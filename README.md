@@ -6,7 +6,7 @@ Lilia is a roleplay gamemode framework for [Garry's Mod](https://gmod.facepunch.
 
 To get started, you can visit the comprehensive guide in that we will leave at the bottom, which provides an in-depth tutorial on how to install the basics of the gamemode. However, if you are already familiar with the process, you can quickly create your own schema by forking/copying the skeleton schema available at [Skeleton Schema Repository](https://github.com/bleonheart/Lilia-Skeleton-Schema). This contains all the essential elements required for a functioning schema, allowing you to start coding immediately.
 
-If you have questions or want to integrate with the community, you can join our Discord server at https://discord.gg/RTcVq92HsH.
+If you have questions or want to integrate with the community, you can join our Discord server at [Discord](https://discord.gg/RTcVq92HsH).
 
 ## Development
 
