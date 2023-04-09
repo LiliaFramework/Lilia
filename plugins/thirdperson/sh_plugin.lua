@@ -1,0 +1,5 @@
+local PLUGIN = PLUGIN
+PLUGIN.name = "New Fancy Third Person"
+PLUGIN.author = "Black Tea"
+PLUGIN.desc = "Third Person plugin."
+lia.util.include("cl_plugin.lua")

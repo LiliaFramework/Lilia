@@ -1,0 +1,7 @@
+"lilia"
+{
+	"base"		"sandbox"
+	"title"		"Lilia 1.0"
+	"author"	"Chessnut, Black Tea and Leonheart"
+	"category"	"rp"
+}
