@@ -1,5 +1,5 @@
 -- Include Lilia content.
-resource.AddWorkshop("")
+resource.AddWorkshop("2959728255")
 
 -- Include features from the Sandbox gamemode.
 DeriveGamemode("sandbox")
