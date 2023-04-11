@@ -15,11 +15,11 @@ do
 
     function entityMeta:getDoorOwner()
         if not self:isDoor() then return nil end
-        local parent = self.nutParent
+        local parent = self.liaParent
         if IsValid(parent) then return parent:getDoorOwner() end
-        if not self.nutAccess then return nil end
+        if not self.liaAccess then return nil end
 
-        for client, access in pairs(self.nutAccess) do
+        for client, access in pairs(self.liaAccess) do
             if access == DOOR_OWNER then return client end
         end
 
@@ -52,15 +52,15 @@ do
         function entityMeta:keysOwn(client)
             if not self:isDoor() then return end
 
-            if self.nutParent then
-                self.nutParent:keysOwn(client)
+            if self.liaParent then
+                self.liaParent:keysOwn(client)
 
                 return
             end
 
             self:SetDTEntity(0, client)
-            self.nutAccess = self.nutAccess or {}
-            self.nutAccess[client] = DOOR_OWNER
+            self.liaAccess = self.liaAccess or {}
+            self.liaAccess[client] = DOOR_OWNER
 
             PLUGIN:callOnDoorChildren(self, function(child)
                 child:SetDTEntity(0, client)
@@ -72,15 +72,15 @@ do
         function entityMeta:keysUnOwn(client)
             if not self:isDoor() then return end
 
-            if self.nutParent then
-                self.nutParent:keysUnOwn(client)
+            if self.liaParent then
+                self.liaParent:keysUnOwn(client)
 
                 return
             end
 
             self:SetDTEntity(0, nil)
-            self.nutAccess = self.nutAccess or {}
-            self.nutAccess[client] = DOOR_NONE
+            self.liaAccess = self.liaAccess or {}
+            self.liaAccess[client] = DOOR_NONE
 
             PLUGIN:callOnDoorChildren(self, function(child)
                 child:SetDTEntity(0, nil)
@@ -92,28 +92,28 @@ do
         function entityMeta:addKeysDoorOwner(client)
             if not self:isDoor() then return end
 
-            if self.nutParent then
-                self.nutParent:addKeysDoorOwner(client)
+            if self.liaAccess then
+                self.liaAccess:addKeysDoorOwner(client)
 
                 return
             end
 
-            self.nutAccess = self.nutAccess or {}
-            self.nutAccess[client] = DOOR_TENANT
+            self.liaAccess = self.liaAccess or {}
+            self.liaAccess[client] = DOOR_TENANT
             PLUGIN:UpdateClientDoorAccess(self, client, DOOR_TENANT)
         end
 
         function entityMeta:removeKeysDoorOwner(client)
             if not self:isDoor() then return end
 
-            if self.nutParent then
-                self.nutParent:removeKeysDoorOwner(client)
+            if self.liaParent then
+                self.liaParent:removeKeysDoorOwner(client)
 
                 return
             end
 
-            self.nutAccess = self.nutAccess or {}
-            self.nutAccess[client] = DOOR_NONE
+            self.liaAccess = self.liaAccess or {}
+            self.liaAccess[client] = DOOR_NONE
             PLUGIN:UpdateClientDoorAccess(self, client, DOOR_NONE)
         end
 
