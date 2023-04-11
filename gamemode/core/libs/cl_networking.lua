@@ -38,4 +38,21 @@ function entityMeta:getNetVar(key, default)
 	return default
 end
 
+function GetNetVar(key, default)
+	local value = lia.net.globals[key]
+
+	return value ~= nil and value or default
+end
+
+function entityMeta:GetNetVar(key, default)
+	local index = self:EntIndex()
+
+	if (lia.net[index] and lia.net[index][key] ~= nil) then
+		return lia.net[index][key]
+	end
+
+	return default
+end
+
 playerMeta.getLocalVar = entityMeta.getNetVar
+playerMeta.GetNetVar = entityMeta.GetNetVar
