@@ -1,7 +1,7 @@
 DarkRP = {}
 nut = lia or {}
-ix.config.Add = lia.config.add or {} 
-
+ix = lia or {}
+ix.config.Add = lia.config.add or {}
 local playerMeta = FindMetaTable("Player")
 local entityMeta = FindMetaTable("Entity")
 local vehicleMeta = FindMetaTable("Vehicle")
