@@ -1,4 +1,7 @@
+ix = ix or {}
 lia.config = lia.config or {}
+ix.config = ix.config or {}
+ix.config.stored = ix.config.stored or {}
 lia.config.stored = lia.config.stored or {}
 
 function ix.config.Add(key, value, desc, callback, data, noNetworking, schemaOnly)

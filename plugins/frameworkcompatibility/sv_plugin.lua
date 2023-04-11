@@ -1,4 +1,5 @@
 DarkRP = {}
+nut = lia or {}
 local playerMeta = FindMetaTable("Player")
 local entityMeta = FindMetaTable("Entity")
 local vehicleMeta = FindMetaTable("Vehicle")
@@ -39,7 +40,9 @@ function vehicleMeta:keysOwn(_p)
     self.liaAccess[_p] = 3
 end
 
-DarkRP.formatMoney = function(x) return lia.currency.get .. string.Comma(x) end
+DarkRP.formatMoney = function(x)
+    return lia.currency.get .. string.Comma(x)
+end
 
 function DarkRP.notify(ply, msgtype, len, msg)
     if type(ply) ~= "table" and not IsValid(ply) then return end
@@ -49,5 +52,4 @@ function DarkRP.notify(ply, msgtype, len, msg)
     umsg.Long(len)
     umsg.End()
 end
-
 -----------------Helix ----------------

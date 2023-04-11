@@ -1,5 +1,9 @@
 -- This file includes utility functions that are pretty isolated.
 -- Includes a file from the prefix.
+ix = ix or {}
+
+ix.util = ix.util or {}
+
 function ix.util.Include(fileName, state)
     lia.util.include(fileName, state)
 end

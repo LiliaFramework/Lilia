@@ -1,20 +1,21 @@
 local Inventory = lia.Inventory
 
 net.Receive("liaInventoryData", function()
-	local id = net.ReadType()
-	local key = net.ReadString()
-	local value = net.ReadType()
-	local instance = lia.inventory.instances[id]
-	if (not instance) then
-		ErrorNoHalt("Got data "..key.." for non-existent instance "..id)
-		return
-	end
+    local id = net.ReadType()
+    local key = net.ReadString()
+    local value = net.ReadType()
+    local instance = lia.inventory.instances[id]
 
-	local oldValue = instance.data[key]
-	instance.data[key] = value
-	instance:onDataChanged(key, oldValue, value)
+    if not instance then
+        ErrorNoHalt("Got data " .. key .. " for non-existent instance " .. id)
 
-	hook.Run("InventoryDataChanged", instance, key, oldValue, value)
+        return
+    end
+
+    local oldValue = instance.data[key]
+    instance.data[key] = value
+    instance:onDataChanged(key, oldValue, value)
+    hook.Run("InventoryDataChanged", instance, key, oldValue, value)
 end)
 
 net.Receive("liaInventoryInit", function()
@@ -28,11 +29,11 @@ net.Receive("liaInventoryInit", function()
     local length = net.ReadUInt(32)
     local data2 = net.ReadData(length)
     local uncompressed_data = util.Decompress(data2)
-  
     local items = util.JSONToTable(uncompressed_data)
 
     local function readItem(I)
         local c = items[I] -- i
+
         return c.i, c.u, c.d, c.q
     end
 
@@ -62,57 +63,63 @@ net.Receive("liaInventoryInit", function()
 end)
 
 net.Receive("liaInventoryAdd", function()
-	local itemID = net.ReadUInt(32)
-	local invID = net.ReadType()
-	local item = lia.item.instances[itemID]
-	local inventory = lia.inventory.instances[invID]
-	if (item and inventory) then
-		inventory.items[itemID] = item
-		hook.Run("InventoryItemAdded", inventory, item)
-	end
+    local itemID = net.ReadUInt(32)
+    local invID = net.ReadType()
+    local item = lia.item.instances[itemID]
+    local inventory = lia.inventory.instances[invID]
+
+    if item and inventory then
+        inventory.items[itemID] = item
+        hook.Run("InventoryItemAdded", inventory, item)
+    end
 end)
 
 net.Receive("liaInventoryRemove", function()
-	local itemID = net.ReadUInt(32)
-	local invID = net.ReadType()
-	local item = lia.item.instances[itemID]
-	local inventory = lia.inventory.instances[invID]
-	if (item and inventory and inventory.items[itemID]) then
-		inventory.items[itemID] = nil
-		item.invID = 0
-		hook.Run("InventoryItemRemoved", inventory, item)
-	end
+    local itemID = net.ReadUInt(32)
+    local invID = net.ReadType()
+    local item = lia.item.instances[itemID]
+    local inventory = lia.inventory.instances[invID]
+
+    if item and inventory and inventory.items[itemID] then
+        inventory.items[itemID] = nil
+        item.invID = 0
+        hook.Run("InventoryItemRemoved", inventory, item)
+    end
 end)
 
 net.Receive("liaInventoryDelete", function()
-	local invID = net.ReadType()
-	local instance = lia.inventory.instances[invID]
-	if (instance) then
-		hook.Run("InventoryDeleted", instance)
-	end
-	if (invID) then
-		lia.inventory.instances[invID] = nil
-	end
+    local invID = net.ReadType()
+    local instance = lia.inventory.instances[invID]
+
+    if instance then
+        hook.Run("InventoryDeleted", instance)
+    end
+
+    if invID then
+        lia.inventory.instances[invID] = nil
+    end
 end)
 
 function Inventory:show(parent)
-	return lia.inventory.show(self, parent)
+    return lia.inventory.show(self, parent)
 end
-nnet.Receive("ixInventoryData", function()
-	local id = net.ReadType()
-	local key = net.ReadString()
-	local value = net.ReadType()
-	local instance = lia.inventory.instances[id]
-	if (not instance) then
-		ErrorNoHalt("Got data "..key.." for non-existent instance "..id)
-		return
-	end
 
-	local oldValue = instance.data[key]
-	instance.data[key] = value
-	instance:onDataChanged(key, oldValue, value)
+net.Receive("ixInventoryData", function()
+    local id = net.ReadType()
+    local key = net.ReadString()
+    local value = net.ReadType()
+    local instance = lia.inventory.instances[id]
 
-	hook.Run("InventoryDataChanged", instance, key, oldValue, value)
+    if not instance then
+        ErrorNoHalt("Got data " .. key .. " for non-existent instance " .. id)
+
+        return
+    end
+
+    local oldValue = instance.data[key]
+    instance.data[key] = value
+    instance:onDataChanged(key, oldValue, value)
+    hook.Run("InventoryDataChanged", instance, key, oldValue, value)
 end)
 
 net.Receive("ixInventoryInit", function()
@@ -126,11 +133,11 @@ net.Receive("ixInventoryInit", function()
     local length = net.ReadUInt(32)
     local data2 = net.ReadData(length)
     local uncompressed_data = util.Decompress(data2)
-  
     local items = util.JSONToTable(uncompressed_data)
 
     local function readItem(I)
         local c = items[I] -- i
+
         return c.i, c.u, c.d, c.q
     end
 
@@ -160,39 +167,43 @@ net.Receive("ixInventoryInit", function()
 end)
 
 net.Receive("ixInventoryAdd", function()
-	local itemID = net.ReadUInt(32)
-	local invID = net.ReadType()
-	local item = lia.item.instances[itemID]
-	local inventory = lia.inventory.instances[invID]
-	if (item and inventory) then
-		inventory.items[itemID] = item
-		hook.Run("InventoryItemAdded", inventory, item)
-	end
+    local itemID = net.ReadUInt(32)
+    local invID = net.ReadType()
+    local item = lia.item.instances[itemID]
+    local inventory = lia.inventory.instances[invID]
+
+    if item and inventory then
+        inventory.items[itemID] = item
+        hook.Run("InventoryItemAdded", inventory, item)
+    end
 end)
 
 net.Receive("ixInventoryRemove", function()
-	local itemID = net.ReadUInt(32)
-	local invID = net.ReadType()
-	local item = lia.item.instances[itemID]
-	local inventory = lia.inventory.instances[invID]
-	if (item and inventory and inventory.items[itemID]) then
-		inventory.items[itemID] = nil
-		item.invID = 0
-		hook.Run("InventoryItemRemoved", inventory, item)
-	end
+    local itemID = net.ReadUInt(32)
+    local invID = net.ReadType()
+    local item = lia.item.instances[itemID]
+    local inventory = lia.inventory.instances[invID]
+
+    if item and inventory and inventory.items[itemID] then
+        inventory.items[itemID] = nil
+        item.invID = 0
+        hook.Run("InventoryItemRemoved", inventory, item)
+    end
 end)
 
 net.Receive("ixInventoryDelete", function()
-	local invID = net.ReadType()
-	local instance = lia.inventory.instances[invID]
-	if (instance) then
-		hook.Run("InventoryDeleted", instance)
-	end
-	if (invID) then
-		lia.inventory.instances[invID] = nil
-	end
+    local invID = net.ReadType()
+    local instance = lia.inventory.instances[invID]
+
+    if instance then
+        hook.Run("InventoryDeleted", instance)
+    end
+
+    if invID then
+        lia.inventory.instances[invID] = nil
+    end
 end)
 
 function Inventory:Show(parent)
-	return lia.inventory.show(self, parent)
+    return lia.inventory.show(self, parent)
 end

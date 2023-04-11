@@ -2,7 +2,6 @@ lia.class = lia.class or {}
 lia.class.list = {}
 ix.class = lia.class or {}
 ix.class.list = lia.class.list or {}
-local charMeta = lia.meta.character
 
 function ix.class.LoadFromDir(directory)
     lia.class.loadFromDir(directory)
@@ -54,7 +53,9 @@ function lia.class.loadFromDir(directory)
 
         -- Allow classes to be joinable by default.
         if not CLASS.onCanBe then
-            CLASS.onCanBe = function(client) return true end
+            CLASS.onCanBe = function(client)
+                return true
+            end
         end
 
         -- Add the class to the list of classes.
@@ -113,6 +114,8 @@ function lia.class.getPlayers(class)
 
     return players
 end
+
+local charMeta = lia.meta.character
 
 function charMeta:joinClass(class, isForced)
     if not class then

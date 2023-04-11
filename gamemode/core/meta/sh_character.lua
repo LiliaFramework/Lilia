@@ -8,6 +8,7 @@ CHAR.__index = CHAR
 CHAR.id = CHAR.id or 0
 CHAR.vars = CHAR.vars or {}
 debug.getregistry().Character = lia.meta.character -- hi mark
+ix.char = ix.char or {}
 
 -- Called when the character is being printed as a string.
 function CHAR:__tostring()

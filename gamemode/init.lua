@@ -1,5 +1,8 @@
 nut = lia or {}
 ix = lia or {}
+nut = lia or {}
+ix.util = ix.util or {}
+nut.util = nut.util or {}
 -- Include Lilia content.
 resource.AddWorkshop("2959728255")
 -- Include features from the Sandbox gamemode.

@@ -1,4 +1,5 @@
 lia.data = lia.data or {}
+ix.data = ix.data or {}
 lia.data.stored = lia.data.stored or {}
 -- Create a folder to store data in.
 file.CreateDir("lilia")
