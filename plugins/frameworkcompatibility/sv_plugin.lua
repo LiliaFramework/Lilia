@@ -1,7 +1,4 @@
 DarkRP = {}
-nut = lia or {}
-ix = lia or {}
-ix.config.Add = lia.config.add or {}
 local playerMeta = FindMetaTable("Player")
 local entityMeta = FindMetaTable("Entity")
 local vehicleMeta = FindMetaTable("Vehicle")
@@ -52,4 +49,5 @@ function DarkRP.notify(ply, msgtype, len, msg)
     umsg.Long(len)
     umsg.End()
 end
+
 -----------------Helix ----------------
