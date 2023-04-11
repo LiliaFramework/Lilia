@@ -34,13 +34,6 @@ timer.Simple(0, function()
     end)
 end)
 
-concommand.Add("lia_setowner", function(client, command, arguments)
-    if not IsValid(client) then
-        MsgC(Color(255, 0, 0), "** 'lia_setowner' has been deprecated in Lilia 1.1\n")
-        MsgC(Color(255, 0, 0), "** Instead, please install an admin mod and use that instead.\n")
-    end
-end)
-
 cvars.AddChangeCallback("sbox_persist", function(name, old, new)
     -- A timer in case someone tries to rapily change the convar, such as addons with "live typing" or whatever
     timer.Create("sbox_persist_change_timer", 1, 1, function()
