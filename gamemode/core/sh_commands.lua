@@ -1,3 +1,4 @@
+SCHEMA_COMMANDS = false
 timer.Simple(10, function()
     if not SCHEMA_COMMANDS then
         lia.command.add("roll", {
