@@ -1,5 +1,5 @@
----//Translation made by Barata#2411 & CVAROG#7222\\----
----//Contact DasBarata#2411 if you have any translation change suggestion\\----
+---//Translation made by Leonheart#7476\\----
+---//Contact Leonheart#7476 if you have any translation change suggestion\\----
 NAME = "Español" 
 LANGUAGE = {
 	loading = "Cargando",
