@@ -1,34 +1,3 @@
-function PLUGIN:LoadFonts(font)
-    surface.CreateFont("liaSmallChatFont", {
-        font = font,
-        size = math.max(ScreenScale(6), 17),
-        extended = true,
-        weight = 750
-    })
-
-    surface.CreateFont("liaItalicsChatFont", {
-        font = font,
-        size = math.max(ScreenScale(7), 17),
-        extended = true,
-        weight = 600,
-        italic = true
-    })
-
-    surface.CreateFont("liaMediumChatFont", {
-        font = font,
-        size = math.max(ScreenScale(7), 17),
-        extended = true,
-        weight = 200
-    })
-
-    surface.CreateFont("liaBigChatFont", {
-        font = font,
-        size = math.max(ScreenScale(8), 17),
-        extended = true,
-        weight = 200
-    })
-end
-
 function PLUGIN:ChatAddText(text, ...)
     if lia.config.get("chatSizeDiff", true) then
         local chatText = {...}
