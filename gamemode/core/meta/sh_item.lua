@@ -2,6 +2,7 @@ local ITEM = lia.meta.item or {}
 debug.getregistry().Item = lia.meta.item -- for FindMetaTable.
 ITEM.__index = ITEM
 ITEM.name = "INVALID ITEM"
+ITEM.description = ITEM.desc or "[[INVALID ITEM]]"
 ITEM.desc = ITEM.desc or "[[INVALID ITEM]]"
 ITEM.id = ITEM.id or 0
 ITEM.uniqueID = "undefined"
@@ -10,6 +11,12 @@ ITEM.isStackable = false
 ITEM.quantity = 1
 ITEM.maxQuantity = 1
 ITEM.canSplit = true
+
+function ITEM:getQuantity()
+    if self.id == 0 then return self.maxQuantity end -- for display purpose.
+
+    return self.quantity
+end
 
 function ITEM:GetQuantity()
     if self.id == 0 then return self.maxQuantity end -- for display purpose.
@@ -23,6 +30,10 @@ end
 
 function ITEM:__tostring()
     return "item[" .. self.uniqueID .. "][" .. self.id .. "]"
+end
+
+function ITEM:getID()
+    return self.id
 end
 
 function ITEM:GetID()
