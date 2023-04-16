@@ -1,5 +1,3 @@
-DarkRP = {}
-nut = lia or {}
 local playerMeta = FindMetaTable("Player")
 local entityMeta = FindMetaTable("Entity")
 local vehicleMeta = FindMetaTable("Vehicle")

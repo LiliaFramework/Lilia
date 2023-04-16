@@ -582,7 +582,7 @@ function GM:LoadLiliaFonts(font, genericFont)
 
     surface.CreateFont("ixChatFont", {
         font = font,
-        size = math.max(ScreenScale(7), 17) * ix.option.Get("chatFontScale", 1),
+        size = math.max(ScreenScale(7), 17) * 1,
         extended = true,
         weight = 600,
         antialias = true
@@ -590,7 +590,7 @@ function GM:LoadLiliaFonts(font, genericFont)
 
     surface.CreateFont("ixChatFontItalics", {
         font = font,
-        size = math.max(ScreenScale(7), 17) * ix.option.Get("chatFontScale", 1),
+        size = math.max(ScreenScale(7), 17) * 1,
         extended = true,
         weight = 600,
         antialias = true,
