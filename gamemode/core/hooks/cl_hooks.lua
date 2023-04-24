@@ -2,63 +2,63 @@ function GM:LoadLiliaFonts(font, genericFont)
     local oldFont, oldGenericFont = font, genericFont
     local scale = math.Round(lia.config.get("fontScale", 1), 2)
 
-    surface.CreateFont("nut3D2DFont", {
+    surface.CreateFont("lia3D2DFont", {
         font = font,
         size = 2048,
         extended = true,
         weight = 1000
     })
 
-    surface.CreateFont("nutTitleFont", {
+    surface.CreateFont("liaTitleFont", {
         font = font,
         size = ScreenScale(30) * scale,
         extended = true,
         weight = 1000
     })
 
-    surface.CreateFont("nutSubTitleFont", {
+    surface.CreateFont("liaSubTitleFont", {
         font = font,
         size = ScreenScale(18) * scale,
         extended = true,
         weight = 500
     })
 
-    surface.CreateFont("nutMenuButtonFont", {
+    surface.CreateFont("liaMenuButtonFont", {
         font = font,
         size = ScreenScale(14) * scale,
         extended = true,
         weight = 1000
     })
 
-    surface.CreateFont("nutMenuButtonLightFont", {
+    surface.CreateFont("liaMenuButtonLightFont", {
         font = font,
         size = ScreenScale(14) * scale,
         extended = true,
         weight = 200
     })
 
-    surface.CreateFont("nutToolTipText", {
+    surface.CreateFont("liaToolTipText", {
         font = font,
         size = 20,
         extended = true,
         weight = 500
     })
 
-    surface.CreateFont("nutDynFontSmall", {
+    surface.CreateFont("liaDynFontSmall", {
         font = font,
         size = ScreenScale(22) * scale,
         extended = true,
         weight = 1000
     })
 
-    surface.CreateFont("nutDynFontMedium", {
+    surface.CreateFont("liaDynFontMedium", {
         font = font,
         size = ScreenScale(28) * scale,
         extended = true,
         weight = 1000
     })
 
-    surface.CreateFont("nutDynFontBig", {
+    surface.CreateFont("liaDynFontBig", {
         font = font,
         size = ScreenScale(48) * scale,
         extended = true,
@@ -68,63 +68,63 @@ function GM:LoadLiliaFonts(font, genericFont)
     -- The more readable font.
     font = genericFont
 
-    surface.CreateFont("nutCleanTitleFont", {
+    surface.CreateFont("liaCleanTitleFont", {
         font = font,
         size = 200 * scale,
         extended = true,
         weight = 1000
     })
 
-    surface.CreateFont("nutHugeFont", {
+    surface.CreateFont("liaHugeFont", {
         font = font,
         size = 72 * scale,
         extended = true,
         weight = 1000
     })
 
-    surface.CreateFont("nutBigFont", {
+    surface.CreateFont("liaBigFont", {
         font = font,
         size = 36 * scale,
         extended = true,
         weight = 1000
     })
 
-    surface.CreateFont("nutMediumFont", {
+    surface.CreateFont("liaMediumFont", {
         font = font,
         size = 25 * scale,
         extended = true,
         weight = 1000
     })
 
-    surface.CreateFont("nutMediumLightFont", {
+    surface.CreateFont("liaMediumLightFont", {
         font = font,
         size = 25 * scale,
         extended = true,
         weight = 200
     })
 
-    surface.CreateFont("nutGenericFont", {
+    surface.CreateFont("liaGenericFont", {
         font = font,
         size = 20 * scale,
         extended = true,
         weight = 1000
     })
 
-    surface.CreateFont("nutGenericLightFont", {
+    surface.CreateFont("liaGenericLightFont", {
         font = font,
         size = 20 * scale,
         extended = true,
         weight = 500
     })
 
-    surface.CreateFont("nutChatFont", {
+    surface.CreateFont("liaChatFont", {
         font = font,
         size = math.max(ScreenScale(7), 17) * scale,
         extended = true,
         weight = 200
     })
 
-    surface.CreateFont("nutChatFontItalics", {
+    surface.CreateFont("liaChatFontItalics", {
         font = font,
         size = math.max(ScreenScale(7), 17) * scale,
         extended = true,
@@ -132,21 +132,21 @@ function GM:LoadLiliaFonts(font, genericFont)
         italic = true
     })
 
-    surface.CreateFont("nutChatFontBold", {
+    surface.CreateFont("liaChatFontBold", {
         font = font,
         size = math.max(ScreenScale(7), 17) * scale,
         extended = true,
         weight = 800,
     })
 
-    surface.CreateFont("nutSmallFont", {
+    surface.CreateFont("liaSmallFont", {
         font = font,
         size = math.max(ScreenScale(6), 17) * scale,
         extended = true,
         weight = 500
     })
 
-    surface.CreateFont("nutItemDescFont", {
+    surface.CreateFont("liaItemDescFont", {
         font = font,
         size = math.max(ScreenScale(6), 17) * scale,
         extended = true,
@@ -154,14 +154,14 @@ function GM:LoadLiliaFonts(font, genericFont)
         weight = 500
     })
 
-    surface.CreateFont("nutSmallBoldFont", {
+    surface.CreateFont("liaSmallBoldFont", {
         font = font,
         size = math.max(ScreenScale(8), 20) * scale,
         extended = true,
         weight = 800
     })
 
-    surface.CreateFont("nutItemBoldFont", {
+    surface.CreateFont("liaItemBoldFont", {
         font = font,
         shadow = true,
         size = math.max(ScreenScale(8), 20) * scale,
@@ -169,49 +169,49 @@ function GM:LoadLiliaFonts(font, genericFont)
         weight = 800
     })
 
-    surface.CreateFont("nutIconsSmall", {
+    surface.CreateFont("liaIconsSmall", {
         font = "fontello",
         size = 22,
         extended = true,
         weight = 500
     })
 
-    surface.CreateFont("nutIconsMedium", {
+    surface.CreateFont("liaIconsMedium", {
         font = "fontello",
         extended = true,
         size = 28,
         weight = 500
     })
 
-    surface.CreateFont("nutIconsBig", {
+    surface.CreateFont("liaIconsBig", {
         font = "fontello",
         extended = true,
         size = 48,
         weight = 500
     })
 
-    surface.CreateFont("nutIconsSmallNew", {
+    surface.CreateFont("liaIconsSmallNew", {
         font = "nsicons",
         size = 22,
         extended = true,
         weight = 500
     })
 
-    surface.CreateFont("nutIconsMediumNew", {
+    surface.CreateFont("liaIconsMediumNew", {
         font = "nsicons",
         extended = true,
         size = 28,
         weight = 500
     })
 
-    surface.CreateFont("nutIconsBigNew", {
+    surface.CreateFont("liaIconsBigNew", {
         font = "nsicons",
         extended = true,
         size = 48,
         weight = 500
     })
 
-    surface.CreateFont("nutNoticeFont", {
+    surface.CreateFont("liaNoticeFont", {
         font = genericFont,
         size = 22,
         weight = 500,
