@@ -1,6 +1,5 @@
 nut = lia or {}
 ix = lia or {}
-nut = lia or {}
 ix.util = ix.util or {}
 nut.util = nut.util or {}
 -- Include Lilia content.
