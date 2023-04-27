@@ -1,4 +1,4 @@
-lia.config.add("TimeOnScreenEnabled", true, "Enable Time On Screen?", nil, {
+lia.config.add("TimeOnScreenEnabled", false, "Enable Time On Screen?", nil, {
     category = "Time"
 })
 
