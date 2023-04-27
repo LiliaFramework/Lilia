@@ -2,6 +2,55 @@ function GM:LoadLiliaFonts(font, genericFont)
     local oldFont, oldGenericFont = font, genericFont
     local scale = math.Round(lia.config.get("fontScale", 1), 2)
 
+    surface.CreateFont("MAIN_Font32", {
+        font = "Roboto Condensed",
+        extended = false,
+        size = 24,
+        weight = 500,
+        blursize = 0,
+        scanlines = 0,
+        antialias = true,
+    })
+
+    surface.CreateFont("MAIN_Font24", {
+        font = "Roboto",
+        extended = false,
+        size = 24,
+        weight = 0,
+        blursize = 0,
+        scanlines = 0,
+        antialias = true,
+    })
+
+    surface.CreateFont("liaSmallChatFont", {
+        font = font,
+        size = math.max(ScreenScale(6), 17),
+        extended = true,
+        weight = 750
+    })
+
+    surface.CreateFont("liaItalicsChatFont", {
+        font = font,
+        size = math.max(ScreenScale(7), 17),
+        extended = true,
+        weight = 600,
+        italic = true
+    })
+
+    surface.CreateFont("liaMediumChatFont", {
+        font = font,
+        size = math.max(ScreenScale(7), 17),
+        extended = true,
+        weight = 200
+    })
+
+    surface.CreateFont("liaBigChatFont", {
+        font = font,
+        size = math.max(ScreenScale(8), 17),
+        extended = true,
+        weight = 200
+    })
+
     surface.CreateFont("lia3D2DFont", {
         font = font,
         size = 2048,
