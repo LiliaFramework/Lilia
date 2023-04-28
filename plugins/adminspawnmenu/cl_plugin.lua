@@ -25,7 +25,7 @@ net.Receive("LiliaResetVariablesNew", function()
         collapsibleCategory.category = realName
 
         for k, v in pairs(lia.item.list) do
-            if v.category == collapsibleCategory.category and v.category ~= "Weapons" then
+            if v.category == collapsibleCategory.category then
                 local item = collapsibleCategory:Add("DButton")
                 item:SetText(v.name)
                 item:SizeToContents()
