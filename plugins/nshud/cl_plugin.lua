@@ -201,3 +201,15 @@ end
 function PLUGIN:HUDDrawTargetID()
     return false
 end
+
+hook.Add("ShouldHideBars", "hideBars", function()
+    return lia.config.get("BarsEnabled", true)
+end)
+
+hook.Add("CanDrawAmmoHUD", "hideAmmo", function()
+    return lia.config.get("AmmoDrawEnabled", true)
+end)
+
+hook.Add("ShouldDrawCrosshair", "hideCrosshair", function()
+    return lia.config.get("CrosshairEnabled", true)
+end)
