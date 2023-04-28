@@ -1,7 +1,7 @@
 local PANEL = {}
 
 function PANEL:Init()
-	self.size = NS_ICON_SIZE
+	self.size = LIA_ICON_SIZE
 end
 
 function PANEL:setIconSize(size)

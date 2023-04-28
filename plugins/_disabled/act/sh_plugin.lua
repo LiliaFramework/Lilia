@@ -1,5 +1,5 @@
 PLUGIN.name = "Acts"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Adds acts that can be performed."
 PLUGIN.acts = PLUGIN.acts or {}
 

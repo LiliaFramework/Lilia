@@ -1,5 +1,5 @@
 PLUGIN.name = "Observer"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Adds on to the no-clip mode to prevent instrusion."
 
 if (CLIENT) then

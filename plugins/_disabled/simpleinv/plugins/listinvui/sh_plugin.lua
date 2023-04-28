@@ -1,5 +1,5 @@
 PLUGIN.name = "Simple Inv UI"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Adds a simple interface for list inventories."
 
 local INVENTORY_TYPE_ID = "simple"

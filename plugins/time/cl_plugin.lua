@@ -9,7 +9,7 @@ function PLUGIN:HUDPaint()
     local y = 50
     local timer = 0
     if not character then return end
-    if not lia.config.get("TimeOnScreenEnabled", true) then return end
+    if not lia.config.get("TimeOnScreenEnabled", false) then return end
 
     if timer < CurTime() then
         timer = CurTime() + 0.5

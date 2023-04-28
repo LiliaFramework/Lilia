@@ -15,8 +15,8 @@ function PANEL:Init()
 	self.gridH = lia.config.get("invH", 5)
 
 	self:SetSize(
-		self.gridW * (NS_ICON_SIZE + PADDING) + BORDER_FIX_W,
-		self.gridH * (NS_ICON_SIZE + PADDING) + PADDING + HEADER_HEIGHT
+		self.gridW * (LIA_ICON_SIZE + PADDING) + BORDER_FIX_W,
+		self.gridH * (LIA_ICON_SIZE + PADDING) + PADDING + HEADER_HEIGHT
 		+ BORDER_FIX_H
 		+ WEIGHT_PANEL_HEIGHT
 	)

@@ -7,14 +7,14 @@ spawnmenu.AddContentType("item", function(container, object)
     icon:SetWide(64)
     icon:SetTall(64)
     icon:InvalidateLayout(true)
-    local item = nut.item.list[object.spawnname]
+    local item = lia.item.list[object.spawnname]
     icon:SetModel(item.model)
     icon:SetTooltip(item.name)
 
     icon.DoClick = function()
         if LocalPlayer():IsAdmin() then
             surface.PlaySound("ui/buttonclickrelease.wav")
-            netstream.Start("nutItemSpawn", item.uniqueID)
+            netstream.Start("liaItemSpawn", item.uniqueID)
         else
             surface.PlaySound("buttons/button10.wav")
         end
@@ -32,7 +32,7 @@ end)
 hook.Add("PopulateItems", "AddEntityContent", function(pnlContent, tree, node)
     local categorised = {}
 
-    for k, v in pairs(nut.item.list) do
+    for k, v in pairs(lia.item.list) do
         local category = v.category and v.category == "misc" and "Miscellaneous" or v.category and v.category or "Miscellaneous"
         categorised[category] = categorised[category] or {}
         table.insert(categorised[category], v)

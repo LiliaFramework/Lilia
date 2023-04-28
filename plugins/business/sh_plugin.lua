@@ -1,5 +1,5 @@
 PLUGIN.name = "Business"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Adds a menu where players can buy items."
 
 if SERVER then

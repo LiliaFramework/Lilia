@@ -1,5 +1,5 @@
 PLUGIN.name = "1.1 Inventory Compatibility"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Adds compatibility for the old 1.1 inventory."
 
 lia.util.include("sv_migrations.lua")

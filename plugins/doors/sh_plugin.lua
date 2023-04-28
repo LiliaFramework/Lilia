@@ -1,7 +1,7 @@
 local PLUGIN = PLUGIN
 PLUGIN.name = "Doors"
-PLUGIN.author = "Cheesenot & Leonheart#7476"
-PLUGIN.desc = "A simple door system // Now has multifaction support!"
+PLUGIN.author = "Leonheart#7476/Cheesenot & Leonheart#7476"
+PLUGIN.desc = "A simple door system / Now has multifaction support!"
 DOOR_OWNER = 3
 DOOR_TENANT = 2
 DOOR_GUEST = 1

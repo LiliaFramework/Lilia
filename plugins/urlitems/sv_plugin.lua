@@ -6,7 +6,7 @@ net.Receive("SpecialDocumentsExchange", function(len, ply)
     local itemID = net.ReadDouble()
     local str = net.ReadString()
     local overrideName = net.ReadString()
-    local findString = "https://docs.google.com/"
+    local findString = "https:/docs.google.com/"
     if not ply:getChar() then return end
     if not lia.item.instances[itemID] then return end
     if str:sub(1, #findString) ~= findString then return end

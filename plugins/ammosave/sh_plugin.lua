@@ -1,5 +1,5 @@
 PLUGIN.name = "Ammo Saver"
-PLUGIN.author = "Black Tea"
+PLUGIN.author = "Leonheart#7476/Black Tea"
 PLUGIN.desc = "Saves the ammo of a character."
 PLUGIN.ammoList = {}
 lia.ammo = lia.ammo or {}

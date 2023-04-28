@@ -1,11 +1,11 @@
 net.Receive("SpecialDocumentsExchange", function()
     local itemID = net.ReadDouble()
 
-    Derma_StringRequest("Enter Special Document Link", "Input the link to a googledoc that is supposed to be shown (must start with https://docs.google.com/)", "https://docs.google.com/", function(str)
-        local findString = "https://docs.google.com/"
+    Derma_StringRequest("Enter Special Document Link", "Input the link to a googledoc that is supposed to be shown (must start with https:/docs.google.com/)", "https:/docs.google.com/", function(str)
+        local findString = "https:/docs.google.com/"
 
         if str:sub(1, #findString) ~= findString then
-            lia.util.notify("The link must start with https://docs.google.com/")
+            lia.util.notify("The link must start with https:/docs.google.com/")
 
             return
         end
@@ -36,7 +36,7 @@ net.Receive("SpecialDocumentsSendURL", function()
     local openURL = net.ReadString()
     local clName = net.ReadString()
     local itemName = net.ReadString()
-    local findString = "https://docs.google.com/"
+    local findString = "https:/docs.google.com/"
     if openURL:sub(1, #findString) ~= findString then return end
 
     Derma_Query(clName .. " wants to show you Special Documents (" .. itemName .. ")\nThis will open a link (hopefully) to a google doc in vgui browser.\nWe are not responsible for the content of the page.\n\nLink: " .. openURL, "Special Documents being Shown", "Open Link", function()

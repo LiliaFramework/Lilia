@@ -1,6 +1,6 @@
 local PLUGIN = PLUGIN
 PLUGIN.name = "Area"
-PLUGIN.author = "Black Tea"
+PLUGIN.author = "Leonheart#7476/Black Tea"
 PLUGIN.desc = "Allows you to set area."
 PLUGIN.areaTable = PLUGIN.areaTable or {}
 lia.area = lia.area or {}

@@ -1,5 +1,5 @@
 PLUGIN.name = "Bars"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Adds bars to display information."
 
 if (SERVER) then return end

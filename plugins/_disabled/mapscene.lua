@@ -1,5 +1,5 @@
 PLUGIN.name = "Map Scenes"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Adds areas of the map that are visible during character selection."
 PLUGIN.scenes = PLUGIN.scenes or {}
 

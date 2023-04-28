@@ -1,5 +1,5 @@
 PLUGIN.name = "Raise Weapons"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Allows players to raise/lower weapons by holding R (reload)."
 
 lia.config.add(

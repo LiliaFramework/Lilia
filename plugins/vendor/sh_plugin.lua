@@ -1,5 +1,5 @@
 PLUGIN.name = "Vendors"
-PLUGIN.author = "Cheesenot/Leonheart#7476"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Adds NPC vendors that can sell things."
 
 if SERVER then

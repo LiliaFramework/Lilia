@@ -38,8 +38,8 @@ function PANEL:Init()
 	self.content = self.scroll:Add("DGrid")
 	self.content:Dock(FILL)
 	self.content:SetCols(1)
-	self.content:SetColWide(NS_ICON_SIZE + PADDING)
-	self.content:SetRowHeight(NS_ICON_SIZE + PADDING)
+	self.content:SetColWide(LIA_ICON_SIZE + PADDING)
+	self.content:SetRowHeight(LIA_ICON_SIZE + PADDING)
 
 	self.icons = {}
 end
@@ -53,7 +53,7 @@ end
 
 
 function PANEL:setColumns(numColumns, iconSideLength)
-	iconSideLength = iconSideLength or (NS_ICON_SIZE + PADDING)
+	iconSideLength = iconSideLength or (LIA_ICON_SIZE + PADDING)
 	self.content:SetCols(numColumns)
 	self.content:SetColWide(iconSideLength)
 	self.content:SetRowHeight(iconSideLength)

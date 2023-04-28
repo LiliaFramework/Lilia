@@ -1,5 +1,5 @@
 PLUGIN.name = "Player Injuries"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Adds more realistic damage and injury sounds."
 
 lia.config.add(

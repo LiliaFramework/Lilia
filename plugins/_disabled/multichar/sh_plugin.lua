@@ -1,5 +1,5 @@
 PLUGIN.name = "Multiple Characters"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Allows players to have multiple characters."
 
 liaMultiChar = PLUGIN

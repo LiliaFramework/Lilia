@@ -10,7 +10,7 @@ function PANEL:Init()
 	lia.gui.storage = self
 
 	self.gridW = lia.config.get("invW")
-	local width = self.gridW * (NS_ICON_SIZE + PADDING)
+	local width = self.gridW * (LIA_ICON_SIZE + PADDING)
 
 	self:SetSize(width * 2 + BORDER_FIX_W, ScrH() * 0.6)
 	self:MakePopup()

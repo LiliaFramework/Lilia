@@ -1,9 +1,4 @@
-PLUGIN.name = "Voice Overlay"
-PLUGIN.author = "Black Tea"
-PLUGIN.desc = "This plugin makes voice overlay clear and look nice (really?)"
-
-if (CLIENT) then
-	local PANEL = {}
+local PANEL = {}
 	local nsVoicePanels = {}
 
 	function PANEL:Init()
@@ -131,4 +126,3 @@ if (CLIENT) then
 	end
 
 	hook.Add("InitPostEntity", "CreateVoiceVGUI", CreateVoiceVGUI)
-end

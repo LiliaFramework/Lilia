@@ -1,5 +1,5 @@
 PLUGIN.name = "Crosshair"
-PLUGIN.author = "Black Tea"
+PLUGIN.author = "Leonheart#7476/Black Tea"
 PLUGIN.desc = "A Crosshair."
 
 if (SERVER) then return end

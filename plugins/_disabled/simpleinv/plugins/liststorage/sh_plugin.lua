@@ -1,5 +1,5 @@
 PLUGIN.name = "List Storage"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Storage of item lists with weight."
 
 local INV_TYPE_ID = "simple"

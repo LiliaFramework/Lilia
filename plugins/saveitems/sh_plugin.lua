@@ -1,4 +1,4 @@
 PLUGIN.name = "Save Items"
-PLUGIN.author = "Cheesenot/Leonheart#7476"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Saves items that were dropped."
 lia.util.include("sv_plugin.lua")

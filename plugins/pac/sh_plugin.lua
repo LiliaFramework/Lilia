@@ -2,7 +2,7 @@
 -- You must install PAC3 to make this library works.
 
 PLUGIN.name = "PAC3 Integration"
-PLUGIN.author = "Black Tea"
+PLUGIN.author = "Leonheart#7476/Black Tea"
 PLUGIN.desc = "More Upgraded, More well organized PAC3 Integration made by Black Tea"
 PLUGIN.partData = {}
 

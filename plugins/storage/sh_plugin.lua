@@ -1,7 +1,7 @@
 local PLUGIN = PLUGIN
 
 PLUGIN.name = "Storage Base"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Useful things for storage plugins."
 
 STORAGE_DEFINITIONS = STORAGE_DEFINITIONS or {}

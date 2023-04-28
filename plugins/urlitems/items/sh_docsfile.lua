@@ -25,7 +25,7 @@ ITEM.functions.show = {
         end
 
         if item.docLink then
-            local findString = "https://docs.google.com/"
+            local findString = "https:/docs.google.com/"
             if item.docLink:sub(1, #findString) ~= findString then return end
             net.Start("SpecialDocumentsSendURL")
             net.WriteString(item.docLink)

@@ -48,7 +48,7 @@ function PANEL:setInventory(inventory)
 end
 
 function PANEL:setGridSize(width, height, iconSize)
-	self.size = iconSize or NS_ICON_SIZE
+	self.size = iconSize or LIA_ICON_SIZE
 	self.gridW = width
 	self.gridH = height
 end

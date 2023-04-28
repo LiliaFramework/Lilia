@@ -1,5 +1,5 @@
 PLUGIN.name = "Grid Storage"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Storage of items inside a grid."
 
 local INV_TYPE_ID = "grid"

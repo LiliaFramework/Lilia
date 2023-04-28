@@ -1,5 +1,5 @@
 PLUGIN.name = "Holstered Weapons"
-PLUGIN.author = "Black Tea"
+PLUGIN.author = "Leonheart#7476/Black Tea"
 PLUGIN.desc = "Shows holstered weapons on players."
 
 lia.config.add(

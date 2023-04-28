@@ -1,5 +1,5 @@
 PLUGIN.name = "Attributes"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Adds attributes for characters."
 
 lia.util.include("sh_commands.lua")

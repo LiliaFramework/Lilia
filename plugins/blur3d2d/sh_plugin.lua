@@ -1,5 +1,5 @@
 PLUGIN.name = "3D2D Blur Library"
-PLUGIN.author = "Black Tea"
+PLUGIN.author = "Leonheart#7476/Black Tea"
 PLUGIN.desc = "Plugin for Developers."
 
 lia.blur3d2d = lia.blur3d2d or {}

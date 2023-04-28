@@ -1,5 +1,5 @@
 PLUGIN.name = "GridInv UI"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Adds UI components for grid inventories."
 
 local INVENTORY_TYPE_ID = "grid"

@@ -1,5 +1,5 @@
 PLUGIN.name = "Simple Inv"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Adds a simple inventory type."
 
 lia.util.include("sh_simple_inv.lua")

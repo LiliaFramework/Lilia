@@ -1,5 +1,5 @@
 PLUGIN.name = "Grid Inventory"
-PLUGIN.author = "Cheesenot"
+PLUGIN.author = "Leonheart#7476/Cheesenot"
 PLUGIN.desc = "Inventory system where items have a size and fit in a grid."
 
 local INVENTORY_TYPE_ID = "grid"

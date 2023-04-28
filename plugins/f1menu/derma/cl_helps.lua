@@ -5,7 +5,7 @@
 		HELP_DEFAULT = [[
 			<div id="parent"><div id="child">
 				<center>
-				    <img src="https://static.miraheze.org/liliawiki/2/26/Lilia.png"></img>
+				    <img src="https:/static.miraheze.org/liliawiki/2/26/Lilia.png"></img>
 					<br><font size=15>]] .. L"helpDefault" .. [[</font>
 				</center>
 			</div></div>
@@ -16,7 +16,7 @@
 			local header = [[<html>
 			<head>
 				<style>
-					@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+					@import url(http:/fonts.googleapis.com/earlyaccess/jejugothic.css);
 
 					#parent {
 					    padding: 5% 0;
@@ -140,9 +140,9 @@ hook.Add("BuildHelpMenu", "liaBasicHelp", function(tabs)
 			local icon
 
 			if (LocalPlayer():getChar():hasFlags(k)) then
-				icon = [[<img src="asset://garrysmod/materials/icon16/tick.png" />]]
+				icon = [[<img src="asset:/garrysmod/materials/icon16/tick.png" />]]
 			else
-				icon = [[<img src="asset://garrysmod/materials/icon16/cross.png" />]]
+				icon = [[<img src="asset:/garrysmod/materials/icon16/cross.png" />]]
 			end
 
 			body = body..Format([[

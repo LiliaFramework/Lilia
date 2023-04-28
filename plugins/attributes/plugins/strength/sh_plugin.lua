@@ -1,5 +1,5 @@
 PLUGIN.name = "Strength"
-PLUGIN.author = "Chessnot"
+PLUGIN.author = "Leonheart#7476/Chessnot"
 PLUGIN.desc = "Adds a strength attribute."
 
 if (SERVER) then
