@@ -211,5 +211,5 @@ hook.Add("CanDrawAmmoHUD", "hideAmmo", function()
 end)
 
 hook.Add("ShouldDrawCrosshair", "hideCrosshair", function()
-    return lia.config.get("CrosshairEnabled", true)
+    return lia.config.get("CrosshairEnabled", false)
 end)

@@ -1,4 +1,5 @@
 function PLUGIN:ForceDermaSkin()
+    if lia.config.get("DarkTheme", false) then return "lilia_darktheme" end
     return "lilia"
 end
 
