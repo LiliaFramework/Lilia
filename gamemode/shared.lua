@@ -59,6 +59,7 @@ lia.util.includeDir("core/hooks")
 -- Include language and default base items.
 lia.lang.loadFromDir("lilia/gamemode/languages")
 lia.item.loadFromDir("lilia/gamemode/items")
+lia.item.loadFromDir("lilia/gamemode/commands")
 
 -- Called after the gamemode has loaded.
 function GM:Initialize()
