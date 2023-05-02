@@ -1,12 +1,6 @@
 -- This file includes utility functions that are pretty isolated.
 -- Includes a file from the prefix.
-ix = ix or {}
-
-ix.util = ix.util or {}
-
-function ix.util.Include(fileName, state)
-    lia.util.include(fileName, state)
-end
+lia.util.cachedMaterials = lia.util.cachedMaterials or {}
 
 function lia.util.include(fileName, state)
     if not fileName then
@@ -32,10 +26,6 @@ function lia.util.include(fileName, state)
             return include(fileName)
         end
     end
-end
-
-function ix.util.IncludeDir(directory, fromLua, recursive)
-    lia.util.includeDir(directory, fromLua, recursive)
 end
 
 -- Include files based off the prefix within a directory.
@@ -86,11 +76,6 @@ function lia.util.getAddress()
     return game.GetIPAddress()
 end
 
--- Returns a table of admin players
-function ix.util.GetAdmins(isSuper)
-    lia.util.getAdmins(isSuper)
-end
-
 function lia.util.getAdmins(isSuper)
     local admins = {}
 
@@ -109,19 +94,10 @@ function lia.util.getAdmins(isSuper)
     return admins
 end
 
--- Returns true if a string is a 32-bit SteamID.
-function ix.util.IsSteamID(value)
-    lia.util.isSteamID(value)
-end
-
 function lia.util.isSteamID(value)
     if string.match(value, "STEAM_(%d+):(%d+):(%d+)") then return true end
 
     return false
-end
-
-function ix.util.FindPlayer(identifier, bAllowPatterns)
-    lia.util.findPlayer(identifier, allowPatterns)
 end
 
 -- Finds a player by matching their name or steam id.
@@ -135,10 +111,6 @@ function lia.util.findPlayer(identifier, allowPatterns)
     for k, v in ipairs(player.GetAll()) do
         if lia.util.stringMatches(v:Name(), identifier) then return v end
     end
-end
-
-function ix.util.GridVector(vec, gridSize)
-    lia.util.gridVector(vec, gridSize)
 end
 
 function lia.util.gridVector(vec, gridSize)
@@ -285,12 +257,6 @@ do
             end
         end
     end
-end
-
-lia.util.cachedMaterials = lia.util.cachedMaterials or {}
-
-function ix.util.GetMaterial(materialPath)
-    lia.util.getMaterial(materialPath)
 end
 
 -- Returns a single cached copy of a material or creates it if it doesn't exist.
