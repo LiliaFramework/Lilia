@@ -1,53 +1,77 @@
-local playerMeta = FindMetaTable("Player")
-local entityMeta = FindMetaTable("Entity")
-local vehicleMeta = FindMetaTable("Vehicle")
-
------------------DARKP ----------------
-function playerMeta:canAfford(x)
-    return self:getChar():hasMoney(x)
-end
-
-function playerMeta:addMoney(x)
-    if x < 0 then
-        self:getChar():takeMoney(x)
+function isNutGlobalUsed()
+    if nut then
+        return true
     else
-        self:getChar():giveMoney(x)
+        return false
     end
 end
 
-function playerMeta:getDarkRPVar(var)
-    if var ~= "money" then
-        self:ChatPrint("Tried To Fetch Improper Variable! Please Refer to Our Discord for Help!")
-
-        return
+function isIxGlobalUsed()
+    if ix then
+        return true
+    else
+        return false
     end
-
-    return self:getChar():getMoney()
 end
 
-function vehicleMeta:keysLock()
-    self:Fire("lock")
+function isDarkRPGlobalUsed()
+    if DarkRP then
+        return true
+    else
+        return false
+    end
 end
 
-function vehicleMeta:keysUnLock()
-    self:Fire("unlock")
-end
+function PLUGIN:InitializedPlugins()
+    timer.Simple(3, function()
+        print("STARTED COMPATIBILITY CHECK!")
 
-function vehicleMeta:keysOwn(_p)
-    self.liaAccess = self.liaAccess or {}
-    self.liaAccess[_p] = 3
+        if isNutGlobalUsed() then
+            nut = nut or {}
+            nut.util = nut.util or {}
+            nut.data = nut.data or {}
+            nut.config = nut.config or {}
+            nut.config.stored = nut.config.stored or {}
+            nut.data.set = NutDataSet
+            nut.data.get = NutDataGet
+            nut.data.delete = NutDataDelete
+            nut.util.include = NutIncludeFile
+            nut.util.includeDir = NutIncludeFile
+            nut.util.getAdmins = NutGetAdmins
+            nut.util.isSteamID = NutIsSteamID
+            nut.util.findPlayer = NutFindPlayer
+            nut.util.gridVector = NutGetGridVector
+            nut.util.getMaterial = NutGetMaterial
+            nut.config.add = NutConfigAdd
+            nut.config.setDefault = NutConfigSetDefault
+            nut.config.forceSet = NutConfigForceSet
+            nut.config.set = NutConfigSet
+            nut.config.get = NutConfigGet
+            print("[COMPATIBILITY] FOUND NUT!")
+        elseif isIxGlobalUsed() then
+            ix = ix or {}
+            ix.util = ix.util or {}
+            ix.data = ix.data or {}
+            ix.config = ix.config or {}
+            ix.config.stored = ix.config.stored or {}
+            ix.data.Set = HelixDataSet
+            ix.data.Set = HelixDataGet
+            ix.data.Delete = HelixDataDelete
+            ix.util.Include = HelixIncludeFile
+            ix.util.IncludeDir = HelixIncludeFile
+            ix.util.GetAdmins = HelixGetAdmins
+            ix.util.IsSteamID = HelixIsSteamID
+            ix.util.FindPlayer = HelixFindPlayer
+            ix.util.GridVector = HelixGetGridVector
+            ix.util.GetMaterial = HelixGetMaterial
+            ix.config.Add = HelixConfigAdd
+            ix.config.SetDefault = HelixConfigSetDefault
+            ix.config.ForceSet = HelixConfigForceSet
+            ix.config.Set = HelixConfigSet
+            ix.config.Get = HelixConfigGet
+            print("[COMPATIBILITY] FOUND IX!")
+        elseif isDarkRPGlobalUsed() then
+            print("[COMPATIBILITY] FOUND DARKRP!")
+        end
+    end)
 end
-
-DarkRP.formatMoney = function(x)
-    return lia.currency.get .. string.Comma(x)
-end
-
-function DarkRP.notify(ply, msgtype, len, msg)
-    if type(ply) ~= "table" and not IsValid(ply) then return end
-    umsg.Start("_Notify", ply)
-    umsg.String(msg)
-    umsg.Short(msgtype)
-    umsg.Long(len)
-    umsg.End()
-end
------------------Helix ----------------
