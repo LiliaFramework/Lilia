@@ -28,6 +28,7 @@ function PLUGIN:InitializedPlugins()
 
         if isNutGlobalUsed() then
             nut = lia or {}
+            --[[
             nut.util = nut.util or {}
             nut.data = nut.data or {}
             nut.config = nut.config or {}
@@ -57,13 +58,15 @@ function PLUGIN:InitializedPlugins()
             nut.config.setDefault = NutConfigSetDefault
             nut.config.forceSet = NutConfigForceSet
             nut.config.set = NutConfigSet
-            nut.config.get = NutConfigGet
+            nut.config.get = NutConfigGet]]
             print("[COMPATIBILITY] FOUND NUT!")
         elseif isIxGlobalUsed() then
             ix = ix or {}
             ix.util = ix.util or {}
             ix.data = ix.data or {}
             ix.config = ix.config or {}
+            ix.class = ix.class or {}
+            ix.class.list = ix.class.list or {}
             ix.config.stored = ix.config.stored or {}
             ix.data.Set = HelixDataSet
             ix.data.Set = HelixDataGet
@@ -91,6 +94,10 @@ function PLUGIN:InitializedPlugins()
             ix.config.ForceSet = HelixConfigForceSet
             ix.config.Set = HelixConfigSet
             ix.config.Get = HelixConfigGet
+            ix.class.LoadFromDir = HelixLoadClass
+            ix.class.CanSwitchTo = HelixCanSwitchTo
+            ix.class.Get = HelixGetClass
+            ix.class.GetPlayers = HelixGetPlayers
             print("[COMPATIBILITY] FOUND IX!")
         end
     end)

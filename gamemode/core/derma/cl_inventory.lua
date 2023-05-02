@@ -1,4 +1,4 @@
-NS_ICON_SIZE = 64
+LIA_ICON_SIZE = 64
 -- The queue for the rendered icons.
 renderedIcons = renderedIcons or {}
 
@@ -89,7 +89,7 @@ end
 
 function PANEL:Init()
     self:Droppable("inv")
-    self:SetSize(NS_ICON_SIZE, NS_ICON_SIZE)
+    self:SetSize(LIA_ICON_SIZE, LIA_ICON_SIZE)
 end
 
 --[[ function PANEL:Think()

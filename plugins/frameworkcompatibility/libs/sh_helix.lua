@@ -105,3 +105,20 @@ end
 function HelixDateToNumber(str)
     lia.util.dateToNumber(str)
 end
+
+--///////////// CLASS /////////////// 
+function HelixLoadClass(directory)
+    lia.class.loadFromDir(directory)
+end
+
+function HelixGetClass(identifier)
+    lia.class.get(identifier)
+end
+
+function HelixGetPlayers(class)
+    lia.class.getPlayers(class)
+end
+
+function HelixCanSwitchTo(client, class)
+    lia.class.canBe(client, class)
+end

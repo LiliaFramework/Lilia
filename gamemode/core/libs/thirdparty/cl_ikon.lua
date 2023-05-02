@@ -1,5 +1,5 @@
 /*
-	BLACK TEA ICON LIBRARY FOR Lilia 1.1
+	BLACK TEA ICON LIBRARY FOR Nuscript 1.1
 
 	The MIT License (MIT)
 

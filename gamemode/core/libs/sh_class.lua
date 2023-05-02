@@ -1,11 +1,5 @@
 lia.class = lia.class or {}
 lia.class.list = {}
-ix.class = lia.class or {}
-ix.class.list = lia.class.list or {}
-
-function ix.class.LoadFromDir(directory)
-    lia.class.loadFromDir(directory)
-end
 
 -- Register classes from a directory.
 function lia.class.loadFromDir(directory)
@@ -53,9 +47,7 @@ function lia.class.loadFromDir(directory)
 
         -- Allow classes to be joinable by default.
         if not CLASS.onCanBe then
-            CLASS.onCanBe = function(client)
-                return true
-            end
+            CLASS.onCanBe = function(client) return true end
         end
 
         -- Add the class to the list of classes.
@@ -85,20 +77,8 @@ function lia.class.canBe(client, class)
     return info:onCanBe(client)
 end
 
-function ix.class.CanSwitchTo(client, class)
-    lia.class.canBe(client, class)
-end
-
-function ix.class.Get(identifier)
-    lia.class.get(identifier)
-end
-
 function lia.class.get(identifier)
     return lia.class.list[identifier]
-end
-
-function ix.class.GetPlayers(class)
-    lia.class.getPlayers(class)
 end
 
 function lia.class.getPlayers(class)
