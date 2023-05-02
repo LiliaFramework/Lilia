@@ -1,12 +1,5 @@
-ix = ix or {}
 lia.config = lia.config or {}
-ix.config = ix.config or {}
-ix.config.stored = ix.config.stored or {}
 lia.config.stored = lia.config.stored or {}
-
-function ix.config.Add(key, value, desc, callback, data, noNetworking, schemaOnly)
-    lia.config.add(key, value, desc, callback, data, noNetworking, schemaOnly)
-end
 
 function lia.config.add(key, value, desc, callback, data, noNetworking, schemaOnly)
     assert(isstring(key), "expected config key to be string, got " .. type(key))
@@ -23,20 +16,12 @@ function lia.config.add(key, value, desc, callback, data, noNetworking, schemaOn
     }
 end
 
-function ix.config.SetDefault(key, value)
-    lia.config.setDefault(key, value)
-end
-
 function lia.config.setDefault(key, value)
     local config = lia.config.stored[key]
 
     if config then
         config.default = value
     end
-end
-
-function ix.config.ForceSet(key, value, noSave)
-    lia.config.forceSet(key, value, noSave)
 end
 
 function lia.config.forceSet(key, value, noSave)
@@ -49,10 +34,6 @@ function lia.config.forceSet(key, value, noSave)
     if noSave then
         lia.config.save()
     end
-end
-
-function ix.config.Set(key, value)
-    lia.config.set(key, value)
 end
 
 function lia.config.set(key, value)
@@ -74,10 +55,6 @@ function lia.config.set(key, value)
             lia.config.save()
         end
     end
-end
-
-function ix.config.Get(key, default)
-    lia.config.get(key, default)
 end
 
 function lia.config.get(key, default)
