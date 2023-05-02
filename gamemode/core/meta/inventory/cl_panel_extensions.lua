@@ -1,6 +1,10 @@
 local PANEL = FindMetaTable("Panel")
 
 -- Make it so the panel hooks below run when the inventory hooks do.
+function PANEL:nutListenForInventoryChanges(inventory)
+    self:liaListenForInventoryChanges(inventory)
+end
+
 function PANEL:liaListenForInventoryChanges(inventory)
     assert(inventory, "No inventory has been set!")
     local id = inventory:getID()
