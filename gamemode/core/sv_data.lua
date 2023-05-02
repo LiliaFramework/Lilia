@@ -1,13 +1,7 @@
 lia.data = lia.data or {}
-ix.data = ix.data or {}
 lia.data.stored = lia.data.stored or {}
 -- Create a folder to store data in.
 file.CreateDir("lilia")
-
--- Set and save data in the lilia folder.
-function ix.data.Set(key, value, global, ignoreMap)
-    lia.data.set(key, value, global, ignoreMap)
-end
 
 function lia.data.set(key, value, global, ignoreMap)
     -- Get the base path to write to.
@@ -29,10 +23,6 @@ function lia.data.set(key, value, global, ignoreMap)
     lia.data.stored[key] = value
 
     return path
-end
-
-function ix.data.Get(key, default, global, ignoreMap, refresh)
-    lia.data.get(key, default, global, ignoreMap, refresh)
 end
 
 -- Gets a piece of information for Lilia.
@@ -71,11 +61,6 @@ function lia.data.get(key, default, global, ignoreMap, refresh)
     -- If we provided a default, return that since we couldn't retrieve
     -- the data.
 end
-
-function ix.data.Delete(key, global, ignoreMap)
-    lia.data.delete(key, global, ignoreMap)
-end
-
 -- Deletes existing data in lilia framework.
 function lia.data.delete(key, global, ignoreMap)
     -- Get the path to read from.
