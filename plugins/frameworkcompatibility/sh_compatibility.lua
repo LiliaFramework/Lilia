@@ -70,8 +70,5 @@ function PLUGIN:InitializedPlugins()
             ix.config.Set = HelixConfigSet
             ix.config.Get = HelixConfigGet
             print("[COMPATIBILITY] FOUND IX!")
-        elseif isDarkRPGlobalUsed() then
-            print("[COMPATIBILITY] FOUND DARKRP!")
-        end
     end)
 end
