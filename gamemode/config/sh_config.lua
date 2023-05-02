@@ -216,7 +216,7 @@ end, {
     }
 })
 
-lia.config.add("contentURL", "http://lilia.net/", "Your server's collection pack.", nil, {
+lia.config.add("contentURL", "https://discord.gg/HmfaJ9brfz", "Your server's collection pack.", nil, {
     category = "server"
 })
 
