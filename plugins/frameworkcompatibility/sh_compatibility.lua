@@ -27,7 +27,7 @@ function PLUGIN:InitializedPlugins()
         print("STARTED COMPATIBILITY CHECK!")
 
         if isNutGlobalUsed() then
-            nut = nut or {}
+            nut = lia or {}
             nut.util = nut.util or {}
             nut.data = nut.data or {}
             nut.config = nut.config or {}
@@ -42,6 +42,17 @@ function PLUGIN:InitializedPlugins()
             nut.util.findPlayer = NutFindPlayer
             nut.util.gridVector = NutGetGridVector
             nut.util.getMaterial = NutGetMaterial
+            nut.util.drawBlur = NutDrawBlur
+            nut.util.drawBlurAt = NutDrawBlurAt
+            nut.util.drawText = NutDrawText
+            nut.util.wrapText = NutWrapText
+            nut.util.notify = NutNotify
+            nut.util.notifyLocalized = NutNotifyLocalized
+            nut.util.emitQueuedSounds = NutEmitQueueSounds
+            nut.util.stringMatches = NutStringMatches
+            nut.util.getUTCTime = NutGetUTCTime
+            nut.util.getStringTime = NutGetStringTime
+            nut.util.dateToNumber = NutDateToNumber
             nut.config.add = NutConfigAdd
             nut.config.setDefault = NutConfigSetDefault
             nut.config.forceSet = NutConfigForceSet
@@ -64,11 +75,23 @@ function PLUGIN:InitializedPlugins()
             ix.util.FindPlayer = HelixFindPlayer
             ix.util.GridVector = HelixGetGridVector
             ix.util.GetMaterial = HelixGetMaterial
+            ix.util.drawBlur = HelixDrawBlur
+            ix.util.drawBlurAt = HelixDrawBlurAt
+            ix.util.drawText = HelixDrawText
+            ix.util.wrapText = HelixWrapText
+            ix.util.notify = HelixNotify
+            ix.util.notifyLocalized = HelixNotifyLocalized
+            ix.util.emitQueuedSounds = HelixEmitQueueSounds
+            ix.util.stringMatches = HelixStringMatches
+            ix.util.getUTCTime = HelixGetUTCTime
+            ix.util.getStringTime = HelixGetStringTime
+            ix.util.dateToNumber = HelixDateToNumber
             ix.config.Add = HelixConfigAdd
             ix.config.SetDefault = HelixConfigSetDefault
             ix.config.ForceSet = HelixConfigForceSet
             ix.config.Set = HelixConfigSet
             ix.config.Get = HelixConfigGet
             print("[COMPATIBILITY] FOUND IX!")
+        end
     end)
 end

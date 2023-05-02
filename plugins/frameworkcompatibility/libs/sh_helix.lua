@@ -60,3 +60,48 @@ end
 function HelixConfigGet(key, default)
     lia.config.get(key, default)
 end
+
+--///////////// EXTRA /////////////// 
+function HelixDrawBlur(panel, amount, passes)
+    lia.util.drawBlur(panel, amount, passes)
+end
+
+function HelixDrawBlurAt(x, y, w, h, amount, passes)
+    lia.util.drawBlurAt(x, y, w, h, amount, passes)
+end
+
+function HelixDrawText(text, x, y, color, alignX, alignY, font, alpha)
+    lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
+end
+
+function HelixWrapText(text, width, font)
+    lia.util.wrapText(text, width, font)
+end
+
+function HelixNotify(message)
+    lia.util.notify(message)
+end
+
+function HelixNotifyLocalized(message, ...)
+    lia.util.notifyLocalized(message, ...)
+end
+
+function HelixEmitQueueSounds(entity, sounds, delay, spacing, volume, pitch)
+    lia.util.emitQueuedSounds(entity, sounds, delay, spacing, volume, pitch)
+end
+
+function HelixStringMatches(a, b)
+    lia.util.stringMatches(a, b)
+end
+
+function HelixGetUTCTime()
+    lia.util.getUTCTime()
+end
+
+function HelixGetStringTime(text)
+    lia.util.getStringTime(text)
+end
+
+function HelixDateToNumber(str)
+    lia.util.dateToNumber(str)
+end

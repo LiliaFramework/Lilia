@@ -61,3 +61,47 @@ function NutConfigGet(key, default)
     lia.config.get(key, default)
 end
 
+--///////////// EXTRA /////////////// 
+function NutDrawBlur(panel, amount, passes)
+    lia.util.drawBlur(panel, amount, passes)
+end
+
+function NutDrawBlurAt(x, y, w, h, amount, passes)
+    lia.util.drawBlurAt(x, y, w, h, amount, passes)
+end
+
+function NutDrawText(text, x, y, color, alignX, alignY, font, alpha)
+    lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
+end
+
+function NutWrapText(text, width, font)
+    lia.util.wrapText(text, width, font)
+end
+
+function NutNotify(message)
+    lia.util.notify(message)
+end
+
+function NutNotifyLocalized(message, ...)
+    lia.util.notifyLocalized(message, ...)
+end
+
+function NutEmitQueueSounds(entity, sounds, delay, spacing, volume, pitch)
+    lia.util.emitQueuedSounds(entity, sounds, delay, spacing, volume, pitch)
+end
+
+function NutStringMatches(a, b)
+    lia.util.stringMatches(a, b)
+end
+
+function NutGetUTCTime()
+    lia.util.getUTCTime()
+end
+
+function NutGetStringTime(text)
+    lia.util.getStringTime(text)
+end
+
+function NutDateToNumber(str)
+    lia.util.dateToNumber(str)
+end

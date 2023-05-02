@@ -1,5 +1,9 @@
 local PANEL = FindMetaTable("Panel")
 
+function PANEL:nutListenForInventoryChanges(inventory)
+    self:liaListenForInventoryChanges(inventory)
+end
+
 -- Make it so the panel hooks below run when the inventory hooks do.
 function PANEL:nutListenForInventoryChanges(inventory)
     self:liaListenForInventoryChanges(inventory)
@@ -54,6 +58,10 @@ function PANEL:liaListenForInventoryChanges(inventory)
     table.insert(self.liaToRemoveHooks[id], "ItemDataChanged")
 end
 
+function PANEL:nutDeleteInventoryHooks(id)
+    self:liaDeleteInventoryHooks(id)
+end
+
 -- Cleans up all the hooks created by listenForInventoryChanges()
 function PANEL:liaDeleteInventoryHooks(id)
     -- If there are no hooks added, do nothing.
@@ -83,8 +91,6 @@ function PANEL:liaDeleteInventoryHooks(id)
 
     self.liaToRemoveHooks[id] = nil
 end
-
-local PANEL = FindMetaTable("Panel")
 
 -- Make it so the panel hooks below run when the inventory hooks do.
 function PANEL:ixListenForInventoryChanges(inventory)

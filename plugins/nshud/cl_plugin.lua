@@ -13,7 +13,7 @@ local hookRun = hook.Run
 local toScreen = FindMetaTable("Vector").ToScreen
 
 function PLUGIN:CanDrawAmmoHUD(weapon)
-    return IsValid(weapon) and weapon.DrawAmmo ~= false
+    return IsValid(weapon) and weapon.DrawAmmo ~= false and LocalPlayer():Alive()
 end
 
 function PLUGIN:DrawAmmoHUD(weapon)
@@ -75,6 +75,7 @@ paintedEntitiesCache = {}
 
 function PLUGIN:DrawEntityInfo(entity, alpha, position)
     if not entity.IsPlayer(entity) then return end
+    if not entity:Alive() then return end
     if hookRun("ShouldDrawPlayerInfo", entity) == false then return end
     local localPlayer = LocalPlayer()
     local character = entity.getChar(entity)
@@ -202,14 +203,6 @@ function PLUGIN:HUDDrawTargetID()
     return false
 end
 
-hook.Add("ShouldHideBars", "hideBars", function()
-    return lia.config.get("BarsEnabled", true)
-end)
-
-hook.Add("CanDrawAmmoHUD", "hideAmmo", function()
-    return lia.config.get("AmmoDrawEnabled", true)
-end)
-
-hook.Add("ShouldDrawCrosshair", "hideCrosshair", function()
-    return lia.config.get("CrosshairEnabled", false)
-end)
+hook.Add("ShouldHideBars", "hideBars", function() return lia.config.get("BarsEnabled", true) end)
+hook.Add("CanDrawAmmoHUD", "hideAmmo", function() return lia.config.get("AmmoDrawEnabled", true) end)
+hook.Add("ShouldDrawCrosshair", "hideCrosshair", function() return lia.config.get("CrosshairEnabled", false) end)
