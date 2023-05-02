@@ -8,7 +8,6 @@ CHAR.__index = CHAR
 CHAR.id = CHAR.id or 0
 CHAR.vars = CHAR.vars or {}
 debug.getregistry().Character = lia.meta.character -- hi mark
-ix.char = ix.char or {}
 
 -- Called when the character is being printed as a string.
 function CHAR:__tostring()
@@ -502,66 +501,6 @@ function lia.char.registerVar(key, data)
     CHAR.vars[key] = data.default
 end
 
-function ix.char.RegisterVar(key, data)
-    -- Store information for the variable.
-    lia.char.vars[key] = data
-    data.index = data.index or table.Count(lia.char.vars)
-    -- Convert the name of the variable to be capitalized.
-    local upperName = key:sub(1, 1):upper() .. key:sub(2)
-
-    -- Provide functions to change the variable if allowed.
-    if SERVER and not data.isNotModifiable then
-        -- Overwrite the set function if desired.
-        if data.onSet then
-            CHAR["set" .. upperName] = data.onSet
-            -- Have the set function only set on the server if no networking.
-        elseif data.noNetworking then
-            CHAR["set" .. upperName] = function(self, value)
-                self.vars[key] = value
-            end
-        elseif data.isLocal then
-            -- If the variable is a local one, only send the variable to the local player.
-            CHAR["set" .. upperName] = function(self, value)
-                local curChar = self:getPlayer() and self:getPlayer():getChar()
-                local sendID = true
-
-                if curChar and curChar == self then
-                    sendID = false
-                end
-
-                local oldVar = self.vars[key]
-                self.vars[key] = value
-                netstream.Start(self.player, "charSet", key, value, sendID and self:getID() or nil)
-                hook.Run("OnCharVarChanged", self, key, oldVar, value)
-            end
-        else -- Otherwise network the variable to everyone.
-            CHAR["set" .. upperName] = function(self, value)
-                local oldVar = self.vars[key]
-                self.vars[key] = value
-                netstream.Start(nil, "charSet", key, value, self:getID())
-                hook.Run("OnCharVarChanged", self, key, oldVar, value)
-            end
-        end
-    end
-
-    -- The get functions are shared.
-    -- Overwrite the get function if desired.
-    if data.onGet then
-        CHAR["get" .. upperName] = data.onGet
-        -- Otherwise return the character variable or default if it does not exist.
-    else
-        CHAR["get" .. upperName] = function(self, default)
-            local value = self.vars[key]
-            if value ~= nil then return value end
-            if default == nil then return lia.char.vars[key] and lia.char.vars[key].default or nil end
-
-            return default
-        end
-    end
-
-    -- Add the variable default to the character object.
-    CHAR.vars[key] = data.default
-end
 
 -- Allows access to the character metatable using lia.meta.character
 lia.meta.character = CHAR

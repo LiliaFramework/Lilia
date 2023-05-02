@@ -65,6 +65,7 @@ function PLUGIN:InitializedPlugins()
             ix.util = ix.util or {}
             ix.data = ix.data or {}
             ix.config = ix.config or {}
+            ix.char = ix.char or {}
             ix.class = ix.class or {}
             ix.class.list = ix.class.list or {}
             ix.config.stored = ix.config.stored or {}
@@ -96,9 +97,17 @@ function PLUGIN:InitializedPlugins()
             ix.config.Get = HelixConfigGet
             ix.class.LoadFromDir = HelixLoadClass
             ix.class.CanSwitchTo = HelixCanSwitchTo
+
+            
+            ix.char.RegisterVar= HelixRegisterVar
             ix.class.Get = HelixGetClass
             ix.class.GetPlayers = HelixGetPlayers
             print("[COMPATIBILITY] FOUND IX!")
+        elseif isDarkRPGlobalUsed() then
+
+        hook.Run("VerifyDarkRP")
+        print("[COMPATIBILITY] FOUND DARKRP!")
+
         end
     end)
 end

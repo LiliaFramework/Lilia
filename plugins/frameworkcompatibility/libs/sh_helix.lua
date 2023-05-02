@@ -122,3 +122,8 @@ end
 function HelixCanSwitchTo(client, class)
     lia.class.canBe(client, class)
 end
+
+--///////////// CHAR /////////////// 
+function HelixRegisterVar(key, data)
+    lia.char.registerVar(key, data)
+end
