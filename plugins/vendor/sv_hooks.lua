@@ -8,7 +8,7 @@ local owner2 = {
 
 function PLUGIN:CanPlayerAccessVendor(client, vendor)
     local uniqueID = client:GetUserGroup()
-    if UserGroups.superRanks[uniqueID] then return true end
+    if client:IsSuperAdmin() then return true end
     local character = client:getChar()
     if vendor:isClassAllowed(character:getClass()) then return true end
     if vendor:isFactionAllowed(client:Team()) then return true end

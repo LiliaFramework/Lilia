@@ -31,7 +31,7 @@ local owner2 = {
 net.Receive("liaVendorEdit", function(_, client)
     local key = net.ReadString()
     local uniqueID = client:GetUserGroup()
-    if not UserGroups.superRanks[uniqueID] then return end
+    if not client:IsSuperAdmin() then return end
     local vendor = client.liaVendor
     if not IsValid(vendor) or not EDITOR[key] then return end
     EDITOR[key](vendor, client, key)

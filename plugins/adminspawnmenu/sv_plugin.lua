@@ -5,7 +5,7 @@ util.AddNetworkString("SpawnMenuWarn")
 net.Receive("LiliaResetVariables2", function(len, client)
     local uniqueID = client:GetUserGroup()
 
-    if not UserGroups.uaRanks[uniqueID] then
+    if not client:IsSuperAdmin()then
         client:notify("Your rank is not high enough to use this command.")
 
         return false
@@ -25,7 +25,7 @@ lia.command.add("adminspawnmenu", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.uaRanks[uniqueID] then
+        if not client:IsSuperAdmin()then
             client:notify("Your rank is not high enough to use this command.")
 
             return false

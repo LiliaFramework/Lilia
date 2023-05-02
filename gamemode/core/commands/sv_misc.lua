@@ -43,7 +43,7 @@ lia.command.add("announce", {
         if not arguments[1] then return "Invalid argument (#1)" end
         local message = table.concat(arguments, " ", 1)
 
-        if not UserGroups.modRanks[uniqueID] then
+        if not client:IsAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -61,7 +61,7 @@ lia.command.add("checkinventory", {
     syntax = "<string target>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if not UserGroups.adminRanks[client:GetUserGroup()] then return "This command is only available to Admin+" end
+        if not client:IsSuperAdmin()then return "This command is only available to Admin+" end
 
         if IsValid(target) and target:getChar() and target ~= client then
             local inventory = target:getChar():getInv()

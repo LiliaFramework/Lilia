@@ -4,7 +4,7 @@ lia.command.add("freezeallprops", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.adminRanks[uniqueID] then
+        if not client:IsAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -27,7 +27,7 @@ lia.command.add("clearinv", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.uaRanks[uniqueID] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -52,7 +52,7 @@ lia.command.add("flaggive", {
         local target = lia.command.findPlayer(client, arguments[1])
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.uaRanks[uniqueID] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -61,7 +61,7 @@ lia.command.add("flaggive", {
         if IsValid(target) and target:getChar() then
             local flags = arguments[2]
 
-            if (flags == "l" or flags == "y" or flags == "b" or flags == "ybl" or flags == "lby" or flags == "byl") and not UserGroups.uaRanks[uniqueID] then
+            if (flags == "l" or flags == "y" or flags == "b" or flags == "ybl" or flags == "lby" or flags == "byl") and not client:IsSuperAdmin() then
                 client:notify("No permission!")
 
                 return false
@@ -96,7 +96,7 @@ lia.command.add("flagtake", {
         local target = lia.command.findPlayer(client, arguments[1])
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.uaRanks[uniqueID] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -125,7 +125,7 @@ lia.command.add("flags", {
         local target = lia.command.findPlayer(client, arguments[1])
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.uaRanks[uniqueID] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -142,7 +142,7 @@ lia.command.add("findallflags", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.founderRanks[uniqueID] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -159,7 +159,7 @@ lia.command.add("musicstopglobal", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.uaRanks[uniqueID] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -178,7 +178,7 @@ lia.command.add("clearchat", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.adminRanks[uniqueID] then
+        if not client:IsAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false

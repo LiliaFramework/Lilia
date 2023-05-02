@@ -309,7 +309,7 @@ function ENT:sync(client)
     net.Send(client)
     local uniqueID = client:GetUserGroup()
 
-    if UserGroups.superRanks[uniqueID] then
+    if client:IsSuperAdmin() then
         for factionID in pairs(self.factions) do
             net.Start("liaVendorAllowFaction")
             net.WriteUInt(factionID, 8)

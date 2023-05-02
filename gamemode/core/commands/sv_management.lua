@@ -4,7 +4,7 @@ lia.command.add("charsetdesc", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.modRanks[uniqueID] then
+        if not client:IsAdmin()then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -36,7 +36,7 @@ lia.command.add("charsetattrib", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.superRanks[uniqueID] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -72,7 +72,7 @@ lia.command.add("charaddattrib", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.superRanks[uniqueID] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -108,7 +108,7 @@ lia.command.add("plytransfer", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.trustedRanks[uniqueID] then
+        if not client:IsAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -153,7 +153,7 @@ lia.command.add("charsetname", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.trustedRanks[uniqueID] then
+        if not client:IsAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -184,7 +184,7 @@ lia.command.add("charsetmodel", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.trustedRanks[uniqueID] then
+        if not client:IsAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -208,7 +208,7 @@ lia.command.add("charsetskin", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.trustedRanks[uniqueID] then
+        if not client:IsAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -232,7 +232,7 @@ lia.command.add("charsetbodygroup", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.trustedRanks[uniqueID] then
+        if not client:IsAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -268,7 +268,7 @@ lia.command.add("charban", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.uaRanks[uniqueID] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -304,7 +304,7 @@ lia.command.add("charselectskin", {
         local skin = tonumber(arguments[1])
         local target = client
 
-        if not UserGroups.uaRanks[uniqueID] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -326,7 +326,7 @@ lia.command.add("charselectbodygroup", {
         local value = tonumber(arguments[2])
         local target = lia.command.findPlayer(client, arguments[1])
 
-        if not UserGroups.uaRanks[uniqueID] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -366,7 +366,7 @@ lia.command.add("charforceunequip", {
         local uniqueID = client:GetUserGroup()
         local target = lia.command.findPlayer(client, arguments[1])
 
-        if not UserGroups.uaRanks[uniqueID] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -390,7 +390,7 @@ lia.command.add("chargetmoney", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.modRanks[uniqueID] then
+        if not client:IsAdmin()then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -413,7 +413,7 @@ lia.command.add("chargetmodel", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.modRanks[uniqueID] then
+        if not client:IsAdmin()then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -435,7 +435,7 @@ lia.command.add("checkallmoney", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.uaRanks[uniqueID] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -455,7 +455,7 @@ lia.command.add("bringlostitems", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.uaRanks[uniqueID] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -475,7 +475,7 @@ lia.command.add("logs", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.modRanks[uniqueID] then
+        if not client:IsAdmin()then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -491,7 +491,7 @@ lia.command.add("chargiveitem", {
     onRun = function(client, arguments)
         local rank = client:GetUserGroup()
 
-        if not UserGroups.uaRanks[rank] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -535,7 +535,7 @@ lia.command.add("charsetmoney", {
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.superRanks[uniqueID] then
+        if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
