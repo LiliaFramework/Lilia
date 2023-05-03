@@ -97,8 +97,6 @@ function PLUGIN:InitializedPlugins()
             ix.config.Get = HelixConfigGet
             ix.class.LoadFromDir = HelixLoadClass
             ix.class.CanSwitchTo = HelixCanSwitchTo
-
-            
             ix.char.RegisterVar= HelixRegisterVar
             ix.class.Get = HelixGetClass
             ix.class.GetPlayers = HelixGetPlayers
