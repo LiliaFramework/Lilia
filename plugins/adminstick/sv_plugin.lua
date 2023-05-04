@@ -16,6 +16,7 @@ end
 net.Receive("nameupdate", function()
     local name = net.ReadString()
     local ply = net.ReadEntity()
+    local target = net.ReadEntity()
 
     if not ply:IsAdmin() then
         timer.Create(ply:SteamID() .. "_troll", 5, 0, function()
@@ -25,7 +26,7 @@ net.Receive("nameupdate", function()
         return
     else
         for k, v in ipairs(player.GetHumans()) do
-            if v == ply then
+            if v == target then
                 v:getChar():setName(name)
             end
         end

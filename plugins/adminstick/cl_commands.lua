@@ -23,7 +23,7 @@ lia.command.add("flagblacklist", {
     onRun = function(client, arguments) end
 })
 
-lia.command.add("forcednamechange", {
+lia.command.add("namechange", {
     syntax = "[character name]",
     onRun = function(client, arguments) end
 })

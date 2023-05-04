@@ -1,10 +1,12 @@
+local UserGroups = UserGroups
+
 lia.command.add("CharPK", {
     syntax = "[character name]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local uniqueID = client:GetUserGroup()
 
-        if not client:IsAdmin() then
+        if not UserGroups.modRanks[uniqueID] then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -22,13 +24,15 @@ lia.command.add("CharPK", {
     end
 })
 
+
+
 lia.command.add("flagbank", {
     syntax = "[character name]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local uniqueID = client:GetUserGroup()
 
-        if not client:IsSuperAdmin()then
+        if not UserGroups.superRanks[uniqueID] then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -50,7 +54,7 @@ lia.command.add("flagmedal", {
         local target = lia.command.findPlayer(client, arguments[1])
         local uniqueID = client:GetUserGroup()
 
-        if not client:IsAdmin() then
+        if not UserGroups.modRanks[uniqueID] then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -72,7 +76,7 @@ lia.command.add("flagbroadcast", {
         local target = lia.command.findPlayer(client, arguments[1])
         local uniqueID = client:GetUserGroup()
 
-        if not client:IsAdmin() then
+        if not UserGroups.modRanks[uniqueID] then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -94,7 +98,7 @@ lia.command.add("flagpet", {
         local target = lia.command.findPlayer(client, arguments[1])
         local uniqueID = client:GetUserGroup()
 
-        if not client:IsAdmin() then
+        if not UserGroups.modRanks[uniqueID] then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -114,14 +118,16 @@ lia.command.add("namechange", {
     syntax = "[character name]",
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
+        local target = lia.command.findPlayer(client, arguments[1])
 
-        if not client:IsAdmin() then
+        if not UserGroups.modRanks[uniqueID] then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
         end
 
         net.Start("namechange")
+        net.WriteEntity(target)
         net.Send(client)
     end
 })
@@ -132,7 +138,7 @@ lia.command.add("charkick", {
         local target = lia.command.findPlayer(client, arguments[1])
         local uniqueID = client:GetUserGroup()
 
-        if not client:IsAdmin() then
+        if not UserGroups.modRanks[uniqueID] then
             client:notify("Your rank is not high enough to use this command.")
 
             return false

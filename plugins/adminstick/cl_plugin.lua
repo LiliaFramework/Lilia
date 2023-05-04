@@ -252,6 +252,13 @@ function AdminStick:OpenAdminStickUI(isright, target)
 
         desc:SetIcon("icon16/user_gray.png")
 
+        local checkinventory = characterInfo:AddOption("Search Inventory", function()
+            RunConsoleCommand("say", "/checkinventory " .. target:SteamID())
+            AdminStick.IsOpen = false
+        end)
+
+        checkinventory:SetIcon("icon16/user_gray.png")
+
         local desc4 = characterInfo:AddOption("Change Description", function()
             RunConsoleCommand("say", "/charsetdesc " .. target:SteamID())
             AdminStick.IsOpen = false
@@ -514,10 +521,15 @@ function AdminStick:OpenAdminStickUI(isright, target)
 end
 
 net.Receive("namechange", function()
-    Derma_StringRequest("Change Name", "Change your name.", "", function(text)
-        net.Start("nameupdate")
-        net.WriteString(text)
-        net.WriteEntity(LocalPlayer())
-        net.SendToServer()
-    end, function(text) end)
+    local entity = net.ReadEntity()
+
+    if LocalPlayer():IsAdmin() then
+        Derma_StringRequest("Change Name", "Change this player name.", "", function(text)
+            net.Start("nameupdate")
+            net.WriteString(text)
+            net.WriteEntity(LocalPlayer())
+            net.WriteEntity(entity)
+            net.SendToServer()
+        end, function(text) end)
+    end
 end)
