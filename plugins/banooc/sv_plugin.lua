@@ -1,6 +1,5 @@
 local PLUGIN = PLUGIN
 
-
 function PLUGIN:SaveData()
     self:setData(self.oocBans)
 end
@@ -16,8 +15,7 @@ end
 lia.command.add("banooc", {
     syntax = "<string target>",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1]) or client
-        local uniqueID = client:GetUserGroup()
+        local target = lia.command.findPlayer(client, arguments[1])
 
         if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
@@ -37,8 +35,7 @@ lia.command.add("banooc", {
 lia.command.add("unbanooc", {
     syntax = "<string target>",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1]) or client
-        local uniqueID = client:GetUserGroup()
+        local target = lia.command.findPlayer(client, arguments[1])
 
         if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
