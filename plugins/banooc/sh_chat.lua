@@ -38,7 +38,7 @@ lia.chat.register("ooc", {
         icon = Material(hook.Run("GetPlayerIcon", speaker) or icon)
         chat.AddText(icon, Color(255, 50, 50), " [OOC] ", speaker, color_white, ": " .. text)
     end,
-    prefix = {"/", "/ooc"},
+    prefix = {"//", "/ooc"},
     noSpaceAfter = true,
     filter = "ooc"
 })
