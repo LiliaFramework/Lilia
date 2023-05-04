@@ -1,4 +1,4 @@
-lia.config.add("BarsEnabled", true, "Whether or not Bars is enabled.", nil, {
+lia.config.add("BarsDisabled", false, "Whether or not Bars is enabled.", nil, {
     category = PLUGIN.name
 })
 
