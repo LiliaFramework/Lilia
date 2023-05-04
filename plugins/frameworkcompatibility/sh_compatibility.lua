@@ -69,43 +69,43 @@ function PLUGIN:InitializedPlugins()
             ix.class = ix.class or {}
             ix.class.list = ix.class.list or {}
             ix.config.stored = ix.config.stored or {}
-            ix.data.Set = HelixDataSet
-            ix.data.Set = HelixDataGet
-            ix.data.Delete = HelixDataDelete
-            ix.util.Include = HelixIncludeFile
-            ix.util.IncludeDir = HelixIncludeFile
-            ix.util.GetAdmins = HelixGetAdmins
-            ix.util.IsSteamID = HelixIsSteamID
-            ix.util.FindPlayer = HelixFindPlayer
-            ix.util.GridVector = HelixGetGridVector
-            ix.util.GetMaterial = HelixGetMaterial
-            ix.util.drawBlur = HelixDrawBlur
-            ix.util.drawBlurAt = HelixDrawBlurAt
-            ix.util.drawText = HelixDrawText
-            ix.util.wrapText = HelixWrapText
-            ix.util.notify = HelixNotify
-            ix.util.notifyLocalized = HelixNotifyLocalized
-            ix.util.emitQueuedSounds = HelixEmitQueueSounds
-            ix.util.stringMatches = HelixStringMatches
-            ix.util.getUTCTime = HelixGetUTCTime
-            ix.util.getStringTime = HelixGetStringTime
-            ix.util.dateToNumber = HelixDateToNumber
-            ix.config.Add = HelixConfigAdd
-            ix.config.SetDefault = HelixConfigSetDefault
-            ix.config.ForceSet = HelixConfigForceSet
-            ix.config.Set = HelixConfigSet
-            ix.config.Get = HelixConfigGet
-            ix.class.LoadFromDir = HelixLoadClass
-            ix.class.CanSwitchTo = HelixCanSwitchTo
-            ix.char.RegisterVar= HelixRegisterVar
-            ix.class.Get = HelixGetClass
-            ix.class.GetPlayers = HelixGetPlayers
+            ix.data.Set = HelixDataSet()
+            ix.data.Set = HelixDataGet()
+            ix.data.Delete = HelixDataDelete()
+            ix.util.Include = HelixIncludeFile()
+            ix.util.IncludeDir = HelixIncludeFile()
+            ix.util.GetAdmins = HelixGetAdmins()
+            ix.util.IsSteamID = HelixIsSteamID()
+            ix.util.FindPlayer = HelixFindPlayer()
+            ix.util.GridVector = HelixGetGridVector()
+            ix.util.GetMaterial = HelixGetMaterial()
+            ix.util.drawBlur = HelixDrawBlur()
+            ix.util.drawBlurAt = HelixDrawBlurAt()
+            ix.util.drawText = HelixDrawText()
+            ix.util.wrapText = HelixWrapText()
+            ix.util.notify = HelixNotify()
+            ix.util.notifyLocalized = HelixNotifyLocalized()
+            ix.util.emitQueuedSounds = HelixEmitQueueSounds()
+            ix.util.stringMatches = HelixStringMatches()
+            ix.util.getUTCTime = HelixGetUTCTime()
+            ix.util.getStringTime = HelixGetStringTime()
+            ix.util.dateToNumber = HelixDateToNumber()
+            ix.config.Add = HelixConfigAdd()
+            ix.config.SetDefault = HelixConfigSetDefault()
+            ix.config.ForceSet = HelixConfigForceSet()
+            ix.config.Set = HelixConfigSet()
+            ix.config.Get = HelixConfigGet()
+            ix.class.LoadFromDir = HelixLoadClass()
+            ix.class.CanSwitchTo = HelixCanSwitchTo()
+            ix.char.RegisterVar = HelixRegisterVar()
+            ix.class.Get = HelixGetClass()
+            ix.class.GetPlayers = HelixGetPlayers()
             print("[COMPATIBILITY] FOUND IX!")
         elseif isDarkRPGlobalUsed() then
-
-        hook.Run("VerifyDarkRP")
-        print("[COMPATIBILITY] FOUND DARKRP!")
-
+            hook.Run("VerifyDarkRP")
+            print("[COMPATIBILITY] FOUND DARKRP!")
         end
+
+        print("Finished Loading!")
     end)
 end
