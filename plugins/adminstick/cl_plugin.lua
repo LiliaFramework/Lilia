@@ -272,7 +272,7 @@ function AdminStick:OpenAdminStickUI(isright, target)
 
         desc3:SetIcon("icon16/user_suit.png")
 
-        local desc2 = characterInfo:AddOption("Prompt Name Change", function()
+        local desc2 = characterInfo:AddOption("Change Target Name", function()
             LocalPlayer():ConCommand('say /namechange "' .. target:SteamID() .. '"')
             AdminStick.IsOpen = false
         end)
