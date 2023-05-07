@@ -22,7 +22,7 @@ function isDarkRPGlobalUsed()
     end
 end
 
-function PLUGIN:Initialize()
+local function SetCompability()
     print("STARTED COMPATIBILITY CHECK!")
 
     if isNutGlobalUsed() then
@@ -107,3 +107,5 @@ function PLUGIN:Initialize()
 
     print("Finished Loading!")
 end
+
+hook.Add("SetCompability", "SetCompatibility", SetCompability)
