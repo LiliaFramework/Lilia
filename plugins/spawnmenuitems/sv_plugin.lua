@@ -1,3 +1,4 @@
+local PLUGIN = PLUGIN
 lia.log.addType("itemSpawned", function(client, itemID)
     return string.format("%s (%s) has spawned '%s'", client:SteamName(), client:SteamID(), lia.item.list[itemID].name)
 end)
