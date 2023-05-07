@@ -5,7 +5,7 @@ lia.plugin.unloaded = lia.plugin.unloaded or {}
 function lia.plugin.load(uniqueID, path, isSingleFile, variable)
     hook.Run("SetCompatibility")
 
-    timer.Simple(1, function()
+    timer.Simple(0.1, function()
         variable = uniqueID == "schema" and "SCHEMA" or variable or "PLUGIN"
         if hook.Run("PluginShouldLoad", uniqueID) == false then return end
         -- Do not load non-existent plugins.
