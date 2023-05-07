@@ -3,88 +3,90 @@ lia.plugin.list = lia.plugin.list or {}
 lia.plugin.unloaded = lia.plugin.unloaded or {}
 
 function lia.plugin.load(uniqueID, path, isSingleFile, variable)
-    variable = uniqueID == "schema" and "SCHEMA" or variable or "PLUGIN"
-    if hook.Run("PluginShouldLoad", uniqueID) == false then return end
-    -- Do not load non-existent plugins.
-    if not isSingleFile and not file.Exists(path .. "/sh_" .. variable:lower() .. ".lua", "LUA") then return end
-    -- Create a table to store plugin information.
-    local oldPlugin = PLUGIN
+    hook.Run("SetCompatibility")
 
-    local PLUGIN = {
-        folder = path,
-        plugin = oldPlugin,
-        uniqueID = uniqueID,
-        name = "Unknown",
-        desc = "Description not available",
-        author = "Anonymous",
-        IsValid = function(plugin)
-            return true
+    timer.Simple(1, function()
+        variable = uniqueID == "schema" and "SCHEMA" or variable or "PLUGIN"
+        if hook.Run("PluginShouldLoad", uniqueID) == false then return end
+        -- Do not load non-existent plugins.
+        if not isSingleFile and not file.Exists(path .. "/sh_" .. variable:lower() .. ".lua", "LUA") then return end
+        -- Create a table to store plugin information.
+        local oldPlugin = PLUGIN
+
+        local PLUGIN = {
+            folder = path,
+            plugin = oldPlugin,
+            uniqueID = uniqueID,
+            name = "Unknown",
+            desc = "Description not available",
+            author = "Anonymous",
+            IsValid = function(plugin) return true end
+        }
+
+        if uniqueID == "schema" then
+            -- If the plugin is actually the schema, overwrite delevant variables.
+            if SCHEMA then
+                PLUGIN = SCHEMA
+            end
+
+            variable = "SCHEMA"
+            PLUGIN.folder = engine.ActiveGamemode()
+        elseif lia.plugin.list[uniqueID] then
+            -- Handle auto-reload.
+            PLUGIN = lia.plugin.list[uniqueID]
         end
-    }
 
-    if uniqueID == "schema" then
-        -- If the plugin is actually the schema, overwrite delevant variables.
-        if SCHEMA then
-            PLUGIN = SCHEMA
+        -- Expose PLUGIN as a global so the plugin files can access the table.
+        _G[variable] = PLUGIN
+        -- Then include all of the plugin files so they run.
+        PLUGIN.loading = true
+        PLUGIN.path = path
+
+        if not isSingleFile then
+            lia.plugin.loadExtras(path)
         end
 
-        variable = "SCHEMA"
-        PLUGIN.folder = engine.ActiveGamemode()
-    elseif lia.plugin.list[uniqueID] then
-        -- Handle auto-reload.
-        PLUGIN = lia.plugin.list[uniqueID]
-    end
+        lia.util.include(isSingleFile and path or path .. "/sh_" .. variable:lower() .. ".lua", "shared")
+        PLUGIN.loading = false
+        -- Add helper methods for persistent data.
+        local uniqueID2 = uniqueID
 
-    -- Expose PLUGIN as a global so the plugin files can access the table.
-    _G[variable] = PLUGIN
-    -- Then include all of the plugin files so they run.
-    PLUGIN.loading = true
-    PLUGIN.path = path
-
-    if not isSingleFile then
-        lia.plugin.loadExtras(path)
-    end
-
-    lia.util.include(isSingleFile and path or path .. "/sh_" .. variable:lower() .. ".lua", "shared")
-    PLUGIN.loading = false
-    -- Add helper methods for persistent data.
-    local uniqueID2 = uniqueID
-
-    if uniqueID2 == "schema" then
-        uniqueID2 = PLUGIN.name
-    end
-
-    function PLUGIN:setData(value, global, ignoreMap)
-        lia.data.set(uniqueID2, value, global, ignoreMap)
-    end
-
-    function PLUGIN:getData(default, global, ignoreMap, refresh)
-        return lia.data.get(uniqueID2, default, global, ignoreMap, refresh) or {}
-    end
-
-    -- Add listeners for the plugin hooks so they run.
-    for k, v in pairs(PLUGIN) do
-        if type(v) == "function" then
-            hook.Add(k, PLUGIN, v)
+        if uniqueID2 == "schema" then
+            uniqueID2 = PLUGIN.name
         end
-    end
 
-    -- Store a reference to the plugin for later access.
-    if uniqueID == "schema" then
-        function PLUGIN:IsValid()
-            return true
+        function PLUGIN:setData(value, global, ignoreMap)
+            lia.data.set(uniqueID2, value, global, ignoreMap)
         end
-    else
-        lia.plugin.list[uniqueID] = PLUGIN
-        _G[variable] = oldPlugin
-    end
 
-    -- Signal that a plugin has finished loading.
-    hook.Run("PluginLoaded", uniqueID, PLUGIN)
+        function PLUGIN:getData(default, global, ignoreMap, refresh)
+            return lia.data.get(uniqueID2, default, global, ignoreMap, refresh) or {}
+        end
 
-    if PLUGIN.OnLoaded then
-        PLUGIN:OnLoaded()
-    end
+        -- Add listeners for the plugin hooks so they run.
+        for k, v in pairs(PLUGIN) do
+            if type(v) == "function" then
+                hook.Add(k, PLUGIN, v)
+            end
+        end
+
+        -- Store a reference to the plugin for later access.
+        if uniqueID == "schema" then
+            function PLUGIN:IsValid()
+                return true
+            end
+        else
+            lia.plugin.list[uniqueID] = PLUGIN
+            _G[variable] = oldPlugin
+        end
+
+        -- Signal that a plugin has finished loading.
+        hook.Run("PluginLoaded", uniqueID, PLUGIN)
+
+        if PLUGIN.OnLoaded then
+            PLUGIN:OnLoaded()
+        end
+    end)
 end
 
 function lia.plugin.loadExtras(path)
