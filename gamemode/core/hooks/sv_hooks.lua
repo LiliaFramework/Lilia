@@ -1,3 +1,4 @@
+local SCHEMA = SCHEMA
 function GM:SetupBotCharacter(client)
 	local botID = os.time()
 	local index = math.random(1, table.Count(lia.faction.indices))
