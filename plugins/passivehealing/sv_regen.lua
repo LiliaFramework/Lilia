@@ -18,12 +18,12 @@ function PLUGIN:Think()
                 local char = v:getChar()
 
                 if canRegen(v) then
-                    local newHP = hp + 1
+                    local newHP = hp + lia.config.get("HealingAmount", 1)
                     v:SetHealth(math.Clamp(newHP, 0, maxhp))
                 end
             end
         end
 
-        self.nextThink = CurTime() + 60
+        self.nextThink = CurTime() + lia.config.get("HealingTimer", 60)
     end
 end

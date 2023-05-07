@@ -55,8 +55,9 @@ if (SERVER) then
 
 	-- Inverts whether or not the weapon is raised.
 	function playerMeta:toggleWepRaised()
+		timer.Simple(lia.config.get("WeaponRaiseTimer", 1), function()
 		self:setWepRaised(!self:isWepRaised())
-
+		end)
 		local weapon = self:GetActiveWeapon()
 
 		if (IsValid(weapon)) then
