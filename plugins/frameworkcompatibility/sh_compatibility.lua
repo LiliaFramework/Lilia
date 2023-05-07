@@ -1,33 +1,9 @@
-function isNutGlobalUsed()
-    if nut then
-        return true
-    else
-        return false
-    end
-end
-
-function isIxGlobalUsed()
-    if ix then
-        return true
-    else
-        return false
-    end
-end
-
-function isDarkRPGlobalUsed()
-    if DarkRP then
-        return true
-    else
-        return false
-    end
-end
-
-local function SetCompability()
+function PLUGIN:SetCompatibility()
     print("STARTED COMPATIBILITY CHECK!")
 
-    if isNutGlobalUsed() then
-        nut = lia or {}
+    if NSCompatibility then
         print("[COMPATIBILITY] FOUND NUT!")
+        nut = lia or {}
         --[[
             nut.util = nut.util or {}
             nut.data = nut.data or {}
@@ -59,8 +35,8 @@ local function SetCompability()
             nut.config.forceSet = NutConfigForceSet
             nut.config.set = NutConfigSet
             nut.config.get = NutConfigGet]]
-    elseif isIxGlobalUsed() then
-        ix = lia or ix
+    elseif IXCompatibility then
+        ix = ix or {}
         ix.util = ix.util or {}
         ix.data = ix.data or {}
         ix.config = ix.config or {}
@@ -100,7 +76,7 @@ local function SetCompability()
         ix.class.Get = HelixGetClass()
         ix.class.GetPlayers = HelixGetPlayers()
         print("[COMPATIBILITY] FOUND IX!")
-    elseif isDarkRPGlobalUsed() then
+    elseif DarkRPCompatibility then
         hook.Run("VerifyDarkRP")
         print("[COMPATIBILITY] FOUND DARKRP!")
     end
@@ -108,4 +84,6 @@ local function SetCompability()
     print("Finished Loading!")
 end
 
-hook.Add("SetCompability", "SetCompatibility", SetCompability)
+function PLUGIN:OnLoaded()
+    self:SetCompatibility()
+end
