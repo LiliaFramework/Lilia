@@ -22,11 +22,12 @@ function isDarkRPGlobalUsed()
     end
 end
 
-timer.Simple(5, function()
+function PLUGIN:Initialize()
     print("STARTED COMPATIBILITY CHECK!")
 
     if isNutGlobalUsed() then
-        nut = lia or nut
+        nut = lia or {}
+        print("[COMPATIBILITY] FOUND NUT!")
         --[[
             nut.util = nut.util or {}
             nut.data = nut.data or {}
@@ -58,7 +59,6 @@ timer.Simple(5, function()
             nut.config.forceSet = NutConfigForceSet
             nut.config.set = NutConfigSet
             nut.config.get = NutConfigGet]]
-        print("[COMPATIBILITY] FOUND NUT!")
     elseif isIxGlobalUsed() then
         ix = lia or ix
         ix.util = ix.util or {}
@@ -106,4 +106,4 @@ timer.Simple(5, function()
     end
 
     print("Finished Loading!")
-end)
+end
