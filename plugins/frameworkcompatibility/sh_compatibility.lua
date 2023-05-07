@@ -22,7 +22,7 @@ function isDarkRPGlobalUsed()
     end
 end
 
-timer.Simple(0, function()
+timer.Simple(5, function()
     print("STARTED COMPATIBILITY CHECK!")
 
     if isNutGlobalUsed() then
