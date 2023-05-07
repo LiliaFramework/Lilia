@@ -5,7 +5,7 @@ end)
 
 -------------------------------------------------------------------------------------------------------------------------
 net.Receive("worlditem_cleanup_inbound", function()
-    chat.AddText(Color(255, 0, 0), "[ WARNING ]  World items will be cleared in 10 Miliaes!")
+    chat.AddText(Color(255, 0, 0), "[ WARNING ]  World items will be cleared in 10 Minutes!")
 end)
 
 -------------------------------------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ end)
 
 -------------------------------------------------------------------------------------------------------------------------
 net.Receive("map_cleanup_inbound", function()
-    chat.AddText(Color(255, 0, 0), "[ WARNING ]  Automatic Map Cleanup in 10 Miliaes!")
+    chat.AddText(Color(255, 0, 0), "[ WARNING ]  Automatic Map Cleanup in 10 Minutes!")
 end)
 
 -------------------------------------------------------------------------------------------------------------------------

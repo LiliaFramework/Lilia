@@ -1,3 +1,4 @@
+local PLUGIN = PLUGIN
 AdminStick = AdminStick or {}
 AdminStick.IsOpen = false
 
