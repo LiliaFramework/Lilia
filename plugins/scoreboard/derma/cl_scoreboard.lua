@@ -1,6 +1,5 @@
 local PANEL = {}
 
-
 local function teamGetPlayers(teamID)
     local players = {}
 
@@ -64,7 +63,7 @@ function PANEL:Init()
     local staffCount = 0
 
     for _, ply in ipairs(player.GetAll()) do
-        if UserGroups.StaffRanks[ply:GetUserGroup()] then
+        if PLUGIN.StaffRanks[ply:GetUserGroup()] then
             staffCount = staffCount + 1
         end
     end

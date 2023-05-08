@@ -1,3 +1,16 @@
+local PLUGIN = PLUGIN
+
+PLUGIN.StaffRanks = {
+    root = true,
+    superadmin = true,
+    communitymanager = true,
+    headadmin = true,
+    headgm = true,
+    senioradmin = true,
+    admin = true,
+    moderator = true
+}
+
 lia.config.add("sbWidth", 0.325, "Scoreboard's width within percent of screen width.", function(oldValue, newValue)
     if CLIENT and IsValid(lia.gui.score) then
         lia.gui.score:Remove()

