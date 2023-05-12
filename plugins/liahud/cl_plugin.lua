@@ -13,10 +13,13 @@ local hookRun = hook.Run
 local toScreen = FindMetaTable("Vector").ToScreen
 
 function PLUGIN:CanDrawAmmoHUD(weapon)
-    return IsValid(weapon) and weapon.DrawAmmo ~= false and LocalPlayer():Alive()
+    if IsValid(weapon) and weapon.DrawAmmo ~= false and LocalPlayer():Alive() then return true end
+
+    return false
 end
 
 function PLUGIN:DrawAmmoHUD(weapon)
+    if not IsValid(weapon) then return end
     local localPlayer = LocalPlayer()
     local clip = weapon:Clip1()
     local count = localPlayer:GetAmmoCount(weapon:GetPrimaryAmmoType())
