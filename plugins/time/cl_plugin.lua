@@ -4,7 +4,7 @@ function PLUGIN:HUDPaint()
     local ply = LocalPlayer()
     local character = ply:getChar()
     local width, height = ScrW(), ScrH()
-    local format = "%A, %d %B " .. tostring(lia.config.get("SchemaYear", 2023))
+    local format = "%A, " .. lia.config.get("day") .. " " .. lia.config.get("month") .. tostring(lia.config.get("SchemaYear", 2023))
     local xOF = 400
     local y = 50
     local timer = 0

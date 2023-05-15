@@ -1,5 +1,5 @@
 net.Receive("death_client", function()
-    local format = "%A," .. lia.config.get("day") .. " " .. lia.config.get("month") .. tostring(lia.config.get("SchemaYear", 2023))
+    local format = "%A, " .. lia.config.get("day") .. " " .. lia.config.get("month") .. tostring(lia.config.get("SchemaYear", 2023))
     local date = os.date(format, lia.date.get())
     local nick = net.ReadString()
     local charid = net.ReadFloat()
