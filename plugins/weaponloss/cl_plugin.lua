@@ -1,6 +1,6 @@
 net.Receive("death_client", function()
-    local format = "%A, %d %B %Y %X"
-    local date = os.date(format, nut.date.get())
+    local format = "%A," .. lia.config.get("day") .. " " .. lia.config.get("month") .. tostring(lia.config.get("SchemaYear", 2023))
+    local date = os.date(format, lia.date.get())
     local nick = net.ReadString()
     local charid = net.ReadFloat()
     chat.AddText(Color(255, 0, 0), "[DEATH]: ", Color(255, 255, 255), date, Color(255, 255, 255), " - You were killed by " .. nick .. "[" .. charid .. "]")
