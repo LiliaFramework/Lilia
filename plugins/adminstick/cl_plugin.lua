@@ -294,46 +294,6 @@ function AdminStick:OpenAdminStickUI(isright, target)
 
         charkick:SetIcon("icon16/lightning_delete.png")
         -------------------------------------------------------------------------------------------------------------
-        local PayGrades = characterInfo:AddSubMenu("Set PayGrades")
-
-        if not PLUGIN.CitizenFactions[target:Team()] then
-            local pagrade1 = PayGrades:AddOption("Enlisted", function()
-                RunConsoleCommand("say", "/setpaygrade " .. target:SteamID() .. " 1")
-                AdminStick.IsOpen = false
-            end)
-
-            pagrade1:SetIcon("icon16/application_form_magnify.png")
-
-            local pagrade2 = PayGrades:AddOption("Non-Commissioned Officer", function()
-                RunConsoleCommand("say", "/setpaygrade " .. target:SteamID() .. " 2")
-                AdminStick.IsOpen = false
-            end)
-
-            pagrade2:SetIcon("icon16/application_form_magnify.png")
-
-            local pagrade3 = PayGrades:AddOption("Commissioned Officer", function()
-                RunConsoleCommand("say", "/setpaygrade " .. target:SteamID() .. " 3")
-                AdminStick.IsOpen = false
-            end)
-
-            pagrade3:SetIcon("icon16/application_form_magnify.png")
-
-            local pagrade4 = PayGrades:AddOption("General Officer", function()
-                RunConsoleCommand("say", "/setpaygrade " .. target:SteamID() .. " 4")
-                AdminStick.IsOpen = false
-            end)
-
-            pagrade4:SetIcon("icon16/application_form_magnify.png")
-
-            local pagrade5 = PayGrades:AddOption("National High Command", function()
-                RunConsoleCommand("say", "/setpaygrade " .. target:SteamID() .. " 5")
-                AdminStick.IsOpen = false
-            end)
-
-            pagrade5:SetIcon("icon16/application_form_magnify.png")
-        end
-
-        -------------------------------------------------------------------------------------------------------------
         local teleport = AdminMenu:AddSubMenu("Teleportation")
 
         local gotoo = teleport:AddOption("Goto", function()
