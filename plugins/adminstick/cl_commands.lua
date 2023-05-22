@@ -36,8 +36,3 @@ lia.command.add("charkick", {
     syntax = "<string name>",
     onRun = function(client, arguments) end
 })
-
-lia.command.add("setpaygrade", {
-    syntax = "[character name]",
-    onRun = function(client, arguments) end
-})
