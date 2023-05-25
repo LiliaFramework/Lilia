@@ -1,4 +1,8 @@
-lia.config.add("WeaponLossOnDeath", false, "Enables a post-death weapon loss", nil, {
+lia.config.add("LoseWeapononDeathHuman", false, "Enables a post-death weapon loss by Human Deaths", nil, {
+    category = "Death"
+})
+
+lia.config.add("LoseWeapononDeathNPC", false, "Enables a post-death weapon loss by NPC Deaths", nil, {
     category = "Death"
 })
 
