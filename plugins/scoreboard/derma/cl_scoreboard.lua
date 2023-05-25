@@ -1,4 +1,5 @@
 local PANEL = {}
+local PLUGIN = PLUGIN
 
 local function teamGetPlayers(teamID)
     local players = {}
