@@ -1,3 +1,4 @@
+local PLUGIN = PLUGIN
 properties.Add("persist", {
     MenuLabel = "#makepersistent",
     Order = 400,
