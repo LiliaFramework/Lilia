@@ -1,3 +1,5 @@
+local PLUGIN = PLUGIN
+
 function PLUGIN:CharacterPreSave(character)
     -- Get the player from the character.
     local client = character:getPlayer()
