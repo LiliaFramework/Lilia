@@ -6,7 +6,7 @@ lia.command.add("CharPK", {
         local target = lia.command.findPlayer(client, arguments[1])
         local uniqueID = client:GetUserGroup()
 
-        if not UserGroups.modRanks[uniqueID] then
+        if not UserGroups.adminRanks[uniqueID] then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -15,16 +15,13 @@ lia.command.add("CharPK", {
         if IsValid(target) and target:getChar() then
             local targetchar = target:getChar()
 
-            if not targetchar:getData("permakilled") then
-                targetchar:setData("permakilled", true)
-                target:Spawn()
+            if not targetchar:getData("banned") then
+                targetchar:ban()
                 client:notify("Perma killed " .. target:Name())
             end
         end
     end
 })
-
-
 
 lia.command.add("flagbank", {
     syntax = "[character name]",
