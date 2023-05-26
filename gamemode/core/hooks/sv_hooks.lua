@@ -225,47 +225,6 @@ function GM:PlayerSpawn(client)
     hook.Run("PlayerLoadout", client)
 end
 
--- Shortcuts for (super)admin only things.
-local IsAdmin = function(_, client)
-    return client:IsAdmin()
-end
-
--- Set the gamemode hooks to the appropriate shortcuts.
-GM.PlayerGiveSWEP = IsAdmin
-GM.PlayerSpawnEffect = IsAdmin
-GM.PlayerSpawnSENT = IsAdmin
-
-function GM:PlayerSpawnNPC(client, npcType, weapon)
-    return client:IsAdmin() or client:getChar():hasFlags("n")
-end
-
-function GM:PlayerSpawnSWEP(client, weapon, info)
-    return client:IsAdmin()
-end
-
-function GM:PlayerSpawnProp(client)
-    if client:getChar() and client:getChar():hasFlags("e") then return true end
-
-    return false
-end
-
-function GM:PlayerSpawnRagdoll(client)
-    if client:getChar() and client:getChar():hasFlags("r") then return true end
-
-    return false
-end
-
-function GM:PlayerSpawnVehicle(client, model, name, data)
-    if client:getChar() then
-        if data.Category == "Chairs" then
-            return client:getChar():hasFlags("c")
-        else
-            return client:getChar():hasFlags("C")
-        end
-    end
-
-    return false
-end
 
 -- Called when weapons should be given to a player.
 function GM:PlayerLoadout(client)
