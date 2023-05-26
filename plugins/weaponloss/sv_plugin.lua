@@ -2,7 +2,6 @@ util.AddNetworkString("death_client")
 
 ------------------------------------------------------------------------------------------------------------------------
 function PLUGIN:PlayerDeath(victim, inflictor, attacker)
-    netstream.Start(ply, "removeF1")
     if victim == attacker then return end
 
     if attacker:IsPlayer() then
