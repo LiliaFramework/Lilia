@@ -1,6 +1,12 @@
 util.AddNetworkString("death_client")
 
 ------------------------------------------------------------------------------------------------------------------------
+-- Removes F1 on Death
+function SCHEMA:PlayerDeath(ply)
+    netstream.Start(ply, "removeF1")
+end
+
+------------------------------------------------------------------------------------------------------------------------
 function PLUGIN:PlayerDeath(victim, inflictor, attacker)
     netstream.Start(ply, "removeF1")
     if victim == attacker then return end
