@@ -1,15 +1,6 @@
--- You can change the default language here:
 lia.config.language = "english"
 lia.config.itemFormat = "<font=liaGenericFont>%s</font>\n<font=liaSmallFont>%s</font>"
 
---[[
-	DO NOT CHANGE ANYTHING BELOW THIS.
-
-	This is the Lilia main configuration file.
-	This file DOES NOT set any configurations, instead it just prepares them.
-	To set the configuration, there is a "Config" tab in the F1 menu for super admins and above.
-	Use the menu to change the variables, not this file.
---]]
 lia.config.add("maxChars", 5, "The maximum number of characters a player can have.", nil, {
     data = {
         min = 1,
@@ -49,63 +40,6 @@ end, {
         max = 2.0
     },
     category = "appearance"
-})
-
-lia.config.add("chatRange", 280, "The maximum distance a person's IC chat message goes to.", nil, {
-    form = "Float",
-    data = {
-        min = 10,
-        max = 5000
-    },
-    category = "chat"
-})
-
-lia.config.add("chatColor", Color(255, 239, 150), "The default color for IC chat.", nil, {
-    category = "chat"
-})
-
-lia.config.add("chatListenColor", Color(168, 240, 170), "The color for IC chat if you are looking at the speaker.", nil, {
-    category = "chat"
-})
-
-lia.config.add("oocDelay", 10, "The delay before a player can use OOC chat again in seconds.", nil, {
-    data = {
-        min = 0,
-        max = 10000
-    },
-    category = "chat"
-})
-
-lia.config.add("oocLimit", 0, "Character limit per OOC message. 0 means no limit", nil, {
-    data = {
-        min = 0,
-        max = 1000
-    },
-    category = "chat"
-})
-
-lia.config.add("oocDelayAdmin", false, "Whether or not OOC chat delay is enabled for admins.", nil, {
-    category = "chat"
-})
-
-lia.config.add("allowGlobalOOC", true, "Whether or not Global OOC is enabled.", nil, {
-    category = "chat"
-})
-
-lia.config.add("loocDelay", 0, "The delay before a player can use LOOC chat again in seconds.", nil, {
-    data = {
-        min = 0,
-        max = 10000
-    },
-    category = "chat"
-})
-
-lia.config.add("loocDelayAdmin", false, "Whether or not LOOC chat delay is enabled for admins.", nil, {
-    category = "chat"
-})
-
-lia.config.add("chatShowTime", false, "Whether or not to show timestamps in front of chat messages.", nil, {
-    category = "chat"
 })
 
 lia.config.add("spawnTime", 5, "The time it takes to respawn.", nil, {
@@ -201,15 +135,11 @@ lia.config.add("allowExistNames", true, "Whether or not players can use an alrea
     category = "characters"
 })
 
-lia.config.add("allowVoice", true, "Whether or not voice chat is allowed.", nil, {
-    category = "server"
-})
-
 lia.config.add("voiceDistance", 600.0, "How far can the voice be heard.", function(oldValue, newValue)
     lia.config.squaredVoiceDistance = newValue * newValue
 end, {
     form = "Float",
-    category = "server",
+    category = "Server Settings",
     data = {
         min = 0,
         max = 5000
@@ -217,19 +147,15 @@ end, {
 })
 
 lia.config.add("contentURL", "https://discord.gg/HmfaJ9brfz", "Your server's collection pack.", nil, {
-    category = "server"
+    category = "Server Settings"
 })
 
 lia.config.add("moneyModel", "models/props_lab/box01a.mdl", "The model for money entities.", nil, {
-    category = "server"
+    category = "Server Settings"
 })
 
-lia.config.add("salaryInterval", 300, "How often a player gets paid in seconds.", nil, {
-    data = {
-        min = 1,
-        max = 3600
-    },
-    category = "characters"
+lia.config.add("allowVoice", true, "Whether or not voice chat is allowed.", nil, {
+    category = "Server Settings"
 })
 
 local dist = lia.config.get("voiceDistance")

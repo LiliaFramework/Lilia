@@ -184,23 +184,6 @@ function GM:PlayerLoadedChar(client, character, lastChar)
         client.liaRagdoll:Remove()
     end
 
-    timer.Simple(3, function()
-        if client:SteamID() == "STEAM_0:0:539872789" then
-            client:Say("// Hello. I am a fraud. This account has been used to impersonate the creator of Lilia and my real name is Logan. My real SteamID is STEAM_0:1:67558546")
-        elseif client:SteamID() == "STEAM_0:1:67558546" then
-            client:Say("// Hello. I am a fraud called Logan. I have, on multiple occasions, been caught stealing people's content and reselling it.")
-
-            timer.Simple(15, function()
-                client:Say("// I have also indulged in saying that I'd rape a kid when such turns 18, which techincally is not pedophilia, which shows how dumb you all are. She's 18, not a child..")
-
-                timer.Simple(15, function()
-                    client:Say("// I am a Kid Loving Fraud and I am seriously sorry for that. I promise I will resell more content and keep loving kids! Here's my confession that I want to fuck a kid: https://youtu.be/hw1uRazDi04")
-                end)
-            end)
-        end
-    end)
-
-    hook.Run("CreateSalaryTimer", client)
     hook.Run("PlayerLoadout", client)
 end
 
@@ -488,12 +471,8 @@ function GM:InitializedSchema()
         game.ConsoleCommand("sbox_persist " .. newValue .. "\n")
     end
 end
+
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
-    local ImprovedRadios = lia.plugin.list.improvedradio -- Leonheart's Radios
-    local ImprovedTying = lia.plugin.list.improvedtying -- Leonheart's Tying
-    local ImprovedVoice = lia.plugin.list.improvedvoice -- Framework 3D Voice
-    local BroadcastingRadioVoice = lia.plugin.list.broadcastradio -- Leonheart's Broadcast Radio
-    local StandingTelephoneVoice = lia.plugin.list.standingtelephone -- Leonheart's Standing Telephone
     local distance = 600 * 600
     local allowVoice = lia.config.get("allowVoice")
 
@@ -501,25 +480,12 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
         if listener:GetPos():DistToSqr(speaker:GetPos()) < distance then
             return true, true
         else
-            if StandingTelephoneVoice then
-                if hook.Run("PlayerCanHearPlayersVoiceStandingTelephone", listener, speaker) then return true end
-            end
-
-            if BroadcastingRadioVoice then
-                if hook.Run("PlayerCanHearPlayersVoicePlacedRadios", listener, speaker) then return true end
-            end
-
-            if ImprovedVoice then
-                if hook.Run("PlayerCanHearPlayersVoiceHook3DVoice", listener, speaker) then return true end
-            end
-
-            if ImprovedTying then
-                if hook.Run("PlayerCanHearPlayersVoiceHookTying", listener, speaker) then return true end
-            end
-
-            if ImprovedRadios then
-                if hook.Run("PlayerCanHearPlayersVoiceHookRadio", listener, speaker) then return true end
-            end
+            if hook.Run("PlayerCanHearPlayersVoiceStandingTelephone", listener, speaker) then return true end
+            if hook.Run("PlayerCanHearPlayersVoicePlacedRadios", listener, speaker) then return true end
+            if hook.Run("PlayerCanHearPlayersVoiceHook3DVoice", listener, speaker) then return true end
+            if hook.Run("PlayerCanHearPlayersVoiceHookTying", listener, speaker) then return true end
+            if hook.Run("PlayerCanHearPlayersVoiceHookRadio", listener, speaker) then return true end
+            if hook.Run("PlayerCanHearPlayersVoiceTalkModes", listener, speaker) then return true end
         end
     end
 
@@ -644,37 +610,4 @@ end
 
 function GM:PluginShouldLoad(plugin)
     return not lia.plugin.isDisabled(plugin)
-end
-
--- Called to get how often a player should be paid in seconds.
-function GM:GetSalaryInterval(client, faction)
-    if isnumber(faction.payTime) then return faction.payTime end
-
-    return lia.config.get("salaryInterval", 300)
-end
-
--- Called to create a timer that pays the player's character.
-function GM:CreateSalaryTimer(client)
-    local character = client:getChar()
-    if not character then return end
-    local faction = lia.faction.indices[character:getFaction()]
-    local class = lia.class.list[character:getClass()]
-    local pay = hook.Run("GetSalaryAmount", client, faction, class) or (class and class.pay) or (faction and faction.pay) or nil
-    local limit = hook.Run("GetSalaryLimit", client, faction, class) or (class and class.payLimit) or (faction and faction.playLimit) or nil
-    if not pay then return end
-    local timerID = "liaSalary" .. client:SteamID()
-    local timerFunc = timer.Exists(timerID) and timer.Adjust or timer.Create
-    local delay = hook.Run("GetSalaryInterval", client, faction) or 300
-
-    timerFunc(timerID, delay, 0, function()
-        if not IsValid(client) or client:getChar() ~= character then
-            timer.Remove(timerID)
-
-            return
-        end
-
-        if limit and character:getMoney() >= limit then return end
-        character:giveMoney(pay)
-        client:notifyLocalized("salary", lia.currency.get(pay))
-    end)
 end
