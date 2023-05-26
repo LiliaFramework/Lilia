@@ -57,3 +57,7 @@ lia.config.add("alwaysPlayIntro", false, "Whether the intro, if enabled, should 
 lia.config.add("introFont", "Cambria", "Font of the intro screen", nil, {
     category = "Server Settings"
 })
+
+lia.config.add("ServerVersionDisplayerEnabled", true, "Whether Version is Displayed.", nil, {
+    category = "Server Settings"
+})
