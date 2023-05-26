@@ -6,6 +6,14 @@ lia.config.add("oocDelay", 10, "The delay before a player can use OOC chat again
     category = "chat"
 })
 
+lia.config.add("MaxChatLength", 200, "Character limit per message. 0 means no limit", nil, {
+    data = {
+        min = 0,
+        max = 1000
+    },
+    category = "chat"
+})
+
 lia.config.add("oocLimit", 150, "Character limit per OOC message. 0 means no limit", nil, {
     data = {
         min = 0,
