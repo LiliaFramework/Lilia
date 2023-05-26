@@ -344,34 +344,6 @@ function AdminStick:OpenAdminStickUI(isright, target)
         end)
 
         blacklist:SetIcon("icon16/cross.png")
-
-        local flagbank = flags:AddOption("Give/Take Banker Flags", function()
-            LocalPlayer():ConCommand('say /flagbank "' .. target:SteamID() .. '"')
-            AdminStick.IsOpen = false
-        end)
-
-        flagbank:SetIcon("icon16/flag_blue.png")
-
-        local flagpd = flags:AddOption("Give/Take Medal Flags", function()
-            LocalPlayer():ConCommand('say /flagmedal "' .. target:SteamID() .. '"')
-            AdminStick.IsOpen = false
-        end)
-
-        flagpd:SetIcon("icon16/flag_blue.png")
-
-        --[[
-        local flagtier = flags:AddOption("Give/Take Tier Flags", function()
-            LocalPlayer():ConCommand('say /flagtier "' .. target:SteamID() .. '"')
-            AdminStick.IsOpen = false
-        end)
-
-        flagtier:SetIcon("icon16/flag_blue.png")]]
-        local flagbr = flags:AddOption("Give/Take Broadcast Flags", function()
-            LocalPlayer():ConCommand('say /flagbroadcast "' .. target:SteamID() .. '"')
-            AdminStick.IsOpen = false
-        end)
-
-        flagbr:SetIcon("icon16/flag_blue.png")
         -------------------------------------------------------------------------------------------------------------
     elseif target:isDoor() then
         local doortitle = AdminMenu:AddOption("Set Door Title", function()

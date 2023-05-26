@@ -20,6 +20,7 @@ lia.command.add("CharPK", {
     end
 })
 
+------------------------------------------------------------------------------------------------------------------------
 lia.command.add("flagpet", {
     syntax = "[character name]",
     onRun = function(client, arguments)
@@ -41,6 +42,7 @@ lia.command.add("flagpet", {
     end
 })
 
+------------------------------------------------------------------------------------------------------------------------
 lia.command.add("charkick", {
     syntax = "<string name>",
     onRun = function(client, arguments)
@@ -65,3 +67,4 @@ lia.command.add("charkick", {
         end
     end
 })
+------------------------------------------------------------------------------------------------------------------------
