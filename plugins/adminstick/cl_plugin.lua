@@ -480,17 +480,3 @@ function AdminStick:OpenAdminStickUI(isright, target)
     AdminMenu:Open()
     AdminMenu:Center()
 end
-
-net.Receive("namechange", function()
-    local entity = net.ReadEntity()
-
-    if LocalPlayer():IsAdmin() then
-        Derma_StringRequest("Change Name", "Change this player name.", "", function(text)
-            net.Start("nameupdate")
-            net.WriteString(text)
-            net.WriteEntity(LocalPlayer())
-            net.WriteEntity(entity)
-            net.SendToServer()
-        end, function(text) end)
-    end
-end)
