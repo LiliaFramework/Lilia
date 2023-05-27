@@ -1,6 +1,5 @@
 NAME = "Portuguese" ---//Contact Leonheart#7476 if you have any translation change suggestion\\----
 
-
 LANGUAGE = {
     loading = "A carregar",
     dbError = "Erro ao conectar à database",
@@ -235,9 +234,7 @@ LANGUAGE = {
     deleteTip = "Apagar este personagem.",
     moneyLeft = "O teu dinheiro: ",
     currentMoney = "Dinheiro Restante: ",
-
     -- 2018 patch
-
     ammoLoadAll = "Carregar tudo",
     ammoLoadAmount = "Carregar %s",
     ammoLoadCustom = "Carregar...",
@@ -260,8 +257,7 @@ LANGUAGE = {
     itemOnGround = "O teu item foi colocado no chão.",
     forbiddenActionStorage = "Não podes fazer isto com itens armazenados.",
     cantDropBagHasEquipped = "Não podes largar uma mala equipada.",
-	
-	-- 2021 patch
-	lookToUseAt = "Precisas de estar a olhar para alguém para usar '@'",
-	mustProvideString = "Deves dar uma string para a variável",
+    -- 2021 patch
+    lookToUseAt = "Precisas de estar a olhar para alguém para usar '@'",
+    mustProvideString = "Deves dar uma string para a variável",
 }
