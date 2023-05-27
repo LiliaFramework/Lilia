@@ -1,3 +1,15 @@
+lia.config.add("contentURL", "https://discord.gg/HmfaJ9brfz", "Your server's collection pack.", nil, {
+    category = "Server Settings"
+})
+
+lia.config.add("moneyModel", "models/props_lab/box01a.mdl", "The model for money entities.", nil, {
+    category = "Server Settings"
+})
+
+lia.config.add("allowVoice", true, "Whether or not voice chat is allowed.", nil, {
+    category = "Server Settings"
+})
+
 lia.config.add("CarRagdoll", true, "Whether or not Car Ragdoll is Enabled to Avoid VDM.", nil, {
     category = "Server Settings"
 })
@@ -60,4 +72,15 @@ lia.config.add("introFont", "Cambria", "Font of the intro screen", nil, {
 
 lia.config.add("ServerVersionDisplayerEnabled", true, "Whether Version is Displayed.", nil, {
     category = "Server Settings"
+})
+
+lia.config.add("voiceDistance", 600.0, "How far can the voice be heard.", function(oldValue, newValue)
+    lia.config.squaredVoiceDistance = newValue * newValue
+end, {
+    form = "Float",
+    category = "Server Settings",
+    data = {
+        min = 0,
+        max = 5000
+    }
 })

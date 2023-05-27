@@ -1,7 +1,12 @@
 -- Include features from the Sandbox gamemode.
 DeriveGamemode("sandbox")
+
 -- Define a global shared table to store Lilia information.
-lia = lia or {util = {}, gui = {}, meta = {}}
+lia = lia or {
+    util = {},
+    gui = {},
+    meta = {}
+}
 
 -- Include core files.
 include("core/sh_util.lua")

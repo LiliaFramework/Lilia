@@ -6,40 +6,7 @@ lia.config.add("maxChars", 5, "The maximum number of characters a player can hav
         min = 1,
         max = 50
     },
-    category = "characters"
-})
-
-lia.config.add("color", Color(75, 119, 190), "The main color theme for the framework.", nil, {
-    category = "appearance"
-})
-
-lia.config.add("font", "Arial", "The font used to display titles.", function(oldValue, newValue)
-    if CLIENT then
-        hook.Run("LoadLiliaFonts", newValue, lia.config.get("genericFont"))
-    end
-end, {
-    category = "appearance"
-})
-
-lia.config.add("genericFont", "Segoe UI", "The font used to display generic texts.", function(oldValue, newValue)
-    if CLIENT then
-        hook.Run("LoadLiliaFonts", lia.config.get("font"), newValue)
-    end
-end, {
-    category = "appearance"
-})
-
-lia.config.add("fontScale", 1.0, "The scale for the font.", function(oldValue, newValue)
-    if CLIENT then
-        hook.Run("LoadLiliaFonts", lia.config.get("font"), lia.config.get("genericFont"))
-    end
-end, {
-    form = "Float",
-    data = {
-        min = 0.1,
-        max = 2.0
-    },
-    category = "appearance"
+    category = "Player Settings"
 })
 
 lia.config.add("spawnTime", 5, "The time it takes to respawn.", nil, {
@@ -47,7 +14,7 @@ lia.config.add("spawnTime", 5, "The time it takes to respawn.", nil, {
         min = 0,
         max = 10000
     },
-    category = "characters"
+    category = "Player Settings"
 })
 
 lia.config.add("invW", 6, "How many slots in a row there is in a default inventory.", nil, {
@@ -55,7 +22,7 @@ lia.config.add("invW", 6, "How many slots in a row there is in a default invento
         min = 0,
         max = 20
     },
-    category = "characters"
+    category = "Player Settings"
 })
 
 lia.config.add("invH", 4, "How many slots in a column there is in a default inventory.", nil, {
@@ -63,7 +30,7 @@ lia.config.add("invH", 4, "How many slots in a column there is in a default inve
         min = 0,
         max = 20
     },
-    category = "characters"
+    category = "Player Settings"
 })
 
 lia.config.add("minDescLen", 16, "The minimum number of characters in a description.", nil, {
@@ -71,7 +38,7 @@ lia.config.add("minDescLen", 16, "The minimum number of characters in a descript
         min = 0,
         max = 300
     },
-    category = "characters"
+    category = "Player Settings"
 })
 
 lia.config.add("saveInterval", 300, "How often characters save in seconds.", nil, {
@@ -79,7 +46,7 @@ lia.config.add("saveInterval", 300, "How often characters save in seconds.", nil
         min = 60,
         max = 3600
     },
-    category = "characters"
+    category = "Player Settings"
 })
 
 lia.config.add("walkSpeed", 130, "How fast a player normally walks.", function(oldValue, newValue)
@@ -91,7 +58,7 @@ end, {
         min = 75,
         max = 500
     },
-    category = "characters"
+    category = "Player Settings"
 })
 
 lia.config.add("runSpeed", 235, "How fast a player normally runs.", function(oldValue, newValue)
@@ -103,7 +70,7 @@ end, {
         min = 75,
         max = 500
     },
-    category = "characters"
+    category = "Player Settings"
 })
 
 lia.config.add("walkRatio", 0.5, "How fast one goes when holding ALT.", nil, {
@@ -112,7 +79,7 @@ lia.config.add("walkRatio", 0.5, "How fast one goes when holding ALT.", nil, {
         min = 0,
         max = 1
     },
-    category = "characters"
+    category = "Player Settings"
 })
 
 lia.config.add("punchStamina", 10, "How much stamina punches use up.", nil, {
@@ -120,11 +87,11 @@ lia.config.add("punchStamina", 10, "How much stamina punches use up.", nil, {
         min = 0,
         max = 100
     },
-    category = "characters"
+    category = "Player Settings"
 })
 
 lia.config.add("defMoney", 0, "The amount of money that players start with.", nil, {
-    category = "characters",
+    category = "Player Settings",
     data = {
         min = 0,
         max = 10000
@@ -132,30 +99,7 @@ lia.config.add("defMoney", 0, "The amount of money that players start with.", ni
 })
 
 lia.config.add("allowExistNames", true, "Whether or not players can use an already existing name upon character creation.", nil, {
-    category = "characters"
-})
-
-lia.config.add("voiceDistance", 600.0, "How far can the voice be heard.", function(oldValue, newValue)
-    lia.config.squaredVoiceDistance = newValue * newValue
-end, {
-    form = "Float",
-    category = "Server Settings",
-    data = {
-        min = 0,
-        max = 5000
-    }
-})
-
-lia.config.add("contentURL", "https://discord.gg/HmfaJ9brfz", "Your server's collection pack.", nil, {
-    category = "Server Settings"
-})
-
-lia.config.add("moneyModel", "models/props_lab/box01a.mdl", "The model for money entities.", nil, {
-    category = "Server Settings"
-})
-
-lia.config.add("allowVoice", true, "Whether or not voice chat is allowed.", nil, {
-    category = "Server Settings"
+    category = "Player Settings"
 })
 
 local dist = lia.config.get("voiceDistance")
