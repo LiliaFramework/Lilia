@@ -61,6 +61,7 @@ function lia.data.get(key, default, global, ignoreMap, refresh)
     -- If we provided a default, return that since we couldn't retrieve
     -- the data.
 end
+
 -- Deletes existing data in lilia framework.
 function lia.data.delete(key, global, ignoreMap)
     -- Get the path to read from.

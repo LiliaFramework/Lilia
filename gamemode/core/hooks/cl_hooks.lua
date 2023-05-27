@@ -935,12 +935,6 @@ function GM:PlayerBindPress(client, bind, pressed)
         end
     elseif bind:find("jump") then
         lia.command.send("chargetup")
-    elseif bind:find("speed") and client:KeyDown(IN_WALK) and pressed then
-        if LocalPlayer():Crouching() then
-            RunConsoleCommand("-duck")
-        else
-            RunConsoleCommand("+duck")
-        end
     end
 end
 

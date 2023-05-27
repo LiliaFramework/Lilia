@@ -26,6 +26,10 @@ lia.config.add("GlobalFlashlightEnabled", false, "Enables Flashlights for Everyo
     category = "Server Settings"
 })
 
+lia.config.add("CentsCompatibility", false, "Enables Cents on Money", nil, {
+    category = "Server Settings"
+})
+
 lia.config.add("SchemaYear", 2023, "Year That The Gamemode Happens On.", nil, {
     data = {
         min = 1,
