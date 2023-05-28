@@ -22,11 +22,14 @@ local function teamNumPlayers(teamID)
 end
 
 local paintFunctions = {}
+
 paintFunctions[0] = function(this, w, h)
     surface.SetDrawColor(0, 0, 0, 50)
     surface.DrawRect(0, 0, w, h)
 end
+
 paintFunctions[1] = function(this, w, h)
+    print("")
 end
 
 function PANEL:Init()
@@ -131,6 +134,7 @@ function PANEL:Think()
 
         for k, v in ipairs(self.teams) do
             visible, amount = v:IsVisible(), teamNumPlayers(k)
+
             if visible and k == FACTION_STAFF and LocalPlayer():Team() == FACTION_STAFF then
                 v:SetVisible(true)
                 self.layout:InvalidateLayout()
@@ -224,6 +228,14 @@ function PANEL:addPlayer(client, parent)
     slot.ping:SetTextColor(color_white)
     slot.ping:SetTextInset(16, 0)
     slot.ping:SetExpensiveShadow(1, color_black)
+    slot.desc = slot:Add("DLabel")
+    slot.desc:Dock(FILL)
+    slot.desc:DockMargin(65, 0, 48, 0)
+    slot.desc:SetWrap(true)
+    slot.desc:SetContentAlignment(7)
+    slot.desc:SetTextColor(color_white)
+    slot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
+    slot.desc:SetFont("liaSmallFont")
     local oldTeam = client:Team()
 
     function slot:update()
@@ -246,6 +258,8 @@ function PANEL:addPlayer(client, parent)
         name = name:gsub("#", "\226\128\139#")
         local model = client:GetModel()
         local skin = client:GetSkin()
+        local desc = hook.Run("ShouldAllowScoreboardOverride", client, "desc") and hook.Run("GetDisplayedDescription", client) or (client:getChar() and client:getChar():getDesc()) or ""
+        desc = desc:gsub("#", "\226\128\139#")
         self.model:setHidden(overrideName == L("unknown"))
 
         if self.lastName ~= name then
@@ -261,6 +275,11 @@ function PANEL:addPlayer(client, parent)
             communitymanager = true,
             superadministrator = true,
         }
+
+        if self.lastDesc ~= desc then
+            self.desc:SetText(desc)
+            self.lastDesc = desc
+        end
 
         if self.lastModel ~= model or self.lastSkin ~= skin then
             self.model:SetModel(client:GetModel(), client:GetSkin())
