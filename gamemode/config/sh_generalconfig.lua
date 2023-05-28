@@ -98,6 +98,14 @@ lia.config.add("defMoney", 0, "The amount of money that players start with.", ni
     }
 })
 
+lia.config.add("StaffAutoRecognize", true, "Whether or not FACTION_STAFF is globally recognized.", nil, {
+    category = "Player Settings"
+})
+
+lia.config.add("FactionAutoRecognize", false, "Whether or not players from the same faction recognize themselves (if true, please configure the faction list in the plugin).", nil, {
+    category = "Player Settings"
+})
+
 lia.config.add("allowExistNames", true, "Whether or not players can use an already existing name upon character creation.", nil, {
     category = "Player Settings"
 })

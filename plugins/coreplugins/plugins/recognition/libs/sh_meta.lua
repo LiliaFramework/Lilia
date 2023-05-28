@@ -16,8 +16,8 @@ function PLUGIN:IsCharRecognized(char, id)
     if other then
         local faction = lia.faction.indices[other:getFaction()]
         if faction and faction.isGloballyRecognized then return end
-        if char:getFaction() == other:getFaction() and not self.noRecognise[char:getFaction()] and not self.noRecognise[other:getFaction()] then return end
-        if char:getFaction() == FACTION_STAFF and other:getFaction() ~= FACTION_STAFF then return true end
+        if lia.config.get("FactionAutoRecognize", false) and char:getFaction() == other:getFaction() and not self.noRecognise[char:getFaction()] and not self.noRecognise[other:getFaction()] then return end
+        if lia.config.get("StaffAutoRecognize", true) and char:getFaction() == FACTION_STAFF and other:getFaction() ~= FACTION_STAFF then return true end
     end
 
     local recognized = char:getData("rgn", "")
