@@ -96,7 +96,9 @@ function lia.config.load()
         end
     end
 
-    lia.util.includeDir("lilia/gamemode/config")
+    lia.util.include("lilia/gamemode/config/sh_clientconfig.lua")
+    lia.util.include("lilia/gamemode/config/sh_generalconfig.lua")
+    lia.util.include("lilia/gamemode/config/sh_serverconfig.lua")
     hook.Run("InitializedConfig")
 end
 

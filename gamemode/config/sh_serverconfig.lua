@@ -88,3 +88,5 @@ end, {
         max = 5000
     }
 })
+
+lia.config.squaredVoiceDistance = lia.config.get("voiceDistance", 600) * lia.config.get("voiceDistance", 600)

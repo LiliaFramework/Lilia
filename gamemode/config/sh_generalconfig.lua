@@ -109,6 +109,3 @@ lia.config.add("FactionAutoRecognize", false, "Whether or not players from the s
 lia.config.add("allowExistNames", true, "Whether or not players can use an already existing name upon character creation.", nil, {
     category = "Player Settings"
 })
-
-local dist = lia.config.get("voiceDistance")
-lia.config.squaredVoiceDistance = dist * dist

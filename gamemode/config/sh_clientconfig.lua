@@ -2,6 +2,10 @@ lia.config.add("MusicKiller", true, "Kills Loud Map Musics On Load?", nil, {
     category = "Client Settings"
 })
 
+lia.config.add("GamemodeInformation", false, "Whether or not the gamemode information is shown.", nil, {
+    category = "Client Settings"
+})
+
 lia.config.add("CrosshairEnabled", false, "Enables Player Spray?", nil, {
     category = "Client Settings"
 })
