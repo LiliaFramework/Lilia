@@ -16,20 +16,6 @@ if SERVER then
     end
 end
 
-lia.config.add("year", lia.config.get("SchemaYear", 2023), "The current year of the schema.", function()
-    if SERVER then
-        for k, client in pairs(player.GetHumans()) do
-            lia.date.syncClientTime(client)
-        end
-    end
-end, {
-    data = {
-        min = 0,
-        max = 4000
-    },
-    category = "server"
-})
-
 lia.config.add("month", tonumber(os.date("%m")), "The current month of the schema.", function()
     if SERVER then
         for k, client in pairs(player.GetHumans()) do
@@ -41,7 +27,7 @@ end, {
         min = 1,
         max = 12
     },
-    category = "server"
+    category = "Server Settings"
 })
 
 lia.config.add("day", tonumber(os.date("%d")), "The current day of the schema.", function()
@@ -55,21 +41,21 @@ end, {
         min = 1,
         max = 31
     },
-    category = "server"
+    category = "Server Settings"
 })
 
 lia.config.add("yearAppendix", "", "Add a custom appendix to your date, if you use a non-conventional calender", nil, {
     data = {
         form = "Generic"
     },
-    category = "server"
+    category = "Server Settings"
 })
 
 -- function returns a number that represents the custom time. the year is always the current year for
 -- compatibility, though it can be editted with lia.date.getFormatted
 function lia.date.get()
     return os.time({
-        year = os.date("%Y"),
+        year = tonumber(lia.config.get("SchemaYear", 2023)),
         month = lia.config.get("month"),
         day = lia.config.get("day"),
         hour = os.date("!%H"),
@@ -102,7 +88,7 @@ if SERVER then
         end
 
         local configTime = os.time({
-            year = tonumber(os.date("%Y")),
+            year = tonumber(lia.config.get("SchemaYear", 2023)),
             month = tonumber(lia.config.get("month")),
             day = tonumber(lia.config.get("day")),
             hour = tonumber(os.date("%H")),
@@ -128,7 +114,7 @@ if SERVER then
             -- run this code only once the day changes
             timer.Simple(remainingSeconds, function()
                 local newTime = os.time({
-                    year = tonumber(os.date("%Y")),
+                    year = tonumber(lia.config.get("SchemaYear", 2023)),
                     month = tonumber(lia.config.get("month")),
                     day = tonumber(lia.config.get("day")),
                     hour = 0,
