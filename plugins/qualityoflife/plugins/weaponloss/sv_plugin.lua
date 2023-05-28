@@ -6,7 +6,7 @@ function PLUGIN:PlayerDeath(victim, inflictor, attacker)
     if victim == attacker then return end
 
     if attacker:IsPlayer() then
-        if lia.config.get("DeathInformation", true) then
+        if lia.config.get("DeathPopupEnabled", true) then
             net.Start("death_client")
             net.WriteString(attacker:Nick())
             net.WriteFloat(attacker:getChar():getID())

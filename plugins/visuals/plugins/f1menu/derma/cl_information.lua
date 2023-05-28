@@ -120,7 +120,7 @@ function PANEL:setup()
     end
 
     if self.time then
-        local format = "%A, %d %B " .. lia.config.get("SchemaYear") .. " %T"
+        local format = "%A, %d %B " .. lia.config.get("SchemaYear", 2023) .. " %T"
         self.time:SetText(L("curTime", lia.date.getFormatted(format)))
 
         self.time.Think = function(this)

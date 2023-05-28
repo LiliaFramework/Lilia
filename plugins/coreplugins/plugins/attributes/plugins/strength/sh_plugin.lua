@@ -24,5 +24,5 @@ end
 lia.config.add("strMultiplier", 0.3, "The strength multiplier scale", nil, {
 	form = "Float",
 	data = {min=0, max=1.0},
-	category = "Strength"
+    category = "Player Settings"
 })

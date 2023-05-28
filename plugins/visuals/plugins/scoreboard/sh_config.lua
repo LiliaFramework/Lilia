@@ -1,23 +1,10 @@
-local PLUGIN = PLUGIN
-
-PLUGIN.StaffRanks = {
-    root = true,
-    superadmin = true,
-    communitymanager = true,
-    headadmin = true,
-    headgm = true,
-    senioradmin = true,
-    admin = true,
-    moderator = true
-}
-
 lia.config.add("sbWidth", 0.325, "Scoreboard's width within percent of screen width.", function(oldValue, newValue)
     if CLIENT and IsValid(lia.gui.score) then
         lia.gui.score:Remove()
     end
 end, {
     form = "Float",
-    category = "visual",
+    category = "Client Settings",
     data = {
         min = 0.2,
         max = 1
@@ -30,7 +17,7 @@ lia.config.add("sbHeight", 0.825, "Scoreboard's height within percent of screen 
     end
 end, {
     form = "Float",
-    category = "visual",
+    category = "Client Settings",
     data = {
         min = 0.3,
         max = 1
@@ -42,9 +29,9 @@ lia.config.add("sbTitle", GetHostName(), "The title of the scoreboard.", functio
         lia.gui.score:Remove()
     end
 end, {
-    category = "visual"
+    category = "Client Settings"
 })
 
 lia.config.add("sbRecog", true, "Whether or not recognition is used in the scoreboard.", nil, {
-    category = "characters"
+    category = "Player Settings"
 })

@@ -64,7 +64,7 @@ function PANEL:Init()
     local staffCount = 0
 
     for _, ply in ipairs(player.GetAll()) do
-        if PLUGIN.StaffRanks[ply:GetUserGroup()] then
+        if ply:IsAdmin() then
             staffCount = staffCount + 1
         end
     end

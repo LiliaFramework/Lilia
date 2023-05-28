@@ -156,7 +156,7 @@ lia.config.add("doorCost", 10, "The price to purchase a door.", nil, {
         min = 0,
         max = 500
     },
-    category = "Doors"
+    category = "Server Settings"
 })
 
 lia.config.add("doorSellRatio", 0.5, "How much of the door price is returned when selling a door.", nil, {
@@ -165,7 +165,7 @@ lia.config.add("doorSellRatio", 0.5, "How much of the door price is returned whe
         min = 0,
         max = 1.0
     },
-    category = "Doors"
+    category = "Server Settings"
 })
 
 lia.config.add("doorLockTime", 1, "How long it takes to (un)lock a door.", nil, {
@@ -174,5 +174,5 @@ lia.config.add("doorLockTime", 1, "How long it takes to (un)lock a door.", nil, 
         min = 0,
         max = 10.0
     },
-    category = "Doors"
+    category = "Server Settings"
 })

@@ -1,8 +1,8 @@
 local PLUGIN = PLUGIN
 
 function PLUGIN:ScoreboardHide()
-    if IsValid(nut.gui.score) then
-        nut.gui.score:SetVisible(false)
+    if IsValid(lia.gui.score) then
+        lia.gui.score:SetVisible(false)
         CloseDermaMenus()
     end
 
@@ -12,10 +12,10 @@ function PLUGIN:ScoreboardHide()
 end
 
 function PLUGIN:ScoreboardShow()
-    if IsValid(nut.gui.score) then
-        nut.gui.score:SetVisible(true)
+    if IsValid(lia.gui.score) then
+        lia.gui.score:SetVisible(true)
     else
-        vgui.Create("nutScoreboard")
+        vgui.Create("liaScoreboard")
     end
 
     gui.EnableScreenClicker(true)
@@ -25,13 +25,13 @@ end
 
 function PLUGIN:OnReloaded()
     -- Reload the scoreboard.
-    if IsValid(nut.gui.score) then
-        nut.gui.score:Remove()
+    if IsValid(lia.gui.score) then
+        lia.gui.score:Remove()
     end
 end
 
 function PLUGIN:ShowPlayerOptions(client, options)
-    if PLUGIN.StaffRanks[LocalPlayer():GetUserGroup()] then
+    if client:IsAdmin() then
         options["Player Profile"] = {
             "icon16/user.png", function()
                 if IsValid(client) then

@@ -16,7 +16,7 @@ lia.util.include("cl_password.lua")
 liaStorageBase = PLUGIN
 
 lia.config.add("passwordDelay",1,"How long a user has to wait between password attempts.",nil,{
-	category = "Storage",
+    category = "Server Settings"
 })
 
 if (CLIENT) then

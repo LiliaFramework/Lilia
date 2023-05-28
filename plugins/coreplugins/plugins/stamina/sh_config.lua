@@ -3,7 +3,7 @@ lia.config.add("defaultStamina", 100, "A higher number means that characters can
         min = 50,
         max = 500
     },
-    category = "stamina"
+    category = "Player Settings"
 })
 
 lia.config.add("staminaRegenMultiplier", 1, "A higher number means that characters can run regenerate stamina faster.", nil, {
@@ -11,5 +11,5 @@ lia.config.add("staminaRegenMultiplier", 1, "A higher number means that characte
         min = 0.1,
         max = 20
     },
-    category = "stamina"
+    category = "Player Settings"
 })

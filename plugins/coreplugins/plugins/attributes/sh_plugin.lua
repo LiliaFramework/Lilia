@@ -11,7 +11,7 @@ lia.config.add(
 	nil,
 	{
 		data = {min = 1, max = 250},
-		category = "characters"
+    category = "Player Settings"
 	}
 )
 
