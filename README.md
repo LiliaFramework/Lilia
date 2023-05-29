@@ -20,6 +20,44 @@ Lilia also includes anti-exploitation measures and several other utilities desig
 
 It's worth noting that Lilia is a work in progress framework, which means that it's still being developed and refined over time. However, its current set of goals suggests that it's designed to be a versatile and useful tool for users who rely on NS plugins, Helix, or DarkRP, as well as those who are looking to improve the performance and security of their software.
 
+## Extensive List of Current Features That Differ from Predecessors
+
+> Core Features
+Full NS Compatibility 
+Partial Helix Compatibility
+Monetary DarkRP Compatibility
+Stormfox2 Time Compatiblity
+Tons of Perfomance Tweakers - Serversided and Clientsided
+Several Tweakable QOL Settings 
+Custom Registration of Time, allowing for virtually any year
+
+> Adminstration Features
+Admin ESP
+Character List
+Adminstration Stick
+
+> Anti Exploits
+Anti Weapon Dupes
+Anti Car Spam
+No Inventory Weapon Equipping
+No Item Collision Crash
+No Item Crash That Involved Spawning/Dropping Items
+Tool Restrictor
+Chat Limiter
+Character Switch Spam Limiter
+Anti BunnyHopping
+Community Blacklister by STEAMID and IPAdress
+Map Cleaners
+
+> Quality of Life
+BodyGroup Closet
+Fractional Currency
+3D Voice
+Start Information about the gamemode
+Time on Screen
+Gamemode Version Displayer
+Weapon Loss
+
 ## Development
 
 You are welcome to submit a pull request with any beneficial changes/fixes. Currently, there are no specific contributing guidelines other than ensuring that your code is consistent with the rest of the framework.
