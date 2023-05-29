@@ -8,18 +8,6 @@ To get started, you can visit the comprehensive guide in that we will leave at t
 
 If you have questions or want to integrate with the community, you can join our Discord server at [Discord](https://discord.gg/RTcVq92HsH).
 
-## Framework Goals & Additional Information
-
-Lilia is a software framework that has been developed with some specific goals in mind. One of its key objectives is to ensure full compatibility with NS plugins that have a version of 1.2 or higher. This means that users who rely on NS plugins will be able to use Lilia without any issues or conflicts for the most part.
-
-Additionally, Lilia aims to provide partial compatibility with Helix and monetary compatibility with DarkRP. This means that users who rely on either of these systems will also be able to use Lilia, although there may be some limitations or restrictions in terms of functionality.
-
-Another important goal of Lilia is to improve both client and server performance. This means that the software should run more smoothly and efficiently, which can lead to a better user experience overall.
-
-Lilia also includes anti-exploitation measures and several other utilities designed to enhance the security and stability of the software. This is important because it helps to prevent users from taking advantage of vulnerabilities or bugs in the software, which can cause serious problems for other users.
-
-It's worth noting that Lilia is a work in progress framework, which means that it's still being developed and refined over time. However, its current set of goals suggests that it's designed to be a versatile and useful tool for users who rely on NS plugins, Helix, or DarkRP, as well as those who are looking to improve the performance and security of their software.
-
 ## Extensive List of Current Features That Differ from Predecessors
 
 > Core Features
@@ -65,6 +53,18 @@ Time on Screen
 Gamemode Version Displayer
 Weapon Loss
 ```
+
+## Framework Goals & Additional Information
+
+Lilia is a software framework that has been developed with some specific goals in mind. One of its key objectives is to ensure full compatibility with NS plugins that have a version of 1.2 or higher. This means that users who rely on NS plugins will be able to use Lilia without any issues or conflicts for the most part.
+
+Additionally, Lilia aims to provide partial compatibility with Helix and monetary compatibility with DarkRP. This means that users who rely on either of these systems will also be able to use Lilia, although there may be some limitations or restrictions in terms of functionality.
+
+Another important goal of Lilia is to improve both client and server performance. This means that the software should run more smoothly and efficiently, which can lead to a better user experience overall.
+
+Lilia also includes anti-exploitation measures and several other utilities designed to enhance the security and stability of the software. This is important because it helps to prevent users from taking advantage of vulnerabilities or bugs in the software, which can cause serious problems for other users.
+
+It's worth noting that Lilia is a work in progress framework, which means that it's still being developed and refined over time. However, its current set of goals suggests that it's designed to be a versatile and useful tool for users who rely on NS plugins, Helix, or DarkRP, as well as those who are looking to improve the performance and security of their software.
 
 ## Development
 
