@@ -23,6 +23,7 @@ It's worth noting that Lilia is a work in progress framework, which means that i
 ## Extensive List of Current Features That Differ from Predecessors
 
 > Core Features
+```
 Full NS Compatibility 
 Partial Helix Compatibility
 Monetary DarkRP Compatibility
@@ -30,13 +31,17 @@ Stormfox2 Time Compatiblity
 Tons of Perfomance Tweakers - Serversided and Clientsided
 Several Tweakable QOL Settings 
 Custom Registration of Time, allowing for virtually any year
+```
 
 > Adminstration Features
+```
 Admin ESP
 Character List
 Adminstration Stick
+```
 
 > Anti Exploits
+```
 Anti Weapon Dupes
 Anti Car Spam
 No Inventory Weapon Equipping
@@ -48,8 +53,10 @@ Character Switch Spam Limiter
 Anti BunnyHopping
 Community Blacklister by STEAMID and IPAdress
 Map Cleaners
+```
 
 > Quality of Life
+```
 BodyGroup Closet
 Fractional Currency
 3D Voice
@@ -57,6 +64,7 @@ Start Information about the gamemode
 Time on Screen
 Gamemode Version Displayer
 Weapon Loss
+```
 
 ## Development
 
