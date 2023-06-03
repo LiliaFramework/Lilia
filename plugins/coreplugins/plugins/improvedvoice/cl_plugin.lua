@@ -1,23 +1,28 @@
-surface.CreateFont("3dvoicedebug", {
-    font = "Arial",
-    size = 14,
-    antialias = true,
-    weight = 700,
-    underline = true,
-})
+netstream.Hook("VoiceMenu", function(client)
+    local menu = DermaMenu()
 
-hook.Add("PostDrawOpaqueRenderables", "3dvoicedebug", function()
-    if lia.config.get("3DVoiceDebugMode") and DEV then
-        radius = lia.config.get("3DVoiceRadius") * 2
+    menu:AddOption("Change voice mode to Whispering range.", function()
+        netstream.Start("ChangeMode", 1)
+        LocalPlayer():notify("You have changed your voice mode to Whispering!")
+    end)
 
-        for k, v in pairs(player.GetAll()) do
-            if v ~= LocalPlayer() then
-                cam.Start3D2D(v:GetPos() + Vector(0, 0, 2), Angle(0, 0, 0), 1)
-                draw.RoundedBox(radius / 2, -radius / 2, -radius / 2, radius, radius, Color(0, 255, 0, 5))
-                draw.RoundedBox(0, 0, -1, radius / 2, 2, Color(0, 255, 0, 255))
-                draw.SimpleText("Radius: " .. radius / 2, "3dvoicedebug", 0, 8, Color(0, 255, 0, 220), 1)
-                cam.End3D2D()
-            end
-        end
-    end
+    menu:AddOption("Change voice mode to Talking range.", function()
+        netstream.Start("ChangeMode", 2)
+        LocalPlayer():notify("You have changed your voice mode to Talking!")
+    end)
+
+    menu:AddOption("Change voice mode to Yelling range.", function()
+        netstream.Start("ChangeMode", 3)
+        LocalPlayer():notify("You have changed your voice mode to Yelling!")
+    end)
+
+    menu:Open()
+    menu:MakePopup()
+    menu:Center()
 end)
+
+function PLUGIN:PlayerButtonDown(client, button)
+    if button == KEY_F2 and IsFirstTimePredicted() then
+        netstream.Start(client, "VoiceMenu")
+    end
+end
