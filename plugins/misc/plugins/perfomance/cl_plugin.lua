@@ -172,13 +172,13 @@ function PLUGIN:Initialize()
 end
 
 function PLUGIN:OnEntityCreated(entity)
-    if lia.option.get("DrawEntityShadows", true) then
+    if lia.config.get("DrawEntityShadows", true) then
         entity:DrawShadow(false)
     end
 end
 
 function PLUGIN:InitPostEntity()
-    if lia.option.get("DrawEntityShadows", true) then
+    if lia.config.get("DrawEntityShadows", true) then
         for _, entity in ipairs(ents.GetAll()) do
             entity:DrawShadow(false)
         end
