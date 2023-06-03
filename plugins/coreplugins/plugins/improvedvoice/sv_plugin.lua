@@ -1,6 +1,6 @@
 util.AddNetworkString("VoiceMenu")
 
-hook.Add("PlayerCanHearPlayersVoiceTalker", "PlayerCanHearPlayersVoiceTalker", function()
+hook.Add("PlayerCanHearPlayersVoiceTalker", "PlayerCanHearPlayersVoiceTalker", function(listener, speaker)
     if not speaker:getNetVar("voiceRange") then return false end
     local oldrange = Voice.Ranges[speaker:getNetVar("voiceRange", 2)].range
     oldrange = oldrange * oldrange
