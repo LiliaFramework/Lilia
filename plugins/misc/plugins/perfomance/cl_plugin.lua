@@ -106,7 +106,7 @@ function PLUGIN:PlayerInitialSpawn(ply)
     self:RegisterPlayer(ply)
 end
 
-function PLUGIN:InitPostEntity()
+function PLUGIN:Initialize()
     hook.Remove("StartChat", "StartChatIndicator")
     hook.Remove("FinishChat", "EndChatIndicator")
     hook.Remove("PostPlayerDraw", "DarkRP_ChatIndicator")
@@ -141,8 +141,66 @@ function PLUGIN:InitPostEntity()
     hook.Remove("NeedsDepthPass", "NeedsDepthPass_Bokeh")
     hook.Remove("PreventScreenClicks", "SuperDOFPreventClicks")
     hook.Remove("RenderScreenspaceEffects", "RenderBokeh")
+    hook.Remove("RenderScreenspaceEffects", "RenderBokeh")
+    hook.Remove("PostDrawEffects", "RenderWidgets")
+    hook.Remove("PlayerTick", "TickWidgets")
+    hook.Remove("PlayerInitialSpawn", "PlayerAuthSpawn")
+    hook.Remove("RenderScene", "RenderStereoscopy")
+    hook.Remove("LoadGModSave", "LoadGModSave")
+    hook.Remove("RenderScreenspaceEffects", "RenderColorModify")
+    hook.Remove("RenderScreenspaceEffects", "RenderBloom")
+    hook.Remove("RenderScreenspaceEffects", "RenderToyTown")
+    hook.Remove("RenderScreenspaceEffects", "RenderTexturize")
+    hook.Remove("RenderScreenspaceEffects", "RenderSunbeams")
+    hook.Remove("RenderScreenspaceEffects", "RenderSobel")
+    hook.Remove("RenderScreenspaceEffects", "RenderSharpen")
+    hook.Remove("RenderScreenspaceEffects", "RenderMaterialOverlay")
+    hook.Remove("RenderScreenspaceEffects", "RenderMotionBlur")
+    hook.Remove("RenderScene", "RenderSuperDoF")
+    hook.Remove("GUIMousePressed", "SuperDOFMouseDown")
+    hook.Remove("GUIMouseReleased", "SuperDOFMouseUp")
+    hook.Remove("PreventScreenClicks", "SuperDOFPreventClicks")
+    hook.Remove("PostRender", "RenderFrameBlend")
+    hook.Remove("PreRender", "PreRenderFrameBlend")
+    hook.Remove("Think", "DOFThink")
+    hook.Remove("RenderScreenspaceEffects", "RenderBokeh")
+    hook.Remove("NeedsDepthPass", "NeedsDepthPass_Bokeh")
+    hook.Remove("PostDrawEffects", "RenderWidgets")
+    hook.Remove("PostDrawEffects", "RenderHalos")
+    timer.Remove("HostnameThink")
+    timer.Remove("CheckHookTimes")
 end
 
-timer.Create("PLUGIN:PlayerExpandedUpdate", 1, 0, function()
-    PLUGIN:PlayerExpandedUpdate()
-end)
+function PLUGIN:OnEntityCreated(entity)
+    if lia.option.get("DrawEntityShadows", true) then
+        entity:DrawShadow(false)
+    end
+end
+
+function PLUGIN:InitPostEntity()
+    if lia.option.get("DrawEntityShadows", true) then
+        for _, entity in ipairs(ents.GetAll()) do
+            entity:DrawShadow(false)
+        end
+    end
+end
+
+do
+    local perfomancekillers = {
+        ["class C_PhysPropClientside"] = true,
+        ["class C_ClientRagdoll"] = true
+    }
+
+    timer.Create("CleanupGarbage", 60, 0, function()
+        for _, v in ipairs(ents.GetAll()) do
+            if perfomancekillers[v:GetClass()] then
+                SafeRemoveEntity(v)
+                RunConsoleCommand("r_cleardecals")
+            end
+        end
+    end)
+
+    timer.Create("PLUGIN:PlayerExpandedUpdate", 1, 0, function()
+        PLUGIN:PlayerExpandedUpdate()
+    end)
+end

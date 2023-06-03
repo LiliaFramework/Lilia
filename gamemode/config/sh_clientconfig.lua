@@ -10,6 +10,10 @@ lia.config.add("CrosshairEnabled", false, "Enables Player Spray?", nil, {
     category = "Client Settings"
 })
 
+lia.config.add("DrawEntityShadows", true, "Should Entity Shadows Be Drawn?", nil, {
+    category = "Client Settings"
+})
+
 lia.config.add("TimeOnScreenEnabled", false, "Enable Time On Screen?", nil, {
     category = "Client Settings"
 })
