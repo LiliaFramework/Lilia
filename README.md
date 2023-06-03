@@ -19,6 +19,7 @@ Stormfox2 Time Compatiblity
 Tons of Perfomance Tweakers - Serversided and Clientsided
 Several Tweakable QOL Settings 
 Custom Registration of Time, allowing for virtually any year
+Anti AFK System
 ```
 
 > Adminstration Features
@@ -52,6 +53,10 @@ Start Information about the gamemode
 Time on Screen
 Gamemode Version Displayer
 Weapon Loss
+Different Voice Tones for Voice Chat
+Optional Turn Based Combat
+Crash Screen
+Built in Legs Display
 ```
 
 ## Framework Goals & Additional Information
