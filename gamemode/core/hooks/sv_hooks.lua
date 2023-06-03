@@ -431,11 +431,10 @@ function GM:InitializedSchema()
 end
 
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
-    local distance = 600 * 600
     local allowVoice = lia.config.get("allowVoice")
 
-    if TalkModes then
-        if hook.Run("PlayerCanHearPlayersVoiceTalkModes", listener, speaker) then
+    if allowVoice then
+        if hook.Run("PlayerCanHearPlayersVoiceTalker", listener, speaker) then
             return true, true
         else
             if hook.Run("PlayerCanHearPlayersVoiceStandingTelephone", listener, speaker) then return true, true end
@@ -443,18 +442,6 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
             if hook.Run("PlayerCanHearPlayersVoiceHook3DVoice", listener, speaker) then return true, true end
             if hook.Run("PlayerCanHearPlayersVoiceHookTying", listener, speaker) then return true, true end
             if hook.Run("PlayerCanHearPlayersVoiceHookRadio", listener, speaker) then return true, true end
-        end
-    else
-        if allowVoice then
-            if listener:GetPos():DistToSqr(speaker:GetPos()) < distance then
-                return true, true
-            else
-                if hook.Run("PlayerCanHearPlayersVoiceStandingTelephone", listener, speaker) then return true, true end
-                if hook.Run("PlayerCanHearPlayersVoicePlacedRadios", listener, speaker) then return true, true end
-                if hook.Run("PlayerCanHearPlayersVoiceHook3DVoice", listener, speaker) then return true, true end
-                if hook.Run("PlayerCanHearPlayersVoiceHookTying", listener, speaker) then return true, true end
-                if hook.Run("PlayerCanHearPlayersVoiceHookRadio", listener, speaker) then return true, true end
-            end
         end
     end
 
@@ -569,13 +556,23 @@ function GM:CreateDefaultInventory(character)
     end
 end
 
+function GM:PluginShouldLoad(plugin)
+    return not lia.plugin.isDisabled(plugin)
+end
+
+function PLUGIN:InitializedPlugins()
+    local psaString = "Please Remove Talk Modes. Our framework has such built in by default."
+
+    if TalkModes then
+        timer.Simple(2, function()
+            MsgC(Color(255, 0, 0), psaString)
+        end)
+    end
+end
+
 function GM:LiliaTablesLoaded()
     local ignore = function() end
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
-end
-
-function GM:PluginShouldLoad(plugin)
-    return not lia.plugin.isDisabled(plugin)
 end
