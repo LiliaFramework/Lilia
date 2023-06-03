@@ -1,6 +1,7 @@
 local PLUGIN = PLUGIN
 
-function PLUGIN:CharacterLoaded(character)
+function PLUGIN:CharacterLoaded(id)
+	local character = lia.char.loaded[id]
 	local client = character:getPlayer()
 
 	if IsValid(client) then
