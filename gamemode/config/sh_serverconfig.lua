@@ -109,4 +109,19 @@ end, {
     category = "Server Settings"
 })
 
+lia.config.add("serverRestartHour", 6, "At what hours the server should restart, local to timezone.", function()
+    if SERVER then
+        timer.Simple(0.01, function()
+            PLUGIN.NextRestart = PLUGIN:GetInitialRestartTime()
+            PLUGIN.NextNotificationTime = PLUGIN:GetNextNotificationTimeBreakpoint()
+        end)
+    end
+end, {
+    data = {
+        min = 0,
+        max = 23
+    },
+    category = "Server Settings"
+})
+
 lia.config.squaredVoiceDistance = lia.config.get("voiceDistance", 600) * lia.config.get("voiceDistance", 600)
