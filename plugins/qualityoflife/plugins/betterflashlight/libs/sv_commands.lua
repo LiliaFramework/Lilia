@@ -1,4 +1,4 @@
-nut.command.Add("flashlightdebugon", {
+lia.command.add("flashlightdebugon", {
 	adminOnly = true,
 	onRun = function(client, arguments)
 		local trace = client:GetEyeTraceNoCursor()
@@ -11,7 +11,7 @@ nut.command.Add("flashlightdebugon", {
 	end
 })
 
-nut.command.Add("flashlightdebugoff", {
+lia.command.add("flashlightdebugoff", {
 	adminOnly = true,
 	onRun = function(client, arguments)
 		local trace = client:GetEyeTraceNoCursor()

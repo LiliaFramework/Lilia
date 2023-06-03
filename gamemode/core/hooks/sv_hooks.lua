@@ -560,7 +560,7 @@ function GM:PluginShouldLoad(plugin)
     return not lia.plugin.isDisabled(plugin)
 end
 
-function PLUGIN:InitializedPlugins()
+function GM:InitializedPlugins()
     local psaString = "Please Remove Talk Modes. Our framework has such built in by default."
 
     if TalkModes then

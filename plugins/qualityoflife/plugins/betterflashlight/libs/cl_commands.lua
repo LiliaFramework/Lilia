@@ -1,9 +1,9 @@
-nut.command.Add("flashlightdebugon", {
+lia.command.add("flashlightdebugon", {
 	adminOnly = true,
 	onRun = function(client, arguments) end
 })
 
-nut.command.Add("flashlightdebugoff", {
+lia.command.add("flashlightdebugoff", {
 	adminOnly = true,
 	onRun = function(client, arguments) end
 })
