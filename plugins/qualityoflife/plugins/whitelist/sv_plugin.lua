@@ -1,9 +1,9 @@
 function PLUGIN:LoadData()
-    self.allowed = self:GetData() or {}
+    self.allowed = self:getData() or {}
 end
 
 function PLUGIN:SaveData()
-    self:SetData(self.allowed)
+    self:setData(self.allowed)
 end
 
 function PLUGIN:CheckPassword(steamID64)
@@ -16,4 +16,3 @@ function PLUGIN:PlayerAuthed(client, steamID, uniqueID)
         game.KickID(uniqueID, "Sorry, you are not whitelisted for " .. GetHostName())
     end
 end
-
