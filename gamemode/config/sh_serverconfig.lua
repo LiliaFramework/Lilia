@@ -14,6 +14,10 @@ lia.config.add("CarRagdoll", true, "Whether or not Car Ragdoll is Enabled to Avo
     category = "Server Settings"
 })
 
+lia.config.add("whitelistEnabled", false, "Enables the server whitelist.", nil, {
+    category = "Server Settings"
+})
+
 lia.config.add("CharacterSwitchCooldown", true, "Whether there's cooldown on switching chars.", nil, {
     category = "Server Settings"
 })
