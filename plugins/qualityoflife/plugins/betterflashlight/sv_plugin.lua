@@ -9,9 +9,9 @@ function meta:FlashlightIsOn()
 end
 
 function PLUGIN:PlayerSwitchFlashlight(client, bEnabled)
-    local character = client:GetCharacter()
+    local character = client:getChar()
 
-    if character and character:GetData("headlamp", false) == true then
+    if character and character:getData("headlamp", false) == true then
         client:SetNWBool("customFlashlight", not client:GetNWBool("customFlashlight"))
         client:EmitSound("items/flashlight1.wav")
 
