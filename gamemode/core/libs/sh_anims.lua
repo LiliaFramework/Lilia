@@ -346,6 +346,12 @@ local function UpdateAnimationTable(client)
     client.liaAnimGlide = baseTable["glide"]
 end
 
+function lia.anim.setModelClass(model, class)
+    if not lia.anim[class] then return end
+    CachedModels[model] = class
+    lia.anim.setModelClass(model, class)
+end
+
 function GM:PlayerModelChanged(ply, model)
     if not IsValid(ply) then return end
 
