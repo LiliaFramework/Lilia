@@ -214,8 +214,8 @@ do
     end
 
     if SERVER then
-        function playerMeta:setRestricted(state, noMessage)
-            self:SetRestricted(state, noMessage)
+        function playerMeta:SetRestricted(state, noMessage)
+            self:setRestricted(state, noMessage)
         end
 
         -- Removes a player's weapon and restricts interactivity.

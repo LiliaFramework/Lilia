@@ -186,6 +186,7 @@ do
 				"model", character.vars.model,
 				character:getID()
 			)
+			hook.Run("PlayerModelChanged", client, value)
 			hook.Run("OnCharVarChanged", character, "model", oldVar, value)
 		end,
 		onGet = function(character, default)

@@ -99,7 +99,7 @@ function PLUGIN:PostPlayerDraw(client)
 end
 
 function PLUGIN:PreDrawTranslucentRenderables()
-    if LocalPlayer() and LocalPlayer():GetCharacter() and not LocalPlayer():ShouldDrawLocalPlayer() then
+    if LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():ShouldDrawLocalPlayer() then
         flashlightThink(LocalPlayer())
     end
 

@@ -3,7 +3,7 @@ Legs.LegEnt = nil
 
 function Legs:CheckDrawVehicle()
     if LocalPlayer():InVehicle() then
-        if lia.option.get("LegsEnabled", true) and not lia.option.get("LegsInVehicle", true) then return true end
+        if lia.config.get("LegsEnabled", true) and not lia.config.get("LegsInVehicle", true) then return true end
 
         return false
     end
@@ -12,7 +12,7 @@ end
 local function ShouldDrawLegs()
     if hook.Run("ShouldDisableLegs") == true then return false end
 
-    if lia.option.get("LegsEnabled", true) then
+    if lia.config.get("LegsEnabled", true) then
         local client = LocalPlayer()
 
         return IsValid(Legs.LegEnt) and (client:Alive() or (client.IsGhosted and client:IsGhosted())) and not Legs:CheckDrawVehicle() and GetViewEntity() == client and not client:ShouldDrawLocalPlayer() and not IsValid(client:GetObserverTarget()) and not client:GetNoDraw() and not client.ShouldDisableLegs
