@@ -178,7 +178,7 @@ function PANEL:PaintOver()
     end
 
     if self.ServerIsOff then
-        draw.DrawText("The server has gone offline. Try reconnecting in a few minutes.", "BigFont", ScrW() / 2, 130, color_white, TEXT_ALIGN_CENTER)
+        draw.DrawText("The server has gone offline. Try reconnecting in a few minutes.", "liaBigFont", ScrW() / 2, 130, color_white, TEXT_ALIGN_CENTER)
     else
         draw.DrawText("You've lost connection to the server. Try reconnecting in a few minutes.", "liaBigFont", ScrW() / 2, 130, color_white, TEXT_ALIGN_CENTER)
         draw.DrawText("Check your router or internet connection.", "liaBigFont", ScrW() / 2, h + 160, color_white, TEXT_ALIGN_CENTER)
