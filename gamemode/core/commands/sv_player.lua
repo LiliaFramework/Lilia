@@ -1,3 +1,12 @@
+-- @type command card - Draw Card Command
+-- @typeCommentStart
+-- Draws a random card from a deck of cards.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /card - Draw a random card.
+-- @usageEnd
 lia.command.add("card", {
     syntax = "<none>",
     onRun = function(client, arguments)
@@ -18,7 +27,15 @@ lia.command.add("card", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command fallover - Fall Over Command
+-- @typeCommentStart
+-- Makes the player fall over as a ragdoll for a specified amount of time.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /fallover [number time] - Make the player fall over as a ragdoll.
+-- @usageEnd
 lia.command.add("fallover", {
     syntax = "[number time]",
     onRun = function(client, arguments)
@@ -48,7 +65,15 @@ lia.command.add("fallover", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command roll - Roll Command
+-- @typeCommentStart
+-- Rolls a random number between 0 and a specified maximum value.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /roll [number maximum] - Roll a random number.
+-- @usageEnd
 lia.command.add("roll", {
     syntax = "[number maximum]",
     onRun = function(client, arguments)
@@ -56,7 +81,15 @@ lia.command.add("roll", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command chardesc - Change Character Description Command
+-- @typeCommentStart
+-- Changes the description of the character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /chardesc [string desc] - Change the description of your character.
+-- @usageEnd
 lia.command.add("chardesc", {
     syntax = "<string desc>",
     onRun = function(client, arguments)
@@ -77,7 +110,15 @@ lia.command.add("chardesc", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command beclass - Become Class Command
+-- @typeCommentStart
+-- Allows the player to become a specific class.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /beclass [string class] - Become a specific class.
+-- @usageEnd
 lia.command.add("beclass", {
     syntax = "<string class>",
     onRun = function(client, arguments)
@@ -122,7 +163,15 @@ lia.command.add("beclass", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command chargestup - Character Get Up Command
+-- @typeCommentStart
+-- Allows the character to get up from a ragdoll state.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /chargetup - Get up from a ragdoll state.
+-- @usageEnd
 lia.command.add("chargetup", {
     onRun = function(client, arguments)
         local entity = client.liaRagdoll
@@ -138,7 +187,15 @@ lia.command.add("chargetup", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command givemoney - Give Money Command
+-- @typeCommentStart
+-- Gives a specified amount of money to another player.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /givemoney <number amount> - Give money to another player.
+-- @usageEnd
 lia.command.add("givemoney", {
     syntax = "<number amount>",
     onRun = function(client, arguments)

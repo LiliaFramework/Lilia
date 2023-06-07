@@ -1,10 +1,18 @@
--------------------------------------------------------------------------------------------------------------------------
+-- @type method charsetdesc - Set Character Description
+-- @typeCommentStart
+-- Sets the description for a character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /charsetdesc <name> <desc> - Sets the description for the character with the specified name.
+-- @usageEnd
 lia.command.add("charsetdesc", {
     syntax = "<string name> <string desc>",
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not client:IsAdmin()then
+        if not client:IsAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -30,12 +38,21 @@ lia.command.add("charsetdesc", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command charsetattrib - Set Character Attribute
+-- @typeCommentStart
+-- Allows super-admin users to set attributes for a character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /charsetattrib <string charname> <string attribname> <number level> - Set the attribute level for a character.
+-- @usageEnd
 lia.command.add("charsetattrib", {
     syntax = "<string charname> <string attribname> <number level>",
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
+        -- Check if the client has the required rank to use this command
         if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
@@ -47,14 +64,17 @@ lia.command.add("charsetattrib", {
         local attribNumber = arguments[3]
         attribNumber = tonumber(attribNumber)
         if not attribNumber or not isnumber(attribNumber) then return L("invalidArg", client, 3) end
+        -- Find the target player
         local target = lia.command.findPlayer(client, arguments[1])
 
         if IsValid(target) then
             local char = target:getChar()
 
             if char then
+                -- Loop through the attribute list to find the matching attribute
                 for k, v in pairs(lia.attribs.list) do
                     if lia.util.stringMatches(L(v.name, client), attribName) or lia.util.stringMatches(k, attribName) then
+                        -- Set the attribute level for the character
                         char:setAttrib(k, math.abs(attribNumber))
                         client:notifyLocalized("attribSet", target:Name(), L(v.name, client), math.abs(attribNumber))
 
@@ -66,12 +86,21 @@ lia.command.add("charsetattrib", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command charsetattrib - Add Character Attributes
+-- @typeCommentStart
+-- Allows super-admin users to add attributes for a character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /charsetattrib <string charname> <string attribname> <number level> - Adds the attribute level for a character.
+-- @usageEnd
 lia.command.add("charaddattrib", {
     syntax = "<string charname> <string attribname> <number level>",
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
+        -- Check if the client is a super-admin
         if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
@@ -89,6 +118,7 @@ lia.command.add("charaddattrib", {
             local char = target:getChar()
 
             if char then
+                -- Loop through the attributes to find a match
                 for k, v in pairs(lia.attribs.list) do
                     if lia.util.stringMatches(L(v.name, client), attribName) or lia.util.stringMatches(k, attribName) then
                         char:updateAttrib(k, math.abs(attribNumber))
@@ -102,12 +132,21 @@ lia.command.add("charaddattrib", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command plytransfer - Transfer Player
+-- @typeCommentStart
+-- Allows admin users to transfer a player to a different faction.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /plytransfer <string name> <string faction> - Transfer the specified player to the specified faction.
+-- @usageEnd
 lia.command.add("plytransfer", {
     syntax = "<string name> <string faction>",
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
+        -- Check if the client is an admin
         if not client:IsAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
@@ -116,12 +155,13 @@ lia.command.add("plytransfer", {
 
         local target = lia.command.findPlayer(client, arguments[1])
         local name = table.concat(arguments, " ", 2)
-        if IsValid(target) and target == client and uniqueID == "plat" then return "Your rank cannot target itself with these commands." end
+        if IsValid(target) and target == client and not client:IsSuperAdmin() then return "Your rank cannot target itself with these commands." end
 
         if IsValid(target) and target:getChar() then
             local faction = lia.faction.teams[name]
 
             if not faction then
+                -- Loop through the factions to find a match
                 for k, v in pairs(lia.faction.indices) do
                     if lia.util.stringMatches(L(v.name, client), name) then
                         faction = v
@@ -147,12 +187,21 @@ lia.command.add("plytransfer", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command charsetname - Set Character Name
+-- @typeCommentStart
+-- Allows admin users to set the name of a character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /charsetname <string name> [string newName] - Set the name of the specified character. If the new name is not provided, a prompt will appear to enter the new name.
+-- @usageEnd
 lia.command.add("charsetname", {
     syntax = "<string name> [string newName]",
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
+        -- Check if the client is an admin
         if not client:IsAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
@@ -160,7 +209,7 @@ lia.command.add("charsetname", {
         end
 
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) and target == client and uniqueID == "plat" then return "Your rank cannot target itself with these commands." end
+        if IsValid(target) and target == client and not client:IsSuperAdmin() then return "Your rank cannot target itself with these commands." end
 
         if IsValid(target) and not arguments[2] then
             return client:requestString("@chgName", "@chgNameDesc", function(text)
@@ -178,12 +227,21 @@ lia.command.add("charsetname", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command charsetmodel - Set Character Model
+-- @typeCommentStart
+-- Allows admin users to set the model of a character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /charsetmodel <string name> <string model> - Set the model of the specified character.
+-- @usageEnd
 lia.command.add("charsetmodel", {
     syntax = "<string name> <string model>",
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
+        -- Check if the client is an admin
         if not client:IsAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
@@ -192,7 +250,7 @@ lia.command.add("charsetmodel", {
 
         if not arguments[2] then return L("invalidArg", client, 2) end
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) and target == client and uniqueID == "plat" then return "Your rank cannot target itself with these commands." end
+        if IsValid(target) and target == client and not client:IsSuperAdmin() then return "Your rank cannot target itself with these commands." end
 
         if IsValid(target) and target:getChar() then
             target:getChar():setModel(arguments[2])
@@ -202,7 +260,15 @@ lia.command.add("charsetmodel", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command charsetskin - Set Character Skin
+-- @typeCommentStart
+-- Allows admin users to set the skin for a character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /charsetskin <string name> [number skin] - Set the skin for a character.
+-- @usageEnd
 lia.command.add("charsetskin", {
     syntax = "<string name> [number skin]",
     onRun = function(client, arguments)
@@ -216,7 +282,7 @@ lia.command.add("charsetskin", {
 
         local skin = tonumber(arguments[2])
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) and target == client and uniqueID == "plat" then return "Your rank cannot target itself with these commands." end
+        if IsValid(target) and target == client and not client:IsSuperAdmin() then return "Your rank cannot target itself with these commands." end
 
         if IsValid(target) and target:getChar() then
             target:getChar():setData("skin", skin)
@@ -226,7 +292,15 @@ lia.command.add("charsetskin", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command charsetbodygroup - Set Character Bodygroup
+-- @typeCommentStart
+-- Allows admin users to set the bodygroup value for a character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /charsetbodygroup <string name> <string bodyGroup> [number value] - Set the bodygroup value for a character.
+-- @usageEnd
 lia.command.add("charsetbodygroup", {
     syntax = "<string name> <string bodyGroup> [number value]",
     onRun = function(client, arguments)
@@ -240,7 +314,7 @@ lia.command.add("charsetbodygroup", {
 
         local value = tonumber(arguments[3])
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) and target == client and uniqueID == "plat" then return "Your rank cannot target itself with these commands." end
+        if IsValid(target) and target == client and not client:IsSuperAdmin() then return "Your rank cannot target itself with these commands." end
 
         if IsValid(target) and target:getChar() then
             local index = target:FindBodygroupByName(arguments[2])
@@ -262,7 +336,15 @@ lia.command.add("charsetbodygroup", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command charban - Ban Character
+-- @typeCommentStart
+-- Allows superadmin users to ban a character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /charban <string name> - Ban a character.
+-- @usageEnd
 lia.command.add("charban", {
     syntax = "<string name>",
     onRun = function(client, arguments)
@@ -296,7 +378,15 @@ lia.command.add("charban", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command charselectskin - Select Character Skin
+-- @typeCommentStart
+-- Allows superadmin users to select a skin for their own character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /charselectskin [number skin] - Select a skin for your own character.
+-- @usageEnd
 lia.command.add("charselectskin", {
     syntax = "[number skin]",
     onRun = function(client, arguments)
@@ -318,9 +408,17 @@ lia.command.add("charselectskin", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command charselectbodygroup - Select Character Bodygroup
+-- @typeCommentStart
+-- Allows superadmin users to select a bodygroup value for a character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /charselectbodygroup <string target> <string bodyGroup> [number value] - Select a bodygroup value for a character.
+-- @usageEnd
 lia.command.add("charselectbodygroup", {
-    syntax = "<string targer> <string bodyGroup> [number value]",
+    syntax = "<string target> <string bodyGroup> [number value]",
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
         local value = tonumber(arguments[2])
@@ -359,7 +457,15 @@ lia.command.add("charselectbodygroup", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command charforceunequip - Force Unequip Character Items
+-- @typeCommentStart
+-- Allows superadmin users to force unequip all items from a character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /charforceunequip <string name> - Force unequip all items from a character.
+-- @usageEnd
 lia.command.add("charforceunequip", {
     syntax = "<string name>",
     onRun = function(client, arguments)
@@ -384,13 +490,21 @@ lia.command.add("charforceunequip", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command chargetmoney - Get Character Money
+-- @typeCommentStart
+-- Allows admin users to retrieve the amount of money a character has.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /chargetmoney <string name> - Get the amount of money a character has.
+-- @usageEnd
 lia.command.add("chargetmoney", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not client:IsAdmin()then
+        if not client:IsAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -407,13 +521,21 @@ lia.command.add("chargetmoney", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command chargetmodel - Get Character Model
+-- @typeCommentStart
+-- Allows admin users to retrieve the model of a character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /chargetmodel <string name> - Get the model of a character.
+-- @usageEnd
 lia.command.add("chargetmodel", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not client:IsAdmin()then
+        if not client:IsAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 
             return false
@@ -429,7 +551,15 @@ lia.command.add("chargetmodel", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command checkallmoney - Check All Player's Money
+-- @typeCommentStart
+-- Allows superadmin users to check the amount of money for all players who have a character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /checkallmoney <string charname> - Check the amount of money for all players who have a character.
+-- @usageEnd
 lia.command.add("checkallmoney", {
     syntax = "<string charname>",
     onRun = function(client, arguments)
@@ -449,7 +579,15 @@ lia.command.add("checkallmoney", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command bringlostitems - Bring Lost Items
+-- @typeCommentStart
+-- Allows superadmin users to bring lost items within a certain range to their current position.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /bringlostitems - Bring lost items within a certain range to your current position.
+-- @usageEnd
 lia.command.add("bringlostitems", {
     syntax = "",
     onRun = function(client, arguments)
@@ -469,23 +607,43 @@ lia.command.add("bringlostitems", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command logs - Open mLogs Menu
+-- @typeCommentStart
+-- Allows admin users to open the mLogs menu.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /logs - Open the mLogs menu.
+-- @usageEnd
 lia.command.add("logs", {
     adminOnly = false,
     onRun = function(client, arguments)
         local uniqueID = client:GetUserGroup()
 
-        if not client:IsAdmin()then
+        if not client:IsAdmin() then
             client:notify("Your rank is not high enough to use this command.")
+
+            return false
+        elseif not mLogs then
+            client:notify("You don't have mLogs installed!")
 
             return false
         end
 
-        client:ConCommand("mlogs")
+        client:ConCommand("mLogs")
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command chargiveitem - Give Item to Character
+-- @typeCommentStart
+-- Allows superadmin users to give an item to a character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /chargiveitem <string name> <string item> - Give an item to a character.
+-- @usageEnd
 lia.command.add("chargiveitem", {
     syntax = "<string name> <string item>",
     onRun = function(client, arguments)
@@ -529,7 +687,15 @@ lia.command.add("chargiveitem", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command charsetmoney - Set Character's Money
+-- @typeCommentStart
+-- Allows superadmin users to set the amount of money for a character.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /charsetmoney <string target> <number amount> - Set the amount of money for a character.
+-- @usageEnd
 lia.command.add("charsetmoney", {
     syntax = "<string target> <number amount>",
     onRun = function(client, arguments)
@@ -557,14 +723,30 @@ lia.command.add("charsetmoney", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command getpos - Get Player Position
+-- @typeCommentStart
+-- Prints the current position of the player in the chat.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /getpos - Get your current position.
+-- @usageEnd
 lia.command.add("getpos", {
     onRun = function(client, arguments)
         client:ChatPrint("MY POSITION: " .. tostring(client:GetPos()))
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command doorname - Get Door Name
+-- @typeCommentStart
+-- Prints the name of the door that the player is looking at.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /doorname - Get the name of the door you are looking at.
+-- @usageEnd
 lia.command.add("doorname", {
     onRun = function(client, arguments)
         local tr = util.TraceLine(util.GetPlayerTrace(client))
@@ -575,7 +757,15 @@ lia.command.add("doorname", {
     end
 })
 
--------------------------------------------------------------------------------------------------------------------------
+-- @type command factionlist - List Factions
+-- @typeCommentStart
+-- Lists all factions with their names and unique IDs.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /factionlist - List all factions.
+-- @usageEnd
 lia.command.add("factionlist", {
     syntax = "<string text>",
     onRun = function(client, arguments)

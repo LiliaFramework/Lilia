@@ -1,3 +1,12 @@
+-- @type method cleanitems - Clean Up Items
+-- @typeCommentStart
+-- Removes all items from the map.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /cleanitems - Removes all items from the map.
+-- @usageEnd
 lia.command.add("cleanitems", {
     onRun = function(client, arguments)
         local count = 0
@@ -17,6 +26,15 @@ lia.command.add("cleanitems", {
     end
 })
 
+-- @type method cleanprops - Clean Up Props
+-- @typeCommentStart
+-- Removes all props from the map.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /cleanprops - Removes all props from the map.
+-- @usageEnd
 lia.command.add("cleanprops", {
     onRun = function(client, arguments)
         local count = 0
@@ -32,10 +50,19 @@ lia.command.add("cleanprops", {
             v:Remove()
         end
 
-        client:notify(count .. " items have been cleaned up from the map.")
+        client:notify(count .. " props have been cleaned up from the map.")
     end
 })
 
+-- @type method cleannpcs - Clean Up NPCs
+-- @typeCommentStart
+-- Removes all NPCs from the map.
+-- @typeCommentEnd
+-- @classmod Commands
+-- @realm server
+-- @usageStart
+-- /cleannpcs - Removes all NPCs from the map.
+-- @usageEnd
 lia.command.add("cleannpcs", {
     onRun = function(client, arguments)
         local count = 0
@@ -53,6 +80,6 @@ lia.command.add("cleannpcs", {
             end
         end
 
-        client:notify(count .. " items have been cleaned up from the map.")
+        client:notify(count .. " NPCs have been cleaned up from the map.")
     end
 })
