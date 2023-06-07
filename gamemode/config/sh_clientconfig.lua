@@ -6,11 +6,7 @@ lia.config.add("GamemodeInformation", false, "Whether or not the gamemode inform
     category = "Client Settings"
 })
 
-lia.config.add("CrosshairEnabled", false, "Enables Player Spray?", nil, {
-    category = "Client Settings"
-})
-
-lia.config.add("DrawEntityShadows", true, "Should Entity Shadows Be Drawn?", nil, {
+lia.config.add("CrosshairEnabled", false, "Enables Crosshair?", nil, {
     category = "Client Settings"
 })
 
@@ -30,7 +26,7 @@ lia.config.add("vignette", true, "Whether or not the vignette is shown.", nil, {
     category = "Client Settings"
 })
 
-lia.config.add("BarsDisabled", false, "Whether or not Bars is enabled.", nil, {
+lia.config.add("BarsDisabled", false, "Whether or not Bars is Disabled.", nil, {
     category = "Client Settings"
 })
 

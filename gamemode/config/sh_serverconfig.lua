@@ -42,6 +42,14 @@ lia.config.add("SchemaYear", 2023, "Year That The Gamemode Happens On.", nil, {
     category = "Server Settings"
 })
 
+lia.config.add("Year", lia.config.get("SchemaYear", 2023), "Year That The Gamemode Happens On.", nil, {
+    data = {
+        min = 1,
+        max = 5000
+    },
+    category = "Server Settings"
+})
+
 lia.config.add("StormFox2Compatibility", true, "Whether or not the StormFox2 Time Compatibility is Enabled.", nil, {
     category = "Server Settings"
 })
