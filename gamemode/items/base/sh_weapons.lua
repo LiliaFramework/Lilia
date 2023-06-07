@@ -1,12 +1,12 @@
-ITEM.name = "Weapon"
-ITEM.desc = "A Weapon."
-ITEM.category = "Weapons"
-ITEM.model = "models/weapons/w_pistol.mdl"
-ITEM.class = "weapon_pistol"
-ITEM.width = 2
-ITEM.height = 2
-ITEM.isWeapon = true
-ITEM.weaponCategory = "sidearm"
+ITEM.name = "Weapon" -- The name of the weapon
+ITEM.desc = "A Weapon." -- The description of the weapon
+ITEM.category = "Weapons" -- The category of the weapon
+ITEM.model = "models/weapons/w_pistol.mdl" -- The model of the weapon
+ITEM.class = "weapon_pistol" -- The class of the weapon
+ITEM.width = 2 -- The width of the weapon in the inventory grid
+ITEM.height = 2 -- The height of the weapon in the inventory grid
+ITEM.isWeapon = true -- Indicates that the item is a weapon
+ITEM.weaponCategory = "sidearm" -- The category of the weapon (e.g., sidearm, rifle, etc.)
 
 -- Inventory drawing
 if CLIENT then
@@ -18,9 +18,9 @@ if CLIENT then
     end
 end
 
--- On item is dropped, Remove a weapon from the player and keep the ammo in
--- the item.
+-- On item is dropped, remove a weapon from the player and keep the ammo in the item.
 ITEM:hook("drop", function(item)
+    -- Check if the item is equipped
     if item:getData("equip") then
         item:setData("equip", nil)
         item.player.carryWeapons = item.player.carryWeapons or {}
@@ -35,9 +35,7 @@ ITEM:hook("drop", function(item)
     end
 end)
 
--- On player uneqipped the item, Removes a weapon from the player and keep
--- the ammo in the item.
--- sorry, for name order.
+-- On player unequips the item, remove a weapon from the player and keep the ammo in the item.
 ITEM.functions.EquipUn = {
     name = "Unequip",
     tip = "equipTip",
@@ -72,8 +70,7 @@ ITEM.functions.EquipUn = {
     end
 }
 
--- On player eqipped the item, Gives a weapon to player and load the ammo data
--- from the item.
+-- On player equips the item, give a weapon to the player and load the ammo data from the item.
 ITEM.functions.Equip = {
     name = "Equip",
     tip = "equipTip",

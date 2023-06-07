@@ -1,17 +1,19 @@
-local INVENTORY_TYPE_ID = "grid"
-ITEM.name = "Bag"
-ITEM.desc = "A bag to hold more items."
-ITEM.model = "models/props_c17/suitcase001a.mdl"
-ITEM.category = "Storage"
-ITEM.isBag = true
+local INVENTORY_TYPE_ID = "grid" -- The ID of the inventory type used for the bag
+ITEM.name = "Bag" -- The name of the item
+ITEM.desc = "A bag to hold more items." -- The description of the item
+ITEM.model = "models/props_c17/suitcase001a.mdl" -- The model of the item
+ITEM.category = "Storage" -- The category of the item
+ITEM.isBag = true -- Indicates that the item is a bag
 
+-- Sound played when interacting with the bag
 local SOUND_BAG_RESPONSE = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
 
-ITEM.invWidth = 2
-ITEM.invHeight = 2
+ITEM.invWidth = 2 -- The width of the bag's inventory grid
+ITEM.invHeight = 2 -- The height of the bag's inventory grid
 
+-- The "View" function of the item
 ITEM.functions.View = {
-    icon = "icon16/briefcase.png",
+    icon = "icon16/briefcase.png", -- The icon used for the function
     onClick = function(item)
         local inventory = item:getInv()
         if not inventory then return false end
@@ -36,10 +38,9 @@ ITEM.functions.View = {
         end
 
         return false
-    end,
-    onCanRun = function(item)
-        return not IsValid(item.entity) and item:getInv()
-    end
+    end, -- The function to execute when the function is clicked
+    onCanRun = function(item) return not IsValid(item.entity) and item:getInv() end -- The function to determine if the function can be run
+    
 }
 
 function ITEM:onInstanced()

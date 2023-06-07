@@ -1,7 +1,23 @@
--- This file includes utility functions that are pretty isolated.
--- Includes a file from the prefix.
 lia.util.cachedMaterials = lia.util.cachedMaterials or {}
+ALWAYS_RAISED = ALWAYS_RAISED or {}
+ALWAYS_RAISED["weapon_physgun"] = true
+ALWAYS_RAISED["gmod_tool"] = true
+ALWAYS_RAISED["lia_poshelper"] = true
 
+-- @type function lia.util.include
+-- @typeCommentStart
+-- This function is used to include Lua files based on their state (server, shared, or client).
+-- It checks the file name and the state parameter to determine how to include the file.
+-- If the file is server-side and the server is running, it uses the `include` function.
+-- If the file is shared, it includes the file on both server and client by sending it to the client using `AddCSLuaFile`.
+-- If the file is client-side and the server is running, it sends the file to the client using `AddCSLuaFile` and includes it on the client.
+-- @typeCommentEnd
+-- @classmod Util
+-- @realm shared
+-- @usageStart
+-- Example usage:
+-- lia.util.include("sv_myfile.lua", "server")
+-- @usageEnd
 function lia.util.include(fileName, state)
     if not fileName then
         error("[Lilia] No file name specified for including.")
@@ -28,7 +44,17 @@ function lia.util.include(fileName, state)
     end
 end
 
--- Include files based off the prefix within a directory.
+-- @type function lia.util.includeDir
+-- @typeCommentStart
+-- Includes Lua files from a directory based on their prefix.
+-- It allows including files recursively if specified.
+-- @typeCommentEnd
+-- @classmod Util
+-- @realm shared
+-- @usageStart
+-- Example usage:
+-- lia.util.includeDir("mydirectory", true, true)
+-- @usageEnd
 function lia.util.includeDir(directory, fromLua, recursive)
     -- By default, we include relatively to Lilia.
     local baseDir = "lilia"
@@ -69,6 +95,15 @@ function lia.util.includeDir(directory, fromLua, recursive)
     end
 end
 
+-- @type function lia.util.getAddress
+-- @typeCommentStart
+-- Legacy Code, here to avoid breaking stuff
+-- @typeCommentEnd
+-- @classmod Util
+-- @realm shared
+-- @usageStart
+-- N/A
+-- @usageEnd
 -- Returns the address:port of the server.
 function lia.util.getAddress()
     ErrorNoHalt("lia.util.getAddress() is deprecated, use game.GetIPAddress()\n")
@@ -76,6 +111,17 @@ function lia.util.getAddress()
     return game.GetIPAddress()
 end
 
+-- @type function lia.util.getAdmins
+-- @typeCommentStart
+-- Returns any person with Admin Permissions. If bool is true, SuperAdmins are also called. 
+-- @typeCommentEnd
+-- @classmod Util
+-- @realm shared
+-- @intParam isSuper Set to true to get super admins, false to get regular admins.
+-- @return admins A table containing the list of admins.
+-- @usageStart
+-- lia.util.getAdmins(bool)
+-- @usageEnd
 function lia.util.getAdmins(isSuper)
     local admins = {}
 
@@ -94,13 +140,37 @@ function lia.util.getAdmins(isSuper)
     return admins
 end
 
+-- @type function lia.util.isSteamID
+-- @typeCommentStart
+-- Checks if a given value is a valid SteamID.
+-- @typeCommentEnd
+-- @classmod Util
+-- @realm shared
+-- @param value The value to check if it's a SteamID.
+-- @return boolean Returns true if the value is a valid SteamID, false otherwise.
+-- @usageStart
+-- Example usage:
+-- local isSteamID = lia.util.isSteamID("STEAM_0:1:12345678")
+-- @usageEnd
 function lia.util.isSteamID(value)
     if string.match(value, "STEAM_(%d+):(%d+):(%d+)") then return true end
 
     return false
 end
 
--- Finds a player by matching their name or steam id.
+-- @type function lia.util.findPlayer
+-- @typeCommentStart
+-- Finds a player by matching their name or SteamID.
+-- @typeCommentEnd
+-- @classmod Util
+-- @realm shared
+-- @param identifier The name or SteamID of the player to find.
+-- @param allowPatterns Set to true to allow pattern matching for the identifier.
+-- @return player|nil Returns the found player or nil if no player was found.
+-- @usageStart
+-- Example usage:
+-- local player = lia.util.findPlayer("JohnDoe", false)
+-- @usageEnd
 function lia.util.findPlayer(identifier, allowPatterns)
     if lia.util.isSteamID(identifier) then return player.GetBySteamID(identifier) end
 
@@ -113,6 +183,19 @@ function lia.util.findPlayer(identifier, allowPatterns)
     end
 end
 
+-- @type function lia.util.gridVector
+-- @typeCommentStart
+-- Rounds the components of a vector to the nearest multiple of a grid size.
+-- @typeCommentEnd
+-- @classmod Util
+-- @realm shared
+-- @param vec The vector to round.
+-- @param gridSize The size of the grid.
+-- @return Vector Returns the rounded vector.
+-- @usageStart
+-- Example usage:
+-- local roundedVector = lia.util.gridVector(Vector(1.2, 2.5, 3.7), 0.5)
+-- @usageEnd
 function lia.util.gridVector(vec, gridSize)
     if gridSize <= 0 then
         gridSize = 1
@@ -127,6 +210,20 @@ function lia.util.gridVector(vec, gridSize)
     return vec
 end
 
+-- @type function lia.util.getAllChar
+-- @typeCommentStart
+-- Retrieves the IDs of all characters owned by players.
+-- @typeCommentEnd
+-- @classmod Util
+-- @realm shared
+-- @return table Returns a table containing the IDs of all characters owned by players.
+-- @usageStart
+-- Example usage:
+-- local charIDs = lia.util.getAllChar()
+-- for k, id in ipairs(charIDs) do
+--     print(id)
+-- end
+-- @usageEnd
 function lia.util.getAllChar()
     local charTable = {}
 
@@ -139,127 +236,18 @@ function lia.util.getAllChar()
     return charTable
 end
 
--- Misc. player stuff.
-do
-    local playerMeta = FindMetaTable("Player")
-    -- Default list of weapons that are always raised.
-    ALWAYS_RAISED = ALWAYS_RAISED or {}
-    ALWAYS_RAISED["weapon_physgun"] = true
-    ALWAYS_RAISED["gmod_tool"] = true
-    ALWAYS_RAISED["lia_poshelper"] = true
-
-    -- Returns how many seconds the player has played on the server in total.
-    if SERVER then
-        function playerMeta:GetPlayTime()
-            self:getPlayTime()
-        end
-
-        function playerMeta:getPlayTime()
-            local diff = os.time(lia.util.dateToNumber(self.lastJoin)) - os.time(lia.util.dateToNumber(self.firstJoin))
-
-            return diff + (RealTime() - (self.liaJoinTime or RealTime()))
-        end
-    else
-        function playerMeta:GetPlayTime()
-            self:getPlayTime()
-        end
-
-        function playerMeta:getPlayTime()
-            local diff = os.time(lia.util.dateToNumber(lia.lastJoin)) - os.time(lia.util.dateToNumber(lia.firstJoin))
-
-            return diff + (RealTime() - lia.joinTime or 0)
-        end
-    end
-
-    -- Returns true if the player is moving at least the running speed.
-    local vectorLength2D = FindMetaTable("Vector").Length2D
-
-    function playerMeta:isRunning()
-        return vectorLength2D(self:GetVelocity()) > (self:GetWalkSpeed() + 10)
-    end
-
-    function playerMeta:IsRunning()
-        self:isRunning()
-    end
-
-    -- Checks if the player has a female model.
-    function playerMeta:IsFemale()
-        self:isFemale()
-    end
-
-    function playerMeta:isFemale()
-        local model = self:GetModel():lower()
-
-        return model:find("female") or model:find("alyx") or model:find("mossman") or lia.anim.getModelClass(model) == "citizen_female"
-    end
-
-    -- Returns a good position in front of the player for an entity.
-    function playerMeta:GetItemDropPos()
-        self:getItemDropPos()
-    end
-
-    function playerMeta:getItemDropPos()
-        -- Start a trace.
-        local data = {}
-        data.start = self:GetShootPos()
-        data.endpos = self:GetShootPos() + self:GetAimVector() * 86
-        data.filter = self
-        local trace = util.TraceLine(data)
-        data.start = trace.HitPos
-        data.endpos = data.start + trace.HitNormal * 46
-        data.filter = {}
-        trace = util.TraceLine(data)
-
-        return trace.HitPos
-    end
-
-    if SERVER then
-        function playerMeta:SetRestricted(state, noMessage)
-            self:setRestricted(state, noMessage)
-        end
-
-        -- Removes a player's weapon and restricts interactivity.
-        function playerMeta:setRestricted(state, noMessage)
-            if state then
-                self:setNetVar("restricted", true)
-
-                if noMessage then
-                    self:setLocalVar("restrictNoMsg", true)
-                end
-
-                self.liaRestrictWeps = self.liaRestrictWeps or {}
-
-                for k, v in ipairs(self:GetWeapons()) do
-                    self.liaRestrictWeps[k] = v:GetClass()
-                end
-
-                timer.Simple(0, function()
-                    self:StripWeapons()
-                end)
-
-                hook.Run("OnPlayerRestricted", self)
-            else
-                self:setNetVar("restricted")
-
-                if self:getLocalVar("restrictNoMsg") then
-                    self:setLocalVar("restrictNoMsg")
-                end
-
-                if self.liaRestrictWeps then
-                    for k, v in ipairs(self.liaRestrictWeps) do
-                        self:Give(v)
-                    end
-
-                    self.liaRestrictWeps = nil
-                end
-
-                hook.Run("OnPlayerUnRestricted", self)
-            end
-        end
-    end
-end
-
--- Returns a single cached copy of a material or creates it if it doesn't exist.
+-- @type function lia.util.getMaterial
+-- @typeCommentStart
+-- Retrieves a material from the cache or creates a new one if it doesn't exist.
+-- @typeCommentEnd
+-- @param string materialPath The path to the material.
+-- @return Material The material object.
+-- @classmod Util
+-- @realm shared
+-- @usageStart
+-- Example usage:
+-- local material = lia.util.getMaterial("materials/my_material.vmt")
+-- @usageEnd
 function lia.util.getMaterial(materialPath)
     -- Cache the material.
     lia.util.cachedMaterials[materialPath] = lia.util.cachedMaterials[materialPath] or Material(materialPath)
