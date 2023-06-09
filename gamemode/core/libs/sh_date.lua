@@ -16,6 +16,22 @@ if SERVER then
     end
 end
 
+lia.config.add("SchemaYear", 2023, "Year That The Gamemode Happens On.", nil, {
+    data = {
+        min = 1,
+        max = 5000
+    },
+    category = "Server Settings"
+})
+
+lia.config.add("Year", lia.config.get("SchemaYear", 2023), "Year That The Gamemode Happens On.", nil, {
+    data = {
+        min = 1,
+        max = 5000
+    },
+    category = "Server Settings"
+})
+
 lia.config.add("month", tonumber(os.date("%m")), "The current month of the schema.", function()
     if SERVER then
         for k, client in pairs(player.GetHumans()) do
