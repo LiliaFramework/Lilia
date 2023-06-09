@@ -13,3 +13,11 @@ If you have questions or want to integrate with the community, you can join our 
 ## Framework Information
 
 Please Refer To Our [Wiki](https://github.com/bleonheart/lilia-docs) [WIP]
+
+## Development
+
+You are welcome to submit a pull request with any beneficial changes/fixes. Currently, there are no specific contributing guidelines other than ensuring that your code is consistent with the rest of the framework.
+
+## Acknowledgements
+
+Lilia is a fork of NutScript 1.2.3 by Chessnut and rebel1324, and we acknowledge their contributions to the framework.
