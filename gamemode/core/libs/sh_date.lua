@@ -16,57 +16,6 @@ if SERVER then
     end
 end
 
-lia.config.add("SchemaYear", 2023, "Year That The Gamemode Happens On.", nil, {
-    data = {
-        min = 1,
-        max = 5000
-    },
-    category = "Server Settings"
-})
-
-lia.config.add("Year", lia.config.get("SchemaYear", 2023), "Year That The Gamemode Happens On.", nil, {
-    data = {
-        min = 1,
-        max = 5000
-    },
-    category = "Server Settings"
-})
-
-lia.config.add("month", tonumber(os.date("%m")), "The current month of the schema.", function()
-    if SERVER then
-        for k, client in pairs(player.GetHumans()) do
-            lia.date.syncClientTime(client)
-        end
-    end
-end, {
-    data = {
-        min = 1,
-        max = 12
-    },
-    category = "Server Settings"
-})
-
-lia.config.add("day", tonumber(os.date("%d")), "The current day of the schema.", function()
-    if SERVER then
-        for k, client in pairs(player.GetHumans()) do
-            lia.date.syncClientTime(client)
-        end
-    end
-end, {
-    data = {
-        min = 1,
-        max = 31
-    },
-    category = "Server Settings"
-})
-
-lia.config.add("yearAppendix", "", "Add a custom appendix to your date, if you use a non-conventional calender", nil, {
-    data = {
-        form = "Generic"
-    },
-    category = "Server Settings"
-})
-
 -- function returns a number that represents the custom time. the year is always the current year for
 -- compatibility, though it can be editted with lia.date.getFormatted
 function lia.date.get()
@@ -110,7 +59,7 @@ if SERVER then
             hour = tonumber(os.date("%H")),
             min = os.date("%M"),
             sec = os.date("%S")
-        }) + os.difftime(os.time(), lia.data.get("SchemaYear", os.time(), true))
+        }) + os.difftime(os.time(), lia.data.get("date", os.time(), true))
 
         lia.config.set("month", tonumber(os.date("%m", configTime)))
         lia.config.set("day", tonumber(os.date("%d", configTime)))

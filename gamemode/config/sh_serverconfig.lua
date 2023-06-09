@@ -38,22 +38,6 @@ lia.config.add("CentsCompatibility", false, "Enables Cents on Money", nil, {
     category = "Server Settings"
 })
 
-lia.config.add("SchemaYear", 2023, "Year That The Gamemode Happens On.", nil, {
-    data = {
-        min = 1,
-        max = 5000
-    },
-    category = "Server Settings"
-})
-
-lia.config.add("Year", lia.config.get("SchemaYear", 2023), "Year That The Gamemode Happens On.", nil, {
-    data = {
-        min = 1,
-        max = 5000
-    },
-    category = "Server Settings"
-})
-
 lia.config.add("StormFox2Compatibility", true, "Whether or not the StormFox2 Time Compatibility is Enabled.", nil, {
     category = "Server Settings"
 })
@@ -142,8 +126,8 @@ end, {
 lia.config.add("serverRestartHour", 6, "At what hours the server should restart, local to timezone.", function()
     if SERVER then
         timer.Simple(0.01, function()
-            PLUGIN.NextRestart = PLUGIN:GetInitialRestartTime()
-            PLUGIN.NextNotificationTime = PLUGIN:GetNextNotificationTimeBreakpoint()
+            lia.plugin.list["restarter"].NextRestart = lia.plugin.list["restarter"]:GetInitialRestartTime()
+            lia.plugin.list["restarter"].NextNotificationTime = lia.plugin.list["restarter"]:GetNextNotificationTimeBreakpoint()
         end)
     end
 end, {
@@ -155,3 +139,53 @@ end, {
 })
 
 lia.config.squaredVoiceDistance = lia.config.get("voiceDistance", 600) * lia.config.get("voiceDistance", 600)
+
+lia.config.add("SchemaYear", 2023, "Year That The Gamemode Happens On.", nil, {
+    data = {
+        min = 1,
+        max = 5000
+    },
+    category = "Server Settings"
+})
+
+lia.config.add("year", tonumber(os.date("%Y")), "The current year of the schema.", function()
+    if SERVER then
+        for k, client in pairs(player.GetHumans()) do
+            lia.date.syncClientTime(client)
+        end
+    end
+end, {
+    data = {
+        min = 0,
+        max = 4000
+    },
+    category = "date"
+})
+
+lia.config.add("month", tonumber(os.date("%m")), "The current month of the schema.", function()
+    if SERVER then
+        for k, client in pairs(player.GetHumans()) do
+            lia.date.syncClientTime(client)
+        end
+    end
+end, {
+    data = {
+        min = 1,
+        max = 12
+    },
+    category = "Server Settings"
+})
+
+lia.config.add("day", tonumber(os.date("%d")), "The current day of the schema.", function()
+    if SERVER then
+        for k, client in pairs(player.GetHumans()) do
+            lia.date.syncClientTime(client)
+        end
+    end
+end, {
+    data = {
+        min = 1,
+        max = 31
+    },
+    category = "Server Settings"
+})
