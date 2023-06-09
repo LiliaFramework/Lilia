@@ -6,6 +6,10 @@ lia.config.add("moneyModel", "models/props_lab/box01a.mdl", "The model for money
     category = "Server Settings"
 })
 
+lia.config.add("RespawnButton", true, "Whether or not the respawn button is enabled.", nil, {
+    category = "Server Settings"
+})
+
 lia.config.add("allowVoice", true, "Whether or not voice chat is allowed.", nil, {
     category = "Server Settings"
 })
