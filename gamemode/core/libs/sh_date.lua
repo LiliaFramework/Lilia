@@ -30,12 +30,13 @@ lia.config.add("year", tonumber(os.date("%Y")), "The current year of the schema.
             lia.date.syncClientTime(client)
         end
     end
+
+    category = "Server Settings"
 end, {
     data = {
         min = 0,
         max = 4000
     },
-    category = "date"
 })
 
 lia.config.add("month", tonumber(os.date("%m")), "The current month of the schema.", function()
@@ -44,12 +45,13 @@ lia.config.add("month", tonumber(os.date("%m")), "The current month of the schem
             lia.date.syncClientTime(client)
         end
     end
+
+    category = "Server Settings"
 end, {
     data = {
         min = 1,
         max = 12
     },
-    category = "Server Settings"
 })
 
 lia.config.add("day", tonumber(os.date("%d")), "The current day of the schema.", function()
@@ -58,12 +60,13 @@ lia.config.add("day", tonumber(os.date("%d")), "The current day of the schema.",
             lia.date.syncClientTime(client)
         end
     end
+
+    category = "Server Settings"
 end, {
     data = {
         min = 1,
         max = 31
     },
-    category = "Server Settings"
 })
 
 -- function returns a number that represents the custom time. the year is always the current year for
@@ -103,7 +106,7 @@ if SERVER then
         end
 
         local configTime = os.time({
-            year = tonumber(lia.config.get("SchemaYear", 2023)),
+            year = tonumber(os.date("%Y")),
             month = tonumber(lia.config.get("month")),
             day = tonumber(lia.config.get("day")),
             hour = tonumber(os.date("%H")),
@@ -129,7 +132,7 @@ if SERVER then
             -- run this code only once the day changes
             timer.Simple(remainingSeconds, function()
                 local newTime = os.time({
-                    year = tonumber(lia.config.get("SchemaYear", 2023)),
+                    year = tonumber(os.date("%Y")),
                     month = tonumber(lia.config.get("month")),
                     day = tonumber(lia.config.get("day")),
                     hour = 0,
