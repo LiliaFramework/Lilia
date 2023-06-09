@@ -66,6 +66,24 @@ lia.config.add("WeaponToggleDelay", 1, "How often you can raise/lower a weapon."
     category = "Server Settings"
 })
 
+lia.config.add("GlobalMaxHealth", 100, "The Maximum Health for players", nil, {
+    form = "Float",
+    data = {
+        min = 1,
+        max = 5000
+    },
+    category = "Server Settings"
+})
+
+lia.config.add("DefaultHealth", 100, "The Default Health for players", nil, {
+    form = "Float",
+    data = {
+        min = 1,
+        max = 5000
+    },
+    category = "Server Settings"
+})
+
 lia.config.add("WeaponRaiseTimer", 1, "How long it takes to raise a weapon.", nil, {
     data = {
         min = 1,

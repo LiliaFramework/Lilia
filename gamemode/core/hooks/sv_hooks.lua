@@ -244,6 +244,8 @@ function GM:PlayerLoadout(client)
         -- Set their player model to the character's model.
         client:SetModel(character:getModel())
         client:Give("lia_hands")
+        client:SetMaxHealth(lia.config.get("GlobalMaxHealth", 100))
+        client:SetHealth(lia.config.get("DefaultHealth", 100))
         client:SetWalkSpeed(lia.config.get("walkSpeed", 130))
         client:SetRunSpeed(lia.config.get("runSpeed", 235))
         local faction = lia.faction.indices[client:Team()]
