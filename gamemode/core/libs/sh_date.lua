@@ -94,7 +94,7 @@ if SERVER then
             hour = tonumber(os.date("%H")),
             min = os.date("%M"),
             sec = os.date("%S")
-        }) + os.difftime(os.time(), lia.data.get("date", os.time(), true))
+        }) + os.difftime(os.time(), lia.data.get("SchemaYear", os.time(), true))
 
         lia.config.set("month", tonumber(os.date("%m", configTime)))
         lia.config.set("day", tonumber(os.date("%d", configTime)))
