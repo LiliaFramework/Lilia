@@ -10,6 +10,10 @@ lia.config.add("RespawnButton", true, "Whether or not the respawn button is enab
     category = "Server Settings"
 })
 
+lia.config.add("AFKKickEnabled", false, "Whether or not AFKKick is enabled.", nil, {
+    category = "Server Settings"
+})
+
 lia.config.add("allowVoice", true, "Whether or not voice chat is allowed.", nil, {
     category = "Server Settings"
 })

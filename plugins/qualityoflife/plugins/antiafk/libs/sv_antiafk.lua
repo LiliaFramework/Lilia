@@ -28,28 +28,30 @@ end
 
 AFKKick.TimerInterval = 1
 
-timer.Create("AFKTimer", AFKKick.TimerInterval, 0, function()
-	local plyCount = player.GetCount()
-	local maxPlayers = game.MaxPlayers()
+if lia.config.get("AFKKickEnabled", false) then
+	timer.Create("AFKTimer", AFKKick.TimerInterval, 0, function()
+		local plyCount = player.GetCount()
+		local maxPlayers = game.MaxPlayers()
 
-	for _, ply in ipairs(player.GetAll()) do
-		if not ply:getChar() and plyCount < maxPlayers then continue end
-		if AFKKick.Config.AllowedPlayers[ply:SteamID()] or ply:IsBot() then continue end
-		ply.AFKTime = (ply.AFKTime or 0) + AFKKick.TimerInterval
+		for _, ply in ipairs(player.GetAll()) do
+			if not ply:getChar() and plyCount < maxPlayers then continue end
+			if AFKKick.Config.AllowedPlayers[ply:SteamID()] or ply:IsBot() then continue end
+			ply.AFKTime = (ply.AFKTime or 0) + AFKKick.TimerInterval
 
-		if ply.AFKTime >= AFKKick.Config.WarningTime and not ply.HasWarning then
-			AFKKick.WarnPlayer(ply)
-		end
+			if ply.AFKTime >= AFKKick.Config.WarningTime and not ply.HasWarning then
+				AFKKick.WarnPlayer(ply)
+			end
 
-		if ply.AFKTime >= AFKKick.Config.WarningTime + AFKKick.Config.KickTime then
-			if plyCount >= maxPlayers then
-				ply:Kick(AFKKick.Config.KickMessage)
-			elseif ply:getChar() then
-				AFKKick.CharKick(ply)
+			if ply.AFKTime >= AFKKick.Config.WarningTime + AFKKick.Config.KickTime then
+				if plyCount >= maxPlayers then
+					ply:Kick(AFKKick.Config.KickMessage)
+				elseif ply:getChar() then
+					AFKKick.CharKick(ply)
+				end
 			end
 		end
-	end
-end)
+	end)
+end
 
 function AFKKick.ResetAFKTime(ply)
 	ply.AFKTime = 0

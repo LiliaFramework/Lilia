@@ -1,6 +1,3 @@
-lia.config.language = "english"
-lia.config.itemFormat = "<font=liaGenericFont>%s</font>\n<font=liaSmallFont>%s</font>"
-
 lia.config.add("maxChars", 5, "The maximum number of characters a player can have.", nil, {
     data = {
         min = 1,
@@ -109,3 +106,6 @@ lia.config.add("FactionAutoRecognize", false, "Whether or not players from the s
 lia.config.add("allowExistNames", true, "Whether or not players can use an already existing name upon character creation.", nil, {
     category = "Player Settings"
 })
+
+lia.config.language = "english"
+lia.config.itemFormat = "<font=liaGenericFont>%s</font>\n<font=liaSmallFont>%s</font>"
