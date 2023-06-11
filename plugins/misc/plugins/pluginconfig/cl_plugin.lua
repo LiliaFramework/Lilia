@@ -2,7 +2,7 @@ local PLUGIN = PLUGIN
 
 function PLUGIN:createPluginPanel(parent, plugins)
     local frame = vgui.Create("DFrame")
-    frame:SetTitle(L"Plugins")
+    frame:SetTitle("Tick to Disable The Checkmarked Plugins")
     frame:SetSize(256, 512)
     frame:MakePopup()
     frame:Center()
