@@ -1,6 +1,6 @@
-local playerMeta = FindMetaTable("Player")
-
 do
+    local playerMeta = FindMetaTable("Player")
+
     -- @type function SetRestricted
     -- @typeCommentStart
     -- Sets the restriction state of the player.
