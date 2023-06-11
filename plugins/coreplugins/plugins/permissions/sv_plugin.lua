@@ -23,17 +23,17 @@ function PLUGIN:PlayerSpawnRagdoll(client)
 end
 
 ------------------------------------------------------------------------------------------------------------------------
-function PLUGIN:PlayerGiveSWEP(ply, class, swep)
-    return ply:IsSuperAdmin()
+function PLUGIN:PlayerGiveSWEP(client, class, swep)
+    return client:IsSuperAdmin()
 end
 
 ------------------------------------------------------------------------------------------------------------------------
-function PLUGIN:PlayerSpawnEffect(ply, model)
+function PLUGIN:PlayerSpawnEffect(client, model)
     return client:IsAdmin()
 end
 
 ------------------------------------------------------------------------------------------------------------------------
-function PLUGIN:PlayerSpawnSENT(ply, class)
+function PLUGIN:PlayerSpawnSENT(client, class)
     return client:IsAdmin()
 end
 
