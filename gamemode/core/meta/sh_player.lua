@@ -1,9 +1,9 @@
-local PLAYER = FindMetaTable("Player")
+local playerMeta = FindMetaTable("Player")
 
 -- I suggest you to follow the Lilia Coding Rules.
 -- This is just for the DarkRP things mate.
 -- trust me, you're going to use character class a lot if you're going to make something with Lilia.
-function PLAYER:AddMoney(amt)
+function playerMeta:AddMoney(amt)
     local char = self:getChar()
 
     if char then
@@ -11,7 +11,7 @@ function PLAYER:AddMoney(amt)
     end
 end
 
-function PLAYER:TakeMoney(amt)
+function playerMeta:TakeMoney(amt)
     local char = self:getChar()
 
     if char then
@@ -19,7 +19,7 @@ function PLAYER:TakeMoney(amt)
     end
 end
 
-function PLAYER:addMoney(amt)
+function playerMeta:addMoney(amt)
     local char = self:getChar()
 
     if char then
@@ -27,7 +27,7 @@ function PLAYER:addMoney(amt)
     end
 end
 
-function PLAYER:takeMoney(amt)
+function playerMeta:takeMoney(amt)
     local char = self:getChar()
 
     if char then
@@ -35,25 +35,25 @@ function PLAYER:takeMoney(amt)
     end
 end
 
-function PLAYER:getMoney()
+function playerMeta:getMoney()
     local char = self:getChar()
 
     return char and char:getMoney() or 0
 end
 
-function PLAYER:canAfford(amount)
+function playerMeta:canAfford(amount)
     local char = self:getChar()
 
     return char and char:hasMoney(amount)
 end
 
-function PLAYER:GetMoney()
+function playerMeta:GetMoney()
     local char = self:getChar()
 
     return char and char:getMoney() or 0
 end
 
-function PLAYER:CanAfford(amount)
+function playerMeta:CanAfford(amount)
     local char = self:getChar()
 
     return char and char:hasMoney(amount)
@@ -67,7 +67,7 @@ if CLIENT then
     end)
 end
 
-function PLAYER:doGesture(a, b, c)
+function playerMeta:doGesture(a, b, c)
     self:AnimRestartGesture(a, b, c)
     netstream.Start(self:GetPos(), "liaSyncGesture", self, a, b, c)
 end

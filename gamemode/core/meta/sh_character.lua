@@ -501,6 +501,5 @@ function lia.char.registerVar(key, data)
     CHAR.vars[key] = data.default
 end
 
-
 -- Allows access to the character metatable using lia.meta.character
 lia.meta.character = CHAR

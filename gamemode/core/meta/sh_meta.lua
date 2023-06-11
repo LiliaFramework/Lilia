@@ -1,5 +1,8 @@
+print("?")
+
 do
     local playerMeta = FindMetaTable("Player")
+
     -- @type function GetPlayTime
     -- @typeCommentStart
     -- Gets the total play time of the player in seconds.

@@ -28,18 +28,17 @@ do
             result = LiliaTranslateModel(model2) -- Call the original TranslateToPlayerModelName function with the modified model path
             if result ~= "kleiner" then return result end -- Return the result if it's not "kleiner"
         end
+        -- Return the original result
 
-        return result -- Return the original result
+        return result
     end
 end
-
 
 lia.util.includeDir("core/libs/thirdparty") -- Include all files in the "thirdparty" directory of the "libs" folder
 lia.util.include("core/sh_config.lua") -- Include the "sh_config.lua" file in the "core" folder
 lia.util.includeDir("core/libs") -- Include all files in the "libs" directory of the "core" folder
 lia.util.includeDir("core/derma") -- Include all files in the "derma" directory of the "core" folder
 lia.util.includeDir("core/hooks") -- Include all files in the "hooks" directory of the "core" folder
-
 lia.lang.loadFromDir("lilia/gamemode/languages") -- Load language files from the "languages" directory of the "lilia/gamemode" folder
 lia.item.loadFromDir("lilia/gamemode/items") -- Load item files from the "items" directory of the "lilia/gamemode" folder
 lia.item.loadFromDir("lilia/gamemode/commands") -- Load command files from the "commands" directory of the "lilia/gamemode" folder
