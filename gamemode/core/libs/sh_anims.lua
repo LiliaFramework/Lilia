@@ -2,6 +2,22 @@ local translations = {}
 lia.anim = lia.anim or {}
 CachedModels = CachedModels or {}
 
+if SERVER then
+    util.AddNetworkString("TPoseFixerSync")
+
+    function GM:PlayerInitialSpawn(client)
+        net.Start("TPoseFixerSync")
+        net.WriteTable(CachedModels)
+        net.Send(client)
+    end
+else
+    net.Receive("TPoseFixerSync", function()
+        for k, v in pairs(net.ReadTable()) do
+            lia.anim.setModelClass(k, v)
+        end
+    end)
+end
+
 lia.anim.citizen_male = {
     normal = {
         [ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE},
