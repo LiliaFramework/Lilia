@@ -1,3 +1,9 @@
+function GM:EntityNetworkedVarChanged(entity, varName, oldVal, newVal)
+    if varName == "Model" and entity.SetModel then
+        hook.Run("PlayerModelChanged", entity, newVal)
+    end
+end
+
 function GM:SetupBotCharacter(client)
     local botID = os.time()
     local index = math.random(1, table.Count(lia.faction.indices))
