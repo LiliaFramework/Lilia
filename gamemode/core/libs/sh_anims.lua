@@ -358,7 +358,7 @@ function GM:PlayerModelChanged(ply, model)
     timer.Simple(0, function()
         if not IsValid(ply) then return end
 
-        if not self.cached[model] then
+        if not CachedModels[model] then
             local submodels = ply:GetSubModels()
 
             for k, v in pairs(submodels) do
