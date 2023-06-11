@@ -34,8 +34,10 @@ do
     end
 end
 
+lia.util.include("lilia/gamemode/core/meta/sh_meta.lua") -- Include the shared (client and server) metatable file
+lia.util.include("lilia/gamemode/core/meta/sv_meta.lua") -- Include the server-only metatable file
 lia.util.includeDir("core/libs/thirdparty") -- Include all files in the "thirdparty" directory of the "libs" folder
-lia.util.include("core/sh_config.lua") -- Include the "sh_config.lua" file in the "core" folder
+lia.util.include("core/sh_config.lua") -- Include the shared (client and server) configuration file
 lia.util.includeDir("core/libs") -- Include all files in the "libs" directory of the "core" folder
 lia.util.includeDir("core/derma") -- Include all files in the "derma" directory of the "core" folder
 lia.util.includeDir("core/hooks") -- Include all files in the "hooks" directory of the "core" folder
