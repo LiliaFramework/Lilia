@@ -1,22 +1,4 @@
-local translations = {}
 lia.anim = lia.anim or {}
-CachedModels = CachedModels or {}
-
-if SERVER then
-    util.AddNetworkString("TPoseFixerSync")
-
-    function GM:PlayerInitialSpawn(client)
-        net.Start("TPoseFixerSync")
-        net.WriteTable(CachedModels)
-        net.Send(client)
-    end
-else
-    net.Receive("TPoseFixerSync", function()
-        for k, v in pairs(net.ReadTable()) do
-            lia.anim.setModelClass(k, v)
-        end
-    end)
-end
 
 lia.anim.citizen_male = {
     normal = {
@@ -346,51 +328,7 @@ lia.anim.fastZombie = {
     [ACT_MP_RUN] = ACT_HL2MP_RUN_ZOMBIE_FAST
 }
 
-ModelTranslations = {
-    male_shared = "citizen_male",
-    female_shared = "citizen_female",
-    police_animations = "metrocop",
-    combine_soldier_anims = "overwatch",
-    vortigaunt_anims = "vortigaunt",
-    m_anm = "player",
-    f_anm = "player",
-}
-
-local function UpdateAnimationTable(client)
-    local baseTable = lia.anim[client.liaAnimModelClass] or {}
-    client.liaAnimTable = baseTable[client.liaAnimHoldType]
-    client.liaAnimGlide = baseTable["glide"]
-end
-
-function lia.anim.setModelClass(model, class)
-    if not lia.anim[class] then return end
-    CachedModels[model] = class
-    lia.anim.setModelClass(model, class)
-end
-
-function GM:PlayerModelChanged(ply, model)
-    if not IsValid(ply) then return end
-
-    timer.Simple(0, function()
-        if not IsValid(ply) then return end
-
-        if not CachedModels[model] then
-            local submodels = ply:GetSubModels()
-
-            for k, v in pairs(submodels) do
-                local class = v.name:gsub(".*/([^/]+)%.%w+$", "%1"):lower()
-
-                if ModelTranslations[class] then
-                    lia.anim.setModelClass(model, ModelTranslations[class])
-                    break
-                end
-            end
-        end
-
-        ply.liaAnimModelClass = lia.anim.getModelClass(model)
-        UpdateAnimationTable(ply)
-    end)
-end
+local translations = {}
 
 function lia.anim.setModelClass(model, class)
     if not lia.anim[class] then
