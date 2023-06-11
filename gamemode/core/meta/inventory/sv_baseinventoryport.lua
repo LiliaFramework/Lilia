@@ -1,4 +1,4 @@
-local Inventory = nut.Inventory
+local Inventory = lia.Inventory
 -- Constants for inventory actions.
 INV_REPLICATE = "repl" -- Replicate data about the inventory to a player.
 local INV_TABLE_NAME = "inventories"
@@ -8,11 +8,11 @@ util.AddNetworkString("ixInventoryData")
 util.AddNetworkString("ixInventoryDelete")
 util.AddNetworkString("ixInventoryAdd")
 util.AddNetworkString("ixInventoryRemove")
-util.AddNetworkString("nutInventoryInit")
-util.AddNetworkString("nutInventoryData")
-util.AddNetworkString("nutInventoryDelete")
-util.AddNetworkString("nutInventoryAdd")
-util.AddNetworkString("nutInventoryRemove")
+util.AddNetworkString("liaInventoryInit")
+util.AddNetworkString("liaInventoryData")
+util.AddNetworkString("liaInventoryDelete")
+util.AddNetworkString("liaInventoryAdd")
+util.AddNetworkString("liaInventoryRemove")
 
 -- Given an item type string, creates an instance of that item type
 -- and adds it to this inventory. A promise is returned containing
@@ -26,7 +26,7 @@ function Inventory:addItem(item)
         id = NULL
     end
 
-    nut.db.updateTable({
+    lia.db.updateTable({
         _invID = id
     }, nil, "items", "_itemID = " .. item:getID())
 
@@ -46,7 +46,7 @@ function Inventory:syncItemAdded(item)
     assert(self.items[item:getID()], "Item " .. item:getID() .. " does not belong to " .. self.id)
     local recipients = self:getRecipients()
     item:sync(recipients)
-    net.Start("nutInventoryAdd")
+    net.Start("liaInventoryAdd")
     net.WriteUInt(item:getID(), 32)
     net.WriteType(self.id)
     net.Send(recipients)
@@ -58,7 +58,7 @@ function Inventory:initializeStorage(initialData)
     local d = deferred.new()
     local charID = initialData.char
 
-    nut.db.insertTable({
+    lia.db.insertTable({
         _invType = self.typeID,
         _charID = charID
     }, function(results, lastID)
@@ -75,7 +75,7 @@ function Inventory:initializeStorage(initialData)
         for key, value in pairs(initialData) do
             if key == "char" then continue end
 
-            nut.db.insertTable({
+            lia.db.insertTable({
                 _invID = lastID,
                 _key = key,
                 _value = {value}
@@ -110,7 +110,7 @@ function Inventory:removeItem(itemID, preserveItem)
     if instance then
         instance.invID = 0
         self.items[itemID] = nil
-        net.Start("nutInventoryRemove")
+        net.Start("liaInventoryRemove")
         net.WriteUInt(itemID, 32)
         net.WriteType(self:getID())
         net.Send(self:getRecipients())
@@ -118,7 +118,7 @@ function Inventory:removeItem(itemID, preserveItem)
         if not preserveItem then
             d:resolve(instance:delete())
         else
-            nut.db.updateTable({
+            lia.db.updateTable({
                 _invID = NULL
             }, function()
                 d:resolve()
@@ -144,14 +144,14 @@ function Inventory:setData(key, value)
 
     if key == "char" then
         -- Compatibility with NS1.1 inventory
-        nut.db.updateTable({
+        lia.db.updateTable({
             _charID = value
         }, nil, INV_TABLE_NAME, "_invID = " .. self:getID())
     elseif not keyData or not keyData.notPersistent then
         if value == nil then
-            nut.db.delete(INV_DATA_TABLE_NAME, "_invID = " .. self.id .. " AND _key = '" .. nut.db.escape(key) .. "'")
+            lia.db.delete(INV_DATA_TABLE_NAME, "_invID = " .. self.id .. " AND _key = '" .. lia.db.escape(key) .. "'")
         else
-            nut.db.upsert({
+            lia.db.upsert({
                 _invID = self.id,
                 _key = key,
                 _value = {value}
@@ -226,20 +226,20 @@ function Inventory:loadItems()
     local ITEM_FIELDS = {"_itemID", "_uniqueID", "_data", "_x", "_y", "_quantity"}
     -- Legacy support for x, y data
 
-    return nut.db.select(ITEM_FIELDS, ITEM_TABLE, "_invID = " .. self.id):next(function(res)
+    return lia.db.select(ITEM_FIELDS, ITEM_TABLE, "_invID = " .. self.id):next(function(res)
         local items = {}
 
         for _, result in ipairs(res.results or {}) do
             local itemID = tonumber(result._itemID)
             local uniqueID = result._uniqueID
-            local itemTable = nut.item.list[uniqueID]
+            local itemTable = lia.item.list[uniqueID]
 
             if not itemTable then
                 ErrorNoHalt("Inventory " .. self.id .. " contains invalid item " .. uniqueID .. " (" .. itemID .. ")\n")
                 continue
             end
 
-            local item = nut.item.new(uniqueID, itemID)
+            local item = lia.item.new(uniqueID, itemID)
             item.invID = self.id
 
             if result._data then
@@ -264,12 +264,12 @@ function Inventory:onItemsLoaded(items)
 end
 
 function Inventory:instance(initialData)
-    return nut.inventory.instance(self.typeID, initialData)
+    return lia.inventory.instance(self.typeID, initialData)
 end
 
 function Inventory:syncData(key, recipients)
     if self.config.data[key] and self.config.data[key].noReplication then return end
-    net.Start("nutInventoryData")
+    net.Start("liaInventoryData")
     -- ID is not always a number.
     net.WriteType(self.id)
     net.WriteString(key)
@@ -278,7 +278,7 @@ function Inventory:syncData(key, recipients)
 end
 
 function Inventory:sync(recipients)
-    net.Start("nutInventoryInit")
+    net.Start("liaInventoryInit")
     -- ID is not always a number.
     net.WriteType(self.id)
     net.WriteString(self.typeID)
@@ -311,7 +311,7 @@ function Inventory:sync(recipients)
 end
 
 function Inventory:delete()
-    nut.inventory.deleteByID(self.id)
+    lia.inventory.deleteByID(self.id)
 end
 
 function Inventory:destroy()
@@ -319,8 +319,8 @@ function Inventory:destroy()
         item:destroy()
     end
 
-    nut.inventory.instances[self:getID()] = nil
-    net.Start("nutInventoryDelete")
+    lia.inventory.instances[self:getID()] = nil
+    net.Start("liaInventoryDelete")
     net.WriteType(id)
     net.Broadcast()
 end
@@ -337,7 +337,7 @@ function Inventory:AddItem(item)
         id = NULL
     end
 
-    nut.db.updateTable({
+    lia.db.updateTable({
         _invID = id
     }, nil, "items", "_itemID = " .. item:getID())
 
@@ -357,7 +357,7 @@ function Inventory:SyncItemAdded(item)
     assert(self.items[item:getID()], "Item " .. item:getID() .. " does not belong to " .. self.id)
     local recipients = self:getRecipients()
     item:sync(recipients)
-    net.Start("nutInventoryAdd")
+    net.Start("liaInventoryAdd")
     net.WriteUInt(item:getID(), 32)
     net.WriteType(self.id)
     net.Send(recipients)
@@ -369,7 +369,7 @@ function Inventory:InitializeStorage(initialData)
     local d = deferred.new()
     local charID = initialData.char
 
-    nut.db.insertTable({
+    lia.db.insertTable({
         _invType = self.typeID,
         _charID = charID
     }, function(results, lastID)
@@ -386,7 +386,7 @@ function Inventory:InitializeStorage(initialData)
         for key, value in pairs(initialData) do
             if key == "char" then continue end
 
-            nut.db.insertTable({
+            lia.db.insertTable({
                 _invID = lastID,
                 _key = key,
                 _value = {value}
@@ -421,7 +421,7 @@ function Inventory:RemoveItem(itemID, preserveItem)
     if instance then
         instance.invID = 0
         self.items[itemID] = nil
-        net.Start("nutInventoryRemove")
+        net.Start("liaInventoryRemove")
         net.WriteUInt(itemID, 32)
         net.WriteType(self:getID())
         net.Send(self:getRecipients())
@@ -429,7 +429,7 @@ function Inventory:RemoveItem(itemID, preserveItem)
         if not preserveItem then
             d:resolve(instance:delete())
         else
-            nut.db.updateTable({
+            lia.db.updateTable({
                 _invID = NULL
             }, function()
                 d:resolve()
@@ -455,14 +455,14 @@ function Inventory:SetData(key, value)
 
     if key == "char" then
         -- Compatibility with NS1.1 inventory
-        nut.db.updateTable({
+        lia.db.updateTable({
             _charID = value
         }, nil, INV_TABLE_NAME, "_invID = " .. self:getID())
     elseif not keyData or not keyData.notPersistent then
         if value == nil then
-            nut.db.delete(INV_DATA_TABLE_NAME, "_invID = " .. self.id .. " AND _key = '" .. nut.db.escape(key) .. "'")
+            lia.db.delete(INV_DATA_TABLE_NAME, "_invID = " .. self.id .. " AND _key = '" .. lia.db.escape(key) .. "'")
         else
-            nut.db.upsert({
+            lia.db.upsert({
                 _invID = self.id,
                 _key = key,
                 _value = {value}
@@ -537,20 +537,20 @@ function Inventory:LoadItems()
     local ITEM_FIELDS = {"_itemID", "_uniqueID", "_data", "_x", "_y", "_quantity"}
     -- Legacy support for x, y data
 
-    return nut.db.select(ITEM_FIELDS, ITEM_TABLE, "_invID = " .. self.id):next(function(res)
+    return lia.db.select(ITEM_FIELDS, ITEM_TABLE, "_invID = " .. self.id):next(function(res)
         local items = {}
 
         for _, result in ipairs(res.results or {}) do
             local itemID = tonumber(result._itemID)
             local uniqueID = result._uniqueID
-            local itemTable = nut.item.list[uniqueID]
+            local itemTable = lia.item.list[uniqueID]
 
             if not itemTable then
                 ErrorNoHalt("Inventory " .. self.id .. " contains invalid item " .. uniqueID .. " (" .. itemID .. ")\n")
                 continue
             end
 
-            local item = nut.item.new(uniqueID, itemID)
+            local item = lia.item.new(uniqueID, itemID)
             item.invID = self.id
 
             if result._data then
@@ -575,12 +575,12 @@ function Inventory:OnItemsLoaded(items)
 end
 
 function Inventory:Instance(initialData)
-    return nut.inventory.instance(self.typeID, initialData)
+    return lia.inventory.instance(self.typeID, initialData)
 end
 
 function Inventory:SyncData(key, recipients)
     if self.config.data[key] and self.config.data[key].noReplication then return end
-    net.Start("nutInventoryData")
+    net.Start("liaInventoryData")
     -- ID is not always a number.
     net.WriteType(self.id)
     net.WriteString(key)
@@ -589,7 +589,7 @@ function Inventory:SyncData(key, recipients)
 end
 
 function Inventory:Sync(recipients)
-    net.Start("nutInventoryInit")
+    net.Start("liaInventoryInit")
     -- ID is not always a number.
     net.WriteType(self.id)
     net.WriteString(self.typeID)
@@ -622,7 +622,7 @@ function Inventory:Sync(recipients)
 end
 
 function Inventory:Delete()
-    nut.inventory.deleteByID(self.id)
+    lia.inventory.deleteByID(self.id)
 end
 
 function Inventory:Destroy()
@@ -630,8 +630,8 @@ function Inventory:Destroy()
         item:destroy()
     end
 
-    nut.inventory.instances[self:getID()] = nil
-    net.Start("nutInventoryDelete")
+    lia.inventory.instances[self:getID()] = nil
+    net.Start("liaInventoryDelete")
     net.WriteType(id)
     net.Broadcast()
 end

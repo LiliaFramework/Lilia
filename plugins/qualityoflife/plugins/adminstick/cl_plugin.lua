@@ -165,7 +165,7 @@ function AdminStick:OpenAdminStickUI(isright, target)
         else
             local freeze = playerInfo:AddOption("Freeze", function()
                 if LocalPlayer() == target then
-                    nut.util.notify("You can't freeze yourself!")
+                    lia.util.notify("You can't freeze yourself!")
 
                     return false
                 end
@@ -233,11 +233,11 @@ function AdminStick:OpenAdminStickUI(isright, target)
 
         search:SetIcon("icon16/briefcase.png")
 
-        for i, fac in pairs(nut.faction.teams) do
+        for i, fac in pairs(lia.faction.teams) do
             if fac.index == target:getChar():getFaction() then
                 local faction = characterInfo:AddSubMenu("Set Faction (" .. fac.name .. ")")
 
-                for i, v in pairs(nut.faction.teams) do
+                for i, v in pairs(lia.faction.teams) do
                     faction:AddOption(v.name, function()
                         LocalPlayer():ConCommand('say /plytransfer "' .. target:SteamID() .. '" "' .. v.name .. '"')
                         AdminStick.IsOpen = false
@@ -298,7 +298,7 @@ function AdminStick:OpenAdminStickUI(isright, target)
 
         local gotoo = teleport:AddOption("Goto", function()
             if LocalPlayer() == target then
-                nut.util.notify("You can't goto yourself!")
+                lia.util.notify("You can't goto yourself!")
 
                 return false
             end
@@ -311,7 +311,7 @@ function AdminStick:OpenAdminStickUI(isright, target)
 
         local bring = teleport:AddOption("Bring", function()
             if LocalPlayer() == target then
-                nut.util.notify("You can't bring yourself!")
+                lia.util.notify("You can't bring yourself!")
 
                 return false
             end
@@ -387,7 +387,7 @@ function AdminStick:OpenAdminStickUI(isright, target)
 
         local addfaction = AdminMenu:AddSubMenu("Add Faction To Door")
 
-        for i, v in pairs(nut.faction.teams) do
+        for i, v in pairs(lia.faction.teams) do
             local factions = string.Split(target:getNetVar("faction", ""), ",")
             if table.HasValue(factions, tostring(v.uniqueID)) then continue end
 
@@ -400,7 +400,7 @@ function AdminStick:OpenAdminStickUI(isright, target)
         if target:getNetVar("faction") ~= nil then
             local removefaction = AdminMenu:AddSubMenu("Remove Faction From Door")
 
-            for i, v in pairs(nut.faction.teams) do
+            for i, v in pairs(lia.faction.teams) do
                 local factions = string.Split(target:getNetVar("faction", ""), ",")
                 if not table.HasValue(factions, tostring(v.uniqueID)) then continue end
 
@@ -423,7 +423,7 @@ function AdminStick:OpenAdminStickUI(isright, target)
             end)
         end
 
-        if target:GetClass() == "nut_storage" then
+        if target:GetClass() == "lia_storage" then
             if target:getNetVar("locked") then
                 local removelock = AdminMenu:AddOption("Remove Lock", function()
                     LocalPlayer():ConCommand('say /storagelock')

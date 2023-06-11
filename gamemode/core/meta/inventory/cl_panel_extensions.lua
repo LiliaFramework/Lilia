@@ -1,11 +1,11 @@
 local PANEL = FindMetaTable("Panel")
 
-function PANEL:nutListenForInventoryChanges(inventory)
+function PANEL:liaListenForInventoryChanges(inventory)
     self:liaListenForInventoryChanges(inventory)
 end
 
 -- Make it so the panel hooks below run when the inventory hooks do.
-function PANEL:nutListenForInventoryChanges(inventory)
+function PANEL:liaListenForInventoryChanges(inventory)
     self:liaListenForInventoryChanges(inventory)
 end
 
@@ -58,7 +58,7 @@ function PANEL:liaListenForInventoryChanges(inventory)
     table.insert(self.liaToRemoveHooks[id], "ItemDataChanged")
 end
 
-function PANEL:nutDeleteInventoryHooks(id)
+function PANEL:liaDeleteInventoryHooks(id)
     self:liaDeleteInventoryHooks(id)
 end
 

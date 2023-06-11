@@ -7,13 +7,13 @@ function PLUGIN:DrawEntityInfo(entity, alpha)
 
 	if stringFind(entity:GetClass(), "prop_") then
 		if IsValid(entity) and exdesc then
-			if exdesc ~= entity.nutDescCache then
-				entity.nutDescCache = exdesc
-				entity.nutDescLines = nut.util.wrapText(exdesc, ScrW() * 0.7, "nutMediumFont")
+			if exdesc ~= entity.liaDescCache then
+				entity.liaDescCache = exdesc
+				entity.liaDescLines = lia.util.wrapText(exdesc, ScrW() * 0.7, "liaMediumFont")
 			end
 
-			for i = 1, #entity.nutDescLines do
-				descInfo[#descInfo + 1] = {entity.nutDescLines[i]}
+			for i = 1, #entity.liaDescLines do
+				descInfo[#descInfo + 1] = {entity.liaDescLines[i]}
 			end
 
 			local position = entity:LocalToWorld(entity:OBBCenter()):ToScreen()
@@ -22,7 +22,7 @@ function PLUGIN:DrawEntityInfo(entity, alpha)
 
 			for i = 1, #descInfo do
 				local info = descInfo[i]
-				_, ty = nut.util.drawText(info[1], x, y, color_white, 1, 1, "nutMediumFont")
+				_, ty = lia.util.drawText(info[1], x, y, color_white, 1, 1, "liaMediumFont")
 				y = y + ty
 			end
 		end

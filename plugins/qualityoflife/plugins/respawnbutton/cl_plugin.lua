@@ -1,5 +1,5 @@
 net.Receive("RespawnButtonDeath", function()
-	timer.Simple(nut.config.get("spawnTime", 5) + 1, function()
+	timer.Simple(lia.config.get("spawnTime", 5) + 1, function()
 		if not LocalPlayer():Alive() then
 			local frame = vgui.Create("DFrame")
 			frame:SetTitle("")
@@ -22,7 +22,7 @@ net.Receive("RespawnButtonDeath", function()
 			btn:SetSize(bW, bH)
 
 			btn.Paint = function(s, w, h)
-				surface.SetDrawColor(nut.gui.palette.color_primary)
+				surface.SetDrawColor(lia.gui.palette.color_primary)
 				surface.DrawOutlinedRect(0, 0, w, h)
 				surface.SetDrawColor(Color(0, 0, 0, 200))
 				surface.DrawRect(1, 1, w - 2, h - 2)
