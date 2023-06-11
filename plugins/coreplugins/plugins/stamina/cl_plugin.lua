@@ -5,6 +5,7 @@ local stmBlurAmount = 0
 -- Called whenever the HUD should be drawn.
 function PLUGIN:HUDPaintBackground()
     local frametime = RealFrameTime()
+    if not lia.config.get("StaminaBlur", false) then return end
 
     -- Account for blurring effects when the player stamina is depleted
     if LocalPlayer():getLocalVar("stm", 50) <= 5 then

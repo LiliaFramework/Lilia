@@ -6,6 +6,10 @@ lia.config.add("GamemodeInformation", false, "Whether or not the gamemode inform
     category = "Client Settings"
 })
 
+lia.config.add("StaminaBlur", false, "Whether or not the Stamina Blur shown.", nil, {
+    category = "Client Settings"
+})
+
 lia.config.add("CrosshairEnabled", false, "Enables Crosshair?", nil, {
     category = "Client Settings"
 })
