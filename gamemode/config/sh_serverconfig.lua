@@ -142,4 +142,57 @@ end, {
     category = "Server Settings"
 })
 
+lia.config.add("SchemaYear", 2023, "Year That The Gamemode Happens On.", nil, {
+    data = {
+        min = 1,
+        max = 5000
+    },
+    category = "Server Settings"
+})
+
+lia.config.add("year", tonumber(os.date("%Y")), "The current year of the schema.", function()
+    if SERVER then
+        for k, client in pairs(player.GetHumans()) do
+            lia.date.syncClientTime(client)
+        end
+    end
+
+    category = "Server Settings"
+end, {
+    data = {
+        min = 0,
+        max = 4000
+    },
+})
+
+lia.config.add("month", tonumber(os.date("%m")), "The current month of the schema.", function()
+    if SERVER then
+        for k, client in pairs(player.GetHumans()) do
+            lia.date.syncClientTime(client)
+        end
+    end
+
+    category = "Server Settings"
+end, {
+    data = {
+        min = 1,
+        max = 12
+    },
+})
+
+lia.config.add("day", tonumber(os.date("%d")), "The current day of the schema.", function()
+    if SERVER then
+        for k, client in pairs(player.GetHumans()) do
+            lia.date.syncClientTime(client)
+        end
+    end
+
+    category = "Server Settings"
+end, {
+    data = {
+        min = 1,
+        max = 31
+    },
+})
+
 lia.config.squaredVoiceDistance = lia.config.get("voiceDistance", 600) * lia.config.get("voiceDistance", 600)

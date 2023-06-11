@@ -1,6 +1,4 @@
-local PLUGIN = PLUGIN
-
-PLUGIN.TposingModels = {
+local TposingModels = {
     "models/kerry/ag_player/male_03.mdl",
     "model/path/xd.mdl",
     "model/path/xd.mdl",
@@ -23,6 +21,6 @@ PLUGIN.TposingModels = {
     "model/path/xd.mdl",
 }
 
-for _, v in pairs(PLUGIN.TposingModels) do
+for _, v in pairs(TposingModels) do
     lia.anim.setModelClass(v, "player")
 end
