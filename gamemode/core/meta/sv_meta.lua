@@ -1,5 +1,3 @@
-print("?")
-
 do
     local playerMeta = FindMetaTable("Player")
 
