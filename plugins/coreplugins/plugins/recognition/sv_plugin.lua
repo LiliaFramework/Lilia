@@ -17,6 +17,17 @@ netstream.Hook("rgnDirect", function(client, target)
     end
 end)
 
+-- Add interaction function
+lia.playerInteract.addFunc("recognize", {
+    nameLocalized = "recognize",
+    callback = function(target)
+        netstream.Start("rgnDirect", target)
+    end,
+    canSee = function(target)
+        return true
+    end
+})
+
 netstream.Hook("rgn", function(client, level)
     local targets = {}
 

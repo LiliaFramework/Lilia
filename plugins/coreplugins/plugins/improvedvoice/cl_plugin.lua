@@ -23,6 +23,6 @@ end)
 
 function PLUGIN:PlayerButtonDown(client, button)
     if button == KEY_F2 and IsFirstTimePredicted() then
-        netstream.Start(client, "VoiceMenu")
+        netstream.Start("VoiceMenu")
     end
 end
