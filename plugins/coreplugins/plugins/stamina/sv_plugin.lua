@@ -39,7 +39,7 @@ function PLUGIN:PostPlayerLoadout(client)
         if current ~= value then
             client:setLocalVar("stm", value)
 
-            if lia.config.get("StaminaSlowDown", true) then
+            if lia.config.get("StaminaSlowdown", true) then
                 if value == 0 and not client:getNetVar("brth", false) then
                     client:SetRunSpeed(lia.config.get("walkSpeed"))
                     client:setNetVar("brth", true)
