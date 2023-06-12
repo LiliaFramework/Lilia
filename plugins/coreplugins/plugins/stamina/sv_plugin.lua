@@ -39,13 +39,15 @@ function PLUGIN:PostPlayerLoadout(client)
         if current ~= value then
             client:setLocalVar("stm", value)
 
-            if value == 0 and not client:getNetVar("brth", false) then
-                client:SetRunSpeed(lia.config.get("walkSpeed"))
-                client:setNetVar("brth", true)
-                hook.Run("PlayerStaminaLost", client)
-            elseif value >= 50 and client:getNetVar("brth", false) then
-                client:SetRunSpeed(runSpeed)
-                client:setNetVar("brth", nil)
+            if lia.config.get("StaminaSlowDown", true) then
+                if value == 0 and not client:getNetVar("brth", false) then
+                    client:SetRunSpeed(lia.config.get("walkSpeed"))
+                    client:setNetVar("brth", true)
+                    hook.Run("PlayerStaminaLost", client)
+                elseif value >= 50 and client:getNetVar("brth", false) then
+                    client:SetRunSpeed(runSpeed)
+                    client:setNetVar("brth", nil)
+                end
             end
         end
     end)
