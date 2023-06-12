@@ -1,3 +1,20 @@
+lia.command.add("return", {
+    onRun = function(client, arguments)
+        if IsValid(client) and client:Alive() and client:IsAdmin() then
+            local char = client:getChar()
+            local oldPos = char:getData("deathPos")
+
+            if oldPos then
+                client:SetPos(oldPos)
+                char:setData("deathPos", nil)
+            else
+                client:notify("No death position saved.")
+            end
+        else
+            client:notify("Wait until you respawn.")
+        end
+    end
+})
 -- @type method freezeallprops - Freeze All Props
 -- @typeCommentStart
 -- Freezes all prop_physics entities in the game.
