@@ -6,6 +6,10 @@ lia.config.add("moneyModel", "models/props_lab/box01a.mdl", "The model for money
     category = "Server Settings"
 })
 
+lia.config.add("StaminaSlowdown", true, "Whether or not the Stamina Slowdown is enabled.", nil, {
+    category = "Server Settings"
+})
+
 lia.config.add("GlobalMaxHealthEnabled", true, "Whether or not the Global Max Health is enabled.", nil, {
     category = "Server Settings"
 })
@@ -86,6 +90,21 @@ lia.config.add("WeaponRaiseTimer", 1, "How long it takes to raise a weapon.", ni
         max = 5
     },
     category = "Server Settings"
+})
+lia.config.add("defaultStamina", 100, "A higher number means that characters can run longer without tiring.", nil, {
+    data = {
+        min = 50,
+        max = 500
+    },
+    category = "Player Settings"
+})
+
+lia.config.add("staminaRegenMultiplier", 1, "A higher number means that characters can run regenerate stamina faster.", nil, {
+    data = {
+        min = 0.1,
+        max = 20
+    },
+    category = "Player Settings"
 })
 
 lia.config.add("introEnabled", false, "Whether or not intro is enabled.", nil, {
