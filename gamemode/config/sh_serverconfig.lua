@@ -3,11 +3,15 @@ lia.config.add("contentURL", "https://discord.gg/HmfaJ9brfz", "Your server's col
 })
 
 lia.config.add("pkActive", false, "Whether or not permakill is activated on the server.", nil, {
-	category = "Permakill"
+    category = "Permakill"
+})
+
+lia.config.add("ShootableDoors", true, "Whether or not doors can be shot to be open.", nil, {
+    category = "Server Settings"
 })
 
 lia.config.add("pkWorld", false, "Whether or not world and self damage produce permanent death.", nil, {
-	category = "Permakill"
+    category = "Permakill"
 })
 
 lia.config.add("moneyModel", "models/props_lab/box01a.mdl", "The model for money entities.", nil, {
@@ -99,6 +103,7 @@ lia.config.add("WeaponRaiseTimer", 1, "How long it takes to raise a weapon.", ni
     },
     category = "Server Settings"
 })
+
 lia.config.add("defaultStamina", 100, "A higher number means that characters can run longer without tiring.", nil, {
     data = {
         min = 50,
