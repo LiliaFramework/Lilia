@@ -107,5 +107,14 @@ lia.config.add("allowExistNames", true, "Whether or not players can use an alrea
     category = "Player Settings"
 })
 
+lia.config.add("strMultiplier", 0.3, "The strength multiplier scale", nil, {
+    form = "Float",
+    data = {
+        min = 0,
+        max = 1.0
+    },
+    category = "Player Settings"
+})
+
 lia.config.language = "english"
 lia.config.itemFormat = "<font=liaGenericFont>%s</font>\n<font=liaSmallFont>%s</font>"
