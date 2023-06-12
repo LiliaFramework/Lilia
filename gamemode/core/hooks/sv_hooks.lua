@@ -224,6 +224,12 @@ function GM:PlayerSay(client, message)
 end
 
 function GM:PlayerSpawn(client)
+    local character = client:getChar()
+
+    if lia.config.get("pkActive") and character and character:getData("permakilled") then
+        character:ban()
+    end
+
     client:SetNoDraw(false)
     client:UnLock()
     client:SetNotSolid(false)
@@ -325,6 +331,11 @@ function GM:PlayerDeath(client, inflictor, attacker)
             client.liaRagdoll.liaIgnoreDelete = true
             client.liaRagdoll:Remove()
             client:setLocalVar("blur", nil)
+        end
+
+        if lia.config.get("pkActive") then
+            if not (lia.config.get("pkWorld") and (client == attacker or inflictor:IsWorld())) then return end
+            character:setData("permakilled", true)
         end
 
         char:setData("deathPos", victim:GetPos())
