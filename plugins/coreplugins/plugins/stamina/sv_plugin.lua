@@ -53,6 +53,7 @@ function PLUGIN:PostPlayerLoadout(client)
     end)
 end
 
+-------------------------------------------------------------------------------------------------------------------------~
 local playerMeta = FindMetaTable("Player")
 
 function playerMeta:restoreStamina(amount)
@@ -63,11 +64,10 @@ end
 
 -------------------------------------------------------------------------------------------------------------------------~
 function PLUGIN:PlayerStaminaLost(client)
-    if client.isBreathing then return end -- Bail out if the player is already breathing
+    if client.isBreathing then return end 
     client:EmitSound("player/breathe1.wav", 35, 100)
     client.isBreathing = true
 
-    -- Stop breathing heavily when the player has recharged his stamina
     timer.Create("liaStamBreathCheck" .. client:SteamID(), 1, 0, function()
         if client:getLocalVar("stm", 0) < 50 then return end
         client:StopSound("player/breathe1.wav")
