@@ -63,7 +63,7 @@ else
 		panel.attribName:SetTextColor(color_white)
 		panel.attribName:SetExpensiveShadow(1, Color(0, 0, 0, 150))
 		panel.attribName:DockMargin(0, 10, 0, 0)
-		panel.attribName:SetText(L"attribs")
+		panel.attribName:SetText("Skills")
 
 		panel.attribs = panel.info:Add("DScrollPanel")
 		panel.attribs:Dock(FILL)
