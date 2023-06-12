@@ -318,16 +318,19 @@ function GM:PostPlayerLoadout(client)
 end
 
 function GM:PlayerDeath(client, inflictor, attacker)
-    if not client:getChar() then return end
+    local char = client:getChar()
 
-    if IsValid(client.liaRagdoll) then
-        client.liaRagdoll.liaIgnoreDelete = true
-        client.liaRagdoll:Remove()
-        client:setLocalVar("blur", nil)
+    if char then
+        if IsValid(client.liaRagdoll) then
+            client.liaRagdoll.liaIgnoreDelete = true
+            client.liaRagdoll:Remove()
+            client:setLocalVar("blur", nil)
+        end
+
+        char:setData("deathPos", victim:GetPos())
+        client:setNetVar("deathStartTime", CurTime())
+        client:setNetVar("deathTime", CurTime() + lia.config.get("spawnTime", 5))
     end
-
-    client:setNetVar("deathStartTime", CurTime())
-    client:setNetVar("deathTime", CurTime() + lia.config.get("spawnTime", 5))
 end
 
 function GM:PlayerHurt(client, attacker, health, damage)
