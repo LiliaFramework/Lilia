@@ -2,6 +2,14 @@ lia.config.add("contentURL", "https://discord.gg/HmfaJ9brfz", "Your server's col
     category = "Server Settings"
 })
 
+lia.config.add("pkActive", false, "Whether or not permakill is activated on the server.", nil, {
+	category = "Permakill"
+})
+
+lia.config.add("pkWorld", false, "Whether or not world and self damage produce permanent death.", nil, {
+	category = "Permakill"
+})
+
 lia.config.add("moneyModel", "models/props_lab/box01a.mdl", "The model for money entities.", nil, {
     category = "Server Settings"
 })
