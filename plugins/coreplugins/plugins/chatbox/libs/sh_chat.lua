@@ -1,4 +1,4 @@
-local PLUGIN = PLUGIN
+local PLUGIN = lia.plugin.list["banooc"]
 
 do
     hook.Add("InitializedConfig", "liaChatTypes", function()
