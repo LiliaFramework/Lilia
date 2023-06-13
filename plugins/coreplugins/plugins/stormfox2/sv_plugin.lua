@@ -8,11 +8,11 @@ function PLUGIN:OnLoaded()
     end
 end
 
-hook.Add("PlayerConnect", "sffix", function(ply)
+function PLUGIN:PlayerConnect(ply)
     if StormFox2 and lia.config.get("StormFox2Compatibility", true) then
         if #player.GetAll() == 0 then
             local dt = string.Explode(":", os.date("%H:%M:%S", lia.date.get()))
             StormFox2.Time.Set(dt[1] * 60 + dt[2] + (dt[3] / 60))
         end
     end
-end)
+end
