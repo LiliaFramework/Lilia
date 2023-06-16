@@ -1,6 +1,5 @@
 local entityMeta = FindMetaTable("Entity")
 local playerMeta = FindMetaTable("Player")
-
 lia.net = lia.net or {}
 lia.net.globals = lia.net.globals or {}
 
@@ -30,10 +29,7 @@ end
 
 function entityMeta:getNetVar(key, default)
 	local index = self:EntIndex()
-
-	if (lia.net[index] and lia.net[index][key] ~= nil) then
-		return lia.net[index][key]
-	end
+	if lia.net[index] and lia.net[index][key] ~= nil then return lia.net[index][key] end
 
 	return default
 end
@@ -46,10 +42,7 @@ end
 
 function entityMeta:GetNetVar(key, default)
 	local index = self:EntIndex()
-
-	if (lia.net[index] and lia.net[index][key] ~= nil) then
-		return lia.net[index][key]
-	end
+	if lia.net[index] and lia.net[index][key] ~= nil then return lia.net[index][key] end
 
 	return default
 end

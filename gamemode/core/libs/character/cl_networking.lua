@@ -4,10 +4,9 @@ end)
 
 netstream.Hook("charSet", function(key, value, id)
 	id = id or (LocalPlayer():getChar() and LocalPlayer():getChar().id)
-	
 	local character = lia.char.loaded[id]
 
-	if (character) then
+	if character then
 		local oldValue = character.vars[key]
 		character.vars[key] = value
 		hook.Run("OnCharVarChanged", character, key, oldValue, value)
@@ -16,13 +15,11 @@ end)
 
 netstream.Hook("charVar", function(key, value, id)
 	id = id or (LocalPlayer():getChar() and LocalPlayer():getChar().id)
-
 	local character = lia.char.loaded[id]
 
-	if (character) then
+	if character then
 		local oldVar = character:getVar()[key]
 		character:getVar()[key] = value
-
 		hook.Run("OnCharLocalVarChanged", character, key, oldVar, value)
 	end
 end)
@@ -30,7 +27,7 @@ end)
 netstream.Hook("charData", function(id, key, value)
 	local character = lia.char.loaded[id]
 
-	if (character) then
+	if character then
 		character.vars.data = character.vars.data or {}
 		character:getData()[key] = value
 	end

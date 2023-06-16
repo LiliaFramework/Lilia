@@ -23,25 +23,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ]]
-
 local WebMaterials = {}
+
 function surface.GetURL(url, w, h, time)
 	if not url or not w or not h then return Material("error") end
 	if WebMaterials[url] then return WebMaterials[url] end
-	local WebPanel = vgui.Create( "HTML" )
-	WebPanel:SetAlpha( 0 )
-	WebPanel:SetSize( tonumber(w), tonumber(h) )
-	WebPanel:OpenURL( url )
+	local WebPanel = vgui.Create("HTML")
+	WebPanel:SetAlpha(0)
+	WebPanel:SetSize(tonumber(w), tonumber(h))
+	WebPanel:OpenURL(url)
+
 	WebPanel.Paint = function(self)
 		if not WebMaterials[url] and self:GetHTMLMaterial() then
 			WebMaterials[url] = self:GetHTMLMaterial()
 			self:Remove()
 		end
 	end
-	timer.Simple( 1 or tonumber(time), function() if IsValid(WebPanel) then WebPanel:Remove() end end ) -- In case we do not render
+
+	-- In case we do not render
+	timer.Simple(1 or tonumber(time), function()
+		if IsValid(WebPanel) then
+			WebPanel:Remove()
+		end
+	end)
+
 	return Material("error")
 end
-
 --[[
     How to use
 
