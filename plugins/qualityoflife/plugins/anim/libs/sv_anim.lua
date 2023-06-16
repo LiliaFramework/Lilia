@@ -1,4 +1,4 @@
---///////////////////////////////////////////////////// This was Ripped from EGM SWEPs \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+--///////////////////////////////////////////////////// This was Ripped from EGM SWEPs & Claymore's Surrender SWEP \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 local PLUGIN = PLUGIN
 
 function PLUGIN:GetCrossArmsAnim()
