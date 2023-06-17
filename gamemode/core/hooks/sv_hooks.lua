@@ -338,7 +338,7 @@ function GM:PlayerDeath(client, inflictor, attacker)
             character:setData("permakilled", true)
         end
 
-        char:setData("deathPos", victim:GetPos())
+        char:setData("deathPos", client:GetPos())
         client:setNetVar("deathStartTime", CurTime())
         client:setNetVar("deathTime", CurTime() + lia.config.get("spawnTime", 5))
     end
