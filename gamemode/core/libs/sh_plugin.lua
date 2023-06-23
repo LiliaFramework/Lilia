@@ -17,9 +17,7 @@ function lia.plugin.load(uniqueID, path, isSingleFile, variable)
         name = "Unknown",
         desc = "Description not available",
         author = "Anonymous",
-        IsValid = function(plugin)
-            return true
-        end
+        IsValid = function(plugin) return true end
     }
 
     if uniqueID == "schema" then
