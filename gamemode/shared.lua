@@ -43,7 +43,7 @@ lia.util.includeDir("core/derma") -- Include all files in the "derma" directory 
 lia.util.includeDir("core/hooks") -- Include all files in the "hooks" directory of the "core" folder
 lia.lang.loadFromDir("lilia/gamemode/languages") -- Load language files from the "languages" directory of the "lilia/gamemode" folder
 lia.item.loadFromDir("lilia/gamemode/items") -- Load item files from the "items" directory of the "lilia/gamemode" folder
-lia.item.loadFromDir("lilia/gamemode/commands") -- Load command files from the "commands" directory of the "lilia/gamemode" folder
+lia.util.includeDir("lilia/gamemode/commands") -- Load command files from the "commands" directory of the "lilia/gamemode" folder
 
 function GM:Initialize()
     lia.plugin.initialize() -- Initialize the plugin system
