@@ -54,10 +54,6 @@ lia.config.add("PlayerSprayEnabled", false, "Enables Player Spray?", nil, {
     category = "Server Settings"
 })
 
-lia.config.add("GlobalFlashlightEnabled", false, "Enables Flashlights for Everyone?", nil, {
-    category = "Server Settings"
-})
-
 lia.config.add("CentsCompatibility", false, "Enables Cents on Money", nil, {
     category = "Server Settings"
 })
@@ -66,7 +62,7 @@ lia.config.add("StormFox2Compatibility", true, "Whether or not the StormFox2 Tim
     category = "Server Settings"
 })
 
-lia.config.add("wepAlwaysRaised", false, "Whether or not weapons are always raised.", nil, {
+lia.config.add("wepAlwaysRaised", true, "Whether or not weapons are always raised.", nil, {
     category = "Server Settings"
 })
 
@@ -178,7 +174,7 @@ end, {
     category = "Server Settings"
 })
 
-lia.config.add("SchemaYear", 2023, "Year That The Gamemode Happens On.", nil, {
+lia.config.add("SchemaYear", 1937, "Year That The Gamemode Happens On.", nil, {
     data = {
         min = 1,
         max = 5000

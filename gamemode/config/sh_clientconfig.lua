@@ -18,11 +18,11 @@ lia.config.add("DrawEntityShadows", true, "Should Entity Shadows Be Drawn?", nil
     category = "Client Settings"
 })
 
-lia.config.add("LegsEnabled", true, "Are Legs Enabled?", nil, {
+lia.config.add("LegsEnabled", false, "Are Legs Enabled?", nil, {
     category = "Client Settings"
 })
 
-lia.config.add("LegsInVehicle", true, "Are Legs Enabled in Vehicles?", nil, {
+lia.config.add("LegsInVehicle", false, "Are Legs Enabled in Vehicles?", nil, {
     category = "Client Settings"
 })
 
