@@ -60,22 +60,12 @@ function PLUGIN:GetAttentionAnim()
     }
 end
 
-function PLUGIN:GetSurrenderAnim()
-    return {
-        ["ValveBiped.Bip01_R_UpperArm"] = Angle(30, 0, 90),
-        ["ValveBiped.Bip01_L_UpperArm"] = Angle(-30, 0, -90),
-        ["ValveBiped.Bip01_R_ForeArm"] = Angle(0, -130, 0),
-        ["ValveBiped.Bip01_L_ForeArm"] = Angle(0, -120, 20)
-    }
-end
-
 PLUGIN.AnimTable = {
     [1] = {"surrender_animation_swep", PLUGIN:GetSurrenderAnim()},
     [2] = {"salute_swep", PLUGIN:GetSaluteAnim()},
     [3] = {"cross_arms_swep", PLUGIN:GetCrossArmsAnim()},
     [4] = {"atease_swep", PLUGIN:GetEaseAnim()},
     [5] = {"attention_swep", PLUGIN:GetAttentionAnim()},
-    [6] = {"surrender_swep", PLUGIN:GetSurrenderAnim()},
 }
 
 function PLUGIN:VelocityIsHigher(ply, value)

@@ -14,21 +14,6 @@ lia.command.add("surrender", {
     end
 })
 
-lia.command.add("surrender", {
-    onRun = function(client, arguments)
-        if not client:GetNWBool("animationStatus") then
-            PLUGIN:ToggleAnimaton(client, true, "surrender_swep", 0)
-            client:SetActiveWeapon(client:GetWeapon("lia_keys"))
-        else
-            PLUGIN:ToggleAnimaton(client, false)
-
-            timer.Simple(0.5, function()
-                PLUGIN:ToggleAnimaton(client, true, "surrender_swep", 0)
-            end)
-        end
-    end
-})
-
 lia.command.add("salute", {
     onRun = function(client, arguments)
         if not client:GetNWBool("animationStatus") then
