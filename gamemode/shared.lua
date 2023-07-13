@@ -34,16 +34,53 @@ do
     end
 end
 
-lia.util.include("lilia/gamemode/core/meta/sh_meta.lua") -- Include the shared (client and server) metatable file
-lia.util.include("lilia/gamemode/core/meta/sv_meta.lua") -- Include the server-only metatable file
-lia.util.includeDir("core/libs/thirdparty") -- Include all files in the "thirdparty" directory of the "libs" folder
-lia.util.include("core/sh_config.lua") -- Include the shared (client and server) configuration file
-lia.util.includeDir("core/libs") -- Include all files in the "libs" directory of the "core" folder
-lia.util.includeDir("core/derma") -- Include all files in the "derma" directory of the "core" folder
-lia.util.includeDir("core/hooks") -- Include all files in the "hooks" directory of the "core" folder
-lia.lang.loadFromDir("lilia/gamemode/languages") -- Load language files from the "languages" directory of the "lilia/gamemode" folder
-lia.item.loadFromDir("lilia/gamemode/items") -- Load item files from the "items" directory of the "lilia/gamemode" folder
-lia.item.loadFromDir("lilia/gamemode/commands") -- Load command files from the "commands" directory of the "lilia/gamemode" folder
+-- Include core framework files.
+lia.util.includeDir("core/libs/thirdparty")
+lia.util.include("core/sh_config.lua")
+lia.util.includeDir("core/libs")
+lia.util.includeDir("core/derma")
+lia.util.includeDir("core/hooks")
+-- Include language and default base items.
+lia.lang.loadFromDir("lilia/gamemode/languages")
+lia.item.loadFromDir("lilia/gamemode/items")
+-- Include client administration commands
+lia.util.include("core/commands/cl_adminstration.lua")
+-- Include client cleaner commands
+lia.util.include("core/commands/cl_cleaners.lua")
+-- Include client management commands
+lia.util.include("core/commands/cl_management.lua")
+-- Include miscellaneous client commands
+lia.util.include("core/commands/cl_misc.lua")
+-- Include client player commands
+lia.util.include("core/commands/cl_player.lua")
+-- Include server administration commands
+lia.util.include("core/commands/sv_adminstration.lua")
+-- Include server cleaner commands
+lia.util.include("core/commands/sv_cleaners.lua")
+-- Include server management commands
+lia.util.include("core/commands/sv_management.lua")
+-- Include miscellaneous server commands
+lia.util.include("core/commands/sv_misc.lua")
+-- Include server player commands
+lia.util.include("core/commands/sv_player.lua")
+-- Include the shared (client and server) metatable file
+lia.util.include("lilia/gamemode/core/meta/sh_meta.lua")
+-- Include the server-only metatable file
+lia.util.include("lilia/gamemode/core/meta/sv_meta.lua")
+-- Include the shared (client and server) configuration file
+lia.util.include("core/sh_config.lua")
+-- Include all files in the "libs" directory of the "core" folder
+lia.util.includeDir("core/libs")
+-- Include all files in the "derma" directory of the "core" folder
+lia.util.includeDir("core/derma")
+-- Include all files in the "hooks" directory of the "core" folder
+lia.util.includeDir("core/hooks")
+-- Include all files in the "thirdparty" directory of the "libs" folder
+lia.util.includeDir("core/libs/thirdparty")
+-- Load item files from the "items" directory of the "lilia/gamemode" folder
+lia.item.loadFromDir("lilia/gamemode/items")
+-- Load language files from the "languages" directory of the "lilia/gamemode" folder
+lia.lang.loadFromDir("lilia/gamemode/languages")
 
 function GM:Initialize()
     lia.plugin.initialize() -- Initialize the plugin system
