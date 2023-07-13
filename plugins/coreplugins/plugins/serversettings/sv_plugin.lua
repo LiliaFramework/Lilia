@@ -12,12 +12,6 @@ function PLUGIN:PlayerSpray(client)
     return not lia.config.get("PlayerSprayEnabled", false)
 end
 
--------------------------------------------------------------------------------------------------------------------------
--- EVERYONE CAN USE FLASHLIGHT
-function PLUGIN:PlayerSwitchFlashlight(ply, on)
-    return lia.config.get("GlobalFlashlightEnabled", false)
-end
-
 ------------------------------------------------------------------------------------------------------------------------
 -- Disables Annoying Extra Elements
 function PLUGIN:PlayerInitialSpawn(ply)
