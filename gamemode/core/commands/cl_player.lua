@@ -37,3 +37,8 @@ lia.command.add("givemoney", {
     syntax = "<number amount>",
     onRun = function(client, arguments) end
 })
+-------------------------------------------------------------------------------------------------------------------------
+lia.command.add("factionbroadcast", {
+    syntax = "<string factions> <string text>",
+    onRun = function(client, arguments)    end
+})
