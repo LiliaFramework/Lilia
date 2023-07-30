@@ -12,7 +12,7 @@ If you have questions or want to integrate with the community, you can join our 
 
 ## Framework Information
 
-Please Refer To Our [Wiki](https://github.com/bleonheart/lilia-docs) [WIP]
+Please Refer To Our [Wiki]([https://github.com/bleonheart/lilia-docs](https://github.com/bleonheart/Lilia/wiki)) [WIP]
 
 ## Development
 
