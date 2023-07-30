@@ -99,7 +99,7 @@ lia.config.add("StaffAutoRecognize", true, "Whether or not FACTION_STAFF is glob
     category = "Player Settings"
 })
 
-lia.config.add("FactionAutoRecognize", false, "Whether or not players from the same faction recognize themselves (if true, please configure the faction list in the plugin).", nil, {
+lia.config.add("FactionAutoRecognize", false, "Whether or not players from the same faction recognize themselves (if true, please configure the faction list in the module).", nil, {
     category = "Player Settings"
 })
 

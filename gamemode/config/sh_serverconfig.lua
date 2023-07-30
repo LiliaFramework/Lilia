@@ -42,10 +42,6 @@ lia.config.add("CarRagdoll", true, "Whether or not Car Ragdoll is Enabled to Avo
     category = "Server Settings"
 })
 
-lia.config.add("whitelistEnabled", false, "Enables the server whitelist.", nil, {
-    category = "Server Settings"
-})
-
 lia.config.add("CharacterSwitchCooldown", true, "Whether there's cooldown on switching chars.", nil, {
     category = "Server Settings"
 })
@@ -166,8 +162,8 @@ end, {
 lia.config.add("serverRestartHour", 6, "At what hours the server should restart, local to timezone.", function()
     if SERVER then
         timer.Simple(0.01, function()
-            lia.plugin.list["restarter"].NextRestart = lia.plugin.list["restarter"]:GetInitialRestartTime()
-            lia.plugin.list["restarter"].NextNotificationTime = lia.plugin.list["restarter"]:GetNextNotificationTimeBreakpoint()
+            lia.module.list["restarter"].NextRestart = lia.module.list["restarter"]:GetInitialRestartTime()
+            lia.module.list["restarter"].NextNotificationTime = lia.module.list["restarter"]:GetNextNotificationTimeBreakpoint()
         end)
     end
 end, {

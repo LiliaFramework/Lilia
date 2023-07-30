@@ -32,8 +32,8 @@ function lia.faction.loadFromDir(directory)
 		local niceName = v:sub(4, -5)
 
 		FACTION = lia.faction.teams[niceName] or {index = table.Count(lia.faction.teams) + 1, isDefault = true}
-			if (PLUGIN) then
-				FACTION.plugin = PLUGIN.uniqueID
+			if (MODULE) then
+				FACTION.module = MODULE.uniqueID
 			end
 
 			lia.util.include(directory.."/"..v, "shared")

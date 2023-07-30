@@ -582,11 +582,11 @@ function GM:CreateDefaultInventory(character)
     end
 end
 
-function GM:PluginShouldLoad(plugin)
-    return not lia.plugin.isDisabled(plugin)
+function GM:ModuleShouldLoad(module)
+    return not lia.module.isDisabled(module)
 end
 
-function GM:InitializedPlugins()
+function GM:InitializedModules()
     local psaString = "Please Remove Talk Modes. Our framework has such built in by default."
 
     if TalkModes then

@@ -1,0 +1,32 @@
+MODULE.m_tblPlayers = MODULE.m_tblPlayers or {}
+MODULE.m_intSpawnDelay = 8 --Delay initial pvs update by this amount on player spawn
+MODULE.m_intUpdateDistance = 5500 --Entities in this range are sent to the player, all others do not send
+MODULE.m_intUpdateRate = 1 --Entity transmit update rate
+MODULE.m_intUpdateAmount = 512
+
+MODULE.m_tblAlwaysSend = {
+    ["player"] = true,
+    ["func_lod"] = true,
+    ["gmod_hands"] = true,
+    ["worldspawn"] = true,
+    ["player_manager"] = true,
+    ["gmod_gamerules"] = true,
+    ["bodyque"] = true,
+    ["network"] = true,
+    ["soundent"] = true,
+    ["prop_door_rotating"] = true,
+    ["phys_slideconstraint"] = true,
+    ["phys_bone_follower"] = true,
+    ["class C_BaseEntity"] = true,
+    ["func_physbox"] = true,
+    ["logic_auto"] = true,
+    ["env_tonemap_controller"] = true,
+    ["shadow_control"] = true,
+    ["env_sun"] = true,
+    ["lua_run"] = true,
+    ["func_useableladder"] = true,
+    ["info_ladder_dismount"] = true,
+    ["func_illusionary"] = true,
+    ["env_fog_controller"] = true,
+    ["prop_vehicle_jeep"] = false,
+}

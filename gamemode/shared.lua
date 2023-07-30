@@ -83,11 +83,11 @@ lia.item.loadFromDir("lilia/gamemode/items")
 lia.lang.loadFromDir("lilia/gamemode/languages")
 
 function GM:Initialize()
-    lia.plugin.initialize() -- Initialize the plugin system
+    lia.module.initialize() -- Initialize the module system
     lia.config.load() -- Load configuration settings
 end
 
-LIA_PLUGINS_ALREADY_LOADED = false
+LIA_MODULES_ALREADY_LOADED = false
 
 function GM:OnReloaded()
     if CLIENT then
@@ -98,10 +98,10 @@ function GM:OnReloaded()
         end
     end
 
-    if not LIA_PLUGINS_ALREADY_LOADED then
-        lia.plugin.initialize() -- Initialize the plugin system if it hasn't been loaded before
+    if not LIA_MODULES_ALREADY_LOADED then
+        lia.module.initialize() -- Initialize the module system if it hasn't been loaded before
         lia.config.load() -- Load configuration settings if they haven't been loaded before
-        LIA_PLUGINS_ALREADY_LOADED = true -- Mark the plugins as already loaded
+        LIA_MODULES_ALREADY_LOADED = true -- Mark the modules as already loaded
     end
 
     lia.faction.formatModelData() -- Format model data for factions

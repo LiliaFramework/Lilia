@@ -30,9 +30,9 @@ function lia.class.loadFromDir(directory)
         CLASS.desc = "No description available."
         CLASS.limit = 0
 
-        -- For future use with plugins.
-        if PLUGIN then
-            CLASS.plugin = PLUGIN.uniqueID
+        -- For future use with Modules.
+        if MODULE then
+            CLASS.module = MODULE.uniqueID
         end
 
         -- Include the file so data can be modified.

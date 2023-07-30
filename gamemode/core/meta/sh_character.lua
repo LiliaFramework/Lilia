@@ -49,7 +49,7 @@ if SERVER then
             end
         end
 
-        -- Let plugins/schema determine if the character should be saved.
+        -- Let Modules/schema determine if the character should be saved.
         local shouldSave = hook.Run("CharacterPreSave", self)
 
         if shouldSave ~= false then
@@ -77,7 +77,7 @@ if SERVER then
             end
         end
 
-        -- Let plugins/schema determine if the character should be saved.
+        -- Let Modules/schema determine if the character should be saved.
         local shouldSave = hook.Run("CharacterPreSave", self)
 
         if shouldSave ~= false then

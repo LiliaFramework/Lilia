@@ -2,6 +2,12 @@ function GM:LoadLiliaFonts(font, genericFont)
     local oldFont, oldGenericFont = font, genericFont
     local scale = math.Round(lia.config.get("fontScale", 1), 2)
 
+    surface.CreateFont("liaCrossIcons", {
+        font = "nsicons",
+        size = ScreenScale(11),
+        extended = true,
+    })
+
     surface.CreateFont("liaSmallChatFont", {
         font = font,
         size = math.max(ScreenScale(6), 17),

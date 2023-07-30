@@ -295,20 +295,20 @@ end
 function GM:LiliaLoaded()
     local namecache = {}
 
-    for _, PLUGIN in pairs(lia.plugin.list) do
-        local authorID = (tonumber(PLUGIN.author) and tostring(PLUGIN.author)) or (string.match(PLUGIN.author, "STEAM_") and util.SteamIDTo64(PLUGIN.author)) or nil
+    for _, MODULE in pairs(lia.module.list) do
+        local authorID = (tonumber(MODULE.author) and tostring(MODULE.author)) or (string.match(MODULE.author, "STEAM_") and util.SteamIDTo64(MODULE.author)) or nil
 
         if authorID then
             if namecache[authorID] ~= nil then
-                PLUGIN.author = namecache[authorID]
+                MODULE.author = namecache[authorID]
             else
                 steamworks.RequestPlayerInfo(authorID, function(newName)
                     namecache[authorID] = newName
-                    PLUGIN.author = newName or PLUGIN.author
+                    MODULE.author = newName or MODULE.author
                 end)
             end
         end
     end
 
-    lia.plugin.namecache = namecache
+    lia.module.namecache = namecache
 end
