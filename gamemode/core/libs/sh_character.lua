@@ -159,7 +159,7 @@ do
 		onValidate = function(value, data)
 			if (noDesc) then return true end
 
-			local minLength = lia.config.get("minDescLen", 16)
+			local minLength = CONFIG.MinDescLen
 
 			if (not value or #value:gsub("%s", "") < minLength) then
 				return false, "descMinLen", minLength

@@ -8,7 +8,6 @@ ITEM.outfitCategory = "model"
 ITEM.pacData = {}
 ITEM.isOutfit = true
 
--- ITEM.armor = 25 -- How much armor to add/remove upon wearing/removing.
 --[[
 -- This will change a player's skin after changing the model.
 -- Keep in mind it starts at 0.
@@ -32,15 +31,16 @@ ITEM.bodyGroups = {
 	["bladeblur"] = 1
 }
 
+ITEM.armor = 25 -- How much armor to add/remove upon wearing/removing.
+
 -- You can also use PAC (if installed) to setup an outfit. Go to your outfit's
 -- file in your GMod's data folder. Copy the contents.
 ITEM.pacData = {
 	-- PASTE CONTENT HERE>
 }
 ]]
--- Inventory drawing
+
 if CLIENT then
-    -- Draw camo if it is available.
     function ITEM:paintOver(item, w, h)
         if item:getData("equip") then
             surface.SetDrawColor(110, 255, 110, 100)
@@ -49,7 +49,6 @@ if CLIENT then
     end
 end
 
---Utility for remembering all models/skins/bodygroups
 if SERVER then
     ITEM.visualData = {
         model = {},
@@ -62,13 +61,7 @@ function ITEM:removeOutfit(client)
     local character = client:getChar()
     self:setData("equip", nil)
 
-    -- Revert the model, skin, and bodygroups.
     if hook.Run("CanOutfitChangeModel", self) ~= false then
-        --[[ character:setModel(character:getData("oldMdl", character:getModel()))
-		character:setData("oldMdl", nil)
-
-		client:SetSkin(character:getData("oldSkin", character:getData("skin", 0)))
-		character:setData("oldSkin", nil) ]]
         character:setModel(self:getData("oldMdl", character:getModel()))
         self:setData("oldMdl", nil)
         client:SetSkin(self:getData("oldSkin", character:getData("skin", 0)))
@@ -93,19 +86,16 @@ function ITEM:removeOutfit(client)
         character:setData("oldGroups", oldGroups)
     end
 
-    -- Then, remove PAC parts from this outfit.
     if self.pacData and client.removePart then
         client:removePart(self.uniqueID)
     end
 
-    -- Remove any boosts.
     if self.attribBoosts then
         for k, _ in pairs(self.attribBoosts) do
             character:removeBoost(self.uniqueID, k)
         end
     end
 
-    -- Remove armor added by this item.
     if isnumber(self.armor) then
         client:SetArmor(math.max(client:Armor() - self.armor, 0))
     end
@@ -131,14 +121,12 @@ ITEM:hook("drop", function(item)
     end
 end)
 
--- sorry, for name order.
 ITEM.functions.EquipUn = {
     name = "Unequip",
     tip = "equipTip",
     icon = "icon16/cross.png",
     onRun = function(item)
         item:removeOutfit(item.player)
-
         return false
     end,
     onCanRun = function(item)
@@ -157,7 +145,6 @@ ITEM.functions.Equip = {
         for _, other in pairs(items) do
             if item ~= other and item.outfitCategory == other.outfitCategory and other:getData("equip") then
                 item.player:notifyLocalized("sameOutfitCategory")
-
                 return false
             end
         end
@@ -165,11 +152,6 @@ ITEM.functions.Equip = {
         item:setData("equip", true)
 
         if hook.Run("CanOutfitChangeModel", item) ~= false then
-            --[[ char:setData(
-				"oldMdl",
-				char:getData("oldMdl", item.player:GetModel())
-			) ]]
-            -- Do model substitutions.
             if isfunction(item.onGetReplacement) then
                 char:setModel(item:onGetReplacement())
                 item:setData("oldMdl", item.player:GetModel())
@@ -190,15 +172,12 @@ ITEM.functions.Equip = {
                 item:setData("oldMdl", item.player:GetModel())
             end
 
-            -- Then apply the new skin for the model.
             if isnumber(item.newSkin) then
-                --char:setData("oldSkin", item.player:GetSkin())
                 item:setData("oldSkin", item.player:GetSkin())
                 char:setData("skin", item.newSkin)
                 item.player:SetSkin(item.newSkin)
             end
 
-            -- Then set appropriate body groups for the model.
             if istable(item.bodyGroups) then
                 local oldGroups = char:getData("oldGroups", {})
                 local groups = {}
@@ -227,7 +206,6 @@ ITEM.functions.Equip = {
             end
         end
 
-        -- And add any attribute boosts.
         if istable(item.attribBoosts) then
             for attribute, boost in pairs(item.attribBoosts) do
                 char:addBoost(item.uniqueID, attribute, boost)
@@ -235,7 +213,6 @@ ITEM.functions.Equip = {
         end
 
         item:wearOutfit(item.player, false)
-
         return false
     end,
     onCanRun = function(item)
@@ -245,7 +222,6 @@ ITEM.functions.Equip = {
 
 function ITEM:onCanBeTransfered(oldInventory, newInventory)
     if newInventory and self:getData("equip") then return false end
-
     return true
 end
 
@@ -256,7 +232,6 @@ function ITEM:onLoadout()
 end
 
 function ITEM:onRemoved()
-    --local inv = lia.item.inventories[self.invID]
     if (IsValid(receiver) and receiver:IsPlayer()) and self:getData("equip") then
         self:removeOutfit(receiver)
     end

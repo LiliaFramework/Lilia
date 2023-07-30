@@ -191,8 +191,8 @@ else
                 CHAT_CLASS = class
                 class.onChatAdd(client, text, anonymous)
 
-                if SOUND_CUSTOM_CHAT_SOUND and SOUND_CUSTOM_CHAT_SOUND ~= "" then
-                    surface.PlaySound(SOUND_CUSTOM_CHAT_SOUND)
+                if CONFIG.CustomChatSound and CONFIG.CustomChatSound ~= "" then
+                    surface.PlaySound(CONFIG.CustomChatSound)
                 else
                     chat.PlaySound()
                 end

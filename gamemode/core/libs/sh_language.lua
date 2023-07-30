@@ -54,7 +54,7 @@ if (SERVER) then
 		end
 	end
 else
-	LIA_CVAR_LANG = CreateClientConVar("lia_language", lia.config.language or "english", true, true)
+	LIA_CVAR_LANG = CreateClientConVar("lia_language", "english", true, true)
 
 	function L(key, ...)
 		local languages = lia.lang.stored

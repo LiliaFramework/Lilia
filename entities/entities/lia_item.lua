@@ -139,7 +139,7 @@ else
         local x, y = position.x, position.y
         local description = itemTable:getDesc()
         self:computeDescMarkup(description)
-        lia.util.drawText(L(itemTable.getName and itemTable:getName() or itemTable.name), x, y, colorAlpha(lia.config.get("color"), alpha), 1, 1, nil, alpha * 0.65)
+        lia.util.drawText(L(itemTable.getName and itemTable:getName() or itemTable.name), x, y, colorAlpha(C, alpha), 1, 1, nil, alpha * 0.65)
         y = y + 12
 
         if self.markup then

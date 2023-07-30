@@ -138,7 +138,7 @@ function lia.menu.drawAll()
 			-- Check if the button is hovered.
 			if (inside and mY >= y and mY <= (y + 28)) then
 				-- If so, draw a colored rectangle to indicate it.
-				surface.SetDrawColor(ColorAlpha(lia.config.get("color"), v.alpha + math.cos(RealTime() * 8) * 40))
+				surface.SetDrawColor(ColorAlpha(CONFIG.Color, v.alpha + math.cos(RealTime() * 8) * 40))
 				surface.DrawRect(startX, y, width, 28)
 			end
 

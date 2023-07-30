@@ -100,7 +100,7 @@ function lia.bar.drawAction()
 			surface.SetDrawColor(0, 0, 0, 120)
 			surface.DrawOutlinedRect(x, y, w, h)
 
-			surface.SetDrawColor(lia.config.get("color"))
+			surface.SetDrawColor(CONFIG.Color)
 			surface.DrawRect(x + 4, y + 4, (w * fraction) - 8, h - 8)
 
 			surface.SetDrawColor(200, 200, 200, 20)

@@ -1,14 +1,13 @@
-ITEM.name = "Weapon" -- The name of the weapon
-ITEM.desc = "A Weapon." -- The description of the weapon
-ITEM.category = "Weapons" -- The category of the weapon
-ITEM.model = "models/weapons/w_pistol.mdl" -- The model of the weapon
-ITEM.class = "weapon_pistol" -- The class of the weapon
-ITEM.width = 2 -- The width of the weapon in the inventory grid
-ITEM.height = 2 -- The height of the weapon in the inventory grid
-ITEM.isWeapon = true -- Indicates that the item is a weapon
-ITEM.weaponCategory = "sidearm" -- The category of the weapon (e.g., sidearm, rifle, etc.)
+ITEM.name = "Weapon"
+ITEM.desc = "A Weapon."
+ITEM.category = "Weapons"
+ITEM.model = "models/weapons/w_pistol.mdl"
+ITEM.class = "weapon_pistol"
+ITEM.width = 2
+ITEM.height = 2
+ITEM.isWeapon = true
+ITEM.weaponCategory = "sidearm"
 
--- Inventory drawing
 if CLIENT then
     function ITEM:paintOver(item, w, h)
         if item:getData("equip") then
@@ -18,9 +17,7 @@ if CLIENT then
     end
 end
 
--- On item is dropped, remove a weapon from the player and keep the ammo in the item.
 ITEM:hook("drop", function(item)
-    -- Check if the item is equipped
     if item:getData("equip") then
         item:setData("equip", nil)
         item.player.carryWeapons = item.player.carryWeapons or {}
@@ -35,7 +32,6 @@ ITEM:hook("drop", function(item)
     end
 end)
 
--- On player unequips the item, remove a weapon from the player and keep the ammo in the item.
 ITEM.functions.EquipUn = {
     name = "Unequip",
     tip = "equipTip",
@@ -70,7 +66,6 @@ ITEM.functions.EquipUn = {
     end
 }
 
--- On player equips the item, give a weapon to the player and load the ammo data from the item.
 ITEM.functions.Equip = {
     name = "Equip",
     tip = "equipTip",
@@ -84,7 +79,6 @@ ITEM.functions.Equip = {
             if v.id ~= item.id then
                 if v.isWeapon and client.carryWeapons[item.weaponCategory] and v:getData("equip") then
                     client:notifyLocalized("weaponSlotFilled")
-
                     return false
                 end
             end
@@ -103,7 +97,6 @@ ITEM.functions.Equip = {
 
             client.carryWeapons[item.weaponCategory] = weapon
             client:EmitSound(item.equipSound or "items/ammo_pickup.wav", 80)
-            -- Remove default given ammo.
             local ammoCount = client:GetAmmoCount(weapon:GetPrimaryAmmoType())
 
             if ammoCount == weapon:Clip1() and item:getData("ammo", 0) == 0 then
@@ -159,24 +152,11 @@ end
 
 HOLSTER_DRAWINFO = HOLSTER_DRAWINFO or {}
 
--- Called after the item is registered into the item tables.
 function ITEM:onRegistered()
     if self.holsterDrawInfo then
         HOLSTER_DRAWINFO[self.class] = self.holsterDrawInfo
     end
 end
-
-hook.Add("PlayerDeath", "liaStripClip", function(client)
-    client.carryWeapons = {}
-    local inventory = client:getChar() and client:getChar():getInv()
-    if not inventory then return end
-
-    for k, v in pairs(inventory:getItems()) do
-        if v.isWeapon and v:getData("equip") then
-            v:setData("ammo", nil)
-        end
-    end
-end)
 
 function ITEM:onRemoved()
     local inv = lia.item.inventories[self.invID]

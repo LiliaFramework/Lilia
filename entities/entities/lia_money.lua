@@ -6,7 +6,7 @@ ENT.Spawnable = false
 
 if SERVER then
     function ENT:Initialize()
-        self:SetModel(hook.Run("GetMoneyModel", self:getAmount()) or lia.config.get("moneyModel", "models/props_lab/box01a.mdl"))
+        self:SetModel(hook.Run("GetMoneyModel", self:getAmount()) or CONFIG.MoneyModel)
         self:SetSolid(SOLID_VPHYSICS)
         self:PhysicsInit(SOLID_VPHYSICS)
         self:SetUseType(SIMPLE_USE)
