@@ -8,8 +8,8 @@ do
                 "ooc",
                 {
                     onCanSay = function(speaker, text)
-                        local delay = lia.config.get("oocDelay", 10)
-                        local oocmaxsize = lia.config.get("oocLimit", 10)
+                        local delay = CONFIG.OOCDelay
+                        local oocmaxsize = CONFIG.OOCLimit
                         if GetGlobalBool("oocblocked", false) then
                             speaker:notify("The OOC is Globally Blocked!")
 

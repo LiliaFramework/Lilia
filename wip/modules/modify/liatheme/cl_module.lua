@@ -1,5 +1,5 @@
 function MODULE:ForceDermaSkin()
-    if lia.config.get("DarkTheme", false) then return "lilia_darktheme" end
+    if CONFIG.DarkTheme then return "lilia_darktheme" end
     return "lilia"
 end
 

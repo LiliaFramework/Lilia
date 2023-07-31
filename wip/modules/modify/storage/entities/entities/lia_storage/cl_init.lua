@@ -21,7 +21,7 @@ function ENT:onDrawEntityInfo(alpha)
 
 	local def = self:getStorageInfo() 
 	if (def) then
-		local tx, ty = drawText(L(def.name or "Storage"), x, y, colorAlpha(configGet("color"), alpha), 1, 1, nil, alpha * 0.65)
+		local tx, ty = drawText(L(def.name or "Storage"), x, y, colorAlpha(CONFIG.Color), 1, 1, nil, alpha * 0.65)
 		y = y + ty + 1
 
 		if (def.desc) then

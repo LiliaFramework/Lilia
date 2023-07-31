@@ -69,7 +69,7 @@ function ENT:onDrawEntityInfo(alpha)
 	drawText(
 		self.getNetVar(self, "name", "John Doe"),
 		x, y,
-		colorAlpha(configGet("color"), alpha),
+		colorAlpha(CONFIG.Color),
 		1, 1,
 		nil,
 		alpha * 0.65

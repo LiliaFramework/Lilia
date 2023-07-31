@@ -28,7 +28,7 @@ else
 
     function ENT:onDrawEntityInfo(alpha)
         local pos = self:LocalToWorld(self:OBBCenter()):ToScreen()
-        lia.util.drawText("Bodygroup Closet", pos.x, pos.y, ColorAlpha(lia.config.get("color", Color(255, 255, 255)), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        lia.util.drawText("Bodygroup Closet", pos.x, pos.y, ColorAlpha(CONFIG.Color), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     function ENT:Draw()

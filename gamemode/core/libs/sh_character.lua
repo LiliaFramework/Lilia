@@ -102,7 +102,7 @@ do
 				return false, "invalid", "name"
 			end
 
-			local allowExistNames = lia.config.get("allowExistNames", true)
+			local allowExistNames = CONFIG.AllowExistNames
 
 			-- Fetch existing character names
 			if (CLIENT and #lia.char.names < 1 and not allowExistNames) then
@@ -114,7 +114,7 @@ do
 			end
 
 			-- Check whether the chosen character name already exists
-			if (not lia.config.get("allowExistNames", true)) then
+			if (not CONFIG.AllowExistNames) then
 				for k, v in pairs(lia.char.names) do
 					if (v == value) then
 						return false, "A character with this name already exists."
@@ -215,7 +215,7 @@ do
 					end
 					icon.PaintOver = function(this, w, h)
 						if (panel.payload.model == k) then
-							local color = lia.config.get("color", color_white)
+							local color = CONFIG.Color
 
 							surface.SetDrawColor(color.r, color.g, color.b, 200)
 

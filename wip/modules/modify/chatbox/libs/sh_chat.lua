@@ -10,12 +10,12 @@ do
                     format = "%s says \"%s\"",
                     onGetColor = function(speaker, text)
                         -- If you are looking at the speaker, make it greener to easier identify who is talking.
-                        if LocalPlayer():GetEyeTrace().Entity == speaker then return lia.config.get("chatListenColor") end
+                        if LocalPlayer():GetEyeTrace().Entity == speaker then return CONFIG.ChatListenColor end
 
-                        return lia.config.get("chatColor")
+                        return CONFIG.ChatColor
                     end,
                     -- Otherwise, use the normal chat color.
-                    radius = function() return lia.config.get("chatRange", 280) end
+                    radius = function() return CONFIG.ChatRange end
                 }
             )
 
@@ -25,7 +25,7 @@ do
                 {
                     format = "**%s %s",
                     onGetColor = lia.chat.classes.ic.onGetColor,
-                    radius = function() return lia.config.get("chatRange", 280) end,
+                    radius = function() return CONFIG.ChatRange end,
                     prefix = {"/me", "/action"},
                     font = "liaChatFontItalics",
                     filter = "actions",
@@ -38,9 +38,9 @@ do
                 "it",
                 {
                     onChatAdd = function(speaker, text)
-                        chat.AddText(lia.chat.timestamp(false), lia.config.get("chatColor"), "**" .. text)
+                        chat.AddText(lia.chat.timestamp(false), CONFIG.ChatColor, "**" .. text)
                     end,
-                    radius = function() return lia.config.get("chatRange", 280) end,
+                    radius = function() return CONFIG.ChatRange end,
                     prefix = {"/it"},
                     font = "liaChatFontItalics",
                     filter = "actions",
@@ -59,7 +59,7 @@ do
                         return Color(color.r - 35, color.g - 35, color.b - 35)
                     end,
                     -- Make the whisper chat slightly darker than IC chat.
-                    radius = function() return lia.config.get("chatRange", 280) * 0.25 end,
+                    radius = function() return CONFIG.ChatRange * 0.25 end,
                     prefix = {"/w", "/whisper"}
                 }
             )
@@ -75,7 +75,7 @@ do
                         return Color(color.r + 35, color.g + 35, color.b + 35)
                     end,
                     -- Make the yell chat slightly brighter than IC chat.
-                    radius = function() return lia.config.get("chatRange", 280) * 2 end,
+                    radius = function() return CONFIG.ChatRange * 2 end,
                     prefix = {"/y", "/yell"}
                 }
             )
@@ -85,12 +85,12 @@ do
                 "looc",
                 {
                     onCanSay = function(speaker, text)
-                        local delay = lia.config.get("loocDelay", 0)
+                        local delay = CONFIG.LOOCDelay
                         -- Only need to check the time if they have spoken in LOOC chat before.
-                        if speaker:IsAdmin() and lia.config.get("loocDelayAdmin", false) and delay > 0 and speaker.liaLastLOOC then
+                        if speaker:IsAdmin() and CONFIG.LOOCDelayAdmin and delay > 0 and speaker.liaLastLOOC then
                             local lastLOOC = CurTime() - speaker.liaLastLOOC
                             -- Use this method of checking time in case the oocDelay config changes (may not affect admins).
-                            if lastLOOC <= delay and (not speaker:IsAdmin() or speaker:IsAdmin() and lia.config.get("loocDelayAdmin", false)) then
+                            if lastLOOC <= delay and (not speaker:IsAdmin() or speaker:IsAdmin() and CONFIG.LOOCDelayAdmin) then
                                 speaker:notifyLocalized("loocDelay", delay - math.ceil(lastLOOC))
 
                                 return false
@@ -101,9 +101,9 @@ do
                         speaker.liaLastLOOC = CurTime()
                     end,
                     onChatAdd = function(speaker, text)
-                        chat.AddText(lia.chat.timestamp(false), Color(255, 50, 50), "[LOOC] ", lia.config.get("chatColor"), speaker:Name() .. ": " .. text)
+                        chat.AddText(lia.chat.timestamp(false), Color(255, 50, 50), "[LOOC] ", CONFIG.ChatColor, speaker:Name() .. ": " .. text)
                     end,
-                    radius = function() return lia.config.get("chatRange", 280) end,
+                    radius = function() return CONFIG.ChatRange end,
                     prefix = {".//", "[[", "/looc"},
                     noSpaceAfter = true,
                     filter = "ooc"
@@ -118,7 +118,7 @@ do
                     color = Color(155, 111, 176),
                     filter = "actions",
                     font = "liaChatFontItalics",
-                    radius = function() return lia.config.get("chatRange", 280) end,
+                    radius = function() return CONFIG.ChatRange end,
                     deadCanChat = true
                 }
             )

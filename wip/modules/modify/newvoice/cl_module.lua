@@ -68,7 +68,7 @@ local PANEL = {}
 	vgui.Register("VoicePanel", PANEL, "DPanel")
 
 	function MODULE:PlayerStartVoice(client)
-		if (!IsValid(g_VoicePanelList) or !lia.config.get("allowVoice", false)) then return end
+		if (!IsValid(g_VoicePanelList) or ! CONFIG.AllowVoice) then return end
 
 		hook.Run("PlayerEndVoice", client)
 

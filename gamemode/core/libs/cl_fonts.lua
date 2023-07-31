@@ -1,6 +1,6 @@
 function GM:LoadLiliaFonts(font, genericFont)
     local oldFont, oldGenericFont = font, genericFont
-    local scale = math.Round(lia.config.get("fontScale", 1), 2)
+    local scale = math.Round(CONFIG.FontScale, 2)
 
     surface.CreateFont("liaCrossIcons", {
         font = "nsicons",

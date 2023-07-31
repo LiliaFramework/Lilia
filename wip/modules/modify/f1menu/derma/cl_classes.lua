@@ -22,23 +22,6 @@ local PANEL = {}
         self.icon:InvalidateLayout(true)
         self.icon:Dock(LEFT)
         self.icon.PaintOver = function(this, w, h)
-            /*
-            if (panel.payload.model == k) then
-                local color = lia.config.get("color", color_white)
-
-                surface.SetDrawColor(color.r, color.g, color.b, 200)
-
-                for i = 1, 3 do
-                    local i2 = i * 2
-
-                    surface.DrawOutlinedRect(i, i, w - i2, h - i2)
-                end
-
-                surface.SetDrawColor(color.r, color.g, color.b, 75)
-                surface.SetMaterial(gradient)
-                surface.DrawTexturedRect(0, 0, w, h)
-            end
-            */
         end
         assignClick(self.icon) 
 

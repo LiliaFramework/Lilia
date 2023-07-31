@@ -4,16 +4,6 @@ MODULE.desc = "Adds attributes for characters."
 
 lia.util.include("sh_commands.lua")
 
-lia.config.add(
-	"maxAttribs",
-	30,
-	"The total maximum amount of attribute points allowed.",
-	nil,
-	{
-		data = {min = 1, max = 250},
-    category = "Player Settings"
-	}
-)
 
 lia.char.registerVar("attribs", {
 	field = "_attribs",
@@ -31,7 +21,7 @@ lia.char.registerVar("attribs", {
 					count = count + v
 				end
 				local points = hook.Run("GetStartAttribPoints", client, count)
-					or lia.config.get("maxAttribs", 30)
+					or CONFIG.MaxAttributes
 				if (count > points) then
 					return false, "unknownError"
 				end
@@ -94,7 +84,7 @@ else
 				bar:setValue(attribValue)
 			end
 
-			local maximum = v.maxValue or lia.config.get("maxAttribs", 30)
+			local maximum = v.maxValue or CONFIG.MaxAttributes
 			bar:setMax(maximum)
 			bar:setReadOnly()
 			bar:setText(

@@ -1,6 +1,6 @@
 function MODULE:LoadFonts()
     -- Introduction fancy font.
-    local font = lia.config.get("introFont", "Cambria")
+    local font = CONFIG.IntroFont
 
     surface.CreateFont("liaIntroTitleFont", {
         font = font,
@@ -32,5 +32,5 @@ function MODULE:LoadFonts()
 end
 
 function MODULE:CreateIntroduction()
-    if lia.config.get("introEnabled") then return vgui.Create("liaIntro") end
+    if CONFIG.IntroEnabled then return vgui.Create("liaIntro") end
 end

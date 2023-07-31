@@ -14,7 +14,7 @@ function PANEL:Init()
 		"GetStartAttribPoints",
 		LocalPlayer(),
 		self:getContext()
-	) or lia.config.get("maxAttribs", 30)
+	) or CONFIG.MaxAttributes
 	self.attribs = {}
 
 	for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do

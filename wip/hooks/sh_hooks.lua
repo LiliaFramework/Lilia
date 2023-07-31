@@ -43,7 +43,7 @@ function GM:TranslateActivity(client, act)
     local weapon = client.GetActiveWeapon(client)
 
     if class == "player" then
-        if not lia.config.get("wepAlwaysRaised") and IsValid(weapon) and (client.isWepRaised and not client.isWepRaised(client)) and client:OnGround() then
+        if not CONFIG.WepAlwaysRaised and IsValid(weapon) and (client.isWepRaised and not client.isWepRaised(client)) and client:OnGround() then
             if string.find(model, "zombie") then
                 local tree = lia.anim.zombie
 
@@ -301,7 +301,7 @@ function GM:Move(client, moveData)
         if client:GetMoveType() == MOVETYPE_WALK and moveData:KeyDown(IN_WALK) then
             local mf, ms = 0, 0
             local speed = client:GetWalkSpeed()
-            local ratio = lia.config.get("walkRatio")
+            local ratio = CONFIG.WalkRatio
 
             if moveData:KeyDown(IN_FORWARD) then
                 mf = ratio

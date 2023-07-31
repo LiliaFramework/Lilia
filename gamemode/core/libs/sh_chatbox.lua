@@ -12,7 +12,7 @@ end
 
 -- Returns a timestamp
 function lia.chat.timestamp(ooc)
-    return lia.config.get("chatShowTime") and (ooc and " " or "") .. "(" .. lia.date.getFormatted("%H:%M") .. ")" .. (ooc and "" or " ") or ""
+    return lia..get("chatShowTime") and (ooc and " " or "") .. "(" .. lia.date.GetFormattedDate(false, false, false, false, true) .. ")" .. (ooc and "" or " ") or ""
 end
 
 -- Registers a new chat type with the information provided.

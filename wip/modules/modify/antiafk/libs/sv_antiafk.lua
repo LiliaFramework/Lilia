@@ -28,7 +28,7 @@ end
 
 AFKKick.TimerInterval = 1
 
-if lia.config.get("AFKKickEnabled", false) then
+if CONFIG.AFKKickEnabled then
 	timer.Create("AFKTimer", AFKKick.TimerInterval, 0, function()
 		local plyCount = player.GetCount()
 		local maxPlayers = game.MaxPlayers()

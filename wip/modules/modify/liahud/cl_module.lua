@@ -207,13 +207,13 @@ function MODULE:HUDDrawTargetID()
 end
 
 hook.Add("ShouldHideBars", "hideBars", function()
-    return lia.config.get("BarsDisabled", false)
+    return CONFIG.BarsDisabled
 end)
 
 hook.Add("CanDrawAmmoHUD", "hideAmmo", function()
-    return lia.config.get("AmmoDrawEnabled", true)
+    return CONFIG.AmmoDrawEnabled
 end)
 
 hook.Add("ShouldDrawCrosshair", "hideCrosshair", function()
-    return lia.config.get("CrosshairEnabled", false)
+    return CONFIG.CrosshairEnabled
 end)

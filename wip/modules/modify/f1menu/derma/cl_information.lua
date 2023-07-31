@@ -119,17 +119,6 @@ function PANEL:setup()
         self.faction:SetText(L("charFaction", L(team.GetName(LocalPlayer():Team()))))
     end
 
-    if self.time then
-        local format = "%A, %d %B " .. CONFIG.SchemaYear .. " %T"
-        self.time:SetText(L("curTime", lia.date.getFormatted(format)))
-
-        self.time.Think = function(this)
-            if (this.nextTime or 0) < CurTime() then
-                this:SetText(L("curTime", lia.date.getFormatted(format)))
-                this.nextTime = CurTime() + 0.5
-            end
-        end
-    end
 
     if self.class then
         local class = lia.class.list[char:getClass()]

@@ -39,8 +39,6 @@ function GM:PlayerInitialSpawn(client)
     -- Send server related data.
     lia.config.send(client)
 
-    --lia.date.sync(client)
-    -- Load and send the Lilia data for the player.
     client:loadLiliaData(function(data)
         if not IsValid(client) then return end
         local address = client:IPAddress()
@@ -257,8 +255,8 @@ function GM:PlayerLoadout(client)
         client:SetModel(character:getModel())
         client:Give("lia_hands")
 
-        client:SetWalkSpeed(lia.config.get("walkSpeed", 130))
-        client:SetRunSpeed(lia.config.get("runSpeed", 235))
+        client:SetWalkSpeed(CONFIG.WalkSpeed)
+        client:SetRunSpeed(CONFIG.RunSpeed)
         local faction = lia.faction.indices[client:Team()]
 
         if faction then
@@ -438,12 +436,7 @@ function GM:PlayerDeathSound()
 end
 
 function GM:InitializedSchema()
-    if not lia.data.get("date", nil, false, true) then
-        lia.data.set("date", os.time(), false, true)
-    end
-
-    --lia.date.start = lia.data.get("date", os.time(), false, true)
-    local persistString = GetConVar("sbox_persist"):GetString()
+   local persistString = GetConVar("sbox_persist"):GetString()
 
     if persistString == "" or string.StartWith(persistString, "ns_") then
         local newValue = "ns_" .. SCHEMA.folder
@@ -452,7 +445,7 @@ function GM:InitializedSchema()
 end
 
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
-    local allowVoice = lia.config.get("allowVoice")
+    local allowVoice = CONFIG.AllowVoice
 
     if allowVoice then
         if hook.Run("PlayerCanHearPlayersVoiceTalker", listener, speaker) then

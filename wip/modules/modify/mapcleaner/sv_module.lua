@@ -1,8 +1,8 @@
-local ItemCleanupTime = lia.config.get("ItemCleanupTime", 7200)
-local MapCleanupTime = lia.config.get("MapCleanupTime", 21600)
+local ItemCleanupTime = CONFIG.ItemCleanupTime
+local MapCleanupTime = CONFIG.MapCleanupTime 
 
 function MODULE:InitializedModules()
-    if not lia.config.get("MapCleanerEnabled", true) then return end
+    if not CONFIG.MapCleanerEnabled then return end
     timer.Create("clearWorldItemsWarning", ItemCleanupTime - (60 * 10), 0, function()
         net.Start("worlditem_cleanup_inbound")
         net.Broadcast()

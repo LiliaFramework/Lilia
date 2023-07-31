@@ -1,7 +1,7 @@
 function lia.char.create(data, callback)
 	local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
 
-	data.money = data.money or lia.config.get("defMoney", 0)
+	data.money = data.money or CONFIG.DefaultMoney
 
 	lia.db.insertTable({
 		_name = data.name or "",

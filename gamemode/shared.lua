@@ -34,7 +34,6 @@ do
 end
 
 lia.util.includeDir("core/libs/thirdparty")
-lia.util.include("core/sh_config.lua")
 lia.util.includeDir("core/libs")
 lia.util.includeDir("core/derma")
 lia.util.includeDir("core/hooks")
@@ -52,7 +51,6 @@ lia.util.include("core/commands/sv_misc.lua")
 lia.util.include("core/commands/sv_player.lua")
 lia.util.include("lilia/gamemode/core/meta/sh_meta.lua")
 lia.util.include("lilia/gamemode/core/meta/sv_meta.lua")
-lia.util.include("core/sh_config.lua")
 lia.util.includeDir("core/libs")
 lia.util.includeDir("core/derma")
 lia.util.includeDir("core/hooks")
@@ -62,7 +60,6 @@ lia.lang.loadFromDir("lilia/gamemode/languages")
 
 function GM:Initialize()
     lia.module.initialize()
-    lia.config.load()
 end
 
 LIA_MODULES_ALREADY_LOADED = false
@@ -78,7 +75,6 @@ function GM:OnReloaded()
 
     if not LIA_MODULES_ALREADY_LOADED then
         lia.module.initialize()
-        lia.config.load()
         LIA_MODULES_ALREADY_LOADED = true
     end
 

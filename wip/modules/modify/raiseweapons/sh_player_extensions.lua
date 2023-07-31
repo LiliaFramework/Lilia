@@ -21,7 +21,7 @@ function playerMeta:isWepRaised()
 	-- If the player has been forced to have their weapon lowered.
 	if self.getNetVar(self, "restricted") then return false end
 	-- Let the config decide before actual results.
-	if lia.config.get("wepAlwaysRaised") then return true end
+	if CONFIG.WepAlwaysRaised then return true end
 	-- Returns what the gamemode decides.
 
 	return self.getNetVar(self, "raised", false)

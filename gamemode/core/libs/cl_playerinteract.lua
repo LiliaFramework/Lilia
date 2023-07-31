@@ -49,7 +49,7 @@ end
 -- @number time The time it takes to open the menu
 -- @internal
 -- @usageStart
--- lia.playerInteract.interact(entity, lia.config.get("playerInteractSpeed", 1))
+-- lia.playerInteract.interact(entity, CONFIG.PlayerInteractSpeed)
 -- @usageEnd
 function lia.playerInteract.interact(entity, time)
     lia.playerInteract.currentEnt = entity
@@ -83,9 +83,10 @@ hook.Add("KeyPress", "lia.playerInteract", function(client, key)
 
     local entity = client:GetEyeTrace().Entity
     if (entity:IsPlayer()) then
-        lia.playerInteract.interact(entity, lia.config.get("playerInteractSpeed", 1))
+        lia.playerInteract.interact(entity, CONFIG.PlayerInteractSpeed)
     end
 end)
+
 
 hook.Add("KeyRelease", "lia.playerInteract", function(client, key)
     if (key == IN_USE and isInteracting) then
