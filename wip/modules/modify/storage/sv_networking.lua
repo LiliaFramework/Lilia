@@ -23,7 +23,7 @@ end)
 net.Receive("liaStorageUnlock", function(_, client)
 	local password = net.ReadString()
 	local storage = getValidStorage(client)
-	local passwordDelay = lia.config.get("passwordDelay",1)
+	local passwordDelay = CONFIG.PasswordDelay
 	if (not storage) then return end
 		
 	if (client.lastPasswordAttempt and CurTime() < client.lastPasswordAttempt + passwordDelay) then

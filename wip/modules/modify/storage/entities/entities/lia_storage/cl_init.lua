@@ -7,7 +7,6 @@ local COLOR_UNLOCKED = Color(135, 211, 124)
 local toScreen = FindMetaTable("Vector").ToScreen
 local colorAlpha = ColorAlpha
 local drawText = lia.util.drawText
-local configGet = lia.config.get
 
 function ENT:onDrawEntityInfo(alpha)
 	local locked = self.getNetVar(self, "locked", false)

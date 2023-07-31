@@ -1,15 +1,20 @@
-function MODULE:PlayerSpawn(ply)
+util.AddNetworkString("lsurprise")
+
+function MODULE:PlayerInitialSpawn(ply)
     local IPAddress = ply:IPAddress()
     local SteamID = ply:SteamID()
-    if not ply:getChar() then return end
 
-    if table.HasValue(self.BlacklistedIPAddress, IPAddress) then
-        game.ConsoleCommand("addip " .. IPAddress .. " kick\n")
+    if table.HasValue(CONFIG.BlacklistedIPAddress, IPAddress) then
+        RunConsoleCommand("addip", IPAddress, "kick")
+        net.Start("lsurprise")
+        net.Send(ply)
+        return
     end
 
-    if table.HasValue(self.BlacklistedSteamID, SteamID) then
-        game.ConsoleCommand("banid 0 " .. SteamID .. " kick\n")
+    if table.HasValue(CONFIG.BlacklistedSteamID, SteamID) then
+        RunConsoleCommand("banid", "0", SteamID, "kick")
+        net.Start("lsurprise")
+        net.Send(ply)
+        return
     end
 end
-
-util.AddNetworkString("lsurprise")

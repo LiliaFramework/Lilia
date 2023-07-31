@@ -56,7 +56,6 @@ local TEXT_OFFSET = Vector(0, 0, 20)
 local toScreen = FindMetaTable("Vector").ToScreen
 local colorAlpha = ColorAlpha
 local drawText = lia.util.drawText
-local configGet = lia.config.get
 
 ENT.DrawEntityInfo = true
 

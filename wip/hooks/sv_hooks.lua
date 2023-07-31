@@ -36,8 +36,6 @@ end
 function GM:PlayerInitialSpawn(client)
     client.liaJoinTime = RealTime()
     if client:IsBot() then return hook.Run("SetupBotCharacter", client) end
-    -- Send server related data.
-    lia.config.send(client)
 
     client:loadLiliaData(function(data)
         if not IsValid(client) then return end
@@ -419,7 +417,6 @@ end
 function GM:ShutDown()
     if hook.Run("ShouldDataBeSaved") == false then return end
     lia.shuttingDown = true
-    lia.config.save()
     hook.Run("SaveData")
 
     for _, v in ipairs(player.GetAll()) do

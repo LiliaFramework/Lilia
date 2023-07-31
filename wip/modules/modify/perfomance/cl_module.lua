@@ -1,11 +1,12 @@
 local MODULE = MODULE
+local CONFIG = CONFIG
 
 function MODULE:GetPlayerData(pPlayer)
-    return self.m_tblPlayers[pPlayer:EntIndex()]
+    return CONFIG.m_tblPlayers[pPlayer:EntIndex()]
 end
 
 function MODULE:RegisterPlayer(pPlayer)
-    self.m_tblPlayers[pPlayer:EntIndex()] = {
+    CONFIG.m_tblPlayers[pPlayer:EntIndex()] = {
         Player = pPlayer,
         Expanding = false,
         Expanded = false,
@@ -14,19 +15,19 @@ function MODULE:RegisterPlayer(pPlayer)
 
     self:PlayerUpdateTransmitStates(pPlayer)
 
-    timer.Simple(self.m_intSpawnDelay, function()
+    timer.Simple(CONFIG.m_intSpawnDelay, function()
         self:BeginExpand(pPlayer)
     end)
 end
 
 function MODULE:RemovePlayer(pPlayer)
-    self.m_tblPlayers[pPlayer:EntIndex()] = nil
+    CONFIG.m_tblPlayers[pPlayer:EntIndex()] = nil
 end
 
 function MODULE:PlayerUpdateTransmitStates(pPlayer, intRange)
     if intRange then
         for _, v in pairs(ents.GetAll()) do
-            if self.m_tblAlwaysSend[v:GetClass()] then
+            if CONFIG.m_tblAlwaysSend[v:GetClass()] then
                 v:SetPreventTransmit(pPlayer, false)
                 continue
             end
@@ -36,7 +37,7 @@ function MODULE:PlayerUpdateTransmitStates(pPlayer, intRange)
                 continue
             end
 
-            if v:GetPos():Distance(pPlayer:GetPos()) > self.m_intUpdateDistance then
+            if v:GetPos():Distance(pPlayer:GetPos()) > CONFIG.m_intUpdateDistance then
                 v:SetPreventTransmit(pPlayer, true)
             else
                 v:SetPreventTransmit(pPlayer, false)
@@ -44,7 +45,7 @@ function MODULE:PlayerUpdateTransmitStates(pPlayer, intRange)
         end
     else
         for _, v in pairs(ents.GetAll()) do
-            if self.m_tblAlwaysSend[v:GetClass()] then
+            if CONFIG.m_tblAlwaysSend[v:GetClass()] then
                 v:SetPreventTransmit(pPlayer, false)
                 continue
             end
@@ -66,17 +67,17 @@ function MODULE:BeginExpand(pPlayer)
     local timerID = "PVS:" .. pPlayer:EntIndex()
     local currentRange = 0
 
-    timer.Create(timerID, self.m_intUpdateRate, 0, function()
+    timer.Create(timerID, CONFIG.m_intUpdateRate, 0, function()
         if not IsValid(pPlayer) then
             timer.Destroy(timerID)
 
             return
         end
 
-        currentRange = math.min(self.m_intUpdateDistance, currentRange + self.m_intUpdateAmount)
+        currentRange = math.min(CONFIG.m_intUpdateDistance, currentRange + CONFIG.m_intUpdateAmount)
         self:PlayerUpdateTransmitStates(pPlayer, currentRange)
 
-        if currentRange == self.m_intUpdateDistance then
+        if currentRange == CONFIG.m_intUpdateDistance then
             timer.Destroy(timerID)
             data.Expanded = true
             data.Expanding = false
@@ -85,15 +86,15 @@ function MODULE:BeginExpand(pPlayer)
 end
 
 function MODULE:PlayerExpandedUpdate()
-    for k, data in pairs(self.m_tblPlayers) do
+    for k, data in pairs(CONFIG.m_tblPlayers) do
         if not data or not data.Expanded then continue end
 
         if not IsValid(data.Player) then
-            self.m_tblPlayers[k] = nil
+            CONFIG.m_tblPlayers[k] = nil
             continue
         end
 
-        self:PlayerUpdateTransmitStates(data.Player, self.m_intUpdateDistance)
+        self:PlayerUpdateTransmitStates(data.Player, CONFIG.m_intUpdateDistance)
     end
 end
 
@@ -112,26 +113,7 @@ function MODULE:Initialize()
     hook.Remove("PostPlayerDraw", "DarkRP_ChatIndicator")
     hook.Remove("CreateClientsideRagdoll", "DarkRP_ChatIndicator")
     hook.Remove("player_disconnect", "DarkRP_ChatIndicator")
-    RunConsoleCommand("gmod_mcore_test", "1")
-    RunConsoleCommand("r_shadows", "0")
-    RunConsoleCommand("cl_detaildist", "0")
-    RunConsoleCommand("cl_threaded_client_leaf_system", "1")
-    RunConsoleCommand("cl_threaded_bone_setup", "2")
-    RunConsoleCommand("r_threaded_renderables", "1")
-    RunConsoleCommand("r_threaded_particles", "1")
-    RunConsoleCommand("r_queued_ropes", "1")
-    RunConsoleCommand("r_queued_decals", "1")
-    RunConsoleCommand("r_queued_post_processing", "1")
-    RunConsoleCommand("r_threaded_client_shadow_manager", "1")
-    RunConsoleCommand("studio_queue_mode", "1")
-    RunConsoleCommand("mat_queue_mode", "-2")
-    RunConsoleCommand("fps_max", "0")
-    RunConsoleCommand("fov_desired", "100")
-    RunConsoleCommand("mat_specular", "0")
-    RunConsoleCommand("r_drawmodeldecals", "0")
-    RunConsoleCommand("r_lod", "-1")
-    RunConsoleCommand("lia_cheapblur", "1")
-    hook.Remove("RenderScene", "RenderSuperDoF")
+       hook.Remove("RenderScene", "RenderSuperDoF")
     hook.Remove("RenderScene", "RenderStereoscopy")
     hook.Remove("Think", "DOFThink")
     hook.Remove("GUIMouseReleased", "SuperDOFMouseUp")
@@ -169,16 +151,35 @@ function MODULE:Initialize()
     hook.Remove("PostDrawEffects", "RenderHalos")
     timer.Remove("HostnameThink")
     timer.Remove("CheckHookTimes")
+    RunConsoleCommand("gmod_mcore_test", "1")
+    RunConsoleCommand("r_shadows", "0")
+    RunConsoleCommand("cl_detaildist", "0")
+    RunConsoleCommand("cl_threaded_client_leaf_system", "1")
+    RunConsoleCommand("cl_threaded_bone_setup", "2")
+    RunConsoleCommand("r_threaded_renderables", "1")
+    RunConsoleCommand("r_threaded_particles", "1")
+    RunConsoleCommand("r_queued_ropes", "1")
+    RunConsoleCommand("r_queued_decals", "1")
+    RunConsoleCommand("r_queued_post_processing", "1")
+    RunConsoleCommand("r_threaded_client_shadow_manager", "1")
+    RunConsoleCommand("studio_queue_mode", "1")
+    RunConsoleCommand("mat_queue_mode", "-2")
+    RunConsoleCommand("fps_max", "0")
+    RunConsoleCommand("fov_desired", "100")
+    RunConsoleCommand("mat_specular", "0")
+    RunConsoleCommand("r_drawmodeldecals", "0")
+    RunConsoleCommand("r_lod", "-1")
+    RunConsoleCommand("lia_cheapblur", "1")
 end
 
 function MODULE:OnEntityCreated(entity)
-    if lia.config.get("DrawEntityShadows", true) then
+    if CONFIG.DrawEntityShadows then
         entity:DrawShadow(false)
     end
 end
 
 function MODULE:InitPostEntity()
-    if lia.config.get("DrawEntityShadows", true) then
+    if CONFIG.DrawEntityShadows then
         for _, entity in ipairs(ents.GetAll()) do
             entity:DrawShadow(false)
         end

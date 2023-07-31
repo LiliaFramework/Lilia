@@ -1,10 +1,10 @@
--- If we're close to restarting, let the client know
+local CONFIG = CONFIG
 function MODULE:CharacterLoaded(character)
     timer.Simple(0, function()
         local timeRemaining = self:GetTimeToRestart()
         local timeRemainingInMinutes = timeRemaining / 60
 
-        if timeRemainingInMinutes < self.TimeRemainingTable[1] then
+        if timeRemainingInMinutes < CONFIG.TimeRemainingTable[1] then
             self:NotifyServerRestart(character:GetPlayer(), self:GetTimeToRestart())
         end
     end)
@@ -12,7 +12,7 @@ end
 
 function MODULE:GetTimeToRestart()
     local time = os.time()
-    time = self.NextRestart - time
+    time = CONFIG.NextRestart - time
 
     return time
 end
@@ -43,41 +43,41 @@ end
 function MODULE:GetInitialNotificationTime()
     local nextBreakpoint = self:GetNextNotificationTimeBreakpoint()
 
-    return self.NextRestart - nextBreakpoint
+    return CONFIG.NextRestart - nextBreakpoint
 end
 
 function MODULE:GetNextNotificationTimeBreakpoint()
     local timeMinutes = self:GetTimeToRestart() / 60
 
-    for i = 1, #self.TimeRemainingTable do
-        if timeMinutes >= self.TimeRemainingTable[i] then return self.TimeRemainingTable[i] * 60 end -- convert back to seconds
+    for i = 1, #CONFIG.TimeRemainingTable do
+        if timeMinutes >= CONFIG.TimeRemainingTable[i] then return CONFIG.TimeRemainingTable[i] * 60 end -- convert back to seconds
     end
 end
 
 function MODULE:Think()
-    if self.IsRestarting == true then return end
+    if CONFIG.IsRestarting == true then return end
 
-    if self.NextRestart == 0 then
-        self.NextRestart = self:GetInitialRestartTime()
-        self.NextNotificationTime = self:GetInitialNotificationTime()
+    if CONFIG.NextRestart == 0 then
+        CONFIG.NextRestart = self:GetInitialRestartTime()
+        CONFIG.NextNotificationTime = self:GetInitialNotificationTime()
 
         return
     end
 
     local time = os.time()
 
-    if time > self.NextNotificationTime or time > self.NextRestart then
+    if time > CONFIG.NextNotificationTime or time > CONFIG.NextRestart then
         local nextBreakpoint = self:GetNextNotificationTimeBreakpoint()
 
         if not nextBreakpoint then
-            self.IsRestarting = true
+            CONFIG.IsRestarting = true
             RunConsoleCommand("changelevel", game.GetMap())
         else
             for _, v in pairs(player.GetAll()) do
                 self:NotifyServerRestart(v, self:GetTimeToRestart())
             end
 
-            self.NextNotificationTime = self.NextRestart - nextBreakpoint
+            CONFIG.NextNotificationTime = CONFIG.NextRestart - nextBreakpoint
         end
     end
 end

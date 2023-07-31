@@ -24,7 +24,6 @@ function MODULE:ScoreboardShow()
 end
 
 function MODULE:OnReloaded()
-    -- Reload the scoreboard.
     if IsValid(lia.gui.score) then
         lia.gui.score:Remove()
     end

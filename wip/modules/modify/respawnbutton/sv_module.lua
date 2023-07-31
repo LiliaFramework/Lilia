@@ -8,7 +8,7 @@ net.Receive("RespawnButtonPress", function(len, ply)
 end)
 
 function MODULE:PlayerDeath(ply)
-    if not lia.config.get("RespawnButton", true) then return end
+    if not CONFIG.RespawnButton then return end
     net.Start("RespawnButtonDeath")
     net.Send(ply)
 end

@@ -15,10 +15,6 @@ lia.util.include("cl_password.lua")
 
 liaStorageBase = MODULE
 
-lia.config.add("passwordDelay",1,"How long a user has to wait between password attempts.",nil,{
-    category = "Server Settings"
-})
-
 if (CLIENT) then
 	function MODULE:transferItem(itemID)
 		if (not lia.item.instances[itemID]) then return end

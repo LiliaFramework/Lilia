@@ -46,7 +46,7 @@ function MODULE:CanPlayerSpawnStorage(client, entity, info)
 end
 
 function MODULE:CanSaveStorage(entity, inventory)
-	return lia.config.get("saveStorage", true)
+	return CONFIG.SaveStorage
 end
 
 function MODULE:saveStorage()

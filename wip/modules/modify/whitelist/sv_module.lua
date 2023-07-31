@@ -1,3 +1,5 @@
+local CONFIG = CONFIG
+
 function MODULE:LoadData()
     self.Allowed = self:getData() or {}
 end
@@ -8,11 +10,11 @@ end
 
 function MODULE:CheckPassword(steamID64)
     local steamID = util.SteamIDFrom64(steamID64)
-    if self.whitelistEnabled and (not self.Allowed[steamID] or not self.AllowedOverride[steamID]) then return false, "Sorry, you are not whitelisted for " .. GetHostName() end
+    if self.whitelistEnabled and (not self.Allowed[steamID] or not CONFIG.AllowedOverride[steamID]) then return false, "Sorry, you are not whitelisted for " .. GetHostName() end
 end
 
 function MODULE:PlayerAuthed(client, steamID, uniqueID)
-    if self.whitelistEnabled and (not self.Allowed[steamID] or not self.AllowedOverride[steamID])  then
+    if self.whitelistEnabled and (not self.Allowed[steamID] or not CONFIG.AllowedOverride[steamID])  then
         game.KickID(uniqueID, "Sorry, you are not whitelisted for " .. GetHostName())
     end
 en

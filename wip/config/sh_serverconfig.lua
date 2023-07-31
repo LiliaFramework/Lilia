@@ -1,3 +1,4 @@
+local CONFIG = CONFIG
 CONFIG.SchemaYear = 2023
 CONFIG.contentURL = "https://discord.gg/HmfaJ9brfz"
 CONFIG.PKActive = false
@@ -14,11 +15,7 @@ CONFIG.PlayerSprayEnabled = true
 CONFIG.FlashlightEnabled = true
 CONFIG.FlashlightItemNeeded = false
 CONFIG.CentsCompatibility = true
-CONFIG.StormFox2Compatibility = true
-CONFIG.StormFox2Seasons = true
-CONFIG.StormFox2TimePerSeason = true
 CONFIG.WepAlwaysRaised = true
-CONFIG.WeaponToggleDelay = 1
 CONFIG.WeaponRaiseTimer = 1
 CONFIG.DefaultStamina = 100
 CONFIG.IntroEnabled = false
@@ -55,10 +52,13 @@ CONFIG.PunchStamina = 10
 CONFIG.DefaultMoney = 0
 CONFIG.SaveInterval = 300
 CONFIG.SaveInterval = 300
+
+CONFIG.StaminaRegenMultiplier = 1
+
 CONFIG.StaffAutoRecognize = false
 CONFIG.FactionAutoRecognize = false
 CONFIG.AllowExistNames = false
-CONFIG.StrMultiplier = false
+CONFIG.StrMultiplier = 0.1
 CONFIG.CustomChatSound = ""
 CONFIG.F1MenuLaunchUnanchor = "buttons/lightswitch2.wav"
 CONFIG.MenuButtonRollover = "ui/buttonrollover.wav"
@@ -85,6 +85,9 @@ CONFIG.RecognitionEnabled = true
 CONFIG.sbWidth = 0.325
 CONFIG.sbHeight = 0.825
 CONFIG.sbTitle = GetHostName()
+CONFIG.SalaryOverride = true
+CONFIG.SalaryInterval = 300
+
 CONFIG.TimeUntilDroppedSWEPRemoved = 30
 CONFIG.PlayerSpawnVehicleDelay = 30
 CONFIG.CharacterSwitchCooldownTimer = 5
@@ -93,3 +96,112 @@ CONFIG.BHOPStamina = 10
 CONFIG.MapCleanerEnabled = true
 CONFIG.ItemCleanupTime = 7200
 CONFIG.MapCleanupTime = 21600
+CONFIG.SaveStorage = true
+CONFIG.PasswordDelay = 1
+
+CONFIG.LegsEnabled = false
+CONFIG.LegsInVehicle = false
+CONFIG.m_tblPlayers = CONFIG.m_tblPlayers or {}
+CONFIG.m_intSpawnDelay = 8 --Delay initial pvs update by this amount on player spawn
+CONFIG.m_intUpdateDistance = 5500 --Entities in this range are sent to the player, all others do not send
+CONFIG.m_intUpdateRate = 1 --Entity transmit update rate
+CONFIG.m_intUpdateAmount = 512
+
+CONFIG.m_tblAlwaysSend = {
+    ["player"] = true,
+    ["func_lod"] = true,
+    ["gmod_hands"] = true,
+    ["worldspawn"] = true,
+    ["player_manager"] = true,
+    ["gmod_gamerules"] = true,
+    ["bodyque"] = true,
+    ["network"] = true,
+    ["soundent"] = true,
+    ["prop_door_rotating"] = true,
+    ["phys_slideconstraint"] = true,
+    ["phys_bone_follower"] = true,
+    ["class C_BaseEntity"] = true,
+    ["func_physbox"] = true,
+    ["logic_auto"] = true,
+    ["env_tonemap_controller"] = true,
+    ["shadow_control"] = true,
+    ["env_sun"] = true,
+    ["lua_run"] = true,
+    ["func_useableladder"] = true,
+    ["info_ladder_dismount"] = true,
+    ["func_illusionary"] = true,
+    ["env_fog_controller"] = true,
+    ["prop_vehicle_jeep"] = false,
+}
+
+CONFIG.TimeRemainingTable = {30, 15, 5, 1, 0}
+CONFIG.NextRestart = 0
+CONFIG.NextNotificationTime = 0
+CONFIG.IsRestarting = false
+CONFIG.whitelistEnabled = false
+CONFIG.AllowedOverride = {
+    ["STEAM_0:0:12345678"] = true,
+    ["STEAM_0:1:98765432"] = true,
+    ["STEAM_0:2:54321098"] = true,
+    ["STEAM_0:3:11111111"] = true,
+}
+CONFIG.KeepAmmoOnDeath = false
+CONFIG.DeathPopupEnabled = true
+CONFIG.LoseWeapononDeathNPC = false
+CONFIG.LoseWeapononDeathHuman = false
+
+CONFIG.TposingModels = {
+    "models/kerry/ag_player/male_03.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+    "model/path/xd.mdl",
+}
+CONFIG.cooldown = 0.5
+CONFIG.CanSpawnMenuItems = {
+    ["superadmin"] = true,
+    ["admin"] = false,
+    ["user"] = false,
+}
+
+CONFIG.BlacklistedIPAddress = {
+    "86.172.101.19",
+    "0.0.0.0",
+    "1.1.1.1",
+}
+
+CONFIG.BlacklistedSteamID = {
+    "STEAM_0:0:539872789",
+    "STEAM_0:1:67558546",
+}
+GM:InitializedConfig()
+
+CONFIG.entities = CONFIG.entities or {}
+
+CONFIG.blacklist = CONFIG.blacklist or {
+    ["func_button"] = true,
+    ["class C_BaseEntity"] = true,
+    ["func_brush"] = true,
+    ["func_tracktrain"] = true,
+    ["func_door"] = true,
+    ["func_door_rotating"] = true,
+    ["prop_door_rotating"] = true,
+    ["prop_static"] = true,
+    ["prop_dynamic"] = true,
+    ["prop_physics_override"] = true,
+}

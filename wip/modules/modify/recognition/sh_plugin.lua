@@ -7,4 +7,3 @@ lia.util.include("cl_module.lua")
 MODULE.noRecognise = {
     [FACTION_CITIZEN] = false,
 }]]
--- Add interaction function

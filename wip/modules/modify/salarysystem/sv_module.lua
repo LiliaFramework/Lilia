@@ -8,7 +8,7 @@ function MODULE:CreateSalaryTimer(client)
     if not pay then return end
     local timerID = "liaSalary" .. client:SteamID()
     local timerFunc = timer.Exists(timerID) and timer.Adjust or timer.Create
-    local delay = lia.config.get("salaryInterval", 300)
+    local delay = CONFIG.SalaryInterval
 
     timerFunc(timerID, delay, 0, function()
         if not IsValid(client) or client:getChar() ~= character then
@@ -24,7 +24,7 @@ function MODULE:CreateSalaryTimer(client)
 end
 
 function MODULE:PlayerLoadedChar(client, character, lastChar)
-    if not lia.config.get("SalaryOverride", false) then
+    if not CONFIG.SalaryOverride then
         hook.Run("CreateSalaryTimer", client)
     end
 end

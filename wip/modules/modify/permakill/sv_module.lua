@@ -2,7 +2,7 @@ function MODULE:PlayerDeath(client, inflictor, attacker)
     local character = client:getChar()
 
     if CONFIG.PKActive then
-        if (attacker == client or inflictor:IsWorld()) and not lia.config.get("pkWorld", false) then return end
+        if (attacker == client or inflictor:IsWorld()) and not CONFIG.PKWorld then return end
         character:setData("permakilled", true)
     end
 end

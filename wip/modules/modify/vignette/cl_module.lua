@@ -26,7 +26,7 @@ function MODULE:HUDPaintBackground()
     local frameTime = FrameTime()
     local scrW, scrH = ScrW(), ScrH()
 
-    if hasVignetteMaterial and lia.config.get("vignette") then
+    if hasVignetteMaterial and CONFIG.Vignette then
         vignetteAlphaDelta = mathApproach(vignetteAlphaDelta, vignetteAlphaGoal, frameTime * 30)
         surface.SetDrawColor(0, 0, 0, 175 + vignetteAlphaDelta)
         surface.SetMaterial(vignette)
