@@ -1,4 +1,5 @@
 local MODULE = MODULE
+
 properties.Add("persist", {
     MenuLabel = "#makepersistent",
     Order = 400,

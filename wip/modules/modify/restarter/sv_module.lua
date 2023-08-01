@@ -1,4 +1,5 @@
 local CONFIG = CONFIG
+
 function MODULE:CharacterLoaded(character)
     timer.Simple(0, function()
         local timeRemaining = self:GetTimeToRestart()

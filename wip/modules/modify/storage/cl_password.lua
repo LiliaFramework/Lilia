@@ -1,12 +1,7 @@
 function MODULE:StorageUnlockPrompt(entity)
-	Derma_StringRequest(
-		L("storPassWrite"),
-		L("storPassWrite"),
-		"",
-		function(val)
-			net.Start("liaStorageUnlock")
-				net.WriteString(val)
-			net.SendToServer()
-		end
-	)
+	Derma_StringRequest(L("storPassWrite"), L("storPassWrite"), "", function(val)
+		net.Start("liaStorageUnlock")
+		net.WriteString(val)
+		net.SendToServer()
+	end)
 end

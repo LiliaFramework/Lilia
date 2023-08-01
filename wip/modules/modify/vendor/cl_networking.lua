@@ -1,21 +1,23 @@
 local function addNetHandler(name, handler)
 	assert(isfunction(handler), "handler is not a function")
-	net.Receive("liaVendor"..name, function()
-		if (not IsValid(liaVendorEnt)) then return end
+
+	net.Receive("liaVendor" .. name, function()
+		if not IsValid(liaVendorEnt) then return end
 		handler(liaVendorEnt)
 	end)
 end
 
 net.Receive("liaVendorSync", function()
 	local vendor = net.ReadEntity()
-	if (not IsValid(vendor)) then return end
-
+	if not IsValid(vendor) then return end
 	vendor.money = net.ReadInt(32)
-	if (vendor.money < 0) then
+
+	if vendor.money < 0 then
 		vendor.money = nil
 	end
 
 	local count = net.ReadUInt(16)
+
 	for i = 1, count do
 		local itemType = net.ReadString()
 		local price = net.ReadInt(32)
@@ -23,10 +25,21 @@ net.Receive("liaVendorSync", function()
 		local maxStock = net.ReadInt(32)
 		local mode = net.ReadInt(8)
 
-		if (price < 0) then price = nil end
-		if (stock < 0) then stock = nil end
-		if (maxStock <= 0) then maxStock = nil end
-		if (mode < 0) then mode = nil end
+		if price < 0 then
+			price = nil
+		end
+
+		if stock < 0 then
+			stock = nil
+		end
+
+		if maxStock <= 0 then
+			maxStock = nil
+		end
+
+		if mode < 0 then
+			mode = nil
+		end
 
 		vendor.items[itemType] = {
 			[VENDOR_PRICE] = price,
@@ -41,7 +54,8 @@ end)
 
 net.Receive("liaVendorOpen", function()
 	local vendor = net.ReadEntity()
-	if (IsValid(vendor)) then
+
+	if IsValid(vendor) then
 		liaVendorEnt = vendor
 		hook.Run("VendorOpened", vendor)
 	end
@@ -54,7 +68,11 @@ end)
 
 addNetHandler("Money", function(vendor)
 	local money = net.ReadInt(32)
-	if (money < 0) then money = nil end
+
+	if money < 0 then
+		money = nil
+	end
+
 	vendor.money = money
 	hook.Run("VendorMoneyUpdated", vendor, money, vendor.money)
 end)
@@ -62,43 +80,47 @@ end)
 addNetHandler("Price", function(vendor)
 	local itemType = net.ReadString()
 	local value = net.ReadInt(32)
-	if (value < 0) then value = nil end
+
+	if value < 0 then
+		value = nil
+	end
 
 	vendor.items[itemType] = vendor.items[itemType] or {}
 	vendor.items[itemType][VENDOR_PRICE] = value
-
 	hook.Run("VendorItemPriceUpdated", vendor, itemType, value)
 end)
 
 addNetHandler("Mode", function(vendor)
 	local itemType = net.ReadString()
 	local value = net.ReadInt(8)
-	if (value < 0) then value = nil end
+
+	if value < 0 then
+		value = nil
+	end
 
 	vendor.items[itemType] = vendor.items[itemType] or {}
 	vendor.items[itemType][VENDOR_MODE] = value
-
 	hook.Run("VendorItemModeUpdated", vendor, itemType, value)
 end)
 
 addNetHandler("Stock", function(vendor)
 	local itemType = net.ReadString()
 	local value = net.ReadUInt(32)
-
 	vendor.items[itemType] = vendor.items[itemType] or {}
 	vendor.items[itemType][VENDOR_STOCK] = value
-
 	hook.Run("VendorItemStockUpdated", vendor, itemType, value)
 end)
 
 addNetHandler("MaxStock", function(vendor)
 	local itemType = net.ReadString()
 	local value = net.ReadUInt(32)
-	if (value == 0) then value = nil end
+
+	if value == 0 then
+		value = nil
+	end
 
 	vendor.items[itemType] = vendor.items[itemType] or {}
 	vendor.items[itemType][VENDOR_MAXSTOCK] = value
-
 	hook.Run("VendorItemMaxStockUpdated", vendor, itemType, value)
 end)
 
@@ -106,7 +128,7 @@ addNetHandler("AllowFaction", function(vendor)
 	local id = net.ReadUInt(8)
 	local allowed = net.ReadBool()
 
-	if (allowed) then
+	if allowed then
 		vendor.factions[id] = true
 	else
 		vendor.factions[id] = nil
@@ -119,7 +141,7 @@ addNetHandler("AllowClass", function(vendor)
 	local id = net.ReadUInt(8)
 	local allowed = net.ReadBool()
 
-	if (allowed) then
+	if allowed then
 		vendor.classes[id] = true
 	else
 		vendor.classes[id] = nil
@@ -130,16 +152,18 @@ end)
 
 net.Receive("liaVendorEdit", function()
 	local key = net.ReadString()
+
 	-- Give some time to receive the update.
 	timer.Simple(0.25, function()
-		if (not IsValid(liaVendorEnt)) then return end
+		if not IsValid(liaVendorEnt) then return end
 		hook.Run("VendorEdited", liaVendorEnt, key)
 	end)
 end)
 
 net.Receive("liaVendorFaction", function()
 	local factionID = net.ReadUInt(8)
-	if (IsValid(liaVendorEnt)) then
+
+	if IsValid(liaVendorEnt) then
 		liaVendorEnt.factions[factionID] = true
 	end
 end)

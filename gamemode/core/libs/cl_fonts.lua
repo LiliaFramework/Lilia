@@ -2,6 +2,99 @@ function GM:LoadLiliaFonts(font, genericFont)
     local oldFont, oldGenericFont = font, genericFont
     local scale = math.Round(CONFIG.FontScale, 2)
 
+    surface.CreateFont("AFKKick25", {
+        font = "Roboto",
+        size = 25,
+        weight = 400
+    })
+
+    surface.CreateFont("AFKKick120", {
+        font = "Roboto",
+        size = 120,
+        weight = 400
+    })
+
+    surface.CreateFont("liaIntroTitleFont", {
+        font = CONFIG.IntroFont,
+        size = 200,
+        extended = true,
+        weight = 1000
+    })
+
+    surface.CreateFont("liaIntroBigFont", {
+        font = CONFIG.IntroFont,
+        size = 48,
+        extended = true,
+        weight = 1000
+    })
+
+    surface.CreateFont("liaIntroMediumFont", {
+        font = CONFIG.IntroFont,
+        size = 28,
+        extended = true,
+        weight = 1000
+    })
+
+    surface.CreateFont("liaIntroSmallFont", {
+        font = CONFIG.IntroFont,
+        size = 22,
+        extended = true,
+        weight = 1000
+    })
+
+    surface.CreateFont("liaVendorButtonFont", {
+        font = font,
+        weight = 200,
+        size = 40
+    })
+
+    surface.CreateFont("liaVendorSmallFont", {
+        font = font,
+        weight = 500,
+        size = 22
+    })
+
+    surface.CreateFont("liaVendorLightFont", {
+        font = font,
+        weight = 200,
+        size = 22
+    })
+
+    surface.CreateFont("liaCharTitleFont", {
+        font = font,
+        weight = 200,
+        size = ScreenScale(70),
+        additive = true
+    })
+
+    surface.CreateFont("liaCharDescFont", {
+        font = font,
+        weight = 200,
+        size = ScreenScale(24),
+        additive = true
+    })
+
+    surface.CreateFont("liaCharSubTitleFont", {
+        font = font,
+        weight = 200,
+        size = ScreenScale(12),
+        additive = true
+    })
+
+    surface.CreateFont("liaCharButtonFont", {
+        font = font,
+        weight = 200,
+        size = ScreenScale(24),
+        additive = true
+    })
+
+    surface.CreateFont("liaCharSmallButtonFont", {
+        font = font,
+        weight = 200,
+        size = ScreenScale(22),
+        additive = true
+    })
+
     surface.CreateFont("liaCrossIcons", {
         font = "nsicons",
         size = ScreenScale(11),

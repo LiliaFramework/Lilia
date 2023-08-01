@@ -1,4 +1,3 @@
 lia.command.add("toggleraise", {
-	onRun = function(client, arguments)
-	end
+	onRun = function(client, arguments) end
 })

@@ -2,21 +2,23 @@ local MODULE = MODULE
 
 function MODULE:saveVendors()
 	local data = {}
-		for k, v in ipairs(ents.FindByClass("lia_vendor")) do
-			data[#data + 1] = {
-				name = v:getNetVar("name"),
-				desc = v:getNetVar("desc"),
-				pos = v:GetPos(),
-				angles = v:GetAngles(),
-				model = v:GetModel(),
-				bubble = v:getNetVar("noBubble"),
-				items = v.items,
-				factions = v.factions,
-				classes = v.classes,
-				money = v.money,
-				scale = v:getNetVar("scale")
-			}
-		end
+
+	for k, v in ipairs(ents.FindByClass("lia_vendor")) do
+		data[#data + 1] = {
+			name = v:getNetVar("name"),
+			desc = v:getNetVar("desc"),
+			pos = v:GetPos(),
+			angles = v:GetAngles(),
+			model = v:GetModel(),
+			bubble = v:getNetVar("noBubble"),
+			items = v.items,
+			factions = v.factions,
+			classes = v.classes,
+			money = v.money,
+			scale = v:getNetVar("scale")
+		}
+	end
+
 	self:setData(data)
 end
 
@@ -36,7 +38,6 @@ function MODULE:LoadData()
 		entity:setNetVar("name", v.name)
 		entity:setNetVar("desc", v.desc)
 		entity:setNetVar("scale", v.scale or 0.5)
-
 		entity.items = v.items or {}
 		entity.factions = v.factions or {}
 		entity.classes = v.classes or {}

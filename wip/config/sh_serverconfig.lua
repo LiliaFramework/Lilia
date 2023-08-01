@@ -205,3 +205,13 @@ CONFIG.blacklist = CONFIG.blacklist or {
     ["prop_dynamic"] = true,
     ["prop_physics_override"] = true,
 }
+
+CONFIG.WarningTime = 570 --How many seconds do they need to be AFK for before they receive the warning
+CONFIG.KickTime = 30 --How many seconds do they need to be AFK for, after the warning, to be kicked
+CONFIG.KickMessage = "Automatically kicked for being AFK for too long."
+CONFIG.WarningHead = "WARNING!"
+CONFIG.WarningSub = "You are going to be sent back to the character menu/kicked for being AFK!\nPress any key to abort!"
+
+CONFIG.AllowedPlayers = {
+    ["STEAM_0:0:0000000"] = true,
+}

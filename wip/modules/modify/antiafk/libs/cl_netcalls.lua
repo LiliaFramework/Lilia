@@ -1,13 +1,12 @@
-AFKKick = AFKKick or {}
-AFKKick.Config = AFKKick.Config or {}
+local MODULE = MODULE or {}
 
 net.Receive("AFKWarning", function()
 	local enable = net.ReadBool()
 
 	if enable then
-		AFKKick.EnableWarning()
+		MODULE.EnableWarning()
 	else
-		AFKKick.DisableWarning()
+		MODULE.DisableWarning()
 	end
 end)
 

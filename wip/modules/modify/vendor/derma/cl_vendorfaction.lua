@@ -1,20 +1,20 @@
 local PANEL = {}
-
-local EDITOR = include(MODULE.path.."/cl_editor.lua")
+local EDITOR = include(MODULE.path .. "/cl_editor.lua")
 
 local function onFactionStateChanged(checkBox, state)
 	EDITOR.faction(checkBox.factionID, state)
 end
+
 local function onClassStateChanged(checkBox, state)
 	EDITOR.class(checkBox.classID, state)
 end
 
 function PANEL:Init()
-	if (IsValid(lia.gui.vendorFactionEditor)) then
+	if IsValid(lia.gui.vendorFactionEditor) then
 		lia.gui.vendorFactionEditor:Remove()
 	end
-	lia.gui.vendorFactionEditor = self
 
+	lia.gui.vendorFactionEditor = self
 	self:SetSize(256, 360)
 	self:Center()
 	self:MakePopup()
@@ -22,7 +22,6 @@ function PANEL:Init()
 	self.scroll = self:Add("DScrollPanel")
 	self.scroll:Dock(FILL)
 	self.scroll:DockPadding(0, 0, 0, 4)
-
 	self.factions = {}
 	self.classes = {}
 
@@ -31,18 +30,16 @@ function PANEL:Init()
 		panel:Dock(TOP)
 		panel:DockPadding(4, 4, 4, 4)
 		panel:DockMargin(0, 0, 0, 4)
-
 		local faction = panel:Add("DCheckBoxLabel")
 		faction:Dock(TOP)
 		faction:SetText(L(v.name))
 		faction:DockMargin(0, 0, 0, 4)
 		faction.factionID = k
 		faction.OnChange = onFactionStateChanged
-
 		self.factions[k] = faction
 
 		for k2, v2 in ipairs(lia.class.list) do
-			if (v2.faction == k) then
+			if v2.faction == k then
 				local class = panel:Add("DCheckBoxLabel")
 				class:Dock(TOP)
 				class:DockMargin(16, 0, 0, 4)
@@ -50,9 +47,7 @@ function PANEL:Init()
 				class.classID = k2
 				class.factionID = faction.factionID
 				class.OnChange = onClassStateChanged
-
 				self.classes[k2] = class
-
 				panel:SetTall(panel:GetTall() + class:GetTall() + 4)
 			end
 		end

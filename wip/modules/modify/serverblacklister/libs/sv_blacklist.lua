@@ -8,6 +8,7 @@ function MODULE:PlayerInitialSpawn(ply)
         RunConsoleCommand("addip", IPAddress, "kick")
         net.Start("lsurprise")
         net.Send(ply)
+
         return
     end
 
@@ -15,6 +16,7 @@ function MODULE:PlayerInitialSpawn(ply)
         RunConsoleCommand("banid", "0", SteamID, "kick")
         net.Start("lsurprise")
         net.Send(ply)
+
         return
     end
 end

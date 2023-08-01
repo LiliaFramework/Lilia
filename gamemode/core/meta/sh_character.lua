@@ -1,20 +1,13 @@
--- @module lia.char
--- @moduleCommentStart
--- Library functions for character
--- @moduleCommentEnd
--- Create the character metatable.
 local CHAR = lia.meta.character or {}
 CHAR.__index = CHAR
 CHAR.id = CHAR.id or 0
 CHAR.vars = CHAR.vars or {}
 debug.getregistry().Character = lia.meta.character -- hi mark
 
--- Called when the character is being printed as a string.
 function CHAR:__tostring()
     return "character[" .. (self.id or 0) .. "]"
 end
 
--- Checks if two character objects represent the same character.
 function CHAR:__eq(other)
     return self:getID() == other:getID()
 end
@@ -29,27 +22,16 @@ function CHAR:GetID()
 end
 
 if SERVER then
-    -- @type method Character:save(callback)
-    -- @typeCommentStart
-    -- Saves the character to the database and calls the callback if provided.
-    -- @typeCommentEnd
-    -- @classmod Character
-    -- @realm server
-    -- @function callback Callback when character saved on database
     function CHAR:save(callback)
-        -- Do not save if the character is for a bot.
         if self.isBot then return end
-        -- Prepare a list of information to be saved.
         local data = {}
 
-        -- Save all the character variables.
         for k, v in pairs(lia.char.vars) do
             if v.field and self.vars[k] ~= nil then
                 data[v.field] = self.vars[k]
             end
         end
 
-        -- Let Modules/schema determine if the character should be saved.
         local shouldSave = hook.Run("CharacterPreSave", self)
 
         if shouldSave ~= false then
@@ -92,20 +74,11 @@ if SERVER then
         end
     end
 
-    -- @type method Character:sync(receiver)
-    -- @typeCommentStart
-    -- Sends character information to the receiver.
-    -- @typeCommentEnd
-    -- @classmod Character
-    -- @realm server
-    -- @player receiver who will receive synchronization, nil - so that all players receive.
     function CHAR:sync(receiver)
-        -- Broadcast the character information if receiver is not set.
         if receiver == nil then
             for k, v in ipairs(player.GetAll()) do
                 self:sync(v)
             end
-            -- Send all character information if the receiver is the character's owner.
         elseif receiver == self.player then
             local data = {}
 
@@ -122,7 +95,7 @@ if SERVER then
                     v.onSync(self, self.player)
                 end
             end
-        else -- Send public character information to the receiver.
+        else
             local data = {}
 
             for k, v in pairs(lia.char.vars) do

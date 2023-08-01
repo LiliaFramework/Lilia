@@ -1,7 +1,6 @@
 local character = lia.meta.character
 
 do
-    -- SERVER
     function character:recognize(id)
         if type(id) ~= "number" and id.getID then
             id = id:getID()

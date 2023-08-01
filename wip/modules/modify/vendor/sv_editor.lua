@@ -18,14 +18,12 @@ end
 EDITOR.mode = function(vendor, client)
 	local itemType = net.ReadString()
 	local mode = net.ReadInt(8)
-
 	vendor:setTradeMode(itemType, mode)
 end
 
 EDITOR.price = function(vendor, client)
 	local itemType = net.ReadString()
 	local price = net.ReadInt(32)
-
 	vendor:setItemPrice(itemType, price)
 end
 
@@ -65,7 +63,8 @@ end
 
 EDITOR.useMoney = function(vendor, client)
 	local useMoney = net.ReadBool()
-	if (useMoney) then
+
+	if useMoney then
 		vendor:setMoney(CONFIG.DefaultMoney)
 	else
 		vendor:setMoney(nil)

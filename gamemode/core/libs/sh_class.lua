@@ -47,7 +47,9 @@ function lia.class.loadFromDir(directory)
 
         -- Allow classes to be joinable by default.
         if not CLASS.onCanBe then
-            CLASS.onCanBe = function(client) return true end
+            CLASS.onCanBe = function(client)
+                return true
+            end
         end
 
         -- Add the class to the list of classes.

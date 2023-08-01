@@ -1,9 +1,7 @@
 MODULE.name = "Attributes"
 MODULE.author = "Leonheart#7476/Cheesenot"
 MODULE.desc = "Adds attributes for characters."
-
 lia.util.include("sh_commands.lua")
-
 
 lia.char.registerVar("attribs", {
 	field = "_attribs",
@@ -11,8 +9,8 @@ lia.char.registerVar("attribs", {
 	isLocal = true,
 	index = 4,
 	onValidate = function(value, data, client)
-		if (value ~= nil) then
-			if (istable(value)) then
+		if value ~= nil then
+			if istable(value) then
 				local count = 0
 
 				for k, v in pairs(value) do
@@ -20,33 +18,34 @@ lia.char.registerVar("attribs", {
 					if max and max < v then return false, lia.attribs.list[k].name .. " too high" end
 					count = count + v
 				end
-				local points = hook.Run("GetStartAttribPoints", client, count)
-					or CONFIG.MaxAttributes
-				if (count > points) then
-					return false, "unknownError"
-				end
+
+				local points = hook.Run("GetStartAttribPoints", client, count) or CONFIG.MaxAttributes
+				if count > points then return false, "unknownError" end
 			else
 				return false, "unknownError"
 			end
 		end
 	end,
-	shouldDisplay = function(panel) return table.Count(lia.attribs.list) > 0 end
+	shouldDisplay = function(panel)
+		return table.Count(lia.attribs.list) > 0
+	end
 })
 
-if (SERVER) then
+if SERVER then
 	function MODULE:PostPlayerLoadout(client)
 		lia.attribs.setup(client)
 	end
 
 	function MODULE:OnCharAttribBoosted(client, character, attribID)
 		local attribute = lia.attribs.list[attribID]
-		if (attribute and isfunction(attribute.onSetup)) then
+
+		if attribute and isfunction(attribute.onSetup) then
 			attribute:onSetup(client, character:getAttrib(attribID, 0))
 		end
 	end
 else
 	function MODULE:CreateCharInfoText(panel, suppress)
-		if (suppress and suppress.attrib) then return end
+		if suppress and suppress.attrib then return end
 		panel.attribName = panel.info:Add("DLabel")
 		panel.attribName:Dock(TOP)
 		panel.attribName:SetFont("liaMediumFont")
@@ -54,20 +53,20 @@ else
 		panel.attribName:SetExpensiveShadow(1, Color(0, 0, 0, 150))
 		panel.attribName:DockMargin(0, 10, 0, 0)
 		panel.attribName:SetText("Skills")
-
 		panel.attribs = panel.info:Add("DScrollPanel")
 		panel.attribs:Dock(FILL)
 		panel.attribs:DockMargin(0, 10, 0, 0)
 	end
 
 	function MODULE:OnCharInfoSetup(panel)
-		if (not IsValid(panel.attribs)) then return end
+		if not IsValid(panel.attribs) then return end
 		local char = LocalPlayer():getChar()
 		local boost = char:getBoosts()
 
 		for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
 			local attribBoost = 0
-			if (boost[k]) then
+
+			if boost[k] then
 				for _, bValue in pairs(boost[k]) do
 					attribBoost = attribBoost + bValue
 				end
@@ -76,9 +75,9 @@ else
 			local bar = panel.attribs:Add("liaAttribBar")
 			bar:Dock(TOP)
 			bar:DockMargin(0, 0, 0, 3)
-
 			local attribValue = char:getAttrib(k, 0)
-			if (attribBoost) then
+
+			if attribBoost then
 				bar:setValue(attribValue - attribBoost or 0)
 			else
 				bar:setValue(attribValue)
@@ -87,18 +86,9 @@ else
 			local maximum = v.maxValue or CONFIG.MaxAttributes
 			bar:setMax(maximum)
 			bar:setReadOnly()
-			bar:setText(
-				Format(
-					"%s [%.1f/%.1f] (%.1f",
-					L(v.name),
-					attribValue,
-					maximum,
-					attribValue/maximum*100
-				)
-				.."%)"
-			)
+			bar:setText(Format("%s [%.1f/%.1f] (%.1f", L(v.name), attribValue, maximum, attribValue / maximum * 100) .. "%)")
 
-			if (attribBoost) then
+			if attribBoost then
 				bar:setBoost(attribBoost)
 			end
 		end

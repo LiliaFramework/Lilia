@@ -1,5 +1,6 @@
 function MODULE:ForceDermaSkin()
     if CONFIG.DarkTheme then return "lilia_darktheme" end
+
     return "lilia"
 end
 

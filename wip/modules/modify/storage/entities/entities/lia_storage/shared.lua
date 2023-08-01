@@ -1,5 +1,4 @@
 local MODULE = MODULE
-
 ENT.Type = "anim"
 ENT.PrintName = "Storage"
 ENT.Category = "Lilia"
@@ -12,5 +11,6 @@ end
 
 function ENT:getStorageInfo()
 	self.lowerModel = self.lowerModel or self:GetModel()
+
 	return MODULE.definitions[self.lowerModel]
 end

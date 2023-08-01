@@ -1,20 +1,16 @@
 function MODULE:PlayerLiliaDataLoaded(client)
 	lia.char.restore(client, function(charList)
-		if (!IsValid(client)) then return end
-
-		MsgN(
-			"Loaded ("..table.concat(charList, ", ")..") for "
-			..client:Name()
-		)
+		if not IsValid(client) then return end
+		MsgN("Loaded (" .. table.concat(charList, ", ") .. ") for " .. client:Name())
 
 		for k, v in ipairs(charList) do
-			if (lia.char.loaded[v]) then
+			if lia.char.loaded[v] then
 				lia.char.loaded[v]:sync(client)
 			end
 		end
 
 		for k, v in ipairs(player.GetAll()) do
-			if (v:getChar()) then
+			if v:getChar() then
 				v:getChar():sync(client)
 			end
 		end
@@ -22,7 +18,6 @@ function MODULE:PlayerLiliaDataLoaded(client)
 		client.liaCharList = charList
 		self:syncCharList(client)
 		client.liaLoaded = true
-
 		client:setLiliaData("intro", true)
 	end)
 end
@@ -33,17 +28,14 @@ function MODULE:PostPlayerInitialSpawn(client)
 	client:Lock()
 
 	timer.Simple(1, function()
-		if (!IsValid(client)) then return end
-
+		if not IsValid(client) then return end
 		client:KillSilent()
 		client:StripAmmo()
 	end)
 end
 
 function MODULE:CanPlayerUseChar(client, character, oldCharacter)
-	if (client:getChar() and client:getChar():getID() == character:getID()) then
-		return false, "@usingChar"
-	end
+	if client:getChar() and client:getChar():getID() == character:getID() then return false, "@usingChar" end
 end
 
 function MODULE:PlayerLoadedChar(client, character, oldCharacter)
@@ -52,5 +44,5 @@ end
 
 function MODULE:OnCharCreated(client, character)
 	local id = character:getID()
-	MsgN("Created character '"..id.."' for "..client:steamName()..".")
+	MsgN("Created character '" .. id .. "' for " .. client:steamName() .. ".")
 end

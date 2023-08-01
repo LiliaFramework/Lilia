@@ -1,41 +1,36 @@
 local entityMeta = FindMetaTable("Entity")
 local playerMeta = FindMetaTable("Player")
-
 lia.net = lia.net or {}
 lia.net.globals = lia.net.globals or {}
 
 -- Check if there is an attempt to send a function. Can't send those.
 local function checkBadType(name, object)
-
 	if isfunction(object) then
-		ErrorNoHalt("Net var '"..name.."' contains a bad object type!")
+		ErrorNoHalt("Net var '" .. name .. "' contains a bad object type!")
 
 		return true
 	elseif istable(object) then
 		for k, v in pairs(object) do
 			-- Check both the key and the value for tables, and has recursion.
-			if (checkBadType(name, k) or checkBadType(name, v)) then
-				return true
-			end
+			if checkBadType(name, k) or checkBadType(name, v) then return true end
 		end
 	end
 end
 
 function setNetVar(key, value, receiver)
-	if (checkBadType(key, value)) then return end
-	if (getNetVar(key) == value) then return end
-
+	if checkBadType(key, value) then return end
+	if getNetVar(key) == value then return end
 	lia.net.globals[key] = value
 	netstream.Start(receiver, "gVar", key, value)
 end
 
 function playerMeta:syncVars()
 	for entity, data in pairs(lia.net) do
-		if (entity == "globals") then
+		if entity == "globals" then
 			for k, v in pairs(data) do
 				netstream.Start(self, "gVar", k, v)
 			end
-		elseif (IsValid(entity)) then
+		elseif IsValid(entity) then
 			for k, v in pairs(data) do
 				netstream.Start(self, "nVar", entity:EntIndex(), k, v)
 			end
@@ -53,11 +48,10 @@ function entityMeta:clearNetVars(receiver)
 end
 
 function entityMeta:setNetVar(key, value, receiver)
-	if (checkBadType(key, value)) then return end
-
+	if checkBadType(key, value) then return end
 	lia.net[self] = lia.net[self] or {}
 
-	if (lia.net[self][key] ~= value) then
+	if lia.net[self][key] ~= value then
 		lia.net[self][key] = value
 	end
 
@@ -65,19 +59,15 @@ function entityMeta:setNetVar(key, value, receiver)
 end
 
 function entityMeta:getNetVar(key, default)
-	if (lia.net[self] and lia.net[self][key] ~= nil) then
-		return lia.net[self][key]
-	end
+	if lia.net[self] and lia.net[self][key] ~= nil then return lia.net[self][key] end
 
 	return default
 end
 
 function playerMeta:setLocalVar(key, value)
-	if (checkBadType(key, value)) then return end
-
+	if checkBadType(key, value) then return end
 	lia.net[self] = lia.net[self] or {}
 	lia.net[self][key] = value
-
 	netstream.Start(self, "nLcl", key, value)
 end
 

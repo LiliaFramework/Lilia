@@ -14,7 +14,9 @@ function MODULE:CheckPassword(steamID64)
 end
 
 function MODULE:PlayerAuthed(client, steamID, uniqueID)
-    if self.whitelistEnabled and (not self.Allowed[steamID] or not CONFIG.AllowedOverride[steamID])  then
+    if self.whitelistEnabled and (not self.Allowed[steamID] or not CONFIG.AllowedOverride[steamID]) then
         game.KickID(uniqueID, "Sorry, you are not whitelisted for " .. GetHostName())
     end
-en
+
+    en"someString"
+end

@@ -140,72 +140,17 @@ function SKIN:PaintListView(panel, w, h)
 end
 
 function SKIN:PaintListViewLine(panel, w, h)
-    surface.SetDrawColor((panel:IsHovered() or panel:IsLineSelected()) and CONFIG.Color) or Color(0, 0, 0, 0))
-    surface.DrawRect(0, 0, w, h)
+    surface.SetDrawColor((panel:IsHovered() or panel:IsLineSelected()) and CONFIG.Color)
 end
 
-function SKIN:PaintScrollBarGrip(panel, w, h)
-    surface.SetDrawColor(CONFIG.Color))
-    surface.DrawRect(0, 0, w, h)
-end
+Color(0, 0, 0, 0)
 
-function SKIN:PaintButtonUp(panel, w, h)
-    surface.SetDrawColor(CONFIG.Color))
-    surface.DrawRect(0, 0, w, h)
-    surface.SetTextColor(255, 255, 255, 255)
-    surface.SetFont("marlett")
-    surface.SetTextPos(1, 1)
-    surface.DrawText("5")
-end
-
-function SKIN:PaintButtonDown(panel, w, h)
-    surface.SetDrawColor(CONFIG.Color))
-    surface.DrawRect(0, 0, w, h)
-    surface.SetTextColor(255, 255, 255, 255)
-    surface.SetFont("marlett")
-    surface.SetTextPos(1, 0)
-    surface.DrawText("6")
-end
-
-function SKIN:PaintVScrollBar(panel, w, h)
-    surface.SetDrawColor(20, 20, 20, 200)
-    surface.DrawRect(0, 0, w, h)
-end
-
-function SKIN:PaintMenu(panel, w, h)
-    local odd = true
-
-    for i = 0, h, 22 do
-        if odd then
-            surface.SetDrawColor(40, 40, 40, 255)
-            surface.DrawRect(0, i, w, 22)
-        else
-            surface.SetDrawColor(50, 50, 50, 255)
-            surface.DrawRect(0, i, w, 22)
-        end
-
-        odd = not odd
-    end
-end
-
-function SKIN:PaintMenuOption(panel, w, h)
-    if not panel.LaidOut then
-        panel.LaidOut = true
-        panel:SetTextColor(Color(200, 200, 200, 255))
-    end
-
-    if panel.m_bBackground and (panel.Hovered or panel.Highlight) then
-        surface.SetDrawColor(70, 70, 70, 255)
-        surface.DrawRect(0, 0, w, h)
-    end
-
-    local skin = derma.GetDefaultSkin()
-    skin.MenuOptionOdd = not skin.MenuOptionOdd
-
-    if panel:GetChecked() then
-        skin.tex.Menu_Check(5, h / 2 - 7, 15, 15)
-    end
-end
-
-derma.DefineSkin("lilia_darktheme", "The base skin for the Lilia framework.", SKIN)
-derma.RefreshSkins()
+return surface.DrawRect(0, 0, w, h), SKIN:PaintScrollBarGrip(panel, w, h), surface.SetDrawColor(CONFIG.Color), surface.DrawRect(0, 0, w, h), SKIN:PaintButtonUp(panel, w, h), surface.SetDrawColor(CONFIG.Color), surface.DrawRect(0, 0, w, h), surface.SetTextColor(255, 255, 255, 255), surface.SetFont("marlett"), surface.SetTextPos(1, 1), surface.DrawText("5"), SKIN:PaintButtonDown(panel, w, h), surface.SetDrawColor(CONFIG.Color), surface.DrawRect(0, 0, w, h), surface.SetTextColor(255, 255, 255, 255), surface.SetFont("marlett"), surface.SetTextPos(1, 0), surface.DrawText("6"), SKIN:PaintVScrollBar(panel, w, h), surface.SetDrawColor(20, 20, 20, 200), surface.DrawRect(0, 0, w, h), SKIN:PaintMenu(panel, w, h){
+    odd = true
+}, i, h, 22, surface.SetDrawColor(40, 40, 40, 255), surface.DrawRect(0, i, w, 22), surface.SetDrawColor(50, 50, 50, 255), surface.DrawRect(0, i, w, 22){
+    odd = not odd,
+    SKIN:PaintMenuOption(panel, w, h), panel.LaidOut, panel.LaidOut, panel:SetTextColor(Color(200, 200, 200, 255)), panel.m_bBackground and (panel.Hovered or panel.Highlight)
+}.SetDrawColor(70, 70, 70, 255), surface.DrawRect(0, 0, w, h){
+    skin = derma.GetDefaultSkin(),
+    skin.MenuOptionOdd, skin.MenuOptionOdd
+}:GetChecked(), skin.tex.Menu_Check(5, h / 2 - 7, 15, 15), derma.DefineSkin("lilia_darktheme", "The base skin for the Lilia framework.", SKIN)

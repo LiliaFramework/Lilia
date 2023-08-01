@@ -1,8 +1,8 @@
 netstream.Hook("item", function(uniqueID, id, data, invID)
 	local item = lia.item.new(uniqueID, id)
-
 	item.data = {}
-	if (data) then
+
+	if data then
 		item.data = data
 	end
 
@@ -13,7 +13,7 @@ end)
 netstream.Hook("invData", function(id, key, value)
 	local item = lia.item.instances[id]
 
-	if (item) then
+	if item then
 		item.data = item.data or {}
 		local oldValue = item.data[key]
 		item.data[key] = value
@@ -24,10 +24,9 @@ end)
 netstream.Hook("invQuantity", function(id, quantity)
 	local item = lia.item.instances[id]
 
-	if (item) then
+	if item then
 		local oldValue = item:getQuantity()
 		item.quantity = quantity
-
 		hook.Run("ItemQuantityChanged", item, oldValue, quantity)
 	end
 end)
@@ -39,11 +38,9 @@ net.Receive("liaItemInstance", function()
 	local item = lia.item.new(itemType, itemID)
 	local invID = net.ReadType()
 	local quantity = net.ReadUInt(32)
-
 	item.data = table.Merge(item.data or {}, data)
 	item.invID = invID
 	item.quantity = quantity
-
 	lia.item.instances[itemID] = item
 	hook.Run("ItemInitialized", item)
 end)
@@ -58,7 +55,8 @@ net.Receive("liaCharacterInvList", function()
 	end
 
 	local character = lia.char.loaded[charID]
-	if (character) then
+
+	if character then
 		character.vars.inv = inventories
 	end
 end)
@@ -66,10 +64,10 @@ end)
 net.Receive("liaItemDelete", function()
 	local id = net.ReadUInt(32)
 	local instance = lia.item.instances[id]
-	if (instance and instance.invID) then
-		local inventory = lia.inventory.instances[instance.invID]
-		if (not inventory or not inventory.items[id]) then return end
 
+	if instance and instance.invID then
+		local inventory = lia.inventory.instances[instance.invID]
+		if not inventory or not inventory.items[id] then return end
 		inventory.items[id] = nil
 		instance.invID = 0
 		hook.Run("InventoryItemRemoved", inventory, instance)

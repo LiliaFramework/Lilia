@@ -57,12 +57,11 @@ end
 function GM:InitializedConfig()
     hook.Run("LoadLiliaFonts", CONFIG.Font, CONFIG.GenericFont)
 
-        if hook.Run("ShouldCreateLoadingScreen") ~= false then
-            hook.Run("CreateLoadingScreen")
-        end
+    if hook.Run("ShouldCreateLoadingScreen") ~= false then
+        hook.Run("CreateLoadingScreen")
+    end
 
-        print("LOADED CONFIG!")
-
+    print("LOADED CONFIG!")
 end
 
 function GM:CharacterListLoaded()

@@ -3,11 +3,12 @@ local EDITOR = {}
 local function addEditor(name, callback)
 	EDITOR[name] = function(...)
 		net.Start("liaVendorEdit")
-			net.WriteString(name)
+		net.WriteString(name)
 
-			if (isfunction(callback)) then
-				callback(...)
-			end
+		if isfunction(callback) then
+			callback(...)
+		end
+
 		net.SendToServer()
 	end
 end
@@ -25,7 +26,10 @@ addEditor("bubble", function(show)
 end)
 
 addEditor("mode", function(itemType, mode)
-	if (not isnumber(mode)) then mode = nil end
+	if not isnumber(mode) then
+		mode = nil
+	end
+
 	net.WriteString(itemType)
 	net.WriteInt(mode or -1, 8)
 end)
@@ -41,7 +45,7 @@ addEditor("stockDisable", function(itemType)
 end)
 
 addEditor("stockMax", function(itemType, value)
-	if (not isnumber(value)) then return end
+	if not isnumber(value) then return end
 	net.WriteString(itemType)
 	net.WriteUInt(math.max(value, 1), 32)
 end)
@@ -70,7 +74,7 @@ addEditor("useMoney", function(useMoney)
 end)
 
 addEditor("money", function(value)
-	if (isnumber(value)) then
+	if isnumber(value) then
 		value = math.max(math.Round(value), 0)
 	else
 		value = nil

@@ -3,13 +3,12 @@ lia.lang.stored = lia.lang.stored or {}
 lia.lang.names = lia.lang.names or {}
 
 function lia.lang.loadFromDir(directory)
-	for k, v in ipairs(file.Find(directory.."/sh_*.lua", "LUA")) do
+	for k, v in ipairs(file.Find(directory .. "/sh_*.lua", "LUA")) do
 		local niceName = v:sub(4, -5):lower()
+		lia.util.include(directory .. "/" .. v, "shared")
 
-		lia.util.include(directory.."/"..v, "shared")
-
-		if (LANGUAGE) then
-			if (NAME) then
+		if LANGUAGE then
+			if NAME then
 				lia.lang.names[niceName] = NAME
 				NAME = nil
 			end
@@ -22,7 +21,7 @@ end
 
 local FormatString = string.format
 
-if (SERVER) then
+if SERVER then
 	local ClientGetInfo = FindMetaTable("Player").GetInfo
 
 	function L(key, client, ...)
@@ -37,20 +36,18 @@ if (SERVER) then
 		local languages = lia.lang.stored
 		local langKey = ClientGetInfo(client, "lia_language")
 		local info = languages[langKey] or languages.english
-
-		if (info and info[key]) then
-			return FormatString(info[key], ...)
-		end
+		if info and info[key] then return FormatString(info[key], ...) end
 	end
 
 	function L3(key, langKey, ...)
 		local languages = lia.lang.stored
-		if (langKey) then
+
+		if langKey then
 			local info = languages[langKey] or languages.english
 
 			return FormatString(info and info[key] or key, ...)
 		else
-			return (key)
+			return key
 		end
 	end
 else
@@ -67,9 +64,6 @@ else
 	function L2(key, ...)
 		local langKey = LIA_CVAR_LANG:GetString()
 		local info = lia.lang.stored[langKey]
-
-		if (info and info[key]) then
-			return FormatString(info[key], ...)
-		end
+		if info and info[key] then return FormatString(info[key], ...) end
 	end
 end

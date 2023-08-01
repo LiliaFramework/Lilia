@@ -1,5 +1,6 @@
 lia.meta.item.height = 1
 local GridInv = lia.Inventory:extend("GridInv")
+
 -- Useful access rules:
 local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
     if inventory.virtual then return action == "transfer" end
@@ -14,12 +15,13 @@ local function CanNotAddItemIfNoSpace(inventory, action, context)
     local x, y = context.x, context.y
     if not x or not y then return false, "noFit" end
     local doesFit, item = inventory:doesItemFitAtPos(context.item, x, y)
+
     if not doesFit then
-        return         false,
-        {
+        return false, {
             item = item
         }
     end
+
     return true
 end
 
@@ -42,6 +44,7 @@ end
 function GridInv:canItemFitInInventory(item, x, y)
     local invW, invH = self:getSize()
     local itemW, itemH = (item.width or 1) - 1, (item.height or 1) - 1
+
     return x >= 1 and y >= 1 and (x + itemW) <= invW and (y + itemH) <= invH
 end
 
@@ -53,12 +56,14 @@ function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
     local itemX2, itemY2 = itemX + (item.width or 1), itemY + (item.height or 1)
     if x >= itemX2 or itemX >= testX2 then return false end
     if y >= itemY2 or itemY >= testY2 then return false end
+
     return true
 end
 
 function GridInv:doesItemFitAtPos(testItem, x, y)
     -- Make sure the inventory can contain the item.
     if not self:canItemFitInInventory(testItem, x, y) then return false end
+
     -- Make sure no current items overlap if we were to put item at (x, y).
     for _, item in pairs(self.items) do
         if self:doesItemOverlapWithOther(testItem, x, y, item) then return false, item end
@@ -73,12 +78,14 @@ function GridInv:doesItemFitAtPos(testItem, x, y)
         end
     end
     -- If no overlap and we can hold the item, it fits.
+
     return true
 end
 
 -- Returns a coordinate where an item can be placed without overlap.
 function GridInv:findFreePosition(item)
     local width, height = self:getSize()
+
     for x = 1, width do
         for y = 1, height do
             if self:doesItemFitAtPos(item, x, y) then return x, y end
@@ -98,10 +105,15 @@ function GridInv:getItems(noRecurse)
     if noRecurse then return items end
     -- If recursive, then add the items within bags to the items list.
     local allItems = {}
+
     for id, item in pairs(items) do
         allItems[id] = item
-        if item.getInv and item:getInv() then allItems = table.Merge(allItems, item:getInv():getItems()) end
+
+        if item.getInv and item:getInv() then
+            allItems = table.Merge(allItems, item:getInv():getItems())
+        end
     end
+
     return allItems
 end
 
@@ -137,15 +149,19 @@ if SERVER then
     function GridInv:add(itemTypeOrItem, xOrQuantity, yOrData)
         local x, y, quantity, data
         local isStackCommand = isstring(itemTypeOrItem) and isnumber(xOrQuantity)
+
         -- Overload of GridInv:add(itemTypeOrItem, quantity, data)
         if istable(yOrData) then
             quantity = tonumber(quantity) or 1
             data = yOrData
+
             if quantity > 1 then
                 local items = {}
+
                 for i = 1, quantity do
                     items[i] = self:add(itemTypeOrItem, 1, data)
                 end
+
                 return deferred.all(items)
             end
         else
@@ -156,6 +172,7 @@ if SERVER then
         local d = deferred.new()
         -- Get the table for the item type.
         local item, justAddDirectly
+
         if lia.item.isItem(itemTypeOrItem) then
             item = itemTypeOrItem
             justAddDirectly = true
@@ -165,8 +182,10 @@ if SERVER then
 
         if not item then return d:reject("invalid item type") end
         local targetInventory = self
+
         if not x or not y then
             x, y = self:findFreePosition(item)
+
             if not x or not y then
                 for _, bagItem in pairs(self:getItems(true)) do
                     if bagItem.isBag == true then
@@ -178,17 +197,24 @@ if SERVER then
             end
         end
 
-        if isStackCommand and item.isStackable ~= true then isStackCommand = false end
+        if isStackCommand and item.isStackable ~= true then
+            isStackCommand = false
+        end
+
         local targetAssignments = {}
         local remainingQuantity = xOrQuantity
+
         if isStackCommand then
             local items = targetInventory:getItemsOfType(itemTypeOrItem)
+
             if items then
                 for _, targetItem in pairs(items) do
                     if remainingQuantity == 0 then break end -- nothing to fill.
                     local freeSpace = targetItem.maxQuantity - targetItem:getQuantity()
+
                     if freeSpace > 0 then
                         local filler = freeSpace - remainingQuantity
+
                         if filler > 0 then
                             targetAssignments[targetItem] = remainingQuantity
                             remainingQuantity = 0
@@ -203,10 +229,12 @@ if SERVER then
 
         if isStackCommand and remainingQuantity == 0 then
             local resultItems = {}
+
             for targetItem, assignedQuantity in pairs(targetAssignments) do
                 targetItem:addQuantity(assignedQuantity)
                 table.insert(resultItems, targetItem)
             end
+
             return d:resolve(resultItems)
         end
 
@@ -218,13 +246,12 @@ if SERVER then
         }
 
         local canAccess, reason = targetInventory:canAccess("add", context)
+
         if not canAccess then
             if istable(reason) then
-                return                 d:resolve(
-                    {
-                        error = reason
-                    }
-                )
+                return d:resolve({
+                    error = reason
+                })
             else
                 return d:reject(tostring(reason or "noAccess"))
             end
@@ -235,11 +262,13 @@ if SERVER then
             item:setData("x", x)
             item:setData("y", y)
             targetInventory:addItem(item)
+
             return d:resolve(item)
         end
 
         -- Allocate space for the item.
         targetInventory.occupied = targetInventory.occupied or {}
+
         for x2 = 0, (item.width or 1) - 1 do
             for y2 = 0, (item.height or 1) - 1 do
                 targetInventory.occupied[(x + x2) .. (y + y2)] = true
@@ -247,63 +276,53 @@ if SERVER then
         end
 
         -- Otherwise, make quantity number of instances.
-        data = table.Merge(
-            {
-                x = x,
-                y = y
-            },
-            data or {}
-        )
+        data = table.Merge({
+            x = x,
+            y = y
+        }, data or {})
 
         local itemType = item.uniqueID
-        lia.item.instance(
-            targetInventory:getID(),
-            itemType,
-            data,
-            0,
-            0,
-            function(item)
-                if targetInventory.occupied then
-                    for x2 = 0, (item.width or 1) - 1 do
-                        for y2 = 0, (item.height or 1) - 1 do
-                            targetInventory.occupied[(x + x2) .. (y + y2)] = nil
-                        end
-                    end
-                end
 
-                targetInventory:addItem(item)
-                d:resolve(item)
-            end
-        ):next(
-            function(item)
-                if isStackCommand and remainingQuantity > 0 then
-                    for targetItem, assignedQuantity in pairs(targetAssignments) do
-                        targetItem:addQuantity(assignedQuantity)
-                    end
-
-                    local overStacks = math.ceil(remainingQuantity / item.maxQuantity) - 1
-                    if overStacks > 0 then
-                        local items = {}
-                        for i = 1, overStacks do
-                            items[i] = self:add(itemTypeOrItem)
-                        end
-
-                        deferred.all(items):next(
-                            nil,
-                            function(error)
-                                hook.Run("OnPlayerLostStackItem", itemTypeOrItem) -- TODO: yes. just in case. maybe drop or something.
-                            end
-                        )
-
-                        item:setQuantity(remainingQuantity - (item.maxQuantity * overStacks))
-                        targetInventory:addItem(item)
-                        return d:resolve(items)
-                    else
-                        item:setQuantity(remainingQuantity)
+        lia.item.instance(targetInventory:getID(), itemType, data, 0, 0, function(item)
+            if targetInventory.occupied then
+                for x2 = 0, (item.width or 1) - 1 do
+                    for y2 = 0, (item.height or 1) - 1 do
+                        targetInventory.occupied[(x + x2) .. (y + y2)] = nil
                     end
                 end
             end
-        )
+
+            targetInventory:addItem(item)
+            d:resolve(item)
+        end):next(function(item)
+            if isStackCommand and remainingQuantity > 0 then
+                for targetItem, assignedQuantity in pairs(targetAssignments) do
+                    targetItem:addQuantity(assignedQuantity)
+                end
+
+                local overStacks = math.ceil(remainingQuantity / item.maxQuantity) - 1
+
+                if overStacks > 0 then
+                    local items = {}
+
+                    for i = 1, overStacks do
+                        items[i] = self:add(itemTypeOrItem)
+                    end
+
+                    deferred.all(items):next(nil, function(error)
+                        hook.Run("OnPlayerLostStackItem", itemTypeOrItem) -- TODO: yes. just in case. maybe drop or something.
+                    end)
+
+                    item:setQuantity(remainingQuantity - (item.maxQuantity * overStacks))
+                    targetInventory:addItem(item)
+
+                    return d:resolve(items)
+                else
+                    item:setQuantity(remainingQuantity)
+                end
+            end
+        end)
+
         return d
     end
 
@@ -313,16 +332,19 @@ if SERVER then
         assert(isnumber(quantity), "quantity must be a number")
         local d = deferred.new()
         if quantity <= 0 then return d:reject("quantity must be positive") end
+
         if isnumber(itemTypeOrID) then
             self:removeItem(itemTypeOrID)
         else
             local items = self:getItemsOfType(itemTypeOrID)
+
             for i = 1, math.min(quantity, #items) do
                 self:removeItem(items[i]:getID())
             end
         end
 
         d:resolve()
+
         return d
     end
 else
@@ -331,7 +353,11 @@ else
         if not inventory then return end
         local item = inventory.items[itemID]
         if item and item:getData("x") == x and item:getData("y") == y then return end
-        if item and (x > inventory:getWidth() or y > inventory:getHeight() or (x + (item.width or 1) - 1) < 1 or (y + (item.height or 1) - 1) < 1) then destinationID = nil end
+
+        if item and (x > inventory:getWidth() or y > inventory:getHeight() or (x + (item.width or 1) - 1) < 1 or (y + (item.height or 1) - 1) < 1) then
+            destinationID = nil
+        end
+
         net.Start("liaTransferItem")
         net.WriteUInt(itemID, 32)
         net.WriteUInt(x, 32)

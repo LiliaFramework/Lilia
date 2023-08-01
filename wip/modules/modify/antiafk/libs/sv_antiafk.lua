@@ -1,67 +1,66 @@
-AFKKick = AFKKick or {}
-AFKKick.Config = AFKKick.Config or {}
+local MODULE = MODULE
 
-function AFKKick.WarnPlayer(ply)
+function MODULE.WarnPlayer(ply)
 	net.Start("AFKWarning")
 	net.WriteBool(true)
 	net.Send(ply)
 	ply.HasWarning = true
 end
 
-function AFKKick.RemoveWarning(ply)
+function MODULE.RemoveWarning(ply)
 	net.Start("AFKWarning")
 	net.WriteBool(false)
 	net.Send(ply)
 	ply.HasWarning = false
 end
 
-function AFKKick.CharKick(ply)
+function MODULE.CharKick(ply)
 	net.Start("AFKAnnounce")
 	net.WriteString(ply:Nick())
 	net.Broadcast()
-	AFKKick.ResetAFKTime(ply)
+	MODULE.ResetAFKTime(ply)
 
 	timer.Simple(1 + (ply:Ping() / 1000), function()
 		ply:getChar():kick()
 	end)
 end
 
-AFKKick.TimerInterval = 1
+MODULE.TimerInterval = 1
 
-if CONFIG.AFKKickEnabled then
-	timer.Create("AFKTimer", AFKKick.TimerInterval, 0, function()
+if CONFIG.MODULEEnabled then
+	timer.Create("AFKTimer", MODULE.TimerInterval, 0, function()
 		local plyCount = player.GetCount()
 		local maxPlayers = game.MaxPlayers()
 
 		for _, ply in ipairs(player.GetAll()) do
 			if not ply:getChar() and plyCount < maxPlayers then continue end
-			if AFKKick.Config.AllowedPlayers[ply:SteamID()] or ply:IsBot() then continue end
-			ply.AFKTime = (ply.AFKTime or 0) + AFKKick.TimerInterval
+			if CONFIG.AllowedPlayers[ply:SteamID()] or ply:IsBot() then continue end
+			ply.AFKTime = (ply.AFKTime or 0) + MODULE.TimerInterval
 
-			if ply.AFKTime >= AFKKick.Config.WarningTime and not ply.HasWarning then
-				AFKKick.WarnPlayer(ply)
+			if ply.AFKTime >= CONFIG.WarningTime and not ply.HasWarning then
+				MODULE.WarnPlayer(ply)
 			end
 
-			if ply.AFKTime >= AFKKick.Config.WarningTime + AFKKick.Config.KickTime then
+			if ply.AFKTime >= CONFIG.WarningTime + CONFIG.KickTime then
 				if plyCount >= maxPlayers then
-					ply:Kick(AFKKick.Config.KickMessage)
+					ply:Kick(CONFIG.KickMessage)
 				elseif ply:getChar() then
-					AFKKick.CharKick(ply)
+					MODULE.CharKick(ply)
 				end
 			end
 		end
 	end)
 end
 
-function AFKKick.ResetAFKTime(ply)
+function MODULE.ResetAFKTime(ply)
 	ply.AFKTime = 0
 
 	if ply.HasWarning then
-		AFKKick.RemoveWarning(ply)
+		MODULE.RemoveWarning(ply)
 	end
 end
 
-hook.Add("PlayerButtonDown", "AFKKick", AFKKick.ResetAFKTime)
-hook.Add("PlayerButtonUp", "AFKKick", AFKKick.ResetAFKTime)
+hook.Add("PlayerButtonDown", "MODULE", MODULE.ResetAFKTime)
+hook.Add("PlayerButtonUp", "MODULE", MODULE.ResetAFKTime)
 util.AddNetworkString("AFKWarning")
 util.AddNetworkString("AFKAnnounce")

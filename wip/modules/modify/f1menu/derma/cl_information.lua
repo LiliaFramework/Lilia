@@ -119,7 +119,6 @@ function PANEL:setup()
         self.faction:SetText(L("charFaction", L(team.GetName(LocalPlayer():Team()))))
     end
 
-
     if self.class then
         local class = lia.class.list[char:getClass()]
 

@@ -15,6 +15,7 @@ lia.command.add("return", {
         end
     end
 })
+
 -- @type method freezeallprops - Freeze All Props
 -- @typeCommentStart
 -- Freezes all prop_physics entities in the game.

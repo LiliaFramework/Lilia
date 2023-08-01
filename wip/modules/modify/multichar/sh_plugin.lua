@@ -1,27 +1,25 @@
 MODULE.name = "Multiple Characters"
 MODULE.author = "Leonheart#7476/Cheesenot"
 MODULE.desc = "Allows players to have multiple characters."
-
 liaMultiChar = MODULE
 
-if (SERVER) then
+if SERVER then
 	function MODULE:syncCharList(client)
-		if (not client.liaCharList) then return end
+		if not client.liaCharList then return end
 		net.Start("liaCharList")
-			net.WriteUInt(#client.liaCharList, 32)
-			for i = 1, #client.liaCharList do
-				net.WriteUInt(client.liaCharList[i], 32)
-			end
+		net.WriteUInt(#client.liaCharList, 32)
+
+		for i = 1, #client.liaCharList do
+			net.WriteUInt(client.liaCharList[i], 32)
+		end
+
 		net.Send(client)
 	end
 
 	function MODULE:CanPlayerCreateCharacter(client)
 		local count = #client.liaCharList
-		local maxChars = hook.Run("GetMaxPlayerCharacter", client)
-			or CONFIG.MaxChars
-		if (count >= maxChars) then
-			return false
-		end
+		local maxChars = hook.Run("GetMaxPlayerCharacter", client) or CONFIG.MaxChars
+		if count >= maxChars then return false end
 	end
 else
 	--- Requests to change to the character corresponding to the ID.
@@ -30,18 +28,22 @@ else
 	function MODULE:chooseCharacter(id)
 		assert(isnumber(id), "id must be a number")
 		local d = deferred.new()
+
 		net.Receive("liaCharChoose", function()
 			local message = net.ReadString()
-			if (message == "") then
+
+			if message == "" then
 				d:resolve()
 				hook.Run("CharacterLoaded", lia.char.loaded[id])
 			else
 				d:reject(message)
 			end
 		end)
+
 		net.Start("liaCharChoose")
-			net.WriteUInt(id, 32)
+		net.WriteUInt(id, 32)
 		net.SendToServer()
+
 		return d
 	end
 
@@ -51,19 +53,19 @@ else
 	function MODULE:createCharacter(data)
 		assert(istable(data), "data must be a table")
 		local d = deferred.new()
-
 		-- Quick client-side validation before sending.
 		local payload = {}
-		for key, charVar in pairs(lia.char.vars) do
-			if (charVar.noDisplay) then continue end
 
+		for key, charVar in pairs(lia.char.vars) do
+			if charVar.noDisplay then continue end
 			local value = data[key]
-			if (isfunction(charVar.onValidate)) then
+
+			if isfunction(charVar.onValidate) then
 				local results = {charVar.onValidate(value, data, LocalPlayer())}
-				if (results[1] == false) then
-					return d:reject(L(unpack(results, 2)))
-				end
+
+				if results[1] == false then return d:reject(L(unpack(results, 2))) end
 			end
+
 			payload[key] = value
 		end
 
@@ -71,7 +73,8 @@ else
 		net.Receive("liaCharCreate", function()
 			local id = net.ReadUInt(32)
 			local reason = net.ReadString()
-			if (id > 0) then
+
+			if id > 0 then
 				d:resolve(id)
 			else
 				d:reject(reason)
@@ -80,12 +83,15 @@ else
 
 		-- Request a character to be created with the given data.
 		net.Start("liaCharCreate")
-			net.WriteUInt(table.Count(payload), 32)
-			for key, value in pairs(payload) do
-				net.WriteString(key)
-				net.WriteType(value)
-			end
+		net.WriteUInt(table.Count(payload), 32)
+
+		for key, value in pairs(payload) do
+			net.WriteString(key)
+			net.WriteType(value)
+		end
+
 		net.SendToServer()
+
 		return d
 	end
 
@@ -94,7 +100,7 @@ else
 	function MODULE:deleteCharacter(id)
 		assert(isnumber(id), "id must be a number")
 		net.Start("liaCharDelete")
-			net.WriteUInt(id, 32)
+		net.WriteUInt(id, 32)
 		net.SendToServer()
 	end
 end

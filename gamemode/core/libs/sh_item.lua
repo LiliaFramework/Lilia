@@ -2,16 +2,16 @@
 -- @moduleCommentStart
 -- Library functions for items.
 -- @moduleCommentEnd
-
 lia.item = lia.item or {}
 lia.item.list = lia.item.list or {}
 lia.item.base = lia.item.base or {}
 lia.item.instances = lia.item.instances or {}
+
 lia.item.inventories = lia.item.inventories or {
 	[0] = {}
 }
-lia.item.inventoryTypes = lia.item.inventoryTypes or {}
 
+lia.item.inventoryTypes = lia.item.inventoryTypes or {}
 lia.util.include("lilia/gamemode/core/meta/sh_item.lua")
 
 -- @type function lia.item.get(identifier)
@@ -44,14 +44,11 @@ end
 function lia.item.load(path, baseID, isBaseItem)
 	local uniqueID = path:match("sh_([_%w]+)%.lua")
 
-	if (uniqueID) then
-		uniqueID = (isBaseItem and "base_" or "")..uniqueID
+	if uniqueID then
+		uniqueID = (isBaseItem and "base_" or "") .. uniqueID
 		lia.item.register(uniqueID, baseID, isBaseItem, path)
-	elseif (not path:find(".txt")) then
-		ErrorNoHalt(
-			"[Lilia] Item at '"..path.."' follows invalid "..
-			"naming convention!\n"
-		)
+	elseif not path:find(".txt") then
+		ErrorNoHalt("[Lilia] Item at '" .. path .. "' follows invalid " .. "naming convention!\n")
 	end
 end
 
@@ -85,12 +82,13 @@ end
 -- @usageEnd
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
 	assert(isstring(uniqueID), "uniqueID must be a string")
-
 	local baseTable = lia.item.base[baseID] or lia.meta.item
-	if (baseID) then
-		assert(baseTable, "Item "..uniqueID.." has a non-existent base "..baseID)
+
+	if baseID then
+		assert(baseTable, "Item " .. uniqueID .. " has a non-existent base " .. baseID)
 	end
-	local targetTable = (isBaseItem and lia.item.base or lia.item.list)
+
+	local targetTable = isBaseItem and lia.item.base or lia.item.list
 
 	if luaGenerated then
 		ITEM = setmetatable({
@@ -110,9 +108,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
 		ITEM.base = baseID
 		ITEM.isBase = isBaseItem
 		ITEM.category = ITEM.category or "misc"
-		ITEM.functions = ITEM.functions or table.Copy(
-			baseTable.functions or LIA_ITEM_DEFAULT_FUNCTIONS
-		)
+		ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or LIA_ITEM_DEFAULT_FUNCTIONS)
 	else
 		ITEM = targetTable[uniqueID] or setmetatable({
 			hooks = table.Copy(baseTable.hooks or {}),
@@ -131,24 +127,20 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
 		ITEM.base = baseID
 		ITEM.isBase = isBaseItem
 		ITEM.category = ITEM.category or "misc"
-		ITEM.functions = ITEM.functions or table.Copy(
-			baseTable.functions or LIA_ITEM_DEFAULT_FUNCTIONS
-		)
+		ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or LIA_ITEM_DEFAULT_FUNCTIONS)
 	end
 
-	if (not luaGenerated and path) then
+	if not luaGenerated and path then
 		lia.util.include(path)
 	end
 
 	ITEM:onRegistered()
-
 	local itemType = ITEM.uniqueID
 	targetTable[itemType] = ITEM
 	ITEM = nil
 
 	return targetTable[itemType]
 end
-
 
 -- @type function lia.item.loadFromDir(directory)
 -- @typeCommentStart
@@ -159,30 +151,26 @@ end
 -- @usageStart
 -- lia.item.loadFromDir("items")
 -- @usageEnd
-
 function lia.item.loadFromDir(directory)
 	local files, folders
-
-	files = file.Find(directory.."/base/*.lua", "LUA")
+	files = file.Find(directory .. "/base/*.lua", "LUA")
 
 	for _, v in ipairs(files) do
-		lia.item.load(directory.."/base/"..v, nil, true)
+		lia.item.load(directory .. "/base/" .. v, nil, true)
 	end
 
-	files, folders = file.Find(directory.."/*", "LUA")
+	files, folders = file.Find(directory .. "/*", "LUA")
 
 	for _, v in ipairs(folders) do
-		if (v == "base") then
-			continue
-		end
+		if v == "base" then continue end
 
-		for _, v2 in ipairs(file.Find(directory.."/"..v.."/*.lua", "LUA")) do
-			lia.item.load(directory.."/"..v .. "/".. v2, "base_"..v)
+		for _, v2 in ipairs(file.Find(directory .. "/" .. v .. "/*.lua", "LUA")) do
+			lia.item.load(directory .. "/" .. v .. "/" .. v2, "base_" .. v)
 		end
 	end
 
 	for _, v in ipairs(files) do
-		lia.item.load(directory.."/"..v)
+		lia.item.load(directory .. "/" .. v)
 	end
 end
 
@@ -197,20 +185,12 @@ end
 -- local item = lia.item.new("example", 15)
 -- @usageEnd
 function lia.item.new(uniqueID, id)
-
 	id = id and tonumber(id) or id
 	assert(isnumber(id), "non-number ID given to lia.item.new")
-
-	if (
-		lia.item.instances[id] and
-		lia.item.instances[id].uniqueID == uniqueID
-	) then
-		return lia.item.instances[id]
-	end
-
+	if lia.item.instances[id] and lia.item.instances[id].uniqueID == uniqueID then return lia.item.instances[id] end
 	local stockItem = lia.item.list[uniqueID]
 
-	if (stockItem) then
+	if stockItem then
 		local item = setmetatable({
 			id = id,
 			data = {}
@@ -224,10 +204,7 @@ function lia.item.new(uniqueID, id)
 
 		return item
 	else
-		error(
-			"[Lilia] Attempt to create unknown item '"
-			..tostring(uniqueID).."'\n"
-		)
+		error("[Lilia] Attempt to create unknown item '" .. tostring(uniqueID) .. "'\n")
 	end
 end
 
@@ -235,21 +212,20 @@ lia.char.registerVar("inv", {
 	noNetworking = true,
 	noDisplay = true,
 	onGet = function(character, index)
-		if (index and type(index) ~= "number") then
-			return character.vars.inv or {}
-		end
+		if index and type(index) ~= "number" then return character.vars.inv or {} end
 
 		return character.vars.inv and character.vars.inv[index or 1]
 	end,
 	onSync = function(character, recipient)
 		net.Start("liaCharacterInvList")
-			net.WriteUInt(character:getID(), 32)
-			net.WriteUInt(#character.vars.inv, 32)
+		net.WriteUInt(character:getID(), 32)
+		net.WriteUInt(#character.vars.inv, 32)
 
-			for i = 1, #character.vars.inv do
-				net.WriteType(character.vars.inv[i].id)
-			end
-		if (recipient == nil) then
+		for i = 1, #character.vars.inv do
+			net.WriteType(character.vars.inv[i].id)
+		end
+
+		if recipient == nil then
 			net.Broadcast()
 		else
 			net.Send(recipient)

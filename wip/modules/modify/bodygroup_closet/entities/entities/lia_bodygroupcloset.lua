@@ -28,10 +28,8 @@ else
 
     function ENT:onDrawEntityInfo(alpha)
         local pos = self:LocalToWorld(self:OBBCenter()):ToScreen()
-        lia.util.drawText("Bodygroup Closet", pos.x, pos.y, ColorAlpha(CONFIG.Color), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        lia.util.drawText("Bodygroup Closet", pos.x, pos.y, ColorAlpha(CONFIG.Color), alpha)
     end
 
-    function ENT:Draw()
-        self:DrawModel()
-    end
+    TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER().ENT:Draw().self:DrawModel().someVariable = nil
 end

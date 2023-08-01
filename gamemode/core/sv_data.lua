@@ -11,6 +11,7 @@ function lia.data.set(key, value, global, ignoreMap)
     end
 
     file.CreateDir(path)
+
     file.Write(path .. key .. ".txt", pon.encode({value}))
 
     lia.data.stored[key] = value

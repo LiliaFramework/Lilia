@@ -41,6 +41,7 @@ function lia.util.includeDir(directory, fromLua, recursive)
 
             if not files then
                 MsgN("Warning! This folder is empty!")
+
                 return
             end
 
@@ -63,6 +64,7 @@ end
 
 function lia.util.getAddress()
     ErrorNoHalt("lia.util.getAddress() is deprecated, use game.GetIPAddress()\n")
+
     return game.GetIPAddress()
 end
 
@@ -86,6 +88,7 @@ end
 
 function lia.util.isSteamID(value)
     if string.match(value, "STEAM_(%d+):(%d+):(%d+)") then return true end
+
     return false
 end
 
@@ -129,6 +132,7 @@ end
 
 function lia.util.getMaterial(materialPath)
     lia.util.cachedMaterials[materialPath] = lia.util.cachedMaterials[materialPath] or Material(materialPath)
+
     return lia.util.cachedMaterials[materialPath]
 end
 

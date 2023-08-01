@@ -1,8 +1,9 @@
 local ItemCleanupTime = CONFIG.ItemCleanupTime
-local MapCleanupTime = CONFIG.MapCleanupTime 
+local MapCleanupTime = CONFIG.MapCleanupTime
 
 function MODULE:InitializedModules()
     if not CONFIG.MapCleanerEnabled then return end
+
     timer.Create("clearWorldItemsWarning", ItemCleanupTime - (60 * 10), 0, function()
         net.Start("worlditem_cleanup_inbound")
         net.Broadcast()

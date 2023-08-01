@@ -8,6 +8,7 @@ function PANEL:Init()
 	self.name:SetFont("liaVendorButtonFont")
 	self.name:SetTextColor(color_white)
 	self.name:SetTextInset(8, 4)
+
 	self.name.Paint = function(name, w, h)
 		surface.SetDrawColor(0, 0, 0, 100)
 		surface.DrawRect(0, 0, w, h)
@@ -21,7 +22,6 @@ function PANEL:Init()
 	self.money:SetTextInset(10, 0)
 	self.money:SetTextColor(Color(255, 255, 255, 200))
 	self.money.Paint = self.name.Paint
-
 	self.items = self:Add("DScrollPanel")
 	self.items:Dock(FILL)
 end
