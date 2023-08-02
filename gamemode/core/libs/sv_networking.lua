@@ -1,9 +1,6 @@
 local entityMeta = FindMetaTable("Entity")
 local playerMeta = FindMetaTable("Player")
-lia.net = lia.net or {}
-lia.net.globals = lia.net.globals or {}
 
--- Check if there is an attempt to send a function. Can't send those.
 local function checkBadType(name, object)
 	if isfunction(object) then
 		ErrorNoHalt("Net var '" .. name .. "' contains a bad object type!")
@@ -11,7 +8,6 @@ local function checkBadType(name, object)
 		return true
 	elseif istable(object) then
 		for k, v in pairs(object) do
-			-- Check both the key and the value for tables, and has recursion.
 			if checkBadType(name, k) or checkBadType(name, v) then return true end
 		end
 	end

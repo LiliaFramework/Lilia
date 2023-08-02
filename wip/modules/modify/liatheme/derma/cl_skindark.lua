@@ -140,12 +140,12 @@ function SKIN:PaintListView(panel, w, h)
 end
 
 function SKIN:PaintListViewLine(panel, w, h)
-    surface.SetDrawColor((panel:IsHovered() or panel:IsLineSelected()) and CONFIG.Color)
+    surface.SetDrawColor((panel:IsHovered() or panel:IsLineSelected()) and lia.config.Color)
 end
 
 Color(0, 0, 0, 0)
 
-return surface.DrawRect(0, 0, w, h), SKIN:PaintScrollBarGrip(panel, w, h), surface.SetDrawColor(CONFIG.Color), surface.DrawRect(0, 0, w, h), SKIN:PaintButtonUp(panel, w, h), surface.SetDrawColor(CONFIG.Color), surface.DrawRect(0, 0, w, h), surface.SetTextColor(255, 255, 255, 255), surface.SetFont("marlett"), surface.SetTextPos(1, 1), surface.DrawText("5"), SKIN:PaintButtonDown(panel, w, h), surface.SetDrawColor(CONFIG.Color), surface.DrawRect(0, 0, w, h), surface.SetTextColor(255, 255, 255, 255), surface.SetFont("marlett"), surface.SetTextPos(1, 0), surface.DrawText("6"), SKIN:PaintVScrollBar(panel, w, h), surface.SetDrawColor(20, 20, 20, 200), surface.DrawRect(0, 0, w, h), SKIN:PaintMenu(panel, w, h){
+return surface.DrawRect(0, 0, w, h), SKIN:PaintScrollBarGrip(panel, w, h), surface.SetDrawColor(lia.config.Color), surface.DrawRect(0, 0, w, h), SKIN:PaintButtonUp(panel, w, h), surface.SetDrawColor(lia.config.Color), surface.DrawRect(0, 0, w, h), surface.SetTextColor(255, 255, 255, 255), surface.SetFont("marlett"), surface.SetTextPos(1, 1), surface.DrawText("5"), SKIN:PaintButtonDown(panel, w, h), surface.SetDrawColor(lia.config.Color), surface.DrawRect(0, 0, w, h), surface.SetTextColor(255, 255, 255, 255), surface.SetFont("marlett"), surface.SetTextPos(1, 0), surface.DrawText("6"), SKIN:PaintVScrollBar(panel, w, h), surface.SetDrawColor(20, 20, 20, 200), surface.DrawRect(0, 0, w, h), SKIN:PaintMenu(panel, w, h){
     odd = true
 }, i, h, 22, surface.SetDrawColor(40, 40, 40, 255), surface.DrawRect(0, i, w, 22), surface.SetDrawColor(50, 50, 50, 255), surface.DrawRect(0, i, w, 22){
     odd = not odd,

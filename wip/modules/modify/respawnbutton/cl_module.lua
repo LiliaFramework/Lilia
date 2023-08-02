@@ -1,5 +1,5 @@
 net.Receive("RespawnButtonDeath", function()
-	timer.Simple(CONFIG.SpawnTime + 1, function()
+	timer.Simple(lia.config.SpawnTime + 1, function()
 		if not LocalPlayer():Alive() then
 			local frame = vgui.Create("DFrame")
 			frame:SetTitle("")

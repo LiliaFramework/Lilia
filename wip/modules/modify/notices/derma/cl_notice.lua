@@ -17,7 +17,7 @@ function PANEL:Paint(w, h)
 
 	if self.start then
 		local w2 = math.TimeFraction(self.start, self.endTime, CurTime()) * w
-		surface.SetDrawColor(CONFIG.Color)
+		surface.SetDrawColor(lia.config.Color)
 		surface.DrawRect(w2, 0, w - w2, h)
 	end
 

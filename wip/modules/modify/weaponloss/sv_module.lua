@@ -9,7 +9,7 @@ function MODULE:PlayerDeath(victim, inflictor, attacker)
     victim.LostItems = {}
     netstream.Start(victim, "removeF1")
 
-    if inventory and CONFIG.KeepAmmoOnDeath then
+    if inventory and lia.config.KeepAmmoOnDeath then
         for k, v in pairs(inventory:getItems()) do
             if v.isWeapon and v:getData("equip") then
                 v:setData("ammo", nil)
@@ -20,14 +20,14 @@ function MODULE:PlayerDeath(victim, inflictor, attacker)
     if victim == attacker then return end
 
     if attacker:IsPlayer() then
-        if CONFIG.DeathPopupEnabled then
+        if lia.config.DeathPopupEnabled then
             net.Start("death_client")
             net.WriteString(attacker:Nick())
             net.WriteFloat(attacker:getChar():getID())
             net.Send(victim)
         end
 
-        if CONFIG.LoseWeapononDeathHuman then
+        if lia.config.LoseWeapononDeathHuman then
             for k, v in pairs(items) do
                 if (v.isWeapon or v.isCW) and v:getData("equip") then
                     table.insert(victim.LostItems, v.uniqueID)
@@ -43,7 +43,7 @@ function MODULE:PlayerDeath(victim, inflictor, attacker)
 
         return
     elseif not attacker:IsPlayer() then
-        if CONFIG.LoseWeapononDeathNPC then
+        if lia.config.LoseWeapononDeathNPC then
             for k, v in pairs(items) do
                 if (v.isWeapon or v.isCW) and v:getData("equip") then
                     table.insert(victim.LostItems, v.uniqueID)

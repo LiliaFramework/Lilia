@@ -9,7 +9,7 @@ end
 ------------------------------------------------------------------------------------------------------------------------
 -- DISABLES SPRAYING
 function MODULE:PlayerSpray(client)
-    return not CONFIG.PlayerSprayEnabled
+    return not lia.config.PlayerSprayEnabled
 end
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ function MODULE:PlayerInitialSpawn(ply)
     local annoying = ents.FindByName("music")
     local val = ents.GetMapCreatedEntity(1733)
 
-    if CONFIG.MusicKiller and #annoying > 0 then
+    if lia.config.MusicKiller and #annoying > 0 then
         annoying[1]:SetKeyValue("RefireTime", 99999999)
         annoying[1]:Fire("Disable")
         annoying[1]:Fire("Kill")

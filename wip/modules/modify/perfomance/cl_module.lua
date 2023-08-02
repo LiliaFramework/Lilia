@@ -2,11 +2,11 @@ local MODULE = MODULE
 local CONFIG = CONFIG
 
 function MODULE:GetPlayerData(pPlayer)
-    return CONFIG.m_tblPlayers[pPlayer:EntIndex()]
+    return lia.config.tblPlayers[pPlayer:EntIndex()]
 end
 
 function MODULE:RegisterPlayer(pPlayer)
-    CONFIG.m_tblPlayers[pPlayer:EntIndex()] = {
+    lia.config.tblPlayers[pPlayer:EntIndex()] = {
         Player = pPlayer,
         Expanding = false,
         Expanded = false,
@@ -15,19 +15,19 @@ function MODULE:RegisterPlayer(pPlayer)
 
     self:PlayerUpdateTransmitStates(pPlayer)
 
-    timer.Simple(CONFIG.m_intSpawnDelay, function()
+    timer.Simple(lia.config.intSpawnDelay, function()
         self:BeginExpand(pPlayer)
     end)
 end
 
 function MODULE:RemovePlayer(pPlayer)
-    CONFIG.m_tblPlayers[pPlayer:EntIndex()] = nil
+    lia.config.tblPlayers[pPlayer:EntIndex()] = nil
 end
 
 function MODULE:PlayerUpdateTransmitStates(pPlayer, intRange)
     if intRange then
         for _, v in pairs(ents.GetAll()) do
-            if CONFIG.m_tblAlwaysSend[v:GetClass()] then
+            if lia.config.tblAlwaysSend[v:GetClass()] then
                 v:SetPreventTransmit(pPlayer, false)
                 continue
             end
@@ -37,7 +37,7 @@ function MODULE:PlayerUpdateTransmitStates(pPlayer, intRange)
                 continue
             end
 
-            if v:GetPos():Distance(pPlayer:GetPos()) > CONFIG.m_intUpdateDistance then
+            if v:GetPos():Distance(pPlayer:GetPos()) > lia.config.intUpdateDistance then
                 v:SetPreventTransmit(pPlayer, true)
             else
                 v:SetPreventTransmit(pPlayer, false)
@@ -45,7 +45,7 @@ function MODULE:PlayerUpdateTransmitStates(pPlayer, intRange)
         end
     else
         for _, v in pairs(ents.GetAll()) do
-            if CONFIG.m_tblAlwaysSend[v:GetClass()] then
+            if lia.config.tblAlwaysSend[v:GetClass()] then
                 v:SetPreventTransmit(pPlayer, false)
                 continue
             end
@@ -67,17 +67,17 @@ function MODULE:BeginExpand(pPlayer)
     local timerID = "PVS:" .. pPlayer:EntIndex()
     local currentRange = 0
 
-    timer.Create(timerID, CONFIG.m_intUpdateRate, 0, function()
+    timer.Create(timerID, lia.config.intUpdateRate, 0, function()
         if not IsValid(pPlayer) then
             timer.Destroy(timerID)
 
             return
         end
 
-        currentRange = math.min(CONFIG.m_intUpdateDistance, currentRange + CONFIG.m_intUpdateAmount)
+        currentRange = math.min(lia.config.intUpdateDistance, currentRange + lia.config.intUpdateAmount)
         self:PlayerUpdateTransmitStates(pPlayer, currentRange)
 
-        if currentRange == CONFIG.m_intUpdateDistance then
+        if currentRange == lia.config.intUpdateDistance then
             timer.Destroy(timerID)
             data.Expanded = true
             data.Expanding = false
@@ -86,15 +86,15 @@ function MODULE:BeginExpand(pPlayer)
 end
 
 function MODULE:PlayerExpandedUpdate()
-    for k, data in pairs(CONFIG.m_tblPlayers) do
+    for k, data in pairs(lia.config.tblPlayers) do
         if not data or not data.Expanded then continue end
 
         if not IsValid(data.Player) then
-            CONFIG.m_tblPlayers[k] = nil
+            lia.config.tblPlayers[k] = nil
             continue
         end
 
-        self:PlayerUpdateTransmitStates(data.Player, CONFIG.m_intUpdateDistance)
+        self:PlayerUpdateTransmitStates(data.Player, lia.config.intUpdateDistance)
     end
 end
 
@@ -173,13 +173,13 @@ function MODULE:Initialize()
 end
 
 function MODULE:OnEntityCreated(entity)
-    if CONFIG.DrawEntityShadows then
+    if lia.config.DrawEntityShadows then
         entity:DrawShadow(false)
     end
 end
 
 function MODULE:InitPostEntity()
-    if CONFIG.DrawEntityShadows then
+    if lia.config.DrawEntityShadows then
         for _, entity in ipairs(ents.GetAll()) do
             entity:DrawShadow(false)
         end

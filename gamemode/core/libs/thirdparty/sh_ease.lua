@@ -1,7 +1,6 @@
 -- thx for reducing the work!
 -- the code is came from: https://github.com/soggybag/Simple-Game/blob/master/Game%20-%20Simple/more_easing.lua
 -- check the ease cheatsheet for your neat UI and stuffs! http://easings.net
-lia.ease = lia.ease or {}
 local pow = math.pow
 local sin = math.sin
 local pi = math.pi

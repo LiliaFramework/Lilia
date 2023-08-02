@@ -1,31 +1,34 @@
 local playerMeta = FindMetaTable("Player")
 
--- Returns whether or not the player has their weapon raised.
+
+
 function playerMeta:isWepRaised()
-	local weapon = self.GetActiveWeapon(self)
-	local override = hook.Run("ShouldWeaponBeRaised", self, weapon)
-	-- Allow the hook to check first.
-	if override ~= nil then return override end
+    local weapon = self:GetActiveWeapon()
+    local override = hook.Run("ShouldWeaponBeRaised", self, weapon)
+    if override ~= nil then
+        return override
+    end
 
-	-- Some weapons may have their own properties.
-	if IsValid(weapon) then
-		-- If their weapon is always raised, return true.
-		if weapon.IsAlwaysRaised or weapon.AlwaysRaised or ALWAYS_RAISED[weapon.GetClass(weapon)] then
-			return true
-		elseif weapon.IsAlwaysLowered or weapon.NeverRaised then
-			-- Return false if always lowered.
-			return false
-		end
-	end
+    if IsValid(weapon) then
+        local weaponClass = weapon:GetClass()
+        if lia.config.PermaRaisedWeapons[weaponClass] or weapon.IsAlwaysRaised or weapon.AlwaysRaised then
+            return true
+        elseif weapon.IsAlwaysLowered or weapon.NeverRaised then
+            return false
+        end
+    end
 
-	-- If the player has been forced to have their weapon lowered.
-	if self.getNetVar(self, "restricted") then return false end
-	-- Let the config decide before actual results.
-	if CONFIG.WepAlwaysRaised then return true end
-	-- Returns what the gamemode decides.
+    if self:getNetVar("restricted") then
+        return false
+    end
 
-	return self.getNetVar(self, "raised", false)
+    if lia.config.WepAlwaysRaised then
+        return true
+    end
+
+    return self:getNetVar("raised", false)
 end
+
 
 if SERVER then
 	-- Sets whether or not the weapon is raised.
@@ -43,7 +46,7 @@ if SERVER then
 
 	-- Inverts whether or not the weapon is raised.
 	function playerMeta:toggleWepRaised()
-		timer.Simple(CONFIG.WeaponRaiseTimer, function()
+		timer.Simple(lia.config.WeaponRaiseTimer, function()
 			self:setWepRaised(not self:isWepRaised())
 		end)
 

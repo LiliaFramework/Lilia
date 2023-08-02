@@ -47,7 +47,7 @@ function PANEL:setIsSelling(isSelling)
 end
 
 local function clickEffects()
-	LocalPlayer():EmitSound(unpack(CONFIG.VendorClick))
+	LocalPlayer():EmitSound(unpack(lia.config.VendorClick))
 end
 
 local function sellItemToVendor(panel)

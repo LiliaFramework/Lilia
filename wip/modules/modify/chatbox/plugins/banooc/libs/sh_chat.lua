@@ -4,8 +4,8 @@ do
     hook.Add("InitializedConfig", "liaChatOOC", function()
         lia.chat.register("ooc", {
             onCanSay = function(speaker, text)
-                local delay = CONFIG.OOCDelay
-                local oocmaxsize = CONFIG.OOCLimit
+                local delay = lia.config.OOCDelay
+                local oocmaxsize = lia.config.OOCLimit
 
                 if GetGlobalBool("oocblocked", false) then
                     speaker:notify("The OOC is Globally Blocked!")

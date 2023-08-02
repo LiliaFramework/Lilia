@@ -1,5 +1,5 @@
 local ITEM = lia.meta.item or {}
-debug.getregistry().Item = lia.meta.item -- for FindMetaTable.
+debug.getregistry().Item = lia.meta.item
 ITEM.__index = ITEM
 ITEM.name = "INVALID ITEM"
 ITEM.description = ITEM.desc or "[[INVALID ITEM]]"
@@ -13,14 +13,12 @@ ITEM.maxQuantity = 1
 ITEM.canSplit = true
 
 function ITEM:getQuantity()
-    if self.id == 0 then return self.maxQuantity end -- for display purpose.
-
+    if self.id == 0 then return self.maxQuantity end
     return self.quantity
 end
 
 function ITEM:GetQuantity()
-    if self.id == 0 then return self.maxQuantity end -- for display purpose.
-
+    if self.id == 0 then return self.maxQuantity end
     return self.quantity
 end
 
@@ -170,38 +168,30 @@ end
 
 function ITEM:GetData(key, default)
     self.data = self.data or {}
-    -- Overload that allows the user to get all the data.
     if key == true then return self.data end
-    -- Try to get the data stored in the item.
     local value = self.data[key]
     if value ~= nil then return value end
 
-    -- If that didn't work, back up to getting the data from its entity.
     if IsValid(self.entity) then
         local data = self.entity:getNetVar("data", {})
         local value = data[key]
         if value ~= nil then return value end
     end
-    -- All no data was found, return the default (nil if not set).
 
     return default
 end
 
 function ITEM:getData(key, default)
     self.data = self.data or {}
-    -- Overload that allows the user to get all the data.
     if key == true then return self.data end
-    -- Try to get the data stored in the item.
     local value = self.data[key]
     if value ~= nil then return value end
 
-    -- If that didn't work, back up to getting the data from its entity.
     if IsValid(self.entity) then
         local data = self.entity:getNetVar("data", {})
         local value = data[key]
         if value ~= nil then return value end
     end
-    -- All no data was found, return the default (nil if not set).
 
     return default
 end
@@ -230,7 +220,6 @@ function ITEM:postHook(name, func)
     end
 end
 
--- Called after Lilia has stored this item into the list of valid items.
 function ITEM:onRegistered()
 end
 

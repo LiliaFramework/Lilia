@@ -19,7 +19,7 @@ lia.char.registerVar("attribs", {
 					count = count + v
 				end
 
-				local points = hook.Run("GetStartAttribPoints", client, count) or CONFIG.MaxAttributes
+				local points = hook.Run("GetStartAttribPoints", client, count) or lia.config.MaxAttributes
 				if count > points then return false, "unknownError" end
 			else
 				return false, "unknownError"
@@ -83,7 +83,7 @@ else
 				bar:setValue(attribValue)
 			end
 
-			local maximum = v.maxValue or CONFIG.MaxAttributes
+			local maximum = v.maxValue or lia.config.MaxAttributes
 			bar:setMax(maximum)
 			bar:setReadOnly()
 			bar:setText(Format("%s [%.1f/%.1f] (%.1f", L(v.name), attribValue, maximum, attribValue / maximum * 100) .. "%)")

@@ -19,8 +19,6 @@ netstream.Hook("invAct", function(client, action, item, invID, data)
 	end
 
 	if not item then return end
-	-- Permission check with inventory. Or, if no inventory exists,
-	-- the player has no way of accessing the item.
 	local inventory = lia.inventory.instances[item.invID]
 
 	local context = {

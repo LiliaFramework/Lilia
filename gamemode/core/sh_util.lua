@@ -1,8 +1,3 @@
-lia.util.cachedMaterials = lia.util.cachedMaterials or {}
-ALWAYS_RAISED = ALWAYS_RAISED or {}
-ALWAYS_RAISED["weapon_physgun"] = true
-ALWAYS_RAISED["gmod_tool"] = true
-ALWAYS_RAISED["lia_poshelper"] = true
 
 function lia.util.include(fileName, state)
     if not fileName then
@@ -60,30 +55,6 @@ function lia.util.includeDir(directory, fromLua, recursive)
             lia.util.include(directory .. "/" .. v)
         end
     end
-end
-
-function lia.util.getAddress()
-    ErrorNoHalt("lia.util.getAddress() is deprecated, use game.GetIPAddress()\n")
-
-    return game.GetIPAddress()
-end
-
-function lia.util.getAdmins(isSuper)
-    local admins = {}
-
-    for k, v in ipairs(player.GetAll()) do
-        if isSuper then
-            if v:IsSuperAdmin() then
-                admins[#admins + 1] = v
-            end
-        else
-            if v:IsAdmin() then
-                admins[#admins + 1] = v
-            end
-        end
-    end
-
-    return admins
 end
 
 function lia.util.isSteamID(value)

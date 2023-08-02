@@ -78,7 +78,7 @@ function PANEL:Think()
 
 	if key and (self.noAnchor or CurTime() + .4) < CurTime() and self.anchorMode == true then
 		self.anchorMode = false
-		surface.PlaySound(CONFIG.F1MenuLaunchUnanchor)
+		surface.PlaySound(lia.config.F1MenuLaunchUnanchor)
 	end
 
 	if not self.anchorMode then
@@ -108,7 +108,7 @@ function PANEL:addTab(name, callback, uniqueID)
 
 	local function paintTab(tab, w, h)
 		if self.activeTab == tab then
-			surface.SetDrawColor(ColorAlpha(CONFIG.Color, 200))
+			surface.SetDrawColor(ColorAlpha(lia.config.Color, 200))
 			surface.DrawRect(0, h - 8, w, 8)
 		elseif tab.Hovered then
 			surface.SetDrawColor(0, 0, 0, 50)

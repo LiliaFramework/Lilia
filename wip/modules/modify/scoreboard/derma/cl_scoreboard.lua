@@ -38,7 +38,7 @@ function PANEL:Init()
     end
 
     lia.gui.score = self
-    self:SetSize(ScrW() * CONFIG.sbWidth, ScrH() * CONFIG.sbHeight)
+    self:SetSize(ScrW() * lia.config.sbWidth, ScrH() * lia.config.sbHeight)
     self:Center()
     self.title = self:Add("DLabel")
     self.title:SetText(GetHostName())
@@ -129,7 +129,7 @@ end
 
 function PANEL:Think()
     if (self.nextUpdate or 0) < CurTime() then
-        self.title:SetText(CONFIG.sbTitle)
+        self.title:SetText(lia.config.sbTitle)
         local visible, amount
 
         for k, v in ipairs(self.teams) do

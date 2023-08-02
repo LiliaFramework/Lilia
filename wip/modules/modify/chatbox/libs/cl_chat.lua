@@ -44,8 +44,8 @@ function MODULE:ChatText(index, name, text, messageType)
     if messageType == "none" and IsValid(self.panel) then
         self.panel:addText(text)
 
-        if CONFIG.CustomChatSound and CONFIG.CustomChatSound ~= "" then
-            surface.PlaySound(CONFIG.CustomChatSound)
+        if lia.config.CustomChatSound and lia.config.CustomChatSound ~= "" then
+            surface.PlaySound(lia.config.CustomChatSound)
         else
             chat.PlaySound()
         end

@@ -1,5 +1,3 @@
-lia.data = lia.data or {}
-lia.data.stored = lia.data.stored or {}
 file.CreateDir("lilia")
 
 function lia.data.set(key, value, global, ignoreMap)
@@ -64,7 +62,8 @@ function lia.data.delete(key, global, ignoreMap)
     end
 end
 
-timer.Create("liaSaveData", 600, 0, function()
+timer.Create("liaSaveData", lia.config.DataSaveInterval, 0, function()
     hook.Run("SaveData")
     hook.Run("PersistenceSave")
 end)
+

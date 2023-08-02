@@ -1,8 +1,5 @@
 local playerMeta = FindMetaTable("Player")
 
--- I suggest you to follow the Lilia Coding Rules.
--- This is just for the DarkRP things mate.
--- trust me, you're going to use character class a lot if you're going to make something with Lilia.
 function playerMeta:AddMoney(amt)
     local char = self:getChar()
 

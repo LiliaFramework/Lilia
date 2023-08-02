@@ -1,56 +1,14 @@
--- @module lia.playerInteract
--- @moduleCommentStart
--- player interaction menu library
--- @moduleCommentEnd
-
-lia.playerInteract = lia.playerInteract or {}
-lia.playerInteract.funcs = {}
-
--- Current entity focused by player interaction
-lia.playerInteract.currentEnt = nil
-
--- Time when interaction menu should open
 local interactPressTime = 0
 local cachedPitch = 0
 local isInteracting = false
 local interfaceScale = 0
 local selectedFunction = nil
 
---[[
-@type function lia.playerInteract.addFunc(name, data)
-@typeCommentStart
-Adding a player interaction button
-@typeCommentEnd
-@realm client
-@string name Name of interact function
-@table data Data for interaction button callback
-@usageStart
-lia.playerInteract.addFunc("recognize", {
-	nameLocalized = "recognize",
-	callback = function(target)
-		netstream.Start("rgnDirect", target)
-	end,
-	canSee = function(target)
-		return true
-	end
-})
-@usageEnd
-]]
+
 function lia.playerInteract.addFunc(name, data)
     lia.playerInteract.funcs[name] = data
 end
 
--- @type function lia.playerInteract.interact(entity, time)
--- @typeCommentStart
--- reproduce the interaction with the player
--- @typeCommentEnd
--- @realm client
--- @entity entity Entity to interact with
--- @number time The time it takes to open the menu
--- @internal
--- @usageStart
--- lia.playerInteract.interact(entity, CONFIG.PlayerInteractSpeed)
--- @usageEnd
 function lia.playerInteract.interact(entity, time)
     lia.playerInteract.currentEnt = entity
 
@@ -59,19 +17,6 @@ function lia.playerInteract.interact(entity, time)
     isInteracting = true
 end
 
--- @type function lia.playerInteract.clear()
--- @typeCommentStart
--- remove player interaction menu
--- @typeCommentEnd
--- @realm client
--- @internal
--- @usageStart
--- hook.Add("KeyRelease", "lia.playerInteract", function(client, key)
---    if (key == IN_USE and isInteracting) then
---        lia.playerInteract.clear()
---    end
--- end)
--- @usageEnd
 function lia.playerInteract.clear()
     isInteracting = false
     cachedPitch = 0
@@ -83,7 +28,7 @@ hook.Add("KeyPress", "lia.playerInteract", function(client, key)
 
     local entity = client:GetEyeTrace().Entity
     if (entity:IsPlayer()) then
-        lia.playerInteract.interact(entity, CONFIG.PlayerInteractSpeed)
+        lia.playerInteract.interact(entity, lia.config.PlayerInteractSpeed)
     end
 end)
 

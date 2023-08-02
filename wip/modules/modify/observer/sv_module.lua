@@ -1,8 +1,3 @@
--- Log observer usage
-function MODULE:OnPlayerObserve(client, state)
-    lia.log.add(client, (state and "observerEnter") or "observerExit")
-end
-
 function MODULE:PlayerNoClip(client, state)
     -- Observer mode is reserved for administrators.
     if client:IsAdmin() or client:getChar():getFaction() == FACTION_STAFF then

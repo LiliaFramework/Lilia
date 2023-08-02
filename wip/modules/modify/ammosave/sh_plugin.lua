@@ -2,7 +2,6 @@ MODULE.name = "Ammo Saver"
 MODULE.author = "Leonheart#7476/Black Tea"
 MODULE.desc = "Saves the ammo of a character."
 MODULE.ammoList = {}
-lia.ammo = lia.ammo or {}
 
 function lia.ammo.register(name)
     table.insert(MODULE.ammoList, name)

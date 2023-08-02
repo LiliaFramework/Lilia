@@ -14,9 +14,9 @@ function SKIN:PaintFrame(panel)
     lia.util.drawBlur(panel, 10)
     surface.SetDrawColor(45, 45, 45, 200)
     surface.DrawRect(0, 0, panel:GetWide(), panel:GetTall())
-    surface.SetDrawColor(CONFIG.Color)
+    surface.SetDrawColor(lia.config.Color)
     surface.DrawRect(0, 0, panel:GetWide(), 24)
-    surface.SetDrawColor(CONFIG.Color)
+    surface.SetDrawColor(lia.config.Color)
     surface.DrawOutlinedRect(0, 0, panel:GetWide(), panel:GetTall())
 end
 

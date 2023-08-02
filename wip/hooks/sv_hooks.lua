@@ -32,7 +32,6 @@ function GM:SetupBotInventory(client, character)
     lia.inventory.instances[inventory.id] = inventory
 end
 
--- When the player first joins, send all important Lilia data.
 function GM:PlayerInitialSpawn(client)
     client.liaJoinTime = RealTime()
     if client:IsBot() then return hook.Run("SetupBotCharacter", client) end
@@ -52,7 +51,6 @@ function GM:PlayerInitialSpawn(client)
         hook.Run("PlayerLiliaDataLoaded", client)
     end)
 
-    -- Allow other things to use PlayerInitialSpawn via a hook that runs later.
     hook.Run("PostPlayerInitialSpawn", client)
 end
 
@@ -198,7 +196,7 @@ function GM:CharacterLoaded(id)
         if IsValid(client) then
             local uniqueID = "liaSaveChar" .. client:SteamID()
 
-            timer.Create(uniqueID, CONFIG.SaveInterval, 0, function()
+            timer.Create(uniqueID, lia.config.CharacterSaveInterval, 0, function()
                 if IsValid(client) and client:getChar() then
                     client:getChar():save()
                 else
@@ -213,7 +211,6 @@ function GM:PlayerSay(client, message)
     local chatType, message, anonymous = lia.chat.parse(client, message, true)
     if (chatType == "ic") and lia.command.parse(client, message) then return "" end
     lia.chat.send(client, chatType, message, anonymous)
-    lia.log.add(client, "chat", chatType and chatType:upper() or "??", message)
     hook.Run("PostPlayerSay", client, message, chatType, anonymous)
 
     return ""
@@ -222,7 +219,7 @@ end
 function GM:PlayerSpawn(client)
     local character = client:getChar()
 
-    if CONFIG.PKActive and character and character:getData("permakilled") then
+    if lia.config.PKActive and character and character:getData("permakilled") then
         character:ban()
     end
 
@@ -233,72 +230,7 @@ function GM:PlayerSpawn(client)
     hook.Run("PlayerLoadout", client)
 end
 
--- Called when weapons should be given to a player.
-function GM:PlayerLoadout(client)
-    if client.liaSkipLoadout then
-        client.liaSkipLoadout = nil
-
-        return
-    end
-
-    client:SetWeaponColor(Vector(client:GetInfo("cl_weaponcolor")))
-    client:StripWeapons()
-    client:setLocalVar("blur", nil)
-    local character = client:getChar()
-
-    -- Check if they have loaded a character.
-    if character then
-        client:SetupHands()
-        -- Set their player model to the character's model.
-        client:SetModel(character:getModel())
-        client:Give("lia_hands")
-
-        client:SetWalkSpeed(CONFIG.WalkSpeed)
-        client:SetRunSpeed(CONFIG.RunSpeed)
-        local faction = lia.faction.indices[client:Team()]
-
-        if faction then
-            -- If their faction wants to do something when the player spawns, let it.
-            if faction.onSpawn then
-                faction:onSpawn(client)
-            end
-
-            -- If the faction has default weapons, give them to the player.
-            if faction.weapons then
-                for _, v in ipairs(faction.weapons) do
-                    client:Give(v)
-                end
-            end
-        end
-
-        -- Ditto, but for classes.
-        local class = lia.class.list[client:getChar():getClass()]
-
-        if class then
-            if class.onSpawn then
-                class:onSpawn(client)
-            end
-
-            if class.weapons then
-                for _, v in ipairs(class.weapons) do
-                    client:Give(v)
-                end
-            end
-        end
-
-        -- Apply any flags as needed.
-        lia.flag.onSpawn(client)
-        hook.Run("PostPlayerLoadout", client)
-        client:SelectWeapon("lia_hands")
-    else
-        client:SetNoDraw(true)
-        client:Lock()
-        client:SetNotSolid(true)
-    end
-end
-
 function GM:PostPlayerLoadout(client)
-    -- Reload All Attrib Boosts
     local char = client:getChar()
 
     if char:getInv() then
@@ -324,19 +256,15 @@ function GM:PlayerDeath(client, inflictor, attacker)
             client:setLocalVar("blur", nil)
         end
 
-        if CONFIG.PKActive then
-            if not (CONFIG.PKWorld and (client == attacker or inflictor:IsWorld())) then return end
+        if lia.config.PKActive then
+            if not (lia.config.PKWorld and (client == attacker or inflictor:IsWorld())) then return end
             character:setData("permakilled", true)
         end
 
         char:setData("deathPos", client:GetPos())
         client:setNetVar("deathStartTime", CurTime())
-        client:setNetVar("deathTime", CurTime() + CONFIG.SpawnTime
+        client:setNetVar("deathTime", CurTime() + lia.config.SpawnTime
     end
-end
-
-function GM:PlayerHurt(client, attacker, health, damage)
-    lia.log.add(client, "playerHurt", attacker:IsPlayer() and attacker:Name() or attacker:GetClass(), damage, health)
 end
 
 function GM:PlayerDeathThink(client)
@@ -364,7 +292,6 @@ function GM:PlayerDisconnected(client)
             end
         end
 
-        lia.log.add(client, "playerDisconnected")
         hook.Run("OnCharDisconnect", client, character)
         character:save()
     end
@@ -376,10 +303,6 @@ function GM:PlayerDisconnected(client)
     end
 
     lia.char.cleanUpForPlayer(client)
-end
-
-function GM:PlayerAuthed(client, steamID, uniqueID)
-    lia.log.add(client, "playerConnected", client, steamID)
 end
 
 function GM:InitPostEntity()
@@ -442,7 +365,7 @@ function GM:InitializedSchema()
 end
 
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
-    local allowVoice = CONFIG.AllowVoice
+    local allowVoice = lia.config.AllowVoice
 
     if allowVoice then
         if hook.Run("PlayerCanHearPlayersVoiceTalker", listener, speaker) then
@@ -460,13 +383,10 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
 end
 
 function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
-    -- Object is already frozen (!?)
     if not physObj:IsMoveable() then return false end
     if entity:GetUnFreezable() then return false end
     physObj:EnableMotion(false)
 
-    -- With the jeep we need to pause all of its physics objects
-    -- to stop it spazzing out and killing the server.
     if entity:GetClass() == "prop_vehicle_jeep" then
         local objects = entity:GetPhysicsObjectCount()
 
@@ -475,7 +395,6 @@ function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
         end
     end
 
-    -- Add it to the player's frozen props
     client:AddFrozenPhysicsObject(entity, physObj)
     client:SendHint("PhysgunUnfreeze", 0.3)
     client:SuppressHint("PhysgunFreeze")
@@ -492,7 +411,6 @@ function GM:AllowPlayerPickup(client, entity)
 end
 
 function GM:PreCleanupMap()
-    -- Pretend like we're shutting down so stuff gets saved properly.
     lia.shuttingDown = true
     hook.Run("SaveData")
     hook.Run("PersistenceSave")
@@ -505,7 +423,6 @@ function GM:PostCleanupMap()
 end
 
 function GM:PrePlayerLoadedChar(client, character, lastChar)
-    -- Remove all skins
     client:SetBodyGroups("000000000")
     client:SetSkin(0)
 end
@@ -521,15 +438,6 @@ function GM:CharacterPreSave(character)
     end
 end
 
-function GM:OnServerLog(client, logType, ...)
-    for _, v in pairs(lia.util.getAdmins()) do
-        if hook.Run("CanPlayerSeeLog", v, logType) ~= false then
-            lia.log.send(v, lia.log.getString(client, logType, ...))
-        end
-    end
-end
-
--- this table is based on mdl's prop keyvalue data. FIX IT WILLOX!
 local defaultAngleData = {
     ["models/items/car_battery01.mdl"] = Angle(-15, 180, 0),
     ["models/props_junk/harpoon002a.mdl"] = Angle(0, 0, 0),
@@ -545,7 +453,7 @@ function GM:GetPreferredCarryAngles(entity)
 
         if itemTable then
             local preferedAngle = itemTable.preferedAngle
-            if preferedAngle then return preferedAngle end -- I don't want to return something
+            if preferedAngle then return preferedAngle end
         end
     elseif class == "prop_physics" then
         local model = entity:GetModel():lower()

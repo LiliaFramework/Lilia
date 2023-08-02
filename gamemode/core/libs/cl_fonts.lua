@@ -1,6 +1,6 @@
 function GM:LoadLiliaFonts(font, genericFont)
     local oldFont, oldGenericFont = font, genericFont
-    local scale = math.Round(CONFIG.FontScale, 2)
+    local scale = math.Round(lia.config.FontScale, 2)
 
     surface.CreateFont("AFKKick25", {
         font = "Roboto",
@@ -15,28 +15,28 @@ function GM:LoadLiliaFonts(font, genericFont)
     })
 
     surface.CreateFont("liaIntroTitleFont", {
-        font = CONFIG.IntroFont,
+        font = lia.config.IntroFont,
         size = 200,
         extended = true,
         weight = 1000
     })
 
     surface.CreateFont("liaIntroBigFont", {
-        font = CONFIG.IntroFont,
+        font = lia.config.IntroFont,
         size = 48,
         extended = true,
         weight = 1000
     })
 
     surface.CreateFont("liaIntroMediumFont", {
-        font = CONFIG.IntroFont,
+        font = lia.config.IntroFont,
         size = 28,
         extended = true,
         weight = 1000
     })
 
     surface.CreateFont("liaIntroSmallFont", {
-        font = CONFIG.IntroFont,
+        font = lia.config.IntroFont,
         size = 22,
         extended = true,
         weight = 1000

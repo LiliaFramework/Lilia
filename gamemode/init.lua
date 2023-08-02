@@ -23,7 +23,6 @@ timer.Simple(0, function()
 
     lia.db.connect(function()
         lia.db.loadTables()
-        lia.log.loadTables()
         MsgC(Color(0, 255, 0), "Lilia has connected to the database.\n")
         MsgC(Color(0, 255, 0), "Database Type: " .. lia.db.module .. ".\n")
         hook.Run("DatabaseConnected")

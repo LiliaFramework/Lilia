@@ -1,13 +1,8 @@
-lia.class = lia.class or {}
-lia.class.list = {}
 
--- Register classes from a directory.
+
 function lia.class.loadFromDir(directory)
-    -- Search the directory for .lua files.
     for k, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
-        -- Get the name without the "sh_" prefix and ".lua" suffix.
         local niceName = v:sub(4, -5)
-        -- Determine a numeric identifier for this class.
         local index = #lia.class.list + 1
         local halt
 
@@ -19,53 +14,43 @@ function lia.class.loadFromDir(directory)
 
         if halt == true then continue end
 
-        -- Set up a global table so the file has access to the class table.
         CLASS = {
             index = index,
             uniqueID = niceName
         }
 
-        -- Define some default variables.
         CLASS.name = "Unknown"
         CLASS.desc = "No description available."
         CLASS.limit = 0
 
-        -- For future use with Modules.
         if MODULE then
             CLASS.module = MODULE.uniqueID
         end
 
-        -- Include the file so data can be modified.
         lia.util.include(directory .. "/" .. v, "shared")
 
-        -- Why have a class without a faction?
         if not CLASS.faction or not team.Valid(CLASS.faction) then
             ErrorNoHalt("Class '" .. niceName .. "' does not have a valid faction!\n")
             CLASS = nil
             continue
         end
 
-        -- Allow classes to be joinable by default.
         if not CLASS.onCanBe then
             CLASS.onCanBe = function(client)
                 return true
             end
         end
 
-        -- Add the class to the list of classes.
         lia.class.list[index] = CLASS
-        -- Remove the global variable to prevent conflict.
         CLASS = nil
     end
 end
 
--- Determines if a player is allowed to join a specific class.
 function lia.class.canBe(client, class)
-    -- Get the class table by its numeric identifier.
     local info = lia.class.list[class]
-    -- See if the class exists.
+
     if not info then return false, "no info" end
-    -- If the player's faction matches the class's faction.
+
     if client:Team() ~= info.faction then return false, "not correct team" end
     if client:getChar():getClass() == class then return false, "same class request" end
 
@@ -74,7 +59,6 @@ function lia.class.canBe(client, class)
     end
 
     if hook.Run("CanPlayerJoinClass", client, class, info) == false then return false end
-    -- See if the class allows the player to join it.
 
     return info:onCanBe(client)
 end
@@ -102,7 +86,6 @@ local charMeta = lia.meta.character
 function charMeta:joinClass(class, isForced)
     if not class then
         self:kickClass()
-
         return
     end
 
@@ -112,7 +95,6 @@ function charMeta:joinClass(class, isForced)
     if isForced or lia.class.canBe(client, class) then
         self:setClass(class)
         hook.Run("OnPlayerJoinClass", client, class, oldClass)
-
         return true
     else
         return false
@@ -133,18 +115,6 @@ function charMeta:kickClass()
 
     self:joinClass(goClass)
     hook.Run("OnPlayerJoinClass", client, goClass)
-end
-
-function charMeta:JoinClass(class, isForced)
-    self:joinClass(class, isForced)
-end
-
-function charMeta:KickClass()
-    self:kickClass()
-end
-
-function GM:PlayerJoinedClass(client, class, oldClass)
-    self:OnPlayerJoinClass(client, class, oldClass)
 end
 
 function GM:OnPlayerJoinClass(client, class, oldClass)

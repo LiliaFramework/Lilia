@@ -1,7 +1,7 @@
 local GM = GM or Gamemode or gamemode or {}
 
 function GM:OnPickupMoney(client, moneyEntity)
-    if not CONFIG.CentsCompatibility then return end
+    if not lia.config.CentsCompatibility then return end
 
     if moneyEntity and moneyEntity:IsValid() then
         local amount = moneyEntity:getAmount()
@@ -11,7 +11,7 @@ function GM:OnPickupMoney(client, moneyEntity)
 end
 
 function MODULE:InitializedModules()
-    if not CONFIG.CentsCompatibility then return end
+    if not lia.config.CentsCompatibility then return end
 
     lia.command.list.dropmoney.onRun = function(client, arguments)
         local amount = tonumber(arguments[1])

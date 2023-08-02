@@ -5,7 +5,7 @@ function MODULE:CharacterLoaded(character)
         local timeRemaining = self:GetTimeToRestart()
         local timeRemainingInMinutes = timeRemaining / 60
 
-        if timeRemainingInMinutes < CONFIG.TimeRemainingTable[1] then
+        if timeRemainingInMinutes < lia.config.TimeRemainingTable[1] then
             self:NotifyServerRestart(character:GetPlayer(), self:GetTimeToRestart())
         end
     end)
@@ -13,7 +13,7 @@ end
 
 function MODULE:GetTimeToRestart()
     local time = os.time()
-    time = CONFIG.NextRestart - time
+    time = lia.config.NextRestart - time
 
     return time
 end
@@ -44,41 +44,41 @@ end
 function MODULE:GetInitialNotificationTime()
     local nextBreakpoint = self:GetNextNotificationTimeBreakpoint()
 
-    return CONFIG.NextRestart - nextBreakpoint
+    return lia.config.NextRestart - nextBreakpoint
 end
 
 function MODULE:GetNextNotificationTimeBreakpoint()
     local timeMinutes = self:GetTimeToRestart() / 60
 
-    for i = 1, #CONFIG.TimeRemainingTable do
-        if timeMinutes >= CONFIG.TimeRemainingTable[i] then return CONFIG.TimeRemainingTable[i] * 60 end -- convert back to seconds
+    for i = 1, #lia.config.TimeRemainingTable do
+        if timeMinutes >= lia.config.TimeRemainingTable[i] then return lia.config.TimeRemainingTable[i] * 60 end -- convert back to seconds
     end
 end
 
 function MODULE:Think()
-    if CONFIG.IsRestarting == true then return end
+    if lia.config.IsRestarting == true then return end
 
-    if CONFIG.NextRestart == 0 then
-        CONFIG.NextRestart = self:GetInitialRestartTime()
-        CONFIG.NextNotificationTime = self:GetInitialNotificationTime()
+    if lia.config.NextRestart == 0 then
+        lia.config.NextRestart = self:GetInitialRestartTime()
+        lia.config.NextNotificationTime = self:GetInitialNotificationTime()
 
         return
     end
 
     local time = os.time()
 
-    if time > CONFIG.NextNotificationTime or time > CONFIG.NextRestart then
+    if time > lia.config.NextNotificationTime or time > lia.config.NextRestart then
         local nextBreakpoint = self:GetNextNotificationTimeBreakpoint()
 
         if not nextBreakpoint then
-            CONFIG.IsRestarting = true
+            lia.config.IsRestarting = true
             RunConsoleCommand("changelevel", game.GetMap())
         else
             for _, v in pairs(player.GetAll()) do
                 self:NotifyServerRestart(v, self:GetTimeToRestart())
             end
 
-            CONFIG.NextNotificationTime = CONFIG.NextRestart - nextBreakpoint
+            lia.config.NextNotificationTime = lia.config.NextRestart - nextBreakpoint
         end
     end
 end

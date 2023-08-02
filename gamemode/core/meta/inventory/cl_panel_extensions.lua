@@ -4,7 +4,6 @@ function PANEL:liaListenForInventoryChanges(inventory)
     self:liaListenForInventoryChanges(inventory)
 end
 
--- Make it so the panel hooks below run when the inventory hooks do.
 function PANEL:liaListenForInventoryChanges(inventory)
     self:liaListenForInventoryChanges(inventory)
 end
@@ -12,7 +11,6 @@ end
 function PANEL:liaListenForInventoryChanges(inventory)
     assert(inventory, "No inventory has been set!")
     local id = inventory:getID()
-    -- Clean up old hooks
     self:liaDeleteInventoryHooks(id)
     _LIA_INV_PANEL_ID = (_LIA_INV_PANEL_ID or 0) + 1
     local hookID = "liaInventoryListener" .. _LIA_INV_PANEL_ID
@@ -21,8 +19,6 @@ function PANEL:liaListenForInventoryChanges(inventory)
     self.liaToRemoveHooks = self.liaToRemoveHooks or {}
     self.liaToRemoveHooks[id] = {}
 
-    -- For each relevant inventory/item hook, add a listener that will
-    -- trigger the associated panel hook.
     local function listenForInventoryChange(name, panelHook)
         panelHook = panelHook or name
 
@@ -31,7 +27,6 @@ function PANEL:liaListenForInventoryChanges(inventory)
             if not isfunction(self[panelHook]) then return end
 
             local args = {...}
-
             args[#args + 1] = inventory
             self[panelHook](self, unpack(args))
 
@@ -62,12 +57,9 @@ function PANEL:liaDeleteInventoryHooks(id)
     self:liaDeleteInventoryHooks(id)
 end
 
--- Cleans up all the hooks created by listenForInventoryChanges()
 function PANEL:liaDeleteInventoryHooks(id)
-    -- If there are no hooks added, do nothing.
     if not self.liaHookID then return end
 
-    -- If id is not set, delete all hooks.
     if id == nil then
         for invID, hookIDs in pairs(self.liaToRemoveHooks) do
             for i = 1, #hookIDs do
@@ -82,7 +74,6 @@ function PANEL:liaDeleteInventoryHooks(id)
         return
     end
 
-    -- If id is set, delete the hooks corresponding to that ID.
     if not self.liaHookID[id] then return end
 
     for i = 1, #self.liaToRemoveHooks[id] do
@@ -92,11 +83,9 @@ function PANEL:liaDeleteInventoryHooks(id)
     self.liaToRemoveHooks[id] = nil
 end
 
--- Make it so the panel hooks below run when the inventory hooks do.
 function PANEL:ixListenForInventoryChanges(inventory)
     assert(inventory, "No inventory has been set!")
     local id = inventory:getID()
-    -- Clean up old hooks
     self:liaDeleteInventoryHooks(id)
     _LIA_INV_PANEL_ID = (_LIA_INV_PANEL_ID or 0) + 1
     local hookID = "liaInventoryListener" .. _LIA_INV_PANEL_ID
@@ -105,8 +94,6 @@ function PANEL:ixListenForInventoryChanges(inventory)
     self.liaToRemoveHooks = self.liaToRemoveHooks or {}
     self.liaToRemoveHooks[id] = {}
 
-    -- For each relevant inventory/item hook, add a listener that will
-    -- trigger the associated panel hook.
     local function listenForInventoryChange(name, panelHook)
         panelHook = panelHook or name
 
@@ -115,7 +102,6 @@ function PANEL:ixListenForInventoryChanges(inventory)
             if not isfunction(self[panelHook]) then return end
 
             local args = {...}
-
             args[#args + 1] = inventory
             self[panelHook](self, unpack(args))
 
@@ -142,12 +128,9 @@ function PANEL:ixListenForInventoryChanges(inventory)
     table.insert(self.liaToRemoveHooks[id], "ItemDataChanged")
 end
 
--- Cleans up all the hooks created by listenForInventoryChanges()
 function PANEL:ixDeleteInventoryHooks(id)
-    -- If there are no hooks added, do nothing.
     if not self.liaHookID then return end
 
-    -- If id is not set, delete all hooks.
     if id == nil then
         for invID, hookIDs in pairs(self.liaToRemoveHooks) do
             for i = 1, #hookIDs do
@@ -162,7 +145,6 @@ function PANEL:ixDeleteInventoryHooks(id)
         return
     end
 
-    -- If id is set, delete the hooks corresponding to that ID.
     if not self.liaHookID[id] then return end
 
     for i = 1, #self.liaToRemoveHooks[id] do

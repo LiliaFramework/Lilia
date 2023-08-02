@@ -66,7 +66,7 @@ LIA_MODULES_ALREADY_LOADED = false
 
 function GM:OnReloaded()
     if CLIENT then
-        hook.Run("LoadLiliaFonts", CONFIG.Font, CONFIG.GenericFont)
+        hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
     else
         for _, client in ipairs(player.GetAll()) do
             hook.Run("CreateSalaryTimer", client)

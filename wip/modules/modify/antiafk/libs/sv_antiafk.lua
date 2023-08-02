@@ -27,23 +27,23 @@ end
 
 MODULE.TimerInterval = 1
 
-if CONFIG.MODULEEnabled then
+if lia.config.MODULEEnabled then
 	timer.Create("AFKTimer", MODULE.TimerInterval, 0, function()
 		local plyCount = player.GetCount()
 		local maxPlayers = game.MaxPlayers()
 
 		for _, ply in ipairs(player.GetAll()) do
 			if not ply:getChar() and plyCount < maxPlayers then continue end
-			if CONFIG.AllowedPlayers[ply:SteamID()] or ply:IsBot() then continue end
+			if lia.config.AllowedPlayers[ply:SteamID()] or ply:IsBot() then continue end
 			ply.AFKTime = (ply.AFKTime or 0) + MODULE.TimerInterval
 
-			if ply.AFKTime >= CONFIG.WarningTime and not ply.HasWarning then
+			if ply.AFKTime >= lia.config.WarningTime and not ply.HasWarning then
 				MODULE.WarnPlayer(ply)
 			end
 
-			if ply.AFKTime >= CONFIG.WarningTime + CONFIG.KickTime then
+			if ply.AFKTime >= lia.config.WarningTime + lia.config.KickTime then
 				if plyCount >= maxPlayers then
-					ply:Kick(CONFIG.KickMessage)
+					ply:Kick(lia.config.KickMessage)
 				elseif ply:getChar() then
 					MODULE.CharKick(ply)
 				end

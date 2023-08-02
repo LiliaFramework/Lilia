@@ -1,6 +1,4 @@
-lia.bar = lia.bar or {}
-lia.bar.list = {}
-lia.bar.delta = lia.bar.delta or {}
+
 lia.bar.actionText = ""
 lia.bar.actionStart = 0
 lia.bar.actionEnd = 0
@@ -88,7 +86,7 @@ function lia.bar.drawAction()
 			surface.DrawRect(x, y, w, h)
 			surface.SetDrawColor(0, 0, 0, 120)
 			surface.DrawOutlinedRect(x, y, w, h)
-			surface.SetDrawColor(CONFIG.Color)
+			surface.SetDrawColor(lia.config.Color)
 			surface.DrawRect(x + 4, y + 4, (w * fraction) - 8, h - 8)
 			surface.SetDrawColor(200, 200, 200, 20)
 			surface.SetMaterial(gradient2)

@@ -1,6 +1,4 @@
 function lia.item.instance(index, uniqueID, itemData, x, y, callback)
-	-- New overload: lia.item.instance(itemType, itemData = {})
-	-- which returns a promise that resolves to the item instance
 	if isstring(index) and (istable(uniqueID) or (itemData == nil and x == nil)) then
 		itemData = uniqueID
 		uniqueID = index
@@ -11,7 +9,6 @@ function lia.item.instance(index, uniqueID, itemData, x, y, callback)
 
 	if not itemTable then
 		d:reject("Attempt to instantiate invalid item " .. tostring(uniqueID))
-
 		return d
 	end
 
@@ -19,8 +16,6 @@ function lia.item.instance(index, uniqueID, itemData, x, y, callback)
 		itemData = {}
 	end
 
-	-- Legacy support for x, y data: have the x, y data save to the correct
-	-- x, y column instead of the data column
 	if isnumber(itemData.x) then
 		x = itemData.x
 		itemData.x = nil
@@ -37,7 +32,6 @@ function lia.item.instance(index, uniqueID, itemData, x, y, callback)
 		if item then
 			item.data = itemData
 			item.invID = index
-			-- Legacy support for x, y data: add it back to the data for use
 			item.data.x = x
 			item.data.y = y
 			item.quantity = itemTable.maxQuantity
@@ -102,7 +96,6 @@ function lia.item.loadItemByID(itemIndex, recipientFilter)
 					local item = lia.item.new(uniqueID, itemID)
 					item.invID = 0
 					item.data = data or {}
-					-- Legacy support for x, y data
 					item.data.x = tonumber(v._x)
 					item.data.y = tonumber(v._y)
 					item.quantity = tonumber(v._quantity)
@@ -113,12 +106,10 @@ function lia.item.loadItemByID(itemIndex, recipientFilter)
 	end)
 end
 
--- Instances and spawns a given item type.
 function lia.item.spawn(uniqueID, position, callback, angles, data)
 	local d
 
 	if not isfunction(callback) then
-		-- Promise returning overload (uniqueID, position[, angles, data])
 		if type(callback) == "Angle" or istable(angles) then
 			angles = callback
 			data = angles

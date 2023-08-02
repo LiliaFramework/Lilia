@@ -6,7 +6,7 @@ ENT.Spawnable = false
 
 if SERVER then
     function ENT:Initialize()
-        self:SetModel(hook.Run("GetMoneyModel", self:getAmount()) or CONFIG.MoneyModel)
+        self:SetModel(hook.Run("GetMoneyModel", self:getAmount()) or lia.config.MoneyModel)
         self:SetSolid(SOLID_VPHYSICS)
         self:PhysicsInit(SOLID_VPHYSICS)
         self:SetUseType(SIMPLE_USE)
@@ -45,7 +45,7 @@ else
     function ENT:onDrawEntityInfo(alpha)
         local position = toScreen(self:LocalToWorld(self:OBBCenter()))
         local x, y = position.x, position.y
-        drawText(lia.currency.get(self:getAmount()), x, y, colorAlpha(CONFIG.Color), 1, 1, nil, alpha * 0.65)
+        drawText(lia.currency.get(self:getAmount()), x, y, colorAlpha(lia.config.Color), 1, 1, nil, alpha * 0.65)
     end
 end
 

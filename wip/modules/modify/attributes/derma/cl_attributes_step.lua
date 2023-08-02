@@ -7,7 +7,7 @@ function PANEL:Init()
 	self.title = self:addLabel("attributes")
 	self.leftLabel = self:addLabel("points left")
 	self.leftLabel:SetFont("liaCharSubTitleFont")
-	self.total = hook.Run("GetStartAttribPoints", LocalPlayer(), self:getContext()) or CONFIG.MaxAttributes
+	self.total = hook.Run("GetStartAttribPoints", LocalPlayer(), self:getContext()) or lia.config.MaxAttributes
 	self.attribs = {}
 
 	for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
@@ -106,7 +106,7 @@ function PANEL:delta(delta)
 		self:updateQuantity()
 
 		if oldPoints ~= self.points then
-			LocalPlayer():EmitSound(unpack(CONFIG.CharAttrib))
+			LocalPlayer():EmitSound(unpack(lia.config.CharAttrib))
 		end
 	end
 end

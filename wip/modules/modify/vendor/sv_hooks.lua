@@ -115,7 +115,6 @@ function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
             vendor:addStock(itemType)
         end
 
-        lia.log.add(client, "vendorSell", itemType, vendor:getNetVar("name"))
     else
         vendor:giveMoney(price)
         character:takeMoney(price)
@@ -138,7 +137,6 @@ function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
             client.vendorTransaction = nil
         end)
 
-        lia.log.add(client, "vendorBuy", itemType, vendor:getNetVar("name"))
     end
 end
 

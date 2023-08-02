@@ -59,7 +59,7 @@ function PANEL:Init()
 		local barWidth = w * value
 
 		if value > 0 then
-			local color = CONFIG.Color
+			local color = lia.config.Color
 			-- your stat
 			surface.SetDrawColor(color)
 			surface.DrawRect(0, 0, barWidth, h)

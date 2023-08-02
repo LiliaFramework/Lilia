@@ -1,6 +1,5 @@
 local ITEM = lia.meta.item
 
--- Dev Buddy. You don't have to print the item data with PrintData();
 function ITEM:print(detail)
     if detail == true then
         print(Format("%s[%s]: >> [%s](%s,%s)", self.uniqueID, self.id, self.owner, self.gridX, self.gridY))
@@ -9,7 +8,6 @@ function ITEM:print(detail)
     end
 end
 
--- Dev Buddy, You don't have to make another function to print the item Data.
 function ITEM:printData()
     self:print(true)
     print("ITEM DATA:")
@@ -19,7 +17,6 @@ function ITEM:printData()
     end
 end
 
--- Dev Buddy. You don't have to print the item data with PrintData();
 function ITEM:Print(detail)
     if detail == true then
         print(Format("%s[%s]: >> [%s](%s,%s)", self.uniqueID, self.id, self.owner, self.gridX, self.gridY))
@@ -28,9 +25,8 @@ function ITEM:Print(detail)
     end
 end
 
--- Dev Buddy, You don't have to make another function to print the item Data.
 function ITEM:PrintData()
-    self:print(true)
+    self:Print(true)
     print("ITEM DATA:")
 
     for k, v in pairs(self.data) do

@@ -36,7 +36,7 @@ function MODULE:OnCharInfoSetup(infoPanel)
     local tree = lia.anim[class]
     if not tree then return end
     local subClass = weapon.HoldType or weapon:GetHoldType()
-    subClass = HOLDTYPE_TRANSLATOR[subClass] or subClass
+    subClass = lia.anim.HoldtypeTranslator[subClass] or subClass
 
     if tree[subClass] and tree[subClass][act] then
         local branch = tree[subClass][act]

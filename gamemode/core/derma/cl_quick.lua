@@ -23,7 +23,7 @@ function PANEL:Init()
     self.title:SetExpensiveShadow(1, Color(0, 0, 0, 175))
 
     self.title.Paint = function(this, w, h)
-        surface.SetDrawColor(CONFIG.Color)
+        surface.SetDrawColor(lia.config.Color)
         surface.DrawRect(0, 0, w, h)
     end
 
@@ -138,7 +138,7 @@ function PANEL:addCheck(text, callback, checked)
         x, y = w - 8, h * 0.5
 
         if this.checked then
-            color = CONFIG.Color
+            color = lia.config.Color
         else
             color = color_dark
         end
@@ -157,7 +157,7 @@ end
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self)
-    surface.SetDrawColor(CONFIG.Color)
+    surface.SetDrawColor(lia.config.Color)
     surface.DrawRect(0, 0, w, 36)
     surface.SetDrawColor(255, 255, 255, 5)
     surface.DrawRect(0, 0, w, h)

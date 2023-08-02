@@ -8,7 +8,6 @@ net.Receive("liaInventoryData", function()
 
     if not instance then
         ErrorNoHalt("Got data " .. key .. " for non-existent instance " .. id)
-
         return
     end
 
@@ -33,7 +32,6 @@ net.Receive("liaInventoryInit", function()
 
     local function readItem(I)
         local c = items[I] -- i
-
         return c.i, c.u, c.d, c.q
     end
 
@@ -112,7 +110,6 @@ net.Receive("ixInventoryData", function()
 
     if not instance then
         ErrorNoHalt("Got data " .. key .. " for non-existent instance " .. id)
-
         return
     end
 
@@ -137,7 +134,6 @@ net.Receive("ixInventoryInit", function()
 
     local function readItem(I)
         local c = items[I] -- i
-
         return c.i, c.u, c.d, c.q
     end
 

@@ -6,8 +6,8 @@ function MODULE.DrawWarning()
 	end
 
 	draw.RoundedBox(0, 0, (ScrH() / 2) - ScreenScale(60), ScrW(), ScreenScale(120), Color(0, 0, 0, MODULE.Alpha))
-	draw.DrawText(CONFIG.WarningHead, "MODULE120", ScrW() * 0.5, (ScrH() * 0.5) - ScreenScale(50), Color(255, 0, 0, MODULE.Alpha), TEXT_ALIGN_CENTER)
-	draw.DrawText(CONFIG.WarningSub .. "\nYou will be kicked in " .. math.floor(math.max(CONFIG.KickTime - (CurTime() - MODULE.WarningStart), 0)) .. "s", "MODULE25", ScrW() * 0.5, ScrH() * 0.5, Color(255, 255, 255, MODULE.Alpha), TEXT_ALIGN_CENTER)
+	draw.DrawText(lia.config.WarningHead, "MODULE120", ScrW() * 0.5, (ScrH() * 0.5) - ScreenScale(50), Color(255, 0, 0, MODULE.Alpha), TEXT_ALIGN_CENTER)
+	draw.DrawText(lia.config.WarningSub .. "\nYou will be kicked in " .. math.floor(math.max(lia.config.KickTime - (CurTime() - MODULE.WarningStart), 0)) .. "s", "MODULE25", ScrW() * 0.5, ScrH() * 0.5, Color(255, 255, 255, MODULE.Alpha), TEXT_ALIGN_CENTER)
 end
 
 function MODULE.EnableWarning()

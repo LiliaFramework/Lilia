@@ -1,7 +1,4 @@
-lia.char = lia.char or {}
-lia.char.loaded = lia.char.loaded or {}
-lia.char.vars = lia.char.vars or {}
-lia.char.names = lia.char.names or {}
+
 
 lia.util.include("lilia/gamemode/core/meta/sh_character.lua")
 lia.util.include("character/cl_networking.lua")
@@ -12,8 +9,6 @@ if (SERVER) then
 		include("sv_database.lua")
 	end
 
-	-- Fetches all the character names and stores
-	-- them into a table so they only have to be fetched once
 	if (#lia.char.names < 1) then
 		lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
 			if (data and #data > 0) then
@@ -24,19 +19,16 @@ if (SERVER) then
 		end)
 	end
 
-	-- Returns the character names
 	netstream.Hook("liaCharFetchNames", function(client)
 		netstream.Start(client, "liaCharFetchNames", lia.char.names)
 	end)
 
-	-- Removes name from table upon character deletion
 	hook.Add("liaCharDeleted", "liaCharRemoveName", function(client, character)
 		lia.char.names[character:getID()] = nil
 
 		netstream.Start(client, "liaCharFetchNames", lia.char.names)
 	end)
 
-	-- Removes name from table upon character deletion
 	hook.Add("OnCharCreated", "liaCharAddName", function(client, character, data)
 		lia.char.names[character:getID()] = data.name
 
@@ -45,7 +37,6 @@ if (SERVER) then
 end
 
 if (CLIENT) then
-	-- Fetch existing character names
 	netstream.Hook("liaCharFetchNames", function(data)
 		lia.char.names = data
 	end)
@@ -57,44 +48,39 @@ end
 
 function lia.char.new(data, id, client, steamID)
 	local character = setmetatable({vars = {}}, lia.meta.character)
-		for k, v in pairs(lia.char.vars) do
-			local value = data[k]
-			if (value == nil) then
-				value = v.default
-				if (istable(value)) then
-					value = table.Copy(value)
-				end
+	for k, v in pairs(lia.char.vars) do
+		local value = data[k]
+		if (value == nil) then
+			value = v.default
+			if (istable(value)) then
+				value = table.Copy(value)
 			end
-			character.vars[k] = value
 		end
+		character.vars[k] = value
+	end
 
-		character.id = id or 0
-		character.player = client
+	character.id = id or 0
+	character.player = client
 
-		if (IsValid(client) or steamID) then
-			character.steamID = IsValid(client)
-				and client:SteamID64()
-				or steamID
-		end
+	if (IsValid(client) or steamID) then
+		character.steamID = IsValid(client) and client:SteamID64() or steamID
+	end
 	return character
 end
 
-lia.char.varHooks = lia.char.varHooks or {}
 function lia.char.hookVar(varName, hookName, func)
 	lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
 
 	lia.char.varHooks[varName][hookName] = func
 end
 
--- Registration of default variables go here.
 do
 	lia.char.registerVar("name", {
 		field = "_name",
 		default = "John Doe",
 		index = 1,
 		onValidate = function(value, data, client)
-			local name, override =
-				hook.Run("GetDefaultCharName", client, data.faction, data)
+			local name, override = hook.Run("GetDefaultCharName", client, data.faction, data)
 			if (isstring(name) and override) then
 				return true
 			end
@@ -102,9 +88,8 @@ do
 				return false, "invalid", "name"
 			end
 
-			local allowExistNames = CONFIG.AllowExistNames
+			local allowExistNames = lia.config.AllowExistNames
 
-			-- Fetch existing character names
 			if (CLIENT and #lia.char.names < 1 and not allowExistNames) then
 				netstream.Start("liaCharFetchNames")
 
@@ -113,8 +98,7 @@ do
 				end)
 			end
 
-			-- Check whether the chosen character name already exists
-			if (not CONFIG.AllowExistNames) then
+			if (not lia.config.AllowExistNames) then
 				for k, v in pairs(lia.char.names) do
 					if (v == value) then
 						return false, "A character with this name already exists."
@@ -125,8 +109,7 @@ do
 			return true
 		end,
 		onAdjust = function(client, data, value, newData)
-			local name, override =
-				hook.Run("GetDefaultCharName", client, data.faction, data)
+			local name, override = hook.Run("GetDefaultCharName", client, data.faction, data)
 			if (isstring(name) and override) then
 				newData.name = name
 			else
@@ -134,11 +117,7 @@ do
 			end
 		end,
 		onPostSetup = function(panel, faction, payload)
-			local name, disabled = hook.Run(
-				"GetDefaultCharName",
-				LocalPlayer(),
-				faction
-			)
+			local name, disabled = hook.Run("GetDefaultCharName", LocalPlayer(), faction)
 
 			if (name) then
 				panel:SetText(name)
@@ -159,7 +138,7 @@ do
 		onValidate = function(value, data)
 			if (noDesc) then return true end
 
-			local minLength = CONFIG.MinDescLen
+			local minLength = lia.config.MinDescLen
 
 			if (not value or #value:gsub("%s", "") < minLength) then
 				return false, "descMinLen", minLength
@@ -181,11 +160,7 @@ do
 			end
 
 			character.vars.model = value
-			netstream.Start(
-				nil, "charSet",
-				"model", character.vars.model,
-				character:getID()
-			)
+			netstream.Start(nil, "charSet", "model", character.vars.model, character:getID())
 			hook.Run("PlayerModelChanged", client, value)
 			hook.Run("OnCharVarChanged", character, "model", oldVar, value)
 		end,
@@ -215,7 +190,7 @@ do
 					end
 					icon.PaintOver = function(this, w, h)
 						if (panel.payload.model == k) then
-							local color = CONFIG.Color
+							local color = lia.config.Color
 
 							surface.SetDrawColor(color.r, color.g, color.b, 200)
 
@@ -299,11 +274,7 @@ do
 			client:SetTeam(value)
 
 			character.vars.faction = faction.uniqueID
-			netstream.Start(
-				nil, "charSet",
-				"faction", character.vars.faction,
-				character:getID()
-			)
+			netstream.Start(nil, "charSet", "faction", character.vars.faction, character:getID())
 			hook.Run("OnCharVarChanged", character, "faction", oldVar, value)
 
 			return true -- Compatability with old version.
@@ -345,12 +316,7 @@ do
 			data[key] = value
 
 			if (not noReplication and IsValid(client)) then
-				netstream.Start(
-					receiver or client,
-					"charData",
-					character:getID(),
-					key, value
-				)
+				netstream.Start(receiver or client, "charData", character:getID(), key, value)
 			end
 
 			character.vars.data = data
@@ -384,10 +350,7 @@ do
 			if (not noReplication and IsValid(client)) then
 				local id
 
-				if (
-					client:getChar() and
-					client:getChar():getID() == character:getID()
-				) then
+				if (client:getChar() and client:getChar():getID() == character:getID()) then
 					id = client:getChar():getID()
 				else
 					id = character:getID()
@@ -417,7 +380,6 @@ do
 	})
 end
 
--- Additions to the player metatable here.
 do
 	local playerMeta = FindMetaTable("Player")
 	playerMeta.steamName = playerMeta.steamName or playerMeta.Name
@@ -430,9 +392,7 @@ do
 	function playerMeta:Name()
 		local character = self.getChar(self)
 
-		return character
-			and character.getName(character)
-			or self.steamName(self)
+		return character and character.getName(character) or self.steamName(self)
 	end
 
 	playerMeta.Nick = playerMeta.Name

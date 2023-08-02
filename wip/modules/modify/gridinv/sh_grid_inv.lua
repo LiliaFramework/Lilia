@@ -27,12 +27,12 @@ end
 
 -- Returns the width of this inverntory.
 function GridInv:getWidth()
-    return self:getData("w", CONFIG.invW)
+    return self:getData("w", lia.config.invW)
 end
 
 -- Returns the height of this inventory.
 function GridInv:getHeight()
-    return self:getData("h", CONFIG.invH)
+    return self:getData("h", lia.config.invH)
 end
 
 -- Returns the width and height of this inventory.

@@ -1,13 +1,5 @@
 local MODULE = MODULE
 
-lia.log.addType("persistedEntity", function(client, entity)
-    return string.format("%s has persisted '%s'.", client:Name(), entity)
-end)
-
-lia.log.addType("unpersistedEntity", function(client, entity)
-    return string.format("%s has removed persistence from '%s'.", client:Name(), entity)
-end)
-
 -- Prevent from picking up persisted entities
 function MODULE:PhysgunPickup(client, entity)
     if entity:getNetVar("persistent", false) then return false end

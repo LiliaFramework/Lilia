@@ -1,6 +1,3 @@
-lia.attribs = lia.attribs or {}
-lia.attribs.list = lia.attribs.list or {}
-
 function lia.attribs.loadFromDir(directory)
 	for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
 		local niceName = v:sub(4, -5)
@@ -41,7 +38,7 @@ do
 
 			if attribute then
 				local attrib = self:getAttribs()
-				attrib[key] = math.min((attrib[key] or 0) + value, attribute.maxValue or CONFIG.MaxAttributes)
+				attrib[key] = math.min((attrib[key] or 0) + value, attribute.maxValue or lia.config.MaxAttributes)
 
 				if IsValid(client) then
 					netstream.Start(client, "attrib", self:getID(), key, attrib[key])

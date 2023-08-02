@@ -13,7 +13,7 @@ function MODULE:GetDisplayedDescription(client)
 end
 
 function MODULE:ShouldAllowScoreboardOverride(client)
-    if CONFIG.RecognitionEnabled then return true end
+    if lia.config.RecognitionEnabled then return true end
 end
 
 function MODULE:GetDisplayedName(client, chatType)

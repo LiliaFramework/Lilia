@@ -1,9 +1,4 @@
 local CONFIG = CONFIG
-
-lia.log.addType("itemSpawned", function(client, itemID)
-    return string.format("%s (%s) has spawned '%s'", client:SteamName(), client:SteamID(), lia.item.list[itemID].name)
-end)
-
 netstream.Hook("liaItemSpawn", function(client, itemID)
     local uniqueID = client:GetUserGroup()
 
@@ -11,9 +6,8 @@ netstream.Hook("liaItemSpawn", function(client, itemID)
         client.itemSpawnCooldown = 0
     end
 
-    if CurTime() > client.itemSpawnCooldown and CONFIG.CanSpawnMenuItems[uniqueID] then
-        client.itemSpawnCooldown = CurTime() + CONFIG.cooldown
-        lia.log.add(client, "itemSpawned", itemID)
+    if CurTime() > client.itemSpawnCooldown and lia.config.CanSpawnMenuItems[uniqueID] then
+        client.itemSpawnCooldown = CurTime() + lia.config.cooldown
         lia.item.spawn(itemID, client:GetShootPos())
     end
 end)

@@ -1,6 +1,3 @@
-lia.inventory = lia.inventory or {}
-lia.inventory.types = {}
-lia.inventory.instances = lia.inventory.instances or {}
 lia.util.include("lilia/gamemode/core/meta/sh_base_inventory.lua")
 
 local function serverOnly(value)
@@ -30,18 +27,14 @@ local function checkType(typeID, struct, expected, prefix)
 	end
 end
 
--- Performs type checking for new inventory types then stores them into
--- lia.inventory.types if there are no errors.
 function lia.inventory.newType(typeID, invTypeStruct)
 	assert(not lia.inventory.types[typeID], "duplicate inventory type " .. typeID)
-	-- Type check the inventory type struct.
 	assert(istable(invTypeStruct), "expected table for argument #2")
 	checkType(typeID, invTypeStruct, InvTypeStructType)
 	debug.getregistry()[invTypeStruct.className] = invTypeStruct
 	lia.inventory.types[typeID] = invTypeStruct
 end
 
--- Creates an instance of an inventory class whose type is the given type ID.
 function lia.inventory.new(typeID)
 	local class = lia.inventory.types[typeID]
 	assert(class ~= nil, "bad inventory type " .. typeID)

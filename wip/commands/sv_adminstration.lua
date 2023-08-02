@@ -258,6 +258,5 @@ lia.command.add("clearchat", {
         end
 
         netstream.Start(player.GetAll(), "adminClearChat")
-        lia.log.addRaw(client:GetName() .. " has cleared the chat.")
     end
 })

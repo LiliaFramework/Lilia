@@ -29,7 +29,7 @@ function lia.util.notify(message)
 
 	-- Once the notice appears, make a sound and message.
 	timer.Simple(0.15, function()
-		LocalPlayer():EmitSound(unpack(CONFIG.Notify))
+		LocalPlayer():EmitSound(unpack(lia.config.Notify))
 	end)
 
 	-- After the notice has displayed for 7.5 seconds, remove it.

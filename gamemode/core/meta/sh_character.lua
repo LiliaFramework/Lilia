@@ -1,28 +1,27 @@
-local CHAR = lia.meta.character or {}
-CHAR.__index = CHAR
-CHAR.id = CHAR.id or 0
-CHAR.vars = CHAR.vars or {}
-debug.getregistry().Character = lia.meta.character -- hi mark
+local charMeta = lia.meta.character or {}
+charMeta.__index = charMeta
+charMeta.id = charMeta.id or 0
+charMeta.vars = charMeta.vars or {}
+debug.getregistry().Character = lia.meta.character
 
-function CHAR:__tostring()
+function charMeta:__tostring()
     return "character[" .. (self.id or 0) .. "]"
 end
 
-function CHAR:__eq(other)
+function charMeta:__eq(other)
     return self:getID() == other:getID()
 end
 
--- Returns the character index from the database.
-function CHAR:getID()
+function charMeta:getID()
     return self.id
 end
 
-function CHAR:GetID()
+function charMeta:GetID()
     return self.id
 end
 
 if SERVER then
-    function CHAR:save(callback)
+    function charMeta:save(callback)
         if self.isBot then return end
         local data = {}
 
@@ -35,7 +34,6 @@ if SERVER then
         local shouldSave = hook.Run("CharacterPreSave", self)
 
         if shouldSave ~= false then
-            -- Run a query to save the character to the database.
             lia.db.updateTable(data, function()
                 if callback then
                     callback()
@@ -46,24 +44,19 @@ if SERVER then
         end
     end
 
-    function CHAR:Save(callback)
-        -- Do not save if the character is for a bot.
+    function charMeta:Save(callback)
         if self.isBot then return end
-        -- Prepare a list of information to be saved.
         local data = {}
 
-        -- Save all the character variables.
         for k, v in pairs(lia.char.vars) do
             if v.field and self.vars[k] ~= nil then
                 data[v.field] = self.vars[k]
             end
         end
 
-        -- Let Modules/schema determine if the character should be saved.
         local shouldSave = hook.Run("CharacterPreSave", self)
 
         if shouldSave ~= false then
-            -- Run a query to save the character to the database.
             lia.db.updateTable(data, function()
                 if callback then
                     callback()
@@ -74,7 +67,7 @@ if SERVER then
         end
     end
 
-    function CHAR:sync(receiver)
+    function charMeta:sync(receiver)
         if receiver == nil then
             for k, v in ipairs(player.GetAll()) do
                 self:sync(v)
@@ -114,13 +107,11 @@ if SERVER then
         end
     end
 
-    function CHAR:Sync(receiver)
-        -- Broadcast the character information if receiver is not set.
+    function charMeta:Sync(receiver)
         if receiver == nil then
             for k, v in ipairs(player.GetAll()) do
                 self:sync(v)
             end
-            -- Send all character information if the receiver is the character's owner.
         elseif receiver == self.player then
             local data = {}
 
@@ -137,7 +128,7 @@ if SERVER then
                     v.onSync(self, self.player)
                 end
             end
-        else -- Send public character information to the receiver.
+        else
             local data = {}
 
             for k, v in pairs(lia.char.vars) do
@@ -156,31 +147,20 @@ if SERVER then
         end
     end
 
-    -- @type method Character:setup(noNetworking)
-    -- @typeCommentStart
-    -- Sets up the "appearance" related information for the character.
-    -- @typeCommentEnd
-    -- @classmod Character
-    -- @realm server
-    -- @bool noNetworking responsible for character synchronization
-    function CHAR:setup(noNetworking)
+    function charMeta:setup(noNetworking)
         local client = self:getPlayer()
 
         if IsValid(client) then
-            -- Set the faction, model, and character index for the player.
             client:SetModel(isstring(self:getModel()) and self:getModel() or self:getModel()[1])
             client:SetTeam(self:getFaction())
             client:setNetVar("char", self:getID())
 
-            -- Apply saved body groups.
             for k, v in pairs(self:getData("groups", {})) do
                 client:SetBodygroup(k, v)
             end
 
-            -- Apply a saved skin.
             client:SetSkin(self:getData("skin", 0))
 
-            -- Synchronize the character if we should.
             if not noNetworking then
                 for k, v in ipairs(self:getInv(true)) do
                     if istable(v) then
@@ -196,24 +176,20 @@ if SERVER then
         end
     end
 
-    function CHAR:Setup(noNetworking)
+    function charMeta:Setup(noNetworking)
         local client = self:getPlayer()
 
         if IsValid(client) then
-            -- Set the faction, model, and character index for the player.
             client:SetModel(isstring(self:getModel()) and self:getModel() or self:getModel()[1])
             client:SetTeam(self:getFaction())
             client:setNetVar("char", self:getID())
 
-            -- Apply saved body groups.
             for k, v in pairs(self:getData("groups", {})) do
                 client:SetBodygroup(k, v)
             end
 
-            -- Apply a saved skin.
             client:SetSkin(self:getData("skin", 0))
 
-            -- Synchronize the character if we should.
             if not noNetworking then
                 for k, v in ipairs(self:getInv(true)) do
                     if istable(v) then
@@ -229,21 +205,13 @@ if SERVER then
         end
     end
 
-    -- @type method Character:kick()
-    -- @typeCommentStart
-    -- Forces the player to choose a character.
-    -- @typeCommentEnd
-    -- @classmod Character
-    -- @realm server
-    function CHAR:kick()
-        -- Kill the player so they are not standing anywhere.
+    function charMeta:kick()
         local client = self:getPlayer()
         client:KillSilent()
         local steamID = client:SteamID64()
         local id = self:getID()
         local isCurrentChar = self and self:getID() == id
 
-        -- Return the player to the character menu.
         if self and self.steamID == steamID then
             netstream.Start(client, "charKick", id, isCurrentChar)
 
@@ -254,15 +222,13 @@ if SERVER then
         end
     end
 
-    function CHAR:Kick()
-        -- Kill the player so they are not standing anywhere.
+    function charMeta:Kick()
         local client = self:getPlayer()
         client:KillSilent()
         local steamID = client:SteamID64()
         local id = self:getID()
         local isCurrentChar = self and self:getID() == id
 
-        -- Return the player to the character menu.
         if self and self.steamID == steamID then
             netstream.Start(client, "charKick", id, isCurrentChar)
 
@@ -273,97 +239,56 @@ if SERVER then
         end
     end
 
-    -- @type method Character:ban(time)
-    -- @typeCommentStart
-    -- Prevents the use of this character permanently or for a certain amount of time.
-    -- @typeCommentEnd
-    -- @classmod Character
-    -- @realm server
-    -- @int time Сharacter ban time
-    -- @usageStart
-    -- Entity(1):getChar():ban(3600) -- will send a character owned by a player with index 1 to a ban
-    -- @usageEnd
-    function CHAR:ban(time)
+    function charMeta:ban(time)
         time = tonumber(time)
 
         if time then
-            -- If time is provided, adjust it so it becomes the un-ban time.
             time = os.time() + math.max(math.ceil(time), 60)
         end
 
-        -- Mark the character as banned and kick the character back to menu.
         self:setData("banned", time or true)
         self:save()
         self:kick()
         hook.Run("OnCharPermakilled", self, time or nil)
     end
 
-    function CHAR:Ban(time)
+    function charMeta:Ban(time)
         time = tonumber(time)
 
         if time then
-            -- If time is provided, adjust it so it becomes the un-ban time.
             time = os.time() + math.max(math.ceil(time), 60)
         end
 
-        -- Mark the character as banned and kick the character back to menu.
         self:setData("banned", time or true)
         self:save()
         self:kick()
         hook.Run("OnCharPermakilled", self, time or nil)
     end
 
-    -- @type method Character:delete()
-    -- @typeCommentStart
-    -- Deletes this character from existence along with its associated data.
-    -- @typeCommentEnd
-    -- @classmod Character
-    -- @realm server
-    function CHAR:delete()
+    function charMeta:delete()
         lia.char.delete(self:getID(), self:getPlayer())
     end
 
-    function CHAR:Delete()
+    function charMeta:Delete()
         lia.char.delete(self:getID(), self:getPlayer())
     end
 
-    -- @type method Character:destroy()
-    -- @typeCommentStart
-    -- Deletes this character from memory.
-    -- @typeCommentEnd
-    -- @classmod Character
-    -- @realm server
-    -- @internal
-    function CHAR:destroy()
+    function charMeta:destroy()
         local id = self:getID()
         lia.char.loaded[id] = nil
         netstream.Start(nil, "charDel", id)
     end
 end
 
--- @type method Character:getPlayer()
--- @typeCommentStart
--- Returns which player owns this character.
--- @typeCommentEnd
--- @classmod Character
--- @realm shared
--- @treturn player The player who owns need character
--- @usageStart
--- local charOwner = Entity(1):getChar():getPlayer()
--- charOwner:notify('test')
--- @usageEnd
-function CHAR:getPlayer()
-    -- Return the player from cache.
+function charMeta:getPlayer()
     if IsValid(self.player) then
         return self.player
     elseif self.steamID then
-        -- Search for which player owns this character.
         local steamID = self.steamID
 
         for k, v in ipairs(player.GetAll()) do
             if v:SteamID64() == steamID then
                 self.player = v
-
                 return v
             end
         end
@@ -373,25 +298,21 @@ function CHAR:getPlayer()
 
             if char and (char:getID() == self:getID()) then
                 self.player = v
-
                 return v
             end
         end
     end
 end
 
-function CHAR:GetPlayer()
-    -- Return the player from cache.
+function charMeta:GetPlayer()
     if IsValid(self.player) then
         return self.player
     elseif self.steamID then
-        -- Search for which player owns this character.
         local steamID = self.steamID
 
         for k, v in ipairs(player.GetAll()) do
             if v:SteamID64() == steamID then
                 self.player = v
-
                 return v
             end
         end
@@ -401,38 +322,26 @@ function CHAR:GetPlayer()
 
             if char and (char:getID() == self:getID()) then
                 self.player = v
-
                 return v
             end
         end
     end
 end
 
--- @type function lia.char.registerVar()
--- @typeCommentStart
--- Sets up a new character variable.
--- @typeCommentEnd
--- @realm shared
 function lia.char.registerVar(key, data)
-    -- Store information for the variable.
     lia.char.vars[key] = data
     data.index = data.index or table.Count(lia.char.vars)
-    -- Convert the name of the variable to be capitalized.
     local upperName = key:sub(1, 1):upper() .. key:sub(2)
 
-    -- Provide functions to change the variable if allowed.
     if SERVER and not data.isNotModifiable then
-        -- Overwrite the set function if desired.
         if data.onSet then
-            CHAR["set" .. upperName] = data.onSet
-            -- Have the set function only set on the server if no networking.
+            charMeta["set" .. upperName] = data.onSet
         elseif data.noNetworking then
-            CHAR["set" .. upperName] = function(self, value)
+            charMeta["set" .. upperName] = function(self, value)
                 self.vars[key] = value
             end
         elseif data.isLocal then
-            -- If the variable is a local one, only send the variable to the local player.
-            CHAR["set" .. upperName] = function(self, value)
+            charMeta["set" .. upperName] = function(self, value)
                 local curChar = self:getPlayer() and self:getPlayer():getChar()
                 local sendID = true
 
@@ -445,8 +354,8 @@ function lia.char.registerVar(key, data)
                 netstream.Start(self.player, "charSet", key, value, sendID and self:getID() or nil)
                 hook.Run("OnCharVarChanged", self, key, oldVar, value)
             end
-        else -- Otherwise network the variable to everyone.
-            CHAR["set" .. upperName] = function(self, value)
+        else
+            charMeta["set" .. upperName] = function(self, value)
                 local oldVar = self.vars[key]
                 self.vars[key] = value
                 netstream.Start(nil, "charSet", key, value, self:getID())
@@ -455,13 +364,10 @@ function lia.char.registerVar(key, data)
         end
     end
 
-    -- The get functions are shared.
-    -- Overwrite the get function if desired.
     if data.onGet then
-        CHAR["get" .. upperName] = data.onGet
-        -- Otherwise return the character variable or default if it does not exist.
+        charMeta["get" .. upperName] = data.onGet
     else
-        CHAR["get" .. upperName] = function(self, default)
+        charMeta["get" .. upperName] = function(self, default)
             local value = self.vars[key]
             if value ~= nil then return value end
             if default == nil then return lia.char.vars[key] and lia.char.vars[key].default or nil end
@@ -470,9 +376,7 @@ function lia.char.registerVar(key, data)
         end
     end
 
-    -- Add the variable default to the character object.
-    CHAR.vars[key] = data.default
+    charMeta.vars[key] = data.default
 end
 
--- Allows access to the character metatable using lia.meta.character
-lia.meta.character = CHAR
+lia.meta.character = charMeta

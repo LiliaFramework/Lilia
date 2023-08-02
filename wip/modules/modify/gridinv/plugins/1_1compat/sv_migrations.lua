@@ -107,7 +107,7 @@ function MODULE:migrateBagSize(res)
 end
 
 function MODULE:migrateInventorySize(res)
-	local w, h = CONFIG.invW
+	local w, h = lia.config.invW
 end
 
 goto = 6

@@ -2,40 +2,12 @@ function GM:PlayerNoClip(client)
     return client:IsAdmin()
 end
 
-HOLDTYPE_TRANSLATOR = HOLDTYPE_TRANSLATOR or {}
-HOLDTYPE_TRANSLATOR[""] = "normal"
-HOLDTYPE_TRANSLATOR["physgun"] = "smg"
-HOLDTYPE_TRANSLATOR["ar2"] = "smg"
-HOLDTYPE_TRANSLATOR["crossbow"] = "shotgun"
-HOLDTYPE_TRANSLATOR["rpg"] = "shotgun"
-HOLDTYPE_TRANSLATOR["slam"] = "normal"
-HOLDTYPE_TRANSLATOR["grenade"] = "grenade"
-HOLDTYPE_TRANSLATOR["melee2"] = "melee"
-HOLDTYPE_TRANSLATOR["passive"] = "smg"
-HOLDTYPE_TRANSLATOR["knife"] = "melee"
-HOLDTYPE_TRANSLATOR["duel"] = "pistol"
-HOLDTYPE_TRANSLATOR["camera"] = "smg"
-HOLDTYPE_TRANSLATOR["magic"] = "normal"
-HOLDTYPE_TRANSLATOR["revolver"] = "pistol"
-PLAYER_HOLDTYPE_TRANSLATOR = PLAYER_HOLDTYPE_TRANSLATOR or {}
-PLAYER_HOLDTYPE_TRANSLATOR[""] = "normal"
-PLAYER_HOLDTYPE_TRANSLATOR["normal"] = "normal"
-PLAYER_HOLDTYPE_TRANSLATOR["revolver"] = "normal"
-PLAYER_HOLDTYPE_TRANSLATOR["fist"] = "normal"
-PLAYER_HOLDTYPE_TRANSLATOR["pistol"] = "normal"
-PLAYER_HOLDTYPE_TRANSLATOR["grenade"] = "normal"
-PLAYER_HOLDTYPE_TRANSLATOR["melee"] = "normal"
-PLAYER_HOLDTYPE_TRANSLATOR["slam"] = "normal"
-PLAYER_HOLDTYPE_TRANSLATOR["melee2"] = "normal"
-PLAYER_HOLDTYPE_TRANSLATOR["knife"] = "normal"
-PLAYER_HOLDTYPE_TRANSLATOR["duel"] = "normal"
-PLAYER_HOLDTYPE_TRANSLATOR["bugbait"] = "normal"
 local getModelClass = lia.anim.getModelClass
 local IsValid = IsValid
 local string = string
 local type = type
-local PLAYER_HOLDTYPE_TRANSLATOR = PLAYER_HOLDTYPE_TRANSLATOR
-local HOLDTYPE_TRANSLATOR = HOLDTYPE_TRANSLATOR
+local playeranimtype = lia.anim.PlayerHoldtypeTranslator
+local defaultanimtype = lia.anim.HoldtypeTranslator
 
 function GM:TranslateActivity(client, act)
     local model = string.lower(client.GetModel(client))
@@ -43,7 +15,7 @@ function GM:TranslateActivity(client, act)
     local weapon = client.GetActiveWeapon(client)
 
     if class == "player" then
-        if not CONFIG.WepAlwaysRaised and IsValid(weapon) and (client.isWepRaised and not client.isWepRaised(client)) and client:OnGround() then
+        if not lia.config.WepAlwaysRaised and IsValid(weapon) and (client.isWepRaised and not client.isWepRaised(client)) and client:OnGround() then
             if string.find(model, "zombie") then
                 local tree = lia.anim.zombie
 
@@ -55,7 +27,7 @@ function GM:TranslateActivity(client, act)
             end
 
             local holdType = IsValid(weapon) and (weapon.HoldType or weapon.GetHoldType(weapon)) or "normal"
-            holdType = PLAYER_HOLDTYPE_TRANSLATOR[holdType] or "passive"
+            holdType = playeranimtype[holdType] or "passive"
             local tree = lia.anim.player[holdType]
 
             if tree and tree[act] then
@@ -110,7 +82,7 @@ function GM:TranslateActivity(client, act)
 
             if IsValid(weapon) then
                 subClass = weapon.HoldType or weapon.GetHoldType(weapon)
-                subClass = HOLDTYPE_TRANSLATOR[subClass] or subClass
+                subClass = defaultanimtype[subClass] or subClass
             end
 
             if tree[subClass] and tree[subClass][act] then
@@ -141,7 +113,7 @@ function GM:DoAnimationEvent(client, event, data)
 
         if IsValid(weapon) then
             local holdType = weapon.HoldType or weapon:GetHoldType()
-            holdType = HOLDTYPE_TRANSLATOR[holdType] or holdType
+            holdType = defaultanimtype[holdType] or holdType
             local animation = lia.anim[class][holdType]
 
             if event == PLAYERANIMEVENT_ATTACK_PRIMARY then
@@ -301,7 +273,7 @@ function GM:Move(client, moveData)
         if client:GetMoveType() == MOVETYPE_WALK and moveData:KeyDown(IN_WALK) then
             local mf, ms = 0, 0
             local speed = client:GetWalkSpeed()
-            local ratio = CONFIG.WalkRatio
+            local ratio = lia.config.WalkRatio
 
             if moveData:KeyDown(IN_FORWARD) then
                 mf = ratio

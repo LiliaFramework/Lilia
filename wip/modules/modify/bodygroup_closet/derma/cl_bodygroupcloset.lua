@@ -90,7 +90,7 @@ function PANEL:Init()
         end
     end
 
-    local h, s, v = ColorToHSV(CONFIG.Color)
+    local h, s, v = ColorToHSV(lia.config.Color)
     s = s - 0.25
     local finaloutlinecolor = HSVToColor(h, s, v)
     -- this seemed like an easier way to darken the config color lol. probs not but  hey
@@ -101,7 +101,7 @@ function PANEL:Init()
     self.finishbutton:SetText("Submit Changes")
 
     self.finishbutton.Paint = function(panel, w, h)
-        draw.RoundedBox(0, 0, 0, w, h, CONFIG.Color)
+        draw.RoundedBox(0, 0, 0, w, h, lia.config.Color)
         surface.SetDrawColor(finaloutlinecolor)
         surface.DrawOutlinedRect(0, 0, w, h, 1)
     end

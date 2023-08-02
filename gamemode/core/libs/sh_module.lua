@@ -1,15 +1,8 @@
-lia.module = lia.module or {}
-lia.module.list = lia.module.list or {}
-lia.module.unloaded = lia.module.unloaded or {}
-
 function lia.module.load(uniqueID, path, isSingleFile, variable)
     variable = uniqueID == "schema" and "SCHEMA" or variable or "MODULE"
     if hook.Run("ModuleShouldLoad", uniqueID) == false then return end
-    -- Do not load non-existent Modules.
     if not isSingleFile and not file.Exists(path .. "/sh_" .. variable:lower() .. ".lua", "LUA") then return end
-    -- Create a table to store module information.
     local oldModule = MODULE
-
     local MODULE = {
         folder = path,
         module = oldModule,
@@ -23,7 +16,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     }
 
     if uniqueID == "schema" then
-        -- If the module is actually the schema, overwrite delevant variables.
         if SCHEMA then
             MODULE = SCHEMA
         end
@@ -31,13 +23,10 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         variable = "SCHEMA"
         MODULE.folder = engine.ActiveGamemode()
     elseif lia.module.list[uniqueID] then
-        -- Handle auto-reload.
         MODULE = lia.module.list[uniqueID]
     end
 
-    -- Expose MODULE as a global so the module files can access the table.
     _G[variable] = MODULE
-    -- Then include all of the module files so they run.
     MODULE.loading = true
     MODULE.path = path
 
@@ -47,7 +36,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
 
     lia.util.include(isSingleFile and path or path .. "/sh_" .. variable:lower() .. ".lua", "shared")
     MODULE.loading = false
-    -- Add helper methods for persistent data.
     local uniqueID2 = uniqueID
 
     if uniqueID2 == "schema" then
@@ -62,14 +50,12 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         return lia.data.get(uniqueID2, default, global, ignoreMap, refresh) or {}
     end
 
-    -- Add listeners for the module hooks so they run.
     for k, v in pairs(MODULE) do
         if type(v) == "function" then
             hook.Add(k, MODULE, v)
         end
     end
 
-    -- Store a reference to the module for later access.
     if uniqueID == "schema" then
         function MODULE:IsValid()
             return true
@@ -79,7 +65,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         _G[variable] = oldModule
     end
 
-    -- Signal that a module has finished loading.
     hook.Run("ModuleLoaded", uniqueID, MODULE)
 
     if MODULE.OnLoaded then
@@ -165,21 +150,18 @@ function lia.module.loadEntities(path)
         end
     end
 
-    -- Include entities.
     HandleEntityInclusion("entities", "ENT", scripted_ents.Register, {
         Type = "anim",
         Base = "base_gmodentity",
         Spawnable = true
     })
 
-    -- Include weapons.
     HandleEntityInclusion("weapons", "SWEP", weapons.Register, {
         Primary = {},
         Secondary = {},
         Base = "weapon_base"
     })
 
-    -- Include effects.
     HandleEntityInclusion("effects", "EFFECT", effects and effects.Register, nil, true)
 end
 

@@ -55,7 +55,7 @@ function GM:ShouldCreateLoadingScreen()
 end
 
 function GM:InitializedConfig()
-    hook.Run("LoadLiliaFonts", CONFIG.Font, CONFIG.GenericFont)
+    hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
 
     if hook.Run("ShouldCreateLoadingScreen") ~= false then
         hook.Run("CreateLoadingScreen")
@@ -65,19 +65,17 @@ function GM:InitializedConfig()
 end
 
 function GM:CharacterListLoaded()
-    local shouldPlayIntro = CONFIG.AlwaysPlayIntro or not lia.localData.intro or nil
+    local shouldPlayIntro = lia.config.AlwaysPlayIntro or not lia.localData.intro or nil
 
     timer.Create("liaWaitUntilPlayerValid", 0.5, 0, function()
         if not IsValid(LocalPlayer()) then return end
         timer.Remove("liaWaitUntilPlayerValid")
 
-        -- Remove the loading indicator.
         if IsValid(lia.gui.loading) then
             lia.gui.loading:Remove()
         end
 
         RunConsoleCommand("stopsound")
-        -- Show the intro if needed, then show the character menu.
         local intro = shouldPlayIntro and hook.Run("CreateIntroduction") or nil
 
         if IsValid(intro) then
@@ -107,8 +105,6 @@ function GM:CalcView(client, origin, angles, fov)
     if client:GetViewEntity() ~= client then return view end
 
     if (not client:ShouldDrawLocalPlayer() and IsValid(entity) and entity:IsRagdoll()) or (not LocalPlayer():Alive() and IsValid(ragdoll)) then
-        -- First person if the player has fallen over.
-        -- Also first person if the player is dead.
         local ent = LocalPlayer():Alive() and entity or ragdoll
         local index = ent:LookupAttachment("eyes")
 
@@ -136,7 +132,6 @@ function GM:HUDPaintBackground()
     local localPlayer = LocalPlayer()
     local frameTime = FrameTime()
     local scrW, scrH = ScrW(), ScrH()
-    -- Make screen blurry if blur local var is set.
     blurGoal = localPlayer:getLocalVar("blur", 0) + (hook.Run("AdjustBlurAmount", blurGoal) or 0)
 
     if blurValue ~= blurGoal then
@@ -182,7 +177,6 @@ function GM:PlayerBindPress(client, bind, pressed)
     end
 end
 
--- Called when use has been pressed on an item.
 function GM:ItemShowEntityMenu(entity)
     for k, v in ipairs(lia.menu.list) do
         if v.entity == entity then
@@ -192,7 +186,7 @@ function GM:ItemShowEntityMenu(entity)
 
     local options = {}
     local itemTable = entity:getItemTable()
-    if not itemTable then return end -- MARK: This is the where error came from.
+    if not itemTable then return end
 
     local function callback(index)
         if IsValid(entity) then
@@ -208,7 +202,7 @@ function GM:ItemShowEntityMenu(entity)
     end
 
     for k, v in SortedPairs(itemTable.functions) do
-        if k == "combine" then continue end -- yeah, noob protection
+        if k == "combine" then continue end
         if (hook.Run("onCanRunItemAction", itemTable, k) == false or isfunction(v.onCanRun)) and (not v.onCanRun(itemTable)) then continue end
 
         options[L(v.name or k)] = function()
@@ -285,7 +279,7 @@ end
 
 function GM:ScreenResolutionChanged(oldW, oldH)
     RunConsoleCommand("fixchatplz")
-    hook.Run("LoadLiliaFonts", CONFIG.Font, CONFIG.GenericFont)
+    hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
 end
 
 function GM:LiliaLoaded()

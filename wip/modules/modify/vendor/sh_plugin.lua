@@ -6,7 +6,6 @@ if SERVER then
     AddCSLuaFile("cl_editor.lua")
 end
 
-lia.util.include("sv_logging.lua")
 lia.util.include("sh_enums.lua")
 lia.util.include("sv_networking.lua")
 lia.util.include("cl_networking.lua")

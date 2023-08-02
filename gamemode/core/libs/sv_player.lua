@@ -1,6 +1,5 @@
 local playerMeta = FindMetaTable("Player")
 
--- Player data (outside of characters) handling.
 do
 	function playerMeta:loadLiliaData(callback)
 		local name = self:steamName()
@@ -58,7 +57,6 @@ do
 	end
 end
 
--- Whitelisting information for the player.
 do
 	function playerMeta:setWhitelisted(faction, whitelisted)
 		if not whitelisted then

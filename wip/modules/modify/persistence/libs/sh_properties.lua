@@ -21,10 +21,7 @@ properties.Add("persist", {
         if not IsValid(ent) then return end
         if not self:Filter(ent, ply) then return end
         ent:setNetVar("persistent", true)
-        -- Register the entity
         MODULE.entities[#MODULE.entities + 1] = ent
-        -- Add new log
-        lia.log.add(ply, "persistedEntity", ent)
     end
 })
 
@@ -57,8 +54,5 @@ properties.Add("persist_end", {
                 break
             end
         end
-
-        -- Add new log
-        lia.log.add(ply, "unpersistedEntity", ent)
     end
 })

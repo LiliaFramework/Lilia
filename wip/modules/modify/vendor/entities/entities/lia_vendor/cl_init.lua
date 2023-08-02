@@ -59,7 +59,7 @@ function ENT:onDrawEntityInfo(alpha)
 	local x, y = position.x, position.y
 	local desc = self.getNetVar(self, "desc")
 	-- Draw the name of the vendor.
-	drawText(self.getNetVar(self, "name", "John Doe"), x, y, colorAlpha(CONFIG.Color), 1, 1, nil, alpha * 0.65)
+	drawText(self.getNetVar(self, "name", "John Doe"), x, y, colorAlpha(lia.config.Color), 1, 1, nil, alpha * 0.65)
 
 	-- Draw the vendor's description below the name.
 	if desc then

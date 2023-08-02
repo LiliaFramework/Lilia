@@ -40,7 +40,7 @@ function PANEL:Init()
 				surface.SetDrawColor(0, 0, 0, 200)
 				surface.DrawRect(0, 0, w, h)
 				local i = 0
-				local color = CONFIG.Color
+				local color = lia.config.Color
 
 				for k, v in SortedPairs(lia.command.list) do
 					local k2 = "/" .. k
@@ -152,7 +152,7 @@ function PANEL:setActive(state)
 			surface.DrawRect(0, 0, w, h)
 			surface.SetDrawColor(0, 0, 0, 200)
 			surface.DrawOutlinedRect(0, 0, w, h)
-			this:DrawTextEntryText(TEXT_COLOR, CONFIG.Color, TEXT_COLOR)
+			this:DrawTextEntryText(TEXT_COLOR, lia.config.Color, TEXT_COLOR)
 		end
 
 		self.text.OnTextChanged = function(this)
@@ -189,7 +189,7 @@ local function PaintFilterButton(this, w, h)
 		surface.SetDrawColor(40, 40, 40)
 	else
 		local alpha = 120 + math.cos(RealTime() * 5) * 10
-		surface.SetDrawColor(ColorAlpha(CONFIG.Color, alpha))
+		surface.SetDrawColor(ColorAlpha(lia.config.Color, alpha))
 	end
 
 	surface.DrawRect(0, 0, w, h)

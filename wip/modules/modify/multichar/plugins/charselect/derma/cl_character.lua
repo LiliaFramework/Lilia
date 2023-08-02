@@ -246,15 +246,15 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:hoverSound()
-	LocalPlayer():EmitSound(unpack(CONFIG.CharHover))
+	LocalPlayer():EmitSound(unpack(lia.config.CharHover))
 end
 
 function PANEL:clickSound()
-	LocalPlayer():EmitSound(unpack(CONFIG.CharClick))
+	LocalPlayer():EmitSound(unpack(lia.config.CharClick))
 end
 
 function PANEL:warningSound()
-	LocalPlayer():EmitSound(unpack(CONFIG.CharWarning))
+	LocalPlayer():EmitSound(unpack(lia.config.CharWarning))
 end
 
 vgui.Register("liaCharacter", PANEL, "EditablePanel")

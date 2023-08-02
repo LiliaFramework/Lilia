@@ -315,7 +315,7 @@ function SWEP:PrimaryAttack()
 
     self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
     if hook.Run("CanPlayerThrowPunch", owner) == false then return end
-    local staminaUse = CONFIG.PunchStamina
+    local staminaUse = lia.config.PunchStamina
 
     if staminaUse > 0 then
         local value = owner:getLocalVar("stm", 0) - staminaUse

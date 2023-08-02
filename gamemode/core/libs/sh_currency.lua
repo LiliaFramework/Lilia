@@ -1,7 +1,4 @@
-lia.currency = lia.currency or {}
-lia.currency.symbol = lia.currency.symbol or "$"
-lia.currency.singular = lia.currency.singular or "dollar"
-lia.currency.plural = lia.currency.plural or "dollars"
+
 
 function lia.currency.set(symbol, singular, plural)
 	lia.currency.symbol = symbol
@@ -50,7 +47,6 @@ end
 
 function charMeta:giveMoney(amount, takingMoney)
 	if not takingMoney then
-		lia.log.add(self:getPlayer(), "money", amount)
 	end
 
 	self:setMoney(self:getMoney() + amount)
@@ -59,7 +55,6 @@ function charMeta:giveMoney(amount, takingMoney)
 end
 
 function charMeta:takeMoney(amount)
-	lia.log.add(self:getPlayer(), "money", -amount)
 	amount = math.abs(amount)
 	self:giveMoney(-amount, true)
 

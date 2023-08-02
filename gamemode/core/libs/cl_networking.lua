@@ -1,7 +1,5 @@
 local entityMeta = FindMetaTable("Entity")
 local playerMeta = FindMetaTable("Player")
-lia.net = lia.net or {}
-lia.net.globals = lia.net.globals or {}
 
 netstream.Hook("nVar", function(index, key, value)
 	lia.net[index] = lia.net[index] or {}

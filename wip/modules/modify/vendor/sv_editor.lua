@@ -65,7 +65,7 @@ EDITOR.useMoney = function(vendor, client)
 	local useMoney = net.ReadBool()
 
 	if useMoney then
-		vendor:setMoney(CONFIG.DefaultMoney)
+		vendor:setMoney(lia.config.DefaultMoney)
 	else
 		vendor:setMoney(nil)
 	end

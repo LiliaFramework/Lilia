@@ -9,7 +9,6 @@ LIA_ITEM_DEFAULT_FUNCTIONS = {
 				item:spawn(client)
 			end)
 
-			lia.log.add(item.player, "itemDrop", item.name, 1)
 
 			return false
 		end,
@@ -39,7 +38,6 @@ LIA_ITEM_DEFAULT_FUNCTIONS = {
 				end
 
 				if not IsValid(client) then return end
-				lia.log.add(client, "itemTake", item.name, 1)
 				d:resolve()
 			end):catch(function(err)
 				client.itemTakeTransaction = nil

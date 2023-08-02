@@ -3,7 +3,7 @@ lia.command.add("returnitems", {
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
 
-        if CONFIG.LoseWeapononDeathHuman or CONFIG.LoseWeapononDeathNPC then
+        if lia.config.LoseWeapononDeathHuman or lia.config.LoseWeapononDeathNPC then
             if not client:IsAdmin() then
                 client:notify("Your rank is not high enough to use this command.")
 

@@ -14,7 +14,6 @@ local ITEMS_TABLE = "items"
 function lia.inventory.loadByID(id, noCache)
 	local instance = lia.inventory.instances[invID]
 
-	-- Do not reload inventories unless necessary.
 	if instance and not noCache then
 		local d = deferred.new()
 		d:resolve(instance)
@@ -32,8 +31,6 @@ function lia.inventory.loadByID(id, noCache)
 		end
 	end
 
-	-- If there were no custom loaders and the id is a normal one, load from
-	-- the default database table.
 	assert(isnumber(id) and id >= 0, "No inventories implement loadFromStorage for ID " .. tostring(id))
 
 	return lia.inventory.loadFromDefaultStorage(id, noCache)

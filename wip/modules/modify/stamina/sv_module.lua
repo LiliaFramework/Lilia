@@ -1,5 +1,5 @@
 function MODULE:PostPlayerLoadout(client)
-    client:setLocalVar("stm", CONFIG.DefaultStamina)
+    client:setLocalVar("stm", lia.config.DefaultStamina)
     local uniqueID = "liaStam" .. client:SteamID()
     local offset = 0
     local runSpeed = client:GetRunSpeed() - 5
@@ -14,7 +14,7 @@ function MODULE:PostPlayerLoadout(client)
         local character = client:getChar()
         if client:GetMoveType() == MOVETYPE_NOCLIP or not character then return end
         local bonus = character.getAttrib and character:getAttrib("stm", 0) or 0
-        runSpeed = CONFIG.RunSpeed + bonus
+        runSpeed = lia.config.RunSpeed + bonus
 
         if client:WaterLevel() > 1 then
             runSpeed = runSpeed * 0.775
@@ -24,9 +24,9 @@ function MODULE:PostPlayerLoadout(client)
             bonus = character.getAttrib and character:getAttrib("end", 0) or 0
             offset = -2 + (bonus / 60)
         elseif offset > 0.5 then
-            offset = 1 * CONFIG.StaminaRegenMultiplier
+            offset = 1 * lia.config.StaminaRegenMultiplier
         else
-            offset = 1.75 * CONFIG.StaminaRegenMultiplier
+            offset = 1.75 * lia.config.StaminaRegenMultiplier
         end
 
         if client:Crouching() then
@@ -34,14 +34,14 @@ function MODULE:PostPlayerLoadout(client)
         end
 
         local current = client:getLocalVar("stm", 0)
-        local value = math.Clamp(current + offset, 0, CONFIG.DefaultStamina)
+        local value = math.Clamp(current + offset, 0, lia.config.DefaultStamina)
 
         if current ~= value then
             client:setLocalVar("stm", value)
 
             if C then
                 if value == 0 and not client:getNetVar("brth", false) then
-                    client:SetRunSpeed(CONFIG.WalkSpeed)
+                    client:SetRunSpeed(lia.config.WalkSpeed)
                     client:setNetVar("brth", true)
                     hook.Run("PlayerStaminaLost", client)
                 elseif value >= 50 and client:getNetVar("brth", false) then
@@ -58,7 +58,7 @@ local playerMeta = FindMetaTable("Player")
 
 function playerMeta:restoreStamina(amount)
     local current = self:getLocalVar("stm", 0)
-    local value = math.Clamp(current + amount, 0, CONFIG.DefaultStamina)
+    local value = math.Clamp(current + amount, 0, lia.config.DefaultStamina)
     self:setLocalVar("stm", value)
 end
 

@@ -36,8 +36,6 @@ function ENT:Use(activator)
         return
     end
 
-    -- Otherwise, add the activator to the list of people trading.
-    lia.log.add(activator, "vendorAccess", self:getNetVar("name"))
     self.receivers[#self.receivers + 1] = activator
     activator.liaVendor = self
 

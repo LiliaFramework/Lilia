@@ -1,7 +1,6 @@
 local playerMeta = FindMetaTable("Player")
 lia.util.include("lilia/gamemode/core/meta/sh_player.lua")
 
--- liaData information for the player.
 do
 	if SERVER then
 		function playerMeta:getLiliaData(key, default)
@@ -38,7 +37,6 @@ do
 	end
 end
 
--- Whitelist networking information here.
 do
 	function playerMeta:hasWhitelist(faction)
 		local data = lia.faction.indices[faction]
