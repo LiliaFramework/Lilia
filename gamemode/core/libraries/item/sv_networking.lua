@@ -1,7 +1,3 @@
-util.AddNetworkString("liaCharacterInvList")
-util.AddNetworkString("liaItemDelete")
-util.AddNetworkString("liaItemInstance")
-
 netstream.Hook("invAct", function(client, action, item, invID, data)
 	local character = client:getChar()
 	if not character then return end

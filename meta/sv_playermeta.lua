@@ -1,41 +1,144 @@
+--------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
+--------------------------------------------------------------------------------------------------------
+function playerMeta:getPlayTime()
+    local diff = os.time(lia.util.dateToNumber(self.lastJoin)) - os.time(lia.util.dateToNumber(self.firstJoin))
+    return diff + (RealTime() - (self.liaJoinTime or RealTime()))
+end
+--------------------------------------------------------------------------------------------------------
+    function playerMeta:setRestricted(state, noMessage)
+        if state then
+            self:setNetVar("restricted", true)
 
-function lia.util.findEmptySpace(entity, filter, spacing, size, height, tolerance)
-    spacing = spacing or 32
-    size = size or 3
-    height = height or 36
-    tolerance = tolerance or 5
-    local position = entity:GetPos()
-    local angles = Angle(0, 0, 0)
-    local mins = Vector(-spacing * 0.5, -spacing * 0.5, 0)
-    local maxs = Vector(spacing * 0.5, spacing * 0.5, height)
-    local output = {}
+            if noMessage then
+                self:setLocalVar("restrictNoMsg", true)
+            end
 
-    for x = -size, size do
-        for y = -size, size do
-            local origin = position + Vector(x * spacing, y * spacing, 0)
-            local color = green
-            local i = 0
-            local data = {}
-            data.start = origin + mins + Vector(0, 0, tolerance)
-            data.endpos = origin + maxs
-            data.filter = filter or entity
-            local trace = util.TraceLine(data)
-            data.start = origin + Vector(-maxs.x, -maxs.y, tolerance)
-            data.endpos = origin + Vector(mins.x, mins.y, height)
-            local trace2 = util.TraceLine(data)
-            if trace.StartSolid or trace.Hit or trace2.StartSolid or trace2.Hit or not util.IsInWorld(origin) then continue end
-            output[#output + 1] = origin
+            self.liaRestrictWeps = self.liaRestrictWeps or {}
+
+            for k, v in ipairs(self:GetWeapons()) do
+                self.liaRestrictWeps[k] = v:GetClass()
+            end
+
+            timer.Simple(0, function()
+                self:StripWeapons()
+            end)
+
+            hook.Run("OnPlayerRestricted", self)
+        else
+            self:setNetVar("restricted")
+
+            if self:getLocalVar("restrictNoMsg") then
+                self:setLocalVar("restrictNoMsg")
+            end
+
+            if self.liaRestrictWeps then
+                for k, v in ipairs(self.liaRestrictWeps) do
+                    self:Give(v)
+                end
+
+                self.liaRestrictWeps = nil
+            end
+
+            hook.Run("OnPlayerUnRestricted", self)
+        end
+    end
+--------------------------------------------------------------------------------------------------------
+function playerMeta:setAction(text, time, callback, startTime, finishTime)
+    if time and time <= 0 then
+        if callback then
+            callback(self)
+        end
+        return
+    end
+
+    time = time or 5
+    startTime = startTime or CurTime()
+    finishTime = finishTime or (startTime + time)
+
+    if text == false then
+        timer.Remove("liaAct" .. self:UniqueID())
+        netstream.Start(self, "actBar")
+        return
+    end
+
+    netstream.Start(self, "actBar", startTime, finishTime, text)
+
+    if callback then
+        timer.Create("liaAct" .. self:UniqueID(), time, 1, function()
+            if IsValid(self) then
+                callback(self)
+            end
+        end)
+    end
+end
+--------------------------------------------------------------------------------------------------------
+function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
+    local uniqueID = "liaStare" .. self:UniqueID()
+    local data = {}
+    data.filter = self
+
+    timer.Create(uniqueID, 0.1, time / 0.1, function()
+        if IsValid(self) and IsValid(entity) then
+            data.start = self:GetShootPos()
+            data.endpos = data.start + self:GetAimVector() * (distance or 96)
+            local targetEntity = util.TraceLine(data).Entity
+
+            if IsValid(targetEntity) and targetEntity:GetClass() == "prop_ragdoll" and IsValid(targetEntity:getNetVar("player")) then
+                targetEntity = targetEntity:getNetVar("player")
+            end
+
+            if targetEntity ~= entity then
+                timer.Remove(uniqueID)
+
+                if onCancel then
+                    onCancel()
+                end
+            elseif callback and timer.RepsLeft(uniqueID) == 0 then
+                callback()
+            end
+        else
+            timer.Remove(uniqueID)
+
+            if onCancel then
+                onCancel()
+            end
+        end
+    end)
+end
+--------------------------------------------------------------------------------------------------------
+function playerMeta:notify(message)
+    lia.util.notify(message, self)
+end
+--------------------------------------------------------------------------------------------------------
+function playerMeta:notifyLocalized(message, ...)
+    lia.util.notifyLocalized(message, self, ...)
+end
+--------------------------------------------------------------------------------------------------------
+function playerMeta:requestString(title, subTitle, callback, default)
+    local d
+
+    if type(callback) ~= "function" and default == nil then
+        default = callback
+        d = deferred.new()
+
+        callback = function(value)
+            d:resolve(value)
         end
     end
 
-    table.sort(output, function(a, b)
-        return a:Distance(position) < b:Distance(position)
-    end)
+    self.liaStrReqs = self.liaStrReqs or {}
+    local id = table.insert(self.liaStrReqs, callback)
+    net.Start("liaStringReq")
+    net.WriteUInt(id, 32)
+    net.WriteString(title)
+    net.WriteString(subTitle)
+    net.WriteString(default or "")
+    net.Send(self)
 
-    return output
+    return d
 end
-
+--------------------------------------------------------------------------------------------------------
 function playerMeta:isStuck()
     return util.TraceEntity({
         start = self:GetPos(),
@@ -43,7 +146,7 @@ function playerMeta:isStuck()
         filter = self
     }, self).StartSolid
 end
-
+--------------------------------------------------------------------------------------------------------
 function playerMeta:createRagdoll(freeze)
     local entity = ents.Create("prop_ragdoll")
     entity:SetPos(self:GetPos())
@@ -77,7 +180,7 @@ function playerMeta:createRagdoll(freeze)
 
     return entity
 end
-
+--------------------------------------------------------------------------------------------------------
 function playerMeta:setRagdolled(state, time, getUpGrace)
     getUpGrace = getUpGrace or time or 5
 
@@ -185,7 +288,6 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
                             self:setAction()
                             entity.liaPausing = true
                         end
-
                         return
                     elseif entity.liaPausing then
                         self:setAction("@wakingUp", time)
@@ -210,3 +312,4 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
         hook.Run("OnCharFallover", self, entity, false)
     end
 end
+--------------------------------------------------------------------------------------------------------

@@ -1,11 +1,10 @@
+--------------------------------------------------------------------------------------------------------
 local entityMeta = FindMetaTable("Entity")
-
--- Checks if an entity is a door by comparing its class.
+--------------------------------------------------------------------------------------------------------
 function entityMeta:isDoor()
     return self:GetClass():find("door")
 end
-
--- Returns the door's slave entity.
+--------------------------------------------------------------------------------------------------------
 function entityMeta:getDoorPartner()
     local owner = self:GetOwner() or self.liaDoorOwner
     if IsValid(owner) and owner:isDoor() then return owner end
@@ -18,3 +17,4 @@ function entityMeta:getDoorPartner()
         end
     end
 end
+--------------------------------------------------------------------------------------------------------

@@ -234,7 +234,6 @@ LANGUAGE = {
     deleteTip = "Delete this character.",
     moneyLeft = "Your Money: ",
     currentMoney = "Money Left: ",
-    -- 2018 patch
     ammoLoadAll = "Load All",
     ammoLoadAmount = "Load %s",
     ammoLoadCustom = "Load...",
@@ -257,7 +256,6 @@ LANGUAGE = {
     itemOnGround = "Your item has been placed on the ground.",
     forbiddenActionStorage = "You can't do this action with storaged item.",
     cantDropBagHasEquipped = "You can't drop bag that has equipped item.",
-    -- 2021 patch
     lookToUseAt = "You need to be looking at someone to use '@'",
     mustProvideString = "You must provide a string for the variable",
 }

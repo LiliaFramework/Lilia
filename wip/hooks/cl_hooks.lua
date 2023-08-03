@@ -237,7 +237,7 @@ function GM:SetupQuickMenu(menu)
         else
             RunConsoleCommand("lia_cheapblur", "0")
         end
-    end, LIA_CVAR_CHEAP:GetBool())
+    end, CreateClientConVar("lia_cheapblur", 0, true):GetBool())
 
     menu:addSpacer()
     local current

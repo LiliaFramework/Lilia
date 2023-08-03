@@ -1,7 +1,3 @@
-util.AddNetworkString("liaStorageOpen")
-util.AddNetworkString("liaStorageExit")
-util.AddNetworkString("liaStorageUnlock")
-util.AddNetworkString("liaStorageTransfer")
 local TRANSFER = "transfer"
 
 local function getValidStorage(client)

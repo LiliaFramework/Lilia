@@ -1,5 +1,3 @@
-LIA_ICON_SIZE = 64
--- The queue for the rendered icons.
 renderedIcons = renderedIcons or {}
 
 -- To make making inventory variant, This must be followed up.
@@ -89,7 +87,7 @@ end
 
 function PANEL:Init()
     self:Droppable("inv")
-    self:SetSize(LIA_ICON_SIZE, LIA_ICON_SIZE)
+    self:SetSize(64, 64)
 end
 
 --[[ function PANEL:Think()

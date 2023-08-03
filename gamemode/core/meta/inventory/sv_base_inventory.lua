@@ -2,16 +2,6 @@ local Inventory = lia.Inventory
 INV_REPLICATE = "repl"
 local INV_TABLE_NAME = "inventories"
 local INV_DATA_TABLE_NAME = "invdata"
-util.AddNetworkString("ixInventoryInit")
-util.AddNetworkString("ixInventoryData")
-util.AddNetworkString("ixInventoryDelete")
-util.AddNetworkString("ixInventoryAdd")
-util.AddNetworkString("ixInventoryRemove")
-util.AddNetworkString("liaInventoryInit")
-util.AddNetworkString("liaInventoryData")
-util.AddNetworkString("liaInventoryDelete")
-util.AddNetworkString("liaInventoryAdd")
-util.AddNetworkString("liaInventoryRemove")
 
 function Inventory:addItem(item)
     self.items[item:getID()] = item
