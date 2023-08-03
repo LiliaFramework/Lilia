@@ -39,7 +39,6 @@ ITEM.pacData = {
 	-- PASTE CONTENT HERE>
 }
 ]]
-
 if CLIENT then
     function ITEM:paintOver(item, w, h)
         if item:getData("equip") then
@@ -127,6 +126,7 @@ ITEM.functions.EquipUn = {
     icon = "icon16/cross.png",
     onRun = function(item)
         item:removeOutfit(item.player)
+
         return false
     end,
     onCanRun = function(item)
@@ -145,6 +145,7 @@ ITEM.functions.Equip = {
         for _, other in pairs(items) do
             if item ~= other and item.outfitCategory == other.outfitCategory and other:getData("equip") then
                 item.player:notifyLocalized("sameOutfitCategory")
+
                 return false
             end
         end
@@ -213,6 +214,7 @@ ITEM.functions.Equip = {
         end
 
         item:wearOutfit(item.player, false)
+
         return false
     end,
     onCanRun = function(item)
@@ -222,6 +224,7 @@ ITEM.functions.Equip = {
 
 function ITEM:onCanBeTransfered(oldInventory, newInventory)
     if newInventory and self:getData("equip") then return false end
+
     return true
 end
 

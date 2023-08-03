@@ -4,6 +4,7 @@ function lia.util.isSteamID(value)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.findPlayer(identifier, allowPatterns)
     if lia.util.isSteamID(identifier) then return player.GetBySteamID(identifier) end
@@ -30,6 +31,7 @@ function lia.util.gridVector(vec, gridSize)
 
     return vec
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.getAllChar()
     local charTable = {}
@@ -42,6 +44,7 @@ function lia.util.getAllChar()
 
     return charTable
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.getMaterial(materialPath)
     lia.util.cachedMaterials[materialPath] = lia.util.cachedMaterials[materialPath] or Material(materialPath)

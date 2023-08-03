@@ -79,6 +79,7 @@ ITEM.functions.Equip = {
             if v.id ~= item.id then
                 if v.isWeapon and client.carryWeapons[item.weaponCategory] and v:getData("equip") then
                     client:notifyLocalized("weaponSlotFilled")
+
                     return false
                 end
             end

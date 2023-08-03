@@ -1,1 +1,0 @@
-net.Receive("lsurprise", function() cam.End3D() end)

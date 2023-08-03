@@ -20,6 +20,7 @@ function lia.util.include(fileName, state)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.includeDir(directory, fromLua, recursive)
     local baseDir = "lilia"
@@ -41,7 +42,13 @@ function lia.util.includeDir(directory, fromLua, recursive)
             end
 
             for k, v in pairs(files) do
-                lia.util.include(folder .. "/" .. v)
+                local fullPath = folder .. "/" .. v
+                lia.util.include(fullPath)
+
+                -- Check if DevPrinting is enabled before printing
+                if lia.config.DevPrinting then
+                    print("Included file:", v, "Full path:", fullPath)
+                end
             end
 
             for k, v in pairs(folders) do
@@ -52,10 +59,18 @@ function lia.util.includeDir(directory, fromLua, recursive)
         AddRecursive((fromLua and "" or baseDir) .. directory)
     else
         for k, v in ipairs(file.Find((fromLua and "" or baseDir) .. directory .. "/*.lua", "LUA")) do
-            lia.util.include(directory .. "/" .. v)
+            local fullPath = directory .. "/" .. v
+            lia.util.include(fullPath)
+
+            -- Check if DevPrinting is enabled before printing
+            if lia.config.DevPrinting then
+                print("Included file:", v, "Full path:", fullPath)
+            end
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
-lia.util.includeDir("lilia/gamemode/core/util", true, true)
+lia.util.includeDir("core/libraries/thirdparty", true, true)
+lia.util.includeDir("core/libraries", true, true)
 --------------------------------------------------------------------------------------------------------

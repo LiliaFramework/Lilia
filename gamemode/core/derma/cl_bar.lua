@@ -1,4 +1,3 @@
-
 lia.bar.actionText = ""
 lia.bar.actionStart = 0
 lia.bar.actionEnd = 0
@@ -155,6 +154,6 @@ netstream.Hook("actBar", function(start, finish, text)
 	end
 end)
 
-function GM:HUDPaint()
-	lia.bar.drawAll()
-end
+hook.Add("HUDPaint", "LiliaBarDrawAll", function()
+    lia.bar.drawAll()
+end)
