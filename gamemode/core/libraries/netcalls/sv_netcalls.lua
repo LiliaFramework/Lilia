@@ -10,6 +10,7 @@ util.AddNetworkString("liaInventoryRemove")
 util.AddNetworkString("liaNotify")
 util.AddNetworkString("liaNotifyL")
 util.AddNetworkString("liaStringReq")
+util.AddNetworkString("liaTypeStatus")
 
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaStringReq", function(_, client)
@@ -71,5 +72,10 @@ netstream.Hook("cmd", function(client, command, arguments)
         lia.command.parse(client, nil, command, arguments2)
         client.liaNextCmd = CurTime() + 0.2
     end
+end)
+
+--------------------------------------------------------------------------------------------------------
+net.Receive("liaTypeStatus", function(_, client)
+    client:setNetVar("typing", net.ReadBool())
 end)
 --------------------------------------------------------------------------------------------------------
