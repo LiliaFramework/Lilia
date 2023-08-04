@@ -1,3 +1,5 @@
+lia.config = lia.config or {}
+lia.config.list = lia.config.list or {}
 lia.config.SchemaYear = 2023
 lia.config.contentURL = "https://discord.gg/HmfaJ9brfz"
 lia.config.PKActive = false
@@ -222,3 +224,11 @@ lia.config.PermaRaisedWeapons = {
 }
 
 lia.config.DevPrinting = true
+lia.config.Language = "english"
+
+lia.config.PlayerModelTposingFixer = {
+    ["path/to/model.mdl"] = "player",
+    ["path/to/model.mdl"] = "player",
+    ["path/to/model.mdl"] = "player",
+    ["path/to/model.mdl"] = "player",
+}

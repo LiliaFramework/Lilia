@@ -1,4 +1,6 @@
 file.CreateDir("lilia")
+lia.data = lia.data or {}
+lia.data.stored = lia.data.stored or {}
 
 --------------------------------------------------------------------------------------------------------
 function lia.data.set(key, value, global, ignoreMap)

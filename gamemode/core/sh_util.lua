@@ -1,3 +1,5 @@
+lia.util.cachedMaterials = lia.util.cachedMaterials or {}
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.isSteamID(value)
     if string.match(value, "STEAM_(%d+):(%d+):(%d+)") then return true end
@@ -18,6 +20,7 @@ function lia.util.findPlayer(identifier, allowPatterns)
     end
 end
 
+--------------------------------------------------------------------------------------------------------
 function lia.util.gridVector(vec, gridSize)
     if gridSize <= 0 then
         gridSize = 1

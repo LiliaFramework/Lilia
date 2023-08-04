@@ -1,3 +1,6 @@
+lia.command = lia.command or {}
+lia.command.list = lia.command.list or {}
+
 function lia.command.add(command, data)
 	data.syntax = data.syntax or "[none]"
 	if not data.onRun then return ErrorNoHalt("Command '" .. command .. "' does not have a callback, not adding!\n") end

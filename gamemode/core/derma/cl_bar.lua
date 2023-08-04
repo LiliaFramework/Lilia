@@ -1,3 +1,6 @@
+lia.bar = lia.bar or {}
+lia.bar.delta = lia.bar.delta or {}
+lia.bar.list = lia.bar.list or {}
 lia.bar.actionText = ""
 lia.bar.actionStart = 0
 lia.bar.actionEnd = 0
@@ -155,5 +158,5 @@ netstream.Hook("actBar", function(start, finish, text)
 end)
 
 hook.Add("HUDPaint", "LiliaBarDrawAll", function()
-    lia.bar.drawAll()
+	lia.bar.drawAll()
 end)

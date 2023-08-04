@@ -1,3 +1,7 @@
+lia.lang = lia.lang or {}
+lia.lang.names = lia.lang.names or {}
+lia.lang.stored = lia.lang.stored or {}
+
 function lia.lang.loadFromDir(directory)
 	for k, v in ipairs(file.Find(directory .. "/sh_*.lua", "LUA")) do
 		local niceName = v:sub(4, -5):lower()

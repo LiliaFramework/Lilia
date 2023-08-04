@@ -1,3 +1,7 @@
+lia.module = lia.module or {}
+lia.module.list = lia.module.list or {}
+lia.module.unloaded = lia.module.unloaded or {}
+
 function lia.module.load(uniqueID, path, isSingleFile, variable)
     variable = uniqueID == "schema" and "SCHEMA" or variable or "MODULE"
     if hook.Run("ModuleShouldLoad", uniqueID) == false then return end

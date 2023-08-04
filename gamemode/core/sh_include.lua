@@ -45,7 +45,6 @@ function lia.util.includeDir(directory, fromLua, recursive)
                 local fullPath = folder .. "/" .. v
                 lia.util.include(fullPath)
 
-                -- Check if DevPrinting is enabled before printing
                 if lia.config.DevPrinting then
                     print("Included file:", v, "Full path:", fullPath)
                 end
@@ -62,7 +61,6 @@ function lia.util.includeDir(directory, fromLua, recursive)
             local fullPath = directory .. "/" .. v
             lia.util.include(fullPath)
 
-            -- Check if DevPrinting is enabled before printing
             if lia.config.DevPrinting then
                 print("Included file:", v, "Full path:", fullPath)
             end
@@ -71,6 +69,5 @@ function lia.util.includeDir(directory, fromLua, recursive)
 end
 
 --------------------------------------------------------------------------------------------------------
-lia.util.includeDir("core/libraries/thirdparty", true, true)
-lia.util.includeDir("core/libraries", true, true)
+lia.util.includeDir("core/libraries/thirdparty", true)
 --------------------------------------------------------------------------------------------------------

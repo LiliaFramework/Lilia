@@ -447,28 +447,3 @@ end
 function playerMeta:SteamID64()
     return self:liaSteamID64() or 0
 end
-
---------------------------------------------------------------------------------------------------------+
-function player_manager.TranslateToPlayerModelName(model)
-    model = model:lower():gsub("\\", "/")
-    local result = lia.anim.ModelTranslations(model)
-
-    if result == "kleiner" and not model:find("kleiner") then
-        local model2 = model:gsub("models/", "models/player/")
-        result = lia.anim.ModelTranslations(model2)
-        if result ~= "kleiner" then return result end
-        model2 = model:gsub("models/humans", "models/player")
-        result = lia.anim.ModelTranslations(model2)
-        if result ~= "kleiner" then return result end
-        model2 = model:gsub("models/zombie/", "models/player/zombie_")
-        result = lia.anim.ModelTranslations(model2)
-        if result ~= "kleiner" then return result end
-    end
-
-    return result
-end
-
---------------------------------------------------------------------------------------------------------+
-timer.Remove("HintSystem_OpeningMenu")
-timer.Remove("HintSystem_Annoy1")
-timer.Remove("HintSystem_Annoy2")

@@ -1,3 +1,7 @@
+lia.faction = lia.faction or {}
+lia.faction.indices = lia.faction.indices or {}
+lia.faction.teams = lia.faction.teams or {}
+
 function lia.faction.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName = v:sub(4, -5)

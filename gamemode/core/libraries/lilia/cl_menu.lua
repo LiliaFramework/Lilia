@@ -1,3 +1,6 @@
+lia.menu = lia.menu or {}
+lia.menu.list = lia.menu.list or {}
+
 function lia.menu.add(options, position, onRemove)
 	local width = 0
 	local entity

@@ -1,3 +1,6 @@
+lia.class = lia.class or {}
+lia.class.list = lia.class.list or {}
+
 function lia.class.loadFromDir(directory)
     for k, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName = v:sub(4, -5)

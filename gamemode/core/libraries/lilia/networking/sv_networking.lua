@@ -1,3 +1,6 @@
+lia.net = lia.net or {}
+lia.net.globals = lia.net.globals or {}
+
 --------------------------------------------------------------------------------------------------------
 function checkBadType(name, object)
 	if isfunction(object) then

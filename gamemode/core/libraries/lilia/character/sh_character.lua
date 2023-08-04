@@ -1,3 +1,9 @@
+lia.char = lia.char or {}
+lia.char.loaded = lia.char.loaded or {}
+lia.char.names = lia.char.names or {}
+lia.char.varHooks = lia.char.varHooks or {}
+lia.char.vars = lia.char.vars or {}
+
 function lia.char.new(data, id, client, steamID)
 	local character = setmetatable({
 		vars = {}

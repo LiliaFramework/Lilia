@@ -1,3 +1,7 @@
+lia.inventory = lia.inventory or {}
+lia.inventory.instances = lia.inventory.instances or {}
+lia.inventory.types = lia.inventory.types or {}
+
 local function serverOnly(value)
 	return SERVER and value or nil
 end

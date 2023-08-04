@@ -1,3 +1,6 @@
+lia.playerInteract = lia.playerInteract or {}
+lia.playerInteract.currentEnt = lia.playerInteract.currentEnt or {}
+lia.playerInteract.funcs = lia.playerInteract.funcs or {}
 local interactPressTime = 0
 local cachedPitch = 0
 local isInteracting = false

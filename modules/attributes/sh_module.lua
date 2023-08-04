@@ -1,6 +1,8 @@
 MODULE.name = "Attributes"
 MODULE.author = "Leonheart#7476/Cheesenot"
 MODULE.desc = "Adds attributes for characters."
+lia.attribs = lia.attribs or {}
+lia.attribs.list = lia.attribs.list or {}
 lia.util.include("sh_commands.lua")
 
 lia.char.registerVar("attribs", {
