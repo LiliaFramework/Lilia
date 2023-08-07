@@ -25,6 +25,7 @@ function GM:TranslateActivity(client, act)
             local holdType = IsValid(weapon) and (weapon.HoldType or weapon.GetHoldType(weapon)) or "normal"
             holdType = playeranimtype[holdType] or "passive"
             local tree = lia.anim.player[holdType]
+
             if tree and tree[act] then
                 if type(tree[act]) == "string" then
                     client.CalcSeqOverride = client.LookupSequence(tree[act])
