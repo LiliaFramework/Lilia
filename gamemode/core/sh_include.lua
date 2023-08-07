@@ -1,3 +1,5 @@
+lia.config.DevPrinting = lia.config.DevPrinting or true
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.include(fileName, state)
     if not fileName then
@@ -31,8 +33,14 @@ function lia.util.includeDir(directory, fromLua, recursive)
         baseDir = baseDir .. "/gamemode/"
     end
 
+    local function printIncludeInfo(filePath)
+        if lia.config.DevPrinting then
+            print("Included file:", filePath)
+        end
+    end
+
     if recursive then
-        local function AddRecursive(folder)
+        local function AddRecursive(folder, baseFolder)
             local files, folders = file.Find(folder .. "/*", "LUA")
 
             if not files then
@@ -44,30 +52,23 @@ function lia.util.includeDir(directory, fromLua, recursive)
             for k, v in pairs(files) do
                 local fullPath = folder .. "/" .. v
                 lia.util.include(fullPath)
-
-                if lia.config.DevPrinting then
-                    print("Included file:", v, "Full path:", fullPath)
-                end
+                printIncludeInfo(fullPath)
             end
 
             for k, v in pairs(folders) do
-                AddRecursive(folder .. "/" .. v)
+                local subFolder = baseFolder .. "/" .. v
+                AddRecursive(folder .. "/" .. v, subFolder)
             end
         end
 
-        AddRecursive((fromLua and "" or baseDir) .. directory)
+        local initialFolder = (fromLua and "" or baseDir) .. directory
+        AddRecursive(initialFolder, initialFolder)
     else
         for k, v in ipairs(file.Find((fromLua and "" or baseDir) .. directory .. "/*.lua", "LUA")) do
             local fullPath = directory .. "/" .. v
             lia.util.include(fullPath)
-
-            if lia.config.DevPrinting then
-                print("Included file:", v, "Full path:", fullPath)
-            end
+            printIncludeInfo(fullPath)
         end
     end
 end
-
---------------------------------------------------------------------------------------------------------
-lia.util.includeDir("core/libraries/thirdparty", true)
 --------------------------------------------------------------------------------------------------------

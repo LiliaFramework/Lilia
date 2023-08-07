@@ -8,5 +8,6 @@ lia = lia or {
 }
 
 --------------------------------------------------------------------------------------------------------
+include("core/sh_config.lua")
 include("core/sh_include.lua")
 include("shared.lua")
