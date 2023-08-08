@@ -114,5 +114,3 @@ function lia.command.extractArgs(text)
 
 	return arguments
 end
-
-lia.util.include("libs/core/commands/sv_commands.lua")

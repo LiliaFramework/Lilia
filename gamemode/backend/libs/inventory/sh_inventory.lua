@@ -46,8 +46,3 @@ function lia.inventory.new(typeID)
 		config = table.Copy(class.config)
 	}, class)
 end
-
-lia.util.include("libs/core/inventory/sv_inventory.lua")
-lia.util.include("libs/core/inventory/cl_inventory.lua")
-
-print("File path: " .. debug.getinfo(1).short_src)

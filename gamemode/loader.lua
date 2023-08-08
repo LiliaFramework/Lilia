@@ -72,3 +72,29 @@ function lia.util.includeDir(directory, fromLua, recursive)
     end
 end
 --------------------------------------------------------------------------------------------------------
+lia.util.include("external/thirdparty/cl_ikon.lua", "client")
+lia.util.include("external/thirdparty/cl_markup.lua", "client")
+lia.util.include("external/thirdparty/cl_surfaceGetURL.lua", "client")
+lia.util.include("external/thirdparty/sh_deferred.lua", "shared")
+lia.util.include("external/thirdparty/sh_ease.lua", "shared")
+lia.util.include("external/thirdparty/sh_netstream2.lua", "shared")
+lia.util.include("external/thirdparty/sh_pon.lua", "shared")
+lia.util.include("external/thirdparty/sh_utf8.lua", "shared")
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------------------------------
+lia.util.include("hud/cl_vignette.lua", "client")
+lia.util.include("inventory/cl_inventory.lua", "client")
+lia.util.include("inventory/cl_invpanel_extensions.lua", "client")
+lia.util.include("panels/cl_horizontal_scroll_bar.lua", "client")
+lia.util.include("panels/cl_modelpanel.lua", "client")
+lia.util.include("panels/cl_horizontal_scroll.lua", "client")
+lia.util.include("panels/cl_quick.lua", "client")
+lia.util.include("panels/cl_spawnicon.lua", "client")
+lia.util.include("panels/cl_tooltip.lua", "client")
+lia.util.include("cl_bars.lua", "client")
+lia.util.include("cl_hooks.lua", "client")
+--------------------------------------------------------------------------------------------------------

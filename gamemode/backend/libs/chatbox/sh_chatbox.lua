@@ -124,5 +124,3 @@ function lia.chat.parse(client, message, noSend)
 
     return chatType, message, anonymous
 end
-
-lia.util.include("libs/core/chatbox/sv_chatbox.lua")

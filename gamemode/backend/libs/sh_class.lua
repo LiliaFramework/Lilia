@@ -132,3 +132,4 @@ function GM:OnPlayerJoinClass(client, class, oldClass)
 
     netstream.Start(nil, "classUpdate", client)
 end
+

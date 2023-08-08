@@ -22,9 +22,6 @@ lia.config.CentsCompatibility = true
 lia.config.WepAlwaysRaised = true
 lia.config.WeaponRaiseTimer = 1
 lia.config.DefaultStamina = 100
-lia.config.IntroEnabled = false
-lia.config.AlwaysPlayIntro = false
-lia.config.introFont = "Cambria"
 lia.config.ServerVersionDisplayerEnabled = true
 lia.config.VoiceDistance = 600
 lia.config.AFKTime = 300
@@ -232,4 +229,20 @@ lia.config.PlayerModelTposingFixer = {
     ["path/to/model.mdl"] = "player",
     ["path/to/model.mdl"] = "player",
     ["path/to/model.mdl"] = "player",
+}
+
+lia.config.HiddenHUDElements = {
+    ["CHudHealth"] = true,
+    ["CHudBattery"] = true,
+    ["CHudAmmo"] = true,
+    ["CHudSecondaryAmmo"] = true,
+    ["CHudHistoryResource"] = true
+}
+
+lia.config.InjuryTextTable = {
+    [.2] = {"Critical Injury", Color(255, 0, 0)},
+    [.4] = {"Severe Injury", Color(255, 165, 0)},
+    [.7] = {"Moderate Injury", Color(255, 215, 0)},
+    [.9] = {"Minor Injury", Color(255, 255, 0)},
+    [1] = {"Healthy", Color(0, 255, 0)},
 }

@@ -19,6 +19,4 @@ function lia.lang.loadFromDir(directory)
 	end
 end
 
-lia.util.include("libs/core/language/sv_language.lua")
-lia.util.include("libs/core/language/cl_language.lua")
 lia.lang.loadFromDir("lilia/gamemode/languages")

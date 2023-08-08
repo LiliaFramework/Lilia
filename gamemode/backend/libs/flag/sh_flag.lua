@@ -22,5 +22,3 @@ end
 for desc, flag in pairs(lia.flag.defaultlist) do
 	lia.flag.add(flag, desc)
 end
-
-lia.util.include("libs/core/flag/sv_flag.lua")

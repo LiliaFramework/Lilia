@@ -18,7 +18,6 @@ function MODULE:PlayerLiliaDataLoaded(client)
 		client.liaCharList = charList
 		self:syncCharList(client)
 		client.liaLoaded = true
-		client:setLiliaData("intro", true)
 	end)
 end
 

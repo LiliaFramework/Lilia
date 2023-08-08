@@ -1,17 +1,19 @@
 --------------------------------------------------------------------------------------------------------
-DeriveGamemode("sandbox")
+local PANEL = {}
 --------------------------------------------------------------------------------------------------------
-lia = lia or {
-    util = {},
-    gui = {},
-    meta = {}
-}
+function PANEL:Init()
+	self:SetPaintBackground(false)
+end
 --------------------------------------------------------------------------------------------------------
-include("config.lua")
-include("loader.lua")
-include("shared.lua")
+function PANEL:setMarkup(text, onDrawText)
+	local object = lia.markup.parse(text, self:GetWide())
+	object.onDrawText = onDrawText
+	self:SetTall(object:getHeight())
+
+	self.Paint = function(this, w, h)
+		object:draw(0, 0)
+	end
+end
 --------------------------------------------------------------------------------------------------------
-timer.Remove("HintSystem_OpeningMenu")
-timer.Remove("HintSystem_Annoy1")
-timer.Remove("HintSystem_Annoy2")
+vgui.Register("liaMarkupPanel", PANEL, "DPanel")
 --------------------------------------------------------------------------------------------------------

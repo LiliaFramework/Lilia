@@ -158,5 +158,4 @@ lia.char.registerVar("inv", {
 	end
 })
 
-lia.util.include("libs/core/item/sv_item.lua")
 lia.item.loadFromDir("lilia/gamemode/items")

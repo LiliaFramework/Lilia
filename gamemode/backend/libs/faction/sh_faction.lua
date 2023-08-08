@@ -104,5 +104,3 @@ function lia.faction.formatModelData()
         end
     end
 end
-
-lia.util.include("libs/core/faction/cl_faction.lua")

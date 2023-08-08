@@ -319,5 +319,3 @@ do
 		end
 	})
 end
-
-lia.util.include("libs/core/character/sv_character.lua")

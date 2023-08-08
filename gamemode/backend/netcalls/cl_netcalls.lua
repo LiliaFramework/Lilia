@@ -483,11 +483,32 @@ netstream.Hook("actBar", function(start, finish, text)
 		lia.bar.actionText = text:upper()
 	end
 end)
+--------------------------------------------------------------------------------------------------------
+netstream.Hook("classUpdate", function(joinedClient)
+    if (lia.gui.classes and lia.gui.classes:IsVisible()) then
+        if (joinedClient == LocalPlayer()) then
+            lia.gui.classes:loadClasses()
+        else
+            for k, v in ipairs(lia.gui.classes.classPanels) do
+                local data = v.data
+
+                v:setNumber(#lia.class.getPlayers(data.index))
+            end
+        end
+    end
+end)
+--------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------------------
+
 
 --------------------------------------------------------------------------------------------------------
 
 if #lia.char.names < 1 then
     netstream.Start("liaCharFetchNames")
 end
-
---------------------------------------------------------------------------------------------------------

@@ -3,7 +3,7 @@ CLIENT
 hook.Run("ShouldHideBars")
 hook.Run("ShouldBarDraw", bar)
 hook.Run("CanPlayerViewInventory") 
-
+hook.Run("CanPlayerViewClasses")
 ITEM
 
 hook.Run("CanOpenBagPanel", item)
