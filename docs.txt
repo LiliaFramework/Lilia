@@ -1,0 +1,9 @@
+HOOKS:
+CLIENT
+hook.Run("ShouldHideBars")
+hook.Run("ShouldBarDraw", bar)
+hook.Run("CanPlayerViewInventory") 
+
+ITEM
+
+hook.Run("CanOpenBagPanel", item)

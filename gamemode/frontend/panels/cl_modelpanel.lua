@@ -1,6 +1,6 @@
+--------------------------------------------------------------------------------------------------------
 local PANEL = {}
-local MODEL_ANGLE = Angle(0, 45, 0)
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self.brightness = 1
     self:SetCursor("none")
@@ -36,10 +36,10 @@ function PANEL:Init()
         entity:ResetSequence(4)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 local gui_MouseX = gui.MouseX
 local gui_MouseY = gui.MouseY
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:LayoutEntity()
     local scrW, scrH = ScrW(), ScrH()
     local xRatio = gui_MouseX() / scrW
@@ -49,7 +49,7 @@ function PANEL:LayoutEntity()
     local entity = self.Entity
     entity:SetPoseParameter("head_pitch", yRatio * 90 - 30)
     entity:SetPoseParameter("head_yaw", (xRatio - xRatio2) * 90 - 5)
-    entity:SetAngles(MODEL_ANGLE)
+    entity:SetAngles(Angle(0, 45, 0))
     entity:SetIK(false)
 
     if self.copyLocalSequence then
@@ -60,7 +60,7 @@ function PANEL:LayoutEntity()
 
     self:RunAnimation()
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:PreDrawModel(entity)
     if self.brightness then
         local brightness = self.brightness * 0.4
@@ -81,21 +81,18 @@ function PANEL:PreDrawModel(entity)
 
     return true
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:OnMousePressed()
 end
-
-local math_abs = math.abs
-local math_deg = math.deg
-local math_atan = math.atan
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:fitFOV()
     local entity = self:GetEntity()
     if not IsValid(entity) then return end
     local mins, maxs = entity:GetRenderBounds()
-    local height = math_abs(maxs.z) + math_abs(mins.z) + 8
+    local height = math.abs(maxs.z) + math.abs(mins.z) + 8
     local distance = self:GetCamPos():Length()
-    self:SetFOV(math_deg(2 * math_atan(height / (2 * distance))))
+    self:SetFOV(math.deg(2 * math.atan(height / (2 * distance))))
 end
-
+--------------------------------------------------------------------------------------------------------
 vgui.Register("liaModelPanel", PANEL, "DModelPanel")
+--------------------------------------------------------------------------------------------------------

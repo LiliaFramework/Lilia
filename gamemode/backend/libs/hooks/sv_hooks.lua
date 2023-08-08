@@ -1,9 +1,10 @@
+--------------------------------------------------------------------------------------------------------
 function GM:EntityNetworkedVarChanged(entity, varName, oldVal, newVal)
     if varName == "Model" and entity.SetModel then
         hook.Run("PlayerModelChanged", entity, newVal)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:SetupBotCharacter(client)
     local botID = os.time()
     local index = math.random(1, table.Count(lia.faction.indices))
@@ -22,7 +23,7 @@ function GM:SetupBotCharacter(client)
     character:setup()
     client:Spawn()
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:SetupBotInventory(client, character)
     local invType = hook.Run("GetDefaultInventoryType")
     if not invType then return end
@@ -31,7 +32,7 @@ function GM:SetupBotInventory(client, character)
     character.vars.inv[1] = inventory
     lia.inventory.instances[inventory.id] = inventory
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerInitialSpawn(client)
     client.liaJoinTime = RealTime()
     if client:IsBot() then return hook.Run("SetupBotCharacter", client) end
@@ -53,7 +54,7 @@ function GM:PlayerInitialSpawn(client)
 
     hook.Run("PostPlayerInitialSpawn", client)
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerUse(client, entity)
     if client:getNetVar("restricted") then return false end
 
@@ -70,7 +71,7 @@ function GM:PlayerUse(client, entity)
 
     return true
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:KeyPress(client, key)
     if key == IN_USE then
         local data = {}
@@ -84,13 +85,13 @@ function GM:KeyPress(client, key)
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:KeyRelease(client, key)
     if key == IN_RELOAD then
         timer.Remove("liaToggleRaise" .. client:SteamID())
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:CanPlayerDropItem(client, item)
     if item.isBag then
         local inventory = item:getInv()
@@ -108,14 +109,14 @@ function GM:CanPlayerDropItem(client, item)
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:CanPlayerInteractItem(client, action, item)
     if client:getNetVar("restricted") then return false end
     if action == "drop" and hook.Run("CanPlayerDropItem", client, item) == false then return false end
     if action == "take" and hook.Run("CanPlayerTakeItem", client, item) == false then return false end
     if not client:Alive() or client:getLocalVar("ragdoll") then return false end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:CanPlayerTakeItem(client, item)
     if IsValid(item.entity) then
         local char = client:getChar()
@@ -127,11 +128,11 @@ function GM:CanPlayerTakeItem(client, item)
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerShouldTakeDamage(client, attacker)
     return client:getChar() ~= nil
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:EntityTakeDamage(entity, dmgInfo)
     if IsValid(entity.liaPlayer) then
         if dmgInfo:IsDamageType(DMG_CRUSH) then
@@ -149,7 +150,7 @@ function GM:EntityTakeDamage(entity, dmgInfo)
         entity.liaPlayer:TakeDamageInfo(dmgInfo)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadedChar(client, character, lastChar)
     local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
 
@@ -186,7 +187,7 @@ function GM:PlayerLoadedChar(client, character, lastChar)
 
     hook.Run("PlayerLoadout", client)
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:CharacterLoaded(id)
     local character = lia.char.loaded[id]
 
@@ -206,7 +207,7 @@ function GM:CharacterLoaded(id)
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerSay(client, message)
     local chatType, message, anonymous = lia.chat.parse(client, message, true)
     if (chatType == "ic") and lia.command.parse(client, message) then return "" end
@@ -215,7 +216,7 @@ function GM:PlayerSay(client, message)
 
     return ""
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadout(client)
     if client:getChar():hasFlags("P") then
         client:Give("weapon_physgun")
@@ -227,7 +228,7 @@ function GM:PlayerLoadout(client)
         client:SelectWeapon("gmod_tool")
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawn(client)
     local character = client:getChar()
 
@@ -241,7 +242,7 @@ function GM:PlayerSpawn(client)
     client:setAction()
     hook.Run("PlayerLoadout", client)
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PostPlayerLoadout(client)
     local char = client:getChar()
 
@@ -257,7 +258,7 @@ function GM:PostPlayerLoadout(client)
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerDeath(client, inflictor, attacker)
     local char = client:getChar()
 
@@ -278,7 +279,7 @@ function GM:PlayerDeath(client, inflictor, attacker)
         client:setNetVar("deathTime", CurTime() + lia.config.SpawnTime)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerDeathThink(client)
     if client:getChar() then
         local deathTime = client:getNetVar("deathTime")
@@ -290,7 +291,7 @@ function GM:PlayerDeathThink(client)
 
     return false
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerDisconnected(client)
     client:saveLiliaData()
     local character = client:getChar()
@@ -316,7 +317,7 @@ function GM:PlayerDisconnected(client)
 
     lia.char.cleanUpForPlayer(client)
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:InitPostEntity()
     local doors = ents.FindByClass("prop_door_rotating")
 
@@ -348,7 +349,7 @@ function GM:InitPostEntity()
         hook.Run("PostLoadData")
     end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:ShutDown()
     if hook.Run("ShouldDataBeSaved") == false then return end
     lia.shuttingDown = true
@@ -362,11 +363,11 @@ function GM:ShutDown()
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerDeathSound()
     return true
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:InitializedSchema()
     local persistString = GetConVar("sbox_persist"):GetString()
 
@@ -375,7 +376,7 @@ function GM:InitializedSchema()
         game.ConsoleCommand("sbox_persist " .. newValue .. "\n")
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
     local allowVoice = lia.config.AllowVoice
 
@@ -385,7 +386,7 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
         return false, false
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
     if not physObj:IsMoveable() then return false end
     if entity:GetUnFreezable() then return false end
@@ -405,32 +406,33 @@ function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
 
     return true
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:CanPlayerSuicide(client)
     return false
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:AllowPlayerPickup(client, entity)
     return false
 end
+--------------------------------------------------------------------------------------------------------
 
 function GM:PreCleanupMap()
     lia.shuttingDown = true
     hook.Run("SaveData")
     hook.Run("PersistenceSave")
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PostCleanupMap()
     lia.shuttingDown = false
     hook.Run("LoadData")
     hook.Run("PostLoadData")
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PrePlayerLoadedChar(client, character, lastChar)
     client:SetBodyGroups("000000000")
     client:SetSkin(0)
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:CharacterPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
@@ -441,7 +443,7 @@ function GM:CharacterPreSave(character)
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 local defaultAngleData = {
     ["models/items/car_battery01.mdl"] = Angle(-15, 180, 0),
     ["models/props_junk/harpoon002a.mdl"] = Angle(0, 0, 0),
@@ -465,7 +467,7 @@ function GM:GetPreferredCarryAngles(entity)
         return defaultAngleData[model]
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:CreateDefaultInventory(character)
     local invType = hook.Run("GetDefaultInventoryType", character)
     local charID = character:getID()
@@ -478,11 +480,11 @@ function GM:CreateDefaultInventory(character)
         error("Invalid default inventory type " .. tostring(invType))
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:ModuleShouldLoad(module)
     return not lia.module.isDisabled(module)
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:InitializedModules()
     local psaString = "Please Remove Talk Modes. Our framework has such built in by default."
 
@@ -492,10 +494,11 @@ function GM:InitializedModules()
         end)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:LiliaTablesLoaded()
     local ignore = function() end
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
 end
+--------------------------------------------------------------------------------------------------------

@@ -1,10 +1,11 @@
+--------------------------------------------------------------------------------------------------------
 local getModelClass = lia.anim.getModelClass
 local IsValid = IsValid
 local string = string
 local type = type
 local playeranimtype = lia.anim.PlayerHoldtypeTranslator
 local defaultanimtype = lia.anim.HoldtypeTranslator
-
+--------------------------------------------------------------------------------------------------------
 function GM:TranslateActivity(client, act)
     local model = string.lower(client.GetModel(client))
     local class = getModelClass(model) or "player"
@@ -98,7 +99,7 @@ function GM:TranslateActivity(client, act)
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:DoAnimationEvent(client, event, data)
     local class = lia.anim.getModelClass(client:GetModel())
 
@@ -141,11 +142,11 @@ function GM:DoAnimationEvent(client, event, data)
 
     return ACT_INVALID
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:EntityEmitSound(data)
     if data.Entity.liaIsMuted then return false end
 end
-
+--------------------------------------------------------------------------------------------------------
 local vectorAngle = FindMetaTable("Vector").Angle
 local normalizeAngle = math.NormalizeAngle
 local oldCalcSeqOverride
@@ -162,7 +163,7 @@ function GM:HandlePlayerLanding(client, velocity, wasOnGround)
         return true
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:CalcMainActivity(client, velocity)
     client.CalcIdeal = ACT_MP_STAND_IDLE
     oldCalcSeqOverride = client.CalcSeqOverride
@@ -194,7 +195,7 @@ function GM:CalcMainActivity(client, velocity)
 
     return client.CalcIdeal, client.liaForceSeq or oldCalcSeqOverride
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:OnCharVarChanged(char, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
         for k, v in pairs(lia.char.varHooks[varName]) do
@@ -202,17 +203,17 @@ function GM:OnCharVarChanged(char, varName, oldVar, newVar)
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:GetDefaultCharName(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.onGetDefaultName then return info:onGetDefaultName(client) end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.onGetDefaultDesc then return info:onGetDefaultDesc(client) end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:CanPlayerUseChar(client, char)
     local banned = char:getData("banned")
 
@@ -225,7 +226,7 @@ function GM:CanPlayerUseChar(client, char)
     local faction = lia.faction.indices[char:getFaction()]
     if faction and hook.Run("CheckFactionLimitReached", faction, char, client) then return false, "@limitFaction" end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:CheckFactionLimitReached(faction, character, client)
     if isfunction(faction.onCheckLimitReached) then return faction:onCheckLimitReached(character, client) end
     if not isnumber(faction.limit) then return false end
@@ -237,7 +238,7 @@ function GM:CheckFactionLimitReached(faction, character, client)
 
     return team.NumPlayers(faction.index) >= maxPlayers
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:Move(client, moveData)
     local char = client:getChar()
 
@@ -269,7 +270,7 @@ function GM:Move(client, moveData)
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:CanItemBeTransfered(itemObject, curInv, inventory)
     if itemObject.onCanBeTransfered then
         local itemHook = itemObject:onCanBeTransfered(curInv, inventory)
@@ -277,3 +278,4 @@ function GM:CanItemBeTransfered(itemObject, curInv, inventory)
         return itemHook ~= false
     end
 end
+--------------------------------------------------------------------------------------------------------

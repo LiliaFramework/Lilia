@@ -1,9 +1,10 @@
+--------------------------------------------------------------------------------------------------------
 function GM:NetworkEntityCreated(entity)
     if entity == LocalPlayer() then return end
     if not entity:IsPlayer() then return end
     hook.Run("PlayerModelChanged", entity, entity:GetModel())
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:InitializedConfig()
     hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
 
@@ -13,7 +14,7 @@ function GM:InitializedConfig()
 
     print("LOADED CONFIG!")
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:CharacterListLoaded()
     local shouldPlayIntro = lia.config.AlwaysPlayIntro or not lia.localData.intro or nil
 
@@ -42,12 +43,12 @@ function GM:CharacterListLoaded()
         end
     end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:InitPostEntity()
     lia.joinTime = RealTime() - 0.9716
     lia.faction.formatModelData()
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:CalcView(client, origin, angles, fov)
     local view = self.BaseClass:CalcView(client, origin, angles, fov)
     local entity = Entity(client:getLocalVar("ragdoll", 0))
@@ -73,7 +74,7 @@ function GM:CalcView(client, origin, angles, fov)
 
     return view
 end
-
+--------------------------------------------------------------------------------------------------------
 local blurGoal = 0
 local blurValue = 0
 local mathApproach = math.Approach
@@ -95,13 +96,13 @@ function GM:HUDPaintBackground()
     self.BaseClass.PaintWorldTips(self.BaseClass)
     lia.menu.drawAll()
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:ShouldDrawEntityInfo(entity)
     if entity:IsPlayer() or IsValid(entity:getNetVar("player")) then return entity == LocalPlayer() and not LocalPlayer():ShouldDrawLocalPlayer() end
 
     return false
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
 
@@ -126,7 +127,7 @@ function GM:PlayerBindPress(client, bind, pressed)
         lia.command.send("chargetup")
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:ItemShowEntityMenu(entity)
     for k, v in ipairs(lia.menu.list) do
         if v.entity == entity then
@@ -179,7 +180,7 @@ function GM:ItemShowEntityMenu(entity)
     itemTable.player = nil
     itemTable.entity = nil
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:SetupQuickMenu(menu)
     menu:addCheck(L"cheapBlur", function(panel, state)
         if state then
@@ -220,18 +221,18 @@ function GM:SetupQuickMenu(menu)
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:DrawLiliaModelView(panel, ent)
     if IsValid(ent.weapon) then
         ent.weapon:DrawModel()
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:ScreenResolutionChanged(oldW, oldH)
     RunConsoleCommand("fixchatplz")
     hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:LiliaLoaded()
     local namecache = {}
 
@@ -252,3 +253,4 @@ function GM:LiliaLoaded()
 
     lia.module.namecache = namecache
 end
+--------------------------------------------------------------------------------------------------------

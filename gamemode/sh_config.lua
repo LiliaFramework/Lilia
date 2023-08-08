@@ -1,12 +1,14 @@
+--------------------------------------------------------------------------------------------------------
 lia.config = lia.config or {}
 lia.config.list = lia.config.list or {}
-lia.config.SchemaYear = 2023
+--------------------------------------------------------------------------------------------------------
 lia.config.contentURL = "https://discord.gg/HmfaJ9brfz"
 lia.config.PKActive = false
 lia.config.PKWorld = false
 lia.config.MoneyModel = "models/props_lab/box01a.mdl"
 lia.config.StaminaSlowdown = true
 lia.config.BranchWarning = true
+lia.config.VersionEnabled = true
 --///////////////////////////
 lia.config.RespawnButton = true
 lia.config.AFKKickEnabled = true

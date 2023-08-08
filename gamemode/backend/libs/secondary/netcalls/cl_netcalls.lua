@@ -468,6 +468,26 @@ netstream.Hook("cMsg", function(client, chatType, text, anonymous)
 end)
 
 --------------------------------------------------------------------------------------------------------
+
+netstream.Hook("actBar", function(start, finish, text)
+	if not text then
+		lia.bar.actionStart = 0
+		lia.bar.actionEnd = 0
+	else
+		if text:sub(1, 1) == "@" then
+			text = L(text:sub(2))
+		end
+
+		lia.bar.actionStart = start
+		lia.bar.actionEnd = finish
+		lia.bar.actionText = text:upper()
+	end
+end)
+
+--------------------------------------------------------------------------------------------------------
+
 if #lia.char.names < 1 then
     netstream.Start("liaCharFetchNames")
 end
+
+--------------------------------------------------------------------------------------------------------

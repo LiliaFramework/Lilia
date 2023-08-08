@@ -1,7 +1,7 @@
+--------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
+--------------------------------------------------------------------------------------------------------
 local setSequence = function(entity)
-    -- This code is duplicated from cl_modelpanel.lua
     local sequence = entity:SelectWeightedSequence(ACT_IDLE)
 
     if sequence <= 0 then
@@ -27,7 +27,7 @@ local setSequence = function(entity)
 
     entity:ResetSequence(4)
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:setHidden(false)
 
@@ -61,7 +61,7 @@ function PANEL:Init()
         entity:SetEyeTarget(Vector(0, 0, 64))
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:setHidden(hidden)
     if hidden then
         self:SetAmbientLight(color_black)
@@ -84,15 +84,16 @@ function PANEL:setHidden(hidden)
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:LayoutEntity()
     self:RunAnimation()
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:OnMousePressed()
     if self.DoClick then
         self:DoClick()
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 vgui.Register("liaSpawnIcon", PANEL, "DModelPanel")
+--------------------------------------------------------------------------------------------------------
