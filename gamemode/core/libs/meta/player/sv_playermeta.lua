@@ -1,8 +1,5 @@
 --------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
---------------------------------------------------------------------------------------------------------
-playerMeta.liaSteamID64 = playerMeta.liaSteamID64 or playerMeta.SteamID64
-
 --------------------------------------------------------------------------------------------------------+
 function playerMeta:getPlayTime()
     local diff = os.time(lia.util.dateToNumber(self.lastJoin)) - os.time(lia.util.dateToNumber(self.firstJoin))
@@ -447,3 +444,6 @@ end
 function playerMeta:SteamID64()
     return self:liaSteamID64() or 0
 end
+--------------------------------------------------------------------------------------------------------+
+playerMeta.liaSteamID64 = playerMeta.liaSteamID64 or playerMeta.SteamID64
+--------------------------------------------------------------------------------------------------------+

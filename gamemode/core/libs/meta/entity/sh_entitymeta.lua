@@ -15,5 +15,6 @@ for k, v in pairs(list.Get("Vehicles")) do
 end
 
 --------------------------------------------------------------------------------------------------------
-lia.util.include("meta/entity/sv_entitymeta.lua")
-lia.util.include("meta/entity/cl_entitymeta.lua")
+lia.util.include("core/libs/meta/entity/sv_entitymeta.lua")
+lia.util.include("core/libs/meta/entity/cl_entitymeta.lua")
+--------------------------------------------------------------------------------------------------------

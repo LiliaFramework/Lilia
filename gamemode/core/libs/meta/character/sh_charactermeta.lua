@@ -1,21 +1,23 @@
+--------------------------------------------------------------------------------------------------------
 local charMeta = lia.meta.character or {}
+--------------------------------------------------------------------------------------------------------
 charMeta.__index = charMeta
 charMeta.id = charMeta.id or 0
 charMeta.vars = charMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
-
+--------------------------------------------------------------------------------------------------------
 function charMeta:__tostring()
     return "character[" .. (self.id or 0) .. "]"
 end
-
+--------------------------------------------------------------------------------------------------------
 function charMeta:__eq(other)
     return self:getID() == other:getID()
 end
-
+--------------------------------------------------------------------------------------------------------
 function charMeta:getID()
     return self.id
 end
-
+--------------------------------------------------------------------------------------------------------
 function charMeta:getPlayer()
     if IsValid(self.player) then
         return self.player
@@ -41,7 +43,7 @@ function charMeta:getPlayer()
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function charMeta:hasMoney(amount)
     if amount < 0 then
         print("Negative Money Check Received.")
@@ -49,21 +51,21 @@ function charMeta:hasMoney(amount)
 
     return self:getMoney() >= amount
 end
-
+--------------------------------------------------------------------------------------------------------
 function charMeta:giveMoney(amount, takingMoney)
     if not takingMoney then end
     self:setMoney(self:getMoney() + amount)
 
     return true
 end
-
+--------------------------------------------------------------------------------------------------------
 function charMeta:takeMoney(amount)
     amount = math.abs(amount)
     self:giveMoney(-amount, true)
 
     return true
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
     data.index = data.index or table.Count(lia.char.vars)
@@ -114,11 +116,11 @@ function lia.char.registerVar(key, data)
 
     charMeta.vars[key] = data.default
 end
-
+--------------------------------------------------------------------------------------------------------
 function charMeta:getFlags()
     return self:getData("f", "")
 end
-
+--------------------------------------------------------------------------------------------------------
 function charMeta:hasFlags(flags)
     for i = 1, #flags do
         if self:getFlags():find(flags:sub(i, i), 1, true) then return true end
@@ -126,6 +128,8 @@ function charMeta:hasFlags(flags)
 
     return hook.Run("CharacterFlagCheck", self, flags) or false
 end
-
-lia.util.include("meta/character/sv_charactermeta.lua")
+--------------------------------------------------------------------------------------------------------
+lia.util.include("core/libs/meta/character/sv_character.lua")
+--------------------------------------------------------------------------------------------------------
 lia.meta.character = charMeta
+--------------------------------------------------------------------------------------------------------

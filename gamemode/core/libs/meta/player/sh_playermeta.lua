@@ -1,10 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
 --------------------------------------------------------------------------------------------------------
-playerMeta.steamName = playerMeta.steamName or playerMeta.Name
-playerMeta.SteamName = playerMeta.steamName
-
---------------------------------------------------------------------------------------------------------
 function playerMeta:AddMoney(amt)
     local char = self:getChar()
 
@@ -219,8 +215,11 @@ function playerMeta:SelectWeapon(class)
 end
 
 --------------------------------------------------------------------------------------------------------
-lia.util.include("meta/player/sv_playermeta.lua")
-lia.util.include("meta/player/cl_playermeta.lua")
+lia.util.include("core/libs/meta/player/sv_playermeta.lua")
+lia.util.include("core/libs/meta/player/cl_playermeta.lua")
 --------------------------------------------------------------------------------------------------------
 playerMeta.Nick = playerMeta.Name
 playerMeta.GetName = playerMeta.Name
+playerMeta.steamName = playerMeta.steamName or playerMeta.Name
+playerMeta.SteamName = playerMeta.steamName
+--------------------------------------------------------------------------------------------------------

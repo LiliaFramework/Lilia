@@ -1,7 +1,8 @@
-file.CreateDir("lilia")
+--------------------------------------------------------------------------------------------------------
 lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
-
+--------------------------------------------------------------------------------------------------------
+file.CreateDir("lilia")
 --------------------------------------------------------------------------------------------------------
 function lia.data.set(key, value, global, ignoreMap)
     local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
