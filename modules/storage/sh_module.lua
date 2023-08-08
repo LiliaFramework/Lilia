@@ -9,6 +9,8 @@ lia.util.include("sv_networking.lua")
 lia.util.include("sv_access_rules.lua")
 lia.util.include("cl_networking.lua")
 lia.util.include("cl_password.lua")
+lia.util.include("cl_storage.lua")
+lia.util.include("sh_definitions.lua")
 liaStorageBase = MODULE
 
 if CLIENT then

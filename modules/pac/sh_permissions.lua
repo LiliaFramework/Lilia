@@ -5,7 +5,6 @@ function MODULE:isAllowedToUsePAC(client)
 	return false
 end
 
--- Only allow PAC using the above function.
 function MODULE:CanWearParts(client, file)
 	return self:isAllowedToUsePAC(client)
 end

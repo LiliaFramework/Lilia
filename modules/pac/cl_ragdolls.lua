@@ -1,4 +1,3 @@
--- Transfer player PAC parts to ragdols.
 function MODULE:DrawPlayerRagdoll(entity)
 	local ply = entity.objCache
 

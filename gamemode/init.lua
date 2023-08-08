@@ -1,10 +1,12 @@
 --------------------------------------------------------------------------------------------------------
 DeriveGamemode("sandbox")
+
 --------------------------------------------------------------------------------------------------------
 lia = lia or {
     util = {},
     meta = {}
 }
+
 --------------------------------------------------------------------------------------------------------
 AddCSLuaFile("config.lua")
 AddCSLuaFile("loader.lua")
@@ -12,7 +14,20 @@ AddCSLuaFile("loader.lua")
 include("config.lua")
 include("loader.lua")
 include("data.lua")
+include("database.lua")
 include("shared.lua")
 --------------------------------------------------------------------------------------------------------
 resource.AddWorkshop("2959728255")
+
+--------------------------------------------------------------------------------------------------------
+timer.Simple(0, function()
+    hook.Run("SetupDatabase")
+
+    lia.db.connect(function()
+        lia.db.loadTables()
+        MsgC(Color(0, 255, 0), "Lilia has connected to the database.\n")
+        MsgC(Color(0, 255, 0), "Database Type: " .. lia.db.module .. ".\n")
+        hook.Run("DatabaseConnected")
+    end)
+end)
 --------------------------------------------------------------------------------------------------------

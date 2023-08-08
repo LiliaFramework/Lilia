@@ -13,6 +13,25 @@ net.Receive("liaNotifyL", function()
 end)
 
 --------------------------------------------------------------------------------------------------------
+net.Receive("liaCharList", function()
+    local newCharList = {}
+    local length = net.ReadUInt(32)
+
+    for i = 1, length do
+        newCharList[i] = net.ReadUInt(32)
+    end
+
+    local oldCharList = lia.characters
+    lia.characters = newCharList
+
+    if oldCharList then
+        hook.Run("CharacterListUpdated", oldCharList, newCharList)
+    else
+        hook.Run("CharacterListLoaded", newCharList)
+    end
+end)
+
+--------------------------------------------------------------------------------------------------------
 net.Receive("liaStringReq", function()
     local id = net.ReadUInt(32)
     local title = net.ReadString()
@@ -468,47 +487,40 @@ netstream.Hook("cMsg", function(client, chatType, text, anonymous)
 end)
 
 --------------------------------------------------------------------------------------------------------
-
 netstream.Hook("actBar", function(start, finish, text)
-	if not text then
-		lia.bar.actionStart = 0
-		lia.bar.actionEnd = 0
-	else
-		if text:sub(1, 1) == "@" then
-			text = L(text:sub(2))
-		end
+    if not text then
+        lia.bar.actionStart = 0
+        lia.bar.actionEnd = 0
+    else
+        if text:sub(1, 1) == "@" then
+            text = L(text:sub(2))
+        end
 
-		lia.bar.actionStart = start
-		lia.bar.actionEnd = finish
-		lia.bar.actionText = text:upper()
-	end
+        lia.bar.actionStart = start
+        lia.bar.actionEnd = finish
+        lia.bar.actionText = text:upper()
+    end
 end)
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("classUpdate", function(joinedClient)
-    if (lia.gui.classes and lia.gui.classes:IsVisible()) then
-        if (joinedClient == LocalPlayer()) then
+    if lia.gui.classes and lia.gui.classes:IsVisible() then
+        if joinedClient == LocalPlayer() then
             lia.gui.classes:loadClasses()
         else
             for k, v in ipairs(lia.gui.classes.classPanels) do
                 local data = v.data
-
                 v:setNumber(#lia.class.getPlayers(data.index))
             end
         end
     end
 end)
---------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------
-
 --------------------------------------------------------------------------------------------------------
-
-
 --------------------------------------------------------------------------------------------------------
-
-
 --------------------------------------------------------------------------------------------------------
-
+--------------------------------------------------------------------------------------------------------
 if #lia.char.names < 1 then
     netstream.Start("liaCharFetchNames")
 end

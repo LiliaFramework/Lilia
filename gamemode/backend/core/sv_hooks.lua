@@ -25,7 +25,7 @@ function GM:SetupBotCharacter(client)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:SetupBotInventory(client, character)
-    local invType = hook.Run("GetDefaultInventoryType")
+    local invType = "grid"
     if not invType then return end
     local inventory = lia.inventory.new(invType)
     inventory.id = "bot" .. character:getID()
@@ -469,7 +469,7 @@ function GM:GetPreferredCarryAngles(entity)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:CreateDefaultInventory(character)
-    local invType = hook.Run("GetDefaultInventoryType", character)
+    local invType = "grid"
     local charID = character:getID()
 
     if lia.inventory.types[invType] then

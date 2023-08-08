@@ -1,5 +1,3 @@
--- This Library is just for PAC3 Integration.
--- You must install PAC3 to make this library works.
 MODULE.name = "PAC3 Integration"
 MODULE.author = "Leonheart#7476/Black Tea"
 MODULE.desc = "More Upgraded, More well organized PAC3 Integration made by Black Tea"

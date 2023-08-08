@@ -1,32 +1,24 @@
 local MODULE = MODULE
 
 function MODULE:CharacterPreSave(character)
-    -- Get the player from the character.
     local client = character:getPlayer()
 
-    -- Check to see if we can get the player's position.
     if IsValid(client) then
-        -- Store the position in the character's data.
         character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()})
     end
 end
 
--- Called after the player's loadout has been set.
 function MODULE:PlayerLoadedChar(client, character, lastChar)
     timer.Simple(0, function()
         if IsValid(client) then
-            -- Get the saved position from the character data.
             local position = character:getData("pos")
 
-            -- Check if the position was set.
             if position then
                 if position[3] and position[3]:lower() == game.GetMap():lower() then
-                    -- Restore the player to that position.
                     client:SetPos(position[1].x and position[1] or client:GetPos())
                     client:SetEyeAngles(position[2].p and position[2] or Angle(0, 0, 0))
                 end
 
-                -- Remove the position data since it is no longer needed.
                 character:setData("pos", nil)
             end
         end
@@ -71,91 +63,3 @@ end
 function MODULE:SaveSpawns()
     self:setData(self.spawns)
 end
-
-lia.command.add("spawnadd", {
-    adminOnly = true,
-    syntax = "<string faction> [string class]",
-    onRun = function(client, arguments)
-        local faction
-        local name = arguments[1]
-        local class = table.concat(arguments, " ", 2)
-        local info
-        local info2
-
-        if name then
-            info = lia.faction.indices[name:lower()]
-
-            if not info then
-                for k, v in ipairs(lia.faction.indices) do
-                    if lia.util.stringMatches(v.uniqueID, name) or lia.util.stringMatches(L(v.name, client), name) then
-                        faction = v.uniqueID
-                        info = v
-                        break
-                    end
-                end
-            end
-
-            if info then
-                if class and class ~= "" then
-                    local found = false
-
-                    for k, v in ipairs(lia.class.list) do
-                        if v.faction == info.index and (v.uniqueID:lower() == class:lower() or lia.util.stringMatches(L(v.name, client), class)) then
-                            class = v.uniqueID
-                            info2 = v
-                            found = true
-                            break
-                        end
-                    end
-
-                    if not found then return L("invalidClass", client) end
-                else
-                    class = ""
-                end
-
-                MODULE.spawns[faction] = MODULE.spawns[faction] or {}
-                MODULE.spawns[faction][class] = MODULE.spawns[faction][class] or {}
-                table.insert(MODULE.spawns[faction][class], client:GetPos())
-                MODULE:SaveSpawns()
-                local name = L(info.name, client)
-
-                if info2 then
-                    name = name .. " (" .. L(info2.name, client) .. ")"
-                end
-
-                return L("spawnAdded", client, name)
-            else
-                return L("invalidFaction", client)
-            end
-        else
-            return L("invalidArg", client, 1)
-        end
-    end
-})
-
-lia.command.add("spawnremove", {
-    adminOnly = true,
-    syntax = "[number radius]",
-    onRun = function(client, arguments)
-        local position = client:GetPos()
-        local radius = tonumber(arguments[1]) or 120
-        local i = 0
-
-        for k, v in pairs(MODULE.spawns) do
-            for k2, v in pairs(v) do
-                for k3, v3 in pairs(v) do
-                    if v3:Distance(position) <= radius then
-                        v[k3] = nil
-                        i = i + 1
-                    end
-                end
-            end
-        end
-
-        if i > 0 then
-            MODULE:SaveSpawns()
-        end
-
-        return L("spawnDeleted", client, i)
-    end
-})

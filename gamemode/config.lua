@@ -9,6 +9,11 @@ lia.config.MoneyModel = "models/props_lab/box01a.mdl"
 lia.config.StaminaSlowdown = true
 lia.config.BranchWarning = true
 lia.config.VersionEnabled = true
+lia.config.ThirdPersonEnabled = true
+lia.config.Musicvolume = 0.25
+lia.config.Music = "music/hl2_song2.mp3"
+lia.config.BackgroundURL = "music/hl2_song2.mp3"
+lia.config.CharMenuBGInputDisabled = true
 --///////////////////////////
 lia.config.RespawnButton = true
 lia.config.AFKKickEnabled = true
