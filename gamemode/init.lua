@@ -18,12 +18,12 @@ include("backend/external/thirdparty/sh_netstream2.lua")
 include("backend/external/thirdparty/sh_pon.lua")
 include("backend/external/thirdparty/sh_utf8.lua")
 --------------------------------------------------------------------------------------------------------
-AddCSLuaFile("sh_config.lua")
-AddCSLuaFile("sh_loader.lua")
+AddCSLuaFile("config.lua")
+AddCSLuaFile("loader.lua")
 --------------------------------------------------------------------------------------------------------
-include("sh_config.lua")
-include("sh_loader.lua")
-include("sv_data.lua")
+include("config.lua")
+include("loader.lua")
+include("data.lua")
 include("shared.lua")
 --------------------------------------------------------------------------------------------------------
 AddCSLuaFile("backend/sh_loader.lua")
