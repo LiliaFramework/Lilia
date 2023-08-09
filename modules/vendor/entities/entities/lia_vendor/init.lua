@@ -1,13 +1,5 @@
 include("shared.lua")
 include("../../../sh_enums.lua")
-
-local owner2 = {
-    root = true,
-    communitymanager = true,
-    superadmin = true,
-    headadmin = true,
-}
-
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 local MODULE = MODULE

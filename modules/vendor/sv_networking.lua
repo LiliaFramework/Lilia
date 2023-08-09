@@ -21,13 +21,6 @@ net.Receive("liaVendorExit", function(_, client)
     end
 end)
 
-local owner2 = {
-    root = true,
-    communitymanager = true,
-    superadmin = true,
-    headadmin = true,
-}
-
 net.Receive("liaVendorEdit", function(_, client)
     local key = net.ReadString()
     local uniqueID = client:GetUserGroup()

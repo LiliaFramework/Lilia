@@ -2,13 +2,6 @@ local PANEL = {}
 local PADDING = 64
 local PADDING_HALF = PADDING / 2
 
-local owner2 = {
-    root = true,
-    communitymanager = true,
-    superadmin = true,
-    headadmin = true,
-}
-
 function PANEL:Init()
     if IsValid(lia.gui.vendor) then
         lia.gui.vendor.noSendExit = true

@@ -100,7 +100,7 @@ function GM:CanPlayerInteractItem(client, action, item)
     if not client:Alive() or client:getLocalVar("ragdoll") then return false end
 end
 --------------------------------------------------------------------------------------------------------
-function PLUGIN:CanPlayerEquipItem(client, item)
+function GM:CanPlayerEquipItem(client, item)
     if not item.RequiredSkillLevels then return true end
 
     return client:MeetsRequiredSkills(item.RequiredSkillLevels)
@@ -225,6 +225,7 @@ function GM:PlayerSay(client, message)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadout(client)
+    if not client:getChar() then return end 
     if client:getChar():hasFlags("P") then
         client:Give("weapon_physgun")
         client:SelectWeapon("weapon_physgun")

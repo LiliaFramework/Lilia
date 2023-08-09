@@ -2,11 +2,11 @@ MYSQLOO_QUEUE = MYSQLOO_QUEUE or {}
 PREPARE_CACHE = {}
 --------------------------------------------------------------------------------------------------------
 lia.db = lia.db or {}
+modules = modules or {}
 lia.db.queryQueue = lia.db.queue or {}
+modules.sqlite = modules.sqlite or {}
 lia.db.prepared = lia.db.prepared or {}
 lia.db.escape = lia.db.escape or modules.sqlite.escape
---------------------------------------------------------------------------------------------------------
-local modules = {}
 --------------------------------------------------------------------------------------------------------
 timer.Simple(0, function()
     hook.Run("SetupDatabase")
@@ -77,6 +77,12 @@ local function promisifyIfNoCallback(queryHandler)
 
 		return d
 	end
+end
+--------------------------------------------------------------------------------------------------------
+local modules = {}
+--------------------------------------------------------------------------------------------------------
+lia.db.query = lia.db.query or function(...)
+	lia.db.queryQueue[#lia.db.queryQueue + 1] = {...}
 end
 --------------------------------------------------------------------------------------------------------
 modules.sqlite = {
@@ -706,5 +712,17 @@ concommand.Add("lia_recreatedb", function(client)
 			lia.db.wipeTables(lia.db.loadTables)
 		end
 	end
+end)
+--------------------------------------------------------------------------------------------------------
+timer.Simple(5, function()
+    if #lia.char.names < 1 then
+        lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
+            if data and #data > 0 then
+                for k, v in pairs(data) do
+                    lia.char.names[v._id] = v._name
+                end
+            end
+        end)
+    end
 end)
 --------------------------------------------------------------------------------------------------------

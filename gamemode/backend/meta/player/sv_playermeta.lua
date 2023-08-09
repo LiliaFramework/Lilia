@@ -427,6 +427,7 @@ function playerMeta:getLiliaData(key, default)
 end
 --------------------------------------------------------------------------------------------------------
 function playerMeta:SteamID64()
+    if self:IsBot() then return 0 end
     return self:liaSteamID64() or 0
 end
 --------------------------------------------------------------------------------------------------------+

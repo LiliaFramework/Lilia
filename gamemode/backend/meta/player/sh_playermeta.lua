@@ -158,10 +158,10 @@ end
 function playerMeta:getChar()
     return lia.char.loaded[self.getNetVar(self, "char")]
 end
-
+--------------------------------------------------------------------------------------------------------
 function playerMeta:Name()
     local character = self.getChar(self)
-
+    if self:IsBot() then return "Bot" end 
     return character and character.getName(character) or self.steamName(self)
 end
 

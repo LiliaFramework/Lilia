@@ -210,6 +210,6 @@ function lia.module.isDisabled(uniqueID)
 end
 --------------------------------------------------------------------------------------------------------
 function lia.module.get(identifier)
-    return lia.plugin.list[identifier]
+    return lia.module.list[identifier]
 end
 --------------------------------------------------------------------------------------------------------

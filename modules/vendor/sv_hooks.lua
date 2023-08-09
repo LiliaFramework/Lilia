@@ -1,11 +1,3 @@
--- Determines whether or not a player can use a vendor.
-local owner2 = {
-    root = true,
-    superadmin = true,
-    communitymanager = true,
-    headadmin = true,
-}
-
 function MODULE:CanPlayerAccessVendor(client, vendor)
     local uniqueID = client:GetUserGroup()
     if client:IsSuperAdmin() then return true end
