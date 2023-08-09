@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 hook.Add("ChooseCharacter", "MultiCharChooseCharacter", function(id)
     assert(isnumber(id), "id must be a number")
     local d = deferred.new()
@@ -19,7 +20,7 @@ hook.Add("ChooseCharacter", "MultiCharChooseCharacter", function(id)
 
     return d
 end)
-
+--------------------------------------------------------------------------------------------------------
 hook.Add("CreateCharacter", "MultiCharCreateCharacter", function(data)
     assert(istable(data), "data must be a table")
     local d = deferred.new()
@@ -61,24 +62,24 @@ hook.Add("CreateCharacter", "MultiCharCreateCharacter", function(data)
 
     return d
 end)
-
+--------------------------------------------------------------------------------------------------------
 hook.Add("DeleteCharacter", "MultiCharDeleteCharacter", function(id)
     assert(isnumber(id), "id must be a number")
     net.Start("liaCharDelete")
     net.WriteUInt(id, 32)
     net.SendToServer()
 end)
-
+--------------------------------------------------------------------------------------------------------
 hook.Add("LiliaLoaded", "MyModule_LiliaLoaded", function()
     vgui.Create("liaCharacter")
 end)
-
+--------------------------------------------------------------------------------------------------------
 hook.Add("KickedFromCharacter", "MyModule_KickedFromCharacter", function(id, isCurrentChar)
     if isCurrentChar then
         vgui.Create("liaCharacter")
     end
 end)
-
+--------------------------------------------------------------------------------------------------------
 hook.Add("CreateMenuButtons", "MyModule_CreateMenuButtons", function(tabs)
     tabs["characters"] = function(panel)
         if IsValid(lia.gui.menu) then
@@ -88,3 +89,4 @@ hook.Add("CreateMenuButtons", "MyModule_CreateMenuButtons", function(tabs)
         vgui.Create("liaCharacter")
     end
 end)
+--------------------------------------------------------------------------------------------------------

@@ -9,7 +9,6 @@ function lia.util.notify(message, recipient)
         net.Send(recipient)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.util.notifyLocalized(message, recipient, ...)
     local args = {...}
@@ -33,7 +32,6 @@ function lia.util.notifyLocalized(message, recipient, ...)
         net.Send(recipient)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.util.findEmptySpace(entity, filter, spacing, size, height, tolerance)
     spacing = spacing or 32

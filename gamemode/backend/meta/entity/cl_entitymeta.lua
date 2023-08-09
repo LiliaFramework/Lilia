@@ -1,10 +1,9 @@
+--------------------------------------------------------------------------------------------------------
 local entityMeta = FindMetaTable("Entity")
-
 --------------------------------------------------------------------------------------------------------
 function entityMeta:isDoor()
     return self:GetClass():find("door")
 end
-
 --------------------------------------------------------------------------------------------------------
 function entityMeta:getDoorPartner()
     local owner = self:GetOwner() or self.liaDoorOwner
@@ -18,7 +17,6 @@ function entityMeta:getDoorPartner()
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function entityMeta:getNetVar(key, default)
     local index = self:EntIndex()

@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 function lia.chat.send(speaker, chatType, text, anonymous, receivers)
     local class = lia.chat.classes[chatType]
 
@@ -17,3 +18,4 @@ function lia.chat.send(speaker, chatType, text, anonymous, receivers)
         netstream.Start(receivers, "cMsg", speaker, chatType, hook.Run("PlayerMessageSend", speaker, chatType, text, anonymous, receivers) or text, anonymous)
     end
 end
+--------------------------------------------------------------------------------------------------------

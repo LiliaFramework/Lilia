@@ -1,9 +1,10 @@
+--------------------------------------------------------------------------------------------------------
 lia.char = lia.char or {}
 lia.char.loaded = lia.char.loaded or {}
 lia.char.names = lia.char.names or {}
 lia.char.varHooks = lia.char.varHooks or {}
 lia.char.vars = lia.char.vars or {}
-
+--------------------------------------------------------------------------------------------------------
 function lia.char.new(data, id, client, steamID)
 	local character = setmetatable({
 		vars = {}
@@ -32,12 +33,12 @@ function lia.char.new(data, id, client, steamID)
 
 	return character
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.char.hookVar(varName, hookName, func)
 	lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
 	lia.char.varHooks[varName][hookName] = func
 end
-
+--------------------------------------------------------------------------------------------------------
 do
 	lia.char.registerVar("name", {
 		field = "_name",
@@ -319,3 +320,4 @@ do
 		end
 	})
 end
+--------------------------------------------------------------------------------------------------------

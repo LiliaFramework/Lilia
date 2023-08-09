@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 function lia.char.create(data, callback)
 	local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
 	data.money = data.money or lia.config.DefaultMoney
@@ -36,7 +37,7 @@ function lia.char.create(data, callback)
 		end)
 	end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.char.restore(client, callback, noCache, id)
 	local steamID64 = client:SteamID64()
 
@@ -135,7 +136,7 @@ function lia.char.restore(client, callback, noCache, id)
 		end
 	end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.char.cleanUpForPlayer(client)
 	for _, charID in pairs(client.liaCharList or {}) do
 		local character = lia.char.loaded[charID]
@@ -146,7 +147,7 @@ function lia.char.cleanUpForPlayer(client)
 		hook.Run("CharacterCleanUp", character)
 	end
 end
-
+--------------------------------------------------------------------------------------------------------
 local function removePlayer(client)
 	if client:getChar() then
 		client:KillSilent()
@@ -155,7 +156,7 @@ local function removePlayer(client)
 		netstream.Start(client, "charKick", nil, true)
 	end
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.char.delete(id, client)
 	assert(isnumber(id), "id must be a number")
 
@@ -192,7 +193,7 @@ function lia.char.delete(id, client)
 
 	hook.Run("OnCharacterDelete", client, id)
 end
-
+--------------------------------------------------------------------------------------------------------
 if #lia.char.names < 1 then
 	lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
 		if data and #data > 0 then
@@ -202,3 +203,4 @@ if #lia.char.names < 1 then
 		end
 	end)
 end
+--------------------------------------------------------------------------------------------------------

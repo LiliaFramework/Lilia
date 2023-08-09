@@ -213,10 +213,19 @@ function playerMeta:SelectWeapon(class)
     if not self:HasWeapon(class) then return end
     self.doWeaponSwitch = self:GetWeapon(class)
 end
-
 --------------------------------------------------------------------------------------------------------
-lia.util.include("core/libs/meta/player/sv_playermeta.lua")
-lia.util.include("core/libs/meta/player/cl_playermeta.lua")
+function playerMeta:HasSkillLevel(skill, level)
+    local currentLevel = self:getChar():getAttrib(skill, 0)
+    return currentLevel >= level
+end
+--------------------------------------------------------------------------------------------------------
+function playerMeta:MeetsRequiredSkills(requiredSkillLevels)
+    if not requiredSkillLevels then return true end
+    for skill, level in pairs(requiredSkillLevels) do
+        if not self:HasSkillLevel(skill, level) then return false end
+    end
+    return true
+end
 --------------------------------------------------------------------------------------------------------
 playerMeta.Nick = playerMeta.Name
 playerMeta.GetName = playerMeta.Name

@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 lia.playerInteract = lia.playerInteract or {}
 lia.playerInteract.currentEnt = lia.playerInteract.currentEnt or {}
 lia.playerInteract.funcs = lia.playerInteract.funcs or {}
@@ -6,24 +7,24 @@ local cachedPitch = 0
 local isInteracting = false
 local interfaceScale = 0
 local selectedFunction = nil
-
+--------------------------------------------------------------------------------------------------------
 function lia.playerInteract.addFunc(name, data)
     lia.playerInteract.funcs[name] = data
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.playerInteract.interact(entity, time)
     lia.playerInteract.currentEnt = entity
     interactPressTime = CurTime() + (time or 1)
     cachedPitch = LocalPlayer():EyeAngles().p
     isInteracting = true
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.playerInteract.clear()
     isInteracting = false
     cachedPitch = 0
     interactPressTime = 0
 end
-
+--------------------------------------------------------------------------------------------------------
 hook.Add("KeyPress", "lia.playerInteract", function(client, key)
     if key ~= IN_USE then return end
     local entity = client:GetEyeTrace().Entity
@@ -32,20 +33,20 @@ hook.Add("KeyPress", "lia.playerInteract", function(client, key)
         lia.playerInteract.interact(entity, lia.config.PlayerInteractSpeed)
     end
 end)
-
+--------------------------------------------------------------------------------------------------------
 hook.Add("KeyRelease", "lia.playerInteract", function(client, key)
     if key == IN_USE and isInteracting then
         lia.playerInteract.clear()
     end
 end)
-
+--------------------------------------------------------------------------------------------------------
 local function isLoading()
     return interactPressTime > CurTime()
 end
-
+--------------------------------------------------------------------------------------------------------
 local scrW = ScrW()
 local scrH = ScrH()
-
+--------------------------------------------------------------------------------------------------------
 hook.Add("HUDPaint", "lia.playerInteract", function()
     if not isInteracting and interfaceScale < 0 then return end
     local client = LocalPlayer()
@@ -104,7 +105,7 @@ hook.Add("HUDPaint", "lia.playerInteract", function()
         funcCount = funcCount + 1
     end
 end)
-
+--------------------------------------------------------------------------------------------------------
 hook.Add("PlayerBindPress", "lia.playerInteract", function(_, bind)
     if isInteracting and interactPressTime < CurTime() and selectedFunction ~= nil and bind == "+attack" then
         selectedFunction.callback(lia.playerInteract.currentEnt)
@@ -113,3 +114,4 @@ hook.Add("PlayerBindPress", "lia.playerInteract", function(_, bind)
         return true
     end
 end)
+--------------------------------------------------------------------------------------------------------

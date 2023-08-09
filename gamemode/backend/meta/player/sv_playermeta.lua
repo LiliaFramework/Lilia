@@ -6,7 +6,6 @@ function playerMeta:getPlayTime()
 
     return diff + (RealTime() - (self.liaJoinTime or RealTime()))
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:setRestricted(state, noMessage)
     if state then
@@ -45,7 +44,6 @@ function playerMeta:setRestricted(state, noMessage)
         hook.Run("OnPlayerUnRestricted", self)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:setAction(text, time, callback, startTime, finishTime)
     if time and time <= 0 then
@@ -77,7 +75,6 @@ function playerMeta:setAction(text, time, callback, startTime, finishTime)
         end)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
     local uniqueID = "liaStare" .. self:UniqueID()
@@ -112,17 +109,14 @@ function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
         end
     end)
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:notify(message)
     lia.util.notify(message, self)
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:notifyLocalized(message, ...)
     lia.util.notifyLocalized(message, self, ...)
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:requestString(title, subTitle, callback, default)
     local d
@@ -147,7 +141,6 @@ function playerMeta:requestString(title, subTitle, callback, default)
 
     return d
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:isStuck()
     return util.TraceEntity({
@@ -156,7 +149,6 @@ function playerMeta:isStuck()
         filter = self
     }, self).StartSolid
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:createRagdoll(freeze)
     local entity = ents.Create("prop_ragdoll")
@@ -191,7 +183,6 @@ function playerMeta:createRagdoll(freeze)
 
     return entity
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:setRagdolled(state, time, getUpGrace)
     getUpGrace = getUpGrace or time or 5
@@ -325,7 +316,6 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
         hook.Run("OnCharFallover", self, entity, false)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:loadLiliaData(callback)
     local name = self:steamName()
@@ -373,7 +363,6 @@ function playerMeta:saveLiliaData()
         _data = self.liaData
     }, nil, "players", "_steamID = " .. steamID64)
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:setLiliaData(key, value, noNetworking)
     self.liaData = self.liaData or {}
@@ -383,7 +372,6 @@ function playerMeta:setLiliaData(key, value, noNetworking)
         netstream.Start(self, "liaData", key, value)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:setWhitelisted(faction, whitelisted)
     if not whitelisted then
@@ -404,7 +392,6 @@ function playerMeta:setWhitelisted(faction, whitelisted)
 
     return false
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:syncVars()
     for entity, data in pairs(lia.net) do
@@ -427,7 +414,6 @@ function playerMeta:setLocalVar(key, value)
     lia.net[self][key] = value
     netstream.Start(self, "nLcl", key, value)
 end
-
 --------------------------------------------------------------------------------------------------------+
 function playerMeta:getLiliaData(key, default)
     if key == true then return self.liaData end
@@ -439,8 +425,7 @@ function playerMeta:getLiliaData(key, default)
         return data
     end
 end
-
---------------------------------------------------------------------------------------------------------+
+--------------------------------------------------------------------------------------------------------
 function playerMeta:SteamID64()
     return self:liaSteamID64() or 0
 end

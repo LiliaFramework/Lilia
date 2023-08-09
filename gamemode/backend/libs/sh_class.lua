@@ -1,6 +1,7 @@
+--------------------------------------------------------------------------------------------------------
 lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
-
+--------------------------------------------------------------------------------------------------------
 function lia.class.loadFromDir(directory)
     for k, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName = v:sub(4, -5)
@@ -46,7 +47,7 @@ function lia.class.loadFromDir(directory)
         CLASS = nil
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.class.canBe(client, class)
     local info = lia.class.list[class]
     if not info then return false, "no info" end
@@ -61,11 +62,11 @@ function lia.class.canBe(client, class)
 
     return info:onCanBe(client)
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.class.get(identifier)
     return lia.class.list[identifier]
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.class.getPlayers(class)
     local players = {}
 
@@ -79,57 +80,4 @@ function lia.class.getPlayers(class)
 
     return players
 end
-
-local charMeta = lia.meta.character
-
-function charMeta:joinClass(class, isForced)
-    if not class then
-        self:kickClass()
-
-        return
-    end
-
-    local oldClass = self:getClass()
-    local client = self:getPlayer()
-
-    if isForced or lia.class.canBe(client, class) then
-        self:setClass(class)
-        hook.Run("OnPlayerJoinClass", client, class, oldClass)
-
-        return true
-    else
-        return false
-    end
-end
-
-function charMeta:kickClass()
-    local client = self:getPlayer()
-    if not client then return end
-    local goClass
-
-    for k, v in pairs(lia.class.list) do
-        if v.faction == client:Team() and v.isDefault then
-            goClass = k
-            break
-        end
-    end
-
-    self:joinClass(goClass)
-    hook.Run("OnPlayerJoinClass", client, goClass)
-end
-
-function GM:OnPlayerJoinClass(client, class, oldClass)
-    local info = lia.class.list[class]
-    local info2 = lia.class.list[oldClass]
-
-    if info.onSet then
-        info:onSet(client)
-    end
-
-    if info2 and info2.onLeave then
-        info2:onLeave(client)
-    end
-
-    netstream.Start(nil, "classUpdate", client)
-end
-
+--------------------------------------------------------------------------------------------------------

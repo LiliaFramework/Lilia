@@ -17,7 +17,6 @@ util.AddNetworkString("liaCharDelete")
 util.AddNetworkString("liaCharList")
 util.AddNetworkString("liaCharMenu")
 util.AddNetworkString("liaTransferItem")
-
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaStringReq", function(_, client)
     local id = net.ReadUInt(32)
@@ -36,7 +35,6 @@ net.Receive("liaTransferItem", function(_, client)
     local invID = net.ReadType()
     hook.Run("HandleItemTransferRequest", client, itemID, x, y, invID)
 end)
-
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("invAct", function(client, action, item, invID, data)
     local character = client:getChar()
@@ -66,12 +64,10 @@ netstream.Hook("invAct", function(client, action, item, invID, data)
     if inventory and not inventory:canAccess("item", context) then return end
     item:interact(action, client, entity, data)
 end)
-
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("liaCharFetchNames", function(client)
     netstream.Start(client, "liaCharFetchNames", lia.char.names)
 end)
-
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("cmd", function(client, command, arguments)
     if (client.liaNextCmd or 0) < CurTime() then
@@ -87,12 +83,10 @@ netstream.Hook("cmd", function(client, command, arguments)
         client.liaNextCmd = CurTime() + 0.2
     end
 end)
-
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaTypeStatus", function(_, client)
     client:setNetVar("typing", net.ReadBool())
 end)
-
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaCharChoose", function(_, client)
     local function response(message)
@@ -125,7 +119,6 @@ net.Receive("liaCharChoose", function(_, client)
     hook.Run("PlayerLoadedChar", client, character, currentChar)
     response()
 end)
-
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaCharCreate", function(_, client)
     if hook.Run("CanPlayerCreateCharacter", client) == false then return end
@@ -190,7 +183,6 @@ net.Receive("liaCharCreate", function(_, client)
         end
     end)
 end)
-
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaCharDelete", function(_, client)
     local id = net.ReadUInt(32)

@@ -1,7 +1,8 @@
+--------------------------------------------------------------------------------------------------------
 lia.module = lia.module or {}
 lia.module.list = lia.module.list or {}
 lia.module.unloaded = lia.module.unloaded or {}
-
+--------------------------------------------------------------------------------------------------------
 function lia.module.load(uniqueID, path, isSingleFile, variable)
     variable = uniqueID == "schema" and "SCHEMA" or variable or "MODULE"
     if hook.Run("ModuleShouldLoad", uniqueID) == false then return end
@@ -77,9 +78,11 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         MODULE:OnLoaded()
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.module.loadExtras(path)
     lia.util.includeDir(path .. "/libs", true, true)
+    lia.util.includeDir(path .. "/libraries", true, true)
+    lia.util.includeDir(path .. "/meta", true, true)
     lia.faction.loadFromDir(path .. "/factions")
     lia.class.loadFromDir(path .. "/classes")
     lia.util.includeDir(path .. "/derma", true)
@@ -94,7 +97,7 @@ function lia.module.loadExtras(path)
         hook.Remove("InitializedModules", hookID)
     end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.module.loadEntities(path)
     local files, folders
 
@@ -170,7 +173,7 @@ function lia.module.loadEntities(path)
 
     HandleEntityInclusion("effects", "EFFECT", effects and effects.Register, nil, true)
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.module.initialize()
     lia.module.loadFromDir(engine.ActiveGamemode() .. "/preload")
     lia.module.load("schema", engine.ActiveGamemode() .. "/schema")
@@ -180,7 +183,7 @@ function lia.module.initialize()
     hook.Run("InitializedModules")
     hook.Run("InitializedItems")
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.module.loadFromDir(directory)
     local files, folders = file.Find(directory .. "/*", "LUA")
 
@@ -192,20 +195,21 @@ function lia.module.loadFromDir(directory)
         lia.module.load(string.StripExtension(v), directory .. "/" .. v, true)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.module.setDisabled(uniqueID, disabled)
     disabled = tobool(disabled)
     local oldData = table.Copy(lia.data.get("unloaded", {}, false, true))
     oldData[uniqueID] = disabled
     lia.data.set("unloaded", oldData, false, true, true)
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.module.isDisabled(uniqueID)
     if istable(DISABLED_MODULES) and DISABLED_MODULES[uniqueID] then return true end
 
     return lia.data.get("unloaded", {}, false, true)[uniqueID] == true
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.module.get(identifier)
     return lia.plugin.list[identifier]
 end
+--------------------------------------------------------------------------------------------------------

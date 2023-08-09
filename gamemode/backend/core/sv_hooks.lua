@@ -92,6 +92,32 @@ function GM:KeyRelease(client, key)
     end
 end
 --------------------------------------------------------------------------------------------------------
+function GM:CanPlayerInteractItem(client, action, item)
+    if client:getNetVar("restricted") then return false end
+    if action == "equip" and hook.Run("CanPlayerEquipItem", client, item) == false then return false end
+    if action == "drop" and hook.Run("CanPlayerDropItem", client, item) == false then return false end
+    if action == "take" and hook.Run("CanPlayerTakeItem", client, item) == false then return false end
+    if not client:Alive() or client:getLocalVar("ragdoll") then return false end
+end
+--------------------------------------------------------------------------------------------------------
+function PLUGIN:CanPlayerEquipItem(client, item)
+    if not item.RequiredSkillLevels then return true end
+
+    return client:MeetsRequiredSkills(item.RequiredSkillLevels)
+end
+--------------------------------------------------------------------------------------------------------
+function GM:CanPlayerTakeItem(client, item)
+    if IsValid(item.entity) then
+        local char = client:getChar()
+
+        if item.entity.liaSteamID == client:SteamID() and item.entity.liaCharID ~= char:getID() then
+            client:notifyLocalized("playerCharBelonging")
+
+            return false
+        end
+    end
+end
+--------------------------------------------------------------------------------------------------------
 function GM:CanPlayerDropItem(client, item)
     if item.isBag then
         local inventory = item:getInv()
@@ -106,25 +132,6 @@ function GM:CanPlayerDropItem(client, item)
                     return false
                 end
             end
-        end
-    end
-end
---------------------------------------------------------------------------------------------------------
-function GM:CanPlayerInteractItem(client, action, item)
-    if client:getNetVar("restricted") then return false end
-    if action == "drop" and hook.Run("CanPlayerDropItem", client, item) == false then return false end
-    if action == "take" and hook.Run("CanPlayerTakeItem", client, item) == false then return false end
-    if not client:Alive() or client:getLocalVar("ragdoll") then return false end
-end
---------------------------------------------------------------------------------------------------------
-function GM:CanPlayerTakeItem(client, item)
-    if IsValid(item.entity) then
-        local char = client:getChar()
-
-        if item.entity.liaSteamID == client:SteamID() and item.entity.liaCharID ~= char:getID() then
-            client:notifyLocalized("playerCharBelonging")
-
-            return false
         end
     end
 end

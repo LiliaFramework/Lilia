@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 function lia.inventory.show(inventory, parent)
 	local globalName = "inv" .. inventory.id
 
@@ -10,3 +11,4 @@ function lia.inventory.show(inventory, parent)
 
 	return panel
 end
+--------------------------------------------------------------------------------------------------------

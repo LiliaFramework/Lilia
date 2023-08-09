@@ -129,7 +129,41 @@ function charMeta:hasFlags(flags)
     return hook.Run("CharacterFlagCheck", self, flags) or false
 end
 --------------------------------------------------------------------------------------------------------
-lia.util.include("core/libs/meta/character/sv_character.lua")
+function charMeta:joinClass(class, isForced)
+    if not class then
+        self:kickClass()
+
+        return
+    end
+
+    local oldClass = self:getClass()
+    local client = self:getPlayer()
+
+    if isForced or lia.class.canBe(client, class) then
+        self:setClass(class)
+        hook.Run("OnPlayerJoinClass", client, class, oldClass)
+
+        return true
+    else
+        return false
+    end
+end
+--------------------------------------------------------------------------------------------------------
+function charMeta:kickClass()
+    local client = self:getPlayer()
+    if not client then return end
+    local goClass
+
+    for k, v in pairs(lia.class.list) do
+        if v.faction == client:Team() and v.isDefault then
+            goClass = k
+            break
+        end
+    end
+
+    self:joinClass(goClass)
+    hook.Run("OnPlayerJoinClass", client, goClass)
+end
 --------------------------------------------------------------------------------------------------------
 lia.meta.character = charMeta
 --------------------------------------------------------------------------------------------------------

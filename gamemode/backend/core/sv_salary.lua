@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 function GM:CreateSalaryTimer(client)
     local character = client:getChar()
     if not character then return end
@@ -22,9 +23,10 @@ function GM:CreateSalaryTimer(client)
         client:notifyLocalized("salary", lia.currency.get(pay))
     end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadedChar(client, character, lastChar)
     if not lia.config.SalaryOverride then
         hook.Run("CreateSalaryTimer", client)
     end
 end
+--------------------------------------------------------------------------------------------------------

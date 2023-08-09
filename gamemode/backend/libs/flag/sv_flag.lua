@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 function lia.flag.onSpawn(client)
 	if client:getChar() then
 		local flags = client:getChar():getFlags()
@@ -12,3 +13,4 @@ function lia.flag.onSpawn(client)
 		end
 	end
 end
+--------------------------------------------------------------------------------------------------------
