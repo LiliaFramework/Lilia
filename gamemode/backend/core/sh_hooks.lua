@@ -279,3 +279,133 @@ function GM:CanItemBeTransfered(itemObject, curInv, inventory)
     end
 end
 --------------------------------------------------------------------------------------------------------
+function GM:OnPickupMoney(client, moneyEntity)
+	if moneyEntity and moneyEntity:IsValid() then
+		local amount = moneyEntity:getAmount()
+		client:getChar():giveMoney(amount)
+		client:notifyLocalized("moneyTaken", lia.currency.get(amount))
+	end
+end
+--------------------------------------------------------------------------------------------------------
+
+function GM:OnPlayerJoinClass(client, class, oldClass)
+    local info = lia.class.list[class]
+    local info2 = lia.class.list[oldClass]
+
+    if info.onSet then
+        info:onSet(client)
+    end
+
+    if info2 and info2.onLeave then
+        info2:onLeave(client)
+    end
+
+    netstream.Start(nil, "classUpdate", client)
+end
+
+function GM:GetGameDescription()
+    if istable(SCHEMA) then return tostring(SCHEMA.name) end
+
+    return lia.config.DefaultGamemodeName
+end
+
+function GM:PlayerSpray(client)
+    return not lia.config.PlayerSprayEnabled
+end
+
+
+function GM:PlayerInitialSpawn(ply)
+    local annoying = ents.FindByName("music")
+    local val = ents.GetMapCreatedEntity(1733)
+
+    if lia.config.MusicKiller and #annoying > 0 then
+        annoying[1]:SetKeyValue("RefireTime", 99999999)
+        annoying[1]:Fire("Disable")
+        annoying[1]:Fire("Kill")
+        val:SetKeyValue("RefireTime", 99999999)
+        val:Fire("Disable") 
+        val:Fire("Kill")
+    end
+end
+
+function GM:InitPostEntity()
+    if system.IsWindows() and not system.HasFocus() then
+        system.FlashWindow()
+    end
+end
+
+function GM:Think()
+    if not self.nextThink then
+        self.nextThink = 0
+    end
+
+    if self.nextThink < CurTime() then
+        local players = player.GetAll()
+
+        for k, v in pairs(players) do
+            local hp = v:Health()
+            local maxhp = v:GetMaxHealth()
+
+            if hp < maxhp then
+                local char = v:getChar()
+                if lia.config.AutoRegen then
+                    local newHP = hp + lia.config.HealingAmount
+                    v:SetHealth(math.Clamp(newHP, 0, maxhp))
+                end
+            end
+        end
+
+        self.nextThink = CurTime() + lia.config.HealingTimer
+    end
+end
+
+
+
+function GM:PlayerSpawnNPC(client, npcType, weapon)
+    if not client:getChar() then return end 
+    return client:IsAdmin() or (client:getChar():hasFlags("n") or client:getChar():hasFlags("E"))
+end
+
+function GM:PlayerSpawnProp(client, model)
+    if not client:getChar() then return end 
+    return client:IsAdmin() or client:getChar():hasFlags("e")
+end
+
+function GM:PlayerSpawnRagdoll(client, model)
+    if not client:getChar() then return end 
+    return client:IsAdmin() or client:getChar():hasFlags("r")
+end
+
+function GM:PlayerSpawnSENT(client, class)
+    if not client:getChar() then return end 
+
+    return client:IsAdmin() or client:getChar():hasFlags("E")
+end
+
+function GM:PlayerSpawnSWEP(client, class, weapon)
+    if not client:getChar() then return end 
+
+    return client:IsSuperAdmin() or client:getChar():hasFlags("W")
+end
+
+function GM:PlayerSpawnEffect(client, class, weapon)
+    if not client:getChar() then return end 
+
+    return client:IsAdmin() or (client:getChar():hasFlags("L") or client:getChar():hasFlags("E"))
+end
+
+function GM:PlayerSpawnVehicle(client, model, name, vehicleTable)
+    if not client:getChar() then return end 
+
+    if data.Category == "Chairs" then
+        return client:getChar():hasFlags("c") or client:IsSuperAdmin()
+    else
+        return client:getChar():hasFlags("C") or client:IsSuperAdmin()
+    end
+end
+
+function GM:PropBreak(attacker, ent)
+    if IsValid(ent) and ent:GetPhysicsObject():IsValid() then
+        constraint.RemoveAll(ent)
+    end
+end

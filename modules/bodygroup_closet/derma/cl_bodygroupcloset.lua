@@ -1,5 +1,6 @@
+--------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     local groups = {}
     self:SetSize(ScrW() / 1.5, ScrH() / 1.5)
@@ -38,7 +39,6 @@ function PANEL:Init()
         self.model.Entity:SetAngles(Angle(0, value, 0))
     end
 
-    -- Right side -- uhhh dont question why the panels below are called "left..." while deving i somehow managed to mess up left and right and just labeled it left lol
     self.leftpanel = vgui.Create("DPanel", self)
     self.leftpanel:Dock(FILL)
     self.leftpanel:DockMargin(5, 0, 0, 0)
@@ -93,7 +93,6 @@ function PANEL:Init()
     local h, s, v = ColorToHSV(lia.config.Color)
     s = s - 0.25
     local finaloutlinecolor = HSVToColor(h, s, v)
-    -- this seemed like an easier way to darken the config color lol. probs not but  hey
     self.finishbutton = vgui.Create("DButton", self.leftpanel)
     self.finishbutton:Dock(BOTTOM)
     self.finishbutton:DockMargin(5, 5, 5, 5)
@@ -114,9 +113,10 @@ function PANEL:Init()
         self:Remove()
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:OnRemove()
-    netstream.Start("onlia_bodygroupclosetclose") -- not optimal as we dont have a reference to the entity but yea
+    netstream.Start("onlia_bodygroupclosetclose")
 end
-
+--------------------------------------------------------------------------------------------------------
 vgui.Register("lia_bodygroupcloset", PANEL, "DFrame")
+--------------------------------------------------------------------------------------------------------

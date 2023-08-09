@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 local function addNetHandler(name, handler)
 	assert(isfunction(handler), "handler is not a function")
 
@@ -6,7 +7,7 @@ local function addNetHandler(name, handler)
 		handler(liaVendorEnt)
 	end)
 end
-
+--------------------------------------------------------------------------------------------------------
 net.Receive("liaVendorSync", function()
 	local vendor = net.ReadEntity()
 	if not IsValid(vendor) then return end
@@ -51,7 +52,7 @@ net.Receive("liaVendorSync", function()
 
 	hook.Run("VendorSynchronized", vendor)
 end)
-
+--------------------------------------------------------------------------------------------------------
 net.Receive("liaVendorOpen", function()
 	local vendor = net.ReadEntity()
 
@@ -60,12 +61,12 @@ net.Receive("liaVendorOpen", function()
 		hook.Run("VendorOpened", vendor)
 	end
 end)
-
+--------------------------------------------------------------------------------------------------------
 net.Receive("liaVendorExit", function()
 	liaVendorEnt = nil
 	hook.Run("VendorExited")
 end)
-
+--------------------------------------------------------------------------------------------------------
 addNetHandler("Money", function(vendor)
 	local money = net.ReadInt(32)
 
@@ -76,7 +77,7 @@ addNetHandler("Money", function(vendor)
 	vendor.money = money
 	hook.Run("VendorMoneyUpdated", vendor, money, vendor.money)
 end)
-
+--------------------------------------------------------------------------------------------------------
 addNetHandler("Price", function(vendor)
 	local itemType = net.ReadString()
 	local value = net.ReadInt(32)
@@ -89,7 +90,7 @@ addNetHandler("Price", function(vendor)
 	vendor.items[itemType][VENDOR_PRICE] = value
 	hook.Run("VendorItemPriceUpdated", vendor, itemType, value)
 end)
-
+--------------------------------------------------------------------------------------------------------
 addNetHandler("Mode", function(vendor)
 	local itemType = net.ReadString()
 	local value = net.ReadInt(8)
@@ -102,7 +103,7 @@ addNetHandler("Mode", function(vendor)
 	vendor.items[itemType][VENDOR_MODE] = value
 	hook.Run("VendorItemModeUpdated", vendor, itemType, value)
 end)
-
+--------------------------------------------------------------------------------------------------------
 addNetHandler("Stock", function(vendor)
 	local itemType = net.ReadString()
 	local value = net.ReadUInt(32)
@@ -110,7 +111,7 @@ addNetHandler("Stock", function(vendor)
 	vendor.items[itemType][VENDOR_STOCK] = value
 	hook.Run("VendorItemStockUpdated", vendor, itemType, value)
 end)
-
+--------------------------------------------------------------------------------------------------------
 addNetHandler("MaxStock", function(vendor)
 	local itemType = net.ReadString()
 	local value = net.ReadUInt(32)
@@ -123,7 +124,7 @@ addNetHandler("MaxStock", function(vendor)
 	vendor.items[itemType][VENDOR_MAXSTOCK] = value
 	hook.Run("VendorItemMaxStockUpdated", vendor, itemType, value)
 end)
-
+--------------------------------------------------------------------------------------------------------
 addNetHandler("AllowFaction", function(vendor)
 	local id = net.ReadUInt(8)
 	local allowed = net.ReadBool()
@@ -136,7 +137,7 @@ addNetHandler("AllowFaction", function(vendor)
 
 	hook.Run("VendorFactionUpdated", vendor, id, allowed)
 end)
-
+--------------------------------------------------------------------------------------------------------
 addNetHandler("AllowClass", function(vendor)
 	local id = net.ReadUInt(8)
 	local allowed = net.ReadBool()
@@ -149,17 +150,16 @@ addNetHandler("AllowClass", function(vendor)
 
 	hook.Run("VendorClassUpdated", vendor, id, allowed)
 end)
-
+--------------------------------------------------------------------------------------------------------
 net.Receive("liaVendorEdit", function()
 	local key = net.ReadString()
 
-	-- Give some time to receive the update.
 	timer.Simple(0.25, function()
 		if not IsValid(liaVendorEnt) then return end
 		hook.Run("VendorEdited", liaVendorEnt, key)
 	end)
 end)
-
+--------------------------------------------------------------------------------------------------------
 net.Receive("liaVendorFaction", function()
 	local factionID = net.ReadUInt(8)
 
@@ -167,3 +167,4 @@ net.Receive("liaVendorFaction", function()
 		liaVendorEnt.factions[factionID] = true
 	end
 end)
+--------------------------------------------------------------------------------------------------------

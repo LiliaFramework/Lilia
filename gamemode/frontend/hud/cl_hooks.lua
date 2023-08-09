@@ -36,6 +36,14 @@ hook.Add("CanDrawAmmoHUD", "HideAmmo", function()
 end)
 --------------------------------------------------------------------------------------------------------
 hook.Add("ShouldDrawCrosshair", "HideCrosshair", function()
+    local wep = LocalPlayer():GetActiveWeapon()
+
+    if wep and wep:IsValid() then
+        if wep.ClassName == "gmod_tool" or string.find(wep.ClassName, "lia_") or string.find(wep.ClassName, "detector_") then return true end
+
+        return lia.config.CrosshairEnabled
+    end
+
     return lia.config.CrosshairEnabled
 end)
 --------------------------------------------------------------------------------------------------------

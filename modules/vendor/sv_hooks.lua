@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 function MODULE:CanPlayerAccessVendor(client, vendor)
     local uniqueID = client:GetUserGroup()
     if client:IsSuperAdmin() then return true end
@@ -5,17 +6,13 @@ function MODULE:CanPlayerAccessVendor(client, vendor)
     if vendor:isClassAllowed(character:getClass()) then return true end
     if vendor:isFactionAllowed(client:Team()) then return true end
 end
-
--- Determines whether or not a player can trade an item with a vendor.
+--------------------------------------------------------------------------------------------------------
 function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)
-    -- Check if the item can be traded at all.
     if not vendor.items[itemType] then return false end
-    -- Make sure the trade mode agrees with the trade.
     local state = vendor:getTradeMode(itemType)
     if isSellingToVendor and state == VENDOR_SELLONLY then return false end
     if not isSellingToVendor and state == VENDOR_BUYONLY then return false end
 
-    -- Make sure whoever is selling actually has an item to sell.
     if isSellingToVendor and not client:getChar():getInv():hasItem(itemType) then
         return false
     elseif not isSellingToVendor then
@@ -23,7 +20,6 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
         if stock and stock <= 0 then return false, "vendorNoStock" end
     end
 
-    -- Make sure the either side can afford the trade.
     local price = vendor:getPrice(itemType, isSellingToVendor)
     local money
 
@@ -35,7 +31,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
 
     if money and money < price then return false, isSellingToVendor and "vendorNoMoney" or "canNotAfford" end
 end
-
+--------------------------------------------------------------------------------------------------------
 if not VENDOR_INVENTORY_MEASURE then
     VENDOR_INVENTORY_MEASURE = lia.inventory.types["grid"]:new()
 
@@ -47,9 +43,8 @@ if not VENDOR_INVENTORY_MEASURE then
     VENDOR_INVENTORY_MEASURE.virtual = true
     VENDOR_INVENTORY_MEASURE:onInstanced()
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
-    -- Make sure the trade is allowed.
     local canAccess, reason = hook.Run("CanPlayerTradeWithVendor", client, vendor, itemType, isSellingToVendor)
 
     if canAccess == false then
@@ -66,7 +61,6 @@ function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
     client.vendorTransaction = true
     client.vendorTimeout = RealTime() + .1
 
-    -- Then, transfer the money and item.
     if isSellingToVendor then
         local inventory = character:getInv()
         local item = inventory:getFirstItemOfType(itemType)
@@ -131,13 +125,11 @@ function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
 
     end
 end
-
--- Called when the vendor menu should open for the vendor.
+--------------------------------------------------------------------------------------------------------
 function MODULE:PlayerAccessVendor(client, vendor)
-    -- Sync the vendor with the player.
     vendor:addReceiver(client)
-    -- Then, open the vendor menu.
     net.Start("liaVendorOpen")
     net.WriteEntity(vendor)
     net.Send(client)
 end
+--------------------------------------------------------------------------------------------------------

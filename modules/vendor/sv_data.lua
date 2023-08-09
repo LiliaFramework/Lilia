@@ -1,5 +1,6 @@
+--------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:saveVendors()
 	local data = {}
 
@@ -21,7 +22,7 @@ function MODULE:saveVendors()
 
 	self:setData(data)
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:LoadData()
 	for k, v in ipairs(ents.FindByClass("lia_vendor")) do
 		v.liaIsSafe = true
@@ -44,3 +45,4 @@ function MODULE:LoadData()
 		entity.money = v.money
 	end
 end
+--------------------------------------------------------------------------------------------------------

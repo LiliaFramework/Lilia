@@ -14,6 +14,7 @@ lia.config.Musicvolume = 0.25
 lia.config.Music = "music/hl2_song2.mp3"
 lia.config.BackgroundURL = "music/hl2_song2.mp3"
 lia.config.CharMenuBGInputDisabled = true
+lia.config.DefaultGamemodeName =  "Lilia - Skeleton"
 --///////////////////////////
 lia.config.RespawnButton = true
 lia.config.AFKKickEnabled = true
@@ -67,6 +68,10 @@ lia.config.CustomChatSound = ""
 lia.config.F1MenuLaunchUnanchor = "buttons/lightswitch2.wav"
 lia.config.MenuButtonRollover = "ui/buttonrollover.wav"
 lia.config.SoundMenuButtonPressed = "ui/buttonclickrelease.wav"
+lia.config.AutoRegen = false
+lia.config.MusicKiller = true
+lia.config.HealingAmount = 10
+lia.config.HealingTimer = 60
 
 lia.config.Notify = {"garrysmod/content_downloaded.wav", 50, 250}
 
@@ -103,6 +108,7 @@ lia.config.PlayerSpawnVehicleDelay = 30
 lia.config.CharacterSwitchCooldownTimer = 5
 lia.config.MaxAttributes = 30
 lia.config.BHOPStamina = 10
+lia.config.AntiBunnyHopEnabled = true
 lia.config.MapCleanerEnabled = true
 lia.config.ItemCleanupTime = 7200
 lia.config.MapCleanupTime = 21600
@@ -142,13 +148,50 @@ lia.config.tblAlwaysSend = {
     ["env_fog_controller"] = true,
     ["prop_vehicle_jeep"] = false,
 }
-
+lia.config.CustomPermissions = true
+lia.config.PermissionTable = {
+    ["PlayerSpawnNPC"] = {
+        IsAdmin = false,
+        IsSuperAdmin = true,
+        CustomCheck = function() return false end,
+    },
+    ["PlayerSpawnProp"] = {
+        IsAdmin = false,
+        IsSuperAdmin = true,
+        CustomCheck = function() return false end,
+    },
+    ["PlayerSpawnRagdoll"] = {
+        IsAdmin = false,
+        IsSuperAdmin = true,
+        CustomCheck = function() return false end
+    },
+    ["PlayerSpawnSWEP"] = {
+        IsAdmin = false,
+        IsSuperAdmin = true,
+        CustomCheck = function() return false end,
+    },
+    ["PlayerSpawnEffect"] = {
+        IsAdmin = false,
+        IsSuperAdmin = true,
+        CustomCheck = function() return false end,
+    },
+    ["PlayerSpawnSENT"] = {
+        IsAdmin = false,
+        IsSuperAdmin = true,
+        CustomCheck = function() return false end,
+    },
+    ["PlayerSpawnVehicle"] = {
+        IsAdmin = false,
+        IsSuperAdmin = true,
+        CustomCheck = function() return false end,
+    },
+}
 lia.config.TimeRemainingTable = {30, 15, 5, 1, 0}
 
 lia.config.NextRestart = 0
 lia.config.NextNotificationTime = 0
 lia.config.IsRestarting = false
-lia.config.whitelistEnabled = false
+lia.config.WhitelistEnabled = false
 
 lia.config.AllowedOverride = {
     ["STEAM_0:0:12345678"] = true,
@@ -251,3 +294,5 @@ lia.config.InjuryTextTable = {
     [.9] = {"Minor Injury", Color(255, 255, 0)},
     [1] = {"Healthy", Color(0, 255, 0)},
 }
+
+timer.Simple(5, function() hook.Run("InitializedConfig") end)

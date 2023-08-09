@@ -60,14 +60,14 @@ lia.util.include("backend/libs/sh_module.lua")
 lia.util.include("backend/libs/language/cl_language.lua")
 --------------------------------------------------------------------------------------------------------
 // GAMEMODE FUNCTIONS \\
-lia.util.include("backend/core/cl_contextmenu.lua") 
 lia.util.include("backend/core/cl_hooks.lua") 
-lia.util.include("backend/core/cl_loadingscreen.lua") 
-lia.util.include("backend/core/sh_class.lua") 
-lia.util.include("backend/core/sh_currency.lua") 
 lia.util.include("backend/core/sh_hooks.lua") 
 lia.util.include("backend/core/sv_hooks.lua") 
-lia.util.include("backend/core/sv_salary.lua")
+
+--[[
+lia.util.include("backend/antiexploits/cl_hooks.lua") 
+lia.util.include("backend/perfomance/sh_hooks.lua") 
+lia.util.include("backend/core/sv_hooks.lua") ]]
 --------------------------------------------------------------------------------------------------------
 // GAMEMODE NETMESSAGES \\
 lia.util.include("backend/netcalls/cl_netcalls.lua") 

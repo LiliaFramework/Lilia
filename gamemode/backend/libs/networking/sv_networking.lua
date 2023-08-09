@@ -23,6 +23,7 @@ function getNetVar(key, default)
 
 	return value ~= nil and value or default
 end
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("EntityRemoved", "nCleanUp", function(entity)
 	entity:clearNetVars()
@@ -41,6 +42,4 @@ hook.Add("OnCharCreated", "liaCharAddName", function(client, character, data)
 	lia.char.names[character:getID()] = data.name
 	netstream.Start(client, "liaCharFetchNames", lia.char.names)
 end)
---------------------------------------------------------------------------------------------------------
-FindMetaTable("Player").getLocalVar = FindMetaTable("Entity").getNetVar
 --------------------------------------------------------------------------------------------------------

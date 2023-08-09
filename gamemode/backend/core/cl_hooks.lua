@@ -1,15 +1,21 @@
 --------------------------------------------------------------------------------------------------------
+function GM:OnContextMenuOpen()
+    self.BaseClass:OnContextMenuOpen()
+    vgui.Create("liaQuick")
+end
+--------------------------------------------------------------------------------------------------------
+function GM:OnContextMenuClose()
+    self.BaseClass:OnContextMenuClose()
+
+    if IsValid(lia.gui.quick) then
+        lia.gui.quick:Remove()
+    end
+end
+--------------------------------------------------------------------------------------------------------
 function GM:NetworkEntityCreated(entity)
     if entity == LocalPlayer() then return end
     if not entity:IsPlayer() then return end
     hook.Run("PlayerModelChanged", entity, entity:GetModel())
-end
-
---------------------------------------------------------------------------------------------------------
-function GM:InitializedConfig()
-    hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
-    if hook.Run("ShouldCreateLoadingScreen") ~= false then hook.Run("CreateLoadingScreen") end
-    print("LOADED CONFIG!")
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -28,11 +34,7 @@ function GM:CharacterListLoaded()
     )
 end
 
---------------------------------------------------------------------------------------------------------
-function GM:InitPostEntity()
-    lia.joinTime = RealTime() - 0.9716
-    lia.faction.formatModelData()
-end
+
 
 --------------------------------------------------------------------------------------------------------
 function GM:CalcView(client, origin, angles, fov)
@@ -95,6 +97,11 @@ function GM:PlayerBindPress(client, bind, pressed)
         end
     elseif bind:find("jump") then
         lia.command.send("chargetup")
+    end
+    if lia.config.AntiBunnyHopEnabled then
+        if client:GetMoveType() == MOVETYPE_NOCLIP or not client:getChar() or client:InVehicle() then return end
+        bind = bind:lower()
+        if bind:find("jump") and (client:getLocalVar("stamina", 0) < lia.config.BHOPStamina) then return true end
     end
 end
 
@@ -187,26 +194,8 @@ function GM:ScreenResolutionChanged(oldW, oldH)
     hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
 end
 
---------------------------------------------------------------------------------------------------------
-function GM:LiliaLoaded()
-    local namecache = {}
-    for _, MODULE in pairs(lia.module.list) do
-        local authorID = (tonumber(MODULE.author) and tostring(MODULE.author)) or (string.match(MODULE.author, "STEAM_") and util.SteamIDTo64(MODULE.author)) or nil
-        if authorID then
-            if namecache[authorID] ~= nil then
-                MODULE.author = namecache[authorID]
-            else
-                steamworks.RequestPlayerInfo(
-                    authorID,
-                    function(newName)
-                        namecache[authorID] = newName
-                        MODULE.author = newName or MODULE.author
-                    end
-                )
-            end
-        end
-    end
 
-    lia.module.namecache = namecache
-end
+--------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
+
 --------------------------------------------------------------------------------------------------------

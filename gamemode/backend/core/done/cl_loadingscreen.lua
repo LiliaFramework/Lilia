@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 function GM:CreateLoadingScreen()
     if IsValid(lia.gui.loading) then
         lia.gui.loading:Remove()
@@ -41,7 +42,8 @@ function GM:CreateLoadingScreen()
 
     lia.gui.loading = loader
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:ShouldCreateLoadingScreen()
     return not IsValid(lia.gui.loading)
 end
+--------------------------------------------------------------------------------------------------------
