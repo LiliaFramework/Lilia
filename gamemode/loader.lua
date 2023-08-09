@@ -10,6 +10,9 @@ lia.util.include("backend/external/thirdparty/sh_pon.lua", "shared")
 lia.util.include("backend/external/thirdparty/sh_utf8.lua", "shared")
 --------------------------------------------------------------------------------------------------------
 // GAMEMODE LIBRARIES \\
+lia.util.include("backend/libs/networking/sh_networking.lua") 
+lia.util.include("backend/libs/networking/sv_networking.lua") 
+lia.util.include("backend/libs/networking/cl_networking.lua") 
 lia.util.include("backend/libs/util/sh_util.lua") 
 lia.util.include("backend/libs/util/sv_util.lua") 
 lia.util.include("backend/libs/util/cl_util.lua") 
@@ -41,9 +44,6 @@ lia.util.include("backend/libs/item/sh_item.lua")
 lia.util.include("backend/libs/item/sv_item.lua") 
 lia.util.include("backend/libs/language/sh_language.lua") 
 lia.util.include("backend/libs/language/sv_language.lua") 
-lia.util.include("backend/libs/networking/sh_networking.lua") 
-lia.util.include("backend/libs/networking/sv_networking.lua") 
-lia.util.include("backend/libs/networking/cl_networking.lua") 
 lia.util.include("backend/meta/entity/sh_entitymeta.lua") 
 lia.util.include("backend/meta/entity/sv_entitymeta.lua") 
 lia.util.include("backend/meta/entity/cl_entitymeta.lua") 
@@ -60,14 +60,19 @@ lia.util.include("backend/libs/sh_module.lua")
 lia.util.include("backend/libs/language/cl_language.lua")
 --------------------------------------------------------------------------------------------------------
 // GAMEMODE FUNCTIONS \\
-lia.util.include("backend/core/cl_hooks.lua") 
-lia.util.include("backend/core/sh_hooks.lua") 
-lia.util.include("backend/core/sv_hooks.lua") 
-
---[[
-lia.util.include("backend/antiexploits/cl_hooks.lua") 
-lia.util.include("backend/perfomance/sh_hooks.lua") 
-lia.util.include("backend/core/sv_hooks.lua") ]]
+lia.util.include("backend/core/hooks/sv_hooks.lua")
+lia.util.include("backend/core/sv_misc.lua")
+lia.util.include("backend/core/sv_iteminteract.lua")
+lia.util.include("backend/core/sv_spawns.lua")
+lia.util.include("backend/core/sv_bots.lua")
+lia.util.include("backend/core/cl_panels.lua")
+lia.util.include("backend/core/cl_visual.lua")
+lia.util.include("backend/core/hooks/cl_hooks.lua")
+lia.util.include("backend/core/cl_loadingscreen.lua")
+lia.util.include("backend/core/cl_initialization.lua")
+lia.util.include("backend/core/sv_permissions.lua")
+lia.util.include("backend/core/sh_misc.lua")
+lia.util.include("backend/core/hooks/sh_hooks.lua")
 --------------------------------------------------------------------------------------------------------
 // GAMEMODE NETMESSAGES \\
 lia.util.include("backend/netcalls/cl_netcalls.lua") 

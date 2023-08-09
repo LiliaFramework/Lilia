@@ -1,4 +1,6 @@
 --------------------------------------------------------------------------------------------------------
+local SCHEMA = SCHEMA
+--------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
 --------------------------------------------------------------------------------------------------------+
 function playerMeta:getPlayTime()
@@ -318,7 +320,7 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
 end
 --------------------------------------------------------------------------------------------------------
 function playerMeta:loadLiliaData(callback)
-    local name = self:steamName()
+    local name = self:GetName()
     local steamID64 = self:SteamID64()
     local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
 
@@ -425,11 +427,4 @@ function playerMeta:getLiliaData(key, default)
         return data
     end
 end
---------------------------------------------------------------------------------------------------------
-function playerMeta:SteamID64()
-    if self:IsBot() then return 0 end
-    return self:liaSteamID64() or 0
-end
---------------------------------------------------------------------------------------------------------+
-playerMeta.liaSteamID64 = playerMeta.liaSteamID64 or playerMeta.SteamID64
 --------------------------------------------------------------------------------------------------------+

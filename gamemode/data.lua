@@ -1,4 +1,6 @@
 --------------------------------------------------------------------------------------------------------
+local SCHEMA = SCHEMA
+--------------------------------------------------------------------------------------------------------
 lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
 --------------------------------------------------------------------------------------------------------
@@ -70,13 +72,4 @@ timer.Create("liaSaveData", lia.config.DataSaveInterval, 0, function()
     hook.Run("SaveData")
     hook.Run("PersistenceSave")
 end)
---------------------------------------------------------------------------------------------------------
-cvars.AddChangeCallback("sbox_persist", function(name, old, new)
-    timer.Create("sbox_persist_change_timer", 1, 1, function()
-        hook.Run("PersistenceSave", old)
-        game.CleanUpMap()
-        if new == "" then return end
-        hook.Run("PersistenceLoad", new)
-    end)
-end, "sbox_persist_load")
 --------------------------------------------------------------------------------------------------------

@@ -7,5 +7,4 @@ end
 
 --------------------------------------------------------------------------------------------------------
 FindMetaTable("Player").getLocalVar = FindMetaTable("Entity").getNetVar
-FindMetaTable("Player").GetNetVar = FindMetaTable("Entity").GetNetVar
 --------------------------------------------------------------------------------------------------------

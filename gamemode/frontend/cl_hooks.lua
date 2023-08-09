@@ -1,6 +1,4 @@
 --------------------------------------------------------------------------------------------------------
-local SCHEMA = SCHEMA
---------------------------------------------------------------------------------------------------------
 local data = {}
 local offset1, offset2, offset3, alpha, y
 --------------------------------------------------------------------------------------------------------
@@ -12,12 +10,12 @@ hook.Add("HUDPaint", "FrontendHooks", function()
     data.filter = ply
     lia.bar.drawAll()
 
-    if lia.config.VersionEnabled and SCHEMA.version then
+    if lia.config.VersionEnabled and lia.config.version then
         local w, h = 45, 45
         surface.SetFont("liaSmallChatFont")
-        local tw, th = surface.GetTextSize(SCHEMA.version)
+        local tw, th = surface.GetTextSize(lia.config.version)
         surface.SetTextPos(5, ScrH() - 20, w, h)
-        surface.DrawText("Server Current Version: " .. SCHEMA.version)
+        surface.DrawText("Server Current Version: " .. lia.config.version)
     end
 
     if lia.config.BranchWarning and BRANCH ~= "x86-64" then

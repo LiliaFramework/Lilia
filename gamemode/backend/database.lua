@@ -8,17 +8,6 @@ modules.sqlite = modules.sqlite or {}
 lia.db.prepared = lia.db.prepared or {}
 lia.db.escape = lia.db.escape or modules.sqlite.escape
 --------------------------------------------------------------------------------------------------------
-timer.Simple(0, function()
-    hook.Run("SetupDatabase")
-
-    lia.db.connect(function()
-        lia.db.loadTables()
-        MsgC(Color(0, 255, 0), "Lilia has connected to the database.\n")
-        MsgC(Color(0, 255, 0), "Database Type: " .. lia.db.module .. ".\n")
-        hook.Run("DatabaseConnected")
-    end)
-end)
---------------------------------------------------------------------------------------------------------
 function GM:OnMySQLOOConnected()
 	hook.Run("RegisterPreparedStatements")
 	MYSQLOO_PREPARED = true

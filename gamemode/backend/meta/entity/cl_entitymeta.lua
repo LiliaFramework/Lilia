@@ -25,3 +25,5 @@ function entityMeta:getNetVar(key, default)
     return default
 end
 --------------------------------------------------------------------------------------------------------
+FindMetaTable("Player").getLocalVar = entityMeta.getNetVar
+--------------------------------------------------------------------------------------------------------

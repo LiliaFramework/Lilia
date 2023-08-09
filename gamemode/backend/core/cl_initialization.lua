@@ -67,6 +67,9 @@ end
 function GM:InitPostEntity()
     lia.joinTime = RealTime() - 0.9716
     lia.faction.formatModelData()
+	if system.IsWindows() and not system.HasFocus() then
+        system.FlashWindow()
+    end
 end
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedConfig()

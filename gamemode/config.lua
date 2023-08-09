@@ -15,6 +15,7 @@ lia.config.Music = "music/hl2_song2.mp3"
 lia.config.BackgroundURL = "music/hl2_song2.mp3"
 lia.config.CharMenuBGInputDisabled = true
 lia.config.DefaultGamemodeName =  "Lilia - Skeleton"
+lia.config.version = "1.0"
 --///////////////////////////
 lia.config.RespawnButton = true
 lia.config.AFKKickEnabled = true

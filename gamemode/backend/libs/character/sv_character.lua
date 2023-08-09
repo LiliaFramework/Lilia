@@ -1,3 +1,4 @@
+local SCHEMA = SCHEMA or "lilia"
 --------------------------------------------------------------------------------------------------------
 function lia.char.create(data, callback)
 	local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
