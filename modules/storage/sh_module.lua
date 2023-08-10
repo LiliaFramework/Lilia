@@ -12,39 +12,5 @@ lia.util.include("cl_password.lua")
 lia.util.include("cl_storage.lua")
 lia.util.include("sh_definitions.lua")
 liaStorageBase = MODULE
-
-if CLIENT then
-	function MODULE:transferItem(itemID)
-		if not lia.item.instances[itemID] then return end
-		net.Start("liaStorageTransfer")
-		net.WriteUInt(itemID, 32)
-		net.SendToServer()
-	end
-end
-
-lia.command.add("storagelock", {
-	adminOnly = true,
-	syntax = "[string password]",
-	onRun = function(client, arguments)
-		local trace = client:GetEyeTraceNoCursor()
-		local ent = trace.Entity
-
-		if ent and ent:IsValid() then
-			local password = table.concat(arguments, " ")
-
-			if password ~= "" then
-				ent:setNetVar("locked", true)
-				ent.password = password
-				client:notifyLocalized("storPass", password)
-			else
-				ent:setNetVar("locked", nil)
-				ent.password = nil
-				client:notifyLocalized("storPassRmv")
-			end
-
-			MODULE:saveStorage()
-		else
-			client:notifyLocalized("invalid", "Entity")
-		end
-	end
-})
+lia.config.SaveStorage = true
+lia.config.PasswordDelay = 1

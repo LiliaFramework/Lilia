@@ -30,7 +30,7 @@ hook.Add("KeyPress", "lia.playerInteract", function(client, key)
     local entity = client:GetEyeTrace().Entity
 
     if entity:IsPlayer() then
-        lia.playerInteract.interact(entity, lia.config.PlayerInteractSpeed)
+        lia.playerInteract.interact(entity, 1)
     end
 end)
 --------------------------------------------------------------------------------------------------------

@@ -1,6 +1,4 @@
 --------------------------------------------------------------------------------------------------------
-lia.config.DevPrinting = lia.config.DevPrinting or false
---------------------------------------------------------------------------------------------------------
 function lia.util.include(fileName, state)
     if not fileName then
         error("[Lilia] No file name specified for including.")
@@ -32,11 +30,6 @@ function lia.util.includeDir(directory, fromLua, recursive)
         baseDir = baseDir .. "/gamemode/"
     end
 
-    local function printIncludeInfo(filePath)
-        if lia.config.DevPrinting then
-            print("Included file:", filePath)
-        end
-    end
 
     if recursive then
         local function AddRecursive(folder, baseFolder)

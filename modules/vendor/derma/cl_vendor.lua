@@ -34,7 +34,7 @@ function PANEL:Init()
     self.leave.x = ScrW() * 0.5 - (self.leave:GetWide() * 0.5)
     local uniqueID = LocalPlayer():GetUserGroup()
 
-    if LocalPlayer():IsSuperAdmin() then
+    if LocalPlayer():CanUseVendor() then
         self.editor = self.buttons:Add("DButton")
         self.editor:SetFont("liaVendorButtonFont")
         self.editor:SetText(L("editor"):upper())

@@ -72,7 +72,7 @@ function PANEL:canCreateCharacter()
 
 	if #validFactions == 0 then return false, "You are unable to join any factions" end
 	self.validFactions = validFactions
-	local maxChars = hook.Run("GetMaxPlayerCharacter", LocalPlayer()) or lia.config.MaxChars
+	local maxChars = hook.Run("GetMaxPlayerCharacter", LocalPlayer()) or lia.config.MaxCharacters
 	if lia.characters and #lia.characters >= maxChars then return false, "You have reached the maximum number of characters" end
 	local canCreate, reason = hook.Run("ShouldMenuButtonShow", "create")
 	if canCreate == false then return false, reason end

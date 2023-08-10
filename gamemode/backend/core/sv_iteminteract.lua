@@ -1,10 +1,14 @@
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerInteractItem(client, action, item)
+    local inventory = lia.inventory.instances[itemObject.invID]
     if client:getNetVar("restricted") then return false end
     if action == "equip" and hook.Run("CanPlayerEquipItem", client, item) == false then return false end
     if action == "drop" and hook.Run("CanPlayerDropItem", client, item) == false then return false end
     if action == "take" and hook.Run("CanPlayerTakeItem", client, item) == false then return false end
     if not client:Alive() or client:getLocalVar("ragdoll") then return false end
+    if inventory and (inventory.isBag == true or inventory.isBank == true) then
+        if lia.config.DisallowedBagForbiddenActions[action] then return false, "forbiddenActionStorage" end
+    end
 end
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerEquipItem(client, item)

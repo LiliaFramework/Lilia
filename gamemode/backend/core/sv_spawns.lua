@@ -60,7 +60,7 @@ function GM:PlayerDeath(client, inflictor, attacker)
 
         char:setData("deathPos", client:GetPos())
         client:setNetVar("deathStartTime", CurTime())
-        client:setNetVar("deathTime", CurTime() + lia.config.SpawnTime)
+        client:setNetVar("deathTime", CurTime() + 5)
     end
 end
 --------------------------------------------------------------------------------------------------------

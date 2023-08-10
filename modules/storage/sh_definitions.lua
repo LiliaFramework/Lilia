@@ -1,14 +1,8 @@
-MODULE.name = "Grid Storage"
-MODULE.author = "Leonheart#7476/Cheesenot"
-MODULE.desc = "Storage of items inside a grid."
-
-local INV_TYPE_ID = "grid"
-
 STORAGE_DEFINITIONS = STORAGE_DEFINITIONS or {}
 STORAGE_DEFINITIONS["models/props_junk/wood_crate001a.mdl"] = {
 	name = "Wood Crate",
 	desc = "A crate made out of wood.",
-	invType = INV_TYPE_ID,
+	invType = "grid",
 	invData = {
 		w = 4,
 		h = 4
@@ -17,7 +11,7 @@ STORAGE_DEFINITIONS["models/props_junk/wood_crate001a.mdl"] = {
 STORAGE_DEFINITIONS["models/props_c17/lockers001a.mdl"] = {
 	name = "Locker",
 	desc = "A white locker.",
-	invType = INV_TYPE_ID,
+	invType = "grid",
 	invData = {
 		w = 4,
 		h = 6
@@ -26,7 +20,7 @@ STORAGE_DEFINITIONS["models/props_c17/lockers001a.mdl"] = {
 STORAGE_DEFINITIONS["models/props_wasteland/controlroom_storagecloset001a.mdl"] = {
 	name = "Metal Closet",
 	desc = "A green storage closet.",
-	invType = INV_TYPE_ID,
+	invType = "grid",
 	invData = {
 		w = 5,
 		h = 7
@@ -35,7 +29,7 @@ STORAGE_DEFINITIONS["models/props_wasteland/controlroom_storagecloset001a.mdl"] 
 STORAGE_DEFINITIONS["models/props_wasteland/controlroom_filecabinet002a.mdl"] = {
 	name = "File Cabinet",
 	desc = "A metal file cabinet.",
-	invType = INV_TYPE_ID,
+	invType = "grid",
 	invData = {
 		w = 3,
 		h = 6
@@ -44,7 +38,7 @@ STORAGE_DEFINITIONS["models/props_wasteland/controlroom_filecabinet002a.mdl"] = 
 STORAGE_DEFINITIONS["models/props_c17/furniturefridge001a.mdl"] = {
 	name = "Refrigerator",
 	desc = "A metal box to keep food in",
-	invType = INV_TYPE_ID,
+	invType = "grid",
 	invData = {
 		w = 3,
 		h = 4
@@ -53,7 +47,7 @@ STORAGE_DEFINITIONS["models/props_c17/furniturefridge001a.mdl"] = {
 STORAGE_DEFINITIONS["models/props_wasteland/kitchen_fridge001a.mdl"] = {
 	name = "Large Refrigerator",
 	desc = "A large metal box to keep even more food in.",
-	invType = INV_TYPE_ID,
+	invType = "grid",
 	invData = {
 		w = 4,
 		h = 5
@@ -62,7 +56,7 @@ STORAGE_DEFINITIONS["models/props_wasteland/kitchen_fridge001a.mdl"] = {
 STORAGE_DEFINITIONS["models/props_junk/trashbin01a.mdl"] = {
 	name = "Trash Bin",
 	desc = "A container for junk.",
-	invType = INV_TYPE_ID,
+	invType = "grid",
 	invData = {
 		w = 1,
 		h = 3
@@ -71,7 +65,7 @@ STORAGE_DEFINITIONS["models/props_junk/trashbin01a.mdl"] = {
 STORAGE_DEFINITIONS["models/items/ammocrate_smg1.mdl"] = {
 	name = "Ammo Crate",
 	desc = "A heavy crate for storing ammunition.",
-	invType = INV_TYPE_ID,
+	invType = "grid",
 	invData = {
 		w = 5,
 		h = 3
@@ -95,7 +89,7 @@ if (CLIENT) then
 
 		if (
 			not IsValid(storage) or
-			storage:getStorageInfo().invType ~= INV_TYPE_ID
+			storage:getStorageInfo().invType ~= "grid"
 		) then
 			return
 		end

@@ -26,11 +26,9 @@ do
                 end
 
                 if not speaker:IsAdmin() then
-                    -- Only need to check the time if they have spoken in OOC chat before.
                     if delay > 0 and speaker.liaLastOOC then
                         local lastOOC = CurTime() - speaker.liaLastOOC
 
-                        -- Use this method of checking time in case the oocDelay config changes.
                         if lastOOC <= delay then
                             speaker:notifyLocalized("oocDelay", delay - math.ceil(lastOOC))
 
@@ -39,7 +37,6 @@ do
                     end
                 end
 
-                -- Save the last time they spoke in OOC.
                 speaker.liaLastOOC = CurTime()
             end,
             onChatAdd = function(speaker, text)

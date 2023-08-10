@@ -84,6 +84,7 @@ end
 function lia.module.loadExtras(path)
     lia.util.includeDir(path .. "/libs", true, true)
     lia.util.includeDir(path .. "/libraries", true, true)
+    lia.util.includeDir(path .. "/commands", true, true)
     lia.util.includeDir(path .. "/meta", true, true)
     lia.faction.loadFromDir(path .. "/factions")
     lia.class.loadFromDir(path .. "/classes")

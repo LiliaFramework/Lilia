@@ -9,6 +9,16 @@ lia.util.include("backend/external/thirdparty/sh_netstream2.lua", "shared")
 lia.util.include("backend/external/thirdparty/sh_pon.lua", "shared")
 lia.util.include("backend/external/thirdparty/sh_utf8.lua", "shared")
 --------------------------------------------------------------------------------------------------------
+// GAMEMODE CONFIG \\
+lia.util.include("config/sh_core.lua")
+lia.util.include("config/sh_default.lua")
+lia.util.include("config/sh_miscellaneous.lua")
+lia.util.include("config/sh_models.lua")
+lia.util.include("config/sh_perfomance.lua")
+lia.util.include("config/sh_permissions.lua")
+lia.util.include("config/sh_protection.lua")
+lia.util.include("config/sh_toolpermissions.lua")
+--------------------------------------------------------------------------------------------------------
 // GAMEMODE LIBRARIES \\
 lia.util.include("backend/libs/networking/sh_networking.lua") 
 lia.util.include("backend/libs/networking/sv_networking.lua") 
@@ -55,6 +65,7 @@ lia.util.include("backend/libs/cl_playerinteract.lua")
 lia.util.include("backend/libs/sh_anims.lua") 
 lia.util.include("backend/libs/sh_class.lua") 
 lia.util.include("backend/libs/sh_currency.lua") 
+lia.util.include("backend/libs/sh_perfomance.lua") 
 lia.util.include("backend/libs/sh_date.lua") 
 lia.util.include("backend/libs/sh_module.lua") 
 lia.util.include("backend/libs/language/cl_language.lua")
@@ -72,6 +83,8 @@ lia.util.include("backend/core/cl_loadingscreen.lua")
 lia.util.include("backend/core/cl_initialization.lua")
 lia.util.include("backend/core/sv_permissions.lua")
 lia.util.include("backend/core/sh_misc.lua")
+lia.util.include("backend/core/sv_nostuck.lua")
+lia.util.include("backend/core/sv_protection.lua")
 lia.util.include("backend/core/hooks/sh_hooks.lua")
 --------------------------------------------------------------------------------------------------------
 // GAMEMODE NETMESSAGES \\

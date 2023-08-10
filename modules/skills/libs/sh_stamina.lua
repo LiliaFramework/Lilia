@@ -32,6 +32,7 @@ function MODULE:CalcStaminaChange(client)
 end
 -------------------------------------------------------------------------------------------------------------------------~
 function MODULE:SetupMove(client, cMoveData)
+    if not lia.config.StaminaSlowdown then return end
     if client:GetNetVar("brth", false) then
         cMoveData:SetMaxClientSpeed(client:GetWalkSpeed())
     elseif client:WaterLevel() > 1 then

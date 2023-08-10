@@ -9,10 +9,6 @@ lia.command.add("rollstrength", {
         local value = math.random(0, maximum) + (character:getAttrib("strength", 0) * MODULE.RollMultiplier)
         lia.chat.send(client, "roll", tostring(value))
 
-        if lia.config.DevPrinting then
-            client:ChatPrint("Current Bonus: " .. character:getAttrib("strength", 0) * MODULE.RollMultiplier)
-        end
-
         lia.chat.send(client, "me", "has rolled a Strength skill roll")
     end
 })
@@ -25,10 +21,6 @@ lia.command.add("rollendurance", {
         local maximum = math.Clamp(arguments[1] or 100, 0, 100)
         local value = math.random(0, maximum) + (character:getAttrib("endurance", 0) * MODULE.RollMultiplier)
         lia.chat.send(client, "roll", tostring(value))
-
-        if lia.config.DevPrinting then
-            client:ChatPrint("Current Bonus: " .. character:getAttrib("endurance", 0) * MODULE.RollMultiplier)
-        end
 
         lia.chat.send(client, "me", "has rolled an Endurance skill roll")
     end

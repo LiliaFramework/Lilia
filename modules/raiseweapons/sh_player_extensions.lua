@@ -1,7 +1,5 @@
 local playerMeta = FindMetaTable("Player")
 
-
-
 function playerMeta:isWepRaised()
     local weapon = self:GetActiveWeapon()
     local override = hook.Run("ShouldWeaponBeRaised", self, weapon)
@@ -31,11 +29,8 @@ end
 
 
 if SERVER then
-	-- Sets whether or not the weapon is raised.
 	function playerMeta:setWepRaised(state)
-		-- Sets the networked variable for being raised.
 		self:setNetVar("raised", state)
-		-- Delays any weapon shooting.
 		local weapon = self:GetActiveWeapon()
 
 		if IsValid(weapon) then
@@ -44,7 +39,6 @@ if SERVER then
 		end
 	end
 
-	-- Inverts whether or not the weapon is raised.
 	function playerMeta:toggleWepRaised()
 		timer.Simple(lia.config.WeaponRaiseTimer, function()
 			self:setWepRaised(not self:isWepRaised())

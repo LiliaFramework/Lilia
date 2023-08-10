@@ -4,6 +4,10 @@ local SCHEMA = SCHEMA
 local playerMeta = FindMetaTable("Player")
 --------------------------------------------------------------------------------------------------------+
 function playerMeta:getPlayTime()
+	return self:GetMoveType() == MOVETYPE_NOCLIP
+end
+--------------------------------------------------------------------------------------------------------+
+function playerMeta:IsNoClipping()
     local diff = os.time(lia.util.dateToNumber(self.lastJoin)) - os.time(lia.util.dateToNumber(self.firstJoin))
 
     return diff + (RealTime() - (self.liaJoinTime or RealTime()))

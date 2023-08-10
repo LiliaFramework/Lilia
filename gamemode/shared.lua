@@ -16,7 +16,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:OnReloaded()
     if CLIENT then
-        hook.Run("LoadLiliaFonts", lia.config.get("font"), lia.config.get("genericFont")) -- Run the "LoadLiliaFonts" hook on the client, passing font parameters from the configuration
+        hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
     else
         for _, client in ipairs(player.GetAll()) do
             hook.Run("CreateSalaryTimer", client)

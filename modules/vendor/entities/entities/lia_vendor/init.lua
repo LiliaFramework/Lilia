@@ -299,7 +299,7 @@ function ENT:sync(client)
     net.Send(client)
     local uniqueID = client:GetUserGroup()
 
-    if client:IsSuperAdmin() then
+    if client:CanUseVendor() then
         for factionID in pairs(self.factions) do
             net.Start("liaVendorAllowFaction")
             net.WriteUInt(factionID, 8)

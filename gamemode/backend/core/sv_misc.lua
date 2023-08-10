@@ -35,6 +35,22 @@ function GM:EntityTakeDamage(entity, dmgInfo)
 
         entity.liaPlayer:TakeDamageInfo(dmgInfo)
     end
+    
+    if not IsValid(target) or not target:IsPlayer() then return end
+    local inflictor = dmginfo:GetInflictor()
+    local attacker = dmginfo:GetAttacker()
+
+    if not dmginfo:IsFallDamage() and IsValid(attacker) and attacker:IsPlayer() and attacker ~= target and target:Team() ~= FACTION_STAFF then
+        target.LastDamaged = CurTime()
+    end
+
+    if lia.config.CarRagdoll and IsValid(inflictor) and (inflictor:GetClass() == "gmod_sent_vehicle_fphysics_base" or inflictor:GetClass() == "gmod_sent_vehicle_fphysics_wheel") and not IsValid(target:GetVehicle()) then
+        dmginfo:ScaleDamage(0)
+
+        if not IsValid(target.liaRagdoll) then
+            target:setRagdolled(true, 5)
+        end
+    end
 end
 --------------------------------------------------------------------------------------------------------
 function GM:PreCleanupMap()

@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------------------------------
 function MODULE:CanPlayerAccessVendor(client, vendor)
     local uniqueID = client:GetUserGroup()
-    if client:IsSuperAdmin() then return true end
+    if client:CanUseVendor() then return true end
     local character = client:getChar()
     if vendor:isClassAllowed(character:getClass()) then return true end
     if vendor:isFactionAllowed(client:Team()) then return true end

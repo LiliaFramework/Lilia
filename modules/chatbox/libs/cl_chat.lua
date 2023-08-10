@@ -58,3 +58,4 @@ concommand.Add("fixchatplz", function()
         MODULE:createChat()
     end
 end)
+

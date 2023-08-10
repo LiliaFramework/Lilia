@@ -70,6 +70,11 @@ function GM:InitializedConfig()
     print("LOADED CONFIG!")
 end
 --------------------------------------------------------------------------------------------------------
+function GM:PostGamemodeLoaded()
+    print("Disabling base_gmodentity think method")
+    scripted_ents.GetStored("base_gmodentity").t.Think = nil
+end
+--------------------------------------------------------------------------------------------------------
 function GM:LiliaLoaded()
     local namecache = {}
     for _, MODULE in pairs(lia.module.list) do

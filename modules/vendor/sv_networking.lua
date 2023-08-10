@@ -24,7 +24,7 @@ end)
 net.Receive("liaVendorEdit", function(_, client)
     local key = net.ReadString()
     local uniqueID = client:GetUserGroup()
-    if not client:IsSuperAdmin() then return end
+    if not client:CanUseVendor() then return end
     local vendor = client.liaVendor
     if not IsValid(vendor) or not EDITOR[key] then return end
     EDITOR[key](vendor, client, key)

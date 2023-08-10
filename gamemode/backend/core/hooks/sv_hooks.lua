@@ -89,7 +89,9 @@ function GM:PlayerLoadedChar(client, character, lastChar)
     for _, client in ipairs(player.GetAll()) do
         hook.Run("CreateSalaryTimer", client)
     end
-    
+
+    local loginTime = os.time()
+    character:setData("loginTime", loginTime)
     hook.Run("PlayerLoadout", client)
 end
 --------------------------------------------------------------------------------------------------------

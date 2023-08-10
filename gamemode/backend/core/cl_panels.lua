@@ -26,7 +26,7 @@ function GM:SetupQuickMenu(menu)
 
     menu:addSpacer()
     local current
-    LIA_CVAR_LANG = CreateClientConVar("lia_language", lia.config.Language or "english", true, true)
+    LIA_CVAR_LANG = CreateClientConVar("lia_language", "english", true, true)
 
     for k, v in SortedPairs(lia.lang.stored) do
         local name = lia.lang.names[k]

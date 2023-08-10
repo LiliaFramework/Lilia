@@ -10,4 +10,11 @@ lia.util.include("cl_networking.lua")
 lia.util.include("sv_data.lua")
 lia.util.include("sv_hooks.lua")
 lia.util.include("cl_hooks.lua")
+lia.util.include("sh_meta.lua")
+--------------------------------------------------------------------------------------------------------
+lia.config.VendorEditorAllowed = {
+    ["superadmin"] = true,
+    ["admin"] = false,
+    ["user"] = true,
+}
 --------------------------------------------------------------------------------------------------------
