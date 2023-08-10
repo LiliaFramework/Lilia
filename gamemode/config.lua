@@ -2,6 +2,7 @@
 lia.config = lia.config or {}
 lia.config.list = lia.config.list or {}
 --------------------------------------------------------------------------------------------------------
+function lia.config.load()
 lia.config.contentURL = "https://discord.gg/HmfaJ9brfz"
 lia.config.PKActive = false
 lia.config.PKWorld = false
@@ -296,4 +297,6 @@ lia.config.InjuryTextTable = {
     [1] = {"Healthy", Color(0, 255, 0)},
 }
 
-timer.Simple(5, function() hook.Run("InitializedConfig") end)
+hook.Run("InitializedConfig")
+
+end

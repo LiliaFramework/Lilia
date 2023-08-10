@@ -49,11 +49,5 @@ function GM:PostCleanupMap()
     hook.Run("PostLoadData")
 end
 --------------------------------------------------------------------------------------------------------
-hook.Add("InitializedModules", "PerfomanceInitializedModules", function()
-    timer.Simple(3, function()
-        RunConsoleCommand("ai_serverragdolls", "1")
-    end)
-end)
---------------------------------------------------------------------------------------------------------
 hook.Remove("PlayerInitialSpawn", "VJBaseSpawn")
 --------------------------------------------------------------------------------------------------------

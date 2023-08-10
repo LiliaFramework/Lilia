@@ -20,9 +20,8 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:SetupBotInventory(client, character)
-    local invType = "grid"
-    if not invType then return end
-    local inventory = lia.inventory.new(invType)
+    if not "grid" then return end
+    local inventory = lia.inventory.new("grid")
     inventory.id = "bot" .. character:getID()
     character.vars.inv[1] = inventory
     lia.inventory.instances[inventory.id] = inventory

@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------------------------------
-function GM:Initialize()
+function GM:InitializedClientHooks()
     hook.Remove("StartChat", "StartChatIndicator")
     hook.Remove("FinishChat", "EndChatIndicator")
     hook.Remove("PostPlayerDraw", "DarkRP_ChatIndicator")
@@ -64,14 +64,6 @@ function GM:Initialize()
     timer.Remove("CheckHookTimes")
 end
 --------------------------------------------------------------------------------------------------------
-function GM:InitPostEntity()
-    lia.joinTime = RealTime() - 0.9716
-    lia.faction.formatModelData()
-	if system.IsWindows() and not system.HasFocus() then
-        system.FlashWindow()
-    end
-end
---------------------------------------------------------------------------------------------------------
 function GM:InitializedConfig()
     hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
     if hook.Run("ShouldCreateLoadingScreen") ~= false then hook.Run("CreateLoadingScreen") end
@@ -99,12 +91,6 @@ function GM:LiliaLoaded()
 
     lia.module.namecache = namecache
 end
---------------------------------------------------------------------------------------------------------
-timer.Remove("HintSystem_OpeningMenu")
-timer.Remove("HintSystem_Annoy1")
-timer.Remove("HintSystem_Annoy2")
---------------------------------------------------------------------------------------------------------
-CreateConVar("cl_weaponcolor", "0.30 1.80 2.10", {FCVAR_ARCHIVE, FCVAR_USERINFO, FCVAR_DONTRECORD}, "The value is a Vector - so between 0-1 - not between 0-255")
 --------------------------------------------------------------------------------------------------------
 local useCheapBlur = CreateClientConVar("lia_cheapblur", 0, true):GetBool()
 --------------------------------------------------------------------------------------------------------

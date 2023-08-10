@@ -85,11 +85,11 @@ function GM:PlayerLoadedChar(client, character, lastChar)
         client.liaRagdoll.liaIgnoreDelete = true
         client.liaRagdoll:Remove()
     end
-	
-	if not lia.config.SalaryOverride then
+
+    for _, client in ipairs(player.GetAll()) do
         hook.Run("CreateSalaryTimer", client)
     end
-	
+    
     hook.Run("PlayerLoadout", client)
 end
 --------------------------------------------------------------------------------------------------------
@@ -178,6 +178,14 @@ function GM:InitPostEntity()
         hook.Run("LoadData")
         hook.Run("PostLoadData")
     end)
+
+    if CLIENT then 
+        lia.joinTime = RealTime() - 0.9716
+        lia.faction.formatModelData()
+	    if system.IsWindows() and not system.HasFocus() then
+            system.FlashWindow()
+        end
+    end
 end
 --------------------------------------------------------------------------------------------------------
 function GM:ShutDown()
@@ -276,6 +284,7 @@ function GM:LiliaTablesLoaded()
 end
 --------------------------------------------------------------------------------------------------------
 function GM:CreateSalaryTimer(client)
+    if lia.config.SalaryOverride then return end
     local character = client:getChar()
     if not character then return end
     local faction = lia.faction.indices[character:getFaction()]
@@ -300,7 +309,7 @@ function GM:CreateSalaryTimer(client)
     end)
 end
 --------------------------------------------------------------------------------------------------------
-function GM:InitializedPlugins()
+function GM:InitializedModules()
     if lia.config.MapCleanerEnabled then
         timer.Create("clearWorldItemsWarning", lia.config.ItemCleanupTime - (60 * 10), 0, function()
             net.Start("worlditem_cleanup_inbound")
@@ -363,5 +372,8 @@ function GM:InitializedPlugins()
             end
         end)
     end
+    timer.Simple(3, function()
+        RunConsoleCommand("ai_serverragdolls", "1")
+    end)
 end
 --------------------------------------------------------------------------------------------------------
