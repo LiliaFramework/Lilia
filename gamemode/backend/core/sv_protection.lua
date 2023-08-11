@@ -8,6 +8,9 @@ function GM:CanDeleteChar(ply, char)
 end
 
 function GM:OnEntityCreated(ent)
+	if lia.config.DrawEntityShadows then
+        entity:DrawShadow(false)
+    end
     if not ent:IsRagdoll() then return end
     if ent:getNetVar("player", nil) then return end
     timer.Simple(

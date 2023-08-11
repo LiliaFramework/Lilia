@@ -12,6 +12,7 @@ function GM:PlayerLoadout(client)
         client:SelectWeapon("gmod_tool")
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawn(client)
     local character = client:getChar()
@@ -26,9 +27,20 @@ function GM:PlayerSpawn(client)
     client:setAction()
     hook.Run("PlayerLoadout", client)
 end
+
+--------------------------------------------------------------------------------------------------------
+function GM:OnCharAttribBoosted(client, character, attribID)
+    local attribute = lia.attribs.list[attribID]
+
+    if attribute and isfunction(attribute.onSetup) then
+        attribute:onSetup(client, character:getAttrib(attribID, 0))
+    end
+end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PostPlayerLoadout(client)
     local char = client:getChar()
+    lia.attribs.setup(client)
 
     if char:getInv() then
         for _, item in pairs(char:getInv():getItems()) do
@@ -42,9 +54,13 @@ function GM:PostPlayerLoadout(client)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerDeath(client, inflictor, attacker)
     local char = client:getChar()
+    local inventory = char and char:getInv()
+    local items = inventory:getInv():getItems()
+    netstream.Start(client, "removeF1")
 
     if char then
         if IsValid(client.liaRagdoll) then
@@ -61,8 +77,62 @@ function GM:PlayerDeath(client, inflictor, attacker)
         char:setData("deathPos", client:GetPos())
         client:setNetVar("deathStartTime", CurTime())
         client:setNetVar("deathTime", CurTime() + 5)
+        victim.carryWeapons = {}
+        victim.LostItems = {}
+
+        if inventory and lia.config.KeepAmmoOnDeath then
+            for k, v in pairs(inventory:getItems()) do
+                if v.isWeapon and v:getData("equip") then
+                    v:setData("ammo", nil)
+                end
+            end
+        end
+
+        if victim ~= attacker and not attacker:IsWorld() then
+            if attacker:IsPlayer() then
+                if lia.config.DeathPopupEnabled then
+                    net.Start("death_client")
+                    net.WriteString(attacker:Nick())
+                    net.WriteFloat(attacker:getChar():getID())
+                    net.Send(victim)
+                end
+
+                if lia.config.LoseWeapononDeathHuman then
+                    for k, v in pairs(items) do
+                        if (v.isWeapon or v.isCW) and v:getData("equip") then
+                            table.insert(victim.LostItems, v.uniqueID)
+                            v:remove()
+                        end
+                    end
+
+                    if #victim.LostItems > 0 then
+                        local amount = #victim.LostItems > 1 and #victim.LostItems .. " items" or "an item"
+                        victim:notify("Because you died, you have lost " .. amount .. ".")
+                    end
+                end
+
+                return
+            elseif not attacker:IsPlayer() then
+                if lia.config.LoseWeapononDeathNPC then
+                    for k, v in pairs(items) do
+                        if (v.isWeapon or v.isCW) and v:getData("equip") then
+                            table.insert(victim.LostItems, v.uniqueID)
+                            v:remove()
+                        end
+                    end
+
+                    if #victim.LostItems > 0 then
+                        local amount = #victim.LostItems > 1 and #victim.LostItems .. " items" or "an item"
+                        victim:notify("Because you died, you have lost " .. amount .. ".")
+                    end
+                end
+
+                return
+            end
+        end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerDeathThink(client)
     if client:getChar() then
@@ -75,6 +145,7 @@ function GM:PlayerDeathThink(client)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerInitialSpawn(client)
     client.liaJoinTime = RealTime()
@@ -94,8 +165,8 @@ function GM:PlayerInitialSpawn(client)
 
         hook.Run("PlayerLiliaDataLoaded", client)
     end)
-	
-	local annoying = ents.FindByName("music")
+
+    local annoying = ents.FindByName("music")
     local val = ents.GetMapCreatedEntity(1733)
 
     if lia.config.MusicKiller and #annoying > 0 then
@@ -106,6 +177,8 @@ function GM:PlayerInitialSpawn(client)
         val:Fire("Disable")
         val:Fire("Kill")
     end
+
+    self:RegisterPlayer(ply)
     hook.Run("PostPlayerInitialSpawn", client)
 end
 --------------------------------------------------------------------------------------------------------

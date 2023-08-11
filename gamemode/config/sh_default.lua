@@ -28,6 +28,7 @@ function lia.config.load.default()
     lia.config.DefaultMoney = 0
     lia.config.HiddenHUDElements = {
         ["CHudHealth"] = true,
+        ["CHudCrosshair"] = true,
         ["CHudBattery"] = true,
         ["CHudAmmo"] = true,
         ["CHudSecondaryAmmo"] = true,

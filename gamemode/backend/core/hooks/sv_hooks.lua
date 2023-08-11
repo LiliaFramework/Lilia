@@ -169,7 +169,11 @@ function GM:InitPostEntity()
             end
         end
     end
-
+	if lia.config.DrawEntityShadows then
+        for _, entity in ipairs(ents.GetAll()) do
+            entity:DrawShadow(false)
+        end
+    end
     lia.faction.formatModelData()
 
     timer.Simple(2, function()

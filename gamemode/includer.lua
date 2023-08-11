@@ -20,6 +20,7 @@ function lia.util.include(fileName, state)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.includeDir(directory, fromLua, recursive)
     local baseDir = "lilia"
@@ -29,7 +30,6 @@ function lia.util.includeDir(directory, fromLua, recursive)
     else
         baseDir = baseDir .. "/gamemode/"
     end
-
 
     if recursive then
         local function AddRecursive(folder, baseFolder)
