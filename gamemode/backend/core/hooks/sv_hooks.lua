@@ -217,12 +217,15 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
     local allowVoice = lia.config.AllowVoice
+    if not allowVoice then return false, false end
+    if not speaker:getNetVar("voiceRange") then return false end
+    local oldrange = lia.config.Ranges[speaker:getNetVar("voiceRange", 2)].range
+    oldrange = oldrange * oldrange
+    if listener:GetPos():DistToSqr(speaker:GetPos()) < oldrange then return true, true end
 
-    if allowVoice then
-        return true, true
-    else
-        return false, false
-    end
+    return false, false    
+    return false, false
+    
 end
 --------------------------------------------------------------------------------------------------------
 function GM:PrePlayerLoadedChar(client, character, lastChar)

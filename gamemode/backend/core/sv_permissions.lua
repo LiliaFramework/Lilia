@@ -232,6 +232,6 @@ end
 function GM:CanProperty(client, property, entity)
     if not client:getChar() then return end
     if client:IsSuperAdmin() then return true end
-    if table.HasValue(lia.config.BlockedProperties, property) and table.HasValue(lia.config.blockedEntities, entity:GetClass()) then return false end
+    if table.HasValue(lia.config.BlockedProperties, property) and table.HasValue("stamina", entity:GetClass()) then return false end
     return not table.HasValue(lia.config.BlockedProperties, property)
 end

@@ -1,8 +1,9 @@
 -------------------------------------------------------------------------------------------------------------------------~
-local charMeta = lia.meta.character
+function MODULE:GetStrengthBonusDamage(character)
+    return (character:getAttrib("strength", 0) * lia.config.StrengthMultiplier) or 0
+end
 -------------------------------------------------------------------------------------------------------------------------~
-function charMeta:GetMaxStamina()
-    local maxStamina = hook.Run("CharacterMaxStamina", self) or lia.config.DefaultStamina or 100
-    return maxStamina
+function MODULE:GetPunchStrengthBonusDamage(character)
+    return (character:getAttrib("strength", 0) * lia.config.PunchStrengthMultiplier) or 0
 end
 -------------------------------------------------------------------------------------------------------------------------~

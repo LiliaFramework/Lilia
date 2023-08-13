@@ -152,7 +152,7 @@ local normalizeAngle = math.NormalizeAngle
 local oldCalcSeqOverride
 
 function GM:HandlePlayerLanding(client, velocity, wasOnGround)
-    if client:GetMoveType() == MOVETYPE_NOCLIP then return end
+    if client:IsNoClipping() then return end
 
     if client:IsOnGround() and not wasOnGround then
         local length = (client.lastVelocity or velocity):LengthSqr()
@@ -186,7 +186,7 @@ function GM:CalcMainActivity(client, velocity)
     end
 
     client.m_bWasOnGround = client:IsOnGround()
-    client.m_bWasNoclipping = client:GetMoveType() == MOVETYPE_NOCLIP and not client:InVehicle()
+    client.m_bWasNoclipping = client:IsNoClipping() and not client:InVehicle()
     client.lastVelocity = velocity
 
     if CLIENT then

@@ -318,12 +318,12 @@ function SWEP:PrimaryAttack()
     local staminaUse = lia.config.PunchStamina
 
     if staminaUse > 0 then
-        local value = owner:getLocalVar("stm", 0) - staminaUse
+        local value = owner:getLocalVar("stamina", 0) - staminaUse
 
         if value < 0 then
             return
         elseif SERVER then
-            owner:setLocalVar("stm", value)
+            owner:setLocalVar("stamina", value)
         end
     end
 

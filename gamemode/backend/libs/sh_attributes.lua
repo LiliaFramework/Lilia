@@ -7,8 +7,8 @@ function lia.attribs.loadFromDir(directory)
 		local niceName = v:sub(4, -5)
 		ATTRIBUTE = lia.attribs.list[niceName] or {}
 
-		if PLUGIN then
-			ATTRIBUTE.plugin = PLUGIN.uniqueID
+		if MODULE then
+			ATTRIBUTE.plugin = MODULE.uniqueID
 		end
 
 		lia.util.include(directory .. "/" .. v)

@@ -29,7 +29,7 @@ function MODULE:PlayerStaminaLost(client)
     client.isBreathing = true
 
     timer.Create("liaStamBreathCheck" .. client:SteamID(), 1, 0, function()
-        if client:getLocalVar("stm", 0) < 50 then return end
+        if client:getLocalVar("stamina", 0) < 50 then return end
         client:StopSound("player/breathe1.wav")
         client.isBreathing = nil
         timer.Remove("liaStamBreathCheck" .. client:SteamID())

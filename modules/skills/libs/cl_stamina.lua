@@ -10,7 +10,7 @@ function MODULE:Think()
     local ply = LocalPlayer()
     if not ply:getChar() then return end
     local char = ply:getChar()
-    local maxStamina = char:getMaxStamina()
+    local maxStamina = char:GetMaxStamina()
     local offset = self:CalcStaminaChange(ply)
     offset = math.Remap(FrameTime(), 0, 0.25, 0, offset)
 
@@ -27,7 +27,7 @@ function MODULE:HUDPaintBackground()
     if not lia.config.StaminaBlur then return end
     local ply = LocalPlayer()
     local char = ply:getChar()
-    local maxStamina = char:getMaxStamina()
+    local maxStamina = char:GetMaxStamina()
     local Stamina = ply:getLocalVar("stamina", maxStamina)
 
     if Stamina <= 5 then

@@ -40,7 +40,7 @@ if SERVER then
 	end
 
 	function playerMeta:toggleWepRaised()
-		timer.Simple(lia.config.WeaponRaiseTimer, function()
+		timer.Simple(1, function()
 			self:setWepRaised(not self:isWepRaised())
 		end)
 

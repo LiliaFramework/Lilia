@@ -11,26 +11,6 @@ net.Receive("liaNotifyL", function()
 
     lia.util.notifyLocalized(message, unpack(args))
 end)
-
---------------------------------------------------------------------------------------------------------
-net.Receive("liaCharList", function()
-    local newCharList = {}
-    local length = net.ReadUInt(32)
-
-    for i = 1, length do
-        newCharList[i] = net.ReadUInt(32)
-    end
-
-    local oldCharList = lia.characters
-    lia.characters = newCharList
-
-    if oldCharList then
-        hook.Run("CharacterListUpdated", oldCharList, newCharList)
-    else
-        hook.Run("CharacterListLoaded", newCharList)
-    end
-end)
-
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaStringReq", function()
     local id = net.ReadUInt(32)
@@ -285,6 +265,39 @@ net.Receive("liaItemInstance", function()
 end)
 
 --------------------------------------------------------------------------------------------------------
+net.Receive("cleanup_inbound", function()
+    chat.AddText(Color(255, 0, 0), "[ WARNING ]  Map Cleanup Inbound! Brace for Impact!")
+end)
+
+-------------------------------------------------------------------------------------------------------------------------
+net.Receive("worlditem_cleanup_inbound", function()
+    chat.AddText(Color(255, 0, 0), "[ WARNING ]  World items will be cleared in 10 Minutes!")
+end)
+
+-------------------------------------------------------------------------------------------------------------------------
+net.Receive("worlditem_cleanup_inbound_final", function()
+    chat.AddText(Color(255, 0, 0), "[ WARNING ]  World items will be cleared in 60 Seconds!")
+end)
+
+-------------------------------------------------------------------------------------------------------------------------
+net.Receive("map_cleanup_inbound", function()
+    chat.AddText(Color(255, 0, 0), "[ WARNING ]  Automatic Map Cleanup in 10 Minutes!")
+end)
+
+-------------------------------------------------------------------------------------------------------------------------
+net.Receive("map_cleanup_inbound_final", function()
+    chat.AddText(Color(255, 0, 0), "[ WARNING ]  Automatic Map Cleanup in 60 Seconds!")
+end)
+
+-------------------------------------------------------------------------------------------------------------------------
+net.Receive("death_client", function()
+    local date = lia.date.GetFormattedDate(true, true, true, true, true)
+    local nick = net.ReadString()
+    local charid = net.ReadFloat()
+    chat.AddText(Color(255, 0, 0), "[DEATH]: ", Color(255, 255, 255), date, Color(255, 255, 255), " - You were killed by " .. nick .. "[" .. charid .. "]")
+end)
+
+-------------------------------------------------------------------------------------------------------------------------
 net.Receive("liaCharacterInvList", function()
     local charID = net.ReadUInt(32)
     local length = net.ReadUInt(32)
@@ -526,45 +539,35 @@ netstream.Hook("classUpdate", function(joinedClient)
 end)
 
 -------------------------------------------------------------------------------------------------------------------------
-net.Receive("cleanup_inbound", function()
-    chat.AddText(Color(255, 0, 0), "[ WARNING ]  Map Cleanup Inbound! Brace for Impact!")
-end)
 
--------------------------------------------------------------------------------------------------------------------------
-net.Receive("worlditem_cleanup_inbound", function()
-    chat.AddText(Color(255, 0, 0), "[ WARNING ]  World items will be cleared in 10 Minutes!")
-end)
-
--------------------------------------------------------------------------------------------------------------------------
-net.Receive("worlditem_cleanup_inbound_final", function()
-    chat.AddText(Color(255, 0, 0), "[ WARNING ]  World items will be cleared in 60 Seconds!")
-end)
-
--------------------------------------------------------------------------------------------------------------------------
-net.Receive("map_cleanup_inbound", function()
-    chat.AddText(Color(255, 0, 0), "[ WARNING ]  Automatic Map Cleanup in 10 Minutes!")
-end)
-
--------------------------------------------------------------------------------------------------------------------------
-net.Receive("map_cleanup_inbound_final", function()
-    chat.AddText(Color(255, 0, 0), "[ WARNING ]  Automatic Map Cleanup in 60 Seconds!")
-end)
-
--------------------------------------------------------------------------------------------------------------------------
-net.Receive("death_client", function()
-    local date = lia.date.GetFormattedDate(true, true, true, true, true)
-    local nick = net.ReadString()
-    local charid = net.ReadFloat()
-    chat.AddText(Color(255, 0, 0), "[DEATH]: ", Color(255, 255, 255), date, Color(255, 255, 255), " - You were killed by " .. nick .. "[" .. charid .. "]")
-end)
-
--------------------------------------------------------------------------------------------------------------------------
 netstream.Hook("removeF1", function()
     if IsValid(lia.gui.menu) then
         lia.gui.menu:remove()
     end
 end)
 
+--------------------------------------------------------------------------------------------------------
+netstream.Hook("VoiceMenu", function(client)
+    local menu = DermaMenu()
+    menu:AddOption("Change voice mode to Whispering range.", function()
+        netstream.Start("ChangeMode", 1)
+        client:notify("You have changed your voice mode to Whispering!")
+    end)
+
+    menu:AddOption("Change voice mode to Talking range.", function()
+        netstream.Start("ChangeMode", 2)
+        client:notify("You have changed your voice mode to Talking!")
+    end)
+
+    menu:AddOption("Change voice mode to Yelling range.", function()
+        netstream.Start("ChangeMode", 3)
+        client:notify("You have changed your voice mode to Yelling!")
+    end)
+
+    menu:Open()
+    menu:MakePopup()
+    menu:Center()
+end)
 --------------------------------------------------------------------------------------------------------
 if #lia.char.names < 1 then
     netstream.Start("liaCharFetchNames")

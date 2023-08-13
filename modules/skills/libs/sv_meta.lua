@@ -17,7 +17,7 @@ end
 -------------------------------------------------------------------------------------------------------------------------~
 function playerMeta:ConsumeStamina(amount)
     local current = self:getLocalVar("stamina", 0)
-    local value = math.Clamp(current - amount, 0, self:getChar():getMaxStamina())
+    local value = math.Clamp(current - amount, 0, self:getChar():GetMaxStamina())
     self:setLocalVar("stamina", value)
 
     if value == 0 and not self:getNetVar("brth", false) then

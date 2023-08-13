@@ -9,7 +9,7 @@ local dimDistance = 1024
 function MODULE:HUDPaint()
     client = LocalPlayer()
 
-    if client:IsAdmin() and client:GetMoveType() == MOVETYPE_NOCLIP and not client:InVehicle() and LIA_CVAR_ADMINESP:GetBool() and LIA_CVAR_ITEMESP:GetBool() then
+    if client:IsAdmin() and client:IsNoClipping() and not client:InVehicle() and LIA_CVAR_ADMINESP:GetBool() and LIA_CVAR_ITEMESP:GetBool() then
         local sx, sy = surface.ScreenWidth(), surface.ScreenHeight()
 
         for k, v in ipairs(ents.GetAll()) do
@@ -34,7 +34,7 @@ function MODULE:HUDPaint()
         end
     end
 
-    if client:IsAdmin() and client:GetMoveType() == MOVETYPE_NOCLIP and not client:InVehicle() and LIA_CVAR_ADMINESP:GetBool() then
+    if client:IsAdmin() and client:IsNoClipping() and not client:InVehicle() and LIA_CVAR_ADMINESP:GetBool() then
         sx, sy = ScrW(), ScrH()
 
         for k, v in ipairs(player.GetAll()) do
@@ -102,7 +102,7 @@ end
 function MODULE:ShouldDrawEntityInfo(entity)
     if IsValid(entity) then
         if entity:IsPlayer() or IsValid(entity:getNetVar("player")) then
-            if entity.IsAdmin and entity:IsAdmin() and entity:GetMoveType() == MOVETYPE_NOCLIP then return false end
+            if entity.IsAdmin and entity:IsAdmin() and entity:IsNoClipping() then return false end
         end
     end
 end

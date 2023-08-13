@@ -22,6 +22,8 @@ lia.util.include("config/sh_protection.lua")
 lia.util.include("config/sh_toolpermissions.lua")
 --------------------------------------------------------------------------------------------------------
 -- GAMEMODE LIBRARIES \\
+
+lia.util.include("backend/libs/cl_buttons.lua")
 lia.util.include("backend/libs/networking/sh_networking.lua")
 lia.util.include("backend/libs/networking/sv_networking.lua")
 lia.util.include("backend/libs/networking/cl_networking.lua")

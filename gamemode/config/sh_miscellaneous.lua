@@ -1,9 +1,5 @@
 function lia.config.load_miscellaneous()
     lia.config.DrawEntityShadows = true
-    lia.config.Musicvolume = 0.25
-    lia.config.Music = "music/hl2_song2.mp3"
-    lia.config.BackgroundURL = "music/hl2_song2.mp3"
-    lia.config.CharMenuBGInputDisabled = true
     lia.config.Notify = {"garrysmod/content_downloaded.wav", 50, 250}
     lia.config.CharHover = {"buttons/button15.wav", 35, 250}
     lia.config.CharClick = {"buttons/button14.wav", 35, 255}
@@ -14,3 +10,6 @@ function lia.config.load_miscellaneous()
     lia.config.MenuButtonRollover = "ui/buttonrollover.wav"
     lia.config.SoundMenuButtonPressed = "ui/buttonclickrelease.wav"
 end
+
+
+

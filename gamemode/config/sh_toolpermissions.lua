@@ -2,7 +2,7 @@ function lia.config.load_toolpermissions()
     lia.config.CustomToolAccess = true
     lia.config.BlockedProperties = {"persist", "bonemanipulate", "drive"}
     lia.config.RestrictedEntityList = {"prop_door_rotating", "lia_vendor",}
-    lia.config.blockedEntities = {"ent_chess_board", "ent_draughts_board", "rock_big", "rock_medium", "rock_small ", "lia_bodygroupcloset", "lia_craftingtable", "carvendor", "sh_teller", "permaweapons", "stockbook", "lia_stash", "valet", "lia_vendor", "telephone", "lia_salary", "spruce", "pinetree", "oaktree", "beechtree", "npc_import_drug", "cardealer", "delivery_crate", "npcdelivery", "housing_npc", "jailer_npc", "sergeant_dornan", "npctaxi",}
+    lia.config.BlockedEntities = {"ent_chess_board", "ent_draughts_board", "rock_big", "rock_medium", "rock_small ", "lia_bodygroupcloset", "lia_craftingtable", "carvendor", "sh_teller", "permaweapons", "stockbook", "lia_stash", "valet", "lia_vendor", "telephone", "lia_salary", "spruce", "pinetree", "oaktree", "beechtree", "npc_import_drug", "cardealer", "delivery_crate", "npcdelivery", "housing_npc", "jailer_npc", "sergeant_dornan", "npctaxi",}
     lia.config.DisallowedTools = {"rope", "light", "lamp", "dynamite", "physprop", "faceposer",}
     lia.config.CustomToolAccessTable = {
         ["remover"] = {
@@ -11,7 +11,7 @@ function lia.config.load_toolpermissions()
             ToolAllowedUsergroup = {"superadmin", "admin", "user"},
             ExtraCheck = function(client, trace, tool, entity)
                 if client:IsSuperAdmin() then return true end
-                if table.HasValue(lia.config.blockedEntities, entity:GetClass()) then
+                if table.HasValue(lia.config.BlockedEntities, entity:GetClass()) then
                     return false
                 else
                     if entity:GetCreator() == client then

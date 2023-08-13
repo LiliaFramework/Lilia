@@ -44,7 +44,7 @@ function GM:PlayerBindPress(client, bind, pressed)
     end
 
     if lia.config.AntiBunnyHopEnabled then
-        if client:GetMoveType() == MOVETYPE_NOCLIP or not client:getChar() or client:InVehicle() then return end
+        if client:IsNoClipping() or not client:getChar() or client:InVehicle() then return end
         bind = bind:lower()
         if bind:find("jump") and (client:getLocalVar("stamina", 0) < lia.config.BHOPStamina) then return true end
     end

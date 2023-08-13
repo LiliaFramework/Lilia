@@ -20,7 +20,8 @@ function GM:PlayerSpawn(client)
     if lia.config.PKActive and character and character:getData("permakilled") then
         character:ban()
     end
-
+    
+    client:setNetVar("voiceRange", 2)
     client:SetNoDraw(false)
     client:UnLock()
     client:SetNotSolid(false)

@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------------------------------------------------~
 function MODULE:CalcStaminaChange(client)
     local character = client:getChar()
-    if not character or client:GetMoveType() == MOVETYPE_NOCLIP then return 0 end
+    if not character or client:IsNoClipping() then return 0 end
     local walkSpeed = client:GetWalkSpeed()
     local offset = 0
     if not client:getNetVar("brth", false) and client:KeyDown(IN_SPEED) and client:GetVelocity():LengthSqr() >= walkSpeed * walkSpeed then
@@ -12,10 +12,10 @@ function MODULE:CalcStaminaChange(client)
     end
 
     offset = hook.Run("AdjustStaminaOffset", client, offset) or offset
-    if CLIENT then
+    if CLIENT then 
         return offset
     else
-        local maxStamina = character:getMaxStamina()
+        local maxStamina = character:GetMaxStamina()
         local current = client:getLocalVar("stamina", 0)
         local value = math.Clamp(current + offset, 0, maxStamina)
         if current ~= value then

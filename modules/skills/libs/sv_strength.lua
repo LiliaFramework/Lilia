@@ -1,12 +1,14 @@
 -------------------------------------------------------------------------------------------------------------------------~
 function MODULE:EntityTakeDamage(target, dmginfo)
     local attacker = dmginfo:GetAttacker()
+    local char = attacker:getChar()
+
     local weapon = attacker:GetActiveWeapon()
     local damage = dmginfo:GetDamage()
-    local char = attacker:getChar()
-    local strbonus = hook.Run("GetStrengthBonusDamage", attacker:getChar())
+    local strbonus = hook.Run("GetStrengthBonusDamage", char)
+    if not attacker:IsPlayer() then return end
 
-    if IsValid(attacker) and attacker:IsPlayer() and IsValid(weapon) and table.HasValue(self.MeleeWeapons, weapon:GetClass()) then
+    if IsValid(attacker) and IsValid(weapon) and table.HasValue(self.MeleeWeapons, weapon:GetClass()) and lia.config.MeleeDamageBonus then
         dmginfo:SetDamage(damage + strbonus)
     end
 
