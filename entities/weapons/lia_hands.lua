@@ -323,7 +323,7 @@ function SWEP:PrimaryAttack()
         if value < 0 then
             return
         elseif SERVER then
-            owner:setLocalVar("stamina", value)
+            owner:setLocalVar("stm", value)
         end
     end
 

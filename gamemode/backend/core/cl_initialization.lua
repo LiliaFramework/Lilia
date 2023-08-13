@@ -1,11 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedConfig()
     hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
-
-    if hook.Run("ShouldCreateLoadingScreen") ~= false then
-        hook.Run("CreateLoadingScreen")
-    end
-
     print("LOADED CONFIG!")
 end
 

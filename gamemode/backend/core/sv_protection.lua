@@ -43,6 +43,25 @@ function GM:PlayerSpawnedVehicle(ply, ent)
         ply.NextVehicleSpawn = SysTime() + timer
     end
 end
+function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
+    if not physObj:IsMoveable() then return false end
+    if entity:GetUnFreezable() then return false end
+    physObj:EnableMotion(false)
+
+    if entity:GetClass() == "prop_vehicle_jeep" then
+        local objects = entity:GetPhysicsObjectCount()
+
+        for i = 0, objects - 1 do
+            entity:GetPhysicsObjectNum(i):EnableMotion(false)
+        end
+    end
+
+    client:AddFrozenPhysicsObject(entity, physObj)
+    client:SendHint("PhysgunUnfreeze", 0.3)
+    client:SuppressHint("PhysgunFreeze")
+
+    return true
+end
 
 function GM:PlayerSpawnedNPC(ply, ent)
     if lia.config.NPCsDropWeapons then return end
@@ -50,6 +69,29 @@ function GM:PlayerSpawnedNPC(ply, ent)
 end
 
 function GM:PlayerDisconnected(client)
+    client:saveLiliaData()
+    local character = client:getChar()
+
+    if character then
+        local charEnts = character:getVar("charEnts") or {}
+
+        for _, v in ipairs(charEnts) do
+            if v and IsValid(v) then
+                v:Remove()
+            end
+        end
+
+        hook.Run("OnCharDisconnect", client, character)
+        character:save()
+    end
+
+    if IsValid(client.liaRagdoll) then
+        client.liaRagdoll.liaNoReset = true
+        client.liaRagdoll.liaIgnoreDelete = true
+        client.liaRagdoll:Remove()
+    end
+
+    lia.char.cleanUpForPlayer(client)
     for _, entity in pairs(ents.GetAll()) do
         if entity:GetCreator() == client then
             entity:Remove()

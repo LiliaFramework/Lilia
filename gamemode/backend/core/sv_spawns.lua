@@ -1,6 +1,16 @@
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadout(client)
-    if not client:getChar() then return end
+    if client.liaSkipLoadout then
+        client.liaSkipLoadout = nil
+        return
+    end
+
+    if not client:getChar() then
+        client:SetNoDraw(true)
+        client:Lock()
+        client:SetNotSolid(true)
+        return
+    end
 
     if client:getChar():hasFlags("P") then
         client:Give("weapon_physgun")
@@ -11,7 +21,53 @@ function GM:PlayerLoadout(client)
         client:Give("gmod_tool")
         client:SelectWeapon("gmod_tool")
     end
+
+    client:SetWeaponColor(Vector(client:GetInfo("cl_weaponcolor")))
+    client:StripWeapons()
+    client:setLocalVar("blur", nil)
+    local character = client:getChar()
+
+    client:SetupHands()
+    client:SetModel(character:getModel())
+    client:Give("lia_hands")
+
+
+    client:SetWalkSpeed(lia.config.WalkSpeed)
+    client:SetRunSpeed(lia.config.RunSpeed)
+    
+    local faction = lia.faction.indices[client:Team()]
+
+    if faction then
+        if faction.onSpawn then
+            faction:onSpawn(client)
+        end
+
+        if faction.weapons then
+            for _, v in ipairs(faction.weapons) do
+                client:Give(v)
+            end
+        end
+    end
+
+    local class = lia.class.list[client:getChar():getClass()]
+
+    if class then
+        if class.onSpawn then
+            class:onSpawn(client)
+        end
+
+        if class.weapons then
+            for _, v in ipairs(class.weapons) do
+                client:Give(v)
+            end
+        end
+    end
+
+    lia.flag.onSpawn(client)
+    hook.Run("PostPlayerLoadout", client)
+    client:SelectWeapon("lia_hands")
 end
+
 
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawn(client)
@@ -59,11 +115,10 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerDeath(client, inflictor, attacker)
     local char = client:getChar()
-    local inventory = char and char:getInv()
-    local items = inventory:getInv():getItems()
-    netstream.Start(client, "removeF1")
 
     if char then
+        netstream.Start(client, "removeF1")
+
         if IsValid(client.liaRagdoll) then
             client.liaRagdoll.liaIgnoreDelete = true
             client.liaRagdoll:Remove()
@@ -71,69 +126,68 @@ function GM:PlayerDeath(client, inflictor, attacker)
         end
 
         if lia.config.PKActive then
-            if not (lia.config.PKWorld and (client == attacker or inflictor:IsWorld())) then return end
-            character:setData("permakilled", true)
+            if not (lia.config.PKWorld and (client == attacker or inflictor:IsWorld())) then
+                return
+            end
+            char:setData("permakilled", true)
         end
 
         char:setData("deathPos", client:GetPos())
         client:setNetVar("deathStartTime", CurTime())
         client:setNetVar("deathTime", CurTime() + 5)
-        victim.carryWeapons = {}
-        victim.LostItems = {}
+
+        local inventory = char:getInv()
+        local items = inventory:getItems()
+
+        client.carryWeapons = {}
+        client.LostItems = {}
 
         if inventory and lia.config.KeepAmmoOnDeath then
-            for k, v in pairs(inventory:getItems()) do
-                if v.isWeapon and v:getData("equip") then
+            for _, v in pairs(items) do
+                if (v.isWeapon or v.isCW) and v:getData("equip") then
                     v:setData("ammo", nil)
                 end
             end
         end
 
-        if victim ~= attacker and not attacker:IsWorld() then
+        if client ~= attacker and not attacker:IsWorld() then
             if attacker:IsPlayer() then
                 if lia.config.DeathPopupEnabled then
                     net.Start("death_client")
                     net.WriteString(attacker:Nick())
                     net.WriteFloat(attacker:getChar():getID())
-                    net.Send(victim)
+                    net.Send(client)
                 end
 
                 if lia.config.LoseWeapononDeathHuman then
-                    for k, v in pairs(items) do
+                    for _, v in pairs(items) do
                         if (v.isWeapon or v.isCW) and v:getData("equip") then
-                            table.insert(victim.LostItems, v.uniqueID)
+                            table.insert(client.LostItems, v.uniqueID)
                             v:remove()
                         end
                     end
 
-                    if #victim.LostItems > 0 then
-                        local amount = #victim.LostItems > 1 and #victim.LostItems .. " items" or "an item"
-                        victim:notify("Because you died, you have lost " .. amount .. ".")
+                    if #client.LostItems > 0 then
+                        local amount = #client.LostItems > 1 and #client.LostItems .. " items" or "an item"
+                        client:notify("Because you died, you have lost " .. amount .. ".")
+                    end
+                end
+            elseif not attacker:IsPlayer() and lia.config.LoseWeapononDeathNPC then
+                for _, v in pairs(items) do
+                    if (v.isWeapon or v.isCW) and v:getData("equip") then
+                        table.insert(client.LostItems, v.uniqueID)
+                        v:remove()
                     end
                 end
 
-                return
-            elseif not attacker:IsPlayer() then
-                if lia.config.LoseWeapononDeathNPC then
-                    for k, v in pairs(items) do
-                        if (v.isWeapon or v.isCW) and v:getData("equip") then
-                            table.insert(victim.LostItems, v.uniqueID)
-                            v:remove()
-                        end
-                    end
-
-                    if #victim.LostItems > 0 then
-                        local amount = #victim.LostItems > 1 and #victim.LostItems .. " items" or "an item"
-                        victim:notify("Because you died, you have lost " .. amount .. ".")
-                    end
+                if #client.LostItems > 0 then
+                    local amount = #client.LostItems > 1 and #client.LostItems .. " items" or "an item"
+                    client:notify("Because you died, you have lost " .. amount .. ".")
                 end
-
-                return
             end
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerDeathThink(client)
     if client:getChar() then
@@ -151,19 +205,20 @@ end
 function GM:PlayerInitialSpawn(client)
     client.liaJoinTime = RealTime()
     if client:IsBot() then return hook.Run("SetupBotCharacter", client) end
+    lia.config.send(client)
 
     client:loadLiliaData(function(data)
         if not IsValid(client) then return end
         local address = client:IPAddress()
         client:setLiliaData("lastIP", address)
         netstream.Start(client, "liaDataSync", data, client.firstJoin, client.lastJoin)
-
+    
         for _, v in pairs(lia.item.instances) do
             if v.entity and v.invID == 0 then
                 v:sync(client)
             end
         end
-
+    
         hook.Run("PlayerLiliaDataLoaded", client)
     end)
 

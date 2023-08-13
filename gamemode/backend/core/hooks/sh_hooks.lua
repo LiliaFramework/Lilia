@@ -343,3 +343,168 @@ function GM:OnPickupMoney(client, moneyEntity)
     end
 end
 --------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
+function GM:InitializedModules()
+    if SERVER then 
+    local TalkModesPSAString = "Please Remove Talk Modes. Our framework has such built in by default."
+    local NutscriptPSAString = "Please Port Any NutScript Plugins You May Be Using. Nutscript is Known for Being Exxploitable and Regardless Of The Compatibility, WE DO NOT Advice Nutscript Plugins. Our framework was built with Lilia Plugins in mind and most perfomance will be adquired like that."
+    
+    if TalkModes then
+        timer.Simple(2, function()
+                MsgC(Color(255, 0, 0), TalkModesPSAString)
+            end)
+        end
+    if nut then
+        timer.Simple(2, function()
+            MsgC(Color(255, 0, 0), NutscriptPSAString)
+                end)
+        end
+    if lia.config.MapCleanerEnabled then
+        timer.Create("clearWorldItemsWarning", lia.config.ItemCleanupTime - (60 * 10), 0, function()
+            net.Start("worlditem_cleanup_inbound")
+            net.Broadcast()
+
+            for i, v in pairs(player.GetAll()) do
+                v:notify("World items will be cleared in 10 Minutes!")
+            end
+        end)
+
+        timer.Create("clearWorldItemsWarningFinal", lia.config.ItemCleanupTime - 60, 0, function()
+            net.Start("worlditem_cleanup_inbound_final")
+            net.Broadcast()
+
+            for i, v in pairs(player.GetAll()) do
+                v:notify("World items will be cleared in 60 Seconds!")
+            end
+        end)
+
+        timer.Create("clearWorldItems", lia.config.ItemCleanupTime, 0, function()
+            for i, v in pairs(ents.FindByClass("lia_item")) do
+                v:Remove()
+            end
+        end)
+
+        timer.Create("mapCleanupWarning", lia.config.MapCleanupTime - (60 * 10), 0, function()
+            net.Start("map_cleanup_inbound")
+            net.Broadcast()
+
+            for i, v in pairs(player.GetAll()) do
+                v:notify("World items will be cleared in 10 Minutes!")
+            end
+        end)
+
+        timer.Create("mapCleanupWarningFinal", lia.config.MapCleanupTime - 60, 0, function()
+            net.Start("worlditem_cleanup_inbound_final")
+            net.Broadcast()
+
+            for i, v in pairs(player.GetAll()) do
+                v:notify("World items will be cleared in 60 Seconds!")
+            end
+        end)
+
+        timer.Create("AutomaticMapCleanup", lia.config.MapCleanupTime, 0, function()
+            net.Start("cleanup_inbound")
+            net.Broadcast()
+
+            for i, v in pairs(ents.GetAll()) do
+                if v:IsNPC() then
+                    v:Remove()
+                end
+            end
+
+            for i, v in pairs(ents.FindByClass("lia_item")) do
+                v:Remove()
+            end
+
+            for i, v in pairs(ents.FindByClass("prop_physics")) do
+                v:Remove()
+            end
+        end)
+    end
+    timer.Simple(3, function()
+        RunConsoleCommand("ai_serverragdolls", "1")
+    end)
+end
+    self:InitializedExtras()
+end
+
+function GM:InitializedExtras()
+    if CLIENT then
+        hook.Remove("StartChat", "StartChatIndicator")
+        hook.Remove("FinishChat", "EndChatIndicator")
+        hook.Remove("PostPlayerDraw", "DarkRP_ChatIndicator")
+        hook.Remove("CreateClientsideRagdoll", "DarkRP_ChatIndicator")
+        hook.Remove("player_disconnect", "DarkRP_ChatIndicator")
+        RunConsoleCommand("gmod_mcore_test", "1")
+        RunConsoleCommand("r_shadows", "0")
+        RunConsoleCommand("cl_detaildist", "0")
+        RunConsoleCommand("cl_threaded_client_leaf_system", "1")
+        RunConsoleCommand("cl_threaded_bone_setup", "2")
+        RunConsoleCommand("r_threaded_renderables", "1")
+        RunConsoleCommand("r_threaded_particles", "1")
+        RunConsoleCommand("r_queued_ropes", "1")
+        RunConsoleCommand("r_queued_decals", "1")
+        RunConsoleCommand("r_queued_post_processing", "1")
+        RunConsoleCommand("r_threaded_client_shadow_manager", "1")
+        RunConsoleCommand("studio_queue_mode", "1")
+        RunConsoleCommand("mat_queue_mode", "-2")
+        RunConsoleCommand("fps_max", "0")
+        RunConsoleCommand("fov_desired", "100")
+        RunConsoleCommand("mat_specular", "0")
+        RunConsoleCommand("r_drawmodeldecals", "0")
+        RunConsoleCommand("r_lod", "-1")
+        RunConsoleCommand("lia_cheapblur", "1")
+        hook.Remove("RenderScene", "RenderSuperDoF")
+        hook.Remove("RenderScene", "RenderStereoscopy")
+        hook.Remove("Think", "DOFThink")
+        hook.Remove("GUIMouseReleased", "SuperDOFMouseUp")
+        hook.Remove("GUIMousePressed", "SuperDOFMouseDown")
+        hook.Remove("PreRender", "PreRenderFrameBlend")
+        hook.Remove("PostRender", "RenderFrameBlend")
+        hook.Remove("NeedsDepthPass", "NeedsDepthPass_Bokeh")
+        hook.Remove("PreventScreenClicks", "SuperDOFPreventClicks")
+        hook.Remove("RenderScreenspaceEffects", "RenderBokeh")
+        hook.Remove("RenderScreenspaceEffects", "RenderBokeh")
+        hook.Remove("PostDrawEffects", "RenderWidgets")
+        hook.Remove("PlayerTick", "TickWidgets")
+        hook.Remove("PlayerInitialSpawn", "PlayerAuthSpawn")
+        hook.Remove("RenderScene", "RenderStereoscopy")
+        hook.Remove("LoadGModSave", "LoadGModSave")
+        hook.Remove("RenderScreenspaceEffects", "RenderColorModify")
+        hook.Remove("RenderScreenspaceEffects", "RenderBloom")
+        hook.Remove("RenderScreenspaceEffects", "RenderToyTown")
+        hook.Remove("RenderScreenspaceEffects", "RenderTexturize")
+        hook.Remove("RenderScreenspaceEffects", "RenderSunbeams")
+        hook.Remove("RenderScreenspaceEffects", "RenderSobel")
+        hook.Remove("RenderScreenspaceEffects", "RenderSharpen")
+        hook.Remove("RenderScreenspaceEffects", "RenderMaterialOverlay")
+        hook.Remove("RenderScreenspaceEffects", "RenderMotionBlur")
+        hook.Remove("RenderScene", "RenderSuperDoF")
+        hook.Remove("GUIMousePressed", "SuperDOFMouseDown")
+        hook.Remove("GUIMouseReleased", "SuperDOFMouseUp")
+        hook.Remove("PreventScreenClicks", "SuperDOFPreventClicks")
+        hook.Remove("PostRender", "RenderFrameBlend")
+        hook.Remove("PreRender", "PreRenderFrameBlend")
+        hook.Remove("Think", "DOFThink")
+        hook.Remove("RenderScreenspaceEffects", "RenderBokeh")
+        hook.Remove("NeedsDepthPass", "NeedsDepthPass_Bokeh")
+        hook.Remove("PostDrawEffects", "RenderWidgets")
+        hook.Remove("PostDrawEffects", "RenderHalos")
+        timer.Remove("HostnameThink")
+        timer.Remove("CheckHookTimes")
+        if nut then
+
+            nut = lia or {
+                util = {},
+                gui = {},
+                meta = {}
+            }
+        else
+            nut = lia or {
+                util = {},
+                meta = {}
+            }
+        end
+    end
+end
+--------------------------------------------------------------------------------------------------------
