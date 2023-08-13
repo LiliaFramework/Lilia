@@ -1,4 +1,4 @@
-function lia.config.load.default()
+function lia.config.load_default()
     lia.config.MapCleanerEnabled = true
     lia.config.ItemCleanupTime = 7200
     lia.config.MapCleanupTime = 21600

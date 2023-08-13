@@ -1,4 +1,5 @@
 local GM = GM
+lia.config.tblPlayers = lia.config.tblPlayers or {}
 
 function GM:GetPlayerData(pPlayer)
     return lia.config.tblPlayers[pPlayer:EntIndex()]

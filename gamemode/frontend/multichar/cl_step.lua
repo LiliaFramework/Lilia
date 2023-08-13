@@ -2,23 +2,28 @@
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------
 PANEL.isCharCreateStep = true
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	self:Dock(FILL)
 	self:SetPaintBackground(false)
 	self:SetVisible(false)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:onDisplay()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:next()
 	lia.gui.charCreate:nextStep()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:previous()
 	lia.gui.charCreate:previousStep()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:validateCharVar(name)
 	local charVar = lia.char.vars[name]
@@ -27,18 +32,22 @@ function PANEL:validateCharVar(name)
 
 	return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:validate()
 	return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setContext(key, value)
 	lia.gui.charCreate.context[key] = value
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:clearContext()
 	lia.gui.charCreate.context = {}
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:getContext(key, default)
 	if key == nil then return lia.gui.charCreate.context end
@@ -47,21 +56,26 @@ function PANEL:getContext(key, default)
 
 	return value
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:getModelPanel()
 	return lia.gui.charCreate.model
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:updateModelPanel()
 	lia.gui.charCreate:updateModel()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:shouldSkip()
 	return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:onSkip()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:addLabel(text)
 	local label = self:Add("DLabel")
@@ -72,9 +86,11 @@ function PANEL:addLabel(text)
 
 	return label
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:onHide()
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaCharacterCreateStep", PANEL, "DScrollPanel")
 --------------------------------------------------------------------------------------------------------

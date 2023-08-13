@@ -5,7 +5,7 @@ local aprg, aprg2 = 0, 0
 w, h = ScrW(), ScrH()
 
 -------------------------------------------------------------------------------------------------------------------------
-function MODULE:HUDPaint()
+hook.Add("HUDPaint", "HUDPaintDeath", function()
     owner = LocalPlayer()
     ft = FrameTime()
 
@@ -36,4 +36,4 @@ function MODULE:HUDPaint()
         surface.DrawRect(-1, -1, w + 2, h + 2)
         local tx, ty = lia.util.drawText(L"youreDead", w / 2, h / 2, ColorAlpha(color_white, aprg2 * 255), 1, 1, "liaDynFontMedium", aprg2 * 255)
     end
-end
+end)

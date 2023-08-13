@@ -44,7 +44,6 @@ function lia.util.includeDir(directory, fromLua, recursive)
             for k, v in pairs(files) do
                 local fullPath = folder .. "/" .. v
                 lia.util.include(fullPath)
-                printIncludeInfo(fullPath)
             end
 
             for k, v in pairs(folders) do
@@ -59,7 +58,6 @@ function lia.util.includeDir(directory, fromLua, recursive)
         for k, v in ipairs(file.Find((fromLua and "" or baseDir) .. directory .. "/*.lua", "LUA")) do
             local fullPath = directory .. "/" .. v
             lia.util.include(fullPath)
-            printIncludeInfo(fullPath)
         end
     end
 end

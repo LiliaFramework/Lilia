@@ -1,8 +1,9 @@
-function lia.config.load.protection()
+function lia.config.load_protection()
     lia.config.DisallowedBagForbiddenActions = {
         ["Equip"] = true,
         ["EquipUn"] = true,
     }
+
     lia.config.TimeUntilDroppedSWEPRemoved = 30
     lia.config.PlayerSpawnVehicleDelay = 30
     lia.config.CharacterSwitchCooldownTimer = 5
@@ -12,9 +13,6 @@ function lia.config.load.protection()
     lia.config.PlayerSprayEnabled = true
     lia.config.AntiBunnyHopEnabled = true
     lia.config.BHOPStamina = 10
-
-
     lia.config.FlashlightEnabled = true
     lia.config.FlashlightItemNeeded = false
-
 end

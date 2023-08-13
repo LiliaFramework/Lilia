@@ -1,4 +1,4 @@
-function lia.config.load.toolpermissions()
+function lia.config.load_toolpermissions()
     lia.config.CustomToolAccess = true
     lia.config.BlockedProperties = {"persist", "bonemanipulate", "drive"}
     lia.config.RestrictedEntityList = {"prop_door_rotating", "lia_vendor",}

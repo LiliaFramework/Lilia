@@ -44,6 +44,6 @@ function GM:CreateLoadingScreen()
 end
 --------------------------------------------------------------------------------------------------------
 function GM:ShouldCreateLoadingScreen()
-    return not IsValid(lia.gui.loading)
+    return false
 end
 --------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-function lia.config.load.miscellaneous()
+function lia.config.load_miscellaneous()
     lia.config.DrawEntityShadows = true
     lia.config.Musicvolume = 0.25
     lia.config.Music = "music/hl2_song2.mp3"

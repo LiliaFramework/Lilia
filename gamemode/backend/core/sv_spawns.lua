@@ -178,7 +178,7 @@ function GM:PlayerInitialSpawn(client)
         val:Fire("Kill")
     end
 
-    self:RegisterPlayer(ply)
+    self:RegisterPlayer(client)
     hook.Run("PostPlayerInitialSpawn", client)
 end
 --------------------------------------------------------------------------------------------------------

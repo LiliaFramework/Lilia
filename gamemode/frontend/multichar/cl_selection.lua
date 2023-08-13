@@ -1,6 +1,6 @@
---------------------------------------------------------------------------------------------------------
 local PANEL = {}
---------------------------------------------------------------------------------------------------------
+local liaMultiChar = GM
+
 function PANEL:Init()
 	self:Dock(FILL)
 	self:DockMargin(0, 64, 0, 0)
@@ -36,7 +36,8 @@ function PANEL:Init()
 		self:createCharacterSlots()
 	end)
 end
---------------------------------------------------------------------------------------------------------
+
+-- Creates a liaCharacterSlot for each of the local player's characters.
 function PANEL:createCharacterSlots()
 	self.scroll:Clear()
 	if #lia.characters == 0 then return lia.gui.character:showContent() end
@@ -54,14 +55,16 @@ function PANEL:createCharacterSlots()
 		end
 	end
 end
---------------------------------------------------------------------------------------------------------
+
+-- Called when a character slot has been selected. This actually loads the
+-- character.
 function PANEL:onCharacterSelected(character)
 	if self.choosing then return end
 	if character == LocalPlayer():getChar() then return lia.gui.character:fadeOut() end
 	self.choosing = true
 
 	lia.gui.character:setFadeToBlack(true):next(function()
-		return liaMultiChar:chooseCharacter(character:getID())
+		return liaMultiChar:ChooseCharacter(character:getID())
 	end):next(function(err)
 		self.choosing = false
 
@@ -78,6 +81,5 @@ function PANEL:onCharacterSelected(character)
 		lia.util.notify(err)
 	end)
 end
---------------------------------------------------------------------------------------------------------
+
 vgui.Register("liaCharacterSelection", PANEL, "EditablePanel")
---------------------------------------------------------------------------------------------------------

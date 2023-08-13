@@ -2,16 +2,12 @@
 local SCHEMA = SCHEMA
 --------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
---------------------------------------------------------------------------------------------------------+
-function playerMeta:getPlayTime()
-	return self:GetMoveType() == MOVETYPE_NOCLIP
-end
+
 --------------------------------------------------------------------------------------------------------+
 function playerMeta:IsNoClipping()
-    local diff = os.time(lia.util.dateToNumber(self.lastJoin)) - os.time(lia.util.dateToNumber(self.firstJoin))
-
-    return diff + (RealTime() - (self.liaJoinTime or RealTime()))
+    return self:GetMoveType() == MOVETYPE_NOCLIP
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:setRestricted(state, noMessage)
     if state then
@@ -50,6 +46,7 @@ function playerMeta:setRestricted(state, noMessage)
         hook.Run("OnPlayerUnRestricted", self)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:setAction(text, time, callback, startTime, finishTime)
     if time and time <= 0 then
@@ -81,6 +78,7 @@ function playerMeta:setAction(text, time, callback, startTime, finishTime)
         end)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
     local uniqueID = "liaStare" .. self:UniqueID()
@@ -115,14 +113,17 @@ function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
         end
     end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:notify(message)
     lia.util.notify(message, self)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:notifyLocalized(message, ...)
     lia.util.notifyLocalized(message, self, ...)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:requestString(title, subTitle, callback, default)
     local d
@@ -147,6 +148,7 @@ function playerMeta:requestString(title, subTitle, callback, default)
 
     return d
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:isStuck()
     return util.TraceEntity({
@@ -155,6 +157,7 @@ function playerMeta:isStuck()
         filter = self
     }, self).StartSolid
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:createRagdoll(freeze)
     local entity = ents.Create("prop_ragdoll")
@@ -189,6 +192,7 @@ function playerMeta:createRagdoll(freeze)
 
     return entity
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:setRagdolled(state, time, getUpGrace)
     getUpGrace = getUpGrace or time or 5
@@ -322,6 +326,7 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
         hook.Run("OnCharFallover", self, entity, false)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:loadLiliaData(callback)
     local name = self:GetName()
@@ -344,7 +349,7 @@ function playerMeta:loadLiliaData(callback)
         else
             lia.db.insertTable({
                 _steamID = steamID64,
-                _steamName = name,
+                _name = name,
                 _firstJoin = timeStamp,
                 _lastJoin = timeStamp,
                 _data = {}
@@ -359,16 +364,17 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function playerMeta:saveLiliaData()
-    local name = self:steamName()
+    local name = self:Name()
     local steamID64 = self:SteamID64()
     local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
 
     lia.db.updateTable({
-        _steamName = name,
+        _name  = name,
         _lastJoin = timeStamp,
         _data = self.liaData
     }, nil, "players", "_steamID = " .. steamID64)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:setLiliaData(key, value, noNetworking)
     self.liaData = self.liaData or {}
@@ -378,6 +384,7 @@ function playerMeta:setLiliaData(key, value, noNetworking)
         netstream.Start(self, "liaData", key, value)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:setWhitelisted(faction, whitelisted)
     if not whitelisted then
@@ -398,6 +405,7 @@ function playerMeta:setWhitelisted(faction, whitelisted)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:syncVars()
     for entity, data in pairs(lia.net) do
@@ -420,6 +428,7 @@ function playerMeta:setLocalVar(key, value)
     lia.net[self][key] = value
     netstream.Start(self, "nLcl", key, value)
 end
+
 --------------------------------------------------------------------------------------------------------+
 function playerMeta:getLiliaData(key, default)
     if key == true then return self.liaData end

@@ -1,6 +1,4 @@
 --------------------------------------------------------------------------------------------------------
-local SCHEMA = SCHEMA
---------------------------------------------------------------------------------------------------------
 function GM:EntityNetworkedVarChanged(entity, varName, oldVal, newVal)
     if varName == "Model" and entity.SetModel then
         hook.Run("PlayerModelChanged", entity, newVal)

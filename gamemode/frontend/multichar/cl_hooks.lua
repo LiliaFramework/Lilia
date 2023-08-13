@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------------------------------
-hook.Add("ChooseCharacter", "MultiCharChooseCharacter", function(id)
-    assert(isnumber(id), "id must be a number")
+hook.Add("ChooseCharacter", "MultiCharChooseCharacter", function(data, onResponse, onFail)
+    assert(istable(data), "data must be a table")
     local d = deferred.new()
 
     net.Receive("liaCharChoose", function()
@@ -8,20 +8,20 @@ hook.Add("ChooseCharacter", "MultiCharChooseCharacter", function(id)
 
         if message == "" then
             d:resolve()
-            hook.Run("CharacterLoaded", lia.char.loaded[id])
+            hook.Run("CharacterLoaded", lia.char.loaded[data.id])
         else
             d:reject(message)
         end
     end)
 
     net.Start("liaCharChoose")
-    net.WriteUInt(id, 32)
+    net.WriteUInt(data.id, 32)
     net.SendToServer()
-
-    return d
+    d:next(onResponse, onFail)
 end)
+
 --------------------------------------------------------------------------------------------------------
-hook.Add("CreateCharacter", "MultiCharCreateCharacter", function(data)
+hook.Add("CreateCharacter", "MultiCharCreateCharacter", function(data, onResponse, onFail)
     assert(istable(data), "data must be a table")
     local d = deferred.new()
     local payload = {}
@@ -59,9 +59,9 @@ hook.Add("CreateCharacter", "MultiCharCreateCharacter", function(data)
     end
 
     net.SendToServer()
-
-    return d
+    d:next(onResponse, onFail)
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("DeleteCharacter", "MultiCharDeleteCharacter", function(id)
     assert(isnumber(id), "id must be a number")
@@ -69,16 +69,19 @@ hook.Add("DeleteCharacter", "MultiCharDeleteCharacter", function(id)
     net.WriteUInt(id, 32)
     net.SendToServer()
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("LiliaLoaded", "MyModule_LiliaLoaded", function()
     vgui.Create("liaCharacter")
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("KickedFromCharacter", "MyModule_KickedFromCharacter", function(id, isCurrentChar)
     if isCurrentChar then
         vgui.Create("liaCharacter")
     end
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("CreateMenuButtons", "MyModule_CreateMenuButtons", function(tabs)
     tabs["characters"] = function(panel)

@@ -8,7 +8,6 @@ lia.module.unloaded = lia.module.unloaded or {}
 function lia.module.load(uniqueID, path, isSingleFile, variable)
     variable = uniqueID == "schema" and "SCHEMA" or variable or "MODULE"
     if hook.Run("ModuleShouldLoad", uniqueID) == false then return end
-    print(uniqueID .. " " .. path)
     if not isSingleFile and not file.Exists(path .. "/sh_" .. variable:lower() .. ".lua", "LUA") then return end
     local oldModule = MODULE
 
@@ -92,6 +91,7 @@ function lia.module.loadExtras(path)
     lia.module.loadEntities(path .. "/entities")
     lia.lang.loadFromDir(path .. "/languages")
     lia.module.loadFromDir(path .. "/modules")
+	lia.attribs.loadFromDir(path .. "/attributes")
     hook.Run("DoModuleIncludes", path, MODULE)
     local hookID = "liaItems" .. path
 

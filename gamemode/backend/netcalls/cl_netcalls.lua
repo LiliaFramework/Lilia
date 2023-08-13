@@ -419,6 +419,15 @@ netstream.Hook("liaData", function(key, value)
 end)
 
 --------------------------------------------------------------------------------------------------------
+netstream.Hook("attrib", function(id, key, value)
+    local character = lia.char.loaded[id]
+
+    if character then
+        character:getAttribs()[key] = value
+    end
+end)
+
+--------------------------------------------------------------------------------------------------------
 netstream.Hook("nVar", function(index, key, value)
     lia.net[index] = lia.net[index] or {}
     lia.net[index][key] = value

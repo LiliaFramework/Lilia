@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	self.title = self:addLabel("Select a model")
@@ -12,6 +13,7 @@ function PANEL:Init()
 	self.models:SetStretchHeight(true)
 	self.models:StretchToParent(0, 0, 0, 0)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:onDisplay()
 	local oldChildren = self.models:GetChildren()
@@ -74,6 +76,7 @@ function PANEL:onDisplay()
 		child:Remove()
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:paintIcon(icon, w, h)
 	if self:getContext("model") ~= icon.index then return end
@@ -86,6 +89,7 @@ function PANEL:paintIcon(icon, w, h)
 		surface.DrawOutlinedRect(i, i, w - i2, h - i2)
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:onModelSelected(icon, noSound)
 	self:setContext("model", icon.index or 1)
@@ -96,16 +100,19 @@ function PANEL:onModelSelected(icon, noSound)
 
 	self:updateModelPanel()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:shouldSkip()
 	local faction = lia.faction.indices[self:getContext("faction")]
 
 	return faction and #faction.models == 1 or false
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:onSkip()
 	self:setContext("model", 1)
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaCharacterModel", PANEL, "liaCharacterCreateStep")
 --------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-function lia.config.load.permissions()
+function lia.config.load_permissions()
     lia.config.CustomPermissions = false
     lia.config.PermissionTable = {
         ["PlayerSpawnNPC"] = {

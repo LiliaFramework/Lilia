@@ -450,8 +450,6 @@ lia.command.add("logs", {
 lia.command.add("chargiveitem", {
     syntax = "<string name> <string item>",
     onRun = function(client, arguments)
-        local rank = client:GetUserGroup()
-
         if not client:IsSuperAdmin() then
             client:notify("Your rank is not high enough to use this command.")
 

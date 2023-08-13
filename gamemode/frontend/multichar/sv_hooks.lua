@@ -21,6 +21,7 @@ hook.Add("PlayerLiliaDataLoaded", "MultiCharPlayerLiliaDataLoaded", function(cli
 		client.liaLoaded = true
 	end)
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("PostPlayerInitialSpawn", "MultiCharPostPlayerInitialSpawn", function(client)
 	client:SetNoDraw(true)
@@ -33,19 +34,23 @@ hook.Add("PostPlayerInitialSpawn", "MultiCharPostPlayerInitialSpawn", function(c
 		client:StripAmmo()
 	end)
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("CanPlayerUseChar", "MultiCharCanPlayerUseChar", function(client, character, oldCharacter)
 	if client:getChar() and client:getChar():getID() == character:getID() then return false, "@usingChar" end
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("PlayerLoadedChar", "MultiCharPlayerLoadedChar", function(client, character, oldCharacter)
 	client:Spawn()
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("OnCharCreated", "MultiCharOnCharCreated", function(client, character)
 	local id = character:getID()
-	MsgN("Created character '" .. id .. "' for " .. client:steamName() .. ".")
+	MsgN("Created character '" .. id .. "' for " .. client:Name() .. ".")
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("MultiCharSyncCharList", "MultiCharSyncCharList", function(client)
 	if not client.liaCharList then return end
@@ -58,6 +63,7 @@ hook.Add("MultiCharSyncCharList", "MultiCharSyncCharList", function(client)
 
 	net.Send(client)
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("CanPlayerCreateCharacter", "MultiCharCanPlayerCreateCharacter", function(client)
 	local count = #client.liaCharList

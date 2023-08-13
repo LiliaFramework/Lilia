@@ -5,18 +5,48 @@ charMeta.__index = charMeta
 charMeta.id = charMeta.id or 0
 charMeta.vars = charMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
+
 --------------------------------------------------------------------------------------------------------
 function charMeta:__tostring()
     return "character[" .. (self.id or 0) .. "]"
 end
+
 --------------------------------------------------------------------------------------------------------
 function charMeta:__eq(other)
     return self:getID() == other:getID()
 end
+
 --------------------------------------------------------------------------------------------------------
 function charMeta:getID()
     return self.id
 end
+
+--------------------------------------------------------------------------------------------------------
+function charMeta:getBoost(attribID)
+    local boosts = self:getBoosts()
+
+    return boosts[attribID]
+end
+
+--------------------------------------------------------------------------------------------------------
+function charMeta:getBoosts()
+    return self:getVar("boosts", {})
+end
+
+--------------------------------------------------------------------------------------------------------
+function charMeta:getAttrib(key, default)
+    local att = self:getAttribs()[key] or default or 0
+    local boosts = self:getBoosts()[key]
+
+    if boosts then
+        for _, v in pairs(boosts) do
+            att = att + v
+        end
+    end
+
+    return att
+end
+
 --------------------------------------------------------------------------------------------------------
 function charMeta:getPlayer()
     if IsValid(self.player) then
@@ -43,6 +73,7 @@ function charMeta:getPlayer()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function charMeta:hasMoney(amount)
     if amount < 0 then
@@ -51,6 +82,7 @@ function charMeta:hasMoney(amount)
 
     return self:getMoney() >= amount
 end
+
 --------------------------------------------------------------------------------------------------------
 function charMeta:giveMoney(amount, takingMoney)
     if not takingMoney then end
@@ -58,6 +90,7 @@ function charMeta:giveMoney(amount, takingMoney)
 
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function charMeta:takeMoney(amount)
     amount = math.abs(amount)
@@ -65,6 +98,7 @@ function charMeta:takeMoney(amount)
 
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
@@ -116,10 +150,12 @@ function lia.char.registerVar(key, data)
 
     charMeta.vars[key] = data.default
 end
+
 --------------------------------------------------------------------------------------------------------
 function charMeta:getFlags()
     return self:getData("f", "")
 end
+
 --------------------------------------------------------------------------------------------------------
 function charMeta:hasFlags(flags)
     for i = 1, #flags do
@@ -128,6 +164,7 @@ function charMeta:hasFlags(flags)
 
     return hook.Run("CharacterFlagCheck", self, flags) or false
 end
+
 --------------------------------------------------------------------------------------------------------
 function charMeta:joinClass(class, isForced)
     if not class then
@@ -148,6 +185,7 @@ function charMeta:joinClass(class, isForced)
         return false
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function charMeta:kickClass()
     local client = self:getPlayer()
@@ -164,6 +202,7 @@ function charMeta:kickClass()
     self:joinClass(goClass)
     hook.Run("OnPlayerJoinClass", client, goClass)
 end
+
 --------------------------------------------------------------------------------------------------------
 lia.meta.character = charMeta
 --------------------------------------------------------------------------------------------------------

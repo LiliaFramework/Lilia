@@ -367,7 +367,7 @@ end
 local MYSQL_CREATE_TABLES = [[
 CREATE TABLE IF NOT EXISTS `lia_players` (
 	`_steamID` VARCHAR(20) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`_steamName` VARCHAR(32) NOT NULL COLLATE 'utf8mb4_general_ci',
+	`_name` VARCHAR(32) NOT NULL COLLATE 'utf8mb4_general_ci',
 	`_firstJoin` DATETIME,
 	`_lastJoin` DATETIME,
 	`_data` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
@@ -416,7 +416,7 @@ CREATE TABLE IF NOT EXISTS `lia_invdata` (
 local SQLITE_CREATE_TABLES = [[
 CREATE TABLE IF NOT EXISTS lia_players (
 	_steamID varchar,
-	_steamName varchar,
+	_name varchar,
 	_firstJoin datetime,
 	_lastJoin datetime,
 	_data varchar,

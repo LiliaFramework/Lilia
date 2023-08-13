@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	self.nameLabel = self:addLabel("name")
@@ -24,6 +25,7 @@ function PANEL:Init()
 	self.desc:SetMultiline(true)
 	self.desc:SetZPos(3)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:addTextEntry(contextName)
 	local entry = self:Add("DTextEntry")
@@ -50,6 +52,7 @@ function PANEL:addTextEntry(contextName)
 
 	return entry
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:onDisplay()
 	local faction = self:getContext("faction")
@@ -72,6 +75,7 @@ function PANEL:onDisplay()
 	self.desc:SetText(self:getContext("desc", ""))
 	self.name:RequestFocus()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:validate()
 	if self.name:IsVisible() then
@@ -82,6 +86,7 @@ function PANEL:validate()
 
 	return self:validateCharVar("desc")
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:paintTextEntry(w, h)
 	lia.util.drawBlur(self)
@@ -89,6 +94,7 @@ function PANEL:paintTextEntry(w, h)
 	surface.DrawRect(0, 0, w, h)
 	self:DrawTextEntryText(color_white, Color(255, 255, 255, 50), Color(255, 255, 255, 50))
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaCharacterBiography", PANEL, "liaCharacterCreateStep")
 --------------------------------------------------------------------------------------------------------

@@ -1,5 +1,6 @@
-function lia.config.load.core()
+function lia.config.load_core()
     lia.config.version = "1.0"
+    lia.config.MaxAttributes = 30
     lia.config.DefaultGamemodeName = "Lilia - Skeleton"
     lia.config.Color = Color(75, 119, 190)
     lia.config.VersionEnabled = true

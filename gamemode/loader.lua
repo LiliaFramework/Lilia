@@ -1,4 +1,6 @@
 --------------------------------------------------------------------------------------------------------
+lia.util.include("backend/libs/cl_fonts.lua")
+--------------------------------------------------------------------------------------------------------
 -- GAMEMODE THIRDPARTY LIBRARIES \\
 lia.util.include("backend/external/thirdparty/cl_ikon.lua", "client")
 lia.util.include("backend/external/thirdparty/cl_markup.lua", "client")
@@ -58,7 +60,6 @@ lia.util.include("backend/meta/entity/sh_entitymeta.lua")
 lia.util.include("backend/meta/entity/sv_entitymeta.lua")
 lia.util.include("backend/meta/entity/cl_entitymeta.lua")
 lia.util.include("backend/libs/cl_bar.lua")
-lia.util.include("backend/libs/cl_fonts.lua")
 lia.util.include("backend/libs/cl_menu.lua")
 lia.util.include("backend/libs/cl_notice.lua")
 lia.util.include("backend/libs/cl_playerinteract.lua")
@@ -71,6 +72,7 @@ lia.util.include("backend/libs/sh_module.lua")
 lia.util.include("backend/libs/language/cl_language.lua")
 --------------------------------------------------------------------------------------------------------
 -- GAMEMODE FUNCTIONS \\
+lia.util.include("backend/core/cl_initialization.lua")
 lia.util.include("backend/core/hooks/sv_hooks.lua")
 lia.util.include("backend/core/sv_misc.lua")
 lia.util.include("backend/core/sv_iteminteract.lua")
@@ -80,7 +82,6 @@ lia.util.include("backend/core/cl_panels.lua")
 lia.util.include("backend/core/cl_visual.lua")
 lia.util.include("backend/core/hooks/cl_hooks.lua")
 lia.util.include("backend/core/cl_loadingscreen.lua")
-lia.util.include("backend/core/cl_initialization.lua")
 lia.util.include("backend/core/sv_permissions.lua")
 lia.util.include("backend/core/sh_misc.lua")
 lia.util.include("backend/core/sv_nostuck.lua")

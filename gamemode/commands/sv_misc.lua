@@ -37,7 +37,6 @@ lia.command.add("advertisement", {
 lia.command.add("announce", {
     syntax = "<string factions> <string text>",
     onRun = function(client, arguments)
-        local uniqueID = client:GetUserGroup()
         if not arguments[1] then return "Invalid argument (#1)" end
         local message = table.concat(arguments, " ", 1)
 
