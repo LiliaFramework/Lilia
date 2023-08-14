@@ -94,7 +94,9 @@ function PANEL:setCharacter(character)
 	self.character = character
 	self.name:SetText(character:getName():gsub("#", "\226\128\139#"):upper())
 	self.model:SetModel(character:getModel())
-	self.faction:SetBackgroundColor(team.GetColor(character:getFaction()))
+	self.faction:SetBackgroundColor(team.GetColor(character:getFaction()) or Color(255, 255, 255))
+	print(tostring(team.GetColor(character:getFaction())))
+	print(tostring(character:getFaction()))
 	self:setBanned(character:getData("banned"))
 	local entity = self.model.Entity
 

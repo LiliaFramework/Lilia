@@ -2,6 +2,12 @@
 local SCHEMA = SCHEMA
 --------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
+
+--------------------------------------------------------------------------------------------------------+
+function playerMeta:IsNoClipping()
+    return self:GetMoveType() == MOVETYPE_NOCLIP
+end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:AddMoney(amt)
     local char = self:getChar()
@@ -10,6 +16,7 @@ function playerMeta:AddMoney(amt)
         char:giveMoney(amt)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:TakeMoney(amt)
     local char = self:getChar()
@@ -18,6 +25,7 @@ function playerMeta:TakeMoney(amt)
         char:giveMoney(-amt)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:addMoney(amt)
     local char = self:getChar()
@@ -26,6 +34,7 @@ function playerMeta:addMoney(amt)
         char:giveMoney(amt)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:takeMoney(amt)
     local char = self:getChar()
@@ -34,55 +43,65 @@ function playerMeta:takeMoney(amt)
         char:giveMoney(-amt)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getMoney()
     local char = self:getChar()
 
     return char and char:getMoney() or 0
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:canAfford(amount)
     local char = self:getChar()
 
     return char and char:hasMoney(amount)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:GetMoney()
     local char = self:getChar()
 
     return char and char:getMoney() or 0
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:CanAfford(amount)
     local char = self:getChar()
 
     return char and char:hasMoney(amount)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:doGesture(a, b, c)
     self:AnimRestartGesture(a, b, c)
     netstream.Start(self:GetPos(), "liaSyncGesture", self, a, b, c)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getPlayTime()
     local diff = os.time(lia.util.dateToNumber(lia.lastJoin)) - os.time(lia.util.dateToNumber(lia.firstJoin))
 
     return diff + (RealTime() - lia.joinTime or 0)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:isRunning()
     return FindMetaTable("Vector").Length2D(self:GetVelocity()) > (self:GetWalkSpeed() + 10)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:isFemale()
     local model = self:GetModel():lower()
 
     return model:find("female") or model:find("alyx") or model:find("mossman") or lia.anim.getModelClass(model) == "citizen_female"
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:GetItemDropPos()
     self:getItemDropPos()
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getItemDropPos()
     local data = {}
@@ -97,6 +116,7 @@ function playerMeta:getItemDropPos()
 
     return trace.HitPos
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:hasWhitelist(faction)
     local data = lia.faction.indices[faction]
@@ -110,6 +130,7 @@ function playerMeta:hasWhitelist(faction)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getItems()
     local char = self:getChar()
@@ -119,11 +140,13 @@ function playerMeta:getItems()
         if inv then return inv:getItems() end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getClass()
     local char = self:getChar()
     if char then return char:getClass() end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getClassData()
     local char = self:getChar()
@@ -138,10 +161,12 @@ function playerMeta:getClassData()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getChar()
     return lia.char.loaded[self.getNetVar(self, "char")]
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:forceSequence(sequence, callback, time, noFreeze)
     hook.Run("OnPlayerEnterSequence", self, sequence, callback, time, noFreeze)
@@ -172,6 +197,7 @@ function playerMeta:forceSequence(sequence, callback, time, noFreeze)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:leaveSequence()
     hook.Run("OnPlayerLeaveSequence", self)
@@ -183,22 +209,28 @@ function playerMeta:leaveSequence()
         self:liaSeqCallback()
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:SelectWeapon(class)
     if not self:HasWeapon(class) then return end
     self.doWeaponSwitch = self:GetWeapon(class)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:HasSkillLevel(skill, level)
     local currentLevel = self:getChar():getAttrib(skill, 0)
+
     return currentLevel >= level
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:MeetsRequiredSkills(requiredSkillLevels)
     if not requiredSkillLevels then return true end
+
     for skill, level in pairs(requiredSkillLevels) do
         if not self:HasSkillLevel(skill, level) then return false end
     end
+
     return true
 end
 --------------------------------------------------------------------------------------------------------

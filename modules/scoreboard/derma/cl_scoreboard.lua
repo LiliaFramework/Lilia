@@ -188,7 +188,7 @@ function PANEL:addPlayer(client, parent)
         RegisterDermaMenuForClose(menu)
     end
 
-    slot.model:SetTooltip(L("sbOptions", client:steamName()))
+    slot.model:SetTooltip(L("sbOptions", client:Name()))
 
     timer.Simple(0, function()
         if not IsValid(slot) then return end
@@ -285,7 +285,7 @@ function PANEL:addPlayer(client, parent)
             self.model:SetModel(client:GetModel(), client:GetSkin())
 
             if offDutySB[LocalPlayer():GetUserGroup()] or (LocalPlayer() == client) or LocalPlayer():Team() == FACTION_STAFF then
-                self.model:SetToolTip(L("sbOptions", client:steamName()))
+                self.model:SetToolTip(L("sbOptions", client:Name()))
             else
                 self.model:SetToolTip("You do not have access to see this information")
             end

@@ -2,6 +2,7 @@
 function GM:PlayerLoadout(client)
     if client.liaSkipLoadout then
         client.liaSkipLoadout = nil
+
         return
     end
 
@@ -9,6 +10,7 @@ function GM:PlayerLoadout(client)
         client:SetNoDraw(true)
         client:Lock()
         client:SetNotSolid(true)
+
         return
     end
 
@@ -26,15 +28,11 @@ function GM:PlayerLoadout(client)
     client:StripWeapons()
     client:setLocalVar("blur", nil)
     local character = client:getChar()
-
     client:SetupHands()
     client:SetModel(character:getModel())
     client:Give("lia_hands")
-
-
     client:SetWalkSpeed(lia.config.WalkSpeed)
     client:SetRunSpeed(lia.config.RunSpeed)
-    
     local faction = lia.faction.indices[client:Team()]
 
     if faction then
@@ -68,7 +66,6 @@ function GM:PlayerLoadout(client)
     client:SelectWeapon("lia_hands")
 end
 
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawn(client)
     local character = client:getChar()
@@ -76,7 +73,7 @@ function GM:PlayerSpawn(client)
     if lia.config.PKActive and character and character:getData("permakilled") then
         character:ban()
     end
-    
+
     client:setNetVar("voiceRange", 2)
     client:SetNoDraw(false)
     client:UnLock()
@@ -126,19 +123,15 @@ function GM:PlayerDeath(client, inflictor, attacker)
         end
 
         if lia.config.PKActive then
-            if not (lia.config.PKWorld and (client == attacker or inflictor:IsWorld())) then
-                return
-            end
+            if not (lia.config.PKWorld and (client == attacker or inflictor:IsWorld())) then return end
             char:setData("permakilled", true)
         end
 
         char:setData("deathPos", client:GetPos())
         client:setNetVar("deathStartTime", CurTime())
         client:setNetVar("deathTime", CurTime() + 5)
-
         local inventory = char:getInv()
         local items = inventory:getItems()
-
         client.carryWeapons = {}
         client.LostItems = {}
 
@@ -188,6 +181,7 @@ function GM:PlayerDeath(client, inflictor, attacker)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerDeathThink(client)
     if client:getChar() then
@@ -205,20 +199,19 @@ end
 function GM:PlayerInitialSpawn(client)
     client.liaJoinTime = RealTime()
     if client:IsBot() then return hook.Run("SetupBotCharacter", client) end
-    lia.config.send(client)
 
     client:loadLiliaData(function(data)
         if not IsValid(client) then return end
         local address = client:IPAddress()
         client:setLiliaData("lastIP", address)
         netstream.Start(client, "liaDataSync", data, client.firstJoin, client.lastJoin)
-    
+
         for _, v in pairs(lia.item.instances) do
             if v.entity and v.invID == 0 then
                 v:sync(client)
             end
         end
-    
+
         hook.Run("PlayerLiliaDataLoaded", client)
     end)
 

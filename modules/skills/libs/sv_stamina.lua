@@ -15,7 +15,7 @@ end
 
 -------------------------------------------------------------------------------------------------------------------------~
 function MODULE:PlayerLoadedChar(client, character)
-    local maxstm = character:getChar():GetMaxStamina()
+    local maxstm = character:GetMaxStamina()
 
     timer.Simple(0.25, function()
         client:setLocalVar("stamina", maxstm)

@@ -3,11 +3,6 @@ local SCHEMA = SCHEMA
 --------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
 
---------------------------------------------------------------------------------------------------------+
-function playerMeta:IsNoClipping()
-    return self:GetMoveType() == MOVETYPE_NOCLIP
-end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:setRestricted(state, noMessage)
     if state then
@@ -369,7 +364,7 @@ function playerMeta:saveLiliaData()
     local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
 
     lia.db.updateTable({
-        _name  = name,
+        _name = name,
         _lastJoin = timeStamp,
         _data = self.liaData
     }, nil, "players", "_steamID = " .. steamID64)

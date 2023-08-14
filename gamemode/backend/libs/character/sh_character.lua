@@ -10,6 +10,7 @@ charMeta.__index = charMeta
 charMeta.id = charMeta.id or 0
 charMeta.vars = charMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
+
 --------------------------------------------------------------------------------------------------------
 function lia.char.new(data, id, client, steamID)
 	local character = setmetatable({
@@ -39,62 +40,65 @@ function lia.char.new(data, id, client, steamID)
 
 	return character
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.char.hookVar(varName, hookName, func)
 	lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
 	lia.char.varHooks[varName][hookName] = func
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.char.registerVar(key, data)
-    lia.char.vars[key] = data
-    data.index = data.index or table.Count(lia.char.vars)
-    local upperName = key:sub(1, 1):upper() .. key:sub(2)
+	lia.char.vars[key] = data
+	data.index = data.index or table.Count(lia.char.vars)
+	local upperName = key:sub(1, 1):upper() .. key:sub(2)
 
-    if SERVER and not data.isNotModifiable then
-        if data.onSet then
-            charMeta["set" .. upperName] = data.onSet
-        elseif data.noNetworking then
-            charMeta["set" .. upperName] = function(self, value)
-                self.vars[key] = value
-            end
-        elseif data.isLocal then
-            charMeta["set" .. upperName] = function(self, value)
-                local curChar = self:getPlayer() and self:getPlayer():getChar()
-                local sendID = true
+	if SERVER and not data.isNotModifiable then
+		if data.onSet then
+			charMeta["set" .. upperName] = data.onSet
+		elseif data.noNetworking then
+			charMeta["set" .. upperName] = function(self, value)
+				self.vars[key] = value
+			end
+		elseif data.isLocal then
+			charMeta["set" .. upperName] = function(self, value)
+				local curChar = self:getPlayer() and self:getPlayer():getChar()
+				local sendID = true
 
-                if curChar and curChar == self then
-                    sendID = false
-                end
+				if curChar and curChar == self then
+					sendID = false
+				end
 
-                local oldVar = self.vars[key]
-                self.vars[key] = value
-                netstream.Start(self.player, "charSet", key, value, sendID and self:getID() or nil)
-                hook.Run("OnCharVarChanged", self, key, oldVar, value)
-            end
-        else
-            charMeta["set" .. upperName] = function(self, value)
-                local oldVar = self.vars[key]
-                self.vars[key] = value
-                netstream.Start(nil, "charSet", key, value, self:getID())
-                hook.Run("OnCharVarChanged", self, key, oldVar, value)
-            end
-        end
-    end
+				local oldVar = self.vars[key]
+				self.vars[key] = value
+				netstream.Start(self.player, "charSet", key, value, sendID and self:getID() or nil)
+				hook.Run("OnCharVarChanged", self, key, oldVar, value)
+			end
+		else
+			charMeta["set" .. upperName] = function(self, value)
+				local oldVar = self.vars[key]
+				self.vars[key] = value
+				netstream.Start(nil, "charSet", key, value, self:getID())
+				hook.Run("OnCharVarChanged", self, key, oldVar, value)
+			end
+		end
+	end
 
-    if data.onGet then
-        charMeta["get" .. upperName] = data.onGet
-    else
-        charMeta["get" .. upperName] = function(self, default)
-            local value = self.vars[key]
-            if value ~= nil then return value end
-            if default == nil then return lia.char.vars[key] and lia.char.vars[key].default or nil end
+	if data.onGet then
+		charMeta["get" .. upperName] = data.onGet
+	else
+		charMeta["get" .. upperName] = function(self, default)
+			local value = self.vars[key]
+			if value ~= nil then return value end
+			if default == nil then return lia.char.vars[key] and lia.char.vars[key].default or nil end
 
-            return default
-        end
-    end
+			return default
+		end
+	end
 
-    charMeta.vars[key] = data.default
+	charMeta.vars[key] = data.default
 end
+
 --------------------------------------------------------------------------------------------------------
 do
 	lia.char.registerVar("name", {
@@ -113,7 +117,7 @@ do
 					lia.char.names = data
 				end)
 			end
-			
+
 			return true
 		end,
 		onAdjust = function(client, data, value, newData)

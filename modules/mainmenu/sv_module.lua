@@ -46,7 +46,7 @@ end
 
 function MODULE:OnCharCreated(client, character)
 	local id = character:getID()
-	MsgN("Created character '" .. id .. "' for " .. client:steamName() .. ".")
+	MsgN("Created character '" .. id .. "' for " .. client:Name() .. ".")
 end
 
 function MODULE:SyncCharList(client)

@@ -69,7 +69,7 @@ end
 
 function PANEL:loadBackground()
 	-- Map scene integration.
-	local mapScene = lia.plugin.list.mapscene
+	local mapScene = lia.module.list.mapscene
 
 	if not mapScene or table.Count(mapScene.scenes) == 0 then
 		self.blank = true
@@ -246,15 +246,15 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:hoverSound()
-	LocalPlayer():EmitSound(unpack(SOUND_CHAR_HOVER))
+	LocalPlayer():EmitSound(unpack(lia.config.CharHover))
 end
 
 function PANEL:clickSound()
-	LocalPlayer():EmitSound(unpack(SOUND_CHAR_CLICK))
+	LocalPlayer():EmitSound(unpack(lia.config.CharClick))
 end
 
 function PANEL:warningSound()
-	LocalPlayer():EmitSound(unpack(SOUND_CHAR_WARNING))
+	LocalPlayer():EmitSound(unpack(lia.config.CharWarning))
 end
 
 vgui.Register("liaCharacter", PANEL, "EditablePanel")

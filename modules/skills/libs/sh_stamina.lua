@@ -22,7 +22,7 @@ function MODULE:CalcStaminaChange(client)
         local value = math.Clamp(current + offset, 0, maxStamina)
 
         if current ~= value then
-            client:SetLocalVar("stamina", value)
+            client:setLocalVar("stamina", value)
 
             if value == 0 and not client:getNetVar("brth", false) then
                 client:setNetVar("brth", true)

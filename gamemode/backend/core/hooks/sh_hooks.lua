@@ -5,6 +5,7 @@ local string = string
 local type = type
 local playeranimtype = lia.anim.PlayerHoldtypeTranslator
 local defaultanimtype = lia.anim.HoldtypeTranslator
+
 --------------------------------------------------------------------------------------------------------
 function GM:TranslateActivity(client, act)
     local model = string.lower(client.GetModel(client))
@@ -99,6 +100,7 @@ function GM:TranslateActivity(client, act)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:DoAnimationEvent(client, event, data)
     local class = lia.anim.getModelClass(client:GetModel())
@@ -142,10 +144,12 @@ function GM:DoAnimationEvent(client, event, data)
 
     return ACT_INVALID
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:EntityEmitSound(data)
     if data.Entity.liaIsMuted then return false end
 end
+
 --------------------------------------------------------------------------------------------------------
 local vectorAngle = FindMetaTable("Vector").Angle
 local normalizeAngle = math.NormalizeAngle
@@ -163,6 +167,7 @@ function GM:HandlePlayerLanding(client, velocity, wasOnGround)
         return true
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CalcMainActivity(client, velocity)
     client.CalcIdeal = ACT_MP_STAND_IDLE
@@ -195,6 +200,7 @@ function GM:CalcMainActivity(client, velocity)
 
     return client.CalcIdeal, client.liaForceSeq or oldCalcSeqOverride
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnCharVarChanged(char, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
@@ -203,19 +209,22 @@ function GM:OnCharVarChanged(char, varName, oldVar, newVar)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:GetDefaultCharName(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.onGetDefaultName then return info:onGetDefaultName(client) end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.onGetDefaultDesc then return info:onGetDefaultDesc(client) end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerUseChar(client, character)
-    local banned = character:getData("banned")
+    local banned = character and character:getData("banned")
 
     if banned then
         if isnumber(banned) and banned < os.time() then return end
@@ -231,10 +240,11 @@ function GM:CanPlayerUseChar(client, character)
         if (client:getChar():getData("loginTime", 0) + lia.config.CharacterSwitchCooldownTimer) > os.time() then return false, "You are on cooldown!" end
         if not client:Alive() then return false, "You are dead!" end
     end
-    
+
     local faction = lia.faction.indices[character:getFaction()]
     if faction and hook.Run("CheckFactionLimitReached", faction, character, client) then return false, "@limitFaction" end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CheckFactionLimitReached(faction, character, client)
     if isfunction(faction.onCheckLimitReached) then return faction:onCheckLimitReached(character, client) end
@@ -247,6 +257,7 @@ function GM:CheckFactionLimitReached(faction, character, client)
 
     return team.NumPlayers(faction.index) >= maxPlayers
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:Move(client, moveData)
     local char = client:getChar()
@@ -279,6 +290,7 @@ function GM:Move(client, moveData)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CanItemBeTransfered(itemObject, curInv, inventory)
     if itemObject.onCanBeTransfered then
@@ -287,6 +299,7 @@ function GM:CanItemBeTransfered(itemObject, curInv, inventory)
         return itemHook ~= false
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnPlayerJoinClass(client, class, oldClass)
     local info = lia.class.list[class]
@@ -302,6 +315,7 @@ function GM:OnPlayerJoinClass(client, class, oldClass)
 
     netstream.Start(nil, "classUpdate", client)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:Think()
     if not self.nextThink then
@@ -328,12 +342,14 @@ function GM:Think()
         self.nextThink = CurTime() + lia.config.HealingTimer
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PropBreak(attacker, ent)
     if IsValid(ent) and ent:GetPhysicsObject():IsValid() then
         constraint.RemoveAll(ent)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnPickupMoney(client, moneyEntity)
     if moneyEntity and moneyEntity:IsValid() then
@@ -342,89 +358,93 @@ function GM:OnPickupMoney(client, moneyEntity)
         client:notifyLocalized("moneyTaken", lia.currency.get(amount))
     end
 end
---------------------------------------------------------------------------------------------------------
+
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedModules()
-    if SERVER then 
-    local TalkModesPSAString = "Please Remove Talk Modes. Our framework has such built in by default."
-    local NutscriptPSAString = "Please Port Any NutScript Plugins You May Be Using. Nutscript is Known for Being Exxploitable and Regardless Of The Compatibility, WE DO NOT Advice Nutscript Plugins. Our framework was built with Lilia Plugins in mind and most perfomance will be adquired like that."
-    
-    if TalkModes then
-        timer.Simple(2, function()
+    if SERVER then
+        local TalkModesPSAString = "Please Remove Talk Modes. Our framework has such built in by default."
+        local NutscriptPSAString = "Please Port Any NutScript Plugins You May Be Using. Nutscript is Known for Being Exxploitable and Regardless Of The Compatibility, WE DO NOT Advice Nutscript Plugins. Our framework was built with Lilia Plugins in mind and most perfomance will be adquired like that."
+
+        if TalkModes then
+            timer.Simple(2, function()
                 MsgC(Color(255, 0, 0), TalkModesPSAString)
             end)
         end
-    if nut then
-        timer.Simple(2, function()
-            MsgC(Color(255, 0, 0), NutscriptPSAString)
-                end)
+
+        if nut then
+            timer.Simple(2, function()
+                MsgC(Color(255, 0, 0), NutscriptPSAString)
+            end)
         end
-    if lia.config.MapCleanerEnabled then
-        timer.Create("clearWorldItemsWarning", lia.config.ItemCleanupTime - (60 * 10), 0, function()
-            net.Start("worlditem_cleanup_inbound")
-            net.Broadcast()
 
-            for i, v in pairs(player.GetAll()) do
-                v:notify("World items will be cleared in 10 Minutes!")
-            end
-        end)
+        if lia.config.MapCleanerEnabled then
+            timer.Create("clearWorldItemsWarning", lia.config.ItemCleanupTime - (60 * 10), 0, function()
+                net.Start("worlditem_cleanup_inbound")
+                net.Broadcast()
 
-        timer.Create("clearWorldItemsWarningFinal", lia.config.ItemCleanupTime - 60, 0, function()
-            net.Start("worlditem_cleanup_inbound_final")
-            net.Broadcast()
+                for i, v in pairs(player.GetAll()) do
+                    v:notify("World items will be cleared in 10 Minutes!")
+                end
+            end)
 
-            for i, v in pairs(player.GetAll()) do
-                v:notify("World items will be cleared in 60 Seconds!")
-            end
-        end)
+            timer.Create("clearWorldItemsWarningFinal", lia.config.ItemCleanupTime - 60, 0, function()
+                net.Start("worlditem_cleanup_inbound_final")
+                net.Broadcast()
 
-        timer.Create("clearWorldItems", lia.config.ItemCleanupTime, 0, function()
-            for i, v in pairs(ents.FindByClass("lia_item")) do
-                v:Remove()
-            end
-        end)
+                for i, v in pairs(player.GetAll()) do
+                    v:notify("World items will be cleared in 60 Seconds!")
+                end
+            end)
 
-        timer.Create("mapCleanupWarning", lia.config.MapCleanupTime - (60 * 10), 0, function()
-            net.Start("map_cleanup_inbound")
-            net.Broadcast()
-
-            for i, v in pairs(player.GetAll()) do
-                v:notify("World items will be cleared in 10 Minutes!")
-            end
-        end)
-
-        timer.Create("mapCleanupWarningFinal", lia.config.MapCleanupTime - 60, 0, function()
-            net.Start("worlditem_cleanup_inbound_final")
-            net.Broadcast()
-
-            for i, v in pairs(player.GetAll()) do
-                v:notify("World items will be cleared in 60 Seconds!")
-            end
-        end)
-
-        timer.Create("AutomaticMapCleanup", lia.config.MapCleanupTime, 0, function()
-            net.Start("cleanup_inbound")
-            net.Broadcast()
-
-            for i, v in pairs(ents.GetAll()) do
-                if v:IsNPC() then
+            timer.Create("clearWorldItems", lia.config.ItemCleanupTime, 0, function()
+                for i, v in pairs(ents.FindByClass("lia_item")) do
                     v:Remove()
                 end
-            end
+            end)
 
-            for i, v in pairs(ents.FindByClass("lia_item")) do
-                v:Remove()
-            end
+            timer.Create("mapCleanupWarning", lia.config.MapCleanupTime - (60 * 10), 0, function()
+                net.Start("map_cleanup_inbound")
+                net.Broadcast()
 
-            for i, v in pairs(ents.FindByClass("prop_physics")) do
-                v:Remove()
-            end
+                for i, v in pairs(player.GetAll()) do
+                    v:notify("World items will be cleared in 10 Minutes!")
+                end
+            end)
+
+            timer.Create("mapCleanupWarningFinal", lia.config.MapCleanupTime - 60, 0, function()
+                net.Start("worlditem_cleanup_inbound_final")
+                net.Broadcast()
+
+                for i, v in pairs(player.GetAll()) do
+                    v:notify("World items will be cleared in 60 Seconds!")
+                end
+            end)
+
+            timer.Create("AutomaticMapCleanup", lia.config.MapCleanupTime, 0, function()
+                net.Start("cleanup_inbound")
+                net.Broadcast()
+
+                for i, v in pairs(ents.GetAll()) do
+                    if v:IsNPC() then
+                        v:Remove()
+                    end
+                end
+
+                for i, v in pairs(ents.FindByClass("lia_item")) do
+                    v:Remove()
+                end
+
+                for i, v in pairs(ents.FindByClass("prop_physics")) do
+                    v:Remove()
+                end
+            end)
+        end
+
+        timer.Simple(3, function()
+            RunConsoleCommand("ai_serverragdolls", "1")
         end)
     end
-    timer.Simple(3, function()
-        RunConsoleCommand("ai_serverragdolls", "1")
-    end)
-end
+
     self:InitializedExtras()
 end
 
@@ -492,8 +512,8 @@ function GM:InitializedExtras()
         hook.Remove("PostDrawEffects", "RenderHalos")
         timer.Remove("HostnameThink")
         timer.Remove("CheckHookTimes")
-        if nut then
 
+        if nut then
             nut = lia or {
                 util = {},
                 gui = {},

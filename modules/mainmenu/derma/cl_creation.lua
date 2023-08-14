@@ -131,8 +131,9 @@ function PANEL:showError(message, ...)
 	if IsValid(self.error) then
 		self.error:Remove()
 	end
-
 	if not message or message == "" then return end
+		print(message)
+
 	message = L(message, ...)
 	assert(IsValid(self.content), "no step is available")
 	self.error = self.content:Add("DLabel")
