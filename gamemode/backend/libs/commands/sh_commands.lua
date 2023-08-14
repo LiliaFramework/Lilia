@@ -5,47 +5,32 @@ lia.command.list = lia.command.list or {}
 function lia.command.add(command, data)
 	data.syntax = data.syntax or "[none]"
 	if not data.onRun then return ErrorNoHalt("Command '" .. command .. "' does not have a callback, not adding!\n") end
-
+	
+	
 	if not data.onCheckAccess then
-		if data.adminOnly then
-			data.onCheckAccess = function(client)
-				return client:IsAdmin()
-			end
-		elseif data.superAdminOnly then
-			data.onCheckAccess = function(client)
-				return client:IsSuperAdmin()
-			end
-		elseif data.group then
-			if istable(data.group) then
-				data.onCheckAccess = function(client)
-					for _, v in ipairs(data.group) do
-						if client:IsUserGroup(v) then return true end
-					end
+        if data.group then
+            ErrorNoHalt("Command '" .. data.name .. "' tried to use the deprecated field 'group'!\n")
+            return
+        end
 
-					return false
-				end
-			else
-				data.onCheckAccess = function(client)
-					return client:IsUserGroup(data.group)
-				end
-			end
-		end
-	end
+        local privilege = "Lilia - " .. (isstring(data.privilege) and data.privilege or data.name)
+		
+        if not CAMI.GetPrivilege(privilege) then
+            CAMI.RegisterPrivilege(
+                {
+                    Name = privilege,
+                    MinAccess = data.superAdminOnly and "superadmin" or (data.adminOnly and "admin" or "user"),
+                    Description = data.description
+                }
+            )
+        end
 
-	local onCheckAccess = data.onCheckAccess
+        function data:onCheckAccess(client)
+            local bHasAccess, _ = CAMI.PlayerHasAccess(client, privilege, nil)
+            return bHasAccess
+        end
+    end
 
-	if onCheckAccess then
-		local onRun = data.onRun
-		data._onRun = data.onRun
-
-		data.onRun = function(client, arguments)
-			if hook.Run("CanPlayerUseCommand", client, command) or onCheckAccess(client) then
-				return onRun(client, arguments)
-			else
-				return "@noPerm"
-			end
-		end
-	end
 
 	local alias = data.alias
 
@@ -114,5 +99,13 @@ function lia.command.extractArgs(text)
 	end
 
 	return arguments
+end
+--------------------------------------------------------------------------------------------------------
+for k,v in pairs(lia.config.urls) do
+	lia.command.add(k, {
+		onRun = function(self, client)
+			client:SendLua("gui.OpenURL('" .. v .. "')")
+		end
+	})
 end
 --------------------------------------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+lia.config.CharAttrib = {"buttons/button16.wav", 30, 255}
+
 local PANEL = {}
 
 function PANEL:Init()

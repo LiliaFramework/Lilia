@@ -42,17 +42,17 @@ function GM:PlayerBindPress(client, bind, pressed)
     elseif bind:find("jump") then
         lia.command.send("chargetup")
     end
-
-    if lia.config.AntiBunnyHopEnabled then
-        if client:IsNoClipping() or not client:getChar() or client:InVehicle() then return end
-        bind = bind:lower()
-        if bind:find("jump") and (client:getLocalVar("stamina", 0) < lia.config.BHOPStamina) then return true end
-    end
 end
 --------------------------------------------------------------------------------------------------------
 function GM:DrawLiliaModelView(panel, ent)
     if IsValid(ent.weapon) then
         ent.weapon:DrawModel()
+    end
+end
+--------------------------------------------------------------------------------------------------------
+function GM:OnChatReceived()
+    if system.IsWindows() and !system.HasFocus()) then
+            system.FlashWindow()
     end
 end
 --------------------------------------------------------------------------------------------------------

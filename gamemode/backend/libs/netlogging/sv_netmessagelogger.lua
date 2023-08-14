@@ -62,7 +62,7 @@ end
 
 hook.Add("ShutDown", "SaveNetMessageLogs", saveLogs)
 
-local function sendData(page, ply)
+function sendData(page, ply)
     if not ply:IsSuperAdmin() then return end
     local dataTable = {}
     local start = ((page - 1) * 128) + 1

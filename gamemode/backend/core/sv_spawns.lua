@@ -199,6 +199,8 @@ end
 function GM:PlayerInitialSpawn(client)
     client.liaJoinTime = RealTime()
     if client:IsBot() then return hook.Run("SetupBotCharacter", client) end
+    
+	client:SetCanZoom(false)
 
     client:loadLiliaData(function(data)
         if not IsValid(client) then return end
@@ -229,5 +231,14 @@ function GM:PlayerInitialSpawn(client)
 
     self:RegisterPlayer(client)
     hook.Run("PostPlayerInitialSpawn", client)
+
+    timer.Simple(1, function()
+		if (client:IsValid()) then
+		  	if (lia.config.Users[client:SteamID()]) then
+				client:SetUserGroup(lia.config.Users[client:SteamID()])
+			end
+		end
+	end)
+
 end
 --------------------------------------------------------------------------------------------------------

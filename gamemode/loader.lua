@@ -1,17 +1,18 @@
 --------------------------------------------------------------------------------------------------------
-lia.util.include("backend/libs/cl_fonts.lua")
+// GAMEMODE THIRDPARTY LIBRARIES \\
+lia.util.include("backend/external/thirdparty/sh_utf8_casemap.lua")
+lia.util.include("backend/external/thirdparty/sh_cami.lua")
+lia.util.include("backend/external/thirdparty/sv_mysql.lua")
+lia.util.include("backend/external/thirdparty/cl_ikon.lua")
+lia.util.include("backend/external/thirdparty/cl_markup.lua")
+lia.util.include("backend/external/thirdparty/cl_surfaceGetURL.lua")
+lia.util.include("backend/external/thirdparty/sh_deferred.lua")
+lia.util.include("backend/external/thirdparty/sh_ease.lua")
+lia.util.include("backend/external/thirdparty/sh_netstream2.lua")
+lia.util.include("backend/external/thirdparty/sh_pon.lua")
+lia.util.include("backend/external/thirdparty/sh_utf8.lua")
 --------------------------------------------------------------------------------------------------------
--- GAMEMODE THIRDPARTY LIBRARIES \\
-lia.util.include("backend/external/thirdparty/cl_ikon.lua", "client")
-lia.util.include("backend/external/thirdparty/cl_markup.lua", "client")
-lia.util.include("backend/external/thirdparty/cl_surfaceGetURL.lua", "client")
-lia.util.include("backend/external/thirdparty/sh_deferred.lua", "shared")
-lia.util.include("backend/external/thirdparty/sh_ease.lua", "shared")
-lia.util.include("backend/external/thirdparty/sh_netstream2.lua", "shared")
-lia.util.include("backend/external/thirdparty/sh_pon.lua", "shared")
-lia.util.include("backend/external/thirdparty/sh_utf8.lua", "shared")
---------------------------------------------------------------------------------------------------------
--- GAMEMODE CONFIG \\
+// GAMEMODE CONFIG \\
 lia.util.include("config/sh_core.lua")
 lia.util.include("config/sh_default.lua")
 lia.util.include("config/sh_miscellaneous.lua")
@@ -21,7 +22,8 @@ lia.util.include("config/sh_permissions.lua")
 lia.util.include("config/sh_protection.lua")
 lia.util.include("config/sh_toolpermissions.lua")
 --------------------------------------------------------------------------------------------------------
--- GAMEMODE LIBRARIES \\
+// GAMEMODE LIBRARIES \\
+lia.util.include("backend/libs/cl_fonts.lua")
 lia.util.include("backend/libs/cl_buttons.lua")
 lia.util.include("backend/libs/networking/sh_networking.lua")
 lia.util.include("backend/libs/networking/sv_networking.lua")
@@ -74,7 +76,7 @@ lia.util.include("backend/libs/language/cl_language.lua")
 lia.lang.loadFromDir("languages")
 lia.item.loadFromDir("items")
 --------------------------------------------------------------------------------------------------------
--- GAMEMODE FUNCTIONS \\
+// GAMEMODE FUNCTIONS \\
 lia.util.include("backend/core/cl_initialization.lua")
 lia.util.include("backend/core/hooks/sv_hooks.lua")
 lia.util.include("backend/core/sv_misc.lua")
@@ -98,11 +100,11 @@ lia.util.include("frontend/attributes/cl_attribute_ui.lua")
 lia.util.include("frontend/attributes/cl_attributes.lua")
 lia.util.include("frontend/death/cl_death.lua")
 --------------------------------------------------------------------------------------------------------
--- GAMEMODE NETMESSAGES \\
+// GAMEMODE NETMESSAGES \\
 lia.util.include("backend/netcalls/cl_netcalls.lua")
 lia.util.include("backend/netcalls/sv_netcalls.lua")
 --------------------------------------------------------------------------------------------------------
--- GAMEMODE VISUALS \\
+// GAMEMODE VISUALS \\
 lia.util.include("frontend/chatbox/cl_chatbox.lua")
 lia.util.include("frontend/chatbox/cl_markup.lua")
 --------------------------------------------------------------------------------------------------------
@@ -146,17 +148,14 @@ lia.util.include("frontend/thirdperson/cl_panel.lua")
 lia.util.include("frontend/weaponselector/cl_enable.lua")
 lia.util.include("frontend/weaponselector/cl_hooks.lua")
 --------------------------------------------------------------------------------------------------------
--- GAMEMODE MISC \\
+// GAMEMODE MISC \\
 lia.util.include("frontend/cl_hooks.lua")
 lia.util.include("frontend/cl_voicepanel.lua")
 --------------------------------------------------------------------------------------------------------
-lia.util.include("commands/cl_adminstration.lua")
-lia.util.include("commands/cl_cleaners.lua")
+lia.util.include("commands/cl_character.lua")
 lia.util.include("commands/cl_management.lua")
-lia.util.include("commands/cl_misc.lua")
-lia.util.include("commands/cl_player.lua")
-lia.util.include("commands/sv_adminstration.lua")
-lia.util.include("commands/sv_cleaners.lua")
+lia.util.include("commands/cl_roleplay.lua")
+lia.util.include("commands/sv_character.lua")
 lia.util.include("commands/sv_management.lua")
-lia.util.include("commands/sv_misc.lua")
-lia.util.include("commands/sv_player.lua")
+lia.util.include("commands/sv_roleplay.lua")
+--------------------------------------------------------------------------------------------------------

@@ -1,596 +1,253 @@
-lia.command.add("charsetdesc", {
-    syntax = "<string name> <string desc>",
-    onRun = function(client, arguments)
-        if not client:IsAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
+lia.command.add(
+    "freezeallprops",
+    {
+        superAdminOnly = true,
+        privilege = "Management - Freeze All Props",
+        onRun = function(client, arguments)
+            for k, v in pairs(ents.FindByClass("prop_physics")) do
+                local physObj = v:GetPhysicsObject()
+                if IsValid(physObj) then
+                    physObj:EnableMotion(false)
+                    physObj:Sleep()
+                end
+            end
         end
+    }
+)
 
-        local target = lia.command.findPlayer(client, arguments[1])
-        if not IsValid(target) then return end
-        if not target:getChar() then return "No character loaded" end
-        local arg = table.concat(arguments, " ", 2)
+lia.command.add(
+    "cleanitems",
+    {
+        superAdminOnly = true,
+        privilege = "Management - Clean Items",
+        onRun = function(client, arguments)
+            local count = 0
+            for k, v in pairs(ents.FindByClass("lia_item")) do
+                count = count + 1
+                v:Remove()
+            end
 
-        if not arg:find("%S") then
-            return client:requestString("Change " .. target:Nick() .. "'s Description", "Enter new description", function(text)
-                lia.command.run(client, "charsetdesc", {arguments[1], text})
-            end, target:getChar():getDesc())
+            client:notify(count .. " items have been cleaned up from the map.")
         end
+    }
+)
 
-        local info = lia.char.vars.desc
-        local result, fault, count = info.onValidate(arg)
-        if result == false then return "@" .. fault, count end
-        target:getChar():setDesc(arg)
+lia.command.add(
+    "cleanprops",
+    {
+        superAdminOnly = true,
+        privilege = "Management - Clean Props",
+        onRun = function(client, arguments)
+            local count = 0
+            for k, v in pairs(ents.FindByClass("prop_physics")) do
+                count = count + 1
+                v:Remove()
+            end
 
-        return "Successfully changed " .. target:Nick() .. "'s description"
-    end
-})
-
-lia.command.add("charsetattrib", {
-    syntax = "<string charname> <string attribname> <number level>",
-    onRun = function(client, arguments)
-        if not client:IsSuperAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
+            client:notify(count .. " props have been cleaned up from the map.")
         end
+    }
+)
 
-        local attribName = arguments[2]
-        if not attribName then return L("invalidArg", client, 2) end
-        local attribNumber = arguments[3]
-        attribNumber = tonumber(attribNumber)
-        if not attribNumber or not isnumber(attribNumber) then return L("invalidArg", client, 3) end
-        -- Find the target player
-        local target = lia.command.findPlayer(client, arguments[1])
+lia.command.add(
+    "cleannpcs",
+    {
+        superAdminOnly = true,
+        privilege = "Management - Clean NPCs",
+        onRun = function(client, arguments)
+            local count = 0
+            for k, v in pairs(ents.GetAll()) do
+                if IsValid(v) and v:IsNPC() then
+                    count = count + 1
+                    v:Remove()
+                end
+            end
 
-        if IsValid(target) then
-            local char = target:getChar()
+            client:notify(count .. " NPCs have been cleaned up from the map.")
+        end
+    }
+)
 
-            if char then
-                -- Loop through the attribute list to find the matching attribute
-                for k, v in pairs(lia.attribs.list) do
-                    if lia.util.stringMatches(L(v.name, client), attribName) or lia.util.stringMatches(k, attribName) then
-                        -- Set the attribute level for the character
-                        char:setAttrib(k, math.abs(attribNumber))
-                        client:notifyLocalized("attribSet", target:Name(), L(v.name, client), math.abs(attribNumber))
+lia.command.add(
+    "flags",
+    {
+        adminOnly = true,
+        syntax = "<string name>",
+        privilege = "Management - Check Flags",
+        onRun = function(client, arguments)
+            local target = lia.command.findPlayer(client, arguments[1])
+            if IsValid(target) and target:getChar() then client:notify("Their character flags are: '" .. target:getChar():getFlags() .. "'") end
+        end
+    }
+)
 
+lia.command.add(
+    "clearchat",
+    {
+        superAdminOnly = true,
+        privilege = "Management - Clear Chat",
+        onRun = function(client, arguments) netstream.Start(player.GetAll(), "adminClearChat") end
+    }
+)
+
+lia.command.add(
+    "checkallmoney",
+    {
+        superAdminOnly = true,
+        syntax = "<string charname>",
+        privilege = "Management - Check All Money",
+        onRun = function(client, arguments)
+            for k, v in pairs(player.GetAll()) do
+                if v:getChar() then client:ChatPrint(v:Name() .. " has " .. v:getChar():getMoney()) end
+            end
+        end
+    }
+)
+
+lia.command.add(
+    "return",
+    {
+        adminOnly = true,
+        privilege = "Management - Return",
+        onRun = function(client, arguments)
+            if IsValid(client) and client:Alive() then
+                local char = client:getChar()
+                local oldPos = char:getData("deathPos")
+                if oldPos then
+                    client:SetPos(oldPos)
+                    char:setData("deathPos", nil)
+                else
+                    client:notify("No death position saved.")
+                end
+            else
+                client:notify("Wait until you respawn.")
+            end
+        end
+    }
+)
+
+lia.command.add(
+    "findallflags",
+    {
+        adminOnly = false,
+        privilege = "Management - Find All Flags",
+        onRun = function(client, arguments)
+            for k, v in pairs(player.GetHumans()) do
+                client:ChatPrint(v:Name() .. " — " .. v:getChar():getFlags())
+            end
+        end
+    }
+)
+
+lia.command.add(
+    "chargiveitem",
+    {
+        superAdminOnly = true,
+        syntax = "<string name> <string item>",
+        privilege = "Management - Give Item",
+        onRun = function(client, arguments)
+            if not arguments[2] then return L("invalidArg", client, 2) end
+            local target = lia.command.findPlayer(client, arguments[1])
+            if IsValid(target) and target:getChar() then
+                local uniqueID = arguments[2]:lower()
+                if not lia.item.list[uniqueID] then
+                    for k, v in SortedPairs(lia.item.list) do
+                        if lia.util.stringMatches(v.name, uniqueID) then
+                            uniqueID = k
+                            break
+                        end
+                    end
+                end
+
+                local inv = target:getChar():getInv()
+                local succ, err = inv:add(uniqueID)
+                if succ then
+                    target:notifyLocalized("itemCreated")
+                    if target ~= client then client:notifyLocalized("itemCreated") end
+                else
+                    target:notify(tostring(succ))
+                    target:notify(tostring(err))
+                end
+            end
+        end
+    }
+)
+
+lia.command.add(
+    "netmessagelogs",
+    {
+        superAdminOnly = true,
+        privilege = "Management - Check Net Message Log",
+        onRun = function(client, arguments) sendData(1, client) end
+    }
+)
+
+lia.command.add(
+    "returnitems",
+    {
+        superAdminOnly = true,
+        syntax = "<string name>",
+        privilege = "Management - Return Items",
+        onRun = function(client, arguments)
+            local target = lia.command.findPlayer(client, arguments[1])
+            if lia.config.LoseWeapononDeathHuman or lia.config.LoseWeapononDeathNPC then
+                if IsValid(target) then
+                    if not target.LostItems then
+                        client:notify("The target hasn't died recently or they had their items returned already!")
                         return
                     end
-                end
-            end
-        end
-    end
-})
 
-lia.command.add("charaddattrib", {
-    syntax = "<string charname> <string attribname> <number level>",
-    onRun = function(client, arguments)
-        if not client:IsSuperAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        local attribName = arguments[2]
-        if not attribName then return L("invalidArg", client, 2) end
-        local attribNumber = arguments[3]
-        attribNumber = tonumber(attribNumber)
-        if not attribNumber or not isnumber(attribNumber) then return L("invalidArg", client, 3) end
-        local target = lia.command.findPlayer(client, arguments[1])
-
-        if IsValid(target) then
-            local char = target:getChar()
-
-            if char then
-                for k, v in pairs(lia.attribs.list) do
-                    if lia.util.stringMatches(L(v.name, client), attribName) or lia.util.stringMatches(k, attribName) then
-                        char:updateAttrib(k, math.abs(attribNumber))
-                        client:notifyLocalized("attribUpdate", target:Name(), L(v.name, client), math.abs(attribNumber))
-
+                    if table.IsEmpty(target.LostItems) then
+                        client:notify("Cannot return any items; the player hasn't lost any!")
                         return
                     end
-                end
-            end
-        end
-    end
-})
 
-lia.command.add("plytransfer", {
-    syntax = "<string name> <string faction>",
-    onRun = function(client, arguments)
-        if not client:IsAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        local target = lia.command.findPlayer(client, arguments[1])
-        local name = table.concat(arguments, " ", 2)
-        if IsValid(target) and target == client and not client:IsSuperAdmin() then return "Your rank cannot target itself with these commands." end
-
-        if IsValid(target) and target:getChar() then
-            local faction = lia.faction.teams[name]
-
-            if not faction then
-                -- Loop through the factions to find a match
-                for k, v in pairs(lia.faction.indices) do
-                    if lia.util.stringMatches(L(v.name, client), name) then
-                        faction = v
-                        break
+                    local char = target:getChar()
+                    if not char then return end
+                    local inv = char:getInv()
+                    if not inv then return end
+                    for k, v in pairs(target.LostItems) do
+                        inv:add(v)
                     end
-                end
-            end
 
-            if faction then
-                target:getChar().vars.faction = faction.uniqueID
-                target:getChar():setFaction(faction.index)
-
-                if faction.onTransfered then
-                    faction:onTransfered(target)
-                end
-
-                client:notify("You have transferred " .. target:Name() .. " to " .. faction.name)
-                target:notify("You have been transferred to " .. faction.name .. " by " .. client:Name())
-            else
-                return "@invalidFaction"
-            end
-        end
-    end
-})
-
-lia.command.add("charsetname", {
-    syntax = "<string name> [string newName]",
-    onRun = function(client, arguments)
-        -- Check if the client is an admin
-        if not client:IsAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) and target == client and not client:IsSuperAdmin() then return "Your rank cannot target itself with these commands." end
-
-        if IsValid(target) and not arguments[2] then
-            return client:requestString("@chgName", "@chgNameDesc", function(text)
-                lia.command.run(client, "charsetname", {target:Name(), text})
-            end, target:Name())
-        end
-
-        table.remove(arguments, 1)
-        local targetName = table.concat(arguments, " ")
-
-        if IsValid(target) and target:getChar() then
-            client:notifyLocalized("cChangeName", client:Name(), target:Name(), targetName)
-            target:getChar():setName(targetName:gsub("#", "#?"))
-        end
-    end
-})
-
-lia.command.add("charsetmodel", {
-    syntax = "<string name> <string model>",
-    onRun = function(client, arguments)
-        -- Check if the client is an admin
-        if not client:IsAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        if not arguments[2] then return L("invalidArg", client, 2) end
-        local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) and target == client and not client:IsSuperAdmin() then return "Your rank cannot target itself with these commands." end
-
-        if IsValid(target) and target:getChar() then
-            target:getChar():setModel(arguments[2])
-            target:SetupHands()
-            client:notifyLocalized("cChangeModel", client:Name(), target:Name(), arguments[2])
-        end
-    end
-})
-
-lia.command.add("charsetskin", {
-    syntax = "<string name> [number skin]",
-    onRun = function(client, arguments)
-        if not client:IsAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        local skin = tonumber(arguments[2])
-        local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) and target == client and not client:IsSuperAdmin() then return "Your rank cannot target itself with these commands." end
-
-        if IsValid(target) and target:getChar() then
-            target:getChar():setData("skin", skin)
-            target:SetSkin(skin or 0)
-            client:notifyLocalized("cChangeSkin", client:Name(), target:Name(), skin or 0)
-        end
-    end
-})
-
-lia.command.add("charsetbodygroup", {
-    syntax = "<string name> <string bodyGroup> [number value]",
-    onRun = function(client, arguments)
-        if not client:IsAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        local value = tonumber(arguments[3])
-        local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) and target == client and not client:IsSuperAdmin() then return "Your rank cannot target itself with these commands." end
-
-        if IsValid(target) and target:getChar() then
-            local index = target:FindBodygroupByName(arguments[2])
-
-            if index > -1 then
-                if value and value < 1 then
-                    value = nil
-                end
-
-                local groups = target:getChar():getData("groups", {})
-                groups[index] = value
-                target:getChar():setData("groups", groups)
-                target:SetBodygroup(index, value or 0)
-                client:notifyLocalized("cChangeGroups", client:Name(), target:Name(), arguments[2], value or 0)
-            else
-                return "@invalidArg", 2
-            end
-        end
-    end
-})
-
-lia.command.add("charban", {
-    syntax = "<string name>",
-    onRun = function(client, arguments)
-        if not client:IsSuperAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        local target = lia.command.findPlayer(client, arguments[1])
-
-        if IsValid(target) then
-            local char = target:getChar()
-
-            if char then
-                client:notifyLocalized("charBan", client:Name(), target:Name())
-                char:setData("banned", true)
-
-                char:setData("charBanInfo", {
-                    name = client.SteamName and client:SteamName() or client:Nick(),
-                    steamID = client:SteamID(),
-                    rank = client:GetUserGroup()
-                })
-
-                char:save()
-                char:kick()
-            end
-        end
-    end
-})
-
-lia.command.add("charselectskin", {
-    syntax = "[number skin]",
-    onRun = function(client, arguments)
-        local skin = tonumber(arguments[1])
-        local target = client
-
-        if not client:IsSuperAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        if IsValid(target) and target:getChar() then
-            target:getChar():setData("skin", skin)
-            target:SetSkin(skin or 0)
-            client:notifyLocalized("cChangeSkin", nil, client:Name(), target:Name(), skin or 0)
-        end
-    end
-})
-
-lia.command.add("charselectbodygroup", {
-    syntax = "<string target> <string bodyGroup> [number value]",
-    onRun = function(client, arguments)
-        local value = tonumber(arguments[2])
-        local target = lia.command.findPlayer(client, arguments[1])
-
-        if not client:IsSuperAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        if not arguments[1] then
-            client:notify("No bodygroup specified.")
-
-            return false
-        end
-
-        if IsValid(client) and client:getChar() then
-            local index = client:FindBodygroupByName(arguments[1])
-
-            if index > -1 then
-                if value and value < 1 then
-                    value = nil
-                end
-
-                local groups = client:getChar():getData("groups", {})
-                groups[index] = value
-                client:getChar():setData("groups", groups)
-                client:SetBodygroup(index, value or 0)
-                client:notify("Bodygroup changed successfully")
-                client:notifyLocalized("cChangeGroups", nil, client:Name(), target:Name(), arguments[2], value or 0)
-            else
-                return "@invalidArg", 2
-            end
-        end
-    end
-})
-
-lia.command.add("charforceunequip", {
-    syntax = "<string name>",
-    onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
-
-        if not client:IsSuperAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        if IsValid(target) and target:getChar() then
-            local inventory = target:getChar():getInv()
-
-            for k, v in pairs(inventory:getItems()) do
-                if v:getData("equip") then
-                    v:setData("equip", false)
-                end
-            end
-        end
-    end
-})
-
-lia.command.add("chargetmoney", {
-    syntax = "<string name>",
-    onRun = function(client, arguments)
-        if not client:IsAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        local target = lia.command.findPlayer(client, arguments[1])
-
-        if IsValid(target) and target:getChar() then
-            local char = target:getChar()
-            client:notify(char:getMoney())
-        else
-            client:notify("Invalid Target")
-        end
-    end
-})
-
-lia.command.add("chargetmodel", {
-    syntax = "<string name>",
-    onRun = function(client, arguments)
-        if not client:IsAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        local target = lia.command.findPlayer(client, arguments[1])
-
-        if IsValid(target) and target:getChar() then
-            client:notify(target:GetModel())
-        else
-            client:notify("Invalid Target")
-        end
-    end
-})
-
-lia.command.add("checkallmoney", {
-    syntax = "<string charname>",
-    onRun = function(client, arguments)
-        if not client:IsSuperAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        for k, v in pairs(player.GetAll()) do
-            if v:getChar() then
-                client:ChatPrint(v:Name() .. " has " .. v:getChar():getMoney())
-            end
-        end
-    end
-})
-
-lia.command.add("bringlostitems", {
-    syntax = "",
-    onRun = function(client, arguments)
-        if not client:IsSuperAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        for k, v in pairs(ents.FindInSphere(client:GetPos(), 500)) do
-            if v:GetClass() == "lia_item" then
-                v:SetPos(client:GetPos())
-            end
-        end
-    end
-})
-
-lia.command.add("logs", {
-    adminOnly = false,
-    onRun = function(client, arguments)
-        if not client:IsAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        elseif not mLogs then
-            client:notify("You don't have mLogs installed!")
-
-            return false
-        end
-
-        client:ConCommand("mLogs")
-    end
-})
-
-lia.command.add("chargiveitem", {
-    syntax = "<string name> <string item>",
-    onRun = function(client, arguments)
-        if not client:IsSuperAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        if not arguments[2] then return L("invalidArg", client, 2) end
-        local target = lia.command.findPlayer(client, arguments[1])
-
-        if IsValid(target) and target:getChar() then
-            local uniqueID = arguments[2]:lower()
-
-            if not lia.item.list[uniqueID] then
-                for k, v in SortedPairs(lia.item.list) do
-                    if lia.util.stringMatches(v.name, uniqueID) then
-                        uniqueID = k
-                        break
-                    end
-                end
-            end
-
-            local inv = target:getChar():getInv()
-            local succ, err = target:getChar():getInv():add(uniqueID)
-
-            if succ then
-                target:notifyLocalized("itemCreated")
-
-                if target ~= client then
-                    client:notifyLocalized("itemCreated")
+                    target.LostItems = nil
+                    target:notify("Your items have been returned.")
+                    client:notify("Returned the items.")
                 end
             else
-                target:notify(tostring(succ))
-                target:notify(tostring(err))
+                client:notify("Weapon on Death not Enabled!")
             end
         end
-    end
-})
+    }
+)
 
-lia.command.add("charsetmoney", {
-    syntax = "<string target> <number amount>",
-    onRun = function(client, arguments)
-        if not client:IsSuperAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
+lia.command.add(
+    "announce",
+    {
+        superAdminOnly = true,
+        syntax = "<string factions> <string text>",
+        privilege = "Management - Make Announcements",
+        onRun = function(client, arguments)
+            if not arguments[1] then return "Invalid argument (#1)" end
+            local message = table.concat(arguments, " ", 1)
+            net.Start("announcement_client")
+            net.WriteString(message)
+            net.Broadcast()
+            client:notify("Announcement sent.")
         end
+    }
+)
 
-        local amount = tonumber(arguments[2])
-        if not amount or not isnumber(amount) or amount < 0 then return "@invalidArg", 2 end
-        local target = lia.command.findPlayer(client, arguments[1])
-
-        if IsValid(target) then
-            local char = target:getChar()
-
-            if char and amount then
-                amount = math.Round(amount)
-                char:setMoney(amount)
-                client:notifyLocalized("setMoney", target:Name(), lia.currency.get(amount))
-            end
-        end
-    end
-})
-
-lia.command.add("getpos", {
-    onRun = function(client, arguments)
-        client:ChatPrint("MY POSITION: " .. tostring(client:GetPos()))
-    end
-})
-
-lia.command.add("doorname", {
-    onRun = function(client, arguments)
-        local tr = util.TraceLine(util.GetPlayerTrace(client))
-
-        if IsValid(tr.Entity) then
-            print("I saw a " .. tr.Entity:GetName())
-        end
-    end
-})
-
-lia.command.add("factionlist", {
-    syntax = "<string text>",
-    onRun = function(client, arguments)
-        for k, v in ipairs(lia.faction.indices) do
-            client:ChatPrint("NAME: " .. v.name .. " ID: " .. v.uniqueID)
-        end
-    end
-})
-
-lia.command.add("netmessagelogs", {
-    onRun = function(client, arguments)
-        if not client:IsSuperAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
-        print(#logs)
-        sendData(1, client)
-    end
-})
-
-lia.command.add("returnitems", {
-    syntax = "<string name>",
-    onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
-
-        if lia.config.LoseWeapononDeathHuman or lia.config.LoseWeapononDeathNPC then
-            if not client:IsAdmin() then
-                client:notify("Your rank is not high enough to use this command.")
-
+lia.command.add(
+    "logs",
+    {
+        adminOnly = true,
+        privilege = "Management - Open MLogs",
+        onRun = function(client, arguments)
+            if not mLogs then
+                client:notify("You don't have mLogs installed!")
                 return false
             end
-
-            if IsValid(target) then
-                if not target.LostItems then
-                    client:notify("The target hasn't died recently or they had their items returned already!")
-
-                    return
-                end
-
-                if table.IsEmpty(target.LostItems) then
-                    client:notify("Cannot return any items; the player hasn't lost any!")
-
-                    return
-                end
-
-                local char = target:getChar()
-                if not char then return end
-                local inv = char:getInv()
-                if not inv then return end
-
-                for k, v in pairs(target.LostItems) do
-                    inv:add(v)
-                end
-
-                target.LostItems = nil
-                target:notify("Your items have been returned.")
-                client:notify("Returned the items.")
-            end
-        else
-            client:notify("Weapon on Death not Enabled!")
         end
-    end
-})
+    }
+)

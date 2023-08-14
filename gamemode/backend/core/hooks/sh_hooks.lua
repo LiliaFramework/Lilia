@@ -302,6 +302,12 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:OnPlayerJoinClass(client, class, oldClass)
+    local char = client:getChar()
+
+	if char and lia.config.PermaClass then
+	    char:setData( "pclass", class )
+	end
+
     local info = lia.class.list[class]
     local info2 = lia.class.list[oldClass]
 
@@ -526,5 +532,9 @@ function GM:InitializedExtras()
             }
         end
     end
+end
+--------------------------------------------------------------------------------------------------------
+function GM:simfphysPhysicsCollide()
+    return true
 end
 --------------------------------------------------------------------------------------------------------

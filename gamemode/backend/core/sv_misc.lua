@@ -20,6 +20,11 @@ function GM:PlayerShouldTakeDamage(client, attacker)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:EntityTakeDamage(entity, dmgInfo)
+
+    if IsValid(entity) && entity:IsPlayer() && dmgInfo:IsDamageType(DMG_CRUSH) && not IsValid(entity.liaRagdoll) then
+        return true
+    end
+    
     if IsValid(entity.liaPlayer) then
         if dmgInfo:IsDamageType(DMG_CRUSH) then
             if (entity.liaFallGrace or 0) < CurTime() then
@@ -53,6 +58,12 @@ function GM:EntityTakeDamage(entity, dmgInfo)
     end
 end
 --------------------------------------------------------------------------------------------------------
+function GM:ScalePlayerDamage(ply, hitgroup, dmgInfo)
+	if hitgroup == HITGROUP_HEAD then 
+		dmgInfo:ScaleDamage(lia.config.HeadShotDamage)
+	end
+end
+--------------------------------------------------------------------------------------------------------
 function GM:PreCleanupMap()
     lia.shuttingDown = true
     hook.Run("SaveData")
@@ -63,6 +74,10 @@ function GM:PostCleanupMap()
     lia.shuttingDown = false
     hook.Run("LoadData")
     hook.Run("PostLoadData")
+end
+--------------------------------------------------------------------------------------------------------
+function GM:OnItemSpawned(ent)
+	ent.health = 250
 end
 --------------------------------------------------------------------------------------------------------
 hook.Remove("PlayerInitialSpawn", "VJBaseSpawn")

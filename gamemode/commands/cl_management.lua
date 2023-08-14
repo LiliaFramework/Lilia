@@ -1,129 +1,144 @@
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("charsetdesc", {
-    syntax = "<string name> <string desc>",
-    onRun = function(client, arguments) end
-})
+lia.command.add(
+    "freezeallprops",
+    {
+        superAdminOnly = true,
+        privilege = "Management - Freeze All Props",
+        onRun = function(client, arguments)
+        end
+    }
+)
 
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("charsetattrib", {
-    syntax = "<string charname> <string attribname> <number level>",
-    onRun = function(client, arguments) end
-})
+lia.command.add(
+    "cleanitems",
+    {
+        superAdminOnly = true,
+        privilege = "Management - Clean Items",
+        onRun = function(client, arguments)
+        end
+    }
+)
 
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("charaddattrib", {
-    syntax = "<string charname> <string attribname> <number level>",
-    onRun = function(client, arguments) end
-})
+lia.command.add(
+    "cleanprops",
+    {
+        superAdminOnly = true,
+        privilege = "Management - Clean Props",
+        onRun = function(client, arguments)
+        end
+    }
+)
 
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("plytransfer", {
-    syntax = "<string name> <string faction>",
-    onRun = function(client, arguments) end
-})
+lia.command.add(
+    "cleannpcs",
+    {
+        superAdminOnly = true,
+        privilege = "Management - Clean NPCs",
+        onRun = function(client, arguments)
+        end
+    }
+)
 
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("charsetname", {
-    syntax = "<string name> [string newName]",
-    onRun = function(client, arguments) end
-})
+lia.command.add(
+    "flags",
+    {
+        adminOnly = true,
+        syntax = "<string name>",
+        privilege = "Management - Check Flags",
+        onRun = function(client, arguments)
+        end
+    }
+)
 
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("charsetmodel", {
-    syntax = "<string name> <string model>",
-    onRun = function(client, arguments) end
-})
+lia.command.add(
+    "clearchat",
+    {
+        superAdminOnly = true,
+        privilege = "Management - Clear Chat",
+        onRun = function(client, arguments)
+        end
+    }
+)
 
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("charsetskin", {
-    syntax = "<string name> [number skin]",
-    onRun = function(client, arguments) end
-})
+lia.command.add(
+    "checkallmoney",
+    {
+        superAdminOnly = true,
+        syntax = "<string charname>",
+        privilege = "Management - Check All Money",
+        onRun = function(client, arguments)
+        end
+    }
+)
 
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("charsetbodygroup", {
-    syntax = "<string name> <string bodyGroup> [number value]",
-    onRun = function(client, arguments) end
-})
+lia.command.add(
+    "return",
+    {
+        adminOnly = true,
+        privilege = "Management - Return",
+        onRun = function(client, arguments)
+        end
+    }
+)
 
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("charban", {
-    syntax = "<string name>",
-    onRun = function(client, arguments) end
-})
+lia.command.add(
+    "findallflags",
+    {
+        adminOnly = false,
+        privilege = "Management - Find All Flags",
+        onRun = function(client, arguments)
+        end
+    }
+)
 
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("charselectskin", {
-    syntax = "[number skin]",
-    onRun = function(client, arguments) end
-})
+lia.command.add(
+    "chargiveitem",
+    {
+        superAdminOnly = true,
+        syntax = "<string name> <string item>",
+        privilege = "Management - Give Item",
+        onRun = function(client, arguments)
+        end
+    }
+)
 
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("charselectbodygroup", {
-    syntax = "<string targer> <string bodyGroup> [number value]",
-    onRun = function(client, arguments) end
-})
+lia.command.add(
+    "netmessagelogs",
+    {
+        superAdminOnly = true,
+        privilege = "Management - Check Net Message Log",
+        onRun = function(client, arguments)
+        end
+    }
+)
 
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("charforceunequip", {
-    syntax = "<string name>",
-    onRun = function(client, arguments) end
-})
+lia.command.add(
+    "returnitems",
+    {
+        superAdminOnly = true,
+        syntax = "<string name>",
+        privilege = "Management - Return Items",
+        onRun = function(client, arguments)
+        end
+    }
+)
 
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("chargetmoney", {
-    syntax = "<string name>",
-    onRun = function(client, arguments) end
-})
+lia.command.add(
+    "announce",
+    {
+        superAdminOnly = true,
+        syntax = "<string factions> <string text>",
+        privilege = "Management - Make Announcements",
+        onRun = function(client, arguments)
+        end
+    }
+)
 
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("chargetmodel", {
-    syntax = "<string name>",
-    onRun = function(client, arguments) end
-})
-
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("checkallmoney", {
-    syntax = "<string charname>",
-    onRun = function(client, arguments) end
-})
-
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("bringlostitems", {
-    syntax = "",
-    onRun = function(client, arguments) end
-})
-
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("logs", {
-    adminOnly = false,
-    onRun = function(client, arguments) end
-})
-
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("chargiveitem", {
-    syntax = "<string name> <string item>",
-    onRun = function(client, arguments) end
-})
-
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("charsetmoney", {
-    syntax = "<string target> <number amount>",
-    onRun = function(client, arguments) end
-})
-
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("getpos", {
-    onRun = function(client, arguments) end
-})
-
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("doorname", {
-    onRun = function(client, arguments) end
-})
-
--------------------------------------------------------------------------------------------------------------------------
-lia.command.add("factionlist", {
-    syntax = "<string text>",
-    onRun = function(client, arguments) end
-})
+lia.command.add(
+    "logs",
+    {
+        adminOnly = true,
+        privilege = "Management - Open MLogs",
+        onRun = function(client, arguments)
+        end
+    }
+)
