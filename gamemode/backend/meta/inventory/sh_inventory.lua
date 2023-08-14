@@ -94,10 +94,6 @@ function Inventory:getFirstItemOfType(itemType)
     end
 end
 --------------------------------------------------------------------------------------------------------
-function Inventory:getItemsByUniqueID(itemType)
-    return self:getItemsOfType(itemType)
-end
---------------------------------------------------------------------------------------------------------
 function Inventory:hasItem(itemType)
     for _, item in pairs(self:getItems()) do
         if item.uniqueID == itemType then return true end

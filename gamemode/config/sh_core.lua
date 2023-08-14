@@ -24,42 +24,44 @@ function lia.config.load_core()
     lia.config.DefaultStaff = {
         ["STEAM_0:1:176123778"] = "superadmin",
     }
+
     lia.config.urls = {
         ["Discord"] = "",
         ["Workshop"] = ""
     }
+
     lia.config.FactionBroadcastEnabled = true
-lia.config.AdvertisementEnabled = true
-lia.config.AdvertisementPrice = 25
-lia.config.DrawEntityShadows = true
---------------------------------------------------------------------------------------------------
+    lia.config.AdvertisementEnabled = true
+    lia.config.AdvertisementPrice = 25
+    lia.config.DrawEntityShadows = true
+    --------------------------------------------------------------------------------------------------
     lia.config.MapCleanerEnabled = true
     lia.config.ItemCleanupTime = 7200
     lia.config.MapCleanupTime = 21600
---------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------
     lia.config.MaxCharacters = 5
     lia.config.Vignette = true
---------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------
     lia.config.StaminaSlowdown = true
     lia.config.SalaryOverride = true
     lia.config.SalaryInterval = 300
---------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------
     lia.config.invW = 6
     lia.config.invH = 4
---------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------
     lia.config.AutoRegen = false
     lia.config.HealingAmount = 10
     lia.config.HealingTimer = 60
---------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------
     lia.config.MusicKiller = true
---------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------
     lia.config.WalkSpeed = 130
     lia.config.RunSpeed = 235
     lia.config.WalkRatio = 0.5
---------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------
     lia.config.PunchStamina = 10
     lia.config.DefaultMoney = 0
---------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------
     lia.config.HiddenHUDElements = {
         ["CHudHealth"] = true,
         ["CHudCrosshair"] = true,
@@ -68,7 +70,8 @@ lia.config.DrawEntityShadows = true
         ["CHudSecondaryAmmo"] = true,
         ["CHudHistoryResource"] = true
     }
---------------------------------------------------------------------------------------------------
+
+    --------------------------------------------------------------------------------------------------
     lia.config.InjuryTextTable = {
         [.2] = {"Critical Injury", Color(255, 0, 0)},
         [.4] = {"Severe Injury", Color(255, 165, 0)},
@@ -76,7 +79,8 @@ lia.config.DrawEntityShadows = true
         [.9] = {"Minor Injury", Color(255, 255, 0)},
         [1] = {"Healthy", Color(0, 255, 0)},
     }
---------------------------------------------------------------------------------------------------
+
+    --------------------------------------------------------------------------------------------------
     lia.config.DefaultTposingFixer = {
         ["models/police.mdl"] = "metrocop",
         ["models/combine_super_soldier.mdl"] = "overwatch",
@@ -90,33 +94,34 @@ lia.config.DrawEntityShadows = true
         ["models/alyx.mdl"] = "citizen_female",
         ["models/mossman.mdl"] = "citizen_female",
     }
---------------------------------------------------------------------------------------------------
-lia.config.Ranges = {
-    {
-        name = "Whispering",
-        range = 120
-    },
-    {
-        name = "Talking",
-        range = 300
-    },
-    {
-        name = "Yelling",
-        range = 600
+
+    --------------------------------------------------------------------------------------------------
+    lia.config.Ranges = {
+        {
+            name = "Whispering",
+            range = 120
+        },
+        {
+            name = "Talking",
+            range = 300
+        },
+        {
+            name = "Yelling",
+            range = 600
+        }
     }
-}
-lia.config.DisallowedBagForbiddenActions = {
-    ["Equip"] = true,
-    ["EquipUn"] = true,
-}
 
-lia.config.TimeUntilDroppedSWEPRemoved = 30
-lia.config.PlayerSpawnVehicleDelay = 30
-lia.config.CharacterSwitchCooldownTimer = 5
-lia.config.NPCsDropWeapons = true
-lia.config.CarRagdoll = true
-lia.config.CharacterSwitchCooldown = true
-lia.config.FlashlightEnabled = true
-lia.config.FlashlightItemNeeded = false
+    lia.config.DisallowedBagForbiddenActions = {
+        ["Equip"] = true,
+        ["EquipUn"] = true,
+    }
 
+    lia.config.TimeUntilDroppedSWEPRemoved = 30
+    lia.config.PlayerSpawnVehicleDelay = 30
+    lia.config.CharacterSwitchCooldownTimer = 5
+    lia.config.NPCsDropWeapons = true
+    lia.config.CarRagdoll = true
+    lia.config.CharacterSwitchCooldown = true
+    lia.config.FlashlightEnabled = true
+    lia.config.FlashlightItemNeeded = false
 end
