@@ -4,6 +4,7 @@ function GM:EntityNetworkedVarChanged(entity, varName, oldVal, newVal)
         hook.Run("PlayerModelChanged", entity, newVal)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerUse(client, entity)
     if client:getNetVar("restricted") then return false end
@@ -21,17 +22,18 @@ function GM:PlayerUse(client, entity)
 
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:KeyPress(client, key)
-	if lia.config.AntiBunnyHopEnabled then
+    if lia.config.AntiBunnyHopEnabled then
         if key == IN_JUMP and client:IsOnGround() and not client:InVehicle() then
             local current = client:getLocalVar("stamina", 0)
             local value = math.Clamp(current - lia.config.BHOPStamina, 0, 100)
             client:setLocalVar("stamina", value)
         end
     end
-    
-	if key == IN_USE then
+
+    if key == IN_USE then
         local data = {}
         data.start = client:GetShootPos()
         data.endpos = data.start + client:GetAimVector() * 96
@@ -43,16 +45,18 @@ function GM:KeyPress(client, key)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:KeyRelease(client, key)
     if key == IN_RELOAD then
         timer.Remove("liaToggleRaise" .. client:SteamID())
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadedChar(client, character, lastChar)
     local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
-	
+
     lia.db.updateTable({
         _lastJoinTime = timeStamp
     }, nil, "characters", "_id = " .. character:getID())
@@ -92,6 +96,7 @@ function GM:PlayerLoadedChar(client, character, lastChar)
     character:setData("loginTime", loginTime)
     hook.Run("PlayerLoadout", client)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CharacterLoaded(id)
     local character = lia.char.loaded[id]
@@ -112,6 +117,7 @@ function GM:CharacterLoaded(id)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSay(client, message)
     local chatType, message, anonymous = lia.chat.parse(client, message, true)
@@ -121,10 +127,11 @@ function GM:PlayerSay(client, message)
 
     return ""
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerDisconnected(client)
-    
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:InitPostEntity()
     local doors = ents.FindByClass("prop_door_rotating")
@@ -145,11 +152,13 @@ function GM:InitPostEntity()
             end
         end
     end
-	if lia.config.DrawEntityShadows then
+
+    if lia.config.DrawEntityShadows then
         for _, entity in ipairs(ents.GetAll()) do
             entity:DrawShadow(false)
         end
     end
+
     lia.faction.formatModelData()
 
     timer.Simple(2, function()
@@ -161,14 +170,16 @@ function GM:InitPostEntity()
         hook.Run("PostLoadData")
     end)
 
-    if CLIENT then 
+    if CLIENT then
         lia.joinTime = RealTime() - 0.9716
         lia.faction.formatModelData()
-	    if system.IsWindows() and not system.HasFocus() then
+
+        if system.IsWindows() and not system.HasFocus() then
             system.FlashWindow()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:ShutDown()
     if hook.Run("ShouldDataBeSaved") == false then return end
@@ -183,15 +194,17 @@ function GM:ShutDown()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedSchema()
     local persistString = GetConVar("sbox_persist"):GetString()
 
-    if persistString == "" or string.StartWith(persistString, "ns_") then
-        local newValue = "ns_" .. SCHEMA.folder
+    if persistString == "" or string.StartWith(persistString, "lia_") then
+        local newValue = "lia_" .. SCHEMA.folder
         game.ConsoleCommand("sbox_persist " .. newValue .. "\n")
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
     local allowVoice = lia.config.AllowVoice
@@ -201,15 +214,15 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     oldrange = oldrange * oldrange
     if listener:GetPos():DistToSqr(speaker:GetPos()) < oldrange then return true, true end
 
-    return false, false    
     return false, false
-    
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PrePlayerLoadedChar(client, character, lastChar)
     client:SetBodyGroups("000000000")
     client:SetSkin(0)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CharacterPreSave(character)
     local client = character:getPlayer()
@@ -221,6 +234,7 @@ function GM:CharacterPreSave(character)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 local defaultAngleData = {
     ["models/items/car_battery01.mdl"] = Angle(-15, 180, 0),
@@ -245,6 +259,7 @@ function GM:GetPreferredCarryAngles(entity)
         return defaultAngleData[model]
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CreateDefaultInventory(character)
     local charID = character:getID()
@@ -257,6 +272,7 @@ function GM:CreateDefaultInventory(character)
         error("Invalid default inventory type " .. tostring("grid"))
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:LiliaTablesLoaded()
     local ignore = function()
@@ -267,6 +283,7 @@ function GM:LiliaTablesLoaded()
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CreateSalaryTimer(client)
     if lia.config.SalaryOverride then return end
