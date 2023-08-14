@@ -1,3 +1,4 @@
+do
 --------------------------------------------------------------------------------------------------------
 local SCHEMA = SCHEMA
 --------------------------------------------------------------------------------------------------------
@@ -324,7 +325,7 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function playerMeta:loadLiliaData(callback)
-    local name = self:GetName()
+    local name = self:steamName()
     local steamID64 = self:SteamID64()
     local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
 
@@ -344,7 +345,7 @@ function playerMeta:loadLiliaData(callback)
         else
             lia.db.insertTable({
                 _steamID = steamID64,
-                _name = name,
+                _steamName = name,
                 _firstJoin = timeStamp,
                 _lastJoin = timeStamp,
                 _data = {}
@@ -359,12 +360,12 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function playerMeta:saveLiliaData()
-    local name = self:Name()
+    local name = self:steamName()
     local steamID64 = self:SteamID64()
     local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
 
     lia.db.updateTable({
-        _name = name,
+        _steamName = name,
         _lastJoin = timeStamp,
         _data = self.liaData
     }, nil, "players", "_steamID = " .. steamID64)
@@ -436,3 +437,4 @@ function playerMeta:getLiliaData(key, default)
     end
 end
 --------------------------------------------------------------------------------------------------------+
+end

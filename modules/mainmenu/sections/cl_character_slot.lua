@@ -26,7 +26,7 @@ function PANEL:Init()
 	self.faction:SetAlpha(100)
 
 	self.faction.Paint = function(faction, w, h)
-		surface.SetDrawColor(faction:GetBackgroundColor())
+		surface.SetDrawColor(faction:GetBackgroundColor() or Color(255, 255, 255))
 		surface.DrawRect(0, 0, w, h)
 	end
 

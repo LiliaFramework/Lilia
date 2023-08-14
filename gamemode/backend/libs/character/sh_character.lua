@@ -282,7 +282,7 @@ do
 			netstream.Start(nil, "charSet", "faction", character.vars.faction, character:getID())
 			hook.Run("OnCharVarChanged", character, "faction", oldVar, value)
 
-			return true -- Compatability with old version.
+			return true
 		end,
 		onGet = function(character, default)
 			local faction = lia.faction.teams[character.vars.faction]
