@@ -22,7 +22,6 @@ lia.util.include("config/sh_protection.lua")
 lia.util.include("config/sh_toolpermissions.lua")
 --------------------------------------------------------------------------------------------------------
 -- GAMEMODE LIBRARIES \\
-
 lia.util.include("backend/libs/cl_buttons.lua")
 lia.util.include("backend/libs/networking/sh_networking.lua")
 lia.util.include("backend/libs/networking/sv_networking.lua")
@@ -72,6 +71,8 @@ lia.util.include("backend/libs/sh_perfomance.lua")
 lia.util.include("backend/libs/sh_date.lua")
 lia.util.include("backend/libs/sh_module.lua")
 lia.util.include("backend/libs/language/cl_language.lua")
+lia.lang.loadFromDir("languages")
+lia.item.loadFromDir("items")
 --------------------------------------------------------------------------------------------------------
 -- GAMEMODE FUNCTIONS \\
 lia.util.include("backend/core/cl_initialization.lua")
