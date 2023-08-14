@@ -8,6 +8,7 @@ lia.util.include("sh_hooks.lua")
 lia.util.include("sv_commands.lua")
 lia.util.include("cl_commands.lua")
 lia.config.WepAlwaysRaised = true
+
 lia.config.PermaRaisedWeapons = {
     ["weapon_physgun"] = true,
     ["gmod_tool"] = true,

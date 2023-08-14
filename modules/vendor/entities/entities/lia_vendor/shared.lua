@@ -52,7 +52,7 @@ function ENT:getMoney()
 end
 
 function ENT:hasMoney(amount)
-	local moeny = self:getMoney()
+	local money = self:getMoney()
 	-- Vendor not using money system so they can always afford it.
 	if not money then return true end
 

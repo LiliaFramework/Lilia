@@ -1,32 +1,25 @@
 local playerMeta = FindMetaTable("Player")
 
 function playerMeta:isWepRaised()
-    local weapon = self:GetActiveWeapon()
-    local override = hook.Run("ShouldWeaponBeRaised", self, weapon)
-    if override ~= nil then
-        return override
-    end
+	local weapon = self:GetActiveWeapon()
+	local override = hook.Run("ShouldWeaponBeRaised", self, weapon)
+	if override ~= nil then return override end
 
-    if IsValid(weapon) then
-        local weaponClass = weapon:GetClass()
-        if lia.config.PermaRaisedWeapons[weaponClass] or weapon.IsAlwaysRaised or weapon.AlwaysRaised then
-            return true
-        elseif weapon.IsAlwaysLowered or weapon.NeverRaised then
-            return false
-        end
-    end
+	if IsValid(weapon) then
+		local weaponClass = weapon:GetClass()
 
-    if self:getNetVar("restricted") then
-        return false
-    end
+		if lia.config.PermaRaisedWeapons[weaponClass] or weapon.IsAlwaysRaised or weapon.AlwaysRaised then
+			return true
+		elseif weapon.IsAlwaysLowered or weapon.NeverRaised then
+			return false
+		end
+	end
 
-    if lia.config.WepAlwaysRaised then
-        return true
-    end
+	if self:getNetVar("restricted") then return false end
+	if lia.config.WepAlwaysRaised then return true end
 
-    return self:getNetVar("raised", false)
+	return self:getNetVar("raised", false)
 end
-
 
 if SERVER then
 	function playerMeta:setWepRaised(state)

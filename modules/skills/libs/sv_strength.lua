@@ -2,7 +2,6 @@
 function MODULE:EntityTakeDamage(target, dmginfo)
     local attacker = dmginfo:GetAttacker()
     local char = attacker:getChar()
-
     local weapon = attacker:GetActiveWeapon()
     local damage = dmginfo:GetDamage()
     local strbonus = hook.Run("GetStrengthBonusDamage", char)

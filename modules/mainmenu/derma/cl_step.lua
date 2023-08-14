@@ -1,8 +1,6 @@
 -- This file contains the panel that you should inherit from if you are adding
 -- a new step for the character creation process.
-
 local PANEL = {}
-
 PANEL.isCharCreateStep = true
 
 function PANEL:Init()
@@ -29,15 +27,9 @@ end
 -- Runs the character validation given the name of a character variable.
 function PANEL:validateCharVar(name)
 	local charVar = lia.char.vars[name]
-	assert(charVar, "invalid character variable "..tostring(name))
+	assert(charVar, "invalid character variable " .. tostring(name))
+	if isfunction(charVar.onValidate) then return charVar.onValidate(self:getContext(name), self:getContext(), LocalPlayer()) end
 
-	if (isfunction(charVar.onValidate)) then
-		return charVar.onValidate(
-			self:getContext(name),
-			self:getContext(),
-			LocalPlayer()
-		)
-	end
 	return true
 end
 
@@ -62,13 +54,10 @@ end
 -- Returns the set character variable corresponding to key. If it does not
 -- exist, then default (which is nil if not set) is returned.
 function PANEL:getContext(key, default)
-	if (key == nil) then
-		return lia.gui.charCreate.context
-	end
+	if key == nil then return lia.gui.charCreate.context end
 	local value = lia.gui.charCreate.context[key]
-	if (value == nil) then
-		return default
-	end
+	if value == nil then return default end
+
 	return value
 end
 
@@ -99,6 +88,7 @@ function PANEL:addLabel(text)
 	label:SetText(L(text):upper())
 	label:SizeToContents()
 	label:Dock(TOP)
+
 	return label
 end
 

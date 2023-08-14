@@ -22,7 +22,6 @@ end
 -------------------------------------------------------------------------------------------------------------------------~
 function MODULE:HUDPaintBackground()
     local ply = LocalPlayer()
-
     if not ply:getChar() then return end
     if not lia.config.StaminaBlur then return end
     local ply = LocalPlayer()

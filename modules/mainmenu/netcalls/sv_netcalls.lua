@@ -1,5 +1,4 @@
 local MODULE = MODULE
-
 util.AddNetworkString("liaCharChoose")
 util.AddNetworkString("liaCharCreate")
 util.AddNetworkString("liaCharDelete")
@@ -9,28 +8,29 @@ util.AddNetworkString("liaCharMenu")
 net.Receive("liaCharChoose", function(_, client)
 	local function response(message)
 		net.Start("liaCharChoose")
-			net.WriteString(L(message or "", client))
+		net.WriteString(L(message or "", client))
 		net.Send(client)
 	end
 
 	local id = net.ReadUInt(32)
 	local character = lia.char.loaded[id]
-	if (not character or character:getPlayer() ~= client) then
-		return response(false, "invalidChar")
-	end
-
+	if not character or character:getPlayer() ~= client then return response(false, "invalidChar") end
 	local status, result = hook.Run("CanPlayerUseChar", client, character)
-	if (status == false) then
+
+	if status == false then
 		-- Weird old translation stuff that should not exist.
-		if (result[1] == "@") then
+		if result[1] == "@" then
 			result = result:sub(2)
 		end
+
 		return response(result)
 	end
 
 	local currentChar = client:getChar()
-	if (currentChar) then currentChar:save() end
 
+	if currentChar then
+		currentChar:save()
+	end
 
 	hook.Run("PrePlayerLoadedChar", client, character, currentChar)
 	character:setup()
@@ -39,26 +39,27 @@ net.Receive("liaCharChoose", function(_, client)
 end)
 
 net.Receive("liaCharCreate", function(_, client)
-	if (hook.Run("CanPlayerCreateCharacter", client) == false) then return end
+	if hook.Run("CanPlayerCreateCharacter", client) == false then return end
 
 	local function response(id, message, ...)
 		net.Start("liaCharCreate")
-			net.WriteUInt(id or 0, 32)
-			net.WriteString(L(message or "", client, ...))
+		net.WriteUInt(id or 0, 32)
+		net.WriteString(L(message or "", client, ...))
 		net.Send(client)
 	end
 
 	local numValues = net.ReadUInt(32)
 	local data = {}
+
 	for i = 1, numValues do
 		data[net.ReadString()] = net.ReadType()
 	end
-	local originalData = table.Copy(data)
 
+	local originalData = table.Copy(data)
 	local newData = {}
 
 	for key in pairs(data) do
-		if (not lia.char.vars[key]) then
+		if not lia.char.vars[key] then
 			data[key] = nil
 		end
 	end
@@ -67,22 +68,24 @@ net.Receive("liaCharCreate", function(_, client)
 		local value = data[key]
 
 		-- Ignore keys that should not be set.
-		if (not isfunction(charVar.onValidate) and charVar.noDisplay) then
+		if not isfunction(charVar.onValidate) and charVar.noDisplay then
 			data[key] = nil
 			continue
 		end
 
 		-- Allow for the value to be validated.
-		if (isfunction(charVar.onValidate)) then
+		if isfunction(charVar.onValidate) then
 			local result = {charVar.onValidate(value, data, client)}
-			if (result[1] == false) then
+
+			if result[1] == false then
 				result[2] = result[2] or "Validation error"
+
 				return response(nil, unpack(result, 2))
 			end
 		end
 
 		-- Then allow for adjustments to the validated value to be made.
-		if (isfunction(charVar.onAdjust)) then
+		if isfunction(charVar.onAdjust) then
 			charVar.onAdjust(client, data, value, newData)
 		end
 	end
@@ -94,7 +97,7 @@ net.Receive("liaCharCreate", function(_, client)
 
 	-- After all the validation, create the character.
 	lia.char.create(data, function(id)
-		if (IsValid(client)) then
+		if IsValid(client) then
 			lia.char.loaded[id]:sync(client)
 			table.insert(client.liaCharList, id)
 			MODULE:SyncCharList(client)
@@ -109,9 +112,8 @@ net.Receive("liaCharDelete", function(_, client)
 	local character = lia.char.loaded[id]
 	local steamID = client:SteamID64()
 
-	if (character and character.steamID == steamID) then
+	if character and character.steamID == steamID then
 		hook.Run("liaCharDeleted", client, character)
-			
 		character:delete()
 
 		timer.Simple(.5, function()
