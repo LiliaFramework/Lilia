@@ -157,5 +157,4 @@ lia.util.include("commands/cl_roleplay.lua")
 lia.util.include("commands/sv_character.lua")
 lia.util.include("commands/sv_management.lua")
 lia.util.include("commands/sv_roleplay.lua")
-lia.util.include("commands/sh_custom.lua")
 --------------------------------------------------------------------------------------------------------

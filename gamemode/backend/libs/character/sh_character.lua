@@ -1,4 +1,6 @@
 --------------------------------------------------------------------------------------------------------
+lia.config.AllowExistNames = true
+--------------------------------------------------------------------------------------------------------
 local charMeta = lia.meta.character or {}
 --------------------------------------------------------------------------------------------------------
 lia.char = lia.char or {}
@@ -89,7 +91,7 @@ end
 do
     lia.char.registerVar(
         "name",
-        {
+        { lia.config.AllowExistNames = true
             field = "_name",
             default = "John Doe",
             index = 1,
@@ -97,7 +99,7 @@ do
                 local name, override = hook.Run("GetDefaultCharName", client, data.faction, data)
                 if isstring(name) and override then return true end
                 if not isstring(value) or not value:find("%S") then return false, "invalid", "name" end
-                local allowExistNames = lia.config.get("allowExistNames", true)
+                local allowExistNames = lia.config.AllowExistNames
                 -- Fetch existing character names
                 if CLIENT and #lia.char.names < 1 and not allowExistNames then
                     netstream.Start("liaCharFetchNames")
@@ -105,7 +107,7 @@ do
                 end
 
                 -- Check whether the chosen character name already exists
-                if not lia.config.get("allowExistNames", true) then
+                if not lia.config.AllowExistNames then
                     for k, v in pairs(lia.char.names) do
                         if v == value then return false, "A character with this name already exists." end
                     end
@@ -143,7 +145,7 @@ do
             index = 2,
             onValidate = function(value, data)
                 if noDesc then return true end
-                local minLength = lia.config.get("minDescLen", 16)
+                local minLength = lia.config.MinDescLen
                 if not value or #value:gsub("%s", "") < minLength then return false, "descMinLen", minLength end
             end
         }
@@ -182,7 +184,7 @@ do
                         icon.DoClick = function(this) panel.payload.model = k end
                         icon.PaintOver = function(this, w, h)
                             if panel.payload.model == k then
-                                local color = lia.config.get("color", color_white)
+                                local color = lia.config.Color
                                 surface.SetDrawColor(color.r, color.g, color.b, 200)
                                 for i = 1, 3 do
                                     local i2 = i * 2

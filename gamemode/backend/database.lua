@@ -725,15 +725,13 @@ concommand.Add("lia_recreatedb", function(client)
 end)
 
 --------------------------------------------------------------------------------------------------------
-timer.Simple(5, function()
-	if #lia.char.names < 1 then
-		lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
-			if data and #data > 0 then
-				for k, v in pairs(data) do
-					lia.char.names[v._id] = v._name
-				end
-			end
-		end)
-	end
-end)
+if (#lia.char.names < 1) then
+    lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
+        if (#data > 0) then
+            for k, v in pairs(data) do
+                lia.char.names[v._id] = v._name
+            end
+        end
+    end)
+end
 --------------------------------------------------------------------------------------------------------

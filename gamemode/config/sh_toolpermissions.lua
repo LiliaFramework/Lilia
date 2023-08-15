@@ -1,4 +1,4 @@
-function lia.config.load_toolpermissions()
+function lia.config.LoadToolPermissions()
     lia.config.CustomToolAccess = true
 
     lia.config.BlockedProperties = {"persist", "bonemanipulate", "drive"}

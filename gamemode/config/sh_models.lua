@@ -1,4 +1,4 @@
-function lia.config.load_tposingmodels()
+function lia.config.LoadModels()
     lia.config.PlayerModelTposingFixer = {
         ["path/to/model.mdl"] = "player",
         ["path/to/model.mdl"] = "player",
