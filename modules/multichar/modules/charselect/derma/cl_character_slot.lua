@@ -12,7 +12,7 @@ function PANEL:confirmDelete()
 	vgui.Create("liaCharacterConfirm")
 		:setMessage(L("Deleting a character cannot be undone."))
 		:onConfirm(function()
-			liaMultiChar:deleteCharacter(id)
+			MainMenu:deleteCharacter(id)
 		end)
 end
 

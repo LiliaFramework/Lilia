@@ -16,7 +16,8 @@ include("shared.lua")
 include("config.lua")
 include("includer.lua")
 include("data.lua")
-include("backend/database.lua")
+include("database.lua")
+include("loader.lua")
 timer.Simple(
     0,
     function()
@@ -32,8 +33,6 @@ timer.Simple(
     end
 )
 
---------------------------------------------------------------------------------------------------------
-include("loader.lua")
 --------------------------------------------------------------------------------------------------------
 resource.AddWorkshop("2959728255")
 --------------------------------------------------------------------------------------------------------

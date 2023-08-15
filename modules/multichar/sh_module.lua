@@ -1,7 +1,8 @@
 MODULE.name = "Multiple Characters"
 MODULE.author = "Leonheart#7476/Cheesenot"
 MODULE.desc = "Allows players to have multiple characters."
-liaMultiChar = MODULE
+MainMenu = MODULE
+
 if SERVER then
     function MODULE:syncCharList(client)
         if not client.liaCharList then return end
@@ -16,7 +17,7 @@ if SERVER then
 
     function MODULE:CanPlayerCreateCharacter(client)
         local count = #client.liaCharList
-        local maxChars = hook.Run("GetMaxPlayerCharacter", client) or lia.config.get("maxChars", 5)
+        local maxChars = hook.Run("GetMaxPlayerCharacter", client) or lia.config.MaxCharacters
         if count >= maxChars then return false end
     end
 else
@@ -103,3 +104,4 @@ end
 lia.util.include("sv_hooks.lua")
 lia.util.include("cl_networking.lua")
 lia.util.include("sv_networking.lua")
+lia.util.include("sh_config.lua")

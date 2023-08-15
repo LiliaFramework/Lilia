@@ -576,20 +576,11 @@ netstream.Hook(
         menu:Center()
     end
 )
-
---------------------------------------------------------------------------------------------------------
-if #lia.char.names < 1 then netstream.Start("liaCharFetchNames") end
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("liaCharFetchNames", function(data) lia.char.names = data end)
 --------------------------------------------------------------------------------------------------------
-timer.Simple(
-    1.5,
-    function()
-        if lia.db then
-            if #lia.char.names < 1 then netstream.Start("liaCharFetchNames") end
-        else
-            print("W")
-        end
-    end
-)
---------------------------------------------------------------------------------------------------------
+if lia.db then
+    if #lia.char.names < 1 then netstream.Start("liaCharFetchNames") end
+else
+    print("lmao")
+end

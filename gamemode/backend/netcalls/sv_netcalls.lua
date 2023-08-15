@@ -103,15 +103,6 @@ netstream.Hook(
 
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaTypeStatus", function(_, client) client:setNetVar("typing", net.ReadBool()) end)
---------------------------------------------------------------------------------------------------------
-hook.Add(
-    "OnCharCreated",
-    "liaCharAddName",
-    function(client, character, data)
-        lia.char.names[character:getID()] = data.name
-        netstream.Start(client, "liaCharFetchNames", lia.char.names)
-    end
-)
 
 --------------------------------------------------------------------------------------------------------
 timer.Simple(
