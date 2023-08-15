@@ -1,4 +1,8 @@
+local MODULE = MODULE
+
 lia.command.add("viewBodygroups", {
+    adminOnly = true,
+    privilege = "Bodygrouper - View Menu",
     syntax = "[string name]",
     onCheckAccess = function(client)
         return MODULE:CanChangeBodygroup(client)

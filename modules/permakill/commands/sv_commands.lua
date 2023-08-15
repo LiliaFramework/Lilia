@@ -1,4 +1,5 @@
 lia.command.add("pktoggle", {
+    privilege = "Characters - Toogle Permakill",
     syntax = "<string target>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])

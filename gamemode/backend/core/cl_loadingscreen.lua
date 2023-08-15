@@ -42,6 +42,7 @@ function GM:CreateLoadingScreen()
 
     lia.gui.loading = loader
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:ShouldCreateLoadingScreen()
     return false

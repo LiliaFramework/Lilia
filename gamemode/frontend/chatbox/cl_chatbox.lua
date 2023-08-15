@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	local border = 32
@@ -91,6 +92,7 @@ function PANEL:Init()
 		end
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
 	if self.active then
@@ -101,6 +103,7 @@ function PANEL:Paint(w, h)
 		surface.DrawOutlinedRect(0, 0, w, h)
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setActive(state)
 	self.active = state
@@ -109,6 +112,7 @@ function PANEL:setActive(state)
 		self.entry = self:Add("EditablePanel")
 		self.entry:SetPos(self.x + 4, self.y + self:GetTall() - 32)
 		self.entry:SetWide(self:GetWide() - 8)
+
 		self.entry.OnRemove = function()
 			hook.Run("FinishChat")
 		end
@@ -164,6 +168,7 @@ function PANEL:setActive(state)
 		hook.Run("StartChat")
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 local function OnDrawText(text, font, x, y, color, alignX, alignY, alpha)
 	alpha = alpha or 255
@@ -176,6 +181,7 @@ local function OnDrawText(text, font, x, y, color, alignX, alignY, alpha)
 	surface.SetFont(font)
 	surface.DrawText(text)
 end
+
 --------------------------------------------------------------------------------------------------------
 local function PaintFilterButton(this, w, h)
 	if this.active then
@@ -189,6 +195,7 @@ local function PaintFilterButton(this, w, h)
 	surface.SetDrawColor(0, 0, 0, 200)
 	surface.DrawOutlinedRect(0, 0, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:addFilterButton(filter)
 	local name = L(filter)
@@ -229,6 +236,7 @@ function PANEL:addFilterButton(filter)
 		tab.active = true
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:addText(...)
 	local text = "<font=liaChatFont>"
@@ -289,6 +297,7 @@ function PANEL:addText(...)
 
 	return panel:IsVisible()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setFilter(filter, state)
 	if state then
@@ -322,6 +331,7 @@ function PANEL:setFilter(filter, state)
 		self.scroll:ScrollToChild(lastChild)
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Think()
 	if gui.IsGameUIVisible() and self.active then
@@ -333,6 +343,7 @@ function PANEL:Think()
 		end
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaChatBox", PANEL, "DPanel")
 --------------------------------------------------------------------------------------------------------

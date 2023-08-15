@@ -441,15 +441,20 @@ function player_manager.TranslateToPlayerModelName(model)
     return result
 end
 
-timer.Simple(2, function()
-    --------------------------------------------------------------------------------------------------------
-    for model, animtype in pairs(lia.anim.DefaultTposingFixer) do
-        lia.anim.setModelClass(model, animtype)
-    end
+lia.config.DefaultTposingFixer = {
+    ["models/police.mdl"] = "metrocop",
+    ["models/combine_super_soldier.mdl"] = "overwatch",
+    ["models/combine_soldier_prisonGuard.mdl"] = "overwatch",
+    ["models/combine_soldier.mdl"] = "overwatch",
+    ["models/vortigaunt.mdl"] = "vort",
+    ["models/vortigaunt_blue.mdl"] = "vort",
+    ["models/vortigaunt_doctor.mdl"] = "vort",
+    ["models/vortigaunt_slave.mdl"] = "vort",
+    ["models/vortigaunt_slave.mdl"] = "vort",
+    ["models/alyx.mdl"] = "citizen_female",
+    ["models/mossman.mdl"] = "citizen_female",
+}
 
-    --------------------------------------------------------------------------------------------------------
-    for model, animtype in pairs(lia.config.PlayerModelTposingFixer) do
-        lia.anim.setModelClass(model, animtype)
-    end
-end)
---------------------------------------------------------------------------------------------------------
+for model, animtype in pairs(lia.anim.DefaultTposingFixer) do
+    lia.anim.setModelClass(model, animtype)
+end

@@ -43,6 +43,7 @@ function GM:PlayerSpawnedVehicle(ply, ent)
         ply.NextVehicleSpawn = SysTime() + timer
     end
 end
+
 function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
     if not physObj:IsMoveable() then return false end
     if entity:GetUnFreezable() then return false end
@@ -92,6 +93,7 @@ function GM:PlayerDisconnected(client)
     end
 
     lia.char.cleanUpForPlayer(client)
+
     for _, entity in pairs(ents.GetAll()) do
         if entity:GetCreator() == client then
             entity:Remove()

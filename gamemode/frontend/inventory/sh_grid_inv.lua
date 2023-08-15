@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local GridInv = lia.Inventory:extend("GridInv")
+
 --------------------------------------------------------------------------------------------------------
 local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
     if inventory.virtual then return action == "transfer" end
@@ -7,6 +8,7 @@ local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
     local client = context.client
     if table.HasValue(client.liaCharList or {}, ownerID) then return true end
 end
+
 --------------------------------------------------------------------------------------------------------
 local function CanNotAddItemIfNoSpace(inventory, action, context)
     if action ~= "add" then return end
@@ -23,18 +25,22 @@ local function CanNotAddItemIfNoSpace(inventory, action, context)
 
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function GridInv:getWidth()
     return self:getData("w", lia.config.invW)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GridInv:getHeight()
     return self:getData("h", lia.config.invH)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GridInv:getSize()
     return self:getWidth(), self:getHeight()
 end
+
 --------------------------------------------------------------------------------------------------------
 function GridInv:canItemFitInInventory(item, x, y)
     local invW, invH = self:getSize()
@@ -42,6 +48,7 @@ function GridInv:canItemFitInInventory(item, x, y)
 
     return x >= 1 and y >= 1 and (x + itemW) <= invW and (y + itemH) <= invH
 end
+
 --------------------------------------------------------------------------------------------------------
 function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
     local testX2, testY2 = x + (testItem.width or 1), y + (testItem.height or 1)
@@ -53,6 +60,7 @@ function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
 
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function GridInv:doesItemFitAtPos(testItem, x, y)
     if not self:canItemFitInInventory(testItem, x, y) then return false end
@@ -71,6 +79,7 @@ function GridInv:doesItemFitAtPos(testItem, x, y)
 
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function GridInv:findFreePosition(item)
     local width, height = self:getSize()
@@ -81,6 +90,7 @@ function GridInv:findFreePosition(item)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GridInv:configure()
     if SERVER then
@@ -88,6 +98,7 @@ function GridInv:configure()
         self:addAccessRule(CanAccessInventoryIfCharacterIsOwner)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GridInv:getItems(noRecurse)
     local items = self.items
@@ -104,13 +115,15 @@ function GridInv:getItems(noRecurse)
 
     return allItems
 end
+
 --------------------------------------------------------------------------------------------------------
-    if SERVER then
+if SERVER then
     function GridInv:setSize(w, h)
         self:setData("w", w)
-        self:setData("h", h)    
+        self:setData("h", h)
     end
---------------------------------------------------------------------------------------------------------
+
+    --------------------------------------------------------------------------------------------------------
     function GridInv:setOwner(owner, fullUpdate)
         if type(owner) == "Player" and owner:getChar() then
             owner = owner:getChar():getID()
@@ -133,7 +146,8 @@ end
 
         self.owner = owner
     end
---------------------------------------------------------------------------------------------------------
+
+    --------------------------------------------------------------------------------------------------------
     function GridInv:add(itemTypeOrItem, xOrQuantity, yOrData)
         local x, y, quantity, data
         local isStackCommand = isstring(itemTypeOrItem) and isnumber(xOrQuantity)
@@ -308,7 +322,8 @@ end
 
         return d
     end
---------------------------------------------------------------------------------------------------------
+
+    --------------------------------------------------------------------------------------------------------
     function GridInv:remove(itemTypeOrID, quantity)
         quantity = quantity or 1
         assert(isnumber(quantity), "quantity must be a number")
@@ -329,9 +344,9 @@ end
 
         return d
     end
---------------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------------
 else
---------------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------------
     function GridInv:requestTransfer(itemID, destinationID, x, y)
         local inventory = lia.inventory.instances[destinationID]
         if not inventory then return end
@@ -349,8 +364,9 @@ else
         net.WriteType(destinationID)
         net.SendToServer()
     end
---------------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------------
 end
+
 --------------------------------------------------------------------------------------------------------
 GridInv:register("grid")
 --------------------------------------------------------------------------------------------------------

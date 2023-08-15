@@ -18,6 +18,7 @@ util.AddNetworkString("worlditem_cleanup_inbound_final")
 util.AddNetworkString("map_cleanup_inbound")
 util.AddNetworkString("map_cleanup_inbound_final")
 util.AddNetworkString("VoiceMenu")
+
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaStringReq", function(_, client)
     local id = net.ReadUInt(32)
@@ -28,6 +29,7 @@ net.Receive("liaStringReq", function(_, client)
         client.liaStrReqs[id] = nil
     end
 end)
+
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaTransferItem", function(_, client)
     local itemID = net.ReadUInt(32)
@@ -36,6 +38,7 @@ net.Receive("liaTransferItem", function(_, client)
     local invID = net.ReadType()
     hook.Run("HandleItemTransferRequest", client, itemID, x, y, invID)
 end)
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("invAct", function(client, action, item, invID, data)
     local character = client:getChar()
@@ -65,10 +68,12 @@ netstream.Hook("invAct", function(client, action, item, invID, data)
     if inventory and not inventory:canAccess("item", context) then return end
     item:interact(action, client, entity, data)
 end)
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("liaCharFetchNames", function(client)
     netstream.Start(client, "liaCharFetchNames", lia.char.names)
 end)
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("cmd", function(client, command, arguments)
     if (client.liaNextCmd or 0) < CurTime() then
@@ -84,6 +89,7 @@ netstream.Hook("cmd", function(client, command, arguments)
         client.liaNextCmd = CurTime() + 0.2
     end
 end)
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("ChangeMode", function(client, mode)
     client:setNetVar("voiceRange", mode)
@@ -92,6 +98,7 @@ netstream.Hook("ChangeMode", function(client, mode)
         client:setNetVar("voiceRange", 2)
     end
 end)
+
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaTypeStatus", function(_, client)
     client:setNetVar("typing", net.ReadBool())

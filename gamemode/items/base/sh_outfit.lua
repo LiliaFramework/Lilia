@@ -9,6 +9,7 @@ ITEM.outfitCategory = "model"
 ITEM.pacData = {}
 ITEM.isOutfit = true
 ITEM.RequiredSkillLevels = nil
+
 --------------------------------------------------------------------------------------------------------
 --[[
 -- This will change a player's skin after changing the model.
@@ -56,6 +57,7 @@ else
         bodygroups = {}
     }
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:removeOutfit(client)
     local character = client:getChar()
@@ -102,6 +104,7 @@ function ITEM:removeOutfit(client)
 
     self:call("onTakeOff", client)
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:wearOutfit(client, isForLoadout)
     if isnumber(self.armor) then
@@ -114,12 +117,14 @@ function ITEM:wearOutfit(client, isForLoadout)
 
     self:call("onWear", client, nil, isForLoadout)
 end
+
 --------------------------------------------------------------------------------------------------------
 ITEM:hook("drop", function(item)
     if item:getData("equip") then
         item:removeOutfit(item.player)
     end
 end)
+
 --------------------------------------------------------------------------------------------------------
 ITEM.functions.EquipUn = {
     name = "Unequip",
@@ -134,6 +139,7 @@ ITEM.functions.EquipUn = {
         return not IsValid(item.entity) and item:getData("equip") == true
     end
 }
+
 --------------------------------------------------------------------------------------------------------
 ITEM.functions.Equip = {
     name = "Equip",
@@ -222,27 +228,32 @@ ITEM.functions.Equip = {
         return not IsValid(item.entity) and item:getData("equip") ~= true
     end
 }
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onCanBeTransfered(oldInventory, newInventory)
     if newInventory and self:getData("equip") then return false end
 
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onLoadout()
     if self:getData("equip") then
         self:wearOutfit(self.player, true)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onRemoved()
     if (IsValid(receiver) and receiver:IsPlayer()) and self:getData("equip") then
         self:removeOutfit(receiver)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onWear(isFirstTime)
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onTakeOff()
 end

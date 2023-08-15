@@ -4,10 +4,13 @@ ITEM.desc = "A bag to hold more items."
 ITEM.model = "models/props_c17/suitcase001a.mdl"
 ITEM.category = "Storage"
 ITEM.isBag = true
+
 ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
+
 ITEM.invWidth = 2
 ITEM.invHeight = 2
 ITEM.RequiredSkillLevels = nil
+
 --------------------------------------------------------------------------------------------------------
 ITEM.functions.View = {
     icon = "icon16/briefcase.png",
@@ -40,6 +43,7 @@ ITEM.functions.View = {
         return not IsValid(item.entity) and item:getInv()
     end
 }
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onInstanced()
     local data = {
@@ -55,6 +59,7 @@ function ITEM:onInstanced()
         self:resolveInvAwaiters(inventory)
     end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onRestored()
     local invID = self:getData("id")
@@ -66,6 +71,7 @@ function ITEM:onRestored()
         end)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onRemoved()
     local invID = self:getData("id")
@@ -74,10 +80,12 @@ function ITEM:onRemoved()
         lia.inventory.deleteByID(invID)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:getInv()
     return lia.inventory.instances[self:getData("id")]
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onSync(recipient)
     local inventory = self:getInv()
@@ -86,6 +94,7 @@ function ITEM:onSync(recipient)
         inventory:sync(recipient)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM.postHooks:drop()
     local invID = self:getData("id")
@@ -96,6 +105,7 @@ function ITEM.postHooks:drop()
         net.Send(self.player)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onCombine(other)
     local client = self.player
@@ -110,6 +120,7 @@ function ITEM:onCombine(other)
         client:EmitSound(unpack(self.BagSound))
     end)
 end
+
 --------------------------------------------------------------------------------------------------------
 if SERVER then
     function ITEM:onDisposed()

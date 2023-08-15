@@ -1,19 +1,23 @@
-lia.command.add("WhitelistAdd", {
+lia.command.add("whitelistadd", {
+    privilege = "Management - Whitelist Change",
     superAdminOnly = true,
     onRun = function(client, arguments) end
 })
 
-lia.command.add("WhitelistRemove", {
+lia.command.add("whitelistremove", {
+    privilege = "Management - Whitelist Change",
     superAdminOnly = true,
     onRun = function(client, arguments) end
 })
 
-lia.command.add("WhitelistClear", {
+lia.command.add("whitelistclear", {
+    privilege = "Management - Whitelist Change",
     superAdminOnly = true,
     onRun = function() end
 })
 
-lia.command.add("WhitelistAddAll", {
+lia.command.add("whitelistaddall", {
+    privilege = "Management - Whitelist Change",
     superAdminOnly = true,
     onRun = function() end
 })

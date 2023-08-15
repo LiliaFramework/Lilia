@@ -66,6 +66,7 @@ function lia.item.instance(index, uniqueID, itemData, x, y, callback)
 
 	return d
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.item.deleteByID(id)
 	if lia.item.instances[id] then
@@ -74,6 +75,7 @@ function lia.item.deleteByID(id)
 		lia.db.delete("items", "_itemID = " .. id)
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.item.loadItemByID(itemIndex, recipientFilter)
 	local range
@@ -107,6 +109,7 @@ function lia.item.loadItemByID(itemIndex, recipientFilter)
 		end
 	end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.item.spawn(uniqueID, position, callback, angles, data)
 	local d

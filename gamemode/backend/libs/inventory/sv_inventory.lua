@@ -1,9 +1,13 @@
 --------------------------------------------------------------------------------------------------------
 local INV_FIELDS = {"_invID", "_invType", "_charID"}
+
 local INV_TABLE = "inventories"
+
 local DATA_FIELDS = {"_key", "_value"}
+
 local DATA_TABLE = "invdata"
 local ITEMS_TABLE = "items"
+
 --------------------------------------------------------------------------------------------------------
 function lia.inventory.loadByID(id, noCache)
 	local instance = lia.inventory.instances[invID]
@@ -29,6 +33,7 @@ function lia.inventory.loadByID(id, noCache)
 
 	return lia.inventory.loadFromDefaultStorage(id, noCache)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.inventory.loadFromDefaultStorage(id, noCache)
 	return deferred.all({lia.db.select(INV_FIELDS, INV_TABLE, "_invID = " .. id, 1), lia.db.select(DATA_FIELDS, DATA_TABLE, "_invID = " .. id)}):next(function(res)
@@ -66,6 +71,7 @@ function lia.inventory.loadFromDefaultStorage(id, noCache)
 		print(err)
 	end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.inventory.instance(typeID, initialData)
 	local invType = lia.inventory.types[typeID]
@@ -83,6 +89,7 @@ function lia.inventory.instance(typeID, initialData)
 		return instance
 	end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.inventory.loadAllFromCharID(charID)
 	assert(isnumber(charID), "charID must be a number")
@@ -93,6 +100,7 @@ function lia.inventory.loadAllFromCharID(charID)
 		end)
 	end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.inventory.deleteByID(id)
 	lia.db.delete(DATA_TABLE, "_invID = " .. id)
@@ -104,6 +112,7 @@ function lia.inventory.deleteByID(id)
 		instance:destroy()
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.inventory.cleanUpForCharacter(character)
 	for _, inventory in pairs(character:getInv(true)) do

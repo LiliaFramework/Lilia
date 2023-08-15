@@ -2,6 +2,8 @@ local MODULE = MODULE
 
 -- Strength Command
 lia.command.add("rollstrength", {
+    adminOnly = false,
+    privilege = "Basic User Permissions",
     syntax = "[number maximum]",
     onRun = function(client, arguments)
         local character = client:getChar()
@@ -14,6 +16,8 @@ lia.command.add("rollstrength", {
 
 -- Endurance Command
 lia.command.add("rollendurance", {
+    adminOnly = false,
+    privilege = "Basic User Permissions",
     syntax = "[number maximum]",
     onRun = function(client, arguments)
         local character = client:getChar()

@@ -1,6 +1,7 @@
 --------------------------------------------------------------------------------------------------------
 local LAST_WIDTH = ScrW()
 local LAST_HEIGHT = ScrH()
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
     color = color or color_white
@@ -14,6 +15,7 @@ function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
         yalign = alignY or 0
     }, 1, alpha or (color.a * 0.575))
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.wrapText(text, width, font)
     font = font or "liaChatFont"
@@ -51,14 +53,17 @@ function lia.util.wrapText(text, width, font)
 
     return lines, maxW
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.notify(message)
     chat.AddText(message)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.notifyLocalized(message, ...)
     lia.util.notify(L(message, ...))
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.drawBlur(panel, amount, passes)
     amount = amount or 5
@@ -79,6 +84,7 @@ function lia.util.drawBlur(panel, amount, passes)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.drawBlurAt(x, y, w, h, amount, passes)
     amount = amount or 5
@@ -101,6 +107,7 @@ function lia.util.drawBlurAt(x, y, w, h, amount, passes)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 timer.Create("liaResolutionMonitor", 1, 0, function()
     local scrW, scrH = ScrW(), ScrH()

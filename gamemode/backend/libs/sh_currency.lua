@@ -6,16 +6,19 @@ lia.currency.symbol = lia.currency.symbol or lia.currency.DefaultCurrencySymbol
 lia.currency.SingularDefaultCurrency = "Dollar"
 lia.currency.PluralDefaultCurrency = "Dollars"
 lia.currency.DefaultCurrencySymbol = "$"
+
 --------------------------------------------------------------------------------------------------------
 function lia.currency.set(symbol, singular, plural)
 	lia.currency.symbol = symbol
 	lia.currency.singular = singular
 	lia.currency.plural = plural
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.currency.get(amount)
 	return lia.currency.symbol .. (amount == 1 and ("1 " .. lia.currency.singular) or (amount .. " " .. lia.currency.plural))
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.currency.spawn(pos, amount, angle)
 	if not pos then

@@ -11,6 +11,7 @@ net.Receive("liaNotifyL", function()
 
     lia.util.notifyLocalized(message, unpack(args))
 end)
+
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaStringReq", function()
     local id = net.ReadUInt(32)
@@ -539,7 +540,6 @@ netstream.Hook("classUpdate", function(joinedClient)
 end)
 
 -------------------------------------------------------------------------------------------------------------------------
-
 netstream.Hook("removeF1", function()
     if IsValid(lia.gui.menu) then
         lia.gui.menu:remove()
@@ -549,6 +549,7 @@ end)
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("VoiceMenu", function(client)
     local menu = DermaMenu()
+
     menu:AddOption("Change voice mode to Whispering range.", function()
         netstream.Start("ChangeMode", 1)
         client:notify("You have changed your voice mode to Whispering!")
@@ -568,6 +569,7 @@ netstream.Hook("VoiceMenu", function(client)
     menu:MakePopup()
     menu:Center()
 end)
+
 --------------------------------------------------------------------------------------------------------
 if #lia.char.names < 1 then
     netstream.Start("liaCharFetchNames")

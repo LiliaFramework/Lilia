@@ -1,6 +1,8 @@
 lia.config.Notify = {"garrysmod/content_downloaded.wav", 50, 250}
+
 --------------------------------------------------------------------------------------------------------
 lia.notices = lia.notices or {}
+
 --------------------------------------------------------------------------------------------------------
 local function OrganizeNotices()
 	local scrW = ScrW()
@@ -9,6 +11,7 @@ local function OrganizeNotices()
 		v:MoveTo(scrW - (v:GetWide() + 4), (k - 1) * (v:GetTall() + 4) + 4, 0.15, (k / #lia.notices) * 0.25)
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.notify(message)
 	local notice = vgui.Create("liaNotice")

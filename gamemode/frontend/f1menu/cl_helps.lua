@@ -7,27 +7,24 @@ hook.Add("BuildHelpMenu", "liaBasicHelp", function(tabs)
 
         for k, v in SortedPairs(lia.command.list) do
             local allowed = false
+            if v.adminOnly and not LocalPlayer():IsAdmin() or v.superAdminOnly and not LocalPlayer():IsSuperAdmin() then continue end
 
-            if (v.adminOnly and not LocalPlayer():IsAdmin() or v.superAdminOnly and not LocalPlayer():IsSuperAdmin()) then
-                continue
-            end
-
-            if (v.group) then
-                if (istable(v.group)) then
+            if v.group then
+                if istable(v.group) then
                     for _, v1 in pairs(v.group) do
-                        if (LocalPlayer():IsUserGroup(v1)) then
+                        if LocalPlayer():IsUserGroup(v1) then
                             allowed = true
                             break
                         end
                     end
-                elseif (LocalPlayer():IsUserGroup(v.group)) then
+                elseif LocalPlayer():IsUserGroup(v.group) then
                     return true
                 end
             else
                 allowed = true
             end
 
-            if (allowed) then
+            if allowed then
                 body = body .. "<h2>/" .. k .. "</h2><strong>Syntax:</strong> <em>" .. v.syntax .. "</em><br /><br />"
             end
         end
@@ -41,7 +38,7 @@ hook.Add("BuildHelpMenu", "liaBasicHelp", function(tabs)
         for k, v in SortedPairs(lia.flag.list) do
             local icon
 
-            if (LocalPlayer():getChar():hasFlags(k)) then
+            if LocalPlayer():getChar():hasFlags(k) then
                 icon = [[<img src="asset:/garrysmod/materials/icon16/tick.png" />]]
             else
                 icon = [[<img src="asset:/garrysmod/materials/icon16/cross.png" />]]
@@ -71,7 +68,7 @@ hook.Add("BuildHelpMenu", "liaBasicHelp", function(tabs)
                     <b>%s</b>: %s
             ]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", L"author", lia.module.namecache[v.author] or v.author)
 
-            if (v.version) then
+            if v.version then
                 body = body .. "<br /><b>" .. L"version" .. "</b>: " .. v.version
             end
 

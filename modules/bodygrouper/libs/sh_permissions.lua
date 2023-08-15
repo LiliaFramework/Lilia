@@ -1,10 +1,3 @@
-if CAMI then
-    CAMI.RegisterPrivilege({
-        Name = "Bodygrouper - View Menu",
-        MinAccess = "admin"
-    })
-end
-
 function MODULE:CanChangeBodygroup(client)
     if CAMI then
         return CAMI.PlayerHasAccess(client, "Bodygrouper - View Menu", nil)

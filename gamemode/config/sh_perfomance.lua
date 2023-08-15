@@ -3,9 +3,9 @@ lia.config.tblPlayers = lia.config.tblPlayers or {}
 function lia.config.load_perfomance()
     lia.config.intSpawnDelay = 8
     lia.config.intUpdateDistance = 5500
-    lia.config.intUpdateRate = 1 
+    lia.config.intUpdateRate = 1
     lia.config.intUpdateAmount = 512
-    
+
     lia.config.tblAlwaysSend = {
         ["player"] = true,
         ["func_lod"] = true,

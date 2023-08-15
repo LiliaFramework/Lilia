@@ -1,36 +1,35 @@
 --------------------------------------------------------------------------------------------------------
 lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
+
 --------------------------------------------------------------------------------------------------------
 function lia.command.add(command, data)
 	data.syntax = data.syntax or "[none]"
 	if not data.onRun then return ErrorNoHalt("Command '" .. command .. "' does not have a callback, not adding!\n") end
-	
-	
+
 	if not data.onCheckAccess then
-        if data.group then
-            ErrorNoHalt("Command '" .. data.name .. "' tried to use the deprecated field 'group'!\n")
-            return
-        end
+		if data.group then
+			ErrorNoHalt("Command '" .. data.name .. "' tried to use the deprecated field 'group'!\n")
 
-        local privilege = "Lilia - " .. (isstring(data.privilege) and data.privilege or data.name)
-		
-        if not CAMI.GetPrivilege(privilege) then
-            CAMI.RegisterPrivilege(
-                {
-                    Name = privilege,
-                    MinAccess = data.superAdminOnly and "superadmin" or (data.adminOnly and "admin" or "user"),
-                    Description = data.description
-                }
-            )
-        end
+			return
+		end
 
-        function data:onCheckAccess(client)
-            local bHasAccess, _ = CAMI.PlayerHasAccess(client, privilege, nil)
-            return bHasAccess
-        end
-    end
+		local privilege = "Lilia - " .. (isstring(data.privilege) and data.privilege or command)
 
+		if not CAMI.GetPrivilege(privilege) then
+			CAMI.RegisterPrivilege({
+				Name = privilege,
+				MinAccess = data.superAdminOnly and "superadmin" or (data.adminOnly and "admin" or "user"),
+				Description = data.description
+			})
+		end
+
+		function data:onCheckAccess(client)
+			local bHasAccess, _ = CAMI.PlayerHasAccess(client, privilege, nil)
+
+			return bHasAccess
+		end
+	end
 
 	local alias = data.alias
 
@@ -51,6 +50,7 @@ function lia.command.add(command, data)
 		lia.command.list[command:lower()] = data
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.command.hasAccess(client, command)
 	command = lia.command.list[command:lower()]
@@ -65,6 +65,7 @@ function lia.command.hasAccess(client, command)
 
 	return hook.Run("CanPlayerUseCommand", client, command) or false
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.command.extractArgs(text)
 	local skip = 0
@@ -99,13 +100,5 @@ function lia.command.extractArgs(text)
 	end
 
 	return arguments
-end
---------------------------------------------------------------------------------------------------------
-for k,v in pairs(lia.config.urls) do
-	lia.command.add(k, {
-		onRun = function(self, client)
-			client:SendLua("gui.OpenURL('" .. v .. "')")
-		end
-	})
 end
 --------------------------------------------------------------------------------------------------------

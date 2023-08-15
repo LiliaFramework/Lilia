@@ -16,12 +16,14 @@ local function CanAccessIfPlayerHasAccessToBag(inventory, action, context)
 
 	return parentInv and parentInv:canAccess(action, contextWithBagInv) or false, "noAccess"
 end
+
 --------------------------------------------------------------------------------------------------------
 local function CanNotTransferBagIntoBag(inventory, action, context)
 	if action ~= "transfer" then return end
 	local item, toInventory = context.item, context.to
 	if toInventory and toInventory:getData("item") and item.isBag then return false, "A bag cannot be placed into another bag" end
 end
+
 --------------------------------------------------------------------------------------------------------
 local function CanNotTransferBagIfNestedItemCanNotBe(inventory, action, context)
 	if action ~= "transfer" then return end
@@ -35,12 +37,14 @@ local function CanNotTransferBagIfNestedItemCanNotBe(inventory, action, context)
 		if canTransferItem == false then return false, reason or "An item in the bag cannot be transfered" end
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("SetupBagInventoryAccessRules", "SetupBagInventoryAccessRules", function(inventory)
 	inventory:addAccessRule(CanNotTransferBagIntoBag, 1)
 	inventory:addAccessRule(CanNotTransferBagIfNestedItemCanNotBe, 1)
 	inventory:addAccessRule(CanAccessIfPlayerHasAccessToBag)
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("ItemCombine", "ItemCombine", function(client, item, target)
 	if target.onCombine then
@@ -51,10 +55,12 @@ hook.Add("ItemCombine", "ItemCombine", function(client, item, target)
 		if item and item:call("onCombineTo", client, nil, target) then return end
 	end
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("ItemDraggedOutOfInventory", "ItemDraggedOutOfInventory", function(client, item)
 	item:interact("drop", client)
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("HandleItemTransferRequest", "HandleItemTransferRequest", function(client, itemID, x, y, invID)
 	local inventory = lia.inventory.instances[invID]

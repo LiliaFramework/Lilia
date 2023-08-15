@@ -1,6 +1,7 @@
 local MODULE = MODULE
 
-lia.command.add("WhitelistAdd", {
+lia.command.add("whitelistadd", {
+    privilege = "Management - Whitelist Change",
     superAdminOnly = true,
     onRun = function(client, arguments)
         local steamID = arguments[1]
@@ -16,7 +17,8 @@ lia.command.add("WhitelistAdd", {
     end
 })
 
-lia.command.add("WhitelistRemove", {
+lia.command.add("whitelistremove", {
+    privilege = "Management - Whitelist Change",
     superAdminOnly = true,
     onRun = function(client, arguments)
         local steamID = arguments[1]
@@ -32,7 +34,8 @@ lia.command.add("WhitelistRemove", {
     end
 })
 
-lia.command.add("WhitelistClear", {
+lia.command.add("whitelistclear", {
+    privilege = "Management - Whitelist Change",
     superAdminOnly = true,
     onRun = function()
         MODULE.allowed = {}
@@ -41,7 +44,8 @@ lia.command.add("WhitelistClear", {
     end
 })
 
-lia.command.add("WhitelistAddAll", {
+lia.command.add("whitelistaddall", {
+    privilege = "Management - Whitelist Change",
     superAdminOnly = true,
     onRun = function()
         for _, client in ipairs(player.GetHumans()) do

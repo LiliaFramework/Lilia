@@ -1,13 +1,10 @@
+local MODULE = MODULE
+
 lia.command.add("banooc", {
+    privilege = "Management - Ban OOC",
     syntax = "<string target>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-
-        if not client:IsSuperAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
 
         if target then
             MODULE.oocBans[target:SteamID()] = true
@@ -19,15 +16,10 @@ lia.command.add("banooc", {
 })
 
 lia.command.add("unbanooc", {
+    privilege = "Management - Unban OOC",
     syntax = "<string target>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-
-        if not client:IsSuperAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
 
         if target then
             MODULE.oocBans[target:SteamID()] = nil
@@ -37,14 +29,9 @@ lia.command.add("unbanooc", {
 })
 
 lia.command.add("blockooc", {
+    privilege = "Management - Block OOC",
     syntax = "<string target>",
     onRun = function(client, arguments)
-        if not client:IsSuperAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-
-            return false
-        end
-
         if GetGlobalBool("oocblocked", false) then
             SetGlobalBool("oocblocked", false)
             client:notify("Unlocked OOC!")
