@@ -91,7 +91,7 @@ end
 do
     lia.char.registerVar(
         "name",
-        { lia.config.AllowExistNames = true
+        { 
             field = "_name",
             default = "John Doe",
             index = 1,
