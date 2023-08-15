@@ -2,6 +2,18 @@ function GM:LoadLiliaFonts(font, genericFont)
     local oldFont, oldGenericFont = font, genericFont
     local scale = math.Round(1, 2)
 
+    surface.CreateFont("liaSmallCredits", {
+        font = "Roboto",
+        size = 20,
+        weight = 400
+    })
+    
+    surface.CreateFont("liaBigCredits", {
+        font = "Roboto",
+        size = 32,
+        weight = 600
+    })
+    
     surface.CreateFont("liaCrossIcons", {
         font = "nsicons",
         size = ScreenScale(11),

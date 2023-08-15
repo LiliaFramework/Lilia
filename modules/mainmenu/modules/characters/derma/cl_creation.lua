@@ -5,6 +5,7 @@ function PANEL:configureSteps()
 	self:addStep(vgui.Create("liaCharacterFaction"))
 	self:addStep(vgui.Create("liaCharacterModel"))
 	self:addStep(vgui.Create("liaCharacterBiography"))
+	self:addStep(vgui.Create("liaCharacterBiography"))
 	hook.Run("ConfigureCharacterCreationSteps", self)
 
 	local stepKeys = table.GetKeys(self.steps)

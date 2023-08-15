@@ -1,7 +1,10 @@
 lia.config.TakeDelay = 1
 lia.config.EquipDelay = 1
 lia.config.DropDelay = 1
-
+lia.config.DisallowedBagForbiddenActions = {
+    ["Equip"] = true,
+    ["EquipUn"] = true,
+}
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerInteractItem(client, action, item)
     local inventory = lia.inventory.instances[itemObject.invID]

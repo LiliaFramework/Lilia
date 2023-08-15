@@ -14,12 +14,8 @@ lia.util.include("backend/external/thirdparty/sh_utf8.lua")
 --------------------------------------------------------------------------------------------------------
 // GAMEMODE CONFIG \\
 lia.util.include("config/sh_core.lua")
-lia.util.include("config/sh_default.lua")
-lia.util.include("config/sh_miscellaneous.lua")
 lia.util.include("config/sh_models.lua")
-lia.util.include("config/sh_perfomance.lua")
 lia.util.include("config/sh_permissions.lua")
-lia.util.include("config/sh_protection.lua")
 lia.util.include("config/sh_toolpermissions.lua")
 --------------------------------------------------------------------------------------------------------
 // GAMEMODE LIBRARIES \\
@@ -69,7 +65,8 @@ lia.util.include("backend/libs/cl_playerinteract.lua")
 lia.util.include("backend/libs/sh_anims.lua")
 lia.util.include("backend/libs/sh_class.lua")
 lia.util.include("backend/libs/sh_currency.lua")
-lia.util.include("backend/libs/sh_perfomance.lua")
+lia.util.include("backend/libs/performance/sh_config.lua")
+lia.util.include("backend/libs/performance/sh_performance.lua")
 lia.util.include("backend/libs/sh_date.lua")
 lia.util.include("backend/libs/sh_module.lua")
 lia.util.include("backend/libs/language/cl_language.lua")
@@ -147,6 +144,8 @@ lia.util.include("frontend/thirdperson/cl_panel.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("frontend/weaponselector/cl_enable.lua")
 lia.util.include("frontend/weaponselector/cl_hooks.lua")
+lia.util.include("frontend/credits/cl_credits.lua")
+lia.util.include("frontend/credits/sh_config.lua")
 --------------------------------------------------------------------------------------------------------
 // GAMEMODE MISC \\
 lia.util.include("frontend/cl_hooks.lua")
@@ -158,4 +157,5 @@ lia.util.include("commands/cl_roleplay.lua")
 lia.util.include("commands/sv_character.lua")
 lia.util.include("commands/sv_management.lua")
 lia.util.include("commands/sv_roleplay.lua")
+lia.util.include("commands/sh_custom.lua")
 --------------------------------------------------------------------------------------------------------

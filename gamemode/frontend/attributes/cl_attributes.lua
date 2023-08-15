@@ -1,4 +1,4 @@
-hook.Add("OnCharInfoSetup", "AttribCreateCharInfoText", function(panel)
+hook.Add("OnCharInfoSetup", "AttribOnCharInfoSetup", function(panel)
 	if suppress and suppress.attrib then return end
 	panel.attribName = panel.info:Add("DLabel")
 	panel.attribName:Dock(TOP)
@@ -10,9 +10,6 @@ hook.Add("OnCharInfoSetup", "AttribCreateCharInfoText", function(panel)
 	panel.attribs = panel.info:Add("DScrollPanel")
 	panel.attribs:Dock(FILL)
 	panel.attribs:DockMargin(0, 10, 0, 0)
-end)
-
-hook.Add("OnCharInfoSetup", "AttribOnCharInfoSetup", function(panel)
 	if not IsValid(panel.attribs) then return end
 	local char = LocalPlayer():getChar()
 	local boost = char:getBoosts()
@@ -46,4 +43,8 @@ hook.Add("OnCharInfoSetup", "AttribOnCharInfoSetup", function(panel)
 			bar:setBoost(attribBoost)
 		end
 	end
+end)
+
+hook.Add("ConfigureCharacterCreationSteps", "AttribOnCharInfoSetup", function(panel)
+	panel:addStep(vgui.Create("liaCharacterAttribs"), 99)
 end)

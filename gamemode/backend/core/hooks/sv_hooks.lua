@@ -1,4 +1,7 @@
---------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------
+lia.config.JumpCooldown = 0.8
+lia.config.CharacterSaveInterval = 300
+-------------------------------------------------------------------------------------------------------
 function GM:EntityNetworkedVarChanged(entity, varName, oldVal, newVal)
     if varName == "Model" and entity.SetModel then
         hook.Run("PlayerModelChanged", entity, newVal)
@@ -159,11 +162,6 @@ function GM:InitPostEntity()
         end
     end
 
-    if lia.config.DrawEntityShadows then
-        for _, entity in ipairs(ents.GetAll()) do
-            entity:DrawShadow(false)
-        end
-    end
 
     lia.faction.formatModelData()
 
@@ -175,15 +173,6 @@ function GM:InitPostEntity()
         hook.Run("LoadData")
         hook.Run("PostLoadData")
     end)
-
-    if CLIENT then
-        lia.joinTime = RealTime() - 0.9716
-        lia.faction.formatModelData()
-
-        if system.IsWindows() and not system.HasFocus() then
-            system.FlashWindow()
-        end
-    end
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -217,7 +206,6 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     if not allowVoice or not speaker:getChar() or not speaker:getNetVar("voiceRange", 2) then return false, false end
     local speakerRange = speaker:getNetVar("voiceRange", 2)
     local rangeSquared = (lia.config.Ranges[speakerRange] or 0) * (lia.config.Ranges[speakerRange] or 0)
-    print(rangeSquared)
     if listener:GetPos():DistToSqr(speaker:GetPos()) < rangeSquared then return true, true end
 
     return false, false
@@ -274,8 +262,6 @@ function GM:CreateDefaultInventory(character)
         return lia.inventory.instance("grid", {
             char = charID
         })
-    elseif "grid" ~= nil then
-        error("Invalid default inventory type " .. tostring("grid"))
     end
 end
 
@@ -325,7 +311,7 @@ function GM:SetupMove(client, mv, cmd)
     if client:OnGround() and mv:KeyPressed(IN_JUMP) then
         local cur_time = CurTime()
 
-        if cur_time - last_jump_time < lia.config.jumpcooldown then
+        if cur_time - last_jump_time < lia.config.JumpCooldown then
             mv:SetButtons(bit.band(mv:GetButtons(), bit.bnot(IN_JUMP)))
         else
             last_jump_time = cur_time

@@ -1,4 +1,8 @@
 --------------------------------------------------------------------------------------------------------
+lia.config.CarRagdoll = true
+lia.config.HeadShotDamage = 2
+
+--------------------------------------------------------------------------------------------------------
 function GM:ModuleShouldLoad(module)
     return not lia.module.isDisabled(module)
 end

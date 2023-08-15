@@ -1,3 +1,4 @@
+lia.config.MusicKiller = true
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadout(client)
     if client.liaSkipLoadout then

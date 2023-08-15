@@ -1,3 +1,7 @@
+lia.config.FactionBroadcastEnabled = true
+lia.config.AdvertisementEnabled = true
+lia.config.AdvertisementPrice = 25
+
 lia.command.add("roll", {
     adminOnly = false,
     privilege = "Basic User Permissions",
@@ -230,7 +234,7 @@ lia.command.add("doorname", {
         local tr = util.TraceLine(util.GetPlayerTrace(client))
 
         if IsValid(tr.Entity) then
-            print("I saw a " .. tr.Entity:GetName())
+            client:ChatPrint("I saw a " .. tr.Entity:GetName())
         end
     end
 })

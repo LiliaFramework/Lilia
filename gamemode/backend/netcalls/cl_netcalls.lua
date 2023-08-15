@@ -575,3 +575,11 @@ if #lia.char.names < 1 then
     netstream.Start("liaCharFetchNames")
 end
 --------------------------------------------------------------------------------------------------------
+netstream.Hook("nutCharFetchNames", function(data)
+    lia.char.names = data
+end)
+--------------------------------------------------------------------------------------------------------
+if (#lia.char.names < 1) then
+    netstream.Start("nutCharFetchNames")
+end
+--------------------------------------------------------------------------------------------------------

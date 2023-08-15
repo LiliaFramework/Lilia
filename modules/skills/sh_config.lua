@@ -3,6 +3,7 @@ lia.config.RollMultiplier = 1
 lia.config.StrengthMultiplier = 2.0
 lia.config.PunchStrengthMultiplier = 0.7
 lia.config.PunchStamina = 10
+lia.config.StaminaSlowdown = true
 
 lia.config.MeleeWeapons = {"weapon_crowbar", "weapon_knife",}
 

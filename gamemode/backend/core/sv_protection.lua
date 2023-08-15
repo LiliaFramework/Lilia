@@ -1,7 +1,10 @@
-function GM:OnPlayerDropWeapon(client, item, entity)
-    local timer = lia.config.TimeUntilDroppedSWEPRemoved
+lia.config.TimeUntilDroppedSWEPRemoved = 15
+lia.config.PlayerSpawnVehicleDelay = 30
+lia.config.NPCsDropWeapons = true
+lia.config.DrawEntityShadows = true
 
-    timer.Simple(timer, function()
+ function GM:OnPlayerDropWeapon(client, item, entity)
+    timer.Simple(lia.config.TimeUntilDroppedSWEPRemoved, function()
         if entity and entity:IsValid() then
             entity:Remove()
         end

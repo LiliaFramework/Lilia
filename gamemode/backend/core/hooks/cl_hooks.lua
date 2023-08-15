@@ -10,16 +10,19 @@ function GM:CharacterListLoaded()
     timer.Create("liaWaitUntilPlayerValid", 0.5, 0, function()
         if not IsValid(LocalPlayer()) then return end
         timer.Remove("liaWaitUntilPlayerValid")
-
-        if IsValid(lia.gui.loading) then
-            lia.gui.loading:Remove()
-        end
-
         RunConsoleCommand("stopsound")
         hook.Run("LiliaLoaded")
     end)
 end
+--------------------------------------------------------------------------------------------------------
+function GM:InitPostEntity()
+    lia.joinTime = RealTime() - 0.9716
+    lia.faction.formatModelData()
 
+    if system.IsWindows() and not system.HasFocus() then
+        system.FlashWindow()
+    end
+end
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
