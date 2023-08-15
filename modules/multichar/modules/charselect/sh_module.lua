@@ -2,28 +2,6 @@ MODULE.name = "Lilia Character Selection"
 MODULE.author = "Leonheart#7476/Cheesenot"
 MODULE.desc = "The Lilia character selection screen."
 lia.util.includeDir(MODULE.path .. "/derma/steps", true)
-
-lia.config.add("music", "music/hl2_song2.mp3", "The default music played in the character menu.", nil, {
-    category = "Character Creation"
-})
-
-lia.config.add("musicvolume", "0.25", "The Volume for the music played in the character menu.", nil, {
-    form = "Float",
-    data = {
-        min = 0,
-        max = 1
-    },
-    category = "Character Creation"
-})
-
-lia.config.add("backgroundURL", "", "The URL or HTML for the background of the character menu.", nil, {
-    category = "Character Creation"
-})
-
-lia.config.add("charMenuBGInputDisabled", true, "Whether or not KB/mouse input is disabled in the character background.", nil, {
-    category = "Character Creation"
-})
-
 if SERVER then return end
 
 local function ScreenScale(size)
