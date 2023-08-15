@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------------------------------
 DeriveGamemode("sandbox")
 --------------------------------------------------------------------------------------------------------
-PluginsLoaded = false
+ModulesLoaded = false
 --------------------------------------------------------------------------------------------------------
 GM.Name = "Lilia 2.0"
 GM.Author = "Chessnut, Black Tea and Leonheart#7476"
@@ -24,10 +24,10 @@ function GM:OnReloaded()
         end
     end
 
-    if not PluginsLoaded then
+    if not ModulesLoaded then
         lia.module.initialize()
         lia.config.load()
-        PluginsLoaded = true
+        ModulesLoaded = true
     end
 
     lia.faction.formatModelData()

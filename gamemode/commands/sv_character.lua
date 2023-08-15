@@ -13,7 +13,7 @@ lia.command.add("charban", {
                 char:setData("banned", true)
 
                 char:setData("charBanInfo", {
-                    name = client.SteamName and client:SteamName() or client:Nick(),
+                    name = client.steamName and client:steamName() or client:Nick(),
                     steamID = client:SteamID(),
                     rank = client:GetUserGroup()
                 })

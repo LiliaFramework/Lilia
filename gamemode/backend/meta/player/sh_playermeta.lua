@@ -229,9 +229,9 @@ function playerMeta:MeetsRequiredSkills(requiredSkillLevels)
     return true
 end
 playerMeta.steamName = playerMeta.steamName or playerMeta.Name
-playerMeta.SteamName = playerMeta.steamName
 playerMeta.Nick = playerMeta.Name
 playerMeta.GetName = playerMeta.Name
+playerMeta.getName = playerMeta.Name
 
 function playerMeta:getChar()
     return lia.char.loaded[self:getNetVar("char")]

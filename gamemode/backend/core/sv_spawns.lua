@@ -197,14 +197,13 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerInitialSpawn(client)
-    client.liaJoinTime = RealTime()
     if client:IsBot() then return hook.Run("SetupBotCharacter", client) end
-    client:SetCanZoom(false)
 
     client:loadLiliaData(function(data)
         if not IsValid(client) then return end
         local address = client:IPAddress()
         client:setLiliaData("lastIP", address)
+
         netstream.Start(client, "liaDataSync", data, client.firstJoin, client.lastJoin)
 
         for _, v in pairs(lia.item.instances) do
@@ -215,6 +214,9 @@ function GM:PlayerInitialSpawn(client)
 
         hook.Run("PlayerLiliaDataLoaded", client)
     end)
+    
+    client:SetCanZoom(false)
+    client.liaJoinTime = RealTime()
 
     local annoying = ents.FindByName("music")
     local val = ents.GetMapCreatedEntity(1733)

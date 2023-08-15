@@ -8,7 +8,7 @@ function lia.attribs.loadFromDir(directory)
 		ATTRIBUTE = lia.attribs.list[niceName] or {}
 
 		if MODULE then
-			ATTRIBUTE.plugin = MODULE.uniqueID
+			ATTRIBUTE.module = MODULE.uniqueID
 		end
 
 		lia.util.include(directory .. "/" .. v)
