@@ -183,6 +183,7 @@ function lia.char.delete(id, client)
 end
 
 --------------------------------------------------------------------------------------------------------
+hook.Add("Test_Function", "1looool",function()
 if lia.db then
     if #lia.char.names < 1 then
         lia.db.query(
@@ -199,3 +200,6 @@ if lia.db then
 else
     print("retard")
 end
+
+
+end)

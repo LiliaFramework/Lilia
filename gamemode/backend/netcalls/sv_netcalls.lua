@@ -105,24 +105,3 @@ netstream.Hook(
 net.Receive("liaTypeStatus", function(_, client) client:setNetVar("typing", net.ReadBool()) end)
 
 --------------------------------------------------------------------------------------------------------
-timer.Simple(
-    1.5,
-    function()
-        if lia.db then
-            if #lia.char.names < 1 then
-                lia.db.query(
-                    "SELECT _id, _name FROM lia_characters",
-                    function(data)
-                        if data and #data > 0 then
-                            for k, v in pairs(data) do
-                                lia.char.names[v._id] = v._name
-                            end
-                        end
-                    end
-                )
-            else
-                print("SV W")
-            end
-        end
-    end
-)
