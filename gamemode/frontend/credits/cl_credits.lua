@@ -129,7 +129,7 @@ function PANEL:Init()
     self.logo:DockMargin(0, 0, 0, ScrH * 0.05)
     self.nsteam = self:Add("DLabel")
     self.nsteam:SetFont("liaBigCredits")
-    self.nsteam:SetText("NutScript Development Team")
+    self.nsteam:SetText("Lilia Development Team")
     self.nsteam:SizeToContents()
     self.nsteam:Dock(TOP)
     local dockLeft = ScrW * 0.15 - self.nsteam:GetContentSize() / 2

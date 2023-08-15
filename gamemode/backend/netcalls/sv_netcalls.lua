@@ -104,8 +104,26 @@ net.Receive("liaTypeStatus", function(_, client)
     client:setNetVar("typing", net.ReadBool())
 end)
 --------------------------------------------------------------------------------------------------------
+netstream.Hook("liaCharFetchNames", function(client)
+    netstream.Start(client, "liaCharFetchNames", lia.char.names)
+end)
+
+--------------------------------------------------------------------------------------------------------
+hook.Add("liaCharDeleted", "liaCharRemoveName", function(client, character)
+    lia.char.names[character:getID()] = nil
+
+    netstream.Start(client, "liaCharFetchNames", lia.char.names)
+end)
+
+--------------------------------------------------------------------------------------------------------
+hook.Add("OnCharCreated", "liaCharAddName", function(client, character, data)
+    lia.char.names[character:getID()] = data.name
+
+    netstream.Start(client, "liaCharFetchNames", lia.char.names)
+end)
+--------------------------------------------------------------------------------------------------------
 if (#lia.char.names < 1) then
-    lia.db.query("SELECT _id, _name FROM nut_characters", function(data)
+    lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
         if (#data > 0) then
             for k, v in pairs(data) do
                 lia.char.names[v._id] = v._name
@@ -113,23 +131,4 @@ if (#lia.char.names < 1) then
         end
     end)
 end
-
---------------------------------------------------------------------------------------------------------
-netstream.Hook("nutCharFetchNames", function(client)
-    netstream.Start(client, "nutCharFetchNames", lia.char.names)
-end)
-
---------------------------------------------------------------------------------------------------------
-hook.Add("nutCharDeleted", "nutCharRemoveName", function(client, character)
-    lia.char.names[character:getID()] = nil
-
-    netstream.Start(client, "nutCharFetchNames", lia.char.names)
-end)
-
---------------------------------------------------------------------------------------------------------
-hook.Add("OnCharCreated", "nutCharAddName", function(client, character, data)
-    lia.char.names[character:getID()] = data.name
-
-    netstream.Start(client, "nutCharFetchNames", lia.char.names)
-end)
 --------------------------------------------------------------------------------------------------------

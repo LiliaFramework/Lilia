@@ -100,8 +100,8 @@ do
                 local allowExistNames = lia.config.get("allowExistNames", true)
                 -- Fetch existing character names
                 if CLIENT and #lia.char.names < 1 and not allowExistNames then
-                    netstream.Start("nutCharFetchNames")
-                    netstream.Hook("nutCharFetchNames", function(data) lia.char.names = data end)
+                    netstream.Start("liaCharFetchNames")
+                    netstream.Hook("liaCharFetchNames", function(data) lia.char.names = data end)
                 end
 
                 -- Check whether the chosen character name already exists
