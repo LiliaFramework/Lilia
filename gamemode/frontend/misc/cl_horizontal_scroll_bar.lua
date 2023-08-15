@@ -1,25 +1,17 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self.btnLeft = self.btnUp
     self.btnRight = self.btnDown
-
-    self.btnLeft.Paint = function(panel, w, h)
-        derma.SkinHook("Paint", "ButtonLeft", panel, w, h)
-    end
-
-    self.btnRight.Paint = function(panel, w, h)
-        derma.SkinHook("Paint", "ButtonRight", panel, w, h)
-    end
+    self.btnLeft.Paint = function(panel, w, h) derma.SkinHook("Paint", "ButtonLeft", panel, w, h) end
+    self.btnRight.Paint = function(panel, w, h) derma.SkinHook("Paint", "ButtonRight", panel, w, h) end
 end
 
 --------------------------------------------------------------------------------------------------------
 function PANEL:SetScroll(offset)
     if not self.Enabled then
         self.Scroll = 0
-
         return
     end
 
@@ -27,7 +19,6 @@ function PANEL:SetScroll(offset)
     self:InvalidateLayout()
     local parent = self:GetParent()
     local onHScroll = parent.OnHScroll
-
     if onHScroll then
         onHScroll(parent, self:GetOffset())
     else
@@ -62,7 +53,6 @@ function PANEL:PerformLayout()
     scroll = scroll * track
     self.btnGrip:SetPos(btnHeight + scroll, 0)
     self.btnGrip:SetSize(barSize, tall)
-
     if btnHeight > 0 then
         self.btnLeft:SetPos(0, 0)
         self.btnLeft:SetSize(btnHeight, tall)

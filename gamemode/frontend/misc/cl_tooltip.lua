@@ -2,7 +2,6 @@
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------
 local tooltip_delay = 0.01
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:SetDrawOnTop(true)
@@ -30,7 +29,6 @@ end
 function PANEL:PerformLayout()
     local override = hook.Run("TooltipLayout", self)
     if override then return end
-
     if self.Contents then
         self:SetWide(self.Contents:GetWide() + 8)
         self:SetTall(self.Contents:GetTall() + 8)
@@ -46,7 +44,6 @@ end
 function PANEL:PositionTooltip()
     if not IsValid(self.TargetPanel) then
         self:Remove()
-
         return
     end
 
@@ -56,11 +53,7 @@ function PANEL:PositionTooltip()
     local _, ly = self.TargetPanel:LocalToScreen(0, 0)
     y = y - 50
     y = math.min(y, ly - h * 1.5)
-
-    if y < 2 then
-        y = 2
-    end
-
+    if y < 2 then y = 2 end
     self:SetPos(math.Clamp(x - w * 0.5, 0, ScrW() - self:GetWide()), math.Clamp(y, 0, ScrH() - self:GetTall()))
 end
 
@@ -77,16 +70,17 @@ function PANEL:OpenForPanel(panel)
     self.TargetPanel = panel
     self:PositionTooltip()
     hook.Run("TooltipInitialize", self, panel)
-
     if tooltip_delay > 0 then
         self:SetVisible(false)
-
-        timer.Simple(tooltip_delay, function()
-            if not IsValid(self) then return end
-            if not IsValid(panel) then return end
-            self:PositionTooltip()
-            self:SetVisible(true)
-        end)
+        timer.Simple(
+            tooltip_delay,
+            function()
+                if not IsValid(self) then return end
+                if not IsValid(panel) then return end
+                self:PositionTooltip()
+                self:SetVisible(true)
+            end
+        )
     end
 end
 

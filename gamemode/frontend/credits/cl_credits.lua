@@ -1,8 +1,6 @@
 local logoMat = Material("lilia/logo.png")
 local ScrW, ScrH = ScrW(), ScrH()
-
 local PANEL = {}
-
 function PANEL:Init()
     self.avatarImage = self:Add("AvatarImage")
     self.avatarImage:Dock(LEFT)
@@ -51,7 +49,6 @@ function PANEL:Paint(w, h)
 end
 
 vgui.Register("CreditsNamePanel", PANEL, "DPanel")
-
 PANEL = {}
 function PANEL:Init()
     self.contButton = self:Add("DButton")
@@ -102,7 +99,6 @@ function PANEL:Paint()
 end
 
 vgui.Register("CreditsCreditsList", PANEL, "DPanel")
-
 PANEL = {}
 function PANEL:Init()
 end
@@ -117,7 +113,6 @@ function PANEL:Paint(w, h)
 end
 
 vgui.Register("CreditsLogo", PANEL, "DPanel")
-
 PANEL = {}
 function PANEL:Init()
     if lia.gui.creditsPanel then lia.gui.creditsPanel:Remove() end

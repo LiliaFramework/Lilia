@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 lia.config.CarRagdoll = true
 lia.config.HeadShotDamage = 2
-
 --------------------------------------------------------------------------------------------------------
 function GM:ModuleShouldLoad(module)
     return not lia.module.isDisabled(module)
@@ -30,14 +29,10 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:EntityTakeDamage(entity, dmgInfo)
     if IsValid(entity) and entity:IsPlayer() and dmgInfo:IsDamageType(DMG_CRUSH) and not IsValid(entity.liaRagdoll) then return true end
-
     if IsValid(entity.liaPlayer) then
         if dmgInfo:IsDamageType(DMG_CRUSH) then
             if (entity.liaFallGrace or 0) < CurTime() then
-                if dmgInfo:GetDamage() <= 10 then
-                    dmgInfo:SetDamage(0)
-                end
-
+                if dmgInfo:GetDamage() <= 10 then dmgInfo:SetDamage(0) end
                 entity.liaFallGrace = CurTime() + 0.5
             else
                 return
@@ -47,28 +42,19 @@ function GM:EntityTakeDamage(entity, dmgInfo)
         entity.liaPlayer:TakeDamageInfo(dmgInfo)
     end
 
-    if not IsValid(target) or not target:IsPlayer() then return end
-    local inflictor = dmginfo:GetInflictor()
-    local attacker = dmginfo:GetAttacker()
-
-    if not dmginfo:IsFallDamage() and IsValid(attacker) and attacker:IsPlayer() and attacker ~= target and target:Team() ~= FACTION_STAFF then
-        target.LastDamaged = CurTime()
-    end
-
-    if lia.config.CarRagdoll and IsValid(inflictor) and (inflictor:GetClass() == "gmod_sent_vehicle_fphysics_base" or inflictor:GetClass() == "gmod_sent_vehicle_fphysics_wheel") and not IsValid(target:GetVehicle()) then
-        dmginfo:ScaleDamage(0)
-
-        if not IsValid(target.liaRagdoll) then
-            target:setRagdolled(true, 5)
-        end
+    if not IsValid(entity) or not entity:IsPlayer() then return end
+    local inflictor = dmgInfo:GetInflictor()
+    local attacker = dmgInfo:GetAttacker()
+    if not dmgInfo:IsFallDamage() and IsValid(attacker) and attacker:IsPlayer() and attacker ~= entity and entity:Team() ~= FACTION_STAFF then entity.LastDamaged = CurTime() end
+    if lia.config.CarRagdoll and IsValid(inflictor) and (inflictor:GetClass() == "gmod_sent_vehicle_fphysics_base" or inflictor:GetClass() == "gmod_sent_vehicle_fphysics_wheel") and not IsValid(entity:GetVehicle()) then
+        dmgInfo:ScaleDamage(0)
+        if not IsValid(entity.liaRagdoll) then entity:setRagdolled(true, 5) end
     end
 end
 
 --------------------------------------------------------------------------------------------------------
 function GM:ScalePlayerDamage(ply, hitgroup, dmgInfo)
-    if hitgroup == HITGROUP_HEAD then
-        dmgInfo:ScaleDamage(lia.config.HeadShotDamage)
-    end
+    if hitgroup == HITGROUP_HEAD then dmgInfo:ScaleDamage(lia.config.HeadShotDamage) end
 end
 
 --------------------------------------------------------------------------------------------------------

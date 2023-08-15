@@ -5,7 +5,6 @@ function lia.config.LoadCore()
     lia.config.Color = Color(75, 119, 190)
     lia.config.VersionEnabled = true
     lia.config.DarkTheme = true
-    lia.config.DataSaveInterval = 600
     lia.config.Font = "Arial"
     lia.config.GenericFont = "Segoe UI"
     lia.config.WhitelistEnabled = false

@@ -2,7 +2,6 @@
 // GAMEMODE THIRDPARTY LIBRARIES \\
 lia.util.include("backend/external/thirdparty/data/sh_utf8_casemap.lua")
 lia.util.include("backend/external/thirdparty/sh_cami.lua")
-lia.util.include("backend/external/thirdparty/sv_mysql.lua")
 lia.util.include("backend/external/thirdparty/cl_ikon.lua")
 lia.util.include("backend/external/thirdparty/cl_markup.lua")
 lia.util.include("backend/external/thirdparty/cl_surfaceGetURL.lua")

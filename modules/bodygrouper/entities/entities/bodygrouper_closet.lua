@@ -4,7 +4,6 @@ ENT.PrintName = "Bodygroup Closet"
 ENT.Category = "Lilia"
 ENT.Spawnable = true
 ENT.AdminOnly = true
-
 if SERVER then
     function ENT:Initialize()
         self:SetModel(lia.config.BodygrouperModel)
@@ -28,7 +27,6 @@ end
 
 function ENT:HasUser(user)
     self.users = self.users or {}
-
     return self.users[user] == true
 end
 

@@ -3,17 +3,11 @@ local PANEL = {}
 --------------------------------------------------------------------------------------------------------
 AccessorFunc(PANEL, "padding", "Padding")
 AccessorFunc(PANEL, "canvas", "Canvas")
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self.canvas = self:Add("Panel")
-
-    self.canvas.OnMousePressed = function(canvas, code)
-        self:OnMousePressed(code)
-    end
-
+    self.canvas.OnMousePressed = function(canvas, code) self:OnMousePressed(code) end
     self.canvas:SetMouseInputEnabled(true)
-
     self.canvas.PerformLayout = function(canvas)
         self:PerformLayout()
         self:InvalidateParent()
@@ -82,19 +76,12 @@ function PANEL:PerformLayout()
     self:Rebuild()
     bar:SetUp(wide, canvasWide)
     x = bar:GetOffset()
-
-    if bar.Enabled then
-        tall = tall - bar:GetTall()
-    end
-
+    if bar.Enabled then tall = tall - bar:GetTall() end
     local canvas = self:GetCanvas()
     canvas:SetPos(x, 0)
     canvas:SetTall(tall)
     self:Rebuild()
-
-    if canvasWide ~= canvas:GetWide() then
-        bar:SetScroll(bar:GetScroll())
-    end
+    if canvasWide ~= canvas:GetWide() then bar:SetScroll(bar:GetScroll()) end
 end
 
 --------------------------------------------------------------------------------------------------------

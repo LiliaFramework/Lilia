@@ -1,20 +1,16 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
-	self:SetPaintBackground(false)
+    self:SetPaintBackground(false)
 end
 
 --------------------------------------------------------------------------------------------------------
 function PANEL:setMarkup(text, onDrawText)
-	local object = lia.markup.parse(text, self:GetWide())
-	object.onDrawText = onDrawText
-	self:SetTall(object:getHeight())
-
-	self.Paint = function(this, w, h)
-		object:draw(0, 0)
-	end
+    local object = nut.markup.parse(text, self:GetWide())
+    object.onDrawText = onDrawText
+    self:SetTall(object:getHeight())
+    self.Paint = function(this, w, h) object:draw(0, 0) end
 end
 
 --------------------------------------------------------------------------------------------------------

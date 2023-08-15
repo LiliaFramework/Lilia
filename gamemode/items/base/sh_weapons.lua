@@ -9,7 +9,6 @@ ITEM.height = 2
 ITEM.isWeapon = true
 ITEM.weaponCategory = "sidearm"
 ITEM.RequiredSkillLevels = nil
-
 --------------------------------------------------------------------------------------------------------
 if CLIENT then
     function ITEM:paintOver(item, w, h)
@@ -21,20 +20,22 @@ if CLIENT then
 end
 
 --------------------------------------------------------------------------------------------------------
-ITEM:hook("drop", function(item)
-    if item:getData("equip") then
-        item:setData("equip", nil)
-        item.player.carryWeapons = item.player.carryWeapons or {}
-        local weapon = item.player.carryWeapons[item.weaponCategory]
-
-        if IsValid(weapon) then
-            item:setData("ammo", weapon:Clip1())
-            item.player:StripWeapon(item.class)
-            item.player.carryWeapons[item.weaponCategory] = nil
-            item.player:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
+ITEM:hook(
+    "drop",
+    function(item)
+        if item:getData("equip") then
+            item:setData("equip", nil)
+            item.player.carryWeapons = item.player.carryWeapons or {}
+            local weapon = item.player.carryWeapons[item.weaponCategory]
+            if IsValid(weapon) then
+                item:setData("ammo", weapon:Clip1())
+                item.player:StripWeapon(item.class)
+                item.player.carryWeapons[item.weaponCategory] = nil
+                item.player:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
+            end
         end
     end
-end)
+)
 
 --------------------------------------------------------------------------------------------------------
 ITEM.functions.EquipUn = {
@@ -44,11 +45,7 @@ ITEM.functions.EquipUn = {
     onRun = function(item)
         item.player.carryWeapons = item.player.carryWeapons or {}
         local weapon = item.player.carryWeapons[item.weaponCategory]
-
-        if not weapon or not IsValid(weapon) then
-            weapon = item.player:GetWeapon(item.class)
-        end
-
+        if not weapon or not IsValid(weapon) then weapon = item.player:GetWeapon(item.class) end
         if weapon and weapon:IsValid() then
             item:setData("ammo", weapon:Clip1())
             item.player:StripWeapon(item.class)
@@ -59,16 +56,10 @@ ITEM.functions.EquipUn = {
         item.player:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
         item.player.carryWeapons[item.weaponCategory] = nil
         item:setData("equip", nil)
-
-        if item.onUnequipWeapon then
-            item:onUnequipWeapon(item.player, weapon)
-        end
-
+        if item.onUnequipWeapon then item:onUnequipWeapon(item.player, weapon) end
         return false
     end,
-    onCanRun = function(item)
-        return not IsValid(item.entity) and item:getData("equip") == true
-    end
+    onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip") == true end
 }
 
 --------------------------------------------------------------------------------------------------------
@@ -80,57 +71,37 @@ ITEM.functions.Equip = {
         local client = item.player
         local items = client:getChar():getInv():getItems()
         client.carryWeapons = client.carryWeapons or {}
-
         for k, v in pairs(items) do
             if v.id ~= item.id then
                 if v.isWeapon and client.carryWeapons[item.weaponCategory] and v:getData("equip") then
                     client:notifyLocalized("weaponSlotFilled")
-
                     return false
                 end
             end
         end
 
-        if client:HasWeapon(item.class) then
-            client:StripWeapon(item.class)
-        end
-
+        if client:HasWeapon(item.class) then client:StripWeapon(item.class) end
         local weapon = client:Give(item.class)
-
         if IsValid(weapon) then
-            timer.Simple(0, function()
-                client:SelectWeapon(weapon:GetClass())
-            end)
-
+            timer.Simple(0, function() client:SelectWeapon(weapon:GetClass()) end)
             client.carryWeapons[item.weaponCategory] = weapon
             client:EmitSound(item.equipSound or "items/ammo_pickup.wav", 80)
             local ammoCount = client:GetAmmoCount(weapon:GetPrimaryAmmoType())
-
-            if ammoCount == weapon:Clip1() and item:getData("ammo", 0) == 0 then
-                client:RemoveAmmo(weapon:Clip1(), weapon:GetPrimaryAmmoType())
-            end
-
+            if ammoCount == weapon:Clip1() and item:getData("ammo", 0) == 0 then client:RemoveAmmo(weapon:Clip1(), weapon:GetPrimaryAmmoType()) end
             item:setData("equip", true)
             weapon:SetClip1(item:getData("ammo", 0))
-
-            if item.onEquipWeapon then
-                item:onEquipWeapon(client, weapon)
-            end
+            if item.onEquipWeapon then item:onEquipWeapon(client, weapon) end
         else
             print(Format("[Lilia] Weapon %s does not exist!", item.class))
         end
-
         return false
     end,
-    onCanRun = function(item)
-        return not IsValid(item.entity) and item:getData("equip") ~= true
-    end
+    onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip") ~= true end
 }
 
 --------------------------------------------------------------------------------------------------------
 function ITEM:onCanBeTransfered(oldInventory, newInventory)
     if newInventory and self:getData("equip") then return false end
-
     return true
 end
 
@@ -140,7 +111,6 @@ function ITEM:onLoadout()
         local client = self.player
         client.carryWeapons = client.carryWeapons or {}
         local weapon = client:Give(self.class)
-
         if IsValid(weapon) then
             client:RemoveAmmo(weapon:Clip1(), weapon:GetPrimaryAmmoType())
             client.carryWeapons[self.weaponCategory] = weapon
@@ -154,34 +124,23 @@ end
 --------------------------------------------------------------------------------------------------------
 function ITEM:onSave()
     local weapon = self.player:GetWeapon(self.class)
-
-    if IsValid(weapon) then
-        self:setData("ammo", weapon:Clip1())
-    end
+    if IsValid(weapon) then self:setData("ammo", weapon:Clip1()) end
 end
 
 --------------------------------------------------------------------------------------------------------
 HOLSTER_DRAWINFO = HOLSTER_DRAWINFO or {}
-
 function ITEM:onRegistered()
-    if self.holsterDrawInfo then
-        HOLSTER_DRAWINFO[self.class] = self.holsterDrawInfo
-    end
+    if self.holsterDrawInfo then HOLSTER_DRAWINFO[self.class] = self.holsterDrawInfo end
 end
 
 --------------------------------------------------------------------------------------------------------
 function ITEM:onRemoved()
     local inv = lia.item.inventories[self.invID]
-
     if inv then
         local receiver = inv.getReceiver and inv:getReceiver()
-
         if IsValid(receiver) and receiver:IsPlayer() then
             local weapon = receiver:GetWeapon(self.class)
-
-            if IsValid(weapon) then
-                weapon:Remove()
-            end
+            if IsValid(weapon) then weapon:Remove() end
         end
     end
 end

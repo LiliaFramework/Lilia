@@ -1,27 +1,19 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self.brightness = 1
     self:SetCursor("none")
     self.OldSetModel = self.SetModel
-
     self.SetModel = function(self, model)
         self:OldSetModel(model)
         local entity = self.Entity
         if not IsValid(entity) then return end
         local sequence = entity:SelectWeightedSequence(ACT_IDLE)
-
-        if sequence <= 0 then
-            sequence = entity:LookupSequence("idle_unarmed")
-        end
-
+        if sequence <= 0 then sequence = entity:LookupSequence("idle_unarmed") end
         entity:SetIK(false)
-
         if sequence > 0 then
             entity:ResetSequence(sequence)
-
             return
         end
 
@@ -30,7 +22,6 @@ function PANEL:Init()
             if seqNameLower == "idlenoise" then continue end
             if not (seqNameLower:find("idle") or seqNameLower:find("fly")) then continue end
             entity:ResetSequence(seqName)
-
             return
         end
 
@@ -41,7 +32,6 @@ end
 --------------------------------------------------------------------------------------------------------
 local gui_MouseX = gui.MouseX
 local gui_MouseY = gui.MouseY
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:LayoutEntity()
     local scrW, scrH = ScrW(), ScrH()
@@ -54,7 +44,6 @@ function PANEL:LayoutEntity()
     entity:SetPoseParameter("head_yaw", (xRatio - xRatio2) * 90 - 5)
     entity:SetAngles(Angle(0, 45, 0))
     entity:SetIK(false)
-
     if self.copyLocalSequence then
         local ply = LocalPlayer()
         entity:SetSequence(ply:GetSequence())
@@ -70,7 +59,6 @@ function PANEL:PreDrawModel(entity)
         local brightness = self.brightness * 0.4
         local brightness2 = self.brightness * 1.5
         render.SetModelLighting(0, brightness2, brightness2, brightness2)
-
         for i = 1, 4 do
             render.SetModelLighting(i, brightness, brightness, brightness)
         end
@@ -79,10 +67,7 @@ function PANEL:PreDrawModel(entity)
         render.SetModelLighting(5, fraction, fraction, fraction)
     end
 
-    if self.enableHook then
-        hook.Run("DrawLiliaModelView", self, entity)
-    end
-
+    if self.enableHook then hook.Run("DrawLiliaModelView", self, entity) end
     return true
 end
 

@@ -7,7 +7,6 @@ GM.Name = "Lilia 2.0"
 GM.Author = "Chessnut, Black Tea and Leonheart#7476"
 GM.Website = "https://discord.gg/RTcVq92HsH"
 GM.version = "1.0"
-
 --------------------------------------------------------------------------------------------------------
 function GM:Initialize()
     lia.module.initialize()
@@ -36,9 +35,6 @@ end
 --------------------------------------------------------------------------------------------------------
 if SERVER and game.IsDedicated() then
     concommand.Remove("gm_save")
-
-    concommand.Add("gm_save", function(client, command, arguments)
-        print("COMMAND DISABLED")
-    end)
+    concommand.Add("gm_save", function(client, command, arguments) print("COMMAND DISABLED") end)
 end
 --------------------------------------------------------------------------------------------------------

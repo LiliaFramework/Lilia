@@ -2,23 +2,17 @@
 lia.faction = lia.faction or {}
 lia.faction.indices = lia.faction.indices or {}
 lia.faction.teams = lia.faction.teams or {}
-
 --------------------------------------------------------------------------------------------------------
 function lia.faction.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName = v:sub(4, -5)
-
         FACTION = lia.faction.teams[niceName] or {
             index = table.Count(lia.faction.teams) + 1,
             isDefault = true
         }
 
-        if MODULE then
-            FACTION.module = MODULE.uniqueID
-        end
-
+        if MODULE then FACTION.module = MODULE.uniqueID end
         lia.util.include(directory .. "/" .. v, "shared")
-
         if not FACTION.name then
             FACTION.name = "Unknown"
             ErrorNoHalt("Faction '" .. niceName .. "' is missing a name. You need to add a FACTION.name = \"Name\"\n")
@@ -37,7 +31,6 @@ function lia.faction.loadFromDir(directory)
         team.SetUp(FACTION.index, FACTION.name or "Unknown", FACTION.color or Color(125, 125, 125))
         FACTION.models = FACTION.models or lia.faction.DefaultModels
         FACTION.uniqueID = FACTION.uniqueID or niceName
-
         for _, modelData in pairs(FACTION.models) do
             if isstring(modelData) then
                 util.PrecacheModel(modelData)
@@ -68,13 +61,10 @@ function lia.faction.formatModelData()
         if faction.models then
             for modelIndex, modelData in pairs(faction.models) do
                 local newGroups
-
                 if istable(modelData) and modelData[3] then
                     local groups = {}
-
                     if istable(modelData[3]) then
                         local dummy
-
                         if SERVER then
                             dummy = ents.Create("prop_physics")
                             dummy:SetModel(modelData[1])
@@ -83,7 +73,6 @@ function lia.faction.formatModelData()
                         end
 
                         local groupData = dummy:GetBodyGroups()
-
                         for _, group in ipairs(groupData) do
                             if group.id > 0 then
                                 if modelData[3][group.id] then

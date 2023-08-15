@@ -11,7 +11,6 @@ SKIN.Colours.Button.Normal = Color(80, 80, 80)
 SKIN.Colours.Button.Hover = Color(255, 255, 255)
 SKIN.Colours.Button.Down = Color(180, 180, 180)
 SKIN.Colours.Button.Disabled = Color(0, 0, 0, 100)
-
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintFrame(panel)
     lia.util.drawBlur(panel, 10)
@@ -49,7 +48,6 @@ function SKIN:PaintButton(panel)
     if panel.GetPaintBackground and not panel:GetPaintBackground() then return end
     local w, h = panel:GetWide(), panel:GetTall()
     local alpha = 50
-
     if panel:GetDisabled() then
         alpha = 10
     elseif panel.Depressed then

@@ -14,11 +14,9 @@ ITEM.isStackable = false
 ITEM.quantity = 1
 ITEM.maxQuantity = 1
 ITEM.canSplit = true
-
 --------------------------------------------------------------------------------------------------------
 function ITEM:getQuantity()
     if self.id == 0 then return self.maxQuantity end
-
     return self.quantity
 end
 
@@ -50,11 +48,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function ITEM:getPrice()
     local price = self.price
-
-    if self.calcPrice then
-        price = self:calcPrice(self.price)
-    end
-
+    if self.calcPrice then price = self:calcPrice(self.price) end
     return price or 0
 end
 
@@ -63,13 +57,10 @@ function ITEM:call(method, client, entity, ...)
     local oldPlayer, oldEntity = self.player, self.entity
     self.player = client or self.player
     self.entity = entity or self.entity
-
     if type(self[method]) == "function" then
         local results = {self[method](self, ...)}
-
         self.player = oldPlayer
         self.entity = oldEntity
-
         return unpack(results)
     end
 
@@ -82,7 +73,6 @@ function ITEM:getOwner()
     local inventory = lia.inventory.instances[self.invID]
     if inventory and SERVER then return inventory:getRecipients()[1] end
     local id = self:getID()
-
     for _, v in ipairs(player.GetAll()) do
         local character = v:getChar()
         if character and character:getInv() and character:getInv().items[id] then return v end
@@ -95,28 +85,22 @@ function ITEM:getData(key, default)
     if key == true then return self.data end
     local value = self.data[key]
     if value ~= nil then return value end
-
     if IsValid(self.entity) then
         local data = self.entity:getNetVar("data", {})
         local value = data[key]
         if value ~= nil then return value end
     end
-
     return default
 end
 
 --------------------------------------------------------------------------------------------------------
 function ITEM:hook(name, func)
-    if name then
-        self.hooks[name] = func
-    end
+    if name then self.hooks[name] = func end
 end
 
 --------------------------------------------------------------------------------------------------------
 function ITEM:postHook(name, func)
-    if name then
-        self.postHooks[name] = func
-    end
+    if name then self.postHooks[name] = func end
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -136,7 +120,6 @@ end
 function ITEM:printData()
     self:print(true)
     print("ITEM DATA:")
-
     for k, v in pairs(self.data) do
         print(Format("[%s] = %s", k, v))
     end
@@ -155,7 +138,6 @@ end
 function ITEM:PrintData()
     self:Print(true)
     print("ITEM DATA:")
-
     for k, v in pairs(self.data) do
         print(Format("[%s] = %s", k, v))
     end

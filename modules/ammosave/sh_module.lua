@@ -4,7 +4,6 @@ MODULE.name = "Ammo Saver"
 MODULE.author = "Leonheart#7476/Black Tea"
 MODULE.desc = "Saves the ammo of a character."
 lia.util.include("sv_module.lua")
-
 function lia.ammo.register(name)
     table.insert(MODULE.ammoList, name)
 end
@@ -31,7 +30,6 @@ lia.ammo.register("combinecannon")
 lia.ammo.register("airboatgun")
 lia.ammo.register("striderminigun")
 lia.ammo.register("helicoptergun")
-
 local ammo = {
     ["7.92x33mm Kurz"] = "ar2",
     ["300 AAC Blackout"] = "ar2",
