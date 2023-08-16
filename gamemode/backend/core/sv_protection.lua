@@ -67,9 +67,12 @@ function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
     return true
 end
 
-function GM:PlayerSpawnedNPC(ply, ent)
-    if lia.config.NPCsDropWeapons then return end
-    ent:SetKeyValue("spawnflags", "8192")
+function GM:PlayerSpawnedNPC(client, entity)
+    entity:SetCreator(client)
+    entity:SetNWString("Creator_Nick", client:Nick())
+    if lia.config.NPCsDropWeapons then  
+    entity:SetKeyValue("spawnflags", "8192")
+    end
 end
 
 function GM:PlayerDisconnected(client)
@@ -134,4 +137,53 @@ function GM:PhysgunDrop(ply, ent)
             ent:SetCollisionGroup(COLLISION_GROUP_NONE)
         end
     end)
+end
+
+function GM:PlayerSpawnedProp(client, model, entity)
+    -- Removes Problematic Models
+    for _, gredwitch in pairs(file.Find("models/gredwitch/bombs/*.mdl", "GAME")) do
+        if model == "models/gredwitch/bombs/" .. gredwitch then
+            entity:Remove()
+
+            return
+        end
+    end
+
+    for _, gbombs in pairs(file.Find("models/gbombs/*.mdl", "GAME")) do
+        if model == "models/gbombs/" .. gbombs then
+            entity:Remove()
+
+            return
+        end
+    end
+
+    for _, phx in pairs(file.Find("models/props_phx/*.mdl", "GAME")) do
+        if model == "models/props_phx/" .. phx then
+            entity:Remove()
+
+            return
+        end
+    end
+
+    for _, mikeprops in pairs(file.Find("models/mikeprops/*.mdl", "GAME")) do
+        if model == "models/mikeprops/" .. mikeprops then
+            entity:Remove()
+
+            return
+        end
+    end
+
+    if table.HasValue(lia.config.PropBlacklist, model:lower()) then
+        client:notify("You cannot spawn this prop.")
+        entity:Remove()
+
+        return
+    end
+
+    self:PlayerSpawnedEntity(client, entity)
+end
+
+function GM:PlayerSpawnedEntity(client, entity)
+    entity:SetNWString("Creator_Nick", client:Nick())
+    entity:SetCreator(client)
 end

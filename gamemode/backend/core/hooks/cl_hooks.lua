@@ -14,17 +14,6 @@ function GM:CharacterListLoaded()
         hook.Run("LiliaLoaded")
     end)
 end
-
---------------------------------------------------------------------------------------------------------
-function GM:InitPostEntity()
-    lia.joinTime = RealTime() - 0.9716
-    lia.faction.formatModelData()
-
-    if system.IsWindows() and not system.HasFocus() then
-        system.FlashWindow()
-    end
-end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
@@ -62,6 +51,17 @@ end
 function GM:OnChatReceived()
     if system.IsWindows() and not system.HasFocus() then
         system.FlashWindow()
+    end
+end
+--------------------------------------------------------------------------------------------------------
+function GM:DrawCharInfo(client, character, info)
+    if client:Team() == FACTION_STAFF then
+        local UserGroup = client:GetUserGroup()
+        local StaffTitleInfo = lia.config.StaffTitles[UserGroup]
+        if StaffTitleInfo then
+            local title, color = StaffTitleInfo[1], StaffTitleInfo[2]
+            info[#info + 1] = {title, color}
+        end
     end
 end
 --------------------------------------------------------------------------------------------------------

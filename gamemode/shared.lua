@@ -11,7 +11,7 @@ GM.version = "1.0"
 function GM:Initialize()
     lia.module.initialize()
     lia.config.load()
-    hook.Run("Test_Function")
+    hook.Run("DevelopmentServerCheckup")
 end
 
 --------------------------------------------------------------------------------------------------------

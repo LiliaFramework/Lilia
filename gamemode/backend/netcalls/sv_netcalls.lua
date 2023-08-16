@@ -18,7 +18,9 @@ util.AddNetworkString("worlditem_cleanup_inbound_final")
 util.AddNetworkString("map_cleanup_inbound")
 util.AddNetworkString("map_cleanup_inbound_final")
 util.AddNetworkString("VoiceMenu")
-
+util.AddNetworkString("OpenInvMenu")
+util.AddNetworkString("announcement_client")
+util.AddNetworkString("advert_client")
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaStringReq", function(_, client)
     local id = net.ReadUInt(32)

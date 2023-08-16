@@ -424,7 +424,7 @@ function playerMeta:setLocalVar(key, value)
     netstream.Start(self, "nLcl", key, value)
 end
 
---------------------------------------------------------------------------------------------------------+
+--------------------------------------------------------------------------------------------------------
 function playerMeta:getLiliaData(key, default)
     if key == true then return self.liaData end
     local data = self.liaData and self.liaData[key]
@@ -435,4 +435,4 @@ function playerMeta:getLiliaData(key, default)
         return data
     end
 end
---------------------------------------------------------------------------------------------------------+
+--------------------------------------------------------------------------------------------------------

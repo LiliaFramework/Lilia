@@ -486,6 +486,52 @@ function GM:InitializedModules()
     self:InitializedExtras()
 end
 
+function GM:InitPostEntity()
+    local ip, port = game.GetIPAddress():match("([^:]+):(%d+)")
+    if ip == lia.config.DevServerIP and port == lia.config.DevServerPort then
+        DEV = true
+    else
+        DEV = false
+    end
+
+    if DEV then
+        print("This is a Development Server!")
+    else
+        print("This is a Main Server!")
+    end
+
+    if CLIENT then
+        lia.joinTime = RealTime() - 0.9716
+        lia.faction.formatModelData()
+        if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
+    else
+        local doors = ents.FindByClass("prop_door_rotating")
+        for _, v in ipairs(doors) do
+            local parent = v:GetOwner()
+            if IsValid(parent) then
+                v.liaPartner = parent
+                parent.liaPartner = v
+            else
+                for _, v2 in ipairs(doors) do
+                    if v2:GetOwner() == v then
+                        v2.liaPartner = v
+                        v.liaPartner = v2
+                        break
+                    end
+                end
+            end
+        end
+
+        lia.faction.formatModelData()
+        timer.Simple(2, function() lia.entityDataLoaded = true end)
+        lia.db.waitForTablesToLoad():next(
+            function()
+                hook.Run("LoadData")
+                hook.Run("PostLoadData")
+            end
+        )
+    end
+end
 function GM:InitializedExtras()
     if CLIENT then
         hook.Remove("StartChat", "StartChatIndicator")
