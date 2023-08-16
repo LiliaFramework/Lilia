@@ -164,7 +164,7 @@ lia.char.registerVar("name", {
             return false, "invalid", "name"
         end
 
-        local allowExistNames = lia.config.get("allowExistNames", true)
+        local allowExistNames = lia.config.AllowExistNames
 
         -- Fetch existing character names
         if (CLIENT and #lia.char.names < 1 and not allowExistNames) then
@@ -176,7 +176,7 @@ lia.char.registerVar("name", {
         end
 
         -- Check whether the chosen character name already exists
-        if (not lia.config.get("allowExistNames", true)) then
+        if (not lia.config.AllowExistNames) then
             for k, v in pairs(lia.char.names) do
                 if (v == value) then
                     return false, "A character with this name already exists."
@@ -221,7 +221,7 @@ lia.char.registerVar("desc", {
     onValidate = function(value, data)
         if (noDesc) then return true end
 
-        local minLength = lia.config.get("minDescLen", 16)
+        local minLength = lia.config.MinDescLen
 
         if (not value or #value:gsub("%s", "") < minLength) then
             return false, "descMinLen", minLength
@@ -277,7 +277,7 @@ lia.char.registerVar("model", {
                 end
                 icon.PaintOver = function(this, w, h)
                     if (panel.payload.model == k) then
-                        local color = lia.config.get("color", color_white)
+                        local color = lia.config.Color
 
                         surface.SetDrawColor(color.r, color.g, color.b, 200)
 

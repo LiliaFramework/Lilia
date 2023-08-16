@@ -15,7 +15,7 @@ lia.command.add("doorsell", {
             -- Check if the player owners the door.
             if client == entity:GetDTEntity(0) then
                 -- Get the price that the door is sold for.
-                local price = math.Round(entity:getNetVar("price", lia.config.get("doorCost")) * lia.config.get("doorSellRatio"))
+                local price = math.Round(entity:getNetVar("price", lia.config.DoorCost) * lia.config.DoorSellRatio)
                 -- Remove old door information.
                 entity:removeDoorAccessData()
 
@@ -61,7 +61,7 @@ lia.command.add("doorbuy", {
             end
 
             -- Get the price that the door is bought for.
-            local price = entity:getNetVar("price", lia.config.get("doorCost"))
+            local price = entity:getNetVar("price", lia.config.DoorCost)
 
             -- Check if the player can actually afford it.
             if client:getChar():hasMoney(price) then

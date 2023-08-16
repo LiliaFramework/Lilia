@@ -201,7 +201,7 @@ function GM:PlayerInitialSpawn(client)
         client:setLiliaData("lastIP", address)
         netstream.Start(client, "liaDataSync", data, client.firstJoin, client.lastJoin)
 
-        _, v in pairs(lia.item.instances) do
+        for _, v in pairs(lia.item.instances) do
             if v.entity and v.invID == 0 then
                 v:sync(client)
             end

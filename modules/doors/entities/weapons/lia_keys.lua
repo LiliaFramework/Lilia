@@ -92,7 +92,7 @@ function SWEP:Initialize()
 end
 
 function SWEP:PrimaryAttack()
-	local time = lia.config.get("doorLockTime", 1)
+	local time = lia.config.DoorLockTime
 	local time2 = math.max(time, 1)
 
 	self:SetNextPrimaryFire(CurTime() + time2)
@@ -177,7 +177,7 @@ function SWEP:toggleLock(door, state)
 end
 
 function SWEP:SecondaryAttack()
-	local time = lia.config.get("doorLockTime", 1)
+	local time = lia.config.DoorLockTime
 	local time2 = math.max(time, 1)
 
 	self:SetNextPrimaryFire(CurTime() + time2)
