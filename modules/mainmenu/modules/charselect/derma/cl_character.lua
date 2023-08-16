@@ -24,7 +24,7 @@ function PANEL:createTabs()
     -- don't add a disconnect button. Just add a close button.
     if LocalPlayer():getChar() then
         self:addTab("return", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end, true)
-        return
+        modules/modules/raiseweapons/cl_hooks.lua modules/raiseweapons/sv_hooks.lua modules/raiseweapons/sh_player_extensions.lua modules/raiseweapons/sh_hooks.lua
     end
 
     -- Otherwise, add a disconnect button.

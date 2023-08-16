@@ -4,3 +4,4 @@ MODULE.name = "OOC Bans"
 MODULE.author = "Leonheart#7476"
 MODULE.desc = "An OOC banlist."
 lia.util.include("sv_module.lua")
+lia.util.include("sh_chat.lua")
