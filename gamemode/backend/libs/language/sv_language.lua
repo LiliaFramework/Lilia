@@ -3,6 +3,7 @@ function L(key, ...)
     local languages = lia.lang.stored
     local langKey = CreateClientConVar("lia_language", "english", true, true):GetString()
     local info = languages[langKey] or languages.english
+
     return string.format(info and info[key] or key, ...)
 end
 

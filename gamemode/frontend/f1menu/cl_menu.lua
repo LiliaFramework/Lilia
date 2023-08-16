@@ -2,9 +2,13 @@
 lia.config.F1MenuLaunchUnanchor = "buttons/lightswitch2.wav"
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
-    if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end
+    if IsValid(lia.gui.menu) then
+        lia.gui.menu:Remove()
+    end
+
     lia.gui.menu = self
     self:SetSize(ScrW(), ScrH())
     self:SetAlpha(0)
@@ -29,9 +33,11 @@ function PANEL:Init()
     local tabs = {}
     hook.Run("CreateMenuButtons", tabs)
     self.tabList = {}
+
     for name, callback in SortedPairs(tabs) do
         if isstring(callback) then
             local body = callback
+
             if body:sub(1, 4) == "http" then
                 callback = function(panel)
                     local html = panel:Add("DHTML")
@@ -63,12 +69,16 @@ end
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnKeyCodePressed(key)
     self.noAnchor = CurTime() + .5
-    if key == KEY_F1 then self:remove() end
+
+    if key == KEY_F1 then
+        self:remove()
+    end
 end
 
 --------------------------------------------------------------------------------------------------------
 function PANEL:Think()
     local key = input.IsKeyDown(KEY_F1)
+
     if key and (self.noAnchor or CurTime() + .4) < CurTime() and self.anchorMode == true then
         self.anchorMode = false
         surface.PlaySound(lia.config.F1MenuLaunchUnanchor)
@@ -76,7 +86,10 @@ function PANEL:Think()
 
     if not self.anchorMode then
         if IsValid(self.info) and self.info.desc:IsEditing() then return end
-        if not key then self:remove() end
+
+        if not key then
+            self:remove()
+        end
     end
 end
 
@@ -95,6 +108,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function PANEL:addTab(name, callback, uniqueID)
     name = L(name)
+
     local function paintTab(tab, w, h)
         if self.activeTab == tab then
             surface.SetDrawColor(ColorAlpha(lia.config.Color, 200))
@@ -117,8 +131,12 @@ function PANEL:addTab(name, callback, uniqueID)
     tab:SizeToContentsX()
     tab:SetWide(w + 32)
     tab.Paint = paintTab
+
     tab.DoClick = function(this)
-        if IsValid(lia.gui.info) then lia.gui.info:Remove() end
+        if IsValid(lia.gui.info) then
+            lia.gui.info:Remove()
+        end
+
         self.panel:Clear()
         self.title:SetText(this:GetText())
         self.title:SizeToContentsY()
@@ -127,18 +145,24 @@ function PANEL:addTab(name, callback, uniqueID)
         self.panel:AlphaTo(255, 0.5, 0.1)
         self.activeTab = this
         lastMenuTab = uniqueID
-        if callback then callback(self.panel, this) end
+
+        if callback then
+            callback(self.panel, this)
+        end
     end
 
     self.tabs:AddPanel(tab)
     self.tabs:SetWide(math.min(self.tabs:GetWide() + tab:GetWide(), ScrW()))
     self.tabs:SetPos((ScrW() * 0.5) - (self.tabs:GetWide() * 0.5), 0)
+
     return tab
 end
 
 --------------------------------------------------------------------------------------------------------
 function PANEL:setActiveTab(key)
-    if IsValid(self.tabList[key]) then self.tabList[key]:DoClick() end
+    if IsValid(self.tabList[key]) then
+        self.tabList[key]:DoClick()
+    end
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -148,14 +172,21 @@ end
 --------------------------------------------------------------------------------------------------------
 function PANEL:remove()
     CloseDermaMenus()
+
     if not self.closing then
-        self:AlphaTo(0, 0.25, 0, function() self:Remove() end)
+        self:AlphaTo(0, 0.25, 0, function()
+            self:Remove()
+        end)
+
         self.closing = true
     end
 end
 
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaMenu", PANEL, "EditablePanel")
+
 --------------------------------------------------------------------------------------------------------
-if IsValid(lia.gui.menu) then vgui.Create("liaMenu") end
+if IsValid(lia.gui.menu) then
+    vgui.Create("liaMenu")
+end
 --------------------------------------------------------------------------------------------------------

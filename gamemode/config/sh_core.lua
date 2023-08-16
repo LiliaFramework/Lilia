@@ -12,6 +12,7 @@ function lia.config.LoadCore()
     lia.config.BranchWarning = true
     lia.config.AllowVoice = true
     lia.config.AutoWorkshopDownloader = false
+
     lia.config.DefaultStaff = {
         ["STEAM_0:1:176123778"] = "superadmin",
     }
@@ -30,4 +31,10 @@ function lia.config.LoadCore()
     lia.config.RunSpeed = 235
     lia.config.WalkRatio = 0.5
     lia.config.DefaultMoney = 0
+
+    lia.config.Ranges = {
+        ["Whispering"] = 120,
+        ["Talking"] = 300,
+        ["Yelling"] = 600,
+    }
 end

@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:MakePopup()
@@ -15,7 +16,12 @@ function PANEL:setInventory(inventory)
     self:InvalidateLayout(true)
     self.content:setGridSize(self.gridW, self.gridH)
     self.content:setInventory(inventory)
-    self.content.InventoryDeleted = function(content, deletedInventory) if deletedInventory == inventory then self:InventoryDeleted() end end
+
+    self.content.InventoryDeleted = function(content, deletedInventory)
+        if deletedInventory == inventory then
+            self:InventoryDeleted()
+        end
+    end
 end
 
 --------------------------------------------------------------------------------------------------------

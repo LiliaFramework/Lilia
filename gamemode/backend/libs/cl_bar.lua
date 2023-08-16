@@ -5,6 +5,7 @@ lia.bar.list = lia.bar.list or {}
 lia.bar.actionText = ""
 lia.bar.actionStart = 0
 lia.bar.actionEnd = 0
+
 --------------------------------------------------------------------------------------------------------
 function lia.bar.get(identifier)
     for i = 1, #lia.bar.list do
@@ -17,11 +18,15 @@ end
 function lia.bar.add(getValue, color, priority, identifier)
     if identifier then
         local oldBar = lia.bar.get(identifier)
-        if oldBar then table.remove(lia.bar.list, oldBar.priority) end
+
+        if oldBar then
+            table.remove(lia.bar.list, oldBar.priority)
+        end
     end
 
     priority = priority or table.Count(lia.bar.list) + 1
     local info = lia.bar.list[priority]
+
     lia.bar.list[priority] = {
         getValue = getValue,
         color = color or info.color or Color(math.random(150, 255), math.random(150, 255), math.random(150, 255)),
@@ -29,12 +34,14 @@ function lia.bar.add(getValue, color, priority, identifier)
         lifeTime = 0,
         identifier = identifier
     }
+
     return priority
 end
 
 --------------------------------------------------------------------------------------------------------
 function lia.bar.remove(identifier)
     local bar
+
     for k, v in ipairs(lia.bar.list) do
         if v.identifier == identifier then
             bar = v
@@ -42,7 +49,9 @@ function lia.bar.remove(identifier)
         end
     end
 
-    if bar then table.remove(lia.bar.list, bar.priority) end
+    if bar then
+        table.remove(lia.bar.list, bar.priority)
+    end
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -64,9 +73,11 @@ function lia.bar.drawAction()
     local start, finish = lia.bar.actionStart, lia.bar.actionEnd
     local curTime = CurTime()
     local scrW, scrH = ScrW(), ScrH()
+
     if finish > curTime then
         local fraction = 1 - math.TimeFraction(start, finish, curTime)
         local alpha = fraction * 255
+
         if alpha > 0 then
             local w, h = scrW * 0.35, 28
             local x, y = (scrW * 0.5) - (w * 0.5), (scrH * 0.725) - (h * 0.5)
@@ -96,13 +107,19 @@ function lia.bar.drawAll()
     local frameTime = FrameTime()
     local curTime = CurTime()
     local updateValue = frameTime * 0.6
+
     for i = 1, #lia.bar.list do
         local bar = lia.bar.list[i]
+
         if bar then
             local realValue = bar.getValue()
             local value = math.Approach(deltas[i] or 0, realValue, updateValue)
             deltas[i] = value
-            if deltas[i] ~= realValue then bar.lifeTime = curTime + 5 end
+
+            if deltas[i] ~= realValue then
+                bar.lifeTime = curTime + 5
+            end
+
             if bar.lifeTime >= curTime or bar.visible or hook.Run("ShouldBarDraw", bar) then
                 lia.bar.draw(x, y, w, h, value, bar.color, bar)
                 y = y + h + 2

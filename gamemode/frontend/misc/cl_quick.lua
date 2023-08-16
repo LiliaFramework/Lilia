@@ -1,8 +1,12 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
-    if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
+    if IsValid(lia.gui.quick) then
+        lia.gui.quick:Remove()
+    end
+
     lia.gui.quick = self
     self:SetSize(400, 36)
     self:SetPos(ScrW() - 36, -36)
@@ -19,6 +23,7 @@ function PANEL:Init()
     self.title:SetTextInset(44, 0)
     self.title:SetTextColor(Color(250, 250, 250))
     self.title:SetExpensiveShadow(1, Color(0, 0, 0, 175))
+
     self.title.Paint = function(this, w, h)
         surface.SetDrawColor(lia.config.Color)
         surface.DrawRect(0, 0, w, h)
@@ -32,27 +37,27 @@ function PANEL:Init()
     self.expand:SetTextColor(color_white)
     self.expand:SetExpensiveShadow(1, Color(0, 0, 0, 150))
     self.expand:SetSize(36, 36)
+
     self.expand.DoClick = function(this)
         if self.expanded then
-            self:SizeTo(self:GetWide(), 36, 0.15, nil, nil, function() self:MoveTo(ScrW() - 36, 30, 0.15) end)
+            self:SizeTo(self:GetWide(), 36, 0.15, nil, nil, function()
+                self:MoveTo(ScrW() - 36, 30, 0.15)
+            end)
+
             self.expanded = false
         else
-            self:MoveTo(
-                ScrW() - 400,
-                30,
-                0.15,
-                nil,
-                nil,
-                function()
-                    local height = 0
-                    for k, v in pairs(self.items) do
-                        if IsValid(v) then height = height + v:GetTall() + 1 end
-                    end
+            self:MoveTo(ScrW() - 400, 30, 0.15, nil, nil, function()
+                local height = 0
 
-                    height = math.min(height, ScrH() * 0.5)
-                    self:SizeTo(self:GetWide(), height, 0.15)
+                for k, v in pairs(self.items) do
+                    if IsValid(v) then
+                        height = height + v:GetTall() + 1
+                    end
                 end
-            )
+
+                height = math.min(height, ScrH() * 0.5)
+                self:SizeTo(self:GetWide(), height, 0.15)
+            end)
 
             self.expanded = true
         end
@@ -69,6 +74,7 @@ end
 --------------------------------------------------------------------------------------------------------
 local function paintButton(button, w, h)
     local alpha = 0
+
     if button.Depressed or button.m_bSelected then
         alpha = 5
     elseif button.Hovered then
@@ -92,8 +98,13 @@ function PANEL:addButton(text, callback)
     button:SetTextInset(8, 0)
     button:SetTextColor(color_white)
     button.Paint = paintButton
-    if callback then button.DoClick = callback end
+
+    if callback then
+        button.DoClick = callback
+    end
+
     self.items[#self.items + 1] = button
+
     return button
 end
 
@@ -103,12 +114,14 @@ function PANEL:addSpacer()
     panel:SetTall(1)
     panel:Dock(TOP)
     panel:DockMargin(0, 1, 0, 0)
+
     panel.Paint = function(this, w, h)
         surface.SetDrawColor(255, 255, 255, 10)
         surface.DrawRect(0, 0, w, h)
     end
 
     self.items[#self.items + 1] = panel
+
     return panel
 end
 
@@ -116,16 +129,18 @@ end
 function PANEL:addCheck(text, callback, checked)
     local x, y
     local color
-    local button = self:addButton(
-        text,
-        function(panel)
-            panel.checked = not panel.checked
-            if callback then callback(panel, panel.checked) end
+
+    local button = self:addButton(text, function(panel)
+        panel.checked = not panel.checked
+
+        if callback then
+            callback(panel, panel.checked)
         end
-    )
+    end)
 
     button.PaintOver = function(this, w, h)
         x, y = w - 8, h * 0.5
+
         if this.checked then
             color = lia.config.Color
         else
@@ -136,6 +151,7 @@ function PANEL:addCheck(text, callback, checked)
     end
 
     button.checked = checked
+
     return button
 end
 

@@ -6,6 +6,7 @@ lia.currency.symbol = lia.currency.symbol or lia.currency.DefaultCurrencySymbol
 lia.currency.SingularDefaultCurrency = "Dollar"
 lia.currency.PluralDefaultCurrency = "Dollars"
 lia.currency.DefaultCurrencySymbol = "$"
+
 --------------------------------------------------------------------------------------------------------
 function lia.currency.set(symbol, singular, plural)
     lia.currency.symbol = symbol
@@ -31,6 +32,7 @@ function lia.currency.spawn(pos, amount, angle)
         money:SetAngles(angle or Angle(0, 0, 0))
         money:Spawn()
         money:Activate()
+
         return money
     end
 end

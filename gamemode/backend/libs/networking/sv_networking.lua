@@ -2,6 +2,7 @@
 function checkBadType(name, object)
     if isfunction(object) then
         ErrorNoHalt("Net var '" .. name .. "' contains a bad object type!")
+
         return true
     elseif istable(object) then
         for k, v in pairs(object) do
@@ -21,30 +22,29 @@ end
 --------------------------------------------------------------------------------------------------------
 function getNetVar(key, default)
     local value = lia.net.globals[key]
+
     return value ~= nil and value or default
 end
 
 --------------------------------------------------------------------------------------------------------
-hook.Add("EntityRemoved", "nCleanUp", function(entity) entity:clearNetVars() end)
---------------------------------------------------------------------------------------------------------
-hook.Add("PlayerInitialSpawn", "nSync", function(client) client:syncVars() end)
---------------------------------------------------------------------------------------------------------
-hook.Add(
-    "liaCharDeleted",
-    "liaCharRemoveName",
-    function(client, character)
-        lia.char.names[character:getID()] = nil
-        netstream.Start(client, "liaCharFetchNames", lia.char.names)
-    end
-)
+hook.Add("EntityRemoved", "nCleanUp", function(entity)
+    entity:clearNetVars()
+end)
 
 --------------------------------------------------------------------------------------------------------
-hook.Add(
-    "OnCharCreated",
-    "liaCharAddName",
-    function(client, character, data)
-        lia.char.names[character:getID()] = data.name
-        netstream.Start(client, "liaCharFetchNames", lia.char.names)
-    end
-)
+hook.Add("PlayerInitialSpawn", "nSync", function(client)
+    client:syncVars()
+end)
+
+--------------------------------------------------------------------------------------------------------
+hook.Add("liaCharDeleted", "liaCharRemoveName", function(client, character)
+    lia.char.names[character:getID()] = nil
+    netstream.Start(client, "liaCharFetchNames", lia.char.names)
+end)
+
+--------------------------------------------------------------------------------------------------------
+hook.Add("OnCharCreated", "liaCharAddName", function(client, character, data)
+    lia.char.names[character:getID()] = data.name
+    netstream.Start(client, "liaCharFetchNames", lia.char.names)
+end)
 --------------------------------------------------------------------------------------------------------

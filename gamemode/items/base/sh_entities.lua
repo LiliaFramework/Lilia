@@ -3,6 +3,7 @@ ITEM.model = ""
 ITEM.description = ""
 ITEM.category = "Entities"
 ITEM.entityid = ""
+
 ITEM.functions.Place = {
     onRun = function(itemTable)
         local client = itemTable.player

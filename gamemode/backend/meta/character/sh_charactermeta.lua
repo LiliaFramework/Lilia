@@ -5,6 +5,7 @@ charMeta.__index = charMeta
 charMeta.id = charMeta.id or 0
 charMeta.vars = charMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
+
 --------------------------------------------------------------------------------------------------------
 function charMeta:__tostring()
     return "character[" .. (self.id or 0) .. "]"
@@ -23,6 +24,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function charMeta:getBoost(attribID)
     local boosts = self:getBoosts()
+
     return boosts[attribID]
 end
 
@@ -35,11 +37,13 @@ end
 function charMeta:getAttrib(key, default)
     local att = self:getAttribs()[key] or default or 0
     local boosts = self:getBoosts()[key]
+
     if boosts then
         for _, v in pairs(boosts) do
             att = att + v
         end
     end
+
     return att
 end
 
@@ -49,17 +53,21 @@ function charMeta:getPlayer()
         return self.player
     elseif self.steamID then
         local steamID = self.steamID
+
         for k, v in ipairs(player.GetAll()) do
             if v:SteamID64() == steamID then
                 self.player = v
+
                 return v
             end
         end
     else
         for k, v in ipairs(player.GetAll()) do
             local char = v:getChar()
+
             if char and (char:getID() == self:getID()) then
                 self.player = v
+
                 return v
             end
         end
@@ -68,13 +76,17 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function charMeta:hasMoney(amount)
-    if amount < 0 then print("Negative Money Check Received.") end
+    if amount < 0 then
+        print("Negative Money Check Received.")
+    end
+
     return self:getMoney() >= amount
 end
 
 --------------------------------------------------------------------------------------------------------
 function charMeta:giveMoney(amount, takingMoney)
     self:setMoney(self:getMoney() + amount)
+
     return true
 end
 
@@ -82,6 +94,7 @@ end
 function charMeta:takeMoney(amount)
     amount = math.abs(amount)
     self:giveMoney(-amount, true)
+
     return true
 end
 
@@ -90,16 +103,23 @@ function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
     data.index = data.index or table.Count(lia.char.vars)
     local upperName = key:sub(1, 1):upper() .. key:sub(2)
+
     if SERVER and not data.isNotModifiable then
         if data.onSet then
             charMeta["set" .. upperName] = data.onSet
         elseif data.noNetworking then
-            charMeta["set" .. upperName] = function(self, value) self.vars[key] = value end
+            charMeta["set" .. upperName] = function(self, value)
+                self.vars[key] = value
+            end
         elseif data.isLocal then
             charMeta["set" .. upperName] = function(self, value)
                 local curChar = self:getPlayer() and self:getPlayer():getChar()
                 local sendID = true
-                if curChar and curChar == self then sendID = false end
+
+                if curChar and curChar == self then
+                    sendID = false
+                end
+
                 local oldVar = self.vars[key]
                 self.vars[key] = value
                 netstream.Start(self.player, "charSet", key, value, sendID and self:getID() or nil)
@@ -122,6 +142,7 @@ function lia.char.registerVar(key, data)
             local value = self.vars[key]
             if value ~= nil then return value end
             if default == nil then return lia.char.vars[key] and lia.char.vars[key].default or nil end
+
             return default
         end
     end
@@ -139,6 +160,7 @@ function charMeta:hasFlags(flags)
     for i = 1, #flags do
         if self:getFlags():find(flags:sub(i, i), 1, true) then return true end
     end
+
     return hook.Run("CharacterFlagCheck", self, flags) or false
 end
 
@@ -146,14 +168,17 @@ end
 function charMeta:joinClass(class, isForced)
     if not class then
         self:kickClass()
+
         return
     end
 
     local oldClass = self:getClass()
     local client = self:getPlayer()
+
     if isForced or lia.class.canBe(client, class) then
         self:setClass(class)
         hook.Run("OnPlayerJoinClass", client, class, oldClass)
+
         return true
     else
         return false
@@ -165,6 +190,7 @@ function charMeta:kickClass()
     local client = self:getPlayer()
     if not client then return end
     local goClass
+
     for k, v in pairs(lia.class.list) do
         if v.faction == client:Team() and v.isDefault then
             goClass = k

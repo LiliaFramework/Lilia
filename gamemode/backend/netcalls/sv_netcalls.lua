@@ -18,90 +18,85 @@ util.AddNetworkString("worlditem_cleanup_inbound_final")
 util.AddNetworkString("map_cleanup_inbound")
 util.AddNetworkString("map_cleanup_inbound_final")
 util.AddNetworkString("VoiceMenu")
+
 --------------------------------------------------------------------------------------------------------
-net.Receive(
-    "liaStringReq",
-    function(_, client)
-        local id = net.ReadUInt(32)
-        local value = net.ReadString()
-        if client.liaStrReqs and client.liaStrReqs[id] then
-            client.liaStrReqs[id](value)
-            client.liaStrReqs[id] = nil
-        end
+net.Receive("liaStringReq", function(_, client)
+    local id = net.ReadUInt(32)
+    local value = net.ReadString()
+
+    if client.liaStrReqs and client.liaStrReqs[id] then
+        client.liaStrReqs[id](value)
+        client.liaStrReqs[id] = nil
     end
-)
+end)
 
 --------------------------------------------------------------------------------------------------------
-net.Receive(
-    "liaTransferItem",
-    function(_, client)
-        local itemID = net.ReadUInt(32)
-        local x = net.ReadUInt(32)
-        local y = net.ReadUInt(32)
-        local invID = net.ReadType()
-        hook.Run("HandleItemTransferRequest", client, itemID, x, y, invID)
+net.Receive("liaTransferItem", function(_, client)
+    local itemID = net.ReadUInt(32)
+    local x = net.ReadUInt(32)
+    local y = net.ReadUInt(32)
+    local invID = net.ReadType()
+    hook.Run("HandleItemTransferRequest", client, itemID, x, y, invID)
+end)
+
+--------------------------------------------------------------------------------------------------------
+netstream.Hook("invAct", function(client, action, item, invID, data)
+    local character = client:getChar()
+    if not character then return end
+    local entity
+
+    if isentity(item) then
+        if not IsValid(item) then return end
+        if item:GetPos():Distance(client:GetPos()) > 96 then return end
+        if not item.liaItemID then return end
+        entity = item
+        item = lia.item.instances[item.liaItemID]
+    else
+        item = lia.item.instances[item]
     end
-)
+
+    if not item then return end
+    local inventory = lia.inventory.instances[item.invID]
+
+    local context = {
+        client = client,
+        item = item,
+        entity = entity,
+        action = action
+    }
+
+    if inventory and not inventory:canAccess("item", context) then return end
+    item:interact(action, client, entity, data)
+end)
 
 --------------------------------------------------------------------------------------------------------
-netstream.Hook(
-    "invAct",
-    function(client, action, item, invID, data)
-        local character = client:getChar()
-        if not character then return end
-        local entity
-        if isentity(item) then
-            if not IsValid(item) then return end
-            if item:GetPos():Distance(client:GetPos()) > 96 then return end
-            if not item.liaItemID then return end
-            entity = item
-            item = lia.item.instances[item.liaItemID]
-        else
-            item = lia.item.instances[item]
-        end
-
-        if not item then return end
-        local inventory = lia.inventory.instances[item.invID]
-        local context = {
-            client = client,
-            item = item,
-            entity = entity,
-            action = action
-        }
-
-        if inventory and not inventory:canAccess("item", context) then return end
-        item:interact(action, client, entity, data)
-    end
-)
-
 --------------------------------------------------------------------------------------------------------
-netstream.Hook("liaCharFetchNames", function(client) netstream.Start(client, "liaCharFetchNames", lia.char.names) end)
---------------------------------------------------------------------------------------------------------
-netstream.Hook(
-    "cmd",
-    function(client, command, arguments)
-        if (client.liaNextCmd or 0) < CurTime() then
-            local arguments2 = {}
-            for _, v in ipairs(arguments) do
-                if isstring(v) or isnumber(v) then arguments2[#arguments2 + 1] = tostring(v) end
+netstream.Hook("cmd", function(client, command, arguments)
+    if (client.liaNextCmd or 0) < CurTime() then
+        local arguments2 = {}
+
+        for _, v in ipairs(arguments) do
+            if isstring(v) or isnumber(v) then
+                arguments2[#arguments2 + 1] = tostring(v)
             end
-
-            lia.command.parse(client, nil, command, arguments2)
-            client.liaNextCmd = CurTime() + 0.2
         end
+
+        lia.command.parse(client, nil, command, arguments2)
+        client.liaNextCmd = CurTime() + 0.2
     end
-)
+end)
 
 --------------------------------------------------------------------------------------------------------
-netstream.Hook(
-    "ChangeMode",
-    function(client, mode)
-        client:setNetVar("voiceRange", mode)
-        if client:getNetVar("voiceRange") > #lia.config.Ranges then client:setNetVar("voiceRange", 2) end
+netstream.Hook("ChangeMode", function(client, mode)
+    client:setNetVar("voiceRange", mode)
+
+    if client:getNetVar("voiceRange") > #lia.config.Ranges then
+        client:setNetVar("voiceRange", 2)
     end
-)
+end)
 
 --------------------------------------------------------------------------------------------------------
-net.Receive("liaTypeStatus", function(_, client) client:setNetVar("typing", net.ReadBool()) end)
-
+net.Receive("liaTypeStatus", function(_, client)
+    client:setNetVar("typing", net.ReadBool())
+end)
 --------------------------------------------------------------------------------------------------------

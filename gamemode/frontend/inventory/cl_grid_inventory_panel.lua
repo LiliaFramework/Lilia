@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
+
 -------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:SetPaintBackground(false)
@@ -11,8 +12,10 @@ end
 --------------------------------------------------------------------------------------------------------
 function PANEL:computeOccupied()
     if not self.inventory then return end
+
     for y = 0, self.gridH do
         self.occupied[y] = {}
+
         for x = 0, self.gridW do
             self.occupied[y][x] = false
         end
@@ -21,6 +24,7 @@ function PANEL:computeOccupied()
     for _, item in pairs(self.inventory:getItems(true)) do
         local x, y = item:getData("x"), item:getData("y")
         if not x then continue end
+
         for offsetX = 0, (item.width or 1) - 1 do
             for offsetY = 0, (item.height or 1) - 1 do
                 self.occupied[y + offsetY - 1][x + offsetX - 1] = true
@@ -84,7 +88,10 @@ end
 --------------------------------------------------------------------------------------------------------
 function PANEL:populateItems()
     for key, icon in pairs(self.icons) do
-        if IsValid(icon) then icon:Remove() end
+        if IsValid(icon) then
+            icon:Remove()
+        end
+
         self.icons[key] = nil
     end
 
@@ -100,17 +107,29 @@ function PANEL:addItem(item)
     local id = item:getID()
     local x, y = item:getData("x"), item:getData("y")
     if not x or not y then return end
-    if IsValid(self.icons[id]) then self.icons[id]:Remove() end
+
+    if IsValid(self.icons[id]) then
+        self.icons[id]:Remove()
+    end
+
     local size = self.size + 2
     local icon = self:Add("liaGridInvItem")
     icon:setItem(item)
     icon:SetPos((x - 1) * size, (y - 1) * size)
     icon:SetSize((item.width or 1) * size - 2, (item.height or 1) * size - 2)
     icon:InvalidateLayout(true)
-    icon.OnMousePressed = function(icon, keyCode) self:onItemPressed(icon, keyCode) end
+
+    icon.OnMousePressed = function(icon, keyCode)
+        self:onItemPressed(icon, keyCode)
+    end
+
     icon.OnMouseReleased = function(icon, keyCode)
         local heldPanel = lia.item.heldPanel
-        if IsValid(heldPanel) then heldPanel:onItemReleased(icon, keyCode) end
+
+        if IsValid(heldPanel) then
+            heldPanel:onItemReleased(icon, keyCode)
+        end
+
         icon:DragMouseRelease(keyCode)
         icon:MouseCapture(false)
         lia.item.held = nil
@@ -135,10 +154,12 @@ function PANEL:drawHeldItemRectangle()
     local maxOffsetY = (item.height or 1) - 1
     local maxOffsetX = (item.width or 1) - 1
     local drawTarget = nil
+
     for itemID, invItem in pairs(self.inventory.items) do
         if item:getID() == itemID then continue end
         local targetX, targetY = invItem:getData("x") - 1, invItem:getData("y") - 1
         local targetW, targetH = invItem.width - 1, invItem.height - 1
+
         if x + (item.width - 1) >= targetX and x <= targetX + targetW and y + (item.height - 1) >= targetY and y <= targetY + targetH and (invItem.onCombine or item.onCombineTo) then
             drawTarget = {
                 x = targetX,
@@ -157,10 +178,18 @@ function PANEL:drawHeldItemRectangle()
     else
         for offsetY = 0, maxOffsetY do
             trimY = 0
+
             for offsetX = 0, maxOffsetX do
                 trimX = 0
-                if offsetY == maxOffsetY then trimY = 2 end
-                if offsetX == maxOffsetX then trimX = 2 end
+
+                if offsetY == maxOffsetY then
+                    trimY = 2
+                end
+
+                if offsetX == maxOffsetX then
+                    trimX = 2
+                end
+
                 local realX, realY = x + offsetX, y + offsetY
                 if realX >= self.gridW or realY >= self.gridH or realX < 0 or realY < 0 then continue end
                 surface.SetDrawColor(self.occupied[y + offsetY][x + offsetX] and Color(231, 76, 60, 25) or Color(46, 204, 113, 25))
@@ -203,6 +232,7 @@ end
 function PANEL:Paint(w, h)
     surface.SetDrawColor(0, 0, 0, 100)
     local size = self.size
+
     for y = 0, self.gridH - 1 do
         for x = 0, self.gridW - 1 do
             surface.DrawRect(x * (size + 2), y * (size + 2), size, size)
@@ -219,7 +249,9 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnCursorExited()
-    if lia.item.heldPanel == self then lia.item.heldPanel = nil end
+    if lia.item.heldPanel == self then
+        lia.item.heldPanel = nil
+    end
 end
 
 --------------------------------------------------------------------------------------------------------

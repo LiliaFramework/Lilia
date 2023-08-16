@@ -9,6 +9,7 @@ lia.anim.PlayerModelTposingFixer = lia.anim.PlayerModelTposingFixer or {}
 lia.anim.ModelTranslations = lia.anim.ModelTranslations or player_manager.TranslateToPlayerModelName
 --------------------------------------------------------------------------------------------------------
 local translations = {}
+
 --------------------------------------------------------------------------------------------------------
 lia.anim.citizen_male = {
     normal = {
@@ -394,7 +395,10 @@ lia.anim.DefaultTposingFixer = {
 
 --------------------------------------------------------------------------------------------------------
 function lia.anim.setModelClass(model, class)
-    if not lia.anim[class] then error("'" .. tostring(class) .. "' is not a valid animation class!") end
+    if not lia.anim[class] then
+        error("'" .. tostring(class) .. "' is not a valid animation class!")
+    end
+
     translations[model:lower()] = class
 end
 
@@ -403,6 +407,7 @@ function lia.anim.getModelClass(model)
     model = string.lower(model)
     local class = translations[model]
     if class then return class end
+
     if model:find("/player") then
         class = "player"
     elseif string.find(model, "female") then
@@ -412,6 +417,7 @@ function lia.anim.getModelClass(model)
     end
 
     lia.anim.setModelClass(model, class)
+
     return class
 end
 
@@ -419,6 +425,7 @@ end
 function player_manager.TranslateToPlayerModelName(model)
     model = model:lower():gsub("\\", "/")
     local result = lia.anim.ModelTranslations(model)
+
     if result == "kleiner" and not model:find("kleiner") then
         local model2 = model:gsub("models/", "models/player/")
         result = lia.anim.ModelTranslations(model2)
@@ -430,6 +437,7 @@ function player_manager.TranslateToPlayerModelName(model)
         result = lia.anim.ModelTranslations(model2)
         if result ~= "kleiner" then return result end
     end
+
     return result
 end
 
