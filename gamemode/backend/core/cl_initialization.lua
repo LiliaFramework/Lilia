@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedConfig()
     hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
-    print("LOADED CONFIG!")
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -32,7 +31,6 @@ function GM:LiliaLoaded()
     lia.module.namecache = namecache
 end
 
---------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------
 cvars.AddChangeCallback("lia_cheapblur", function(name, old, new)
     local useCheapBlur = CreateClientConVar("lia_cheapblur", 0, true):GetBool() or false

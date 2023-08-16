@@ -199,9 +199,3 @@ function lia.char.delete(id, client)
 end
 
 --------------------------------------------------------------------------------------------------------
-hook.Add("Test_Function", "1looool", function()
-    if lia.db then
-    else
-        print("retard")
-    end
-end)

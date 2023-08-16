@@ -36,13 +36,15 @@ end
 -- Creates a liaCharacterSlot for each of the local player's characters.
 function PANEL:createCharacterSlots()
 	self.scroll:Clear()
+
 	if (#lia.characters == 0) then
 		return lia.gui.character:showContent()
 	end
+	PrintTable(lia.characters, 1)
 	for _, id in ipairs(lia.characters) do
 		local character = lia.char.loaded[id]
 		if (not character) then continue end
-
+		print(character .. " ".. id)
 		local panel = self.scroll:Add("liaCharacterSlot")
 		panel:Dock(LEFT)
 		panel:DockMargin(0, 0, 8, 8)

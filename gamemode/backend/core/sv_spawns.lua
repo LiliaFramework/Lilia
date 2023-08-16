@@ -192,8 +192,8 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerInitialSpawn(client)
-    client.liaJoinTime = RealTime()
     if client:IsBot() then return hook.Run("SetupBotCharacter", client) end
+    client.liaJoinTime = RealTime()
 
     client:loadLiliaData(function(data)
         if not IsValid(client) then return end
@@ -201,7 +201,7 @@ function GM:PlayerInitialSpawn(client)
         client:setLiliaData("lastIP", address)
         netstream.Start(client, "liaDataSync", data, client.firstJoin, client.lastJoin)
 
-        for _, v in pairs(lia.item.instances) do
+        _, v in pairs(lia.item.instances) do
             if v.entity and v.invID == 0 then
                 v:sync(client)
             end
@@ -224,12 +224,12 @@ function GM:PlayerInitialSpawn(client)
     end
 
     self:RegisterPlayer(client)
-    hook.Run("PostPlayerInitialSpawn", client)
-
+    
     timer.Simple(1, function()
         if client:IsValid() and lia.config.DefaultStaff[client:SteamID()] then
             client:SetUserGroup(lia.config.DefaultStaff[client:SteamID()])
         end
     end)
+    hook.Run("PostPlayerInitialSpawn", client)    
 end
 --------------------------------------------------------------------------------------------------------

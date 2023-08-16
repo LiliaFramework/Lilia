@@ -212,19 +212,23 @@ function playerMeta:MeetsRequiredSkills(requiredSkillLevels)
 end
 
 --------------------------------------------------------------------------------------------------------
-playerMeta.steamName = playerMeta.steamName or playerMeta.Name
-playerMeta.SteamName = playerMeta.steamName
 
 function playerMeta:getChar()
     return lia.char.loaded[self.getNetVar(self, "char")]
 end
-
+--------------------------------------------------------------------------------------------------------
 function playerMeta:Name()
     local character = self.getChar(self)
 
     return character and character.getName(character) or self.steamName(self)
 end
-
+--------------------------------------------------------------------------------------------------------
+function playerMeta:SteamID64()
+    return self:liaSteamID64() or 0
+end
 playerMeta.Nick = playerMeta.Name
 playerMeta.GetName = playerMeta.Name
+playerMeta.liaSteamID64 = playerMeta.liaSteamID64 or playerMeta.SteamID64 -- Add a new field to store the original SteamID64 function
+playerMeta.steamName = playerMeta.steamName or playerMeta.Name
+playerMeta.SteamName = playerMeta.steamName
 --------------------------------------------------------------------------------------------------------

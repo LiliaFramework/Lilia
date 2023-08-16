@@ -18,8 +18,6 @@ include("config.lua")
 include("includer.lua")
 include("data.lua")
 include("database.lua")
-include("loader.lua")
-
 timer.Simple(0, function()
     hook.Run("SetupDatabase")
 
@@ -30,6 +28,8 @@ timer.Simple(0, function()
         hook.Run("DatabaseConnected")
     end)
 end)
+
+include("loader.lua")
 
 --------------------------------------------------------------------------------------------------------
 resource.AddWorkshop("2959728255")

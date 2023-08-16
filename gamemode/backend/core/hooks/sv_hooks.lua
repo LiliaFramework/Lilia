@@ -138,10 +138,6 @@ function GM:PlayerSay(client, message)
 end
 
 --------------------------------------------------------------------------------------------------------
-function GM:PlayerDisconnected(client)
-end
-
---------------------------------------------------------------------------------------------------------
 function GM:InitPostEntity()
     local doors = ents.FindByClass("prop_door_rotating")
 

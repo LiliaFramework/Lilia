@@ -334,7 +334,7 @@ end)
 
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("charInfo", function(data, id, client)
-    lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client)
+	lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client)
 end)
 
 --------------------------------------------------------------------------------------------------------
@@ -351,14 +351,16 @@ end)
 
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("charVar", function(key, value, id)
-    id = id or (LocalPlayer():getChar() and LocalPlayer():getChar().id)
-    local character = lia.char.loaded[id]
+	id = id or (LocalPlayer():getChar() and LocalPlayer():getChar().id)
 
-    if character then
-        local oldVar = character:getVar()[key]
-        character:getVar()[key] = value
-        hook.Run("OnCharLocalVarChanged", character, key, oldVar, value)
-    end
+	local character = lia.char.loaded[id]
+
+	if (character) then
+		local oldVar = character:getVar()[key]
+		character:getVar()[key] = value
+
+		hook.Run("OnCharLocalVarChanged", character, key, oldVar, value)
+	end
 end)
 
 --------------------------------------------------------------------------------------------------------
@@ -373,7 +375,7 @@ end)
 
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("charKick", function(id, isCurrentChar)
-    hook.Run("KickedFromCharacter", id, isCurrentChar)
+	hook.Run("KickedFromCharacter", id, isCurrentChar)
 end)
 
 --------------------------------------------------------------------------------------------------------
