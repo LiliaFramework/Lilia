@@ -1,5 +1,6 @@
---------------------------------------------------------------------------------------------------------function MODULE:PlayerSpawnedProp(client, model, entity)
-	local data = self.definitions[model:lower()]
+--------------------------------------------------------------------------------------------------------
+function MODULE:PlayerSpawnedProp(client, model, entity)
+	local data = STORAGE_DEFINITIONS[model:lower()]
 	if not data then return end
 	if hook.Run("CanPlayerSpawnStorage", client, entity, data) == false then return end
 	local storage = ents.Create("lia_storage")
@@ -66,7 +67,7 @@ function MODULE:LoadData()
 
 	for _, info in ipairs(data) do
 		local position, angles, invID, model, password = unpack(info)
-		local storage = self.definitions[model]
+		local storage = STORAGE_DEFINITIONS[model]
 		if not storage then continue end
 		local storage = ents.Create("lia_storage")
 		storage:SetPos(position)

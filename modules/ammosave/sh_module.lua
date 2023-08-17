@@ -9,7 +9,9 @@ MODULE.desc = "Saves the ammo of a character."
 --------------------------------------------------------------------------------------------------------
 lia.util.include("sv_module.lua")
 --------------------------------------------------------------------------------------------------------
-local ammo = {
+lia.config.AmmoRegister = {"ar2", "pistol", "357", "smg1", "xbowbolt", "buckshot", "rpg_round", "smg1_grenade", "grenade", "ar2altfire", "slam", "alyxgun", "sniperround", "sniperpenetratedround", "thumper", "gravity", "battery", "gaussenergy", "combinecannon", "airboatgun", "striderminigun", "helicoptergun"}
+--------------------------------------------------------------------------------------------------------
+lia.config.Ammo = {
     ["7.92x33mm Kurz"] = "ar2",
     ["300 AAC Blackout"] = "ar2",
     ["5.7x28mm"] = "ar2",
@@ -39,34 +41,16 @@ local ammo = {
     [".338 Lapua"] = "sniperround",
 }
 --------------------------------------------------------------------------------------------------------
-lia.ammo.register("ar2")
-lia.ammo.register("pistol")
-lia.ammo.register("357")
-lia.ammo.register("smg1")
-lia.ammo.register("xbowbolt")
-lia.ammo.register("buckshot")
-lia.ammo.register("rpg_round")
-lia.ammo.register("smg1_grenade")
-lia.ammo.register("grenade")
-lia.ammo.register("ar2altfire")
-lia.ammo.register("slam")
-lia.ammo.register("alyxgun")
-lia.ammo.register("sniperround")
-lia.ammo.register("sniperpenetratedround")
-lia.ammo.register("thumper")
-lia.ammo.register("gravity")
-lia.ammo.register("battery")
-lia.ammo.register("gaussenergy")
-lia.ammo.register("combinecannon")
-lia.ammo.register("airboatgun")
-lia.ammo.register("striderminigun")
-lia.ammo.register("helicoptergun")
+function lia.ammo.register(name)
+    table.insert(MODULE.ammoList, name)
+end
 --------------------------------------------------------------------------------------------------------
-for k, v in pairs(ammo) do
+for k, v in pairs(lia.config.Ammo) do
     lia.ammo.register(v)
     lia.ammo.register(k)
 end
 --------------------------------------------------------------------------------------------------------
-function lia.ammo.register(name)
-    table.insert(MODULE.ammoList, name)
+for k, v in pairs(lia.config.AmmoRegister) do
+    lia.ammo.register(v)
 end
+--------------------------------------------------------------------------------------------------------
