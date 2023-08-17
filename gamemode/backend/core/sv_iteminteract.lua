@@ -82,7 +82,7 @@ function GM:CanPlayerTakeItem(client, item)
     if IsValid(item.entity) then
         local char = client:getChar()
 
-        if item.entity.liaSteamID == client:SteamID() and item.entity.liaCharID ~= char:getID() then
+        if item.entity.SteamID64 == client:SteamID() and item.entity.liaCharID ~= char:getID() then
             client:notifyLocalized("playerCharBelonging")
 
             return false
