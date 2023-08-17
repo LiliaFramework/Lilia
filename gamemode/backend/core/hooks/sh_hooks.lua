@@ -233,14 +233,6 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerUseChar(client, character)
-    local banned = character and character:getData("banned")
-
-    if banned then
-        if isnumber(banned) and banned < os.time() then return end
-
-        return false, "@charBanned"
-    end
-
     if client:getChar() and client:getChar():getID() == character:getID() then return false, "You are already using this character!" end
     if client.LastDamaged and client.LastDamaged > CurTime() - 120 and character:getFaction() ~= FACTION_STAFF and client:getChar() then return false, "You took damage too recently to switch characters!" end
     if client:getNetVar("restricted") then return false, "You can't change characters while tied!" end
@@ -252,6 +244,12 @@ function GM:CanPlayerUseChar(client, character)
 
     local faction = lia.faction.indices[character:getFaction()]
     if faction and hook.Run("CheckFactionLimitReached", faction, character, client) then return false, "@limitFaction" end
+
+    if client:getChar() and client:getChar():getData("banned", false) then
+        if isnumber(banned) and banned < os.time() then return end
+
+        return false, "@charBanned"
+    end
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -488,6 +486,7 @@ end
 
 function GM:InitPostEntity()
     local ip, port = game.GetIPAddress():match("([^:]+):(%d+)")
+
     if ip == lia.config.DevServerIP and port == lia.config.DevServerPort then
         DEV = true
     else
@@ -503,11 +502,16 @@ function GM:InitPostEntity()
     if CLIENT then
         lia.joinTime = RealTime() - 0.9716
         lia.faction.formatModelData()
-        if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
+
+        if system.IsWindows() and not system.HasFocus() then
+            system.FlashWindow()
+        end
     else
         local doors = ents.FindByClass("prop_door_rotating")
+
         for _, v in ipairs(doors) do
             local parent = v:GetOwner()
+
             if IsValid(parent) then
                 v.liaPartner = parent
                 parent.liaPartner = v
@@ -523,15 +527,18 @@ function GM:InitPostEntity()
         end
 
         lia.faction.formatModelData()
-        timer.Simple(2, function() lia.entityDataLoaded = true end)
-        lia.db.waitForTablesToLoad():next(
-            function()
-                hook.Run("LoadData")
-                hook.Run("PostLoadData")
-            end
-        )
+
+        timer.Simple(2, function()
+            lia.entityDataLoaded = true
+        end)
+
+        lia.db.waitForTablesToLoad():next(function()
+            hook.Run("LoadData")
+            hook.Run("PostLoadData")
+        end)
     end
 end
+
 function GM:InitializedExtras()
     if CLIENT then
         hook.Remove("StartChat", "StartChatIndicator")

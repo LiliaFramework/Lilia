@@ -13,7 +13,7 @@ charMeta.id = charMeta.id or 0
 charMeta.vars = charMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
 
---------------------------------------------------------------------------------------------------------3
+--------------------------------------------------------------------------------------------------------
 if SERVER then
     if not lia.db then
         print("db not up")
@@ -449,3 +449,51 @@ do
     playerMeta.Nick = playerMeta.Name
     playerMeta.GetName = playerMeta.Name
 end
+
+hook.Add("Re-RunNames", "RerunNames1", function()
+    if SERVER then
+        if not lia.db then
+            print("db not up")
+        end
+
+        -- Fetches all the character names and stores
+        -- them into a table so they only have to be fetched once
+        if #lia.char.names < 1 then
+            lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
+                if data and #data > 0 then
+                    for k, v in pairs(data) do
+                        lia.char.names[v._id] = v._name
+                    end
+                end
+            end)
+        end
+
+        -- Returns the character names
+        netstream.Hook("liaCharFetchNames", function(client)
+            netstream.Start(client, "liaCharFetchNames", lia.char.names)
+        end)
+
+        -- Removes name from table upon character deletion
+        hook.Add("liaCharDeleted", "liaCharRemoveName", function(client, character)
+            lia.char.names[character:getID()] = nil
+            netstream.Start(client, "liaCharFetchNames", lia.char.names)
+        end)
+
+        -- Removes name from table upon character deletion
+        hook.Add("OnCharCreated", "liaCharAddName", function(client, character, data)
+            lia.char.names[character:getID()] = data.name
+            netstream.Start(client, "liaCharFetchNames", lia.char.names)
+        end)
+    end
+
+    if CLIENT then
+        -- Fetch existing character names
+        netstream.Hook("liaCharFetchNames", function(data)
+            lia.char.names = data
+        end)
+
+        if #lia.char.names < 1 then
+            netstream.Start("liaCharFetchNames")
+        end
+    end
+end)

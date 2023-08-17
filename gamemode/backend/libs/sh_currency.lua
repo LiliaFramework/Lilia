@@ -1,11 +1,8 @@
 --------------------------------------------------------------------------------------------------------
 lia.currency = lia.currency or {}
-lia.currency.plural = lia.currency.plural or lia.currency.PluralDefaultCurrency
-lia.currency.singular = lia.currency.singular or lia.currency.SingularDefaultCurrency
-lia.currency.symbol = lia.currency.symbol or lia.currency.DefaultCurrencySymbol
-lia.currency.SingularDefaultCurrency = "Dollar"
-lia.currency.PluralDefaultCurrency = "Dollars"
-lia.currency.DefaultCurrencySymbol = "$"
+lia.currency.plural = lia.currency.plural or "Dollar"
+lia.currency.singular = lia.currency.singular or "Dollars"
+lia.currency.symbol = lia.currency.symbol or "$"
 
 --------------------------------------------------------------------------------------------------------
 function lia.currency.set(symbol, singular, plural)

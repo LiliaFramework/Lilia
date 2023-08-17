@@ -197,5 +197,4 @@ function lia.char.delete(id, client)
 
     hook.Run("OnCharacterDelete", client, id)
 end
-
 --------------------------------------------------------------------------------------------------------
