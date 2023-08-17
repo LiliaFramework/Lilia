@@ -1,7 +1,8 @@
+--------------------------------------------------------------------------------------------------------
 lia.config.FactionBroadcastEnabled = true
 lia.config.AdvertisementEnabled = true
 lia.config.AdvertisementPrice = 25
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("roll", {
     adminOnly = false,
     privilege = "Basic User Permissions",
@@ -10,7 +11,7 @@ lia.command.add("roll", {
         lia.chat.send(client, "roll", math.random(0, math.min(tonumber(arguments[1]) or 100, 100)))
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("dropmoney", {
     adminOnly = false,
     privilege = "Basic User Permissions",
@@ -27,7 +28,7 @@ lia.command.add("dropmoney", {
         client:doGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_GMOD_GESTURE_ITEM_PLACE, true)
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("chardesc", {
     adminOnly = false,
     privilege = "Basic User Permissions",
@@ -49,7 +50,7 @@ lia.command.add("chardesc", {
         return "@descChanged"
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("beclass", {
     adminOnly = false,
     privilege = "Basic User Permissions",
@@ -95,7 +96,7 @@ lia.command.add("beclass", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("chargetup", {
     adminOnly = false,
     privilege = "Basic User Permissions",
@@ -112,7 +113,7 @@ lia.command.add("chargetup", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("givemoney", {
     adminOnly = false,
     privilege = "Basic User Permissions",
@@ -141,7 +142,7 @@ lia.command.add("givemoney", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("bringlostitems", {
     adminOnly = false,
     privilege = "Basic User Permissions",
@@ -153,7 +154,7 @@ lia.command.add("bringlostitems", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("carddraw", {
     adminOnly = false,
     privilege = "Basic User Permissions",
@@ -166,7 +167,7 @@ lia.command.add("carddraw", {
         lia.chat.send(client, "rolld", msg)
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("fallover", {
     adminOnly = false,
     privilege = "Basic User Permissions",
@@ -207,7 +208,7 @@ lia.command.add("fallover", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("factionlist", {
     adminOnly = false,
     privilege = "Basic User Permissions",
@@ -218,7 +219,7 @@ lia.command.add("factionlist", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("getpos", {
     adminOnly = false,
     privilege = "Basic User Permissions",
@@ -226,7 +227,7 @@ lia.command.add("getpos", {
         client:ChatPrint("MY POSITION: " .. tostring(client:GetPos()))
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("doorname", {
     adminOnly = false,
     privilege = "Basic User Permissions",
@@ -238,7 +239,7 @@ lia.command.add("doorname", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 if lia.config.FactionBroadcastEnabled then
     lia.command.add("factionbroadcast", {
         adminOnly = false,
@@ -293,7 +294,7 @@ if lia.config.FactionBroadcastEnabled then
         end
     })
 end
-
+--------------------------------------------------------------------------------------------------------
 if lia.config.AdvertisementEnabled then
     lia.command.add("advertisement", {
         adminOnly = false,
@@ -333,3 +334,4 @@ if lia.config.AdvertisementEnabled then
         end
     })
 end
+--------------------------------------------------------------------------------------------------------

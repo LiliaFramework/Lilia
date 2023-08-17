@@ -2,7 +2,6 @@
 hook.Add("ShowHelp", "DisableShowHelp", function()
     return false
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("PlayerBindPress", "F1MenuPlayerBindPress", function(client, bind, pressed)
     if bind:lower():find("gm_showhelp") and pressed then
@@ -15,7 +14,6 @@ hook.Add("PlayerBindPress", "F1MenuPlayerBindPress", function(client, bind, pres
         return true
     end
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("OnCharInfoSetup", "F1MenuOnCharInfoSetup", function(infoPanel)
     if not IsValid(infoPanel.model) then return end

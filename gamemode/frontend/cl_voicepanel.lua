@@ -21,7 +21,6 @@ function PANEL:Init()
     self:DockMargin(2, 2, 2, 2)
     self:Dock(BOTTOM)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Setup(client)
     self.client = client
@@ -45,7 +44,6 @@ function PANEL:Think()
     if IsValid(self.client) then self.LabelName:SetText(self.name) end
     if self.fadeAnim then self.fadeAnim:Run() end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:FadeOut(anim, delta, data)
     if anim.Finished then
@@ -59,14 +57,10 @@ function PANEL:FadeOut(anim, delta, data)
 
     self:SetAlpha(255 - (255 * (delta * 2)))
 end
-
 --------------------------------------------------------------------------------------------------------
 vgui.Register("VoicePanel", PANEL, "DPanel")
 --------------------------------------------------------------------------------------------------------
-hook.Add(
-    "PlayerStartVoice",
-    "liaPlayerStartVoice",
-    function(client)
+hook.Add("PlayerStartVoice", "liaPlayerStartVoice", function(client)
         if not IsValid(g_VoicePanelList) or not lia.config.AllowVoice then return end
         hook.Run("PlayerEndVoice", client)
         if IsValid(nsVoicePanels[client]) then
@@ -85,12 +79,8 @@ hook.Add(
         nsVoicePanels[client] = pnl
     end
 )
-
 --------------------------------------------------------------------------------------------------------
-hook.Add(
-    "PlayerEndVoice",
-    "liaPlayerEndVoice",
-    function(client)
+hook.Add("PlayerEndVoice", "liaPlayerEndVoice", function(client)
         if IsValid(nsVoicePanels[client]) then
             if nsVoicePanels[client].fadeAnim then return end
             nsVoicePanels[client].fadeAnim = Derma_Anim("FadeOut", nsVoicePanels[client], nsVoicePanels[client].FadeOut)
@@ -98,12 +88,8 @@ hook.Add(
         end
     end
 )
-
 --------------------------------------------------------------------------------------------------------
-hook.Add(
-    "InitPostEntity",
-    "liaCreateVoiceVGUI",
-    function()
+hook.Add("InitPostEntity", "liaCreateVoiceVGUI", function()
         gmod.GetGamemode().PlayerStartVoice = function() end
         gmod.GetGamemode().PlayerEndVoice = function() end
         if IsValid(g_VoicePanelList) then g_VoicePanelList:Remove() end
@@ -114,13 +100,8 @@ hook.Add(
         g_VoicePanelList:SetPaintBackground(false)
     end
 )
-
 --------------------------------------------------------------------------------------------------------
-timer.Create(
-    "VoiceClean",
-    10,
-    0,
-    function()
+timer.Create("VoiceClean", 10, 0, function()
         for k, v in pairs(nsVoicePanels) do
             if not IsValid(k) then hook.Run("PlayerEndVoice", k) end
         end

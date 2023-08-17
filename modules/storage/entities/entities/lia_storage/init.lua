@@ -1,11 +1,10 @@
+--------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
+--------------------------------------------------------------------------------------------------------
 include("shared.lua")
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
-local DEFAULT_LOCK_SOUND = "doors/default_locked.wav"
-local DEFAULT_OPEN_SOUND = "items/ammocrate_open.wav"
-local OPEN_TIME = 0.7
-
+--------------------------------------------------------------------------------------------------------
 function ENT:Initialize()
 	self:SetModel("models/props_junk/watermelon01.mdl")
 	self:SetSolid(SOLID_VPHYSICS)
@@ -24,13 +23,13 @@ function ENT:Initialize()
 		physObj:Wake()
 	end
 end
-
+--------------------------------------------------------------------------------------------------------
 function ENT:setInventory(inventory)
 	assert(inventory, "Storage setInventory called without an inventory!")
 	self:setNetVar("id", inventory:getID())
 	hook.Run("StorageInventorySet", self, inventory)
 end
-
+--------------------------------------------------------------------------------------------------------
 function ENT:deleteInventory()
 	local inventory = self:getInv()
 
@@ -44,7 +43,7 @@ function ENT:deleteInventory()
 		self:setNetVar("id", nil)
 	end
 end
-
+--------------------------------------------------------------------------------------------------------
 function ENT:OnRemove()
 	if not self.liaForceDelete then
 		if not lia.entityDataLoaded or not MODULE.loadedData then return end
@@ -55,7 +54,7 @@ function ENT:OnRemove()
 	self:deleteInventory()
 	MODULE:saveStorage()
 end
-
+--------------------------------------------------------------------------------------------------------
 function ENT:openInv(activator)
 	local inventory = self:getInv()
 	local storage = self:getStorageInfo()
@@ -64,7 +63,7 @@ function ENT:openInv(activator)
 		storage.onOpen(self, activator)
 	end
 
-	activator:setAction(L("Opening...", activator), OPEN_TIME, function()
+	activator:setAction(L("Opening...", activator), lia.config.StorageOpenTime, function()
 		if activator:GetPos():Distance(self:GetPos()) > 96 then
 			activator.liaStorageEntity = nil
 
@@ -77,10 +76,10 @@ function ENT:openInv(activator)
 		net.WriteEntity(self)
 		net.Send(activator)
 		local openSound = self:getStorageInfo().openSound
-		self:EmitSound(openSound or DEFAULT_OPEN_SOUND)
+		self:EmitSound(openSound or "items/ammocrate_open.wav")
 	end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function ENT:Use(activator)
 	if not activator:getChar() then return end
 	if (activator.liaNextOpen or 0) > CurTime() then return end
@@ -95,7 +94,7 @@ function ENT:Use(activator)
 
 	if self:getNetVar("locked") then
 		local lockSound = self:getStorageInfo().lockSound
-		self:EmitSound(lockSound or DEFAULT_LOCK_SOUND)
+		self:EmitSound(lockSound or "doors/default_locked.wav")
 
 		if self.keypad then
 			client.liaStorageEntity = nil
@@ -108,5 +107,6 @@ function ENT:Use(activator)
 		self:openInv(activator)
 	end
 
-	activator.liaNextOpen = CurTime() + OPEN_TIME * 1.5
+	activator.liaNextOpen = CurTime() + lia.config.StorageOpenTime * 1.5
 end
+--------------------------------------------------------------------------------------------------------

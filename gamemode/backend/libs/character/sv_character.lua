@@ -37,7 +37,6 @@ function lia.char.create(data, callback)
         end)
     end)
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.char.restore(client, callback, noCache, id)
     local steamID64 = client:SteamID64()
@@ -137,7 +136,6 @@ function lia.char.restore(client, callback, noCache, id)
         end
     end)
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.char.cleanUpForPlayer(client)
     for _, charID in pairs(client.liaCharList or {}) do
@@ -149,7 +147,6 @@ function lia.char.cleanUpForPlayer(client)
         hook.Run("CharacterCleanUp", character)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 local function removePlayer(client)
     if client:getChar() then
@@ -159,7 +156,6 @@ local function removePlayer(client)
         netstream.Start(client, "charKick", nil, true)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.char.delete(id, client)
     assert(isnumber(id), "id must be a number")

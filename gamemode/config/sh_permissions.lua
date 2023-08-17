@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 function lia.config.LoadPermissions()
     lia.config.CustomPermissions = false
     lia.config.PermissionTable = {
@@ -51,3 +52,4 @@ function lia.config.LoadPermissions()
         },
     }
 end
+--------------------------------------------------------------------------------------------------------

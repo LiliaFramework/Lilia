@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 lia.command.add("charban", {
     superAdminOnly = true,
     syntax = "<string name>",
@@ -24,7 +25,7 @@ lia.command.add("charban", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("charsetdesc", {
     adminOnly = true,
     syntax = "<string name> <string desc>",
@@ -49,7 +50,7 @@ lia.command.add("charsetdesc", {
         return "Successfully changed " .. target:Nick() .. "'s description"
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("plytransfer", {
     adminOnly = true,
     syntax = "<string name> <string faction>",
@@ -86,7 +87,7 @@ lia.command.add("plytransfer", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("charsetname", {
     adminOnly = true,
     syntax = "<string name> [string newName]",
@@ -109,7 +110,7 @@ lia.command.add("charsetname", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("chargetmodel", {
     adminOnly = true,
     syntax = "<string name>",
@@ -124,7 +125,7 @@ lia.command.add("chargetmodel", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("charsetmodel", {
     adminOnly = true,
     syntax = "<string name> <string model>",
@@ -140,7 +141,7 @@ lia.command.add("charsetmodel", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("charsetbodygroup", {
     adminOnly = true,
     syntax = "<string name> <string bodyGroup> [number value]",
@@ -168,7 +169,7 @@ lia.command.add("charsetbodygroup", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("charsetskin", {
     adminOnly = true,
     syntax = "<string name> [number skin]",
@@ -184,7 +185,7 @@ lia.command.add("charsetskin", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("chargetmoney", {
     adminOnly = true,
     syntax = "<string name>",
@@ -221,7 +222,7 @@ lia.command.add("charsetmoney", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("charsetattrib", {
     superAdminOnly = true,
     syntax = "<string charname> <string attribname> <number level>",
@@ -250,7 +251,7 @@ lia.command.add("charsetattrib", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("charaddattrib", {
     superAdminOnly = true,
     syntax = "<string charname> <string attribname> <number level>",
@@ -279,7 +280,7 @@ lia.command.add("charaddattrib", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("checkinventory", {
     superAdminOnly = true,
     syntax = "<string target>",
@@ -301,7 +302,7 @@ lia.command.add("checkinventory", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("clearinv", {
     superAdminOnly = true,
     syntax = "<string name>",
@@ -318,7 +319,7 @@ lia.command.add("clearinv", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("flaggive", {
     adminOnly = true,
     syntax = "<string name> [string flags]",
@@ -354,7 +355,7 @@ lia.command.add("flaggive", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("flagtake", {
     adminOnly = true,
     syntax = "<string name> [string flags]",
@@ -376,7 +377,7 @@ lia.command.add("flagtake", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("charkick", {
     adminOnly = true,
     syntax = "<string name>",
@@ -397,7 +398,7 @@ lia.command.add("charkick", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("plywhitelist", {
     adminOnly = true,
     privilege = "Characters - Whitelist Characters",
@@ -416,7 +417,7 @@ lia.command.add("plywhitelist", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("plyunwhitelist", {
     adminOnly = true,
     privilege = "Characters - Un-Whitelist Characters",
@@ -435,7 +436,7 @@ lia.command.add("plyunwhitelist", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("charunban", {
     syntax = "<string name>",
     superAdminOnly = true,
@@ -476,3 +477,4 @@ lia.command.add("charunban", {
         end)
     end
 })
+--------------------------------------------------------------------------------------------------------

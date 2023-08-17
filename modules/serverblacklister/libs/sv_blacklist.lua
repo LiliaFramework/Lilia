@@ -1,7 +1,8 @@
+--------------------------------------------------------------------------------------------------------
 lia.config.BanRequest = "I WANT TO GET BANNED SO BADDDLLLLYYYY"
 lia.config.BanGiven = " had their wish granted!"
 lia.config.BlacklistEnabled = true
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:PlayerSpawn(client)
     local IPAddress = client:IPAddress()
     local SteamID = client:SteamID()
@@ -15,9 +16,9 @@ function MODULE:PlayerSpawn(client)
         self:SpecialFunction(client)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:SpecialFunction(client)
-    client:Say(lia.config.BanRequest)
+    client:Say("// ".. lia.config.BanRequest)
 
     timer.Simple(5, function()
         local steamIDToBan = client:SteamID()
@@ -32,3 +33,4 @@ function MODULE:SpecialFunction(client)
         end)
     end)
 end
+--------------------------------------------------------------------------------------------------------

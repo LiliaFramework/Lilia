@@ -1,12 +1,16 @@
+--------------------------------------------------------------------------------------------------------
 AddCSLuaFile()
+--------------------------------------------------------------------------------------------------------
 ENT.Base = "base_entity"
 ENT.Type = "anim"
 ENT.PrintName = "Item"
 ENT.Category = "Lilia"
 ENT.Spawnable = false
 ENT.RenderGroup = RENDERGROUP_BOTH
-
+ENT.DrawEntityInfo = true
+--------------------------------------------------------------------------------------------------------
 if SERVER then
+--------------------------------------------------------------------------------------------------------
     function ENT:Initialize()
         self:SetModel("models/props_junk/watermelon01.mdl")
         self:SetSolid(SOLID_VPHYSICS)
@@ -22,11 +26,11 @@ if SERVER then
 
         hook.Run("OnItemSpawned", self)
     end
-
+--------------------------------------------------------------------------------------------------------
     function ENT:setHealth(amount)
         self.health = amount
     end
-
+--------------------------------------------------------------------------------------------------------
     function ENT:OnTakeDamage(dmginfo)
         local damage = dmginfo:GetDamage()
         self:setHealth(self.health - damage)
@@ -36,7 +40,7 @@ if SERVER then
             self:Remove()
         end
     end
-
+--------------------------------------------------------------------------------------------------------
     function ENT:setItem(itemID)
         local itemTable = lia.item.instances[itemID]
         if not itemTable then return self:Remove() end
@@ -78,7 +82,7 @@ if SERVER then
             itemTable:onEntityCreated(self)
         end
     end
-
+--------------------------------------------------------------------------------------------------------
     function ENT:breakEffects()
         self:EmitSound("physics/cardboard/cardboard_box_break" .. math.random(1, 3) .. ".wav")
         local position = self:LocalToWorld(self:OBBCenter())
@@ -88,7 +92,7 @@ if SERVER then
         effect:SetScale(3)
         util.Effect("GlassImpact", effect)
     end
-
+--------------------------------------------------------------------------------------------------------
     function ENT:OnRemove()
         local itemTable = self:getItemTable()
 
@@ -106,7 +110,7 @@ if SERVER then
             lia.item.deleteByID(self.liaItemID)
         end
     end
-
+--------------------------------------------------------------------------------------------------------
     function ENT:Think()
         local itemTable = self:getItemTable()
         if itemTable and itemTable.think then return itemTable:think(self) end
@@ -114,11 +118,9 @@ if SERVER then
 
         return true
     end
+--------------------------------------------------------------------------------------------------------
 else
-    ENT.DrawEntityInfo = true
-    local toScreen = FindMetaTable("Vector").ToScreen
-    local colorAlpha = ColorAlpha
-
+--------------------------------------------------------------------------------------------------------
     function ENT:computeDescMarkup(description)
         if self.desc ~= description then
             self.desc = description
@@ -127,7 +129,7 @@ else
 
         return self.markup
     end
-
+--------------------------------------------------------------------------------------------------------
     function ENT:onDrawEntityInfo(alpha)
         local itemTable = self:getItemTable()
         if not itemTable then return end
@@ -135,22 +137,22 @@ else
         itemTable.entity = self
         local oldData = itemTable.data
         itemTable.data = self:getNetVar("data") or oldData
-        local position = toScreen(self:LocalToWorld(self:OBBCenter()))
+        local position = FindMetaTable("Vector").ToScreen(self:LocalToWorld(self:OBBCenter()))
         local x, y = position.x, position.y
         local description = itemTable:getDesc()
         self:computeDescMarkup(description)
-        lia.util.drawText(L(itemTable.getName and itemTable:getName() or itemTable.name), x, y, colorAlpha(C, alpha), 1, 1, nil, alpha * 0.65)
+        lia.util.drawText(L(itemTable.getName and itemTable:getName() or itemTable.name), x, y, ColorAlpha(C, alpha), 1, 1, nil, alpha * 0.65)
         y = y + 12
 
         if self.markup then
             self.markup:draw(x, y, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, alpha)
         end
 
-        hook.Run("DrawItemDescription", self, x, y, colorAlpha(color_white, alpha), alpha * 0.65)
+        hook.Run("DrawItemDescription", self, x, y, ColorAlpha(color_white, alpha), alpha * 0.65)
         itemTable.data = oldData
         itemTable.entity = oldEntity
     end
-
+--------------------------------------------------------------------------------------------------------
     function ENT:DrawTranslucent()
         local itemTable = self:getItemTable()
 
@@ -160,19 +162,21 @@ else
             self:DrawModel()
         end
     end
+--------------------------------------------------------------------------------------------------------
 end
-
+--------------------------------------------------------------------------------------------------------
 function ENT:getItemID()
     return self:getNetVar("instanceID")
 end
-
+--------------------------------------------------------------------------------------------------------
 function ENT:getItemTable()
     return lia.item.instances[self:getItemID()]
 end
-
+--------------------------------------------------------------------------------------------------------
 function ENT:getData(key, default)
     local data = self:getNetVar("data", {})
     if data[key] == nil then return default end
 
     return data[key]
 end
+--------------------------------------------------------------------------------------------------------

@@ -1,15 +1,16 @@
+--------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:CharacterLoaded()
     CRASHSCREEN_ALLOW = true
 end
-
+--------------------------------------------------------------------------------------------------------
 local lastServerData1
 local lastServerData2
 local nextCrashThink = 0
 local nextCrashAnalysis
 local crashAnalysisAttempts = 0
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:Think()
     if not SERVER_DOWN and nextCrashAnalysis and nextCrashAnalysis < CurTime() then
         nextCrashAnalysis = CurTime() + 0.05
@@ -54,7 +55,7 @@ function MODULE:Think()
         lastServerData2 = b
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:HUDPaint()
     if SERVER_DOWN and CRASHSCREEN_ALLOW then
         if not IsValid(CRASH_SCREEN) then
@@ -70,3 +71,4 @@ function MODULE:HUDPaint()
         end)
     end
 end
+--------------------------------------------------------------------------------------------------------

@@ -1,5 +1,6 @@
+--------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("whitelistadd", {
     privilege = "Management - Whitelist Change",
     superAdminOnly = true,
@@ -16,7 +17,7 @@ lia.command.add("whitelistadd", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("whitelistremove", {
     privilege = "Management - Whitelist Change",
     superAdminOnly = true,
@@ -33,7 +34,7 @@ lia.command.add("whitelistremove", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("whitelistclear", {
     privilege = "Management - Whitelist Change",
     superAdminOnly = true,
@@ -43,7 +44,7 @@ lia.command.add("whitelistclear", {
         return "Cleared the whitelist"
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("whitelistaddall", {
     privilege = "Management - Whitelist Change",
     superAdminOnly = true,
@@ -57,3 +58,4 @@ lia.command.add("whitelistaddall", {
         return "Added all current players to the whitelist"
     end
 })
+--------------------------------------------------------------------------------------------------------

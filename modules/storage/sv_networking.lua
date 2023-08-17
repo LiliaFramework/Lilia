@@ -1,5 +1,4 @@
-local TRANSFER = "transfer"
-
+--------------------------------------------------------------------------------------------------------
 local function getValidStorage(client)
 	local storage = client.liaStorageEntity
 	if not IsValid(storage) then return end
@@ -7,7 +6,7 @@ local function getValidStorage(client)
 
 	return storage
 end
-
+--------------------------------------------------------------------------------------------------------
 net.Receive("liaStorageExit", function(_, client)
 	local storage = client.liaStorageEntity
 
@@ -17,7 +16,7 @@ net.Receive("liaStorageExit", function(_, client)
 
 	client.liaStorageEntity = nil
 end)
-
+--------------------------------------------------------------------------------------------------------
 net.Receive("liaStorageUnlock", function(_, client)
 	local password = net.ReadString()
 	local storage = getValidStorage(client)
@@ -37,15 +36,12 @@ net.Receive("liaStorageUnlock", function(_, client)
 		client.lastPasswordAttempt = CurTime()
 	end
 end)
-
+--------------------------------------------------------------------------------------------------------
 net.Receive("liaStorageTransfer", function(_, client)
-	-- Get the item that the player is swapping.
 	local itemID = net.ReadUInt(32)
-	-- Get the storage that the player opened.
 	if not client:getChar() then return end
 	local storage = getValidStorage(client)
 	if not storage or not storage.receivers[client] then return end
-	-- Get the inventory that we are transfering to and from.
 	local clientInv = client:getChar():getInv()
 	local storageInv = storage:getInv()
 	if not clientInv or not storageInv then return end
@@ -53,7 +49,6 @@ net.Receive("liaStorageTransfer", function(_, client)
 	if not item then return end
 	local toInv = clientInv:getID() == item.invID and storageInv or clientInv
 	local fromInv = toInv == clientInv and storageInv or clientInv
-	-- Permission check before moving the item around.
 	if hook.Run("StorageCanTransferItem", client, storage, item) == false then return end
 
 	local context = {
@@ -64,11 +59,10 @@ net.Receive("liaStorageTransfer", function(_, client)
 		to = toInv
 	}
 
-	if clientInv:canAccess(TRANSFER, context) == false or storageInv:canAccess(TRANSFER, context) == false then return end
+	if clientInv:canAccess("transfer", context) == false or storageInv:canAccess("transfer", context) == false then return end
 	if client.storageTransaction and client.storageTransactionTimeout > RealTime() then return end
 	client.storageTransaction = true
 	client.storageTransactionTimeout = RealTime() + .1
-	-- Swap the item between the storage inventory and character's inventory.
 	local failItemDropPos = client:getItemDropPos()
 
 	fromInv:removeItem(itemID, true):next(function()
@@ -95,3 +89,4 @@ net.Receive("liaStorageTransfer", function(_, client)
 		end
 	end)
 end)
+--------------------------------------------------------------------------------------------------------

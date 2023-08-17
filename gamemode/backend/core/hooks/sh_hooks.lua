@@ -1,10 +1,5 @@
 --------------------------------------------------------------------------------------------------------
-local getModelClass = lia.anim.getModelClass
-local IsValid = IsValid
-local string = string
-local type = type
-local playeranimtype = lia.anim.PlayerHoldtypeTranslator
-local defaultanimtype = lia.anim.HoldtypeTranslator
+local oldCalcSeqOverride
 lia.config.CharacterSwitchCooldownTimer = 5
 lia.config.CharacterSwitchCooldown = true
 lia.config.AutoRegen = false
@@ -14,11 +9,10 @@ lia.config.PermaClass = true
 lia.config.MapCleanerEnabled = true
 lia.config.ItemCleanupTime = 7200
 lia.config.MapCleanupTime = 21600
-
 --------------------------------------------------------------------------------------------------------
 function GM:TranslateActivity(client, act)
     local model = string.lower(client.GetModel(client))
-    local class = getModelClass(model) or "player"
+    local class = lia.anim.getModelClass(model) or "player"
     local weapon = client.GetActiveWeapon(client)
 
     if class == "player" then
@@ -34,7 +28,7 @@ function GM:TranslateActivity(client, act)
             end
 
             local holdType = IsValid(weapon) and (weapon.HoldType or weapon.GetHoldType(weapon)) or "normal"
-            holdType = playeranimtype[holdType] or "passive"
+            holdType = lia.anim.PlayerHoldtypeTranslator[holdType] or "passive"
             local tree = lia.anim.player[holdType]
 
             if tree and tree[act] then
@@ -89,7 +83,7 @@ function GM:TranslateActivity(client, act)
 
             if IsValid(weapon) then
                 subClass = weapon.HoldType or weapon.GetHoldType(weapon)
-                subClass = defaultanimtype[subClass] or subClass
+                subClass = lia.anim.HoldtypeTranslator[subClass] or subClass
             end
 
             if tree[subClass] and tree[subClass][act] then
@@ -109,7 +103,6 @@ function GM:TranslateActivity(client, act)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:DoAnimationEvent(client, event, data)
     local class = lia.anim.getModelClass(client:GetModel())
@@ -121,7 +114,7 @@ function GM:DoAnimationEvent(client, event, data)
 
         if IsValid(weapon) then
             local holdType = weapon.HoldType or weapon:GetHoldType()
-            holdType = defaultanimtype[holdType] or holdType
+            holdType = lia.anim.HoldtypeTranslator[holdType] or holdType
             local animation = lia.anim[class][holdType]
 
             if event == PLAYERANIMEVENT_ATTACK_PRIMARY then
@@ -153,17 +146,11 @@ function GM:DoAnimationEvent(client, event, data)
 
     return ACT_INVALID
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:EntityEmitSound(data)
     if data.Entity.liaIsMuted then return false end
 end
-
 --------------------------------------------------------------------------------------------------------
-local vectorAngle = FindMetaTable("Vector").Angle
-local normalizeAngle = math.NormalizeAngle
-local oldCalcSeqOverride
-
 function GM:HandlePlayerLanding(client, velocity, wasOnGround)
     if client:IsNoClipping() then return end
 
@@ -176,7 +163,6 @@ function GM:HandlePlayerLanding(client, velocity, wasOnGround)
         return true
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:CalcMainActivity(client, velocity)
     client.CalcIdeal = ACT_MP_STAND_IDLE
@@ -185,7 +171,7 @@ function GM:CalcMainActivity(client, velocity)
     local animClass = lia.anim.getModelClass(client:GetModel())
 
     if animClass ~= "player" then
-        client:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - client:EyeAngles()[2]))
+        client:SetPoseParameter("move_yaw", math.NormalizeAngle(FindMetaTable("Vector").Angle(velocity)[2] - client:EyeAngles()[2]))
     end
 
     if self:HandlePlayerLanding(client, velocity, client.m_bWasOnGround) or self:HandlePlayerNoClipping(client, velocity) or self:HandlePlayerDriving(client) or self:HandlePlayerVaulting(client, velocity) or (usingPlayerAnims and self:HandlePlayerJumping(client, velocity)) or self:HandlePlayerSwimming(client, velocity) or self:HandlePlayerDucking(client, velocity) then
@@ -209,7 +195,6 @@ function GM:CalcMainActivity(client, velocity)
 
     return client.CalcIdeal, client.liaForceSeq or oldCalcSeqOverride
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:OnCharVarChanged(char, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
@@ -218,19 +203,16 @@ function GM:OnCharVarChanged(char, varName, oldVar, newVar)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:GetDefaultCharName(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.onGetDefaultName then return info:onGetDefaultName(client) end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.onGetDefaultDesc then return info:onGetDefaultDesc(client) end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerUseChar(client, character)
     if client:getChar() and client:getChar():getID() == character:getID() then return false, "You are already using this character!" end
@@ -245,13 +227,12 @@ function GM:CanPlayerUseChar(client, character)
     local faction = lia.faction.indices[character:getFaction()]
     if faction and hook.Run("CheckFactionLimitReached", faction, character, client) then return false, "@limitFaction" end
 
-    if client:getChar() and client:getChar():getData("banned", false) then
+    if character and character:getData("banned", false) then
         if isnumber(banned) and banned < os.time() then return end
 
         return false, "@charBanned"
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:CheckFactionLimitReached(faction, character, client)
     if isfunction(faction.onCheckLimitReached) then return faction:onCheckLimitReached(character, client) end
@@ -264,7 +245,6 @@ function GM:CheckFactionLimitReached(faction, character, client)
 
     return team.NumPlayers(faction.index) >= maxPlayers
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:Move(client, moveData)
     local char = client:getChar()
@@ -297,7 +277,6 @@ function GM:Move(client, moveData)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:CanItemBeTransfered(itemObject, curInv, inventory)
     if itemObject.onCanBeTransfered then
@@ -306,7 +285,6 @@ function GM:CanItemBeTransfered(itemObject, curInv, inventory)
         return itemHook ~= false
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:OnPlayerJoinClass(client, class, oldClass)
     local char = client:getChar()
@@ -328,7 +306,6 @@ function GM:OnPlayerJoinClass(client, class, oldClass)
 
     netstream.Start(nil, "classUpdate", client)
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:Think()
     if not self.nextThink then
@@ -351,14 +328,12 @@ function GM:Think()
         self.nextThink = CurTime() + lia.config.HealingTimer
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PropBreak(attacker, ent)
     if IsValid(ent) and ent:GetPhysicsObject():IsValid() then
         constraint.RemoveAll(ent)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:OnPickupMoney(client, moneyEntity)
     if moneyEntity and moneyEntity:IsValid() then
@@ -367,7 +342,6 @@ function GM:OnPickupMoney(client, moneyEntity)
         client:notifyLocalized("moneyTaken", lia.currency.get(amount))
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedModules()
     if SERVER then
@@ -483,7 +457,7 @@ function GM:InitializedModules()
 
     self:InitializedExtras()
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:InitPostEntity()
     local ip, port = game.GetIPAddress():match("([^:]+):(%d+)")
 
@@ -538,7 +512,7 @@ function GM:InitPostEntity()
         end)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:InitializedExtras()
     if CLIENT then
         hook.Remove("StartChat", "StartChatIndicator")
@@ -603,22 +577,21 @@ function GM:InitializedExtras()
         hook.Remove("PostDrawEffects", "RenderHalos")
         timer.Remove("HostnameThink")
         timer.Remove("CheckHookTimes")
+    end
 
-        if nut then
-            nut = lia or {
-                util = {},
-                gui = {},
-                meta = {}
-            }
-        else
-            nut = lia or {
-                util = {},
-                meta = {}
-            }
-        end
+    if nut then
+        nut = lia or {
+            util = {},
+            gui = {},
+            meta = {}
+        }
+    else
+        nut = lia or {
+            util = {},
+            meta = {}
+        }
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:simfphysPhysicsCollide()
     return true

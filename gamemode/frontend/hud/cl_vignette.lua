@@ -3,7 +3,6 @@ local vignetteAlphaGoal = 0
 local vignetteAlphaDelta = 0
 local hasVignetteMaterial = lia.util.getMaterial("lilia/gui/vignette.png") ~= "___error"
 lia.config.Vignette = true
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("HUDPaintBackground", "VignetteFrontendHooks", function()
     local frameTime = FrameTime()
@@ -16,7 +15,6 @@ hook.Add("HUDPaintBackground", "VignetteFrontendHooks", function()
         surface.DrawTexturedRect(0, 0, scrW, scrH)
     end
 end)
-
 --------------------------------------------------------------------------------------------------------
 timer.Create("liaVignetteChecker", 1, 0, function()
     local client = LocalPlayer()

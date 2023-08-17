@@ -22,3 +22,6 @@ hook.Run("CanPlayerEquipItem", client, item)
 
 hook.Run("GetMoneyModel", self:getAmount())
 hook.Run("OnPickupMoney", activator, self)
+
+
+hook.Run("OnItemSpawned", self)

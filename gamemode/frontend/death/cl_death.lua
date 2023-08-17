@@ -3,7 +3,6 @@ ceil = math.ceil
 clmp = math.Clamp
 local aprg, aprg2 = 0, 0
 w, h = ScrW(), ScrH()
-
 -------------------------------------------------------------------------------------------------------------------------
 hook.Add("HUDPaint", "HUDPaintDeath", function()
     owner = LocalPlayer()

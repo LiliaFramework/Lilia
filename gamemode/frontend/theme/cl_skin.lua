@@ -11,7 +11,6 @@ SKIN.Colours.Button.Normal = Color(80, 80, 80)
 SKIN.Colours.Button.Hover = Color(255, 255, 255)
 SKIN.Colours.Button.Down = Color(180, 180, 180)
 SKIN.Colours.Button.Disabled = Color(0, 0, 0, 100)
-
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintFrame(panel)
     lia.util.drawBlur(panel, 10)
@@ -22,7 +21,6 @@ function SKIN:PaintFrame(panel)
     surface.SetDrawColor(lia.config.Color)
     surface.DrawOutlinedRect(0, 0, panel:GetWide(), panel:GetTall())
 end
-
 --------------------------------------------------------------------------------------------------------
 function SKIN:DrawGenericBackground(x, y, w, h)
     surface.SetDrawColor(45, 45, 45, 240)
@@ -32,7 +30,6 @@ function SKIN:DrawGenericBackground(x, y, w, h)
     surface.SetDrawColor(100, 100, 100, 25)
     surface.DrawOutlinedRect(x + 1, y + 1, w - 2, h - 2)
 end
-
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintPanel(panel)
     if not panel.m_bBackground then return end
@@ -42,7 +39,6 @@ function SKIN:PaintPanel(panel)
     surface.DrawRect(0, 0, w, h)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
-
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintButton(panel)
     if not panel.m_bBackground then return end
@@ -65,15 +61,12 @@ function SKIN:PaintButton(panel)
     surface.SetDrawColor(180, 180, 180, 2)
     surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
 end
-
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintWindowMinimizeButton(panel, w, h)
 end
-
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintWindowMaximizeButton(panel, w, h)
 end
-
 --------------------------------------------------------------------------------------------------------
 derma.DefineSkin("lilia", "The base skin for the Lilia framework.", SKIN)
 derma.RefreshSkins()

@@ -231,7 +231,7 @@ function GM:PlayerInitialSpawn(client)
         end
     end)
     hook.Run("PostPlayerInitialSpawn", client)    
-	hook.Run("Re-RunNames")    
+	hook.Run("ReRunNames")    
 
 end
 --------------------------------------------------------------------------------------------------------

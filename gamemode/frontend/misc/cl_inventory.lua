@@ -1,10 +1,7 @@
-LIA_ICON_SIZE = 64
--- The queue for the rendered icons.
+--------------------------------------------------------------------------------------------------------
 renderedIcons = renderedIcons or {}
-
--- To make making inventory variant, This must be followed up.
+--------------------------------------------------------------------------------------------------------
 function renderNewIcon(panel, itemTable)
-    -- re-render icons
     if (itemTable.iconCam and not renderedIcons[string.lower(itemTable.model)]) or itemTable.forceRender then
         local iconCam = itemTable.iconCam
 
@@ -18,15 +15,15 @@ function renderNewIcon(panel, itemTable)
         panel.Icon:RebuildSpawnIconEx(iconCam)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 local function drawIcon(mat, self, x, y)
     surface.SetDrawColor(color_white)
     surface.SetMaterial(mat)
     surface.DrawTexturedRect(0, 0, x, y)
 end
-
+--------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:setItemType(itemTypeOrID)
     local item = lia.item.list[itemTypeOrID]
 
@@ -73,29 +70,24 @@ function PANEL:setItemType(itemTypeOrID)
         renderNewIcon(self, item)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:updateTooltip()
     self:SetTooltip("<font=liaItemBoldFont>" .. self.itemTable:getName() .. "</font>\n" .. "<font=liaItemDescFont>" .. self.itemTable:getDesc())
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:getItem()
     return self.itemTable
 end
-
--- Updates the parts of the UI that could be changed by data changes.
+--------------------------------------------------------------------------------------------------------
 function PANEL:ItemDataChanged(key, oldValue, newValue)
     self:updateTooltip()
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:Droppable("inv")
-    self:SetSize(LIA_ICON_SIZE, LIA_ICON_SIZE)
+    self:SetSize(64, 64)
 end
-
---[[ function PANEL:Think()
-	self.itemTable = lia.item.instances[self.itemID]
-	self:updateTooltip()
-end ]]
+--------------------------------------------------------------------------------------------------------
 function PANEL:PaintOver(w, h)
     local itemTable = lia.item.instances[self.itemID]
 
@@ -106,20 +98,20 @@ function PANEL:PaintOver(w, h)
 
     hook.Run("ItemPaintOver", self, itemTable, w, h)
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:PaintBehind(w, h)
     surface.SetDrawColor(0, 0, 0, 85)
     surface.DrawRect(2, 2, w - 4, h - 4)
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:ExtraPaint(w, h)
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
     self:PaintBehind(w, h)
     self:ExtraPaint(w, h)
 end
-
+--------------------------------------------------------------------------------------------------------
 local buildActionFunc = function(action, actionIndex, itemTable, invID, sub)
     return function()
         itemTable.player = LocalPlayer()
@@ -146,7 +138,7 @@ local buildActionFunc = function(action, actionIndex, itemTable, invID, sub)
         itemTable.player = nil
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:openActionMenu()
     local itemTable = self.itemTable
     assert(itemTable, "attempt to open action menu for invalid item")
@@ -165,7 +157,6 @@ function PANEL:openActionMenu()
     for k, v in SortedPairs(itemTable.functions) do
         if hook.Run("onCanRunItemAction", itemTable, k) == false or isfunction(v.onCanRun) and not v.onCanRun(itemTable) then continue end
 
-        -- TODO: refactor custom menu options as a method for items
         if v.isMulti then
             local subMenu, subMenuOption = menu:AddSubMenu(L(v.name or k), buildActionFunc(v, k, itemTable, self.invID))
             subMenuOption:SetImage(v.icon or "icon16/brick.png")
@@ -183,10 +174,11 @@ function PANEL:openActionMenu()
     menu:Open()
     itemTable.player = nil
 end
-
+--------------------------------------------------------------------------------------------------------
 vgui.Register("liaItemIcon", PANEL, "SpawnIcon")
+--------------------------------------------------------------------------------------------------------
 PANEL = {}
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:MakePopup()
     self:Center()
@@ -194,50 +186,40 @@ function PANEL:Init()
     self:SetDraggable(true)
     self:SetTitle(L"inv")
 end
-
--- Sets which inventory this panel is representing.
+--------------------------------------------------------------------------------------------------------
 function PANEL:setInventory(inventory)
     self.inventory = inventory
     self:liaListenForInventoryChanges(inventory)
 end
-
--- Called when the data for the local inventory has been initialized.
--- This shouldn't run unless the inventory got resync'd.
+--------------------------------------------------------------------------------------------------------
 function PANEL:InventoryInitialized()
 end
-
--- Called when a data value has been changed for the inventory.
+--------------------------------------------------------------------------------------------------------
 function PANEL:InventoryDataChanged(key, oldValue, newValue)
 end
-
--- Called when the inventory for this panel has been deleted. This may
--- be because the local player no longer has access to the inventory!
+--------------------------------------------------------------------------------------------------------
 function PANEL:InventoryDeleted(inventory)
     if self.inventory == inventory then
         self:Remove()
     end
 end
-
--- Called when the given item has been added to the inventory.
+--------------------------------------------------------------------------------------------------------
 function PANEL:InventoryItemAdded(item)
 end
-
--- Called when the given item has been removed from the inventory.
+--------------------------------------------------------------------------------------------------------
 function PANEL:InventoryItemRemoved(item)
 end
-
--- Called when an item within this inventory has its data changed.
+--------------------------------------------------------------------------------------------------------
 function PANEL:InventoryItemDataChanged(item, key, oldValue, newValue)
 end
-
--- Make sure to clean up hooks before removing the panel.
+--------------------------------------------------------------------------------------------------------
 function PANEL:OnRemove()
     self:liaDeleteInventoryHooks()
 end
-
+--------------------------------------------------------------------------------------------------------
 vgui.Register("liaInventory", PANEL, "DFrame")
-local margin = 10
 
+--------------------------------------------------------------------------------------------------------
 hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
     if hook.Run("CanPlayerViewInventory") == false then return end
 
@@ -254,7 +236,7 @@ hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
         }
 
         table.insert(sortPanels, mainPanel)
-        totalSize.x = totalSize.x + mainPanel:GetWide() + margin
+        totalSize.x = totalSize.x + mainPanel:GetWide() + 10
         totalSize.y = math.max(totalSize.y, mainPanel:GetTall())
 
         for id, item in pairs(inventory:getItems()) do
@@ -263,7 +245,7 @@ hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
                 local childPanels = inventory:show(mainPanel)
                 lia.gui["inv" .. inventory:getID()] = childPanels
                 table.insert(sortPanels, childPanels)
-                totalSize.x = totalSize.x + childPanels:GetWide() + margin
+                totalSize.x = totalSize.x + childPanels:GetWide() + 10
                 totalSize.y = math.max(totalSize.y, childPanels:GetTall())
             end
         end
@@ -274,7 +256,7 @@ hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
         for _, panel in pairs(sortPanels) do
             panel:ShowCloseButton(true)
             panel:SetPos(x, y - panel:GetTall() / 2)
-            x = x + panel:GetWide() + margin
+            x = x + panel:GetWide() + 10
         end
 
         hook.Add("PostRenderVGUI", mainPanel, function()
@@ -282,3 +264,4 @@ hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
         end)
     end
 end)
+--------------------------------------------------------------------------------------------------------

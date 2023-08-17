@@ -1,11 +1,21 @@
+--------------------------------------------------------------------------------------------------------
 lia.xhair = lia.xhair or {}
 lia.xhair.entIcon = {}
-
-lia.xhair.entIgnore = {
-    func_physbox = true,
-    prop_dynamic = true,
-}
-
+--------------------------------------------------------------------------------------------------------
+lia.xhair.entIgnore = {"func_physbox", "prop_dynamic"}
+--------------------------------------------------------------------------------------------------------
+local w, h, aimVector, punchAngle, ft, screen, scaleFraction, distance, entity
+local curGap = 0
+local curAlpha = 0
+local curIconAlpha = 0
+local maxDistance = 1000 ^ 2
+local crossSize = 4
+local crossGap = 0
+local colors = {color_black}
+local filter = {}
+local sw, sh = ScrW(), ScrH()
+local lastIcon = ""
+--------------------------------------------------------------------------------------------------------
 local function drawdot(pos, size, col)
     local color = col[2]
     surface.SetDrawColor(color.r, color.g, color.b, color.a)
@@ -14,22 +24,7 @@ local function drawdot(pos, size, col)
     surface.SetDrawColor(0, 0, 0, col[2].a)
     surface.DrawOutlinedRect(pos[1] - size / 2, pos[2] - size / 2, size, size)
 end
-
-local w, h, aimVector, punchAngle, ft, screen, scaleFraction, distance, entity
-local math_round = math.Round
-local curGap = 0
-local curAlpha = 0
-local curIconAlpha = 0
-local maxDistance = 1000 ^ 2
-local crossSize = 4
-local crossGap = 0
-
-local colors = {color_black}
-
-local filter = {}
-local sw, sh = ScrW(), ScrH()
-local lastIcon = ""
-
+--------------------------------------------------------------------------------------------------------
 function GM:PostDrawHUD()
     local client = LocalPlayer()
     if not client:getChar() or not client:Alive() then return end
@@ -88,22 +83,22 @@ function GM:PostDrawHUD()
     curAlpha = hook.Run("GetCrosshairAlpha", curAlpha, entity) or curAlpha
 
     if curAlpha > 1 then
-        drawdot({math_round(cx), math_round(cy)}, crossSize, colors)
+        drawdot({math.Round(cx), math.Round(cy)}, crossSize, colors)
 
-        drawdot({math_round(cx + curGap), math_round(cy)}, crossSize, colors)
+        drawdot({math.Round(cx + curGap), math.Round(cy)}, crossSize, colors)
 
-        drawdot({math_round(cx - curGap), math_round(cy)}, crossSize, colors)
+        drawdot({math.Round(cx - curGap), math.Round(cy)}, crossSize, colors)
 
-        drawdot({math_round(cx), math_round(cy + curGap * .8)}, crossSize, colors)
+        drawdot({math.Round(cx), math.Round(cy + curGap * .8)}, crossSize, colors)
 
-        drawdot({math_round(cx), math_round(cy - curGap * .8)}, crossSize, colors)
+        drawdot({math.Round(cx), math.Round(cy - curGap * .8)}, crossSize, colors)
     end
 
     if lastIcon then
         lia.util.drawText(lastIcon or "", cx + (adx or 0), cy + (ady or 0), ColorAlpha(color_white, curIconAlpha), 1, 1, "liaCrossIcons")
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:GetCrosshairIcon(curAlpha, entity, weapon, distance)
     if table.Count(lia.menu.list) > 0 then return "", 0, ScreenScale(5) end
 
@@ -114,8 +109,7 @@ function GM:GetCrosshairIcon(curAlpha, entity, weapon, distance)
     if IsValid(entity) and distance < 16384 then
         if not entity:IsPlayer() and not entity:IsNPC() then
             local class = entity:GetClass()
-
-            if not lia.xhair.entIgnore[class] then
+            if not table.HasValue(lia.xhair.entIgnore, class) then
                 if class == "class C_BaseEntity" then return "" end
                 if lia.xhair.entIcon[class] then return lia.xhair.entIcon[class] end
 
@@ -138,3 +132,4 @@ function GM:GetCrosshairIcon(curAlpha, entity, weapon, distance)
         end
     end
 end
+--------------------------------------------------------------------------------------------------------

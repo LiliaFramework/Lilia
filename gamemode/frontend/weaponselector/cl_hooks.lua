@@ -7,9 +7,8 @@ local alphaDelta = alphaDelta or alpha
 local fadetime = fadetime or 0
 local IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs = IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs
 local RunConsoleCommand, LocalPlayer, math, color_white, surface = RunConsoleCommand, LocalPlayer, math, color_white, surface
-
 local weaponInfo = {"Author", "Contact", "Purpose", "Instructions"}
-
+--------------------------------------------------------------------------------------------------------
 lia.config.InjuryTextTable = {
     [.2] = {"Critical Injury", Color(255, 0, 0)},
     [.4] = {"Severe Injury", Color(255, 165, 0)},
@@ -17,7 +16,6 @@ lia.config.InjuryTextTable = {
     [.9] = {"Minor Injury", Color(255, 255, 0)},
     [1] = {"Healthy", Color(0, 255, 0)},
 }
-
 --------------------------------------------------------------------------------------------------------
 local function onIndexChanged()
     alpha = 1
@@ -45,7 +43,6 @@ local function onIndexChanged()
         client:EmitSound(source or "common/talk.wav", 50, pitch or 180)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("HUDPaint", "WeaponSelectorHUDPaint", function()
     local frameTime = FrameTime()
@@ -99,7 +96,6 @@ hook.Add("HUDPaint", "WeaponSelectorHUDPaint", function()
         end
     end
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("PlayerBindPress", "WeaponSelectorPlayerBindPress", function(client, bind, pressed)
     local weapon = client:GetActiveWeapon()
@@ -145,7 +141,6 @@ hook.Add("PlayerBindPress", "WeaponSelectorPlayerBindPress", function(client, bi
         end
     end
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("GetInjuredText", "HUDGetInjuredText", function(client)
     local health = client:Health()

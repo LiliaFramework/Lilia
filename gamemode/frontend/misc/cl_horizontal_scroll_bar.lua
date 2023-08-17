@@ -1,6 +1,5 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self.btnLeft = self.btnUp
@@ -14,7 +13,6 @@ function PANEL:Init()
         derma.SkinHook("Paint", "ButtonRight", panel, w, h)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:SetScroll(offset)
     if not self.Enabled then
@@ -34,7 +32,6 @@ function PANEL:SetScroll(offset)
         parent:InvalidateLayout()
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnCursorMoved()
     if not self.Enabled or not self.Dragging then return end
@@ -44,13 +41,11 @@ function PANEL:OnCursorMoved()
     local trackSize = self:GetWide() - (height * 2) - self.btnGrip:GetWide()
     self:SetScroll(x * (self.CanvasSize / trackSize))
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Grip()
     self.BaseClass.Grip(self)
     self.HoldPos = self.btnGrip:ScreenToLocal(gui.MouseX(), 0)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:PerformLayout()
     local tall = self:GetTall()
@@ -75,7 +70,6 @@ function PANEL:PerformLayout()
         self.btnRight:SetVisible(false)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaHorizontalScrollBar", PANEL, "DVScrollBar")
 --------------------------------------------------------------------------------------------------------

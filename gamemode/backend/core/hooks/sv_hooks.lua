@@ -1,13 +1,13 @@
 -------------------------------------------------------------------------------------------------------
+local last_jump_time = 0
+--------------------------------------------------------------------------------------------------------
 lia.config.JumpCooldown = 0.8
-
 -------------------------------------------------------------------------------------------------------
 function GM:EntityNetworkedVarChanged(entity, varName, oldVal, newVal)
     if varName == "Model" and entity.SetModel then
         hook.Run("PlayerModelChanged", entity, newVal)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerUse(client, entity)
     if client:getNetVar("restricted") then return false end
@@ -25,7 +25,6 @@ function GM:PlayerUse(client, entity)
 
     return true
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:KeyPress(client, key)
     if key == IN_USE then
@@ -40,14 +39,12 @@ function GM:KeyPress(client, key)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:KeyRelease(client, key)
     if key == IN_RELOAD then
         timer.Remove("liaToggleRaise" .. client:SteamID())
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadedChar(client, character, lastChar)
     local data = character:getData("pclass")
@@ -105,7 +102,6 @@ function GM:PlayerLoadedChar(client, character, lastChar)
     character:setData("loginTime", loginTime)
     hook.Run("PlayerLoadout", client)
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:CharacterLoaded(id)
     local character = lia.char.loaded[id]
@@ -126,7 +122,6 @@ function GM:CharacterLoaded(id)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSay(client, message)
     local chatType, message, anonymous = lia.chat.parse(client, message, true)
@@ -150,7 +145,6 @@ function GM:ShutDown()
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedSchema()
     local persistString = GetConVar("sbox_persist"):GetString()
@@ -160,7 +154,6 @@ function GM:InitializedSchema()
         game.ConsoleCommand("sbox_persist " .. newValue .. "\n")
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
     local allowVoice = lia.config.AllowVoice
@@ -171,13 +164,11 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
 
     return false, false
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PrePlayerLoadedChar(client, character, lastChar)
     client:SetBodyGroups("000000000")
     client:SetSkin(0)
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:CharacterPreSave(character)
     local client = character:getPlayer()
@@ -189,14 +180,12 @@ function GM:CharacterPreSave(character)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 local defaultAngleData = {
     ["models/items/car_battery01.mdl"] = Angle(-15, 180, 0),
     ["models/props_junk/harpoon002a.mdl"] = Angle(0, 0, 0),
     ["models/props_junk/propane_tank001a.mdl"] = Angle(-90, 0, 0),
 }
-
 function GM:GetPreferredCarryAngles(entity)
     if entity.preferedAngle then return entity.preferedAngle end
     local class = entity:GetClass()
@@ -214,7 +203,6 @@ function GM:GetPreferredCarryAngles(entity)
         return defaultAngleData[model]
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:CreateDefaultInventory(character)
     local charID = character:getID()
@@ -225,7 +213,6 @@ function GM:CreateDefaultInventory(character)
         })
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:LiliaTablesLoaded()
     local ignore = function()
@@ -236,7 +223,6 @@ function GM:LiliaTablesLoaded()
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:CreateSalaryTimer(client)
     if lia.config.SalaryOverride then return end
@@ -263,10 +249,6 @@ function GM:CreateSalaryTimer(client)
         client:notifyLocalized("salary", lia.currency.get(pay))
     end)
 end
-
---------------------------------------------------------------------------------------------------------
-local last_jump_time = 0
-
 --------------------------------------------------------------------------------------------------------
 function GM:SetupMove(client, mv, cmd)
     if client:OnGround() and mv:KeyPressed(IN_JUMP) then
@@ -279,7 +261,6 @@ function GM:SetupMove(client, mv, cmd)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerThrowPunch(ply, trace)
     local ent = trace.Entity
@@ -291,7 +272,6 @@ function GM:PlayerThrowPunch(ply, trace)
         ply:setRagdolled(true, 10)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:OnCharFallover(client, entity, bFallenOver)
     if IsValid(entity) then
@@ -299,7 +279,6 @@ function GM:OnCharFallover(client, entity, bFallenOver)
         entity:SetCustomCollisionCheck(false)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 if lia.config.AutoWorkshopDownloader then
     for i = 1, #workshop_items do

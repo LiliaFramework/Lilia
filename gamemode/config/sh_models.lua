@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 function lia.config.LoadModels()
     lia.config.PlayerModelTposingFixer = {
         ["path/to/model.mdl"] = "player",
@@ -10,3 +11,4 @@ function lia.config.LoadModels()
         lia.anim.setModelClass(model, animtype)
     end
 end
+--------------------------------------------------------------------------------------------------------

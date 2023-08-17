@@ -4,7 +4,6 @@ function GM:NetworkEntityCreated(entity)
 	if not entity:IsPlayer() then return end
 	hook.Run("PlayerModelChanged", entity, entity:GetModel())
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:CharacterListLoaded()
 	timer.Create("liaWaitUntilPlayerValid", 1, 0, function()
@@ -13,7 +12,6 @@ function GM:CharacterListLoaded()
 		hook.Run("LiliaLoaded")
 	end)
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerBindPress(client, bind, pressed)
 	bind = bind:lower()
@@ -39,21 +37,18 @@ function GM:PlayerBindPress(client, bind, pressed)
 		lia.command.send("chargetup")
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:DrawLiliaModelView(panel, ent)
 	if IsValid(ent.weapon) then
 		ent.weapon:DrawModel()
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:OnChatReceived()
 	if system.IsWindows() and not system.HasFocus() then
 		system.FlashWindow()
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:DrawCharInfo(client, character, info)
 	if client:Team() == FACTION_STAFF then

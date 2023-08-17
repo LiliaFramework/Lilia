@@ -1,5 +1,6 @@
+--------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS = STORAGE_DEFINITIONS or {}
-
+--------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/props_junk/wood_crate001a.mdl"] = {
 	name = "Wood Crate",
 	desc = "A crate made out of wood.",
@@ -9,7 +10,7 @@ STORAGE_DEFINITIONS["models/props_junk/wood_crate001a.mdl"] = {
 		h = 4
 	}
 }
-
+--------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/props_c17/lockers001a.mdl"] = {
 	name = "Locker",
 	desc = "A white locker.",
@@ -19,7 +20,7 @@ STORAGE_DEFINITIONS["models/props_c17/lockers001a.mdl"] = {
 		h = 6
 	}
 }
-
+--------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/props_wasteland/controlroom_storagecloset001a.mdl"] = {
 	name = "Metal Closet",
 	desc = "A green storage closet.",
@@ -29,7 +30,7 @@ STORAGE_DEFINITIONS["models/props_wasteland/controlroom_storagecloset001a.mdl"] 
 		h = 7
 	}
 }
-
+--------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/props_wasteland/controlroom_filecabinet002a.mdl"] = {
 	name = "File Cabinet",
 	desc = "A metal file cabinet.",
@@ -39,7 +40,7 @@ STORAGE_DEFINITIONS["models/props_wasteland/controlroom_filecabinet002a.mdl"] = 
 		h = 6
 	}
 }
-
+--------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/props_c17/furniturefridge001a.mdl"] = {
 	name = "Refrigerator",
 	desc = "A metal box to keep food in",
@@ -49,7 +50,7 @@ STORAGE_DEFINITIONS["models/props_c17/furniturefridge001a.mdl"] = {
 		h = 4
 	}
 }
-
+--------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/props_wasteland/kitchen_fridge001a.mdl"] = {
 	name = "Large Refrigerator",
 	desc = "A large metal box to keep even more food in.",
@@ -59,7 +60,7 @@ STORAGE_DEFINITIONS["models/props_wasteland/kitchen_fridge001a.mdl"] = {
 		h = 5
 	}
 }
-
+--------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/props_junk/trashbin01a.mdl"] = {
 	name = "Trash Bin",
 	desc = "A container for junk.",
@@ -69,7 +70,7 @@ STORAGE_DEFINITIONS["models/props_junk/trashbin01a.mdl"] = {
 		h = 3
 	}
 }
-
+--------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/items/ammocrate_smg1.mdl"] = {
 	name = "Ammo Crate",
 	desc = "A heavy crate for storing ammunition.",
@@ -88,30 +89,25 @@ STORAGE_DEFINITIONS["models/items/ammocrate_smg1.mdl"] = {
 		end)
 	end
 }
-
+--------------------------------------------------------------------------------------------------------
 if CLIENT then
+--------------------------------------------------------------------------------------------------------
 	function MODULE:StorageOpen(storage)
-		-- Number of pixels between the local inventory and storage inventory.
-		local PADDING = 4
 		if not IsValid(storage) or storage:getStorageInfo().invType ~= "grid" then return end
-		-- Get the inventory for the player and storage.
 		local localInv = LocalPlayer():getChar() and LocalPlayer():getChar():getInv()
 		local storageInv = storage:getInv()
-		if not localInv or not storageInv then return liaStorageBase:exitStorage() end
-		-- Show both the storage and inventory.
+		if not localInv or not storageInv then return LiliaStorage:exitStorage() end
 		local localInvPanel = localInv:show()
 		local storageInvPanel = storageInv:show()
 		storageInvPanel:SetTitle(L(storage:getStorageInfo().name))
-		-- Allow the inventory panels to close.
 		localInvPanel:ShowCloseButton(true)
 		storageInvPanel:ShowCloseButton(true)
-		-- Put the two panels, side by side, in the middle.
-		local extraWidth = (storageInvPanel:GetWide() + PADDING) / 2
+		local extraWidth = (storageInvPanel:GetWide() + 4) / 2
 		localInvPanel:Center()
 		storageInvPanel:Center()
 		localInvPanel.x = localInvPanel.x + extraWidth
-		storageInvPanel:MoveLeftOf(localInvPanel, PADDING)
-		-- Signal that the user left the inventory if either closes.
+		storageInvPanel:MoveLeftOf(localInvPanel, 4)
+
 		local firstToRemove = true
 		localInvPanel.oldOnRemove = localInvPanel.OnRemove
 		storageInvPanel.oldOnRemove = storageInvPanel.OnRemove
@@ -119,7 +115,7 @@ if CLIENT then
 		local function exitStorageOnRemove(panel)
 			if firstToRemove then
 				firstToRemove = false
-				liaStorageBase:exitStorage()
+				LiliaStorage:exitStorage()
 				local otherPanel = panel == localInvPanel and storageInvPanel or localInvPanel
 
 				if IsValid(otherPanel) then
@@ -134,4 +130,6 @@ if CLIENT then
 		localInvPanel.OnRemove = exitStorageOnRemove
 		storageInvPanel.OnRemove = exitStorageOnRemove
 	end
+--------------------------------------------------------------------------------------------------------
 end
+--------------------------------------------------------------------------------------------------------

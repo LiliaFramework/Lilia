@@ -5,12 +5,10 @@ lia.item.instances = lia.item.instances or {}
 lia.item.inventoryTypes = lia.item.inventoryTypes or {}
 lia.item.list = lia.item.list or {}
 lia.item.defaultfunctions = lia.item.defaultfunctions or {}
-
 --------------------------------------------------------------------------------------------------------
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua")
@@ -22,12 +20,10 @@ function lia.item.load(path, baseID, isBaseItem)
         ErrorNoHalt("[Lilia] Item at '" .. path .. "' follows an invalid naming convention!\n")
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.item.isItem(object)
     return istable(object) and object.isItem == true
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     assert(isstring(uniqueID), "uniqueID must be a string")
@@ -90,7 +86,6 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
 
     return targetTable[itemType]
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.item.loadFromDir(directory)
     local files, folders
@@ -114,7 +109,6 @@ function lia.item.loadFromDir(directory)
         lia.item.load(directory .. "/" .. v)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
@@ -139,7 +133,6 @@ function lia.item.new(uniqueID, id)
         error("[Lilia] Attempt to create an unknown item '" .. tostring(uniqueID) .. "'\n")
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar("inv", {
     noNetworking = true,

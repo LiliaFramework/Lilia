@@ -3,7 +3,6 @@ local view, traceData, traceData2, aimOrigin, crouchFactor, ft, trace, curAng
 local clmp = math.Clamp
 local diff, fm, sm
 crouchFactor = 0
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("SetupQuickMenu", "ThirdPersonSetupQuickMenu", function(menu)
     if lia.config.ThirdPersonEnabled then
@@ -35,7 +34,6 @@ hook.Add("SetupQuickMenu", "ThirdPersonSetupQuickMenu", function(menu)
         menu:addSpacer()
     end
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("CalcView", "ThirdPersonCalcView", function(client, origin, angles, fov)
     ft = FrameTime()
@@ -84,7 +82,6 @@ hook.Add("CreateMove", "ThirdPersonCreateMove", function(cmd)
         return false
     end
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("InputMouseApply", "ThirdPersonInputMouseApply", function(cmd, x, y, ang)
     owner = LocalPlayer()
@@ -100,17 +97,19 @@ hook.Add("InputMouseApply", "ThirdPersonInputMouseApply", function(cmd, x, y, an
         return true
     end
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("ShouldDrawLocalPlayer", "ThirdPersonShouldDrawLocalPlayer", function()
     if LocalPlayer():GetViewEntity() == LocalPlayer() and not IsValid(LocalPlayer():GetVehicle()) and LocalPlayer():CanOverrideView() then return true end
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("PlayerButtonDown", "ThirdPersonPlayerButtonDown", function(ply, button)
     if button == KEY_F4 and IsFirstTimePredicted() then
         local toggle = GetConVar("lia_tp_enabled")
         toggle:SetString((toggle:GetString() == "1" and "0") or "1")
+    end
+
+    if button == KEY_F2 and IsFirstTimePredicted() then
+        netstream.Start("VoiceMenu", ply)
     end
 end)
 --------------------------------------------------------------------------------------------------------

@@ -1,5 +1,6 @@
+--------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
-
+--------------------------------------------------------------------------------------------------------
 function playerMeta:isWepRaised()
 	local weapon = self:GetActiveWeapon()
 	local override = hook.Run("ShouldWeaponBeRaised", self, weapon)
@@ -20,7 +21,7 @@ function playerMeta:isWepRaised()
 
 	return self:getNetVar("raised", false)
 end
-
+--------------------------------------------------------------------------------------------------------
 if SERVER then
 	function playerMeta:setWepRaised(state)
 		self:setNetVar("raised", state)
@@ -48,3 +49,4 @@ if SERVER then
 		end
 	end
 end
+--------------------------------------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 lia.config.CustomChatSound = ""
 lia.config.ChatColor = Color(255, 239, 150)
 lia.config.ChatRange = 280
@@ -10,3 +11,4 @@ lia.config.LOOCDelayAdmin = false
 lia.config.LOOCDelay = 6
 lia.config.ChatSizeDiff = false
 lia.config.MaxChatLength = 256
+--------------------------------------------------------------------------------------------------------

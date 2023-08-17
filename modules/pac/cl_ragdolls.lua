@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 function MODULE:DrawPlayerRagdoll(entity)
 	local ply = entity.objCache
 
@@ -16,7 +17,7 @@ function MODULE:DrawPlayerRagdoll(entity)
 		entity.overridePAC3 = true
 	end
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:OnEntityCreated(entity)
 	local class = entity:GetClass()
 
@@ -45,3 +46,4 @@ function MODULE:OnEntityCreated(entity)
 		end
 	end)
 end
+--------------------------------------------------------------------------------------------------------

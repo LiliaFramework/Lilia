@@ -1,7 +1,8 @@
+--------------------------------------------------------------------------------------------------------
 function MODULE:InitializedModules()
     RunConsoleCommand("spawnmenu_reload")
 end
-
+--------------------------------------------------------------------------------------------------------
 spawnmenu.AddContentType("item", function(container, object)
     local icon = vgui.Create("SpawnIcon", p)
     icon:SetWide(64)
@@ -28,7 +29,7 @@ spawnmenu.AddContentType("item", function(container, object)
 
     return icon
 end)
-
+--------------------------------------------------------------------------------------------------------
 hook.Add("PopulateItems", "AddEntityContent", function(pnlContent, tree, node)
     local categorised = {}
 
@@ -74,7 +75,7 @@ hook.Add("PopulateItems", "AddEntityContent", function(pnlContent, tree, node)
     if IsValid(FirstNode) then
         FirstNode:InternalDoClick()
     end
-end)
+end)--------------------------------------------------------------------------------------------------------
 
 spawnmenu.AddCreationTab("Items", function()
     local ctrl = vgui.Create("SpawnmenuContentPanel")
@@ -83,3 +84,4 @@ spawnmenu.AddCreationTab("Items", function()
 
     return ctrl
 end, "icon16/cog_add.png", 200)
+--------------------------------------------------------------------------------------------------------

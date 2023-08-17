@@ -1,12 +1,12 @@
+--------------------------------------------------------------------------------------------------------
 local PANEL = {}
-local STRIP_HEIGHT = 4
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:isCursorWithinBounds()
 	local x, y = self:LocalCursorPos()
 
 	return x >= 0 and x <= self:GetWide() and y >= 0 and y < self:GetTall()
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:confirmDelete()
 	local id = self.character:getID()
 
@@ -14,14 +14,14 @@ function PANEL:confirmDelete()
 		MainMenu:deleteCharacter(id)
 	end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	local WIDTH = 240
 	self:SetWide(WIDTH)
 	self:SetPaintBackground(false)
 	self.faction = self:Add("DPanel")
 	self.faction:Dock(TOP)
-	self.faction:SetTall(STRIP_HEIGHT)
+	self.faction:SetTall(4)
 	self.faction:SetSkin("Default")
 	self.faction:SetAlpha(100)
 
@@ -86,10 +86,10 @@ function PANEL:Init()
 	self.delete.y = ScrH()
 	self.delete.showY = self.delete.y - self.delete:GetTall()
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:onSelected()
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:setCharacter(character)
 	self.character = character
 	print(character)
@@ -100,25 +100,23 @@ function PANEL:setCharacter(character)
 	local entity = self.model.Entity
 
 	if IsValid(entity) then
-		-- Match the skin and bodygroups.
 		entity:SetSkin(character:getData("skin", 0))
 
 		for k, v in pairs(character:getData("groups", {})) do
 			entity:SetBodygroup(k, v)
 		end
 
-		-- Approximate the upper body position.
 		local mins, maxs = entity:GetRenderBounds()
 		local height = math.abs(mins.z) + math.abs(maxs.z)
 		local scale = math.max((960 / ScrH()) * 0.5, 0.5)
 		self.model:SetLookAt(entity:GetPos() + Vector(0, 0, height * scale))
 	end
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:setBanned(banned)
 	self.banned = banned
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:onHoverChanged(isHovered)
 	local ANIM_SPEED = lia.gui.character.ANIM_SPEED
 	if self.isHovered == isHovered then return end
@@ -135,19 +133,20 @@ function PANEL:onHoverChanged(isHovered)
 
 	self.faction:AlphaTo(isHovered and 250 or 100, ANIM_SPEED)
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
 	lia.util.drawBlur(self)
 	surface.SetDrawColor(0, 0, 0, 50)
-	surface.DrawRect(0, STRIP_HEIGHT, w, h)
+	surface.DrawRect(0, 4, w, h)
 
 	if not self:isCursorWithinBounds() and self.isHovered then
 		self:onHoverChanged(false)
 	end
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:OnCursorEntered()
 	self:onHoverChanged(true)
 end
-
+--------------------------------------------------------------------------------------------------------
 vgui.Register("liaCharacterSlot", PANEL, "DPanel")
+--------------------------------------------------------------------------------------------------------

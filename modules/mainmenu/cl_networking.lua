@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 net.Receive("liaCharList", function()
     local newCharList = {}
     local length = net.ReadUInt(32)
@@ -15,3 +16,4 @@ net.Receive("liaCharList", function()
         hook.Run("CharacterListLoaded", newCharList)
     end
 end)
+--------------------------------------------------------------------------------------------------------

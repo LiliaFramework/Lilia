@@ -2,17 +2,14 @@
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------
 local EDITOR = include(MODULE.path .. "/cl_editor.lua")
-
 --------------------------------------------------------------------------------------------------------
 local function onFactionStateChanged(checkBox, state)
 	EDITOR.faction(checkBox.factionID, state)
 end
-
 --------------------------------------------------------------------------------------------------------
 local function onClassStateChanged(checkBox, state)
 	EDITOR.class(checkBox.classID, state)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	if IsValid(lia.gui.vendorFactionEditor) then
@@ -62,7 +59,6 @@ function PANEL:Init()
 	hook.Add("VendorFactionUpdated", self, self.updateChecked)
 	hook.Add("VendorClassUpdated", self, self.updateChecked)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:updateChecked()
 	local entity = liaVendorEnt
@@ -75,7 +71,6 @@ function PANEL:updateChecked()
 		panel:SetChecked(entity:isClassAllowed(id))
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaVendorFactionEditor", PANEL, "DFrame")
 --------------------------------------------------------------------------------------------------------

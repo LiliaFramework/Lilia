@@ -1,8 +1,10 @@
+--------------------------------------------------------------------------------------------------------
 MODULE.name = "Multiple Characters"
 MODULE.author = "Leonheart#7476/Cheesenot"
 MODULE.desc = "Allows players to have multiple characters."
+--------------------------------------------------------------------------------------------------------
 MainMenu = MODULE
-
+--------------------------------------------------------------------------------------------------------
 if SERVER then
     function MODULE:syncCharList(client)
         if not client.liaCharList then return end
@@ -104,8 +106,9 @@ else
         net.SendToServer()
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 lia.util.include("sv_hooks.lua")
 lia.util.include("cl_networking.lua")
 lia.util.include("sv_networking.lua")
 lia.util.include("sh_config.lua")
+--------------------------------------------------------------------------------------------------------

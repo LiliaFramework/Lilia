@@ -1,5 +1,6 @@
+--------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:SetSize(280, 240)
     self:SetTitle(L"doorSettings")
@@ -36,7 +37,7 @@ function PANEL:Init()
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:setDoor(door, access, door2)
     door.liaPanel = self
     self.accessData = access
@@ -78,18 +79,19 @@ function PANEL:setDoor(door, access, door2)
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:checkAccess(access)
     access = access or DOOR_GUEST
     if (self.accessData[LocalPlayer()] or 0) >= access then return true end
 
     return false
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Think()
     if self.accessData and not IsValid(self.door) and self:checkAccess() then
         self:Remove()
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 vgui.Register("liaDoorMenu", PANEL, "DFrame")
+--------------------------------------------------------------------------------------------------------

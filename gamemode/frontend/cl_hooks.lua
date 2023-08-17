@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local data = {}
 local offset1, offset2, offset3, alpha, y
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("HUDPaint", "FrontendHooks", function()
     local ply = LocalPlayer()
@@ -40,7 +39,6 @@ hook.Add("HUDPaint", "FrontendHooks", function()
         end
     end
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("TooltipInitialize", "liaItemTooltip", function(self, panel)
     if panel.liaToolTip or panel.itemID then
@@ -53,7 +51,6 @@ hook.Add("TooltipInitialize", "liaItemTooltip", function(self, panel)
         self.isItemTooltip = true
     end
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("TooltipPaint", "liaItemTooltip", function(self, w, h)
     if self.isItemTooltip then
@@ -68,31 +65,26 @@ hook.Add("TooltipPaint", "liaItemTooltip", function(self, w, h)
         return true
     end
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("TooltipLayout", "liaItemTooltip", function(self)
     if self.isItemTooltip then return true end
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("StartChat", "StartChatTyping", function()
     net.Start("liaTypeStatus")
     net.WriteBool(false)
     net.SendToServer()
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("FinishChat", "FinishChatTyping", function()
     net.Start("liaTypeStatus")
     net.WriteBool(true)
     net.SendToServer()
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("ShowHelp", "DisableShowHelp", function()
     return false
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("BuildHelpMenu", "liaCreditsList", function(tabs)
     tabs["Credits"] = function()

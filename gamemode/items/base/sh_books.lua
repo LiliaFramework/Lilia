@@ -1,9 +1,10 @@
+--------------------------------------------------------------------------------------------------------
 ITEM.name = "Book Base"
 ITEM.desc = "A book."
 ITEM.category = "Literature"
 ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
 ITEM.contents = ""
-
+--------------------------------------------------------------------------------------------------------
 ITEM.functions.Read = {
     onClick = function(item)
         local frame = vgui.Create("DFrame")
@@ -20,3 +21,4 @@ ITEM.functions.Read = {
     end,
     icon = "icon16/book_open.png"
 }
+--------------------------------------------------------------------------------------------------------

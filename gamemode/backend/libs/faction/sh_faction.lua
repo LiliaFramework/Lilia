@@ -2,7 +2,6 @@
 lia.faction = lia.faction or {}
 lia.faction.indices = lia.faction.indices or {}
 lia.faction.teams = lia.faction.teams or {}
-
 --------------------------------------------------------------------------------------------------------
 function lia.faction.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
@@ -51,17 +50,14 @@ function lia.faction.loadFromDir(directory)
         FACTION = nil
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.faction.get(identifier)
     return lia.faction.indices[identifier] or lia.faction.teams[identifier]
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.faction.getIndex(uniqueID)
     return lia.faction.teams[uniqueID] and lia.faction.teams[uniqueID].index
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.faction.formatModelData()
     for name, faction in pairs(lia.faction.teams) do

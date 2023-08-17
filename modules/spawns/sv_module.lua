@@ -1,5 +1,6 @@
+--------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:CharacterPreSave(character)
     local client = character:getPlayer()
 
@@ -7,7 +8,7 @@ function MODULE:CharacterPreSave(character)
         character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()})
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:PlayerLoadedChar(client, character, lastChar)
     timer.Simple(0, function()
         if IsValid(client) then
@@ -24,7 +25,7 @@ function MODULE:PlayerLoadedChar(client, character, lastChar)
         end
     end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:PostPlayerLoadout(client)
     if self.spawns and table.Count(self.spawns) > 0 and client:getChar() then
         local class = client:getChar():getClass()
@@ -55,11 +56,12 @@ function MODULE:PostPlayerLoadout(client)
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:LoadData()
     self.spawns = self:getData() or {}
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:SaveSpawns()
     self:setData(self.spawns)
 end
+--------------------------------------------------------------------------------------------------------

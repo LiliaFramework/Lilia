@@ -7,12 +7,10 @@ local cachedPitch = 0
 local isInteracting = false
 local interfaceScale = 0
 local selectedFunction = nil
-
 --------------------------------------------------------------------------------------------------------
 function lia.playerInteract.addFunc(name, data)
     lia.playerInteract.funcs[name] = data
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.playerInteract.interact(entity, time)
     lia.playerInteract.currentEnt = entity
@@ -20,14 +18,12 @@ function lia.playerInteract.interact(entity, time)
     cachedPitch = LocalPlayer():EyeAngles().p
     isInteracting = true
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.playerInteract.clear()
     isInteracting = false
     cachedPitch = 0
     interactPressTime = 0
 end
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("KeyPress", "lia.playerInteract", function(client, key)
     if key ~= IN_USE then return end
@@ -37,23 +33,16 @@ hook.Add("KeyPress", "lia.playerInteract", function(client, key)
         lia.playerInteract.interact(entity, 1)
     end
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("KeyRelease", "lia.playerInteract", function(client, key)
     if key == IN_USE and isInteracting then
         lia.playerInteract.clear()
     end
 end)
-
 --------------------------------------------------------------------------------------------------------
 local function isLoading()
     return interactPressTime > CurTime()
 end
-
---------------------------------------------------------------------------------------------------------
-local scrW = ScrW()
-local scrH = ScrH()
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("HUDPaint", "lia.playerInteract", function()
     if not isInteracting and interfaceScale < 0 then return end
@@ -65,8 +54,8 @@ hook.Add("HUDPaint", "lia.playerInteract", function()
     end
 
     local curTime = CurTime()
-    local posX = scrW / 2
-    local posY = scrH / 2
+    local posX = ScrW() / 2
+    local posY = ScrH() / 2
     interfaceScale = Lerp(FrameTime() * 8, interfaceScale, (isInteracting and interactPressTime < curTime) and 1 or -0.1)
 
     if isLoading() then

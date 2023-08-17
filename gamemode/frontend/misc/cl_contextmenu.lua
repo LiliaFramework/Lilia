@@ -1,8 +1,9 @@
+--------------------------------------------------------------------------------------------------------
 function GM:OnContextMenuOpen()
     self.BaseClass:OnContextMenuOpen()
     vgui.Create("liaQuick")
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:OnContextMenuClose()
     self.BaseClass:OnContextMenuClose()
 
@@ -10,3 +11,4 @@ function GM:OnContextMenuClose()
         lia.gui.quick:Remove()
     end
 end
+--------------------------------------------------------------------------------------------------------

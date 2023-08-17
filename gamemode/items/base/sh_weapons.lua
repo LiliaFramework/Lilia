@@ -9,7 +9,6 @@ ITEM.height = 2
 ITEM.isWeapon = true
 ITEM.weaponCategory = "sidearm"
 ITEM.RequiredSkillLevels = nil
-
 --------------------------------------------------------------------------------------------------------
 if CLIENT then
     function ITEM:paintOver(item, w, h)
@@ -19,7 +18,6 @@ if CLIENT then
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 ITEM:hook("drop", function(item)
     if item:getData("equip") then
@@ -35,7 +33,6 @@ ITEM:hook("drop", function(item)
         end
     end
 end)
-
 --------------------------------------------------------------------------------------------------------
 ITEM.functions.EquipUn = {
     name = "Unequip",
@@ -70,7 +67,6 @@ ITEM.functions.EquipUn = {
         return not IsValid(item.entity) and item:getData("equip") == true
     end
 }
-
 --------------------------------------------------------------------------------------------------------
 ITEM.functions.Equip = {
     name = "Equip",
@@ -126,14 +122,12 @@ ITEM.functions.Equip = {
         return not IsValid(item.entity) and item:getData("equip") ~= true
     end
 }
-
 --------------------------------------------------------------------------------------------------------
 function ITEM:onCanBeTransfered(oldInventory, newInventory)
     if newInventory and self:getData("equip") then return false end
 
     return true
 end
-
 --------------------------------------------------------------------------------------------------------
 function ITEM:onLoadout()
     if self:getData("equip") then
@@ -159,16 +153,6 @@ function ITEM:onSave()
         self:setData("ammo", weapon:Clip1())
     end
 end
-
---------------------------------------------------------------------------------------------------------
-HOLSTER_DRAWINFO = HOLSTER_DRAWINFO or {}
-
-function ITEM:onRegistered()
-    if self.holsterDrawInfo then
-        HOLSTER_DRAWINFO[self.class] = self.holsterDrawInfo
-    end
-end
-
 --------------------------------------------------------------------------------------------------------
 function ITEM:onRemoved()
     local inv = lia.item.inventories[self.invID]

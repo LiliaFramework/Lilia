@@ -1,6 +1,7 @@
+--------------------------------------------------------------------------------------------------------
 local isOpen = false
 local logList
-
+--------------------------------------------------------------------------------------------------------
 local function fillLogs(listview, logs)
     listview:Clear()
 
@@ -8,13 +9,13 @@ local function fillLogs(listview, logs)
         listview:AddLine(curLog.time, curLog.name, curLog.ply, curLog.steamID, curLog.len, curLog.source, curLog.ip)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 local function requestLogs(page)
     net.Start("net_RequestLogs")
     net.WriteInt(page, 32)
     net.SendToServer()
 end
-
+--------------------------------------------------------------------------------------------------------
 local function displayLogs(logs, amtOfPages)
     local results
     local frame = vgui.Create("DFrame")
@@ -128,7 +129,7 @@ local function displayLogs(logs, amtOfPages)
         results = nil
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 net.Receive("net_ReceiveLogs", function()
     local len = net.ReadUInt(32)
     local data = net.ReadData(len)
@@ -142,3 +143,4 @@ net.Receive("net_ReceiveLogs", function()
         displayLogs(tab, amtOfPages)
     end
 end)
+--------------------------------------------------------------------------------------------------------

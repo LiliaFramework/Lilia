@@ -1,5 +1,6 @@
+--------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("spawnadd", {
     privilege = "Management - Change Spawns",
     adminOnly = true,
@@ -61,7 +62,7 @@ lia.command.add("spawnadd", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("spawnremove", {
     privilege = "Management - Change Spawns",
     adminOnly = true,
@@ -89,3 +90,4 @@ lia.command.add("spawnremove", {
         return L("spawnDeleted", client, i)
     end
 })
+--------------------------------------------------------------------------------------------------------

@@ -17,7 +17,6 @@ function GM:SetupBotCharacter(client)
     character:setup()
     client:Spawn()
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:SetupBotInventory(client, character)
     if not "grid" then return end

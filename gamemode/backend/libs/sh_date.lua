@@ -1,6 +1,5 @@
 --------------------------------------------------------------------------------------------------------
 lia.date = lia.date or {}
-
 --------------------------------------------------------------------------------------------------------
 function lia.date.GetFormattedDate(includeWeek, includeDay, includeMonth, includeYear, includeTime)
     local currentTime = os.date("*t") -- Get the current date and time as a table

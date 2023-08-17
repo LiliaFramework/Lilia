@@ -1,15 +1,15 @@
+--------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
-net.Receive(
-    "BodygrouperMenuClose",
+--------------------------------------------------------------------------------------------------------
+net.Receive("BodygrouperMenuClose",
     function(l, client)
         for k, v in pairs(ents.FindByClass("bodygrouper_closet")) do
             if v:HasUser(client) then v:RemoveUser(client) end
         end
     end
 )
-
-net.Receive(
-    "BodygrouperMenu",
+--------------------------------------------------------------------------------------------------------
+net.Receive("BodygrouperMenu",
     function(l, client)
         local target = net.ReadEntity()
         local skn = net.ReadUInt(10)
@@ -68,3 +68,4 @@ net.Receive(
         end
     end
 )
+--------------------------------------------------------------------------------------------------------

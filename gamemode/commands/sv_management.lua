@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 lia.command.add("freezeallprops", {
     superAdminOnly = true,
     privilege = "Management - Freeze All Props",
@@ -12,7 +13,7 @@ lia.command.add("freezeallprops", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("cleanitems", {
     superAdminOnly = true,
     privilege = "Management - Clean Items",
@@ -27,7 +28,7 @@ lia.command.add("cleanitems", {
         client:notify(count .. " items have been cleaned up from the map.")
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("cleanprops", {
     superAdminOnly = true,
     privilege = "Management - Clean Props",
@@ -42,7 +43,7 @@ lia.command.add("cleanprops", {
         client:notify(count .. " props have been cleaned up from the map.")
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("cleannpcs", {
     superAdminOnly = true,
     privilege = "Management - Clean NPCs",
@@ -59,7 +60,7 @@ lia.command.add("cleannpcs", {
         client:notify(count .. " NPCs have been cleaned up from the map.")
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("flags", {
     adminOnly = true,
     syntax = "<string name>",
@@ -72,7 +73,7 @@ lia.command.add("flags", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("clearchat", {
     superAdminOnly = true,
     privilege = "Management - Clear Chat",
@@ -80,7 +81,7 @@ lia.command.add("clearchat", {
         netstream.Start(player.GetAll(), "adminClearChat")
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("checkallmoney", {
     superAdminOnly = true,
     syntax = "<string charname>",
@@ -93,7 +94,7 @@ lia.command.add("checkallmoney", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("return", {
     adminOnly = true,
     privilege = "Management - Return",
@@ -113,7 +114,7 @@ lia.command.add("return", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("findallflags", {
     adminOnly = false,
     privilege = "Management - Find All Flags",
@@ -123,7 +124,7 @@ lia.command.add("findallflags", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("chargiveitem", {
     superAdminOnly = true,
     syntax = "<string name> <string item>",
@@ -160,7 +161,7 @@ lia.command.add("chargiveitem", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("netmessagelogs", {
     superAdminOnly = true,
     privilege = "Management - Check Net Message Log",
@@ -168,7 +169,7 @@ lia.command.add("netmessagelogs", {
         sendData(1, client)
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("returnitems", {
     superAdminOnly = true,
     syntax = "<string name>",
@@ -208,7 +209,7 @@ lia.command.add("returnitems", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("announce", {
     superAdminOnly = true,
     syntax = "<string factions> <string text>",
@@ -222,7 +223,7 @@ lia.command.add("announce", {
         client:notify("Announcement sent.")
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add("logs", {
     adminOnly = true,
     privilege = "Management - Open MLogs",
@@ -234,3 +235,4 @@ lia.command.add("logs", {
         end
     end
 })
+--------------------------------------------------------------------------------------------------------

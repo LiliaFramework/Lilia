@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 function MODULE:PlayerNoClip(client, state)
     if client:IsAdmin() or client:getChar():getFaction() == FACTION_STAFF then
         if state then
@@ -18,7 +19,6 @@ function MODULE:PlayerNoClip(client, state)
                     timer.Simple(0, function()
                         client:SetPos(position)
                         client:SetEyeAngles(angles)
-                        -- Make sure they stay still when they get back.
                         client:SetVelocity(Vector(0, 0, 0))
                     end)
                 end
@@ -36,3 +36,4 @@ function MODULE:PlayerNoClip(client, state)
         end
     end
 end
+--------------------------------------------------------------------------------------------------------

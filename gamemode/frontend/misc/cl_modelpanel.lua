@@ -1,6 +1,5 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self.brightness = 1
@@ -37,11 +36,9 @@ function PANEL:Init()
         entity:ResetSequence(4)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 local gui_MouseX = gui.MouseX
 local gui_MouseY = gui.MouseY
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:LayoutEntity()
     local scrW, scrH = ScrW(), ScrH()
@@ -63,7 +60,6 @@ function PANEL:LayoutEntity()
 
     self:RunAnimation()
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:PreDrawModel(entity)
     if self.brightness then
@@ -85,11 +81,9 @@ function PANEL:PreDrawModel(entity)
 
     return true
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnMousePressed()
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:fitFOV()
     local entity = self:GetEntity()
@@ -99,7 +93,6 @@ function PANEL:fitFOV()
     local distance = self:GetCamPos():Length()
     self:SetFOV(math.deg(2 * math.atan(height / (2 * distance))))
 end
-
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaModelPanel", PANEL, "DModelPanel")
 --------------------------------------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 hook.Add("OnCharInfoSetup", "AttribOnCharInfoSetup", function(panel)
     if suppress and suppress.attrib then return end
     panel.attribName = panel.info:Add("DLabel")
@@ -44,7 +45,8 @@ hook.Add("OnCharInfoSetup", "AttribOnCharInfoSetup", function(panel)
         end
     end
 end)
-
+--------------------------------------------------------------------------------------------------------
 hook.Add("ConfigureCharacterCreationSteps", "AttribOnCharInfoSetup", function(panel)
     panel:addStep(vgui.Create("liaCharacterAttribs"), 99)
 end)
+--------------------------------------------------------------------------------------------------------

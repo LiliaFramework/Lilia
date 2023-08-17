@@ -1,9 +1,9 @@
+--------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
-lia.command.add(
-    "viewBodygroups",
-    {
+--------------------------------------------------------------------------------------------------------
+lia.command.add("viewBodygroups",{
         adminOnly = true,
-        privilege = "Bodygrouper - View Menu",
+        privilege = "Characters - Change Bodygroups",
         syntax = "[string name]",
         onCheckAccess = function(client) return MODULE:CanChangeBodygroup(client) end,
         onRun = function(client, args)
@@ -14,3 +14,4 @@ lia.command.add(
         end
     }
 )
+--------------------------------------------------------------------------------------------------------

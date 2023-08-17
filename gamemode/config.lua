@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 lia.config = lia.config or {}
 lia.config.list = lia.config.list or {}
-
 --------------------------------------------------------------------------------------------------------
 function lia.config.load()
     lia.config.LoadCore()
@@ -10,3 +9,4 @@ function lia.config.load()
     lia.config.LoadToolPermissions()
     hook.Run("InitializedConfig")
 end
+--------------------------------------------------------------------------------------------------------

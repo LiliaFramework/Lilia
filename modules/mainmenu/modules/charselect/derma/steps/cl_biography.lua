@@ -1,6 +1,6 @@
+--------------------------------------------------------------------------------------------------------
 local PANEL = {}
-local HIGHLIGHT = Color(255, 255, 255, 50)
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	self.nameLabel = self:addLabel("name")
 	self.nameLabel:SetZPos(0)
@@ -24,7 +24,7 @@ function PANEL:Init()
 	self.desc:SetMultiline(true)
 	self.desc:SetZPos(3)
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:addTextEntry(contextName)
 	local entry = self:Add("DTextEntry")
 	entry:Dock(TOP)
@@ -50,7 +50,7 @@ function PANEL:addTextEntry(contextName)
 
 	return entry
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:onDisplay()
 	local faction = self:getContext("faction")
 	assert(faction, "faction not set before showing name input")
@@ -70,10 +70,9 @@ function PANEL:onDisplay()
 	end
 
 	self.desc:SetText(self:getContext("desc", ""))
-	-- Requesting focus same frame causes issues with docking.
 	self.name:RequestFocus()
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:validate()
 	if self.name:IsVisible() then
 		local res = {self:validateCharVar("name")}
@@ -83,13 +82,13 @@ function PANEL:validate()
 
 	return self:validateCharVar("desc")
 end
-
--- self refers to the text entry
+--------------------------------------------------------------------------------------------------------
 function PANEL:paintTextEntry(w, h)
 	lia.util.drawBlur(self)
 	surface.SetDrawColor(0, 0, 0, 100)
 	surface.DrawRect(0, 0, w, h)
-	self:DrawTextEntryText(color_white, HIGHLIGHT, HIGHLIGHT)
+	self:DrawTextEntryText(color_white, Color(255, 255, 255, 50), Color(255, 255, 255, 50))
 end
-
+--------------------------------------------------------------------------------------------------------
 vgui.Register("liaCharacterBiography", PANEL, "liaCharacterCreateStep")
+--------------------------------------------------------------------------------------------------------

@@ -1,6 +1,14 @@
 --------------------------------------------------------------------------------------------------------
-MODULE.name = "Save Items"
-MODULE.author = "Leonheart#7476/Cheesenot"
-MODULE.desc = "Saves items that were dropped."
-lia.util.include("sv_module.lua")
+ITEM.name = "Example"
+ITEM.desc = "An Example"
+ITEM.contents = [[
+<h1>An Example</h1>
+<h3>By Example</h3>
+<p>
+EXAMPLE PARA. 
+EXAMPLE PARA. 
+EXAMPLE PARAGRAPH. 
+EXAMPLE PARAGRAH!
+</p>
+]]
 --------------------------------------------------------------------------------------------------------

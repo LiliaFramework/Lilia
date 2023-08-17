@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 netstream.Hook("liaItemSpawn", function(client, itemID)
     local uniqueID = client:GetUserGroup()
 
@@ -10,3 +11,4 @@ netstream.Hook("liaItemSpawn", function(client, itemID)
         lia.item.spawn(itemID, client:GetShootPos())
     end
 end)
+--------------------------------------------------------------------------------------------------------

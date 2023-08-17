@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 function MODULE:KeyPress(client, key)
 	if key == IN_RELOAD then
 		timer.Create("liaToggleRaise" .. client:SteamID(), 1, 1, function()
@@ -7,7 +8,8 @@ function MODULE:KeyPress(client, key)
 		end)
 	end
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:PlayerSwitchWeapon(client, oldWeapon, newWeapon)
 	client:setWepRaised(false)
 end
+--------------------------------------------------------------------------------------------------------

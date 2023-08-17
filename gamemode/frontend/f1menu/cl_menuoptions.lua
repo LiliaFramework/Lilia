@@ -1,8 +1,5 @@
 --------------------------------------------------------------------------------------------------------
-hook.Add(
-    "CreateMenuButtons",
-    "liaInventory",
-    function(tabs)
+hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
         if hook.Run("CanPlayerViewInventory") == false then return end
         tabs["inv"] = function(panel)
             local inventory = LocalPlayer():getChar():getInv()
@@ -41,12 +38,8 @@ hook.Add(
         end
     end
 )
-
 --------------------------------------------------------------------------------------------------------
-hook.Add(
-    "CreateMenuButtons",
-    "liaClasses",
-    function(tabs)
+hook.Add("CreateMenuButtons", "liaClasses", function(tabs)
         if hook.Run("CanPlayerViewClasses") == false then return end
         local cnt = table.Count(lia.class.list)
         if cnt <= 1 then return end
@@ -60,12 +53,8 @@ hook.Add(
         end
     end
 )
-
 --------------------------------------------------------------------------------------------------------
-hook.Add(
-    "CreateMenuButtons",
-    "liaHelpMenu",
-    function(tabs)
+hook.Add("CreateMenuButtons", "liaHelpMenu", function(tabs)
         if hook.Run("CanPlayerViewHelp") == false then return end
         HELP_DEFAULT = [[
         <div id="parent"><div id="child">

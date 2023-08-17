@@ -7,7 +7,6 @@ local function addNetHandler(name, handler)
 		handler(liaVendorEnt)
 	end)
 end
-
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaVendorSync", function()
 	local vendor = net.ReadEntity()
@@ -53,7 +52,6 @@ net.Receive("liaVendorSync", function()
 
 	hook.Run("VendorSynchronized", vendor)
 end)
-
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaVendorOpen", function()
 	local vendor = net.ReadEntity()
@@ -63,13 +61,11 @@ net.Receive("liaVendorOpen", function()
 		hook.Run("VendorOpened", vendor)
 	end
 end)
-
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaVendorExit", function()
 	liaVendorEnt = nil
 	hook.Run("VendorExited")
 end)
-
 --------------------------------------------------------------------------------------------------------
 addNetHandler("Money", function(vendor)
 	local money = net.ReadInt(32)
@@ -81,7 +77,6 @@ addNetHandler("Money", function(vendor)
 	vendor.money = money
 	hook.Run("VendorMoneyUpdated", vendor, money, vendor.money)
 end)
-
 --------------------------------------------------------------------------------------------------------
 addNetHandler("Price", function(vendor)
 	local itemType = net.ReadString()
@@ -95,7 +90,6 @@ addNetHandler("Price", function(vendor)
 	vendor.items[itemType][VENDOR_PRICE] = value
 	hook.Run("VendorItemPriceUpdated", vendor, itemType, value)
 end)
-
 --------------------------------------------------------------------------------------------------------
 addNetHandler("Mode", function(vendor)
 	local itemType = net.ReadString()
@@ -109,7 +103,6 @@ addNetHandler("Mode", function(vendor)
 	vendor.items[itemType][VENDOR_MODE] = value
 	hook.Run("VendorItemModeUpdated", vendor, itemType, value)
 end)
-
 --------------------------------------------------------------------------------------------------------
 addNetHandler("Stock", function(vendor)
 	local itemType = net.ReadString()
@@ -118,7 +111,6 @@ addNetHandler("Stock", function(vendor)
 	vendor.items[itemType][VENDOR_STOCK] = value
 	hook.Run("VendorItemStockUpdated", vendor, itemType, value)
 end)
-
 --------------------------------------------------------------------------------------------------------
 addNetHandler("MaxStock", function(vendor)
 	local itemType = net.ReadString()
@@ -132,7 +124,6 @@ addNetHandler("MaxStock", function(vendor)
 	vendor.items[itemType][VENDOR_MAXSTOCK] = value
 	hook.Run("VendorItemMaxStockUpdated", vendor, itemType, value)
 end)
-
 --------------------------------------------------------------------------------------------------------
 addNetHandler("AllowFaction", function(vendor)
 	local id = net.ReadUInt(8)
@@ -146,7 +137,6 @@ addNetHandler("AllowFaction", function(vendor)
 
 	hook.Run("VendorFactionUpdated", vendor, id, allowed)
 end)
-
 --------------------------------------------------------------------------------------------------------
 addNetHandler("AllowClass", function(vendor)
 	local id = net.ReadUInt(8)
@@ -160,7 +150,6 @@ addNetHandler("AllowClass", function(vendor)
 
 	hook.Run("VendorClassUpdated", vendor, id, allowed)
 end)
-
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaVendorEdit", function()
 	local key = net.ReadString()
@@ -170,7 +159,6 @@ net.Receive("liaVendorEdit", function()
 		hook.Run("VendorEdited", liaVendorEnt, key)
 	end)
 end)
-
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaVendorFaction", function()
 	local factionID = net.ReadUInt(8)

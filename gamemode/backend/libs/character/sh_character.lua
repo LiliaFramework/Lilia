@@ -2,6 +2,7 @@
 lia.config.AllowExistNames = true
 --------------------------------------------------------------------------------------------------------
 local charMeta = lia.meta.character or {}
+local playerMeta = FindMetaTable("Player")
 --------------------------------------------------------------------------------------------------------
 lia.char = lia.char or {}
 lia.char.loaded = lia.char.loaded or {}
@@ -12,15 +13,11 @@ charMeta.__index = charMeta
 charMeta.id = charMeta.id or 0
 charMeta.vars = charMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
-
 --------------------------------------------------------------------------------------------------------
 if SERVER then
     if not lia.db then
         print("db not up")
     end
-
-    -- Fetches all the character names and stores
-    -- them into a table so they only have to be fetched once
     if #lia.char.names < 1 then
         lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
             if data and #data > 0 then
@@ -31,26 +28,22 @@ if SERVER then
         end)
     end
 
-    -- Returns the character names
     netstream.Hook("liaCharFetchNames", function(client)
         netstream.Start(client, "liaCharFetchNames", lia.char.names)
     end)
 
-    -- Removes name from table upon character deletion
     hook.Add("liaCharDeleted", "liaCharRemoveName", function(client, character)
         lia.char.names[character:getID()] = nil
         netstream.Start(client, "liaCharFetchNames", lia.char.names)
     end)
 
-    -- Removes name from table upon character deletion
     hook.Add("OnCharCreated", "liaCharAddName", function(client, character, data)
         lia.char.names[character:getID()] = data.name
         netstream.Start(client, "liaCharFetchNames", lia.char.names)
     end)
 end
-
+--------------------------------------------------------------------------------------------------------
 if CLIENT then
-    -- Fetch existing character names
     netstream.Hook("liaCharFetchNames", function(data)
         lia.char.names = data
     end)
@@ -59,7 +52,7 @@ if CLIENT then
         netstream.Start("liaCharFetchNames")
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.char.new(data, id, client, steamID)
     local character = setmetatable({
         vars = {}
@@ -88,13 +81,11 @@ function lia.char.new(data, id, client, steamID)
 
     return character
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
     lia.char.varHooks[varName][hookName] = func
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
@@ -146,7 +137,6 @@ function lia.char.registerVar(key, data)
 
     charMeta.vars[key] = data.default
 end
-
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar("name", {
     field = "_name",
@@ -199,7 +189,7 @@ lia.char.registerVar("name", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.char.registerVar("desc", {
     field = "_desc",
     default = "",
@@ -210,9 +200,7 @@ lia.char.registerVar("desc", {
         if not value or #value:gsub("%s", "") < minLength then return false, "descMinLen", minLength end
     end
 })
-
-local gradient = lia.util.getMaterial("vgui/gradient-d")
-
+--------------------------------------------------------------------------------------------------------
 lia.char.registerVar("model", {
     field = "_model",
     default = "models/error.mdl",
@@ -264,7 +252,7 @@ lia.char.registerVar("model", {
                         end
 
                         surface.SetDrawColor(color.r, color.g, color.b, 75)
-                        surface.SetMaterial(gradient)
+                        surface.SetMaterial(lia.util.getMaterial("vgui/gradient-d"))
                         surface.DrawTexturedRect(0, 0, w, h)
                     end
                 end
@@ -320,11 +308,11 @@ lia.char.registerVar("model", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.char.registerVar("class", {
     noDisplay = true,
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.char.registerVar("faction", {
     field = "_faction",
     default = "Citizen",
@@ -338,7 +326,7 @@ lia.char.registerVar("faction", {
         netstream.Start(nil, "charSet", "faction", character.vars.faction, character:getID())
         hook.Run("OnCharVarChanged", character, "faction", oldVar, value)
 
-        return true -- Compatability with old version.
+        return true
     end,
     onGet = function(character, default)
         local faction = lia.faction.teams[character.vars.faction]
@@ -355,14 +343,14 @@ lia.char.registerVar("faction", {
         newData.faction = lia.faction.indices[value].uniqueID
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.char.registerVar("money", {
     field = "_money",
     default = 0,
     isLocal = true,
     noDisplay = true
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.char.registerVar("data", {
     default = {},
     isLocal = true,
@@ -392,7 +380,7 @@ lia.char.registerVar("data", {
         end
     end
 })
-
+--------------------------------------------------------------------------------------------------------
 lia.char.registerVar("var", {
     default = {},
     noDisplay = true,
@@ -429,35 +417,23 @@ lia.char.registerVar("var", {
         end
     end
 })
-
 --------------------------------------------------------------------------------------------------------
-do
-    local playerMeta = FindMetaTable("Player")
-    playerMeta.steamName = playerMeta.steamName or playerMeta.Name
-    playerMeta.SteamName = playerMeta.steamName
-
-    function playerMeta:getChar()
-        return lia.char.loaded[self.getNetVar(self, "char")]
-    end
-
-    function playerMeta:Name()
-        local character = self.getChar(self)
-
-        return character and character.getName(character) or self.steamName(self)
-    end
-
-    playerMeta.Nick = playerMeta.Name
-    playerMeta.GetName = playerMeta.Name
+function playerMeta:getChar()
+    return lia.char.loaded[self.getNetVar(self, "char")]
 end
+--------------------------------------------------------------------------------------------------------
+function playerMeta:Name()
+    local character = self.getChar(self)
 
-hook.Add("Re-RunNames", "RerunNames1", function()
+    return character and character.getName(character) or self.steamName(self)
+end
+--------------------------------------------------------------------------------------------------------
+hook.Add("ReRunNames", "RerunNames1", function()
     if SERVER then
         if not lia.db then
             print("db not up")
         end
 
-        -- Fetches all the character names and stores
-        -- them into a table so they only have to be fetched once
         if #lia.char.names < 1 then
             lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
                 if data and #data > 0 then
@@ -468,18 +444,15 @@ hook.Add("Re-RunNames", "RerunNames1", function()
             end)
         end
 
-        -- Returns the character names
         netstream.Hook("liaCharFetchNames", function(client)
             netstream.Start(client, "liaCharFetchNames", lia.char.names)
         end)
 
-        -- Removes name from table upon character deletion
         hook.Add("liaCharDeleted", "liaCharRemoveName", function(client, character)
             lia.char.names[character:getID()] = nil
             netstream.Start(client, "liaCharFetchNames", lia.char.names)
         end)
 
-        -- Removes name from table upon character deletion
         hook.Add("OnCharCreated", "liaCharAddName", function(client, character, data)
             lia.char.names[character:getID()] = data.name
             netstream.Start(client, "liaCharFetchNames", lia.char.names)
@@ -487,7 +460,6 @@ hook.Add("Re-RunNames", "RerunNames1", function()
     end
 
     if CLIENT then
-        -- Fetch existing character names
         netstream.Hook("liaCharFetchNames", function(data)
             lia.char.names = data
         end)
@@ -497,3 +469,9 @@ hook.Add("Re-RunNames", "RerunNames1", function()
         end
     end
 end)
+--------------------------------------------------------------------------------------------------------
+playerMeta.Nick = playerMeta.Name
+playerMeta.GetName = playerMeta.Name
+playerMeta.steamName = playerMeta.steamName or playerMeta.Name
+playerMeta.SteamName = playerMeta.steamName
+--------------------------------------------------------------------------------------------------------

@@ -6,7 +6,6 @@ hook.Add("CreateInventoryPanel", "CreateInventoryPanelEvent", function(inventory
 
     return panel
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("getItemStackKey", "getItemStackKeyEvent", function(item)
     local elements = {}
@@ -18,7 +17,6 @@ hook.Add("getItemStackKey", "getItemStackKeyEvent", function(item)
 
     return item.uniqueID .. pon.encode(elements)
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("getItemStacks", "getItemStacksEvent", function(inventory)
     local stacks = {}

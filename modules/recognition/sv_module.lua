@@ -1,9 +1,10 @@
+--------------------------------------------------------------------------------------------------------
 function MODULE:ShowSpare1(client)
     if client:getChar() then
         netstream.Start(client, "rgnMenu")
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 netstream.Hook("rgnDirect", function(client, target)
     if target:GetPos():DistToSqr(client:GetPos()) > 100000 then return end
     local id = client:getChar():getID()
@@ -16,7 +17,7 @@ netstream.Hook("rgnDirect", function(client, target)
         client:notifyLocalized("already_recognized")
     end
 end)
-
+--------------------------------------------------------------------------------------------------------
 netstream.Hook("rgn", function(client, level)
     local targets = {}
 
@@ -60,3 +61,4 @@ netstream.Hook("rgn", function(client, level)
         end
     end
 end)
+--------------------------------------------------------------------------------------------------------

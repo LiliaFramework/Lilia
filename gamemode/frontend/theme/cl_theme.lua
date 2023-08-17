@@ -5,7 +5,6 @@ hook.Add("ForceDermaSkin", "ThemeForceDermaSkin", function()
         return "lilia"
     end
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("SpawnMenuOpen", "ThemeSpawnMenuOpen", function()
     timer.Simple(0, function()
@@ -17,7 +16,6 @@ hook.Add("SpawnMenuOpen", "ThemeSpawnMenuOpen", function()
         end)
     end)
 end)
-
 --------------------------------------------------------------------------------------------------------
 hook.Add("OnContextMenuOpen", "ThemeOnContextMenuOpen", function()
     timer.Simple(0, function()

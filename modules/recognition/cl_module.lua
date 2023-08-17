@@ -1,21 +1,18 @@
-CHAT_RECOGNIZED = CHAT_RECOGNIZED or {}
-CHAT_RECOGNIZED["ic"] = true
-CHAT_RECOGNIZED["y"] = true
-CHAT_RECOGNIZED["w"] = true
-CHAT_RECOGNIZED["me"] = true
-
+--------------------------------------------------------------------------------------------------------
+lia.config.ChatIsRecognized = {"ic","y","w","me"}
+--------------------------------------------------------------------------------------------------------
 function MODULE:IsRecognizedChatType(chatType)
-    return CHAT_RECOGNIZED[chatType]
+    return table.HasValue(lia.config.ChatIsRecognized, chatType) 
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:GetDisplayedDescription(client)
     if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar()) and not hook.Run("IsPlayerRecognized", client) then return L"noRecog" end
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:ShouldAllowScoreboardOverride(client)
     if lia.config.RecognitionEnabled then return true end
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:GetDisplayedName(client, chatType)
     if client ~= LocalPlayer() then
         local character = client:getChar()
@@ -36,7 +33,7 @@ function MODULE:GetDisplayedName(client, chatType)
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 netstream.Hook("rgnMenu", function()
     local menu = DermaMenu()
 
@@ -60,16 +57,16 @@ netstream.Hook("rgnMenu", function()
     menu:MakePopup()
     menu:Center()
 end)
-
+--------------------------------------------------------------------------------------------------------
 netstream.Hook("rgnDone", function()
     local client = LocalPlayer()
     hook.Run("OnCharRecognized", client, id)
 end)
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:OnCharRecognized(client, recogCharID)
     surface.PlaySound("buttons/button17.wav")
 end
-
+--------------------------------------------------------------------------------------------------------
 lia.playerInteract.addFunc("recognize", {
     nameLocalized = "recognize",
     callback = function(target)
@@ -79,3 +76,4 @@ lia.playerInteract.addFunc("recognize", {
         return true
     end
 })
+--------------------------------------------------------------------------------------------------------

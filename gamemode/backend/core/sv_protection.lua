@@ -1,8 +1,9 @@
+--------------------------------------------------------------------------------------------------------
 lia.config.TimeUntilDroppedSWEPRemoved = 15
 lia.config.PlayerSpawnVehicleDelay = 30
 lia.config.NPCsDropWeapons = true
 lia.config.DrawEntityShadows = true
-
+--------------------------------------------------------------------------------------------------------
 function GM:OnPlayerDropWeapon(client, item, entity)
     timer.Simple(lia.config.TimeUntilDroppedSWEPRemoved, function()
         if entity and entity:IsValid() then
@@ -10,11 +11,11 @@ function GM:OnPlayerDropWeapon(client, item, entity)
         end
     end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:CanDeleteChar(ply, char)
     if char:getMoney() < lia.config.DefaultMoney or ply:getNetVar("restricted") then return true end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:OnEntityCreated(ent)
     if lia.config.DrawEntityShadows then
         ent:DrawShadow(false)
@@ -33,12 +34,12 @@ function GM:OnEntityCreated(ent)
         end)
     end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:CheckValidSit(ply, trace)
     local ent = trace.Entity
     if ply:getNetVar("restricted") or ent:IsPlayer() then return false end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedVehicle(ply, ent)
     local delay = lia.config.PlayerSpawnVehicleDelay
 
@@ -46,7 +47,7 @@ function GM:PlayerSpawnedVehicle(ply, ent)
         ply.NextVehicleSpawn = SysTime() + delay
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
     if not physObj:IsMoveable() then return false end
     if entity:GetUnFreezable() then return false end
@@ -66,7 +67,7 @@ function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
 
     return true
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedNPC(client, entity)
     entity:SetCreator(client)
     entity:SetNWString("Creator_Nick", client:Nick())
@@ -74,7 +75,7 @@ function GM:PlayerSpawnedNPC(client, entity)
     entity:SetKeyValue("spawnflags", "8192")
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerDisconnected(client)
     client:saveLiliaData()
     local character = client:getChar()
@@ -106,13 +107,13 @@ function GM:PlayerDisconnected(client)
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:OnPhysgunPickup(ply, ent)
     if ent:GetClass() == "prop_physics" and ent:GetCollisionGroup() == COLLISION_GROUP_NONE then
         ent:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnObject(client, model, skin)
     if client:IsSuperAdmin() then return true end
 
@@ -128,7 +129,7 @@ function GM:PlayerSpawnObject(client, model, skin)
         return false
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PhysgunDrop(ply, ent)
     if ent:GetClass() ~= "prop_physics" then return end
 
@@ -138,9 +139,8 @@ function GM:PhysgunDrop(ply, ent)
         end
     end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedProp(client, model, entity)
-    -- Removes Problematic Models
     for _, gredwitch in pairs(file.Find("models/gredwitch/bombs/*.mdl", "GAME")) do
         if model == "models/gredwitch/bombs/" .. gredwitch then
             entity:Remove()
@@ -182,8 +182,9 @@ function GM:PlayerSpawnedProp(client, model, entity)
 
     self:PlayerSpawnedEntity(client, entity)
 end
-
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedEntity(client, entity)
     entity:SetNWString("Creator_Nick", client:Nick())
     entity:SetCreator(client)
 end
+--------------------------------------------------------------------------------------------------------

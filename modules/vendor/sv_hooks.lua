@@ -5,7 +5,6 @@ function MODULE:CanPlayerAccessVendor(client, vendor)
     if vendor:isClassAllowed(character:getClass()) then return true end
     if vendor:isFactionAllowed(client:Team()) then return true end
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)
     if not vendor.items[itemType] then return false end
@@ -31,7 +30,6 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
 
     if money and money < price then return false, isSellingToVendor and "vendorNoMoney" or "canNotAfford" end
 end
-
 --------------------------------------------------------------------------------------------------------
 if not VENDOR_INVENTORY_MEASURE then
     VENDOR_INVENTORY_MEASURE = lia.inventory.types["grid"]:new()
@@ -44,7 +42,6 @@ if not VENDOR_INVENTORY_MEASURE then
     VENDOR_INVENTORY_MEASURE.virtual = true
     VENDOR_INVENTORY_MEASURE:onInstanced()
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
     local canAccess, reason = hook.Run("CanPlayerTradeWithVendor", client, vendor, itemType, isSellingToVendor)
@@ -125,7 +122,6 @@ function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
         end)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:PlayerAccessVendor(client, vendor)
     vendor:addReceiver(client)
