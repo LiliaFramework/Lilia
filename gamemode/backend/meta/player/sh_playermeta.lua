@@ -210,21 +210,4 @@ function playerMeta:MeetsRequiredSkills(requiredSkillLevels)
 
     return true
 end
-
---------------------------------------------------------------------------------------------------------
-
-function playerMeta:getChar()
-    return lia.char.loaded[self.getNetVar(self, "char")]
-end
---------------------------------------------------------------------------------------------------------
-function playerMeta:Name()
-    local character = self.getChar(self)
-
-    return character and character.getName(character) or self.steamName(self)
-end
---------------------------------------------------------------------------------------------------------
-playerMeta.Nick = playerMeta.Name
-playerMeta.getName = playerMeta.Name
-playerMeta.GetName = playerMeta.Name
-playerMeta.steamName = playerMeta.steamName or playerMeta.Name
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------+
