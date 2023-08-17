@@ -418,14 +418,23 @@ lia.char.registerVar("var", {
     end
 })
 --------------------------------------------------------------------------------------------------------
-function playerMeta:getChar()
-    return lia.char.loaded[self.getNetVar(self, "char")]
-end
---------------------------------------------------------------------------------------------------------
-function playerMeta:Name()
-    local character = self.getChar(self)
+do
+    local playerMeta = FindMetaTable("Player")
+    playerMeta.steamName = playerMeta.steamName or playerMeta.Name
+    playerMeta.SteamName = playerMeta.steamName
 
-    return character and character.getName(character) or self.steamName(self)
+    function playerMeta:getChar()
+        return lia.char.loaded[self.getNetVar(self, "char")]
+    end
+
+    function playerMeta:Name()
+        local character = self.getChar(self)
+
+        return character and character.getName(character) or self.steamName(self)
+    end
+
+    playerMeta.Nick = playerMeta.Name
+    playerMeta.GetName = playerMeta.Name
 end
 --------------------------------------------------------------------------------------------------------
 hook.Add("ReRunNames", "RerunNames1", function()
@@ -469,9 +478,4 @@ hook.Add("ReRunNames", "RerunNames1", function()
         end
     end
 end)
---------------------------------------------------------------------------------------------------------
-playerMeta.Nick = playerMeta.Name
-playerMeta.GetName = playerMeta.Name
-playerMeta.steamName = playerMeta.steamName or playerMeta.Name
-playerMeta.SteamName = playerMeta.steamName
 --------------------------------------------------------------------------------------------------------
