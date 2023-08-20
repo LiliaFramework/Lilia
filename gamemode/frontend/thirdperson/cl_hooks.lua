@@ -105,11 +105,16 @@ end)
 hook.Add("PlayerButtonDown", "ThirdPersonPlayerButtonDown", function(ply, button)
     if button == KEY_F4 and IsFirstTimePredicted() then
         local toggle = GetConVar("lia_tp_enabled")
-        toggle:SetString((toggle:GetString() == "1" and "0") or "1")
+        if toggle:GetInt() == 1 then
+            toggle:SetInt(0)
+        else
+            toggle:SetInt(1)
+        end
     end
 
     if button == KEY_F2 and IsFirstTimePredicted() then
         netstream.Start("VoiceMenu", ply)
     end
 end)
+
 --------------------------------------------------------------------------------------------------------
