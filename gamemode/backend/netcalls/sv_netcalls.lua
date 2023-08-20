@@ -21,6 +21,7 @@ util.AddNetworkString("VoiceMenu")
 util.AddNetworkString("OpenInvMenu")
 util.AddNetworkString("announcement_client")
 util.AddNetworkString("advert_client")
+util.AddNetworkString("Pointing")
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaStringReq", function(_, client)
     local id = net.ReadUInt(32)

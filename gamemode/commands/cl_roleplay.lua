@@ -6,6 +6,13 @@ lia.command.add("roll", {
     onRun = function(client, arguments) end
 })
 --------------------------------------------------------------------------------------------------------
+lia.command.add("point", {
+    adminOnly = false,
+    privilege = "Basic User Permissions",
+    syntax = "[number maximum]",
+    onRun = function(client, arguments) end
+})
+--------------------------------------------------------------------------------------------------------
 lia.command.add("dropmoney", {
     adminOnly = false,
     privilege = "Basic User Permissions",

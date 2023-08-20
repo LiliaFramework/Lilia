@@ -12,6 +12,36 @@ lia.command.add("roll", {
     end
 })
 --------------------------------------------------------------------------------------------------------
+lia.command.add("point", {
+    adminOnly = false,
+    privilege = "Basic User Permissions",
+    syntax = "[number maximum]",
+    onRun = function(client, arguments)
+	    local table = ents.FindInSphere(client:EyePos(), 200)
+	    local i = #table
+        local pointing = client:GetEyeTraceNoCursor()
+        
+		::GOTO_REVERSE::
+        if table[i]:IsPlayer() then
+            local trace = util.TraceLine{
+				start = client:EyePos(),
+				endpos = table[i]:EyePos(),
+				mask  = MASK_SOLID_BRUSHONLY,
+			}
+            if !trace.Hit then
+                net.Start("Pointing")
+                    net.WriteFloat( (CurTime()+10) )
+                    net.WriteVector( pointing.HitPos  )
+                net.Send( table[i] )
+            end
+		end
+		i = i - 1
+    	if (i ~= 0) then
+		   	goto GOTO_REVERSE
+    	end
+    end
+})
+--------------------------------------------------------------------------------------------------------
 lia.command.add("dropmoney", {
     adminOnly = false,
     privilege = "Basic User Permissions",

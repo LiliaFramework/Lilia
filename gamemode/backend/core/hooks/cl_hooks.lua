@@ -1,4 +1,7 @@
 --------------------------------------------------------------------------------------------------------
+local flo = 0
+local vec
+--------------------------------------------------------------------------------------------------------
 function GM:NetworkEntityCreated(entity)
 	if entity == LocalPlayer() then return end
 	if not entity:IsPlayer() then return end
@@ -62,6 +65,19 @@ function GM:DrawCharInfo(client, character, info)
 		end
 	end
 end
+--------------------------------------------------------------------------------------------------------
+function GM:HUDPaint()
+    net.Receive("Pointing", function(len)
+        flo = net.ReadFloat()
+        vec = net.ReadVector()
+    end)
+	
+    if flo >= CurTime() then
+        local toScream = vec:ToScreen()
+        local distance = 40/(LocalPlayer():GetPos():Distance(vec)/300)
+        surface.DrawCircle( toScream.x, toScream.y, distance, 0, 255, 0, 255 )
+    end
+ end
 --------------------------------------------------------------------------------------------------------
 timer.Create('FixShadows', 10, 0, function() -- same
 	for _, player in ipairs( player.GetAll() ) do
