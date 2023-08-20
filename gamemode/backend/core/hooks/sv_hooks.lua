@@ -47,9 +47,26 @@ function GM:KeyRelease(client, key)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadedChar(client, character, lastChar)
+    local identifier = "RemoveMatSpecular"..player:SteamID()
     local data = character:getData("pclass")
     local class = data and lia.class.list[data]
 
+    if timer.Exists(identifier) then
+        timer.Remove(identifier)
+    end
+
+    timer.Create(identifier, 30, 0, function()
+        if !IsValid(player) or !character then
+            return
+        end
+
+        if !player:Alive() then
+            return
+        end
+
+        RunConsoleCommand("mat_specular", 0)
+    end)
+    
     if class and data then
         local oldClass = character:GetClass()
 

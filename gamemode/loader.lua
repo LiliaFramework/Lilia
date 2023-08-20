@@ -19,6 +19,8 @@ lia.util.include("backend/external/thirdparty/sh_pon.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/external/thirdparty/sh_utf8.lua")
 --------------------------------------------------------------------------------------------------------
+lia.util.include("backend/core/sv_serverguardcompatibility.lua")
+--------------------------------------------------------------------------------------------------------
 lia.util.include("config/sh_core.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("config/sh_models.lua")

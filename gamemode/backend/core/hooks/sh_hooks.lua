@@ -481,6 +481,16 @@ function GM:InitPostEntity()
             system.FlashWindow()
         end
     else
+        if StormFox2 then
+            RunConsoleCommand('sf_time_speed', 1)
+            RunConsoleCommand('sf_addnight_temp', 4)
+            RunConsoleCommand('sf_windmove_props', 0)
+            RunConsoleCommand('sf_windmove_props_break', 0)
+            RunConsoleCommand('sf_windmove_props_unfreeze', 0)
+            RunConsoleCommand('sf_windmove_props_unweld', 0)
+            RunConsoleCommand('sf_windmove_props_makedebris', 0)
+        end
+
         local doors = ents.FindByClass("prop_door_rotating")
 
         for _, v in ipairs(doors) do
@@ -497,6 +507,12 @@ function GM:InitPostEntity()
                         break
                     end
                 end
+            end
+        end
+        
+        for _, v in ipairs( ents.FindByClass('prop_door_rotating') ) do
+            if IsValid(v) and v:IsDoor() then
+                v:DrawShadow(false) -- we need this?
             end
         end
 
