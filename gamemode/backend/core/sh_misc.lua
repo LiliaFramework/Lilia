@@ -10,8 +10,8 @@ function GM:PlayerSpray(client)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:ModuleShouldLoad(id)
-    if lia.config.CustomMainMenu then
-        if id == "charselect" then return false end
+    if lia.config.CustomMainMenu then 
+    if id == "charselect" then return false end
     end
 end
 --------------------------------------------------------------------------------------------------------
