@@ -16,7 +16,7 @@ function lia.config.LoadCore()
     lia.config.BranchWarning = true
     lia.config.AllowVoice = true
     lia.config.AutoWorkshopDownloader = false
-
+    lia.config.CustomMainMenu = false
     lia.config.DefaultStaff = {
         ["STEAM_0:1:176123778"] = "superadmin",
     }
