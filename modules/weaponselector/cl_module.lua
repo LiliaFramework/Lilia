@@ -28,7 +28,7 @@ function MODULE:HUDPaint()
             end
 
             local theta = (k - index) * 0.1
-            local color = ColorAlpha(k == self.index and lia.config.get("color") or color_white, (255 - math.abs(theta * 3) * 255) * fraction)
+            local color = ColorAlpha(k == self.index and lia.config.Color or color_white, (255 - math.abs(theta * 3) * 255) * fraction)
             local lastY = 0
             local shiftX = ScrW() * .02
 
@@ -74,7 +74,7 @@ function MODULE:onIndexChanged()
 
         for k, v in ipairs(weaponInfo) do
             if weapon[v] and weapon[v]:find("%S") then
-                local color = lia.config.get("color")
+                local color = lia.config.Color
                 text = text .. "<font=liaItemBoldFont><color=" .. color.r .. "," .. color.g .. "," .. color.b .. ">" .. L(v) .. "</font></color>\n" .. weapon[v] .. "\n"
             end
         end
