@@ -190,4 +190,11 @@ function playerMeta:MeetsRequiredSkills(requiredSkillLevels)
 
     return true
 end
---------------------------------------------------------------------------------------------------------+
+--------------------------------------------------------------------------------------------------------
+function playerMeta:getEyeEnt(distance)
+    distance = distance or 150
+    local e = self:GetEyeTrace().Entity
+
+    return e:GetPos():Distance(self:GetPos()) <= distance and e or nil
+end
+--------------------------------------------------------------------------------------------------------
