@@ -49,6 +49,8 @@ lia.util.include("backend/external/thirdparty/wolflib/derma/cl_telephone_dialer.
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/external/thirdparty/wolflib/derma/cl_web_image.lua")
 --------------------------------------------------------------------------------------------------------
+lia.util.include("backend/external/thirdparty/wolflib/derma/cl_icon.lua")
+--------------------------------------------------------------------------------------------------------
 lia.util.include("backend/core/sv_serverguardcompatibility.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("config/sh_core.lua")
