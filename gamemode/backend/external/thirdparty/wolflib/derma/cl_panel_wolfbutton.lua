@@ -1,5 +1,6 @@
+--------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     --Button Settings
     self:SetFont("WB_Small")
@@ -15,7 +16,7 @@ function PANEL:Init()
     self.switchTextColor = false
     self:ReloadColors()
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:ReloadColors()
     self:SetColorAcc(self.accentColor)
     self:SetupHover(self.custHovCol or getHovCol(self.accentColor))
@@ -28,7 +29,7 @@ function PANEL:ReloadColors()
         self:SetTextColor(color_white)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 --Setting of the accent color (hover&idle color)
 function PANEL:SetAccentColor(col, hov, switchTextColor)
     if self.accentColor == col then return end --Color is already set
@@ -41,7 +42,7 @@ function PANEL:SetAccentColor(col, hov, switchTextColor)
     self.switchTextColor = switchTextColor or false
     self:ReloadColors()
 end
-
+--------------------------------------------------------------------------------------------------------
 --Customized hover setter ? I guess
 function PANEL:SetupHover(hoverCol)
     if not self.GetColor or not self.SetColor or not self.color then
@@ -80,25 +81,27 @@ function PANEL:SetupHover(hoverCol)
         tcolSwitch(self)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
     draw.RoundedBoxEx(self.round, 0, 0, w, h, self.color, unpack(self.corners))
 end
-
+--------------------------------------------------------------------------------------------------------
 vgui.Register("WButton", PANEL, "DButton")
+--------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:SetFont("WB_Small")
     self:SetColor(color_black)
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:FontSize(fs)
     self:SetFont("WB_" .. fs)
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:PerformLayout()
     self:SizeToContents()
 end
-
+--------------------------------------------------------------------------------------------------------
 vgui.Register("WLabel", PANEL, "DLabel")
+--------------------------------------------------------------------------------------------------------

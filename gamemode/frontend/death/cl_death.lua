@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 local owner, w, h, ceil, ft, clmp
 ceil = math.ceil
 clmp = math.Clamp
@@ -36,3 +37,4 @@ hook.Add("HUDPaint", "HUDPaintDeath", function()
         local tx, ty = lia.util.drawText(L"youreDead", w / 2, h / 2, ColorAlpha(color_white, aprg2 * 255), 1, 1, "liaDynFontMedium", aprg2 * 255)
     end
 end)
+--------------------------------------------------------------------------------------------------------

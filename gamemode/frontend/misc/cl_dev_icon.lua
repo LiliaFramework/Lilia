@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 ICON_INFO = ICON_INFO or {}
 ICON_INFO.camPos = ICON_INFO.camPos or Vector()
 ICON_INFO.camAng = ICON_INFO.camAng or Angle()

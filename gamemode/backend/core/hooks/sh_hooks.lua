@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local oldCalcSeqOverride
+--------------------------------------------------------------------------------------------------------
 lia.config.CharacterSwitchCooldownTimer = 5
 lia.config.CharacterSwitchCooldown = true
 lia.config.AutoRegen = false

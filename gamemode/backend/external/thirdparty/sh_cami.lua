@@ -40,7 +40,7 @@ Structures:
             optionally on another player (target).
     }
 ]]
--- Version number in YearMonthDay format.
+--------------------------------------------------------------------------------------------------------
 local version = 20190102
 if CAMI and CAMI.Version >= version then return end
 CAMI = CAMI or {}

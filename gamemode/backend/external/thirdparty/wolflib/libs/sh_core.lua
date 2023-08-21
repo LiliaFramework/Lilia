@@ -1,3 +1,6 @@
+--------------------------------------------------------------------------------------------------------
+local draw = draw or {}
+--------------------------------------------------------------------------------------------------------
 ICON = {}
 WB = {}
 WB.colors = {}
@@ -11,10 +14,11 @@ BC_AGREE = Color(75, 225, 75)
 BC_NEUTRAL = Color(206, 80, 80)
 BC_NEUTRAL_HOV = Color(70, 163, 255)
 NUTCOL = lia.config.Color
+--------------------------------------------------------------------------------------------------------
 function WB:ColorBrighten(col)
     return Color(col.r + 10, col.g + 10, col.b + 10, col.a)
 end
-
+--------------------------------------------------------------------------------------------------------
 function WB:StyleButton(pnl, hoverCol, idleCol, roundCorners, smoothHover)
     AccessorFunc(pnl, "color", "Color")
     pnl:SetColor(idleCol)
@@ -32,7 +36,7 @@ function WB:StyleButton(pnl, hoverCol, idleCol, roundCorners, smoothHover)
         draw.RoundedBox(roundCorners, 0, 0, w, h, self:GetColor())
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function draw.Circle(x, y, radius, seg)
     local cir = {}
     table.insert(
@@ -71,7 +75,7 @@ function draw.Circle(x, y, radius, seg)
 
     surface.DrawPoly(cir)
 end
-
+--------------------------------------------------------------------------------------------------------
 function CreateOverBlur(callback)
     local blur = vgui.Create("DPanel")
     blur:SetSize(ScrW(), ScrH())
@@ -101,7 +105,7 @@ function CreateOverBlur(callback)
     end
     return blur
 end
-
+--------------------------------------------------------------------------------------------------------
 function follow(pnl1, pnl2, side)
     side = side or BOTTOM
     if side == BOTTOM then
@@ -113,19 +117,19 @@ function follow(pnl1, pnl2, side)
         pnl1:SetPos(pnl2:GetX() + pnl2:GetWide(), pnl2:GetY() - pnl1:GetTall() / 4)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function getHovCol(col)
     if not col then return end
     return Color(col.r + 10, col.g + 10, col.b + 10, col.a)
 end
-
+--------------------------------------------------------------------------------------------------------
 function DebugPanel(pnl)
     function pnl:Paint(w, h)
         surface.SetDrawColor(255, 0, 0)
         surface.DrawRect(0, 0, w, h)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function strPosAngConv(str)
     local pos = str:Split(";")[1]:Split("setpos")[2]:Split(" ")
     pos = Vector(pos[2], pos[3], pos[4])
@@ -133,7 +137,7 @@ function strPosAngConv(str)
     ang = Angle(ang[2], ang[3], ang[4])
     return pos, ang
 end
-
+--------------------------------------------------------------------------------------------------------
 WB.drawTextEntry = function(panel, w, h)
     local color = Color(235, 235, 235)
     if panel:IsEditing() then
@@ -145,6 +149,4 @@ WB.drawTextEntry = function(panel, w, h)
     draw.RoundedBox(4, 0, 0, w, h, color)
     panel:DrawTextEntryText(color_black, Color(75, 75, 235), color_black)
 end
-
-if CLIENT then end
-local playerMeta = FindMetaTable("Player")
+--------------------------------------------------------------------------------------------------------

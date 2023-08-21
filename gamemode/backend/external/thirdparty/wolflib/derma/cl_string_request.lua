@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 function Empty_Popup(callback, sw, sh)
   sw = sw or 500
   sh = sh or 250
@@ -13,7 +14,7 @@ function Empty_Popup(callback, sw, sh)
     if callback then callback(frame) end
   end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function String_Request(question, ok, cancel, numeric)
   question = question or "Unset Question"
   numeric = numeric or false
@@ -56,7 +57,7 @@ function String_Request(question, ok, cancel, numeric)
     end
   end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function Choice_Request(question, yes, no, modify)
   question = question or "Unset Question"
 
@@ -108,7 +109,7 @@ function Choice_Request(question, yes, no, modify)
     if modify and isfunction(modify) then modify(wp) end
   end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function Important_Notification(message)
   Empty_Popup(function(frame)
     local wp = frame:GetWorkPanel()
@@ -137,8 +138,9 @@ function Important_Notification(message)
     g:FadeIn()
   end)
 end
-
+--------------------------------------------------------------------------------------------------------
 concommand.Add("reqbox", function()
   Choice_Request("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ut quam eget purus maximus euismod. Nam vitae pretium orci, sed luctus sem. Proin sodales ipsum nibh, vitae dignissim enim feugiat eu. Donec eget viverra risus. Aenean eget lobortis turpis, vel luctus sapien. Nullam ac lectus eros. Aliquam erat volutpat. Cras.")
 
 end)
+--------------------------------------------------------------------------------------------------------

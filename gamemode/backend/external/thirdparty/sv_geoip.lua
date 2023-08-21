@@ -1,7 +1,6 @@
--- @module lia.geoip
-
+--------------------------------------------------------------------------------------------------------
 lia.geoip = lia.geoip or {}
-
+--------------------------------------------------------------------------------------------------------
 lia.geoip.API = "https://freegeoip.app/json/"
 lia.geoip.blockedIPs = {
 	["loopback"] = true,
@@ -10,9 +9,9 @@ lia.geoip.blockedIPs = {
 	["::1"] = true,
 	["p2p"] = true
 }
-
+--------------------------------------------------------------------------------------------------------
 lia.geoip.cache = lia.geoip.cache or {}
-
+--------------------------------------------------------------------------------------------------------
 function lia.geoip:Query(ip, callback)
 	ip = string.Explode(":", ip)[1]
 
@@ -54,29 +53,16 @@ function lia.geoip:Query(ip, callback)
 		}
 	)
 end
-
+--------------------------------------------------------------------------------------------------------
 hook.Add("LoadData", "GeoIP", function()
-	lia.geoip.cache = lia.data.Get("geoipcache", {}, true, true)
+	lia.geoip.cache = lia.data.get("geoipcache", {}, true, true)
 end)
-
+--------------------------------------------------------------------------------------------------------
 hook.Add("SaveData", "GeoIP", function()
-	lia.data.Set("geoipcache", lia.geoip.cache, true, true)
+	lia.data.set("geoipcache", lia.geoip.cache, true, true)
 end)
-
--- gameevent.Listen("player_connect")
--- hook.Add("player_connect", "GeoIP", function(data)
-	-- local id = data.userid // Same as Player:UserID()
-
-	-- if (!data.bot) then
-		-- lia.geoip:Query(data.address, function(data)
-			-- if (istable(data)) then
-				-- Player(id):setNetVar("country_code", data.country_code:lower())
-			-- end
-		-- end)
-	-- end
--- end)
-
-hook.Add("PlayerLoadedCharacter", "GeoIP", function(client, character)
+--------------------------------------------------------------------------------------------------------
+hook.Add("PlayerLoadedChar", "GeoIP", function(client, character)
 	if (client:IsBot()) then return end
 
 	if (character) then
@@ -87,12 +73,13 @@ hook.Add("PlayerLoadedCharacter", "GeoIP", function(client, character)
 		end)
 	end
 end)
-
-concommand.Add("ix_flush_geoip", function(client)
+--------------------------------------------------------------------------------------------------------
+concommand.Add("lia_flush_geoip", function(client)
 	if (IsValid(client)) then return end
 
 	lia.geoip.cache = {}
-	lia.data.Set("geoipcache", {}, true, true)
+	lia.data.set("geoipcache", {}, true, true)
 
 	MsgC(Color(50, 200, 50), "geoipcache.txt flushed!\n")
 end)
+--------------------------------------------------------------------------------------------------------

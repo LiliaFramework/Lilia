@@ -37,11 +37,10 @@
 
 	Author: Perry ( https://raw.githubusercontent.com/Perryvw/LuaLibraries/master/PseudoRNG.lua )
 ]]
-
+--------------------------------------------------------------------------------------------------------
 PseudoRNG = {}
 PseudoRNG.__index = PseudoRNG
-
---construct a PseudoRNG for a certain chance (0 - 1; 25% -> 0.25)
+--------------------------------------------------------------------------------------------------------
 function PseudoRNG.Create( chance )
 	local rng = {}
 	setmetatable(rng, PseudoRNG)
@@ -49,13 +48,12 @@ function PseudoRNG.Create( chance )
 	rng:Init( math.max(chance, 0.0001) )
 	return rng
 end
-
+--------------------------------------------------------------------------------------------------------
 function PseudoRNG:Init( chance )
 	self.failedTries = 0
-	--calculate the constant
 	self.cons = PseudoRNG:CFromP( chance )
 end
-
+--------------------------------------------------------------------------------------------------------
 function PseudoRNG:CFromP( P )
 	local Cupper = P
 	local Clower = 0
@@ -82,7 +80,7 @@ function PseudoRNG:CFromP( P )
 	
 	return Cmid
 end
-
+--------------------------------------------------------------------------------------------------------
 function PseudoRNG:PFromC( C )
 	local pOnN = 0
 	local pByN = 0
@@ -98,22 +96,18 @@ function PseudoRNG:PFromC( C )
 
 	return 1/sumPByN
 end
-
---Use this to check if an ab
+--------------------------------------------------------------------------------------------------------
 function PseudoRNG:Next()
-	-- P(N) = C * N
 	local P = self.cons * (self.failedTries + 1)
 	if math.random() <= P then
-		--success!
 		self.failedTries = 0
 		return true
 	else
-		--failure
 		self.failedTries = self.failedTries + 1
 		return false
 	end
 end
-
+--------------------------------------------------------------------------------------------------------
 ------------------------------------
 -- Pseudo-Random Choice - choose between a number of probabilities
 ------------------------------------
@@ -127,7 +121,7 @@ function ChoicePseudoRNG.Create( probs )
 	rng:Init( probs )
 	return rng
 end
-
+--------------------------------------------------------------------------------------------------------
 function ChoicePseudoRNG:Init( probs )
 	self.probs = {} --the probability the drop should be around
 	self.curProbs = {} --the current probability
@@ -146,7 +140,7 @@ function ChoicePseudoRNG:Init( probs )
 		self:Choose()
 	end
 end
-
+--------------------------------------------------------------------------------------------------------
 --Use this to choose one of the elements, returns the index of the chosen item (starts at 1!)
 function ChoicePseudoRNG:Choose()
 	local rand = math.random() * self.total
@@ -185,3 +179,4 @@ function ChoicePseudoRNG:Choose()
 
 	return choice
 end
+--------------------------------------------------------------------------------------------------------

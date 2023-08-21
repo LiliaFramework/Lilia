@@ -1,17 +1,13 @@
-//Render cool rings
-//Code borrowed from Raubana. Thanks raub <3
-
--- World Sphere took from https://www.youtube.com/watch?v=w4tt5pvbr6A
+--------------------------------------------------------------------------------------------------------
 local color_mask2 = ColorAlpha(color_black, 0)
 local render = render
-
+--------------------------------------------------------------------------------------------------------
 local function drawStencilSphere( pos, ref, compare_func, radius, color, detail )
 	render.SetStencilReferenceValue( ref )
 	render.SetStencilCompareFunction( compare_func )
 	render.DrawSphere(pos, radius, detail, detail, color)
 end
-
--- Call this before calling render.AddWorldRing()
+--------------------------------------------------------------------------------------------------------
 function render.StartWorldRings()
 	render.WORLD_RINGS = {}
 
@@ -19,7 +15,7 @@ function render.StartWorldRings()
 	render.SetStencilEnable(true)
 	render.SetColorMaterial()
 end
-
+--------------------------------------------------------------------------------------------------------
 -- Args: pos = where, radius = how big, [thicc = how thick, detail = how laggy]
 -- Detail must be an odd number or it will look like shit.
 function render.AddWorldRing(pos, radius, thicc, detail)
@@ -28,7 +24,7 @@ function render.AddWorldRing(pos, radius, thicc, detail)
 	local z = {detail=detail, thicc=thicc, pos=pos, outer_r=radius, inner_r=math.max(radius-thicc,0)}
 	table.insert(render.WORLD_RINGS, z)
 end
-
+--------------------------------------------------------------------------------------------------------
 -- Call this to actually draw the rings added with render.AddWorldRing()
 function render.FinishWorldRings(color)
 	local ply = LocalPlayer()
@@ -70,3 +66,4 @@ function render.FinishWorldRings(color)
 
 	render.SetStencilEnable(false)
 end
+--------------------------------------------------------------------------------------------------------

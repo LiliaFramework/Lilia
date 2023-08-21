@@ -23,8 +23,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ]]
+--------------------------------------------------------------------------------------------------------
 local WebMaterials = {}
-
+--------------------------------------------------------------------------------------------------------
 function surface.GetURL(url, w, h, time)
     if not url or not w or not h then return Material("error") end
     if WebMaterials[url] then return WebMaterials[url] end
@@ -49,6 +50,7 @@ function surface.GetURL(url, w, h, time)
 
     return Material("error")
 end
+--------------------------------------------------------------------------------------------------------
 --[[
     How to use
 

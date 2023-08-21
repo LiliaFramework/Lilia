@@ -1,40 +1,37 @@
+--------------------------------------------------------------------------------------------------------
 ANIM = {}
 ANIM.runAnim = nil
 ANIM.running = false
 ANIM.curAlpha = 0
 ANIM.overlay = ANIM.overlay or nil
 ANIM.anims = {}
---Timing
+--------------------------------------------------------------------------------------------------------
 local lerpEnd = CurTime()
 local lerpStart = CurTime()
 local fadeStart = CurTime()
 local fadeEnd = CurTime()
---Shortcuts
 local anim
 local fadeTime
 local song
 local animCallback
---Sitaional vars
 local pointID = 0
 local curPoint
-
---Some derma
+--------------------------------------------------------------------------------------------------------
 function ANIM:CreateDermaOverlay()
     if self.overlay and IsValid(self.overlay) then return end
     self.overlay = vgui.Create("CinematicOverlay")
     self.overlay:SetAnimSettings(anim.settings)
 end
-
+--------------------------------------------------------------------------------------------------------
 function ANIM:ClearDerma()
     if self.overlay and IsValid(self.overlay) then
         self.overlay:Remove()
     end
 end
-
---Quick animation
+--------------------------------------------------------------------------------------------------------
 local qa = {}
 qa.run = false
-
+--------------------------------------------------------------------------------------------------------
 function qa:Think()
     if not self.run then return end
 
@@ -48,12 +45,12 @@ function qa:Think()
         return posLerp, angLerp
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function qa:Start()
     self.start = CurTime()
     self.run = true
 end
-
+--------------------------------------------------------------------------------------------------------
 function qa:Init(time, pos1, ang1, pos2, ang2)
     local nqa = table.Copy(qa)
     nqa.time = time
@@ -64,19 +61,17 @@ function qa:Init(time, pos1, ang1, pos2, ang2)
 
     return nqa
 end
-
+--------------------------------------------------------------------------------------------------------
 function ANIM:CreateQuickAnim(time, pos1, ang1, pos2, ang2)
     return qa:Init(time, pos1, ang1, pos2, ang2)
 end
-
---Drawing of the transitions
+--------------------------------------------------------------------------------------------------------
 hook.Add("RenderScreenspaceEffects", "drawTransitions", function()
     if not ANIM.running then return end
     surface.SetDrawColor(0, 0, 0, ANIM.curAlpha or 0)
     surface.DrawRect(0, 0, ScrW(), ScrH())
 end)
-
---Calculating the position and angle of the camera
+--------------------------------------------------------------------------------------------------------
 hook.Add("CalcView", "AnimationRun", function(ply, pos, angles, fov)
     if not ANIM.running then return end
     fadeTime = anim.settings.fadeTime
@@ -154,7 +149,7 @@ hook.Add("CalcView", "AnimationRun", function(ply, pos, angles, fov)
         print("Scene " .. pointID .. "/" .. table.Count(anim.points))
     end
 end)
-
+--------------------------------------------------------------------------------------------------------
 --Library to control the animation
 function ANIM:Run(animName, restart, callback)
     if not animName then
@@ -224,7 +219,7 @@ function ANIM:Run(animName, restart, callback)
         return duration
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function ANIM:Stop(smooth)
     local function resetVals(obj)
         obj.running = false
@@ -268,7 +263,7 @@ function ANIM:Stop(smooth)
         end)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function ANIM:QuickAnim(time, pos1, pos2, ang1, ang2)
     if not self.q then
         self.q = {}
@@ -299,7 +294,7 @@ function ANIM:QuickAnim(time, pos1, pos2, ang1, ang2)
         return v, a, q
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function ANIM:Add(animTable)
     if not animTable.settings then
         Error("Unable to find the 'settings' table in the animation table")
@@ -311,13 +306,14 @@ function ANIM:Add(animTable)
     self.anims[name] = animTable
     MsgC(Color(0, 255, 0), "[ANIM] ", color_white, "Added animation " .. name .. "\n")
 end
-
+--------------------------------------------------------------------------------------------------------
 concommand.Add("forceStartAnimation", function(ply, cmd, args)
     ANIM:Run(args[1])
 end)
-
+--------------------------------------------------------------------------------------------------------
 concommand.Add("forceStopAnimation", function()
     ANIM:Stop()
 end)
-
+--------------------------------------------------------------------------------------------------------
 cprint("Loaded Animation Library")
+--------------------------------------------------------------------------------------------------------

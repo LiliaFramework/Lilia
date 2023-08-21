@@ -1,7 +1,8 @@
+--------------------------------------------------------------------------------------------------------
 lia.color = lia.color or {}
-
+--------------------------------------------------------------------------------------------------------
 local colorMeta = FindMetaTable('Color')
-
+--------------------------------------------------------------------------------------------------------
 function lia.color.Lighten(colot, amount)
 	return Color(
 		math.Clamp(colot.r + amount, 0, 255),
@@ -10,7 +11,7 @@ function lia.color.Lighten(colot, amount)
 		colot.a
 	)
 end
-
+--------------------------------------------------------------------------------------------------------
 function lia.color.Darken(colot, amount)
 	return Color(
 		math.Clamp(colot.r - amount, 0, 255),
@@ -19,17 +20,7 @@ function lia.color.Darken(colot, amount)
 		colot.a
 	)
 end
-
---do
---[[ 	function colorMeta:Pulsate(c) -- used for flashing colors
-		return (math.abs(math.sin(CurTime() * c)))
-	end
-
-	function colorMeta:Fluctuate(c) -- used for flashing colors
-		return (math.cos(CurTime() * c) + 1) / 2
-	end ]]
---end
-
+--------------------------------------------------------------------------------------------------------
 function Color(r, g, b, a)
 	return setmetatable({
 		r = tonumber(r) or 255,
@@ -38,7 +29,7 @@ function Color(r, g, b, a)
 		a = tonumber(a) or 255
 	}, colorMeta)
 end
-
+--------------------------------------------------------------------------------------------------------
 do
 	local colors = {
 		blue = Color(0, 0, 255),
@@ -71,7 +62,7 @@ do
 		end
 	end
 
-	function lia.color.Register(name, color, force)
+	function lia.color.register(name, color, force)
 		if (!force and colors[name]) then return end
 
 		colors[name] = color
@@ -98,3 +89,4 @@ do
 		return HSVToColor(linear, 1, 1)
 	end
 end
+--------------------------------------------------------------------------------------------------------

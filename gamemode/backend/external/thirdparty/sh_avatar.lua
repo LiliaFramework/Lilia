@@ -1,7 +1,8 @@
+--------------------------------------------------------------------------------------------------------
 lia.steam = lia.steam or {}
-
+--------------------------------------------------------------------------------------------------------
 if (CLIENT) then
-	file.CreateDir("helix/avatars")
+	file.CreateDir("lilia/avatars")
 	lia.steam.avatars = lia.steam.avatars or {}
 	lia.steam.users = lia.steam.users or {}
 
@@ -12,7 +13,7 @@ if (CLIENT) then
 			return lia.steam.avatars[steamID64]
 		end
 
-		local path = "helix/avatars/"..steamID64..".png"
+		local path = "lilia/avatars/"..steamID64..".png"
 
 		if (file.Exists(path, "DATA")) then
 			lia.steam.avatars[steamID64] = Material("../data/" .. path, "noclamp smooth")
@@ -66,8 +67,8 @@ if (CLIENT) then
 		id = nil
 	end)
 
-	concommand.Add("ix_flush_avatars", function()
-		local root = "helix/avatars/"
+	concommand.Add("flush_avatars", function()
+		local root = "lilia/avatars/"
 
 		for _, v in pairs(file.Find(root .. "/*.png", "DATA")) do
 			file.Delete(root .. "/" .. v)

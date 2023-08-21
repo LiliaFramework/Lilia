@@ -1,4 +1,4 @@
---Keypad
+--------------------------------------------------------------------------------------------------------
 local keys = {
     ["1"] = {1, KEY_1, KEY_PAD_1},
     ["2"] = {2, KEY_2, KEY_PAD_2},
@@ -13,13 +13,12 @@ local keys = {
     ["0"] = {11, KEY_0, KEY_PAD_0},
     ["<CALL>"] = {12}
 }
-
---Setting the data file path
-local path = "liascript/artemis/saved_numbers.dat"
-file.CreateDir("liascript")
-file.CreateDir("liascript/artemis")
+--------------------------------------------------------------------------------------------------------
+local path = "lilia/saved_numbers.dat"
+file.CreateDir("lilia")
+file.CreateDir("lilia")
 local savedNumbersTbl = util.JSONToTable(file.Read(path) or "{}") or {}
-
+--------------------------------------------------------------------------------------------------------
 local function openDialer(telent)
     local beingCalled = telent:getNetVar("ringing")
     local frame = vgui.Create("DFrame")
@@ -770,5 +769,6 @@ local function openDialer(telent)
         end)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 netstream.Hook("OpenPhoneDialer", openDialer)
+--------------------------------------------------------------------------------------------------------

@@ -1,13 +1,12 @@
---[[Button Specific]]
---
+--------------------------------------------------------------------------------------------------------
 local b = vgui.GetControlTable("DButton")
-
+--------------------------------------------------------------------------------------------------------
 function b:SetColorAcc(col)
     self.defaultColor = col or Color(255, 0, 0)
     self.color = col or Color(255, 0, 0)
     AccessorFunc(self, "color", "Color")
 end
-
+--------------------------------------------------------------------------------------------------------
 function b:SetupHover(hoverCol)
     if not self.GetColor or not self.SetColor or not self.color then
         self:SetColorAcc()
@@ -23,7 +22,7 @@ function b:SetupHover(hoverCol)
         self:ColorTo(self.defaultColor, 0.15)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function b:Flash(text, color, time, noAdjust, callback)
     noAdjust = noAdjust or false
     time = time or 1
@@ -77,7 +76,7 @@ function b:Flash(text, color, time, noAdjust, callback)
         end
     end)
 end
-
+--------------------------------------------------------------------------------------------------------
 function b:GInflate(color, over)
     if not self.GetColor then
         Error("Panel deosn't have '.GetColor()'")
@@ -115,11 +114,9 @@ function b:GInflate(color, over)
         draw.Circle(w / 2, h / 2, r, 360)
     end
 end
-
---[[Text Entry Specific]]
---
+--------------------------------------------------------------------------------------------------------
 local te = vgui.GetControlTable("DTextEntry")
-
+--------------------------------------------------------------------------------------------------------
 function te:SetPlaceholder(text)
     local ogThink = self.Think
     self.placeholder = text
@@ -137,7 +134,7 @@ function te:SetPlaceholder(text)
         ogThink(self) --Call original think method.
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function te:SetError(err, ogCol)
     AccessorFunc(self, "color", "Color") --Create getters/setters
     self:SetEditable(false)
@@ -163,10 +160,9 @@ function te:SetError(err, ogCol)
         surface.DrawOutlinedRect(0, 0, w, h)
     end
 end
-
---[[Major Panels Specific]]
+--------------------------------------------------------------------------------------------------------
 local mps = {"DPanel", "DButton", "DLabel", "DFrame", "DTextEntry", "WButton", "WLabel", "WScrollList"}
-
+--------------------------------------------------------------------------------------------------------
 for k, v in pairs(mps) do
     local m = vgui.GetControlTable(v)
 
@@ -200,9 +196,7 @@ for k, v in pairs(mps) do
         end)
     end
 end
-
---[[CONTAINERS SPECIFIC]]
---
+--------------------------------------------------------------------------------------------------------
 function WB.GetWorkPanel(panel, paddingTop, paddingLeft, paddingRight, paddingBottom, center)
     center = center or false
 
@@ -223,3 +217,4 @@ function WB.GetWorkPanel(panel, paddingTop, paddingLeft, paddingRight, paddingBo
 
     return wp
 end
+--------------------------------------------------------------------------------------------------------

@@ -1,5 +1,6 @@
+--------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self.tabs = {}
     self.btnTextCol = color_black
@@ -11,24 +12,24 @@ function PANEL:Init()
     AccessorFunc(self, "btnCol", "ButtonColor")
     -- AccessorFunc(self, "wpPnlType", "PanelType", FORCE_STRING)
 end
-
+--------------------------------------------------------------------------------------------------------
 --Get/Set of pnl type
 function PANEL:SetPanelType(pt, setCall)
     self.wpPnlType = pt
     self.cpCall = setCall
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:GetPanelType()
     return self.wpPnlType, self.cpCall
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:AddTab(title, onClick)
     self.tabs[#self.tabs + 1] = {
         name = title,
         onClick = onClick
     }
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:WorkPanel()
     if self.wp and IsValid(self.wp) then
         self.wp:Remove()
@@ -42,7 +43,7 @@ function PANEL:WorkPanel()
 
     return self.wp
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:SwitchTab(onClick)
     local er = nil
 
@@ -62,7 +63,7 @@ function PANEL:SwitchTab(onClick)
         self.OnTabSwitchFinished(er)
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:ShowTabs()
     self.scroll = self:Add("DScrollPanel")
     self.scroll:SetSize(self:GetWide(), 35)
@@ -103,8 +104,9 @@ function PANEL:ShowTabs()
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
 end
-
+--------------------------------------------------------------------------------------------------------
 vgui.Register("WTabs", PANEL, "DPanel")
+--------------------------------------------------------------------------------------------------------

@@ -1,5 +1,3 @@
-if SERVER then return false end
-
 local _R = debug.getregistry()
 if _R.Circles then return _R.Circles end
 

@@ -1,6 +1,7 @@
+--------------------------------------------------------------------------------------------------------
 lia.geoip = lia.geoip or {}
 lia.geoip.cache = lia.geoip.cache or {}
-
+--------------------------------------------------------------------------------------------------------
 hook.Add("CharacterLoaded", "GeoIP", function()
 	for _, v in ipairs(player.GetHumans()) do
 		if (IsValid(v)) then
@@ -8,7 +9,7 @@ hook.Add("CharacterLoaded", "GeoIP", function()
 		end
 	end
 end)
-
+--------------------------------------------------------------------------------------------------------
 function lia.geoip:GetMaterial(client, pngParameters)
 	if (!IsValid(client)) then return false end
 
@@ -29,3 +30,4 @@ function lia.geoip:GetMaterial(client, pngParameters)
 
 	return self.cache[id]
 end
+--------------------------------------------------------------------------------------------------------
