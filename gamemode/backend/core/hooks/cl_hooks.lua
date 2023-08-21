@@ -1,6 +1,19 @@
 --------------------------------------------------------------------------------------------------------
 local flo = 0
 local vec
+-------------------------------------------------------------------------------------------------------
+function GM:InitializedExtrasClient()
+	for k, v in pairs(lia.config.RemovableConsoleCommand) do
+		RunConsoleCommand(k, v)
+	end
+
+	for k, v in pairs(lia.config.RemovableHooks) do
+		hook.Remove(k, v)
+	end
+
+	timer.Remove("HostnameThink")
+	timer.Remove("CheckHookTimes")
+end
 --------------------------------------------------------------------------------------------------------
 function GM:NetworkEntityCreated(entity)
 	if entity == LocalPlayer() then return end
