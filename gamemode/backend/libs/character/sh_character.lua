@@ -13,11 +13,13 @@ charMeta.__index = charMeta
 charMeta.id = charMeta.id or 0
 charMeta.vars = charMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
+
 --------------------------------------------------------------------------------------------------------
 if SERVER then
     if not lia.db then
         print("db not up")
     end
+
     if #lia.char.names < 1 then
         lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
             if data and #data > 0 then
@@ -42,6 +44,7 @@ if SERVER then
         netstream.Start(client, "liaCharFetchNames", lia.char.names)
     end)
 end
+
 --------------------------------------------------------------------------------------------------------
 if CLIENT then
     netstream.Hook("liaCharFetchNames", function(data)
@@ -52,6 +55,7 @@ if CLIENT then
         netstream.Start("liaCharFetchNames")
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.char.new(data, id, client, steamID)
     local character = setmetatable({
@@ -81,11 +85,13 @@ function lia.char.new(data, id, client, steamID)
 
     return character
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
     lia.char.varHooks[varName][hookName] = func
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
@@ -137,6 +143,7 @@ function lia.char.registerVar(key, data)
 
     charMeta.vars[key] = data.default
 end
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar("name", {
     field = "_name",
@@ -189,6 +196,7 @@ lia.char.registerVar("name", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar("desc", {
     field = "_desc",
@@ -200,6 +208,7 @@ lia.char.registerVar("desc", {
         if not value or #value:gsub("%s", "") < minLength then return false, "descMinLen", minLength end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar("model", {
     field = "_model",
@@ -308,10 +317,12 @@ lia.char.registerVar("model", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar("class", {
     noDisplay = true,
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar("faction", {
     field = "_faction",
@@ -343,6 +354,7 @@ lia.char.registerVar("faction", {
         newData.faction = lia.faction.indices[value].uniqueID
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar("money", {
     field = "_money",
@@ -350,6 +362,7 @@ lia.char.registerVar("money", {
     isLocal = true,
     noDisplay = true
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar("data", {
     default = {},
@@ -380,6 +393,7 @@ lia.char.registerVar("data", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar("var", {
     default = {},
@@ -417,6 +431,7 @@ lia.char.registerVar("var", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 do
     local playerMeta = FindMetaTable("Player")
@@ -436,6 +451,7 @@ do
     playerMeta.Nick = playerMeta.Name
     playerMeta.GetName = playerMeta.Name
 end
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("ReRunNames", "RerunNames1", function()
     if SERVER then

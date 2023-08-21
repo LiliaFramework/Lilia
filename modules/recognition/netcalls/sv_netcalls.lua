@@ -11,6 +11,7 @@ netstream.Hook("rgnDirect", function(client, target)
         client:notifyLocalized("already_recognized")
     end
 end)
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("rgn", function(client, level)
     local targets = {}

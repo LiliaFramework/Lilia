@@ -5,6 +5,7 @@ lia.command.add("charban", {
     privilege = "Characters - Ban Characters",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charsetdesc", {
     adminOnly = true,
@@ -12,6 +13,7 @@ lia.command.add("charsetdesc", {
     privilege = "Characters - Change Description",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("plytransfer", {
     adminOnly = true,
@@ -19,6 +21,7 @@ lia.command.add("plytransfer", {
     privilege = "Characters - Transfer Player",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charsetname", {
     adminOnly = true,
@@ -26,6 +29,7 @@ lia.command.add("charsetname", {
     privilege = "Characters - Change Name",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("chargetmodel", {
     adminOnly = true,
@@ -33,6 +37,7 @@ lia.command.add("chargetmodel", {
     privilegeprivilege = "Characters - Retrieve Model",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charsetmodel", {
     adminOnly = true,
@@ -40,6 +45,7 @@ lia.command.add("charsetmodel", {
     privilege = "Characters - Change Model",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charsetbodygroup", {
     adminOnly = true,
@@ -47,6 +53,7 @@ lia.command.add("charsetbodygroup", {
     privilege = "Characters - Change Bodygroups",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charsetskin", {
     adminOnly = true,
@@ -54,6 +61,7 @@ lia.command.add("charsetskin", {
     privilege = "Characters - Change Skin",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("chargetmoney", {
     adminOnly = true,
@@ -61,6 +69,7 @@ lia.command.add("chargetmoney", {
     privilege = "Characters - Retrieve Money",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charsetmoney", {
     superAdminOnly = true,
@@ -68,6 +77,7 @@ lia.command.add("charsetmoney", {
     privilege = "Characters - Change Money",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charsetattrib", {
     superAdminOnly = true,
@@ -75,6 +85,7 @@ lia.command.add("charsetattrib", {
     privilege = "Characters - Change Attributes",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charaddattrib", {
     superAdminOnly = true,
@@ -82,6 +93,7 @@ lia.command.add("charaddattrib", {
     privilege = "Characters - Change Attributes",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("checkinventory", {
     superAdminOnly = true,
@@ -89,6 +101,7 @@ lia.command.add("checkinventory", {
     privilege = "Characters - Check Inventory",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("clearinv", {
     superAdminOnly = true,
@@ -96,6 +109,7 @@ lia.command.add("clearinv", {
     privilege = "Characters - Clear Inventory",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("flaggive", {
     adminOnly = true,
@@ -103,6 +117,7 @@ lia.command.add("flaggive", {
     privilege = "Characters - Toggle Flags",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("flagtake", {
     adminOnly = true,
@@ -110,6 +125,7 @@ lia.command.add("flagtake", {
     privilege = "Characters - Toggle Flags",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charkick", {
     adminOnly = true,
@@ -117,6 +133,7 @@ lia.command.add("charkick", {
     privilege = "Characters - Kick Characters",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("plywhitelist", {
     adminOnly = true,
@@ -124,6 +141,7 @@ lia.command.add("plywhitelist", {
     syntax = "<string name> <string faction>",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("plyunwhitelist", {
     adminOnly = true,
@@ -131,6 +149,7 @@ lia.command.add("plyunwhitelist", {
     syntax = "<string name> <string faction>",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charunban", {
     syntax = "<string name>",

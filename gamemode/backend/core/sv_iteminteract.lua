@@ -2,11 +2,13 @@
 lia.config.TakeDelay = 1
 lia.config.EquipDelay = 1
 lia.config.DropDelay = 1
+
 --------------------------------------------------------------------------------------------------------
 lia.config.DisallowedBagForbiddenActions = {
     ["Equip"] = true,
     ["EquipUn"] = true,
 }
+
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerInteractItem(client, action, item)
     local inventory = lia.inventory.instances[itemObject.invID]
@@ -57,6 +59,7 @@ function GM:CanPlayerInteractItem(client, action, item)
 
     if inventory and (inventory.isBag == true or inventory.isBank == true) and lia.config.DisallowedBagForbiddenActions[action] then return false, "forbiddenActionStorage" end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerEquipItem(client, item)
     if client.EquipDelay then
@@ -69,6 +72,7 @@ function GM:CanPlayerEquipItem(client, item)
 
     return client:MeetsRequiredSkills(item.RequiredSkillLevels)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerTakeItem(client, item)
     if client.TakeDelay then
@@ -87,6 +91,7 @@ function GM:CanPlayerTakeItem(client, item)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerDropItem(client, item)
     if client.DropDelay then

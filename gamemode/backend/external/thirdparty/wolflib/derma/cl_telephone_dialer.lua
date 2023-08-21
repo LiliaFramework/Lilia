@@ -13,11 +13,13 @@ local keys = {
     ["0"] = {11, KEY_0, KEY_PAD_0},
     ["<CALL>"] = {12}
 }
+
 --------------------------------------------------------------------------------------------------------
 local path = "lilia/saved_numbers.dat"
 file.CreateDir("lilia")
 file.CreateDir("lilia")
 local savedNumbersTbl = util.JSONToTable(file.Read(path) or "{}") or {}
+
 --------------------------------------------------------------------------------------------------------
 local function openDialer(telent)
     local beingCalled = telent:getNetVar("ringing")
@@ -769,6 +771,7 @@ local function openDialer(telent)
         end)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("OpenPhoneDialer", openDialer)
 --------------------------------------------------------------------------------------------------------

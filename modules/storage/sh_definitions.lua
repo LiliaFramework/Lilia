@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS = STORAGE_DEFINITIONS or {}
+
 --------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/props_junk/wood_crate001a.mdl"] = {
 	name = "Wood Crate",
@@ -10,6 +11,7 @@ STORAGE_DEFINITIONS["models/props_junk/wood_crate001a.mdl"] = {
 		h = 4
 	}
 }
+
 --------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/props_c17/lockers001a.mdl"] = {
 	name = "Locker",
@@ -20,6 +22,7 @@ STORAGE_DEFINITIONS["models/props_c17/lockers001a.mdl"] = {
 		h = 6
 	}
 }
+
 --------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/props_wasteland/controlroom_storagecloset001a.mdl"] = {
 	name = "Metal Closet",
@@ -30,6 +33,7 @@ STORAGE_DEFINITIONS["models/props_wasteland/controlroom_storagecloset001a.mdl"] 
 		h = 7
 	}
 }
+
 --------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/props_wasteland/controlroom_filecabinet002a.mdl"] = {
 	name = "File Cabinet",
@@ -40,6 +44,7 @@ STORAGE_DEFINITIONS["models/props_wasteland/controlroom_filecabinet002a.mdl"] = 
 		h = 6
 	}
 }
+
 --------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/props_c17/furniturefridge001a.mdl"] = {
 	name = "Refrigerator",
@@ -50,6 +55,7 @@ STORAGE_DEFINITIONS["models/props_c17/furniturefridge001a.mdl"] = {
 		h = 4
 	}
 }
+
 --------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/props_wasteland/kitchen_fridge001a.mdl"] = {
 	name = "Large Refrigerator",
@@ -60,6 +66,7 @@ STORAGE_DEFINITIONS["models/props_wasteland/kitchen_fridge001a.mdl"] = {
 		h = 5
 	}
 }
+
 --------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/props_junk/trashbin01a.mdl"] = {
 	name = "Trash Bin",
@@ -70,6 +77,7 @@ STORAGE_DEFINITIONS["models/props_junk/trashbin01a.mdl"] = {
 		h = 3
 	}
 }
+
 --------------------------------------------------------------------------------------------------------
 STORAGE_DEFINITIONS["models/items/ammocrate_smg1.mdl"] = {
 	name = "Ammo Crate",
@@ -89,9 +97,10 @@ STORAGE_DEFINITIONS["models/items/ammocrate_smg1.mdl"] = {
 		end)
 	end
 }
+
 --------------------------------------------------------------------------------------------------------
 if CLIENT then
---------------------------------------------------------------------------------------------------------
+	--------------------------------------------------------------------------------------------------------
 	function MODULE:StorageOpen(storage)
 		if not IsValid(storage) or storage:getStorageInfo().invType ~= "grid" then return end
 		local localInv = LocalPlayer():getChar() and LocalPlayer():getChar():getInv()
@@ -107,7 +116,6 @@ if CLIENT then
 		storageInvPanel:Center()
 		localInvPanel.x = localInvPanel.x + extraWidth
 		storageInvPanel:MoveLeftOf(localInvPanel, 4)
-
 		local firstToRemove = true
 		localInvPanel.oldOnRemove = localInvPanel.OnRemove
 		storageInvPanel.oldOnRemove = storageInvPanel.OnRemove
@@ -130,6 +138,6 @@ if CLIENT then
 		localInvPanel.OnRemove = exitStorageOnRemove
 		storageInvPanel.OnRemove = exitStorageOnRemove
 	end
---------------------------------------------------------------------------------------------------------
+	--------------------------------------------------------------------------------------------------------
 end
 --------------------------------------------------------------------------------------------------------

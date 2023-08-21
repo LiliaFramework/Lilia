@@ -1,7 +1,9 @@
 --------------------------------------------------------------------------------------------------------
 local GM = GM
+
 --------------------------------------------------------------------------------------------------------
 lia.config.BlockedCollideEntities = {"lia_item", "lia_money"}
+
 --------------------------------------------------------------------------------------------------------
 function GM:CanCollide(ent1, ent2)
     local ShouldCollide = hook.Run("ShouldCollide", ent1, ent2)
@@ -12,10 +14,12 @@ function GM:CanCollide(ent1, ent2)
 
     return ShouldCollide
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:ShouldCheck(ply)
     return IsValid(ply) and ply:IsPlayer() and ply:Alive() and not ply:InVehicle() and not ply:IsNoClipping() and ply:IsSolid()
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CheckIfPlayerStuck()
     for _, ply in ipairs(player.GetAll()) do
@@ -48,10 +52,12 @@ function GM:CheckIfPlayerStuck()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:ShouldCollide(ent1, ent2)
     if table.HasValue(lia.config.BlockedCollideEntities, ent1:GetClass()) and table.HasValue(lia.config.BlockedCollideEntities, ent2:GetClass()) then return false end
 end
+
 --------------------------------------------------------------------------------------------------------
 timer.Create("CheckIfPlayerStuck", 4, 0, function()
     GM:CheckIfPlayerStuck()

@@ -2,6 +2,7 @@
 local PANEL = {}
 local waits = {}
 local w, h = ScrW(), ScrH()
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:SetSize(w, h)
@@ -37,6 +38,7 @@ function PANEL:Init()
         end)
     end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:DoLamar()
     local function wait(s, f)
@@ -153,6 +155,7 @@ function PANEL:DoLamar()
         end)
     end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Think()
     self:MoveToFront()
@@ -164,11 +167,13 @@ function PANEL:Think()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 10)
     draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 200))
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:PaintOver()
     draw.DrawText(":( Connection lost", "liaTitleFont", w / 2, 10, color_white, TEXT_ALIGN_CENTER)
@@ -186,6 +191,7 @@ function PANEL:PaintOver()
         draw.DrawText("Check your router or internet connection.", "liaBigFont", w / 2, h + 160, color_white, TEXT_ALIGN_CENTER)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaCrashScreen", PANEL, "DPanel")
 --------------------------------------------------------------------------------------------------------

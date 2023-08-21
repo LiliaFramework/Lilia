@@ -6,6 +6,7 @@ function L(key, ...)
 
     return string.format(info and info[key] or key, ...)
 end
+
 --------------------------------------------------------------------------------------------------------
 function L2(key, ...)
     local langKey = CreateClientConVar("lia_language", "english", true, true):GetString()

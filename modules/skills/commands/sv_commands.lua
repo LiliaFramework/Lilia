@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("rollstrength", {
     adminOnly = false,
@@ -13,6 +14,7 @@ lia.command.add("rollstrength", {
         lia.chat.send(client, "me", "has rolled a Strength skill roll")
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("rollendurance", {
     adminOnly = false,

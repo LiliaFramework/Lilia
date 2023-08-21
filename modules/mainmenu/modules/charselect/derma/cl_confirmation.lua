@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	if IsValid(lia.gui.charConfirm) then
@@ -88,16 +89,19 @@ function PANEL:Init()
 		lia.gui.character:warningSound()
 	end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnMousePressed()
 	self:Remove()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
 	lia.util.drawBlur(self)
 	surface.SetDrawColor(0, 0, 0, 150)
 	surface.DrawRect(0, 0, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setTitle(title)
 	self.title:SetText(title)
@@ -106,24 +110,28 @@ function PANEL:setTitle(title)
 
 	return self
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setMessage(message)
 	self.message:SetText(message:upper())
 
 	return self
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:onConfirm(callback)
 	self.onConfirmCallback = callback
 
 	return self
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:onCancel(callback)
 	self.onCancelCallback = callback
 
 	return self
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaCharacterConfirm", PANEL, "EditablePanel")
 --------------------------------------------------------------------------------------------------------

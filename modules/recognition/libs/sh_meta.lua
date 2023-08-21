@@ -1,13 +1,19 @@
 --------------------------------------------------------------------------------------------------------
 local character = lia.meta.character
+
 --------------------------------------------------------------------------------------------------------
 function character:doesRecognize(id)
-    if type(id) ~= "number" and id.getID then id = id:getID() end
+    if type(id) ~= "number" and id.getID then
+        id = id:getID()
+    end
+
     return hook.Run("IsCharRecognized", self, id) ~= false
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:IsCharRecognized(char, id)
     local other = lia.char.loaded[id]
+
     if other then
         local faction = lia.faction.indices[other:getFaction()]
         if faction and faction.isGloballyRecognized then return end

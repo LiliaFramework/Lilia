@@ -5,6 +5,7 @@ lia.command.add("spawnadd", {
     syntax = "<string faction> [string class]",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("spawnremove", {
     privilege = "Management - Change Spawns",

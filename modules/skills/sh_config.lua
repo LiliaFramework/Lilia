@@ -7,5 +7,6 @@ lia.config.PunchStamina = 10
 lia.config.StaminaSlowdown = true
 lia.config.StaminaBlur = false
 lia.config.MeleeDamageBonus = false
+
 lia.config.MeleeWeapons = {"weapon_crowbar", "weapon_knife",}
 --------------------------------------------------------------------------------------------------------

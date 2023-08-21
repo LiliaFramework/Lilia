@@ -4,12 +4,14 @@ lia.command.add("banooc", {
     syntax = "<string target>",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("unbanooc", {
     privilege = "Management - Unban OOC",
     syntax = "<string target>",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("blockooc", {
     privilege = "Management - Block OOC",

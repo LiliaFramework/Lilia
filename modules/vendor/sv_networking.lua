@@ -14,6 +14,7 @@ util.AddNetworkString("liaVendorStock")
 util.AddNetworkString("liaVendorMaxStock")
 util.AddNetworkString("liaVendorSync")
 util.AddNetworkString("liaVendorTrade")
+
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaVendorExit", function(_, client)
     local vendor = client.liaVendor
@@ -22,6 +23,7 @@ net.Receive("liaVendorExit", function(_, client)
         vendor:removeReceiver(client, true)
     end
 end)
+
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaVendorEdit", function(_, client)
     local key = net.ReadString()
@@ -31,6 +33,7 @@ net.Receive("liaVendorEdit", function(_, client)
     EDITOR[key](vendor, client, key)
     MODULE:saveVendors()
 end)
+
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaVendorTrade", function(_, client)
     local uniqueID = net.ReadString()

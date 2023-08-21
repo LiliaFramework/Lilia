@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 renderedIcons = renderedIcons or {}
+
 --------------------------------------------------------------------------------------------------------
 function renderNewIcon(panel, itemTable)
     if (itemTable.iconCam and not renderedIcons[string.lower(itemTable.model)]) or itemTable.forceRender then
@@ -15,14 +16,17 @@ function renderNewIcon(panel, itemTable)
         panel.Icon:RebuildSpawnIconEx(iconCam)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 local function drawIcon(mat, self, x, y)
     surface.SetDrawColor(color_white)
     surface.SetMaterial(mat)
     surface.DrawTexturedRect(0, 0, x, y)
 end
+
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setItemType(itemTypeOrID)
     local item = lia.item.list[itemTypeOrID]
@@ -70,23 +74,28 @@ function PANEL:setItemType(itemTypeOrID)
         renderNewIcon(self, item)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:updateTooltip()
     self:SetTooltip("<font=liaItemBoldFont>" .. self.itemTable:getName() .. "</font>\n" .. "<font=liaItemDescFont>" .. self.itemTable:getDesc())
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:getItem()
     return self.itemTable
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:ItemDataChanged(key, oldValue, newValue)
     self:updateTooltip()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:Droppable("inv")
     self:SetSize(64, 64)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:PaintOver(w, h)
     local itemTable = lia.item.instances[self.itemID]
@@ -98,19 +107,23 @@ function PANEL:PaintOver(w, h)
 
     hook.Run("ItemPaintOver", self, itemTable, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:PaintBehind(w, h)
     surface.SetDrawColor(0, 0, 0, 85)
     surface.DrawRect(2, 2, w - 4, h - 4)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:ExtraPaint(w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
     self:PaintBehind(w, h)
     self:ExtraPaint(w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 local buildActionFunc = function(action, actionIndex, itemTable, invID, sub)
     return function()
@@ -138,6 +151,7 @@ local buildActionFunc = function(action, actionIndex, itemTable, invID, sub)
         itemTable.player = nil
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:openActionMenu()
     local itemTable = self.itemTable
@@ -174,10 +188,12 @@ function PANEL:openActionMenu()
     menu:Open()
     itemTable.player = nil
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaItemIcon", PANEL, "SpawnIcon")
 --------------------------------------------------------------------------------------------------------
 PANEL = {}
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:MakePopup()
@@ -186,36 +202,45 @@ function PANEL:Init()
     self:SetDraggable(true)
     self:SetTitle(L"inv")
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setInventory(inventory)
     self.inventory = inventory
     self:liaListenForInventoryChanges(inventory)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:InventoryInitialized()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:InventoryDataChanged(key, oldValue, newValue)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:InventoryDeleted(inventory)
     if self.inventory == inventory then
         self:Remove()
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:InventoryItemAdded(item)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:InventoryItemRemoved(item)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:InventoryItemDataChanged(item, key, oldValue, newValue)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnRemove()
     self:liaDeleteInventoryHooks()
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaInventory", PANEL, "DFrame")
 

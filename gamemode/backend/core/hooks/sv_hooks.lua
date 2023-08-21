@@ -2,101 +2,21 @@
 local last_jump_time = 0
 --------------------------------------------------------------------------------------------------------
 lia.config.JumpCooldown = 0.8
--------------------------------------------------------------------------------------------------------
-function GM:InitializedExtrasServer()
-    self:OptimizeSeats()
-    hook.Remove("PlayerTick", "TickWidgets")
-    hook.Remove("Think", "CheckSchedules")
-    hook.Remove("LoadGModSave", "LoadGModSave")
-    local timers = {"CheckHookTimes", "HostnameThink"}
-    for i = 1, #timers do
-        local t = timers[i]
-        if timer.Exists(t) then timer.Remove(t) end
-    end
-
-    hook.Add(
-        "OnEntityCreated",
-        "-",
-        function(m)
-            if m:IsWidget() then
-                hook.Add("PlayerTick", "GODisableEntWidgets2", function(m, n) widgets.PlayerTick(m, n) end)
-                hook.Remove("OnEntityCreated", "WidgetInit")
-            end
-        end
-    )
-
-    for k, v in pairs(ents.GetAll()) do
-        if lia.config.RemoveEntities[v:GetClass()] then v:Remove() end
-    end
-end
-
--------------------------------------------------------------------------------------------------------
-function GM:OptimizeSeats()
-    local EFL_NO_THINK_FUNCTION = EFL_NO_THINK_FUNCTION
-    local loop, nicoSeats, nicoEnabled
-    hook.Add(
-        "OnEntityCreated",
-        "nicoSeat",
-        function(seat)
-            if seat:GetClass() == "prop_vehicle_prisoner_pod" then
-                seat:AddEFlags(EFL_NO_THINK_FUNCTION)
-                seat.nicoSeat = true
-            end
-        end
-    )
-
-    hook.Add(
-        "Think",
-        "nicoSeat",
-        function()
-            if not nicoSeats or not nicoSeats[loop] then
-                loop = 1
-                nicoSeats = {}
-                for _, seat in ipairs(ents.FindByClass("prop_vehicle_prisoner_pod")) do
-                    if seat.nicoSeat then table.insert(nicoSeats, seat) end
-                end
-            end
-
-            while nicoSeats[loop] and not IsValid(nicoSeats[loop]) do
-                loop = loop + 1
-            end
-
-            local seat = nicoSeats[loop]
-            if nicoEnabled ~= seat and IsValid(nicoEnabled) then
-                local saved = nicoEnabled:GetSaveTable()
-                if not saved["m_bEnterAnimOn"] and not saved["m_bExitAnimOn"] then
-                    nicoEnabled:AddEFlags(EFL_NO_THINK_FUNCTION)
-                    nicoEnabled = nil
-                end
-            end
-
-            if IsValid(seat) then
-                seat:RemoveEFlags(EFL_NO_THINK_FUNCTION)
-                nicoEnabled = seat
-            end
-
-            loop = loop + 1
-        end
-    )
-
-    local function nicoSeatAction(ply, seat)
-        if IsValid(seat) and seat.nicoSeat then table.insert(nicoSeats, loop, seat) end
-    end
-
-    hook.Add("PlayerEnteredVehicle", "nicoSeat", nicoSeatAction)
-    hook.Add("PlayerLeaveVehicle", "nicoSeat", nicoSeatAction)
-end
 
 -------------------------------------------------------------------------------------------------------
 function GM:EntityNetworkedVarChanged(entity, varName, oldVal, newVal)
-    if varName == "Model" and entity.SetModel then hook.Run("PlayerModelChanged", entity, newVal) end
+    if varName == "Model" and entity.SetModel then
+        hook.Run("PlayerModelChanged", entity, newVal)
+    end
 end
 
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerUse(client, entity)
     if client:getNetVar("restricted") then return false end
+
     if entity:isDoor() then
         local result = hook.Run("CanPlayerUseDoor", client, entity)
+
         if result == false then
             return false
         else
@@ -104,6 +24,7 @@ function GM:PlayerUse(client, entity)
             if result ~= nil then return result end
         end
     end
+
     return true
 end
 
@@ -115,13 +36,18 @@ function GM:KeyPress(client, key)
         data.endpos = data.start + client:GetAimVector() * 96
         data.filter = client
         local entity = util.TraceLine(data).Entity
-        if IsValid(entity) and entity:isDoor() or entity:IsPlayer() then hook.Run("PlayerUse", client, entity) end
+
+        if IsValid(entity) and entity:isDoor() or entity:IsPlayer() then
+            hook.Run("PlayerUse", client, entity)
+        end
     end
 end
 
 --------------------------------------------------------------------------------------------------------
 function GM:KeyRelease(client, key)
-    if key == IN_RELOAD then timer.Remove("liaToggleRaise" .. client:SteamID()) end
+    if key == IN_RELOAD then
+        timer.Remove("liaToggleRaise" .. client:SteamID())
+    end
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -129,45 +55,41 @@ function GM:PlayerLoadedChar(client, character, lastChar)
     local identifier = "RemoveMatSpecular" .. player:SteamID()
     local data = character:getData("pclass")
     local class = data and lia.class.list[data]
-    if timer.Exists(identifier) then timer.Remove(identifier) end
-    timer.Create(
-        identifier,
-        30,
-        0,
-        function()
-            if not IsValid(player) or not character then return end
-            if not player:Alive() then return end
-            RunConsoleCommand("mat_specular", 0)
-        end
-    )
+
+    if timer.Exists(identifier) then
+        timer.Remove(identifier)
+    end
+
+    timer.Create(identifier, 30, 0, function()
+        if not IsValid(player) or not character then return end
+        if not player:Alive() then return end
+        RunConsoleCommand("mat_specular", 0)
+    end)
 
     if class and data then
         local oldClass = character:GetClass()
+
         if client:Team() == class.faction then
-            timer.Simple(
-                .3,
-                function()
-                    character:setClass(class.index)
-                    hook.Run("OnPlayerJoinClass", client, class.index, oldClass)
-                end
-            )
+            timer.Simple(.3, function()
+                character:setClass(class.index)
+                hook.Run("OnPlayerJoinClass", client, class.index, oldClass)
+            end)
         end
     end
 
     local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
-    lia.db.updateTable(
-        {
-            _lastJoinTime = timeStamp
-        },
-        nil,
-        "characters",
-        "_id = " .. character:getID()
-    )
+
+    lia.db.updateTable({
+        _lastJoinTime = timeStamp
+    }, nil, "characters", "_id = " .. character:getID())
 
     if lastChar then
         local charEnts = lastChar:getVar("charEnts") or {}
+
         for _, v in ipairs(charEnts) do
-            if v and IsValid(v) then v:Remove() end
+            if v and IsValid(v) then
+                v:Remove()
+            end
         end
 
         lastChar:setVar("charEnts", nil)
@@ -200,22 +122,20 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:CharacterLoaded(id)
     local character = lia.char.loaded[id]
+
     if character then
         local client = character:getPlayer()
+
         if IsValid(client) then
             local uniqueID = "liaSaveChar" .. client:SteamID()
-            timer.Create(
-                uniqueID,
-                300,
-                0,
-                function()
-                    if IsValid(client) and client:getChar() then
-                        client:getChar():save()
-                    else
-                        timer.Remove(uniqueID)
-                    end
+
+            timer.Create(uniqueID, 300, 0, function()
+                if IsValid(client) and client:getChar() then
+                    client:getChar():save()
+                else
+                    timer.Remove(uniqueID)
                 end
-            )
+            end)
         end
     end
 end
@@ -226,6 +146,7 @@ function GM:PlayerSay(client, message)
     if (chatType == "ic") and lia.command.parse(client, message) then return "" end
     lia.chat.send(client, chatType, message, anonymous)
     hook.Run("PostPlayerSay", client, message, chatType, anonymous)
+
     return ""
 end
 
@@ -234,15 +155,20 @@ function GM:ShutDown()
     if hook.Run("ShouldDataBeSaved") == false then return end
     lia.shuttingDown = true
     hook.Run("SaveData")
+
     for _, v in ipairs(player.GetAll()) do
         v:saveLiliaData()
-        if v:getChar() then v:getChar():save() end
+
+        if v:getChar() then
+            v:getChar():save()
+        end
     end
 end
 
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedSchema()
     local persistString = GetConVar("sbox_persist"):GetString()
+
     if persistString == "" or string.StartWith(persistString, "lia_") then
         local newValue = "lia_" .. SCHEMA.folder
         game.ConsoleCommand("sbox_persist " .. newValue .. "\n")
@@ -256,6 +182,7 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     local speakerRange = speaker:getNetVar("voiceRange", 2)
     local rangeSquared = (lia.config.Ranges[speakerRange] or 0) * (lia.config.Ranges[speakerRange] or 0)
     if listener:GetPos():DistToSqr(speaker:GetPos()) < rangeSquared then return true, true end
+
     return false, false
 end
 
@@ -269,8 +196,11 @@ end
 function GM:CharacterPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
+
     for _, v in pairs(character:getInv():getItems()) do
-        if v.onSave then v:call("onSave", client) end
+        if v.onSave then
+            v:call("onSave", client)
+        end
     end
 end
 
@@ -284,14 +214,17 @@ local defaultAngleData = {
 function GM:GetPreferredCarryAngles(entity)
     if entity.preferedAngle then return entity.preferedAngle end
     local class = entity:GetClass()
+
     if class == "lia_item" then
         local itemTable = entity:getItemTable()
+
         if itemTable then
             local preferedAngle = itemTable.preferedAngle
             if preferedAngle then return preferedAngle end
         end
     elseif class == "prop_physics" then
         local model = entity:GetModel():lower()
+
         return defaultAngleData[model]
     end
 end
@@ -299,19 +232,20 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:CreateDefaultInventory(character)
     local charID = character:getID()
+
     if lia.inventory.types["grid"] then
-        return         lia.inventory.instance(
-            "grid",
-            {
-                char = charID
-            }
-        )
+        return lia.inventory.instance("grid", {
+            char = charID
+        })
     end
 end
 
 --------------------------------------------------------------------------------------------------------
 function GM:LiliaTablesLoaded()
-    local ignore = function() print("") end
+    local ignore = function()
+        print("")
+    end
+
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
@@ -330,27 +264,25 @@ function GM:CreateSalaryTimer(client)
     local timerID = "liaSalary" .. client:SteamID()
     local timerFunc = timer.Exists(timerID) and timer.Adjust or timer.Create
     local delay = lia.config.SalaryInterval
-    timerFunc(
-        timerID,
-        delay,
-        0,
-        function()
-            if not IsValid(client) or client:getChar() ~= character then
-                timer.Remove(timerID)
-                return
-            end
 
-            if limit and character:getMoney() >= limit then return end
-            character:giveMoney(pay)
-            client:notifyLocalized("salary", lia.currency.get(pay))
+    timerFunc(timerID, delay, 0, function()
+        if not IsValid(client) or client:getChar() ~= character then
+            timer.Remove(timerID)
+
+            return
         end
-    )
+
+        if limit and character:getMoney() >= limit then return end
+        character:giveMoney(pay)
+        client:notifyLocalized("salary", lia.currency.get(pay))
+    end)
 end
 
 --------------------------------------------------------------------------------------------------------
 function GM:SetupMove(client, mv, cmd)
     if client:OnGround() and mv:KeyPressed(IN_JUMP) then
         local cur_time = CurTime()
+
         if cur_time - last_jump_time < lia.config.JumpCooldown then
             mv:SetButtons(bit.band(mv:GetButtons(), bit.bnot(IN_JUMP)))
         else
@@ -363,6 +295,7 @@ end
 function GM:PlayerThrowPunch(ply, trace)
     local ent = trace.Entity
     if not ent:IsPlayer() then return end
+
     if ply:IsSuperAdmin() and IsValid(ent) and ply:Team() == FACTION_STAFF then
         ply:ConsumeStamina(ent:getChar():GetMaxStamina())
         ent:EmitSound("weapons/crowbar/crowbar_impact" .. math.random(1, 2) .. ".wav", 70)

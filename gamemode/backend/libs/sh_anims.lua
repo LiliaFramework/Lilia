@@ -10,6 +10,7 @@ lia.anim.PlayerHoldtypeTranslator = lia.anim.PlayerHoldtypeTranslator or {}
 lia.anim.DefaultTposingFixer = lia.anim.DefaultTposingFixer or {}
 lia.anim.PlayerModelTposingFixer = lia.anim.PlayerModelTposingFixer or {}
 lia.anim.ModelTranslations = lia.anim.ModelTranslations or player_manager.TranslateToPlayerModelName
+
 --------------------------------------------------------------------------------------------------------
 lia.anim.citizen_male = {
     normal = {
@@ -76,6 +77,7 @@ lia.anim.citizen_male = {
         chair = {ACT_BUSY_SIT_CHAIR, Vector(1, 0, -23)}
     },
 }
+
 --------------------------------------------------------------------------------------------------------
 lia.anim.citizen_female = {
     normal = {
@@ -137,6 +139,7 @@ lia.anim.citizen_female = {
     glide = ACT_GLIDE,
     vehicle = lia.anim.citizen_male.vehicle
 }
+
 --------------------------------------------------------------------------------------------------------
 lia.anim.metrocop = {
     normal = {
@@ -200,6 +203,7 @@ lia.anim.metrocop = {
         ["prop_vehicle_prisoner_pod"] = {ACT_IDLE, Vector(-4, -0.5, 0)}
     }
 }
+
 --------------------------------------------------------------------------------------------------------
 lia.anim.overwatch = {
     normal = {
@@ -254,6 +258,7 @@ lia.anim.overwatch = {
     },
     glide = ACT_GLIDE
 }
+
 --------------------------------------------------------------------------------------------------------
 lia.anim.vort = {
     normal = {
@@ -307,6 +312,7 @@ lia.anim.vort = {
     },
     glide = ACT_GLIDE
 }
+
 --------------------------------------------------------------------------------------------------------
 lia.anim.player = {
     normal = {
@@ -322,6 +328,7 @@ lia.anim.player = {
         [ACT_MP_RUN] = ACT_HL2MP_RUN_PASSIVE
     }
 }
+
 --------------------------------------------------------------------------------------------------------
 lia.anim.zombie = {
     [ACT_MP_STAND_IDLE] = ACT_HL2MP_IDLE_ZOMBIE,
@@ -330,6 +337,7 @@ lia.anim.zombie = {
     [ACT_MP_WALK] = ACT_HL2MP_WALK_ZOMBIE_02,
     [ACT_MP_RUN] = ACT_HL2MP_RUN_ZOMBIE
 }
+
 --------------------------------------------------------------------------------------------------------
 lia.anim.fastZombie = {
     [ACT_MP_STAND_IDLE] = ACT_HL2MP_WALK_ZOMBIE,
@@ -338,6 +346,7 @@ lia.anim.fastZombie = {
     [ACT_MP_WALK] = ACT_HL2MP_WALK_ZOMBIE_06,
     [ACT_MP_RUN] = ACT_HL2MP_RUN_ZOMBIE_FAST
 }
+
 --------------------------------------------------------------------------------------------------------
 lia.anim.HoldtypeTranslator = {
     ["normal"] = "normal",
@@ -352,6 +361,7 @@ lia.anim.HoldtypeTranslator = {
     ["duel"] = "normal",
     ["bugbait"] = "normal",
 }
+
 --------------------------------------------------------------------------------------------------------
 lia.anim.PlayerHoldtypeTranslator = {
     [""] = "normal",
@@ -369,6 +379,7 @@ lia.anim.PlayerHoldtypeTranslator = {
     ["magic"] = "normal",
     ["revolver"] = "pistol",
 }
+
 --------------------------------------------------------------------------------------------------------
 lia.anim.DefaultTposingFixer = {
     ["models/police.mdl"] = "metrocop",
@@ -383,6 +394,7 @@ lia.anim.DefaultTposingFixer = {
     ["models/alyx.mdl"] = "citizen_female",
     ["models/mossman.mdl"] = "citizen_female",
 }
+
 --------------------------------------------------------------------------------------------------------
 function lia.anim.setModelClass(model, class)
     if not lia.anim[class] then
@@ -391,6 +403,7 @@ function lia.anim.setModelClass(model, class)
 
     translations[model:lower()] = class
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.anim.getModelClass(model)
     model = string.lower(model)
@@ -409,6 +422,7 @@ function lia.anim.getModelClass(model)
 
     return class
 end
+
 --------------------------------------------------------------------------------------------------------
 function player_manager.TranslateToPlayerModelName(model)
     model = model:lower():gsub("\\", "/")
@@ -428,6 +442,7 @@ function player_manager.TranslateToPlayerModelName(model)
 
     return result
 end
+
 --------------------------------------------------------------------------------------------------------
 lia.config.DefaultTposingFixer = {
     ["models/police.mdl"] = "metrocop",
@@ -442,6 +457,7 @@ lia.config.DefaultTposingFixer = {
     ["models/alyx.mdl"] = "citizen_female",
     ["models/mossman.mdl"] = "citizen_female",
 }
+
 --------------------------------------------------------------------------------------------------------
 for model, animtype in pairs(lia.anim.DefaultTposingFixer) do
     lia.anim.setModelClass(model, animtype)

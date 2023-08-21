@@ -4,6 +4,7 @@ local MODULE = MODULE
 include("shared.lua")
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
+
 --------------------------------------------------------------------------------------------------------
 function ENT:Initialize()
 	self:SetModel("models/props_junk/watermelon01.mdl")
@@ -23,12 +24,14 @@ function ENT:Initialize()
 		physObj:Wake()
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:setInventory(inventory)
 	assert(inventory, "Storage setInventory called without an inventory!")
 	self:setNetVar("id", inventory:getID())
 	hook.Run("StorageInventorySet", self, inventory)
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:deleteInventory()
 	local inventory = self:getInv()
@@ -43,6 +46,7 @@ function ENT:deleteInventory()
 		self:setNetVar("id", nil)
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:OnRemove()
 	if not self.liaForceDelete then
@@ -54,6 +58,7 @@ function ENT:OnRemove()
 	self:deleteInventory()
 	MODULE:saveStorage()
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:openInv(activator)
 	local inventory = self:getInv()
@@ -79,6 +84,7 @@ function ENT:openInv(activator)
 		self:EmitSound(openSound or "items/ammocrate_open.wav")
 	end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:Use(activator)
 	if not activator:getChar() then return end

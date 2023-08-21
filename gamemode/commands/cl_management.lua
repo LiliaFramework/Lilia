@@ -4,24 +4,28 @@ lia.command.add("freezeallprops", {
     privilege = "Management - Freeze All Props",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("cleanitems", {
     superAdminOnly = true,
     privilege = "Management - Clean Items",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("cleanprops", {
     superAdminOnly = true,
     privilege = "Management - Clean Props",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("cleannpcs", {
     superAdminOnly = true,
     privilege = "Management - Clean NPCs",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("flags", {
     adminOnly = true,
@@ -29,12 +33,14 @@ lia.command.add("flags", {
     privilege = "Management - Check Flags",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("clearchat", {
     superAdminOnly = true,
     privilege = "Management - Clear Chat",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("checkallmoney", {
     superAdminOnly = true,
@@ -42,18 +48,21 @@ lia.command.add("checkallmoney", {
     privilege = "Management - Check All Money",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("return", {
     adminOnly = true,
     privilege = "Management - Return",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("findallflags", {
     adminOnly = false,
     privilege = "Management - Find All Flags",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("chargiveitem", {
     superAdminOnly = true,
@@ -61,12 +70,14 @@ lia.command.add("chargiveitem", {
     privilege = "Management - Give Item",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("netmessagelogs", {
     superAdminOnly = true,
     privilege = "Management - Check Net Message Log",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("returnitems", {
     superAdminOnly = true,
@@ -74,6 +85,7 @@ lia.command.add("returnitems", {
     privilege = "Management - Return Items",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("announce", {
     superAdminOnly = true,
@@ -81,6 +93,7 @@ lia.command.add("announce", {
     privilege = "Management - Make Announcements",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("logs", {
     adminOnly = true,

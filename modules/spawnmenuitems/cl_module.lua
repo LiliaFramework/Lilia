@@ -2,6 +2,7 @@
 function MODULE:InitializedModules()
     RunConsoleCommand("spawnmenu_reload")
 end
+
 --------------------------------------------------------------------------------------------------------
 spawnmenu.AddContentType("item", function(container, object)
     local icon = vgui.Create("SpawnIcon", p)
@@ -29,6 +30,7 @@ spawnmenu.AddContentType("item", function(container, object)
 
     return icon
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("PopulateItems", "AddEntityContent", function(pnlContent, tree, node)
     local categorised = {}
@@ -75,8 +77,9 @@ hook.Add("PopulateItems", "AddEntityContent", function(pnlContent, tree, node)
     if IsValid(FirstNode) then
         FirstNode:InternalDoClick()
     end
-end)--------------------------------------------------------------------------------------------------------
+end)
 
+--------------------------------------------------------------------------------------------------------
 spawnmenu.AddCreationTab("Items", function()
     local ctrl = vgui.Create("SpawnmenuContentPanel")
     ctrl:EnableSearch("items", "PopulateItems")

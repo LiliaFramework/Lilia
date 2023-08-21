@@ -5,6 +5,7 @@ lia.command.add("rollstrength", {
     syntax = "[number maximum]",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("rollendurance", {
     adminOnly = false,

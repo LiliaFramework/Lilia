@@ -2,24 +2,17 @@
 lia.color = lia.color or {}
 --------------------------------------------------------------------------------------------------------
 local colorMeta = FindMetaTable('Color')
+
 --------------------------------------------------------------------------------------------------------
 function lia.color.Lighten(colot, amount)
-	return Color(
-		math.Clamp(colot.r + amount, 0, 255),
-		math.Clamp(colot.g + amount, 0, 255),
-		math.Clamp(colot.b + amount, 0, 255),
-		colot.a
-	)
+	return Color(math.Clamp(colot.r + amount, 0, 255), math.Clamp(colot.g + amount, 0, 255), math.Clamp(colot.b + amount, 0, 255), colot.a)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.color.Darken(colot, amount)
-	return Color(
-		math.Clamp(colot.r - amount, 0, 255),
-		math.Clamp(colot.g - amount, 0, 255),
-		math.Clamp(colot.b - amount, 0, 255),
-		colot.a
-	)
+	return Color(math.Clamp(colot.r - amount, 0, 255), math.Clamp(colot.g - amount, 0, 255), math.Clamp(colot.b - amount, 0, 255), colot.a)
 end
+
 --------------------------------------------------------------------------------------------------------
 function Color(r, g, b, a)
 	return setmetatable({
@@ -29,6 +22,7 @@ function Color(r, g, b, a)
 		a = tonumber(a) or 255
 	}, colorMeta)
 end
+
 --------------------------------------------------------------------------------------------------------
 do
 	local colors = {
@@ -49,10 +43,10 @@ do
 	_OLD_COLOR_FN_ = old_color
 
 	function Color(r, g, b, a)
-		if (isstring(r)) then
-			if (colors[r:lower()]) then
+		if isstring(r) then
+			if colors[r:lower()] then
 				return ColorAlpha(colors[r:lower()], g or 255)
-			elseif (isstring(g) and isstring(b)) then
+			elseif isstring(g) and isstring(b) then
 				return old_color(r, g, b, a or 255)
 			else
 				return color_white
@@ -63,8 +57,7 @@ do
 	end
 
 	function lia.color.register(name, color, force)
-		if (!force and colors[name]) then return end
-
+		if not force and colors[name] then return end
 		colors[name] = color
 	end
 end
@@ -79,13 +72,11 @@ do
 	function lia.color.LerpHSV(start_color, end_color, maxValue, currentValue, minValue)
 		start_color = Color("green")
 		end_color = Color("red")
-
 		minValue = minValue or 0
-
 		local hsv_start = ColorToHSV(end_color)
 		local hsv_end = ColorToHSV(start_color)
-
 		local linear = Lerp(normalize(minValue, maxValue, currentValue), hsv_start, hsv_end)
+
 		return HSVToColor(linear, 1, 1)
 	end
 end

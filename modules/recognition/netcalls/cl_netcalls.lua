@@ -22,6 +22,7 @@ netstream.Hook("rgnMenu", function()
     menu:MakePopup()
     menu:Center()
 end)
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook("rgnDone", function()
     local client = LocalPlayer()

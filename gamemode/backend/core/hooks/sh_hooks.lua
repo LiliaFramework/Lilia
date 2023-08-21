@@ -10,6 +10,7 @@ lia.config.PermaClass = true
 lia.config.MapCleanerEnabled = true
 lia.config.ItemCleanupTime = 7200
 lia.config.MapCleanupTime = 21600
+
 --------------------------------------------------------------------------------------------------------
 function GM:TranslateActivity(client, act)
     local model = string.lower(client.GetModel(client))
@@ -104,6 +105,7 @@ function GM:TranslateActivity(client, act)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:DoAnimationEvent(client, event, data)
     local class = lia.anim.getModelClass(client:GetModel())
@@ -147,10 +149,12 @@ function GM:DoAnimationEvent(client, event, data)
 
     return ACT_INVALID
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:EntityEmitSound(data)
     if data.Entity.liaIsMuted then return false end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:HandlePlayerLanding(client, velocity, wasOnGround)
     if client:IsNoClipping() then return end
@@ -164,6 +168,7 @@ function GM:HandlePlayerLanding(client, velocity, wasOnGround)
         return true
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CalcMainActivity(client, velocity)
     client.CalcIdeal = ACT_MP_STAND_IDLE
@@ -196,6 +201,7 @@ function GM:CalcMainActivity(client, velocity)
 
     return client.CalcIdeal, client.liaForceSeq or oldCalcSeqOverride
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnCharVarChanged(char, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
@@ -204,16 +210,19 @@ function GM:OnCharVarChanged(char, varName, oldVar, newVar)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:GetDefaultCharName(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.onGetDefaultName then return info:onGetDefaultName(client) end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.onGetDefaultDesc then return info:onGetDefaultDesc(client) end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerUseChar(client, character)
     if client:getChar() and client:getChar():getID() == character:getID() then return false, "You are already using this character!" end
@@ -234,6 +243,7 @@ function GM:CanPlayerUseChar(client, character)
         return false, "@charBanned"
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CheckFactionLimitReached(faction, character, client)
     if isfunction(faction.onCheckLimitReached) then return faction:onCheckLimitReached(character, client) end
@@ -246,6 +256,7 @@ function GM:CheckFactionLimitReached(faction, character, client)
 
     return team.NumPlayers(faction.index) >= maxPlayers
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:Move(client, moveData)
     local char = client:getChar()
@@ -278,6 +289,7 @@ function GM:Move(client, moveData)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CanItemBeTransfered(itemObject, curInv, inventory)
     if itemObject.onCanBeTransfered then
@@ -286,6 +298,7 @@ function GM:CanItemBeTransfered(itemObject, curInv, inventory)
         return itemHook ~= false
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnPlayerJoinClass(client, class, oldClass)
     local char = client:getChar()
@@ -307,6 +320,7 @@ function GM:OnPlayerJoinClass(client, class, oldClass)
 
     netstream.Start(nil, "classUpdate", client)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:Think()
     if not self.nextThink then
@@ -329,12 +343,14 @@ function GM:Think()
         self.nextThink = CurTime() + lia.config.HealingTimer
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PropBreak(attacker, ent)
     if IsValid(ent) and ent:GetPhysicsObject():IsValid() then
         constraint.RemoveAll(ent)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnPickupMoney(client, moneyEntity)
     if moneyEntity and moneyEntity:IsValid() then
@@ -343,6 +359,7 @@ function GM:OnPickupMoney(client, moneyEntity)
         client:notifyLocalized("moneyTaken", lia.currency.get(amount))
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedModules()
     if SERVER then
@@ -460,6 +477,7 @@ function GM:InitializedModules()
     self:InitializedExtrasShared()
     self:InitializedExtrasServer()
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:InitPostEntity()
     local ip, port = game.GetIPAddress():match("([^:]+):(%d+)")
@@ -485,13 +503,13 @@ function GM:InitPostEntity()
         end
     else
         if StormFox2 then
-            RunConsoleCommand('sf_time_speed', 1)
-            RunConsoleCommand('sf_addnight_temp', 4)
-            RunConsoleCommand('sf_windmove_props', 0)
-            RunConsoleCommand('sf_windmove_props_break', 0)
-            RunConsoleCommand('sf_windmove_props_unfreeze', 0)
-            RunConsoleCommand('sf_windmove_props_unweld', 0)
-            RunConsoleCommand('sf_windmove_props_makedebris', 0)
+            RunConsoleCommand("sf_time_speed", 1)
+            RunConsoleCommand("sf_addnight_temp", 4)
+            RunConsoleCommand("sf_windmove_props", 0)
+            RunConsoleCommand("sf_windmove_props_break", 0)
+            RunConsoleCommand("sf_windmove_props_unfreeze", 0)
+            RunConsoleCommand("sf_windmove_props_unweld", 0)
+            RunConsoleCommand("sf_windmove_props_makedebris", 0)
         end
 
         local doors = ents.FindByClass("prop_door_rotating")
@@ -512,8 +530,8 @@ function GM:InitPostEntity()
                 end
             end
         end
-        
-        for _, v in ipairs( ents.FindByClass('prop_door_rotating') ) do
+
+        for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
             if IsValid(v) and v:IsDoor() then
                 v:DrawShadow(false) -- we need this?
             end
@@ -531,6 +549,7 @@ function GM:InitPostEntity()
         end)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedExtrasShared()
     if nut then
@@ -546,6 +565,7 @@ function GM:InitializedExtrasShared()
         }
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:simfphysPhysicsCollide()
     return true

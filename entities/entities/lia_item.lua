@@ -8,9 +8,10 @@ ENT.Category = "Lilia"
 ENT.Spawnable = false
 ENT.RenderGroup = RENDERGROUP_BOTH
 ENT.DrawEntityInfo = true
+
 --------------------------------------------------------------------------------------------------------
 if SERVER then
---------------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------------
     function ENT:Initialize()
         self:SetModel("models/props_junk/watermelon01.mdl")
         self:SetSolid(SOLID_VPHYSICS)
@@ -26,11 +27,13 @@ if SERVER then
 
         hook.Run("OnItemSpawned", self)
     end
---------------------------------------------------------------------------------------------------------
+
+    --------------------------------------------------------------------------------------------------------
     function ENT:setHealth(amount)
         self.health = amount
     end
---------------------------------------------------------------------------------------------------------
+
+    --------------------------------------------------------------------------------------------------------
     function ENT:OnTakeDamage(dmginfo)
         local damage = dmginfo:GetDamage()
         self:setHealth(self.health - damage)
@@ -40,7 +43,8 @@ if SERVER then
             self:Remove()
         end
     end
---------------------------------------------------------------------------------------------------------
+
+    --------------------------------------------------------------------------------------------------------
     function ENT:setItem(itemID)
         local itemTable = lia.item.instances[itemID]
         if not itemTable then return self:Remove() end
@@ -82,7 +86,8 @@ if SERVER then
             itemTable:onEntityCreated(self)
         end
     end
---------------------------------------------------------------------------------------------------------
+
+    --------------------------------------------------------------------------------------------------------
     function ENT:breakEffects()
         self:EmitSound("physics/cardboard/cardboard_box_break" .. math.random(1, 3) .. ".wav")
         local position = self:LocalToWorld(self:OBBCenter())
@@ -92,7 +97,8 @@ if SERVER then
         effect:SetScale(3)
         util.Effect("GlassImpact", effect)
     end
---------------------------------------------------------------------------------------------------------
+
+    --------------------------------------------------------------------------------------------------------
     function ENT:OnRemove()
         local itemTable = self:getItemTable()
 
@@ -110,7 +116,8 @@ if SERVER then
             lia.item.deleteByID(self.liaItemID)
         end
     end
---------------------------------------------------------------------------------------------------------
+
+    --------------------------------------------------------------------------------------------------------
     function ENT:Think()
         local itemTable = self:getItemTable()
         if itemTable and itemTable.think then return itemTable:think(self) end
@@ -118,9 +125,9 @@ if SERVER then
 
         return true
     end
---------------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------------
 else
---------------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------------
     function ENT:computeDescMarkup(description)
         if self.desc ~= description then
             self.desc = description
@@ -129,7 +136,8 @@ else
 
         return self.markup
     end
---------------------------------------------------------------------------------------------------------
+
+    --------------------------------------------------------------------------------------------------------
     function ENT:onDrawEntityInfo(alpha)
         local itemTable = self:getItemTable()
         if not itemTable then return end
@@ -152,7 +160,8 @@ else
         itemTable.data = oldData
         itemTable.entity = oldEntity
     end
---------------------------------------------------------------------------------------------------------
+
+    --------------------------------------------------------------------------------------------------------
     function ENT:DrawTranslucent()
         local itemTable = self:getItemTable()
 
@@ -162,16 +171,19 @@ else
             self:DrawModel()
         end
     end
---------------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------------
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:getItemID()
     return self:getNetVar("instanceID")
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:getItemTable()
     return lia.item.instances[self:getItemID()]
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:getData(key, default)
     local data = self:getNetVar("data", {})

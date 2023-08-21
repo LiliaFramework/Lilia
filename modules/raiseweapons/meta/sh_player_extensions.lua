@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:isWepRaised()
 	local weapon = self:GetActiveWeapon()
@@ -21,6 +22,7 @@ function playerMeta:isWepRaised()
 
 	return self:getNetVar("raised", false)
 end
+
 --------------------------------------------------------------------------------------------------------
 if SERVER then
 	function playerMeta:setWepRaised(state)

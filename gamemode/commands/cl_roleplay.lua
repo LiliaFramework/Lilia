@@ -5,6 +5,7 @@ lia.command.add("roll", {
     syntax = "[number maximum]",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("point", {
     adminOnly = false,
@@ -12,6 +13,7 @@ lia.command.add("point", {
     syntax = "[number maximum]",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("dropmoney", {
     adminOnly = false,
@@ -19,6 +21,7 @@ lia.command.add("dropmoney", {
     syntax = "<number amount>",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("chardesc", {
     adminOnly = false,
@@ -26,6 +29,7 @@ lia.command.add("chardesc", {
     syntax = "<string desc>",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("beclass", {
     adminOnly = false,
@@ -33,12 +37,14 @@ lia.command.add("beclass", {
     privilege = "Basic User Permissions",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("chargetup", {
     adminOnly = false,
     privilege = "Basic User Permissions",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("givemoney", {
     adminOnly = false,
@@ -46,18 +52,21 @@ lia.command.add("givemoney", {
     syntax = "<number amount>",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("bringlostitems", {
     adminOnly = false,
     privilege = "Basic User Permissions",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("carddraw", {
     adminOnly = false,
     privilege = "Basic User Permissions",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("fallover", {
     adminOnly = false,
@@ -65,6 +74,7 @@ lia.command.add("fallover", {
     syntax = "[number time]",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("factionlist", {
     adminOnly = false,
@@ -72,18 +82,21 @@ lia.command.add("factionlist", {
     syntax = "<string text>",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("getpos", {
     adminOnly = false,
     privilege = "Basic User Permissions",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("doorname", {
     adminOnly = false,
     privilege = "Basic User Permissions",
     onRun = function(client, arguments) end
 })
+
 --------------------------------------------------------------------------------------------------------
 if lia.config.FactionBroadcastEnabled then
     lia.command.add("factionbroadcast", {
@@ -93,6 +106,7 @@ if lia.config.FactionBroadcastEnabled then
         onRun = function(client, arguments) end
     })
 end
+
 --------------------------------------------------------------------------------------------------------
 if lia.config.AdvertisementEnabled then
     lia.command.add("advertisement", {

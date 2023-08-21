@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("doorsell", {
     onRun = function(client, arguments)
@@ -31,6 +32,7 @@ lia.command.add("doorsell", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("doorbuy", {
     onRun = function(client, arguments)
@@ -75,6 +77,7 @@ lia.command.add("doorbuy", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("doorsetunownable", {
     adminOnly = true,
@@ -105,6 +108,7 @@ lia.command.add("doorsetunownable", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("doorsetownable", {
     adminOnly = true,
@@ -135,6 +139,7 @@ lia.command.add("doorsetownable", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("dooraddfaction", {
     adminOnly = true,
@@ -189,6 +194,7 @@ lia.command.add("dooraddfaction", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("doorremovefaction", {
     adminOnly = true,
@@ -243,6 +249,7 @@ lia.command.add("doorremovefaction", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("doorsetdisabled", {
     adminOnly = true,
@@ -265,6 +272,7 @@ lia.command.add("doorsetdisabled", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("doorsettitle", {
     syntax = "<string title>",
@@ -279,6 +287,7 @@ lia.command.add("doorsettitle", {
         if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
             local name = table.concat(arguments, " ")
             if not name:find("%S") then return client:notifyLocalized("invalidArg", 1) end
+
             if entity:checkDoorAccess(client, DOOR_TENANT) then
                 entity:setNetVar("title", name)
             elseif client:IsAdmin() then
@@ -295,6 +304,7 @@ lia.command.add("doorsettitle", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("doorsetparent", {
     adminOnly = true,
@@ -333,6 +343,7 @@ lia.command.add("doorsetchild", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("doorremovechild", {
     adminOnly = true,
@@ -361,6 +372,7 @@ lia.command.add("doorremovechild", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("doorsethidden", {
     adminOnly = true,
@@ -383,6 +395,7 @@ lia.command.add("doorsethidden", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("doorsetclass", {
     adminOnly = true,

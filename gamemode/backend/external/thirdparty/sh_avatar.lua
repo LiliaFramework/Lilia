@@ -1,21 +1,18 @@
 --------------------------------------------------------------------------------------------------------
 lia.steam = lia.steam or {}
+
 --------------------------------------------------------------------------------------------------------
-if (CLIENT) then
+if CLIENT then
 	file.CreateDir("lilia/avatars")
 	lia.steam.avatars = lia.steam.avatars or {}
 	lia.steam.users = lia.steam.users or {}
 
 	function lia.steam.GetAvatar(steamID64)
 		steamID64 = tostring(steamID64)
+		if lia.steam.avatars[steamID64] then return lia.steam.avatars[steamID64] end
+		local path = "lilia/avatars/" .. steamID64 .. ".png"
 
-		if (lia.steam.avatars[steamID64]) then
-			return lia.steam.avatars[steamID64]
-		end
-
-		local path = "lilia/avatars/"..steamID64..".png"
-
-		if (file.Exists(path, "DATA")) then
+		if file.Exists(path, "DATA") then
 			lia.steam.avatars[steamID64] = Material("../data/" .. path, "noclamp smooth")
 
 			return lia.steam.avatars[steamID64]
@@ -36,15 +33,14 @@ if (CLIENT) then
 	end
 
 	function lia.steam.GetNickName(steamID64)
-		if (lia.steam.users[steamID64]) then
-			return lia.steam.users[steamID64]
-		end
+		if lia.steam.users[steamID64] then return lia.steam.users[steamID64] end
 
 		http.Fetch("https://steamcommunity.com/profiles/" .. steamID64 .. "?xml=1", function(content)
 			local name = content:match("<steamID><!%[CDATA%[(.-)%]%]></steamID>")
 
-			if (name) then
+			if name then
 				lia.steam.users[steamID64] = name
+
 				return name
 			end
 
@@ -56,9 +52,8 @@ if (CLIENT) then
 		local id
 
 		for _, v in ipairs(player.GetHumans()) do
-			if (IsValid(v)) then
+			if IsValid(v) then
 				id = v:SteamID64()
-
 				lia.steam.GetAvatar(id)
 				lia.steam.users[id] = v:Name()
 			end

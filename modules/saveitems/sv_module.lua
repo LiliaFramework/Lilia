@@ -48,6 +48,7 @@ function MODULE:LoadData()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:SaveData()
     local items = {}

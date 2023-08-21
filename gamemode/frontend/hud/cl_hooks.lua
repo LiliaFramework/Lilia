@@ -10,6 +10,7 @@ lia.config.ThirdPersonEnabled = true
 lia.config.CrosshairEnabled = false
 lia.config.BarsDisabled = false
 lia.config.AmmoDrawEnabled = true
+
 lia.config.HiddenHUDElements = {
     ["CHudHealth"] = true,
     ["CHudCrosshair"] = true,
@@ -18,34 +19,42 @@ lia.config.HiddenHUDElements = {
     ["CHudSecondaryAmmo"] = true,
     ["CHudHistoryResource"] = true
 }
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("HUDShouldDraw", "HideHUD", function(element)
     if lia.config.HiddenHUDElements[element] then return false end
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("DrawDeathNotice", "HideDeathNotice", function()
     return false
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("HUDAmmoPickedUp", "HideAmmoPickedUp", function()
     return false
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("HUDDrawPickupHistory", "HidePickupHistory", function()
     return false
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("HUDDrawTargetID", "HideTargetID", function()
     return false
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("ShouldHideBars", "HideBars", function()
     return lia.config.BarsDisabled
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("CanDrawAmmoHUD", "HideAmmo", function()
     return lia.config.AmmoDrawEnabled
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("ShouldDrawCrosshair", "HideCrosshair", function()
     local wep = LocalPlayer():GetActiveWeapon()
@@ -59,6 +68,7 @@ hook.Add("ShouldDrawCrosshair", "HideCrosshair", function()
 
     return lia.config.CrosshairEnabled
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("HUDPaintBackground", "NewHUDPaintBackground", function()
     local localPlayer = LocalPlayer()
@@ -124,12 +134,14 @@ hook.Add("HUDPaintBackground", "NewHUDPaintBackground", function()
         lia.util.drawText(L"restricted", scrW * 0.5, scrH * 0.33, nil, 1, 1, "liaBigFont")
     end
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("CanDrawAmmoHUD", "NewCanDrawAmmoHUD", function(weapon)
     if IsValid(weapon) and weapon.DrawAmmo ~= false and LocalPlayer():Alive() then return true end
 
     return false
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("DrawAmmoHUD", "NewDrawAmmoHUD", function(weapon)
     if not IsValid(weapon) then return end
@@ -158,6 +170,7 @@ hook.Add("DrawAmmoHUD", "NewDrawAmmoHUD", function(weapon)
         lia.util.drawText(clip == -1 and count or clip .. "/" .. count, x + 64, y + 32, nil, 1, 1, "liaBigFont")
     end
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("DrawCharInfo", "NewDrawCharInfo", function(client, character, info)
     local injText, injColor = hook.Run("GetInjuredText", client)
@@ -166,6 +179,7 @@ hook.Add("DrawCharInfo", "NewDrawCharInfo", function(client, character, info)
         info[#info + 1] = {L(injText), injColor}
     end
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("DrawEntityInfo", "NewDrawEntityInfo", function(entity, alpha, position)
     if not entity.IsPlayer(entity) then return end
@@ -204,6 +218,7 @@ hook.Add("DrawEntityInfo", "NewDrawEntityInfo", function(entity, alpha, position
         y = y + ty
     end
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("ShouldDrawEntityInfo", "NewShouldDrawEntityInfo", function(entity)
     if entity.DrawEntityInfo then return true end

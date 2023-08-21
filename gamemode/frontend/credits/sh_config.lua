@@ -31,11 +31,13 @@ lia.config.GamemodeCreators = {
         color = Color(34, 139, 34)
     },
 }
+
 --------------------------------------------------------------------------------------------------------
 lia.config.contributors = {
     desc = "View All Contributors",
     url = "https://github.com/bleonheart/Lilia/graphs/contributors"
 }
+
 --------------------------------------------------------------------------------------------------------
 lia.config.discord = {
     desc = "Join the Lilia Development Discord",

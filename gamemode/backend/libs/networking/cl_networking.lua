@@ -4,6 +4,7 @@ function getNetVar(key, default)
 
     return value ~= nil and value or default
 end
+
 --------------------------------------------------------------------------------------------------------
 FindMetaTable("Player").getLocalVar = FindMetaTable("Entity").getNetVar
 --------------------------------------------------------------------------------------------------------

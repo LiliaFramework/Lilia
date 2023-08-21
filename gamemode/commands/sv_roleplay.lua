@@ -2,6 +2,7 @@
 lia.config.FactionBroadcastEnabled = true
 lia.config.AdvertisementEnabled = true
 lia.config.AdvertisementPrice = 25
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("roll", {
     adminOnly = false,
@@ -11,36 +12,41 @@ lia.command.add("roll", {
         lia.chat.send(client, "roll", math.random(0, math.min(tonumber(arguments[1]) or 100, 100)))
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("point", {
     adminOnly = false,
     privilege = "Basic User Permissions",
     syntax = "[number maximum]",
     onRun = function(client, arguments)
-	    local table = ents.FindInSphere(client:EyePos(), 200)
-	    local i = #table
+        local table = ents.FindInSphere(client:EyePos(), 200)
+        local i = #table
         local pointing = client:GetEyeTraceNoCursor()
-        
-		::GOTO_REVERSE::
+        ::GOTO_REVERSE::
+
         if table[i]:IsPlayer() then
             local trace = util.TraceLine{
-				start = client:EyePos(),
-				endpos = table[i]:EyePos(),
-				mask  = MASK_SOLID_BRUSHONLY,
-			}
-            if !trace.Hit then
+                start = client:EyePos(),
+                endpos = table[i]:EyePos(),
+                mask = MASK_SOLID_BRUSHONLY,
+            }
+
+            if not trace.Hit then
                 net.Start("Pointing")
-                    net.WriteFloat( (CurTime()+10) )
-                    net.WriteVector( pointing.HitPos  )
-                net.Send( table[i] )
+                net.WriteFloat(CurTime() + 10)
+                net.WriteVector(pointing.HitPos)
+                net.Send(table[i])
             end
-		end
-		i = i - 1
-    	if (i ~= 0) then
-		   	goto GOTO_REVERSE
-    	end
+        end
+
+        i = i - 1
+
+        if i ~= 0 then
+            goto GOTO_REVERSE
+        end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("dropmoney", {
     adminOnly = false,
@@ -58,6 +64,7 @@ lia.command.add("dropmoney", {
         client:doGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_GMOD_GESTURE_ITEM_PLACE, true)
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("chardesc", {
     adminOnly = false,
@@ -80,6 +87,7 @@ lia.command.add("chardesc", {
         return "@descChanged"
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("beclass", {
     adminOnly = false,
@@ -126,6 +134,7 @@ lia.command.add("beclass", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("chargetup", {
     adminOnly = false,
@@ -143,6 +152,7 @@ lia.command.add("chargetup", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("givemoney", {
     adminOnly = false,
@@ -172,6 +182,7 @@ lia.command.add("givemoney", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("bringlostitems", {
     adminOnly = false,
@@ -184,6 +195,7 @@ lia.command.add("bringlostitems", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("carddraw", {
     adminOnly = false,
@@ -197,6 +209,7 @@ lia.command.add("carddraw", {
         lia.chat.send(client, "rolld", msg)
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("fallover", {
     adminOnly = false,
@@ -238,6 +251,7 @@ lia.command.add("fallover", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("factionlist", {
     adminOnly = false,
@@ -249,6 +263,7 @@ lia.command.add("factionlist", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("getpos", {
     adminOnly = false,
@@ -257,6 +272,7 @@ lia.command.add("getpos", {
         client:ChatPrint("MY POSITION: " .. tostring(client:GetPos()))
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("doorname", {
     adminOnly = false,
@@ -269,6 +285,7 @@ lia.command.add("doorname", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 if lia.config.FactionBroadcastEnabled then
     lia.command.add("factionbroadcast", {
@@ -324,6 +341,7 @@ if lia.config.FactionBroadcastEnabled then
         end
     })
 end
+
 --------------------------------------------------------------------------------------------------------
 if lia.config.AdvertisementEnabled then
     lia.command.add("advertisement", {

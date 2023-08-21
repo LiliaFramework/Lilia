@@ -6,6 +6,7 @@ local function getValidStorage(client)
 
 	return storage
 end
+
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaStorageExit", function(_, client)
 	local storage = client.liaStorageEntity
@@ -16,6 +17,7 @@ net.Receive("liaStorageExit", function(_, client)
 
 	client.liaStorageEntity = nil
 end)
+
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaStorageUnlock", function(_, client)
 	local password = net.ReadString()
@@ -36,6 +38,7 @@ net.Receive("liaStorageUnlock", function(_, client)
 		client.lastPasswordAttempt = CurTime()
 	end
 end)
+
 --------------------------------------------------------------------------------------------------------
 net.Receive("liaStorageTransfer", function(_, client)
 	local itemID = net.ReadUInt(32)

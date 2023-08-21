@@ -224,14 +224,14 @@ function GM:PlayerInitialSpawn(client)
     end
 
     self:RegisterPlayer(client)
-    
+
     timer.Simple(1, function()
         if client:IsValid() and lia.config.DefaultStaff[client:SteamID()] then
             client:SetUserGroup(lia.config.DefaultStaff[client:SteamID()])
         end
     end)
-    hook.Run("PostPlayerInitialSpawn", client)    
-	hook.Run("ReRunNames")    
 
+    hook.Run("PostPlayerInitialSpawn", client)
+    hook.Run("ReRunNames")
 end
 --------------------------------------------------------------------------------------------------------

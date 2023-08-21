@@ -17,6 +17,7 @@ function MODULE:DrawPlayerRagdoll(entity)
 		entity.overridePAC3 = true
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:OnEntityCreated(entity)
 	local class = entity:GetClass()

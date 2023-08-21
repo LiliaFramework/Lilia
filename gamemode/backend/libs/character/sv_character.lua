@@ -37,6 +37,7 @@ function lia.char.create(data, callback)
         end)
     end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.char.restore(client, callback, noCache, id)
     local steamID64 = client:SteamID64()
@@ -135,6 +136,7 @@ function lia.char.restore(client, callback, noCache, id)
         end
     end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.char.cleanUpForPlayer(client)
     for _, charID in pairs(client.liaCharList or {}) do
@@ -146,6 +148,7 @@ function lia.char.cleanUpForPlayer(client)
         hook.Run("CharacterCleanUp", character)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 local function removePlayer(client)
     if client:getChar() then
@@ -155,6 +158,7 @@ local function removePlayer(client)
         netstream.Start(client, "charKick", nil, true)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.char.delete(id, client)
     assert(isnumber(id), "id must be a number")
@@ -192,41 +196,42 @@ function lia.char.delete(id, client)
 
     hook.Run("OnCharacterDelete", client, id)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.spawnProp(model, position, force, lifetime, angles, collision)
-	local entity = ents.Create("prop_physics")
-	entity:SetModel(model)
-	entity:Spawn()
+    local entity = ents.Create("prop_physics")
+    entity:SetModel(model)
+    entity:Spawn()
+    entity:SetCollisionGroup(collision or COLLISION_GROUP_WEAPON)
+    entity:SetAngles(angles or angle_zero)
 
-	entity:SetCollisionGroup(collision or COLLISION_GROUP_WEAPON)
-	entity:SetAngles(angles or angle_zero)
+    if type(position) == "Player" then
+        position = position:GetItemDropPos(entity)
+    end
 
-	if (type(position) == "Player") then
-		position = position:GetItemDropPos(entity)
-	end
+    entity:SetPos(position)
 
-	entity:SetPos(position)
+    if force then
+        local phys = entity:GetPhysicsObject()
 
-	if (force) then
-		local phys = entity:GetPhysicsObject()
+        if IsValid(phys) then
+            phys:ApplyForceCenter(force)
+        end
+    end
 
-		if (IsValid(phys)) then
-			phys:ApplyForceCenter(force)
-		end
-	end
+    if (lifetime or 0) > 0 then
+        timer.Simple(lifetime, function()
+            if IsValid(entity) then
+                entity:Remove()
+            end
+        end)
+    end
 
-	if ((lifetime or 0) > 0) then
-		timer.Simple(lifetime, function()
-			if (IsValid(entity)) then
-				entity:Remove()
-			end
-		end)
-	end
-
-	return entity
+    return entity
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.DebugLog(str)
-	MsgC(Color("sky_blue"), os.date("(%d/%m/%Y - %H:%M:%S)", os.time()), Color("yellow"), " [LOG] ", color_white, str, "\n")
+    MsgC(Color("sky_blue"), os.date("(%d/%m/%Y - %H:%M:%S)", os.time()), Color("yellow"), " [LOG] ", color_white, str, "\n")
 end
 --------------------------------------------------------------------------------------------------------

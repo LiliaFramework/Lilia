@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local backCam = backCam or nil
+
 --------------------------------------------------------------------------------------------------------
 local function getDarkPanel()
     local dark = vgui.Create("DPanel")
@@ -14,6 +15,7 @@ local function getDarkPanel()
 
     return dark
 end
+
 --------------------------------------------------------------------------------------------------------
 function QuickBackground(time, callback)
     local dark = getDarkPanel()
@@ -44,6 +46,7 @@ function QuickBackground(time, callback)
 
     return "CalcView", "Camerabackground"
 end
+
 --------------------------------------------------------------------------------------------------------
 function RemoveBackground(time, callback)
     local dark = getDarkPanel()

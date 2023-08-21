@@ -1,6 +1,7 @@
 --------------------------------------------------------------------------------------------------------
 local flo = 0
 local vec
+
 -------------------------------------------------------------------------------------------------------
 function GM:InitializedExtrasClient()
 	for k, v in pairs(lia.config.RemovableConsoleCommand) do
@@ -14,12 +15,14 @@ function GM:InitializedExtrasClient()
 	timer.Remove("HostnameThink")
 	timer.Remove("CheckHookTimes")
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:NetworkEntityCreated(entity)
 	if entity == LocalPlayer() then return end
 	if not entity:IsPlayer() then return end
 	hook.Run("PlayerModelChanged", entity, entity:GetModel())
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CharacterListLoaded()
 	timer.Create("liaWaitUntilPlayerValid", 1, 0, function()
@@ -28,6 +31,7 @@ function GM:CharacterListLoaded()
 		hook.Run("LiliaLoaded")
 	end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerBindPress(client, bind, pressed)
 	bind = bind:lower()
@@ -53,18 +57,21 @@ function GM:PlayerBindPress(client, bind, pressed)
 		lia.command.send("chargetup")
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:DrawLiliaModelView(panel, ent)
 	if IsValid(ent.weapon) then
 		ent.weapon:DrawModel()
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnChatReceived()
 	if system.IsWindows() and not system.HasFocus() then
 		system.FlashWindow()
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:DrawCharInfo(client, character, info)
 	if client:Team() == FACTION_STAFF then
@@ -78,27 +85,30 @@ function GM:DrawCharInfo(client, character, info)
 		end
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:HUDPaint()
-    net.Receive("Pointing", function(len)
-        flo = net.ReadFloat()
-        vec = net.ReadVector()
-    end)
-	
-    if flo >= CurTime() then
-        local toScream = vec:ToScreen()
-        local distance = 40/(LocalPlayer():GetPos():Distance(vec)/300)
-        surface.DrawCircle( toScream.x, toScream.y, distance, 0, 255, 0, 255 )
-    end
- end
+	net.Receive("Pointing", function(len)
+		flo = net.ReadFloat()
+		vec = net.ReadVector()
+	end)
+
+	if flo >= CurTime() then
+		local toScream = vec:ToScreen()
+		local distance = 40 / (LocalPlayer():GetPos():Distance(vec) / 300)
+		surface.DrawCircle(toScream.x, toScream.y, distance, 0, 255, 0, 255)
+	end
+end
+
 --------------------------------------------------------------------------------------------------------
-timer.Create('FixShadows', 10, 0, function() -- same
-	for _, player in ipairs( player.GetAll() ) do
+-- same
+timer.Create("FixShadows", 10, 0, function()
+	for _, player in ipairs(player.GetAll()) do
 		player:DrawShadow(false)
 	end
 
-	for _, v in ipairs( ents.FindByClass('prop_door_rotating') ) do
-		if IsValid(v) && v:IsDoor() then
+	for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
+		if IsValid(v) and v:IsDoor() then
 			v:DrawShadow(false)
 		end
 	end

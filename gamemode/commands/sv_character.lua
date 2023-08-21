@@ -25,6 +25,7 @@ lia.command.add("charban", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charsetdesc", {
     adminOnly = true,
@@ -50,6 +51,7 @@ lia.command.add("charsetdesc", {
         return "Successfully changed " .. target:Nick() .. "'s description"
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("plytransfer", {
     adminOnly = true,
@@ -87,6 +89,7 @@ lia.command.add("plytransfer", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charsetname", {
     adminOnly = true,
@@ -110,6 +113,7 @@ lia.command.add("charsetname", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("chargetmodel", {
     adminOnly = true,
@@ -125,6 +129,7 @@ lia.command.add("chargetmodel", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charsetmodel", {
     adminOnly = true,
@@ -141,6 +146,7 @@ lia.command.add("charsetmodel", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charsetbodygroup", {
     adminOnly = true,
@@ -169,6 +175,7 @@ lia.command.add("charsetbodygroup", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charsetskin", {
     adminOnly = true,
@@ -185,6 +192,7 @@ lia.command.add("charsetskin", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("chargetmoney", {
     adminOnly = true,
@@ -222,6 +230,7 @@ lia.command.add("charsetmoney", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charsetattrib", {
     superAdminOnly = true,
@@ -251,6 +260,7 @@ lia.command.add("charsetattrib", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charaddattrib", {
     superAdminOnly = true,
@@ -280,6 +290,7 @@ lia.command.add("charaddattrib", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("checkinventory", {
     superAdminOnly = true,
@@ -302,6 +313,7 @@ lia.command.add("checkinventory", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("clearinv", {
     superAdminOnly = true,
@@ -319,6 +331,7 @@ lia.command.add("clearinv", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("flaggive", {
     adminOnly = true,
@@ -355,6 +368,7 @@ lia.command.add("flaggive", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("flagtake", {
     adminOnly = true,
@@ -377,6 +391,7 @@ lia.command.add("flagtake", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charkick", {
     adminOnly = true,
@@ -398,6 +413,7 @@ lia.command.add("charkick", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("plywhitelist", {
     adminOnly = true,
@@ -417,6 +433,7 @@ lia.command.add("plywhitelist", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("plyunwhitelist", {
     adminOnly = true,
@@ -436,6 +453,7 @@ lia.command.add("plyunwhitelist", {
         end
     end
 })
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add("charunban", {
     syntax = "<string name>",

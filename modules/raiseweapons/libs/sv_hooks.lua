@@ -8,6 +8,7 @@ function MODULE:KeyPress(client, key)
 		end)
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:PlayerSwitchWeapon(client, oldWeapon, newWeapon)
 	client:setWepRaised(false)

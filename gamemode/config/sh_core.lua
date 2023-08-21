@@ -21,7 +21,6 @@ function lia.config.LoadCore()
         ["STEAM_0:1:176123778"] = "superadmin",
     }
 
-
     lia.config.MaxCharacters = 5
     lia.config.SalaryOverride = true
     lia.config.SalaryInterval = 300
@@ -56,6 +55,7 @@ function lia.config.LoadCore()
         ["Gamemaster"] = {"Gamemaster", Color(150, 75, 0)},
         ["Junior Gamemaster"] = {"Junior Gamemaster", Color(150, 75, 0)},
     }
+
     lia.config.ConsoleCommand = {
         ["gmod_mcore_test"] = "1",
         ["r_shadows"] = "0",
@@ -77,7 +77,7 @@ function lia.config.LoadCore()
         ["r_lod"] = "-1",
         ["lia_cheapblur"] = "1",
     }
-    
+
     lia.config.RemovableHooks = {
         ["StartChat"] = "StartChatIndicator",
         ["FinishChat"] = "EndChatIndicator",
@@ -136,7 +136,7 @@ function lia.config.LoadCore()
         ["func_tracktrain"] = true,
         ["point_template"] = true,
     }
-    
+
     lia.config.DevServerIP = "45.61.170.66"
     lia.config.DevServerPort = "27270"
     --[[

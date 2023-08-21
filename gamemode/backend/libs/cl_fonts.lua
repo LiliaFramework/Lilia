@@ -1266,6 +1266,7 @@ function GM:LoadLiliaFonts(font, genericFont)
         extended = true,
         weight = 1000
     })
+
     surface.CreateFont("WB_Small", {
         font = fontStr,
         size = 17
@@ -1292,7 +1293,7 @@ function GM:LoadLiliaFonts(font, genericFont)
         font = fontStr,
         size = 54
     })
-    
+
     surface.CreateFont("wolficon_normal", {
         font = ICON.font,
         size = 25,
@@ -1320,6 +1321,7 @@ function GM:LoadLiliaFonts(font, genericFont)
         weight = 400,
         antialias = true
     })
+
     hook.Run("LoadFonts", oldFont, oldGenericFont)
 end
 --------------------------------------------------------------------------------------------------------

@@ -2,11 +2,14 @@
 local GM = GM
 --------------------------------------------------------------------------------------------------------
 lia.config.tblPlayers = lia.config.tblPlayers or {}
+
 lia.config.Perfomancekillers = {"class C_PhysPropClientside", "class C_ClientRagdoll"}
+
 --------------------------------------------------------------------------------------------------------
 function GM:GetPlayerData(pPlayer)
     return lia.config.tblPlayers[pPlayer:EntIndex()]
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:RegisterPlayer(pPlayer)
     lia.config.tblPlayers[pPlayer:EntIndex()] = {
@@ -17,12 +20,17 @@ function GM:RegisterPlayer(pPlayer)
     }
 
     self:PlayerUpdateTransmitStates(pPlayer)
-    timer.Simple(lia.config.intSpawnDelay, function() self:BeginExpand(pPlayer) end)
+
+    timer.Simple(lia.config.intSpawnDelay, function()
+        self:BeginExpand(pPlayer)
+    end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:RemovePlayer(pPlayer)
     lia.config.tblPlayers[pPlayer:EntIndex()] = nil
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerUpdateTransmitStates(pPlayer, intRange)
     if intRange then
@@ -59,6 +67,7 @@ function GM:PlayerUpdateTransmitStates(pPlayer, intRange)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:BeginExpand(pPlayer)
     local data = self:GetPlayerData(pPlayer)
@@ -66,13 +75,17 @@ function GM:BeginExpand(pPlayer)
     data.Expanding = true
     local timerID = "PVS:" .. pPlayer:EntIndex()
     local currentRange = 0
+
     timer.Create(timerID, lia.config.intUpdateRate, 0, function()
         if not IsValid(pPlayer) then
             timer.Remove(timerID)
+
             return
         end
+
         currentRange = math.min(lia.config.intUpdateDistance, currentRange + lia.config.intUpdateAmount)
         self:PlayerUpdateTransmitStates(pPlayer, currentRange)
+
         if currentRange == lia.config.intUpdateDistance then
             timer.Remove(timerID)
             data.Expanded = true
@@ -80,10 +93,12 @@ function GM:BeginExpand(pPlayer)
         end
     end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerExpandedUpdate()
     for k, data in pairs(lia.config.tblPlayers) do
         if not data or not data.Expanded then continue end
+
         if not IsValid(data.Player) then
             lia.config.tblPlayers[k] = nil
             continue
@@ -92,25 +107,32 @@ function GM:PlayerExpandedUpdate()
         self:PlayerUpdateTransmitStates(data.Player, lia.config.intUpdateDistance)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:EntityRemoved(ent)
     if not ent:IsPlayer() then return end
     self:RemovePlayer(ent)
 end
+
 --------------------------------------------------------------------------------------------------------
 timer.Create("CleanupGarbage", 60, 0, function()
-        for _, v in ipairs(ents.GetAll()) do
-            if table.HasValue(lia.config.Perfomancekillers, v:GetClass()) then
-                SafeRemoveEntity(v)
-                RunConsoleCommand("r_cleardecals")
-            end
+    for _, v in ipairs(ents.GetAll()) do
+        if table.HasValue(lia.config.Perfomancekillers, v:GetClass()) then
+            SafeRemoveEntity(v)
+            RunConsoleCommand("r_cleardecals")
         end
-    end)
+    end
+end)
+
 --------------------------------------------------------------------------------------------------------
 function widgets.PlayerTick()
 end
+
 --------------------------------------------------------------------------------------------------------
-timer.Create("GM:PlayerExpandedUpdate", 1, 0, function() GM:PlayerExpandedUpdate() end)
+timer.Create("GM:PlayerExpandedUpdate", 1, 0, function()
+    GM:PlayerExpandedUpdate()
+end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Remove("PlayerTick", "TickWidgets")
 --------------------------------------------------------------------------------------------------------

@@ -16,21 +16,25 @@ local song
 local animCallback
 local pointID = 0
 local curPoint
+
 --------------------------------------------------------------------------------------------------------
 function ANIM:CreateDermaOverlay()
     if self.overlay and IsValid(self.overlay) then return end
     self.overlay = vgui.Create("CinematicOverlay")
     self.overlay:SetAnimSettings(anim.settings)
 end
+
 --------------------------------------------------------------------------------------------------------
 function ANIM:ClearDerma()
     if self.overlay and IsValid(self.overlay) then
         self.overlay:Remove()
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 local qa = {}
 qa.run = false
+
 --------------------------------------------------------------------------------------------------------
 function qa:Think()
     if not self.run then return end
@@ -45,11 +49,13 @@ function qa:Think()
         return posLerp, angLerp
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function qa:Start()
     self.start = CurTime()
     self.run = true
 end
+
 --------------------------------------------------------------------------------------------------------
 function qa:Init(time, pos1, ang1, pos2, ang2)
     local nqa = table.Copy(qa)
@@ -61,16 +67,19 @@ function qa:Init(time, pos1, ang1, pos2, ang2)
 
     return nqa
 end
+
 --------------------------------------------------------------------------------------------------------
 function ANIM:CreateQuickAnim(time, pos1, ang1, pos2, ang2)
     return qa:Init(time, pos1, ang1, pos2, ang2)
 end
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("RenderScreenspaceEffects", "drawTransitions", function()
     if not ANIM.running then return end
     surface.SetDrawColor(0, 0, 0, ANIM.curAlpha or 0)
     surface.DrawRect(0, 0, ScrW(), ScrH())
 end)
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("CalcView", "AnimationRun", function(ply, pos, angles, fov)
     if not ANIM.running then return end
@@ -149,6 +158,7 @@ hook.Add("CalcView", "AnimationRun", function(ply, pos, angles, fov)
         print("Scene " .. pointID .. "/" .. table.Count(anim.points))
     end
 end)
+
 --------------------------------------------------------------------------------------------------------
 --Library to control the animation
 function ANIM:Run(animName, restart, callback)
@@ -219,6 +229,7 @@ function ANIM:Run(animName, restart, callback)
         return duration
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ANIM:Stop(smooth)
     local function resetVals(obj)
@@ -263,6 +274,7 @@ function ANIM:Stop(smooth)
         end)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ANIM:QuickAnim(time, pos1, pos2, ang1, ang2)
     if not self.q then
@@ -294,6 +306,7 @@ function ANIM:QuickAnim(time, pos1, pos2, ang1, ang2)
         return v, a, q
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ANIM:Add(animTable)
     if not animTable.settings then
@@ -306,14 +319,17 @@ function ANIM:Add(animTable)
     self.anims[name] = animTable
     MsgC(Color(0, 255, 0), "[ANIM] ", color_white, "Added animation " .. name .. "\n")
 end
+
 --------------------------------------------------------------------------------------------------------
 concommand.Add("forceStartAnimation", function(ply, cmd, args)
     ANIM:Run(args[1])
 end)
+
 --------------------------------------------------------------------------------------------------------
 concommand.Add("forceStopAnimation", function()
     ANIM:Stop()
 end)
+
 --------------------------------------------------------------------------------------------------------
 cprint("Loaded Animation Library")
 --------------------------------------------------------------------------------------------------------

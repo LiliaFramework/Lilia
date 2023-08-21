@@ -1,6 +1,7 @@
 --------------------------------------------------------------------------------------------------------
 lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
+
 --------------------------------------------------------------------------------------------------------
 function lia.class.loadFromDir(directory)
     for k, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
@@ -47,6 +48,7 @@ function lia.class.loadFromDir(directory)
         CLASS = nil
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.class.canBe(client, class)
     local info = lia.class.list[class]
@@ -62,10 +64,12 @@ function lia.class.canBe(client, class)
 
     return info:onCanBe(client)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.class.get(identifier)
     return lia.class.list[identifier]
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.class.getPlayers(class)
     local players = {}

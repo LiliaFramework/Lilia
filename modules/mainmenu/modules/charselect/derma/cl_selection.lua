@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	self:Dock(FILL)
@@ -40,6 +41,7 @@ function PANEL:Init()
 		self:createCharacterSlots()
 	end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:createCharacterSlots()
 	self.scroll:Clear()
@@ -59,6 +61,7 @@ function PANEL:createCharacterSlots()
 		end
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:onCharacterSelected(character)
 	if self.choosing then return end
@@ -83,6 +86,7 @@ function PANEL:onCharacterSelected(character)
 		lia.util.notify(err)
 	end)
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaCharacterSelection", PANEL, "EditablePanel")
 --------------------------------------------------------------------------------------------------------

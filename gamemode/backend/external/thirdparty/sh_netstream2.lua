@@ -10,14 +10,17 @@
 --]]
 --------------------------------------------------------------------------------------------------------
 local type, error, pcall, pairs, _player = type, error, pcall, pairs, player
+
 --------------------------------------------------------------------------------------------------------
 if not pon then
     include("sh_pon.lua")
 end
+
 --------------------------------------------------------------------------------------------------------
 AddCSLuaFile()
 netstream = netstream or {}
 netstream.stored = netstream.stored or {}
+
 --------------------------------------------------------------------------------------------------------
 -- A function to split data for a data stream.
 function netstream.Split(data)
@@ -39,13 +42,16 @@ function netstream.Split(data)
 
     return result
 end
+
 --------------------------------------------------------------------------------------------------------
 function netstream.Hook(name, Callback)
     netstream.stored[name] = Callback
 end
+
 --------------------------------------------------------------------------------------------------------
 if SERVER then
     util.AddNetworkString("NetStreamDS")
+
     function netstream.Start(player, name, ...)
         local recipients = {}
         local bShouldSend = false

@@ -1,6 +1,7 @@
 --------------------------------------------------------------------------------------------------------
 lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
+
 --------------------------------------------------------------------------------------------------------
 function lia.command.add(command, data)
     data.syntax = data.syntax or "[none]"
@@ -49,6 +50,7 @@ function lia.command.add(command, data)
         lia.command.list[command:lower()] = data
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.command.hasAccess(client, command)
     command = lia.command.list[command:lower()]
@@ -63,6 +65,7 @@ function lia.command.hasAccess(client, command)
 
     return hook.Run("CanPlayerUseCommand", client, command) or false
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.command.extractArgs(text)
     local skip = 0

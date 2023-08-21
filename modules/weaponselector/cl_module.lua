@@ -8,6 +8,7 @@ MODULE.fadeTime = MODULE.fadeTime or 0
 --------------------------------------------------------------------------------------------------------
 local IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs = IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs
 local RunConsoleCommand, LocalPlayer, math, color_white, surface = RunConsoleCommand, LocalPlayer, math, color_white, surface
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:HUDPaint()
     local frameTime = FrameTime()
@@ -90,6 +91,7 @@ function MODULE:onIndexChanged()
         client:EmitSound(source or "common/talk.wav", 50, pitch or 180)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:PlayerBindPress(client, bind, pressed)
     local weapon = client:GetActiveWeapon()

@@ -40,116 +40,123 @@
 --------------------------------------------------------------------------------------------------------
 PseudoRNG = {}
 PseudoRNG.__index = PseudoRNG
+
 --------------------------------------------------------------------------------------------------------
-function PseudoRNG.Create( chance )
+function PseudoRNG.Create(chance)
 	local rng = {}
 	setmetatable(rng, PseudoRNG)
+	rng:Init(math.max(chance, 0.0001))
 
-	rng:Init( math.max(chance, 0.0001) )
 	return rng
 end
+
 --------------------------------------------------------------------------------------------------------
-function PseudoRNG:Init( chance )
+function PseudoRNG:Init(chance)
 	self.failedTries = 0
-	self.cons = PseudoRNG:CFromP( chance )
+	self.cons = PseudoRNG:CFromP(chance)
 end
+
 --------------------------------------------------------------------------------------------------------
-function PseudoRNG:CFromP( P )
+function PseudoRNG:CFromP(P)
 	local Cupper = P
 	local Clower = 0
 	local Cmid = 0
-	
 	local p1 = 0
 	local p2 = 1
-	
+
 	while true do
 		Cmid = (Cupper + Clower) / 2
-		p1 = PseudoRNG:PFromC( Cmid )
-		if math.abs(p1 - p2) <= 0 then
-			break
-		end
-		
+		p1 = PseudoRNG:PFromC(Cmid)
+		if math.abs(p1 - p2) <= 0 then break end
+
 		if p1 > P then
 			Cupper = Cmid
 		else
 			Clower = Cmid
 		end
-		
+
 		p2 = p1
 	end
-	
+
 	return Cmid
 end
+
 --------------------------------------------------------------------------------------------------------
-function PseudoRNG:PFromC( C )
+function PseudoRNG:PFromC(C)
 	local pOnN = 0
 	local pByN = 0
 	local sumPByN = 0
+	local maxFails = math.ceil(1 / C)
 
-	local maxFails = math.ceil( 1/ C )
-
-	for N=1,maxFails do
+	for N = 1, maxFails do
 		pOnN = math.min(1, N * C) * (1 - pByN)
 		pByN = pByN + pOnN
 		sumPByN = sumPByN + N * pOnN
 	end
 
-	return 1/sumPByN
+	return 1 / sumPByN
 end
+
 --------------------------------------------------------------------------------------------------------
 function PseudoRNG:Next()
 	local P = self.cons * (self.failedTries + 1)
+
 	if math.random() <= P then
 		self.failedTries = 0
+
 		return true
 	else
 		self.failedTries = self.failedTries + 1
+
 		return false
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 ------------------------------------
 -- Pseudo-Random Choice - choose between a number of probabilities
 ------------------------------------
 ChoicePseudoRNG = {}
 ChoicePseudoRNG.__index = ChoicePseudoRNG
+
 --construct a ChoicePseudoRNG from a list of probabilities, they should add up to 1 .
-function ChoicePseudoRNG.Create( probs )
+function ChoicePseudoRNG.Create(probs)
 	local rng = {}
 	setmetatable(rng, ChoicePseudoRNG)
+	rng:Init(probs)
 
-	rng:Init( probs )
 	return rng
 end
+
 --------------------------------------------------------------------------------------------------------
-function ChoicePseudoRNG:Init( probs )
+function ChoicePseudoRNG:Init(probs)
 	self.probs = {} --the probability the drop should be around
 	self.curProbs = {} --the current probability
 	self.cons = {} --the minimum value for this probability
 	self.total = 0
 
-	for _, chance in pairs( probs ) do
-		self.probs[#self.probs+1] = chance
-		self.curProbs[#self.curProbs+1] = chance
-		self.cons[#self.cons+1] = PseudoRNG:CFromP( chance ) -- calculate the minimum
+	for _, chance in pairs(probs) do
+		self.probs[#self.probs + 1] = chance
+		self.curProbs[#self.curProbs + 1] = chance
+		self.cons[#self.cons + 1] = PseudoRNG:CFromP(chance) -- calculate the minimum
 		self.total = self.total + chance
 	end
 
 	--scramble the distribution a bit before using
-	for i=0, math.random(5, 16) do
+	for i = 0, math.random(5, 16) do
 		self:Choose()
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 --Use this to choose one of the elements, returns the index of the chosen item (starts at 1!)
 function ChoicePseudoRNG:Choose()
 	local rand = math.random() * self.total
 	local cumulative = 0
-
 	local choice = #self.cons
 
 	--loop over all probabilities we have
-	for i=1,#self.probs do
+	for i = 1, #self.probs do
 		--the number we generated is below the current probability and all previous probabilities
 		--we choose this i
 		if cumulative + self.curProbs[i] > rand then
@@ -163,12 +170,11 @@ function ChoicePseudoRNG:Choose()
 
 	--reduce the probability of the item we just chose
 	self.curProbs[choice] = self.cons[choice]
-
 	--update our total value
 	self.total = self.cons[choice]
 
 	--distribute the 'extra probability' we got from our choice over all indices we didn't choose
-	for i=1,#self.cons do
+	for i = 1, #self.cons do
 		if i ~= choice then
 			--use the P(N) = C * N formula to set a new percentage for each non-chosen element
 			self.curProbs[i] = self.curProbs[i] + self.cons[i]

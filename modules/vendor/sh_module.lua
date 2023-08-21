@@ -11,8 +11,10 @@ lia.util.include("sv_data.lua")
 lia.util.include("sv_hooks.lua")
 lia.util.include("cl_hooks.lua")
 lia.util.include("sh_meta.lua")
+
 --------------------------------------------------------------------------------------------------------
 lia.config.VendorClick = {"buttons/button15.wav", 30, 250}
+
 lia.config.VendorEditorAllowed = {
     ["superadmin"] = true,
     ["admin"] = false,

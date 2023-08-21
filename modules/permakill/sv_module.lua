@@ -7,6 +7,7 @@ function MODULE:PlayerDeath(client, inflictor, attacker)
         character:setData("permakilled", true)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:PlayerSpawn(client)
     local character = client:getChar()

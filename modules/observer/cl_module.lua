@@ -4,6 +4,7 @@ LIA_CVAR_ADMINESPAVANCED = CreateClientConVar("lia_obsespadvanced", 1, true, tru
 LIA_CVAR_ITEMESP = CreateClientConVar("lia_obsitemesp", 1, true, true)
 local client, sx, sy, scrPos, marginx, marginy, x, y, teamColor, distance, factor, size, alpha
 local dimDistance = 1024
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:HUDPaint()
     client = LocalPlayer()
@@ -57,6 +58,7 @@ function MODULE:HUDPaint()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:SetupQuickMenu(menu)
     if LocalPlayer():IsAdmin() then
@@ -97,6 +99,7 @@ function MODULE:SetupQuickMenu(menu)
         menu:addSpacer()
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:ShouldDrawEntityInfo(entity)
     if IsValid(entity) then

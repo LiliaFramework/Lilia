@@ -28,6 +28,7 @@ function GM:PlayerSpawnNPC(client)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnProp(client)
     if not client:getChar() then return end
@@ -58,6 +59,7 @@ function GM:PlayerSpawnProp(client)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnRagdoll(client)
     if not client:getChar() then return end
@@ -86,6 +88,7 @@ function GM:PlayerSpawnRagdoll(client)
         return client:IsAdmin() or client:getChar():hasFlags("r")
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnSWEP(client)
     if not client:getChar() then return end
@@ -116,6 +119,7 @@ function GM:PlayerSpawnSWEP(client)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnEffect(client)
     if not client:getChar() then return end
@@ -146,6 +150,7 @@ function GM:PlayerSpawnEffect(client)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnSENT(client)
     if not client:getChar() then return end
@@ -176,6 +181,7 @@ function GM:PlayerSpawnSENT(client)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnVehicle(client, model, name, data)
     if not client:getChar() then return end
@@ -206,6 +212,7 @@ function GM:PlayerSpawnVehicle(client, model, name, data)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CanTool(client, trace, tool)
     local entity = trace.Entity
@@ -253,6 +260,7 @@ function GM:CanTool(client, trace, tool)
         return client:getChar():hasFlags("t") or client:IsSuperAdmin()
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PhysgunPickup(client, entity)
     if client:IsSuperAdmin() then
@@ -269,6 +277,7 @@ function GM:PhysgunPickup(client, entity)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CanProperty(client, property, entity)
     if not client:getChar() then return end

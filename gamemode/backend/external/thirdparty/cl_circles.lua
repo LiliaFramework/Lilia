@@ -1,14 +1,13 @@
 local _R = debug.getregistry()
 if _R.Circles then return _R.Circles end
-
 local CIRCLE = {}
 CIRCLE.__index = CIRCLE
-
 CIRCLE_FILLED = 0
 CIRCLE_OUTLINED = 1
 CIRCLE_BLURRED = 2
+local New
 
-local New do
+do
 	local err_number = "bad argument #%i to 'New' (number expected, got %s)"
 
 	function New(t, r, x, y, ...)
@@ -16,26 +15,24 @@ local New do
 		assert(isnumber(r), string.format(err_number, 2, type(r)))
 		assert(isnumber(x), string.format(err_number, 3, type(x)))
 		assert(isnumber(y), string.format(err_number, 4, type(y)))
-
 		local circle = setmetatable({}, CIRCLE)
-
 		circle:SetType(t)
 		circle:SetRadius(r)
 		circle:SetX(x)
 		circle:SetY(y)
 
-		circle:SetVertices({Count = 0})
+		circle:SetVertices({
+			Count = 0
+		})
 
 		if t == CIRCLE_OUTLINED then
 			local outline_width = ...
 			assert(outline_width == nil or isnumber(outline_width), string.format(err_number, 5, type(outline_width)))
-
 			circle:SetOutlineWidth(outline_width)
 		elseif t == CIRCLE_BLURRED then
 			local blur_layers, blur_density = ...
 			assert(blur_layers == nil or isnumber(blur_layers), string.format(err_number, 5, type(blur_layers)))
 			assert(blur_density == nil or isnumber(blur_density), string.format(err_number, 6, type(blur_density)))
-
 			circle:SetBlurLayers(blur_layers)
 			circle:SetBlurDensity(blur_density)
 		end
@@ -44,7 +41,9 @@ local New do
 	end
 end
 
-local RotateVertices do
+local RotateVertices
+
+do
 	local err_table = "bad argument #1 to 'RotateVertices' (table expected, got %s)"
 	local err_number = "bad argument #%i to 'RotateVertices' (number expected, got %s)"
 
@@ -53,7 +52,6 @@ local RotateVertices do
 		assert(isnumber(ox), string.format(err_number, 2, type(ox)))
 		assert(isnumber(oy), string.format(err_number, 3, type(oy)))
 		assert(isnumber(rotation), string.format(err_number, 4, type(rotation)))
-
 		local rotation = math.rad(rotation)
 		local c = math.cos(rotation)
 		local s = math.sin(rotation)
@@ -61,17 +59,14 @@ local RotateVertices do
 		for i = 1, vertices.Count or #vertices do
 			local vertex = vertices[i]
 			local vx, vy = vertex.x, vertex.y
-
 			vx = vx - ox
 			vy = vy - oy
-
 			vertex.x = ox + (vx * c - vy * s)
 			vertex.y = oy + (vx * s + vy * c)
 
 			if rotate_uv == false then
 				local u, v = vertex.u, vertex.v
 				u, v = u - 0.5, v - 0.5
-
 				vertex.u = 0.5 + (u * c - v * s)
 				vertex.v = 0.5 + (u * s + v * c)
 			end
@@ -79,7 +74,9 @@ local RotateVertices do
 	end
 end
 
-local CalculateVertices do
+local CalculateVertices
+
+do
 	local err_number = "bad argument #%i to 'CalculateVertices' (number expected, got %s)"
 
 	function CalculateVertices(x, y, radius, rotation, start_angle, end_angle, distance, rotate_uv)
@@ -91,16 +88,17 @@ local CalculateVertices do
 		assert(isnumber(end_angle), string.format(err_number, 6, type(end_angle)))
 		assert(isnumber(distance), string.format(err_number, 7, type(distance)))
 
-		local vertices = {Count = 0}
-		local step = distance / radius
+		local vertices = {
+			Count = 0
+		}
 
+		local step = distance / radius
 		local rad_start_angle = math.rad(start_angle)
 		local rad_end_angle = math.rad(end_angle)
 		local rad_rotation = math.rad(rotation)
 
 		for a = rad_start_angle, rad_end_angle + step, step do
 			a = math.min(a, rad_end_angle)
-
 			local c = math.cos(a + rad_rotation)
 			local s = math.sin(a + rad_rotation)
 
@@ -123,8 +121,10 @@ local CalculateVertices do
 
 		if end_angle - start_angle ~= 360 then
 			table.insert(vertices, 1, {
-				x = x, y = y,
-				u = 0.5, v = 0.5,
+				x = x,
+				y = y,
+				u = 0.5,
+				v = 0.5,
 			})
 
 			vertices.Count = vertices.Count + 1
@@ -146,29 +146,19 @@ function CIRCLE:Copy()
 end
 
 function CIRCLE:IsValid()
-	return (
-		not self.m_Dirty and
-		self.m_Vertices.Count >= 3 and
-		self.m_Radius >= 1 and
-		self.m_Distance >= 1
-	)
+	return not self.m_Dirty and self.m_Vertices.Count >= 3 and self.m_Radius >= 1 and self.m_Distance >= 1
 end
 
 function CIRCLE:Calculate()
 	local rotate_uv = self.m_RotateMaterial
-
 	local radius = self.m_Radius
 	local x, y = self.m_X, self.m_Y
-
 	local rotation = self.m_Rotation
 	local start_angle = self.m_StartAngle
 	local end_angle = self.m_EndAngle
-
 	local distance = self.m_Distance
-
 	assert(radius >= 1, string.format("circle radius should be >= 1 (%.4f)", radius))
 	assert(distance >= 1, string.format("circle distance should be >= 1 (%.4f)", distance))
-
 	self:SetVertices(CalculateVertices(x, y, radius, rotation, start_angle, end_angle, distance, rotate_uv))
 
 	if self.m_Type == CIRCLE_OUTLINED then
@@ -180,13 +170,10 @@ function CIRCLE:Calculate()
 		else
 			if inner_r >= 1 then
 				inner:SetType(CIRCLE_FILLED)
-
 				inner:SetRadius(inner_r)
 				inner:SetAngles(start_angle, end_angle)
-
 				inner:SetColor(false)
 				inner:SetMaterial(false)
-
 				inner:SetShouldRender(true)
 			else
 				inner:SetShouldRender(false)
@@ -211,9 +198,7 @@ do
 			self:Calculate()
 		end
 
-		if not self.m_ShouldRender or not self:IsValid() then
-			return false
-		end
+		if not self.m_ShouldRender or not self:IsValid() then return false end
 
 		do
 			local col, mat = self.m_Color, self.m_Material
@@ -232,53 +217,42 @@ do
 
 		if self.m_Type == CIRCLE_OUTLINED then
 			render.ClearStencil()
-
 			render.SetStencilEnable(true)
-				render.SetStencilTestMask(0xFF)
-				render.SetStencilWriteMask(0xFF)
-				render.SetStencilReferenceValue(0x01)
-
-				render.SetStencilCompareFunction(STENCIL_NEVER)
-				render.SetStencilFailOperation(STENCIL_REPLACE)
-				render.SetStencilZFailOperation(STENCIL_REPLACE)
-
-				self.m_ChildCircle()
-
-				render.SetStencilCompareFunction(STENCIL_GREATER)
-				render.SetStencilFailOperation(STENCIL_KEEP)
-				render.SetStencilZFailOperation(STENCIL_KEEP)
-
-				surface.DrawPoly(self.m_Vertices)
+			render.SetStencilTestMask(0xFF)
+			render.SetStencilWriteMask(0xFF)
+			render.SetStencilReferenceValue(0x01)
+			render.SetStencilCompareFunction(STENCIL_NEVER)
+			render.SetStencilFailOperation(STENCIL_REPLACE)
+			render.SetStencilZFailOperation(STENCIL_REPLACE)
+			self.m_ChildCircle()
+			render.SetStencilCompareFunction(STENCIL_GREATER)
+			render.SetStencilFailOperation(STENCIL_KEEP)
+			render.SetStencilZFailOperation(STENCIL_KEEP)
+			surface.DrawPoly(self.m_Vertices)
 			render.SetStencilEnable(false)
 		elseif self.m_Type == CIRCLE_BLURRED then
 			render.ClearStencil()
-
 			render.SetStencilEnable(true)
-				render.SetStencilTestMask(0xFF)
-				render.SetStencilWriteMask(0xFF)
-				render.SetStencilReferenceValue(0x01)
+			render.SetStencilTestMask(0xFF)
+			render.SetStencilWriteMask(0xFF)
+			render.SetStencilReferenceValue(0x01)
+			render.SetStencilCompareFunction(STENCIL_NEVER)
+			render.SetStencilFailOperation(STENCIL_REPLACE)
+			render.SetStencilZFailOperation(STENCIL_REPLACE)
+			surface.DrawPoly(self.m_Vertices)
+			render.SetStencilCompareFunction(STENCIL_LESSEQUAL)
+			render.SetStencilFailOperation(STENCIL_KEEP)
+			render.SetStencilZFailOperation(STENCIL_KEEP)
+			surface.SetMaterial(blur)
+			local sw, sh = ScrW(), ScrH()
 
-				render.SetStencilCompareFunction(STENCIL_NEVER)
-				render.SetStencilFailOperation(STENCIL_REPLACE)
-				render.SetStencilZFailOperation(STENCIL_REPLACE)
+			for i = 1, self.m_BlurLayers do
+				blur:SetFloat("$blur", (i / self.m_BlurLayers) * self.m_BlurDensity)
+				blur:Recompute()
+				render.UpdateScreenEffectTexture()
+				surface.DrawTexturedRect(0, 0, sw, sh)
+			end
 
-				surface.DrawPoly(self.m_Vertices)
-
-				render.SetStencilCompareFunction(STENCIL_LESSEQUAL)
-				render.SetStencilFailOperation(STENCIL_KEEP)
-				render.SetStencilZFailOperation(STENCIL_KEEP)
-
-				surface.SetMaterial(blur)
-
-				local sw, sh = ScrW(), ScrH()
-
-				for i = 1, self.m_BlurLayers do
-					blur:SetFloat("$blur", (i / self.m_BlurLayers) * self.m_BlurDensity)
-					blur:Recompute()
-
-					render.UpdateScreenEffectTexture()
-					surface.DrawTexturedRect(0, 0, sw, sh)
-				end
 			render.SetStencilEnable(false)
 		else
 			surface.DrawPoly(self.m_Vertices)
@@ -295,15 +269,12 @@ do
 		assert(isnumber(x), string.format(err_number, 1, type(x)))
 		assert(isnumber(y), string.format(err_number, 2, type(y)))
 		if x == 0 and y == 0 then return end
-
 		self.m_X = self.m_X + x
 		self.m_Y = self.m_Y + y
-
 		if not self:IsValid() then return end
 
 		for i = 1, self.m_Vertices.Count do
 			local vertex = self.m_Vertices[i]
-
 			vertex.x = vertex.x + x
 			vertex.y = vertex.y + y
 		end
@@ -320,16 +291,12 @@ do
 	function CIRCLE:Scale(scale)
 		assert(isnumber(scale), string.format(err_number, type(scale)))
 		if scale == 1 then return end
-
 		self.m_Radius = self.m_Radius * scale
-
 		if not self:IsValid() then return end
-
 		local x, y = self.m_X, self.m_Y
 
 		for i = 1, self.m_Vertices.Count do
 			local vertex = self.m_Vertices[i]
-
 			vertex.x = x + (vertex.x - x) * scale
 			vertex.y = y + (vertex.y - y) * scale
 		end
@@ -346,15 +313,11 @@ do
 	function CIRCLE:Rotate(rotation)
 		assert(isnumber(rotation), string.format(err_number, type(rotation)))
 		if rotation == 0 then return end
-
 		self.m_Rotation = self.m_Rotation + rotation
-
 		if not self:IsValid() then return end
-
 		local x, y = self.m_X, self.m_Y
 		local vertices = self.m_Vertices
 		local rotate_uv = self.m_RotateMaterial
-
 		RotateVertices(vertices, x, y, rotation, rotate_uv)
 
 		if self.m_Type == CIRCLE_OUTLINED and self.m_ChildCircle then
@@ -395,7 +358,6 @@ do
 
 	local function OffsetVerticesX(circle, old, new)
 		if not circle:IsValid() then return end
-
 		circle:Translate(new - old, 0)
 
 		if circle.m_Type == CIRCLE_OUTLINED and circle.m_ChildCircle then
@@ -407,7 +369,6 @@ do
 
 	local function OffsetVerticesY(circle, old, new)
 		if not circle:IsValid() then return end
-
 		circle:Translate(0, new - old)
 
 		if circle.m_Type == CIRCLE_OUTLINED and circle.m_ChildCircle then
@@ -419,12 +380,10 @@ do
 
 	local function UpdateRotation(circle, old, new)
 		if not circle:IsValid() then return end
-
 		local vertices = circle.m_Vertices
 		local x, y = circle.m_X, circle.m_Y
 		local rotation = new - old
 		local rotate_uv = circle.m_RotateMaterial
-
 		RotateVertices(vertices, x, y, rotation, rotate_uv)
 
 		if circle.m_Type == CIRCLE_OUTLINED and circle.m_ChildCircle then
@@ -439,37 +398,31 @@ do
 	AccessorFunc("Vertices", false)
 	AccessorFunc("ChildCircle", false)
 	AccessorFunc("ShouldRender", true)
-
-	AccessorFunc("Color", false)				-- The colour you want the circle to be. If set to false then surface.SetDrawColor's can be used.
-	AccessorFunc("Material", false)				-- The material you want the circle to render. If set to false then surface.SetMaterial can be used.
-	AccessorFunc("RotateMaterial", true)			-- Sets whether or not the circle's UV points should be rotated with the vertices.
-
-	AccessorFunc("Type", CIRCLE_FILLED, "m_Dirty")		-- The circle's type.
-	AccessorFunc("X", 0, false, OffsetVerticesX)		-- The circle's X position relative to the top left of the screen.
-	AccessorFunc("Y", 0, false, OffsetVerticesY)		-- The circle's Y position relative to the top left of the screen.
-	AccessorFunc("Radius", 8, "m_Dirty")			-- The circle's radius.
-	AccessorFunc("Rotation", 0, false, UpdateRotation)	-- The circle's rotation, measured in degrees.
-	AccessorFunc("StartAngle", 0, "m_Dirty")		-- The circle's start angle, measured in degrees.
-	AccessorFunc("EndAngle", 360, "m_Dirty")		-- The circle's end angle, measured in degrees.
-	AccessorFunc("Distance", 10, "m_Dirty")			-- The maximum distance between each of the circle's vertices. Set to false to use segments instead. This should typically be used for large circles in 3D2D.
-
-	AccessorFunc("BlurLayers", 3)				-- The circle's blur layers if Type is set to CIRCLE_BLURRED.
-	AccessorFunc("BlurDensity", 2)				-- The circle's blur density if Type is set to CIRCLE_BLURRED.
-	AccessorFunc("OutlineWidth", 10, "m_Dirty")		-- The circle's outline width if Type is set to CIRCLE_OUTLINED.
+	AccessorFunc("Color", false) -- The colour you want the circle to be. If set to false then surface.SetDrawColor's can be used.
+	AccessorFunc("Material", false) -- The material you want the circle to render. If set to false then surface.SetMaterial can be used.
+	AccessorFunc("RotateMaterial", true) -- Sets whether or not the circle's UV points should be rotated with the vertices.
+	AccessorFunc("Type", CIRCLE_FILLED, "m_Dirty") -- The circle's type.
+	AccessorFunc("X", 0, false, OffsetVerticesX) -- The circle's X position relative to the top left of the screen.
+	AccessorFunc("Y", 0, false, OffsetVerticesY) -- The circle's Y position relative to the top left of the screen.
+	AccessorFunc("Radius", 8, "m_Dirty") -- The circle's radius.
+	AccessorFunc("Rotation", 0, false, UpdateRotation) -- The circle's rotation, measured in degrees.
+	AccessorFunc("StartAngle", 0, "m_Dirty") -- The circle's start angle, measured in degrees.
+	AccessorFunc("EndAngle", 360, "m_Dirty") -- The circle's end angle, measured in degrees.
+	AccessorFunc("Distance", 10, "m_Dirty") -- The maximum distance between each of the circle's vertices. Set to false to use segments instead. This should typically be used for large circles in 3D2D.
+	AccessorFunc("BlurLayers", 3) -- The circle's blur layers if Type is set to CIRCLE_BLURRED.
+	AccessorFunc("BlurDensity", 2) -- The circle's blur density if Type is set to CIRCLE_BLURRED.
+	AccessorFunc("OutlineWidth", 10, "m_Dirty") -- The circle's outline width if Type is set to CIRCLE_OUTLINED.
 
 	function CIRCLE:SetPos(x, y)
 		x = tonumber(x) or 0
 		y = tonumber(y) or 0
-
 		self:Translate(x - self.m_X, y - self.m_Y)
 	end
 
 	function CIRCLE:SetAngles(s, e)
 		s = tonumber(s) or self.m_StartAngle
 		e = tonumber(e) or self.m_EndAngle
-
 		self:SetDirty(self.m_Dirty or s ~= self.m_StartAngle or e ~= self.m_EndAngle)
-
 		self.m_StartAngle = s
 		self.m_EndAngle = e
 	end
@@ -485,7 +438,6 @@ end
 
 _R.Circles = {
 	_MT = CIRCLE,
-
 	New = New,
 	RotateVertices = RotateVertices,
 	CalculateVertices = CalculateVertices,

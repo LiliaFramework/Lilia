@@ -44,6 +44,7 @@ ikon.maxSize = 8
 --------------------------------------------------------------------------------------------------------
 local schemaName = schemaName or (SCHEMA and SCHEMA.folder)
 local List = {}
+
 --------------------------------------------------------------------------------------------------------
 function ikon:init()
     if self.dev then
@@ -80,11 +81,13 @@ end
 if schemaName then
     ikon:init()
 end
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("InitializedSchema", "updatePath", function()
     schemaName = SCHEMA.folder
     ikon:init()
 end)
+
 --------------------------------------------------------------------------------------------------------
 --[[
 	IKON Library Essential Material/Texture Declare
@@ -100,6 +103,7 @@ local mat_outline = CreateMaterial("nsIconRenderedTemp", "UnlitGeneric", {
     ["$basetexture"] = tex_effect:GetName(),
     ["$translucent"] = 1
 })
+
 --------------------------------------------------------------------------------------------------------
 --[[
 	Developer hook.
@@ -111,6 +115,7 @@ local lightPositions = {
     BOX_TOP = Color(255, 255, 255),
     BOX_FRONT = Color(255, 255, 255),
 }
+
 --------------------------------------------------------------------------------------------------------
 function ikon:renderHook()
     -- Go Away, GMOD Halo.
@@ -236,8 +241,10 @@ function ikon:renderHook()
         print(rrer)
     end)
 end
+
 --------------------------------------------------------------------------------------------------------
 local testName = "renderedMeme"
+
 --------------------------------------------------------------------------------------------------------
 function ikon:showResult()
     local x, y = ScrW() / 2, ScrH() / 2
@@ -247,6 +254,7 @@ function ikon:showResult()
     surface.SetMaterial(mat_outline)
     surface.DrawTexturedRect(x, 0, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 --[[
 	Renders the Icon with given arguments.
@@ -257,6 +265,7 @@ ikon.requestList = ikon.requestList or {}
 IKON_BUSY = 1
 IKON_PROCESSING = 0
 IKON_SOMETHINGWRONG = -1
+
 --------------------------------------------------------------------------------------------------------
 function ikon:renderIcon(name, w, h, mdl, camInfo, updateCache)
     if #ikon.requestList > 0 then return IKON_BUSY end
@@ -316,6 +325,7 @@ function ikon:renderIcon(name, w, h, mdl, camInfo, updateCache)
 
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 --[[
 	Gets rendered icon with given unique name.
@@ -323,6 +333,7 @@ end
 ]]
 --------------------------------------------------------------------------------------------------------
 ikon.cache = ikon.cache or {}
+
 --------------------------------------------------------------------------------------------------------
 function ikon:getIcon(name)
     if ikon.cache[name] then return ikon.cache[name] end -- yeah return cache
@@ -336,6 +347,7 @@ function ikon:getIcon(name)
         return false -- retryd
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 concommand.Add("lia_flushicon", function()
     ikon.cache = {}

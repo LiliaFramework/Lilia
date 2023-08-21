@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local entityMeta = FindMetaTable("Entity")
+
 --------------------------------------------------------------------------------------------------------
 function entityMeta:checkDoorAccess(client, access)
     if not self:isDoor() then return false end
