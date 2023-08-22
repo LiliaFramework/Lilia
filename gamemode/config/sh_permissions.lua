@@ -14,51 +14,38 @@ function lia.config.LoadPermissions()
         ["PlayerSpawnNPC"] = {
             IsAdmin = false,
             IsSuperAdmin = true,
-            CustomCheck = function(client)
-                return client:IsAdmin() or (client:getChar():hasFlags("n") or client:getChar():hasFlags("E"))
-            end,
+            CustomCheck = function(client) return client:IsAdmin() or (client:getChar():hasFlags("n") or client:getChar():hasFlags("E")) end,
         },
         ["PlayerSpawnProp"] = {
             IsAdmin = false,
             IsSuperAdmin = true,
-            CustomCheck = function(client)
-                return client:IsAdmin() or client:getChar():hasFlags("e")
-            end,
+            CustomCheck = function(client) return client:IsAdmin() or client:getChar():hasFlags("e") end,
         },
         ["PlayerSpawnRagdoll"] = {
             IsAdmin = false,
             IsSuperAdmin = true,
-            CustomCheck = function(client)
-                return client:IsAdmin() or client:getChar():hasFlags("r")
-            end,
+            CustomCheck = function(client) return client:IsAdmin() or client:getChar():hasFlags("r") end,
         },
         ["PlayerSpawnSWEP"] = {
             IsAdmin = false,
             IsSuperAdmin = true,
-            CustomCheck = function(client)
-                return client:IsSuperAdmin() or client:getChar():hasFlags("W")
-            end,
+            CustomCheck = function(client) return client:IsSuperAdmin() or client:getChar():hasFlags("W") end,
         },
         ["PlayerSpawnEffect"] = {
             IsAdmin = false,
             IsSuperAdmin = true,
-            CustomCheck = function(client)
-                return client:IsAdmin() or (client:getChar():hasFlags("n") or client:getChar():hasFlags("E"))
-            end,
+            CustomCheck = function(client) return client:IsAdmin() or (client:getChar():hasFlags("n") or client:getChar():hasFlags("E")) end,
         },
         ["PlayerSpawnSENT"] = {
             IsAdmin = false,
             IsSuperAdmin = true,
-            CustomCheck = function(client)
-                return client:IsAdmin() or client:getChar():hasFlags("E")
-            end,
+            CustomCheck = function(client) return client:IsAdmin() or client:getChar():hasFlags("E") end,
         },
         ["PlayerSpawnVehicle"] = {
             IsAdmin = false,
             IsSuperAdmin = true,
             CustomCheck = function(client, model, name, data)
                 if client:IsSuperAdmin() then return true end
-
                 if table.HasValue(lia.config.RestrictedVehicles, name) then
                     ply:notify("You can't spawn this vehicle since it's restricted!")
 
@@ -74,63 +61,57 @@ function lia.config.LoadPermissions()
                 return false
             end,
         },
+    }
 
-        lia.config.CustomToolAccessTable = {
-            ["remover"] = {
-                IsAdmin = false,
-                IsSuperAdmin = false,
-                ToolAllowedUsergroup = {"superadmin", "admin", "user"},
-                ExtraCheck = function(client, trace, tool, entity)
-                    if client:IsSuperAdmin() then return true end
-    
-                    if table.HasValue(lia.config.BlockedEntities, entity:GetClass()) then
-                        return false
+    lia.config.CustomToolAccessTable = {
+        ["remover"] = {
+            IsAdmin = false,
+            IsSuperAdmin = false,
+            ToolAllowedUsergroup = {"superadmin", "admin", "user"},
+            ExtraCheck = function(client, trace, tool, entity)
+                if client:IsSuperAdmin() then return true end
+                if table.HasValue(lia.config.BlockedEntities, entity:GetClass()) then
+                    return false
+                else
+                    if entity:GetCreator() == client then
+                        return true
                     else
-                        if entity:GetCreator() == client then
+                        if client:Team() ~= FACTION_STAFF and not client:IsAdmin() then
+                            return false
+                        elseif client:Team() == FACTION_STAFF or client:IsAdmin() then
                             return true
-                        else
-                            if client:Team() ~= FACTION_STAFF and not client:IsAdmin() then
-                                return false
-                            elseif client:Team() == FACTION_STAFF or client:IsAdmin() then
-                                return true
-                            end
                         end
                     end
-    
+                end
+
+                return false
+            end,
+        },
+        ["editentity"] = {
+            IsAdmin = true,
+            IsSuperAdmin = true,
+            ToolAllowedUsergroup = {"superadmin", "admin"},
+            ExtraCheck = function(client, trace, tool) return true end,
+        },
+        ["collision"] = {
+            IsAdmin = true,
+            IsSuperAdmin = true,
+            ToolAllowedUsergroup = {"superadmin"},
+            ExtraCheck = function(client, trace, tool) return true end,
+        },
+        ["advdupe2"] = {
+            IsAdmin = false,
+            IsSuperAdmin = false,
+            ToolAllowedUsergroup = {"superadmin"},
+            ExtraCheck = function(client, trace, tool)
+                if client:IsSuperAdmin() then return true end
+                if table.HasValue(lia.config.DuplicatorBlackList, entity:GetClass()) then
                     return false
-                end,
-            },
-            ["editentity"] = {
-                IsAdmin = true,
-                IsSuperAdmin = true,
-                ToolAllowedUsergroup = {"superadmin", "admin"},
-                ExtraCheck = function(client, trace, tool)
+                else
                     return true
-                end,
-            },
-            ["collision"] = {
-                IsAdmin = true,
-                IsSuperAdmin = true,
-                ToolAllowedUsergroup = {"superadmin"},
-                ExtraCheck = function(client, trace, tool)
-                    return true
-                end,
-            },
-            ["advdupe2"] = {
-                IsAdmin = false,
-                IsSuperAdmin = false,
-                ToolAllowedUsergroup = {"superadmin"},
-                ExtraCheck = function(client, trace, tool)
-                    if client:IsSuperAdmin() then return true end
-    
-                    if table.HasValue(lia.config.DuplicatorBlackList, entity:GetClass()) then
-                        return false
-                    else
-                        return true
-                    end
-                end,
-            },
-        }
+                end
+            end,
+        },
     }
 end
 --------------------------------------------------------------------------------------------------------
