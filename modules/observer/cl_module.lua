@@ -1,4 +1,5 @@
---------------------------------------------------------------------------------------------------------LIA_CVAR_OBSTPBACK = CreateClientConVar("lia_obstpback", 0, true, true)
+--------------------------------------------------------------------------------------------------------
+LIA_CVAR_OBSTPBACK = CreateClientConVar("lia_obstpback", 0, true, true)
 LIA_CVAR_ADMINESP = CreateClientConVar("lia_obsesp", 1, true, true)
 LIA_CVAR_ADMINESPAVANCED = CreateClientConVar("lia_obsespadvanced", 1, true, true)
 LIA_CVAR_ITEMESP = CreateClientConVar("lia_obsitemesp", 1, true, true)

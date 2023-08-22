@@ -1,12 +1,4 @@
 --------------------------------------------------------------------------------------------------------
-ACCESS_LABELS = {}
---------------------------------------------------------------------------------------------------------
-ACCESS_LABELS[DOOR_OWNER] = "owner"
-ACCESS_LABELS[DOOR_TENANT] = "tenant"
-ACCESS_LABELS[DOOR_GUEST] = "guest"
-ACCESS_LABELS[DOOR_NONE] = "none"
-
---------------------------------------------------------------------------------------------------------
 function MODULE:ShouldDrawEntityInfo(entity)
 	if entity.isDoor(entity) and not entity.getNetVar(entity, "disabled") then return true end
 end
