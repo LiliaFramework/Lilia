@@ -97,7 +97,6 @@ end
 --------------------------------------------------------------------------------------------------------
 function PANEL:setCharacter(character)
 	self.character = character
-	print(character)
 	self.name:SetText(character:getName():gsub("#", "\226\128\139#"):upper())
 	self.model:SetModel(character:getModel())
 	self.faction:SetBackgroundColor(team.GetColor(character:getFaction()))
