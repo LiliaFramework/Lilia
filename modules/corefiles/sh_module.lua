@@ -1,14 +1,7 @@
 --------------------------------------------------------------------------------------------------------
-function L(key, ...)
-    local languages = lia.lang.stored
-    local info = languages.english
-
-    return string.format(info and info[key] or key, ...)
-end
-
+local MODULE = MODULE
 --------------------------------------------------------------------------------------------------------
-function L2(key, ...)
-    local info = lia.lang.stored[languages.english]
-    if info and info[key] then return string.format(info[key], ...) end
-end
+MODULE.name = "Core Files"
+MODULE.author = "Leonheart#7476"
+MODULE.desc = "Adds a few core files"
 --------------------------------------------------------------------------------------------------------

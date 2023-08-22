@@ -7,6 +7,14 @@ local playerMeta = FindMetaTable("Player")
 function playerMeta:IsNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP
 end
+--------------------------------------------------------------------------------------------------------
+function playerMeta:IsStuck()
+    return util.TraceEntity({
+        start = self:GetPos(),
+        endpos = self:GetPos(),
+        filter = self
+    }, self).StartSolid
+end
 
 --------------------------------------------------------------------------------------------------------
 function playerMeta:AddMoney(amt)
