@@ -1,3 +1,4 @@
+lia.config.Color = lia.config.Color or Color(75, 119, 190)
 --------------------------------------------------------------------------------------------------------
 MODULE.index = MODULE.index or 1
 MODULE.deltaIndex = MODULE.deltaIndex or MODULE.index

@@ -2,6 +2,89 @@
 local flo = 0
 local vec
 
+--------------------------------------------------------------------------------------------------------
+lia.config.RemovableConsoleCommand = {
+	["gmod_mcore_test"] = "1",
+	["r_shadows"] = "0",
+	["cl_detaildist"] = "0",
+	["cl_threaded_client_leaf_system"] = "1",
+	["cl_threaded_bone_setup"] = "2",
+	["r_threaded_renderables"] = "1",
+	["r_threaded_particles"] = "1",
+	["r_queued_ropes"] = "1",
+	["r_queued_decals"] = "1",
+	["r_queued_post_processing"] = "1",
+	["r_threaded_client_shadow_manager"] = "1",
+	["studio_queue_mode"] = "1",
+	["mat_queue_mode"] = "-2",
+	["fps_max"] = "0",
+	["fov_desired"] = "100",
+	["mat_specular"] = "0",
+	["r_drawmodeldecals"] = "0",
+	["r_lod"] = "-1",
+	["lia_cheapblur"] = "1",
+}
+
+lia.config.StaffTitles = {
+	["Owner"] = {"Owner", Color(174, 0, 0)},
+	["Upper Administration"] = {"Upper Administration", Color(2, 0, 121)},
+	["Senior Administrator"] = {"Senior Administrator", Color(255, 165, 0)},
+	["Administrator"] = {"Administrator", Color(255, 165, 0)},
+	["Junior Administrator"] = {"Junior Administrator", Color(255, 165, 0)},
+	["Senior Moderator"] = {"Senior Moderator", Color(255, 255, 0)},
+	["Moderator"] = {"Moderator", Color(255, 255, 0)},
+	["Junior Moderator"] = {"Junior Moderator", Color(255, 255, 0)},
+	["Senior Gamemaster"] = {"Senior Gamemaster", Color(150, 75, 0)},
+	["Experienced Gamemaster"] = {"Experienced Gamemaster", Color(150, 75, 0)},
+	["Gamemaster"] = {"Gamemaster", Color(150, 75, 0)},
+	["Junior Gamemaster"] = {"Junior Gamemaster", Color(150, 75, 0)},
+}
+
+--------------------------------------------------------------------------------------------------------
+lia.config.RemovableHooks = {
+	["StartChat"] = "StartChatIndicator",
+	["FinishChat"] = "EndChatIndicator",
+	["PostPlayerDraw"] = "DarkRP_ChatIndicator",
+	["CreateClientsideRagdoll"] = "DarkRP_ChatIndicator",
+	["player_disconnect"] = "DarkRP_ChatIndicator",
+	["RenderScene"] = "RenderSuperDoF",
+	["RenderScene"] = "RenderStereoscopy",
+	["Think"] = "DOFThink",
+	["GUIMouseReleased"] = "SuperDOFMouseUp",
+	["GUIMousePressed"] = "SuperDOFMouseDown",
+	["PreRender"] = "PreRenderFrameBlend",
+	["PostRender"] = "RenderFrameBlend",
+	["NeedsDepthPass"] = "NeedsDepthPass_Bokeh",
+	["PreventScreenClicks"] = "SuperDOFPreventClicks",
+	["RenderScreenspaceEffects"] = "RenderBokeh",
+	["RenderScreenspaceEffects"] = "RenderBokeh",
+	["PostDrawEffects"] = "RenderWidgets",
+	["PlayerTick"] = "TickWidgets",
+	["PlayerInitialSpawn"] = "PlayerAuthSpawn",
+	["RenderScene"] = "RenderStereoscopy",
+	["LoadGModSave"] = "LoadGModSave",
+	["RenderScreenspaceEffects"] = "RenderColorModify",
+	["RenderScreenspaceEffects"] = "RenderBloom",
+	["RenderScreenspaceEffects"] = "RenderToyTown",
+	["RenderScreenspaceEffects"] = "RenderTexturize",
+	["RenderScreenspaceEffects"] = "RenderSunbeams",
+	["RenderScreenspaceEffects"] = "RenderSobel",
+	["RenderScreenspaceEffects"] = "RenderSharpen",
+	["RenderScreenspaceEffects"] = "RenderMaterialOverlay",
+	["RenderScreenspaceEffects"] = "RenderMotionBlur",
+	["RenderScene"] = "RenderSuperDoF",
+	["GUIMousePressed"] = "SuperDOFMouseDown",
+	["GUIMouseReleased"] = "SuperDOFMouseUp",
+	["PreventScreenClicks"] = "SuperDOFPreventClicks",
+	["PostRender"] = "RenderFrameBlend",
+	["PreRender"] = "PreRenderFrameBlend",
+	["Think"] = "DOFThink",
+	["RenderScreenspaceEffects"] = "RenderBokeh",
+	["NeedsDepthPass"] = "NeedsDepthPass_Bokeh",
+	["PostDrawEffects"] = "RenderWidgets",
+	["PostDrawEffects"] = "RenderHalos",
+}
+
 -------------------------------------------------------------------------------------------------------
 function GM:InitializedExtrasClient()
 	for k, v in pairs(lia.config.RemovableConsoleCommand) do
@@ -101,7 +184,6 @@ function GM:HUDPaint()
 end
 
 --------------------------------------------------------------------------------------------------------
--- same
 timer.Create("FixShadows", 10, 0, function()
 	for _, player in ipairs(player.GetAll()) do
 		player:DrawShadow(false)

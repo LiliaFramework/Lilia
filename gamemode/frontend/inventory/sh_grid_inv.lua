@@ -1,3 +1,5 @@
+lia.config.invW = lia.config.invW or 5
+lia.config.invH = lia.config.invH or 5
 --------------------------------------------------------------------------------------------------------
 local GridInv = lia.Inventory:extend("GridInv")
 

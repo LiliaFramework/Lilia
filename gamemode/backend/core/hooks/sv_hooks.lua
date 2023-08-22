@@ -2,6 +2,110 @@
 local last_jump_time = 0
 --------------------------------------------------------------------------------------------------------
 lia.config.JumpCooldown = 0.8
+lia.config.RemoveEntities = {
+    ["env_fire"] = true,
+    ["trigger_hurt"] = true,
+    ["prop_ragdoll"] = true,
+    ["prop_physics"] = true,
+    ["spotlight_end"] = true,
+    ["light"] = true,
+    ["point_spotlight"] = true,
+    ["beam"] = true,
+    ["env_sprite"] = true,
+    ["light_spot"] = true,
+    ["func_tracktrain"] = true,
+    ["point_template"] = true,
+}
+-------------------------------------------------------------------------------------------------------
+function GM:InitializedExtrasServer()
+    self:OptimizeSeats()
+    hook.Remove("PlayerTick", "TickWidgets")
+    hook.Remove("Think", "CheckSchedules")
+    hook.Remove("LoadGModSave", "LoadGModSave")
+
+    local timers = {"CheckHookTimes", "HostnameThink"}
+
+    for i = 1, #timers do
+        local t = timers[i]
+
+        if timer.Exists(t) then
+            timer.Remove(t)
+        end
+    end
+
+    hook.Add("OnEntityCreated", "-", function(m)
+        if m:IsWidget() then
+            hook.Add("PlayerTick", "GODisableEntWidgets2", function(m, n)
+                widgets.PlayerTick(m, n)
+            end)
+
+            hook.Remove("OnEntityCreated", "WidgetInit")
+        end
+    end)
+
+    for k, v in pairs(ents.GetAll()) do
+        if lia.config.RemoveEntities[v:GetClass()] then
+            v:Remove()
+        end
+    end
+end
+
+-------------------------------------------------------------------------------------------------------
+function GM:OptimizeSeats()
+    local EFL_NO_THINK_FUNCTION = EFL_NO_THINK_FUNCTION
+    local loop, nicoSeats, nicoEnabled
+
+    hook.Add("OnEntityCreated", "nicoSeat", function(seat)
+        if seat:GetClass() == "prop_vehicle_prisoner_pod" then
+            seat:AddEFlags(EFL_NO_THINK_FUNCTION)
+            seat.nicoSeat = true
+        end
+    end)
+
+    hook.Add("Think", "nicoSeat", function()
+        if not nicoSeats or not nicoSeats[loop] then
+            loop = 1
+            nicoSeats = {}
+
+            for _, seat in ipairs(ents.FindByClass("prop_vehicle_prisoner_pod")) do
+                if seat.nicoSeat then
+                    table.insert(nicoSeats, seat)
+                end
+            end
+        end
+
+        while nicoSeats[loop] and not IsValid(nicoSeats[loop]) do
+            loop = loop + 1
+        end
+
+        local seat = nicoSeats[loop]
+
+        if nicoEnabled ~= seat and IsValid(nicoEnabled) then
+            local saved = nicoEnabled:GetSaveTable()
+
+            if not saved["m_bEnterAnimOn"] and not saved["m_bExitAnimOn"] then
+                nicoEnabled:AddEFlags(EFL_NO_THINK_FUNCTION)
+                nicoEnabled = nil
+            end
+        end
+
+        if IsValid(seat) then
+            seat:RemoveEFlags(EFL_NO_THINK_FUNCTION)
+            nicoEnabled = seat
+        end
+
+        loop = loop + 1
+    end)
+
+    local function nicoSeatAction(ply, seat)
+        if IsValid(seat) and seat.nicoSeat then
+            table.insert(nicoSeats, loop, seat)
+        end
+    end
+
+    hook.Add("PlayerEnteredVehicle", "nicoSeat", nicoSeatAction)
+    hook.Add("PlayerLeaveVehicle", "nicoSeat", nicoSeatAction)
+end
 
 -------------------------------------------------------------------------------------------------------
 function GM:EntityNetworkedVarChanged(entity, varName, oldVal, newVal)
@@ -52,7 +156,7 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadedChar(client, character, lastChar)
-    local identifier = "RemoveMatSpecular" .. player:SteamID()
+    local identifier = "RemoveMatSpecular" .. client:SteamID()
     local data = character:getData("pclass")
     local class = data and lia.class.list[data]
 

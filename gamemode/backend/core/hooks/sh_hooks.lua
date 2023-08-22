@@ -473,9 +473,13 @@ function GM:InitializedModules()
         end)
     end
 
-    self:InitializedExtrasClient()
+    if CLIENT then
+        self:InitializedExtrasClient()
+    else
+        self:InitializedExtrasServer()
+    end
+
     self:InitializedExtrasShared()
-    self:InitializedExtrasServer()
 end
 
 --------------------------------------------------------------------------------------------------------

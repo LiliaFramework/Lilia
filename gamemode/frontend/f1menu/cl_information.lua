@@ -46,15 +46,6 @@ function PANEL:Init()
             self.desc:SetTall(28)
         end
 
-        if not suppress or not suppress.time then
-            self.time = self.info:Add("DLabel")
-            self.time:SetFont("liaMediumFont")
-            self.time:SetTall(28)
-            self.time:Dock(TOP)
-            self.time:SetTextColor(color_white)
-            self.time:SetExpensiveShadow(1, Color(0, 0, 0, 150))
-        end
-
         if not suppress or not suppress.money then
             self.money = self.info:Add("DLabel")
             self.money:Dock(TOP)
