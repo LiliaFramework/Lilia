@@ -69,7 +69,10 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawn(client)
     local character = client:getChar()
-
+  
+    if pac then
+        client:ConCommand("pac_restart")
+    end
     if lia.config.PKActive and character and character:getData("permakilled") then
         character:ban()
     end
