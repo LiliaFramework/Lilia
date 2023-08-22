@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 MODULE.name = "Permakill"
-MODULE.author = "Leonheart#7476/Thadah Denyse"
+MODULE.author = "STEAM_0:1:176123778/Thadah Denyse"
 MODULE.desc = "Adds permanent death in the server options."
 --------------------------------------------------------------------------------------------------------
 lia.util.include("sv_module.lua")

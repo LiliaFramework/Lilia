@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 MODULE.name = "Recognition"
-MODULE.author = "Leonheart#7476/Cheesenot"
+MODULE.author = "STEAM_0:1:176123778/Cheesenut"
 MODULE.desc = "Adds the ability to recognize people / You can also allow auto faction recognition."
 --------------------------------------------------------------------------------------------------------
 lia.util.include("sv_module.lua")

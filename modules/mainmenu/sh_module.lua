@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 MODULE.name = "Multiple Characters"
-MODULE.author = "Leonheart#7476/Cheesenot"
+MODULE.author = "STEAM_0:1:176123778/Cheesenut"
 MODULE.desc = "Allows players to have multiple characters."
 --------------------------------------------------------------------------------------------------------
 MainMenu = MODULE

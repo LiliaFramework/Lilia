@@ -10,7 +10,7 @@ if CLIENT then
 end
 
 --------------------------------------------------------------------------------------------------------
-SWEP.Author = "Cheesenot / Black Tea"
+SWEP.Author = "Cheesenut / Black Tea"
 SWEP.Instructions = "Primary Fire: [RAISED] Punch\nSecondary Fire: Knock/Pickup"
 SWEP.Purpose = "Hitting things and knocking on doors."
 SWEP.Drop = false

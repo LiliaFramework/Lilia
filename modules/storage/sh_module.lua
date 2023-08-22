@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 MODULE.name = "Storage Base"
-MODULE.author = "Leonheart#7476/Cheesenot"
+MODULE.author = "STEAM_0:1:176123778/Cheesenut"
 MODULE.desc = "Useful things for storage modules."
 --------------------------------------------------------------------------------------------------------
 LiliaStorage = MODULE

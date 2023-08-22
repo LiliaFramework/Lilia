@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 MODULE.name = "Observer Plus"
-MODULE.author = "Leonheart#7476/Cheesenot"
+MODULE.author = "STEAM_0:1:176123778/Cheesenut"
 MODULE.desc = "Adds Observer with Extras."
 --------------------------------------------------------------------------------------------------------
 lia.util.include("sv_module.lua")

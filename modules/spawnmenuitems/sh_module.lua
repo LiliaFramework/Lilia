@@ -3,7 +3,7 @@ local MODULE = MODULE
 --------------------------------------------------------------------------------------------------------
 MODULE.name = "Spawn Menu Items"
 MODULE.desc = "Adds a tab to the spawn menu for spawning items."
-MODULE.author = "Leonheart#7476"
+MODULE.author = "STEAM_0:1:176123778"
 --------------------------------------------------------------------------------------------------------
 lia.config.cooldown = 0.5
 

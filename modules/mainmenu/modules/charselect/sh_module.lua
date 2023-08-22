@@ -1,5 +1,5 @@
 MODULE.name = "Lilia Character Selection"
-MODULE.author = "Leonheart#7476/Cheesenot"
+MODULE.author = "STEAM_0:1:176123778/Cheesenut"
 MODULE.desc = "The Lilia character selection screen."
 lia.util.includeDir(MODULE.path .. "/derma/steps", true)
 if SERVER then return end

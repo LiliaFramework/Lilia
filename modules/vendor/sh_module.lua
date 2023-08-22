@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 MODULE.name = "Vendors"
-MODULE.author = "Leonheart#7476/Cheesenot"
+MODULE.author = "STEAM_0:1:176123778/Cheesenut"
 MODULE.desc = "Adds NPC vendors that can sell things."
 --------------------------------------------------------------------------------------------------------
 lia.util.include("cl_editor.lua")

@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 MODULE.name = "Raise Weapons"
-MODULE.author = "Leonheart#7476/Cheesenot"
+MODULE.author = "STEAM_0:1:176123778/Cheesenut"
 MODULE.desc = "Allows players to raise/lower weapons by holding R (reload)."
 --------------------------------------------------------------------------------------------------------
 lia.config.WepAlwaysRaised = true

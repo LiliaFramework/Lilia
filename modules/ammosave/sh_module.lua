@@ -4,7 +4,7 @@ lia.ammo = lia.ammo or {}
 MODULE.ammoList = {}
 --------------------------------------------------------------------------------------------------------
 MODULE.name = "Ammo Saver"
-MODULE.author = "Leonheart#7476/Black Tea"
+MODULE.author = "STEAM_0:1:176123778/Black Tea"
 MODULE.desc = "Saves the ammo of a character."
 --------------------------------------------------------------------------------------------------------
 lia.util.include("sv_module.lua")
