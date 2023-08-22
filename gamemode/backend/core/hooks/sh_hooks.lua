@@ -10,7 +10,9 @@ lia.config.PermaClass = true
 lia.config.MapCleanerEnabled = true
 lia.config.ItemCleanupTime = 7200
 lia.config.MapCleanupTime = 21600
-
+lia.config.DevServerIP = "45.61.170.66"
+lia.config.DevServerPort = "27270"
+lia.config.WalkRatio = 0.5
 --------------------------------------------------------------------------------------------------------
 function GM:TranslateActivity(client, act)
     local model = string.lower(client.GetModel(client))
@@ -363,6 +365,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedModules()
     if SERVER then
+
         local TalkModesPSAString = "Please Remove Talk Modes. Our framework has such built in by default."
         local NutscriptPSAString = "Please Port Any NutScript Plugins You May Be Using. Nutscript is Known for Being Exxploitable and Regardless Of The Compatibility, WE DO NOT Advice Nutscript Plugins. Our framework was built with Lilia Plugins in mind and most Performance will be adquired like that."
         local ULXPSAString = [[
@@ -484,20 +487,7 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:InitPostEntity()
-    local ip, port = game.GetIPAddress():match("([^:]+):(%d+)")
-
-    if ip == lia.config.DevServerIP and port == lia.config.DevServerPort then
-        DEV = true
-    else
-        DEV = false
-    end
-
-    if DEV then
-        print("This is a Development Server!")
-    else
-        print("This is a Main Server!")
-    end
-
+    self:DevServerEnable()
     if CLIENT then
         lia.joinTime = RealTime() - 0.9716
         lia.faction.formatModelData()
@@ -573,5 +563,40 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:simfphysPhysicsCollide()
     return true
+end
+--------------------------------------------------------------------------------------------------------
+function GM:DevServerEnable()
+--[[
+    This allows you to make reduced cooldowns or certain scenarios only happen on the Dev server. Example:
+    
+    function GM:PlayerSpawn(ply)
+        if not ply:getChar() then return end -- If the character isn't loaded, the function won't run
+    
+        -- will load after the default spawn
+        timer.Simple(0.5, function()
+            -- if it detects it is the Dev Server, the HP will be set to 69420, otherwise, it will be 100
+            if DEV then
+                ply:SetMaxHealth(69420)
+                ply:SetHealth(69420)
+            else
+                ply:SetMaxHealth(100)
+                ply:SetHealth(100)
+            end
+        end)
+    end
+--]]
+    local ip, port = game.GetIPAddress():match("([^:]+):(%d+)")
+
+    if ip == lia.config.DevServerIP and port == lia.config.DevServerPort then
+        DEV = true
+    else
+        DEV = false
+    end
+
+    if DEV then
+        print("This is a Development Server!")
+    else
+        print("This is a Main Server!")
+    end
 end
 --------------------------------------------------------------------------------------------------------

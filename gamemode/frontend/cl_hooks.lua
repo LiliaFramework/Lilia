@@ -1,8 +1,10 @@
 --------------------------------------------------------------------------------------------------------
 local data = {}
 local offset1, offset2, offset3, alpha, y
-lia.config.VersionEnabled = lia.config.VersionEnabled or false
-lia.config.version = lia.config.version or "1.0"
+--------------------------------------------------------------------------------------------------------
+lia.config.BranchWarning =  true
+lia.config.VersionEnabled = true
+lia.config.version = "1.0"
 --------------------------------------------------------------------------------------------------------
 hook.Add("HUDPaint", "FrontendHooks", function()
     local ply = LocalPlayer()

@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 function lia.config.LoadModels()
+    print("CONFIG: Loaded Tpose Fixer")
     lia.config.PlayerModelTposingFixer = {
         ["path/to/model.mdl"] = "player",
         ["path/to/model.mdl"] = "player",

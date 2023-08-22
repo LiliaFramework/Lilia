@@ -2,6 +2,8 @@
 local PANEL = {}
 local nsVoicePanels = {}
 --------------------------------------------------------------------------------------------------------
+lia.config.AllowVoice = lia.config.AllowVoice or true
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     local hi = vgui.Create("DLabel", self)
     hi:SetFont("liaIconsMedium")

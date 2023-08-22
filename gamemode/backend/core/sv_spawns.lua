@@ -1,4 +1,7 @@
 --------------------------------------------------------------------------------------------------------
+lia.config.WalkSpeed = 130
+lia.config.RunSpeed = 235
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadout(client)
     if client.liaSkipLoadout then
         client.liaSkipLoadout = nil

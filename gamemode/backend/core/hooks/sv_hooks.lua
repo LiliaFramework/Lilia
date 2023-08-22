@@ -16,6 +16,8 @@ lia.config.RemoveEntities = {
     ["func_tracktrain"] = true,
     ["point_template"] = true,
 }
+lia.config.SalaryOverride = true
+lia.config.SalaryInterval = 300
 -------------------------------------------------------------------------------------------------------
 function GM:InitializedExtrasServer()
     self:OptimizeSeats()
