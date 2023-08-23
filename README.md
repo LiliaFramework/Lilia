@@ -8,7 +8,7 @@ To get started, you can visit the comprehensive guide in that we will leave at t
 
 Make sure to install the Workshop as well: https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255
 
-If you have questions or want to integrate with the community, you can join our Discord server at [Discord](https://discord.gg/RTcVq92HsH).
+If you have questions or want to integrate with the community, you can join our Discord server at [Discord](https://discord.gg/jWCEUEKQ).
 
 ## Framework Information
 

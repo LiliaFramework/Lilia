@@ -45,9 +45,9 @@ function MODULE:InitializedConfig()
         "it",
         {
             onChatAdd = function(speaker, text)
-                chat.AddText(lia.chat.timestamp(false), lia.config.get("chatColor"), "**" .. text)
+                chat.AddText(lia.chat.timestamp(false), lia.config.ChatColor, "**" .. text)
             end,
-            radius = function(speaker, text) return lia.config.get("chatRange", 280) end,
+            radius = function(speaker, text) return lia.config.ChatRange end,
             prefix = {"/it"},
             font = "liaChatFontItalics",
             filter = "actions",
