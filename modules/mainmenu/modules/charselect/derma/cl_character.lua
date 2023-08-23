@@ -68,13 +68,8 @@ function PANEL:createTitle()
 end
 
 function PANEL:loadBackground()
-    -- Map scene integration.
-    local mapScene = lia.plugin.list.mapscene
-
-    if not mapScene or table.Count(mapScene.scenes) == 0 then
-        self.blank = true
-    end
-
+    self.blank = true
+    
     local url = lia.config.BackgroundURL
 
     if url and url:find("%S") then

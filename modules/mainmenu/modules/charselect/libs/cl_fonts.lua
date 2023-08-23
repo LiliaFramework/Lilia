@@ -2,7 +2,7 @@ local function ScreenScale(size)
     return size * (ScrH() / 900) + 10
 end
 
-function PLUGIN:LoadFonts(font)
+function MODULE:LoadFonts(font)
     surface.CreateFont('liaCharTitleFont', {
         font = font,
         weight = 200,

@@ -157,17 +157,17 @@ hook.Add("BuildHelpMenu", "liaBasicHelp", function(tabs)
 		return body.."</table>"
 	end
 
-	tabs["plugins"] = function(node)
+	tabs["modules"] = function(node)
 		local body = ""
 
-		for _, v in SortedPairsByMemberValue(lia.plugin.list, "name") do
+		for _, v in SortedPairsByMemberValue(lia.module.list, "name") do
 			body = (body..[[
 				<p>
 					<span style="font-size: 22;"><b>%s</b><br /></span>
 					<span style="font-size: smaller;">
 					<b>%s</b>: %s<br />
 					<b>%s</b>: %s
-			]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", L"author", lia.plugin.namecache[v.author] or v.author)
+			]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", L"author", lia.module.namecache[v.author] or v.author)
 
 			if (v.version) then
 				body = body.."<br /><b>"..L"version".."</b>: "..v.version

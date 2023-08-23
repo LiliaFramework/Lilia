@@ -1,4 +1,4 @@
-local PLUGIN = PLUGIN
+local MODULE = MODULE
 local PANEL = {}
 DEFINE_BASECLASS('EditablePanel')
 local BGs = lia.config.CustomUIBackgrounds
