@@ -11,7 +11,7 @@ function PANEL:confirmDelete()
 	local id = self.character:getID()
 
 	vgui.Create('liaNewCharacterConfirm'):setMessage(L('Deleting a character cannot be undone.')):onConfirm(function()
-		liaMultiChar:deleteCharacter(id)
+		MainMenu:deleteCharacter(id)
 	end)
 end
 

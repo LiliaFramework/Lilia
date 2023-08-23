@@ -63,7 +63,7 @@ function PANEL:onCharacterSelected(character)
 	self.choosing = true
 
 	lia.gui.character:setFadeToBlack(true):next(function()
-		return liaMultiChar:chooseCharacter(character:getID())
+		return MainMenu:chooseCharacter(character:getID())
 	end):next(function(err)
 		self.choosing = false
 

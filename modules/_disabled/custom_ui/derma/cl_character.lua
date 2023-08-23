@@ -75,7 +75,7 @@ function PANEL:loadBackground()
         self.blank = true
     end
 
-    local url = lia.config.get("backgroundURL")
+    local url = lia.config.BackgroundURL
 
     if url and url:find("%S") then
         self.background = self:Add("DHTML")
@@ -96,7 +96,7 @@ function PANEL:loadBackground()
         self.background:MoveToBack()
         self.background:SetZPos(-999)
 
-        if lia.config.get("charMenuBGInputDisabled") then
+        if lia.config.CharMenuBGInputDisabled then
             self.background:SetMouseInputEnabled(false)
             self.background:SetKeyboardInputEnabled(false)
         end

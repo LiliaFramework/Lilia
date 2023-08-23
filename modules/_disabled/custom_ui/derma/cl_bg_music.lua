@@ -1,6 +1,5 @@
 local PANEL = {}
 local FADE_TIME = 5
-local VOLUME = lia.config.get("musicvolume", 0.25)
 
 function PANEL:Init()
     if lia.menuMusic then
@@ -12,14 +11,14 @@ function PANEL:Init()
     self:SetVisible(false)
     lia.menuMusicIsLocal = false
     timer.Remove("liaMusicFader")
-    local source = lia.config.get("music", "")
+    local source = lia.config.Music
     source = 'external_g/menu2.mp3'
     if not source:find("%S") then return end
 
     if source:find("http") then
         sound.PlayURL(source, "noplay", function(music, errorID, fault)
             if music then
-                music:SetVolume(VOLUME)
+                music:SetVolume(lia.config.Musicvolume)
                 lia.menuMusic = music
                 lia.menuMusic:Play()
             else
@@ -30,7 +29,7 @@ function PANEL:Init()
     else
         lia.menuMusicIsLocal = true
         lia.menuMusic = CreateSound(LocalPlayer(), source)
-        lia.menuMusic:PlayEx(VOLUME, 100)
+        lia.menuMusic:PlayEx(lia.config.Musicvolume, 100)
     end
 end
 
@@ -45,9 +44,9 @@ function PANEL:OnRemove()
             fraction = 1 - math.TimeFraction(start, finish, RealTime())
 
             if music.ChangeVolume then
-                music:ChangeVolume(fraction * VOLUME, 0.1)
+                music:ChangeVolume(fraction * lia.config.Musicvolume, 0.1)
             elseif music.SetVolume then
-                music:SetVolume(fraction * VOLUME)
+                music:SetVolume(fraction * lia.config.Musicvolume)
             end
 
             if fraction <= 0 then

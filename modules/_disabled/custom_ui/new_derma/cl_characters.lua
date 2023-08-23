@@ -1,5 +1,4 @@
 local PANEL = {}
-local logo = lia.util.getMaterial('external_g/eagle.png')
 local WHITE = Color(255, 255, 255, 150)
 local SELECTED = Color(255, 255, 255, 230)
 PANEL.WHITE = WHITE
@@ -84,7 +83,7 @@ function PANEL:onCharacterSelected(character)
     self.choosing = true
 
     self:setFadeToBlack(true):next(function()
-        return liaMultiChar:chooseCharacter(character:getID())
+        return MainMenu:chooseCharacter(character:getID())
     end):next(function(err)
         self.choosing = false
 

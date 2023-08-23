@@ -62,7 +62,7 @@ end
 
 function PANEL:paintIcon(icon, w, h)
     if self:getContext("model") ~= icon.index then return end
-    local color = lia.config.get("color", color_white)
+    local color = charMenuBGInputDisabled
     surface.SetDrawColor(color.r, color.g, color.b, 200)
     local i2
 

@@ -1,8 +1,7 @@
 local PLUGIN = PLUGIN
 local PANEL = {}
 DEFINE_BASECLASS('EditablePanel')
-local BGs = PLUGIN.backgrounds
-local logo = lia.util.getMaterial('external_g/eagle.png')
+local BGs = lia.config.CustomUIBackgrounds
 local click_sound = 'weapons/grenade/tick1.wav'
 
 local function playClickSound()
@@ -91,15 +90,15 @@ function PANEL:Init()
     end
 
     self:CreateButton('Discord', 'Our Discord server', function()
-        gui.OpenURL(PLUGIN.discordURL)
+        gui.OpenURL(lia.config.DiscordURL)
     end)
 
     self:CreateButton('Forums', 'Our website', function()
-        gui.OpenURL(PLUGIN.websiteURL)
+        gui.OpenURL(lia.config.WebsiteURL)
     end)
 
     self:CreateButton('Content Pack', 'Our Content', function()
-        gui.OpenURL(PLUGIN.contentURL)
+        gui.OpenURL(lia.config.ContentURL)
     end)
 
     self:CreateButton('Exit', 'Disconnect from server', function(me)
@@ -124,7 +123,7 @@ function PANEL:CanCreateCharacter()
 
     if #validFactions == 0 then return false end
     self.validFactions = validFactions
-    local maxChars = hook.Run('GetMaxPlayerCharacter', LocalPlayer()) or lia.config.get('maxChars', 5)
+    local maxChars = hook.Run('GetMaxPlayerCharacter', LocalPlayer()) or lia.config.MaxCharacters
     if lia.characters and #lia.characters >= maxChars then return false end
     local canCreate = hook.Run('ShouldMenuButtonShow', 'create')
     if canCreate == false then return false end

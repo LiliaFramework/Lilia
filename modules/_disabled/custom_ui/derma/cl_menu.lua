@@ -108,7 +108,7 @@ function PANEL:addTab(name, callback, uniqueID)
 
     local function paintTab(tab, w, h)
         if self.activeTab == tab then
-            surface.SetDrawColor(ColorAlpha(lia.config.get("color"), 200))
+            surface.SetDrawColor(ColorAlpha(lia.config.Color, 200))
             surface.DrawRect(0, h - 8, w, 8)
         elseif tab.Hovered then
             surface.SetDrawColor(0, 0, 0, 50)

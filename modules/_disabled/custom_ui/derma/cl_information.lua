@@ -43,16 +43,7 @@ function PANEL:Init()
             self.desc:SetFont("liaMediumLightFont")
             self.desc:SetTall(28)
         end
-
-        if not suppress or not suppress.time then
-            self.time = self.info:Add("DLabel")
-            self.time:SetFont("liaMediumFont")
-            self.time:SetTall(28)
-            self.time:Dock(TOP)
-            self.time:SetTextColor(color_white)
-            self.time:SetExpensiveShadow(1, Color(0, 0, 0, 150))
-        end
-
+        
         if not suppress or not suppress.money then
             self.money = self.info:Add("DLabel")
             self.money:Dock(TOP)
@@ -119,17 +110,7 @@ function PANEL:setup()
         self.faction:SetText(L("charFaction", L(team.GetName(LocalPlayer():Team()))))
     end
 
-    if self.time then
-        local format = "%A, %d %B " .. lia.config.get("SchemaYear") .. " %T"
-        self.time:SetText(L("curTime", lia.date.getFormatted(format)))
-
-        self.time.Think = function(this)
-            if (this.nextTime or 0) < CurTime() then
-                this:SetText(L("curTime", lia.date.getFormatted(format)))
-                this.nextTime = CurTime() + 0.5
-            end
-        end
-    end
+    
 
     if self.class then
         local class = lia.class.list[char:getClass()]

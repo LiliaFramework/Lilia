@@ -43,7 +43,7 @@ function PANEL:OnMousePressed(code)
 	if self.color then
 		self:SetTextColor(self.color)
 	else
-		self:SetTextColor(lia.config.get("color"))
+		self:SetTextColor(lia.config.Color)
 	end
 
 	surface.PlaySound(SOUND_MENU_BUTTON_PRESSED)
