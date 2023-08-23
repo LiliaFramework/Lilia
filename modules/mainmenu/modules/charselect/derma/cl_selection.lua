@@ -50,7 +50,6 @@ function PANEL:createCharacterSlots()
 	for _, id in ipairs(lia.characters) do
 		local character = lia.char.loaded[id]
 		if not character then continue end
-		print(character)
 		local panel = self.scroll:Add("liaCharacterSlot")
 		panel:Dock(LEFT)
 		panel:DockMargin(0, 0, 8, 8)

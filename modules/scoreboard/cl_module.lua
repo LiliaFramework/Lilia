@@ -1,6 +1,5 @@
 --------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:ScoreboardHide()
     if IsValid(lia.gui.score) then
@@ -37,7 +36,8 @@ end
 function MODULE:ShowPlayerOptions(client, options)
     if CAMI.PlayerHasAccess(client, "Lilia - Can Access Scoreboard Admin Options") then
         options["Player Profile"] = {
-            "icon16/user.png", function()
+            "icon16/user.png",
+            function()
                 if IsValid(client) then
                     client:ShowProfile()
                 end
@@ -45,7 +45,8 @@ function MODULE:ShowPlayerOptions(client, options)
         }
 
         options["Player Steam ID"] = {
-            "icon16/user.png", function()
+            "icon16/user.png",
+            function()
                 if IsValid(client) then
                     SetClipboardText(client:SteamID())
                 end
@@ -53,13 +54,15 @@ function MODULE:ShowPlayerOptions(client, options)
         }
 
         options["Move To Player"] = {
-            "icon16/wand.png", function()
+            "icon16/wand.png",
+            function()
                 LocalPlayer():ConCommand("say !goto " .. client:SteamID())
             end
         }
 
         options["Bring Player"] = {
-            "icon16/arrow_down.png", function()
+            "icon16/arrow_down.png",
+            function()
                 if IsValid(client) then
                     LocalPlayer():ConCommand("say !bring " .. client:SteamID())
                 end
@@ -67,7 +70,8 @@ function MODULE:ShowPlayerOptions(client, options)
         }
 
         options["Return Player"] = {
-            "icon16/arrow_down.png", function()
+            "icon16/arrow_down.png",
+            function()
                 if IsValid(client) then
                     LocalPlayer():ConCommand("say !return " .. client:SteamID())
                 end

@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 lia.chat = lia.chat or {}
 lia.chat.classes = lia.char.classes or {}
-
 --------------------------------------------------------------------------------------------------------
 local DUMMY_COMMAND = {
     syntax = "<string text>",
@@ -17,26 +16,16 @@ end
 function lia.chat.register(chatType, data)
     if not data.onCanHear then
         if isfunction(data.radius) then
-            data.onCanHear = function(speaker, listener)
-                return (speaker:GetPos() - listener:GetPos()):LengthSqr() <= (data.radius() ^ 2)
-            end
+            data.onCanHear = function(speaker, listener) return (speaker:GetPos() - listener:GetPos()):LengthSqr() <= (data.radius() ^ 2) end
         elseif isnumber(data.radius) then
             local range = data.radius ^ 2
-
-            data.onCanHear = function(speaker, listener)
-                return (speaker:GetPos() - listener:GetPos()):LengthSqr() <= range
-            end
+            data.onCanHear = function(speaker, listener) return (speaker:GetPos() - listener:GetPos()):LengthSqr() <= range end
         else
-            data.onCanHear = function(speaker, listener)
-                return true
-            end
+            data.onCanHear = function(speaker, listener) return true end
         end
     elseif isnumber(data.onCanHear) then
         local range = data.onCanHear ^ 2
-
-        data.onCanHear = function(speaker, listener)
-            return (speaker:GetPos() - listener:GetPos()):LengthSqr() <= range
-        end
+        data.onCanHear = function(speaker, listener) return (speaker:GetPos() - listener:GetPos()):LengthSqr() <= range end
     end
 
     if not data.onCanSay then
@@ -52,19 +41,18 @@ function lia.chat.register(chatType, data)
     end
 
     data.color = data.color or Color(242, 230, 160)
-
     if not data.onChatAdd then
         data.format = data.format or "%s: \"%s\""
-
         data.onChatAdd = function(speaker, text, anonymous)
             local color = data.color
             local name = anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, chatType) or (IsValid(speaker) and speaker:Name() or "Console")
-
             if data.onGetColor then
                 color = data.onGetColor(speaker, text)
             end
 
             local timestamp = lia.chat.timestamp(false)
+
+			print(chatType .. "Format")
             local translated = L2(chatType .. "Format", name, text)
             chat.AddText(timestamp, color, translated or string.format(data.format, name, text))
         end
@@ -90,12 +78,10 @@ end
 function lia.chat.parse(client, message, noSend)
     local anonymous = false
     local chatType = "ic"
-
     for k, v in pairs(lia.chat.classes) do
         local isChosen = false
         local chosenPrefix = ""
         local noSpaceAfter = v.noSpaceAfter
-
         if type(v.prefix) == "table" then
             for _, prefix in ipairs(v.prefix) do
                 if message:sub(1, #prefix + (noSpaceAfter and 0 or 1)):lower() == prefix .. (noSpaceAfter and "" or " "):lower() then
@@ -112,7 +98,6 @@ function lia.chat.parse(client, message, noSend)
         if isChosen then
             chatType = k
             message = message:sub(#chosenPrefix + 1)
-
             if lia.chat.classes[k].noSpaceAfter and message:sub(1, 1):match("%s") then
                 message = message:sub(2)
             end
@@ -122,7 +107,6 @@ function lia.chat.parse(client, message, noSend)
     end
 
     if not message:find("%S") then return end
-
     if SERVER and not noSend then
         lia.chat.send(client, chatType, hook.Run("PlayerMessageSend", client, chatType, message, anonymous) or message, anonymous)
     end

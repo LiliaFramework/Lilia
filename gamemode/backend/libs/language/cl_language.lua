@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------------------------------
-function L(key, client, ...)
+function L(key, ...)
     local languages = lia.lang.stored
     local info = languages.english
 
@@ -7,22 +7,8 @@ function L(key, client, ...)
 end
 
 --------------------------------------------------------------------------------------------------------
-function L2(key, client, ...)
-    local languages = lia.lang.stored
-    local info = languages.english
+function L2(key, ...)
+    local info = lia.lang.stored["english"]
     if info and info[key] then return string.format(info[key], ...) end
-end
-
---------------------------------------------------------------------------------------------------------
-function L3(key, langKey, ...)
-    local languages = lia.lang.stored
-
-    if langKey then
-        local info = languages.english
-
-        return string.format(info and info[key] or key, ...)
-    else
-        return key
-    end
 end
 --------------------------------------------------------------------------------------------------------

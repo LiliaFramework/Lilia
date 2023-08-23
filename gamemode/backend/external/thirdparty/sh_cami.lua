@@ -45,7 +45,6 @@ local version = 20190102
 if CAMI and CAMI.Version >= version then return end
 CAMI = CAMI or {}
 CAMI.Version = version
-
 --[[
 usergroups
     Contains the registered CAMI_USERGROUP usergroup structures.
@@ -72,7 +71,6 @@ privileges
     Indexed by privilege name.
 ]]
 local privileges = CAMI.GetPrivileges and CAMI.GetPrivileges() or {}
-
 --[[
 CAMI.RegisterUsergroup
     Registers a usergroup with CAMI.
@@ -205,7 +203,6 @@ CAMI.InheritanceRoot
 function CAMI.InheritanceRoot(usergroupName)
     if not usergroups[usergroupName] then return end
     local inherits = usergroups[usergroupName].Inherits
-
     while inherits ~= usergroups[usergroupName].Inherits do
         usergroupName = usergroups[usergroupName].Inherits
     end
@@ -352,14 +349,12 @@ local defaultAccessHandler = {
 
 function CAMI.PlayerHasAccess(actorPly, privilegeName, callback, targetPly, extraInfoTbl)
     local hasAccess, reason = nil, nil
-
     local callback_ = callback or function(hA, r)
         hasAccess, reason = hA, r
     end
 
     hook.Call("CAMI.PlayerHasAccess", defaultAccessHandler, actorPly, privilegeName, callback_, targetPly, extraInfoTbl)
     if callback ~= nil then return end
-
     if hasAccess == nil then
         local err = [[The function CAMI.PlayerHasAccess was used to find out
         whether Player %s has privilege "%s", but an admin mod did not give an
@@ -407,10 +402,8 @@ function CAMI.GetPlayersWithAccess(privilegeName, callback, targetPly, extraInfo
     local allowedPlys = {}
     local allPlys = player.GetAll()
     local countdown = #allPlys
-
     local function onResult(ply, hasAccess, _)
         countdown = countdown - 1
-
         if hasAccess then
             table.insert(allowedPlys, ply)
         end
@@ -421,9 +414,13 @@ function CAMI.GetPlayersWithAccess(privilegeName, callback, targetPly, extraInfo
     end
 
     for _, ply in ipairs(allPlys) do
-        CAMI.PlayerHasAccess(ply, privilegeName, function(...)
-            onResult(ply, ...)
-        end, targetPly, extraInfoTbl)
+        CAMI.PlayerHasAccess(
+            ply,
+            privilegeName,
+            function(...)
+                onResult(ply, ...)
+            end, targetPly, extraInfoTbl
+        )
     end
 end
 

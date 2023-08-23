@@ -16,10 +16,6 @@ debug.getregistry().Character = lia.meta.character
 
 --------------------------------------------------------------------------------------------------------
 if SERVER then
-    if not lia.db then
-        print("db not up")
-    end
-
     if #lia.char.names < 1 then
         lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
             if data and #data > 0 then
@@ -455,10 +451,6 @@ end
 --------------------------------------------------------------------------------------------------------
 hook.Add("ReRunNames", "RerunNames1", function()
     if SERVER then
-        if not lia.db then
-            print("db not up")
-        end
-
         if #lia.char.names < 1 then
             lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
                 if data and #data > 0 then

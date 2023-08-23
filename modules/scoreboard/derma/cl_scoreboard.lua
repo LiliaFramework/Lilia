@@ -2,14 +2,11 @@
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
-
 --------------------------------------------------------------------------------------------------------
 local function teamGetPlayers(teamID)
     local players = {}
-
     for _, ply in next, player.GetAll() do
         local isDisguised = hook.Run("GetDisguised", ply)
-
         if isDisguised and isDisguised == teamID then
             table.insert(players, ply)
         elseif not isDisguised and ply:Team() == teamID then
@@ -27,7 +24,6 @@ end
 
 --------------------------------------------------------------------------------------------------------
 local paintFunctions = {}
-
 --------------------------------------------------------------------------------------------------------
 paintFunctions[0] = function(this, w, h)
     surface.SetDrawColor(0, 0, 0, 50)
@@ -57,7 +53,6 @@ function PANEL:Init()
     self.title:Dock(TOP)
     self.title:SizeToContentsY()
     self.title:SetTall(self.title:GetTall() + 16)
-
     self.title.Paint = function(this, w, h)
         surface.SetDrawColor(0, 0, 0, 150)
         surface.DrawRect(0, 0, w, h)
@@ -73,7 +68,6 @@ function PANEL:Init()
     self.slots = {}
     self.i = {}
     local staffCount = 0
-
     for _, ply in ipairs(player.GetAll()) do
         if ply:IsAdmin() then
             staffCount = staffCount + 1
@@ -92,7 +86,6 @@ function PANEL:Init()
     self.staffListHeader:SetExpensiveShadow(1, color_black)
     self.staffListHeader:SetTall(28)
     self.staffListHeader:SizeToContents()
-
     self.staffListHeader.Paint = function(this, w, h)
         surface.SetDrawColor(50, 50, 50, 20)
         surface.DrawRect(0, 0, w, h)
@@ -104,7 +97,6 @@ function PANEL:Init()
         local list = self.layout:Add("DListLayout")
         list:Dock(TOP)
         list:SetTall(28)
-
         list.Think = function(this)
             for k2, v2 in ipairs(teamGetPlayers(k)) do
                 if not IsValid(v2.liaScoreSlot) or v2.liaScoreSlot:GetParent() ~= this then
@@ -125,7 +117,6 @@ function PANEL:Init()
         header:SetTextColor(color_white)
         header:SetExpensiveShadow(1, color_black)
         header:SetTall(28)
-
         header.Paint = function(this, w, h)
             surface.SetDrawColor(r, g, b, 20)
             surface.DrawRect(0, 0, w, h)
@@ -140,10 +131,8 @@ function PANEL:Think()
     if (self.nextUpdate or 0) < CurTime() then
         self.title:SetText(lia.config.sbTitle)
         local visible, amount
-
         for k, v in ipairs(self.teams) do
             visible, amount = v:IsVisible(), teamNumPlayers(k)
-
             if visible and k == FACTION_STAFF and LocalPlayer():Team() == FACTION_STAFF then
                 v:SetVisible(true)
                 self.layout:InvalidateLayout()
@@ -182,12 +171,10 @@ function PANEL:addPlayer(client, parent)
     slot.model = slot:Add("liaSpawnIcon")
     slot.model:SetModel(client:GetModel(), client:GetSkin())
     slot.model:SetSize(64, 64)
-
     slot.model.DoClick = function()
         local menu = DermaMenu()
         local options = {}
         hook.Run("ShowPlayerOptions", client, options)
-
         if table.Count(options) > 0 then
             for k, v in SortedPairs(options) do
                 menu:AddOption(L(k), v[2]):SetImage(v[1])
@@ -198,22 +185,23 @@ function PANEL:addPlayer(client, parent)
         RegisterDermaMenuForClose(menu)
     end
 
-    slot.model:SetTooltip(L("sbOptions", client:steamName()))
+    slot.model:SetTooltip(L("sbOptions", client:Name()))
+    timer.Simple(
+        0,
+        function()
+            if not IsValid(slot) then return end
+            local entity = slot.model.Entity
+            if IsValid(entity) then
+                for k, v in ipairs(client:GetBodyGroups()) do
+                    entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
+                end
 
-    timer.Simple(0, function()
-        if not IsValid(slot) then return end
-        local entity = slot.model.Entity
-
-        if IsValid(entity) then
-            for k, v in ipairs(client:GetBodyGroups()) do
-                entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
-            end
-
-            for k, v in ipairs(client:GetMaterials()) do
-                entity:SetSubMaterial(k - 1, client:GetSubMaterial(k - 1))
+                for k, v in ipairs(client:GetMaterials()) do
+                    entity:SetSubMaterial(k - 1, client:GetSubMaterial(k - 1))
+                end
             end
         end
-    end)
+    )
 
     slot.name = slot:Add("DLabel")
     slot.name:Dock(TOP)
@@ -226,7 +214,6 @@ function PANEL:addPlayer(client, parent)
     slot.ping:SetPos(self:GetWide() - 48, 0)
     slot.ping:SetSize(48, 64)
     slot.ping:SetText("0")
-
     slot.ping.Think = function(this)
         if IsValid(client) then
             this:SetText(client:Ping())
@@ -247,12 +234,10 @@ function PANEL:addPlayer(client, parent)
     slot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     slot.desc:SetFont("liaSmallFont")
     local oldTeam = client:Team()
-
     function slot:update()
         if not IsValid(client) or not client:getChar() or not self.character or self.character ~= client:getChar() or oldTeam ~= client:Team() then
             self:Remove()
             local i = 0
-
             for k, v in ipairs(parent:GetChildren()) do
                 if IsValid(v.model) and v ~= self then
                     i = i + 1
@@ -271,7 +256,6 @@ function PANEL:addPlayer(client, parent)
         local desc = hook.Run("ShouldAllowScoreboardOverride", client, "desc") and hook.Run("GetDisplayedDescription", client) or (client:getChar() and client:getChar():getDesc()) or ""
         desc = desc:gsub("#", "\226\128\139#")
         self.model:setHidden(overrideName == L("unknown"))
-
         if self.lastName ~= name then
             self.name:SetText(name)
             self.lastName = name
@@ -279,7 +263,6 @@ function PANEL:addPlayer(client, parent)
 
         local entity = self.model.Entity
         if not IsValid(entity) then return end
-
         local offDutySB = {
             root = true,
             communitymanager = true,
@@ -293,9 +276,8 @@ function PANEL:addPlayer(client, parent)
 
         if self.lastModel ~= model or self.lastSkin ~= skin then
             self.model:SetModel(client:GetModel(), client:GetSkin())
-
             if offDutySB[LocalPlayer():GetUserGroup()] or (LocalPlayer() == client) or LocalPlayer():Team() == FACTION_STAFF then
-                self.model:SetToolTip(L("sbOptions", client:steamName()))
+                self.model:SetToolTip(L("sbOptions", client:Name()))
             else
                 self.model:SetToolTip("You do not have access to see this information")
             end
@@ -304,13 +286,15 @@ function PANEL:addPlayer(client, parent)
             self.lastSkin = skin
         end
 
-        timer.Simple(0, function()
-            if not IsValid(entity) or not IsValid(client) then return end
-
-            for k, v in ipairs(client:GetBodyGroups()) do
-                entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
+        timer.Simple(
+            0,
+            function()
+                if not IsValid(entity) or not IsValid(client) then return end
+                for k, v in ipairs(client:GetBodyGroups()) do
+                    entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
+                end
             end
-        end)
+        )
     end
 
     self.slots[#self.slots + 1] = slot
@@ -318,7 +302,6 @@ function PANEL:addPlayer(client, parent)
     parent:SizeToChildren(false, true)
     parent:InvalidateLayout(true)
     local i = 0
-
     for k, v in ipairs(parent:GetChildren()) do
         if IsValid(v.model) then
             i = i + 1
@@ -347,11 +330,13 @@ end
 
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaScoreboard", PANEL, "EditablePanel")
-
 --------------------------------------------------------------------------------------------------------
-concommand.Add("dev_reloadsb", function()
-    if IsValid(lia.gui.score) then
-        lia.gui.score:Remove()
+concommand.Add(
+    "dev_reloadsb",
+    function()
+        if IsValid(lia.gui.score) then
+            lia.gui.score:Remove()
+        end
     end
-end)
+)
 --------------------------------------------------------------------------------------------------------
