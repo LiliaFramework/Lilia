@@ -41,6 +41,6 @@ lia.config.contributors = {
 --------------------------------------------------------------------------------------------------------
 lia.config.discord = {
     desc = "Join the Lilia Development Discord",
-    url = "https://discord.gg/6hqzh7VFcU"
+    url = "https://discord.gg/jWCEUEKQ"
 }
 --------------------------------------------------------------------------------------------------------
