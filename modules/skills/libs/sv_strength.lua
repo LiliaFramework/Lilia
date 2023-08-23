@@ -7,7 +7,7 @@ function MODULE:EntityTakeDamage(target, dmginfo)
     local damage = dmginfo:GetDamage()
     local strbonus = hook.Run("GetStrengthBonusDamage", char)
 
-    if IsValid(attacker) and IsValid(weapon) and table.HasValue(self.MeleeWeapons, weapon:GetClass()) and lia.config.MeleeDamageBonus then
+    if IsValid(attacker) and IsValid(weapon) and table.HasValue(lia.config.MeleeWeapons, weapon:GetClass()) and lia.config.MeleeDamageBonus then
         dmginfo:SetDamage(damage + strbonus)
     end
 
