@@ -1,14 +1,8 @@
-MODULE.name = "Lilia Character Selection"
-MODULE.author = "STEAM_0:1:176123778/Cheesenut"
-MODULE.desc = "The Lilia character selection screen."
-lia.util.includeDir(MODULE.path .. "/derma/steps", true)
-if SERVER then return end
-
 local function ScreenScale(size)
     return size * (ScrH() / 900) + 10
 end
 
-function MODULE:LoadFonts(font)
+function PLUGIN:LoadFonts(font)
     surface.CreateFont("liaCharTitleFont", {
         font = font,
         weight = 200,
@@ -43,24 +37,4 @@ function MODULE:LoadFonts(font)
         size = ScreenScale(22),
         additive = true
     })
-end
-
-function MODULE:LiliaLoaded()
-    vgui.Create("liaCharacter")
-end
-
-function MODULE:KickedFromCharacter(id, isCurrentChar)
-    if isCurrentChar then
-        vgui.Create("liaCharacter")
-    end
-end
-
-function MODULE:CreateMenuButtons(tabs)
-    tabs["characters"] = function(panel)
-        if IsValid(lia.gui.menu) then
-            lia.gui.menu:Remove()
-        end
-
-        vgui.Create("liaCharacter")
-    end
 end
