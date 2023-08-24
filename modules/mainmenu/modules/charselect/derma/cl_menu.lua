@@ -2,6 +2,7 @@ local PANEL = {}
 local gradient = lia.util.getMaterial("vgui/gradient-u")
 local gradient2 = lia.util.getMaterial("vgui/gradient-d")
 local alpha = 80
+lia.config.F1MenuLaunchUnanchor = lia.config.F1MenuLaunchUnanchor or "buttons/lightswitch2.wav"
 
 function PANEL:Init()
     if IsValid(lia.gui.menu) then
@@ -78,7 +79,7 @@ function PANEL:Think()
 
     if key and (self.noAnchor or CurTime() + .4) < CurTime() and self.anchorMode == true then
         self.anchorMode = false
-        surface.PlaySound(SOUND_F1_MENU_UNANCHOR)
+        surface.PlaySound(lia.config.F1MenuLaunchUnanchor)
     end
 
     if not self.anchorMode then

@@ -1,4 +1,6 @@
 local PANEL = {}
+lia.config.SoundMenuButtonPressed = lia.config.SoundMenuButtonPressed or "ui/buttonclickrelease.wav"
+lia.config.MenuButtonRollover = lia.config.MenuButtonRollover or "ui/buttonrollover.wav"
 
 function PANEL:Init()
 	self:SetFont("liaMenuButtonFont")
@@ -28,7 +30,7 @@ end
 function PANEL:OnCursorEntered()
 	local color = self:GetTextColor()
 	self:SetTextColor(Color(math.max(color.r - 25, 0), math.max(color.g - 25, 0), math.max(color.b - 25, 0)))
-	surface.PlaySound(SOUND_MENU_BUTTON_ROLLOVER)
+	surface.PlaySound(lia.config.MenuButtonRollover)
 end
 
 function PANEL:OnCursorExited()
@@ -46,7 +48,7 @@ function PANEL:OnMousePressed(code)
 		self:SetTextColor(lia.config.Color)
 	end
 
-	surface.PlaySound(SOUND_MENU_BUTTON_PRESSED)
+	surface.PlaySound(lia.config.SoundMenuButtonPressed)
 
 	if code == MOUSE_LEFT and self.DoClick then
 		self:DoClick(self)
