@@ -1,5 +1,4 @@
-lia.config.CustomUIEnabled = true 
-
+lia.config.CustomUIEnabled = false
 if lia.config.CustomUIEnabled then
     function MODULE:LiliaLoaded()
         vgui.Create("liaNewCharacterMenu")
