@@ -5,7 +5,8 @@ lia.bar.list = lia.bar.list or {}
 lia.bar.actionText = ""
 lia.bar.actionStart = 0
 lia.bar.actionEnd = 0
-
+--------------------------------------------------------------------------------------------------------
+lia.config.Color = lia.config.Color or Color(75, 119, 190)
 --------------------------------------------------------------------------------------------------------
 function lia.bar.get(identifier)
     for i = 1, #lia.bar.list do
