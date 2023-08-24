@@ -13,7 +13,7 @@ function PANEL:Init()
     lia.menuMusicIsLocal = false
     timer.Remove("liaMusicFader")
     local source = lia.config.Music
-    source = 'external_g/menu2.mp3'
+    source = 'mainmenu/menu2.mp3'
     if not source:find("%S") then return end
     if source:find("http") then
         sound.PlayURL(
