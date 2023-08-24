@@ -76,9 +76,6 @@ function GM:PlayerSpawn(client)
     if pac then
         client:ConCommand("pac_restart")
     end
-    if lia.config.PKActive and character and character:getData("permakilled") then
-        character:ban()
-    end
 
     client:setNetVar("voiceRange", 2)
     client:SetNoDraw(false)
