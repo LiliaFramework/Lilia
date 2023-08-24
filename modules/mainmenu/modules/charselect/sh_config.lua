@@ -14,5 +14,4 @@ lia.config.CustomUIBackgrounds = {lia.util.getMaterial('ui/bg1.png'), lia.util.g
 lia.config.WebsiteURL = 'https://discord.gg/77JtZx2FCq'
 lia.config.DiscordURL = 'https://discord.gg/77JtZx2FCq'
 lia.config.ContentURL = 'https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255'
-lia.config.CustomUIEnabled = false
 --------------------------------------------------------------------------------------------------------

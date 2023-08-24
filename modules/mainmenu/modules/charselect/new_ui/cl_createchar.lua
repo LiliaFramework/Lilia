@@ -1,6 +1,6 @@
 local PANEL = {}
-local eagle = lia.util.getMaterial('external_g/eagle.png')
-
+lia.config.CharClick = lia.config.CharClick or {"buttons/button14.wav", 35, 255}
+lia.config.CharWarning = lia.config.CharWarning or {"friends/friend_join.wav", 40, 255}
 function PANEL:Init()
     if IsValid(lia.gui.newCreateCharMenu) then
         lia.gui.newCreateCharMenu:Remove()
@@ -24,7 +24,6 @@ function PANEL:Init()
     self.right:SetSize(20, 20)
     self.right:SetPos((ScrW() * .5) - 20 / 2 + 20, (ScrH() * .87) - 20 / 2)
     self.right:SetImage('external_g/arrow_right.png')
-
     self.right.Think = function()
         if self.currentSlide == #self.slides then
             self.right:SetDisabled(true)
@@ -39,28 +38,40 @@ function PANEL:Init()
         if self.movingSlide then return end
         if self.currentSlide == #self.slides then return end
         self.movingSlide = true
-
-        self.slides[self.currentSlide]:MoveTo(-ScrW(), (ScrH() * .5) - (ScrH() * .7) / 2, .3, 0, -1, function(_, me)
-            if me.Hidden then
-                me:Hidden()
+        self.slides[self.currentSlide]:MoveTo(
+            -ScrW(),
+            (ScrH() * .5) - (ScrH() * .7) / 2,
+            .3,
+            0,
+            -1,
+            function(_, me)
+                if me.Hidden then
+                    me:Hidden()
+                end
             end
-        end)
+        )
 
         if self.slides[self.currentSlide + 1].Setup then
             self.slides[self.currentSlide + 1]:Setup()
         end
 
-        self.slides[self.currentSlide + 1]:MoveTo((ScrW() * .5) - (ScrW() * .7) / 2, (ScrH() * .5) - (ScrH() * .7) / 2, .3, 0, -1, function()
-            self.movingSlide = false
-            self.currentSlide = self.currentSlide + 1
-        end)
+        self.slides[self.currentSlide + 1]:MoveTo(
+            (ScrW() * .5) - (ScrW() * .7) / 2,
+            (ScrH() * .5) - (ScrH() * .7) / 2,
+            .3,
+            0,
+            -1,
+            function()
+                self.movingSlide = false
+                self.currentSlide = self.currentSlide + 1
+            end
+        )
     end
 
     self.left = self:Add('DImageButton')
     self.left:SetSize(20, 20)
     self.left:SetPos((ScrW() * .5) - 20 / 2 - 20, (ScrH() * .87) - 20 / 2)
     self.left:SetImage('external_g/arrow_left.png')
-
     self.left.Think = function()
         if self.currentSlide == 1 then
             self.left:SetDisabled(true)
@@ -75,36 +86,50 @@ function PANEL:Init()
         if self.movingSlide then return end
         if self.currentSlide == 1 then return end
         self.movingSlide = true
-
-        self.slides[self.currentSlide]:MoveTo(ScrW(), (ScrH() * .5) - (ScrH() * .7) / 2, .3, 0, -1, function(_, me)
-            if me.Hidden then
-                me:Hidden()
+        self.slides[self.currentSlide]:MoveTo(
+            ScrW(),
+            (ScrH() * .5) - (ScrH() * .7) / 2,
+            .3,
+            0,
+            -1,
+            function(_, me)
+                if me.Hidden then
+                    me:Hidden()
+                end
             end
-        end)
+        )
 
         if self.slides[self.currentSlide - 1].Setup then
             self.slides[self.currentSlide - 1]:Setup()
         end
 
-        self.slides[self.currentSlide - 1]:MoveTo((ScrW() * .5) - (ScrW() * .7) / 2, (ScrH() * .5) - (ScrH() * .7) / 2, .3, 0, -1, function()
-            self.movingSlide = false
-            self.currentSlide = self.currentSlide - 1
-        end)
+        self.slides[self.currentSlide - 1]:MoveTo(
+            (ScrW() * .5) - (ScrW() * .7) / 2,
+            (ScrH() * .5) - (ScrH() * .7) / 2,
+            .3,
+            0,
+            -1,
+            function()
+                self.movingSlide = false
+                self.currentSlide = self.currentSlide - 1
+            end
+        )
     end
 
     do
         local pnl = self:CreateSlide()
         pnl:SetX((ScrW() * .5) - (ScrW() * .7) / 2)
-
         pnl.Paint = function(_, w, h)
-            draw.Text({
-                text = 'Select a faction',
-                font = 'liaEgMainMenu',
-                pos = {w / 2, 0},
-                xalign = TEXT_ALIGN_CENTER,
-                yalign = TEXT_ALIGN_TOP,
-                color = color_white
-            })
+            draw.Text(
+                {
+                    text = 'Select a faction',
+                    font = 'liaEgMainMenu',
+                    pos = {w / 2, 0},
+                    xalign = TEXT_ALIGN_CENTER,
+                    yalign = TEXT_ALIGN_TOP,
+                    color = color_white
+                }
+            )
         end
 
         pnl.Setup = function()
@@ -113,7 +138,6 @@ function PANEL:Init()
             pnl.faction:SetPos((pnl:GetWide() * .5) - (pnl:GetWide() * .3) / 2, (pnl:GetTall() * .5) - 35 / 2)
             pnl.faction:SetTextColor(color_white)
             pnl.faction:SetFont('liaCharButtonFont')
-
             pnl.faction.Paint = function(me, w, h)
                 lia.util.drawBlur(me)
                 surface.SetDrawColor(0, 0, 0, 100)
@@ -125,17 +149,14 @@ function PANEL:Init()
             end
 
             local first = true
-
             for id, _faction in SortedPairsByMemberValue(lia.faction.teams, 'name') do
                 if not lia.faction.hasWhitelist(_faction.index) then continue end
-
                 if self.context:GetFaction() then
                     first = false
                     pnl.faction:SetValue(L(lia.faction.get(self.context:GetFaction()).name))
                 end
 
                 pnl.faction:AddChoice(L(_faction.name), id, first)
-
                 if first then
                     self.context:SetFaction(_faction.index)
                 end
@@ -156,16 +177,17 @@ function PANEL:Init()
     do
         local realpanel = self
         local pnl = self:CreateSlide()
-
         pnl.Paint = function(_, w, h)
-            draw.Text({
-                text = 'Select a model',
-                font = 'liaEgMainMenu',
-                pos = {w / 2, 0},
-                xalign = TEXT_ALIGN_CENTER,
-                yalign = TEXT_ALIGN_TOP,
-                color = color_white
-            })
+            draw.Text(
+                {
+                    text = 'Select a model',
+                    font = 'liaEgMainMenu',
+                    pos = {w / 2, 0},
+                    xalign = TEXT_ALIGN_CENTER,
+                    yalign = TEXT_ALIGN_TOP,
+                    color = color_white
+                }
+            )
         end
 
         pnl.Setup = function()
@@ -174,14 +196,12 @@ function PANEL:Init()
             pnl.modelViewer:Dock(LEFT)
             pnl.modelViewer:SetModel('models/error.mdl')
             pnl.modelViewer.oldSetModel = pnl.modelViewer.SetModel
-
             pnl.modelViewer.SetModel = function(model, ...)
                 model:oldSetModel(...)
                 model:fitFOV()
             end
 
             local sideMargin = 0
-
             if ScrW() > 1280 then
                 sideMargin = ScrW() * 0.15
             elseif ScrW() > 720 then
@@ -192,7 +212,6 @@ function PANEL:Init()
                 local faction = lia.faction.indices[realpanel.context:GetFaction()]
                 local modelInfo = faction.models[realpanel.context:GetModel() or 1]
                 local model, skin, groups
-
                 if istable(modelInfo) then
                     model, skin, groups = unpack(modelInfo)
                 else
@@ -203,7 +222,6 @@ function PANEL:Init()
                 local entity = pnl.modelViewer:GetEntity()
                 if not IsValid(entity) then return end
                 entity:SetSkin(skin)
-
                 if istable(groups) then
                     for group, value in pairs(groups) do
                         entity:SetBodygroup(group, value)
@@ -226,7 +244,6 @@ function PANEL:Init()
             pnl.models:SetStretchWidth(true)
             pnl.models:SetStretchHeight(true)
             pnl.models:StretchToParent(0, 0, 0, 0)
-
             function pnl.models:onModelSelected(icon, noSound)
                 realpanel.context:SetModel(icon.index or 1)
                 pnl.modelViewer:updateModel()
@@ -237,7 +254,6 @@ function PANEL:Init()
                 local color = lia.config.Color
                 surface.SetDrawColor(color.r, color.g, color.b, 200)
                 local i2
-
                 for i = 1, 3 do
                     i2 = i * 2
                     surface.DrawOutlinedRect(i, i, w - i2, h - i2)
@@ -249,7 +265,6 @@ function PANEL:Init()
                 pnl.models:InvalidateLayout(true)
                 local faction = lia.faction.indices[realpanel.context:GetFaction()]
                 if not faction then return end
-
                 local function paintIcon(icon, w, h)
                     self:paintIcon(icon, w, h)
                 end
@@ -258,13 +273,11 @@ function PANEL:Init()
                     local icon = pnl.models:Add('SpawnIcon')
                     icon:SetSize(64, 128)
                     icon:InvalidateLayout(true)
-
                     icon.DoClick = function(icon)
                         self:onModelSelected(icon)
                     end
 
                     icon.PaintOver = paintIcon
-
                     if isstring(v) then
                         icon:SetModel(v)
                         icon.model = v
@@ -278,7 +291,6 @@ function PANEL:Init()
                     end
 
                     icon.index = k
-
                     if realpanel.context:GetModel() == k then
                         self:onModelSelected(icon, true)
                     end
@@ -286,7 +298,6 @@ function PANEL:Init()
 
                 pnl.models:Layout()
                 pnl.models:InvalidateLayout()
-
                 for _, child in pairs(oldChildren) do
                     child:Remove()
                 end
@@ -306,12 +317,10 @@ function PANEL:Init()
         local HIGHLIGHT = Color(255, 255, 255, 50)
         local realpanel = self
         local pnl = self:CreateSlide()
-
         pnl.Setup = function()
             pnl.secondPanel = pnl:Add('EditablePanel')
             pnl.secondPanel:SetSize(ScrW() * .5, ScrH() * .5)
             pnl.secondPanel:SetPos((pnl:GetWide() * .5) - (ScrW() * .5) / 2, (pnl:GetTall() * .5) - (ScrH() * .5) / 2)
-
             function pnl.secondPanel:paintTextEntry(w, h)
                 lia.util.drawBlur(self)
                 surface.SetDrawColor(0, 0, 0, 100)
@@ -325,7 +334,6 @@ function PANEL:Init()
                 entry:SetFont('liaCharButtonFont')
                 entry.Paint = self.paintTextEntry
                 entry:DockMargin(0, 4, 0, 16)
-
                 entry.OnValueChange = function(_, value)
                     if contextName == 'Name' then
                         realpanel.context:SetName(value:Trim())
@@ -335,7 +343,6 @@ function PANEL:Init()
                 end
 
                 entry.contextName = contextName
-
                 entry.OnKeyCodeTyped = function(name, keyCode)
                     if keyCode == KEY_TAB then
                         entry:onTabPressed()
@@ -364,13 +371,11 @@ function PANEL:Init()
             pnl.nameLabel:SetZPos(0)
             pnl.name = pnl.secondPanel:addTextEntry('Name')
             pnl.name:SetTall(48)
-
             pnl.name.onTabPressed = function()
                 pnl.desc:RequestFocus()
             end
 
             pnl.name:SetZPos(1)
-
             if realpanel.context:GetName() then
                 pnl.name:SetValue(realpanel.context:GetName())
             end
@@ -379,14 +384,12 @@ function PANEL:Init()
             pnl.descLabel:SetZPos(2)
             pnl.desc = pnl.secondPanel:addTextEntry('Description')
             pnl.desc:SetTall(pnl.name:GetTall() * 3)
-
             pnl.desc.onTabPressed = function()
                 pnl.name:RequestFocus()
             end
 
             pnl.desc:SetMultiline(true)
             pnl.desc:SetZPos(3)
-
             if realpanel.context:GetDescription() then
                 pnl.desc:SetValue(realpanel.context:GetDescription())
             end
@@ -397,20 +400,21 @@ function PANEL:Init()
             pnl.finish:SetFont('liaCharButtonFont')
             pnl.finish:SetText('Finish')
             pnl.finish.Paint = nil
-
             pnl.finish.DoClick = function()
                 if not realpanel.context:GetFaction() then return end
                 if not realpanel.context:GetModel() then return end
                 if not realpanel.context:GetName() then return end
                 if not realpanel.context:GetDescription() then return end
                 if self.bClosing then return end
-
-                MainMenu:createCharacter(self.context):next(function()
-                    realpanel:Hide()
-                    LocalPlayer():EmitSound(unpack(SOUND_CHAR_CLICK))
-                end, function()
-                    LocalPlayer():EmitSound(unpack(SOUND_CHAR_WARNING))
-                end)
+                MainMenu:createCharacter(self.context):next(
+                    function()
+                        realpanel:Hide()
+                        LocalPlayer():EmitSound(unpack(lia.config.CharClick))
+                    end,
+                    function()
+                        LocalPlayer():EmitSound(unpack(lia.config.CharWarning))
+                    end
+                )
             end
         end
 
@@ -433,16 +437,22 @@ function PANEL:CreateSlide()
 end
 
 local gradient = lia.util.getMaterial('gui/gradient_down')
-
 function PANEL:Paint(w, h)
     surface.SetDrawColor(28, 28, 28)
     surface.DrawRect(0, 0, w, h)
 end
 
 function PANEL:Hide()
-    self:MoveTo(0, ScrH(), .8, 0, -1, function()
-        self:Remove()
-    end)
+    self:MoveTo(
+        0,
+        ScrH(),
+        .8,
+        0,
+        -1,
+        function()
+            self:Remove()
+        end
+    )
 
     local panel = vgui.Create('liaNewCharacterMenu')
     panel:SetPos(0, -ScrH())
@@ -452,7 +462,6 @@ end
 
 function PANEL:OnKeyCodePressed(keyCode)
     if self.bClosing then return end
-
     if keyCode == KEY_SPACE then
         self:Hide()
     end

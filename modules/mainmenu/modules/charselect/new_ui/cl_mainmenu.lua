@@ -1,9 +1,8 @@
 local MODULE = MODULE
 local PANEL = {}
 DEFINE_BASECLASS('EditablePanel')
-local BGs = lia.config.CustomUIBackgrounds
+local BGs = lia.config.CustomUIBackgrounds or {}
 local click_sound = 'weapons/grenade/tick1.wav'
-
 local function playClickSound()
     surface.PlaySound(click_sound)
 end
@@ -29,7 +28,6 @@ function PANEL:Init()
     self.selected:SetSize(ScrW() * .5, ScrH() * .05)
     self.selected:SetPos((ScrW() * .5) - (ScrW() * .25) / 2, ScrH() - (ScrH() * .1))
     self.selected.alpha = 0
-
     self.selected.Paint = function(me, w, h)
         if me.text == '' then
             me.alpha = Lerp(math.ease.InOutCirc(0.1), me.alpha, 0)
@@ -42,70 +40,112 @@ function PANEL:Init()
         surface.DrawRect(0, 0, w, h)
         surface.SetDrawColor(255, 255, 255)
         surface.DrawRect(0, 0, 2, h)
-
-        draw.Text({
-            text = self.selected.text:upper(),
-            font = 'liaEgMainMenu',
-            pos = {w / 2, h / 2},
-            xalign = TEXT_ALIGN_CENTER,
-            yalign = TEXT_ALIGN_CENTER,
-            color = me.text_color
-        })
+        draw.Text(
+            {
+                text = self.selected.text:upper(),
+                font = 'liaEgMainMenu',
+                pos = {w / 2, h / 2},
+                xalign = TEXT_ALIGN_CENTER,
+                yalign = TEXT_ALIGN_CENTER,
+                color = me.text_color
+            }
+        )
     end
 
     self.selected.text = ''
-
     if LocalPlayer():getChar() then
-        self:CreateButton('Resume', 'Return to game', function()
-            if IsValid(lia.gui.bgMusic) then
-                lia.gui.bgMusic:Remove()
-            end
+        self:CreateButton(
+            'Resume',
+            'Return to game',
+            function()
+                if IsValid(lia.gui.bgMusic) then
+                    lia.gui.bgMusic:Remove()
+                end
 
-            self:Remove()
-        end)
+                self:Remove()
+            end
+        )
     end
 
     if #lia.characters > 0 then
-        self:CreateButton('Characters', 'Your characters', function(me)
-            if me.pressed then return end
+        self:CreateButton(
+            'Characters',
+            'Your characters',
+            function(me)
+                if me.pressed then return end
+                self:MoveTo(
+                    0,
+                    ScrH(),
+                    .8,
+                    0,
+                    -1,
+                    function()
+                        self:Remove()
+                    end
+                )
 
-            self:MoveTo(0, ScrH(), .8, 0, -1, function()
-                self:Remove()
-            end)
-
-            vgui.Create('liaNewCharactersMenu')
-        end)
+                vgui.Create('liaNewCharactersMenu')
+            end
+        )
     end
 
     if (hook.Run('CanPlayerCreateCharacter', LocalPlayer()) ~= false) and self:CanCreateCharacter() then
-        self:CreateButton('New Character', 'Create a new character', function(me)
-            if me.pressed then return end
+        self:CreateButton(
+            'New Character',
+            'Create a new character',
+            function(me)
+                if me.pressed then return end
+                self:MoveTo(
+                    0,
+                    -ScrH(),
+                    .8,
+                    0,
+                    -1,
+                    function()
+                        self:Remove()
+                    end
+                )
 
-            self:MoveTo(0, -ScrH(), .8, 0, -1, function()
-                self:Remove()
-            end)
-
-            vgui.Create('liaNewCreateCharacterMenu')
-        end)
+                vgui.Create('liaNewCreateCharacterMenu')
+            end
+        )
     end
 
-    self:CreateButton('Discord', 'Our Discord server', function()
-        gui.OpenURL(lia.config.DiscordURL)
-    end)
+    self:CreateButton(
+        'Discord',
+        'Our Discord server',
+        function()
+            gui.OpenURL(lia.config.DiscordURL)
+        end
+    )
 
-    self:CreateButton('Forums', 'Our website', function()
-        gui.OpenURL(lia.config.WebsiteURL)
-    end)
+    self:CreateButton(
+        'Forums',
+        'Our website',
+        function()
+            gui.OpenURL(lia.config.WebsiteURL)
+        end
+    )
 
-    self:CreateButton('Content Pack', 'Our Content', function()
-        gui.OpenURL(lia.config.ContentURL)
-    end)
+    self:CreateButton(
+        'Content Pack',
+        'Our Content',
+        function()
+            gui.OpenURL(lia.config.ContentURL)
+        end
+    )
 
-    self:CreateButton('Exit', 'Disconnect from server', function(me)
-        vgui.Create('liaNewCharacterConfirm'):setTitle(L('disconnect'):upper() .. '?'):setMessage(L('You will disconnect from the server.'):upper()):onConfirm(function()
-            LocalPlayer():ConCommand('disconnect')
-        end)
-    end)
+    self:CreateButton(
+        'Exit',
+        'Disconnect from server',
+        function(me)
+            vgui.Create('liaNewCharacterConfirm'):setTitle(L('disconnect'):upper() .. '?'):setMessage(L('You will disconnect from the server.'):upper()):onConfirm(
+                function()
+                    LocalPlayer():ConCommand('disconnect')
+                end
+            )
+        end
+    )
 
     if not IsValid(lia.gui.bgMusic) then
         lia.gui.bgMusic = vgui.Create('liaNewCharBGMusic')
@@ -114,7 +154,6 @@ end
 
 function PANEL:CanCreateCharacter()
     local validFactions = {}
-
     for k, v in pairs(lia.faction.teams) do
         if lia.faction.hasWhitelist(v.index) then
             validFactions[#validFactions + 1] = v.index
@@ -152,7 +191,6 @@ function PANEL:CreateButton(text, description, callback)
     btn.pressed = false
     btn.text_x = btn:GetWide() * 0.09
     btn:SetTall(btn.tall)
-
     btn.Paint = function(me, w, h)
         if me:IsHovered() then
             me.tall = Lerp(math.ease.InOutCirc(0.2), me.tall, ScrH() * .064)
@@ -172,15 +210,16 @@ function PANEL:CreateButton(text, description, callback)
         surface.SetDrawColor(255, 255, 255)
         surface.DrawRect(0, 0, btn.width, h)
         me:SetTall(btn.tall)
-
-        draw.Text({
-            text = me.text:upper(),
-            font = 'liaEgMainMenu',
-            pos = {25, h / 2},
-            xalign = TEXT_ALIGN_LEFT,
-            yalign = TEXT_ALIGN_CENTER,
-            color = me.text_color
-        })
+        draw.Text(
+            {
+                text = me.text:upper(),
+                font = 'liaEgMainMenu',
+                pos = {25, h / 2},
+                xalign = TEXT_ALIGN_LEFT,
+                yalign = TEXT_ALIGN_CENTER,
+                color = me.text_color
+            }
+        )
     end
 
     btn.DoClick = function(me)
@@ -201,10 +240,8 @@ function PANEL:Paint(w, h)
 end
 
 local oBackground = 0
-
 local function performBackground()
     oBackground = oBackground + 1
-
     if not BGs[oBackground] then
         oBackground = 1
     end
@@ -218,37 +255,58 @@ function PANEL:CreateBG()
     local background = performBackground()
     local bg = self.background:Add('EditablePanel')
     bg:SetSize(self:GetWide(), self:GetTall())
-
     if self.bg_initialized then
         bg:SetPos(0, 0)
         bg:SetAlpha(0)
+        bg:AlphaTo(
+            255,
+            1,
+            0,
+            function()
+                timer.Simple(
+                    10,
+                    function()
+                        if not IsValid(self) then return end
+                        bg:AlphaTo(
+                            0,
+                            1,
+                            0,
+                            function()
+                                bg:Remove()
+                            end
+                        )
 
-        bg:AlphaTo(255, 1, 0, function()
-            timer.Simple(10, function()
-                if not IsValid(self) then return end
-
-                bg:AlphaTo(0, 1, 0, function()
-                    bg:Remove()
-                end)
-
-                self:CreateBG()
-            end)
-        end)
+                        self:CreateBG()
+                    end
+                )
+            end
+        )
     else
         bg:SetPos(0, 0)
         bg:SetAlpha(0)
+        bg:AlphaTo(
+            255,
+            1,
+            0,
+            function()
+                timer.Simple(
+                    10,
+                    function()
+                        if not IsValid(self) then return end
+                        bg:AlphaTo(
+                            0,
+                            1,
+                            0,
+                            function()
+                                bg:Remove()
+                            end
+                        )
 
-        bg:AlphaTo(255, 1, 0, function()
-            timer.Simple(10, function()
-                if not IsValid(self) then return end
-
-                bg:AlphaTo(0, 1, 0, function()
-                    bg:Remove()
-                end)
-
-                self:CreateBG()
-            end)
-        end)
+                        self:CreateBG()
+                    end
+                )
+            end
+        )
     end
 
     bg.Paint = function(me, w, h)
@@ -261,10 +319,14 @@ end
 
 function PANEL:Remove()
     self.bClosing = true
-
-    self:AlphaTo(0, .3, 0, function()
-        BaseClass.Remove(self)
-    end)
+    self:AlphaTo(
+        0,
+        .3,
+        0,
+        function()
+            BaseClass.Remove(self)
+        end
+    )
 end
 
 vgui.Register('liaNewCharacterMenu', PANEL, 'EditablePanel')

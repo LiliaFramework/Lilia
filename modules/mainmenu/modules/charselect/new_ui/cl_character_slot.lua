@@ -1,5 +1,8 @@
 local PANEL = {}
 local STRIP_HEIGHT = 4
+lia.config.CharHover = lia.config.CharHover or {"buttons/button15.wav", 35, 250}
+lia.config.CharClick = lia.config.CharClick or {"buttons/button14.wav", 35, 255}
+lia.config.CharWarning = lia.config.CharWarning or {"friends/friend_join.wav", 40, 255}
 
 function PANEL:isCursorWithinBounds()
 	local x, y = self:LocalCursorPos()
