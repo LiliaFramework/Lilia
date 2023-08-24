@@ -6,11 +6,12 @@ PANEL.SELECTED = SELECTED
 PANEL.HOVERED = Color(255, 255, 255, 50)
 PANEL.ANIM_SPEED = 0.1
 PANEL.FADE_SPEED = 0.5
-
+lia.config.CharHover = lia.config.CharHover or {"buttons/button15.wav", 35, 250}
+lia.config.CharClick = lia.config.CharClick or {"buttons/button14.wav", 35, 255}
+lia.config.CharWarning = lia.config.CharWarning or {"friends/friend_join.wav", 40, 255}
 -- Called when the tabs for the character menu should be created.
 function PANEL:createTabs()
     local load, create
-
     -- Only show the load tab if playable characters exist.
     if lia.characters and #lia.characters > 0 then
         load = self:addTab("continue", self.createCharacterSelection)
@@ -31,21 +32,29 @@ function PANEL:createTabs()
     -- If the player has a character (i.e. opened this menu from F1 menu), then
     -- don't add a disconnect button. Just add a close button.
     if LocalPlayer():getChar() then
-        self:addTab("return", function()
-            if IsValid(self) and LocalPlayer():getChar() then
-                self:fadeOut()
-            end
-        end, true)
+        self:addTab(
+            "return",
+            function()
+                if IsValid(self) and LocalPlayer():getChar() then
+                    self:fadeOut()
+                end
+            end, true
+        )
 
         return
     end
 
     -- Otherwise, add a disconnect button.
-    self:addTab("leave", function()
-        vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function()
-            LocalPlayer():ConCommand("disconnect")
-        end)
-    end, true)
+    self:addTab(
+        "leave",
+        function()
+            vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(
+                function()
+                    LocalPlayer():ConCommand("disconnect")
+                end
+            )
+        end, true
+    )
 end
 
 function PANEL:createTitle()
@@ -69,13 +78,10 @@ end
 
 function PANEL:loadBackground()
     self.blank = true
-    
     local url = lia.config.BackgroundURL
-
     if url and url:find("%S") then
         self.background = self:Add("DHTML")
         self.background:SetSize(ScrW(), ScrH())
-
         if url:find("http") then
             self.background:OpenURL(url)
         else
@@ -83,14 +89,18 @@ function PANEL:loadBackground()
         end
 
         self.background.OnDocumentReady = function(background)
-            self.bgLoader:AlphaTo(0, 2, 1, function()
-                self.bgLoader:Remove()
-            end)
+            self.bgLoader:AlphaTo(
+                0,
+                2,
+                1,
+                function()
+                    self.bgLoader:Remove()
+                end
+            )
         end
 
         self.background:MoveToBack()
         self.background:SetZPos(-999)
-
         if lia.config.CharMenuBGInputDisabled then
             self.background:SetMouseInputEnabled(false)
             self.background:SetKeyboardInputEnabled(false)
@@ -99,7 +109,6 @@ function PANEL:loadBackground()
         self.bgLoader = self:Add("DPanel")
         self.bgLoader:SetSize(ScrW(), ScrH())
         self.bgLoader:SetZPos(-998)
-
         self.bgLoader.Paint = function(loader, w, h)
             surface.SetDrawColor(20, 20, 20)
             surface.DrawRect(0, 0, w, h)
@@ -108,7 +117,6 @@ function PANEL:loadBackground()
 end
 
 local gradient = lia.util.getMaterial("vgui/gradient-u")
-
 function PANEL:paintBackground(w, h)
     if IsValid(self.background) then return end
     -- if (self.blank) then
@@ -123,7 +131,6 @@ end
 function PANEL:addTab(name, callback, justClick)
     local button = self.tabs:Add("liaCharacterTabButton")
     button:setText(L(name):upper())
-
     if justClick then
         if isfunction(callback) then
             button.DoClick = function(button)
@@ -139,9 +146,11 @@ function PANEL:addTab(name, callback, justClick)
     end
 
     if isfunction(callback) then
-        button:onSelected(function()
-            callback(self)
-        end)
+        button:onSelected(
+            function()
+                callback(self)
+            end
+        )
     end
 
     return button
@@ -160,9 +169,14 @@ function PANEL:createCharacterCreation()
 end
 
 function PANEL:fadeOut()
-    self:AlphaTo(0, self.ANIM_SPEED, 0, function()
-        self:Remove()
-    end)
+    self:AlphaTo(
+        0,
+        self.ANIM_SPEED,
+        0,
+        function()
+            self:Remove()
+        end
+    )
 end
 
 function PANEL:Init()
@@ -206,7 +220,6 @@ end
 
 function PANEL:setFadeToBlack(fade)
     local d = deferred.new()
-
     if fade then
         if IsValid(self.fade) then
             self.fade:Remove()
@@ -217,21 +230,29 @@ function PANEL:setFadeToBlack(fade)
         fade:SetSkin("Default")
         fade:SetBackgroundColor(color_black)
         fade:SetAlpha(0)
-
-        fade:AlphaTo(255, self.FADE_SPEED, 0, function()
-            d:resolve()
-        end)
+        fade:AlphaTo(
+            255,
+            self.FADE_SPEED,
+            0,
+            function()
+                d:resolve()
+            end
+        )
 
         fade:SetZPos(999)
         fade:MakePopup()
         self.fade = fade
     elseif IsValid(self.fade) then
         local fadePanel = self.fade
-
-        fadePanel:AlphaTo(0, self.FADE_SPEED, 0, function()
-            fadePanel:Remove()
-            d:resolve()
-        end)
+        fadePanel:AlphaTo(
+            0,
+            self.FADE_SPEED,
+            0,
+            function()
+                fadePanel:Remove()
+                d:resolve()
+            end
+        )
     end
 
     return d
@@ -243,15 +264,15 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:hoverSound()
-    LocalPlayer():EmitSound(unpack(SOUND_CHAR_HOVER))
+    LocalPlayer():EmitSound(unpack(lia.config.CharHover))
 end
 
 function PANEL:clickSound()
-    LocalPlayer():EmitSound(unpack(SOUND_CHAR_CLICK))
+    LocalPlayer():EmitSound(unpack(lia.config.CharClick))
 end
 
 function PANEL:warningSound()
-    LocalPlayer():EmitSound(unpack(SOUND_CHAR_WARNING))
+    LocalPlayer():EmitSound(unpack(lia.config.CharWarning))
 end
 
 vgui.Register("liaCharacter", PANEL, "EditablePanel")
