@@ -53,7 +53,7 @@ function ENT:onDrawEntityInfo(alpha)
 	local desc = self.getNetVar(self, "desc")
 	lia.util.drawText(self.getNetVar(self, "name", "John Doe"), x, y, ColorAlpha(lia.config.Color), 1, 1, nil, alpha * 0.65)
 	if desc then
-		drawTlia.util.drawTextext(desc, x, y + 16, ColorAlpha(color_white, alpha), 1, 1, "liaSmallFont", alpha * 0.65)
+		lia.util.drawText(desc, x, y + 16, ColorAlpha(color_white, alpha), 1, 1, "liaSmallFont", alpha * 0.65)
 	end
 end
 --------------------------------------------------------------------------------------------------------
