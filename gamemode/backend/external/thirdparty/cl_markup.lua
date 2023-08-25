@@ -8,7 +8,6 @@ TEXT_ALIGN_CENTER = 1
 TEXT_ALIGN_RIGHT = 2
 TEXT_ALIGN_TOP = 3
 TEXT_ALIGN_BOTTOM = 4
-
 --[[---------------------------------------------------------
     Name: Temporary information used when building text frames.
 -----------------------------------------------------------]]
@@ -22,9 +21,7 @@ local colour_stack = {
 }
 
 local font_stack = {"DermaDefault"}
-
 local blocks = {}
-
 local colourmap = {
     -- it's all black and white
     ["black"] = {
@@ -207,7 +204,6 @@ local colourmap = {
         a = 255
     },
 }
-
 --[[---------------------------------------------------------
     Name: colourMatch(c)
     Desc: Match a colour name to an rgb value.
@@ -218,7 +214,6 @@ local function colourMatch(c)
 
     return colourmap[c]
 end
-
 --[[---------------------------------------------------------
     Name: ExtractParams(p1,p2,p3)
     Desc: This function is used to extract the tag information.
@@ -227,7 +222,6 @@ end
 local function ExtractParams(p1, p2, p3)
     if string.utf8sub(p1, 1, 1) == "/" then
         local tag = string.utf8sub(p1, 2)
-
         if tag == "color" or tag == "colour" then
             table.remove(colour_stack)
         elseif tag == "font" or tag == "face" then
@@ -236,14 +230,10 @@ local function ExtractParams(p1, p2, p3)
     else
         if p1 == "color" or p1 == "colour" then
             local rgba = colourMatch(p2)
-
             if rgba == nil then
                 rgba = {}
-
                 local x = {"r", "g", "b", "a"}
-
                 n = 1
-
                 for k, v in string.gmatch(p2, "(%d+),?") do
                     rgba[x[n]] = k
                     n = n + 1
@@ -258,7 +248,6 @@ local function ExtractParams(p1, p2, p3)
             local material = exploded[1] or p2
             local p3 = exploded[2]
             local found = file.Find("materials/" .. material .. ".*", "GAME")
-
             if found[1] and found[1]:find("%.png") then
                 material = material .. ".png"
             end
@@ -267,18 +256,19 @@ local function ExtractParams(p1, p2, p3)
             local sizeData = string.Explode("x", p3 or "16x16")
             w = tonumber(sizeData[1]) or 16
             h = tonumber(sizeData[2]) or 16
-
             if texture then
-                table.insert(blocks, {
-                    texture = texture,
-                    w = w,
-                    h = h
-                })
+                table.insert(
+                    blocks,
+                    {
+                        texture = texture,
+                        w = w,
+                        h = h
+                    }
+                )
             end
         end
     end
 end
-
 --[[---------------------------------------------------------
     Name: CheckTextOrTag(p)
     Desc: This function places data in the "blocks" table
@@ -288,7 +278,6 @@ end
 local function CheckTextOrTag(p)
     if p == "" then return end
     if p == nil then return end
-
     if string.utf8sub(p, 1, 1) == "<" then
         string.gsub(p, "<([/%a]*)=?([^>]*)", ExtractParams)
     else
@@ -299,7 +288,6 @@ local function CheckTextOrTag(p)
         table.insert(blocks, text_block)
     end
 end
-
 --[[---------------------------------------------------------
     Name: ProcessMatches(p1,p2,p3)
     Desc: CheckTextOrTag for 3 parameters. Called by string.gsub
@@ -320,7 +308,6 @@ local function ProcessMatches(p1, p2, p3)
 end
 
 local MarkupObject = {}
-
 --[[---------------------------------------------------------
     Name: MarkupObject:Create()
     Desc: Called by Parse. Creates a new table, and setups the 
@@ -334,7 +321,6 @@ function MarkupObject:create()
 
     return o
 end
-
 --[[---------------------------------------------------------
     Name: MarkupObject:GetWidth()
     Desc: Returns the width of a markup block
@@ -343,7 +329,6 @@ end
 function MarkupObject:getWidth()
     return self.totalWidth
 end
-
 --[[---------------------------------------------------------
     Name: MarkupObject:GetHeight()
     Desc: Returns the height of a markup block
@@ -352,13 +337,11 @@ end
 function MarkupObject:getHeight()
     return self.totalHeight
 end
-
 --[[---------------------------------------------------------
 -----------------------------------------------------------]]
 function MarkupObject:size()
     return self.totalWidth, self.totalHeight
 end
-
 --[[---------------------------------------------------------
     Name: MarkupObject:Draw(xOffset, yOffset, halign, valign, alphaoverride)
     Desc: Draw the markup text to the screen as position
@@ -370,11 +353,9 @@ end
 function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
     for i = 1, #self.blocks do
         local blk = self.blocks[i]
-
         if blk.texture then
             local y = yOffset + (blk.h - blk.thisY) + blk.offset.y
             local x = xOffset + blk.offset.x
-
             if halign == TEXT_ALIGN_CENTER then
                 x = x - (self.totalWidth / 2)
             elseif halign == TEXT_ALIGN_RIGHT then
@@ -391,7 +372,6 @@ function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
         else
             local y = yOffset + (blk.height - blk.thisY) + blk.offset.y
             local x = xOffset
-
             if halign == TEXT_ALIGN_CENTER then
                 x = x - (self.totalWidth / 2)
             elseif halign == TEXT_ALIGN_RIGHT then
@@ -399,7 +379,6 @@ function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
             end
 
             x = x + blk.offset.x
-
             if self.onDrawText then
                 self.onDrawText(blk.text, blk.font, x, y, blk.colour, halign, valign, alphaoverride, blk)
             else
@@ -410,7 +389,6 @@ function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
                 end
 
                 local alpha = blk.colour.a
-
                 if alphaoverride then
                     alpha = alphaoverride
                 end
@@ -423,7 +401,6 @@ function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
         end
     end
 end
-
 --[[---------------------------------------------------------
     Name: Parse(ml, maxwidth)
     Desc: Parses the pseudo-html markup language, and creates a 
@@ -446,9 +423,7 @@ function parse(ml, maxwidth)
     }
 
     font_stack = {"DermaDefault"}
-
     blocks = {}
-
     if not string.find(ml, "<") then
         ml = ml .. "<nop>"
     end
@@ -463,10 +438,8 @@ function parse(ml, maxwidth)
     local ymaxes = {}
     local texOffset = 0
     local lineHeight = 0
-
     for i = 1, #blocks do
         local block = blocks[i]
-
         if block.text then
             surface.SetFont(block.font)
             local thisY = 0
@@ -474,10 +447,8 @@ function parse(ml, maxwidth)
             block.text = string.gsub(block.text, "&gt;", ">")
             block.text = string.gsub(block.text, "&lt;", "<")
             block.text = string.gsub(block.text, "&amp;", "&")
-
             for j = 1, string.utf8len(block.text) do
                 local ch = string.utf8sub(block.text, j, j)
-
                 if ch == "\n" then
                     if thisY == 0 then
                         thisY = lineHeight + texOffset
@@ -498,7 +469,6 @@ function parse(ml, maxwidth)
                         new_block.offset.x = xOffset
                         new_block.offset.y = yOffset
                         table.insert(new_block_list, new_block)
-
                         if xOffset + x1 > xMax then
                             xMax = xOffset + x1
                         end
@@ -523,7 +493,6 @@ function parse(ml, maxwidth)
                         new_block.offset.x = xOffset
                         new_block.offset.y = yOffset
                         table.insert(new_block_list, new_block)
-
                         if xOffset + x1 > xMax then
                             xMax = xOffset + x1
                         end
@@ -534,14 +503,12 @@ function parse(ml, maxwidth)
                     curString = ""
                     local xOldOffset = xOffset
                     xOffset = math.ceil((xOffset + xOldSize) / 50) * 50
-
                     if xOffset == xOldOffset then
                         xOffset = xOffset + 50
                     end
                 else
                     local x, y = surface.GetTextSize(ch)
                     if x == nil then return end
-
                     if maxwidth and maxwidth > x then
                         if xOffset + xSize + x >= maxwidth then
                             -- need to: find the previous space in the curString
@@ -549,10 +516,8 @@ function parse(ml, maxwidth)
                             --          and add a -. add the character to ch
                             --          and insert as a new block, incrementing the y etc
                             local lastSpacePos = string.utf8len(curString)
-
                             for k = 1, string.utf8len(curString) do
                                 local chspace = string.utf8sub(curString, k, k)
-
                                 if chspace == " " then
                                     lastSpacePos = k
                                 end
@@ -569,14 +534,12 @@ function parse(ml, maxwidth)
                             end
 
                             local m = 1
-
                             while string.utf8sub(ch, m, m) == " " do
                                 m = m + 1
                             end
 
                             ch = string.utf8sub(ch, m)
                             local x1, y1 = surface.GetTextSize(curString)
-
                             if y1 > thisMaxY then
                                 thisMaxY = y1
                                 ymaxes[yOffset] = thisMaxY
@@ -593,7 +556,6 @@ function parse(ml, maxwidth)
                             new_block.offset.x = xOffset
                             new_block.offset.y = yOffset
                             table.insert(new_block_list, new_block)
-
                             if xOffset + x1 > xMax then
                                 xMax = xOffset + x1
                             end
@@ -611,7 +573,6 @@ function parse(ml, maxwidth)
                     curString = curString .. ch
                     thisY = y
                     xSize = xSize + x
-
                     if y > thisMaxY then
                         thisMaxY = y
                         ymaxes[yOffset] = thisMaxY
@@ -633,7 +594,6 @@ function parse(ml, maxwidth)
                 new_block.offset.y = yOffset
                 table.insert(new_block_list, new_block)
                 lineHeight = thisY
-
                 if xOffset + x1 > xMax then
                     xMax = xOffset + x1
                 end
@@ -644,7 +604,6 @@ function parse(ml, maxwidth)
             xSize = 0
         elseif block.texture then
             local newBlock = table.Copy(block)
-
             newBlock.colour = block.colour or {
                 r = 255,
                 g = 255,
@@ -654,7 +613,6 @@ function parse(ml, maxwidth)
 
             newBlock.thisX = block.w
             newBlock.thisY = block.h - 3
-
             newBlock.offset = {
                 x = xOffset,
                 y = yOffset
@@ -667,11 +625,9 @@ function parse(ml, maxwidth)
     end
 
     local totalHeight = 0
-
     for i = 1, #new_block_list do
         local block = new_block_list[i]
         block.height = ymaxes[block.offset.y]
-
         if block.height and block.offset.y + block.height > totalHeight then
             totalHeight = block.offset.y + block.height
         end

@@ -1,6 +1,5 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	self.name = self:Add("DLabel")
@@ -10,7 +9,6 @@ function PANEL:Init()
 	self.name:SetFont("liaVendorButtonFont")
 	self.name:SetTextColor(color_white)
 	self.name:SetTextInset(8, 4)
-
 	self.name.Paint = function(name, w, h)
 		surface.SetDrawColor(0, 0, 0, 100)
 		surface.DrawRect(0, 0, w, h)
@@ -27,24 +25,20 @@ function PANEL:Init()
 	self.items = self:Add("DScrollPanel")
 	self.items:Dock(FILL)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:setName(name)
 	self.name:SetText(name)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:setMoney(money)
 	money = money or "∞"
 	self.money:SetText(lia.currency.get(money))
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
 	surface.SetDrawColor(0, 0, 0, 175)
 	surface.DrawRect(0, 0, w, h)
 end
-
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaVendorTrader", PANEL, "DPanel")
 --------------------------------------------------------------------------------------------------------

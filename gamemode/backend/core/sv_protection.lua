@@ -3,21 +3,21 @@ lia.config.TimeUntilDroppedSWEPRemoved = 15
 lia.config.PlayerSpawnVehicleDelay = 30
 lia.config.NPCsDropWeapons = true
 lia.config.DrawEntityShadows = true
-
 --------------------------------------------------------------------------------------------------------
 function GM:OnPlayerDropWeapon(client, item, entity)
-    timer.Simple(lia.config.TimeUntilDroppedSWEPRemoved, function()
-        if entity and entity:IsValid() then
-            entity:Remove()
+    timer.Simple(
+        lia.config.TimeUntilDroppedSWEPRemoved,
+        function()
+            if entity and entity:IsValid() then
+                entity:Remove()
+            end
         end
-    end)
+    )
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:CanDeleteChar(ply, char)
     if char:getMoney() < lia.config.DefaultMoney or ply:getNetVar("restricted") then return true end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:OnEntityCreated(ent)
     if lia.config.DrawEntityShadows then
@@ -26,42 +26,40 @@ function GM:OnEntityCreated(ent)
 
     if not ent:IsRagdoll() then return end
     if ent:getNetVar("player", nil) then return end
-
-    timer.Simple(300, function()
-        if not IsValid(ent) then return end
-        ent:SetSaveValue("m_bFadingOut", true)
-
-        timer.Simple(3, function()
+    timer.Simple(
+        300,
+        function()
             if not IsValid(ent) then return end
-            ent:Remove()
-        end)
-    end)
+            ent:SetSaveValue("m_bFadingOut", true)
+            timer.Simple(
+                3,
+                function()
+                    if not IsValid(ent) then return end
+                    ent:Remove()
+                end
+            )
+        end
+    )
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:CheckValidSit(ply, trace)
     local ent = trace.Entity
     if ply:getNetVar("restricted") or ent:IsPlayer() then return false end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedVehicle(ply, ent)
     local delay = lia.config.PlayerSpawnVehicleDelay
-
     if not ply:IsSuperAdmin() then
         ply.NextVehicleSpawn = SysTime() + delay
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
     if not physObj:IsMoveable() then return false end
     if entity:GetUnFreezable() then return false end
     physObj:EnableMotion(false)
-
     if entity:GetClass() == "prop_vehicle_jeep" then
         local objects = entity:GetPhysicsObjectCount()
-
         for i = 0, objects - 1 do
             entity:GetPhysicsObjectNum(i):EnableMotion(false)
         end
@@ -73,25 +71,20 @@ function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
 
     return true
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedNPC(client, entity)
     entity:SetCreator(client)
     entity:SetNWString("Creator_Nick", client:Nick())
-
     if lia.config.NPCsDropWeapons then
         entity:SetKeyValue("spawnflags", "8192")
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerDisconnected(client)
     client:saveLiliaData()
     local character = client:getChar()
-
     if character then
         local charEnts = character:getVar("charEnts") or {}
-
         for _, v in ipairs(charEnts) do
             if v and IsValid(v) then
                 v:Remove()
@@ -109,25 +102,21 @@ function GM:PlayerDisconnected(client)
     end
 
     lia.char.cleanUpForPlayer(client)
-
     for _, entity in pairs(ents.GetAll()) do
         if entity:GetCreator() == client then
             entity:Remove()
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:OnPhysgunPickup(ply, ent)
     if ent:GetClass() == "prop_physics" and ent:GetCollisionGroup() == COLLISION_GROUP_NONE then
         ent:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnObject(client, model, skin)
     if client:IsSuperAdmin() then return true end
-
     if (client.liaNextSpawn or 0) < CurTime() then
         if client.AdvDupe2 and client.AdvDupe2.Pasting then
             client.liaNextSpawn = CurTime() + 5
@@ -140,18 +129,18 @@ function GM:PlayerSpawnObject(client, model, skin)
         return false
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PhysgunDrop(ply, ent)
     if ent:GetClass() ~= "prop_physics" then return end
-
-    timer.Simple(5, function()
-        if IsValid(ent) and ent:GetCollisionGroup() == COLLISION_GROUP_PASSABLE_DOOR then
-            ent:SetCollisionGroup(COLLISION_GROUP_NONE)
+    timer.Simple(
+        5,
+        function()
+            if IsValid(ent) and ent:GetCollisionGroup() == COLLISION_GROUP_PASSABLE_DOOR then
+                ent:SetCollisionGroup(COLLISION_GROUP_NONE)
+            end
         end
-    end)
+    )
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedProp(client, model, entity)
     for _, gredwitch in pairs(file.Find("models/gredwitch/bombs/*.mdl", "GAME")) do
@@ -195,7 +184,6 @@ function GM:PlayerSpawnedProp(client, model, entity)
 
     self:PlayerSpawnedEntity(client, entity)
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedEntity(client, entity)
     entity:SetNWString("Creator_Nick", client:Nick())

@@ -5,14 +5,11 @@ LIA_CVAR_ADMINESPAVANCED = CreateClientConVar("lia_obsespadvanced", 1, true, tru
 LIA_CVAR_ITEMESP = CreateClientConVar("lia_obsitemesp", 1, true, true)
 local client, sx, sy, scrPos, marginx, marginy, x, y, teamColor, distance, factor, size, alpha
 local dimDistance = 1024
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:HUDPaint()
     client = LocalPlayer()
-
     if client:IsAdmin() and client:IsNoClipping() and not client:InVehicle() and LIA_CVAR_ADMINESP:GetBool() and LIA_CVAR_ITEMESP:GetBool() then
         local sx, sy = surface.ScreenWidth(), surface.ScreenHeight()
-
         for k, v in ipairs(ents.GetAll()) do
             if v:GetClass() == "lia_item" then
                 local scrPos = v:GetPos():ToScreen()
@@ -25,7 +22,6 @@ function MODULE:HUDPaint()
                 surface.SetDrawColor(30, 30, 30, alpha)
                 surface.DrawRect(x - size / 2, y - size / 2, size, size)
                 local name = "invalid"
-
                 if v.getItemTable and v:getItemTable() then
                     name = v:getItemTable().name
                 end
@@ -37,7 +33,6 @@ function MODULE:HUDPaint()
 
     if client:IsAdmin() and client:IsNoClipping() and not client:InVehicle() and LIA_CVAR_ADMINESP:GetBool() then
         sx, sy = ScrW(), ScrH()
-
         for k, v in ipairs(player.GetAll()) do
             if v == client then continue end
             scrPos = v:GetPos():ToScreen()
@@ -49,7 +44,6 @@ function MODULE:HUDPaint()
             size = math.max(10, 32 * factor)
             alpha = math.Clamp(255 * factor, 80, 255)
             surface.SetDrawColor(teamColor.r, teamColor.g, teamColor.b, alpha)
-
             if LIA_CVAR_ADMINESPAVANCED:GetBool() then
                 surface.DrawLine(sx * 0.5, sy * 0.5, x, y)
                 surface.DrawRect(x - size / 2, y - size / 2, size, size)
@@ -59,48 +53,57 @@ function MODULE:HUDPaint()
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:SetupQuickMenu(menu)
     if LocalPlayer():IsAdmin() then
-        local buttonESP = menu:addCheck(L"toggleESP", function(panel, state)
-            local buttonItem = menu:addCheck("Toggle Item ESP", function(panel, state)
+        local buttonESP = menu:addCheck(
+            L"toggleESP",
+            function(panel, state)
+                local buttonItem = menu:addCheck(
+                    "Toggle Item ESP",
+                    function(panel, state)
+                        if state then
+                            RunConsoleCommand("lia_obsitemesp", "1")
+                        else
+                            RunConsoleCommand("lia_obsitemesp", "0")
+                        end
+                    end, LIA_CVAR_ITEMESP:GetBool()
+                )
+
+                menu:addSpacer()
                 if state then
-                    RunConsoleCommand("lia_obsitemesp", "1")
+                    RunConsoleCommand("lia_obsesp", "1")
                 else
-                    RunConsoleCommand("lia_obsitemesp", "0")
+                    RunConsoleCommand("lia_obsesp", "0")
                 end
-            end, LIA_CVAR_ITEMESP:GetBool())
+            end, LIA_CVAR_ADMINESP:GetBool()
+        )
 
-            menu:addSpacer()
+        local buttonESPAdvanced = menu:addCheck(
+            L"toggleESPAdvanced",
+            function(panel, state)
+                if state then
+                    RunConsoleCommand("lia_obsespadvanced", "1")
+                else
+                    RunConsoleCommand("lia_obsespadvanced", "0")
+                end
+            end, LIA_CVAR_ADMINESPAVANCED:GetBool()
+        )
 
-            if state then
-                RunConsoleCommand("lia_obsesp", "1")
-            else
-                RunConsoleCommand("lia_obsesp", "0")
-            end
-        end, LIA_CVAR_ADMINESP:GetBool())
-
-        local buttonESPAdvanced = menu:addCheck(L"toggleESPAdvanced", function(panel, state)
-            if state then
-                RunConsoleCommand("lia_obsespadvanced", "1")
-            else
-                RunConsoleCommand("lia_obsespadvanced", "0")
-            end
-        end, LIA_CVAR_ADMINESPAVANCED:GetBool())
-
-        local buttonTP = menu:addCheck(L"toggleObserverTP", function(panel, state)
-            if state then
-                RunConsoleCommand("lia_obstpback", "1")
-            else
-                RunConsoleCommand("lia_obstpback", "0")
-            end
-        end, LIA_CVAR_OBSTPBACK:GetBool())
+        local buttonTP = menu:addCheck(
+            L"toggleObserverTP",
+            function(panel, state)
+                if state then
+                    RunConsoleCommand("lia_obstpback", "1")
+                else
+                    RunConsoleCommand("lia_obstpback", "0")
+                end
+            end, LIA_CVAR_OBSTPBACK:GetBool()
+        )
 
         menu:addSpacer()
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:ShouldDrawEntityInfo(entity)
     if IsValid(entity) then

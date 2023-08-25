@@ -1,14 +1,11 @@
 --------------------------------------------------------------------------------------------------------
 lia.date = lia.date or {}
-
 --------------------------------------------------------------------------------------------------------
 function lia.date.GetFormattedDate(includeWeek, includeDay, includeMonth, includeYear, includeTime)
     local currentTime = os.date("*t") -- Get the current date and time as a table
     local output = "Current Date:"
-
     if includeWeek then
         local daysOfWeek = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}
-
         output = output .. " " .. daysOfWeek[currentTime.wday]
     end
 
@@ -18,7 +15,6 @@ function lia.date.GetFormattedDate(includeWeek, includeDay, includeMonth, includ
 
     if includeMonth then
         local months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
-
         output = output .. " " .. months[currentTime.month]
     end
 

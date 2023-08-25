@@ -1,11 +1,9 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self.btnLeft = self.btnUp
     self.btnRight = self.btnDown
-
     self.btnLeft.Paint = function(panel, w, h)
         derma.SkinHook("Paint", "ButtonLeft", panel, w, h)
     end
@@ -14,7 +12,6 @@ function PANEL:Init()
         derma.SkinHook("Paint", "ButtonRight", panel, w, h)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:SetScroll(offset)
     if not self.Enabled then
@@ -27,14 +24,12 @@ function PANEL:SetScroll(offset)
     self:InvalidateLayout()
     local parent = self:GetParent()
     local onHScroll = parent.OnHScroll
-
     if onHScroll then
         onHScroll(parent, self:GetOffset())
     else
         parent:InvalidateLayout()
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnCursorMoved()
     if not self.Enabled or not self.Dragging then return end
@@ -44,13 +39,11 @@ function PANEL:OnCursorMoved()
     local trackSize = self:GetWide() - (height * 2) - self.btnGrip:GetWide()
     self:SetScroll(x * (self.CanvasSize / trackSize))
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Grip()
     self.BaseClass.Grip(self)
     self.HoldPos = self.btnGrip:ScreenToLocal(gui.MouseX(), 0)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:PerformLayout()
     local tall = self:GetTall()
@@ -62,7 +55,6 @@ function PANEL:PerformLayout()
     scroll = scroll * track
     self.btnGrip:SetPos(btnHeight + scroll, 0)
     self.btnGrip:SetSize(barSize, tall)
-
     if btnHeight > 0 then
         self.btnLeft:SetPos(0, 0)
         self.btnLeft:SetSize(btnHeight, tall)
@@ -75,7 +67,6 @@ function PANEL:PerformLayout()
         self.btnRight:SetVisible(false)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaHorizontalScrollBar", PANEL, "DVScrollBar")
 --------------------------------------------------------------------------------------------------------

@@ -1,27 +1,24 @@
 local PANEL = {}
-
 local STRIP_HEIGHT = 4
-
 function PANEL:isCursorWithinBounds()
 	local x, y = self:LocalCursorPos()
+
 	return x >= 0 and x <= self:GetWide() and y >= 0 and y < self:GetTall()
 end
 
 function PANEL:confirmDelete()
 	local id = self.character:getID()
-	vgui.Create("liaCharacterConfirm")
-		:setMessage(L("Deleting a character cannot be undone."))
-		:onConfirm(function()
+	vgui.Create("liaCharacterConfirm"):setMessage(L("Deleting a character cannot be undone.")):onConfirm(
+		function()
 			MainMenu:deleteCharacter(id)
-		end)
+		end
+	)
 end
 
 function PANEL:Init()
 	local WIDTH = 240
-
 	self:SetWide(WIDTH)
 	self:SetPaintBackground(false)
-
 	self.faction = self:Add("DPanel")
 	self.faction:Dock(TOP)
 	self.faction:SetTall(STRIP_HEIGHT)
@@ -39,23 +36,15 @@ function PANEL:Init()
 	self.name:SetFont("liaCharSmallButtonFont")
 	self.name:SetTextColor(lia.gui.character.WHITE)
 	self.name:SizeToContentsY()
-
 	self.model = self:Add("liaModelPanel")
 	self.model:Dock(FILL)
 	self.model:SetFOV(37)
 	self.model.PaintOver = function(model, w, h)
-		if (self.banned) then
+		if self.banned then
 			local centerX, centerY = w * 0.5, h * 0.5 - 24
 			surface.SetDrawColor(250, 0, 0, 40)
 			surface.DrawRect(0, centerY - 24, w, 48)
-
-			draw.SimpleText(
-				L("banned"):upper(),
-				"liaCharSubTitleFont",
-				centerX,
-				centerY,
-				color_white, 1, 1
-			)
+			draw.SimpleText(L("banned"):upper(), "liaCharSubTitleFont", centerX, centerY, color_white, 1, 1)
 		end
 	end
 
@@ -63,10 +52,13 @@ function PANEL:Init()
 	self.button:SetSize(WIDTH, ScrH())
 	self.button:SetPaintBackground(false)
 	self.button:SetText("")
-	self.button.OnCursorEntered = function(button) self:OnCursorEntered() end
+	self.button.OnCursorEntered = function(button)
+		self:OnCursorEntered()
+	end
+
 	self.button.DoClick = function(button)
 		lia.gui.character:clickSound()
-		if (not self.banned) then
+		if not self.banned then
 			self:onSelected()
 		end
 	end
@@ -74,16 +66,18 @@ function PANEL:Init()
 	self.delete = self:Add("DButton")
 	self.delete:SetTall(30)
 	self.delete:SetFont("liaCharSubTitleFont")
-	self.delete:SetText("✕ "..L("delete"):upper())
+	self.delete:SetText("✕ " .. L("delete"):upper())
 	self.delete:SetWide(self:GetWide())
 	self.delete.Paint = function(delete, w, h)
 		surface.SetDrawColor(255, 0, 0, 50)
 		surface.DrawRect(0, 0, w, h)
 	end
+
 	self.delete.DoClick = function(delete)
 		lia.gui.character:clickSound()
 		self:confirmDelete()
 	end
+
 	self.delete.y = ScrH()
 	self.delete.showY = self.delete.y - self.delete:GetTall()
 end
@@ -93,14 +87,12 @@ end
 
 function PANEL:setCharacter(character)
 	self.character = character
-
 	self.name:SetText(character:getName():gsub("#", "\226\128\139#"):upper())
 	self.model:SetModel(character:getModel())
 	self.faction:SetBackgroundColor(team.GetColor(character:getFaction()))
 	self:setBanned(character:getData("banned"))
-
 	local entity = self.model.Entity
-	if (IsValid(entity)) then
+	if IsValid(entity) then
 		-- Match the skin and bodygroups.
 		entity:SetSkin(character:getData("skin", 0))
 		for k, v in pairs(character:getData("groups", {})) do
@@ -121,11 +113,10 @@ end
 
 function PANEL:onHoverChanged(isHovered)
 	local ANIM_SPEED = lia.gui.character.ANIM_SPEED
-	if (self.isHovered == isHovered) then return end
+	if self.isHovered == isHovered then return end
 	self.isHovered = isHovered
-
 	local tall = self:GetTall()
-	if (isHovered) then
+	if isHovered then
 		self.delete.y = tall
 		self.delete:MoveTo(0, tall - self.delete:GetTall(), ANIM_SPEED)
 		lia.gui.character:hoverSound()
@@ -140,8 +131,7 @@ function PANEL:Paint(w, h)
 	lia.util.drawBlur(self)
 	surface.SetDrawColor(0, 0, 0, 50)
 	surface.DrawRect(0, STRIP_HEIGHT, w, h)
-
-	if (not self:isCursorWithinBounds() and self.isHovered) then
+	if not self:isCursorWithinBounds() and self.isHovered then
 		self:onHoverChanged(false)
 	end
 end

@@ -1,5 +1,4 @@
 local PANEL = {}
-
 function PANEL:Init()
     self.title = self:addLabel("Select a faction")
     self.faction = self:Add("DComboBox")
@@ -7,7 +6,6 @@ function PANEL:Init()
     self.faction:Dock(TOP)
     self.faction:DockMargin(0, 4, 0, 0)
     self.faction:SetTall(40)
-
     self.faction.Paint = function(faction, w, h)
         lia.util.drawBlur(faction)
         surface.SetDrawColor(0, 0, 0, 100)
@@ -15,7 +13,6 @@ function PANEL:Init()
     end
 
     self.faction:SetTextColor(color_white)
-
     self.faction.OnSelect = function(faction, index, value, id)
         self:onFactionSelected(lia.faction.teams[id])
     end
@@ -27,7 +24,6 @@ function PANEL:Init()
     self.desc:SetAutoStretchVertical(true)
     self.skipFirstSelect = true
     local first = true
-
     for id, faction in SortedPairsByMemberValue(lia.faction.teams, "name") do
         if not lia.faction.hasWhitelist(faction.index) then continue end
         self.faction:AddChoice(L(faction.name), id, first)
@@ -39,7 +35,6 @@ function PANEL:onDisplay()
     self.skipFirstSelect = true
     local _, id = self.faction:GetSelected()
     local faction = lia.faction.teams[id]
-
     if faction then
         self:onFactionSelected(faction)
     end
@@ -53,7 +48,6 @@ function PANEL:onFactionSelected(faction)
     self:setContext("model", 1)
     -- Set the model for the preview.
     self:updateModelPanel()
-
     -- Don't make the click sound when the faction is pre-selected.
     if self.skipFirstSelect then
         self.skipFirstSelect = false

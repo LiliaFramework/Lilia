@@ -17,7 +17,10 @@ end
 function PANEL:setAvatarImage(id)
     if not self.avatarImage then return end
     self.avatarImage:SetSteamID(id, 64)
-    self.avatarImage.OnCursorEntered = function() surface.PlaySound("garrysmod/ui_return.wav") end
+    self.avatarImage.OnCursorEntered = function()
+        surface.PlaySound("garrysmod/ui_return.wav")
+    end
+
     self.avatarImage.OnMousePressed = function()
         surface.PlaySound("buttons/button14.wav")
         gui.OpenURL("http://steamcommunity.com/profiles/" .. id)
@@ -27,12 +30,20 @@ end
 function PANEL:setName(name, isID, color)
     if not self.name then return end
     if isID then
-        steamworks.RequestPlayerInfo(name, function(steamName) self.name:SetText(steamName or "Loading...") end)
+        steamworks.RequestPlayerInfo(
+            name,
+            function(steamName)
+                self.name:SetText(steamName or "Loading...")
+            end
+        )
     else
         self.name:SetText(name)
     end
 
-    if color then self.name:SetTextColor(color) end
+    if color then
+        self.name:SetTextColor(color)
+    end
+
     self.name:SizeToContents()
     self.name:Dock(TOP)
     self.name:DockMargin(ScrW * 0.01, 0, 0, 0)
@@ -126,7 +137,10 @@ vgui.Register("CreditsLogo", PANEL, "DPanel")
 PANEL = {}
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
-    if lia.gui.creditsPanel then lia.gui.creditsPanel:Remove() end
+    if lia.gui.creditsPanel then
+        lia.gui.creditsPanel:Remove()
+    end
+
     lia.gui.creditsPanel = self
     self:SetSize(ScrW * 0.3, ScrH * 0.7)
     self.logo = self:Add("CreditsLogo")
@@ -143,7 +157,8 @@ function PANEL:Init()
     self.creditPanels = {}
     local curNum = 0
     for k, v in ipairs(lia.config.GamemodeCreators) do
-        if k % 2 ~= 0 then -- if k is odd
+        -- if k is odd
+        if k % 2 ~= 0 then
             self.creditPanels[k] = self:Add("CreditsCreditsList")
             curNum = k
             self.creditPanels[curNum]:SetSize(self:GetWide(), ScrH * 0.05)

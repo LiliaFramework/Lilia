@@ -2,28 +2,23 @@
 -- a new step for the character creation process.
 local PANEL = {}
 PANEL.isCharCreateStep = true
-
 function PANEL:Init()
 	self:Dock(FILL)
 	self:SetPaintBackground(false)
 	self:SetVisible(false)
 end
-
 -- Called when this step is made visible.
 function PANEL:onDisplay()
 end
-
 -- Requests for the next step to be shown, or to finish character creation
 -- if this is the final step.
 function PANEL:next()
 	lia.gui.charCreate:nextStep()
 end
-
 -- Requests for the previous step to be shown.
 function PANEL:previous()
 	lia.gui.charCreate:previousStep()
 end
-
 -- Runs the character validation given the name of a character variable.
 function PANEL:validateCharVar(name)
 	local charVar = lia.char.vars[name]
@@ -32,25 +27,21 @@ function PANEL:validateCharVar(name)
 
 	return true
 end
-
 -- Returns whether or not the input for this form is valid. You should override
 -- this if you need custom validation.
 function PANEL:validate()
 	return true
 end
-
 -- Sets the value of a character variable corresponding to key for the character
 -- that is going to be created.
 function PANEL:setContext(key, value)
 	lia.gui.charCreate.context[key] = value
 end
-
 -- Removes any set character variables for the character that is going to be
 -- created.
 function PANEL:clearContext()
 	lia.gui.charCreate.context = {}
 end
-
 -- Returns the set character variable corresponding to key. If it does not
 -- exist, then default (which is nil if not set) is returned.
 function PANEL:getContext(key, default)
@@ -60,27 +51,22 @@ function PANEL:getContext(key, default)
 
 	return value
 end
-
 -- Returns the model panel to the left of the step view.
 function PANEL:getModelPanel()
 	return lia.gui.charCreate.model
 end
-
 -- Requests that the model panel for the character is updated.
 function PANEL:updateModelPanel()
 	lia.gui.charCreate:updateModel()
 end
-
 -- Return true if this step should be skipped, false otherwise. This should
 -- not have any side effects. Side effects go in onSkip.
 function PANEL:shouldSkip()
 	return false
 end
-
 -- Called if this step has been skipped over.
 function PANEL:onSkip()
 end
-
 -- Helper function to add a label that is docked at the top of the step.
 function PANEL:addLabel(text)
 	local label = self:Add("DLabel")

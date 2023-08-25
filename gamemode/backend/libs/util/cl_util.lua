@@ -1,21 +1,21 @@
 --------------------------------------------------------------------------------------------------------
 local LAST_WIDTH = ScrW()
 local LAST_HEIGHT = ScrH()
-
 --------------------------------------------------------------------------------------------------------
 function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
     color = color or color_white
 
-    return draw.TextShadow({
-        text = text,
-        font = font or "liaGenericFont",
-        pos = {x, y},
-        color = color,
-        xalign = alignX or 0,
-        yalign = alignY or 0
-    }, 1, alpha or (color.a * 0.575))
+    return draw.TextShadow(
+        {
+            text = text,
+            font = font or "liaGenericFont",
+            pos = {x, y},
+            color = color,
+            xalign = alignX or 0,
+            yalign = alignY or 0
+        }, 1, alpha or (color.a * 0.575)
+    )
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.util.wrapText(text, width, font)
     font = font or "liaChatFont"
@@ -25,7 +25,6 @@ function lia.util.wrapText(text, width, font)
     local lines = {}
     local w = surface.GetTextSize(text)
     local maxW = 0
-
     if w <= width then
         text, _ = text:gsub("%s", " ")
 
@@ -36,11 +35,9 @@ function lia.util.wrapText(text, width, font)
         local word = exploded[i]
         line = line .. " " .. word
         w = surface.GetTextSize(line)
-
         if w > width then
             lines[#lines + 1] = line
             line = ""
-
             if w > maxW then
                 maxW = w
             end
@@ -53,21 +50,17 @@ function lia.util.wrapText(text, width, font)
 
     return lines, maxW
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.util.notify(message)
     chat.AddText(message)
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.util.notifyLocalized(message, ...)
     lia.util.notify(L(message, ...))
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.util.drawBlur(panel, amount, passes)
     amount = amount or 5
-
     if CreateClientConVar("lia_cheapblur", 0, true):GetBool() then
         surface.SetDrawColor(50, 50, 50, amount * 20)
         surface.DrawRect(0, 0, panel:GetWide(), panel:GetTall())
@@ -75,7 +68,6 @@ function lia.util.drawBlur(panel, amount, passes)
         surface.SetMaterial(lia.util.getMaterial("pp/blurscreen"))
         surface.SetDrawColor(255, 255, 255)
         local x, y = panel:LocalToScreen(0, 0)
-
         for i = -(passes or 0.2), 1, 0.2 do
             lia.util.getMaterial("pp/blurscreen"):SetFloat("$blur", i * amount)
             lia.util.getMaterial("pp/blurscreen"):Recompute()
@@ -84,11 +76,9 @@ function lia.util.drawBlur(panel, amount, passes)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.util.drawBlurAt(x, y, w, h, amount, passes)
     amount = amount or 5
-
     if CreateClientConVar("lia_cheapblur", 0, true):GetBool() then
         surface.SetDrawColor(30, 30, 30, amount * 20)
         surface.DrawRect(x, y, w, h)
@@ -98,7 +88,6 @@ function lia.util.drawBlurAt(x, y, w, h, amount, passes)
         local scrW, scrH = ScrW(), ScrH()
         local x2, y2 = x / scrW, y / scrH
         local w2, h2 = (x + w) / scrW, (y + h) / scrH
-
         for i = -(passes or 0.2), 1, 0.2 do
             lia.util.getMaterial("pp/blurscreen"):SetFloat("$blur", i * amount)
             lia.util.getMaterial("pp/blurscreen"):Recompute()
@@ -107,32 +96,32 @@ function lia.util.drawBlurAt(x, y, w, h, amount, passes)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
-timer.Create("liaResolutionMonitor", 1, 0, function()
-    local scrW, scrH = ScrW(), ScrH()
-
-    if scrW ~= LAST_WIDTH or scrH ~= LAST_HEIGHT then
-        hook.Run("ScreenResolutionChanged", LAST_WIDTH, LAST_HEIGHT)
-        LAST_WIDTH = scrW
-        LAST_HEIGHT = scrH
+timer.Create(
+    "liaResolutionMonitor",
+    1,
+    0,
+    function()
+        local scrW, scrH = ScrW(), ScrH()
+        if scrW ~= LAST_WIDTH or scrH ~= LAST_HEIGHT then
+            hook.Run("ScreenResolutionChanged", LAST_WIDTH, LAST_HEIGHT)
+            LAST_WIDTH = scrW
+            LAST_HEIGHT = scrH
+        end
     end
-end)
-
+)
 --------------------------------------------------------------------------------------------------------
 function lia.util.getInjuredColor(client)
     local health_color = color_white
     if not IsValid(client) then return health_color end
     local health_color = color_white
     local health, healthMax = client:Health(), client:GetMaxHealth()
-
     if (health / healthMax) < .95 then
         health_color = lia.color.LerpHSV(nil, nil, healthMax, health, 0)
     end
 
     return health_color
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.util.ScreenScaleH(n, type)
     if type then
@@ -143,7 +132,6 @@ function lia.util.ScreenScaleH(n, type)
 
     return n * (ScrH() / 480)
 end
-
 --------------------------------------------------------------------------------------------------------
 function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCancel, strButtonText, strButtonCancelText)
     local Window = vgui.Create("DFrame")
@@ -161,7 +149,6 @@ function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCanc
     Text:SetTextColor(color_white)
     local TextEntry = vgui.Create("DTextEntry", InnerPanel)
     TextEntry:SetValue(strDefaultText or "")
-
     TextEntry.OnEnter = function()
         Window:Close()
         fnEnter(TextEntry:GetValue())
@@ -177,7 +164,6 @@ function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCanc
     Button:SetTall(20)
     Button:SetWide(Button:GetWide() + 20)
     Button:SetPos(5, 5)
-
     Button.DoClick = function()
         Window:Close()
         fnEnter(TextEntry:GetValue())
@@ -189,10 +175,8 @@ function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCanc
     ButtonCancel:SetTall(20)
     ButtonCancel:SetWide(Button:GetWide() + 20)
     ButtonCancel:SetPos(5, 5)
-
     ButtonCancel.DoClick = function()
         Window:Close()
-
         if fnCancel then
             fnCancel(TextEntry:GetValue())
         end
@@ -217,18 +201,14 @@ function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCanc
 
     return Window
 end
-
 --------------------------------------------------------------------------------------------------------
 file.CreateDir("lilia/images")
-
 lia.util.LoadedImages = lia.util.LoadedImages or {
     [0] = Material("icon16/cross.png")
 }
-
 --------------------------------------------------------------------------------------------------------
 function lia.util.FetchImage(id, callback, failImg, pngParameters, imageProvider)
     local loadedImage = lia.util.LoadedImages[id]
-
     if loadedImage then
         if callback then
             callback(loadedImage)
@@ -239,10 +219,8 @@ function lia.util.FetchImage(id, callback, failImg, pngParameters, imageProvider
 
     if file.Exists("lilia/images/" .. id .. ".png", "DATA") then
         local mat = Material("data/lilia/images/" .. id .. ".png", pngParameters or "noclamp smooth")
-
         if mat then
             lia.util.LoadedImages[id] = mat
-
             if callback then
                 callback(mat)
             end
@@ -250,31 +228,34 @@ function lia.util.FetchImage(id, callback, failImg, pngParameters, imageProvider
             callback(false)
         end
     else
-        http.Fetch((imageProvider or "https://i.imgur.com/") .. id .. ".png", function(body, size, headers, code)
-            if code ~= 200 then
-                callback(false)
+        http.Fetch(
+            (imageProvider or "https://i.imgur.com/") .. id .. ".png",
+            function(body, size, headers, code)
+                if code ~= 200 then
+                    callback(false)
 
-                return
+                    return
+                end
+
+                if not body or body == "" then
+                    callback(false)
+
+                    return
+                end
+
+                file.Write("lilia/images/" .. id .. ".png", body)
+                local mat = Material("data/lilia/images/" .. id .. ".png", "noclamp smooth")
+                lia.util.LoadedImages[id] = mat
+                if callback then
+                    callback(mat)
+                end
+            end,
+            function()
+                if callback then
+                    callback(false)
+                end
             end
-
-            if not body or body == "" then
-                callback(false)
-
-                return
-            end
-
-            file.Write("lilia/images/" .. id .. ".png", body)
-            local mat = Material("data/lilia/images/" .. id .. ".png", "noclamp smooth")
-            lia.util.LoadedImages[id] = mat
-
-            if callback then
-                callback(mat)
-            end
-        end, function()
-            if callback then
-                callback(false)
-            end
-        end)
+        )
     end
 end
 --------------------------------------------------------------------------------------------------------

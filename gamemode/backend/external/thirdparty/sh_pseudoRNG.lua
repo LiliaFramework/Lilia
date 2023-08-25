@@ -40,7 +40,6 @@
 --------------------------------------------------------------------------------------------------------
 PseudoRNG = {}
 PseudoRNG.__index = PseudoRNG
-
 --------------------------------------------------------------------------------------------------------
 function PseudoRNG.Create(chance)
 	local rng = {}
@@ -49,13 +48,11 @@ function PseudoRNG.Create(chance)
 
 	return rng
 end
-
 --------------------------------------------------------------------------------------------------------
 function PseudoRNG:Init(chance)
 	self.failedTries = 0
 	self.cons = PseudoRNG:CFromP(chance)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PseudoRNG:CFromP(P)
 	local Cupper = P
@@ -63,12 +60,10 @@ function PseudoRNG:CFromP(P)
 	local Cmid = 0
 	local p1 = 0
 	local p2 = 1
-
 	while true do
 		Cmid = (Cupper + Clower) / 2
 		p1 = PseudoRNG:PFromC(Cmid)
 		if math.abs(p1 - p2) <= 0 then break end
-
 		if p1 > P then
 			Cupper = Cmid
 		else
@@ -80,14 +75,12 @@ function PseudoRNG:CFromP(P)
 
 	return Cmid
 end
-
 --------------------------------------------------------------------------------------------------------
 function PseudoRNG:PFromC(C)
 	local pOnN = 0
 	local pByN = 0
 	local sumPByN = 0
 	local maxFails = math.ceil(1 / C)
-
 	for N = 1, maxFails do
 		pOnN = math.min(1, N * C) * (1 - pByN)
 		pByN = pByN + pOnN
@@ -96,11 +89,9 @@ function PseudoRNG:PFromC(C)
 
 	return 1 / sumPByN
 end
-
 --------------------------------------------------------------------------------------------------------
 function PseudoRNG:Next()
 	local P = self.cons * (self.failedTries + 1)
-
 	if math.random() <= P then
 		self.failedTries = 0
 
@@ -111,14 +102,12 @@ function PseudoRNG:Next()
 		return false
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 ------------------------------------
 -- Pseudo-Random Choice - choose between a number of probabilities
 ------------------------------------
 ChoicePseudoRNG = {}
 ChoicePseudoRNG.__index = ChoicePseudoRNG
-
 --construct a ChoicePseudoRNG from a list of probabilities, they should add up to 1 .
 function ChoicePseudoRNG.Create(probs)
 	local rng = {}
@@ -127,14 +116,12 @@ function ChoicePseudoRNG.Create(probs)
 
 	return rng
 end
-
 --------------------------------------------------------------------------------------------------------
 function ChoicePseudoRNG:Init(probs)
 	self.probs = {} --the probability the drop should be around
 	self.curProbs = {} --the current probability
 	self.cons = {} --the minimum value for this probability
 	self.total = 0
-
 	for _, chance in pairs(probs) do
 		self.probs[#self.probs + 1] = chance
 		self.curProbs[#self.curProbs + 1] = chance
@@ -147,14 +134,12 @@ function ChoicePseudoRNG:Init(probs)
 		self:Choose()
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 --Use this to choose one of the elements, returns the index of the chosen item (starts at 1!)
 function ChoicePseudoRNG:Choose()
 	local rand = math.random() * self.total
 	local cumulative = 0
 	local choice = #self.cons
-
 	--loop over all probabilities we have
 	for i = 1, #self.probs do
 		--the number we generated is below the current probability and all previous probabilities
@@ -172,7 +157,6 @@ function ChoicePseudoRNG:Choose()
 	self.curProbs[choice] = self.cons[choice]
 	--update our total value
 	self.total = self.cons[choice]
-
 	--distribute the 'extra probability' we got from our choice over all indices we didn't choose
 	for i = 1, #self.cons do
 		if i ~= choice then

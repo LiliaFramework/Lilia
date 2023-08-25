@@ -9,12 +9,10 @@ local col_white = Color(250, 250, 250)
 local col_red = Color(255, 0, 0)
 local col_green = Color(0, 255, 0)
 local stack = {}
-
 --------------------------------------------------------------------------------------------------------
 function bench.Push()
 	stack[#stack + 1] = SysTime()
 end
-
 --------------------------------------------------------------------------------------------------------
 function bench.Pop()
 	local ret = stack[#stack]
@@ -22,27 +20,22 @@ function bench.Pop()
 
 	return SysTime() - ret
 end
-
 --------------------------------------------------------------------------------------------------------
 function bench.Run(func, calls)
 	bench.Push()
-
 	for i = 1, calls or 1000 do
 		func()
 	end
 
 	return bench.Pop()
 end
-
 --------------------------------------------------------------------------------------------------------
 function bench.Compare(funcs, calls)
 	local lowest = math.huge
 	local results = {}
-
 	for k, v in pairs(funcs) do
 		local runtime = bench.Run(v, calls)
 		results[k] = runtime
-
 		if runtime < lowest then
 			lowest = runtime
 		end

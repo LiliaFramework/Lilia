@@ -64,7 +64,6 @@ local usergroups = CAMI.GetUsergroups and CAMI.GetUsergroups() or {
         Inherits = "admin"
     }
 }
-
 --[[
 privileges
     Contains the registered CAMI_PRIVILEGE privilege structures.
@@ -97,7 +96,6 @@ function CAMI.RegisterUsergroup(usergroup, source)
 
     return usergroup
 end
-
 --[[
 CAMI.UnregisterUsergroup
     Unregisters a usergroup from CAMI. This will call a hook that will notify
@@ -127,7 +125,6 @@ function CAMI.UnregisterUsergroup(usergroupName, source)
 
     return true
 end
-
 --[[
 CAMI.GetUsergroups
     Retrieves all registered usergroups.
@@ -138,7 +135,6 @@ CAMI.GetUsergroups
 function CAMI.GetUsergroups()
     return usergroups
 end
-
 --[[
 CAMI.GetUsergroup
     Receives information about a usergroup.
@@ -150,7 +146,6 @@ CAMI.GetUsergroup
 function CAMI.GetUsergroup(usergroupName)
     return usergroups[usergroupName]
 end
-
 --[[
 CAMI.UsergroupInherits
     Returns true when usergroupName1 inherits usergroupName2.
@@ -180,7 +175,6 @@ function CAMI.UsergroupInherits(usergroupName1, usergroupName2)
 
     return usergroupName1 == usergroupName2 or usergroupName2 == "user"
 end
-
 --[[
 CAMI.InheritanceRoot
     All usergroups must eventually inherit either user, admin or superadmin.
@@ -209,7 +203,6 @@ function CAMI.InheritanceRoot(usergroupName)
 
     return usergroupName
 end
-
 --[[
 CAMI.RegisterPrivilege
     Registers a privilege with CAMI.
@@ -233,7 +226,6 @@ function CAMI.RegisterPrivilege(privilege)
 
     return privilege
 end
-
 --[[
 CAMI.UnregisterPrivilege
     Unregisters a privilege from CAMI. This will call a hook that will notify
@@ -258,7 +250,6 @@ function CAMI.UnregisterPrivilege(privilegeName)
 
     return true
 end
-
 --[[
 CAMI.GetPrivileges
     Retrieves all registered privileges.
@@ -269,7 +260,6 @@ CAMI.GetPrivileges
 function CAMI.GetPrivileges()
     return privileges
 end
-
 --[[
 CAMI.GetPrivilege
     Receives information about a privilege.
@@ -281,7 +271,6 @@ CAMI.GetPrivilege
 function CAMI.GetPrivilege(privilegeName)
     return privileges[privilegeName]
 end
-
 --[[
 CAMI.PlayerHasAccess
     Queries whether a certain player has the right to perform a certain action.
@@ -364,7 +353,6 @@ function CAMI.PlayerHasAccess(actorPly, privilegeName, callback, targetPly, extr
 
     return hasAccess, reason
 end
-
 --[[
 CAMI.GetPlayersWithAccess
     Finds the list of currently joined players who have the right to perform a
@@ -423,7 +411,6 @@ function CAMI.GetPlayersWithAccess(privilegeName, callback, targetPly, extraInfo
         )
     end
 end
-
 --[[
 CAMI.SteamIDHasAccess
     Queries whether a player with a steam ID has the right to perform a certain
@@ -468,7 +455,6 @@ CAMI.SteamIDHasAccess
 function CAMI.SteamIDHasAccess(actorSteam, privilegeName, callback, targetSteam, extraInfoTbl)
     hook.Call("CAMI.SteamIDHasAccess", defaultAccessHandler, actorSteam, privilegeName, callback, targetSteam, extraInfoTbl)
 end
-
 --[[
 CAMI.SignalUserGroupChanged
     Signify that your admin mod has changed the usergroup of a player. This
@@ -494,7 +480,6 @@ CAMI.SignalUserGroupChanged
 function CAMI.SignalUserGroupChanged(ply, old, new, source)
     hook.Call("CAMI.PlayerUsergroupChanged", nil, ply, old, new, source)
 end
-
 --[[
 CAMI.SignalSteamIDUserGroupChanged
     Signify that your admin mod has changed the usergroup of a disconnected

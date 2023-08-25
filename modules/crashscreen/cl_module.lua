@@ -1,24 +1,20 @@
 --------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:CharacterLoaded()
     CRASHSCREEN_ALLOW = true
 end
-
 --------------------------------------------------------------------------------------------------------
 local lastServerData1
 local lastServerData2
 local nextCrashThink = 0
 local nextCrashAnalysis
 local crashAnalysisAttempts = 0
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:Think()
     if not SERVER_DOWN and nextCrashAnalysis and nextCrashAnalysis < CurTime() then
         nextCrashAnalysis = CurTime() + 0.05
         local a, b = engine.ServerFrameTime()
-
         if (crashAnalysisAttempts or 0) <= 15 then
             if a ~= (lastServerData1 or 0) or b ~= (lastServerData2 or 0) then
                 nextCrashAnalysis = nil
@@ -28,7 +24,6 @@ function MODULE:Think()
             end
 
             crashAnalysisAttempts = crashAnalysisAttempts + 1
-
             if crashAnalysisAttempts == 15 then
                 nextCrashAnalysis = nil
                 crashAnalysisAttempts = 0
@@ -46,7 +41,6 @@ function MODULE:Think()
     if (nextCrashThink or 0) < CurTime() then
         nextCrashThink = CurTime() + 0.66
         local a, b = engine.ServerFrameTime()
-
         if a == (lastServerData1 or 0) and b == (lastServerData2 or 0) then
             nextCrashAnalysis = CurTime()
         else
@@ -58,7 +52,6 @@ function MODULE:Think()
         lastServerData2 = b
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:HUDPaint()
     if SERVER_DOWN and CRASHSCREEN_ALLOW then
@@ -67,12 +60,16 @@ function MODULE:HUDPaint()
         end
     elseif IsValid(CRASH_SCREEN) and not CRASH_SCREEN.fadin then
         CRASH_SCREEN.fadin = true
-
-        CRASH_SCREEN:AlphaTo(0, 1.2, nil, function()
-            if IsValid(CRASH_SCREEN) then
-                CRASH_SCREEN:Remove()
+        CRASH_SCREEN:AlphaTo(
+            0,
+            1.2,
+            nil,
+            function()
+                if IsValid(CRASH_SCREEN) then
+                    CRASH_SCREEN:Remove()
+                end
             end
-        end)
+        )
     end
 end
 --------------------------------------------------------------------------------------------------------

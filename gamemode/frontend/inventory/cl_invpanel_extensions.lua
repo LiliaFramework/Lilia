@@ -1,6 +1,5 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = FindMetaTable("Panel")
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:liaListenForInventoryChanges(inventory)
     assert(inventory, "No inventory has been set!")
@@ -12,23 +11,22 @@ function PANEL:liaListenForInventoryChanges(inventory)
     self.liaHookID[id] = hookID
     self.liaToRemoveHooks = self.liaToRemoveHooks or {}
     self.liaToRemoveHooks[id] = {}
-
     local function listenForInventoryChange(name, panelHook)
         panelHook = panelHook or name
-
-        hook.Add(name, hookID, function(inventory, ...)
-            if not IsValid(self) then return end
-            if not isfunction(self[panelHook]) then return end
-
-            local args = {...}
-
-            args[#args + 1] = inventory
-            self[panelHook](self, unpack(args))
-
-            if name == "InventoryDeleted" and self.deleteInventoryHooks then
-                self:deleteInventoryHooks(id)
+        hook.Add(
+            name,
+            hookID,
+            function(inventory, ...)
+                if not IsValid(self) then return end
+                if not isfunction(self[panelHook]) then return end
+                local args = {...}
+                args[#args + 1] = inventory
+                self[panelHook](self, unpack(args))
+                if name == "InventoryDeleted" and self.deleteInventoryHooks then
+                    self:deleteInventoryHooks(id)
+                end
             end
-        end)
+        )
 
         table.insert(self.liaToRemoveHooks[id], name)
     end
@@ -38,20 +36,21 @@ function PANEL:liaListenForInventoryChanges(inventory)
     listenForInventoryChange("InventoryDataChanged")
     listenForInventoryChange("InventoryItemAdded")
     listenForInventoryChange("InventoryItemRemoved")
-
-    hook.Add("ItemDataChanged", hookID, function(item, key, oldValue, newValue)
-        if not IsValid(self) or not inventory.items[item:getID()] then return end
-        if not isfunction(self.InventoryItemDataChanged) then return end
-        self:InventoryItemDataChanged(item, key, oldValue, newValue, inventory)
-    end)
+    hook.Add(
+        "ItemDataChanged",
+        hookID,
+        function(item, key, oldValue, newValue)
+            if not IsValid(self) or not inventory.items[item:getID()] then return end
+            if not isfunction(self.InventoryItemDataChanged) then return end
+            self:InventoryItemDataChanged(item, key, oldValue, newValue, inventory)
+        end
+    )
 
     table.insert(self.liaToRemoveHooks[id], "ItemDataChanged")
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:liaDeleteInventoryHooks(id)
     if not self.liaHookID then return end
-
     if id == nil then
         for invID, hookIDs in pairs(self.liaToRemoveHooks) do
             for i = 1, #hookIDs do
@@ -67,7 +66,6 @@ function PANEL:liaDeleteInventoryHooks(id)
     end
 
     if not self.liaHookID[id] then return end
-
     for i = 1, #self.liaToRemoveHooks[id] do
         hook.Remove(self.liaToRemoveHooks[id][i], self.liaHookID[id])
     end

@@ -1,5 +1,4 @@
 local PANEL = {}
-
 function PANEL:Init()
     self:SetFont("liaCharButtonFont")
     self:SizeToContentsY()

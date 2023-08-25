@@ -23,30 +23,25 @@ local RenderType = OUTLINE_RENDERTYPE_AFTER_EF
 local OutlineThickness = 1
 local StoreTexture = render.GetScreenEffectTexture(0)
 local DrawTexture = render.GetScreenEffectTexture(1)
-
 --------------------------------------------------------------------------------------------------------
 local OutlineMatSettings = {
 	["$basetexture"] = DrawTexture:GetName(),
 	["$ignorez"] = 1,
 	["$alphatest"] = 1
 }
-
 --------------------------------------------------------------------------------------------------------
 local CopyMat = Material("pp/copy")
 local OutlineMat = CreateMaterial("outline", "UnlitGeneric", OutlineMatSettings)
 local ENTS, COLOR, MODE = 1, 2, 3
-
 --------------------------------------------------------------------------------------------------------
 function Add(ents, color, mode)
 	if ListSize >= 255 then return end --Maximum 255 reference values
-
 	--Support for passing Entity as first argument
 	if not istable(ents) then
 		ents = {ents}
 	end
 
 	if ents[1] == nil then return end --Do not pass empty tables
-
 	if mode ~= OUTLINE_MODE_BOTH and mode ~= OUTLINE_MODE_NOTVISIBLE and mode ~= OUTLINE_MODE_VISIBLE then
 		mode = OUTLINE_MODE_BOTH
 	end
@@ -60,12 +55,10 @@ function Add(ents, color, mode)
 	ListSize = ListSize + 1
 	List[ListSize] = data
 end
-
 --------------------------------------------------------------------------------------------------------
 function RenderedEntity()
 	return RenderEnt
 end
-
 --------------------------------------------------------------------------------------------------------
 function SetRenderType(render_type)
 	if render_type ~= OUTLINE_RENDERTYPE_BEFORE_VM and render_type ~= OUTLINE_RENDERTYPE_BEFORE_EF and render_type ~= OUTLINE_RENDERTYPE_AFTER_EF then return end
@@ -74,12 +67,10 @@ function SetRenderType(render_type)
 
 	return old_type
 end
-
 --------------------------------------------------------------------------------------------------------
 function GetRenderType()
 	return RenderType
 end
-
 --------------------------------------------------------------------------------------------------------
 function SetDoubleThickness(thickness)
 	local old_thickness = OutlineThickness == 2
@@ -87,12 +78,10 @@ function SetDoubleThickness(thickness)
 
 	return old_thickness
 end
-
 --------------------------------------------------------------------------------------------------------
 function IsDoubleThickness()
 	return OutlineThickness == 2
 end
-
 --------------------------------------------------------------------------------------------------------
 local function Render()
 	local scene = render.GetRenderTarget()
@@ -107,21 +96,17 @@ local function Render()
 	render.SetStencilFailOperation(STENCIL_KEEP)
 	cam.Start3D()
 	render.SetBlend(1)
-
 	for i = 1, ListSize do
 		local reference = 0xFF - (i - 1)
 		local data = List[i]
 		local mode = data[MODE]
 		local ents = data[ENTS]
 		render.SetStencilReferenceValue(reference)
-
 		if mode == OUTLINE_MODE_BOTH or mode == OUTLINE_MODE_VISIBLE then
 			render.SetStencilZFailOperation(mode == OUTLINE_MODE_BOTH and STENCIL_REPLACE or STENCIL_KEEP)
 			render.SetStencilPassOperation(STENCIL_REPLACE)
-
 			for j = 1, #ents do
 				local ent = ents[j]
-
 				if IsValid(ent) then
 					RenderEnt = ent
 					ent:DrawModel()
@@ -130,10 +115,8 @@ local function Render()
 		elseif mode == OUTLINE_MODE_NOTVISIBLE then
 			render.SetStencilZFailOperation(STENCIL_REPLACE)
 			render.SetStencilPassOperation(STENCIL_KEEP)
-
 			for j = 1, #ents do
 				local ent = ents[j]
-
 				if IsValid(ent) then
 					RenderEnt = ent
 					ent:DrawModel()
@@ -143,10 +126,8 @@ local function Render()
 			render.SetStencilCompareFunction(STENCIL_EQUAL)
 			render.SetStencilZFailOperation(STENCIL_KEEP)
 			render.SetStencilPassOperation(STENCIL_ZERO)
-
 			for j = 1, #ents do
 				local ent = ents[j]
-
 				if IsValid(ent) then
 					RenderEnt = ent
 					ent:DrawModel()
@@ -165,7 +146,6 @@ local function Render()
 	render.SetStencilPassOperation(STENCIL_KEEP)
 	render.Clear(0, 0, 0, 0, false, false)
 	cam.Start2D()
-
 	for i = 1, ListSize do
 		local reference = 0xFF - (i - 1)
 		render.SetStencilReferenceValue(reference)
@@ -197,7 +177,6 @@ local function Render()
 	render.SetStencilEnable(false)
 	render.ClearDepth() -- Allows to render view model and other stuff in front of outline
 end
-
 --------------------------------------------------------------------------------------------------------
 local function RenderOutlines()
 	hook.Run("PreDrawOutlines")
@@ -205,31 +184,38 @@ local function RenderOutlines()
 	Render()
 	List, ListSize = {}, 0
 end
-
 --------------------------------------------------------------------------------------------------------
-hook.Add("PreDrawViewModels", "RenderOutlines", function()
-	if RenderType == OUTLINE_RENDERTYPE_BEFORE_VM then
-		RenderOutlines()
+hook.Add(
+	"PreDrawViewModels",
+	"RenderOutlines",
+	function()
+		if RenderType == OUTLINE_RENDERTYPE_BEFORE_VM then
+			RenderOutlines()
+		end
 	end
-end)
-
+)
 --------------------------------------------------------------------------------------------------------
-hook.Add("PreDrawEffects", "RenderOutlines", function()
-	if RenderType == OUTLINE_RENDERTYPE_BEFORE_EF then
-		RenderOutlines()
+hook.Add(
+	"PreDrawEffects",
+	"RenderOutlines",
+	function()
+		if RenderType == OUTLINE_RENDERTYPE_BEFORE_EF then
+			RenderOutlines()
+		end
 	end
-end)
-
+)
 --------------------------------------------------------------------------------------------------------
-hook.Add("PostDrawEffects", "RenderOutlines", function()
-	if RenderType == OUTLINE_RENDERTYPE_AFTER_EF then
-		RenderOutlines()
+hook.Add(
+	"PostDrawEffects",
+	"RenderOutlines",
+	function()
+		if RenderType == OUTLINE_RENDERTYPE_AFTER_EF then
+			RenderOutlines()
+		end
 	end
-end)
-
+)
 --------------------------------------------------------------------------------------------------------
 local textureInt = 0
-
 function render.DrawBoundingBox(pos1, pos2, color, mat, thick)
 	thick = thick or 1
 	color = color or color_white
@@ -239,7 +225,6 @@ function render.DrawBoundingBox(pos1, pos2, color, mat, thick)
 	local b1 = Vector(pos2.x, pos2.y, pos1.z)
 	local b2 = Vector(pos2.x, pos1.y, pos2.z)
 	local b3 = Vector(pos1.x, pos2.y, pos2.z)
-
 	if mat then
 		render.SetMaterial(mat)
 	else

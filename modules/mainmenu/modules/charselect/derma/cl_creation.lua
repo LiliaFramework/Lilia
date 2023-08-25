@@ -1,5 +1,4 @@
 local PANEL = {}
-
 -- Sets up the steps to show in the character creation menu.
 function PANEL:configureSteps()
     self:addStep(vgui.Create("liaCharacterFaction"))
@@ -7,7 +6,6 @@ function PANEL:configureSteps()
     self:addStep(vgui.Create("liaCharacterBiography"))
     hook.Run("ConfigureCharacterCreationSteps", self)
 end
-
 -- If the faction and model character data has been set, updates the
 -- model panel on the left of the creation menu to reflect how the
 -- character will look.
@@ -17,7 +15,6 @@ function PANEL:updateModel()
     local modelInfo = faction.models[self.context.model or 1]
     assert(modelInfo, "faction " .. faction.name .. " has no models!")
     local model, skin, groups
-
     if istable(modelInfo) then
         model, skin, groups = unpack(modelInfo)
     else
@@ -28,7 +25,6 @@ function PANEL:updateModel()
     local entity = self.model:GetEntity()
     if not IsValid(entity) then return end
     entity:SetSkin(skin)
-
     if istable(groups) then
         for group, value in pairs(groups) do
             entity:SetBodygroup(group, value)
@@ -51,12 +47,10 @@ function PANEL:updateModel()
         entity:SetMaterial(faction.material)
     end
 end
-
 -- Returns true if the local player can create a character, otherwise
 -- returns false and a string reason for why.
 function PANEL:canCreateCharacter()
     local validFactions = {}
-
     for k, v in pairs(lia.faction.teams) do
         if lia.faction.hasWhitelist(v.index) then
             validFactions[#validFactions + 1] = v.index
@@ -72,7 +66,6 @@ function PANEL:canCreateCharacter()
 
     return true
 end
-
 -- Called after the player has pressed "next" on the last step. This
 -- requests for a character to be made using the set character data.
 function PANEL:onFinish()
@@ -82,7 +75,6 @@ function PANEL:onFinish()
     self.buttons:SetVisible(false)
     self:showMessage("creating")
     self.creating = true
-
     -- Reset the UI once the server responds.
     local function onResponse()
         timer.Remove("liaFailedToCreate")
@@ -99,21 +91,26 @@ function PANEL:onFinish()
     end
 
     -- Send the character data and request that a character be made.
-    MainMenu:createCharacter(self.context):next(function()
-        onResponse()
-
-        if IsValid(lia.gui.character) then
-            lia.gui.character:showContent()
-        end
-    end, onFail)
+    MainMenu:createCharacter(self.context):next(
+        function()
+            onResponse()
+            if IsValid(lia.gui.character) then
+                lia.gui.character:showContent()
+            end
+        end, onFail
+    )
 
     -- Show an error if this is taking too long.
-    timer.Create("liaFailedToCreate", 60, 1, function()
-        if not IsValid(self) or not self.creating then return end
-        onFail("unknownError")
-    end)
+    timer.Create(
+        "liaFailedToCreate",
+        60,
+        1,
+        function()
+            if not IsValid(self) or not self.creating then return end
+            onFail("unknownError")
+        end
+    )
 end
-
 -- Shows a message with a red background in the current step.
 function PANEL:showError(message, ...)
     if IsValid(self.error) then
@@ -131,7 +128,6 @@ function PANEL:showError(message, ...)
     self.error:SetTall(32)
     self.error:DockMargin(0, 0, 0, 8)
     self.error:SetContentAlignment(5)
-
     self.error.Paint = function(box, w, h)
         lia.util.drawBlur(box)
         surface.SetDrawColor(255, 0, 0, 50)
@@ -142,7 +138,6 @@ function PANEL:showError(message, ...)
     self.error:AlphaTo(255, lia.gui.character.ANIM_SPEED)
     lia.gui.character:warningSound()
 end
-
 -- Shows a normal message in the middle of this menu.
 function PANEL:showMessage(message, ...)
     if not message or message == "" then
@@ -154,7 +149,6 @@ function PANEL:showMessage(message, ...)
     end
 
     message = L(message, ...):upper()
-
     if IsValid(self.message) then
         self.message:SetText(message)
     end
@@ -166,13 +160,11 @@ function PANEL:showMessage(message, ...)
     self.message:SetContentAlignment(5)
     self.message:SetText(message)
 end
-
 -- Adds a step to the list of steps to be shown in the character creation menu.
 -- Priority is a number (lower is higher priority) that can change order.
 function PANEL:addStep(step, priority)
     assert(IsValid(step), "Invalid panel for step")
     assert(step.isCharCreateStep, "Panel must inherit liaCharacterCreateStep")
-
     if isnumber(priority) then
         table.insert(self.steps, math.min(priority, #self.steps + 1), step)
     else
@@ -181,16 +173,13 @@ function PANEL:addStep(step, priority)
 
     step:SetParent(self.content)
 end
-
 -- Moves to the next available step. If none are, onFinish is called.
 -- If there is a validation error, that is shown first.
 function PANEL:nextStep()
     local lastStep = self.curStep
     local curStep = self.steps[lastStep]
-
     if IsValid(curStep) then
         local res = {curStep:validate()}
-
         if res[1] == false then return self:showError(unpack(res, 2)) end
     end
 
@@ -199,7 +188,6 @@ function PANEL:nextStep()
     -- Move to the next step. Call onFinish if none exists.
     self.curStep = self.curStep + 1
     local nextStep = self.steps[self.curStep]
-
     while IsValid(nextStep) and nextStep:shouldSkip() do
         self.curStep = self.curStep + 1
         nextStep:onSkip()
@@ -215,13 +203,11 @@ function PANEL:nextStep()
     -- Transition the view to the next step's view.
     self:onStepChanged(curStep, nextStep)
 end
-
 -- Moves to the previous available step if one exists.
 function PANEL:previousStep()
     local curStep = self.steps[self.curStep]
     local newStep = self.curStep - 1
     local prevStep = self.steps[newStep]
-
     while IsValid(prevStep) and prevStep:shouldSkip() do
         prevStep:onSkip()
         newStep = newStep - 1
@@ -232,12 +218,10 @@ function PANEL:previousStep()
     self.curStep = newStep
     self:onStepChanged(curStep, prevStep)
 end
-
 -- Resets the character creation menu to the first step and clears form data.
 function PANEL:reset()
     self.context = {}
     local curStep = self.steps[self.curStep]
-
     if IsValid(curStep) then
         curStep:SetVisible(false)
         curStep:onHide()
@@ -247,11 +231,9 @@ function PANEL:reset()
     if #self.steps == 0 then return self:showError("No character creation steps have been set up") end
     self:nextStep()
 end
-
 -- Returns the panel for the step shown prior to this step.
 function PANEL:getPreviousStep()
     local step = self.curStep - 1
-
     while IsValid(self.steps[step]) do
         if not self.steps[step]:shouldSkip() then
             hasPrevStep = true
@@ -263,7 +245,6 @@ function PANEL:getPreviousStep()
 
     return self.steps[step]
 end
-
 -- Called when the step has been changed via nextStep or previousStep.
 -- This is where transitions are handled.
 function PANEL:onStepChanged(oldStep, newStep)
@@ -271,7 +252,6 @@ function PANEL:onStepChanged(oldStep, newStep)
     local shouldFinish = self.curStep == #self.steps
     local nextStepText = L(shouldFinish and "finish" or "next"):upper()
     local shouldSwitchNextText = nextStepText ~= self.next:GetText()
-
     -- Change visibility for prev/next if they should not be shown.
     if IsValid(self:getPreviousStep()) then
         self.prev:AlphaTo(255, ANIM_SPEED)
@@ -290,7 +270,6 @@ function PANEL:onStepChanged(oldStep, newStep)
         newStep:onDisplay()
         newStep:InvalidateChildren(true)
         newStep:AlphaTo(255, ANIM_SPEED)
-
         if shouldSwitchNextText then
             self.next:SetAlpha(0)
             self.next:SetText(nextStepText)
@@ -301,12 +280,17 @@ function PANEL:onStepChanged(oldStep, newStep)
     end
 
     if IsValid(oldStep) then
-        oldStep:AlphaTo(0, ANIM_SPEED, 0, function()
-            self:showError()
-            oldStep:SetVisible(false)
-            oldStep:onHide()
-            showNewStep()
-        end)
+        oldStep:AlphaTo(
+            0,
+            ANIM_SPEED,
+            0,
+            function()
+                self:showError()
+                oldStep:SetVisible(false)
+                oldStep:onHide()
+                showNewStep()
+            end
+        )
     else
         showNewStep()
     end
@@ -318,7 +302,6 @@ function PANEL:Init()
     if not canCreate then return self:showMessage(reason) end
     lia.gui.charCreate = self
     local sideMargin = 0
-
     if ScrW() > 1280 then
         sideMargin = ScrW() * 0.15
     elseif ScrW() > 720 then
@@ -334,7 +317,6 @@ function PANEL:Init()
     self.model:Dock(LEFT)
     self.model:SetModel("models/error.mdl")
     self.model.oldSetModel = self.model.SetModel
-
     self.model.SetModel = function(model, ...)
         model:oldSetModel(...)
         model:fitFOV()
@@ -348,7 +330,6 @@ function PANEL:Init()
     self.prev:SetText(L("back"):upper())
     self.prev:Dock(LEFT)
     self.prev:SetWide(96)
-
     self.prev.DoClick = function(prev)
         self:previousStep()
     end
@@ -358,7 +339,6 @@ function PANEL:Init()
     self.next:SetText(L("next"):upper())
     self.next:Dock(RIGHT)
     self.next:SetWide(96)
-
     self.next.DoClick = function(next)
         self:nextStep()
     end
@@ -366,7 +346,6 @@ function PANEL:Init()
     self.cancel = self.buttons:Add("liaCharButton")
     self.cancel:SetText(L("cancel"):upper())
     self.cancel:SizeToContentsX()
-
     self.cancel.DoClick = function(cancel)
         self:reset()
     end

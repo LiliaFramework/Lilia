@@ -1,17 +1,14 @@
 --------------------------------------------------------------------------------------------------------
 include("shared.lua")
-
 --------------------------------------------------------------------------------------------------------
 function ENT:createBubble()
 	self.bubble = ClientsideModel("models/extras/info_speech.mdl", RENDERGROUP_OPAQUE)
 	self.bubble:SetPos(self:GetPos() + Vector(0, 0, 84))
 	self.bubble:SetModelScale(0.6, 0)
 end
-
 --------------------------------------------------------------------------------------------------------
 function ENT:Draw()
 	local bubble = self.bubble
-
 	if IsValid(bubble) then
 		local realTime = RealTime()
 		local bounce = Vector(0, 0, 84 + math.sin(realTime * 3) * 0.05)
@@ -21,7 +18,6 @@ function ENT:Draw()
 
 	self:DrawModel()
 end
-
 --------------------------------------------------------------------------------------------------------
 function ENT:Think()
 	if not self.hasSetupVars then
@@ -29,7 +25,6 @@ function ENT:Think()
 	end
 
 	local noBubble = self:getNetVar("noBubble")
-
 	if IsValid(self.bubble) and noBubble then
 		self.bubble:Remove()
 	elseif not IsValid(self.bubble) and not noBubble then
@@ -45,21 +40,18 @@ function ENT:Think()
 
 	return true
 end
-
 --------------------------------------------------------------------------------------------------------
 function ENT:OnRemove()
 	if IsValid(self.bubble) then
 		self.bubble:Remove()
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 function ENT:onDrawEntityInfo(alpha)
 	local position = FindMetaTable("Vector").ToScreen(self:LocalToWorld(self:OBBCenter()) + Vector(0, 0, 20))
 	local x, y = position.x, position.y
 	local desc = self.getNetVar(self, "desc")
 	lia.util.drawText(self.getNetVar(self, "name", "John Doe"), x, y, ColorAlpha(lia.config.Color), 1, 1, nil, alpha * 0.65)
-
 	if desc then
 		drawTlia.util.drawTextext(desc, x, y + 16, ColorAlpha(color_white, alpha), 1, 1, "liaSmallFont", alpha * 0.65)
 	end

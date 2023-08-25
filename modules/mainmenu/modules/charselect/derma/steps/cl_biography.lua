@@ -1,12 +1,10 @@
 local PANEL = {}
 local HIGHLIGHT = Color(255, 255, 255, 50)
-
 function PANEL:Init()
     self.nameLabel = self:addLabel("name")
     self.nameLabel:SetZPos(0)
     self.name = self:addTextEntry("name")
     self.name:SetTall(48)
-
     self.name.onTabPressed = function()
         self.desc:RequestFocus()
     end
@@ -16,7 +14,6 @@ function PANEL:Init()
     self.descLabel:SetZPos(2)
     self.desc = self:addTextEntry("desc")
     self.desc:SetTall(self.name:GetTall() * 3)
-
     self.desc.onTabPressed = function()
         self.name:RequestFocus()
     end
@@ -31,13 +28,11 @@ function PANEL:addTextEntry(contextName)
     entry:SetFont("liaCharButtonFont")
     entry.Paint = self.paintTextEntry
     entry:DockMargin(0, 4, 0, 16)
-
     entry.OnValueChange = function(_, value)
         self:setContext(contextName, string.Trim(value))
     end
 
     entry.contextName = contextName
-
     entry.OnKeyCodeTyped = function(name, keyCode)
         if keyCode == KEY_TAB then
             entry:onTabPressed()
@@ -55,7 +50,6 @@ function PANEL:onDisplay()
     local faction = self:getContext("faction")
     assert(faction, "faction not set before showing name input")
     local default, override = hook.Run("GetDefaultCharName", LocalPlayer(), faction)
-
     if override then
         self.nameLabel:SetVisible(false)
         self.name:SetVisible(false)
@@ -77,13 +71,11 @@ end
 function PANEL:validate()
     if self.name:IsVisible() then
         local res = {self:validateCharVar("name")}
-
         if res[1] == false then return unpack(res) end
     end
 
     return self:validateCharVar("desc")
 end
-
 -- self refers to the text entry
 function PANEL:paintTextEntry(w, h)
     lia.util.drawBlur(self)

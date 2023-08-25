@@ -11,7 +11,6 @@ function MODULE:ScoreboardHide()
 
     return true
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:ScoreboardShow()
     if IsValid(lia.gui.score) then
@@ -24,14 +23,12 @@ function MODULE:ScoreboardShow()
 
     return true
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:OnReloaded()
     if IsValid(lia.gui.score) then
         lia.gui.score:Remove()
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:ShowPlayerOptions(client, options)
     if CAMI.PlayerHasAccess(client, "Lilia - Can Access Scoreboard Admin Options") then

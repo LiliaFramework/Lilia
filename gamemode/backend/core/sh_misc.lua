@@ -4,7 +4,6 @@ function GM:GetGameDescription()
 
     return lia.config.DefaultGamemodeName
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpray(client)
     return true

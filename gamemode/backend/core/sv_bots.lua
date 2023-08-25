@@ -3,12 +3,13 @@ function GM:SetupBotCharacter(client)
     local botID = os.time()
     local index = math.random(1, table.Count(lia.faction.indices))
     local faction = lia.faction.indices[index]
-
-    local character = lia.char.new({
-        name = client:Name(),
-        faction = faction and faction.uniqueID or "unknown",
-        model = faction and table.Random(faction.models) or "models/gman.mdl"
-    }, botID, client, client:SteamID64())
+    local character = lia.char.new(
+        {
+            name = client:Name(),
+            faction = faction and faction.uniqueID or "unknown",
+            model = faction and table.Random(faction.models) or "models/gman.mdl"
+        }, botID, client, client:SteamID64()
+    )
 
     character.isBot = true
     character.vars.inv = {}
@@ -17,7 +18,6 @@ function GM:SetupBotCharacter(client)
     character:setup()
     client:Spawn()
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:SetupBotInventory(client, character)
     if not "grid" then return end

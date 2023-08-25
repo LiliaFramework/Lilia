@@ -2,14 +2,11 @@
 function MODULE:ChatAddText(text, ...)
     if lia.config.ChatSizeDiff then
         local chatText = {...}
-
         local chatMode = #chatText <= 4 and chatText[2] or chatText[3]
-
         if not chatMode or istable(chatMode) then
             return "<font=liaChatFont>"
         else
             local chatMode = string.lower(chatMode)
-
             if string.match(chatMode, "yell") then
                 return "<font=liaBigChatFont>"
             elseif string.sub(chatMode, 1, 2) == "**" then

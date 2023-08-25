@@ -5,14 +5,12 @@ function MODULE:CanPlayerAccessVendor(client, vendor)
     if vendor:isClassAllowed(character:getClass()) then return true end
     if vendor:isFactionAllowed(client:Team()) then return true end
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)
     if not vendor.items[itemType] then return false end
     local state = vendor:getTradeMode(itemType)
     if isSellingToVendor and state == VENDOR_SELLONLY then return false end
     if not isSellingToVendor and state == VENDOR_BUYONLY then return false end
-
     if isSellingToVendor and not client:getChar():getInv():hasItem(itemType) then
         return false
     elseif not isSellingToVendor then
@@ -22,7 +20,6 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
 
     local price = vendor:getPrice(itemType, isSellingToVendor)
     local money
-
     if isSellingToVendor then
         money = vendor:getMoney()
     else
@@ -31,11 +28,9 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
 
     if money and money < price then return false, isSellingToVendor and "vendorNoMoney" or "canNotAfford" end
 end
-
 --------------------------------------------------------------------------------------------------------
 if not VENDOR_INVENTORY_MEASURE then
     VENDOR_INVENTORY_MEASURE = lia.inventory.types["grid"]:new()
-
     VENDOR_INVENTORY_MEASURE.data = {
         w = 8,
         h = 8
@@ -44,11 +39,9 @@ if not VENDOR_INVENTORY_MEASURE then
     VENDOR_INVENTORY_MEASURE.virtual = true
     VENDOR_INVENTORY_MEASURE:onInstanced()
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
     local canAccess, reason = hook.Run("CanPlayerTradeWithVendor", client, vendor, itemType, isSellingToVendor)
-
     if canAccess == false then
         if isstring(reason) then
             client:notifyLocalized(reason)
@@ -62,11 +55,9 @@ function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
     if client.vendorTransaction and client.vendorTimeout > RealTime() then return end
     client.vendorTransaction = true
     client.vendorTimeout = RealTime() + .1
-
     if isSellingToVendor then
         local inventory = character:getInv()
         local item = inventory:getFirstItemOfType(itemType)
-
         if item then
             local context = {
                 client = client,
@@ -76,7 +67,6 @@ function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
             }
 
             local canTransfer, reason = VENDOR_INVENTORY_MEASURE:canAccess("transfer", context)
-
             if not canTransfer then
                 client:notifyLocalized(reason or "vendorError")
 
@@ -84,7 +74,6 @@ function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
             end
 
             local canTransferItem, reason = hook.Run("CanItemBeTransfered", item, inventory, VENDOR_INVENTORY_MEASURE, client)
-
             if canTransferItem == false then
                 client:notifyLocalized(reason or "vendorError")
 
@@ -93,12 +82,15 @@ function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
 
             vendor:takeMoney(price)
             character:giveMoney(price)
-
-            item:remove():next(function()
-                client.vendorTransaction = nil
-            end):catch(function()
-                client.vendorTransaction = nil
-            end)
+            item:remove():next(
+                function()
+                    client.vendorTransaction = nil
+                end
+            ):catch(
+                function()
+                    client.vendorTransaction = nil
+                end
+            )
 
             vendor:addStock(itemType)
         end
@@ -107,25 +99,29 @@ function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
         character:takeMoney(price)
         vendor:takeStock(itemType)
         local position = client:getItemDropPos()
-
-        local result = character:getInv():add(itemType):next(function(item)
-            hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor)
-            client.vendorTransaction = nil
-        end):catch(function(err)
-            if IsValid(client) then
-                client:notifyLocalized("Cannot add to inventory! Giving money back!")
+        local result = character:getInv():add(itemType):next(
+            function(item)
+                hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor)
+                client.vendorTransaction = nil
             end
+        ):catch(
+            function(err)
+                if IsValid(client) then
+                    client:notifyLocalized("Cannot add to inventory! Giving money back!")
+                end
 
-            client.vendorTransaction = nil
+                client.vendorTransaction = nil
 
-            return character:giveMoney(price)
-        end):catch(function(err)
-            client:notifyLocalized(err)
-            client.vendorTransaction = nil
-        end)
+                return character:giveMoney(price)
+            end
+        ):catch(
+            function(err)
+                client:notifyLocalized(err)
+                client.vendorTransaction = nil
+            end
+        )
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:PlayerAccessVendor(client, vendor)
     vendor:addReceiver(client)

@@ -3,7 +3,6 @@ local STRIP_HEIGHT = 4
 lia.config.CharHover = lia.config.CharHover or {"buttons/button15.wav", 35, 250}
 lia.config.CharClick = lia.config.CharClick or {"buttons/button14.wav", 35, 255}
 lia.config.CharWarning = lia.config.CharWarning or {"friends/friend_join.wav", 40, 255}
-
 function PANEL:isCursorWithinBounds()
 	local x, y = self:LocalCursorPos()
 
@@ -12,10 +11,11 @@ end
 
 function PANEL:confirmDelete()
 	local id = self.character:getID()
-
-	vgui.Create('liaNewCharacterConfirm'):setMessage(L('Deleting a character cannot be undone.')):onConfirm(function()
-		MainMenu:deleteCharacter(id)
-	end)
+	vgui.Create('liaNewCharacterConfirm'):setMessage(L('Deleting a character cannot be undone.')):onConfirm(
+		function()
+			MainMenu:deleteCharacter(id)
+		end
+	)
 end
 
 function PANEL:Init()
@@ -27,7 +27,6 @@ function PANEL:Init()
 	self.faction:SetTall(STRIP_HEIGHT)
 	self.faction:SetSkin('Default')
 	self.faction:SetAlpha(100)
-
 	self.faction.Paint = function(faction, w, h)
 		surface.SetDrawColor(faction:GetBackgroundColor())
 		surface.DrawRect(0, 0, w, h)
@@ -43,7 +42,6 @@ function PANEL:Init()
 	self.model = self:Add('liaModelPanel')
 	self.model:Dock(FILL)
 	self.model:SetFOV(37)
-
 	self.model.PaintOver = function(model, w, h)
 		if self.banned then
 			local centerX, centerY = w * 0.5, h * 0.5 - 24
@@ -57,14 +55,12 @@ function PANEL:Init()
 	self.button:SetSize(WIDTH, ScrH())
 	self.button:SetPaintBackground(false)
 	self.button:SetText('')
-
 	self.button.OnCursorEntered = function(button)
 		self:OnCursorEntered()
 	end
 
 	self.button.DoClick = function(button)
 		lia.gui.newCharsMenu:clickSound()
-
 		if not self.banned then
 			self:onSelected()
 		end
@@ -75,7 +71,6 @@ function PANEL:Init()
 	self.delete:SetFont('liaCharSubTitleFont')
 	self.delete:SetText('✕ ' .. L('delete'):upper())
 	self.delete:SetWide(self:GetWide())
-
 	self.delete.Paint = function(delete, w, h)
 		surface.SetDrawColor(255, 0, 0, 50)
 		surface.DrawRect(0, 0, w, h)
@@ -100,11 +95,9 @@ function PANEL:setCharacter(character)
 	self.faction:SetBackgroundColor(team.GetColor(character:getFaction()))
 	self:setBanned(character:getData('banned'))
 	local entity = self.model.Entity
-
 	if IsValid(entity) then
 		-- Match the skin and bodygroups.
 		entity:SetSkin(character:getData('skin', 0))
-
 		for k, v in pairs(character:getData('groups', {})) do
 			entity:SetBodygroup(k, v)
 		end
@@ -126,7 +119,6 @@ function PANEL:onHoverChanged(isHovered)
 	if self.isHovered == isHovered then return end
 	self.isHovered = isHovered
 	local tall = self:GetTall()
-
 	if isHovered then
 		self.delete.y = tall
 		self.delete:MoveTo(0, tall - self.delete:GetTall(), ANIM_SPEED)
@@ -142,7 +134,6 @@ function PANEL:Paint(w, h)
 	lia.util.drawBlur(self)
 	surface.SetDrawColor(0, 0, 0, 50)
 	surface.DrawRect(0, STRIP_HEIGHT, w, h)
-
 	if not self:isCursorWithinBounds() and self.isHovered then
 		self:onHoverChanged(false)
 	end

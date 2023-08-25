@@ -6,12 +6,10 @@ local DUMMY_COMMAND = {
     syntax = "<string text>",
     onRun = function() end
 }
-
 --------------------------------------------------------------------------------------------------------
 function lia.chat.timestamp(ooc)
     return lia.config.ChatShowTime and (ooc and " " or "") .. "(" .. lia.date.GetFormattedDate(false, false, false, false, true) .. ")" .. (ooc and "" or " ") or ""
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.chat.register(chatType, data)
     if not data.onCanHear then
@@ -51,8 +49,7 @@ function lia.chat.register(chatType, data)
             end
 
             local timestamp = lia.chat.timestamp(false)
-
-			print(chatType .. "Format")
+            print(chatType .. "Format")
             local translated = L2(chatType .. "Format", name, text)
             chat.AddText(timestamp, color, translated or string.format(data.format, name, text))
         end
@@ -73,7 +70,6 @@ function lia.chat.register(chatType, data)
     data.filter = data.filter or "ic"
     lia.chat.classes[chatType] = data
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.chat.parse(client, message, noSend)
     local anonymous = false

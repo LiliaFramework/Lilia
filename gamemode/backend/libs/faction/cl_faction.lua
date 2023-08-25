@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 function lia.faction.hasWhitelist(faction)
     local data = lia.faction.indices[faction]
-
     if data then
         if data.isDefault then return true end
         local liaData = lia.localData and lia.localData.whitelists or {}

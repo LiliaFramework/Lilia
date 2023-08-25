@@ -28,25 +28,33 @@ ITEM.functions.use = {
     isMulti = true,
     multiOptions = function(item, client)
         local options = {}
-
-        table.insert(options, {
-            name = L("ammoLoadAll"),
-            data = 0,
-        })
+        table.insert(
+            options,
+            {
+                name = L("ammoLoadAll"),
+                data = 0,
+            }
+        )
 
         for _, amount in pairs(loadAmount) do
             if amount <= item:getQuantity() then
-                table.insert(options, {
-                    name = L("ammoLoadAmount", amount),
-                    data = amount,
-                })
+                table.insert(
+                    options,
+                    {
+                        name = L("ammoLoadAmount", amount),
+                        data = amount,
+                    }
+                )
             end
         end
 
-        table.insert(options, {
-            name = L("ammoLoadCustom"),
-            data = -1,
-        })
+        table.insert(
+            options,
+            {
+                name = L("ammoLoadCustom"),
+                data = -1,
+            }
+        )
 
         return options
     end,
@@ -55,7 +63,6 @@ ITEM.functions.use = {
     end,
     onRun = function(item, data)
         data = data or 0
-
         if data > 0 then
             local num = tonumber(data)
             item:addQuantity(-num)

@@ -1,6 +1,5 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     if IsValid(lia.gui.info) then
@@ -11,7 +10,6 @@ function PANEL:Init()
     self:SetSize(ScrW() * 0.6, ScrH() * 0.7)
     self:Center()
     local suppress = hook.Run("CanCreateCharInfo", self)
-
     if not suppress or (suppress and not suppress.all) then
         if not suppress or not suppress.model then
             self.model = self:Add("liaModelPanel")
@@ -66,7 +64,6 @@ function PANEL:Init()
 
         if not suppress or not suppress.class then
             local class = lia.class.list[LocalPlayer():getChar():getClass()]
-
             if class then
                 self.class = self.info:Add("DLabel")
                 self.class:Dock(TOP)
@@ -82,14 +79,11 @@ function PANEL:Init()
 
     hook.Run("CreateCharInfo", self)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:setup()
     local char = LocalPlayer():getChar()
-
     if self.desc then
         self.desc:SetText(char:getDesc():gsub("#", "\226\128\139#"))
-
         self.desc.OnEnter = function(this, w, h)
             lia.command.send("chardesc", this:GetText():gsub("\226\128\139#", "#"))
         end
@@ -97,12 +91,15 @@ function PANEL:setup()
 
     if self.name then
         self.name:SetText(LocalPlayer():Name():gsub("#", "\226\128\139#"))
-
-        hook.Add("OnCharVarChanged", self, function(panel, character, key, oldValue, value)
-            if char ~= character then return end
-            if key ~= "name" then return end
-            self.name:SetText(value:gsub("#", "\226\128\139#"))
-        end)
+        hook.Add(
+            "OnCharVarChanged",
+            self,
+            function(panel, character, key, oldValue, value)
+                if char ~= character then return end
+                if key ~= "name" then return end
+                self.name:SetText(value:gsub("#", "\226\128\139#"))
+            end
+        )
     end
 
     if self.money then
@@ -115,7 +112,6 @@ function PANEL:setup()
 
     if self.class then
         local class = lia.class.list[char:getClass()]
-
         if class then
             self.class:SetText(L("charClass", L(class.name)))
         end
@@ -124,16 +120,13 @@ function PANEL:setup()
     if self.model then
         self.model:SetModel(LocalPlayer():GetModel())
         self.model.Entity:SetSkin(LocalPlayer():GetSkin())
-
         for k, v in ipairs(LocalPlayer():GetBodyGroups()) do
             self.model.Entity:SetBodygroup(v.id, LocalPlayer():GetBodygroup(v.id))
         end
 
         local ent = self.model.Entity
-
         if ent and IsValid(ent) then
             local mats = LocalPlayer():GetMaterials()
-
             for k, v in pairs(mats) do
                 ent:SetSubMaterial(k - 1, LocalPlayer():GetSubMaterial(k - 1))
             end
@@ -142,11 +135,9 @@ function PANEL:setup()
 
     hook.Run("OnCharInfoSetup", self)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
 end
-
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaCharInfo", PANEL, "EditablePanel")
 --------------------------------------------------------------------------------------------------------

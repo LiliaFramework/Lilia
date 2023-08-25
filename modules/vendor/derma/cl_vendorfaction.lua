@@ -2,17 +2,14 @@
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------
 local EDITOR = include(MODULE.path .. "/cl_editor.lua")
-
 --------------------------------------------------------------------------------------------------------
 local function onFactionStateChanged(checkBox, state)
 	EDITOR.faction(checkBox.factionID, state)
 end
-
 --------------------------------------------------------------------------------------------------------
 local function onClassStateChanged(checkBox, state)
 	EDITOR.class(checkBox.classID, state)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	if IsValid(lia.gui.vendorFactionEditor) then
@@ -29,7 +26,6 @@ function PANEL:Init()
 	self.scroll:DockPadding(0, 0, 0, 4)
 	self.factions = {}
 	self.classes = {}
-
 	for k, v in ipairs(lia.faction.indices) do
 		local panel = self.scroll:Add("DPanel")
 		panel:Dock(TOP)
@@ -42,7 +38,6 @@ function PANEL:Init()
 		faction.factionID = k
 		faction.OnChange = onFactionStateChanged
 		self.factions[k] = faction
-
 		for k2, v2 in ipairs(lia.class.list) do
 			if v2.faction == k then
 				local class = panel:Add("DCheckBoxLabel")
@@ -62,11 +57,9 @@ function PANEL:Init()
 	hook.Add("VendorFactionUpdated", self, self.updateChecked)
 	hook.Add("VendorClassUpdated", self, self.updateChecked)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:updateChecked()
 	local entity = liaVendorEnt
-
 	for id, panel in pairs(self.factions) do
 		panel:SetChecked(entity:isFactionAllowed(id))
 	end
@@ -75,7 +68,6 @@ function PANEL:updateChecked()
 		panel:SetChecked(entity:isClassAllowed(id))
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaVendorFactionEditor", PANEL, "DFrame")
 --------------------------------------------------------------------------------------------------------

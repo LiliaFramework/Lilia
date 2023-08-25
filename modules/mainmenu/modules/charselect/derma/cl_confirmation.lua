@@ -1,5 +1,4 @@
 local PANEL = {}
-
 function PANEL:Init()
     if IsValid(lia.gui.charConfirm) then
         lia.gui.charConfirm:Remove()
@@ -13,7 +12,6 @@ function PANEL:Init()
     self.content = self:Add("DPanel")
     self.content:SetSize(ScrW(), 256)
     self.content:CenterVertical()
-
     self.content.Paint = function(content, w, h)
         surface.SetDrawColor(0, 0, 0, 200)
         surface.DrawRect(0, 0, w, h)
@@ -38,7 +36,6 @@ function PANEL:Init()
     self.confirm:SetText(L("yes"):upper())
     self.confirm:SetPaintBackground(false)
     self.confirm:SetSize(64, 32)
-
     self.confirm.OnCursorEntered = function()
         lia.gui.character:hoverSound()
     end
@@ -49,10 +46,8 @@ function PANEL:Init()
     end
 
     self.confirm:SetPos(ScrW() * 0.5 - (self.confirm:GetWide() + SPACING), self.message.y + 64)
-
     self.confirm.DoClick = function(cancel)
         lia.gui.character:clickSound()
-
         if isfunction(self.onConfirmCallback) then
             self.onConfirmCallback()
         end
@@ -65,17 +60,14 @@ function PANEL:Init()
     self.cancel:SetText(L("no"):upper())
     self.cancel:SetPaintBackground(false)
     self.cancel:SetSize(64, 32)
-
     self.cancel.OnCursorEntered = function(cancel)
         cancel.BaseClass.OnCursorEntered(cancel)
         lia.gui.character:hoverSound()
     end
 
     self.cancel:SetPos(ScrW() * 0.5 + SPACING, self.message.y + 64)
-
     self.cancel.DoClick = function(cancel)
         lia.gui.character:clickSound()
-
         if isfunction(self.onCancelCallback) then
             self.onCancelCallback()
         end
@@ -83,9 +75,12 @@ function PANEL:Init()
         self:Remove()
     end
 
-    timer.Simple(lia.gui.character.ANIM_SPEED * 0.5, function()
-        lia.gui.character:warningSound()
-    end)
+    timer.Simple(
+        lia.gui.character.ANIM_SPEED * 0.5,
+        function()
+            lia.gui.character:warningSound()
+        end
+    )
 end
 
 function PANEL:OnMousePressed()

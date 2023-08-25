@@ -10,42 +10,38 @@ function MODULE:PlayerSpawnedProp(client, model, entity)
 	storage:SetModel(model)
 	storage:SetSolid(SOLID_VPHYSICS)
 	storage:PhysicsInit(SOLID_VPHYSICS)
-
-	lia.inventory.instance(data.invType, data.invData):next(function(inventory)
-		if IsValid(storage) then
-			inventory.isStorage = true
-			storage:setInventory(inventory)
-			self:saveStorage()
-
-			if isfunction(data.onSpawn) then
-				data.onSpawn(storage)
+	lia.inventory.instance(data.invType, data.invData):next(
+		function(inventory)
+			if IsValid(storage) then
+				inventory.isStorage = true
+				storage:setInventory(inventory)
+				self:saveStorage()
+				if isfunction(data.onSpawn) then
+					data.onSpawn(storage)
+				end
+			end
+		end,
+		function(err)
+			ErrorNoHalt("Unable to create storage entity for " .. client:Name() .. "\n" .. err .. "\n")
+			if IsValid(storage) then
+				storage:Remove()
 			end
 		end
-	end, function(err)
-		ErrorNoHalt("Unable to create storage entity for " .. client:Name() .. "\n" .. err .. "\n")
-
-		if IsValid(storage) then
-			storage:Remove()
-		end
-	end)
+	)
 
 	entity:Remove()
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:CanPlayerSpawnStorage(client, entity, info)
 	if not info.invType or not lia.inventory.types[info.invType] then return false end
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:CanSaveStorage(entity, inventory)
 	return lia.config.SaveStorage
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:saveStorage()
 	local data = {}
-
 	for _, entity in ipairs(ents.FindByClass("lia_storage")) do
 		if hook.Run("CanSaveStorage", entity, entity:getInv()) == false then
 			entity.liaForceDelete = true
@@ -59,17 +55,14 @@ function MODULE:saveStorage()
 
 	self:setData(data)
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:StorageItemRemoved(entity, inventory)
 	self:saveStorage()
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:LoadData()
 	local data = self:getData()
 	if not data then return end
-
 	for _, info in ipairs(data) do
 		local position, angles, invID, model, password = unpack(info)
 		local storage = STORAGE_DEFINITIONS[model]
@@ -81,28 +74,31 @@ function MODULE:LoadData()
 		storage:SetModel(model)
 		storage:SetSolid(SOLID_VPHYSICS)
 		storage:PhysicsInit(SOLID_VPHYSICS)
-
 		if password then
 			storage.password = password
 			storage:setNetVar("locked", true)
 		end
 
-		lia.inventory.loadByID(invID):next(function(inventory)
-			if inventory and IsValid(storage) then
-				inventory.isStorage = true
-				storage:setInventory(inventory)
-				hook.Run("StorageRestored", storage, inventory)
-			elseif IsValid(storage) then
-				timer.Simple(1, function()
-					if IsValid(storage) then
-						storage:Remove()
-					end
-				end)
+		lia.inventory.loadByID(invID):next(
+			function(inventory)
+				if inventory and IsValid(storage) then
+					inventory.isStorage = true
+					storage:setInventory(inventory)
+					hook.Run("StorageRestored", storage, inventory)
+				elseif IsValid(storage) then
+					timer.Simple(
+						1,
+						function()
+							if IsValid(storage) then
+								storage:Remove()
+							end
+						end
+					)
+				end
 			end
-		end)
+		)
 
 		local physObject = storage:GetPhysicsObject()
-
 		if physObject then
 			physObject:EnableMotion()
 		end

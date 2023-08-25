@@ -1,5 +1,8 @@
 --------------------------------------------------------------------------------------------------------
-hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
+hook.Add(
+    "CreateMenuButtons",
+    "liaInventory",
+    function(tabs)
         if hook.Run("CanPlayerViewInventory") == false then return end
         tabs["inv"] = function(panel)
             local inventory = LocalPlayer():getChar():getInv()
@@ -34,12 +37,21 @@ hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
                 x = x + panel:GetWide() + 10
             end
 
-            hook.Add("PostRenderVGUI", mainPanel, function() hook.Run("PostDrawInventory", mainPanel) end)
+            hook.Add(
+                "PostRenderVGUI",
+                mainPanel,
+                function()
+                    hook.Run("PostDrawInventory", mainPanel)
+                end
+            )
         end
     end
 )
 --------------------------------------------------------------------------------------------------------
-hook.Add("CreateMenuButtons", "liaClasses", function(tabs)
+hook.Add(
+    "CreateMenuButtons",
+    "liaClasses",
+    function(tabs)
         if hook.Run("CanPlayerViewClasses") == false then return end
         local cnt = table.Count(lia.class.list)
         if cnt <= 1 then return end
@@ -47,14 +59,20 @@ hook.Add("CreateMenuButtons", "liaClasses", function(tabs)
             if not lia.class.canBe(LocalPlayer(), k) then
                 continue
             else
-                tabs["classes"] = function(panel) panel:Add("liaClasses") end
+                tabs["classes"] = function(panel)
+                    panel:Add("liaClasses")
+                end
+
                 return
             end
         end
     end
 )
 --------------------------------------------------------------------------------------------------------
-hook.Add("CreateMenuButtons", "liaHelpMenu", function(tabs)
+hook.Add(
+    "CreateMenuButtons",
+    "liaHelpMenu",
+    function(tabs)
         if hook.Run("CanPlayerViewHelp") == false then return end
         HELP_DEFAULT = [[
         <div id="parent"><div id="child">
@@ -101,8 +119,14 @@ hook.Add("CreateMenuButtons", "liaHelpMenu", function(tabs)
             tree.OnNodeSelected = function(this, node)
                 if node.onGetHTML then
                     local source = node:onGetHTML()
-                    if IsValid(helpPanel) then helpPanel:Remove() end
-                    if lia.gui.creditsPanel then lia.gui.creditsPanel:Remove() end
+                    if IsValid(helpPanel) then
+                        helpPanel:Remove()
+                    end
+
+                    if lia.gui.creditsPanel then
+                        lia.gui.creditsPanel:Remove()
+                    end
+
                     helpPanel = panel:Add("DListView")
                     helpPanel:Dock(FILL)
                     helpPanel.Paint = function() end

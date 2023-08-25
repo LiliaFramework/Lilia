@@ -20,11 +20,9 @@ function lia.util.include(fileName, state)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.util.includeDir(directory, fromLua, recursive)
     local baseDir = "lilia"
-
     if SCHEMA and SCHEMA.folder and SCHEMA.loading then
         baseDir = SCHEMA.folder .. "/schema/"
     else
@@ -34,7 +32,6 @@ function lia.util.includeDir(directory, fromLua, recursive)
     if recursive then
         local function AddRecursive(folder, baseFolder)
             local files, folders = file.Find(folder .. "/*", "LUA")
-
             if not files then
                 MsgN("Warning! This folder is empty!")
 

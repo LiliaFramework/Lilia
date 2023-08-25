@@ -1,6 +1,5 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     local border = 32
@@ -15,7 +14,6 @@ function PANEL:Init()
     self.tabs:SetTall(28)
     self.tabs:DockPadding(4, 4, 4, 4)
     self.tabs:SetVisible(false)
-
     self.tabs.Paint = function(tabs, w, h)
         surface.SetDrawColor(0, 0, 0, 100)
         surface.DrawRect(0, 0, w, h)
@@ -26,13 +24,10 @@ function PANEL:Init()
     self.scroll:SetPos(4, 31)
     self.scroll:SetSize(w - 8, h - 66)
     self.scroll:GetVBar():SetWide(0)
-
     self.scroll.PaintOver = function(this, w, h)
         local entry = self.text
-
         if self.active and IsValid(entry) then
             local text = entry:GetText()
-
             if text:sub(1, 1) == "/" then
                 local arguments = self.arguments or {}
                 local command = string.PatternSafe(arguments[1] or ""):lower()
@@ -41,21 +36,16 @@ function PANEL:Init()
                 surface.DrawRect(0, 0, w, h)
                 local i = 0
                 local color = lia.config.Color
-
                 for k, v in SortedPairs(lia.command.list) do
                     local k2 = "/" .. k
                     local k = k:lower()
-
                     if k2:lower():match(command) then
                         local x = lia.util.drawText((v.realCommand and "/" .. v.realCommand or k2) .. "  ", 4, i * 20, color)
-
                         if k == command and v.syntax then
                             local i2 = 0
-
                             for argument in v.syntax:gmatch("([%[<][%w_]+[%s][%w_]+[%]>])") do
                                 i2 = i2 + 1
                                 local color = Color(200, 200, 200, 100)
-
                                 if i2 == (#arguments - 1) then
                                     color = color_white
                                 end
@@ -74,17 +64,9 @@ function PANEL:Init()
     self.lastY = 0
     self.list = {}
     self.filtered = {}
-
-    chat.GetChatBoxPos = function()
-        return self:LocalToScreen(0, 0)
-    end
-
-    chat.GetChatBoxSize = function()
-        return self:GetSize()
-    end
-
+    chat.GetChatBoxPos = function() return self:LocalToScreen(0, 0) end
+    chat.GetChatBoxSize = function() return self:GetSize() end
     local buttons = {}
-
     for k, v in SortedPairsByMemberValue(lia.chat.classes, "filter") do
         if not buttons[v.filter] then
             self:addFilterButton(v.filter)
@@ -92,7 +74,6 @@ function PANEL:Init()
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
     if self.active then
@@ -103,16 +84,13 @@ function PANEL:Paint(w, h)
         surface.DrawOutlinedRect(0, 0, w, h)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:setActive(state)
     self.active = state
-
     if state then
         self.entry = self:Add("EditablePanel")
         self.entry:SetPos(self.x + 4, self.y + self:GetTall() - 32)
         self.entry:SetWide(self:GetWide() - 8)
-
         self.entry.OnRemove = function()
             hook.Run("FinishChat")
         end
@@ -125,14 +103,12 @@ function PANEL:setActive(state)
         self.text:SetHistoryEnabled(true)
         self.text:DockMargin(0, 0, 0, 0)
         self.text:SetFont("liaChatFont")
-
         self.text.OnEnter = function(this)
             local text = this:GetText()
             this:Remove()
             self.tabs:SetVisible(false)
             self.active = false
             self.entry:Remove()
-
             if text:find("%S") then
                 if not (lia.chat.lastLine or ""):find(text, 1, true) then
                     lia.chat.history[#lia.chat.history + 1] = text
@@ -144,7 +120,6 @@ function PANEL:setActive(state)
         end
 
         self.text:SetAllowNonAsciiCharacters(true)
-
         self.text.Paint = function(this, w, h)
             surface.SetDrawColor(0, 0, 0, 100)
             surface.DrawRect(0, 0, w, h)
@@ -156,7 +131,6 @@ function PANEL:setActive(state)
         self.text.OnTextChanged = function(this)
             local text = this:GetText()
             hook.Run("ChatTextChanged", text)
-
             if text:sub(1, 1) == "/" then
                 self.arguments = lia.command.extractArgs(text:sub(2))
             end
@@ -168,7 +142,6 @@ function PANEL:setActive(state)
         hook.Run("StartChat")
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 local function OnDrawText(text, font, x, y, color, alignX, alignY, alpha)
     alpha = alpha or 255
@@ -181,7 +154,6 @@ local function OnDrawText(text, font, x, y, color, alignX, alignY, alpha)
     surface.SetFont(font)
     surface.DrawText(text)
 end
-
 --------------------------------------------------------------------------------------------------------
 local function PaintFilterButton(this, w, h)
     if this.active then
@@ -195,7 +167,6 @@ local function PaintFilterButton(this, w, h)
     surface.SetDrawColor(0, 0, 0, 200)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:addFilterButton(filter)
     local name = L(filter)
@@ -209,11 +180,9 @@ function PANEL:addFilterButton(filter)
     tab:SetTextColor(color_white)
     tab:SetExpensiveShadow(1, Color(0, 0, 0, 200))
     tab.Paint = PaintFilterButton
-
     tab.DoClick = function(this)
         this.active = not this.active
         local filters = LIA_CVAR_CHATFILTER:GetString():lower()
-
         if filters == "none" then
             filters = ""
         end
@@ -222,7 +191,6 @@ function PANEL:addFilterButton(filter)
             filters = filters .. filter .. ","
         else
             filters = filters:gsub(filter .. "[,]", "")
-
             if not filters:find("%S") then
                 filters = "none"
             end
@@ -236,17 +204,14 @@ function PANEL:addFilterButton(filter)
         tab.active = true
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:addText(...)
     local text = "<font=liaChatFont>"
-
     if CHAT_CLASS then
         text = "<font=" .. (CHAT_CLASS.font or "liaChatFont") .. ">"
     end
 
     text = hook.Run("ChatAddText", text, ...) or text
-
     for k, v in ipairs({...}) do
         if type(v) == "IMaterial" then
             local ttx = v:GetName()
@@ -258,11 +223,13 @@ function PANEL:addText(...)
             text = text .. "<color=" .. color.r .. "," .. color.g .. "," .. color.b .. ">" .. v:Name():gsub("<", "&lt;"):gsub(">", "&gt;"):gsub("#", "\226\128\139#")
         else
             text = text .. tostring(v):gsub("<", "&lt;"):gsub(">", "&gt;")
-
-            text = text:gsub("%b**", function(value)
-                local inner = value:sub(2, -2)
-                if inner:find("%S") then return "<font=liaChatFontItalics>" .. value:sub(2, -2) .. "</font>" end
-            end)
+            text = text:gsub(
+                "%b**",
+                function(value)
+                    local inner = value:sub(2, -2)
+                    if inner:find("%S") then return "<font=liaChatFontItalics>" .. value:sub(2, -2) .. "</font>" end
+                end
+            )
         end
     end
 
@@ -272,7 +239,6 @@ function PANEL:addText(...)
     panel:setMarkup(text, OnDrawText)
     panel.start = CurTime() + 15
     panel.finish = panel.start + 20
-
     panel.Think = function(this)
         if self.active then
             this:SetAlpha(255)
@@ -283,7 +249,6 @@ function PANEL:addText(...)
 
     self.list[#self.list + 1] = panel
     local class = CHAT_CLASS and CHAT_CLASS.filter and CHAT_CLASS.filter:lower() or "ic"
-
     if LIA_CVAR_CHATFILTER:GetString():lower():find(class) then
         self.filtered[panel] = class
         panel:SetVisible(false)
@@ -297,7 +262,6 @@ function PANEL:addText(...)
 
     return panel:IsVisible()
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:setFilter(filter, state)
     if state then
@@ -318,7 +282,6 @@ function PANEL:setFilter(filter, state)
 
     self.lastY = 0
     local lastChild
-
     for k, v in ipairs(self.list) do
         if v:IsVisible() then
             v:SetPos(0, self.lastY)
@@ -331,19 +294,16 @@ function PANEL:setFilter(filter, state)
         self.scroll:ScrollToChild(lastChild)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Think()
     if gui.IsGameUIVisible() and self.active then
         self.tabs:SetVisible(false)
         self.active = false
-
         if IsValid(self.entry) then
             self.entry:Remove()
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaChatBox", PANEL, "DPanel")
 --------------------------------------------------------------------------------------------------------

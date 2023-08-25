@@ -5,7 +5,6 @@ AccessorFunc(PANEL, "m_eTarget", "Target")
 --------------------------------------------------------------------------------------------------------
 local leftrotate, rightrotate = input.LookupBinding("+moveleft"), input.LookupBinding("+moveright")
 local leftinput, rightinput = input.GetKeyCode(leftrotate), input.GetKeyCode(rightrotate)
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:SetSize(ScrW() / 1.5, ScrH() / 1.5)
@@ -17,7 +16,6 @@ function PANEL:Init()
     self.model = self:Add("liaModelPanel")
     self.model:Dock(LEFT)
     self.model:SetWide(w / 2)
-
     self.model.PaintOver = function(this, w, h)
         local str = "[%s] Rotate Left | [%s] Rotate Right"
         str = str:format(leftrotate:upper(), rightrotate:upper())
@@ -35,10 +33,8 @@ function PANEL:Init()
     self.skinSelector:SetMin(0)
     self.skinSelector:SetDecimals(0)
     self.skinSelector:SetVisible(false)
-
     self.skinSelector.OnValueChanged = function(this, value)
         local model = self.model.Entity
-
         if IsValid(model) then
             model:SetSkin(math.Round(value))
         end
@@ -54,7 +50,6 @@ function PANEL:Init()
     self.finish:SetTall(24)
     self.finish:SetText("Finish")
     self.finish:SetFont("liaMediumFont")
-
     self.finish.Paint = function(panel, w, h)
         surface.SetDrawColor(color)
         surface.DrawRect(0, 0, w, h)
@@ -64,17 +59,14 @@ function PANEL:Init()
 
     self.finish.DoClick = function(this)
         local model = self.model.Entity
-
         if IsValid(model) then
             local skn = model:GetSkin()
             local groups = {}
-
             for i = 0, model:GetNumBodyGroups() - 1 do
                 groups[i] = model:GetBodygroup(i)
             end
 
             local makeChange = true
-
             if self.originalSkin == skn then
                 makeChange = false
             end
@@ -101,19 +93,16 @@ function PANEL:Init()
     self.scroll = self.side:Add("DScrollPanel")
     self.scroll:Dock(FILL)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnClose()
     net.Start("BodygrouperMenuClose")
     net.SendToServer()
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:PopulateOptions()
     local target = self:GetTarget()
     if not IsValid(target) then return end
     self.scroll:Clear()
-
     if target:SkinCount() > 1 then
         self.skinSelector:SetMax(target:SkinCount() - 1)
         self.skinSelector:SetValue(target:GetSkin())
@@ -124,7 +113,6 @@ function PANEL:PopulateOptions()
         self.category = self.scroll:Add("DCollapsibleCategory")
         self.category:Dock(TOP)
         self.category:SetLabel("Bodygroups")
-
         for i = 0, target:GetNumBodyGroups() - 1 do
             if target:GetBodygroupCount(i) <= 1 then continue end
             local group = target:GetBodygroup(i)
@@ -137,7 +125,6 @@ function PANEL:PopulateOptions()
             panel:SetMax(target:GetBodygroupCount(i) - 1)
             panel:SetDecimals(0)
             panel:SetValue(group)
-
             panel.OnValueChanged = function(this, value)
                 model:SetBodygroup(i, math.Round(value))
             end
@@ -155,19 +142,16 @@ function PANEL:PopulateOptions()
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:SetTarget(target)
     self.m_eTarget = target
     self.model:SetModel(target:GetModel())
     self.model:fitFOV()
     local ent = self.model.Entity
-
     if IsValid(ent) then
         self.originalSkin = target:GetSkin()
         ent:SetSkin(target:GetSkin())
         self.originalBodygroups = {}
-
         for i = 0, ent:GetNumBodyGroups() - 1 do
             self.originalBodygroups[i] = target:GetBodygroup(i)
             ent:SetBodygroup(i, target:GetBodygroup(i))
@@ -176,7 +160,6 @@ function PANEL:SetTarget(target)
 
     self:PopulateOptions()
 end
-
 --------------------------------------------------------------------------------------------------------
 local function RotatePointAroundPivot(point, pivot, angles)
     local newpoint = point - pivot
@@ -185,18 +168,15 @@ local function RotatePointAroundPivot(point, pivot, angles)
 
     return newpoint
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Think()
     local model = self.model
-
     if input.IsKeyDown(leftinput) then
         model:SetCamPos(RotatePointAroundPivot(model:GetCamPos(), model:GetLookAt(), Angle(0, FrameTime() * 180, 0)))
     elseif input.IsKeyDown(rightinput) then
         model:SetCamPos(RotatePointAroundPivot(model:GetCamPos(), model:GetLookAt(), Angle(0, FrameTime() * -180, 0)))
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 vgui.Register("BodygrouperMenu", PANEL, "DFrame")
 --------------------------------------------------------------------------------------------------------

@@ -1,14 +1,12 @@
---------------------------------------------------------------------------------------------------------
-AddCSLuaFile()
-
---------------------------------------------------------------------------------------------------------
-if CLIENT then
-    SWEP.PrintName = "Hands"
-    SWEP.Slot = 0
-    SWEP.SlotPos = 1
-    SWEP.DrawAmmo = false
-end
-
+CARRY_STRENGTH_NERD = 1
+CARRY_STRENGTH_CHAD = 2
+CARRY_STRENGTH_TERMINATOR = 3
+CARRY_STRENGTH_GOD = 4
+CARRY_FORCE_LEVEL = {16500, 40000, 100000, 0,}
+CARRY_WEIGHT_LIMIT = 100
+THROW_VELOCITY_CAP = 150
+PLAYER_PICKUP_RANGE = 200
+CARRY_FORCE_LIMIT = CARRY_FORCE_LEVEL[CARRY_STRENGTH_CHAD] -- default strength level is CHAD.
 --------------------------------------------------------------------------------------------------------
 SWEP.Author = "Cheesenut / Black Tea"
 SWEP.Instructions = "Primary Fire: [RAISED] Punch\nSecondary Fire: Knock/Pickup"
@@ -37,20 +35,9 @@ SWEP.FireWhenLowered = true
 SWEP.HoldType = "fist"
 SWEP.holdingEntity = nil
 SWEP.carryHack = nil
-SWEP.constr = nila
+SWEP.constr = nil
 SWEP.prevOwner = nil
 --------------------------------------------------------------------------------------------------------
-CARRY_STRENGTH_NERD = 1
-CARRY_STRENGTH_CHAD = 2
-CARRY_STRENGTH_TERMINATOR = 3
-CARRY_STRENGTH_GOD = 4
-
-CARRY_FORCE_LEVEL = {16500, 40000, 100000, 0,}
-
---------------------------------------------------------------------------------------------------------
-CARRY_WEIGHT_LIMIT = 100
-THROW_VELOCITY_CAP = 150
-PLAYER_PICKUP_RANGE = 200
 --[[
 	CARRY_STRENGTH_NERD: 16500 - You can't push player with prop on this strength level.
 								the grabbing fails kinda often. the most minge safe strength.
@@ -66,95 +53,76 @@ PLAYER_PICKUP_RANGE = 200
 ]]
 --
 --------------------------------------------------------------------------------------------------------
-CARRY_FORCE_LIMIT = CARRY_FORCE_LEVEL[CARRY_STRENGTH_CHAD] -- default strength level is CHAD.
-
---------------------------------------------------------------------------------------------------------
-if CLIENT then
-    function SWEP:PreDrawViewModel(viewModel, weapon, client)
-        local hands = player_manager.TranslatePlayerHands(player_manager.TranslateToPlayerModelName(client:GetModel()))
-
-        if hands and hands.model then
-            viewModel:SetModel(hands.model)
-            viewModel:SetSkin(hands.skin)
-            viewModel:SetBodyGroups(hands.body)
-        end
-    end
-end
-
---------------------------------------------------------------------------------------------------------
-local function SetSubPhysMotionEnabled(entity, enable)
+function SWEP:SetSubPhysMotionEnabled(entity, enable)
     if not IsValid(entity) then return end
-
     for i = 0, entity:GetPhysicsObjectCount() - 1 do
         local subphys = entity:GetPhysicsObjectNum(i)
-
         if IsValid(subphys) then
             subphys:EnableMotion(enable)
-
             if enable then
                 subphys:Wake()
             end
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
-local function removeVelocity(entity, normalize)
+function SWEP:removeVelocity(entity, normalize)
     if normalize then
         local phys = entity:GetPhysicsObject()
-
         if IsValid(phys) then
             phys:SetVelocity(Vector(0, 0, 0))
         end
 
         entity:SetVelocity(vector_origin)
-        SetSubPhysMotionEnabled(entity, false)
-
-        timer.Simple(0, function()
-            SetSubPhysMotionEnabled(entity, true)
-        end)
+        self:SetSubPhysMotionEnabled(entity, false)
+        timer.Simple(
+            0,
+            function()
+                self:SetSubPhysMotionEnabled(entity, true)
+            end
+        )
     else
         local phys = entity:GetPhysicsObject()
         local vel = IsValid(phys) and phys:GetVelocity() or entity:GetVelocity()
         local len = math.min(THROW_VELOCITY_CAP, vel:Length2D())
         vel:Normalize()
         vel = vel * len
-        SetSubPhysMotionEnabled(entity, false)
+        self:SetSubPhysMotionEnabled(entity, false)
+        timer.Simple(
+            0,
+            function()
+                self:SetSubPhysMotionEnabled(entity, true)
+                if IsValid(phys) then
+                    phys:SetVelocity(vel)
+                end
 
-        timer.Simple(0, function()
-            SetSubPhysMotionEnabled(entity, true)
-
-            if IsValid(phys) then
-                phys:SetVelocity(vel)
+                entity:SetVelocity(vel)
+                entity:SetLocalAngularVelocity(Angle())
             end
-
-            entity:SetVelocity(vel)
-            entity:SetLocalAngularVelocity(Angle())
-        end)
+        )
     end
 end
-
 --------------------------------------------------------------------------------------------------------
-local function throwVelocity(entity, client, power)
+function SWEP:throwVelocity(entity, client, power)
     local phys = entity:GetPhysicsObject()
     local vel = client:GetAimVector()
     vel = vel * power
-    SetSubPhysMotionEnabled(entity, false)
+    self:SetSubPhysMotionEnabled(entity, false)
+    timer.Simple(
+        0,
+        function()
+            if IsValid(entity) then
+                self:SetSubPhysMotionEnabled(entity, true)
+                if IsValid(phys) then
+                    phys:SetVelocity(vel)
+                end
 
-    timer.Simple(0, function()
-        if IsValid(entity) then
-            SetSubPhysMotionEnabled(entity, true)
-
-            if IsValid(phys) then
-                phys:SetVelocity(vel)
+                entity:SetVelocity(vel)
+                entity:SetLocalAngularVelocity(Angle())
             end
-
-            entity:SetVelocity(vel)
-            entity:SetLocalAngularVelocity(Angle())
         end
-    end)
+    )
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:reset(throw)
     if IsValid(self.carryHack) then
@@ -167,7 +135,6 @@ function SWEP:reset(throw)
 
     if IsValid(self.holdingEntity) then
         local owner = self:GetOwner()
-
         if not self.holdingEntity:IsWeapon() then
             if not IsValid(self.prevOwner) then
                 self.holdingEntity:SetOwner(nil)
@@ -177,7 +144,6 @@ function SWEP:reset(throw)
         end
 
         local phys = self.holdingEntity:GetPhysicsObject()
-
         if IsValid(phys) then
             phys:ClearGameFlag(FVPHYSICS_PLAYER_HELD)
             phys:AddGameFlag(FVPHYSICS_WAS_THROWN)
@@ -188,9 +154,9 @@ function SWEP:reset(throw)
         end
 
         if not throw then
-            removeVelocity(self.holdingEntity)
+            self:removeVelocity(self.holdingEntity)
         else
-            throwVelocity(self.holdingEntity, owner, 300)
+            self:throwVelocity(self.holdingEntity, owner, 300)
         end
 
         hook.Run("GravGunOnDropped", owner, self.holdingEntity, throw)
@@ -202,18 +168,15 @@ function SWEP:reset(throw)
     self.carryHack = nil
     self.constr = nil
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:drop(throw)
     if not self:checkValidity() then return end
     if not self:allowEntityDrop() then return end
-
     if SERVER then
         self.constr:Remove()
         self.carryHack:Remove()
         local entity = self.holdingEntity
         local phys = entity:GetPhysicsObject()
-
         if IsValid(phys) then
             phys:EnableCollisions(true)
             phys:EnableGravity(true)
@@ -225,7 +188,7 @@ function SWEP:drop(throw)
         end
 
         if entity:GetClass() == "prop_ragdoll" then
-            removeVelocity(entity)
+            self:removeVelocity(entity)
         end
 
         entity:SetPhysicsAttacker(self:GetOwner())
@@ -233,7 +196,6 @@ function SWEP:drop(throw)
 
     self:reset(throw)
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:checkValidity()
     if (not IsValid(self.holdingEntity)) or (not IsValid(self.carryHack)) or (not IsValid(self.constr)) then
@@ -246,82 +208,18 @@ function SWEP:checkValidity()
         return true
     end
 end
-
 --------------------------------------------------------------------------------------------------------
-local function isPlayerStandsOn(entity)
+function SWEP:isPlayerStandsOn(entity)
     for _, client in pairs(player.GetAll()) do
         if client:GetGroundEntity() == entity then return true end
     end
 
     return false
 end
-
---------------------------------------------------------------------------------------------------------
-if SERVER then
-    local ent_diff = vector_origin
-    local ent_diff_time = CurTime()
-    local stand_time = 0
-
-    --------------------------------------------------------------------------------------------------------
-    function SWEP:Think()
-        if not self:checkValidity() then return end
-        local curTime = CurTime()
-
-        if curTime > ent_diff_time then
-            ent_diff = self:GetPos() - self.holdingEntity:GetPos()
-
-            if ent_diff:Dot(ent_diff) > 40000 then
-                self:reset()
-
-                return
-            end
-
-            ent_diff_time = curTime + 1
-        end
-
-        if curTime > stand_time then
-            if isPlayerStandsOn(self.holdingEntity) then
-                self:reset()
-
-                return
-            end
-
-            stand_time = curTime + 0.1
-        end
-
-        local owner = self:GetOwner()
-        local obb = math.abs(self.holdingEntity:GetModelBounds():Length2D())
-        self.carryHack:SetPos(owner:EyePos() + owner:GetAimVector() * (35 + obb))
-        local targetAng = owner:GetAngles()
-
-        if self.carryHack.preferedAngle then
-            targetAng.p = 0
-        end
-
-        self.carryHack:SetAngles(targetAng)
-        self.holdingEntity:PhysWake()
-    end
-    --------------------------------------------------------------------------------------------------------
-else
-    function SWEP:Think()
-        local owner = self:GetOwner()
-
-        if CLIENT and owner then
-            local viewModel = owner:GetViewModel()
-
-            if IsValid(viewModel) then
-                viewModel:SetPlaybackRate(1)
-            end
-        end
-    end
-    --------------------------------------------------------------------------------------------------------
-end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:PrimaryAttack()
     if not IsFirstTimePredicted() then return end
     local owner = self:GetOwner()
-
     if IsValid(self.holdingEntity) then
         self:doPickup(not self.isWepRaised or owner:isWepRaised())
 
@@ -331,10 +229,8 @@ function SWEP:PrimaryAttack()
     self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
     if hook.Run("CanPlayerThrowPunch", owner) == false then return end
     local staminaUse = lia.config.PunchStamina
-
     if staminaUse > 0 then
         local value = owner:getLocalVar("stamina", 0) - staminaUse
-
         if value < 0 then
             return
         elseif SERVER then
@@ -352,10 +248,8 @@ function SWEP:PrimaryAttack()
     self:SetNW2Float("startTime", CurTime())
     self:SetNW2Bool("startPunch", true)
 end
-
 --------------------------------------------------------------------------------------------------------
 local hull = Vector(4, 4, 4)
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:SecondaryAttack()
     if not IsFirstTimePredicted() then return end
@@ -363,14 +257,11 @@ function SWEP:SecondaryAttack()
     local data = {}
     data.start = client:GetShootPos()
     data.endpos = data.start + client:GetAimVector() * PLAYER_PICKUP_RANGE
-
     data.filter = {self, client}
-
     data.mins = -hull
     data.maxs = hull
     local trace = util.TraceHull(data)
     local entity = trace.Entity
-
     if SERVER and IsValid(entity) then
         if entity:isDoor() then
             if hook.Run("PlayerCanKnock", client, entity) == false then return end
@@ -391,7 +282,6 @@ function SWEP:SecondaryAttack()
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:dragObject(phys, targetpos)
     if not IsValid(phys) then return end
@@ -402,7 +292,6 @@ function SWEP:dragObject(phys, targetpos)
     physDirection:Normalize()
     phys:SetVelocity(physDirection * math.min(length, 250))
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:getRange(target)
     if IsValid(target) and target:GetClass() == "prop_ragdoll" then
@@ -411,20 +300,17 @@ function SWEP:getRange(target)
         return 100
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:allowPickup(target)
     local phys = target:GetPhysicsObject()
     local client = self:GetOwner()
 
-    return IsValid(phys) and IsValid(client) and client:getChar() and (not phys:HasGameFlag(FVPHYSICS_NO_PLAYER_PICKUP)) and phys:GetMass() <= CARRY_WEIGHT_LIMIT and (not isPlayerStandsOn(target)) and (target.CanPickup ~= false) and hook.Run("GravGunPickupAllowed", client, target) ~= false and (target.GravGunPickupAllowed and (target:GravGunPickupAllowed(client) ~= false) or true)
+    return IsValid(phys) and IsValid(client) and client:getChar() and (not phys:HasGameFlag(FVPHYSICS_NO_PLAYER_PICKUP)) and phys:GetMass() <= CARRY_WEIGHT_LIMIT and (not self:isPlayerStandsOn(target)) and (target.CanPickup ~= false) and hook.Run("GravGunPickupAllowed", client, target) ~= false and (target.GravGunPickupAllowed and (target:GravGunPickupAllowed(client) ~= false) or true)
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:doPickup(throw, entity, trace)
     self:SetNextPrimaryFire(CurTime() + .1)
     self:SetNextSecondaryFire(CurTime() + .1)
-
     if IsValid(self.holdingEntity) then
         self:drop(throw)
         self:SetNextSecondaryFire(CurTime() + 0.1)
@@ -433,10 +319,8 @@ function SWEP:doPickup(throw, entity, trace)
     end
 
     local client = self:GetOwner()
-
     if IsValid(entity) then
         local phys = entity:GetPhysicsObject()
-
         if not IsValid(phys) or not phys:IsMoveable() or phys:HasGameFlag(FVPHYSICS_PLAYER_HELD) then
             hook.Run("OnPickupObject", false, client, entity)
 
@@ -456,17 +340,14 @@ function SWEP:doPickup(throw, entity, trace)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:pickup(entity, trace)
     if CLIENT or IsValid(self.holdingEntity) then return end
     local client = self:GetOwner()
     self.holdingEntity = entity
     local entphys = entity:GetPhysicsObject()
-
     if IsValid(entity) and IsValid(entphys) then
         self.carryHack = ents.Create("prop_physics")
-
         if IsValid(self.carryHack) then
             local pos, obb = self.holdingEntity:GetPos(), self.holdingEntity:OBBCenter()
             pos = pos + self.holdingEntity:GetForward() * obb.x
@@ -482,7 +363,6 @@ function SWEP:pickup(entity, trace)
             self.carryHack:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
             self.carryHack:SetSolid(SOLID_NONE)
             local preferredAngles = hook.Run("GetPreferredCarryAngles", self.holdingEntity)
-
             if client:KeyDown(IN_RELOAD) and not preferredAngles then
                 preferredAngles = Angle()
             end
@@ -500,14 +380,12 @@ function SWEP:pickup(entity, trace)
             end
 
             self.carryHack:Spawn()
-
             if not self.holdingEntity:IsWeapon() then
                 self.prevOwner = self.holdingEntity:GetOwner()
                 self.holdingEntity:SetOwner(client)
             end
 
             local phys = self.carryHack:GetPhysicsObject()
-
             if IsValid(phys) then
                 phys:SetMass(200)
                 phys:SetDamping(0, 1000)
@@ -520,7 +398,6 @@ function SWEP:pickup(entity, trace)
             entphys:AddGameFlag(FVPHYSICS_PLAYER_HELD)
             local bone = math.Clamp(0, 0, 1)
             local max_force = CARRY_FORCE_LIMIT
-
             if entity:GetClass() == "prop_ragdoll" then
                 self.dt.carried_rag = entity
                 bone = trace.PhysicsBone
@@ -536,10 +413,8 @@ function SWEP:pickup(entity, trace)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 local down = Vector(0, 0, -1)
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:allowEntityDrop()
     local client = self:GetOwner()
@@ -551,12 +426,10 @@ function SWEP:allowEntityDrop()
 
     return down:Dot(diff) <= 0.75
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:SetupDataTables()
     self:DTVar("Entity", 0, "carried_rag")
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:Initialize()
     if SERVER then
@@ -566,23 +439,19 @@ function SWEP:Initialize()
     self:SetHoldType(self.HoldType)
     self.LastHand = 0
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:OnRemove()
     self:reset()
 end
-
 --------------------------------------------------------------------------------------------------------
 ACT_VM_FISTS_DRAW = 3
 ACT_VM_FISTS_HOLSTER = 2
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:Deploy()
     local owner = self:GetOwner()
     if not IsValid(owner) then return end
     self:reset()
     local viewModel = owner:GetViewModel()
-
     if IsValid(viewModel) then
         viewModel:SetPlaybackRate(1)
         viewModel:ResetSequence(ACT_VM_FISTS_DRAW)
@@ -590,14 +459,12 @@ function SWEP:Deploy()
 
     return true
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:Holster()
     local owner = self:GetOwner()
     if not IsValid(owner) then return end
     self:reset()
     local viewModel = owner:GetViewModel()
-
     if IsValid(viewModel) then
         viewModel:SetPlaybackRate(1)
         viewModel:ResetSequence(ACT_VM_FISTS_HOLSTER)
@@ -605,7 +472,6 @@ function SWEP:Holster()
 
     return true
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:Precache()
     util.PrecacheSound("npc/vort/claw_swing1.wav")
@@ -617,13 +483,11 @@ function SWEP:Precache()
     util.PrecacheSound("physics/wood/wood_crate_impact_hard2.wav")
     util.PrecacheSound("physics/wood/wood_crate_impact_hard3.wav")
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:doPunchAnimation()
     self.LastHand = math.abs(1 - self.LastHand)
     local sequence = 4 + self.LastHand
     local viewModel = self:GetOwner():GetViewModel()
-
     if IsValid(viewModel) then
         viewModel:SetPlaybackRate(0.5)
         viewModel:SetSequence(sequence)
@@ -635,20 +499,16 @@ function SWEP:doPunchAnimation()
         self:SetNW2Float("startTime", 0)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:doPunch()
     local owner = self:GetOwner()
-
     if IsValid(self) and IsValid(owner) then
         local damage = self.Primary.Damage
-
         local context = {
             damage = damage
         }
 
         local result = hook.Run("PlayerGetFistDamage", owner, damage, context)
-
         if result ~= nil then
             damage = result
         else
@@ -661,10 +521,8 @@ function SWEP:doPunch()
         data.endpos = data.start + owner:GetAimVector() * 96
         data.filter = owner
         local trace = util.TraceLine(data)
-
         if SERVER and trace.Hit then
             local entity = trace.Entity
-
             if IsValid(entity) then
                 local damageInfo = DamageInfo()
                 damageInfo:SetAttacker(owner)

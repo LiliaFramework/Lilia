@@ -1,6 +1,5 @@
 --------------------------------------------------------------------------------------------------------
 AddCSLuaFile()
-
 --------------------------------------------------------------------------------------------------------
 if CLIENT then
 	SWEP.PrintName = "Keys"
@@ -8,7 +7,6 @@ if CLIENT then
 	SWEP.SlotPos = 2
 	SWEP.DrawAmmo = false
 end
-
 --------------------------------------------------------------------------------------------------------
 SWEP.Author = "Chessnut"
 SWEP.Instructions = "Primary Fire: Lock\nSecondary Fire: Unlock"
@@ -36,17 +34,14 @@ SWEP.LowerAngles2 = Angle(0, 5, -22)
 SWEP.IsAlwaysLowered = true
 SWEP.FireWhenLowered = true
 SWEP.HoldType = "normal"
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:PreDrawViewModel(viewModel, weapon, client)
 	local hands = player_manager.TranslatePlayerHands(player_manager.TranslateToPlayerModelName(client:GetModel()))
 	if hands and hands.model then end --viewModel:SetModel(hands.model) --viewModel:SetSkin(hands.skin) --viewModel:SetBodyGroups(hands.body)
 end
-
 --------------------------------------------------------------------------------------------------------
 ACT_VM_FISTS_DRAW = 3
 ACT_VM_FISTS_HOLSTER = 2
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:Deploy()
 	if not IsValid(self.Owner) then return end
@@ -55,12 +50,10 @@ function SWEP:Deploy()
 
 	return true
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:Holster()
 	if not IsValid(self.Owner) then return end
 	local viewModel = self.Owner:GetViewModel()
-
 	if IsValid(viewModel) then
 		viewModel:SetPlaybackRate(1)
 		viewModel:ResetSequence(ACT_VM_FISTS_HOLSTER)
@@ -68,16 +61,13 @@ function SWEP:Holster()
 
 	return true
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:Precache()
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:Initialize()
 	self:SetHoldType(self.HoldType)
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:PrimaryAttack()
 	local time = lia.config.DoorLockTime
@@ -92,28 +82,28 @@ function SWEP:PrimaryAttack()
 	data.filter = self.Owner
 	local entity = util.TraceLine(data).Entity
 	if hook.Run("KeyLockOverride", self:GetOwner(), entity) then return end
-
 	--[[
 		Locks the entity if the contiditon fits:
 			1. The entity is door and client has access to the door.
 			2. The entity is vehicle and the "owner" variable is same as client's character ID.
 	--]]
 	if IsValid(entity) and ((entity:isDoor() and entity:checkDoorAccess(self.Owner)) or (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == self.Owner)) then
-		self.Owner:setAction("@locking", time, function()
-			self:toggleLock(entity, true)
-		end)
+		self.Owner:setAction(
+			"@locking",
+			time,
+			function()
+				self:toggleLock(entity, true)
+			end
+		)
 
 		return
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:toggleLock(door, state)
 	if IsValid(self.Owner) and self.Owner:GetPos():Distance(door:GetPos()) > 96 then return end
-
 	if door:isDoor() then
 		local partner = door:getDoorPartner()
-
 		if state then
 			if IsValid(partner) then
 				partner:Fire("lock")
@@ -132,7 +122,6 @@ function SWEP:toggleLock(door, state)
 	elseif door:IsVehicle() then
 		if state then
 			door:Fire("lock")
-
 			if door.IsSimfphyscar then
 				door:Lock()
 			end
@@ -140,7 +129,6 @@ function SWEP:toggleLock(door, state)
 			self.Owner:EmitSound("doors/door_latch3.wav")
 		else
 			door:Fire("unlock")
-
 			if door.IsSimfphyscar then
 				door:UnLock()
 				door:SetPassenger(self.Owner)
@@ -150,7 +138,6 @@ function SWEP:toggleLock(door, state)
 		end
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:SecondaryAttack()
 	local time = lia.config.DoorLockTime
@@ -165,16 +152,19 @@ function SWEP:SecondaryAttack()
 	data.filter = self.Owner
 	local entity = util.TraceLine(data).Entity
 	if hook.Run("KeyUnlockOverride", self:GetOwner(), entity) then return end
-
 	--[[
 		Unlocks the entity if the contiditon fits:
 			1. The entity is door and client has access to the door.
 			2. The entity is vehicle and the "owner" variable is same as client's character ID.
 	]]
 	if IsValid(entity) and ((entity:isDoor() and entity:checkDoorAccess(self.Owner)) or (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == self.Owner)) then
-		self.Owner:setAction("@unlocking", time, function()
-			self:toggleLock(entity, false)
-		end)
+		self.Owner:setAction(
+			"@unlocking",
+			time,
+			function()
+				self:toggleLock(entity, false)
+			end
+		)
 
 		return
 	end

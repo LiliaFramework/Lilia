@@ -2,7 +2,6 @@
 function MODULE:ShouldDrawEntityInfo(entity)
 	if entity.isDoor(entity) and not entity.getNetVar(entity, "disabled") then return true end
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:DrawEntityInfo(entity, alpha)
 	if entity.isDoor(entity) and not entity:getNetVar("hidden") then
@@ -14,13 +13,11 @@ function MODULE:DrawEntityInfo(entity, alpha)
 		local class = entity.getNetVar(entity, "class")
 		local color = lia.config.Color
 		lia.util.drawText(name, x, y, ColorAlpha(color_white, alpha), 1, 1)
-
 		if IsValid(owner) then
 			lia.util.drawText(L("dOwnedBy", owner.Name(owner)), x, y + 16, ColorAlpha(color_white, alpha), 1, 1)
 		elseif factions ~= "[]" and factions ~= nil then
 			local facs = util.JSONToTable(factions)
 			local count = 1
-
 			for id, _ in pairs(facs) do
 				local info = lia.faction.indices[id]
 				lia.util.drawText(info.name, x, y + (16 * count), info.color, 1, 1)

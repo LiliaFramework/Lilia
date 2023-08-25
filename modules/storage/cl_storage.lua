@@ -17,13 +17,11 @@ function MODULE:StorageOpen(storage)
 	local firstToRemove = true
 	localInvPanel.oldOnRemove = localInvPanel.OnRemove
 	storageInvPanel.oldOnRemove = storageInvPanel.OnRemove
-
 	local function exitStorageOnRemove(panel)
 		if firstToRemove then
 			firstToRemove = false
 			LiliaStorage:exitStorage()
 			local otherPanel = panel == localInvPanel and storageInvPanel or localInvPanel
-
 			if IsValid(otherPanel) then
 				otherPanel:Remove()
 			end
@@ -36,7 +34,6 @@ function MODULE:StorageOpen(storage)
 	localInvPanel.OnRemove = exitStorageOnRemove
 	storageInvPanel.OnRemove = exitStorageOnRemove
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:transferItem(itemID)
 	if not lia.item.instances[itemID] then return end

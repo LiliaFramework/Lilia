@@ -6,11 +6,13 @@ function MODULE:setupPACDataFromItems()
 		end
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:InitializedModules()
-	timer.Simple(1, function()
-		self:setupPACDataFromItems()
-	end)
+	timer.Simple(
+		1,
+		function()
+			self:setupPACDataFromItems()
+		end
+	)
 end
 --------------------------------------------------------------------------------------------------------

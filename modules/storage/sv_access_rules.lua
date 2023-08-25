@@ -3,16 +3,13 @@ local PROHIBITED_ACTIONS = {
 	["Equip"] = true,
 	["EquipUn"] = true,
 }
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:CanPlayerInteractItem(client, action, itemObject, data)
 	local inventory = lia.inventory.instances[itemObject.invID]
-
 	if inventory and inventory.isStorage == true then
 		if PROHIBITED_ACTIONS[action] then return false, "forbiddenActionStorage" end
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 local RULES = {
 	AccessIfStorageReceiver = function(inventory, action, context)
@@ -29,12 +26,11 @@ local RULES = {
 		if storage.receivers[client] then return true end
 	end
 }
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:StorageInventorySet(storage, inventory)
 	inventory:addAccessRule(RULES.AccessIfStorageReceiver)
 end
 
---------------------------------------------------------------------------------------------------------
 return RULES
+--------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------

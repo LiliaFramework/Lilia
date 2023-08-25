@@ -33,7 +33,6 @@ _G.pon = pon
 local type, count = type, table.Count
 local tonumber = tonumber
 local format = string.format
-
 --------------------------------------------------------------------------------------------------------
 do
     local type, count = type, table.Count
@@ -42,7 +41,6 @@ do
     local encode = {}
     local tryCache
     local cacheSize = 0
-
     encode['table'] = function(self, tbl, output, cache)
         if cache[tbl] then
             output[#output + 1] = format('(%x)', cache[tbl])
@@ -56,19 +54,15 @@ do
         local first = next(tbl, nil)
         local predictedNumeric = 1
         local lastKey = nil
-
         -- starts with a numeric dealio
         if first == 1 then
             output[#output + 1] = '{'
-
             for k, v in next, tbl do
                 if k == predictedNumeric then
                     predictedNumeric = predictedNumeric + 1
                     local tv = type(v)
-
                     if tv == 'string' then
                         local pid = cache[v]
-
                         if pid then
                             output[#output + 1] = format('(%x)', pid)
                         else
@@ -97,11 +91,9 @@ do
 
         for k, v in next, tbl, predictedNumeric do
             local tk, tv = type(k), type(v)
-
             -- WRITE KEY
             if tk == 'string' then
                 local pid = cache[k]
-
                 if pid then
                     output[#output + 1] = format('(%x)', pid)
                 else
@@ -116,7 +108,6 @@ do
             -- WRITE VALUE
             if tv == 'string' then
                 local pid = cache[v]
-
                 if pid then
                     output[#output + 1] = format('(%x)', pid)
                 else
@@ -134,11 +125,9 @@ do
 
     --    ENCODE STRING
     local gsub = string.gsub
-
     encode['string'] = function(self, str, output)
         --if tryCache( str, output ) then return end
         local estr, count = gsub(str, ";", "\\;")
-
         if count == 0 then
             output[#output + 1] = '\'' .. str .. ';'
         else
@@ -184,7 +173,6 @@ do
     encode['NPC'] = encode['Entity']
     encode['NextBot'] = encode['Entity']
     encode['PhysObj'] = encode['Entity']
-
     encode['nil'] = function()
         output[#output + 1] = '?'
     end
@@ -197,7 +185,6 @@ do
 
     do
         local empty, concat = table.Empty, table.concat
-
         function pon.encode(tbl)
             local output = {}
             cacheSize = 0
@@ -214,15 +201,12 @@ do
     local find, sub, gsub, Explode = string.find, string.sub, string.gsub, string.Explode
     local Vector, Angle, Entity = Vector, Angle, Entity
     local decode = {}
-
     decode['{'] = function(self, index, str, cache)
         local cur = {}
         cache[#cache + 1] = cur
         local k, v, tk, tv = 1, nil, nil, nil
-
         while true do
             tv = sub(str, index, index)
-
             if not tv or tv == '~' then
                 index = index + 1
                 break
@@ -238,7 +222,6 @@ do
 
         while true do
             tk = sub(str, index, index)
-
             if not tk or tk == '}' then
                 index = index + 1
                 break
@@ -261,10 +244,8 @@ do
         local cur = {}
         cache[#cache + 1] = cur
         local k, v, tk, tv = 1, nil, nil, nil
-
         while true do
             tk = sub(str, index, index)
-
             if not tk or tk == '}' then
                 index = index + 1
                 break
@@ -277,7 +258,6 @@ do
             -- READ THE VALUE
             tv = sub(str, index, index)
             index = index + 1
-
             if not self[tv] then
                 print('did not find type: ' .. tv)
             end
@@ -330,7 +310,6 @@ do
     decode['8'] = decode['n']
     decode['9'] = decode['n']
     decode['-'] = decode['n']
-
     -- positive hex
     decode['X'] = function(self, index, str, cache)
         local finish = find(str, ';', index, true)
@@ -359,14 +338,8 @@ do
     end
 
     -- BOOLEAN. ONE DATA TYPE FOR YES, ANOTHER FOR NO.
-    decode['t'] = function(self, index)
-        return index, true
-    end
-
-    decode['f'] = function(self, index)
-        return index, false
-    end
-
+    decode['t'] = function(self, index) return index, true end
+    decode['f'] = function(self, index) return index, false end
     -- VECTOR
     decode['v'] = function(self, index, str, cache)
         local finish = find(str, ';', index, true)
@@ -412,10 +385,7 @@ do
     end
 
     -- NIL
-    decode['?'] = function(self, index, str, cache)
-        return index + 1, nil
-    end
-
+    decode['?'] = function(self, index, str, cache) return index + 1, nil end
     function pon.decode(data)
         local _, res = decode[sub(data, 1, 1)](decode, 2, data, {})
 

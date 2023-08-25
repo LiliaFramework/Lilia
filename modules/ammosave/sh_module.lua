@@ -8,10 +8,8 @@ MODULE.author = "STEAM_0:1:176123778/Black Tea"
 MODULE.desc = "Saves the ammo of a character."
 --------------------------------------------------------------------------------------------------------
 lia.util.include("sv_module.lua")
-
 --------------------------------------------------------------------------------------------------------
 lia.config.AmmoRegister = {"ar2", "pistol", "357", "smg1", "xbowbolt", "buckshot", "rpg_round", "smg1_grenade", "grenade", "ar2altfire", "slam", "alyxgun", "sniperround", "sniperpenetratedround", "thumper", "gravity", "battery", "gaussenergy", "combinecannon", "airboatgun", "striderminigun", "helicoptergun"}
-
 --------------------------------------------------------------------------------------------------------
 lia.config.Ammo = {
     ["7.92x33mm Kurz"] = "ar2",
@@ -42,18 +40,15 @@ lia.config.Ammo = {
     ["12 Gauge"] = "buckshot",
     [".338 Lapua"] = "sniperround",
 }
-
 --------------------------------------------------------------------------------------------------------
 function lia.ammo.register(name)
     table.insert(MODULE.ammoList, name)
 end
-
 --------------------------------------------------------------------------------------------------------
 for k, v in pairs(lia.config.Ammo) do
     lia.ammo.register(v)
     lia.ammo.register(k)
 end
-
 --------------------------------------------------------------------------------------------------------
 for k, v in pairs(lia.config.AmmoRegister) do
     lia.ammo.register(v)

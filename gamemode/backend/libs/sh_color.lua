@@ -2,27 +2,25 @@
 lia.color = lia.color or {}
 --------------------------------------------------------------------------------------------------------
 local colorMeta = FindMetaTable('Color')
-
 --------------------------------------------------------------------------------------------------------
 function lia.color.Lighten(colot, amount)
 	return Color(math.Clamp(colot.r + amount, 0, 255), math.Clamp(colot.g + amount, 0, 255), math.Clamp(colot.b + amount, 0, 255), colot.a)
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.color.Darken(colot, amount)
 	return Color(math.Clamp(colot.r - amount, 0, 255), math.Clamp(colot.g - amount, 0, 255), math.Clamp(colot.b - amount, 0, 255), colot.a)
 end
-
 --------------------------------------------------------------------------------------------------------
 function Color(r, g, b, a)
-	return setmetatable({
-		r = tonumber(r) or 255,
-		g = tonumber(g) or 255,
-		b = tonumber(b) or 255,
-		a = tonumber(a) or 255
-	}, colorMeta)
+	return setmetatable(
+		{
+			r = tonumber(r) or 255,
+			g = tonumber(g) or 255,
+			b = tonumber(b) or 255,
+			a = tonumber(a) or 255
+		}, colorMeta
+	)
 end
-
 --------------------------------------------------------------------------------------------------------
 do
 	local colors = {
@@ -41,7 +39,6 @@ do
 
 	local old_color = _OLD_COLOR_FN_ or Color
 	_OLD_COLOR_FN_ = old_color
-
 	function Color(r, g, b, a)
 		if isstring(r) then
 			if colors[r:lower()] then

@@ -25,7 +25,6 @@ SOFTWARE.
 ]]
 --------------------------------------------------------------------------------------------------------
 local WebMaterials = {}
-
 --------------------------------------------------------------------------------------------------------
 function surface.GetURL(url, w, h, time)
     if not url or not w or not h then return Material("error") end
@@ -34,7 +33,6 @@ function surface.GetURL(url, w, h, time)
     WebPanel:SetAlpha(0)
     WebPanel:SetSize(tonumber(w), tonumber(h))
     WebPanel:OpenURL(url)
-
     WebPanel.Paint = function(self)
         if not WebMaterials[url] and self:GetHTMLMaterial() then
             WebMaterials[url] = self:GetHTMLMaterial()
@@ -43,11 +41,14 @@ function surface.GetURL(url, w, h, time)
     end
 
     -- In case we do not render
-    timer.Simple(1 or tonumber(time), function()
-        if IsValid(WebPanel) then
-            WebPanel:Remove()
+    timer.Simple(
+        1 or tonumber(time),
+        function()
+            if IsValid(WebPanel) then
+                WebPanel:Remove()
+            end
         end
-    end)
+    )
 
     return Material("error")
 end

@@ -9,13 +9,11 @@ MODULE.fadeTime = MODULE.fadeTime or 0
 --------------------------------------------------------------------------------------------------------
 local IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs = IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs
 local RunConsoleCommand, LocalPlayer, math, color_white, surface = RunConsoleCommand, LocalPlayer, math, color_white, surface
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:HUDPaint()
     local frameTime = FrameTime()
     self.alphaDelta = Lerp(frameTime * 10, self.alphaDelta, self.alpha)
     local fraction = self.alphaDelta
-
     if fraction > 0 then
         local client = LocalPlayer()
         local weapons = client:GetWeapons()
@@ -25,7 +23,6 @@ function MODULE:HUDPaint()
         local radius = 240 * self.alphaDelta
         self.deltaIndex = Lerp(frameTime * 12, self.deltaIndex, self.index) --math.Approach(self.deltaIndex, self.index, fTime() * 12)
         local index = self.deltaIndex
-
         for k, v in ipairs(weapons) do
             if not weapons[self.index] then
                 self.index = total
@@ -35,11 +32,9 @@ function MODULE:HUDPaint()
             local color = ColorAlpha(k == self.index and lia.config.Color or color_white, (255 - math.abs(theta * 3) * 255) * fraction)
             local lastY = 0
             local shiftX = ScrW() * .02
-
             if self.markup and k < self.index then
                 local w, h = self.markup:Size()
                 lastY = h * fraction
-
                 if k == self.index - 1 then
                     self.infoAlpha = Lerp(frameTime * 3, self.infoAlpha, 255)
                     self.markup:Draw(x + 6 + shiftX, y + 30, 0, 0, self.infoAlpha * fraction)
@@ -65,17 +60,14 @@ function MODULE:HUDPaint()
 end
 
 local weaponInfo = {"Author", "Contact", "Purpose", "Instructions"}
-
 function MODULE:onIndexChanged()
     self.alpha = 1
     self.fadeTime = CurTime() + 5
     local client = LocalPlayer()
     local weapon = client:GetWeapons()[self.index]
     self.markup = nil
-
     if IsValid(weapon) then
         local text = ""
-
         for k, v in ipairs(weaponInfo) do
             if weapon[v] and weapon[v]:find("%S") then
                 local color = lia.config.Color
@@ -92,19 +84,15 @@ function MODULE:onIndexChanged()
         client:EmitSound(source or "common/talk.wav", 50, pitch or 180)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:PlayerBindPress(client, bind, pressed)
     local weapon = client:GetActiveWeapon()
     local lPly = LocalPlayer()
-
     if not client:InVehicle() and (not IsValid(weapon) or weapon:GetClass() ~= "weapon_physgun" or not client:KeyDown(IN_ATTACK)) then
         if IsValid(weapon) and weapon.CW20Weapon and not bind:find("invprev") and not bind:find("invnext") and not (bind:find("attack") and self.alpha > 0) and not (bind:find("slot") and weapon.dt.State ~= CW_CUSTOMIZE) then return end
         bind = bind:lower()
-
         if bind:find("invprev") and pressed then
             self.index = self.index - 1
-
             if self.index < 1 then
                 self.index = #client:GetWeapons()
             end
@@ -114,7 +102,6 @@ function MODULE:PlayerBindPress(client, bind, pressed)
             return true
         elseif bind:find("invnext") and pressed then
             self.index = self.index + 1
-
             if self.index > #client:GetWeapons() then
                 self.index = 1
             end

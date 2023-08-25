@@ -4,14 +4,12 @@ local SCHEMA = SCHEMA
 lia.module = lia.module or {}
 lia.module.list = lia.module.list or {}
 lia.module.unloaded = lia.module.unloaded or {}
-
 --------------------------------------------------------------------------------------------------------
 function lia.module.load(uniqueID, path, isSingleFile, variable)
     variable = uniqueID == "schema" and "SCHEMA" or variable or "MODULE"
     if hook.Run("ModuleShouldLoad", uniqueID) == false then return end
     if not isSingleFile and not file.Exists(path .. "/sh_" .. variable:lower() .. ".lua", "LUA") then return end
     local oldModule = MODULE
-
     local MODULE = {
         folder = path,
         module = oldModule,
@@ -19,9 +17,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         name = "Unknown",
         desc = "Description not available",
         author = "Anonymous",
-        IsValid = function(module)
-            return true
-        end
+        IsValid = function(module) return true end
     }
 
     if uniqueID == "schema" then
@@ -38,7 +34,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     _G[variable] = MODULE
     MODULE.loading = true
     MODULE.path = path
-
     if not isSingleFile then
         lia.module.loadExtras(path)
     end
@@ -46,7 +41,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     lia.util.include(isSingleFile and path or path .. "/sh_" .. variable:lower() .. ".lua", "shared")
     MODULE.loading = false
     local uniqueID2 = uniqueID
-
     if uniqueID2 == "schema" then
         uniqueID2 = MODULE.name
     end
@@ -75,12 +69,10 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     end
 
     hook.Run("ModuleLoaded", uniqueID, MODULE)
-
     if MODULE.OnLoaded then
         MODULE:OnLoaded()
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.module.loadExtras(path)
     lia.util.includeDir(path .. "/libs", true, true)
@@ -98,21 +90,21 @@ function lia.module.loadExtras(path)
     lia.attribs.loadFromDir(path .. "/attributes")
     hook.Run("DoModuleIncludes", path, MODULE)
     local hookID = "liaItems" .. path
-
-    hook.Add("InitializedModules", hookID, function()
-        lia.item.loadFromDir(path .. "/items")
-        hook.Remove("InitializedModules", hookID)
-    end)
+    hook.Add(
+        "InitializedModules",
+        hookID,
+        function()
+            lia.item.loadFromDir(path .. "/items")
+            hook.Remove("InitializedModules", hookID)
+        end
+    )
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.module.loadEntities(path)
     local files, folders
-
     local function IncludeFiles(path2, clientOnly)
         if (SERVER and file.Exists(path2 .. "init.lua", "LUA")) or (CLIENT and file.Exists(path2 .. "cl_init.lua", "LUA")) then
             lia.util.include(path2 .. "init.lua", clientOnly and "client" or "server")
-
             if file.Exists(path2 .. "cl_init.lua", "LUA") then
                 lia.util.include(path2 .. "cl_init.lua", "client")
             end
@@ -130,12 +122,10 @@ function lia.module.loadEntities(path)
     local function HandleEntityInclusion(folder, variable, register, default, clientOnly)
         files, folders = file.Find(path .. "/" .. folder .. "/*", "LUA")
         default = default or {}
-
         for k, v in ipairs(folders) do
             local path2 = path .. "/" .. folder .. "/" .. v .. "/"
             _G[variable] = table.Copy(default)
             _G[variable].ClassName = v
-
             if IncludeFiles(path2, clientOnly) and not client then
                 if clientOnly then
                     if CLIENT then
@@ -154,7 +144,6 @@ function lia.module.loadEntities(path)
             _G[variable] = table.Copy(default)
             _G[variable].ClassName = niceName
             lia.util.include(path .. "/" .. folder .. "/" .. v, clientOnly and "client" or "shared")
-
             if clientOnly then
                 if CLIENT then
                     register(_G[variable], niceName)
@@ -167,21 +156,30 @@ function lia.module.loadEntities(path)
         end
     end
 
-    HandleEntityInclusion("entities", "ENT", scripted_ents.Register, {
-        Type = "anim",
-        Base = "base_gmodentity",
-        Spawnable = true
-    })
+    HandleEntityInclusion(
+        "entities",
+        "ENT",
+        scripted_ents.Register,
+        {
+            Type = "anim",
+            Base = "base_gmodentity",
+            Spawnable = true
+        }
+    )
 
-    HandleEntityInclusion("weapons", "SWEP", weapons.Register, {
-        Primary = {},
-        Secondary = {},
-        Base = "weapon_base"
-    })
+    HandleEntityInclusion(
+        "weapons",
+        "SWEP",
+        weapons.Register,
+        {
+            Primary = {},
+            Secondary = {},
+            Base = "weapon_base"
+        }
+    )
 
     HandleEntityInclusion("effects", "EFFECT", effects and effects.Register, nil, true)
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.module.initialize()
     lia.module.loadFromDir(engine.ActiveGamemode() .. "/preload")
@@ -192,11 +190,9 @@ function lia.module.initialize()
     hook.Run("InitializedModules")
     hook.Run("InitializedItems")
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.module.loadFromDir(directory)
     local files, folders = file.Find(directory .. "/*", "LUA")
-
     for k, v in ipairs(folders) do
         lia.module.load(v, directory .. "/" .. v)
     end
@@ -205,7 +201,6 @@ function lia.module.loadFromDir(directory)
         lia.module.load(string.StripExtension(v), directory .. "/" .. v, true)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.module.setDisabled(uniqueID, disabled)
     disabled = tobool(disabled)
@@ -213,14 +208,12 @@ function lia.module.setDisabled(uniqueID, disabled)
     oldData[uniqueID] = disabled
     lia.data.set("unloaded", oldData, false, true, true)
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.module.isDisabled(uniqueID)
     if istable(DISABLED_MODULES) and DISABLED_MODULES[uniqueID] then return true end
 
     return lia.data.get("unloaded", {}, false, true)[uniqueID] == true
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.module.get(identifier)
     return lia.module.list[identifier]

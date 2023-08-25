@@ -6,7 +6,6 @@ function MODULE:EntityTakeDamage(target, dmginfo)
     local weapon = attacker:GetActiveWeapon()
     local damage = dmginfo:GetDamage()
     local strbonus = hook.Run("GetStrengthBonusDamage", char)
-
     if IsValid(attacker) and IsValid(weapon) and table.HasValue(lia.config.MeleeWeapons, weapon:GetClass()) and lia.config.MeleeDamageBonus then
         dmginfo:SetDamage(damage + strbonus)
     end
@@ -15,17 +14,14 @@ function MODULE:EntityTakeDamage(target, dmginfo)
         self:PrintAllDetails(target, dmginfo)
     end
 end
-
 -------------------------------------------------------------------------------------------------------------------------~
 function MODULE:PlayerGetFistDamage(client, damage, context)
     local char = client:getChar()
     local strbonus = hook.Run("GetPunchStrengthBonusDamage", char)
-
     if client:getChar() then
         context.damage = context.damage + strbonus
     end
 end
-
 -------------------------------------------------------------------------------------------------------------------------~
 function MODULE:PrintAllDetails(target, dmginfo)
     local attacker = dmginfo:GetAttacker()
@@ -34,11 +30,9 @@ function MODULE:PrintAllDetails(target, dmginfo)
     local baseDamage = dmginfo:GetDamage()
     local strbonus = hook.Run("GetStrengthBonusDamage", attacker:getChar())
     if not (attacker:IsNPC() or attacker:IsNextBot() or attacker:IsPlayer()) then return end
-
     if IsPlayer then
         target:ChatPrint("You are being attacked by: " .. tostring(attacker:GetName()))
         attacker:ChatPrint("You are attacking: " .. tostring(attacker:GetName()))
-
         if table.HasValue(self.MeleeWeapons, weapon:GetClass()) then
             target:ChatPrint("Weapon: " .. tostring(dmginfo:GetWeapon()))
             target:ChatPrint("Base Damage: " .. baseDamage)
