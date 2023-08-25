@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 local _R = debug.getregistry()
 if _R.Circles then return _R.Circles end
 local CIRCLE = {}
@@ -6,6 +7,7 @@ CIRCLE_FILLED = 0
 CIRCLE_OUTLINED = 1
 CIRCLE_BLURRED = 2
 local New
+--------------------------------------------------------------------------------------------------------
 do
 	local err_number = "bad argument #%i to 'New' (number expected, got %s)"
 	function New(t, r, x, y, ...)
@@ -418,3 +420,4 @@ _R.Circles = {
 }
 
 return _R.Circles
+--------------------------------------------------------------------------------------------------------

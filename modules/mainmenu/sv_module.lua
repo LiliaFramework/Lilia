@@ -1,8 +1,10 @@
+--------------------------------------------------------------------------------------------------------
 util.AddNetworkString("liaCharChoose")
 util.AddNetworkString("liaCharCreate")
 util.AddNetworkString("liaCharDelete")
 util.AddNetworkString("liaCharList")
 util.AddNetworkString("liaCharMenu")
+--------------------------------------------------------------------------------------------------------
 function MODULE:syncCharList(client)
     if not client.liaCharList then return end
     net.Start("liaCharList")
@@ -13,13 +15,13 @@ function MODULE:syncCharList(client)
 
     net.Send(client)
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:CanPlayerCreateCharacter(client)
     local count = #client.liaCharList
     local maxChars = hook.Run("GetMaxPlayerCharacter", client) or lia.config.MaxCharacters
     if count >= maxChars then return false end
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:PlayerLiliaDataLoaded(client)
     lia.char.restore(
         client,
@@ -45,7 +47,7 @@ function MODULE:PlayerLiliaDataLoaded(client)
         end
     )
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:PostPlayerInitialSpawn(client)
     client:SetNoDraw(true)
     client:SetNotSolid(true)
@@ -59,16 +61,17 @@ function MODULE:PostPlayerInitialSpawn(client)
         end
     )
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:CanPlayerUseChar(client, character, oldCharacter)
     if client:getChar() and client:getChar():getID() == character:getID() then return false, "@usingChar" end
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:PlayerLoadedChar(client, character, oldCharacter)
     client:Spawn()
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:OnCharCreated(client, character)
     local id = character:getID()
     MsgN("Created character '" .. id .. "' for " .. client:steamName() .. ".")
 end
+--------------------------------------------------------------------------------------------------------

@@ -3,16 +3,14 @@ lia.config.DisallowedBagForbiddenActions = {
     ["Equip"] = true,
     ["EquipUn"] = true,
 }
-
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerInteractItem(client, action, item)
-    local inventory = lia.inventory.instances[item.invID]
     if client:getNetVar("restricted") then return false end
     if not client:Alive() or client:getLocalVar("ragdoll") then return false end
     if action == "equip" and hook.Run("CanPlayerEquipItem", client, item) then return true end
     if action == "drop" and hook.Run("CanPlayerDropItem", client, item) then return true end
     if action == "take" and hook.Run("CanPlayerTakeItem", client, item) then return true end
-    if inventory and (inventory.isBag == true or inventory.isBank == true) and lia.config.DisallowedBagForbiddenActions[action] then return false, "forbiddenActionStorage" end
+    if lia.inventory.instances[item.invID] and (lia.inventory.instances[item.invID].isBag == true or lia.inventory.instances[item.invID].isBank == true) and lia.config.DisallowedBagForbiddenActions[action] then return false, "forbiddenActionStorage" end
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -21,7 +19,6 @@ function GM:CanPlayerEquipItem(client, item)
 
     return client:MeetsRequiredSkills(item.RequiredSkillLevels)
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerTakeItem(client, item)
     if IsValid(item.entity) then
@@ -33,7 +30,6 @@ function GM:CanPlayerTakeItem(client, item)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerDropItem(client, item)
     if item.isBag then

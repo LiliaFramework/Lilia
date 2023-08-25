@@ -1,6 +1,9 @@
+--------------------------------------------------------------------------------------------------------
 local PANEL = {}
+--------------------------------------------------------------------------------------------------------
 lia.config.CharClick = lia.config.CharClick or {"buttons/button14.wav", 35, 255}
 lia.config.CharWarning = lia.config.CharWarning or {"friends/friend_join.wav", 40, 255}
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     if IsValid(lia.gui.newCreateCharMenu) then
         lia.gui.newCreateCharMenu:Remove()
@@ -426,7 +429,7 @@ function PANEL:Init()
         end
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:CreateSlide()
     local pnl = self:Add('EditablePanel')
     pnl:SetSize(ScrW() * .7, ScrH() * .7)
@@ -435,13 +438,13 @@ function PANEL:CreateSlide()
 
     return pnl
 end
-
+--------------------------------------------------------------------------------------------------------
 local gradient = lia.util.getMaterial('gui/gradient_down')
 function PANEL:Paint(w, h)
     surface.SetDrawColor(28, 28, 28)
     surface.DrawRect(0, 0, w, h)
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:Hide()
     self:MoveTo(
         0,
@@ -459,12 +462,13 @@ function PANEL:Hide()
     panel:MoveTo(0, 0, .8)
     self.bClosing = true
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:OnKeyCodePressed(keyCode)
     if self.bClosing then return end
     if keyCode == KEY_SPACE then
         self:Hide()
     end
 end
-
+--------------------------------------------------------------------------------------------------------
 vgui.Register('liaNewCreateCharacterMenu', PANEL, 'EditablePanel')
+--------------------------------------------------------------------------------------------------------

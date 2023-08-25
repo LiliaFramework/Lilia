@@ -1,6 +1,5 @@
 --------------------------------------------------------------------------------------------------------
 function MODULE:InitializedConfig()
-    --------------------------------------------------------------------------------------------------------
     lia.chat.register(
         "ic",
         {
@@ -14,7 +13,6 @@ function MODULE:InitializedConfig()
         }
     )
 
-    --------------------------------------------------------------------------------------------------------
     lia.chat.register(
         "me",
         {
@@ -27,9 +25,7 @@ function MODULE:InitializedConfig()
                     endpos = listener:EyePos()
                 }
 
-                if not trace.Hit then
-                    if speaker:EyePos():Distance(listener:EyePos()) <= lia.config.ChatRange then return true end
-                end
+                if not trace.Hit and speaker:EyePos():Distance(listener:EyePos()) <= lia.config.ChatRange then return true end
 
                 return false
             end,
@@ -40,7 +36,6 @@ function MODULE:InitializedConfig()
         }
     )
 
-    --------------------------------------------------------------------------------------------------------
     lia.chat.register(
         "it",
         {
@@ -55,7 +50,6 @@ function MODULE:InitializedConfig()
         }
     )
 
-    --------------------------------------------------------------------------------------------------------
     lia.chat.register(
         "w",
         {
@@ -70,7 +64,6 @@ function MODULE:InitializedConfig()
         }
     )
 
-    --------------------------------------------------------------------------------------------------------
     lia.chat.register(
         "y",
         {
@@ -85,7 +78,6 @@ function MODULE:InitializedConfig()
         }
     )
 
-    --------------------------------------------------------------------------------------------------------
     lia.chat.register(
         "looc",
         {
@@ -112,7 +104,6 @@ function MODULE:InitializedConfig()
         }
     )
 
-    --------------------------------------------------------------------------------------------------------
     lia.chat.register(
         "roll",
         {
@@ -125,7 +116,6 @@ function MODULE:InitializedConfig()
         }
     )
 
-    --------------------------------------------------------------------------------------------------------
     lia.chat.register(
         "pm",
         {
@@ -136,7 +126,6 @@ function MODULE:InitializedConfig()
         }
     )
 
-    --------------------------------------------------------------------------------------------------------
     lia.chat.register(
         "event",
         {
@@ -147,7 +136,7 @@ function MODULE:InitializedConfig()
             prefix = {"/event"}
         }
     )
-    --------------------------------------------------------------------------------------------------------
 end
 
+--------------------------------------------------------------------------------------------------------
 hook.Remove("PlayerSay", "ULXMeCheck")

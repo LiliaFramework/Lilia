@@ -1,7 +1,9 @@
+--------------------------------------------------------------------------------------------------------
 local PANEL = {}
-local FADE_TIME = 5
+--------------------------------------------------------------------------------------------------------
 lia.config.Music = lia.config.Music or "music/hl2_song2.mp3"
 lia.config.MusicVolume = lia.config.MusicVolume or 0.25
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	if IsValid(lia.menuMusic) then
 		lia.menuMusic:Stop()
@@ -35,12 +37,12 @@ function PANEL:Init()
 		lia.menuMusic:PlayEx(lia.config.MusicVolume, 100)
 	end
 end
-
+--------------------------------------------------------------------------------------------------------
 function PANEL:OnRemove()
 	local music = lia.menuMusic
 	if not music then return end
 	local fraction = 1
-	local start, finish = RealTime(), RealTime() + FADE_TIME
+	local start, finish = RealTime(), RealTime() + 5
 	timer.Create(
 		'liaMusicFader',
 		0.1,
@@ -65,5 +67,6 @@ function PANEL:OnRemove()
 		end
 	)
 end
-
+--------------------------------------------------------------------------------------------------------
 vgui.Register('liaNewCharBGMusic', PANEL, 'DPanel')
+--------------------------------------------------------------------------------------------------------

@@ -1,4 +1,6 @@
+--------------------------------------------------------------------------------------------------------
 local vjThink = 0
+--------------------------------------------------------------------------------------------------------
 lia.config.VJConvars = {
     ["vj_npc_corpsefade"] = 1,
     ["vj_npc_corpsefadetime"] = 5,
@@ -12,10 +14,10 @@ lia.config.VJConvars = {
     ["vj_npc_dropweapon"] = 0,
     ["vj_npc_plypickupdropwep"] = 0,
 }
-
+--------------------------------------------------------------------------------------------------------
 if VJ then
     function setupVJ()
-        for k, v in pairs(VJConvars) do
+        for k, v in pairs(lia.config.VJConvars) do
             RunConsoleCommand(k, tostring(v))
         end
     end
@@ -36,3 +38,4 @@ if VJ then
         end
     )
 end
+--------------------------------------------------------------------------------------------------------

@@ -24,7 +24,7 @@ function PANEL:Init()
 	self:SetPaintBackground(false)
 	self.faction = self:Add('DPanel')
 	self.faction:Dock(TOP)
-	self.faction:SetTall(STRIP_HEIGHT)
+	self.faction:SetTall(4)
 	self.faction:SetSkin('Default')
 	self.faction:SetAlpha(100)
 	self.faction.Paint = function(faction, w, h)
@@ -133,7 +133,7 @@ end
 function PANEL:Paint(w, h)
 	lia.util.drawBlur(self)
 	surface.SetDrawColor(0, 0, 0, 50)
-	surface.DrawRect(0, STRIP_HEIGHT, w, h)
+	surface.DrawRect(0, 4, w, h)
 	if not self:isCursorWithinBounds() and self.isHovered then
 		self:onHoverChanged(false)
 	end
