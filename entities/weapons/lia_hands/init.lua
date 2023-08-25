@@ -22,7 +22,7 @@ function SWEP:Think()
     end
 
     if curTime > stand_time then
-        if isPlayerStandsOn(self.holdingEntity) then
+        if self:isPlayerStandsOn(self.holdingEntity) then
             self:reset()
 
             return
