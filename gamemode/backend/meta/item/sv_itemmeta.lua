@@ -12,7 +12,7 @@ function ITEM:getDesc()
     return self.desc
 end
 --------------------------------------------------------------------------------------------------------
-function ITEM:RemoveFromInventory(preserveItem)
+function ITEM:removeFromInventory(preserveItem)
     local inventory = lia.inventory.instances[self.invID]
     self.invID = 0
     if inventory then return inventory:removeItem(self:getID(), preserveItem) end
