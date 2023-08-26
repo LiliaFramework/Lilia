@@ -359,4 +359,4 @@ else
 	end
 end
 
-GridInv:register(MODULE.INVENTORY_TYPE_ID)
+GridInv:register("grid")

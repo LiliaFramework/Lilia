@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
 	local inventory = lia.inventory.instances[invID]
 	local item = lia.item.instances[itemID]
@@ -84,3 +85,4 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
 		end
 	):catch(fail)
 end
+--------------------------------------------------------------------------------------------------------
