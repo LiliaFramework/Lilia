@@ -12,6 +12,7 @@ function PANEL:Init()
         panel.OnMouseReleased = function()
             if self.pressing then
                 self.pressing = nil
+                --self:onClick()
             end
         end
     end
@@ -57,7 +58,7 @@ end
 function PANEL:setClass(data)
     if data.model then
         local model = data.model
-        if istable(model) then
+        if istable(model):lower() then
             model = table.Random(model)
         end
 
@@ -80,7 +81,7 @@ end
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaClassPanel", PANEL, "DPanel")
 --------------------------------------------------------------------------------------------------------
-local PANEL = {}
+PANEL = {}
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     lia.gui.classes = self
@@ -109,4 +110,24 @@ function PANEL:loadClasses()
 end
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaClasses", PANEL, "EditablePanel")
+--------------------------------------------------------------------------------------------------------
+hook.Add(
+    "CreateMenuButtons",
+    "liaClasses",
+    function(tabs)
+        local cnt = table.Count(lia.class.list)
+        if cnt <= 1 then return end
+        for k, v in ipairs(lia.class.list) do
+            if not lia.class.canBe(LocalPlayer(), k) then
+                continue
+            else
+                tabs["classes"] = function(panel)
+                    panel:Add("liaClasses")
+                end
+
+                return
+            end
+        end
+    end
+)
 --------------------------------------------------------------------------------------------------------
