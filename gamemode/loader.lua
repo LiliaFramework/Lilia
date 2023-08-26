@@ -1,8 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/external/thirdparty/cl_circles.lua")
 --------------------------------------------------------------------------------------------------------
-lia.util.include("backend/external/thirdparty/cl_geoip.lua")
---------------------------------------------------------------------------------------------------------
 lia.util.include("backend/external/thirdparty/cl_ikon.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/external/thirdparty/cl_markup.lua")
@@ -34,8 +32,6 @@ lia.util.include("backend/external/thirdparty/sh_pseudoRNG.lua")
 lia.util.include("backend/external/thirdparty/sh_utf8.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/external/thirdparty/sh_utils.lua")
---------------------------------------------------------------------------------------------------------
-lia.util.include("backend/external/thirdparty/sv_geoip.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/external/thirdparty/sv_netwatcher.lua")
 --------------------------------------------------------------------------------------------------------
