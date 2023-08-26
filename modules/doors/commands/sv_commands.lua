@@ -25,7 +25,6 @@ lia.command.add(
                     client:getChar():giveMoney(price)
                     client:notifyLocalized("dSold", lia.currency.get(price))
                     hook.Run("OnPlayerPurchaseDoor", client, entity, false, MODULE.callOnDoorChildren)
-                    lia.log.add(client, "selldoor")
                 else
                     client:notifyLocalized("notOwner")
                 end
@@ -71,7 +70,6 @@ lia.command.add(
                     client:getChar():takeMoney(price)
                     client:notifyLocalized("dPurchased", lia.currency.get(price))
                     hook.Run("OnPlayerPurchaseDoor", client, entity, true, MODULE.callOnDoorChildren)
-                    lia.log.add(client, "buydoor")
                 else
                     client:notifyLocalized("canNotAfford")
                 end

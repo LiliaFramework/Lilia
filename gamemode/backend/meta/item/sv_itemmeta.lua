@@ -104,18 +104,6 @@ function ITEM:spawn(position, angles)
     end
 end
 
---------------------------------------------------------------------------------------------------------
-function ITEM:Transfer(newInventory, bBypass)
-    if not bBypass and not newInventory:canAccess("transfer") then return false end
-    local inventory = lia.inventory.instances[self.invID]
-    inventory:removeItem(self.id, true):next(
-        function()
-            newInventory:add(self)
-        end
-    )
-
-    return true
-end
 
 --------------------------------------------------------------------------------------------------------
 function ITEM:transfer(newInventory, bBypass)

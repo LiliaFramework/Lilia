@@ -48,7 +48,7 @@ function PANEL:setInventory(inventory)
 end
 
 function PANEL:setGridSize(width, height, iconSize)
-	self.MODULE = iconSize or LIA_ICON_SIZE
+	self.MODULE = iconSize or 64
 	self.gridW = width
 	self.gridH = height
 end

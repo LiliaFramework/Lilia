@@ -6,9 +6,65 @@ lia.item.inventoryTypes = lia.item.inventoryTypes or {}
 lia.item.list = lia.item.list or {}
 lia.item.defaultfunctions = lia.item.defaultfunctions or {}
 --------------------------------------------------------------------------------------------------------
+lia.config.defaultfunctions = {
+    drop = {
+        tip = "dropTip",
+        icon = "icon16/world.png",
+        onRun = function(item)
+            local client = item.player
+            item:removeFromInventory(true):next(
+                function()
+                    item:spawn(client)
+                end
+            )
+
+
+            return false
+        end,
+        onCanRun = function(item) return item.entity == nil and not IsValid(item.entity) and not item.noDrop end
+    },
+    take = {
+        tip = "takeTip",
+        icon = "icon16/box.png",
+        onRun = function(item)
+            local client = item.player
+            local inventory = client:getChar():getInv()
+            local entity = item.entity
+            if client.itemTakeTransaction and client.itemTakeTransactionTimeout > RealTime() then return false end
+            client.itemTakeTransaction = true
+            client.itemTakeTransactionTimeout = RealTime()
+            if not inventory then return false end
+            local d = deferred.new()
+            inventory:add(item):next(
+                function(res)
+                    client.itemTakeTransaction = nil
+                    if IsValid(entity) then
+                        entity.liaIsSafe = true
+                        entity:Remove()
+                    end
+
+                    if not IsValid(client) then return end
+                    d:resolve()
+                end
+            ):catch(
+                function(err)
+                    client.itemTakeTransaction = nil
+                    client:notifyLocalized(err)
+                    d:reject()
+                end
+            )
+
+            return d
+        end,
+        onCanRun = function(item) return IsValid(item.entity) end
+    },
+}
+
+--------------------------------------------------------------------------------------------------------
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua")
@@ -19,10 +75,12 @@ function lia.item.load(path, baseID, isBaseItem)
         ErrorNoHalt("[Lilia] Item at '" .. path .. "' follows an invalid naming convention!\n")
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.item.isItem(object)
     return istable(object) and object.isItem == true
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     assert(isstring(uniqueID), "uniqueID must be a string")
@@ -53,7 +111,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         ITEM.base = baseID
         ITEM.isBase = isBaseItem
         ITEM.category = ITEM.category or "misc"
-        ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or lia.item.defaultfunctions)
+        ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or lia.config.defaultfunctions)
     else
         ITEM = targetTable[uniqueID] or setmetatable(
             {
@@ -75,7 +133,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         ITEM.base = baseID
         ITEM.isBase = isBaseItem
         ITEM.category = ITEM.category or "misc"
-        ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or lia.item.defaultfunctions)
+        ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or lia.config.defaultfunctions)
     end
 
     if not luaGenerated and path then
@@ -89,6 +147,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
 
     return targetTable[itemType]
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.item.loadFromDir(directory)
     local files, folders
@@ -109,6 +168,7 @@ function lia.item.loadFromDir(directory)
         lia.item.load(directory .. "/" .. v)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
@@ -135,6 +195,7 @@ function lia.item.new(uniqueID, id)
         error("[Lilia] Attempt to create an unknown item '" .. tostring(uniqueID) .. "'\n")
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar(
     "inv",
@@ -162,3 +223,4 @@ lia.char.registerVar(
         end
     }
 )
+--------------------------------------------------------------------------------------------------------

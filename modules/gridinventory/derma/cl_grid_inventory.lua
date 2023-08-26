@@ -21,8 +21,8 @@ end
 function PANEL:setInventory(inventory)
 	self.gridW, self.gridH = inventory:getSize()
 	self:SetSize(
-		self.gridW * (LIA_ICON_SIZE + PADDING) + BORDER*2,
-		self.gridH * (LIA_ICON_SIZE + PADDING) + HEADER_FIX + BORDER*2
+		self.gridW * (64 + PADDING) + BORDER*2,
+		self.gridH * (64 + PADDING) + HEADER_FIX + BORDER*2
 	)
 	self:InvalidateLayout(true)
 

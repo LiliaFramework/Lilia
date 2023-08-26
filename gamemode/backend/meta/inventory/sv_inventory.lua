@@ -145,6 +145,7 @@ end
 function Inventory:canAccess(action, context)
     context = context or {}
     local result
+
     for _, rule in ipairs(self.config.accessRules) do
         result, reason = rule(self, action, context)
         if result ~= nil then return result, reason end

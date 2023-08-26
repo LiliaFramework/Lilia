@@ -49,7 +49,7 @@ function MODULE:ItemCombine(client, item, target)
 		if item and item:call("onCombineTo", client, nil, target) then return end -- when you drag the item on something
 	end
 end
-
+--------------------------------------------------------------------------------------------------------
 function MODULE:ItemDraggedOutOfInventory(client, item)
 	item:interact("drop", client)
 end

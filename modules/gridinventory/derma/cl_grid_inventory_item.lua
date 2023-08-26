@@ -1,7 +1,7 @@
 local PANEL = {}
 
 function PANEL:Init()
-	self.MODULE = LIA_ICON_SIZE
+	self.MODULE = 64
 end
 
 function PANEL:setIconSize(MODULE)
