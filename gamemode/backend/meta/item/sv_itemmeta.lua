@@ -7,10 +7,12 @@ ITEM.__index = ITEM
 function ITEM:getName()
     return self.name
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:getDesc()
     return self.desc
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:removeFromInventory(preserveItem)
     local inventory = lia.inventory.instances[self.invID]
@@ -21,6 +23,7 @@ function ITEM:removeFromInventory(preserveItem)
 
     return d
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:delete()
     self:destroy()
@@ -31,6 +34,7 @@ function ITEM:delete()
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:remove()
     local d = deferred.new()
@@ -48,6 +52,7 @@ function ITEM:remove()
 
     return d
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:destroy()
     net.Start("liaItemDelete")
@@ -56,9 +61,11 @@ function ITEM:destroy()
     lia.item.instances[self:getID()] = nil
     self:onDisposed()
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onDisposed()
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:getEntity()
     local id = self:getID()
@@ -66,6 +73,7 @@ function ITEM:getEntity()
         if v.liaItemID == id then return v end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:spawn(position, angles)
     local instance = lia.item.instances[self.id]
@@ -95,6 +103,7 @@ function ITEM:spawn(position, angles)
         return entity
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:Transfer(newInventory, bBypass)
     if not bBypass and not newInventory:canAccess("transfer") then return false end
@@ -107,6 +116,7 @@ function ITEM:Transfer(newInventory, bBypass)
 
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:transfer(newInventory, bBypass)
     if not bBypass and not newInventory:canAccess("transfer") then return false end
@@ -119,18 +129,23 @@ function ITEM:transfer(newInventory, bBypass)
 
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onInstanced(id)
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onSync(recipient)
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onRemoved()
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onRestored(inventory)
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:sync(recipient)
     net.Start("liaItemInstance")
@@ -147,6 +162,7 @@ function ITEM:sync(recipient)
 
     self:onSync(recipient)
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
     self.data = self.data or {}
@@ -192,10 +208,12 @@ function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
 
     self.data.x, self.data.y = x, y
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:addQuantity(quantity, receivers, noCheckEntity)
     self:setQuantity(self:getQuantity() + quantity, receivers, noCheckEntity)
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:setQuantity(quantity, receivers, noCheckEntity)
     self.quantity = quantity
@@ -221,6 +239,7 @@ function ITEM:setQuantity(quantity, receivers, noCheckEntity)
         )
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:interact(action, client, entity, data)
     assert(type(client) == "Player" and IsValid(client), "Item action cannot be performed without a player")
@@ -279,6 +298,7 @@ function ITEM:interact(action, client, entity, data)
 
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 lia.meta.item = ITEM
 --------------------------------------------------------------------------------------------------------
