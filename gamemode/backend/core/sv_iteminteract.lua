@@ -13,12 +13,13 @@ function GM:CanPlayerInteractItem(client, action, item)
     if action == "take" and hook.Run("CanPlayerTakeItem", client, item) then return true end
     if inventory and (inventory.isBag == true or inventory.isBank == true) and lia.config.DisallowedBagForbiddenActions[action] then return false, "forbiddenActionStorage" end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerEquipItem(client, item)
-    if not item.RequiredSkillLevels then return true end
-
-    return client:MeetsRequiredSkills(item.RequiredSkillLevels)
+    if item.RequiredSkillLevels == nil then
+        return true
+    else
+        return client:MeetsRequiredSkills(item.RequiredSkillLevels)
+    end
 end
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerTakeItem(client, item)
@@ -30,6 +31,8 @@ function GM:CanPlayerTakeItem(client, item)
             return false
         end
     end
+
+    return true
 end
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerDropItem(client, item)
@@ -46,5 +49,7 @@ function GM:CanPlayerDropItem(client, item)
             end
         end
     end
+
+    return true
 end
 --------------------------------------------------------------------------------------------------------
