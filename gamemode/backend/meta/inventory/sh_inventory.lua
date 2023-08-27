@@ -14,18 +14,6 @@ function Inventory:getData(key, default)
     return value
 end
 --------------------------------------------------------------------------------------------------------
-function Inventory:getItemCount(uniqueID, onlyMain)
-	local i = 0
-
-	for _, v in pairs(self:getItems(onlyMain)) do
-		if (v.uniqueID == uniqueID) then
-			i = i + 1
-		end
-	end
-
-	return i
-end
---------------------------------------------------------------------------------------------------------
 function Inventory:extend(className)
     local base = debug.getregistry()[className] or {}
     table.Empty(base)
