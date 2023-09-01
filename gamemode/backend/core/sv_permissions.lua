@@ -57,6 +57,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnRagdoll(client)
     if not client:getChar() then return end
+
     if lia.config.CustomPermissions then
         local permission = lia.config.PermissionTable["PlayerSpawnRagdoll"]
         if permission.IsAdmin and client:IsAdmin() then
@@ -260,5 +261,19 @@ function GM:CanProperty(client, property, entity)
     if table.HasValue(lia.config.BlockedProperties, property) and table.HasValue("stamina", entity:GetClass()) then return false end
 
     return not table.HasValue(lia.config.BlockedProperties, property)
+end
+--------------------------------------------------------------------------------------------------------
+
+function PLUGIN:PlayerCheckLimit(ply, name)
+	if FindMetaTable("Player").GetLimit then
+		if name == "props" then
+			if ply:GetLimit("props") < 0 then return end
+			if ply:getLiliaData("extraProps") then
+				local limit = ply:GetLimit("props") + 50
+				local props = ply:GetCount("props")
+				if props <= limit + 50 then return true end
+			end
+		end
+	end
 end
 --------------------------------------------------------------------------------------------------------

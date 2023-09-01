@@ -19,12 +19,46 @@ function lia.config.LoadPermissions()
         ["PlayerSpawnProp"] = {
             IsAdmin = false,
             IsSuperAdmin = true,
-            CustomCheck = function(client) return client:IsAdmin() or client:getChar():hasFlags("e") end,
+            CustomCheck = function(client)
+                if FindMetaTable("Player").GetLimit then
+                    local limit = client:GetLimit("props")
+                    if limit < 0 then return end
+                    local props = client:GetCount("props") + 1
+                    if client:getLiliaData("extraProps") then
+                        if props > (limit + 50) then
+                            client:LimitHit("props")
+
+                            return false
+                        end
+                    else
+                        if props > limit then
+                            client:LimitHit("props")
+
+                            return false
+                        end
+                    end
+                end
+
+                return client:IsAdmin() or client:getChar():hasFlags("e")
+            end,
         },
         ["PlayerSpawnRagdoll"] = {
             IsAdmin = false,
             IsSuperAdmin = true,
-            CustomCheck = function(client) return client:IsAdmin() or client:getChar():hasFlags("r") end,
+            CustomCheck = function(client)
+                if FindMetaTable("Player").GetLimit then
+                    local limit = ply:GetLimit("ragdolls")
+                    if limit < 0 then return end
+                    local ragdolls = ply:GetCount("ragdolls") + 1
+                    if ragdolls > limit then
+                        ply:LimitHit("ragdolls")
+
+                        return false
+                    end
+                end
+
+                return client:IsAdmin() or client:getChar():hasFlags("r")
+            end,
         },
         ["PlayerSpawnSWEP"] = {
             IsAdmin = false,
