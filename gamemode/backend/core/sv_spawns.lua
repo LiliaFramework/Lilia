@@ -211,7 +211,11 @@ function GM:PlayerInitialSpawn(client)
 
     self:RegisterPlayer(client)
     if lia.config.DefaultStaff[client:SteamID()] then
-        client:SetUserGroup(lia.config.DefaultStaff[client:SteamID()])
+        if sam then
+            RunConsoleCommand("sam", "setrank", target:SteamID(), lia.config.DefaultStaff[client:SteamID()])
+        else
+            client:SetUserGroup(lia.config.DefaultStaff[client:SteamID()])
+        end
     end
 
     hook.Run("PostPlayerInitialSpawn", client)
