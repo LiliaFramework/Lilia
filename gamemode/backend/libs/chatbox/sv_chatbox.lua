@@ -1,10 +1,7 @@
 --------------------------------------------------------------------------------------------------------
 function lia.chat.send(speaker, chatType, text, anonymous, receivers)
     local class = lia.chat.classes[chatType]
-    print("?")
-    print(chatType)
-    print(text)
-    print(anonymous)
+
     if class and class.onCanSay(speaker, text) ~= false then
         if class.onCanHear and not receivers then
             receivers = {}
