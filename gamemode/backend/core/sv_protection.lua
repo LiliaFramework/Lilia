@@ -74,7 +74,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedNPC(client, entity)
     entity:SetCreator(client)
-    entity:SetNWString("Creator_Nick", client:Nick())
+    entity:SetNW2String("Creator_Nick", client:Nick())
     if lia.config.NPCsDropWeapons then
         entity:SetKeyValue("spawnflags", "8192")
     end
@@ -186,7 +186,7 @@ function GM:PlayerSpawnedProp(client, model, entity)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedEntity(client, entity)
-    entity:SetNWString("Creator_Nick", client:Nick())
+    entity:SetNW2String("Creator_Nick", client:Nick())
     entity:SetCreator(client)
 end
 --------------------------------------------------------------------------------------------------------
