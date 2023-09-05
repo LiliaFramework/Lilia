@@ -1,8 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------
-local MODULE = MODULE
---------------------------------------------------------------------------------------------------------
 local function teamGetPlayers(teamID)
     local players = {}
     for _, ply in next, player.GetAll() do
@@ -88,6 +86,7 @@ function PANEL:Init()
     end
 
     for k, v in ipairs(lia.faction.indices) do
+        if table.HasValue(lia.config.HiddenFactions, k) then continue end
         local color = team.GetColor(k)
         local r, g, b = color.r, color.g, color.b
         local list = self.layout:Add("DListLayout")
