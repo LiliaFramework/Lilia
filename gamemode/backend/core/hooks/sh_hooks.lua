@@ -510,8 +510,8 @@ function GM:InitPostEntity()
         end
 
         for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
-            if IsValid(v) and v:IsDoor() then
-                v:DrawShadow(false) -- we need this?
+            if IsValid(v) and v:isDoor() then
+                v:DrawShadow(false)
             end
         end
 
