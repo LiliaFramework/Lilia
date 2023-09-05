@@ -21,10 +21,8 @@ function lia.config.LoadCore()
         ["Talking"] = 300,
         ["Yelling"] = 600,
     }
-
-    lia.config.DefaultStaff = {
-        ["STEAM_0:1:176123778"] = "superadmin",
-    }
+    
+    lia.config.DefaultStaff = {}
 end
 
 function lia.config.LoadSchemaConfig()
