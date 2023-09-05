@@ -404,10 +404,12 @@ function GM:PlayerThrowPunch(ply, trace)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:OnCharFallover(client, entity, bFallenOver)
+    bFallenOver = bFallenOver or false
     if IsValid(entity) then
         entity:SetCollisionGroup(COLLISION_GROUP_NONE)
         entity:SetCustomCollisionCheck(false)
     end
+    client:setNetVar("fallingover", bFallenOver) 
 end
 --------------------------------------------------------------------------------------------------------
 if lia.config.AutoWorkshopDownloader then
