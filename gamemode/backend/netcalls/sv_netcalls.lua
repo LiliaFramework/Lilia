@@ -17,7 +17,6 @@ util.AddNetworkString("worlditem_cleanup_inbound")
 util.AddNetworkString("worlditem_cleanup_inbound_final")
 util.AddNetworkString("map_cleanup_inbound")
 util.AddNetworkString("map_cleanup_inbound_final")
-util.AddNetworkString("VoiceMenu")
 util.AddNetworkString("OpenInvMenu")
 util.AddNetworkString("announcement_client")
 util.AddNetworkString("advert_client")
@@ -94,12 +93,9 @@ netstream.Hook(
 )
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
-    "ChangeMode",
+    "ChangeSpeakMode",
     function(client, mode)
-        client:setNetVar("voiceRange", mode)
-        if client:getNetVar("voiceRange") > #lia.config.Ranges then
-            client:setNetVar("voiceRange", 2)
-        end
+        client:setNetVar("VoiceType", mode)
     end
 )
 --------------------------------------------------------------------------------------------------------

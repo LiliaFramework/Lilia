@@ -138,10 +138,6 @@ hook.Add(
                 toggle:SetInt(1)
             end
         end
-
-        if button == KEY_F2 and IsFirstTimePredicted() then
-            netstream.Start("VoiceMenu", ply)
-        end
     end
 )
 --------------------------------------------------------------------------------------------------------

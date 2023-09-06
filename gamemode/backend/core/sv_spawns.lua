@@ -73,7 +73,7 @@ function GM:PlayerSpawn(client)
         client:ConCommand("pac_restart")
     end
 
-    client:setNetVar("voiceRange", 2)
+    client:setNetVar("VoiceType", "Talking")
     client:SetNoDraw(false)
     client:UnLock()
     client:SetNotSolid(false)

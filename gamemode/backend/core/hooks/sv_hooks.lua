@@ -285,8 +285,8 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
     local allowVoice = lia.config.AllowVoice
-    if not allowVoice or not speaker:getChar() or not speaker:getNetVar("voiceRange", 2) then return false, false end
-    local speakerRange = speaker:getNetVar("voiceRange", 2)
+    if not allowVoice or not speaker:getChar() or not speaker:getNetVar("VoiceType", "Talking") then return false, false end
+    local speakerRange = speaker:getNetVar("VoiceType", "Talking")
     local rangeSquared = (lia.config.Ranges[speakerRange] or 0) * (lia.config.Ranges[speakerRange] or 0)
     if listener:GetPos():DistToSqr(speaker:GetPos()) < rangeSquared then return true, true end
 

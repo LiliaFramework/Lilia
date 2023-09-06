@@ -25,7 +25,4 @@ function lia.config.LoadCore()
     lia.config.DefaultStaff = {}
 end
 
-function lia.config.LoadSchemaConfig()
-    print("CONFIG: Loaded Schema Config")
-end
 --------------------------------------------------------------------------------------------------------
