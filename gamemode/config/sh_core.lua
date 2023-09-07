@@ -1,6 +1,5 @@
 --------------------------------------------------------------------------------------------------------
-function lia.config.LoadCore()
-    print("CONFIG: Loaded Core")
+function GM:LoadCoreConfig()
     lia.config.DefaultGamemodeName = "Lilia - Skeleton"
     lia.config.Color = Color(75, 119, 190)
     lia.config.DarkTheme = true
@@ -21,8 +20,7 @@ function lia.config.LoadCore()
         ["Talking"] = 300,
         ["Yelling"] = 600,
     }
-    
+
     lia.config.DefaultStaff = {}
 end
-
 --------------------------------------------------------------------------------------------------------

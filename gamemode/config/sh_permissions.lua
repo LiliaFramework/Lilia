@@ -1,6 +1,5 @@
 --------------------------------------------------------------------------------------------------------
-function lia.config.LoadPermissions()
-    print("CONFIG: Loaded Custom Tool and Hook Access")
+function GM:LoadPermissionsConfig()
     lia.config.CustomPermissions = false
     lia.config.CustomToolAccess = true
     lia.config.BlockedProperties = {"persist", "bonemanipulate", "drive"}
@@ -27,18 +26,15 @@ function lia.config.LoadPermissions()
                     if client:getLiliaData("extraProps") then
                         if props > (limit + 50) then
                             client:LimitHit("props")
-
                             return false
                         end
                     else
                         if props > limit then
                             client:LimitHit("props")
-
                             return false
                         end
                     end
                 end
-
                 return client:IsAdmin() or client:getChar():hasFlags("e")
             end,
         },
@@ -52,11 +48,9 @@ function lia.config.LoadPermissions()
                     local ragdolls = ply:GetCount("ragdolls") + 1
                     if ragdolls > limit then
                         ply:LimitHit("ragdolls")
-
                         return false
                     end
                 end
-
                 return client:IsAdmin() or client:getChar():hasFlags("r")
             end,
         },
@@ -82,7 +76,6 @@ function lia.config.LoadPermissions()
                 if client:IsSuperAdmin() then return true end
                 if table.HasValue(lia.config.RestrictedVehicles, name) then
                     ply:notify("You can't spawn this vehicle since it's restricted!")
-
                     return false
                 else
                     if data.Category == "Chairs" then
@@ -91,7 +84,6 @@ function lia.config.LoadPermissions()
                         return client:getChar():hasFlags("C")
                     end
                 end
-
                 return false
             end,
         },
@@ -117,7 +109,6 @@ function lia.config.LoadPermissions()
                         end
                     end
                 end
-
                 return false
             end,
         },
