@@ -4,6 +4,7 @@ local MODULE = MODULE
 lia.command.add(
     "doorsell",
     {
+        privilege = "Basic User Permissions",
         onRun = function(client, arguments)
             local data = {}
             data.start = client:GetShootPos()
@@ -38,6 +39,7 @@ lia.command.add(
 lia.command.add(
     "doorbuy",
     {
+        privilege = "Basic User Permissions",
         onRun = function(client, arguments)
             local data = {}
             data.start = client:GetShootPos()
@@ -85,6 +87,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "[string name]",
+        privilege = "Management- Manage Doors",
         onRun = function(client, arguments)
             local entity = client:GetEyeTrace().Entity
             local name = table.concat(arguments, " ")
@@ -118,6 +121,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "[string name]",
+        privilege = "Management- Manage Doors",
         onRun = function(client, arguments)
             local entity = client:GetEyeTrace().Entity
             local name = table.concat(arguments, " ")
@@ -151,6 +155,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "[string faction]",
+        privilege = "Management- Manage Doors",
         onRun = function(client, arguments)
             local entity = client:GetEyeTrace().Entity
             if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
@@ -209,6 +214,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "[string faction]",
+        privilege = "Management- Manage Doors",
         onRun = function(client, arguments)
             local entity = client:GetEyeTrace().Entity
             if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
@@ -267,6 +273,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<bool disabled>",
+        privilege = "Management- Manage Doors",
         onRun = function(client, arguments)
             local entity = client:GetEyeTrace().Entity
             if IsValid(entity) and entity:isDoor() then
@@ -292,6 +299,7 @@ lia.command.add(
     "doorsettitle",
     {
         syntax = "<string title>",
+        privilege = "Management- Manage Doors",
         onRun = function(client, arguments)
             local data = {}
             data.start = client:GetShootPos()
@@ -326,6 +334,7 @@ lia.command.add(
     "doorsetparent",
     {
         adminOnly = true,
+        privilege = "Management- Manage Doors",
         onRun = function(client, arguments)
             local entity = client:GetEyeTrace().Entity
             if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
@@ -337,11 +346,12 @@ lia.command.add(
         end
     }
 )
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add(
     "doorsetchild",
     {
         adminOnly = true,
+        privilege = "Management- Manage Doors",
         onRun = function(client, arguments)
             local entity = client:GetEyeTrace().Entity
             if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
@@ -367,6 +377,7 @@ lia.command.add(
     "doorremovechild",
     {
         adminOnly = true,
+        privilege = "Management- Manage Doors",
         onRun = function(client, arguments)
             local entity = client:GetEyeTrace().Entity
             if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
@@ -401,6 +412,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<bool hidden>",
+        privilege = "Management- Manage Doors",
         onRun = function(client, arguments)
             local entity = client:GetEyeTrace().Entity
             if IsValid(entity) and entity:isDoor() then
@@ -427,6 +439,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "[string faction]",
+        privilege = "Management- Manage Doors",
         onRun = function(client, arguments)
             local entity = client:GetEyeTrace().Entity
             if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
