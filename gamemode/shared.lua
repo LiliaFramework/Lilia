@@ -10,8 +10,9 @@ lia.version = "2.0"
 --------------------------------------------------------------------------------------------------------
 function GM:Initialize()
     lia.module.initialize()
-    lia.config.load()
-    hook.Run("DevelopmentServerCheckup")
+    self:LoadConfigValues()
+    self:DevelopmentServerLoader()
+    self:PSALoader()
 end
 --------------------------------------------------------------------------------------------------------
 function GM:OnReloaded()
@@ -25,7 +26,7 @@ function GM:OnReloaded()
 
     if not ModulesLoaded then
         lia.module.initialize()
-        lia.config.load()
+        self:LoadConfigValues()
         ModulesLoaded = true
     end
 
