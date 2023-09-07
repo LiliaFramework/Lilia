@@ -1,11 +1,4 @@
 --------------------------------------------------------------------------------------------------------
-lia.config.Font = lia.config.Font or "Arial"
-lia.config.GenericFont = lia.config.GenericFont or "Segoe UI"
---------------------------------------------------------------------------------------------------------
-function GM:InitializedConfig()
-    hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
-end
---------------------------------------------------------------------------------------------------------
 function GM:PostGamemodeLoaded()
     print("Disabling base_gmodentity think method")
     scripted_ents.GetStored("base_gmodentity").t.Think = nil
