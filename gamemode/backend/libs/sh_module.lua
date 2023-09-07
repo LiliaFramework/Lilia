@@ -187,7 +187,7 @@ function lia.module.initialize()
     hook.Run("InitializedSchema")
     lia.module.loadFromDir("lilia/modules")
     lia.module.loadFromDir(engine.ActiveGamemode() .. "/modules")
-    hook.Run("InitializedModules")
+    hook.Run("InitializedConfig")
     hook.Run("InitializedItems")
 end
 --------------------------------------------------------------------------------------------------------

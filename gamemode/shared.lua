@@ -26,7 +26,6 @@ function GM:OnReloaded()
 
     if not ModulesLoaded then
         lia.module.initialize()
-        self:LoadConfigValues()
         ModulesLoaded = true
     end
 

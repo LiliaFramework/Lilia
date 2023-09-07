@@ -488,8 +488,6 @@ function GM:InitializedExtrasShared()
             meta = {}
         }
     end
-
-    self:LoadConfigValues()
 end
 
 --------------------------------------------------------------------------------------------------------

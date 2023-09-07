@@ -5,7 +5,6 @@ function GM:LoadConfigValues()
     self:LoadCoreConfig()
     self:LoadModelsConfig()
     self:LoadPermissionsConfig()
-    
     if not lia.config.LoadedSchemaCoreConfig then
         print("CONFIG: Loaded Default Core Config")
     else

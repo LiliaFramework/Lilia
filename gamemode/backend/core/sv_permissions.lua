@@ -26,6 +26,7 @@ function GM:PlayerSpawnNPC(client)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnProp(client)
     if not client:getChar() then return end
@@ -54,10 +55,10 @@ function GM:PlayerSpawnProp(client)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnRagdoll(client)
     if not client:getChar() then return end
-
     if lia.config.CustomPermissions then
         local permission = lia.config.PermissionTable["PlayerSpawnRagdoll"]
         if permission.IsAdmin and client:IsAdmin() then
@@ -81,6 +82,7 @@ function GM:PlayerSpawnRagdoll(client)
         return client:IsAdmin() or client:getChar():hasFlags("r")
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnSWEP(client)
     if not client:getChar() then return end
@@ -109,6 +111,7 @@ function GM:PlayerSpawnSWEP(client)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnEffect(client)
     if not client:getChar() then return end
@@ -137,6 +140,7 @@ function GM:PlayerSpawnEffect(client)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnSENT(client)
     if not client:getChar() then return end
@@ -165,6 +169,7 @@ function GM:PlayerSpawnSENT(client)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnVehicle(client, model, name, data)
     if not client:getChar() then return end
@@ -193,51 +198,16 @@ function GM:PlayerSpawnVehicle(client, model, name, data)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CanTool(client, trace, tool)
-    local entity = trace.Entity
-    if not client:getChar() then return end
-    if lia.config.CustomToolAccess then
-        local permission = lia.config.CustomToolAccessTable[tool]
-        if permission.IsSuperAdmin and client:IsSuperAdmin() then
-            if permission.ExtraCheck and type(permission.ExtraCheck) == "function" then
-                if permission.ExtraCheck(client, trace, tool, entity) then
-                    return true
-                else
-                    client:ChatPrint("You don't have permission to use this tool.")
-
-                    return false
-                end
-            end
-        elseif table.HasValue(permission.ToolAllowedUsergroup, client:GetUserGroup()) then
-            return true
-        elseif table.HasValue(lia.config.DisallowedTools, tool) then
-            return false
-        elseif permission.IsAdmin and client:IsAdmin() then
-            if permission.ExtraCheck(client, trace, tool, entity) then
-                return true
-            else
-                client:ChatPrint("You don't have permission to use this tool.")
-
-                return false
-            end
-        elseif permission.ToolAllowedUsergroup and table.HasValue(permission.ToolAllowedUsergroup, client:GetUserGroup()) then
-            if permission.ExtraCheck(client, trace, tool, entity) then
-                return true
-            else
-                client:ChatPrint("You don't have permission to use this tool.")
-
-                return false
-            end
-        else
-            client:ChatPrint("You don't have permission to spawn NPCs.")
-
-            return false
-        end
-    else
-        return client:getChar():hasFlags("t") or client:IsSuperAdmin()
-    end
+    local privilege = "Lilia - Management - Access Tool " .. tool:gsub("^%l", string.upper)
+    if not client:getChar() then return false end
+    if not client:getChar():hasFlags("t") then return false end
+    if CAMI.PlayerHasAccess(client, privilege, nil) then return true end
+    client:ChatPrint(privilege)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PhysgunPickup(client, entity)
     if client:IsSuperAdmin() then
@@ -254,6 +224,7 @@ function GM:PhysgunPickup(client, entity)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CanProperty(client, property, entity)
     if not client:getChar() then return end
@@ -262,18 +233,18 @@ function GM:CanProperty(client, property, entity)
 
     return not table.HasValue(lia.config.BlockedProperties, property)
 end
---------------------------------------------------------------------------------------------------------
 
-function PLUGIN:PlayerCheckLimit(ply, name)
-	if FindMetaTable("Player").GetLimit then
-		if name == "props" then
-			if ply:GetLimit("props") < 0 then return end
-			if ply:getLiliaData("extraProps") then
-				local limit = ply:GetLimit("props") + 50
-				local props = ply:GetCount("props")
-				if props <= limit + 50 then return true end
-			end
-		end
-	end
+--------------------------------------------------------------------------------------------------------
+function GM:PlayerCheckLimit(ply, name)
+    if FindMetaTable("Player").GetLimit then
+        if name == "props" then
+            if ply:GetLimit("props") < 0 then return end
+            if ply:getLiliaData("extraProps") then
+                local limit = ply:GetLimit("props") + 50
+                local props = ply:GetCount("props")
+                if props <= limit + 50 then return true end
+            end
+        end
+    end
 end
 --------------------------------------------------------------------------------------------------------
