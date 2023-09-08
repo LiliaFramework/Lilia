@@ -1,6 +1,7 @@
 -------------------------------------------------------------------------------------------------------
 local last_jump_time = 0
 --------------------------------------------------------------------------------------------------------
+lia.config.TimeToEnterVehicle = 1
 lia.config.JumpCooldown = 0.8
 lia.config.RemoveEntities = {
     ["env_fire"] = true,
@@ -57,24 +58,14 @@ function GM:InitializedExtrasServer()
         end
     end
 
-    for _, wep in pairs(weapons.GetList()) do
-        if wep.ClassName == "gmod_tool" then
-            for ToolName, TOOL in pairs(wep.Tool) do
-                if not ToolName then continue end
-                local privilege = "Lilia - Management - Access Tool " .. ToolName:gsub("^%l", string.upper)
-                if not CAMI.GetPrivilege(privilege) then
-                    local privilegeInfo = {
-                        Name = privilege,
-                        MinAccess = "admin",
-                        Description = "Allows access to " .. ToolName:gsub("^%l", string.upper)
-                    }
-
-                    CAMI.RegisterPrivilege(privilegeInfo)
-                end
-            end
+    timer.Simple(
+        3,
+        function()
+            RunConsoleCommand("ai_serverragdolls", "1")
         end
-    end
+    )
 end
+
 -------------------------------------------------------------------------------------------------------
 function GM:OptimizeSeats()
     local EFL_NO_THINK_FUNCTION = EFL_NO_THINK_FUNCTION
@@ -135,14 +126,27 @@ function GM:OptimizeSeats()
     hook.Add("PlayerEnteredVehicle", "nicoSeat", nicoSeatAction)
     hook.Add("PlayerLeaveVehicle", "nicoSeat", nicoSeatAction)
 end
+
 -------------------------------------------------------------------------------------------------------
 function GM:EntityNetworkedVarChanged(entity, varName, oldVal, newVal)
     if varName == "Model" and entity.SetModel then
         hook.Run("PlayerModelChanged", entity, newVal)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerUse(client, entity)
+    if simfphys and simfphys.IsCar(entity) and lia.config.TimeToEnterVehicle > 0 then
+        if entity.IsLocked then return end
+        client:setAction(
+            "Entering Vehicle...",
+            lia.config.TimeToEnterVehicle,
+            function()
+                entity:SetPassenger(client)
+            end
+        )
+    end
+
     if client:getNetVar("restricted") then return false end
     if entity:isDoor() then
         local result = hook.Run("CanPlayerUseDoor", client, entity)
@@ -156,6 +160,7 @@ function GM:PlayerUse(client, entity)
 
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:KeyPress(client, key)
     if key == IN_USE then
@@ -169,12 +174,14 @@ function GM:KeyPress(client, key)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:KeyRelease(client, key)
     if key == IN_RELOAD then
         timer.Remove("liaToggleRaise" .. client:SteamID())
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadedChar(client, character, lastChar)
     local identifier = "RemoveMatSpecular" .. client:SteamID()
@@ -249,6 +256,7 @@ function GM:PlayerLoadedChar(client, character, lastChar)
     character:setData("loginTime", loginTime)
     hook.Run("PlayerLoadout", client)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CharacterLoaded(id)
     local character = lia.char.loaded[id]
@@ -271,6 +279,7 @@ function GM:CharacterLoaded(id)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSay(client, message)
     local chatType, message, anonymous = lia.chat.parse(client, message, true)
@@ -280,6 +289,7 @@ function GM:PlayerSay(client, message)
 
     return ""
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:ShutDown()
     if hook.Run("ShouldDataBeSaved") == false then return end
@@ -292,6 +302,7 @@ function GM:ShutDown()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedSchema()
     local persistString = GetConVar("sbox_persist"):GetString()
@@ -300,6 +311,7 @@ function GM:InitializedSchema()
         game.ConsoleCommand("sbox_persist " .. newValue .. "\n")
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
     local allowVoice = lia.config.AllowVoice
@@ -310,11 +322,13 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
 
     return false, false
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PrePlayerLoadedChar(client, character, lastChar)
     client:SetBodyGroups("000000000")
     client:SetSkin(0)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CharacterPreSave(character)
     local client = character:getPlayer()
@@ -325,6 +339,7 @@ function GM:CharacterPreSave(character)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 local defaultAngleData = {
     ["models/items/car_battery01.mdl"] = Angle(-15, 180, 0),
@@ -347,6 +362,7 @@ function GM:GetPreferredCarryAngles(entity)
         return defaultAngleData[model]
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CreateDefaultInventory(character)
     local charID = character:getID()
@@ -359,6 +375,7 @@ function GM:CreateDefaultInventory(character)
         )
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:LiliaTablesLoaded()
     local ignore = function()
@@ -369,6 +386,7 @@ function GM:LiliaTablesLoaded()
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CreateSalaryTimer(client)
     if lia.config.SalaryOverride then return end
@@ -399,6 +417,7 @@ function GM:CreateSalaryTimer(client)
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:SetupMove(client, mv, cmd)
     if client:OnGround() and mv:KeyPressed(IN_JUMP) then
@@ -410,6 +429,7 @@ function GM:SetupMove(client, mv, cmd)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerThrowPunch(ply, trace)
     local ent = trace.Entity
@@ -420,6 +440,7 @@ function GM:PlayerThrowPunch(ply, trace)
         ply:setRagdolled(true, 10)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnCharFallover(client, entity, bFallenOver)
     bFallenOver = bFallenOver or false
@@ -427,12 +448,194 @@ function GM:OnCharFallover(client, entity, bFallenOver)
         entity:SetCollisionGroup(COLLISION_GROUP_NONE)
         entity:SetCustomCollisionCheck(false)
     end
-    client:setNetVar("fallingover", bFallenOver) 
+
+    client:setNetVar("fallingover", bFallenOver)
 end
+
 --------------------------------------------------------------------------------------------------------
-if lia.config.AutoWorkshopDownloader then
+function GM:RegisterCamiPermissions()
+    for _, PrivilegeInfo in pairs(lia.config.CAMIPrivileges) do
+        if not CAMI.GetPrivilege(PrivilegeInfo.Name) then
+            CAMI.RegisterPrivilege(PrivilegeInfo)
+        end
+    end
+
+    for _, wep in pairs(weapons.GetList()) do
+        if wep.ClassName == "gmod_tool" then
+            for ToolName, TOOL in pairs(wep.Tool) do
+                if not ToolName then continue end
+                local privilege = "Lilia - Management - Access Tool " .. ToolName:gsub("^%l", string.upper)
+                if not CAMI.GetPrivilege(privilege) then
+                    local privilegeInfo = {
+                        Name = privilege,
+                        MinAccess = "admin",
+                        Description = "Allows access to " .. ToolName:gsub("^%l", string.upper)
+                    }
+
+                    CAMI.RegisterPrivilege(privilegeInfo)
+                end
+            end
+        end
+    end
+
+    for name, _ in pairs(properties.List) do
+        local privilege = "Lilia - Management - Access Tool " .. name:gsub("^%l", string.upper)
+        if not CAMI.GetPrivilege(privilege) then
+            local privilegeInfo = {
+                Name = privilege,
+                MinAccess = "admin",
+                Description = "Allows access to Entity Property " .. name:gsub("^%l", string.upper)
+            }
+
+            CAMI.RegisterPrivilege(privilegeInfo)
+        end
+    end
+end
+
+--------------------------------------------------------------------------------------------------------
+function GM:CallMapCleanerInit()
+    timer.Create(
+        "clearWorldItemsWarning",
+        lia.config.ItemCleanupTime - (60 * 10),
+        0,
+        function()
+            net.Start("worlditem_cleanup_inbound")
+            net.Broadcast()
+            for i, v in pairs(player.GetAll()) do
+                v:notify("World items will be cleared in 10 Minutes!")
+            end
+        end
+    )
+
+    timer.Create(
+        "clearWorldItemsWarningFinal",
+        lia.config.ItemCleanupTime - 60,
+        0,
+        function()
+            net.Start("worlditem_cleanup_inbound_final")
+            net.Broadcast()
+            for i, v in pairs(player.GetAll()) do
+                v:notify("World items will be cleared in 60 Seconds!")
+            end
+        end
+    )
+
+    timer.Create(
+        "clearWorldItems",
+        lia.config.ItemCleanupTime,
+        0,
+        function()
+            for i, v in pairs(ents.FindByClass("lia_item")) do
+                v:Remove()
+            end
+        end
+    )
+
+    timer.Create(
+        "mapCleanupWarning",
+        lia.config.MapCleanupTime - (60 * 10),
+        0,
+        function()
+            net.Start("map_cleanup_inbound")
+            net.Broadcast()
+            for i, v in pairs(player.GetAll()) do
+                v:notify("World items will be cleared in 10 Minutes!")
+            end
+        end
+    )
+
+    timer.Create(
+        "mapCleanupWarningFinal",
+        lia.config.MapCleanupTime - 60,
+        0,
+        function()
+            net.Start("worlditem_cleanup_inbound_final")
+            net.Broadcast()
+            for i, v in pairs(player.GetAll()) do
+                v:notify("World items will be cleared in 60 Seconds!")
+            end
+        end
+    )
+
+    timer.Create(
+        "AutomaticMapCleanup",
+        lia.config.MapCleanupTime,
+        0,
+        function()
+            net.Start("cleanup_inbound")
+            net.Broadcast()
+            for i, v in pairs(ents.GetAll()) do
+                if v:IsNPC() then
+                    v:Remove()
+                end
+            end
+
+            for i, v in pairs(ents.FindByClass("lia_item")) do
+                v:Remove()
+            end
+
+            for i, v in pairs(ents.FindByClass("prop_physics")) do
+                v:Remove()
+            end
+        end
+    )
+end
+
+--------------------------------------------------------------------------------------------------------
+function GM:InitalizedWorkshopDownloader()
     for i = 1, #workshop_items do
         resource.AddWorkshop(engine.GetAddons()[i].wsid)
     end
+end
+
+--------------------------------------------------------------------------------------------------------
+function GM:ServerPostInit()
+    if StormFox2 then
+        RunConsoleCommand("sf_time_speed", 1)
+        RunConsoleCommand("sf_addnight_temp", 4)
+        RunConsoleCommand("sf_windmove_props", 0)
+        RunConsoleCommand("sf_windmove_props_break", 0)
+        RunConsoleCommand("sf_windmove_props_unfreeze", 0)
+        RunConsoleCommand("sf_windmove_props_unweld", 0)
+        RunConsoleCommand("sf_windmove_props_makedebris", 0)
+    end
+
+    local doors = ents.FindByClass("prop_door_rotating")
+    for _, v in ipairs(doors) do
+        local parent = v:GetOwner()
+        if IsValid(parent) then
+            v.liaPartner = parent
+            parent.liaPartner = v
+        else
+            for _, v2 in ipairs(doors) do
+                if v2:GetOwner() == v then
+                    v2.liaPartner = v
+                    v.liaPartner = v2
+                    break
+                end
+            end
+        end
+    end
+
+    for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
+        if IsValid(v) and v:isDoor() then
+            v:DrawShadow(false)
+        end
+    end
+
+    lia.faction.formatModelData()
+    timer.Simple(
+        2,
+        function()
+            lia.entityDataLoaded = true
+        end
+    )
+
+    lia.db.waitForTablesToLoad():next(
+        function()
+            hook.Run("LoadData")
+            hook.Run("PostLoadData")
+        end
+    )
 end
 --------------------------------------------------------------------------------------------------------

@@ -19,7 +19,10 @@ lia.config.DevServerPort = "27270"
 lia.config.WalkRatio = 0.5
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedConfig()
-    if CLIENT then hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont) end
+    if CLIENT then
+        self:ClientInitializedConfig()
+    end
+
     for tpose, animtype in pairs(lia.anim.DefaultTposingFixer) do
         TposeOverridenModels[tpose] = true
         lia.anim.setModelClass(tpose, animtype)
@@ -50,7 +53,10 @@ function GM:TranslateActivity(client, act)
         if not lia.config.WepAlwaysRaised and IsValid(weapon) and (client.isWepRaised and not client.isWepRaised(client)) and client:OnGround() then
             if string.find(model, "zombie") then
                 local tree = lia.anim.zombie
-                if string.find(model, "fast") then tree = lia.anim.fastZombie end
+                if string.find(model, "fast") then
+                    tree = lia.anim.fastZombie
+                end
+
                 if tree[act] then return tree[act] end
             end
 
@@ -60,12 +66,14 @@ function GM:TranslateActivity(client, act)
             if tree and tree[act] then
                 if type(tree[act]) == "string" then
                     client.CalcSeqOverride = client.LookupSequence(tree[act])
+
                     return
                 else
                     return tree[act]
                 end
             end
         end
+
         return self.BaseClass.TranslateActivity(self.BaseClass, client, act)
     end
 
@@ -78,16 +86,23 @@ function GM:TranslateActivity(client, act)
             if tree.vehicle and tree.vehicle[class] then
                 local act = tree.vehicle[class][1]
                 local fixvec = tree.vehicle[class][2]
-                if fixvec then client:SetLocalPos(Vector(16.5438, -0.1642, -20.5493)) end
+                if fixvec then
+                    client:SetLocalPos(Vector(16.5438, -0.1642, -20.5493))
+                end
+
                 if type(act) == "string" then
                     client.CalcSeqOverride = client.LookupSequence(client, act)
+
                     return
                 else
                     return act
                 end
             else
                 act = tree.normal[ACT_MP_CROUCH_IDLE][1]
-                if type(act) == "string" then client.CalcSeqOverride = client:LookupSequence(act) end
+                if type(act) == "string" then
+                    client.CalcSeqOverride = client:LookupSequence(act)
+                end
+
                 return
             end
         elseif client.OnGround(client) then
@@ -102,8 +117,10 @@ function GM:TranslateActivity(client, act)
                 local act2 = tree[subClass][act][index]
                 if type(act2) == "string" then
                     client.CalcSeqOverride = client.LookupSequence(client, act2)
+
                     return
                 end
+
                 return act2
             end
         elseif tree.glide then
@@ -125,25 +142,31 @@ function GM:DoAnimationEvent(client, event, data)
             local animation = lia.anim[class][holdType]
             if event == PLAYERANIMEVENT_ATTACK_PRIMARY then
                 client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1, true)
+
                 return ACT_VM_PRIMARYATTACK
             elseif event == PLAYERANIMEVENT_ATTACK_SECONDARY then
                 client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1, true)
+
                 return ACT_VM_SECONDARYATTACK
             elseif event == PLAYERANIMEVENT_RELOAD then
                 client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.reload or ACT_GESTURE_RELOAD_SMG1, true)
+
                 return ACT_INVALID
             elseif event == PLAYERANIMEVENT_JUMP then
                 client.m_bJumping = true
                 client.m_bFistJumpFrame = true
                 client.m_flJumpStartTime = CurTime()
                 client:AnimRestartMainSequence()
+
                 return ACT_INVALID
             elseif event == PLAYERANIMEVENT_CANCEL_RELOAD then
                 client:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
+
                 return ACT_INVALID
             end
         end
     end
+
     return ACT_INVALID
 end
 
@@ -160,6 +183,7 @@ function GM:HandlePlayerLanding(client, velocity, wasOnGround)
         local animClass = lia.anim.getModelClass(client:GetModel())
         if animClass ~= "player" and length < 100000 then return end
         client:AnimRestartGesture(GESTURE_SLOT_JUMP, ACT_LAND, true)
+
         return true
     end
 end
@@ -170,7 +194,10 @@ function GM:CalcMainActivity(client, velocity)
     oldCalcSeqOverride = client.CalcSeqOverride
     client.CalcSeqOverride = -1
     local animClass = lia.anim.getModelClass(client:GetModel())
-    if animClass ~= "player" then client:SetPoseParameter("move_yaw", math.NormalizeAngle(FindMetaTable("Vector").Angle(velocity)[2] - client:EyeAngles()[2])) end
+    if animClass ~= "player" then
+        client:SetPoseParameter("move_yaw", math.NormalizeAngle(FindMetaTable("Vector").Angle(velocity)[2] - client:EyeAngles()[2]))
+    end
+
     if self:HandlePlayerLanding(client, velocity, client.m_bWasOnGround) or self:HandlePlayerNoClipping(client, velocity) or self:HandlePlayerDriving(client) or self:HandlePlayerVaulting(client, velocity) or (usingPlayerAnims and self:HandlePlayerJumping(client, velocity)) or self:HandlePlayerSwimming(client, velocity) or self:HandlePlayerDucking(client, velocity) then
     else
         local len2D = velocity:Length2DSqr()
@@ -184,7 +211,10 @@ function GM:CalcMainActivity(client, velocity)
     client.m_bWasOnGround = client:IsOnGround()
     client.m_bWasNoclipping = client:IsNoClipping() and not client:InVehicle()
     client.lastVelocity = velocity
-    if CLIENT then client:SetIK(false) end
+    if CLIENT then
+        client:SetIK(false)
+    end
+
     return client.CalcIdeal, client.liaForceSeq or oldCalcSeqOverride
 end
 
@@ -223,6 +253,7 @@ function GM:CanPlayerUseChar(client, character)
     if faction and hook.Run("CheckFactionLimitReached", faction, character, client) then return false, "@limitFaction" end
     if character and character:getData("banned", false) then
         if isnumber(banned) and banned < os.time() then return end
+
         return false, "@charBanned"
     end
 end
@@ -232,7 +263,10 @@ function GM:CheckFactionLimitReached(faction, character, client)
     if isfunction(faction.onCheckLimitReached) then return faction:onCheckLimitReached(character, client) end
     if not isnumber(faction.limit) then return false end
     local maxPlayers = faction.limit
-    if faction.limit < 1 then maxPlayers = math.Round(#player.GetAll() * faction.limit) end
+    if faction.limit < 1 then
+        maxPlayers = math.Round(#player.GetAll() * faction.limit)
+    end
+
     return team.NumPlayers(faction.index) >= maxPlayers
 end
 
@@ -271,6 +305,7 @@ end
 function GM:CanItemBeTransfered(itemObject, curInv, inventory)
     if itemObject.onCanBeTransfered then
         local itemHook = itemObject:onCanBeTransfered(curInv, inventory)
+
         return itemHook ~= false
     end
 end
@@ -278,17 +313,29 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:OnPlayerJoinClass(client, class, oldClass)
     local char = client:getChar()
-    if char and lia.config.PermaClass then char:setData("pclass", class) end
+    if char and lia.config.PermaClass then
+        char:setData("pclass", class)
+    end
+
     local info = lia.class.list[class]
     local info2 = lia.class.list[oldClass]
-    if info.onSet then info:onSet(client) end
-    if info2 and info2.onLeave then info2:onLeave(client) end
+    if info.onSet then
+        info:onSet(client)
+    end
+
+    if info2 and info2.onLeave then
+        info2:onLeave(client)
+    end
+
     netstream.Start(nil, "classUpdate", client)
 end
 
 --------------------------------------------------------------------------------------------------------
 function GM:Think()
-    if not self.nextThink then self.nextThink = 0 end
+    if not self.nextThink then
+        self.nextThink = 0
+    end
+
     if self.nextThink < CurTime() then
         local players = player.GetAll()
         for k, v in pairs(players) do
@@ -306,7 +353,9 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:PropBreak(attacker, ent)
-    if IsValid(ent) and ent:GetPhysicsObject():IsValid() then constraint.RemoveAll(ent) end
+    if IsValid(ent) and ent:GetPhysicsObject():IsValid() then
+        constraint.RemoveAll(ent)
+    end
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -331,93 +380,15 @@ end
 function GM:InitializedModules()
     if SERVER then
         if lia.config.MapCleanerEnabled then
-            timer.Create(
-                "clearWorldItemsWarning",
-                lia.config.ItemCleanupTime - (60 * 10),
-                0,
-                function()
-                    net.Start("worlditem_cleanup_inbound")
-                    net.Broadcast()
-                    for i, v in pairs(player.GetAll()) do
-                        v:notify("World items will be cleared in 10 Minutes!")
-                    end
-                end
-            )
-
-            timer.Create(
-                "clearWorldItemsWarningFinal",
-                lia.config.ItemCleanupTime - 60,
-                0,
-                function()
-                    net.Start("worlditem_cleanup_inbound_final")
-                    net.Broadcast()
-                    for i, v in pairs(player.GetAll()) do
-                        v:notify("World items will be cleared in 60 Seconds!")
-                    end
-                end
-            )
-
-            timer.Create(
-                "clearWorldItems",
-                lia.config.ItemCleanupTime,
-                0,
-                function()
-                    for i, v in pairs(ents.FindByClass("lia_item")) do
-                        v:Remove()
-                    end
-                end
-            )
-
-            timer.Create(
-                "mapCleanupWarning",
-                lia.config.MapCleanupTime - (60 * 10),
-                0,
-                function()
-                    net.Start("map_cleanup_inbound")
-                    net.Broadcast()
-                    for i, v in pairs(player.GetAll()) do
-                        v:notify("World items will be cleared in 10 Minutes!")
-                    end
-                end
-            )
-
-            timer.Create(
-                "mapCleanupWarningFinal",
-                lia.config.MapCleanupTime - 60,
-                0,
-                function()
-                    net.Start("worlditem_cleanup_inbound_final")
-                    net.Broadcast()
-                    for i, v in pairs(player.GetAll()) do
-                        v:notify("World items will be cleared in 60 Seconds!")
-                    end
-                end
-            )
-
-            timer.Create(
-                "AutomaticMapCleanup",
-                lia.config.MapCleanupTime,
-                0,
-                function()
-                    net.Start("cleanup_inbound")
-                    net.Broadcast()
-                    for i, v in pairs(ents.GetAll()) do
-                        if v:IsNPC() then v:Remove() end
-                    end
-
-                    for i, v in pairs(ents.FindByClass("lia_item")) do
-                        v:Remove()
-                    end
-
-                    for i, v in pairs(ents.FindByClass("prop_physics")) do
-                        v:Remove()
-                    end
-                end
-            )
+            self:CallMapCleanerInit()
         end
 
-        timer.Simple(3, function() RunConsoleCommand("ai_serverragdolls", "1") end)
+        if lia.config.AutoWorkshopDownloader then
+            self:InitalizedWorkshopDownloader()
+        end
+
         self:InitializedExtrasServer()
+        self:RegisterCamiPermissions()
     else
         self:InitializedExtrasClient()
     end
@@ -428,49 +399,9 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:InitPostEntity()
     if CLIENT then
-        lia.joinTime = RealTime() - 0.9716
-        lia.faction.formatModelData()
-        if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
+        self:ClientPostInit()
     else
-        if StormFox2 then
-            RunConsoleCommand("sf_time_speed", 1)
-            RunConsoleCommand("sf_addnight_temp", 4)
-            RunConsoleCommand("sf_windmove_props", 0)
-            RunConsoleCommand("sf_windmove_props_break", 0)
-            RunConsoleCommand("sf_windmove_props_unfreeze", 0)
-            RunConsoleCommand("sf_windmove_props_unweld", 0)
-            RunConsoleCommand("sf_windmove_props_makedebris", 0)
-        end
-
-        local doors = ents.FindByClass("prop_door_rotating")
-        for _, v in ipairs(doors) do
-            local parent = v:GetOwner()
-            if IsValid(parent) then
-                v.liaPartner = parent
-                parent.liaPartner = v
-            else
-                for _, v2 in ipairs(doors) do
-                    if v2:GetOwner() == v then
-                        v2.liaPartner = v
-                        v.liaPartner = v2
-                        break
-                    end
-                end
-            end
-        end
-
-        for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
-            if IsValid(v) and v:isDoor() then v:DrawShadow(false) end
-        end
-
-        lia.faction.formatModelData()
-        timer.Simple(2, function() lia.entityDataLoaded = true end)
-        lia.db.waitForTablesToLoad():next(
-            function()
-                hook.Run("LoadData")
-                hook.Run("PostLoadData")
-            end
-        )
+        self:ServerPostInit()
     end
 end
 
@@ -529,6 +460,7 @@ function GM:DevelopmentServerLoader()
         print("This is a Main Server!")
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PSALoader()
     local TalkModesPSAString = "Please Remove Talk Modes. Our framework has such built in by default."
@@ -556,8 +488,26 @@ function GM:PSALoader()
                                            -Lilia Development Team
             
             */------------------------------------------------------------]]
-    if ulx or ULib then MsgC(Color(255, 0, 0), ULXPSAString .. "\n") end
-    if TalkModes then timer.Simple(2, function() MsgC(Color(255, 0, 0), TalkModesPSAString) end) end
-    if nut then timer.Simple(2, function() MsgC(Color(255, 0, 0), NutscriptPSAString) end) end
+    if ulx or ULib then
+        MsgC(Color(255, 0, 0), ULXPSAString .. "\n")
+    end
+
+    if TalkModes then
+        timer.Simple(
+            2,
+            function()
+                MsgC(Color(255, 0, 0), TalkModesPSAString)
+            end
+        )
+    end
+
+    if nut then
+        timer.Simple(
+            2,
+            function()
+                MsgC(Color(255, 0, 0), NutscriptPSAString)
+            end
+        )
+    end
 end
 --------------------------------------------------------------------------------------------------------

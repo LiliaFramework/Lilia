@@ -23,7 +23,6 @@ lia.config.RemovableConsoleCommand = {
 	["r_lod"] = "-1",
 	["lia_cheapblur"] = "1",
 }
-
 lia.config.StaffTitles = {
 	["Owner"] = {"Owner", Color(174, 0, 0)},
 	["Upper Administration"] = {"Upper Administration", Color(2, 0, 121)},
@@ -176,53 +175,65 @@ function GM:HUDPaint()
 	end
 end
 --------------------------------------------------------------------------------------------------------
-timer.Create(
-	"FixShadows",
-	10,
-	0,
-	function()
-		for _, player in ipairs(player.GetAll()) do
-			player:DrawShadow(false)
-		end
+function GM:PlayerButtonDown(client, button)
+	if button == KEY_F2 and IsFirstTimePredicted() then
+		local menu = DermaMenu()
+		menu:AddOption(
+			"Change voice mode to Whispering range.",
+			function()
+				netstream.Start("ChangeSpeakMode", "Whispering")
+				client:ChatPrint("You have changed your voice mode to Whispering!")
+			end
+		)
 
-		for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
-			if IsValid(v) and v:isDoor() then
-				v:DrawShadow(false)
+		menu:AddOption(
+			"Change voice mode to Talking range.",
+			function()
+				netstream.Start("ChangeSpeakMode", "Talking")
+				client:ChatPrint("You have changed your voice mode to Talking!")
+			end
+		)
+
+		menu:AddOption(
+			"Change voice mode to Yelling range.",
+			function()
+				netstream.Start("ChangeSpeakMode", "Yelling")
+				client:ChatPrint("You have changed your voice mode to Yelling!")
+			end
+		)
+
+		menu:Open()
+		menu:MakePopup()
+		menu:Center()
+	end
+end
+--------------------------------------------------------------------------------------------------------
+function GM:ClientInitializedConfig()
+	hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
+end
+--------------------------------------------------------------------------------------------------------
+function GM:ClientPostInit()
+	lia.joinTime = RealTime() - 0.9716
+	lia.faction.formatModelData()
+	if system.IsWindows() and not system.HasFocus() then
+		system.FlashWindow()
+	end
+
+	timer.Create(
+		"FixShadows",
+		10,
+		0,
+		function()
+			for _, player in ipairs(player.GetAll()) do
+				player:DrawShadow(false)
+			end
+
+			for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
+				if IsValid(v) and v:isDoor() then
+					v:DrawShadow(false)
+				end
 			end
 		end
-	end
-)
---------------------------------------------------------------------------------------------------------
-function GM:PlayerButtonDown(client, button)
-    if button == KEY_F2 and IsFirstTimePredicted() then
-        local menu = DermaMenu()
-        menu:AddOption(
-            "Change voice mode to Whispering range.",
-            function()
-                netstream.Start("ChangeSpeakMode", "Whispering")
-                client:ChatPrint("You have changed your voice mode to Whispering!")
-            end
-        )
-
-        menu:AddOption(
-            "Change voice mode to Talking range.",
-            function()
-                netstream.Start("ChangeSpeakMode", "Talking")
-                client:ChatPrint("You have changed your voice mode to Talking!")
-            end
-        )
-
-        menu:AddOption(
-            "Change voice mode to Yelling range.",
-            function()
-                netstream.Start("ChangeSpeakMode", "Yelling")
-                client:ChatPrint("You have changed your voice mode to Yelling!")
-            end
-        )
-
-        menu:Open()
-        menu:MakePopup()
-        menu:Center()
-    end
+	)
 end
 --------------------------------------------------------------------------------------------------------
