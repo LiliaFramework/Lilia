@@ -205,29 +205,35 @@ function GM:CanTool(client, trace, tool)
     if not client:getChar() then return false end
     if not client:getChar():hasFlags("t") then return false end
     if CAMI.PlayerHasAccess(client, privilege, nil) then return true end
-    client:ChatPrint(privilege)
 end
 
 --------------------------------------------------------------------------------------------------------
 function GM:PhysgunPickup(client, entity)
-    if client:IsSuperAdmin() then
-        return true
-    else
+    if not client:getChar() then return false end
+    if client:IsSuperAdmin() then return true end
+    if entity:GetCreator() == client and entity:GetClass() == "prop_physics" then return true end
+    if CAMI.PlayerHasAccess(client, "Lilia - Management - Physgun Pickup", nil) then
         if table.HasValue(lia.config.RestrictedEntityList, entity:GetClass()) then
-            return false
-        elseif entity:GetCreator() == client and entity:GetClass() == "prop_physics" then
-            return true
-        elseif client:Team() == FACTION_STAFF or client:IsAdmin() then
-            return true
+            if CAMI.PlayerHasAccess(client, "Lilia - Management - Physgun Pickup on Restricted Entities", nil) then
+                return true
+            else
+                return false
+            end
         elseif entity:IsVehicle() then
-            return false
+            if CAMI.PlayerHasAccess(client, "Lilia - Management - Physgun Pickup on Vehicles", nil) then
+                return true
+            else
+                return false
+            end
         end
+    else
+        return false
     end
 end
 
 --------------------------------------------------------------------------------------------------------
 function GM:CanProperty(client, property, entity)
-    if not client:getChar() then return end
+    if not client:getChar() then return false end
     if client:IsSuperAdmin() then return true end
     if table.HasValue(lia.config.BlockedProperties, property) and table.HasValue("stamina", entity:GetClass()) then return false end
 
