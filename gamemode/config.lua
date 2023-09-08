@@ -2,9 +2,6 @@
 lia.config = lia.config or {}
 --------------------------------------------------------------------------------------------------------
 function GM:LoadConfigValues()
-    self:LoadCoreConfig()
-    self:LoadModelsConfig()
-    self:LoadPermissionsConfig()
     if not lia.config.LoadedSchemaCoreConfig then
         print("CONFIG: Loaded Default Core Config")
     else
@@ -16,7 +13,8 @@ function GM:LoadConfigValues()
     else
         print("CONFIG: Loaded Schema Model Fixer Config")
     end
-
+    self:LoadCoreConfig()
+    self:LoadModelsConfig()
     hook.Run("InitializedConfig")
 end
 --------------------------------------------------------------------------------------------------------

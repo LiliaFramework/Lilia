@@ -392,7 +392,7 @@ function GM:InitializedModules()
     else
         self:InitializedExtrasClient()
     end
-
+    self:LoadConfigValues()
     self:InitializedExtrasShared()
 end
 
