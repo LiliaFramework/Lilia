@@ -175,13 +175,6 @@ function GM:PlayerSpawnedProp(client, model, entity)
         end
     end
 
-    if table.HasValue(lia.config.PropBlacklist, model:lower()) then
-        client:notify("You cannot spawn this prop.")
-        entity:Remove()
-
-        return
-    end
-
     self:PlayerSpawnedEntity(client, entity)
 end
 --------------------------------------------------------------------------------------------------------
