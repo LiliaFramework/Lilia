@@ -23,20 +23,6 @@ lia.config.RemovableConsoleCommand = {
 	["r_lod"] = "-1",
 	["lia_cheapblur"] = "1",
 }
-lia.config.StaffTitles = {
-	["Owner"] = {"Owner", Color(174, 0, 0)},
-	["Upper Administration"] = {"Upper Administration", Color(2, 0, 121)},
-	["Senior Administrator"] = {"Senior Administrator", Color(255, 165, 0)},
-	["Administrator"] = {"Administrator", Color(255, 165, 0)},
-	["Junior Administrator"] = {"Junior Administrator", Color(255, 165, 0)},
-	["Senior Moderator"] = {"Senior Moderator", Color(255, 255, 0)},
-	["Moderator"] = {"Moderator", Color(255, 255, 0)},
-	["Junior Moderator"] = {"Junior Moderator", Color(255, 255, 0)},
-	["Senior Gamemaster"] = {"Senior Gamemaster", Color(150, 75, 0)},
-	["Experienced Gamemaster"] = {"Experienced Gamemaster", Color(150, 75, 0)},
-	["Gamemaster"] = {"Gamemaster", Color(150, 75, 0)},
-	["Junior Gamemaster"] = {"Junior Gamemaster", Color(150, 75, 0)},
-}
 --------------------------------------------------------------------------------------------------------
 lia.config.RemovableHooks = {
 	["StartChat"] = "StartChatIndicator",
@@ -145,17 +131,6 @@ end
 function GM:OnChatReceived()
 	if system.IsWindows() and not system.HasFocus() then
 		system.FlashWindow()
-	end
-end
---------------------------------------------------------------------------------------------------------
-function GM:DrawCharInfo(client, character, info)
-	if client:Team() == FACTION_STAFF then
-		local UserGroup = client:GetUserGroup()
-		local StaffTitleInfo = lia.config.StaffTitles[UserGroup]
-		if StaffTitleInfo then
-			local title, color = StaffTitleInfo[1], StaffTitleInfo[2]
-			info[#info + 1] = {title, color}
-		end
 	end
 end
 --------------------------------------------------------------------------------------------------------
