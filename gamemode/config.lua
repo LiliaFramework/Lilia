@@ -11,12 +11,6 @@ function GM:LoadConfigValues()
         print("CONFIG: Loaded Schema Core Config")
     end
 
-    if not lia.config.LoadedSchemaPermissionConfig then
-        print("CONFIG: Loaded Default Tool and Hook Access")
-    else
-        print("CONFIG: Loaded Custom Tool and Hook Access")
-    end
-
     if not lia.config.LoadedSchemaTposeModelConfig then
         print("CONFIG: Loaded Default TPose Fixer!")
     else
