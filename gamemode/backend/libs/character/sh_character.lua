@@ -2,7 +2,6 @@
 lia.config.AllowExistNames = true
 --------------------------------------------------------------------------------------------------------
 local charMeta = lia.meta.character or {}
-local playerMeta = FindMetaTable("Player")
 --------------------------------------------------------------------------------------------------------
 lia.char = lia.char or {}
 lia.char.loaded = lia.char.loaded or {}

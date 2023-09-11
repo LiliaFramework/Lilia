@@ -2,6 +2,40 @@
 local SCHEMA = SCHEMA
 --------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function playerMeta:IsHandcuffed()
+    if self:getNetVar("restricted", false) then return true end
+
+    return false
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function playerMeta:IsDragged()
+    if self:getNetVar("dragged", false) then return true end
+
+    return false
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function playerMeta:IsBlinded()
+    if self:getNetVar("blinded", false) then return true end
+
+    return false
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function playerMeta:IsGagged()
+    if self:getNetVar("gagged", false) then return true end
+
+    return false
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function playerMeta:GetTracedEntity(client)
+    local data = {}
+    data.start = client:GetShootPos()
+    data.endpos = data.start + client:GetAimVector() * 96
+    data.filter = client
+    local target = util.TraceLine(data).Entity
+
+    return target
+end
 --------------------------------------------------------------------------------------------------------
 function playerMeta:IsNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP
@@ -127,49 +161,6 @@ function playerMeta:getClassData()
 
             return classData
         end
-    end
-end
---------------------------------------------------------------------------------------------------------
-function playerMeta:forceSequence(sequence, callback, time, noFreeze)
-    hook.Run("OnPlayerEnterSequence", self, sequence, callback, time, noFreeze)
-    if not sequence then return netstream.Start(nil, "seqSet", self) end
-    local sequence = self:LookupSequence(sequence)
-    if sequence and sequence > 0 then
-        time = time or self:SequenceDuration(sequence)
-        self.liaSeqCallback = callback
-        self.liaForceSeq = sequence
-        if not noFreeze then
-            self:SetMoveType(MOVETYPE_NONE)
-        end
-
-        if time > 0 then
-            timer.Create(
-                "liaSeq" .. self:EntIndex(),
-                time,
-                1,
-                function()
-                    if IsValid(self) then
-                        self:leaveSequence()
-                    end
-                end
-            )
-        end
-
-        netstream.Start(nil, "seqSet", self, sequence)
-
-        return time
-    end
-
-    return false
-end
---------------------------------------------------------------------------------------------------------
-function playerMeta:leaveSequence()
-    hook.Run("OnPlayerLeaveSequence", self)
-    netstream.Start(nil, "seqSet", self)
-    self:SetMoveType(MOVETYPE_WALK)
-    self.liaForceSeq = nil
-    if self.liaSeqCallback then
-        self:liaSeqCallback()
     end
 end
 --------------------------------------------------------------------------------------------------------
