@@ -27,11 +27,11 @@ function playerMeta:IsGagged()
     return false
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function playerMeta:GetTracedEntity(client)
+function playerMeta:GetTracedEntity()
     local data = {}
-    data.start = client:GetShootPos()
-    data.endpos = data.start + client:GetAimVector() * 96
-    data.filter = client
+    data.start = self:GetShootPos()
+    data.endpos = data.start + self:GetAimVector() * 96
+    data.filter = self
     local target = util.TraceLine(data).Entity
 
     return target
