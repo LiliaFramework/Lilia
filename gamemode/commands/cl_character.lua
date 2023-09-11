@@ -44,7 +44,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name>",
-        privilegeprivilege = "Characters - Retrieve Model",
+        privilege = "Characters - Retrieve Model",
         onRun = function(client, arguments) end
     }
 )
@@ -197,5 +197,41 @@ lia.command.add(
         privilege = "Characters - Un-Ban Characters",
         onRun = function(client, arguments) end
     }
+)
+--------------------------------------------------------------------------------------------------------
+lia.command.add(
+	"viewextdescription",
+	{
+		adminOnly = false,
+		privilege = "Basic User Permissions",
+		onRun = function(client, arguments) end
+	}
+)
+--------------------------------------------------------------------------------------------------------
+lia.command.add(
+	"charsetextdescription",
+	{
+		adminOnly = true,
+		privilege = "Characters - Change Description",
+		onRun = function(client, arguments) end
+	}
+)
+--------------------------------------------------------------------------------------------------------
+lia.command.add(
+	"viewextdescription",
+	{
+		adminOnly = false,
+		privilege = "Basic User Permissions",
+		onRun = function(client, arguments) end
+	}
+)
+--------------------------------------------------------------------------------------------------------
+lia.command.add(
+	"charsetextdescription",
+	{
+		adminOnly = true,
+		privilege = "Characters - Change Description",
+		onRun = function(client, arguments) end
+	}
 )
 --------------------------------------------------------------------------------------------------------

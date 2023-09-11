@@ -224,7 +224,7 @@ lia.command.add(
         end
     }
 )
-
+--------------------------------------------------------------------------------------------------------
 lia.command.add(
     "charsetmoney",
     {
@@ -521,6 +521,34 @@ lia.command.add(
                     end
                 end
             )
+        end
+    }
+)
+--------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "viewextdescription",
+    {
+        adminOnly = false,
+        privilege = "Basic User Permissions",
+        onRun = function(client, arguments)
+            net.Start("OpenDetailedDescriptions")
+            net.WriteEntity(client)
+            net.WriteString(client:getChar():getData("textDetDescData", nil) or "No detailed description found.")
+            net.WriteString(client:getChar():getData("textDetDescDataURL", nil) or "No detailed description found.")
+            net.Send(client)
+        end
+    }
+)
+--------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "charsetextdescription",
+    {
+        adminOnly = true,
+        privilege = "Characters - Change Description",
+        onRun = function(client, arguments)
+            net.Start("SetDetailedDescriptions")
+            net.WriteString(client:steamName())
+            net.Send(client)
         end
     }
 )
