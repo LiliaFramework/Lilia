@@ -1,9 +1,34 @@
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-MODULE.name = "Context Menu Improves"
+local playerMeta = FindMetaTable("Player")
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-MODULE.author = "STEAM_0:1:176123778"
+function playerMeta:FreeTies()
+    self:setNetVar("blinded", false)
+    self:setNetVar("dragged", false)
+    self:setNetVar("gagged", false)
+    self:setNetVar("restricted", false)
+end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-MODULE.desc = "Adds Player Interactions To Be Achieved by Using Fellow Players."
+function playerMeta:SetBlinded()
+    if self:getNetVar("blinded") then
+        self:setNetVar("blinded", false)
+    else
+        self:setNetVar("blinded", true)
+    end
+end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-lia.util.include("sh_interactions.lua")
+function playerMeta:SetGagged()
+    if self:getNetVar("gagged") then
+        self:setNetVar("gagged", false)
+    else
+        self:setNetVar("gagged", true)
+    end
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function playerMeta:SetRestricted()
+    if self:getNetVar("restricted") then
+        self:setNetVar("restricted", false)
+    else
+        self:setNetVar("restricted", true)
+    end
+end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
