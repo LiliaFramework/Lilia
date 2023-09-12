@@ -3,8 +3,10 @@ local SCHEMA = SCHEMA
 --------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
 --------------------------------------------------------------------------------------------------------
-function playerMeta:setRestricted(state, noMessage)
+function playerMeta:setRestrictedTying(state, noMessage)
     if state then
+        self:SetWalkSpeed(lia.config.WalkSpeed * 0.5)
+        self:SetRunSpeed(lia.config.RunSpeed * 0.5)
         self:setNetVar("restricted", true)
         if noMessage then
             self:setLocalVar("restrictNoMsg", true)
@@ -25,6 +27,8 @@ function playerMeta:setRestricted(state, noMessage)
         hook.Run("OnPlayerRestricted", self)
     else
         self:setNetVar("restricted")
+        self:SetWalkSpeed(lia.config.WalkSpeed)
+        self:SetRunSpeed(lia.config.RunSpeed)
         if self:getLocalVar("restrictNoMsg") then
             self:setLocalVar("restrictNoMsg")
         end
@@ -40,7 +44,7 @@ function playerMeta:setRestricted(state, noMessage)
         hook.Run("OnPlayerUnRestricted", self)
     end
 end
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
 function playerMeta:setAction(text, time, callback, startTime, finishTime)
     if time and time <= 0 then
         if callback then
