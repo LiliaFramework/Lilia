@@ -156,8 +156,10 @@ function GM:PlayerBindPress(client, bind, pressed)
     elseif bind:find("jump") then
         lia.command.send("chargetup")
     elseif isInteracting and interactPressTime < CurTime() and selectedFunction ~= nil and bind == "+attack" then
-        selectedFunction.callback(lia.playerInteract.currentEnt)
+        selectedFunction.Callback(client, lia.playerInteract.currentEnt)
         lia.playerInteract.clear()
+        return true
+    elseif string.find(bind, "+speed") and client:getNetVar("restricted") or (string.find(bind, "gm_showhelp") and client:getNetVar("restricted")) or (string.find(bind, "+jump") and client:getNetVar("restricted")) or (string.find(bind, "+walk") and client:getNetVar("restricted")) or (string.find(bind, "+use") and client:getNetVar("restricted")) then
         return true
     end
 end
@@ -282,7 +284,7 @@ function GM:InteractionHUDPaint()
     local pitchDifference = (cachedPitch - EyeAngles().p) * 6
     local funcCount = 0
     for _, funcData in SortedPairs(lia.playerInteract.funcs) do
-        if not funcData.canSee(target) then continue end
+        if not funcData.CanSee(client, target) then continue end
         local name = funcData.name or L(funcData.nameLocalized)
         surface.SetFont("liaGenericLightFont")
         local textW, _ = surface.GetTextSize(name)
