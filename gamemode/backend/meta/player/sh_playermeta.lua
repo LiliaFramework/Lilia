@@ -9,6 +9,12 @@ function playerMeta:IsHandcuffed()
     return false
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function playerMeta:IsTying()
+    if self:getNetVar("tying", false) then return true end
+
+    return false
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function playerMeta:IsDragged()
     if self:getNetVar("dragged", false) then return true end
 
@@ -82,6 +88,17 @@ function playerMeta:takeMoney(amt)
     if char then
         char:giveMoney(-amt)
     end
+end
+--------------------------------------------------------------------------------------------------------
+function playerMeta:ConditionsMetForTying(target)
+    if not GM:IsValidTarget(target) then return false end
+    if not lia.module.list["tying"] then return false end
+    if target:IsHandcuffed() then return false end
+    if target:IsTying() then return false end
+    if self:IsHandcuffed() then return false end
+    if self:IsTying() then return false end
+
+    return self:getChar():getInv():hasItem("tie")
 end
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getMoney()
