@@ -3,6 +3,9 @@ local oldCalcSeqOverride
 local ModelCount = 0
 local TposeOverridenModels = {}
 --------------------------------------------------------------------------------------------------------
+lia.config.PlayerModelTposingFixer = lia.config.PlayerModelTposingFixer or {}
+lia.config.DefaultTposingFixer = lia.config.DefaultTposingFixer or {}
+--------------------------------------------------------------------------------------------------------
 lia.config.Font = lia.config.Font or "Arial"
 lia.config.GenericFont = lia.config.GenericFont or "Segoe UI"
 lia.config.CharacterSwitchCooldownTimer = 5
@@ -43,7 +46,6 @@ function GM:InitializedConfig()
     print("Total models processed with TPoseFixer: " .. ModelCount)
     hook.Run("InitializedModules")
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:TranslateActivity(client, act)
     local model = string.lower(client.GetModel(client))
