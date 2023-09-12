@@ -3,7 +3,7 @@ local SCHEMA = SCHEMA
 --------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
 --------------------------------------------------------------------------------------------------------
-function playerMeta:setRestrictedTying(state, noMessage)
+function playerMeta:setRestricted(state, noMessage)
     if state then
         self:SetWalkSpeed(lia.config.WalkSpeed * 0.5)
         self:SetRunSpeed(lia.config.RunSpeed * 0.5)
@@ -423,4 +423,27 @@ function playerMeta:getLiliaData(key, default)
         return data
     end
 end
---------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function playerMeta:ResetTies()
+    self:setNetVar("blinded", false)
+    self:setNetVar("dragged", false)
+    self:setNetVar("gagged", false)
+    self:setNetVar("restricted", false)
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function playerMeta:ToggleBlinded()
+    if self:getNetVar("blinded") then
+        self:setNetVar("blinded", false)
+    else
+        self:setNetVar("blinded", true)
+    end
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function playerMeta:ToggleGagged()
+    if self:getNetVar("gagged") then
+        self:setNetVar("gagged", false)
+    else
+        self:setNetVar("gagged", true)
+    end
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

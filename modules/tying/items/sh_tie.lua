@@ -26,7 +26,7 @@ ITEM.functions.Use = {
 				target,
 				function()
 					item:remove()
-					target:setRestrictedTying(true)
+					target:setRestricted(true)
 					target:setNetVar("tying")
 					client:EmitSound("npc/barnacle/neck_snap1.wav", 100, 140)
 				end,

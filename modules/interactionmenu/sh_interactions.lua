@@ -1,20 +1,20 @@
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 lia.config.PlayerInteractionOptions = {
     ["Allow This Player To Recognize You"] = {
-        CanSee = function(client, target) return GM:IsValidTarget(target) and not client:getChar():doesRecognize(target:getChar()) end,
         Callback = function(client, target)
             local id = client:getChar():getID()
             if SERVER then
-            if target:GetPos():DistToSqr(client:GetPos()) > 100000 then return end
-            if target:getChar():recognize(id) then
-                netstream.Start(client, "rgnDone")
-                hook.Run("OnCharRecognized", client, id)
-                client:notifyLocalized("recognized")
-            else
-                client:notifyLocalized("already_recognized")
+                if target:GetPos():DistToSqr(client:GetPos()) > 100000 then return end
+                if target:getChar():recognize(id) then
+                    netstream.Start(client, "rgnDone")
+                    hook.Run("OnCharRecognized", client, id)
+                    client:notifyLocalized("recognized")
+                else
+                    client:notifyLocalized("already_recognized")
+                end
             end
-        end
         end,
+        CanSee = function(client, target) return GM:IsValidTarget(target) and not client:getChar():doesRecognize(target:getChar()) end,
     },
     ["Give Money"] = {
         Callback = function(client, target)
@@ -22,9 +22,11 @@ lia.config.PlayerInteractionOptions = {
                 local amount = math.floor(number or 0)
                 if not amount or not isnumber(amount) or amount <= 0 then
                     client:ChatPrint("Invalid Amount!")
+
                     return
                 elseif not client:getChar():hasMoney(amount) then
                     client:ChatPrint("You lack the funds to use this!")
+
                     return
                 end
 
@@ -62,6 +64,7 @@ lia.config.PlayerInteractionOptions = {
             if target:Team() == FACTION_STAFF then
                 target:notify("You were just attempted to be restrained by " .. client:Name() .. ".")
                 client:notify("You can't tie a staff member!")
+
                 return
             end
 
@@ -70,7 +73,7 @@ lia.config.PlayerInteractionOptions = {
                 target,
                 function()
                     if SERVER then
-                        target:setRestrictedTying(true)
+                        target:setRestricted(true)
                         target:setNetVar("tying")
                         client:EmitSound("npc/barnacle/neck_snap1.wav", 100, 140)
                     end
@@ -79,7 +82,9 @@ lia.config.PlayerInteractionOptions = {
                 function()
                     client:setAction()
                     target:setAction()
-                    if SERVER then target:setNetVar("tying") end
+                    if SERVER then
+                        target:setNetVar("tying")
+                    end
                 end
             )
 

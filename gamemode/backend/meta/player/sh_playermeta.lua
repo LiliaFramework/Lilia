@@ -8,30 +8,35 @@ function playerMeta:IsHandcuffed()
 
     return false
 end
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function playerMeta:IsTying()
     if self:getNetVar("tying", false) then return true end
 
     return false
 end
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function playerMeta:IsDragged()
     if self:getNetVar("dragged", false) then return true end
 
     return false
 end
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function playerMeta:IsBlinded()
     if self:getNetVar("blinded", false) then return true end
 
     return false
 end
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function playerMeta:IsGagged()
     if self:getNetVar("gagged", false) then return true end
 
     return false
 end
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function playerMeta:GetTracedEntity()
     local data = {}
@@ -42,15 +47,19 @@ function playerMeta:GetTracedEntity()
 
     return target
 end
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function playerMeta:VerifyCommandDistance(otherPlayer)
     if not IsValid(otherPlayer) or not IsValid(self) then return false end
+
     return self:GetPos():DistToSqr(otherPlayer:GetPos()) <= (lia.config.InteractionDistance * lia.config.InteractionDistance)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:IsNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:IsStuck()
     return util.TraceEntity(
@@ -61,6 +70,7 @@ function playerMeta:IsStuck()
         }, self
     ).StartSolid
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:AddMoney(amt)
     local char = self:getChar()
@@ -68,6 +78,7 @@ function playerMeta:AddMoney(amt)
         char:giveMoney(amt)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:TakeMoney(amt)
     local char = self:getChar()
@@ -75,6 +86,7 @@ function playerMeta:TakeMoney(amt)
         char:giveMoney(-amt)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:addMoney(amt)
     local char = self:getChar()
@@ -82,6 +94,7 @@ function playerMeta:addMoney(amt)
         char:giveMoney(amt)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:takeMoney(amt)
     local char = self:getChar()
@@ -99,6 +112,20 @@ function playerMeta:ConditionsMetForTying(target)
     if self:IsTying() then return false end
 
     return self:getChar():getInv():hasItem("tie")
+end
+--------------------------------------------------------------------------------------------------------
+function playerMeta:ConditionsMetForTyingExtras(target)
+    if self:InVehicle() then return false end
+    if IsBeingDragged(self) then return false end
+    if not lia.module.list["tying"] then return false end
+    if not GM:IsValidTarget(target) then return false end
+    if self:IsHandcuffed() then return false end
+    if self:IsTying() then return false end
+    if not target:IsHandcuffed() then return false end
+    if target:InVehicle() then return false end
+    if target:GetPos():DistToSqr(self:GetPos()) > lia.config.DraggingStartRange * lia.config.DraggingStartRange then return false end
+
+    return true
 end
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getMoney()

@@ -1,34 +1,11 @@
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-local playerMeta = FindMetaTable("Player")
+lia.config.TargetRadius = 100 * 100
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function playerMeta:FreeTies()
-    self:setNetVar("blinded", false)
-    self:setNetVar("dragged", false)
-    self:setNetVar("gagged", false)
-    self:setNetVar("restricted", false)
-end
+lia.config.DragMoveSpeed = 160
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function playerMeta:SetBlinded()
-    if self:getNetVar("blinded") then
-        self:setNetVar("blinded", false)
-    else
-        self:setNetVar("blinded", true)
-    end
-end
+lia.config.MaxDistance = 300 * 300
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function playerMeta:SetGagged()
-    if self:getNetVar("gagged") then
-        self:setNetVar("gagged", false)
-    else
-        self:setNetVar("gagged", true)
-    end
-end
+lia.config.DraggingStartRange = 100
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function playerMeta:SetRestricted()
-    if self:getNetVar("restricted") then
-        self:setNetVar("restricted", false)
-    else
-        self:setNetVar("restricted", true)
-    end
-end
+lia.config.DragSWEP = "lia_keys"
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
