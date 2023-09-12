@@ -31,3 +31,9 @@ function MODULE:OnCharRecognized(client, recogCharID)
     surface.PlaySound("buttons/button17.wav")
 end
 --------------------------------------------------------------------------------------------------------
+function MODULE:ShowSpare1(client)
+    if client:getChar() then
+        netstream.Start(client, "rgnMenu")
+    end
+end
+--------------------------------------------------------------------------------------------------------
