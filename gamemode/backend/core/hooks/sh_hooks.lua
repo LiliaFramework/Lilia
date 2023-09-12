@@ -511,9 +511,13 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:KeyRelease(client, key)
     if SERVER then
-    self:ServerKeyRelease(client, key)
+        self:ServerKeyRelease(client, key)
     else
-    self:ClientKeyRelease(client, key)
+        self:ClientKeyRelease(client, key)
     end
+end
+--------------------------------------------------------------------------------------------------------
+function GM:IsValidTarget(target)
+    return IsValid(target) and target:IsPlayer() and target:getChar()
 end
 --------------------------------------------------------------------------------------------------------
