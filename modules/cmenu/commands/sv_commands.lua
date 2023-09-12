@@ -2,20 +2,16 @@
 lia.command.add(
     "tieplayer",
     {
+        adminOnly = false,
+        privilege = "Basic User Permissions",
         onRun = function(client, arguments)
             local foundItem = false
             local target = client:GetTracedEntity()
             if not target:IsPlayer() then
                 client:notify("Invalid Target!")
-
-                return
-            elseif not target:IsPlayer() then
-                client:notify("Invalid Target!")
-
                 return
             elseif client:VerifyCommandDistance(target) then
                 client:notify("You can't use this from this distance!")
-
                 return
             else
                 for _, itemType in ipairs(lia.config.ZipTieItems) do
@@ -27,9 +23,7 @@ lia.command.add(
                     end
                 end
 
-                if not foundItem then
-                    client:notify("You don't have a Tie!")
-                end
+                if not foundItem then client:notify("You don't have a Tie!") end
             end
         end
     }
