@@ -384,6 +384,7 @@ lia.command.add(
                 end
 
                 target:getChar():giveFlags(flags)
+                hook.Run("PlayerLoadout", target)
                 client:notifyLocalized("flagGive", client:Name(), target:Name(), flags)
             end
         end
