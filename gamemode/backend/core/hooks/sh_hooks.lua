@@ -332,6 +332,10 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:Think()
+    if CLIENT then
+        self:ClientThink()
+    end
+
     if not self.nextThink then
         self.nextThink = 0
     end
@@ -392,7 +396,7 @@ function GM:InitializedModules()
     else
         self:InitializedExtrasClient()
     end
-    
+
     self:InitializedExtrasShared()
 end
 
@@ -407,18 +411,7 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedExtrasShared()
-    if nut then
-        nut = lia or {
-            util = {},
-            gui = {},
-            meta = {}
-        }
-    else
-        nut = lia or {
-            util = {},
-            meta = {}
-        }
-    end
+    print("")
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -502,6 +495,19 @@ function GM:PSALoader()
     end
 
     if nut then
+        if CLIENT then
+            nut = lia or {
+                util = {},
+                gui = {},
+                meta = {}
+            }
+        else
+            nut = lia or {
+                util = {},
+                meta = {}
+            }
+        end
+
         timer.Simple(
             2,
             function()

@@ -1,6 +1,9 @@
 --------------------------------------------------------------------------------------------------------
 local flo = 0
 local vec
+local lastcheck
+--------------------------------------------------------------------------------------------------------
+lia.config.HackCommands = {"gear_printents", "gw_toggle", "gw_pos", "gearmenu", "gb_reload", "gb_toggle", "+gb", "-gb", "gb_menu", "gear2_menu", "ahack_menu", "sasha_menu", "showents", "showhxmenu", "SmegHack_Menu", "sCheat_menu", "lowkey_menu"} -- GEAR1 Commands -- GEAR2 Commands -- AHack Commands -- Sasha Commands -- Misc. Commands --smeg, prob doesnt work anymore (2015) --random ones found in uc
 --------------------------------------------------------------------------------------------------------
 lia.config.RemovableConsoleCommand = {
 	["gmod_mcore_test"] = "1",
@@ -67,6 +70,24 @@ lia.config.RemovableHooks = {
 	["PostDrawEffects"] = "RenderWidgets",
 	["PostDrawEffects"] = "RenderHalos",
 }
+-------------------------------------------------------------------------------------------------------
+function GM:ClientThink()
+	if not lastcheck then
+		lastcheck = CurTime()
+	end
+
+	if CurTime() - lastcheck > 30 then
+		local commands, _ = concommand.GetTable()
+		for _, cmd in pairs(lia.config.HackCommands) do
+			if commands[cmd] then
+				net.Start("BanMeAmHack")
+				net.SendToServer()
+			end
+		end
+
+		lastcheck = CurTime()
+	end
+end
 -------------------------------------------------------------------------------------------------------
 function GM:InitializedExtrasClient()
 	for k, v in pairs(lia.config.RemovableConsoleCommand) do
