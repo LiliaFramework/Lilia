@@ -69,7 +69,7 @@ lia.command.add(
                     SetDrag(nil, client)
                     SetDrag(target, nil)
                     target:setNetVar("dragged", false)
-                elseif not target:IsDragged() then
+                else
                     SetDrag(target, client)
                     client:notify("Started Dragging Player!")
                     target:setNetVar("dragged", true)

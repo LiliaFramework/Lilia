@@ -117,5 +117,50 @@ lia.config.PlayerInteractionOptions = {
         end,
         CanSee = function(client, target) return GM:IsValidTarget(target) end
     },
+    ["(Un)Drag Player"] = {
+        Callback = function(client, target)
+            if target:IsDragged() then
+                client:notify("Stopped Dragging Player!")
+                SetDrag(nil, client)
+                SetDrag(target, nil)
+                target:setNetVar("dragged", false)
+            else
+                SetDrag(target, client)
+                client:notify("Started Dragging Player!")
+                target:setNetVar("dragged", true)
+            end
+        end,
+        CanSee = function(client, target) return client:ConditionsMetForTyingExtras(target) end
+    },
+    ["(Un)Blind Player"] = {
+        Callback = function(client, target)
+            if not client:ConditionsMetForTyingExtras(target) then
+                client:notify("Can't (Un)Blind This Player!!")
+
+                return
+            else
+                if target:IsBlinded() then
+                    target:ToggleBlinded()
+                    client:notify("Unblinded Player!")
+                else
+                    target:ToggleBlinded()
+                    client:notify("Blinded Player!")
+                end
+            end
+        end,
+        CanSee = function(client, target) return client:ConditionsMetForTyingExtras(target) end
+    },
+    ["(Un)Gag Player"] = {
+        Callback = function(client, target)
+            if target:IsGagged() then
+                target:ToggleGagged()
+                client:notify("Ungagged Player!")
+            else
+                target:ToggleGagged()
+                client:notify("Gagged Player!")
+            end
+        end,
+        CanSee = function(client, target) return client:ConditionsMetForTyingExtras(target) end
+    },
 }
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
