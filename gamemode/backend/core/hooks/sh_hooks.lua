@@ -509,3 +509,11 @@ function GM:KeyPress(client, key)
     end
 end
 --------------------------------------------------------------------------------------------------------
+function GM:KeyRelease(client, key)
+    if SERVER then
+    self:ServerKeyRelease(client, key)
+    else
+    self:ClientKeyRelease(client, key)
+    end
+end
+--------------------------------------------------------------------------------------------------------

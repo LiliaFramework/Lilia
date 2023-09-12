@@ -134,7 +134,7 @@ function GM:PlayerUse(client, entity)
     return true
 end
 --------------------------------------------------------------------------------------------------------
-function GM:KeyRelease(client, key)
+function GM:ServerKeyRelease(client, key)
     if key == IN_RELOAD then timer.Remove("liaToggleRaise" .. client:SteamID()) end
 end
 --------------------------------------------------------------------------------------------------------

@@ -31,14 +31,3 @@ function MODULE:OnCharRecognized(client, recogCharID)
     surface.PlaySound("buttons/button17.wav")
 end
 --------------------------------------------------------------------------------------------------------
-lia.playerInteract.addFunc(
-    "recognize",
-    {
-        nameLocalized = "recognize",
-        callback = function(target)
-            netstream.Start("rgnDirect", target)
-        end,
-        canSee = function(target) return true end
-    }
-)
---------------------------------------------------------------------------------------------------------
