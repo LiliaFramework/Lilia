@@ -36,6 +36,11 @@ function playerMeta:GetTracedEntity()
 
     return target
 end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function playerMeta:VerifyCommandDistance(otherPlayer)
+    if not IsValid(otherPlayer) or not IsValid(self) then return false end
+    return self:GetPos():DistToSqr(otherPlayer:GetPos()) <= (lia.config.InteractionDistance * lia.config.InteractionDistance)
+end
 --------------------------------------------------------------------------------------------------------
 function playerMeta:IsNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP
