@@ -2,42 +2,47 @@
 local SCHEMA = SCHEMA
 --------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function playerMeta:EndChatter()
+    timer.Simple(
+        1,
+        function()
+            if not listener:IsValid() or not listener:Alive() or hook.Run("ShouldRadioBeep", listener) == false then return false end
+            listener:EmitSound("npc/metropolice/vo/off" .. math.random(1, 3) .. ".wav", math.random(60, 70), math.random(80, 120))
+        end
+    )
+end
+--------------------------------------------------------------------------------------------------------
 function playerMeta:IsHandcuffed()
     if self:getNetVar("restricted", false) then return true end
 
     return false
 end
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
 function playerMeta:IsTying()
     if self:getNetVar("tying", false) then return true end
 
     return false
 end
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
 function playerMeta:IsDragged()
     if self:getNetVar("dragged", false) then return true end
 
     return false
 end
 
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
 function playerMeta:IsBlinded()
     if self:getNetVar("blinded", false) then return true end
 
     return false
 end
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
 function playerMeta:IsGagged()
     if self:getNetVar("gagged", false) then return true end
 
     return false
 end
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
 function playerMeta:GetTracedEntity()
     local data = {}
     data.start = self:GetShootPos()
@@ -47,19 +52,16 @@ function playerMeta:GetTracedEntity()
 
     return target
 end
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
 function playerMeta:VerifyCommandDistance(otherPlayer)
     if not IsValid(otherPlayer) or not IsValid(self) then return false end
 
     return self:GetPos():DistToSqr(otherPlayer:GetPos()) <= (lia.config.InteractionDistance * lia.config.InteractionDistance)
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:IsNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:IsStuck()
     return util.TraceEntity(
@@ -70,7 +72,6 @@ function playerMeta:IsStuck()
         }, self
     ).StartSolid
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:AddMoney(amt)
     local char = self:getChar()
@@ -78,7 +79,6 @@ function playerMeta:AddMoney(amt)
         char:giveMoney(amt)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:TakeMoney(amt)
     local char = self:getChar()
@@ -86,7 +86,6 @@ function playerMeta:TakeMoney(amt)
         char:giveMoney(-amt)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:addMoney(amt)
     local char = self:getChar()
@@ -94,7 +93,6 @@ function playerMeta:addMoney(amt)
         char:giveMoney(amt)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function playerMeta:takeMoney(amt)
     local char = self:getChar()

@@ -58,8 +58,7 @@ function MODULE:PlayerLoadout(client)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function MODULE:PlayerCanHearPlayersVoice(listener, speaker)
-    if not speaker:getChar() then return false end
-    if not listener:getChar() then return false end
+    if not (speaker:getChar() and listener:getChar()) then return false end
 
     return not speaker:IsGagged()
 end
