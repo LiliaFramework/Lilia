@@ -1,8 +1,4 @@
 --------------------------------------------------------------------------------------------------------
-lia.config.RestrictedEntityList = {"prop_door_rotating", "lia_vendor",}
-lia.config.BlockedEntities = {"ent_chess_board", "ent_draughts_board", "rock_big", "rock_medium", "rock_small ", "lia_bodygroupcloset", "lia_craftingtable", "carvendor", "sh_teller", "permaweapons", "stockbook", "lia_stash", "valet", "lia_vendor", "telephone", "lia_salary", "spruce", "pinetree", "oaktree", "beechtree", "npc_import_drug", "cardealer", "delivery_crate", "npcdelivery", "housing_npc", "jailer_npc", "sergeant_dornan", "npctaxi",}
-lia.config.DuplicatorBlackList = {"lia_storage", "lia_money"}
-lia.config.RestrictedVehicles = {"sim_fphys_chaos126p", "sim_fphys_hedgehog", "sim_fphys_ratmobile", "sim_fphys_tank2", "sim_fphys_tank", "sim_fphys_conscriptapc_armed", "sim_fphys_combineapc_armed", "sim_fphys_jeep_armed2", "sim_fphys_jeep_armed", "sim_fphys_tank3", "sim_fphys_v8elite_armed2", "sim_fphys_v8elite_armed", "sim_fphys_tank4", "sim_fphys_couch", "sim_fphys_couch", "sim_fphys_tank_sdkfz_halftrack", "sim_fphys_opel_blitz_ww2", "gred_simfphys_panzerivd", "gred_simfphys_panzerivf1", "gred_simfphys_panzerivf2", "sim_fphys_pwavia", "sim_fphys_pwgaz52", "sim_fphys_pwhatchback", "sim_fphys_pwhatchback", "sim_fphys_pwmoskvich", "sim_fphys_pwtrabant", "sim_fphys_pwtrabant02", "sim_fphys_pwvan", "sim_fphys_pwvolga", "sim_fphys_pwzaz", "sim_fphys_conscriptapc", "sim_fphys_combineapc", "sim_fphys_jeep", "sim_fphys_jalopy", "sim_fphys_v8elite", "sim_fphys_van", "sim_fphys_chaos126p", "sim_fphys_hedgehog", "sim_fphys_ratmobile", "sim_fphys_tank2", "sim_fphys_tank", "sim_fphys_conscriptapc_armed", "sim_fphys_combineapc_armed", "sim_fphys_jeep_armed2", "sim_fphys_jeep_armed", "sim_fphys_tank3", "sim_fphys_v8elite_armed2", "sim_fphys_v8elite_armed", "sim_fphys_tank4", "sim_fphys_couch", "sim_fphys_dukes", "sim_fphys_tank_sdkfz_halftrack", "sim_fphys_opel_blitz_ww2", "gred_simfphys_panzerivd", "gred_simfphys_panzerivf1", "gred_simfphys_panzerivf2", "sim_fphys_pwavia", "sim_fphys_pwgaz52", "sim_fphys_pwhatchback", "sim_fphys_pwliaz", "sim_fphys_pwmoskvich", "sim_fphys_pwtrabant", "sim_fphys_pwtrabant02", "sim_fphys_pwvan", "sim_fphys_pwvolga", "sim_fphys_pwzaz", "sim_fphys_conscriptapc", "sim_fphys_combineapc", "sim_fphys_jeep", "sim_fphys_jalopy", "sim_fphys_v8elite", "sim_fphys_van", "gred_simfphys_panzerivd", "avx_t-34-85", "sim_fphys_chaos126p", "sim_fphys_hedgehog", "sim_fphys_ratmobile", "sim_fphys_tank2", "sim_fphys_tank", "sim_fphys_conscriptapc_armed", "sim_fphys_combineapc_armed", "sim_fphys_jeep_armed2", "sim_fphys_jeep_armed", "sim_fphys_tank3", "sim_fphys_v8elite_armed2", "sim_fphys_v8elite_armed", "sim_fphys_tank4", "sim_fphys_couch", "sim_fphys_dukes", "sim_fphys_conscriptapc", "sim_fphys_combineapc", "sim_fphys_jeep", "sim_fphys_jalopy", "sim_fphys_v8elite", "sim_fphys_van", "gred_panzerivd", "gred_simfphys_panzerivf1", "gred_simfphys_panzerivf2", "T34rp", "t34_76rp", "T34_85rp", "T34", "t34_76", "sdkfz_234", "ps_sdkfz_251_armed", "gb_bomb_cbu", "gb_bomb_1000gp", "gb_bomb_2000gp", "gb_bomb_fab250", "gb_bomb_gbu12", "gb_bomb_250gp", "gb_bomb_500gp", "gb_bomb_gbu38", "gb_bomb_mk77", "gb_bomb_mk82", "gb_bomb_sc100", "gb_bomb_sc1000", "gb_bomb_sc250", "gb_bomb_sc500", "gb_rocket_hvar", "gb_rocket_hydra", "gb_rocket_nebel", "gb_rocket_rp3", "gb_rocket_v1", "gred_ammobox", "sdkfz", "sdkfz2w", "sim_fphys_tank2", "Airboat", "Jeep", "Pod", "sim_fphys_chaos126p", "sim_fphys_hedgehog", "sim_fphys_ratmobile", "sim_fphys_tank2", "sim_fphys_tank", "sim_fphys_conscriptapc_armed", "sim_fphys_combineapc_armed", "sim_fphys_jeep_armed2", "sim_fphys_jeep_armed", "sim_fphys_tank3", "sim_fphys_v8elite_armed2", "sim_fphys_v8elite_armed", "sim_fphys_tank4", "sim_fphys_couch", "sim_fphys_dukes", "sim_fphys_tank_sdkfz_halftrack", "sim_fphys_opel_blitz_ww2", "gred_simfphys_panzerivd", "gred_simfphys_panzerivf1", "gred_simfphys_panzerivf2", "sim_fphys_pwavia", "sim_fphys_pwgaz52", "sim_fphys_pwhatchback", "sim_fphys_pwhatchback", "sim_fphys_pwmoskvich", "sim_fphys_pwtrabant", "sim_fphys_pwtrabant02", "sim_fphys_pwvan", "sim_fphys_pwvolga", "sim_fphys_pwzaz", "sim_fphys_conscriptapc", "sim_fphys_conscriptapc", "sim_fphys_jeep", "sim_fphys_jalopy ", "sim_fphys_v8elite", "sim_fphys_van", "T34_85"}
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnNPC(client)
     if not client:getChar() then return false end
@@ -92,7 +88,7 @@ function GM:CanTool(client, trace, tool)
     if not client:getChar() then return false end
     if not client:getChar():hasFlags("t") then return false end
     if tool == "advdupe2" and table.HasValue(lia.config.DuplicatorBlackList, entity:GetClass()) then return false end
-    if tool == "remover" and table.HasValue(lia.config.BlockedEntities, entity:GetClass()) then return CAMI.PlayerHasAccess(client, "Lilia - Management - Can Remove Blocked Entities", nil) end
+    if tool == "remover" and table.HasValue(lia.config.RemoverBlockedEntities, entity:GetClass()) then return CAMI.PlayerHasAccess(client, "Lilia - Management - Can Remove Blocked Entities", nil) end
     if CAMI.PlayerHasAccess(client, privilege, nil) then return true end
 end
 --------------------------------------------------------------------------------------------------------
@@ -101,7 +97,7 @@ function GM:PhysgunPickup(client, entity)
     if client:IsSuperAdmin() then return true end
     if entity:GetCreator() == client and entity:GetClass() == "prop_physics" then return true end
     if CAMI.PlayerHasAccess(client, "Lilia - Management - Physgun Pickup", nil) then
-        if table.HasValue(lia.config.RestrictedEntityList, entity:GetClass()) then
+        if table.HasValue(lia.config.PhysGunMoveRestrictedEntityList, entity:GetClass()) then
             if CAMI.PlayerHasAccess(client, "Lilia - Management - Physgun Pickup on Restricted Entities", nil) then
                 return true
             else
@@ -123,7 +119,7 @@ function GM:CanProperty(client, property, entity)
     if not client:getChar() then return false end
     if client:IsSuperAdmin() then return true end
     if CAMI.PlayerHasAccess(client, "Lilia - Management - Access Tool " .. property:gsub("^%l", string.upper), nil) then
-        if table.HasValue(lia.config.BlockedEntities, entity:GetClass()) or table.HasValue(lia.config.RestrictedEntityList, entity:GetClass()) then
+        if table.HasValue(lia.config.RemoverBlockedEntities, entity:GetClass()) or table.HasValue(lia.config.PhysGunMoveRestrictedEntityList, entity:GetClass()) then
             return CAMI.PlayerHasAccess(client, "Lilia - Management - Use Entity Properties on Blocked Entities", nil)
         else
             return true

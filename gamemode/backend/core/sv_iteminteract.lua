@@ -3,7 +3,6 @@ lia.config.DisallowedBagForbiddenActions = {
     ["Equip"] = true,
     ["EquipUn"] = true,
 }
-
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerInteractItem(client, action, item)
     local inventory = lia.inventory.instances[item.invID]

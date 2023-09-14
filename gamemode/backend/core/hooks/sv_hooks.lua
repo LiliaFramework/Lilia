@@ -1,24 +1,5 @@
 -------------------------------------------------------------------------------------------------------
 local last_jump_time = 0
---------------------------------------------------------------------------------------------------------
-lia.config.SalaryOverride = true
-lia.config.SalaryInterval = 300
-lia.config.TimeToEnterVehicle = 1
-lia.config.JumpCooldown = 0.8
-lia.config.RemoveEntities = {
-    ["env_fire"] = true,
-    ["trigger_hurt"] = true,
-    ["prop_ragdoll"] = true,
-    ["prop_physics"] = true,
-    ["spotlight_end"] = true,
-    ["light"] = true,
-    ["point_spotlight"] = true,
-    ["beam"] = true,
-    ["env_sprite"] = true,
-    ["light_spot"] = true,
-    ["func_tracktrain"] = true,
-    ["point_template"] = true,
-}
 -------------------------------------------------------------------------------------------------------
 local defaultAngleData = {
     ["models/items/car_battery01.mdl"] = Angle(-15, 180, 0),
@@ -49,7 +30,7 @@ function GM:InitializedExtrasServer()
     )
 
     for k, v in pairs(ents.GetAll()) do
-        if lia.config.RemoveEntities[v:GetClass()] then v:Remove() end
+        if lia.config.EntitiesToBeRemoved[v:GetClass()] then v:Remove() end
     end
 
     timer.Simple(3, function() RunConsoleCommand("ai_serverragdolls", "1") end)
@@ -262,7 +243,7 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     local allowVoice = lia.config.AllowVoice
     if not allowVoice or not speaker:getChar() or not speaker:getNetVar("VoiceType", "Talking") then return false, false end
     local speakerRange = speaker:getNetVar("VoiceType", "Talking")
-    local rangeSquared = (lia.config.Ranges[speakerRange] or 0) * (lia.config.Ranges[speakerRange] or 0)
+    local rangeSquared = (lia.config.TalkRanges[speakerRange] or 0) * (lia.config.TalkRanges[speakerRange] or 0)
     if listener:GetPos():DistToSqr(speaker:GetPos()) < rangeSquared then return true, true end
     return false, false
 end

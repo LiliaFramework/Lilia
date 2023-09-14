@@ -6,10 +6,10 @@ local lastEntity
 --------------------------------------------------------------------------------------------------------
 paintedEntitiesCache = {}
 --------------------------------------------------------------------------------------------------------
-lia.config.ThirdPersonEnabled = true
-lia.config.CrosshairEnabled = false
-lia.config.BarsDisabled = false
-lia.config.AmmoDrawEnabled = true
+lia.config.ThirdPersonEnabled = lia.config.ThirdPersonEnabled or true
+lia.config.CrosshairEnabled = lia.config.CrosshairEnabled or false
+lia.config.BarsDisabled = lia.config.BarsDisabled or false
+lia.config.AmmoDrawEnabled = lia.config.AmmoDrawEnabled or true
 lia.config.HiddenHUDElements = {
     ["CHudHealth"] = true,
     ["CHudCrosshair"] = true,

@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 lia.attribs = lia.attribs or {}
 lia.attribs.list = lia.attribs.list or {}
-lia.config.MaxAttributes = 30
 --------------------------------------------------------------------------------------------------------
 function lia.attribs.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do

@@ -3,24 +3,6 @@ local oldCalcSeqOverride
 local ModelCount = 0
 local TposeOverridenModels = {}
 --------------------------------------------------------------------------------------------------------
-lia.config.PlayerModelTposingFixer = lia.config.PlayerModelTposingFixer or {}
-lia.config.DefaultTposingFixer = lia.config.DefaultTposingFixer or {}
---------------------------------------------------------------------------------------------------------
-lia.config.Font = lia.config.Font or "Arial"
-lia.config.GenericFont = lia.config.GenericFont or "Segoe UI"
-lia.config.CharacterSwitchCooldownTimer = 5
-lia.config.CharacterSwitchCooldown = true
-lia.config.AutoRegen = false
-lia.config.HealingAmount = 10
-lia.config.HealingTimer = 60
-lia.config.PermaClass = true
-lia.config.MapCleanerEnabled = true
-lia.config.ItemCleanupTime = 7200
-lia.config.MapCleanupTime = 21600
-lia.config.DevServerIP = "45.61.170.66"
-lia.config.DevServerPort = "27270"
-lia.config.WalkRatio = 0.5
---------------------------------------------------------------------------------------------------------
 function GM:InitializedConfig()
     if CLIENT then
         self:ClientInitializedConfig()

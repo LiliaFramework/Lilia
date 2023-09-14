@@ -1,8 +1,4 @@
 --------------------------------------------------------------------------------------------------------
-lia.config.BranchWarning = true
-lia.config.VersionEnabled = true
-lia.config.version = "1.0"
---------------------------------------------------------------------------------------------------------
 hook.Add(
     "TooltipInitialize",
     "liaItemTooltip",

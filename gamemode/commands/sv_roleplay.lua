@@ -1,8 +1,4 @@
 --------------------------------------------------------------------------------------------------------
-lia.config.FactionBroadcastEnabled = true
-lia.config.AdvertisementEnabled = true
-lia.config.AdvertisementPrice = 25
---------------------------------------------------------------------------------------------------------
 lia.command.add(
     "roll",
     {
