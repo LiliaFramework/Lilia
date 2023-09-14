@@ -3,6 +3,14 @@ local SCHEMA = SCHEMA
 --------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
 --------------------------------------------------------------------------------------------------------
+function playerMeta:FreeTies()
+    self:setNetVar("vehicle_allowed", false)
+    self:setNetVar("blinded", false)
+    self:setNetVar("dragged", false)
+    self:setNetVar("gagged", false)
+    self:setNetVar("restricted", false)
+end
+--------------------------------------------------------------------------------------------------------
 function playerMeta:setRestricted(state, noMessage)
     if state then
         self:SetWalkSpeed(lia.config.WalkSpeed * 0.5)
