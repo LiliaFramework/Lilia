@@ -22,7 +22,6 @@ net.Receive(
         )
     end
 )
-
 ----------------------------------------------------------------------------------------------
 net.Receive(
     "liaRequestID",
@@ -43,24 +42,6 @@ net.Receive(
                     net.WriteBool(false)
                     net.SendToServer()
                 end
-            end
-        )
-    end
-)
-
-----------------------------------------------------------------------------------------------
-net.Receive(
-    "moneyprompt",
-    function()
-        Derma_StringRequest(
-            "Give money",
-            "How much would you like to give?",
-            "0",
-            function(text)
-                lia.command.send("givemoney", text)
-            end,
-            function()
-                gui.EnableScreenClicker(false)
             end
         )
     end
