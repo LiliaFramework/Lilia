@@ -23,6 +23,10 @@ local offset1, offset2, offset3, alpha, y
 lia.config.HackCommands = {"gear_printents", "gw_toggle", "gw_pos", "gearmenu", "gb_reload", "gb_toggle", "+gb", "-gb", "gb_menu", "gear2_menu", "ahack_menu", "sasha_menu", "showents", "showhxmenu", "SmegHack_Menu", "sCheat_menu", "lowkey_menu"} -- GEAR1 Commands -- GEAR2 Commands -- AHack Commands -- Sasha Commands -- Misc. Commands --smeg, prob doesnt work anymore (2015) --random ones found in uc
 --------------------------------------------------------------------------------------------------------
 lia.config.RemovableConsoleCommand = {
+	["cl_resend"] = "11",
+	["cl_jiggle_bone_framerate_cutoff"] = "4",
+	["ragdoll_sleepaftertime"] = "40.0f"",
+	["cl_timeout"] = "3000",
 	["gmod_mcore_test"] = "1",
 	["r_shadows"] = "0",
 	["cl_detaildist"] = "0",

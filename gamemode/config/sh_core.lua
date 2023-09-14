@@ -20,7 +20,40 @@ function GM:LoadCoreConfig()
         ["Talking"] = 300,
         ["Yelling"] = 600,
     }
-
+    
+    lia.config.UnLoadedPlugins = {
+        ammosave = false,
+        bodygrouper = false,
+        chatbox = false,
+        cmenu = false,
+        corefiles = false,
+        crashscreen = false,
+        doors = false,
+        f1menu = false,
+        flashlight = false,
+        gridinventory = false,
+        interactionmenu = false,
+        mainmenu = false,
+        observer = false,
+        pac = false,
+        permakill = false,
+        radio = false,
+        raiseweapons = false,
+        recognition = false,
+        saveitems = false,
+        scoreboard = false,
+        serverblacklister = false,
+        skills = false,
+        spawnmenuitems = false,
+        spawns = false,
+        storage = false,
+        tying = false,
+        vendor = false,
+        weaponselector = false,
+        whitelist = false,
+    }
+    
+    
     lia.config.DefaultStaff = {}
 end
 --------------------------------------------------------------------------------------------------------
