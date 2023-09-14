@@ -10,7 +10,6 @@ lia.version = "2.0"
 --------------------------------------------------------------------------------------------------------
 function GM:Initialize()
     lia.module.initialize()
-    self:LoadConfigValues()
     self:DevelopmentServerLoader()
     self:PSALoader()
 end

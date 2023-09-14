@@ -1,5 +1,6 @@
 
 --------------------------------------------------------------------------------------------------------function GM:ModuleShouldLoad(module)
+function GM:ModuleShouldLoad(module)
     return not lia.module.isDisabled(module)
 end
 --------------------------------------------------------------------------------------------------------
