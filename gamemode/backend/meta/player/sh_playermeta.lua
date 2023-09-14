@@ -2,6 +2,15 @@
 local SCHEMA = SCHEMA
 --------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
+--------------------------------------------------------------------------------------------------------
+function playerMeta:isObserving()
+    if self:GetMoveType() == MOVETYPE_NOCLIP and not self:InVehicle() then
+        return true
+    else
+        return false
+    end
+end
+--------------------------------------------------------------------------------------------------------
 function playerMeta:EndChatter()
     timer.Simple(
         1,
