@@ -4,7 +4,6 @@ local SCHEMA = SCHEMA
 local playerMeta = FindMetaTable("Player")
 --------------------------------------------------------------------------------------------------------
 function playerMeta:FreeTies()
-    self:setNetVar("vehicle_allowed", false)
     self:setNetVar("blinded", false)
     self:setNetVar("dragged", false)
     self:setNetVar("gagged", false)
