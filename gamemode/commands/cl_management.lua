@@ -27,6 +27,15 @@ lia.command.add(
 )
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
+    "savemap",
+    {
+        superAdminOnly = true,
+        privilege = "Management - Save Map Data",
+        onRun = function(client, arguments) end
+    }
+)
+--------------------------------------------------------------------------------------------------------
+lia.command.add(
     "cleannpcs",
     {
         superAdminOnly = true,
