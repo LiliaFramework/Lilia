@@ -274,7 +274,10 @@ function GM:ClientKeyRelease(client, key)
 		lia.playerInteract.clear()
 	end
 end
-
+--------------------------------------------------------------------------------------------------------
+function GM:isLoading()
+	return interactPressTime > CurTime()
+end
 --------------------------------------------------------------------------------------------------------
 function GM:InteractionHUDPaint()
 	if not isInteracting and interfaceScale < 0 then return end
@@ -288,7 +291,7 @@ function GM:InteractionHUDPaint()
 	local posX = ScrW() / 2
 	local posY = ScrH() / 2
 	interfaceScale = Lerp(FrameTime() * 8, interfaceScale, (isInteracting and interactPressTime < curTime) and 1 or -0.1)
-	if isLoading() then
+	if self:isLoading() then
 		local loadingMaxW = 128
 		local progress = 1 - (interactPressTime - curTime)
 		local curLoadingW = loadingMaxW * progress

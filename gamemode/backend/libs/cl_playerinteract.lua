@@ -26,7 +26,3 @@ function lia.playerInteract.clear()
     interactPressTime = 0
 end
 --------------------------------------------------------------------------------------------------------
-local function isLoading()
-    return interactPressTime > CurTime()
-end
---------------------------------------------------------------------------------------------------------
