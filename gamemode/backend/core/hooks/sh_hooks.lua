@@ -309,6 +309,7 @@ function GM:OnPlayerJoinClass(client, class, oldClass)
 
     local info = lia.class.list[class]
     local info2 = lia.class.list[oldClass]
+    
     if info.onSet then
         info:onSet(client)
     end
