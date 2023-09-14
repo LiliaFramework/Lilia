@@ -166,13 +166,13 @@ lia.config.PlayerInteractionOptions = {
         Callback = function(client, target)
             netstream.Start(client, "OpenID", target)
         end,
-        CanSee = function(client, target) return client:ConditionsMetForTyingExtras(target) end
+        CanSee = function(client, target) return client:ConditionsMetForTyingExtras(target) and lia.module.list["id_system"] end
     },
     ["Show ID"] = {
         Callback = function(client, target)
             netstream.Start(target, "OpenID", client)
         end,
-        CanSee = function(client, target) return client:getChar():getInv():hasItem("citizenid") and target:IsPlayer() end
+        CanSee = function(client, target) return client:getChar():getInv():hasItem("citizenid") and target:IsPlayer() and lia.module.list["id_system"] end
     },
     ["Request ID"] = {
         Callback = function(client, target)
@@ -183,7 +183,7 @@ lia.config.PlayerInteractionOptions = {
             client.IDRequested = target
             client.LastIDRequest = CurTime()
         end,
-        CanSee = function(client, target) return IsValid(target) and target:IsPlayer() and not target:getNetVar("restricted") and not target.IDRequested and not client.IDRequested end
+        CanSee = function(client, target) return IsValid(target) and target:IsPlayer() and not target:getNetVar("restricted") and lia.module.list["id_system"] and not target.IDRequested and not client.IDRequested end
     },
     ["Request ID"] = {
         Callback = function(client, target)
@@ -195,7 +195,7 @@ lia.config.PlayerInteractionOptions = {
             client.SearchRequested = target
             client.LastSearchRequest = CurTime()
         end,
-        CanSee = function(client, target) return not target:getNetVar("restricted") and not target.SearchRequested and not client.SearchRequested end
+        CanSee = function(client, target) return not target:getNetVar("restricted") and not target.SearchRequested and lia.module.list["id_system"] and not client.SearchRequested end
     },
 }
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
