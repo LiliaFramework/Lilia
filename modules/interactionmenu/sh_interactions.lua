@@ -162,5 +162,40 @@ lia.config.PlayerInteractionOptions = {
         end,
         CanSee = function(client, target) return client:ConditionsMetForTyingExtras(target) end
     },
+    ["Force ID Out of Player"] = {
+        Callback = function(client, target)
+            netstream.Start(client, "OpenID", target)
+        end,
+        CanSee = function(client, target) return client:ConditionsMetForTyingExtras(target) end
+    },
+    ["Show ID"] = {
+        Callback = function(client, target)
+            netstream.Start(target, "OpenID", client)
+        end,
+        CanSee = function(client, target) return client:getChar():getInv():hasItem("citizenid") and target:IsPlayer() end
+    },
+    ["Request ID"] = {
+        Callback = function(client, target)
+            net.Start("liaRequestID")
+            net.Send(target)
+            client:notify("Request to view sent.")
+            target.IDRequested = client
+            client.IDRequested = target
+            client.LastIDRequest = CurTime()
+        end,
+        CanSee = function(client, target) return IsValid(target) and target:IsPlayer() and not target:getNetVar("restricted") and not target.IDRequested and not client.IDRequested end
+    },
+    ["Request ID"] = {
+        Callback = function(client, target)
+            if (client.LastSearchRequest or 0) > CurTime() - 30 then return "You can't send search requests this quickly!" end
+            net.Start("liaRequestSearch")
+            net.Send(target)
+            client:notify("Request to search sent.")
+            target.SearchRequested = client
+            client.SearchRequested = target
+            client.LastSearchRequest = CurTime()
+        end,
+        CanSee = function(client, target) return not target:getNetVar("restricted") and not target.SearchRequested and not client.SearchRequested end
+    },
 }
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
