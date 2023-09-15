@@ -1,4 +1,3 @@
-
 --------------------------------------------------------------------------------------------------------function GM:ModuleShouldLoad(module)
 function GM:ModuleShouldLoad(module)
     return not lia.module.isDisabled(module)
@@ -21,7 +20,11 @@ function GM:PlayerShouldTakeDamage(client, attacker)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:EntityTakeDamage(entity, dmgInfo)
-    if IsValid(entity) and entity:IsPlayer() and dmgInfo:IsDamageType(DMG_CRUSH) and not IsValid(entity.liaRagdoll) then return true end
+    local inflictor = dmgInfo:GetInflictor()
+    local attacker = dmgInfo:GetAttacker()
+    if attacker:GetClass() == "prop_physics" then return true end
+    if inflictor:GetClass() == "prop_physics" then return true end
+    if not IsValid(entity) or not entity:IsPlayer() then return end
     if IsValid(entity.liaPlayer) then
         if dmgInfo:IsDamageType(DMG_CRUSH) then
             if (entity.liaFallGrace or 0) < CurTime() then
@@ -38,9 +41,6 @@ function GM:EntityTakeDamage(entity, dmgInfo)
         entity.liaPlayer:TakeDamageInfo(dmgInfo)
     end
 
-    if not IsValid(entity) or not entity:IsPlayer() then return end
-    local inflictor = dmgInfo:GetInflictor()
-    local attacker = dmgInfo:GetAttacker()
     if not dmgInfo:IsFallDamage() and IsValid(attacker) and attacker:IsPlayer() and attacker ~= entity and entity:Team() ~= FACTION_STAFF then
         entity.LastDamaged = CurTime()
     end
