@@ -55,7 +55,6 @@ local colourmap = {
         b = 192,
         a = 255
     },
-    -- account for speeling mistakes
     ["dkgray"] = {
         r = 64,
         g = 64,

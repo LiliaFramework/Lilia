@@ -18,6 +18,7 @@ function Inventory:addItem(item)
     )
 
     self:syncItemAdded(item)
+    hook.Run("OnItemAdded", item:getOwner(), item)
 
     return self
 end
