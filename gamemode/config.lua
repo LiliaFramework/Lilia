@@ -3,6 +3,7 @@ lia.config = lia.config or {}
 --------------------------------------------------------------------------------------------------------
 lia.config = {
     -- General Gameplay Settings
+    SchemaYear = 2023, -- Year When Schema Happens
     AmericanDates = true, -- American Date Formatting?
     AmericanTimeStamp = true, -- American Time Formatting?
     CarRagdoll = true, -- Enable car ragdolls
