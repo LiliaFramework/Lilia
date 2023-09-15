@@ -9,6 +9,7 @@ ITEM.height = 2
 ITEM.isWeapon = true
 ITEM.weaponCategory = "sidearm"
 ITEM.RequiredSkillLevels = nil
+ITEM.TeamBlacklist = {}
 --------------------------------------------------------------------------------------------------------
 if CLIENT then
     function ITEM:paintOver(item, w, h)
@@ -74,6 +75,7 @@ ITEM.functions.Equip = {
         local client = item.player
         local items = client:getChar():getInv():getItems()
         client.carryWeapons = client.carryWeapons or {}
+
         for k, v in pairs(items) do
             if v.id ~= item.id then
                 if v.isWeapon and client.carryWeapons[item.weaponCategory] and v:getData("equip") then
@@ -82,6 +84,12 @@ ITEM.functions.Equip = {
                     return false
                 end
             end
+        end
+
+        if table.HasValue(item.TeamBlacklist, client:Team()) then
+            client:notify("Your faction is not allowed to equip this item!")
+
+            return false
         end
 
         if client:HasWeapon(item.class) then
