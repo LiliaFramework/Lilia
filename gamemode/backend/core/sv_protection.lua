@@ -45,7 +45,7 @@ function GM:OnEntityCreated(ent)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:CheckValidSit(ply, trace)
-    local ent = trace.Entity
+    local ent = ply:GetTracedEntity()
     if ply:getNetVar("restricted") or ent:IsPlayer() then return false end
 end
 --------------------------------------------------------------------------------------------------------

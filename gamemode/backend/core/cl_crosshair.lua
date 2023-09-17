@@ -49,7 +49,7 @@ function GM:PostDrawHUD()
     data.endpos = data.start + (aimVector + punchAngle):Forward() * 65535
     data.filter = filter
     local trace = util.TraceLine(data)
-    entity = trace.Entity
+    entity = client:GetTracedEntity()
     distance = trace.StartPos:DistToSqr(trace.HitPos)
     scaleFraction = 1 - math.Clamp(distance / maxDistance, 0, .5)
     screen = trace.HitPos:ToScreen()

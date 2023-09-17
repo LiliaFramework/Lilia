@@ -4,9 +4,8 @@ lia.command.add(
     {
         adminOnly = false,
         privilege = "Basic User Permissions",
-        syntax = "[number maximum]",
         onRun = function(client, arguments)
-            lia.chat.send(client, "roll", math.random(0, math.min(tonumber(arguments[1]) or 100, 100)))
+            lia.chat.send(client, "roll", math.random(0, 100))
         end
     }
 )

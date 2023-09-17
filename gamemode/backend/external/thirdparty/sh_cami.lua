@@ -223,7 +223,6 @@ CAMI.RegisterPrivilege
 function CAMI.RegisterPrivilege(privilege)
     privileges[privilege.Name] = privilege
     hook.Call("CAMI.OnPrivilegeRegistered", nil, privilege)
-
     return privilege
 end
 --[[

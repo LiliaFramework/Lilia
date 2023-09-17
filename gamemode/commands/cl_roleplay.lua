@@ -7,7 +7,6 @@ lia.command.add(
     {
         adminOnly = false,
         privilege = "Basic User Permissions",
-        syntax = "[number maximum]",
         onRun = function(client, arguments) end
     }
 )

@@ -4,9 +4,8 @@ lia.item.base = lia.item.base or {}
 lia.item.instances = lia.item.instances or {}
 lia.item.inventoryTypes = lia.item.inventoryTypes or {}
 lia.item.list = lia.item.list or {}
-lia.item.defaultfunctions = lia.item.defaultfunctions or {}
 --------------------------------------------------------------------------------------------------------
-lia.config.defaultfunctions = {
+lia.item.defaultfunctions = {
     drop = {
         tip = "dropTip",
         icon = "icon16/world.png",
@@ -111,7 +110,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         ITEM.base = baseID
         ITEM.isBase = isBaseItem
         ITEM.category = ITEM.category or "misc"
-        ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or lia.config.defaultfunctions)
+        ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or lia.item.defaultfunctions)
     else
         ITEM = targetTable[uniqueID] or setmetatable(
             {
@@ -133,7 +132,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         ITEM.base = baseID
         ITEM.isBase = isBaseItem
         ITEM.category = ITEM.category or "misc"
-        ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or lia.config.defaultfunctions)
+        ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or lia.item.defaultfunctions)
     end
 
     if not luaGenerated and path then

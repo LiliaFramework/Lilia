@@ -18,80 +18,6 @@ local aprg, aprg2 = 0, 0
 w, h = ScrW(), ScrH()
 --------------------------------------------------------------------------------------------------------
 local offset1, offset2, offset3, alpha, y
---------------------------------------------------------------------------------------------------------
-lia.config.HackCommands = {"gear_printents", "gw_toggle", "gw_pos", "gearmenu", "gb_reload", "gb_toggle", "+gb", "-gb", "gb_menu", "gear2_menu", "ahack_menu", "sasha_menu", "showents", "showhxmenu", "SmegHack_Menu", "sCheat_menu", "lowkey_menu"} -- GEAR1 Commands -- GEAR2 Commands -- AHack Commands -- Sasha Commands -- Misc. Commands --smeg, prob doesnt work anymore (2015) --random ones found in uc
---------------------------------------------------------------------------------------------------------
-lia.config.RemovableConsoleCommand = {
-	["cl_resend"] = "11",
-	["cl_jiggle_bone_framerate_cutoff"] = "4",
-	["ragdoll_sleepaftertime"] = "40.0f",
-	["cl_timeout"] = "3000",
-	["gmod_mcore_test"] = "1",
-	["r_shadows"] = "0",
-	["cl_detaildist"] = "0",
-	["cl_threaded_client_leaf_system"] = "1",
-	["cl_threaded_bone_setup"] = "2",
-	["r_threaded_renderables"] = "1",
-	["r_threaded_particles"] = "1",
-	["r_queued_ropes"] = "1",
-	["r_queued_decals"] = "1",
-	["r_queued_post_processing"] = "1",
-	["r_threaded_client_shadow_manager"] = "1",
-	["studio_queue_mode"] = "1",
-	["mat_queue_mode"] = "-2",
-	["fps_max"] = "0",
-	["fov_desired"] = "100",
-	["mat_specular"] = "0",
-	["r_drawmodeldecals"] = "0",
-	["r_lod"] = "-1",
-	["lia_cheapblur"] = "1",
-}
-
---------------------------------------------------------------------------------------------------------
-lia.config.RemovableHooks = {
-	["StartChat"] = "StartChatIndicator",
-	["FinishChat"] = "EndChatIndicator",
-	["PostPlayerDraw"] = "DarkRP_ChatIndicator",
-	["CreateClientsideRagdoll"] = "DarkRP_ChatIndicator",
-	["player_disconnect"] = "DarkRP_ChatIndicator",
-	["RenderScene"] = "RenderSuperDoF",
-	["RenderScene"] = "RenderStereoscopy",
-	["Think"] = "DOFThink",
-	["GUIMouseReleased"] = "SuperDOFMouseUp",
-	["GUIMousePressed"] = "SuperDOFMouseDown",
-	["PreRender"] = "PreRenderFrameBlend",
-	["PostRender"] = "RenderFrameBlend",
-	["NeedsDepthPass"] = "NeedsDepthPass_Bokeh",
-	["PreventScreenClicks"] = "SuperDOFPreventClicks",
-	["RenderScreenspaceEffects"] = "RenderBokeh",
-	["RenderScreenspaceEffects"] = "RenderBokeh",
-	["PostDrawEffects"] = "RenderWidgets",
-	["PlayerTick"] = "TickWidgets",
-	["PlayerInitialSpawn"] = "PlayerAuthSpawn",
-	["RenderScene"] = "RenderStereoscopy",
-	["LoadGModSave"] = "LoadGModSave",
-	["RenderScreenspaceEffects"] = "RenderColorModify",
-	["RenderScreenspaceEffects"] = "RenderBloom",
-	["RenderScreenspaceEffects"] = "RenderToyTown",
-	["RenderScreenspaceEffects"] = "RenderTexturize",
-	["RenderScreenspaceEffects"] = "RenderSunbeams",
-	["RenderScreenspaceEffects"] = "RenderSobel",
-	["RenderScreenspaceEffects"] = "RenderSharpen",
-	["RenderScreenspaceEffects"] = "RenderMaterialOverlay",
-	["RenderScreenspaceEffects"] = "RenderMotionBlur",
-	["RenderScene"] = "RenderSuperDoF",
-	["GUIMousePressed"] = "SuperDOFMouseDown",
-	["GUIMouseReleased"] = "SuperDOFMouseUp",
-	["PreventScreenClicks"] = "SuperDOFPreventClicks",
-	["PostRender"] = "RenderFrameBlend",
-	["PreRender"] = "PreRenderFrameBlend",
-	["Think"] = "DOFThink",
-	["RenderScreenspaceEffects"] = "RenderBokeh",
-	["NeedsDepthPass"] = "NeedsDepthPass_Bokeh",
-	["PostDrawEffects"] = "RenderWidgets",
-	["PostDrawEffects"] = "RenderHalos",
-}
-
 -------------------------------------------------------------------------------------------------------
 function GM:ClientThink()
 	if not lastcheck then
@@ -110,7 +36,6 @@ function GM:ClientThink()
 		lastcheck = CurTime()
 	end
 end
-
 -------------------------------------------------------------------------------------------------------
 function GM:InitializedExtrasClient()
 	for k, v in pairs(lia.config.RemovableConsoleCommand) do
@@ -124,14 +49,12 @@ function GM:InitializedExtrasClient()
 	timer.Remove("HostnameThink")
 	timer.Remove("CheckHookTimes")
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:NetworkEntityCreated(entity)
 	if entity == LocalPlayer() then return end
 	if not entity:IsPlayer() then return end
 	hook.Run("PlayerModelChanged", entity, entity:GetModel())
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:CharacterListLoaded()
 	timer.Create(
@@ -145,59 +68,24 @@ function GM:CharacterListLoaded()
 		end
 	)
 end
-
---------------------------------------------------------------------------------------------------------
-function GM:PlayerBindPress(client, bind, pressed)
-	bind = bind:lower()
-	if (bind:find("use") or bind:find("attack")) and pressed then
-		local menu, callback = lia.menu.getActiveMenu()
-		if menu and lia.menu.onButtonPressed(menu, callback) then
-			return true
-		elseif bind:find("use") and pressed then
-			local data = {}
-			data.start = client:GetShootPos()
-			data.endpos = data.start + client:GetAimVector() * 96
-			data.filter = client
-			local trace = util.TraceLine(data)
-			local entity = trace.Entity
-			if IsValid(entity) and (entity:GetClass() == "lia_item" or entity.hasMenu == true) then
-				hook.Run("ItemShowEntityMenu", entity)
-			end
-		end
-	elseif bind:find("jump") then
-		lia.command.send("chargetup")
-	elseif isInteracting and interactPressTime < CurTime() and selectedFunction ~= nil and bind == "+attack" then
-		selectedFunction.Callback(client, lia.playerInteract.currentEnt)
-		lia.playerInteract.clear()
-
-		return true
-	elseif string.find(bind, "+speed") and client:getNetVar("restricted") or (string.find(bind, "gm_showhelp") and client:getNetVar("restricted")) or (string.find(bind, "+jump") and client:getNetVar("restricted")) or (string.find(bind, "+walk") and client:getNetVar("restricted")) or (string.find(bind, "+use") and client:getNetVar("restricted")) then
-		return true
-	end
-end
-
 --------------------------------------------------------------------------------------------------------
 function GM:DrawLiliaModelView(panel, ent)
 	if IsValid(ent.weapon) then
 		ent.weapon:DrawModel()
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:OnChatReceived()
 	if system.IsWindows() and not system.HasFocus() then
 		system.FlashWindow()
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:HUDPaint()
 	self:DeathHUDPaint()
-	self:InteractionHUDPaint()
 	self:MiscHUDPaint()
 	self:PointingHUDPaint()
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerButtonDown(client, button)
 	if button == KEY_F2 and IsFirstTimePredicted() then
@@ -231,12 +119,10 @@ function GM:PlayerButtonDown(client, button)
 		menu:Center()
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:ClientInitializedConfig()
 	hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:ClientPostInit()
 	lia.joinTime = RealTime() - 0.9716
@@ -262,78 +148,6 @@ function GM:ClientPostInit()
 		end
 	)
 end
-
---------------------------------------------------------------------------------------------------------
-function GM:ClientKeyPress(entity, time)
-	lia.playerInteract.interact(entity, time)
-end
-
---------------------------------------------------------------------------------------------------------
-function GM:ClientKeyRelease(client, key)
-	if key == IN_USE and isInteracting then
-		lia.playerInteract.clear()
-	end
-end
---------------------------------------------------------------------------------------------------------
-function GM:isLoading()
-	return interactPressTime > CurTime()
-end
---------------------------------------------------------------------------------------------------------
-function GM:InteractionHUDPaint()
-	if not isInteracting and interfaceScale < 0 then return end
-	local client = LocalPlayer()
-	local target = lia.playerInteract.currentEnt
-	if IsValid(target) and target:GetPos():DistToSqr(client:GetPos()) > 30000 then
-		lia.playerInteract.clear()
-	end
-
-	local curTime = CurTime()
-	local posX = ScrW() / 2
-	local posY = ScrH() / 2
-	interfaceScale = Lerp(FrameTime() * 8, interfaceScale, (isInteracting and interactPressTime < curTime) and 1 or -0.1)
-	if self:isLoading() then
-		local loadingMaxW = 128
-		local progress = 1 - (interactPressTime - curTime)
-		local curLoadingW = loadingMaxW * progress
-		local loadingCentreX = ScrW() / 2
-		local loadingCentreY = ScrH() / 2 + 86
-		local loadingH = 10
-		lia.util.drawBlurAt(loadingCentreX - (loadingMaxW / 2), loadingCentreY, loadingMaxW, loadingH)
-		surface.SetDrawColor(Color(0, 0, 0, 150))
-		surface.DrawRect(loadingCentreX - (loadingMaxW / 2), loadingCentreY, loadingMaxW, loadingH, 1)
-		surface.SetDrawColor(255, 255, 255, 120)
-		surface.DrawOutlinedRect(loadingCentreX - (loadingMaxW / 2) + 1, loadingCentreY + 1, loadingMaxW - 2, loadingH - 2)
-		surface.SetDrawColor(color_white)
-		surface.DrawRect(loadingCentreX - (curLoadingW / 2) + 2, loadingCentreY + 2, (loadingMaxW - 4) * progress, loadingH - 4, 1)
-	end
-
-	if interfaceScale < 0 then return end
-	local pitchDifference = (cachedPitch - EyeAngles().p) * 6
-	local funcCount = 0
-	for _, funcData in SortedPairs(lia.playerInteract.funcs) do
-		if not funcData.CanSee(client, target) then continue end
-		local name = funcData.name or L(funcData.nameLocalized)
-		surface.SetFont("liaGenericLightFont")
-		local textW, _ = surface.GetTextSize(name)
-		local barW, barH = textW + 16, 32
-		local yAlignment = barH * funcCount
-		local barX, barY = posX - (barW / 2) * interfaceScale, posY - (barH / 2) + yAlignment * interfaceScale + pitchDifference
-		local isSelected = math.abs(yAlignment + pitchDifference) < 32
-		if isSelected and interfaceScale > 0.75 then
-			lia.util.drawBlurAt(barX, barY, barW, barH)
-			surface.SetDrawColor(55, 55, 55, 120)
-			surface.DrawRect(barX, barY, barW, barH)
-			surface.SetDrawColor(255, 255, 255, 120)
-			surface.DrawOutlinedRect(barX + 1, barY + 1, barW - 2, barH - 2)
-			selectedFunction = funcData
-		end
-
-		draw.SimpleText(name, "liaGenericLightFont", barX + (barW / 2) + 2, barY + (barH / 2.1) + 2, Color(0, 0, 0, interfaceScale * 128), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-		draw.SimpleText(name, "liaGenericLightFont", barX + (barW / 2), barY + (barH / 2.1), Color(255, 255, 255, interfaceScale * 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-		funcCount = funcCount + 1
-	end
-end
-
 --------------------------------------------------------------------------------------------------------
 function GM:DeathHUDPaint()
 	owner = LocalPlayer()
@@ -363,7 +177,6 @@ function GM:DeathHUDPaint()
 		local tx, ty = lia.util.drawText(L"youreDead", w / 2, h / 2, ColorAlpha(color_white, aprg2 * 255), 1, 1, "liaDynFontMedium", aprg2 * 255)
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:MiscHUDPaint()
 	local ply = LocalPlayer()
@@ -401,7 +214,6 @@ function GM:MiscHUDPaint()
 		end
 	end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PointingHUDPaint()
 	net.Receive(

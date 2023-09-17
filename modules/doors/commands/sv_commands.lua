@@ -6,12 +6,7 @@ lia.command.add(
     {
         privilege = "Basic User Permissions",
         onRun = function(client, arguments)
-            local data = {}
-            data.start = client:GetShootPos()
-            data.endpos = data.start + client:GetAimVector() * 96
-            data.filter = client
-            local trace = util.TraceLine(data)
-            local entity = trace.Entity
+            local entity = client:GetTracedEntity()
             if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
                 if client == entity:GetDTEntity(0) then
                     local price = math.Round(entity:getNetVar("price", lia.config.DoorCost) * lia.config.DoorSellRatio)
@@ -41,12 +36,7 @@ lia.command.add(
     {
         privilege = "Basic User Permissions",
         onRun = function(client, arguments)
-            local data = {}
-            data.start = client:GetShootPos()
-            data.endpos = data.start + client:GetAimVector() * 96
-            data.filter = client
-            local trace = util.TraceLine(data)
-            local entity = trace.Entity
+            local entity = client:GetTracedEntity()
             if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
                 if entity:getNetVar("noSell") or entity:getNetVar("faction") or entity:getNetVar("class") then return client:notifyLocalized("dNotAllowedToOwn") end
                 if IsValid(entity:GetDTEntity(0)) then
@@ -89,7 +79,7 @@ lia.command.add(
         syntax = "[string name]",
         privilege = "Management- Manage Doors",
         onRun = function(client, arguments)
-            local entity = client:GetEyeTrace().Entity
+            local entity = client:GetTracedEntity()
             local name = table.concat(arguments, " ")
             if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
                 entity:setNetVar("noSell", true)
@@ -301,12 +291,7 @@ lia.command.add(
         syntax = "<string title>",
         privilege = "Management- Manage Doors",
         onRun = function(client, arguments)
-            local data = {}
-            data.start = client:GetShootPos()
-            data.endpos = data.start + client:GetAimVector() * 96
-            data.filter = client
-            local trace = util.TraceLine(data)
-            local entity = trace.Entity
+            local entity = client:GetTracedEntity()
             if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
                 local name = table.concat(arguments, " ")
                 if not name:find("%S") then return client:notifyLocalized("invalidArg", 1) end

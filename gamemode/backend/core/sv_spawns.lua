@@ -66,6 +66,7 @@ function GM:PlayerLoadout(client)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawn(client)
+    local character = client:getChar()
     if pac then
         client:ConCommand("pac_restart")
     end

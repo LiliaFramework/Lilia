@@ -8,8 +8,7 @@ lia.command.add(
 		adminOnly = true,
 		syntax = "[string password]",
 		onRun = function(client, arguments)
-			local trace = client:GetEyeTraceNoCursor()
-			local ent = trace.Entity
+			local ent = client:GetTracedEntity()
 			if ent and ent:IsValid() then
 				local password = table.concat(arguments, " ")
 				if password ~= "" then

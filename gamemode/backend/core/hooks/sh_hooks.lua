@@ -291,7 +291,6 @@ function GM:OnPlayerJoinClass(client, class, oldClass)
 
     local info = lia.class.list[class]
     local info2 = lia.class.list[oldClass]
-    
     if info.onSet then
         info:onSet(client)
     end
@@ -359,8 +358,8 @@ function GM:InitializedModules()
             self:InitalizedWorkshopDownloader()
         end
 
-        self:InitializedExtrasServer()
         self:RegisterCamiPermissions()
+        self:InitializedExtrasServer()
     else
         self:InitializedExtrasClient()
     end
@@ -480,29 +479,28 @@ function GM:PSALoader()
     end
 end
 --------------------------------------------------------------------------------------------------------
-function GM:KeyPress(client, key)
-    local entity = client:GetEyeTrace().Entity
-    if not IsValid(entity) then return end
-    if entity:isDoor() and entity:IsPlayer() then
-        if key == IN_USE then
-            if SERVER then
-                hook.Run("PlayerUse", client, entity)
-            else
-                if entity:IsPlayer() then lia.playerInteract.interact(entity, 1) end
-            end
-        end
-    end
-end
---------------------------------------------------------------------------------------------------------
-function GM:KeyRelease(client, key)
-    if SERVER then
-        self:ServerKeyRelease(client, key)
-    else
-        self:ClientKeyRelease(client, key)
-    end
-end
---------------------------------------------------------------------------------------------------------
 function GM:IsValidTarget(target)
     return IsValid(target) and target:IsPlayer() and target:getChar()
+end
+--------------------------------------------------------------------------------------------------------
+function GM:PlayerBindPress(client, bind, pressed)
+    bind = bind:lower()
+    if (bind:find("use") or bind:find("attack")) and pressed then
+        local menu, callback = lia.menu.getActiveMenu()
+        if menu and lia.menu.onButtonPressed(menu, callback) then
+            return true
+        elseif bind:find("use") and pressed then
+            local entity = client:GetTracedEntity()
+            if IsValid(entity) and (entity:GetClass() == "lia_item" or entity.hasMenu == true) then
+                hook.Run("ItemShowEntityMenu", entity)
+            end
+        end
+    elseif bind:find("jump") then
+        if SERVER then
+            lia.command.send("chargetup")
+        end
+    elseif string.find(bind, "+speed") and client:getNetVar("restricted") or (string.find(bind, "MODULE_showhelp") and client:getNetVar("restricted")) or (string.find(bind, "+jump") and client:getNetVar("restricted")) or (string.find(bind, "+walk") and client:getNetVar("restricted")) or (string.find(bind, "+use") and client:getNetVar("restricted")) then
+        return true
+    end
 end
 --------------------------------------------------------------------------------------------------------

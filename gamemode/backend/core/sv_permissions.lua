@@ -84,7 +84,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:CanTool(client, trace, tool)
     local privilege = "Lilia - Management - Access Tool " .. tool:gsub("^%l", string.upper)
-    local entity = trace.Entity
+    local entity = client:GetTracedEntity()
     if not client:getChar() then return false end
     if not client:getChar():hasFlags("t") then return false end
     if tool == "advdupe2" and table.HasValue(lia.config.DuplicatorBlackList, entity:GetClass()) then return false end

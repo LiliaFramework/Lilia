@@ -249,19 +249,10 @@ function SWEP:PrimaryAttack()
     self:SetNW2Bool("startPunch", true)
 end
 --------------------------------------------------------------------------------------------------------
-local hull = Vector(4, 4, 4)
---------------------------------------------------------------------------------------------------------
 function SWEP:SecondaryAttack()
     if not IsFirstTimePredicted() then return end
     local client = self:GetOwner()
-    local data = {}
-    data.start = client:GetShootPos()
-    data.endpos = data.start + client:GetAimVector() * PLAYER_PICKUP_RANGE
-    data.filter = {self, client}
-    data.mins = -hull
-    data.maxs = hull
-    local trace = util.TraceHull(data)
-    local entity = trace.Entity
+    local entity = client:GetTracedEntity()
     if SERVER and IsValid(entity) then
         if entity:isDoor() then
             if hook.Run("PlayerCanKnock", client, entity) == false then return end
@@ -516,13 +507,8 @@ function SWEP:doPunch()
         end
 
         owner:LagCompensation(true)
-        local data = {}
-        data.start = owner:GetShootPos()
-        data.endpos = data.start + owner:GetAimVector() * 96
-        data.filter = owner
-        local trace = util.TraceLine(data)
         if SERVER and trace.Hit then
-            local entity = trace.Entity
+            local entity = owner:GetTracedEntity()
             if IsValid(entity) then
                 local damageInfo = DamageInfo()
                 damageInfo:SetAttacker(owner)

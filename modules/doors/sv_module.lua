@@ -146,12 +146,7 @@ function MODULE:PostPlayerLoadout(client)
 end
 --------------------------------------------------------------------------------------------------------
 function MODULE:ShowTeam(client)
-    local data = {}
-    data.start = client:GetShootPos()
-    data.endpos = data.start + client:GetAimVector() * 96
-    data.filter = client
-    local trace = util.TraceLine(data)
-    local entity = trace.Entity
+    local entity = client:GetTracedEntity()
     if IsValid(entity) and entity:isDoor() and not entity:getNetVar("faction") and not entity:getNetVar("class") then
         if entity:checkDoorAccess(client, DOOR_TENANT) then
             local door = entity

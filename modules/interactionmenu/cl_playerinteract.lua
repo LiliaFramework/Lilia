@@ -1,14 +1,4 @@
 --------------------------------------------------------------------------------------------------------
-lia.playerInteract = lia.playerInteract or {}
-lia.playerInteract.currentEnt = lia.playerInteract.currentEnt or {}
-lia.playerInteract.funcs = lia.playerInteract.funcs or {}
---------------------------------------------------------------------------------------------------------
-isInteracting = false
-interactPressTime = 0
-cachedPitch = 0
-interfaceScale = 0
-selectedFunction = nil
---------------------------------------------------------------------------------------------------------
 function lia.playerInteract.addFunc(name, data)
     lia.playerInteract.funcs[name] = data
 end
@@ -25,4 +15,15 @@ function lia.playerInteract.clear()
     cachedPitch = 0
     interactPressTime = 0
 end
---------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+for name, vars in pairs(lia.config.PlayerInteractionOptions) do
+    lia.playerInteract.addFunc(
+        name,
+        {
+            name = name,
+            Callback = vars.Callback,
+            CanSee = vars.CanSee,
+        }
+    )
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
