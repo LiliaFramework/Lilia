@@ -9,7 +9,7 @@ function MODULE:GetDisplayedDescription(client)
     if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar()) and not hook.Run("IsPlayerRecognized", client) then return L"noRecog" end
 end
 --------------------------------------------------------------------------------------------------------
-function PLUGIN:GetDisplayedName(client, chatType)
+function MODULE:GetDisplayedName(client, chatType)
     if client ~= LocalPlayer() then
         local character = client:getChar()
         local ourCharacter = LocalPlayer():getChar()

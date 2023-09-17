@@ -55,7 +55,7 @@ function MODULE:PlayerLoadout(client)
 	client:resetParts()
 end
 --------------------------------------------------------------------------------------------------------
-function PLUGIN:ModuleLoaded()
+function MODULE:ModuleLoaded()
 	game.ConsoleCommand("sv_pac_webcontent_limit 35840\n")
 end
 --------------------------------------------------------------------------------------------------------
