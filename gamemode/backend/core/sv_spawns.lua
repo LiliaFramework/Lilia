@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadout(client)
+    local character = client:getChar()
     if client.liaSkipLoadout then
         client.liaSkipLoadout = nil
 
@@ -17,18 +18,7 @@ function GM:PlayerLoadout(client)
     client:SetWeaponColor(Vector(client:GetInfo("cl_weaponcolor")))
     client:StripWeapons()
     client:setLocalVar("blur", nil)
-    local character = client:getChar()
-    client:SetupHands()
     client:SetModel(character:getModel())
-    if client:getChar():hasFlags("p") then
-        client:Give("weapon_physgun")
-    end
-
-    if client:getChar():hasFlags("t") then
-        client:Give("gmod_tool")
-    end
-
-    client:Give("lia_hands")
     client:SetWalkSpeed(lia.config.WalkSpeed)
     client:SetRunSpeed(lia.config.RunSpeed)
     local faction = lia.faction.indices[client:Team()]
@@ -83,14 +73,25 @@ function GM:OnCharAttribBoosted(client, character, attribID)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:PostPlayerLoadout(client)
-    local char = client:getChar()
+    local character = client:getChar()
+
+    if character:hasFlags("p") then
+        client:Give("weapon_physgun")
+    end
+
+    if character:hasFlags("t") then
+        client:Give("gmod_tool")
+    end
+
+    client:Give("lia_hands")
+    client:SetupHands()
     lia.attribs.setup(client)
-    if char:getInv() then
-        for _, item in pairs(char:getInv():getItems()) do
+    if character:getInv() then
+        for _, item in pairs(character:getInv():getItems()) do
             item:call("onLoadout", client)
             if item:getData("equip") and istable(item.attribBoosts) then
                 for attribute, boost in pairs(item.attribBoosts) do
-                    char:addBoost(item.uniqueID, attribute, boost)
+                    character:addBoost(item.uniqueID, attribute, boost)
                 end
             end
         end
