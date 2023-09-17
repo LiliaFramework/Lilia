@@ -62,6 +62,18 @@ function playerMeta:GetTracedEntity()
     return target
 end
 --------------------------------------------------------------------------------------------------------
+function playerMeta:GetTrace()
+    local data = {}
+    data.start = client:GetShootPos()
+    data.endpos = data.start + client:GetAimVector() * 200
+    data.filter = {self, client}
+    data.mins = -hull
+    data.maxs = hull
+    local trace = util.TraceHull(data)
+
+    return trace
+end
+--------------------------------------------------------------------------------------------------------
 function playerMeta:VerifyCommandDistance(otherPlayer)
     if not IsValid(otherPlayer) or not IsValid(self) then return false end
 

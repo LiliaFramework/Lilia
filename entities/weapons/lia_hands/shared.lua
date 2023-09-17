@@ -263,13 +263,13 @@ function SWEP:SecondaryAttack()
             self:SetNextSecondaryFire(CurTime() + 0.4)
             self:SetNextPrimaryFire(CurTime() + 1)
         elseif not entity:IsPlayer() and not entity:IsNPC() then
-            self:doPickup(false, entity, trace)
+            self:doPickup(false, entity, client:GetTrace())
         elseif IsValid(self.heldEntity) and not self.heldEntity:IsPlayerHolding() then
             self.heldEntity = nil
         end
     else
         if IsValid(self.holdingEntity) then
-            self:doPickup(false, nil, trace)
+            self:doPickup(false, nil, client:GetTrace())
         end
     end
 end
