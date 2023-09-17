@@ -554,3 +554,48 @@ lia.command.add(
     }
 )
 --------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "flagpet",
+    {
+        privilege = "Characters - Give pet Flags",
+        syntax = "[character name]",
+        onRun = function(client, arguments)
+            local target = lia.command.findPlayer(client, arguments[1])
+            if not client:IsAdmin() then
+                client:notify("Your rank is not high enough to use this command.")
+
+                return false
+            end
+
+            if target:getChar():hasFlags("pet") then
+                target:getChar():takeFlags("pet")
+                client:notify("Taken pet Flags!")
+            else
+                target:getChar():giveFlags("pet")
+                client:notify("Given pet Flags!")
+            end
+        end
+    }
+)
+--------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "flags",
+    {
+        privilege = "Characters - Check Flags",
+        adminOnly = true,
+        syntax = "<string name>",
+        onRun = function(client, arguments)
+            local target = lia.command.findPlayer(client, arguments[1])
+            if not client:IsSuperAdmin() then
+                client:notify("Your rank is not high enough to use this command.")
+
+                return false
+            end
+
+            if IsValid(target) and target:getChar() then
+                client:notify("Their character flags are: '" .. target:getChar():getFlags() .. "'")
+            end
+        end
+    }
+)
+--------------------------------------------------------------------------------------------------------
