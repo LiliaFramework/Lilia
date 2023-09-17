@@ -1,4 +1,3 @@
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadout(client)
     if client.liaSkipLoadout then
@@ -15,22 +14,20 @@ function GM:PlayerLoadout(client)
         return
     end
 
-    if client:getChar():hasFlags("P") then
-        client:Give("weapon_physgun")
-        client:SelectWeapon("weapon_physgun")
-    end
-
-    if client:getChar():hasFlags("t") then
-        client:Give("gmod_tool")
-        client:SelectWeapon("gmod_tool")
-    end
-
     client:SetWeaponColor(Vector(client:GetInfo("cl_weaponcolor")))
     client:StripWeapons()
     client:setLocalVar("blur", nil)
     local character = client:getChar()
     client:SetupHands()
     client:SetModel(character:getModel())
+    if client:getChar():hasFlags("p") then
+        client:Give("weapon_physgun")
+    end
+
+    if client:getChar():hasFlags("t") then
+        client:Give("gmod_tool")
+    end
+
     client:Give("lia_hands")
     client:SetWalkSpeed(lia.config.WalkSpeed)
     client:SetRunSpeed(lia.config.RunSpeed)
@@ -66,7 +63,6 @@ function GM:PlayerLoadout(client)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawn(client)
-    local character = client:getChar()
     if pac then
         client:ConCommand("pac_restart")
     end
