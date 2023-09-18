@@ -507,6 +507,11 @@ function SWEP:doPunch()
         end
 
         owner:LagCompensation(true)
+        local data = {}
+        data.start = owner:GetShootPos()
+        data.endpos = data.start + owner:GetAimVector() * 96
+        data.filter = owner
+        local trace = util.TraceLine(data)
         if SERVER and trace.Hit then
             local entity = owner:GetTracedEntity()
             if IsValid(entity) then

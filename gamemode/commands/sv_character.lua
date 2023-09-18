@@ -83,6 +83,7 @@ lia.command.add(
                 if faction then
                     target:getChar().vars.faction = faction.uniqueID
                     target:getChar():setFaction(faction.index)
+                    hook.Run("PlayerOnFactionTransfer", target)
                     if faction.onTransfered then
                         faction:onTransfered(target)
                     end
@@ -384,7 +385,7 @@ lia.command.add(
                 end
 
                 target:getChar():giveFlags(flags)
-                hook.Run("PlayerLoadout", target)
+                hook.Run("PostPlayerLoadout", target)
                 client:notifyLocalized("flagGive", client:Name(), target:Name(), flags)
             end
         end
