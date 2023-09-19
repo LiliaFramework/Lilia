@@ -263,16 +263,41 @@ lia.command.add(
 )
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
-    "logs",
+    "voiceunban",
     {
         adminOnly = true,
-        privilege = "Management - Open MLogs",
+        privilege = "Management - Voice Unban Character",
+        syntax = "<string name>",
         onRun = function(client, arguments)
-            if not mLogs then
-                client:notify("You don't have mLogs installed!")
-
+            local target = lia.command.findPlayer(client, arguments[1])
+            if target == client then
+                client:notify("You cannot run mute commands on yourself.")
                 return false
             end
+
+            if IsValid(target) and target:getChar():GetData("VoiceBan") then target:getChar():SetData("VoiceBan", false) end
+            client:notify("You have unmuted a player.")
+            target:notify("You've been unmuted by the admin.")
+        end
+    }
+)
+--------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "voiceban",
+    {
+        adminOnly = true,
+        privilege = "Management - Voice ban Character",
+        syntax = "<string name>",
+        onRun = function(client, arguments)
+            local target = lia.command.findPlayer(client, arguments[1])
+            if target == client then
+                client:notify("You cannot run mute commands on yourself.")
+                return false
+            end
+
+            if IsValid(target) then if not target:GetData("VoiceBan") then target:SetData("VoiceBan", true) end end
+            client:notify("You have muted a player.")
+            target:notify("You've been muted by the admin.")
         end
     }
 )

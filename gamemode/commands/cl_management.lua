@@ -131,10 +131,21 @@ lia.command.add(
 )
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
-    "logs",
+    "voiceunban",
     {
         adminOnly = true,
-        privilege = "Management - Open MLogs",
+        privilege = "Management - Voice Unban Character",
+        syntax = "<string name>",
+        onRun = function(client, arguments) end
+    }
+)
+--------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "voiceban",
+    {
+        adminOnly = true,
+        privilege = "Management - Voice ban Character",
+        syntax = "<string name>",
         onRun = function(client, arguments) end
     }
 )
