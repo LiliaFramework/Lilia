@@ -14,21 +14,75 @@ netstream.Hook(
         menu:AddOption(
             "Allow those in a whispering range to recognize you.",
             function()
-                netstream.Start("rgn", 2)
+                CharRecognize(2)
             end
         )
 
         menu:AddOption(
             "Allow those in a talking range to recognize you.",
             function()
-                netstream.Start("rgn", 3)
+                CharRecognize(3)
             end
         )
 
         menu:AddOption(
             "Allow those in a yelling range to recognize you.",
             function()
-                netstream.Start("rgn", 4)
+                CharRecognize(4)
+            end
+        )
+
+        menu:AddOption(
+            "Allow those in whispering range to recognize you by a fake name.",
+            function()
+                local client = LocalPlayer()
+                local name = nil
+                Derma_StringRequest(
+                    "Allow those in whispering range to recognize you by a fake name.",
+                    "Enter a fake name to display to other players in range.",
+                    default or "",
+                    function(text)
+                        if text then
+                            CharRecognize(2, text)
+                        end
+                    end
+                )
+            end
+        )
+
+        menu:AddOption(
+            "Allow those in talking range to recognize you by a fake name.",
+            function()
+                local client = LocalPlayer()
+                local name = nil
+                Derma_StringRequest(
+                    "Allow those in talking range to recognize you by a fake name.",
+                    "Enter a fake name to display to other players in range.",
+                    default or "",
+                    function(text)
+                        if text then
+                            CharRecognize(3, text)
+                        end
+                    end
+                )
+            end
+        )
+
+        menu:AddOption(
+            "Allow those in yelling range to recognize you by a fake name.",
+            function()
+                local client = LocalPlayer()
+                local name = nil
+                Derma_StringRequest(
+                    "Allow those in yelling range to recognize you by a fake name.",
+                    "Enter a fake name to display to other players in range.",
+                    default or "",
+                    function(text)
+                        if text then
+                            CharRecognize(2, text)
+                        end
+                    end
+                )
             end
         )
 
