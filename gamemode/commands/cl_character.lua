@@ -237,3 +237,13 @@ lia.command.add(
     }
 )
 --------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "flagragdoll",
+    {
+        adminOnly = true,
+        privilege = "Management - Hand Ragdoll Medals",
+        syntax = "<string name>",
+        onRun = function(client, arguments) end
+    }
+)
+--------------------------------------------------------------------------------------------------------

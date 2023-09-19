@@ -361,11 +361,6 @@ lia.command.add(
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and target:getChar() then
                 local flags = arguments[2]
-                if flags == "l" or flags == "y" or flags == "b" or flags == "ybl" or flags == "lby" or flags == "byl" then
-                    client:notify("No permission!")
-
-                    return false
-                end
 
                 if not flags then
                     local available = ""
@@ -575,6 +570,21 @@ lia.command.add(
                 target:getChar():giveFlags("pet")
                 client:notify("Given pet Flags!")
             end
+        end
+    }
+)
+--------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "flagragdoll",
+    {
+        adminOnly = true,
+        privilege = "Management - Hand Ragdoll Medals",
+        syntax = "<string name>",
+        onRun = function(client, arguments)
+            local target = lia.command.findPlayer(client, arguments[1])
+            target:getChar():giveFlags("r")
+            client:notifyLocalized("You have given " .. arguments[1] .. " Ragdoll Flags")
+            target:notifyLocalized("You have been given Ragdoll flags by " .. client:Name())
         end
     }
 )
