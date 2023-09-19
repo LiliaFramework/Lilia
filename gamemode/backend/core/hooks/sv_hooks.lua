@@ -432,7 +432,8 @@ end
 function GM:PlayerThrowPunch(ply, trace)
     local ent = ply:GetTracedEntity()
     if not ent:IsPlayer() then return end
-    if ply:IsSuperAdmin() and IsValid(ent) and ply:Team() == FACTION_STAFF then
+    if not CAMI.PlayerHasAccess(ply, "Lilia - Management - One Punch Man", nil) then return end
+    if IsValid(ent) and ply:Team() == FACTION_STAFF then
         ply:ConsumeStamina(ent:getChar():GetMaxStamina())
         ent:EmitSound("weapons/crowbar/crowbar_impact" .. math.random(1, 2) .. ".wav", 70)
         ply:setRagdolled(true, 10)

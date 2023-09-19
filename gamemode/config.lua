@@ -4,6 +4,10 @@ lia.config = lia.config or {}
 if not lia.config.WasInitialized then
     lia.config = {
         -- General Gameplay Settings
+        ServerURLs = {
+            ["Discord"] = "https://discord.gg/52MSnh39vw",
+            ["Workshop"] = "https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255"
+        }
         SchemaYear = 2023, -- Year When Schema Happens
         AmericanDates = true, -- American Date Formatting?
         AmericanTimeStamp = true, -- American Time Formatting?
@@ -146,6 +150,11 @@ if not lia.config.WasInitialized then
             whitelist = false,
         },
         CAMIPrivileges = {
+            {
+                Name = "Lilia - Management - One Punch Man",
+                MinAccess = "superadmin",
+                Description = "Allows access to OPM to Ragdoll Minges.",
+            },
             {
                 Name = "Lilia - Management - Can Spawn Ragdolls",
                 MinAccess = "admin",

@@ -150,3 +150,14 @@ lia.command.add(
     }
 )
 --------------------------------------------------------------------------------------------------------
+for k, _ in pairs(lia.config.ServerURLs) do
+    ix.command.Add(
+        k,
+        {
+            adminOnly = false,
+            privilege = "Basic User Permissions",
+            onRun = function(client, arguments) end
+        }
+    )
+end
+--------------------------------------------------------------------------------------------------------

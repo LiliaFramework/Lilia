@@ -21,3 +21,5 @@ You are welcome to submit a pull request with any beneficial changes/fixes. Curr
 ## Acknowledgements
 
 Lilia is a fork of NutScript 1.2.3 by Chessnut and rebel1324, and we acknowledge their contributions to the framework.
+
+<img src="https://repobeats.axiom.co/api/embed/660cce650311f7194a70c7b65fb5e33506950da8.svg"/>
