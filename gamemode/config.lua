@@ -297,9 +297,6 @@ if not lia.config.WasInitialized then
             ["Discord"] = "https://discord.gg/52MSnh39vw",
             ["Workshop"] = "https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255"
         },
-        MenuButtonRollover = "ui/buttonrollover.wav", -- Menu Sounds
-        SoundMenuButtonPressed = "ui/buttonclickrelease.wav", -- Menu Sounds
-        F1MenuLaunchUnanchor = "buttons/lightswitch2.wav", -- Menu Sounds
     }
 end
 
