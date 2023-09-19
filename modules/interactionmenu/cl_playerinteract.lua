@@ -16,11 +16,11 @@ function lia.playerInteract.clear()
     interactPressTime = 0
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-for name, vars in pairs(lia.config.PlayerInteractionOptions) do
+for varname, vars in pairs(lia.config.PlayerInteractionOptions) do
     lia.playerInteract.addFunc(
-        name,
+        varname,
         {
-            name = name,
+            name = varname,
             Callback = vars.Callback,
             CanSee = vars.CanSee,
         }
