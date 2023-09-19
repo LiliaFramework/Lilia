@@ -8,6 +8,9 @@ local defaultAngleData = {
 }
 -------------------------------------------------------------------------------------------------------
 function GM:InitializedExtrasServer()
+    if ArcCW then
+        RunConsoleCommand("arccw_override_crosshair_off", "0")
+    end
     self:OptimizeSeats()
     hook.Remove("PlayerTick", "TickWidgets")
     hook.Remove("Think", "CheckSchedules")
