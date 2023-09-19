@@ -6,7 +6,6 @@ function MODULE:InitializedConfig()
             format = "%s says \"%s\"",
             onGetColor = function(speaker, text)
                 if LocalPlayer():GetEyeTrace().Entity == speaker then return lia.config.ChatListenColor end
-
                 return lia.config.ChatColor
             end,
             radius = function(speaker, text) return lia.config.ChatRange end
@@ -26,7 +25,6 @@ function MODULE:InitializedConfig()
                 }
 
                 if not trace.Hit and speaker:EyePos():Distance(listener:EyePos()) <= lia.config.ChatRange then return true end
-
                 return false
             end,
             prefix = {"/me", "/action"},
@@ -39,9 +37,7 @@ function MODULE:InitializedConfig()
     lia.chat.register(
         "it",
         {
-            onChatAdd = function(speaker, text)
-                chat.AddText(lia.chat.timestamp(false), lia.config.ChatColor, "**" .. text)
-            end,
+            onChatAdd = function(speaker, text) chat.AddText(lia.chat.timestamp(false), lia.config.ChatColor, "**" .. text) end,
             radius = function(speaker, text) return lia.config.ChatRange end,
             prefix = {"/it"},
             font = "liaChatFontItalics",
@@ -56,7 +52,6 @@ function MODULE:InitializedConfig()
             format = "%s whispers \"%s\"",
             onGetColor = function(speaker, text)
                 local color = lia.chat.classes.ic.onGetColor(speaker, text)
-
                 return Color(color.r - 35, color.g - 35, color.b - 35)
             end,
             radius = function(speaker, text) return lia.config.ChatRange * 0.25 end,
@@ -70,7 +65,6 @@ function MODULE:InitializedConfig()
             format = "%s yells \"%s\"",
             onGetColor = function(speaker, text)
                 local color = lia.chat.classes.ic.onGetColor(speaker, text)
-
                 return Color(color.r + 35, color.g + 35, color.b + 35)
             end,
             radius = function(speaker, text) return lia.config.ChatRange * 2 end,
@@ -87,20 +81,37 @@ function MODULE:InitializedConfig()
                     local lastLOOC = CurTime() - speaker.liaLastLOOC
                     if lastLOOC <= delay and (not speaker:IsAdmin() or speaker:IsAdmin() and lia.config.LOOCDelayAdmin) then
                         speaker:notifyLocalized("loocDelay", delay - math.ceil(lastLOOC))
-
                         return false
                     end
                 end
 
                 speaker.liaLastLOOC = CurTime()
             end,
-            onChatAdd = function(speaker, text)
-                chat.AddText(Color(255, 50, 50), "[LOOC] ", lia.config.ChatColor, speaker:Name() .. ": " .. text)
-            end,
+            onChatAdd = function(speaker, text) chat.AddText(Color(255, 50, 50), "[LOOC] ", lia.config.ChatColor, speaker:Name() .. ": " .. text) end,
             radius = function(speaker, text) return lia.config.ChatRange end,
             prefix = {".//", "[[", "/looc"},
             noSpaceAfter = true,
             filter = "ooc"
+        }
+    )
+
+    lia.chat.register(
+        "adminchat",
+        {
+            onGetColor = function(self, speaker, text) return Color(0, 196, 255) end,
+            onCanHear = function(self, speaker, listener)
+                if CAMI.PlayerHasAccess(listener, "Lilia - Management - Admin Chat", nil) then return true end
+                return false
+            end,
+            onCanSay = function(self, speaker, text)
+                if CAMI.PlayerHasAccess(speaker, "Lilia - Management - Admin Chat", nil) then
+                    speaker:notify("You aren't an admin. Use '@messagehere' to create a ticket.")
+                    return false
+                end
+                return true
+            end,
+            onChatAdd = function(self, speaker, text) if CAMI.PlayerHasAccess(LocalPlayer(), "Lilia - Management - Admin Chat", nil) and CAMI.PlayerHasAccess(speaker, "Lilia - Management - Admin Chat", nil) then chat.AddText(Color(255, 215, 0), "[А] ", Color(128, 0, 255, 255), speaker:getChar():getName(), ": ", Color(255, 255, 255), text) end end,
+            prefix = "/adminchat"
         }
     )
 
@@ -130,9 +141,7 @@ function MODULE:InitializedConfig()
         "event",
         {
             onCanSay = function(speaker, text) return speaker:IsAdmin() end,
-            onChatAdd = function(speaker, text)
-                chat.AddText(lia.chat.timestamp(false), text)
-            end,
+            onChatAdd = function(speaker, text) chat.AddText(lia.chat.timestamp(false), text) end,
             prefix = {"/event"}
         }
     )
@@ -156,7 +165,6 @@ function MODULE:InitializedConfig()
                         if v.uniqueID == "radio" and v:getData("enabled", false) == true then
                             if CURFREQ == v:getData("freq", "000.0") and CURCHANNEL == v:getData("channel", 1) then
                                 listener:EndChatter()
-
                                 return true
                             end
                         end
@@ -170,14 +178,12 @@ function MODULE:InitializedConfig()
                             if itemTable.uniqueID == "radio" and v:getData("enabled", false) == true then
                                 if CURFREQ == v:getData("freq", "000.0") and CURCHANNEL == v:getData("channel", 1) then
                                     listener:EndChatter()
-
                                     return true
                                 end
                             end
                         end
                     end
                 end
-
                 return false
             end,
             onCanSay = function(speaker, text)
@@ -212,14 +218,10 @@ function MODULE:InitializedConfig()
 
                 if freq then
                     CURFREQ = freq
-                    if channel then
-                        CURCHANNEL = channel
-                    end
-
+                    if channel then CURCHANNEL = channel end
                     speaker:EmitSound("npc/metropolice/vo/on" .. math.random(1, 2) .. ".wav", math.random(50, 60), math.random(80, 120))
                 else
                     speaker:notifyLocalized("radioNoRadioComm")
-
                     return false
                 end
             end,
@@ -227,5 +229,6 @@ function MODULE:InitializedConfig()
         }
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 hook.Remove("PlayerSay", "ULXMeCheck")
