@@ -206,10 +206,15 @@ function GM:PlayerInitialSpawn(client)
 
     self:RegisterPlayer(client)
     if lia.config.DefaultStaff[client:SteamID()] then
+        local newRank = lia.config.DefaultStaff[client:SteamID()]
         if sam then
-            RunConsoleCommand("sam", "setrank", target:SteamID(), lia.config.DefaultStaff[client:SteamID()])
+            RunConsoleCommand("sam", "setrank", client:SteamID(), newRank)
+            client:ChatPrint("You have been set as rank: " .. newRank)
+            print(client:Nick() .. " has been set as rank: " .. newRank)
         else
-            client:SetUserGroup(lia.config.DefaultStaff[client:SteamID()])
+            client:SetUserGroup(newRank)
+            client:ChatPrint("You have been set as rank: " .. newRank)
+            print(client:Nick() .. " has been set as rank: " .. newRank)
         end
     end
 
