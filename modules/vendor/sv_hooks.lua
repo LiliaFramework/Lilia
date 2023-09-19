@@ -137,3 +137,11 @@ function MODULE:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, char
     )
 end
 --------------------------------------------------------------------------------------------------------
+CAMI.RegisterPrivilege(
+    {
+        Name = "Lilia - Management - Can Edit Vendors",
+        MinAccess = "admin",
+        Description = "Allows access to edit vendors.",
+    }
+)
+--------------------------------------------------------------------------------------------------------

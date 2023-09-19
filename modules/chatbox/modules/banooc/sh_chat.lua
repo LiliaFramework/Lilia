@@ -1,14 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
 --------------------------------------------------------------------------------------------------------
-CAMI.RegisterPrivilege(
-    {
-        Name = "Lilia - Management - No OOC Cooldown",
-        MinAccess = "admin",
-        Description = "Allows access to use the OOC chat command without delay.",
-    }
-)
---------------------------------------------------------------------------------------------------------
 function MODULE:InitializedConfig()
     lia.chat.register(
         "ooc",
