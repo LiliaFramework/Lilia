@@ -303,12 +303,12 @@ lia.command.add(
 )
 --------------------------------------------------------------------------------------------------------
 for k, v in pairs(lia.config.ServerURLs) do
-    ix.command.Add(
+    lia.command.add(
         k,
         {
             adminOnly = false,
             privilege = "Basic User Permissions",
-            onRun = function(client, arguments) end
+            onRun = function(client, arguments)
                 client:SendLua("gui.OpenURL('" .. v .. "')")
             end
         }
