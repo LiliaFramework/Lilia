@@ -11,32 +11,12 @@ local flo = 0
 --------------------------------------------------------------------------------------------------------
 local vec
 --------------------------------------------------------------------------------------------------------
-local lastcheck
---------------------------------------------------------------------------------------------------------
 local aprg, aprg2 = 0, 0
 --------------------------------------------------------------------------------------------------------
 w, h = ScrW(), ScrH()
 --------------------------------------------------------------------------------------------------------
 local offset1, offset2, offset3, alpha, y
--------------------------------------------------------------------------------------------------------
-function GM:ClientThink()
-	if not lastcheck then
-		lastcheck = CurTime()
-	end
 
-	if CurTime() - lastcheck > 30 then
-		local commands, _ = concommand.GetTable()
-		for _, cmd in pairs(lia.config.HackCommands) do
-			if commands[cmd] then
-				net.Start("BanMeAmHack")
-				net.SendToServer()
-			end
-		end
-
-		lastcheck = CurTime()
-	end
-end
--------------------------------------------------------------------------------------------------------
 function GM:InitializedExtrasClient()
 	for k, v in pairs(lia.config.RemovableConsoleCommand) do
 		RunConsoleCommand(k, v)

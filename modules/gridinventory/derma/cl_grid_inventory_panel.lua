@@ -272,7 +272,6 @@ function PANEL:Paint(w, h)
 	end
 
 	self:drawHeldItemRectangle()
-	-- Hack to figure out which panel is being hovered while ignoring Z axis.
 	self:computeHeldPanel()
 end
 

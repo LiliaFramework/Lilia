@@ -1,6 +1,4 @@
 --------------------------------------------------------------------------------------------------------
-util.AddNetworkString("BanMeAmHack")
---------------------------------------------------------------------------------------------------------
 util.AddNetworkString("liaCharacterInvList")
 --------------------------------------------------------------------------------------------------------
 util.AddNetworkString("liaItemDelete")
@@ -149,15 +147,3 @@ net.Receive(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
-net.Receive(
-    "BanMeAmHack",
-    function(len, ply)
-        local kickReason = "Kicked for cheating."
-        ply:Kick(kickReason)
-        local banDuration = 0
-        local banReason = "You have easily detectable hacks and should be ashamed. Banned for cheating."
-        ply:Ban(banDuration, banReason)
-    end
-)
---------------------------------------------------------------------------------------------------------

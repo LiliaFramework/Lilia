@@ -303,10 +303,6 @@ function GM:OnPlayerJoinClass(client, class, oldClass)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:Think()
-    if CLIENT then
-        self:ClientThink()
-    end
-
     if not self.nextThink then
         self.nextThink = 0
     end

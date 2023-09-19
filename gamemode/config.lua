@@ -289,7 +289,6 @@ if not lia.config.WasInitialized then
             ["PostDrawEffects"] = "RenderWidgets",
             ["PostDrawEffects"] = "RenderHalos",
         },
-        HackCommands = {"gear_printents", "gw_toggle", "gw_pos", "gearmenu", "gb_reload", "gb_toggle", "+gb", "-gb", "gb_menu", "gear2_menu", "ahack_menu", "sasha_menu", "showents", "showhxmenu", "SmegHack_Menu", "sCheat_menu", "lowkey_menu"},
     }
 end
 
