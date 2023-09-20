@@ -20,7 +20,6 @@ netstream.Hook(
     function(client, level, name)
         local targets = {}
         if isnumber(level) then
-            local targets = {}
             local class = "w"
             if level == 2 then
                 class = "ic"

@@ -1,8 +1,7 @@
 --------------------------------------------------------------------------------------------------------
 local character = lia.meta.character
 --------------------------------------------------------------------------------------------------------
-function character:recognize(id)
-    local id = character:getID()
+function character:recognize(id, name)
     if not isnumber(id) and id.getID then
         id = id:getID()
     end

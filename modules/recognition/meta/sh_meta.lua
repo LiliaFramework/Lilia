@@ -2,12 +2,13 @@
 local character = lia.meta.character
 --------------------------------------------------------------------------------------------------------
 function character:doesRecognize(id)
-    if isnumber(id) and id.getID then
+    if not isnumber(id) and id.getID then
         id = id:getID()
     end
 
     return hook.Run("IsCharRecognized", self, id) ~= false
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:IsCharRecognized(char, id)
     if char.id == id then return true end
