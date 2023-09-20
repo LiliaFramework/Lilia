@@ -353,6 +353,8 @@ CREATE TABLE IF NOT EXISTS `lia_characters` (
 	`_data` VARCHAR(1024) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
 	`_money` INT(10) UNSIGNED NULL DEFAULT '0',
 	`_faction` VARCHAR(24) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`recognized_as` VARCHAR(70) NOT NULL COLLATE 'utf8mb4_general_ci',
+	`chars_we_know` VARCHAR(70) NOT NULL COLLATE 'utf8mb4_general_ci',
 	PRIMARY KEY (`_id`)
 );
 CREATE TABLE IF NOT EXISTS `lia_inventories` (
@@ -400,6 +402,8 @@ CREATE TABLE IF NOT EXISTS lia_characters (
 	_lastJoinTime datetime,
 	_data varchar,
 	_money varchar,
+    recognized_as varchar,
+	chars_we_know varchar,
 	_faction varchar
 );
 CREATE TABLE IF NOT EXISTS lia_inventories (
