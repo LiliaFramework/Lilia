@@ -151,7 +151,7 @@ lia.command.add(
 )
 --------------------------------------------------------------------------------------------------------
 for k, _ in pairs(lia.config.ServerURLs) do
-    ix.command.Add(
+    lia.command.add(
         k,
         {
             adminOnly = false,

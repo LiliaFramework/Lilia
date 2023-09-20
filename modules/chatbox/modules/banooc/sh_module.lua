@@ -10,3 +10,11 @@ MODULE.desc = "An OOC banlist."
 lia.util.include("sv_module.lua")
 lia.util.include("sh_chat.lua")
 --------------------------------------------------------------------------------------------------------
+CAMI.RegisterPrivilege(
+    {
+        Name = "Lilia - Management - No OOC Cooldown",
+        MinAccess = "admin",
+        Description = "Allows access to use the OOC chat command without delay.",
+    }
+)
+--------------------------------------------------------------------------------------------------------
