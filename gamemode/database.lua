@@ -341,22 +341,23 @@ CREATE TABLE IF NOT EXISTS `lia_players` (
 	PRIMARY KEY (`_steamID`)
 );
 CREATE TABLE IF NOT EXISTS `lia_characters` (
-	`_id` INT(12) NOT NULL AUTO_INCREMENT,
-	`_steamID` VARCHAR(20) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`_name` VARCHAR(70) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`_desc` VARCHAR(512) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`_model` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`_attribs` VARCHAR(512) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-	`_schema` VARCHAR(24) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`_createTime` DATETIME NOT NULL,
-	`_lastJoinTime` DATETIME NOT NULL,
-	`_data` VARCHAR(1024) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-	`_money` INT(10) UNSIGNED NULL DEFAULT '0',
-	`_faction` VARCHAR(24) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-	`recognized_as` VARCHAR(70) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`chars_we_know` VARCHAR(70) NOT NULL COLLATE 'utf8mb4_general_ci',
-	PRIMARY KEY (`_id`)
+    `_id` INT(12) NOT NULL AUTO_INCREMENT,
+    `_steamID` VARCHAR(20) NOT NULL COLLATE 'utf8mb4_general_ci',
+    `_name` VARCHAR(70) NOT NULL COLLATE 'utf8mb4_general_ci',
+    `_desc` VARCHAR(512) NOT NULL COLLATE 'utf8mb4_general_ci',
+    `_model` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
+    `_attribs` VARCHAR(512) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+    `_schema` VARCHAR(24) NOT NULL COLLATE 'utf8mb4_general_ci',
+    `_createTime` DATETIME NOT NULL,
+    `_lastJoinTime` DATETIME NOT NULL,
+    `_data` VARCHAR(1024) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+    `_money` INT(10) UNSIGNED NULL DEFAULT '0',
+    `_faction` VARCHAR(24) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+    `recognized_as` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
+    `chars_we_know` TEXT NOT NULL COLLATE 'utf8mb4_general_ci', 
+    PRIMARY KEY (`_id`)
 );
+
 CREATE TABLE IF NOT EXISTS `lia_inventories` (
 	`_invID` INT(12) NOT NULL AUTO_INCREMENT,
 	`_charID` INT(12) NULL DEFAULT NULL,
@@ -391,21 +392,22 @@ CREATE TABLE IF NOT EXISTS lia_players (
 	_intro binary
 );
 CREATE TABLE IF NOT EXISTS lia_characters (
-	_id integer PRIMARY KEY AUTOINCREMENT,
-	_steamID varchar,
-	_name varchar,
-	_desc varchar,
-	_model varchar,
-	_attribs varchar,
-	_schema varchar,
-	_createTime datetime,
-	_lastJoinTime datetime,
-	_data varchar,
-	_money varchar,
-    recognized_as varchar,
-	chars_we_know varchar,
-	_faction varchar
+    _id INTEGER PRIMARY KEY AUTOINCREMENT,
+    _steamID VARCHAR,
+    _name VARCHAR,
+    _desc VARCHAR,
+    _model VARCHAR,
+    _attribs VARCHAR,
+    _schema VARCHAR,
+    _createTime DATETIME,
+    _lastJoinTime DATETIME,
+    _data VARCHAR,
+    _money VARCHAR,
+    _faction VARCHAR,
+    recognized_as TEXT NOT NULL DEFAULT '',
+    chars_we_know TEXT NOT NULL DEFAULT ''    
 );
+
 CREATE TABLE IF NOT EXISTS lia_inventories (
 	_invID integer PRIMARY KEY AUTOINCREMENT,
 	_charID integer,

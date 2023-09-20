@@ -15,15 +15,15 @@ function MODULE:GetDisplayedName(client, chatType)
     if client ~= LocalPlayer() then
         local character = client:getChar()
         local ourCharacter = LocalPlayer():getChar()
-        if ourCharacter and character and not ourCharacter:doesRecognize(character) and not hook.Run("IsPlayerRecognized", client) then
+        local myReg = ourCharacter:GetRecognizedAs() or false
+        if myReg[character:getID()] then
+            return myReg[character:getID()]
+        elseif ourCharacter and character and not ourCharacter:doesRecognize(character) and not hook.Run("IsPlayerRecognized", client) then
             if chatType and hook.Run("IsRecognizedChatType", chatType) then
                 return "[Unknown Person]"
             elseif not chatType then
                 return L"unknown"
             end
-        else
-            local myReg = ourCharacter:GetRecognizedAs()
-            if myReg[character:getID()] then return myReg[character:getID()] end
         end
     end
 end
@@ -36,13 +36,6 @@ end
 --------------------------------------------------------------------------------------------------------
 function MODULE:OnCharRecognized(client, recogCharID)
     surface.PlaySound("buttons/button17.wav")
-end
-
---------------------------------------------------------------------------------------------------------
-function MODULE:ShowSpare1(client)
-    if client:getChar() then
-        netstream.Start(client, "rgnMenu")
-    end
 end
 
 --------------------------------------------------------------------------------------------------------

@@ -13,6 +13,8 @@ function lia.char.create(data, callback)
             _steamID = data.steamID,
             _faction = data.faction or "Unknown",
             _money = data.money,
+            chars_we_know = "",
+            recognized_as = "",
             _data = data.data
         },
         function(_, charID)

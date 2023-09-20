@@ -18,6 +18,7 @@ netstream.Hook(
 netstream.Hook(
     "rgn",
     function(client, level, name)
+        local targets = {}
         if isnumber(level) then
             local targets = {}
             local class = "w"
@@ -52,4 +53,3 @@ netstream.Hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------

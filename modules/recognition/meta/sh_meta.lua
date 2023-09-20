@@ -24,3 +24,4 @@ function MODULE:IsCharRecognized(char, id)
     if not recognized:find("," .. id .. ",") then return false end
     if recognized ~= "" and recognized:find("," .. id .. ",") then return true end
 end
+--------------------------------------------------------------------------------------------------------

@@ -8,19 +8,19 @@ function character:recognize(id)
     end
 
     local recognized = self:getData("rgn", "")
-    local peopleWhoWeKnow = character:GetCharsWeKnow()
+    local peopleWhoWeKnow = character:getCharsWeKnow()
     if recognized ~= "" and recognized:find("," .. id .. ",") and peopleWhoWeKnow[id] then return false end
     self:setData("rgn", recognized .. "," .. id .. ",")
-    local nameList = self:GetRecognizedAs()
+    local nameList = self:getRecognizedAs()
     if string.len(name) > 0 then
         nameList[id] = name
     else
-        nameList[id] = tostring(character:GetName())
+        nameList[id] = tostring(character:getName())
         peopleWhoWeKnow[id] = true
     end
 
-    character:SetCharsWeKnow(peopleWhoWeKnow)
-    self:SetRecognizedAs(nameList)
+    character:setCharsWeKnow(peopleWhoWeKnow)
+    self:setRecognizedAs(nameList)
 
     return true
 end
