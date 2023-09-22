@@ -7,6 +7,7 @@ if CLIENT then
 	SWEP.SlotPos = 2
 	SWEP.DrawAmmo = false
 end
+
 --------------------------------------------------------------------------------------------------------
 SWEP.Author = "Chessnut"
 SWEP.Instructions = "Primary Fire: Lock\nSecondary Fire: Unlock"
@@ -39,6 +40,7 @@ function SWEP:PreDrawViewModel(viewModel, weapon, client)
 	local hands = player_manager.TranslatePlayerHands(player_manager.TranslateToPlayerModelName(client:GetModel()))
 	if hands and hands.model then end --viewModel:SetModel(hands.model) --viewModel:SetSkin(hands.skin) --viewModel:SetBodyGroups(hands.body)
 end
+
 --------------------------------------------------------------------------------------------------------
 ACT_VM_FISTS_DRAW = 3
 ACT_VM_FISTS_HOLSTER = 2
@@ -50,6 +52,7 @@ function SWEP:Deploy()
 
 	return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:Holster()
 	if not IsValid(self.Owner) then return end
@@ -61,13 +64,16 @@ function SWEP:Holster()
 
 	return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:Precache()
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:Initialize()
 	self:SetHoldType(self.HoldType)
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:PrimaryAttack()
 	local time = lia.config.DoorLockTime
@@ -99,6 +105,7 @@ function SWEP:PrimaryAttack()
 		return
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:toggleLock(door, state)
 	if IsValid(self.Owner) and self.Owner:GetPos():Distance(door:GetPos()) > 96 then return end
@@ -117,6 +124,17 @@ function SWEP:toggleLock(door, state)
 			end
 
 			door:Fire("unlock")
+			self.Owner:EmitSound("doors/door_latch1.wav")
+		end
+	elseif door.IsSimfphyscar then
+		if state then
+			door:Fire("lock")
+			door:Lock()
+			self.Owner:EmitSound("doors/door_latch3.wav")
+		else
+			door:Fire("unlock")
+			door:UnLock()
+			door:SetPassenger(self.Owner)
 			self.Owner:EmitSound("doors/door_latch1.wav")
 		end
 	elseif door:IsVehicle() then
@@ -138,6 +156,7 @@ function SWEP:toggleLock(door, state)
 		end
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:SecondaryAttack()
 	local time = lia.config.DoorLockTime
