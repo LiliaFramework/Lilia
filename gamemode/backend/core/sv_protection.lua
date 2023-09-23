@@ -18,7 +18,7 @@ function GM:OnPlayerDropWeapon(client, item, entity)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:CanDeleteChar(ply, char)
-    if char:getMoney() < lia.config.DefaultMoney or ply:getNetVar("restricted") then return true end
+    if char:getMoney() < lia.config.DefaultMoney then return true end
 end
 --------------------------------------------------------------------------------------------------------
 function GM:OnEntityCreated(ent)
@@ -46,7 +46,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:CheckValidSit(ply, trace)
     local ent = ply:GetTracedEntity()
-    if ply:getNetVar("restricted") or ent:IsPlayer() then return false end
+    if ent:IsPlayer() then return false end
 end
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedVehicle(ply, ent)

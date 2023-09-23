@@ -133,7 +133,6 @@ function GM:PlayerUse(client, entity)
         )
     end
 
-    if client:getNetVar("restricted") then return false end
     if entity:isDoor() then
         local result = hook.Run("CanPlayerUseDoor", client, entity)
         if result == false then

@@ -265,7 +265,6 @@ end
 function GM:CanPlayerUseChar(client, character)
     if client:getChar() and client:getChar():getID() == character:getID() then return false, "You are already using this character!" end
     if client.LastDamaged and client.LastDamaged > CurTime() - 120 and character:getFaction() ~= FACTION_STAFF and client:getChar() then return false, "You took damage too recently to switch characters!" end
-    if client:getNetVar("restricted") then return false, "You can't change characters while tied!" end
     if lia.config.CharacterSwitchCooldown and client:getChar() then
         if (client:getChar():getData("loginTime", 0) + lia.config.CharacterSwitchCooldownTimer) > os.time() then return false, "You are on cooldown!" end
         if not client:Alive() then return false, "You are dead!" end
@@ -544,8 +543,6 @@ function GM:PlayerBindPress(client, bind, pressed)
         if SERVER then
             lia.command.send("chargetup")
         end
-    elseif string.find(bind, "+speed") and client:getNetVar("restricted") or (string.find(bind, "MODULE_showhelp") and client:getNetVar("restricted")) or (string.find(bind, "+jump") and client:getNetVar("restricted")) or (string.find(bind, "+walk") and client:getNetVar("restricted")) or (string.find(bind, "+use") and client:getNetVar("restricted")) then
-        return true
     end
 end
 --------------------------------------------------------------------------------------------------------

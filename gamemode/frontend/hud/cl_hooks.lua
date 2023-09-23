@@ -111,10 +111,6 @@ hook.Add(
         if hook.Run("CanDrawAmmoHUD", weapon) ~= false then
             hook.Run("DrawAmmoHUD", weapon)
         end
-
-        if localPlayer.getLocalVar(localPlayer, "restricted") and not localPlayer.getLocalVar(localPlayer, "restrictNoMsg") then
-            lia.util.drawText(L"restricted", scrW * 0.5, scrH * 0.33, nil, 1, 1, "liaBigFont")
-        end
     end
 )
 --------------------------------------------------------------------------------------------------------

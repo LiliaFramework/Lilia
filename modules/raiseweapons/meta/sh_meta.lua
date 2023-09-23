@@ -20,7 +20,6 @@ function playerMeta:isWepRaised()
 		end
 	end
 
-	if self:getNetVar("restricted") then return false end
 	if lia.config.WepAlwaysRaised then return true end
 
 	return self:getNetVar("raised", false)
