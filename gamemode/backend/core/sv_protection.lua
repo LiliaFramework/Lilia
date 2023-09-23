@@ -1,11 +1,9 @@
-
 --------------------------------------------------------------------------------------------------------
 function GM:OnPlayerDropWeapon(client, item, entity)
     local physObject = entity:GetPhysicsObject()
-	
-	if (physObject) then
-		physObject:EnableMotion()
-	end
+    if physObject then
+        physObject:EnableMotion()
+    end
 
     timer.Simple(
         lia.config.TimeUntilDroppedSWEPRemoved,
