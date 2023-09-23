@@ -2,55 +2,6 @@
 local SCHEMA = SCHEMA
 --------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
---------------------------------------------------------------------------------------------------------
-function playerMeta:FreeTies()
-    self:setNetVar("blinded", false)
-    self:setNetVar("dragged", false)
-    self:setNetVar("gagged", false)
-    self:setNetVar("restricted", false)
-end
---------------------------------------------------------------------------------------------------------
-function playerMeta:setRestricted(state, noMessage)
-    if state then
-        self:SetWalkSpeed(lia.config.WalkSpeed * 0.5)
-        self:SetRunSpeed(lia.config.RunSpeed * 0.5)
-        self:setNetVar("restricted", true)
-        if noMessage then
-            self:setLocalVar("restrictNoMsg", true)
-        end
-
-        self.liaRestrictWeps = self.liaRestrictWeps or {}
-        for k, v in ipairs(self:GetWeapons()) do
-            self.liaRestrictWeps[k] = v:GetClass()
-        end
-
-        timer.Simple(
-            0,
-            function()
-                self:StripWeapons()
-            end
-        )
-
-        hook.Run("OnPlayerRestricted", self)
-    else
-        self:setNetVar("restricted")
-        self:SetWalkSpeed(lia.config.WalkSpeed)
-        self:SetRunSpeed(lia.config.RunSpeed)
-        if self:getLocalVar("restrictNoMsg") then
-            self:setLocalVar("restrictNoMsg")
-        end
-
-        if self.liaRestrictWeps then
-            for k, v in ipairs(self.liaRestrictWeps) do
-                self:Give(v)
-            end
-
-            self.liaRestrictWeps = nil
-        end
-
-        hook.Run("OnPlayerUnRestricted", self)
-    end
-end
 --------------------------------------------------------------------------------------------
 function playerMeta:setAction(text, time, callback, startTime, finishTime)
     if time and time <= 0 then
@@ -430,27 +381,4 @@ function playerMeta:getLiliaData(key, default)
         return data
     end
 end
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function playerMeta:ResetTies()
-    self:setNetVar("blinded", false)
-    self:setNetVar("dragged", false)
-    self:setNetVar("gagged", false)
-    self:setNetVar("restricted", false)
-end
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function playerMeta:ToggleBlinded()
-    if self:getNetVar("blinded") then
-        self:setNetVar("blinded", false)
-    else
-        self:setNetVar("blinded", true)
-    end
-end
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function playerMeta:ToggleGagged()
-    if self:getNetVar("gagged") then
-        self:setNetVar("gagged", false)
-    else
-        self:setNetVar("gagged", true)
-    end
-end
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
