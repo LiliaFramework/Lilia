@@ -122,17 +122,6 @@ function GM:EntityNetworkedVarChanged(entity, varName, oldVal, newVal)
 end
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerUse(client, entity)
-    if simfphys and simfphys.IsCar(entity) and lia.config.TimeToEnterVehicle > 0 then
-        if entity.IsLocked then return end
-        client:setAction(
-            "Entering Vehicle...",
-            lia.config.TimeToEnterVehicle,
-            function()
-                entity:SetPassenger(client)
-            end
-        )
-    end
-
     if entity:isDoor() then
         local result = hook.Run("CanPlayerUseDoor", client, entity)
         if result == false then
@@ -144,6 +133,19 @@ function GM:PlayerUse(client, entity)
     end
 
     return true
+end
+--------------------------------------------------------------------------------------------------------
+function GM:simfphysUse(entity, client)
+    if simfphys and simfphys.IsCar(entity) and lia.config.TimeToEnterVehicle > 0 then
+        if entity.IsLocked then return end
+        client:setAction(
+            "Entering Vehicle...",
+            lia.config.TimeToEnterVehicle,
+            function()
+                entity:SetPassenger(client)
+            end
+        )
+    end
 end
 --------------------------------------------------------------------------------------------------------
 function GM:KeyRelease(client, key)

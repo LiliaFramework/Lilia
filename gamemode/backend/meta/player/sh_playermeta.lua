@@ -136,6 +136,34 @@ function playerMeta:getClass()
     if char then return char:getClass() end
 end
 --------------------------------------------------------------------------------------------------------
+function playerMeta:GetTracedEntity()
+    local data = {}
+    data.start = self:GetShootPos()
+    data.endpos = data.start + self:GetAimVector() * 96
+    data.filter = self
+    local target = util.TraceLine(data).Entity
+
+    return target
+end
+--------------------------------------------------------------------------------------------------------
+function playerMeta:GetTrace()
+    local data = {}
+    data.start = client:GetShootPos()
+    data.endpos = data.start + client:GetAimVector() * 200
+    data.filter = {self, client}
+    data.mins = -hull
+    data.maxs = hull
+    local trace = util.TraceHull(data)
+
+    return trace
+end
+--------------------------------------------------------------------------------------------------------
+function playerMeta:VerifyCommandDistance(otherPlayer)
+    if not IsValid(otherPlayer) or not IsValid(self) then return false end
+
+    return self:GetPos():DistToSqr(otherPlayer:GetPos()) <= (lia.config.InteractionDistance * lia.config.InteractionDistance)
+end
+--------------------------------------------------------------------------------------------------------
 function playerMeta:getClassData()
     local char = self:getChar()
     if char then
