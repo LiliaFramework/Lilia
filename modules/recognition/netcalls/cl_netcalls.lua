@@ -6,6 +6,7 @@ netstream.Hook(
         hook.Run("OnCharRecognized", client, id)
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "rgnMenu",
@@ -35,8 +36,6 @@ netstream.Hook(
         menu:AddOption(
             "Allow those in whispering range to recognize you by a fake name.",
             function()
-                local client = LocalPlayer()
-                local name = nil
                 Derma_StringRequest(
                     "Allow those in whispering range to recognize you by a fake name.",
                     "Enter a fake name to display to other players in range.",
@@ -53,8 +52,6 @@ netstream.Hook(
         menu:AddOption(
             "Allow those in talking range to recognize you by a fake name.",
             function()
-                local client = LocalPlayer()
-                local name = nil
                 Derma_StringRequest(
                     "Allow those in talking range to recognize you by a fake name.",
                     "Enter a fake name to display to other players in range.",
@@ -71,15 +68,13 @@ netstream.Hook(
         menu:AddOption(
             "Allow those in yelling range to recognize you by a fake name.",
             function()
-                local client = LocalPlayer()
-                local name = nil
                 Derma_StringRequest(
                     "Allow those in yelling range to recognize you by a fake name.",
                     "Enter a fake name to display to other players in range.",
                     default or "",
                     function(text)
                         if text then
-                            CharRecognize(2, text)
+                            CharRecognize(4, text)
                         end
                     end
                 )
