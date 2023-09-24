@@ -262,23 +262,6 @@ function GM:GetDefaultCharDesc(client, faction)
     if info and info.onGetDefaultDesc then return info:onGetDefaultDesc(client) end
 end
 --------------------------------------------------------------------------------------------------------
-function GM:CanPlayerUseChar(client, character)
-    if client:getChar() and client:getChar():getID() == character:getID() then return false, "You are already using this character!" end
-    if client.LastDamaged and client.LastDamaged > CurTime() - 120 and character:getFaction() ~= FACTION_STAFF and client:getChar() then return false, "You took damage too recently to switch characters!" end
-    if lia.config.CharacterSwitchCooldown and client:getChar() then
-        if (client:getChar():getData("loginTime", 0) + lia.config.CharacterSwitchCooldownTimer) > os.time() then return false, "You are on cooldown!" end
-        if not client:Alive() then return false, "You are dead!" end
-    end
-
-    local faction = lia.faction.indices[character:getFaction()]
-    if faction and hook.Run("CheckFactionLimitReached", faction, character, client) then return false, "@limitFaction" end
-    if character and character:getData("banned", false) then
-        if isnumber(banned) and banned < os.time() then return end
-
-        return false, "@charBanned"
-    end
-end
---------------------------------------------------------------------------------------------------------
 function GM:CheckFactionLimitReached(faction, character, client)
     if isfunction(faction.onCheckLimitReached) then return faction:onCheckLimitReached(character, client) end
     if not isnumber(faction.limit) then return false end

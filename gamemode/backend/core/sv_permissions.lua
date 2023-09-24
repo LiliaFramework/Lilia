@@ -69,7 +69,6 @@ function GM:PlayerSpawnSENT(client)
 
     return client:getChar():hasFlags("E")
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnVehicle(client, model, name, data)
     if not client:getChar() then return false end
@@ -87,6 +86,7 @@ function GM:CanTool(client, trace, tool)
     local entity = client:GetTracedEntity()
     if not client:getChar() then return false end
     if not client:getChar():hasFlags("t") then return false end
+    if toolname == "permaprops" and IsValid(entity) and string.StartWith(entity:GetClass(), "lia_") then return false end
     if tool == "advdupe2" and table.HasValue(lia.config.DuplicatorBlackList, entity:GetClass()) then return false end
     if tool == "remover" and table.HasValue(lia.config.RemoverBlockedEntities, entity:GetClass()) then return CAMI.PlayerHasAccess(client, "Lilia - Management - Can Remove Blocked Entities", nil) end
     if CAMI.PlayerHasAccess(client, privilege, nil) then return true end

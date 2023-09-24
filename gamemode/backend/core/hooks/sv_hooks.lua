@@ -563,3 +563,30 @@ function GM:KeyPress(client, key)
     end
 end
 --------------------------------------------------------------------------------------------------------
+function GM:CanPlayerUseChar(client, character)
+    local faction = lia.faction.indices[character:getFaction()]
+	local banned = character:getData("banned")
+    local currentChar = client:getChar()
+	
+    if character and character:getData("banned", false) then
+        if isnumber(banned) and banned < os.time() then return end
+        return false, "@charBanned"
+    end
+
+    if faction and hook.Run("CheckFactionLimitReached", faction, character, client) then return false, "@limitFaction" end
+    if currentChar then
+        local status, result = hook.Run("CanPlayerSwitchChar", client, currentChar, character)
+        if status == false then return status, result end
+    end
+end
+--------------------------------------------------------------------------------------------------------
+function GM:CanPlayerSwitchChar(client, character, newCharacter)
+    local currentChar = client:getChar()
+    if IsValid(client.liaRagdoll) then return false, "You are ragdolled!" end
+    if lia.config.CharacterSwitchCooldown and (currentChar:getData("loginTime", 0) + lia.config.CharacterSwitchCooldownTimer) > os.time() then return false, "You are on cooldown!" end
+    if not client:Alive() then return false, "You are dead!" end
+    if client.LastDamaged and client.LastDamaged > CurTime() - 120 and character:getFaction() ~= FACTION_STAFF and currentChar then return false, "You took damage too recently to switch characters!" end
+    if currentChar:getID() == character:getID() then return false, "You are already using this character!" end
+end
+--------------------------------------------------------------------------------------------------------
+
