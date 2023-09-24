@@ -22,16 +22,6 @@ lia.command.add(
 )
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
-    "dropmoney",
-    {
-        adminOnly = false,
-        privilege = "Basic User Permissions",
-        syntax = "<number amount>",
-        onRun = function(client, arguments) end
-    }
-)
---------------------------------------------------------------------------------------------------------
-lia.command.add(
     "chardesc",
     {
         adminOnly = false,
