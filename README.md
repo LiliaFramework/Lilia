@@ -1,6 +1,6 @@
 # Lilia
  
-Lilia is a roleplay gamemode framework for [Garry's Mod](https://gmod.facepunch.com/), built as a fork of [NutScript 1.2.3](https://github.com/NutScript/NutScript). Its aim is to provide a stable, feature-rich and open-source, allowing game developers to focus on creating engaging gameplay.
+Lilia is a dynamic roleplay gamemode framework for [Garry's Mod](https://gmod.facepunch.com/), derived from [NutScript 1.2.3](https://github.com/NutScript/NutScript). It's designed to offer a stable, feature-rich, and open-source platform, enabling game developers to focus on crafting captivating gameplay.
 
 ## Getting Started
 
