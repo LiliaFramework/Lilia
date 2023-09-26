@@ -75,7 +75,7 @@ if not lia.config.WasInitialized then
         BarsDisabled = false, -- Disable certain UI bars
         AmmoDrawEnabled = true, -- Enable ammo drawing
         Vignette = true, -- Enable vignette effect
-        CustomUIEnabled = true, -- Enable custom UI elements
+        CustomUIEnabled = false, -- Enable custom UI elements
         -- Talk Ranges
         TalkRanges = {
             ["Whispering"] = 120, -- Whispering talk range
