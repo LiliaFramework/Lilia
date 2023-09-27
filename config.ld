@@ -3,7 +3,6 @@ file = {
 	"gamemode",
 	"plugins",
 	"docs/hooks",
-	exclude = {"gamemode/core/libs/thirdparty"}
 }
 
 module_file = {
