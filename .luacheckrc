@@ -1,17 +1,15 @@
-⟷
-
 max_line_length = 128
-std = "luajit+gmod+helix"
+std = "luajit+gmod+lilia"
 ignore = {
 	"212",
 }
-stds.helix = {}
-stds.helix.globals = {
+stds.lilia = {}
+stds.lilia.globals = {
 	"ix",
-	"Schema",
+	"SCHEMA",
 
 	"ITEM",
-	"PLUGIN",
+	"MODULE",
 	"ATTRIBUTE",
 	"NAME",
 	"LANGUAGE",
@@ -22,7 +20,7 @@ stds.helix.globals = {
 	"ICON_RENDER_QUEUE",
 	"USABLE_FUNCS",
 }
-stds.helix.read_globals = {
+stds.lilia.read_globals = {
 	"L",
 	"L2",
 	"IX_RELOADED",
@@ -94,7 +92,7 @@ files = {
 		}
 	},
 
-	["plugins/**/languages/*.lua"] = {
+	["modules/**/languages/*.lua"] = {
 		ignore = {
 			"631"
 		}
