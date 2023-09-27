@@ -27,7 +27,7 @@ jobs:
       run: luarocks make
 
     - name: Lint
-      working-directory: helix
+      working-directory: Lilia
       run: luacheck .
 
   docs:
@@ -36,7 +36,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          path: helix
+          path: Lilia
 
       - uses: leafo/gh-actions-lua@v8.0.0
         with:
@@ -55,19 +55,19 @@ jobs:
         run: luarocks make
 
       - name: Build docs
-        working-directory: helix
+        working-directory: Lilia
         run: ldoc . --fatalwarnings
 
       - name: Copy assets
-        working-directory: helix
+        working-directory: Lilia
         run: |
           cp -v docs/css/* docs/html
           cp -v docs/js/* docs/html
 
       - name: Deploy
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository == 'NebulousCloud/helix' && success()
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository == 'bleonheart/Lilia' && success()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: helix/docs/html
-          cname: docs.gethelix.co
+          publish_dir: Lilia/docs/html
+          cname: docs.getLilia.co
