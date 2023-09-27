@@ -2,7 +2,7 @@ name: UpdateWiki
 on: [push, pull_request]
 
 jobs:
-  docs:
+  linter:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,30 +16,16 @@ jobs:
 
       - uses: leafo/gh-actions-luarocks@v4.0.0
 
-      - name: Pull LDoc
+      - name: Pull gluacheck
         uses: actions/checkout@v2
         with:
-          repository: impulsh/LDoc
-          path: ldoc
+          repository: impulsh/gluacheck
+          path: luacheck
 
-      - name: Build LDoc
-        working-directory: ldoc
+      - name: Build gluacheck
+        working-directory: luacheck
         run: luarocks make
 
-      - name: Build docs
+      - name: Lint
         working-directory: UpdateWiki
-        run: ldoc . --fatalwarnings
-
-      - name: Copy assets
-        working-directory: UpdateWiki
-        run: |
-          cp -v docs/css/* docs/html
-          cp -v docs/js/* docs/html
-
-      - name: Deploy
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: UpdateWiki/docs/html
-          cname: docs.getyourcustomdomain.com
+        run: luacheck .
