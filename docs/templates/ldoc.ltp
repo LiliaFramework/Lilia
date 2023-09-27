@@ -14,7 +14,7 @@ function ldoc.url(path)
 end
 
 function ldoc.realm_icon(realm)
-	return "<span class=\"realm " .. (realm or "") .. "\"></span>";
+	return "<span class=\"realm " .. (realm or "shared") .. "\"></span>";
 end
 
 function ldoc.is_kind_classmethod(kind)
