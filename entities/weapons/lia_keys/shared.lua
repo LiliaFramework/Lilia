@@ -35,7 +35,6 @@ end
 --------------------------------------------------------------------------------------------------------
 function SWEP:Deploy()
 	if not IsValid(self.Owner) then return end
-	local viewModel = self.Owner:GetViewModel()
 	return true
 end
 --------------------------------------------------------------------------------------------------------

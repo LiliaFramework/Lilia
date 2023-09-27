@@ -1,24 +1,14 @@
 max_line_length = 512
 std = "luajit+gmod+lilia"
 ignore = {
-	"212", -- unused argument
+    "212", -- unused argument
 }
+
 stds = {
     lilia = {
-        globals = {"lia", "SCHEMA", "ITEM", "MODULE", "ATTRIBUTE", "NAME", "LANGUAGE", "FACTION", "CLASS", "CHAT_RECOGNIZED", "LIA_CVAR_LANG", "ALWAYS_RAISED", "ACT_VM_FISTS_HOLSTER",
-		"ACT_VM_FISTS_DRAW",
-		"CARRY_WEIGHT_LIMIT",
-		"CARRY_FORCE_LIMIT",
-		"THROW_VELOCITY_CAP",
-		"CARRY_STRENGTH_CHAD",
-		"CARRY_FORCE_LEVEL",
-		"PLAYER_PICKUP_RANGE",
-		"CARRY_STRENGTH_GOD",
-		"CARRY_STRENGTH_TERMINATOR",
-		"CARRY_STRENGTH_NERD","ICON_RENDER_QUEUE", "USABLE_FUNCS",},
+        globals = {"lia", "SCHEMA", "ITEM", "MODULE", "g_ContextMenu", "ATTRIBUTE", "NAME", "LANGUAGE", "FACTION", "CLASS", "CHAT_RECOGNIZED", "LIA_CVAR_LANG", "ALWAYS_RAISED", "ACT_VM_FISTS_HOLSTER", "ACT_VM_FISTS_DRAW", "CARRY_WEIGHT_LIMIT", "CARRY_FORCE_LIMIT", "THROW_VELOCITY_CAP", "CARRY_STRENGTH_CHAD", "CARRY_FORCE_LEVEL", "PLAYER_PICKUP_RANGE", "CARRY_STRENGTH_GOD", "CARRY_STRENGTH_TERMINATOR", "VENDOR_WELCOME", "VENDOR_LEAVE", "VENDOR_NOTRADE", "VENDOR_PRICE", "VENDOR_STOCK", "VENDOR_MODE", "VENDOR_MAXSTOCK", "VENDOR_SELLANDBUY", "VENDOR_SELLONLY", "VENDOR_BUYONLY", "VENDOR_TEXT", "LIA_VENDORS", "STORAGE_DEFINITIONS", "CARRY_STRENGTH_NERD", "ICON_RENDER_QUEUE", "USABLE_FUNCS",},
         read_globals = {"L", "L2", "LIA_RELOADED", "CHAT_CLASS", "HOOKS_CACHE", "BAR_HEIGHT", "ACCESS_LABELS", "CAMI", "netstream", "mysql", "pon", "ikon", "BaseClass", "SetNetVar", "GetNetVar", "liaSoundDuration", "HOLDTYPE_TRANSLATOR", "PLAYER_HOLDTYPE_TRANSLATOR", "ACT_VM_FISTS_DRAW", "ACT_VM_FISTS_HOLSTER", "TOOLTIP_GENERIC", "TOOLTIP_ITEM", "FLAG_NORMAL", "FLAG_SUCCESS", "FLAG_WARNING", "FLAG_DANGER", "FLAG_SERVER", "FLAG_DEV", "DOOR_OWNER", "DOOR_TENANT", "DOOR_GUEST", "DOOR_NONE", "VENDOR_BUY", "VENDOR_SELL", "VENDOR_BOTH", "VENDOR_WELCOME", "VENDOR_LEAVE", "VENDOR_NOTRADE", "VENDOR_PRICE", "VENDOR_STOCK", "VENDOR_MODE", "VENDOR_MAXSTOCK", "VENDOR_SELLANDBUY", "VENDOR_SELLONLY", "VENDOR_BUYONLY", "VENDOR_TEXT", "FCAP_IMPULSE_USE", "FCAP_CONTINUOUS_USE", "FCAP_ONOFF_USE", "FCAP_DIRECTIONAL_USE", "FCAP_USE_ONGROUND", "FCAP_USE_IN_RADIUS",},
         files = {
-            -- some phrases are unavoidably long, so we'll ignore the max line length for language files
             ["gamemode/languages/**/*.lua"] = {
                 ignore = {"631"}
             },
@@ -26,12 +16,12 @@ stds = {
                 ignore = {"631"}
             },
         },
-        -- ignore third party files
-        exclude_files = {"gamemode/core/libs/thirdparty/**/*.lua"},
+        exclude_files = {"gamemode/backend/external/thirdparty/**/*.lua"},
     },
     gmod = {
         globals = {"GM", "ENT", "TOOL", "SWEP"},
         read_globals = {
+            "g_ContextMenu",
             "VERSION",
             "CLIENT",
             "SERVER",
