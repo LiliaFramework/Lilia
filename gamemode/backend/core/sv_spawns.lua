@@ -51,6 +51,7 @@ function GM:PlayerLoadout(client)
     hook.Run("PostPlayerLoadout", client)
     client:SelectWeapon("lia_hands")
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawn(client)
     if pac then
@@ -64,6 +65,7 @@ function GM:PlayerSpawn(client)
     client:setAction()
     hook.Run("PlayerLoadout", client)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnCharAttribBoosted(client, character, attribID)
     local attribute = lia.attribs.list[attribID]
@@ -71,10 +73,10 @@ function GM:OnCharAttribBoosted(client, character, attribID)
         attribute:onSetup(client, character:getAttrib(attribID, 0))
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PostPlayerLoadout(client)
     local character = client:getChar()
-
     if character:hasFlags("p") then
         client:Give("weapon_physgun")
     end
@@ -97,6 +99,7 @@ function GM:PostPlayerLoadout(client)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerDeath(client, inflictor, attacker)
     local char = client:getChar()
@@ -161,6 +164,7 @@ function GM:PlayerDeath(client, inflictor, attacker)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerDeathThink(client)
     if client:getChar() then
@@ -172,6 +176,7 @@ function GM:PlayerDeathThink(client)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerInitialSpawn(client)
     if client:IsBot() then return hook.Run("SetupBotCharacter", client) end

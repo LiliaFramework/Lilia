@@ -1,5 +1,4 @@
 local w, h = ScrW(), ScrH()
-
 function MODULE:HUDPaint()
 	local ply = LocalPlayer()
 	if not IsValid(ply:getChar()) then return end

@@ -5,9 +5,9 @@ hook.Add(
     function(tabs)
         if hook.Run("CanPlayerViewInventory") == false then return end
         tabs["inv"] = function(panel)
-            local inventory = LocalPlayer():getChar():getInv()
-            if not inventory then return end
-            local mainPanel = inventory:show(panel)
+            local playerInventory = LocalPlayer():getChar():getInv()
+            if not playerInventory then return end
+            local mainPanel = playerInventory:show(panel)
             local sortPanels = {}
             local totalSize = {
                 x = 0,
@@ -18,11 +18,11 @@ hook.Add(
             table.insert(sortPanels, mainPanel)
             totalSize.x = totalSize.x + mainPanel:GetWide() + 10
             totalSize.y = math.max(totalSize.y, mainPanel:GetTall())
-            for id, item in pairs(inventory:getItems()) do
+            for id, item in pairs(playerInventory:getItems()) do
                 if item.isBag and hook.Run("CanOpenBagPanel", item) ~= false then
-                    local inventory = item:getInv()
-                    local childPanels = inventory:show(mainPanel)
-                    lia.gui["inv" .. inventory:getID()] = childPanels
+                    local bagInventory = item:getInv()
+                    local childPanels = bagInventory:show(mainPanel)
+                    lia.gui["inv" .. bagInventory:getID()] = childPanels
                     table.insert(sortPanels, childPanels)
                     totalSize.x = totalSize.x + childPanels:GetWide() + 10
                     totalSize.y = math.max(totalSize.y, childPanels:GetTall())
@@ -31,10 +31,10 @@ hook.Add(
 
             local px, py, pw, ph = mainPanel:GetBounds()
             local x, y = px + pw / 2 - totalSize.x / 2, py + ph / 2
-            for _, panel in pairs(sortPanels) do
-                panel:ShowCloseButton(true)
-                panel:SetPos(x, y - panel:GetTall() / 2)
-                x = x + panel:GetWide() + 10
+            for _, sortingPanel in pairs(sortPanels) do
+                sortingPanel:ShowCloseButton(true)
+                sortingPanel:SetPos(x, y - sortingPanel:GetTall() / 2)
+                x = x + sortingPanel:GetWide() + 10
             end
 
             hook.Add(
@@ -47,6 +47,7 @@ hook.Add(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "CreateMenuButtons",
@@ -68,6 +69,7 @@ hook.Add(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "CreateMenuButtons",

@@ -1,10 +1,10 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
 local waits = {}
-local w, h = ScrW(), ScrH()
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
-    self:SetSize(w, h)
+    local screenWidth, screenHeight = ScrW(), ScrH()
+    self:SetSize(screenWidth, screenHeight)
     self:Center()
     self:MoveToFront()
     self:SetAlpha(0)
@@ -200,24 +200,24 @@ function PANEL:Think()
     end
 end
 --------------------------------------------------------------------------------------------------------
-function PANEL:Paint(w, h)
+function PANEL:Paint(_, _)
     lia.util.drawBlur(self, 10)
-    draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 200))
+    draw.RoundedBox(0, 0, 0, self:GetWide(), self:GetTall(), Color(20, 20, 20, 200))
 end
 --------------------------------------------------------------------------------------------------------
 function PANEL:PaintOver()
-    draw.DrawText(":( Connection lost", "liaTitleFont", w / 2, 10, color_white, TEXT_ALIGN_CENTER)
+    draw.DrawText(":( Connection lost", "liaTitleFont", self:GetWide() / 2, 10, color_white, TEXT_ALIGN_CENTER)
     if self.ServerIsOff == nil then
-        draw.DrawText("Checking server status...", "liaBigFont", w / 2, 130, color_white, TEXT_ALIGN_CENTER)
+        draw.DrawText("Checking server status...", "liaBigFont", self:GetWide() / 2, 130, color_white, TEXT_ALIGN_CENTER)
 
         return
     end
 
     if self.ServerIsOff then
-        draw.DrawText("The server has gone offline. Try reconnecting in a few minutes.", "liaBigFont", w / 2, 130, color_white, TEXT_ALIGN_CENTER)
+        draw.DrawText("The server has gone offline. Try reconnecting in a few minutes.", "liaBigFont", self:GetWide() / 2, 130, color_white, TEXT_ALIGN_CENTER)
     else
-        draw.DrawText("You've lost connection to the server. Try reconnecting in a few minutes.", "liaBigFont", w / 2, 130, color_white, TEXT_ALIGN_CENTER)
-        draw.DrawText("Check your router or internet connection.", "liaBigFont", w / 2, h + 160, color_white, TEXT_ALIGN_CENTER)
+        draw.DrawText("You've lost connection to the server. Try reconnecting in a few minutes.", "liaBigFont", self:GetWide() / 2, 130, color_white, TEXT_ALIGN_CENTER)
+        draw.DrawText("Check your router or internet connection.", "liaBigFont", self:GetWide() / 2, self:GetTall() + 160, color_white, TEXT_ALIGN_CENTER)
     end
 end
 --------------------------------------------------------------------------------------------------------

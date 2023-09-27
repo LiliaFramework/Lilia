@@ -21,6 +21,7 @@ function MODULE:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, ey
 	vm_angles:RotateAroundAxis(vm_angles:Right(), rotation.r * fraction)
 	client.liaRaisedFrac = Lerp(FrameTime() * 2, client.liaRaisedFrac or 0, value)
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:SetupQuickMenu(menu)
 	menu:addSpacer()

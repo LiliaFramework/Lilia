@@ -10,10 +10,12 @@ ENT.DrawEntityInfo = true
 function ENT:getItemID()
     return self:getNetVar("instanceID")
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:getItemTable()
     return lia.item.instances[self:getItemID()]
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:getData(key, default)
     local data = self:getNetVar("data", {})

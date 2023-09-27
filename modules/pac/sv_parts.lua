@@ -8,11 +8,13 @@ local playerMeta = FindMetaTable("Entity")
 function playerMeta:getParts()
 	return self:getNetVar("parts", {})
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:syncParts()
 	net.Start("liaPACSync")
 	net.Send(self)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:addPart(partID)
 	if self:getParts()[partID] then return end
@@ -24,6 +26,7 @@ function playerMeta:addPart(partID)
 	parts[partID] = true
 	self:setNetVar("parts", parts)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:removePart(partID)
 	net.Start("liaPACPartRemove")
@@ -34,6 +37,7 @@ function playerMeta:removePart(partID)
 	parts[partID] = nil
 	self:setNetVar("parts", parts)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:resetParts()
 	net.Start("liaPACPartReset")
@@ -41,6 +45,7 @@ function playerMeta:resetParts()
 	net.Broadcast()
 	self:setNetVar("parts", {})
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:PostPlayerInitialSpawn(client)
 	timer.Simple(
@@ -50,10 +55,12 @@ function MODULE:PostPlayerInitialSpawn(client)
 		end
 	)
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:PlayerLoadout(client)
 	client:resetParts()
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:ModuleLoaded()
 	game.ConsoleCommand("sv_pac_webcontent_limit 35840\n")

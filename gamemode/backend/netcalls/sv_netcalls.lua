@@ -60,6 +60,7 @@ net.Receive(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaTransferItem",
@@ -71,6 +72,7 @@ net.Receive(
         hook.Run("HandleItemTransferRequest", client, itemID, x, y, invID)
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "invAct",
@@ -101,6 +103,7 @@ netstream.Hook(
         item:interact(action, client, entity, data)
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "cmd",
@@ -118,6 +121,7 @@ netstream.Hook(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "ChangeSpeakMode",
@@ -125,6 +129,7 @@ netstream.Hook(
         client:setNetVar("VoiceType", mode)
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaTypeStatus",
@@ -132,6 +137,7 @@ net.Receive(
         client:setNetVar("typing", net.ReadBool())
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "EditDetailedDescriptions",

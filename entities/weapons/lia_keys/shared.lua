@@ -32,15 +32,18 @@ SWEP.HoldType = "normal"
 function SWEP:Initialize()
 	self:SetHoldType(self.HoldType)
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:Deploy()
-	if not IsValid(self.Owner) then return end
+	if not IsValid(self:GetOwner()) then return end
+
 	return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:Holster()
-	if not IsValid(self.Owner) then return end
-	local viewModel = self.Owner:GetViewModel()
+	if not IsValid(self:GetOwner()) then return end
+	local viewModel = self:GetOwner():GetViewModel()
 	if IsValid(viewModel) then
 		viewModel:SetPlaybackRate(1)
 		viewModel:ResetSequence(ACT_VM_FISTS_HOLSTER)

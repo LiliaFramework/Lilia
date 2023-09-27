@@ -28,6 +28,7 @@ function GM:InitializedConfig()
     print("Total models processed with TPoseFixer: " .. ModelCount)
     hook.Run("InitializedModules")
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:RegisterCamiPermissions()
     for _, PrivilegeInfo in pairs(lia.config.CAMIPrivileges) do
@@ -73,14 +74,14 @@ function GM:RegisterCamiPermissions()
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 --------------------------------------------------------------------------------------------------------
 function GM:TranslateActivity(client, act)
-    local model = string.lower(client.GetModel(client))
-    local class = lia.anim.getModelClass(model) or "player"
-    local weapon = client.GetActiveWeapon(client)
-    if class == "player" then
-        if not lia.config.WepAlwaysRaised and IsValid(weapon) and (client.isWepRaised and not client.isWepRaised(client)) and client:OnGround() then
+    local model = string.lower(client:GetModel())
+    local modelClass = lia.anim.getModelClass(model) or "player"
+    local weapon = client:GetActiveWeapon()
+    if modelClass == "player" then
+        if not lia.config.WepAlwaysRaised and IsValid(weapon) and (client.isWepRaised and not client:isWepRaised()) and client:OnGround() then
             if string.find(model, "zombie") then
                 local tree = lia.anim.zombie
                 if string.find(model, "fast") then
@@ -90,12 +91,12 @@ function GM:TranslateActivity(client, act)
                 if tree[act] then return tree[act] end
             end
 
-            local holdType = IsValid(weapon) and (weapon.HoldType or weapon.GetHoldType(weapon)) or "normal"
+            local holdType = IsValid(weapon) and (weapon.HoldType or weapon:GetHoldType()) or "normal"
             holdType = lia.anim.PlayerHoldtypeTranslator[holdType] or "passive"
             local tree = lia.anim.player[holdType]
             if tree and tree[act] then
                 if type(tree[act]) == "string" then
-                    client.CalcSeqOverride = client.LookupSequence(tree[act])
+                    client.CalcSeqOverride = client:LookupSequence(tree[act])
 
                     return
                 else
@@ -107,57 +108,58 @@ function GM:TranslateActivity(client, act)
         return self.BaseClass.TranslateActivity(self.BaseClass, client, act)
     end
 
-    local tree = lia.anim[class]
+    local tree = lia.anim[modelClass]
     if tree then
         local subClass = "normal"
-        if client.InVehicle(client) then
-            local vehicle = client.GetVehicle(client)
-            local class = vehicle:isChair() and "chair" or vehicle:GetClass()
-            if tree.vehicle and tree.vehicle[class] then
-                local act = tree.vehicle[class][1]
-                local fixvec = tree.vehicle[class][2]
+        if client:InVehicle() then
+            local vehicle = client:GetVehicle()
+            local vehicleClass = vehicle:isChair() and "chair" or vehicle:GetClass()
+            if tree.vehicle and tree.vehicle[vehicleClass] then
+                local actInVehicle = tree.vehicle[vehicleClass][1]
+                local fixvec = tree.vehicle[vehicleClass][2]
                 if fixvec then
                     client:SetLocalPos(Vector(16.5438, -0.1642, -20.5493))
                 end
 
-                if type(act) == "string" then
-                    client.CalcSeqOverride = client.LookupSequence(client, act)
+                if type(actInVehicle) == "string" then
+                    client.CalcSeqOverride = client:LookupSequence(actInVehicle)
 
                     return
                 else
-                    return act
+                    return actInVehicle
                 end
             else
-                act = tree.normal[ACT_MP_CROUCH_IDLE][1]
-                if type(act) == "string" then
-                    client.CalcSeqOverride = client:LookupSequence(act)
+                actInVehicle = tree.normal[ACT_MP_CROUCH_IDLE][1]
+                if type(actInVehicle) == "string" then
+                    client.CalcSeqOverride = client:LookupSequence(actInVehicle)
                 end
 
                 return
             end
-        elseif client.OnGround(client) then
-            client.ManipulateBonePosition(client, 0, vector_origin)
+        elseif client:OnGround() then
+            client:ManipulateBonePosition(0, vector_origin)
             if IsValid(weapon) then
-                subClass = weapon.HoldType or weapon.GetHoldType(weapon)
+                subClass = weapon.HoldType or weapon:GetHoldType()
                 subClass = lia.anim.HoldtypeTranslator[subClass] or subClass
             end
 
             if tree[subClass] and tree[subClass][act] then
                 local index = (not client.isWepRaised or client:isWepRaised()) and 2 or 1
-                local act2 = tree[subClass][act][index]
-                if type(act2) == "string" then
-                    client.CalcSeqOverride = client.LookupSequence(client, act2)
+                local actForGround = tree[subClass][act][index]
+                if type(actForGround) == "string" then
+                    client.CalcSeqOverride = client:LookupSequence(actForGround)
 
                     return
+                else
+                    return actForGround
                 end
-
-                return act2
             end
         elseif tree.glide then
             return tree.glide
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:DoAnimationEvent(client, event, data)
     local class = lia.anim.getModelClass(client:GetModel())
@@ -198,10 +200,12 @@ function GM:DoAnimationEvent(client, event, data)
 
     return ACT_INVALID
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:EntityEmitSound(data)
     if data.Entity.liaIsMuted then return false end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:HandlePlayerLanding(client, velocity, wasOnGround)
     if client:IsNoClipping() then return end
@@ -214,6 +218,7 @@ function GM:HandlePlayerLanding(client, velocity, wasOnGround)
         return true
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CalcMainActivity(client, velocity)
     client.CalcIdeal = ACT_MP_STAND_IDLE
@@ -224,8 +229,7 @@ function GM:CalcMainActivity(client, velocity)
         client:SetPoseParameter("move_yaw", math.NormalizeAngle(FindMetaTable("Vector").Angle(velocity)[2] - client:EyeAngles()[2]))
     end
 
-    if self:HandlePlayerLanding(client, velocity, client.m_bWasOnGround) or self:HandlePlayerNoClipping(client, velocity) or self:HandlePlayerDriving(client) or self:HandlePlayerVaulting(client, velocity) or (usingPlayerAnims and self:HandlePlayerJumping(client, velocity)) or self:HandlePlayerSwimming(client, velocity) or self:HandlePlayerDucking(client, velocity) then
-    else
+    if not (self:HandlePlayerLanding(client, velocity, client.m_bWasOnGround) or self:HandlePlayerNoClipping(client, velocity) or self:HandlePlayerDriving(client) or self:HandlePlayerVaulting(client, velocity) or (usingPlayerAnims and self:HandlePlayerJumping(client, velocity)) or self:HandlePlayerSwimming(client, velocity) or self:HandlePlayerDucking(client, velocity)) then
         local len2D = velocity:Length2DSqr()
         if len2D > 22500 then
             client.CalcIdeal = ACT_MP_RUN
@@ -243,6 +247,7 @@ function GM:CalcMainActivity(client, velocity)
 
     return client.CalcIdeal, client.liaForceSeq or oldCalcSeqOverride
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnCharVarChanged(char, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
@@ -251,16 +256,19 @@ function GM:OnCharVarChanged(char, varName, oldVar, newVar)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:GetDefaultCharName(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.onGetDefaultName then return info:onGetDefaultName(client) end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.onGetDefaultDesc then return info:onGetDefaultDesc(client) end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CheckFactionLimitReached(faction, character, client)
     if isfunction(faction.onCheckLimitReached) then return faction:onCheckLimitReached(character, client) end
@@ -272,6 +280,7 @@ function GM:CheckFactionLimitReached(faction, character, client)
 
     return team.NumPlayers(faction.index) >= maxPlayers
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:Move(client, moveData)
     local char = client:getChar()
@@ -302,6 +311,7 @@ function GM:Move(client, moveData)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CanItemBeTransfered(itemObject, curInv, inventory)
     if itemObject.onCanBeTransfered then
@@ -310,6 +320,7 @@ function GM:CanItemBeTransfered(itemObject, curInv, inventory)
         return itemHook ~= false
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnPlayerJoinClass(client, class, oldClass)
     local char = client:getChar()
@@ -329,6 +340,7 @@ function GM:OnPlayerJoinClass(client, class, oldClass)
 
     netstream.Start(nil, "classUpdate", client)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:Think()
     if not self.nextThink then
@@ -349,12 +361,14 @@ function GM:Think()
         self.nextThink = CurTime() + lia.config.HealingTimer
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PropBreak(attacker, ent)
     if IsValid(ent) and ent:GetPhysicsObject():IsValid() then
         constraint.RemoveAll(ent)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnPickupMoney(client, moneyEntity)
     if moneyEntity and moneyEntity:IsValid() then
@@ -363,6 +377,7 @@ function GM:OnPickupMoney(client, moneyEntity)
         client:notifyLocalized("moneyTaken", lia.currency.get(amount))
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:ModelFixer(model, animtype)
     if not animtype then
@@ -371,6 +386,7 @@ function GM:ModelFixer(model, animtype)
         lia.anim.setModelClass(model, animtype)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedModules()
     if SERVER then
@@ -386,9 +402,11 @@ function GM:InitializedModules()
     else
         self:InitializedExtrasClient()
     end
+
     self:RegisterCamiPermissions()
     self:InitializedExtrasShared()
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:InitPostEntity()
     if CLIENT then
@@ -397,6 +415,7 @@ function GM:InitPostEntity()
         self:ServerPostInit()
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedExtrasShared()
     RunConsoleCommand("sv_simfphys_gib_lifetime", "0")
@@ -405,10 +424,12 @@ function GM:InitializedExtrasShared()
     RunConsoleCommand("sv_simfphys_traction_snow", "1")
     RunConsoleCommand("sv_simfphys_damagemultiplicator", "100")
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:simfphysPhysicsCollide()
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:DevelopmentServerLoader()
     --[[
@@ -443,6 +464,7 @@ function GM:DevelopmentServerLoader()
         print("This is a Main Server!")
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PSALoader()
     local TalkModesPSAString = "Please Remove Talk Modes. Our framework has such built in by default."
@@ -505,10 +527,12 @@ function GM:PSALoader()
         )
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:IsValidTarget(target)
     return IsValid(target) and target:IsPlayer() and target:getChar()
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()

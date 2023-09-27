@@ -31,6 +31,7 @@ end
 function ENT:setHealth(amount)
     self.health = amount
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:OnTakeDamage(dmginfo)
     local damage = dmginfo:GetDamage()
@@ -40,6 +41,7 @@ function ENT:OnTakeDamage(dmginfo)
         self:Remove()
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:setItem(itemID)
     local itemTable = lia.item.instances[itemID]
@@ -79,6 +81,7 @@ function ENT:setItem(itemID)
         itemTable:onEntityCreated(self)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:breakEffects()
     self:EmitSound("physics/cardboard/cardboard_box_break" .. math.random(1, 3) .. ".wav")
@@ -89,6 +92,7 @@ function ENT:breakEffects()
     effect:SetScale(3)
     util.Effect("GlassImpact", effect)
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:OnRemove()
     local itemTable = self:getItemTable()
@@ -105,6 +109,7 @@ function ENT:OnRemove()
         lia.item.deleteByID(self.liaItemID)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:Think()
     local itemTable = self:getItemTable()

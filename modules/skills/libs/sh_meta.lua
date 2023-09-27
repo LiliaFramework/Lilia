@@ -6,6 +6,7 @@ function charMeta:GetMaxStamina()
 
     return maxStamina
 end
+
 --------------------------------------------------------------------------------------------------------
 function charMeta:GetStamina()
     local Stamina = self:getPlayer():getLocalVar("stamina", 100) or lia.config.DefaultStamina or 100

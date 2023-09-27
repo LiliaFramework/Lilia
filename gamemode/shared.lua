@@ -13,6 +13,7 @@ function GM:Initialize()
     self:DevelopmentServerLoader()
     self:PSALoader()
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnReloaded()
     if CLIENT then
@@ -30,6 +31,7 @@ function GM:OnReloaded()
 
     lia.faction.formatModelData()
 end
+
 --------------------------------------------------------------------------------------------------------
 if SERVER and game.IsDedicated() then
     concommand.Remove("gm_save")

@@ -14,17 +14,17 @@ ITEM.functions.View = {
     onClick = function(item)
         local inventory = item:getInv()
         if not inventory then return false end
-        local panel = lia.gui["inv" .. inventory:getID()]
         local parent = item.invID and lia.gui["inv" .. item.invID] or nil
-        if IsValid(panel) then
-            panel:Remove()
+
+        if IsValid(parent) then
+            parent:Remove()
         end
 
         if inventory then
-            local panel = lia.inventory.show(inventory, parent)
-            if IsValid(panel) then
-                panel:ShowCloseButton(true)
-                panel:SetTitle(item:getName())
+            local invPanel = lia.inventory.show(inventory, parent)
+            if IsValid(invPanel) then
+                invPanel:ShowCloseButton(true)
+                invPanel:SetTitle(item:getName())
             end
         else
             local itemID = item:getID()
@@ -53,6 +53,7 @@ function ITEM:onInstanced()
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onRestored()
     local invID = self:getData("id")
@@ -65,6 +66,7 @@ function ITEM:onRestored()
         )
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onRemoved()
     local invID = self:getData("id")
@@ -72,10 +74,12 @@ function ITEM:onRemoved()
         lia.inventory.deleteByID(invID)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:getInv()
     return lia.inventory.instances[self:getData("id")]
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onSync(recipient)
     local inventory = self:getInv()
@@ -83,6 +87,7 @@ function ITEM:onSync(recipient)
         inventory:sync(recipient)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM.postHooks:drop()
     local invID = self:getData("id")
@@ -92,6 +97,7 @@ function ITEM.postHooks:drop()
         net.Send(self.player)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onCombine(other)
     local client = self.player
@@ -100,13 +106,15 @@ function ITEM:onCombine(other)
     local res = hook.Run("HandleItemTransferRequest", client, other:getID(), nil, nil, invID)
     if not res then return end
     res:next(
-        function(res)
+        function(result)
             if not IsValid(client) then return end
-            if istable(res) and isstring(res.error) then return client:notifyLocalized(res.error) end
+            if istable(result) and isstring(result.error) then return client:notifyLocalized(result.error) end
             client:EmitSound(unpack(self.BagSound))
         end
     )
 end
+
+
 --------------------------------------------------------------------------------------------------------
 if SERVER then
     function ITEM:onDisposed()

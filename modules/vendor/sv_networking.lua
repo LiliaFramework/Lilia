@@ -24,6 +24,7 @@ net.Receive(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaVendorEdit",
@@ -36,6 +37,7 @@ net.Receive(
         MODULE:saveVendors()
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaVendorTrade",
@@ -49,7 +51,6 @@ net.Receive(
             return
         end
 
-        local found
         local entity = client.liaVendor
         if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 192 then return end
         if not hook.Run("CanPlayerAccessVendor", client, entity) then return end

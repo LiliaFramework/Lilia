@@ -9,6 +9,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "point",
@@ -17,32 +18,28 @@ lia.command.add(
         privilege = "Basic User Permissions",
         syntax = "[number maximum]",
         onRun = function(client, arguments)
-            local table = ents.FindInSphere(client:EyePos(), 200)
-            local i = #table
+            local entities = ents.FindInSphere(client:EyePos(), 200)
             local pointing = client:GetEyeTraceNoCursor()
-            ::GOTO_REVERSE::
-            if table[i]:IsPlayer() then
-                local trace = util.TraceLine{
-                    start = client:EyePos(),
-                    endpos = table[i]:EyePos(),
-                    mask = MASK_SOLID_BRUSHONLY,
-                }
+            for i = #entities, 1, -1 do
+                if entities[i]:IsPlayer() then
+                    local trace = util.TraceLine{
+                        start = client:EyePos(),
+                        endpos = entities[i]:EyePos(),
+                        mask = MASK_SOLID_BRUSHONLY,
+                    }
 
-                if not trace.Hit then
-                    net.Start("Pointing")
-                    net.WriteFloat(CurTime() + 10)
-                    net.WriteVector(pointing.HitPos)
-                    net.Send(table[i])
+                    if not trace.Hit then
+                        net.Start("Pointing")
+                        net.WriteFloat(CurTime() + 10)
+                        net.WriteVector(pointing.HitPos)
+                        net.Send(entities[i])
+                    end
                 end
-            end
-
-            i = i - 1
-            if i ~= 0 then
-                goto GOTO_REVERSE
             end
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "chardesc",
@@ -71,6 +68,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "beclass",
@@ -117,6 +115,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "chargetup",
@@ -139,6 +138,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "givemoney",
@@ -170,6 +170,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "bringlostitems",
@@ -185,6 +186,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "carddraw",
@@ -199,6 +201,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "fallover",
@@ -242,6 +245,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "factionlist",
@@ -256,6 +260,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "getpos",
@@ -267,6 +272,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "doorname",
@@ -281,6 +287,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 if lia.config.FactionBroadcastEnabled then
     lia.command.add(
@@ -336,6 +343,7 @@ if lia.config.FactionBroadcastEnabled then
         }
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 if lia.config.AdvertisementEnabled then
     lia.command.add(

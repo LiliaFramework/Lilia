@@ -17,7 +17,6 @@ lia.item.defaultfunctions = {
                 end
             )
 
-
             return false
         end,
         onCanRun = function(item) return item.entity == nil and not IsValid(item.entity) and not item.noDrop end

@@ -17,6 +17,7 @@ function lia.attribs.loadFromDir(directory)
         ATTRIBUTE = nil
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.attribs.setup(client)
     local character = client:getChar()
@@ -28,6 +29,7 @@ function lia.attribs.setup(client)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar(
     "attribs",

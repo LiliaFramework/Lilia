@@ -1,37 +1,39 @@
+--------------------------------------------------------------------------------------------------------
 local PANEL = {}
-local WHITE = Color(255, 255, 255, 150)
-local SELECTED = Color(255, 255, 255, 230)
-PANEL.WHITE = WHITE
-PANEL.SELECTED = SELECTED
+--------------------------------------------------------------------------------------------------------
+PANEL.WHITE = Color(255, 255, 255, 150)
+--------------------------------------------------------------------------------------------------------
+PANEL.SELECTED = Color(255, 255, 255, 230)
+--------------------------------------------------------------------------------------------------------
 PANEL.HOVERED = Color(255, 255, 255, 50)
+--------------------------------------------------------------------------------------------------------
 PANEL.ANIM_SPEED = 0.1
+--------------------------------------------------------------------------------------------------------
 PANEL.FADE_SPEED = 0.5
+--------------------------------------------------------------------------------------------------------
 lia.config.CharHover = lia.config.CharHover or {}
+--------------------------------------------------------------------------------------------------------
 lia.config.CharClick = lia.config.CharClick or {}
+--------------------------------------------------------------------------------------------------------
 lia.config.CharWarning = lia.config.CharWarning or {}
--- Called when the tabs for the character menu should be created.
+--------------------------------------------------------------------------------------------------------
 function PANEL:createTabs()
     local load, create
-    -- Only show the load tab if playable characters exist.
     if lia.characters and #lia.characters > 0 then
         load = self:addTab("continue", self.createCharacterSelection)
     end
 
-    -- Only show the create tab if the local player can create characters.
     if hook.Run("CanPlayerCreateCharacter", LocalPlayer()) ~= false then
         create = self:addTab("create", self.createCharacterCreation)
     end
 
-    -- By default, select the continue tab, or the create tab.
     if IsValid(load) then
         load:setSelected()
     elseif IsValid(create) then
         create:setSelected()
     end
 
-    -- If the player has a character (i.e. opened this menu from F1 menu), then
-    -- don't add a disconnect button. Just add a close button.
-    if LocalPlayer():getChar() then
+    if LocalPlaer():getChar() then
         self:addTab(
             "return",
             function()
@@ -44,7 +46,6 @@ function PANEL:createTabs()
         return
     end
 
-    -- Otherwise, add a disconnect button.
     self:addTab(
         "leave",
         function()
@@ -57,6 +58,7 @@ function PANEL:createTabs()
     )
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:createTitle()
     self.title = self:Add("DLabel")
     self.title:Dock(TOP)
@@ -65,7 +67,7 @@ function PANEL:createTitle()
     self.title:SetTall(96)
     self.title:SetFont("liaCharTitleFont")
     self.title:SetText(L(SCHEMA and SCHEMA.name or "Unknown"):upper())
-    self.title:SetTextColor(WHITE)
+    self.title:SetTextColor(Color(255, 255, 255, 150))
     self.desc = self:Add("DLabel")
     self.desc:Dock(TOP)
     self.desc:DockMargin(64, 0, 0, 0)
@@ -73,9 +75,10 @@ function PANEL:createTitle()
     self.desc:SetContentAlignment(7)
     self.desc:SetText(L(SCHEMA and SCHEMA.desc or ""):upper())
     self.desc:SetFont("liaCharDescFont")
-    self.desc:SetTextColor(WHITE)
+    self.desc:SetTextColor(Color(255, 255, 255, 150))
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:loadBackground()
     self.blank = true
     local url = lia.config.BackgroundURL
@@ -116,24 +119,18 @@ function PANEL:loadBackground()
     end
 end
 
-local gradient = lia.util.getMaterial("vgui/gradient-u")
+--------------------------------------------------------------------------------------------------------
 function PANEL:paintBackground(w, h)
     if IsValid(self.background) then return end
-    -- if (self.blank) then
-    -- 	surface.SetDrawColor(30, 30, 30)
-    -- 	surface.DrawRect(0, 0, w, h)
-    -- end
-    -- surface.SetMaterial(gradient)
-    -- surface.SetDrawColor(0, 0, 0, 250)
-    -- surface.DrawTexturedRect(0, 0, w, h * 1.5)
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:addTab(name, callback, justClick)
     local button = self.tabs:Add("liaCharacterTabButton")
     button:setText(L(name):upper())
     if justClick then
         if isfunction(callback) then
-            button.DoClick = function(button)
+            button.DoClick = function(innerButton)
                 callback(self)
             end
         end
@@ -141,8 +138,8 @@ function PANEL:addTab(name, callback, justClick)
         return
     end
 
-    button.DoClick = function(button)
-        button:setSelected(true)
+    button.DoClick = function(innerButton)
+        innerButton:setSelected(true)
     end
 
     if isfunction(callback) then
@@ -156,18 +153,21 @@ function PANEL:addTab(name, callback, justClick)
     return button
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:createCharacterSelection()
     self.content:Clear()
     self.content:InvalidateLayout(true)
     self.content:Add("liaCharacterSelection")
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:createCharacterCreation()
     self.content:Clear()
     self.content:InvalidateLayout(true)
     self.content:Add("liaCharacterCreation")
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:fadeOut()
     self:AlphaTo(
         0,
@@ -179,6 +179,7 @@ function PANEL:fadeOut()
     )
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     if IsValid(lia.gui.loading) then
         lia.gui.loading:Remove()
@@ -195,15 +196,10 @@ function PANEL:Init()
     self:AlphaTo(255, self.ANIM_SPEED * 2)
     self:createTitle()
     self.tabs = self:Add("DPanel")
-    --self.tabs:Dock(BOTTOM)
-    --self.tabs:DockMargin(64, 32, 64, 0)
-    --self.tabs:SetTall(128)
     self.tabs:SetSize(ScrW() * .1, ScrH() * .2)
     self.tabs:SetPos(ScrW() * .05, (ScrH() * .5) - (ScrH() * .2) / 2)
     self.tabs:SetPaintBackground(false)
     self.content = self:Add("DPanel")
-    --self.content:Dock(FILL)
-    --self.content:DockMargin(ScrW() * .5, 0, 64, 64)
     self.content:SetSize(ScrW() * .7, ScrH() * .7)
     self.content:SetPos(ScrW() * .2, (ScrH() * .5) - (ScrH() * .7) / 2)
     self.content:SetPaintBackground(false)
@@ -212,25 +208,27 @@ function PANEL:Init()
     self:showContent()
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:showContent()
     self.tabs:Clear()
     self.content:Clear()
     self:createTabs()
 end
 
-function PANEL:setFadeToBlack(fade)
+--------------------------------------------------------------------------------------------------------
+function PANEL:setFadeToBlack(fadeIn)
     local d = deferred.new()
-    if fade then
+    if fadeIn then
         if IsValid(self.fade) then
             self.fade:Remove()
         end
 
-        local fade = vgui.Create("DPanel")
-        fade:SetSize(ScrW(), ScrH())
-        fade:SetSkin("Default")
-        fade:SetBackgroundColor(color_black)
-        fade:SetAlpha(0)
-        fade:AlphaTo(
+        local fadePanel = vgui.Create("DPanel")
+        fadePanel:SetSize(ScrW(), ScrH())
+        fadePanel:SetSkin("Default")
+        fadePanel:SetBackgroundColor(color_black)
+        fadePanel:SetAlpha(0)
+        fadePanel:AlphaTo(
             255,
             self.FADE_SPEED,
             0,
@@ -239,9 +237,9 @@ function PANEL:setFadeToBlack(fade)
             end
         )
 
-        fade:SetZPos(999)
-        fade:MakePopup()
-        self.fade = fade
+        fadePanel:SetZPos(999)
+        fadePanel:MakePopup()
+        self.fade = fadePanel
     elseif IsValid(self.fade) then
         local fadePanel = self.fade
         fadePanel:AlphaTo(
@@ -258,21 +256,27 @@ function PANEL:setFadeToBlack(fade)
     return d
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self)
     self:paintBackground(w, h)
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:hoverSound()
     LocalPlayer():EmitSound(unpack(lia.config.CharHover))
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:clickSound()
     LocalPlayer():EmitSound(unpack(lia.config.CharClick))
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:warningSound()
     LocalPlayer():EmitSound(unpack(lia.config.CharWarning))
 end
 
+--------------------------------------------------------------------------------------------------------
 vgui.Register("liaCharacter", PANEL, "EditablePanel")
+--------------------------------------------------------------------------------------------------------

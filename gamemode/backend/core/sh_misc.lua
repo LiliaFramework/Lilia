@@ -4,10 +4,12 @@ function GM:GetGameDescription()
 
     return lia.config.DefaultGamemodeName
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpray(client)
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:SecToTime(t)
     if t < 0 then

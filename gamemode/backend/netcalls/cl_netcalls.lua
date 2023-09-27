@@ -17,6 +17,7 @@ net.Receive(
         lia.util.notifyLocalized(message, unpack(args))
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaStringReq",
@@ -46,6 +47,7 @@ net.Receive(
         )
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaNotify",
@@ -54,6 +56,7 @@ net.Receive(
         lia.util.notify(message)
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaInventoryData",
@@ -74,16 +77,17 @@ net.Receive(
         hook.Run("InventoryDataChanged", instance, key, oldValue, value)
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaInventoryInit",
     function()
         local id = net.ReadType()
         local typeID = net.ReadString()
-        local data = net.ReadTable()
+        local receivedData = net.ReadTable()
         local instance = lia.inventory.new(typeID)
         instance.id = id
-        instance.data = data
+        instance.data = receivedData
         instance.items = {}
         local length = net.ReadUInt(32)
         local data2 = net.ReadData(length)
@@ -118,6 +122,7 @@ net.Receive(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaInventoryAdd",
@@ -132,6 +137,7 @@ net.Receive(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaInventoryRemove",
@@ -147,6 +153,7 @@ net.Receive(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaInventoryDelete",
@@ -162,6 +169,7 @@ net.Receive(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaItemInstance",
@@ -179,6 +187,7 @@ net.Receive(
         hook.Run("ItemInitialized", item)
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "cleanup_inbound",
@@ -186,6 +195,7 @@ net.Receive(
         chat.AddText(Color(255, 0, 0), "[ WARNING ]  Map Cleanup Inbound! Brace for Impact!")
     end
 )
+
 -------------------------------------------------------------------------------------------------------------------------
 net.Receive(
     "worlditem_cleanup_inbound",
@@ -193,6 +203,7 @@ net.Receive(
         chat.AddText(Color(255, 0, 0), "[ WARNING ]  World items will be cleared in 10 Minutes!")
     end
 )
+
 -------------------------------------------------------------------------------------------------------------------------
 net.Receive(
     "worlditem_cleanup_inbound_final",
@@ -200,6 +211,7 @@ net.Receive(
         chat.AddText(Color(255, 0, 0), "[ WARNING ]  World items will be cleared in 60 Seconds!")
     end
 )
+
 -------------------------------------------------------------------------------------------------------------------------
 net.Receive(
     "map_cleanup_inbound",
@@ -207,6 +219,7 @@ net.Receive(
         chat.AddText(Color(255, 0, 0), "[ WARNING ]  Automatic Map Cleanup in 10 Minutes!")
     end
 )
+
 -------------------------------------------------------------------------------------------------------------------------
 net.Receive(
     "map_cleanup_inbound_final",
@@ -214,6 +227,7 @@ net.Receive(
         chat.AddText(Color(255, 0, 0), "[ WARNING ]  Automatic Map Cleanup in 60 Seconds!")
     end
 )
+
 -------------------------------------------------------------------------------------------------------------------------
 net.Receive(
     "death_client",
@@ -224,6 +238,7 @@ net.Receive(
         chat.AddText(Color(255, 255, 255), date, " - You were killed by " .. nick .. "[" .. charid .. "]")
     end
 )
+
 -------------------------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaCharacterInvList",
@@ -241,6 +256,7 @@ net.Receive(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaItemDelete",
@@ -259,6 +275,7 @@ net.Receive(
         hook.Run("ItemDeleted", instance)
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "charInfo",
@@ -266,6 +283,7 @@ netstream.Hook(
         lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client)
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "charSet",
@@ -279,6 +297,7 @@ netstream.Hook(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "charVar",
@@ -292,6 +311,7 @@ netstream.Hook(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "charData",
@@ -303,6 +323,7 @@ netstream.Hook(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "charKick",
@@ -310,6 +331,7 @@ netstream.Hook(
         hook.Run("KickedFromCharacter", id, isCurrentChar)
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "liaSyncGesture",
@@ -319,6 +341,7 @@ netstream.Hook(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "item",
@@ -347,6 +370,7 @@ netstream.Hook(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "invQuantity",
@@ -359,6 +383,7 @@ netstream.Hook(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "liaDataSync",
@@ -368,6 +393,7 @@ netstream.Hook(
         lia.lastJoin = last
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "liaData",
@@ -376,6 +402,7 @@ netstream.Hook(
         lia.localData[key] = value
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "attrib",
@@ -386,6 +413,7 @@ netstream.Hook(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "nVar",
@@ -394,6 +422,7 @@ netstream.Hook(
         lia.net[index][key] = value
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "nDel",
@@ -401,6 +430,7 @@ netstream.Hook(
         lia.net[index] = nil
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "nLcl",
@@ -409,6 +439,7 @@ netstream.Hook(
         lia.net[LocalPlayer():EntIndex()][key] = value
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "gVar",
@@ -416,6 +447,7 @@ netstream.Hook(
         lia.net.globals[key] = value
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "seqSet",
@@ -433,6 +465,7 @@ netstream.Hook(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "cMsg",
@@ -454,6 +487,7 @@ netstream.Hook(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "actBar",
@@ -472,6 +506,7 @@ netstream.Hook(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "classUpdate",
@@ -488,6 +523,7 @@ netstream.Hook(
         end
     end
 )
+
 -------------------------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "removeF1",
@@ -497,19 +533,21 @@ netstream.Hook(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 netstream.Hook(
     "adminClearChat",
     function()
-        local chat = lia.module.list["chatbox"]
-        if chat and IsValid(chat.panel) then
-            chat.panel:Remove()
-            chat:createChat()
+        local chatbox = lia.module.list["chatbox"]
+        if chatbox and IsValid(chatbox.panel) then
+            chatbox.panel:Remove()
+            chatbox:createChat()
         else
             LocalPlayer():ConCommand("fixchatplz")
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "announcement_client",
@@ -518,6 +556,7 @@ net.Receive(
         chat.AddText(Color(255, 56, 252), "[Admin Announcement]: ", Color(255, 255, 255), message)
     end
 )
+
 -------------------------------------------------------------------------------------------------------------------------
 net.Receive(
     "advert_client",
@@ -527,6 +566,7 @@ net.Receive(
         chat.AddText(Color(216, 190, 18), "[Advertisement by " .. nick .. "]: ", Color(255, 255, 255), message)
     end
 )
+
 -------------------------------------------------------------------------------------------------------------------------
 net.Receive(
     "OpenInvMenu",
@@ -546,6 +586,7 @@ net.Receive(
         myInventoryDerma:MoveLeftOf(inventoryDerma, 4)
     end
 )
+
 -------------------------------------------------------------------------------------------------------------------------
 net.Receive(
     "OpenDetailedDescriptions",
@@ -584,6 +625,7 @@ net.Receive(
         end
     end
 )
+
 -------------------------------------------------------------------------------------------------------------------------
 net.Receive(
     "SetDetailedDescriptions",

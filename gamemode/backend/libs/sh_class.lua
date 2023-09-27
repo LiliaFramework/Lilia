@@ -3,12 +3,12 @@ lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
 --------------------------------------------------------------------------------------------------------
 function lia.class.loadFromDir(directory)
-    for k, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
-        local niceName = v:sub(4, -5)
+    for _, filename in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
+        local niceName = filename:sub(4, -5)
         local index = #lia.class.list + 1
         local halt
-        for k, v in ipairs(lia.class.list) do
-            if v.uniqueID == niceName then
+        for _, existingClass in ipairs(lia.class.list) do
+            if existingClass.uniqueID == niceName then
                 halt = true
             end
         end
@@ -26,7 +26,7 @@ function lia.class.loadFromDir(directory)
             CLASS.module = MODULE.uniqueID
         end
 
-        lia.util.include(directory .. "/" .. v, "shared")
+        lia.util.include(directory .. "/" .. filename, "shared")
         if not CLASS.faction or not team.Valid(CLASS.faction) then
             ErrorNoHalt("Class '" .. niceName .. "' does not have a valid faction!\n")
             CLASS = nil
@@ -41,24 +41,24 @@ function lia.class.loadFromDir(directory)
         CLASS = nil
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.class.canBe(client, class)
     local info = lia.class.list[class]
     if not info then return false, "no info" end
     if client:Team() ~= info.faction then return false, "not correct team" end
     if client:getChar():getClass() == class then return false, "same class request" end
-    if info.limit > 0 then
-        if #lia.class.getPlayers(info.index) >= info.limit then return false, "class is full" end
-    end
-
+    if info.limit > 0 and #lia.class.getPlayers(info.index) >= info.limit then return false, "class is full" end
     if hook.Run("CanPlayerJoinClass", client, class, info) == false then return false end
 
     return info:onCanBe(client)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.class.get(identifier)
     return lia.class.list[identifier]
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.class.getPlayers(class)
     local players = {}

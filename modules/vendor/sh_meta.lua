@@ -8,6 +8,7 @@ function playerMeta:CanEditVendor()
         return self:IsSuperAdmin()
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 CAMI.RegisterPrivilege(
     {

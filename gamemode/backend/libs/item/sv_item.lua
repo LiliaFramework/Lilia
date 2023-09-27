@@ -65,6 +65,7 @@ function lia.item.instance(index, uniqueID, itemData, x, y, callback)
 
     return d
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.item.deleteByID(id)
     if lia.item.instances[id] then
@@ -73,6 +74,7 @@ function lia.item.deleteByID(id)
         lia.db.delete("items", "_itemID = " .. id)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.item.loadItemByID(itemIndex, recipientFilter)
     local range
@@ -86,17 +88,17 @@ function lia.item.loadItemByID(itemIndex, recipientFilter)
 
     lia.db.query(
         "SELECT _itemID, _uniqueID, _data, _x, _y, _quantity FROM lia_items WHERE _itemID IN " .. range,
-        function(data)
-            if data then
-                for k, v in ipairs(data) do
+        function(queryData)
+            if queryData then
+                for k, v in ipairs(queryData) do
                     local itemID = tonumber(v._itemID)
-                    local data = util.JSONToTable(v._data or "[]")
+                    local itemData = util.JSONToTable(v._data or "[]")
                     local uniqueID = v._uniqueID
                     local itemTable = lia.item.list[uniqueID]
                     if itemTable and itemID then
                         local item = lia.item.new(uniqueID, itemID)
                         item.invID = 0
-                        item.data = data or {}
+                        item.data = itemData or {}
                         item.data.x = tonumber(v._x)
                         item.data.y = tonumber(v._y)
                         item.quantity = tonumber(v._quantity)
@@ -107,6 +109,7 @@ function lia.item.loadItemByID(itemIndex, recipientFilter)
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.item.spawn(uniqueID, position, callback, angles, data)
     local d

@@ -7,6 +7,7 @@ function MODULE:CreateInventoryPanel(inventory, parent)
 
 	return panel
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:getItemStackKey(item)
 	local elements = {}
@@ -17,6 +18,7 @@ function MODULE:getItemStackKey(item)
 
 	return item.uniqueID .. pon.encode(elements)
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:getItemStacks(inventory)
 	local stacks = {}

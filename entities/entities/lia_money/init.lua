@@ -18,6 +18,7 @@ function ENT:Initialize()
         self:SetCollisionBounds(min, max)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:Use(activator)
     local character = activator:getChar()

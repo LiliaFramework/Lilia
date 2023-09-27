@@ -7,6 +7,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "whitelistremove",
@@ -16,6 +17,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "whitelistclear",
@@ -25,6 +27,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "whitelistaddall",

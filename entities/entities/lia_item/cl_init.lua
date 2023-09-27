@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------------------------
 include("shared.lua")
 --------------------------------------------------------------------------------------------------------
 function ENT:computeDescMarkup(description)
@@ -8,6 +9,7 @@ function ENT:computeDescMarkup(description)
 
     return self.markup
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:onDrawEntityInfo(alpha)
     local itemTable = self:getItemTable()
@@ -30,6 +32,7 @@ function ENT:onDrawEntityInfo(alpha)
     itemTable.data = oldData
     itemTable.entity = oldEntity
 end
+
 --------------------------------------------------------------------------------------------------------
 function ENT:DrawTranslucent()
     local itemTable = self:getItemTable()

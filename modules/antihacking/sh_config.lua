@@ -1,14 +1,15 @@
 --------------------------------------------------------------------------------------------------------
 lia.config.KnownExploits = {
-    ["npctool_relman_up"] = true, 
-    ["npctool_spawner_clearundo"] = true, 
-    ["sv_npctool_spawner_ppoint"] = true, 
-    ["wire_expression2_request_file"] = true, 
-    ["wire_adv_upload"] = true, 
-    ["wire_expression2_request_list"] = true, 
-    ["wire_adv_unwire"] = true, 
+    ["npctool_relman_up"] = true,
+    ["npctool_spawner_clearundo"] = true,
+    ["sv_npctool_spawner_ppoint"] = true,
+    ["wire_expression2_request_file"] = true,
+    ["wire_adv_upload"] = true,
+    ["wire_expression2_request_list"] = true,
+    ["wire_adv_unwire"] = true,
     ["wire_expression2_client_request_set_extension_status"] = true
 }
+
 --------------------------------------------------------------------------------------------------------
 lia.config.HackCommands = {"loki_menu", "gear_printents", "gw_toggle", "gw_pos", "gearmenu", "gb_reload", "gb_toggle", "+gb", "-gb", "gb_menu", "gear2_menu", "ahack_menu", "sasha_menu", "showents", "showhxmenu", "SmegHack_Menu", "sCheat_menu", "lowkey_menu"}
 --------------------------------------------------------------------------------------------------------

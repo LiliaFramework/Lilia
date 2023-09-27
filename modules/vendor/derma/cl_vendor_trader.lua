@@ -25,20 +25,24 @@ function PANEL:Init()
 	self.items = self:Add("DScrollPanel")
 	self.items:Dock(FILL)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setName(name)
 	self.name:SetText(name)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setMoney(money)
 	money = money or "∞"
 	self.money:SetText(lia.currency.get(money))
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
 	surface.SetDrawColor(0, 0, 0, 175)
 	surface.DrawRect(0, 0, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaVendorTrader", PANEL, "DPanel")
 --------------------------------------------------------------------------------------------------------

@@ -8,6 +8,7 @@ function MODULE:StartCommand(client, command)
 		command:RemoveKey(KEY_BLACKLIST)
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:CanPlayerThrowPunch(client)
 	if not client:isWepRaised() then return false end

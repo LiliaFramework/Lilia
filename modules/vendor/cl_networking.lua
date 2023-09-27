@@ -9,6 +9,7 @@ local function addNetHandler(name, handler)
 		end
 	)
 end
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
 	"liaVendorSync",
@@ -54,6 +55,7 @@ net.Receive(
 		hook.Run("VendorSynchronized", vendor)
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
 	"liaVendorOpen",
@@ -65,6 +67,7 @@ net.Receive(
 		end
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
 	"liaVendorExit",
@@ -73,6 +76,7 @@ net.Receive(
 		hook.Run("VendorExited")
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 addNetHandler(
 	"Money",
@@ -86,6 +90,7 @@ addNetHandler(
 		hook.Run("VendorMoneyUpdated", vendor, money, vendor.money)
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 addNetHandler(
 	"Price",
@@ -101,6 +106,7 @@ addNetHandler(
 		hook.Run("VendorItemPriceUpdated", vendor, itemType, value)
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 addNetHandler(
 	"Mode",
@@ -116,6 +122,7 @@ addNetHandler(
 		hook.Run("VendorItemModeUpdated", vendor, itemType, value)
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 addNetHandler(
 	"Stock",
@@ -127,6 +134,7 @@ addNetHandler(
 		hook.Run("VendorItemStockUpdated", vendor, itemType, value)
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 addNetHandler(
 	"MaxStock",
@@ -142,6 +150,7 @@ addNetHandler(
 		hook.Run("VendorItemMaxStockUpdated", vendor, itemType, value)
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 addNetHandler(
 	"AllowFaction",
@@ -157,6 +166,7 @@ addNetHandler(
 		hook.Run("VendorFactionUpdated", vendor, id, allowed)
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 addNetHandler(
 	"AllowClass",
@@ -172,6 +182,7 @@ addNetHandler(
 		hook.Run("VendorClassUpdated", vendor, id, allowed)
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
 	"liaVendorEdit",
@@ -186,6 +197,7 @@ net.Receive(
 		)
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
 	"liaVendorFaction",

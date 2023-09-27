@@ -16,6 +16,7 @@ function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
         }, 1, alpha or (color.a * 0.575)
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.notifQuery(question, option1, option2, manualDismiss, notifType, callback)
     if not callback or not isfunction(callback) then
@@ -165,6 +166,7 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
 
     return notice
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.wrapText(text, width, font)
     font = font or "liaChatFont"
@@ -199,14 +201,17 @@ function lia.util.wrapText(text, width, font)
 
     return lines, maxW
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.notify(message)
     chat.AddText(message)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.notifyLocalized(message, ...)
     lia.util.notify(L(message, ...))
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.drawBlur(panel, amount, passes)
     amount = amount or 5
@@ -225,6 +230,7 @@ function lia.util.drawBlur(panel, amount, passes)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.drawBlurAt(x, y, w, h, amount, passes)
     amount = amount or 5
@@ -245,6 +251,7 @@ function lia.util.drawBlurAt(x, y, w, h, amount, passes)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 timer.Create(
     "liaResolutionMonitor",
@@ -259,18 +266,19 @@ timer.Create(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.getInjuredColor(client)
     local health_color = color_white
     if not IsValid(client) then return health_color end
-    local health_color = color_white
     local health, healthMax = client:Health(), client:GetMaxHealth()
-    if (health / healthMax) < .95 then
+    if (health / healthMax) < 0.95 then
         health_color = lia.color.LerpHSV(nil, nil, healthMax, health, 0)
     end
 
     return health_color
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.ScreenScaleH(n, type)
     if type then
@@ -281,6 +289,7 @@ function lia.util.ScreenScaleH(n, type)
 
     return n * (ScrH() / 480)
 end
+
 --------------------------------------------------------------------------------------------------------
 function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCancel, strButtonText, strButtonCancelText)
     local Window = vgui.Create("DFrame")
@@ -350,11 +359,13 @@ function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCanc
 
     return Window
 end
+
 --------------------------------------------------------------------------------------------------------
 file.CreateDir("lilia/images")
 lia.util.LoadedImages = lia.util.LoadedImages or {
     [0] = Material("icon16/cross.png")
 }
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.FetchImage(id, callback, failImg, pngParameters, imageProvider)
     local loadedImage = lia.util.LoadedImages[id]

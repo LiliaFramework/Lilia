@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------------------------------
-local view, traceData, traceData2, aimOrigin, crouchFactor, ft, trace, curAng
+local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng
 local clmp = math.Clamp
 local diff, fm, sm
 crouchFactor = 0
@@ -9,7 +9,7 @@ hook.Add(
     "ThirdPersonSetupQuickMenu",
     function(menu)
         if lia.config.ThirdPersonEnabled then
-            local button = menu:addCheck(
+            menu:addCheck(
                 L"thirdpersonToggle",
                 function(panel, state)
                     if state then
@@ -20,7 +20,7 @@ hook.Add(
                 end, CreateClientConVar("lia_tp_enabled", "0", true):GetBool()
             )
 
-            local button = menu:addCheck(
+            menu:addCheck(
                 L"thirdpersonClassic",
                 function(panel, state)
                     if state then
@@ -31,7 +31,7 @@ hook.Add(
                 end, CreateClientConVar("lia_tp_classic", "0", true):GetBool()
             )
 
-            local button = menu:addButton(
+            menu:addButton(
                 L"thirdpersonConfig",
                 function()
                     if lia.gui.tpconfig and lia.gui.tpconfig:IsVisible() then
@@ -47,6 +47,7 @@ hook.Add(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "CalcView",
@@ -81,6 +82,7 @@ hook.Add(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "CreateMove",
@@ -99,6 +101,7 @@ hook.Add(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "InputMouseApply",
@@ -117,6 +120,7 @@ hook.Add(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "ShouldDrawLocalPlayer",
@@ -125,6 +129,7 @@ hook.Add(
         if LocalPlayer():GetViewEntity() == LocalPlayer() and not IsValid(LocalPlayer():GetVehicle()) and LocalPlayer():CanOverrideView() then return true end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "PlayerButtonDown",

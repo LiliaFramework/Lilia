@@ -9,15 +9,15 @@ lia.command.add(
         syntax = "<string faction> [string class]",
         onRun = function(client, arguments)
             local faction
-            local name = arguments[1]
+            local factionName = arguments[1]
             local class = table.concat(arguments, " ", 2)
             local info
             local info2
-            if name then
-                info = lia.faction.indices[name:lower()]
+            if factionName then
+                info = lia.faction.indices[factionName:lower()]
                 if not info then
                     for k, v in ipairs(lia.faction.indices) do
-                        if lia.util.stringMatches(v.uniqueID, name) or lia.util.stringMatches(L(v.name, client), name) then
+                        if lia.util.stringMatches(v.uniqueID, factionName) or lia.util.stringMatches(L(v.name, client), factionName) then
                             faction = v.uniqueID
                             info = v
                             break
@@ -46,12 +46,12 @@ lia.command.add(
                     MODULE.spawns[faction][class] = MODULE.spawns[faction][class] or {}
                     table.insert(MODULE.spawns[faction][class], client:GetPos())
                     MODULE:SaveSpawns()
-                    local name = L(info.name, client)
+                    local factionDisplayName = L(info.name, client)
                     if info2 then
-                        name = name .. " (" .. L(info2.name, client) .. ")"
+                        factionDisplayName = factionDisplayName .. " (" .. L(info2.name, client) .. ")"
                     end
 
-                    return L("spawnAdded", client, name)
+                    return L("spawnAdded", client, factionDisplayName)
                 else
                     return L("invalidFaction", client)
                 end
@@ -61,6 +61,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "spawnremove",
@@ -73,10 +74,10 @@ lia.command.add(
             local radius = tonumber(arguments[1]) or 120
             local i = 0
             for k, v in pairs(MODULE.spawns) do
-                for k2, v in pairs(v) do
-                    for k3, v3 in pairs(v) do
+                for k2, v2 in pairs(v) do
+                    for k3, v3 in pairs(v2) do
                         if v3:Distance(position) <= radius then
-                            v[k3] = nil
+                            v2[k3] = nil
                             i = i + 1
                         end
                     end

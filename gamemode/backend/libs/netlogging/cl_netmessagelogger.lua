@@ -8,12 +8,14 @@ local function fillLogs(listview, logs)
         listview:AddLine(curLog.time, curLog.name, curLog.ply, curLog.steamID, curLog.len, curLog.source, curLog.ip)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 local function requestLogs(page)
     net.Start("net_RequestLogs")
     net.WriteInt(page, 32)
     net.SendToServer()
 end
+
 --------------------------------------------------------------------------------------------------------
 local function displayLogs(logs, amtOfPages)
     local results
@@ -136,6 +138,7 @@ local function displayLogs(logs, amtOfPages)
         results = nil
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "net_ReceiveLogs",

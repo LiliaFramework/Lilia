@@ -21,6 +21,7 @@ function MODULE:saveVendors()
 
 	self:setData(data)
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:LoadData()
 	for k, v in ipairs(ents.FindByClass("lia_vendor")) do

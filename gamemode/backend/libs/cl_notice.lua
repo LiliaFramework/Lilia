@@ -36,6 +36,7 @@ lia.config.NotifTypes = {
         icon = "icon16/information.png"
     }
 }
+
 --------------------------------------------------------------------------------------------------------
 local function OrganizeNoticess()
     for k, v in ipairs(lia.noticess) do
@@ -49,6 +50,7 @@ local function OrganizeNoticess()
         v:MoveTo(v:GetX(), topMargin + 5, 0.15, 0, 5)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 local function RemoveNoticess(notice)
     for k, v in ipairs(lia.noticess) do
@@ -70,6 +72,7 @@ local function RemoveNoticess(notice)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function CreateNoticePanel(length, notimer)
     if not notimer then
@@ -114,6 +117,7 @@ function CreateNoticePanel(length, notimer)
 
     return notice
 end
+
 --------------------------------------------------------------------------------------------------------
 local function OrganizeNotices()
     local scrW = ScrW()
@@ -121,6 +125,7 @@ local function OrganizeNotices()
         v:MoveTo(scrW - (v:GetWide() + 4), (k - 1) * (v:GetTall() + 4) + 4, 0.15, (k / #lia.notices) * 0.25)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.notify(message)
     local notice = vgui.Create("liaNotice")

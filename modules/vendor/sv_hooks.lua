@@ -85,16 +85,16 @@ function MODULE:VendorSellEvent(client, vendor, itemType, isSellingToVendor, cha
             to = VENDOR_INVENTORY_MEASURE
         }
 
-        local canTransfer, reason = VENDOR_INVENTORY_MEASURE:canAccess("transfer", context)
+        local canTransfer, transferReason = VENDOR_INVENTORY_MEASURE:canAccess("transfer", context)
         if not canTransfer then
-            client:notifyLocalized(reason or "vendorError")
+            client:notifyLocalized(transferReason or "vendorError")
 
             return
         end
 
-        local canTransferItem, reason = hook.Run("CanItemBeTransfered", item, inventory, VENDOR_INVENTORY_MEASURE, client)
+        local canTransferItem, itemTransferReason = hook.Run("CanItemBeTransfered", item, inventory, VENDOR_INVENTORY_MEASURE, client)
         if canTransferItem == false then
-            client:notifyLocalized(reason or "vendorError")
+            client:notifyLocalized(itemTransferReason or "vendorError")
 
             return
         end
@@ -120,7 +120,7 @@ function MODULE:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, char
     vendor:giveMoney(price)
     character:takeMoney(price)
     vendor:takeStock(itemType)
-    local result = character:getInv():add(itemType):next(
+    character:getInv():add(itemType):next(
         function(item)
             hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
             client.vendorTransaction = nil

@@ -13,6 +13,7 @@ function MODULE:CharacterPreSave(character)
         character:setData("ammo", ammoTable)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:PlayerLoadedChar(client)
     timer.Simple(

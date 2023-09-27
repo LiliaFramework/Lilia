@@ -30,29 +30,31 @@ function GM:InitializedExtrasClient()
 	timer.Remove("CheckHookTimes")
 	if ArcCW then
 		RunConsoleCommand("arccw_crosshair", "1")
-        RunConsoleCommand("arccw_shake", "0")
-        RunConsoleCommand("arccw_vm_bob_sprint", "2.80")
-        RunConsoleCommand("arccw_vm_sway_sprint", "1.85")
-        RunConsoleCommand("arccw_vm_right", "1.16")
-        RunConsoleCommand("arccw_vm_forward", "3.02")
-        RunConsoleCommand("arccw_vm_up", "0")
-        RunConsoleCommand("arccw_vm_lookxmult", "-2.46")
-        RunConsoleCommand("arccw_vm_lookymult", "7")
-        RunConsoleCommand("arccw_vm_accelmult", "0.85")
-        RunConsoleCommand("arccw_crosshair_clr_a", "61")
-        RunConsoleCommand("arccw_crosshair_clr_b", "255")
-        RunConsoleCommand("arccw_crosshair_clr_g", "242")
-        RunConsoleCommand("arccw_crosshair_clr_r", "0")
-        RunConsoleCommand("arccw_crosshair_outline", "0")
-        RunConsoleCommand("arccw_crosshair_shotgun", "1")
+		RunConsoleCommand("arccw_shake", "0")
+		RunConsoleCommand("arccw_vm_bob_sprint", "2.80")
+		RunConsoleCommand("arccw_vm_sway_sprint", "1.85")
+		RunConsoleCommand("arccw_vm_right", "1.16")
+		RunConsoleCommand("arccw_vm_forward", "3.02")
+		RunConsoleCommand("arccw_vm_up", "0")
+		RunConsoleCommand("arccw_vm_lookxmult", "-2.46")
+		RunConsoleCommand("arccw_vm_lookymult", "7")
+		RunConsoleCommand("arccw_vm_accelmult", "0.85")
+		RunConsoleCommand("arccw_crosshair_clr_a", "61")
+		RunConsoleCommand("arccw_crosshair_clr_b", "255")
+		RunConsoleCommand("arccw_crosshair_clr_g", "242")
+		RunConsoleCommand("arccw_crosshair_clr_r", "0")
+		RunConsoleCommand("arccw_crosshair_outline", "0")
+		RunConsoleCommand("arccw_crosshair_shotgun", "1")
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:NetworkEntityCreated(entity)
 	if entity == LocalPlayer() then return end
 	if not entity:IsPlayer() then return end
 	hook.Run("PlayerModelChanged", entity, entity:GetModel())
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CharacterListLoaded()
 	timer.Create(
@@ -66,24 +68,28 @@ function GM:CharacterListLoaded()
 		end
 	)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:DrawLiliaModelView(panel, ent)
 	if IsValid(ent.weapon) then
 		ent.weapon:DrawModel()
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnChatReceived()
 	if system.IsWindows() and not system.HasFocus() then
 		system.FlashWindow()
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:HUDPaint()
 	self:DeathHUDPaint()
 	self:MiscHUDPaint()
 	self:PointingHUDPaint()
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerButtonDown(client, button)
 	if button == KEY_F2 and IsFirstTimePredicted() then
@@ -117,10 +123,12 @@ function GM:PlayerButtonDown(client, button)
 		menu:Center()
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:ClientInitializedConfig()
 	hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:ClientPostInit()
 	lia.joinTime = RealTime() - 0.9716
@@ -146,6 +154,7 @@ function GM:ClientPostInit()
 		end
 	)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:DeathHUDPaint()
 	owner = LocalPlayer()
@@ -172,9 +181,9 @@ function GM:DeathHUDPaint()
 	if aprg > 0.01 then
 		surface.SetDrawColor(0, 0, 0, ceil((aprg ^ .5) * 255))
 		surface.DrawRect(-1, -1, w + 2, h + 2)
-		local tx, ty = lia.util.drawText(L"youreDead", w / 2, h / 2, ColorAlpha(color_white, aprg2 * 255), 1, 1, "liaDynFontMedium", aprg2 * 255)
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:MiscHUDPaint()
 	local ply = LocalPlayer()
@@ -184,9 +193,8 @@ function GM:MiscHUDPaint()
 	data.filter = ply
 	lia.bar.drawAll()
 	if lia.config.VersionEnabled and lia.config.version then
-		local w, h = 45, 45
 		surface.SetFont("liaSmallChatFont")
-		surface.SetTextPos(5, ScrH() - 20, w, h)
+		surface.SetTextPos(5, ScrH() - 20, 45, 45)
 		surface.DrawText("Server Current Version: " .. lia.config.version)
 	end
 
@@ -212,6 +220,7 @@ function GM:MiscHUDPaint()
 		end
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PointingHUDPaint()
 	net.Receive(

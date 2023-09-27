@@ -44,6 +44,7 @@ function PANEL:Init()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setDoor(door, access, door2)
     door.liaPanel = self
@@ -83,6 +84,7 @@ function PANEL:setDoor(door, access, door2)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:checkAccess(access)
     access = access or DOOR_GUEST
@@ -90,12 +92,14 @@ function PANEL:checkAccess(access)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Think()
     if self.accessData and not IsValid(self.door) and self:checkAccess() then
         self:Remove()
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaDoorMenu", PANEL, "DFrame")
 --------------------------------------------------------------------------------------------------------

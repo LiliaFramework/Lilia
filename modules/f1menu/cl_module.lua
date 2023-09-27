@@ -10,6 +10,7 @@ function MODULE:PlayerBindPress(client, bind, pressed)
         return true
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:OnCharInfoSetup(infoPanel)
     if not IsValid(infoPanel.model) then return end
@@ -34,11 +35,9 @@ function MODULE:OnCharInfoSetup(infoPanel)
     if not tree then return end
     local subClass = weapon.HoldType or weapon:GetHoldType()
     subClass = lia.anim.HoldtypeTranslator[subClass] or subClass
-
     if tree[subClass] and tree[subClass][act] then
         local branch = tree[subClass][act]
         local act2 = istable(branch) and branch[1] or branch
-
         if isstring(act2) then
             act2 = ent:LookupSequence(act2)
         else

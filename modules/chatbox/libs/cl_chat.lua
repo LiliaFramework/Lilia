@@ -9,10 +9,12 @@ function MODULE:createChat()
     if IsValid(self.panel) then return end
     self.panel = vgui.Create("liaChatBox")
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:InitPostEntity()
     self:createChat()
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
@@ -24,6 +26,7 @@ function MODULE:PlayerBindPress(client, bind, pressed)
         return true
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:HUDShouldDraw(element)
     if element == "CHudChat" then return false end
@@ -39,6 +42,7 @@ function chat.AddText(...)
         chat.liaAddText(...)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:ChatText(index, name, text, messageType)
     if messageType == "none" and IsValid(self.panel) then
@@ -50,6 +54,7 @@ function MODULE:ChatText(index, name, text, messageType)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 concommand.Add(
     "fixchatplz",

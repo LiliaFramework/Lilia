@@ -15,6 +15,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "cleanitems",
@@ -32,6 +33,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "cleanprops",
@@ -49,6 +51,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "savemap",
@@ -60,6 +63,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "cleannpcs",
@@ -79,6 +83,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "flags",
@@ -94,6 +99,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "clearchat",
@@ -105,6 +111,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "checkallmoney",
@@ -121,6 +128,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "return",
@@ -143,6 +151,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "findallflags",
@@ -156,6 +165,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "chargiveitem",
@@ -192,6 +202,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "netmessagelogs",
@@ -203,6 +214,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "returnitems",
@@ -244,6 +256,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "announce",
@@ -261,6 +274,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "voiceunban",
@@ -272,15 +286,20 @@ lia.command.add(
             local target = lia.command.findPlayer(client, arguments[1])
             if target == client then
                 client:notify("You cannot run mute commands on yourself.")
+
                 return false
             end
 
-            if IsValid(target) and target:getChar():GetData("VoiceBan") then target:getChar():SetData("VoiceBan", false) end
+            if IsValid(target) and target:getChar():GetData("VoiceBan") then
+                target:getChar():SetData("VoiceBan", false)
+            end
+
             client:notify("You have unmuted a player.")
             target:notify("You've been unmuted by the admin.")
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "voiceban",
@@ -292,15 +311,20 @@ lia.command.add(
             local target = lia.command.findPlayer(client, arguments[1])
             if target == client then
                 client:notify("You cannot run mute commands on yourself.")
+
                 return false
             end
 
-            if IsValid(target) then if not target:GetData("VoiceBan") then target:SetData("VoiceBan", true) end end
+            if IsValid(target) and not target:GetData("VoiceBan") then
+                target:SetData("VoiceBan", true)
+            end
+
             client:notify("You have muted a player.")
             target:notify("You've been muted by the admin.")
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 for k, v in pairs(lia.config.ServerURLs) do
     lia.command.add(

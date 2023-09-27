@@ -14,6 +14,7 @@ function SWEP:PreDrawViewModel(viewModel, weapon, client)
         viewModel:SetBodyGroups(hands.body)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:Think()
     local owner = self:GetOwner()

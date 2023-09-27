@@ -80,6 +80,7 @@ function PANEL:Init()
     self.items = {}
     hook.Run("SetupQuickMenu", self)
 end
+
 --------------------------------------------------------------------------------------------------------
 local function paintButton(button, w, h)
     local alpha = 0
@@ -92,6 +93,7 @@ local function paintButton(button, w, h)
     surface.SetDrawColor(255, 255, 255, alpha)
     surface.DrawRect(0, 0, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:addButton(text, callback)
     local button = self.scroll:Add("DButton")
@@ -113,6 +115,7 @@ function PANEL:addButton(text, callback)
 
     return button
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:addSpacer()
     local panel = self.scroll:Add("DPanel")
@@ -128,6 +131,7 @@ function PANEL:addSpacer()
 
     return panel
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:addCheck(text, callback, checked)
     local x, y
@@ -157,10 +161,12 @@ function PANEL:addCheck(text, callback, checked)
 
     return button
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setIcon(char)
     self.icon = char
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self)
@@ -169,6 +175,7 @@ function PANEL:Paint(w, h)
     surface.SetDrawColor(255, 255, 255, 5)
     surface.DrawRect(0, 0, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaQuick", PANEL, "EditablePanel")
 --------------------------------------------------------------------------------------------------------

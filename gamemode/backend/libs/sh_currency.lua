@@ -9,10 +9,12 @@ function lia.currency.set(symbol, singular, plural)
     lia.currency.singular = singular
     lia.currency.plural = plural
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.currency.get(amount)
     return lia.currency.symbol .. (amount == 1 and ("1 " .. lia.currency.singular) or (amount .. " " .. lia.currency.plural))
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.currency.spawn(pos, amount, angle)
     if not pos then

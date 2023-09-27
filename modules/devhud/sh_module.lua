@@ -12,6 +12,7 @@ CAMI.RegisterPrivilege(
         Description = "Allows access to Development HUD.",
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 CAMI.RegisterPrivilege(
     {

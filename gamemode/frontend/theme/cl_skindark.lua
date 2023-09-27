@@ -31,6 +31,7 @@ function SKIN:PaintFrame(panel)
     surface.SetDrawColor(45, 45, 45, 200)
     surface.DrawRect(0, 0, panel:GetWide(), panel:GetTall())
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:DrawGenericBackground(x, y, w, h)
     surface.SetDrawColor(45, 45, 45, 240)
@@ -40,6 +41,7 @@ function SKIN:DrawGenericBackground(x, y, w, h)
     surface.SetDrawColor(100, 100, 100, 25)
     surface.DrawOutlinedRect(x + 1, y + 1, w - 2, h - 2)
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintPanel(panel)
     if not panel.m_bBackground then return end
@@ -49,6 +51,7 @@ function SKIN:PaintPanel(panel)
     surface.DrawRect(0, 0, w, h)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintButton(panel)
     if not panel.m_bBackground then return end
@@ -68,6 +71,7 @@ function SKIN:PaintButton(panel)
     surface.SetDrawColor(100, 100, 100, alpha)
     surface.DrawRect(2, 2, w - 4, h - 4)
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintComboBox(panel, w, h)
     if not panel.m_bBackground then return end
@@ -86,6 +90,7 @@ function SKIN:PaintComboBox(panel, w, h)
     surface.SetDrawColor(100, 100, 100, alpha)
     surface.DrawRect(2, 2, w - 4, h - 4)
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintTextEntry(panel, w, h)
     if panel.m_bBackground then
@@ -121,30 +126,37 @@ function SKIN:PaintTextEntry(panel, w, h)
 
     panel:DrawTextEntryText(panel:GetTextColor(), panel:GetHighlightColor(), panel:GetCursorColor())
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintWindowCloseButton(panel, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintWindowMinimizeButton(panel, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintWindowMaximizeButton(panel, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintListView(panel, w, h)
     surface.SetDrawColor(20, 20, 20, 100)
     surface.DrawRect(0, 0, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintListViewLine(panel, w, h)
     surface.SetDrawColor((panel:IsHovered() or panel:IsLineSelected()) and lia.config.Color or Color(0, 0, 0, 0))
     surface.DrawRect(0, 0, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintScrollBarGrip(panel, w, h)
     surface.SetDrawColor(lia.config.Color)
     surface.DrawRect(0, 0, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintButtonUp(panel, w, h)
     surface.SetDrawColor(lia.config.Color)
@@ -154,6 +166,7 @@ function SKIN:PaintButtonUp(panel, w, h)
     surface.SetTextPos(1, 1)
     surface.DrawText("5")
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintButtonDown(panel, w, h)
     surface.SetDrawColor(lia.config.Color)
@@ -163,11 +176,13 @@ function SKIN:PaintButtonDown(panel, w, h)
     surface.SetTextPos(1, 0)
     surface.DrawText("6")
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintVScrollBar(panel, w, h)
     surface.SetDrawColor(20, 20, 20, 200)
     surface.DrawRect(0, 0, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintMenu(panel, w, h)
     local odd = true
@@ -183,6 +198,7 @@ function SKIN:PaintMenu(panel, w, h)
         odd = not odd
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function SKIN:PaintMenuOption(panel, w, h)
     if not panel.LaidOut then
@@ -201,6 +217,7 @@ function SKIN:PaintMenuOption(panel, w, h)
         skin.tex.Menu_Check(5, h / 2 - 7, 15, 15)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 derma.DefineSkin("lilia_darktheme", "The base skin for the Lilia framework.", SKIN)
 --------------------------------------------------------------------------------------------------------

@@ -13,24 +13,24 @@ function MODULE:LoadData()
             local range = "(" .. table.concat(idRange, ", ") .. ")"
             if hook.Run("ShouldDeleteSavedItems") == true then
                 lia.db.query("DELETE FROM lia_items WHERE _itemID IN " .. range)
-                print("Server Deleted Server Items (does not includes Logical Items)")
+                print("Server Deleted Server Items (does not include Logical Items)")
                 print(range)
             else
                 lia.db.query(
                     "SELECT _itemID, _uniqueID, _data FROM lia_items WHERE _itemID IN " .. range,
-                    function(data)
-                        if data then
+                    function(resultData)
+                        -- Renamed 'data' to 'resultData'
+                        if resultData then
                             local loadedItems = {}
-                            for k, v in ipairs(data) do
+                            for k, v in ipairs(resultData) do
                                 local itemID = tonumber(v._itemID)
-                                local data = util.JSONToTable(v._data or "[]")
+                                local itemData = util.JSONToTable(v._data or "[]")
                                 local uniqueID = v._uniqueID
                                 local itemTable = lia.item.list[uniqueID]
-                                local position = positions[itemID]
                                 if itemTable and itemID then
                                     local position = positions[itemID]
                                     local item = lia.item.new(uniqueID, itemID)
-                                    item.data = data or {}
+                                    item.data = itemData or {}
                                     item:spawn(position).liaItemID = itemID
                                     item:onRestored()
                                     item.invID = 0
@@ -46,6 +46,7 @@ function MODULE:LoadData()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:SaveData()
     local items = {}

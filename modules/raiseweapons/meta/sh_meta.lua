@@ -6,6 +6,7 @@ lia.config.PermaRaisedWeapons = lia.config.PermaRaisedWeapons or {
 	["gmod_tool"] = true,
 	["lia_poshelper"] = true,
 }
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:isWepRaised()
 	local weapon = self:GetActiveWeapon()

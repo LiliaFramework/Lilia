@@ -16,13 +16,13 @@ function MODULE:Think()
         self.predictedStamina = math.Clamp(self.predictedStamina + offset, 0, maxStamina)
     end
 end
+
 -------------------------------------------------------------------------------------------------------------------------~
 function MODULE:HUDPaintBackground()
     local ply = LocalPlayer()
-    if not ply:getChar() then return end
+    local char = ply and ply:getChar()
+    if not char then return end
     if not lia.config.StaminaBlur then return end
-    local ply = LocalPlayer()
-    local char = ply:getChar()
     local maxStamina = char:GetMaxStamina()
     local Stamina = ply:getLocalVar("stamina", maxStamina)
     if Stamina <= 5 then
@@ -31,6 +31,7 @@ function MODULE:HUDPaintBackground()
         lia.util.drawBlurAt(0, 0, ScrW(), ScrH(), self.stmBlurAmount, 0.2, self.stmBlurAlpha)
     end
 end
+
 -------------------------------------------------------------------------------------------------------------------------~
 lia.bar.add(function() return MODULE.predictedStamina / 100 end, Color(200, 200, 40), nil, "stamina")
 --------------------------------------------------------------------------------------------------------

@@ -5,14 +5,17 @@ function MODULE:isAllowedToUsePAC(client)
 
 	return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:CanWearParts(client, file)
 	return self:isAllowedToUsePAC(client)
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:PrePACEditorOpen(client)
 	return self:isAllowedToUsePAC(client)
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:PrePACConfigApply(client)
 	return self:isAllowedToUsePAC(client)

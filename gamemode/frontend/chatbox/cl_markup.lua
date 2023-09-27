@@ -4,6 +4,7 @@ local PANEL = {}
 function PANEL:Init()
     self:SetPaintBackground(false)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setMarkup(text, onDrawText)
     local object = lia.markup.parse(text, self:GetWide())
@@ -13,6 +14,7 @@ function PANEL:setMarkup(text, onDrawText)
         object:draw(0, 0)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaMarkupPanel", PANEL, "DPanel")
 --------------------------------------------------------------------------------------------------------

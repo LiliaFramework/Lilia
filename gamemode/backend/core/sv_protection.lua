@@ -14,10 +14,12 @@ function GM:OnPlayerDropWeapon(client, item, entity)
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CanDeleteChar(ply, char)
     if char:getMoney() < lia.config.DefaultMoney then return true end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnEntityCreated(ent)
     if lia.config.DrawEntityShadows then
@@ -41,11 +43,13 @@ function GM:OnEntityCreated(ent)
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:CheckValidSit(ply, trace)
     local ent = ply:GetTracedEntity()
     if ent:IsPlayer() then return false end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedVehicle(ply, ent)
     local delay = lia.config.PlayerSpawnVehicleDelay
@@ -53,6 +57,7 @@ function GM:PlayerSpawnedVehicle(ply, ent)
         ply.NextVehicleSpawn = SysTime() + delay
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
     if not physObj:IsMoveable() then return false end
@@ -71,6 +76,7 @@ function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
 
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedNPC(client, entity)
     entity:SetCreator(client)
@@ -79,6 +85,7 @@ function GM:PlayerSpawnedNPC(client, entity)
         entity:SetKeyValue("spawnflags", "8192")
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerDisconnected(client)
     client:saveLiliaData()
@@ -108,12 +115,14 @@ function GM:PlayerDisconnected(client)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnPhysgunPickup(ply, ent)
     if ent:GetClass() == "prop_physics" and ent:GetCollisionGroup() == COLLISION_GROUP_NONE then
         ent:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnObject(client, model, skin)
     if client:IsSuperAdmin() then return true end
@@ -129,6 +138,7 @@ function GM:PlayerSpawnObject(client, model, skin)
         return false
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PhysgunDrop(ply, ent)
     if ent:GetClass() ~= "prop_physics" then return end
@@ -141,6 +151,7 @@ function GM:PhysgunDrop(ply, ent)
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedProp(client, model, entity)
     for _, gredwitch in pairs(file.Find("models/gredwitch/bombs/*.mdl", "GAME")) do
@@ -177,6 +188,7 @@ function GM:PlayerSpawnedProp(client, model, entity)
 
     self:PlayerSpawnedEntity(client, entity)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedEntity(client, entity)
     entity:SetNW2String("Creator_Nick", client:Nick())

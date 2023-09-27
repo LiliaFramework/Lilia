@@ -4,6 +4,7 @@ local MODULE = MODULE
 function MODULE:CharacterLoaded()
     CRASHSCREEN_ALLOW = true
 end
+
 --------------------------------------------------------------------------------------------------------
 local lastServerData1
 local lastServerData2
@@ -52,6 +53,7 @@ function MODULE:Think()
         lastServerData2 = b
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:HUDPaint()
     if SERVER_DOWN and CRASHSCREEN_ALLOW then

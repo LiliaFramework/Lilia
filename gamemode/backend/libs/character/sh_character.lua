@@ -50,6 +50,7 @@ if SERVER then
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 if CLIENT then
     netstream.Hook(
@@ -63,6 +64,7 @@ if CLIENT then
         netstream.Start("liaCharFetchNames")
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.char.new(data, id, client, steamID)
     local character = setmetatable(
@@ -91,11 +93,13 @@ function lia.char.new(data, id, client, steamID)
 
     return character
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
     lia.char.varHooks[varName][hookName] = func
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
@@ -145,6 +149,7 @@ function lia.char.registerVar(key, data)
 
     charMeta.vars[key] = data.default
 end
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar(
     "name",
@@ -152,8 +157,8 @@ lia.char.registerVar(
         field = "_name",
         default = "John Doe",
         index = 1,
-        onValidate = function(value, data, client)
-            local name, override = hook.Run("GetDefaultCharName", client, data.faction, data)
+        onValidate = function(value, charData, client)
+            local name, override = hook.Run("GetDefaultCharName", client, charData.faction, charData)
             if isstring(name) and override then return true end
             if not isstring(value) or not value:find("%S") then return false, "invalid", "name" end
             local allowExistNames = lia.config.AllowExistNames
@@ -176,15 +181,15 @@ lia.char.registerVar(
             end
 
             return true
-        end,
-        onAdjust = function(client, data, value, newData)
-            local name, override = hook.Run("GetDefaultCharName", client, data.faction, data)
+        end, -- Change 'data' to 'charData'
+        onAdjust = function(client, charData, value, newData)
+            local name, override = hook.Run("GetDefaultCharName", client, charData.faction, charData)
             if isstring(name) and override then
                 newData.name = name
             else
                 newData.name = string.Trim(value):sub(1, 70)
             end
-        end,
+        end, -- Change 'data' to 'charData'
         onPostSetup = function(panel, faction, payload)
             local name, disabled = hook.Run("GetDefaultCharName", LocalPlayer(), faction)
             if name then
@@ -199,6 +204,7 @@ lia.char.registerVar(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar(
     "desc",
@@ -213,24 +219,26 @@ lia.char.registerVar(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar(
     "model",
     {
         field = "_model",
         default = "models/error.mdl",
-        onSet = function(character, value)
+        onSet = function(character, newValue)
             local oldVar = character:getModel()
             local client = character:getPlayer()
             if IsValid(client) and client:getChar() == character then
-                client:SetModel(value)
+                client:SetModel(newValue) -- Change 'value' to 'newValue'
             end
 
-            character.vars.model = value
+            character.vars.model = newValue -- Change 'value' to 'newValue'
             netstream.Start(nil, "charSet", "model", character.vars.model, character:getID())
-            hook.Run("PlayerModelChanged", client, value)
-            hook.Run("OnCharVarChanged", character, "model", oldVar, value)
+            hook.Run("PlayerModelChanged", client, newValue) -- Change 'value' to 'newValue'
+            hook.Run("OnCharVarChanged", character, "model", oldVar, newValue) -- Change 'value' to 'newValue'
         end,
+        -- Change 'value' to 'newValue'
         onGet = function(character, default) return character.vars.model or default end,
         index = 3,
         onDisplay = function(panel, y)
@@ -276,7 +284,7 @@ lia.char.registerVar(
 
             return scroll
         end,
-        onValidate = function(value, data)
+        onValidate = function(newValue, data)
             local faction = lia.faction.indices[data.faction]
             if faction then
                 if not data.model or not faction.models[data.model] then return false, "needModel" end
@@ -297,8 +305,8 @@ lia.char.registerVar(
                     local groups = {}
                     if isstring(model[3]) then
                         local i = 0
-                        for value in model[3]:gmatch("%d") do
-                            groups[i] = tonumber(value)
+                        for val in model[3]:gmatch("%d") do
+                            groups[i] = tonumber(val)
                             i = i + 1
                         end
                     elseif istable(model[3]) then
@@ -313,6 +321,7 @@ lia.char.registerVar(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar(
     "class",
@@ -320,6 +329,7 @@ lia.char.registerVar(
         noDisplay = true,
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar(
     "faction",
@@ -354,6 +364,7 @@ lia.char.registerVar(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar(
     "money",
@@ -364,6 +375,7 @@ lia.char.registerVar(
         noDisplay = true
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar(
     "data",
@@ -395,6 +407,7 @@ lia.char.registerVar(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar(
     "var",
@@ -432,6 +445,7 @@ lia.char.registerVar(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 do
     local playerMeta = FindMetaTable("Player")
@@ -450,6 +464,7 @@ do
     playerMeta.Nick = playerMeta.Name
     playerMeta.GetName = playerMeta.Name
 end
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "ReRunNames",

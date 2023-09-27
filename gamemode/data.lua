@@ -17,6 +17,7 @@ function lia.data.set(key, value, global, ignoreMap)
 
     return path
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.data.get(key, default, global, ignoreMap, refresh)
     if not refresh then
@@ -44,6 +45,7 @@ function lia.data.get(key, default, global, ignoreMap, refresh)
         return default
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.data.delete(key, global, ignoreMap)
     local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
@@ -58,6 +60,7 @@ function lia.data.delete(key, global, ignoreMap)
         return false
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 timer.Create(
     "liaSaveData",

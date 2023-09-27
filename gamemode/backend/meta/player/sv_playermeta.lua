@@ -36,6 +36,7 @@ function playerMeta:setAction(text, time, callback, startTime, finishTime)
         )
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:CreateServerRagdoll(DontSetPlayer)
     local entity = ents.Create("prop_ragdoll")
@@ -43,35 +44,26 @@ function playerMeta:CreateServerRagdoll(DontSetPlayer)
     entity:SetAngles(self:EyeAngles())
     entity:SetModel(self:GetModel())
     entity:SetSkin(self:GetSkin())
-
     for k, v in ipairs(self:GetBodyGroups()) do
         entity:SetBodygroup(v.id, self:GetBodygroup(v.id))
     end
 
     entity:Spawn()
-
-    if (!DontSetPlayer) then
+    if not DontSetPlayer then
         entity:SetNetVar("player", self)
     end
 
     entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
     entity:Activate()
-
     hook.Run("OnCreatePlayerServerRagdoll", self)
-
     local velocity = self:GetVelocity()
-
     for i = 0, entity:GetPhysicsObjectCount() - 1 do
         local physObj = entity:GetPhysicsObjectNum(i)
-
-        if (IsValid(physObj)) then
+        if IsValid(physObj) then
             physObj:SetVelocity(velocity)
-
             local index = entity:TranslatePhysBoneToBone(i)
-
-            if (index) then
+            if index then
                 local position, angles = self:GetBonePosition(index)
-
                 physObj:SetPos(position)
                 physObj:SetAngles(angles)
             end
@@ -80,6 +72,7 @@ function playerMeta:CreateServerRagdoll(DontSetPlayer)
 
     return entity
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
     local uniqueID = "liaStare" .. self:UniqueID()
@@ -115,14 +108,17 @@ function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:notify(message)
     lia.util.notify(message, self)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:notifyLocalized(message, ...)
     lia.util.notifyLocalized(message, self, ...)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:requestString(title, subTitle, callback, default)
     local d
@@ -145,6 +141,7 @@ function playerMeta:requestString(title, subTitle, callback, default)
 
     return d
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:isStuck()
     return util.TraceEntity(
@@ -155,6 +152,7 @@ function playerMeta:isStuck()
         }, self
     ).StartSolid
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:createRagdoll(freeze)
     local entity = ents.Create("prop_ragdoll")
@@ -186,15 +184,16 @@ function playerMeta:createRagdoll(freeze)
 
     return entity
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:setRagdolled(state, time, getUpGrace)
+    local entity = self:createRagdoll()
     getUpGrace = getUpGrace or time or 5
     if state then
         if IsValid(self.liaRagdoll) then
             self.liaRagdoll:Remove()
         end
 
-        local entity = self:createRagdoll()
         entity:setNetVar("player", self)
         entity:CallOnRemove(
             "fixer",
@@ -274,7 +273,6 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
         self:SetNotSolid(true)
         self:SetMoveType(MOVETYPE_NONE)
         if time then
-            local time2 = time
             local uniqueID = "liaUnRagdoll" .. self:SteamID()
             timer.Create(
                 uniqueID,
@@ -315,6 +313,7 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
         hook.Run("OnCharFallover", self, entity, false)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:loadLiliaData(callback)
     local name = self:steamName()
@@ -354,6 +353,7 @@ function playerMeta:loadLiliaData(callback)
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:saveLiliaData()
     local name = self:steamName()
@@ -367,6 +367,7 @@ function playerMeta:saveLiliaData()
         }, nil, "players", "_steamID = " .. steamID64
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:setLiliaData(key, value, noNetworking)
     self.liaData = self.liaData or {}
@@ -375,6 +376,7 @@ function playerMeta:setLiliaData(key, value, noNetworking)
         netstream.Start(self, "liaData", key, value)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:setWhitelisted(faction, whitelisted)
     if not whitelisted then
@@ -394,6 +396,7 @@ function playerMeta:setWhitelisted(faction, whitelisted)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:syncVars()
     for entity, data in pairs(lia.net) do
@@ -408,6 +411,7 @@ function playerMeta:syncVars()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:setLocalVar(key, value)
     if checkBadType(key, value) then return end
@@ -415,6 +419,7 @@ function playerMeta:setLocalVar(key, value)
     lia.net[self][key] = value
     netstream.Start(self, "nLcl", key, value)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getLiliaData(key, default)
     if key == true then return self.liaData end

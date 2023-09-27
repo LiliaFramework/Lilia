@@ -28,6 +28,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "charsetdesc",
@@ -59,6 +60,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "plytransfer",
@@ -97,6 +99,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "charsetname",
@@ -125,6 +128,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "chargetmodel",
@@ -142,6 +146,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "charsetmodel",
@@ -160,6 +165,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "charsetbodygroup",
@@ -189,6 +195,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "charsetskin",
@@ -207,6 +214,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "chargetmoney",
@@ -225,6 +233,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "charsetmoney",
@@ -247,6 +256,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "charsetattrib",
@@ -277,6 +287,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "charaddattrib",
@@ -307,6 +318,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "checkinventory",
@@ -331,6 +343,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "clearinv",
@@ -350,6 +363,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "flaggive",
@@ -361,7 +375,6 @@ lia.command.add(
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and target:getChar() then
                 local flags = arguments[2]
-
                 if not flags then
                     local available = ""
                     for k in SortedPairs(lia.flag.list) do
@@ -386,6 +399,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "flagtake",
@@ -413,6 +427,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "charkick",
@@ -435,6 +450,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "plywhitelist",
@@ -455,6 +471,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "plyunwhitelist",
@@ -475,6 +492,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "charunban",
@@ -501,16 +519,16 @@ lia.command.add(
             client.liaNextSearch = CurTime() + 15
             lia.db.query(
                 "SELECT _id, _name, _data FROM lia_characters WHERE _name LIKE \"%" .. lia.db.escape(name) .. "%\" LIMIT 1",
-                function(data)
-                    if data and data[1] then
-                        local charID = tonumber(data[1]._id)
-                        local data = util.JSONToTable(data[1]._data or "[]")
+                function(dbData)
+                    if dbData and dbData[1] then
+                        local charID = tonumber(dbData[1]._id)
+                        local charData = util.JSONToTable(dbData[1]._data or "[]")
                         client.liaNextSearch = 0
-                        if not data.banned then return client:notifyLocalized("charNotBanned") end
-                        data.banned = nil
+                        if not charData.banned then return client:notifyLocalized("charNotBanned") end
+                        charData.banned = nil
                         lia.db.updateTable(
                             {
-                                _data = data
+                                _data = charData
                             }, nil, nil, "_id = " .. charID
                         )
 
@@ -521,6 +539,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "viewextdescription",
@@ -536,6 +555,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "charsetextdescription",
@@ -549,6 +569,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "flagpet",
@@ -573,6 +594,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "flagragdoll",
@@ -588,6 +610,7 @@ lia.command.add(
         end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "flags",

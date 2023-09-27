@@ -11,6 +11,7 @@ function playerMeta:RestoreStamina(amount)
         hook.Run("PlayerStaminaGained", self)
     end
 end
+
 -------------------------------------------------------------------------------------------------------------------------~
 function playerMeta:ConsumeStamina(amount)
     local current = self:getLocalVar("stamina", 0)

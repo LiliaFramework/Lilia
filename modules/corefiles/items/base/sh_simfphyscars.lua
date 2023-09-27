@@ -12,7 +12,7 @@ ITEM.functions.Place = {
         data.start = client:GetShootPos()
         data.endpos = data.start + client:GetAimVector() * 96
         data.filter = client
-        local V = simfphys.SpawnVehicleSimple(itemTable.vehicleid, Vector(data.endpos), Angle(1, 1, 1))
+        simfphys.SpawnVehicleSimple(itemTable.vehicleid, Vector(data.endpos), Angle(1, 1, 1))
     end
 }
 --------------------------------------------------------------------------------------------------------

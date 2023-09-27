@@ -104,7 +104,6 @@ function ITEM:spawn(position, angles)
     end
 end
 
-
 --------------------------------------------------------------------------------------------------------
 function ITEM:transfer(newInventory, bBypass)
     if not bBypass and not newInventory:canAccess("transfer") then return false end

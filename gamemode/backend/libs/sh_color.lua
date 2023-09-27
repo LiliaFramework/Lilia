@@ -1,15 +1,17 @@
 --------------------------------------------------------------------------------------------------------
 lia.color = lia.color or {}
 --------------------------------------------------------------------------------------------------------
-local colorMeta = FindMetaTable('Color')
+local colorMeta = FindMetaTable("Color")
 --------------------------------------------------------------------------------------------------------
 function lia.color.Lighten(colot, amount)
 	return Color(math.Clamp(colot.r + amount, 0, 255), math.Clamp(colot.g + amount, 0, 255), math.Clamp(colot.b + amount, 0, 255), colot.a)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.color.Darken(colot, amount)
 	return Color(math.Clamp(colot.r - amount, 0, 255), math.Clamp(colot.g - amount, 0, 255), math.Clamp(colot.b - amount, 0, 255), colot.a)
 end
+
 --------------------------------------------------------------------------------------------------------
 function Color(r, g, b, a)
 	return setmetatable(
@@ -21,6 +23,7 @@ function Color(r, g, b, a)
 		}, colorMeta
 	)
 end
+
 --------------------------------------------------------------------------------------------------------
 do
 	local colors = {

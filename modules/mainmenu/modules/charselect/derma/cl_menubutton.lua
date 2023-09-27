@@ -1,6 +1,10 @@
+--------------------------------------------------------------------------------------------------------
 local PANEL = {}
-lia.config.SoundMenuButtonPressed = lia.config.SoundMenuButtonPressed or "ui/buttonclickrelease.wav"
-lia.config.MenuButtonRollover = lia.config.MenuButtonRollover or "ui/buttonrollover.wav"
+--------------------------------------------------------------------------------------------------------
+lia.config.SoundMenuButtonPressed = lia.config.SoundMenuButtonPressed
+--------------------------------------------------------------------------------------------------------
+lia.config.MenuButtonRollover = lia.config.MenuButtonRollover
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	self:SetFont("liaMenuButtonFont")
 	self:SetExpensiveShadow(2, Color(0, 0, 0, 200))
@@ -13,6 +17,7 @@ function PANEL:Init()
 	end
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:setText(text, noTranslation)
 	surface.SetFont("liaMenuButtonFont")
 	self:SetText(noTranslation and text:upper() or L(text):upper())
@@ -24,12 +29,14 @@ function PANEL:setText(text, noTranslation)
 	self:SetSize(w + 64, h + 32)
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:OnCursorEntered()
 	local color = self:GetTextColor()
 	self:SetTextColor(Color(math.max(color.r - 25, 0), math.max(color.g - 25, 0), math.max(color.b - 25, 0)))
 	surface.PlaySound(lia.config.MenuButtonRollover)
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:OnCursorExited()
 	if self.color then
 		self:SetTextColor(self.color)
@@ -38,6 +45,7 @@ function PANEL:OnCursorExited()
 	end
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:OnMousePressed(code)
 	if self.color then
 		self:SetTextColor(self.color)
@@ -51,6 +59,7 @@ function PANEL:OnMousePressed(code)
 	end
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:OnMouseReleased(key)
 	if self.color then
 		self:SetTextColor(self.color)
@@ -59,4 +68,6 @@ function PANEL:OnMouseReleased(key)
 	end
 end
 
+--------------------------------------------------------------------------------------------------------
 vgui.Register("liaMenuButton", PANEL, "DButton")
+--------------------------------------------------------------------------------------------------------

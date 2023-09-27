@@ -11,13 +11,13 @@ function SWEP:PrimaryAttack()
 	if not IsFirstTimePredicted() then return end
 	if CLIENT then return end
 	local data = {}
-	data.start = self.Owner:GetShootPos()
-	data.endpos = data.start + self.Owner:GetAimVector() * 96
-	data.filter = self.Owner
+	data.start = self:GetOwner():GetShootPos()
+	data.endpos = data.start + self:GetOwner():GetAimVector() * 96
+	data.filter = self:GetOwner()
 	local entity = util.TraceLine(data).Entity
 	if hook.Run("KeyLockOverride", self:GetOwner(), entity) then return end
-	if IsValid(entity) and ((entity:isDoor() and entity:checkDoorAccess(self.Owner)) or (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == self.Owner)) then
-		self.Owner:setAction(
+	if IsValid(entity) and ((entity:isDoor() and entity:checkDoorAccess(self:GetOwner())) or (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == self:GetOwner())) then
+		self:GetOwner():setAction(
 			"@locking",
 			time,
 			function()
@@ -28,6 +28,7 @@ function SWEP:PrimaryAttack()
 		return
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:toggleLock(door, state)
 	if IsValid(self:GetOwner()) and self:GetOwner():GetPos():Distance(door:GetPos()) > 96 then return end
@@ -78,6 +79,7 @@ function SWEP:toggleLock(door, state)
 		end
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:SecondaryAttack()
 	local time = lia.config.DoorLockTime

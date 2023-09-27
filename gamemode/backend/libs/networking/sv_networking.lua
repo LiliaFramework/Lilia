@@ -10,6 +10,7 @@ function checkBadType(name, object)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function setNetVar(key, value, receiver)
     if checkBadType(key, value) then return end
@@ -17,12 +18,14 @@ function setNetVar(key, value, receiver)
     lia.net.globals[key] = value
     netstream.Start(receiver, "gVar", key, value)
 end
+
 --------------------------------------------------------------------------------------------------------
 function getNetVar(key, default)
     local value = lia.net.globals[key]
 
     return value ~= nil and value or default
 end
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "EntityRemoved",
@@ -31,6 +34,7 @@ hook.Add(
         entity:clearNetVars()
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "PlayerInitialSpawn",
@@ -39,6 +43,7 @@ hook.Add(
         client:syncVars()
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "liaCharDeleted",
@@ -48,6 +53,7 @@ hook.Add(
         netstream.Start(client, "liaCharFetchNames", lia.char.names)
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "OnCharCreated",

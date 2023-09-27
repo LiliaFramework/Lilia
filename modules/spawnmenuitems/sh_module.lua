@@ -11,6 +11,7 @@ lia.config.CanSpawnMenuItems = {
     ["admin"] = false,
     ["user"] = false,
 }
+
 --------------------------------------------------------------------------------------------------------
 lia.util.include("cl_module.lua")
 lia.util.include("sv_module.lua")

@@ -20,26 +20,32 @@ function ITEM:getQuantity()
 
     return self.quantity
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:__eq(other)
     return self:getID() == other:getID()
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:__tostring()
     return "item[" .. self.uniqueID .. "][" .. self.id .. "]"
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:getID()
     return self.id
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:getModel()
     return self.model
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:getSkin()
     return self.skin
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:getPrice()
     local price = self.price
@@ -49,6 +55,7 @@ function ITEM:getPrice()
 
     return price or 0
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:call(method, client, entity, ...)
     local oldPlayer, oldEntity = self.player, self.entity
@@ -65,6 +72,7 @@ function ITEM:call(method, client, entity, ...)
     self.player = oldPlayer
     self.entity = oldEntity
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:getOwner()
     local inventory = lia.inventory.instances[self.invID]
@@ -75,35 +83,40 @@ function ITEM:getOwner()
         if character and character:getInv() and character:getInv().items[id] then return v end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:getData(key, default)
     self.data = self.data or {}
     if key == true then return self.data end
-    local value = self.data[key]
-    if value ~= nil then return value end
+    local dataValue = self.data[key]
+    if dataValue ~= nil then return dataValue end
     if IsValid(self.entity) then
         local data = self.entity:getNetVar("data", {})
-        local value = data[key]
-        if value ~= nil then return value end
+        local entityValue = data[key]
+        if entityValue ~= nil then return entityValue end
     end
 
     return default
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:hook(name, func)
     if name then
         self.hooks[name] = func
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:postHook(name, func)
     if name then
         self.postHooks[name] = func
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onRegistered()
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:print(detail)
     if detail == true then
@@ -112,6 +125,7 @@ function ITEM:print(detail)
         print(Format("%s[%s]", self.uniqueID, self.id))
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:printData()
     self:print(true)
@@ -120,6 +134,7 @@ function ITEM:printData()
         print(Format("[%s] = %s", k, v))
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:Print(detail)
     if detail == true then
@@ -128,6 +143,7 @@ function ITEM:Print(detail)
         print(Format("%s[%s]", self.uniqueID, self.id))
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:PrintData()
     self:Print(true)
@@ -136,6 +152,7 @@ function ITEM:PrintData()
         print(Format("[%s] = %s", k, v))
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 lia.meta.item = ITEM
 --------------------------------------------------------------------------------------------------------

@@ -40,6 +40,7 @@ end
 
 function PANEL:Paint(w, h)
 end
+
 -- if (self.isSelected or self:IsHovered()) then
 -- 	surface.SetDrawColor(
 -- 		self.isSelected

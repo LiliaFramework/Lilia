@@ -14,6 +14,7 @@ lia.config.VJConvars = {
     ["vj_npc_dropweapon"] = 0,
     ["vj_npc_plypickupdropwep"] = 0,
 }
+
 --------------------------------------------------------------------------------------------------------
 if VJ then
     function setupVJ()

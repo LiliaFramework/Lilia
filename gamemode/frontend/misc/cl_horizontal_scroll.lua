@@ -24,35 +24,43 @@ function PANEL:Init()
     self:SetPaintBorderEnabled(false)
     self:SetPaintBackground(false)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:AddItem(panel)
     panel:SetParent(self:GetCanvas())
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnChildAdded(child)
     self:AddItem(child)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:SizeToContents()
     self:SetSize(self:GetCanvas():GetSize())
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:GetHBar()
     return self.bar
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Rebuild()
     self:GetCanvas():SizeToChildren(true, false)
     self:CenterHorizontal()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnMouseWheeled(delta)
     self:GetHBar():OnMouseWheeled(delta)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnHScroll(offset)
     self:GetCanvas():SetPos(offset, 0)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:ScrollToChild(child)
     self:PerformLayout()
@@ -61,6 +69,7 @@ function PANEL:ScrollToChild(child)
     x = x + ((w - self:GetWide()) * 0.5)
     self:GetHBar():AnimateTo(x, 0.5, 0, 0.5)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:PerformLayout()
     local canvasWide = self:GetCanvas():GetWide()
@@ -82,10 +91,12 @@ function PANEL:PerformLayout()
         bar:SetScroll(bar:GetScroll())
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Clear()
     self:GetCanvas():Clear()
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaHorizontalScroll", PANEL, "DPanel")
 --------------------------------------------------------------------------------------------------------

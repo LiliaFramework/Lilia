@@ -276,9 +276,9 @@ function PANEL:addPlayer(client, parent)
         if self.lastModel ~= model or self.lastSkin ~= skin then
             self.model:SetModel(client:GetModel(), client:GetSkin())
             if offDutySB[LocalPlayer():GetUserGroup()] or (LocalPlayer() == client) or LocalPlayer():Team() == FACTION_STAFF then
-                self.model:SetToolTip(L("sbOptions", client:Name()))
+                self.model:SetTooltip(L("sbOptions", client:Name()))
             else
-                self.model:SetToolTip("You do not have access to see this information")
+                self.model:SetTooltip("You do not have access to see this information")
             end
 
             self.lastModel = model

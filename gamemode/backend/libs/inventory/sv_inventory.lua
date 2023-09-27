@@ -27,6 +27,7 @@ function lia.inventory.loadByID(id, noCache)
 
     return lia.inventory.loadFromDefaultStorage(id, noCache)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.inventory.loadFromDefaultStorage(id, noCache)
     return deferred.all({lia.db.select(INV_FIELDS, INV_TABLE, "_invID = " .. id, 1), lia.db.select(DATA_FIELDS, DATA_TABLE, "_invID = " .. id)}):next(
@@ -62,6 +63,7 @@ function lia.inventory.loadFromDefaultStorage(id, noCache)
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.inventory.instance(typeID, initialData)
     local invType = lia.inventory.types[typeID]
@@ -81,12 +83,14 @@ function lia.inventory.instance(typeID, initialData)
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.inventory.loadAllFromCharID(charID)
     assert(isnumber(charID), "charID must be a number")
 
     return lia.db.select({"_invID"}, INV_TABLE, "_charID = " .. charID):next(function(res) return deferred.map(res.results or {}, function(result) return lia.inventory.loadByID(tonumber(result._invID)) end) end)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.inventory.deleteByID(id)
     lia.db.delete(DATA_TABLE, "_invID = " .. id)
@@ -97,6 +101,7 @@ function lia.inventory.deleteByID(id)
         instance:destroy()
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.inventory.cleanUpForCharacter(character)
     for _, inventory in pairs(character:getInv(true)) do

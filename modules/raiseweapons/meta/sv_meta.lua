@@ -9,6 +9,7 @@ function playerMeta:setWepRaised(state)
 		weapon:SetNextSecondaryFire(CurTime() + 1)
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:toggleWepRaised()
 	timer.Simple(

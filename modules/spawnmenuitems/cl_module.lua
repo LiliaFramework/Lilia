@@ -2,6 +2,7 @@
 function MODULE:InitializedModules()
     RunConsoleCommand("spawnmenu_reload")
 end
+
 --------------------------------------------------------------------------------------------------------
 spawnmenu.AddContentType(
     "item",
@@ -30,57 +31,46 @@ spawnmenu.AddContentType(
         return icon
     end
 )
+
 --------------------------------------------------------------------------------------------------------
-hook.Add(
-    "PopulateItems",
-    "AddEntityContent",
-    function(pnlContent, tree, node)
-        local categorised = {}
-        for k, v in pairs(lia.item.list) do
-            local category = v.category and v.category == "misc" and "Miscellaneous" or v.category and v.category or "Miscellaneous"
-            categorised[category] = categorised[category] or {}
-            table.insert(categorised[category], v)
-        end
+function MODULE:PopulateItems(pnlContent, tree, parentNode)
+    local categorised = {}
+    for k, v in pairs(lia.item.list) do
+        local category = v.category and v.category == "misc" and "Miscellaneous" or v.category and v.category or "Miscellaneous"
+        categorised[category] = categorised[category] or {}
+        table.insert(categorised[category], v)
+    end
 
-        --
-        -- Add a tree node for each category
-        --
-        for categoryName, v in SortedPairs(categorised) do
-            -- Add a node to the tree
-            local node = tree:AddNode(categoryName, "icon16/bricks.png")
-            -- When we click on the node - populate it using this function
-            node.DoPopulate = function(self)
-                -- If we've already populated it - forget it.
-                if self.itemPanel then return end
-                -- Create the container panel
-                self.itemPanel = vgui.Create("ContentContainer", pnlContent)
-                self.itemPanel:SetVisible(false)
-                self.itemPanel:SetTriggerSpawnlistChange(false)
-                for _, item in SortedPairsByMemberValue(v, "name") do
-                    spawnmenu.CreateContentIcon(
-                        "item",
-                        self.itemPanel,
-                        {
-                            spawnname = item.uniqueID
-                        }
-                    )
-                end
-            end
-
-            -- If we click on the node populate it and switch to it.
-            node.DoClick = function(self)
-                self:DoPopulate()
-                pnlContent:SwitchPanel(self.itemPanel)
+    for categoryName, itemTable in SortedPairs(categorised) do
+        local node = tree:AddNode(categoryName, "icon16/bricks.png")
+        node.DoPopulate = function(treeNode)
+            if treeNode.itemPanel then return end
+            treeNode.itemPanel = vgui.Create("ContentContainer", pnlContent)
+            treeNode.itemPanel:SetVisible(false)
+            treeNode.itemPanel:SetTriggerSpawnlistChange(false)
+            for _, item in SortedPairsByMemberValue(itemTable, "name") do
+                spawnmenu.CreateContentIcon(
+                    "item",
+                    treeNode.itemPanel,
+                    {
+                        spawnname = item.uniqueID
+                    }
+                )
             end
         end
 
-        -- Select the first node
-        local FirstNode = tree:Root():GetChildNode(0)
-        if IsValid(FirstNode) then
-            FirstNode:InternalDoClick()
+        node.DoClick = function(treeNode)
+            treeNode:DoPopulate()
+            pnlContent:SwitchPanel(treeNode.itemPanel)
         end
     end
-)
+
+    local firstNode = tree:Root():GetChildNode(0)
+    if IsValid(firstNode) then
+        firstNode:InternalDoClick()
+    end
+end
+
 --------------------------------------------------------------------------------------------------------
 spawnmenu.AddCreationTab(
     "Items",

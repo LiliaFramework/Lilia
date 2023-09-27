@@ -7,6 +7,7 @@ lia.char.registerVar(
         noDisplay = true
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.char.registerVar(
     "RecognizedAs",

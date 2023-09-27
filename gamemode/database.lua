@@ -6,12 +6,14 @@ local function ThrowQueryFault(query, fault)
     MsgC(Color(255, 0, 0), "* " .. query .. "\n")
     MsgC(Color(255, 0, 0), fault .. "\n")
 end
+
 --------------------------------------------------------------------------------------------------------
 local function ThrowConnectionFault(fault)
     MsgC(Color(255, 0, 0), "Lilia has failed to connect to the database.\n")
     MsgC(Color(255, 0, 0), fault .. "\n")
     setNetVar("dbError", fault)
 end
+
 --------------------------------------------------------------------------------------------------------
 local modules = {}
 --------------------------------------------------------------------------------------------------------
@@ -43,6 +45,7 @@ local function promisifyIfNoCallback(queryHandler)
         return d
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 modules.sqlite = {
     query = promisifyIfNoCallback(
@@ -67,6 +70,7 @@ modules.sqlite = {
         end
     end
 }
+
 --------------------------------------------------------------------------------------------------------
 modules.tmysql4 = {
     query = promisifyIfNoCallback(
@@ -77,7 +81,7 @@ modules.tmysql4 = {
                     function(status, result)
                         if result then
                             result = result[1]
-                            local queryStatus, queryError, affected, lastID, time, data = result.status, result.error, result.affected, result.lastid, result.time, result.data
+                            local queryStatus, lastID, data = result.status, result.lastid, result.data
                             if queryStatus and queryStatus == true and callback then
                                 callback(data, lastID)
                             end
@@ -118,6 +122,7 @@ modules.tmysql4 = {
         end
     end
 }
+
 --------------------------------------------------------------------------------------------------------
 MYSQLOO_QUEUE = MYSQLOO_QUEUE or {}
 PREPARE_CACHE = {}
@@ -207,9 +212,8 @@ modules.mysqloo = {
         local password = lia.db.password
         local database = lia.db.database
         local port = lia.db.port
-        local object = mysqloo.connect(hostname, username, password, database, port)
         lia.db.pool = {}
-        local poolNum = 6 -- it won't utilize full potential beyond 6.
+        local poolNum = 6 -- it won"t utilize full potential beyond 6.
         local connectedPools = 0
         for i = 1, poolNum do
             lia.db.pool[i] = mysqloo.connect(hostname, username, password, database, port)
@@ -260,7 +264,6 @@ modules.mysqloo = {
     preparedCall = function(key, callback, ...)
         local preparedStatement = lia.db.prepared[key]
         if preparedStatement then
-            local freeDB, freeIndex = lia.db.getObject()
             PREPARE_CACHE[key] = PREPARE_CACHE[key] or {}
             PREPARE_CACHE[key][freeIndex] = PREPARE_CACHE[key][freeIndex] or lia.db.getObject():prepare(preparedStatement.query)
             local prepObj = PREPARE_CACHE[key][freeIndex]
@@ -296,12 +299,14 @@ modules.mysqloo = {
         end
     end
 }
+
 --------------------------------------------------------------------------------------------------------
 lia.db.escape = lia.db.escape or modules.sqlite.escape
 --------------------------------------------------------------------------------------------------------
 lia.db.query = lia.db.query or function(...)
     lia.db.queryQueue[#lia.db.queryQueue + 1] = {...}
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.db.connect(callback, reconnect)
     local dbModule = modules[lia.db.module]
@@ -329,6 +334,7 @@ function lia.db.connect(callback, reconnect)
         ErrorNoHalt("[Lilia] '" .. (lia.db.module or "nil") .. "' is not a valid data storage method! \n")
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 local MYSQL_CREATE_TABLES = [[
 CREATE TABLE IF NOT EXISTS `lia_players` (
@@ -488,6 +494,7 @@ function lia.db.wipeTables(callback)
         lia.db.query(DROP_QUERY_LITE, realCallback)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 local resetCalled = 0
 --------------------------------------------------------------------------------------------------------
@@ -508,6 +515,7 @@ concommand.Add(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 function lia.db.loadTables()
     local function done()
@@ -544,6 +552,7 @@ function lia.db.loadTables()
 
     hook.Run("OnLoadTables")
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.db.waitForTablesToLoad()
     TABLE_WAIT_ID = TABLE_WAIT_ID or 0
@@ -564,6 +573,7 @@ function lia.db.waitForTablesToLoad()
 
     return d
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.db.convertDataType(value, noEscape)
     if isstring(value) then
@@ -584,6 +594,7 @@ function lia.db.convertDataType(value, noEscape)
 
     return value
 end
+
 --------------------------------------------------------------------------------------------------------
 local function genInsertValues(value, dbTable)
     local query = "lia_" .. (dbTable or "characters") .. " ("
@@ -596,6 +607,7 @@ local function genInsertValues(value, dbTable)
 
     return query .. table.concat(keys, ", ") .. ") VALUES (" .. table.concat(values, ", ") .. ")"
 end
+
 --------------------------------------------------------------------------------------------------------
 local function genUpdateList(value)
     local changes = {}
@@ -605,16 +617,19 @@ local function genUpdateList(value)
 
     return table.concat(changes, ", ")
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.db.insertTable(value, callback, dbTable)
     local query = "INSERT INTO " .. genInsertValues(value, dbTable)
     lia.db.query(query, callback)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.db.updateTable(value, callback, dbTable, condition)
     local query = "UPDATE " .. ("lia_" .. (dbTable or "characters")) .. " SET " .. genUpdateList(value) .. (condition and " WHERE " .. condition or "")
     lia.db.query(query, callback)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.db.select(fields, dbTable, condition, limit)
     local d = deferred.new()
@@ -643,6 +658,7 @@ function lia.db.select(fields, dbTable, condition, limit)
 
     return d
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.db.upsert(value, dbTable)
     local query
@@ -667,6 +683,7 @@ function lia.db.upsert(value, dbTable)
 
     return d
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.db.delete(dbTable, condition)
     local query
@@ -724,11 +741,13 @@ function GM:SetupDatabase()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnMySQLOOConnected()
     hook.Run("RegisterPreparedStatements")
     MYSQLOO_PREPARED = true
 end
+
 --------------------------------------------------------------------------------------------------------
 MYSQLOO_INTEGER = 0
 MYSQLOO_STRING = 1

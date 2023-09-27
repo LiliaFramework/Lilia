@@ -24,6 +24,7 @@ function lia.command.findPlayer(client, name)
         client:notifyLocalized("mustProvideString")
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.command.findFaction(client, name)
     if lia.faction.teams[name] then return lia.faction.teams[name] end
@@ -33,6 +34,7 @@ function lia.command.findFaction(client, name)
 
     client:notifyLocalized("invalidFaction")
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.command.run(client, command, arguments)
     command = lia.command.list[command:lower()]
@@ -52,6 +54,7 @@ function lia.command.run(client, command, arguments)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.command.parse(client, text, realCommand, arguments)
     if realCommand or text:utf8sub(1, 1) == "/" then
@@ -83,10 +86,12 @@ function lia.command.parse(client, text, realCommand, arguments)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.command.send(command, ...)
     netstream.Start("cmd", command, {...})
 end
+
 --------------------------------------------------------------------------------------------------------
 concommand.Add(
     "lia",

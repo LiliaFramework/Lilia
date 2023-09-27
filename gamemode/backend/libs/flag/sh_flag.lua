@@ -15,6 +15,7 @@ lia.flag.defaultlist = {
     ["p"] = "Access to the physgun.",
     ["t"] = "Access to the toolgun."
 }
+
 --------------------------------------------------------------------------------------------------------
 function lia.flag.add(flag, desc, callback)
     lia.flag.list[flag] = {
@@ -22,6 +23,7 @@ function lia.flag.add(flag, desc, callback)
         callback = callback
     }
 end
+
 --------------------------------------------------------------------------------------------------------
 for desc, flag in pairs(lia.flag.defaultlist) do
     lia.flag.add(flag, desc)

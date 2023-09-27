@@ -274,7 +274,7 @@ if SERVER then
 			data,
 			0,
 			0,
-			function(item)
+			function()
 				if targetInventory.occupied then
 					for x2 = 0, (item.width or 1) - 1 do
 						for y2 = 0, (item.height or 1) - 1 do
@@ -287,7 +287,7 @@ if SERVER then
 				d:resolve(item)
 			end
 		):next(
-			function(item)
+			function()
 				if isStackCommand and remainingQuantity > 0 then
 					for targetItem, assignedQuantity in pairs(targetAssignments) do
 						targetItem:addQuantity(assignedQuantity)

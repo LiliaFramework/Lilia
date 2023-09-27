@@ -4,10 +4,10 @@ hook.Add(
     "liaInventory",
     function(tabs)
         if hook.Run("CanPlayerViewInventory") == false then return end
-        tabs["inv"] = function(panel)
-            local inventory = LocalPlayer():getChar():getInv()
-            if not inventory then return end
-            local mainPanel = inventory:show(panel)
+        tabs["inv"] = function(mainMenuPanel)
+            local playerInventory = LocalPlayer():getChar():getInv()
+            if not playerInventory then return end
+            local mainPanel = playerInventory:show(mainMenuPanel)
             local sortPanels = {}
             local totalSize = {
                 x = 0,
@@ -18,11 +18,11 @@ hook.Add(
             table.insert(sortPanels, mainPanel)
             totalSize.x = totalSize.x + mainPanel:GetWide() + 10
             totalSize.y = math.max(totalSize.y, mainPanel:GetTall())
-            for id, item in pairs(inventory:getItems()) do
+            for id, item in pairs(playerInventory:getItems()) do
                 if item.isBag and hook.Run("CanOpenBagPanel", item) ~= false then
-                    local inventory = item:getInv()
-                    local childPanels = inventory:show(mainPanel)
-                    lia.gui["inv" .. inventory:getID()] = childPanels
+                    local bagInventory = item:getInv()
+                    local childPanels = bagInventory:show(mainPanel)
+                    lia.gui["inv" .. bagInventory:getID()] = childPanels
                     table.insert(sortPanels, childPanels)
                     totalSize.x = totalSize.x + childPanels:GetWide() + 10
                     totalSize.y = math.max(totalSize.y, childPanels:GetTall())
@@ -47,6 +47,7 @@ hook.Add(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "CreateMenuButtons",
@@ -68,6 +69,7 @@ hook.Add(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "CreateMenuButtons",

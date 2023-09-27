@@ -5,6 +5,7 @@ function L(key, ...)
 
     return string.format(info and info[key] or key, ...)
 end
+
 --------------------------------------------------------------------------------------------------------
 function L2(key, ...)
     local info = lia.lang.stored["english"]

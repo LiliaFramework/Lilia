@@ -16,6 +16,7 @@ function MODULE:PostPlayerLoadout(client)
         end
     )
 end
+
 -------------------------------------------------------------------------------------------------------------------------~
 function MODULE:PlayerLoadedChar(client, character)
     local maxstm = character:GetMaxStamina()
@@ -26,6 +27,7 @@ function MODULE:PlayerLoadedChar(client, character)
         end
     )
 end
+
 -------------------------------------------------------------------------------------------------------------------------~
 function MODULE:PlayerStaminaLost(client)
     if client.isBreathing then return end

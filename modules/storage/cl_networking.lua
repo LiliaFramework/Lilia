@@ -6,6 +6,7 @@ net.Receive(
 		hook.Run("StorageUnlockPrompt", entity)
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
 	"liaStorageOpen",
@@ -14,6 +15,7 @@ net.Receive(
 		hook.Run("StorageOpen", entity)
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:exitStorage()
 	net.Start("liaStorageExit")

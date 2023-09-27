@@ -6,6 +6,7 @@ local function getValidStorage(client)
 
 	return storage
 end
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
 	"liaStorageExit",
@@ -18,6 +19,7 @@ net.Receive(
 		client.liaStorageEntity = nil
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
 	"liaStorageUnlock",
@@ -40,6 +42,7 @@ net.Receive(
 		end
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
 	"liaStorageTransfer",

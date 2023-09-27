@@ -30,6 +30,7 @@ function MODULE:CalcStaminaChange(client)
         end
     end
 end
+
 -------------------------------------------------------------------------------------------------------------------------~
 function MODULE:SetupMove(client, cMoveData)
     if not lia.config.StaminaSlowdown then return end

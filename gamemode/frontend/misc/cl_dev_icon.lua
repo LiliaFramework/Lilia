@@ -22,6 +22,7 @@ local function adjustSize(pnl, x, y)
     pnl:SetSize(10 + x * 64, 27 + y * 64)
     pnl.model:SetSize(x * 64, y * 64)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:SetPos(50, 50)
@@ -39,11 +40,13 @@ function PANEL:Init()
 
     self:AdjustSize(ICON_INFO.w, ICON_INFO.h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
     surface.SetDrawColor(255, 255, 255)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 PANEL.AdjustSize = adjustSize
 vgui.Register("iconPreview", PANEL, "DFrame")
@@ -67,7 +70,7 @@ function PANEL:Init()
     end
 
     self.model.Icon:SetVisible(false)
-    self.model.Paint = function(self, x, y)
+    self.model.Paint = function(x, y)
         local exIcon = ikon:getIcon("iconEditor")
         if exIcon then
             surface.SetMaterial(exIcon)
@@ -78,11 +81,13 @@ function PANEL:Init()
 
     self:AdjustSize(ICON_INFO.w, ICON_INFO.h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
     surface.SetDrawColor(255, 255, 255)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 PANEL.AdjustSize = adjustSize
 vgui.Register("iconRenderPreview", PANEL, "DFrame")
@@ -112,12 +117,14 @@ local function buildActionText(self, setModel)
 
     return text
 end
+
 --------------------------------------------------------------------------------------------------------
 local function action(self)
     local text = buildActionText(self)
     if not text then return end
     SetClipboardText(text)
 end
+
 --------------------------------------------------------------------------------------------------------
 local function renderAction(self)
     local text = buildActionText(self, true)
@@ -139,6 +146,7 @@ local function renderAction(self)
         }, true
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 PANEL = {}
 --------------------------------------------------------------------------------------------------------
@@ -156,7 +164,7 @@ function PANEL:Init()
     self.prev2 = vgui.Create("iconRenderPreview")
     self.list = self:Add("DScrollPanel")
     self.list:Dock(FILL)
-    self:AddText("Actions")
+    self:SetText("Actions")
     self.render = self.list:Add("DButton")
     self.render:Dock(TOP)
     self.render:SetFont("ChatFont")
@@ -177,7 +185,7 @@ function PANEL:Init()
         action(self)
     end
 
-    self:AddText("Presets")
+    self:SetText("Presets")
     for i = 1, 6 do
         local btn = self.list:Add("DButton")
         btn:Dock(TOP)
@@ -191,7 +199,7 @@ function PANEL:Init()
         end
     end
 
-    self:AddText("Model Name")
+    self:SetText("Model Name")
     self.mdl = self.list:Add("DTextEntry")
     self.mdl:Dock(TOP)
     self.mdl:SetFont("Default")
@@ -204,36 +212,36 @@ function PANEL:Init()
         self:UpdateIcon()
     end
 
-    self:AddText("Icon Size")
-    local cfg = self.list:Add("DNumSlider")
-    cfg:Dock(TOP)
-    cfg:SetText("W")
-    cfg:SetMin(0)
-    cfg:SetMax(10)
-    cfg:SetDecimals(0)
-    cfg:SetValue(ICON_INFO.w)
-    cfg:DockMargin(10, 0, 0, 5)
-    cfg.OnValueChanged = function(cfg, value)
+    self:SetText("Icon Size")
+    local cfgW = self.list:Add("DNumSlider")
+    cfgW:Dock(TOP)
+    cfgW:SetText("W")
+    cfgW:SetMin(0)
+    cfgW:SetMax(10)
+    cfgW:SetDecimals(0)
+    cfgW:SetValue(ICON_INFO.w)
+    cfgW:DockMargin(10, 0, 0, 5)
+    cfgW.OnValueChanged = function(cfg, value)
         ICON_INFO.w = value
         self.prev:AdjustSize(ICON_INFO.w, ICON_INFO.h)
         self.prev2:AdjustSize(ICON_INFO.w, ICON_INFO.h)
     end
 
-    local cfg = self.list:Add("DNumSlider")
-    cfg:Dock(TOP)
-    cfg:SetText("H")
-    cfg:SetMin(0)
-    cfg:SetMax(10)
-    cfg:SetDecimals(0)
-    cfg:SetValue(ICON_INFO.h)
-    cfg:DockMargin(10, 0, 0, 5)
-    cfg.OnValueChanged = function(cfg, value)
+    local cfgH = self.list:Add("DNumSlider")
+    cfgH:Dock(TOP)
+    cfgH:SetText("H")
+    cfgH:SetMin(0)
+    cfgH:SetMax(10)
+    cfgH:SetDecimals(0)
+    cfgH:SetValue(ICON_INFO.h)
+    cfgH:DockMargin(10, 0, 0, 5)
+    cfgH.OnValueChanged = function(cfg, value)
         ICON_INFO.h = value
         self.prev:AdjustSize(ICON_INFO.w, ICON_INFO.h)
         self.prev2:AdjustSize(ICON_INFO.w, ICON_INFO.h)
     end
 
-    self:AddText("Camera FOV")
+    self:SetText("Camera FOV")
     self.camFOV = self.list:Add("DNumSlider")
     self.camFOV:Dock(TOP)
     self.camFOV:SetText("CAMFOV")
@@ -252,7 +260,7 @@ function PANEL:Init()
         end
     end
 
-    self:AddText("Camera Position")
+    self:SetText("Camera Position")
     self.camPos = {}
     for i = 1, 3 do
         self.camPos[i] = self.list:Add("DNumSlider")
@@ -270,7 +278,7 @@ function PANEL:Init()
         end
     end
 
-    self:AddText("Camera Angle")
+    self:SetText("Camera Angle")
     self.camAng = {}
     for i = 1, 3 do
         self.camAng[i] = self.list:Add("DNumSlider")
@@ -288,7 +296,7 @@ function PANEL:Init()
         end
     end
 
-    self:AddText("Entity Angle")
+    self:SetText("Entity Angle")
     self.entAng = {}
     for i = 1, 3 do
         self.entAng[i] = self.list:Add("DNumSlider")
@@ -334,6 +342,7 @@ function PANEL:Init()
     self:SetupEditor()
     self:UpdateIcon(true)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:UpdateIcon()
     isIconUpdating = true
@@ -346,6 +355,7 @@ function PANEL:UpdateIcon()
 
     isIconUpdating = false
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:SetupEditor(update, mode)
     local p = self.prev
@@ -382,6 +392,7 @@ function PANEL:SetupEditor(update, mode)
         p.model.Entity:SetAngles(ICON_INFO.entAng)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:BestGuessLayout()
     local p = self.prev
@@ -394,6 +405,7 @@ function PANEL:BestGuessLayout()
         ICON_INFO.camAng = tab.angles
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:FullFrontalLayout()
     local p = self.prev
@@ -404,6 +416,7 @@ function PANEL:FullFrontalLayout()
     ICON_INFO.FOV = 45
     ICON_INFO.camAng = (campos * -1):Angle()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:AboveLayout()
     local p = self.prev
@@ -414,6 +427,7 @@ function PANEL:AboveLayout()
     ICON_INFO.FOV = 45
     ICON_INFO.camAng = (campos * -1):Angle()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:RightLayout()
     local p = self.prev
@@ -424,6 +438,7 @@ function PANEL:RightLayout()
     ICON_INFO.FOV = 45
     ICON_INFO.camAng = (campos * -1):Angle()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:OriginLayout()
     local p = self.prev
@@ -434,8 +449,9 @@ function PANEL:OriginLayout()
     ICON_INFO.FOV = 45
     ICON_INFO.camAng = Angle(0, -180, 0)
 end
+
 --------------------------------------------------------------------------------------------------------
-function PANEL:AddText(str)
+function PANEL:SetText(str)
     local label = self.list:Add("DLabel")
     label:SetFont("ChatFont")
     label:SetTextColor(color_white)
@@ -444,6 +460,7 @@ function PANEL:AddText(str)
     label:SetContentAlignment(5)
     label:SetText(str)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnRemove()
     if self.prev and self.prev:IsVisible() then
@@ -454,6 +471,7 @@ function PANEL:OnRemove()
         self.prev2:Close()
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("iconEditor", PANEL, "DFrame")
 --------------------------------------------------------------------------------------------------------

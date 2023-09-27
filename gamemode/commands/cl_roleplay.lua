@@ -10,6 +10,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "point",
@@ -20,6 +21,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "chardesc",
@@ -30,6 +32,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "beclass",
@@ -40,6 +43,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "chargetup",
@@ -49,6 +53,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "givemoney",
@@ -59,6 +64,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "bringlostitems",
@@ -68,6 +74,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "carddraw",
@@ -77,6 +84,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "fallover",
@@ -87,6 +95,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "factionlist",
@@ -97,6 +106,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "getpos",
@@ -106,6 +116,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "doorname",
@@ -115,6 +126,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 if lia.config.FactionBroadcastEnabled then
     lia.command.add(
@@ -127,6 +139,7 @@ if lia.config.FactionBroadcastEnabled then
         }
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 if lia.config.AdvertisementEnabled then
     lia.command.add(

@@ -25,6 +25,7 @@ local setSequence = function(entity)
 
     entity:ResetSequence(4)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:setHidden(false)
@@ -37,9 +38,9 @@ function PANEL:Init()
     end
 
     self.OldSetModel = self.SetModel
-    self.SetModel = function(self, model, skin, hidden)
-        self:OldSetModel(model)
-        local entity = self.Entity
+    self.SetModel = function(panelSelf, model, skin, hidden)
+        panelSelf:OldSetModel(model)
+        local entity = panelSelf.Entity
         if skin then
             entity:SetSkin(skin)
         end
@@ -47,14 +48,15 @@ function PANEL:Init()
         setSequence(entity)
         local data = PositionSpawnIcon(entity, entity:GetPos())
         if data then
-            self:SetFOV(data.fov)
-            self:SetCamPos(data.origin)
-            self:SetLookAng(data.angles)
+            panelSelf:SetFOV(data.fov)
+            panelSelf:SetCamPos(data.origin)
+            panelSelf:SetLookAng(data.angles)
         end
 
         entity:SetEyeTarget(Vector(0, 0, 64))
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setHidden(hidden)
     if hidden then
@@ -76,16 +78,19 @@ function PANEL:setHidden(hidden)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:LayoutEntity()
     self:RunAnimation()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnMousePressed()
     if self.DoClick then
         self:DoClick()
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaSpawnIcon", PANEL, "DModelPanel")
 --------------------------------------------------------------------------------------------------------

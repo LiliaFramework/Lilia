@@ -10,6 +10,7 @@ function playerMeta:isObserving()
         return false
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:EndChatter()
     timer.Simple(
@@ -20,10 +21,12 @@ function playerMeta:EndChatter()
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:IsNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:IsStuck()
     return util.TraceEntity(
@@ -34,6 +37,7 @@ function playerMeta:IsStuck()
         }, self
     ).StartSolid
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:AddMoney(amt)
     local char = self:getChar()
@@ -41,6 +45,7 @@ function playerMeta:AddMoney(amt)
         char:giveMoney(amt)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:TakeMoney(amt)
     local char = self:getChar()
@@ -48,6 +53,7 @@ function playerMeta:TakeMoney(amt)
         char:giveMoney(-amt)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:addMoney(amt)
     local char = self:getChar()
@@ -55,6 +61,7 @@ function playerMeta:addMoney(amt)
         char:giveMoney(amt)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:takeMoney(amt)
     local char = self:getChar()
@@ -62,40 +69,47 @@ function playerMeta:takeMoney(amt)
         char:giveMoney(-amt)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getMoney()
     local char = self:getChar()
 
     return char and char:getMoney() or 0
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:canAfford(amount)
     local char = self:getChar()
 
     return char and char:hasMoney(amount)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:GetMoney()
     local char = self:getChar()
 
     return char and char:getMoney() or 0
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:CanAfford(amount)
     local char = self:getChar()
 
     return char and char:hasMoney(amount)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:isRunning()
     return FindMetaTable("Vector").Length2D(self:GetVelocity()) > (self:GetWalkSpeed() + 10)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:isFemale()
     local model = self:GetModel():lower()
 
     return model:find("female") or model:find("alyx") or model:find("mossman") or lia.anim.getModelClass(model) == "citizen_female"
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getItemDropPos()
     local data = {}
@@ -110,6 +124,7 @@ function playerMeta:getItemDropPos()
 
     return trace.HitPos
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:hasWhitelist(faction)
     local data = lia.faction.indices[faction]
@@ -122,6 +137,7 @@ function playerMeta:hasWhitelist(faction)
 
     return false
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getItems()
     local char = self:getChar()
@@ -130,11 +146,13 @@ function playerMeta:getItems()
         if inv then return inv:getItems() end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getClass()
     local char = self:getChar()
     if char then return char:getClass() end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:GetTracedEntity()
     local data = {}
@@ -145,6 +163,7 @@ function playerMeta:GetTracedEntity()
 
     return target
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:GetTrace()
     local data = {}
@@ -157,12 +176,14 @@ function playerMeta:GetTrace()
 
     return trace
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:VerifyCommandDistance(otherPlayer)
     if not IsValid(otherPlayer) or not IsValid(self) then return false end
 
     return self:GetPos():DistToSqr(otherPlayer:GetPos()) <= (lia.config.InteractionDistance * lia.config.InteractionDistance)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getClassData()
     local char = self:getChar()
@@ -175,17 +196,20 @@ function playerMeta:getClassData()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:SelectWeapon(class)
     if not self:HasWeapon(class) then return end
     self.doWeaponSwitch = self:GetWeapon(class)
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:HasSkillLevel(skill, level)
     local currentLevel = self:getChar():getAttrib(skill, 0)
 
     return currentLevel >= level
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:MeetsRequiredSkills(requiredSkillLevels)
     if not requiredSkillLevels then return true end
@@ -195,6 +219,7 @@ function playerMeta:MeetsRequiredSkills(requiredSkillLevels)
 
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:getEyeEnt(distance)
     distance = distance or 150

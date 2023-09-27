@@ -40,8 +40,9 @@ function lia.char.create(data, callback)
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
-function lia.char.restore(client, callback, noCache, id)
+function lia.char.restore(client, callback, noCache, characterID)
     local steamID64 = client:SteamID64()
     local fields = {"_id"}
     for _, var in pairs(lia.char.vars) do
@@ -52,8 +53,8 @@ function lia.char.restore(client, callback, noCache, id)
 
     fields = table.concat(fields, ", ")
     local condition = "_schema = '" .. lia.db.escape(SCHEMA.folder) .. "' AND _steamID = " .. steamID64
-    if id then
-        condition = condition .. " AND _id = " .. id
+    if characterID then
+        condition = condition .. " AND _id = " .. characterID
     end
 
     local query = "SELECT " .. fields .. " FROM lia_characters WHERE " .. condition
@@ -72,13 +73,13 @@ function lia.char.restore(client, callback, noCache, id)
             end
 
             for k, v in ipairs(results) do
-                local id = tonumber(v._id)
-                if not id then
-                    ErrorNoHalt("[Lilia] Attempt to load character '" .. (data._name or "nil") .. "' with invalid ID!")
+                local charID = tonumber(v._id)
+                if not charID then
+                    ErrorNoHalt("[Lilia] Attempt to load character '" .. (v._name or "nil") .. "' with an invalid ID!")
                     continue
                 end
 
-                local data = {}
+                local charData = {}
                 for k2, v2 in pairs(lia.char.vars) do
                     if v2.field and v[v2.field] then
                         local value = tostring(v[v2.field])
@@ -90,15 +91,15 @@ function lia.char.restore(client, callback, noCache, id)
                             value = util.JSONToTable(value)
                         end
 
-                        data[k2] = value
+                        charData[k2] = value
                     end
                 end
 
-                characters[#characters + 1] = id
-                local character = lia.char.new(data, id, client)
+                characters[#characters + 1] = charID
+                local character = lia.char.new(charData, charID, client)
                 hook.Run("CharacterRestored", character)
                 character.vars.inv = {}
-                lia.inventory.loadAllFromCharID(id):next(
+                lia.inventory.loadAllFromCharID(charID):next(
                     function(inventories)
                         -- Try to get a default inventory if one does not exist.
                         if #inventories == 0 then
@@ -117,16 +118,16 @@ function lia.char.restore(client, callback, noCache, id)
                         return inventories
                     end,
                     function(err)
-                        print("Failed to load inventories for " .. tostring(id))
+                        print("Failed to load inventories for " .. tostring(charID))
                         print(err)
                         if IsValid(client) then
-                            client:ChatPrint("A server error occured while loading your" .. " inventories. Check server log for details.")
+                            client:ChatPrint("A server error occurred while loading your inventories. Check the server log for details.")
                         end
                     end
                 ):next(
                     function(inventories)
                         character.vars.inv = inventories
-                        lia.char.loaded[id] = character
+                        lia.char.loaded[charID] = character
                         done = done + 1
                         if done == #results and callback then
                             callback(characters)
@@ -137,6 +138,7 @@ function lia.char.restore(client, callback, noCache, id)
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.char.cleanUpForPlayer(client)
     for _, charID in pairs(client.liaCharList or {}) do
@@ -148,6 +150,7 @@ function lia.char.cleanUpForPlayer(client)
         hook.Run("CharacterCleanUp", character)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 local function removePlayer(client)
     if client:getChar() then
@@ -157,6 +160,7 @@ local function removePlayer(client)
         netstream.Start(client, "charKick", nil, true)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.char.delete(id, client)
     assert(isnumber(id), "id must be a number")
@@ -194,6 +198,7 @@ function lia.char.delete(id, client)
 
     hook.Run("OnCharacterDelete", client, id)
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.spawnProp(model, position, force, lifetime, angles, collision)
     local entity = ents.Create("prop_physics")
@@ -226,6 +231,7 @@ function lia.util.spawnProp(model, position, force, lifetime, angles, collision)
 
     return entity
 end
+
 --------------------------------------------------------------------------------------------------------
 function lia.util.DebugLog(str)
     MsgC(Color("sky_blue"), os.date("(%d/%m/%Y - %H:%M:%S)", os.time()), Color("yellow"), " [LOG] ", color_white, str, "\n")

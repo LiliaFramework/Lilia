@@ -8,7 +8,7 @@ MODULE.alphaDelta = MODULE.alphaDelta or MODULE.alpha
 MODULE.fadeTime = MODULE.fadeTime or 0
 --------------------------------------------------------------------------------------------------------
 local IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs = IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs
-local  LocalPlayer, math, color_white, surface =  LocalPlayer, math, color_white, surface
+local LocalPlayer, math, color_white, surface = LocalPlayer, math, color_white, surface
 --------------------------------------------------------------------------------------------------------
 function MODULE:HUDPaint()
     local frameTime = FrameTime()
@@ -33,7 +33,7 @@ function MODULE:HUDPaint()
             local lastY = 0
             local shiftX = ScrW() * .02
             if self.markup and k < self.index then
-                local w, h = self.markup:Size()
+                local _, h = self.markup:Size()
                 lastY = h * fraction
                 if k == self.index - 1 then
                     self.infoAlpha = Lerp(frameTime * 3, self.infoAlpha, 255)
@@ -42,7 +42,7 @@ function MODULE:HUDPaint()
             end
 
             surface.SetFont("liaSubTitleFont")
-            local tx, ty = surface.GetTextSize(v:GetPrintName():upper())
+            local ty = surface.GetTextSize(v:GetPrintName():upper())
             local scale = 1 - math.abs(theta * 2)
             local matrix = Matrix()
             matrix:Translate(Vector(shiftX + x + math.cos(theta * spacing + math.pi) * radius + radius, y + lastY + math.sin(theta * spacing + math.pi) * radius - ty / 2, 1))
@@ -84,6 +84,7 @@ function MODULE:onIndexChanged()
         client:EmitSound(source or "common/talk.wav", 50, pitch or 180)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:PlayerBindPress(client, bind, pressed)
     local weapon = client:GetActiveWeapon()

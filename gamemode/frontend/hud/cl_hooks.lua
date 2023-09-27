@@ -18,6 +18,7 @@ lia.config.HiddenHUDElements = {
     ["CHudSecondaryAmmo"] = true,
     ["CHudHistoryResource"] = true
 }
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "HUDShouldDraw",
@@ -26,6 +27,7 @@ hook.Add(
         if lia.config.HiddenHUDElements[element] then return false end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add("DrawDeathNotice", "HideDeathNotice", function() return false end)
 --------------------------------------------------------------------------------------------------------
@@ -54,6 +56,7 @@ hook.Add(
         return lia.config.CrosshairEnabled
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "HUDPaintBackground",
@@ -63,7 +66,6 @@ hook.Add(
         if not localPlayer.getChar(localPlayer) then return end
         local realTime = RealTime()
         local frameTime = FrameTime()
-        local scrW, scrH = ScrW(), ScrH()
         if nextUpdate < realTime then
             nextUpdate = realTime + 0.5
             lastTrace.start = localPlayer.GetShootPos(localPlayer)
@@ -113,6 +115,7 @@ hook.Add(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "CanDrawAmmoHUD",
@@ -123,6 +126,7 @@ hook.Add(
         return false
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "DrawAmmoHUD",
@@ -154,6 +158,7 @@ hook.Add(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "DrawCharInfo",
@@ -165,6 +170,7 @@ hook.Add(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "DrawEntityInfo",
@@ -202,6 +208,7 @@ hook.Add(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "ShouldDrawEntityInfo",

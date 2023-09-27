@@ -4,10 +4,12 @@ lia.config.ChatIsRecognized = {"ic", "y", "w", "me"}
 function MODULE:IsRecognizedChatType(chatType)
     return table.HasValue(lia.config.ChatIsRecognized, chatType)
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:GetDisplayedDescription(client)
     if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar()) and not hook.Run("IsPlayerRecognized", client) then return L"noRecog" end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:GetDisplayedName(client, chatType)
     if client ~= LocalPlayer() then
@@ -25,14 +27,17 @@ function MODULE:GetDisplayedName(client, chatType)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:ShouldAllowScoreboardOverride(client)
     if lia.config.RecognitionEnabled then return true end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:OnCharRecognized(client, recogCharID)
     surface.PlaySound("buttons/button17.wav")
 end
+
 --------------------------------------------------------------------------------------------------------
 function CharRecognize(level, name)
     if name then

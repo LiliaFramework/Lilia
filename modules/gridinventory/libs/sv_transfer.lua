@@ -5,9 +5,9 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
 	if not item then return end
 	local oldInventory = lia.inventory.instances[item.invID]
 	if not oldInventory or not oldInventory.items[itemID] then return end
-	local status, reason = hook.Run("CanItemBeTransfered", item, oldInventory, inventory, client)
+	local status, transferReason = hook.Run("CanItemBeTransfered", item, oldInventory, inventory, client)
 	if status == false then
-		client:notify(reason or "You can't do that right now.")
+		client:notify(transferReason or "You can't do that right now.")
 
 		return
 	end
@@ -19,13 +19,13 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
 		to = inventory
 	}
 
-	local canTransfer, reason = oldInventory:canAccess("transfer", context)
+	local canTransfer, transferError = oldInventory:canAccess("transfer", context)
 	if not canTransfer then return end
 	if not inventory then return hook.Run("ItemDraggedOutOfInventory", client, item) end
-	canTransfer, reason = inventory:canAccess("transfer", context)
+	canTransfer, transferError = inventory:canAccess("transfer", context)
 	if not canTransfer then
-		if isstring(reason) then
-			client:notifyLocalized(reason)
+		if isstring(transferError) then
+			client:notifyLocalized(transferError)
 		end
 
 		return
@@ -68,9 +68,7 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
 	):next(
 		function(res)
 			if res and res.error then return res end
-			if tryCombineWith and IsValid(client) then
-				if hook.Run("ItemCombine", client, item, tryCombineWith) then return end
-			end
+			if tryCombineWith and IsValid(client) and hook.Run("ItemCombine", client, item, tryCombineWith) then return end
 		end
 	):next(
 		function(res)

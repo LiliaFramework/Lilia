@@ -14,6 +14,7 @@ function MODULE:EntityTakeDamage(target, dmginfo)
         self:PrintAllDetails(target, dmginfo)
     end
 end
+
 -------------------------------------------------------------------------------------------------------------------------~
 function MODULE:PlayerGetFistDamage(client, damage, context)
     local char = client:getChar()
@@ -22,6 +23,7 @@ function MODULE:PlayerGetFistDamage(client, damage, context)
         context.damage = context.damage + strbonus
     end
 end
+
 -------------------------------------------------------------------------------------------------------------------------~
 function MODULE:PrintAllDetails(target, dmginfo)
     local attacker = dmginfo:GetAttacker()

@@ -9,6 +9,7 @@ function GM:OnContextMenuOpen()
     self.BaseClass:OnContextMenuOpen()
     vgui.Create("liaQuick")
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:OnContextMenuClose()
     self.BaseClass:OnContextMenuClose()
@@ -16,6 +17,7 @@ function GM:OnContextMenuClose()
         lia.gui.quick:Remove()
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:SetupQuickMenu(menu)
     menu:addCheck(
@@ -61,11 +63,13 @@ function GM:SetupQuickMenu(menu)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:ScreenResolutionChanged(oldW, oldH)
     RunConsoleCommand("fixchatplz")
     hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:HUDPaintBackground()
     local localPlayer = LocalPlayer()
@@ -83,6 +87,7 @@ function GM:HUDPaintBackground()
     self.BaseClass.PaintWorldTips(self.BaseClass)
     lia.menu.drawAll()
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:ItemShowEntityMenu(entity)
     for k, v in ipairs(lia.menu.list) do
