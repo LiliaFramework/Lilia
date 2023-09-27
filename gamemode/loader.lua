@@ -27,8 +27,6 @@ lia.util.include("backend/external/thirdparty/sh_netstream2.lua")
 
 lia.util.include("backend/external/thirdparty/sh_pon.lua")
 
-lia.util.include("backend/external/thirdparty/sh_pseudoRNG.lua")
-
 lia.util.include("backend/external/thirdparty/sh_utf8.lua")
 
 lia.util.include("backend/external/thirdparty/sh_utils.lua")
