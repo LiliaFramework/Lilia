@@ -8,7 +8,7 @@ Plugin hooks are regular hooks that can be used in your schema with `Schema:Hook
 `PLUGIN:HookName(args)`, or in your addon with `hook.Add("HookName", function(args) end)`.
 ]]
 -- @hooks Plugin
-
+realm = "shared"
 --- Adjusts the data used just before creating a new character.
 -- @realm server
 -- @player client Player that is creating the character
