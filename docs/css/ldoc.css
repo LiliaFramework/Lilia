@@ -1,0 +1,522 @@
+
+:root {
+	--content-width: 1200px;
+	--sidebar-width: 330px;
+
+	--padding-big: 48px;
+	--padding-normal: 24px;
+	--padding-small: 16px;
+	--padding-tiny: 10px;
+
+	--font-massive: 32px;
+	--font-huge: 24px;
+	--font-big: 18px;
+	--font-normal: 16px;
+	--font-tiny: 12px;
+
+	--font-style-normal: Segoe UI, Helvetica, Arial, sans-serif;
+	--font-style-code: Consolas, monospace;
+
+	--color-accent: rgb(115, 53, 142);
+	--color-accent-dark: rgb(85, 39, 105);
+	--color-white: rgb(255, 255, 255);
+	--color-offwhite: rgb(200, 200, 200);
+	--color-white-accent: rgb(203, 190, 209);
+	--color-black: rgb(0, 0, 0);
+	--color-lightgrey: rgb(160, 160, 160);
+	--color-background-light: rgb(240, 240, 240);
+	--color-background-dark: rgb(33, 33, 33);
+}
+
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background-color: var(--color-background-light);
+	font-family: var(--font-style-normal);
+
+	display: flex;
+	flex-direction: column;
+}
+
+a {
+	color: inherit;
+	text-decoration: inherit;
+}
+
+h1, h2, h3, h4 {
+	font-weight: 400;
+}
+
+ul li {
+	margin-left: var(--padding-small);
+}
+
+/* landing */
+.landing {
+	background-color: var(--color-accent);
+	color: var(--color-white);
+
+	padding: 128px 0 128px 0;
+}
+
+.landing h1 {
+	margin: 0;
+	padding: 0;
+	border: none;
+
+	font-weight: 100;
+	font-size: var(--font-massive);
+	text-align: center;
+}
+
+.wrapper {
+	padding: var(--padding-small);
+}
+
+details {
+	user-select: none;
+}
+
+details summary {
+	outline: none;
+}
+
+code {
+	font-family: "Source Code Pro", monospace;
+	font-size: 85%;
+	white-space: pre;
+	tab-size: 4;
+	-moz-tab-size: 4;
+	padding: 2px 4px;
+	background-color: rgb(33, 33, 33, 0.1);
+}
+
+pre {
+	background-color: rgb(33, 33, 33, 0.1);
+	margin-top: var(--padding-small);
+	padding: var(--padding-tiny);
+	overflow: auto;
+}
+
+pre code {
+	background-color: transparent;
+}
+
+span.realm {
+	width: 14px;
+	height: 14px;
+	border-radius: 3px;
+	display: inline-block;
+	margin-right: 6px;
+}
+
+span.realm.shared {
+	background: linear-gradient(45deg, #f80 0%, #f80 50%, #08f 51%, #08f 100%);
+}
+
+span.realm.client {
+	background-color: #f80;
+}
+
+span.realm.server {
+	background-color: #08f;
+}
+
+/* wrapper element for sidebar/content */
+main {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
+
+	width: var(--content-width);
+	margin: auto;
+}
+
+/* sidebar */
+nav {
+	color: var(--color-offwhite);
+	background-color: var(--color-background-dark);
+
+	position: fixed;
+	display: flex;
+	flex-direction: column;
+
+	width: var(--sidebar-width);
+	height: 100%;
+}
+
+/* sidebar header */
+nav header {
+	color: var(--color-white);
+	background-color: var(--color-accent);
+
+	padding: var(--padding-small);
+}
+
+nav header h1 {
+	font-size: var(--font-huge);
+	font-weight: 100;
+	text-align: center;
+
+	margin-bottom: var(--padding-small);
+}
+
+#search {
+	background-color: var(--color-accent-dark);
+	color: var(--color-white);
+
+	border: none;
+	font-size: var(--font-normal);
+	outline: none;
+
+	width: 100%;
+	padding: 6px;
+}
+
+#search::placeholder {
+	color: var(--color-white-accent);
+}
+
+#search::-webkit-search-cancel-button {
+	display: none;
+}
+
+/* sidebar contents */
+nav section {
+	padding: var(--padding-small);
+	overflow: auto;
+}
+
+nav section ul {
+	list-style-type: none;
+}
+
+nav section::-webkit-scrollbar,
+pre::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+nav section::-webkit-scrollbar-track,
+pre::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+nav section::-webkit-scrollbar-thumb {
+	background-color: var(--color-lightgrey);
+}
+
+pre::-webkit-scrollbar-thumb {
+	background-color: var(--color-lightgrey);
+}
+
+/* sidebar contents category */
+nav section details.category {
+	padding-top: var(--padding-tiny);
+}
+
+nav section details.category > ul > li {
+	margin: 0;
+	line-height: 1.5;
+}
+
+nav section details.category > ul > li a {
+	display: inline-block;
+	width: 90%;
+}
+
+nav section details.category:first-of-type {
+	padding-top: calc(var(--padding-tiny) * -1);
+}
+
+nav section details.category summary::-webkit-details-marker {
+	opacity: 0.5;
+	cursor: pointer;
+}
+
+nav section details.category summary h2 {
+	color: var(--color-accent);
+
+	font-size: var(--font-big);
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	cursor: pointer;
+
+	padding-bottom: var(--padding-tiny);
+}
+
+/* content */
+article {
+	background-color: rgb(255, 255, 255);
+
+	width: calc(100% - var(--sidebar-width));
+	min-height: 100vh;
+	margin-left: var(--sidebar-width);
+}
+
+article .wrapper > *:first-child {
+	margin-top: 0;
+}
+
+/* header */
+article header {
+	color: rgb(255, 255, 255);
+	background-color: rgb(115, 53, 142);
+	padding: var(--padding-tiny);
+}
+
+article header h1 {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+	padding-bottom: 8px;
+	font-family: var(--font-style-code);
+	margin: 0;
+}
+
+article header h2 {
+	padding-top: var(--padding-tiny);
+	margin: 0;
+	font-size: var(--font-normal);
+	font-weight: normal;
+}
+
+article header.module a {
+	color: white !important;
+	text-decoration: underline;
+}
+
+details.category > summary {
+	list-style: none;
+}
+
+details.category > summary::-webkit-details-marker {
+	display: none;
+}
+
+article h1 {
+	font-size: 28px;
+	font-weight: 600;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+	margin-top: 24px;
+	margin-bottom: 16px;
+	padding-bottom: 8px;
+}
+
+article h2 {
+	font-size: 20px;
+	font-weight: 600;
+	margin-top: 12px;
+}
+
+article h3 {
+	color: rgb(115, 53, 142);
+	margin-top: var(--padding-tiny);
+	text-transform: uppercase;
+}
+
+article p {
+	margin-top: var(--padding-small);
+}
+
+article p a,
+article ul li a,
+article h1 a,
+article h2 a {
+	color: rgb(115, 53, 142);
+	font-weight: 600;
+}
+
+article h1.title {
+	color: rgb(255, 255, 255);
+	background-color: rgb(115, 53, 142);
+	margin-top: var(--padding-small);
+	margin-bottom: 0;
+	padding: var(--padding-tiny);
+
+	font-size: var(--font-big);
+	font-weight: 100;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+}
+
+a.reference {
+	color: rgb(115, 53, 142);
+	float: right;
+	margin-top: 8px;
+	padding-left: 8px;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.notice {
+	--color-notice-background: var(--color-accent);
+	--color-notice-text: var(--color-notice-background);
+
+	margin-top: var(--padding-tiny);
+	border: 2px solid var(--color-notice-background);
+}
+
+.notice.error {
+	--color-notice-background: rgb(194, 52, 130);
+}
+
+.notice.warning {
+	--color-notice-background: rgb(224, 169, 112);
+	--color-notice-text: rgb(167, 104, 37);
+}
+
+.notice .title {
+	color: var(--color-white);
+	background-color: var(--color-notice-background);
+
+	padding: var(--padding-tiny);
+	font-size: var(--font-normal);
+
+	text-transform: uppercase;
+	letter-spacing: 2px;
+}
+
+.notice p {
+	color: var(--color-notice-text);
+
+	margin: 0 !important;
+	padding: var(--padding-tiny);
+}
+
+/* function/table */
+.method {
+	display: flex;
+	flex-flow: column;
+	background-color: rgb(230, 230, 230);
+	padding: var(--padding-tiny);
+	margin-top: var(--padding-small);
+}
+
+.method header {
+	color: rgb(0, 0, 0);
+	background-color: inherit;
+	padding: 0;
+	order: -1;
+}
+
+.method header .anchor {
+	color: inherit;
+	text-decoration: inherit;
+}
+
+.method header .anchor:target h1 {
+	background-color: rgba(115, 53, 142, 0.2);
+	background-clip: content-box;
+}
+
+.method header h1 {
+	font-family: "Source Code Pro", monospace;
+	padding-bottom: var(--padding-tiny);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+	font-size: 20px;
+}
+
+.method header p:first-of-type {
+	margin-top: var(--padding-tiny);
+}
+
+.method h3 {
+	color: rgb(115, 53, 142);
+	font-size: var(--font-normal);
+	letter-spacing: 2px;
+	text-transform: uppercase;
+}
+
+.method pre {
+	margin-top: var(--padding-tiny);
+}
+
+@media only screen and (max-width: 1100px) {
+	main nav {
+		position: inherit;
+	}
+
+	main article {
+		margin-left: 0;
+	}
+}
+
+.method ul {
+	margin-top: var(--padding-tiny);
+	background-color: inherit;
+}
+
+.method ul li {
+	list-style: none;
+	margin: 4px 0 0 var(--padding-normal);
+}
+
+.method ul li:first-of-type {
+	margin-top: 0;
+}
+
+.method ul li p {
+	margin: 4px 0 0 var(--padding-normal);
+}
+
+.method ul li pre {
+	margin: 4px 0 0 var(--padding-normal);
+}
+
+.method ul li a {
+	color: rgb(115, 53, 142);
+	font-weight: 600;
+}
+
+/* we have to manually specify these instead of making a shared class since you cannot customize the parameter class in ldoc */
+.parameter, .type, .default {
+	display: inline-block;
+	color: rgb(255, 255, 255) !important;
+
+	padding: 4px;
+	font-size: 14px;
+	font-family: "Source Code Pro", monospace;
+}
+
+.parameter {
+	background-color: rgb(115, 53, 142);
+}
+
+.type {
+	background-color: rgb(31, 141, 155);
+}
+
+a.type {
+	font-weight: 300 !important;
+	text-decoration: underline;
+}
+
+.default {
+	background-color: rgb(193, 114, 11);
+}
+
+.type a {
+	padding: 0;
+}
+
+.or {
+	color: rgba(115, 53, 142, 0.5);
+	background-color: inherit;
+
+	width: calc(100% - 32px);
+	height: 8px;
+	margin: 0 0 8px 32px;
+
+	text-align: center;
+	font-weight: 600;
+	border-bottom: 1px solid rgba(115, 53, 142, 0.5);
+}
+
+.or span {
+	background-color: inherit;
+	padding: 0 8px 0 8px;
+}
