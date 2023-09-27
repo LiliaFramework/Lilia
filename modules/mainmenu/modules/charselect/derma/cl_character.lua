@@ -6,9 +6,9 @@ PANEL.SELECTED = SELECTED
 PANEL.HOVERED = Color(255, 255, 255, 50)
 PANEL.ANIM_SPEED = 0.1
 PANEL.FADE_SPEED = 0.5
-lia.config.CharHover = lia.config.CharHover or {"buttons/button15.wav", 35, 250}
-lia.config.CharClick = lia.config.CharClick or {"buttons/button14.wav", 35, 255}
-lia.config.CharWarning = lia.config.CharWarning or {"friends/friend_join.wav", 40, 255}
+lia.config.CharHover = lia.config.CharHover or {}
+lia.config.CharClick = lia.config.CharClick or {}
+lia.config.CharWarning = lia.config.CharWarning or {}
 -- Called when the tabs for the character menu should be created.
 function PANEL:createTabs()
     local load, create

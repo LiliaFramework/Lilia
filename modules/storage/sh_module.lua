@@ -1,10 +1,10 @@
 --------------------------------------------------------------------------------------------------------
+LiliaStorage = MODULE
+lia.config.StorageDefinitions = lia.config.StorageDefinitions or {}
+--------------------------------------------------------------------------------------------------------
 MODULE.name = "Storage Base"
 MODULE.author = "STEAM_0:1:176123778/Cheesenut"
 MODULE.desc = "Useful things for storage modules."
---------------------------------------------------------------------------------------------------------
-LiliaStorage = MODULE
-STORAGE_DEFINITIONS = STORAGE_DEFINITIONS or {}
 --------------------------------------------------------------------------------------------------------
 lia.util.include("sv_storage.lua")
 lia.util.include("sv_networking.lua")
