@@ -8,7 +8,7 @@ MODULE.alphaDelta = MODULE.alphaDelta or MODULE.alpha
 MODULE.fadeTime = MODULE.fadeTime or 0
 --------------------------------------------------------------------------------------------------------
 local IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs = IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs
-local RunConsoleCommand, LocalPlayer, math, color_white, surface = RunConsoleCommand, LocalPlayer, math, color_white, surface
+local  LocalPlayer, math, color_white, surface =  LocalPlayer, math, color_white, surface
 --------------------------------------------------------------------------------------------------------
 function MODULE:HUDPaint()
     local frameTime = FrameTime()
