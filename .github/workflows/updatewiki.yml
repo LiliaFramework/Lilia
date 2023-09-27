@@ -6,29 +6,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        path: UpdateWiki
+      - uses: actions/checkout@v2
+        with:
+          path: UpdateWiki
 
-    - uses: leafo/gh-actions-lua@v8.0.0
-      with:
-        luaVersion: "5.2"
+      - uses: leafo/gh-actions-lua@v8.0.0
+        with:
+          luaVersion: "5.2"
 
-    - uses: leafo/gh-actions-luarocks@v4.0.0
+      - uses: leafo/gh-actions-luarocks@v4.0.0
 
-    - name: Pull gluacheck
-      uses: actions/checkout@v2
-      with:
-        repository: impulsh/gluacheck
-        path: luacheck
+      - name: Pull gluacheck
+        uses: actions/checkout@v2
+        with:
+          repository: impulsh/gluacheck
+          path: luacheck
 
-    - name: Build gluacheck
-      working-directory: luacheck
-      run: luarocks make
+      - name: Build gluacheck
+        working-directory: luacheck
+        run: luarocks make
 
-    - name: Lint
-      working-directory: Lilia
-      run: luacheck .
+      - name: Lint
+        working-directory: UpdateWiki
+        run: luacheck .
 
   docs:
     runs-on: ubuntu-latest
@@ -36,7 +36,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          path: Lilia
+          path: UpdateWiki
 
       - uses: leafo/gh-actions-lua@v8.0.0
         with:
@@ -55,19 +55,19 @@ jobs:
         run: luarocks make
 
       - name: Build docs
-        working-directory: Lilia
+        working-directory: UpdateWiki
         run: ldoc . --fatalwarnings
 
       - name: Copy assets
-        working-directory: Lilia
+        working-directory: UpdateWiki
         run: |
           cp -v docs/css/* docs/html
           cp -v docs/js/* docs/html
 
       - name: Deploy
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository == 'bleonheart/Lilia' && success()
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: Lilia/docs/html
-          cname: docs.gethelix.co
+          publish_dir: UpdateWiki/docs/html
+          cname: docs.getyourcustomdomain.com
