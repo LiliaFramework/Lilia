@@ -1,5 +1,5 @@
 max_line_length = 512
-std = "luajit+gmod+lilia"
+std = "luajit+gmod"
 ignore = {
 	"212",
 }
