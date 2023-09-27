@@ -1,9 +1,9 @@
---------------------------------------------------------------------------------------------------------
+
 local PANEL = {}
 local nsVoicePanels = {}
---------------------------------------------------------------------------------------------------------
+
 lia.config.AllowVoice = lia.config.AllowVoice or true
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Init()
     local hi = vgui.Create("DLabel", self)
     hi:SetFont("liaIconsMedium")
@@ -23,14 +23,14 @@ function PANEL:Init()
     self:DockMargin(2, 2, 2, 2)
     self:Dock(BOTTOM)
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Setup(client)
     self.client = client
     self.name = hook.Run("ShouldAllowScoreboardOverride", client, "name") and hook.Run("GetDisplayedName", client) or client:Nick()
     self.LabelName:SetText(self.name)
     self:InvalidateLayout()
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Paint(w, h)
     if not IsValid(self.client) then return end
     lia.util.drawBlur(self, 1, 2)
@@ -39,7 +39,7 @@ function PANEL:Paint(w, h)
     surface.SetDrawColor(255, 255, 255, 50 + self.client:VoiceVolume() * 120)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Think()
     if IsValid(self.client) then
         self.LabelName:SetText(self.name)
@@ -49,7 +49,7 @@ function PANEL:Think()
         self.fadeAnim:Run()
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:FadeOut(anim, delta, data)
     if anim.Finished then
         if IsValid(nsVoicePanels[self.client]) then
@@ -64,9 +64,9 @@ function PANEL:FadeOut(anim, delta, data)
 
     self:SetAlpha(255 - (255 * (delta * 2)))
 end
---------------------------------------------------------------------------------------------------------
+
 vgui.Register("VoicePanel", PANEL, "DPanel")
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "PlayerStartVoice",
     "liaPlayerStartVoice",
@@ -90,7 +90,7 @@ hook.Add(
         nsVoicePanels[client] = pnl
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "PlayerEndVoice",
     "liaPlayerEndVoice",
@@ -102,7 +102,7 @@ hook.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "InitPostEntity",
     "liaCreateVoiceVGUI",
@@ -120,7 +120,7 @@ hook.Add(
         g_VoicePanelList:SetPaintBackground(false)
     end
 )
---------------------------------------------------------------------------------------------------------
+
 timer.Create(
     "VoiceClean",
     10,
@@ -133,4 +133,3 @@ timer.Create(
         end
     end
 )
---------------------------------------------------------------------------------------------------------

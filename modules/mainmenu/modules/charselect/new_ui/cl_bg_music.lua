@@ -1,9 +1,9 @@
---------------------------------------------------------------------------------------------------------
+
 local PANEL = {}
---------------------------------------------------------------------------------------------------------
+
 lia.config.Music = lia.config.Music or "music/hl2_song2.mp3"
 lia.config.MusicVolume = lia.config.MusicVolume or 0.25
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Init()
 	if IsValid(lia.menuMusic) then
 		lia.menuMusic:Stop()
@@ -37,7 +37,7 @@ function PANEL:Init()
 		lia.menuMusic:PlayEx(lia.config.MusicVolume, 100)
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:OnRemove()
 	local music = lia.menuMusic
 	if not music then return end
@@ -67,6 +67,5 @@ function PANEL:OnRemove()
 		end
 	)
 end
---------------------------------------------------------------------------------------------------------
+
 vgui.Register('liaNewCharBGMusic', PANEL, 'DPanel')
---------------------------------------------------------------------------------------------------------

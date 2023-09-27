@@ -1,20 +1,20 @@
---------------------------------------------------------------------------------------------------------
+
 lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
 lia.bar.list = lia.bar.list or {}
 lia.bar.actionText = ""
 lia.bar.actionStart = 0
 lia.bar.actionEnd = 0
---------------------------------------------------------------------------------------------------------
+
 lia.config.Color = lia.config.Color or Color(75, 119, 190)
---------------------------------------------------------------------------------------------------------
+
 function lia.bar.get(identifier)
     for i = 1, #lia.bar.list do
         local bar = lia.bar.list[i]
         if bar and bar.identifier == identifier then return bar end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.bar.add(getValue, color, priority, identifier)
     if identifier then
         local oldBar = lia.bar.get(identifier)
@@ -35,7 +35,7 @@ function lia.bar.add(getValue, color, priority, identifier)
 
     return priority
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.bar.remove(identifier)
     local bar
     for k, v in ipairs(lia.bar.list) do
@@ -49,7 +49,7 @@ function lia.bar.remove(identifier)
         table.remove(lia.bar.list, bar.priority)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.bar.draw(x, y, w, h, value, color)
     lia.util.drawBlurAt(x, y, w, h)
     surface.SetDrawColor(255, 255, 255, 15)
@@ -62,7 +62,7 @@ function lia.bar.draw(x, y, w, h, value, color)
     surface.SetMaterial(lia.util.getMaterial("vgui/gradient-u"))
     surface.DrawTexturedRect(x, y, w, h)
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.bar.drawAction()
     local start, finish = lia.bar.actionStart, lia.bar.actionEnd
     local curTime = CurTime()
@@ -88,7 +88,7 @@ function lia.bar.drawAction()
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.bar.drawAll()
     lia.bar.drawAction()
     if hook.Run("ShouldHideBars") then return end
@@ -115,4 +115,3 @@ function lia.bar.drawAll()
         end
     end
 end
---------------------------------------------------------------------------------------------------------

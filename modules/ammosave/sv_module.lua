@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 function MODULE:CharacterPreSave(character)
     local client = character:getPlayer()
     if IsValid(client) then
@@ -13,7 +13,7 @@ function MODULE:CharacterPreSave(character)
         character:setData("ammo", ammoTable)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function MODULE:PlayerLoadedChar(client)
     timer.Simple(
         0.25,
@@ -30,4 +30,3 @@ function MODULE:PlayerLoadedChar(client)
         end
     )
 end
---------------------------------------------------------------------------------------------------------

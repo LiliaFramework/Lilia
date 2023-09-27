@@ -1,7 +1,7 @@
---------------------------------------------------------------------------------------------------------
+
 lia.attribs = lia.attribs or {}
 lia.attribs.list = lia.attribs.list or {}
---------------------------------------------------------------------------------------------------------
+
 function lia.attribs.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName = v:sub(4, -5)
@@ -17,7 +17,7 @@ function lia.attribs.loadFromDir(directory)
         ATTRIBUTE = nil
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.attribs.setup(client)
     local character = client:getChar()
     if character then
@@ -28,7 +28,7 @@ function lia.attribs.setup(client)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 lia.char.registerVar(
     "attribs",
     {
@@ -56,4 +56,3 @@ lia.char.registerVar(
         shouldDisplay = function(panel) return table.Count(lia.attribs.list) > 0 end
     }
 )
---------------------------------------------------------------------------------------------------------

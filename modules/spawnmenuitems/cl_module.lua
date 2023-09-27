@@ -1,8 +1,8 @@
---------------------------------------------------------------------------------------------------------
+
 function MODULE:InitializedModules()
     RunConsoleCommand("spawnmenu_reload")
 end
---------------------------------------------------------------------------------------------------------
+
 spawnmenu.AddContentType(
     "item",
     function(container, object)
@@ -30,7 +30,7 @@ spawnmenu.AddContentType(
         return icon
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "PopulateItems",
     "AddEntityContent",
@@ -81,7 +81,7 @@ hook.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 spawnmenu.AddCreationTab(
     "Items",
     function()
@@ -92,4 +92,3 @@ spawnmenu.AddCreationTab(
         return ctrl
     end, "icon16/cog_add.png", 200
 )
---------------------------------------------------------------------------------------------------------

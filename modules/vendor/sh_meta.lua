@@ -1,6 +1,6 @@
---------------------------------------------------------------------------------------------------------
+
 local playerMeta = FindMetaTable("Player")
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:CanEditVendor()
     if CAMI.PlayerHasAccess(self, "Lilia - Management - Can Edit Vendors") then
         return true
@@ -8,7 +8,7 @@ function playerMeta:CanEditVendor()
         return self:IsSuperAdmin()
     end
 end
---------------------------------------------------------------------------------------------------------
+
 CAMI.RegisterPrivilege(
     {
         Name = "Lilia - Management - Can Edit Vendors",
@@ -16,4 +16,3 @@ CAMI.RegisterPrivilege(
         Description = "Allows access to edit vendors.",
     }
 )
---------------------------------------------------------------------------------------------------------

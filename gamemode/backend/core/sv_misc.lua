@@ -1,24 +1,24 @@
---------------------------------------------------------------------------------------------------------function GM:ModuleShouldLoad(module)
+function GM:ModuleShouldLoad(module)
 function GM:ModuleShouldLoad(module)
     return not lia.module.isDisabled(module)
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerDeathSound()
     return true
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:CanPlayerSuicide(client)
     return false
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:AllowPlayerPickup(client, entity)
     return false
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerShouldTakeDamage(client, attacker)
     return client:getChar() ~= nil
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:EntityTakeDamage(entity, dmgInfo)
     local inflictor = dmgInfo:GetInflictor()
     local attacker = dmgInfo:GetAttacker()
@@ -45,28 +45,27 @@ function GM:EntityTakeDamage(entity, dmgInfo)
         if not IsValid(entity.liaRagdoll) then entity:setRagdolled(true, 5) end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:ScalePlayerDamage(ply, hitgroup, dmgInfo)
     if hitgroup == HITGROUP_HEAD then
         dmgInfo:ScaleDamage(lia.config.HeadShotDamage)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PreCleanupMap()
     lia.shuttingDown = true
     hook.Run("SaveData")
     hook.Run("PersistenceSave")
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PostCleanupMap()
     lia.shuttingDown = false
     hook.Run("LoadData")
     hook.Run("PostLoadData")
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:OnItemSpawned(ent)
     ent.health = 250
 end
---------------------------------------------------------------------------------------------------------
+
 hook.Remove("PlayerInitialSpawn", "VJBaseSpawn")
---------------------------------------------------------------------------------------------------------

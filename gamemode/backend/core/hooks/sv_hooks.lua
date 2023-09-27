@@ -1,12 +1,12 @@
--------------------------------------------------------------------------------------------------------
+
 local last_jump_time = 0
--------------------------------------------------------------------------------------------------------
+
 local defaultAngleData = {
     ["models/items/car_battery01.mdl"] = Angle(-15, 180, 0),
     ["models/props_junk/harpoon002a.mdl"] = Angle(0, 0, 0),
     ["models/props_junk/propane_tank001a.mdl"] = Angle(-90, 0, 0),
 }
--------------------------------------------------------------------------------------------------------
+
 function GM:InitializedExtrasServer()
     if ArcCW then
         RunConsoleCommand("arccw_override_crosshair_off", "0")
@@ -54,7 +54,7 @@ function GM:InitializedExtrasServer()
         end
     )
 end
--------------------------------------------------------------------------------------------------------
+
 function GM:OptimizeSeats()
     local EFL_NO_THINK_FUNCTION = EFL_NO_THINK_FUNCTION
     local loop, nicoSeats, nicoEnabled
@@ -114,13 +114,13 @@ function GM:OptimizeSeats()
     hook.Add("PlayerEnteredVehicle", "nicoSeat", nicoSeatAction)
     hook.Add("PlayerLeaveVehicle", "nicoSeat", nicoSeatAction)
 end
--------------------------------------------------------------------------------------------------------
+
 function GM:EntityNetworkedVarChanged(entity, varName, oldVal, newVal)
     if varName == "Model" and entity.SetModel then
         hook.Run("PlayerModelChanged", entity, newVal)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerUse(client, entity)
     if entity:isDoor() then
         local result = hook.Run("CanPlayerUseDoor", client, entity)
@@ -134,7 +134,7 @@ function GM:PlayerUse(client, entity)
 
     return true
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:simfphysUse(entity, client)
     if simfphys and simfphys.IsCar(entity) and lia.config.TimeToEnterVehicle > 0 then
         if entity.IsLocked then return end
@@ -147,13 +147,13 @@ function GM:simfphysUse(entity, client)
         )
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:KeyRelease(client, key)
     if key == IN_RELOAD then
         timer.Remove("liaToggleRaise" .. client:SteamID())
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerLoadedChar(client, character, lastChar)
     local identifier = "RemoveMatSpecular" .. client:SteamID()
     local data = character:getData("pclass")
@@ -227,7 +227,7 @@ function GM:PlayerLoadedChar(client, character, lastChar)
     character:setData("loginTime", loginTime)
     hook.Run("PlayerLoadout", client)
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:CharacterLoaded(id)
     local character = lia.char.loaded[id]
     if character then
@@ -249,7 +249,7 @@ function GM:CharacterLoaded(id)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerSay(client, message)
     local chatType, message, anonymous = lia.chat.parse(client, message, true)
     if (chatType == "ic") and lia.command.parse(client, message) then return "" end
@@ -258,7 +258,7 @@ function GM:PlayerSay(client, message)
 
     return ""
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:ShutDown()
     if hook.Run("ShouldDataBeSaved") == false then return end
     lia.shuttingDown = true
@@ -270,7 +270,7 @@ function GM:ShutDown()
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:InitializedSchema()
     local persistString = GetConVar("sbox_persist"):GetString()
     if persistString == "" or string.StartWith(persistString, "lia_") then
@@ -278,7 +278,7 @@ function GM:InitializedSchema()
         game.ConsoleCommand("sbox_persist " .. newValue .. "\n")
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
     local allowVoice = lia.config.AllowVoice
     if not speaker:Alive() then return false end
@@ -293,12 +293,12 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
 
     return false, false
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PrePlayerLoadedChar(client, character, lastChar)
     client:SetBodyGroups("000000000")
     client:SetSkin(0)
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:CharacterPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
@@ -308,7 +308,7 @@ function GM:CharacterPreSave(character)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:GetPreferredCarryAngles(entity)
     if entity.preferedAngle then return entity.preferedAngle end
     local class = entity:GetClass()
@@ -324,7 +324,7 @@ function GM:GetPreferredCarryAngles(entity)
         return defaultAngleData[model]
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:CreateDefaultInventory(character)
     local charID = character:getID()
     if lia.inventory.types["grid"] then
@@ -336,7 +336,7 @@ function GM:CreateDefaultInventory(character)
         )
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:LiliaTablesLoaded()
     local ignore = function()
         print("")
@@ -346,7 +346,7 @@ function GM:LiliaTablesLoaded()
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:CreateSalaryTimer(client)
     if lia.config.SalaryOverride then return end
     local character = client:getChar()
@@ -376,7 +376,7 @@ function GM:CreateSalaryTimer(client)
         end
     )
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:SetupMove(client, mv, cmd)
     if client:OnGround() and mv:KeyPressed(IN_JUMP) then
         local cur_time = CurTime()
@@ -387,7 +387,7 @@ function GM:SetupMove(client, mv, cmd)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerThrowPunch(ply, trace)
     local ent = ply:GetTracedEntity()
     if not ent:IsPlayer() then return end
@@ -398,7 +398,7 @@ function GM:PlayerThrowPunch(ply, trace)
         ply:setRagdolled(true, 10)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:OnCharFallover(client, entity, bFallenOver)
     bFallenOver = bFallenOver or false
     if IsValid(entity) then
@@ -408,7 +408,7 @@ function GM:OnCharFallover(client, entity, bFallenOver)
 
     client:setNetVar("fallingover", bFallenOver)
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:CallMapCleanerInit()
     timer.Create(
         "clearWorldItemsWarning",
@@ -496,7 +496,7 @@ function GM:CallMapCleanerInit()
         end
     )
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:InitalizedWorkshopDownloader()
     if workshop_items then
         for i = 1, #workshop_items do
@@ -504,7 +504,7 @@ function GM:InitalizedWorkshopDownloader()
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:ServerPostInit()
     if StormFox2 then
         RunConsoleCommand("sf_time_speed", 1)
@@ -554,7 +554,7 @@ function GM:ServerPostInit()
         end
     )
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:KeyPress(client, key)
     local entity = client:GetEyeTrace().Entity
     if not IsValid(entity) then return end
@@ -562,7 +562,7 @@ function GM:KeyPress(client, key)
         hook.Run("PlayerUse", client, entity)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:CanPlayerUseChar(client, character)
     local faction = lia.faction.indices[character:getFaction()]
 	local banned = character:getData("banned")
@@ -579,7 +579,7 @@ function GM:CanPlayerUseChar(client, character)
         if status == false then return status, result end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:CanPlayerSwitchChar(client, character, newCharacter)
     local currentChar = client:getChar()
     if IsValid(client.liaRagdoll) then return false, "You are ragdolled!" end
@@ -588,5 +588,5 @@ function GM:CanPlayerSwitchChar(client, character, newCharacter)
     if client.LastDamaged and client.LastDamaged > CurTime() - 120 and character:getFaction() ~= FACTION_STAFF and currentChar then return false, "You took damage too recently to switch characters!" end
     if currentChar:getID() == character:getID() then return false, "You are already using this character!" end
 end
---------------------------------------------------------------------------------------------------------
+
 

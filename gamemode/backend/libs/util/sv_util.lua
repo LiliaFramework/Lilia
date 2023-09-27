@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 function lia.util.notify(message, recipient)
     net.Start("liaNotify")
     net.WriteString(message)
@@ -8,7 +8,7 @@ function lia.util.notify(message, recipient)
         net.Send(recipient)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.util.notifyLocalized(message, recipient, ...)
     local args = {...}
     if recipient ~= nil and type(recipient) ~= "table" and type(recipient) ~= "Player" then
@@ -29,7 +29,7 @@ function lia.util.notifyLocalized(message, recipient, ...)
         net.Send(recipient)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.util.findEmptySpace(entity, filter, spacing, size, height, tolerance)
     spacing = spacing or 32
     size = size or 3
@@ -59,4 +59,3 @@ function lia.util.findEmptySpace(entity, filter, spacing, size, height, toleranc
 
     return output
 end
---------------------------------------------------------------------------------------------------------

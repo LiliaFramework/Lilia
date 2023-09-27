@@ -1,9 +1,9 @@
---------------------------------------------------------------------------------------------------------
+
 function GM:PostGamemodeLoaded()
     print("Disabling base_gmodentity think method")
     scripted_ents.GetStored("base_gmodentity").t.Think = nil
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:LiliaLoaded()
     local namecache = {}
     for _, MODULE in pairs(lia.module.list) do
@@ -25,7 +25,7 @@ function GM:LiliaLoaded()
 
     lia.module.namecache = namecache
 end
---------------------------------------------------------------------------------------------------------
+
 cvars.AddChangeCallback(
     "lia_cheapblur",
     function(name, old, new)
@@ -33,4 +33,3 @@ cvars.AddChangeCallback(
         useCheapBlur = (tonumber(new) or 0) > 0
     end
 )
---------------------------------------------------------------------------------------------------------

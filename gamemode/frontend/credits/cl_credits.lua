@@ -1,9 +1,9 @@
---------------------------------------------------------------------------------------------------------
+
 local logoMat = Material("lilia/logo.png")
 local ScrW, ScrH = ScrW(), ScrH()
---------------------------------------------------------------------------------------------------------
+
 local PANEL = {}
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Init()
     self.avatarImage = self:Add("AvatarImage")
     self.avatarImage:Dock(LEFT)
@@ -13,7 +13,7 @@ function PANEL:Init()
     self.desc = self:Add("DLabel")
     self.desc:SetFont("liaSmallCredits")
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:setAvatarImage(id)
     if not self.avatarImage then return end
     self.avatarImage:SetSteamID(id, 64)
@@ -26,7 +26,7 @@ function PANEL:setAvatarImage(id)
         gui.OpenURL("http://steamcommunity.com/profiles/" .. id)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:setName(name, isID, color)
     if not self.name then return end
     if isID then
@@ -48,7 +48,7 @@ function PANEL:setName(name, isID, color)
     self.name:Dock(TOP)
     self.name:DockMargin(ScrW * 0.01, 0, 0, 0)
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:setDesc(desc)
     if not self.desc then return end
     self.desc:SetText(desc)
@@ -56,16 +56,16 @@ function PANEL:setDesc(desc)
     self.desc:Dock(TOP)
     self.desc:DockMargin(ScrW * 0.01, 0, 0, 0)
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Paint(w, h)
     surface.SetTexture(surface.GetTextureID("models/effects/portalfunnel_sheet"))
     surface.DrawTexturedRect(0, 0, w, h)
 end
---------------------------------------------------------------------------------------------------------
+
 vgui.Register("CreditsNamePanel", PANEL, "DPanel")
---------------------------------------------------------------------------------------------------------
+
 PANEL = {}
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Init()
     self.contButton = self:Add("DButton")
     self.contButton:SetFont("liaBigCredits")
@@ -89,17 +89,17 @@ function PANEL:Init()
     self.discordButton:Dock(TOP)
     self:SizeToChildren(true, true)
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Paint()
 end
---------------------------------------------------------------------------------------------------------
+
 vgui.Register("CreditsContribPanel", PANEL, "DPanel")
---------------------------------------------------------------------------------------------------------
+
 PANEL = {}
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Init()
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:setPerson(data, left)
     local id = left and "creditleft" or "creditright"
     self[id] = self:Add("CreditsNamePanel")
@@ -112,17 +112,17 @@ function PANEL:setPerson(data, left)
     self:InvalidateLayout(true)
     self[id]:SetWide((self:GetWide() / 2) + 32)
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Paint()
 end
---------------------------------------------------------------------------------------------------------
+
 vgui.Register("CreditsCreditsList", PANEL, "DPanel")
---------------------------------------------------------------------------------------------------------
+
 PANEL = {}
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Init()
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Paint(w, h)
     surface.SetMaterial(Material("lilia/logo_glow.png"))
     surface.SetDrawColor(255, 255, 255, 64 * math.sin(CurTime()) + 191)
@@ -131,11 +131,11 @@ function PANEL:Paint(w, h)
     surface.SetDrawColor(255, 255, 255, 255)
     surface.DrawTexturedRect((w / 2) - 128, (h / 2) - 128, 256, 256)
 end
---------------------------------------------------------------------------------------------------------
+
 vgui.Register("CreditsLogo", PANEL, "DPanel")
---------------------------------------------------------------------------------------------------------
+
 PANEL = {}
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Init()
     if lia.gui.creditsPanel then
         lia.gui.creditsPanel:Remove()
@@ -176,9 +176,8 @@ function PANEL:Init()
     self.contribPanel:SizeToChildren(true, true)
     self.contribPanel:Dock(TOP)
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Paint()
 end
---------------------------------------------------------------------------------------------------------
+
 vgui.Register("liaCreditsList", PANEL, "DPanel")
---------------------------------------------------------------------------------------------------------

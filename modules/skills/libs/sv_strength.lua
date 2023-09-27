@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------------------------------------~
+
 function MODULE:EntityTakeDamage(target, dmginfo)
     if not dmginfo:GetAttacker():IsPlayer() then return end
     local attacker = dmginfo:GetAttacker()
@@ -14,7 +14,7 @@ function MODULE:EntityTakeDamage(target, dmginfo)
         self:PrintAllDetails(target, dmginfo)
     end
 end
--------------------------------------------------------------------------------------------------------------------------~
+
 function MODULE:PlayerGetFistDamage(client, damage, context)
     local char = client:getChar()
     local strbonus = hook.Run("GetPunchStrengthBonusDamage", char)
@@ -22,7 +22,7 @@ function MODULE:PlayerGetFistDamage(client, damage, context)
         context.damage = context.damage + strbonus
     end
 end
--------------------------------------------------------------------------------------------------------------------------~
+
 function MODULE:PrintAllDetails(target, dmginfo)
     local attacker = dmginfo:GetAttacker()
     local IsPlayer = attacker:IsPlayer()
@@ -43,4 +43,3 @@ function MODULE:PrintAllDetails(target, dmginfo)
         target:ChatPrint("You are being attacked by a " .. tostring(attacker:GetName()))
     end
 end
--------------------------------------------------------------------------------------------------------------------------~

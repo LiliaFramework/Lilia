@@ -1,14 +1,14 @@
---------------------------------------------------------------------------------------------------------
+
 local PANEL = {}
---------------------------------------------------------------------------------------------------------
+
 local EDITOR = include(MODULE.path .. "/cl_editor.lua")
---------------------------------------------------------------------------------------------------------
+
 local PRICE_UPDATE_DELAY = 0.5
 local COLS_NAME = 1
 local COLS_MODE = 2
 local COLS_PRICE = 3
 local COLS_STOCK = 4
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Init()
 	if IsValid(lia.gui.vendorEditor) then
 		lia.gui.vendorEditor:Remove()
@@ -210,21 +210,21 @@ function PANEL:Init()
 	self:updateMoney()
 	self:updateSellScale()
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:getModeText(mode)
 	return L(VENDOR_TEXT[mode] or "none")
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:OnRemove()
 	if IsValid(lia.gui.editorFaction) then
 		lia.gui.editorFaction:Remove()
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:updateVendor(key, value)
 	netstream.Start("vendorEdit", key, value)
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:OnFocusChanged(gained)
 	if not gained then
 		timer.Simple(0, function()
@@ -233,7 +233,7 @@ function PANEL:OnFocusChanged(gained)
 		end)
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:updateMoney()
 	local money = liaVendorEnt:getMoney()
 	local useMoney = isnumber(money)
@@ -248,11 +248,11 @@ function PANEL:updateMoney()
 	self.money:SetEnabled(useMoney)
 	self.useMoney:SetChecked(useMoney)
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:updateSellScale()
 	self.sellScale:SetValue(liaVendorEnt:getSellScale())
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:onNameDescChanged(vendor, key, value)
 	local entity = liaVendorEnt
 
@@ -268,26 +268,26 @@ function PANEL:onNameDescChanged(vendor, key, value)
 		self:updateSellScale()
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:onItemModeUpdated(vendor, itemType, value)
 	local line = self.lines[itemType]
 	if not IsValid(line) then return end
 	line:SetColumnText(COLS_MODE, self:getModeText(value))
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:onItemPriceUpdated(vendor, itemType, value)
 	local line = self.lines[itemType]
 	if not IsValid(line) then return end
 	line:SetColumnText(COLS_PRICE, vendor:getPrice(itemType))
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:onItemStockUpdated(vendor, itemType)
 	local line = self.lines[itemType]
 	if not IsValid(line) then return end
 	local current, max = vendor:getStock(itemType)
 	line:SetColumnText(COLS_STOCK, max and current .. "/" .. max or "-")
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:listenForUpdates()
 	hook.Add("VendorEdited", self, self.onNameDescChanged)
 	hook.Add("VendorMoneyUpdated", self, self.updateMoney)
@@ -296,6 +296,5 @@ function PANEL:listenForUpdates()
 	hook.Add("VendorItemStockUpdated", self, self.onItemStockUpdated)
 	hook.Add("VendorItemMaxStockUpdated", self, self.onItemStockUpdated)
 end
---------------------------------------------------------------------------------------------------------
+
 vgui.Register("liaVendorEditor", PANEL, "DFrame")
---------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 function MODULE:PlayerNoClip(client, state)
     if client:IsAdmin() or client:getChar():getFaction() == FACTION_STAFF then
         if state then
@@ -37,4 +37,3 @@ function MODULE:PlayerNoClip(client, state)
         end
     end
 end
---------------------------------------------------------------------------------------------------------

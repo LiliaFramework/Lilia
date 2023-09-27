@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 function MODULE:PlayerSpawnedProp(client, model, entity)
 	local data = STORAGE_DEFINITIONS[model:lower()]
 	if not data then return end
@@ -31,15 +31,15 @@ function MODULE:PlayerSpawnedProp(client, model, entity)
 
 	entity:Remove()
 end
---------------------------------------------------------------------------------------------------------
+
 function MODULE:CanPlayerSpawnStorage(client, entity, info)
 	if not info.invType or not lia.inventory.types[info.invType] then return false end
 end
---------------------------------------------------------------------------------------------------------
+
 function MODULE:CanSaveStorage(entity, inventory)
 	return lia.config.SaveStorage
 end
---------------------------------------------------------------------------------------------------------
+
 function MODULE:saveStorage()
 	local data = {}
 	for _, entity in ipairs(ents.FindByClass("lia_storage")) do
@@ -55,11 +55,11 @@ function MODULE:saveStorage()
 
 	self:setData(data)
 end
---------------------------------------------------------------------------------------------------------
+
 function MODULE:StorageItemRemoved(entity, inventory)
 	self:saveStorage()
 end
---------------------------------------------------------------------------------------------------------
+
 function MODULE:LoadData()
 	local data = self:getData()
 	if not data then return end
@@ -106,4 +106,3 @@ function MODULE:LoadData()
 
 	self.loadedData = true
 end
---------------------------------------------------------------------------------------------------------

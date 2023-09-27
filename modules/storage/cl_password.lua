@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 function MODULE:StorageUnlockPrompt(entity)
 	Derma_StringRequest(
 		L("storPassWrite"),
@@ -11,4 +11,3 @@ function MODULE:StorageUnlockPrompt(entity)
 		end
 	)
 end
---------------------------------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
---------------------------------------------------------------------------------------------------------
+
 local loadAmount = {5, 10, 30, 45, 90, 150, 300}
---------------------------------------------------------------------------------------------------------
+
 ITEM.name = "Ammo Base"
 ITEM.model = "models/Items/BoxSRounds.mdl"
 ITEM.width = 1
@@ -11,16 +11,16 @@ ITEM.ammo = "pistol"
 ITEM.desc = "A Box that contains %s of Pistol Ammo"
 ITEM.category = "Ammunition"
 ITEM.RequiredSkillLevels = nil
---------------------------------------------------------------------------------------------------------
+
 function ITEM:getDesc()
     return Format(self.ammoDesc or self.desc, self:getQuantity())
 end
---------------------------------------------------------------------------------------------------------
+
 function ITEM:paintOver(item, w, h)
     local quantity = item:getQuantity()
     lia.util.drawText(quantity, 8, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "liaChatFont")
 end
---------------------------------------------------------------------------------------------------------
+
 ITEM.functions.use = {
     name = "Load",
     tip = "useTip",
@@ -78,4 +78,3 @@ ITEM.functions.use = {
         return item:getQuantity() <= 0
     end,
 }
---------------------------------------------------------------------------------------------------------

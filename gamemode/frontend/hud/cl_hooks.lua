@@ -1,11 +1,11 @@
---------------------------------------------------------------------------------------------------------
+
 local charInfo = {}
 local nextUpdate = 0
 local lastTrace = {}
 local lastEntity
---------------------------------------------------------------------------------------------------------
+
 paintedEntitiesCache = {}
---------------------------------------------------------------------------------------------------------
+
 lia.config.ThirdPersonEnabled = lia.config.ThirdPersonEnabled or true
 lia.config.CrosshairEnabled = lia.config.CrosshairEnabled or false
 lia.config.BarsDisabled = lia.config.BarsDisabled or false
@@ -18,7 +18,7 @@ lia.config.HiddenHUDElements = {
     ["CHudSecondaryAmmo"] = true,
     ["CHudHistoryResource"] = true
 }
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "HUDShouldDraw",
     "HideHUD",
@@ -26,19 +26,19 @@ hook.Add(
         if lia.config.HiddenHUDElements[element] then return false end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add("DrawDeathNotice", "HideDeathNotice", function() return false end)
---------------------------------------------------------------------------------------------------------
+
 hook.Add("HUDAmmoPickedUp", "HideAmmoPickedUp", function() return false end)
---------------------------------------------------------------------------------------------------------
+
 hook.Add("HUDDrawPickupHistory", "HidePickupHistory", function() return false end)
---------------------------------------------------------------------------------------------------------
+
 hook.Add("HUDDrawTargetID", "HideTargetID", function() return false end)
---------------------------------------------------------------------------------------------------------
+
 hook.Add("ShouldHideBars", "HideBars", function() return lia.config.BarsDisabled end)
---------------------------------------------------------------------------------------------------------
+
 hook.Add("CanDrawAmmoHUD", "HideAmmo", function() return lia.config.AmmoDrawEnabled end)
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "ShouldDrawCrosshair",
     "HideCrosshair",
@@ -54,7 +54,7 @@ hook.Add(
         return lia.config.CrosshairEnabled
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "HUDPaintBackground",
     "NewHUDPaintBackground",
@@ -113,7 +113,7 @@ hook.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "CanDrawAmmoHUD",
     "NewCanDrawAmmoHUD",
@@ -123,7 +123,7 @@ hook.Add(
         return false
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "DrawAmmoHUD",
     "NewDrawAmmoHUD",
@@ -154,7 +154,7 @@ hook.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "DrawCharInfo",
     "NewDrawCharInfo",
@@ -165,7 +165,7 @@ hook.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "DrawEntityInfo",
     "NewDrawEntityInfo",
@@ -202,7 +202,7 @@ hook.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "ShouldDrawEntityInfo",
     "NewShouldDrawEntityInfo",
@@ -212,4 +212,3 @@ hook.Add(
         if entity:IsPlayer() and entity:getChar() and entity:GetNoDraw() ~= true then return true end
     end
 )
---------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 function checkBadType(name, object)
     if isfunction(object) then
         ErrorNoHalt("Net var '" .. name .. "' contains a bad object type!")
@@ -10,20 +10,20 @@ function checkBadType(name, object)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function setNetVar(key, value, receiver)
     if checkBadType(key, value) then return end
     if getNetVar(key) == value then return end
     lia.net.globals[key] = value
     netstream.Start(receiver, "gVar", key, value)
 end
---------------------------------------------------------------------------------------------------------
+
 function getNetVar(key, default)
     local value = lia.net.globals[key]
 
     return value ~= nil and value or default
 end
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "EntityRemoved",
     "nCleanUp",
@@ -31,7 +31,7 @@ hook.Add(
         entity:clearNetVars()
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "PlayerInitialSpawn",
     "nSync",
@@ -39,7 +39,7 @@ hook.Add(
         client:syncVars()
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "liaCharDeleted",
     "liaCharRemoveName",
@@ -48,7 +48,7 @@ hook.Add(
         netstream.Start(client, "liaCharFetchNames", lia.char.names)
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "OnCharCreated",
     "liaCharAddName",
@@ -57,4 +57,3 @@ hook.Add(
         netstream.Start(client, "liaCharFetchNames", lia.char.names)
     end
 )
---------------------------------------------------------------------------------------------------------

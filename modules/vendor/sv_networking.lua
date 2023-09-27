@@ -1,7 +1,7 @@
---------------------------------------------------------------------------------------------------------
+
 local MODULE = MODULE
 local EDITOR = lia.util.include("sv_editor.lua")
---------------------------------------------------------------------------------------------------------
+
 util.AddNetworkString("liaVendorAllowClass")
 util.AddNetworkString("liaVendorAllowFaction")
 util.AddNetworkString("liaVendorExit")
@@ -14,7 +14,7 @@ util.AddNetworkString("liaVendorStock")
 util.AddNetworkString("liaVendorMaxStock")
 util.AddNetworkString("liaVendorSync")
 util.AddNetworkString("liaVendorTrade")
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
     "liaVendorExit",
     function(_, client)
@@ -24,7 +24,7 @@ net.Receive(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
     "liaVendorEdit",
     function(_, client)
@@ -36,7 +36,7 @@ net.Receive(
         MODULE:saveVendors()
     end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
     "liaVendorTrade",
     function(_, client)
@@ -56,4 +56,3 @@ net.Receive(
         hook.Run("VendorTradeAttempt", client, entity, uniqueID, isSellingToVendor)
     end
 )
---------------------------------------------------------------------------------------------------------

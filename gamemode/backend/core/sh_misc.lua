@@ -1,14 +1,14 @@
---------------------------------------------------------------------------------------------------------
+
 function GM:GetGameDescription()
     if istable(SCHEMA) then return tostring(SCHEMA.name) end
 
     return lia.config.DefaultGamemodeName
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerSpray(client)
     return true
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:SecToTime(t)
     if t < 0 then
         return "?"
@@ -24,4 +24,3 @@ function GM:SecToTime(t)
         return math.floor(t / 3600 / 24 / 7) .. " weeks " .. math.floor(t / 3600 / 24) % 7 .. " days " .. math.floor(t / 3600) % 24 .. " hours"
     end
 end
---------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 VENDOR_WELCOME = 1
 VENDOR_LEAVE = 2
 VENDOR_NOTRADE = 3
@@ -13,4 +13,3 @@ VENDOR_TEXT = {}
 VENDOR_TEXT[VENDOR_SELLANDBUY] = "vendorBoth"
 VENDOR_TEXT[VENDOR_BUYONLY] = "vendorBuy"
 VENDOR_TEXT[VENDOR_SELLONLY] = "vendorSell"
---------------------------------------------------------------------------------------------------------

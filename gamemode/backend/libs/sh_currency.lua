@@ -1,19 +1,19 @@
---------------------------------------------------------------------------------------------------------
+
 lia.currency = lia.currency or {}
 lia.currency.plural = lia.config.CurrencyPluralName or "Dollars"
 lia.currency.singular = lia.currency.CurrencySingularName or "Dollar"
 lia.currency.symbol = lia.currency.CurrencySymbol or "$"
---------------------------------------------------------------------------------------------------------
+
 function lia.currency.set(symbol, singular, plural)
     lia.currency.symbol = symbol
     lia.currency.singular = singular
     lia.currency.plural = plural
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.currency.get(amount)
     return lia.currency.symbol .. (amount == 1 and ("1 " .. lia.currency.singular) or (amount .. " " .. lia.currency.plural))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.currency.spawn(pos, amount, angle)
     if not pos then
         print("[Lilia] Can't create currency entity: Invalid Position")
@@ -30,4 +30,3 @@ function lia.currency.spawn(pos, amount, angle)
         return money
     end
 end
---------------------------------------------------------------------------------------------------------

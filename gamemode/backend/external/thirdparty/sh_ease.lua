@@ -1,7 +1,7 @@
 -- thx for reducing the work!
 -- the code is came from: https://github.com/soggybag/Simple-Game/blob/master/Game%20-%20Simple/more_easing.lua
 -- check the ease cheatsheet for your neat UI and stuffs! http://easings.net
---------------------------------------------------------------------------------------------------------
+
 lia.ease = lia.ease or {}
 local pow = math.pow
 local sin = math.sin
@@ -10,7 +10,7 @@ local easeIn, easeOut, easeInOut, easeOutIn
 local easeInBack, easeOutBack, easeInOutBack, easeOutInBack
 local easeInElastic, easeOutElastic, easeInOutElastic, easeOutInElastic
 local easeInBounce, easeOutBounce, easeInOutBounce, easeOutInBounce
---------------------------------------------------------------------------------------------------------
+
 --[[
 t = timeElapsed
 tMax = duration of animation/ending time of animation
@@ -19,69 +19,69 @@ delta = change to apply per change ]]
 function lia.ease.easeIn(t, tMax, start, delta)
     return start + (delta * easeIn(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.ease.easeOut(t, tMax, start, delta)
     return start + (delta * easeOut(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.ease.easeInOut(t, tMax, start, delta)
     return start + (delta * easeInOut(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.ease.easeOutIn(t, tMax, start, delta)
     return start + (delta * easeOutIn(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.ease.easeInBack(t, tMax, start, delta)
     return start + (delta * easeInBack(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.ease.easeOutBack(t, tMax, start, delta)
     return start + (delta * easeOutBack(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.ease.easeInOutBack(t, tMax, start, delta)
     return start + (delta * easeInOutBack(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.ease.easeOutInBack(t, tMax, start, delta)
     return start + (delta * easeOutInBack(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.ease.easeInElastic(t, tMax, start, delta)
     return start + (delta * easeInElastic(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.ease.easeOutElastic(t, tMax, start, delta)
     return start + (delta * easeOutElastic(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.ease.easeInOutElastic(t, tMax, start, delta)
     return start + (delta * easeInOutElastic(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.ease.easeOutInElastic(t, tMax, start, delta)
     return start + (delta * easeOutInElastic(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.ease.easeInBounce(t, tMax, start, delta)
     return start + (delta * easeInBounce(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.ease.easeOutBounce(t, tMax, start, delta)
     return start + (delta * easeOutBounce(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.ease.easeInOutBounce(t, tMax, start, delta)
     return start + (delta * easeInOutBounce(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.ease.easeOutInBounce(t, tMax, start, delta)
     return start + (delta * easeOutInBounce(t / tMax))
 end
---------------------------------------------------------------------------------------------------------
+
 easeInBounce = function(ratio) return 1.0 - easeOutBounce(1.0 - ratio) end
---------------------------------------------------------------------------------------------------------
+
 easeOutBounce = function(ratio)
     local s = 7.5625
     local p = 2.75
@@ -105,7 +105,7 @@ easeOutBounce = function(ratio)
 
     return l
 end
---------------------------------------------------------------------------------------------------------
+
 easeInOutBounce = function(ratio)
     if ratio < 0.5 then
         return 0.5 * easeInBounce(ratio * 2.0)
@@ -113,7 +113,7 @@ easeInOutBounce = function(ratio)
         return 0.5 * easeOutBounce((ratio - 0.5) * 2.0) + 0.5
     end
 end
---------------------------------------------------------------------------------------------------------
+
 easeOutInBounce = function(ratio)
     if ratio < 0.5 then
         return 0.5 * easeOutBounce(ratio * 2.0)
@@ -121,7 +121,7 @@ easeOutInBounce = function(ratio)
         return 0.5 * easeInBounce((ratio - 0.5) * 2.0) + 0.5
     end
 end
---------------------------------------------------------------------------------------------------------
+
 easeInElastic = function(ratio)
     if ratio == 0 or ratio == 1.0 then return ratio end
     local p = 0.3
@@ -130,7 +130,7 @@ easeInElastic = function(ratio)
 
     return -1 * pow(2.0, 10.0 * invRatio) * sin((invRatio - s) * 2 * pi / p)
 end
---------------------------------------------------------------------------------------------------------
+
 easeOutElastic = function(ratio)
     if ratio == 0 or ratio == 1.0 then return ratio end
     local p = 0.3
@@ -138,7 +138,7 @@ easeOutElastic = function(ratio)
 
     return -1 * pow(2.0, -10.0 * ratio) * sin((ratio + s) * 2 * pi / p) + 1.0
 end
---------------------------------------------------------------------------------------------------------
+
 easeInOutElastic = function(ratio)
     if ratio < 0.5 then
         return 0.5 * easeInElastic(ratio * 2.0)
@@ -146,7 +146,7 @@ easeInOutElastic = function(ratio)
         return 0.5 * easeOutElastic((ratio - 0.5) * 2.0) + 0.5
     end
 end
---------------------------------------------------------------------------------------------------------
+
 easeOutInElastic = function(ratio)
     if ratio < 0.5 then
         return 0.5 * easeOutElastic(ratio * 2.0)
@@ -154,15 +154,15 @@ easeOutInElastic = function(ratio)
         return 0.5 * easeInElastic((ratio - 0.5) * 2.0) + 0.5
     end
 end
---------------------------------------------------------------------------------------------------------
+
 easeIn = function(ratio) return ratio * ratio * ratio end
---------------------------------------------------------------------------------------------------------
+
 easeOut = function(ratio)
     local invRatio = ratio - 1.0
 
     return (invRatio * invRatio * invRatio) + 1.0
 end
---------------------------------------------------------------------------------------------------------
+
 easeInOut = function(ratio)
     if ratio < 0.5 then
         return 0.5 * easeIn(ratio * 2.0)
@@ -170,7 +170,7 @@ easeInOut = function(ratio)
         return 0.5 * easeOut((ratio - 0.5) * 2.0) + 0.5
     end
 end
---------------------------------------------------------------------------------------------------------
+
 easeOutIn = function(ratio)
     if ratio < 0.5 then
         return 0.5 * easeOut(ratio * 2.0)
@@ -178,20 +178,20 @@ easeOutIn = function(ratio)
         return 0.5 * easeIn((ratio - 0.5) * 2.0) + 0.5
     end
 end
---------------------------------------------------------------------------------------------------------
+
 easeInBack = function(ratio)
     local s = 1.70158
 
     return pow(ratio, 2.0) * ((s + 1.0) * ratio - s)
 end
---------------------------------------------------------------------------------------------------------
+
 easeOutBack = function(ratio)
     local invRatio = ratio - 1.0
     local s = 1.70158
 
     return pow(invRatio, 2.0) * ((s + 1.0) * invRatio + s) + 1.0
 end
---------------------------------------------------------------------------------------------------------
+
 easeInOutBack = function(ratio)
     if ratio < 0.5 then
         return 0.5 * easeInBack(ratio * 2.0)
@@ -199,7 +199,7 @@ easeInOutBack = function(ratio)
         return 0.5 * easeOutBack((ratio - 0.5) * 2.0) + 0.5
     end
 end
---------------------------------------------------------------------------------------------------------
+
 easeOutInBack = function(ratio)
     if ratio < 0.5 then
         return 0.5 * easeOutBack(ratio * 2.0)
@@ -207,4 +207,3 @@ easeOutInBack = function(ratio)
         return 0.5 * easeInBack((ratio - 0.5) * 2.0) + 0.5
     end
 end
---------------------------------------------------------------------------------------------------------

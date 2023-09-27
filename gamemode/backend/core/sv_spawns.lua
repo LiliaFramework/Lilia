@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerLoadout(client)
     local character = client:getChar()
     if client.liaSkipLoadout then
@@ -51,7 +51,7 @@ function GM:PlayerLoadout(client)
     hook.Run("PostPlayerLoadout", client)
     client:SelectWeapon("lia_hands")
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerSpawn(client)
     if pac then
         client:ConCommand("pac_restart")
@@ -64,14 +64,14 @@ function GM:PlayerSpawn(client)
     client:setAction()
     hook.Run("PlayerLoadout", client)
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:OnCharAttribBoosted(client, character, attribID)
     local attribute = lia.attribs.list[attribID]
     if attribute and isfunction(attribute.onSetup) then
         attribute:onSetup(client, character:getAttrib(attribID, 0))
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PostPlayerLoadout(client)
     local character = client:getChar()
 
@@ -97,7 +97,7 @@ function GM:PostPlayerLoadout(client)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerDeath(client, inflictor, attacker)
     local char = client:getChar()
     if char then
@@ -161,7 +161,7 @@ function GM:PlayerDeath(client, inflictor, attacker)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerDeathThink(client)
     if client:getChar() then
         local deathTime = client:getNetVar("deathTime")
@@ -172,7 +172,7 @@ function GM:PlayerDeathThink(client)
 
     return false
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerInitialSpawn(client)
     if client:IsBot() then return hook.Run("SetupBotCharacter", client) end
     client.liaJoinTime = RealTime()
@@ -221,4 +221,4 @@ function GM:PlayerInitialSpawn(client)
     hook.Run("PostPlayerInitialSpawn", client)
     hook.Run("ReRunNames")
 end
---------------------------------------------------------------------------------------------------------
+

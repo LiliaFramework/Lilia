@@ -1,22 +1,22 @@
---------------------------------------------------------------------------------------------------------
+
 lia.config.Font = lia.config.Font or "Arial"
 lia.config.GenericFont = lia.config.GenericFont or "Segoe UI"
---------------------------------------------------------------------------------------------------------
+
 local blurGoal = 0
 local blurValue = 0
---------------------------------------------------------------------------------------------------------
+
 function GM:OnContextMenuOpen()
     self.BaseClass:OnContextMenuOpen()
     vgui.Create("liaQuick")
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:OnContextMenuClose()
     self.BaseClass:OnContextMenuClose()
     if IsValid(lia.gui.quick) then
         lia.gui.quick:Remove()
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:SetupQuickMenu(menu)
     menu:addCheck(
         L"cheapBlur",
@@ -61,12 +61,12 @@ function GM:SetupQuickMenu(menu)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:ScreenResolutionChanged(oldW, oldH)
     RunConsoleCommand("fixchatplz")
     hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:HUDPaintBackground()
     local localPlayer = LocalPlayer()
     local frameTime = FrameTime()
@@ -83,7 +83,7 @@ function GM:HUDPaintBackground()
     self.BaseClass.PaintWorldTips(self.BaseClass)
     lia.menu.drawAll()
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:ItemShowEntityMenu(entity)
     for k, v in ipairs(lia.menu.list) do
         if v.entity == entity then
@@ -132,4 +132,3 @@ function GM:ItemShowEntityMenu(entity)
     itemTable.player = nil
     itemTable.entity = nil
 end
---------------------------------------------------------------------------------------------------------

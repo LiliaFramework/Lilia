@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 function MODULE:CanPlayerAccessVendor(client, vendor)
     if client:CanEditVendor() then return true end
     local character = client:getChar()
@@ -6,7 +6,7 @@ function MODULE:CanPlayerAccessVendor(client, vendor)
     if vendor:isFactionAllowed(client:Team()) then return true end
 end
 
---------------------------------------------------------------------------------------------------------
+
 function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)
     if not vendor.items[itemType] then return false end
     local state = vendor:getTradeMode(itemType)
@@ -30,7 +30,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     if money and money < price then return false, isSellingToVendor and "vendorNoMoney" or "canNotAfford" end
 end
 
---------------------------------------------------------------------------------------------------------
+
 if not VENDOR_INVENTORY_MEASURE then
     VENDOR_INVENTORY_MEASURE = lia.inventory.types["grid"]:new()
     VENDOR_INVENTORY_MEASURE.data = {
@@ -42,7 +42,7 @@ if not VENDOR_INVENTORY_MEASURE then
     VENDOR_INVENTORY_MEASURE:onInstanced()
 end
 
---------------------------------------------------------------------------------------------------------
+
 function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
     local canAccess, reason = hook.Run("CanPlayerTradeWithVendor", client, vendor, itemType, isSellingToVendor)
     if canAccess == false then
@@ -65,7 +65,7 @@ function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+
 function MODULE:PlayerAccessVendor(client, vendor)
     vendor:addReceiver(client)
     net.Start("liaVendorOpen")
@@ -73,7 +73,7 @@ function MODULE:PlayerAccessVendor(client, vendor)
     net.Send(client)
 end
 
---------------------------------------------------------------------------------------------------------
+
 function MODULE:VendorSellEvent(client, vendor, itemType, isSellingToVendor, character, price)
     local inventory = character:getInv()
     local item = inventory:getFirstItemOfType(itemType)
@@ -115,7 +115,7 @@ function MODULE:VendorSellEvent(client, vendor, itemType, isSellingToVendor, cha
     end
 end
 
---------------------------------------------------------------------------------------------------------
+
 function MODULE:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
     vendor:giveMoney(price)
     character:takeMoney(price)

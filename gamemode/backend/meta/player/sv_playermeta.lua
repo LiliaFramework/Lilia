@@ -1,8 +1,8 @@
---------------------------------------------------------------------------------------------------------
+
 local SCHEMA = SCHEMA
---------------------------------------------------------------------------------------------------------
+
 local playerMeta = FindMetaTable("Player")
---------------------------------------------------------------------------------------------
+
 function playerMeta:setAction(text, time, callback, startTime, finishTime)
     if time and time <= 0 then
         if callback then
@@ -36,7 +36,7 @@ function playerMeta:setAction(text, time, callback, startTime, finishTime)
         )
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:CreateServerRagdoll(DontSetPlayer)
     local entity = ents.Create("prop_ragdoll")
     entity:SetPos(self:GetPos())
@@ -80,7 +80,7 @@ function playerMeta:CreateServerRagdoll(DontSetPlayer)
 
     return entity
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
     local uniqueID = "liaStare" .. self:UniqueID()
     local data = {}
@@ -115,15 +115,15 @@ function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
         end
     )
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:notify(message)
     lia.util.notify(message, self)
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:notifyLocalized(message, ...)
     lia.util.notifyLocalized(message, self, ...)
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:requestString(title, subTitle, callback, default)
     local d
     if type(callback) ~= "function" and default == nil then
@@ -145,7 +145,7 @@ function playerMeta:requestString(title, subTitle, callback, default)
 
     return d
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:isStuck()
     return util.TraceEntity(
         {
@@ -155,7 +155,7 @@ function playerMeta:isStuck()
         }, self
     ).StartSolid
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:createRagdoll(freeze)
     local entity = ents.Create("prop_ragdoll")
     entity:SetPos(self:GetPos())
@@ -186,7 +186,7 @@ function playerMeta:createRagdoll(freeze)
 
     return entity
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:setRagdolled(state, time, getUpGrace)
     getUpGrace = getUpGrace or time or 5
     if state then
@@ -315,7 +315,7 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
         hook.Run("OnCharFallover", self, entity, false)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:loadLiliaData(callback)
     local name = self:steamName()
     local steamID64 = self:SteamID64()
@@ -354,7 +354,7 @@ function playerMeta:loadLiliaData(callback)
         end
     )
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:saveLiliaData()
     local name = self:steamName()
     local steamID64 = self:SteamID64()
@@ -367,7 +367,7 @@ function playerMeta:saveLiliaData()
         }, nil, "players", "_steamID = " .. steamID64
     )
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:setLiliaData(key, value, noNetworking)
     self.liaData = self.liaData or {}
     self.liaData[key] = value
@@ -375,7 +375,7 @@ function playerMeta:setLiliaData(key, value, noNetworking)
         netstream.Start(self, "liaData", key, value)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:setWhitelisted(faction, whitelisted)
     if not whitelisted then
         whitelisted = nil
@@ -394,7 +394,7 @@ function playerMeta:setWhitelisted(faction, whitelisted)
 
     return false
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:syncVars()
     for entity, data in pairs(lia.net) do
         if entity == "globals" then
@@ -408,14 +408,14 @@ function playerMeta:syncVars()
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:setLocalVar(key, value)
     if checkBadType(key, value) then return end
     lia.net[self] = lia.net[self] or {}
     lia.net[self][key] = value
     netstream.Start(self, "nLcl", key, value)
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:getLiliaData(key, default)
     if key == true then return self.liaData end
     local data = self.liaData and self.liaData[key]
@@ -425,4 +425,3 @@ function playerMeta:getLiliaData(key, default)
         return data
     end
 end
---------------------------------------------------------------------------------------------------------

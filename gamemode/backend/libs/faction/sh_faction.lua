@@ -1,10 +1,10 @@
---------------------------------------------------------------------------------------------------------
+
 lia.faction = lia.faction or {}
 lia.faction.indices = lia.faction.indices or {}
 lia.faction.teams = lia.faction.teams or {}
---------------------------------------------------------------------------------------------------------
+
 lia.faction.DefaultModels = {"models/humans/group01/male_01.mdl", "models/humans/group01/male_02.mdl", "models/humans/group01/male_04.mdl", "models/humans/group01/male_05.mdl", "models/humans/group01/male_06.mdl", "models/humans/group01/male_07.mdl", "models/humans/group01/male_08.mdl", "models/humans/group01/male_09.mdl", "models/humans/group02/male_01.mdl", "models/humans/group02/male_03.mdl", "models/humans/group02/male_05.mdl", "models/humans/group02/male_07.mdl", "models/humans/group02/male_09.mdl", "models/humans/group01/female_01.mdl", "models/humans/group01/female_02.mdl", "models/humans/group01/female_03.mdl", "models/humans/group01/female_06.mdl", "models/humans/group01/female_07.mdl", "models/humans/group02/female_01.mdl", "models/humans/group02/female_03.mdl", "models/humans/group02/female_06.mdl", "models/humans/group01/female_04.mdl"}
---------------------------------------------------------------------------------------------------------
+
 function lia.faction.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName = v:sub(4, -5)
@@ -49,15 +49,15 @@ function lia.faction.loadFromDir(directory)
         FACTION = nil
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.faction.get(identifier)
     return lia.faction.indices[identifier] or lia.faction.teams[identifier]
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.faction.getIndex(uniqueID)
     return lia.faction.teams[uniqueID] and lia.faction.teams[uniqueID].index
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.faction.formatModelData()
     for name, faction in pairs(lia.faction.teams) do
         if faction.models then
@@ -100,4 +100,3 @@ function lia.faction.formatModelData()
         end
     end
 end
---------------------------------------------------------------------------------------------------------

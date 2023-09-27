@@ -1,7 +1,7 @@
---------------------------------------------------------------------------------------------------------
+
 local LAST_WIDTH = ScrW()
 local LAST_HEIGHT = ScrH()
---------------------------------------------------------------------------------------------------------
+
 function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
     color = color or color_white
 
@@ -16,7 +16,7 @@ function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
         }, 1, alpha or (color.a * 0.575)
     )
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.util.notifQuery(question, option1, option2, manualDismiss, notifType, callback)
     if not callback or not isfunction(callback) then
         Error("A callback function must be specified")
@@ -165,7 +165,7 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
 
     return notice
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.util.wrapText(text, width, font)
     font = font or "liaChatFont"
     surface.SetFont(font)
@@ -199,15 +199,15 @@ function lia.util.wrapText(text, width, font)
 
     return lines, maxW
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.util.notify(message)
     chat.AddText(message)
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.util.notifyLocalized(message, ...)
     lia.util.notify(L(message, ...))
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.util.drawBlur(panel, amount, passes)
     amount = amount or 5
     if CreateClientConVar("lia_cheapblur", 0, true):GetBool() then
@@ -225,7 +225,7 @@ function lia.util.drawBlur(panel, amount, passes)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.util.drawBlurAt(x, y, w, h, amount, passes)
     amount = amount or 5
     if CreateClientConVar("lia_cheapblur", 0, true):GetBool() then
@@ -245,7 +245,7 @@ function lia.util.drawBlurAt(x, y, w, h, amount, passes)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 timer.Create(
     "liaResolutionMonitor",
     1,
@@ -259,7 +259,7 @@ timer.Create(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 function lia.util.getInjuredColor(client)
     local health_color = color_white
     if not IsValid(client) then return health_color end
@@ -271,7 +271,7 @@ function lia.util.getInjuredColor(client)
 
     return health_color
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.util.ScreenScaleH(n, type)
     if type then
         if ScrH() > 720 then return n end
@@ -281,7 +281,7 @@ function lia.util.ScreenScaleH(n, type)
 
     return n * (ScrH() / 480)
 end
---------------------------------------------------------------------------------------------------------
+
 function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCancel, strButtonText, strButtonCancelText)
     local Window = vgui.Create("DFrame")
     Window:SetTitle(strTitle or "Message Title (First Parameter)")
@@ -350,12 +350,12 @@ function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCanc
 
     return Window
 end
---------------------------------------------------------------------------------------------------------
+
 file.CreateDir("lilia/images")
 lia.util.LoadedImages = lia.util.LoadedImages or {
     [0] = Material("icon16/cross.png")
 }
---------------------------------------------------------------------------------------------------------
+
 function lia.util.FetchImage(id, callback, failImg, pngParameters, imageProvider)
     local loadedImage = lia.util.LoadedImages[id]
     if loadedImage then
@@ -407,4 +407,3 @@ function lia.util.FetchImage(id, callback, failImg, pngParameters, imageProvider
         )
     end
 end
---------------------------------------------------------------------------------------------------------

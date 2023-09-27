@@ -1,12 +1,12 @@
---------------------------------------------------------------------------------------------------------
+
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
---------------------------------------------------------------------------------------------------------
+
 local ent_diff = vector_origin
 local ent_diff_time = CurTime()
 local stand_time = 0
---------------------------------------------------------------------------------------------------------
+
 function SWEP:Think()
     if not self:checkValidity() then return end
     local curTime = CurTime()
@@ -42,4 +42,3 @@ function SWEP:Think()
     self.carryHack:SetAngles(targetAng)
     self.holdingEntity:PhysWake()
 end
---------------------------------------------------------------------------------------------------------

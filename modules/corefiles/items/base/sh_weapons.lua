@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 ITEM.name = "Weapon"
 ITEM.desc = "A Weapon."
 ITEM.category = "Weapons"
@@ -10,7 +10,7 @@ ITEM.isWeapon = true
 ITEM.weaponCategory = "sidearm"
 ITEM.RequiredSkillLevels = nil
 ITEM.TeamBlacklist = {}
---------------------------------------------------------------------------------------------------------
+
 if CLIENT then
     function ITEM:paintOver(item, w, h)
         if item:getData("equip") then
@@ -19,7 +19,7 @@ if CLIENT then
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 ITEM:hook(
     "drop",
     function(item)
@@ -36,7 +36,7 @@ ITEM:hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 ITEM.functions.EquipUn = {
     name = "Unequip",
     tip = "equipTip",
@@ -66,7 +66,7 @@ ITEM.functions.EquipUn = {
     end,
     onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip") == true end
 }
---------------------------------------------------------------------------------------------------------
+
 ITEM.functions.Equip = {
     name = "Equip",
     tip = "equipTip",
@@ -125,13 +125,13 @@ ITEM.functions.Equip = {
     end,
     onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip") ~= true end
 }
---------------------------------------------------------------------------------------------------------
+
 function ITEM:onCanBeTransfered(oldInventory, newInventory)
     if newInventory and self:getData("equip") then return false end
 
     return true
 end
---------------------------------------------------------------------------------------------------------
+
 function ITEM:onLoadout()
     if self:getData("equip") then
         local client = self.player
@@ -146,14 +146,14 @@ function ITEM:onLoadout()
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function ITEM:onSave()
     local weapon = self.player:GetWeapon(self.class)
     if IsValid(weapon) then
         self:setData("ammo", weapon:Clip1())
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function ITEM:onRemoved()
     local inv = lia.item.inventories[self.invID]
     if inv then
@@ -166,4 +166,3 @@ function ITEM:onRemoved()
         end
     end
 end
---------------------------------------------------------------------------------------------------------

@@ -1,9 +1,9 @@
---------------------------------------------------------------------------------------------------------
+
 lia.menu = lia.menu or {}
 lia.menu.list = lia.menu.list or {}
---------------------------------------------------------------------------------------------------------
+
 lia.config.Color = lia.config.Color or Color(75, 119, 190)
---------------------------------------------------------------------------------------------------------
+
 function lia.menu.add(options, position, onRemove)
     local width = 0
     local entity
@@ -29,7 +29,7 @@ function lia.menu.add(options, position, onRemove)
         }
     )
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.menu.drawAll()
     local frameTime = FrameTime() * 30
     local mX, mY = ScrW() * 0.5, ScrH() * 0.5
@@ -98,7 +98,7 @@ function lia.menu.drawAll()
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.menu.getActiveMenu()
     local mX, mY = ScrW() * 0.5, ScrH() * 0.5
     local position2 = LocalPlayer():GetPos()
@@ -137,7 +137,7 @@ function lia.menu.getActiveMenu()
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.menu.onButtonPressed(menu, callback)
     table.remove(lia.menu.list, menu)
     if callback then
@@ -148,4 +148,3 @@ function lia.menu.onButtonPressed(menu, callback)
 
     return false
 end
---------------------------------------------------------------------------------------------------------

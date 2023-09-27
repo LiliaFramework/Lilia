@@ -1,10 +1,10 @@
---------------------------------------------------------------------------------------------------------
+
 lia.item = lia.item or {}
 lia.item.base = lia.item.base or {}
 lia.item.instances = lia.item.instances or {}
 lia.item.inventoryTypes = lia.item.inventoryTypes or {}
 lia.item.list = lia.item.list or {}
---------------------------------------------------------------------------------------------------------
+
 lia.item.defaultfunctions = {
     drop = {
         tip = "dropTip",
@@ -59,12 +59,12 @@ lia.item.defaultfunctions = {
     },
 }
 
---------------------------------------------------------------------------------------------------------
+
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
 
---------------------------------------------------------------------------------------------------------
+
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua")
     if uniqueID then
@@ -75,12 +75,12 @@ function lia.item.load(path, baseID, isBaseItem)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+
 function lia.item.isItem(object)
     return istable(object) and object.isItem == true
 end
 
---------------------------------------------------------------------------------------------------------
+
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     assert(isstring(uniqueID), "uniqueID must be a string")
     local baseTable = lia.item.base[baseID] or lia.meta.item
@@ -147,7 +147,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     return targetTable[itemType]
 end
 
---------------------------------------------------------------------------------------------------------
+
 function lia.item.loadFromDir(directory)
     local files, folders
     files = file.Find(directory .. "/base/*.lua", "LUA")
@@ -168,7 +168,7 @@ function lia.item.loadFromDir(directory)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
     assert(isnumber(id), "non-number ID given to lia.item.new")
@@ -195,7 +195,7 @@ function lia.item.new(uniqueID, id)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+
 lia.char.registerVar(
     "inv",
     {
@@ -222,4 +222,3 @@ lia.char.registerVar(
         end
     }
 )
---------------------------------------------------------------------------------------------------------

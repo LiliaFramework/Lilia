@@ -1,22 +1,22 @@
---------------------------------------------------------------------------------------------------------
+
 local data = {}
---------------------------------------------------------------------------------------------------------
+
 local owner, w, h, ceil, ft, clmp
---------------------------------------------------------------------------------------------------------
+
 ceil = math.ceil
---------------------------------------------------------------------------------------------------------
+
 clmp = math.Clamp
---------------------------------------------------------------------------------------------------------
+
 local flo = 0
---------------------------------------------------------------------------------------------------------
+
 local vec
---------------------------------------------------------------------------------------------------------
+
 local aprg, aprg2 = 0, 0
---------------------------------------------------------------------------------------------------------
+
 w, h = ScrW(), ScrH()
---------------------------------------------------------------------------------------------------------
+
 local offset1, offset2, offset3, alpha, y
---------------------------------------------------------------------------------------------------------
+
 function GM:InitializedExtrasClient()
 	for k, v in pairs(lia.config.RemovableConsoleCommand) do
 		RunConsoleCommand(k, v)
@@ -47,13 +47,13 @@ function GM:InitializedExtrasClient()
         RunConsoleCommand("arccw_crosshair_shotgun", "1")
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:NetworkEntityCreated(entity)
 	if entity == LocalPlayer() then return end
 	if not entity:IsPlayer() then return end
 	hook.Run("PlayerModelChanged", entity, entity:GetModel())
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:CharacterListLoaded()
 	timer.Create(
 		"liaWaitUntilPlayerValid",
@@ -66,25 +66,25 @@ function GM:CharacterListLoaded()
 		end
 	)
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:DrawLiliaModelView(panel, ent)
 	if IsValid(ent.weapon) then
 		ent.weapon:DrawModel()
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:OnChatReceived()
 	if system.IsWindows() and not system.HasFocus() then
 		system.FlashWindow()
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:HUDPaint()
 	self:DeathHUDPaint()
 	self:MiscHUDPaint()
 	self:PointingHUDPaint()
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerButtonDown(client, button)
 	if button == KEY_F2 and IsFirstTimePredicted() then
 		local menu = DermaMenu()
@@ -117,11 +117,11 @@ function GM:PlayerButtonDown(client, button)
 		menu:Center()
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:ClientInitializedConfig()
 	hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:ClientPostInit()
 	lia.joinTime = RealTime() - 0.9716
 	lia.faction.formatModelData()
@@ -146,7 +146,7 @@ function GM:ClientPostInit()
 		end
 	)
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:DeathHUDPaint()
 	owner = LocalPlayer()
 	ft = FrameTime()
@@ -175,7 +175,7 @@ function GM:DeathHUDPaint()
 		local tx, ty = lia.util.drawText(L"youreDead", w / 2, h / 2, ColorAlpha(color_white, aprg2 * 255), 1, 1, "liaDynFontMedium", aprg2 * 255)
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:MiscHUDPaint()
 	local ply = LocalPlayer()
 	local ourPos = ply:GetPos()
@@ -212,7 +212,7 @@ function GM:MiscHUDPaint()
 		end
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PointingHUDPaint()
 	net.Receive(
 		"Pointing",
@@ -228,4 +228,3 @@ function GM:PointingHUDPaint()
 		surface.DrawCircle(toScream.x, toScream.y, distance, 0, 255, 0, 255)
 	end
 end
---------------------------------------------------------------------------------------------------------

@@ -1,9 +1,9 @@
---------------------------------------------------------------------------------------------------------
+
 lia.xhair = lia.xhair or {}
 lia.xhair.entIcon = {}
---------------------------------------------------------------------------------------------------------
+
 lia.xhair.entIgnore = {"func_physbox", "prop_dynamic"}
---------------------------------------------------------------------------------------------------------
+
 local w, h, aimVector, punchAngle, ft, screen, scaleFraction, distance, entity
 local curGap = 0
 local curAlpha = 0
@@ -15,7 +15,7 @@ local colors = {color_black}
 local filter = {}
 local sw, sh = ScrW(), ScrH()
 local lastIcon = ""
---------------------------------------------------------------------------------------------------------
+
 local function drawdot(pos, size, col)
     local color = col[2]
     surface.SetDrawColor(color.r, color.g, color.b, color.a)
@@ -24,7 +24,7 @@ local function drawdot(pos, size, col)
     surface.SetDrawColor(0, 0, 0, col[2].a)
     surface.DrawOutlinedRect(pos[1] - size / 2, pos[2] - size / 2, size, size)
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PostDrawHUD()
     local client = LocalPlayer()
     if not client:getChar() or not client:Alive() then return end
@@ -89,7 +89,7 @@ function GM:PostDrawHUD()
         lia.util.drawText(lastIcon or "", cx + (adx or 0), cy + (ady or 0), ColorAlpha(color_white, curIconAlpha), 1, 1, "liaCrossIcons")
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:GetCrosshairIcon(curAlpha, entity, weapon, distance)
     if table.Count(lia.menu.list) > 0 then return "", 0, ScreenScale(5) end
     if IsValid(wep) then
@@ -120,4 +120,3 @@ function GM:GetCrosshairIcon(curAlpha, entity, weapon, distance)
         end
     end
 end
---------------------------------------------------------------------------------------------------------

@@ -1,10 +1,10 @@
---------------------------------------------------------------------------------------------------------
+
 lia.config.DisallowedBagForbiddenActions = {
     ["Equip"] = true,
     ["EquipUn"] = true,
 }
 
---------------------------------------------------------------------------------------------------------
+
 function GM:CanPlayerInteractItem(client, action, item)
     local inventory = lia.inventory.instances[item.invID]
     if client:getNetVar("fallingover") then return false end
@@ -31,7 +31,7 @@ function GM:CanPlayerInteractItem(client, action, item)
     if inventory and (inventory.isBag == true or inventory.isBank == true) and self.BagForbiddenActions[action] then return false, "forbiddenActionStorage" end
 end
 
---------------------------------------------------------------------------------------------------------
+
 function GM:CanPlayerEquipItem(client, item)
     if client.equipDelay then
         client:notify("You need to wait before equipping something again!")
@@ -40,7 +40,7 @@ function GM:CanPlayerEquipItem(client, item)
     return true
 end
 
---------------------------------------------------------------------------------------------------------
+
 function GM:CanPlayerTakeItem(client, item)
     if client.takeDelay then
         client:notify("You need to wait before picking something up again!")
@@ -55,7 +55,7 @@ function GM:CanPlayerTakeItem(client, item)
     return true
 end
 
---------------------------------------------------------------------------------------------------------
+
 function GM:CanPlayerDropItem(client, item)
     if client.dropDelay then
         client:notify("You need to wait before dropping something again!")
@@ -74,4 +74,3 @@ function GM:CanPlayerDropItem(client, item)
     end
     return true
 end
---------------------------------------------------------------------------------------------------------

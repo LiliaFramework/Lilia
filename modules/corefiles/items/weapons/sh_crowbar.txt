@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 ITEM.name = "Crowbar"
 ITEM.desc = "A slightly rusty looking crowbar."
 ITEM.model = "models/weapons/w_crowbar.mdl"
@@ -6,4 +6,3 @@ ITEM.class = "weapon_crowbar"
 ITEM.weaponCategory = "melee"
 ITEM.width = 2
 ITEM.height = 1
---------------------------------------------------------------------------------------------------------

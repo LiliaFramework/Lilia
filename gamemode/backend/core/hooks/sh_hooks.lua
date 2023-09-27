@@ -1,8 +1,8 @@
---------------------------------------------------------------------------------------------------------
+
 local oldCalcSeqOverride
 local ModelCount = 0
 local TposeOverridenModels = {}
---------------------------------------------------------------------------------------------------------
+
 function GM:InitializedConfig()
     if CLIENT then
         self:ClientInitializedConfig()
@@ -28,7 +28,7 @@ function GM:InitializedConfig()
     print("Total models processed with TPoseFixer: " .. ModelCount)
     hook.Run("InitializedModules")
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:RegisterCamiPermissions()
     for _, PrivilegeInfo in pairs(lia.config.CAMIPrivileges) do
         local privilegeData = {
@@ -73,8 +73,8 @@ function GM:RegisterCamiPermissions()
         end
     end
 end
---------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------
+
+
 function GM:TranslateActivity(client, act)
     local model = string.lower(client.GetModel(client))
     local class = lia.anim.getModelClass(model) or "player"
@@ -158,7 +158,7 @@ function GM:TranslateActivity(client, act)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:DoAnimationEvent(client, event, data)
     local class = lia.anim.getModelClass(client:GetModel())
     if class == "player" then
@@ -198,11 +198,11 @@ function GM:DoAnimationEvent(client, event, data)
 
     return ACT_INVALID
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:EntityEmitSound(data)
     if data.Entity.liaIsMuted then return false end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:HandlePlayerLanding(client, velocity, wasOnGround)
     if client:IsNoClipping() then return end
     if client:IsOnGround() and not wasOnGround then
@@ -214,7 +214,7 @@ function GM:HandlePlayerLanding(client, velocity, wasOnGround)
         return true
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:CalcMainActivity(client, velocity)
     client.CalcIdeal = ACT_MP_STAND_IDLE
     oldCalcSeqOverride = client.CalcSeqOverride
@@ -243,7 +243,7 @@ function GM:CalcMainActivity(client, velocity)
 
     return client.CalcIdeal, client.liaForceSeq or oldCalcSeqOverride
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:OnCharVarChanged(char, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
         for k, v in pairs(lia.char.varHooks[varName]) do
@@ -251,17 +251,17 @@ function GM:OnCharVarChanged(char, varName, oldVar, newVar)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:GetDefaultCharName(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.onGetDefaultName then return info:onGetDefaultName(client) end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.onGetDefaultDesc then return info:onGetDefaultDesc(client) end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:CheckFactionLimitReached(faction, character, client)
     if isfunction(faction.onCheckLimitReached) then return faction:onCheckLimitReached(character, client) end
     if not isnumber(faction.limit) then return false end
@@ -272,7 +272,7 @@ function GM:CheckFactionLimitReached(faction, character, client)
 
     return team.NumPlayers(faction.index) >= maxPlayers
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:Move(client, moveData)
     local char = client:getChar()
     if char then
@@ -302,7 +302,7 @@ function GM:Move(client, moveData)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:CanItemBeTransfered(itemObject, curInv, inventory)
     if itemObject.onCanBeTransfered then
         local itemHook = itemObject:onCanBeTransfered(curInv, inventory)
@@ -310,7 +310,7 @@ function GM:CanItemBeTransfered(itemObject, curInv, inventory)
         return itemHook ~= false
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:OnPlayerJoinClass(client, class, oldClass)
     local char = client:getChar()
     if char and lia.config.PermaClass then
@@ -329,7 +329,7 @@ function GM:OnPlayerJoinClass(client, class, oldClass)
 
     netstream.Start(nil, "classUpdate", client)
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:Think()
     if not self.nextThink then
         self.nextThink = 0
@@ -349,13 +349,13 @@ function GM:Think()
         self.nextThink = CurTime() + lia.config.HealingTimer
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PropBreak(attacker, ent)
     if IsValid(ent) and ent:GetPhysicsObject():IsValid() then
         constraint.RemoveAll(ent)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:OnPickupMoney(client, moneyEntity)
     if moneyEntity and moneyEntity:IsValid() then
         local amount = moneyEntity:getAmount()
@@ -363,7 +363,7 @@ function GM:OnPickupMoney(client, moneyEntity)
         client:notifyLocalized("moneyTaken", lia.currency.get(amount))
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:ModelFixer(model, animtype)
     if not animtype then
         lia.anim.setModelClass(model, "player")
@@ -371,7 +371,7 @@ function GM:ModelFixer(model, animtype)
         lia.anim.setModelClass(model, animtype)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:InitializedModules()
     if SERVER then
         if lia.config.MapCleanerEnabled then
@@ -389,7 +389,7 @@ function GM:InitializedModules()
     self:RegisterCamiPermissions()
     self:InitializedExtrasShared()
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:InitPostEntity()
     if CLIENT then
         self:ClientPostInit()
@@ -397,7 +397,7 @@ function GM:InitPostEntity()
         self:ServerPostInit()
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:InitializedExtrasShared()
     RunConsoleCommand("sv_simfphys_gib_lifetime", "0")
     RunConsoleCommand("sv_simfphys_fuel", "0")
@@ -405,11 +405,11 @@ function GM:InitializedExtrasShared()
     RunConsoleCommand("sv_simfphys_traction_snow", "1")
     RunConsoleCommand("sv_simfphys_damagemultiplicator", "100")
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:simfphysPhysicsCollide()
     return true
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:DevelopmentServerLoader()
     --[[
     This allows you to make reduced cooldowns or certain scenarios only happen on the Dev server. Example:
@@ -443,7 +443,7 @@ function GM:DevelopmentServerLoader()
         print("This is a Main Server!")
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PSALoader()
     local TalkModesPSAString = "Please Remove Talk Modes. Our framework has such built in by default."
     local NutscriptPSAString = "Please Port Any NutScript Plugins You May Be Using. Nutscript is Known for Being Exxploitable and Regardless Of The Compatibility, WE DO NOT Advice Nutscript Plugins. Our framework was built with Lilia Plugins in mind and most Performance will be adquired like that."
@@ -505,11 +505,11 @@ function GM:PSALoader()
         )
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:IsValidTarget(target)
     return IsValid(target) and target:IsPlayer() and target:getChar()
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
     if (bind:find("use") or bind:find("attack")) and pressed then
@@ -528,4 +528,3 @@ function GM:PlayerBindPress(client, bind, pressed)
         end
     end
 end
---------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 function GM:SetupBotCharacter(client)
     local botID = os.time()
     local index = math.random(1, table.Count(lia.faction.indices))
@@ -18,7 +18,7 @@ function GM:SetupBotCharacter(client)
     character:setup()
     client:Spawn()
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:SetupBotInventory(client, character)
     if not "grid" then return end
     local inventory = lia.inventory.new("grid")
@@ -26,4 +26,3 @@ function GM:SetupBotInventory(client, character)
     character.vars.inv[1] = inventory
     lia.inventory.instances[inventory.id] = inventory
 end
---------------------------------------------------------------------------------------------------------

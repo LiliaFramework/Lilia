@@ -1,8 +1,8 @@
---------------------------------------------------------------------------------------------------------
+
 local MODULE = MODULE
---------------------------------------------------------------------------------------------------------
+
 local playerMeta = FindMetaTable("Entity")
---------------------------------------------------------------------------------------------------------
+
 function MODULE:AdjustPACPartData(wearer, id, data)
 	local item = lia.item.list[id]
 	if item and isfunction(item.pacAdjust) then
@@ -10,14 +10,14 @@ function MODULE:AdjustPACPartData(wearer, id, data)
 		if result ~= nil then return result end
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function MODULE:getAdjustedPartData(wearer, id)
 	if not MODULE.partData[id] then return end
 	local data = table.Copy(MODULE.partData[id])
 
 	return hook.Run("AdjustPACPartData", wearer, id, data) or data
 end
---------------------------------------------------------------------------------------------------------
+
 function MODULE:attachPart(client, id)
 	if not pac then return end
 	local part = self:getAdjustedPartData(client, id)
@@ -30,7 +30,7 @@ function MODULE:attachPart(client, id)
 	client.liaPACParts = client.liaPACParts or {}
 	client.liaPACParts[id] = part
 end
---------------------------------------------------------------------------------------------------------
+
 function MODULE:removePart(client, id)
 	if not client.RemovePACPart or not client.liaPACParts then return end
 	local part = client.liaPACParts[id]
@@ -39,11 +39,11 @@ function MODULE:removePart(client, id)
 		client.liaPACParts[id] = nil
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function playerMeta:getParts()
 	return self:getNetVar("parts", {})
 end
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
 	"liaPACSync",
 	function()
@@ -55,7 +55,7 @@ net.Receive(
 		end
 	end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
 	"liaPACPartAdd",
 	function()
@@ -65,7 +65,7 @@ net.Receive(
 		MODULE:attachPart(client, id)
 	end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
 	"liaPACPartRemove",
 	function()
@@ -75,7 +75,7 @@ net.Receive(
 		MODULE:removePart(client, id)
 	end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
 	"liaPACPartReset",
 	function()
@@ -90,4 +90,3 @@ net.Receive(
 		end
 	end
 )
---------------------------------------------------------------------------------------------------------

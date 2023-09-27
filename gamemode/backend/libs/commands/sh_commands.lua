@@ -1,7 +1,7 @@
---------------------------------------------------------------------------------------------------------
+
 lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
---------------------------------------------------------------------------------------------------------
+
 function lia.command.add(command, data)
     data.syntax = data.syntax or "[none]"
     if not data.onRun then return ErrorNoHalt("Command '" .. command .. "' does not have a callback, not adding!\n") end
@@ -48,7 +48,7 @@ function lia.command.add(command, data)
         lia.command.list[command:lower()] = data
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.command.hasAccess(client, command)
     command = lia.command.list[command:lower()]
     if command then
@@ -61,7 +61,7 @@ function lia.command.hasAccess(client, command)
 
     return hook.Run("CanPlayerUseCommand", client, command) or false
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.command.extractArgs(text)
     local skip = 0
     local arguments = {}
@@ -93,4 +93,3 @@ function lia.command.extractArgs(text)
 
     return arguments
 end
---------------------------------------------------------------------------------------------------------

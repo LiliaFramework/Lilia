@@ -1,6 +1,6 @@
 local LIA_CVAR_LOWER2 = CreateClientConVar("lia_usealtlower", "0", true)
 local LOWERED_ANGLES = Angle(30, -30, -25)
---------------------------------------------------------------------------------------------------------
+
 function MODULE:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
 	if not IsValid(weapon) then return end
 	local vm_angles = eyeAngles
@@ -21,7 +21,7 @@ function MODULE:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, ey
 	vm_angles:RotateAroundAxis(vm_angles:Right(), rotation.r * fraction)
 	client.liaRaisedFrac = Lerp(FrameTime() * 2, client.liaRaisedFrac or 0, value)
 end
---------------------------------------------------------------------------------------------------------
+
 function MODULE:SetupQuickMenu(menu)
 	menu:addSpacer()
 	menu:addCheck(
@@ -35,4 +35,3 @@ function MODULE:SetupQuickMenu(menu)
 		end, LIA_CVAR_LOWER2:GetBool()
 	)
 end
---------------------------------------------------------------------------------------------------------

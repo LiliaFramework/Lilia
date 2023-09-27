@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 local function getValidStorage(client)
 	local storage = client.liaStorageEntity
 	if not IsValid(storage) then return end
@@ -6,7 +6,7 @@ local function getValidStorage(client)
 
 	return storage
 end
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
 	"liaStorageExit",
 	function(_, client)
@@ -18,7 +18,7 @@ net.Receive(
 		client.liaStorageEntity = nil
 	end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
 	"liaStorageUnlock",
 	function(_, client)
@@ -40,7 +40,7 @@ net.Receive(
 		end
 	end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
 	"liaStorageTransfer",
 	function(_, client)
@@ -96,4 +96,3 @@ net.Receive(
 		)
 	end
 )
---------------------------------------------------------------------------------------------------------

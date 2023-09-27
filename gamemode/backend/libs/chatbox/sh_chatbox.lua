@@ -1,16 +1,16 @@
---------------------------------------------------------------------------------------------------------
+
 lia.chat = lia.chat or {}
 lia.chat.classes = lia.char.classes or {}
---------------------------------------------------------------------------------------------------------
+
 local DUMMY_COMMAND = {
     syntax = "<string text>",
     onRun = function() end
 }
---------------------------------------------------------------------------------------------------------
+
 function lia.chat.timestamp(ooc)
     return lia.config.ChatShowTime and (ooc and " " or "") .. "(" .. lia.date.GetFormattedDate(nil, false, false, false, false, true) .. ")" .. (ooc and "" or " ") or ""
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.chat.register(chatType, data)
     if not data.onCanHear then
         if isfunction(data.radius) then
@@ -70,7 +70,7 @@ function lia.chat.register(chatType, data)
     data.filter = data.filter or "ic"
     lia.chat.classes[chatType] = data
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.chat.parse(client, message, noSend)
     local anonymous = false
     local chatType = "ic"
@@ -109,4 +109,3 @@ function lia.chat.parse(client, message, noSend)
 
     return chatType, message, anonymous
 end
---------------------------------------------------------------------------------------------------------

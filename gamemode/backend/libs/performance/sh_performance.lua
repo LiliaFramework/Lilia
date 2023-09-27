@@ -1,13 +1,13 @@
---------------------------------------------------------------------------------------------------------
+
 local GM = GM
---------------------------------------------------------------------------------------------------------
+
 lia.config.tblPlayers = lia.config.tblPlayers or {}
 lia.config.Perfomancekillers = {"class C_PhysPropClientside", "class C_ClientRagdoll"}
---------------------------------------------------------------------------------------------------------
+
 function GM:GetPlayerData(pPlayer)
     return lia.config.tblPlayers[pPlayer:EntIndex()]
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:RegisterPlayer(pPlayer)
     lia.config.tblPlayers[pPlayer:EntIndex()] = {
         Player = pPlayer,
@@ -24,11 +24,11 @@ function GM:RegisterPlayer(pPlayer)
         end
     )
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:RemovePlayer(pPlayer)
     lia.config.tblPlayers[pPlayer:EntIndex()] = nil
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerUpdateTransmitStates(pPlayer, intRange)
     if intRange then
         for _, v in pairs(ents.GetAll()) do
@@ -64,7 +64,7 @@ function GM:PlayerUpdateTransmitStates(pPlayer, intRange)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:BeginExpand(pPlayer)
     local data = self:GetPlayerData(pPlayer)
     if not data then return end
@@ -92,7 +92,7 @@ function GM:BeginExpand(pPlayer)
         end
     )
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:PlayerExpandedUpdate()
     for k, data in pairs(lia.config.tblPlayers) do
         if not data or not data.Expanded then continue end
@@ -104,12 +104,12 @@ function GM:PlayerExpandedUpdate()
         self:PlayerUpdateTransmitStates(data.Player, lia.config.intUpdateDistance)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function GM:EntityRemoved(ent)
     if not ent:IsPlayer() then return end
     self:RemovePlayer(ent)
 end
---------------------------------------------------------------------------------------------------------
+
 timer.Create(
     "CleanupGarbage",
     60,
@@ -123,10 +123,10 @@ timer.Create(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 function widgets.PlayerTick()
 end
---------------------------------------------------------------------------------------------------------
+
 timer.Create(
     "GM:PlayerExpandedUpdate",
     1,
@@ -135,6 +135,5 @@ timer.Create(
         GM:PlayerExpandedUpdate()
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Remove("PlayerTick", "TickWidgets")
---------------------------------------------------------------------------------------------------------

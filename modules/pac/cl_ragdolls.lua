@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 function MODULE:DrawPlayerRagdoll(entity)
 	local ply = entity.objCache
 	if IsValid(ply) and not entity.overridePAC3 then
@@ -16,7 +16,7 @@ function MODULE:DrawPlayerRagdoll(entity)
 		entity.overridePAC3 = true
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function MODULE:OnEntityCreated(entity)
 	local class = entity:GetClass()
 	timer.Simple(
@@ -47,4 +47,3 @@ function MODULE:OnEntityCreated(entity)
 		end
 	)
 end
---------------------------------------------------------------------------------------------------------

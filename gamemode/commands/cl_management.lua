@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "freezeallprops",
     {
@@ -7,7 +7,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "cleanitems",
     {
@@ -16,7 +16,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "cleanprops",
     {
@@ -25,7 +25,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "savemap",
     {
@@ -34,7 +34,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "cleannpcs",
     {
@@ -43,7 +43,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "flags",
     {
@@ -53,7 +53,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "clearchat",
     {
@@ -62,7 +62,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "checkallmoney",
     {
@@ -72,7 +72,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "return",
     {
@@ -81,7 +81,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "findallflags",
     {
@@ -90,7 +90,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "chargiveitem",
     {
@@ -100,7 +100,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "netmessagelogs",
     {
@@ -109,7 +109,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "returnitems",
     {
@@ -119,7 +119,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "announce",
     {
@@ -129,7 +129,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "voiceunban",
     {
@@ -139,7 +139,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 lia.command.add(
     "voiceban",
     {
@@ -149,7 +149,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
---------------------------------------------------------------------------------------------------------
+
 for k, _ in pairs(lia.config.ServerURLs) do
     lia.command.add(
         k,
@@ -160,4 +160,3 @@ for k, _ in pairs(lia.config.ServerURLs) do
         }
     )
 end
---------------------------------------------------------------------------------------------------------

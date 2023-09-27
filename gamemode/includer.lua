@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 function lia.util.include(fileName, state)
     if not fileName then
         error("[Lilia] No file name specified for including.")
@@ -20,7 +20,7 @@ function lia.util.include(fileName, state)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.util.includeDir(directory, fromLua, recursive)
     local baseDir = "lilia"
     if SCHEMA and SCHEMA.folder and SCHEMA.loading then
@@ -58,4 +58,3 @@ function lia.util.includeDir(directory, fromLua, recursive)
         end
     end
 end
---------------------------------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
---------------------------------------------------------------------------------------------------------
+
 AddCSLuaFile()
---------------------------------------------------------------------------------------------------------
+
 if CLIENT then
 	SWEP.PrintName = "Keys"
 	SWEP.Slot = 0
@@ -8,7 +8,7 @@ if CLIENT then
 	SWEP.DrawAmmo = false
 end
 
---------------------------------------------------------------------------------------------------------
+
 SWEP.Author = "Chessnut"
 SWEP.Instructions = "Primary Fire: Lock\nSecondary Fire: Unlock"
 SWEP.Purpose = "Hitting things and knocking on doors."
@@ -35,15 +35,15 @@ SWEP.LowerAngles2 = Angle(0, 5, -22)
 SWEP.IsAlwaysLowered = true
 SWEP.FireWhenLowered = true
 SWEP.HoldType = "normal"
---------------------------------------------------------------------------------------------------------
+
 function SWEP:PreDrawViewModel(viewModel, weapon, client)
 	local hands = player_manager.TranslatePlayerHands(player_manager.TranslateToPlayerModelName(client:GetModel()))
 	if hands and hands.model then end --viewModel:SetModel(hands.model) --viewModel:SetSkin(hands.skin) --viewModel:SetBodyGroups(hands.body)
 end
---------------------------------------------------------------------------------------------------------
+
 ACT_VM_FISTS_DRAW = 3
 ACT_VM_FISTS_HOLSTER = 2
---------------------------------------------------------------------------------------------------------
+
 function SWEP:Deploy()
 	if not IsValid(self.Owner) then return end
 	local viewModel = self.Owner:GetViewModel()
@@ -51,7 +51,7 @@ function SWEP:Deploy()
 
 	return true
 end
---------------------------------------------------------------------------------------------------------
+
 function SWEP:Holster()
 	if not IsValid(self.Owner) then return end
 	local viewModel = self.Owner:GetViewModel()
@@ -62,14 +62,14 @@ function SWEP:Holster()
 
 	return true
 end
---------------------------------------------------------------------------------------------------------
+
 function SWEP:Precache()
 end
---------------------------------------------------------------------------------------------------------
+
 function SWEP:Initialize()
 	self:SetHoldType(self.HoldType)
 end
---------------------------------------------------------------------------------------------------------
+
 function SWEP:PrimaryAttack()
 	local time = lia.config.DoorLockTime
 	local time2 = math.max(time, 1)
@@ -100,7 +100,7 @@ function SWEP:PrimaryAttack()
 		return
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function SWEP:toggleLock(door, state)
 	if IsValid(self:GetOwner()) and self:GetOwner():GetPos():Distance(door:GetPos()) > 96 then return end
 	if door:isDoor() then
@@ -151,7 +151,7 @@ function SWEP:toggleLock(door, state)
 	end
 end
 
---------------------------------------------------------------------------------------------------------
+
 function SWEP:SecondaryAttack()
 	local time = lia.config.DoorLockTime
 	local time2 = math.max(time, 1)
@@ -177,4 +177,3 @@ function SWEP:SecondaryAttack()
 		return
 	end
 end
---------------------------------------------------------------------------------------------------------

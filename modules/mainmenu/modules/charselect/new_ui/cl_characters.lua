@@ -1,10 +1,10 @@
---------------------------------------------------------------------------------------------------------
+
 local PANEL = {}
---------------------------------------------------------------------------------------------------------
+
 local WHITE = Color(255, 255, 255, 150)
---------------------------------------------------------------------------------------------------------
+
 local SELECTED = Color(255, 255, 255, 230)
---------------------------------------------------------------------------------------------------------
+
 PANEL.WHITE = WHITE
 PANEL.SELECTED = SELECTED
 PANEL.HOVERED = Color(255, 255, 255, 50)
@@ -55,7 +55,7 @@ function PANEL:Init()
         end
     )
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:createCharacterSlots()
     self.list:Clear()
     if #lia.characters == 0 then return end
@@ -71,7 +71,7 @@ function PANEL:createCharacterSlots()
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:onCharacterSelected(character)
     if self.choosing then return end
     if IsValid(lia.gui.bgMusic) then
@@ -106,7 +106,7 @@ function PANEL:onCharacterSelected(character)
         end
     )
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:setFadeToBlack(fade)
     local d = deferred.new()
     if fade then
@@ -146,7 +146,7 @@ function PANEL:setFadeToBlack(fade)
 
     return d
 end
---------------------------------------------------------------------------------------------------------
+
 DEFINE_BASECLASS('EditablePanel')
 function PANEL:Remove()
     self.bClosing = true
@@ -160,7 +160,7 @@ function PANEL:Remove()
         end
     )
 end
---------------------------------------------------------------------------------------------------------
+
 local gradient = lia.util.getMaterial('gui/gradient_up')
 function PANEL:Paint(w, h)
     surface.DrawTexturedRect((w / 2) - ((h * 1.5) * .2) / 2, 10, (h * 1.5) * .2, h * .28)
@@ -168,7 +168,7 @@ function PANEL:Paint(w, h)
     surface.SetMaterial(gradient)
     surface.DrawTexturedRect(0, h - (h * .1), w, h * .1)
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:OnKeyCodePressed(keyCode)
     if self.bClosing then return end
     if keyCode == KEY_SPACE then
@@ -189,18 +189,17 @@ function PANEL:OnKeyCodePressed(keyCode)
         self.bClosing = true
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:hoverSound()
     LocalPlayer():EmitSound(unpack(lia.config.CharHover))
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:clickSound()
     LocalPlayer():EmitSound(unpack(lia.config.CharClick))
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:warningSound()
     LocalPlayer():EmitSound(unpack(lia.config.CharWarning))
 end
---------------------------------------------------------------------------------------------------------
+
 vgui.Register('liaNewCharactersMenu', PANEL, 'EditablePanel')
---------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 function MODULE:LoadData()
     local items = self:getData()
     if items then
@@ -46,7 +46,7 @@ function MODULE:LoadData()
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function MODULE:SaveData()
     local items = {}
     for k, v in ipairs(ents.FindByClass("lia_item")) do
@@ -57,4 +57,3 @@ function MODULE:SaveData()
 
     self:setData(items)
 end
---------------------------------------------------------------------------------------------------------

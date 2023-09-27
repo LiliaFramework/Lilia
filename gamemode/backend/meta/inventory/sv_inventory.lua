@@ -1,8 +1,8 @@
---------------------------------------------------------------------------------------------------------
+
 local Inventory = lia.Inventory
 local INV_TABLE_NAME = "inventories"
 local INV_DATA_TABLE_NAME = "invdata"
---------------------------------------------------------------------------------------------------------
+
 function Inventory:addItem(item)
     self.items[item:getID()] = item
     item.invID = self:getID()
@@ -22,11 +22,11 @@ function Inventory:addItem(item)
 
     return self
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:add(item)
     return self:addItem(item)
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:syncItemAdded(item)
     assert(istable(item) and item.getID, "cannot sync non-item")
     assert(self.items[item:getID()], "Item " .. item:getID() .. " does not belong to " .. self.id)
@@ -37,7 +37,7 @@ function Inventory:syncItemAdded(item)
     net.WriteType(self.id)
     net.Send(recipients)
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:initializeStorage(initialData)
     local d = deferred.new()
     local charID = initialData.char
@@ -75,10 +75,10 @@ function Inventory:initializeStorage(initialData)
 
     return d
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:restoreFromStorage(id)
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:removeItem(itemID, preserveItem)
     assert(isnumber(itemID), "itemID must be a number for remove")
     local d = deferred.new()
@@ -108,11 +108,11 @@ function Inventory:removeItem(itemID, preserveItem)
 
     return d
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:remove(itemID)
     return self:removeItem(itemID)
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:setData(key, value)
     local oldValue = self.data[key]
     self.data[key] = value
@@ -142,7 +142,7 @@ function Inventory:setData(key, value)
 
     return self
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:canAccess(action, context)
     context = context or {}
     local result
@@ -152,7 +152,7 @@ function Inventory:canAccess(action, context)
         if result ~= nil then return result, reason end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:addAccessRule(rule, priority)
     if isnumber(priority) then
         table.insert(self.config.accessRules, priority, rule)
@@ -162,13 +162,13 @@ function Inventory:addAccessRule(rule, priority)
 
     return self
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:removeAccessRule(rule)
     table.RemoveByValue(self.config.accessRules, rule)
 
     return self
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:getRecipients()
     local recipients = {}
     for _, client in ipairs(player.GetAll()) do
@@ -184,13 +184,13 @@ function Inventory:getRecipients()
 
     return recipients
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:onInstanced()
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:onLoaded()
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:loadItems()
     local ITEM_TABLE = "items"
     local ITEM_FIELDS = {"_itemID", "_uniqueID", "_data", "_x", "_y", "_quantity"}
@@ -227,14 +227,14 @@ function Inventory:loadItems()
         end
     )
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:onItemsLoaded(items)
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:instance(initialData)
     return lia.inventory.instance(self.typeID, initialData)
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:syncData(key, recipients)
     if self.config.data[key] and self.config.data[key].noReplication then return end
     net.Start("liaInventoryData")
@@ -243,7 +243,7 @@ function Inventory:syncData(key, recipients)
     net.WriteType(self.data[key])
     net.Send(recipients or self:getRecipients())
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:sync(recipients)
     net.Start("liaInventoryInit")
     net.WriteType(self.id)
@@ -271,11 +271,11 @@ function Inventory:sync(recipients)
         item:onSync(recipients)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:delete()
     lia.inventory.deleteByID(self.id)
 end
---------------------------------------------------------------------------------------------------------
+
 function Inventory:destroy()
     for _, item in pairs(self:getItems()) do
         item:destroy()
@@ -286,4 +286,3 @@ function Inventory:destroy()
     net.WriteType(id)
     net.Broadcast()
 end
---------------------------------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
---------------------------------------------------------------------------------------------------------
+
 local doLog = CreateConVar("net_logoutgoing", 0, FCVAR_NONE)
 local maxLines = CreateConVar("net_maxlines", 30, FCVAR_ARCHIVE)
---------------------------------------------------------------------------------------------------------
+
 net.StartTime = net.StartTime or CurTime()
 net.NetworkData = net.NetworkData or {}
 net.NetworkFilter = net.NetworkFilter or {}
@@ -13,21 +13,21 @@ net.OldSendOmit = net.OldSendOmit or net.SendOmit
 net.OldSendPAS = net.OldSendPAS or net.SendPAS
 net.OldSendPVS = net.OldSendPVS or net.SendPVS
 net.OldBroadcast = net.OldBroadcast or net.Broadcast
---------------------------------------------------------------------------------------------------------
+
 local function AccessCheck(ply)
 	if game.SinglePlayer() or not IsValid(ply) then return true end
 
 	return false
 end
---------------------------------------------------------------------------------------------------------
+
 local function printf(str, ...)
 	print(string.format(str, ...))
 end
---------------------------------------------------------------------------------------------------------
+
 local function perc(val, max)
 	return math.Round((val / max) * 100, 2)
 end
---------------------------------------------------------------------------------------------------------
+
 function net.LogOutgoing(filter)
 	local recipients
 	local typeID = TypeID(filter or nil)
@@ -70,7 +70,7 @@ function net.LogOutgoing(filter)
 		printf("Outgoing %s message %s (%s) to %s", net.IsUnreliable and "unreliable" or "reliable", name, string.NiceSize(bytes), recipients)
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 concommand.Add(
 	"net_addfilter",
 	function(ply, cmd, args)
@@ -78,7 +78,7 @@ concommand.Add(
 		net.NetworkFilter[args[1]] = true
 	end
 )
---------------------------------------------------------------------------------------------------------
+
 concommand.Add(
 	"net_removefilter",
 	function(ply, cmd, args)
@@ -86,7 +86,7 @@ concommand.Add(
 		net.NetworkFilter[args[1]] = nil
 	end
 )
---------------------------------------------------------------------------------------------------------
+
 concommand.Add(
 	"net_checkfilter",
 	function(ply)
@@ -109,7 +109,7 @@ concommand.Add(
 		print("-------")
 	end
 )
---------------------------------------------------------------------------------------------------------
+
 concommand.Add(
 	"net_clearfilter",
 	function(ply)
@@ -117,7 +117,7 @@ concommand.Add(
 		net.NetworkFilter = {}
 	end
 )
---------------------------------------------------------------------------------------------------------
+
 concommand.Add(
 	"net_getinfo",
 	function(ply, cmd, args)
@@ -188,7 +188,7 @@ concommand.Add(
 		print("-------")
 	end
 )
---------------------------------------------------------------------------------------------------------
+
 concommand.Add(
 	"net_reset",
 	function(ply)
@@ -199,18 +199,18 @@ concommand.Add(
 		net.BytesCount = 0
 	end
 )
---------------------------------------------------------------------------------------------------------
+
 function net.Start(messageName, unreliable)
 	net.CurrentMessageName = messageName
 	net.IsUnreliable = unreliable or false
 	net.OldStart(messageName, unreliable)
 end
---------------------------------------------------------------------------------------------------------
+
 function net.Send(ply)
 	net.LogOutgoing(ply)
 	net.OldSend(ply)
 end
---------------------------------------------------------------------------------------------------------
+
 function net.SendOmit(ply)
 	local filter = RecipientFilter()
 	filter:AddAllPlayers()
@@ -227,23 +227,22 @@ function net.SendOmit(ply)
 	net.LogOutgoing(filter)
 	net.OldSendOmit(ply)
 end
---------------------------------------------------------------------------------------------------------
+
 function net.SendPAS(vec)
 	local filter = RecipientFilter()
 	filter:AddPAS(vec)
 	net.LogOutgoing(filter)
 	net.OldSendPAS(vec)
 end
---------------------------------------------------------------------------------------------------------
+
 function net.SendPVS(vec)
 	local filter = RecipientFilter()
 	filter:AddPVS(vec)
 	net.LogOutgoing(filter)
 	net.OldSendPVS(vec)
 end
---------------------------------------------------------------------------------------------------------
+
 function net.Broadcast()
 	net.LogOutgoing()
 	net.OldBroadcast()
 end
---------------------------------------------------------------------------------------------------------

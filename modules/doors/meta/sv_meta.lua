@@ -1,6 +1,6 @@
---------------------------------------------------------------------------------------------------------
+
 local entityMeta = FindMetaTable("Entity")
---------------------------------------------------------------------------------------------------------
+
 function entityMeta:removeDoorAccessData()
     if IsValid(self) then
         for k, v in pairs(self.liaAccess or {}) do
@@ -11,4 +11,3 @@ function entityMeta:removeDoorAccessData()
         self:SetDTEntity(0, nil)
     end
 end
---------------------------------------------------------------------------------------------------------

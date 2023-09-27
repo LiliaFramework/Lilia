@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "TooltipInitialize",
     "liaItemTooltip",
@@ -14,7 +14,7 @@ hook.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "TooltipPaint",
     "liaItemTooltip",
@@ -31,7 +31,7 @@ hook.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "TooltipLayout",
     "liaItemTooltip",
@@ -39,7 +39,7 @@ hook.Add(
         if self.isItemTooltip then return true end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "StartChat",
     "StartChatTyping",
@@ -49,7 +49,7 @@ hook.Add(
         net.SendToServer()
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "FinishChat",
     "FinishChatTyping",
@@ -59,9 +59,9 @@ hook.Add(
         net.SendToServer()
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add("ShowHelp", "DisableShowHelp", function() return false end)
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "BuildHelpMenu",
     "liaCreditsList",
@@ -77,7 +77,7 @@ hook.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 concommand.Add("vgui_cleanup", function()
 	for k, v in pairs( vgui.GetWorldPanel():GetChildren() ) do
 		if not (v.Init and debug.getinfo(v.Init, "Sln").short_src:find("chatbox")) then
@@ -85,4 +85,3 @@ concommand.Add("vgui_cleanup", function()
 		end
 	end
 end, nil, "Removes every panel that you have left over (like that errored DFrame filling up your screen)")
---------------------------------------------------------------------------------------------------------

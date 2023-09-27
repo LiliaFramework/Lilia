@@ -1,10 +1,10 @@
---------------------------------------------------------------------------------------------------------
+
 local MODULE = MODULE
---------------------------------------------------------------------------------------------------------
+
 include("shared.lua")
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
---------------------------------------------------------------------------------------------------------
+
 function ENT:Initialize()
 	self:SetModel("models/props_junk/watermelon01.mdl")
 	self:SetSolid(SOLID_VPHYSICS)
@@ -21,13 +21,13 @@ function ENT:Initialize()
 		physObj:Wake()
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function ENT:setInventory(inventory)
 	assert(inventory, "Storage setInventory called without an inventory!")
 	self:setNetVar("id", inventory:getID())
 	hook.Run("StorageInventorySet", self, inventory)
 end
---------------------------------------------------------------------------------------------------------
+
 function ENT:deleteInventory()
 	local inventory = self:getInv()
 	if inventory then
@@ -39,7 +39,7 @@ function ENT:deleteInventory()
 		self:setNetVar("id", nil)
 	end
 end
---------------------------------------------------------------------------------------------------------
+
 function ENT:OnRemove()
 	if not self.liaForceDelete then
 		if not lia.entityDataLoaded or not MODULE.loadedData then return end
@@ -50,7 +50,7 @@ function ENT:OnRemove()
 	self:deleteInventory()
 	MODULE:saveStorage()
 end
---------------------------------------------------------------------------------------------------------
+
 function ENT:openInv(activator)
 	local inventory = self:getInv()
 	local storage = self:getStorageInfo()
@@ -78,7 +78,7 @@ function ENT:openInv(activator)
 		end
 	)
 end
---------------------------------------------------------------------------------------------------------
+
 function ENT:Use(activator)
 	if not activator:getChar() then return end
 	if (activator.liaNextOpen or 0) > CurTime() then return end
@@ -105,4 +105,3 @@ function ENT:Use(activator)
 
 	activator.liaNextOpen = CurTime() + lia.config.StorageOpenTime * 1.5
 end
---------------------------------------------------------------------------------------------------------

@@ -1,9 +1,9 @@
---------------------------------------------------------------------------------------------------------
+
 local view, traceData, traceData2, aimOrigin, crouchFactor, ft, trace, curAng
 local clmp = math.Clamp
 local diff, fm, sm
 crouchFactor = 0
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "SetupQuickMenu",
     "ThirdPersonSetupQuickMenu",
@@ -47,7 +47,7 @@ hook.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "CalcView",
     "ThirdPersonCalcView",
@@ -81,7 +81,7 @@ hook.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "CreateMove",
     "ThirdPersonCreateMove",
@@ -99,7 +99,7 @@ hook.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "InputMouseApply",
     "ThirdPersonInputMouseApply",
@@ -117,7 +117,7 @@ hook.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "ShouldDrawLocalPlayer",
     "ThirdPersonShouldDrawLocalPlayer",
@@ -125,7 +125,7 @@ hook.Add(
         if LocalPlayer():GetViewEntity() == LocalPlayer() and not IsValid(LocalPlayer():GetVehicle()) and LocalPlayer():CanOverrideView() then return true end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "PlayerButtonDown",
     "ThirdPersonPlayerButtonDown",
@@ -140,4 +140,3 @@ hook.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------

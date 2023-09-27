@@ -1,6 +1,6 @@
---------------------------------------------------------------------------------------------------------
+
 local PANEL = {}
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Init()
     self:SetTall(64)
     local function assignClick(panel)
@@ -44,11 +44,11 @@ function PANEL:Init()
     self.label:SetFont("liaMediumFont")
     assignClick(self.label)
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:onClick()
     lia.command.send("beclass", self.class)
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:setNumber(number)
     local limit = self.data.limit
     if limit > 0 then
@@ -57,7 +57,7 @@ function PANEL:setNumber(number)
         self.limit:SetText("∞")
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:setClass(data)
     if data.model then
         local model = data.model
@@ -81,11 +81,11 @@ function PANEL:setClass(data)
     self.class = data.index
     self:setNumber(#lia.class.getPlayers(data.index))
 end
---------------------------------------------------------------------------------------------------------
+
 vgui.Register("liaClassPanel", PANEL, "DPanel")
---------------------------------------------------------------------------------------------------------
+
 PANEL = {}
---------------------------------------------------------------------------------------------------------
+
 function PANEL:Init()
     lia.gui.classes = self
     self:SetSize(self:GetParent():GetSize())
@@ -97,7 +97,7 @@ function PANEL:Init()
     self.classPanels = {}
     self:loadClasses()
 end
---------------------------------------------------------------------------------------------------------
+
 function PANEL:loadClasses()
     self.list:Clear()
     for k, v in ipairs(lia.class.list) do
@@ -111,9 +111,9 @@ function PANEL:loadClasses()
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 vgui.Register("liaClasses", PANEL, "EditablePanel")
---------------------------------------------------------------------------------------------------------
+
 hook.Add(
     "CreateMenuButtons",
     "liaClasses",
@@ -133,7 +133,7 @@ hook.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "classUpdate",
     function(joinedClient)
@@ -149,4 +149,3 @@ netstream.Hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------

@@ -1,8 +1,8 @@
---------------------------------------------------------------------------------------------------------
+
 lia.config.CustomChatSound = lia.config.CustomChatSound or ""
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook("notifyQuery", lia.util.notifQuery)
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
     "liaNotifyL",
     function()
@@ -17,7 +17,7 @@ net.Receive(
         lia.util.notifyLocalized(message, unpack(args))
     end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
     "liaStringReq",
     function()
@@ -46,7 +46,7 @@ net.Receive(
         )
     end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
     "liaNotify",
     function()
@@ -54,7 +54,7 @@ net.Receive(
         lia.util.notify(message)
     end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
     "liaInventoryData",
     function()
@@ -74,7 +74,7 @@ net.Receive(
         hook.Run("InventoryDataChanged", instance, key, oldValue, value)
     end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
     "liaInventoryInit",
     function()
@@ -118,7 +118,7 @@ net.Receive(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
     "liaInventoryAdd",
     function()
@@ -132,7 +132,7 @@ net.Receive(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
     "liaInventoryRemove",
     function()
@@ -147,7 +147,7 @@ net.Receive(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
     "liaInventoryDelete",
     function()
@@ -162,7 +162,7 @@ net.Receive(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
     "liaItemInstance",
     function()
@@ -179,42 +179,42 @@ net.Receive(
         hook.Run("ItemInitialized", item)
     end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
     "cleanup_inbound",
     function()
         chat.AddText(Color(255, 0, 0), "[ WARNING ]  Map Cleanup Inbound! Brace for Impact!")
     end
 )
--------------------------------------------------------------------------------------------------------------------------
+-----------------
 net.Receive(
     "worlditem_cleanup_inbound",
     function()
         chat.AddText(Color(255, 0, 0), "[ WARNING ]  World items will be cleared in 10 Minutes!")
     end
 )
--------------------------------------------------------------------------------------------------------------------------
+-----------------
 net.Receive(
     "worlditem_cleanup_inbound_final",
     function()
         chat.AddText(Color(255, 0, 0), "[ WARNING ]  World items will be cleared in 60 Seconds!")
     end
 )
--------------------------------------------------------------------------------------------------------------------------
+-----------------
 net.Receive(
     "map_cleanup_inbound",
     function()
         chat.AddText(Color(255, 0, 0), "[ WARNING ]  Automatic Map Cleanup in 10 Minutes!")
     end
 )
--------------------------------------------------------------------------------------------------------------------------
+-----------------
 net.Receive(
     "map_cleanup_inbound_final",
     function()
         chat.AddText(Color(255, 0, 0), "[ WARNING ]  Automatic Map Cleanup in 60 Seconds!")
     end
 )
--------------------------------------------------------------------------------------------------------------------------
+-----------------
 net.Receive(
     "death_client",
     function()
@@ -224,7 +224,7 @@ net.Receive(
         chat.AddText(Color(255, 255, 255), date, " - You were killed by " .. nick .. "[" .. charid .. "]")
     end
 )
--------------------------------------------------------------------------------------------------------------------------
+-----------------
 net.Receive(
     "liaCharacterInvList",
     function()
@@ -241,7 +241,7 @@ net.Receive(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
     "liaItemDelete",
     function()
@@ -259,14 +259,14 @@ net.Receive(
         hook.Run("ItemDeleted", instance)
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "charInfo",
     function(data, id, client)
         lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client)
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "charSet",
     function(key, value, id)
@@ -279,7 +279,7 @@ netstream.Hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "charVar",
     function(key, value, id)
@@ -292,7 +292,7 @@ netstream.Hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "charData",
     function(id, key, value)
@@ -303,14 +303,14 @@ netstream.Hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "charKick",
     function(id, isCurrentChar)
         hook.Run("KickedFromCharacter", id, isCurrentChar)
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "liaSyncGesture",
     function(entity, a, b, c)
@@ -319,7 +319,7 @@ netstream.Hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "item",
     function(uniqueID, id, data, invID)
@@ -334,7 +334,7 @@ netstream.Hook(
     end
 )
 
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "invData",
     function(id, key, value)
@@ -347,7 +347,7 @@ netstream.Hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "invQuantity",
     function(id, quantity)
@@ -359,7 +359,7 @@ netstream.Hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "liaDataSync",
     function(data, first, last)
@@ -368,7 +368,7 @@ netstream.Hook(
         lia.lastJoin = last
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "liaData",
     function(key, value)
@@ -376,7 +376,7 @@ netstream.Hook(
         lia.localData[key] = value
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "attrib",
     function(id, key, value)
@@ -386,7 +386,7 @@ netstream.Hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "nVar",
     function(index, key, value)
@@ -394,14 +394,14 @@ netstream.Hook(
         lia.net[index][key] = value
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "nDel",
     function(index)
         lia.net[index] = nil
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "nLcl",
     function(key, value)
@@ -409,14 +409,14 @@ netstream.Hook(
         lia.net[LocalPlayer():EntIndex()][key] = value
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "gVar",
     function(key, value)
         lia.net.globals[key] = value
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "seqSet",
     function(entity, sequence)
@@ -433,7 +433,7 @@ netstream.Hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "cMsg",
     function(client, chatType, text, anonymous)
@@ -454,7 +454,7 @@ netstream.Hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "actBar",
     function(start, finish, text)
@@ -472,7 +472,7 @@ netstream.Hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "classUpdate",
     function(joinedClient)
@@ -488,7 +488,7 @@ netstream.Hook(
         end
     end
 )
--------------------------------------------------------------------------------------------------------------------------
+-----------------
 netstream.Hook(
     "removeF1",
     function()
@@ -497,7 +497,7 @@ netstream.Hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 netstream.Hook(
     "adminClearChat",
     function()
@@ -510,7 +510,7 @@ netstream.Hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
+
 net.Receive(
     "announcement_client",
     function()
@@ -518,7 +518,7 @@ net.Receive(
         chat.AddText(Color(255, 56, 252), "[Admin Announcement]: ", Color(255, 255, 255), message)
     end
 )
--------------------------------------------------------------------------------------------------------------------------
+-----------------
 net.Receive(
     "advert_client",
     function()
@@ -527,7 +527,7 @@ net.Receive(
         chat.AddText(Color(216, 190, 18), "[Advertisement by " .. nick .. "]: ", Color(255, 255, 255), message)
     end
 )
--------------------------------------------------------------------------------------------------------------------------
+-----------------
 net.Receive(
     "OpenInvMenu",
     function()
@@ -546,7 +546,7 @@ net.Receive(
         myInventoryDerma:MoveLeftOf(inventoryDerma, 4)
     end
 )
--------------------------------------------------------------------------------------------------------------------------
+-----------------
 net.Receive(
     "OpenDetailedDescriptions",
     function()
@@ -584,7 +584,7 @@ net.Receive(
         end
     end
 )
--------------------------------------------------------------------------------------------------------------------------
+-----------------
 net.Receive(
     "SetDetailedDescriptions",
     function()
@@ -632,4 +632,4 @@ net.Receive(
         end
     end
 )
--------------------------------------------------------------------------------------------------------------------------
+-----------------

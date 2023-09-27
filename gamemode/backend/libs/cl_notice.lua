@@ -1,10 +1,10 @@
---------------------------------------------------------------------------------------------------------
+
 lia.notices = lia.notices or {}
---------------------------------------------------------------------------------------------------------
+
 lia.noticess = lia.noticess or {}
---------------------------------------------------------------------------------------------------------
+
 lia.config.Notify = {"garrysmod/content_downloaded.wav", 50, 250}
---------------------------------------------------------------------------------------------------------
+
 lia.config.NotifTypes = {
     [1] = {
         col = Color(200, 60, 60),
@@ -36,7 +36,7 @@ lia.config.NotifTypes = {
         icon = "icon16/information.png"
     }
 }
---------------------------------------------------------------------------------------------------------
+
 local function OrganizeNoticess()
     for k, v in ipairs(lia.noticess) do
         local topMargin = 0
@@ -49,7 +49,7 @@ local function OrganizeNoticess()
         v:MoveTo(v:GetX(), topMargin + 5, 0.15, 0, 5)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 local function RemoveNoticess(notice)
     for k, v in ipairs(lia.noticess) do
         if v == notice then
@@ -70,7 +70,7 @@ local function RemoveNoticess(notice)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function CreateNoticePanel(length, notimer)
     if not notimer then
         notimer = false
@@ -114,14 +114,14 @@ function CreateNoticePanel(length, notimer)
 
     return notice
 end
---------------------------------------------------------------------------------------------------------
+
 local function OrganizeNotices()
     local scrW = ScrW()
     for k, v in ipairs(lia.notices) do
         v:MoveTo(scrW - (v:GetWide() + 4), (k - 1) * (v:GetTall() + 4) + 4, 0.15, (k / #lia.notices) * 0.25)
     end
 end
---------------------------------------------------------------------------------------------------------
+
 function lia.util.notify(message)
     local notice = vgui.Create("liaNotice")
     local i = table.insert(lia.notices, notice)
@@ -167,4 +167,3 @@ function lia.util.notify(message)
         end
     )
 end
---------------------------------------------------------------------------------------------------------
