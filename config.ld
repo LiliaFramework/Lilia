@@ -1,7 +1,7 @@
 
 file = {
 	"gamemode",
-	"plugins",
+	"modules",
 	"docs/hooks",
 }
 
