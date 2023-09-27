@@ -5,7 +5,7 @@ ignore = {
 }
 stds.lilia = {}
 stds.lilia.globals = {
-	"ix",
+	"lia",
 	"SCHEMA",
 
 	"ITEM",
@@ -23,44 +23,36 @@ stds.lilia.globals = {
 stds.lilia.read_globals = {
 	"L",
 	"L2",
-	"IX_RELOADED",
+	"LIA_RELOADED",
 	"CHAT_CLASS",
 	"HOOKS_CACHE",
 	"BAR_HEIGHT",
 	"ACCESS_LABELS",
 	"CAMI",
-
 	"netstream",
 	"mysql",
 	"pon",
 	"ikon",
 	"BaseClass",
-
-	"SetNetVar",
-	"GetNetVar",
-	"ixSoundDuration",
-
+	"setNetVar",
+	"getNetVar",
+	"liaSoundDuration",
 	"HOLDTYPE_TRANSLATOR",
 	"PLAYER_HOLDTYPE_TRANSLATOR",
-
 	"ACT_VM_FISTS_DRAW",
 	"ACT_VM_FISTS_HOLSTER",
-
 	"TOOLTIP_GENERIC",
 	"TOOLTIP_ITEM",
-
 	"FLAG_NORMAL",
 	"FLAG_SUCCESS",
 	"FLAG_WARNING",
 	"FLAG_DANGER",
 	"FLAG_SERVER",
 	"FLAG_DEV",
-
 	"DOOR_OWNER",
 	"DOOR_TENANT",
 	"DOOR_GUEST",
 	"DOOR_NONE",
-
 	"VENDOR_BUY",
 	"VENDOR_SELL",
 	"VENDOR_BOTH",
@@ -75,7 +67,6 @@ stds.lilia.read_globals = {
 	"VENDOR_SELLONLY",
 	"VENDOR_BUYONLY",
 	"VENDOR_TEXT",
-
 	"FCAP_IMPULSE_USE",
 	"FCAP_CONTINUOUS_USE",
 	"FCAP_ONOFF_USE",
