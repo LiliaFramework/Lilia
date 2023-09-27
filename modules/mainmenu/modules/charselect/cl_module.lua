@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------------------------------
-lia.config.CustomUIEnabled = lia.config.CustomUIEnabled or  false
+lia.config.CustomUIEnabled = lia.config.CustomUIEnabled
 --------------------------------------------------------------------------------------------------------
 if lia.config.CustomUIEnabled then
     function MODULE:LiliaLoaded()
