@@ -3,8 +3,7 @@ std = "luajit+gmod+lilia"
 ignore = {
 	"212",
 }
-stds.lilia = {}
-stds.lilia.globals = {
+globals = {
 	"lia",
 	"SCHEMA",
 	"ITEM",
@@ -19,7 +18,7 @@ stds.lilia.globals = {
 	"ICON_RENDER_QUEUE",
 	"USABLE_FUNCS",
 }
-stds.lilia.read_globals = {
+read_globals = {
 	"L",
 	"L2",
 	"LIA_RELOADED",
