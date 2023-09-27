@@ -1,4 +1,4 @@
-max_line_length = 128
+max_line_length = 512
 std = "luajit+gmod+lilia"
 ignore = {
 	"212",
@@ -7,7 +7,6 @@ stds.lilia = {}
 stds.lilia.globals = {
 	"lia",
 	"SCHEMA",
-
 	"ITEM",
 	"MODULE",
 	"ATTRIBUTE",
@@ -109,18 +108,14 @@ stds.gmod.read_globals = {
 	"SERVER",
 	"GAMEMODE",
 	"NULL",
-
 	"vector_origin",
 	"vector_up",
 	"angle_zero",
 	"color_white",
 	"color_black",
 	"color_transparent",
-
 	"PLAYERANIMEVENT_CANCEL_RELOAD",
 	"ACT_COMBINE_THROW_GRENADE",
-
-	-- Generated on Wed Jan 17 02:56:57 2018
 	"ACT_MP_GESTURE_VC_NODYES",
 	"ACT_MELEE_ATTACK_SWING_GESTURE",
 	"SCHED_TAKE_COVER_FROM_ORIGIN",
