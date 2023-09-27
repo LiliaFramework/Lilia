@@ -503,17 +503,17 @@ function GM:CallMapCleanerInit()
         function()
             net.Start("cleanup_inbound")
             net.Broadcast()
-            for i, v in pairs(ents.GetAll()) do
+            for _, v in pairs(ents.GetAll()) do
                 if v:IsNPC() then
                     v:Remove()
                 end
             end
 
-            for i, v in pairs(ents.FindByClass("lia_item")) do
+            for _, v in pairs(ents.FindByClass("lia_item")) do
                 v:Remove()
             end
 
-            for i, v in pairs(ents.FindByClass("prop_physics")) do
+            for _, v in pairs(ents.FindByClass("prop_physics")) do
                 v:Remove()
             end
         end

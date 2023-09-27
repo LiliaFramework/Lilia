@@ -202,7 +202,7 @@ function GM:MiscHUDPaint()
 		draw.SimpleText("We recommend the use of the x86-64 Garry's Mod Branch for this server, consider swapping as soon as possible.", "liaSmallFont", ScrW() * .5, ScrH() * .97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 
-	for k, v in ipairs(player.GetAll()) do
+	for _, v in ipairs(player.GetAll()) do
 		if v ~= ply and v:getNetVar("typing") and v:GetMoveType() == MOVETYPE_WALK then
 			data.endpos = v:EyePos()
 			if util.TraceLine(data).Entity ~= v then continue end

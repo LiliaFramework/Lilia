@@ -10,7 +10,6 @@ local colors = {color_black}
 local filter = {}
 local sw, sh = ScrW(), ScrH()
 local lastIcon = ""
-
 -- Define crosshair drawing function
 local function drawdot(pos, size, col)
     surface.SetDrawColor(col[2].r, col[2].g, col[2].b, col[2].a)
@@ -88,6 +87,8 @@ end
 
 -- Define crosshair icon retrieval function
 function GM:GetCrosshairIcon(_, entity, weapon, distance)
+    local client = LocalPlayer()
+    local wep = client:GetActiveWeapon()
     if table.Count(lia.menu.list) > 0 then return "", 0, ScreenScale(5) end
     if IsValid(wep) and wep:GetNW2Bool("holdingObject", false) == true then return "" end
     if IsValid(entity) and distance < 16384 and not entity:IsPlayer() and not entity:IsNPC() then

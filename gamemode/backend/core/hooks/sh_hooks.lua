@@ -451,6 +451,7 @@ function GM:DevelopmentServerLoader()
         end)
     end
 --]]
+    DEV = nil
     local ip, port = game.GetIPAddress():match("([^:]+):(%d+)")
     if ip == lia.config.DevServerIP and port == lia.config.DevServerPort then
         DEV = true
@@ -468,34 +469,6 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:PSALoader()
     local TalkModesPSAString = "Please Remove Talk Modes. Our framework has such built in by default."
-    local NutscriptPSAString = "Please Port Any NutScript Plugins You May Be Using. Nutscript is Known for Being Exxploitable and Regardless Of The Compatibility, WE DO NOT Advice Nutscript Plugins. Our framework was built with Lilia Plugins in mind and most Performance will be adquired like that."
-    local ULXPSAString = [[
-            /*------------------------------------------------------------
-            
-            PUBLIC SERVICE ANNOUNCEMENT FOR LILIA SERVER OWNERS
-            
-            There is a ENOURMOUS performance issue with ULX Admin mod.
-            Lilia Development Team found ULX is the main issue
-            that make the server freeze when player count is higher
-            than 20-30. The duration of freeze will be increased as you get
-            more players on your server.
-            
-            If you're planning to open big server with ULX/ULib, Lilia
-            Development Team does not recommend your plan. Server Performance
-            Issues with ULX/Ulib on your server will be ignored and we're
-            going to consider that you're taking the risk of ULX/Ulib's
-            critical performance issue.
-            
-            Lilia 1.2 only displays this message when you have ULX or
-            ULib on your server.
-            
-                                           -Lilia Development Team
-            
-            */------------------------------------------------------------]]
-    if ulx or ULib then
-        MsgC(Color(255, 0, 0), ULXPSAString .. "\n")
-    end
-
     if TalkModes then
         timer.Simple(
             2,
@@ -505,27 +478,6 @@ function GM:PSALoader()
         )
     end
 
-    if nut then
-        if CLIENT then
-            nut = lia or {
-                util = {},
-                gui = {},
-                meta = {}
-            }
-        else
-            nut = lia or {
-                util = {},
-                meta = {}
-            }
-        end
-
-        timer.Simple(
-            2,
-            function()
-                MsgC(Color(255, 0, 0), NutscriptPSAString)
-            end
-        )
-    end
 end
 
 --------------------------------------------------------------------------------------------------------
