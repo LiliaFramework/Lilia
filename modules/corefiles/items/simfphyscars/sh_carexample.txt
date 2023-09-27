@@ -1,6 +1,0 @@
-
-ITEM.name = "Simfphys Car"
-ITEM.desc = "An Simfphys Car"
-ITEM.model = "models/props_c17/BriefCase001a.mdl"
-ITEM.category = "Simfphys Cars"
-ITEM.vehicleid = "simfpyscarID"
