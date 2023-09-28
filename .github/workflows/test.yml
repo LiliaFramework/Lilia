@@ -18,8 +18,8 @@ jobs:
 
     - name: Install Lua modules
       run: |
-        luarocks --local install luasocket
-        luarocks --local install htmlparser
+        luarocks install --local --tree lua_modules luasocket
+        luarocks install --local --tree lua_modules htmlparser
       shell: bash
 
     - name: Retrieve Lua script from GitHub
@@ -29,7 +29,7 @@ jobs:
 
     - name: Run Lua script and generate dump
       run: |
-        lua script.lua
+        lua -I $GITHUB_WORKSPACE/lua_modules script.lua
       shell: bash
 
     - name: Upload output text file to repo root
