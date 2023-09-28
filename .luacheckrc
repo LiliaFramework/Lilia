@@ -178,7 +178,7 @@ stds.gmod.globals = {
 	"GM",
 	"ENT",
 	"TOOL",
-	"SWEP"
+	"SWEP",
 	"player_manager",
 	"g_SpawnMenu",
 	"g_ContextMenu",
