@@ -1,9 +1,11 @@
 local PANEL = {}
 local function teamGetPlayers(teamID)
     local players = {}
-    for _, ply in pairs(player.GetAll()) do
+    for _, ply in ipairs(player.GetAll()) do
         local isDisguised = hook.Run("GetDisguised", ply)
-        if (isDisguised and isDisguised == teamID) or (not isDisguised and ply:Team() == teamID) then
+        if isDisguised and isDisguised == teamID then
+            table.insert(players, ply)
+        elseif not isDisguised and ply:Team() == teamID then
             table.insert(players, ply)
         end
     end
@@ -21,7 +23,10 @@ paintFunctions[0] = function(this, w, h)
     surface.DrawRect(0, 0, w, h)
 end
 
-paintFunctions[1] = function(this, w, h) end -- Empty paint function
+paintFunctions[1] = function(this, w, h)
+    print("")
+end
+
 function PANEL:Init()
     if IsValid(lia.gui.score) then
         lia.gui.score:Remove()
@@ -54,7 +59,7 @@ function PANEL:Init()
     self.slots = {}
     self.i = {}
     local staffCount = 0
-    for _, ply in pairs(player.GetAll()) do
+    for _, ply in ipairs(player.GetAll()) do
         if ply:IsAdmin() then
             staffCount = staffCount + 1
         end
@@ -78,44 +83,43 @@ function PANEL:Init()
     end
 
     for k, v in ipairs(lia.faction.indices) do
-        if not table.HasValue(lia.config.HiddenFactions, k) then
-            local color = team.GetColor(k)
-            local r, g, b = color.r, color.g, color.b
-            local list = self.layout:Add("DListLayout")
-            list:Dock(TOP)
-            list:SetTall(28)
-            list.Think = function(this)
-                for _, v2 in ipairs(teamGetPlayers(k)) do
-                    if not IsValid(v2.liaScoreSlot) or v2.liaScoreSlot:GetParent() ~= this then
-                        if IsValid(v2.liaScoreSlot) then
-                            v2.liaScoreSlot:SetParent(this)
-                        else
-                            self:addPlayerToScoreboard(v2, this)
-                        end
+        if table.HasValue(lia.config.HiddenFactions, k) then continue end
+        local color = team.GetColor(k)
+        local r, g, b = color.r, color.g, color.b
+        local list = self.layout:Add("DListLayout")
+        list:Dock(TOP)
+        list:SetTall(28)
+        list.Think = function(this)
+            for _, v2 in ipairs(teamGetPlayers(k)) do
+                if not IsValid(v2.liaScoreSlot) or v2.liaScoreSlot:GetParent() ~= this then
+                    if IsValid(v2.liaScoreSlot) then
+                        v2.liaScoreSlot:SetParent(this)
+                    else
+                        self:addPlayer(v2, this)
                     end
                 end
             end
-
-            local header = list:Add("DLabel")
-            header:Dock(TOP)
-            header:SetText(L(v.name))
-            header:SetTextInset(3, 0)
-            header:SetFont("liaMediumFont")
-            header:SetTextColor(color_white)
-            header:SetExpensiveShadow(1, color_black)
-            header:SetTall(28)
-            header.Paint = function(this, w, h)
-                surface.SetDrawColor(r, g, b, 20)
-                surface.DrawRect(0, 0, w, h)
-            end
-
-            self.teams[k] = list
         end
+
+        local header = list:Add("DLabel")
+        header:Dock(TOP)
+        header:SetText(L(v.name))
+        header:SetTextInset(3, 0)
+        header:SetFont("liaMediumFont")
+        header:SetTextColor(color_white)
+        header:SetExpensiveShadow(1, color_black)
+        header:SetTall(28)
+        header.Paint = function(this, w, h)
+            surface.SetDrawColor(r, g, b, 20)
+            surface.DrawRect(0, 0, w, h)
+        end
+
+        self.teams[k] = list
     end
 end
 
 function PANEL:Think()
-    if not self.nextUpdate or self.nextUpdate < CurTime() then
+    if (self.nextUpdate or 0) < CurTime() then
         self.title:SetText(lia.config.sbTitle)
         local visible, amount
         for k, v in ipairs(self.teams) do
@@ -146,9 +150,14 @@ function PANEL:Think()
     end
 end
 
-function PANEL:addPlayerToScoreboard(client, parent)
+function PANEL:addPlayer(client, parent)
     if not client:getChar() or not IsValid(parent) then return end
-    local slot = parent:Add("DPanel")
+    local slot = self:createSlot(client)
+    parent:Add(slot)
+end
+
+function PANEL:createSlot(client)
+    local slot = vgui.Create("DPanel")
     slot:Dock(TOP)
     slot:SetTall(64)
     slot:DockMargin(0, 0, 0, 1)
@@ -199,10 +208,9 @@ function PANEL:addPlayerToScoreboard(client, parent)
     slot.ping = slot:Add("DLabel")
     slot.ping:SetPos(self:GetWide() - 48, 0)
     slot.ping:SetSize(48, 64)
-    slot.ping:SetText("0")
-    slot.ping.Think = function()
+    slot.ping.Think = function(this)
         if IsValid(client) then
-            slot.ping:SetText(client:Ping())
+            this:SetText(client:Ping())
         end
     end
 
@@ -219,17 +227,9 @@ function PANEL:addPlayerToScoreboard(client, parent)
     slot.desc:SetTextColor(color_white)
     slot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     slot.desc:SetFont("liaSmallFont")
-    local oldTeam = client:Team()
     function slot:update()
-        if not IsValid(client) or not client:getChar() or not self.character or self.character ~= client:getChar() or oldTeam ~= client:Team() then
+        if not IsValid(client) or not client:getChar() or not self.character or self.character ~= client:getChar() then
             self:Remove()
-            local i = 0
-            for _, v in ipairs(parent:GetChildren()) do
-                if IsValid(v.model) and v ~= self then
-                    i = i + 1
-                    v.Paint = paintFunctions[i % 2]
-                end
-            end
 
             return
         end
@@ -262,7 +262,7 @@ function PANEL:addPlayerToScoreboard(client, parent)
 
         if self.lastModel ~= model or self.lastSkin ~= skin then
             self.model:SetModel(client:GetModel(), client:GetSkin())
-            if offDutySB[LocalPlayer():GetUserGroup()] or (LocalPlayer() == client) or LocalPlayer():Team() == FACTION_STAFF then
+            if offDutySB[LocalPlayer():GetUserGroup()] or (LocalPlayer() == client) then
                 self.model:SetTooltip(L("sbOptions", client:Name()))
             else
                 self.model:SetTooltip("You do not have access to see this information")
@@ -284,18 +284,6 @@ function PANEL:addPlayerToScoreboard(client, parent)
     end
 
     self.slots[#self.slots + 1] = slot
-    parent:SetVisible(true)
-    parent:SizeToChildren(false, true)
-    parent:InvalidateLayout(true)
-    local i = 0
-    for _, v in ipairs(parent:GetChildren()) do
-        if IsValid(v.model) then
-            i = i + 1
-            v.Paint = paintFunctions[i % 2]
-        end
-    end
-
-    slot:update()
 
     return slot
 end
