@@ -143,7 +143,7 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
             function notice:Think()
                 if not self.respondToKeys then return end
                 local queries = {}
-                for k, v in pairs(lia.noticess) do
+                for _, v in pairs(lia.noticess) do
                     if v.isQuery then
                         queries[#queries + 1] = v
                     end
@@ -201,7 +201,6 @@ function lia.util.wrapText(text, width, font)
 
     return lines, maxW
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.util.notify(message)
     chat.AddText(message)

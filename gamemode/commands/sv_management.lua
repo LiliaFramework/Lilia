@@ -5,7 +5,7 @@ lia.command.add(
         superAdminOnly = true,
         privilege = "Management - Freeze All Props",
         onRun = function(client, arguments)
-            for k, v in pairs(ents.FindByClass("prop_physics")) do
+            for _, v in pairs(ents.FindByClass("prop_physics")) do
                 local physObj = v:GetPhysicsObject()
                 if IsValid(physObj) then
                     physObj:EnableMotion(false)
@@ -24,7 +24,7 @@ lia.command.add(
         privilege = "Management - Clean Items",
         onRun = function(client, arguments)
             local count = 0
-            for k, v in pairs(ents.FindByClass("lia_item")) do
+            for _, v in pairs(ents.FindByClass("lia_item")) do
                 count = count + 1
                 v:Remove()
             end
@@ -42,7 +42,7 @@ lia.command.add(
         privilege = "Management - Clean Props",
         onRun = function(client, arguments)
             local count = 0
-            for k, v in pairs(ents.FindByClass("prop_physics")) do
+            for _, v in pairs(ents.FindByClass("prop_physics")) do
                 count = count + 1
                 v:Remove()
             end
@@ -72,7 +72,7 @@ lia.command.add(
         privilege = "Management - Clean NPCs",
         onRun = function(client, arguments)
             local count = 0
-            for k, v in pairs(ents.GetAll()) do
+            for _, v in pairs(ents.GetAll()) do
                 if IsValid(v) and v:IsNPC() then
                     count = count + 1
                     v:Remove()
@@ -120,7 +120,7 @@ lia.command.add(
         syntax = "<string charname>",
         privilege = "Management - Check All Money",
         onRun = function(client, arguments)
-            for k, v in pairs(player.GetAll()) do
+            for _, v in pairs(player.GetAll()) do
                 if v:getChar() then
                     client:ChatPrint(v:Name() .. " has " .. v:getChar():getMoney())
                 end
@@ -159,7 +159,7 @@ lia.command.add(
         adminOnly = false,
         privilege = "Management - Find All Flags",
         onRun = function(client, arguments)
-            for k, v in pairs(player.GetHumans()) do
+            for _, v in pairs(player.GetHumans()) do
                 client:ChatPrint(v:Name() .. " — " .. v:getChar():getFlags())
             end
         end
@@ -242,7 +242,7 @@ lia.command.add(
                     if not char then return end
                     local inv = char:getInv()
                     if not inv then return end
-                    for k, v in pairs(target.LostItems) do
+                    for _, v in pairs(target.LostItems) do
                         inv:add(v)
                     end
 
@@ -326,7 +326,7 @@ lia.command.add(
 )
 
 --------------------------------------------------------------------------------------------------------
-for k, v in pairs(lia.config.ServerURLs) do
+for _, v in pairs(lia.config.ServerURLs) do
     lia.command.add(
         k,
         {

@@ -101,10 +101,6 @@ lia.util.include("backend/libs/language/cl_language.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/libs/language/sv_language.lua")
 --------------------------------------------------------------------------------------------------------
-lia.util.include("backend/libs/netlogging/cl_netmessagelogger.lua")
---------------------------------------------------------------------------------------------------------
-lia.util.include("backend/libs/netlogging/sv_netmessagelogger.lua")
---------------------------------------------------------------------------------------------------------
 lia.util.include("backend/libs/networking/sh_networking.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/libs/networking/cl_networking.lua")

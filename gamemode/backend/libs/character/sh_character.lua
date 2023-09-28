@@ -17,7 +17,7 @@ if SERVER then
             "SELECT _id, _name FROM lia_characters",
             function(data)
                 if data and #data > 0 then
-                    for k, v in pairs(data) do
+                    for _, v in pairs(data) do
                         lia.char.names[v._id] = v._name
                     end
                 end
@@ -175,7 +175,7 @@ lia.char.registerVar(
 
             -- Check whether the chosen character name already exists
             if not lia.config.AllowExistNames then
-                for k, v in pairs(lia.char.names) do
+                for _, v in pairs(lia.char.names) do
                     if v == value then return false, "A character with this name already exists." end
                 end
             end
@@ -213,7 +213,7 @@ lia.char.registerVar(
         default = "",
         index = 2,
         onValidate = function(value, data)
-            if noDesc then return true end
+            if lia.config.NoDescription then return true end
             local minLength = lia.config.MinDescLen
             if not value or #value:gsub("%s", "") < minLength then return false, "descMinLen", minLength end
         end
@@ -476,7 +476,7 @@ hook.Add(
                     "SELECT _id, _name FROM lia_characters",
                     function(data)
                         if data and #data > 0 then
-                            for k, v in pairs(data) do
+                            for _, v in pairs(data) do
                                 lia.char.names[v._id] = v._name
                             end
                         end

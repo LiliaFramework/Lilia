@@ -14,7 +14,7 @@ function lia.util.findPlayer(identifier, allowPatterns)
         identifier = string.PatternSafe(identifier)
     end
 
-    for k, v in ipairs(player.GetAll()) do
+    for _, v in ipairs(player.GetAll()) do
         if lia.util.stringMatches(v:Name(), identifier) then return v end
     end
 end
@@ -37,7 +37,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function lia.util.getAllChar()
     local charTable = {}
-    for k, v in ipairs(player.GetAll()) do
+    for _, v in ipairs(player.GetAll()) do
         if v:getChar() then
             table.insert(charTable, v:getChar():getID())
         end
@@ -57,7 +57,7 @@ end
 function lia.util.emitQueuedSounds(entity, sounds, delay, spacing, volume, pitch)
     delay = delay or 0
     spacing = spacing or 0.1
-    for k, v in ipairs(sounds) do
+    for _, v in ipairs(sounds) do
         local postSet, preSet = 0, 0
         if istable(v) then
             postSet, preSet = v[2] or 0, v[3] or 0

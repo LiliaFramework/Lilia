@@ -6,7 +6,7 @@ local DATA_TABLE = "invdata"
 local ITEMS_TABLE = "items"
 --------------------------------------------------------------------------------------------------------
 function lia.inventory.loadByID(id, noCache)
-    local instance = lia.inventory.instances[invID]
+    local instance = lia.inventory.instances[id]
     if instance and not noCache then
         local d = deferred.new()
         d:resolve(instance)

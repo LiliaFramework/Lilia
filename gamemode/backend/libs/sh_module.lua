@@ -123,11 +123,11 @@ function lia.module.loadEntities(path)
     local function HandleEntityInclusion(folder, variable, register, default, clientOnly)
         files, folders = file.Find(path .. "/" .. folder .. "/*", "LUA")
         default = default or {}
-        for k, v in ipairs(folders) do
+        for _, v in ipairs(folders) do
             local path2 = path .. "/" .. folder .. "/" .. v .. "/"
             _G[variable] = table.Copy(default)
             _G[variable].ClassName = v
-            if IncludeFiles(path2, clientOnly) and not client then
+            if IncludeFiles(path2, clientOnly) and not CLIENT then
                 if clientOnly then
                     if CLIENT then
                         register(_G[variable], v)
@@ -140,7 +140,7 @@ function lia.module.loadEntities(path)
             _G[variable] = nil
         end
 
-        for k, v in ipairs(files) do
+        for _, v in ipairs(files) do
             local niceName = string.StripExtension(v)
             _G[variable] = table.Copy(default)
             _G[variable].ClassName = niceName
@@ -196,11 +196,11 @@ end
 --------------------------------------------------------------------------------------------------------
 function lia.module.loadFromDir(directory)
     local files, folders = file.Find(directory .. "/*", "LUA")
-    for k, v in ipairs(folders) do
+    for _, v in ipairs(folders) do
         lia.module.load(v, directory .. "/" .. v)
     end
 
-    for k, v in ipairs(files) do
+    for _, v in ipairs(files) do
         lia.module.load(string.StripExtension(v), directory .. "/" .. v, true)
     end
 end

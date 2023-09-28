@@ -72,7 +72,6 @@ local function RemoveNoticess(notice)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function CreateNoticePanel(length, notimer)
     if not notimer then

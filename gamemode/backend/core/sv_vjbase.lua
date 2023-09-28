@@ -17,23 +17,16 @@ lia.config.VJConvars = {
 
 --------------------------------------------------------------------------------------------------------
 if VJ then
-    function setupVJ()
-        for k, v in pairs(lia.config.VJConvars) do
-            RunConsoleCommand(k, tostring(v))
-        end
-    end
-
-    function optimizeVJ()
-        RunConsoleCommand("vj_npc_processtime", 1)
-    end
-
     hook.Add(
         "Think",
         "OptimizerVJThink",
         function()
             if vjThink <= CurTime() then
-                setupVJ()
-                optimizeVJ()
+                for k, v in pairs(lia.config.VJConvars) do
+                    RunConsoleCommand(k, tostring(v))
+                end
+
+                RunConsoleCommand("vj_npc_processtime", 1)
                 vjThink = CurTime() + 180
             end
         end

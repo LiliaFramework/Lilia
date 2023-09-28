@@ -51,7 +51,7 @@ function charMeta:getPlayer()
         return self.player
     elseif self.steamID then
         local steamID = self.steamID
-        for k, v in ipairs(player.GetAll()) do
+        for _, v in ipairs(player.GetAll()) do
             if v:SteamID64() == steamID then
                 self.player = v
 
@@ -59,7 +59,7 @@ function charMeta:getPlayer()
             end
         end
     else
-        for k, v in ipairs(player.GetAll()) do
+        for _, v in ipairs(player.GetAll()) do
             local char = v:getChar()
             if char and (char:getID() == self:getID()) then
                 self.player = v

@@ -40,7 +40,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function lia.bar.remove(identifier)
     local bar
-    for k, v in ipairs(lia.bar.list) do
+    for _, v in ipairs(lia.bar.list) do
         if v.identifier == identifier then
             bar = v
             break

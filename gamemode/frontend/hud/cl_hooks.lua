@@ -183,7 +183,6 @@ hook.Add(
         if not character then return end
         position = position or FindMetaTable("Vector").ToScreen(entity.GetPos(entity) + (entity.Crouching(entity) and Vector(0, 0, 48) or Vector(0, 0, 80)))
         local x, y = position.x, position.y
-        local ty = 0
         charInfo = {}
         charInfo[1] = {hook.Run("GetDisplayedName", entity) or character.getName(character), team.GetColor(entity.Team(entity))}
         local description = character.getDesc(character)
@@ -203,7 +202,7 @@ hook.Add(
         hook.Run("DrawCharInfo", entity, character, charInfo)
         for i = 1, #charInfo do
             local info = charInfo[i]
-            _, ty = lia.util.drawText(info[1]:gsub("#", "\226\128\139#"), x, y, ColorAlpha(info[2] or color_white, alpha), 1, 1, "liaSmallFont")
+            ty = lia.util.drawText(info[1]:gsub("#", "\226\128\139#"), x, y, ColorAlpha(info[2] or color_white, alpha), 1, 1, "liaSmallFont")
             y = y + ty
         end
     end

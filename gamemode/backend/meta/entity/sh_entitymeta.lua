@@ -7,7 +7,7 @@ function entityMeta:isChair()
 end
 
 --------------------------------------------------------------------------------------------------------
-for k, v in pairs(list.Get("Vehicles")) do
+for _, v in pairs(list.Get("Vehicles")) do
     if v.Category == "Chairs" then
         ChairCache[v.Model] = true
     end

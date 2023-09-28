@@ -69,7 +69,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function ITEM:getEntity()
     local id = self:getID()
-    for k, v in ipairs(ents.FindByClass("lia_item")) do
+    for _, v in ipairs(ents.FindByClass("lia_item")) do
         if v.liaItemID == id then return v end
     end
 end
@@ -152,6 +152,7 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
+    local noSave = noSave or false
     self.data = self.data or {}
     self.data[key] = value
     if not noCheckEntity then

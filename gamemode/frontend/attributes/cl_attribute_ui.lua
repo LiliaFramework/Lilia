@@ -264,7 +264,7 @@ function PANEL:addButton(symbol, delta)
     newButton:SetContentAlignment(5)
     newButton.OnMousePressed = function(button)
         self.autoDelta = delta
-        self.nextAuto = CurTime() + AUTO_CLICK_TIME
+        self.nextAuto = CurTime() + 0.1
         self:delta(delta)
     end
 

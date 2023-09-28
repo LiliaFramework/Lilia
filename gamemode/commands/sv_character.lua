@@ -74,7 +74,7 @@ lia.command.add(
             if IsValid(target) and target:getChar() then
                 local faction = lia.faction.teams[name]
                 if not faction then
-                    for k, v in pairs(lia.faction.indices) do
+                    for _, v in pairs(lia.faction.indices) do
                         if lia.util.stringMatches(L(v.name, client), name) then
                             faction = v
                             break
@@ -354,7 +354,7 @@ lia.command.add(
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and target:getChar() then
-                for k, v in pairs(target:getChar():getInv():getItems()) do
+                for _, v in pairs(target:getChar():getInv():getItems()) do
                     v:remove()
                 end
 
@@ -440,7 +440,7 @@ lia.command.add(
             if IsValid(target) then
                 local char = target:getChar()
                 if char then
-                    for k, v in ipairs(player.GetAll()) do
+                    for _, v in ipairs(player.GetAll()) do
                         v:notifyLocalized("charKick", client:Name(), target:Name())
                     end
 
@@ -463,7 +463,7 @@ lia.command.add(
             if IsValid(target) then
                 local faction = lia.command.findFaction(client, table.concat(arguments, " ", 2))
                 if faction and target:setWhitelisted(faction.index, true) then
-                    for k, v in ipairs(player.GetAll()) do
+                    for _, v in ipairs(player.GetAll()) do
                         v:notifyLocalized("whitelist", client:Name(), target:Name(), L(faction.name, v))
                     end
                 end
@@ -484,7 +484,7 @@ lia.command.add(
             if IsValid(target) then
                 local faction = lia.command.findFaction(client, table.concat(arguments, " ", 2))
                 if faction and target:setWhitelisted(faction.index, false) then
-                    for k, v in ipairs(player.GetAll()) do
+                    for _, v in ipairs(player.GetAll()) do
                         v:notifyLocalized("unwhitelist", client:Name(), target:Name(), L(faction.name, v))
                     end
                 end
@@ -503,7 +503,7 @@ lia.command.add(
         onRun = function(client, arguments)
             if (client.liaNextSearch or 0) >= CurTime() then return L("charSearching", client) end
             local name = table.concat(arguments, " ")
-            for k, v in pairs(lia.char.loaded) do
+            for _, v in pairs(lia.char.loaded) do
                 if lia.util.stringMatches(v:getName(), name) then
                     if v:getData("banned") then
                         v:setData("banned")

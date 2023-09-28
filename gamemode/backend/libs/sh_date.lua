@@ -3,6 +3,7 @@ lia.date = lia.date or {}
 --------------------------------------------------------------------------------------------------------
 function lia.date.GetFormattedDate(StartingMessage, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
     local currentTime = os.date("*t")
+    local output
     if StartingMessage then
         output = StartingMessage
     else

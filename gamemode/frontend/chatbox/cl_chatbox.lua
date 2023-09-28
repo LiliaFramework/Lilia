@@ -67,7 +67,7 @@ function PANEL:Init()
     chat.GetChatBoxPos = function() return self:LocalToScreen(0, 0) end
     chat.GetChatBoxSize = function() return self:GetSize() end
     local buttons = {}
-    for k, v in SortedPairsByMemberValue(lia.chat.classes, "filter") do
+    for _, v in SortedPairsByMemberValue(lia.chat.classes, "filter") do
         if not buttons[v.filter] then
             self:addFilterButton(v.filter)
             buttons[v.filter] = true
@@ -218,7 +218,7 @@ function PANEL:addText(...)
     end
 
     text = hook.Run("ChatAddText", text, ...) or text
-    for k, v in ipairs({...}) do
+    for _, v in ipairs({...}) do
         if type(v) == "IMaterial" then
             local ttx = v:GetName()
             text = text .. "<img=" .. ttx .. "," .. v:Width() .. "x" .. v:Height() .. ">"
@@ -272,7 +272,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function PANEL:setFilter(filter, state)
     if state then
-        for k, v in ipairs(self.list) do
+        for _, v in ipairs(self.list) do
             if v.filter == filter then
                 v:SetVisible(false)
                 self.filtered[v] = filter
@@ -289,7 +289,7 @@ function PANEL:setFilter(filter, state)
 
     self.lastY = 0
     local lastChild
-    for k, v in ipairs(self.list) do
+    for _, v in ipairs(self.list) do
         if v:IsVisible() then
             v:SetPos(0, self.lastY)
             self.lastY = self.lastY + v:GetTall() + 2
