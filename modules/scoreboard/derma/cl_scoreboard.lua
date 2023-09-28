@@ -233,7 +233,6 @@ function PANEL:addPlayer(client, parent)
     playerSlot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     playerSlot.desc:SetFont("liaSmallFont")
     local oldTeam = client:Team()
-    
     function playerSlot:update()
         if not IsValid(client) or not client:getChar() or not playerSlot.character or playerSlot.character ~= client:getChar() or oldTeam ~= client:Team() then
             playerSlot:Remove()
@@ -246,7 +245,7 @@ function PANEL:addPlayer(client, parent)
             end
 
             return
-        }
+        end
 
         local overrideName = hook.Run("ShouldAllowScoreboardOverride", client, "name") and hook.Run("GetDisplayedName", client)
         local name = overrideName or client:Name()
@@ -313,7 +312,6 @@ function PANEL:addPlayer(client, parent)
 
     return playerSlot
 end
-
 
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnRemove()
