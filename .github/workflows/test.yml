@@ -14,17 +14,8 @@ jobs:
       run: |
         sudo apt-get update -y
         sudo apt-get install -y lua5.3 lua5.3-dev luarocks
-      shell: bash
-
-    - name: Install Lua modules
-      run: |
-        luarocks install --local --tree lua_modules luasocket
-        luarocks install --local --tree lua_modules htmlparser
-      shell: bash
-
-    - name: Set LUA_PATH environment variable
-      run: |
-        export LUA_PATH="$GITHUB_WORKSPACE/lua_modules/share/lua/5.3/?.lua;;"
+        luarocks --local install luasocket
+        luarocks --local install htmlparser
       shell: bash
 
     - name: Retrieve Lua script from GitHub
