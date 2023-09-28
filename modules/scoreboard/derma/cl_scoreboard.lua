@@ -1,13 +1,9 @@
---------------------------------------------------------------------------------------------------------
 local PANEL = {}
---------------------------------------------------------------------------------------------------------
 local function teamGetPlayers(teamID)
     local players = {}
-    for _, ply in next, player.GetAll() do
+    for _, ply in pairs(player.GetAll()) do
         local isDisguised = hook.Run("GetDisguised", ply)
-        if isDisguised and isDisguised == teamID then
-            table.insert(players, ply)
-        elseif not isDisguised and ply:Team() == teamID then
+        if (isDisguised and isDisguised == teamID) or (not isDisguised and ply:Team() == teamID) then
             table.insert(players, ply)
         end
     end
@@ -25,10 +21,7 @@ paintFunctions[0] = function(this, w, h)
     surface.DrawRect(0, 0, w, h)
 end
 
-paintFunctions[1] = function(this, w, h)
-    print("")
-end
-
+paintFunctions[1] = function(this, w, h) end -- Empty paint function
 function PANEL:Init()
     if IsValid(lia.gui.score) then
         lia.gui.score:Remove()
@@ -61,7 +54,7 @@ function PANEL:Init()
     self.slots = {}
     self.i = {}
     local staffCount = 0
-    for _, ply in ipairs(player.GetAll()) do
+    for _, ply in pairs(player.GetAll()) do
         if ply:IsAdmin() then
             staffCount = staffCount + 1
         end
@@ -85,43 +78,44 @@ function PANEL:Init()
     end
 
     for k, v in ipairs(lia.faction.indices) do
-        if table.HasValue(lia.config.HiddenFactions, k) then continue end
-        local color = team.GetColor(k)
-        local r, g, b = color.r, color.g, color.b
-        local list = self.layout:Add("DListLayout")
-        list:Dock(TOP)
-        list:SetTall(28)
-        list.Think = function(this)
-            for _, v2 in ipairs(teamGetPlayers(k)) do
-                if not IsValid(v2.liaScoreSlot) or v2.liaScoreSlot:GetParent() ~= this then
-                    if IsValid(v2.liaScoreSlot) then
-                        v2.liaScoreSlot:SetParent(this)
-                    else
-                        self:addPlayerToScoreboard(v2, this)
+        if not table.HasValue(lia.config.HiddenFactions, k) then
+            local color = team.GetColor(k)
+            local r, g, b = color.r, color.g, color.b
+            local list = self.layout:Add("DListLayout")
+            list:Dock(TOP)
+            list:SetTall(28)
+            list.Think = function(this)
+                for _, v2 in ipairs(teamGetPlayers(k)) do
+                    if not IsValid(v2.liaScoreSlot) or v2.liaScoreSlot:GetParent() ~= this then
+                        if IsValid(v2.liaScoreSlot) then
+                            v2.liaScoreSlot:SetParent(this)
+                        else
+                            self:addPlayerToScoreboard(v2, this)
+                        end
                     end
                 end
             end
-        end
 
-        local header = list:Add("DLabel")
-        header:Dock(TOP)
-        header:SetText(L(v.name))
-        header:SetTextInset(3, 0)
-        header:SetFont("liaMediumFont")
-        header:SetTextColor(color_white)
-        header:SetExpensiveShadow(1, color_black)
-        header:SetTall(28)
-        header.Paint = function(this, w, h)
-            surface.SetDrawColor(r, g, b, 20)
-            surface.DrawRect(0, 0, w, h)
-        end
+            local header = list:Add("DLabel")
+            header:Dock(TOP)
+            header:SetText(L(v.name))
+            header:SetTextInset(3, 0)
+            header:SetFont("liaMediumFont")
+            header:SetTextColor(color_white)
+            header:SetExpensiveShadow(1, color_black)
+            header:SetTall(28)
+            header.Paint = function(this, w, h)
+                surface.SetDrawColor(r, g, b, 20)
+                surface.DrawRect(0, 0, w, h)
+            end
 
-        self.teams[k] = list
+            self.teams[k] = list
+        end
     end
 end
 
 function PANEL:Think()
-    if (self.nextUpdate or 0) < CurTime() then
+    if not self.nextUpdate or self.nextUpdate < CurTime() then
         self.title:SetText(lia.config.sbTitle)
         local visible, amount
         for k, v in ipairs(self.teams) do
@@ -327,4 +321,3 @@ concommand.Add(
         end
     end
 )
---------------------------------------------------------------------------------------------------------
