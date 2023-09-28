@@ -1,6 +1,9 @@
 name: LuaRocks Workflow
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main  # Change this to your main branch
 
 jobs:
   build:
@@ -14,12 +17,8 @@ jobs:
       run: |
         sudo apt-get update -y
         sudo apt-get install -y lua5.3 lua5.3-dev luarocks
-      shell: bash
-
-    - name: Install Lua modules
-      run: |
-        luarocks install http
-        luarocks install htmlparser
+        luarocks --local install http
+        luarocks --local install htmlparser
       shell: bash
 
     - name: Retrieve Lua script from GitHub
@@ -34,10 +33,9 @@ jobs:
 
     - name: Upload output text file to repo root
       run: |
+        mv generated_globals.txt $GITHUB_WORKSPACE/generated_globals.txt
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-
-        mv generated_globals.txt $GITHUB_WORKSPACE/generated_globals.txt
         git add generated_globals.txt
         git commit -m "Add generated_globals.txt" || true
         git push
