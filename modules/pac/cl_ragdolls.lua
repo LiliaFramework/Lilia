@@ -32,7 +32,7 @@ function MODULE:OnEntityCreated(entity)
 			end
 
 			if class:find("HL2MPRagdoll") then
-				for k, v in ipairs(player.GetAll()) do
+				for _, v in ipairs(player.GetAll()) do
 					if v:GetRagdollEntity() == entity then
 						entity.objCache = v
 					end

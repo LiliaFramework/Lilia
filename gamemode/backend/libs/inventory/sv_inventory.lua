@@ -14,8 +14,7 @@ function lia.inventory.loadByID(id, noCache)
         return d
     end
 
-    -- Allow for custom ways of loading inventories.
-    for typeID, invType in pairs(lia.inventory.types) do
+    for _, invType in pairs(lia.inventory.types) do
         local loadFunction = rawget(invType, "loadFromStorage")
         if loadFunction then
             local d = loadFunction(invType, id)

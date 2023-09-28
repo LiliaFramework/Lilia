@@ -40,7 +40,7 @@ function GM:RegisterCamiPermissions()
 
     for _, wep in pairs(weapons.GetList()) do
         if wep.ClassName == "gmod_tool" then
-            for ToolName, TOOL in pairs(wep.Tool) do
+            for ToolName, _ in pairs(wep.Tool) do
                 if not ToolName then continue end
                 local privilege = "Lilia - Management - Access Tool " .. ToolName:gsub("^%l", string.upper)
                 if not CAMI.GetPrivilege(privilege) then
@@ -201,7 +201,7 @@ function GM:CalcMainActivity(client, velocity)
     client.CalcSeqOverride = -1
     local animClass = lia.anim.getModelClass(client:GetModel())
     if animClass ~= "player" then client:SetPoseParameter("move_yaw", math.NormalizeAngle(FindMetaTable("Vector").Angle(velocity)[2] - client:EyeAngles()[2])) end
-    if not (self:HandlePlayerLanding(client, velocity, client.m_bWasOnGround) or self:HandlePlayerNoClipping(client, velocity) or self:HandlePlayerDriving(client) or self:HandlePlayerVaulting(client, velocity) or (usingPlayerAnims and self:HandlePlayerJumping(client, velocity)) or self:HandlePlayerSwimming(client, velocity) or self:HandlePlayerDucking(client, velocity)) then
+    if not (self:HandlePlayerLanding(client, velocity, client.m_bWasOnGround) then
         local len2D = velocity:Length2DSqr()
         if len2D > 22500 then
             client.CalcIdeal = ACT_MP_RUN
@@ -220,7 +220,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:OnCharVarChanged(char, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
-        for k, v in pairs(lia.char.varHooks[varName]) do
+        for _, v in pairs(lia.char.varHooks[varName]) do
             v(char, oldVar, newVar)
         end
     end
@@ -302,7 +302,7 @@ function GM:Think()
     if not self.nextThink then self.nextThink = 0 end
     if self.nextThink < CurTime() then
         local players = player.GetAll()
-        for k, v in pairs(players) do
+        for _, v in pairs(players) do
             local hp = v:Health()
             local maxhp = v:GetMaxHealth()
             if hp < maxhp and lia.config.AutoRegen then

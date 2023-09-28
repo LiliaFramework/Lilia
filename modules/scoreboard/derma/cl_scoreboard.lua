@@ -5,7 +5,7 @@ local function teamGetPlayers(teamID)
     local players = {}
     for _, ply in next, player.GetAll() do
         local isDisguised = hook.Run("GetDisguised", ply)
-        if isDisguised and isDisguised == teamID thenf
+        if isDisguised and isDisguised == teamID then
             table.insert(players, ply)
         elseif not isDisguised and ply:Team() == teamID then
             table.insert(players, ply)

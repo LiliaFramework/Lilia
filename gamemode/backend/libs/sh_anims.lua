@@ -450,7 +450,6 @@ lia.config.DefaultTposingFixer = {
     ["models/vortigaunt_blue.mdl"] = "vort",
     ["models/vortigaunt_doctor.mdl"] = "vort",
     ["models/vortigaunt_slave.mdl"] = "vort",
-    ["models/vortigaunt_slave.mdl"] = "vort",
     ["models/alyx.mdl"] = "citizen_female",
     ["models/mossman.mdl"] = "citizen_female",
 }

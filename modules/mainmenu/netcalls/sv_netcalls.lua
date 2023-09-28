@@ -48,7 +48,7 @@ net.Receive(
 
         local numValues = net.ReadUInt(32)
         local data = {}
-        for i = 1, numValues do
+        for _ = 1, numValues do
             data[net.ReadString()] = net.ReadType()
         end
 

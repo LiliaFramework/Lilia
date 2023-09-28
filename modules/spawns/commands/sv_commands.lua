@@ -16,7 +16,7 @@ lia.command.add(
             if factionName then
                 info = lia.faction.indices[factionName:lower()]
                 if not info then
-                    for k, v in ipairs(lia.faction.indices) do
+                    for _, v in ipairs(lia.faction.indices) do
                         if lia.util.stringMatches(v.uniqueID, factionName) or lia.util.stringMatches(L(v.name, client), factionName) then
                             faction = v.uniqueID
                             info = v
@@ -73,8 +73,8 @@ lia.command.add(
             local position = client:GetPos()
             local radius = tonumber(arguments[1]) or 120
             local i = 0
-            for k, v in pairs(MODULE.spawns) do
-                for k2, v2 in pairs(v) do
+            for _, v in pairs(MODULE.spawns) do
+                for __, v2 in pairs(v) do
                     for k3, v3 in pairs(v2) do
                         if v3:Distance(position) <= radius then
                             v2[k3] = nil

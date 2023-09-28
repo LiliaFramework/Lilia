@@ -12,7 +12,6 @@ function PANEL:Init()
         panel.OnMouseReleased = function()
             if self.pressing then
                 self.pressing = nil
-                --self:onClick()
             end
         end
     end
@@ -126,7 +125,7 @@ hook.Add(
     function(tabs)
         local cnt = table.Count(lia.class.list)
         if cnt <= 1 then return end
-        for k, v in ipairs(lia.class.list) do
+        for k, _ in ipairs(lia.class.list) do
             if not lia.class.canBe(LocalPlayer(), k) then
                 continue
             else
@@ -148,7 +147,7 @@ netstream.Hook(
             if joinedClient == LocalPlayer() then
                 lia.gui.classes:loadClasses()
             else
-                for k, v in ipairs(lia.gui.classes.classPanels) do
+                for _, v in ipairs(lia.gui.classes.classPanels) do
                     local data = v.data
                     v:setNumber(#lia.class.getPlayers(data.index))
                 end

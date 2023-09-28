@@ -1,86 +1,81 @@
 --------------------------------------------------------------------------------------------------------
 function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
-	local inventory = lia.inventory.instances[invID]
-	local item = lia.item.instances[itemID]
-	if not item then return end
-	local oldInventory = lia.inventory.instances[item.invID]
-	if not oldInventory or not oldInventory.items[itemID] then return end
-	local status, transferReason = hook.Run("CanItemBeTransfered", item, oldInventory, inventory, client)
-	if status == false then
-		client:notify(transferReason or "You can't do that right now.")
+    local inventory = lia.inventory.instances[invID]
+    local item = lia.item.instances[itemID]
+    if not item then return end
+    local oldInventory = lia.inventory.instances[item.invID]
+    if not oldInventory or not oldInventory.items[itemID] then return end
+    local status, transferReason = hook.Run("CanItemBeTransfered", item, oldInventory, inventory, client)
+    if status == false then
+        client:notify(transferReason or "You can't do that right now.")
+        return
+    end
 
-		return
-	end
+    local context = {
+        client = client,
+        item = item,
+        from = oldInventory,
+        to = inventory
+    }
 
-	local context = {
-		client = client,
-		item = item,
-		from = oldInventory,
-		to = inventory
-	}
+    local canTransfer = oldInventory:canAccess("transfer", context)
+    if not canTransfer then return end
+    if not inventory then return hook.Run("ItemDraggedOutOfInventory", client, item) end
+    canTransfer = inventory:canAccess("transfer", context)
+    if not canTransfer then
+        return
+    end
 
-	local canTransfer, transferError = oldInventory:canAccess("transfer", context)
-	if not canTransfer then return end
-	if not inventory then return hook.Run("ItemDraggedOutOfInventory", client, item) end
-	canTransfer, transferError = inventory:canAccess("transfer", context)
-	if not canTransfer then
-		if isstring(transferError) then
-			client:notifyLocalized(transferError)
-		end
+    local oldX, oldY = item:getData("x"), item:getData("y")
+    local failItemDropPos = client:getItemDropPos()
+    if client.invTransferTransaction and client.invTransferTransactionTimeout > RealTime() then return end
+    client.invTransferTransaction = true
+    client.invTransferTransactionTimeout = RealTime()
+    local function fail(err)
+        client.invTransferTransaction = nil
+        if err then
+            print(err)
+            debug.Trace()
+        end
 
-		return
-	end
+        if IsValid(client) then
+            client:notifyLocalized("itemOnGround")
+        end
 
-	local oldX, oldY = item:getData("x"), item:getData("y")
-	local failItemDropPos = client:getItemDropPos()
-	if client.invTransferTransaction and client.invTransferTransactionTimeout > RealTime() then return end
-	client.invTransferTransaction = true
-	client.invTransferTransactionTimeout = RealTime()
-	local function fail(err)
-		client.invTransferTransaction = nil
-		if err then
-			print(err)
-			debug.Trace()
-		end
+        item:spawn(failItemDropPos)
+    end
 
-		if IsValid(client) then
-			client:notifyLocalized("itemOnGround")
-		end
+    local tryCombineWith
+    local originalAddRes
 
-		item:spawn(failItemDropPos)
-	end
+    return oldInventory:removeItem(itemID, true):next(function() return inventory:add(item, x, y) end):next(
+        function(res)
+            if not res or not res.error then return end
+            local conflictingItem = istable(res.error) and res.error.item
+            if conflictingItem then
+                tryCombineWith = conflictingItem
+            end
 
-	local tryCombineWith
-	local originalAddRes
+            originalAddRes = res
 
-	return oldInventory:removeItem(itemID, true):next(function() return inventory:add(item, x, y) end):next(
-		function(res)
-			if not res or not res.error then return end
-			local conflictingItem = istable(res.error) and res.error.item
-			if conflictingItem then
-				tryCombineWith = conflictingItem
-			end
+            return oldInventory:add(item, oldX, oldY)
+        end
+    ):next(
+        function(res)
+            if res and res.error then return res end
+            if tryCombineWith and IsValid(client) and hook.Run("ItemCombine", client, item, tryCombineWith) then return end
+        end
+    ):next(
+        function(res)
+            client.invTransferTransaction = nil
+            if res and res.error then
+                fail()
+            else
+                hook.Run("ItemTransfered", context)
+            end
 
-			originalAddRes = res
-
-			return oldInventory:add(item, oldX, oldY)
-		end
-	):next(
-		function(res)
-			if res and res.error then return res end
-			if tryCombineWith and IsValid(client) and hook.Run("ItemCombine", client, item, tryCombineWith) then return end
-		end
-	):next(
-		function(res)
-			client.invTransferTransaction = nil
-			if res and res.error then
-				fail()
-			else
-				hook.Run("ItemTransfered", context)
-			end
-
-			return originalAddRes
-		end
-	):catch(fail)
+            return originalAddRes
+        end
+    ):catch(fail)
 end
 --------------------------------------------------------------------------------------------------------

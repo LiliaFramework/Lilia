@@ -7,7 +7,7 @@ end
 spawnmenu.AddContentType(
     "item",
     function(container, object)
-        local icon = vgui.Create("SpawnIcon", p)
+        local icon = vgui.Create("SpawnIcon", container)
         icon:SetWide(64)
         icon:SetTall(64)
         icon:InvalidateLayout(true)
@@ -35,7 +35,7 @@ spawnmenu.AddContentType(
 --------------------------------------------------------------------------------------------------------
 function MODULE:PopulateItems(pnlContent, tree, parentNode)
     local categorised = {}
-    for k, v in pairs(lia.item.list) do
+    for _, v in pairs(lia.item.list) do
         local category = v.category and v.category == "misc" and "Miscellaneous" or v.category and v.category or "Miscellaneous"
         categorised[category] = categorised[category] or {}
         table.insert(categorised[category], v)

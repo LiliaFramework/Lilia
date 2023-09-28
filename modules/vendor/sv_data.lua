@@ -3,7 +3,7 @@ local MODULE = MODULE
 --------------------------------------------------------------------------------------------------------
 function MODULE:saveVendors()
 	local data = {}
-	for k, v in ipairs(ents.FindByClass("lia_vendor")) do
+	for _, v in ipairs(ents.FindByClass("lia_vendor")) do
 		data[#data + 1] = {
 			name = v:getNetVar("name"),
 			desc = v:getNetVar("desc"),
@@ -24,12 +24,12 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function MODULE:LoadData()
-	for k, v in ipairs(ents.FindByClass("lia_vendor")) do
+	for _, v in ipairs(ents.FindByClass("lia_vendor")) do
 		v.liaIsSafe = true
 		v:Remove()
 	end
 
-	for k, v in ipairs(self:getData() or {}) do
+	for _, v in ipairs(self:getData() or {}) do
 		local entity = ents.Create("lia_vendor")
 		entity:SetPos(v.pos)
 		entity:SetAngles(v.angles)

@@ -14,8 +14,7 @@ function PANEL:Init()
     self:SetVisible(false)
     lia.menuMusicIsLocal = false
     timer.Remove("liaMusicFader")
-    local source = lia.config.Music
-    source = "mainmenu/menu2.mp3"
+    local source = lia.config.Music or "mainmenu/menu2.mp3"
     if not source:find("%S") then return end
     if source:find("http") then
         sound.PlayURL(

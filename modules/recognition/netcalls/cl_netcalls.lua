@@ -3,6 +3,9 @@ netstream.Hook(
     "rgnDone",
     function()
         local client = LocalPlayer()
+        local character = client:getChar()
+        local id = character:getID()
+
         hook.Run("OnCharRecognized", client, id)
     end
 )
