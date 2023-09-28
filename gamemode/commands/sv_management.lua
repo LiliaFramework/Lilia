@@ -335,19 +335,18 @@ if sam and sam.command then
             customSyntax = customSyntax == "" and "[" or customSyntax .. " ["
             customSyntax = customSyntax .. (argInfo.default and tostring(type(argInfo.default)) or "string") .. " "
             customSyntax = customSyntax .. argInfo.name .. "]"
+            lia.command.add(
+                commandInfo.name,
+                {
+                    privilege = "Access to " .. argInfo.name .. " SAM Commands",
+                    adminOnly = commandInfo.default_rank == "admin",
+                    superAdminOnly = commandInfo.default_rank == "superadmin",
+                    syntax = customSyntax,
+                    onRun = function(client, arguments)
+                        RunConsoleCommand("sam", commandInfo.name, unpack(arguments))
+                    end
+                }
+            )
         end
-
-        lia.command.add(
-            commandInfo.name,
-            {
-                privilege = "Access to " .. argInfo.name .. " SAM Commands",
-                adminOnly = commandInfo.default_rank == "admin",
-                superAdminOnly = commandInfo.default_rank == "superadmin",
-                syntax = customSyntax,
-                onRun = function(client, arguments)
-                    RunConsoleCommand("sam", commandInfo.name, unpack(arguments))
-                end
-            }
-        )
     end
 end
