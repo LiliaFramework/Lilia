@@ -234,8 +234,8 @@ function PANEL:addPlayer(client, parent)
     playerSlot.desc:SetFont("liaSmallFont")
     local oldTeam = client:Team()
     function playerSlot:update()
-        if not IsValid(client) or not client:getChar() or not self.character or self.character ~= client:getChar() or oldTeam ~= client:Team() then
-            self:Remove()
+        if not IsValid(client) or not client:getChar() or not playerSlot.character or playerSlot.character ~= client:getChar() or oldTeam ~= client:Team() then
+            playerSlot:Remove()
             local i = 0
             for _, v in ipairs(parent:GetChildren()) do
                 if IsValid(v.model) and v ~= self then
