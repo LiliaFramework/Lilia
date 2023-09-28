@@ -1,0 +1,47 @@
+name: LuaRocks Workflow
+
+on:
+  push:
+    branches:
+      - main  # Change this to your main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # You can change the runner as needed
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Lua and LuaRocks
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y lua5.3 lua5.3-dev luarocks
+      shell: bash
+
+    - name: Install Lua modules
+      run: |
+        luarocks install http
+        luarocks install htmlparser
+      shell: bash
+
+    - name: Retrieve Lua script from GitHub
+      run: |
+        curl -o script.lua https://raw.githubusercontent.com/impulsh/gmod-globals-scraper/master/scraper.lua
+      shell: bash
+
+    - name: Run Lua script
+      run: |
+        lua script.lua
+      shell: bash
+
+    - name: Upload output text file to repo root
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+
+        mv generated_globals.txt $GITHUB_WORKSPACE/generated_globals.txt
+        git add generated_globals.txt
+        git commit -m "Add generated_globals.txt" || true
+        git push
+      shell: bash
