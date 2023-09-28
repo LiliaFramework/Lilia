@@ -1,13 +1,10 @@
 name: LuaRocks Workflow
 
-on:
-  push:
-    branches:
-      - main  # Change this to your main branch
+on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # You can change the runner as needed
+    runs-on: ubuntu-latest 
 
     steps:
     - name: Checkout code
