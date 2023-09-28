@@ -210,7 +210,7 @@ function PANEL:addPlayer(client, parent)
     slot.name:SetTextColor(color_white)
     slot.name:SetExpensiveShadow(1, color_black)
     slot.ping = slot:Add("DLabel")
-    slot.ping:SetPos(self:GetWide() - 48, 0)
+    slot.ping:SetPos(slot:GetWide() - 48, 0)
     slot.ping:SetSize(48, 64)
     slot.ping:SetText("0")
     slot.ping.Think = function(this)
@@ -234,8 +234,8 @@ function PANEL:addPlayer(client, parent)
     slot.desc:SetFont("liaSmallFont")
     local oldTeam = client:Team()
     function slot:update()
-        if not IsValid(client) or not client:getChar() or not self.character or self.character ~= client:getChar() or oldTeam ~= client:Team() then
-            self:Remove()
+        if not IsValid(client) or not client:getChar() or not slot.character or slot.character ~= client:getChar() or oldTeam ~= client:Team() then
+            slot:Remove()
             local i = 0
             for _, v in ipairs(parent:GetChildren()) do
                 if IsValid(v.model) and v ~= slot then
@@ -254,13 +254,13 @@ function PANEL:addPlayer(client, parent)
         local skin = client:GetSkin()
         local desc = hook.Run("ShouldAllowScoreboardOverride", client, "desc") and hook.Run("GetDisplayedDescription", client) or (client:getChar() and client:getChar():getDesc()) or "You do not recognize this person."
         desc = desc:gsub("#", "\226\128\139#")
-        self.model:setHidden(overrideName == L("unknown"))
-        if self.lastName ~= name then
-            self.name:SetText(name)
-            self.lastName = name
+        slot.model:setHidden(overrideName == L("unknown"))
+        if slot.lastName ~= name then
+            slot.name:SetText(name)
+            slot.lastName = name
         end
 
-        local entity = self.model.Entity
+        local entity = slot.model.Entity
         if not IsValid(entity) then return end
         local offDutySB = {
             root = true,
@@ -268,21 +268,21 @@ function PANEL:addPlayer(client, parent)
             superadministrator = true,
         }
 
-        if self.lastDesc ~= desc then
-            self.desc:SetText(desc)
-            self.lastDesc = desc
+        if slot.lastDesc ~= desc then
+            slot.desc:SetText(desc)
+            slot.lastDesc = desc
         end
 
-        if self.lastModel ~= model or self.lastSkin ~= skin then
-            self.model:SetModel(client:GetModel(), client:GetSkin())
+        if slot.lastModel ~= model or slot.lastSkin ~= skin then
+            slot.model:SetModel(client:GetModel(), client:GetSkin())
             if offDutySB[LocalPlayer():GetUserGroup()] or (LocalPlayer() == client) or LocalPlayer():Team() == FACTION_STAFF then
-                self.model:SetTooltip(L("sbOptions", client:Name()))
+                slot.model:SetTooltip(L("sbOptions", client:Name()))
             else
-                self.model:SetTooltip("You do not have access to see this information")
+                slot.model:SetTooltip("You do not have access to see this information")
             end
 
-            self.lastModel = model
-            self.lastSkin = skin
+            slot.lastModel = model
+            slot.lastSkin = skin
         end
 
         timer.Simple(
@@ -296,7 +296,7 @@ function PANEL:addPlayer(client, parent)
         )
     end
 
-    self.slots[#self.slots + 1] = slot
+    slot.slots[#slot.slots + 1] = slot
     parent:SetVisible(true)
     parent:SizeToChildren(false, true)
     parent:InvalidateLayout(true)
