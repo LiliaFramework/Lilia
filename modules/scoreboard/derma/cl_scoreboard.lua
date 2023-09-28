@@ -238,7 +238,7 @@ function PANEL:addPlayer(client, parent)
             self:Remove()
             local i = 0
             for _, v in ipairs(parent:GetChildren()) do
-                if IsValid(v.model) and v ~= self then
+                if IsValid(v.model) and v ~= slot then
                     i = i + 1
                     v.Paint = paintFunctions[i % 2]
                 end
