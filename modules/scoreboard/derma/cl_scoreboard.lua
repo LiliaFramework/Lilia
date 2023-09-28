@@ -97,7 +97,7 @@ function PANEL:Init()
                     if IsValid(v2.liaScoreSlot) then
                         v2.liaScoreSlot:SetParent(this)
                     else
-                        self:addPlayer(v2, this)
+                        self:addPlayerToScoreboard(v2, this)
                     end
                 end
             end
@@ -152,7 +152,7 @@ function PANEL:Think()
     end
 end
 
-local function addPlayerToScoreboard(client, parent)
+function PANEL:addPlayerToScoreboard(client, parent)
     if not client:getChar() or not IsValid(parent) then return end
     local slot = parent:Add("DPanel")
     slot:Dock(TOP)
@@ -319,7 +319,6 @@ function PANEL:Paint(w, h)
 end
 
 vgui.Register("liaScoreboard", PANEL, "EditablePanel")
---------------------------------------------------------------------------------------------------------
 concommand.Add(
     "dev_reloadsb",
     function()
