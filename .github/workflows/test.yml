@@ -16,7 +16,6 @@ jobs:
         sudo apt-get install -y lua5.3 lua5.3-dev luarocks
         luarocks --local install http
         luarocks --local install htmlparser
-        luarocks --local install http.request
       shell: bash
 
     - name: Retrieve Lua script from GitHub
@@ -26,6 +25,8 @@ jobs:
 
     - name: Run Lua script
       run: |
+        luarocks --local show http || luarocks --local install http
+        luarocks --local show htmlparser || luarocks --local install htmlparser
         lua script.lua
       shell: bash
 
