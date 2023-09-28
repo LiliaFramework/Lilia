@@ -178,7 +178,7 @@ lia.command.add(
         adminOnly = false,
         privilege = "Basic User Permissions",
         onRun = function(client, arguments)
-            for k, v in pairs(ents.FindInSphere(client:GetPos(), 500)) do
+            for _, v in pairs(ents.FindInSphere(client:GetPos(), 500)) do
                 if v:GetClass() == "lia_item" then
                     v:SetPos(client:GetPos())
                 end
@@ -254,7 +254,7 @@ lia.command.add(
         privilege = "Basic User Permissions",
         syntax = "<string text>",
         onRun = function(client, arguments)
-            for k, v in ipairs(lia.faction.indices) do
+            for _, v in ipairs(lia.faction.indices) do
                 client:ChatPrint("NAME: " .. v.name .. " ID: " .. v.uniqueID)
             end
         end
@@ -303,7 +303,7 @@ if lia.config.FactionBroadcastEnabled then
                 local message = table.concat(arguments, " ", 2)
                 local factionList = {}
                 local factionListSimple = {}
-                for k, v in pairs(string.Explode(",", arguments[1])) do
+                for _, v in pairs(string.Explode(",", arguments[1])) do
                     local foundFaction
                     local foundID
                     local multiFind
@@ -331,7 +331,7 @@ if lia.config.FactionBroadcastEnabled then
                 end
 
                 if table.Count(factionList) == 0 then return "No valid factions found" end
-                for k, v in pairs(player.GetAll()) do
+                for _, v in pairs(player.GetAll()) do
                     if v == client or (v:getChar() and factionList[v:getChar():getFaction()]) then
                         v:SendMessage(Color(200, 200, 100), "[Local Broadcast]", Color(255, 255, 255), ": ", Color(180, 180, 100), client:Nick(), Color(255, 255, 255), ": ", message)
                         v:SendMessage(Color(200, 200, 100), "[Local Broadcast]", Color(255, 255, 255), ": This message was sent to ", table.concat(factionListSimple, ", "), ".")

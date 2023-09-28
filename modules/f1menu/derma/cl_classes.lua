@@ -122,7 +122,7 @@ hook.Add(
     function(tabs)
         local cnt = table.Count(lia.class.list)
         if cnt <= 1 then return end
-        for k, v in ipairs(lia.class.list) do
+        for k, _ in ipairs(lia.class.list) do
             if not lia.class.canBe(LocalPlayer(), k) then
                 continue
             else

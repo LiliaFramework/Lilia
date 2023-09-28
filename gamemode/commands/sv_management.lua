@@ -202,19 +202,6 @@ lia.command.add(
         end
     }
 )
-
---------------------------------------------------------------------------------------------------------
-lia.command.add(
-    "netmessagelogs",
-    {
-        superAdminOnly = true,
-        privilege = "Management - Check Net Message Log",
-        onRun = function(client, arguments)
-            sendData(1, client)
-        end
-    }
-)
-
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "returnitems",

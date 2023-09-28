@@ -22,12 +22,12 @@ function GM:InitializedExtrasClient()
 		RunConsoleCommand(k, v)
 	end
 
-	for k, v in pairs(lia.config.RemovableHooks) do
-		hook.Remove(k, v)
+	for hookType, identifiers in pairs(lia.config.RemovableHooks) do
+		for _, identifier in ipairs(identifiers) do
+			hook.Remove(hookType, identifier)
+		end
 	end
 
-	timer.Remove("HostnameThink")
-	timer.Remove("CheckHookTimes")
 	if ArcCW then
 		RunConsoleCommand("arccw_crosshair", "1")
 		RunConsoleCommand("arccw_shake", "0")
@@ -46,6 +46,8 @@ function GM:InitializedExtrasClient()
 		RunConsoleCommand("arccw_crosshair_outline", "0")
 		RunConsoleCommand("arccw_crosshair_shotgun", "1")
 	end
+	timer.Remove("HostnameThink")
+	timer.Remove("CheckHookTimes")
 end
 
 --------------------------------------------------------------------------------------------------------

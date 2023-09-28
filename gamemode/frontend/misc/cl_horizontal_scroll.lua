@@ -74,24 +74,23 @@ end
 function PANEL:PerformLayout()
     local canvasWide = self:GetCanvas():GetWide()
     local wide, tall = self:GetSize()
-    local x = 0
+    local originalX = 0 
     local bar = self:GetHBar()
     self:Rebuild()
     bar:SetUp(wide, canvasWide)
-    x = bar:GetOffset()
+    originalX = bar:GetOffset()
     if bar.Enabled then
         tall = tall - bar:GetTall()
     end
 
     local canvas = self:GetCanvas()
-    canvas:SetPos(x, 0)
+    canvas:SetPos(originalX, 0)
     canvas:SetTall(tall)
     self:Rebuild()
     if canvasWide ~= canvas:GetWide() then
         bar:SetScroll(bar:GetScroll())
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Clear()
     self:GetCanvas():Clear()

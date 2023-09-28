@@ -3,7 +3,7 @@ function MODULE:CharacterPreSave(character)
     local client = character:getPlayer()
     if IsValid(client) then
         local ammoTable = {}
-        for k, v in ipairs(self.ammoList) do
+        for _, v in ipairs(self.ammoList) do
             local ammo = client:GetAmmoCount(v)
             if ammo > 0 then
                 ammoTable[v] = ammo

@@ -38,12 +38,12 @@ function lia.util.includeDir(directory, fromLua, recursive)
                 return
             end
 
-            for k, v in pairs(files) do
+            for _, v in pairs(files) do
                 local fullPath = folder .. "/" .. v
                 lia.util.include(fullPath)
             end
 
-            for k, v in pairs(folders) do
+            for _, v in pairs(folders) do
                 local subFolder = baseFolder .. "/" .. v
                 AddRecursive(folder .. "/" .. v, subFolder)
             end
@@ -52,7 +52,7 @@ function lia.util.includeDir(directory, fromLua, recursive)
         local initialFolder = (fromLua and "" or baseDir) .. directory
         AddRecursive(initialFolder, initialFolder)
     else
-        for k, v in ipairs(file.Find((fromLua and "" or baseDir) .. directory .. "/*.lua", "LUA")) do
+        for _, v in ipairs(file.Find((fromLua and "" or baseDir) .. directory .. "/*.lua", "LUA")) do
             local fullPath = directory .. "/" .. v
             lia.util.include(fullPath)
         end

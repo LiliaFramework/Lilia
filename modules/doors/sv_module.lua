@@ -45,7 +45,7 @@ end
 function MODULE:copyParentDoor(child)
     local parent = child.liaParent
     if IsValid(parent) then
-        for k, v in ipairs(Variables) do
+        for _, v in ipairs(Variables) do
             local value = parent:getNetVar(v)
             if child:getNetVar(v) ~= value then
                 child:setNetVar(v, value)
@@ -82,7 +82,7 @@ end
 function MODULE:SaveDoorData()
     local data = {}
     local doors = {}
-    for k, v in ipairs(ents.GetAll()) do
+    for _, v in ipairs(ents.GetAll()) do
         if v:isDoor() then
             doors[v:MapCreationID()] = v
         end
@@ -91,7 +91,7 @@ function MODULE:SaveDoorData()
     local doorData
     for k, v in pairs(doors) do
         doorData = {}
-        for k2, v2 in ipairs(Variables) do
+        for _, v2 in ipairs(Variables) do
             local value = v:getNetVar(v2)
             if value then
                 doorData[v2] = v:getNetVar(v2)
@@ -174,7 +174,7 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function MODULE:PlayerDisconnected(client)
-    for k, v in ipairs(ents.GetAll()) do
+    for _, v in ipairs(ents.GetAll()) do
         if v == client then return end
         if v.isDoor and v:isDoor() and v:GetDTEntity(0) == client then
             v:removeDoorAccessData()

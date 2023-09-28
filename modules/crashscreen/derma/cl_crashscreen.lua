@@ -192,7 +192,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function PANEL:Think()
     self:MoveToFront()
-    for v, k in pairs(waits) do
+    for _, k in pairs(waits) do
         if k ~= nil and k[1] < SysTime() then
             k[2]()
             waits[v] = nil

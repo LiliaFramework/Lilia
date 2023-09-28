@@ -4,7 +4,7 @@ util.AddNetworkString("BodygrouperMenuClose")
 --------------------------------------------------------------------------------------------------------
 function MODULE:SaveData()
     local data = {}
-    for k, v in pairs(ents.FindByClass("bodygrouper_closet")) do
+    for _, v in pairs(ents.FindByClass("bodygrouper_closet")) do
         data[#data + 1] = {v:GetPos(), v:GetAngles()}
     end
 
@@ -13,7 +13,7 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function MODULE:LoadData()
-    for k, v in pairs(self:getData()) do
+    for _, v in pairs(self:getData()) do
         local closet = ents.Create("bodygrouper_closet")
         closet:SetPos(v[1])
         closet:SetAngles(v[2])

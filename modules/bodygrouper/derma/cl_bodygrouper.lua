@@ -13,15 +13,16 @@ function PANEL:Init()
     self:MakePopup()
     self:SetBackgroundBlur(true)
     self:SetTitle("Bodygroup Menu")
-    local frameWidth, frameHeight = self:GetSize()
+    local frameWidth = self:GetSize()
     self.model = self:Add("liaModelPanel")
     self.model:Dock(LEFT)
     self.model:SetWide(frameWidth / 2)
-    self.model.PaintOver = function(this, w, h)
+    self.model.PaintOver = function(thisModel, w, hModel)
         local str = "[%s] Rotate Left | [%s] Rotate Right"
         str = str:format(leftrotate:upper(), rightrotate:upper())
-        lia.util.drawText(str, w / 2, h - 16, color_white, 1, 1)
+        lia.util.drawText(str, wModel / 2, hModel - 16, color_white, 1, 1)
     end
+
 
     self.side = self:Add("Panel")
     self.side:Dock(RIGHT)

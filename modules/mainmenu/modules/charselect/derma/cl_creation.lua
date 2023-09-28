@@ -53,7 +53,7 @@ end
 -- returns false and a string reason for why.
 function PANEL:canCreateCharacter()
     local validFactions = {}
-    for k, v in pairs(lia.faction.teams) do
+    for _, v in pairs(lia.faction.teams) do
         if lia.faction.hasWhitelist(v.index) then
             validFactions[#validFactions + 1] = v.index
         end

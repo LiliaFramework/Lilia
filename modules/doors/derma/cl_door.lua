@@ -50,7 +50,7 @@ function PANEL:setDoor(door, access, door2)
     door.liaPanel = self
     self.accessData = access
     self.door = door
-    for k, v in ipairs(player.GetAll()) do
+    for _, v in ipairs(player.GetAll()) do
         if v ~= LocalPlayer() and v:getChar() then
             self.access:AddLine(v:Name():gsub("#", "\226\128\139#"), L(ACCESS_LABELS[access[v] or 0])).player = v
         end

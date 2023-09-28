@@ -202,8 +202,7 @@ hook.Add(
         hook.Run("DrawCharInfo", entity, character, charInfo)
         for i = 1, #charInfo do
             local info = charInfo[i]
-            ty = lia.util.drawText(info[1]:gsub("#", "\226\128\139#"), x, y, ColorAlpha(info[2] or color_white, alpha), 1, 1, "liaSmallFont")
-            y = y + ty
+            y = y + lia.util.drawText(info[1]:gsub("#", "\226\128\139#"), x, y, ColorAlpha(info[2] or color_white, alpha), 1, 1, "liaSmallFont")
         end
     end
 )

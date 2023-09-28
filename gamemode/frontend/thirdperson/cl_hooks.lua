@@ -2,6 +2,7 @@
 local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng
 local clmp = math.Clamp
 local diff, fm, sm
+local owner = LocalPlayer()
 crouchFactor = 0
 --------------------------------------------------------------------------------------------------------
 hook.Add(
