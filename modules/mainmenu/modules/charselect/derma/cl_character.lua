@@ -33,7 +33,7 @@ function PANEL:createTabs()
         create:setSelected()
     end
 
-    if LocalPlaer():getChar() then
+    if LocalPlayer():getChar() then
         self:addTab(
             "return",
             function()

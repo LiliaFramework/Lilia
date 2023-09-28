@@ -323,7 +323,7 @@ if lia.config.FactionBroadcastEnabled then
                         end
                     end
 
-                    if foundFaction == "staff" or foundFaction == FACTION_staff then return "No." end
+                    if foundFaction == "staff" or foundFaction == FACTION_STAFF then return "No." end
                     if not foundFaction then return "Cannot find faction '" .. v .. "' - use the unique IDs of factions (example: okw, okh, citizen, etc)" end
                     if multiFind then return "Ambiguous entry (multiple possible factions) - '" .. v .. "'" end
                     factionList[foundFaction] = foundID

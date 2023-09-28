@@ -16,6 +16,7 @@ stds.lilia.globals = {
 	"NAME",
 	"LANGUAGE",
 	"FACTION",
+	"chat",
 	"CLASS",
 	"CHAT_RECOGNIZED",
 	"ALWAYS_RAISED",
@@ -63,7 +64,10 @@ stds.lilia.globals = {
 	"BAR_HEIGHT",
 	"ACCESS_LABELS",
 	"CAMI",
-
+	"_OLD_COLOR_FN_",
+	"Color",
+	"CanReplicateItemsForEveryone",
+	"ItemCanEnterForEveryone",
 	"StormFox2",
 	"deferred",
 	"serverguard",
@@ -122,7 +126,25 @@ stds.lilia.globals = {
 	"VENDOR_SELLONLY",
 	"VENDOR_BUYONLY",
 	"VENDOR_TEXT",
-
+	"TABLE_WAIT_ID",
+	"MYSQLOO_INTEGER",
+	"MYSQLOO_STRING",
+	"MYSQLOO_BOOL",
+	"g_VoicePanelList",
+	"editorPanel",
+	"paintedEntitiesCache",
+	"ICON_INFO",
+	"_LIA_INV_PANEL_ID",
+	"isIconUpdating",
+	"simfphys",
+	"CRASHSCREEN_ALLOW",
+	"SERVER_DOWN",
+	"helpPanel",
+	"sideMargin",
+	"renderedIcons",
+	"LerpColor",
+	"lastMeliaab",
+	"hasPrevStep",
 	"FCAP_IMPULSE_USE",
 	"FCAP_CONTINUOUS_USE",
 	"FCAP_ONOFF_USE",
@@ -157,8 +179,7 @@ stds.gmod.globals = {
 	"ENT",
 	"TOOL",
 	"SWEP"
-}
-stds.gmod.read_globals = {
+	"player_manager",
 	"g_SpawnMenu",
 	"g_ContextMenu",
 	"VERSION",
@@ -166,7 +187,6 @@ stds.gmod.read_globals = {
 	"SERVER",
 	"GAMEMODE",
 	"NULL",
-
 	"vector_origin",
 	"vector_up",
 	"angle_zero",
@@ -793,7 +813,6 @@ stds.gmod.read_globals = {
 	"ACT_VM_ISHOOT",
 	"BONE_SCREEN_ALIGN_CYLINDER",
 	"PLAYERANIMEVENT_FLINCH_LEFTARM",
-	"player_manager",
 	"ACT_MP_ATTACK_CROUCH_GRENADE_MELEE",
 	"ACT_VM_IDLE_4",
 	"SF_NPC_FADE_CORPSE",
@@ -3139,7 +3158,6 @@ stds.gmod.read_globals = {
 	"ACT_HL2MP_GESTURE_RANGE_ATTACK",
 	"ACT_DOD_RUN_AIM_MG",
 	"ACT_HL2MP_IDLE",
-	"chat",
 	"ACT_GLIDE",
 	"GetViewEntity",
 	"ACT_WALK_CROUCH_AIM",
@@ -3502,3 +3520,4 @@ stds.gmod.read_globals = {
 	"SCHED_GET_HEALTHKIT",
 	"ACT_RELOAD"
 }
+stds.gmod.read_globals = {}

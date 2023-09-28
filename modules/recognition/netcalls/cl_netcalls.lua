@@ -11,7 +11,7 @@ netstream.Hook(
 netstream.Hook(
     "rgnMenu",
     function()
-        local default
+        local default = ""
         local menu = DermaMenu()
         menu:AddOption(
             "Allow those in a whispering range to recognize you.",
@@ -40,7 +40,7 @@ netstream.Hook(
                 Derma_StringRequest(
                     "Allow those in whispering range to recognize you by a fake name.",
                     "Enter a fake name to display to other players in range.",
-                    default or "",
+                    default,
                     function(text)
                         if text then
                             CharRecognize(2, text)
@@ -56,7 +56,7 @@ netstream.Hook(
                 Derma_StringRequest(
                     "Allow those in talking range to recognize you by a fake name.",
                     "Enter a fake name to display to other players in range.",
-                    default or "",
+                    default,
                     function(text)
                         if text then
                             CharRecognize(3, text)
@@ -72,7 +72,7 @@ netstream.Hook(
                 Derma_StringRequest(
                     "Allow those in yelling range to recognize you by a fake name.",
                     "Enter a fake name to display to other players in range.",
-                    default or "",
+                    default,
                     function(text)
                         if text then
                             CharRecognize(4, text)

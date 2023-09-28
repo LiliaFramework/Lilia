@@ -59,6 +59,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function lia.date.GetFormattedDateInGame(StartingMessage, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
     local currentTime = os.date("*t")
+    local output
     if StartingMessage then
         output = StartingMessage
     else

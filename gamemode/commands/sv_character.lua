@@ -318,32 +318,6 @@ lia.command.add(
         end
     }
 )
-
---------------------------------------------------------------------------------------------------------
-lia.command.add(
-    "checkinventory",
-    {
-        superAdminOnly = true,
-        syntax = "<string target>",
-        privilege = "Characters - Check Inventory",
-        onRun = function(client, arguments)
-            local target = lia.command.findPlayer(client, arguments[1])
-            if IsValid(target) and target:getChar() and target ~= client then
-                local inventory = target:getChar():getInv()
-                inventory:addAccessRule(ItemCanEnterForEveryone, 1)
-                inventory:addAccessRule(CanReplicateItemsForEveryone, 1)
-                inventory:sync(client)
-                net.Start("OpenInvMenu")
-                net.WriteEntity(target)
-                net.WriteType(inventory:getID())
-                net.Send(client)
-            elseif target == client then
-                client:notifyLocalized("This isn't meant for checking your own inventory.")
-            end
-        end
-    }
-)
-
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "clearinv",

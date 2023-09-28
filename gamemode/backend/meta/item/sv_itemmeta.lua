@@ -152,7 +152,6 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
-    local noSave = noSave or false
     self.data = self.data or {}
     self.data[key] = value
     if not noCheckEntity then
@@ -165,7 +164,7 @@ function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
     if receivers or self:getOwner() then
         netstream.Start(receivers or self:getOwner(), "invData", self:getID(), key, value)
     end
-
+    local noSave = noSave or false
     if noSave or not lia.db then return end
     if key == "x" or key == "y" then
         value = tonumber(value)
