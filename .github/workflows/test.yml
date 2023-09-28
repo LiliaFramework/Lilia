@@ -16,11 +16,9 @@ jobs:
         sudo apt-get install -y lua5.3 lua5.3-dev luarocks
         luarocks --local install http
         luarocks --local install htmlparser
+        luarocks --local install http.request
       shell: bash
-      
-      - name: HTTP Request Action
-      uses: fjogeleit/http-request-action@v1.14.1
-  
+
     - name: Retrieve Lua script from GitHub
       run: |
         curl -o script.lua https://raw.githubusercontent.com/impulsh/gmod-globals-scraper/master/scraper.lua
