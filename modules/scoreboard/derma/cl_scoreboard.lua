@@ -161,16 +161,16 @@ end
 --------------------------------------------------------------------------------------------------------
 function PANEL:addPlayer(client, parent)
     if not client:getChar() or not IsValid(parent) then return end
-    local slot = parent:Add("DPanel")
-    slot:Dock(TOP)
-    slot:SetTall(64)
-    slot:DockMargin(0, 0, 0, 1)
-    slot.character = client:getChar()
-    client.liaScoreSlot = slot
-    slot.model = slot:Add("liaSpawnIcon")
-    slot.model:SetModel(client:GetModel(), client:GetSkin())
-    slot.model:SetSize(64, 64)
-    slot.model.DoClick = function()
+    local playerSlot = parent:Add("DPanel")  -- Renamed 'slot' to 'playerSlot'
+    playerSlot:Dock(TOP)
+    playerSlot:SetTall(64)
+    playerSlot:DockMargin(0, 0, 0, 1)
+    playerSlot.character = client:getChar()
+    client.liaScoreSlot = playerSlot
+    playerSlot.model = playerSlot:Add("liaSpawnIcon")
+    playerSlot.model:SetModel(client:GetModel(), client:GetSkin())
+    playerSlot.model:SetSize(64, 64)
+    playerSlot.model.DoClick = function()
         local menu = DermaMenu()
         local options = {}
         hook.Run("ShowPlayerOptions", client, options)
@@ -184,56 +184,56 @@ function PANEL:addPlayer(client, parent)
         RegisterDermaMenuForClose(menu)
     end
 
-    slot.model:SetTooltip(L("sbOptions", client:Name()))
+    playerSlot.model:SetTooltip(L("sbOptions", client:Name()))
     timer.Simple(
         0,
         function()
-            if not IsValid(slot) then return end
-            local entity = slot.model.Entity
+            if not IsValid(playerSlot) then return end
+            local entity = playerSlot.model.Entity
             if IsValid(entity) then
                 for _, v in ipairs(client:GetBodyGroups()) do
                     entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
                 end
 
-                for _, v in ipairs(client:GetMaterials()) do
+                for k, _ in ipairs(client:GetMaterials()) do
                     entity:SetSubMaterial(k - 1, client:GetSubMaterial(k - 1))
                 end
             end
         end
     )
 
-    slot.name = slot:Add("DLabel")
-    slot.name:Dock(TOP)
-    slot.name:DockMargin(65, 0, 48, 0)
-    slot.name:SetTall(18)
-    slot.name:SetFont("liaGenericFont")
-    slot.name:SetTextColor(color_white)
-    slot.name:SetExpensiveShadow(1, color_black)
-    slot.ping = slot:Add("DLabel")
-    slot.ping:SetPos(self:GetWide() - 48, 0)
-    slot.ping:SetSize(48, 64)
-    slot.ping:SetText("0")
-    slot.ping.Think = function(this)
+    playerSlot.name = playerSlot:Add("DLabel")
+    playerSlot.name:Dock(TOP)
+    playerSlot.name:DockMargin(65, 0, 48, 0)
+    playerSlot.name:SetTall(18)
+    playerSlot.name:SetFont("liaGenericFont")
+    playerSlot.name:SetTextColor(color_white)
+    playerSlot.name:SetExpensiveShadow(1, color_black)
+    playerSlot.ping = playerSlot:Add("DLabel")
+    playerSlot.ping:SetPos(self:GetWide() - 48, 0)
+    playerSlot.ping:SetSize(48, 64)
+    playerSlot.ping:SetText("0")
+    playerSlot.ping.Think = function(this)
         if IsValid(client) then
             this:SetText(client:Ping())
         end
     end
 
-    slot.ping:SetFont("liaGenericFont")
-    slot.ping:SetContentAlignment(6)
-    slot.ping:SetTextColor(color_white)
-    slot.ping:SetTextInset(16, 0)
-    slot.ping:SetExpensiveShadow(1, color_black)
-    slot.desc = slot:Add("DLabel")
-    slot.desc:Dock(FILL)
-    slot.desc:DockMargin(65, 0, 48, 0)
-    slot.desc:SetWrap(true)
-    slot.desc:SetContentAlignment(7)
-    slot.desc:SetTextColor(color_white)
-    slot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
-    slot.desc:SetFont("liaSmallFont")
+    playerSlot.ping:SetFont("liaGenericFont")
+    playerSlot.ping:SetContentAlignment(6)
+    playerSlot.ping:SetTextColor(color_white)
+    playerSlot.ping:SetTextInset(16, 0)
+    playerSlot.ping:SetExpensiveShadow(1, color_black)
+    playerSlot.desc = playerSlot:Add("DLabel")
+    playerSlot.desc:Dock(FILL)
+    playerSlot.desc:DockMargin(65, 0, 48, 0)
+    playerSlot.desc:SetWrap(true)
+    playerSlot.desc:SetContentAlignment(7)
+    playerSlot.desc:SetTextColor(color_white)
+    playerSlot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
+    playerSlot.desc:SetFont("liaSmallFont")
     local oldTeam = client:Team()
-    function slot:update()
+    function playerSlot:update()
         if not IsValid(client) or not client:getChar() or not self.character or self.character ~= client:getChar() or oldTeam ~= client:Team() then
             self:Remove()
             local i = 0
@@ -296,7 +296,7 @@ function PANEL:addPlayer(client, parent)
         )
     end
 
-    self.slots[#self.slots + 1] = slot
+    self.slots[#self.slots + 1] = playerSlot
     parent:SetVisible(true)
     parent:SizeToChildren(false, true)
     parent:InvalidateLayout(true)
@@ -308,11 +308,10 @@ function PANEL:addPlayer(client, parent)
         end
     end
 
-    slot:update()
+    playerSlot:update()
 
-    return slot
+    return playerSlot
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnRemove()
     CloseDermaMenus()

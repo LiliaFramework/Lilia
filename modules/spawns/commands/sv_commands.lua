@@ -28,7 +28,7 @@ lia.command.add(
                 if info then
                     if class and class ~= "" then
                         local found = false
-                        for k, v in ipairs(lia.class.list) do
+                        for _, v in ipairs(lia.class.list) do
                             if v.faction == info.index and (v.uniqueID:lower() == class:lower() or lia.util.stringMatches(L(v.name, client), class)) then
                                 class = v.uniqueID
                                 info2 = v
@@ -74,7 +74,7 @@ lia.command.add(
             local radius = tonumber(arguments[1]) or 120
             local i = 0
             for _, v in pairs(MODULE.spawns) do
-                for __, v2 in pairs(v) do
+                for _, v2 in pairs(v) do
                     for k3, v3 in pairs(v2) do
                         if v3:Distance(position) <= radius then
                             v2[k3] = nil

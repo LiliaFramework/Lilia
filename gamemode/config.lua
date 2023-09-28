@@ -266,6 +266,7 @@ if not lia.config.WasInitialized then
             },
             ["PostDrawEffects"] = {
                 "RenderWidgets",
+                "RenderHalos"",
             },
             ["PlayerTick"] = {
                 "TickWidgets",
@@ -312,9 +313,6 @@ if not lia.config.WasInitialized then
             },
             ["NeedsDepthPass"] = {
                 "NeedsDepthPass_Bokeh",
-            },
-            ["PostDrawEffects"] = {
-                "RenderHalos",
             },
         },
         ServerURLs = {

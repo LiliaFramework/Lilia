@@ -18,7 +18,7 @@ hook.Add(
             table.insert(sortPanels, mainPanel)
             totalSize.x = totalSize.x + mainPanel:GetWide() + 10
             totalSize.y = math.max(totalSize.y, mainPanel:GetTall())
-            for id, item in pairs(playerInventory:getItems()) do
+            for _, item in pairs(playerInventory:getItems()) do
                 if item.isBag and hook.Run("CanOpenBagPanel", item) ~= false then
                     local bagInventory = item:getInv()
                     local childPanels = bagInventory:show(mainPanel)
@@ -56,7 +56,7 @@ hook.Add(
         if hook.Run("CanPlayerViewClasses") == false then return end
         local cnt = table.Count(lia.class.list)
         if cnt <= 1 then return end
-        for k, v in ipairs(lia.class.list) do
+        for k, _ in ipairs(lia.class.list) do
             if not lia.class.canBe(LocalPlayer(), k) then
                 continue
             else

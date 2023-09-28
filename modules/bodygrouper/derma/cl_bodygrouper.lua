@@ -41,10 +41,10 @@ function PANEL:Init()
         end
     end
 
-    local color = lia.config.Color
-    local h, s, v = ColorToHSV(color)
+    local defaultColor = lia.config.Color
+    local h, s, v = ColorToHSV(defaultColor)
     s = s * 0.25
-    local finaloutlinecolor = HSVToColor(h, s, v)
+    local finalOutlineColor = HSVToColor(h, s, v)
     self.finish = self.side:Add("DButton")
     self.finish:Dock(BOTTOM)
     self.finish:DockMargin(0, 5, 0, 0)
@@ -52,9 +52,9 @@ function PANEL:Init()
     self.finish:SetText("Finish")
     self.finish:SetFont("liaMediumFont")
     self.finish.Paint = function(panel, w, h)
-        surface.SetDrawColor(color)
+        surface.SetDrawColor(defaultColor)
         surface.DrawRect(0, 0, w, h)
-        surface.SetDrawColor(finaloutlinecolor)
+        surface.SetDrawColor(finalOutlineColor)
         surface.DrawOutlinedRect(0, 0, w, h, 1)
     end
 

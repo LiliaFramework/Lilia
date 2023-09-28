@@ -31,7 +31,7 @@ function GM:InitializedExtrasServer()
         end
     )
 
-    for k, v in pairs(ents.GetAll()) do
+    for _, v in pairs(ents.GetAll()) do
         if lia.config.EntitiesToBeRemoved[v:GetClass()] then v:Remove() end
     end
 
