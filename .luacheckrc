@@ -39,7 +39,7 @@ stds.lilia.read_globals = {
 	"CAMI",
 
 	"StormFox2",
-	"deferred"
+	"deferred",
 	"serverguard",
 	"sam",
 	"netstream",
