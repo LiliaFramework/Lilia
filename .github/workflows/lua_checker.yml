@@ -31,6 +31,6 @@ jobs:
       working-directory: luacheck
       run: luarocks make
 
-    - name: Lint
+    - name: Lua Check Code
       working-directory: lilia
       run: luacheck .

@@ -161,7 +161,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function PANEL:addPlayer(client, parent)
     if not client:getChar() or not IsValid(parent) then return end
-    local playerSlot = parent:Add("DPanel")  -- Renamed 'slot' to 'playerSlot'
+    local playerSlot = parent:Add("DPanel")
     playerSlot:Dock(TOP)
     playerSlot:SetTall(64)
     playerSlot:DockMargin(0, 0, 0, 1)

@@ -137,7 +137,7 @@ if SERVER then
     function GridInv:add(itemTypeOrItem, xOrQuantity, yOrData)
         local x, y, data
         local isStackCommand = isstring(itemTypeOrItem) and isnumber(xOrQuantity)
-        local quantity = tonumber(quantity) or 1
+        local quantity = 0
         if istable(yOrData) then
             data = yOrData
             if quantity > 1 then
