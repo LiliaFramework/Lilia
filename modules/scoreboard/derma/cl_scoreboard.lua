@@ -1,7 +1,9 @@
+--------------------------------------------------------------------------------------------------------
 local PANEL = {}
+--------------------------------------------------------------------------------------------------------
 local function teamGetPlayers(teamID)
     local players = {}
-    for _, ply in ipairs(player.GetAll()) do
+    for _, ply in next, player.GetAll() do
         local isDisguised = hook.Run("GetDisguised", ply)
         if isDisguised and isDisguised == teamID then
             table.insert(players, ply)
@@ -13,20 +15,25 @@ local function teamGetPlayers(teamID)
     return players
 end
 
+--------------------------------------------------------------------------------------------------------
 local function teamNumPlayers(teamID)
     return #teamGetPlayers(teamID)
 end
 
+--------------------------------------------------------------------------------------------------------
 local paintFunctions = {}
+--------------------------------------------------------------------------------------------------------
 paintFunctions[0] = function(this, w, h)
     surface.SetDrawColor(0, 0, 0, 50)
     surface.DrawRect(0, 0, w, h)
 end
 
+--------------------------------------------------------------------------------------------------------
 paintFunctions[1] = function(this, w, h)
     print("")
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     if IsValid(lia.gui.score) then
         lia.gui.score:Remove()
@@ -118,6 +125,7 @@ function PANEL:Init()
     end
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:Think()
     if (self.nextUpdate or 0) < CurTime() then
         self.title:SetText(lia.config.sbTitle)
@@ -150,14 +158,10 @@ function PANEL:Think()
     end
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:addPlayer(client, parent)
     if not client:getChar() or not IsValid(parent) then return end
-    local slot = self:createSlot(client)
-    parent:Add(slot)
-end
-
-function PANEL:createSlot(client)
-    local slot = vgui.Create("DPanel")
+    local slot = parent:Add("DPanel")
     slot:Dock(TOP)
     slot:SetTall(64)
     slot:DockMargin(0, 0, 0, 1)
@@ -208,6 +212,7 @@ function PANEL:createSlot(client)
     slot.ping = slot:Add("DLabel")
     slot.ping:SetPos(self:GetWide() - 48, 0)
     slot.ping:SetSize(48, 64)
+    slot.ping:SetText("0")
     slot.ping.Think = function(this)
         if IsValid(client) then
             this:SetText(client:Ping())
@@ -227,9 +232,17 @@ function PANEL:createSlot(client)
     slot.desc:SetTextColor(color_white)
     slot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     slot.desc:SetFont("liaSmallFont")
+    local oldTeam = client:Team()
     function slot:update()
-        if not IsValid(client) or not client:getChar() or not self.character or self.character ~= client:getChar() then
+        if not IsValid(client) or not client:getChar() or not self.character or self.character ~= client:getChar() or oldTeam ~= client:Team() then
             self:Remove()
+            local i = 0
+            for _, v in ipairs(parent:GetChildren()) do
+                if IsValid(v.model) and v ~= self then
+                    i = i + 1
+                    v.Paint = paintFunctions[i % 2]
+                end
+            end
 
             return
         end
@@ -262,7 +275,7 @@ function PANEL:createSlot(client)
 
         if self.lastModel ~= model or self.lastSkin ~= skin then
             self.model:SetModel(client:GetModel(), client:GetSkin())
-            if offDutySB[LocalPlayer():GetUserGroup()] or (LocalPlayer() == client) then
+            if offDutySB[LocalPlayer():GetUserGroup()] or (LocalPlayer() == client) or LocalPlayer():Team() == FACTION_STAFF then
                 self.model:SetTooltip(L("sbOptions", client:Name()))
             else
                 self.model:SetTooltip("You do not have access to see this information")
@@ -284,14 +297,28 @@ function PANEL:createSlot(client)
     end
 
     self.slots[#self.slots + 1] = slot
+    parent:SetVisible(true)
+    parent:SizeToChildren(false, true)
+    parent:InvalidateLayout(true)
+    local i = 0
+    for _, v in ipairs(parent:GetChildren()) do
+        if IsValid(v.model) then
+            i = i + 1
+            v.Paint = paintFunctions[i % 2]
+        end
+    end
+
+    slot:update()
 
     return slot
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:OnRemove()
     CloseDermaMenus()
 end
 
+--------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 10)
     surface.SetDrawColor(30, 30, 30, 100)
@@ -300,7 +327,9 @@ function PANEL:Paint(w, h)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
 
+--------------------------------------------------------------------------------------------------------
 vgui.Register("liaScoreboard", PANEL, "EditablePanel")
+--------------------------------------------------------------------------------------------------------
 concommand.Add(
     "dev_reloadsb",
     function()
@@ -309,3 +338,4 @@ concommand.Add(
         end
     end
 )
+--------------------------------------------------------------------------------------------------------
