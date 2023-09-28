@@ -4,7 +4,7 @@ function MODULE:LoadData()
     if items then
         local idRange = {}
         local positions = {}
-        for k, v in ipairs(items) do
+        for _, v in ipairs(items) do
             idRange[#idRange + 1] = v[1]
             positions[v[1]] = v[2]
         end
@@ -22,7 +22,7 @@ function MODULE:LoadData()
                         -- Renamed 'data' to 'resultData'
                         if resultData then
                             local loadedItems = {}
-                            for k, v in ipairs(resultData) do
+                            for _, v in ipairs(resultData) do
                                 local itemID = tonumber(v._itemID)
                                 local itemData = util.JSONToTable(v._data or "[]")
                                 local uniqueID = v._uniqueID
@@ -50,7 +50,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function MODULE:SaveData()
     local items = {}
-    for k, v in ipairs(ents.FindByClass("lia_item")) do
+    for _, v in ipairs(ents.FindByClass("lia_item")) do
         if v.liaItemID and not v.temp then
             items[#items + 1] = {v.liaItemID, v:GetPos()}
         end

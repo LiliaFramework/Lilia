@@ -21,11 +21,37 @@ stds.lilia.globals = {
 	"ALWAYS_RAISED",
 	"ICON_RENDER_QUEUE",
 	"USABLE_FUNCS",
-}
-stds.lilia.read_globals = {
+	"ModulesLoaded",
+	"CARRY_STRENGTH_TERMINATOR",
+	"CARRY_STRENGTH_GOD",
+	"PLAYER_PICKUP_RANGE",
+	"CARRY_FORCE_LEVEL",
+	"THROW_VELOCITY_CAP",
+	"CARRY_WEIGHT_LIMIT",
+	"CARRY_FORCE_LIMIT",
+	"ACT_VM_FISTS_DRAW",
+	"ACT_VM_FISTS_HOLSTER",
+	"LIA_CVAR_LANG",
+	"TalkModes",
+	"CARRY_STRENGTH_NERD",
+	"MYSQLOO_PREPARED",
+	"CARRY_STRENGTH_CHAD",
+	"LIA_CVAR_CHATFILTER",
 	"L",
 	"L2",
 	"L3",
+	"LIA_CVAR_OBSTPBACK",
+	"LIA_CVAR_ADMINESP",
+	"LIA_CVAR_ADMINESPAVANCED",
+	"LIA_CVAR_ITEMESP",
+	"LiliaStorage",
+	"MainMenu",
+	"liaVendorEnt",
+	"LIA_VENDORS",
+
+	"pac",
+	"FACTION_STAFF",
+	"CharRecognize",
 	"widgets",
 	"checkBadType",
 	"LIA_RELOADED",
@@ -79,7 +105,9 @@ stds.lilia.read_globals = {
 	"DOOR_TENANT",
 	"DOOR_GUEST",
 	"DOOR_NONE",
+	"CW_CUSTOMIZE",
 
+	"VENDOR_INVENTORY_MEASURE",
 	"VENDOR_BUY",
 	"VENDOR_SELL",
 	"VENDOR_BOTH",
@@ -102,6 +130,7 @@ stds.lilia.read_globals = {
 	"FCAP_USE_ONGROUND",
 	"FCAP_USE_IN_RADIUS",
 }
+stds.lilia.read_globals = {}
 
 files = {
 	["gamemode/languages/**/*.lua"] = {
@@ -130,6 +159,8 @@ stds.gmod.globals = {
 	"SWEP"
 }
 stds.gmod.read_globals = {
+	"g_SpawnMenu",
+	"g_ContextMenu",
 	"VERSION",
 	"CLIENT",
 	"SERVER",

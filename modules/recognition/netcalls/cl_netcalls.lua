@@ -11,6 +11,7 @@ netstream.Hook(
 netstream.Hook(
     "rgnMenu",
     function()
+        local default
         local menu = DermaMenu()
         menu:AddOption(
             "Allow those in a whispering range to recognize you.",

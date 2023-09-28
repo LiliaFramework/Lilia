@@ -28,7 +28,7 @@ netstream.Hook(
             end
 
             class = lia.chat.classes[class]
-            for k, v in ipairs(player.GetAll()) do
+            for _, v in ipairs(player.GetAll()) do
                 if client ~= v and v:getChar() and class.onCanHear(client, v) then
                     targets[#targets + 1] = v
                 end

@@ -98,7 +98,7 @@ function ENT:Use(activator)
 		local lockSound = self:getStorageInfo().lockSound
 		self:EmitSound(lockSound or "doors/default_locked.wav")
 		if self.keypad then
-			client.liaStorageEntity = nil
+			activator.liaStorageEntity = nil
 		else
 			net.Start("liaStorageUnlock")
 			net.WriteEntity(self)

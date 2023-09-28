@@ -5,7 +5,7 @@ local function teamGetPlayers(teamID)
     local players = {}
     for _, ply in next, player.GetAll() do
         local isDisguised = hook.Run("GetDisguised", ply)
-        if isDisguised and isDisguised == teamID then
+        if isDisguised and isDisguised == teamID thenf
             table.insert(players, ply)
         elseif not isDisguised and ply:Team() == teamID then
             table.insert(players, ply)
@@ -97,7 +97,7 @@ function PANEL:Init()
         list:Dock(TOP)
         list:SetTall(28)
         list.Think = function(this)
-            for k2, v2 in ipairs(teamGetPlayers(k)) do
+            for _, v2 in ipairs(teamGetPlayers(k)) do
                 if not IsValid(v2.liaScoreSlot) or v2.liaScoreSlot:GetParent() ~= this then
                     if IsValid(v2.liaScoreSlot) then
                         v2.liaScoreSlot:SetParent(this)
@@ -148,7 +148,7 @@ function PANEL:Think()
             end
         end
 
-        for k, v in pairs(self.slots) do
+        for _, v in pairs(self.slots) do
             if IsValid(v) then
                 v:update()
             end
@@ -191,11 +191,11 @@ function PANEL:addPlayer(client, parent)
             if not IsValid(slot) then return end
             local entity = slot.model.Entity
             if IsValid(entity) then
-                for k, v in ipairs(client:GetBodyGroups()) do
+                for _, v in ipairs(client:GetBodyGroups()) do
                     entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
                 end
 
-                for k, v in ipairs(client:GetMaterials()) do
+                for _, v in ipairs(client:GetMaterials()) do
                     entity:SetSubMaterial(k - 1, client:GetSubMaterial(k - 1))
                 end
             end
@@ -237,7 +237,7 @@ function PANEL:addPlayer(client, parent)
         if not IsValid(client) or not client:getChar() or not self.character or self.character ~= client:getChar() or oldTeam ~= client:Team() then
             self:Remove()
             local i = 0
-            for k, v in ipairs(parent:GetChildren()) do
+            for _, v in ipairs(parent:GetChildren()) do
                 if IsValid(v.model) and v ~= self then
                     i = i + 1
                     v.Paint = paintFunctions[i % 2]
@@ -289,7 +289,7 @@ function PANEL:addPlayer(client, parent)
             0,
             function()
                 if not IsValid(entity) or not IsValid(client) then return end
-                for k, v in ipairs(client:GetBodyGroups()) do
+                for _, v in ipairs(client:GetBodyGroups()) do
                     entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
                 end
             end
@@ -301,7 +301,7 @@ function PANEL:addPlayer(client, parent)
     parent:SizeToChildren(false, true)
     parent:InvalidateLayout(true)
     local i = 0
-    for k, v in ipairs(parent:GetChildren()) do
+    for _, v in ipairs(parent:GetChildren()) do
         if IsValid(v.model) then
             i = i + 1
             v.Paint = paintFunctions[i % 2]

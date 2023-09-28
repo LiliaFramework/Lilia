@@ -123,7 +123,7 @@ local buildActionFunc = function(action, actionIndex, itemTable, invID, sub)
             send = action.onClick(itemTable, sub and sub.data)
         end
 
-        local snd = action.sound or SOUND_INVENTORY_INTERACT
+        local snd = action.sound
         if snd then
             if istable(snd) then
                 LocalPlayer():EmitSound(unpack(snd))
