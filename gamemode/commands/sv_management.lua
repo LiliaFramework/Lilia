@@ -313,7 +313,7 @@ lia.command.add(
 )
 
 --------------------------------------------------------------------------------------------------------
-for _, v in pairs(lia.config.ServerURLs) do
+for k, v in pairs(lia.config.ServerURLs) do
     lia.command.add(
         k,
         {

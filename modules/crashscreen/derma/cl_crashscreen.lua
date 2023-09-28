@@ -1,42 +1,7 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
-local waits = {}
 --------------------------------------------------------------------------------------------------------
-function PANEL:Init()
-    local screenWidth, screenHeight = ScrW(), ScrH()
-    self:SetSize(screenWidth, screenHeight)
-    self:Center()
-    self:MoveToFront()
-    self:SetAlpha(0)
-    self:AlphaTo(255, 1.2)
-    local function wait(s, f)
-        table.insert(waits, {SysTime() + s, function() if IsValid(self) then f() end end})
-    end
-
-    wait(
-        3.33,
-        function()
-            http.Fetch(
-                "http://api.steampowered.com/ISteamApps/GetServersAtAddress/v0001?addr=" .. game.GetIPAddress(),
-                function(json)
-                    if not IsValid(self) then return end
-                    local data = util.JSONToTable(json)
-                    if not data["response"]["servers"] or not data["response"]["servers"][0] then
-                        self.ServerIsOff = true
-                        self:DoLamar()
-                    else
-                        self.ServerIsOff = false
-                    end
-                end,
-                function()
-                    if not IsValid(self) then return end
-                    self.ServerIsOff = false
-                end
-            )
-        end
-    )
-end
-
+local waits = {}
 --------------------------------------------------------------------------------------------------------
 function PANEL:DoLamar()
     local function wait(s, f)
@@ -108,6 +73,41 @@ function PANEL:DoLamar()
             wait(x, function() surface.PlaySound("ambient/energy/spark1.wav") end)
             x = x + 1.2
             wait(x, function() surface.PlaySound("ambient/energy/spark3.wav") end)
+        end
+    )
+end
+--------------------------------------------------------------------------------------------------------
+function PANEL:Init()
+    local screenWidth, screenHeight = ScrW(), ScrH()
+    self:SetSize(screenWidth, screenHeight)
+    self:Center()
+    self:MoveToFront()
+    self:SetAlpha(0)
+    self:AlphaTo(255, 1.2)
+    local function wait(s, f)
+        table.insert(waits, {SysTime() + s, function() if IsValid(self) then f() end end})
+    end
+
+    wait(
+        3.33,
+        function()
+            http.Fetch(
+                "http://api.steampowered.com/ISteamApps/GetServersAtAddress/v0001?addr=" .. game.GetIPAddress(),
+                function(json)
+                    if not IsValid(self) then return end
+                    local data = util.JSONToTable(json)
+                    if not data["response"]["servers"] or not data["response"]["servers"][0] then
+                        self.ServerIsOff = true
+                        self:DoLamar()
+                    else
+                        self.ServerIsOff = false
+                    end
+                end,
+                function()
+                    if not IsValid(self) then return end
+                    self.ServerIsOff = false
+                end
+            )
         end
     )
 end

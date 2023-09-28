@@ -42,9 +42,9 @@ function PANEL:Init()
     end
 
     local defaultColor = lia.config.Color
-    local h, s, v = ColorToHSV(defaultColor)
-    s = s * 0.25
-    local finalOutlineColor = HSVToColor(h, s, v)
+    local hue, saturation, value = ColorToHSV(defaultColor)
+    saturation = saturation * 0.25
+    local finalOutlineColor = HSVToColor(hue, saturation, value)
     self.finish = self.side:Add("DButton")
     self.finish:Dock(BOTTOM)
     self.finish:DockMargin(0, 5, 0, 0)
@@ -61,14 +61,14 @@ function PANEL:Init()
     self.finish.DoClick = function(this)
         local model = self.model.Entity
         if IsValid(model) then
-            local skn = model:GetSkin()
+            local skin = model:GetSkin()
             local groups = {}
             for i = 0, model:GetNumBodyGroups() - 1 do
                 groups[i] = model:GetBodygroup(i)
             end
 
             local makeChange = true
-            if self.originalSkin == skn then
+            if self.originalSkin == skin then
                 makeChange = false
             end
 
@@ -84,7 +84,7 @@ function PANEL:Init()
             if makeChange then
                 net.Start("BodygrouperMenu")
                 net.WriteEntity(self:GetTarget())
-                net.WriteUInt(skn, 10)
+                net.WriteUInt(skin, 10)
                 net.WriteTable(groups)
                 net.SendToServer()
             end

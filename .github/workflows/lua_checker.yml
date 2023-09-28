@@ -2,7 +2,7 @@ name: LUA Checker
 on: [push, pull_request]
 
 jobs:
-  linter:
+  LuaChecker:
     runs-on: ubuntu-latest
 
     steps:

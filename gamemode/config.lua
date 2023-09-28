@@ -249,71 +249,24 @@ if not lia.config.WasInitialized then
             ["lia_cheapblur"] = "1",
         },
         RemovableHooks = {
-            ["StartChat"] = {
-                "StartChatIndicator",
-            },
-            ["FinishChat"] = {
-                "EndChatIndicator",
-            },
-            ["PostPlayerDraw"] = {
-                "DarkRP_ChatIndicator",
-            },
-            ["CreateClientsideRagdoll"] = {
-                "DarkRP_ChatIndicator",
-            },
-            ["player_disconnect"] = {
-                "DarkRP_ChatIndicator",
-            },
-            ["PostDrawEffects"] = {
-                "RenderWidgets",
-                "RenderHalos"",
-            },
-            ["PlayerTick"] = {
-                "TickWidgets",
-            },
-            ["PlayerInitialSpawn"] = {
-                "PlayerAuthSpawn",
-            },
-            ["RenderScene"] = {
-                "RenderStereoscopy",
-                "RenderSuperDoF",
-            },
-            ["LoadGModSave"] = {
-                "LoadGModSave",
-            },
-            ["RenderScreenspaceEffects"] = {
-                "RenderColorModify",
-                "RenderBloom",
-                "RenderToyTown",
-                "RenderTexturize",
-                "RenderSunbeams",
-                "RenderSobel",
-                "RenderSharpen",
-                "RenderMaterialOverlay",
-                "RenderMotionBlur",
-                "RenderBokeh",
-            },
-            ["GUIMousePressed"] = {
-                "SuperDOFMouseDown",
-            },
-            ["GUIMouseReleased"] = {
-                "SuperDOFMouseUp",
-            },
-            ["PreventScreenClicks"] = {
-                "SuperDOFPreventClicks",
-            },
-            ["PostRender"] = {
-                "RenderFrameBlend",
-            },
-            ["PreRender"] = {
-                "PreRenderFrameBlend",
-            },
-            ["Think"] = {
-                "DOFThink",
-            },
-            ["NeedsDepthPass"] = {
-                "NeedsDepthPass_Bokeh",
-            },
+            ["StartChat"] = {"StartChatIndicator",},
+            ["FinishChat"] = {"EndChatIndicator",},
+            ["PostPlayerDraw"] = {"DarkRP_ChatIndicator",},
+            ["CreateClientsideRagdoll"] = {"DarkRP_ChatIndicator",},
+            ["player_disconnect"] = {"DarkRP_ChatIndicator",},
+            ["PostDrawEffects"] = {"RenderWidgets", "RenderHalos",},
+            ["PlayerTick"] = {"TickWidgets",},
+            ["PlayerInitialSpawn"] = {"PlayerAuthSpawn",},
+            ["RenderScene"] = {"RenderStereoscopy", "RenderSuperDoF",},
+            ["LoadGModSave"] = {"LoadGModSave",},
+            ["RenderScreenspaceEffects"] = {"RenderColorModify", "RenderBloom", "RenderToyTown", "RenderTexturize", "RenderSunbeams", "RenderSobel", "RenderSharpen", "RenderMaterialOverlay", "RenderMotionBlur", "RenderBokeh",},
+            ["GUIMousePressed"] = {"SuperDOFMouseDown",},
+            ["GUIMouseReleased"] = {"SuperDOFMouseUp",},
+            ["PreventScreenClicks"] = {"SuperDOFPreventClicks",},
+            ["PostRender"] = {"RenderFrameBlend",},
+            ["PreRender"] = {"PreRenderFrameBlend",},
+            ["Think"] = {"DOFThink",},
+            ["NeedsDepthPass"] = {"NeedsDepthPass_Bokeh",},
         },
         ServerURLs = {
             ["Discord"] = "https://discord.gg/52MSnh39vw",
