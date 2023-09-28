@@ -1,9 +1,6 @@
 name: LuaRocks Workflow
 
-on:
-  push:
-    branches:
-      - main  # Change this to your main branch
+on: [push, pull_request]
 
 jobs:
   build:
