@@ -22,6 +22,11 @@ jobs:
         luarocks install --local --tree lua_modules htmlparser
       shell: bash
 
+    - name: Set LUA_PATH environment variable
+      run: |
+        export LUA_PATH="$GITHUB_WORKSPACE/lua_modules/share/lua/5.3/?.lua;;"
+      shell: bash
+
     - name: Retrieve Lua script from GitHub
       run: |
         curl -o script.lua https://raw.githubusercontent.com/bleonheart/gmod-globals-scraper/master/scraper.lua
@@ -29,7 +34,7 @@ jobs:
 
     - name: Run Lua script and generate dump
       run: |
-        lua -I $GITHUB_WORKSPACE/lua_modules script.lua
+        lua script.lua
       shell: bash
 
     - name: Upload output text file to repo root
