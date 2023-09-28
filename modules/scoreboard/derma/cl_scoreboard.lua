@@ -1,5 +1,11 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
+local offDutySB = {
+    root = true,
+    communitymanager = true,
+    superadministrator = true,
+}
+
 --------------------------------------------------------------------------------------------------------
 local function teamGetPlayers(teamID)
     local players = {}
@@ -262,12 +268,6 @@ function PANEL:addPlayer(client, parent)
 
         local entity = self.model.Entity
         if not IsValid(entity) then return end
-        local offDutySB = {
-            root = true,
-            communitymanager = true,
-            superadministrator = true,
-        }
-
         if self.lastDesc ~= desc then
             self.desc:SetText(desc)
             self.lastDesc = desc
