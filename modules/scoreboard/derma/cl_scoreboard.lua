@@ -96,7 +96,7 @@ function PANEL:Init()
         local list = self.layout:Add("DListLayout")
         list:Dock(TOP)
         list:SetTall(28)
-        list.Think = function(this)
+        list.Think = function(this) end         --[[
             for _, v2 in ipairs(teamGetPlayers(k)) do
                 if not IsValid(v2.liaScoreSlot) or v2.liaScoreSlot:GetParent() ~= this then
                     if IsValid(v2.liaScoreSlot) then
@@ -106,8 +106,7 @@ function PANEL:Init()
                     end
                 end
             end
-        end
-
+            ]]
         local header = list:Add("DLabel")
         header:Dock(TOP)
         header:SetText(L(v.name))
@@ -159,160 +158,6 @@ function PANEL:Think()
 end
 
 --------------------------------------------------------------------------------------------------------
-function PANEL:addPlayer(client, parent)
-    if not client:getChar() or not IsValid(parent) then return end
-    local slot = parent:Add("DPanel")
-    slot:Dock(TOP)
-    slot:SetTall(64)
-    slot:DockMargin(0, 0, 0, 1)
-    slot.character = client:getChar()
-    client.liaScoreSlot = slot
-    slot.model = slot:Add("liaSpawnIcon")
-    slot.model:SetModel(client:GetModel(), client:GetSkin())
-    slot.model:SetSize(64, 64)
-    slot.model.DoClick = function()
-        local menu = DermaMenu()
-        local options = {}
-        hook.Run("ShowPlayerOptions", client, options)
-        if table.Count(options) > 0 then
-            for k, v in SortedPairs(options) do
-                menu:AddOption(L(k), v[2]):SetImage(v[1])
-            end
-        end
-
-        menu:Open()
-        RegisterDermaMenuForClose(menu)
-    end
-
-    slot.model:SetTooltip(L("sbOptions", client:Name()))
-    timer.Simple(
-        0,
-        function()
-            if not IsValid(slot) then return end
-            local entity = slot.model.Entity
-            if IsValid(entity) then
-                for _, v in ipairs(client:GetBodyGroups()) do
-                    entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
-                end
-
-                for k, _ in ipairs(client:GetMaterials()) do
-                    entity:SetSubMaterial(k - 1, client:GetSubMaterial(k - 1))
-                end
-            end
-        end
-    )
-
-    slot.name = slot:Add("DLabel")
-    slot.name:Dock(TOP)
-    slot.name:DockMargin(65, 0, 48, 0)
-    slot.name:SetTall(18)
-    slot.name:SetFont("liaGenericFont")
-    slot.name:SetTextColor(color_white)
-    slot.name:SetExpensiveShadow(1, color_black)
-    slot.ping = slot:Add("DLabel")
-    slot.ping:SetPos(slot:GetWide() - 48, 0)
-    slot.ping:SetSize(48, 64)
-    slot.ping:SetText("0")
-    slot.ping.Think = function(this)
-        if IsValid(client) then
-            this:SetText(client:Ping())
-        end
-    end
-
-    slot.ping:SetFont("liaGenericFont")
-    slot.ping:SetContentAlignment(6)
-    slot.ping:SetTextColor(color_white)
-    slot.ping:SetTextInset(16, 0)
-    slot.ping:SetExpensiveShadow(1, color_black)
-    slot.desc = slot:Add("DLabel")
-    slot.desc:Dock(FILL)
-    slot.desc:DockMargin(65, 0, 48, 0)
-    slot.desc:SetWrap(true)
-    slot.desc:SetContentAlignment(7)
-    slot.desc:SetTextColor(color_white)
-    slot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
-    slot.desc:SetFont("liaSmallFont")
-    local oldTeam = client:Team()
-    function slot:update()
-        if not IsValid(client) or not client:getChar() or not slot.character or slot.character ~= client:getChar() or oldTeam ~= client:Team() then
-            slot:Remove()
-            local i = 0
-            for _, v in ipairs(parent:GetChildren()) do
-                if IsValid(v.model) and v ~= slot then
-                    i = i + 1
-                    v.Paint = paintFunctions[i % 2]
-                end
-            end
-
-            return
-        end
-
-        local overrideName = hook.Run("ShouldAllowScoreboardOverride", client, "name") and hook.Run("GetDisplayedName", client)
-        local name = overrideName or client:Name()
-        name = name:gsub("#", "\226\128\139#")
-        local model = client:GetModel()
-        local skin = client:GetSkin()
-        local desc = hook.Run("ShouldAllowScoreboardOverride", client, "desc") and hook.Run("GetDisplayedDescription", client) or (client:getChar() and client:getChar():getDesc()) or "You do not recognize this person."
-        desc = desc:gsub("#", "\226\128\139#")
-        slot.model:setHidden(overrideName == L("unknown"))
-        if slot.lastName ~= name then
-            slot.name:SetText(name)
-            slot.lastName = name
-        end
-
-        local entity = slot.model.Entity
-        if not IsValid(entity) then return end
-        local offDutySB = {
-            root = true,
-            communitymanager = true,
-            superadministrator = true,
-        }
-
-        if slot.lastDesc ~= desc then
-            slot.desc:SetText(desc)
-            slot.lastDesc = desc
-        end
-
-        if slot.lastModel ~= model or slot.lastSkin ~= skin then
-            slot.model:SetModel(client:GetModel(), client:GetSkin())
-            if offDutySB[LocalPlayer():GetUserGroup()] or (LocalPlayer() == client) or LocalPlayer():Team() == FACTION_STAFF then
-                slot.model:SetTooltip(L("sbOptions", client:Name()))
-            else
-                slot.model:SetTooltip("You do not have access to see this information")
-            end
-
-            slot.lastModel = model
-            slot.lastSkin = skin
-        end
-
-        timer.Simple(
-            0,
-            function()
-                if not IsValid(entity) or not IsValid(client) then return end
-                for _, v in ipairs(client:GetBodyGroups()) do
-                    entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
-                end
-            end
-        )
-    end
-
-    slot.slots[#slot.slots + 1] = slot
-    parent:SetVisible(true)
-    parent:SizeToChildren(false, true)
-    parent:InvalidateLayout(true)
-    local i = 0
-    for _, v in ipairs(parent:GetChildren()) do
-        if IsValid(v.model) then
-            i = i + 1
-            v.Paint = paintFunctions[i % 2]
-        end
-    end
-
-    slot:update()
-
-    return slot
-end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnRemove()
     CloseDermaMenus()
