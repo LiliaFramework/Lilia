@@ -164,6 +164,7 @@ function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
     if receivers or self:getOwner() then
         netstream.Start(receivers or self:getOwner(), "invData", self:getID(), key, value)
     end
+
     if not lia.db then return end
     if key == "x" or key == "y" then
         value = tonumber(value)

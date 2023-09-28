@@ -46,6 +46,7 @@ function GM:InitializedExtrasClient()
 		RunConsoleCommand("arccw_crosshair_outline", "0")
 		RunConsoleCommand("arccw_crosshair_shotgun", "1")
 	end
+
 	timer.Remove("HostnameThink")
 	timer.Remove("CheckHookTimes")
 end

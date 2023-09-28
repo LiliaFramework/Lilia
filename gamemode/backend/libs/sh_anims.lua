@@ -438,6 +438,7 @@ function player_manager.TranslateToPlayerModelName(model)
 
     return result
 end
+
 --------------------------------------------------------------------------------------------------------
 for model, animtype in pairs(lia.anim.DefaultTposingFixer) do
     lia.anim.setModelClass(model, animtype)

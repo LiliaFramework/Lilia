@@ -15,7 +15,6 @@ ITEM.functions.View = {
         local inventory = item:getInv()
         if not inventory then return false end
         local parent = item.invID and lia.gui["inv" .. item.invID] or nil
-
         if IsValid(parent) then
             parent:Remove()
         end
@@ -36,6 +35,7 @@ ITEM.functions.View = {
     end,
     onCanRun = function(item) return not IsValid(item.entity) and item:getInv() end
 }
+
 --------------------------------------------------------------------------------------------------------
 function ITEM:onInstanced()
     local data = {
@@ -113,7 +113,6 @@ function ITEM:onCombine(other)
         end
     )
 end
-
 
 --------------------------------------------------------------------------------------------------------
 if SERVER then

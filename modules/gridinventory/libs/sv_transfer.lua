@@ -8,6 +8,7 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
     local status, transferReason = hook.Run("CanItemBeTransfered", item, oldInventory, inventory, client)
     if status == false then
         client:notify(transferReason or "You can't do that right now.")
+
         return
     end
 
@@ -22,10 +23,7 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
     if not canTransfer then return end
     if not inventory then return hook.Run("ItemDraggedOutOfInventory", client, item) end
     canTransfer = inventory:canAccess("transfer", context)
-    if not canTransfer then
-        return
-    end
-
+    if not canTransfer then return end
     local oldX, oldY = item:getData("x"), item:getData("y")
     local failItemDropPos = client:getItemDropPos()
     if client.invTransferTransaction and client.invTransferTransactionTimeout > RealTime() then return end

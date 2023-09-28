@@ -5,7 +5,6 @@ netstream.Hook(
         if target:GetPos():DistToSqr(client:GetPos()) > 100000 then return end
         local character = client:getChar()
         local id = character:getID()
-
         if target:getChar():recognize(id, name) then
             netstream.Start(client, "rgnDone")
             hook.Run("OnCharRecognized", client, id)
@@ -23,7 +22,6 @@ netstream.Hook(
         local targets = {}
         local character = client:getChar()
         local id = character:getID()
-
         if isnumber(level) then
             local class = "w"
             if level == 3 then

@@ -181,7 +181,8 @@ lia.char.registerVar(
             end
 
             return true
-        end, -- Change 'data' to 'charData'
+        end,
+        -- Change 'data' to 'charData'
         onAdjust = function(client, charData, value, newData)
             local name, override = hook.Run("GetDefaultCharName", client, charData.faction, charData)
             if isstring(name) and override then
@@ -189,7 +190,8 @@ lia.char.registerVar(
             else
                 newData.name = string.Trim(value):sub(1, 70)
             end
-        end, -- Change 'data' to 'charData'
+        end,
+        -- Change 'data' to 'charData'
         onPostSetup = function(panel, faction, payload)
             local name, disabled = hook.Run("GetDefaultCharName", LocalPlayer(), faction)
             if name then

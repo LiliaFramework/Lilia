@@ -312,6 +312,7 @@ function PANEL:addPlayer(client, parent)
 
     return playerSlot
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnRemove()
     CloseDermaMenus()

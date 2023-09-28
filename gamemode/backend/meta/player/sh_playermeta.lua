@@ -10,6 +10,7 @@ function playerMeta:isObserving()
         return false
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function playerMeta:IsNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP

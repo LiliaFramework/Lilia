@@ -15,11 +15,12 @@ local function CanNotAddItemIfNoSpace(inventory, action, context)
     if not x or not y then return false, "noFit" end
     local doesFit, item = inventory:doesItemFitAtPos(context.item, x, y)
     if not doesFit then
-        return         false,
+        return false,
         {
             item = item
         }
     end
+
     return true
 end
 
@@ -42,6 +43,7 @@ end
 function GridInv:canItemFitInInventory(item, x, y)
     local invW, invH = self:getSize()
     local itemW, itemH = (item.width or 1) - 1, (item.height or 1) - 1
+
     return x >= 1 and y >= 1 and (x + itemW) <= invW and (y + itemH) <= invH
 end
 
@@ -53,6 +55,7 @@ function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
     local itemX2, itemY2 = itemX + (item.width or 1), itemY + (item.height or 1)
     if x >= itemX2 or itemX >= testX2 then return false end
     if y >= itemY2 or itemY >= testY2 then return false end
+
     return true
 end
 
@@ -73,6 +76,7 @@ function GridInv:doesItemFitAtPos(testItem, x, y)
         end
     end
     -- If no overlap and we can hold the item, it fits.
+
     return true
 end
 
@@ -100,8 +104,11 @@ function GridInv:getItems(noRecurse)
     local allItems = {}
     for id, item in pairs(items) do
         allItems[id] = item
-        if item.getInv and item:getInv() then allItems = table.Merge(allItems, item:getInv():getItems()) end
+        if item.getInv and item:getInv() then
+            allItems = table.Merge(allItems, item:getInv():getItems())
+        end
     end
+
     return allItems
 end
 
@@ -145,6 +152,7 @@ if SERVER then
                 for i = 1, quantity do
                     items[i] = self:add(itemTypeOrItem, 1, data)
                 end
+
                 return deferred.all(items)
             end
         else
@@ -176,7 +184,10 @@ if SERVER then
             end
         end
 
-        if isStackCommand and item.isStackable ~= true then isStackCommand = false end
+        if isStackCommand and item.isStackable ~= true then
+            isStackCommand = false
+        end
+
         local targetAssignments = {}
         local remainingQuantity = xOrQuantity
         if isStackCommand then
@@ -205,6 +216,7 @@ if SERVER then
                 targetItem:addQuantity(assignedQuantity)
                 table.insert(resultItems, targetItem)
             end
+
             return d:resolve(resultItems)
         end
 
@@ -218,7 +230,7 @@ if SERVER then
         local canAccess, reason = targetInventory:canAccess("add", context)
         if not canAccess then
             if istable(reason) then
-                return                 d:resolve(
+                return d:resolve(
                     {
                         error = reason
                     }
@@ -233,6 +245,7 @@ if SERVER then
             item:setData("x", x)
             item:setData("y", y)
             targetInventory:addItem(item)
+
             return d:resolve(item)
         end
 
@@ -249,8 +262,7 @@ if SERVER then
             {
                 x = x,
                 y = y
-            },
-            data or {}
+            }, data or {}
         )
 
         local itemType = item.uniqueID
@@ -295,6 +307,7 @@ if SERVER then
 
                         item:setQuantity(remainingQuantity - (item.maxQuantity * overStacks))
                         targetInventory:addItem(item)
+
                         return d:resolve(items)
                     else
                         item:setQuantity(remainingQuantity)
@@ -302,6 +315,7 @@ if SERVER then
                 end
             end
         )
+
         return d
     end
 
@@ -320,6 +334,7 @@ if SERVER then
         end
 
         d:resolve()
+
         return d
     end
 else
@@ -328,7 +343,10 @@ else
         if not inventory then return end
         local item = inventory.items[itemID]
         if item and item:getData("x") == x and item:getData("y") == y then return end
-        if item and (x > inventory:getWidth() or y > inventory:getHeight() or (x + (item.width or 1) - 1) < 1 or (y + (item.height or 1) - 1) < 1) then destinationID = nil end
+        if item and (x > inventory:getWidth() or y > inventory:getHeight() or (x + (item.width or 1) - 1) < 1 or (y + (item.height or 1) - 1) < 1) then
+            destinationID = nil
+        end
+
         net.Start("liaTransferItem")
         net.WriteUInt(itemID, 32)
         net.WriteUInt(x, 32)
