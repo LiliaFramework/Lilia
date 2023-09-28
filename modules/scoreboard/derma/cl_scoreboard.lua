@@ -15,25 +15,20 @@ local function teamGetPlayers(teamID)
     return players
 end
 
---------------------------------------------------------------------------------------------------------
 local function teamNumPlayers(teamID)
     return #teamGetPlayers(teamID)
 end
 
---------------------------------------------------------------------------------------------------------
 local paintFunctions = {}
---------------------------------------------------------------------------------------------------------
 paintFunctions[0] = function(this, w, h)
     surface.SetDrawColor(0, 0, 0, 50)
     surface.DrawRect(0, 0, w, h)
 end
 
---------------------------------------------------------------------------------------------------------
 paintFunctions[1] = function(this, w, h)
     print("")
 end
 
---------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     if IsValid(lia.gui.score) then
         lia.gui.score:Remove()
@@ -125,7 +120,6 @@ function PANEL:Init()
     end
 end
 
---------------------------------------------------------------------------------------------------------
 function PANEL:Think()
     if (self.nextUpdate or 0) < CurTime() then
         self.title:SetText(lia.config.sbTitle)
@@ -158,18 +152,18 @@ function PANEL:Think()
     end
 end
 
---------------------------------------------------------------------------------------------------------
-function PANEL:addPlayer(client, parent)
+local function addPlayerToScoreboard(client, parent)
     if not client:getChar() or not IsValid(parent) then return end
     local slot = parent:Add("DPanel")
     slot:Dock(TOP)
     slot:SetTall(64)
     slot:DockMargin(0, 0, 0, 1)
     slot.character = client:getChar()
-    client.liaScoreSlot.model = client.liaScoreSlot:Add("liaSpawnIcon")
-    client.liaScoreSlot.model:SetModel(client:GetModel(), client:GetSkin())
-    client.liaScoreSlot.model:SetSize(64, 64)
-    client.liaScoreSlot.model.DoClick = function()
+    client.liaScoreSlot = slot
+    slot.model = slot:Add("liaSpawnIcon")
+    slot.model:SetModel(client:GetModel(), client:GetSkin())
+    slot.model:SetSize(64, 64)
+    slot.model.DoClick = function()
         local menu = DermaMenu()
         local options = {}
         hook.Run("ShowPlayerOptions", client, options)
@@ -183,12 +177,12 @@ function PANEL:addPlayer(client, parent)
         RegisterDermaMenuForClose(menu)
     end
 
-    client.liaScoreSlot.model:SetTooltip(L("sbOptions", client:Name()))
+    slot.model:SetTooltip(L("sbOptions", client:Name()))
     timer.Simple(
         0,
         function()
-            if not IsValid(client.liaScoreSlot) then return end
-            local entity = client.liaScoreSlot.model.Entity
+            if not IsValid(slot) then return end
+            local entity = slot.model.Entity
             if IsValid(entity) then
                 for _, v in ipairs(client:GetBodyGroups()) do
                     entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
@@ -201,36 +195,36 @@ function PANEL:addPlayer(client, parent)
         end
     )
 
-    client.liaScoreSlot.name = client.liaScoreSlot:Add("DLabel")
-    client.liaScoreSlot.name:Dock(TOP)
-    client.liaScoreSlot.name:DockMargin(65, 0, 48, 0)
-    client.liaScoreSlot.name:SetTall(18)
-    client.liaScoreSlot.name:SetFont("liaGenericFont")
-    client.liaScoreSlot.name:SetTextColor(color_white)
-    client.liaScoreSlot.name:SetExpensiveShadow(1, color_black)
-    client.liaScoreSlot.ping = client.liaScoreSlot:Add("DLabel")
-    client.liaScoreSlot.ping:SetPos(self:GetWide() - 48, 0)
-    client.liaScoreSlot.ping:SetSize(48, 64)
-    client.liaScoreSlot.ping:SetText("0")
-    client.liaScoreSlot.ping.Think = function(this)
+    slot.name = slot:Add("DLabel")
+    slot.name:Dock(TOP)
+    slot.name:DockMargin(65, 0, 48, 0)
+    slot.name:SetTall(18)
+    slot.name:SetFont("liaGenericFont")
+    slot.name:SetTextColor(color_white)
+    slot.name:SetExpensiveShadow(1, color_black)
+    slot.ping = slot:Add("DLabel")
+    slot.ping:SetPos(self:GetWide() - 48, 0)
+    slot.ping:SetSize(48, 64)
+    slot.ping:SetText("0")
+    slot.ping.Think = function()
         if IsValid(client) then
-            this:SetText(client:Ping())
+            slot.ping:SetText(client:Ping())
         end
     end
 
-    client.liaScoreSlot.ping:SetFont("liaGenericFont")
-    client.liaScoreSlot.ping:SetContentAlignment(6)
-    client.liaScoreSlot.ping:SetTextColor(color_white)
-    client.liaScoreSlot.ping:SetTextInset(16, 0)
-    client.liaScoreSlot.ping:SetExpensiveShadow(1, color_black)
-    client.liaScoreSlot.desc = client.liaScoreSlot:Add("DLabel")
-    client.liaScoreSlot.desc:Dock(FILL)
-    client.liaScoreSlot.desc:DockMargin(65, 0, 48, 0)
-    client.liaScoreSlot.desc:SetWrap(true)
-    client.liaScoreSlot.desc:SetContentAlignment(7)
-    client.liaScoreSlot.desc:SetTextColor(color_white)
-    client.liaScoreSlot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
-    client.liaScoreSlot.desc:SetFont("liaSmallFont")
+    slot.ping:SetFont("liaGenericFont")
+    slot.ping:SetContentAlignment(6)
+    slot.ping:SetTextColor(color_white)
+    slot.ping:SetTextInset(16, 0)
+    slot.ping:SetExpensiveShadow(1, color_black)
+    slot.desc = slot:Add("DLabel")
+    slot.desc:Dock(FILL)
+    slot.desc:DockMargin(65, 0, 48, 0)
+    slot.desc:SetWrap(true)
+    slot.desc:SetContentAlignment(7)
+    slot.desc:SetTextColor(color_white)
+    slot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
+    slot.desc:SetFont("liaSmallFont")
     local oldTeam = client:Team()
     function slot:update()
         if not IsValid(client) or not client:getChar() or not self.character or self.character ~= client:getChar() or oldTeam ~= client:Team() then
@@ -275,9 +269,9 @@ function PANEL:addPlayer(client, parent)
         if self.lastModel ~= model or self.lastSkin ~= skin then
             self.model:SetModel(client:GetModel(), client:GetSkin())
             if offDutySB[LocalPlayer():GetUserGroup()] or (LocalPlayer() == client) or LocalPlayer():Team() == FACTION_STAFF then
-                self.model:SetToolTip(L("sbOptions", client:Name()))
+                self.model:SetTooltip(L("sbOptions", client:Name()))
             else
-                self.model:SetToolTip("You do not have access to see this information")
+                self.model:SetTooltip("You do not have access to see this information")
             end
 
             self.lastModel = model
@@ -312,12 +306,10 @@ function PANEL:addPlayer(client, parent)
     return slot
 end
 
---------------------------------------------------------------------------------------------------------
 function PANEL:OnRemove()
     CloseDermaMenus()
 end
 
---------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 10)
     surface.SetDrawColor(30, 30, 30, 100)
@@ -326,7 +318,6 @@ function PANEL:Paint(w, h)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
 
---------------------------------------------------------------------------------------------------------
 vgui.Register("liaScoreboard", PANEL, "EditablePanel")
 --------------------------------------------------------------------------------------------------------
 concommand.Add(
