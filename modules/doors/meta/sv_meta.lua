@@ -3,7 +3,7 @@ local entityMeta = FindMetaTable("Entity")
 --------------------------------------------------------------------------------------------------------
 function entityMeta:removeDoorAccessData()
     if IsValid(self) then
-        for _, v in pairs(self.liaAccess or {}) do
+        for k, _ in pairs(self.liaAccess or {}) do
             netstream.Start(k, "doorMenu")
         end
 

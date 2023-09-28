@@ -58,7 +58,7 @@ function PANEL:Init()
                 nil,
                 function()
                     local height = 0
-                    for k, v in pairs(self.items) do
+                    for _, v in pairs(self.items) do
                         if IsValid(v) then
                             height = height + v:GetTall() + 1
                         end

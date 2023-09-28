@@ -11,7 +11,7 @@ function MODULE:callOnDoorChildren(entity, callback)
 
     if IsValid(parent) then
         callback(parent)
-        for k, v in pairs(parent.liaChildren) do
+        for k, _ in pairs(parent.liaChildren) do
             local child = ents.GetMapCreatedEntity(k)
             if IsValid(child) then
                 callback(child)

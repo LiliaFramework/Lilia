@@ -177,7 +177,7 @@ function lia.util.wrapText(text, width, font)
     local w = surface.GetTextSize(text)
     local maxW = 0
     if w <= width then
-        text, _ = text:gsub("%s", " ")
+        text = text:gsub("%s", " ")
 
         return {text}, w
     end

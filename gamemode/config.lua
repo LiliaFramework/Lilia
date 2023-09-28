@@ -316,7 +316,7 @@ if not lia.config.WasInitialized then
             ["PostDrawEffects"] = {
                 "RenderHalos",
             },
-        }
+        },
         ServerURLs = {
             ["Discord"] = "https://discord.gg/52MSnh39vw",
             ["Workshop"] = "https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255"

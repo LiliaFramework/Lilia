@@ -393,7 +393,7 @@ function GM:CallMapCleanerInit()
         function()
             net.Start("worlditem_cleanup_inbound")
             net.Broadcast()
-            for i, v in pairs(player.GetAll()) do
+            for _, v in pairs(player.GetAll()) do
                 v:notify("World items will be cleared in 10 Minutes!")
             end
         end
@@ -406,7 +406,7 @@ function GM:CallMapCleanerInit()
         function()
             net.Start("worlditem_cleanup_inbound_final")
             net.Broadcast()
-            for i, v in pairs(player.GetAll()) do
+            for _, v in pairs(player.GetAll()) do
                 v:notify("World items will be cleared in 60 Seconds!")
             end
         end
@@ -417,7 +417,7 @@ function GM:CallMapCleanerInit()
         lia.config.ItemCleanupTime,
         0,
         function()
-            for i, v in pairs(ents.FindByClass("lia_item")) do
+            for _, v in pairs(ents.FindByClass("lia_item")) do
                 v:Remove()
             end
         end
@@ -430,7 +430,7 @@ function GM:CallMapCleanerInit()
         function()
             net.Start("map_cleanup_inbound")
             net.Broadcast()
-            for i, v in pairs(player.GetAll()) do
+            for _, v in pairs(player.GetAll()) do
                 v:notify("World items will be cleared in 10 Minutes!")
             end
         end
@@ -443,7 +443,7 @@ function GM:CallMapCleanerInit()
         function()
             net.Start("worlditem_cleanup_inbound_final")
             net.Broadcast()
-            for i, v in pairs(player.GetAll()) do
+            for _, v in pairs(player.GetAll()) do
                 v:notify("World items will be cleared in 60 Seconds!")
             end
         end

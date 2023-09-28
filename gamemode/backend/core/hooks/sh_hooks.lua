@@ -201,7 +201,7 @@ function GM:CalcMainActivity(client, velocity)
     client.CalcSeqOverride = -1
     local animClass = lia.anim.getModelClass(client:GetModel())
     if animClass ~= "player" then client:SetPoseParameter("move_yaw", math.NormalizeAngle(FindMetaTable("Vector").Angle(velocity)[2] - client:EyeAngles()[2])) end
-    if not (self:HandlePlayerLanding(client, velocity, client.m_bWasOnGround) then
+    if not self:HandlePlayerLanding(client, velocity, client.m_bWasOnGround) then
         local len2D = velocity:Length2DSqr()
         if len2D > 22500 then
             client.CalcIdeal = ACT_MP_RUN

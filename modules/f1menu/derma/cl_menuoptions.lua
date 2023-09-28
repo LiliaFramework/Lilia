@@ -56,7 +56,7 @@ hook.Add(
         if hook.Run("CanPlayerViewClasses") == false then return end
         local cnt = table.Count(lia.class.list)
         if cnt <= 1 then return end
-        for _, v in ipairs(lia.class.list) do
+        for k, _ in ipairs(lia.class.list) do
             if not lia.class.canBe(LocalPlayer(), k) then
                 continue
             else
