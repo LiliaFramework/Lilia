@@ -27,23 +27,15 @@ end
 function GM:EntityTakeDamage(entity, dmgInfo)
     local inflictor = dmgInfo:GetInflictor()
     local attacker = dmgInfo:GetAttacker()
-    if attacker:GetClass() == "prop_physics" then return true end
-    if inflictor:GetClass() == "prop_physics" then return true end
+    if attacker:GetClass() == "prop_physics" or inflictor:GetClass() == "prop_physics" then return true end
     if not IsValid(entity) or not entity:IsPlayer() then return end
-    if IsValid(entity) and entity:IsPlayer() and dmgInfo:IsDamageType(DMG_CRUSH) and not IsValid(entity.liaRagdoll) then return true end
-    if IsValid(entity.liaPlayer) then
-        if dmgInfo:IsDamageType(DMG_CRUSH) then
-            if (entity.liaFallGrace or 0) < CurTime() then
-                if dmgInfo:GetDamage() <= 10 then
-                    dmgInfo:SetDamage(0)
-                end
-
-                entity.liaFallGrace = CurTime() + 0.5
-            else
-                return
-            end
+    if dmgInfo:IsDamageType(DMG_CRUSH) and not IsValid(entity.liaRagdoll) then return true end
+    if IsValid(entity.liaPlayer) and dmgInfo:IsDamageType(DMG_CRUSH) and (entity.liaFallGrace or 0) < CurTime() then
+        if dmgInfo:GetDamage() <= 10 then
+            dmgInfo:SetDamage(0)
         end
 
+        entity.liaFallGrace = CurTime() + 0.5
         entity.liaPlayer:TakeDamageInfo(dmgInfo)
     end
 
