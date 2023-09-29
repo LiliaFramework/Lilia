@@ -73,12 +73,10 @@ function ikon:init()
     file.CreateDir("nsIcon")
     file.CreateDir("nsIcon/" .. schemaName)
 end
-
 --------------------------------------------------------------------------------------------------------
 if schemaName then
     ikon:init()
 end
-
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "InitializedSchema",
@@ -88,7 +86,6 @@ hook.Add(
         ikon:init()
     end
 )
-
 --------------------------------------------------------------------------------------------------------
 --[[
 	IKON Library Essential Material/Texture Declare
@@ -107,7 +104,6 @@ local mat_outline = CreateMaterial(
         ["$translucent"] = 1
     }
 )
-
 --------------------------------------------------------------------------------------------------------
 --[[
 	Developer hook.
@@ -119,7 +115,6 @@ local lightPositions = {
     BOX_TOP = Color(255, 255, 255),
     BOX_FRONT = Color(255, 255, 255),
 }
-
 --------------------------------------------------------------------------------------------------------
 function ikon:renderHook()
     -- Go Away, GMOD Halo.
@@ -241,7 +236,6 @@ function ikon:renderHook()
         end
     )
 end
-
 --------------------------------------------------------------------------------------------------------
 local testName = "renderedMeme"
 --------------------------------------------------------------------------------------------------------
@@ -253,7 +247,6 @@ function ikon:showResult()
     surface.SetMaterial(mat_outline)
     surface.DrawTexturedRect(x, 0, w, h)
 end
-
 --------------------------------------------------------------------------------------------------------
 --[[
 	Renders the Icon with given arguments.
@@ -323,7 +316,6 @@ function ikon:renderIcon(name, w, h, mdl, camInfo, updateCache)
 
     return true
 end
-
 --------------------------------------------------------------------------------------------------------
 --[[
 	Gets rendered icon with given unique name.
@@ -344,7 +336,6 @@ function ikon:getIcon(name)
     end
     -- retryd
 end
-
 --------------------------------------------------------------------------------------------------------
 concommand.Add(
     "lia_flushicon",

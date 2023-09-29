@@ -22,7 +22,6 @@ net.Receive(
 		end
 
 		local count = net.ReadUInt(16)
-		-- Removed the unused variable i
 		for _ = 1, count do
 			local itemType = net.ReadString()
 			local price = net.ReadInt(32)
