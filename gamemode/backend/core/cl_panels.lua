@@ -20,17 +20,6 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:SetupQuickMenu(menu)
-    menu:addCheck(
-        L"cheapBlur",
-        function(panel, state)
-            if state then
-                RunConsoleCommand("lia_cheapblur", "1")
-            else
-                RunConsoleCommand("lia_cheapblur", "0")
-            end
-        end, CreateClientConVar("lia_cheapblur", 0, true):GetBool()
-    )
-
     menu:addSpacer()
     local current
     LIA_CVAR_LANG = CreateClientConVar("lia_language", "english", true, true)
