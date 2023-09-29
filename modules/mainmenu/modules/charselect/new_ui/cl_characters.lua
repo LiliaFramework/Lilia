@@ -1,22 +1,18 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------
-lia.config.CharHover = lia.config.CharHover or {}
+local WHITE = Color(255, 255, 255, 150)
 --------------------------------------------------------------------------------------------------------
-lia.config.CharClick = lia.config.CharClick or {}
+local SELECTED = Color(255, 255, 255, 230)
 --------------------------------------------------------------------------------------------------------
-lia.config.CharWarning = lia.config.CharWarning or {}
---------------------------------------------------------------------------------------------------------
-PANEL.WHITE = Color(255, 255, 255, 150)
---------------------------------------------------------------------------------------------------------
-PANEL.SELECTED = Color(255, 255, 255, 230)
---------------------------------------------------------------------------------------------------------
+PANEL.WHITE = WHITE
+PANEL.SELECTED = SELECTED
 PANEL.HOVERED = Color(255, 255, 255, 50)
---------------------------------------------------------------------------------------------------------
 PANEL.ANIM_SPEED = 0.1
---------------------------------------------------------------------------------------------------------
 PANEL.FADE_SPEED = 0.5
---------------------------------------------------------------------------------------------------------
+lia.config.CharHover = lia.config.CharHover or {"buttons/button15.wav", 35, 250}
+lia.config.CharClick = lia.config.CharClick or {"buttons/button14.wav", 35, 255}
+lia.config.CharWarning = lia.config.CharWarning or {"friends/friend_join.wav", 40, 255}
 function PANEL:Init()
     if IsValid(lia.gui.newCharsMenu) then
         lia.gui.newCharsMenu:Remove()
@@ -27,7 +23,7 @@ function PANEL:Init()
     self:SetPos(0, -ScrH())
     self:MakePopup()
     self:MoveTo(0, 0, .8)
-    self.list = self:Add("liaHorizontalScroll")
+    self.list = self:Add('liaHorizontalScroll')
     self.list:SetSize(ScrW() * .8, ScrH() * .6)
     self.list:SetPos((ScrW() * .5) - (ScrW() * .8) / 2, (ScrH() * .6) - (ScrH() * .6) / 2)
     local scrollBar = self.list:GetHBar()
@@ -52,14 +48,13 @@ function PANEL:Init()
 
     self:createCharacterSlots()
     hook.Add(
-        "CharacterListUpdated",
+        'CharacterListUpdated',
         self,
         function()
             self:createCharacterSlots()
         end
     )
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:createCharacterSlots()
     self.list:Clear()
@@ -67,16 +62,15 @@ function PANEL:createCharacterSlots()
     for _, id in ipairs(lia.characters) do
         local character = lia.char.loaded[id]
         if not character then continue end
-        local charPanel = self.list:Add("liaNewCharacterSlot")
-        charPanel:Dock(LEFT)
-        charPanel:DockMargin(0, 0, 8, 8)
-        charPanel:setCharacter(character)
-        charPanel.onSelected = function(panel)
+        local panel = self.list:Add('liaNewCharacterSlot')
+        panel:Dock(LEFT)
+        panel:DockMargin(0, 0, 8, 8)
+        panel:setCharacter(character)
+        panel.onSelected = function(panel)
             self:onCharacterSelected(character)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:onCharacterSelected(character)
     if self.choosing then return end
@@ -112,7 +106,6 @@ function PANEL:onCharacterSelected(character)
         end
     )
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:setFadeToBlack(fade)
     local d = deferred.new()
@@ -121,12 +114,12 @@ function PANEL:setFadeToBlack(fade)
             self.fade:Remove()
         end
 
-        local fadePanel = vgui.Create("DPanel")
-        fadePanel:SetSize(ScrW(), ScrH())
-        fadePanel:SetSkin("Default")
-        fadePanel:SetBackgroundColor(color_black)
-        fadePanel:SetAlpha(0)
-        fadePanel:AlphaTo(
+        local fade = vgui.Create('DPanel')
+        fade:SetSize(ScrW(), ScrH())
+        fade:SetSkin('Default')
+        fade:SetBackgroundColor(color_black)
+        fade:SetAlpha(0)
+        fade:AlphaTo(
             255,
             self.FADE_SPEED,
             0,
@@ -135,9 +128,9 @@ function PANEL:setFadeToBlack(fade)
             end
         )
 
-        fadePanel:SetZPos(999)
-        fadePanel:MakePopup()
-        self.fade = fadePanel
+        fade:SetZPos(999)
+        fade:MakePopup()
+        self.fade = fade
     elseif IsValid(self.fade) then
         local fadePanel = self.fade
         fadePanel:AlphaTo(
@@ -153,9 +146,8 @@ function PANEL:setFadeToBlack(fade)
 
     return d
 end
-
 --------------------------------------------------------------------------------------------------------
-DEFINE_BASECLASS("EditablePanel")
+DEFINE_BASECLASS('EditablePanel')
 function PANEL:Remove()
     self.bClosing = true
     self.list:Clear()
@@ -168,15 +160,14 @@ function PANEL:Remove()
         end
     )
 end
-
 --------------------------------------------------------------------------------------------------------
+local gradient = lia.util.getMaterial('gui/gradient_up')
 function PANEL:Paint(w, h)
     surface.DrawTexturedRect((w / 2) - ((h * 1.5) * .2) / 2, 10, (h * 1.5) * .2, h * .28)
     surface.SetDrawColor(0, 0, 0)
-    surface.SetMaterial(lia.util.getMaterial("gui/gradient_up"))
+    surface.SetMaterial(gradient)
     surface.DrawTexturedRect(0, h - (h * .1), w, h * .1)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnKeyCodePressed(keyCode)
     if self.bClosing then return end
@@ -192,28 +183,24 @@ function PANEL:OnKeyCodePressed(keyCode)
             end
         )
 
-        local panel = vgui.Create("liaNewCharacterMenu")
+        local panel = vgui.Create('liaNewCharacterMenu')
         panel:SetPos(0, ScrH())
         panel:MoveTo(0, 0, .8)
         self.bClosing = true
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:hoverSound()
     LocalPlayer():EmitSound(unpack(lia.config.CharHover))
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:clickSound()
     LocalPlayer():EmitSound(unpack(lia.config.CharClick))
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:warningSound()
     LocalPlayer():EmitSound(unpack(lia.config.CharWarning))
 end
-
 --------------------------------------------------------------------------------------------------------
-vgui.Register("liaNewCharactersMenu", PANEL, "EditablePanel")
+vgui.Register('liaNewCharactersMenu', PANEL, 'EditablePanel')
 --------------------------------------------------------------------------------------------------------

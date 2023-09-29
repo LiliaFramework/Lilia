@@ -1,8 +1,7 @@
 --------------------------------------------------------------------------------------------------------
-if serverguard then
-    serverguard.plugin:Toggle("restrictions", false)
-end
-
+if not serverguard then return end
+--------------------------------------------------------------------------------------------------------
+serverguard.plugin:Toggle("restrictions", false)
 --------------------------------------------------------------------------------------------------------
 local function OnPrivilegeRegistered(privilege)
     local permission = privilege.Name

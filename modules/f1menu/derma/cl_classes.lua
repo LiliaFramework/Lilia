@@ -12,6 +12,7 @@ function PANEL:Init()
         panel.OnMouseReleased = function()
             if self.pressing then
                 self.pressing = nil
+                --self:onClick()
             end
         end
     end
@@ -40,12 +41,10 @@ function PANEL:Init()
     self.label:SetFont("liaMediumFont")
     assignClick(self.label)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:onClick()
     lia.command.send("beclass", self.class)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:setNumber(number)
     local limit = self.data.limit
@@ -55,7 +54,6 @@ function PANEL:setNumber(number)
         self.limit:SetText("∞")
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:setClass(data)
     if data.model then
@@ -80,7 +78,6 @@ function PANEL:setClass(data)
     self.class = data.index
     self:setNumber(#lia.class.getPlayers(data.index))
 end
-
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaClassPanel", PANEL, "DPanel")
 --------------------------------------------------------------------------------------------------------
@@ -97,7 +94,6 @@ function PANEL:Init()
     self.classPanels = {}
     self:loadClasses()
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:loadClasses()
     self.list:Clear()
@@ -112,7 +108,6 @@ function PANEL:loadClasses()
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaClasses", PANEL, "EditablePanel")
 --------------------------------------------------------------------------------------------------------
@@ -122,7 +117,7 @@ hook.Add(
     function(tabs)
         local cnt = table.Count(lia.class.list)
         if cnt <= 1 then return end
-        for k, _ in ipairs(lia.class.list) do
+        for k, v in ipairs(lia.class.list) do
             if not lia.class.canBe(LocalPlayer(), k) then
                 continue
             else

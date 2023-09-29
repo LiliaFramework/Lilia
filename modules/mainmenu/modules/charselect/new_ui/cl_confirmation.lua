@@ -1,21 +1,8 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
---------------------------------------------------------------------------------------------------------
-lia.config.CharHover = lia.config.CharHover or {}
---------------------------------------------------------------------------------------------------------
-lia.config.CharClick = lia.config.CharClick or {}
---------------------------------------------------------------------------------------------------------
-lia.config.CharWarning = lia.config.CharWarning or {}
---------------------------------------------------------------------------------------------------------
-PANEL.WHITE = Color(255, 255, 255, 150)
---------------------------------------------------------------------------------------------------------
-PANEL.SELECTED = Color(255, 255, 255, 230)
---------------------------------------------------------------------------------------------------------
-PANEL.HOVERED = Color(255, 255, 255, 50)
---------------------------------------------------------------------------------------------------------
-PANEL.ANIM_SPEED = 0.1
---------------------------------------------------------------------------------------------------------
-PANEL.FADE_SPEED = 0.5
+lia.config.CharHover = lia.config.CharHover or {"buttons/button15.wav", 35, 250}
+lia.config.CharClick = lia.config.CharClick or {"buttons/button14.wav", 35, 255}
+lia.config.CharWarning = lia.config.CharWarning or {"friends/friend_join.wav", 40, 255}
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     if IsValid(lia.gui.charConfirm) then
@@ -27,7 +14,7 @@ function PANEL:Init()
     self:AlphaTo(255, self.ANIM_SPEED)
     self:SetSize(ScrW(), ScrH())
     self:MakePopup()
-    self.content = self:Add("DPanel")
+    self.content = self:Add('DPanel')
     self.content:SetSize(ScrW(), 256)
     self.content:CenterVertical()
     self.content.Paint = function(content, w, h)
@@ -35,23 +22,23 @@ function PANEL:Init()
         surface.DrawRect(0, 0, w, h)
     end
 
-    self.title = self.content:Add("DLabel")
-    self.title:SetText(L("Are you sure?"):upper())
-    self.title:SetFont("liaCharButtonFont")
+    self.title = self.content:Add('DLabel')
+    self.title:SetText(L('Are you sure?'):upper())
+    self.title:SetFont('liaCharButtonFont')
     self.title:SetTextColor(color_white)
     self.title:SizeToContents()
     self.title:CenterHorizontal()
     self.title.y = 64
-    self.message = self.content:Add("DLabel")
-    self.message:SetFont("liaCharSubTitleFont")
+    self.message = self.content:Add('DLabel')
+    self.message:SetFont('liaCharSubTitleFont')
     self.message:SetTextColor(color_white)
     self.message:SetSize(ScrW(), 32)
     self.message:CenterVertical()
     self.message:SetContentAlignment(5)
     local SPACING = 16
-    self.confirm = self.content:Add("DButton")
-    self.confirm:SetFont("liaCharSmallButtonFont")
-    self.confirm:SetText(L("yes"):upper())
+    self.confirm = self.content:Add('DButton')
+    self.confirm:SetFont('liaCharSmallButtonFont')
+    self.confirm:SetText(L('yes'):upper())
     self.confirm:SetPaintBackground(false)
     self.confirm:SetSize(64, 32)
     self.confirm.OnCursorEntered = function()
@@ -73,9 +60,9 @@ function PANEL:Init()
         self:Remove()
     end
 
-    self.cancel = self.content:Add("DButton")
-    self.cancel:SetFont("liaCharSmallButtonFont")
-    self.cancel:SetText(L("no"):upper())
+    self.cancel = self.content:Add('DButton')
+    self.cancel:SetFont('liaCharSmallButtonFont')
+    self.cancel:SetText(L('no'):upper())
     self.cancel:SetPaintBackground(false)
     self.cancel:SetSize(64, 32)
     self.cancel.OnCursorEntered = function(cancel)
@@ -100,19 +87,16 @@ function PANEL:Init()
         end
     )
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnMousePressed()
     self:Remove()
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self)
     surface.SetDrawColor(0, 0, 0, 150)
     surface.DrawRect(0, 0, w, h)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:setTitle(title)
     self.title:SetText(title)
@@ -121,30 +105,26 @@ function PANEL:setTitle(title)
 
     return self
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:setMessage(message)
     self.message:SetText(message:upper())
 
     return self
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:onConfirm(callback)
     self.onConfirmCallback = callback
 
     return self
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:onCancel(callback)
     self.onCancelCallback = callback
 
     return self
 end
-
 --------------------------------------------------------------------------------------------------------
-DEFINE_BASECLASS("EditablePanel")
+DEFINE_BASECLASS('EditablePanel')
 --------------------------------------------------------------------------------------------------------
 function PANEL:Remove()
     self.bClosing = true
@@ -157,22 +137,26 @@ function PANEL:Remove()
         end
     )
 end
-
+--------------------------------------------------------------------------------------------------------
+local WHITE = Color(255, 255, 255, 150)
+local SELECTED = Color(255, 255, 255, 230)
+PANEL.WHITE = WHITE
+PANEL.SELECTED = SELECTED
+PANEL.HOVERED = Color(255, 255, 255, 50)
+PANEL.ANIM_SPEED = 0.1
+PANEL.FADE_SPEED = 0.5
 --------------------------------------------------------------------------------------------------------
 function PANEL:hoverSound()
     LocalPlayer():EmitSound(unpack(lia.config.CharHover))
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:clickSound()
     LocalPlayer():EmitSound(unpack(lia.config.CharClick))
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:warningSound()
     LocalPlayer():EmitSound(unpack(lia.config.CharWarning))
 end
-
 --------------------------------------------------------------------------------------------------------
-vgui.Register("liaNewCharacterConfirm", PANEL, "EditablePanel")
+vgui.Register('liaNewCharacterConfirm', PANEL, 'EditablePanel')
 --------------------------------------------------------------------------------------------------------

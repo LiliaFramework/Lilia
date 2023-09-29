@@ -33,7 +33,6 @@ net.Receive(
         response()
     end
 )
-
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaCharCreate",
@@ -48,7 +47,7 @@ net.Receive(
 
         local numValues = net.ReadUInt(32)
         local data = {}
-        for _ = 1, numValues do
+        for i = 1, numValues do
             data[net.ReadString()] = net.ReadType()
         end
 
@@ -98,7 +97,6 @@ net.Receive(
         )
     end
 )
-
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaCharDelete",

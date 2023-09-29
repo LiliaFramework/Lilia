@@ -35,7 +35,6 @@ function PANEL:Init()
 		end
 	)
 end
-
 -- Creates a liaCharacterSlot for each of the local player's characters.
 function PANEL:createCharacterSlots()
 	self.scroll:Clear()
@@ -43,16 +42,15 @@ function PANEL:createCharacterSlots()
 	for _, id in ipairs(lia.characters) do
 		local character = lia.char.loaded[id]
 		if not character then continue end
-		local slotPanel = self.scroll:Add("liaCharacterSlot")
-		slotPanel:Dock(LEFT)
-		slotPanel:DockMargin(0, 0, 8, 8)
-		slotPanel:setCharacter(character)
-		slotPanel.onSelected = function(panel)
+		local panel = self.scroll:Add("liaCharacterSlot")
+		panel:Dock(LEFT)
+		panel:DockMargin(0, 0, 8, 8)
+		panel:setCharacter(character)
+		panel.onSelected = function(panel)
 			self:onCharacterSelected(character)
 		end
 	end
 end
-
 -- Called when a character slot has been selected. This actually loads the
 -- character.
 function PANEL:onCharacterSelected(character)

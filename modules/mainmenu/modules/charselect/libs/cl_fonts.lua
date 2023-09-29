@@ -2,11 +2,10 @@
 local function ScreenScale(size)
     return size * (ScrH() / 900) + 10
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:LoadFonts(font, genericFont)
     surface.CreateFont(
-        "liaCharTitleFont",
+        'liaCharTitleFont',
         {
             font = font,
             weight = 200,
@@ -16,7 +15,7 @@ function MODULE:LoadFonts(font, genericFont)
     )
 
     surface.CreateFont(
-        "liaCharDescFont",
+        'liaCharDescFont',
         {
             font = font,
             weight = 200,
@@ -26,7 +25,7 @@ function MODULE:LoadFonts(font, genericFont)
     )
 
     surface.CreateFont(
-        "liaCharSubTitleFont",
+        'liaCharSubTitleFont',
         {
             font = font,
             weight = 200,
@@ -36,7 +35,7 @@ function MODULE:LoadFonts(font, genericFont)
     )
 
     surface.CreateFont(
-        "liaCharButtonFont",
+        'liaCharButtonFont',
         {
             font = font,
             weight = 200,
@@ -46,7 +45,7 @@ function MODULE:LoadFonts(font, genericFont)
     )
 
     surface.CreateFont(
-        "liaCharSmallButtonFont",
+        'liaCharSmallButtonFont',
         {
             font = font,
             weight = 200,
@@ -56,11 +55,11 @@ function MODULE:LoadFonts(font, genericFont)
     )
 
     surface.CreateFont(
-        "liaEgMainMenu",
+        'liaEgMainMenu',
         {
-            font = "Open Sans",
+            font = 'Open Sans',
             extended = true,
-            size = ScreenScale(12),
+            size = SScale(12),
             weight = 500,
             antialias = true
         }

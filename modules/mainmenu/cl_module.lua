@@ -21,7 +21,6 @@ function MODULE:chooseCharacter(id)
 
     return d
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:createCharacter(data)
     assert(istable(data), "data must be a table")
@@ -62,7 +61,6 @@ function MODULE:createCharacter(data)
 
     return d
 end
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:deleteCharacter(id)
     assert(isnumber(id), "id must be a number")

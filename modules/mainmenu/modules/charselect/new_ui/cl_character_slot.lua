@@ -1,51 +1,45 @@
---------------------------------------------------------------------------------------------------------
 local PANEL = {}
---------------------------------------------------------------------------------------------------------
-lia.config.CharHover = lia.config.CharHover or {}
---------------------------------------------------------------------------------------------------------
-lia.config.CharClick = lia.config.CharClick or {}
---------------------------------------------------------------------------------------------------------
-lia.config.CharWarning = lia.config.CharWarning or {}
---------------------------------------------------------------------------------------------------------
+local STRIP_HEIGHT = 4
+lia.config.CharHover = lia.config.CharHover or {"buttons/button15.wav", 35, 250}
+lia.config.CharClick = lia.config.CharClick or {"buttons/button14.wav", 35, 255}
+lia.config.CharWarning = lia.config.CharWarning or {"friends/friend_join.wav", 40, 255}
 function PANEL:isCursorWithinBounds()
 	local x, y = self:LocalCursorPos()
 
 	return x >= 0 and x <= self:GetWide() and y >= 0 and y < self:GetTall()
 end
 
---------------------------------------------------------------------------------------------------------
 function PANEL:confirmDelete()
 	local id = self.character:getID()
-	vgui.Create("liaNewCharacterConfirm"):setMessage(L("Deleting a character cannot be undone.")):onConfirm(
+	vgui.Create('liaNewCharacterConfirm'):setMessage(L('Deleting a character cannot be undone.')):onConfirm(
 		function()
 			MainMenu:deleteCharacter(id)
 		end
 	)
 end
 
---------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	local WIDTH = 240
 	self:SetWide(WIDTH)
 	self:SetPaintBackground(false)
-	self.faction = self:Add("DPanel")
+	self.faction = self:Add('DPanel')
 	self.faction:Dock(TOP)
 	self.faction:SetTall(4)
-	self.faction:SetSkin("Default")
+	self.faction:SetSkin('Default')
 	self.faction:SetAlpha(100)
 	self.faction.Paint = function(faction, w, h)
 		surface.SetDrawColor(faction:GetBackgroundColor())
 		surface.DrawRect(0, 0, w, h)
 	end
 
-	self.name = self:Add("DLabel")
+	self.name = self:Add('DLabel')
 	self.name:Dock(TOP)
 	self.name:DockMargin(0, 16, 0, 0)
 	self.name:SetContentAlignment(5)
-	self.name:SetFont("liaCharSmallButtonFont")
+	self.name:SetFont('liaCharSmallButtonFont')
 	self.name:SetTextColor(lia.gui.newCharsMenu.WHITE)
 	self.name:SizeToContentsY()
-	self.model = self:Add("liaModelPanel")
+	self.model = self:Add('liaModelPanel')
 	self.model:Dock(FILL)
 	self.model:SetFOV(37)
 	self.model.PaintOver = function(model, w, h)
@@ -53,14 +47,14 @@ function PANEL:Init()
 			local centerX, centerY = w * 0.5, h * 0.5 - 24
 			surface.SetDrawColor(250, 0, 0, 40)
 			surface.DrawRect(0, centerY - 24, w, 48)
-			draw.SimpleText(L("banned"):upper(), "liaCharSubTitleFont", centerX, centerY, color_white, 1, 1)
+			draw.SimpleText(L('banned'):upper(), 'liaCharSubTitleFont', centerX, centerY, color_white, 1, 1)
 		end
 	end
 
-	self.button = self:Add("DButton")
+	self.button = self:Add('DButton')
 	self.button:SetSize(WIDTH, ScrH())
 	self.button:SetPaintBackground(false)
-	self.button:SetText("")
+	self.button:SetText('')
 	self.button.OnCursorEntered = function(button)
 		self:OnCursorEntered()
 	end
@@ -72,10 +66,10 @@ function PANEL:Init()
 		end
 	end
 
-	self.delete = self:Add("DButton")
+	self.delete = self:Add('DButton')
 	self.delete:SetTall(30)
-	self.delete:SetFont("liaCharSubTitleFont")
-	self.delete:SetText("✕ " .. L("delete"):upper())
+	self.delete:SetFont('liaCharSubTitleFont')
+	self.delete:SetText('✕ ' .. L('delete'):upper())
 	self.delete:SetWide(self:GetWide())
 	self.delete.Paint = function(delete, w, h)
 		surface.SetDrawColor(255, 0, 0, 50)
@@ -91,24 +85,24 @@ function PANEL:Init()
 	self.delete.showY = self.delete.y - self.delete:GetTall()
 end
 
---------------------------------------------------------------------------------------------------------
 function PANEL:onSelected()
 end
 
---------------------------------------------------------------------------------------------------------
 function PANEL:setCharacter(character)
 	self.character = character
-	self.name:SetText(character:getName():gsub("#", "\226\128\139#"):upper())
+	self.name:SetText(character:getName():gsub('#', '\226\128\139#'):upper())
 	self.model:SetModel(character:getModel())
 	self.faction:SetBackgroundColor(team.GetColor(character:getFaction()))
-	self:setBanned(character:getData("banned"))
+	self:setBanned(character:getData('banned'))
 	local entity = self.model.Entity
 	if IsValid(entity) then
-		entity:SetSkin(character:getData("skin", 0))
-		for k, v in pairs(character:getData("groups", {})) do
+		-- Match the skin and bodygroups.
+		entity:SetSkin(character:getData('skin', 0))
+		for k, v in pairs(character:getData('groups', {})) do
 			entity:SetBodygroup(k, v)
 		end
 
+		-- Approximate the upper body position.
 		local mins, maxs = entity:GetRenderBounds()
 		local height = math.abs(mins.z) + math.abs(maxs.z)
 		local scale = math.max((960 / ScrH()) * 0.5, 0.5)
@@ -116,12 +110,10 @@ function PANEL:setCharacter(character)
 	end
 end
 
---------------------------------------------------------------------------------------------------------
 function PANEL:setBanned(banned)
 	self.banned = banned
 end
 
---------------------------------------------------------------------------------------------------------
 function PANEL:onHoverChanged(isHovered)
 	local ANIM_SPEED = lia.gui.newCharsMenu.ANIM_SPEED
 	if self.isHovered == isHovered then return end
@@ -138,7 +130,6 @@ function PANEL:onHoverChanged(isHovered)
 	self.faction:AlphaTo(isHovered and 250 or 100, ANIM_SPEED)
 end
 
---------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
 	lia.util.drawBlur(self)
 	surface.SetDrawColor(0, 0, 0, 50)
@@ -148,11 +139,8 @@ function PANEL:Paint(w, h)
 	end
 end
 
---------------------------------------------------------------------------------------------------------
 function PANEL:OnCursorEntered()
 	self:onHoverChanged(true)
 end
 
---------------------------------------------------------------------------------------------------------
-vgui.Register("liaNewCharacterSlot", PANEL, "DPanel")
---------------------------------------------------------------------------------------------------------
+vgui.Register('liaNewCharacterSlot', PANEL, 'DPanel')

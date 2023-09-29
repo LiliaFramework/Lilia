@@ -14,7 +14,8 @@ function PANEL:Init()
     self:SetVisible(false)
     lia.menuMusicIsLocal = false
     timer.Remove("liaMusicFader")
-    local source = lia.config.Music or "mainmenu/menu2.mp3"
+    local source = lia.config.Music
+    source = 'mainmenu/menu2.mp3'
     if not source:find("%S") then return end
     if source:find("http") then
         sound.PlayURL(
@@ -37,7 +38,6 @@ function PANEL:Init()
         lia.menuMusic:PlayEx(lia.config.MusicVolume, 100)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnRemove()
     local music = lia.menuMusic
@@ -68,7 +68,6 @@ function PANEL:OnRemove()
         end
     )
 end
-
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaCharBGMusic", PANEL, "DPanel")
 --------------------------------------------------------------------------------------------------------

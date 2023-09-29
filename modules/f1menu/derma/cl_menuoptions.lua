@@ -4,10 +4,10 @@ hook.Add(
     "liaInventory",
     function(tabs)
         if hook.Run("CanPlayerViewInventory") == false then return end
-        tabs["inv"] = function(mainMenuPanel)
-            local playerInventory = LocalPlayer():getChar():getInv()
-            if not playerInventory then return end
-            local mainPanel = playerInventory:show(mainMenuPanel)
+        tabs["inv"] = function(panel)
+            local inventory = LocalPlayer():getChar():getInv()
+            if not inventory then return end
+            local mainPanel = inventory:show(panel)
             local sortPanels = {}
             local totalSize = {
                 x = 0,
@@ -18,11 +18,11 @@ hook.Add(
             table.insert(sortPanels, mainPanel)
             totalSize.x = totalSize.x + mainPanel:GetWide() + 10
             totalSize.y = math.max(totalSize.y, mainPanel:GetTall())
-            for _, item in pairs(playerInventory:getItems()) do
+            for id, item in pairs(inventory:getItems()) do
                 if item.isBag and hook.Run("CanOpenBagPanel", item) ~= false then
-                    local bagInventory = item:getInv()
-                    local childPanels = bagInventory:show(mainPanel)
-                    lia.gui["inv" .. bagInventory:getID()] = childPanels
+                    local inventory = item:getInv()
+                    local childPanels = inventory:show(mainPanel)
+                    lia.gui["inv" .. inventory:getID()] = childPanels
                     table.insert(sortPanels, childPanels)
                     totalSize.x = totalSize.x + childPanels:GetWide() + 10
                     totalSize.y = math.max(totalSize.y, childPanels:GetTall())
@@ -47,7 +47,6 @@ hook.Add(
         end
     end
 )
-
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "CreateMenuButtons",
@@ -56,7 +55,7 @@ hook.Add(
         if hook.Run("CanPlayerViewClasses") == false then return end
         local cnt = table.Count(lia.class.list)
         if cnt <= 1 then return end
-        for k, _ in ipairs(lia.class.list) do
+        for k, v in ipairs(lia.class.list) do
             if not lia.class.canBe(LocalPlayer(), k) then
                 continue
             else
@@ -69,7 +68,6 @@ hook.Add(
         end
     end
 )
-
 --------------------------------------------------------------------------------------------------------
 hook.Add(
     "CreateMenuButtons",

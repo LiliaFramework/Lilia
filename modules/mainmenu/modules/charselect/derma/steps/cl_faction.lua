@@ -32,7 +32,6 @@ function PANEL:Init()
         first = false
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:onDisplay()
     self.skipFirstSelect = true
@@ -42,7 +41,6 @@ function PANEL:onDisplay()
         self:onFactionSelected(faction)
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:onFactionSelected(faction)
     if self:getContext("faction") == faction.index then return end
@@ -59,12 +57,10 @@ function PANEL:onFactionSelected(faction)
 
     lia.gui.character:clickSound()
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:shouldSkip()
     return #self.faction.Choices == 1
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:onSkip()
     local _, id = self.faction:GetSelected()
@@ -72,7 +68,6 @@ function PANEL:onSkip()
     self:setContext("faction", faction and faction.index or nil)
     self:setContext("model", self:getContext("model", 1))
 end
-
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaCharacterFaction", PANEL, "liaCharacterCreateStep")
 --------------------------------------------------------------------------------------------------------

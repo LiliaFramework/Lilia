@@ -79,7 +79,6 @@ function PANEL:Init()
 
     hook.Run("CreateCharInfo", self)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:setup()
     local char = LocalPlayer():getChar()
@@ -121,14 +120,14 @@ function PANEL:setup()
     if self.model then
         self.model:SetModel(LocalPlayer():GetModel())
         self.model.Entity:SetSkin(LocalPlayer():GetSkin())
-        for _, v in ipairs(LocalPlayer():GetBodyGroups()) do
+        for k, v in ipairs(LocalPlayer():GetBodyGroups()) do
             self.model.Entity:SetBodygroup(v.id, LocalPlayer():GetBodygroup(v.id))
         end
 
         local ent = self.model.Entity
         if ent and IsValid(ent) then
             local mats = LocalPlayer():GetMaterials()
-            for k, _ in pairs(mats) do
+            for k, v in pairs(mats) do
                 ent:SetSubMaterial(k - 1, LocalPlayer():GetSubMaterial(k - 1))
             end
         end
@@ -136,11 +135,9 @@ function PANEL:setup()
 
     hook.Run("OnCharInfoSetup", self)
 end
-
 --------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
 end
-
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaCharInfo", PANEL, "EditablePanel")
 --------------------------------------------------------------------------------------------------------
