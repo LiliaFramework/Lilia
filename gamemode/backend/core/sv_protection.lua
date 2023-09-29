@@ -127,7 +127,7 @@ end
 function GM:PlayerSpawnObject(client, model, skin)
     local bEditLimit = ents.GetEdictCount() >= 7900
     if bEditLimit then
-        ErrorNoHalt(string.format("[Lilia] %s attempted to spawn '%s' but edict limit is too high!\n", client:Name(), class))
+        ErrorNoHalt(string.format("[Lilia] %s attempted to spawn an entity but edict limit is too high!\n", client:Name()))
         client:notify("The server is too close to the edict limit to spawn this!")
 
         return false
