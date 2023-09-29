@@ -1,4 +1,11 @@
+local MODULE = MODULE
 local PANEL = {}
+local PADDING = 2
+local HEADER_HEIGHT = 22
+local WEIGHT_PANEL_HEIGHT = 32
+local BORDER_FIX_W = 8
+local BORDER_FIX_H = 14
+local SHADOW_COLOR = Color(0, 0, 0, 100)
 function PANEL:Init()
 	self:SetPaintBackground(false)
 	self.icons = {}
@@ -63,9 +70,9 @@ function PANEL:onItemReleased(itemIcon, keyCode)
 	local item = itemIcon.itemTable
 	if not item then return end
 	local x, y = self:LocalCursorPos()
-	local MODULE = self.MODULE + 2
-	local itemW = (item.width or 1) * MODULE - 2
-	local itemH = (item.height or 1) * MODULE - 2
+	local MODULE = self.MODULE + PADDING
+	local itemW = (item.width or 1) * MODULE - PADDING
+	local itemH = (item.height or 1) * MODULE - PADDING
 	x = math.Round((x - (itemW * 0.5)) / MODULE) + 1
 	y = math.Round((y - (itemH * 0.5)) / MODULE) + 1
 	self.inventory:requestTransfer(item:getID(), self.inventory:getID(), x, y)
@@ -96,24 +103,24 @@ function PANEL:addItem(item)
 		self.icons[id]:Remove()
 	end
 
-	local MODULE = self.MODULE + 2
+	local MODULE = self.MODULE + PADDING
 	local icon = self:Add("liaGridInvItem")
 	icon:setItem(item)
 	icon:SetPos((x - 1) * MODULE, (y - 1) * MODULE)
-	icon:SetSize((item.width or 1) * MODULE - 2, (item.height or 1) * MODULE - 2)
+	icon:SetSize((item.width or 1) * MODULE - PADDING, (item.height or 1) * MODULE - PADDING)
 	icon:InvalidateLayout(true)
-	icon.OnMousePressed = function(selfIcon, keyCode)
-		self:onItemPressed(selfIcon, keyCode) -- Changed the parameter name here
+	icon.OnMousePressed = function(icon, keyCode)
+		self:onItemPressed(icon, keyCode)
 	end
 
-	icon.OnMouseReleased = function(selfIcon, keyCode)
+	icon.OnMouseReleased = function(icon, keyCode)
 		local heldPanel = lia.item.heldPanel
 		if IsValid(heldPanel) then
-			heldPanel:onItemReleased(selfIcon, keyCode) -- Changed the parameter name here
+			heldPanel:onItemReleased(icon, keyCode)
 		end
 
-		selfIcon:DragMouseRelease(keyCode) -- Changed the parameter name here
-		selfIcon:MouseCapture(false)
+		icon:DragMouseRelease(keyCode)
+		icon:MouseCapture(false)
 		lia.item.held = nil
 		lia.item.heldPanel = nil
 	end
@@ -128,9 +135,9 @@ function PANEL:drawHeldItemRectangle()
 	local heldItem = lia.item.held
 	if not IsValid(heldItem) or not heldItem.itemTable then return end
 	local item = heldItem.itemTable
-	local MODULE = self.MODULE + 2
-	local itemW = (item.width or 1) * MODULE - 2
-	local itemH = (item.height or 1) * MODULE - 2
+	local MODULE = self.MODULE + PADDING
+	local itemW = (item.width or 1) * MODULE - PADDING
+	local itemH = (item.height or 1) * MODULE - PADDING
 	local x, y = self:LocalCursorPos()
 	x = math.Round((x - (itemW * 0.5)) / MODULE)
 	y = math.Round((y - (itemH * 0.5)) / MODULE)
@@ -156,18 +163,18 @@ function PANEL:drawHeldItemRectangle()
 
 	if drawTarget then
 		surface.SetDrawColor(COLOR_COMBINE)
-		surface.DrawRect(drawTarget.x * MODULE, drawTarget.y * MODULE, drawTarget.w * MODULE - 2, drawTarget.h * MODULE - 2)
+		surface.DrawRect(drawTarget.x * MODULE, drawTarget.y * MODULE, drawTarget.w * MODULE - PADDING, drawTarget.h * MODULE - PADDING)
 	else
 		for offsetY = 0, maxOffsetY do
 			trimY = 0
 			for offsetX = 0, maxOffsetX do
 				trimX = 0
 				if offsetY == maxOffsetY then
-					trimY = 2
+					trimY = PADDING
 				end
 
 				if offsetX == maxOffsetX then
-					trimX = 2
+					trimX = PADDING
 				end
 
 				local realX, realY = x + offsetX, y + offsetY
@@ -180,6 +187,7 @@ function PANEL:drawHeldItemRectangle()
 end
 
 function PANEL:Center()
+	local parent = self:GetParent()
 	local centerX, centerY = ScrW() * 0.5, ScrH() * 0.5
 	self:SetPos(centerX - (self:GetWide() * 0.5), centerY - (self:GetTall() * 0.5))
 end
@@ -211,7 +219,7 @@ function PANEL:Paint(w, h)
 	local MODULE = self.MODULE
 	for y = 0, self.gridH - 1 do
 		for x = 0, self.gridW - 1 do
-			surface.DrawRect(x * (MODULE + 2), y * (MODULE + 2), MODULE, MODULE)
+			surface.DrawRect(x * (MODULE + PADDING), y * (MODULE + PADDING), MODULE, MODULE)
 		end
 	end
 

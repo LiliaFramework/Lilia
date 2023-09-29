@@ -20,10 +20,21 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:SetupQuickMenu(menu)
+    menu:addCheck(
+        L"cheapBlur",
+        function(panel, state)
+            if state then
+                RunConsoleCommand("lia_cheapblur", "1")
+            else
+                RunConsoleCommand("lia_cheapblur", "0")
+            end
+        end, CreateClientConVar("lia_cheapblur", 0, true):GetBool()
+    )
+
     menu:addSpacer()
     local current
     LIA_CVAR_LANG = CreateClientConVar("lia_language", "english", true, true)
-    for k in SortedPairs(lia.lang.stored) do
+    for k, v in SortedPairs(lia.lang.stored) do
         local name = lia.lang.names[k]
         local name2 = k:sub(1, 1):upper() .. k:sub(2)
         local enabled = LIA_CVAR_LANG:GetString():match(k)

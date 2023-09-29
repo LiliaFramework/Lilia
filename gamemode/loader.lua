@@ -1,9 +1,7 @@
 --------------------------------------------------------------------------------------------------------
-lia.util.include("backend/core/sh_serverguardcompatibility.lua")
+lia.util.include("backend/external/thirdparty/cl_circles.lua")
 --------------------------------------------------------------------------------------------------------
-lia.util.include("backend/external/thirdparty/sv_netwatcher.lua")
---------------------------------------------------------------------------------------------------------
-lia.util.include("backend/external/thirdparty/sh_pseudoRNG.lua")
+lia.util.include("backend/external/thirdparty/cl_ikon.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/external/thirdparty/cl_markup.lua")
 --------------------------------------------------------------------------------------------------------
@@ -19,12 +17,6 @@ lia.util.include("backend/external/thirdparty/sh_avatar.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/external/thirdparty/sh_bench.lua")
 --------------------------------------------------------------------------------------------------------
-lia.util.include("backend/external/thirdparty/cl_circles.lua")
---------------------------------------------------------------------------------------------------------
-lia.util.include("backend/external/thirdparty/cl_ikon.lua")
---------------------------------------------------------------------------------------------------------
-lia.util.include("backend/external/thirdparty/cl_markup.lua")
---------------------------------------------------------------------------------------------------------
 lia.util.include("backend/external/thirdparty/sh_cami.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/external/thirdparty/sh_deferred.lua")
@@ -35,11 +27,15 @@ lia.util.include("backend/external/thirdparty/sh_netstream2.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/external/thirdparty/sh_pon.lua")
 --------------------------------------------------------------------------------------------------------
+lia.util.include("backend/external/thirdparty/sh_pseudoRNG.lua")
+--------------------------------------------------------------------------------------------------------
 lia.util.include("backend/external/thirdparty/sh_utf8.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/external/thirdparty/sh_utils.lua")
 --------------------------------------------------------------------------------------------------------
-lia.util.include("backend/core/sh_serverguardcompatibility.lua")
+lia.util.include("backend/external/thirdparty/sv_netwatcher.lua")
+--------------------------------------------------------------------------------------------------------
+lia.util.include("backend/core/sv_serverguardcompatibility.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/core/sv_vjbase.lua")
 --------------------------------------------------------------------------------------------------------
@@ -122,6 +118,10 @@ lia.util.include("backend/libs/language/sh_language.lua")
 lia.util.include("backend/libs/language/cl_language.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/libs/language/sv_language.lua")
+--------------------------------------------------------------------------------------------------------
+lia.util.include("backend/libs/netlogging/cl_netmessagelogger.lua")
+--------------------------------------------------------------------------------------------------------
+lia.util.include("backend/libs/netlogging/sv_netmessagelogger.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/libs/networking/sh_networking.lua")
 --------------------------------------------------------------------------------------------------------
@@ -238,4 +238,3 @@ lia.util.include("commands/sv_character.lua")
 lia.util.include("commands/sv_management.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("commands/sv_roleplay.lua")
---------------------------------------------------------------------------------------------------------

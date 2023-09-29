@@ -53,7 +53,7 @@ for k, v in pairs(lia.config.Ammo) do
 end
 
 --------------------------------------------------------------------------------------------------------
-for _, v in pairs(lia.config.AmmoRegister) do
+for k, v in pairs(lia.config.AmmoRegister) do
     lia.ammo.register(v)
 end
 --------------------------------------------------------------------------------------------------------

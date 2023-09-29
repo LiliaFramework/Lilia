@@ -55,6 +55,7 @@ function PANEL:Init()
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:createCharacterSlots()
     self.list:Clear()
@@ -71,6 +72,7 @@ function PANEL:createCharacterSlots()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:onCharacterSelected(character)
     if self.choosing then return end
@@ -106,6 +108,7 @@ function PANEL:onCharacterSelected(character)
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setFadeToBlack(fade)
     local d = deferred.new()
@@ -146,6 +149,7 @@ function PANEL:setFadeToBlack(fade)
 
     return d
 end
+
 --------------------------------------------------------------------------------------------------------
 DEFINE_BASECLASS('EditablePanel')
 function PANEL:Remove()
@@ -160,6 +164,7 @@ function PANEL:Remove()
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 local gradient = lia.util.getMaterial('gui/gradient_up')
 function PANEL:Paint(w, h)
@@ -168,6 +173,7 @@ function PANEL:Paint(w, h)
     surface.SetMaterial(gradient)
     surface.DrawTexturedRect(0, h - (h * .1), w, h * .1)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnKeyCodePressed(keyCode)
     if self.bClosing then return end
@@ -189,18 +195,22 @@ function PANEL:OnKeyCodePressed(keyCode)
         self.bClosing = true
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:hoverSound()
     LocalPlayer():EmitSound(unpack(lia.config.CharHover))
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:clickSound()
     LocalPlayer():EmitSound(unpack(lia.config.CharClick))
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:warningSound()
     LocalPlayer():EmitSound(unpack(lia.config.CharWarning))
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register('liaNewCharactersMenu', PANEL, 'EditablePanel')
 --------------------------------------------------------------------------------------------------------

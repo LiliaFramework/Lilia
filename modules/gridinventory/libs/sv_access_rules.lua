@@ -26,13 +26,13 @@ end
 --------------------------------------------------------------------------------------------------------
 local function CanNotTransferBagIfNestedItemCanNotBe(inventory, action, context)
 	if action ~= "transfer" then return end
-	local bagItem = context.item
-	if not bagItem.isBag then return end
-	local bagInventory = bagItem:getInv()
+	local item = context.item
+	if not item.isBag then return end
+	local bagInventory = item:getInv()
 	if not bagInventory then return end
-	for _, nestedItem in pairs(bagInventory:getItems()) do
-		local canTransferNestedItem, reason = hook.Run("CanItemBeTransfered", nestedItem, bagInventory, bagInventory, context.client)
-		if canTransferNestedItem == false then return false, reason or "An item in the bag cannot be transferred" end
+	for _, item in pairs(bagInventory:getItems()) do
+		local canTransferItem, reason = hook.Run("CanItemBeTransfered", item, bagInventory, bagInventory, context.client)
+		if canTransferItem == false then return false, reason or "An item in the bag cannot be transfered" end
 	end
 end
 
@@ -45,8 +45,13 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function MODULE:ItemCombine(client, item, target)
-	if target.onCombine and target:call("onCombine", client, nil, item) then return end -- when other items dragged into the item.
-	if item and item.onCombineTo and item:call("onCombineTo", client, nil, target) then return end -- when you drag the item on something
+	if target.onCombine then
+		if target:call("onCombine", client, nil, item) then return end -- when other items dragged into the item.
+	end
+
+	if item.onCombineTo then
+		if item and item:call("onCombineTo", client, nil, target) then return end -- when you drag the item on something
+	end
 end
 
 --------------------------------------------------------------------------------------------------------

@@ -41,10 +41,10 @@ function PANEL:setItemType(itemTypeOrID)
     self:updateTooltip()
     if item.exRender then
         self.Icon:SetVisible(false)
-        self.ExtraPaint = function(panel, x, y)
+        self.ExtraPaint = function(self, x, y)
             local paintFunc = item.paintIcon
             if paintFunc and type(paintFunc) == "function" then
-                paintFunc(item, panel)
+                paintFunc(item, self)
             else
                 local exIcon = ikon:getIcon(item.uniqueID)
                 if exIcon then
@@ -58,8 +58,8 @@ function PANEL:setItemType(itemTypeOrID)
         end
     elseif item.icon then
         self.Icon:SetVisible(false)
-        self.ExtraPaint = function(panel, w, h)
-            drawIcon(item.icon, panel, w, h)
+        self.ExtraPaint = function(self, w, h)
+            drawIcon(item.icon, self, w, h)
         end
     else
         renderNewIcon(self, item)
@@ -88,14 +88,14 @@ function PANEL:Init()
 end
 
 --------------------------------------------------------------------------------------------------------
-function PANEL:PaintOver(width, height)
+function PANEL:PaintOver(w, h)
     local itemTable = lia.item.instances[self.itemID]
     if itemTable and itemTable.paintOver then
         local w, h = self:GetSize()
         itemTable.paintOver(self, itemTable, w, h)
     end
 
-    hook.Run("ItemPaintOver", self, itemTable, width, height)
+    hook.Run("ItemPaintOver", self, itemTable, w, h)
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -123,7 +123,7 @@ local buildActionFunc = function(action, actionIndex, itemTable, invID, sub)
             send = action.onClick(itemTable, sub and sub.data)
         end
 
-        local snd = action.sound
+        local snd = action.sound or SOUND_INVENTORY_INTERACT
         if snd then
             if istable(snd) then
                 LocalPlayer():EmitSound(unpack(snd))
@@ -177,7 +177,7 @@ end
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaItemIcon", PANEL, "SpawnIcon")
 --------------------------------------------------------------------------------------------------------
-PANEL = {}
+local PANEL = {}
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:MakePopup()

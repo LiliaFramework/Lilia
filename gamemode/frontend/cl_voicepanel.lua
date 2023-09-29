@@ -1,9 +1,8 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
---------------------------------------------------------------------------------------------------------
 local nsVoicePanels = {}
 --------------------------------------------------------------------------------------------------------
-lia.config.AllowVoice = lia.config.AllowVoice
+lia.config.AllowVoice = lia.config.AllowVoice or true
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     local hi = vgui.Create("DLabel", self)
@@ -135,7 +134,7 @@ timer.Create(
     10,
     0,
     function()
-        for k, _ in pairs(nsVoicePanels) do
+        for k, v in pairs(nsVoicePanels) do
             if not IsValid(k) then
                 hook.Run("PlayerEndVoice", k)
             end

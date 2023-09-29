@@ -6,7 +6,7 @@ lia.bar.actionText = ""
 lia.bar.actionStart = 0
 lia.bar.actionEnd = 0
 --------------------------------------------------------------------------------------------------------
-lia.config.Color = lia.config.Color or {}
+lia.config.Color = lia.config.Color or Color(75, 119, 190)
 --------------------------------------------------------------------------------------------------------
 function lia.bar.get(identifier)
     for i = 1, #lia.bar.list do
@@ -40,7 +40,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function lia.bar.remove(identifier)
     local bar
-    for _, v in ipairs(lia.bar.list) do
+    for k, v in ipairs(lia.bar.list) do
         if v.identifier == identifier then
             bar = v
             break

@@ -38,9 +38,9 @@ function PANEL:Init()
     end
 
     self.OldSetModel = self.SetModel
-    self.SetModel = function(panelSelf, model, skin, hidden)
-        panelSelf:OldSetModel(model)
-        local entity = panelSelf.Entity
+    self.SetModel = function(self, model, skin, hidden)
+        self:OldSetModel(model)
+        local entity = self.Entity
         if skin then
             entity:SetSkin(skin)
         end
@@ -48,9 +48,9 @@ function PANEL:Init()
         setSequence(entity)
         local data = PositionSpawnIcon(entity, entity:GetPos())
         if data then
-            panelSelf:SetFOV(data.fov)
-            panelSelf:SetCamPos(data.origin)
-            panelSelf:SetLookAng(data.angles)
+            self:SetFOV(data.fov)
+            self:SetCamPos(data.origin)
+            self:SetLookAng(data.angles)
         end
 
         entity:SetEyeTarget(Vector(0, 0, 64))

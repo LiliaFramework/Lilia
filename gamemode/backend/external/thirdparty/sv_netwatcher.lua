@@ -19,14 +19,17 @@ local function AccessCheck(ply)
 
 	return false
 end
+
 --------------------------------------------------------------------------------------------------------
 local function printf(str, ...)
 	print(string.format(str, ...))
 end
+
 --------------------------------------------------------------------------------------------------------
 local function perc(val, max)
 	return math.Round((val / max) * 100, 2)
 end
+
 --------------------------------------------------------------------------------------------------------
 function net.LogOutgoing(filter)
 	local recipients
@@ -70,6 +73,7 @@ function net.LogOutgoing(filter)
 		printf("Outgoing %s message %s (%s) to %s", net.IsUnreliable and "unreliable" or "reliable", name, string.NiceSize(bytes), recipients)
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 concommand.Add(
 	"net_addfilter",
@@ -78,6 +82,7 @@ concommand.Add(
 		net.NetworkFilter[args[1]] = true
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 concommand.Add(
 	"net_removefilter",
@@ -86,6 +91,7 @@ concommand.Add(
 		net.NetworkFilter[args[1]] = nil
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 concommand.Add(
 	"net_checkfilter",
@@ -109,6 +115,7 @@ concommand.Add(
 		print("-------")
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 concommand.Add(
 	"net_clearfilter",
@@ -117,6 +124,7 @@ concommand.Add(
 		net.NetworkFilter = {}
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 concommand.Add(
 	"net_getinfo",
@@ -188,6 +196,7 @@ concommand.Add(
 		print("-------")
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 concommand.Add(
 	"net_reset",
@@ -199,17 +208,20 @@ concommand.Add(
 		net.BytesCount = 0
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 function net.Start(messageName, unreliable)
 	net.CurrentMessageName = messageName
 	net.IsUnreliable = unreliable or false
 	net.OldStart(messageName, unreliable)
 end
+
 --------------------------------------------------------------------------------------------------------
 function net.Send(ply)
 	net.LogOutgoing(ply)
 	net.OldSend(ply)
 end
+
 --------------------------------------------------------------------------------------------------------
 function net.SendOmit(ply)
 	local filter = RecipientFilter()
@@ -227,6 +239,7 @@ function net.SendOmit(ply)
 	net.LogOutgoing(filter)
 	net.OldSendOmit(ply)
 end
+
 --------------------------------------------------------------------------------------------------------
 function net.SendPAS(vec)
 	local filter = RecipientFilter()
@@ -234,6 +247,7 @@ function net.SendPAS(vec)
 	net.LogOutgoing(filter)
 	net.OldSendPAS(vec)
 end
+
 --------------------------------------------------------------------------------------------------------
 function net.SendPVS(vec)
 	local filter = RecipientFilter()
@@ -241,6 +255,7 @@ function net.SendPVS(vec)
 	net.LogOutgoing(filter)
 	net.OldSendPVS(vec)
 end
+
 --------------------------------------------------------------------------------------------------------
 function net.Broadcast()
 	net.LogOutgoing()

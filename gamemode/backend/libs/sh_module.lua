@@ -9,9 +9,10 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     variable = uniqueID == "schema" and "SCHEMA" or variable or "MODULE"
     if hook.Run("ModuleShouldLoad", uniqueID) == false then return end
     if not isSingleFile and not file.Exists(path .. "/sh_" .. variable:lower() .. ".lua", "LUA") then return end
+    local oldModule = MODULE
     local MODULE = {
         folder = path,
-        module = MODULE,
+        module = oldModule,
         uniqueID = uniqueID,
         name = "Unknown",
         desc = "Description not available",
@@ -64,7 +65,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         end
     else
         lia.module.list[uniqueID] = MODULE
-        _G[variable] = MODULE
+        _G[variable] = oldModule
     end
 
     hook.Run("ModuleLoaded", uniqueID, MODULE)
@@ -123,11 +124,11 @@ function lia.module.loadEntities(path)
     local function HandleEntityInclusion(folder, variable, register, default, clientOnly)
         files, folders = file.Find(path .. "/" .. folder .. "/*", "LUA")
         default = default or {}
-        for _, v in ipairs(folders) do
+        for k, v in ipairs(folders) do
             local path2 = path .. "/" .. folder .. "/" .. v .. "/"
             _G[variable] = table.Copy(default)
             _G[variable].ClassName = v
-            if IncludeFiles(path2, clientOnly) and not CLIENT then
+            if IncludeFiles(path2, clientOnly) and not client then
                 if clientOnly then
                     if CLIENT then
                         register(_G[variable], v)
@@ -140,7 +141,7 @@ function lia.module.loadEntities(path)
             _G[variable] = nil
         end
 
-        for _, v in ipairs(files) do
+        for k, v in ipairs(files) do
             local niceName = string.StripExtension(v)
             _G[variable] = table.Copy(default)
             _G[variable].ClassName = niceName
@@ -196,11 +197,11 @@ end
 --------------------------------------------------------------------------------------------------------
 function lia.module.loadFromDir(directory)
     local files, folders = file.Find(directory .. "/*", "LUA")
-    for _, v in ipairs(folders) do
+    for k, v in ipairs(folders) do
         lia.module.load(v, directory .. "/" .. v)
     end
 
-    for _, v in ipairs(files) do
+    for k, v in ipairs(files) do
         lia.module.load(string.StripExtension(v), directory .. "/" .. v, true)
     end
 end

@@ -74,16 +74,17 @@ end
 function PANEL:PerformLayout()
     local canvasWide = self:GetCanvas():GetWide()
     local wide, tall = self:GetSize()
+    local x = 0
     local bar = self:GetHBar()
     self:Rebuild()
     bar:SetUp(wide, canvasWide)
-    local originalX = bar:GetOffset()
+    x = bar:GetOffset()
     if bar.Enabled then
         tall = tall - bar:GetTall()
     end
 
     local canvas = self:GetCanvas()
-    canvas:SetPos(originalX, 0)
+    canvas:SetPos(x, 0)
     canvas:SetTall(tall)
     self:Rebuild()
     if canvasWide ~= canvas:GetWide() then

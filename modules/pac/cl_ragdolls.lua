@@ -23,16 +23,18 @@ function MODULE:OnEntityCreated(entity)
 	timer.Simple(
 		0,
 		function()
-			if class == "prop_ragdoll" and entity:getNetVar("player") then
-				entity.RenderOverride = function()
-					entity.objCache = entity:getNetVar("player")
-					entity:DrawModel()
-					hook.Run("DrawPlayerRagdoll", entity)
+			if class == "prop_ragdoll" then
+				if entity:getNetVar("player") then
+					entity.RenderOverride = function()
+						entity.objCache = entity:getNetVar("player")
+						entity:DrawModel()
+						hook.Run("DrawPlayerRagdoll", entity)
+					end
 				end
 			end
 
 			if class:find("HL2MPRagdoll") then
-				for _, v in ipairs(player.GetAll()) do
+				for k, v in ipairs(player.GetAll()) do
 					if v:GetRagdollEntity() == entity then
 						entity.objCache = v
 					end

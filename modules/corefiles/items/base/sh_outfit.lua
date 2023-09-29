@@ -229,7 +229,6 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function ITEM:onRemoved()
-    local receiver = self.player
     if (IsValid(receiver) and receiver:IsPlayer()) and self:getData("equip") then
         self:removeOutfit(receiver)
     end

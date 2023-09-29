@@ -4,11 +4,9 @@ lia.config = lia.config or {}
 if not lia.config.WasInitialized then
     lia.config = {
         -- General Gameplay Settings
-        DevServer = false, --  Is it a Dev Server?
         EquipDelay = 1, -- Delay OnEquip
         DropDelay = 1, -- Delay OnDrop
         TakeDelay = 1, -- Delay OnTake
-        NoDescription = false, -- Is Description Needed?
         SchemaYear = 2023, -- Year When Schema Happens
         AmericanDates = true, -- American Date Formatting?
         AmericanTimeStamp = true, -- American Time Formatting?
@@ -30,6 +28,9 @@ if not lia.config.WasInitialized then
         MapCleanerEnabled = true, -- Enable map cleaning functionality
         ItemCleanupTime = 7200, -- Time interval for cleaning up items on the ground (in seconds)
         MapCleanupTime = 21600, -- Time interval for cleaning up maps (in seconds)
+        -- Server Settings
+        DevServerIP = "45.61.170.66", -- Development server IP address
+        DevServerPort = "27270", -- Development server port
         -- Player Interaction Settings
         WalkRatio = 0.5, -- Walk speed ratio (used in certain interactions)
         SalaryOverride = true, -- Enable salary override
@@ -249,24 +250,47 @@ if not lia.config.WasInitialized then
             ["lia_cheapblur"] = "1",
         },
         RemovableHooks = {
-            ["StartChat"] = {"StartChatIndicator",},
-            ["FinishChat"] = {"EndChatIndicator",},
-            ["PostPlayerDraw"] = {"DarkRP_ChatIndicator",},
-            ["CreateClientsideRagdoll"] = {"DarkRP_ChatIndicator",},
-            ["player_disconnect"] = {"DarkRP_ChatIndicator",},
-            ["PostDrawEffects"] = {"RenderWidgets", "RenderHalos",},
-            ["PlayerTick"] = {"TickWidgets",},
-            ["PlayerInitialSpawn"] = {"PlayerAuthSpawn",},
-            ["RenderScene"] = {"RenderStereoscopy", "RenderSuperDoF",},
-            ["LoadGModSave"] = {"LoadGModSave",},
-            ["RenderScreenspaceEffects"] = {"RenderColorModify", "RenderBloom", "RenderToyTown", "RenderTexturize", "RenderSunbeams", "RenderSobel", "RenderSharpen", "RenderMaterialOverlay", "RenderMotionBlur", "RenderBokeh",},
-            ["GUIMousePressed"] = {"SuperDOFMouseDown",},
-            ["GUIMouseReleased"] = {"SuperDOFMouseUp",},
-            ["PreventScreenClicks"] = {"SuperDOFPreventClicks",},
-            ["PostRender"] = {"RenderFrameBlend",},
-            ["PreRender"] = {"PreRenderFrameBlend",},
-            ["Think"] = {"DOFThink",},
-            ["NeedsDepthPass"] = {"NeedsDepthPass_Bokeh",},
+            ["StartChat"] = "StartChatIndicator",
+            ["FinishChat"] = "EndChatIndicator",
+            ["PostPlayerDraw"] = "DarkRP_ChatIndicator",
+            ["CreateClientsideRagdoll"] = "DarkRP_ChatIndicator",
+            ["player_disconnect"] = "DarkRP_ChatIndicator",
+            ["RenderScene"] = "RenderSuperDoF",
+            ["RenderScene"] = "RenderStereoscopy",
+            ["Think"] = "DOFThink",
+            ["GUIMouseReleased"] = "SuperDOFMouseUp",
+            ["GUIMousePressed"] = "SuperDOFMouseDown",
+            ["PreRender"] = "PreRenderFrameBlend",
+            ["PostRender"] = "RenderFrameBlend",
+            ["NeedsDepthPass"] = "NeedsDepthPass_Bokeh",
+            ["PreventScreenClicks"] = "SuperDOFPreventClicks",
+            ["RenderScreenspaceEffects"] = "RenderBokeh",
+            ["RenderScreenspaceEffects"] = "RenderBokeh",
+            ["PostDrawEffects"] = "RenderWidgets",
+            ["PlayerTick"] = "TickWidgets",
+            ["PlayerInitialSpawn"] = "PlayerAuthSpawn",
+            ["RenderScene"] = "RenderStereoscopy",
+            ["LoadGModSave"] = "LoadGModSave",
+            ["RenderScreenspaceEffects"] = "RenderColorModify",
+            ["RenderScreenspaceEffects"] = "RenderBloom",
+            ["RenderScreenspaceEffects"] = "RenderToyTown",
+            ["RenderScreenspaceEffects"] = "RenderTexturize",
+            ["RenderScreenspaceEffects"] = "RenderSunbeams",
+            ["RenderScreenspaceEffects"] = "RenderSobel",
+            ["RenderScreenspaceEffects"] = "RenderSharpen",
+            ["RenderScreenspaceEffects"] = "RenderMaterialOverlay",
+            ["RenderScreenspaceEffects"] = "RenderMotionBlur",
+            ["RenderScene"] = "RenderSuperDoF",
+            ["GUIMousePressed"] = "SuperDOFMouseDown",
+            ["GUIMouseReleased"] = "SuperDOFMouseUp",
+            ["PreventScreenClicks"] = "SuperDOFPreventClicks",
+            ["PostRender"] = "RenderFrameBlend",
+            ["PreRender"] = "PreRenderFrameBlend",
+            ["Think"] = "DOFThink",
+            ["RenderScreenspaceEffects"] = "RenderBokeh",
+            ["NeedsDepthPass"] = "NeedsDepthPass_Bokeh",
+            ["PostDrawEffects"] = "RenderWidgets",
+            ["PostDrawEffects"] = "RenderHalos",
         },
         ServerURLs = {
             ["Discord"] = "https://discord.gg/52MSnh39vw",

@@ -1,4 +1,5 @@
 --------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnNPC(client)
     if not client:getChar() then return false end
     if CAMI.PlayerHasAccess(client, "Lilia - Management - Can Spawn NPCs", nil) then return true end
@@ -37,11 +38,11 @@ function GM:PlayerSpawnRagdoll(client)
     if not client:getChar() then return false end
     if CAMI.PlayerHasAccess(client, "Lilia - Management - Can Spawn Ragdolls", nil) then return true end
     if FindMetaTable("Player").GetLimit then
-        local limit = client:GetLimit("ragdolls")
+        local limit = ply:GetLimit("ragdolls")
         if limit < 0 then return end
-        local ragdolls = client:GetCount("ragdolls") + 1
+        local ragdolls = ply:GetCount("ragdolls") + 1
         if ragdolls > limit then
-            client:LimitHit("ragdolls")
+            ply:LimitHit("ragdolls")
 
             return false
         end
@@ -78,7 +79,7 @@ end
 function GM:PlayerSpawnVehicle(client, model, name, data)
     if not client:getChar() then return false end
     if table.HasValue(lia.config.RestrictedVehicles, name) then
-        client:notify("You can't spawn this vehicle since it's restricted!")
+        ply:notify("You can't spawn this vehicle since it's restricted!")
 
         return CAMI.PlayerHasAccess(client, "Lilia - Management - Can Spawn Restricted Cars", nil)
     else
@@ -92,7 +93,7 @@ function GM:CanTool(client, trace, tool)
     local entity = client:GetTracedEntity()
     if not client:getChar() then return false end
     if not client:getChar():hasFlags("t") then return false end
-    if tool == "permaprops" and IsValid(entity) and string.StartWith(entity:GetClass(), "lia_") then return false end
+    if toolname == "permaprops" and IsValid(entity) and string.StartWith(entity:GetClass(), "lia_") then return false end
     if tool == "advdupe2" and table.HasValue(lia.config.DuplicatorBlackList, entity:GetClass()) then return false end
     if tool == "remover" and table.HasValue(lia.config.RemoverBlockedEntities, entity:GetClass()) then return CAMI.PlayerHasAccess(client, "Lilia - Management - Can Remove Blocked Entities", nil) end
     if CAMI.PlayerHasAccess(client, privilege, nil) then return true end
@@ -138,11 +139,16 @@ function GM:CanProperty(client, property, entity)
 end
 
 --------------------------------------------------------------------------------------------------------
-function GM:PlayerCheckLimit(client, name)
-    if FindMetaTable("Player").GetLimit and name == "props" and client:getLiliaData("extraProps") then
-        local limit = client:GetLimit("props") + 50
-        local props = client:GetCount("props")
-        if props <= limit + 50 then return true end
+function GM:PlayerCheckLimit(ply, name)
+    if FindMetaTable("Player").GetLimit then
+        if name == "props" then
+            if ply:GetLimit("props") < 0 then return end
+            if ply:getLiliaData("extraProps") then
+                local limit = ply:GetLimit("props") + 50
+                local props = ply:GetCount("props")
+                if props <= limit + 50 then return true end
+            end
+        end
     end
 end
 --------------------------------------------------------------------------------------------------------

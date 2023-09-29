@@ -97,7 +97,7 @@ function PANEL:Init()
         list:Dock(TOP)
         list:SetTall(28)
         list.Think = function(this)
-            for _, v2 in ipairs(teamGetPlayers(k)) do
+            for k2, v2 in ipairs(teamGetPlayers(k)) do
                 if not IsValid(v2.liaScoreSlot) or v2.liaScoreSlot:GetParent() ~= this then
                     if IsValid(v2.liaScoreSlot) then
                         v2.liaScoreSlot:SetParent(this)
@@ -148,7 +148,7 @@ function PANEL:Think()
             end
         end
 
-        for _, v in pairs(self.slots) do
+        for k, v in pairs(self.slots) do
             if IsValid(v) then
                 v:update()
             end
@@ -191,11 +191,11 @@ function PANEL:addPlayer(client, parent)
             if not IsValid(slot) then return end
             local entity = slot.model.Entity
             if IsValid(entity) then
-                for _, v in ipairs(client:GetBodyGroups()) do
+                for k, v in ipairs(client:GetBodyGroups()) do
                     entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
                 end
 
-                for k, _ in ipairs(client:GetMaterials()) do
+                for k, v in ipairs(client:GetMaterials()) do
                     entity:SetSubMaterial(k - 1, client:GetSubMaterial(k - 1))
                 end
             end
@@ -237,7 +237,7 @@ function PANEL:addPlayer(client, parent)
         if not IsValid(client) or not client:getChar() or not self.character or self.character ~= client:getChar() or oldTeam ~= client:Team() then
             self:Remove()
             local i = 0
-            for _, v in ipairs(parent:GetChildren()) do
+            for k, v in ipairs(parent:GetChildren()) do
                 if IsValid(v.model) and v ~= self then
                     i = i + 1
                     v.Paint = paintFunctions[i % 2]
@@ -276,9 +276,9 @@ function PANEL:addPlayer(client, parent)
         if self.lastModel ~= model or self.lastSkin ~= skin then
             self.model:SetModel(client:GetModel(), client:GetSkin())
             if offDutySB[LocalPlayer():GetUserGroup()] or (LocalPlayer() == client) or LocalPlayer():Team() == FACTION_STAFF then
-                self.model:SetTooltip(L("sbOptions", client:Name()))
+                self.model:SetToolTip(L("sbOptions", client:Name()))
             else
-                self.model:SetTooltip("You do not have access to see this information")
+                self.model:SetToolTip("You do not have access to see this information")
             end
 
             self.lastModel = model
@@ -289,7 +289,7 @@ function PANEL:addPlayer(client, parent)
             0,
             function()
                 if not IsValid(entity) or not IsValid(client) then return end
-                for _, v in ipairs(client:GetBodyGroups()) do
+                for k, v in ipairs(client:GetBodyGroups()) do
                     entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
                 end
             end
@@ -301,7 +301,7 @@ function PANEL:addPlayer(client, parent)
     parent:SizeToChildren(false, true)
     parent:InvalidateLayout(true)
     local i = 0
-    for _, v in ipairs(parent:GetChildren()) do
+    for k, v in ipairs(parent:GetChildren()) do
         if IsValid(v.model) then
             i = i + 1
             v.Paint = paintFunctions[i % 2]

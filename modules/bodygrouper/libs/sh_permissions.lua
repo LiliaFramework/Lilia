@@ -11,7 +11,7 @@ end
 
 --------------------------a------------------------------------------------------------------------------
 function MODULE:CanAccessMenu(client)
-    for _, v in pairs(ents.FindByClass("bodygrouper_closet")) do
+    for k, v in pairs(ents.FindByClass("bodygrouper_closet")) do
         if v:GetPos():Distance(client:GetPos()) <= 128 then return true end
     end
 

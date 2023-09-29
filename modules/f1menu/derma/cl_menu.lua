@@ -64,6 +64,7 @@ function PANEL:Init()
 	self.info:SetAlpha(0)
 	self.info:AlphaTo(255, 0.5)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnKeyCodePressed(key)
 	self.noAnchor = CurTime() + .5
@@ -71,6 +72,7 @@ function PANEL:OnKeyCodePressed(key)
 		self:remove()
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Think()
 	local key = input.IsKeyDown(KEY_F1)
@@ -86,6 +88,7 @@ function PANEL:Think()
 		end
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 local color_bright = Color(240, 240, 240, 180)
 function PANEL:Paint(w, h)
@@ -98,6 +101,7 @@ function PANEL:Paint(w, h)
 	surface.SetDrawColor(color_bright)
 	surface.DrawRect(0, 78, w, 8)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:addTab(name, callback, uniqueID)
 	name = L(name)
@@ -147,15 +151,18 @@ function PANEL:addTab(name, callback, uniqueID)
 
 	return tab
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setActiveTab(key)
 	if IsValid(self.tabList[key]) then
 		self.tabList[key]:DoClick()
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnRemove()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:remove()
 	CloseDermaMenus()
@@ -172,6 +179,7 @@ function PANEL:remove()
 		self.closing = true
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaMenu", PANEL, "EditablePanel")
 --------------------------------------------------------------------------------------------------------

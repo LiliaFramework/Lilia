@@ -141,6 +141,7 @@ local function utf8charbytes(s, i)
         error("Invalid UTF-8 character")
     end
 end
+
 -- returns the number of characters in a UTF-8 string
 local function utf8len(s)
     -- argument checking
@@ -158,16 +159,19 @@ local function utf8len(s)
 
     return len
 end
+
 --------------------------------------------------------------------------------------------------------
 -- install in the string library
 if not string.utf8bytes then
     string.utf8bytes = utf8charbytes
 end
+
 --------------------------------------------------------------------------------------------------------
 -- install in the string library
 if not string.utf8len then
     string.utf8len = utf8len
 end
+
 --------------------------------------------------------------------------------------------------------
 -- functions identically to string.sub except that i and j are UTF-8 characters
 -- instead of bytes
@@ -213,11 +217,13 @@ local function utf8sub(s, i, j)
 
     return s:sub(startByte, endByte)
 end
+
 --------------------------------------------------------------------------------------------------------
 -- install in the string library
 if not string.utf8sub then
     string.utf8sub = utf8sub
 end
+
 --------------------------------------------------------------------------------------------------------
 -- replace UTF-8 characters based on a mapping table
 local function utf8replace(s, mapping)
@@ -243,26 +249,31 @@ local function utf8replace(s, mapping)
 
     return newstr
 end
+
 --------------------------------------------------------------------------------------------------------
 -- identical to string.upper except it knows about unicode simple case conversions
 local function utf8upper(s)
     return utf8replace(s, utf8_lc_uc)
 end
+
 --------------------------------------------------------------------------------------------------------
 -- install in the string library
 if not string.utf8upper and utf8_lc_uc then
     string.utf8upper = utf8upper
 end
+
 --------------------------------------------------------------------------------------------------------
 -- identical to string.lower except it knows about unicode simple case conversions
 local function utf8lower(s)
     return utf8replace(s, utf8_uc_lc)
 end
+
 --------------------------------------------------------------------------------------------------------
 -- install in the string library
 if not string.utf8lower and utf8_uc_lc then
     string.utf8lower = utf8lower
 end
+
 --------------------------------------------------------------------------------------------------------
 -- identical to string.reverse except that it supports UTF-8
 local function utf8reverse(s)
@@ -289,6 +300,7 @@ local function utf8reverse(s)
 
     return newstr
 end
+
 --------------------------------------------------------------------------------------------------------
 -- install in the string library
 if not string.utf8reverse then

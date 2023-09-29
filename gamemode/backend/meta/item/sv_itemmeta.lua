@@ -69,7 +69,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function ITEM:getEntity()
     local id = self:getID()
-    for _, v in ipairs(ents.FindByClass("lia_item")) do
+    for k, v in ipairs(ents.FindByClass("lia_item")) do
         if v.liaItemID == id then return v end
     end
 end
@@ -165,7 +165,7 @@ function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
         netstream.Start(receivers or self:getOwner(), "invData", self:getID(), key, value)
     end
 
-    if not lia.db then return end
+    if noSave or not lia.db then return end
     if key == "x" or key == "y" then
         value = tonumber(value)
         if MYSQLOO_PREPARED then
@@ -215,7 +215,7 @@ function ITEM:setQuantity(quantity, receivers, noCheckEntity)
         netstream.Start(receivers or self:getOwner(), "invQuantity", self:getID(), self.quantity)
     end
 
-    if not lia.db then return end
+    if noSave or not lia.db then return end
     if MYSQLOO_PREPARED then
         lia.db.preparedCall("itemq", nil, self.quantity, self:getID())
     else

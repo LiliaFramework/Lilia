@@ -11,6 +11,8 @@ function MODULE:DrawEntityInfo(entity, alpha)
 		local owner = entity.GetDTEntity(entity, 0)
 		local name = entity.getNetVar(entity, "title", entity.getNetVar(entity, "name", IsValid(owner) and L"dTitleOwned" or L"dTitle"))
 		local factions = entity.getNetVar(entity, "factions")
+		local class = entity.getNetVar(entity, "class")
+		local color = lia.config.Color
 		lia.util.drawText(name, x, y, ColorAlpha(color_white, alpha), 1, 1)
 		if IsValid(owner) then
 			lia.util.drawText(L("dOwnedBy", owner.Name(owner)), x, y + 16, ColorAlpha(color_white, alpha), 1, 1)

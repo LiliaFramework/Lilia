@@ -26,9 +26,9 @@ end
 --------------------------------------------------------------------------------------------------------
 function charMeta:setAttrib(key, value)
     local attribute = lia.attribs.list[key]
-    local attrib = self:getAttribs()
-    local client = self:getPlayer()
     if attribute then
+        local attrib = self:getAttribs()
+        local client = self:getPlayer()
         attrib[key] = value
         if IsValid(client) then
             netstream.Start(client, "attrib", self:getID(), key, attrib[key])
@@ -135,7 +135,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function charMeta:sync(receiver)
     if receiver == nil then
-        for _, v in ipairs(player.GetAll()) do
+        for k, v in ipairs(player.GetAll()) do
             self:sync(v)
         end
     elseif receiver == self.player then
@@ -147,7 +147,7 @@ function charMeta:sync(receiver)
         end
 
         netstream.Start(self.player, "charInfo", data, self:getID())
-        for _, v in pairs(lia.char.vars) do
+        for k, v in pairs(lia.char.vars) do
             if isfunction(v.onSync) then
                 v.onSync(self, self.player)
             end
@@ -161,7 +161,7 @@ function charMeta:sync(receiver)
         end
 
         netstream.Start(receiver, "charInfo", data, self:getID(), self.player)
-        for _, v in pairs(lia.char.vars) do
+        for k, v in pairs(lia.char.vars) do
             if type(v.onSync) == "function" then
                 v.onSync(self, receiver)
             end
@@ -183,7 +183,7 @@ function charMeta:setup(noNetworking)
 
         client:SetSkin(self:getData("skin", 0))
         if not noNetworking then
-            for _, v in ipairs(self:getInv(true)) do
+            for k, v in ipairs(self:getInv(true)) do
                 if istable(v) then
                     v:sync(client)
                 end

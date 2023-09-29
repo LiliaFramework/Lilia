@@ -74,7 +74,7 @@ lia.command.add(
             if IsValid(target) and target:getChar() then
                 local faction = lia.faction.teams[name]
                 if not faction then
-                    for _, v in pairs(lia.faction.indices) do
+                    for k, v in pairs(lia.faction.indices) do
                         if lia.util.stringMatches(L(v.name, client), name) then
                             faction = v
                             break
@@ -321,6 +321,31 @@ lia.command.add(
 
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
+    "checkinventory",
+    {
+        superAdminOnly = true,
+        syntax = "<string target>",
+        privilege = "Characters - Check Inventory",
+        onRun = function(client, arguments)
+            local target = lia.command.findPlayer(client, arguments[1])
+            if IsValid(target) and target:getChar() and target ~= client then
+                local inventory = target:getChar():getInv()
+                inventory:addAccessRule(ItemCanEnterForEveryone, 1)
+                inventory:addAccessRule(CanReplicateItemsForEveryone, 1)
+                inventory:sync(client)
+                net.Start("OpenInvMenu")
+                net.WriteEntity(target)
+                net.WriteType(inventory:getID())
+                net.Send(client)
+            elseif target == client then
+                client:notifyLocalized("This isn't meant for checking your own inventory.")
+            end
+        end
+    }
+)
+
+--------------------------------------------------------------------------------------------------------
+lia.command.add(
     "clearinv",
     {
         superAdminOnly = true,
@@ -329,7 +354,7 @@ lia.command.add(
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and target:getChar() then
-                for _, v in pairs(target:getChar():getInv():getItems()) do
+                for k, v in pairs(target:getChar():getInv():getItems()) do
                     v:remove()
                 end
 
@@ -415,7 +440,7 @@ lia.command.add(
             if IsValid(target) then
                 local char = target:getChar()
                 if char then
-                    for _, v in ipairs(player.GetAll()) do
+                    for k, v in ipairs(player.GetAll()) do
                         v:notifyLocalized("charKick", client:Name(), target:Name())
                     end
 
@@ -438,7 +463,7 @@ lia.command.add(
             if IsValid(target) then
                 local faction = lia.command.findFaction(client, table.concat(arguments, " ", 2))
                 if faction and target:setWhitelisted(faction.index, true) then
-                    for _, v in ipairs(player.GetAll()) do
+                    for k, v in ipairs(player.GetAll()) do
                         v:notifyLocalized("whitelist", client:Name(), target:Name(), L(faction.name, v))
                     end
                 end
@@ -459,7 +484,7 @@ lia.command.add(
             if IsValid(target) then
                 local faction = lia.command.findFaction(client, table.concat(arguments, " ", 2))
                 if faction and target:setWhitelisted(faction.index, false) then
-                    for _, v in ipairs(player.GetAll()) do
+                    for k, v in ipairs(player.GetAll()) do
                         v:notifyLocalized("unwhitelist", client:Name(), target:Name(), L(faction.name, v))
                     end
                 end
@@ -478,7 +503,7 @@ lia.command.add(
         onRun = function(client, arguments)
             if (client.liaNextSearch or 0) >= CurTime() then return L("charSearching", client) end
             local name = table.concat(arguments, " ")
-            for _, v in pairs(lia.char.loaded) do
+            for k, v in pairs(lia.char.loaded) do
                 if lia.util.stringMatches(v:getName(), name) then
                     if v:getData("banned") then
                         v:setData("banned")
@@ -494,16 +519,16 @@ lia.command.add(
             client.liaNextSearch = CurTime() + 15
             lia.db.query(
                 "SELECT _id, _name, _data FROM lia_characters WHERE _name LIKE \"%" .. lia.db.escape(name) .. "%\" LIMIT 1",
-                function(dbData)
-                    if dbData and dbData[1] then
-                        local charID = tonumber(dbData[1]._id)
-                        local charData = util.JSONToTable(dbData[1]._data or "[]")
+                function(data)
+                    if data and data[1] then
+                        local charID = tonumber(data[1]._id)
+                        local data = util.JSONToTable(data[1]._data or "[]")
                         client.liaNextSearch = 0
-                        if not charData.banned then return client:notifyLocalized("charNotBanned") end
-                        charData.banned = nil
+                        if not data.banned then return client:notifyLocalized("charNotBanned") end
+                        data.banned = nil
                         lia.db.updateTable(
                             {
-                                _data = charData
+                                _data = data
                             }, nil, nil, "_id = " .. charID
                         )
 

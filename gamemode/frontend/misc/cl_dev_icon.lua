@@ -28,15 +28,14 @@ function PANEL:Init()
     self:SetPos(50, 50)
     self:ShowCloseButton(false)
     self:SetTitle("RENDER PREVIEW")
-    local modelPanel = self:Add("DModelPanel")
-    modelPanel:SetPos(5, 22)
-    function modelPanel:PaintOver(w, h)
+    self.model = self:Add("DModelPanel")
+    self.model:SetPos(5, 22)
+    function self.model:PaintOver(w, h)
         surface.SetDrawColor(255, 255, 255)
         surface.DrawOutlinedRect(0, 0, w, h)
     end
 
-    function modelPanel:LayoutEntity()
-        print("")
+    function self.model:LayoutEntity()
     end
 
     self:AdjustSize(ICON_INFO.w, ICON_INFO.h)
@@ -71,7 +70,7 @@ function PANEL:Init()
     end
 
     self.model.Icon:SetVisible(false)
-    self.model.Paint = function(x, y)
+    self.model.Paint = function(self, x, y)
         local exIcon = ikon:getIcon("iconEditor")
         if exIcon then
             surface.SetMaterial(exIcon)
@@ -165,7 +164,7 @@ function PANEL:Init()
     self.prev2 = vgui.Create("iconRenderPreview")
     self.list = self:Add("DScrollPanel")
     self.list:Dock(FILL)
-    self:SetText("Actions")
+    self:AddText("Actions")
     self.render = self.list:Add("DButton")
     self.render:Dock(TOP)
     self.render:SetFont("ChatFont")
@@ -186,7 +185,7 @@ function PANEL:Init()
         action(self)
     end
 
-    self:SetText("Presets")
+    self:AddText("Presets")
     for i = 1, 6 do
         local btn = self.list:Add("DButton")
         btn:Dock(TOP)
@@ -200,7 +199,7 @@ function PANEL:Init()
         end
     end
 
-    self:SetText("Model Name")
+    self:AddText("Model Name")
     self.mdl = self.list:Add("DTextEntry")
     self.mdl:Dock(TOP)
     self.mdl:SetFont("Default")
@@ -213,36 +212,36 @@ function PANEL:Init()
         self:UpdateIcon()
     end
 
-    self:SetText("Icon Size")
-    local cfgW = self.list:Add("DNumSlider")
-    cfgW:Dock(TOP)
-    cfgW:SetText("W")
-    cfgW:SetMin(0)
-    cfgW:SetMax(10)
-    cfgW:SetDecimals(0)
-    cfgW:SetValue(ICON_INFO.w)
-    cfgW:DockMargin(10, 0, 0, 5)
-    cfgW.OnValueChanged = function(cfg, value)
+    self:AddText("Icon Size")
+    local cfg = self.list:Add("DNumSlider")
+    cfg:Dock(TOP)
+    cfg:SetText("W")
+    cfg:SetMin(0)
+    cfg:SetMax(10)
+    cfg:SetDecimals(0)
+    cfg:SetValue(ICON_INFO.w)
+    cfg:DockMargin(10, 0, 0, 5)
+    cfg.OnValueChanged = function(cfg, value)
         ICON_INFO.w = value
         self.prev:AdjustSize(ICON_INFO.w, ICON_INFO.h)
         self.prev2:AdjustSize(ICON_INFO.w, ICON_INFO.h)
     end
 
-    local cfgH = self.list:Add("DNumSlider")
-    cfgH:Dock(TOP)
-    cfgH:SetText("H")
-    cfgH:SetMin(0)
-    cfgH:SetMax(10)
-    cfgH:SetDecimals(0)
-    cfgH:SetValue(ICON_INFO.h)
-    cfgH:DockMargin(10, 0, 0, 5)
-    cfgH.OnValueChanged = function(cfg, value)
+    local cfg = self.list:Add("DNumSlider")
+    cfg:Dock(TOP)
+    cfg:SetText("H")
+    cfg:SetMin(0)
+    cfg:SetMax(10)
+    cfg:SetDecimals(0)
+    cfg:SetValue(ICON_INFO.h)
+    cfg:DockMargin(10, 0, 0, 5)
+    cfg.OnValueChanged = function(cfg, value)
         ICON_INFO.h = value
         self.prev:AdjustSize(ICON_INFO.w, ICON_INFO.h)
         self.prev2:AdjustSize(ICON_INFO.w, ICON_INFO.h)
     end
 
-    self:SetText("Camera FOV")
+    self:AddText("Camera FOV")
     self.camFOV = self.list:Add("DNumSlider")
     self.camFOV:Dock(TOP)
     self.camFOV:SetText("CAMFOV")
@@ -261,7 +260,7 @@ function PANEL:Init()
         end
     end
 
-    self:SetText("Camera Position")
+    self:AddText("Camera Position")
     self.camPos = {}
     for i = 1, 3 do
         self.camPos[i] = self.list:Add("DNumSlider")
@@ -279,7 +278,7 @@ function PANEL:Init()
         end
     end
 
-    self:SetText("Camera Angle")
+    self:AddText("Camera Angle")
     self.camAng = {}
     for i = 1, 3 do
         self.camAng[i] = self.list:Add("DNumSlider")
@@ -297,7 +296,7 @@ function PANEL:Init()
         end
     end
 
-    self:SetText("Entity Angle")
+    self:AddText("Entity Angle")
     self.entAng = {}
     for i = 1, 3 do
         self.entAng[i] = self.list:Add("DNumSlider")
@@ -452,7 +451,7 @@ function PANEL:OriginLayout()
 end
 
 --------------------------------------------------------------------------------------------------------
-function PANEL:SetText(str)
+function PANEL:AddText(str)
     local label = self.list:Add("DLabel")
     label:SetFont("ChatFont")
     label:SetTextColor(color_white)

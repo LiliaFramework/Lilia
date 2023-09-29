@@ -18,14 +18,14 @@ function MODULE:InitializedConfig()
         {
             format = "**%s %s",
             onGetColor = lia.chat.classes.ic.onGetColor,
-            onCanHear = function(speaker, text, listeningPlayer)
+            onCanHear = function(speaker, text)
                 local trace = util.TraceLine{
                     start = speaker:EyePos(),
                     mask = MASK_SOLID_BRUSHONLY,
-                    endpos = listeningPlayer:EyePos()
+                    endpos = listener:EyePos()
                 }
 
-                if not trace.Hit and speaker:EyePos():Distance(listeningPlayer:EyePos()) <= lia.config.ChatRange then return true end
+                if not trace.Hit and speaker:EyePos():Distance(listener:EyePos()) <= lia.config.ChatRange then return true end
 
                 return false
             end,
@@ -107,13 +107,13 @@ function MODULE:InitializedConfig()
     lia.chat.register(
         "adminchat",
         {
-            onGetColor = function(chatSelf, speaker, text) return Color(0, 196, 255) end,
-            onCanHear = function(chatSelf, speaker, listener)
+            onGetColor = function(self, speaker, text) return Color(0, 196, 255) end,
+            onCanHear = function(self, speaker, listener)
                 if CAMI.PlayerHasAccess(listener, "Lilia - Management - Admin Chat", nil) then return true end
 
                 return false
             end,
-            onCanSay = function(chatSelf, speaker, text)
+            onCanSay = function(self, speaker, text)
                 if CAMI.PlayerHasAccess(speaker, "Lilia - Management - Admin Chat", nil) then
                     speaker:notify("You aren't an admin. Use '@messagehere' to create a ticket.")
 
@@ -122,7 +122,7 @@ function MODULE:InitializedConfig()
 
                 return true
             end,
-            onChatAdd = function(chatSelf, speaker, text)
+            onChatAdd = function(self, speaker, text)
                 if CAMI.PlayerHasAccess(LocalPlayer(), "Lilia - Management - Admin Chat", nil) and CAMI.PlayerHasAccess(speaker, "Lilia - Management - Admin Chat", nil) then
                     chat.AddText(Color(255, 215, 0), "[А] ", Color(128, 0, 255, 255), speaker:getChar():getName(), ": ", Color(255, 255, 255), text)
                 end
@@ -161,6 +161,96 @@ function MODULE:InitializedConfig()
                 chat.AddText(lia.chat.timestamp(false), text)
             end,
             prefix = {"/event"}
+        }
+    )
+
+    lia.chat.register(
+        "radio",
+        {
+            format = "%s says in radio: \"%s\"",
+            font = "liaRadioFont",
+            onGetColor = function(speaker, text) return lia.config.RadioChatColor end,
+            onCanHear = function(speaker, listener)
+                local dist = speaker:GetPos():Distance(listener:GetPos())
+                local speakRange = lia.config.ChatRange
+                local listenerEnts = ents.FindInSphere(listener:GetPos(), speakRange)
+                local listenerInv = listener:getChar():getInv()
+                local freq
+                if not CURFREQ or CURFREQ == "" or not CURCHANNEL then return false end
+                if dist <= speakRange then return true end
+                if listenerInv then
+                    for k, v in pairs(listenerInv:getItems()) do
+                        if v.uniqueID == "radio" and v:getData("enabled", false) == true then
+                            if CURFREQ == v:getData("freq", "000.0") and CURCHANNEL == v:getData("channel", 1) then
+                                listener:EndChatter()
+
+                                return true
+                            end
+                        end
+                    end
+                end
+
+                if not freq then
+                    for k, v in ipairs(listenerEnts) do
+                        if v:GetClass() == "lia_item" then
+                            local itemTable = v:getItemTable()
+                            if itemTable.uniqueID == "radio" and v:getData("enabled", false) == true then
+                                if CURFREQ == v:getData("freq", "000.0") and CURCHANNEL == v:getData("channel", 1) then
+                                    listener:EndChatter()
+
+                                    return true
+                                end
+                            end
+                        end
+                    end
+                end
+
+                return false
+            end,
+            onCanSay = function(speaker, text)
+                local schar = speaker:getChar()
+                local speakRange = lia.config.ChatRange
+                local speakEnts = ents.FindInSphere(speaker:GetPos(), speakRange)
+                local speakerInv = schar:getInv()
+                local freq
+                local channel
+                if speakerInv then
+                    for k, v in pairs(speakerInv:getItems()) do
+                        if v.uniqueID == "radio" and v:getData("enabled", false) == true then
+                            freq = v:getData("freq", "000.0")
+                            channel = v:getData("channel", 1)
+                            break
+                        end
+                    end
+                end
+
+                if not freq then
+                    for k, v in ipairs(speakEnts) do
+                        if v:GetClass() == "lia_item" then
+                            local itemTable = v:getItemTable()
+                            if itemTable.uniqueID == "radio" and v:getData("enabled", false) == true then
+                                freq = v:getData("freq", "000.0")
+                                channel = v:getData("channel", 1)
+                                break
+                            end
+                        end
+                    end
+                end
+
+                if freq then
+                    CURFREQ = freq
+                    if channel then
+                        CURCHANNEL = channel
+                    end
+
+                    speaker:EmitSound("npc/metropolice/vo/on" .. math.random(1, 2) .. ".wav", math.random(50, 60), math.random(80, 120))
+                else
+                    speaker:notifyLocalized("radioNoRadioComm")
+
+                    return false
+                end
+            end,
+            prefix = {"/r", "/radio"},
         }
     )
 end

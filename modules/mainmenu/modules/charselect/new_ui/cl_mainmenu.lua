@@ -8,6 +8,7 @@ local click_sound = 'weapons/grenade/tick1.wav'
 local function playClickSound()
     surface.PlaySound(click_sound)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     if IsValid(lia.gui.newCharMenu) then
@@ -153,6 +154,7 @@ function PANEL:Init()
         lia.gui.bgMusic = vgui.Create('liaNewCharBGMusic')
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:CanCreateCharacter()
     local validFactions = {}
@@ -171,6 +173,7 @@ function PANEL:CanCreateCharacter()
 
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 local function DrawTexturedRectRotatedPoint(x, y, w, h, rot, x0, y0)
     local c = math.cos(math.rad(rot))
@@ -179,6 +182,7 @@ local function DrawTexturedRectRotatedPoint(x, y, w, h, rot, x0, y0)
     local newy = y0 * c + x0 * s
     surface.DrawTexturedRectRotated(x + newx, y + newy, w, h, rot)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:CreateButton(text, description, callback)
     local btn = self.list:Add('DButton')
@@ -230,16 +234,19 @@ function PANEL:CreateButton(text, description, callback)
         me.pressed = true
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Fade()
     self:SetAlpha(0)
     self:AlphaTo(255, .3, 0)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Paint(w, h)
     surface.SetDrawColor(0, 0, 0)
     surface.DrawRect(0, 0, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 local oBackground = 0
 local function performBackground()
@@ -252,6 +259,7 @@ local function performBackground()
 
     return chosen
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:CreateBG()
     local background = performBackground()
@@ -318,6 +326,7 @@ function PANEL:CreateBG()
         surface.DrawTexturedRect(0, 0, w, h)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Remove()
     self.bClosing = true
@@ -330,6 +339,7 @@ function PANEL:Remove()
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register('liaNewCharacterMenu', PANEL, 'EditablePanel')
 --------------------------------------------------------------------------------------------------------

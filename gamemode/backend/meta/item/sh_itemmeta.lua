@@ -88,12 +88,12 @@ end
 function ITEM:getData(key, default)
     self.data = self.data or {}
     if key == true then return self.data end
-    local dataValue = self.data[key]
-    if dataValue ~= nil then return dataValue end
+    local value = self.data[key]
+    if value ~= nil then return value end
     if IsValid(self.entity) then
         local data = self.entity:getNetVar("data", {})
-        local entityValue = data[key]
-        if entityValue ~= nil then return entityValue end
+        local value = data[key]
+        if value ~= nil then return value end
     end
 
     return default

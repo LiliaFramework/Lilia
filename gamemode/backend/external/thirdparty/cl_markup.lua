@@ -203,6 +203,7 @@ local colourmap = {
         a = 255
     },
 }
+
 --[[---------------------------------------------------------
     Name: colourMatch(c)
     Desc: Match a colour name to an rgb value.
@@ -213,6 +214,7 @@ local function colourMatch(c)
 
     return colourmap[c]
 end
+
 --[[---------------------------------------------------------
     Name: ExtractParams(p1,p2,p3)
     Desc: This function is used to extract the tag information.
@@ -268,6 +270,7 @@ local function ExtractParams(p1, p2, p3)
         end
     end
 end
+
 --[[---------------------------------------------------------
     Name: CheckTextOrTag(p)
     Desc: This function places data in the "blocks" table
@@ -287,6 +290,7 @@ local function CheckTextOrTag(p)
         table.insert(blocks, text_block)
     end
 end
+
 --[[---------------------------------------------------------
     Name: ProcessMatches(p1,p2,p3)
     Desc: CheckTextOrTag for 3 parameters. Called by string.gsub
@@ -320,6 +324,7 @@ function MarkupObject:create()
 
     return o
 end
+
 --[[---------------------------------------------------------
     Name: MarkupObject:GetWidth()
     Desc: Returns the width of a markup block
@@ -328,6 +333,7 @@ end
 function MarkupObject:getWidth()
     return self.totalWidth
 end
+
 --[[---------------------------------------------------------
     Name: MarkupObject:GetHeight()
     Desc: Returns the height of a markup block
@@ -336,11 +342,13 @@ end
 function MarkupObject:getHeight()
     return self.totalHeight
 end
+
 --[[---------------------------------------------------------
 -----------------------------------------------------------]]
 function MarkupObject:size()
     return self.totalWidth, self.totalHeight
 end
+
 --[[---------------------------------------------------------
     Name: MarkupObject:Draw(xOffset, yOffset, halign, valign, alphaoverride)
     Desc: Draw the markup text to the screen as position
@@ -400,6 +408,7 @@ function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
         end
     end
 end
+
 --[[---------------------------------------------------------
     Name: Parse(ml, maxwidth)
     Desc: Parses the pseudo-html markup language, and creates a 

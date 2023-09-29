@@ -143,7 +143,7 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
             function notice:Think()
                 if not self.respondToKeys then return end
                 local queries = {}
-                for _, v in pairs(lia.noticess) do
+                for k, v in pairs(lia.noticess) do
                     if v.isQuery then
                         queries[#queries + 1] = v
                     end
@@ -177,7 +177,7 @@ function lia.util.wrapText(text, width, font)
     local w = surface.GetTextSize(text)
     local maxW = 0
     if w <= width then
-        text = text:gsub("%s", " ")
+        text, _ = text:gsub("%s", " ")
 
         return {text}, w
     end
@@ -271,8 +271,9 @@ timer.Create(
 function lia.util.getInjuredColor(client)
     local health_color = color_white
     if not IsValid(client) then return health_color end
+    local health_color = color_white
     local health, healthMax = client:Health(), client:GetMaxHealth()
-    if (health / healthMax) < 0.95 then
+    if (health / healthMax) < .95 then
         health_color = lia.color.LerpHSV(nil, nil, healthMax, health, 0)
     end
 

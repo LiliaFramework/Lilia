@@ -9,7 +9,7 @@ function MODULE:PlayerSwitchFlashlight(client, enabled)
             if (client.FlashlightEnable or 0) > CurTime() and enabled then
                 return false
             else
-                client.FlashlightEnable = CurTime() + lia.config.FlashlightToggleCooldown
+                client.FlashlightEnable = CurTime() + cooldown
 
                 return true
             end
@@ -18,7 +18,7 @@ function MODULE:PlayerSwitchFlashlight(client, enabled)
         if (client.FlashlightEnable or 0) > CurTime() and enabled then
             return false
         else
-            client.FlashlightEnable = CurTime() + lia.config.FlashlightToggleCooldown
+            client.FlashlightEnable = CurTime() + cooldown
 
             return true
         end

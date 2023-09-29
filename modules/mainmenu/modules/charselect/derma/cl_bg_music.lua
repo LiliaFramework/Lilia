@@ -38,6 +38,7 @@ function PANEL:Init()
         lia.menuMusic:PlayEx(lia.config.MusicVolume, 100)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnRemove()
     local music = lia.menuMusic
@@ -68,6 +69,7 @@ function PANEL:OnRemove()
         end
     )
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaCharBGMusic", PANEL, "DPanel")
 --------------------------------------------------------------------------------------------------------

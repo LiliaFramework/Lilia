@@ -4,7 +4,6 @@ local PANEL = {}
 AccessorFunc(PANEL, "m_eTarget", "Target")
 --------------------------------------------------------------------------------------------------------
 local leftrotate, rightrotate = input.LookupBinding("+moveleft"), input.LookupBinding("+moveright")
---------------------------------------------------------------------------------------------------------
 local leftinput, rightinput = input.GetKeyCode(leftrotate), input.GetKeyCode(rightrotate)
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
@@ -13,10 +12,10 @@ function PANEL:Init()
     self:MakePopup()
     self:SetBackgroundBlur(true)
     self:SetTitle("Bodygroup Menu")
-    local frameWidth = self:GetSize()
+    local w, h = self:GetSize()
     self.model = self:Add("liaModelPanel")
     self.model:Dock(LEFT)
-    self.model:SetWide(frameWidth / 2)
+    self.model:SetWide(w / 2)
     self.model.PaintOver = function(this, w, h)
         local str = "[%s] Rotate Left | [%s] Rotate Right"
         str = str:format(leftrotate:upper(), rightrotate:upper())
@@ -26,7 +25,7 @@ function PANEL:Init()
     self.side = self:Add("Panel")
     self.side:Dock(RIGHT)
     self.side:DockPadding(5, 5, 5, 5)
-    self.side:SetWide(frameWidth / 2)
+    self.side:SetWide(w / 2)
     self.skinSelector = self.side:Add("DNumSlider")
     self.skinSelector:Dock(TOP)
     self.skinSelector:DockMargin(0, 0, 0, 5)
@@ -41,10 +40,10 @@ function PANEL:Init()
         end
     end
 
-    local defaultColor = lia.config.Color
-    local hue, saturation, value = ColorToHSV(defaultColor)
-    saturation = saturation * 0.25
-    local finalOutlineColor = HSVToColor(hue, saturation, value)
+    local color = lia.config.Color
+    local h, s, v = ColorToHSV(color)
+    s = s * 0.25
+    local finaloutlinecolor = HSVToColor(h, s, v)
     self.finish = self.side:Add("DButton")
     self.finish:Dock(BOTTOM)
     self.finish:DockMargin(0, 5, 0, 0)
@@ -52,23 +51,23 @@ function PANEL:Init()
     self.finish:SetText("Finish")
     self.finish:SetFont("liaMediumFont")
     self.finish.Paint = function(panel, w, h)
-        surface.SetDrawColor(defaultColor)
+        surface.SetDrawColor(color)
         surface.DrawRect(0, 0, w, h)
-        surface.SetDrawColor(finalOutlineColor)
+        surface.SetDrawColor(finaloutlinecolor)
         surface.DrawOutlinedRect(0, 0, w, h, 1)
     end
 
     self.finish.DoClick = function(this)
         local model = self.model.Entity
         if IsValid(model) then
-            local skin = model:GetSkin()
+            local skn = model:GetSkin()
             local groups = {}
             for i = 0, model:GetNumBodyGroups() - 1 do
                 groups[i] = model:GetBodygroup(i)
             end
 
             local makeChange = true
-            if self.originalSkin == skin then
+            if self.originalSkin == skn then
                 makeChange = false
             end
 
@@ -84,7 +83,7 @@ function PANEL:Init()
             if makeChange then
                 net.Start("BodygrouperMenu")
                 net.WriteEntity(self:GetTarget())
-                net.WriteUInt(skin, 10)
+                net.WriteUInt(skn, 10)
                 net.WriteTable(groups)
                 net.SendToServer()
             end

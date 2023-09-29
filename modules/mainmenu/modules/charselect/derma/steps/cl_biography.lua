@@ -76,6 +76,7 @@ function PANEL:validate()
 
     return self:validateCharVar("desc")
 end
+
 -- self refers to the text entry
 function PANEL:paintTextEntry(w, h)
     lia.util.drawBlur(self)

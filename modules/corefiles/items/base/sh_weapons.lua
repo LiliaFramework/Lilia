@@ -78,11 +78,13 @@ ITEM.functions.Equip = {
         local client = item.player
         local items = client:getChar():getInv():getItems()
         client.carryWeapons = client.carryWeapons or {}
-        for _, v in pairs(items) do
-            if v.id ~= item.id and v.isWeapon and client.carryWeapons[item.weaponCategory] and v:getData("equip") then
-                client:notifyLocalized("weaponSlotFilled")
+        for k, v in pairs(items) do
+            if v.id ~= item.id then
+                if v.isWeapon and client.carryWeapons[item.weaponCategory] and v:getData("equip") then
+                    client:notifyLocalized("weaponSlotFilled")
 
-                return false
+                    return false
+                end
             end
         end
 

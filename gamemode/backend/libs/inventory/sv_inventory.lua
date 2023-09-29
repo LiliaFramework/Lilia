@@ -6,7 +6,7 @@ local DATA_TABLE = "invdata"
 local ITEMS_TABLE = "items"
 --------------------------------------------------------------------------------------------------------
 function lia.inventory.loadByID(id, noCache)
-    local instance = lia.inventory.instances[id]
+    local instance = lia.inventory.instances[invID]
     if instance and not noCache then
         local d = deferred.new()
         d:resolve(instance)
@@ -14,7 +14,8 @@ function lia.inventory.loadByID(id, noCache)
         return d
     end
 
-    for _, invType in pairs(lia.inventory.types) do
+    -- Allow for custom ways of loading inventories.
+    for typeID, invType in pairs(lia.inventory.types) do
         local loadFunction = rawget(invType, "loadFromStorage")
         if loadFunction then
             local d = loadFunction(invType, id)

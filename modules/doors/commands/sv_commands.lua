@@ -143,6 +143,7 @@ lia.command.add(
     }
 )
 
+--------------------------------------------------------------------------------------------------------
 lia.command.add(
     "dooraddfaction",
     {
@@ -165,19 +166,19 @@ lia.command.add(
 
                 if faction then
                     entity.liaFactionID = faction.uniqueID
-                    local facsToAdd = entity:getNetVar("factions", "[]")
-                    local facs = util.JSONToTable(facsToAdd)
+                    local facs = entity:getNetVar("factions", "[]")
+                    facs = util.JSONToTable(facs)
                     facs[faction.index] = true
-                    local jsonStr = util.TableToJSON(facs)
-                    entity:setNetVar("factions", jsonStr)
+                    local json = util.TableToJSON(facs)
+                    entity:setNetVar("factions", json)
                     MODULE:callOnDoorChildren(
                         entity,
                         function()
-                            local childFacsToAdd = entity:getNetVar("factions", "[]")
-                            local childFacs = util.JSONToTable(childFacsToAdd)
-                            childFacs[faction.index] = true
-                            local childJsonStr = util.TableToJSON(childFacs)
-                            entity:setNetVar("factions", childJsonStr)
+                            local facs = entity:getNetVar("factions", "[]")
+                            facs = util.JSONToTable(facs)
+                            facs[faction.index] = true
+                            local json = util.TableToJSON(facs)
+                            entity:setNetVar("factions", json)
                         end
                     )
 
@@ -202,6 +203,7 @@ lia.command.add(
     }
 )
 
+--------------------------------------------------------------------------------------------------------
 lia.command.add(
     "doorremovefaction",
     {
@@ -224,19 +226,19 @@ lia.command.add(
 
                 if faction then
                     entity.liaFactionID = nil
-                    local facsToRemove = entity:getNetVar("factions", "[]")
-                    local facs = util.JSONToTable(facsToRemove)
+                    local facs = entity:getNetVar("factions", "[]")
+                    facs = util.JSONToTable(facs)
                     facs[faction.index] = nil
-                    local jsonStr = util.TableToJSON(facs)
-                    entity:setNetVar("factions", jsonStr)
+                    local json = util.TableToJSON(facs)
+                    entity:setNetVar("factions", json)
                     MODULE:callOnDoorChildren(
                         entity,
                         function()
-                            local childFacsToRemove = entity:getNetVar("factions", "[]")
-                            local childFacs = util.JSONToTable(childFacsToRemove)
-                            childFacs[faction.index] = nil
-                            local childJsonStr = util.TableToJSON(childFacs)
-                            entity:setNetVar("factions", childJsonStr)
+                            local facs = entity:getNetVar("factions", "[]")
+                            facs = util.JSONToTable(facs)
+                            facs[faction.index] = nil
+                            local json = util.TableToJSON(facs)
+                            entity:setNetVar("factions", json)
                         end
                     )
 
@@ -271,7 +273,7 @@ lia.command.add(
         onRun = function(client, arguments)
             local entity = client:GetEyeTrace().Entity
             if IsValid(entity) and entity:isDoor() then
-                local disabled = tobool(arguments[1] or true)
+                local disabled = util.tobool(arguments[1] or true)
                 entity:setNetVar("disabled", disabled)
                 MODULE:callOnDoorChildren(
                     entity,

@@ -9,7 +9,7 @@ end
 function entityMeta:getDoorPartner()
     local owner = self:GetOwner() or self.liaDoorOwner
     if IsValid(owner) and owner:isDoor() then return owner end
-    for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
+    for k, v in ipairs(ents.FindByClass("prop_door_rotating")) do
         if v:GetOwner() == self then
             self.liaDoorOwner = v
 

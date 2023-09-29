@@ -5,9 +5,9 @@ function PANEL:Init()
     self.brightness = 1
     self:SetCursor("none")
     self.OldSetModel = self.SetModel
-    self.SetModel = function(panel, model)
-        panel:OldSetModel(model)
-        local entity = panel.Entity
+    self.SetModel = function(self, model)
+        self:OldSetModel(model)
+        local entity = self.Entity
         if not IsValid(entity) then return end
         local sequence = entity:SelectWeightedSequence(ACT_IDLE)
         if sequence <= 0 then

@@ -84,10 +84,10 @@ net.Receive(
     function()
         local id = net.ReadType()
         local typeID = net.ReadString()
-        local receivedData = net.ReadTable()
+        local data = net.ReadTable()
         local instance = lia.inventory.new(typeID)
         instance.id = id
-        instance.data = receivedData
+        instance.data = data
         instance.items = {}
         local length = net.ReadUInt(32)
         local data2 = net.ReadData(length)
@@ -515,7 +515,7 @@ netstream.Hook(
             if joinedClient == LocalPlayer() then
                 lia.gui.classes:loadClasses()
             else
-                for _, v in ipairs(lia.gui.classes.classPanels) do
+                for k, v in ipairs(lia.gui.classes.classPanels) do
                     local data = v.data
                     v:setNumber(#lia.class.getPlayers(data.index))
                 end
@@ -538,10 +538,10 @@ netstream.Hook(
 netstream.Hook(
     "adminClearChat",
     function()
-        local chatbox = lia.module.list["chatbox"]
-        if chatbox and IsValid(chatbox.panel) then
-            chatbox.panel:Remove()
-            chatbox:createChat()
+        local chat = lia.module.list["chatbox"]
+        if chat and IsValid(chat.panel) then
+            chat.panel:Remove()
+            chat:createChat()
         else
             LocalPlayer():ConCommand("fixchatplz")
         end

@@ -13,6 +13,7 @@ local stack = {}
 function bench.Push()
 	stack[#stack + 1] = SysTime()
 end
+
 --------------------------------------------------------------------------------------------------------
 function bench.Pop()
 	local ret = stack[#stack]
@@ -20,6 +21,7 @@ function bench.Pop()
 
 	return SysTime() - ret
 end
+
 --------------------------------------------------------------------------------------------------------
 function bench.Run(func, calls)
 	bench.Push()
@@ -29,6 +31,7 @@ function bench.Run(func, calls)
 
 	return bench.Pop()
 end
+
 --------------------------------------------------------------------------------------------------------
 function bench.Compare(funcs, calls)
 	local lowest = math.huge

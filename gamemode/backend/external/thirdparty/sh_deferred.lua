@@ -351,6 +351,7 @@ function deferred.each(promises, fn)
         end, nil
     ):next(function() return nil end)
 end
+
 -- Clear the return value.
 function deferred.some(promises, count)
     assert(istable(promises), "promises must be a table")

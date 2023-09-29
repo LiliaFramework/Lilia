@@ -17,7 +17,7 @@ if SERVER then
             "SELECT _id, _name FROM lia_characters",
             function(data)
                 if data and #data > 0 then
-                    for _, v in pairs(data) do
+                    for k, v in pairs(data) do
                         lia.char.names[v._id] = v._name
                     end
                 end
@@ -157,8 +157,8 @@ lia.char.registerVar(
         field = "_name",
         default = "John Doe",
         index = 1,
-        onValidate = function(value, charData, client)
-            local name, override = hook.Run("GetDefaultCharName", client, charData.faction, charData)
+        onValidate = function(value, data, client)
+            local name, override = hook.Run("GetDefaultCharName", client, data.faction, data)
             if isstring(name) and override then return true end
             if not isstring(value) or not value:find("%S") then return false, "invalid", "name" end
             local allowExistNames = lia.config.AllowExistNames
@@ -175,23 +175,21 @@ lia.char.registerVar(
 
             -- Check whether the chosen character name already exists
             if not lia.config.AllowExistNames then
-                for _, v in pairs(lia.char.names) do
+                for k, v in pairs(lia.char.names) do
                     if v == value then return false, "A character with this name already exists." end
                 end
             end
 
             return true
         end,
-        -- Change 'data' to 'charData'
-        onAdjust = function(client, charData, value, newData)
-            local name, override = hook.Run("GetDefaultCharName", client, charData.faction, charData)
+        onAdjust = function(client, data, value, newData)
+            local name, override = hook.Run("GetDefaultCharName", client, data.faction, data)
             if isstring(name) and override then
                 newData.name = name
             else
                 newData.name = string.Trim(value):sub(1, 70)
             end
         end,
-        -- Change 'data' to 'charData'
         onPostSetup = function(panel, faction, payload)
             local name, disabled = hook.Run("GetDefaultCharName", LocalPlayer(), faction)
             if name then
@@ -215,7 +213,7 @@ lia.char.registerVar(
         default = "",
         index = 2,
         onValidate = function(value, data)
-            if lia.config.NoDescription then return true end
+            if noDesc then return true end
             local minLength = lia.config.MinDescLen
             if not value or #value:gsub("%s", "") < minLength then return false, "descMinLen", minLength end
         end
@@ -228,19 +226,18 @@ lia.char.registerVar(
     {
         field = "_model",
         default = "models/error.mdl",
-        onSet = function(character, newValue)
+        onSet = function(character, value)
             local oldVar = character:getModel()
             local client = character:getPlayer()
             if IsValid(client) and client:getChar() == character then
-                client:SetModel(newValue) -- Change 'value' to 'newValue'
+                client:SetModel(value)
             end
 
-            character.vars.model = newValue -- Change 'value' to 'newValue'
+            character.vars.model = value
             netstream.Start(nil, "charSet", "model", character.vars.model, character:getID())
-            hook.Run("PlayerModelChanged", client, newValue) -- Change 'value' to 'newValue'
-            hook.Run("OnCharVarChanged", character, "model", oldVar, newValue) -- Change 'value' to 'newValue'
+            hook.Run("PlayerModelChanged", client, value)
+            hook.Run("OnCharVarChanged", character, "model", oldVar, value)
         end,
-        -- Change 'value' to 'newValue'
         onGet = function(character, default) return character.vars.model or default end,
         index = 3,
         onDisplay = function(panel, y)
@@ -286,7 +283,7 @@ lia.char.registerVar(
 
             return scroll
         end,
-        onValidate = function(newValue, data)
+        onValidate = function(value, data)
             local faction = lia.faction.indices[data.faction]
             if faction then
                 if not data.model or not faction.models[data.model] then return false, "needModel" end
@@ -307,8 +304,8 @@ lia.char.registerVar(
                     local groups = {}
                     if isstring(model[3]) then
                         local i = 0
-                        for val in model[3]:gmatch("%d") do
-                            groups[i] = tonumber(val)
+                        for value in model[3]:gmatch("%d") do
+                            groups[i] = tonumber(value)
                             i = i + 1
                         end
                     elseif istable(model[3]) then
@@ -478,7 +475,7 @@ hook.Add(
                     "SELECT _id, _name FROM lia_characters",
                     function(data)
                         if data and #data > 0 then
-                            for _, v in pairs(data) do
+                            for k, v in pairs(data) do
                                 lia.char.names[v._id] = v._name
                             end
                         end

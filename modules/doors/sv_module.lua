@@ -11,7 +11,7 @@ function MODULE:callOnDoorChildren(entity, callback)
 
     if IsValid(parent) then
         callback(parent)
-        for k, _ in pairs(parent.liaChildren) do
+        for k, v in pairs(parent.liaChildren) do
             local child = ents.GetMapCreatedEntity(k)
             if IsValid(child) then
                 callback(child)
@@ -45,7 +45,7 @@ end
 function MODULE:copyParentDoor(child)
     local parent = child.liaParent
     if IsValid(parent) then
-        for _, v in ipairs(Variables) do
+        for k, v in ipairs(Variables) do
             local value = parent:getNetVar(v)
             if child:getNetVar(v) ~= value then
                 child:setNetVar(v, value)
@@ -82,7 +82,7 @@ end
 function MODULE:SaveDoorData()
     local data = {}
     local doors = {}
-    for _, v in ipairs(ents.GetAll()) do
+    for k, v in ipairs(ents.GetAll()) do
         if v:isDoor() then
             doors[v:MapCreationID()] = v
         end
@@ -91,7 +91,7 @@ function MODULE:SaveDoorData()
     local doorData
     for k, v in pairs(doors) do
         doorData = {}
-        for _, v2 in ipairs(Variables) do
+        for k2, v2 in ipairs(Variables) do
             local value = v:getNetVar(v2)
             if value then
                 doorData[v2] = v:getNetVar(v2)
@@ -128,7 +128,9 @@ function MODULE:CanPlayerAccessDoor(client, door, access)
     local factions = door:getNetVar("factions")
     if factions ~= nil then
         local facs = util.JSONToTable(factions)
-        if facs ~= nil and facs ~= "[]" and facs[client:Team()] then return true end
+        if facs ~= nil and facs ~= "[]" then
+            if facs[client:Team()] then return true end
+        end
     end
 
     local class = door:getNetVar("class")
@@ -174,7 +176,7 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function MODULE:PlayerDisconnected(client)
-    for _, v in ipairs(ents.GetAll()) do
+    for k, v in ipairs(ents.GetAll()) do
         if v == client then return end
         if v.isDoor and v:isDoor() and v:GetDTEntity(0) == client then
             v:removeDoorAccessData()

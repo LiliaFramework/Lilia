@@ -40,10 +40,12 @@ function PANEL:Init()
     self.label:SetFont("liaMediumFont")
     assignClick(self.label)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:onClick()
     lia.command.send("beclass", self.class)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setNumber(number)
     local limit = self.data.limit
@@ -53,6 +55,7 @@ function PANEL:setNumber(number)
         self.limit:SetText("∞")
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:setClass(data)
     if data.model then
@@ -77,6 +80,7 @@ function PANEL:setClass(data)
     self.class = data.index
     self:setNumber(#lia.class.getPlayers(data.index))
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaClassPanel", PANEL, "DPanel")
 --------------------------------------------------------------------------------------------------------
@@ -93,6 +97,7 @@ function PANEL:Init()
     self.classPanels = {}
     self:loadClasses()
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:loadClasses()
     self.list:Clear()
@@ -107,6 +112,7 @@ function PANEL:loadClasses()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaClasses", PANEL, "EditablePanel")
 --------------------------------------------------------------------------------------------------------

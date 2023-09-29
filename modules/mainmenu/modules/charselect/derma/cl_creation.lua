@@ -6,6 +6,7 @@ function PANEL:configureSteps()
     self:addStep(vgui.Create("liaCharacterBiography"))
     hook.Run("ConfigureCharacterCreationSteps", self)
 end
+
 -- If the faction and model character data has been set, updates the
 -- model panel on the left of the creation menu to reflect how the
 -- character will look.
@@ -47,6 +48,7 @@ function PANEL:updateModel()
         entity:SetMaterial(faction.material)
     end
 end
+
 -- Returns true if the local player can create a character, otherwise
 -- returns false and a string reason for why.
 function PANEL:canCreateCharacter()
@@ -66,6 +68,7 @@ function PANEL:canCreateCharacter()
 
     return true
 end
+
 -- Called after the player has pressed "next" on the last step. This
 -- requests for a character to be made using the set character data.
 function PANEL:onFinish()
@@ -111,6 +114,7 @@ function PANEL:onFinish()
         end
     )
 end
+
 -- Shows a message with a red background in the current step.
 function PANEL:showError(message, ...)
     if IsValid(self.error) then
@@ -138,6 +142,7 @@ function PANEL:showError(message, ...)
     self.error:AlphaTo(255, lia.gui.character.ANIM_SPEED)
     lia.gui.character:warningSound()
 end
+
 -- Shows a normal message in the middle of this menu.
 function PANEL:showMessage(message, ...)
     if not message or message == "" then
@@ -160,6 +165,7 @@ function PANEL:showMessage(message, ...)
     self.message:SetContentAlignment(5)
     self.message:SetText(message)
 end
+
 -- Adds a step to the list of steps to be shown in the character creation menu.
 -- Priority is a number (lower is higher priority) that can change order.
 function PANEL:addStep(step, priority)
@@ -173,6 +179,7 @@ function PANEL:addStep(step, priority)
 
     step:SetParent(self.content)
 end
+
 -- Moves to the next available step. If none are, onFinish is called.
 -- If there is a validation error, that is shown first.
 function PANEL:nextStep()
@@ -203,6 +210,7 @@ function PANEL:nextStep()
     -- Transition the view to the next step's view.
     self:onStepChanged(curStep, nextStep)
 end
+
 -- Moves to the previous available step if one exists.
 function PANEL:previousStep()
     local curStep = self.steps[self.curStep]
@@ -218,6 +226,7 @@ function PANEL:previousStep()
     self.curStep = newStep
     self:onStepChanged(curStep, prevStep)
 end
+
 -- Resets the character creation menu to the first step and clears form data.
 function PANEL:reset()
     self.context = {}
@@ -231,6 +240,7 @@ function PANEL:reset()
     if #self.steps == 0 then return self:showError("No character creation steps have been set up") end
     self:nextStep()
 end
+
 -- Returns the panel for the step shown prior to this step.
 function PANEL:getPreviousStep()
     local step = self.curStep - 1
@@ -245,6 +255,7 @@ function PANEL:getPreviousStep()
 
     return self.steps[step]
 end
+
 -- Called when the step has been changed via nextStep or previousStep.
 -- This is where transitions are handled.
 function PANEL:onStepChanged(oldStep, newStep)

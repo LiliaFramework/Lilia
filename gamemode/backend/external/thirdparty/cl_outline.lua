@@ -29,6 +29,7 @@ local OutlineMatSettings = {
 	["$ignorez"] = 1,
 	["$alphatest"] = 1
 }
+
 --------------------------------------------------------------------------------------------------------
 local CopyMat = Material("pp/copy")
 local OutlineMat = CreateMaterial("outline", "UnlitGeneric", OutlineMatSettings)
@@ -55,10 +56,12 @@ function Add(ents, color, mode)
 	ListSize = ListSize + 1
 	List[ListSize] = data
 end
+
 --------------------------------------------------------------------------------------------------------
 function RenderedEntity()
 	return RenderEnt
 end
+
 --------------------------------------------------------------------------------------------------------
 function SetRenderType(render_type)
 	if render_type ~= OUTLINE_RENDERTYPE_BEFORE_VM and render_type ~= OUTLINE_RENDERTYPE_BEFORE_EF and render_type ~= OUTLINE_RENDERTYPE_AFTER_EF then return end
@@ -67,10 +70,12 @@ function SetRenderType(render_type)
 
 	return old_type
 end
+
 --------------------------------------------------------------------------------------------------------
 function GetRenderType()
 	return RenderType
 end
+
 --------------------------------------------------------------------------------------------------------
 function SetDoubleThickness(thickness)
 	local old_thickness = OutlineThickness == 2
@@ -78,10 +83,12 @@ function SetDoubleThickness(thickness)
 
 	return old_thickness
 end
+
 --------------------------------------------------------------------------------------------------------
 function IsDoubleThickness()
 	return OutlineThickness == 2
 end
+
 --------------------------------------------------------------------------------------------------------
 local function Render()
 	local scene = render.GetRenderTarget()
@@ -177,6 +184,7 @@ local function Render()
 	render.SetStencilEnable(false)
 	render.ClearDepth() -- Allows to render view model and other stuff in front of outline
 end
+
 --------------------------------------------------------------------------------------------------------
 local function RenderOutlines()
 	hook.Run("PreDrawOutlines")
@@ -184,6 +192,7 @@ local function RenderOutlines()
 	Render()
 	List, ListSize = {}, 0
 end
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
 	"PreDrawViewModels",
@@ -194,6 +203,7 @@ hook.Add(
 		end
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
 	"PreDrawEffects",
@@ -204,6 +214,7 @@ hook.Add(
 		end
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 hook.Add(
 	"PostDrawEffects",
@@ -214,6 +225,7 @@ hook.Add(
 		end
 	end
 )
+
 --------------------------------------------------------------------------------------------------------
 local textureInt = 0
 function render.DrawBoundingBox(pos1, pos2, color, mat, thick)

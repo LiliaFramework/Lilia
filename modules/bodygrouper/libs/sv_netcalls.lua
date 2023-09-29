@@ -4,7 +4,7 @@ local MODULE = MODULE
 net.Receive(
     "BodygrouperMenuClose",
     function(l, client)
-        for _, v in pairs(ents.FindByClass("bodygrouper_closet")) do
+        for k, v in pairs(ents.FindByClass("bodygrouper_closet")) do
             if v:HasUser(client) then
                 v:RemoveUser(client)
             end
@@ -71,7 +71,7 @@ net.Receive(
 
         client:SendLua("lia.module.list.bodygrouper.Menu:Close()")
         if closetuser then
-            for _, v in pairs(ents.FindByClass("bodygrouper_closet")) do
+            for k, v in pairs(ents.FindByClass("bodygrouper_closet")) do
                 if v:HasUser(target) then
                     v:RemoveUser(target)
                 end

@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = FindMetaTable("Panel")
 --------------------------------------------------------------------------------------------------------
-function PANEL:liaListenForInventoryChanges(inv)
-    assert(inv, "No inventory has been set!")
-    local id = inv:getID()
+function PANEL:liaListenForInventoryChanges(inventory)
+    assert(inventory, "No inventory has been set!")
+    local id = inventory:getID()
     self:liaDeleteInventoryHooks(id)
     _LIA_INV_PANEL_ID = (_LIA_INV_PANEL_ID or 0) + 1
     local hookID = "liaInventoryListener" .. _LIA_INV_PANEL_ID
@@ -40,9 +40,9 @@ function PANEL:liaListenForInventoryChanges(inv)
         "ItemDataChanged",
         hookID,
         function(item, key, oldValue, newValue)
-            if not IsValid(self) or not inv.items[item:getID()] then return end
+            if not IsValid(self) or not inventory.items[item:getID()] then return end
             if not isfunction(self.InventoryItemDataChanged) then return end
-            self:InventoryItemDataChanged(item, key, oldValue, newValue, inv)
+            self:InventoryItemDataChanged(item, key, oldValue, newValue, inventory)
         end
     )
 

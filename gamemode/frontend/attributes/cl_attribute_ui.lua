@@ -142,7 +142,8 @@ end
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaAttribBar", PANEL, "DPanel")
 --------------------------------------------------------------------------------------------------------
-PANEL = {}
+local PANEL = {}
+local AUTO_CLICK_TIME = 0.1
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self.title = self:addLabel("attributes")
@@ -257,31 +258,31 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function PANEL:addButton(symbol, delta)
-    local newButton = self.buttons:Add("liaCharButton")
-    newButton:SetFont("liaCharSubTitleFont")
-    newButton:SetWide(32)
-    newButton:SetText(symbol)
-    newButton:SetContentAlignment(5)
-    newButton.OnMousePressed = function(button)
+    local button = self.buttons:Add("liaCharButton")
+    button:SetFont("liaCharSubTitleFont")
+    button:SetWide(32)
+    button:SetText(symbol)
+    button:SetContentAlignment(5)
+    button.OnMousePressed = function(button)
         self.autoDelta = delta
-        self.nextAuto = CurTime() + 0.1
+        self.nextAuto = CurTime() + AUTO_CLICK_TIME
         self:delta(delta)
     end
 
-    newButton.OnMouseReleased = function(button)
+    button.OnMouseReleased = function(button)
         self.autoDelta = nil
     end
 
-    newButton:SetPaintBackground(false)
+    button:SetPaintBackground(false)
 
-    return newButton
+    return button
 end
 
 --------------------------------------------------------------------------------------------------------
 function PANEL:Think()
     local curTime = CurTime()
     if self.autoDelta and (self.nextAuto or 0) < curTime then
-        self.nextAuto = CurTime() + 0.1
+        self.nextAuto = CurTime() + AUTO_CLICK_TIME
         self:delta(self.autoDelta)
     end
 end

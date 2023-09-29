@@ -20,9 +20,10 @@ end
 -------------------------------------------------------------------------------------------------------------------------~
 function MODULE:HUDPaintBackground()
     local ply = LocalPlayer()
-    local char = ply and ply:getChar()
-    if not char then return end
+    if not ply:getChar() then return end
     if not lia.config.StaminaBlur then return end
+    local ply = LocalPlayer()
+    local char = ply:getChar()
     local maxStamina = char:GetMaxStamina()
     local Stamina = ply:getLocalVar("stamina", maxStamina)
     if Stamina <= 5 then

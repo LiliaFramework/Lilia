@@ -1,8 +1,7 @@
 --------------------------------------------------------------------------------------------------------
-local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng
+local view, traceData, traceData2, aimOrigin, crouchFactor, ft, trace, curAng
 local clmp = math.Clamp
 local diff, fm, sm
-local owner = LocalPlayer()
 crouchFactor = 0
 --------------------------------------------------------------------------------------------------------
 hook.Add(
@@ -10,7 +9,7 @@ hook.Add(
     "ThirdPersonSetupQuickMenu",
     function(menu)
         if lia.config.ThirdPersonEnabled then
-            menu:addCheck(
+            local button = menu:addCheck(
                 L"thirdpersonToggle",
                 function(panel, state)
                     if state then
@@ -21,7 +20,7 @@ hook.Add(
                 end, CreateClientConVar("lia_tp_enabled", "0", true):GetBool()
             )
 
-            menu:addCheck(
+            local button = menu:addCheck(
                 L"thirdpersonClassic",
                 function(panel, state)
                     if state then
@@ -32,7 +31,7 @@ hook.Add(
                 end, CreateClientConVar("lia_tp_classic", "0", true):GetBool()
             )
 
-            menu:addButton(
+            local button = menu:addButton(
                 L"thirdpersonConfig",
                 function()
                     if lia.gui.tpconfig and lia.gui.tpconfig:IsVisible() then

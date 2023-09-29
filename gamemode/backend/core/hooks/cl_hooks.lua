@@ -22,12 +22,12 @@ function GM:InitializedExtrasClient()
 		RunConsoleCommand(k, v)
 	end
 
-	for hookType, identifiers in pairs(lia.config.RemovableHooks) do
-		for _, identifier in ipairs(identifiers) do
-			hook.Remove(hookType, identifier)
-		end
+	for k, v in pairs(lia.config.RemovableHooks) do
+		hook.Remove(k, v)
 	end
 
+	timer.Remove("HostnameThink")
+	timer.Remove("CheckHookTimes")
 	if ArcCW then
 		RunConsoleCommand("arccw_crosshair", "1")
 		RunConsoleCommand("arccw_shake", "0")
@@ -46,9 +46,6 @@ function GM:InitializedExtrasClient()
 		RunConsoleCommand("arccw_crosshair_outline", "0")
 		RunConsoleCommand("arccw_crosshair_shotgun", "1")
 	end
-
-	timer.Remove("HostnameThink")
-	timer.Remove("CheckHookTimes")
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -184,6 +181,7 @@ function GM:DeathHUDPaint()
 	if aprg > 0.01 then
 		surface.SetDrawColor(0, 0, 0, ceil((aprg ^ .5) * 255))
 		surface.DrawRect(-1, -1, w + 2, h + 2)
+		local tx, ty = lia.util.drawText(L"youreDead", w / 2, h / 2, ColorAlpha(color_white, aprg2 * 255), 1, 1, "liaDynFontMedium", aprg2 * 255)
 	end
 end
 
@@ -196,8 +194,9 @@ function GM:MiscHUDPaint()
 	data.filter = ply
 	lia.bar.drawAll()
 	if lia.config.VersionEnabled and lia.config.version then
+		local w, h = 45, 45
 		surface.SetFont("liaSmallChatFont")
-		surface.SetTextPos(5, ScrH() - 20, 45, 45)
+		surface.SetTextPos(5, ScrH() - 20, w, h)
 		surface.DrawText("Server Current Version: " .. lia.config.version)
 	end
 
@@ -205,7 +204,7 @@ function GM:MiscHUDPaint()
 		draw.SimpleText("We recommend the use of the x86-64 Garry's Mod Branch for this server, consider swapping as soon as possible.", "liaSmallFont", ScrW() * .5, ScrH() * .97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 
-	for _, v in ipairs(player.GetAll()) do
+	for k, v in ipairs(player.GetAll()) do
 		if v ~= ply and v:getNetVar("typing") and v:GetMoveType() == MOVETYPE_WALK then
 			data.endpos = v:EyePos()
 			if util.TraceLine(data).Entity ~= v then continue end

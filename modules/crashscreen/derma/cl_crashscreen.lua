@@ -1,7 +1,52 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
---------------------------------------------------------------------------------------------------------
 local waits = {}
+local w, h = ScrW(), ScrH()
+--------------------------------------------------------------------------------------------------------
+function PANEL:Init()
+    self:SetSize(w, h)
+    self:Center()
+    self:MoveToFront()
+    self:SetAlpha(0)
+    self:AlphaTo(255, 1.2)
+    local function wait(s, f)
+        table.insert(
+            waits,
+            {
+                SysTime() + s,
+                function()
+                    if IsValid(self) then
+                        f()
+                    end
+                end
+            }
+        )
+    end
+
+    wait(
+        3.33,
+        function()
+            http.Fetch(
+                "http://api.steampowered.com/ISteamApps/GetServersAtAddress/v0001?addr=" .. game.GetIPAddress(),
+                function(json)
+                    if not IsValid(self) then return end
+                    local data = util.JSONToTable(json)
+                    if not data["response"]["servers"] or not data["response"]["servers"][0] then
+                        self.ServerIsOff = true
+                        self:DoLamar()
+                    else
+                        self.ServerIsOff = false
+                    end
+                end,
+                function()
+                    if not IsValid(self) then return end
+                    self.ServerIsOff = false
+                end
+            )
+        end
+    )
+end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:DoLamar()
     local function wait(s, f)
@@ -102,14 +147,7 @@ function PANEL:DoLamar()
             )
 
             x = x + 2.1
-            x = x + 2.1
-            wait(
-                x,
-                function()
-                    doAnim()
-                end
-            )
-
+            wait(x, doAnim)
             x = x + 1.6
             wait(
                 x,
@@ -154,52 +192,6 @@ function PANEL:DoLamar()
 end
 
 --------------------------------------------------------------------------------------------------------
-function PANEL:Init()
-    local screenWidth, screenHeight = ScrW(), ScrH()
-    self:SetSize(screenWidth, screenHeight)
-    self:Center()
-    self:MoveToFront()
-    self:SetAlpha(0)
-    self:AlphaTo(255, 1.2)
-    local function wait(s, f)
-        table.insert(
-            waits,
-            {
-                SysTime() + s,
-                function()
-                    if IsValid(self) then
-                        f()
-                    end
-                end
-            }
-        )
-    end
-
-    wait(
-        3.33,
-        function()
-            http.Fetch(
-                "http://api.steampowered.com/ISteamApps/GetServersAtAddress/v0001?addr=" .. game.GetIPAddress(),
-                function(json)
-                    if not IsValid(self) then return end
-                    local data = util.JSONToTable(json)
-                    if not data["response"]["servers"] or not data["response"]["servers"][0] then
-                        self.ServerIsOff = true
-                        self:DoLamar()
-                    else
-                        self.ServerIsOff = false
-                    end
-                end,
-                function()
-                    if not IsValid(self) then return end
-                    self.ServerIsOff = false
-                end
-            )
-        end
-    )
-end
-
---------------------------------------------------------------------------------------------------------
 function PANEL:Think()
     self:MoveToFront()
     for v, k in pairs(waits) do
@@ -211,25 +203,25 @@ function PANEL:Think()
 end
 
 --------------------------------------------------------------------------------------------------------
-function PANEL:Paint(_, _)
+function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 10)
-    draw.RoundedBox(0, 0, 0, self:GetWide(), self:GetTall(), Color(20, 20, 20, 200))
+    draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 200))
 end
 
 --------------------------------------------------------------------------------------------------------
 function PANEL:PaintOver()
-    draw.DrawText(":( Connection lost", "liaTitleFont", self:GetWide() / 2, 10, color_white, TEXT_ALIGN_CENTER)
+    draw.DrawText(":( Connection lost", "liaTitleFont", w / 2, 10, color_white, TEXT_ALIGN_CENTER)
     if self.ServerIsOff == nil then
-        draw.DrawText("Checking server status...", "liaBigFont", self:GetWide() / 2, 130, color_white, TEXT_ALIGN_CENTER)
+        draw.DrawText("Checking server status...", "liaBigFont", w / 2, 130, color_white, TEXT_ALIGN_CENTER)
 
         return
     end
 
     if self.ServerIsOff then
-        draw.DrawText("The server has gone offline. Try reconnecting in a few minutes.", "liaBigFont", self:GetWide() / 2, 130, color_white, TEXT_ALIGN_CENTER)
+        draw.DrawText("The server has gone offline. Try reconnecting in a few minutes.", "liaBigFont", w / 2, 130, color_white, TEXT_ALIGN_CENTER)
     else
-        draw.DrawText("You've lost connection to the server. Try reconnecting in a few minutes.", "liaBigFont", self:GetWide() / 2, 130, color_white, TEXT_ALIGN_CENTER)
-        draw.DrawText("Check your router or internet connection.", "liaBigFont", self:GetWide() / 2, self:GetTall() + 160, color_white, TEXT_ALIGN_CENTER)
+        draw.DrawText("You've lost connection to the server. Try reconnecting in a few minutes.", "liaBigFont", w / 2, 130, color_white, TEXT_ALIGN_CENTER)
+        draw.DrawText("Check your router or internet connection.", "liaBigFont", w / 2, h + 160, color_white, TEXT_ALIGN_CENTER)
     end
 end
 

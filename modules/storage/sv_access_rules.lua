@@ -7,7 +7,9 @@ local PROHIBITED_ACTIONS = {
 --------------------------------------------------------------------------------------------------------
 function MODULE:CanPlayerInteractItem(client, action, itemObject, data)
 	local inventory = lia.inventory.instances[itemObject.invID]
-	if inventory and inventory.isStorage == true and PROHIBITED_ACTIONS[action] then return false, "forbiddenActionStorage" end
+	if inventory and inventory.isStorage == true then
+		if PROHIBITED_ACTIONS[action] then return false, "forbiddenActionStorage" end
+	end
 end
 
 --------------------------------------------------------------------------------------------------------

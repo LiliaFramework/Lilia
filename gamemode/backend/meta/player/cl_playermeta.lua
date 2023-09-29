@@ -19,7 +19,7 @@ function playerMeta:CanOverrideView()
 end
 
 --------------------------------------------------------------------------------------------------------
-function playerMeta:SetWeighPoint(name, vector)
+function playerMeta:SetWeighPoint(name, vector, OnReach)
     hook.Add(
         "HUDPaint",
         "WeighPoint",
@@ -44,6 +44,7 @@ concommand.Add(
     "weighpoint_stop",
     function()
         hook.Add("HUDPaint", "WeighPoint", function() end)
+        OnReach()
     end
 )
 --------------------------------------------------------------------------------------------------------

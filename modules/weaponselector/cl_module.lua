@@ -8,7 +8,7 @@ MODULE.alphaDelta = MODULE.alphaDelta or MODULE.alpha
 MODULE.fadeTime = MODULE.fadeTime or 0
 --------------------------------------------------------------------------------------------------------
 local IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs = IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs
-local LocalPlayer, math, color_white, surface = LocalPlayer, math, color_white, surface
+local RunConsoleCommand, LocalPlayer, math, color_white, surface = RunConsoleCommand, LocalPlayer, math, color_white, surface
 --------------------------------------------------------------------------------------------------------
 function MODULE:HUDPaint()
     local frameTime = FrameTime()
@@ -33,7 +33,7 @@ function MODULE:HUDPaint()
             local lastY = 0
             local shiftX = ScrW() * .02
             if self.markup and k < self.index then
-                local _, h = self.markup:Size()
+                local w, h = self.markup:Size()
                 lastY = h * fraction
                 if k == self.index - 1 then
                     self.infoAlpha = Lerp(frameTime * 3, self.infoAlpha, 255)
@@ -42,11 +42,11 @@ function MODULE:HUDPaint()
             end
 
             surface.SetFont("liaSubTitleFont")
-            local ty = surface.GetTextSize(v:GetPrintName():upper())
+            local tx, ty = surface.GetTextSize(v:GetPrintName():upper())
             local scale = 1 - math.abs(theta * 2)
             local matrix = Matrix()
             matrix:Translate(Vector(shiftX + x + math.cos(theta * spacing + math.pi) * radius + radius, y + lastY + math.sin(theta * spacing + math.pi) * radius - ty / 2, 1))
-            matrix:Rotate(Angle(0, 0, 0))
+            matrix:Rotate(angle or Angle(0, 0, 0))
             matrix:Scale(Vector(1, 1, 0) * scale)
             cam.PushModelMatrix(matrix)
             lia.util.drawText(v:GetPrintName():upper(), 2, ty / 2, color, 0, 1, "liaSubTitleFont")
@@ -68,7 +68,7 @@ function MODULE:onIndexChanged()
     self.markup = nil
     if IsValid(weapon) then
         local text = ""
-        for _, v in ipairs(weaponInfo) do
+        for k, v in ipairs(weaponInfo) do
             if weapon[v] and weapon[v]:find("%S") then
                 local color = lia.config.Color
                 text = text .. "<font=liaItemBoldFont><color=" .. color.r .. "," .. color.g .. "," .. color.b .. ">" .. L(v) .. "</font></color>\n" .. weapon[v] .. "\n"
@@ -80,7 +80,7 @@ function MODULE:onIndexChanged()
             self.infoAlpha = 0
         end
 
-        local source, pitch = hook.Run("WeaponCycleSound") or "common/talk.wav", 180
+        local source, pitch = hook.Run("WeaponCycleSound") or "common/talk.wav"
         client:EmitSound(source or "common/talk.wav", 50, pitch or 180)
     end
 end

@@ -14,6 +14,7 @@ local type, error, pcall, pairs, _player = type, error, pcall, pairs, player
 if not pon then
     include("sh_pon.lua")
 end
+
 --------------------------------------------------------------------------------------------------------
 AddCSLuaFile()
 netstream = netstream or {}
@@ -37,10 +38,12 @@ function netstream.Split(data)
 
     return result
 end
+
 --------------------------------------------------------------------------------------------------------
 function netstream.Hook(name, Callback)
     netstream.stored[name] = Callback
 end
+
 --------------------------------------------------------------------------------------------------------
 if SERVER then
     util.AddNetworkString("NetStreamDS")

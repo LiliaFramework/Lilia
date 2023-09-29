@@ -1,4 +1,6 @@
 --------------------------------------------------------------------------------------------------------
+local IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs = IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs
+local RunConsoleCommand, LocalPlayer, math, color_white, surface = RunConsoleCommand, LocalPlayer, math, color_white, surface
 local playerMeta = FindMetaTable("Player")
 --------------------------------------------------------------------------------------------------------
 function playerMeta:SelectWeapon(class)

@@ -28,8 +28,8 @@ function GM:InitializedExtrasServer()
     hook.Add(
         "OnEntityCreated",
         "-",
-        function(ent)
-            if ent:IsWidget() then
+        function(m)
+            if m:IsWidget() then
                 hook.Add(
                     "PlayerTick",
                     "GODisableEntWidgets2",
@@ -43,7 +43,7 @@ function GM:InitializedExtrasServer()
         end
     )
 
-    for _, v in pairs(ents.GetAll()) do
+    for k, v in pairs(ents.GetAll()) do
         if lia.config.EntitiesToBeRemoved[v:GetClass()] then
             v:Remove()
         end
@@ -260,8 +260,8 @@ function GM:CharacterLoaded(id)
 end
 
 --------------------------------------------------------------------------------------------------------
-function GM:PlayerSay(client, playerMessage)
-    local chatType, message, anonymous = lia.chat.parse(client, playerMessage, true)
+function GM:PlayerSay(client, message)
+    local chatType, message, anonymous = lia.chat.parse(client, message, true)
     if (chatType == "ic") and lia.command.parse(client, message) then return "" end
     lia.chat.send(client, chatType, message, anonymous)
     hook.Run("PostPlayerSay", client, message, chatType, anonymous)
@@ -298,7 +298,7 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     if not listener:Alive() then return false end
     if not speaker:getChar() then return false end
     if not allowVoice then return false end
-    if speaker:getChar():getData("VoiceBan") then return false end
+    if speaker:getChar():getData('VoiceBan') then return false end
     if not speaker:getNetVar("VoiceType", "Talking") then return false, false end
     local speakerRange = speaker:getNetVar("VoiceType", "Talking")
     local rangeSquared = (lia.config.TalkRanges[speakerRange] or 0) * (lia.config.TalkRanges[speakerRange] or 0)
@@ -440,7 +440,7 @@ function GM:CallMapCleanerInit()
         function()
             net.Start("worlditem_cleanup_inbound")
             net.Broadcast()
-            for _, v in pairs(player.GetAll()) do
+            for i, v in pairs(player.GetAll()) do
                 v:notify("World items will be cleared in 10 Minutes!")
             end
         end
@@ -453,7 +453,7 @@ function GM:CallMapCleanerInit()
         function()
             net.Start("worlditem_cleanup_inbound_final")
             net.Broadcast()
-            for _, v in pairs(player.GetAll()) do
+            for i, v in pairs(player.GetAll()) do
                 v:notify("World items will be cleared in 60 Seconds!")
             end
         end
@@ -464,7 +464,7 @@ function GM:CallMapCleanerInit()
         lia.config.ItemCleanupTime,
         0,
         function()
-            for _, v in pairs(ents.FindByClass("lia_item")) do
+            for i, v in pairs(ents.FindByClass("lia_item")) do
                 v:Remove()
             end
         end
@@ -477,7 +477,7 @@ function GM:CallMapCleanerInit()
         function()
             net.Start("map_cleanup_inbound")
             net.Broadcast()
-            for _, v in pairs(player.GetAll()) do
+            for i, v in pairs(player.GetAll()) do
                 v:notify("World items will be cleared in 10 Minutes!")
             end
         end
@@ -490,7 +490,7 @@ function GM:CallMapCleanerInit()
         function()
             net.Start("worlditem_cleanup_inbound_final")
             net.Broadcast()
-            for _, v in pairs(player.GetAll()) do
+            for i, v in pairs(player.GetAll()) do
                 v:notify("World items will be cleared in 60 Seconds!")
             end
         end
@@ -503,17 +503,17 @@ function GM:CallMapCleanerInit()
         function()
             net.Start("cleanup_inbound")
             net.Broadcast()
-            for _, v in pairs(ents.GetAll()) do
+            for i, v in pairs(ents.GetAll()) do
                 if v:IsNPC() then
                     v:Remove()
                 end
             end
 
-            for _, v in pairs(ents.FindByClass("lia_item")) do
+            for i, v in pairs(ents.FindByClass("lia_item")) do
                 v:Remove()
             end
 
-            for _, v in pairs(ents.FindByClass("prop_physics")) do
+            for i, v in pairs(ents.FindByClass("prop_physics")) do
                 v:Remove()
             end
         end
@@ -522,9 +522,10 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:InitalizedWorkshopDownloader()
-    local workshop_items = engine.GetAddons()
-    for i = 1, #workshop_items do
-        resource.AddWorkshop(workshop_items[i].wsid)
+    if workshop_items then
+        for i = 1, #workshop_items do
+            resource.AddWorkshop(engine.GetAddons()[i].wsid)
+        end
     end
 end
 

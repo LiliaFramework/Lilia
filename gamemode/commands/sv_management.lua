@@ -5,7 +5,7 @@ lia.command.add(
         superAdminOnly = true,
         privilege = "Management - Freeze All Props",
         onRun = function(client, arguments)
-            for _, v in pairs(ents.FindByClass("prop_physics")) do
+            for k, v in pairs(ents.FindByClass("prop_physics")) do
                 local physObj = v:GetPhysicsObject()
                 if IsValid(physObj) then
                     physObj:EnableMotion(false)
@@ -24,7 +24,7 @@ lia.command.add(
         privilege = "Management - Clean Items",
         onRun = function(client, arguments)
             local count = 0
-            for _, v in pairs(ents.FindByClass("lia_item")) do
+            for k, v in pairs(ents.FindByClass("lia_item")) do
                 count = count + 1
                 v:Remove()
             end
@@ -42,7 +42,7 @@ lia.command.add(
         privilege = "Management - Clean Props",
         onRun = function(client, arguments)
             local count = 0
-            for _, v in pairs(ents.FindByClass("prop_physics")) do
+            for k, v in pairs(ents.FindByClass("prop_physics")) do
                 count = count + 1
                 v:Remove()
             end
@@ -72,7 +72,7 @@ lia.command.add(
         privilege = "Management - Clean NPCs",
         onRun = function(client, arguments)
             local count = 0
-            for _, v in pairs(ents.GetAll()) do
+            for k, v in pairs(ents.GetAll()) do
                 if IsValid(v) and v:IsNPC() then
                     count = count + 1
                     v:Remove()
@@ -120,7 +120,7 @@ lia.command.add(
         syntax = "<string charname>",
         privilege = "Management - Check All Money",
         onRun = function(client, arguments)
-            for _, v in pairs(player.GetAll()) do
+            for k, v in pairs(player.GetAll()) do
                 if v:getChar() then
                     client:ChatPrint(v:Name() .. " has " .. v:getChar():getMoney())
                 end
@@ -159,7 +159,7 @@ lia.command.add(
         adminOnly = false,
         privilege = "Management - Find All Flags",
         onRun = function(client, arguments)
-            for _, v in pairs(player.GetHumans()) do
+            for k, v in pairs(player.GetHumans()) do
                 client:ChatPrint(v:Name() .. " — " .. v:getChar():getFlags())
             end
         end
@@ -205,6 +205,18 @@ lia.command.add(
 
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
+    "netmessagelogs",
+    {
+        superAdminOnly = true,
+        privilege = "Management - Check Net Message Log",
+        onRun = function(client, arguments)
+            sendData(1, client)
+        end
+    }
+)
+
+--------------------------------------------------------------------------------------------------------
+lia.command.add(
     "returnitems",
     {
         superAdminOnly = true,
@@ -230,7 +242,7 @@ lia.command.add(
                     if not char then return end
                     local inv = char:getInv()
                     if not inv then return end
-                    for _, v in pairs(target.LostItems) do
+                    for k, v in pairs(target.LostItems) do
                         inv:add(v)
                     end
 
@@ -303,8 +315,10 @@ lia.command.add(
                 return false
             end
 
-            if IsValid(target) and not target:GetData("VoiceBan") then
-                target:SetData("VoiceBan", true)
+            if IsValid(target) then
+                if not target:GetData("VoiceBan") then
+                    target:SetData("VoiceBan", true)
+                end
             end
 
             client:notify("You have muted a player.")
@@ -326,27 +340,4 @@ for k, v in pairs(lia.config.ServerURLs) do
         }
     )
 end
-
 --------------------------------------------------------------------------------------------------------
-if sam and sam.command then
-    for _, commandInfo in ipairs(sam.command.get_commands()) do
-        local customSyntax = ""
-        for _, argInfo in ipairs(commandInfo.args) do
-            customSyntax = customSyntax == "" and "[" or customSyntax .. " ["
-            customSyntax = customSyntax .. (argInfo.default and tostring(type(argInfo.default)) or "string") .. " "
-            customSyntax = customSyntax .. argInfo.name .. "]"
-            lia.command.add(
-                commandInfo.name,
-                {
-                    privilege = "Access to " .. argInfo.name .. " SAM Commands",
-                    adminOnly = commandInfo.default_rank == "admin",
-                    superAdminOnly = commandInfo.default_rank == "superadmin",
-                    syntax = customSyntax,
-                    onRun = function(client, arguments)
-                        RunConsoleCommand("sam", commandInfo.name, unpack(arguments))
-                    end
-                }
-            )
-        end
-    end
-end

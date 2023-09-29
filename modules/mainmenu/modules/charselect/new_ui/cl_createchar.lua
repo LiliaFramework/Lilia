@@ -429,6 +429,7 @@ function PANEL:Init()
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:CreateSlide()
     local pnl = self:Add('EditablePanel')
@@ -438,12 +439,14 @@ function PANEL:CreateSlide()
 
     return pnl
 end
+
 --------------------------------------------------------------------------------------------------------
 local gradient = lia.util.getMaterial('gui/gradient_down')
 function PANEL:Paint(w, h)
     surface.SetDrawColor(28, 28, 28)
     surface.DrawRect(0, 0, w, h)
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:Hide()
     self:MoveTo(
@@ -462,6 +465,7 @@ function PANEL:Hide()
     panel:MoveTo(0, 0, .8)
     self.bClosing = true
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnKeyCodePressed(keyCode)
     if self.bClosing then return end
@@ -469,6 +473,7 @@ function PANEL:OnKeyCodePressed(keyCode)
         self:Hide()
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register('liaNewCreateCharacterMenu', PANEL, 'EditablePanel')
 --------------------------------------------------------------------------------------------------------

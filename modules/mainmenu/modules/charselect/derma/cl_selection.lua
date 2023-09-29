@@ -35,6 +35,7 @@ function PANEL:Init()
 		end
 	)
 end
+
 -- Creates a liaCharacterSlot for each of the local player's characters.
 function PANEL:createCharacterSlots()
 	self.scroll:Clear()
@@ -51,6 +52,7 @@ function PANEL:createCharacterSlots()
 		end
 	end
 end
+
 -- Called when a character slot has been selected. This actually loads the
 -- character.
 function PANEL:onCharacterSelected(character)

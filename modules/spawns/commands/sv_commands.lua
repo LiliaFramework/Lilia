@@ -9,15 +9,15 @@ lia.command.add(
         syntax = "<string faction> [string class]",
         onRun = function(client, arguments)
             local faction
-            local factionName = arguments[1]
+            local name = arguments[1]
             local class = table.concat(arguments, " ", 2)
             local info
             local info2
-            if factionName then
-                info = lia.faction.indices[factionName:lower()]
+            if name then
+                info = lia.faction.indices[name:lower()]
                 if not info then
-                    for _, v in ipairs(lia.faction.indices) do
-                        if lia.util.stringMatches(v.uniqueID, factionName) or lia.util.stringMatches(L(v.name, client), factionName) then
+                    for k, v in ipairs(lia.faction.indices) do
+                        if lia.util.stringMatches(v.uniqueID, name) or lia.util.stringMatches(L(v.name, client), name) then
                             faction = v.uniqueID
                             info = v
                             break
@@ -28,7 +28,7 @@ lia.command.add(
                 if info then
                     if class and class ~= "" then
                         local found = false
-                        for _, v in ipairs(lia.class.list) do
+                        for k, v in ipairs(lia.class.list) do
                             if v.faction == info.index and (v.uniqueID:lower() == class:lower() or lia.util.stringMatches(L(v.name, client), class)) then
                                 class = v.uniqueID
                                 info2 = v
@@ -46,12 +46,12 @@ lia.command.add(
                     MODULE.spawns[faction][class] = MODULE.spawns[faction][class] or {}
                     table.insert(MODULE.spawns[faction][class], client:GetPos())
                     MODULE:SaveSpawns()
-                    local factionDisplayName = L(info.name, client)
+                    local name = L(info.name, client)
                     if info2 then
-                        factionDisplayName = factionDisplayName .. " (" .. L(info2.name, client) .. ")"
+                        name = name .. " (" .. L(info2.name, client) .. ")"
                     end
 
-                    return L("spawnAdded", client, factionDisplayName)
+                    return L("spawnAdded", client, name)
                 else
                     return L("invalidFaction", client)
                 end
@@ -73,11 +73,11 @@ lia.command.add(
             local position = client:GetPos()
             local radius = tonumber(arguments[1]) or 120
             local i = 0
-            for _, v in pairs(MODULE.spawns) do
-                for _, v2 in pairs(v) do
-                    for k3, v3 in pairs(v2) do
+            for k, v in pairs(MODULE.spawns) do
+                for k2, v in pairs(v) do
+                    for k3, v3 in pairs(v) do
                         if v3:Distance(position) <= radius then
-                            v2[k3] = nil
+                            v[k3] = nil
                             i = i + 1
                         end
                     end

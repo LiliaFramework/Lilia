@@ -1,7 +1,11 @@
+local MODULE = MODULE
 local PANEL = {}
 local PADDING = 2
 local BORDER = 4
+local WEIGHT_PANEL_HEIGHT = 32
 local HEADER_FIX = 22
+local BORDER_FIX_H = 9 + PADDING
+local SHADOW_COLOR = Color(0, 0, 0, 100)
 function PANEL:Init()
 	self:MakePopup()
 	self.content = self:Add("liaGridInventoryPanel")
@@ -27,6 +31,7 @@ function PANEL:InventoryDeleted()
 end
 
 function PANEL:Center()
+	local parent = self:GetParent()
 	local centerX, centerY = ScrW() * 0.5, ScrH() * 0.5
 	self:SetPos(centerX - (self:GetWide() * 0.5), centerY - (self:GetTall() * 0.5))
 end

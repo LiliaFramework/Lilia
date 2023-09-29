@@ -3,6 +3,8 @@ local PANEL = {}
 --------------------------------------------------------------------------------------------------------
 local EDITOR = include(MODULE.path .. "/cl_editor.lua")
 --------------------------------------------------------------------------------------------------------
+local PRICE_UPDATE_DELAY = 0.5
+local COLS_NAME = 1
 local COLS_MODE = 2
 local COLS_PRICE = 3
 local COLS_STOCK = 4
@@ -22,7 +24,7 @@ function PANEL:Init()
 	self:SetTitle(L"vendorEditor")
 	self.name = self:Add("DTextEntry")
 	self.name:Dock(TOP)
-	self.name:SetTooltip(L"name")
+	self.name:SetToolTip(L"name")
 	self.name:SetText(entity:getName())
 	self.name.OnEnter = function(this)
 		if entity:getNetVar("name") ~= this:GetText() then
@@ -32,7 +34,7 @@ function PANEL:Init()
 
 	self.desc = self:Add("DTextEntry")
 	self.desc:Dock(TOP)
-	self.desc:SetTooltip(L"desc")
+	self.desc:SetToolTip(L"desc")
 	self.desc:DockMargin(0, 4, 0, 0)
 	self.desc:SetText(entity:getDesc())
 	self.desc.OnEnter = function(this)
@@ -43,7 +45,7 @@ function PANEL:Init()
 
 	self.model = self:Add("DTextEntry")
 	self.model:Dock(TOP)
-	self.model:SetTooltip(L"model")
+	self.model:SetToolTip(L"model")
 	self.model:DockMargin(0, 4, 0, 0)
 	self.model:SetText(entity:GetModel())
 	self.model.OnEnter = function(this)
@@ -53,9 +55,10 @@ function PANEL:Init()
 		end
 	end
 
+	local useMoney = tonumber(entity:getMoney()) ~= nil
 	self.money = self:Add("DTextEntry")
 	self.money:Dock(TOP)
-	self.money:SetTooltip(lia.currency.plural)
+	self.money:SetToolTip(lia.currency.plural)
 	self.money:DockMargin(0, 4, 0, 0)
 	self.money:SetNumeric(true)
 	self.money.OnEnter = function(this)
@@ -94,7 +97,7 @@ function PANEL:Init()
 	self.sellScale.OnValueChanged = function(this, value)
 		timer.Create(
 			"liaVendorScale",
-			0.5,
+			PRICE_UPDATE_DELAY,
 			1,
 			function()
 				if IsValid(self) and IsValid(self.sellScale) then
@@ -134,30 +137,30 @@ function PANEL:Init()
 		local uniqueID = line.item
 		local itemTable = lia.item.list[uniqueID]
 		menu = DermaMenu()
-		local modeSubMenu, modePanel = menu:AddSubMenu(L"mode")
-		modePanel:SetImage("icon16/key.png")
-		modeSubMenu:AddOption(
+		local mode, panel = menu:AddSubMenu(L"mode")
+		panel:SetImage("icon16/key.png")
+		mode:AddOption(
 			L"none",
 			function()
 				EDITOR.mode(uniqueID, nil)
 			end
 		):SetImage("icon16/cog_error.png")
 
-		modeSubMenu:AddOption(
+		mode:AddOption(
 			L"vendorBoth",
 			function()
 				EDITOR.mode(uniqueID, VENDOR_SELLANDBUY)
 			end
 		):SetImage("icon16/cog.png")
 
-		modeSubMenu:AddOption(
+		mode:AddOption(
 			L"vendorBuy",
 			function()
 				EDITOR.mode(uniqueID, VENDOR_BUYONLY)
 			end
 		):SetImage("icon16/cog_delete.png")
 
-		modeSubMenu:AddOption(
+		mode:AddOption(
 			L"vendorSell",
 			function()
 				EDITOR.mode(uniqueID, VENDOR_SELLONLY)
@@ -179,16 +182,16 @@ function PANEL:Init()
 			end
 		):SetImage("icon16/coins.png")
 
-		local stockSubMenu, stockPanel = menu:AddSubMenu(L"stock")
-		stockPanel:SetImage("icon16/table.png")
-		stockSubMenu:AddOption(
+		local stock, panel = menu:AddSubMenu(L"stock")
+		panel:SetImage("icon16/table.png")
+		stock:AddOption(
 			L"disable",
 			function()
 				EDITOR.stockDisable(uniqueID)
 			end
 		):SetImage("icon16/table_delete.png")
 
-		stockSubMenu:AddOption(
+		stock:AddOption(
 			L"edit",
 			function()
 				local _, max = entity:getStock(uniqueID)
@@ -204,7 +207,7 @@ function PANEL:Init()
 			end
 		):SetImage("icon16/table_edit.png")
 
-		stockSubMenu:AddOption(
+		stock:AddOption(
 			L"vendorEditCurStock",
 			function()
 				Derma_StringRequest(
@@ -226,9 +229,9 @@ function PANEL:Init()
 	for k, v in SortedPairsByMemberValue(lia.item.list, "name") do
 		local mode = entity.items[k] and entity.items[k][VENDOR_MODE]
 		local current, max = entity:getStock(k)
-		local line = self.items:AddLine(v:getName(), self:getModeText(mode), entity:getPrice(k), max and current .. "/" .. max or "-")
-		line.item = k
-		self.lines[k] = line
+		local panel = self.items:AddLine(v:getName(), self:getModeText(mode), entity:getPrice(k), max and current .. "/" .. max or "-")
+		panel.item = k
+		self.lines[k] = panel
 	end
 
 	self:listenForUpdates()

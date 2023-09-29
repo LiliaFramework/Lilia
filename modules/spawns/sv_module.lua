@@ -42,7 +42,7 @@ function MODULE:PostPlayerLoadout(client)
         end
 
         if points then
-            for _, v in ipairs(lia.class.list) do
+            for k, v in ipairs(lia.class.list) do
                 if class == v.index then
                     className = v.uniqueID
                     break

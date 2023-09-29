@@ -2,13 +2,12 @@
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
-    local argColor = Color(200, 200, 200, 100)
     local border = 32
     local scrW, scrH = ScrW(), ScrH()
-    local panelW, panelH = scrW * 0.4, scrH * 0.375
+    local w, h = scrW * 0.4, scrH * 0.375
     lia.gui.chat = self
-    self:SetSize(panelW, panelH)
-    self:SetPos(border, scrH - panelH - border)
+    self:SetSize(w, h)
+    self:SetPos(border, scrH - h - border)
     self.active = false
     self.tabs = self:Add("DPanel")
     self.tabs:Dock(TOP)
@@ -23,9 +22,9 @@ function PANEL:Init()
     self.arguments = {}
     self.scroll = self:Add("DScrollPanel")
     self.scroll:SetPos(4, 31)
-    self.scroll:SetSize(panelW - 8, panelH - 66)
+    self.scroll:SetSize(w - 8, h - 66)
     self.scroll:GetVBar():SetWide(0)
-    self.scroll.PaintOver = function(this, scrollW, scrollH)
+    self.scroll.PaintOver = function(this, w, h)
         local entry = self.text
         if self.active and IsValid(entry) then
             local text = entry:GetText()
@@ -34,23 +33,24 @@ function PANEL:Init()
                 local command = string.PatternSafe(arguments[1] or ""):lower()
                 lia.util.drawBlur(this)
                 surface.SetDrawColor(0, 0, 0, 200)
-                surface.DrawRect(0, 0, scrollW, scrollH)
+                surface.DrawRect(0, 0, w, h)
                 local i = 0
                 local color = lia.config.Color
                 for k, v in SortedPairs(lia.command.list) do
                     local k2 = "/" .. k
-                    local kLower = k:lower()
+                    local k = k:lower()
                     if k2:lower():match(command) then
                         local x = lia.util.drawText((v.realCommand and "/" .. v.realCommand or k2) .. "  ", 4, i * 20, color)
-                        if kLower == command and v.syntax then
+                        if k == command and v.syntax then
                             local i2 = 0
                             for argument in v.syntax:gmatch("([%[<][%w_]+[%s][%w_]+[%]>])") do
                                 i2 = i2 + 1
+                                local color = Color(200, 200, 200, 100)
                                 if i2 == (#arguments - 1) then
-                                    argColor = color_white
+                                    color = color_white
                                 end
 
-                                x = x + lia.util.drawText(argument .. "  ", x, i * 20, argColor)
+                                x = x + lia.util.drawText(argument .. "  ", x, i * 20, color)
                             end
                         end
 
@@ -67,7 +67,7 @@ function PANEL:Init()
     chat.GetChatBoxPos = function() return self:LocalToScreen(0, 0) end
     chat.GetChatBoxSize = function() return self:GetSize() end
     local buttons = {}
-    for _, v in SortedPairsByMemberValue(lia.chat.classes, "filter") do
+    for k, v in SortedPairsByMemberValue(lia.chat.classes, "filter") do
         if not buttons[v.filter] then
             self:addFilterButton(v.filter)
             buttons[v.filter] = true
@@ -218,7 +218,7 @@ function PANEL:addText(...)
     end
 
     text = hook.Run("ChatAddText", text, ...) or text
-    for _, v in ipairs({...}) do
+    for k, v in ipairs({...}) do
         if type(v) == "IMaterial" then
             local ttx = v:GetName()
             text = text .. "<img=" .. ttx .. "," .. v:Width() .. "x" .. v:Height() .. ">"
@@ -272,7 +272,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function PANEL:setFilter(filter, state)
     if state then
-        for _, v in ipairs(self.list) do
+        for k, v in ipairs(self.list) do
             if v.filter == filter then
                 v:SetVisible(false)
                 self.filtered[v] = filter
@@ -289,7 +289,7 @@ function PANEL:setFilter(filter, state)
 
     self.lastY = 0
     local lastChild
-    for _, v in ipairs(self.list) do
+    for k, v in ipairs(self.list) do
         if v:IsVisible() then
             v:SetPos(0, self.lastY)
             self.lastY = self.lastY + v:GetTall() + 2

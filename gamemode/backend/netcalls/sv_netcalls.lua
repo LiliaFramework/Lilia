@@ -145,7 +145,7 @@ net.Receive(
         local textEntryURL = net.ReadString()
         local text = net.ReadString()
         local callingClientSteamName = net.ReadString()
-        for _, client in pairs(player.GetAll()) do
+        for key, client in pairs(player.GetAll()) do
             if client:SteamName() == callingClientSteamName then
                 client:getChar():setData("textDetDescData", text)
                 client:getChar():setData("textDetDescDataURL", textEntryURL)
@@ -153,4 +153,3 @@ net.Receive(
         end
     end
 )
---------------------------------------------------------------------------------------------------------

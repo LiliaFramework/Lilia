@@ -154,7 +154,6 @@ end
 function Inventory:canAccess(action, context)
     context = context or {}
     local result
-    local reason
     for _, rule in ipairs(self.config.accessRules) do
         result, reason = rule(self, action, context)
         if result ~= nil then return result, reason end
@@ -284,6 +283,7 @@ function Inventory:sync(recipients)
     local compressedTable = util.Compress(util.TableToJSON(items))
     net.WriteUInt(#compressedTable, 32)
     net.WriteData(compressedTable, #compressedTable)
+    local res = net.Send(recipients or self:getRecipients())
     for _, item in pairs(self.items) do
         item:onSync(recipients)
     end
@@ -302,7 +302,7 @@ function Inventory:destroy()
 
     lia.inventory.instances[self:getID()] = nil
     net.Start("liaInventoryDelete")
-    net.WriteType(self.id)
+    net.WriteType(id)
     net.Broadcast()
 end
 --------------------------------------------------------------------------------------------------------

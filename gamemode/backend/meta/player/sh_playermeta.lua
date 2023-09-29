@@ -12,6 +12,17 @@ function playerMeta:isObserving()
 end
 
 --------------------------------------------------------------------------------------------------------
+function playerMeta:EndChatter()
+    timer.Simple(
+        1,
+        function()
+            if not listener:IsValid() or not listener:Alive() or hook.Run("ShouldRadioBeep", listener) == false then return false end
+            listener:EmitSound("npc/metropolice/vo/off" .. math.random(1, 3) .. ".wav", math.random(60, 70), math.random(80, 120))
+        end
+    )
+end
+
+--------------------------------------------------------------------------------------------------------
 function playerMeta:IsNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP
 end
@@ -156,11 +167,11 @@ end
 --------------------------------------------------------------------------------------------------------
 function playerMeta:GetTrace()
     local data = {}
-    data.start = self:GetShootPos()
-    data.endpos = data.start + self:GetAimVector() * 200
-    data.filter = {self, self}
-    data.mins = -Vector(4, 4, 4)
-    data.maxs = Vector(4, 4, 4)
+    data.start = client:GetShootPos()
+    data.endpos = data.start + client:GetAimVector() * 200
+    data.filter = {self, client}
+    data.mins = -hull
+    data.maxs = hull
     local trace = util.TraceHull(data)
 
     return trace

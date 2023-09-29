@@ -330,14 +330,16 @@ function SWEP:doPickup(throw, entity, trace)
             return
         end
 
-        if SERVER and (client:EyePos() - (entity:GetPos() + entity:OBBCenter())):Length() < self:getRange(entity) and self:allowPickup(entity) then
-            self:pickup(entity, trace)
-            self:SendWeaponAnim(ACT_VM_HITCENTER)
-            local delay = (entity:GetClass() == "prop_ragdoll") and 0.8 or 0.1
-            hook.Run("OnPickupObject", true, client, entity)
-            self:SetNextSecondaryFire(CurTime() + delay)
+        if SERVER and (client:EyePos() - (entity:GetPos() + entity:OBBCenter())):Length() < self:getRange(entity) then
+            if self:allowPickup(entity) then
+                self:pickup(entity, trace)
+                self:SendWeaponAnim(ACT_VM_HITCENTER)
+                local delay = (entity:GetClass() == "prop_ragdoll") and 0.8 or 0.1
+                hook.Run("OnPickupObject", true, client, entity)
+                self:SetNextSecondaryFire(CurTime() + delay)
 
-            return
+                return
+            end
         end
     end
 end

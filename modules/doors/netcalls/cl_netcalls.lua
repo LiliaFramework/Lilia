@@ -17,7 +17,7 @@ netstream.Hook(
 		local panel = door.liaPanel
 		if IsValid(panel) and IsValid(client) then
 			panel.access[client] = access
-			for _, v in ipairs(panel.access:GetLines()) do
+			for k, v in ipairs(panel.access:GetLines()) do
 				if v.player == client then
 					v:SetColumnText(2, L(ACCESS_LABELS[access or 0]))
 

@@ -26,4 +26,13 @@ function GM:LiliaLoaded()
 
     lia.module.namecache = namecache
 end
+
+--------------------------------------------------------------------------------------------------------
+cvars.AddChangeCallback(
+    "lia_cheapblur",
+    function(name, old, new)
+        local useCheapBlur = CreateClientConVar("lia_cheapblur", 0, true):GetBool() or false
+        useCheapBlur = (tonumber(new) or 0) > 0
+    end
+)
 --------------------------------------------------------------------------------------------------------

@@ -3,8 +3,7 @@ netstream.Hook(
     "rgnDirect",
     function(client, target, name)
         if target:GetPos():DistToSqr(client:GetPos()) > 100000 then return end
-        local character = client:getChar()
-        local id = character:getID()
+        local id = client:getChar():getID()
         if target:getChar():recognize(id, name) then
             netstream.Start(client, "rgnDone")
             hook.Run("OnCharRecognized", client, id)
@@ -20,8 +19,6 @@ netstream.Hook(
     "rgn",
     function(client, level, name)
         local targets = {}
-        local character = client:getChar()
-        local id = character:getID()
         if isnumber(level) then
             local class = "w"
             if level == 3 then
@@ -31,7 +28,7 @@ netstream.Hook(
             end
 
             class = lia.chat.classes[class]
-            for _, v in ipairs(player.GetAll()) do
+            for k, v in ipairs(player.GetAll()) do
                 if client ~= v and v:getChar() and class.onCanHear(client, v) then
                     targets[#targets + 1] = v
                 end
@@ -39,6 +36,8 @@ netstream.Hook(
         end
 
         if #targets > 0 then
+            local id = client:getChar():getID()
+            local character = client:getChar()
             local i = 0
             for _, v in ipairs(targets) do
                 if v:getChar():recognize(character, name) then
@@ -53,4 +52,3 @@ netstream.Hook(
         end
     end
 )
---------------------------------------------------------------------------------------------------------

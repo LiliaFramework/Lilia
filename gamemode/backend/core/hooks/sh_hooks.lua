@@ -45,7 +45,7 @@ function GM:RegisterCamiPermissions()
 
     for _, wep in pairs(weapons.GetList()) do
         if wep.ClassName == "gmod_tool" then
-            for ToolName, _ in pairs(wep.Tool) do
+            for ToolName, TOOL in pairs(wep.Tool) do
                 if not ToolName then continue end
                 local privilege = "Lilia - Management - Access Tool " .. ToolName:gsub("^%l", string.upper)
                 if not CAMI.GetPrivilege(privilege) then
@@ -76,12 +76,13 @@ function GM:RegisterCamiPermissions()
 end
 
 --------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
 function GM:TranslateActivity(client, act)
-    local model = string.lower(client:GetModel())
-    local modelClass = lia.anim.getModelClass(model) or "player"
-    local weapon = client:GetActiveWeapon()
-    if modelClass == "player" then
-        if not lia.config.WepAlwaysRaised and IsValid(weapon) and (client.isWepRaised and not client:isWepRaised()) and client:OnGround() then
+    local model = string.lower(client.GetModel(client))
+    local class = lia.anim.getModelClass(model) or "player"
+    local weapon = client.GetActiveWeapon(client)
+    if class == "player" then
+        if not lia.config.WepAlwaysRaised and IsValid(weapon) and (client.isWepRaised and not client.isWepRaised(client)) and client:OnGround() then
             if string.find(model, "zombie") then
                 local tree = lia.anim.zombie
                 if string.find(model, "fast") then
@@ -91,12 +92,12 @@ function GM:TranslateActivity(client, act)
                 if tree[act] then return tree[act] end
             end
 
-            local holdType = IsValid(weapon) and (weapon.HoldType or weapon:GetHoldType()) or "normal"
+            local holdType = IsValid(weapon) and (weapon.HoldType or weapon.GetHoldType(weapon)) or "normal"
             holdType = lia.anim.PlayerHoldtypeTranslator[holdType] or "passive"
             local tree = lia.anim.player[holdType]
             if tree and tree[act] then
                 if type(tree[act]) == "string" then
-                    client.CalcSeqOverride = client:LookupSequence(tree[act])
+                    client.CalcSeqOverride = client.LookupSequence(tree[act])
 
                     return
                 else
@@ -108,51 +109,51 @@ function GM:TranslateActivity(client, act)
         return self.BaseClass.TranslateActivity(self.BaseClass, client, act)
     end
 
-    local tree = lia.anim[modelClass]
+    local tree = lia.anim[class]
     if tree then
         local subClass = "normal"
-        if client:InVehicle() then
-            local vehicle = client:GetVehicle()
-            local vehicleClass = vehicle:isChair() and "chair" or vehicle:GetClass()
-            if tree.vehicle and tree.vehicle[vehicleClass] then
-                local actInVehicle = tree.vehicle[vehicleClass][1]
-                local fixvec = tree.vehicle[vehicleClass][2]
+        if client.InVehicle(client) then
+            local vehicle = client.GetVehicle(client)
+            local class = vehicle:isChair() and "chair" or vehicle:GetClass()
+            if tree.vehicle and tree.vehicle[class] then
+                local act = tree.vehicle[class][1]
+                local fixvec = tree.vehicle[class][2]
                 if fixvec then
                     client:SetLocalPos(Vector(16.5438, -0.1642, -20.5493))
                 end
 
-                if type(actInVehicle) == "string" then
-                    client.CalcSeqOverride = client:LookupSequence(actInVehicle)
+                if type(act) == "string" then
+                    client.CalcSeqOverride = client.LookupSequence(client, act)
 
                     return
                 else
-                    return actInVehicle
+                    return act
                 end
             else
-                local actInVehicle = tree.normal[ACT_MP_CROUCH_IDLE][1]
-                if type(actInVehicle) == "string" then
-                    client.CalcSeqOverride = client:LookupSequence(actInVehicle)
+                act = tree.normal[ACT_MP_CROUCH_IDLE][1]
+                if type(act) == "string" then
+                    client.CalcSeqOverride = client:LookupSequence(act)
                 end
 
                 return
             end
-        elseif client:OnGround() then
-            client:ManipulateBonePosition(0, vector_origin)
+        elseif client.OnGround(client) then
+            client.ManipulateBonePosition(client, 0, vector_origin)
             if IsValid(weapon) then
-                subClass = weapon.HoldType or weapon:GetHoldType()
+                subClass = weapon.HoldType or weapon.GetHoldType(weapon)
                 subClass = lia.anim.HoldtypeTranslator[subClass] or subClass
             end
 
             if tree[subClass] and tree[subClass][act] then
                 local index = (not client.isWepRaised or client:isWepRaised()) and 2 or 1
-                local actForGround = tree[subClass][act][index]
-                if type(actForGround) == "string" then
-                    client.CalcSeqOverride = client:LookupSequence(actForGround)
+                local act2 = tree[subClass][act][index]
+                if type(act2) == "string" then
+                    client.CalcSeqOverride = client.LookupSequence(client, act2)
 
                     return
-                else
-                    return actForGround
                 end
+
+                return act2
             end
         elseif tree.glide then
             return tree.glide
@@ -229,7 +230,8 @@ function GM:CalcMainActivity(client, velocity)
         client:SetPoseParameter("move_yaw", math.NormalizeAngle(FindMetaTable("Vector").Angle(velocity)[2] - client:EyeAngles()[2]))
     end
 
-    if not self:HandlePlayerLanding(client, velocity, client.m_bWasOnGround) then
+    if self:HandlePlayerLanding(client, velocity, client.m_bWasOnGround) or self:HandlePlayerNoClipping(client, velocity) or self:HandlePlayerDriving(client) or self:HandlePlayerVaulting(client, velocity) or (usingPlayerAnims and self:HandlePlayerJumping(client, velocity)) or self:HandlePlayerSwimming(client, velocity) or self:HandlePlayerDucking(client, velocity) then
+    else
         local len2D = velocity:Length2DSqr()
         if len2D > 22500 then
             client.CalcIdeal = ACT_MP_RUN
@@ -251,7 +253,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:OnCharVarChanged(char, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
-        for _, v in pairs(lia.char.varHooks[varName]) do
+        for k, v in pairs(lia.char.varHooks[varName]) do
             v(char, oldVar, newVar)
         end
     end
@@ -349,7 +351,7 @@ function GM:Think()
 
     if self.nextThink < CurTime() then
         local players = player.GetAll()
-        for _, v in pairs(players) do
+        for k, v in pairs(players) do
             local hp = v:Health()
             local maxhp = v:GetMaxHealth()
             if hp < maxhp and lia.config.AutoRegen then
@@ -432,7 +434,33 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:DevelopmentServerLoader()
-    if lia.DevServer then
+    --[[
+    This allows you to make reduced cooldowns or certain scenarios only happen on the Dev server. Example:
+    
+    function GM:PlayerSpawn(ply)
+        if not ply:getChar() then return end -- If the character isn't loaded, the function won't run
+    
+        -- will load after the default spawn
+        timer.Simple(0.5, function()
+            -- if it detects it is the Dev Server, the HP will be set to 69420, otherwise, it will be 100
+            if DEV then
+                ply:SetMaxHealth(69420)
+                ply:SetHealth(69420)
+            else
+                ply:SetMaxHealth(100)
+                ply:SetHealth(100)
+            end
+        end)
+    end
+--]]
+    local ip, port = game.GetIPAddress():match("([^:]+):(%d+)")
+    if ip == lia.config.DevServerIP and port == lia.config.DevServerPort then
+        DEV = true
+    else
+        DEV = false
+    end
+
+    if DEV then
         print("This is a Development Server!")
     else
         print("This is a Main Server!")
@@ -442,11 +470,61 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:PSALoader()
     local TalkModesPSAString = "Please Remove Talk Modes. Our framework has such built in by default."
+    local NutscriptPSAString = "Please Port Any NutScript Plugins You May Be Using. Nutscript is Known for Being Exxploitable and Regardless Of The Compatibility, WE DO NOT Advice Nutscript Plugins. Our framework was built with Lilia Plugins in mind and most Performance will be adquired like that."
+    local ULXPSAString = [[
+            /*------------------------------------------------------------
+            
+            PUBLIC SERVICE ANNOUNCEMENT FOR LILIA SERVER OWNERS
+            
+            There is a ENOURMOUS performance issue with ULX Admin mod.
+            Lilia Development Team found ULX is the main issue
+            that make the server freeze when player count is higher
+            than 20-30. The duration of freeze will be increased as you get
+            more players on your server.
+            
+            If you're planning to open big server with ULX/ULib, Lilia
+            Development Team does not recommend your plan. Server Performance
+            Issues with ULX/Ulib on your server will be ignored and we're
+            going to consider that you're taking the risk of ULX/Ulib's
+            critical performance issue.
+            
+            Lilia 1.2 only displays this message when you have ULX or
+            ULib on your server.
+            
+                                           -Lilia Development Team
+            
+            */------------------------------------------------------------]]
+    if ulx or ULib then
+        MsgC(Color(255, 0, 0), ULXPSAString .. "\n")
+    end
+
     if TalkModes then
         timer.Simple(
             2,
             function()
                 MsgC(Color(255, 0, 0), TalkModesPSAString)
+            end
+        )
+    end
+
+    if nut then
+        if CLIENT then
+            nut = lia or {
+                util = {},
+                gui = {},
+                meta = {}
+            }
+        else
+            nut = lia or {
+                util = {},
+                meta = {}
+            }
+        end
+
+        timer.Simple(
+            2,
+            function()
+                MsgC(Color(255, 0, 0), NutscriptPSAString)
             end
         )
     end

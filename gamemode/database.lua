@@ -81,7 +81,7 @@ modules.tmysql4 = {
                     function(status, result)
                         if result then
                             result = result[1]
-                            local queryStatus, lastID, data = result.status, result.lastid, result.data
+                            local queryStatus, queryError, affected, lastID, time, data = result.status, result.error, result.affected, result.lastid, result.time, result.data
                             if queryStatus and queryStatus == true and callback then
                                 callback(data, lastID)
                             end
@@ -167,14 +167,14 @@ modules.mysqloo = {
     end,
     queue = function()
         local count = 0
-        for _, v in pairs(lia.db.pool) do
+        for k, v in pairs(lia.db.pool) do
             count = count + v:queueSize()
         end
 
         return count
     end,
     abort = function()
-        for _, v in pairs(lia.db.pool) do
+        for k, v in pairs(lia.db.pool) do
             v:abortAllQueries()
         end
     end,
@@ -212,8 +212,9 @@ modules.mysqloo = {
         local password = lia.db.password
         local database = lia.db.database
         local port = lia.db.port
+        local object = mysqloo.connect(hostname, username, password, database, port)
         lia.db.pool = {}
-        local poolNum = 6 -- it won"t utilize full potential beyond 6.
+        local poolNum = 6 -- it won't utilize full potential beyond 6.
         local connectedPools = 0
         for i = 1, poolNum do
             lia.db.pool[i] = mysqloo.connect(hostname, username, password, database, port)
@@ -264,6 +265,7 @@ modules.mysqloo = {
     preparedCall = function(key, callback, ...)
         local preparedStatement = lia.db.prepared[key]
         if preparedStatement then
+            local freeDB, freeIndex = lia.db.getObject()
             PREPARE_CACHE[key] = PREPARE_CACHE[key] or {}
             PREPARE_CACHE[key][freeIndex] = PREPARE_CACHE[key][freeIndex] or lia.db.getObject():prepare(preparedStatement.query)
             local prepObj = PREPARE_CACHE[key][freeIndex]
@@ -280,7 +282,7 @@ modules.mysqloo = {
             local arguments = {...}
             if table.Count(arguments) == table.Count(preparedStatement.values) then
                 local index = 1
-                for _, type in pairs(preparedStatement.values) do
+                for name, type in pairs(preparedStatement.values) do
                     if type == MYSQLOO_INTEGER then
                         prepObj:setNumber(index, arguments[index])
                     elseif type == MYSQLOO_STRING then
@@ -360,7 +362,7 @@ CREATE TABLE IF NOT EXISTS `lia_characters` (
     `_money` INT(10) UNSIGNED NULL DEFAULT '0',
     `_faction` VARCHAR(24) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
     `recognized_as` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
-    `chars_we_know` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
+    `chars_we_know` TEXT NOT NULL COLLATE 'utf8mb4_general_ci', 
     PRIMARY KEY (`_id`)
 );
 
@@ -411,7 +413,7 @@ CREATE TABLE IF NOT EXISTS lia_characters (
     _money VARCHAR,
     _faction VARCHAR,
     recognized_as TEXT NOT NULL DEFAULT '',
-    chars_we_know TEXT NOT NULL DEFAULT ''
+    chars_we_know TEXT NOT NULL DEFAULT ''    
 );
 
 CREATE TABLE IF NOT EXISTS lia_inventories (
@@ -761,4 +763,3 @@ function GM:RegisterPreparedStatements()
     lia.db.prepare("itemq", "UPDATE lia_items SET _quantity = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
     lia.db.prepare("itemInstance", "INSERT INTO lia_items (_invID, _uniqueID, _data, _x, _y, _quantity) VALUES (?, ?, ?, ?, ?, ?)", {MYSQLOO_INTEGER, MYSQLOO_STRING, MYSQLOO_STRING, MYSQLOO_INTEGER, MYSQLOO_INTEGER, MYSQLOO_INTEGER,})
 end
---------------------------------------------------------------------------------------------------------
