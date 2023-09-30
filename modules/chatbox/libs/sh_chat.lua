@@ -25,6 +25,7 @@ function MODULE:InitializedConfig()
                     endpos = listener:EyePos()
                 }
 
+                if speaker == listener then return true end
                 if not trace.Hit and speaker:EyePos():Distance(listener:EyePos()) <= lia.config.ChatRange then return true end
 
                 return false
