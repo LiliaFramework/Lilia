@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------------------------------
 function MODULE:CreateInventoryPanel(inventory, parent)
 	if inventory.typeID ~= "grid" then return end
-	local panel = vgui.Create("liaInventory", parent)
+	local panel = vgui.Create("liaGridInventory", parent)
 	panel:setInventory(inventory)
 	panel:Center()
 
