@@ -578,12 +578,6 @@ lia.command.add(
         syntax = "[character name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
-            if not client:IsAdmin() then
-                client:notify("Your rank is not high enough to use this command.")
-
-                return false
-            end
-
             if target:getChar():hasFlags("pet") then
                 target:getChar():takeFlags("pet")
                 client:notify("Taken pet Flags!")

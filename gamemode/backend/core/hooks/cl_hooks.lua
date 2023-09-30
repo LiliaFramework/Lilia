@@ -18,12 +18,14 @@ w, h = ScrW(), ScrH()
 local offset1, offset2, offset3, alpha, y
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedExtrasClient()
-	for k, v in pairs(lia.config.RemovableConsoleCommand) do
+	for k, v in pairs(lia.config.StartupConsoleCommand) do
 		RunConsoleCommand(k, v)
 	end
 
-	for k, v in pairs(lia.config.RemovableHooks) do
-		hook.Remove(k, v)
+	for hookType, identifiers in pairs(lia.config.RemovableHooks) do
+		for _, identifier in ipairs(identifiers) do
+			hook.Remove(hookType, identifier)
+		end
 	end
 
 	timer.Remove("HostnameThink")

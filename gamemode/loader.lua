@@ -35,7 +35,7 @@ lia.util.include("backend/external/thirdparty/sh_utils.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/external/thirdparty/sv_netwatcher.lua")
 --------------------------------------------------------------------------------------------------------
-lia.util.include("backend/core/sv_serverguardcompatibility.lua")
+lia.util.include("backend/core/sh_serverguardcompatibility.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/core/sv_vjbase.lua")
 --------------------------------------------------------------------------------------------------------
