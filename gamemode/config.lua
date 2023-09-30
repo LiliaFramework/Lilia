@@ -126,7 +126,7 @@ if not lia.config.WasInitialized then
             doors = false,
             f1menu = false,
             flashlight = false,
-            gridinventory = false,
+            inventory = false,
             interactionmenu = false,
             mainmenu = false,
             observer = false,

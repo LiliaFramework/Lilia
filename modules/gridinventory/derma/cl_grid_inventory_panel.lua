@@ -236,4 +236,4 @@ function PANEL:OnCursorExited()
 	end
 end
 
-vgui.Register("liaGridInventoryPanel", PANEL, "DPanel")
+vgui.Register("liaInventoryPanel", PANEL, "DPanel")

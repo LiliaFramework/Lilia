@@ -8,7 +8,7 @@ local BORDER_FIX_H = 9 + PADDING
 local SHADOW_COLOR = Color(0, 0, 0, 100)
 function PANEL:Init()
 	self:MakePopup()
-	self.content = self:Add("liaGridInventoryPanel")
+	self.content = self:Add("liaInventoryPanel")
 	self.content:Dock(FILL)
 	self.content:setGridSize(1, 1)
 end
@@ -36,4 +36,4 @@ function PANEL:Center()
 	self:SetPos(centerX - (self:GetWide() * 0.5), centerY - (self:GetTall() * 0.5))
 end
 
-vgui.Register("liaGridInventory", PANEL, "liaInventory")
+vgui.Register("liaInventory", PANEL, "liaInventory")
