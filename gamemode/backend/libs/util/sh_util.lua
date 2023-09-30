@@ -8,6 +8,20 @@ function lia.util.isSteamID(value)
 end
 
 --------------------------------------------------------------------------------------------------------
+function lia.util.dateToNumber(str)
+    str = str or os.date("%Y-%m-%d %H:%M:%S", os.time())
+
+    return {
+        year = tonumber(str:sub(1, 4)),
+        month = tonumber(str:sub(6, 7)),
+        day = tonumber(str:sub(9, 10)),
+        hour = tonumber(str:sub(12, 13)),
+        min = tonumber(str:sub(15, 16)),
+        sec = tonumber(str:sub(18, 19)),
+    }
+end
+
+--------------------------------------------------------------------------------------------------------
 function lia.util.findPlayer(identifier, allowPatterns)
     if lia.util.isSteamID(identifier) then return player.GetBySteamID(identifier) end
     if not allowPatterns then

@@ -11,6 +11,13 @@ function playerMeta:getLiliaData(key, default)
 end
 
 --------------------------------------------------------------------------------------------------------
+function playerMeta:getPlayTime()
+    local diff = os.time(lia.util.dateToNumber(lia.lastJoin)) - os.time(lia.util.dateToNumber(lia.firstJoin))
+
+    return diff + (RealTime() - lia.joinTime or 0)
+end
+
+--------------------------------------------------------------------------------------------------------
 function playerMeta:CanOverrideView()
     local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
     if IsValid(lia.gui.char) and lia.gui.char:IsVisible() then return false end

@@ -38,6 +38,13 @@ function playerMeta:setAction(text, time, callback, startTime, finishTime)
 end
 
 --------------------------------------------------------------------------------------------------------
+function playerMeta:getPlayTime()
+    local diff = os.time(lia.util.dateToNumber(self.lastJoin)) - os.time(lia.util.dateToNumber(self.firstJoin))
+
+    return diff + (RealTime() - (self.liaJoinTime or RealTime()))
+end
+
+--------------------------------------------------------------------------------------------------------
 function playerMeta:CreateServerRagdoll(DontSetPlayer)
     local entity = ents.Create("prop_ragdoll")
     entity:SetPos(self:GetPos())
