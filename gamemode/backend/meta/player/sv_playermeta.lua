@@ -3,6 +3,16 @@ local SCHEMA = SCHEMA
 --------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
 --------------------------------------------------------------------------------------------
+function playerMeta:IPAddressNoPort()
+    local ipAddr = self:IPAddress()
+    local ipAddrExploded = string.Explode(":", ipAddr, false)
+    if table.Count(ipAddrExploded) == 2 then
+        return ipAddrExploded[1]
+    else
+        return ipAddr
+    end
+end
+--------------------------------------------------------------------------------------------
 function playerMeta:setAction(text, time, callback, startTime, finishTime)
     if time and time <= 0 then
         if callback then
