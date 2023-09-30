@@ -1,10 +1,14 @@
 --------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
 --------------------------------------------------------------------------------------------------------
+util.AddNetworkString("BodygrouperMenu")
+--------------------------------------------------------------------------------------------------------
+util.AddNetworkString("BodygrouperMenuClose")
+--------------------------------------------------------------------------------------------------------
 net.Receive(
     "BodygrouperMenuClose",
     function(l, client)
-        for k, v in pairs(ents.FindByClass("bodygrouper_closet")) do
+        for k, v in pairs(ents.FindByClass("lia_bodygrouper")) do
             if v:HasUser(client) then
                 v:RemoveUser(client)
             end
@@ -71,7 +75,7 @@ net.Receive(
 
         client:SendLua("lia.module.list.bodygrouper.Menu:Close()")
         if closetuser then
-            for k, v in pairs(ents.FindByClass("bodygrouper_closet")) do
+            for k, v in pairs(ents.FindByClass("lia_bodygrouper")) do
                 if v:HasUser(target) then
                     v:RemoveUser(target)
                 end
