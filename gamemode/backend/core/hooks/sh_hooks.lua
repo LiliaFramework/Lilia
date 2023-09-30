@@ -453,14 +453,7 @@ function GM:DevelopmentServerLoader()
         end)
     end
 --]]
-    local ip, port = game.GetIPAddress():match("([^:]+):(%d+)")
-    if ip == lia.config.DevServerIP and port == lia.config.DevServerPort then
-        DEV = true
-    else
-        DEV = false
-    end
-
-    if DEV then
+    if lia.config.DevServer then
         print("This is a Development Server!")
     else
         print("This is a Main Server!")

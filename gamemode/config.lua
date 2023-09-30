@@ -29,8 +29,7 @@ if not lia.config.WasInitialized then
         ItemCleanupTime = 7200, -- Time interval for cleaning up items on the ground (in seconds)
         MapCleanupTime = 21600, -- Time interval for cleaning up maps (in seconds)
         -- Server Settings
-        DevServerIP = "45.61.170.66", -- Development server IP address
-        DevServerPort = "27270", -- Development server port
+        DevServer = false, -- Is it a Development Server?
         -- Player Interaction Settings
         WalkRatio = 0.5, -- Walk speed ratio (used in certain interactions)
         SalaryOverride = true, -- Enable salary override
