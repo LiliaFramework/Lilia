@@ -20,9 +20,7 @@ lia.config.GamemodeCreators = {
         steamid = "76561198070441753",
         color = Color(138, 43, 226)
     },
-    {
-        desc = "Developer", -- Seamus
-        steamid = "76561198036551982",
+    {x
         color = Color(34, 139, 34)
     },
     {
