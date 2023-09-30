@@ -1,32 +1,24 @@
 --------------------------------------------------------------------------------------------------------
 lia.config.GamemodeCreators = {
     {
-        desc = "Creator", -- Chessnut
+        desc = "Creator", -- Leonheart
+        steamid = "76561198312513285",
+        color = Color(34, 139, 34)
+    },
+    {
+        desc = "Developer", -- Chessnut
         steamid = "76561198030127257",
         color = Color(255, 0, 0)
     },
     {
-        desc = "Co-Creator", -- Black Tea
+        desc = "Developer", -- Black Tea
         steamid = "76561197999893894",
         color = Color(255, 0, 0)
     },
     {
-        desc = "Lead Developer", -- Zoephix
-        steamid = "76561198060659964",
-        color = Color(138, 43, 226)
-    },
-    {
-        desc = "Lead Developer", -- TovarischPootis
-        steamid = "76561198070441753",
-        color = Color(138, 43, 226)
-    },
-    {x
-        color = Color(34, 139, 34)
-    },
-    {
-        desc = "Developer", -- Milk
-        steamid = "76561198031437460",
-        color = Color(34, 139, 34)
+        desc = "Developer", -- Doopie
+        steamid = "76561198112316720",
+        color = Color(255, 0, 0)
     },
 }
 
@@ -39,6 +31,6 @@ lia.config.contributors = {
 --------------------------------------------------------------------------------------------------------
 lia.config.discord = {
     desc = "Join the Lilia Development Discord",
-    url = "https://discord.gg/jWCEUEKQ"
+    url = "https://discord.gg/77JtZx2FCq"
 }
 --------------------------------------------------------------------------------------------------------
