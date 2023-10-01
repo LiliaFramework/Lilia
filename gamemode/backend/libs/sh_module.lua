@@ -216,7 +216,7 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function lia.module.isDisabled(uniqueID)
-    if lia.config.UnLoadedPlugins[uniqueID] ~= nil then return lia.config.UnLoadedPlugins[uniqueID] end
+    if lia.config.UnLoadedModules[uniqueID] ~= nil then return lia.config.UnLoadedModules[uniqueID] end
 
     return lia.data.get("unloaded", {}, false, true)[uniqueID] == true
 end

@@ -114,8 +114,8 @@ if not lia.config.WasInitialized then
         BlockedCollideEntities = {"lia_item", "lia_money"},
         -- Restricted Vehicles
         RestrictedVehicles = {},
-        -- Unloaded Plugins
-        UnLoadedPlugins = {
+        -- Unloaded Modules
+        UnLoadedModules = {
             ammosave = false,
             bodygrouper = false,
             chatbox = false,
