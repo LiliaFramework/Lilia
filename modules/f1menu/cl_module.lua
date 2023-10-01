@@ -137,6 +137,7 @@ function MODULE:CreateMenuButtons(tabs)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:BuildHelpMenu(tabs)
     tabs["commands"] = function(node, client)
@@ -184,15 +185,6 @@ function MODULE:BuildHelpMenu(tabs)
             body = body .. "</span></p>"
         end
         return body
-    end
-
-    tabs["Credits"] = function()
-        if helpPanel then
-            local credits = helpPanel:Add("liaCreditsList")
-            credits:Dock(TOP)
-            credits:DockMargin(ScrW * 0.1, 0, ScrW * 0.1, 0)
-        end
-        return ""
     end
 
     if lia.config.RulesEnabled then tabs["Rules"] = function() return lia.config.Rules end end
