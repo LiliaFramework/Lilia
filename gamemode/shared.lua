@@ -38,3 +38,6 @@ if SERVER and game.IsDedicated() then
     concommand.Add("gm_save", function(client, command, arguments) end)
 end
 --------------------------------------------------------------------------------------------------------
+lia.lang.loadFromDir("lilia/gamemode/languages")
+lia.item.loadFromDir("lilia/gamemode/items")
+--------------------------------------------------------------------------------------------------------
