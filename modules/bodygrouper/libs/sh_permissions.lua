@@ -1,12 +1,12 @@
 --------------------------------------------------------------------------------------------------------
 function MODULE:CanChangeBodygroup(client)
-    if CAMI then
-        return CAMI.PlayerHasAccess(client, "Characters - Change Bodygroups", nil)
-    else
-        if lia.config.BodygrouperAdminOnly then return client:IsAdmin() end
+    if lia.config.BodygrouperAdminOnly then
+        if CAMI then
+            return CAMI.PlayerHasAccess(client, "Change Bodygroups", nil)
+        else
+            return client:IsAdmin()
+        end
     end
-
-    return true
 end
 
 --------------------------a------------------------------------------------------------------------------
@@ -14,7 +14,6 @@ function MODULE:CanAccessMenu(client)
     for k, v in pairs(ents.FindByClass("lia_bodygrouper")) do
         if v:GetPos():Distance(client:GetPos()) <= 128 then return true end
     end
-
     return self:CanChangeBodygroup(client)
 end
 

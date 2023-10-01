@@ -1,11 +1,20 @@
 --------------------------------------------------------------------------------------------------------
-MODULE.name = "Flashlight Improver"
+lia.config.Vignette = true
 --------------------------------------------------------------------------------------------------------
-MODULE.author = "STEAM_0:1:176123778"
+lia.config.ThirdPersonEnabled =  true
 --------------------------------------------------------------------------------------------------------
-MODULE.desc = "Adds a Cooldown to enabling the Flashlight And Item Requirements."
+lia.config.CrosshairEnabled =  false
 --------------------------------------------------------------------------------------------------------
-lia.util.include("sv_module.lua")
+lia.config.BarsDisabled =  false
 --------------------------------------------------------------------------------------------------------
-lia.util.include("sh_config.lua")
+lia.config.AmmoDrawEnabled = true
+--------------------------------------------------------------------------------------------------------
+lia.config.HiddenHUDElements = {
+    ["CHudHealth"] = true,
+    ["CHudCrosshair"] = true,
+    ["CHudBattery"] = true,
+    ["CHudAmmo"] = true,
+    ["CHudSecondaryAmmo"] = true,
+    ["CHudHistoryResource"] = true
+}
 --------------------------------------------------------------------------------------------------------

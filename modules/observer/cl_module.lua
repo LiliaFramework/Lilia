@@ -8,7 +8,8 @@ local dimDistance = 1024
 --------------------------------------------------------------------------------------------------------
 function MODULE:HUDPaint()
     client = LocalPlayer()
-    if client:IsAdmin() and client:IsNoClipping() and not client:InVehicle() and LIA_CVAR_ADMINESP:GetBool() and LIA_CVAR_ITEMESP:GetBool() then
+    if not CAMI.PlayerHasAccess(client, "Lilia - Management - No Clip ESP", nil) then return end
+    if client:IsNoClipping() and not client:InVehicle() and LIA_CVAR_ADMINESP:GetBool() and LIA_CVAR_ITEMESP:GetBool() then
         local sx, sy = surface.ScreenWidth(), surface.ScreenHeight()
         for k, v in ipairs(ents.GetAll()) do
             if v:GetClass() == "lia_item" then
@@ -22,16 +23,13 @@ function MODULE:HUDPaint()
                 surface.SetDrawColor(30, 30, 30, alpha)
                 surface.DrawRect(x - size / 2, y - size / 2, size, size)
                 local name = "invalid"
-                if v.getItemTable and v:getItemTable() then
-                    name = v:getItemTable().name
-                end
-
+                if v.getItemTable and v:getItemTable() then name = v:getItemTable().name end
                 lia.util.drawText("item: " .. name, x, y - size, ColorAlpha(Color(220, 220, 220, 255), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, nil, alpha)
             end
         end
     end
 
-    if client:IsAdmin() and client:IsNoClipping() and not client:InVehicle() and LIA_CVAR_ADMINESP:GetBool() then
+    if client:IsNoClipping() and not client:InVehicle() and LIA_CVAR_ADMINESP:GetBool() then
         sx, sy = ScrW(), ScrH()
         for k, v in ipairs(player.GetAll()) do
             if v == client then continue end
@@ -68,7 +66,8 @@ function MODULE:SetupQuickMenu(menu)
                         else
                             RunConsoleCommand("lia_obsitemesp", "0")
                         end
-                    end, LIA_CVAR_ITEMESP:GetBool()
+                    end,
+                    LIA_CVAR_ITEMESP:GetBool()
                 )
 
                 menu:addSpacer()
@@ -77,7 +76,8 @@ function MODULE:SetupQuickMenu(menu)
                 else
                     RunConsoleCommand("lia_obsesp", "0")
                 end
-            end, LIA_CVAR_ADMINESP:GetBool()
+            end,
+            LIA_CVAR_ADMINESP:GetBool()
         )
 
         local buttonESPAdvanced = menu:addCheck(
@@ -88,7 +88,8 @@ function MODULE:SetupQuickMenu(menu)
                 else
                     RunConsoleCommand("lia_obsespadvanced", "0")
                 end
-            end, LIA_CVAR_ADMINESPAVANCED:GetBool()
+            end,
+            LIA_CVAR_ADMINESPAVANCED:GetBool()
         )
 
         local buttonTP = menu:addCheck(
@@ -99,7 +100,8 @@ function MODULE:SetupQuickMenu(menu)
                 else
                     RunConsoleCommand("lia_obstpback", "0")
                 end
-            end, LIA_CVAR_OBSTPBACK:GetBool()
+            end,
+            LIA_CVAR_OBSTPBACK:GetBool()
         )
 
         menu:addSpacer()
@@ -108,10 +110,6 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function MODULE:ShouldDrawEntityInfo(entity)
-    if IsValid(entity) then
-        if entity:IsPlayer() or IsValid(entity:getNetVar("player")) then
-            if entity.IsAdmin and entity:IsAdmin() and entity:IsNoClipping() then return false end
-        end
-    end
+    if IsValid(entity) then if entity:IsPlayer() or IsValid(entity:getNetVar("player")) then if entity.IsAdmin and entity:IsAdmin() and entity:IsNoClipping() then return false end end end
 end
 --------------------------------------------------------------------------------------------------------

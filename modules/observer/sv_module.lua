@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 function MODULE:PlayerNoClip(client, state)
-    if client:IsAdmin() or client:getChar():getFaction() == FACTION_STAFF then
+    if CAMI.PlayerHasAccess(client, "Lilia - Management - No Clip ESP", nil) or client:getChar():getFaction() == FACTION_STAFF then
         if state then
             client.liaObsData = {client:GetPos(), client:EyeAngles()}
             client:SetNoDraw(true)
