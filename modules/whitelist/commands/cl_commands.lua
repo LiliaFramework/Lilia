@@ -2,7 +2,7 @@
 lia.command.add(
     "whitelistadd",
     {
-        privilege = "Management - Whitelist Change",
+        privilege = "Whitelist Change",
         superAdminOnly = true,
         onRun = function(client, arguments) end
     }
@@ -12,7 +12,7 @@ lia.command.add(
 lia.command.add(
     "whitelistremove",
     {
-        privilege = "Management - Whitelist Change",
+        privilege = "Whitelist Change",
         superAdminOnly = true,
         onRun = function(client, arguments) end
     }
@@ -22,9 +22,9 @@ lia.command.add(
 lia.command.add(
     "whitelistclear",
     {
-        privilege = "Management - Whitelist Change",
+        privilege = "Whitelist Change",
         superAdminOnly = true,
-        onRun = function(client, arguments) end
+        onRun = function() end
     }
 )
 
@@ -32,9 +32,9 @@ lia.command.add(
 lia.command.add(
     "whitelistaddall",
     {
-        privilege = "Management - Whitelist Change",
+        privilege = "Whitelist Change",
         superAdminOnly = true,
-        onRun = function(client, arguments) end
+        onRun = function() end
     }
 )
 --------------------------------------------------------------------------------------------------------

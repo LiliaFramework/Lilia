@@ -12,7 +12,7 @@ function lia.command.add(command, data)
             return
         end
 
-        local privilege = "Lilia - " .. (isstring(data.privilege) and data.privilege or command)
+        local privilege = "Lilia - Commands - " .. (isstring(data.privilege) and data.privilege or command)
         if not CAMI.GetPrivilege(privilege) then
             CAMI.RegisterPrivilege(
                 {

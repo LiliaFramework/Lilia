@@ -2,14 +2,13 @@
 lia.command.add(
     "pktoggle",
     {
-        privilege = "Characters - Toogle Permakill",
+        privilege = "Toogle Permakill",
         syntax = "<string target>",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             local tcharacter = target:getChar()
             if not lia.config.PKActive then
                 client:notify("PKing isn't enabled! Enable it in the config!")
-
                 return
             end
 

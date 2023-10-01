@@ -3,7 +3,7 @@ lia.command.add(
 	"toggleraise",
 	{
 		adminOnly = false,
-		privilege = "Basic User Permissions",
+		privilege = "Default User Commands",
 		onRun = function(client, arguments)
 			if (client.liaNextToggle or 0) < CurTime() then
 				client:toggleWepRaised()

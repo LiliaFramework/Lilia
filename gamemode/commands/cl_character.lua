@@ -4,7 +4,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string name>",
-        privilege = "Characters - Ban Characters",
+        privilege = "Ban Characters",
         onRun = function(client, arguments) end
     }
 )
@@ -15,7 +15,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> <string desc>",
-        privilege = "Characters - Change Description",
+        privilege = "Change Description",
         onRun = function(client, arguments) end
     }
 )
@@ -26,7 +26,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> <string faction>",
-        privilege = "Characters - Transfer Player",
+        privilege = "Transfer Player",
         onRun = function(client, arguments) end
     }
 )
@@ -37,7 +37,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> [string newName]",
-        privilege = "Characters - Change Name",
+        privilege = "Change Name",
         onRun = function(client, arguments) end
     }
 )
@@ -48,7 +48,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name>",
-        privilege = "Characters - Retrieve Model",
+        privilege = "Retrieve Model",
         onRun = function(client, arguments) end
     }
 )
@@ -59,7 +59,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> <string model>",
-        privilege = "Characters - Change Model",
+        privilege = "Change Model",
         onRun = function(client, arguments) end
     }
 )
@@ -70,7 +70,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> <string bodyGroup> [number value]",
-        privilege = "Characters - Change Bodygroups",
+        privilege = "Change Bodygroups",
         onRun = function(client, arguments) end
     }
 )
@@ -81,7 +81,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> [number skin]",
-        privilege = "Characters - Change Skin",
+        privilege = "Change Skin",
         onRun = function(client, arguments) end
     }
 )
@@ -92,7 +92,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name>",
-        privilege = "Characters - Retrieve Money",
+        privilege = "Retrieve Money",
         onRun = function(client, arguments) end
     }
 )
@@ -103,7 +103,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string target> <number amount>",
-        privilege = "Characters - Change Money",
+        privilege = "Change Money",
         onRun = function(client, arguments) end
     }
 )
@@ -114,7 +114,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string charname> <string attribname> <number level>",
-        privilege = "Characters - Change Attributes",
+        privilege = "Change Attributes",
         onRun = function(client, arguments) end
     }
 )
@@ -125,7 +125,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string charname> <string attribname> <number level>",
-        privilege = "Characters - Change Attributes",
+        privilege = "Change Attributes",
         onRun = function(client, arguments) end
     }
 )
@@ -136,7 +136,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string target>",
-        privilege = "Characters - Check Inventory",
+        privilege = "Check Inventory",
         onRun = function(client, arguments) end
     }
 )
@@ -147,7 +147,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string name>",
-        privilege = "Characters - Clear Inventory",
+        privilege = "Clear Inventory",
         onRun = function(client, arguments) end
     }
 )
@@ -158,7 +158,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> [string flags]",
-        privilege = "Characters - Toggle Flags",
+        privilege = "Toggle Flags",
         onRun = function(client, arguments) end
     }
 )
@@ -169,7 +169,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> [string flags]",
-        privilege = "Characters - Toggle Flags",
+        privilege = "Toggle Flags",
         onRun = function(client, arguments) end
     }
 )
@@ -180,7 +180,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name>",
-        privilege = "Characters - Kick Characters",
+        privilege = "Kick Characters",
         onRun = function(client, arguments) end
     }
 )
@@ -190,7 +190,7 @@ lia.command.add(
     "plywhitelist",
     {
         adminOnly = true,
-        privilege = "Characters - Whitelist Characters",
+        privilege = "Whitelist Characters",
         syntax = "<string name> <string faction>",
         onRun = function(client, arguments) end
     }
@@ -201,7 +201,7 @@ lia.command.add(
     "plyunwhitelist",
     {
         adminOnly = true,
-        privilege = "Characters - Un-Whitelist Characters",
+        privilege = "Un-Whitelist Characters",
         syntax = "<string name> <string faction>",
         onRun = function(client, arguments) end
     }
@@ -213,7 +213,7 @@ lia.command.add(
     {
         syntax = "<string name>",
         superAdminOnly = true,
-        privilege = "Characters - Un-Ban Characters",
+        privilege = "Un-Ban Characters",
         onRun = function(client, arguments) end
     }
 )
@@ -223,7 +223,7 @@ lia.command.add(
     "viewextdescription",
     {
         adminOnly = false,
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         onRun = function(client, arguments) end
     }
 )
@@ -233,7 +233,7 @@ lia.command.add(
     "charsetextdescription",
     {
         adminOnly = true,
-        privilege = "Characters - Change Description",
+        privilege = "Change Description",
         onRun = function(client, arguments) end
     }
 )
@@ -242,7 +242,7 @@ lia.command.add(
 lia.command.add(
     "flagpet",
     {
-        privilege = "Characters - Give pet Flags",
+        privilege = "Give pet Flags",
         adminOnly = true,
         syntax = "[character name]",
         onRun = function(client, arguments) end
@@ -253,7 +253,7 @@ lia.command.add(
 lia.command.add(
     "flags",
     {
-        privilege = "Characters - Check Flags",
+        privilege = "Check Flags",
         adminOnly = true,
         syntax = "<string name>",
         onRun = function(client, arguments) end
@@ -265,7 +265,7 @@ lia.command.add(
     "flagragdoll",
     {
         adminOnly = true,
-        privilege = "Management - Hand Ragdoll Medals",
+        privilege = "Hand Ragdoll Medals",
         syntax = "<string name>",
         onRun = function(client, arguments) end
     }

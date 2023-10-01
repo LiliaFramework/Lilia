@@ -4,7 +4,7 @@ local MODULE = MODULE
 lia.command.add(
     "whitelistadd",
     {
-        privilege = "Management - Whitelist Change",
+        privilege = "Whitelist Change",
         superAdminOnly = true,
         onRun = function(client, arguments)
             local steamID = arguments[1]
@@ -13,7 +13,6 @@ lia.command.add(
                 return "This SteamID is already whitelisted"
             else
                 MODULE.allowed[steamID] = true
-
                 return "Added SteamID to the whitelist"
             end
         end
@@ -24,7 +23,7 @@ lia.command.add(
 lia.command.add(
     "whitelistremove",
     {
-        privilege = "Management - Whitelist Change",
+        privilege = "Whitelist Change",
         superAdminOnly = true,
         onRun = function(client, arguments)
             local steamID = arguments[1]
@@ -33,7 +32,6 @@ lia.command.add(
                 return "This SteamID is not whitelisted"
             else
                 MODULE.allowed[steamID] = nil
-
                 return "Removed SteamID from the whitelist"
             end
         end
@@ -44,11 +42,10 @@ lia.command.add(
 lia.command.add(
     "whitelistclear",
     {
-        privilege = "Management - Whitelist Change",
+        privilege = "Whitelist Change",
         superAdminOnly = true,
         onRun = function()
             MODULE.allowed = {}
-
             return "Cleared the whitelist"
         end
     }
@@ -58,15 +55,12 @@ lia.command.add(
 lia.command.add(
     "whitelistaddall",
     {
-        privilege = "Management - Whitelist Change",
+        privilege = "Whitelist Change",
         superAdminOnly = true,
         onRun = function()
             for _, client in ipairs(player.GetHumans()) do
-                if IsValid(client) then
-                    MODULE.allowed[client:SteamID()] = true
-                end
+                if IsValid(client) then MODULE.allowed[client:SteamID()] = true end
             end
-
             return "Added all current players to the whitelist"
         end
     }

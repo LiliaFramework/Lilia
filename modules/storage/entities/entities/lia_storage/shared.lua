@@ -14,6 +14,6 @@ end
 function ENT:getStorageInfo()
 	self.lowerModel = self.lowerModel or self:GetModel()
 
-	return STORAGE_DEFINITIONS[self.lowerModel]
+	return lia.config.StorageDefinitions[self.lowerModel]
 end
 --------------------------------------------------------------------------------------------------------

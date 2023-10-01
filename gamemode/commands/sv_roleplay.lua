@@ -3,7 +3,7 @@ lia.command.add(
     "roll",
     {
         adminOnly = false,
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         onRun = function(client, arguments)
             lia.chat.send(client, "roll", math.random(0, 100))
         end
@@ -15,7 +15,7 @@ lia.command.add(
     "point",
     {
         adminOnly = false,
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         syntax = "[number maximum]",
         onRun = function(client, arguments)
             local table = ents.FindInSphere(client:EyePos(), 200)
@@ -50,7 +50,7 @@ lia.command.add(
     "chardesc",
     {
         adminOnly = false,
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         syntax = "<string desc>",
         onRun = function(client, arguments)
             arguments = table.concat(arguments, " ")
@@ -79,7 +79,7 @@ lia.command.add(
     "beclass",
     {
         adminOnly = false,
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         syntax = "<string class>",
         onRun = function(client, arguments)
             local class = table.concat(arguments, " ")
@@ -126,7 +126,7 @@ lia.command.add(
     "chargetup",
     {
         adminOnly = false,
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         onRun = function(client, arguments)
             local entity = client.liaRagdoll
             if IsValid(entity) and entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
@@ -149,7 +149,7 @@ lia.command.add(
     "givemoney",
     {
         adminOnly = false,
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         syntax = "<number amount>",
         onRun = function(client, arguments)
             local number = tonumber(arguments[1])
@@ -181,7 +181,7 @@ lia.command.add(
     "bringlostitems",
     {
         adminOnly = false,
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         onRun = function(client, arguments)
             for k, v in pairs(ents.FindInSphere(client:GetPos(), 500)) do
                 if v:GetClass() == "lia_item" then
@@ -197,7 +197,7 @@ lia.command.add(
     "carddraw",
     {
         adminOnly = false,
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         onRun = function(client, arguments)
             local cards = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Ace", "Queen", "King", "Jack"}
             local family = {"Spades", "Hearts", "Diamonds", "Clubs"}
@@ -212,7 +212,7 @@ lia.command.add(
     "fallover",
     {
         adminOnly = false,
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         syntax = "[number time]",
         onRun = function(client, arguments)
             if client:IsFrozen() then
@@ -256,7 +256,7 @@ lia.command.add(
     "factionlist",
     {
         adminOnly = false,
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         syntax = "<string text>",
         onRun = function(client, arguments)
             for k, v in ipairs(lia.faction.indices) do
@@ -271,7 +271,7 @@ lia.command.add(
     "getpos",
     {
         adminOnly = false,
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         onRun = function(client, arguments)
             client:ChatPrint("MY POSITION: " .. tostring(client:GetPos()))
         end
@@ -283,7 +283,7 @@ lia.command.add(
     "doorname",
     {
         adminOnly = false,
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         onRun = function(client, arguments)
             local tr = util.TraceLine(util.GetPlayerTrace(client))
             if IsValid(tr.Entity) then
@@ -299,7 +299,7 @@ if lia.config.FactionBroadcastEnabled then
         "factionbroadcast",
         {
             adminOnly = false,
-            privilege = "Basic User Permissions",
+            privilege = "Default User Commands",
             syntax = "<string factions> <string text>",
             onRun = function(client, arguments)
                 if not client:getChar() or not client:getChar():hasFlags("B") then return "Your character does not have the required flags for this command." end
@@ -355,7 +355,7 @@ if lia.config.AdvertisementEnabled then
         "advertisement",
         {
             adminOnly = false,
-            privilege = "Basic User Permissions",
+            privilege = "Default User Commands",
             syntax = "<string factions> <string text>",
             onRun = function(client, arguments)
                 if not arguments[1] then return "Invalid argument (#1)" end

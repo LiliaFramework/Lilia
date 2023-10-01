@@ -4,7 +4,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string name>",
-        privilege = "Characters - Ban Characters",
+        privilege = "Ban Characters",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -35,7 +35,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> <string desc>",
-        privilege = "Characters - Change Description",
+        privilege = "Change Description",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if not IsValid(target) then return end
@@ -67,7 +67,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> <string faction>",
-        privilege = "Characters - Transfer Player",
+        privilege = "Transfer Player",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             local name = table.concat(arguments, " ", 2)
@@ -106,7 +106,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> [string newName]",
-        privilege = "Characters - Change Name",
+        privilege = "Change Name",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and not arguments[2] then
@@ -135,7 +135,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name>",
-        privilege = "Characters - Retrieve Model",
+        privilege = "Retrieve Model",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and target:getChar() then
@@ -153,7 +153,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> <string model>",
-        privilege = "Characters - Change Model",
+        privilege = "Change Model",
         onRun = function(client, arguments)
             if not arguments[2] then return L("invalidArg", client, 2) end
             local target = lia.command.findPlayer(client, arguments[1])
@@ -172,7 +172,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> <string bodyGroup> [number value]",
-        privilege = "Characters - Change Bodygroups",
+        privilege = "Change Bodygroups",
         onRun = function(client, arguments)
             local value = tonumber(arguments[3])
             local target = lia.command.findPlayer(client, arguments[1])
@@ -202,7 +202,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> [number skin]",
-        privilege = "Characters - Change Skin",
+        privilege = "Change Skin",
         onRun = function(client, arguments)
             local skin = tonumber(arguments[2])
             local target = lia.command.findPlayer(client, arguments[1])
@@ -221,7 +221,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name>",
-        privilege = "Characters - Retrieve Money",
+        privilege = "Retrieve Money",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and target:getChar() then
@@ -240,7 +240,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string target> <number amount>",
-        privilege = "Characters - Change Money",
+        privilege = "Change Money",
         onRun = function(client, arguments)
             local amount = tonumber(arguments[2])
             if not amount or not isnumber(amount) or amount < 0 then return "@invalidArg", 2 end
@@ -263,7 +263,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string charname> <string attribname> <number level>",
-        privilege = "Characters - Change Attributes",
+        privilege = "Change Attributes",
         onRun = function(client, arguments)
             local attribName = arguments[2]
             if not attribName then return L("invalidArg", client, 2) end
@@ -294,7 +294,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string charname> <string attribname> <number level>",
-        privilege = "Characters - Change Attributes",
+        privilege = "Change Attributes",
         onRun = function(client, arguments)
             local attribName = arguments[2]
             if not attribName then return L("invalidArg", client, 2) end
@@ -325,7 +325,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string target>",
-        privilege = "Characters - Check Inventory",
+        privilege = "Check Inventory",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and target:getChar() and target ~= client then
@@ -350,7 +350,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string name>",
-        privilege = "Characters - Clear Inventory",
+        privilege = "Clear Inventory",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and target:getChar() then
@@ -370,7 +370,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> [string flags]",
-        privilege = "Characters - Toggle Flags",
+        privilege = "Toggle Flags",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and target:getChar() then
@@ -406,7 +406,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name> [string flags]",
-        privilege = "Characters - Toggle Flags",
+        privilege = "Toggle Flags",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and target:getChar() then
@@ -434,7 +434,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name>",
-        privilege = "Characters - Kick Characters",
+        privilege = "Kick Characters",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -456,7 +456,7 @@ lia.command.add(
     "plywhitelist",
     {
         adminOnly = true,
-        privilege = "Characters - Whitelist Characters",
+        privilege = "Whitelist Characters",
         syntax = "<string name> <string faction>",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
@@ -477,7 +477,7 @@ lia.command.add(
     "plyunwhitelist",
     {
         adminOnly = true,
-        privilege = "Characters - Un-Whitelist Characters",
+        privilege = "Un-Whitelist Characters",
         syntax = "<string name> <string faction>",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
@@ -499,7 +499,7 @@ lia.command.add(
     {
         syntax = "<string name>",
         superAdminOnly = true,
-        privilege = "Characters - Un-Ban Characters",
+        privilege = "Un-Ban Characters",
         onRun = function(client, arguments)
             if (client.liaNextSearch or 0) >= CurTime() then return L("charSearching", client) end
             local name = table.concat(arguments, " ")
@@ -545,7 +545,7 @@ lia.command.add(
     "viewextdescription",
     {
         adminOnly = false,
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         onRun = function(client, arguments)
             net.Start("OpenDetailedDescriptions")
             net.WriteEntity(client)
@@ -561,7 +561,7 @@ lia.command.add(
     "charsetextdescription",
     {
         adminOnly = true,
-        privilege = "Characters - Change Description",
+        privilege = "Change Description",
         onRun = function(client, arguments)
             net.Start("SetDetailedDescriptions")
             net.WriteString(client:steamName())
@@ -574,7 +574,7 @@ lia.command.add(
 lia.command.add(
     "flagpet",
     {
-        privilege = "Characters - Give pet Flags",
+        privilege = "Give pet Flags",
         syntax = "[character name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
@@ -594,7 +594,7 @@ lia.command.add(
     "flagragdoll",
     {
         adminOnly = true,
-        privilege = "Management - Hand Ragdoll Medals",
+        privilege = "Hand Ragdoll Medals",
         syntax = "<string name>",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
@@ -609,7 +609,7 @@ lia.command.add(
 lia.command.add(
     "flags",
     {
-        privilege = "Characters - Check Flags",
+        privilege = "Check Flags",
         adminOnly = true,
         syntax = "<string name>",
         onRun = function(client, arguments)

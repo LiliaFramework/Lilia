@@ -4,7 +4,7 @@ local MODULE = MODULE
 lia.command.add(
     "banooc",
     {
-        privilege = "Management - Ban OOC",
+        privilege = "Ban OOC",
         syntax = "<string target>",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
@@ -22,7 +22,7 @@ lia.command.add(
 lia.command.add(
     "unbanooc",
     {
-        privilege = "Management - Unban OOC",
+        privilege = "Unban OOC",
         syntax = "<string target>",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
@@ -38,7 +38,7 @@ lia.command.add(
 lia.command.add(
     "blockooc",
     {
-        privilege = "Management - Block OOC",
+        privilege = "Block OOC",
         syntax = "<string target>",
         onRun = function(client, arguments)
             if GetGlobalBool("oocblocked", false) then

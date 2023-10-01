@@ -4,7 +4,7 @@ local MODULE = MODULE
 lia.command.add(
     "spawnadd",
     {
-        privilege = "Management - Change Spawns",
+        privilege = "Change Spawns",
         adminOnly = true,
         syntax = "<string faction> [string class]",
         onRun = function(client, arguments)
@@ -47,10 +47,7 @@ lia.command.add(
                     table.insert(MODULE.spawns[faction][class], client:GetPos())
                     MODULE:SaveSpawns()
                     local name = L(info.name, client)
-                    if info2 then
-                        name = name .. " (" .. L(info2.name, client) .. ")"
-                    end
-
+                    if info2 then name = name .. " (" .. L(info2.name, client) .. ")" end
                     return L("spawnAdded", client, name)
                 else
                     return L("invalidFaction", client)
@@ -66,7 +63,7 @@ lia.command.add(
 lia.command.add(
     "spawnremove",
     {
-        privilege = "Management - Change Spawns",
+        privilege = "Change Spawns",
         adminOnly = true,
         syntax = "[number radius]",
         onRun = function(client, arguments)
@@ -84,10 +81,7 @@ lia.command.add(
                 end
             end
 
-            if i > 0 then
-                MODULE:SaveSpawns()
-            end
-
+            if i > 0 then MODULE:SaveSpawns() end
             return L("spawnDeleted", client, i)
         end
     }

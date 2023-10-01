@@ -3,7 +3,7 @@ lia.command.add(
     "freezeallprops",
     {
         superAdminOnly = true,
-        privilege = "Management - Freeze All Props",
+        privilege = "Freeze All Props",
         onRun = function(client, arguments) end
     }
 )
@@ -13,7 +13,7 @@ lia.command.add(
     "cleanitems",
     {
         superAdminOnly = true,
-        privilege = "Management - Clean Items",
+        privilege = "Clean Items",
         onRun = function(client, arguments) end
     }
 )
@@ -23,7 +23,7 @@ lia.command.add(
     "cleanprops",
     {
         superAdminOnly = true,
-        privilege = "Management - Clean Props",
+        privilege = "Clean Props",
         onRun = function(client, arguments) end
     }
 )
@@ -33,7 +33,7 @@ lia.command.add(
     "savemap",
     {
         superAdminOnly = true,
-        privilege = "Management - Save Map Data",
+        privilege = "Save Map Data",
         onRun = function(client, arguments) end
     }
 )
@@ -43,7 +43,7 @@ lia.command.add(
     "cleannpcs",
     {
         superAdminOnly = true,
-        privilege = "Management - Clean NPCs",
+        privilege = "Clean NPCs",
         onRun = function(client, arguments) end
     }
 )
@@ -54,7 +54,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<string name>",
-        privilege = "Management - Check Flags",
+        privilege = "Check Flags",
         onRun = function(client, arguments) end
     }
 )
@@ -64,7 +64,7 @@ lia.command.add(
     "clearchat",
     {
         superAdminOnly = true,
-        privilege = "Management - Clear Chat",
+        privilege = "Clear Chat",
         onRun = function(client, arguments) end
     }
 )
@@ -75,7 +75,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string charname>",
-        privilege = "Management - Check All Money",
+        privilege = "Check All Money",
         onRun = function(client, arguments) end
     }
 )
@@ -85,7 +85,7 @@ lia.command.add(
     "return",
     {
         adminOnly = true,
-        privilege = "Management - Return",
+        privilege = "Return",
         onRun = function(client, arguments) end
     }
 )
@@ -95,7 +95,7 @@ lia.command.add(
     "findallflags",
     {
         adminOnly = false,
-        privilege = "Management - Find All Flags",
+        privilege = "Find All Flags",
         onRun = function(client, arguments) end
     }
 )
@@ -106,7 +106,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string name> <string item>",
-        privilege = "Management - Give Item",
+        privilege = "Give Item",
         onRun = function(client, arguments) end
     }
 )
@@ -116,7 +116,7 @@ lia.command.add(
     "netmessagelogs",
     {
         superAdminOnly = true,
-        privilege = "Management - Check Net Message Log",
+        privilege = "Check Net Message Log",
         onRun = function(client, arguments) end
     }
 )
@@ -127,7 +127,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string name>",
-        privilege = "Management - Return Items",
+        privilege = "Return Items",
         onRun = function(client, arguments) end
     }
 )
@@ -138,7 +138,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         syntax = "<string factions> <string text>",
-        privilege = "Management - Make Announcements",
+        privilege = "Make Announcements",
         onRun = function(client, arguments) end
     }
 )
@@ -148,7 +148,7 @@ lia.command.add(
     "voiceunban",
     {
         adminOnly = true,
-        privilege = "Management - Voice Unban Character",
+        privilege = "Voice Unban Character",
         syntax = "<string name>",
         onRun = function(client, arguments) end
     }
@@ -159,7 +159,7 @@ lia.command.add(
     "voiceban",
     {
         adminOnly = true,
-        privilege = "Management - Voice ban Character",
+        privilege = "Voice ban Character",
         syntax = "<string name>",
         onRun = function(client, arguments) end
     }
@@ -171,7 +171,7 @@ for k, _ in pairs(lia.config.ServerURLs) do
         k,
         {
             adminOnly = false,
-            privilege = "Basic User Permissions",
+            privilege = "Default User Commands",
             onRun = function(client, arguments) end
         }
     )

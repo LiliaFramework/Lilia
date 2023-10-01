@@ -4,7 +4,7 @@ local MODULE = MODULE
 lia.command.add(
     "doorsell",
     {
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         onRun = function(client, arguments) end
     }
 )
@@ -13,7 +13,7 @@ lia.command.add(
 lia.command.add(
     "doorbuy",
     {
-        privilege = "Basic User Permissions",
+        privilege = "Default User Commands",
         onRun = function(client, arguments) end
     }
 )
@@ -24,7 +24,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "[string name]",
-        privilege = "Management- Manage Doors",
+        privilege = "Manage Doors",
         onRun = function(client, arguments) end
     }
 )
@@ -35,7 +35,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "[string name]",
-        privilege = "Management- Manage Doors",
+        privilege = "Manage Doors",
         onRun = function(client, arguments) end
     }
 )
@@ -46,7 +46,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "[string faction]",
-        privilege = "Management- Manage Doors",
+        privilege = "Manage Doors",
         onRun = function(client, arguments) end
     }
 )
@@ -57,7 +57,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "[string faction]",
-        privilege = "Management- Manage Doors",
+        privilege = "Manage Doors",
         onRun = function(client, arguments) end
     }
 )
@@ -68,7 +68,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<bool disabled>",
-        privilege = "Management- Manage Doors",
+        privilege = "Manage Doors",
         onRun = function(client, arguments) end
     }
 )
@@ -78,7 +78,7 @@ lia.command.add(
     "doorsettitle",
     {
         syntax = "<string title>",
-        privilege = "Management- Manage Doors",
+        privilege = "Manage Doors",
         onRun = function(client, arguments) end
     }
 )
@@ -88,7 +88,7 @@ lia.command.add(
     "doorsetparent",
     {
         adminOnly = true,
-        privilege = "Management- Manage Doors",
+        privilege = "Manage Doors",
         onRun = function(client, arguments) end
     }
 )
@@ -98,7 +98,7 @@ lia.command.add(
     "doorsetchild",
     {
         adminOnly = true,
-        privilege = "Management- Manage Doors",
+        privilege = "Manage Doors",
         onRun = function(client, arguments) end
     }
 )
@@ -108,7 +108,7 @@ lia.command.add(
     "doorremovechild",
     {
         adminOnly = true,
-        privilege = "Management- Manage Doors",
+        privilege = "Manage Doors",
         onRun = function(client, arguments) end
     }
 )
@@ -119,7 +119,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "<bool hidden>",
-        privilege = "Management- Manage Doors",
+        privilege = "Manage Doors",
         onRun = function(client, arguments) end
     }
 )
@@ -130,7 +130,7 @@ lia.command.add(
     {
         adminOnly = true,
         syntax = "[string faction]",
-        privilege = "Management- Manage Doors",
+        privilege = "Manage Doors",
         onRun = function(client, arguments) end,
         alias = {"jobdoor"}
     }
