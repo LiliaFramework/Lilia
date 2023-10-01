@@ -18,7 +18,6 @@ function MODULE:chooseCharacter(id)
     net.Start("liaCharChoose")
     net.WriteUInt(id, 32)
     net.SendToServer()
-
     return d
 end
 
@@ -59,7 +58,6 @@ function MODULE:createCharacter(data)
     end
 
     net.SendToServer()
-
     return d
 end
 
