@@ -63,26 +63,6 @@ hook.Add(
         net.SendToServer()
     end
 )
-
---------------------------------------------------------------------------------------------------------
-hook.Add("ShowHelp", "DisableShowHelp", function() return false end)
---------------------------------------------------------------------------------------------------------
-hook.Add(
-    "BuildHelpMenu",
-    "liaCreditsList",
-    function(tabs)
-        tabs["Credits"] = function()
-            if helpPanel then
-                local credits = helpPanel:Add("liaCreditsList")
-                credits:Dock(TOP)
-                credits:DockMargin(ScrW * 0.1, 0, ScrW * 0.1, 0)
-            end
-
-            return ""
-        end
-    end
-)
-
 --------------------------------------------------------------------------------------------------------
 concommand.Add(
     "vgui_cleanup",
