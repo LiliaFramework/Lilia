@@ -222,16 +222,30 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:CalcMainActivity(client, velocity)
+    if not IsValid(client) or client == NULL then return end
+    local Length2D = velocity:Length2D()
+    if client:GetActiveWeapon() and client:GetActiveWeapon():IsValid() and client:GetActiveWeapon():GetClass() == "lia_keys" then
+        if Length2D > 100 or (Length2D > 0 and client:Crouching()) or not client:OnGround() then
+            client:GetActiveWeapon():SetHoldType("normal")
+        else
+            client:GetActiveWeapon():SetHoldType("passive")
+        end
+    end
+
+    if client:GetActiveWeapon() and client:GetActiveWeapon():IsValid() and client:GetActiveWeapon():GetClass() == "lia_hands" then
+        if not client:isWepRaised() then
+            if Length2D > 100 or (Length2D > 0 and client:Crouching()) or not client:OnGround() then client:GetActiveWeapon():SetHoldType("normal") end
+        else
+            client:GetActiveWeapon():SetHoldType("fist")
+        end
+    end
+
     client.CalcIdeal = ACT_MP_STAND_IDLE
     oldCalcSeqOverride = client.CalcSeqOverride
     client.CalcSeqOverride = -1
     local animClass = lia.anim.getModelClass(client:GetModel())
-    if animClass ~= "player" then
-        client:SetPoseParameter("move_yaw", math.NormalizeAngle(FindMetaTable("Vector").Angle(velocity)[2] - client:EyeAngles()[2]))
-    end
-
-    if self:HandlePlayerLanding(client, velocity, client.m_bWasOnGround) or self:HandlePlayerNoClipping(client, velocity) or self:HandlePlayerDriving(client) or self:HandlePlayerVaulting(client, velocity) or (usingPlayerAnims and self:HandlePlayerJumping(client, velocity)) or self:HandlePlayerSwimming(client, velocity) or self:HandlePlayerDucking(client, velocity) then
-    else
+    if animClass ~= "player" then client:SetPoseParameter("move_yaw", math.NormalizeAngle(FindMetaTable("Vector").Angle(velocity)[2] - client:EyeAngles()[2])) end
+    if not self:HandlePlayerLanding(client, velocity, client.m_bWasOnGround) and not self:HandlePlayerNoClipping(client, velocity) and not self:HandlePlayerDriving(client) and not self:HandlePlayerVaulting(client, velocity) and (usingPlayerAnims or not self:HandlePlayerJumping(client, velocity)) and not self:HandlePlayerSwimming(client, velocity) and not self:HandlePlayerDucking(client, velocity) then
         local len2D = velocity:Length2DSqr()
         if len2D > 22500 then
             client.CalcIdeal = ACT_MP_RUN
@@ -243,10 +257,7 @@ function GM:CalcMainActivity(client, velocity)
     client.m_bWasOnGround = client:IsOnGround()
     client.m_bWasNoclipping = client:IsNoClipping() and not client:InVehicle()
     client.lastVelocity = velocity
-    if CLIENT then
-        client:SetIK(false)
-    end
-
+    if CLIENT then client:SetIK(false) end
     return client.CalcIdeal, client.liaForceSeq or oldCalcSeqOverride
 end
 
