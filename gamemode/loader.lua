@@ -179,10 +179,6 @@ lia.util.include("backend/netcalls/cl_netcalls.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("backend/netcalls/sv_netcalls.lua")
 --------------------------------------------------------------------------------------------------------
-lia.util.include("frontend/attributes/cl_attribute_ui.lua")
---------------------------------------------------------------------------------------------------------
-lia.util.include("frontend/attributes/cl_attributes.lua")
---------------------------------------------------------------------------------------------------------
 lia.util.include("frontend/chatbox/cl_chatbox.lua")
 --------------------------------------------------------------------------------------------------------
 lia.util.include("frontend/credits/cl_credits.lua")

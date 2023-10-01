@@ -1,8 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------
-local tooltip_delay = 0.01
---------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:SetDrawOnTop(true)
     self.DeleteContentsOnClose = false
@@ -74,10 +72,10 @@ function PANEL:OpenForPanel(panel)
     self.TargetPanel = panel
     self:PositionTooltip()
     hook.Run("TooltipInitialize", self, panel)
-    if tooltip_delay > 0 then
+    if 0.01 > 0 then
         self:SetVisible(false)
         timer.Simple(
-            tooltip_delay,
+            0.01,
             function()
                 if not IsValid(self) then return end
                 if not IsValid(panel) then return end
