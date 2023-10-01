@@ -1,13 +1,4 @@
---------------------------------------------------------------------------------------------------------
-lia.config.Rules = MODULE:GenerateRules()
---------------------------------------------------------------------------------------------------------
-lia.config.RulesEnabled = false
---------------------------------------------------------------------------------------------------------
-lia.config.TutorialEnabled = false
---------------------------------------------------------------------------------------------------------
-lia.config.Tutorial = MODULE:GenerateTutorial()
---------------------------------------------------------------------------------------------------------
-function MODULE:GenerateRules()
+function GenerateRules()
     local body = "<h1>Game Server Rules</h1>"
     -- Introduction
     body = body .. "<p>Welcome to our game server! To ensure a fun and fair gaming experience for everyone, please abide by the following rules:</p>"
@@ -41,7 +32,7 @@ function MODULE:GenerateRules()
 end
 
 --------------------------------------------------------------------------------------------------------
-function MODULE:GenerateTutorial()
+function GenerateTutorial()
     local body = "<h1>How to Make Perfect Scrambled Eggs</h1>"
     -- Introduction
     body = body .. "<p>Scrambled eggs are a classic breakfast favorite, and making them is easier than you might think. In this tutorial, we'll walk you through the steps to create delicious, fluffy scrambled eggs that will start your day off right.</p>"
@@ -83,4 +74,12 @@ function MODULE:GenerateTutorial()
     body = body .. "<p>Transfer your scrambled eggs to a plate, and they're ready to enjoy! Season with additional salt and pepper if needed.</p>"
     return body
 end
+--------------------------------------------------------------------------------------------------------
+lia.config.Rules = GenerateRules()
+--------------------------------------------------------------------------------------------------------
+lia.config.RulesEnabled = false
+--------------------------------------------------------------------------------------------------------
+lia.config.TutorialEnabled = false
+--------------------------------------------------------------------------------------------------------
+lia.config.Tutorial = GenerateTutorial()
 --------------------------------------------------------------------------------------------------------

@@ -418,6 +418,8 @@ function GM:InitializedModules()
 
     self:RegisterCamiPermissions()
     self:InitializedExtrasShared()
+    lia.lang.loadFromDir("lilia/gamemode/languages")
+    lia.item.loadFromDir("lilia/gamemode/items")
 end
 
 --------------------------------------------------------------------------------------------------------
