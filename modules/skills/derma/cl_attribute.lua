@@ -1,4 +1,3 @@
-⟷
 --------------------------------------------------------------------------------------------------------
 lia.config.CharAttrib = {"buttons/button16.wav", 30, 255}
 lia.config.MaxAttributes = lia.config.MaxAttributes or 30
