@@ -1,14 +1,14 @@
 --------------------------------------------------------------------------------------------------------
 net.Receive(
-	"liaStorageExit",
-	function(_, client)
-		local storage = client.liaStorageEntity
-		if IsValid(storage) then
-			storage.receivers[client] = nil
-		end
+    "liaStorageExit",
+    function(_, client)
+        local storage = client.liaStorageEntity
+        if IsValid(storage) then
+            storage.receivers[client] = nil
+        end
 
-		client.liaStorageEntity = nil
-	end
+        client.liaStorageEntity = nil
+    end
 )
 
 --------------------------------------------------------------------------------------------------------
@@ -19,6 +19,7 @@ net.Receive(
         local storageFunc = function()
             if not IsValid(client.liaStorageEntity) then return end
             if client:GetPos():Distance(client.liaStorageEntity:GetPos()) > 128 then return end
+
             return client.liaStorageEntity
         end
 
@@ -39,6 +40,7 @@ net.Receive(
         end
     end
 )
+
 --------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaStorageTransfer",
@@ -48,8 +50,10 @@ net.Receive(
         local storageFunc = function()
             if not IsValid(client.liaStorageEntity) then return end
             if client:GetPos():Distance(client.liaStorageEntity:GetPos()) > 128 then return end
+
             return client.liaStorageEntity
         end
+
         local storage = storageFunc()
         if not storage or not storage.receivers[client] then return end
         local clientInv = client:getChar():getInv()

@@ -17,8 +17,7 @@ function MODULE:SetupQuickMenu(menu)
                 else
                     RunConsoleCommand("lia_tp_enabled", "0")
                 end
-            end,
-            CreateClientConVar("lia_tp_enabled", "0", true):GetBool()
+            end, CreateClientConVar("lia_tp_enabled", "0", true):GetBool()
         )
 
         menu:addCheck(
@@ -29,8 +28,7 @@ function MODULE:SetupQuickMenu(menu)
                 else
                     RunConsoleCommand("lia_tp_classic", "0")
                 end
-            end,
-            CreateClientConVar("lia_tp_classic", "0", true):GetBool()
+            end, CreateClientConVar("lia_tp_classic", "0", true):GetBool()
         )
 
         menu:addButton(
@@ -72,7 +70,10 @@ function MODULE:CalcView(client, origin, angles, fov)
         traceData2.start = aimOrigin
         traceData2.endpos = aimOrigin + curAng:Forward() * 65535
         traceData2.filter = client
-        if CreateClientConVar("lia_tp_classic", "0", true):GetBool() or (owner.isWepRaised and owner:isWepRaised() or (owner:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and owner:GetVelocity():Length() >= 10)) then client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle()) end
+        if CreateClientConVar("lia_tp_classic", "0", true):GetBool() or (owner.isWepRaised and owner:isWepRaised() or (owner:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and owner:GetVelocity():Length() >= 10)) then
+            client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle())
+        end
+
         return view
     end
 end
@@ -87,6 +88,7 @@ function MODULE:CreateMove(cmd)
         diff = diff / 90
         cmd:SetForwardMove(fm + sm * diff)
         cmd:SetSideMove(sm + fm * diff)
+
         return false
     end
 end
@@ -94,10 +96,14 @@ end
 --------------------------------------------------------------------------------------------------------
 function MODULE:InputMouseApply(cmd, x, y, ang)
     owner = LocalPlayer()
-    if not owner.camAng then owner.camAng = Angle(0, 0, 0) end
+    if not owner.camAng then
+        owner.camAng = Angle(0, 0, 0)
+    end
+
     if owner:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer() then
         owner.camAng.p = clmp(math.NormalizeAngle(owner.camAng.p + y / 50), -85, 85)
         owner.camAng.y = math.NormalizeAngle(owner.camAng.y - x / 50)
+
         return true
     end
 end
@@ -120,5 +126,10 @@ function MODULE:PlayerButtonDown(ply, button)
 end
 
 --------------------------------------------------------------------------------------------------------
-concommand.Add("lia_tp_toggle", function() GetConVar("lia_tp_enabled"):SetInt(GetConVar("lia_tp_enabled"):GetInt() == 0 and 1 or 0) end)
+concommand.Add(
+    "lia_tp_toggle",
+    function()
+        GetConVar("lia_tp_enabled"):SetInt(GetConVar("lia_tp_enabled"):GetInt() == 0 and 1 or 0)
+    end
+)
 --------------------------------------------------------------------------------------------------------

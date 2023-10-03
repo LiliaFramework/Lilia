@@ -6,6 +6,7 @@ function MODULE:BuildHelpMenu(tabs)
             credits:Dock(TOP)
             credits:DockMargin(ScrW * 0.1, 0, ScrW * 0.1, 0)
         end
+
         return ""
     end
 end

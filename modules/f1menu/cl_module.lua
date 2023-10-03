@@ -36,7 +36,13 @@ function MODULE:CreateMenuButtons(tabs)
                 x = x + panel:GetWide() + 10
             end
 
-            hook.Add("PostRenderVGUI", mainPanel, function() hook.Run("PostDrawInventory", mainPanel) end)
+            hook.Add(
+                "PostRenderVGUI",
+                mainPanel,
+                function()
+                    hook.Run("PostDrawInventory", mainPanel)
+                end
+            )
         end
     end
 
@@ -47,7 +53,10 @@ function MODULE:CreateMenuButtons(tabs)
             if not lia.class.canBe(LocalPlayer(), k) then
                 continue
             else
-                tabs["classes"] = function(panel) panel:Add("liaClasses") end
+                tabs["classes"] = function(panel)
+                    panel:Add("liaClasses")
+                end
+
                 return
             end
         end
@@ -98,8 +107,14 @@ function MODULE:CreateMenuButtons(tabs)
             tree.OnNodeSelected = function(this, node)
                 if node.onGetHTML then
                     local source = node:onGetHTML()
-                    if IsValid(helpPanel) then helpPanel:Remove() end
-                    if lia.gui.creditsPanel then lia.gui.creditsPanel:Remove() end
+                    if IsValid(helpPanel) then
+                        helpPanel:Remove()
+                    end
+
+                    if lia.gui.creditsPanel then
+                        lia.gui.creditsPanel:Remove()
+                    end
+
                     helpPanel = panel:Add("DListView")
                     helpPanel:Dock(FILL)
                     helpPanel.Paint = function() end
@@ -144,9 +159,15 @@ function MODULE:BuildHelpMenu(tabs)
         local body = ""
         for k, v in SortedPairs(lia.command.list) do
             local allowed = false
-            if lia.command.hasAccess(client, k) then allowed = true end
-            if allowed then body = body .. "<h2>/" .. k .. "</h2><strong>Syntax:</strong> <em>" .. v.syntax .. "</em><br /><br />" end
+            if lia.command.hasAccess(client, k) then
+                allowed = true
+            end
+
+            if allowed then
+                body = body .. "<h2>/" .. k .. "</h2><strong>Syntax:</strong> <em>" .. v.syntax .. "</em><br /><br />"
+            end
         end
+
         return body
     end
 
@@ -168,6 +189,7 @@ function MODULE:BuildHelpMenu(tabs)
                 </tr>
             ]], icon, k, v.desc)
         end
+
         return body .. "</table>"
     end
 
@@ -181,13 +203,22 @@ function MODULE:BuildHelpMenu(tabs)
                     <b>%s</b>: %s<br />
                     <b>%s</b>: %s
             ]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", L"author", lia.module.namecache[v.author] or v.author)
-            if v.version then body = body .. "<br /><b>" .. L"version" .. "</b>: " .. v.version end
+            if v.version then
+                body = body .. "<br /><b>" .. L"version" .. "</b>: " .. v.version
+            end
+
             body = body .. "</span></p>"
         end
+
         return body
     end
 
-    if lia.config.RulesEnabled then tabs["Rules"] = function() return lia.config.Rules end end
-    if lia.config.TutorialEnabled then tabs["Tutorial"] = function() return lia.config.Tutorial end end
+    if lia.config.RulesEnabled then
+        tabs["Rules"] = function() return lia.config.Rules end
+    end
+
+    if lia.config.TutorialEnabled then
+        tabs["Tutorial"] = function() return lia.config.Tutorial end
+    end
 end
 --------------------------------------------------------------------------------------------------------

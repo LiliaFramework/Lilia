@@ -15,6 +15,7 @@ function MODULE:HUDPaintBackground()
         surface.DrawTexturedRect(0, 0, scrW, scrH)
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 timer.Create(
     "liaVignetteChecker",

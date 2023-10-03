@@ -4,6 +4,7 @@ function MODULE:CreateInventoryPanel(inventory, parent)
     local panel = vgui.Create("liaGridInventory", parent)
     panel:setInventory(inventory)
     panel:Center()
+
     return panel
 end
 
@@ -14,6 +15,7 @@ function MODULE:getItemStackKey(item)
         elements[#elements + 1] = key
         elements[#elements + 1] = value
     end
+
     return item.uniqueID .. pon.encode(elements)
 end
 
@@ -27,6 +29,7 @@ function MODULE:getItemStacks(inventory)
         stack[#stack + 1] = item
         stacks[key] = stack
     end
+
     return stacks
 end
 --------------------------------------------------------------------------------------------------------

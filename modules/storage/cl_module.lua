@@ -3,6 +3,7 @@ function MODULE:exitStorage()
 	net.Start("liaStorageExit")
 	net.SendToServer()
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:StorageUnlockPrompt(entity)
 	Derma_StringRequest(
@@ -16,6 +17,7 @@ function MODULE:StorageUnlockPrompt(entity)
 		end
 	)
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:StorageOpen(storage)
 	if not IsValid(storage) or storage:getStorageInfo().invType ~= "grid" then return end

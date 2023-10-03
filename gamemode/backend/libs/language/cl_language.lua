@@ -5,6 +5,7 @@ function L(key, ...)
     local languages = lia.lang.stored
     local langKey = LIA_CVAR_LANG:GetString()
     local info = languages[langKey] or languages.english
+
     return string.format(info and info[key] or key, ...)
 end
 

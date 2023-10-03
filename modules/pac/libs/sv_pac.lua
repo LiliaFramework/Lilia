@@ -1,4 +1,3 @@
-
 --------------------------------------------------------------------------------------------------------
 function MODULE:PostPlayerInitialSpawn(client)
 	timer.Simple(
@@ -8,6 +7,7 @@ function MODULE:PostPlayerInitialSpawn(client)
 		end
 	)
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:PlayerLoadout(client)
 	client:resetParts()

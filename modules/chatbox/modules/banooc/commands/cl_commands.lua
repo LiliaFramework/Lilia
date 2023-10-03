@@ -7,6 +7,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "unbanooc",
@@ -16,6 +17,7 @@ lia.command.add(
         onRun = function(client, arguments) end
     }
 )
+
 --------------------------------------------------------------------------------------------------------
 lia.command.add(
     "blockooc",

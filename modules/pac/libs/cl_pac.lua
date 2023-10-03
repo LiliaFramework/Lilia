@@ -8,6 +8,7 @@ function MODULE:AdjustPACPartData(wearer, id, data)
 		if result ~= nil then return result end
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:getAdjustedPartData(wearer, id)
 	if not MODULE.partData[id] then return end
@@ -15,6 +16,7 @@ function MODULE:getAdjustedPartData(wearer, id)
 
 	return hook.Run("AdjustPACPartData", wearer, id, data) or data
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:attachPart(client, id)
 	if not pac then return end
@@ -28,6 +30,7 @@ function MODULE:attachPart(client, id)
 	client.liaPACParts = client.liaPACParts or {}
 	client.liaPACParts[id] = part
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:removePart(client, id)
 	if not client.RemovePACPart or not client.liaPACParts then return end
@@ -37,6 +40,7 @@ function MODULE:removePart(client, id)
 		client.liaPACParts[id] = nil
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:DrawPlayerRagdoll(entity)
 	local ply = entity.objCache

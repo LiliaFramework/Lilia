@@ -46,8 +46,10 @@ function MODULE:ShouldDrawCrosshair()
     if wep and wep:IsValid() then
         local className = wep:GetClass()
         if className == "gmod_tool" or string.find(className, "lia_") or string.find(className, "detector_") then return true end
+
         return lia.config.CrosshairEnabled
     end
+
     return lia.config.CrosshairEnabled
 end
 
@@ -67,14 +69,19 @@ function MODULE:HUDPaintBackground()
         lastTrace.maxs = Vector(4, 4, 4)
         lastTrace.mask = MASK_SHOT_HULL
         lastEntity = util.TraceHull(lastTrace).Entity
-        if IsValid(lastEntity) and hook.Run("ShouldDrawEntityInfo", lastEntity) then paintedEntitiesCache[lastEntity] = true end
+        if IsValid(lastEntity) and hook.Run("ShouldDrawEntityInfo", lastEntity) then
+            paintedEntitiesCache[lastEntity] = true
+        end
     end
 
     for entity, drawing in pairs(paintedEntitiesCache) do
         if IsValid(entity) then
             local goal = drawing and 255 or 0
             local alpha = math.Approach(entity.liaAlpha or 0, goal, frameTime * 1000)
-            if lastEntity ~= entity then paintedEntitiesCache[entity] = false end
+            if lastEntity ~= entity then
+                paintedEntitiesCache[entity] = false
+            end
+
             if alpha > 0 then
                 local client = entity.getNetVar(entity, "player")
                 if IsValid(client) then
@@ -88,19 +95,24 @@ function MODULE:HUDPaintBackground()
             end
 
             entity.liaAlpha = alpha
-            if alpha == 0 and goal == 0 then paintedEntitiesCache[entity] = nil end
+            if alpha == 0 and goal == 0 then
+                paintedEntitiesCache[entity] = nil
+            end
         else
             paintedEntitiesCache[entity] = nil
         end
     end
 
     local weapon = localPlayer:GetActiveWeapon()
-    if hook.Run("CanDrawAmmoHUD", weapon) ~= false then hook.Run("DrawAmmoHUD", weapon) end
+    if hook.Run("CanDrawAmmoHUD", weapon) ~= false then
+        hook.Run("DrawAmmoHUD", weapon)
+    end
 end
 
 --------------------------------------------------------------------------------------------------------
 function MODULE:CanDrawAmmoHUD(weapon)
     if IsValid(weapon) and weapon.DrawAmmo ~= false and LocalPlayer():Alive() then return true end
+
     return false
 end
 
@@ -135,7 +147,9 @@ end
 --------------------------------------------------------------------------------------------------------
 function MODULE:DrawCharInfo(client, character, info)
     local injText, injColor = hook.Run("GetInjuredText", client)
-    if injText then info[#info + 1] = {L(injText), injColor} end
+    if injText then
+        info[#info + 1] = {L(injText), injColor}
+    end
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -153,7 +167,10 @@ function MODULE:ShouldDrawEntityInfo(entity, alpha, position)
     local description = character.getDesc(character)
     if description ~= entity.liaDescCache then
         entity.liaDescCache = description
-        if description:len() > 750 then description = description:sub(1, 750) .. "..." end
+        if description:len() > 750 then
+            description = description:sub(1, 750) .. "..."
+        end
+
         entity.liaDescLines = lia.util.wrapText(description, ScrW() * 0.5, "liaSmallFont")
     end
 

@@ -20,7 +20,6 @@ lia.config.GamemodeCreators = {
         steamid = "76561198112316720",
         color = Color(255, 0, 0)
     },
-
     {
         desc = "Developer", -- Mother
         steamid = "76561198814168693",

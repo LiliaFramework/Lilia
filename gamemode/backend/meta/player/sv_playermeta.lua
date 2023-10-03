@@ -12,6 +12,7 @@ function playerMeta:IPAddressNoPort()
         return ipAddr
     end
 end
+
 --------------------------------------------------------------------------------------------
 function playerMeta:setAction(text, time, callback, startTime, finishTime)
     if time and time <= 0 then
