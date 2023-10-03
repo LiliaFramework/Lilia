@@ -6,7 +6,7 @@ local nextUpdate = 0
 local lastTrace = {}
 local lastEntity
 --------------------------------------------------------------------------------------------------------
-function MODULE:HUDShouldDraw()
+function MODULE:HUDShouldDraw(element)
     if lia.config.HiddenHUDElements[element] then return false end
 end
 
