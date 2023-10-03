@@ -1,24 +1,24 @@
 --------------------------------------------------------------------------------------------------------
-local character = lia.meta.character
+local charMeta = lia.meta.character
 --------------------------------------------------------------------------------------------------------
-function character:recognize(id, name)
+function charMeta:recognize(id, name)
     if not isnumber(id) and id.getID then
         id = id:getID()
     end
 
     local recognized = self:getData("rgn", "")
-    local peopleWhoWeKnow = character:getCharsWeKnow()
+    local peopleWhoWeKnow = charMeta:getCharsWeKnow()
     if recognized ~= "" and recognized:find("," .. id .. ",") and peopleWhoWeKnow[id] then return false end
     self:setData("rgn", recognized .. "," .. id .. ",")
     local nameList = self:getRecognizedAs()
     if string.len(name) > 0 then
         nameList[id] = name
     else
-        nameList[id] = tostring(character:getName())
+        nameList[id] = tostring(charMeta:getName())
         peopleWhoWeKnow[id] = true
     end
 
-    character:setCharsWeKnow(peopleWhoWeKnow)
+    charMeta:setCharsWeKnow(peopleWhoWeKnow)
     self:setRecognizedAs(nameList)
 
     return true

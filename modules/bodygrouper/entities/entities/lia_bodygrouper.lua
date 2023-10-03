@@ -17,7 +17,7 @@ if SERVER then
 
     function ENT:Use(activator)
         if activator:IsPlayer() then
-            net.Start("BodygroupMenu")
+            net.Start("BodygrouperMenu")
             net.Send(activator)
             self:AddUser(activator)
         end
