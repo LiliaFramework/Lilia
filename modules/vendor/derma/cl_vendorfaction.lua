@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------
-local EDITOR = include(MODULE.path .. "/cl_editor.lua")
+local EDITOR = include(MODULE.path .. "/libs/cl_vendor.lua")
 --------------------------------------------------------------------------------------------------------
 local function onFactionStateChanged(checkBox, state)
 	EDITOR.faction(checkBox.factionID, state)
