@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------
-lia.config.Music = lia.config.Music or "music/hl2_song2.mp3"
-lia.config.MusicVolume = lia.config.MusicVolume or 0.25
+lia.config.Music = lia.config.Music
+lia.config.MusicVolume = lia.config.MusicVolume
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	if IsValid(lia.menuMusic) then

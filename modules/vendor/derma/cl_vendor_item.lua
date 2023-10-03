@@ -1,13 +1,6 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------
-local COLOR_PRICE = Color(255, 255, 255, 75)
-local COLOR_CANNOT_AFFORD = Color(255, 100, 100, 75)
---------------------------------------------------------------------------------------------------------
-local function ignore()
-end
-
---------------------------------------------------------------------------------------------------------
 function PANEL:Init()
 	self:Dock(TOP)
 	self:SetTall(64)
@@ -15,7 +8,7 @@ function PANEL:Init()
 	self.suffix = ""
 	self.icon = self:Add("liaItemIcon")
 	self.icon:SetSize(64, 64)
-	self.icon.PaintBehind = ignore
+	self.icon.PaintBehind = function() end
 	self.icon.OnCursorEntered = function(icon)
 		self:OnCursorEntered()
 	end
@@ -95,7 +88,7 @@ function PANEL:showAction()
 
 	self.action:SetText(L(self.isSelling and "sell" or "buy"):upper())
 	self.action.liaToolTip = true
-	self.action:SetToolTip("<font=liaItemDescFont>" .. self.item:getDesc())
+	self.action:SetTooltip("<font=liaItemDescFont>" .. self.item:getDesc())
 	self.action.item = self.item
 	self.action.DoClick = self.isSelling and sellItemToVendor or buyItemFromVendor
 	LocalPlayer():EmitSound("buttons/button15.wav", 25, 200)

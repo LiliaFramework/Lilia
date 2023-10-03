@@ -1,8 +1,13 @@
 --------------------------------------------------------------------------------------------------------
-local playerMeta = FindMetaTable("Player")
+function MODULE:VendorOpened(vendor)
+	vgui.Create("liaVendor")
+	hook.Run("OnOpenVendorMenu", self)
+end
+
 --------------------------------------------------------------------------------------------------------
-function playerMeta:SelectWeapon(class)
-    if not self:HasWeapon(class) then return end
-    self.doWeaponSwitch = self:GetWeapon(class)
+function MODULE:VendorExited()
+	if IsValid(lia.gui.vendor) then
+		lia.gui.vendor:Remove()
+	end
 end
 --------------------------------------------------------------------------------------------------------

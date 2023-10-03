@@ -3,10 +3,10 @@ local PANEL = {}
 --------------------------------------------------------------------------------------------------------
 local EDITOR = include(MODULE.path .. "/cl_editor.lua")
 --------------------------------------------------------------------------------------------------------
-local PRICE_UPDATE_DELAY = 0.5
-local COLS_NAME = 1
 local COLS_MODE = 2
+--------------------------------------------------------------------------------------------------------
 local COLS_PRICE = 3
+--------------------------------------------------------------------------------------------------------
 local COLS_STOCK = 4
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
@@ -24,7 +24,7 @@ function PANEL:Init()
 	self:SetTitle(L"vendorEditor")
 	self.name = self:Add("DTextEntry")
 	self.name:Dock(TOP)
-	self.name:SetToolTip(L"name")
+	self.name:SetTooltip(L"name")
 	self.name:SetText(entity:getName())
 	self.name.OnEnter = function(this)
 		if entity:getNetVar("name") ~= this:GetText() then
@@ -34,7 +34,7 @@ function PANEL:Init()
 
 	self.desc = self:Add("DTextEntry")
 	self.desc:Dock(TOP)
-	self.desc:SetToolTip(L"desc")
+	self.desc:SetTooltip(L"desc")
 	self.desc:DockMargin(0, 4, 0, 0)
 	self.desc:SetText(entity:getDesc())
 	self.desc.OnEnter = function(this)
@@ -45,7 +45,7 @@ function PANEL:Init()
 
 	self.model = self:Add("DTextEntry")
 	self.model:Dock(TOP)
-	self.model:SetToolTip(L"model")
+	self.model:SetTooltip(L"model")
 	self.model:DockMargin(0, 4, 0, 0)
 	self.model:SetText(entity:GetModel())
 	self.model.OnEnter = function(this)
@@ -58,7 +58,7 @@ function PANEL:Init()
 	local useMoney = tonumber(entity:getMoney()) ~= nil
 	self.money = self:Add("DTextEntry")
 	self.money:Dock(TOP)
-	self.money:SetToolTip(lia.currency.plural)
+	self.money:SetTooltip(lia.currency.plural)
 	self.money:DockMargin(0, 4, 0, 0)
 	self.money:SetNumeric(true)
 	self.money.OnEnter = function(this)
@@ -97,7 +97,7 @@ function PANEL:Init()
 	self.sellScale.OnValueChanged = function(this, value)
 		timer.Create(
 			"liaVendorScale",
-			PRICE_UPDATE_DELAY,
+			0.5,
 			1,
 			function()
 				if IsValid(self) and IsValid(self.sellScale) then

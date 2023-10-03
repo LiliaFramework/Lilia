@@ -1,30 +1,29 @@
 --------------------------------------------------------------------------------------------------------
---[[ DEFAULT STUFF]]
-lia.config.MusicVolume = 0.25
+VENDOR_WELCOME = 1
 --------------------------------------------------------------------------------------------------------
-lia.config.Music = "music/hl2_song2.mp3"
+VENDOR_LEAVE = 2
 --------------------------------------------------------------------------------------------------------
-lia.config.BackgroundURL = ""
+VENDOR_NOTRADE = 3
 --------------------------------------------------------------------------------------------------------
-lia.config.CharMenuBGInputDisabled = true
+VENDOR_PRICE = 1
 --------------------------------------------------------------------------------------------------------
-lia.config.MinDescLen = 16
+VENDOR_STOCK = 2
 --------------------------------------------------------------------------------------------------------
-lia.config.CharHover = {"buttons/button15.wav", 35, 250}
+VENDOR_MODE = 3
 --------------------------------------------------------------------------------------------------------
-lia.config.CharClick = {"buttons/button14.wav", 35, 255}
+VENDOR_MAXSTOCK = 4
 --------------------------------------------------------------------------------------------------------
-lia.config.CharWarning = {"friends/friend_join.wav", 40, 255}
+VENDOR_SELLANDBUY = 1
 --------------------------------------------------------------------------------------------------------
+VENDOR_SELLONLY = 2
 --------------------------------------------------------------------------------------------------------
---[[ CUSTOM UI STUFF]]
-lia.config.CustomUIBackgrounds = {lia.util.getMaterial("mainmenu/bg1.png"), lia.util.getMaterial("mainmenu/bg2.png"), lia.util.getMaterial("mainmenu/bg3.png"), lia.util.getMaterial("mainmenu/bg4.png"), lia.util.getMaterial("mainmenu/bg5.png")}
+VENDOR_BUYONLY = 3
 --------------------------------------------------------------------------------------------------------
-lia.config.WebsiteURL = "https://discord.gg/77JtZx2FCq"
+VENDOR_TEXT = {}
 --------------------------------------------------------------------------------------------------------
-lia.config.DiscordURL = "https://discord.gg/77JtZx2FCq"
+VENDOR_TEXT[VENDOR_SELLANDBUY] = "vendorBoth"
 --------------------------------------------------------------------------------------------------------
-lia.config.ContentURL = "https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255"
+VENDOR_TEXT[VENDOR_BUYONLY] = "vendorBuy"
 --------------------------------------------------------------------------------------------------------
-lia.config.CustomUIEnabled = false
+VENDOR_TEXT[VENDOR_SELLONLY] = "vendorSell"
 --------------------------------------------------------------------------------------------------------

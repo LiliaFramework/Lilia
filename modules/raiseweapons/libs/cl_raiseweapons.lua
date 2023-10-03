@@ -1,5 +1,5 @@
+--------------------------------------------------------------------------------------------------------F
 local LIA_CVAR_LOWER2 = CreateClientConVar("lia_usealtlower", "0", true)
-local LOWERED_ANGLES = Angle(30, -30, -25)
 --------------------------------------------------------------------------------------------------------
 function MODULE:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
 	if not IsValid(weapon) then return end
@@ -11,7 +11,7 @@ function MODULE:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, ey
 	end
 
 	local fraction = (client.liaRaisedFrac or 0) / 100
-	local rotation = weapon.LowerAngles or LOWERED_ANGLES
+	local rotation = weapon.LowerAngles or Angle(30, -30, -25)
 	if LIA_CVAR_LOWER2:GetBool() and weapon.LowerAngles2 then
 		rotation = weapon.LowerAngles2
 	end

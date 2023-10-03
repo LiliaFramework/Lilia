@@ -1,8 +1,9 @@
 --------------------------------------------------------------------------------------------------------
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------
-lia.config.CharClick = lia.config.CharClick or {"buttons/button14.wav", 35, 255}
-lia.config.CharWarning = lia.config.CharWarning or {"friends/friend_join.wav", 40, 255}
+lia.config.CharClick = lia.config.CharClick
+--------------------------------------------------------------------------------------------------------
+lia.config.CharWarning = lia.config.CharWarning
 --------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     if IsValid(lia.gui.newCreateCharMenu) then

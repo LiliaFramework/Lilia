@@ -3,10 +3,10 @@ local PANEL = {}
 --------------------------------------------------------------------------------------------------------
 DEFINE_BASECLASS('EditablePanel')
 --------------------------------------------------------------------------------------------------------
-local BGs = lia.config.CustomUIBackgrounds or {}
-local click_sound = 'weapons/grenade/tick1.wav'
+local BGs = lia.config.CustomUIBackgrounds
+--------------------------------------------------------------------------------------------------------
 local function playClickSound()
-    surface.PlaySound(click_sound)
+    surface.PlaySound('weapons/grenade/tick1.wav')
 end
 
 --------------------------------------------------------------------------------------------------------

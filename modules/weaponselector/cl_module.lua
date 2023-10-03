@@ -1,13 +1,19 @@
 lia.config.Color = lia.config.Color or Color(75, 119, 190)
 --------------------------------------------------------------------------------------------------------
 MODULE.index = MODULE.index or 1
+--------------------------------------------------------------------------------------------------------
 MODULE.deltaIndex = MODULE.deltaIndex or MODULE.index
+--------------------------------------------------------------------------------------------------------
 MODULE.infoAlpha = MODULE.infoAlpha or 0
+--------------------------------------------------------------------------------------------------------
 MODULE.alpha = MODULE.alpha or 0
+--------------------------------------------------------------------------------------------------------
 MODULE.alphaDelta = MODULE.alphaDelta or MODULE.alpha
+--------------------------------------------------------------------------------------------------------
 MODULE.fadeTime = MODULE.fadeTime or 0
 --------------------------------------------------------------------------------------------------------
 local IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs = IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs
+--------------------------------------------------------------------------------------------------------
 local RunConsoleCommand, LocalPlayer, math, color_white, surface = RunConsoleCommand, LocalPlayer, math, color_white, surface
 --------------------------------------------------------------------------------------------------------
 function MODULE:HUDPaint()
@@ -59,7 +65,9 @@ function MODULE:HUDPaint()
     end
 end
 
+--------------------------------------------------------------------------------------------------------
 local weaponInfo = {"Author", "Contact", "Purpose", "Instructions"}
+--------------------------------------------------------------------------------------------------------
 function MODULE:onIndexChanged()
     self.alpha = 1
     self.fadeTime = CurTime() + 5
