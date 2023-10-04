@@ -19,12 +19,12 @@ If you have questions or want to integrate with the community, join our [Discord
 
 For in-depth documentation on how to use and customize Lilia for your roleplay server, please visit our [Wiki](https://github.com/bleonheart/Lilia/wiki).
 
-## Acknowledgements
-
-Lilia is a fork of NutScript 1.2.3 by Chessnut and rebel1324, and we acknowledge their valuable contributions to the framework.
-
 ## Repository Statistics
 
 <p align="center">
   <img src="https://repobeats.axiom.co/api/embed/660cce650311f7194a70c7b65fb5e33506950da8.svg">
 </p>
+
+## Acknowledgements
+
+Lilia is a fork of NutScript 1.2.3 by Chessnut and rebel1324, and we acknowledge their valuable contributions to the framework.
