@@ -3,7 +3,6 @@ function GM:PlayerLoadout(client)
     local character = client:getChar()
     if client.liaSkipLoadout then
         client.liaSkipLoadout = nil
-
         return
     end
 
@@ -11,7 +10,6 @@ function GM:PlayerLoadout(client)
         client:SetNoDraw(true)
         client:Lock()
         client:SetNotSolid(true)
-
         return
     end
 
@@ -21,43 +19,142 @@ function GM:PlayerLoadout(client)
     client:SetModel(character:getModel())
     client:SetWalkSpeed(lia.config.WalkSpeed)
     client:SetRunSpeed(lia.config.RunSpeed)
-    local faction = lia.faction.indices[client:Team()]
-    if faction then
-        if faction.onSpawn then
-            faction:onSpawn(client)
-        end
-
-        if faction.weapons then
-            for _, v in ipairs(faction.weapons) do
-                client:Give(v)
-            end
-        end
-    end
-
-    local class = lia.class.list[client:getChar():getClass()]
-    if class then
-        if class.onSpawn then
-            class:onSpawn(client)
-        end
-
-        if class.weapons then
-            for _, v in ipairs(class.weapons) do
-                client:Give(v)
-            end
-        end
-    end
-
+    client:SetJumpPower(160)
+    self:ClassOnLoadout(client)
+    self:FactionOnLoadout(client)
     lia.flag.onSpawn(client)
     hook.Run("PostPlayerLoadout", client)
     client:SelectWeapon("lia_hands")
 end
 
 --------------------------------------------------------------------------------------------------------
-function GM:PlayerSpawn(client)
-    if pac then
-        client:ConCommand("pac_restart")
+function GM:FactionOnLoadout(client)
+    local faction = lia.faction.indices[client:Team()]
+    if not faction then return end
+    if faction.scale then
+        local scaleViewFix = faction.scale
+        local scaleViewFixOffset = Vector(0, 0, 64)
+        local scaleViewFixOffsetDuck = Vector(0, 0, 28)
+        client:SetViewOffset(scaleViewFixOffset * faction.scale)
+        client:SetViewOffsetDucked(scaleViewFixOffsetDuck * faction.scale)
+        client:SetModelScale(scaleViewFix)
+    else
+        client:SetViewOffset(Vector(0, 0, 64))
+        client:SetViewOffsetDucked(Vector(0, 0, 28))
+        client:SetModelScale(1)
     end
 
+    if faction.runSpeed then
+        if faction.runSpeedMultiplier then
+            client:SetRunSpeed(math.Round(lia.config.RunSpeed * faction.runSpeed))
+        else
+            client:SetRunSpeed(faction.runSpeed)
+        end
+    end
+
+    if faction.walkSpeed then
+        if faction.walkSpeedMultiplier then
+            client:SetWalkSpeed(math.Round(lia.config.WalkSpeed * faction.walkSpeed))
+        else
+            client:SetWalkSpeed(faction.walkSpeed)
+        end
+    end
+
+    if faction.jumpPower then
+        if faction.jumpPowerMultiplier then
+            client:SetJumpPower(math.Round(160 * faction.jumpPower))
+        else
+            client:SetJumpPower(faction.jumpPower)
+        end
+    end
+
+    if faction.bloodcolor then
+        client:SetBloodColor(faction.bloodcolor)
+    else
+        client:SetBloodColor(BLOOD_COLOR_RED)
+    end
+
+    if faction.health then
+        client:SetMaxHealth(faction.health)
+        client:SetHealth(faction.health)
+    end
+
+    if faction.armor then client:SetArmor(faction.armor) end
+    if faction.weapons then
+        for _, v in ipairs(faction.weapons) do
+            client:Give(v)
+        end
+    end
+
+    if faction.onSpawn then faction:onSpawn(client) end
+end
+
+--------------------------------------------------------------------------------------------------------
+function GM:ClassOnLoadout(client)
+    local character = client:getChar()
+    local class = lia.class.list[character:getClass()]
+    if not class then return end
+    if class.None then return end
+    if class.scale then
+        local scaleViewFix = class.scale
+        local scaleViewFixOffset = Vector(0, 0, 64)
+        local scaleViewFixOffsetDuck = Vector(0, 0, 28)
+        client:SetViewOffset(scaleViewFixOffset * class.scale)
+        client:SetViewOffsetDucked(scaleViewFixOffsetDuck * class.scale)
+        client:SetModelScale(scaleViewFix)
+    else
+        client:SetViewOffset(Vector(0, 0, 64))
+        client:SetViewOffsetDucked(Vector(0, 0, 28))
+        client:SetModelScale(1)
+    end
+
+    if class.runSpeed then
+        if class.runSpeedMultiplier then
+            client:SetRunSpeed(math.Round(lia.config.RunSpeed * class.runSpeed))
+        else
+            client:SetRunSpeed(class.runSpeed)
+        end
+    end
+
+    if class.walkSpeed then
+        if class.walkSpeedMultiplier then
+            client:SetWalkSpeed(math.Round(lia.config.WalkSpeed * class.walkSpeed))
+        else
+            client:SetWalkSpeed(class.walkSpeed)
+        end
+    end
+
+    if class.jumpPower then
+        if class.jumpPowerMultiplier then
+            client:SetJumpPower(math.Round(160 * class.jumpPower))
+        else
+            client:SetJumpPower(class.jumpPower)
+        end
+    end
+
+    if class.bloodcolor then
+        client:SetBloodColor(class.bloodcolor)
+    else
+        client:SetBloodColor(BLOOD_COLOR_RED)
+    end
+
+    if class.health then
+        client:SetMaxHealth(class.health)
+        client:SetHealth(class.health)
+    end
+
+    if class.armor then client:SetArmor(class.armor) end
+    if class.onSpawn then class:onSpawn(client) end
+    if class.weapons then
+        for _, v in ipairs(class.weapons) do
+            client:Give(v)
+        end
+    end
+end
+
+--------------------------------------------------------------------------------------------------------
+function GM:PlayerSpawn(client)
+    if pac then client:ConCommand("pac_restart") end
     client:setNetVar("VoiceType", "Talking")
     client:SetNoDraw(false)
     client:UnLock()
@@ -69,22 +166,14 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:OnCharAttribBoosted(client, character, attribID)
     local attribute = lia.attribs.list[attribID]
-    if attribute and isfunction(attribute.onSetup) then
-        attribute:onSetup(client, character:getAttrib(attribID, 0))
-    end
+    if attribute and isfunction(attribute.onSetup) then attribute:onSetup(client, character:getAttrib(attribID, 0)) end
 end
 
 --------------------------------------------------------------------------------------------------------
 function GM:PostPlayerLoadout(client)
     local character = client:getChar()
-    if character:hasFlags("p") then
-        client:Give("weapon_physgun")
-    end
-
-    if character:hasFlags("t") then
-        client:Give("gmod_tool")
-    end
-
+    if character:hasFlags("p") then client:Give("weapon_physgun") end
+    if character:hasFlags("t") then client:Give("gmod_tool") end
     client:Give("lia_hands")
     client:SetupHands()
     lia.attribs.setup(client)
@@ -120,9 +209,7 @@ function GM:PlayerDeath(client, inflictor, attacker)
         client.LostItems = {}
         if inventory and lia.config.KeepAmmoOnDeath then
             for _, v in pairs(items) do
-                if (v.isWeapon or v.isCW) and v:getData("equip") then
-                    v:setData("ammo", nil)
-                end
+                if (v.isWeapon or v.isCW) and v:getData("equip") then v:setData("ammo", nil) end
             end
         end
 
@@ -169,11 +256,8 @@ end
 function GM:PlayerDeathThink(client)
     if client:getChar() then
         local deathTime = client:getNetVar("deathTime")
-        if deathTime and deathTime <= CurTime() then
-            client:Spawn()
-        end
+        if deathTime and deathTime <= CurTime() then client:Spawn() end
     end
-
     return false
 end
 
@@ -188,9 +272,7 @@ function GM:PlayerInitialSpawn(client)
             client:setLiliaData("lastIP", address)
             netstream.Start(client, "liaDataSync", data, client.firstJoin, client.lastJoin)
             for _, v in pairs(lia.item.instances) do
-                if v.entity and v.invID == 0 then
-                    v:sync(client)
-                end
+                if v.entity and v.invID == 0 then v:sync(client) end
             end
 
             hook.Run("PlayerLiliaDataLoaded", client)
