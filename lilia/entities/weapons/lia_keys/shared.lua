@@ -1,8 +1,9 @@
 --------------------------------------------------------------------------------------------------------
 ACT_VM_FISTS_DRAW = 3
+--------------------------------------------------------------------------------------------------------
 ACT_VM_FISTS_HOLSTER = 2
 --------------------------------------------------------------------------------------------------------
-SWEP.Author = "Chessnut"
+SWEP.Author = "Leonheart"
 SWEP.Instructions = "Primary Fire: Lock\nSecondary Fire: Unlock"
 SWEP.Purpose = "Hitting things and knocking on doors."
 SWEP.Drop = false

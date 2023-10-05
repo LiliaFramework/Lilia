@@ -4,7 +4,7 @@ DeriveGamemode("sandbox")
 ModulesLoaded = false
 --------------------------------------------------------------------------------------------------------
 GM.Name = "Lilia 2.0"
-GM.Author = "Chessnut, Black Tea and STEAM_0:1:176123778"
+GM.Author = "STEAM_0:1:176123778"
 GM.Website = "https://discord.gg/jWCEUEKQ"
 lia.version = "2.0"
 --------------------------------------------------------------------------------------------------------
