@@ -42,8 +42,8 @@ end
 timer.Simple(
     0,
     function()
-        lia.lang.loadFromDir("lilia/gamemode/languages")
-        lia.item.loadFromDir("lilia/gamemode/items")
+        lia.lang.loadFromDir("lilia/languages")
+        lia.item.loadFromDir("lilia/items")
     end
 )
 --------------------------------------------------------------------------------------------------------
