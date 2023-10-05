@@ -156,9 +156,9 @@ function lia.item.loadFromDir(directory)
 
     files, folders = file.Find(directory .. "/*", "LUA")
     for _, v in ipairs(folders) do
+        
         if v == "base" then continue end
         for _, v2 in ipairs(file.Find(directory .. "/" .. v .. "/*.lua", "LUA")) do
-            print(v2)
             lia.item.load(directory .. "/" .. v .. "/" .. v2, "base_" .. v)
         end
     end

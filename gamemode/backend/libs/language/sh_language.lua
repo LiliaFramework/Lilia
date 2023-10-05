@@ -6,7 +6,6 @@ lia.lang.stored = lia.lang.stored or {}
 function lia.lang.loadFromDir(directory)
     for k, v in ipairs(file.Find(directory .. "/sh_*.lua", "LUA")) do
         local niceName = v:sub(4, -5):lower()
-        print("LOADED " .. niceName)
         lia.util.include(directory .. "/" .. v, "shared")
         if LANGUAGE then
             if NAME then
