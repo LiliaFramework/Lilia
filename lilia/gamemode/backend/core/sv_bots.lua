@@ -6,9 +6,13 @@ function GM:SetupBotCharacter(client)
     local character = lia.char.new(
         {
             name = client:Name(),
+            desc = "This is a bot. BotID is " .. botID .. ".",
             faction = faction and faction.uniqueID or "unknown",
             model = faction and table.Random(faction.models) or "models/gman.mdl"
-        }, botID, client, client:SteamID64()
+        },
+        botID,
+        client,
+        client:SteamID64()
     )
 
     character.isBot = true
@@ -21,7 +25,6 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:SetupBotInventory(client, character)
-    if not "grid" then return end
     local inventory = lia.inventory.new("grid")
     inventory.id = "bot" .. character:getID()
     character.vars.inv[1] = inventory
