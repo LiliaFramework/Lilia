@@ -107,7 +107,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:TranslateActivity(client, act)
     local model = string.lower(client.GetModel(client))
-    local class = getModelClass(model) or "player"
+    local class = lia.anim.getModelClass(model) or "player"
     local weapon = client.GetActiveWeapon(client)
     if class == "player" then
         if not lia.config.WepAlwaysRaised and IsValid(weapon) and (client.isWepRaised and not client.isWepRaised(client)) and client:OnGround() then
