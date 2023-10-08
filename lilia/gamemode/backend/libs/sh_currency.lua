@@ -1,20 +1,21 @@
 --------------------------------------------------------------------------------------------------------
 lia.currency = lia.currency or {}
-lia.currency.plural = lia.config.CurrencyPluralName or "Dollars"
-lia.currency.singular = lia.currency.CurrencySingularName or "Dollar"
-lia.currency.symbol = lia.currency.CurrencySymbol or "$"
+--------------------------------------------------------------------------------------------------------
+lia.currency.symbol = lia.config.CurrencySymbol or "$"
+--------------------------------------------------------------------------------------------------------
+lia.currency.singular = lia.config.CurrencySingularName or "dollar"
+--------------------------------------------------------------------------------------------------------
+lia.currency.plural = lia.config.CurrencyPluralName or "dollars"
 --------------------------------------------------------------------------------------------------------
 function lia.currency.set(symbol, singular, plural)
-    lia.currency.symbol = symbol
-    lia.currency.singular = singular
-    lia.currency.plural = plural
+    lia.config.CurrencySymbol = symbol
+    lia.config.CurrencySingularName = singular
+    lia.config.CurrencyPluralName = plural
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.currency.get(amount)
     return lia.currency.symbol .. (amount == 1 and ("1 " .. lia.currency.singular) or (amount .. " " .. lia.currency.plural))
 end
-
 --------------------------------------------------------------------------------------------------------
 function lia.currency.spawn(pos, amount, angle)
     if not pos then
