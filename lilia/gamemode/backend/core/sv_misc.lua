@@ -34,10 +34,7 @@ function GM:EntityTakeDamage(entity, dmgInfo)
     if IsValid(entity.liaPlayer) then
         if dmgInfo:IsDamageType(DMG_CRUSH) then
             if (entity.liaFallGrace or 0) < CurTime() then
-                if dmgInfo:GetDamage() <= 10 then
-                    dmgInfo:SetDamage(0)
-                end
-
+                if dmgInfo:GetDamage() <= 10 then dmgInfo:SetDamage(0) end
                 entity.liaFallGrace = CurTime() + 0.5
             else
                 return
@@ -47,22 +44,10 @@ function GM:EntityTakeDamage(entity, dmgInfo)
         entity.liaPlayer:TakeDamageInfo(dmgInfo)
     end
 
-    if not dmgInfo:IsFallDamage() and IsValid(attacker) and attacker:IsPlayer() and attacker ~= entity and entity:Team() ~= FACTION_STAFF then
-        entity.LastDamaged = CurTime()
-    end
-
+    if not dmgInfo:IsFallDamage() and IsValid(attacker) and attacker:IsPlayer() and attacker ~= entity and entity:Team() ~= FACTION_STAFF then entity.LastDamaged = CurTime() end
     if lia.config.CarRagdoll and IsValid(inflictor) and (inflictor:GetClass() == "gmod_sent_vehicle_fphysics_base" or inflictor:GetClass() == "gmod_sent_vehicle_fphysics_wheel") and not IsValid(entity:GetVehicle()) then
         dmgInfo:ScaleDamage(0)
-        if not IsValid(entity.liaRagdoll) then
-            entity:setRagdolled(true, 5)
-        end
-    end
-end
-
---------------------------------------------------------------------------------------------------------
-function GM:ScalePlayerDamage(ply, hitgroup, dmgInfo)
-    if hitgroup == HITGROUP_HEAD then
-        dmgInfo:ScaleDamage(lia.config.HeadShotDamage)
+        if not IsValid(entity.liaRagdoll) then entity:setRagdolled(true, 5) end
     end
 end
 

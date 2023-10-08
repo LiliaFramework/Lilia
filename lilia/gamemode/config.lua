@@ -11,7 +11,6 @@ if not lia.config.WasInitialized then
         AmericanDates = true, -- American Date Formatting?
         AmericanTimeStamp = true, -- American Time Formatting?
         CarRagdoll = true, -- Enable car ragdolls
-        HeadShotDamage = 2, -- Damage multiplier for headshots
         TimeUntilDroppedSWEPRemoved = 15, -- Time until dropped weapons are removed (in seconds)
         PlayerSpawnVehicleDelay = 30, -- Delay before players can spawn vehicles (in seconds)
         NPCsDropWeapons = true, -- NPCs drop weapons when killed
