@@ -11,7 +11,6 @@ hook.Add(
             elseif LocalPlayer():getChar() then
                 vgui.Create("liaMenu")
             end
-
             return true
         end
     end
@@ -43,7 +42,7 @@ hook.Add(
         local tree = lia.anim[class]
         if not tree then return end
         local subClass = weapon.HoldType or weapon:GetHoldType()
-        subClass = lia.anim.HoldtypeTranslator[subClass] or subClass
+        subClass = HOLDTYPE_TRANSLATOR[subClass] or subClass
         if tree[subClass] and tree[subClass][act] then
             local branch = tree[subClass][act]
             local act2 = istable(branch) and branch[1] or branch

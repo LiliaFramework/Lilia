@@ -15,37 +15,37 @@ lia.anim.DefaultTposingFixer = {
     ["models/alyx.mdl"] = "citizen_female",
     ["models/mossman.mdl"] = "citizen_female",
 }
+
 --------------------------------------------------------------------------------------------------------
-lia.anim.PlayerHoldtypeTranslator = {
-    [""] = "normal",
-    ["physgun"] = "smg",
-    ["ar2"] = "smg",
-    ["crossbow"] = "shotgun",
-    ["rpg"] = "shotgun",
-    ["slam"] = "normal",
-    ["grenade"] = "grenade",
-    ["melee2"] = "melee",
-    ["passive"] = "smg",
-    ["knife"] = "melee",
-    ["duel"] = "pistol",
-    ["camera"] = "smg",
-    ["magic"] = "normal",
-    ["revolver"] = "pistol",
-}
+HOLDTYPE_TRANSLATOR = HOLDTYPE_TRANSLATOR or {}
+HOLDTYPE_TRANSLATOR[""] = "normal"
+HOLDTYPE_TRANSLATOR["physgun"] = "smg"
+HOLDTYPE_TRANSLATOR["ar2"] = "smg"
+HOLDTYPE_TRANSLATOR["crossbow"] = "shotgun"
+HOLDTYPE_TRANSLATOR["rpg"] = "shotgun"
+HOLDTYPE_TRANSLATOR["slam"] = "normal"
+HOLDTYPE_TRANSLATOR["grenade"] = "grenade"
+HOLDTYPE_TRANSLATOR["melee2"] = "melee"
+HOLDTYPE_TRANSLATOR["passive"] = "smg"
+HOLDTYPE_TRANSLATOR["knife"] = "melee"
+HOLDTYPE_TRANSLATOR["duel"] = "pistol"
+HOLDTYPE_TRANSLATOR["camera"] = "smg"
+HOLDTYPE_TRANSLATOR["magic"] = "normal"
+HOLDTYPE_TRANSLATOR["revolver"] = "pistol"
 --------------------------------------------------------------------------------------------------------
-lia.anim.HoldtypeTranslator = {
-    ["normal"] = "normal",
-    ["revolver"] = "normal",
-    ["fist"] = "normal",
-    ["pistol"] = "normal",
-    ["grenade"] = "normal",
-    ["melee"] = "normal",
-    ["slam"] = "normal",
-    ["melee2"] = "normal",
-    ["knife"] = "normal",
-    ["duel"] = "normal",
-    ["bugbait"] = "normal",
-}
+PLAYER_HOLDTYPE_TRANSLATOR = PLAYER_HOLDTYPE_TRANSLATOR or {}
+PLAYER_HOLDTYPE_TRANSLATOR[""] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["normal"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["revolver"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["fist"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["pistol"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["grenade"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["melee"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["slam"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["melee2"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["knife"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["duel"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["bugbait"] = "normal"
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedConfig()
     if CLIENT then self:ClientInitializedConfig() end
@@ -59,6 +59,7 @@ function GM:InitializedConfig()
 
     hook.Run("InitializedModules")
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:RegisterCamiPermissions()
     for _, PrivilegeInfo in pairs(lia.config.CAMIPrivileges) do
@@ -106,7 +107,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:TranslateActivity(client, act)
     local model = string.lower(client.GetModel(client))
-    local class = lia.anim.getModelClass(model) or "player"
+    local class = getModelClass(model) or "player"
     local weapon = client.GetActiveWeapon(client)
     if class == "player" then
         if not lia.config.WepAlwaysRaised and IsValid(weapon) and (client.isWepRaised and not client.isWepRaised(client)) and client:OnGround() then
@@ -117,7 +118,7 @@ function GM:TranslateActivity(client, act)
             end
 
             local holdType = IsValid(weapon) and (weapon.HoldType or weapon.GetHoldType(weapon)) or "normal"
-            holdType = lia.anim.PlayerHoldtypeTranslator[holdType] or "passive"
+            holdType = PLAYER_HOLDTYPE_TRANSLATOR[holdType] or "passive"
             local tree = lia.anim.player[holdType]
             if tree and tree[act] then
                 if type(tree[act]) == "string" then
@@ -156,7 +157,7 @@ function GM:TranslateActivity(client, act)
             client.ManipulateBonePosition(client, 0, vector_origin)
             if IsValid(weapon) then
                 subClass = weapon.HoldType or weapon.GetHoldType(weapon)
-                subClass = lia.anim.HoldtypeTranslator[subClass] or subClass
+                subClass = HOLDTYPE_TRANSLATOR[subClass] or subClass
             end
 
             if tree[subClass] and tree[subClass][act] then

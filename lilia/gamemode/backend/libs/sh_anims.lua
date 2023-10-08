@@ -316,7 +316,7 @@ lia.anim.player = {
         [ACT_MP_WALK] = ACT_HL2MP_WALK,
         [ACT_MP_RUN] = ACT_HL2MP_RUN
     },
-    passive = {
+    ACT_HL2MP_IDLE = {
         [ACT_MP_STAND_IDLE] = ACT_HL2MP_IDLE_PASSIVE,
         [ACT_MP_WALK] = ACT_HL2MP_WALK_PASSIVE,
         [ACT_MP_CROUCHWALK] = ACT_HL2MP_WALK_CROUCH_PASSIVE,
@@ -367,7 +367,7 @@ function player_manager.TranslateToPlayerModelName(model)
     model = model:lower():gsub("\\", "/")
     local result = lia.anim.ModelTranslations(model)
     if result == "kleiner" and not model:find("kleiner") then
-        local model2 = model:gsub("models/", "models/player/")
+        local fmodel2 = model:gsub("models/", "models/player/")
         result = lia.anim.ModelTranslations(model2)
         if result ~= "kleiner" then return result end
         model2 = model:gsub("models/humans", "models/player")
@@ -380,3 +380,4 @@ function player_manager.TranslateToPlayerModelName(model)
 
     return result
 end
+--------------------------------------------------------------------------------------------------------
