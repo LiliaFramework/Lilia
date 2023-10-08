@@ -1,25 +1,27 @@
 --------------------------------------------------------------------------------------------------------
 local oldCalcSeqOverride
-local ModelCount = 0
-local TposeOverridenModels = {}
+--------------------------------------------------------------------------------------------------------
+lia.anim.DefaultTposingFixer = {
+    ["models/police.mdl"] = "metrocop",
+    ["models/combine_super_soldier.mdl"] = "overwatch",
+    ["models/combine_soldier_prisonGuard.mdl"] = "overwatch",
+    ["models/combine_soldier.mdl"] = "overwatch",
+    ["models/vortigaunt.mdl"] = "vort",
+    ["models/vortigaunt_blue.mdl"] = "vort",
+    ["models/vortigaunt_doctor.mdl"] = "vort",
+    ["models/vortigaunt_slave.mdl"] = "vort",
+    ["models/alyx.mdl"] = "citizen_female",
+    ["models/mossman.mdl"] = "citizen_female",
+}
 --------------------------------------------------------------------------------------------------------
 function GM:InitializedConfig()
     if CLIENT then self:ClientInitializedConfig() end
     for tpose, animtype in pairs(lia.anim.DefaultTposingFixer) do
-        TposeOverridenModels[tpose] = true
         lia.anim.setModelClass(tpose, animtype)
     end
 
     for customtpose, _ in pairs(lia.config.PlayerModelTposingFixer) do
-        TposeOverridenModels[customtpose] = true
         lia.anim.setModelClass(customtpose, "player")
-    end
-
-    for _, ingamemdl in pairs(file.Find("models/*", "GAME")) do
-        if not TposeOverridenModels[ingamemdl] then
-            self:ModelFixer(ingamemdl)
-            ModelCount = ModelCount + 1
-        end
     end
 
     print("Total models processed with TPoseFixer: " .. ModelCount)
@@ -70,7 +72,6 @@ function GM:RegisterCamiPermissions()
     end
 end
 
---------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------
 function GM:TranslateActivity(client, act)
     local model = string.lower(client.GetModel(client))

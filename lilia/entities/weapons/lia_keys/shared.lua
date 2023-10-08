@@ -9,7 +9,7 @@ SWEP.Purpose = "Hitting things and knocking on doors."
 SWEP.Drop = false
 SWEP.ViewModelFOV = 45
 SWEP.ViewModelFlip = false
-SWEP.AnimPrefix = "rpg"
+SWEP.AnimPrefix = "passive"
 SWEP.ViewTranslation = 4
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
@@ -28,10 +28,14 @@ SWEP.LowerAngles = Angle(0, 5, -14)
 SWEP.LowerAngles2 = Angle(0, 5, -22)
 SWEP.IsAlwaysLowered = true
 SWEP.FireWhenLowered = true
-SWEP.HoldType = "normal"
+SWEP.HoldType = "passive"
 --------------------------------------------------------------------------------------------------------
 function SWEP:Initialize()
     self:SetHoldType(self.HoldType)
+    timer.Simple(0.1, function()
+        self:SetHoldType(self.HoldType)
+        print("FUCK")
+    end)
 end
 
 --------------------------------------------------------------------------------------------------------

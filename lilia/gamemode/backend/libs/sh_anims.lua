@@ -5,10 +5,8 @@ lia.anim = lia.anim or {}
 player_manager.anim = player_manager.anim or {}
 lia.anim.DefaultTposingFixer = lia.anim.DefaultTposingFixer or {}
 lia.anim.HoldtypeTranslator = lia.anim.HoldtypeTranslator or {}
-lia.anim.HoldtypeTranslator = lia.anim.HoldtypeTranslator or {}
 lia.anim.PlayerHoldtypeTranslator = lia.anim.PlayerHoldtypeTranslator or {}
-lia.anim.DefaultTposingFixer = lia.anim.DefaultTposingFixer or {}
-lia.anim.PlayerModelTposingFixer = lia.anim.PlayerModelTposingFixer or {}
+lia.config.PlayerModelTposingFixer = lia.config.PlayerModelTposingFixer or {}
 lia.anim.ModelTranslations = lia.anim.ModelTranslations or player_manager.TranslateToPlayerModelName
 --------------------------------------------------------------------------------------------------------
 lia.anim.citizen_male = {
@@ -379,19 +377,7 @@ lia.anim.PlayerHoldtypeTranslator = {
     ["revolver"] = "pistol",
 }
 
---------------------------------------------------------------------------------------------------------
-lia.anim.DefaultTposingFixer = {
-    ["models/police.mdl"] = "metrocop",
-    ["models/combine_super_soldier.mdl"] = "overwatch",
-    ["models/combine_soldier_prisonGuard.mdl"] = "overwatch",
-    ["models/combine_soldier.mdl"] = "overwatch",
-    ["models/vortigaunt.mdl"] = "vort",
-    ["models/vortigaunt_blue.mdl"] = "vort",
-    ["models/vortigaunt_doctor.mdl"] = "vort",
-    ["models/vortigaunt_slave.mdl"] = "vort",
-    ["models/alyx.mdl"] = "citizen_female",
-    ["models/mossman.mdl"] = "citizen_female",
-}
+
 
 --------------------------------------------------------------------------------------------------------
 function lia.anim.setModelClass(model, class)
@@ -407,13 +393,7 @@ function lia.anim.getModelClass(model)
     model = string.lower(model)
     local class = translations[model]
     if class then return class end
-    if model:find("/player") then
-        class = "player"
-    elseif string.find(model, "female") then
-        class = "citizen_female"
-    else
-        class = "citizen_male"
-    end
+    class =  "player"
 
     lia.anim.setModelClass(model, class)
 
@@ -438,9 +418,3 @@ function player_manager.TranslateToPlayerModelName(model)
 
     return result
 end
-
---------------------------------------------------------------------------------------------------------
-for model, animtype in pairs(lia.anim.DefaultTposingFixer) do
-    lia.anim.setModelClass(model, animtype)
-end
---------------------------------------------------------------------------------------------------------
