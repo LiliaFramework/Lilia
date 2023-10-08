@@ -5,7 +5,7 @@ lia.anim = lia.anim or {}
 player_manager.anim = player_manager.anim or {}
 lia.anim.DefaultTposingFixer = lia.anim.DefaultTposingFixer or {}
 lia.config.PlayerModelTposingFixer = lia.config.PlayerModelTposingFixer or {}
-lia.anim.ModelTranslations = lia.anim.ModelTranslations or player_manager.TranslateToPlayerModelName
+TranslateModel = TranslateModel or player_manager.TranslateToPlayerModelName
 --------------------------------------------------------------------------------------------------------
 lia.anim.citizen_male = {
     normal = {
@@ -341,6 +341,7 @@ lia.anim.fastZombie = {
     [ACT_MP_WALK] = ACT_HL2MP_WALK_ZOMBIE_06,
     [ACT_MP_RUN] = ACT_HL2MP_RUN_ZOMBIE_FAST
 }
+
 --------------------------------------------------------------------------------------------------------
 function lia.anim.setModelClass(model, class)
     if not lia.anim[class] then
@@ -355,9 +356,13 @@ function lia.anim.getModelClass(model)
     model = string.lower(model)
     local class = translations[model]
     if class then return class end
-    class =  "player"
-
-    lia.anim.setModelClass(model, class)
+    if model:find("/player") then
+        class = "player"
+    elseif string.find(model, "female") then
+        class = "citizen_female"
+    else
+        class = "citizen_male"
+    end
 
     return class
 end
@@ -365,16 +370,16 @@ end
 --------------------------------------------------------------------------------------------------------
 function player_manager.TranslateToPlayerModelName(model)
     model = model:lower():gsub("\\", "/")
-    local result = lia.anim.ModelTranslations(model)
+    local result = TranslateModel(model)
     if result == "kleiner" and not model:find("kleiner") then
-        local fmodel2 = model:gsub("models/", "models/player/")
-        result = lia.anim.ModelTranslations(model2)
+        local model2 = model:gsub("models/", "models/player/")
+        result = TranslateModel(model2)
         if result ~= "kleiner" then return result end
         model2 = model:gsub("models/humans", "models/player")
-        result = lia.anim.ModelTranslations(model2)
+        result = TranslateModel(model2)
         if result ~= "kleiner" then return result end
         model2 = model:gsub("models/zombie/", "models/player/zombie_")
-        result = lia.anim.ModelTranslations(model2)
+        result = TranslateModel(model2)
         if result ~= "kleiner" then return result end
     end
 

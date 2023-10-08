@@ -29,6 +29,7 @@ function GenerateRules()
     body = body .. "<p>Be aware that some games may have server-specific rules or guidelines. Familiarize yourself with these rules and follow them accordingly.</p>"
     -- Conclusion
     body = body .. "<p>Thank you for being a part of our gaming community. By following these rules, you contribute to a positive and enjoyable gaming environment for everyone.</p>"
+
     return body
 end
 
@@ -73,6 +74,7 @@ function GenerateTutorial()
     -- Step 6
     body = body .. "<h3>Step 6: Serve and Enjoy</h3>"
     body = body .. "<p>Transfer your scrambled eggs to a plate, and they're ready to enjoy! Season with additional salt and pepper if needed.</p>"
+
     return body
 end
 

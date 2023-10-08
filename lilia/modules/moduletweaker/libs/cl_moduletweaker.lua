@@ -52,13 +52,16 @@ function PANEL:Init()
         self,
         function(_, module, disabled)
             local box = self.modules[module]
-            if IsValid(box) then box:SetValue(disabled) end
+            if IsValid(box) then
+                box:SetValue(disabled)
+            end
         end
     )
 
     net.Start("liaModuleList")
     net.SendToServer()
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaModuleList", PANEL, "DFrame")
 --------------------------------------------------------------------------------------------------------

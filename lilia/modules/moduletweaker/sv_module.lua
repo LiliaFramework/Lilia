@@ -1,4 +1,6 @@
 --------------------------------------------------------------------------------------------------------
+local MODULE = MODULE
+--------------------------------------------------------------------------------------------------------
 MODULE.overwrite = MODULE.overwrite or {}
 --------------------------------------------------------------------------------------------------------
 function MODULE:getModuleList()
@@ -26,6 +28,7 @@ function MODULE:getModuleList()
     findModules("lilia/modules")
     findModules(SCHEMA.folder .. "/modules")
     self.computedModules = modules
+
     return modules
 end
 

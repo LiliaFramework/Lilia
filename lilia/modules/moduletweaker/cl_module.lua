@@ -1,5 +1,7 @@
 --------------------------------------------------------------------------------------------------------
 function MODULE:CreateMenuButtons(tabs)
-    tabs["classes"] = function(panel) panel:Add("liaModuleList") end
+    tabs["Modules"] = function(panel)
+        panel:Add("liaModuleList")
+    end
 end
 --------------------------------------------------------------------------------------------------------

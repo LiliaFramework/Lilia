@@ -4,7 +4,7 @@ function MODULE:BuildHelpMenu(tabs)
         if helpPanel then
             local credits = helpPanel:Add("liaCreditsList")
             credits:Dock(TOP)
-            credits:DockMargin(ScrW * 0.1, 0, ScrW * 0.1, 0)
+            credits:DockMargin(ScrW() * 0.1, 0, ScrW() * 0.1, 0)
         end
 
         return ""
