@@ -510,7 +510,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:PSALoader()
     local TalkModesPSAString = "Please Remove Talk Modes. Our framework has such built in by default."
-    local liascriptPSAString = "Please Port Any liaScript Plugins You May Be Using. liascript is Known for Being Exxploitable and Regardless Of The Compatibility, WE DO NOT Advice liascript Plugins. Our framework was built with Lilia Plugins in mind and most Performance will be adquired like that."
+    local NutscriptPSAString = "Please Port Any Nutscript Plugins You May Be Using. Nutscript is Known for Being Exxploitable and Regardless Of The Compatibility, WE DO NOT Advice Nutscript Plugins. Our framework was built with Lilia Plugins in mind and most Performance will be adquired like that."
     local ULXPSAString = [[
             /*------------------------------------------------------------
             
@@ -564,7 +564,7 @@ function GM:PSALoader()
         timer.Simple(
             2,
             function()
-                MsgC(Color(255, 0, 0), liascriptPSAString)
+                MsgC(Color(255, 0, 0), NutscriptPSAString)
             end
         )
     end
