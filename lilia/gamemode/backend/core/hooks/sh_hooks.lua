@@ -58,10 +58,6 @@ function GM:InitializedConfig()
         lia.anim.setModelClass(tpose, animtype)
     end
 
-    for _, model in pairs(lia.config.PlayerModelTposingFixer) do
-        lia.anim.setModelClass(model, "player")
-    end
-
     hook.Run("InitializedModules")
 end
 
@@ -445,6 +441,19 @@ function GM:InitializedModules()
 
     self:RegisterCamiPermissions()
     self:InitializedExtrasShared()
+    timer.Simple(
+        2,
+        function()
+            self:TPosingModelsFix()
+        end
+    )
+end
+
+--------------------------------------------------------------------------------------------------------
+function GM:TPosingModelsFix()
+    for _, model in pairs(lia.config.PlayerModelTposingFixer) do
+        lia.anim.setModelClass(model, "player")
+    end
 end
 
 --------------------------------------------------------------------------------------------------------

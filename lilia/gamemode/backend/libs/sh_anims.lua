@@ -4,7 +4,6 @@ local translations = {}
 lia.anim = lia.anim or {}
 player_manager.anim = player_manager.anim or {}
 lia.anim.DefaultTposingFixer = lia.anim.DefaultTposingFixer or {}
-lia.config.PlayerModelTposingFixer = lia.config.PlayerModelTposingFixer or {}
 TranslateModel = TranslateModel or player_manager.TranslateToPlayerModelName
 --------------------------------------------------------------------------------------------------------
 lia.anim.citizen_male = {

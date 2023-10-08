@@ -31,10 +31,16 @@ function lia.currency.spawn(pos, amount, angle)
         money:SetAngles(angle or Angle(0, 0, 0))
         money:Spawn()
         money:Activate()
+
         return money
     end
 end
 
 --------------------------------------------------------------------------------------------------------
-timer.Simple(1, function() lia.currency.set(lia.config.CurrencySymbol, lia.config.CurrencySingularName, lia.config.CurrencyPluralName) end)
+timer.Simple(
+    1,
+    function()
+        lia.currency.set(lia.config.CurrencySymbol, lia.config.CurrencySingularName, lia.config.CurrencyPluralName)
+    end
+)
 --------------------------------------------------------------------------------------------------------
