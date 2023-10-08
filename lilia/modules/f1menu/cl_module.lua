@@ -2,7 +2,7 @@
 local HELP_DEFAULT
 --------------------------------------------------------------------------------------------------------
 function MODULE:CreateMenuButtons(tabs)
-    if hook.Run("CanPlayerViewInventory") ~= false then
+    if (hook.GetTable()["CanPlayerViewInventory"] and hook.Run("CanPlayerViewInventory") ~= false) or (not hook.GetTable()["CanPlayerViewInventory"] and LocalPlayer():Alive()) then
         tabs["inv"] = function(panel)
             local inventory = LocalPlayer():getChar():getInv()
             if not inventory then return end
@@ -36,34 +36,22 @@ function MODULE:CreateMenuButtons(tabs)
                 x = x + panel:GetWide() + 10
             end
 
-            hook.Add(
-                "PostRenderVGUI",
-                mainPanel,
-                function()
-                    hook.Run("PostDrawInventory", mainPanel)
-                end
-            )
+            hook.Add("PostRenderVGUI", mainPanel, function() hook.Run("PostDrawInventory", mainPanel) end)
         end
     end
 
-    if hook.Run("CanPlayerViewClasses") ~= false then
-        local cnt = table.Count(lia.class.list)
-        if cnt <= 1 then return end
-        for k, v in ipairs(lia.class.list) do
-            if not lia.class.canBe(LocalPlayer(), k) then
-                continue
-            else
-                tabs["classes"] = function(panel)
-                    panel:Add("liaClasses")
-                end
-
-                return
-            end
+    local cnt = table.Count(lia.class.list)
+    if cnt <= 1 then return end
+    for k, v in ipairs(lia.class.list) do
+        if not lia.class.canBe(LocalPlayer(), k) then
+            continue
+        else
+            tabs["classes"] = function(panel) panel:Add("liaClasses") end
+            return
         end
     end
 
-    if hook.Run("CanPlayerViewHelp") ~= false then
-        HELP_DEFAULT = [[
+    HELP_DEFAULT = [[
 			<div id="parent"><div id="child">
 				<center>
 				    <img src="https://i.imgur.com/yY3wT30.png"></img>
@@ -71,9 +59,9 @@ function MODULE:CreateMenuButtons(tabs)
 				</center>
 			</div></div>
 		]]
-        tabs["help"] = function(panel)
-            local html
-            local header = [[<html>
+    tabs["help"] = function(panel)
+        local html
+        local header = [[<html>
 			<head>
 				<style>
 					@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
@@ -99,56 +87,49 @@ function MODULE:CreateMenuButtons(tabs)
 			</head>
 			<body>
 			]]
-            local tree = panel:Add("DTree")
-            tree:SetPadding(5)
-            tree:Dock(LEFT)
-            tree:SetWide(180)
-            tree:DockMargin(0, 0, 15, 0)
-            tree.OnNodeSelected = function(this, node)
-                if node.onGetHTML then
-                    local source = node:onGetHTML()
-                    if IsValid(helpPanel) then
-                        helpPanel:Remove()
-                    end
-
-                    if lia.gui.creditsPanel then
-                        lia.gui.creditsPanel:Remove()
-                    end
-
-                    helpPanel = panel:Add("DListView")
-                    helpPanel:Dock(FILL)
-                    helpPanel.Paint = function() end
-                    helpPanel:InvalidateLayout(true)
-                    html = helpPanel:Add("DHTML")
-                    html:Dock(FILL)
-                    html:SetHTML(header .. HELP_DEFAULT)
-                    if source and source:sub(1, 4) == "http" then
-                        html:OpenURL(source)
-                    else
-                        html:SetHTML(header .. node:onGetHTML() .. "</body></html>")
-                    end
-                end
-            end
-
-            if not IsValid(helpPanel) then
+        local tree = panel:Add("DTree")
+        tree:SetPadding(5)
+        tree:Dock(LEFT)
+        tree:SetWide(180)
+        tree:DockMargin(0, 0, 15, 0)
+        tree.OnNodeSelected = function(this, node)
+            if node.onGetHTML then
+                local source = node:onGetHTML()
+                if IsValid(helpPanel) then helpPanel:Remove() end
+                if lia.gui.creditsPanel then lia.gui.creditsPanel:Remove() end
                 helpPanel = panel:Add("DListView")
                 helpPanel:Dock(FILL)
                 helpPanel.Paint = function() end
+                helpPanel:InvalidateLayout(true)
                 html = helpPanel:Add("DHTML")
                 html:Dock(FILL)
                 html:SetHTML(header .. HELP_DEFAULT)
-            end
-
-            tabs = {}
-            hook.Run("BuildHelpMenu", tabs)
-            for k, v in SortedPairs(tabs) do
-                if not isfunction(v) then
-                    local source = v
-                    v = function() return tostring(source) end
+                if source and source:sub(1, 4) == "http" then
+                    html:OpenURL(source)
+                else
+                    html:SetHTML(header .. node:onGetHTML() .. "</body></html>")
                 end
-
-                tree:AddNode(L(k)).onGetHTML = v or function() return "" end
             end
+        end
+
+        if not IsValid(helpPanel) then
+            helpPanel = panel:Add("DListView")
+            helpPanel:Dock(FILL)
+            helpPanel.Paint = function() end
+            html = helpPanel:Add("DHTML")
+            html:Dock(FILL)
+            html:SetHTML(header .. HELP_DEFAULT)
+        end
+
+        tabs = {}
+        hook.Run("BuildHelpMenu", tabs)
+        for k, v in SortedPairs(tabs) do
+            if not isfunction(v) then
+                local source = v
+                v = function() return tostring(source) end
+            end
+
+            tree:AddNode(L(k)).onGetHTML = v or function() return "" end
         end
     end
 end
@@ -159,15 +140,9 @@ function MODULE:BuildHelpMenu(tabs)
         local body = ""
         for k, v in SortedPairs(lia.command.list) do
             local allowed = false
-            if lia.command.hasAccess(client, k) then
-                allowed = true
-            end
-
-            if allowed then
-                body = body .. "<h2>/" .. k .. "</h2><strong>Syntax:</strong> <em>" .. v.syntax .. "</em><br /><br />"
-            end
+            if lia.command.hasAccess(client, k) then allowed = true end
+            if allowed then body = body .. "<h2>/" .. k .. "</h2><strong>Syntax:</strong> <em>" .. v.syntax .. "</em><br /><br />" end
         end
-
         return body
     end
 
@@ -189,7 +164,6 @@ function MODULE:BuildHelpMenu(tabs)
                 </tr>
             ]], icon, k, v.desc)
         end
-
         return body .. "</table>"
     end
 
@@ -203,22 +177,13 @@ function MODULE:BuildHelpMenu(tabs)
                     <b>%s</b>: %s<br />
                     <b>%s</b>: %s
             ]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", L"author", lia.module.namecache[v.author] or v.author)
-            if v.version then
-                body = body .. "<br /><b>" .. L"version" .. "</b>: " .. v.version
-            end
-
+            if v.version then body = body .. "<br /><b>" .. L"version" .. "</b>: " .. v.version end
             body = body .. "</span></p>"
         end
-
         return body
     end
 
-    if lia.config.RulesEnabled then
-        tabs["Rules"] = function() return lia.config.Rules end
-    end
-
-    if lia.config.TutorialEnabled then
-        tabs["Tutorial"] = function() return lia.config.Tutorial end
-    end
+    if lia.config.RulesEnabled then tabs["Rules"] = function() return GenerateRules() end end
+    if lia.config.TutorialEnabled then tabs["Tutorial"] = function() return GenerateTutorial() end end
 end
 --------------------------------------------------------------------------------------------------------
