@@ -24,7 +24,6 @@ function GM:InitializedConfig()
         lia.anim.setModelClass(customtpose, "player")
     end
 
-    print("Total models processed with TPoseFixer: " .. ModelCount)
     hook.Run("InitializedModules")
 end
 
