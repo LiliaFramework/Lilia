@@ -163,7 +163,7 @@ function MODULE:ShouldDrawEntityInfo(entity, alpha, position)
     local x, y = position.x, position.y
     local ty = 0
     charInfo = {}
-    charInfo[1] = {hook.Run("GetDisplayedName", entity) or character.getName(character), team.GetColor(entity.Team(entity))}
+    charInfo[1] = {hook.Run("GetDisplayedName", entity, nil, "hud") or character.getName(character), team.GetColor(entity.Team(entity))}
     local description = character.getDesc(character)
     if description ~= entity.liaDescCache then
         entity.liaDescCache = description
