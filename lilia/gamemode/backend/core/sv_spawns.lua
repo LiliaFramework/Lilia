@@ -172,8 +172,6 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:PostPlayerLoadout(client)
     local character = client:getChar()
-    if character:hasFlags("p") then client:Give("weapon_physgun") end
-    if character:hasFlags("t") then client:Give("gmod_tool") end
     client:Give("lia_hands")
     client:SetupHands()
     lia.attribs.setup(client)
@@ -188,7 +186,6 @@ function GM:PostPlayerLoadout(client)
         end
     end
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerDeath(client, inflictor, attacker)
     local char = client:getChar()

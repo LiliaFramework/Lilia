@@ -2,30 +2,46 @@
 lia.flag = lia.flag or {}
 lia.flag.list = lia.flag.list or {}
 --------------------------------------------------------------------------------------------------------
-lia.flag.defaultlist = {
-    ["c"] = "Access to spawn chairs.",
-    ["C"] = "Access to spawn vehicles.",
-    ["W"] = "Access to spawn SWEPS.",
-    ["E"] = "Access to spawn SENTs.",
-    ["L"] = "Access to spawn Effects.",
-    ["r"] = "Access to spawn ragdolls.",
-    ["e"] = "Access to spawn props.",
-    ["n"] = "Access to spawn NPCs.",
-    ["P"] = "Access to PAC3.",
-    ["p"] = "Access to the physgun.",
-    ["t"] = "Access to the toolgun."
-}
-
---------------------------------------------------------------------------------------------------------
 function lia.flag.add(flag, desc, callback)
     lia.flag.list[flag] = {
         desc = desc,
         callback = callback
     }
 end
-
 --------------------------------------------------------------------------------------------------------
-for desc, flag in pairs(lia.flag.defaultlist) do
-    lia.flag.add(flag, desc)
-end
+lia.flag.add("p", "Access to the physgun.", function(client, isGiven)
+    if (isGiven) then
+        client:Give("weapon_physgun")
+        client:SelectWeapon("weapon_physgun")
+    else
+        client:StripWeapon("weapon_physgun")
+    end
+end)
+--------------------------------------------------------------------------------------------------------
+lia.flag.add("t", "Access to the toolgun", function(client, isGiven)
+    if (isGiven) then
+        client:Give("gmod_tool")
+        client:SelectWeapon("gmod_tool")
+    else
+        client:StripWeapon("gmod_tool")
+    end
+end)
+--------------------------------------------------------------------------------------------------------
+lia.flag.add("c", "Access to spawn chairs.")
+--------------------------------------------------------------------------------------------------------
+lia.flag.add("C", "Access to spawn vehicles.")
+--------------------------------------------------------------------------------------------------------
+lia.flag.add("W", "Access to spawn SWEPS.")
+--------------------------------------------------------------------------------------------------------
+lia.flag.add("E", "Access to spawn SENTs.")
+--------------------------------------------------------------------------------------------------------
+lia.flag.add("L", "Access to spawn Effects.")
+--------------------------------------------------------------------------------------------------------
+lia.flag.add("r", "Access to spawn ragdolls.")
+--------------------------------------------------------------------------------------------------------
+lia.flag.add("e", "Access to spawn props.")
+--------------------------------------------------------------------------------------------------------
+lia.flag.add("n", "Access to spawn NPCs.")
+--------------------------------------------------------------------------------------------------------
+lia.flag.add("P", "Access to PAC3.")
 --------------------------------------------------------------------------------------------------------
