@@ -1,11 +1,7 @@
 --------------------------------------------------------------------------------------------------------
-ACT_VM_FISTS_DRAW = 3
---------------------------------------------------------------------------------------------------------
-ACT_VM_FISTS_HOLSTER = 2
---------------------------------------------------------------------------------------------------------
 SWEP.Author = "Leonheart"
-SWEP.Instructions = "Primary Fire: Lock Entities\nSecondary Fire: Unlock"
-SWEP.Purpose = "Hitting things and knocking on doors."
+SWEP.Instructions = "Primary Fire: Lock\nSecondary Fire: Unlock"
+SWEP.Purpose = "Locking and Unlocking Stuff."
 SWEP.Drop = false
 SWEP.ViewModelFOV = 45
 SWEP.ViewModelFlip = false
@@ -30,21 +26,15 @@ SWEP.IsAlwaysLowered = true
 SWEP.FireWhenLowered = true
 SWEP.HoldType = "passive"
 --------------------------------------------------------------------------------------------------------
-function SWEP:Initialize()
-    self:SetHoldType(self.HoldType)
-    timer.Simple(0.1, function()
-        self:SetHoldType(self.HoldType)
-        print("FUCK")
-    end)
-end
-
+ACT_VM_FISTS_DRAW = 3
+--------------------------------------------------------------------------------------------------------
+ACT_VM_FISTS_HOLSTER = 2
 --------------------------------------------------------------------------------------------------------
 function SWEP:Deploy()
     if not IsValid(self:GetOwner()) then return end
     return true
-end
+end--------------------------------------------------------------------------------------------------------
 
---------------------------------------------------------------------------------------------------------
 function SWEP:Holster()
     if not IsValid(self:GetOwner()) then return end
     local viewModel = self:GetOwner():GetViewModel()
@@ -54,7 +44,13 @@ function SWEP:Holster()
     end
     return true
 end
-
+--------------------------------------------------------------------------------------------------------
+function SWEP:Precache()
+end
+--------------------------------------------------------------------------------------------------------
+function SWEP:Initialize()
+    self:SetHoldType(self.HoldType)
+end
 --------------------------------------------------------------------------------------------------------
 function SWEP:PrimaryAttack()
     local time = lia.config.DoorLockTime
@@ -64,7 +60,6 @@ function SWEP:PrimaryAttack()
     if not IsFirstTimePredicted() then return end
     if SERVER then self:ServerPrimaryAttack() end
 end
-
 --------------------------------------------------------------------------------------------------------
 function SWEP:SecondaryAttack()
     local time = lia.config.DoorLockTime
