@@ -1,4 +1,6 @@
 --------------------------------------------------------------------------------------------------------
+lia.config.PlayerModelTposingFixer = lia.config.PlayerModelTposingFixer or {}
+--------------------------------------------------------------------------------------------------------
 local oldCalcSeqOverride
 --------------------------------------------------------------------------------------------------------
 lia.anim.DefaultTposingFixer = {
@@ -20,13 +22,12 @@ function GM:InitializedConfig()
         lia.anim.setModelClass(tpose, animtype)
     end
 
-    for customtpose, _ in pairs(lia.config.PlayerModelTposingFixer) do
-        lia.anim.setModelClass(customtpose, "player")
+    for _, model in pairs(lia.config.PlayerModelTposingFixer) do
+        lia.anim.setModelClass(model, "player")
     end
 
     hook.Run("InitializedModules")
 end
-
 --------------------------------------------------------------------------------------------------------
 function GM:RegisterCamiPermissions()
     for _, PrivilegeInfo in pairs(lia.config.CAMIPrivileges) do

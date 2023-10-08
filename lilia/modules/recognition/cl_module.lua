@@ -29,17 +29,16 @@ function MODULE:GetDisplayedName(client, chatType, location)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
 
-function PLUGIN:ShouldAllowScoreboardOverride(client, var)
-    if (lia.config.RecognitionEnabled) and lia.config.ScoreboardHiddenVars[var] ~= nil and (client ~= LocalPlayer()) then
+--------------------------------------------------------------------------------------------------------
+function MODULE:ShouldAllowScoreboardOverride(client, var)
+    if lia.config.RecognitionEnabled and lia.config.ScoreboardHiddenVars[var] ~= nil and (client ~= LocalPlayer()) then
         local character = client:getChar()
         local ourCharacter = LocalPlayer():getChar()
-        if (ourCharacter and character and !ourCharacter:doesRecognize(character) and !hook.Run("IsPlayerRecognized", client)) then
-            return true
-        end
+        if ourCharacter and character and not ourCharacter:doesRecognize(character) and not hook.Run("IsPlayerRecognized", client) then return true end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function MODULE:OnCharRecognized(client, recogCharID)
     surface.PlaySound("buttons/button17.wav")

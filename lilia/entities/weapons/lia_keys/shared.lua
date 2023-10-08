@@ -24,17 +24,15 @@ SWEP.LowerAngles = Angle(0, 5, -14)
 SWEP.LowerAngles2 = Angle(0, 5, -22)
 SWEP.IsAlwaysLowered = true
 SWEP.FireWhenLowered = true
-SWEP.HoldType = "passive"
---------------------------------------------------------------------------------------------------------
-ACT_VM_FISTS_DRAW = 3
+SWEP.HoldType = "normal"
 --------------------------------------------------------------------------------------------------------
 ACT_VM_FISTS_HOLSTER = 2
 --------------------------------------------------------------------------------------------------------
 function SWEP:Deploy()
     if not IsValid(self:GetOwner()) then return end
     return true
-end--------------------------------------------------------------------------------------------------------
-
+end
+--------------------------------------------------------------------------------------------------------
 function SWEP:Holster()
     if not IsValid(self:GetOwner()) then return end
     local viewModel = self:GetOwner():GetViewModel()

@@ -95,10 +95,7 @@ if not lia.config.WasInitialized then
             ["point_template"] = true,
         },
         -- Player Model T-posing Fixer
-        PlayerModelTposingFixer = {
-            ["models/player/Group03/female_03.mdl"] = "citizen_female",
-            ["models/player/Group01/male_02.mdl"] = "citizen_male",
-        },
+        PlayerModelTposingFixer = {"models/player/Group03/female_03.mdl", "models/player/Group01/male_02.mdl", "models/player/player.mdl",},
         -- Default Staff Ranks
         DefaultStaff = {
             ["STEAMID"] = "RANK",

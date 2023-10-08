@@ -16,6 +16,7 @@ lia.config.CharClick = {"buttons/button14.wav", 35, 255}
 --------------------------------------------------------------------------------------------------------
 lia.config.CharWarning = {"friends/friend_join.wav", 40, 255}
 --------------------------------------------------------------------------------------------------------
+lia.config.F1MenuLaunchUnanchor = "buttons/lightswitch2.wav"
 --------------------------------------------------------------------------------------------------------
 --[[ CUSTOM UI STUFF]]
 lia.config.CustomUIBackgrounds = {lia.util.getMaterial("mainmenu/bg1.png"), lia.util.getMaterial("mainmenu/bg2.png"), lia.util.getMaterial("mainmenu/bg3.png"), lia.util.getMaterial("mainmenu/bg4.png"), lia.util.getMaterial("mainmenu/bg5.png")}
