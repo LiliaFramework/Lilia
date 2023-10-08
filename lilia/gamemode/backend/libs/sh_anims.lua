@@ -4,8 +4,6 @@ local translations = {}
 lia.anim = lia.anim or {}
 player_manager.anim = player_manager.anim or {}
 lia.anim.DefaultTposingFixer = lia.anim.DefaultTposingFixer or {}
-lia.anim.HoldtypeTranslator = lia.anim.HoldtypeTranslator or {}
-lia.anim.PlayerHoldtypeTranslator = lia.anim.PlayerHoldtypeTranslator or {}
 lia.config.PlayerModelTposingFixer = lia.config.PlayerModelTposingFixer or {}
 lia.anim.ModelTranslations = lia.anim.ModelTranslations or player_manager.TranslateToPlayerModelName
 --------------------------------------------------------------------------------------------------------
@@ -343,42 +341,6 @@ lia.anim.fastZombie = {
     [ACT_MP_WALK] = ACT_HL2MP_WALK_ZOMBIE_06,
     [ACT_MP_RUN] = ACT_HL2MP_RUN_ZOMBIE_FAST
 }
-
---------------------------------------------------------------------------------------------------------
-lia.anim.HoldtypeTranslator = {
-    ["normal"] = "normal",
-    ["revolver"] = "normal",
-    ["fist"] = "normal",
-    ["pistol"] = "normal",
-    ["grenade"] = "normal",
-    ["melee"] = "normal",
-    ["slam"] = "normal",
-    ["melee2"] = "normal",
-    ["knife"] = "normal",
-    ["duel"] = "normal",
-    ["bugbait"] = "normal",
-}
-
---------------------------------------------------------------------------------------------------------
-lia.anim.PlayerHoldtypeTranslator = {
-    [""] = "normal",
-    ["physgun"] = "smg",
-    ["ar2"] = "smg",
-    ["crossbow"] = "shotgun",
-    ["rpg"] = "shotgun",
-    ["slam"] = "normal",
-    ["grenade"] = "grenade",
-    ["melee2"] = "melee",
-    ["passive"] = "smg",
-    ["knife"] = "melee",
-    ["duel"] = "pistol",
-    ["camera"] = "smg",
-    ["magic"] = "normal",
-    ["revolver"] = "pistol",
-}
-
-
-
 --------------------------------------------------------------------------------------------------------
 function lia.anim.setModelClass(model, class)
     if not lia.anim[class] then

@@ -16,6 +16,37 @@ lia.anim.DefaultTposingFixer = {
     ["models/mossman.mdl"] = "citizen_female",
 }
 --------------------------------------------------------------------------------------------------------
+lia.anim.PlayerHoldtypeTranslator = {
+    [""] = "normal",
+    ["physgun"] = "smg",
+    ["ar2"] = "smg",
+    ["crossbow"] = "shotgun",
+    ["rpg"] = "shotgun",
+    ["slam"] = "normal",
+    ["grenade"] = "grenade",
+    ["melee2"] = "melee",
+    ["passive"] = "smg",
+    ["knife"] = "melee",
+    ["duel"] = "pistol",
+    ["camera"] = "smg",
+    ["magic"] = "normal",
+    ["revolver"] = "pistol",
+}
+--------------------------------------------------------------------------------------------------------
+lia.anim.HoldtypeTranslator = {
+    ["normal"] = "normal",
+    ["revolver"] = "normal",
+    ["fist"] = "normal",
+    ["pistol"] = "normal",
+    ["grenade"] = "normal",
+    ["melee"] = "normal",
+    ["slam"] = "normal",
+    ["melee2"] = "normal",
+    ["knife"] = "normal",
+    ["duel"] = "normal",
+    ["bugbait"] = "normal",
+}
+--------------------------------------------------------------------------------------------------------
 function GM:InitializedConfig()
     if CLIENT then self:ClientInitializedConfig() end
     for tpose, animtype in pairs(lia.anim.DefaultTposingFixer) do
