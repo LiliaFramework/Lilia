@@ -18,7 +18,7 @@ function MODULE:InitializedConfig()
         {
             format = "**%s %s",
             onGetColor = lia.chat.classes.ic.onGetColor,
-            onCanHear = function(speaker, text)
+            onCanHear = function(speaker, listener)
                 local trace = util.TraceLine{
                     start = speaker:EyePos(),
                     mask = MASK_SOLID_BRUSHONLY,
@@ -108,13 +108,13 @@ function MODULE:InitializedConfig()
     lia.chat.register(
         "adminchat",
         {
-            onGetColor = function(self, speaker, text) return Color(0, 196, 255) end,
-            onCanHear = function(self, speaker, listener)
+            onGetColor = function(speaker, text) return Color(0, 196, 255) end,
+            onCanHear = function(speaker, listener)
                 if CAMI.PlayerHasAccess(listener, "Lilia - Management - Admin Chat", nil) then return true end
 
                 return false
             end,
-            onCanSay = function(self, speaker, text)
+            onCanSay = function(speaker, text)
                 if CAMI.PlayerHasAccess(speaker, "Lilia - Management - Admin Chat", nil) then
                     speaker:notify("You aren't an admin. Use '@messagehere' to create a ticket.")
 
@@ -123,7 +123,7 @@ function MODULE:InitializedConfig()
 
                 return true
             end,
-            onChatAdd = function(self, speaker, text)
+            onChatAdd = function(speaker, text)
                 if CAMI.PlayerHasAccess(LocalPlayer(), "Lilia - Management - Admin Chat", nil) and CAMI.PlayerHasAccess(speaker, "Lilia - Management - Admin Chat", nil) then
                     chat.AddText(Color(255, 215, 0), "[А] ", Color(128, 0, 255, 255), speaker:getChar():getName(), ": ", Color(255, 255, 255), text)
                 end
