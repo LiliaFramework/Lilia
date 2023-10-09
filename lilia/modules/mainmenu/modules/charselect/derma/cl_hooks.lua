@@ -11,6 +11,7 @@ hook.Add(
             elseif LocalPlayer():getChar() then
                 vgui.Create("liaMenu")
             end
+
             return true
         end
     end

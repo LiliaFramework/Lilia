@@ -18,28 +18,22 @@ lia.command.add(
         privilege = "Default User Commands",
         syntax = "[number maximum]",
         onRun = function(client, arguments)
-            local table = ents.FindInSphere(client:EyePos(), 200)
-            local i = #table
-            local pointing = client:GetEyeTraceNoCursor()
-            ::GOTO_REVERSE::
-            if table[i]:IsPlayer() then
-                local trace = util.TraceLine{
-                    start = client:EyePos(),
-                    endpos = table[i]:EyePos(),
-                    mask = MASK_SOLID_BRUSHONLY,
-                }
+            local objectsInRange = ents.FindInSphere(client:EyePos(), 200)
+            for _, object in ipairs(objectsInRange) do
+                if object:IsPlayer() then
+                    local trace = util.TraceLine{
+                        start = client:EyePos(),
+                        endpos = object:EyePos(),
+                        mask = MASK_SOLID_BRUSHONLY,
+                    }
 
-                if not trace.Hit then
-                    net.Start("Pointing")
-                    net.WriteFloat(CurTime() + 10)
-                    net.WriteVector(pointing.HitPos)
-                    net.Send(table[i])
+                    if not trace.Hit then
+                        net.Start("Pointing")
+                        net.WriteFloat(CurTime() + 10)
+                        net.WriteVector(client:GetEyeTraceNoCursor().HitPos)
+                        net.Send(object)
+                    end
                 end
-            end
-
-            i = i - 1
-            if i ~= 0 then
-                goto GOTO_REVERSE
             end
         end
     }

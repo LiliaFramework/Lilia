@@ -271,7 +271,6 @@ timer.Create(
 function lia.util.getInjuredColor(client)
     local health_color = color_white
     if not IsValid(client) then return health_color end
-    local health_color = color_white
     local health, healthMax = client:Health(), client:GetMaxHealth()
     if (health / healthMax) < .95 then
         health_color = lia.color.LerpHSV(nil, nil, healthMax, health, 0)

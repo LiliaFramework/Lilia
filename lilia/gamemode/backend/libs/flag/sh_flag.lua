@@ -8,24 +8,35 @@ function lia.flag.add(flag, desc, callback)
         callback = callback
     }
 end
+
 --------------------------------------------------------------------------------------------------------
-lia.flag.add("p", "Access to the physgun.", function(client, isGiven)
-    if (isGiven) then
-        client:Give("weapon_physgun")
-        client:SelectWeapon("weapon_physgun")
-    else
-        client:StripWeapon("weapon_physgun")
+lia.flag.add(
+    "p",
+    "Access to the physgun.",
+    function(client, isGiven)
+        if isGiven then
+            client:Give("weapon_physgun")
+            client:SelectWeapon("weapon_physgun")
+        else
+            client:StripWeapon("weapon_physgun")
+        end
     end
-end)
+)
+
 --------------------------------------------------------------------------------------------------------
-lia.flag.add("t", "Access to the toolgun", function(client, isGiven)
-    if (isGiven) then
-        client:Give("gmod_tool")
-        client:SelectWeapon("gmod_tool")
-    else
-        client:StripWeapon("gmod_tool")
+lia.flag.add(
+    "t",
+    "Access to the toolgun",
+    function(client, isGiven)
+        if isGiven then
+            client:Give("gmod_tool")
+            client:SelectWeapon("gmod_tool")
+        else
+            client:StripWeapon("gmod_tool")
+        end
     end
-end)
+)
+
 --------------------------------------------------------------------------------------------------------
 lia.flag.add("c", "Access to spawn chairs.")
 --------------------------------------------------------------------------------------------------------

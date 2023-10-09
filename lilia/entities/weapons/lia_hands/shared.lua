@@ -1,13 +1,3 @@
-CARRY_STRENGTH_NERD = 1
-CARRY_STRENGTH_CHAD = 2
-CARRY_STRENGTH_TERMINATOR = 3
-CARRY_STRENGTH_GOD = 4
-CARRY_FORCE_LEVEL = {16500, 40000, 100000, 0,}
-CARRY_WEIGHT_LIMIT = 100
-THROW_VELOCITY_CAP = 150
-PLAYER_PICKUP_RANGE = 200
-CARRY_FORCE_LIMIT = CARRY_FORCE_LEVEL[CARRY_STRENGTH_CHAD] -- default strength level is CHAD.
---------------------------------------------------------------------------------------------------------
 SWEP.Author = "Cheesenut / Black Tea"
 SWEP.Instructions = "Primary Fire: [RAISED] Punch\nSecondary Fire: Knock/Pickup"
 SWEP.Purpose = "Hitting things and knocking on doors."
@@ -37,6 +27,15 @@ SWEP.holdingEntity = nil
 SWEP.carryHack = nil
 SWEP.constr = nil
 SWEP.prevOwner = nil
+CARRY_STRENGTH_NERD = 1
+CARRY_STRENGTH_CHAD = 2
+CARRY_STRENGTH_TERMINATOR = 3
+CARRY_STRENGTH_GOD = 4
+CARRY_FORCE_LEVEL = {16500, 40000, 100000, 0,}
+CARRY_WEIGHT_LIMIT = 100
+THROW_VELOCITY_CAP = 150
+PLAYER_PICKUP_RANGE = 200
+CARRY_FORCE_LIMIT = CARRY_FORCE_LEVEL[CARRY_STRENGTH_CHAD]
 --------------------------------------------------------------------------------------------------------
 --[[
 	CARRY_STRENGTH_NERD: 16500 - You can't push player with prop on this strength level.
@@ -52,6 +51,7 @@ SWEP.prevOwner = nil
 							Try this if you're playing with very trustful community.
 ]]
 --
+--------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------
 function SWEP:SetSubPhysMotionEnabled(entity, enable)
     if not IsValid(entity) then return end
@@ -330,16 +330,14 @@ function SWEP:doPickup(throw, entity, trace)
             return
         end
 
-        if SERVER and (client:EyePos() - (entity:GetPos() + entity:OBBCenter())):Length() < self:getRange(entity) then
-            if self:allowPickup(entity) then
-                self:pickup(entity, trace)
-                self:SendWeaponAnim(ACT_VM_HITCENTER)
-                local delay = (entity:GetClass() == "prop_ragdoll") and 0.8 or 0.1
-                hook.Run("OnPickupObject", true, client, entity)
-                self:SetNextSecondaryFire(CurTime() + delay)
+        if SERVER and (client:EyePos() - (entity:GetPos() + entity:OBBCenter())):Length() < self:getRange(entity) and self:allowPickup(entity) then
+            self:pickup(entity, trace)
+            self:SendWeaponAnim(ACT_VM_HITCENTER)
+            local delay = (entity:GetClass() == "prop_ragdoll") and 0.8 or 0.1
+            hook.Run("OnPickupObject", true, client, entity)
+            self:SetNextSecondaryFire(CurTime() + delay)
 
-                return
-            end
+            return
         end
     end
 end

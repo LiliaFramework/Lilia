@@ -20,6 +20,7 @@ ITEM.functions.use = {
         client:getChar():setData("leg_broken", false)
         client:SetWalkSpeed(lia.config.WalkSpeed)
         client:SetRunSpeed(lia.config.RunSpeed)
+
         return true
     end
 }
@@ -37,8 +38,10 @@ ITEM.functions.usef = {
             target:getChar():setData("leg_broken", false)
             target:SetWalkSpeed(lia.config.WalkSpeed)
             target:SetRunSpeed(lia.config.RunSpeed)
+
             return true
         end
+
         return false
     end,
     onCanRun = function(item) return not IsValid(item.entity) end

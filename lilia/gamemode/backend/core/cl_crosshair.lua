@@ -35,7 +35,7 @@ function GM:PostDrawHUD()
     if wep and wep:IsValid() and wep.HUDPaint then return end
     if hook.Run("ShouldDrawCrosshair") == false or g_ContextMenu:IsVisible() or IsValid(lia.gui.character) and lia.gui.character:IsVisible() then return end
     aimVector = client:EyeAngles()
-    punchAngle = client:GetPunchAngle()
+    punchAngle = client:GetViewPunchAngles()
     w, h = ScrW(), ScrH()
     ft = FrameTime()
     filter = {client}

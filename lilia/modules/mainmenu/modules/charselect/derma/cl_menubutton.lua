@@ -58,6 +58,7 @@ function PANEL:OnMousePressed(code)
 		self:DoClick(self)
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 function PANEL:OnMouseReleased(key)
 	if self.color then
@@ -66,6 +67,7 @@ function PANEL:OnMouseReleased(key)
 		self:SetTextColor(color_white)
 	end
 end
+
 --------------------------------------------------------------------------------------------------------
 vgui.Register("liaMenuButton", PANEL, "DButton")
 --------------------------------------------------------------------------------------------------------

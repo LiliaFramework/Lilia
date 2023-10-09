@@ -30,8 +30,10 @@ ACT_VM_FISTS_HOLSTER = 2
 --------------------------------------------------------------------------------------------------------
 function SWEP:Deploy()
     if not IsValid(self:GetOwner()) then return end
+
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:Holster()
     if not IsValid(self:GetOwner()) then return end
@@ -40,15 +42,19 @@ function SWEP:Holster()
         viewModel:SetPlaybackRate(1)
         viewModel:ResetSequence(ACT_VM_FISTS_HOLSTER)
     end
+
     return true
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:Precache()
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:Initialize()
     self:SetHoldType(self.HoldType)
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:PrimaryAttack()
     local time = lia.config.DoorLockTime
@@ -56,8 +62,11 @@ function SWEP:PrimaryAttack()
     self:SetNextPrimaryFire(CurTime() + time2)
     self:SetNextSecondaryFire(CurTime() + time2)
     if not IsFirstTimePredicted() then return end
-    if SERVER then self:ServerPrimaryAttack() end
+    if SERVER then
+        self:ServerPrimaryAttack()
+    end
 end
+
 --------------------------------------------------------------------------------------------------------
 function SWEP:SecondaryAttack()
     local time = lia.config.DoorLockTime
@@ -65,6 +74,8 @@ function SWEP:SecondaryAttack()
     self:SetNextPrimaryFire(CurTime() + time2)
     self:SetNextSecondaryFire(CurTime() + time2)
     if not IsFirstTimePredicted() then return end
-    if SERVER then self:ServerSecondaryAttack() end
+    if SERVER then
+        self:ServerSecondaryAttack()
+    end
 end
 --------------------------------------------------------------------------------------------------------

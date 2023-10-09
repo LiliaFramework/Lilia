@@ -9,7 +9,7 @@ function GM:CanPlayerInteractItem(client, action, item)
     local inventory = lia.inventory.instances[item.invID]
     if client:getNetVar("fallingover") then return false end
     if client:getNetVar("restricted") then return false end
-    if action == "drop" and hook.Run("CanPlayerDropItem", client, item) == false then
+    if action == "drop" and hook.Run("CanPlayerDropItem", client, item) ~= false then
         client.dropDelay = true
         timer.Create(
             "DropDelay." .. client:SteamID64(),
@@ -25,7 +25,7 @@ function GM:CanPlayerInteractItem(client, action, item)
         return false
     end
 
-    if action == "take" and hook.Run("CanPlayerTakeItem", client, item) == false then
+    if action == "take" and hook.Run("CanPlayerTakeItem", client, item) ~= false then
         client.takeDelay = true
         timer.Create(
             "TakeDelay." .. client:SteamID64(),
@@ -41,7 +41,7 @@ function GM:CanPlayerInteractItem(client, action, item)
         return false
     end
 
-    if action == "equip" and hook.Run("CanPlayerEquipItem", client, item) == false then
+    if action == "equip" and hook.Run("CanPlayerEquipItem", client, item) ~= false then
         client.equipDelay = true
         timer.Create(
             "EquipDelay." .. client:SteamID64(),
@@ -63,7 +63,7 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerEquipItem(client, item)
-    if client.equipDelay then
+    if client.equipDelay ~= nil then
         client:notify("You need to wait before equipping something again!")
 
         return false
@@ -74,7 +74,7 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerTakeItem(client, item)
-    if client.takeDelay then
+    if client.takeDelay ~= nil then
         client:notify("You need to wait before picking something up again!")
 
         return false
@@ -92,7 +92,7 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerDropItem(client, item)
-    if client.dropDelay then
+    if client.dropDelay ~= nil then
         client:notify("You need to wait before dropping something again!")
 
         return false

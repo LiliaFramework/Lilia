@@ -273,7 +273,7 @@ lia.command.add(
         onRun = function(client, arguments)
             local entity = client:GetEyeTrace().Entity
             if IsValid(entity) and entity:isDoor() then
-                local disabled = util.tobool(arguments[1] or true)
+                local disabled = tobool(arguments[1] or true)
                 entity:setNetVar("disabled", disabled)
                 MODULE:callOnDoorChildren(
                     entity,

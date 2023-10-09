@@ -11,7 +11,7 @@ function MODULE:HUDPaint()
     client = LocalPlayer()
     if not CAMI.PlayerHasAccess(client, "Lilia - Management - No Clip ESP", nil) then return end
     if client:IsNoClipping() and not client:InVehicle() and LIA_CVAR_ADMINESP:GetBool() and LIA_CVAR_ITEMESP:GetBool() then
-        local sx, sy = surface.ScreenWidth(), surface.ScreenHeight()
+        local sx, sy = ScrW(), ScrH()
         for k, v in ipairs(ents.GetAll()) do
             if v:GetClass() == "lia_item" then
                 local scrPos = v:GetPos():ToScreen()

@@ -164,7 +164,7 @@ function PANEL:Init()
     self.prev2 = vgui.Create("iconRenderPreview")
     self.list = self:Add("DScrollPanel")
     self.list:Dock(FILL)
-    self:AddText("Actions")
+    self:WriteText("Actions")
     self.render = self.list:Add("DButton")
     self.render:Dock(TOP)
     self.render:SetFont("ChatFont")
@@ -185,7 +185,7 @@ function PANEL:Init()
         action(self)
     end
 
-    self:AddText("Presets")
+    self:WriteText("Presets")
     for i = 1, 6 do
         local btn = self.list:Add("DButton")
         btn:Dock(TOP)
@@ -199,7 +199,7 @@ function PANEL:Init()
         end
     end
 
-    self:AddText("Model Name")
+    self:WriteText("Model Name")
     self.mdl = self.list:Add("DTextEntry")
     self.mdl:Dock(TOP)
     self.mdl:SetFont("Default")
@@ -212,7 +212,7 @@ function PANEL:Init()
         self:UpdateIcon()
     end
 
-    self:AddText("Icon Size")
+    self:WriteText("Icon Size")
     local cfg = self.list:Add("DNumSlider")
     cfg:Dock(TOP)
     cfg:SetText("W")
@@ -241,7 +241,7 @@ function PANEL:Init()
         self.prev2:AdjustSize(ICON_INFO.w, ICON_INFO.h)
     end
 
-    self:AddText("Camera FOV")
+    self:WriteText("Camera FOV")
     self.camFOV = self.list:Add("DNumSlider")
     self.camFOV:Dock(TOP)
     self.camFOV:SetText("CAMFOV")
@@ -260,7 +260,7 @@ function PANEL:Init()
         end
     end
 
-    self:AddText("Camera Position")
+    self:WriteText("Camera Position")
     self.camPos = {}
     for i = 1, 3 do
         self.camPos[i] = self.list:Add("DNumSlider")
@@ -278,7 +278,7 @@ function PANEL:Init()
         end
     end
 
-    self:AddText("Camera Angle")
+    self:WriteText("Camera Angle")
     self.camAng = {}
     for i = 1, 3 do
         self.camAng[i] = self.list:Add("DNumSlider")
@@ -296,7 +296,7 @@ function PANEL:Init()
         end
     end
 
-    self:AddText("Entity Angle")
+    self:WriteText("Entity Angle")
     self.entAng = {}
     for i = 1, 3 do
         self.entAng[i] = self.list:Add("DNumSlider")
@@ -451,7 +451,7 @@ function PANEL:OriginLayout()
 end
 
 --------------------------------------------------------------------------------------------------------
-function PANEL:AddText(str)
+function PANEL:WriteText(str)
     local label = self.list:Add("DLabel")
     label:SetFont("ChatFont")
     label:SetTextColor(color_white)

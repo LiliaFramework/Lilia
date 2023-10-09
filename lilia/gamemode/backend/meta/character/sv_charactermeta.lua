@@ -7,8 +7,8 @@ charMeta.vars = charMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
 --------------------------------------------------------------------------------------------------------
 function charMeta:updateAttrib(key, value)
-    local attribute = lia.attribs.list[key]
     local client = self:getPlayer()
+    local attribute = lia.attribs.list[key]
     if attribute then
         local attrib = self:getAttribs()
         attrib[key] = math.min((attrib[key] or 0) + value, attribute.maxValue or lia.config.MaxAttributes)
@@ -25,10 +25,10 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function charMeta:setAttrib(key, value)
+    local client = self:getPlayer()
     local attribute = lia.attribs.list[key]
     if attribute then
         local attrib = self:getAttribs()
-        local client = self:getPlayer()
         attrib[key] = value
         if IsValid(client) then
             netstream.Start(client, "attrib", self:getID(), key, attrib[key])

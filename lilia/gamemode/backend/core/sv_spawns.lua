@@ -3,6 +3,7 @@ function GM:PlayerLoadout(client)
     local character = client:getChar()
     if client.liaSkipLoadout then
         client.liaSkipLoadout = nil
+
         return
     end
 
@@ -10,6 +11,7 @@ function GM:PlayerLoadout(client)
         client:SetNoDraw(true)
         client:Lock()
         client:SetNotSolid(true)
+
         return
     end
 
@@ -79,14 +81,19 @@ function GM:FactionOnLoadout(client)
         client:SetHealth(faction.health)
     end
 
-    if faction.armor then client:SetArmor(faction.armor) end
+    if faction.armor then
+        client:SetArmor(faction.armor)
+    end
+
     if faction.weapons then
         for _, v in ipairs(faction.weapons) do
             client:Give(v)
         end
     end
 
-    if faction.onSpawn then faction:onSpawn(client) end
+    if faction.onSpawn then
+        faction:onSpawn(client)
+    end
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -143,8 +150,14 @@ function GM:ClassOnLoadout(client)
         client:SetHealth(class.health)
     end
 
-    if class.armor then client:SetArmor(class.armor) end
-    if class.onSpawn then class:onSpawn(client) end
+    if class.armor then
+        client:SetArmor(class.armor)
+    end
+
+    if class.onSpawn then
+        class:onSpawn(client)
+    end
+
     if class.weapons then
         for _, v in ipairs(class.weapons) do
             client:Give(v)
@@ -154,7 +167,10 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawn(client)
-    if pac then client:ConCommand("pac_restart") end
+    if pac then
+        client:ConCommand("pac_restart")
+    end
+
     client:setNetVar("VoiceType", "Talking")
     client:SetNoDraw(false)
     client:UnLock()
@@ -166,7 +182,9 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:OnCharAttribBoosted(client, character, attribID)
     local attribute = lia.attribs.list[attribID]
-    if attribute and isfunction(attribute.onSetup) then attribute:onSetup(client, character:getAttrib(attribID, 0)) end
+    if attribute and isfunction(attribute.onSetup) then
+        attribute:onSetup(client, character:getAttrib(attribID, 0))
+    end
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -186,6 +204,7 @@ function GM:PostPlayerLoadout(client)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerDeath(client, inflictor, attacker)
     local char = client:getChar()
@@ -206,7 +225,9 @@ function GM:PlayerDeath(client, inflictor, attacker)
         client.LostItems = {}
         if inventory and lia.config.KeepAmmoOnDeath then
             for _, v in pairs(items) do
-                if (v.isWeapon or v.isCW) and v:getData("equip") then v:setData("ammo", nil) end
+                if (v.isWeapon or v.isCW) and v:getData("equip") then
+                    v:setData("ammo", nil)
+                end
             end
         end
 
@@ -253,8 +274,11 @@ end
 function GM:PlayerDeathThink(client)
     if client:getChar() then
         local deathTime = client:getNetVar("deathTime")
-        if deathTime and deathTime <= CurTime() then client:Spawn() end
+        if deathTime and deathTime <= CurTime() then
+            client:Spawn()
+        end
     end
+
     return false
 end
 
@@ -269,7 +293,9 @@ function GM:PlayerInitialSpawn(client)
             client:setLiliaData("lastIP", address)
             netstream.Start(client, "liaDataSync", data, client.firstJoin, client.lastJoin)
             for _, v in pairs(lia.item.instances) do
-                if v.entity and v.invID == 0 then v:sync(client) end
+                if v.entity and v.invID == 0 then
+                    v:sync(client)
+                end
             end
 
             hook.Run("PlayerLiliaDataLoaded", client)
