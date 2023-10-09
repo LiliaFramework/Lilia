@@ -5,7 +5,7 @@ function PANEL:Init()
     self.brightness = 1
     self:SetCursor("none")
     self.OldSetModel = self.SetModel
-    self.SetModel = function(model)
+    self.SetModel = function(self, model)
         self:OldSetModel(model)
         local entity = self.Entity
         if not IsValid(entity) then return end

@@ -38,7 +38,7 @@ function PANEL:Init()
     end
 
     self.OldSetModel = self.SetModel
-    self.SetModel = function(model, skin, hidden)
+    self.SetModel = function(self, model, skin, hidden)
         self:OldSetModel(model)
         local entity = self.Entity
         if skin then
