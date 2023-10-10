@@ -27,8 +27,8 @@ end
 function GM:EntityTakeDamage(entity, dmgInfo)
     local inflictor = dmgInfo:GetInflictor()
     local attacker = dmgInfo:GetAttacker()
-    if attacker:GetClass() == "prop_physics" then return true end
-    if inflictor:GetClass() == "prop_physics" then return true end
+    if attacker and attacker:GetClass() == "prop_physics" then return true end
+    if inflictor and inflictor:GetClass() == "prop_physics" then return true end
     if not IsValid(entity) or not entity:IsPlayer() then return end
     if IsValid(entity) and entity:IsPlayer() and dmgInfo:IsDamageType(DMG_CRUSH) and not IsValid(entity.liaRagdoll) then return true end
     if IsValid(entity.liaPlayer) then
