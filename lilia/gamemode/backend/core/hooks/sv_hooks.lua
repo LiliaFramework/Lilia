@@ -614,11 +614,10 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:CanPlayerSwitchChar(client, character, newCharacter)
-    local currentChar = client:getChar()
     if IsValid(client.liaRagdoll) then return false, "You are ragdolled!" end
-    if lia.config.CharacterSwitchCooldown and (currentChar:getData("loginTime", 0) + lia.config.CharacterSwitchCooldownTimer) > os.time() then return false, "You are on cooldown!" end
+    if lia.config.CharacterSwitchCooldown and (character:getData("loginTime", 0) + lia.config.CharacterSwitchCooldownTimer) > os.time() then return false, "You are on cooldown!" end
     if not client:Alive() then return false, "You are dead!" end
-    if client.LastDamaged and client.LastDamaged > CurTime() - 120 and character:getFaction() ~= FACTION_STAFF and currentChar then return false, "You took damage too recently to switch characters!" end
-    if currentChar:getID() == character:getID() then return false, "You are already using this character!" end
+    if client.LastDamaged and client.LastDamaged > CurTime() - 120 and character:getFaction() ~= FACTION_STAFF and character then return false, "You took damage too recently to switch characters!" end
+    if character:getID() == newCharacter:getID() then return false, "You are already using this character!" end
 end
 --------------------------------------------------------------------------------------------------------
