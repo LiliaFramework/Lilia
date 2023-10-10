@@ -85,34 +85,39 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function MODULE:InitializedModules()
-    if lia.config.EasyItemRegisterEnabled then
-        for i, v in pairs(lia.EasyRegister) do
-            if i == "primary" or i == "secondary" then
-                for x, y in pairs(v) do
-                    self:RegisterWeapon(x, y, i)
-                end
-            elseif i == "melee" then
-                for x, y in pairs(v) do
-                    self:RegisterMelee(x, y, i)
-                end
-            elseif i == "ammo" then
-                for x, y in pairs(v) do
-                    self:RegisterAmmo(x, y)
-                end
-            elseif i == "entities" then
-                for x, y in pairs(v) do
-                    self:RegisterEnts(x, y)
-                end
-            else
-                for x, y in pairs(v) do
-                    self:RegisterItem(x, y, i)
+    timer.Simple(
+        3,
+        function()
+            if lia.config.EasyItemRegisterEnabled then
+                for i, v in pairs(lia.EasyRegister) do
+                    if i == "primary" or i == "secondary" then
+                        for x, y in pairs(v) do
+                            self:RegisterWeapon(x, y, i)
+                        end
+                    elseif i == "melee" then
+                        for x, y in pairs(v) do
+                            self:RegisterMelee(x, y, i)
+                        end
+                    elseif i == "ammo" then
+                        for x, y in pairs(v) do
+                            self:RegisterAmmo(x, y)
+                        end
+                    elseif i == "entities" then
+                        for x, y in pairs(v) do
+                            self:RegisterEnts(x, y)
+                        end
+                    else
+                        for x, y in pairs(v) do
+                            self:RegisterItem(x, y, i)
+                        end
+                    end
                 end
             end
-        end
-    end
 
-    if lia.config.AutomaticWeaponRegister then
-        self:RegisterWeapons()
-    end
+            if lia.config.AutomaticWeaponRegister then
+                self:RegisterWeapons()
+            end
+        end
+    )
 end
 --------------------------------------------------------------------------------------------------------

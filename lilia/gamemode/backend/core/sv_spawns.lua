@@ -202,6 +202,7 @@ function GM:PostPlayerLoadout(client)
             end
         end
     end
+
     client:setNetVar("VoiceType", "Talking")
 end
 

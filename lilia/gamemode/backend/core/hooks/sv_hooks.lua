@@ -293,14 +293,19 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
+    if not speaker:getChar() then return false end
     local IsVoiceBan = speaker:getChar():getData("VoiceBan") == true
     local AllowVoice = lia.config.AllowVoice
     local VoiceType = speaker:getNetVar("VoiceType", "Talking")
     local VoiceDefault = lia.config.TalkRanges["Talking"]
-    if not (AllowVoice or speaker:getChar()) or IsVoiceBan then return false, false end
-    if not VoiceType then VoiceType = "Talking" end
+    if not AllowVoice or IsVoiceBan then return false, false end
+    if not VoiceType then
+        VoiceType = "Talking"
+    end
+
     local rangeSquared = (lia.config.TalkRanges[VoiceType] or VoiceDefault) * (lia.config.TalkRanges[VoiceType] or VoiceDefault)
     if listener:GetPos():DistToSqr(speaker:GetPos()) < rangeSquared then return true, true end
+
     return false, false
 end
 

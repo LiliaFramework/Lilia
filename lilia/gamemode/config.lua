@@ -4,9 +4,9 @@ lia.config = lia.config or {}
 if not lia.config.WasInitialized then
     lia.config = {
         -- General Gameplay Settings
-        EquipDelay = 1, -- Delay OnEquip
-        DropDelay = 1, -- Delay OnDrop
-        TakeDelay = 1, -- Delay OnTake
+        EquipDelay = 2, -- Delay OnEquip
+        DropDelay = 2, -- Delay OnDrop
+        TakeDelay = 2, -- Delay OnTake
         SchemaYear = 2023, -- Year When Schema Happens
         AmericanDates = true, -- American Date Formatting?
         AmericanTimeStamp = true, -- American Time Formatting?
