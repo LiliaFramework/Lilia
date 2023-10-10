@@ -4,6 +4,7 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 --------------------------------------------------------------------------------------------------------
 function SWEP:ServerSecondaryAttack()
+    local time = lia.config.DoorLockTime
     local data = {}
     data.start = self:GetOwner():GetShootPos()
     data.endpos = data.start + self:GetOwner():GetAimVector() * 96
@@ -25,6 +26,7 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function SWEP:ServerPrimaryAttack()
+    local time = lia.config.DoorLockTime
     local data = {}
     data.start = self:GetOwner():GetShootPos()
     data.endpos = data.start + self:GetOwner():GetAimVector() * 96
