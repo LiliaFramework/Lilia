@@ -153,7 +153,7 @@ function MODULE:DrawCharInfo(client, character, info)
 end
 
 --------------------------------------------------------------------------------------------------------
-function MODULE:ShouldDrawEntityInfo(entity, alpha, position)
+function MODULE:DrawEntityInfo(entity, alpha, position)
     if not entity.IsPlayer(entity) then return end
     if not entity:Alive() then return end
     if hook.Run("ShouldDrawPlayerInfo", entity) == false then return end
@@ -163,7 +163,7 @@ function MODULE:ShouldDrawEntityInfo(entity, alpha, position)
     local x, y = position.x, position.y
     local ty = 0
     charInfo = {}
-    charInfo[1] = {hook.Run("GetDisplayedName", entity, "hud") or character.getName(character), team.GetColor(entity.Team(entity))}
+    charInfo[1] = {hook.Run("GetDisplayedName", entity, nil, "hud") or character.getName(character), team.GetColor(entity.Team(entity))}
     local description = character.getDesc(character)
     if description ~= entity.liaDescCache then
         entity.liaDescCache = description
@@ -187,7 +187,7 @@ function MODULE:ShouldDrawEntityInfo(entity, alpha, position)
 end
 
 --------------------------------------------------------------------------------------------------------
-function MODULE:ShouldDrawEntityInfo(entity)
+function MODULE:ShouldDrawEntityInfo(entity, alpha, position)
     if entity.DrawEntityInfo then return true end
     if entity.onShouldDrawEntityInfo then return entity:onShouldDrawEntityInfo() end
     if entity:IsPlayer() and entity:getChar() and entity:GetNoDraw() ~= true then return true end

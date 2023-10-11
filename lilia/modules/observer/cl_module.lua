@@ -110,10 +110,6 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function MODULE:ShouldDrawEntityInfo(entity)
-    if IsValid(entity) then
-        if entity:IsPlayer() or IsValid(entity:getNetVar("player")) then
-            if entity.IsAdmin and entity:IsAdmin() and entity:IsNoClipping() then return false end
-        end
-    end
+    if IsValid(entity) and entity:IsPlayer() or IsValid(entity:getNetVar("player")) and entity.IsAdmin and entity:IsAdmin() and entity:IsNoClipping() then return false end
 end
 --------------------------------------------------------------------------------------------------------
