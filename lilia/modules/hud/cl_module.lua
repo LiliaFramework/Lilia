@@ -2,9 +2,14 @@
 paintedEntitiesCache = {}
 --------------------------------------------------------------------------------------------------------
 local charInfo = {}
+--------------------------------------------------------------------------------------------------------
 local nextUpdate = 0
+--------------------------------------------------------------------------------------------------------
 local lastTrace = {}
+--------------------------------------------------------------------------------------------------------
 local lastEntity
+--------------------------------------------------------------------------------------------------------
+local DescWidth = CreateClientConVar("lia_hud_descwidth", 0.5, true, false)
 --------------------------------------------------------------------------------------------------------
 function MODULE:HUDShouldDraw(element)
     if lia.config.HiddenHUDElements[element] then return false end
@@ -155,33 +160,53 @@ end
 --------------------------------------------------------------------------------------------------------
 function MODULE:DrawEntityInfo(entity, alpha, position)
     if not entity.IsPlayer(entity) then return end
-    if not entity:Alive() then return end
-    if hook.Run("ShouldDrawPlayerInfo", entity) == false then return end
+    if hookRun("ShouldDrawPlayerInfo", entity) == false then return end
     local character = entity.getChar(entity)
     if not character then return end
-    position = position or FindMetaTable("Vector").ToScreen(entity.GetPos(entity) + (entity.Crouching(entity) and Vector(0, 0, 48) or Vector(0, 0, 80)))
+    position = position or toScreen(entity.GetPos(entity) + (entity.Crouching(entity) and OFFSET_CROUCHING or OFFSET_NORMAL))
     local x, y = position.x, position.y
     local ty = 0
     charInfo = {}
-    charInfo[1] = {hook.Run("GetDisplayedName", entity, nil, "hud") or character.getName(character), team.GetColor(entity.Team(entity))}
-    local description = character.getDesc(character)
-    if description ~= entity.liaDescCache then
-        entity.liaDescCache = description
-        if description:len() > 750 then
-            description = description:sub(1, 750) .. "..."
+    if entity.widthCache ~= DescWidth:GetFloat() then
+        entity.widthCache = DescWidth:GetFloat()
+        entity.liaNameCache = nil
+        entity.liaDescCache = nil
+    end
+
+    entity.liaNameCache = nil
+    entity.liaDescCache = nil
+    local name = hookRun("GetDisplayedName", entity, nil, "hud") or character.getName(character)
+    if name ~= entity.liaNameCache then
+        entity.liaNameCache = name
+        if name:len() > 250 then
+            name = name:sub(1, 250) .. "..."
         end
 
-        entity.liaDescLines = lia.util.wrapText(description, ScrW() * 0.5, "liaSmallFont")
+        entity.liaNameLines = lia.util.wrapText(name, ScrW() * entity.widthCache, "liaSmallFont")
+    end
+
+    for i = 1, #entity.liaNameLines do
+        charInfo[#charInfo + 1] = {entity.liaNameLines[i], teamGetColor(entity.Team(entity))}
+    end
+
+    local description = hookRun("GetDisplayedDescription", entity, "hud") or character.getDesc(character)
+    if description ~= entity.liaDescCache then
+        entity.liaDescCache = description
+        if description:len() > 250 then
+            description = description:sub(1, 250) .. "..."
+        end
+
+        entity.liaDescLines = lia.util.wrapText(description, ScrW() * entity.widthCache, "liaSmallFont")
     end
 
     for i = 1, #entity.liaDescLines do
         charInfo[#charInfo + 1] = {entity.liaDescLines[i]}
     end
 
-    hook.Run("DrawCharInfo", entity, character, charInfo)
+    hookRun("DrawCharInfo", entity, character, charInfo)
     for i = 1, #charInfo do
         local info = charInfo[i]
-        _, ty = lia.util.drawText(info[1]:gsub("#", "\226\128\139#"), x, y, ColorAlpha(info[2] or color_white, alpha), 1, 1, "liaSmallFont")
+        _, ty = drawText(info[1]:gsub("#", "\226\128\139#"), x, y, colorAlpha(info[2] or color_white, alpha), 1, 1, "liaSmallFont")
         y = y + ty
     end
 end
