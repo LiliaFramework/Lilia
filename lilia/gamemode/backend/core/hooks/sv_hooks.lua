@@ -481,10 +481,9 @@ function GM:InitalizedWorkshopDownloader()
         end
     end
 
-    if lia.config.AutoWorkshopDownloader then
-        if not engine.GetAddons() then return end
+    if lia.config.AutoWorkshopDownloader and engine.GetAddons() then
         for i = 1, #engine.GetAddons() do
-            resource.AddWorkshop(engine.GetAddons()[i])
+            resource.AddWorkshop(engine.GetAddons()[i].wsid)
         end
     end
 end
