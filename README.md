@@ -4,13 +4,13 @@
   <img src="https://i.imgur.com/2bByf9w.png" width="200">
 </p>
 
-Lilia is a dynamic roleplay gamemode framework for [Garry's Mod](https://gmod.facepunch.com/), derived from [NutScript 1.2.3](https://github.com/NutScript/NutScript). It's designed to provide a stable, [feature-rich](https://github.com/bleonheart/Lilia/wiki/Core-%E2%80%90-Lilia-Features), and open-source platform, enabling game developers to focus on crafting captivating gameplay experiences.
+Lilia is a dynamic roleplay gamemode framework for [Garry's Mod](https://gmod.facepunch.com/), derived from [NutScript](https://github.com/NutScript/NutScript). It's designed to provide a stable, [feature-rich](https://github.com/bleonheart/Lilia/wiki/Lilia-Features), and open-source platform, enabling game developers to focus on crafting captivating gameplay experiences.
 
 ## Getting Started
 
 To get started with Lilia, follow these steps:
 
-1. Refer to our [installation tutorial](https://github.com/bleonheart/Lilia/wiki/Core-%E2%80%90-Installation-Tutorial).
+1. Refer to our [installation tutorial](https://github.com/bleonheart/Lilia/wiki/Installation-Tutorial).
 2. Explore and install additional [Workshop Content](https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255) to enhance your Lilia experience.
 
 If you have questions or want to integrate with the community, join our [Discord server](https://discord.gg/jjrhyeuzYV).
