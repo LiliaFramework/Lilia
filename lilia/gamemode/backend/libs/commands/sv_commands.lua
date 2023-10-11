@@ -86,12 +86,6 @@ function lia.command.parse(client, text, realCommand, arguments)
 
     return false
 end
-
---------------------------------------------------------------------------------------------------------
-function lia.command.send(command, ...)
-    netstream.Start("cmd", command, {...})
-end
-
 --------------------------------------------------------------------------------------------------------
 concommand.Add(
     "lia",

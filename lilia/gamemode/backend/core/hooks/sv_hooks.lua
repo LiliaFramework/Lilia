@@ -9,10 +9,7 @@ local defaultAngleData = {
 
 -------------------------------------------------------------------------------------------------------
 function GM:InitializedExtrasServer()
-    if ArcCW then
-        RunConsoleCommand("arccw_override_crosshair_off", "0")
-    end
-
+    if ArcCW then RunConsoleCommand("arccw_override_crosshair_off", "0") end
     self:OptimizeSeats()
     hook.Remove("PlayerTick", "TickWidgets")
     hook.Remove("Think", "CheckSchedules")
@@ -20,9 +17,7 @@ function GM:InitializedExtrasServer()
     local timers = {"CheckHookTimes", "HostnameThink"}
     for i = 1, #timers do
         local t = timers[i]
-        if timer.Exists(t) then
-            timer.Remove(t)
-        end
+        if timer.Exists(t) then timer.Remove(t) end
     end
 
     hook.Add(
@@ -30,31 +25,17 @@ function GM:InitializedExtrasServer()
         "-",
         function(m)
             if m:IsWidget() then
-                hook.Add(
-                    "PlayerTick",
-                    "GODisableEntWidgets2",
-                    function(m, n)
-                        widgets.PlayerTick(m, n)
-                    end
-                )
-
+                hook.Add("PlayerTick", "GODisableEntWidgets2", function(m, n) widgets.PlayerTick(m, n) end)
                 hook.Remove("OnEntityCreated", "WidgetInit")
             end
         end
     )
 
     for k, v in pairs(ents.GetAll()) do
-        if lia.config.EntitiesToBeRemoved[v:GetClass()] then
-            v:Remove()
-        end
+        if lia.config.EntitiesToBeRemoved[v:GetClass()] then v:Remove() end
     end
 
-    timer.Simple(
-        3,
-        function()
-            RunConsoleCommand("ai_serverragdolls", "1")
-        end
-    )
+    timer.Simple(3, function() RunConsoleCommand("ai_serverragdolls", "1") end)
 end
 
 -------------------------------------------------------------------------------------------------------
@@ -80,9 +61,7 @@ function GM:OptimizeSeats()
                 loop = 1
                 nicoSeats = {}
                 for _, seat in ipairs(ents.FindByClass("prop_vehicle_prisoner_pod")) do
-                    if seat.nicoSeat then
-                        table.insert(nicoSeats, seat)
-                    end
+                    if seat.nicoSeat then table.insert(nicoSeats, seat) end
                 end
             end
 
@@ -109,9 +88,7 @@ function GM:OptimizeSeats()
     )
 
     local function nicoSeatAction(ply, seat)
-        if IsValid(seat) and seat.nicoSeat then
-            table.insert(nicoSeats, loop, seat)
-        end
+        if IsValid(seat) and seat.nicoSeat then table.insert(nicoSeats, loop, seat) end
     end
 
     hook.Add("PlayerEnteredVehicle", "nicoSeat", nicoSeatAction)
@@ -120,9 +97,7 @@ end
 
 -------------------------------------------------------------------------------------------------------
 function GM:EntityNetworkedVarChanged(entity, varName, oldVal, newVal)
-    if varName == "Model" and entity.SetModel then
-        hook.Run("PlayerModelChanged", entity, newVal)
-    end
+    if varName == "Model" and entity.SetModel then hook.Run("PlayerModelChanged", entity, newVal) end
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -136,7 +111,6 @@ function GM:PlayerUse(client, entity)
             if result ~= nil then return result end
         end
     end
-
     return true
 end
 
@@ -144,21 +118,13 @@ end
 function GM:simfphysUse(entity, client)
     if simfphys and simfphys.IsCar(entity) and lia.config.TimeToEnterVehicle > 0 then
         if entity.IsLocked then return end
-        client:setAction(
-            "Entering Vehicle...",
-            lia.config.TimeToEnterVehicle,
-            function()
-                entity:SetPassenger(client)
-            end
-        )
+        client:setAction("Entering Vehicle...", lia.config.TimeToEnterVehicle, function() entity:SetPassenger(client) end)
     end
 end
 
 --------------------------------------------------------------------------------------------------------
 function GM:KeyRelease(client, key)
-    if key == IN_RELOAD then
-        timer.Remove("liaToggleRaise" .. client:SteamID())
-    end
+    if key == IN_RELOAD then timer.Remove("liaToggleRaise" .. client:SteamID()) end
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -166,10 +132,7 @@ function GM:PlayerLoadedChar(client, character, lastChar)
     local identifier = "RemoveMatSpecular" .. client:SteamID()
     local data = character:getData("pclass")
     local class = data and lia.class.list[data]
-    if timer.Exists(identifier) then
-        timer.Remove(identifier)
-    end
-
+    if timer.Exists(identifier) then timer.Remove(identifier) end
     timer.Create(
         identifier,
         30,
@@ -198,15 +161,16 @@ function GM:PlayerLoadedChar(client, character, lastChar)
     lia.db.updateTable(
         {
             _lastJoinTime = timeStamp
-        }, nil, "characters", "_id = " .. character:getID()
+        },
+        nil,
+        "characters",
+        "_id = " .. character:getID()
     )
 
     if lastChar then
         local charEnts = lastChar:getVar("charEnts") or {}
         for _, v in ipairs(charEnts) do
-            if v and IsValid(v) then
-                v:Remove()
-            end
+            if v and IsValid(v) then v:Remove() end
         end
 
         lastChar:setVar("charEnts", nil)
@@ -261,11 +225,10 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerSay(client, message)
-    local chatType, message, anonymous = lia.chat.parse(client, message, true)
+    local chatType, anonymous = lia.chat.parse(client, message, true)
     if (chatType == "ic") and lia.command.parse(client, message) then return "" end
     lia.chat.send(client, chatType, message, anonymous)
     hook.Run("PostPlayerSay", client, message, chatType, anonymous)
-
     return ""
 end
 
@@ -276,9 +239,7 @@ function GM:ShutDown()
     hook.Run("SaveData")
     for _, v in ipairs(player.GetAll()) do
         v:saveLiliaData()
-        if v:getChar() then
-            v:getChar():save()
-        end
+        if v:getChar() then v:getChar():save() end
     end
 end
 
@@ -302,10 +263,8 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     if AllowVoice then
         if VoiceBanned then return false, false end
         if listener:GetPos():DistToSqr(speaker:GetPos()) > rangeSquared then return false, false end
-
         return true, true
     end
-
     return false, false
 end
 
@@ -320,9 +279,7 @@ function GM:CharacterPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
     for _, v in pairs(character:getInv():getItems()) do
-        if v.onSave then
-            v:call("onSave", client)
-        end
+        if v.onSave then v:call("onSave", client) end
     end
 end
 
@@ -338,7 +295,6 @@ function GM:GetPreferredCarryAngles(entity)
         end
     elseif class == "prop_physics" then
         local model = entity:GetModel():lower()
-
         return defaultAngleData[model]
     end
 end
@@ -347,7 +303,7 @@ end
 function GM:CreateDefaultInventory(character)
     local charID = character:getID()
     if lia.inventory.types["grid"] then
-        return lia.inventory.instance(
+        return         lia.inventory.instance(
             "grid",
             {
                 char = charID
@@ -358,10 +314,7 @@ end
 
 --------------------------------------------------------------------------------------------------------
 function GM:LiliaTablesLoaded()
-    local ignore = function()
-        print("")
-    end
-
+    local ignore = function() print("") end
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
@@ -387,7 +340,6 @@ function GM:CreateSalaryTimer(client)
         function()
             if not IsValid(client) or client:getChar() ~= character then
                 timer.Remove(timerID)
-
                 return
             end
 
@@ -506,9 +458,7 @@ function GM:CallMapCleanerInit()
             net.Start("cleanup_inbound")
             net.Broadcast()
             for i, v in pairs(ents.GetAll()) do
-                if v:IsNPC() then
-                    v:Remove()
-                end
+                if v:IsNPC() then v:Remove() end
             end
 
             for i, v in pairs(ents.FindByClass("lia_item")) do
@@ -569,19 +519,11 @@ function GM:ServerPostInit()
     end
 
     for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
-        if IsValid(v) and v:isDoor() then
-            v:DrawShadow(false)
-        end
+        if IsValid(v) and v:isDoor() then v:DrawShadow(false) end
     end
 
     lia.faction.formatModelData()
-    timer.Simple(
-        2,
-        function()
-            lia.entityDataLoaded = true
-        end
-    )
-
+    timer.Simple(2, function() lia.entityDataLoaded = true end)
     lia.db.waitForTablesToLoad():next(
         function()
             hook.Run("LoadData")
@@ -594,9 +536,7 @@ end
 function GM:KeyPress(client, key)
     local entity = client:GetEyeTrace().Entity
     if not IsValid(entity) then return end
-    if entity:isDoor() and entity:IsPlayer() and key == IN_USE then
-        hook.Run("PlayerUse", client, entity)
-    end
+    if entity:isDoor() and entity:IsPlayer() and key == IN_USE then hook.Run("PlayerUse", client, entity) end
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -606,7 +546,6 @@ function GM:CanPlayerUseChar(client, character)
     local currentChar = client:getChar()
     if character and character:getData("banned", false) then
         if isnumber(banned) and banned < os.time() then return end
-
         return false, "@charBanned"
     end
 
@@ -623,6 +562,6 @@ function GM:CanPlayerSwitchChar(client, character, newCharacter)
     if lia.config.CharacterSwitchCooldown and (character:getData("loginTime", 0) + lia.config.CharacterSwitchCooldownTimer) > os.time() then return false, "You are on cooldown!" end
     if not client:Alive() then return false, "You are dead!" end
     if client.LastDamaged and client.LastDamaged > CurTime() - 120 and character:getFaction() ~= FACTION_STAFF and character then return false, "You took damage too recently to switch characters!" end
-    if character:getID() == newCharacter:getID() then return false, "You are already using this character!" end
+    if newCharacter and (character:getID() == newCharacter:getID()) then return false, "You are already using this character!" end
 end
 --------------------------------------------------------------------------------------------------------
