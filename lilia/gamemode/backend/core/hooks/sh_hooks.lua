@@ -418,15 +418,6 @@ function GM:OnPickupMoney(client, moneyEntity)
 end
 
 --------------------------------------------------------------------------------------------------------
-function GM:ModelFixer(model, animtype)
-    if not animtype then
-        lia.anim.setModelClass(model, "player")
-    else
-        lia.anim.setModelClass(model, animtype)
-    end
-end
-
---------------------------------------------------------------------------------------------------------
 function GM:InitializedModules()
     if SERVER then
         if lia.config.MapCleanerEnabled then
