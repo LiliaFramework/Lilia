@@ -24,23 +24,19 @@ function MODULE:InitializedConfig()
                     return false
                 end
 
-                if not CAMI.PlayerHasAccess(speaker, "Lilia - No OOC Cooldown") then
-                    if lia.config.OOCDelay > 0 and speaker.liaLastOOC then
-                        local lastOOC = CurTime() - speaker.liaLastOOC
-                        if lastOOC <= lia.config.OOCDelay then
-                            speaker:notifyLocalized("oocDelay", lia.config.OOCDelay - math.ceil(lastOOC))
+                if not CAMI.PlayerHasAccess(speaker, "Lilia - Management - No OOC Cooldown") and lia.config.OOCDelay > 0 and speaker.liaLastOOC then
+                    local lastOOC = CurTime() - speaker.liaLastOOC
+                    if lastOOC <= lia.config.OOCDelay then
+                        speaker:notifyLocalized("oocDelay", lia.config.OOCDelay - math.ceil(lastOOC))
 
-                            return false
-                        end
+                        return false
                     end
                 end
 
                 speaker.liaLastOOC = CurTime()
             end,
             onChatAdd = function(speaker, text)
-                local icon = "icon16/user.png"
-                icon = Material(hook.Run("GetPlayerIcon", speaker) or icon)
-                chat.AddText(icon, Color(255, 50, 50), " [OOC] ", speaker, color_white, ": " .. text)
+                chat.AddText(Color(255, 50, 50), " [OOC] ", speaker, color_white, ": " .. text)
             end,
             prefix = {"//", "/ooc"},
             noSpaceAfter = true,
