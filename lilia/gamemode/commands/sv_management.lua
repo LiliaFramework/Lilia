@@ -290,7 +290,7 @@ lia.command.add(
                 return false
             end
 
-            if IsValid(target) and target:getChar():GetData("VoiceBan") then
+            if IsValid(target) and target:getChar():GetData("VoiceBan", false) then
                 target:getChar():SetData("VoiceBan", false)
             end
 
@@ -316,7 +316,7 @@ lia.command.add(
             end
 
             if IsValid(target) then
-                if not target:GetData("VoiceBan") then
+                if not target:GetData("VoiceBan", false) then
                     target:SetData("VoiceBan", true)
                 end
             end

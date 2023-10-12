@@ -294,7 +294,7 @@ end
 --------------------------------------------------------------------------------------------------------
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
     if not speaker:getChar() then return false end
-    local VoiceBanned = speaker:getChar():getData("VoiceBan")
+    local VoiceBanned = speaker:getChar():getData("VoiceBan", false)
     local AllowVoice = lia.config.AllowVoice
     local VoiceType = speaker:getNetVar("VoiceType", "Talking")
     local VoiceDefault = lia.config.TalkRanges["Talking"]
