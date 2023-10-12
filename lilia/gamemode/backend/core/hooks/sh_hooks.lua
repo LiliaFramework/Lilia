@@ -1,10 +1,10 @@
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 lia.config.PlayerModelTposingFixer = lia.config.PlayerModelTposingFixer or {}
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 local vectorAngle = FindMetaTable("Vector").Angle
 local normalizeAngle = math.NormalizeAngle
 local oldCalcSeqOverride
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 lia.anim.DefaultTposingFixer = {
     ["models/police.mdl"] = "metrocop",
     ["models/combine_super_soldier.mdl"] = "overwatch",
@@ -18,7 +18,7 @@ lia.anim.DefaultTposingFixer = {
     ["models/mossman.mdl"] = "citizen_female",
 }
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 HOLDTYPE_TRANSLATOR = HOLDTYPE_TRANSLATOR or {}
 HOLDTYPE_TRANSLATOR[""] = "normal"
 HOLDTYPE_TRANSLATOR["physgun"] = "smg"
@@ -34,7 +34,7 @@ HOLDTYPE_TRANSLATOR["duel"] = "pistol"
 HOLDTYPE_TRANSLATOR["camera"] = "smg"
 HOLDTYPE_TRANSLATOR["magic"] = "normal"
 HOLDTYPE_TRANSLATOR["revolver"] = "pistol"
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 PLAYER_HOLDTYPE_TRANSLATOR = PLAYER_HOLDTYPE_TRANSLATOR or {}
 PLAYER_HOLDTYPE_TRANSLATOR[""] = "normal"
 PLAYER_HOLDTYPE_TRANSLATOR["normal"] = "normal"
@@ -48,7 +48,7 @@ PLAYER_HOLDTYPE_TRANSLATOR["melee2"] = "normal"
 PLAYER_HOLDTYPE_TRANSLATOR["knife"] = "normal"
 PLAYER_HOLDTYPE_TRANSLATOR["duel"] = "normal"
 PLAYER_HOLDTYPE_TRANSLATOR["bugbait"] = "normal"
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:InitializedConfig()
     if CLIENT then
         self:ClientInitializedConfig()
@@ -61,7 +61,7 @@ function GM:InitializedConfig()
     hook.Run("InitializedModules")
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:RegisterCamiPermissions()
     for _, PrivilegeInfo in pairs(lia.config.CAMIPrivileges) do
         local privilegeData = {
@@ -107,7 +107,7 @@ function GM:RegisterCamiPermissions()
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 local getModelClass = lia.anim.getModelClass
 local IsValid = IsValid
 local string = string
@@ -198,7 +198,7 @@ function GM:TranslateActivity(client, act)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:DoAnimationEvent(client, event, data)
     local class = lia.anim.getModelClass(client:GetModel())
     if class == "player" then
@@ -239,12 +239,12 @@ function GM:DoAnimationEvent(client, event, data)
     return ACT_INVALID
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:EntityEmitSound(data)
     if data.Entity.liaIsMuted then return false end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:HandlePlayerLanding(client, velocity, wasOnGround)
     if client:IsNoClipping() then return end
     if client:IsOnGround() and not wasOnGround then
@@ -257,7 +257,7 @@ function GM:HandlePlayerLanding(client, velocity, wasOnGround)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:CalcMainActivity(client, velocity)
     client.CalcIdeal = ACT_MP_STAND_IDLE
     oldCalcSeqOverride = client.CalcSeqOverride
@@ -287,7 +287,7 @@ function GM:CalcMainActivity(client, velocity)
     return client.CalcIdeal, client.liaForceSeq or oldCalcSeqOverride
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:OnCharVarChanged(char, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
         for k, v in pairs(lia.char.varHooks[varName]) do
@@ -296,19 +296,19 @@ function GM:OnCharVarChanged(char, varName, oldVar, newVar)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:GetDefaultCharName(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.onGetDefaultName then return info:onGetDefaultName(client) end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.onGetDefaultDesc then return info:onGetDefaultDesc(client) end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:CheckFactionLimitReached(faction, character, client)
     if isfunction(faction.onCheckLimitReached) then return faction:onCheckLimitReached(character, client) end
     if not isnumber(faction.limit) then return false end
@@ -320,7 +320,7 @@ function GM:CheckFactionLimitReached(faction, character, client)
     return team.NumPlayers(faction.index) >= maxPlayers
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:Move(client, moveData)
     local char = client:getChar()
     if char then
@@ -351,7 +351,7 @@ function GM:Move(client, moveData)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:CanItemBeTransfered(itemObject, curInv, inventory)
     if itemObject.onCanBeTransfered then
         local itemHook = itemObject:onCanBeTransfered(curInv, inventory)
@@ -360,7 +360,7 @@ function GM:CanItemBeTransfered(itemObject, curInv, inventory)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:OnPlayerJoinClass(client, class, oldClass)
     local char = client:getChar()
     if char and lia.config.PermaClass then
@@ -380,7 +380,7 @@ function GM:OnPlayerJoinClass(client, class, oldClass)
     netstream.Start(nil, "classUpdate", client)
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:Think()
     if not self.nextThink then
         self.nextThink = 0
@@ -401,14 +401,14 @@ function GM:Think()
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PropBreak(attacker, ent)
     if IsValid(ent) and ent:GetPhysicsObject():IsValid() then
         constraint.RemoveAll(ent)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:OnPickupMoney(client, moneyEntity)
     if moneyEntity and moneyEntity:IsValid() then
         local amount = moneyEntity:getAmount()
@@ -417,7 +417,7 @@ function GM:OnPickupMoney(client, moneyEntity)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:InitializedModules()
     if SERVER then
         if lia.config.MapCleanerEnabled then
@@ -440,14 +440,14 @@ function GM:InitializedModules()
     )
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:TPosingModelsFix()
     for _, model in pairs(lia.config.PlayerModelTposingFixer) do
         lia.anim.setModelClass(model, "player")
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:InitPostEntity()
     if CLIENT then
         self:ClientPostInit()
@@ -456,7 +456,7 @@ function GM:InitPostEntity()
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:InitializedExtrasShared()
     RunConsoleCommand("sv_simfphys_gib_lifetime", "0")
     RunConsoleCommand("sv_simfphys_fuel", "0")
@@ -465,12 +465,12 @@ function GM:InitializedExtrasShared()
     RunConsoleCommand("sv_simfphys_damagemultiplicator", "100")
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:simfphysPhysicsCollide()
     return true
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:DevelopmentServerLoader()
     --[[
     This allows you to make reduced cooldowns or certain scenarios only happen on the Dev server. Example:
@@ -498,7 +498,7 @@ function GM:DevelopmentServerLoader()
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PSALoader()
     local TalkModesPSAString = "Please Remove Talk Modes. Our framework has such built in by default."
     local NutscriptPSAString = "Please Port Any Nutscript Plugins You May Be Using. Nutscript is Known for Being Exxploitable and Regardless Of The Compatibility, WE DO NOT Advice Nutscript Plugins. Our framework was built with Lilia Plugins in mind and most Performance will be adquired like that."
@@ -561,12 +561,12 @@ function GM:PSALoader()
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:IsValidTarget(target)
     return IsValid(target) and target:IsPlayer() and target:getChar()
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
     if (bind:find("use") or bind:find("attack")) and pressed then
@@ -585,4 +585,4 @@ function GM:PlayerBindPress(client, bind, pressed)
         end
     end
 end
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:PlayerDeath(client)
     if not lia.config.DeathSoundEnabled then return end
     local deathSound = hook.Run("GetPlayerDeathSound", client, client:isFemale())
@@ -7,7 +7,7 @@ function MODULE:PlayerDeath(client)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:GetPlayerDeathSound(client, isFemale)
     local soundTable
     soundTable = isFemale and lia.config.FemaleDeathSounds or lia.config.MaleDeathSounds
@@ -15,7 +15,7 @@ function MODULE:GetPlayerDeathSound(client, isFemale)
     return soundTable and soundTable[math.random(#soundTable)]
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:GetPlayerPainSound(client, paintype, isFemale)
     local soundTable
     if paintype == "drown" then
@@ -27,7 +27,7 @@ function MODULE:GetPlayerPainSound(client, paintype, isFemale)
     return soundTable and soundTable[math.random(#soundTable)]
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:EntityTakeDamage(client, dmg)
     if not lia.config.PainSoundEnabled or not client:IsPlayer() or client:Health() <= 0 then return end
     local painSound = self:GetPlayerPainSound(client, "hurt", client:isFemale())
@@ -40,4 +40,4 @@ function MODULE:EntityTakeDamage(client, dmg)
         client.NextPain = CurTime() + 0.33
     end
 end
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------

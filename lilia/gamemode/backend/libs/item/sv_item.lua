@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function lia.item.instance(index, uniqueID, itemData, x, y, callback)
     if isstring(index) and (istable(uniqueID) or (itemData == nil and x == nil)) then
         itemData = uniqueID
@@ -66,7 +66,7 @@ function lia.item.instance(index, uniqueID, itemData, x, y, callback)
     return d
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function lia.item.deleteByID(id)
     if lia.item.instances[id] then
         lia.item.instances[id]:delete()
@@ -75,7 +75,7 @@ function lia.item.deleteByID(id)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function lia.item.loadItemByID(itemIndex, recipientFilter)
     local range
     if istable(itemIndex) then
@@ -110,7 +110,7 @@ function lia.item.loadItemByID(itemIndex, recipientFilter)
     )
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function lia.item.spawn(uniqueID, position, callback, angles, data)
     local d
     if not isfunction(callback) then
@@ -141,4 +141,4 @@ function lia.item.spawn(uniqueID, position, callback, angles, data)
 
     return d
 end
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
---------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnNPC(client)
     if not client:getChar() then return false end
     if CAMI.PlayerHasAccess(client, "Lilia - Management - Can Spawn NPCs", nil) then return true end
@@ -7,7 +7,7 @@ function GM:PlayerSpawnNPC(client)
     return client:getChar():hasFlags("n") or client:getChar():hasFlags("E")
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnProp(client)
     if not client:getChar() then return false end
     if CAMI.PlayerHasAccess(client, "Lilia - Management - Can Spawn Props", nil) then return true end
@@ -33,7 +33,7 @@ function GM:PlayerSpawnProp(client)
     return client:IsAdmin() or client:getChar():hasFlags("e")
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnRagdoll(client)
     if not client:getChar() then return false end
     if CAMI.PlayerHasAccess(client, "Lilia - Management - Can Spawn Ragdolls", nil) then return true end
@@ -51,7 +51,7 @@ function GM:PlayerSpawnRagdoll(client)
     return client:getChar():hasFlags("r")
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnSWEP(client)
     if not client:getChar() then return false end
     if CAMI.PlayerHasAccess(client, "Lilia - Management - Can Spawn SWEPs", nil) then return true end
@@ -59,7 +59,7 @@ function GM:PlayerSpawnSWEP(client)
     return client:getChar():hasFlags("W")
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnEffect(client)
     if not client:getChar() then return false end
     if CAMI.PlayerHasAccess(client, "Lilia - Management - Can Spawn Effects", nil) then return true end
@@ -67,7 +67,7 @@ function GM:PlayerSpawnEffect(client)
     return client:getChar():hasFlags("n") or client:getChar():hasFlags("E")
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnSENT(client)
     if not client:getChar() then return false end
     if CAMI.PlayerHasAccess(client, "Lilia - Management - Can Spawn SENTs", nil) then return true end
@@ -75,7 +75,7 @@ function GM:PlayerSpawnSENT(client)
     return client:getChar():hasFlags("E")
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnVehicle(client, model, name, data)
     if not client:getChar() then return false end
     if table.HasValue(lia.config.RestrictedVehicles, name) then
@@ -87,7 +87,7 @@ function GM:PlayerSpawnVehicle(client, model, name, data)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:CanTool(client, trace, tool)
     local privilege = "Lilia - Management - Access Tool " .. tool:gsub("^%l", string.upper)
     local entity = client:GetTracedEntity()
@@ -100,7 +100,7 @@ function GM:CanTool(client, trace, tool)
     if CAMI.PlayerHasAccess(client, privilege, nil) then return true end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PhysgunPickup(client, entity)
     if not client:getChar() then return false end
     if client:IsSuperAdmin() then return true end
@@ -124,7 +124,7 @@ function GM:PhysgunPickup(client, entity)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:CanProperty(client, property, entity)
     if not client:getChar() then return false end
     if client:IsSuperAdmin() then return true end
@@ -139,7 +139,7 @@ function GM:CanProperty(client, property, entity)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerCheckLimit(client, name)
     if FindMetaTable("Player").GetLimit and name == "props" and client:getLiliaData("extraProps") and client:GetLimit("props") > 0 then
         local limit = client:GetLimit("props") + 50
@@ -147,4 +147,4 @@ function GM:PlayerCheckLimit(client, name)
         if props <= limit + 50 then return true end
     end
 end
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------

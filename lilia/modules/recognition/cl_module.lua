@@ -1,16 +1,16 @@
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 lia.config.ChatIsRecognized = {"ic", "y", "w", "me"}
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:IsRecognizedChatType(chatType)
     return table.HasValue(lia.config.ChatIsRecognized, chatType)
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:GetDisplayedDescription(client)
     if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar()) and not hook.Run("IsPlayerRecognized", client) then return L"noRecog" end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:GetDisplayedName(client, chatType, location)
     if client ~= LocalPlayer() then
         local character = client:getChar()
@@ -30,7 +30,7 @@ function MODULE:GetDisplayedName(client, chatType, location)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:ShouldAllowScoreboardOverride(client, var)
     if lia.config.RecognitionEnabled and lia.config.ScoreboardHiddenVars[var] ~= nil and (client ~= LocalPlayer()) then
         local character = client:getChar()
@@ -39,12 +39,12 @@ function MODULE:ShouldAllowScoreboardOverride(client, var)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:OnCharRecognized(client, recogCharID)
     surface.PlaySound("buttons/button17.wav")
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function CharRecognize(level, name)
     if name then
         netstream.Start("rgn", level, name)
@@ -52,4 +52,4 @@ function CharRecognize(level, name)
         netstream.Start("rgn", level)
     end
 end
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------

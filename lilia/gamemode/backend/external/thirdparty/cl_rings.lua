@@ -1,14 +1,14 @@
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 local color_mask2 = ColorAlpha(color_black, 0)
 local render = render
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 local function drawStencilSphere(pos, ref, compare_func, radius, color, detail)
 	render.SetStencilReferenceValue(ref)
 	render.SetStencilCompareFunction(compare_func)
 	render.DrawSphere(pos, radius, detail, detail, color)
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function render.StartWorldRings()
 	render.WORLD_RINGS = {}
 	cam.IgnoreZ(false)
@@ -16,7 +16,7 @@ function render.StartWorldRings()
 	render.SetColorMaterial()
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 -- Args: pos = where, radius = how big, [thicc = how thick, detail = how laggy]
 -- Detail must be an odd number or it will look like shit.
 function render.AddWorldRing(pos, radius, thicc, detail)
@@ -33,7 +33,7 @@ function render.AddWorldRing(pos, radius, thicc, detail)
 	table.insert(render.WORLD_RINGS, z)
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 -- Call this to actually draw the rings added with render.AddWorldRing()
 function render.FinishWorldRings(color)
 	local ply = LocalPlayer()
@@ -70,4 +70,4 @@ function render.FinishWorldRings(color)
 	cam.IgnoreZ(false)
 	render.SetStencilEnable(false)
 end
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------

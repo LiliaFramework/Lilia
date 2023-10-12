@@ -1,6 +1,6 @@
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 local PANEL = {}
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function PANEL:configureSteps()
     self:addStep(vgui.Create("liaCharacterFaction"))
     self:addStep(vgui.Create("liaCharacterModel"))
@@ -8,7 +8,7 @@ function PANEL:configureSteps()
     hook.Run("ConfigureCharacterCreationSteps", self)
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function PANEL:updateModel()
     local faction = lia.faction.indices[self.context.faction]
     assert(faction, "invalid faction when updating model")
@@ -48,7 +48,7 @@ function PANEL:updateModel()
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function PANEL:canCreateCharacter()
     local validFactions = {}
     for k, v in pairs(lia.faction.teams) do
@@ -67,7 +67,7 @@ function PANEL:canCreateCharacter()
     return true
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function PANEL:onFinish()
     if self.creating then return end
     self.content:SetVisible(false)
@@ -108,7 +108,7 @@ function PANEL:onFinish()
     )
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function PANEL:showError(message, ...)
     if IsValid(self.error) then
         self.error:Remove()
@@ -136,7 +136,7 @@ function PANEL:showError(message, ...)
     lia.gui.character:warningSound()
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function PANEL:showMessage(message, ...)
     if not message or message == "" then
         if IsValid(self.message) then
@@ -159,7 +159,7 @@ function PANEL:showMessage(message, ...)
     self.message:SetText(message)
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function PANEL:addStep(step, priority)
     assert(IsValid(step), "Invalid panel for step")
     assert(step.isCharCreateStep, "Panel must inherit liaCharacterCreateStep")
@@ -172,7 +172,7 @@ function PANEL:addStep(step, priority)
     step:SetParent(self.content)
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function PANEL:nextStep()
     local lastStep = self.curStep
     local curStep = self.steps[lastStep]
@@ -199,7 +199,7 @@ function PANEL:nextStep()
     self:onStepChanged(curStep, nextStep)
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function PANEL:previousStep()
     local curStep = self.steps[self.curStep]
     local newStep = self.curStep - 1
@@ -215,7 +215,7 @@ function PANEL:previousStep()
     self:onStepChanged(curStep, prevStep)
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function PANEL:reset()
     self.context = {}
     local curStep = self.steps[self.curStep]
@@ -229,7 +229,7 @@ function PANEL:reset()
     self:nextStep()
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function PANEL:getPreviousStep()
     local step = self.curStep - 1
     while IsValid(self.steps[step]) do
@@ -244,7 +244,7 @@ function PANEL:getPreviousStep()
     return self.steps[step]
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function PANEL:onStepChanged(oldStep, newStep)
     local ANIM_SPEED = lia.gui.character.ANIM_SPEED
     local shouldFinish = self.curStep == #self.steps
@@ -292,7 +292,7 @@ function PANEL:onStepChanged(oldStep, newStep)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self:Dock(FILL)
     local canCreate, reason = self:canCreateCharacter()
@@ -357,6 +357,6 @@ function PANEL:Init()
     self:nextStep()
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 vgui.Register("liaCharacterCreation", PANEL, "EditablePanel")
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------

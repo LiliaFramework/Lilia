@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadout(client)
     local character = client:getChar()
     if client.liaSkipLoadout then
@@ -29,7 +29,7 @@ function GM:PlayerLoadout(client)
     client:SelectWeapon("lia_hands")
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:FactionOnLoadout(client)
     local faction = lia.faction.indices[client:Team()]
     if not faction then return end
@@ -96,7 +96,7 @@ function GM:FactionOnLoadout(client)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:ClassOnLoadout(client)
     local character = client:getChar()
     local class = lia.class.list[character:getClass()]
@@ -165,7 +165,7 @@ function GM:ClassOnLoadout(client)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawn(client)
     if pac then
         client:ConCommand("pac_restart")
@@ -178,7 +178,7 @@ function GM:PlayerSpawn(client)
     hook.Run("PlayerLoadout", client)
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:OnCharAttribBoosted(client, character, attribID)
     local attribute = lia.attribs.list[attribID]
     if attribute and isfunction(attribute.onSetup) then
@@ -186,7 +186,7 @@ function GM:OnCharAttribBoosted(client, character, attribID)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PostPlayerLoadout(client)
     local character = client:getChar()
     client:Give("lia_hands")
@@ -206,7 +206,7 @@ function GM:PostPlayerLoadout(client)
     client:setNetVar("VoiceType", "Talking")
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerDeath(client, inflictor, attacker)
     local char = client:getChar()
     if char then
@@ -271,7 +271,7 @@ function GM:PlayerDeath(client, inflictor, attacker)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerDeathThink(client)
     if client:getChar() then
         local deathTime = client:getNetVar("deathTime")
@@ -283,7 +283,7 @@ function GM:PlayerDeathThink(client)
     return false
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerInitialSpawn(client)
     if client:IsBot() then return hook.Run("SetupBotCharacter", client) end
     client.liaJoinTime = RealTime()
@@ -332,4 +332,4 @@ function GM:PlayerInitialSpawn(client)
     hook.Run("PostPlayerInitialSpawn", client)
     hook.Run("ReRunNames")
 end
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------

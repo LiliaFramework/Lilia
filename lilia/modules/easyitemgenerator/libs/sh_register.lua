@@ -1,6 +1,6 @@
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 lia.EasyRegister = lia.EasyRegister or {}
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:RegisterWeapons()
     for _, wep in ipairs(weapons.GetList()) do
         if table.HasValue(lia.config.RegisterWeaponsBlackList, wep.ClassName) then continue end
@@ -16,7 +16,7 @@ function MODULE:RegisterWeapons()
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:RegisterMelee(id, data, category)
     local ITEM = lia.item.register(id, "base_weapons", nil, nil, true)
     ITEM.name = data["name"]
@@ -30,7 +30,7 @@ function MODULE:RegisterMelee(id, data, category)
     ITEM.category = "Weapons"
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:RegisterAmmo(id, data)
     local ITEM = lia.item.register(id, "base_ammo", nil, nil, true)
     ITEM.name = data["name"]
@@ -45,7 +45,7 @@ function MODULE:RegisterAmmo(id, data)
     ITEM.ammoDesc = data["ammoDesc"]
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:RegisterEnts(id, data, base)
     local ITEM = lia.item.register(id, "base_ents", nil, nil, true)
     ITEM.name = data["name"]
@@ -58,7 +58,7 @@ function MODULE:RegisterEnts(id, data, base)
     ITEM.entdrop = data["entity"]
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:RegisterItem(id, data, base)
     local ITEM = lia.item.register(id, "base_junk", nil, nil, true)
     ITEM.name = data["name"]
@@ -69,7 +69,7 @@ function MODULE:RegisterItem(id, data, base)
     ITEM.height = data["height"] or 1
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:RegisterWeapon(id, data, category)
     local ITEM = lia.item.register(id, "base_weapons", nil, nil, true)
     ITEM.name = data["name"]
@@ -83,7 +83,7 @@ function MODULE:RegisterWeapon(id, data, category)
     ITEM.category = "Weapons"
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:InitializedModules()
     timer.Simple(
         3,
@@ -120,4 +120,4 @@ function MODULE:InitializedModules()
         end
     )
 end
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------

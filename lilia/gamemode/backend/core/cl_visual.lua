@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:CalcView(client, origin, angles, fov)
     local view = self.BaseClass:CalcView(client, origin, angles, fov)
     local entity = Entity(client:getLocalVar("ragdoll", 0))
@@ -22,10 +22,10 @@ function GM:CalcView(client, origin, angles, fov)
     return view
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:ShouldDrawEntityInfo(entity)
     if entity:IsPlayer() or IsValid(entity:getNetVar("player")) then return entity == LocalPlayer() and not LocalPlayer():ShouldDrawLocalPlayer() end
 
     return false
 end
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------

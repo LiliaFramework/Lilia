@@ -36,7 +36,7 @@ CARRY_WEIGHT_LIMIT = 100
 THROW_VELOCITY_CAP = 150
 PLAYER_PICKUP_RANGE = 200
 CARRY_FORCE_LIMIT = CARRY_FORCE_LEVEL[CARRY_STRENGTH_CHAD]
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 --[[
 	CARRY_STRENGTH_NERD: 16500 - You can't push player with prop on this strength level.
 								the grabbing fails kinda often. the most minge safe strength.
@@ -51,8 +51,8 @@ CARRY_FORCE_LIMIT = CARRY_FORCE_LEVEL[CARRY_STRENGTH_CHAD]
 							Try this if you're playing with very trustful community.
 ]]
 --
---------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:SetSubPhysMotionEnabled(entity, enable)
     if not IsValid(entity) then return end
     for i = 0, entity:GetPhysicsObjectCount() - 1 do
@@ -66,7 +66,7 @@ function SWEP:SetSubPhysMotionEnabled(entity, enable)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:removeVelocity(entity, normalize)
     if normalize then
         local phys = entity:GetPhysicsObject()
@@ -104,7 +104,7 @@ function SWEP:removeVelocity(entity, normalize)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:throwVelocity(entity, client, power)
     local phys = entity:GetPhysicsObject()
     local vel = client:GetAimVector()
@@ -126,7 +126,7 @@ function SWEP:throwVelocity(entity, client, power)
     )
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:reset(throw)
     if IsValid(self.carryHack) then
         self.carryHack:Remove()
@@ -172,7 +172,7 @@ function SWEP:reset(throw)
     self.constr = nil
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:drop(throw)
     if not self:checkValidity() then return end
     if not self:allowEntityDrop() then return end
@@ -201,7 +201,7 @@ function SWEP:drop(throw)
     self:reset(throw)
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:checkValidity()
     if (not IsValid(self.holdingEntity)) or (not IsValid(self.carryHack)) or (not IsValid(self.constr)) then
         if self.holdingEntity or self.carryHack or self.constr then
@@ -214,7 +214,7 @@ function SWEP:checkValidity()
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:isPlayerStandsOn(entity)
     for _, client in pairs(player.GetAll()) do
         if client:GetGroundEntity() == entity then return true end
@@ -223,7 +223,7 @@ function SWEP:isPlayerStandsOn(entity)
     return false
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:PrimaryAttack()
     if not IsFirstTimePredicted() then return end
     local owner = self:GetOwner()
@@ -256,7 +256,7 @@ function SWEP:PrimaryAttack()
     self:SetNW2Bool("startPunch", true)
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:SecondaryAttack()
     if not IsFirstTimePredicted() then return end
     local client = self:GetOwner()
@@ -282,7 +282,7 @@ function SWEP:SecondaryAttack()
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:dragObject(phys, targetpos)
     if not IsValid(phys) then return end
     local owner = self:GetOwner()
@@ -293,7 +293,7 @@ function SWEP:dragObject(phys, targetpos)
     phys:SetVelocity(physDirection * math.min(length, 250))
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:getRange(target)
     if IsValid(target) and target:GetClass() == "prop_ragdoll" then
         return 75
@@ -302,7 +302,7 @@ function SWEP:getRange(target)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:allowPickup(target)
     local phys = target:GetPhysicsObject()
     local client = self:GetOwner()
@@ -310,7 +310,7 @@ function SWEP:allowPickup(target)
     return IsValid(phys) and IsValid(client) and client:getChar() and (not phys:HasGameFlag(FVPHYSICS_NO_PLAYER_PICKUP)) and phys:GetMass() <= CARRY_WEIGHT_LIMIT and (not self:isPlayerStandsOn(target)) and (target.CanPickup ~= false) and hook.Run("GravGunPickupAllowed", client, target) ~= false and (target.GravGunPickupAllowed and (target:GravGunPickupAllowed(client) ~= false) or true)
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:doPickup(throw, entity, trace)
     self:SetNextPrimaryFire(CurTime() + .1)
     self:SetNextSecondaryFire(CurTime() + .1)
@@ -342,7 +342,7 @@ function SWEP:doPickup(throw, entity, trace)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:pickup(entity, trace)
     if CLIENT or IsValid(self.holdingEntity) then return end
     local client = self:GetOwner()
@@ -416,9 +416,9 @@ function SWEP:pickup(entity, trace)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 local down = Vector(0, 0, -1)
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:allowEntityDrop()
     local client = self:GetOwner()
     local ent = self.carryHack
@@ -430,12 +430,12 @@ function SWEP:allowEntityDrop()
     return down:Dot(diff) <= 0.75
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:SetupDataTables()
     self:DTVar("Entity", 0, "carried_rag")
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:Initialize()
     if SERVER then
         self.dt.carried_rag = nil
@@ -445,15 +445,15 @@ function SWEP:Initialize()
     self.LastHand = 0
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:OnRemove()
     self:reset()
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 ACT_VM_FISTS_DRAW = 3
 ACT_VM_FISTS_HOLSTER = 2
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:Deploy()
     local owner = self:GetOwner()
     if not IsValid(owner) then return end
@@ -467,7 +467,7 @@ function SWEP:Deploy()
     return true
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:Holster()
     local owner = self:GetOwner()
     if not IsValid(owner) then return end
@@ -481,7 +481,7 @@ function SWEP:Holster()
     return true
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:Precache()
     util.PrecacheSound("npc/vort/claw_swing1.wav")
     util.PrecacheSound("npc/vort/claw_swing2.wav")
@@ -493,7 +493,7 @@ function SWEP:Precache()
     util.PrecacheSound("physics/wood/wood_crate_impact_hard3.wav")
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:doPunchAnimation()
     self.LastHand = math.abs(1 - self.LastHand)
     local sequence = 4 + self.LastHand
@@ -510,7 +510,7 @@ function SWEP:doPunchAnimation()
     end
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SWEP:doPunch()
     local owner = self:GetOwner()
     if IsValid(self) and IsValid(owner) then
@@ -551,4 +551,4 @@ function SWEP:doPunch()
         owner:LagCompensation(false)
     end
 end
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------

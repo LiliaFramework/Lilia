@@ -1,6 +1,6 @@
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 lia.date = lia.date or {}
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function lia.date.GetFormattedDate(StartingMessage, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
     local currentTime = os.date("*t")
     if StartingMessage then
@@ -55,7 +55,7 @@ function lia.date.GetFormattedDate(StartingMessage, includeWeekDay, includeDay, 
     return output
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function lia.date.GetFormattedDateInGame(StartingMessage, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
     local currentTime = os.date("*t")
     if StartingMessage then
@@ -109,4 +109,4 @@ function lia.date.GetFormattedDateInGame(StartingMessage, includeWeekDay, includ
 
     return output
 end
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------

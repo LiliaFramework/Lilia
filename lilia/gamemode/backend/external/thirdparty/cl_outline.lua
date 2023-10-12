@@ -1,11 +1,11 @@
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 OUTLINE_MODE_BOTH = 0 -- Render always
 OUTLINE_MODE_NOTVISIBLE = 1
 OUTLINE_MODE_VISIBLE = 2
 OUTLINE_RENDERTYPE_BEFORE_VM = 0 -- Render before drawing the view model
 OUTLINE_RENDERTYPE_BEFORE_EF = 1 -- Render before drawing all effects (after drawing the viewmodel)
 OUTLINE_RENDERTYPE_AFTER_EF = 2 -- Render after drawing all effects
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 local istable = istable
 local render = render
 local Material = Material
@@ -23,18 +23,18 @@ local RenderType = OUTLINE_RENDERTYPE_AFTER_EF
 local OutlineThickness = 1
 local StoreTexture = render.GetScreenEffectTexture(0)
 local DrawTexture = render.GetScreenEffectTexture(1)
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 local OutlineMatSettings = {
 	["$basetexture"] = DrawTexture:GetName(),
 	["$ignorez"] = 1,
 	["$alphatest"] = 1
 }
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 local CopyMat = Material("pp/copy")
 local OutlineMat = CreateMaterial("outline", "UnlitGeneric", OutlineMatSettings)
 local ENTS, COLOR, MODE = 1, 2, 3
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function Add(ents, color, mode)
 	if ListSize >= 255 then return end --Maximum 255 reference values
 	--Support for passing Entity as first argument
@@ -57,12 +57,12 @@ function Add(ents, color, mode)
 	List[ListSize] = data
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function RenderedEntity()
 	return RenderEnt
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SetRenderType(render_type)
 	if render_type ~= OUTLINE_RENDERTYPE_BEFORE_VM and render_type ~= OUTLINE_RENDERTYPE_BEFORE_EF and render_type ~= OUTLINE_RENDERTYPE_AFTER_EF then return end
 	local old_type = RenderType
@@ -71,12 +71,12 @@ function SetRenderType(render_type)
 	return old_type
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GetRenderType()
 	return RenderType
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function SetDoubleThickness(thickness)
 	local old_thickness = OutlineThickness == 2
 	OutlineThickness = thickness and 2 or 1
@@ -84,12 +84,12 @@ function SetDoubleThickness(thickness)
 	return old_thickness
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function IsDoubleThickness()
 	return OutlineThickness == 2
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 local function Render()
 	local scene = render.GetRenderTarget()
 	render.CopyRenderTargetToTexture(StoreTexture)
@@ -185,7 +185,7 @@ local function Render()
 	render.ClearDepth() -- Allows to render view model and other stuff in front of outline
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 local function RenderOutlines()
 	hook.Run("PreDrawOutlines")
 	if ListSize == 0 then return end
@@ -193,7 +193,7 @@ local function RenderOutlines()
 	List, ListSize = {}, 0
 end
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 hook.Add(
 	"PreDrawViewModels",
 	"RenderOutlines",
@@ -204,7 +204,7 @@ hook.Add(
 	end
 )
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 hook.Add(
 	"PreDrawEffects",
 	"RenderOutlines",
@@ -215,7 +215,7 @@ hook.Add(
 	end
 )
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 hook.Add(
 	"PostDrawEffects",
 	"RenderOutlines",
@@ -226,7 +226,7 @@ hook.Add(
 	end
 )
 
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 local textureInt = 0
 function render.DrawBoundingBox(pos1, pos2, color, mat, thick)
 	thick = thick or 1
@@ -256,4 +256,4 @@ function render.DrawBoundingBox(pos1, pos2, color, mat, thick)
 	render.DrawBeam(b1, a1, thick, textureInt, textureInt, color)
 	render.DrawBeam(b1, a2, thick, textureInt, textureInt, color)
 end
---------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
