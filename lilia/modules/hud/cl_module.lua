@@ -186,7 +186,7 @@ function MODULE:DrawEntityInfo(entity, alpha, position)
     end
 
     for i = 1, #entity.liaNameLines do
-        charInfo[#charInfo + 1] = {entity.liaNameLines[i], teamGetColor(entity.Team(entity))}
+        charInfo[#charInfo + 1] = {entity.liaNameLines[i], team.GetColor(entity.Team(entity))}
     end
 
     local description = hook.Run("GetDisplayedDescription", entity, "hud") or character.getDesc(character)
@@ -206,7 +206,7 @@ function MODULE:DrawEntityInfo(entity, alpha, position)
     hook.Run("DrawCharInfo", entity, character, charInfo)
     for i = 1, #charInfo do
         local info = charInfo[i]
-        _, ty = drawText(info[1]:gsub("#", "\226\128\139#"), x, y, colorAlpha(info[2] or color_white, alpha), 1, 1, "liaSmallFont")
+        _, ty = lia.util.drawText(info[1]:gsub("#", "\226\128\139#"), x, y, ColorAlpha(info[2] or color_white, alpha), 1, 1, "liaSmallFont")
         y = y + ty
     end
 end
