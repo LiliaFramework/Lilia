@@ -5,7 +5,7 @@ function MODULE:RegisterWeapons()
     for _, wep in ipairs(weapons.GetList()) do
         if table.HasValue(lia.config.RegisterWeaponsBlackList, wep.ClassName) then continue end
         local ITEM = lia.item.register(wep.ClassName, "base_weapons", nil, nil, true)
-        ITEM.name = wep.PrintName
+        ITEM.name = tostring(wep.PrintName) or "Undefined SWEP"
         ITEM.desc = "A Weapon"
         ITEM.model = wep.WorldModel
         ITEM.class = wep.ClassName
