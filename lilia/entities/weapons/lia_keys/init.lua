@@ -4,15 +4,16 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 --------------------------------------------------------------------------------------------------------------------------
 function SWEP:ServerSecondaryAttack()
+    local owner = self:GetOwner()
     local time = lia.config.DoorLockTime
     local data = {}
-    data.start = self:GetOwner():GetShootPos()
-    data.endpos = data.start + self:GetOwner():GetAimVector() * 96
-    data.filter = self:GetOwner()
+    data.start = owner:GetShootPos()
+    data.endpos = data.start + owner:GetAimVector() * 96
+    data.filter = owner
     local entity = util.TraceLine(data).Entity
-    if hook.Run("KeyUnlockOverride", self:GetOwner(), entity) then return end
-    if IsValid(entity) and ((entity:isDoor() and entity:checkDoorAccess(self:GetOwner())) or (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == self:GetOwner())) then
-        self:GetOwner():setAction(
+    if hook.Run("KeyUnlockOverride", owner, entity) then return end
+    if IsValid(entity) and ((entity:isDoor() and entity:checkDoorAccess(owner)) or (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == owner) or entity:GetCreator() == owner) then
+        owner:setAction(
             "@unlocking",
             time,
             function()
@@ -26,15 +27,16 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function SWEP:ServerPrimaryAttack()
+    local owner = self:GetOwner()
     local time = lia.config.DoorLockTime
     local data = {}
-    data.start = self:GetOwner():GetShootPos()
-    data.endpos = data.start + self:GetOwner():GetAimVector() * 96
-    data.filter = self:GetOwner()
+    data.start = owner:GetShootPos()
+    data.endpos = data.start + owner:GetAimVector() * 96
+    data.filter = owner
     local entity = util.TraceLine(data).Entity
-    if hook.Run("KeyLockOverride", self:GetOwner(), entity) then return end
-    if IsValid(entity) and ((entity:isDoor() and entity:checkDoorAccess(self:GetOwner())) or (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == self:GetOwner())) then
-        self:GetOwner():setAction(
+    if hook.Run("KeyLockOverride", owner, entity) then return end
+    if IsValid(entity) and ((entity:isDoor() and entity:checkDoorAccess(owner)) or (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == owner) or entity:GetCreator() == owner) then
+        owner:setAction(
             "@locking",
             time,
             function()
@@ -48,7 +50,8 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function SWEP:ToggleLock(door, state)
-    if IsValid(self:GetOwner()) and self:GetOwner():GetPos():Distance(door:GetPos()) > 96 then return end
+    local owner = self:GetOwner()
+    if IsValid(owner) and owner:GetPos():Distance(door:GetPos()) > 96 then return end
     if door:isDoor() then
         local partner = door:getDoorPartner()
         if state then
@@ -57,14 +60,14 @@ function SWEP:ToggleLock(door, state)
             end
 
             door:Fire("lock")
-            self:GetOwner():EmitSound("doors/door_latch3.wav")
+            owner:EmitSound("doors/door_latch3.wav")
         else
             if IsValid(partner) then
                 partner:Fire("unlock")
             end
 
             door:Fire("unlock")
-            self:GetOwner():EmitSound("doors/door_latch1.wav")
+            owner:EmitSound("doors/door_latch1.wav")
         end
     elseif door:IsVehicle() then
         if state then
@@ -73,14 +76,14 @@ function SWEP:ToggleLock(door, state)
                 door.IsLocked = true
             end
 
-            self:GetOwner():EmitSound("doors/door_latch3.wav")
+            owner:EmitSound("doors/door_latch3.wav")
         else
             door:Fire("unlock")
             if door.IsSimfphyscar then
                 door.IsLocked = nil
             end
 
-            self:GetOwner():EmitSound("doors/door_latch1.wav")
+            owner:EmitSound("doors/door_latch1.wav")
         end
     end
 end
