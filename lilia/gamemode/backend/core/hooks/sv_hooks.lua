@@ -166,6 +166,7 @@ function GM:PlayerLoadedChar(client, character, lastChar)
     local identifier = "RemoveMatSpecular" .. client:SteamID()
     local data = character:getData("pclass")
     local class = data and lia.class.list[data]
+    client:Spawn()
     if timer.Exists(identifier) then
         timer.Remove(identifier)
     end
@@ -622,6 +623,6 @@ function GM:CanPlayerSwitchChar(client, character, newCharacter)
     if lia.config.CharacterSwitchCooldown and (character:getData("loginTime", 0) + lia.config.CharacterSwitchCooldownTimer) > os.time() then return false, "You are on cooldown!" end
     if not client:Alive() then return false, "You are dead!" end
     if client.LastDamaged and client.LastDamaged > CurTime() - 120 and character:getFaction() ~= FACTION_STAFF and character then return false, "You took damage too recently to switch characters!" end
-    if newCharacter and (character:getID() == newCharacter:getID()) then return false, "You are already using this character!" end
+    if client:getChar() and client:getChar():getID() == character:getID() then return false, "You are already using this character!" end
 end
 --------------------------------------------------------------------------------------------------------------------------
