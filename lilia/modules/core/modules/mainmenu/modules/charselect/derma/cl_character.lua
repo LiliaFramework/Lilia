@@ -74,7 +74,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:loadBackground()
-	if not DynamicBackgrounds or table.Count(DynamicBackgrounds.scenes) == 0 then
+	if (not DynamicBackgrounds or table.Count(DynamicBackgrounds.scenes) == 0) or lia.config.CharCreationTransparentBackground then
 		self.blank = true
 	end
 
