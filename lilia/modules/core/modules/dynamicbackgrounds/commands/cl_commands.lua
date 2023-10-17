@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------------------------------------------------
 lia.command.add(
-    "mapsceneadd",
+    "dynamicsceneadd",
     {
         privilege = "Add Map Scene",
         adminOnly = true,
@@ -11,7 +11,7 @@ lia.command.add(
 
 --------------------------------------------------------------------------------------------------------------------------
 lia.command.add(
-    "mapsceneremove",
+    "dynamicsceneremove",
     {
         privilege = "DeleteMap Scene",
         adminOnly = true,
