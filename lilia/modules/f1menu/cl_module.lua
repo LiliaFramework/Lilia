@@ -2,6 +2,16 @@
 local HELP_DEFAULT
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:CreateMenuButtons(tabs)
+    if (hook.GetTable()["CanPlayerViewCharacters"] and hook.Run("CanPlayerViewCharacters") ~= false) or (not hook.GetTable()["CanPlayerViewCharacters"]) then
+        tabs["characters"] = function(panel)
+            if IsValid(lia.gui.menu) then
+                lia.gui.menu:Remove()
+            end
+
+            vgui.Create("liaCharacter")
+        end
+    end
+
     if (hook.GetTable()["CanPlayerViewInventory"] and hook.Run("CanPlayerViewInventory") ~= false) or (not hook.GetTable()["CanPlayerViewInventory"] and LocalPlayer():Alive()) then
         tabs["inv"] = function(panel)
             local inventory = LocalPlayer():getChar():getInv()
