@@ -35,10 +35,8 @@ function MODULE:HUDPaintBackground()
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:LoadBars()
-    if not StaminaBarAdded then
-        lia.bar.add(function() return MODULE.predictedStamina / 100 end, Color(200, 200, 40), nil, "stamina")
-        StaminaBarAdded = true
-    end
+if not StaminaBarAdded then
+    lia.bar.add(function() return MODULE.predictedStamina / 100 end, Color(200, 200, 40), nil, "stamina")
+    StaminaBarAdded = true
 end
 --------------------------------------------------------------------------------------------------------------------------

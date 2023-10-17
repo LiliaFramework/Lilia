@@ -476,8 +476,6 @@ end
 function GM:PlayerSpawn(client)
     if SERVER then
         self:PlayerSpawnServer(client)
-    else
-        self:PlayerSpawnClient(client)
     end
 end
 
