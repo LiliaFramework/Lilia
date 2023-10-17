@@ -248,10 +248,14 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSay(client, message)
-	local chatType, message, anonymous = lia.chat.parse(client, message, true)
-	if (chatType == "ic") and lia.command.parse(client, message) then return "" end
-	lia.chat.send(client, chatType, message, anonymous)
-	hook.Run("PostPlayerSay", client, message, chatType, anonymous)
+	if utf8.len(text) <= lia.config.MaxChatLength then
+		local chatType, message, anonymous = lia.chat.parse(client, message, true)
+		if (chatType == "ic") and lia.command.parse(client, message) then return "" end
+		lia.chat.send(client, chatType, message, anonymous)
+		hook.Run("PostPlayerSay", client, message, chatType, anonymous)
+	else
+		client:notify("Your message is too long and has not been sent.")
+	end
 
 	return ""
 end
