@@ -3,21 +3,13 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 --------------------------------------------------------------------------------------------------------------------------
-function SWEP:ServerSecondaryAttack()
-    local owner = self:GetOwner()
-    local time = lia.config.DoorLockTime
-    local data = {}
-    data.start = owner:GetShootPos()
-    data.endpos = data.start + owner:GetAimVector() * 96
-    data.filter = owner
-    local entity = util.TraceLine(data).Entity
-    if hook.Run("KeyUnlockOverride", owner, entity) then return end
-    if IsValid(entity) and ((entity:isDoor() and entity:checkDoorAccess(owner)) or (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == owner) or entity:GetCreator() == owner) then
+function SWEP:ServerSecondaryAttack(owner, entity, time)
+    if IsValid(entity) and ((entity:isDoor() and entity:checkDoorAccess(owner)) or (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == owner) or entity:GetCreator() == owner or simfphys.IsCar(entity)) then
         owner:setAction(
             "@unlocking",
             time,
             function()
-                self:ToggleLock(entity, false)
+                self:ToggleLock(owner, entity, false)
             end
         )
 
@@ -26,21 +18,13 @@ function SWEP:ServerSecondaryAttack()
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function SWEP:ServerPrimaryAttack()
-    local owner = self:GetOwner()
-    local time = lia.config.DoorLockTime
-    local data = {}
-    data.start = owner:GetShootPos()
-    data.endpos = data.start + owner:GetAimVector() * 96
-    data.filter = owner
-    local entity = util.TraceLine(data).Entity
-    if hook.Run("KeyLockOverride", owner, entity) then return end
-    if IsValid(entity) and ((entity:isDoor() and entity:checkDoorAccess(owner)) or (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == owner) or entity:GetCreator() == owner) then
+function SWEP:ServerPrimaryAttack(owner, entity, time)
+    if ((entity:isDoor() and entity:checkDoorAccess(owner)) or (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == owner)) or (entity:GetCreator() == owner and simfphys and simfphys.IsCar(entity)) then
         owner:setAction(
             "@locking",
             time,
             function()
-                self:ToggleLock(entity, true)
+                self:ToggleLock(owner, entity, true)
             end
         )
 
@@ -49,8 +33,7 @@ function SWEP:ServerPrimaryAttack()
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function SWEP:ToggleLock(door, state)
-    local owner = self:GetOwner()
+function SWEP:ToggleLock(owner, door, state)
     if IsValid(owner) and owner:GetPos():Distance(door:GetPos()) > 96 then return end
     if door:isDoor() then
         local partner = door:getDoorPartner()
@@ -72,15 +55,15 @@ function SWEP:ToggleLock(door, state)
     elseif door:IsVehicle() then
         if state then
             door:Fire("lock")
-            if door.IsSimfphyscar then
+            if simfphys.IsCar(door) then
                 door.IsLocked = true
             end
 
             owner:EmitSound("doors/door_latch3.wav")
         else
             door:Fire("unlock")
-            if door.IsSimfphyscar then
-                door.IsLocked = nil
+            if simfphys.IsCar(door) then
+                door.IsLocked = false
             end
 
             owner:EmitSound("doors/door_latch1.wav")

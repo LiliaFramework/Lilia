@@ -241,4 +241,11 @@ function GM:PointingHUDPaint()
 		surface.DrawCircle(toScream.x, toScream.y, distance, 0, 255, 0, 255)
 	end
 end
+
+--------------------------------------------------------------------------------------------------------------------------
+function GM:PlayerSpawnClient(client)
+	if client:getChar() then
+		hook.Run("LoadBars")
+	end
+end
 --------------------------------------------------------------------------------------------------------------------------

@@ -59,11 +59,19 @@ end
 function SWEP:PrimaryAttack()
     local time = lia.config.DoorLockTime
     local time2 = math.max(time, 1)
+    local owner = self:GetOwner()
+    local data = {}
+    data.start = owner:GetShootPos()
+    data.endpos = data.start + owner:GetAimVector() * 96
+    data.filter = owner
+    local entity = util.TraceLine(data).Entity
     self:SetNextPrimaryFire(CurTime() + time2)
     self:SetNextSecondaryFire(CurTime() + time2)
     if not IsFirstTimePredicted() then return end
+    if not IsValid(entity) then return end
+    if hook.Run("KeyLockOverride", owner, entity) then return end
     if SERVER then
-        self:ServerPrimaryAttack()
+        self:ServerPrimaryAttack(owner, entity, time)
     end
 end
 
@@ -71,11 +79,19 @@ end
 function SWEP:SecondaryAttack()
     local time = lia.config.DoorLockTime
     local time2 = math.max(time, 1)
+    local owner = self:GetOwner()
+    local data = {}
+    data.start = owner:GetShootPos()
+    data.endpos = data.start + owner:GetAimVector() * 96
+    data.filter = owner
+    local entity = util.TraceLine(data).Entity
     self:SetNextPrimaryFire(CurTime() + time2)
     self:SetNextSecondaryFire(CurTime() + time2)
     if not IsFirstTimePredicted() then return end
+    if not IsValid(entity) then return end
+    if hook.Run("KeyUnlockOverride", owner, entity) then return end
     if SERVER then
-        self:ServerSecondaryAttack()
+        self:ServerSecondaryAttack(owner, entity, time)
     end
 end
 --------------------------------------------------------------------------------------------------------------------------

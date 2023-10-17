@@ -473,6 +473,15 @@ function GM:simfphysPhysicsCollide()
 end
 
 --------------------------------------------------------------------------------------------------------------------------
+function GM:PlayerSpawn(client)
+    if SERVER then
+        self:PlayerSpawnServer(client)
+    else
+        self:PlayerSpawnClient(client)
+    end
+end
+
+--------------------------------------------------------------------------------------------------------------------------
 function GM:DevelopmentServerLoader()
     --[[
     This allows you to make reduced cooldowns or certain scenarios only happen on the Dev server. Example:
@@ -503,7 +512,6 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PSALoader()
     local TalkModesPSAString = "Please Remove Talk Modes. Our framework has such built in by default."
-    local NutscriptPSAString = "Please Port Any Nutscript Plugins You May Be Using. Nutscript is Known for Being Exxploitable and Regardless Of The Compatibility, WE DO NOT Advice Nutscript Plugins. Our framework was built with Lilia Plugins in mind and most Performance will be adquired like that."
     local ULXPSAString = [[
             /*------------------------------------------------------------
             
@@ -536,28 +544,6 @@ function GM:PSALoader()
             2,
             function()
                 MsgC(Color(255, 0, 0), TalkModesPSAString)
-            end
-        )
-    end
-
-    if lia then
-        if CLIENT then
-            lia = lia or {
-                util = {},
-                gui = {},
-                meta = {}
-            }
-        else
-            lia = lia or {
-                util = {},
-                meta = {}
-            }
-        end
-
-        timer.Simple(
-            2,
-            function()
-                MsgC(Color(255, 0, 0), NutscriptPSAString)
             end
         )
     end

@@ -166,7 +166,7 @@ function GM:ClassOnLoadout(client)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:PlayerSpawn(client)
+function GM:PlayerSpawnServer(client)
     if pac then
         client:ConCommand("pac_restart")
     end
@@ -331,5 +331,20 @@ function GM:PlayerInitialSpawn(client)
 
     hook.Run("PostPlayerInitialSpawn", client)
     hook.Run("ReRunNames")
+end
+
+--------------------------------------------------------------------------------------------------------------------------
+function GM:PostPlayerInitialSpawn(client)
+    client:SetNoDraw(true)
+    client:SetNotSolid(true)
+    client:Lock()
+    timer.Simple(
+        1,
+        function()
+            if not IsValid(client) then return end
+            client:KillSilent()
+            client:StripAmmo()
+        end
+    )
 end
 --------------------------------------------------------------------------------------------------------------------------

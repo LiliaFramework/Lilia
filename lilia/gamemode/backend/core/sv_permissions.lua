@@ -1,5 +1,4 @@
 --------------------------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnNPC(client)
     if not client:getChar() then return false end
     if CAMI.PlayerHasAccess(client, "Lilia - Management - Can Spawn NPCs", nil) then return true end

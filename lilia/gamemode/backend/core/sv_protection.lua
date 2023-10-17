@@ -16,28 +16,28 @@ function GM:OnPlayerDropWeapon(client, item, entity)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:CanDeleteChar(ply, char)
+function GM:CanDeleteChar(client, char)
     if char:getMoney() < lia.config.DefaultMoney then return true end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:OnEntityCreated(ent)
+function GM:OnEntityCreated(entity)
     if lia.config.DrawEntityShadows then
-        ent:DrawShadow(false)
+        entity:DrawShadow(false)
     end
 
-    if not ent:IsRagdoll() then return end
-    if ent:getNetVar("player", nil) then return end
+    if not entity:IsRagdoll() then return end
+    if entity:getNetVar("player", nil) then return end
     timer.Simple(
         300,
         function()
-            if not IsValid(ent) then return end
-            ent:SetSaveValue("m_bFadingOut", true)
+            if not IsValid(entity) then return end
+            entity:SetSaveValue("m_bFadingOut", true)
             timer.Simple(
                 3,
                 function()
-                    if not IsValid(ent) then return end
-                    ent:Remove()
+                    if not IsValid(entity) then return end
+                    entity:Remove()
                 end
             )
         end
@@ -45,17 +45,19 @@ function GM:OnEntityCreated(ent)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:CheckValidSit(ply, trace)
-    local ent = ply:GetTracedEntity()
-    if ent:IsPlayer() then return false end
+function GM:CheckValidSit(client, trace)
+    local entity = client:GetTracedEntity()
+    if entity:IsPlayer() then return false end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:PlayerSpawnedVehicle(ply, ent)
+function GM:PlayerSpawnedVehicle(client, entity)
     local delay = lia.config.PlayerSpawnVehicleDelay
-    if not ply:IsSuperAdmin() then
-        ply.NextVehicleSpawn = SysTime() + delay
+    if not client:IsSuperAdmin() then
+        client.NextVehicleSpawn = SysTime() + delay
     end
+
+    self:PlayerSpawnedEntity(client, entity)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -79,11 +81,11 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnedNPC(client, entity)
-    entity:SetCreator(client)
-    entity:SetNW2String("Creator_Nick", client:Nick())
     if lia.config.NPCsDropWeapons then
         entity:SetKeyValue("spawnflags", "8192")
     end
+
+    self:PlayerSpawnedEntity(client, entity)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -117,9 +119,9 @@ function GM:PlayerDisconnected(client)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:OnPhysgunPickup(ply, ent)
-    if ent:GetClass() == "prop_physics" and ent:GetCollisionGroup() == COLLISION_GROUP_NONE then
-        ent:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
+function GM:OnPhysgunPickup(client, entity)
+    if entity:GetClass() == "prop_physics" and entity:GetCollisionGroup() == COLLISION_GROUP_NONE then
+        entity:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
     end
 end
 
@@ -148,16 +150,31 @@ function GM:PlayerSpawnObject(client, model, skin)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:PhysgunDrop(ply, ent)
-    if ent:GetClass() ~= "prop_physics" then return end
+function GM:PhysgunDrop(client, entity)
+    if entity:GetClass() ~= "prop_physics" then return end
     timer.Simple(
         5,
         function()
-            if IsValid(ent) and ent:GetCollisionGroup() == COLLISION_GROUP_PASSABLE_DOOR then
-                ent:SetCollisionGroup(COLLISION_GROUP_NONE)
+            if IsValid(entity) and entity:GetCollisionGroup() == COLLISION_GROUP_PASSABLE_DOOR then
+                entity:SetCollisionGroup(COLLISION_GROUP_NONE)
             end
         end
     )
+end
+
+--------------------------------------------------------------------------------------------------------------------------
+function GM:PlayerSpawnedEffect(client, model, entity)
+    self:PlayerSpawnedEntity(client, entity)
+end
+
+--------------------------------------------------------------------------------------------------------------------------
+function GM:PlayerSpawnedRagdoll(client, model, entity)
+    self:PlayerSpawnedEntity(client, entity)
+end
+
+--------------------------------------------------------------------------------------------------------------------------
+function GM:PlayerSpawnedSENT(client, entity)
+    self:PlayerSpawnedEntity(client, entity)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
