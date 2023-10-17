@@ -248,7 +248,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSay(client, message)
-	local chatType, anonymous = lia.chat.parse(client, message, true)
+	local chatType, message, anonymous = lia.chat.parse(client, message, true)
 	if (chatType == "ic") and lia.command.parse(client, message) then return "" end
 	lia.chat.send(client, chatType, message, anonymous)
 	hook.Run("PostPlayerSay", client, message, chatType, anonymous)
