@@ -125,7 +125,7 @@ function MODULE:InitializedConfig()
             end,
             onChatAdd = function(speaker, text)
                 if CAMI.PlayerHasAccess(LocalPlayer(), "Lilia - Management - Admin Chat", nil) and CAMI.PlayerHasAccess(speaker, "Lilia - Management - Admin Chat", nil) then
-                    chat.AddText(Color(255, 215, 0), "[А] ", Color(128, 0, 255, 255), speaker:getChar():getName(), ": ", Color(255, 255, 255), text)
+                    chat.AddText(Color(255, 215, 0), "[Аdmin] ", Color(128, 0, 255, 255), speaker:getChar():getName(), ": ", Color(255, 255, 255), text)
                 end
             end,
             prefix = "/adminchat"
