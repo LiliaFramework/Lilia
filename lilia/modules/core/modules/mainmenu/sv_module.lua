@@ -46,7 +46,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:CanPlayerCreateCharacter(client)
     local count = #client.liaCharList
-    local maxChars = hook.Run("GetMaxPlayerCharacter", client) or lia.config.MaxChars
+    local maxChars = hook.Run("GetMaxPlayerCharacter", client) or lia.config.MaxCharacters
     if count >= maxChars then return false end
 end
 --------------------------------------------------------------------------------------------------------------------------
