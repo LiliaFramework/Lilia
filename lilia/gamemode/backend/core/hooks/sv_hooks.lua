@@ -600,9 +600,6 @@ function GM:CanPlayerUseChar(client, newcharacter)
 		return false, "@charBanned"
 	end
 
-	if IsValid(client.liaRagdoll) then return false, "You are ragdolled!" end
-	if not client:Alive() then return false, "You are dead!" end
-	if client.LastDamaged and client.LastDamaged > CurTime() - 120 and currentChar:getFaction() ~= FACTION_STAFF then return false, "You took damage too recently to switch characters!" end
 	if faction and hook.Run("CheckFactionLimitReached", faction, newcharacter, client) then return false, "@limitFaction" end
 	if currentChar then
 		local status, result = hook.Run("CanPlayerSwitchChar", client, currentChar, newcharacter)
@@ -612,7 +609,12 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:CanPlayerSwitchChar(client, character, newCharacter)
+	if IsValid(client.liaRagdoll) then return false, "You are ragdolled!" end
+	if not client:Alive() then return false, "You are dead!" end
+	if client.LastDamaged and client.LastDamaged > CurTime() - 120 and character:getFaction() ~= FACTION_STAFF then return false, "You took damage too recently to switch characters!" end
 	if lia.config.CharacterSwitchCooldown and (character:getData("loginTime", 0) + lia.config.CharacterSwitchCooldownTimer) > os.time() then return false, "You are on cooldown!" end
 	if character:getID() == newCharacter:getID() then return false, "You are already using this character!" end
+
+	return true
 end
 --------------------------------------------------------------------------------------------------------------------------
