@@ -51,7 +51,6 @@ function lia.chat.register(chatType, data)
             end
 
             local timestamp = lia.chat.timestamp(false)
-            print(chatType .. "Format")
             local translated = L2(chatType .. "Format", name, text)
             chat.AddText(timestamp, color, translated or string.format(data.format, name, text))
         end
