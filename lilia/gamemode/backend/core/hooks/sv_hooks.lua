@@ -248,7 +248,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSay(client, message)
-	if utf8.len(text) <= lia.config.MaxChatLength then
+	if utf8.len(message) <= lia.config.MaxChatLength then
 		local chatType, message, anonymous = lia.chat.parse(client, message, true)
 		if (chatType == "ic") and lia.command.parse(client, message) then return "" end
 		lia.chat.send(client, chatType, message, anonymous)
