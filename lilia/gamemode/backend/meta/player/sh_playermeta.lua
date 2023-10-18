@@ -159,8 +159,8 @@ function playerMeta:GetTrace()
     data.start = self:GetShootPos()
     data.endpos = data.start + self:GetAimVector() * 200
     data.filter = {self, self}
-    data.mins = -hull
-    data.maxs = hull
+    data.mins = -Vector(4, 4, 4)
+    data.maxs = Vector(4, 4, 4)
     local trace = util.TraceHull(data)
 
     return trace
