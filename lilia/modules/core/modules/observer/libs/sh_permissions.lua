@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------------------------------------------------
 CAMI.RegisterPrivilege(
     {
-        Name = "Lilia - Management - No Clip ESP",
+        Name = "Lilia - Management - No Clip",
         MinAccess = "superadmin",
-        Description = "Allows access to No Clip ESP.",
+        Description = "Allows access to No Clip.",
     }
 )
 --------------------------------------------------------------------------------------------------------------------------
