@@ -3,17 +3,13 @@ local vignetteAlphaGoal = 0
 --------------------------------------------------------------------------------------------------------------------------
 local vignetteAlphaDelta = 0
 --------------------------------------------------------------------------------------------------------------------------
-local hasVignetteMaterial = lia.util.getMaterial("lilia/gui/vignette.png") ~= "___error"
---------------------------------------------------------------------------------------------------------------------------
-function MODULE:HUDPaintBackground()
+function MODULE:HUDPaintBackgroundVignette()
     local frameTime = FrameTime()
     local scrW, scrH = ScrW(), ScrH()
-    if hasVignetteMaterial and lia.config.Vignette then
-        vignetteAlphaDelta = math.Approach(vignetteAlphaDelta, vignetteAlphaGoal, frameTime * 30)
-        surface.SetDrawColor(0, 0, 0, 175 + vignetteAlphaDelta)
-        surface.SetMaterial(lia.util.getMaterial("lilia/gui/vignette.png"))
-        surface.DrawTexturedRect(0, 0, scrW, scrH)
-    end
+    vignetteAlphaDelta = math.Approach(vignetteAlphaDelta, vignetteAlphaGoal, frameTime * 30)
+    surface.SetDrawColor(0, 0, 0, 175 + vignetteAlphaDelta)
+    surface.SetMaterial(lia.util.getMaterial("lilia/gui/vignette.png"))
+    surface.DrawTexturedRect(0, 0, scrW, scrH)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
