@@ -31,8 +31,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:setName(name, isID, color)
-    if not self.name then return end
-    if isID then
+    if isID and self.name then
         steamworks.RequestPlayerInfo(
             name,
             function(steamName)
@@ -170,7 +169,6 @@ function PANEL:Init()
     self.creditPanels = {}
     local curNum = 0
     for k, v in ipairs(lia.config.GamemodeCreators) do
-        -- if k is odd
         if k % 2 ~= 0 then
             self.creditPanels[k] = self:Add("CreditsCreditsList")
             curNum = k
