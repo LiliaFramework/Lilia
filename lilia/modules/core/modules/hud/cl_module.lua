@@ -11,6 +11,8 @@ local lastTrace = {}
 --------------------------------------------------------------------------------------------------------------------------
 local lastEntity
 --------------------------------------------------------------------------------------------------------------------------
+local toScreen = FindMetaTable("Vector").ToScreen
+--------------------------------------------------------------------------------------------------------------------------
 local DescWidth = CreateClientConVar("lia_hud_descwidth", 0.5, true, false)
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:HUDShouldDraw(element)
@@ -61,15 +63,12 @@ function MODULE:ShouldDrawCrosshair()
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:HUDPaintBackground()
+function PLUGIN:HUDPaintBackground()
     local localPlayer = LocalPlayer()
     if not localPlayer.getChar(localPlayer) then return end
     local realTime = RealTime()
     local frameTime = FrameTime()
-    if hasVignetteMaterial and lia.config.Vignette then
-        self:HUDPaintBackgroundVignette()
-    end
-
+    local scrW, scrH = ScrW(), ScrH()
     if nextUpdate < realTime then
         nextUpdate = realTime + 0.5
         lastTrace.start = localPlayer.GetShootPos(localPlayer)
@@ -95,7 +94,7 @@ function MODULE:HUDPaintBackground()
             if alpha > 0 then
                 local client = entity.getNetVar(entity, "player")
                 if IsValid(client) then
-                    local position = FindMetaTable("Vector").ToScreen(entity.LocalToWorld(entity, entity.OBBCenter(entity)))
+                    local position = toScreen(entity.LocalToWorld(entity, entity.OBBCenter(entity)))
                     hook.Run("DrawEntityInfo", client, alpha, position)
                 elseif entity.onDrawEntityInfo then
                     entity.onDrawEntityInfo(entity, alpha)
@@ -163,15 +162,19 @@ function MODULE:DrawCharInfo(client, character, info)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:DrawEntityInfo(entity, alpha, position)
+function PLUGIN:DrawEntityInfo(entity, alpha, position)
     if not entity.IsPlayer(entity) then return end
     if hook.Run("ShouldDrawPlayerInfo", entity) == false then return end
     local character = entity.getChar(entity)
     if not character then return end
-    position = position or FindMetaTable("Vector").ToScreen(entity.GetPos(entity) + (entity.Crouching(entity) and Vector(0, 0, 48) or Vector(0, 0, 80)))
+    position = position or toScreen(entity.GetPos(entity) + (entity.Crouching(entity) and Vector(0, 0, 48) or Vector(0, 0, 80)))
     local x, y = position.x, position.y
     local ty = 0
     charInfo = {}
+    if hasVignetteMaterial and lia.config.Vignette then
+        self:HUDPaintBackgroundVignette()
+    end
+
     if entity.widthCache ~= DescWidth:GetFloat() then
         entity.widthCache = DescWidth:GetFloat()
         entity.liaNameCache = nil
@@ -217,7 +220,7 @@ function MODULE:DrawEntityInfo(entity, alpha, position)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:ShouldDrawEntityInfo(entity, alpha, position)
+function MODULE:ShouldDrawEntityInfo(entity)
     if entity.DrawEntityInfo then return true end
     if entity.onShouldDrawEntityInfo then return entity:onShouldDrawEntityInfo() end
     if entity:IsPlayer() and entity:getChar() and entity:GetNoDraw() ~= true then return true end

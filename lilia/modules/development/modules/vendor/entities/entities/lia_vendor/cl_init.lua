@@ -1,4 +1,6 @@
 --------------------------------------------------------------------------------------------------------------------------
+local toScreen = FindMetaTable("Vector").ToScreen
+--------------------------------------------------------------------------------------------------------------------------
 include("shared.lua")
 --------------------------------------------------------------------------------------------------------------------------
 function ENT:createBubble()
@@ -52,7 +54,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function ENT:onDrawEntityInfo(alpha)
-	local position = FindMetaTable("Vector").ToScreen(self:LocalToWorld(self:OBBCenter()) + Vector(0, 0, 20))
+	local position = toScreen(self:LocalToWorld(self:OBBCenter()) + Vector(0, 0, 20))
 	local x, y = position.x, position.y
 	local desc = self.getNetVar(self, "desc")
 	lia.util.drawText(self.getNetVar(self, "name", "John Doe"), x, y, ColorAlpha(lia.config.Color), 1, 1, nil, alpha * 0.65)

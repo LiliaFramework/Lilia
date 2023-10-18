@@ -1,3 +1,6 @@
+--------------------------------------------------------------------------------------------------------------------------
+local toScreen = FindMetaTable("Vector").ToScreen
+--------------------------------------------------------------------------------------------------------------------------
 include("shared.lua")
 --------------------------------------------------------------------------------------------------------------------------
 function ENT:computeDescMarkup(description)
@@ -17,7 +20,7 @@ function ENT:onDrawEntityInfo(alpha)
     itemTable.entity = self
     local oldData = itemTable.data
     itemTable.data = self:getNetVar("data") or oldData
-    local position = FindMetaTable("Vector").ToScreen(self:LocalToWorld(self:OBBCenter()))
+    local position = toScreen(self:LocalToWorld(self:OBBCenter()))
     local x, y = position.x, position.y
     local description = itemTable:getDesc()
     self:computeDescMarkup(description)
