@@ -6,12 +6,6 @@ function lia.command.add(command, data)
     data.syntax = data.syntax or "[none]"
     if not data.onRun then return ErrorNoHalt("Command '" .. command .. "' does not have a callback, not adding!\n") end
     if not data.onCheckAccess then
-        if data.group then
-            ErrorNoHalt("Command '" .. data.name .. "' tried to use the deprecated field 'group'!\n")
-
-            return
-        end
-
         local privilege = "Lilia - Commands - " .. (isstring(data.privilege) and data.privilege or command)
         if not CAMI.GetPrivilege(privilege) then
             CAMI.RegisterPrivilege(
@@ -27,6 +21,18 @@ function lia.command.add(command, data)
             local bHasAccess, _ = CAMI.PlayerHasAccess(client, privilege, nil)
 
             return bHasAccess
+        end
+    end
+
+    if data.onCheckAccess then
+        local onRun = data.onRun
+        data._onRun = data.onRun
+        data.onRun = function(client, arguments)
+            if lia.command.hasAccess(client, command) then
+                return onRun(client, arguments)
+            else
+                return "@noPerm"
+            end
         end
     end
 
@@ -94,9 +100,5 @@ function lia.command.extractArgs(text)
     end
 
     return arguments
-end
---------------------------------------------------------------------------------------------------------------------------
-function lia.command.send(command, ...)
-    netstream.Start("cmd", command, {...})
 end
 --------------------------------------------------------------------------------------------------------------------------
