@@ -3,7 +3,7 @@ if not pac then return end
 --------------------------------------------------------------------------------------------------------------------------
 CAMI.RegisterPrivilege(
     {
-        Name = "Lilia - Management - Can Use PAC3",
+        Name = "Lilia - Staff Permissions - Can Use PAC3",
         MinAccess = "superadmin",
         Description = "Allows access to Spawning Menu Items.",
     }
@@ -11,7 +11,7 @@ CAMI.RegisterPrivilege(
 
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:isAllowedToUsePAC(client)
-    return CAMI.PlayerHasAccess(client, "Lilia - Management - Can Use PAC3", nil)
+    return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Can Use PAC3", nil)
 end
 
 --------------------------------------------------------------------------------------------------------------------------

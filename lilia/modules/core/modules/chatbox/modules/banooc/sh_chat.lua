@@ -24,7 +24,7 @@ function MODULE:InitializedConfig()
                     return false
                 end
 
-                if not CAMI.PlayerHasAccess(speaker, "Lilia - Management - No OOC Cooldown") and lia.config.OOCDelay > 0 and speaker.liaLastOOC then
+                if not CAMI.PlayerHasAccess(speaker, "Lilia - Staff Permissions - No OOC Cooldown") and lia.config.OOCDelay > 0 and speaker.liaLastOOC then
                     local lastOOC = CurTime() - speaker.liaLastOOC
                     if lastOOC <= lia.config.OOCDelay then
                         speaker:notifyLocalized("oocDelay", lia.config.OOCDelay - math.ceil(lastOOC))

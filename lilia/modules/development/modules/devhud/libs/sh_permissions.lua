@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------------------------------------------------
 CAMI.RegisterPrivilege(
     {
-        Name = "Lilia - Management - Development HUD",
+        Name = "Lilia - Staff Permissions - Development HUD",
         MinAccess = "superadmin",
         Description = "Allows access to Development HUD.",
     }
@@ -10,7 +10,7 @@ CAMI.RegisterPrivilege(
 --------------------------------------------------------------------------------------------------------------------------
 CAMI.RegisterPrivilege(
     {
-        Name = "Lilia - Management - Staff HUD",
+        Name = "Lilia - Staff Permissions - Staff HUD",
         MinAccess = "superadmin",
         Description = "Allows access to Staff HUD.",
     }

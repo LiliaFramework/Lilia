@@ -110,12 +110,12 @@ function MODULE:InitializedConfig()
         {
             onGetColor = function(speaker, text) return Color(0, 196, 255) end,
             onCanHear = function(speaker, listener)
-                if CAMI.PlayerHasAccess(listener, "Lilia - Management - Admin Chat", nil) then return true end
+                if CAMI.PlayerHasAccess(listener, "Lilia - Staff Permissions - Admin Chat", nil) then return true end
 
                 return false
             end,
             onCanSay = function(speaker, text)
-                if CAMI.PlayerHasAccess(speaker, "Lilia - Management - Admin Chat", nil) then
+                if CAMI.PlayerHasAccess(speaker, "Lilia - Staff Permissions - Admin Chat", nil) then
                     speaker:notify("You aren't an admin. Use '@messagehere' to create a ticket.")
 
                     return false
@@ -124,7 +124,7 @@ function MODULE:InitializedConfig()
                 return true
             end,
             onChatAdd = function(speaker, text)
-                if CAMI.PlayerHasAccess(LocalPlayer(), "Lilia - Management - Admin Chat", nil) and CAMI.PlayerHasAccess(speaker, "Lilia - Management - Admin Chat", nil) then
+                if CAMI.PlayerHasAccess(LocalPlayer(), "Lilia - Staff Permissions - Admin Chat", nil) and CAMI.PlayerHasAccess(speaker, "Lilia - Staff Permissions - Admin Chat", nil) then
                     chat.AddText(Color(255, 215, 0), "[А] ", Color(128, 0, 255, 255), speaker:getChar():getName(), ": ", Color(255, 255, 255), text)
                 end
             end,

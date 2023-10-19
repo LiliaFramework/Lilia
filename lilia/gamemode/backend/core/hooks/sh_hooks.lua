@@ -79,7 +79,7 @@ function GM:RegisterCamiPermissions()
         if wep.ClassName == "gmod_tool" then
             for ToolName, TOOL in pairs(wep.Tool) do
                 if not ToolName then continue end
-                local privilege = "Lilia - Management - Access Tool " .. ToolName:gsub("^%l", string.upper)
+                local privilege = "Lilia - Staff Permissions - Access Tool " .. ToolName:gsub("^%l", string.upper)
                 if not CAMI.GetPrivilege(privilege) then
                     local privilegeInfo = {
                         Name = privilege,
@@ -94,7 +94,7 @@ function GM:RegisterCamiPermissions()
     end
 
     for name, _ in pairs(properties.List) do
-        local privilege = "Lilia - Management - Access Tool " .. name:gsub("^%l", string.upper)
+        local privilege = "Lilia - Staff Permissions - Access Property " .. name:gsub("^%l", string.upper)
         if not CAMI.GetPrivilege(privilege) then
             local privilegeInfo = {
                 Name = privilege,

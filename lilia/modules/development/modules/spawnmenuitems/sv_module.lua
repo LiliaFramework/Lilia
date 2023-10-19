@@ -6,7 +6,7 @@ netstream.Hook(
             client.itemSpawnCooldown = 0
         end
 
-        if CurTime() > client.itemSpawnCooldown and CAMI.PlayerHasAccess(client, "Lilia - Management - Can Spawn Menu Items", nil) then
+        if CurTime() > client.itemSpawnCooldown and CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Can Spawn Menu Items", nil) then
             client.itemSpawnCooldown = CurTime() + lia.config.cooldown
             lia.item.spawn(itemID, client:GetShootPos())
         end
