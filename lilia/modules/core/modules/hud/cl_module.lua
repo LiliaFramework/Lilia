@@ -66,11 +66,9 @@ end
 function MODULE:HUDPaintBackground()
     local localPlayer = LocalPlayer()
     if not localPlayer.getChar(localPlayer) then return end
-    local realTime = RealTime()
     local frameTime = FrameTime()
-    local scrW, scrH = ScrW(), ScrH()
-    if nextUpdate < realTime then
-        nextUpdate = realTime + 0.5
+    if nextUpdate < RealTime() then
+        nextUpdate = RealTime() + 0.5
         lastTrace.start = localPlayer.GetShootPos(localPlayer)
         lastTrace.endpos = lastTrace.start + localPlayer:GetAimVector() * 160
         lastTrace.filter = localPlayer
