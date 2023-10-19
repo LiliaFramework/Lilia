@@ -26,7 +26,7 @@ net.Receive(
         local closetuser = false
         if not IsValid(target) then return end
         if target ~= client then
-            if not MODULE:CanChangeBodygroup(client) then
+            if not CAMI.PlayerHasAccess(client, "Lilia - Commands - Change Bodygroups", nil) then
                 client:notifyLocalized("noAccess")
 
                 return

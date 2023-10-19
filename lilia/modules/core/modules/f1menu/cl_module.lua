@@ -163,12 +163,7 @@ function MODULE:BuildHelpMenu(tabs)
     tabs["commands"] = function(node, client)
         local body = ""
         for k, v in SortedPairs(lia.command.list) do
-            local allowed = false
-            if lia.command.hasAccess(client, k) then
-                allowed = true
-            end
-
-            if allowed then
+            if lia.command.hasAccess(LocalPlayer(), k, nil) then
                 body = body .. "<h2>/" .. k .. "</h2><strong>Syntax:</strong> <em>" .. v.syntax .. "</em><br /><br />"
             end
         end

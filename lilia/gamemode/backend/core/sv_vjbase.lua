@@ -25,6 +25,7 @@ if VJ then
                 for k, v in pairs(lia.config.VJConvars) do
                     RunConsoleCommand(k, tostring(v))
                 end
+
                 RunConsoleCommand("vj_npc_processtime", 1)
                 vjThink = CurTime() + 180
             end

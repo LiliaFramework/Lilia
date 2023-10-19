@@ -40,7 +40,7 @@ Structures:
             optionally on another player (target).
     }
 ]]
---------------------------------------------------------------------------------------------------------------------------
+-- Version number in YearMonthDay format.
 local version = 20190102
 if CAMI and CAMI.Version >= version then return end
 CAMI = CAMI or {}
@@ -230,6 +230,7 @@ CAMI.RegisterPrivilege
 function CAMI.RegisterPrivilege(privilege)
     privileges[privilege.Name] = privilege
     hook.Call("CAMI.OnPrivilegeRegistered", nil, privilege)
+    print("Registered Privilege " .. privilege.Name .. " with default access to " .. privilege.MinAccess .. ".")
 
     return privilege
 end

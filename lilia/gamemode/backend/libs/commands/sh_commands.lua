@@ -5,34 +5,30 @@ lia.command.list = lia.command.list or {}
 function lia.command.add(command, data)
     data.syntax = data.syntax or "[none]"
     if not data.onRun then return ErrorNoHalt("Command '" .. command .. "' does not have a callback, not adding!\n") end
-    if not data.onCheckAccess then
-        local privilege = "Lilia - Commands - " .. (isstring(data.privilege) and data.privilege or command)
-        if not CAMI.GetPrivilege(privilege) then
-            CAMI.RegisterPrivilege(
-                {
-                    Name = privilege,
-                    MinAccess = data.superAdminOnly and "superadmin" or (data.adminOnly and "admin" or "user"),
-                    Description = data.description
-                }
-            )
-        end
+    if data.group then
+        ErrorNoHalt("Command '" .. data.name .. "' tried to use the deprecated field 'group'!\n")
 
-        function data:onCheckAccess(client)
-            local bHasAccess, _ = CAMI.PlayerHasAccess(client, privilege, nil)
-
-            return bHasAccess
-        end
+        return
     end
 
-    if data.onCheckAccess then
-        local onRun = data.onRun
-        data._onRun = data.onRun
-        data.onRun = function(client, arguments)
-            if lia.command.hasAccess(client, command) then
-                return onRun(client, arguments)
-            else
-                return "@noPerm"
-            end
+    local privilege = "Lilia - Commands - " .. (isstring(data.privilege) and data.privilege or command)
+    if not CAMI.GetPrivilege(privilege) then
+        CAMI.RegisterPrivilege(
+            {
+                Name = privilege,
+                MinAccess = data.superAdminOnly and "superadmin" or (data.adminOnly and "admin" or "user"),
+                Description = data.description
+            }
+        )
+    end
+
+    local onRun = data.onRun
+    data._onRun = data.onRun
+    data.onRun = function(client, arguments)
+        if lia.command.hasAccess(client, command, data) then
+            return onRun(client, arguments)
+        else
+            return "@noPerm"
         end
     end
 
@@ -56,17 +52,20 @@ function lia.command.add(command, data)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function lia.command.hasAccess(client, command)
-    command = lia.command.list[command:lower()]
-    if command then
-        if command.onCheckAccess then
-            return command.onCheckAccess(client)
-        else
-            return true
-        end
+function lia.command.hasAccess(client, command, data)
+    if data == nil then
+        data = lia.command.list[command]
     end
 
-    return hook.Run("CanPlayerUseCommand", client, command) or false
+    local privilege = data.privilege
+    if not privilege then
+        privilege = command
+    end
+
+    local bHasAccess, _ = CAMI.PlayerHasAccess(client, "Lilia - Commands - " .. privilege, nil)
+    if hook.GetTable()["CanPlayerUseCommand"] then return hook.Run("CanPlayerUseCommand") end
+
+    return bHasAccess
 end
 
 --------------------------------------------------------------------------------------------------------------------------

@@ -6,6 +6,7 @@ CAMI.RegisterPrivilege(
         Description = "Allows access to No Clip.",
     }
 )
+
 --------------------------------------------------------------------------------------------------------------------------
 CAMI.RegisterPrivilege(
     {

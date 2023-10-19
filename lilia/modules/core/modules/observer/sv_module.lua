@@ -35,6 +35,8 @@ function MODULE:PlayerNoClip(client, state)
             client:SetNoTarget(false)
             hook.Run("OnPlayerObserve", client, state)
         end
+    else
+        return false
     end
 end
 --------------------------------------------------------------------------------------------------------------------------
