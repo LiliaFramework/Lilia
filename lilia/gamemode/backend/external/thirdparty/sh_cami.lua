@@ -230,7 +230,6 @@ CAMI.RegisterPrivilege
 function CAMI.RegisterPrivilege(privilege)
     privileges[privilege.Name] = privilege
     hook.Call("CAMI.OnPrivilegeRegistered", nil, privilege)
-    print("Registered Privilege " .. privilege.Name .. " with default access to " .. privilege.MinAccess .. ".")
 
     return privilege
 end
