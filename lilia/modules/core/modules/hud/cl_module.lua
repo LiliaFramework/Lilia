@@ -67,6 +67,10 @@ function MODULE:HUDPaintBackground()
     local localPlayer = LocalPlayer()
     if not localPlayer.getChar(localPlayer) then return end
     local frameTime = FrameTime()
+    if hasVignetteMaterial and lia.config.Vignette then
+        self:HUDPaintBackgroundVignette()
+    end
+
     if nextUpdate < RealTime() then
         nextUpdate = RealTime() + 0.5
         lastTrace.start = localPlayer.GetShootPos(localPlayer)
@@ -169,10 +173,6 @@ function MODULE:DrawEntityInfo(entity, alpha, position)
     local x, y = position.x, position.y
     local ty = 0
     charInfo = {}
-    if hasVignetteMaterial and lia.config.Vignette then
-        self:HUDPaintBackgroundVignette()
-    end
-
     if entity.widthCache ~= DescWidth:GetFloat() then
         entity.widthCache = DescWidth:GetFloat()
         entity.liaNameCache = nil
