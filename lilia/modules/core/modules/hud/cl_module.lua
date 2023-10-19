@@ -63,7 +63,7 @@ function MODULE:ShouldDrawCrosshair()
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function PLUGIN:HUDPaintBackground()
+function MODULE:HUDPaintBackground()
     local localPlayer = LocalPlayer()
     if not localPlayer.getChar(localPlayer) then return end
     local realTime = RealTime()
@@ -162,7 +162,7 @@ function MODULE:DrawCharInfo(client, character, info)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function PLUGIN:DrawEntityInfo(entity, alpha, position)
+function MODULE:DrawEntityInfo(entity, alpha, position)
     if not entity.IsPlayer(entity) then return end
     if hook.Run("ShouldDrawPlayerInfo", entity) == false then return end
     local character = entity.getChar(entity)
