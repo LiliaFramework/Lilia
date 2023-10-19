@@ -76,12 +76,6 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function lia.module.loadExtras(path)
-    lia.util.includeDir(path .. "/config", true, true)
-    lia.util.includeDir(path .. "/libs", true, true)
-    lia.util.includeDir(path .. "/libraries", true, true)
-    lia.util.includeDir(path .. "/commands", true, true)
-    lia.util.includeDir(path .. "/netcalls", true, true)
-    lia.util.includeDir(path .. "/meta", true, true)
     lia.faction.loadFromDir(path .. "/factions")
     lia.class.loadFromDir(path .. "/classes")
     lia.util.includeDir(path .. "/derma", true)
@@ -90,6 +84,12 @@ function lia.module.loadExtras(path)
     lia.lang.loadFromDir(path .. "/languages")
     lia.module.loadFromDir(path .. "/modules")
     lia.attribs.loadFromDir(path .. "/attributes")
+    lia.util.includeDir(path .. "/config", true, true)
+    lia.util.includeDir(path .. "/libs", true, true)
+    lia.util.includeDir(path .. "/libraries", true, true)
+    lia.util.includeDir(path .. "/commands", true, true)
+    lia.util.includeDir(path .. "/netcalls", true, true)
+    lia.util.includeDir(path .. "/meta", true, true)
     hook.Run("DoModuleIncludes", path, MODULE)
     local hookID = "liaItems" .. path
     hook.Add(
