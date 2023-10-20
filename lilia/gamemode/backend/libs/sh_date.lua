@@ -112,7 +112,8 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function lia.date.GetPreFormattedDate(StartingMessage, timeToFormat, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
-    local currentTime = timeToFormat
+    if timeToFormat == nil then return "No Time Provided!" end
+    local currentTime = tostring(timeToFormat)
     if StartingMessage then
         output = StartingMessage
     else
@@ -167,7 +168,8 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function lia.date.GetPreFormattedDateInGame(StartingMessage, timeToFormat, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
-    local currentTime = timeToFormat
+    if timeToFormat == nil then return "No Time Provided!" end
+    local currentTime = tostring(timeToFormat)
     if StartingMessage then
         output = StartingMessage
     else
