@@ -158,18 +158,4 @@ function ITEM:onSave()
         self:setData("ammo", weapon:Clip1())
     end
 end
-
---------------------------------------------------------------------------------------------------------------------------
-function ITEM:onRemoved()
-    local inv = lia.item.inventories[self.invID]
-    if inv then
-        local receiver = inv.getReceiver and inv:getReceiver()
-        if IsValid(receiver) and receiver:IsPlayer() then
-            local weapon = receiver:GetWeapon(self.class)
-            if IsValid(weapon) then
-                weapon:Remove()
-            end
-        end
-    end
-end
 --------------------------------------------------------------------------------------------------------------------------

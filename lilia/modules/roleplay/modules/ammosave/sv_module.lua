@@ -31,4 +31,17 @@ function MODULE:PlayerLoadedChar(client)
         end
     )
 end
+
+--------------------------------------------------------------------------------------------------------------------------
+function MODULE:PlayerDeath(client, inflictor, attacker)
+    local inventory = char:getInv()
+    local items = inventory:getItems()
+    if inventory and not lia.config.KeepAmmoOnDeath then
+        for _, v in pairs(items) do
+            if (v.isWeapon or v.isCW) and v:getData("equip") then
+                v:setData("ammo", nil)
+            end
+        end
+    end
+end
 --------------------------------------------------------------------------------------------------------------------------

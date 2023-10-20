@@ -60,6 +60,7 @@ if not lia.config.WasInitialized then
         -- Player Attribute Settings
         LoseWeapononDeathNPC = false, -- NPCs do not lose weapons on death
         LoseWeapononDeathHuman = false, -- Players do not lose weapons on death
+        LoseWeapononDeathWorld = false, -- Players do not lose weapons on word related deaths
         BranchWarning = true, -- Enable warnings for branching in code
         VersionEnabled = true, -- Enable version tracking
         version = "1.0", -- Server version

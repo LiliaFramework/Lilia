@@ -209,65 +209,46 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerDeath(client, inflictor, attacker)
     local char = client:getChar()
-    if char then
-        netstream.Start(client, "removeF1")
-        if IsValid(client.liaRagdoll) then
-            client.liaRagdoll.liaIgnoreDelete = true
-            client.liaRagdoll:Remove()
-            client:setLocalVar("blur", nil)
+    if not char then return end
+    netstream.Start(client, "removeF1")
+    if IsValid(client.liaRagdoll) then
+        client.liaRagdoll.liaIgnoreDelete = true
+        client.liaRagdoll:Remove()
+        client:setLocalVar("blur", nil)
+    end
+
+    char:setData("deathPos", client:GetPos())
+    client:setNetVar("deathStartTime", CurTime())
+    client:setNetVar("deathTime", CurTime() + 5)
+    if lia.config.DeathPopupEnabled then
+        net.Start("death_client")
+        net.WriteString(attacker:Nick())
+        net.WriteFloat(attacker:getChar():getID())
+        net.Send(client)
+    end
+
+    if (attacker:IsPlayer() and lia.config.LoseWeapononDeathHuman) or (not attacker:IsPlayer() and lia.config.LoseWeapononDeathNPC) or (lia.config.LoseWeapononDeathWorld and attacker:IsWorld()) then
+        self:RemoveAllEquippedWeapons(client)
+    end
+end
+
+--------------------------------------------------------------------------------------------------------------------------
+function GM:RemoveAllEquippedWeapons(client)
+    local char = client:getChar()
+    local inventory = char:getInv()
+    local items = inventory:getItems()
+    client.carryWeapons = {}
+    client.LostItems = {}
+    for _, v in pairs(items) do
+        if (v.isWeapon or v.isCW) and v:getData("equip") then
+            table.insert(client.LostItems, v.uniqueID)
+            v:remove()
         end
+    end
 
-        char:setData("deathPos", client:GetPos())
-        client:setNetVar("deathStartTime", CurTime())
-        client:setNetVar("deathTime", CurTime() + 5)
-        local inventory = char:getInv()
-        local items = inventory:getItems()
-        client.carryWeapons = {}
-        client.LostItems = {}
-        if inventory and lia.config.KeepAmmoOnDeath then
-            for _, v in pairs(items) do
-                if (v.isWeapon or v.isCW) and v:getData("equip") then
-                    v:setData("ammo", nil)
-                end
-            end
-        end
-
-        if client ~= attacker and not attacker:IsWorld() then
-            if attacker:IsPlayer() then
-                if lia.config.DeathPopupEnabled then
-                    net.Start("death_client")
-                    net.WriteString(attacker:Nick())
-                    net.WriteFloat(attacker:getChar():getID())
-                    net.Send(client)
-                end
-
-                if lia.config.LoseWeapononDeathHuman then
-                    for _, v in pairs(items) do
-                        if (v.isWeapon or v.isCW) and v:getData("equip") then
-                            table.insert(client.LostItems, v.uniqueID)
-                            v:remove()
-                        end
-                    end
-
-                    if #client.LostItems > 0 then
-                        local amount = #client.LostItems > 1 and #client.LostItems .. " items" or "an item"
-                        client:notify("Because you died, you have lost " .. amount .. ".")
-                    end
-                end
-            elseif not attacker:IsPlayer() and lia.config.LoseWeapononDeathNPC then
-                for _, v in pairs(items) do
-                    if (v.isWeapon or v.isCW) and v:getData("equip") then
-                        table.insert(client.LostItems, v.uniqueID)
-                        v:remove()
-                    end
-                end
-
-                if #client.LostItems > 0 then
-                    local amount = #client.LostItems > 1 and #client.LostItems .. " items" or "an item"
-                    client:notify("Because you died, you have lost " .. amount .. ".")
-                end
-            end
-        end
+    if #client.LostItems > 0 then
+        local amount = #client.LostItems > 1 and #client.LostItems .. " items" or "an item"
+        client:notify("Because you died, you have lost " .. amount .. ".")
     end
 end
 
