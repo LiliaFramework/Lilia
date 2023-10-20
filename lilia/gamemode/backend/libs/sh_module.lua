@@ -34,11 +34,11 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     _G[variable] = MODULE
     MODULE.loading = true
     MODULE.path = path
+    lia.util.include(isSingleFile and path or path .. "/sh_" .. variable:lower() .. ".lua", "shared")
     if not isSingleFile then
         lia.module.loadExtras(path)
     end
 
-    lia.util.include(isSingleFile and path or path .. "/sh_" .. variable:lower() .. ".lua", "shared")
     MODULE.loading = false
     local uniqueID2 = uniqueID
     if uniqueID2 == "schema" then
