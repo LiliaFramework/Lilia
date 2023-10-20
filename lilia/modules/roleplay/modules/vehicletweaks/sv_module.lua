@@ -3,7 +3,7 @@ hook.Add(
     "simfphysUse",
     "simfphysUse",
     function(entity, client)
-        if simfphys.IsCar(entity) and lia.config.TimeToEnterVehicle > 0 and not (entity.IsBeingEntered or entity.IsLocked) then
+        if (lia.module.list["tying"] and not IsHandcuffed(client)) and simfphys.IsCar(entity) and lia.config.TimeToEnterVehicle > 0 and not (entity.IsBeingEntered or entity.IsLocked) then
             entity.IsBeingEntered = true
             client:setAction("Entering Vehicle...", lia.config.TimeToEnterVehicle)
             client:doStaredAction(

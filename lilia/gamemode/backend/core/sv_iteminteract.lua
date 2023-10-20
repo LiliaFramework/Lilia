@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------------------------------------------------
 function GM:CanPlayerInteractItem(client, action, item)
     if not client:Alive() or client:getLocalVar("ragdoll") then return false end
-    if client:getNetVar("fallingover") or client:getNetVar("restricted") then return false end
+    if client:getNetVar("fallingover") then return false end
     if action == "drop" and hook.Run("CanPlayerDropItem", client, item) then
         if client.dropDelay == nil then
             client.dropDelay = true
