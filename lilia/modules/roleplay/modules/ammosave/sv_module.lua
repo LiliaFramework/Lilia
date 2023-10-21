@@ -34,6 +34,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:PlayerDeath(client, inflictor, attacker)
+    local char = client:getChar()
     local inventory = char:getInv()
     local items = inventory:getItems()
     if inventory and not lia.config.KeepAmmoOnDeath then
