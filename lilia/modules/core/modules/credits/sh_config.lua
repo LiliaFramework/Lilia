@@ -30,7 +30,7 @@ lia.config.GamemodeCreators = {
 --------------------------------------------------------------------------------------------------------------------------
 lia.config.contributors = {
     desc = "View All Contributors",
-    url = "https://github.com/bleonheart/Lilia/graphs/contributors"
+    url = "https://github.com/Lilia-Framework/Lilia/graphs/contributors"
 }
 
 --------------------------------------------------------------------------------------------------------------------------
