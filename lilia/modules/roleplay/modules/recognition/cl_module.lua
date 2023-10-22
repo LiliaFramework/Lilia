@@ -7,7 +7,8 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:GetDisplayedDescription(client)
-    if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar()) and not hook.Run("IsPlayerRecognized", client) then return L"noRecog" end
+    local character = client:getChar()
+    if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar()) and not hook.Run("IsPlayerRecognized", client) then return character:getDesc() end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -22,7 +23,7 @@ function MODULE:GetDisplayedName(client, chatType, location)
             if chatType and hook.Run("IsRecognizedChatType", chatType) then
                 return "[Unknown Person]"
             elseif location == "hud" then
-                return character:getDesc()
+                return L"noRecog"
             elseif not chatType then
                 return L"unknown"
             end
