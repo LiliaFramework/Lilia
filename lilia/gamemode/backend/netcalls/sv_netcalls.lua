@@ -55,6 +55,21 @@ util.AddNetworkString("SendPrintTable")
 --------------------------------------------------------------------------------------------------------------------------
 util.AddNetworkString("SendPrint")
 --------------------------------------------------------------------------------------------------------------------------
+util.AddNetworkString("StringRequest")
+--------------------------------------------------------------------------------------------------------------------------
+net.Receive(
+    "StringRequest",
+    function(length, client)
+        local time = net.ReadUInt(32)
+        local text = net.ReadString()
+        if client.StrReqs and client.StrReqs[time] then
+            client.StrReqs[time](text)
+            client.StrReqs[time] = nil
+        end
+    end
+)
+
+--------------------------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaStringReq",
     function(_, client)

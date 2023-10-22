@@ -214,4 +214,17 @@ function playerMeta:getEyeEnt(distance)
 
     return e:GetPos():Distance(self:GetPos()) <= distance and e or nil
 end
+
+--------------------------------------------------------------------------------------------------------------------------
+function playerMeta:RequestString(title, subTitle, callback, default)
+    local time = math.floor(os.time())
+    self.StrReqs = self.StrReqs or {}
+    self.StrReqs[time] = callback
+    net.Start("StringRequest")
+    net.WriteUInt(time, 32)
+    net.WriteString(title)
+    net.WriteString(subTitle)
+    net.WriteString(default)
+    net.Send(self)
+end
 --------------------------------------------------------------------------------------------------------------------------
