@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:PlayerSwitchFlashlight(client, enabled)
-    if not client:getChar() then return false end
-    if not lia.config.flashlightenabled then return false end
+    if not (lia.config.flashlightenabled and client:getChar())  then return false end
     if lia.config.FlashlightItemRequired ~= nil then
         if not client:getChar():getInv():hasItem(lia.config.FlashlightItemRequired) then
             return false
@@ -9,7 +8,7 @@ function MODULE:PlayerSwitchFlashlight(client, enabled)
             if (client.FlashlightEnable or 0) > CurTime() and enabled then
                 return false
             else
-                client.FlashlightEnable = CurTime() + cooldown
+                client.FlashlightEnable = CurTime() + lia.config.FlashlightToggleCooldown
 
                 return true
             end
@@ -18,7 +17,7 @@ function MODULE:PlayerSwitchFlashlight(client, enabled)
         if (client.FlashlightEnable or 0) > CurTime() and enabled then
             return false
         else
-            client.FlashlightEnable = CurTime() + cooldown
+            client.FlashlightEnable = CurTime() + lia.config.FlashlightToggleCooldown
 
             return true
         end
