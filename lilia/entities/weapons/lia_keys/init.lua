@@ -4,7 +4,7 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 --------------------------------------------------------------------------------------------------------------------------
 function SWEP:ServerSecondaryAttack(owner, entity, time)
-    if IsValid(entity) and ((entity:isDoor() and entity:checkDoorAccess(owner)) or (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == owner) or entity:GetCreator() == owner or simfphys.IsCar(entity)) then
+    if (entity:isDoor() and entity:checkDoorAccess(owner)) or (entity:IsVehicle() or (simfphys and simfphys.IsCar(entity))) and (entity:GetCreator() == owner) then
         owner:setAction(
             "@unlocking",
             time,
@@ -19,7 +19,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function SWEP:ServerPrimaryAttack(owner, entity, time)
-    if ((entity:isDoor() and entity:checkDoorAccess(owner)) or (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == owner)) or (entity:GetCreator() == owner and simfphys and simfphys.IsCar(entity)) then
+    if (entity:isDoor() and entity:checkDoorAccess(owner)) or (entity:IsVehicle() or (simfphys and simfphys.IsCar(entity))) and (entity:GetCreator() == owner) then
         owner:setAction(
             "@locking",
             time,
