@@ -267,13 +267,12 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerInitialSpawn(client)
     if client:IsBot() then return hook.Run("SetupBotCharacter", client) end
-    client.liaJoinTime = RealTime()
     client:loadLiliaData(
         function(data)
             if not IsValid(client) then return end
             local address = client:IPAddress()
             client:setLiliaData("lastIP", address)
-            netstream.Start(client, "liaDataSync", data, client.firstJoin, client.lastJoin)
+            netstream.Start(client, "liaDataSync", data, client.firstJoin, RealTime())
             for _, v in pairs(lia.item.instances) do
                 if v.entity and v.invID == 0 then
                     v:sync(client)
