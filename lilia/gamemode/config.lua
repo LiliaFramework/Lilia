@@ -209,6 +209,16 @@ if not lia.config.WasInitialized then
                 Description = "Allows access to Spawning Cars."
             },
             {
+                Name = "Lilia - Staff Permissions - Local Event Chat",
+                MinAccess = "admin",
+                Description = "Allows access to Local Event Chat."
+            },
+            {
+                Name = "Lilia - Staff Permissions - Event Chat",
+                MinAccess = "admin",
+                Description = "Allows access to Event Chat."
+            },
+            {
                 Name = "Lilia - Spawn Permissions - Can Spawn Restricted Cars",
                 MinAccess = "superadmin",
                 Description = "Allows access to Spawning Restricted Cars."

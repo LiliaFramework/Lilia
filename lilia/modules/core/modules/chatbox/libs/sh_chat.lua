@@ -155,13 +155,52 @@ function MODULE:InitializedConfig()
     )
 
     lia.chat.register(
+        "eventlocal",
+        {
+            onCanSay = function(speaker, text) return CAMI.PlayerHasAccess(speaker, "Lilia - Staff Permissions - Local Event Chat", nil) end,
+            onCanHear = lia.config.ChatRange * 6,
+            onChatAdd = function(speaker, text)
+                chat.AddText(Color(255, 150, 0), text)
+            end,
+            prefix = {"/eventlocal"},
+            font = "liaMediumFont"
+        }
+    )
+
+    lia.chat.register(
         "event",
         {
-            onCanSay = function(speaker, text) return speaker:IsAdmin() end,
+            onCanSay = function(speaker, text) return CAMI.PlayerHasAccess(speaker, "Lilia - Staff Permissions - Event Chat", nil) end,
+            onCanHear = function(speaker, text) return true end,
             onChatAdd = function(speaker, text)
-                chat.AddText(lia.chat.timestamp(false), text)
+                chat.AddText(Color(255, 150, 0), text)
             end,
-            prefix = {"/event"}
+            prefix = {"/event"},
+            font = "liaMediumFont"
+        }
+    )
+
+    lia.chat.register(
+        "rolld",
+        {
+            format = "%s has %s.",
+            color = Color(155, 111, 176),
+            filter = "actions",
+            font = "liaChatFontItalics",
+            onCanHear = lia.config.ChatRange,
+            deadCanChat = true
+        }
+    )
+
+    lia.chat.register(
+        "flip",
+        {
+            format = "%s flipped a coin and it landed on %s.",
+            color = Color(155, 111, 176),
+            filter = "actions",
+            font = "liaChatFontItalics",
+            onCanHear = lia.config.ChatRange,
+            deadCanChat = true
         }
     )
 
