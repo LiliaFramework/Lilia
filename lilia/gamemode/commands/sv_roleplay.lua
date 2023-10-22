@@ -1,5 +1,57 @@
 --------------------------------------------------------------------------------------------------------------------------
 lia.command.add(
+    "flip",
+    {
+        onRun = function(client, arguments)
+            local roll = math.random(0, 1)
+            if roll == 1 then
+                lia.chat.send(client, "flip", "Heads")
+            else
+                lia.chat.send(client, "flip", "Tails")
+            end
+        end
+    }
+)
+
+--------------------------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "rolld",
+    {
+        syntax = "<number dice> <number pips> <number bonus>",
+        onRun = function(client, arguments)
+            local dice = math.Clamp(tonumber(arguments[1]) or 1, 1, 100)
+            local pips = math.Clamp(tonumber(arguments[2]) or 6, 1, 100)
+            local bonus = tonumber(arguments[3]) or nil
+            if bonus then
+                bonus = math.Clamp(bonus, 0, 1000000)
+            end
+
+            local total = 0
+            local dmsg = ""
+            for i = 1, dice do
+                local roll = math.random(1, pips)
+                total = total + roll
+                if i > 1 then
+                    dmsg = dmsg .. ", "
+                end
+
+                dmsg = dmsg .. roll
+            end
+
+            local msg = ""
+            if bonus then
+                total = total + bonus
+                msg = msg .. " + " .. bonus
+            end
+
+            msg = "rolled " .. total .. " [" .. dmsg .. "]" .. " on " .. dice .. "d" .. pips .. msg
+            lia.chat.send(client, "rolld", msg)
+        end
+    }
+)
+
+--------------------------------------------------------------------------------------------------------------------------
+lia.command.add(
     "roll",
     {
         adminOnly = false,
