@@ -1,5 +1,16 @@
 --------------------------------------------------------------------------------------------------------------------------
 lia.command.add(
+    "charaddmoney",
+    {
+        privilege = "Add Money",
+        superAdminOnly = true,
+        syntax = "<string target> <number amount>",
+        onRun = function(client, arguments) end
+    }
+)
+
+--------------------------------------------------------------------------------------------------------------------------
+lia.command.add(
     "charban",
     {
         superAdminOnly = true,
