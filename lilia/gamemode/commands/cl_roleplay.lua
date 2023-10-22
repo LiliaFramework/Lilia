@@ -1,7 +1,25 @@
 --------------------------------------------------------------------------------------------------------------------------
-lia.config.AdvertisementEnabled = lia.config.AdvertisementEnabled or true
-lia.config.FactionBroadcastEnabled = lia.config.FactionBroadcastEnabled or true
+lia.command.add(
+    "flip",
+    {
+        adminOnly = false,
+        privilege = "Default User Commands",
+        onRun = function(client, arguments) end
+    }
+)
+
 --------------------------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "rolld",
+    {
+        adminOnly = false,
+        privilege = "Default User Commands",
+        syntax = "<number dice> <number pips> <number bonus>",
+        onRun = function(client, arguments) end
+    }
+)
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 lia.command.add(
     "roll",
     {

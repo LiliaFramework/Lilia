@@ -2,6 +2,8 @@
 lia.command.add(
     "flip",
     {
+        adminOnly = false,
+        privilege = "Default User Commands",
         onRun = function(client, arguments)
             local roll = math.random(0, 1)
             if roll == 1 then
@@ -17,6 +19,8 @@ lia.command.add(
 lia.command.add(
     "rolld",
     {
+        adminOnly = false,
+        privilege = "Default User Commands",
         syntax = "<number dice> <number pips> <number bonus>",
         onRun = function(client, arguments)
             local dice = math.Clamp(tonumber(arguments[1]) or 1, 1, 100)

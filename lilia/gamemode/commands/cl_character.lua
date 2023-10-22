@@ -2,6 +2,7 @@
 lia.command.add(
     "charsetspeed",
     {
+        privilege = "Set Character Speed",
         adminOnly = true,
         syntax = "<string name> <number speed>",
         onRun = function(client, arguments) end
@@ -13,6 +14,7 @@ lia.command.add(
     "charsetjump",
     {
         adminOnly = true,
+        privilege = "Set Character Jump",
         syntax = "<string name> <number power>",
         onRun = function(client, arguments) end
     }

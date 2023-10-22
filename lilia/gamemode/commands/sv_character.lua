@@ -3,6 +3,7 @@ lia.command.add(
     "charsetspeed",
     {
         adminOnly = true,
+        privilege = "Set Character Speed",
         syntax = "<string name> <number speed>",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
@@ -21,6 +22,7 @@ lia.command.add(
     "charsetjump",
     {
         adminOnly = true,
+        privilege = "Set Character Jump",
         syntax = "<string name> <number power>",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
