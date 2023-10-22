@@ -1,5 +1,25 @@
 --------------------------------------------------------------------------------------------------------------------------
 lia.command.add(
+    "charsetspeed",
+    {
+        adminOnly = true,
+        syntax = "<string name> <number speed>",
+        onRun = function(client, arguments) end
+    }
+)
+
+--------------------------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "charsetjump",
+    {
+        adminOnly = true,
+        syntax = "<string name> <number power>",
+        onRun = function(client, arguments) end
+    }
+)
+
+--------------------------------------------------------------------------------------------------------------------------
+lia.command.add(
     "charaddmoney",
     {
         privilege = "Add Money",

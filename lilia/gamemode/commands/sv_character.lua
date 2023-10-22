@@ -1,5 +1,41 @@
 --------------------------------------------------------------------------------------------------------------------------
 lia.command.add(
+    "charsetspeed",
+    {
+        adminOnly = true,
+        syntax = "<string name> <number speed>",
+        onRun = function(client, arguments)
+            local target = lia.command.findPlayer(client, arguments[1])
+            local speed = tonumber(arguments[2]) or lia.config.get("walkSpeed")
+            if IsValid(target) and target:getChar() then
+                target:SetRunSpeed(speed)
+            else
+                client:notify("Invalid Target")
+            end
+        end
+    }
+)
+
+--------------------------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "charsetjump",
+    {
+        adminOnly = true,
+        syntax = "<string name> <number power>",
+        onRun = function(client, arguments)
+            local target = lia.command.findPlayer(client, arguments[1])
+            local power = tonumber(arguments[2]) or 200
+            if IsValid(target) and target:getChar() then
+                target:SetJumpPower(power)
+            else
+                client:notify("Invalid Target")
+            end
+        end
+    }
+)
+
+--------------------------------------------------------------------------------------------------------------------------
+lia.command.add(
     "charaddmoney",
     {
         privilege = "Add Money",
