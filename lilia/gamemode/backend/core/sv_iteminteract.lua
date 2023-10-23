@@ -2,68 +2,80 @@
 function GM:CanPlayerInteractItem(client, action, item)
     if not client:Alive() or client:getLocalVar("ragdoll") then return false end
     if client:getNetVar("fallingover") then return false end
-    if action == "drop" and hook.Run("CanPlayerDropItem", client, item) then
-        if client.dropDelay == nil then
-            client.dropDelay = true
-            timer.Create(
-                "DropDelay." .. client:SteamID64(),
-                lia.config.DropDelay,
-                1,
-                function()
-                    if IsValid(client) then
-                        client.dropDelay = nil
+    if action == "drop" then
+        if hook.Run("CanPlayerDropItem", client, item) ~= false then
+            if client.dropDelay == nil then
+                client.dropDelay = true
+                timer.Create(
+                    "DropDelay." .. client:SteamID64(),
+                    lia.config.DropDelay,
+                    1,
+                    function()
+                        if IsValid(client) then
+                            client.dropDelay = nil
+                        end
                     end
-                end
-            )
+                )
 
-            return true
+                return true
+            else
+                client:notify("You need to wait before dropping something again!")
+
+                return false
+            end
         else
-            client:notify("You need to wait before dropping something again!")
-
             return false
         end
     end
 
-    if action == "take" and hook.Run("CanPlayerTakeItem", client, item) then
-        if client.takeDelay == nil then
-            client.takeDelay = true
-            timer.Create(
-                "TakeDelay." .. client:SteamID64(),
-                lia.config.TakeDelay,
-                1,
-                function()
-                    if IsValid(client) then
-                        client.takeDelay = nil
+    if action == "take" then
+        if hook.Run("CanPlayerTakeItem", client, item) ~= false then
+            if client.takeDelay == nil then
+                client.takeDelay = true
+                timer.Create(
+                    "TakeDelay." .. client:SteamID64(),
+                    lia.config.TakeDelay,
+                    1,
+                    function()
+                        if IsValid(client) then
+                            client.takeDelay = nil
+                        end
                     end
-                end
-            )
+                )
 
-            return true
+                return true
+            else
+                client:notify("You need to wait before picking something up again!")
+
+                return false
+            end
         else
-            client:notify("You need to wait before picking something up again!")
-
             return false
         end
     end
 
-    if action == "equip" and hook.Run("CanPlayerEquipItem", client, item) then
-        if client.equipDelay == nil then
-            client.equipDelay = true
-            timer.Create(
-                "EquipDelay." .. client:SteamID64(),
-                lia.config.EquipDelay,
-                1,
-                function()
-                    if IsValid(client) then
-                        client.equipDelay = nil
+    if action == "equip" then
+        if hook.Run("CanPlayerEquipItem", client, item) ~= false then
+            if client.equipDelay == nil then
+                client.equipDelay = true
+                timer.Create(
+                    "EquipDelay." .. client:SteamID64(),
+                    lia.config.EquipDelay,
+                    1,
+                    function()
+                        if IsValid(client) then
+                            client.equipDelay = nil
+                        end
                     end
-                end
-            )
+                )
 
-            return true
+                return true
+            else
+                client:notify("You need to wait before equipping something again!")
+
+                return false
+            end
         else
-            client:notify("You need to wait before equipping something again!")
-
             return false
         end
     end
@@ -81,8 +93,6 @@ function GM:CanPlayerEquipItem(client, item)
 
         return false
     end
-
-    return true
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -104,8 +114,6 @@ function GM:CanPlayerTakeItem(client, item)
             return false
         end
     end
-
-    return true
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -129,7 +137,5 @@ function GM:CanPlayerDropItem(client, item)
 
         return false
     end
-
-    return true
 end
 --------------------------------------------------------------------------------------------------------------------------
