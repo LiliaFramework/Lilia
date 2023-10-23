@@ -10,6 +10,37 @@ lia.command.add(
 
 --------------------------------------------------------------------------------------------------------------------------
 lia.command.add(
+    "status",
+    {
+        privilege = "Default User Commands",
+        onRun = function(client, arguments) end
+    }
+)
+
+--------------------------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "setclass",
+    {
+        privilege = "Set Class",
+        adminOnly = true,
+        syntax = "<string target> <string class>",
+        onRun = function(client, arguments) end,
+    }
+)
+
+-------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "checkmoney",
+    {
+        syntax = "<string target>",
+        privilege = "Check Money",
+        adminOnly = true,
+        onRun = function(client, arguments) end
+    }
+)
+
+-------------------------------------------------------------------------------------------------------------------------
+lia.command.add(
     "cleanitems",
     {
         superAdminOnly = true,

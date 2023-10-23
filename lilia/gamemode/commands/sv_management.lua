@@ -16,6 +16,81 @@ lia.command.add(
     }
 )
 
+-------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "checkmoney",
+    {
+        syntax = "<string target>",
+        privilege = "Check Money",
+        adminOnly = true,
+        onRun = function(client, arguments)
+            local target = lia.command.findPlayer(client, arguments[1])
+            if target then
+                client:ChatPrint(target:GetName() .. " has: " .. target:getChar():getMoney() .. lia.currency.plural .. " (s)")
+            else
+                client:ChatPrint("Invalid Target")
+            end
+        end
+    }
+)
+
+--------------------------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "status",
+    {
+        privilege = "Default User Commands",
+        onRun = function(client, arguments)
+            if not client.metaAntiSpam or client.metaAntiSpam < CurTime() and SERVER then
+                local char = client:getChar()
+                client:ChatPrint("________________________________" .. "\n➣ Your SteamID: " .. client:SteamID() .. "\n➣ Your ping: " .. client:Ping() .. " ms")
+                client:ChatPrint("➣ Your faction: " .. team.GetName(client:Team()) .. "\n➣ Your class: " .. "\n➣ Your health: " .. client:Health())
+                client:ChatPrint("➣ Your description: " .. "\n[ " .. char:getDesc() .. " ]")
+                client:ChatPrint("➣ Your max health: " .. client:GetMaxHealth() .. "\n➣ Your max run speed: " .. client:GetRunSpeed() .. "\n➣ Your max walk speed: " .. client:GetWalkSpeed() .. "\n➣________________________________")
+                client.metaAntiSpam = CurTime() + 8
+            end
+        end
+    }
+)
+
+--------------------------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "setclass",
+    {
+        privilege = "Set Class",
+        adminOnly = true,
+        syntax = "<string target> <string class>",
+        onRun = function(client, arguments)
+            local target = lia.command.findPlayer(client, arguments[1])
+            if target and target:getChar() then
+                local character = target:getChar()
+                local classFound
+                if lia.class.list[name] then
+                    classFound = lia.class.list[name]
+                end
+
+                if not classFound then
+                    for k, v in ipairs(lia.class.list) do
+                        if lia.util.stringMatches(L(v.name, client), arguments[2]) then
+                            classFound = v
+                            break
+                        end
+                    end
+                end
+
+                if classFound then
+                    character:joinClass(classFound.index, true)
+                    target:notify("Your class was set to " .. classFound.name .. (client ~= target and "by " .. client:GetName() or "") .. ".")
+                    if client ~= target then
+                        client:notify("You set " .. target:GetName() .. "'s class to " .. classFound.name .. ".")
+                    end
+                else
+                    client:notify("Invalid class.")
+                end
+            end
+        end,
+    }
+)
+
 --------------------------------------------------------------------------------------------------------------------------
 lia.command.add(
     "cleanitems",
