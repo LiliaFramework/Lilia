@@ -303,7 +303,7 @@ if not lia.config.WasInitialized then
             ["ragdoll_sleepaftertime"] = "40.0f",
             ["cl_timeout"] = "3000",
             ["gmod_mcore_test"] = "1",
-            ["r_shadows"] = "0",
+            ["r_shadows"] = "1",
             ["cl_detaildist"] = "0",
             ["cl_threaded_client_leaf_system"] = "1",
             ["cl_threaded_bone_setup"] = "2",
