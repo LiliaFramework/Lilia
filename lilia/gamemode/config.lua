@@ -291,11 +291,13 @@ if not lia.config.WasInitialized then
             ["arccw_crosshair_outline"] = "0",
             ["arccw_crosshair_shotgun"] = "1",
         },
-        StartupConsoleCommand = {
+        ServerStartupConsoleCommand = {
             ["ai_serverragdolls"] = "1",
-            ["cl_playerspraydisable"] = 1,
-            ["mat_antialias"] = 2,
-            ["voice_maxgain"] = 1,
+            ["cl_playerspraydisable"] = "1",
+            ["mat_antialias"] = "2",
+        },
+        ClientStartupConsoleCommand = {
+            ["pac_debug_clmdl"] = "1",
             ["cl_resend"] = "11",
             ["cl_jiggle_bone_framerate_cutoff"] = "4",
             ["ragdoll_sleepaftertime"] = "40.0f",

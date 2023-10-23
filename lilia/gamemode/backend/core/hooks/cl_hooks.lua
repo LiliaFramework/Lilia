@@ -21,6 +21,10 @@ function GM:InitializedExtrasClient()
 	for _, timerName in pairs(lia.config.ClientTimersToRemove) do
 		timer.Remove(timerName)
 	end
+
+	for k, v in pairs(lia.config.ClientStartupConsoleCommand) do
+		RunConsoleCommand(k, v)
+	end
 end
 
 --------------------------------------------------------------------------------------------------------------------------

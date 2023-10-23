@@ -267,8 +267,7 @@ function GM:CalcMainActivity(client, velocity)
         client:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - client:EyeAngles()[2]))
     end
 
-    if self:HandlePlayerLanding(client, velocity, client.m_bWasOnGround) or self:HandlePlayerNoClipping(client, velocity) or self:HandlePlayerDriving(client) or self:HandlePlayerVaulting(client, velocity) or (usingPlayerAnims and self:HandlePlayerJumping(client, velocity)) or self:HandlePlayerSwimming(client, velocity) or self:HandlePlayerDucking(client, velocity) then
-    else
+    if not (self:HandlePlayerLanding(client, velocity, client.m_bWasOnGround) or self:HandlePlayerNoClipping(client, velocity) or self:HandlePlayerDriving(client) or self:HandlePlayerVaulting(client, velocity) or (usingPlayerAnims and self:HandlePlayerJumping(client, velocity)) or self:HandlePlayerSwimming(client, velocity) or self:HandlePlayerDucking(client, velocity)) then
         local len2D = velocity:Length2DSqr()
         if len2D > 22500 then
             client.CalcIdeal = ACT_MP_RUN
@@ -411,11 +410,7 @@ function GM:InitPostEntity()
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:InitializeConsoleCommandsShared()
-    for k, v in pairs(lia.config.StartupConsoleCommand) do
-        RunConsoleCommand(k, v)
-    end
-
+function GM:InitializedExtrasShared()
     if simfphys then
         for k, v in pairs(lia.config.SimfphysConsoleCommands) do
             RunConsoleCommand(k, v)
@@ -445,12 +440,6 @@ function GM:InitializeConsoleCommandsShared()
             hook.Remove(hookType, identifier)
         end
     end
-end
-
---------------------------------------------------------------------------------------------------------------------------
-function GM:InitializedExtrasShared()
-    RunConsoleCommand("pac_debug_clmdl", "1")
-    self:InitializeConsoleCommandsShared()
 end
 
 --------------------------------------------------------------------------------------------------------------------------

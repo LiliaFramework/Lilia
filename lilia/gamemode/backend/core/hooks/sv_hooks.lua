@@ -17,6 +17,10 @@ function GM:InitializedExtrasServer()
 		timer.Remove(timerName)
 	end
 
+	for k, v in pairs(lia.config.ServerStartupConsoleCommand) do
+		RunConsoleCommand(k, v)
+	end
+
 	for k, v in pairs(ents.GetAll()) do
 		if lia.config.EntitiesToBeRemoved[v:GetClass()] then
 			v:Remove()
