@@ -7,6 +7,10 @@ function MODULE:CreateMenuButtons(tabs)
             lia.gui.menu:Remove()
         end
 
+        if lia.config.KickOnEnteringMainMenu then
+            netstream.Start("liaCharKickSelf")
+        end
+
         vgui.Create("liaCharacter")
     end
 

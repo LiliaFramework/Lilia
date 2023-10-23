@@ -70,6 +70,21 @@ net.Receive(
 )
 
 --------------------------------------------------------------------------------------------------------------------------
+netstream.Hook(
+    "liaCharKickSelf",
+    function(client)
+        local char = client:getChar()
+        if char then
+            if not client:Alive() then
+                char:setData("pos", nil)
+            end
+
+            char:kick()
+        end
+    end
+)
+
+--------------------------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaStringReq",
     function(_, client)

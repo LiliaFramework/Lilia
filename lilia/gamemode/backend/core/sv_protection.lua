@@ -26,6 +26,21 @@ function GM:OnEntityCreated(entity)
         entity:DrawShadow(false)
     end
 
+    if entity:GetClass() == "prop_vehicle_prisoner_pod" then
+        entity:AddEFlags(EFL_NO_THINK_FUNCTION)
+        entity.nicoSeat = true
+    end
+
+    if entity:IsWidget() then
+        hook.Add(
+            "PlayerTick",
+            "GODisableEntWidgets2",
+            function(entity, n)
+                widgets.PlayerTick(entity, n)
+            end
+        )
+    end
+
     if not entity:IsRagdoll() then return end
     if entity:getNetVar("player", nil) then return end
     timer.Simple(

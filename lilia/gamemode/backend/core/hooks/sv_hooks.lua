@@ -1,6 +1,10 @@
 -------------------------------------------------------------------------------------------------------
 local last_jump_time = 0
 -------------------------------------------------------------------------------------------------------
+local vjThink = 0
+-------------------------------------------------------------------------------------------------------
+local loop, nicoSeats, nicoEnabled
+-------------------------------------------------------------------------------------------------------
 local defaultAngleData = {
 	["models/items/car_battery01.mdl"] = Angle(-15, 180, 0),
 	["models/props_junk/harpoon002a.mdl"] = Angle(0, 0, 0),
@@ -9,113 +13,121 @@ local defaultAngleData = {
 
 -------------------------------------------------------------------------------------------------------
 function GM:InitializedExtrasServer()
-	if ArcCW then
-		RunConsoleCommand("arccw_override_crosshair_off", "0")
+	for _, timerName in pairs(lia.config.ServerTimersToRemove) do
+		timer.Remove(timerName)
 	end
-
-	self:OptimizeSeats()
-	hook.Remove("PlayerTick", "TickWidgets")
-	hook.Remove("Think", "CheckSchedules")
-	hook.Remove("LoadGModSave", "LoadGModSave")
-	local timers = {"CheckHookTimes", "HostnameThink"}
-	for i = 1, #timers do
-		local t = timers[i]
-		if timer.Exists(t) then
-			timer.Remove(t)
-		end
-	end
-
-	hook.Add(
-		"OnEntityCreated",
-		"-",
-		function(m)
-			if m:IsWidget() then
-				hook.Add(
-					"PlayerTick",
-					"GODisableEntWidgets2",
-					function(m, n)
-						widgets.PlayerTick(m, n)
-					end
-				)
-
-				hook.Remove("OnEntityCreated", "WidgetInit")
-			end
-		end
-	)
 
 	for k, v in pairs(ents.GetAll()) do
 		if lia.config.EntitiesToBeRemoved[v:GetClass()] then
 			v:Remove()
 		end
 	end
-
-	timer.Simple(
-		3,
-		function()
-			RunConsoleCommand("ai_serverragdolls", "1")
-		end
-	)
 end
 
--------------------------------------------------------------------------------------------------------
-function GM:OptimizeSeats()
-	local EFL_NO_THINK_FUNCTION = EFL_NO_THINK_FUNCTION
-	local loop, nicoSeats, nicoEnabled
-	hook.Add(
-		"OnEntityCreated",
-		"nicoSeat",
-		function(seat)
-			if seat:GetClass() == "prop_vehicle_prisoner_pod" then
-				seat:AddEFlags(EFL_NO_THINK_FUNCTION)
-				seat.nicoSeat = true
+--------------------------------------------------------------------------------------------------------------------------
+function GM:OnPlayerJoinClass(client, class, oldClass)
+	local char = client:getChar()
+	if char and lia.config.PermaClass then
+		char:setData("pclass", class)
+	end
+
+	local info = lia.class.list[class]
+	local info2 = lia.class.list[oldClass]
+	if info.onSet then
+		info:onSet(client)
+	end
+
+	if info2 and info2.onLeave then
+		info2:onLeave(client)
+	end
+
+	netstream.Start(nil, "classUpdate", client)
+end
+
+--------------------------------------------------------------------------------------------------------------------------
+function GM:Think()
+	if VJ and vjThink <= CurTime() then
+		for k, v in pairs(lia.config.VJBaseConsoleCommands) do
+			RunConsoleCommand(k, v)
+		end
+
+		vjThink = CurTime() + 180
+	end
+
+	if not self.nextThink then
+		self.nextThink = 0
+	end
+
+	if self.nextThink < CurTime() then
+		local players = player.GetAll()
+		for k, v in pairs(players) do
+			local hp = v:Health()
+			local maxhp = v:GetMaxHealth()
+			if hp < maxhp and lia.config.AutoRegen then
+				local newHP = hp + lia.config.HealingAmount
+				v:SetHealth(math.Clamp(newHP, 0, maxhp))
 			end
 		end
-	)
 
-	hook.Add(
-		"Think",
-		"nicoSeat",
-		function()
-			if not nicoSeats or not nicoSeats[loop] then
-				loop = 1
-				nicoSeats = {}
-				for _, seat in ipairs(ents.FindByClass("prop_vehicle_prisoner_pod")) do
-					if seat.nicoSeat then
-						table.insert(nicoSeats, seat)
-					end
-				end
+		self.nextThink = CurTime() + lia.config.HealingTimer
+	end
+
+	if not nicoSeats or not nicoSeats[loop] then
+		loop = 1
+		nicoSeats = {}
+		for _, seat in ipairs(ents.FindByClass("prop_vehicle_prisoner_pod")) do
+			if seat.nicoSeat then
+				table.insert(nicoSeats, seat)
 			end
-
-			while nicoSeats[loop] and not IsValid(nicoSeats[loop]) do
-				loop = loop + 1
-			end
-
-			local seat = nicoSeats[loop]
-			if nicoEnabled ~= seat and IsValid(nicoEnabled) then
-				local saved = nicoEnabled:GetSaveTable()
-				if not saved["m_bEnterAnimOn"] and not saved["m_bExitAnimOn"] then
-					nicoEnabled:AddEFlags(EFL_NO_THINK_FUNCTION)
-					nicoEnabled = nil
-				end
-			end
-
-			if IsValid(seat) then
-				seat:RemoveEFlags(EFL_NO_THINK_FUNCTION)
-				nicoEnabled = seat
-			end
-
-			loop = loop + 1
-		end
-	)
-
-	local function nicoSeatAction(ply, seat)
-		if IsValid(seat) and seat.nicoSeat then
-			table.insert(nicoSeats, loop, seat)
 		end
 	end
 
-	hook.Add("PlayerEnteredVehicle", "nicoSeat", nicoSeatAction)
-	hook.Add("PlayerLeaveVehicle", "nicoSeat", nicoSeatAction)
+	while nicoSeats[loop] and not IsValid(nicoSeats[loop]) do
+		loop = loop + 1
+	end
+
+	local seat = nicoSeats[loop]
+	if nicoEnabled ~= seat and IsValid(nicoEnabled) then
+		local saved = nicoEnabled:GetSaveTable()
+		if not saved["m_bEnterAnimOn"] and not saved["m_bExitAnimOn"] then
+			nicoEnabled:AddEFlags(EFL_NO_THINK_FUNCTION)
+			nicoEnabled = nil
+		end
+	end
+
+	if IsValid(seat) then
+		seat:RemoveEFlags(EFL_NO_THINK_FUNCTION)
+		nicoEnabled = seat
+	end
+
+	loop = loop + 1
+end
+
+--------------------------------------------------------------------------------------------------------------------------
+function GM:PropBreak(attacker, ent)
+	if IsValid(ent) and ent:GetPhysicsObject():IsValid() then
+		constraint.RemoveAll(ent)
+	end
+end
+
+--------------------------------------------------------------------------------------------------------------------------
+function GM:OnPickupMoney(client, moneyEntity)
+	if moneyEntity and moneyEntity:IsValid() then
+		local amount = moneyEntity:getAmount()
+		client:getChar():giveMoney(amount)
+		client:notifyLocalized("moneyTaken", lia.currency.get(amount))
+	end
+end
+
+-------------------------------------------------------------------------------------------------------
+function GM:PlayerEnteredVehicle(ply, vehicle)
+	if IsValid(vehicle) and vehicle.nicoSeat then
+		table.insert(nicoSeats, loop, vehicle)
+	end
+end
+
+-------------------------------------------------------------------------------------------------------
+function GM:PlayerLeaveVehicle(ply, vehicle)
 end
 
 -------------------------------------------------------------------------------------------------------
@@ -531,16 +543,6 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:ServerPostInit()
-	if StormFox2 then
-		RunConsoleCommand("sf_time_speed", 1)
-		RunConsoleCommand("sf_addnight_temp", 4)
-		RunConsoleCommand("sf_windmove_props", 0)
-		RunConsoleCommand("sf_windmove_props_break", 0)
-		RunConsoleCommand("sf_windmove_props_unfreeze", 0)
-		RunConsoleCommand("sf_windmove_props_unweld", 0)
-		RunConsoleCommand("sf_windmove_props_makedebris", 0)
-	end
-
 	local doors = ents.FindByClass("prop_door_rotating")
 	for _, v in ipairs(doors) do
 		local parent = v:GetOwner()

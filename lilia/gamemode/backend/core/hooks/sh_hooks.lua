@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------------------------------------------------
-lia.config.PlayerModelTposingFixer = lia.config.PlayerModelTposingFixer or {}
---------------------------------------------------------------------------------------------------------------------------
 local vectorAngle = FindMetaTable("Vector").Angle
+--------------------------------------------------------------------------------------------------------------------------
 local normalizeAngle = math.NormalizeAngle
+--------------------------------------------------------------------------------------------------------------------------
 local oldCalcSeqOverride
 --------------------------------------------------------------------------------------------------------------------------
 lia.anim.DefaultTposingFixer = {
@@ -352,68 +352,22 @@ function GM:Move(client, moveData)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:CanItemBeTransfered(itemObject, curInv, inventory)
-    if itemObject.onCanBeTransfered then
-        local itemHook = itemObject:onCanBeTransfered(curInv, inventory)
-
-        return itemHook ~= false
-    end
-end
-
---------------------------------------------------------------------------------------------------------------------------
-function GM:OnPlayerJoinClass(client, class, oldClass)
-    local char = client:getChar()
-    if char and lia.config.PermaClass then
-        char:setData("pclass", class)
-    end
-
-    local info = lia.class.list[class]
-    local info2 = lia.class.list[oldClass]
-    if info.onSet then
-        info:onSet(client)
-    end
-
-    if info2 and info2.onLeave then
-        info2:onLeave(client)
-    end
-
-    netstream.Start(nil, "classUpdate", client)
-end
-
---------------------------------------------------------------------------------------------------------------------------
-function GM:Think()
-    if not self.nextThink then
-        self.nextThink = 0
-    end
-
-    if self.nextThink < CurTime() then
-        local players = player.GetAll()
-        for k, v in pairs(players) do
-            local hp = v:Health()
-            local maxhp = v:GetMaxHealth()
-            if hp < maxhp and lia.config.AutoRegen then
-                local newHP = hp + lia.config.HealingAmount
-                v:SetHealth(math.Clamp(newHP, 0, maxhp))
-            end
+function GM:CanItemBeTransfered(item, curInv, inventory)
+    if item.isBag and curInv ~= inventory and item.getInv and item:getInv() and table.Count(item:getInv():getItems()) > 0 then
+        local char = lia.char.loaded[curInv.owner]
+        if SERVER and char and char:getPlayer() then
+            char:getPlayer():notify("You can't transfer a backpack that has items inside of it.")
+        elseif CLIENT then
+            lia.util.notify("You can't transfer a backpack that has items inside of it.")
         end
 
-        self.nextThink = CurTime() + lia.config.HealingTimer
+        return false
     end
-end
 
---------------------------------------------------------------------------------------------------------------------------
-function GM:PropBreak(attacker, ent)
-    if IsValid(ent) and ent:GetPhysicsObject():IsValid() then
-        constraint.RemoveAll(ent)
-    end
-end
+    if item.onCanBeTransfered then
+        local itemHook = item:onCanBeTransfered(curInv, inventory)
 
---------------------------------------------------------------------------------------------------------------------------
-function GM:OnPickupMoney(client, moneyEntity)
-    if moneyEntity and moneyEntity:IsValid() then
-        local amount = moneyEntity:getAmount()
-        client:getChar():giveMoney(amount)
-        client:notifyLocalized("moneyTaken", lia.currency.get(amount))
+        return itemHook ~= false
     end
 end
 
@@ -457,14 +411,46 @@ function GM:InitPostEntity()
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:InitializedExtrasShared()
-    if simfphys then
-        RunConsoleCommand("sv_simfphys_gib_lifetime", "0")
-        RunConsoleCommand("sv_simfphys_fuel", "0")
-        RunConsoleCommand("sv_simfphys_teampassenger", "0")
-        RunConsoleCommand("sv_simfphys_traction_snow", "1")
-        RunConsoleCommand("sv_simfphys_damagemultiplicator", "100")
+function GM:InitializeConsoleCommandsShared()
+    for k, v in pairs(lia.config.StartupConsoleCommand) do
+        RunConsoleCommand(k, v)
     end
+
+    if simfphys then
+        for k, v in pairs(lia.config.SimfphysConsoleCommands) do
+            RunConsoleCommand(k, v)
+        end
+    end
+
+    if StormFox2 then
+        for k, v in pairs(lia.config.StormFox2ConsoleCommands) do
+            RunConsoleCommand(k, v)
+        end
+    end
+
+    if ArcCW then
+        for k, v in pairs(lia.config.ArcCWConsoleCommands) do
+            RunConsoleCommand(k, v)
+        end
+    end
+
+    if TFA then
+        for k, v in pairs(lia.config.TFAConsoleCommands) do
+            RunConsoleCommand(k, v)
+        end
+    end
+
+    for hookType, identifiers in pairs(lia.config.RemovableHooks) do
+        for _, identifier in ipairs(identifiers) do
+            hook.Remove(hookType, identifier)
+        end
+    end
+end
+
+--------------------------------------------------------------------------------------------------------------------------
+function GM:InitializedExtrasShared()
+    RunConsoleCommand("pac_debug_clmdl", "1")
+    self:InitializeConsoleCommandsShared()
 end
 
 --------------------------------------------------------------------------------------------------------------------------
