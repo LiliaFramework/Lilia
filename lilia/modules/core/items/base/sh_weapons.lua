@@ -66,7 +66,7 @@ ITEM.functions.EquipUn = {
 
         return false
     end,
-    onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip") == true end
+    onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip", false) end
 }
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -125,7 +125,7 @@ ITEM.functions.Equip = {
 
         return false
     end,
-    onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip") ~= true end
+    onCanRun = function(item) return not IsValid(item.entity) and not item:getData("equip", false) end
 }
 
 --------------------------------------------------------------------------------------------------------------------------
