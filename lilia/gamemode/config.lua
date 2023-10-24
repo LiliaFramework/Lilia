@@ -293,10 +293,10 @@ if not lia.config.WasInitialized then
         },
         ServerStartupConsoleCommand = {
             ["ai_serverragdolls"] = "1",
-            ["cl_playerspraydisable"] = "1",
             ["mat_antialias"] = "2",
         },
         ClientStartupConsoleCommand = {
+            ["cl_playerspraydisable"] = "1",
             ["pac_debug_clmdl"] = "1",
             ["cl_resend"] = "11",
             ["cl_jiggle_bone_framerate_cutoff"] = "4",
