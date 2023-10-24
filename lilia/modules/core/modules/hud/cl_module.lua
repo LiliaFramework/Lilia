@@ -222,5 +222,6 @@ function MODULE:ShouldDrawEntityInfo(entity)
     if entity.DrawEntityInfo then return true end
     if entity.onShouldDrawEntityInfo then return entity:onShouldDrawEntityInfo() end
     if entity:IsPlayer() and entity:getChar() and entity:GetNoDraw() ~= true then return true end
+    if entity:IsPlayer() or IsValid(entity:getNetVar("player")) then return entity == LocalPlayer() and not LocalPlayer():ShouldDrawLocalPlayer() end
 end
 --------------------------------------------------------------------------------------------------------------------------

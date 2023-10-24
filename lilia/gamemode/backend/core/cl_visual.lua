@@ -21,11 +21,4 @@ function GM:CalcView(client, origin, angles, fov)
 
     return view
 end
-
---------------------------------------------------------------------------------------------------------------------------
-function GM:ShouldDrawEntityInfo(entity)
-    if entity:IsPlayer() or IsValid(entity:getNetVar("player")) then return entity == LocalPlayer() and not LocalPlayer():ShouldDrawLocalPlayer() end
-
-    return false
-end
 --------------------------------------------------------------------------------------------------------------------------
