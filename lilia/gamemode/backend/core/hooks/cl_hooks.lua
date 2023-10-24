@@ -28,6 +28,14 @@ function GM:InitializedExtrasClient()
 end
 
 --------------------------------------------------------------------------------------------------------------------------
+function GM:PlayerBindPressClient(client, bind, pressed)
+	bind = bind:lower()
+	if bind:find("jump") then
+		lia.command.send("chargetup")
+	end
+end
+
+--------------------------------------------------------------------------------------------------------------------------
 function GM:NetworkEntityCreated(entity)
 	if entity == LocalPlayer() then return end
 	if not entity:IsPlayer() then return end

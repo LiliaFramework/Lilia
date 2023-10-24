@@ -540,10 +540,10 @@ function GM:PlayerBindPress(client, bind, pressed)
                 hook.Run("ItemShowEntityMenu", entity)
             end
         end
-    elseif bind:find("jump") then
-        if SERVER then
-            lia.command.send("chargetup")
-        end
+    end
+
+    if CLIENT then
+        self:PlayerBindPressClient(client, bind, pressed)
     end
 end
 --------------------------------------------------------------------------------------------------------------------------
