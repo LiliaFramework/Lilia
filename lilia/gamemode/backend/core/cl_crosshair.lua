@@ -12,8 +12,7 @@ function GM:HUDPaintCrosshair()
     local client = LocalPlayer()
     local entity = Entity(client:getLocalVar("ragdoll", 0))
     local wep = client:GetActiveWeapon()
-    if not (client:IsValid() and client:Alive() and client:getChar()) then return end
-    if entity:IsValid() then return end
+    if not (client:IsValid() and client:Alive() and client:getChar()) or entity:IsValid() then return end
     if not (wep and wep:IsValid()) then return end
     if lia.config.NoDrawCrosshairWeapon[wep:GetClass()] then return end
     if hook.Run("ShouldDrawCrosshair") == false or g_ContextMenu:IsVisible() or IsValid(lia.gui.character) and lia.gui.character:IsVisible() then return end

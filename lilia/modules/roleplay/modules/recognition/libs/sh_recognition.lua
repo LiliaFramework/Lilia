@@ -9,6 +9,7 @@ function MODULE:IsCharRecognized(char, id)
 
     local recognized = char:getData("rgn", "")
     if recognized == "" then return false end
+    if char:getRecognizedAs()[id] then return true end
     if not recognized:find("," .. id .. ",") then return false end
     if recognized ~= "" and recognized:find("," .. id .. ",") then return true end
 end
