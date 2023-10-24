@@ -25,7 +25,9 @@ function MODULE:GetDisplayedName(client, chatType, location)
                 return L"unknown"
             end
         else
+            if ourCharacter:getRecognizedAs()[character:getID()] then return ourCharacter:getRecognizedAs()[character:getID()] end
         end
+
         return L"noRecog"
     end
 end
