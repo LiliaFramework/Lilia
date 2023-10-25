@@ -11,7 +11,7 @@ lia.config.noRecognise = {
 
 --------------------------------------------------------------------------------------------------------------------------
 lia.config.ScoreboardHiddenVars = {
-    ["name"] = true,
+    ["name"] = false,
     ["model"] = true,
     ["desc"] = true
 }

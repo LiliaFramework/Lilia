@@ -12,24 +12,17 @@ function MODULE:GetDisplayedDescription(client)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:GetDisplayedName(client, chatType, location)
+function MODULE:GetDisplayedName(client, chatType)
     local character = client:getChar()
     local ourCharacter = LocalPlayer():getChar()
-    if client ~= LocalPlayer() then
-        if client:IsBot() then return client:GetName() end
-        if ourCharacter and character and not ourCharacter:doesRecognize(character) and not hook.Run("IsPlayerRecognized", client) then
-            if chatType and hook.Run("IsRecognizedChatType", chatType) then
-                return "[Unknown Person]"
-            elseif location == "hud" then
-                return L"noRecog"
-            elseif not chatType then
-                return L"unknown"
-            end
-        else
-            if ourCharacter:getRecognizedAs()[character:getID()] then return ourCharacter:getRecognizedAs()[character:getID()] end
-        end
-
-        return L"noRecog"
+    if client == LocalPlayer() then return end
+    if client:IsBot() then return client:GetName() end
+    if not (ourCharacter and character) then return end
+    if not (ourCharacter:doesRecognize(character) and hook.Run("IsPlayerRecognized", client)) then
+        if chatType and hook.Run("IsRecognizedChatType", chatType) or not not chatType then return "[Unknown Person]" end
+    else
+        if ourCharacter:getRecognizedAs()[character:getID()] then return ourCharacter:getRecognizedAs()[character:getID()] end
+        return character:getName()
     end
 end
 

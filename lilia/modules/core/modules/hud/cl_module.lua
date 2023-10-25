@@ -165,11 +165,11 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:DrawEntityInfo(entity, alpha, position)
-    if not entity.IsPlayer(entity) then return end
+    if not entity:IsPlayer(entity) then return end
     if hook.Run("ShouldDrawPlayerInfo", entity) == false then return end
-    local character = entity.getChar(entity)
+    local character = entity:getChar()
     if not character then return end
-    position = position or toScreen(entity.GetPos(entity) + (entity.Crouching(entity) and Vector(0, 0, 48) or Vector(0, 0, 80)))
+    position = position or toScreen(entity:GetPos(entity) + (entity:Crouching() and Vector(0, 0, 48) or Vector(0, 0, 80)))
     local x, y = position.x, position.y
     local ty = 0
     charInfo = {}
@@ -181,7 +181,7 @@ function MODULE:DrawEntityInfo(entity, alpha, position)
 
     entity.liaNameCache = nil
     entity.liaDescCache = nil
-    local name = hook.Run("GetDisplayedName", entity, nil, "hud") or character.getName(character)
+    local name = hook.Run("GetDisplayedName", entity)
     if name ~= entity.liaNameCache then
         entity.liaNameCache = name
         if name:len() > 250 then
@@ -192,10 +192,10 @@ function MODULE:DrawEntityInfo(entity, alpha, position)
     end
 
     for i = 1, #entity.liaNameLines do
-        charInfo[#charInfo + 1] = {entity.liaNameLines[i], team.GetColor(entity.Team(entity))}
+        charInfo[#charInfo + 1] = {entity.liaNameLines[i], team.GetColor(entity:Team())}
     end
 
-    local description = hook.Run("GetDisplayedDescription", entity, "hud") or character.getDesc(character)
+    local description = hook.Run("GetDisplayedDescription", entity, "hud") or character:getDesc()
     if description ~= entity.liaDescCache then
         entity.liaDescCache = description
         if description:len() > 250 then

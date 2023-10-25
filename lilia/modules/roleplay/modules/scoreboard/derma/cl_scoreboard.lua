@@ -247,7 +247,7 @@ function PANEL:addPlayer(client, parent)
             return
         end
 
-        local overrideName = hook.Run("ShouldAllowScoreboardOverride", client, "name") and hook.Run("GetDisplayedName", client)
+        local overrideName = hook.Run("ShouldAllowScoreboardOverride", client, "name") and hook.Run("GetDisplayedName", entity)
         local name = overrideName or client:Name()
         name = name:gsub("#", "\226\128\139#")
         local model = client:GetModel()
