@@ -3,8 +3,8 @@ netstream.Hook(
     "rgnDirect",
     function(client, target, name)
         if target:GetPos():DistToSqr(client:GetPos()) > 100000 then return end
-        local id = client:getChar():getID()
-        if target:getChar():recognize(id, name) then
+        local CharID = client:getChar():getID()
+        if target:getChar():recognize(CharID, name) then
             netstream.Start(client, "rgnDone")
             hook.Run("OnCharRecognized", client, id)
             client:notifyLocalized("recognized")
@@ -36,11 +36,10 @@ netstream.Hook(
         end
 
         if #targets > 0 then
-            local id = client:getChar():getID()
-            local character = client:getChar():getID()
             local i = 0
+            local CharID = client:getChar():getID()
             for _, v in ipairs(targets) do
-                if v:getChar():recognize(character, name) then
+                if v:getChar():recognize(CharID, name) then
                     i = i + 1
                 end
             end
