@@ -107,9 +107,4 @@ function MODULE:SetupQuickMenu(menu)
         menu:addSpacer()
     end
 end
-
---------------------------------------------------------------------------------------------------------------------------
-function MODULE:ShouldDrawEntityInfo(entity)
-    if IsValid(entity) and entity:IsPlayer() or IsValid(entity:getNetVar("player")) and entity.IsAdmin and entity:IsAdmin() and entity:IsNoClipping() then return false end
-end
 --------------------------------------------------------------------------------------------------------------------------

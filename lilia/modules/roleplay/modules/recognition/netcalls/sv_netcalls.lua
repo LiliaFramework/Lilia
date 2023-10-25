@@ -37,7 +37,7 @@ netstream.Hook(
 
         if #targets > 0 then
             local id = client:getChar():getID()
-            local character = client:getChar()
+            local character = client:getChar():getID()
             local i = 0
             for _, v in ipairs(targets) do
                 if v:getChar():recognize(character, name) then
@@ -52,3 +52,4 @@ netstream.Hook(
         end
     end
 )
+--------------------------------------------------------------------------------------------------------------------------

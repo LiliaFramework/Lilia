@@ -219,6 +219,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:ShouldDrawEntityInfo(entity)
+    if entity:IsNoClipping() then return false end
     if entity:IsPlayer() and entity:IsBot() then return true end
     if entity.DrawEntityInfo then return true end
     if entity.onShouldDrawEntityInfo then return entity:onShouldDrawEntityInfo() end
