@@ -16,6 +16,7 @@ function MODULE:GetDisplayedName(client, chatType, location)
     local character = client:getChar()
     local ourCharacter = LocalPlayer():getChar()
     if client ~= LocalPlayer() then
+        if client:IsBot() then return client:GetName() end
         if ourCharacter and character and not ourCharacter:doesRecognize(character) and not hook.Run("IsPlayerRecognized", client) then
             if chatType and hook.Run("IsRecognizedChatType", chatType) then
                 return "[Unknown Person]"

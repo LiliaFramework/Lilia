@@ -172,7 +172,6 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function charMeta:setup(noNetworking)
     local client = self:getPlayer()
-    if client:IsBot() then return end
     if IsValid(client) then
         client:SetModel(isstring(self:getModel()) and self:getModel() or self:getModel()[1])
         client:SetTeam(self:getFaction())

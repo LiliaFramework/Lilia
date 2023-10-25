@@ -1,12 +1,14 @@
 --------------------------------------------------------------------------------------------------------------------------
 function GM:SetupBotCharacter(client)
     local botID = os.time()
+    local index = math.random(1, table.Count(lia.faction.indices))
+    local faction = lia.faction.indices[index]
     local character = lia.char.new(
         {
             name = client:Name(),
+            faction = faction and faction.uniqueID or "unknown",
             desc = "This is a bot. BotID is " .. botID .. ".",
-            faction = "unknown",
-            model = "models/gman.mdl"
+            model = "models/gman.mdl",
         }, botID, client, client:SteamID64()
     )
 

@@ -266,7 +266,6 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerInitialSpawn(client)
-    if client:IsBot() then return hook.Run("SetupBotCharacter", client) end
     client.liaJoinTime = RealTime()
     client:loadLiliaData(
         function(data)
@@ -284,6 +283,7 @@ function GM:PlayerInitialSpawn(client)
         end
     )
 
+    if client:IsBot() then return hook.Run("SetupBotCharacter", client) end
     client:SetCanZoom(false)
     local annoying = ents.FindByName("music")
     local val = ents.GetMapCreatedEntity(1733)

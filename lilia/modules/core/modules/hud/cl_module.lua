@@ -219,6 +219,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:ShouldDrawEntityInfo(entity)
+    if entity:IsPlayer() and entity:IsBot() then return true end
     if entity.DrawEntityInfo then return true end
     if entity.onShouldDrawEntityInfo then return entity:onShouldDrawEntityInfo() end
     if entity:IsPlayer() and entity:getChar() and entity:GetNoDraw() ~= true then return true end
