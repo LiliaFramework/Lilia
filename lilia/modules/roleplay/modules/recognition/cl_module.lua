@@ -13,22 +13,30 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:GetDisplayedName(client, chatType)
+    if client == LocalPlayer() then return end
+    if not (LocalPlayer():getChar() or client:getChar()) then return nil end
     local character = client:getChar()
     local ourCharacter = LocalPlayer():getChar()
-    if client == LocalPlayer() then return end
     if client:IsBot() then return client:GetName() end
-    if not (ourCharacter and character) then return end
-    if not (ourCharacter:doesRecognize(character) and hook.Run("IsPlayerRecognized", client)) then
-        if chatType and hook.Run("IsRecognizedChatType", chatType) or not not chatType then return "[Unknown Person]" end
+    if not (ourCharacter:doesRecognize(character) and not hook.Run("IsPlayerRecognized", client)) then
+        if chatType and hook.Run("IsRecognizedChatType", chatType) then
+            return "[Unknown Person]"
+        elseif not chatType then
+            return "Unknown"
+        end
     else
-        if ourCharacter:getRecognizedAs()[character:getID()] then return ourCharacter:getRecognizedAs()[character:getID()] end
-        return character:getName()
+        local myReg = ourCharacter:getRecognizedAs()
+        if myReg[character:getID()] then
+            return myReg[character:getID()]
+        else
+            return character:getName()
+        end
     end
 end
-
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:ShouldAllowScoreboardOverride(client, var)
-    if lia.config.RecognitionEnabled and lia.config.ScoreboardHiddenVars[var] ~= nil and (client ~= LocalPlayer()) then
+    if client == LocalPlayer() then return end
+    if lia.config.RecognitionEnabled then
         local character = client:getChar()
         local ourCharacter = LocalPlayer():getChar()
         if ourCharacter and character and not ourCharacter:doesRecognize(character) and not hook.Run("IsPlayerRecognized", client) then return true end
