@@ -11,7 +11,6 @@ local function teamGetPlayers(teamID)
             table.insert(players, ply)
         end
     end
-
     return players
 end
 
@@ -29,16 +28,10 @@ paintFunctions[0] = function(this, w, h)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-paintFunctions[1] = function(this, w, h)
-    print("")
-end
-
+paintFunctions[1] = function(this, w, h) print("") end
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:Init()
-    if IsValid(lia.gui.score) then
-        lia.gui.score:Remove()
-    end
-
+    if IsValid(lia.gui.score) then lia.gui.score:Remove() end
     lia.gui.score = self
     self:SetSize(ScrW() * lia.config.sbWidth, ScrH() * lia.config.sbHeight)
     self:Center()
@@ -67,9 +60,7 @@ function PANEL:Init()
     self.i = {}
     local staffCount = 0
     for _, ply in ipairs(player.GetAll()) do
-        if ply:IsAdmin() then
-            staffCount = staffCount + 1
-        end
+        if ply:IsAdmin() then staffCount = staffCount + 1 end
     end
 
     local staffList = self.layout:Add("DListLayout")
@@ -102,6 +93,7 @@ function PANEL:Init()
                     if IsValid(v2.liaScoreSlot) then
                         v2.liaScoreSlot:SetParent(this)
                     else
+                        print(v2)
                         self:addPlayer(v2, this)
                     end
                 end
@@ -149,9 +141,7 @@ function PANEL:Think()
         end
 
         for k, v in pairs(self.slots) do
-            if IsValid(v) then
-                v:update()
-            end
+            if IsValid(v) then v:update() end
         end
 
         self.nextUpdate = CurTime() + 0.1
@@ -213,12 +203,7 @@ function PANEL:addPlayer(client, parent)
     slot.ping:SetPos(self:GetWide() - 48, 0)
     slot.ping:SetSize(48, 64)
     slot.ping:SetText("0")
-    slot.ping.Think = function(this)
-        if IsValid(client) then
-            this:SetText(client:Ping())
-        end
-    end
-
+    slot.ping.Think = function(this) if IsValid(client) then this:SetText(client:Ping()) end end
     slot.ping:SetFont("liaGenericFont")
     slot.ping:SetContentAlignment(6)
     slot.ping:SetTextColor(color_white)
@@ -243,7 +228,6 @@ function PANEL:addPlayer(client, parent)
                     v.Paint = paintFunctions[i % 2]
                 end
             end
-
             return
         end
 
@@ -262,12 +246,6 @@ function PANEL:addPlayer(client, parent)
 
         local entity = self.model.Entity
         if not IsValid(entity) then return end
-        local offDutySB = {
-            root = true,
-            communitymanager = true,
-            superadministrator = true,
-        }
-
         if self.lastDesc ~= desc then
             self.desc:SetText(desc)
             self.lastDesc = desc
@@ -275,7 +253,7 @@ function PANEL:addPlayer(client, parent)
 
         if self.lastModel ~= model or self.lastSkin ~= skin then
             self.model:SetModel(client:GetModel(), client:GetSkin())
-            if  CAMI.PlayerHasAccess(client, "Lilia - Can Access Scoreboard Info Out Of Staff") or (LocalPlayer() == client) or LocalPlayer():Team() == FACTION_STAFF then
+            if CAMI.PlayerHasAccess(client, "Lilia - Can Access Scoreboard Info Out Of Staff") or (LocalPlayer() == client) or LocalPlayer():Team() == FACTION_STAFF then
                 self.model:SetTooltip(L("sbOptions", client:Name()))
             else
                 self.model:SetTooltip("You do not have access to see this information")
@@ -309,7 +287,6 @@ function PANEL:addPlayer(client, parent)
     end
 
     slot:update()
-
     return slot
 end
 

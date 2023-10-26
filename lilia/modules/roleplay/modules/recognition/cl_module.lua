@@ -13,16 +13,16 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:GetDisplayedName(client, chatType)
-    if client == LocalPlayer() then return end
     if not (LocalPlayer():getChar() or client:getChar()) then return nil end
     local character = client:getChar()
     local ourCharacter = LocalPlayer():getChar()
+    if client == LocalPlayer() then return character:getName() end
     if client:IsBot() then return client:GetName() end
     if not (ourCharacter:doesRecognize(character) and not hook.Run("IsPlayerRecognized", client)) then
         if chatType and hook.Run("IsRecognizedChatType", chatType) then
             return "[Unknown Person]"
         elseif not chatType then
-            return "Unknown"
+            return "You don't know this person."
         end
     else
         local myReg = ourCharacter:getRecognizedAs()
