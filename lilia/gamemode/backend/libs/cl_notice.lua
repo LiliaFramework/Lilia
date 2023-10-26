@@ -38,7 +38,7 @@ lia.config.NotifTypes = {
 }
 
 --------------------------------------------------------------------------------------------------------------------------
-local function OrganizeNoticess()
+function OrganizeNoticess()
     for k, v in ipairs(lia.noticess) do
         local topMargin = 0
         for k2, v2 in pairs(lia.noticess) do
@@ -52,7 +52,7 @@ local function OrganizeNoticess()
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-local function RemoveNoticess(notice)
+function RemoveNoticess(notice)
     for k, v in ipairs(lia.noticess) do
         if v == notice then
             notice:SizeTo(
@@ -119,7 +119,7 @@ function CreateNoticePanel(length, notimer)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-local function OrganizeNotices()
+function OrganizeNotices()
     local scrW = ScrW()
     for k, v in ipairs(lia.notices) do
         v:MoveTo(scrW - (v:GetWide() + 4), (k - 1) * (v:GetTall() + 4) + 4, 0.15, (k / #lia.notices) * 0.25)
