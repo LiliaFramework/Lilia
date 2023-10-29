@@ -74,6 +74,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function lia.module.loadExtras(path)
+    lia.lang.loadFromDir(path .. "/languages")
     lia.faction.loadFromDir(path .. "/factions")
     lia.class.loadFromDir(path .. "/classes")
     lia.attribs.loadFromDir(path .. "/attributes")
@@ -88,6 +89,14 @@ function lia.module.loadExtras(path)
     lia.module.loadFromDir(path .. "/modules")
     lia.module.loadEntities(path .. "/entities")
     hook.Run("DoModuleIncludes", path, MODULE)
+    hook.Add(
+        "InitializedModules",
+        "liaItems" .. path,
+        function()
+            lia.item.loadFromDir(path .. "/items")
+            hook.Remove("InitializedModules", "liaItems" .. path)
+        end
+    )
 end
 
 --------------------------------------------------------------------------------------------------------------------------
