@@ -124,14 +124,17 @@ function GM:OnPickupMoney(client, moneyEntity)
 end
 
 -------------------------------------------------------------------------------------------------------
-function GM:PlayerEnteredVehicle(ply, vehicle)
+function GM:PlayerEnteredVehicle(client, vehicle)
 	if IsValid(vehicle) and vehicle.nicoSeat then
 		table.insert(nicoSeats, loop, vehicle)
 	end
 end
 
 -------------------------------------------------------------------------------------------------------
-function GM:PlayerLeaveVehicle(ply, vehicle)
+function GM:PlayerLeaveVehicle(client, vehicle)
+	if IsValid(vehicle) and vehicle.nicoSeat then
+		table.insert(nicoSeats, loop, vehicle)
+	end
 end
 
 -------------------------------------------------------------------------------------------------------
@@ -158,6 +161,13 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:KeyRelease(client, key)
+	if key == IN_ATTACK2 then
+		local wep = client:GetActiveWeapon()
+		if IsValid(wep) and wep.IsHands and wep.ReadyToPickup then
+			wep:Grab()
+		end
+	end
+
 	if key == IN_RELOAD then
 		timer.Remove("liaToggleRaise" .. client:SteamID())
 	end
@@ -418,14 +428,14 @@ function GM:SetupMove(client, mv, cmd)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:PlayerThrowPunch(ply, trace)
-	local ent = ply:GetTracedEntity()
+function GM:PlayerThrowPunch(client, trace)
+	local ent = client:GetTracedEntity()
 	if not ent:IsPlayer() then return end
-	if not CAMI.PlayerHasAccess(ply, "Lilia - Staff Permissions - One Punch Man", nil) then return end
-	if IsValid(ent) and ply:Team() == FACTION_STAFF then
-		ply:ConsumeStamina(ent:getChar():GetMaxStamina())
+	if not CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - One Punch Man", nil) then return end
+	if IsValid(ent) and client:Team() == FACTION_STAFF then
+		client:ConsumeStamina(ent:getChar():GetMaxStamina())
 		ent:EmitSound("weapons/crowbar/crowbar_impact" .. math.random(1, 2) .. ".wav", 70)
-		ply:setRagdolled(true, 10)
+		client:setRagdolled(true, 10)
 	end
 end
 
@@ -588,6 +598,11 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:KeyPress(client, key)
+	if key == IN_ATTACK2 and IsValid(client.Grabbed) then
+		client:DropObject(client.Grabbed)
+		client.Grabbed = NULL
+	end
+
 	local entity = client:GetEyeTrace().Entity
 	if not IsValid(entity) then return end
 	if entity:isDoor() and entity:IsPlayer() and key == IN_USE then
