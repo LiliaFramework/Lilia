@@ -311,9 +311,9 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
 		if listener:GetPos():DistToSqr(speaker:GetPos()) > rangeSquared then return false, false end
 
 		return true, true
+	else
+		return false, false
 	end
-
-	return false, false
 end
 
 --------------------------------------------------------------------------------------------------------------------------
