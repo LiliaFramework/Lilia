@@ -401,6 +401,17 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function GM:InitPostEntity()
     if CLIENT then
+        gmod.GetGamemode().PlayerStartVoice = function() end
+        gmod.GetGamemode().PlayerEndVoice = function() end
+        if IsValid(g_VoicePanelList) then
+            g_VoicePanelList:Remove()
+        end
+
+        g_VoicePanelList = vgui.Create("DPanel")
+        g_VoicePanelList:ParentToHUD()
+        g_VoicePanelList:SetSize(270, ScrH() - 200)
+        g_VoicePanelList:SetPos(ScrW() - 320, 100)
+        g_VoicePanelList:SetPaintBackground(false)
         self:ClientPostInit()
     else
         self:ServerPostInit()

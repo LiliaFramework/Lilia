@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------------------------------------------------
 local PANEL = {}
-nsVoicePanels = {}
+VoicePanels = {}
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     local hi = vgui.Create("DLabel", self)
@@ -54,9 +54,9 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:FadeOut(anim, delta, data)
     if anim.Finished then
-        if IsValid(nsVoicePanels[self.client]) then
-            nsVoicePanels[self.client]:Remove()
-            nsVoicePanels[self.client] = nil
+        if IsValid(VoicePanels[self.client]) then
+            VoicePanels[self.client]:Remove()
+            VoicePanels[self.client] = nil
 
             return
         end
@@ -75,7 +75,7 @@ timer.Create(
     10,
     0,
     function()
-        for k, v in pairs(nsVoicePanels) do
+        for k, v in pairs(VoicePanels) do
             if not IsValid(k) then
                 hook.Run("PlayerEndVoice", k)
             end

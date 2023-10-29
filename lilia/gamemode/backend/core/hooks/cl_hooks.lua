@@ -124,17 +124,6 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:ClientPostInit()
-    gmod.GetGamemode().PlayerStartVoice = function() end
-    gmod.GetGamemode().PlayerEndVoice = function() end
-    if IsValid(g_VoicePanelList) then
-        g_VoicePanelList:Remove()
-    end
-
-    g_VoicePanelList = vgui.Create("DPanel")
-    g_VoicePanelList:ParentToHUD()
-    g_VoicePanelList:SetSize(270, ScrH() - 200)
-    g_VoicePanelList:SetPos(ScrW() - 320, 100)
-    g_VoicePanelList:SetPaintBackground(false)
     lia.joinTime = RealTime() - 0.9716
     lia.faction.formatModelData()
     if system.IsWindows() and not system.HasFocus() then
@@ -294,13 +283,13 @@ end
 function GM:PlayerStartVoice(client)
     if not IsValid(g_VoicePanelList) or not lia.config.AllowVoice then return end
     hook.Run("PlayerEndVoice", client)
-    if IsValid(nsVoicePanels[client]) then
-        if nsVoicePanels[client].fadeAnim then
-            nsVoicePanels[client].fadeAnim:Stop()
-            nsVoicePanels[client].fadeAnim = nil
+    if IsValid(VoicePanels[client]) then
+        if VoicePanels[client].fadeAnim then
+            VoicePanels[client].fadeAnim:Stop()
+            VoicePanels[client].fadeAnim = nil
         end
 
-        nsVoicePanels[client]:SetAlpha(255)
+        VoicePanels[client]:SetAlpha(255)
 
         return
     end
@@ -308,15 +297,15 @@ function GM:PlayerStartVoice(client)
     if not IsValid(client) then return end
     local pnl = g_VoicePanelList:Add("VoicePanel")
     pnl:Setup(client)
-    nsVoicePanels[client] = pnl
+    VoicePanels[client] = pnl
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerEndVoice(client)
-    if IsValid(nsVoicePanels[client]) then
-        if nsVoicePanels[client].fadeAnim then return end
-        nsVoicePanels[client].fadeAnim = Derma_Anim("FadeOut", nsVoicePanels[client], nsVoicePanels[client].FadeOut)
-        nsVoicePanels[client].fadeAnim:Start(2)
+    if IsValid(VoicePanels[client]) then
+        if VoicePanels[client].fadeAnim then return end
+        VoicePanels[client].fadeAnim = Derma_Anim("FadeOut", VoicePanels[client], VoicePanels[client].FadeOut)
+        VoicePanels[client].fadeAnim:Start(2)
     end
 end
 
