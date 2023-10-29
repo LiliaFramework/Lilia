@@ -1,9 +1,10 @@
 --------------------------------------------------------------------------------------------------------------------------
 lia.item = lia.item or {}
 lia.item.base = lia.item.base or {}
+lia.item.list = lia.item.list or {}
 lia.item.instances = lia.item.instances or {}
 lia.item.inventoryTypes = lia.item.inventoryTypes or {}
-lia.item.list = lia.item.list or {}
+lia.item.inventories = lia.inventory.instances or {}
 --------------------------------------------------------------------------------------------------------------------------
 lia.item.defaultfunctions = {
     drop = {

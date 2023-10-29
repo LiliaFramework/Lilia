@@ -1,7 +1,16 @@
 --------------------------------------------------------------------------------------------------------------------------
-MODULE.name = "Core Functionalities"
+ENT.Type = "anim"
+ENT.PrintName = "Money"
+ENT.Category = "Lilia"
+ENT.Spawnable = false
+ENT.DrawEntityInfo = true
 --------------------------------------------------------------------------------------------------------------------------
-MODULE.author = "@liliaplayer"
+function ENT:setAmount(amount)
+    self:setNetVar("amount", amount)
+end
+
 --------------------------------------------------------------------------------------------------------------------------
-MODULE.desc = "A Module that adds Core Sub-Modules."
+function ENT:getAmount()
+    return self:getNetVar("amount", 0)
+end
 --------------------------------------------------------------------------------------------------------------------------

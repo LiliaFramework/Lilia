@@ -1,7 +1,11 @@
 --------------------------------------------------------------------------------------------------------------------------
-MODULE.name = "Core Functionalities"
+local toScreen = FindMetaTable("Vector").ToScreen
 --------------------------------------------------------------------------------------------------------------------------
-MODULE.author = "@liliaplayer"
+include("shared.lua")
 --------------------------------------------------------------------------------------------------------------------------
-MODULE.desc = "A Module that adds Core Sub-Modules."
+function ENT:onDrawEntityInfo(alpha)
+    local position = toScreen(self:LocalToWorld(self:OBBCenter()))
+    local x, y = position.x, position.y
+    lia.util.drawText(lia.currency.get(self:getAmount()), x, y, ColorAlpha(lia.config.Color), 1, 1, nil, alpha * 0.65)
+end
 --------------------------------------------------------------------------------------------------------------------------

@@ -74,21 +74,11 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function lia.module.loadExtras(path)
-    local hookID = "liaItems" .. path
-    hook.Add(
-        "InitializedModules",
-        hookID,
-        function()
-            lia.item.loadFromDir(path .. "/items")
-            hook.Remove("InitializedModules", hookID)
-        end
-    )
-
+    lia.item.loadFromDir(path .. "/items")
+    lia.lang.loadFromDir(path .. "/languages")
     lia.faction.loadFromDir(path .. "/factions")
     lia.class.loadFromDir(path .. "/classes")
-    lia.lang.loadFromDir(path .. "/languages")
     lia.attribs.loadFromDir(path .. "/attributes")
-    lia.module.loadFromDir(path .. "/modules")
     lia.util.includeDir(path .. "/config", true, true)
     lia.util.includeDir(path .. "/libs", true, true)
     lia.util.includeDir(path .. "/hooks", true)
@@ -97,6 +87,7 @@ function lia.module.loadExtras(path)
     lia.util.includeDir(path .. "/netcalls", true, true)
     lia.util.includeDir(path .. "/meta", true, true)
     lia.util.includeDir(path .. "/derma", true)
+    lia.module.loadFromDir(path .. "/modules")
     lia.module.loadEntities(path .. "/entities")
     hook.Run("DoModuleIncludes", path, MODULE)
 end
@@ -185,13 +176,14 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function lia.module.initialize()
+    lia.module.load("module", "lilia/core")
     lia.module.loadFromDir(engine.ActiveGamemode() .. "/preload")
     lia.module.load("schema", engine.ActiveGamemode() .. "/schema")
     hook.Run("InitializedSchema")
     lia.module.loadFromDir("lilia/modules")
     lia.module.loadFromDir(engine.ActiveGamemode() .. "/modules")
-    hook.Run("InitializedConfig")
     hook.Run("InitializedItems")
+    hook.Run("InitializedModules")
 end
 
 --------------------------------------------------------------------------------------------------------------------------
