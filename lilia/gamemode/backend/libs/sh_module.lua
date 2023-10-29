@@ -1,4 +1,3 @@
-
 --------------------------------------------------------------------------------------------------------------------------
 lia.module = lia.module or {}
 lia.module.list = lia.module.list or {}
@@ -75,11 +74,21 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function lia.module.loadExtras(path)
+    local hookID = "liaItems" .. path
+    hook.Add(
+        "InitializedModules",
+        hookID,
+        function()
+            lia.item.loadFromDir(path .. "/items")
+            hook.Remove("InitializedModules", hookID)
+        end
+    )
+
     lia.faction.loadFromDir(path .. "/factions")
     lia.class.loadFromDir(path .. "/classes")
     lia.lang.loadFromDir(path .. "/languages")
-    lia.module.loadFromDir(path .. "/modules")
     lia.attribs.loadFromDir(path .. "/attributes")
+    lia.module.loadFromDir(path .. "/modules")
     lia.util.includeDir(path .. "/config", true, true)
     lia.util.includeDir(path .. "/libs", true, true)
     lia.util.includeDir(path .. "/hooks", true)
@@ -90,15 +99,6 @@ function lia.module.loadExtras(path)
     lia.util.includeDir(path .. "/derma", true)
     lia.module.loadEntities(path .. "/entities")
     hook.Run("DoModuleIncludes", path, MODULE)
-    local hookID = "liaItems" .. path
-    hook.Add(
-        "InitializedModules",
-        hookID,
-        function()
-            lia.item.loadFromDir(path .. "/items")
-            hook.Remove("InitializedModules", hookID)
-        end
-    )
 end
 
 --------------------------------------------------------------------------------------------------------------------------
