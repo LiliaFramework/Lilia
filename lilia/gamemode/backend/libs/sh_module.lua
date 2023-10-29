@@ -74,8 +74,6 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function lia.module.loadExtras(path)
-    lia.item.loadFromDir(path .. "/items")
-    lia.lang.loadFromDir(path .. "/languages")
     lia.faction.loadFromDir(path .. "/factions")
     lia.class.loadFromDir(path .. "/classes")
     lia.attribs.loadFromDir(path .. "/attributes")
@@ -176,12 +174,16 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function lia.module.initialize()
-    lia.module.load("module", "lilia/core")
+    lia.item.loadFromDir("lilia/core/items")
+    lia.lang.loadFromDir("lilia/core/languages")
+    lia.module.loadEntities("lilia/core/entities")
+    lia.util.includeDir("lilia/core/commands", true, true)
     lia.module.loadFromDir(engine.ActiveGamemode() .. "/preload")
     lia.module.load("schema", engine.ActiveGamemode() .. "/schema")
     hook.Run("InitializedSchema")
     lia.module.loadFromDir("lilia/modules")
     lia.module.loadFromDir(engine.ActiveGamemode() .. "/modules")
+    hook.Run("InitializedConfig")
     hook.Run("InitializedItems")
     hook.Run("InitializedModules")
 end
