@@ -36,7 +36,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:ShouldAllowScoreboardOverride(client, var)
     if client == LocalPlayer() then return end
-    if lia.config.RecognitionEnabled then
+    if lia.config.RecognitionEnabled and lia.config.ScoreboardHiddenVars[var] ~= nil and (client ~= LocalPlayer()) then
         local character = client:getChar()
         local ourCharacter = LocalPlayer():getChar()
         if ourCharacter and character and not ourCharacter:doesRecognize(character) and not hook.Run("IsPlayerRecognized", client) then return true end
