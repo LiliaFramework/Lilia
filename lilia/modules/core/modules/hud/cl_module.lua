@@ -53,7 +53,7 @@ end
 function MODULE:ShouldDrawCrosshair()
     local client = LocalPlayer()
     local entity = Entity(client:getLocalVar("ragdoll", 0))
-    if not lia.config.CrosshairEnabled then return end
+    if not lia.config.CrosshairEnabled then return false end
     if not IsValid(client) or not client:Alive() or not client:getChar() or IsValid(entity) or (g_ContextMenu:IsVisible() or IsValid(lia.gui.character) and lia.gui.character:IsVisible()) then return false end
     local wep = client:GetActiveWeapon()
     if wep and IsValid(wep) then
