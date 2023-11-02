@@ -7,7 +7,7 @@ function MODULE:IsCharRecognized(char, id)
     if other and faction then
         if faction.isGloballyRecognized then return true end
         if lia.config.FactionAutoRecognize and (char:getFaction() == other:getFaction() and (lia.config.MemberToMemberAutoRecognition[char:getFaction()] and lia.config.MemberToMemberAutoRecognition[other:getFaction()])) then return true end
-        if lia.config.StaffAutoRecognize and char:getFaction() == lia.config.StaffFaction then return true end
+        if lia.config.StaffAutoRecognize and char:getFaction() == FACTION_STAFF then return true end
     end
 
     if recognized == "" then return false end

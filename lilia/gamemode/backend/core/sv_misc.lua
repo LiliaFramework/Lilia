@@ -47,7 +47,7 @@ function GM:EntityTakeDamage(entity, dmgInfo)
         entity.liaPlayer:TakeDamageInfo(dmgInfo)
     end
 
-    if not dmgInfo:IsFallDamage() and IsValid(attacker) and attacker:IsPlayer() and attacker ~= entity and entity:Team() ~= lia.config.StaffFaction then
+    if not dmgInfo:IsFallDamage() and IsValid(attacker) and attacker:IsPlayer() and attacker ~= entity and entity:Team() ~= FACTION_STAFF then
         entity.LastDamaged = CurTime()
     end
 

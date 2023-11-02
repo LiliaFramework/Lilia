@@ -24,7 +24,6 @@ if not lia.config.WasInitialized then
         HealingAmount = 10, -- Amount of health regenerated per tick when AutoRegen is enabled
         HealingTimer = 60, -- Time interval between health regeneration ticks (in seconds)
         PermaClass = true, -- Enable permanent player classes
-        StaffFaction = FACTION_STAFF,
         -- Cleanup Settings
         MapCleanerEnabled = true, -- Enable map cleaning functionality
         ItemCleanupTime = 7200, -- Time interval for cleaning up items on the ground (in seconds)
