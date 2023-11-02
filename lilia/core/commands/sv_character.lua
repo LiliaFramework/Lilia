@@ -232,18 +232,15 @@ lia.command.add(
     "charsetbodygroup",
     {
         adminOnly = true,
-        syntax = "<string name> <string bodyGroup> [number value]",
         privilege = "Change Bodygroups",
+        syntax = "<string name> <string bodyGroup> [number value]",
         onRun = function(client, arguments)
             local value = tonumber(arguments[3])
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and target:getChar() then
                 local index = target:FindBodygroupByName(arguments[2])
                 if index > -1 then
-                    if value and value < 1 then
-                        value = nil
-                    end
-
+                    if value and value < 1 then value = nil end
                     local groups = target:getChar():getData("groups", {})
                     groups[index] = value
                     target:getChar():setData("groups", groups)
