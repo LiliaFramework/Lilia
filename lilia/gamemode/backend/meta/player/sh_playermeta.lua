@@ -39,7 +39,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function playerMeta:isStaff()
-    return (CAMI.PlayerHasAccess(self, "Lilia - UserGroups - Staff Group", nil) or self:Team() == FACTION_STAFF)
+    return (CAMI.PlayerHasAccess(self, "Lilia - UserGroups - Staff Group", nil) or self:Team() == lia.config.StaffFaction)
 end
 
 --------------------------------------------------------------------------------------------------------------------------

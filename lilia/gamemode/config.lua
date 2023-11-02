@@ -24,6 +24,7 @@ if not lia.config.WasInitialized then
         HealingAmount = 10, -- Amount of health regenerated per tick when AutoRegen is enabled
         HealingTimer = 60, -- Time interval between health regeneration ticks (in seconds)
         PermaClass = true, -- Enable permanent player classes
+        StaffFaction = FACTION_STAFF,
         -- Cleanup Settings
         MapCleanerEnabled = true, -- Enable map cleaning functionality
         ItemCleanupTime = 7200, -- Time interval for cleaning up items on the ground (in seconds)
@@ -208,6 +209,16 @@ if not lia.config.WasInitialized then
                 Name = "Lilia - Spawn Permissions - Can Spawn Cars",
                 MinAccess = "admin",
                 Description = "Allows access to Spawning Cars."
+            },
+            {
+                Name = "Lilia - UserGroups - Staff Group",
+                MinAccess = "admin",
+                Description = "Defines Player as Staff."
+            },
+            {
+                Name = "Lilia - UserGroups - VIP Group",
+                MinAccess = "superadmin",
+                Description = "Defines Player as VIP."
             },
             {
                 Name = "Lilia - Staff Permissions - Local Event Chat",

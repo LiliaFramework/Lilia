@@ -428,7 +428,7 @@ function GM:PlayerThrowPunch(client, trace)
 	local ent = client:GetTracedEntity()
 	if not ent:IsPlayer() then return end
 	if not CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - One Punch Man", nil) then return end
-	if IsValid(ent) and client:Team() == FACTION_STAFF then
+	if IsValid(ent) and client:Team() == lia.config.StaffFaction then
 		client:ConsumeStamina(ent:getChar():GetMaxStamina())
 		ent:EmitSound("weapons/crowbar/crowbar_impact" .. math.random(1, 2) .. ".wav", 70)
 		client:setRagdolled(true, 10)
@@ -628,7 +628,7 @@ end
 function GM:CanPlayerSwitchChar(client, character, newCharacter)
 	if IsValid(client.liaRagdoll) then return false, "You are ragdolled!" end
 	if not client:Alive() then return false, "You are dead!" end
-	if client.LastDamaged and client.LastDamaged > CurTime() - 120 and character:getFaction() ~= FACTION_STAFF then return false, "You took damage too recently to switch characters!" end
+	if client.LastDamaged and client.LastDamaged > CurTime() - 120 and character:getFaction() ~= lia.config.StaffFaction then return false, "You took damage too recently to switch characters!" end
 	if lia.config.CharacterSwitchCooldown and (character:getData("loginTime", 0) + lia.config.CharacterSwitchCooldownTimer) > os.time() then return false, "You are on cooldown!" end
 	if character:getID() == newCharacter:getID() then return false, "You are already using this character!" end
 

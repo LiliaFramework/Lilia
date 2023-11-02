@@ -5,8 +5,8 @@ lia.config.StaffAutoRecognize = false
 --------------------------------------------------------------------------------------------------------------------------
 lia.config.FactionAutoRecognize = false
 --------------------------------------------------------------------------------------------------------------------------
-lia.config.noRecognise = {
-    [FACTION_STAFF] = false,
+lia.config.MemberToMemberAutoRecognition = {
+    [lia.config.StaffFaction] = true,
 }
 --------------------------------------------------------------------------------------------------------------------------
 lia.config.ScoreboardHiddenVars = {
