@@ -357,7 +357,6 @@ if not lia.config.WasInitialized then
             ["r_threaded_client_shadow_manager"] = "1",
             ["studio_queue_mode"] = "1",
             ["mat_queue_mode"] = "2",
-            ["fps_max"] = "0",
             ["fov_desired"] = "100",
             ["mat_specular"] = "0",
             ["r_drawmodeldecals"] = "0",
