@@ -94,7 +94,7 @@ function CreateNoticePanel(length, notimer)
         draw.RoundedBox(4, 0, 0, w, h, Color(35, 35, 35, 200))
         if self.start then
             local w2 = math.TimeFraction(self.start, self.endTime, CurTime()) * w
-            local col = (t and t.col) or lia.config.get("color")
+            local col = (t and t.col) or lia.config.Color
             draw.RoundedBox(4, w2, 0, w - w2, h, col)
         end
 

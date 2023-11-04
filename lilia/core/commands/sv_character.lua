@@ -7,7 +7,7 @@ lia.command.add(
         syntax = "<string name> <number speed>",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
-            local speed = tonumber(arguments[2]) or lia.config.get("walkSpeed")
+            local speed = tonumber(arguments[2]) or lia.config.WalkSpeed
             if IsValid(target) and target:getChar() then
                 target:SetRunSpeed(speed)
             else
