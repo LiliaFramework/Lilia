@@ -33,10 +33,11 @@ function MODULE:GetDisplayedName(client, chatType)
         end
     end
 end
+
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:ShouldAllowScoreboardOverride(client, var)
     if client == LocalPlayer() then return end
-    if lia.config.RecognitionEnabled and lia.config.ScoreboardHiddenVars[var] ~= nil and (client ~= LocalPlayer()) then
+    if lia.config.RecognitionEnabled and table.HasValue(lia.config.ScoreboardHiddenVars, var) and (client ~= LocalPlayer()) then
         local character = client:getChar()
         local ourCharacter = LocalPlayer():getChar()
         if ourCharacter and character and not ourCharacter:doesRecognize(character) and not hook.Run("IsPlayerRecognized", client) then return true end
@@ -50,6 +51,6 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function CharRecognize(level, name)
-        netstream.Start("rgn", level, name)
+    netstream.Start("rgn", level, name)
 end
 --------------------------------------------------------------------------------------------------------------------------

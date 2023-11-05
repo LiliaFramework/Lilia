@@ -255,7 +255,7 @@ function PANEL:addPlayer(client, parent)
         local skin = client:GetSkin()
         local desc = hook.Run("ShouldAllowScoreboardOverride", client, "desc") and hook.Run("GetDisplayedDescription", client) or (client:getChar() and client:getChar():getDesc()) or "You do not recognize this person."
         desc = desc:gsub("#", "\226\128\139#")
-        self.model:setHidden(overrideName == L("unknown"))
+        self.model:setHidden(hook.Run("ShouldAllowScoreboardOverride", client, "model"))
         if self.lastName ~= name then
             self.name:SetText(name)
             self.lastName = name

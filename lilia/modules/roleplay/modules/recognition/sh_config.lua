@@ -10,9 +10,5 @@ lia.config.MemberToMemberAutoRecognition = {
 }
 
 -------------------------------------------------------------------------------------------------------------------------
-lia.config.ScoreboardHiddenVars = {
-    ["name"] = true,
-    ["model"] = true,
-    ["desc"] = true
-}
+lia.config.ScoreboardHiddenVars = {"name", "model", "desc"}
 --------------------------------------------------------------------------------------------------------------------------
