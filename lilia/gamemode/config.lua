@@ -246,13 +246,6 @@ if not lia.config.WasInitialized then
                 Description = "Allows access to Spawning SENTs."
             },
         },
-        SimfphysConsoleCommands = {
-            ["sv_simfphys_gib_lifetime"] = "0",
-            ["sv_simfphys_fuel"] = "0",
-            ["sv_simfphys_teampassenger"] = "0",
-            ["sv_simfphys_traction_snow"] = "1",
-            ["sv_simfphys_damagemultiplicator"] = "100",
-        },
         StormFox2ConsoleCommands = {
             ["sf_time_speed"] = "1",
             ["sf_addnight_temp"] = "4",

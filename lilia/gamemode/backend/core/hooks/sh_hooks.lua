@@ -418,12 +418,6 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:InitializedExtrasShared()
-    if simfphys then
-        for k, v in pairs(lia.config.SimfphysConsoleCommands) do
-            RunConsoleCommand(k, v)
-        end
-    end
-
     if StormFox2 then
         for k, v in pairs(lia.config.StormFox2ConsoleCommands) do
             RunConsoleCommand(k, v)

@@ -22,5 +22,4 @@ function MODULE:simfphysUse(entity, client)
     end
     return lia.config.CarEntryDelayEnabled
 end
-
 --------------------------------------------------------------------------------------------------------------------------
