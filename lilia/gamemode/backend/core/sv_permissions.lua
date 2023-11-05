@@ -9,12 +9,13 @@ function GM:PlayerSpawnProp(client, model)
     local nextSpawnTime = client.NextSpawn or 0
     if client:getChar() and CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Props", nil) or client:getChar():hasFlags("e") then
         if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - No Spawn Delay") and (client.AdvDupe2 and client.AdvDupe2.Pasting) then return true end
+        if not self:CheckSpawnPropBlackList(client, model) then return false end
         if nextSpawnTime < CurTime() then
             client.NextSpawn = CurTime() + 0.75
-            return self:CheckSpawnPropBlackList(client, model)
+            return true
         else
             client:notify("You can't spawn props that fast!")
-            return self:CheckSpawnPropBlackList(client, model)
+            return false
         end
     end
     return false
@@ -22,6 +23,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnRagdoll(client)
+    local nextSpawnTime = client.NextSpawn or 0
     if client:getChar() and CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Ragdolls", nil) or client:getChar():hasFlags("r") then
         if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - No Spawn Delay") and (client.AdvDupe2 and client.AdvDupe2.Pasting) then return true end
         if nextSpawnTime < CurTime() then
@@ -31,15 +33,18 @@ function GM:PlayerSpawnRagdoll(client)
             client:notify("You can't spawn ragdolls that fast!")
             return false
         end
-        return true
     end
     return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnSWEP(client)
+    if client:getChar() and (CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn SWEPs", nil) or client:getChar():hasFlags("W")) then return true end
+end
 
-    if client:getChar() and CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn SWEPs", nil) or client:getChar():hasFlags("W") then return true end
+--------------------------------------------------------------------------------------------------------------------------
+function GM:PlayerGiveSWEP(client)
+    if client:getChar() and (CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn SWEPs", nil) or client:getChar():hasFlags("W")) then return true end
     return false
 end
 
