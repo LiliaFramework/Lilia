@@ -1,10 +1,23 @@
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnNPC(client)
-    if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn NPCs", nil) or client:getChar():hasFlags("n") or client:getChar():hasFlags("E") then return true end
+    if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn NPCs", nil) or client:getChar():hasFlags("n") then return true end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnProp(client)
+    print(client:Name() .. " tried to spawn a prop!")
+    if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Props", nil) then
+        print("He has CAMI permission for that!")
+    else
+        print("He doesnt have CAMI permission for that!")
+    end
+
+    if client:getChar():hasFlags("e") then
+        print("He has flag permission for that!")
+    else
+        print("He doesnt have flag permission for that!")
+    end
+
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Props", nil) or client:getChar():hasFlags("e") then return true end
 end
 
@@ -20,7 +33,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnEffect(client)
-    if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Effects", nil) or client:getChar():hasFlags("n") or client:getChar():hasFlags("E") then return true end
+    if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Effects", nil) or client:getChar():hasFlags("L") then return true end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -75,5 +88,12 @@ function GM:CanProperty(client, property, entity)
             return true
         end
     end
+end
+
+--------------------------------------------------------------------------------------------------------------------------
+if sam then
+    sam.config.set("Restrictions.Tool", false)
+    sam.config.set("Restrictions.Limits", false)
+    sam.config.set("Restrictions.Spawning", false)
 end
 --------------------------------------------------------------------------------------------------------------------------
