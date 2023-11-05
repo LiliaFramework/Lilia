@@ -19,7 +19,6 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:attachPart(client, id)
-	if not pac then return end
 	local part = self:getAdjustedPartData(client, id)
 	if not part then return end
 	if not client.AttachPACPart then
