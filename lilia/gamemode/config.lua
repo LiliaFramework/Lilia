@@ -32,7 +32,6 @@ if not lia.config.WasInitialized then
         DevServer = false, -- Is it a Development Server?
         -- Player Interaction Settings
         WalkRatio = 0.5, -- Walk speed ratio (used in certain interactions)
-        SalaryOverride = true, -- Enable salary override
         SalaryInterval = 300, -- Salary interval (in seconds)
         JumpCooldown = 0.8, -- Cooldown time between jumps (in seconds)
         MaxAttributes = 30, -- Maximum number of player attributes

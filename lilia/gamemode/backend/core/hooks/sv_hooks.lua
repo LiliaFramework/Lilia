@@ -383,7 +383,6 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:CreateSalaryTimer(client)
-	if lia.config.SalaryOverride then return end
 	local character = client:getChar()
 	if not character then return end
 	local faction = lia.faction.indices[character:getFaction()]
@@ -393,7 +392,7 @@ function GM:CreateSalaryTimer(client)
 	if not pay then return end
 	local timerID = "liaSalary" .. client:SteamID()
 	local timerFunc = timer.Exists(timerID) and timer.Adjust or timer.Create
-	local delay = (class and class.payTimer) or (faction and faction.payTimer) or faction.lia.config.SalaryInterval
+	local delay = (class and class.payTimer) or (faction and faction.payTimer) or lia.config.SalaryInterval
 	timerFunc(
 		timerID,
 		delay,
