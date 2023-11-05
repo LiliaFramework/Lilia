@@ -1,20 +1,20 @@
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnNPC(client)
-    if client:getChar() and AMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn NPCs", nil) or client:getChar():hasFlags("n") then return true end
+    if client:getChar() and CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn NPCs", nil) or client:getChar():hasFlags("n") then return true end
     return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnProp(client, model)
     local nextSpawnTime = client.NextSpawn or 0
-    if (self:CheckSpawnPropBlackList(client, model) and client:getChar()) and CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Props", nil) or client:getChar():hasFlags("e") then
+    if client:getChar() and CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Props", nil) or client:getChar():hasFlags("e") then
         if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - No Spawn Delay") and (client.AdvDupe2 and client.AdvDupe2.Pasting) then return true end
         if nextSpawnTime < CurTime() then
             client.NextSpawn = CurTime() + 0.75
-            return true
+            return self:CheckSpawnPropBlackList(client, model)
         else
             client:notify("You can't spawn props that fast!")
-            return false
+            return self:CheckSpawnPropBlackList(client, model)
         end
     end
     return false
@@ -38,6 +38,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnSWEP(client)
+
     if client:getChar() and CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn SWEPs", nil) or client:getChar():hasFlags("W") then return true end
     return false
 end
