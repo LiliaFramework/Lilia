@@ -7,22 +7,20 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:GetDisplayedDescription(client)
-    local character = client:getChar()
-    if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar()) and not hook.Run("IsPlayerRecognized", client) then return character:getDesc() end
+    if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar():getID()) then return "You do not recognize this person." end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:GetDisplayedName(client, chatType)
-    if not (LocalPlayer():getChar() or client:getChar()) then return nil end
     local character = client:getChar()
     local ourCharacter = LocalPlayer():getChar()
     if client == LocalPlayer() then return character:getName() end
-    if client:IsBot() then return client:GetName() end
-    if not (ourCharacter:doesRecognize(character) and not hook.Run("IsPlayerRecognized", client)) then
+    --  if client:IsBot() then return client:GetName() end
+    if not ourCharacter:doesRecognize(character:getID()) then
         if chatType and hook.Run("IsRecognizedChatType", chatType) then
             return "[Unknown Person]"
         elseif not chatType then
-            return "You don't know this person."
+            return "Unknown"
         end
     else
         local myReg = ourCharacter:getRecognizedAs()
@@ -36,12 +34,9 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:ShouldAllowScoreboardOverride(client, var)
-    if client == LocalPlayer() then return end
-    if lia.config.RecognitionEnabled and table.HasValue(lia.config.ScoreboardHiddenVars, var) and (client ~= LocalPlayer()) then
-        local character = client:getChar()
-        local ourCharacter = LocalPlayer():getChar()
-        if ourCharacter and character and not ourCharacter:doesRecognize(character) and not hook.Run("IsPlayerRecognized", client) then return true end
-    end
+    local character = client:getChar()
+    local ourCharacter = LocalPlayer():getChar()
+    if (lia.config.RecognitionEnabled and table.HasValue(lia.config.ScoreboardHiddenVars, var)) and (client ~= LocalPlayer()) and not ourCharacter:doesRecognize(character:getID()) then return true end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -53,4 +48,14 @@ end
 function CharRecognize(level, name)
     netstream.Start("rgn", level, name)
 end
+
+--------------------------------------------------------------------------------------------------------------------------
+concommand.Add(
+    "dev_reloadsb",
+    function()
+        if IsValid(lia.gui.score) then
+            lia.gui.score:Remove()
+        end
+    end
+)
 --------------------------------------------------------------------------------------------------------------------------

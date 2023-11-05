@@ -50,7 +50,10 @@ function Inventory:register(typeID)
     end
 
     self:configure(self.config)
-    lia.inventory.newType(self.typeID, self)
+    if not InventoryRegistered then
+        lia.inventory.newType(self.typeID, self)
+        InventoryRegistered = true
+    end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
