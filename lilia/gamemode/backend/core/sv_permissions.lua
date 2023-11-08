@@ -96,6 +96,8 @@ function GM:PhysgunPickup(client, entity)
             return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Physgun Pickup on Restricted Entities", nil)
         elseif entity:IsVehicle() then
             return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Physgun Pickup on Vehicles", nil)
+        else
+            return true
         end
     end
     return false

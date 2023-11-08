@@ -1,0 +1,120 @@
+name: GluaLinter and GLuaFixer
+on:
+  - push
+  - pull_request
+permissions:
+  actions: write
+  checks: write
+  contents: write
+  deployments: write
+  id-token: write
+  issues: write
+  discussions: write
+  packages: write
+  pages: write
+  pull-requests: write
+  repository-projects: write
+  security-events: write
+  statuses: write
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: lilia
+      - name: Setup Lua
+        uses: leafo/gh-actions-lua@v8.0.0
+        with:
+          luaVersion: '5.2'
+      - name: Setup LuaRocks
+        uses: leafo/gh-actions-luarocks@v4.0.0
+      - name: Pull gluacheck
+        uses: actions/checkout@v2
+        with:
+          repository: impulsh/gluacheck
+          path: luacheck
+      - name: Build gluacheck
+        working-directory: luacheck
+        run: luarocks make
+      - name: Lint with gluacheck
+        working-directory: lilia
+        run: >-
+          luacheck . --no-unused-secondaries --no-unused-args --no-redefined
+          --no-unused --no-global --no-self -i 4.2/.*_ --formatter visual_studio
+          --no-unused --no-max-line-length --no-max-code-line-length
+          --no-max-string-line-length --no-max-comment-line-length
+          --no-max-cyclomatic-complexity
+  glualint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Bash
+        run: |
+          sudo apt update
+          sudo apt install -y unzip
+        shell: bash
+      - name: List files in the working directory (Before running GLuaFixer)
+        run: |
+          ls
+      - name: Set location of Lilia
+        run: |
+          cd lilia
+      - name: List files in lilia
+        run: |
+          ls
+        working-directory: '${{ github.workspace }}/lilia'
+      - name: Download GLuaFixer (Step 1)
+        run: >
+          echo "Step 1: Downloading glualint..."
+
+          curl -L -o glualint.zip
+          https://github.com/FPtje/GLuaFixer/releases/download/1.26.0/glualint-1.26.0-x86_64-linux.zip
+
+          unzip glualint.zip -d glualint
+
+          mv glualint/glualint glualint_executable
+        working-directory: '${{ github.workspace }}'
+        shell: bash
+      - name: Set execution permissions (Step 2)
+        run: |
+          echo "Step 2: Setting execution permissions..."
+          sudo chmod +x glualint_executable
+        working-directory: '${{ github.workspace }}'
+        shell: bash
+      - name: List files in the working directory (After downloading GLuaFixer)
+        run: |
+          ls
+      - name: Run GLuaFixer on Lilia (Step 6)
+        run: |
+          echo "Step 6: Running glualint pretty-print on Lilia"
+          sudo ./glualint_executable pretty-print lilia/*
+        working-directory: '${{ github.workspace }}'
+        shell: bash
+      - name: Remove the glualint folder (Step 7)
+        run: |
+          echo "Step 7: Removing the glualint folder..."
+          rm -r glualint
+        working-directory: '${{ github.workspace }}'
+        shell: bash
+      - name: Delete the zip file (Step 8)
+        run: |
+          echo "Step 8: Deleting glualint.zip..."
+          rm glualint.zip
+        working-directory: '${{ github.workspace }}'
+      - name: Delete the zip file (Step 8)
+        run: |
+          echo "Step 9: Deleting glualint_executable..."
+          rm glualint_executable
+        working-directory: '${{ github.workspace }}'
+        shell: bash
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Auto-commit after running GLuaFixer"
+          git push
+        working-directory: '${{ github.workspace }}'
