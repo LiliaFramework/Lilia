@@ -19,7 +19,7 @@ end
 local function CanNotTransferBagIntoBag(inventory, action, context)
     if action ~= "transfer" then return end
     local item, toInventory = context.item, context.to
-    if toInventory and toInventory:getData("item") and item.isBag then return false, "A bag cannot be placed into another bag" end -- if to inventory is not valid, it goes to the ground.
+    if toInventory and toInventory:getData("item") and item.isBag then return false, "A bag cannot be placed into another bag" end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -44,8 +44,8 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:ItemCombine(client, item, target)
-    if target.onCombine then if target:call("onCombine", client, nil, item) then return end -- when other items dragged into the item. end
-    if item.onCombineTo then if item and item:call("onCombineTo", client, nil, target) then return end -- when you drag the item on something end
+    if target.onCombine and target:call("onCombine", client, nil, item) then return end
+    if item.onCombineTo and item and item:call("onCombineTo", client, nil, target) then return end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
