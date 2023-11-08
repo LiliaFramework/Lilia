@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
@@ -25,12 +25,9 @@ function ENT:Use(activator)
     if not character then return end
     if self.client == activator and character:getID() ~= self.charID then
         activator:notifyLocalized("logged")
-
         return
     end
 
-    if hook.Run("OnPickupMoney", activator, self) ~= false then
-        self:Remove()
-    end
+    if hook.Run("OnPickupMoney", activator, self) ~= false then self:Remove() end
 end
 --------------------------------------------------------------------------------------------------------------------------

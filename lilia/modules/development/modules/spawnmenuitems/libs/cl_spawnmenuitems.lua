@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 spawnmenu.AddContentType(
     "item",
     function(container, object)
@@ -19,10 +19,7 @@ spawnmenu.AddContentType(
         end
 
         icon:InvalidateLayout(true)
-        if IsValid(container) then
-            container:Add(icon)
-        end
-
+        if IsValid(container) then container:Add(icon) end
         return icon
     end
 )
@@ -34,8 +31,9 @@ spawnmenu.AddCreationTab(
         local ctrl = vgui.Create("SpawnmenuContentPanel")
         ctrl:EnableSearch("items", "PopulateItems")
         ctrl:CallPopulateHook("PopulateItems")
-
         return ctrl
-    end, "icon16/cog_add.png", 200
+    end,
+    "icon16/cog_add.png",
+    200
 )
 --------------------------------------------------------------------------------------------------------------------------

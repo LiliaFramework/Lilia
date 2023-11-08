@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local Inventory = lia.Inventory or {}
 --------------------------------------------------------------------------------------------------------------------------
 Inventory.__index = Inventory
@@ -10,7 +10,6 @@ Inventory.id = -1
 function Inventory:getData(key, default)
     local value = self.data[key]
     if value == nil then return default end
-
     return value
 end
 
@@ -21,7 +20,6 @@ function Inventory:extend(className)
     base.className = className
     local subClass = table.Inherit(base, self)
     subClass.__index = subClass
-
     return subClass
 end
 
@@ -90,11 +88,8 @@ end
 function Inventory:getItemsOfType(itemType)
     local items = {}
     for _, item in pairs(self:getItems()) do
-        if item.uniqueID == itemType then
-            items[#items + 1] = item
-        end
+        if item.uniqueID == itemType then items[#items + 1] = item end
     end
-
     return items
 end
 
@@ -110,7 +105,6 @@ function Inventory:hasItem(itemType)
     for _, item in pairs(self:getItems()) do
         if item.uniqueID == itemType then return true end
     end
-
     return false
 end
 
@@ -118,11 +112,8 @@ end
 function Inventory:getItemCount(itemType)
     local count = 0
     for _, item in pairs(self:getItems()) do
-        if itemType == nil and true or item.uniqueID == itemType then
-            count = count + item:getQuantity()
-        end
+        if itemType == nil and true or item.uniqueID == itemType then count = count + item:getQuantity() end
     end
-
     return count
 end
 

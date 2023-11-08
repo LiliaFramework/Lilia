@@ -1,23 +1,17 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:Init()
     self.btnLeft = self.btnUp
     self.btnRight = self.btnDown
-    self.btnLeft.Paint = function(panel, w, h)
-        derma.SkinHook("Paint", "ButtonLeft", panel, w, h)
-    end
-
-    self.btnRight.Paint = function(panel, w, h)
-        derma.SkinHook("Paint", "ButtonRight", panel, w, h)
-    end
+    self.btnLeft.Paint = function(panel, w, h) derma.SkinHook("Paint", "ButtonLeft", panel, w, h) end
+    self.btnRight.Paint = function(panel, w, h) derma.SkinHook("Paint", "ButtonRight", panel, w, h) end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:SetScroll(offset)
     if not self.Enabled then
         self.Scroll = 0
-
         return
     end
 

@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 function MODULE:PlayerBindPress(client, bind, pressed)
     if bind:lower():find("gm_showhelp") and pressed then
         if IsValid(lia.gui.menu) then
@@ -6,7 +6,6 @@ function MODULE:PlayerBindPress(client, bind, pressed)
         elseif LocalPlayer():getChar() then
             vgui.Create("liaMenu")
         end
-
         return true
     end
 end

@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
 --------------------------------------------------------------------------------------------------------------------------
 function playerMeta:getLiliaData(key, default)
@@ -13,7 +13,6 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function playerMeta:getPlayTime()
     local diff = os.time(lia.util.dateToNumber(lia.lastJoin)) - os.time(lia.util.dateToNumber(lia.firstJoin))
-
     return diff + (RealTime() - lia.joinTime or 0)
 end
 
@@ -21,7 +20,6 @@ end
 function playerMeta:CanOverrideView()
     local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
     if IsValid(lia.gui.char) and lia.gui.char:IsVisible() then return false end
-
     return CreateClientConVar("lia_tp_enabled", "0", true):GetBool() and not IsValid(self:GetVehicle()) and IsValid(self) and self:getChar() and not self:getNetVar("actAng") and not IsValid(ragdoll) and LocalPlayer():Alive()
 end
 
@@ -39,9 +37,7 @@ function playerMeta:SetWeighPoint(name, vector, OnReach)
             surface.SetFont("WB_Large")
             draw.DrawText(name .. "\n" .. howclose .. " Meters\n", "CenterPrintText", spos.x, spos.y, Color(123, 57, 209), TEXT_ALIGN_CENTER)
             render.SuppressEngineLighting(false)
-            if howclose <= 3 then
-                RunConsoleCommand("weighpoint_stop")
-            end
+            if howclose <= 3 then RunConsoleCommand("weighpoint_stop") end
         end
     )
 end

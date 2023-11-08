@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local entityMeta = FindMetaTable("Entity")
 --------------------------------------------------------------------------------------------------------------------------
 function entityMeta:isDoor()
@@ -19,7 +19,6 @@ function entityMeta:isLocked()
         local datatable = self:GetSaveTable()
         if datatable then return datatable.m_bLocked end
     end
-
     return
 end
 
@@ -38,17 +37,13 @@ end
 function entityMeta:setNetVar(key, value, receiver)
     if checkBadType(key, value) then return end
     lia.net[self] = lia.net[self] or {}
-    if lia.net[self][key] ~= value then
-        lia.net[self][key] = value
-    end
-
+    if lia.net[self][key] ~= value then lia.net[self][key] = value end
     self:sendNetVar(key, receiver)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function entityMeta:getNetVar(key, default)
     if lia.net[self] and lia.net[self][key] ~= nil then return lia.net[self][key] end
-
     return default
 end
 

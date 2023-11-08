@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 lia.command.add(
     "charsetspeed",
     {
@@ -102,21 +102,11 @@ lia.command.add(
             if not IsValid(target) then return end
             if not target:getChar() then return "No character loaded" end
             local arg = table.concat(arguments, " ", 2)
-            if not arg:find("%S") then
-                return client:requestString(
-                    "Change " .. target:Nick() .. "'s Description",
-                    "Enter new description",
-                    function(text)
-                        lia.command.run(client, "charsetdesc", {arguments[1], text})
-                    end, target:getChar():getDesc()
-                )
-            end
-
+            if not arg:find("%S") then return client:requestString("Change " .. target:Nick() .. "'s Description", "Enter new description", function(text) lia.command.run(client, "charsetdesc", {arguments[1], text}) end, target:getChar():getDesc()) end
             local info = lia.char.vars.desc
             local result, fault, count = info.onValidate(arg)
             if result == false then return "@" .. fault, count end
             target:getChar():setDesc(arg)
-
             return "Successfully changed " .. target:Nick() .. "'s description"
         end
     }
@@ -147,10 +137,7 @@ lia.command.add(
                     target:getChar().vars.faction = faction.uniqueID
                     target:getChar():setFaction(faction.index)
                     hook.Run("PlayerOnFactionTransfer", target)
-                    if faction.onTransfered then
-                        faction:onTransfered(target)
-                    end
-
+                    if faction.onTransfered then faction:onTransfered(target) end
                     client:notify("You have transferred " .. target:Name() .. " to " .. faction.name)
                     target:notify("You have been transferred to " .. faction.name .. " by " .. client:Name())
                 else
@@ -170,16 +157,7 @@ lia.command.add(
         privilege = "Change Name",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
-            if IsValid(target) and not arguments[2] then
-                return client:requestString(
-                    "@chgName",
-                    "@chgNameDesc",
-                    function(text)
-                        lia.command.run(client, "charsetname", {target:Name(), text})
-                    end, target:Name()
-                )
-            end
-
+            if IsValid(target) and not arguments[2] then return client:requestString("@chgName", "@chgNameDesc", function(text) lia.command.run(client, "charsetname", {target:Name(), text}) end, target:Name()) end
             table.remove(arguments, 1)
             local targetName = table.concat(arguments, " ")
             if IsValid(target) and target:getChar() then
@@ -336,7 +314,6 @@ lia.command.add(
                         if lia.util.stringMatches(L(v.name, client), attribName) or lia.util.stringMatches(k, attribName) then
                             char:setAttrib(k, math.abs(attribNumber))
                             client:notifyLocalized("attribSet", target:Name(), L(v.name, client), math.abs(attribNumber))
-
                             return
                         end
                     end
@@ -367,7 +344,6 @@ lia.command.add(
                         if lia.util.stringMatches(L(v.name, client), attribName) or lia.util.stringMatches(k, attribName) then
                             char:updateAttrib(k, math.abs(attribNumber))
                             client:notifyLocalized("attribUpdate", target:Name(), L(v.name, client), math.abs(attribNumber))
-
                             return
                         end
                     end
@@ -436,18 +412,9 @@ lia.command.add(
                 if not flags then
                     local available = ""
                     for k in SortedPairs(lia.flag.list) do
-                        if not target:getChar():hasFlags(k) then
-                            available = available .. k
-                        end
+                        if not target:getChar():hasFlags(k) then available = available .. k end
                     end
-
-                    return client:requestString(
-                        "@flagGiveTitle",
-                        "@flagGiveDesc",
-                        function(text)
-                            lia.command.run(client, "flaggive", {target:Name(), text})
-                        end, available
-                    )
+                    return client:requestString("@flagGiveTitle", "@flagGiveDesc", function(text) lia.command.run(client, "flaggive", {target:Name(), text}) end, available)
                 end
 
                 target:getChar():giveFlags(flags)
@@ -468,16 +435,7 @@ lia.command.add(
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and target:getChar() then
                 local flags = arguments[2]
-                if not flags then
-                    return client:requestString(
-                        "@flagTakeTitle",
-                        "@flagTakeDesc",
-                        function(text)
-                            lia.command.run(client, "flagtake", {target:Name(), text})
-                        end, target:getChar():getFlags()
-                    )
-                end
-
+                if not flags then return client:requestString("@flagTakeTitle", "@flagTakeDesc", function(text) lia.command.run(client, "flagtake", {target:Name(), text}) end, target:getChar():getFlags()) end
                 target:getChar():takeFlags(flags)
                 client:notifyLocalized("flagTake", client:Name(), flags, target:Name())
             end
@@ -568,7 +526,6 @@ lia.command.add(
                     else
                         return "@charNotBanned"
                     end
-
                     return lia.util.notifyLocalized("charUnBan", nil, client:Name(), v:getName())
                 end
             end
@@ -586,7 +543,10 @@ lia.command.add(
                         lia.db.updateTable(
                             {
                                 _data = data
-                            }, nil, nil, "_id = " .. charID
+                            },
+                            nil,
+                            nil,
+                            "_id = " .. charID
                         )
 
                         lia.util.notifyLocalized("charUnBan", nil, client:Name(), lia.char.loaded[charID]:getName())
@@ -673,13 +633,10 @@ lia.command.add(
             local target = lia.command.findPlayer(client, arguments[1])
             if not client:IsSuperAdmin() then
                 client:notify("Your rank is not high enough to use this command.")
-
                 return false
             end
 
-            if IsValid(target) and target:getChar() then
-                client:notify("Their character flags are: '" .. target:getChar():getFlags() .. "'")
-            end
+            if IsValid(target) and target:getChar() then client:notify("Their character flags are: '" .. target:getChar():getFlags() .. "'") end
         end
     }
 )

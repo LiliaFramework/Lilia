@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
 --------------------------------------------------------------------------------------------------------------------------
 include("shared.lua")
@@ -17,35 +17,25 @@ function ENT:SpawnFunction(client, trace)
     entity:SetAngles(angles)
     entity:Spawn()
     MODULE:saveVendors()
-
     return entity
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function ENT:Use(activator)
     if not hook.Run("CanPlayerAccessVendor", activator, self) then
-        if self.messages[VENDOR_NOTRADE] then
-            activator:ChatPrint(self:getNetVar("name") .. ": " .. L(self.messages[VENDOR_NOTRADE], activator))
-        end
-
+        if self.messages[VENDOR_NOTRADE] then activator:ChatPrint(self:getNetVar("name") .. ": " .. L(self.messages[VENDOR_NOTRADE], activator)) end
         return
     end
 
     self.receivers[#self.receivers + 1] = activator
     activator.liaVendor = self
-    if self.messages[VENDOR_WELCOME] then
-        activator:ChatPrint(self:getNetVar("name") .. ": " .. self.messages[VENDOR_WELCOME])
-    end
-
+    if self.messages[VENDOR_WELCOME] then activator:ChatPrint(self:getNetVar("name") .. ": " .. self.messages[VENDOR_WELCOME]) end
     hook.Run("PlayerAccessVendor", activator, self)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function ENT:setMoney(value)
-    if not isnumber(value) or value < 0 then
-        value = nil
-    end
-
+    if not isnumber(value) or value < 0 then value = nil end
     self.money = value
     net.Start("liaVendorMoney")
     net.WriteInt(value or -1, 32)
@@ -54,25 +44,18 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function ENT:giveMoney(value)
-    if self.money then
-        self:setMoney(self:getMoney() + value)
-    end
+    if self.money then self:setMoney(self:getMoney() + value) end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function ENT:takeMoney(value)
-    if self.money then
-        self:giveMoney(-value)
-    end
+    if self.money then self:giveMoney(-value) end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function ENT:setStock(itemType, value)
     self.items[itemType] = self.items[itemType] or {}
-    if not self.items[itemType][VENDOR_MAXSTOCK] then
-        self:setMaxStock(itemType, value)
-    end
-
+    if not self.items[itemType][VENDOR_MAXSTOCK] then self:setMaxStock(itemType, value) end
     self.items[itemType][VENDOR_STOCK] = math.Clamp(value, 0, self.items[itemType][VENDOR_MAXSTOCK])
     net.Start("liaVendorStock")
     net.WriteString(itemType)
@@ -95,10 +78,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function ENT:setMaxStock(itemType, value)
-    if value == 0 or not isnumber(value) then
-        value = nil
-    end
-
+    if value == 0 or not isnumber(value) then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_MAXSTOCK] = value
     net.Start("liaVendorMaxStock")
@@ -120,9 +100,7 @@ function ENT:setFactionAllowed(factionID, isAllowed)
     net.WriteBool(self.factions[factionID] == true)
     net.Send(self.receivers)
     for _, client in ipairs(self.receivers) do
-        if not hook.Run("CanPlayerAccessVendor", client, self) then
-            self:removeReceiver(client)
-        end
+        if not hook.Run("CanPlayerAccessVendor", client, self) then self:removeReceiver(client) end
     end
 end
 
@@ -143,10 +121,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function ENT:removeReceiver(client, requestedByPlayer)
     table.RemoveByValue(self.receivers, client)
-    if client.liaVendor == self then
-        client.liaVendor = nil
-    end
-
+    if client.liaVendor == self then client.liaVendor = nil end
     if requestedByPlayer then return end
     net.Start("liaVendorExit")
     net.Send(client)
@@ -185,10 +160,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function ENT:setTradeMode(itemType, mode)
-    if not ALLOWED_MODES[mode] then
-        mode = nil
-    end
-
+    if not ALLOWED_MODES[mode] then mode = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_MODE] = mode
     net.Start("liaVendorMode")
@@ -199,10 +171,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function ENT:setItemPrice(itemType, value)
-    if not isnumber(value) or value < 0 then
-        value = nil
-    end
-
+    if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_PRICE] = value
     net.Start("liaVendorPrice")
@@ -213,10 +182,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function ENT:setItemStock(itemType, value)
-    if not isnumber(value) or value < 0 then
-        value = nil
-    end
-
+    if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_STOCK] = value
     net.Start("liaVendorStock")
@@ -227,10 +193,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function ENT:setItemMaxStock(itemType, value)
-    if not isnumber(value) or value < 0 then
-        value = nil
-    end
-
+    if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_MAXSTOCK] = value
     net.Start("liaVendorMaxStock")
@@ -302,10 +265,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function ENT:addReceiver(client, noSync)
-    if not table.HasValue(self.receivers, client) then
-        self.receivers[#self.receivers + 1] = client
-    end
-
+    if not table.HasValue(self.receivers, client) then self.receivers[#self.receivers + 1] = client end
     if noSync then return end
     self:sync(client)
 end

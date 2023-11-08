@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local ITEM = lia.meta.item or {}
 --------------------------------------------------------------------------------------------------------------------------
 debug.getregistry().Item = lia.meta.item
@@ -17,7 +17,6 @@ ITEM.canSplit = true
 --------------------------------------------------------------------------------------------------------------------------
 function ITEM:getQuantity()
     if self.id == 0 then return self.maxQuantity end
-
     return self.quantity
 end
 
@@ -49,10 +48,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function ITEM:getPrice()
     local price = self.price
-    if self.calcPrice then
-        price = self:calcPrice(self.price)
-    end
-
+    if self.calcPrice then price = self:calcPrice(self.price) end
     return price or 0
 end
 
@@ -65,7 +61,6 @@ function ITEM:call(method, client, entity, ...)
         local results = {self[method](self, ...)}
         self.player = oldPlayer
         self.entity = oldEntity
-
         return unpack(results)
     end
 
@@ -95,22 +90,17 @@ function ITEM:getData(key, default)
         local value = data[key]
         if value ~= nil then return value end
     end
-
     return default
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function ITEM:hook(name, func)
-    if name then
-        self.hooks[name] = func
-    end
+    if name then self.hooks[name] = func end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function ITEM:postHook(name, func)
-    if name then
-        self.postHooks[name] = func
-    end
+    if name then self.postHooks[name] = func end
 end
 
 --------------------------------------------------------------------------------------------------------------------------

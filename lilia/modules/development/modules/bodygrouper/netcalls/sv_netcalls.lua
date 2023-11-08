@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
 --------------------------------------------------------------------------------------------------------------------------
 util.AddNetworkString("BodygrouperMenu")
@@ -9,9 +9,7 @@ net.Receive(
     "BodygrouperMenuClose",
     function(l, client)
         for k, v in pairs(ents.FindByClass("lia_bodygrouper")) do
-            if v:HasUser(client) then
-                v:RemoveUser(client)
-            end
+            if v:HasUser(client) then v:RemoveUser(client) end
         end
     end
 )
@@ -28,13 +26,11 @@ net.Receive(
         if target ~= client then
             if not CAMI.PlayerHasAccess(client, "Lilia - Commands - Change Bodygroups", nil) then
                 client:notifyLocalized("noAccess")
-
                 return
             end
         else
             if not MODULE:CanAccessMenu(client) then
                 client:notifyLocalized("noAccess")
-
                 return
             end
 
@@ -43,7 +39,6 @@ net.Receive(
 
         if target:SkinCount() and skn > target:SkinCount() then
             client:notifyLocalized("invalidSkin")
-
             return
         end
 
@@ -51,7 +46,6 @@ net.Receive(
             for k, v in pairs(groups) do
                 if v > target:GetBodygroupCount(k) then
                     client:notifyLocalized("invalidBodygroup")
-
                     return
                 end
             end
@@ -76,9 +70,7 @@ net.Receive(
         client:SendLua("lia.module.list.bodygrouper.Menu:Close()")
         if closetuser then
             for k, v in pairs(ents.FindByClass("lia_bodygrouper")) do
-                if v:HasUser(target) then
-                    v:RemoveUser(target)
-                end
+                if v:HasUser(target) then v:RemoveUser(target) end
             end
         end
     end

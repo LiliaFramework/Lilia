@@ -1,12 +1,9 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 net.Receive(
     "liaStorageExit",
     function(_, client)
         local storage = client.liaStorageEntity
-        if IsValid(storage) then
-            storage.receivers[client] = nil
-        end
-
+        if IsValid(storage) then storage.receivers[client] = nil end
         client.liaStorageEntity = nil
     end
 )
@@ -19,7 +16,6 @@ net.Receive(
         local storageFunc = function()
             if not IsValid(client.liaStorageEntity) then return end
             if client:GetPos():Distance(client.liaStorageEntity:GetPos()) > 128 then return end
-
             return client.liaStorageEntity
         end
 
@@ -50,7 +46,6 @@ net.Receive(
         local storageFunc = function()
             if not IsValid(client.liaStorageEntity) then return end
             if client:GetPos():Distance(client.liaStorageEntity:GetPos()) > 128 then return end
-
             return client.liaStorageEntity
         end
 
@@ -81,25 +76,19 @@ net.Receive(
             function(res)
                 client.storageTransaction = nil
                 hook.Run("ItemTransfered", context)
-
                 return res
             end
         ):catch(
             function(err)
                 client.storageTransaction = nil
-                if IsValid(client) then
-                    client:notifyLocalized(err)
-                end
-
+                if IsValid(client) then client:notifyLocalized(err) end
                 return fromInv:add(item)
             end
         ):catch(
             function(err)
                 client.storageTransaction = nil
                 item:spawn(failItemDropPos)
-                if IsValid(client) then
-                    client:notifyLocalized("itemOnGround")
-                end
+                if IsValid(client) then client:notifyLocalized("itemOnGround") end
             end
         )
     end

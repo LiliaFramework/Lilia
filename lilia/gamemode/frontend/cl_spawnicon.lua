@@ -1,16 +1,12 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------------------------
 local setSequence = function(entity)
     local sequence = entity:SelectWeightedSequence(ACT_IDLE)
-    if sequence <= 0 then
-        sequence = entity:LookupSequence("idle_unarmed")
-    end
-
+    if sequence <= 0 then sequence = entity:LookupSequence("idle_unarmed") end
     entity:SetIK(false)
     if sequence > 0 then
         entity:ResetSequence(sequence)
-
         return
     end
 
@@ -19,7 +15,6 @@ local setSequence = function(entity)
         if seqNameLower == "idlenoise" then continue end
         if not (seqNameLower:find("idle") or seqNameLower:find("fly")) then continue end
         entity:ResetSequence(seqName)
-
         return
     end
 
@@ -41,10 +36,7 @@ function PANEL:Init()
     self.SetModel = function(self, model, skin, hidden)
         self:OldSetModel(model)
         local entity = self.Entity
-        if skin then
-            entity:SetSkin(skin)
-        end
-
+        if skin then entity:SetSkin(skin) end
         setSequence(entity)
         local data = PositionSpawnIcon(entity, entity:GetPos())
         if data then
@@ -86,9 +78,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:OnMousePressed()
-    if self.DoClick then
-        self:DoClick()
-    end
+    if self.DoClick then self:DoClick() end
 end
 
 --------------------------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
 --------------------------------------------------------------------------------------------------------------------------
 lia.command.add(
@@ -47,10 +47,7 @@ lia.command.add(
                     table.insert(MODULE.spawns[faction][class], client:GetPos())
                     MODULE:SaveSpawns()
                     local name = L(info.name, client)
-                    if info2 then
-                        name = name .. " (" .. L(info2.name, client) .. ")"
-                    end
-
+                    if info2 then name = name .. " (" .. L(info2.name, client) .. ")" end
                     return L("spawnAdded", client, name)
                 else
                     return L("invalidFaction", client)
@@ -84,10 +81,7 @@ lia.command.add(
                 end
             end
 
-            if i > 0 then
-                MODULE:SaveSpawns()
-            end
-
+            if i > 0 then MODULE:SaveSpawns() end
             return L("spawnDeleted", client, i)
         end
     }

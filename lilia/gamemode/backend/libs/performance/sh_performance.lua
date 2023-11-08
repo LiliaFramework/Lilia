@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local GM = GM
 --------------------------------------------------------------------------------------------------------------------------
 lia.config.tblPlayers = lia.config.tblPlayers or {}
@@ -18,12 +18,7 @@ function GM:RegisterPlayer(pPlayer)
     }
 
     self:PlayerUpdateTransmitStates(pPlayer)
-    timer.Simple(
-        lia.config.intSpawnDelay,
-        function()
-            self:BeginExpand(pPlayer)
-        end
-    )
+    timer.Simple(lia.config.intSpawnDelay, function() self:BeginExpand(pPlayer) end)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -82,7 +77,6 @@ function GM:BeginExpand(pPlayer)
         function()
             if not IsValid(pPlayer) then
                 timer.Remove(timerID)
-
                 return
             end
 
@@ -136,12 +130,5 @@ function widgets.PlayerTick()
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-timer.Create(
-    "GM:PlayerExpandedUpdate",
-    1,
-    0,
-    function()
-        GM:PlayerExpandedUpdate()
-    end
-)
+timer.Create("GM:PlayerExpandedUpdate", 1, 0, function() GM:PlayerExpandedUpdate() end)
 --------------------------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
--- thx for reducing the work!
+﻿-- thx for reducing the work!
 -- the code is came from: https://github.com/soggybag/Simple-Game/blob/master/Game%20-%20Simple/more_easing.lua
 -- check the ease cheatsheet for your neat UI and stuffs! http://easings.net
 --------------------------------------------------------------------------------------------------------------------------
@@ -118,7 +118,6 @@ easeOutBounce = function(ratio)
             end
         end
     end
-
     return l
 end
 
@@ -146,7 +145,6 @@ easeInElastic = function(ratio)
     local p = 0.3
     local s = p / 4.0
     local invRatio = ratio - 1.0
-
     return -1 * pow(2.0, 10.0 * invRatio) * sin((invRatio - s) * 2 * pi / p)
 end
 
@@ -155,7 +153,6 @@ easeOutElastic = function(ratio)
     if ratio == 0 or ratio == 1.0 then return ratio end
     local p = 0.3
     local s = p / 4.0
-
     return -1 * pow(2.0, -10.0 * ratio) * sin((ratio + s) * 2 * pi / p) + 1.0
 end
 
@@ -182,7 +179,6 @@ easeIn = function(ratio) return ratio * ratio * ratio end
 --------------------------------------------------------------------------------------------------------------------------
 easeOut = function(ratio)
     local invRatio = ratio - 1.0
-
     return (invRatio * invRatio * invRatio) + 1.0
 end
 
@@ -207,7 +203,6 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 easeInBack = function(ratio)
     local s = 1.70158
-
     return pow(ratio, 2.0) * ((s + 1.0) * ratio - s)
 end
 
@@ -215,7 +210,6 @@ end
 easeOutBack = function(ratio)
     local invRatio = ratio - 1.0
     local s = 1.70158
-
     return pow(invRatio, 2.0) * ((s + 1.0) * invRatio + s) + 1.0
 end
 

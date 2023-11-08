@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 lia.config.Font = lia.config.Font
 -----------------------------------------------------------------------------------------------------------------------------------------------
 lia.config.GenericFont = lia.config.GenericFont
@@ -17,9 +17,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function GM:OnContextMenuClose()
     self.BaseClass:OnContextMenuClose()
-    if IsValid(lia.gui.quick) then
-        lia.gui.quick:Remove()
-    end
+    if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -47,21 +45,14 @@ function GM:SetupQuickMenu(menu)
 
                 current = panel
                 RunConsoleCommand("lia_language", k)
-            end, enabled
+            end,
+            enabled
         )
 
-        if enabled and not IsValid(current) then
-            current = button
-        end
+        if enabled and not IsValid(current) then current = button end
     end
 
-    menu:addSlider(
-        "HUD Desc Width Modifier",
-        function(panel, value)
-            DescWidth:SetFloat(value)
-        end, DescWidth:GetFloat(), 0.1, 1, 2
-    )
-
+    menu:addSlider("HUD Desc Width Modifier", function(panel, value) DescWidth:SetFloat(value) end, DescWidth:GetFloat(), 0.1, 1, 2)
     menu:addSpacer()
 end
 
@@ -77,14 +68,8 @@ function GM:HUDPaintBackground()
     local frameTime = FrameTime()
     local scrW, scrH = ScrW(), ScrH()
     blurGoal = localPlayer:getLocalVar("blur", 0) + (hook.Run("AdjustBlurAmount", blurGoal) or 0)
-    if blurValue ~= blurGoal then
-        blurValue = math.Approach(blurValue, blurGoal, frameTime * 20)
-    end
-
-    if blurValue > 0 and not localPlayer:ShouldDrawLocalPlayer() then
-        lia.util.drawBlurAt(0, 0, scrW, scrH, blurValue)
-    end
-
+    if blurValue ~= blurGoal then blurValue = math.Approach(blurValue, blurGoal, frameTime * 20) end
+    if blurValue > 0 and not localPlayer:ShouldDrawLocalPlayer() then lia.util.drawBlurAt(0, 0, scrW, scrH, blurValue) end
     self.BaseClass.PaintWorldTips(self.BaseClass)
     lia.menu.drawAll()
 end
@@ -92,49 +77,31 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function GM:ItemShowEntityMenu(entity)
     for k, v in ipairs(lia.menu.list) do
-        if v.entity == entity then
-            table.remove(lia.menu.list, k)
-        end
+        if v.entity == entity then table.remove(lia.menu.list, k) end
     end
 
     local options = {}
     local itemTable = entity:getItemTable()
     if not itemTable then return end
     local function callback(index)
-        if IsValid(entity) then
-            netstream.Start("invAct", index, entity)
-        end
+        if IsValid(entity) then netstream.Start("invAct", index, entity) end
     end
 
     itemTable.player = LocalPlayer()
     itemTable.entity = entity
-    if input.IsShiftDown() then
-        callback("take")
-    end
-
+    if input.IsShiftDown() then callback("take") end
     for k, v in SortedPairs(itemTable.functions) do
         if k == "combine" then continue end
         if (hook.Run("onCanRunItemAction", itemTable, k) == false or isfunction(v.onCanRun)) and (not v.onCanRun(itemTable)) then continue end
         options[L(v.name or k)] = function()
             local send = true
-            if v.onClick then
-                send = v.onClick(itemTable)
-            end
-
-            if v.sound then
-                surface.PlaySound(v.sound)
-            end
-
-            if send ~= false then
-                callback(k)
-            end
+            if v.onClick then send = v.onClick(itemTable) end
+            if v.sound then surface.PlaySound(v.sound) end
+            if send ~= false then callback(k) end
         end
     end
 
-    if table.Count(options) > 0 then
-        entity.liaMenuIndex = lia.menu.add(options, entity)
-    end
-
+    if table.Count(options) > 0 then entity.liaMenuIndex = lia.menu.add(options, entity) end
     itemTable.player = nil
     itemTable.entity = nil
 end

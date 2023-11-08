@@ -1,4 +1,4 @@
---[[
+﻿--[[
 CAMI - Common Admin Mod Interface.
 Makes admin mods intercompatible and provides an abstract privilege interface
 for third party addons.
@@ -94,7 +94,6 @@ CAMI.RegisterUsergroup
 function CAMI.RegisterUsergroup(usergroup, source)
     usergroups[usergroup.Name] = usergroup
     hook.Call("CAMI.OnUsergroupRegistered", nil, usergroup, source)
-
     return usergroup
 end
 
@@ -124,7 +123,6 @@ function CAMI.UnregisterUsergroup(usergroupName, source)
     local usergroup = usergroups[usergroupName]
     usergroups[usergroupName] = nil
     hook.Call("CAMI.OnUsergroupUnregistered", nil, usergroup, source)
-
     return true
 end
 
@@ -177,7 +175,6 @@ function CAMI.UsergroupInherits(usergroupName1, usergroupName2)
     until not usergroups[usergroupName1] or usergroups[usergroupName1].Inherits == usergroupName1
     -- One can only be sure the usergroup inherits from user if the
     -- usergroup isn't registered.
-
     return usergroupName1 == usergroupName2 or usergroupName2 == "user"
 end
 
@@ -206,7 +203,6 @@ function CAMI.InheritanceRoot(usergroupName)
     while inherits ~= usergroups[usergroupName].Inherits do
         usergroupName = usergroups[usergroupName].Inherits
     end
-
     return usergroupName
 end
 
@@ -230,7 +226,6 @@ CAMI.RegisterPrivilege
 function CAMI.RegisterPrivilege(privilege)
     privileges[privilege.Name] = privilege
     hook.Call("CAMI.OnPrivilegeRegistered", nil, privilege)
-
     return privilege
 end
 
@@ -255,7 +250,6 @@ function CAMI.UnregisterPrivilege(privilegeName)
     local privilege = privileges[privilegeName]
     privileges[privilegeName] = nil
     hook.Call("CAMI.OnPrivilegeUnregistered", nil, privilege)
-
     return true
 end
 
@@ -342,17 +336,12 @@ local defaultAccessHandler = {
         if not priv then return callback(fallback, "Fallback.") end
         callback(priv.MinAccess == "user" or priv.MinAccess == "admin" and actorPly:IsAdmin() or priv.MinAccess == "superadmin" and actorPly:IsSuperAdmin(), "Fallback.")
     end,
-    ["CAMI.SteamIDHasAccess"] = function(_, _, _, callback)
-        callback(false, "No information available.")
-    end
+    ["CAMI.SteamIDHasAccess"] = function(_, _, _, callback) callback(false, "No information available.") end
 }
 
 function CAMI.PlayerHasAccess(actorPly, privilegeName, callback, targetPly, extraInfoTbl)
     local hasAccess, reason = nil, nil
-    local callback_ = callback or function(hA, r)
-        hasAccess, reason = hA, r
-    end
-
+    local callback_ = callback or function(hA, r) hasAccess, reason = hA, r end
     hook.Call("CAMI.PlayerHasAccess", defaultAccessHandler, actorPly, privilegeName, callback_, targetPly, extraInfoTbl)
     if callback ~= nil then return end
     if hasAccess == nil then
@@ -361,7 +350,6 @@ function CAMI.PlayerHasAccess(actorPly, privilegeName, callback, targetPly, extr
         immediate answer!]]
         error(string.format(err, actorPly:IsPlayer() and actorPly:Nick() or tostring(actorPly), privilegeName))
     end
-
     return hasAccess, reason
 end
 
@@ -404,23 +392,12 @@ function CAMI.GetPlayersWithAccess(privilegeName, callback, targetPly, extraInfo
     local countdown = #allPlys
     local function onResult(ply, hasAccess, _)
         countdown = countdown - 1
-        if hasAccess then
-            table.insert(allowedPlys, ply)
-        end
-
-        if countdown == 0 then
-            callback(allowedPlys)
-        end
+        if hasAccess then table.insert(allowedPlys, ply) end
+        if countdown == 0 then callback(allowedPlys) end
     end
 
     for _, ply in ipairs(allPlys) do
-        CAMI.PlayerHasAccess(
-            ply,
-            privilegeName,
-            function(...)
-                onResult(ply, ...)
-            end, targetPly, extraInfoTbl
-        )
+        CAMI.PlayerHasAccess(ply, privilegeName, function(...) onResult(ply, ...) end, targetPly, extraInfoTbl)
     end
 end
 

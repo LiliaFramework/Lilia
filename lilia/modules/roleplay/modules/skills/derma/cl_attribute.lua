@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 lia.config.CharAttrib = {"buttons/button16.wav", 30, 255}
 lia.config.MaxAttributes = lia.config.MaxAttributes or 30
 --------------------------------------------------------------------------------------------------------------------------
@@ -82,10 +82,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:Think()
-    if self.pressing and ((self.nextPress or 0) < CurTime()) then
-        self:doChange()
-    end
-
+    if self.pressing and ((self.nextPress or 0) < CurTime()) then self:doChange() end
     self.deltaValue = math.Approach(self.deltaValue, self.value, FrameTime() * 15)
 end
 
@@ -93,9 +90,7 @@ end
 function PANEL:doChange()
     if (self.value == 0 and self.pressing == -1) or (self.value == self.max and self.pressing == 1) then return end
     self.nextPress = CurTime() + 0.2
-    if self:onChanged(self.pressing) ~= false then
-        self.value = math.Clamp(self.value + self.pressing, 0, self.max)
-    end
+    if self:onChanged(self.pressing) ~= false then self.value = math.Clamp(self.value + self.pressing, 0, self.max) end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -183,7 +178,6 @@ function PANEL:addAttribute(key, attribute)
     local row = self:Add("liaCharacterAttribsRow")
     row:setAttribute(key, attribute)
     row.parent = self
-
     return row
 end
 
@@ -200,7 +194,6 @@ function PANEL:onPointChange(key, delta)
     self:updatePointsLeft()
     attribs[key] = newQuantity
     self:setContext("attribs", attribs)
-
     return newQuantity
 end
 
@@ -250,9 +243,7 @@ function PANEL:delta(delta)
         local oldPoints = self.points
         self.points = self.parent:onPointChange(self.key, delta)
         self:updateQuantity()
-        if oldPoints ~= self.points then
-            LocalPlayer():EmitSound(unpack(lia.config.CharAttrib))
-        end
+        if oldPoints ~= self.points then LocalPlayer():EmitSound(unpack(lia.config.CharAttrib)) end
     end
 end
 
@@ -269,12 +260,8 @@ function PANEL:addButton(symbol, delta)
         self:delta(delta)
     end
 
-    button.OnMouseReleased = function(button)
-        self.autoDelta = nil
-    end
-
+    button.OnMouseReleased = function(button) self.autoDelta = nil end
     button:SetPaintBackground(false)
-
     return button
 end
 

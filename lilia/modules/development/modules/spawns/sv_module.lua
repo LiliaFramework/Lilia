@@ -1,11 +1,9 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:CharacterPreSave(character)
     local client = character:getPlayer()
-    if IsValid(client) then
-        character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()})
-    end
+    if IsValid(client) then character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()}) end
 end
 
 --------------------------------------------------------------------------------------------------------------------------

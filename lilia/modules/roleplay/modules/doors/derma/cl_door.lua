@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:Init()
@@ -13,33 +13,9 @@ function PANEL:Init()
     self.access.OnClickLine = function(this, line, selected)
         if IsValid(line.player) then
             local menu = DermaMenu()
-            menu:AddOption(
-                L"tenant",
-                function()
-                    if self.accessData and self.accessData[line.player] ~= DOOR_TENANT then
-                        netstream.Start("doorPerm", self.door, line.player, DOOR_TENANT)
-                    end
-                end
-            ):SetImage("icon16/user_add.png")
-
-            menu:AddOption(
-                L"guest",
-                function()
-                    if self.accessData and self.accessData[line.player] ~= DOOR_GUEST then
-                        netstream.Start("doorPerm", self.door, line.player, DOOR_GUEST)
-                    end
-                end
-            ):SetImage("icon16/user_green.png")
-
-            menu:AddOption(
-                L"none",
-                function()
-                    if self.accessData and self.accessData[line.player] ~= DOOR_NONE then
-                        netstream.Start("doorPerm", self.door, line.player, DOOR_NONE)
-                    end
-                end
-            ):SetImage("icon16/user_red.png")
-
+            menu:AddOption(L"tenant", function() if self.accessData and self.accessData[line.player] ~= DOOR_TENANT then netstream.Start("doorPerm", self.door, line.player, DOOR_TENANT) end end):SetImage("icon16/user_add.png")
+            menu:AddOption(L"guest", function() if self.accessData and self.accessData[line.player] ~= DOOR_GUEST then netstream.Start("doorPerm", self.door, line.player, DOOR_GUEST) end end):SetImage("icon16/user_green.png")
+            menu:AddOption(L"none", function() if self.accessData and self.accessData[line.player] ~= DOOR_NONE then netstream.Start("doorPerm", self.door, line.player, DOOR_NONE) end end):SetImage("icon16/user_red.png")
             menu:Open()
         end
     end
@@ -51,9 +27,7 @@ function PANEL:setDoor(door, access, door2)
     self.accessData = access
     self.door = door
     for k, v in ipairs(player.GetAll()) do
-        if v ~= LocalPlayer() and v:getChar() then
-            self.access:AddLine(v:Name():gsub("#", "\226\128\139#"), L(ACCESS_LABELS[access[v] or 0])).player = v
-        end
+        if v ~= LocalPlayer() and v:getChar() then self.access:AddLine(v:Name():gsub("#", "\226\128\139#"), L(ACCESS_LABELS[access[v] or 0])).player = v end
     end
 
     if self:checkAccess(DOOR_OWNER) then
@@ -79,9 +53,7 @@ function PANEL:setDoor(door, access, door2)
             end
         end
 
-        self.name.OnEnter = function(this)
-            lia.command.send("doorsettitle", this:GetText())
-        end
+        self.name.OnEnter = function(this) lia.command.send("doorsettitle", this:GetText()) end
     end
 end
 
@@ -89,15 +61,12 @@ end
 function PANEL:checkAccess(access)
     access = access or DOOR_GUEST
     if (self.accessData[LocalPlayer()] or 0) >= access then return true end
-
     return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:Think()
-    if self.accessData and not IsValid(self.door) and self:checkAccess() then
-        self:Remove()
-    end
+    if self.accessData and not IsValid(self.door) and self:checkAccess() then self:Remove() end
 end
 
 --------------------------------------------------------------------------------------------------------------------------

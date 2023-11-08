@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 function MODULE:SaveData()
     local data = {}
     for k, v in pairs(ents.FindByClass("lia_bodygrouper")) do
@@ -16,9 +16,7 @@ function MODULE:LoadData()
         closet:SetAngles(v[2])
         closet:Spawn()
         local phys = closet:GetPhysicsObject()
-        if IsValid(phys) then
-            phys:EnableMotion(false)
-        end
+        if IsValid(phys) then phys:EnableMotion(false) end
     end
 end
 --------------------------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
---[[
+﻿--[[
 https://github.com/mattkrins/surfaceGetURL
 
 MIT License
@@ -41,15 +41,7 @@ function surface.GetURL(url, w, h, time)
     end
 
     -- In case we do not render
-    timer.Simple(
-        1 or tonumber(time),
-        function()
-            if IsValid(WebPanel) then
-                WebPanel:Remove()
-            end
-        end
-    )
-
+    timer.Simple(1 or tonumber(time), function() if IsValid(WebPanel) then WebPanel:Remove() end end)
     return Material("error")
 end
 --------------------------------------------------------------------------------------------------------------------------

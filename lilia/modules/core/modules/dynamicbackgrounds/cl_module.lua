@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 MODULE.ordered = MODULE.ordered or {}
 --------------------------------------------------------------------------------------------------------------------------
 local view = {}
@@ -45,15 +45,11 @@ function MODULE:CalcView(client, origin, angles, fov)
                 self.finishTime = curTime + 30
                 if ordered then
                     self.orderedIndex = self.orderedIndex + 1
-                    if self.orderedIndex > #self.ordered then
-                        self.orderedIndex = 1
-                    end
+                    if self.orderedIndex > #self.ordered then self.orderedIndex = 1 end
                 else
                     local keys = {}
                     for k, v in pairs(scenes) do
-                        if type(k) == "Vector" then
-                            keys[#keys + 1] = k
-                        end
+                        if type(k) == "Vector" then keys[#keys + 1] = k end
                     end
 
                     self.index = table.Random(keys)
@@ -71,7 +67,6 @@ function MODULE:CalcView(client, origin, angles, fov)
         x3 = Lerp(frameTime, x3, math.Clamp((x - x2) / x2, -1, 1) * 6)
         view.origin = realOrigin + realAngles:Up() * y3 + realAngles:Right() * x3
         view.angles = realAngles + Angle(y3 * -0.5, x3 * -0.5, 0)
-
         return view
     end
 end

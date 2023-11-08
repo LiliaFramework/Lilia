@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 function MODULE:InitializedModules()
     RunConsoleCommand("spawnmenu_reload")
 end
@@ -37,8 +37,6 @@ function MODULE:PopulateItems(pnlContent, tree, node)
     end
 
     local FirstNode = tree:Root():GetChildNode(0)
-    if IsValid(FirstNode) then
-        FirstNode:InternalDoClick()
-    end
+    if IsValid(FirstNode) then FirstNode:InternalDoClick() end
 end
 --------------------------------------------------------------------------------------------------------------------------

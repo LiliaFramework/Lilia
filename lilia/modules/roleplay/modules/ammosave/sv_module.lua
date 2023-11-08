@@ -1,13 +1,11 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 function MODULE:CharacterPreSave(character)
     local client = character:getPlayer()
     if IsValid(client) then
         local ammoTable = {}
         for k, v in ipairs(self.ammoList) do
             local ammo = client:GetAmmoCount(v)
-            if ammo > 0 then
-                ammoTable[v] = ammo
-            end
+            if ammo > 0 then ammoTable[v] = ammo end
         end
 
         character:setData("ammo", ammoTable)
@@ -39,9 +37,7 @@ function MODULE:PlayerDeath(client, inflictor, attacker)
     local items = inventory:getItems()
     if inventory and not lia.config.KeepAmmoOnDeath then
         for _, v in pairs(items) do
-            if (v.isWeapon or v.isCW) and v:getData("equip") then
-                v:setData("ammo", nil)
-            end
+            if (v.isWeapon or v.isCW) and v:getData("equip") then v:setData("ammo", nil) end
         end
     end
 end

@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 function GM:OnPlayerDropWeapon(client, item, entity)
     local physObject = entity:GetPhysicsObject()
     if physObject then physObject:EnableMotion() end

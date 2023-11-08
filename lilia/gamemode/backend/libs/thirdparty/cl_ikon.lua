@@ -1,4 +1,4 @@
---[[
+﻿--[[
 	BLACK TEA ICON LIBRARY FOR Nuscript 1.1
 
 	The MIT License (MIT)
@@ -58,16 +58,12 @@ function ikon:init()
 	]]
     OLD_HALOADD = OLD_HALOADD or halo.Add
     function halo.Add(...)
-        if ikon.rendering ~= true then
-            OLD_HALOADD(...)
-        end
+        if ikon.rendering ~= true then OLD_HALOADD(...) end
     end
 
     OLD_HALORENDER = OLD_HALORENDER or halo.Render
     function halo.Render(...)
-        if ikon.rendering ~= true then
-            OLD_HALORENDER(...)
-        end
+        if ikon.rendering ~= true then OLD_HALORENDER(...) end
     end
 
     file.CreateDir("nsIcon")
@@ -75,10 +71,7 @@ function ikon:init()
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-if schemaName then
-    ikon:init()
-end
-
+if schemaName then ikon:init() end
 --------------------------------------------------------------------------------------------------------------------------
 hook.Add(
     "InitializedSchema",
@@ -154,16 +147,11 @@ function ikon:renderHook()
             render.SetColorModulation(1, 1, 1)
             for i = 0, 6 do
                 local col = lightPositions[i]
-                if col then
-                    render.SetModelLighting(i, col.r / 255, col.g / 255, col.b / 255)
-                end
+                if col then render.SetModelLighting(i, col.r / 255, col.g / 255, col.b / 255) end
             end
 
             cam.Start2D()
-            if tab.drawBackgroundHook then
-                tab.drawBackgroundHook(w, h)
-            end
-
+            if tab.drawBackgroundHook then tab.drawBackgroundHook(w, h) end
             cam.End2D()
             if tab.outline then
                 render.SetStencilEnable(true)
@@ -177,10 +165,7 @@ function ikon:renderHook()
             --[[
 			Add more effects on the Models!
 		]]
-            if tab.drawHook then
-                tab.drawHook(ikon.renderEntity, w, h)
-            end
-
+            if tab.drawHook then tab.drawHook(ikon.renderEntity, w, h) end
             cam.Start3D(tab.origin, tab.angles, tab.fov, 0, 0, w, h)
             if tab.entAng then
                 ikon.renderEntity:SetAngles(tab.entAng)
@@ -236,9 +221,7 @@ function ikon:renderHook()
             render.SuppressEngineLighting(false)
             render.SetWriteDepthToDestAlpha(true)
         end,
-        function(rrer)
-            print(rrer)
-        end
+        function(rrer) print(rrer) end
     )
 end
 
@@ -273,10 +256,7 @@ function ikon:renderIcon(name, w, h, mdl, camInfo, updateCache)
     ikon.curWidth = w or 1
     ikon.curHeight = h or 1
     ikon.renderModel = mdl
-    if camInfo then
-        ikon.info = camInfo
-    end
-
+    if camInfo then ikon.info = camInfo end
     local w, h = ikon.curWidth * 64, ikon.curHeight * 64
     local sw, sh = ScrW(), ScrH()
     if ikon.renderModel then
@@ -320,7 +300,6 @@ function ikon:renderIcon(name, w, h, mdl, camInfo, updateCache)
     end
 
     ikon.requestList[name] = nil
-
     return true
 end
 
@@ -337,14 +316,13 @@ function ikon:getIcon(name)
     if file.Exists("nsIcon/" .. schemaName .. "/" .. name .. ".png", "DATA") then
         ikon.cache[name] = Material("../data/nsIcon/" .. schemaName .. "/" .. name .. ".png")
         -- yeah return cache
-
         return ikon.cache[name]
     else
         return false
     end
-    -- retryd
 end
 
+-- retryd
 --------------------------------------------------------------------------------------------------------------------------
 concommand.Add(
     "lia_flushicon",

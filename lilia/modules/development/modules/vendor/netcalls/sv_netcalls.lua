@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
 --------------------------------------------------------------------------------------------------------------------------
 local EDITOR = include(MODULE.path .. "/libs/sv_vendor.lua")
@@ -31,9 +31,7 @@ net.Receive(
     "liaVendorExit",
     function(_, client)
         local vendor = client.liaVendor
-        if IsValid(vendor) then
-            vendor:removeReceiver(client, true)
-        end
+        if IsValid(vendor) then vendor:removeReceiver(client, true) end
     end
 )
 

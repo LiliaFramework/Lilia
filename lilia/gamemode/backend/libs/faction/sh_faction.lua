@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 lia.faction = lia.faction or {}
 lia.faction.indices = lia.faction.indices or {}
 lia.faction.teams = lia.faction.teams or {}
@@ -13,10 +13,7 @@ function lia.faction.loadFromDir(directory)
             isDefault = true
         }
 
-        if MODULE then
-            FACTION.module = MODULE.uniqueID
-        end
-
+        if MODULE then FACTION.module = MODULE.uniqueID end
         lia.util.include(directory .. "/" .. v, "shared")
         if not FACTION.name then
             FACTION.name = "Unknown"

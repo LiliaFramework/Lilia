@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local PANEL = {}
 VoicePanels = {}
 --------------------------------------------------------------------------------------------------------------------------
@@ -42,13 +42,8 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:Think()
-    if IsValid(self.client) then
-        self.LabelName:SetText(self.name)
-    end
-
-    if self.fadeAnim then
-        self.fadeAnim:Run()
-    end
+    if IsValid(self.client) then self.LabelName:SetText(self.name) end
+    if self.fadeAnim then self.fadeAnim:Run() end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -57,10 +52,8 @@ function PANEL:FadeOut(anim, delta, data)
         if IsValid(VoicePanels[self.client]) then
             VoicePanels[self.client]:Remove()
             VoicePanels[self.client] = nil
-
             return
         end
-
         return
     end
 
@@ -76,9 +69,7 @@ timer.Create(
     0,
     function()
         for k, v in pairs(VoicePanels) do
-            if not IsValid(k) then
-                hook.Run("PlayerEndVoice", k)
-            end
+            if not IsValid(k) then hook.Run("PlayerEndVoice", k) end
         end
     end
 )

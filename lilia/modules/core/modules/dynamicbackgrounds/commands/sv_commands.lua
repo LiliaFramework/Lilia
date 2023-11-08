@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 lia.command.add(
     "dynamicsceneadd",
     {
@@ -9,7 +9,6 @@ lia.command.add(
             local position, angles = client:EyePos(), client:EyeAngles()
             if tobool(arguments[1]) and not client.liaScnPair then
                 client.liaScnPair = {position, angles}
-
                 return L("mapRepeat", client)
             else
                 if client.liaScnPair then
@@ -18,7 +17,6 @@ lia.command.add(
                 else
                     MODULE:addScene(position, angles)
                 end
-
                 return L("mapAdd", client)
             end
         end
@@ -39,9 +37,7 @@ lia.command.add(
             for k, v in pairs(MODULE.scenes) do
                 local delete = false
                 if type(k) == "Vector" then
-                    if k:Distance(position) <= radius or v[1]:Distance(position) <= radius then
-                        delete = true
-                    end
+                    if k:Distance(position) <= radius or v[1]:Distance(position) <= radius then delete = true end
                 elseif v[1]:Distance(position) <= radius then
                     delete = true
                 end
@@ -53,10 +49,7 @@ lia.command.add(
                 end
             end
 
-            if i > 0 then
-                MODULE:SaveScenes()
-            end
-
+            if i > 0 then MODULE:SaveScenes() end
             return L("mapDel", client, i)
         end
     }

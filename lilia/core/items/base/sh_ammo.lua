@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local loadAmount = {5, 10, 30, 45, 90, 150, 300}
 --------------------------------------------------------------------------------------------------------------------------
 ITEM.name = "Ammo Base"
@@ -57,12 +57,9 @@ ITEM.functions.use = {
                 data = -1,
             }
         )
-
         return options
     end,
-    onClick = function(item, data)
-        if data == -1 then return false end
-    end,
+    onClick = function(item, data) if data == -1 then return false end end,
     onRun = function(item, data)
         data = data or 0
         if data > 0 then
@@ -73,10 +70,8 @@ ITEM.functions.use = {
         elseif data == 0 then
             item.player:GiveAmmo(item:getQuantity(), item.ammo)
             item.player:EmitSound(item.useSound or "items/ammo_pickup.wav", 110)
-
             return true
         end
-
         return item:getQuantity() <= 0
     end,
 }

@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 lia.notices = lia.notices or {}
 --------------------------------------------------------------------------------------------------------------------------
 lia.noticess = lia.noticess or {}
@@ -42,9 +42,7 @@ function OrganizeNoticess()
     for k, v in ipairs(lia.noticess) do
         local topMargin = 0
         for k2, v2 in pairs(lia.noticess) do
-            if k < k2 then
-                topMargin = topMargin + v2:GetTall() + 5
-            end
+            if k < k2 then topMargin = topMargin + v2:GetTall() + 5 end
         end
 
         v:MoveTo(v:GetX(), topMargin + 5, 0.15, 0, 5)
@@ -55,17 +53,7 @@ end
 function RemoveNoticess(notice)
     for k, v in ipairs(lia.noticess) do
         if v == notice then
-            notice:SizeTo(
-                notice:GetWide(),
-                0,
-                0.2,
-                0,
-                -1,
-                function()
-                    notice:Remove()
-                end
-            )
-
+            notice:SizeTo(notice:GetWide(), 0, 0.2, 0, -1, function() notice:Remove() end)
             table.remove(lia.noticess, k)
             OrganizeNoticess()
             break
@@ -75,10 +63,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function CreateNoticePanel(length, notimer)
-    if not notimer then
-        notimer = false
-    end
-
+    if not notimer then notimer = false end
     local notice = vgui.Create("noticePanel")
     notice.start = CurTime() + 0.25
     notice.endTime = CurTime() + length
@@ -106,15 +91,7 @@ function CreateNoticePanel(length, notimer)
         end
     end
 
-    if not notimer then
-        timer.Simple(
-            length,
-            function()
-                RemoveNoticess(notice)
-            end
-        )
-    end
-
+    if not notimer then timer.Simple(length, function() RemoveNoticess(notice) end) end
     return notice
 end
 
@@ -139,30 +116,14 @@ function lia.util.notify(message)
     notice.endTime = CurTime() + 7.75
     OrganizeNotices()
     MsgC(Color(0, 255, 255), message .. "\n")
-    timer.Simple(
-        0.15,
-        function()
-            LocalPlayer():EmitSound(unpack(lia.config.Notify))
-        end
-    )
-
+    timer.Simple(0.15, function() LocalPlayer():EmitSound(unpack(lia.config.Notify)) end)
     timer.Simple(
         7.75,
         function()
             if IsValid(notice) then
                 for k, v in ipairs(lia.notices) do
                     if v == notice then
-                        notice:MoveTo(
-                            scrW,
-                            notice.y,
-                            0.15,
-                            0.1,
-                            nil,
-                            function()
-                                notice:Remove()
-                            end
-                        )
-
+                        notice:MoveTo(scrW, notice.y, 0.15, 0.1, nil, function() notice:Remove() end)
                         table.remove(lia.notices, k)
                         OrganizeNotices()
                         break

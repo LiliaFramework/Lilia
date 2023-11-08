@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 lia.command.add(
     "pktoggle",
     {
@@ -9,7 +9,6 @@ lia.command.add(
             local tcharacter = target:getChar()
             if not lia.config.PKActive then
                 client:notify("PKing isn't enabled! Enable it in the config!")
-
                 return
             end
 

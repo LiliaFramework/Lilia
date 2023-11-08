@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:Init()
@@ -23,10 +23,7 @@ function PANEL:Init()
     self.leave:SetTextColor(color_white)
     self.leave:SetContentAlignment(9)
     self.leave:SetExpensiveShadow(2, color_black)
-    self.leave.DoClick = function(button)
-        self:Remove()
-    end
-
+    self.leave.DoClick = function(button) self:Remove() end
     self.leave:SizeToContents()
     self.leave:SetPaintBackground(false)
     self.leave.x = ScrW() * 0.5 - (self.leave:GetWide() * 0.5)
@@ -37,10 +34,7 @@ function PANEL:Init()
         self.editor:SetTextColor(color_white)
         self.editor:SetContentAlignment(9)
         self.editor:SetExpensiveShadow(2, color_black)
-        self.editor.DoClick = function(button)
-            vgui.Create("liaVendorEditor"):SetZPos(99)
-        end
-
+        self.editor.DoClick = function(button) vgui.Create("liaVendorEditor"):SetZPos(99) end
         self.editor:SizeToContents()
         self.editor:SetPaintBackground(false)
         self.leave.x = self.leave.x + 16 + self.leave:GetWide() * 0.5
@@ -89,13 +83,8 @@ function PANEL:initializeItems()
     for itemType in SortedPairs(liaVendorEnt.items) do
         local mode = liaVendorEnt:getTradeMode(itemType)
         if not mode then continue end
-        if mode ~= VENDOR_SELLONLY then
-            self:updateItem(itemType, self.me):setIsSelling(true)
-        end
-
-        if mode ~= VENDOR_BUYONLY then
-            self:updateItem(itemType, self.vendor)
-        end
+        if mode ~= VENDOR_SELLONLY then self:updateItem(itemType, self.me):setIsSelling(true) end
+        if mode ~= VENDOR_BUYONLY then self:updateItem(itemType, self.vendor) end
     end
 end
 
@@ -104,7 +93,6 @@ function PANEL:shouldItemBeVisible(itemType, parent)
     local mode = liaVendorEnt:getTradeMode(itemType)
     if parent == self.me and mode == VENDOR_SELLONLY then return false end
     if parent == self.vendor and mode == VENDOR_BUYONLY then return false end
-
     return mode ~= nil
 end
 
@@ -114,10 +102,7 @@ function PANEL:updateItem(itemType, parent, quantity)
     if not self.items[parent] then return end
     local panel = self.items[parent][itemType]
     if not self:shouldItemBeVisible(itemType, parent) then
-        if IsValid(panel) then
-            panel:Remove()
-        end
-
+        if IsValid(panel) then panel:Remove() end
         return
     end
 
@@ -128,12 +113,8 @@ function PANEL:updateItem(itemType, parent, quantity)
         self.items[parent][itemType] = panel
     end
 
-    if not isnumber(quantity) then
-        quantity = parent == self.me and LocalPlayer():getChar():getInv():getItemCount(itemType) or liaVendorEnt:getStock(itemType)
-    end
-
+    if not isnumber(quantity) then quantity = parent == self.me and LocalPlayer():getChar():getInv():getItemCount(itemType) or liaVendorEnt:getStock(itemType) end
     panel:setQuantity(quantity)
-
     return panel
 end
 
@@ -162,14 +143,9 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:onVendorPriceUpdated(vendor, itemType, value)
     local panel = self.items[self.vendor][itemType]
-    if IsValid(panel) then
-        panel:updatePrice()
-    end
-
+    if IsValid(panel) then panel:updatePrice() end
     panel = self.items[self.me][itemType]
-    if IsValid(panel) then
-        panel:updatePrice()
-    end
+    if IsValid(panel) then panel:updatePrice() end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -186,9 +162,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:onCharVarChanged(character, key, oldValue, newValue)
     if character ~= LocalPlayer():getChar() then return end
-    if key == "money" then
-        self.me:setMoney(newValue)
-    end
+    if key == "money" then self.me:setMoney(newValue) end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -227,29 +201,19 @@ function PANEL:OnRemove()
         self.noSendExit = true
     end
 
-    if IsValid(lia.gui.vendorEditor) then
-        lia.gui.vendorEditor:Remove()
-    end
-
-    if IsValid(lia.gui.vendorFactionEditor) then
-        lia.gui.vendorFactionEditor:Remove()
-    end
-
+    if IsValid(lia.gui.vendorEditor) then lia.gui.vendorEditor:Remove() end
+    if IsValid(lia.gui.vendorFactionEditor) then lia.gui.vendorFactionEditor:Remove() end
     self:liaDeleteInventoryHooks()
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:OnKeyCodePressed(keyCode)
     local useKey = input.LookupBinding("+use", true)
-    if useKey then
-        self:Remove()
-    end
+    if useKey then self:Remove() end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 vgui.Register("liaVendor", PANEL, "EditablePanel")
 --------------------------------------------------------------------------------------------------------------------------
-if IsValid(lia.gui.vendor) then
-    vgui.Create("liaVendor")
-end
+if IsValid(lia.gui.vendor) then vgui.Create("liaVendor") end
 --------------------------------------------------------------------------------------------------------------------------

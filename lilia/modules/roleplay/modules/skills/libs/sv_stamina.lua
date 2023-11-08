@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------------------------
 function MODULE:PostPlayerLoadout(client)
     local uniqueID = "StamCheck" .. client:SteamID()
     timer.Create(
@@ -8,7 +8,6 @@ function MODULE:PostPlayerLoadout(client)
         function()
             if not IsValid(client) then
                 timer.Remove(uniqueID)
-
                 return
             end
 
@@ -20,12 +19,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------------------------
 function MODULE:PlayerLoadedChar(client, character)
     local maxstm = character:GetMaxStamina()
-    timer.Simple(
-        0.25,
-        function()
-            client:setLocalVar("stamina", maxstm)
-        end
-    )
+    timer.Simple(0.25, function() client:setLocalVar("stamina", maxstm) end)
 end
 
 --------------------------------------------------------------------------------------------------------------------------------------------

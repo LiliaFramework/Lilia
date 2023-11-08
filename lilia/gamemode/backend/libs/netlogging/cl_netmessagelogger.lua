@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local isOpen = false
 local logList
 --------------------------------------------------------------------------------------------------------------------------
@@ -43,40 +43,11 @@ local function displayLogs(logs, amtOfPages)
         local menu = DermaMenu(frame)
         menu:MakePopup()
         menu:SetPos(input.GetCursorPos())
-        menu:AddOption(
-            "Copy player name",
-            function()
-                SetClipboardText(line:GetColumnText(3))
-            end
-        )
-
-        menu:AddOption(
-            "Copy player steamID",
-            function()
-                SetClipboardText(line:GetColumnText(4))
-            end
-        )
-
-        menu:AddOption(
-            "Copy player IP address",
-            function()
-                SetClipboardText(line:GetColumnText(7))
-            end
-        )
-
-        menu:AddOption(
-            "Copy source path",
-            function()
-                SetClipboardText(line:GetColumnText(6))
-            end
-        )
-
-        menu:AddOption(
-            "Copy net message name",
-            function()
-                SetClipboardText(line:GetColumnText(2))
-            end
-        )
+        menu:AddOption("Copy player name", function() SetClipboardText(line:GetColumnText(3)) end)
+        menu:AddOption("Copy player steamID", function() SetClipboardText(line:GetColumnText(4)) end)
+        menu:AddOption("Copy player IP address", function() SetClipboardText(line:GetColumnText(7)) end)
+        menu:AddOption("Copy source path", function() SetClipboardText(line:GetColumnText(6)) end)
+        menu:AddOption("Copy net message name", function() SetClipboardText(line:GetColumnText(2)) end)
     end
 
     isOpen = true
@@ -120,7 +91,6 @@ local function displayLogs(logs, amtOfPages)
         results = nil
         if searchTerm == "" then
             fillLogs(logList, logs)
-
             return
         end
 

@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
 lia.bar.list = lia.bar.list or {}
@@ -19,9 +19,7 @@ end
 function lia.bar.add(getValue, color, priority, identifier)
     if identifier then
         local oldBar = lia.bar.get(identifier)
-        if oldBar then
-            table.remove(lia.bar.list, oldBar.priority)
-        end
+        if oldBar then table.remove(lia.bar.list, oldBar.priority) end
     end
 
     priority = priority or table.Count(lia.bar.list) + 1
@@ -33,7 +31,6 @@ function lia.bar.add(getValue, color, priority, identifier)
         lifeTime = 0,
         identifier = identifier
     }
-
     return priority
 end
 
@@ -47,9 +44,7 @@ function lia.bar.remove(identifier)
         end
     end
 
-    if bar then
-        table.remove(lia.bar.list, bar.priority)
-    end
+    if bar then table.remove(lia.bar.list, bar.priority) end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -109,10 +104,7 @@ function lia.bar.drawAll()
             local realValue = bar.getValue()
             local value = math.Approach(deltas[i] or 0, realValue, updateValue)
             deltas[i] = value
-            if deltas[i] ~= realValue then
-                bar.lifeTime = curTime + 5
-            end
-
+            if deltas[i] ~= realValue then bar.lifeTime = curTime + 5 end
             if bar.lifeTime >= curTime or bar.visible or hook.Run("ShouldBarDraw", bar) then
                 lia.bar.draw(x, y, w, h, value, bar.color, bar)
                 y = y + h + 2

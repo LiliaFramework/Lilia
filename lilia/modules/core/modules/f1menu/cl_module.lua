@@ -1,16 +1,10 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local HELP_DEFAULT
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:CreateMenuButtons(tabs)
     tabs["characters"] = function(panel)
-        if IsValid(lia.gui.menu) then
-            lia.gui.menu:Remove()
-        end
-
-        if lia.config.KickOnEnteringMainMenu then
-            netstream.Start("liaCharKickSelf")
-        end
-
+        if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end
+        if lia.config.KickOnEnteringMainMenu then netstream.Start("liaCharKickSelf") end
         vgui.Create("liaCharacter")
     end
 
@@ -48,13 +42,7 @@ function MODULE:CreateMenuButtons(tabs)
                 x = x + panel:GetWide() + 10
             end
 
-            hook.Add(
-                "PostRenderVGUI",
-                mainPanel,
-                function()
-                    hook.Run("PostDrawInventory", mainPanel)
-                end
-            )
+            hook.Add("PostRenderVGUI", mainPanel, function() hook.Run("PostDrawInventory", mainPanel) end)
         end
     end
 
@@ -64,10 +52,7 @@ function MODULE:CreateMenuButtons(tabs)
             if not lia.class.canBe(LocalPlayer(), k) then
                 continue
             else
-                tabs["classes"] = function(panel)
-                    panel:Add("liaClasses")
-                end
-
+                tabs["classes"] = function(panel) panel:Add("liaClasses") end
                 return
             end
         end
@@ -117,14 +102,8 @@ function MODULE:CreateMenuButtons(tabs)
         tree.OnNodeSelected = function(this, node)
             if node.onGetHTML then
                 local source = node:onGetHTML()
-                if IsValid(helpPanel) then
-                    helpPanel:Remove()
-                end
-
-                if lia.gui.creditsPanel then
-                    lia.gui.creditsPanel:Remove()
-                end
-
+                if IsValid(helpPanel) then helpPanel:Remove() end
+                if lia.gui.creditsPanel then lia.gui.creditsPanel:Remove() end
                 helpPanel = panel:Add("DListView")
                 helpPanel:Dock(FILL)
                 helpPanel.Paint = function() end
@@ -167,11 +146,8 @@ function MODULE:BuildHelpMenu(tabs)
     tabs["commands"] = function(node, client)
         local body = ""
         for k, v in SortedPairs(lia.command.list) do
-            if lia.command.hasAccess(LocalPlayer(), k, nil) then
-                body = body .. "<h2>/" .. k .. "</h2><strong>Syntax:</strong> <em>" .. v.syntax .. "</em><br /><br />"
-            end
+            if lia.command.hasAccess(LocalPlayer(), k, nil) then body = body .. "<h2>/" .. k .. "</h2><strong>Syntax:</strong> <em>" .. v.syntax .. "</em><br /><br />" end
         end
-
         return body
     end
 
@@ -193,7 +169,6 @@ function MODULE:BuildHelpMenu(tabs)
                 </tr>
             ]], icon, k, v.desc)
         end
-
         return body .. "</table>"
     end
 
@@ -207,22 +182,13 @@ function MODULE:BuildHelpMenu(tabs)
                     <b>%s</b>: %s<br />
                     <b>%s</b>: %s
             ]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", L"author", lia.module.namecache[v.author] or v.author)
-            if v.version then
-                body = body .. "<br /><b>" .. L"version" .. "</b>: " .. v.version
-            end
-
+            if v.version then body = body .. "<br /><b>" .. L"version" .. "</b>: " .. v.version end
             body = body .. "</span></p>"
         end
-
         return body
     end
 
-    if lia.config.RulesEnabled then
-        tabs["Rules"] = function() return GenerateRules() end
-    end
-
-    if lia.config.TutorialEnabled then
-        tabs["Tutorial"] = function() return GenerateTutorial() end
-    end
+    if lia.config.RulesEnabled then tabs["Rules"] = function() return GenerateRules() end end
+    if lia.config.TutorialEnabled then tabs["Tutorial"] = function() return GenerateTutorial() end end
 end
 --------------------------------------------------------------------------------------------------------------------------

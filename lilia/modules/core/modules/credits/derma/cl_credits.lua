@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local logoMat = Material("lilia/logo.png")
 --------------------------------------------------------------------------------------------------------------------------
 local ScrW, ScrH = ScrW(), ScrH()
@@ -19,10 +19,7 @@ end
 function PANEL:setAvatarImage(id)
     if not self.avatarImage then return end
     self.avatarImage:SetSteamID(id, 64)
-    self.avatarImage.OnCursorEntered = function()
-        surface.PlaySound("garrysmod/ui_return.wav")
-    end
-
+    self.avatarImage.OnCursorEntered = function() surface.PlaySound("garrysmod/ui_return.wav") end
     self.avatarImage.OnMousePressed = function()
         surface.PlaySound("buttons/button14.wav")
         gui.OpenURL("http://steamcommunity.com/profiles/" .. id)
@@ -32,20 +29,12 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:setName(name, isID, color)
     if isID and self.name then
-        steamworks.RequestPlayerInfo(
-            name,
-            function(steamName)
-                self.name:SetText(steamName or "Loading...")
-            end
-        )
+        steamworks.RequestPlayerInfo(name, function(steamName) self.name:SetText(steamName or "Loading...") end)
     else
         self.name:SetText(name)
     end
 
-    if color then
-        self.name:SetTextColor(color)
-    end
-
+    if color then self.name:SetTextColor(color) end
     self.name:SizeToContents()
     self.name:Dock(TOP)
     self.name:DockMargin(ScrW * 0.01, 0, 0, 0)
@@ -149,10 +138,7 @@ vgui.Register("CreditsLogo", PANEL, "DPanel")
 PANEL = {}
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:Init()
-    if lia.gui.creditsPanel then
-        lia.gui.creditsPanel:Remove()
-    end
-
+    if lia.gui.creditsPanel then lia.gui.creditsPanel:Remove() end
     lia.gui.creditsPanel = self
     self:SetSize(ScrW * 0.3, ScrH * 0.7)
     self.logo = self:Add("CreditsLogo")

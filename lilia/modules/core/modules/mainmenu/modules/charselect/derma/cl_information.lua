@@ -1,11 +1,8 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:Init()
-    if IsValid(lia.gui.info) then
-        lia.gui.info:Remove()
-    end
-
+    if IsValid(lia.gui.info) then lia.gui.info:Remove() end
     lia.gui.info = self
     self:SetSize(ScrW() * 0.6, ScrH() * 0.7)
     self:Center()
@@ -85,9 +82,7 @@ function PANEL:setup()
     local char = LocalPlayer():getChar()
     if self.desc then
         self.desc:SetText(char:getDesc():gsub("#", "\226\128\139#"))
-        self.desc.OnEnter = function(this, w, h)
-            lia.command.send("chardesc", this:GetText():gsub("\226\128\139#", "#"))
-        end
+        self.desc.OnEnter = function(this, w, h) lia.command.send("chardesc", this:GetText():gsub("\226\128\139#", "#")) end
     end
 
     if self.name then
@@ -103,19 +98,11 @@ function PANEL:setup()
         )
     end
 
-    if self.money then
-        self.money:SetText(L("charMoney", lia.currency.get(char:getMoney())))
-    end
-
-    if self.faction then
-        self.faction:SetText(L("charFaction", L(team.GetName(LocalPlayer():Team()))))
-    end
-
+    if self.money then self.money:SetText(L("charMoney", lia.currency.get(char:getMoney()))) end
+    if self.faction then self.faction:SetText(L("charFaction", L(team.GetName(LocalPlayer():Team())))) end
     if self.class then
         local class = lia.class.list[char:getClass()]
-        if class then
-            self.class:SetText(L("charClass", L(class.name)))
-        end
+        if class then self.class:SetText(L("charClass", L(class.name))) end
     end
 
     if self.model then

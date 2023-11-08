@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:CharacterLoaded()
@@ -24,7 +24,6 @@ function MODULE:Think()
             if a ~= (lastServerData1 or 0) or b ~= (lastServerData2 or 0) then
                 nextCrashAnalysis = nil
                 crashAnalysisAttempts = 0
-
                 return
             end
 
@@ -61,21 +60,10 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:HUDPaint()
     if SERVER_DOWN and CRASHSCREEN_ALLOW then
-        if not IsValid(CRASH_SCREEN) then
-            CRASH_SCREEN = vgui.Create("liaCrashScreen")
-        end
+        if not IsValid(CRASH_SCREEN) then CRASH_SCREEN = vgui.Create("liaCrashScreen") end
     elseif IsValid(CRASH_SCREEN) and not CRASH_SCREEN.fadin then
         CRASH_SCREEN.fadin = true
-        CRASH_SCREEN:AlphaTo(
-            0,
-            1.2,
-            nil,
-            function()
-                if IsValid(CRASH_SCREEN) then
-                    CRASH_SCREEN:Remove()
-                end
-            end
-        )
+        CRASH_SCREEN:AlphaTo(0, 1.2, nil, function() if IsValid(CRASH_SCREEN) then CRASH_SCREEN:Remove() end end)
     end
 end
 --------------------------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
---[[
+﻿--[[
 DEVELOPMENTAL VERSION;
 VERSION 1.2.2
 Copyright thelastpenguin™
@@ -44,7 +44,6 @@ do
     encode['table'] = function(self, tbl, output, cache)
         if cache[tbl] then
             output[#output + 1] = format('(%x)', cache[tbl])
-
             return
         else
             cacheSize = cacheSize + 1
@@ -149,37 +148,21 @@ do
     end
 
     --    ENCODE BOOLEAN
-    encode['boolean'] = function(self, val, output)
-        output[#output + 1] = val and 't' or 'f'
-    end
-
+    encode['boolean'] = function(self, val, output) output[#output + 1] = val and 't' or 'f' end
     --    ENCODE VECTOR
-    encode['Vector'] = function(self, val, output)
-        output[#output + 1] = ('v' .. val.x .. ',' .. val.y) .. (',' .. val.z .. ';')
-    end
-
+    encode['Vector'] = function(self, val, output) output[#output + 1] = ('v' .. val.x .. ',' .. val.y) .. (',' .. val.z .. ';') end
     --    ENCODE ANGLE
-    encode['Angle'] = function(self, val, output)
-        output[#output + 1] = ('a' .. val.p .. ',' .. val.y) .. (',' .. val.r .. ';')
-    end
-
-    encode['Entity'] = function(self, val, output)
-        output[#output + 1] = 'E' .. (IsValid(val) and (val:EntIndex() .. ';') or '#')
-    end
-
+    encode['Angle'] = function(self, val, output) output[#output + 1] = ('a' .. val.p .. ',' .. val.y) .. (',' .. val.r .. ';') end
+    encode['Entity'] = function(self, val, output) output[#output + 1] = 'E' .. (IsValid(val) and (val:EntIndex() .. ';') or '#') end
     encode['Player'] = encode['Entity']
     encode['Vehicle'] = encode['Entity']
     encode['Weapon'] = encode['Entity']
     encode['NPC'] = encode['Entity']
     encode['NextBot'] = encode['Entity']
     encode['PhysObj'] = encode['Entity']
-    encode['nil'] = function()
-        output[#output + 1] = '?'
-    end
-
+    encode['nil'] = function() output[#output + 1] = '?' end
     encode.__index = function(key)
         ErrorNoHalt('Type: ' .. key .. ' can not be encoded. Encoded as as pass-over value.')
-
         return encode['nil']
     end
 
@@ -190,7 +173,6 @@ do
             cacheSize = 0
             encode['table'](encode, tbl, output, {})
             local res = concat(output)
-
             return res
         end
     end
@@ -236,7 +218,6 @@ do
             index, v = self[tv](self, index, str, cache)
             cur[k] = v
         end
-
         return index, cur
     end
 
@@ -258,14 +239,10 @@ do
             -- READ THE VALUE
             tv = sub(str, index, index)
             index = index + 1
-            if not self[tv] then
-                print('did not find type: ' .. tv)
-            end
-
+            if not self[tv] then print('did not find type: ' .. tv) end
             index, v = self[tv](self, index, str, cache)
             cur[k] = v
         end
-
         return index, cur
     end
 
@@ -275,7 +252,6 @@ do
         local res = gsub(sub(str, index, finish - 1), '\\;', ';')
         index = finish + 2
         cache[#cache + 1] = res
-
         return index, res
     end
 
@@ -285,7 +261,6 @@ do
         local res = sub(str, index, finish - 1)
         index = finish + 1
         cache[#cache + 1] = res
-
         return index, res
     end
 
@@ -295,7 +270,6 @@ do
         local finish = find(str, ';', index, true)
         local num = tonumber(sub(str, index, finish - 1))
         index = finish + 1
-
         return index, num
     end
 
@@ -315,7 +289,6 @@ do
         local finish = find(str, ';', index, true)
         local num = tonumber(sub(str, index, finish - 1), 16)
         index = finish + 1
-
         return index, num
     end
 
@@ -324,7 +297,6 @@ do
         local finish = find(str, ';', index, true)
         local num = -tonumber(sub(str, index, finish - 1), 16)
         index = finish + 1
-
         return index, num
     end
 
@@ -333,7 +305,6 @@ do
         local finish = find(str, ')', index, true)
         local num = tonumber(sub(str, index, finish - 1), 16)
         index = finish + 1
-
         return index, cache[num]
     end
 
@@ -346,7 +317,6 @@ do
         local vecStr = sub(str, index, finish - 1)
         index = finish + 1 -- update the index.
         local segs = Explode(',', vecStr, false)
-
         return index, Vector(tonumber(segs[1]), tonumber(segs[2]), tonumber(segs[3]))
     end
 
@@ -356,7 +326,6 @@ do
         local angStr = sub(str, index, finish - 1)
         index = finish + 1 -- update the index.
         local segs = Explode(',', angStr, false)
-
         return index, Angle(tonumber(segs[1]), tonumber(segs[2]), tonumber(segs[3]))
     end
 
@@ -364,13 +333,11 @@ do
     decode['E'] = function(self, index, str, cache)
         if str[index] == '#' then
             index = index + 1
-
             return index, NULL
         else
             local finish = find(str, ';', index, true)
             local num = tonumber(sub(str, index, finish - 1))
             index = finish + 1
-
             return index, Entity(num)
         end
     end
@@ -380,7 +347,6 @@ do
         local finish = find(str, ';', index, true)
         local num = tonumber(sub(str, index, finish - 1))
         index = finish + 1
-
         return index, Entity(num) or NULL
     end
 
@@ -388,7 +354,6 @@ do
     decode['?'] = function(self, index, str, cache) return index + 1, nil end
     function pon.decode(data)
         local _, res = decode[sub(data, 1, 1)](decode, 2, data, {})
-
         return res
     end
 end

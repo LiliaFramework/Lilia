@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 chat.liaAddText = chat.liaAddText or chat.AddText
 --------------------------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
@@ -19,10 +19,7 @@ end
 function MODULE:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
     if bind:find("messagemode") and pressed then
-        if not self.panel.active then
-            self.panel:setActive(true)
-        end
-
+        if not self.panel.active then self.panel:setActive(true) end
         return true
     end
 end
@@ -35,13 +32,8 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function chat.AddText(...)
     local show = true
-    if IsValid(MODULE.panel) then
-        show = MODULE.panel:addText(...)
-    end
-
-    if show then
-        chat.liaAddText(...)
-    end
+    if IsValid(MODULE.panel) then show = MODULE.panel:addText(...) end
+    if show then chat.liaAddText(...) end
 end
 
 --------------------------------------------------------------------------------------------------------------------------

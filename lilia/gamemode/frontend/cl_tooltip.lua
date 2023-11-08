@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:Init()
@@ -42,7 +42,6 @@ end
 function PANEL:PositionTooltip()
     if not IsValid(self.TargetPanel) then
         self:Remove()
-
         return
     end
 
@@ -52,10 +51,7 @@ function PANEL:PositionTooltip()
     local _, ly = self.TargetPanel:LocalToScreen(0, 0)
     y = y - 50
     y = math.min(y, ly - h * 1.5)
-    if y < 2 then
-        y = 2
-    end
-
+    if y < 2 then y = 2 end
     self:SetPos(math.Clamp(x - w * 0.5, 0, ScrW() - self:GetWide()), math.Clamp(y, 0, ScrH() - self:GetTall()))
 end
 

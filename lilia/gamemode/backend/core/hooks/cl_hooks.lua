@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local data = {}
 --------------------------------------------------------------------------------------------------------------------------
 local owner, w, h, ceil, ft, clmp
@@ -36,9 +36,7 @@ function GM:PlayerBindPress(client, bind, pressed)
             return true
         elseif bind:find("use") and pressed then
             local entity = client:GetTracedEntity()
-            if IsValid(entity) and (entity:GetClass() == "lia_item" or entity.hasMenu == true) then
-                hook.Run("ItemShowEntityMenu", entity)
-            end
+            if IsValid(entity) and (entity:GetClass() == "lia_item" or entity.hasMenu == true) then hook.Run("ItemShowEntityMenu", entity) end
         end
     elseif bind:find("jump") then
         lia.command.send("chargetup")
@@ -61,16 +59,12 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:DrawLiliaModelView(panel, ent)
-    if IsValid(ent.weapon) then
-        ent.weapon:DrawModel()
-    end
+    if IsValid(ent.weapon) then ent.weapon:DrawModel() end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:OnChatReceived()
-    if system.IsWindows() and not system.HasFocus() then
-        system.FlashWindow()
-    end
+    if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -78,9 +72,7 @@ function GM:HUDPaint()
     self:DeathHUDPaint()
     self:MiscHUDPaint()
     self:PointingHUDPaint()
-    if hook.Run("ShouldDrawCrosshair") then
-        self:HUDPaintCrosshair()
-    end
+    if hook.Run("ShouldDrawCrosshair") then self:HUDPaintCrosshair() end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -126,10 +118,7 @@ end
 function GM:ClientPostInit()
     lia.joinTime = RealTime() - 0.9716
     lia.faction.formatModelData()
-    if system.IsWindows() and not system.HasFocus() then
-        system.FlashWindow()
-    end
-
+    if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
     timer.Create(
         "FixShadows",
         10,
@@ -140,9 +129,7 @@ function GM:ClientPostInit()
             end
 
             for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
-                if IsValid(v) and v:isDoor() then
-                    v:DrawShadow(false)
-                end
+                if IsValid(v) and v:isDoor() then v:DrawShadow(false) end
             end
         end
     )
@@ -156,16 +143,12 @@ function GM:DeathHUDPaint()
         if owner:Alive() then
             if aprg ~= 0 then
                 aprg2 = clmp(aprg2 - ft * 1.3, 0, 1)
-                if aprg2 == 0 then
-                    aprg = clmp(aprg - ft * .7, 0, 1)
-                end
+                if aprg2 == 0 then aprg = clmp(aprg - ft * .7, 0, 1) end
             end
         else
             if aprg2 ~= 1 then
                 aprg = clmp(aprg + ft * .5, 0, 1)
-                if aprg == 1 then
-                    aprg2 = clmp(aprg2 + ft * .4, 0, 1)
-                end
+                if aprg == 1 then aprg2 = clmp(aprg2 + ft * .4, 0, 1) end
             end
         end
     end
@@ -193,10 +176,7 @@ function GM:MiscHUDPaint()
         surface.DrawText("Server Current Version: " .. lia.config.version)
     end
 
-    if lia.config.BranchWarning and BRANCH ~= "x86-64" then
-        draw.SimpleText("We recommend the use of the x86-64 Garry's Mod Branch for this server, consider swapping as soon as possible.", "liaSmallFont", ScrW() * .5, ScrH() * .97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
-
+    if lia.config.BranchWarning and BRANCH ~= "x86-64" then draw.SimpleText("We recommend the use of the x86-64 Garry's Mod Branch for this server, consider swapping as soon as possible.", "liaSmallFont", ScrW() * .5, ScrH() * .97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
     for k, v in ipairs(player.GetAll()) do
         if v ~= ply and v:getNetVar("typing") and v:GetMoveType() == MOVETYPE_WALK then
             data.endpos = v:EyePos()
@@ -252,10 +232,7 @@ function GM:TooltipPaint(var, w, h)
         lia.util.drawBlur(var, 2, 2)
         surface.SetDrawColor(0, 0, 0, 230)
         surface.DrawRect(0, 0, w, h)
-        if var.markupObject then
-            var.markupObject:draw(12 * 0.5, 12 * 0.5 + 2)
-        end
-
+        if var.markupObject then var.markupObject:draw(12 * 0.5, 12 * 0.5 + 2) end
         return true
     end
 end
@@ -290,7 +267,6 @@ function GM:PlayerStartVoice(client)
         end
 
         VoicePanels[client]:SetAlpha(255)
-
         return
     end
 
@@ -314,10 +290,10 @@ concommand.Add(
     "vgui_cleanup",
     function()
         for k, v in pairs(vgui.GetWorldPanel():GetChildren()) do
-            if not (v.Init and debug.getinfo(v.Init, "Sln").short_src:find("chatbox")) then
-                v:Remove()
-            end
+            if not (v.Init and debug.getinfo(v.Init, "Sln").short_src:find("chatbox")) then v:Remove() end
         end
-    end, nil, "Removes every panel that you have left over (like that errored DFrame filling up your screen)"
+    end,
+    nil,
+    "Removes every panel that you have left over (like that errored DFrame filling up your screen)"
 )
 --------------------------------------------------------------------------------------------------------------------------

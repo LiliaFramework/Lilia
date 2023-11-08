@@ -1,4 +1,4 @@
---[[
+﻿--[[
 	NetStream - 2.0.0
 
 	Alexander Grist-Hucker
@@ -11,10 +11,7 @@
 --------------------------------------------------------------------------------------------------------------------------
 local type, error, pcall, pairs, _player = type, error, pcall, pairs, player
 --------------------------------------------------------------------------------------------------------------------------
-if not pon then
-    include("sh_pon.lua")
-end
-
+if not pon then include("sh_pon.lua") end
 --------------------------------------------------------------------------------------------------------------------------
 AddCSLuaFile()
 netstream = netstream or {}
@@ -35,7 +32,6 @@ function netstream.Split(data)
     end
 
     result[#result + 1] = table.concat(buffer)
-
     return result
 end
 

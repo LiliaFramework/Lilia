@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------------------------
 function MODULE:EntityTakeDamage(target, dmginfo)
     if not dmginfo:GetAttacker():IsPlayer() then return end
     local attacker = dmginfo:GetAttacker()
@@ -6,22 +6,15 @@ function MODULE:EntityTakeDamage(target, dmginfo)
     local weapon = attacker:GetActiveWeapon()
     local damage = dmginfo:GetDamage()
     local strbonus = hook.Run("GetStrengthBonusDamage", char)
-    if IsValid(attacker) and IsValid(weapon) and table.HasValue(lia.config.MeleeWeapons, weapon:GetClass()) and lia.config.MeleeDamageBonus then
-        dmginfo:SetDamage(damage + strbonus)
-    end
-
-    if self.DevMode then
-        self:PrintAllDetails(target, dmginfo)
-    end
+    if IsValid(attacker) and IsValid(weapon) and table.HasValue(lia.config.MeleeWeapons, weapon:GetClass()) and lia.config.MeleeDamageBonus then dmginfo:SetDamage(damage + strbonus) end
+    if self.DevMode then self:PrintAllDetails(target, dmginfo) end
 end
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 function MODULE:PlayerGetFistDamage(client, damage, context)
     local char = client:getChar()
     local strbonus = hook.Run("GetPunchStrengthBonusDamage", char)
-    if client:getChar() then
-        context.damage = context.damage + strbonus
-    end
+    if client:getChar() then context.damage = context.damage + strbonus end
 end
 
 --------------------------------------------------------------------------------------------------------------------------------------------

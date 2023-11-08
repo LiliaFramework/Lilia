@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 function GM:CalcView(client, origin, angles, fov)
     local view = self.BaseClass:CalcView(client, origin, angles, fov)
     local entity = Entity(client:getLocalVar("ragdoll", 0))
@@ -14,11 +14,9 @@ function GM:CalcView(client, origin, angles, fov)
                 view.origin = data.Pos
                 view.angles = data.Ang
             end
-
             return view
         end
     end
-
     return view
 end
 --------------------------------------------------------------------------------------------------------------------------

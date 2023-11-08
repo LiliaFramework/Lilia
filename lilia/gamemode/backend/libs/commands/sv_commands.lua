@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 function lia.command.findPlayer(client, name)
     if isstring(name) then
         if name == "^" then
@@ -9,7 +9,6 @@ function lia.command.findPlayer(client, name)
                 return trace
             else
                 client:notifyLocalized("lookToUseAt")
-
                 return
             end
         end
@@ -68,10 +67,7 @@ function lia.command.parse(client, text, realCommand, arguments)
         match = match:lower()
         local command = lia.command.list[match]
         if command then
-            if not arguments then
-                arguments = lia.command.extractArgs(text:sub(#match + 3))
-            end
-
+            if not arguments then arguments = lia.command.extractArgs(text:sub(#match + 3)) end
             lia.command.run(client, match, arguments)
         else
             if IsValid(client) then
@@ -80,10 +76,8 @@ function lia.command.parse(client, text, realCommand, arguments)
                 print("Sorry, that command does not exist.")
             end
         end
-
         return true
     end
-
     return false
 end
 

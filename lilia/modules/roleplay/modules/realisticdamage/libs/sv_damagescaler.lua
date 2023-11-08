@@ -1,13 +1,10 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 function MODULE:ScalePlayerDamage(client, hitgroup, dmgInfo)
     local damageScale = lia.config.DamageScale
     if hitgroup == HITGROUP_HEAD then
         damageScale = lia.config.HeadShotDamage
     elseif table.HasValue(lia.config.LimbHitgroups, hitgroup) then
-        if lia.config.BreakableLegsEnabled then
-            self:CheckForBrokenLeg(client, hitgroup, dmgInfo)
-        end
-
+        if lia.config.BreakableLegsEnabled then self:CheckForBrokenLeg(client, hitgroup, dmgInfo) end
         damageScale = lia.config.LimbDamage
     end
 

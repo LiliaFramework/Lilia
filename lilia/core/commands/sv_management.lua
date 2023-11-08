@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 lia.command.add(
     "freezeallprops",
     {
@@ -64,10 +64,7 @@ lia.command.add(
             if target and target:getChar() then
                 local character = target:getChar()
                 local classFound
-                if lia.class.list[name] then
-                    classFound = lia.class.list[name]
-                end
-
+                if lia.class.list[name] then classFound = lia.class.list[name] end
                 if not classFound then
                     for k, v in ipairs(lia.class.list) do
                         if lia.util.stringMatches(L(v.name, client), arguments[2]) then
@@ -80,9 +77,7 @@ lia.command.add(
                 if classFound then
                     character:joinClass(classFound.index, true)
                     target:notify("Your class was set to " .. classFound.name .. (client ~= target and "by " .. client:GetName() or "") .. ".")
-                    if client ~= target then
-                        client:notify("You set " .. target:GetName() .. "'s class to " .. classFound.name .. ".")
-                    end
+                    if client ~= target then client:notify("You set " .. target:GetName() .. "'s class to " .. classFound.name .. ".") end
                 else
                     client:notify("Invalid class.")
                 end
@@ -133,9 +128,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         privilege = "Save Map Data",
-        onRun = function(client, arguments)
-            hook.Run("SaveData")
-        end
+        onRun = function(client, arguments) hook.Run("SaveData") end
     }
 )
 
@@ -168,9 +161,7 @@ lia.command.add(
         privilege = "Check Flags",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
-            if IsValid(target) and target:getChar() then
-                client:notify("Their character flags are: '" .. target:getChar():getFlags() .. "'")
-            end
+            if IsValid(target) and target:getChar() then client:notify("Their character flags are: '" .. target:getChar():getFlags() .. "'") end
         end
     }
 )
@@ -181,9 +172,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         privilege = "Clear Chat",
-        onRun = function(client, arguments)
-            netstream.Start(player.GetAll(), "adminClearChat")
-        end
+        onRun = function(client, arguments) netstream.Start(player.GetAll(), "adminClearChat") end
     }
 )
 
@@ -196,9 +185,7 @@ lia.command.add(
         privilege = "Check All Money",
         onRun = function(client, arguments)
             for k, v in pairs(player.GetAll()) do
-                if v:getChar() then
-                    client:ChatPrint(v:Name() .. " has " .. v:getChar():getMoney())
-                end
+                if v:getChar() then client:ChatPrint(v:Name() .. " has " .. v:getChar():getMoney()) end
             end
         end
     }
@@ -266,9 +253,7 @@ lia.command.add(
                 local succ, err = inv:add(uniqueID)
                 if succ then
                     target:notifyLocalized("itemCreated")
-                    if target ~= client then
-                        client:notifyLocalized("itemCreated")
-                    end
+                    if target ~= client then client:notifyLocalized("itemCreated") end
                 else
                     target:notify(tostring(succ))
                     target:notify(tostring(err))
@@ -284,9 +269,7 @@ lia.command.add(
     {
         superAdminOnly = true,
         privilege = "Check Net Message Log",
-        onRun = function(client, arguments)
-            sendData(1, client)
-        end
+        onRun = function(client, arguments) sendData(1, client) end
     }
 )
 
@@ -303,13 +286,11 @@ lia.command.add(
                 if IsValid(target) then
                     if not target.LostItems then
                         client:notify("The target hasn't died recently or they had their items returned already!")
-
                         return
                     end
 
                     if table.IsEmpty(target.LostItems) then
                         client:notify("Cannot return any items; the player hasn't lost any!")
-
                         return
                     end
 
@@ -361,14 +342,10 @@ lia.command.add(
             local target = lia.command.findPlayer(client, arguments[1])
             if target == client then
                 client:notify("You cannot run mute commands on yourself.")
-
                 return false
             end
 
-            if IsValid(target) and target:getChar():GetData("VoiceBan", false) then
-                target:getChar():SetData("VoiceBan", false)
-            end
-
+            if IsValid(target) and target:getChar():GetData("VoiceBan", false) then target:getChar():SetData("VoiceBan", false) end
             client:notify("You have unmuted a player.")
             target:notify("You've been unmuted by the admin.")
         end
@@ -386,16 +363,10 @@ lia.command.add(
             local target = lia.command.findPlayer(client, arguments[1])
             if target == client then
                 client:notify("You cannot run mute commands on yourself.")
-
                 return false
             end
 
-            if IsValid(target) then
-                if not target:GetData("VoiceBan", false) then
-                    target:SetData("VoiceBan", true)
-                end
-            end
-
+            if IsValid(target) then if not target:GetData("VoiceBan", false) then target:SetData("VoiceBan", true) end end
             client:notify("You have muted a player.")
             target:notify("You've been muted by the admin.")
         end
@@ -409,9 +380,7 @@ for k, v in pairs(lia.config.ServerURLs) do
         {
             adminOnly = false,
             privilege = "Default User Commands",
-            onRun = function(client, arguments)
-                client:SendLua("gui.OpenURL('" .. v .. "')")
-            end
+            onRun = function(client, arguments) client:SendLua("gui.OpenURL('" .. v .. "')") end
         }
     )
 end

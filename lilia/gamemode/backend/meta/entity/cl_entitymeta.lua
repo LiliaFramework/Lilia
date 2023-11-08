@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local entityMeta = FindMetaTable("Entity")
 --------------------------------------------------------------------------------------------------------------------------
 function entityMeta:isDoor()
@@ -12,7 +12,6 @@ function entityMeta:getDoorPartner()
     for k, v in ipairs(ents.FindByClass("prop_door_rotating")) do
         if v:GetOwner() == self then
             self.liaDoorOwner = v
-
             return v
         end
     end
@@ -22,7 +21,6 @@ end
 function entityMeta:getNetVar(key, default)
     local index = self:EntIndex()
     if lia.net[index] and lia.net[index][key] ~= nil then return lia.net[index][key] end
-
     return default
 end
 

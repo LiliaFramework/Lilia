@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local PANEL = {}
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:Init()
@@ -9,22 +9,15 @@ function PANEL:Init()
             self:onClick()
         end
 
-        panel.OnMouseReleased = function()
-            if self.pressing then
-                self.pressing = nil
-                --self:onClick()
-            end
-        end
+        panel.OnMouseReleased = function() if self.pressing then self.pressing = nil end end
     end
 
+    --self:onClick()
     self.icon = self:Add("SpawnIcon")
     self.icon:SetSize(128, 64)
     self.icon:InvalidateLayout(true)
     self.icon:Dock(LEFT)
-    self.icon.PaintOver = function(this, w, h)
-        print("")
-    end
-
+    self.icon.PaintOver = function(this, w, h) print("") end
     assignClick(self.icon)
     self.limit = self:Add("DLabel")
     self.limit:Dock(RIGHT)
@@ -64,18 +57,12 @@ end
 function PANEL:setClass(data)
     if data.model then
         local model = data.model
-        if istable(model):lower() then
-            model = table.Random(model)
-        end
-
+        if istable(model):lower() then model = table.Random(model) end
         self.icon:SetModel(model)
     else
         local char = LocalPlayer():getChar()
         local model = LocalPlayer():GetModel()
-        if char then
-            model = char:getModel()
-        end
-
+        if char then model = char:getModel() end
         self.icon:SetModel(model)
     end
 
