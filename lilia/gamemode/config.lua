@@ -301,6 +301,7 @@ if not lia.config.WasInitialized then
             ["arccw_crosshair_shotgun"] = "1",
         },
         ServerStartupConsoleCommand = {
+            ["sgm_ignore_warnings"] = "1",
             ["ai_serverragdolls"] = "1",
             ["mem_max_heapsize"] = "131072",
             ["mem_max_heapsize_dedicated"] = "131072",
@@ -312,6 +313,7 @@ if not lia.config.WasInitialized then
             ["mat_antialias"] = "2",
         },
         ClientStartupConsoleCommand = {
+            ["sgm_ignore_warnings"] = "1",
             ["fast_fogvolume"] = "0",
             ["mat_managedtextures"] = "1",
             ["net_maxpacketdrop"] = "5000",
