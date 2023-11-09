@@ -97,6 +97,7 @@ lia.config.StorageDefinitions["models/items/ammocrate_smg1.mdl"] = {
         timer.Create("CloseLid" .. entity:EntIndex(), 2, 1, function() if IsValid(entity) then entity:ResetSequence("Open") end end)
     end
 }
+
 --------------------------------------------------------------------------------------------------------------------------
 CAMI.RegisterPrivilege(
     {
