@@ -1,11 +1,11 @@
 ﻿--------------------------------------------------------------------------------------------------------------------------
-function GM:PlayerSpawnNPC(client)
+function MODULE:PlayerSpawnNPC(client)
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn NPCs", nil) or client:getChar():hasFlags("n") then return true end
     return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:PlayerSpawnProp(client, model)
+function MODULE:PlayerSpawnProp(client, model)
     local nextSpawnTime = client.NextSpawn or 0
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Props", nil) or client:getChar():hasFlags("e") then
         if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - No Spawn Delay") and (client.AdvDupe2 and client.AdvDupe2.Pasting) then return true end
@@ -21,7 +21,7 @@ function GM:PlayerSpawnProp(client, model)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:PlayerSpawnRagdoll(client)
+function MODULE:PlayerSpawnRagdoll(client)
     local nextSpawnTime = client.NextSpawn or 0
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Ragdolls", nil) or client:getChar():hasFlags("r") then
         if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - No Spawn Delay") and (client.AdvDupe2 and client.AdvDupe2.Pasting) then return true end
@@ -37,30 +37,30 @@ function GM:PlayerSpawnRagdoll(client)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:PlayerSpawnSWEP(client)
+function MODULE:PlayerSpawnSWEP(client)
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn SWEPs", nil) or client:getChar():hasFlags("W") then return true end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:PlayerGiveSWEP(client)
+function MODULE:PlayerGiveSWEP(client)
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn SWEPs", nil) or client:getChar():hasFlags("W") then return true end
     return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:PlayerSpawnEffect(client)
+function MODULE:PlayerSpawnEffect(client)
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Effects", nil) or client:getChar():hasFlags("L") then return true end
     return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:PlayerSpawnSENT(client)
+function MODULE:PlayerSpawnSENT(client)
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn SENTs", nil) or client:getChar():hasFlags("E") then return true end
     return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:PlayerSpawnVehicle(client, model, name, data)
+function MODULE:PlayerSpawnVehicle(client, model, name, data)
     if client:getChar():hasFlags("C") or CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Cars", nil) then
         if table.HasValue(lia.config.RestrictedVehicles, name) then
             if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Restricted Cars", nil) then
@@ -76,7 +76,7 @@ function GM:PlayerSpawnVehicle(client, model, name, data)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:CanTool(client, trace, tool)
+function MODULE:CanTool(client, trace, tool)
     local privilege = "Lilia - Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
     local entity = client:GetTracedEntity()
     if client:getChar():hasFlags("t") or CAMI.PlayerHasAccess(client, privilege, nil) then
@@ -90,7 +90,7 @@ function GM:CanTool(client, trace, tool)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:PhysgunPickup(client, entity)
+function MODULE:PhysgunPickup(client, entity)
     if entity:GetCreator() == client and entity:GetClass() == "prop_physics" then
         return true
     elseif CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Physgun Pickup", nil) then
@@ -105,7 +105,7 @@ function GM:PhysgunPickup(client, entity)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:CanProperty(client, property, entity)
+function MODULE:CanProperty(client, property, entity)
     if CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Access Tool " .. property:gsub("^%l", string.upper), nil) then
         if table.HasValue(lia.config.RemoverBlockedEntities, entity:GetClass()) or table.HasValue(lia.config.PhysGunMoveRestrictedEntityList, entity:GetClass()) then
             return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Use Entity Properties on Blocked Entities", nil)
@@ -118,7 +118,7 @@ function GM:CanProperty(client, property, entity)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function GM:CheckSpawnPropBlackList(client, model)
+function MODULE:CheckSpawnPropBlackList(client, model)
     for _, gredwitch in pairs(file.Find("models/gredwitch/bombs/*.mdl", "GAME")) do
         if model == "models/gredwitch/bombs/" .. gredwitch then return false end
     end
@@ -135,7 +135,7 @@ function GM:CheckSpawnPropBlackList(client, model)
         if model == "models/mikeprops/" .. mikeprops then return false end
     end
 
-    if table.HasValue(C, model:lower()) then return false end
+    if table.HasValue(lia.config.BlackListedProps, model:lower()) then return false end
     return true
 end
 
