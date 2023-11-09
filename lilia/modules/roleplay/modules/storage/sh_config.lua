@@ -98,3 +98,11 @@ lia.config.StorageDefinitions["models/items/ammocrate_smg1.mdl"] = {
     end
 }
 --------------------------------------------------------------------------------------------------------------------------
+CAMI.RegisterPrivilege(
+    {
+        Name = "Lilia - Staff Permissions - Can Spawn Storage",
+        MinAccess = "superadmin",
+        Description = "Allows access to Spawning Storage.",
+    }
+)
+--------------------------------------------------------------------------------------------------------------------------

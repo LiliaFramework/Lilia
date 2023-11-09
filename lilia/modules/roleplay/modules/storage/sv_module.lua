@@ -38,6 +38,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:CanPlayerSpawnStorage(client, entity, info)
+    if not CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Can Spawn Storage", nil) then return false end
     if not info.invType or not lia.inventory.types[info.invType] then return false end
 end
 
@@ -136,5 +137,4 @@ function MODULE:StorageInventorySet(storage, inventory)
     inventory:addAccessRule(RULES.AccessIfStorageReceiver)
 end
 return RULES
---------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------
