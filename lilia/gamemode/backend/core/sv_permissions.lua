@@ -1,11 +1,11 @@
 ﻿--------------------------------------------------------------------------------------------------------------------------
-function MODULE:PlayerSpawnNPC(client)
+function GM:PlayerSpawnNPC(client)
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn NPCs", nil) or client:getChar():hasFlags("n") then return true end
     return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:PlayerSpawnProp(client, model)
+function GM:PlayerSpawnProp(client, model)
     local nextSpawnTime = client.NextSpawn or 0
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Props", nil) or client:getChar():hasFlags("e") then
         if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - No Spawn Delay") and (client.AdvDupe2 and client.AdvDupe2.Pasting) then return true end
@@ -21,7 +21,7 @@ function MODULE:PlayerSpawnProp(client, model)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:PlayerSpawnRagdoll(client)
+function GM:PlayerSpawnRagdoll(client)
     local nextSpawnTime = client.NextSpawn or 0
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Ragdolls", nil) or client:getChar():hasFlags("r") then
         if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - No Spawn Delay") and (client.AdvDupe2 and client.AdvDupe2.Pasting) then return true end
@@ -37,30 +37,30 @@ function MODULE:PlayerSpawnRagdoll(client)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:PlayerSpawnSWEP(client)
+function GM:PlayerSpawnSWEP(client)
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn SWEPs", nil) or client:getChar():hasFlags("W") then return true end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:PlayerGiveSWEP(client)
+function GM:PlayerGiveSWEP(client)
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn SWEPs", nil) or client:getChar():hasFlags("W") then return true end
     return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:PlayerSpawnEffect(client)
+function GM:PlayerSpawnEffect(client)
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Effects", nil) or client:getChar():hasFlags("L") then return true end
     return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:PlayerSpawnSENT(client)
+function GM:PlayerSpawnSENT(client)
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn SENTs", nil) or client:getChar():hasFlags("E") then return true end
     return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:PlayerSpawnVehicle(client, model, name, data)
+function GM:PlayerSpawnVehicle(client, model, name, data)
     if client:getChar():hasFlags("C") or CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Cars", nil) then
         if table.HasValue(lia.config.RestrictedVehicles, name) then
             if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Restricted Cars", nil) then
@@ -76,7 +76,7 @@ function MODULE:PlayerSpawnVehicle(client, model, name, data)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:CanTool(client, trace, tool)
+function GM:CanTool(client, trace, tool)
     local privilege = "Lilia - Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
     local entity = client:GetTracedEntity()
     if client:getChar():hasFlags("t") or CAMI.PlayerHasAccess(client, privilege, nil) then
@@ -90,7 +90,7 @@ function MODULE:CanTool(client, trace, tool)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:PhysgunPickup(client, entity)
+function GM:PhysgunPickup(client, entity)
     if entity:GetCreator() == client and entity:GetClass() == "prop_physics" then
         return true
     elseif CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Physgun Pickup", nil) then
@@ -105,20 +105,16 @@ function MODULE:PhysgunPickup(client, entity)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:CanProperty(client, property, entity)
+function GM:CanProperty(client, property, entity)
     if CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Access Tool " .. property:gsub("^%l", string.upper), nil) then
-        if table.HasValue(lia.config.RemoverBlockedEntities, entity:GetClass()) or table.HasValue(lia.config.PhysGunMoveRestrictedEntityList, entity:GetClass()) then
-            return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Use Entity Properties on Blocked Entities", nil)
-        else
-            return true
-        end
+        if table.HasValue(lia.config.RemoverBlockedEntities, entity:GetClass()) or table.HasValue(lia.config.PhysGunMoveRestrictedEntityList, entity:GetClass()) then return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Use Entity Properties on Blocked Entities", nil) end
         return true
     end
     return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:CheckSpawnPropBlackList(client, model)
+function GM:CheckSpawnPropBlackList(client, model)
     for _, gredwitch in pairs(file.Find("models/gredwitch/bombs/*.mdl", "GAME")) do
         if model == "models/gredwitch/bombs/" .. gredwitch then return false end
     end
