@@ -78,7 +78,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function GM:CanTool(client, trace, tool)
     local privilege = "Lilia - Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
-    local entity = client:GetTracedEntity()    
+    local entity = client:GetTracedEntity()
     if client:getChar():hasFlags("t") or CAMI.PlayerHasAccess(client, privilege, nil) then
         if table.HasValue(lia.config.ToolRequiresEntity, tool) and not IsValid(entity) then return false end
         if tool == "advdupe2" and table.HasValue(lia.config.DuplicatorBlackList, entity:GetClass()) then return false end
