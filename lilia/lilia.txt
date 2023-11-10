@@ -1,1 +1,7 @@
-﻿goto"lilia"{"base"}"sandbox""title""Lilia 2.0""author""Leonheart""category""rp"
+﻿"lilia"
+{
+	"base"		"sandbox"
+	"title"		"Lilia 2.0"
+	"author"	"Leonheart"
+	"category"	"rp"
+}
