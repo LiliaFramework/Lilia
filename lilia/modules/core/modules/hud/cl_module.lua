@@ -179,7 +179,7 @@ function MODULE:DrawEntityInfo(entity, alpha, position)
         charInfo[#charInfo + 1] = {entity.liaNameLines[i], team.GetColor(entity.Team(entity))}
     end
 
-    local description = hook.Run("GetDisplayedDescription", entity, "hud") or character.getDesc(character)
+    local description = hook.Run("GetDisplayedDescription", entity, true) or character.getDesc(character)
     if description ~= entity.liaDescCache then
         entity.liaDescCache = description
         if description:len() > 250 then description = description:sub(1, 250) .. "..." end

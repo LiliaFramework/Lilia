@@ -6,8 +6,14 @@ function MODULE:IsRecognizedChatType(chatType)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:GetDisplayedDescription(client)
-    if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar():getID()) then return "You do not recognize this person." end
+function MODULE:GetDisplayedDescription(client, isHUD)
+    if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar():getID()) then
+        if isHUD then
+            return client:getChar():getDesc()
+        else
+            return "You do not recognize this person."
+        end
+    end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -50,5 +56,12 @@ function CharRecognize(level, name)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-concommand.Add("dev_reloadsb", function() if IsValid(lia.gui.score) then lia.gui.score:Remove() end end)
+concommand.Add(
+    "dev_reloadsb",
+    function()
+        if IsValid(lia.gui.score) then
+            lia.gui.score:Remove()
+        end
+    end
+)
 --------------------------------------------------------------------------------------------------------------------------
