@@ -1,1 +1,1 @@
-exclude_files = {"lilia/**/*.png", "lilia/*.png", "lilia/gamemode/backend/libs/thirdparty/**/*.lua", "lilia/gamemode/database.lua", "lilia/**/*.txt", "lilia/*.txt"}
+exclude_files = {"lilia/logo.png", "lilia/gamemode/backend/libs/thirdparty/**/*.lua", "lilia/gamemode/database.lua", "lilia/**/*.txt", "lilia/*.txt"}
