@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
 --------------------------------------------------------------------------------------------------------------------------
 util.AddNetworkString("liaCharChoose")
@@ -25,18 +25,12 @@ net.Receive(
         if not character or character:getPlayer() ~= client then return response(false, "invalidChar") end
         local status, result = hook.Run("CanPlayerUseChar", client, character)
         if status == false then
-            if result[1] == "@" then
-                result = result:sub(2)
-            end
-
+            if result[1] == "@" then result = result:sub(2) end
             return response(result)
         end
 
         local currentChar = client:getChar()
-        if currentChar then
-            currentChar:save()
-        end
-
+        if currentChar then currentChar:save() end
         hook.Run("PrePlayerLoadedChar", client, character, currentChar)
         character:setup()
         hook.Run("PlayerLoadedChar", client, character, currentChar)
@@ -66,9 +60,7 @@ net.Receive(
         local originalData = table.Copy(data)
         local newData = {}
         for key in pairs(data) do
-            if not lia.char.vars[key] then
-                data[key] = nil
-            end
+            if not lia.char.vars[key] then data[key] = nil end
         end
 
         for key, charVar in pairs(lia.char.vars) do
@@ -82,14 +74,11 @@ net.Receive(
                 local result = {charVar.onValidate(value, data, client)}
                 if result[1] == false then
                     result[2] = result[2] or "Validation error"
-
                     return response(nil, unpack(result, 2))
                 end
             end
 
-            if isfunction(charVar.onAdjust) then
-                charVar.onAdjust(client, data, value, newData)
-            end
+            if isfunction(charVar.onAdjust) then charVar.onAdjust(client, data, value, newData) end
         end
 
         hook.Run("AdjustCreationData", client, data, newData, originalData)
@@ -120,12 +109,7 @@ net.Receive(
         if character and character.steamID == steamID then
             hook.Run("liaCharDeleted", client, character)
             character:delete()
-            timer.Simple(
-                .5,
-                function()
-                    MODULE:syncCharList(client)
-                end
-            )
+            timer.Simple(.5, function() MODULE:syncCharList(client) end)
         end
     end
 )
