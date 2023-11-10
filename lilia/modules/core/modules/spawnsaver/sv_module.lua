@@ -1,4 +1,3 @@
-﻿function MODULE:CharacterPreSave(character)
 ﻿--------------------------------------------------------------------------------------------------------------------------
 function MODULE:CharacterPreSave(character)
     local client = character:getPlayer()
