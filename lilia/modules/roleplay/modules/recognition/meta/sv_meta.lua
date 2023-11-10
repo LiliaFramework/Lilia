@@ -9,10 +9,15 @@ function charMeta:recognize(character, name)
 
     local recognized = self:getData("rgn", "")
     local peopleWhoWeKnow = character:getCharsWeKnow()
+    if recognized ~= "" and recognized:find("," .. id .. ",") and peopleWhoWeKnow[id] then return false end
     self:setData("rgn", recognized .. "," .. id .. ",")
     local nameList = self:getRecognizedAs()
-    nameList[id] = name
-    peopleWhoWeKnow[id] = true
+    if name ~= nil then
+        nameList[id] = name
+    else
+        peopleWhoWeKnow[id] = true
+    end
+
     character:setCharsWeKnow(peopleWhoWeKnow)
     self:setRecognizedAs(nameList)
 

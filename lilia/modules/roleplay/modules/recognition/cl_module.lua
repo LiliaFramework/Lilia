@@ -9,6 +9,7 @@ end
 function MODULE:GetDisplayedDescription(client, isHUD)
     if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar():getID()) then
         if isHUD then return client:getChar():getDesc() end
+
         return "You do not recognize this person."
     end
 end
@@ -20,18 +21,19 @@ function MODULE:GetDisplayedName(client, chatType)
     if client == LocalPlayer() then return character:getName() end
     if client:IsBot() then return client:GetName() end
     if not ourCharacter:doesRecognize(character:getID()) then
-        if chatType and hook.Run("IsRecognizedChatType", chatType) then
-            return "[Unknown Person]"
-        elseif not chatType then
-            return "Unknown"
-        end
+        if chatType and hook.Run("IsRecognizedChatType", chatType) then return "[Unknown Person]" end
+
+        return "Unknown"
     else
+        local peopleWeKnow = ourCharacter:getCharsWeKnow()
         local myReg = ourCharacter:getRecognizedAs()
-        if myReg[character:getID()] then
-            return myReg[character:getID()]
-        else
+        if peopleWeKnow[character:getID()] then
             return character:getName()
+        elseif myReg[character:getID()] then
+            return myReg[character:getID()]
         end
+
+        return "Unknown"
     end
 end
 
@@ -53,5 +55,12 @@ function CharRecognize(level, name)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-concommand.Add("dev_reloadsb", function() if IsValid(lia.gui.score) then lia.gui.score:Remove() end end)
+concommand.Add(
+    "dev_reloadsb",
+    function()
+        if IsValid(lia.gui.score) then
+            lia.gui.score:Remove()
+        end
+    end
+)
 --------------------------------------------------------------------------------------------------------------------------

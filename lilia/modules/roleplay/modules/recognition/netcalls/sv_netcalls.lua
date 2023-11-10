@@ -2,15 +2,10 @@
 netstream.Hook(
     "rgnDirect",
     function(client, target, name)
-        if not name then
-            name = client:getChar():getName()
-        end
-
         if target:GetPos():DistToSqr(client:GetPos()) > 100000 then return end
-        local CharID = client:getChar():getID()
-        if target:getChar():recognize(CharID, name) then
+        if target:getChar():recognize(client:getChar(), name) then
             netstream.Start(client, "rgnDone")
-            hook.Run("OnCharRecognized", client, CharID)
+            hook.Run("OnCharRecognized", client, client:getChar())
             client:notifyLocalized("recognized")
         else
             client:notifyLocalized("already_recognized")
