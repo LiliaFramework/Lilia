@@ -1,14 +1,18 @@
 ﻿function MODULE:CharacterPreSave(character)
+﻿--------------------------------------------------------------------------------------------------------------------------
+function MODULE:CharacterPreSave(character)
     local client = character:getPlayer()
-    if IsValid(client) then character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()}) end
+    if IsValid(client) then
+        character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()})
+    end
 end
 
+--------------------------------------------------------------------------------------------------------------------------
 function MODULE:PlayerLoadedChar(client, character, lastChar)
     timer.Simple(
         0,
         function()
             if IsValid(client) then
-                client:Spawn()
                 local position = character:getData("pos")
                 if position then
                     if position[3] and position[3]:lower() == game.GetMap():lower() then
@@ -22,3 +26,4 @@ function MODULE:PlayerLoadedChar(client, character, lastChar)
         end
     )
 end
+--------------------------------------------------------------------------------------------------------------------------
