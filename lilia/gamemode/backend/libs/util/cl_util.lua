@@ -4,8 +4,7 @@ local LAST_HEIGHT = ScrH()
 --------------------------------------------------------------------------------------------------------------------------
 function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
     color = color or color_white
-
-    return draw.TextShadow(
+    return     draw.TextShadow(
         {
             text = text,
             font = font or "liaGenericFont",
@@ -13,32 +12,19 @@ function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
             color = color,
             xalign = alignX or 0,
             yalign = alignY or 0
-        }, 1, alpha or (color.a * 0.575)
+        },
+        1,
+        alpha or (color.a * 0.575)
     )
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function lia.util.notifQuery(question, option1, option2, manualDismiss, notifType, callback)
-    if not callback or not isfunction(callback) then
-        Error("A callback function must be specified")
-    end
-
-    if not question or not isstring(question) then
-        Error("A question string must be specified")
-    end
-
-    if not option1 then
-        option1 = "Yes"
-    end
-
-    if not option2 then
-        option2 = "No"
-    end
-
-    if not manualDismiss then
-        manualDismiss = false
-    end
-
+    if not callback or not isfunction(callback) then Error("A callback function must be specified") end
+    if not question or not isstring(question) then Error("A question string must be specified") end
+    if not option1 then option1 = "Yes" end
+    if not option2 then option2 = "No" end
+    if not manualDismiss then manualDismiss = false end
     local notice = CreateNoticePanel(10, manualDismiss)
     local i = table.insert(lia.noticess, notice)
     notice.isQuery = true
@@ -48,10 +34,7 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
     notice:CalcWidth(120)
     notice:CenterHorizontal()
     notice.notifType = notifType or 7
-    if manualDismiss then
-        notice.start = nil
-    end
-
+    if manualDismiss then notice.start = nil end
     notice.opt1 = notice:Add("DButton")
     notice.opt1:SetAlpha(0)
     notice.opt2 = notice:Add("DButton")
@@ -95,15 +78,7 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
                         self:ColorTo(Color(24, 215, 37), 0.2, 0)
                         notice.respondToKeys = false
                         callback(1, notice)
-                        timer.Simple(
-                            1,
-                            function()
-                                if notice and IsValid(notice) then
-                                    RemoveNoticess(notice)
-                                end
-                            end
-                        )
-
+                        timer.Simple(1, function() if notice and IsValid(notice) then RemoveNoticess(notice) end end)
                         notice.lastKey = CurTime()
                     end
                 end
@@ -124,15 +99,7 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
                         self:ColorTo(Color(24, 215, 37), 0.2, 0)
                         notice.respondToKeys = false
                         callback(2, notice)
-                        timer.Simple(
-                            1,
-                            function()
-                                if notice and IsValid(notice) then
-                                    RemoveNoticess(notice)
-                                end
-                            end
-                        )
-
+                        timer.Simple(1, function() if notice and IsValid(notice) then RemoveNoticess(notice) end end)
                         notice.lastKey = CurTime()
                     end
                 end
@@ -144,26 +111,18 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
                 if not self.respondToKeys then return end
                 local queries = {}
                 for k, v in pairs(lia.noticess) do
-                    if v.isQuery then
-                        queries[#queries + 1] = v
-                    end
+                    if v.isQuery then queries[#queries + 1] = v end
                 end
 
                 for k, v in pairs(queries) do
                     if v == self and k > 1 then return end
                 end
 
-                if self.opt1 and IsValid(self.opt1) then
-                    self.opt1:keyThink()
-                end
-
-                if self.opt2 and IsValid(self.opt2) then
-                    self.opt2:keyThink()
-                end
+                if self.opt1 and IsValid(self.opt1) then self.opt1:keyThink() end
+                if self.opt2 and IsValid(self.opt2) then self.opt2:keyThink() end
             end
         end
     )
-
     return notice
 end
 
@@ -178,7 +137,6 @@ function lia.util.wrapText(text, width, font)
     local maxW = 0
     if w <= width then
         text, _ = text:gsub("%s", " ")
-
         return {text}, w
     end
 
@@ -189,16 +147,11 @@ function lia.util.wrapText(text, width, font)
         if w > width then
             lines[#lines + 1] = line
             line = ""
-            if w > maxW then
-                maxW = w
-            end
+            if w > maxW then maxW = w end
         end
     end
 
-    if line ~= "" then
-        lines[#lines + 1] = line
-    end
-
+    if line ~= "" then lines[#lines + 1] = line end
     return lines, maxW
 end
 
@@ -272,10 +225,7 @@ function lia.util.getInjuredColor(client)
     local health_color = color_white
     if not IsValid(client) then return health_color end
     local health, healthMax = client:Health(), client:GetMaxHealth()
-    if (health / healthMax) < .95 then
-        health_color = lia.color.LerpHSV(nil, nil, healthMax, health, 0)
-    end
-
+    if (health / healthMax) < .95 then health_color = lia.color.LerpHSV(nil, nil, healthMax, health, 0) end
     return health_color
 end
 
@@ -283,10 +233,8 @@ end
 function lia.util.ScreenScaleH(n, type)
     if type then
         if ScrH() > 720 then return n end
-
         return math.ceil(n / 1080 * ScrH())
     end
-
     return n * (ScrH() / 480)
 end
 
@@ -335,9 +283,7 @@ function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCanc
     ButtonCancel:SetPos(5, 5)
     ButtonCancel.DoClick = function()
         Window:Close()
-        if fnCancel then
-            fnCancel(TextEntry:GetValue())
-        end
+        if fnCancel then fnCancel(TextEntry:GetValue()) end
     end
 
     ButtonCancel:MoveRightOf(Button, 5)
@@ -356,7 +302,6 @@ function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCanc
     ButtonPanel:AlignBottom(8)
     Window:MakePopup()
     Window:DoModal()
-
     return Window
 end
 
@@ -370,10 +315,7 @@ lia.util.LoadedImages = lia.util.LoadedImages or {
 function lia.util.FetchImage(id, callback, failImg, pngParameters, imageProvider)
     local loadedImage = lia.util.LoadedImages[id]
     if loadedImage then
-        if callback then
-            callback(loadedImage)
-        end
-
+        if callback then callback(loadedImage) end
         return
     end
 
@@ -381,9 +323,7 @@ function lia.util.FetchImage(id, callback, failImg, pngParameters, imageProvider
         local mat = Material("data/lilia/images/" .. id .. ".png", pngParameters or "noclamp smooth")
         if mat then
             lia.util.LoadedImages[id] = mat
-            if callback then
-                callback(mat)
-            end
+            if callback then callback(mat) end
         elseif callback then
             callback(false)
         end
@@ -393,28 +333,20 @@ function lia.util.FetchImage(id, callback, failImg, pngParameters, imageProvider
             function(body, size, headers, code)
                 if code ~= 200 then
                     callback(false)
-
                     return
                 end
 
                 if not body or body == "" then
                     callback(false)
-
                     return
                 end
 
                 file.Write("lilia/images/" .. id .. ".png", body)
                 local mat = Material("data/lilia/images/" .. id .. ".png", "noclamp smooth")
                 lia.util.LoadedImages[id] = mat
-                if callback then
-                    callback(mat)
-                end
+                if callback then callback(mat) end
             end,
-            function()
-                if callback then
-                    callback(false)
-                end
-            end
+            function() if callback then callback(false) end end
         )
     end
 end
