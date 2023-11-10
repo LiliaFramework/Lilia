@@ -83,7 +83,9 @@ jobs:
       - name: Run GLuaFixer on Lilia (Step 7)
         run: |
           echo "Step 7: Running glualint pretty-print on Lilia"
-          sudo ./glualint_executable pretty-print lilia/*
+          sudo ./glualint_executable pretty-print lilia/core/*
+          sudo ./glualint_executable pretty-print lilia/gamemode/*
+          sudo ./glualint_executable pretty-print lilia/modules/*
         working-directory: '${{ github.workspace }}'
         shell: bash
       - name: Remove the glualint folder (Step 8)
