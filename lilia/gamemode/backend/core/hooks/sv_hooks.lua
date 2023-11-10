@@ -178,7 +178,6 @@ function GM:PlayerLoadedChar(client, character, lastChar)
     local identifier = "RemoveMatSpecular" .. client:SteamID()
     local data = character:getData("pclass")
     local class = data and lia.class.list[data]
-    client:Spawn()
     if timer.Exists(identifier) then
         timer.Remove(identifier)
     end
