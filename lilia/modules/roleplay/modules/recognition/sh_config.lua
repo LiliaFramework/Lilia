@@ -5,7 +5,7 @@ lia.config.StaffAutoRecognize = false
 --------------------------------------------------------------------------------------------------------------------------
 lia.config.FactionAutoRecognize = false
 --------------------------------------------------------------------------------------------------------------------------
-lia.config.FakeNamesEnabled = true
+lia.config.FakeNamesEnabled = false
 --------------------------------------------------------------------------------------------------------------------------
 lia.config.MemberToMemberAutoRecognition = {
     [FACTION_STAFF] = true,
