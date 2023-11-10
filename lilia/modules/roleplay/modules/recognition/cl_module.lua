@@ -56,12 +56,5 @@ function CharRecognize(level, name)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-concommand.Add(
-    "dev_reloadsb",
-    function()
-        if IsValid(lia.gui.score) then
-            lia.gui.score:Remove()
-        end
-    end
-)
+concommand.Add("dev_reloadsb", function() if IsValid(lia.gui.score) then lia.gui.score:Remove() end end)
 --------------------------------------------------------------------------------------------------------------------------
