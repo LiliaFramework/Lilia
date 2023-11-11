@@ -374,7 +374,7 @@ if not lia.config.WasInitialized then
             ["r_lod"] = "-1",
             ["lia_cheapblur"] = "1",
         },
-        ToolRequiresEntity = {"rb655_easy_bodygroup", "eyeposer", "remover", "thruster", "weld", "nocollide", "simfphyseditor", "simfphysduplicator", "colour", "precision", "stacker_improved", "advmat", "permaprops", "inflator", "physprop", "simfphyswheeleditor", "simfphysfueleditor", "paint", "simfphysgeareditor", "simfphyssuspensioneditor", "finger", "editentity", "material", "duplicator", "advdupe2", "simfphyssoundeditor", "faceposer", "simfphysmiscsoundeditor",},
+        ToolRequiresEntity = {"rb655_easy_bodygroup", "eyeposer", "remover", "thruster", "weld", "nocollide", "simfphyseditor", "simfphysduplicator", "colour", "precision", "stacker_improved", "advmat", "permaprops", "inflator", "physprop", "simfphyswheeleditor", "simfphysfueleditor", "paint", "simfphysgeareditor", "simfphyssuspensioneditor", "finger", "editentity", "material", "duplicator", "simfphyssoundeditor", "faceposer", "simfphysmiscsoundeditor",},
         RemovableHooks = {
             ["StartChat"] = {"StartChatIndicator",},
             ["FinishChat"] = {"EndChatIndicator",},
