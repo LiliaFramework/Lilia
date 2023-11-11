@@ -245,6 +245,16 @@ if not lia.config.WasInitialized then
                 MinAccess = "admin",
                 Description = "Allows access to Spawning SENTs."
             },
+            {
+                Name = "Lilia - Staff Permissions - Can't be Grabbed with PhysGun",
+                MinAccess = "superadmin",
+                Description = "Allows access to not being Grabbed with PhysGun."
+            },
+            {
+                Name = "Lilia - Staff Permissions - Can Grab World Props",
+                MinAccess = "superadmin",
+                Description = "Allows access to grabbing world props."
+            },
         },
         StormFox2ConsoleCommands = {
             ["sf_time_speed"] = "1",
