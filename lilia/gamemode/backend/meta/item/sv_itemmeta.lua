@@ -87,6 +87,7 @@ function ITEM:spawn(position, angles)
         if IsValid(client) then
             entity.SteamID64 = client:SteamID()
             entity.liaCharID = client:getChar():getID()
+            entity:SetCreator(client)
         end
         return entity
     end
