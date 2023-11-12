@@ -1,4 +1,4 @@
-﻿--------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 local MODULE = MODULE
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:CharacterPreSave(character)
@@ -7,23 +7,18 @@ function MODULE:CharacterPreSave(character)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function MODULE:PlayerLoadedChar(client, character, lastChar)
-    timer.Simple(
-        0,
-        function()
-            if IsValid(client) then
-                local position = character:getData("pos")
-                if position then
-                    if position[3] and position[3]:lower() == game.GetMap():lower() then
-                        client:SetPos(position[1].x and position[1] or client:GetPos())
-                        client:SetEyeAngles(position[2].p and position[2] or Angle(0, 0, 0))
-                    end
-
-                    character:setData("pos", nil)
-                end
+function MODULE:PostPlayerLoadedChar(client, character, lastChar)
+    if IsValid(client) then
+        local position = character:getData("pos")
+        if position then
+            if position[3] and position[3]:lower() == game.GetMap():lower() then
+                client:SetPos(position[1].x and position[1] or client:GetPos())
+                client:SetEyeAngles(position[2].p and position[2] or Angle(0, 0, 0))
             end
+
+            character:setData("pos", nil)
         end
-    )
+    end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
