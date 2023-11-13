@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnNPC(client)
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn NPCs", nil) or client:getChar():hasFlags("n") then return true end
     return false
@@ -109,6 +109,7 @@ function GM:PhysgunPickup(client, entity)
     end
     return false
 end
+
 --------------------------------------------------------------------------------------------------------------------------
 function GM:CanProperty(client, property, entity)
     if CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Access Tool " .. property:gsub("^%l", string.upper), nil) or client:Team() == FACTION_STAFF then
