@@ -80,7 +80,6 @@ function GM:CanTool(client, trace, tool)
     local privilege = "Lilia - Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
     local entity = client:GetTracedEntity():GetClass()
     if client:getChar():hasFlags("t") or CAMI.PlayerHasAccess(client, privilege, nil) then
-        if table.HasValue(lia.config.ToolRequiresEntity, tool) and not IsValid(client:GetTracedEntity()) then return false end
         if tool == "advdupe2" and (table.HasValue(lia.config.DuplicatorBlackList, entity) and IsValid(entity)) then return false end
         if tool == "permaprops" and string.StartWith(entity, "lia_") and IsValid(entity) then return false end
         if tool == "remover" and (table.HasValue(lia.config.RemoverBlockedEntities, entity) and IsValid(entity)) then return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Can Remove Blocked Entities", nil) end
