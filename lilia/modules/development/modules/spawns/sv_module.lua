@@ -6,10 +6,7 @@ function MODULE:PostPlayerLoadout(client)
     local position = character:getData("pos")
     if not IsValid(client) then return end
     if position ~= nil then
-        client:ChatPrint("Loaded Character Position")
-        PrintTable(character:getData("pos"), 1)
         if position[3] and position[3]:lower() == game.GetMap():lower() then
-            client:ChatPrint("Set Character Position")
             client:SetPos(position[1].x and position[1] or client:GetPos())
             client:SetEyeAngles(position[2].p and position[2] or Angle(0, 0, 0))
             character:setData("pos", nil)
