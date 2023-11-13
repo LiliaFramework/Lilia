@@ -141,6 +141,7 @@ function GM:CheckSpawnPropBlackList(client, model)
     if table.HasValue(lia.config.BlackListedProps, model:lower()) then return false end
     return true
 end
+
 --------------------------------------------------------------------------------------------------------------------------
 if sam then
     sam.config.set("Restrictions.Tool", false)
