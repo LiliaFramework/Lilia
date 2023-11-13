@@ -1,4 +1,4 @@
-﻿--------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnNPC(client)
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn NPCs", nil) or client:getChar():hasFlags("n") then return true end
     return false
@@ -78,12 +78,15 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function GM:CanTool(client, trace, tool)
     local privilege = "Lilia - Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
-    local entity = client:GetTracedEntity():GetClass()
+    local entity = client:GetTracedEntity()
     if client:getChar():hasFlags("t") or CAMI.PlayerHasAccess(client, privilege, nil) then
         if tool == "advdupe2" and (table.HasValue(lia.config.DuplicatorBlackList, entity) and IsValid(entity)) then return false end
-        if tool == "permaprops" and string.StartWith(entity, "lia_") and IsValid(entity) then return false end
-        if tool == "remover" and (table.HasValue(lia.config.RemoverBlockedEntities, entity) and IsValid(entity)) then return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Can Remove Blocked Entities", nil) end
-        return true
+        if tool == "permaprops" and string.StartWith(entity:GetClass(), "lia_") and IsValid(entity) then return false end
+        if tool == "remover" then
+            if table.HasValue(lia.config.RemoverBlockedEntities, entity:GetClass()) and IsValid(entity) then return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Can Remove Blocked Entities", nil) end
+            if entity:IsWorld() and IsValid(entity) then return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Can Remove World Entities", nil) end
+            return true
+        end
     end
     return false
 end
@@ -110,6 +113,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function GM:CanProperty(client, property, entity)
     if CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Access Tool " .. property:gsub("^%l", string.upper), nil) then
+        if entity:IsWorld() and IsValid(entity) then return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Can Property World Entities", nil) end
         if table.HasValue(lia.config.RemoverBlockedEntities, entity:GetClass()) or table.HasValue(lia.config.PhysGunMoveRestrictedEntityList, entity:GetClass()) then return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Use Entity Properties on Blocked Entities", nil) end
         return true
     end
