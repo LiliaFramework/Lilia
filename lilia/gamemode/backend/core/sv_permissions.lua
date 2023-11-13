@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnNPC(client)
     if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn NPCs", nil) or client:getChar():hasFlags("n") then return true end
     return false
