@@ -1,7 +1,6 @@
 ﻿--------------------------------------------------------------------------------------------------------------------------
 function GM:GetGameDescription()
-    if istable(SCHEMA) then return tostring(SCHEMA.name) end
-    return lia.config.DefaultGamemodeName
+    return lia.config.GamemodeName
 end
 
 --------------------------------------------------------------------------------------------------------------------------

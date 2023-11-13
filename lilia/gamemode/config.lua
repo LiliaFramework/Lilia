@@ -40,7 +40,7 @@ if not lia.config.WasInitialized then
         FactionBroadcastEnabled = true, -- Enable faction broadcasts
         AdvertisementEnabled = true, -- Enable player advertisements
         AdvertisementPrice = 25, -- Price for player advertisements
-        DefaultGamemodeName = "Lilia - Skeleton", -- Default server gamemode name
+        GamemodeName = "A Lilia Gamemode", -- Default server gamemode name
         -- Visual Settings
         Color = Color(75, 119, 190), -- Default color used for UI elements
         DarkTheme = true, -- Enable dark theme
