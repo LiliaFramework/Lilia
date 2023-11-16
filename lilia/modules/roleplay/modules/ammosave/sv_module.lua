@@ -32,6 +32,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:PlayerDeath(client, inflictor, attacker)
+    if not client:getChar() then return end
     local char = client:getChar()
     local inventory = char:getInv()
     local items = inventory:getItems()
