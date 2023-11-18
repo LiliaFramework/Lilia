@@ -93,7 +93,6 @@ function PANEL:Init()
                     if IsValid(v2.liaScoreSlot) then
                         v2.liaScoreSlot:SetParent(this)
                     else
-                        print(v2)
                         self:addPlayer(v2, this)
                     end
                 end
