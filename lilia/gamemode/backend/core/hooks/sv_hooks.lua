@@ -22,18 +22,29 @@ function GM:InitializedExtrasServer()
     end
 
     for k, v in pairs(ents.GetAll()) do
-        if lia.config.EntitiesToBeRemoved[v:GetClass()] then v:Remove() end
+        if lia.config.EntitiesToBeRemoved[v:GetClass()] then
+            v:Remove()
+        end
     end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:OnPlayerJoinClass(client, class, oldClass)
     local char = client:getChar()
-    if char and lia.config.PermaClass then char:setData("pclass", class) end
+    if char and lia.config.PermaClass then
+        char:setData("pclass", class)
+    end
+
     local info = lia.class.list[class]
     local info2 = lia.class.list[oldClass]
-    if info.onSet then info:onSet(client) end
-    if info2 and info2.onLeave then info2:onLeave(client) end
+    if info.onSet then
+        info:onSet(client)
+    end
+
+    if info2 and info2.onLeave then
+        info2:onLeave(client)
+    end
+
     netstream.Start(nil, "classUpdate", client)
 end
 
@@ -47,7 +58,10 @@ function GM:Think()
         vjThink = CurTime() + 180
     end
 
-    if not self.nextThink then self.nextThink = 0 end
+    if not self.nextThink then
+        self.nextThink = 0
+    end
+
     if self.nextThink < CurTime() then
         local players = player.GetAll()
         for k, v in pairs(players) do
@@ -66,7 +80,9 @@ function GM:Think()
         loop = 1
         nicoSeats = {}
         for _, seat in ipairs(ents.FindByClass("prop_vehicle_prisoner_pod")) do
-            if seat.nicoSeat then table.insert(nicoSeats, seat) end
+            if seat.nicoSeat then
+                table.insert(nicoSeats, seat)
+            end
         end
     end
 
@@ -93,7 +109,9 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PropBreak(attacker, ent)
-    if IsValid(ent) and ent:GetPhysicsObject():IsValid() then constraint.RemoveAll(ent) end
+    if IsValid(ent) and ent:GetPhysicsObject():IsValid() then
+        constraint.RemoveAll(ent)
+    end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -107,17 +125,23 @@ end
 
 -------------------------------------------------------------------------------------------------------
 function GM:PlayerEnteredVehicle(client, vehicle)
-    if IsValid(vehicle) and vehicle.nicoSeat then table.insert(nicoSeats, loop, vehicle) end
+    if IsValid(vehicle) and vehicle.nicoSeat then
+        table.insert(nicoSeats, loop, vehicle)
+    end
 end
 
 -------------------------------------------------------------------------------------------------------
 function GM:PlayerLeaveVehicle(client, vehicle)
-    if IsValid(vehicle) and vehicle.nicoSeat then table.insert(nicoSeats, loop, vehicle) end
+    if IsValid(vehicle) and vehicle.nicoSeat then
+        table.insert(nicoSeats, loop, vehicle)
+    end
 end
 
 -------------------------------------------------------------------------------------------------------
 function GM:EntityNetworkedVarChanged(entity, varName, oldVal, newVal)
-    if varName == "Model" and entity.SetModel then hook.Run("PlayerModelChanged", entity, newVal) end
+    if varName == "Model" and entity.SetModel then
+        hook.Run("PlayerModelChanged", entity, newVal)
+    end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -131,6 +155,7 @@ function GM:PlayerUse(client, entity)
             if result ~= nil then return result end
         end
     end
+
     return true
 end
 
@@ -138,18 +163,26 @@ end
 function GM:KeyRelease(client, key)
     if key == IN_ATTACK2 then
         local wep = client:GetActiveWeapon()
-        if IsValid(wep) and wep.IsHands and wep.ReadyToPickup then wep:Grab() end
+        if IsValid(wep) and wep.IsHands and wep.ReadyToPickup then
+            wep:Grab()
+        end
     end
 
-    if key == IN_RELOAD then timer.Remove("liaToggleRaise" .. client:SteamID()) end
+    if key == IN_RELOAD then
+        timer.Remove("liaToggleRaise" .. client:SteamID())
+    end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerLoadedChar(client, character, lastChar)
+    client:Spawn()
     local identifier = "RemoveMatSpecular" .. client:SteamID()
     local data = character:getData("pclass")
     local class = data and lia.class.list[data]
-    if timer.Exists(identifier) then timer.Remove(identifier) end
+    if timer.Exists(identifier) then
+        timer.Remove(identifier)
+    end
+
     timer.Create(
         identifier,
         30,
@@ -178,16 +211,15 @@ function GM:PlayerLoadedChar(client, character, lastChar)
     lia.db.updateTable(
         {
             _lastJoinTime = timeStamp
-        },
-        nil,
-        "characters",
-        "_id = " .. character:getID()
+        }, nil, "characters", "_id = " .. character:getID()
     )
 
     if lastChar then
         local charEnts = lastChar:getVar("charEnts") or {}
         for _, v in ipairs(charEnts) do
-            if v and IsValid(v) then v:Remove() end
+            if v and IsValid(v) then
+                v:Remove()
+            end
         end
 
         lastChar:setVar("charEnts", nil)
@@ -250,6 +282,7 @@ function GM:PlayerSay(client, message)
     else
         client:notify("Your message is too long and has not been sent.")
     end
+
     return ""
 end
 
@@ -260,7 +293,9 @@ function GM:ShutDown()
     hook.Run("SaveData")
     for _, v in ipairs(player.GetAll()) do
         v:saveLiliaData()
-        if v:getChar() then v:getChar():save() end
+        if v:getChar() then
+            v:getChar():save()
+        end
     end
 end
 
@@ -284,6 +319,7 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     if not AllowVoice then return false, false end
     if VoiceBanned then return false, false end
     if listener:GetPos():DistToSqr(speaker:GetPos()) > rangeSquared then return false, false end
+
     return true, true
 end
 
@@ -298,7 +334,9 @@ function GM:CharacterPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
     for _, v in pairs(character:getInv():getItems()) do
-        if v.onSave then v:call("onSave", client) end
+        if v.onSave then
+            v:call("onSave", client)
+        end
     end
 end
 
@@ -314,6 +352,7 @@ function GM:GetPreferredCarryAngles(entity)
         end
     elseif class == "prop_physics" then
         local model = entity:GetModel():lower()
+
         return defaultAngleData[model]
     end
 end
@@ -322,7 +361,7 @@ end
 function GM:CreateDefaultInventory(character)
     local charID = character:getID()
     if lia.inventory.types["grid"] then
-        return         lia.inventory.instance(
+        return lia.inventory.instance(
             "grid",
             {
                 char = charID
@@ -333,7 +372,10 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:LiliaTablesLoaded()
-    local ignore = function() print("") end
+    local ignore = function()
+        print("")
+    end
+
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
@@ -358,6 +400,7 @@ function GM:CreateSalaryTimer(client)
         function()
             if not IsValid(client) or client:getChar() ~= character then
                 timer.Remove(timerID)
+
                 return
             end
 
@@ -476,7 +519,9 @@ function GM:CallMapCleanerInit()
             net.Start("cleanup_inbound")
             net.Broadcast()
             for i, v in pairs(ents.GetAll()) do
-                if v:IsNPC() then v:Remove() end
+                if v:IsNPC() then
+                    v:Remove()
+                end
             end
 
             for i, v in pairs(ents.FindByClass("lia_item")) do
@@ -526,11 +571,19 @@ function GM:ServerPostInit()
     end
 
     for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
-        if IsValid(v) and v:isDoor() then v:DrawShadow(false) end
+        if IsValid(v) and v:isDoor() then
+            v:DrawShadow(false)
+        end
     end
 
     lia.faction.formatModelData()
-    timer.Simple(2, function() lia.entityDataLoaded = true end)
+    timer.Simple(
+        2,
+        function()
+            lia.entityDataLoaded = true
+        end
+    )
+
     lia.db.waitForTablesToLoad():next(
         function()
             hook.Run("LoadData")
@@ -548,7 +601,9 @@ function GM:KeyPress(client, key)
 
     local entity = client:GetEyeTrace().Entity
     if not IsValid(entity) then return end
-    if entity:isDoor() and entity:IsPlayer() and key == IN_USE then hook.Run("PlayerUse", client, entity) end
+    if entity:isDoor() and entity:IsPlayer() and key == IN_USE then
+        hook.Run("PlayerUse", client, entity)
+    end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -558,6 +613,7 @@ function GM:CanPlayerUseChar(client, newcharacter)
     local banned = newcharacter:getData("banned")
     if newcharacter and newcharacter:getData("banned", false) then
         if isnumber(banned) and banned < os.time() then return end
+
         return false, "@charBanned"
     end
 
@@ -575,6 +631,7 @@ function GM:CanPlayerSwitchChar(client, character, newCharacter)
     if client.LastDamaged and client.LastDamaged > CurTime() - 120 and character:getFaction() ~= FACTION_STAFF then return false, "You took damage too recently to switch characters!" end
     if lia.config.CharacterSwitchCooldown and (character:getData("loginTime", 0) + lia.config.CharacterSwitchCooldownTimer) > os.time() then return false, "You are on cooldown!" end
     if character:getID() == newCharacter:getID() then return false, "You are already using this character!" end
+
     return true
 end
 --------------------------------------------------------------------------------------------------------------------------
