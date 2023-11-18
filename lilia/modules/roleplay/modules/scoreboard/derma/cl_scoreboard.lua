@@ -11,6 +11,7 @@ local function teamGetPlayers(teamID)
             table.insert(players, ply)
         end
     end
+
     return players
 end
 
@@ -28,10 +29,16 @@ paintFunctions[0] = function(this, w, h)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-paintFunctions[1] = function(this, w, h) print("") end
+paintFunctions[1] = function(this, w, h)
+    print("")
+end
+
 --------------------------------------------------------------------------------------------------------------------------
 function PANEL:Init()
-    if IsValid(lia.gui.score) then lia.gui.score:Remove() end
+    if IsValid(lia.gui.score) then
+        lia.gui.score:Remove()
+    end
+
     lia.gui.score = self
     self:SetSize(ScrW() * lia.config.sbWidth, ScrH() * lia.config.sbHeight)
     self:Center()
@@ -60,7 +67,9 @@ function PANEL:Init()
     self.i = {}
     local staffCount = 0
     for _, ply in ipairs(player.GetAll()) do
-        if ply:IsAdmin() then staffCount = staffCount + 1 end
+        if ply:IsAdmin() then
+            staffCount = staffCount + 1
+        end
     end
 
     local staffList = self.layout:Add("DListLayout")
@@ -140,7 +149,9 @@ function PANEL:Think()
         end
 
         for k, v in pairs(self.slots) do
-            if IsValid(v) then v:update() end
+            if IsValid(v) then
+                v:update()
+            end
         end
 
         self.nextUpdate = CurTime() + 0.1
@@ -202,7 +213,12 @@ function PANEL:addPlayer(client, parent)
     slot.ping:SetPos(self:GetWide() - 48, 0)
     slot.ping:SetSize(48, 64)
     slot.ping:SetText("0")
-    slot.ping.Think = function(this) if IsValid(client) then this:SetText(client:Ping()) end end
+    slot.ping.Think = function(this)
+        if IsValid(client) then
+            this:SetText(client:Ping())
+        end
+    end
+
     slot.ping:SetFont("liaGenericFont")
     slot.ping:SetContentAlignment(6)
     slot.ping:SetTextColor(color_white)
@@ -227,6 +243,7 @@ function PANEL:addPlayer(client, parent)
                     v.Paint = paintFunctions[i % 2]
                 end
             end
+
             return
         end
 
@@ -286,6 +303,7 @@ function PANEL:addPlayer(client, parent)
     end
 
     slot:update()
+
     return slot
 end
 
