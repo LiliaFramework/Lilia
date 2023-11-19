@@ -17,17 +17,19 @@ end
 function MODULE:GetDisplayedName(client, chatType)
     local character = client:getChar()
     local ourCharacter = LocalPlayer():getChar()
-    if not ourCharacter:doesRecognize(character:getID()) then
-        if chatType and hook.Run("IsRecognizedChatType", chatType) then return "[Unknown Person]" end
+    local myReg = ourCharacter:getRecognizedAs()
+    local characterID = character:getID()
+    if not ourCharacter:doesRecognize(characterID) then
+        if ourCharacter:doesFakeRecognize(characterID) and myReg[characterID] then return myReg[characterID] end
+        if chatType and hook.Run("IsRecognizedChatType", chatType) then return "[Unknown]" end
         return "Unknown"
     end
 end
-
 --------------------------------------------------------------------------------------------------------------------------
 function MODULE:ShouldAllowScoreboardOverride(client, var)
     local character = client:getChar()
     local ourCharacter = LocalPlayer():getChar()
-    if (lia.config.RecognitionEnabled and table.HasValue(lia.config.ScoreboardHiddenVars, var)) and (client ~= LocalPlayer()) and not ourCharacter:doesRecognize(character:getID()) then return true end
+    if lia.config.RecognitionEnabled and table.HasValue(lia.config.ScoreboardHiddenVars, var) and (client ~= LocalPlayer()) and not (ourCharacter:doesRecognize(character:getID()) and ourCharacter:doesFakeRecognize(character:getID())) then return true end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
