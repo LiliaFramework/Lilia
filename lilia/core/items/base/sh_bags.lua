@@ -1,13 +1,56 @@
-﻿--------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 ITEM.name = "Bag"
+--------------------------------------------------------------------------------------------------------------------------
 ITEM.desc = "A bag to hold more items."
+--------------------------------------------------------------------------------------------------------------------------
 ITEM.model = "models/props_c17/suitcase001a.mdl"
+--------------------------------------------------------------------------------------------------------------------------
 ITEM.category = "Storage"
+--------------------------------------------------------------------------------------------------------------------------
 ITEM.isBag = true
+--------------------------------------------------------------------------------------------------------------------------
 ITEM.invWidth = 2
+--------------------------------------------------------------------------------------------------------------------------
 ITEM.invHeight = 2
+--------------------------------------------------------------------------------------------------------------------------
 ITEM.RequiredSkillLevels = nil
+--------------------------------------------------------------------------------------------------------------------------
+ITEM.NeedsEquip = true
+--------------------------------------------------------------------------------------------------------------------------
 ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
+--------------------------------------------------------------------------------------------------------------------------
+if CLIENT then
+    function ITEM:paintOver(item, w, h)
+        if item:getData("equip") then
+            surface.SetDrawColor(110, 255, 110, 100)
+            surface.DrawRect(w - 14, h - 14, 8, 8)
+        end
+    end
+end
+
+--------------------------------------------------------------------------------------------------------------------------
+if ITEM.NeedsEquip then
+    ITEM.functions.Equip = {
+        name = "Equip",
+        icon = "icon16/tick.png",
+        onClick = function(item)
+            item:setData("equip", true)
+            return false
+        end,
+        onCanRun = function(item) return not IsValid(item.entity) and not item:getData("equip", false) end
+    }
+
+    ITEM.functions.Unequip = {
+        name = "Unequip",
+        icon = "icon16/cross.png",
+        onClick = function(item)
+            item:setData("equip", false)
+            return false
+        end,
+        onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip", false) end
+    }
+end
+
 --------------------------------------------------------------------------------------------------------------------------
 ITEM.functions.View = {
     icon = "icon16/briefcase.png",
@@ -30,7 +73,7 @@ ITEM.functions.View = {
         end
         return false
     end,
-    onCanRun = function(item) return not IsValid(item.entity) and item:getInv() end
+    onCanRun = function(item) return not IsValid(item.entity) and item:getInv() and (item.NeedsEquip and item:getData("equip", false)) or not item.NeedsEquip end
 }
 
 --------------------------------------------------------------------------------------------------------------------------
