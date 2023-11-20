@@ -1,4 +1,4 @@
-﻿--------------------------------------------------------------------------------------------------------------------------
+﻿----------------------------------------------------------------------------------------------
 function MODULE:IsCharRecognized(char, id)
     if char.id == id then return true end
     local recognized = char:getData("rgn", "")
@@ -11,7 +11,7 @@ function MODULE:IsCharRecognized(char, id)
     return false
 end
 
---------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------
 function MODULE:IsCharFakeRecognized(char, id)
     local other = lia.char.loaded[id]
     local CharNameList = char:getRecognizedAs()
@@ -19,7 +19,7 @@ function MODULE:IsCharFakeRecognized(char, id)
     return lia.config.FakeNamesEnabled and self:IsFakeNameExistant(plyName, CharNameList)
 end
 
---------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------
 function MODULE:IsFakeNameExistant(plyName, CharNameList)
     for _, n in pairs(CharNameList) do
         if n == plyName then return true end
@@ -27,7 +27,7 @@ function MODULE:IsFakeNameExistant(plyName, CharNameList)
     return false
 end
 
---------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------
 lia.char.registerVar(
     "RecognizedAs",
     {
@@ -36,4 +36,4 @@ lia.char.registerVar(
         noDisplay = true
     }
 )
---------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------
