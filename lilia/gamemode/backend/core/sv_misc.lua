@@ -71,6 +71,16 @@ function GM:OnItemSpawned(ent)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
+function DebugMessage(msg, ...)
+    MsgC(Color(70, 150, 255), "[CityRP] DEBUG: ", string.format(msg, ...), "\n")
+end
+
+--------------------------------------------------------------------------------------------------------------------------
+function WarningMessage(message, ...)
+    MsgC(Color(255, 100, 0), string.format(message, ...), "\n")
+end
+
+--------------------------------------------------------------------------------------------------------------------------
 hook.Add("MouthMoveAnimation", "Optimization", function() return nil end)
 --------------------------------------------------------------------------------------------------------------------------
 hook.Add("GrabEarAnimation", "Optimization", function() return nil end)

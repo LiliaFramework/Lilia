@@ -1,7 +1,9 @@
-name: Lint and Indent Code
+name: Commit Verification and Wiki Update
+
 on:
   push:
   pull_request:
+
 permissions:
   actions: write
   checks: write
@@ -16,8 +18,9 @@ permissions:
   repository-projects: write
   security-events: write
   statuses: write
+
 jobs:
-  glualint:
+  CodeVerifierAndIndenter:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -80,11 +83,21 @@ jobs:
       - name: List files in the working directory (After downloading GLuaFixer)
         run: |
           ls
-      - name: Run GLuaFixer on Lilia (Step 7)
+      - name: Run GLuaFixer on Lilia (Step 7 - Part 1)
         run: |
-          echo "Step 7: Running glualint pretty-print on Lilia"
+          echo "Step 7: Running glualint pretty-print on Lilia (Part 1)"
           sudo ./glualint_executable pretty-print lilia/core/*
+        working-directory: '${{ github.workspace }}'
+        shell: bash
+      - name: Run GLuaFixer on Lilia (Step 7 - Part 2)
+        run: |
+          echo "Step 7: Running glualint pretty-print on Lilia (Part 2)"
           sudo ./glualint_executable pretty-print lilia/gamemode/*
+        working-directory: '${{ github.workspace }}'
+        shell: bash
+      - name: Run GLuaFixer on Lilia (Step 7 - Part 3)
+        run: |
+          echo "Step 7: Running glualint pretty-print on Lilia (Part 3)"
           sudo ./glualint_executable pretty-print lilia/modules/*
         working-directory: '${{ github.workspace }}'
         shell: bash
@@ -117,3 +130,17 @@ jobs:
             echo "No changes to commit."
           fi
         working-directory: '${{ github.workspace }}'
+
+  wiki:
+    runs-on: ubuntu-latest
+    needs: CodeVerifierAndIndenter
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Publish Wiki
+        uses: spenserblack/actions-wiki@v0.3.0
+        with:
+          path: documentation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
