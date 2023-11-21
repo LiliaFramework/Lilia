@@ -17,7 +17,7 @@ permissions:
   security-events: write
   statuses: write
 jobs:
-  glualint:
+  CodeVerifierAndIndenter:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
