@@ -75,3 +75,6 @@ hook.Add("MouthMoveAnimation", "Optimization", function() return nil end)
 --------------------------------------------------------------------------------------------------------------------------
 hook.Add("GrabEarAnimation", "Optimization", function() return nil end)
 --------------------------------------------------------------------------------------------------------------------------
+function WarningMessage(message, ...)
+	MsgC(Color(255, 100, 0), string.format(message, ...), "\n")
+end
