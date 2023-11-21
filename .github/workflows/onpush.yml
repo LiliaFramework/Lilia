@@ -83,11 +83,21 @@ jobs:
       - name: List files in the working directory (After downloading GLuaFixer)
         run: |
           ls
-      - name: Run GLuaFixer on Lilia (Step 7)
+      - name: Run GLuaFixer on Lilia (Step 7 - Part 1)
         run: |
-          echo "Step 7: Running glualint pretty-print on Lilia"
+          echo "Step 7: Running glualint pretty-print on Lilia (Part 1)"
           sudo ./glualint_executable pretty-print lilia/core/*
+        working-directory: '${{ github.workspace }}'
+        shell: bash
+      - name: Run GLuaFixer on Lilia (Step 7 - Part 2)
+        run: |
+          echo "Step 7: Running glualint pretty-print on Lilia (Part 2)"
           sudo ./glualint_executable pretty-print lilia/gamemode/*
+        working-directory: '${{ github.workspace }}'
+        shell: bash
+      - name: Run GLuaFixer on Lilia (Step 7 - Part 3)
+        run: |
+          echo "Step 7: Running glualint pretty-print on Lilia (Part 3)"
           sudo ./glualint_executable pretty-print lilia/modules/*
         working-directory: '${{ github.workspace }}'
         shell: bash
