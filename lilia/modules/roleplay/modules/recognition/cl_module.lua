@@ -25,6 +25,7 @@ function MODULE:GetDisplayedName(client, chatType)
         return "Unknown"
     end
 end
+
 ----------------------------------------------------------------------------------------------
 function MODULE:ShouldAllowScoreboardOverride(client, var)
     local character = client:getChar()
