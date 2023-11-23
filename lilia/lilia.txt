@@ -1,7 +1,7 @@
-﻿"lilia"
+"lilia"
 {
 	"base"		"sandbox"
 	"title"		"Lilia"
-	"author"	"Chessnut, Black Tea and Leonheart"
+	"author"	"Leonheart"
 	"category"	"rp"
 }
