@@ -16,12 +16,13 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function playerMeta:IsStuck()
-    return util.TraceEntity(
+    return     util.TraceEntity(
         {
             start = self:GetPos(),
             endpos = self:GetPos(),
             filter = self
-        }, self
+        },
+        self
     ).StartSolid
 end
 
@@ -31,10 +32,7 @@ function playerMeta:AddMoney(amount)
     if not char then return end
     local currentMoney = char:getMoney()
     local maxMoneyLimit = lia.config.MoneyLimit
-    if hook.Run("WalletLimit", self) ~= nil then
-        maxMoneyLimit = hook.Run("WalletLimit", self)
-    end
-
+    if hook.Run("WalletLimit", self) ~= nil then maxMoneyLimit = hook.Run("WalletLimit", self) end
     if maxMoneyLimit > 0 then
         local totalMoney = currentMoney + amount
         if totalMoney > maxMoneyLimit then
@@ -69,9 +67,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function playerMeta:TakeMoney(amt)
     local char = self:getChar()
-    if char then
-        char:giveMoney(-amt)
-    end
+    if char then char:giveMoney(-amt) end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -80,10 +76,7 @@ function playerMeta:addMoney(amount)
     if not char then return end
     local currentMoney = char:getMoney()
     local maxMoneyLimit = lia.config.MoneyLimit
-    if hook.Run("WalletLimit", self) ~= nil then
-        maxMoneyLimit = hook.Run("WalletLimit", self)
-    end
-
+    if hook.Run("WalletLimit", self) ~= nil then maxMoneyLimit = hook.Run("WalletLimit", self) end
     if maxMoneyLimit > 0 then
         local totalMoney = currentMoney + amount
         if totalMoney > maxMoneyLimit then
@@ -103,36 +96,30 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function playerMeta:takeMoney(amt)
     local char = self:getChar()
-    if char then
-        char:giveMoney(-amt)
-    end
+    if char then char:giveMoney(-amt) end
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function playerMeta:getMoney()
     local char = self:getChar()
-
     return char and char:getMoney() or 0
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function playerMeta:canAfford(amount)
     local char = self:getChar()
-
     return char and char:hasMoney(amount)
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function playerMeta:GetMoney()
     local char = self:getChar()
-
     return char and char:getMoney() or 0
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function playerMeta:CanAfford(amount)
     local char = self:getChar()
-
     return char and char:hasMoney(amount)
 end
 
@@ -144,7 +131,6 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function playerMeta:isFemale()
     local model = self:GetModel():lower()
-
     return model:find("female") or model:find("alyx") or model:find("mossman") or lia.anim.getModelClass(model) == "citizen_female"
 end
 
@@ -159,7 +145,6 @@ function playerMeta:getItemDropPos()
     data.endpos = data.start + trace.HitNormal * 46
     data.filter = {}
     trace = util.TraceLine(data)
-
     return trace.HitPos
 end
 
@@ -169,10 +154,8 @@ function playerMeta:hasWhitelist(faction)
     if data then
         if data.isDefault then return true end
         local liaData = self:getLiliaData("whitelists", {})
-
         return liaData[SCHEMA.folder] and liaData[SCHEMA.folder][data.uniqueID] == true or false
     end
-
     return false
 end
 
@@ -198,7 +181,6 @@ function playerMeta:GetTracedEntity()
     data.endpos = data.start + self:GetAimVector() * 96
     data.filter = self
     local target = util.TraceLine(data).Entity
-
     return target
 end
 
@@ -211,14 +193,12 @@ function playerMeta:GetTrace()
     data.mins = -Vector(4, 4, 4)
     data.maxs = Vector(4, 4, 4)
     local trace = util.TraceHull(data)
-
     return trace
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function playerMeta:VerifyCommandDistance(otherPlayer)
     if not IsValid(otherPlayer) or not IsValid(self) then return false end
-
     return self:GetPos():DistToSqr(otherPlayer:GetPos()) <= (lia.config.InteractionDistance * lia.config.InteractionDistance)
 end
 
@@ -229,7 +209,6 @@ function playerMeta:getClassData()
         local class = char:getClass()
         if class then
             local classData = lia.class.list[class]
-
             return classData
         end
     end
@@ -244,7 +223,6 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function playerMeta:HasSkillLevel(skill, level)
     local currentLevel = self:getChar():getAttrib(skill, 0)
-
     return currentLevel >= level
 end
 
@@ -254,7 +232,6 @@ function playerMeta:MeetsRequiredSkills(requiredSkillLevels)
     for skill, level in pairs(requiredSkillLevels) do
         if not self:HasSkillLevel(skill, level) then return false end
     end
-
     return true
 end
 
@@ -262,7 +239,6 @@ end
 function playerMeta:getEyeEnt(distance)
     distance = distance or 150
     local e = self:GetEyeTrace().Entity
-
     return e:GetPos():Distance(self:GetPos()) <= distance and e or nil
 end
 
