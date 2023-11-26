@@ -81,10 +81,10 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 function charMeta:giveMoney(amount, takingMoney)
-    local char = self
-    local currentMoney = char:getMoney()
+    local client = self:getPlayer()
+    local currentMoney = self:getMoney()
     local maxMoneyLimit = lia.config.MoneyLimit
-    if hook.Run("WalletLimit", self) ~= nil then
+    if hook.Run("WalletLimit", client) ~= nil then
         maxMoneyLimit = hook.Run("WalletLimit", self)
     end
 
@@ -92,15 +92,15 @@ function charMeta:giveMoney(amount, takingMoney)
         local totalMoney = currentMoney + amount
         if totalMoney > maxMoneyLimit then
             local remainingMoney = totalMoney - maxMoneyLimit
-            char:setMoney(maxMoneyLimit)
+            self:setMoney(maxMoneyLimit)
             local money = lia.currency.spawn(self:getItemDropPos(), remainingMoney)
-            money.client = self
+            money.client = client
             money.charID = char:getID()
         else
-            char:setMoney(totalMoney)
+            self:setMoney(totalMoney)
         end
     else
-        char:setMoney(currentMoney + amount)
+        self:setMoney(currentMoney + amount)
     end
 
     return true
