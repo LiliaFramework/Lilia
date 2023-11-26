@@ -1,7 +1,6 @@
 ﻿--------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnNPC(client)
     if IsValid(client) and CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn NPCs", nil) or client:getChar():hasFlags("n") then return true end
-
     return false
 end
 
@@ -10,10 +9,8 @@ function GM:PlayerSpawnProp(client, model)
     if not client then return true end
     if IsValid(client) and CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Props", nil) or client:getChar():hasFlags("e") or client:Team() == FACTION_STAFF then
         if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - No Spawn Delay") or (client.AdvDupe2 and client.AdvDupe2.Pasting) then return true end
-
         return self:CheckSpawnPropBlackList(client, model)
     end
-
     return false
 end
 
@@ -22,10 +19,8 @@ function GM:PlayerSpawnRagdoll(client)
     if not client then return true end
     if IsValid(client) and CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Ragdolls", nil) or client:getChar():hasFlags("r") or client:Team() == FACTION_STAFF then
         if CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - No Spawn Delay") or (client.AdvDupe2 and client.AdvDupe2.Pasting) then return true end
-
         return true
     end
-
     return false
 end
 
@@ -37,21 +32,18 @@ end
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerGiveSWEP(client)
     if IsValid(client) and CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn SWEPs", nil) or client:getChar():hasFlags("W") then return true end
-
     return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnEffect(client)
     if IsValid(client) and CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn Effects", nil) or client:getChar():hasFlags("L") then return true end
-
     return false
 end
 
 --------------------------------------------------------------------------------------------------------------------------
 function GM:PlayerSpawnSENT(client)
     if IsValid(client) and CAMI.PlayerHasAccess(client, "Lilia - Spawn Permissions - Can Spawn SENTs", nil) or client:getChar():hasFlags("E") then return true end
-
     return false
 end
 
@@ -63,14 +55,11 @@ function GM:PlayerSpawnVehicle(client, model, name, data)
                 return true
             else
                 client:notify("You can't spawn this vehicle since it's restricted!")
-
                 return false
             end
         end
-
         return true
     end
-
     return false
 end
 
@@ -86,10 +75,8 @@ function GM:CanTool(client, trace, tool)
             if table.HasValue(lia.config.RemoverBlockedEntities, entity:GetClass()) and IsValid(entity) then return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Can Remove Blocked Entities", nil) end
             if entity:IsWorld() and IsValid(entity) then return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Can Remove World Entities", nil) end
         end
-
         return true
     end
-
     return false
 end
 
@@ -106,10 +93,8 @@ function GM:PhysgunPickup(client, entity)
         elseif entity:IsWorld() then
             return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Can Grab World Props", nil)
         end
-
         return true
     end
-
     return false
 end
 
@@ -119,10 +104,8 @@ function GM:CanProperty(client, property, entity)
     if CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Access Tool " .. property:gsub("^%l", string.upper), nil) or client:Team() == FACTION_STAFF then
         if entity:IsWorld() and IsValid(entity) then return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Can Property World Entities", nil) end
         if table.HasValue(lia.config.RemoverBlockedEntities, entity:GetClass()) or table.HasValue(lia.config.PhysGunMoveRestrictedEntityList, entity:GetClass()) then return CAMI.PlayerHasAccess(client, "Lilia - Staff Permissions - Use Entity Properties on Blocked Entities", nil) end
-
         return true
     end
-
     return false
 end
 
@@ -145,7 +128,6 @@ function GM:CheckSpawnPropBlackList(client, model)
     end
 
     if table.HasValue(lia.config.BlackListedProps, model:lower()) then return false end
-
     return true
 end
 
