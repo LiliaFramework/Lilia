@@ -200,4 +200,14 @@ if lia.config.AdvertisementEnabled then
         }
     )
 end
+
+--------------------------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "dropmoney",
+    {
+        privilege = "Default User Commands",
+        syntax = "<number amount>",
+        onRun = function(client, arguments) end
+    }
+)
 --------------------------------------------------------------------------------------------------------------------------

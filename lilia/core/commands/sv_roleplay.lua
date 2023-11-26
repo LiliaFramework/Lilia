@@ -23,7 +23,9 @@ lia.command.add(
         privilege = "List Staff",
         onRun = function(client, arguments)
             for k, ply in ipairs(player.GetAll()) do
-                if ply:isStaff() then client:ChatPrint("Staff Member: " .. ply:Name()) end
+                if ply:isStaff() then
+                    client:ChatPrint("Staff Member: " .. ply:Name())
+                end
             end
         end
     }
@@ -37,7 +39,9 @@ lia.command.add(
         privilege = "List VIPs",
         onRun = function(client, arguments)
             for k, ply in ipairs(player.GetAll()) do
-                if ply:isVIP() then client:ChatPrint("VIP Member: " .. ply:Name()) end
+                if ply:isVIP() then
+                    client:ChatPrint("VIP Member: " .. ply:Name())
+                end
             end
         end
     }
@@ -51,7 +55,9 @@ lia.command.add(
         privilege = "List Users",
         onRun = function(client, arguments)
             for k, ply in ipairs(player.GetAll()) do
-                if ply:isUser() then client:ChatPrint("User Member: " .. ply:Name()) end
+                if ply:isUser() then
+                    client:ChatPrint("User Member: " .. ply:Name())
+                end
             end
         end
     }
@@ -68,13 +74,19 @@ lia.command.add(
             local dice = math.Clamp(tonumber(arguments[1]) or 1, 1, 100)
             local pips = math.Clamp(tonumber(arguments[2]) or 6, 1, 100)
             local bonus = tonumber(arguments[3]) or nil
-            if bonus then bonus = math.Clamp(bonus, 0, 1000000) end
+            if bonus then
+                bonus = math.Clamp(bonus, 0, 1000000)
+            end
+
             local total = 0
             local dmsg = ""
             for i = 1, dice do
                 local roll = math.random(1, pips)
                 total = total + roll
-                if i > 1 then dmsg = dmsg .. ", " end
+                if i > 1 then
+                    dmsg = dmsg .. ", "
+                end
+
                 dmsg = dmsg .. roll
             end
 
@@ -96,7 +108,9 @@ lia.command.add(
     {
         adminOnly = false,
         privilege = "Default User Commands",
-        onRun = function(client, arguments) lia.chat.send(client, "roll", math.random(0, 100)) end
+        onRun = function(client, arguments)
+            lia.chat.send(client, "roll", math.random(0, 100))
+        end
     }
 )
 
@@ -138,11 +152,21 @@ lia.command.add(
         syntax = "<string desc>",
         onRun = function(client, arguments)
             arguments = table.concat(arguments, " ")
-            if not arguments:find("%S") then return client:requestString("@chgDesc", "@chgDescDesc", function(text) lia.command.run(client, "chardesc", {text}) end, client:getChar():getDesc()) end
+            if not arguments:find("%S") then
+                return client:requestString(
+                    "@chgDesc",
+                    "@chgDescDesc",
+                    function(text)
+                        lia.command.run(client, "chardesc", {text})
+                    end, client:getChar():getDesc()
+                )
+            end
+
             local info = lia.char.vars.desc
             local result, fault, count = info.onValidate(arguments)
             if result == false then return "@" .. fault, count end
             client:getChar():setDesc(arguments)
+
             return "@descChanged"
         end
     }
@@ -164,9 +188,11 @@ lia.command.add(
                     local v = lia.class.list[num]
                     if char:joinClass(num) then
                         client:notifyLocalized("becomeClass", L(v.name, client))
+
                         return
                     else
                         client:notifyLocalized("becomeClassFail", L(v.name, client))
+
                         return
                     end
                 else
@@ -174,9 +200,11 @@ lia.command.add(
                         if lia.util.stringMatches(v.uniqueID, class) or lia.util.stringMatches(L(v.name, client), class) then
                             if char:joinClass(k) then
                                 client:notifyLocalized("becomeClass", L(v.name, client))
+
                                 return
                             else
                                 client:notifyLocalized("becomeClassFail", L(v.name, client))
+
                                 return
                             end
                         end
@@ -254,7 +282,9 @@ lia.command.add(
         privilege = "Default User Commands",
         onRun = function(client, arguments)
             for k, v in pairs(ents.FindInSphere(client:GetPos(), 500)) do
-                if v:GetClass() == "lia_item" then v:SetPos(client:GetPos()) end
+                if v:GetClass() == "lia_item" then
+                    v:SetPos(client:GetPos())
+                end
             end
         end
     }
@@ -285,27 +315,36 @@ lia.command.add(
         onRun = function(client, arguments)
             if client:IsFrozen() then
                 client:notify("You cannot use this while frozen!")
+
                 return
             elseif not client:Alive() then
                 client:notify("You cannot use this while dead!")
+
                 return
             elseif client:InVehicle() then
                 client:notify("You cannot use this as you are in a vehicle!")
+
                 return
             elseif client:GetMoveType() == MOVETYPE_NOCLIP then
                 client:notify("You cannot use this while in noclip!")
+
                 return
             end
 
             local time = tonumber(arguments[1])
-            if not isnumber(time) then time = 5 end
+            if not isnumber(time) then
+                time = 5
+            end
+
             if time > 0 then
                 time = math.Clamp(time, 1, 60)
             else
                 time = nil
             end
 
-            if not IsValid(client.liaRagdoll) then client:setRagdolled(true, time) end
+            if not IsValid(client.liaRagdoll) then
+                client:setRagdolled(true, time)
+            end
         end
     }
 )
@@ -331,7 +370,9 @@ lia.command.add(
     {
         adminOnly = false,
         privilege = "Default User Commands",
-        onRun = function(client, arguments) client:ChatPrint("MY POSITION: " .. tostring(client:GetPos())) end
+        onRun = function(client, arguments)
+            client:ChatPrint("MY POSITION: " .. tostring(client:GetPos()))
+        end
     }
 )
 
@@ -343,7 +384,9 @@ lia.command.add(
         privilege = "Default User Commands",
         onRun = function(client, arguments)
             local tr = util.TraceLine(util.GetPlayerTrace(client))
-            if IsValid(tr.Entity) then client:ChatPrint("I saw a " .. tr.Entity:GetName()) end
+            if IsValid(tr.Entity) then
+                client:ChatPrint("I saw a " .. tr.Entity:GetName())
+            end
         end
     }
 )
@@ -374,7 +417,10 @@ if lia.config.FactionBroadcastEnabled then
                             multiFind = false
                             break
                         elseif string.lower(n.uniqueID):find(string.lower(v), 1, true) then
-                            if foundFaction then multiFind = true end
+                            if foundFaction then
+                                multiFind = true
+                            end
+
                             foundID = n.name
                             foundFaction = m
                         end
@@ -412,9 +458,13 @@ if lia.config.AdvertisementEnabled then
             onRun = function(client, arguments)
                 if not arguments[1] then return "Invalid argument (#1)" end
                 local message = table.concat(arguments, " ", 1)
-                if not client.advertdelay then client.advertdelay = 0 end
+                if not client.advertdelay then
+                    client.advertdelay = 0
+                end
+
                 if CurTime() < client.advertdelay then
                     client:notify("This command is in cooldown!")
+
                     return
                 else
                     if string.len(message) <= 250 then
@@ -428,6 +478,7 @@ if lia.config.AdvertisementEnabled then
                             net.Broadcast()
                         else
                             client:notify("You lack sufficient funds to make an advertisement.")
+
                             return
                         end
                     else
@@ -438,4 +489,40 @@ if lia.config.AdvertisementEnabled then
         }
     )
 end
+
+--------------------------------------------------------------------------------------------------------------------------
+lia.command.add(
+    "dropmoney",
+    {
+        privilege = "Default User Commands",
+        syntax = "<number amount>",
+        onRun = function(client, arguments)
+            if client:GetNWBool("DropMoneyCooldown", false) then
+                local remainingTime = math.ceil(client:GetNWFloat("DropMoneyCooldownEnd", 0) - CurTime())
+                client:notify("You can't use this command yet. Cooldown remaining: " .. remainingTime .. " seconds.")
+
+                return
+            end
+
+            local amount = tonumber(arguments[1])
+            if not amount or not isnumber(amount) or amount < 1 then return "@invalidArg", 1 end
+            amount = math.Round(amount)
+            if not client:getChar():hasMoney(amount) then return end
+            client:getChar():takeMoney(amount)
+            local money = lia.currency.spawn(client:getItemDropPos(), amount)
+            money.client = client
+            money.charID = client:getChar():getID()
+            client:SetNWBool("DropMoneyCooldown", true)
+            client:SetNWFloat("DropMoneyCooldownEnd", CurTime() + 5)
+            timer.Simple(
+                5,
+                function()
+                    if IsValid(client) then
+                        client:SetNWBool("DropMoneyCooldown", false)
+                    end
+                end
+            )
+        end
+    }
+)
 --------------------------------------------------------------------------------------------------------------------------
