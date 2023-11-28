@@ -76,7 +76,7 @@ end
 function charMeta:giveMoney(amount, takingMoney)
     local client = self:getPlayer()
     local currentMoney = self:getMoney()
-    local maxMoneyLimit = lia.config.MoneyLimit
+    local maxMoneyLimit = lia.config.MoneyLimit or 0
     if hook.Run("WalletLimit", client) ~= nil then maxMoneyLimit = hook.Run("WalletLimit", client) end
     if not takingMoney then
         if maxMoneyLimit > 0 then
