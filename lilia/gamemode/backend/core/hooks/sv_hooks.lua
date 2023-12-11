@@ -163,7 +163,7 @@ function GM:PlayerLoadedChar(client, character, lastChar)
     )
 
     if class and data then
-        local oldClass = character:GetClass()
+        local oldClass = character:getClass()
         if client:Team() == class.faction then
             timer.Simple(
                 .3,
