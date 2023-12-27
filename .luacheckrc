@@ -1,0 +1,1 @@
+exclude_files = {"lilia/gamemode/backend/libs/thirdparty/**/*.lua", "lilia/gamemode/database.lua"}
