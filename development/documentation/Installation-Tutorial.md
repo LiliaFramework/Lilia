@@ -9,7 +9,7 @@ Before you begin, make sure you have the following:
 - A working Garry's Mod server.
 - Basic knowledge of Garry's Mod server administration.
 - An understanding of how to use the command line.
-- An Admin Menu (we recommend SAM or Serverguard).
+- An Admin Menu (we recommend SAM).
 
 ## Step 1: Setting Up Your Garry's Mod Server
 
