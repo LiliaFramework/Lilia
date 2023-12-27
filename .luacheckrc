@@ -1,6 +1,4 @@
 exclude_files = {
-  
-  
     "lilia/modules/frameworkui/mainmenu/*.lua",
     "lilia/**/submodules/**/logger/*.lua",
     "lilia/libraries/thirdparty/**/*.lua",
@@ -14,5 +12,4 @@ exclude_files = {
     "development/**",
     "lilia/*.png",
     "lilia/*.txt",
-
 }
