@@ -48,7 +48,6 @@ else
         net.Start("liaCharChoose")
         net.WriteUInt(id, 32)
         net.SendToServer()
-
         return d
     end
 
@@ -88,7 +87,6 @@ else
         end
 
         net.SendToServer()
-
         return d
     end
 
