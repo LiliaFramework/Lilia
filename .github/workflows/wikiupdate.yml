@@ -1,0 +1,38 @@
+name: Wiki Update
+
+on:
+  push:
+    paths:
+      - 'development/documentation/**'
+  pull_request:
+    paths:
+      - 'development/documentation/**'
+
+permissions:
+  actions: write
+  checks: write
+  contents: write
+  deployments: write
+  id-token: write
+  issues: write
+  discussions: write
+  packages: write
+  pages: write
+  pull-requests: write
+  repository-projects: write
+  security-events: write
+  statuses: write
+
+jobs:
+  Wiki_Update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Publish Wiki
+        uses: spenserblack/actions-wiki@v0.3.0
+        with:
+          path: development/documentation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
