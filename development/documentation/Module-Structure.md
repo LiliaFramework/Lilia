@@ -26,7 +26,7 @@ MODULE.CAMIPrivileges = {
 
 ---
 
-## [View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/modules/core/restrictions/module.lua)
+## [View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/modules/core/permissions/module.lua)
 
 ## Module Configuration
 
