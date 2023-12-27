@@ -50,13 +50,13 @@ If you haven't already, set up your Garry's Mod server and ensure it's running w
 To install a roleplay schema for your Lilia framework, follow these steps:
 
 1. Download one of the available schemas from the repositories listed below, based on your server's theme:
+
 - [Framework](https://github.com/Lilia-Framework/Lilia)
 - [Skeleton Schema](https://github.com/Lilia-Framework/Lilia-Skeleton)
-- [1942RP Schema](https://github.com/Lilia-Framework/Lilia-1942RP)
 - [MafiaRP Schema](https://github.com/Lilia-Framework/Lilia-MafiaRP)
 - [HL2RP Schema](https://github.com/Lilia-Framework/Lilia-HL2RP)
 - [MetroRP Schema](https://github.com/Lilia-Framework/Lilia-MetroRP)
-- [Public Modules](https://github.com/Lilia-Framework/Lilia-Plugins)
+- [Public Modules](https://github.com/Lilia-Framework/Lilia-Modules)
 
 2. Set up factions, items, and modules as required, following the specific schema's documentation or online resources.
 3. Set the startup gamemode to the schema folder ID within your server's startup configuration.

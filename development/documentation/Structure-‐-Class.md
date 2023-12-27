@@ -10,7 +10,7 @@ CLASS.pay = 50
 CLASS.payTimer = 3600 
 CLASS_STEVE = CLASS.index
 ```
-[View source »](https://github.com/Lilia-Framework/Lilia/blob/2.0/lilia/gamemode/backend/core/sv_spawns.lua#L100)
+[View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/modules/core/teams/libraries/server.lua#L110)
 ## CLASS Variables
 - **CLASS.name**: The name of your class.
 

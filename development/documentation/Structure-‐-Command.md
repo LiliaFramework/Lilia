@@ -34,7 +34,9 @@ lia.command.add("charsetskin", {
 })
 
 ```
-[View source »](https://github.com/Lilia-Framework/Lilia/blob/b06ee3ea18174334b78c14c26c9c1dd64d91b700/lilia/gamemode/commands/sv_character.lua#L201)
+
+[View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/commands/config/commands/server.lua#L200)
+
 ## Command Variables
 
 - **privilege**: This variable specifies the permission associated with the command. It determines who is allowed to use the command and what actions they can perform.

@@ -10,7 +10,7 @@ FACTION.pay = 50
 FACTION.payTimer = 3600 
 FACTION_MINECRAFTER = FACTION.index
 ```
-[View source »](https://github.com/Lilia-Framework/Lilia/blob/2.0/lilia/gamemode/backend/core/sv_spawns.lua#L33)
+[View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/modules/core/teams/libraries/server.lua#L48)
 ## Faction Variables
 - **FACTION.name**: The name of your faction.
 

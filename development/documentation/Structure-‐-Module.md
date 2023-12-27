@@ -67,5 +67,7 @@ MODULE.CAMIPrivileges = {
 - derma
 - pim
 - logger
+
 ---
+
 - [Default Module List](https://github.com/Lilia-Framework/Lilia/wiki/Module-List): This link directs you to the Module List.
