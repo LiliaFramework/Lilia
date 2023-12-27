@@ -3,6 +3,7 @@
 - [lia](https://github.com/Lilia-Framework/Lilia/wiki/lia)
 
 ### Character Libraries
+
 - [lia.char](https://github.com/Lilia-Framework/Lilia/wiki/lia.char)
 - [lia.item](https://github.com/Lilia-Framework/Lilia/wiki/lia.item)
 - [lia.inventory](https://github.com/Lilia-Framework/Lilia/wiki/lia.inventory)
@@ -10,6 +11,7 @@
 - [lia.faction](https://github.com/Lilia-Framework/Lilia/wiki/lia.faction)
 
 ### Management Libraries
+
 - [lia.flag](https://github.com/Lilia-Framework/Lilia/wiki/lia.flag)
 - [lia.command](https://github.com/Lilia-Framework/Lilia/wiki/lia.command)
 - [lia.chat](https://github.com/Lilia-Framework/Lilia/wiki/lia.chat)
@@ -17,6 +19,7 @@
 - [lia.data](https://github.com/Lilia-Framework/Lilia/wiki/lia.data)
 
 ### Utilitary Libraries
+
 - [lia.anim](https://github.com/Lilia-Framework/Lilia/wiki/lia.anim)
 
 - [lia.lang](https://github.com/Lilia-Framework/Lilia/wiki/lia.lang)
@@ -26,8 +29,11 @@
 - [lia.notices](https://github.com/Lilia-Framework/Lilia/wiki/lia.notices)
 
 - [lia.util](https://github.com/Lilia-Framework/Lilia/wiki/lia.util)
+
 ## Hooks
+
 ### Core Hooks
+
 - [Faction](https://github.com/Lilia-Framework/Lilia/wiki/Faction)
 
 - [Classes](https://github.com/Lilia-Framework/Lilia/wiki/Classes)
@@ -41,24 +47,25 @@
 - [Placeholder Hook Group](https://github.com/Lilia-Framework/Lilia/wiki)
 
 ### Module Hooks
-- [Skills](https://github.com/Lilia-Framework/Lilia/wiki/Skills) -  [Location](https://github.com/Lilia-Framework/Lilia/tree/2.0/lilia/modules/roleplay/modules/skills)
-- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki) -  [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
 
-- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki) -  [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
+- [Skills](https://github.com/Lilia-Framework/Lilia/wiki/Skills) - [Location](https://github.com/Lilia-Framework/Lilia/tree/2.0/lilia/modules/roleplay/modules/skills)
+- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki) - [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
 
-- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki) -  [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
+- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki) - [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
 
-- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki) -  [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
+- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki) - [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
 
-- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki) -  [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
+- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki) - [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
 
-- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki) -  [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
+- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki) - [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
 
-- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki) -  [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
+- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki) - [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
 
-- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki/) -  [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
+- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki) - [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
 
-###  File Structure
+- [Placeholder Module](https://github.com/Lilia-Framework/Lilia/wiki/) - [Location](https://github.com/Lilia-Framework/Lilia/wiki/)
+
+### File Structure
 
 - [Commands Structure](https://github.com/Lilia-Framework/Lilia/wiki/Command-Structure)
 
@@ -83,7 +90,6 @@
 - [Item Meta](https://github.com/Lilia-Framework/Lilia/wiki/Item-Meta)
 
 - [Player Meta](https://github.com/Lilia-Framework/Lilia/wiki/Player-Meta)
-
 
 # Useful Links
 
