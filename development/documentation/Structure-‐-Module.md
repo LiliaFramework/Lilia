@@ -12,6 +12,8 @@ MODULE.desc = "Implements CAMI Based Permissions."
 --------------------------------------------------------------------------------------------------------------------------
 MODULE.identifier = "RestrictionCore"
 --------------------------------------------------------------------------------------------------------------------------
+MODULE.WorkshopContent = {"2959728255"}
+--------------------------------------------------------------------------------------------------------------------------
 MODULE.enabled = true
 --------------------------------------------------------------------------------------------------------------------------
 MODULE.CAMIPrivileges = {
@@ -39,6 +41,8 @@ MODULE.CAMIPrivileges = {
 - **`MODULE.desc`:** Provides a brief description of the module's purpose. In this case, it states that the module adds skills functionality to the framework.
 
 - **`MODULE.CAMIPrivileges`:** An example CAMI permission that is loaded alongside the module.
+
+- **`MODULE.WorkshopContent`:** Workshop Content to be added.
 
 - **`MODULE.enabled`:** Indicates if the module is active or not. If False, then it won't be.
 
