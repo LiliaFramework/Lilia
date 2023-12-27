@@ -1,32 +1,71 @@
 ## Module Example
+
 ```lua
 --------------------------------------------------------------------------------------------------------------------------
-MODULE.name = "Skills"
+MODULE.name = "Core - Permissions"
 --------------------------------------------------------------------------------------------------------------------------
-MODULE.author = "@liliaplayer > Discord"
+MODULE.author = "76561198312513285"
 --------------------------------------------------------------------------------------------------------------------------
-MODULE.desc = "Adds Skills."
+MODULE.discord = "@liliaplayer"
 --------------------------------------------------------------------------------------------------------------------------
-MODULE.DevMode = false
+MODULE.desc = "Implements CAMI Based Permissions."
 --------------------------------------------------------------------------------------------------------------------------
-lia.util.include("sh_config.lua")
+MODULE.identifier = "RestrictionCore"
 --------------------------------------------------------------------------------------------------------------------------
-lia.util.include("cl_module.lua")
+MODULE.enabled = true
+--------------------------------------------------------------------------------------------------------------------------
+MODULE.CAMIPrivileges = {
+    {
+        Name = "Staff Permissions - One Punch Man",
+        MinAccess = "superadmin",
+        Description = "Allows access to OPM to Ragdoll Minges.",
+    },
+}
 --------------------------------------------------------------------------------------------------------------------------
 ```
-[View source »](https://github.com/Lilia-Framework/Lilia/blob/2.0/lilia/modules/roleplay/modules/skills/sh_module.lua)
 
+---
+
+## [View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/modules/core/restrictions/module.lua)
 
 ## Module Configuration
 
-- **`MODULE.name`**: Specifies the name of the module, which is "Skills" in this case. This variable identifies the module.
+- **`MODULE.name`:** Specifies the name of the module, which is "Core - Permissions" in this case. This variable identifies the module.
 
-- **`MODULE.author`**: Indicates the author of the module. It can be a STEAMID or Name. Replace "STEAM_0:1:176123778" with the actual author information.
+- **`MODULE.author`:** Indicates the author of the module. It can be a STEAMID64 or Name. Replace "76561198312513285" with the actual author information.
 
-- **`MODULE.desc`**: Provides a brief description of the module's purpose. In this case, it states that the module adds skills functionality to the framework.
+- **`MODULE.discord`:** Indicates the discord of the module creator, in this case, as shown, is liliaplayer.
 
-- **`MODULE.DevMode`**: An example variable tied to this specific module. It's currently set to `false`.
+- **`MODULE.desc`:** Provides a brief description of the module's purpose. In this case, it states that the module adds skills functionality to the framework.
 
-- **`lia.util.include("sh_config.lua")`**: Demonstrates an example of file inclusion. This line includes the 'sh_config.lua' file for this module.
+- **`MODULE.CAMIPrivileges`:** An example CAMI permission that is loaded alongside the module.
 
-- **[Default Module List](https://github.com/Lilia-Framework/Lilia/wiki/Module-List)**: This link directs you to the Module List.
+- **`MODULE.enabled`:** Indicates if the module is active or not. If False, then it won't be.
+
+### Automatically Included Files and Folders in the Module:
+
+**Files:**
+
+- client.lua
+- cl_module.lua
+- sv_module.lua
+- server.lua
+- config.lua
+- sconfig.lua
+
+**Folders:**
+
+- dependencies
+- config
+- permissions
+- libs
+- hooks
+- libraries
+- commands
+- netcalls
+- meta
+- derma
+- pim
+- logger
+---
+- [Default Module List](https://github.com/Lilia-Framework/Lilia/wiki/Module-List): This link directs you to the Module List.
