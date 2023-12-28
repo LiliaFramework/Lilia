@@ -71,7 +71,7 @@ end
 function SpawnsCore:PlayerDeath(client, _, attacker)
     local char = client:getChar()
     if not char then return end
-    if self.DeathPopupEnabled and not attacker:IsWorld() then
+    if self.DeathPopupEnabled and not attacker:IsWorld() and not IsFallDamage() then
         net.Start("death_client")
         net.WriteString(attacker:Nick())
         net.WriteFloat(attacker:getChar():getID())
