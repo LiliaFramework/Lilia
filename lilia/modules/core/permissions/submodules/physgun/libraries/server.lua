@@ -10,7 +10,7 @@ function GM:PhysgunPickup(client, entity)
             return CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup on Vehicles", nil)
         elseif entity:IsPlayer() then
             return CAMI.PlayerHasAccess(entity, "Staff Permissions - Can't be Grabbed with PhysGun", nil) and CAMI.PlayerHasAccess(client, "Staff Permissions - Can Grab Players", nil)
-        elseif entity:IsWorld() then
+        elseif entity:IsWorld() or entity:CreatedByMap() then
             return CAMI.PlayerHasAccess(client, "Staff Permissions - Can Grab World Props", nil)
         end
         return true
