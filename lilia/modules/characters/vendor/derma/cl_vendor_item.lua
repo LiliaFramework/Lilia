@@ -42,7 +42,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------
 local function clickEffects()
-    LocalPlayer():EmitSound(unpack(lia.config.VendorClick))
+    LocalPlayer():EmitSound(unpack(VendorCore.VendorClick))
 end
 
 --------------------------------------------------------------------------------------------------------------------------
