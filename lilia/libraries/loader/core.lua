@@ -4,6 +4,7 @@ lia.config.RealmIdentifiers = {
     server = "server",
     shared = "shared",
     config = "shared",
+    schema = "shared",
     module = "shared",
     permissions = "shared",
     sconfig = "server",
