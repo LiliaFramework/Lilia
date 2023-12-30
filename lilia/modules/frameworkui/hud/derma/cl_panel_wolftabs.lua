@@ -64,7 +64,7 @@ function PANEL:ShowTabs()
     for k, v in pairs(self.tabs) do
         local t = self.list:Add("DButton")
         t:SetText(v.name)
-        t:SetFont("FrameworkHUD_Small")
+        t:SetFont("WB_Small")
         t:SetColor(self:GetTextColor())
         t:SetSize(self.list:GetWide() / #self.tabs, self.list:GetTall())
         t:SetColorAcc(self:GetButtonColor())

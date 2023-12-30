@@ -45,7 +45,7 @@ PIM:AddOption(
             frame.ok:CenterVertical(0.7)
             frame.ok:SetText("Give Money")
             frame.ok:SetTextColor(color_white)
-            frame.ok:SetFont("FrameworkHUD_Small")
+            frame.ok:SetFont("WB_Small")
             frame.ok.DoClick = frame.te.OnEnter
             function frame.ok:Paint(w, h)
                 draw.RoundedBox(0, 0, 0, w, h, BC_NEUTRAL)

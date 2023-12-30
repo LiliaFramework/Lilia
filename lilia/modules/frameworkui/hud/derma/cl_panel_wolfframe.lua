@@ -25,7 +25,7 @@ function PANEL:Init()
 
     self.lblTitle:Hide()
     self.title = self:Add("DLabel")
-    self.title:SetFont("FrameworkHUD_Small")
+    self.title:SetFont("WB_Small")
     self.title:SetColor(color_white)
     function self.title.PerformLayout(this, _, h)
         this:SetText(self.lblTitle:GetText())
