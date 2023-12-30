@@ -390,14 +390,14 @@ function CAMI.GetPlayersWithAccess(privilegeName, callback, targetPly, extraInfo
     local allowedPlys = {}
     local allPlys = player.GetAll()
     local countdown = #allPlys
-    local function onResult(ply, hasAccess, _)
+    local function onResult(client, hasAccess, _)
         countdown = countdown - 1
-        if hasAccess then table.insert(allowedPlys, ply) end
+        if hasAccess then table.insert(allowedPlys, client) end
         if countdown == 0 then callback(allowedPlys) end
     end
 
-    for _, ply in ipairs(allPlys) do
-        CAMI.PlayerHasAccess(ply, privilegeName, function(...) onResult(ply, ...) end, targetPly, extraInfoTbl)
+    for _, client in ipairs(allPlys) do
+        CAMI.PlayerHasAccess(client, privilegeName, function(...) onResult(client, ...) end, targetPly, extraInfoTbl)
     end
 end
 
@@ -455,7 +455,7 @@ CAMI.SignalUserGroupChanged
     Listen to the hook to receive the usergroup changes of other admin mods.
 
     Parameters:
-        ply
+        client
             Player
             The player for which the usergroup is changed
         old
@@ -468,8 +468,8 @@ CAMI.SignalUserGroupChanged
             any
             Identifier for your own admin mod. Can be anything.
 ]]
-function CAMI.SignalUserGroupChanged(ply, old, new, source)
-    hook.Call("CAMI.PlayerUsergroupChanged", nil, ply, old, new, source)
+function CAMI.SignalUserGroupChanged(client, old, new, source)
+    hook.Call("CAMI.PlayerUsergroupChanged", nil, client, old, new, source)
 end
 
 --[[
@@ -481,7 +481,7 @@ CAMI.SignalSteamIDUserGroupChanged
     Listen to the hook to receive the usergroup changes of other admin mods.
 
     Parameters:
-        ply
+        client
             string
             The steam ID of the player for which the usergroup is changed
         old
