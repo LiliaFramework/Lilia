@@ -260,7 +260,7 @@ function PANEL:setFilter(filter, state)
             end
         end
     else
-        for _, v in pairs(self.filtered) do
+        for k, v in pairs(self.filtered) do
             if v == filter then
                 k:SetVisible(true)
                 self.filtered[k] = nil
