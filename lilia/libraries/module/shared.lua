@@ -85,8 +85,10 @@ lia.module.ModuleConditions = {
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function lia.module.load(uniqueID, path, isSingleFile, variable)
     local lowerVariable = variable:lower()
-    local ModuleCore = file.Exists(path .. "/" .. lowerVariable .. ".lua", "LUA")
-    local ExtendedCore = file.Exists(path .. "/sh_" .. lowerVariable .. ".lua", "LUA")
+    local normalpath = path .. "/" .. lowerVariable .. ".lua"
+    local extendedpath = path .. "/sh_" .. lowerVariable .. ".lua"
+    local ModuleCore = file.Exists(normalpath, "LUA")
+    local ExtendedCore = file.Exists(extendedpath, "LUA")
     if not isSingleFile and not ModuleCore and not ExtendedCore then return end
     local oldModule = MODULE
     MODULE = {
@@ -101,7 +103,10 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     }
 
     if uniqueID == "schema" then
-        if SCHEMA then MODULE = SCHEMA end
+        if SCHEMA then
+            MODULE = SCHEMA
+        end
+
         variable = "SCHEMA"
         MODULE.folder = engine.ActiveGamemode()
     elseif lia.module.list[uniqueID] then
@@ -111,24 +116,30 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     _G[variable] = MODULE
     MODULE.loading = true
     MODULE.path = path
-    lia.util.include(isSingleFile and path or ModuleCore and path .. "/" .. lowerVariable .. ".lua" or ExtendedCore and path .. "/sh_" .. lowerVariable .. ".lua")
+    lia.util.include(isSingleFile and path or (ModuleCore and normalpath or ExtendedCore and extendedpath))
     hook.Run("ModuleDependenciesPreLoad", uniqueID, MODULE, MODULE.identifier)
     if hook.Run("VerifyModuleValidity", uniqueID, MODULE, MODULE.identifier) then
-        lia.module.enabilitystatus[MODULE.name] = true
+        lia.module.enabilitystatus[tostring(MODULE.name)] = true
     else
-        if tostring(uniqueID) == "schema" then
-            lia.module.enabilitystatus[MODULE.name] = true
-        else
-            if lia.module.ModuleConditions[uniqueID] == nil then print(MODULE.name .. " is disabled. Disabling!") end
-            lia.module.enabilitystatus[MODULE.name] = false
+        if lia.module.ModuleConditions[uniqueID] == nil then
+            print(MODULE.name .. " is disabled. Disabling!")
         end
+
+        lia.module.enabilitystatus[MODULE.name] = false
+
         return
     end
 
-    if not isSingleFile then lia.module.loadExtras(path) end
+    if not isSingleFile then
+        lia.module.loadExtras(path)
+    end
+
     MODULE.loading = false
     local uniqueID2 = uniqueID
-    if uniqueID2 == "schema" then uniqueID2 = MODULE.name end
+    if uniqueID2 == "schema" then
+        uniqueID2 = MODULE.name
+    end
+
     function MODULE:setData(value, global, ignoreMap)
         lia.data.set(uniqueID2, value, global, ignoreMap)
     end
@@ -138,7 +149,9 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     end
 
     for k, v in pairs(MODULE) do
-        if isfunction(v) then hook.Add(k, MODULE, v) end
+        if isfunction(v) then
+            hook.Add(k, MODULE, v)
+        end
     end
 
     if uniqueID == "schema" then
@@ -151,7 +164,9 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     end
 
     hook.Run("ModuleLoaded", uniqueID, MODULE)
-    if MODULE.OnLoaded then MODULE:OnLoaded() end
+    if MODULE.OnLoaded then
+        MODULE:OnLoaded()
+    end
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -161,15 +176,28 @@ function lia.module.loadExtras(path)
     local configFolder = path .. "/config"
     for fileName, state in pairs(lia.module.ModuleFiles) do
         local filePath = path .. "/" .. fileName
-        if file.Exists(filePath, "LUA") then lia.util.include(filePath, state) end
+        if file.Exists(filePath, "LUA") then
+            lia.util.include(filePath, state)
+        end
     end
 
-    if file.Exists(configFolder, "LUA") then lia.util.includeDir(configFolder, true, true) end
-    if file.Exists(libraryFolder, "LUA") then lia.util.includeDir(libraryFolder, true, false) end
-    if file.Exists(subLibraryFolder, "LUA") then lia.util.includeDir(subLibraryFolder, true, true) end
+    if file.Exists(configFolder, "LUA") then
+        lia.util.includeDir(configFolder, true, true)
+    end
+
+    if file.Exists(libraryFolder, "LUA") then
+        lia.util.includeDir(libraryFolder, true, false)
+    end
+
+    if file.Exists(subLibraryFolder, "LUA") then
+        lia.util.includeDir(subLibraryFolder, true, true)
+    end
+
     for _, folder in ipairs(lia.module.ModuleFolders) do
         local subFolders = path .. "/" .. folder
-        if file.Exists(subFolders, "LUA") then lia.util.includeDir(subFolders, true, true) end
+        if file.Exists(subFolders, "LUA") then
+            lia.util.includeDir(subFolders, true, true)
+        end
     end
 
     lia.lang.loadFromDir(path .. "/languages")
