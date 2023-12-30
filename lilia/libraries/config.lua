@@ -39,7 +39,11 @@ if not ConfigWasInitialized then
             database = "", -- Database name
             port = 3306 -- Database port
         },
-        Notify = {"garrysmod/content_downloaded.wav", 50, 250}, -- Notification Sound
+        Notify = {
+            "garrysmod/content_downloaded.wav", -- Notification Sound
+            50,
+            250
+        },
         PlayerModelTposingFixer = {} -- Models to fix T-pose issues
     }
 
