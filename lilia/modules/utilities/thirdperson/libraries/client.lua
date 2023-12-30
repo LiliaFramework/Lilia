@@ -26,7 +26,7 @@ function ThirdPersonCore:SetupQuickMenu(menu)
     if self.ThirdPersonEnabled then
         menu:addCheck(
             L"thirdpersonToggle",
-            function(panel, state)
+            function(_, state)
                 if state then
                     RunConsoleCommand("lia_tp_enabled", "1")
                 else
@@ -37,7 +37,7 @@ function ThirdPersonCore:SetupQuickMenu(menu)
 
         menu:addCheck(
             L"thirdpersonClassic",
-            function(panel, state)
+            function(_, state)
                 if state then
                     RunConsoleCommand("lia_tp_classic", "1")
                 else
@@ -63,7 +63,7 @@ function ThirdPersonCore:SetupQuickMenu(menu)
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function ThirdPersonCore:CalcView(client, origin, angles, fov)
+function ThirdPersonCore:CalcView(client)
     ft = FrameTime()
     if client:CanOverrideView() then
         if (client:OnGround() and client:KeyDown(IN_DUCK)) or client:Crouching() then
@@ -109,7 +109,7 @@ function ThirdPersonCore:CreateMove(cmd)
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function ThirdPersonCore:InputMouseApply(cmd, x, y, ang)
+function ThirdPersonCore:InputMouseApply(_, x, y)
     owner = LocalPlayer()
     if not owner.camAng then
         owner.camAng = Angle(0, 0, 0)
@@ -137,7 +137,7 @@ function playerMeta:CanOverrideView()
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-function ThirdPersonCore:PlayerButtonDown(ply, button)
+function ThirdPersonCore:PlayerButtonDown(_, button)
     if button == KEY_F4 and IsFirstTimePredicted() then
         local toggle = CVAR_THIRDPERSON
         if toggle:GetInt() == 1 then
