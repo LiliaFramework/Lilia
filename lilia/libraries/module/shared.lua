@@ -163,7 +163,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         _G[variable] = oldModule
     end
 
-    hook.Run("ModuleLoaded", uniqueID, MODULE)
+    hook.Run("ModuleLoaded", uniqueID, MODULE, MODULE.identifier)
     if MODULE.OnLoaded then
         MODULE:OnLoaded()
     end
