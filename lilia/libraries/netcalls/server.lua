@@ -57,10 +57,7 @@ netstream.Hook(
     function(client)
         local char = client:getChar()
         if char then
-            if not client:Alive() then
-                char:setData("pos", nil)
-            end
-
+            if not client:Alive() then char:setData("pos", nil) end
             char:kick()
         end
     end
@@ -140,9 +137,7 @@ netstream.Hook(
         if (client.liaNextCmd or 0) < CurTime() then
             local arguments2 = {}
             for _, v in ipairs(arguments) do
-                if isstring(v) or isnumber(v) then
-                    arguments2[#arguments2 + 1] = tostring(v)
-                end
+                if isstring(v) or isnumber(v) then arguments2[#arguments2 + 1] = tostring(v) end
             end
 
             lia.command.parse(client, nil, command, arguments2)
