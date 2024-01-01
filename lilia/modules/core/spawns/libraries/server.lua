@@ -44,7 +44,10 @@ end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function SpawnsCore:CharacterPreSave(character)
     local client = character:getPlayer()
-    if IsValid(client) then character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()}) end
+    local vehicle = client:GetVehicle()
+    if IsValid(client) and not IsValid(vehicle) or not vehicle:IsVehicle() then
+        character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()})
+    end
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -78,7 +81,10 @@ function SpawnsCore:PlayerDeath(client, _, attacker)
         net.Send(client)
     end
 
-    if (attacker:IsPlayer() and self.LoseWeapononDeathHuman) or (not attacker:IsPlayer() and self.LoseWeapononDeathNPC) or (self.LoseWeapononDeathWorld and attacker:IsWorld()) then self:RemoveAllEquippedWeapons(client) end
+    if (attacker:IsPlayer() and self.LoseWeapononDeathHuman) or (not attacker:IsPlayer() and self.LoseWeapononDeathNPC) or (self.LoseWeapononDeathWorld and attacker:IsWorld()) then
+        self:RemoveAllEquippedWeapons(client)
+    end
+
     net.Start("RespawnButtonDeath")
     net.Send(client)
     char:setData("deathPos", client:GetPos())
