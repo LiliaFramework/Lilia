@@ -15,6 +15,7 @@ local function teamGetPlayers(teamID)
             table.insert(players, client)
         end
     end
+
     return players
 end
 
@@ -35,7 +36,10 @@ end
 paintFunctions[1] = function(_, _, _) end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function PANEL:Init()
-    if IsValid(lia.gui.score) then lia.gui.score:Remove() end
+    if IsValid(lia.gui.score) then
+        lia.gui.score:Remove()
+    end
+
     lia.gui.score = self
     self:SetSize(ScrW() * ScoreboardCore.sbWidth, ScrH() * ScoreboardCore.sbHeight)
     self:Center()
@@ -117,8 +121,13 @@ function PANEL:UpdateStaff()
     StaffCount = 0
     StaffOnDutyCount = 0
     for _, target in pairs(player.GetAll()) do
-        if target:isStaff() then StaffCount = StaffCount + 1 end
-        if target:isStaffOnDuty() then StaffOnDutyCount = StaffOnDutyCount + 1 end
+        if target:isStaff() then
+            StaffCount = StaffCount + 1
+        end
+
+        if target:isStaffOnDuty() then
+            StaffOnDutyCount = StaffOnDutyCount + 1
+        end
     end
 
     self.staff1:SetText("Staff On Duty: " .. StaffOnDutyCount .. " | Staff Online: " .. StaffCount)
@@ -148,10 +157,15 @@ function PANEL:Think()
         end
 
         for _, v in pairs(self.slots) do
-            if IsValid(v) then v:update() end
+            if IsValid(v) then
+                v:update()
+            end
         end
 
-        if input.IsKeyDown(KEY_Z) then self:Init() end
+        if input.IsKeyDown(KEY_Z) then
+            self:Init()
+        end
+
         self.nextUpdate = CurTime() + 0.1
         self:UpdateStaff()
     end
@@ -159,7 +173,7 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function PANEL:addPlayer(client, parent)
-    if not client:getChar() or not IsValid(parent) then return end
+    if not hook.Run("ShouldShowPlayerOnScoreboard", client) or not client:getChar() or not IsValid(parent) then return end
     local slot = parent:Add("DPanel")
     slot:Dock(TOP)
     slot:SetTall(64)
@@ -212,7 +226,12 @@ function PANEL:addPlayer(client, parent)
     slot.ping:SetPos(self:GetWide() - 48, 0)
     slot.ping:SetSize(48, 64)
     slot.ping:SetText("0")
-    slot.ping.Think = function(this) if IsValid(client) then this:SetText(client:Ping()) end end
+    slot.ping.Think = function(this)
+        if IsValid(client) then
+            this:SetText(client:Ping())
+        end
+    end
+
     slot.ping:SetFont("liaGenericFont")
     slot.ping:SetContentAlignment(6)
     slot.ping:SetTextColor(color_white)
@@ -237,6 +256,7 @@ function PANEL:addPlayer(client, parent)
                     v.Paint = paintFunctions[i % 2]
                 end
             end
+
             return
         end
 
@@ -296,6 +316,7 @@ function PANEL:addPlayer(client, parent)
     end
 
     slot:update()
+
     return slot
 end
 
