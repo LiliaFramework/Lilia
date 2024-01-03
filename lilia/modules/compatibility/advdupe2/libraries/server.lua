@@ -11,13 +11,11 @@ function AdvDupe2Compatibility:CanTool(client, _, tool)
                 if v.ModelScale > 10 then
                     client:notify("A model within this duplication exceeds the size limit!")
                     print("[Server Warning] Potential server crash using dupes attempt by player: " .. client:Nick() .. " (" .. client:SteamID() .. ")")
-
                     return false
                 end
 
                 v.ModelScale = 1
             end
-
             return true
         end
     end
