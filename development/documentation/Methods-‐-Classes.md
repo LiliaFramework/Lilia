@@ -11,11 +11,13 @@ Whether or not a player can switch to this class.
 Return true if the player is allowed to switch to this class
 
 ### EXAMPLE USAGE
+
 ```lua
 function CLASS:onCanBe(client)
     return client:IsAdmin() or client:getChar():hasFlags("Z") -- Only admins or people with the Z flag are allowed in this class!
 end
 ```
+
 [View source »](https://github.com/bleonheart/Lilia/blob/b06ee3ea18174334b78c14c26c9c1dd64d91b700/lilia/gamemode/backend/libs/sh_class.lua#L37)
 ***
 ## CLASS:onSpawn(client)
