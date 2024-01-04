@@ -33,7 +33,7 @@ jobs:
         with:
           source: docs
           destination: wiki
-          token: ${{ secrets.GITHUB_TOKEN }}  # Use the default GitHub token
+          token: ${{ secrets.GITHUB_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
 
@@ -48,6 +48,6 @@ jobs:
         with:
           source: wiki
           destination: docs
-          token: ${{ secrets.GITHUB_TOKEN }}  # Use the default GitHub token
+          token: ${{ secrets.GITHUB_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
