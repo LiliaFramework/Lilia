@@ -45,9 +45,7 @@ end
 function SpawnsCore:CharacterPreSave(character)
     local client = character:getPlayer()
     local vehicle = client:GetVehicle()
-    if IsValid(client) and not IsValid(vehicle) or not vehicle:IsVehicle() then
-        character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()})
-    end
+    if IsValid(client) and not IsValid(vehicle) or not vehicle:IsVehicle() then character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()}) end
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -75,10 +73,7 @@ function SpawnsCore:PlayerDeath(client, _, attacker)
     local char = client:getChar()
     if not char then return end
     if attacker:IsPlayer() then
-        if self.LoseWeapononDeathHuman then
-            self:RemoveAllEquippedWeapons(client)
-        end
-
+        if self.LoseWeapononDeathHuman then self:RemoveAllEquippedWeapons(client) end
         if self.DeathPopupEnabled then
             net.Start("death_client")
             net.WriteString(attacker:Nick())
@@ -87,10 +82,7 @@ function SpawnsCore:PlayerDeath(client, _, attacker)
         end
     end
 
-    if (not attacker:IsPlayer() and self.LoseWeapononDeathNPC) or (self.LoseWeapononDeathWorld and attacker:IsWorld()) then
-        self:RemoveAllEquippedWeapons(client)
-    end
-
+    if (not attacker:IsPlayer() and self.LoseWeapononDeathNPC) or (self.LoseWeapononDeathWorld and attacker:IsWorld()) then self:RemoveAllEquippedWeapons(client) end
     net.Start("RespawnButtonDeath")
     net.Send(client)
     char:setData("deathPos", client:GetPos())

@@ -32,7 +32,8 @@ function ThirdPersonCore:SetupQuickMenu(menu)
                 else
                     RunConsoleCommand("lia_tp_enabled", "0")
                 end
-            end, CVAR_THIRDPERSON:GetBool()
+            end,
+            CVAR_THIRDPERSON:GetBool()
         )
 
         menu:addCheck(
@@ -43,7 +44,8 @@ function ThirdPersonCore:SetupQuickMenu(menu)
                 else
                     RunConsoleCommand("lia_tp_classic", "0")
                 end
-            end, CVAR_TP_CLASSIC:GetBool()
+            end,
+            CVAR_TP_CLASSIC:GetBool()
         )
 
         menu:addButton(
@@ -85,10 +87,7 @@ function ThirdPersonCore:CalcView(client)
         traceData2.start = aimOrigin
         traceData2.endpos = aimOrigin + curAng:Forward() * 65535
         traceData2.filter = client
-        if CVAR_TP_CLASSIC:GetBool() or (owner.isWepRaised and owner:isWepRaised() or (owner:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and owner:GetVelocity():Length() >= 10)) then
-            client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle())
-        end
-
+        if CVAR_TP_CLASSIC:GetBool() or (owner.isWepRaised and owner:isWepRaised() or (owner:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and owner:GetVelocity():Length() >= 10)) then client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle()) end
         return view
     end
 end
@@ -103,7 +102,6 @@ function ThirdPersonCore:CreateMove(cmd)
         diff = diff / 90
         cmd:SetForwardMove(fm + sm * diff)
         cmd:SetSideMove(sm + fm * diff)
-
         return false
     end
 end
@@ -111,14 +109,10 @@ end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function ThirdPersonCore:InputMouseApply(_, x, y)
     owner = LocalPlayer()
-    if not owner.camAng then
-        owner.camAng = Angle(0, 0, 0)
-    end
-
+    if not owner.camAng then owner.camAng = Angle(0, 0, 0) end
     if owner:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer() then
         owner.camAng.p = math.Clamp(math.NormalizeAngle(owner.camAng.p + y / 50), -85, 85)
         owner.camAng.y = math.NormalizeAngle(owner.camAng.y - x / 50)
-
         return true
     end
 end
@@ -132,7 +126,6 @@ end
 function playerMeta:CanOverrideView()
     local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
     if IsValid(lia.gui.char) and lia.gui.char:IsVisible() then return false end
-
     return self.ThirdPersonEnabled and CVAR_THIRDPERSON:GetBool() and not IsValid(self:GetVehicle()) and IsValid(self) and self:getChar() and not IsValid(ragdoll) and LocalPlayer():Alive()
 end
 
@@ -149,10 +142,5 @@ function ThirdPersonCore:PlayerButtonDown(_, button)
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-concommand.Add(
-    "lia_tp_toggle",
-    function()
-        CVAR_THIRDPERSON:SetInt(CVAR_THIRDPERSON:GetInt() == 0 and 1 or 0)
-    end
-)
+concommand.Add("lia_tp_toggle", function() CVAR_THIRDPERSON:SetInt(CVAR_THIRDPERSON:GetInt() == 0 and 1 or 0) end)
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
