@@ -34,13 +34,14 @@ jobs:
       - name: Commit and Push Changes
         run: |
           echo "Committing changes..."
-          cd documentation
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           if [[ -n "$(git status --porcelain)" ]]; then
             git add -A
             git commit -m "Synced Documentation"
-            git push origin main
+            git push
           else
             echo "No changes to commit."
           fi
+        working-directory: '${{ github.workspace }}'
+
