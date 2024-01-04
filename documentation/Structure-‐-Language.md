@@ -24,37 +24,37 @@ Here are the default language localization files of Lilia:
 
 #### English
 
-- Language ID: `"english"`
-- [File Location:](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/english.lua)
+- **ID**: ``"english```
+- [File Location](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/english.lua)
 
 #### Portuguese
 
-- Language ID: `"portuguese"`
-- [File Location:](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/portuguese.lua)
+- **ID**: ``"portuguese```
+- [File Location](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/portuguese.lua)
 
 #### French
 
-- Language ID: `"french"`
-- [File Location:](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/french.lua)
+- **ID**: ``"french```
+- [File Location](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/french.lua)
 
 #### Polish
 
-- Language ID: `"polish"`
-- [File Location:](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/polish.lua)
+- **ID**: ``"polish```
+- [File Location](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/polish.lua)
 
 #### Russian
 
-- Language ID: `"russian"`
-- [File Location:](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/russian.lua)
+- **ID**: ```"russian````
+- [File Location](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/russian.lua)
 
 #### Dutch
 
-- Language ID: `"dutch"`
-- [File Location:](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/dutch.lua)
+- **ID**: ``"dutch```
+- [File Location](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/dutch.lua)
 
 #### Spanish
 
-- Language ID: `"spanish"`
-- [File Location:](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/spanish.lua)
+- **ID**: ``"spanish```
+- [File Location](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/spanish.lua)
 
 These Language Locations provide translations for the variables used in the Lua script, allowing the application or game to support multiple languages
