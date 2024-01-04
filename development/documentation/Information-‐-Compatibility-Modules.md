@@ -72,4 +72,3 @@
 
 - **Module Location:** https://github.com/Lilia-Framework/Lilia/tree/main/lilia/modules/compatibility/vjbase 
 - **Addon URL:** https://steamcommunity.com/workshop/filedetails/?id=131759821
-
