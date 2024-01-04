@@ -51,4 +51,5 @@ jobs:
           git add .
           git add .gitignore  # Add .gitignore file
           git commit -m "Auto-commit changes to the wiki."
+          git pull origin main  # Pull changes from the remote repository
           git push origin HEAD:${{ github.event_name }}
