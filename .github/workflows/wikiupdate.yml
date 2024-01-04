@@ -38,7 +38,8 @@ jobs:
           cd development/documentation
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
-          rm -rf temp_dev
+          echo "temp_dev/" >> .gitignore  # Add temp_dev/ to .gitignore
           git add .
+          git add .gitignore  # Add .gitignore file
           git commit -m "Auto-commit changes to the wiki."
           git push origin HEAD:${{ github.event_name }}
