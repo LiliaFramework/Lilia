@@ -8,13 +8,11 @@ function GM:VerifyModuleValidity(uniqueID, MODULE)
         if uniqueID ~= ModuleName then continue end
         if _G[conditions.global] ~= nil then
             print(conditions.name .. " found. Activating Compatibility!")
-
             return true
         else
             return false
         end
     end
-
     return isEnabled
 end
 
@@ -54,16 +52,11 @@ function GM:ModuleLoaded(uniqueID, ModuleGlobal, MODULE)
                 Description = privilegeData.Description or ("Allows access to " .. privilegeData.Name:gsub("^%l", string.upper))
             }
 
-            if not CAMI.GetPrivilege(privilegeData.Name) then
-                CAMI.RegisterPrivilege(privilegeInfo)
-            end
+            if not CAMI.GetPrivilege(privilegeData.Name) then CAMI.RegisterPrivilege(privilegeInfo) end
         end
     end
 
-    if IsValidForGlobal and uniqueID ~= "schema" then
-        _G[ModuleGlobal] = MODULE
-    end
-
+    if IsValidForGlobal and uniqueID ~= "schema" then _G[ModuleGlobal] = MODULE end
     if ModuleWorkshopContent then
         if istable(ModuleWorkshopContent) then
             for i = 1, #ModuleWorkshopContent do
