@@ -2,10 +2,7 @@ name: Documentation
 
 on:
   push:
-    branches:
-      - develop
     paths:
-      - "docs/**"
   repository_dispatch:
     types: [docs]
   gollum:
