@@ -46,6 +46,7 @@ jobs:
         uses: newrelic/wiki-sync-action@main
         with:
           source: docs
+          destination: wiki
           token: ${{ secrets.GITHUB_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
