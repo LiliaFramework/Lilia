@@ -39,5 +39,7 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git add .
+          git reset temp_dev
+          git add temp_dev # Exclude temp_dev from being tracked
           git commit -m "Auto-commit changes to the wiki."
           git push origin HEAD:${{ github.event_name }}
