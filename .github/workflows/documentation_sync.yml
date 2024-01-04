@@ -2,54 +2,64 @@ name: Documentation Sync
 
 on:
   push:
-    branches:
-      - main
 
 env:
   GIT_AUTHOR_NAME: Actionbot
   GIT_AUTHOR_EMAIL: actions@github.com
 
+permissions:
+  actions: write
+  checks: write
+  contents: write
+  deployments: write
+  id-token: write
+  issues: write
+  discussions: write
+  packages: write
+  pages: write
+  pull-requests: write
+  repository-projects: write
+  security-events: write
+  statuses: write
+
 jobs:
-  job-create-documentation-directory:
+  job-create-docs-directory:
     runs-on: ubuntu-latest
     steps:
       - name: Check if Docs Directory Exists
         run: |
-          if [ ! -d "documentation" ]; then
-            echo "Creating documentation directory..."
-            mkdir documentation
+          if [ ! -d "docs" ]; then
+            echo "Creating docs directory..."
+            mkdir docs
           else
             echo "Docs directory already exists."
           fi
 
-  job-sync-documentation-to-wiki:
+  job-sync-docs-to-wiki:
     runs-on: ubuntu-latest
     if: github.event_name != 'gollum'
-    needs: job-create-documentation-directory
+    needs: job-create-docs-directory
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-      - name: Sync documentation to wiki
-        uses: newrelic/wiki-sync-action@main
-        with:
-          source: documentation
-          destination: wiki
-          token: ${{ secrets.GITHUB_TOKEN }}
-          gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
-          gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
-          branch: main
-
-  job-sync-wiki-to-documentation:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'gollum'
-    needs: job-create-documentation-directory
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Publish Wiki
         uses: spenserblack/actions-wiki@v0.3.0
         with:
           path: documentation
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  job-sync-wiki-to-docs:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'gollum'
+    needs: job-create-docs-directory
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Sync Wiki to Docs
+        uses: newrelic/wiki-sync-action@main
+        with:
+          source: wiki
+          destination: docs
+          token: ${{ secrets.GITHUB_TOKEN }}
+          gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
+          gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
+          branch: main
