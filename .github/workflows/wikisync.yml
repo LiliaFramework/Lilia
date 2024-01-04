@@ -44,6 +44,7 @@ jobs:
       - name: Sync docs to wiki
         uses: newrelic/wiki-sync-action@main
         with:
+          branch: main
           source: docs
           destination: wiki
           token: ${{ secrets.GITHUB_TOKEN }}
