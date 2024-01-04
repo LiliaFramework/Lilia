@@ -65,13 +65,17 @@ function GM:ModuleLoaded(uniqueID, ModuleGlobal, MODULE)
     end
 
     if ModuleWorkshopContent then
-        for i = 1, #ModuleWorkshopContent do
-            local workshopID = ModuleWorkshopContent[i]
-            if isstring(workshopID) and workshopID:match("^%d+$") then
-                resource.AddWorkshop(workshopID)
-            else
-                print("Invalid Workshop ID:", workshopID)
+        if istable(ModuleWorkshopContent) then
+            for i = 1, #ModuleWorkshopContent do
+                local workshopID = ModuleWorkshopContent[i]
+                if isstring(workshopID) and workshopID:match("^%d+$") then
+                    resource.AddWorkshop(workshopID)
+                else
+                    print("Invalid Workshop ID:", workshopID)
+                end
             end
+        else
+            resource.AddWorkshop(ModuleWorkshopContent)
         end
     end
 end
