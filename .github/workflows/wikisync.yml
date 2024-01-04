@@ -29,8 +29,8 @@ jobs:
 
       - name: Clone or update Wiki
         run: |
-          git clone https://github.com/Lilia-Framework/Lilia.wiki.git documentation
-          cd documentation
+          git clone https://github.com/Lilia-Framework/Lilia.wiki.git
+          cd Lilia.wiki
           ls
 
       - name: Commit and Push Changes
