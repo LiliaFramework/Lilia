@@ -49,6 +49,7 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           echo "temp_dev/" >> .gitignore  # Add temp_dev/ to .gitignore
           git add .
+          git add -u  # Stage updated files
           git add .gitignore  # Add .gitignore file
           git commit -m "Auto-commit changes to the wiki."
           git pull origin main  # Pull changes from the remote repository
