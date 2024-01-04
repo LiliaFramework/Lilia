@@ -151,7 +151,7 @@ jobs:
           git config --local user.name "GitHub Action"
           if [[ -n "$(git status --porcelain)" ]]; then
             git add -A
-            git commit -m "Auto-commit after running GLuaFixer"
+            git commit -m "Linted Code"
             git push
           else
             echo "No changes to commit."
