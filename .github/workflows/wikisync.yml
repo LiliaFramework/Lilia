@@ -16,7 +16,8 @@ jobs:
           mkdir wiki
           ls
           git clone https://github.com/Lilia-Framework/Lilia.wiki.git wiki
-
+          cd wiki
+          ls
       - name: Commit and Push Changes
         run: |
           cd wiki
