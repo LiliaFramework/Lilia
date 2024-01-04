@@ -1,56 +1,25 @@
-name: Wiki Update
+name: Wiki Sync
 
 on:
   push:
-  pull_request:
-
-permissions:
-  actions: write
-  checks: write
-  contents: write
-  deployments: write
-  id-token: write
-  issues: write
-  discussions: write
-  packages: write
-  pages: write
-  pull-requests: write
-  repository-projects: write
-  security-events: write
-  statuses: write
-
 jobs:
-  wiki_update:
+  Wiki_Sync:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Clone Wiki
-        run: git clone https://github.com/Lilia-Framework/Lilia.wiki.git temp_dev
-
-      - name: Check for Wiki Changes
-        id: wiki-check
+      - name: Pull Wiki
         run: |
-          if ! cmp -r development/documentation temp_dev; then
-            echo "Changes detected in the wiki."
-            echo "has_changes=true" >> $GITHUB_ENV
-          else
-            echo "No changes in the wiki."
-            echo "has_changes=false" >> $GITHUB_ENV
-          fi
+          mkdir wiki
+          git clone https://github.com/Lilia-Framework/Lilia.wiki.git wiki
 
-      - name: Push Changes if Needed
-        if: env.has_changes == 'true'
+      - name: Commit and Push Changes
         run: |
-          cd development/documentation
+          cd wiki
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
-          echo "temp_dev/" >> .gitignore  # Add temp_dev/ to .gitignore
           git add .
-          git add -u  # Stage updated files
-          git add .gitignore  # Add .gitignore file
           git commit -m "Auto-commit changes to the wiki."
-          git pull origin main  # Pull changes from the remote repository
-          git push --force origin HEAD:${{ github.event_name }}
+          git push origin HEAD:${{ github.event_name }}
