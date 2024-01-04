@@ -32,16 +32,14 @@ jobs:
           git clone https://github.com/Lilia-Framework/Lilia.wiki.git
           ls
           cd Lilia.wiki
-          ls
 
       - name: Remove .git folder and Rename to "documentation"
         run: |
+        ls
           rm -rf .git
-          ls
           cd ..
           ls
           mv Lilia.wiki documentation
-          ls
 
       - name: Commit and Push Changes
         run: |
