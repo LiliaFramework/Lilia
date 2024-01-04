@@ -24,10 +24,12 @@ permissions:
 jobs:
   job-create-docs-directory:
     runs-on: ubuntu-latest
-    if: '!files("docs/**/*")'
     steps:
-      - name: Create Docs Directory
-        run: mkdir docs
+      - name: Check if Docs Directory Exists
+        run: |
+          if [ ! -d "docs" ]; then
+            mkdir docs
+          fi
 
   job-sync-docs-to-wiki:
     runs-on: ubuntu-latest
