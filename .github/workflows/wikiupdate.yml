@@ -48,7 +48,7 @@ jobs:
       - name: Check for Wiki Changes
         id: wiki-check
         run: |
-          if git diff --quiet HEAD development/documentation/** 'temp_dev/**'; then
+          if git diff --quiet HEAD development/documentation/** temp_dev/**; then
             echo "No changes in the wiki."
             echo "has_changes=false" >> $GITHUB_ENV
           else
