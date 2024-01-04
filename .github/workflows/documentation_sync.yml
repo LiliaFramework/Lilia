@@ -37,6 +37,7 @@ jobs:
 
   job-sync-docs-to-wiki:
     runs-on: ubuntu-latest
+    if: github.event_name ~= 'gollum'
     needs: job-create-docs-directory
     steps:
       - name: Checkout Repo
@@ -53,6 +54,7 @@ jobs:
 
   job-sync-wiki-to-docs:
     runs-on: ubuntu-latest
+    if: github.event_name == 'gollum'
     needs: job-create-docs-directory
     steps:
       - name: Checkout Repo
