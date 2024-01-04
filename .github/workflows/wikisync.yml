@@ -35,8 +35,6 @@ jobs:
 
       - name: Remove .git folder and Rename to "documentation"
         run: |
-          rm -rf .git
-          cd ..
           mv Lilia.wiki documentation
           ls
 
