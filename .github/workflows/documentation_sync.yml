@@ -2,6 +2,12 @@ name: Documentation Sync
 
 on:
   push:
+    paths:
+      - "documentation/**"
+  pull_request:
+    paths:
+      - "documentation/**"
+
 
 env:
   GIT_AUTHOR_NAME: Actionbot
@@ -40,6 +46,8 @@ jobs:
     if: github.event_name != 'gollum'
     needs: job-create-docs-directory
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Publish Wiki
         uses: spenserblack/actions-wiki@v0.3.0
         with:
