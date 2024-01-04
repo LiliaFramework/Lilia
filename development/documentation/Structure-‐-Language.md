@@ -18,43 +18,43 @@ For example:
 
 This allows for lilia to dynamically retrieve the correct translation based on the clientside language ID, ensuring that the framework displays content in the user's preferred language.
 
-### Example Language Files
+### Example Language Locations
 
 Here are the default language localization files of Lilia:
 
-#### English Language File
+#### English Language Location
 
 - Language ID: `"english"`
 - File: [English Language Location](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/english.lua)
 
-#### Portuguese Language File
+#### Portuguese Language Location
 
 - Language ID: `"portuguese"`
 - File: [Portuguese Language Location](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/portuguese.lua)
 
-#### French Language File
+#### French Language Location
 
 - Language ID: `"french"`
 - File: [French Language Location](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/french.lua)
 
-#### Polish Language File
+#### Polish Language Location
 
 - Language ID: `"polish"`
 - File: [Polish Language Location](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/polish.lua)
 
-#### Russian Language File
+#### Russian Language Location
 
 - Language ID: `"russian"`
 - File: [Russian Language Location](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/russian.lua)
 
-#### Dutch Language File
+#### Dutch Language Location
 
 - Language ID: `"dutch"`
 - File: [Dutch Language Location](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/dutch.lua)
 
-#### Spanish Language File
+#### Spanish Language Location
 
 - Language ID: `"spanish"`
 - File: [Spanish Language Location](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/spanish.lua)
 
-These language files provide translations for the variables used in the Lua script, allowing the application or game to support multiple languages.
+These Language Files provide translations for the variables used in the Lua script, allowing the application or game to support multiple languages.
