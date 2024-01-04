@@ -1,11 +1,9 @@
-name: Documentation
+name: Documentation Sync
 
 on:
   push:
     paths:
-  repository_dispatch:
-    types: [docs]
-  gollum:
+      - "docs/**"
 
 env:
   GIT_AUTHOR_NAME: Actionbot
@@ -26,7 +24,7 @@ jobs:
           token: ${{ secrets.NEWRELIC_BOT_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
-  
+
   job-sync-wiki-to-docs:
     runs-on: ubuntu-latest
     if: github.event_name == 'gollum'
