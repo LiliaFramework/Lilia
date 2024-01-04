@@ -2,25 +2,12 @@ name: Documentation Sync
 
 on:
   push:
+    branches:
+      - main
 
 env:
   GIT_AUTHOR_NAME: Actionbot
   GIT_AUTHOR_EMAIL: actions@github.com
-
-permissions:
-  actions: write
-  checks: write
-  contents: write
-  deployments: write
-  id-token: write
-  issues: write
-  discussions: write
-  packages: write
-  pages: write
-  pull-requests: write
-  repository-projects: write
-  security-events: write
-  statuses: write
 
 jobs:
   job-create-docs-directory:
@@ -47,7 +34,7 @@ jobs:
         with:
           source: docs
           destination: wiki
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
           branch: main
@@ -64,7 +51,7 @@ jobs:
         with:
           source: wiki
           destination: docs
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
           branch: main
