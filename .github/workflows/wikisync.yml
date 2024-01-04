@@ -35,15 +35,20 @@ jobs:
       - name: Remove .git folder and Rename to "documentation"
         run: |
           mv Lilia.wiki documentation
+          
       - name: Commit changes
         run: |
           echo "Committing changes..."
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+
           if [[ -n "$(git status --porcelain)" ]]; then
             git add -A
             git commit -m "Synced Documentation"
-            git push
+      
+            curl -u ${{ secrets.GITHUB_TOKEN }} -X PATCH -H "Accept: application/vnd.github.v3+json" \
+              --data '{"source": {"branch": "main"}, "name": "Home"}' \
+              https://api.github.com/repos/Lilia-Framework/Lilia.wiki/pages/builds
           else
             echo "No changes to commit."
           fi
