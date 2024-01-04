@@ -57,6 +57,7 @@ To install a roleplay schema for your Lilia framework, follow these steps:
 - [HL2RP Schema](https://github.com/Lilia-Framework/Lilia-HL2RP)
 - [MetroRP Schema](https://github.com/Lilia-Framework/Lilia-MetroRP)
 - [Public Modules](https://github.com/Lilia-Framework/Lilia-Modules)
+- [Bozy's Modules](https://github.com/B0zy/Boz-Lilia-Modules)
 
 2. Set up factions, items, and modules as required, following the specific schema's documentation or online resources.
 3. Set the startup gamemode to the schema folder ID within your server's startup configuration.
