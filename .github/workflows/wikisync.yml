@@ -14,15 +14,13 @@ jobs:
       - name: Pull Wiki
         run: |
           mkdir wiki
-          ls
           git clone https://github.com/Lilia-Framework/Lilia.wiki.git wiki
-          cd wiki
-          ls
       - name: Commit and Push Changes
         run: |
           cd wiki
+          ls
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git add .
-          git commit -m "Auto-commit changes to the wiki."
+          git commit -m "Synced Wiki Settings."
           git push origin HEAD:${{ github.event_name }}
