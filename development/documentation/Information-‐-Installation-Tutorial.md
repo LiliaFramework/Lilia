@@ -36,9 +36,8 @@ If you haven't already, set up your Garry's Mod server and ensure it's running w
 ## Step 5: Configuring Lilia
 
 1. Before making any changes, consider making a backup of the default configuration.
-2. Edit this [configuration](https://github.com/bleonheart/Lilia-Skeleton/blob/main/skeleton/schema/sh_config.lua) to override any default values you wish.
+2. Edit this [configuration](https://github.com/bleonheart/Lilia-Skeleton/blob/main/skeleton/schema/config/shared.lua) to override any default values you wish.
 3. Copy the modified configuration to your schema folder.
-4. Include it in your sh_schema using the [following line](https://github.com/bleonheart/Lilia-Skeleton/blob/main/skeleton/schema/sh_schema.lua#L8C1-L9C1).
 
 ## Step 6: Starting Lilia on Your Server
 
