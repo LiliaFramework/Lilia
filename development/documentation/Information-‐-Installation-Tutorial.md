@@ -18,7 +18,7 @@ If you haven't already, set up your Garry's Mod server and ensure it's running w
 ## Step 2: Downloading Lilia
 
 1. After downloading the ZIP file, visit the Lilia GitHub repository: [Lilia GitHub Repo](https://github.com/bleonheart/Lilia).
-2. Pick the branch you wish to use; we recommend 2.0.
+2. Pick the branch you wish to use; we recommend main.
 3. Click on the green "Code" button and select "Download ZIP."
 4. Save the ZIP file to a location on your computer.
 
