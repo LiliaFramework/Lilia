@@ -38,18 +38,6 @@ ITEM.vehicleid = "VehicleID" -- The identifier for the vehicle
 
 [View source »](https://github.com/Lilia-Framework/Lilia/blob/2.0/lilia/modules/core/items/vehicles/vehicleexample.txt)
 
-### Simfphyscars Item Example:
-
-```lua
-ITEM.name = "A Simfphys Car" -- The name of the Simfphys car
-ITEM.desc = "A Simfphys Car" -- A brief description of the Simfphys car
-ITEM.model = "models/props_c17/BriefCase001a.mdl" -- The 3D model for the Simfphys car
-ITEM.category = "Vehicles" -- The category of the Simfphys car
-ITEM.vehicleid = "VehicleID" -- The identifier for the Simfphys car
-```
-
-[View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/items/config/items/simfphyscars/carexample.txt)
-
 ### Outfit Item Example:
 
 ```lua
