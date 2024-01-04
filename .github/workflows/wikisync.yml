@@ -33,9 +33,17 @@ jobs:
           cd Lilia.wiki
           ls
 
+      - name: Remove .git folder and Rename to "documentation"
+        run: |
+          rm -rf .git
+          cd ..
+          mv Lilia.wiki documentation
+          ls
+
       - name: Commit and Push Changes
         run: |
           echo "Committing changes..."
+          cd documentation
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           if [[ -n "$(git status --porcelain)" ]]; then
@@ -46,4 +54,3 @@ jobs:
             echo "No changes to commit."
           fi
         working-directory: '${{ github.workspace }}'
-
