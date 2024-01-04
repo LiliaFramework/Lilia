@@ -2,7 +2,7 @@ name: Documentation Sync
 
 on:
   push:
-  
+
 env:
   GIT_AUTHOR_NAME: Actionbot
   GIT_AUTHOR_EMAIL: actions@github.com
@@ -45,13 +45,11 @@ jobs:
       - name: Sync docs to wiki
         uses: newrelic/wiki-sync-action@main
         with:
-          branch: main
           source: docs
           destination: wiki
           token: ${{ secrets.GITHUB_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
-
   job-sync-wiki-to-docs:
     runs-on: ubuntu-latest
     if: github.event_name == 'gollum'
@@ -67,4 +65,3 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
-          branch: main
