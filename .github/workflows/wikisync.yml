@@ -29,12 +29,7 @@ jobs:
 
       - name: Clone or update Wiki
         run: |
-          if [ -d "documentation" ]; then
-            cd documentation
-            git pull origin main
-          else
-            git clone https://github.com/Lilia-Framework/Lilia.wiki.git documentation
-          fi
+          git clone https://github.com/Lilia-Framework/Lilia.wiki.git documentation
 
       - name: Commit and Push Changes
         run: |
