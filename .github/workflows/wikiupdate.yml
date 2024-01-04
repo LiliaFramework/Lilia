@@ -10,45 +10,21 @@ on:
       - "development/documentation/**"
       - ".github/workflows/**"
 
-permissions:
-  actions: write
-  checks: write
-  contents: write
-  deployments: write
-  id-token: write
-  issues: write
-  discussions: write
-  packages: write
-  pages: write
-  pull-requests: write
-  repository-projects: write
-  security-events: write
-  statuses: write
-
 jobs:
-  Wiki_Update:
+  wiki_update:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Notify Files Checked
-        run: echo "Checking for differences in files under 'development/documentation/'."
-
-      - name: List Files in 'development/documentation/'
-        run: ls -R development/documentation/
-
       - name: Clone Wiki
-        run: |
-          git clone https://github.com/Lilia-Framework/Lilia.wiki.git temp_dev
-
-      - name: List Files in 'temp_dev'
-        run: ls -R temp_dev/
+        run: git clone https://github.com/Lilia-Framework/Lilia.wiki.git temp_dev
 
       - name: Check for Wiki Changes
         id: wiki-check
         run: |
-          if git diff --quiet HEAD development/documentation/** temp_dev/**; then
+          if git diff --quiet development/documentation temp_dev; then
             echo "No changes in the wiki."
             echo "has_changes=false" >> $GITHUB_ENV
           else
@@ -64,17 +40,4 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git add .
           git commit -m "Auto-commit changes to the wiki."
-          git push origin HEAD:${{ github.event_name }}
-
-      - name: Notify Changes
-        if: env.has_changes == 'false'
-        run: echo "No changes in the files under 'development/documentation/'."
-      - name: Replace Development with Wiki Clone
-        if: env.has_changes == 'true'
-        run: |
-          rm -rf development/documentation
-          mv temp_dev development/documentation
-          cd development/documentation  # Change into the directory
-          git add .
-          git commit -m "Update development/documentation with the latest wiki changes."
           git push origin HEAD:${{ github.event_name }}
