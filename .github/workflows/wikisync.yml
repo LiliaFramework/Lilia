@@ -37,6 +37,8 @@ jobs:
           ls
           mv Lilia.wiki documentation
           ls
+          cd documentation
+          ls
       - name: Commit and Push Changes
         run: |
           echo "Committing changes..."
