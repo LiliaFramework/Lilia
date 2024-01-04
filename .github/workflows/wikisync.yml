@@ -3,6 +3,21 @@ name: Wiki Sync
 on:
   push:
   pull_request:
+
+permissions:
+  actions: write
+  checks: write
+  contents: write
+  deployments: write
+  id-token: write
+  issues: write
+  discussions: write
+  packages: write
+  pages: write
+  pull-requests: write
+  repository-projects: write
+  security-events: write
+  statuses: write
 jobs:
   WikiSync:
     runs-on: ubuntu-latest
