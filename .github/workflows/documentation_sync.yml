@@ -1,5 +1,3 @@
-name: Documentation Sync
-
 on:
   push:
 
@@ -37,7 +35,7 @@ jobs:
 
   job-sync-docs-to-wiki:
     runs-on: ubuntu-latest
-    if: github.event_name =~ 'gollum'
+    if: github.event_name =~ 'gollum'  # Fix the syntax here
     needs: job-create-docs-directory
     steps:
       - name: Checkout Repo
