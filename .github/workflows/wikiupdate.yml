@@ -48,7 +48,7 @@ jobs:
       - name: Check for Wiki Changes
         id: wiki-check
         run: |
-          if git diff --quiet HEAD temp_dev 'development/documentation/**'; then
+          if git diff --quiet HEAD development/documentation 'temp_dev/**'; then
             echo "No changes in the wiki."
             echo "has_changes=false" >> $GITHUB_ENV
           else
@@ -57,9 +57,9 @@ jobs:
           fi
 
       - name: Push Changes if Needed
-        if: env.has_changes == 'false'
+        if: env.has_changes == 'true'
         run: |
-          cd temp_dev
+          cd development/documentation
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git add .
@@ -69,11 +69,8 @@ jobs:
       - name: Notify Changes
         if: env.has_changes == 'false'
         run: echo "No changes in the files under 'development/documentation/'."
-      - name: Notify Changes
-        if: env.has_changes == 'true'
-        run: echo "Changes detected in the files under 'development/documentation/'."
       - name: Replace Development with Wiki Clone
-        if: env.has_changes == 'false'
+        if: env.has_changes == 'true'
         run: |
           rm -rf development/documentation
           mv temp_dev development/documentation
