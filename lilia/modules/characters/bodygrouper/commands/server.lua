@@ -8,7 +8,10 @@ lia.command.add(
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1] or "")
             net.Start("BodygrouperMenu")
-            if IsValid(target) then net.WriteEntity(target) end
+            if IsValid(target) then
+                net.WriteEntity(target)
+            end
+
             net.Send(client)
         end
     }
