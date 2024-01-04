@@ -57,4 +57,4 @@ Here are the default language localization files of Lilia:
 - Language ID: `"spanish"`
 - File: https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/spanish.lua
 
-These Language Locations provide translations for the variables used in the Lua script, allowing the application or game to support multiple languages.
+These Language Locations provide translations for the variables used in the Lua script, allowing the application or game to support multiple languages
