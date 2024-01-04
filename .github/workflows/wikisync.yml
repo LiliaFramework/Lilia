@@ -31,7 +31,7 @@ jobs:
         run: |
           if [ -d "documentation" ]; then
             cd documentation
-            git pull origin master
+            git pull origin main
           else
             git clone https://github.com/Lilia-Framework/Lilia.wiki.git documentation
           fi
@@ -45,7 +45,7 @@ jobs:
           if [[ -n "$(git status --porcelain)" ]]; then
             git add -A
             git commit -m "Synced Documentation"
-            git push origin master
+            git push origin main
           else
             echo "No changes to commit."
           fi
