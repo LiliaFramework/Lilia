@@ -3,10 +3,10 @@ name: Wiki Update
 on:
   push:
     paths:
-      - "development/documentation/**"
+      - 'development/documentation/**'
   pull_request:
     paths:
-      - "development/documentation/**"
+      - 'development/documentation/**'
 
 permissions:
   actions: write
@@ -30,10 +30,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Clone Wiki
+        run: |
+          git clone https://github.com/Lilia-Framework/Lilia.wiki.git temp_dev
+          
       - name: Check for Wiki Changes
         id: wiki-check
         run: |
-          if git diff --quiet ${{ github.sha }} HEAD -- 'development/documentation/**'; then
+          if git diff --quiet HEAD temp_dev 'development/documentation/**'; then
             echo "No changes in the wiki."
             echo "has_changes=false" >> $GITHUB_ENV
           else
@@ -41,20 +45,21 @@ jobs:
             echo "has_changes=true" >> $GITHUB_ENV
           fi
 
-      - name: Publish Wiki
-        if: env.has_changes == 'true'
-        uses: spenserblack/actions-wiki@v0.3.0
-        with:
-          path: development/documentation
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Push Changes to Wiki Repository
-        if: env.has_changes == 'true'
+      - name: Push Changes if Needed
+        if: env.has_changes == 'false'
         run: |
-          cd development/documentation
+          cd temp_dev
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git add .
           git commit -m "Auto-commit changes to the wiki."
+          git push origin HEAD:${{ github.event_name }}
+
+      - name: Replace Development with Wiki Clone
+        if: env.has_changes == 'false'
+        run: |
+          rm -rf development/documentation
+          mv temp_dev development/documentation
+          git add development/documentation
+          git commit -m "Update development/documentation with the latest wiki changes."
           git push origin HEAD:${{ github.event_name }}
