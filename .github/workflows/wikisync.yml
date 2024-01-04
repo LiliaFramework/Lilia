@@ -18,6 +18,7 @@ permissions:
   repository-projects: write
   security-events: write
   statuses: write
+
 jobs:
   WikiSync:
     runs-on: ubuntu-latest
