@@ -2,6 +2,7 @@ name: Documentation Sync
 
 on:
   push:
+  
 env:
   GIT_AUTHOR_NAME: Actionbot
   GIT_AUTHOR_EMAIL: actions@github.com
@@ -28,7 +29,10 @@ jobs:
       - name: Check if Docs Directory Exists
         run: |
           if [ ! -d "docs" ]; then
+            echo "Creating docs directory..."
             mkdir docs
+          else
+            echo "Docs directory already exists."
           fi
 
   job-sync-docs-to-wiki:
