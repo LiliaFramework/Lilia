@@ -14,6 +14,7 @@ jobs:
       - name: Pull Wiki
         run: |
           mkdir wiki
+          ls
           git clone https://github.com/Lilia-Framework/Lilia.wiki.git wiki
 
       - name: Commit and Push Changes
