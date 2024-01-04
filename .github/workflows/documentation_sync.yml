@@ -42,6 +42,7 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
+      
       - name: Sync docs to wiki
         uses: newrelic/wiki-sync-action@main
         with:
@@ -50,6 +51,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
+
   job-sync-wiki-to-docs:
     runs-on: ubuntu-latest
     if: github.event_name == 'gollum'
@@ -57,6 +59,7 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
+      
       - name: Sync Wiki to Docs
         uses: newrelic/wiki-sync-action@main
         with:
