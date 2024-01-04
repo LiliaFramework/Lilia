@@ -36,6 +36,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
+          branch: main
 
   job-sync-wiki-to-docs:
     runs-on: ubuntu-latest
@@ -51,3 +52,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
+          branch: main
