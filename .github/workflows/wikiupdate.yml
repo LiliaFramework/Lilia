@@ -60,6 +60,7 @@ jobs:
         run: |
           rm -rf development/documentation
           mv temp_dev development/documentation
-          git add development/documentation
+          cd development/documentation  # Change into the directory
+          git add .
           git commit -m "Update development/documentation with the latest wiki changes."
           git push origin HEAD:${{ github.event_name }}
