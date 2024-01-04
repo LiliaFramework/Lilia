@@ -18,43 +18,43 @@ For example:
 
 This allows for lilia to dynamically retrieve the correct translation based on the clientside language ID, ensuring that the framework displays content in the user's preferred language.
 
-### Example Language Files
+### Example Languages
 
 Here are the default language localization files of Lilia:
 
-#### English Language File
+#### English
 
 - Language ID: `"english"`
-- File: [English Language File](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/english.lua)
+- File: https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/english.lua
 
-#### Portuguese Language File
+#### Portuguese
 
 - Language ID: `"portuguese"`
-- File: [Portuguese Language File](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/portuguese.lua)
+- File: https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/portuguese.lua
 
-#### French Language File
+#### French
 
 - Language ID: `"french"`
-- File: [French Language File](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/french.lua)
+- File: https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/french.lua
 
-#### Polish Language File
+#### Polish
 
 - Language ID: `"polish"`
-- File: [Polish Language File](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/polish.lua)
+- File: https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/polish.lua
 
-#### Russian Language File
+#### Russian
 
 - Language ID: `"russian"`
-- File: [Russian Language File](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/russian.lua)
+- File: https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/russian.lua
 
-#### Dutch Language File
+#### Dutch
 
 - Language ID: `"dutch"`
-- File: [Dutch Language File](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/dutch.lua)
+- File: https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/dutch.lua
 
-#### Spanish Language File
+#### Spanish
 
 - Language ID: `"spanish"`
-- File: [Spanish Language File](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/spanish.lua)
+- File: https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/spanish.lua
 
-These language files provide translations for the variables used in the Lua script, allowing the application or game to support multiple languages.
+These Language Locations provide translations for the variables used in the Lua script, allowing the application or game to support multiple languages.
