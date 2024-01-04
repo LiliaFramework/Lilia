@@ -30,7 +30,6 @@ jobs:
       - name: Clone or update Wiki
         run: |
           git clone https://github.com/Lilia-Framework/Lilia.wiki.git
-          ls
           cd Lilia.wiki
 
       - name: Remove .git folder and Rename to "documentation"
