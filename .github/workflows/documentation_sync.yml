@@ -2,7 +2,7 @@ name: Documentation Sync
 
 on:
   push:
-  
+
 env:
   GIT_AUTHOR_NAME: Actionbot
   GIT_AUTHOR_EMAIL: actions@github.com
@@ -37,7 +37,7 @@ jobs:
 
   job-sync-docs-to-wiki:
     runs-on: ubuntu-latest
-    if: github.event_name ~= 'gollum'
+    if: github.event_name =~ 'gollum'
     needs: job-create-docs-directory
     steps:
       - name: Checkout Repo
