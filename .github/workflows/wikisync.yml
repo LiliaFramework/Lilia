@@ -35,11 +35,8 @@ jobs:
       - name: Remove .git folder and Rename to "documentation"
         run: |
           ls
-          rm -rf .git
-          cd ..
-          ls
           mv Lilia.wiki documentation
-
+          ls
       - name: Commit and Push Changes
         run: |
           echo "Committing changes..."
