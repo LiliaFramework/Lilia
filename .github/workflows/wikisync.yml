@@ -29,8 +29,9 @@ jobs:
 
       - name: Pull Wiki
         run: |
-          mkdir wiki
-          git clone https://github.com/Lilia-Framework/Lilia.wiki.git wiki
+          mkdir documentation
+          git clone https://github.com/Lilia-Framework/Lilia.wiki.git documentation
+          ls
       - name: Commit and Push Changes
         run: |
           echo "Committing changes..."
@@ -38,7 +39,7 @@ jobs:
           git config --local user.name "GitHub Action"
           if [[ -n "$(git status --porcelain)" ]]; then
             git add -A
-            git commit -m "Synced Wiki Settings"
+            git commit -m "Synced Documentation Files"
             git push
           else
             echo "No changes to commit."
