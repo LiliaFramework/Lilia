@@ -22,9 +22,17 @@ permissions:
   statuses: write
 
 jobs:
+  job-create-docs-directory:
+    runs-on: ubuntu-latest
+    if: '!files("docs/**/*")'
+    steps:
+      - name: Create Docs Directory
+        run: mkdir docs
+
   job-sync-docs-to-wiki:
     runs-on: ubuntu-latest
     if: github.event_name != 'gollum'
+    needs: job-create-docs-directory
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
@@ -41,6 +49,7 @@ jobs:
   job-sync-wiki-to-docs:
     runs-on: ubuntu-latest
     if: github.event_name == 'gollum'
+    needs: job-create-docs-directory
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
