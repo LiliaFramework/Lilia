@@ -2,13 +2,7 @@ name: Wiki Update
 
 on:
   push:
-    paths:
-      - "development/documentation/**"
-      - ".github/workflows/**"
   pull_request:
-    paths:
-      - "development/documentation/**"
-      - ".github/workflows/**"
 
 permissions:
   actions: write
