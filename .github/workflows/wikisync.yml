@@ -35,7 +35,7 @@ jobs:
 
       - name: Remove .git folder and Rename to "documentation"
         run: |
-        ls
+          ls
           rm -rf .git
           cd ..
           ls
