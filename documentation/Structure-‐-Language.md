@@ -25,36 +25,36 @@ Here are the default language localization files of Lilia:
 #### English
 
 - Language ID: `"english"`
-- File: https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/english.lua
+- [File Location:](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/english.lua)
 
 #### Portuguese
 
 - Language ID: `"portuguese"`
-- File: https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/portuguese.lua
+- [File Location:](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/portuguese.lua)
 
 #### French
 
 - Language ID: `"french"`
-- File: https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/french.lua
+- [File Location:](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/french.lua)
 
 #### Polish
 
 - Language ID: `"polish"`
-- File: https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/polish.lua
+- [File Location:](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/polish.lua)
 
 #### Russian
 
 - Language ID: `"russian"`
-- File: https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/russian.lua
+- [File Location:](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/russian.lua)
 
 #### Dutch
 
 - Language ID: `"dutch"`
-- File: https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/dutch.lua
+- [File Location:](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/dutch.lua)
 
 #### Spanish
 
 - Language ID: `"spanish"`
-- File: https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/spanish.lua
+- [File Location:](https://github.com/Lilia-Framework/Lilia/tree/main/lilia/libraries/languages/config/languages/spanish.lua)
 
 These Language Locations provide translations for the variables used in the Lua script, allowing the application or game to support multiple languages
