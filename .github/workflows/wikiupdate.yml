@@ -24,12 +24,12 @@ jobs:
       - name: Check for Wiki Changes
         id: wiki-check
         run: |
-          if git diff --quiet development/documentation temp_dev; then
-            echo "No changes in the wiki."
-            echo "has_changes=false" >> $GITHUB_ENV
-          else
+          if ! cmp -r development/documentation temp_dev; then
             echo "Changes detected in the wiki."
             echo "has_changes=true" >> $GITHUB_ENV
+          else
+            echo "No changes in the wiki."
+            echo "has_changes=false" >> $GITHUB_ENV
           fi
 
       - name: Push Changes if Needed
