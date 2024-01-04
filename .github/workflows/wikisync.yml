@@ -1,55 +1,50 @@
-name: Wiki Sync
+name: Documentation
 
 on:
   push:
-  pull_request:
+    branches:
+      - develop
+    paths:
+      - "docs/**"
+  repository_dispatch:
+    types: [docs]
+  gollum:
 
-permissions:
-  actions: write
-  checks: write
-  contents: write
-  deployments: write
-  id-token: write
-  issues: write
-  discussions: write
-  packages: write
-  pages: write
-  pull-requests: write
-  repository-projects: write
-  security-events: write
-  statuses: write
+env:
+  GIT_AUTHOR_NAME: Actionbot
+  GIT_AUTHOR_EMAIL: actions@github.com
 
 jobs:
-  WikiSync:
+  job-sync-docs-to-wiki:
     runs-on: ubuntu-latest
-
+    if: github.event_name != 'gollum'
     steps:
-      - name: Checkout code
+      - name: Checkout Repo
         uses: actions/checkout@v2
-
-      - name: Clone or update Wiki
-        run: |
-          git clone https://github.com/Lilia-Framework/Lilia.wiki.git
-          cd Lilia.wiki
-
-      - name: Remove .git folder and Rename to "documentation"
-        run: |
-          mv Lilia.wiki documentation
-
-      - name: Commit changes
-        run: |
-          echo "Committing changes..."
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-
-          if [[ -n "$(git status --porcelain)" ]]; then
-            git add -A
-            git commit -m "Synced Documentation"
-
-            curl -u ${{ secrets.GITHUB_TOKEN }} -X PATCH -H "Accept: application/vnd.github.v3+json" \
-              --data '{"source": {"branch": "main"}, "name": "Home"}' \
-              https://api.github.com/repos/Lilia-Framework/Lilia.wiki/pages/builds
-          else
-            echo "No changes to commit."
-          fi
-        working-directory: "${{ github.workspace }}"
+      - name: Sync docs to wiki
+        uses: newrelic/wiki-sync-action@main
+        with:
+          source: docs
+          destination: wiki
+          token: ${{ secrets.NEWRELIC_BOT_TOKEN }}
+          gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
+          gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
+  
+  job-sync-wiki-to-docs:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'gollum'
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.NEWRELIC_BOT_TOKEN }}
+          ref: develop
+      - name: Sync Wiki to Docs
+        uses: newrelic/wiki-sync-action@main
+        with:
+          source: wiki
+          destination: docs
+          token: ${{ secrets.NEWRELIC_BOT_TOKEN }}
+          gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
+          gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
+          branch: develop
