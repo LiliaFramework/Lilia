@@ -3,10 +3,12 @@ name: Wiki Update
 on:
   push:
     paths:
-      - 'development/documentation/**'
+      - "development/documentation/**"
+      - ".github/workflows/**"
   pull_request:
     paths:
-      - 'development/documentation/**'
+      - "development/documentation/**"
+      - ".github/workflows/**"
 
 permissions:
   actions: write
@@ -33,9 +35,15 @@ jobs:
       - name: Notify Files Checked
         run: echo "Checking for differences in files under 'development/documentation/'."
 
+      - name: List Files in 'development/documentation/'
+        run: ls -R development/documentation/
+
       - name: Clone Wiki
         run: |
           git clone https://github.com/Lilia-Framework/Lilia.wiki.git temp_dev
+
+      - name: List Files in 'temp_dev'
+        run: ls -R temp_dev/
 
       - name: Check for Wiki Changes
         id: wiki-check
