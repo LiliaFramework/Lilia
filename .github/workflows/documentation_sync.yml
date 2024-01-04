@@ -2,7 +2,7 @@ name: Documentation Sync
 
 on:
   push:
-
+  
 env:
   GIT_AUTHOR_NAME: Actionbot
   GIT_AUTHOR_EMAIL: actions@github.com
@@ -37,14 +37,10 @@ jobs:
 
   job-sync-docs-to-wiki:
     runs-on: ubuntu-latest
-    if: github.event_name != 'gollum'
     needs: job-create-docs-directory
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Fetch all history for proper push
-
       - name: Sync docs to wiki
         uses: newrelic/wiki-sync-action@main
         with:
@@ -53,17 +49,14 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
+          branch: main
 
   job-sync-wiki-to-docs:
     runs-on: ubuntu-latest
-    if: github.event_name == 'gollum'
     needs: job-create-docs-directory
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Fetch all history for proper push
-
       - name: Sync Wiki to Docs
         uses: newrelic/wiki-sync-action@main
         with:
@@ -72,3 +65,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
+          branch: main
