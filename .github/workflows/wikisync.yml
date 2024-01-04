@@ -34,20 +34,17 @@ jobs:
 
       - name: Remove .git folder and Rename to "documentation"
         run: |
-          ls
           mv Lilia.wiki documentation
-          ls
-          cd documentation
-          ls
-      - name: Commit and Push Changes
+      - name: Commit changes
         run: |
           echo "Committing changes..."
-          cd documentation
-          git init
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add -A
-          git commit -m "Synced Documentation"
-          git remote add origin https://github.com/Lilia-Framework/Lilia.wiki.git
-          git push -u origin master -f
-        working-directory: '${{ github.workspace }}'
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git add -A
+            git commit -m "Synced Documentation"
+            git push
+          else
+            echo "No changes to commit."
+          fi
+        working-directory: "${{ github.workspace }}"
