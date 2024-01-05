@@ -20,13 +20,13 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function LiliaStorage:StorageOpen(storage)
-    if not IsValid(storage) or storage:getStorageInfo().invType ~= "grid" then return end
+    if not IsValid(storage) then return end
     local localInv = LocalPlayer():getChar() and LocalPlayer():getChar():getInv()
     local storageInv = storage:getInv()
     if not localInv or not storageInv then return self:exitStorage() end
     local localInvPanel = localInv:show()
     local storageInvPanel = storageInv:show()
-    storageInvPanel:SetTitle(L(storage:getStorageInfo().name))
+    storageInvPanel:SetTitle("Trunk")
     localInvPanel:ShowCloseButton(true)
     storageInvPanel:ShowCloseButton(true)
     local extraWidth = (storageInvPanel:GetWide() + 4) / 2
@@ -42,7 +42,9 @@ function LiliaStorage:StorageOpen(storage)
             firstToRemove = false
             self:exitStorage()
             local otherPanel = panel == localInvPanel and storageInvPanel or localInvPanel
-            if IsValid(otherPanel) then otherPanel:Remove() end
+            if IsValid(otherPanel) then
+                otherPanel:Remove()
+            end
         end
 
         panel:oldOnRemove()
