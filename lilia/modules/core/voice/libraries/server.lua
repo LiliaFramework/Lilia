@@ -10,9 +10,9 @@ VoiceData.CanHearCache = false
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
     local HasCharacter = speaker:getChar()
     if not HasCharacter then return false end
-    local IsVoiceEnabled = self.IsVoiceEnabled and GetGlobalBool("EnabledVoice", true)
+    local IsVoiceEnabled = VoiceCore.IsVoiceEnabled and GetGlobalBool("EnabledVoice", true)
     local IsVoiceBanned = speaker:getChar():getData("VoiceBan", false)
-    local VoiceRefreshRate = self.VoiceRefreshRate
+    local VoiceRefreshRate = VoiceCore.VoiceRefreshRate
     local VoiceType = speaker:getNetVar("VoiceType", "Talking")
     local VoiceRadius = VoiceCore.TalkRanges[VoiceType]
     local VoiceRadiusSquared = VoiceRadius * VoiceRadius
@@ -28,8 +28,8 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     if (CurTime() - VoiceData.cache > VoiceRefreshRate) and (listener ~= speaker) then
         VoiceData.cache = CurTime()
         if speaker:GetPos():DistToSqr(listener:GetPos()) <= VoiceRadiusSquared then
-            if self.IsVoicePropBlockingEnabled then
-                if not tr.Hit or table.HasValue(self.WhitelistedProps, tr.Entity:GetModel()) then
+            if VoiceCore.IsVoicePropBlockingEnabled then
+                if not tr.Hit or table.HasValue(VoiceCore.WhitelistedProps, tr.Entity:GetModel()) then
                     VoiceData.CanHearCache = true
                 else
                     VoiceData.CanHearCache = false
@@ -40,11 +40,9 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
         end
     end
 
-    if VoiceData.CanHearCache then
-        return true, true
-    else
-        return false, false
-    end
+    if not VoiceData.CanHearCache then return false, false end
+
+    return true, true
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
