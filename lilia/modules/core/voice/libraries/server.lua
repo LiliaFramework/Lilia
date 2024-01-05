@@ -11,7 +11,6 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     local VoiceRadiusSquared = VoiceRadius * VoiceRadius
     if IsVoiceBanned then return false end
     if IsVoiceEnabled and (listener ~= speaker) and speaker:GetPos():DistToSqr(listener:GetPos()) <= VoiceRadiusSquared then return true, true end
-
     return false, false
 end
 
