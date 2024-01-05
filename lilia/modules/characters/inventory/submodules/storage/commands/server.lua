@@ -40,13 +40,11 @@ lia.command.add(
             local clientPos = client:GetPos():Distance(ent:GetPos())
             if not hook.Run("isSuitableForTrunk", ent) then
                 client:notify("You're not looking at any vehicle!", client)
-
                 return
             end
 
             if clientPos > maxDistance then
                 client:notify("You're too far to open the trunk!", client)
-
                 return
             end
 
@@ -57,7 +55,6 @@ lia.command.add(
                 function()
                     if clientPos > maxDistance then
                         client.liaStorageEntity = nil
-
                         return
                     end
 
