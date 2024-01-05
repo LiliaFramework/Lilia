@@ -67,7 +67,7 @@ function GM:OnContextMenuOpen()
         lia.bar.delta[k] = value
         v.visible = true
         lia.bar.draw(4, 4, ScrW() * 0.35, 10, value, v.color, v)
-        y = y + (h + 2)
+        y = y + (10 + 2)
     end
 end
 
