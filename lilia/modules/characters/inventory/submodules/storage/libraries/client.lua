@@ -42,7 +42,9 @@ function LiliaStorage:StorageOpen(storage)
             firstToRemove = false
             self:exitStorage()
             local otherPanel = panel == localInvPanel and storageInvPanel or localInvPanel
-            if IsValid(otherPanel) then otherPanel:Remove() end
+            if IsValid(otherPanel) then
+                otherPanel:Remove()
+            end
         end
 
         panel:oldOnRemove()

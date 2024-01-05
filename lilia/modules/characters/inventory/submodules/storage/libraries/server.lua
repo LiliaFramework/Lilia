@@ -30,12 +30,16 @@ function LiliaStorage:PlayerSpawnedProp(client, model, entity)
                 inventory.isStorage = true
                 storage:setInventory(inventory)
                 self:SaveData()
-                if isfunction(data.onSpawn) then data.onSpawn(storage) end
+                if isfunction(data.onSpawn) then
+                    data.onSpawn(storage)
+                end
             end
         end,
         function(err)
             ErrorNoHalt("Unable to create storage entity for " .. client:Name() .. "\n" .. err .. "\n")
-            if IsValid(storage) then storage:Remove() end
+            if IsValid(storage) then
+                storage:Remove()
+            end
         end
     )
 
@@ -62,7 +66,9 @@ function LiliaStorage:SaveData()
             continue
         end
 
-        if entity:getInv() then data[#data + 1] = {entity:GetPos(), entity:GetAngles(), entity:getNetVar("id"), entity:GetModel():lower(), entity.password} end
+        if entity:getInv() then
+            data[#data + 1] = {entity:GetPos(), entity:GetAngles(), entity:getNetVar("id"), entity:GetModel():lower(), entity.password}
+        end
     end
 
     self:setData(data)
@@ -100,13 +106,22 @@ function LiliaStorage:LoadData()
                     storage:setInventory(inventory)
                     hook.Run("StorageRestored", storage, inventory)
                 elseif IsValid(storage) then
-                    timer.Simple(1, function() if IsValid(storage) then storage:Remove() end end)
+                    timer.Simple(
+                        1,
+                        function()
+                            if IsValid(storage) then
+                                storage:Remove()
+                            end
+                        end
+                    )
                 end
             end
         )
 
         local physObject = storage:GetPhysicsObject()
-        if physObject then physObject:EnableMotion() end
+        if physObject then
+            physObject:EnableMotion()
+        end
     end
 
     self.loadedData = true
@@ -129,13 +144,18 @@ function LiliaStorage:EntityRemoved(ent)
     LiliaStorage.Vehicles[ent] = nil
     if not LiliaStorage:isSuitableForTrunk(ent) then return end
     local inv = ent:getInv()
-    if inv then inv:delete() end
+    if inv then
+        inv:delete()
+    end
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function LiliaStorage:OnEntityCreated(ent)
     if not LiliaStorage:isSuitableForTrunk(ent) then return end
-    if ent.IsSimfphyscar then netstream.Start(nil, "trunkInitStorage", ent) end
+    if ent.IsSimfphyscar then
+        netstream.Start(nil, "trunkInitStorage", ent)
+    end
+
     self:InitializeStorage(ent)
 end
 
@@ -148,6 +168,7 @@ end
 function LiliaStorage:StorageInventorySet(_, inventory)
     inventory:addAccessRule(RULES.AccessIfStorageReceiver)
 end
+
 return RULES
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
