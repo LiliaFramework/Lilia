@@ -13,14 +13,8 @@ PANEL.FADE_SPEED = 0.5
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function PANEL:createTabs()
     local load, create
-    if lia.characters and #lia.characters > 0 then
-        load = self:addTab("continue", self.createCharacterSelection)
-    end
-
-    if hook.Run("CanPlayerCreateCharacter", LocalPlayer()) ~= false then
-        create = self:addTab("create", self.createCharacterCreation)
-    end
-
+    if lia.characters and #lia.characters > 0 then load = self:addTab("continue", self.createCharacterSelection) end
+    if hook.Run("CanPlayerCreateCharacter", LocalPlayer()) ~= false then create = self:addTab("create", self.createCharacterCreation) end
     if IsValid(load) then
         load:setSelected()
     elseif IsValid(create) then
@@ -28,25 +22,9 @@ function PANEL:createTabs()
     end
 
     if LocalPlayer():getChar() then
-        self:addTab(
-            "return",
-            function()
-                if IsValid(self) and LocalPlayer():getChar() then
-                    self:fadeOut()
-                end
-            end, true
-        )
+        self:addTab("return", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end, true)
     else
-        self:addTab(
-            "leave",
-            function()
-                vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(
-                    function()
-                        LocalPlayer():ConCommand("disconnect")
-                    end
-                )
-            end, true
-        )
+        self:addTab("leave", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() LocalPlayer():ConCommand("disconnect") end) end, true)
     end
 
     local totalWidth = -32
@@ -116,17 +94,7 @@ function PANEL:loadBackground()
                 self.background:SetHTML(url)
             end
 
-            self.background.OnDocumentReady = function(_)
-                self.bgLoader:AlphaTo(
-                    0,
-                    2,
-                    1,
-                    function()
-                        self.bgLoader:Remove()
-                    end
-                )
-            end
-
+            self.background.OnDocumentReady = function(_) self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end
             self.bgLoader = self:Add("DPanel")
             self.bgLoader:SetSize(ScrW(), ScrH())
             self.bgLoader:SetZPos(-998)
@@ -160,10 +128,7 @@ function PANEL:paintBackground(w, h)
         surface.DrawRect(0, 0, w, h)
     end
 
-    if not self.startTime then
-        self.startTime = CurTime()
-    end
-
+    if not self.startTime then self.startTime = CurTime() end
     local r, g, b = lia.config.Color:Unpack()
     local curTime = (self.startTime - CurTime()) / 4
     local alpha = 200 * ((math.sin(curTime - 1.8719) + math.sin(curTime - 1.8719 / 2)) / 4 + 0.44)
@@ -181,27 +146,12 @@ function PANEL:addTab(name, callback, justClick)
     local button = self.tabs:Add("liaCharacterTabButton")
     button:setText(L(name):upper())
     if justClick then
-        if isfunction(callback) then
-            button.DoClick = function(_)
-                callback(self)
-            end
-        end
-
+        if isfunction(callback) then button.DoClick = function(_) callback(self) end end
         return
     end
 
-    button.DoClick = function(button)
-        button:setSelected(true)
-    end
-
-    if isfunction(callback) then
-        button:onSelected(
-            function()
-                callback(self)
-            end
-        )
-    end
-
+    button.DoClick = function(button) button:setSelected(true) end
+    if isfunction(callback) then button:onSelected(function() callback(self) end) end
     return button
 end
 
@@ -221,26 +171,13 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function PANEL:fadeOut()
-    self:AlphaTo(
-        0,
-        self.ANIM_SPEED,
-        0,
-        function()
-            self:Remove()
-        end
-    )
+    self:AlphaTo(0, self.ANIM_SPEED, 0, function() self:Remove() end)
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function PANEL:Init()
-    if IsValid(lia.gui.loading) then
-        lia.gui.loading:Remove()
-    end
-
-    if IsValid(lia.gui.character) then
-        lia.gui.character:Remove()
-    end
-
+    if IsValid(lia.gui.loading) then lia.gui.loading:Remove() end
+    if IsValid(lia.gui.character) then lia.gui.character:Remove() end
     lia.gui.character = self
     self:Dock(FILL)
     self:MakePopup()
@@ -271,24 +208,13 @@ end
 function PANEL:setFadeToBlack(fade)
     local d = deferred.new()
     if fade then
-        if IsValid(self.fade) then
-            self.fade:Remove()
-        end
-
+        if IsValid(self.fade) then self.fade:Remove() end
         local fade = vgui.Create("DPanel")
         fade:SetSize(ScrW(), ScrH())
         fade:SetSkin("Default")
         fade:SetBackgroundColor(color_black)
         fade:SetAlpha(0)
-        fade:AlphaTo(
-            255,
-            self.FADE_SPEED,
-            0,
-            function()
-                d:resolve()
-            end
-        )
-
+        fade:AlphaTo(255, self.FADE_SPEED, 0, function() d:resolve() end)
         fade:SetZPos(999)
         fade:MakePopup()
         self.fade = fade
@@ -304,7 +230,6 @@ function PANEL:setFadeToBlack(fade)
             end
         )
     end
-
     return d
 end
 
