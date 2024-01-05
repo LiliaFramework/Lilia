@@ -1,5 +1,5 @@
 ﻿--------------------------------------------------------------------------------------------------------------------------
-function VendorCore:LoadFonts(font)
+function VendorCore:LoadLiliaFonts(font)
     surface.CreateFont(
         "liaVendorButtonFont",
         {
