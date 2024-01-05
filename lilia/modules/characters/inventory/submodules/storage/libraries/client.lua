@@ -22,7 +22,7 @@ end
 function LiliaStorage:StorageOpen(storage)
     if not IsValid(storage) then return end
     local localInv = LocalPlayer():getChar() and LocalPlayer():getChar():getInv()
-    local storageInv = storage:getInv()
+    local storageInv = lia.inventory.instances[storage:getNetVar("inv")]
     if not localInv or not storageInv then return self:exitStorage() end
     local localInvPanel = localInv:show()
     local storageInvPanel = storageInv:show()

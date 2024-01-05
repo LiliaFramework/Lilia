@@ -1,6 +1,7 @@
 ﻿------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function LiliaStorage:isSuitableForTrunk(ent)
     if IsValid(ent) and ent:IsVehicle() then return true end
+
     return false
 end
 
@@ -8,8 +9,6 @@ end
 function LiliaStorage:InitializeStorage(ent)
     if LiliaStorage.Vehicles[ent] then return end
     LiliaStorage.Vehicles[ent] = true
-    ent.getInv = function(selfent) return lia.inventory.instances[selfent:getNetVar("inv")] end
-    ent.getStorageInfo = function(_) return LiliaStorage.VehicleTrunk end
     if SERVER then
         ent.receivers = {}
         lia.inventory.instance(LiliaStorage.VehicleTrunk.invType, LiliaStorage.VehicleTrunk.invData):next(

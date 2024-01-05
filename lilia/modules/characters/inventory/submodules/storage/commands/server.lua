@@ -39,22 +39,25 @@ lia.command.add(
             local openTime = LiliaStorage.TrunkOpenTime
             local clientPos = client:GetPos():Distance(ent:GetPos())
             if not hook.Run("isSuitableForTrunk", ent) then
-                lia.util.notify("You're not looking at any vehicle!", client)
+                client:notify("You're not looking at any vehicle!", client)
+
                 return
             end
 
             if clientPos > maxDistance then
-                lia.util.notify("You're too far to open the trunk!", client)
+                client:notify("You're too far to open the trunk!", client)
+
                 return
             end
 
             client.liaStorageEntity = ent
             client:setAction(
-                L("Opening...", client),
+                "Opening...",
                 openTime,
                 function()
                     if clientPos > maxDistance then
                         client.liaStorageEntity = nil
+
                         return
                     end
 
