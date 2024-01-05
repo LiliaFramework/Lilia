@@ -129,7 +129,7 @@ function PANEL:paintBackground(w, h)
     end
 
     if not self.startTime then self.startTime = CurTime() end
-    local r, g, b = lia.config.Color:Unpack()
+    local r, g, b = lia.config.Color:unpack()
     local curTime = (self.startTime - CurTime()) / 4
     local alpha = 200 * ((math.sin(curTime - 1.8719) + math.sin(curTime - 1.8719 / 2)) / 4 + 0.44)
     surface.SetDrawColor(r, g, b, alpha)
