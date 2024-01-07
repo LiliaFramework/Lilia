@@ -128,7 +128,7 @@ end
 function LiliaStorage:EntityRemoved(ent)
     LiliaStorage.Vehicles[ent] = nil
     if not LiliaStorage:isSuitableForTrunk(ent) then return end
-    local storageInv = lia.inventory.instances[storage:getNetVar("inv")]
+    local storageInv = lia.inventory.instances[ent:getNetVar("inv")]
     if storageInv then inv:delete() end
 end
 
