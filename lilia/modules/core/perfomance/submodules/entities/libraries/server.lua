@@ -42,8 +42,6 @@ function EntityPerfomance:ServersideInitializedModules()
                 for _, v in ipairs(ents.GetAll()) do
                     if table.HasValue(self.Perfomancekillers, v:GetClass()) then SafeRemoveEntity(v) end
                 end
-
-                RunConsoleCommand("r_cleardecals")
             end
         )
     end
