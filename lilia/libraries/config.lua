@@ -31,14 +31,6 @@ if not ConfigWasInitialized then
         AmericanDates = true, -- Use American date format
         AmericanTimeStamp = true, -- Use American timestamp format
         MinDescLen = 16, -- How long the description has to be
-        DatabaseConfig = {
-            module = "sqlite", -- Database module
-            hostname = "127.0.0.1", -- Database hostname
-            username = "", -- Database username
-            password = "", -- Database password
-            database = "", -- Database name
-            port = 3306 -- Database port
-        },
         Notify = {
             "garrysmod/content_downloaded.wav", -- Notification Sound
             50,
