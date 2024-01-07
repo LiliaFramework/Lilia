@@ -2,39 +2,42 @@
 local PANEL = {}
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function PANEL:Init()
-    self:SetTitle(L("thirdpersonConfig"))
+    self:SetTitle("Third Person Configuration")
     self:SetSize(300, 140)
     self:Center()
     self:MakePopup()
+
     self.list = self:Add("DPanel")
     self.list:Dock(FILL)
     self.list:DockMargin(0, 0, 0, 0)
+
     local cfg = self.list:Add("DNumSlider")
     cfg:Dock(TOP)
-    cfg:SetText("") -- Set the text above the slider
-    cfg:SetMin(0) -- Set the minimum number you can slide to
-    cfg:SetMax(30) -- Set the maximum number you can slide to
-    cfg:SetDecimals(0) -- Decimal places - zero for whole number
-    cfg:SetConVar("lia_tp_vertical") -- Changes the ConVar when you slide
+    cfg:SetText("Height")
+    cfg:SetMin(0)
+    cfg:SetMax(30)
+    cfg:SetDecimals(0)
+    cfg:SetConVar("tp_vertical")
     cfg:DockMargin(10, 0, 0, 5)
+
     local cfg = self.list:Add("DNumSlider")
     cfg:Dock(TOP)
-    cfg:SetText("") -- Set the text above the slider
-    cfg:SetMin(-30) -- Set the minimum number you can slide to
-    cfg:SetMax(30) -- Set the maximum number you can slide to
-    cfg:SetDecimals(0) -- Decimal places - zero for whole number
-    cfg:SetConVar("lia_tp_") -- Changes the ConVar when you slide
+    cfg:SetText("Horizontal")
+    cfg:SetMin(-30)
+    cfg:SetMax(30)
+    cfg:SetDecimals(0)
+    cfg:SetConVar("tp_horizontal")
     cfg:DockMargin(10, 0, 0, 5)
+
     local cfg = self.list:Add("DNumSlider")
     cfg:Dock(TOP)
-    cfg:SetText("ance") -- Set the text above the slider
-    cfg:SetMin(0) -- Set the minimum number you can slide to
-    cfg:SetMax(100) -- Set the maximum number you can slide to
-    cfg:SetDecimals(0) -- Decimal places - zero for whole number
-    cfg:SetConVar("lia_tp_ance") -- Changes the ConVar when you slide
+    cfg:SetText("Distance")
+    cfg:SetMin(0)
+    cfg:SetMax(100)
+    cfg:SetDecimals(0)
+    cfg:SetConVar("tp_distance")
     cfg:DockMargin(10, 0, 0, 5)
 end
-
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-vgui.Register("liaTPConfig", PANEL, "DFrame")
+vgui.Register("ThirdPersonConfig", PANEL, "DFrame")
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
