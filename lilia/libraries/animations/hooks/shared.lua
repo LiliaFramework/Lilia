@@ -27,10 +27,7 @@ function GM:TranslateActivity(client, act)
         if not lia.config.get("wepAlwaysRaised") and IsValid(weapon) and (client.isWepRaised and not client.isWepRaised(client)) and client:OnGround() then
             if string.find(model, "zombie") then
                 local tree = lia.anim.zombie
-                if string.find(model, "fast") then
-                    tree = lia.anim.fastZombie
-                end
-
+                if string.find(model, "fast") then tree = lia.anim.fastZombie end
                 if tree[act] then return tree[act] end
             end
 
@@ -40,14 +37,12 @@ function GM:TranslateActivity(client, act)
             if tree and tree[act] then
                 if type(tree[act]) == "string" then
                     client.CalcSeqOverride = client.LookupSequence(tree[act])
-
                     return
                 else
                     return tree[act]
                 end
             end
         end
-
         return self.BaseClass.TranslateActivity(self.BaseClass, client, act)
     end
 
@@ -60,23 +55,16 @@ function GM:TranslateActivity(client, act)
             if tree.vehicle and tree.vehicle[class] then
                 local act = tree.vehicle[class][1]
                 local fixvec = tree.vehicle[class][2]
-                if fixvec then
-                    client:SetLocalPos(Vector(16.5438, -0.1642, -20.5493))
-                end
-
+                if fixvec then client:SetLocalPos(Vector(16.5438, -0.1642, -20.5493)) end
                 if type(act) == "string" then
                     client.CalcSeqOverride = client.LookupSequence(client, act)
-
                     return
                 else
                     return act
                 end
             else
                 act = tree.normal[ACT_MP_CROUCH_IDLE][1]
-                if type(act) == "string" then
-                    client.CalcSeqOverride = client:LookupSequence(act)
-                end
-
+                if type(act) == "string" then client.CalcSeqOverride = client:LookupSequence(act) end
                 return
             end
         elseif client.OnGround(client) then
@@ -91,10 +79,8 @@ function GM:TranslateActivity(client, act)
                 local act2 = tree[subClass][act][index]
                 if type(act2) == "string" then
                     client.CalcSeqOverride = client.LookupSequence(client, act2)
-
                     return
                 end
-
                 return act2
             end
         elseif tree.glide then
@@ -116,31 +102,25 @@ function GM:DoAnimationEvent(client, event, data)
             local animation = lia.anim[class][holdType]
             if event == PLAYERANIMEVENT_ATTACK_PRIMARY then
                 client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1, true)
-
                 return ACT_VM_PRIMARYATTACK
             elseif event == PLAYERANIMEVENT_ATTACK_SECONDARY then
                 client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1, true)
-
                 return ACT_VM_SECONDARYATTACK
             elseif event == PLAYERANIMEVENT_RELOAD then
                 client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.reload or ACT_GESTURE_RELOAD_SMG1, true)
-
                 return ACT_INVALID
             elseif event == PLAYERANIMEVENT_JUMP then
                 client.m_bJumping = true
                 client.m_bFistJumpFrame = true
                 client.m_flJumpStartTime = CurTime()
                 client:AnimRestartMainSequence()
-
                 return ACT_INVALID
             elseif event == PLAYERANIMEVENT_CANCEL_RELOAD then
                 client:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
-
                 return ACT_INVALID
             end
         end
     end
-
     return ACT_INVALID
 end
 
@@ -152,7 +132,6 @@ function GM:HandlePlayerLanding(client, velocity, wasOnGround)
         local animClass = lia.anim.getModelClass(client:GetModel())
         if animClass ~= "player" and length < 100000 then return end
         client:AnimRestartGesture(GESTURE_SLOT_JUMP, ACT_LAND, true)
-
         return true
     end
 end
@@ -163,10 +142,7 @@ function GM:CalcMainActivity(client, velocity)
     oldCalcSeqOverride = client.CalcSeqOverride
     client.CalcSeqOverride = -1
     local animClass = lia.anim.getModelClass(client:GetModel())
-    if animClass ~= "player" then
-        client:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - client:EyeAngles()[2]))
-    end
-
+    if animClass ~= "player" then client:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - client:EyeAngles()[2])) end
     if not (self:HandlePlayerLanding(client, velocity, client.m_bWasOnGround) or self:HandlePlayerNoClipping(client, velocity) or self:HandlePlayerDriving(client) or self:HandlePlayerVaulting(client, velocity) or (usingPlayerAnims and self:HandlePlayerJumping(client, velocity)) or self:HandlePlayerSwimming(client, velocity) or self:HandlePlayerDucking(client, velocity)) then
         local len2D = velocity:Length2DSqr()
         if len2D > 22500 then
@@ -179,10 +155,7 @@ function GM:CalcMainActivity(client, velocity)
     client.m_bWasOnGround = client:IsOnGround()
     client.m_bWasNoclipping = client:GetMoveType() == MOVETYPE_NOCLIP and not client:InVehicle()
     client.lastVelocity = velocity
-    if CLIENT then
-        client:SetIK(false)
-    end
-
+    if CLIENT then client:SetIK(false) end
     return client.CalcIdeal, client.nutForceSeq or oldCalcSeqOverride
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

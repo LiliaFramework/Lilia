@@ -45,10 +45,7 @@ lia.command.add(
                     table.insert(SpawnsCore.spawns[faction][class], client:GetPos())
                     SpawnsCore:SaveData()
                     local name = L(info.name, client)
-                    if info2 then
-                        name = name .. " (" .. L(info2.name, client) .. ")"
-                    end
-
+                    if info2 then name = name .. " (" .. L(info2.name, client) .. ")" end
                     return L("spawnAdded", client, name)
                 else
                     return L("invalidFaction", client)
@@ -99,10 +96,7 @@ lia.command.add(
                 end
             end
 
-            if i > 0 then
-                SpawnsCore:SaveData()
-            end
-
+            if i > 0 then SpawnsCore:SaveData() end
             return L("spawnDeleted", client, i)
         end
     }
@@ -121,13 +115,11 @@ lia.command.add(
                 if IsValid(target) then
                     if not target.LostItems then
                         client:notify("The target hasn't died recently or they had their items returned already!")
-
                         return
                     end
 
                     if table.IsEmpty(target.LostItems) then
                         client:notify("Cannot return any items; the player hasn't lost any!")
-
                         return
                     end
 
