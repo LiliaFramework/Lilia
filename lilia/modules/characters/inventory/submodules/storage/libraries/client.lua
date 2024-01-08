@@ -26,7 +26,7 @@ function LiliaStorage:StorageOpen(storage)
     if not localInv or not storageInv then return self:exitStorage() end
     local localInvPanel = localInv:show()
     local storageInvPanel = storageInv:show()
-    storageInvPanel:SetTitle("Trunk")
+    storageInvPanel:SetTitle("Car Trunk")
     localInvPanel:ShowCloseButton(true)
     storageInvPanel:ShowCloseButton(true)
     local extraWidth = (storageInvPanel:GetWide() + 4) / 2
