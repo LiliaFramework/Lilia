@@ -52,7 +52,6 @@ end
 do
     local function normalize(min, max, val)
         local delta = max - min
-
         return (val - min) / delta
     end
 
@@ -63,7 +62,6 @@ do
         local hsv_start = ColorToHSV(end_color)
         local hsv_end = ColorToHSV(start_color)
         local linear = Lerp(normalize(minValue, maxValue, currentValue), hsv_start, hsv_end)
-
         return HSVToColor(linear, 1, 1)
     end
 end

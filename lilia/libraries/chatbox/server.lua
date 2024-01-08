@@ -5,9 +5,7 @@ function lia.chat.send(speaker, chatType, text, anonymous, receivers)
         if class.onCanHear and not receivers then
             receivers = {}
             for _, v in ipairs(player.GetAll()) do
-                if v:getChar() and class.onCanHear(speaker, v) ~= false then
-                    receivers[#receivers + 1] = v
-                end
+                if v:getChar() and class.onCanHear(speaker, v) ~= false then receivers[#receivers + 1] = v end
             end
 
             if #receivers == 0 then return end
