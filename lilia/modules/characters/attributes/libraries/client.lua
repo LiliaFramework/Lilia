@@ -21,9 +21,7 @@ function AttributesCore:Think()
     local maxStamina = char:getMaxStamina()
     local offset = self:CalcStaminaChange(client)
     offset = math.Remap(FrameTime(), 0, 0.25, 0, offset)
-    if offset ~= 0 then
-        self.predictedStamina = math.Clamp(self.predictedStamina + offset, 0, maxStamina)
-    end
+    if offset ~= 0 then self.predictedStamina = math.Clamp(self.predictedStamina + offset, 0, maxStamina) end
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

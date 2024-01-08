@@ -37,10 +37,8 @@ function GM:PlayerNoClip(client, state)
             client:SetNoTarget(false)
             hook.Run("OnPlayerObserve", client, state)
         end
-
         return true
     end
-
     return false
 end
 

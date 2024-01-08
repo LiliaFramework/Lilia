@@ -13,7 +13,6 @@ function VUICore:PlayerStartVoice(client)
         end
 
         VoicePanels[client]:SetAlpha(255)
-
         return
     end
 
@@ -36,10 +35,7 @@ end
 local function CreateVoiceVGUI()
     gmod.GetGamemode().PlayerStartVoice = function() end
     gmod.GetGamemode().PlayerEndVoice = function() end
-    if IsValid(g_VoicePanelList) then
-        g_VoicePanelList:Remove()
-    end
-
+    if IsValid(g_VoicePanelList) then g_VoicePanelList:Remove() end
     g_VoicePanelList = vgui.Create("DPanel")
     g_VoicePanelList:ParentToHUD()
     g_VoicePanelList:SetSize(270, ScrH() - 200)
@@ -88,21 +84,14 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function PANEL:Think()
-    if IsValid(self.client) then
-        self.LabelName:SetText(self.name)
-    end
-
-    if self.fadeAnim then
-        self.fadeAnim:Run()
-    end
+    if IsValid(self.client) then self.LabelName:SetText(self.name) end
+    if self.fadeAnim then self.fadeAnim:Run() end
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local function VoiceClean()
     for k, _ in pairs(VoicePanels) do
-        if not IsValid(k) then
-            hook.Run("PlayerEndVoice", k)
-        end
+        if not IsValid(k) then hook.Run("PlayerEndVoice", k) end
     end
 end
 
@@ -112,10 +101,8 @@ function PANEL:FadeOut(anim, delta)
         if IsValid(VoicePanels[self.client]) then
             VoicePanels[self.client]:Remove()
             VoicePanels[self.client] = nil
-
             return
         end
-
         return
     end
 
