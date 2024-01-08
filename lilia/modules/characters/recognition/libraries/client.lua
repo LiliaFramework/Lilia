@@ -7,6 +7,7 @@ end
 function RecognitionCore:GetDisplayedDescription(client, isHUD)
     if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar():getID()) then
         if isHUD then return client:getChar():getDesc() end
+
         return "You do not recognize this person."
     end
 end
@@ -20,6 +21,7 @@ function RecognitionCore:GetDisplayedName(client, chatType)
     if not ourCharacter:doesRecognize(characterID) then
         if ourCharacter:doesFakeRecognize(characterID) and myReg[characterID] then return myReg[characterID] end
         if chatType and hook.Run("IsRecognizedChatType", chatType) then return "[Unknown]" end
+
         return "Unknown"
     end
 end
@@ -28,7 +30,7 @@ end
 function RecognitionCore:ShouldAllowScoreboardOverride(client, var)
     local character = client:getChar()
     local ourCharacter = LocalPlayer():getChar()
-    if self.RecognitionEnabled and table.HasValue(self.ScoreboardHiddenVars, var) and (client ~= LocalPlayer()) and not (ourCharacter:doesRecognize(character:getID()) and ourCharacter:doesFakeRecognize(character:getID())) then return true end
+    if self.RecognitionEnabled and IsValid(ourCharacter) and IsValid(character) and table.HasValue(self.ScoreboardHiddenVars, var) and (client ~= LocalPlayer()) and not (ourCharacter:doesRecognize(character:getID()) and ourCharacter:doesFakeRecognize(character:getID())) then return true end
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -42,5 +44,12 @@ function CharRecognize(level, name)
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-concommand.Add("dev_reloadsb", function() if IsValid(lia.gui.score) then lia.gui.score:Remove() end end)
+concommand.Add(
+    "dev_reloadsb",
+    function()
+        if IsValid(lia.gui.score) then
+            lia.gui.score:Remove()
+        end
+    end
+)
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
