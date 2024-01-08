@@ -24,7 +24,7 @@ function GM:TranslateActivity(client, act)
     local class = getModelClass(model) or "player"
     local weapon = client.GetActiveWeapon(client)
     if class == "player" then
-        if not lia.config.get("wepAlwaysRaised") and IsValid(weapon) and (client.isWepRaised and not client.isWepRaised(client)) and client:OnGround() then
+        if not (RaisedWeaponCore and RaisedWeaponCore.WepAlwaysRaised) and IsValid(weapon) and (client.isWepRaised and not client.isWepRaised(client)) and client:OnGround() then
             if string.find(model, "zombie") then
                 local tree = lia.anim.zombie
                 if string.find(model, "fast") then tree = lia.anim.fastZombie end
