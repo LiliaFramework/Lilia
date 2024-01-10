@@ -12,18 +12,13 @@ end
 function RealisticDamageCore:PlayerDeath(client)
     if not self.DeathSoundEnabled then return end
     local deathSound = hook.Run("GetPlayerDeathSound", client, client:isFemale())
-    if deathSound then
-        client:EmitSound(deathSound)
-    end
+    if deathSound then client:EmitSound(deathSound) end
 end
 
 function RealisticDamageCore:EntityTakeDamage(client, _)
     if not self.PainSoundEnabled or not client:IsPlayer() or client:Health() <= 0 then return end
     local painSound = self:GetPlayerPainSound(client, "hurt", client:isFemale())
-    if client:WaterLevel() >= 3 then
-        painSound = self:GetPlayerPainSound(client, "drown", client:isFemale())
-    end
-
+    if client:WaterLevel() >= 3 then painSound = self:GetPlayerPainSound(client, "drown", client:isFemale()) end
     if painSound then
         client:EmitSound(painSound)
         client.NextPain = CurTime() + 0.33
@@ -32,18 +27,13 @@ end
 
 function RealisticDamageCore:PlayerDisconnected(client)
     local steamID64 = client:SteamID64()
-    if timer.Exists("DrownTimer_" .. steamID64) then
-        timer.Remove("DrownTimer_" .. steamID64)
-    end
+    if timer.Exists("DrownTimer_" .. steamID64) then timer.Remove("DrownTimer_" .. steamID64) end
 end
 
 function RealisticDamageCore:PlayerLoadedChar(client)
     local steamID64 = client:SteamID64()
     if not (client:getChar() or client:Alive() or self.DrowningEnabled) or hook.Run("ShouldclientDrown", client) == false then return end
-    if timer.Exists("DrownTimer_" .. steamID64) then
-        timer.Remove("DrownTimer_" .. steamID64)
-    end
-
+    if timer.Exists("DrownTimer_" .. steamID64) then timer.Remove("DrownTimer_" .. steamID64) end
     local function applyDrowningEffects()
         if client:WaterLevel() >= 3 then
             client.drowningTime = client.drowningTime or (CurTime() + self.DrownTime)

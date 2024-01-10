@@ -1,4 +1,4 @@
-function MODULE:PostDrawOpaqueRenderables()
+﻿function MODULE:PostDrawOpaqueRenderables()
     local client = LocalPlayer()
     if not client:FlashlightIsOn() then return end
     local flashlight = DynamicLight(client:EntIndex())

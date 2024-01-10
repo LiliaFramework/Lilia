@@ -15,13 +15,10 @@
                     client:setAction()
                 end
 
-                if IsValid(client) then
-                    client:setAction()
-                end
+                if IsValid(client) then client:setAction() end
             end
         )
     end
-
     return self.CarEntryDelayEnabled
 end
 
@@ -31,7 +28,6 @@ function SimfphysCompatibility:OnEntityCreated(entity)
         entity.PhysicsCollide = function(vehicle, data, physobj)
             if not self.DamageInCars then
                 entity:PhysicsCollideBack(data, physobj)
-
                 return
             end
 
@@ -39,10 +35,7 @@ function SimfphysCompatibility:OnEntityCreated(entity)
             local speed = data.Speed
             local mass = 1
             local hitEnt = data.HitEntity
-            if not hitEnt:IsWorld() then
-                mass = math.Clamp(data.HitObject:GetMass() / physobj:GetMass(), 0, 1)
-            end
-
+            if not hitEnt:IsWorld() then mass = math.Clamp(data.HitObject:GetMass() / physobj:GetMass(), 0, 1) end
             local dmg = speed * speed * mass / 5000
             if not dmg or dmg < 1 then return end
             local pos = data.HitPos
