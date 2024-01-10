@@ -1,20 +1,20 @@
-﻿---------
+﻿
 ModulesLoaded = false
----------
+
 DeriveGamemode("sandbox")
----------
+
 GM.Name = "Lilia"
----------
+
 GM.Author = "Leonheart"
----------
+
 GM.Website = "https://discord.gg/jjrhyeuzYV"
----------
+
 function GM:Initialize()
     hook.Run("LoadLiliaFonts", "Arial", "Segoe UI")
     lia.module.initialize()
 end
 
----------
+
 function GM:OnReloaded()
     if not ModulesLoaded then
         lia.module.initialize()

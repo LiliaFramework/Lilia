@@ -1,10 +1,10 @@
-﻿---
+﻿
 function LiliaStorage:isSuitableForTrunk(ent)
     if IsValid(ent) and ent:IsVehicle() then return true end
     return false
 end
 
----
+
 function LiliaStorage:InitializeStorage(ent)
     if LiliaStorage.Vehicles[ent] then return end
     LiliaStorage.Vehicles[ent] = true
@@ -19,4 +19,4 @@ function LiliaStorage:InitializeStorage(ent)
         )
     end
 end
----
+

@@ -1,7 +1,7 @@
-------------------
+
 MODULE.FlashlightEnabled = true
-------------------W
+W
 MODULE.FlashlightNeedsItem = true
-------------------
+
 MODULE.FlashlightItems = {"flashlight"}
-------------------
+

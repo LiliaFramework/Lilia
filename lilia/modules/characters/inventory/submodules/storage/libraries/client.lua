@@ -1,10 +1,10 @@
-﻿---
+﻿
 function LiliaStorage:exitStorage()
     net.Start("liaStorageExit")
     net.SendToServer()
 end
 
----
+
 function LiliaStorage:StorageUnlockPrompt(_)
     Derma_StringRequest(
         L("storPassWrite"),
@@ -18,7 +18,7 @@ function LiliaStorage:StorageUnlockPrompt(_)
     )
 end
 
----
+
 function LiliaStorage:StorageOpen(storage)
     if not IsValid(storage) then return end
     local localInv = LocalPlayer():getChar() and LocalPlayer():getChar():getInv()
@@ -53,7 +53,7 @@ function LiliaStorage:StorageOpen(storage)
     storageInvPanel.OnRemove = exitStorageOnRemove
 end
 
----
+
 function LiliaStorage:transferItem(itemID)
     if not lia.item.instances[itemID] then return end
     net.Start("liaStorageTransfer")
@@ -61,7 +61,7 @@ function LiliaStorage:transferItem(itemID)
     net.SendToServer()
 end
 
----
+
 function LiliaStorage:PopulateContent(pnlContent, tree)
     local RootNode = tree:AddNode("Spawnable Props", "icon16/box.png")
     local ViewPanel = vgui.Create("ContentContainer", pnlContent)
@@ -86,4 +86,4 @@ function LiliaStorage:PopulateContent(pnlContent, tree)
 
     pnlContent:SwitchPanel(ViewPanel)
 end
----
+

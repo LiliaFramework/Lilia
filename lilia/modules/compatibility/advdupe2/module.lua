@@ -1,4 +1,4 @@
-﻿---
+﻿
 MODULE.name = "Compatibility - Advanced Dupe 2"
 
 MODULE.author = "76561198312513285"

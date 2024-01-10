@@ -1,8 +1,8 @@
-﻿---
+﻿
 local toScreen = FindMetaTable("Vector").ToScreen
----
+
 include("shared.lua")
----
+
 function ENT:onDrawEntityInfo(alpha)
     local locked = self.getNetVar(self, "locked", false)
     local position = toScreen(self.LocalToWorld(self, self.OBBCenter(self)))
@@ -16,4 +16,4 @@ function ENT:onDrawEntityInfo(alpha)
         if def.desc then lia.util.drawText(L(def.desc), x, y, ColorAlpha(color_white, alpha), 1, 1, nil, alpha * 0.65) end
     end
 end
----
+

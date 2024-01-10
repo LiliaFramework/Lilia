@@ -1,4 +1,4 @@
-﻿---
+﻿
 lia.command.add(
     "storagelock",
     {
@@ -27,7 +27,7 @@ lia.command.add(
     }
 )
 
----
+
 lia.command.add(
     "trunk",
     {
@@ -69,4 +69,4 @@ lia.command.add(
         end
     }
 )
----
+

@@ -1,8 +1,8 @@
-﻿---
+﻿
 util.AddNetworkString("BodygrouperMenu")
----
+
 util.AddNetworkString("BodygrouperMenuClose")
----
+
 net.Receive(
     "BodygrouperMenuClose",
     function(_, client)
@@ -12,7 +12,7 @@ net.Receive(
     end
 )
 
----
+
 net.Receive(
     "BodygrouperMenu",
     function(_, client)
@@ -73,4 +73,4 @@ net.Receive(
         end
     end
 )
----
+

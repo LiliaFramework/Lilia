@@ -1,4 +1,4 @@
-﻿-------------------
+﻿
 local function addNetHandler(name, handler)
     assert(isfunction(handler), "handler is not a function")
     net.Receive(
@@ -10,7 +10,7 @@ local function addNetHandler(name, handler)
     )
 end
 
--------------------
+
 addNetHandler(
     "Money",
     function(vendor)
@@ -21,7 +21,7 @@ addNetHandler(
     end
 )
 
--------------------
+
 addNetHandler(
     "Price",
     function(vendor)
@@ -34,7 +34,7 @@ addNetHandler(
     end
 )
 
--------------------
+
 addNetHandler(
     "Mode",
     function(vendor)
@@ -47,7 +47,7 @@ addNetHandler(
     end
 )
 
--------------------
+
 addNetHandler(
     "Stock",
     function(vendor)
@@ -59,7 +59,7 @@ addNetHandler(
     end
 )
 
--------------------
+
 addNetHandler(
     "MaxStock",
     function(vendor)
@@ -72,7 +72,7 @@ addNetHandler(
     end
 )
 
--------------------
+
 addNetHandler(
     "AllowFaction",
     function(vendor)
@@ -88,7 +88,7 @@ addNetHandler(
     end
 )
 
--------------------
+
 addNetHandler(
     "AllowClass",
     function(vendor)

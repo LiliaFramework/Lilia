@@ -1,4 +1,4 @@
-﻿---
+﻿
 local RULES = {
     AccessIfStorageReceiver = function(inventory, _, context)
         local client = context.client
@@ -21,7 +21,7 @@ local RULES = {
     end
 }
 
----
+
 function LiliaStorage:PlayerSpawnedProp(client, model, entity)
     local data = self.StorageDefinitions[model:lower()]
     if not data then return end
@@ -51,18 +51,18 @@ function LiliaStorage:PlayerSpawnedProp(client, model, entity)
     entity:Remove()
 end
 
----
+
 function LiliaStorage:CanPlayerSpawnStorage(client, _, info)
     if not CAMI.PlayerHasAccess(client, "Staff Permissions - Can Spawn Storage", nil) then return false end
     if not info.invType or not lia.inventory.types[info.invType] then return false end
 end
 
----
+
 function LiliaStorage:CanSaveData(_, _)
     return self.SaveData
 end
 
----
+
 function LiliaStorage:SaveData()
     local data = {}
     for _, entity in ipairs(ents.FindByClass("lia_storage")) do
@@ -77,12 +77,12 @@ function LiliaStorage:SaveData()
     self:setData(data)
 end
 
----
+
 function LiliaStorage:StorageItemRemoved(_, _)
     self:SaveData()
 end
 
----
+
 function LiliaStorage:LoadData()
     local data = self:getData()
     if not data then return end
@@ -121,19 +121,19 @@ function LiliaStorage:LoadData()
     self.loadedData = true
 end
 
----
+
 local PROHIBITED_ACTIONS = {
     ["Equip"] = true,
     ["EquipUn"] = true,
 }
 
----
+
 function LiliaStorage:CanPlayerInteractItem(_, action, itemObject, _)
     local inventory = lia.inventory.instances[itemObject.invID]
     if inventory and inventory.isStorage == true and PROHIBITED_ACTIONS[action] then return false, "forbiddenActionStorage" end
 end
 
----
+
 function LiliaStorage:EntityRemoved(ent)
     LiliaStorage.Vehicles[ent] = nil
     if not LiliaStorage:isSuitableForTrunk(ent) then return end
@@ -141,19 +141,19 @@ function LiliaStorage:EntityRemoved(ent)
     if storageInv then storageInv:delete() end
 end
 
----
+
 function LiliaStorage:OnEntityCreated(ent)
     if not LiliaStorage:isSuitableForTrunk(ent) then return end
     if ent.IsSimfphyscar then netstream.Start(nil, "trunkInitStorage", ent) end
     self:InitializeStorage(ent)
 end
 
----
+
 function LiliaStorage:PlayerInitialSpawn(client)
     netstream.Start(client, "trunkInitStorage", LiliaStorage.Vehicles)
 end
 
----
+
 function LiliaStorage:StorageInventorySet(_, inventory, isCar)
     if isCar then
         inventory:addAccessRule(RULES.AccessIfCarStorageReceiver)
@@ -162,4 +162,4 @@ function LiliaStorage:StorageInventorySet(_, inventory, isCar)
     end
 end
 return RULES
----
+

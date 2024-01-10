@@ -1,15 +1,15 @@
-﻿-------------------
+﻿
 local toScreen = FindMetaTable("Vector").ToScreen
--------------------
+
 include("shared.lua")
--------------------
+
 function ENT:createBubble()
     self.bubble = ClientsideModel("models/extras/info_speech.mdl", RENDERGROUP_OPAQUE)
     self.bubble:SetPos(self:GetPos() + Vector(0, 0, 84))
     self.bubble:SetModelScale(0.6, 0)
 end
 
--------------------
+
 function ENT:Draw()
     local bubble = self.bubble
     if IsValid(bubble) then
@@ -22,7 +22,7 @@ function ENT:Draw()
     self:DrawModel()
 end
 
--------------------
+
 function ENT:Think()
     if not self.hasSetupVars then self:setupVars() end
     local noBubble = self:getNetVar("noBubble")
@@ -41,12 +41,12 @@ function ENT:Think()
     return true
 end
 
--------------------
+
 function ENT:OnRemove()
     if IsValid(self.bubble) then self.bubble:Remove() end
 end
 
--------------------
+
 function ENT:onDrawEntityInfo(alpha)
     local position = toScreen(self:LocalToWorld(self:OBBCenter()) + Vector(0, 0, 20))
     local x, y = position.x, position.y
@@ -54,4 +54,4 @@ function ENT:onDrawEntityInfo(alpha)
     lia.util.drawText(self.getNetVar(self, "name", "John Doe"), x, y, ColorAlpha(lia.config.Color), 1, 1, nil, alpha * 0.65)
     if desc then lia.util.drawText(desc, x, y + 16, ColorAlpha(color_white, alpha), 1, 1, "liaSmallFont", alpha * 0.65) end
 end
--------------------
+

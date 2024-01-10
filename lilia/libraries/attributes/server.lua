@@ -1,4 +1,4 @@
-﻿---------
+﻿
 function lia.attribs.setup(client)
     local character = client:getChar()
     if character then

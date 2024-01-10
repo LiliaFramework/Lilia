@@ -1,4 +1,4 @@
-﻿---
+﻿
 net.Receive(
     "liaStorageUnlock",
     function()
@@ -7,7 +7,7 @@ net.Receive(
     end
 )
 
----
+
 net.Receive(
     "liaStorageOpen",
     function()
@@ -15,4 +15,4 @@ net.Receive(
         hook.Run("StorageOpen", entity)
     end
 )
----
+

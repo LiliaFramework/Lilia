@@ -1,4 +1,4 @@
-﻿---
+﻿
 MODULE.name = "Compatibility - PCasino"
 
 MODULE.author = "76561198312513285"

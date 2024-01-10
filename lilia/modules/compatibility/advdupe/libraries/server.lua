@@ -29,7 +29,7 @@ function AdvDupeCompatibility:PlayerSpawnProp(client)
     if usingToolgun and toolobj.Entities then return true end
 end
 
---------------------
+
 function AdvDupeCompatibility:PlayerSpawnObject(client, _, _)
     local toolobj = client:GetActiveWeapon():GetToolObject()
     local usingToolgun = client:GetActiveWeapon():GetClass() == "gmod_tool"

@@ -1,4 +1,4 @@
-﻿---
+﻿
 LiliaStorage.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Spawn Storage",
@@ -6,4 +6,4 @@ LiliaStorage.CAMIPrivileges = {
         Description = "Allows access to Spawning Storage.",
     }
 }
----
+

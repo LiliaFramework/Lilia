@@ -1,9 +1,9 @@
-﻿-------------------
+﻿
 local PANEL = {}
--------------------
+
 AccessorFunc(PANEL, "padding", "Padding")
 AccessorFunc(PANEL, "canvas", "Canvas")
--------------------
+
 function PANEL:Init()
     self.canvas = self:Add("Panel")
     self.canvas.OnMousePressed = function(_, code) self:OnMousePressed(code) end
@@ -22,43 +22,43 @@ function PANEL:Init()
     self:SetPaintBackground(false)
 end
 
--------------------
+
 function PANEL:AddItem(panel)
     panel:SetParent(self:GetCanvas())
 end
 
--------------------
+
 function PANEL:OnChildAdded(child)
     self:AddItem(child)
 end
 
--------------------
+
 function PANEL:SizeToContents()
     self:SetSize(self:GetCanvas():GetSize())
 end
 
--------------------
+
 function PANEL:GetHBar()
     return self.bar
 end
 
--------------------
+
 function PANEL:Rebuild()
     self:GetCanvas():SizeToChildren(true, false)
     self:CenterHorizontal()
 end
 
--------------------
+
 function PANEL:OnMouseWheeled(delta)
     self:GetHBar():OnMouseWheeled(delta)
 end
 
--------------------
+
 function PANEL:OnHScroll(offset)
     self:GetCanvas():SetPos(offset, 0)
 end
 
--------------------
+
 function PANEL:ScrollToChild(child)
     self:PerformLayout()
     local x = self:GetCanvas():GetChildPosition(child)
@@ -67,7 +67,7 @@ function PANEL:ScrollToChild(child)
     self:GetHBar():AnimateTo(x, 0.5, 0, 0.5)
 end
 
--------------------
+
 function PANEL:PerformLayout()
     local canvasWide = self:GetCanvas():GetWide()
     local wide, tall = self:GetSize()
@@ -83,11 +83,11 @@ function PANEL:PerformLayout()
     if canvasWide ~= canvas:GetWide() then bar:SetScroll(bar:GetScroll()) end
 end
 
--------------------
+
 function PANEL:Clear()
     self:GetCanvas():Clear()
 end
 
--------------------
+
 vgui.Register("liaHorizontalScroll", PANEL, "DPanel")
--------------------
+

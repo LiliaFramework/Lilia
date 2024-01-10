@@ -1,19 +1,19 @@
-﻿---
+﻿
 local stmBlurAlpha = 0
----
+
 local stmBlurAmount = 0
----
+
 AttributesCore.stmBlurAlpha = 0
----
+
 AttributesCore.predictedStamina = 100
----
+
 AttributesCore.stmBlurAmount = 0
----
+
 function AttributesCore:ConfigureCharacterCreationSteps(panel)
     panel:addStep(vgui.Create("liaCharacterAttribs"), 99)
 end
 
----
+
 function AttributesCore:Think()
     local client = LocalPlayer()
     if not client:getChar() then return end
@@ -24,7 +24,7 @@ function AttributesCore:Think()
     if offset ~= 0 then self.predictedStamina = math.Clamp(self.predictedStamina + offset, 0, maxStamina) end
 end
 
----
+
 function AttributesCore:HUDPaintBackground()
     local client = LocalPlayer()
     if not (self.StaminaBlur or client:getChar()) then return end
@@ -38,7 +38,7 @@ function AttributesCore:HUDPaintBackground()
     end
 end
 
----
+
 if not StaminaBarAdded then
     lia.bar.add(function() return AttributesCore.predictedStamina / 100 end, Color(200, 200, 40), nil, "stamina")
     StaminaBarAdded = true

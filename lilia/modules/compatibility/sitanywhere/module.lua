@@ -1,4 +1,4 @@
-﻿---
+﻿
 MODULE.name = "Compatibility - Sitting Anywhere"
 
 MODULE.author = "76561198312513285"

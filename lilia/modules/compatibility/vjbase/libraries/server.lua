@@ -11,7 +11,7 @@ function VJBaseCompatibility:Think()
     end
 end
 
---------------------
+
 hook.Remove("PlayerInitialSpawn", "VJBaseSpawn")
 
 hook.Remove("PlayerInitialSpawn", "drvrejplayerInitialSpawn")

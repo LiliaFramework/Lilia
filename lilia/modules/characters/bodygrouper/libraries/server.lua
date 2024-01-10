@@ -1,4 +1,4 @@
-﻿---
+﻿
 function BodygrouperCore:SaveData()
     local data = {}
     for _, v in pairs(ents.FindByClass("lia_bodygrouper")) do
@@ -8,7 +8,7 @@ function BodygrouperCore:SaveData()
     self:setData(data)
 end
 
----
+
 function BodygrouperCore:LoadData()
     timer.Simple(
         1,
@@ -25,15 +25,15 @@ function BodygrouperCore:LoadData()
     )
 end
 
----
+
 function BodygrouperCore:BodygrouperClosetAddUser(closet, _)
     local opensound = self.BodygrouperOpenSound
     if opensound then closet:EmitSound(opensound) end
 end
 
----
+
 function BodygrouperCore:BodygrouperClosetRemoveUser(closet, _)
     local closesound = self.BodygrouperCloseSound
     if closesound then closet:EmitSound(closesound) end
 end
----
+

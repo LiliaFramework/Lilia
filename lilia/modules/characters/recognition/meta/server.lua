@@ -1,6 +1,6 @@
-﻿---
+﻿
 local charMeta = lia.meta.character
----
+
 function charMeta:recognize(character, name)
     local id = character:getID()
     if not isnumber(id) and id.getID then id = id:getID() end
@@ -14,4 +14,4 @@ function charMeta:recognize(character, name)
     end
     return true
 end
----
+

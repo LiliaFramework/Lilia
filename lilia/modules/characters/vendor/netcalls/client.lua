@@ -1,4 +1,4 @@
-﻿-------------------
+﻿
 net.Receive(
     "liaVendorSync",
     function()
@@ -29,7 +29,7 @@ net.Receive(
     end
 )
 
--------------------
+
 net.Receive(
     "liaVendorOpen",
     function()
@@ -41,7 +41,7 @@ net.Receive(
     end
 )
 
--------------------
+
 net.Receive(
     "liaVendorExit",
     function()
@@ -50,7 +50,7 @@ net.Receive(
     end
 )
 
--------------------
+
 net.Receive(
     "liaVendorEdit",
     function()
@@ -65,7 +65,7 @@ net.Receive(
     end
 )
 
--------------------
+
 net.Receive(
     "liaVendorFaction",
     function()
@@ -73,4 +73,4 @@ net.Receive(
         if IsValid(liaVendorEnt) then liaVendorEnt.factions[factionID] = true end
     end
 )
--------------------
+

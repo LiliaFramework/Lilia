@@ -1,4 +1,4 @@
-﻿--------------------
+﻿
 net.Receive(
     "liaAuditPanel",
     function()
@@ -8,6 +8,6 @@ net.Receive(
     end
 )
 
---------------------
+
 netstream.Hook("liaReport", function(data) vgui.Create("liaReport"):populate(data) end)
---------------------
+
