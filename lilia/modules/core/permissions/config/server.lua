@@ -1,5 +1,5 @@
 ﻿--[[ List of entities blocked from physgun move ]]
-RestrictionCore.PhysGunMoveRestrictedEntityList = {"prop_dynamic", "func_movelinear", "prop_door_rotating", "lia_vendor"}
+RestrictionCore.RestrictedEnts = {"func_button", "class C_BaseEntity", "func_brush", "func_tracktrain", "func_door", "func_door_rotating", "prop_static", "prop_physics_override", "prop_dynamic", "func_movelinear", "prop_door_rotating", "lia_vendor"}
 --[[ List of entities blocked from the remover tool ]]
 RestrictionCore.RemoverBlockedEntities = {"lia_bodygroupcloset", "lia_vendor",}
 --[[ List of entities blocked from the duplicator tool ]]
@@ -16,3 +16,5 @@ RestrictionCore.ButtonList = {"models/maxofs2d/button_01.mdl", "models/maxofs2d/
 RestrictionCore.PassableOnFreeze = false
 --[[ Delay for spawning a vehicle after the previous one ]]
 RestrictionCore.PlayerSpawnVehicleDelay = 30
+--[[ Adds ToolGun Cooldown ]]
+RestrictionCore.ToolInterval = 0.5
