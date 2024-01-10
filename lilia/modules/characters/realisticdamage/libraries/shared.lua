@@ -1,7 +1,6 @@
-function RealisticDamageCore:GetPlayerDeathSound(_, isFemale)
+﻿function RealisticDamageCore:GetPlayerDeathSound(_, isFemale)
     local soundTable
     soundTable = isFemale and self.FemaleDeathSounds or self.MaleDeathSounds
-
     return soundTable and soundTable[math.random(#soundTable)]
 end
 
@@ -12,7 +11,6 @@ function RealisticDamageCore:GetPlayerPainSound(_, paintype, isFemale)
     elseif paintype == "hurt" then
         soundTable = isFemale and self.FemaleHurtSounds or self.MaleHurtSounds
     end
-
     return soundTable and soundTable[math.random(#soundTable)]
 end
 

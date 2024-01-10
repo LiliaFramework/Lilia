@@ -1,4 +1,4 @@
---[[ Indicates whether drowning is enabled   ]]
+﻿--[[ Indicates whether drowning is enabled   ]]
 RealisticDamageCore.DrowningEnabled = true
 --[[ Indicates whether damage while in cars is enabled   ]]
 RealisticDamageCore.DamageInCars = true
