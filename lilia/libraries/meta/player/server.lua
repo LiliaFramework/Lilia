@@ -11,7 +11,10 @@ end
 
 function playerMeta:setAction(text, time, callback, startTime, finishTime)
     if time and time <= 0 then
-        if callback then callback(self) end
+        if callback then
+            callback(self)
+        end
+
         return
     end
 
@@ -21,11 +24,23 @@ function playerMeta:setAction(text, time, callback, startTime, finishTime)
     if text == false then
         timer.Remove("liaAct" .. self:UniqueID())
         netstream.Start(self, "actBar")
+
         return
     end
 
     netstream.Start(self, "actBar", startTime, finishTime, text)
-    if callback then timer.Create("liaAct" .. self:UniqueID(), time, 1, function() if IsValid(self) then callback(self) end end) end
+    if callback then
+        timer.Create(
+            "liaAct" .. self:UniqueID(),
+            time,
+            1,
+            function()
+                if IsValid(self) then
+                    callback(self)
+                end
+            end
+        )
+    end
 end
 
 function playerMeta:PlaySound(sound, pitch)
@@ -43,6 +58,7 @@ end
 
 function playerMeta:getPlayTime()
     local diff = os.time(lia.util.dateToNumber(self.lastJoin)) - os.time(lia.util.dateToNumber(self.firstJoin))
+
     return diff + (RealTime() - (self.liaJoinTime or RealTime()))
 end
 
@@ -57,7 +73,10 @@ function playerMeta:CreateServerRagdoll(DontSetPlayer)
     end
 
     entity:Spawn()
-    if not DontSetPlayer then entity:SetNetVar("player", self) end
+    if not DontSetPlayer then
+        entity:SetNetVar("player", self)
+    end
+
     entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
     entity:Activate()
     hook.Run("OnCreatePlayerServerRagdoll", self)
@@ -74,6 +93,7 @@ function playerMeta:CreateServerRagdoll(DontSetPlayer)
             end
         end
     end
+
     return entity
 end
 
@@ -90,16 +110,23 @@ function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
                 data.start = self:GetShootPos()
                 data.endpos = data.start + self:GetAimVector() * (distance or 96)
                 local targetEntity = util.TraceLine(data).Entity
-                if IsValid(targetEntity) and targetEntity:GetClass() == "prop_ragdoll" and IsValid(targetEntity:getNetVar("player")) then targetEntity = targetEntity:getNetVar("player") end
+                if IsValid(targetEntity) and targetEntity:GetClass() == "prop_ragdoll" and IsValid(targetEntity:getNetVar("player")) then
+                    targetEntity = targetEntity:getNetVar("player")
+                end
+
                 if targetEntity ~= entity then
                     timer.Remove(uniqueID)
-                    if onCancel then onCancel() end
+                    if onCancel then
+                        onCancel()
+                    end
                 elseif callback and timer.RepsLeft(uniqueID) == 0 then
                     callback()
                 end
             else
                 timer.Remove(uniqueID)
-                if onCancel then onCancel() end
+                if onCancel then
+                    onCancel()
+                end
             end
         end
     )
@@ -113,12 +140,23 @@ function playerMeta:notifyLocalized(message, ...)
     lia.util.notifyLocalized(message, self, ...)
 end
 
+function playerMeta:chatNotify(message)
+    lia.chat.send(client, "flip", message)
+end
+
+function playerMeta:chatNotifyLocalized(message, ...)
+    message = L(message, self, ...)
+    lia.chat.send(client, "flip", message)
+end
+
 function playerMeta:requestString(title, subTitle, callback, default)
     local d
     if not isfunction(callback) and default == nil then
         default = callback
         d = deferred.new()
-        callback = function(value) d:resolve(value) end
+        callback = function(value)
+            d:resolve(value)
+        end
     end
 
     self.liaStrReqs = self.liaStrReqs or {}
@@ -129,17 +167,17 @@ function playerMeta:requestString(title, subTitle, callback, default)
     net.WriteString(subTitle)
     net.WriteString(default or "")
     net.Send(self)
+
     return d
 end
 
 function playerMeta:isStuck()
-    return     util.TraceEntity(
+    return util.TraceEntity(
         {
             start = self:GetPos(),
             endpos = self:GetPos(),
             filter = self
-        },
-        self
+        }, self
     ).StartSolid
 end
 
@@ -170,13 +208,17 @@ function playerMeta:createRagdoll(freeze)
             end
         end
     end
+
     return entity
 end
 
 function playerMeta:setRagdolled(state, time, getUpGrace)
     getUpGrace = getUpGrace or time or 5
     if state then
-        if IsValid(self.liaRagdoll) then self.liaRagdoll:Remove() end
+        if IsValid(self.liaRagdoll) then
+            self.liaRagdoll:Remove()
+        end
+
         local entity = self:createRagdoll()
         entity:setNetVar("player", self)
         entity:CallOnRemove(
@@ -185,7 +227,10 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
                 if IsValid(self) then
                     self:setLocalVar("blur", nil)
                     self:setLocalVar("ragdoll", nil)
-                    if not entity.liaNoReset then self:SetPos(entity:GetPos()) end
+                    if not entity.liaNoReset then
+                        self:SetPos(entity:GetPos())
+                    end
+
                     self:SetNoDraw(false)
                     self:SetNotSolid(false)
                     self:Freeze(false)
@@ -199,7 +244,9 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
                             self:Give(v)
                             if entity.liaAmmo then
                                 for k2, v2 in ipairs(entity.liaAmmo) do
-                                    if v == v2[1] then self:SetAmmo(v2[2], tostring(k2)) end
+                                    if v == v2[1] then
+                                        self:SetAmmo(v2[2], tostring(k2))
+                                    end
                                 end
                             end
                         end
@@ -227,7 +274,10 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
         entity.liaWeapons = {}
         entity.liaAmmo = {}
         entity.liaPlayer = self
-        if getUpGrace then entity.liaGrace = CurTime() + getUpGrace end
+        if getUpGrace then
+            entity.liaGrace = CurTime() + getUpGrace
+        end
+
         if time and time > 0 then
             entity.liaStart = CurTime()
             entity.liaFinish = entity.liaStart + time
@@ -264,6 +314,7 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
                                 self:setAction()
                                 entity.liaPausing = true
                             end
+
                             return
                         elseif entity.liaPausing then
                             self:setAction("@wakingUp", time)
@@ -271,7 +322,9 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
                         end
 
                         time = time - 0.33
-                        if time <= 0 then entity:Remove() end
+                        if time <= 0 then
+                            entity:Remove()
+                        end
                     else
                         timer.Remove(uniqueID)
                     end
@@ -288,7 +341,10 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
 end
 
 function playerMeta:setWhitelisted(faction, whitelisted)
-    if not whitelisted then whitelisted = nil end
+    if not whitelisted then
+        whitelisted = nil
+    end
+
     local data = lia.faction.indices[faction]
     if data then
         local whitelists = self:getLiliaData("whitelists", {})
@@ -296,8 +352,10 @@ function playerMeta:setWhitelisted(faction, whitelisted)
         whitelists[SCHEMA.folder][data.uniqueID] = whitelisted and true or nil
         self:setLiliaData("whitelists", whitelists)
         self:saveLiliaData()
+
         return true
     end
+
     return false
 end
 

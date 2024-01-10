@@ -5,6 +5,6 @@
     return CAMI.PlayerHasAccess(client, "Commands - Change Bodygroups", nil)
 end
 
-function BodygrouperCore:CanProperty(_, str, ent)
-    if str == "persist" and (IsValid(ent) and ent:GetClass() == "lia_bodygrouper") then return false end
+function BodygrouperCore:CanProperty(_, property, entity)
+    if property == "persist" and (IsValid(entity) and entity:GetClass() == "lia_bodygrouper") then return false end
 end
