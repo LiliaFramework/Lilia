@@ -46,11 +46,7 @@ function SimfphysCompatibility:OnEntityCreated(entity)
             local dmg = speed * speed * mass / 5000
             if not dmg or dmg < 1 then return end
             local pos = data.HitPos
-            local attacker = hitEnt
-            local inflictor = hitEnt
             if simfphys.IsCar(hitEnt) then
-                local entDriver = hitEnt:GetDriver()
-                attacker = IsValid(entDriver) and entDriver or hitEnt
                 local vel = data.OurOldVelocity
                 local tvel = data.TheirOldVelocity
                 local dif = data.OurNewVelocity - tvel
@@ -69,12 +65,9 @@ function SimfphysCompatibility:OnEntityCreated(entity)
             end
 
             local dmginfo = DamageInfo()
-            local driver = vehicle:GetDriver()
-            local attacker = hitEnt
-            local inflictor = vehicle
             dmginfo:SetDamage(dmg)
-            dmginfo:SetAttacker(attacker)
-            dmginfo:SetInflictor(inflictor)
+            dmginfo:SetAttacker(hitEnt)
+            dmginfo:SetInflictor(vehicle)
             dmginfo:SetDamageType(DMG_CRUSH)
             dmginfo:SetDamagePosition(pos)
             local force = Vector((vehicle:GetPos() - pos):GetNormalized() * dmg * physobj:GetMass() * 100)
