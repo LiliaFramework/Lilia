@@ -1,6 +1,4 @@
-﻿--------------------------------------------------------------------------------------------------------------------------
-local PANEL = {}
---------------------------------------------------------------------------------------------------------------------------
+﻿local PANEL = {}
 function PANEL:Init()
     self.brightness = 1
     self:SetCursor("none")
@@ -29,10 +27,8 @@ function PANEL:Init()
     end
 end
 
---------------------------------------------------------------------------------------------------------------------------
 local gui_MouseX = gui.MouseX
 local gui_MouseY = gui.MouseY
---------------------------------------------------------------------------------------------------------------------------
 function PANEL:LayoutEntity()
     local scrW, scrH = ScrW(), ScrH()
     local xRatio = gui_MouseX() / scrW
@@ -53,7 +49,6 @@ function PANEL:LayoutEntity()
     self:RunAnimation()
 end
 
---------------------------------------------------------------------------------------------------------------------------
 function PANEL:PreDrawModel(entity)
     if self.brightness then
         local brightness = self.brightness * 0.4
@@ -71,11 +66,9 @@ function PANEL:PreDrawModel(entity)
     return true
 end
 
---------------------------------------------------------------------------------------------------------------------------
 function PANEL:OnMousePressed()
 end
 
---------------------------------------------------------------------------------------------------------------------------
 function PANEL:fitFOV()
     local entity = self:GetEntity()
     if not IsValid(entity) then return end
@@ -85,6 +78,4 @@ function PANEL:fitFOV()
     self:SetFOV(math.deg(2 * math.atan(height / (2 * distance))))
 end
 
---------------------------------------------------------------------------------------------------------------------------
 vgui.Register("liaModelPanel", PANEL, "DModelPanel")
---------------------------------------------------------------------------------------------------------------------------

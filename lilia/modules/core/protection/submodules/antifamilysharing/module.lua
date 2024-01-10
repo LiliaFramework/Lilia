@@ -1,0 +1,5 @@
+﻿MODULE.name = "Protection - Anti Family Sharing"
+MODULE.author = "76561198312513285"
+MODULE.discord = "@liliaplayer"
+MODULE.desc = "Implements Lilia's Anti Family Sharing System."
+MODULE.identifier = "AntiFamilySharing"

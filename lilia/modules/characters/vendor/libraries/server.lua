@@ -1,6 +1,4 @@
-﻿--------------------------------------------------------------------------------------------------------------------------
-local VendorCore = VendorCore
---------------------------------------------------------------------------------------------------------------------------
+﻿local VendorCore = VendorCore
 function VendorCore:SaveData()
     local data = {}
     for _, v in ipairs(ents.FindByClass("lia_vendor")) do
@@ -22,7 +20,6 @@ function VendorCore:SaveData()
     self:setData(data)
 end
 
---------------------------------------------------------------------------------------------------------------------------
 function VendorCore:LoadData()
     for _, v in ipairs(ents.FindByClass("lia_vendor")) do
         v.liaIsSafe = true
@@ -46,7 +43,6 @@ function VendorCore:LoadData()
     end
 end
 
---------------------------------------------------------------------------------------------------------------------------
 function VendorCore:CanPlayerAccessVendor(client, vendor)
     if client:CanEditVendor() then return true end
     local character = client:getChar()
@@ -54,7 +50,6 @@ function VendorCore:CanPlayerAccessVendor(client, vendor)
     if vendor:isFactionAllowed(client:Team()) then return true end
 end
 
---------------------------------------------------------------------------------------------------------------------------
 function VendorCore:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)
     if not vendor.items[itemType] then return false end
     local state = vendor:getTradeMode(itemType)
@@ -78,7 +73,6 @@ function VendorCore:CanPlayerTradeWithVendor(client, vendor, itemType, isSelling
     if money and money < price then return false, isSellingToVendor and "vendorNoMoney" or "canNotAfford" end
 end
 
---------------------------------------------------------------------------------------------------------------------------
 if not VENDOR_INVENTORY_MEASURE then
     VENDOR_INVENTORY_MEASURE = lia.inventory.types["grid"]:new()
     VENDOR_INVENTORY_MEASURE.data = {
@@ -90,7 +84,6 @@ if not VENDOR_INVENTORY_MEASURE then
     VENDOR_INVENTORY_MEASURE:onInstanced()
 end
 
---------------------------------------------------------------------------------------------------------------------------
 function VendorCore:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
     local canAccess, reason = hook.Run("CanPlayerTradeWithVendor", client, vendor, itemType, isSellingToVendor)
     if canAccess == false then
@@ -110,7 +103,6 @@ function VendorCore:VendorTradeAttempt(client, vendor, itemType, isSellingToVend
     end
 end
 
---------------------------------------------------------------------------------------------------------------------------
 function VendorCore:PlayerAccessVendor(client, vendor)
     vendor:addReceiver(client)
     net.Start("liaVendorOpen")
@@ -118,7 +110,6 @@ function VendorCore:PlayerAccessVendor(client, vendor)
     net.Send(client)
 end
 
---------------------------------------------------------------------------------------------------------------------------
 function VendorCore:VendorSellEvent(client, vendor, itemType, _, character, price)
     local inventory = character:getInv()
     local item = inventory:getFirstItemOfType(itemType)
@@ -150,7 +141,6 @@ function VendorCore:VendorSellEvent(client, vendor, itemType, _, character, pric
     end
 end
 
---------------------------------------------------------------------------------------------------------------------------
 function VendorCore:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
     vendor:giveMoney(price)
     character:takeMoney(price)
@@ -174,4 +164,3 @@ function VendorCore:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, 
         end
     )
 end
---------------------------------------------------------------------------------------------------------------------------
