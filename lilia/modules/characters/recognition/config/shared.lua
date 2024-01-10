@@ -7,7 +7,7 @@ RecognitionCore.FactionAutoRecognize = false
 
 --[[ Are fake names enabled? ]]
 RecognitionCore.FakeNamesEnabled = false
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----
 --[[ Variables to hide from a non-recognized character in the scoreboard ]]
 RecognitionCore.ScoreboardHiddenVars = {"name", "model", "desc"}
 
