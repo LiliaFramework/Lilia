@@ -1,4 +1,4 @@
-﻿
+
 AFKKicker.WarningTime = 570
 
 AFKKicker.TimerInterval = 1
