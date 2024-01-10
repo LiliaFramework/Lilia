@@ -1,4 +1,4 @@
-﻿
+
 function AmmoSaveCore:CharacterPreSave(character)
     local client = character:getPlayer()
     if not IsValid(client) then return end
