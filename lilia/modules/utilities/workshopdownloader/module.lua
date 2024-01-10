@@ -1,4 +1,4 @@
-﻿
+
 MODULE.name = "Utilities - Workshop Downloader"
 
 MODULE.author = "76561198312513285"

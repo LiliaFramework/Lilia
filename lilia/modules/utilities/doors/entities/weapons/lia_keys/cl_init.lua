@@ -1,4 +1,4 @@
-﻿
+
 include("shared.lua")
 
 SWEP.PrintName = "Keys"

@@ -1,4 +1,4 @@
-﻿------------------
+------------------
 ITEM.name = "Flashlight"
 ------------------
 ITEM.model = "models/Items/battery.mdl"

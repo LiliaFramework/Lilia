@@ -1,4 +1,4 @@
-﻿
+
 lia.log.addType(
     "money",
     function(client, ...)

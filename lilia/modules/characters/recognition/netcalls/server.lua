@@ -1,4 +1,4 @@
-﻿
+
 netstream.Hook(
     "rgnDirect",
     function(client, target, name)

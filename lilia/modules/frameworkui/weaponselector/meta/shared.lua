@@ -1,4 +1,4 @@
-﻿
+
 local playerMeta = FindMetaTable("Player")
 
 function playerMeta:SelectWeapon(class)

@@ -1,4 +1,4 @@
-﻿
+
 --[[ Cost of a door]]
 DoorsCore.DoorCost = 10
 

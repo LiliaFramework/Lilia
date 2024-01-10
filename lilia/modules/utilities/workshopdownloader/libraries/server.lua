@@ -1,4 +1,4 @@
-﻿
+
 function WorkshoperCore:InitializedModules()
     if self.GamemodeWorkshop then
         for i = 1, #self.GamemodeWorkshop do

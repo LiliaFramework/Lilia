@@ -1,4 +1,4 @@
-﻿
+
 SWEP.Author = "Leonheart"
 
 SWEP.Instructions = "Primary Fire: Lock\nSecondary Fire: Unlock"

@@ -1,4 +1,4 @@
-﻿
+
 MODULE.name = "Framework UI - Weapon Selector"
 
 MODULE.author = "76561198312513285"

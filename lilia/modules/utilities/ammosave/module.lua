@@ -1,4 +1,4 @@
-﻿
+
 MODULE.name = "Utilities - Ammo Save"
 
 MODULE.author = "76561198312513285"

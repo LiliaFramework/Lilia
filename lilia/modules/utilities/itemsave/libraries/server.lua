@@ -1,4 +1,4 @@
-﻿
+
 function SaveItemsCore:LoadData()
     local items = self:getData()
     if items then

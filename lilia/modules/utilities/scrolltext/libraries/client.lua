@@ -1,4 +1,4 @@
-﻿
+
 local SCROLL_X = ScrW() * 0.9
 
 local SCROLL_Y = ScrH() * 0.7

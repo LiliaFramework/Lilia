@@ -1,4 +1,4 @@
-﻿
+
 local Variables = {"disabled", "name", "price", "noSell", "faction", "factions", "class", "hidden"}
 
 local DarkRPVariables = {
