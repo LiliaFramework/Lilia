@@ -1,4 +1,4 @@
-﻿
+
 net.Receive(
     "AFKWarning",
     function()

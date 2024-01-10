@@ -1,4 +1,4 @@
-﻿------------------
+------------------
 MODULE.FlashlightEnabled = true
 ------------------W
 MODULE.FlashlightNeedsItem = true

@@ -1,4 +1,4 @@
-﻿
+
 --[[ Time it takes to lock a door]]
 DoorsCore.DoorLockTime = 0.5
 

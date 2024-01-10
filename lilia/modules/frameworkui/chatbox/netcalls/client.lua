@@ -1,4 +1,4 @@
-﻿
+
 netstream.Hook(
     "adminClearChat",
     function()

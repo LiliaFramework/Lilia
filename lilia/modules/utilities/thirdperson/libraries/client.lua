@@ -1,4 +1,4 @@
-﻿
+
 local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng, diff, fm, sm
 
 local playerMeta = FindMetaTable("Player")

@@ -1,4 +1,4 @@
-﻿
+
 local toScreen = FindMetaTable("Vector").ToScreen
 
 function DoorsCore:ShouldDrawEntityInfo(entity)

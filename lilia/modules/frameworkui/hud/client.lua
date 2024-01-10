@@ -1,4 +1,4 @@
-﻿
+
 function FrameworkHUD:ShouldHideBars()
     return self.BarsDisabled
 end

@@ -1,4 +1,4 @@
-﻿------------------
+------------------
 function MODULE:PlayerSwitchFlashlight(client, isEnabled)
     local hasFlashlight = false
     local itemNeeded = self.FlashlightItems

@@ -1,4 +1,4 @@
-﻿
+
 local weaponInfo = {"Author", "Contact", "Purpose", "Instructions"}
 
 WSCore.index = WSCore.index or 1

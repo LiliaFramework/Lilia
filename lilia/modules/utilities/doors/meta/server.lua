@@ -1,4 +1,4 @@
-﻿
+
 local entityMeta = FindMetaTable("Entity")
 
 function entityMeta:removeDoorAccessData()

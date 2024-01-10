@@ -1,4 +1,4 @@
-﻿
+
 function LoggerCore:PlayerAuthed(client, steamID)
     lia.log.add(client, "playerConnected", client, steamID)
 end

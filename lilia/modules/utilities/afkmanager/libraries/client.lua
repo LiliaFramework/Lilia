@@ -1,4 +1,4 @@
-﻿
+
 local function DrawWarning()
     if AFKKicker.Alpha < 230 then AFKKicker.Alpha = AFKKicker.Alpha + (FrameTime() * 200) end
     draw.RoundedBox(0, 0, (ScrH() / 2) - ScreenScale(60), ScrW(), ScreenScale(120), Color(0, 0, 0, AFKKicker.Alpha))

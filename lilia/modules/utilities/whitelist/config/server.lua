@@ -1,4 +1,4 @@
-﻿
+
 --[[ Enable or disable the Whitelist ]]
 WhitelistCore.WhitelistEnabled = false
 

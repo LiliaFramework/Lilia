@@ -1,4 +1,4 @@
-﻿
+
 netstream.Hook(
     "doorMenu",
     function(entity, access, door2)

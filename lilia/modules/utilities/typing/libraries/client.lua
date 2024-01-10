@@ -1,4 +1,4 @@
-﻿
+
 local data = {}
 
 local offset1, offset2, offset3, alpha, y

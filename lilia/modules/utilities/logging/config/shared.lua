@@ -1,4 +1,4 @@
-﻿
+
 lia.log.LogColor = {
     [FLAG_NORMAL] = Color(200, 200, 200),
     [FLAG_SUCCESS] = Color(50, 200, 50),
