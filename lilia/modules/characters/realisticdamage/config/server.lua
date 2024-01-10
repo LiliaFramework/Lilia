@@ -1,7 +1,5 @@
 ﻿--[[ Indicates whether drowning is enabled   ]]
 RealisticDamageCore.DrowningEnabled = true
---[[ Indicates whether damage while in cars is enabled   ]]
-RealisticDamageCore.DamageInCars = true
 --[[ Indicates whether damage scaling is enabled   ]]
 RealisticDamageCore.DamageScalerEnabled = true
 --[[ Indicates whether hurt sounds are enabled   ]]
