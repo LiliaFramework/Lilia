@@ -1,5 +1,4 @@
-﻿
-local b = vgui.GetControlTable("DButton")
+﻿local b = vgui.GetControlTable("DButton")
 
 function b:SetColorAcc(col)
     self.defaultColor = col or Color(255, 0, 0)

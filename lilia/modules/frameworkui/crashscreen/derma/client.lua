@@ -1,5 +1,4 @@
-﻿
-local PANEL = {}
+﻿local PANEL = {}
 
 local waits = {}
 

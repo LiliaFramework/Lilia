@@ -1,5 +1,4 @@
-﻿-
-lia.command.add(
+﻿lia.command.add(
     "pktoggle",
     {
         privilege = "Toogle Permakill",
@@ -7,4 +6,4 @@ lia.command.add(
         onRun = function() end
     }
 )
--
+

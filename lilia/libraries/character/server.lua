@@ -39,7 +39,6 @@ function lia.char.create(data, callback)
     )
 end
 
--
 function lia.setCharData(charID, key, val)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end

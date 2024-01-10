@@ -56,7 +56,6 @@ else
     if #lia.char.names < 1 then netstream.Start("liaCharFetchNames") end
 end
 
--
 function lia.getCharData(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end

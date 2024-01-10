@@ -34,7 +34,6 @@ function lia.command.findFaction(client, name)
     client:notifyLocalized("invalidFaction")
 end
 
--
 function lia.command.findPlayerSilent(client, name)
     local target = type(name) == "string" and lia.util.findPlayer(name) or NULL
     if type(name) == "string" and name == "@" then

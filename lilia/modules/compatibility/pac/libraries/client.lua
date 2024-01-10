@@ -1,5 +1,5 @@
 ﻿
-function pace.LoadParts(name, clear, override_part) end
+function pace.LoadParts() end
 
 function PACCompatibility:AdjustPACPartData(wearer, id, data)
     local item = lia.item.list[id]
