@@ -1,24 +1,13 @@
-﻿
-local GM = GM or GAMEMODE
-
+﻿local GM = GM or GAMEMODE
 local getModelClass = lia.anim.getModelClass
-
 local IsValid = IsValid
-
 local string = string
-
 local type = type
-
 local vectorAngle = FindMetaTable("Vector").Angle
-
 local normalizeAngle = math.NormalizeAngle
-
 local oldCalcSeqOverride
-
 local PLAYER_HOLDTYPE_TRANSLATOR = lia.anim.HoldTypeTranslator
-
 local HOLDTYPE_TRANSLATOR = lia.anim.PlayerHoldTypeTranslator
-
 function GM:TranslateActivity(client, act)
     local model = string.lower(client.GetModel(client))
     local class = getModelClass(model) or "player"
@@ -89,7 +78,6 @@ function GM:TranslateActivity(client, act)
     end
 end
 
-
 function GM:DoAnimationEvent(client, event, data)
     local class = lia.anim.getModelClass(client:GetModel())
     if class == "player" then
@@ -124,7 +112,6 @@ function GM:DoAnimationEvent(client, event, data)
     return ACT_INVALID
 end
 
-
 function GM:HandlePlayerLanding(client, velocity, wasOnGround)
     if client:GetMoveType() == MOVETYPE_NOCLIP then return end
     if client:IsOnGround() and not wasOnGround then
@@ -135,7 +122,6 @@ function GM:HandlePlayerLanding(client, velocity, wasOnGround)
         return true
     end
 end
-
 
 function GM:CalcMainActivity(client, velocity)
     client.CalcIdeal = ACT_MP_STAND_IDLE
@@ -159,7 +145,6 @@ function GM:CalcMainActivity(client, velocity)
     return client.CalcIdeal, oldCalcSeqOverride
 end
 
-
 function GM:InitializedModules()
     for _, model in pairs(lia.config.PlayerModelTposingFixer) do
         print("Setting " .. model .. " to a playermodel.")
@@ -172,4 +157,3 @@ function GM:InitializedModules()
 
     if CLIENT then hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont) end
 end
-

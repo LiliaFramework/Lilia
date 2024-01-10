@@ -1,5 +1,4 @@
-﻿
---[[ Defines the text referring to condition that appears when looking at someone ]]
+﻿--[[ Defines the text referring to condition that appears when looking at someone ]]
 RealisticDamageCore.InjuriesTable = {
     [0.0] = {
         "Healthy Condition", -- Health at 100%
@@ -26,4 +25,3 @@ RealisticDamageCore.InjuriesTable = {
         Color(46, 204, 113)
     },
 }
-

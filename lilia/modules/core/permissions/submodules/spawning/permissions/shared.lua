@@ -1,5 +1,4 @@
-﻿
-SpawningCore.CAMIPrivileges = {
+﻿SpawningCore.CAMIPrivileges = {
     {
         Name = "Spawn Permissions - Can Spawn Ragdolls",
         MinAccess = "admin",
@@ -51,4 +50,3 @@ SpawningCore.CAMIPrivileges = {
         Description = "Allows access to Spawning SENTs."
     },
 }
-

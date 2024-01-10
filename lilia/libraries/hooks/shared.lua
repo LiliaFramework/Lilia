@@ -1,6 +1,4 @@
-﻿
-local GM = GM or GAMEMODE
-
+﻿local GM = GM or GAMEMODE
 function GM:OnCharVarChanged(char, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
         for _, v in pairs(lia.char.varHooks[varName]) do
@@ -8,7 +6,6 @@ function GM:OnCharVarChanged(char, varName, oldVar, newVar)
         end
     end
 end
-
 
 function GM:Move(client, moveData)
     local char = client:getChar()
@@ -34,7 +31,6 @@ function GM:Move(client, moveData)
     end
 end
 
-
 function GM:InitPostEntity()
     if SERVER then
         self:ServerInitPostEntity()
@@ -43,33 +39,26 @@ function GM:InitPostEntity()
     end
 end
 
-
 function GM:CanDrive(client)
     if not client:IsSuperAdmin() then return false end
 end
-
 
 function GM:PlayerSpray(_)
     return true
 end
 
-
 function GM:PlayerDeathSound()
     return true
 end
-
 
 function GM:CanPlayerSuicide(_)
     return false
 end
 
-
 function GM:AllowPlayerPickup(_, _)
     return false
 end
 
-
 function GM:PlayerShouldTakeDamage(client, _)
     return client:getChar() ~= nil
 end
-

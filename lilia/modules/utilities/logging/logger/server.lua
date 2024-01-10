@@ -1,5 +1,4 @@
-
-lia.log.addType(
+﻿lia.log.addType(
     "money",
     function(client, ...)
         local data = {...}
@@ -7,7 +6,6 @@ lia.log.addType(
         return string.format("%s's money has changed by %d.", client:Name(), amount)
     end
 )
-
 
 lia.log.addType(
     "playerHurt",
@@ -19,7 +17,6 @@ lia.log.addType(
     end
 )
 
-
 lia.log.addType(
     "playerDeath",
     function(client, ...)
@@ -28,7 +25,6 @@ lia.log.addType(
         return string.format("%s has killed %s.", attacker, client:Name())
     end
 )
-
 
 lia.log.addType(
     "playerConnected",
@@ -39,6 +35,4 @@ lia.log.addType(
     end
 )
 
-
 lia.log.addType("playerDisconnected", function(client, ...) return string.format("%s[%s] has disconnected from the server.", client:Name(), client:SteamID()) end)
-

@@ -1,10 +1,7 @@
-﻿
-local GM = GM or GAMEMODE
-
+﻿local GM = GM or GAMEMODE
 function GM:CanDeleteChar(_, char)
     if char:getMoney() < lia.config.DefaultMoney then return true end
 end
-
 
 function GM:PrePlayerLoadedChar(client, _, _)
     client:SetBodyGroups("000000000")
@@ -12,7 +9,6 @@ function GM:PrePlayerLoadedChar(client, _, _)
     client:ExitVehicle()
     client:Freeze(false)
 end
-
 
 function GM:CreateDefaultInventory(character)
     local charID = character:getID()
@@ -26,7 +22,6 @@ function GM:CreateDefaultInventory(character)
     end
 end
 
-
 function GM:CharacterPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
@@ -34,7 +29,6 @@ function GM:CharacterPreSave(character)
         if v.onSave then v:call("onSave", client) end
     end
 end
-
 
 function GM:PlayerLoadedChar(client, character, lastChar)
     local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
@@ -66,7 +60,6 @@ function GM:PlayerLoadedChar(client, character, lastChar)
     hook.Run("PlayerLoadout", client)
 end
 
-
 function GM:CharacterLoaded(id)
     local character = lia.char.loaded[id]
     if character then
@@ -89,7 +82,6 @@ function GM:CharacterLoaded(id)
     end
 end
 
-
 function GM:OnCharFallover(client, entity, bFallenOver)
     bFallenOver = bFallenOver or false
     if IsValid(entity) then
@@ -99,4 +91,3 @@ function GM:OnCharFallover(client, entity, bFallenOver)
 
     client:setNetVar("fallingover", bFallenOver)
 end
-

@@ -1,5 +1,4 @@
-﻿
-function SimfphysCompatibility:simfphysUse(entity, client)
+﻿function SimfphysCompatibility:simfphysUse(entity, client)
     if simfphys.IsCar(entity) and self.TimeToEnterVehicle > 0 and not (entity.IsBeingEntered or entity.IsLocked) then
         entity.IsBeingEntered = true
         client:setAction("Entering Vehicle...", self.TimeToEnterVehicle)
@@ -23,14 +22,11 @@ function SimfphysCompatibility:simfphysUse(entity, client)
     return self.CarEntryDelayEnabled
 end
 
-
 function SimfphysCompatibility:isSuitableForTrunk(ent)
     if IsValid(ent) and simfphys.IsCar(ent) then return true end
 end
-
 
 function SimfphysCompatibility:CheckValidSit(client, _)
     local entity = client:GetTracedEntity()
     if simfphys.IsCar(entity) then return false end
 end
-

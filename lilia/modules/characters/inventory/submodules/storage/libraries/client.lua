@@ -1,9 +1,7 @@
-﻿
-function LiliaStorage:exitStorage()
+﻿function LiliaStorage:exitStorage()
     net.Start("liaStorageExit")
     net.SendToServer()
 end
-
 
 function LiliaStorage:StorageUnlockPrompt(_)
     Derma_StringRequest(
@@ -17,7 +15,6 @@ function LiliaStorage:StorageUnlockPrompt(_)
         end
     )
 end
-
 
 function LiliaStorage:StorageOpen(storage)
     if not IsValid(storage) then return end
@@ -53,14 +50,12 @@ function LiliaStorage:StorageOpen(storage)
     storageInvPanel.OnRemove = exitStorageOnRemove
 end
 
-
 function LiliaStorage:transferItem(itemID)
     if not lia.item.instances[itemID] then return end
     net.Start("liaStorageTransfer")
     net.WriteUInt(itemID, 32)
     net.SendToServer()
 end
-
 
 function LiliaStorage:PopulateContent(pnlContent, tree)
     local RootNode = tree:AddNode("Spawnable Props", "icon16/box.png")
@@ -86,4 +81,3 @@ function LiliaStorage:PopulateContent(pnlContent, tree)
 
     pnlContent:SwitchPanel(ViewPanel)
 end
-

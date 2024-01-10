@@ -1,32 +1,17 @@
-﻿
-local VendorCore = VendorCore
-
+﻿local VendorCore = VendorCore
 local EDITOR = include(VendorCore.path .. "/libs/sv_vendor.lua")
-
 util.AddNetworkString("liaVendorAllowClass")
-
 util.AddNetworkString("liaVendorAllowFaction")
-
 util.AddNetworkString("liaVendorExit")
-
 util.AddNetworkString("liaVendorEdit")
-
 util.AddNetworkString("liaVendorMode")
-
 util.AddNetworkString("liaVendorMoney")
-
 util.AddNetworkString("liaVendorOpen")
-
 util.AddNetworkString("liaVendorPrice")
-
 util.AddNetworkString("liaVendorStock")
-
 util.AddNetworkString("liaVendorMaxStock")
-
 util.AddNetworkString("liaVendorSync")
-
 util.AddNetworkString("liaVendorTrade")
-
 net.Receive(
     "liaVendorExit",
     function(_, client)
@@ -34,7 +19,6 @@ net.Receive(
         if IsValid(vendor) then vendor:removeReceiver(client, true) end
     end
 )
-
 
 net.Receive(
     "liaVendorEdit",
@@ -47,7 +31,6 @@ net.Receive(
         VendorCore:SaveData()
     end
 )
-
 
 net.Receive(
     "liaVendorTrade",
@@ -67,4 +50,3 @@ net.Receive(
         hook.Run("VendorTradeAttempt", client, entity, uniqueID, isSellingToVendor)
     end
 )
-

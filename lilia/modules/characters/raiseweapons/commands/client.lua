@@ -1,5 +1,4 @@
-﻿
-lia.command.add(
+﻿lia.command.add(
     "toggleraise",
     {
         adminOnly = false,
@@ -7,4 +6,3 @@ lia.command.add(
         onRun = function() end
     }
 )
-

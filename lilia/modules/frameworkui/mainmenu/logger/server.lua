@@ -1,12 +1,10 @@
-﻿
-lia.log.addType(
+﻿lia.log.addType(
     "charCreate",
     function(client, ...)
         local arg = {...}
         return Format("%s created the character #%s(%s)", client:steamName(), arg[1]:getID(), arg[1]:getName())
     end
 )
-
 
 lia.log.addType(
     "charLoad",
@@ -16,7 +14,6 @@ lia.log.addType(
     end
 )
 
-
 lia.log.addType(
     "charDelete",
     function(client, ...)
@@ -24,4 +21,3 @@ lia.log.addType(
         return Format("%s(%s) deleted character (%s)", IsValid(client) and client:steamName() or "COMMAND", IsValid(client) and client:SteamID() or "", arg[1])
     end
 )
-

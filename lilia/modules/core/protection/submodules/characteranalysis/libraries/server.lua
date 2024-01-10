@@ -1,11 +1,9 @@
-﻿
-function CoreCharacterAnalysis:SanitizeSteamID(sid)
+﻿function CoreCharacterAnalysis:SanitizeSteamID(sid)
     for _, char in ipairs(string.Explode("", sid, false)) do
         if not tonumber(char) then return false end
     end
     return sid
 end
-
 
 function CoreCharacterAnalysis:GenerateReport(steamID64)
     steamID64 = self:SanitizeSteamID(steamID64)
@@ -68,8 +66,6 @@ function CoreCharacterAnalysis:GenerateReport(steamID64)
     return characters
 end
 
-
 function CoreCharacterAnalysis:SendReport(reportPly, receiver)
     netstream.Start(receiver, "liaReport", self:GenerateReport(reportPly:SteamID64()))
 end
-

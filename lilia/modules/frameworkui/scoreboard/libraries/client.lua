@@ -1,5 +1,4 @@
-﻿
-function ScoreboardCore:ScoreboardHide()
+﻿function ScoreboardCore:ScoreboardHide()
     if IsValid(lia.gui.score) then
         lia.gui.score:SetVisible(false)
         CloseDermaMenus()
@@ -8,7 +7,6 @@ function ScoreboardCore:ScoreboardHide()
     gui.EnableScreenClicker(false)
     return true
 end
-
 
 function ScoreboardCore:ScoreboardShow()
     if IsValid(lia.gui.score) then
@@ -21,11 +19,9 @@ function ScoreboardCore:ScoreboardShow()
     return true
 end
 
-
 function ScoreboardCore:OnReloaded()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
 end
-
 
 function ScoreboardCore:ShowPlayerOptions(client, options)
     if (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Staff Permissions - Can Access Scoreboard Admin Options")) or CAMI.PlayerHasAccess(client, "Staff Permissions - Can Access Scoreboard Info Out Of Staff") then
@@ -36,4 +32,3 @@ function ScoreboardCore:ShowPlayerOptions(client, options)
         options["Return Player"] = {"icon16/arrow_down.png", function() if IsValid(client) then LocalPlayer():ConCommand("say !return " .. client:SteamID()) end end}
     end
 end
-

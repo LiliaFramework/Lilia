@@ -1,5 +1,4 @@
-﻿
-function VoiceCore:PlayerButtonDown(client, button)
+﻿function VoiceCore:PlayerButtonDown(client, button)
     if button == KEY_F2 and IsFirstTimePredicted() then
         local menu = DermaMenu()
         menu:AddOption(
@@ -32,7 +31,6 @@ function VoiceCore:PlayerButtonDown(client, button)
     end
 end
 
-
 function VoiceCore:PostDrawOpaqueRenderables()
     local VoiceType = LocalPlayer():getNetVar("VoiceType", "Talking")
     local rangeSquared = self.TalkRanges[VoiceType] * self.TalkRanges[VoiceType]
@@ -48,7 +46,6 @@ function VoiceCore:PostDrawOpaqueRenderables()
     end
 end
 
-
 function VoiceCore:LoadFonts(_)
     surface.CreateFont(
         "3DVoiceDebug",
@@ -61,4 +58,3 @@ function VoiceCore:LoadFonts(_)
         }
     )
 end
-

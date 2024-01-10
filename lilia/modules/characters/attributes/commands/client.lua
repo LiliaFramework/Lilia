@@ -1,5 +1,4 @@
-﻿
-lia.command.add(
+﻿lia.command.add(
     "charsetattrib",
     {
         superAdminOnly = true,
@@ -8,7 +7,6 @@ lia.command.add(
         onRun = function() end
     }
 )
-
 
 lia.command.add(
     "charaddattrib",
@@ -19,4 +17,3 @@ lia.command.add(
         onRun = function() end
     }
 )
-

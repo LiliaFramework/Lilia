@@ -1,5 +1,4 @@
-﻿
-lia.command.add(
+﻿lia.command.add(
     "viewBodygroups",
     {
         adminOnly = true,
@@ -8,4 +7,3 @@ lia.command.add(
         onRun = function() end
     }
 )
-

@@ -1,5 +1,4 @@
-﻿
-concommand.Add(
+﻿concommand.Add(
     "enabledmodules",
     function()
         local enabledModulesMenu = vgui.Create("DFrame")
@@ -15,7 +14,6 @@ concommand.Add(
         end
     end
 )
-
 
 concommand.Add(
     "disabled_modules",
@@ -33,4 +31,3 @@ concommand.Add(
         end
     end
 )
-

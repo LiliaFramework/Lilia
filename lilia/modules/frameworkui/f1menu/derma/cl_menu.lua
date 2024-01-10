@@ -1,6 +1,4 @@
-﻿
-local PANEL = {}
-
+﻿local PANEL = {}
 function PANEL:Init()
     if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end
     lia.gui.menu = self
@@ -58,12 +56,10 @@ function PANEL:Init()
     self.info:AlphaTo(255, 0.5)
 end
 
-
 function PANEL:OnKeyCodePressed(key)
     self.noAnchor = CurTime() + .5
     if key == KEY_F1 then self:remove() end
 end
-
 
 function PANEL:Think()
     local key = input.IsKeyDown(KEY_F1)
@@ -78,7 +74,6 @@ function PANEL:Think()
     end
 end
 
-
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 12)
     surface.SetDrawColor(0, 0, 0)
@@ -89,7 +84,6 @@ function PANEL:Paint(w, h)
     surface.SetDrawColor(Color(240, 240, 240, 180))
     surface.DrawRect(0, 78, w, 8)
 end
-
 
 function PANEL:addTab(name, callback, uniqueID)
     name = L(name)
@@ -134,11 +128,9 @@ function PANEL:addTab(name, callback, uniqueID)
     return tab
 end
 
-
 function PANEL:setActiveTab(key)
     if IsValid(self.tabList[key]) then self.tabList[key]:DoClick() end
 end
-
 
 function PANEL:remove()
     CloseDermaMenus()
@@ -148,8 +140,5 @@ function PANEL:remove()
     end
 end
 
-
 vgui.Register("liaMenu", PANEL, "EditablePanel")
-
 if IsValid(lia.gui.menu) then vgui.Create("liaMenu") end
-

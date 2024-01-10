@@ -1,5 +1,4 @@
-﻿
-net.Receive(
+﻿net.Receive(
     "StormFox2.lightstyle",
     function()
         local c_var = net.ReadUInt(7)
@@ -8,4 +7,3 @@ net.Receive(
         timer.Simple(1, function() render.RedownloadAllLightmaps(true) end)
     end
 )
-

@@ -1,6 +1,4 @@
-﻿
-local GM = GM or GAMEMODE
-
+﻿local GM = GM or GAMEMODE
 function GM:VerifyModuleValidity(uniqueID, MODULE)
     local isEnabled = MODULE.enabled
     if uniqueID == "schema" then return true end
@@ -15,7 +13,6 @@ function GM:VerifyModuleValidity(uniqueID, MODULE)
     end
     return isEnabled
 end
-
 
 function GM:LiliaLoaded()
     local namecache = {}
@@ -38,7 +35,6 @@ function GM:LiliaLoaded()
 
     lia.module.namecache = namecache
 end
-
 
 function GM:ModuleLoaded(uniqueID, ModuleGlobal, MODULE)
     local ModuleWorkshopContent = MODULE.WorkshopContent
@@ -73,9 +69,7 @@ function GM:ModuleLoaded(uniqueID, ModuleGlobal, MODULE)
     end
 end
 
-
 function GM:ModuleDependenciesPreLoad(uniqueID, ModuleGlobal, MODULE)
     local IsValidForGlobal = ModuleGlobal ~= "" and ModuleGlobal ~= nil
     if IsValidForGlobal and uniqueID ~= "schema" then _G[ModuleGlobal] = MODULE end
 end
-

@@ -1,10 +1,6 @@
-﻿
-local vignetteAlphaGoal = 0
-
+﻿local vignetteAlphaGoal = 0
 local vignetteAlphaDelta = 0
-
 local hasVignetteMaterial = lia.util.getMaterial("lilia/gui/vignette.png") ~= "___error"
-
 function FrameworkHUD:DrawVignette()
     if hasVignetteMaterial then
         local frameTime = FrameTime()
@@ -16,11 +12,9 @@ function FrameworkHUD:DrawVignette()
     end
 end
 
-
 function FrameworkHUD:ShouldDrawVignette()
     if hasVignetteMaterial then return self.Vignette end
 end
-
 
 timer.Create(
     "liaVignetteChecker",
@@ -42,4 +36,3 @@ timer.Create(
         end
     end
 )
-

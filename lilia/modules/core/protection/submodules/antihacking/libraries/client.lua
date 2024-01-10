@@ -1,6 +1,4 @@
-﻿
-local lastcheck
-
+﻿local lastcheck
 function AntiHackingCore:Think()
     if not lastcheck then lastcheck = CurTime() end
     if CurTime() - lastcheck > 60 then
@@ -29,4 +27,3 @@ function AntiHackingCore:Think()
         lastcheck = CurTime()
     end
 end
-

@@ -1,8 +1,6 @@
-﻿
-function EasyWeaponsCore:InitializedModules()
+﻿function EasyWeaponsCore:InitializedModules()
     if self.AutomaticWeaponRegister then self:RegisterWeapons() end
 end
-
 
 function EasyWeaponsCore:RegisterWeapons()
     for _, wep in ipairs(weapons.GetList()) do
@@ -18,4 +16,3 @@ function EasyWeaponsCore:RegisterWeapons()
         ITEM.category = "Weapons"
     end
 end
-

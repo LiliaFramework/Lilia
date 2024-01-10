@@ -1,5 +1,4 @@
-﻿
-net.Receive(
+﻿net.Receive(
     "liaNotifyL",
     function()
         local message = net.ReadString()
@@ -13,7 +12,6 @@ net.Receive(
         lia.util.notifyLocalized(message, unpack(args))
     end
 )
-
 
 net.Receive(
     "liaStringReq",
@@ -38,7 +36,6 @@ net.Receive(
     end
 )
 
-
 net.Receive(
     "liaNotify",
     function()
@@ -46,7 +43,6 @@ net.Receive(
         lia.util.notify(message)
     end
 )
-
 
 net.Receive(
     "liaInventoryData",
@@ -66,7 +62,6 @@ net.Receive(
         hook.Run("InventoryDataChanged", instance, key, oldValue, value)
     end
 )
-
 
 net.Receive(
     "liaInventoryInit",
@@ -109,7 +104,6 @@ net.Receive(
     end
 )
 
-
 net.Receive(
     "liaInventoryAdd",
     function()
@@ -123,7 +117,6 @@ net.Receive(
         end
     end
 )
-
 
 net.Receive(
     "liaInventoryRemove",
@@ -140,7 +133,6 @@ net.Receive(
     end
 )
 
-
 net.Receive(
     "liaInventoryDelete",
     function()
@@ -150,7 +142,6 @@ net.Receive(
         if invID then lia.inventory.instances[invID] = nil end
     end
 )
-
 
 net.Receive(
     "liaItemInstance",
@@ -169,7 +160,6 @@ net.Receive(
     end
 )
 
-
 net.Receive(
     "liaCharacterInvList",
     function()
@@ -184,7 +174,6 @@ net.Receive(
         if character then character.vars.inv = inventories end
     end
 )
-
 
 net.Receive(
     "liaItemDelete",
@@ -204,7 +193,6 @@ net.Receive(
     end
 )
 
-
 netstream.Hook(
     "charSet",
     function(key, value, id)
@@ -217,7 +205,6 @@ netstream.Hook(
         end
     end
 )
-
 
 netstream.Hook(
     "charVar",
@@ -232,7 +219,6 @@ netstream.Hook(
     end
 )
 
-
 netstream.Hook(
     "charData",
     function(id, key, value)
@@ -244,7 +230,6 @@ netstream.Hook(
     end
 )
 
-
 netstream.Hook(
     "item",
     function(uniqueID, id, data, invID)
@@ -255,7 +240,6 @@ netstream.Hook(
         hook.Run("ItemInitialized", item)
     end
 )
-
 
 netstream.Hook(
     "invData",
@@ -270,7 +254,6 @@ netstream.Hook(
     end
 )
 
-
 netstream.Hook(
     "invQuantity",
     function(id, quantity)
@@ -283,7 +266,6 @@ netstream.Hook(
     end
 )
 
-
 netstream.Hook(
     "liaDataSync",
     function(data, first, last)
@@ -293,7 +275,6 @@ netstream.Hook(
     end
 )
 
-
 netstream.Hook(
     "liaData",
     function(key, value)
@@ -301,7 +282,6 @@ netstream.Hook(
         lia.localData[key] = value
     end
 )
-
 
 netstream.Hook(
     "attrib",
@@ -311,7 +291,6 @@ netstream.Hook(
     end
 )
 
-
 netstream.Hook(
     "nVar",
     function(index, key, value)
@@ -320,7 +299,6 @@ netstream.Hook(
     end
 )
 
-
 netstream.Hook(
     "nLcl",
     function(key, value)
@@ -328,7 +306,6 @@ netstream.Hook(
         lia.net[LocalPlayer():EntIndex()][key] = value
     end
 )
-
 
 netstream.Hook(
     "actBar",
@@ -345,7 +322,6 @@ netstream.Hook(
     end
 )
 
-
 net.Receive(
     "announcement_client",
     function()
@@ -353,7 +329,6 @@ net.Receive(
         chat.AddText(Color(255, 56, 252), "[Admin Announcement]: ", Color(255, 255, 255), message)
     end
 )
-
 
 net.Receive(
     "StringRequest",
@@ -376,7 +351,6 @@ net.Receive(
         )
     end
 )
-
 
 net.Receive(
     "OpenInformationMenu",
@@ -421,7 +395,6 @@ net.Receive(
     end
 )
 
-
 net.Receive(
     "OpenVGUI",
     function()
@@ -430,27 +403,14 @@ net.Receive(
     end
 )
 
-net.Receive("LiliaPlaySound", function()
-	LocalPlayer():EmitSound(tostring(net.ReadString()), tonumber(net.ReadUInt(7)) or 100)
-end)
-
+net.Receive("LiliaPlaySound", function() LocalPlayer():EmitSound(tostring(net.ReadString()), tonumber(net.ReadUInt(7)) or 100) end)
 netstream.Hook("ChatPrint", function(data) chat.AddText(unpack(data)) end)
-
 netstream.Hook("charInfo", function(data, id, client) lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client) end)
-
 net.Receive("ReloadLightMaps", function() render.RedownloadAllLightmaps(true) end)
-
 netstream.Hook("charKick", function(id, isCurrentChar) hook.Run("KickedFromCharacter", id, isCurrentChar) end)
-
 net.Receive("SendMessage", function() chat.AddText(Color(255, 255, 255), unpack(net.ReadTable())) end)
-
 netstream.Hook("gVar", function(key, value) lia.net.globals[key] = value end)
-
 net.Receive("SendPrint", function() print(unpack(net.ReadTable())) end)
-
 net.Receive("SendPrintTable", function() PrintTable(net.ReadTable()) end)
-
 netstream.Hook("nDel", function(index) lia.net[index] = nil end)
-
 netstream.Hook("notifyQuery", lia.util.notifQuery)
-

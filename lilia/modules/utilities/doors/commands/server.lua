@@ -1,5 +1,4 @@
-
-lia.command.add(
+﻿lia.command.add(
     "doorsell",
     {
         privilege = "Default User Commands",
@@ -23,7 +22,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "doorbuy",
@@ -60,7 +58,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "doorsetunownable",
     {
@@ -90,7 +87,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "doorsetownable",
     {
@@ -119,7 +115,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "dooraddfaction",
@@ -174,7 +169,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "doorremovefaction",
     {
@@ -228,7 +222,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "doorsetdisabled",
     {
@@ -249,7 +242,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "doorsettitle",
@@ -276,7 +268,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "doorsetparent",
     {
@@ -293,7 +284,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "doorsetchild",
@@ -320,7 +310,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "doorremovechild",
@@ -349,7 +338,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "doorsethidden",
     {
@@ -370,7 +358,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "doorsetclass",
@@ -418,4 +405,3 @@ lia.command.add(
         alias = {"jobdoor"}
     }
 )
-

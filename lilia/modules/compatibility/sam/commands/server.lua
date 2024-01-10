@@ -1,5 +1,4 @@
-﻿
-lia.command.add(
+﻿lia.command.add(
     "cleardecals",
     {
         adminOnly = true,
@@ -11,4 +10,3 @@ lia.command.add(
         end
     }
 )
-

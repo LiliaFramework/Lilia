@@ -1,26 +1,14 @@
-﻿
-ITEM.name = "Weapon"
-
+﻿ITEM.name = "Weapon"
 ITEM.desc = "A Weapon."
-
 ITEM.category = "Weapons"
-
 ITEM.model = "models/weapons/w_pistol.mdl"
-
 ITEM.class = "weapon_pistol"
-
 ITEM.width = 2
-
 ITEM.height = 2
-
 ITEM.isWeapon = true
-
 ITEM.weaponCategory = "sidearm"
-
 ITEM.RequiredSkillLevels = nil
-
 ITEM.TeamBlacklist = {}
-
 if CLIENT then
     function ITEM:paintOver(item, w, h)
         if item:getData("equip") then
@@ -29,7 +17,6 @@ if CLIENT then
         end
     end
 end
-
 
 ITEM:hook(
     "drop",
@@ -47,7 +34,6 @@ ITEM:hook(
         end
     end
 )
-
 
 ITEM.functions.EquipUn = {
     name = "Unequip",
@@ -72,7 +58,6 @@ ITEM.functions.EquipUn = {
     end,
     onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip", false) end
 }
-
 
 ITEM.functions.Equip = {
     name = "Equip",
@@ -113,12 +98,10 @@ ITEM.functions.Equip = {
     onCanRun = function(item) return not IsValid(item.entity) and not item:getData("equip", false) end
 }
 
-
 function ITEM:onCanBeTransfered(oldInventory, newInventory)
     if newInventory and self:getData("equip") then return false end
     return true
 end
-
 
 function ITEM:onLoadout()
     if self:getData("equip") then
@@ -135,9 +118,7 @@ function ITEM:onLoadout()
     end
 end
 
-
 function ITEM:onSave()
     local weapon = self.player:GetWeapon(self.class)
     if IsValid(weapon) then self:setData("ammo", weapon:Clip1()) end
 end
-

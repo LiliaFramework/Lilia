@@ -1,5 +1,4 @@
-﻿
-CreditsCore.GamemodeCreators = {
+﻿CreditsCore.GamemodeCreators = {
     {
         desc = "Creator of Lilia", -- Leonheart
         steamid = "76561198312513285",
@@ -7,15 +6,12 @@ CreditsCore.GamemodeCreators = {
     },
 }
 
-
 CreditsCore.contributors = {
     desc = "View All Contributors",
     url = "https://github.com/Lilia-Framework/Lilia/graphs/contributors"
 }
 
-
 CreditsCore.discord = {
     desc = "Join the Lilia Development Discord",
     url = "https://discord.gg/jjrhyeuzYV"
 }
-

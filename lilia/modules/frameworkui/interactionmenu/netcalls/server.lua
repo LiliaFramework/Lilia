@@ -1,5 +1,4 @@
-﻿
-netstream.Hook(
+﻿netstream.Hook(
     "transferMoneyFromP2P",
     function(client, amount, target)
         if amount < 0 then return end
@@ -11,7 +10,6 @@ netstream.Hook(
     end
 )
 
-
 netstream.Hook(
     "PIMRunOption",
     function(client, name)
@@ -19,4 +17,3 @@ netstream.Hook(
         if opt.runServer then opt.onRun(client, client:GetEyeTrace().Entity) end
     end
 )
-

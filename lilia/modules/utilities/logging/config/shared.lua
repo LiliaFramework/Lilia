@@ -1,5 +1,4 @@
-
-lia.log.LogColor = {
+﻿lia.log.LogColor = {
     [FLAG_NORMAL] = Color(200, 200, 200),
     [FLAG_SUCCESS] = Color(50, 200, 50),
     [FLAG_WARNING] = Color(255, 255, 0),
@@ -7,4 +6,3 @@ lia.log.LogColor = {
     [FLAG_SERVER] = Color(200, 200, 220),
     [FLAG_DEV] = Color(200, 200, 220),
 }
-

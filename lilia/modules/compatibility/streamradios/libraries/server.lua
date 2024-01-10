@@ -1,5 +1,4 @@
-﻿
-function StreamRadiosCompatibility:LoadData()
+﻿function StreamRadiosCompatibility:LoadData()
     local savedTable = self:getData() or {}
     for _, v in ipairs(savedTable) do
         local ent = StreamRadioLib.SpawnRadio(v.client, v.mdl, v.pos, v.ang, v.settings)
@@ -11,7 +10,6 @@ function StreamRadiosCompatibility:LoadData()
         end
     end
 end
-
 
 function StreamRadiosCompatibility:SaveData()
     local savedTable = {}
@@ -30,4 +28,3 @@ function StreamRadiosCompatibility:SaveData()
 
     self:setData(savedTable)
 end
-

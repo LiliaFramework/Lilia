@@ -1,5 +1,4 @@
-﻿
-lia.flag.add(
+﻿lia.flag.add(
     "p",
     "Access to the physgun.",
     function(client, isGiven)
@@ -11,7 +10,6 @@ lia.flag.add(
         end
     end
 )
-
 
 lia.flag.add(
     "t",
@@ -26,18 +24,10 @@ lia.flag.add(
     end
 )
 
-
 lia.flag.add("C", "Access to spawn vehicles.")
-
 lia.flag.add("z", "Access to spawn SWEPS.")
-
 lia.flag.add("E", "Access to spawn SENTs.")
-
 lia.flag.add("L", "Access to spawn Effects.")
-
 lia.flag.add("r", "Access to spawn ragdolls.")
-
 lia.flag.add("e", "Access to spawn props.")
-
 lia.flag.add("n", "Access to spawn NPCs.")
-

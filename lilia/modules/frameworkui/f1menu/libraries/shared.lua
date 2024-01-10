@@ -1,5 +1,3 @@
-﻿
-function F1MenuCore:ShowHelp()
+﻿function F1MenuCore:ShowHelp()
     return false
 end
-

@@ -1,5 +1,4 @@
-﻿
-lia.command.add(
+﻿lia.command.add(
     "fixpac",
     {
         privilege = "Default User Commands",
@@ -22,7 +21,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "pacenable",
     {
@@ -30,7 +28,6 @@ lia.command.add(
         onRun = function(client) client:SendLua([[RunConsoleCommand("pac_enable", "1")]]) end
     }
 )
-
 
 lia.command.add(
     "pacdisable",
@@ -42,4 +39,3 @@ lia.command.add(
         end
     }
 )
-

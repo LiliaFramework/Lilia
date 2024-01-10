@@ -1,5 +1,4 @@
-
-function SaveItemsCore:LoadData()
+﻿function SaveItemsCore:LoadData()
     local items = self:getData()
     if items then
         local idRange = {}
@@ -46,7 +45,6 @@ function SaveItemsCore:LoadData()
     end
 end
 
-
 function SaveItemsCore:SaveData()
     local items = {}
     for _, v in ipairs(ents.FindByClass("lia_item")) do
@@ -56,8 +54,6 @@ function SaveItemsCore:SaveData()
     self:setData(items)
 end
 
-
 function SaveItemsCore:ShouldDeleteSavedItems()
     return self.DeleteItemsOnRestart
 end
-

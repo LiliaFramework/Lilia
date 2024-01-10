@@ -1,8 +1,5 @@
-﻿
-lia.notices = lia.notices or {}
-
+﻿lia.notices = lia.notices or {}
 lia.noticess = lia.noticess or {}
-
 lia.config.NotifTypes = {
     [1] = {
         col = Color(200, 60, 60),
@@ -30,7 +27,6 @@ lia.config.NotifTypes = {
     }
 }
 
-
 function OrganizeNoticess()
     for k, _ in ipairs(lia.noticess) do
         local topMargin = 0
@@ -42,7 +38,6 @@ function OrganizeNoticess()
     end
 end
 
-
 function RemoveNoticess(notice)
     for k, v in ipairs(lia.noticess) do
         if v == notice then
@@ -53,7 +48,6 @@ function RemoveNoticess(notice)
         end
     end
 end
-
 
 function CreateNoticePanel(length, notimer)
     if not notimer then notimer = false end
@@ -88,14 +82,12 @@ function CreateNoticePanel(length, notimer)
     return notice
 end
 
-
 function OrganizeNotices()
     local scrW = ScrW()
     for k, v in ipairs(lia.notices) do
         v:MoveTo(scrW - (v:GetWide() + 4), (k - 1) * (v:GetTall() + 4) + 4, 0.15, (k / #lia.notices) * 0.25)
     end
 end
-
 
 function lia.util.notify(message)
     local notice = vgui.Create("liaNotice")
@@ -126,4 +118,3 @@ function lia.util.notify(message)
         end
     )
 end
-

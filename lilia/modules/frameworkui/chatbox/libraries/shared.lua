@@ -1,5 +1,4 @@
-﻿
-lia.chat.register(
+﻿lia.chat.register(
     "ooc",
     {
         onCanSay = function(speaker, text)
@@ -251,4 +250,3 @@ lia.chat.register(
         deadCanChat = true
     }
 )
-

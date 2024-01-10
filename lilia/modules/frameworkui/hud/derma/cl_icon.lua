@@ -1,8 +1,5 @@
-﻿
-ICON = {}
-
+﻿ICON = {}
 ICON.font = "wolficonfont"
-
 ICON.characters = {
     trash = "-",
     male = "a",
@@ -13,8 +10,6 @@ ICON.characters = {
     hamburger = "g"
 }
 
-
 function ICON:GetIconChar(iconDesc)
     return self.characters[iconDesc] or "nil"
 end
-

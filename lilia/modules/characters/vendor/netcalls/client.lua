@@ -1,5 +1,4 @@
-﻿
-net.Receive(
+﻿net.Receive(
     "liaVendorSync",
     function()
         local vendor = net.ReadEntity()
@@ -29,7 +28,6 @@ net.Receive(
     end
 )
 
-
 net.Receive(
     "liaVendorOpen",
     function()
@@ -41,7 +39,6 @@ net.Receive(
     end
 )
 
-
 net.Receive(
     "liaVendorExit",
     function()
@@ -49,7 +46,6 @@ net.Receive(
         hook.Run("VendorExited")
     end
 )
-
 
 net.Receive(
     "liaVendorEdit",
@@ -65,7 +61,6 @@ net.Receive(
     end
 )
 
-
 net.Receive(
     "liaVendorFaction",
     function()
@@ -73,4 +68,3 @@ net.Receive(
         if IsValid(liaVendorEnt) then liaVendorEnt.factions[factionID] = true end
     end
 )
-

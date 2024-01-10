@@ -1,44 +1,25 @@
-﻿
-DeriveGamemode("sandbox")
-
+﻿DeriveGamemode("sandbox")
 lia = lia or {
     util = {},
     meta = {}
 }
 
-
 AddCSLuaFile("lilia/libraries/config.lua")
-
 include("lilia/libraries/config.lua")
-
 include("lilia/gamemode/shared.lua")
-
 include("lilia/libraries/loader/core.lua")
-
 include("lilia/libraries/data/shared.lua")
-
 include("lilia/libraries/data/server.lua")
-
 include("lilia/libraries/data/hooks/server.lua")
-
 include("lilia/libraries/database/config/database.lua")
-
 include("lilia/libraries/database/config/tables.lua")
-
 include("lilia/libraries/database/server.lua")
-
 include("lilia/libraries/loader/libraries.lua")
-
 AddCSLuaFile("lilia/libraries/fonts.lua")
-
 AddCSLuaFile("lilia/libraries/loader/core.lua")
-
 AddCSLuaFile("lilia/libraries/loader/libraries.lua")
-
 AddCSLuaFile("lilia/libraries/data/shared.lua")
-
 AddCSLuaFile("lilia/gamemode/shared.lua")
-
 timer.Simple(
     0,
     function()
@@ -53,7 +34,6 @@ timer.Simple(
         )
     end
 )
-
 
 cvars.AddChangeCallback(
     "sbox_persist",
@@ -72,4 +52,3 @@ cvars.AddChangeCallback(
     end,
     "sbox_persist_load"
 )
-

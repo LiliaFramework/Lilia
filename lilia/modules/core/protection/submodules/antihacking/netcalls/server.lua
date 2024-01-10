@@ -1,8 +1,5 @@
-﻿
-util.AddNetworkString("IAmHackingOwO")
-
+﻿util.AddNetworkString("IAmHackingOwO")
 net.Receive("IAmHackingOwO", function(_, client) ProtectionCore:ApplyPunishment(client, "Hacking", true, true, 0) end)
-
 for _, v in pairs(AntiHackingCore.KnownExploits) do
     net.Receive(
         tostring(v),
@@ -16,4 +13,3 @@ for _, v in pairs(AntiHackingCore.KnownExploits) do
         end
     )
 end
-

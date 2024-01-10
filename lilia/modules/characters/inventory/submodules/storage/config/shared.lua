@@ -1,23 +1,15 @@
-﻿
-LiliaStorage.StorageDefinitions = LiliaStorage.StorageDefinitions or {}
-
+﻿LiliaStorage.StorageDefinitions = LiliaStorage.StorageDefinitions or {}
 LiliaStorage.Vehicles = LiliaStorage.Vehicles or {}
-
 --[[ Enable or disable the saving of storage data ]]
 LiliaStorage.SaveStorage = true
-
 --[[ Set the delay (in seconds) until password retries are allowed ]]
 LiliaStorage.PasswordDelay = 1
-
 --[[ Set the duration (in seconds) for how long a storage container takes to open ]]
 LiliaStorage.StorageOpenTime = 0.7
-
 --[[ Set the duration (in seconds) for how long a trunk takes to open ]]
 LiliaStorage.TrunkOpenTime = 0.7
-
 --[[ Set the distance a trunk must be to be opened ]]
 LiliaStorage.TrunkOpenDistance = 110
-
 LiliaStorage.StorageDefinitions["models/props_junk/wood_crate001a.mdl"] = {
     name = "Wood Crate",
     desc = "A crate made out of wood.",
@@ -27,7 +19,6 @@ LiliaStorage.StorageDefinitions["models/props_junk/wood_crate001a.mdl"] = {
         h = 4
     }
 }
-
 
 LiliaStorage.StorageDefinitions["models/props_c17/lockers001a.mdl"] = {
     name = "Locker",
@@ -39,7 +30,6 @@ LiliaStorage.StorageDefinitions["models/props_c17/lockers001a.mdl"] = {
     }
 }
 
-
 LiliaStorage.StorageDefinitions["models/props_wasteland/controlroom_storagecloset001a.mdl"] = {
     name = "Metal Closet",
     desc = "A green storage closet.",
@@ -49,7 +39,6 @@ LiliaStorage.StorageDefinitions["models/props_wasteland/controlroom_storageclose
         h = 7
     }
 }
-
 
 LiliaStorage.StorageDefinitions["models/props_wasteland/controlroom_filecabinet002a.mdl"] = {
     name = "File Cabinet",
@@ -61,7 +50,6 @@ LiliaStorage.StorageDefinitions["models/props_wasteland/controlroom_filecabinet0
     }
 }
 
-
 LiliaStorage.StorageDefinitions["models/props_c17/furniturefridge001a.mdl"] = {
     name = "Refrigerator",
     desc = "A metal box to keep food in",
@@ -71,7 +59,6 @@ LiliaStorage.StorageDefinitions["models/props_c17/furniturefridge001a.mdl"] = {
         h = 4
     }
 }
-
 
 LiliaStorage.StorageDefinitions["models/props_wasteland/kitchen_fridge001a.mdl"] = {
     name = "Large Refrigerator",
@@ -83,7 +70,6 @@ LiliaStorage.StorageDefinitions["models/props_wasteland/kitchen_fridge001a.mdl"]
     }
 }
 
-
 LiliaStorage.StorageDefinitions["models/props_junk/trashbin01a.mdl"] = {
     name = "Trash Bin",
     desc = "A container for junk.",
@@ -93,7 +79,6 @@ LiliaStorage.StorageDefinitions["models/props_junk/trashbin01a.mdl"] = {
         h = 3
     }
 }
-
 
 LiliaStorage.StorageDefinitions["models/items/ammocrate_smg1.mdl"] = {
     name = "Ammo Crate",
@@ -109,7 +94,6 @@ LiliaStorage.StorageDefinitions["models/items/ammocrate_smg1.mdl"] = {
     end
 }
 
-
 LiliaStorage.VehicleTrunk = {
     name = "Trunk",
     desc = "A car's trunk.",
@@ -119,4 +103,3 @@ LiliaStorage.VehicleTrunk = {
         h = 6
     }
 }
-

@@ -1,5 +1,4 @@
-﻿
-lia.config.RealmIdentifiers = {
+﻿lia.config.RealmIdentifiers = {
     client = "client",
     server = "server",
     shared = "shared",
@@ -9,7 +8,6 @@ lia.config.RealmIdentifiers = {
     permissions = "shared",
     sconfig = "server",
 }
-
 
 function lia.util.include(fileName, state)
     if not fileName then error("[Lilia] No file name specified for including.") end
@@ -28,7 +26,6 @@ function lia.util.include(fileName, state)
         end
     end
 end
-
 
 function lia.util.includeDir(directory, fromLua, recursive)
     local baseDir = "lilia"
@@ -66,4 +63,3 @@ function lia.util.includeDir(directory, fromLua, recursive)
         end
     end
 end
-

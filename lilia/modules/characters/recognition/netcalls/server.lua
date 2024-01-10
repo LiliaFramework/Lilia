@@ -1,5 +1,4 @@
-
-netstream.Hook(
+﻿netstream.Hook(
     "rgnDirect",
     function(client, target, name)
         if target:GetPos():DistToSqr(client:GetPos()) > 100000 then return end
@@ -12,7 +11,6 @@ netstream.Hook(
         end
     end
 )
-
 
 netstream.Hook(
     "rgn",
@@ -46,4 +44,3 @@ netstream.Hook(
         end
     end
 )
-

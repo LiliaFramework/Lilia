@@ -1,5 +1,4 @@
-﻿
-lia.log.addType(
+﻿lia.log.addType(
     "vendorAccess",
     function(client, ...)
         local data = {...}
@@ -7,7 +6,6 @@ lia.log.addType(
         return string.format("%s has accessed vendor %s.", client:Name(), vendorName)
     end
 )
-
 
 lia.log.addType(
     "vendorExit",
@@ -17,7 +15,6 @@ lia.log.addType(
         return string.format("%s has exited vendor %s.", client:Name(), vendorName)
     end
 )
-
 
 lia.log.addType(
     "vendorSell",
@@ -29,7 +26,6 @@ lia.log.addType(
     end
 )
 
-
 lia.log.addType(
     "vendorBuy",
     function(client, ...)
@@ -39,4 +35,3 @@ lia.log.addType(
         return string.format("%s has bought a %s from %s.", client:Name(), itemName, vendorName)
     end
 )
-

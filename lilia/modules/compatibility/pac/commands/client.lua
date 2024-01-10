@@ -1,12 +1,10 @@
-﻿
-lia.command.add(
+﻿lia.command.add(
     "fixpac",
     {
         privilege = "Default User Commands",
         onRun = function() end
     }
 )
-
 
 lia.command.add(
     "pacenable",
@@ -16,7 +14,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "pacdisable",
     {
@@ -24,4 +21,3 @@ lia.command.add(
         onRun = function() end
     }
 )
-

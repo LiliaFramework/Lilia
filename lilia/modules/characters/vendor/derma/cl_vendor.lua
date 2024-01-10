@@ -1,6 +1,4 @@
-﻿
-local PANEL = {}
-
+﻿local PANEL = {}
 function PANEL:Init()
     if IsValid(lia.gui.vendor) then
         lia.gui.vendor.noSendExit = true
@@ -62,7 +60,6 @@ function PANEL:Init()
     self:initializeItems()
 end
 
-
 function PANEL:buyItemFromVendor(itemType)
     net.Start("liaVendorTrade")
     net.WriteString(itemType)
@@ -70,14 +67,12 @@ function PANEL:buyItemFromVendor(itemType)
     net.SendToServer()
 end
 
-
 function PANEL:sellItemToVendor(itemType)
     net.Start("liaVendorTrade")
     net.WriteString(itemType)
     net.WriteBool(true)
     net.SendToServer()
 end
-
 
 function PANEL:initializeItems()
     for itemType in SortedPairs(liaVendorEnt.items) do
@@ -88,14 +83,12 @@ function PANEL:initializeItems()
     end
 end
 
-
 function PANEL:shouldItemBeVisible(itemType, parent)
     local mode = liaVendorEnt:getTradeMode(itemType)
     if parent == self.me and mode == VENDOR_SELLONLY then return false end
     if parent == self.vendor and mode == VENDOR_BUYONLY then return false end
     return mode ~= nil
 end
-
 
 function PANEL:updateItem(itemType, parent, quantity)
     assert(isstring(itemType), "itemType must be a string")
@@ -118,7 +111,6 @@ function PANEL:updateItem(itemType, parent, quantity)
     return panel
 end
 
-
 function PANEL:onVendorPropEdited(vendor, key)
     if key == "name" then
         self.vendor:setName(vendor:getName())
@@ -135,11 +127,9 @@ function PANEL:onVendorPropEdited(vendor, key)
     end
 end
 
-
 function PANEL:onVendorMoneyUpdated(_, money)
     self.vendor:setMoney(money)
 end
-
 
 function PANEL:onVendorPriceUpdated(_, itemType, _)
     local panel = self.items[self.vendor][itemType]
@@ -148,23 +138,19 @@ function PANEL:onVendorPriceUpdated(_, itemType, _)
     if IsValid(panel) then panel:updatePrice() end
 end
 
-
 function PANEL:onVendorModeUpdated(_, itemType, _)
     self:updateItem(itemType, self.vendor)
     self:updateItem(itemType, self.me)
 end
 
-
 function PANEL:onItemStockUpdated(_, itemType)
     self:updateItem(itemType, self.vendor)
 end
-
 
 function PANEL:onCharVarChanged(character, key, _, newValue)
     if character ~= LocalPlayer():getChar() then return end
     if key == "money" then self.me:setMoney(newValue) end
 end
-
 
 function PANEL:listenForChanges()
     hook.Add("VendorMoneyUpdated", self, self.onVendorMoneyUpdated)
@@ -176,23 +162,19 @@ function PANEL:listenForChanges()
     hook.Add("VendorEdited", self, self.onVendorPropEdited)
 end
 
-
 function PANEL:InventoryItemAdded(item)
     self:updateItem(item.uniqueID, self.me)
 end
 
-
 function PANEL:InventoryItemRemoved(item)
     self:InventoryItemAdded(item)
 end
-
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 10)
     surface.SetDrawColor(0, 0, 0, 100)
     surface.DrawRect(0, 0, w, h)
 end
-
 
 function PANEL:OnRemove()
     if not self.noSendExit then
@@ -206,14 +188,10 @@ function PANEL:OnRemove()
     self:liaDeleteInventoryHooks()
 end
 
-
 function PANEL:OnKeyCodePressed(_)
     local useKey = input.LookupBinding("+use", true)
     if useKey then self:Remove() end
 end
 
-
 vgui.Register("liaVendor", PANEL, "EditablePanel")
-
 if IsValid(lia.gui.vendor) then vgui.Create("liaVendor") end
-

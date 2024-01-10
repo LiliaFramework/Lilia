@@ -1,6 +1,4 @@
-﻿
-local resetCalled = 0
-
+﻿local resetCalled = 0
 concommand.Add(
     "lia_recreatedb",
     function(client)
@@ -17,4 +15,3 @@ concommand.Add(
         end
     end
 )
-

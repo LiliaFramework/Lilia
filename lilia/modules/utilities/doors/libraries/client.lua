@@ -1,10 +1,7 @@
-
-local toScreen = FindMetaTable("Vector").ToScreen
-
+﻿local toScreen = FindMetaTable("Vector").ToScreen
 function DoorsCore:ShouldDrawEntityInfo(entity)
     if IsValid(entity) and entity.isDoor(entity) and not entity.getNetVar(entity, "disabled") then return true end
 end
-
 
 function DoorsCore:DrawEntityInfo(entity, alpha)
     if entity.isDoor(entity) and not entity:getNetVar("hidden") then
@@ -29,4 +26,3 @@ function DoorsCore:DrawEntityInfo(entity, alpha)
         end
     end
 end
-

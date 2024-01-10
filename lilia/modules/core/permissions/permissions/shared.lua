@@ -1,5 +1,4 @@
-﻿
-RestrictionCore.CAMIPrivileges = {
+﻿RestrictionCore.CAMIPrivileges = {
     {
         Name = "UserGroups - Staff Group",
         MinAccess = "admin",
@@ -11,4 +10,3 @@ RestrictionCore.CAMIPrivileges = {
         Description = "Defines Player as VIP."
     },
 }
-

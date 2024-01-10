@@ -1,17 +1,13 @@
-
-local Variables = {"disabled", "name", "price", "noSell", "faction", "factions", "class", "hidden"}
-
+﻿local Variables = {"disabled", "name", "price", "noSell", "faction", "factions", "class", "hidden"}
 local DarkRPVariables = {
     ["DarkRPNonOwnable"] = function(ent, _) ent:setNetVar("noSell", true) end,
     ["DarkRPTitle"] = function(ent, val) ent:setNetVar("name", val) end,
     ["DarkRPCanLockpick"] = function(ent, val) ent.noPick = tobool(val) end
 }
 
-
 function DoorsCore:EntityKeyValue(ent, key, value)
     if ent:isDoor() and DarkRPVariables[key] then DarkRPVariables[key](ent, value) end
 end
-
 
 function DoorsCore:copyParentDoor(child)
     local parent = child.liaParent
@@ -22,7 +18,6 @@ function DoorsCore:copyParentDoor(child)
         end
     end
 end
-
 
 function DoorsCore:LoadData()
     local data = self:getData()
@@ -44,7 +39,6 @@ function DoorsCore:LoadData()
         end
     end
 end
-
 
 function DoorsCore:SaveData()
     local data = {}
@@ -70,7 +64,6 @@ function DoorsCore:SaveData()
     self:setData(data)
 end
 
-
 function DoorsCore:callOnDoorChildren(entity, callback)
     local parent
     if entity.liaChildren then
@@ -87,7 +80,6 @@ function DoorsCore:callOnDoorChildren(entity, callback)
         end
     end
 end
-
 
 function DoorsCore:InitPostEntity()
     local doors = ents.FindByClass("prop_door_rotating")
@@ -108,7 +100,6 @@ function DoorsCore:InitPostEntity()
     end
 end
 
-
 function DoorsCore:PlayerUse(client, entity)
     if entity:isDoor() then
         local result = hook.Run("CanPlayerUseDoor", client, entity)
@@ -121,11 +112,9 @@ function DoorsCore:PlayerUse(client, entity)
     end
 end
 
-
 function DoorsCore:CanPlayerUseDoor(_, entity)
     if entity:getNetVar("disabled") then return false end
 end
-
 
 function DoorsCore:CanPlayerAccessDoor(client, door, _)
     local factions = door:getNetVar("factions")
@@ -148,11 +137,9 @@ function DoorsCore:CanPlayerAccessDoor(client, door, _)
     end
 end
 
-
 function DoorsCore:PostPlayerLoadout(client)
     client:Give("lia_keys")
 end
-
 
 function DoorsCore:ShowTeam(client)
     local entity = client:GetTracedEntity()
@@ -170,11 +157,9 @@ function DoorsCore:ShowTeam(client)
     end
 end
 
-
 function DoorsCore:PlayerDisconnected(client)
     for _, v in ipairs(ents.GetAll()) do
         if v == client then return end
         if v.isDoor and v:isDoor() and v:GetDTEntity(0) == client then v:removeDoorAccessData() end
     end
 end
-

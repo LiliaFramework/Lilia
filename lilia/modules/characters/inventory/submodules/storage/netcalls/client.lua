@@ -1,12 +1,10 @@
-﻿
-net.Receive(
+﻿net.Receive(
     "liaStorageUnlock",
     function()
         local entity = net.ReadEntity()
         hook.Run("StorageUnlockPrompt", entity)
     end
 )
-
 
 net.Receive(
     "liaStorageOpen",
@@ -15,4 +13,3 @@ net.Receive(
         hook.Run("StorageOpen", entity)
     end
 )
-

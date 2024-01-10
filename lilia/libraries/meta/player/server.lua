@@ -1,6 +1,4 @@
-﻿
-local playerMeta = FindMetaTable("Player")
-
+﻿local playerMeta = FindMetaTable("Player")
 function playerMeta:IPAddressNoPort()
     local ipAddr = self:IPAddress()
     local ipAddrExploded = string.Explode(":", ipAddr, false)
@@ -10,7 +8,6 @@ function playerMeta:IPAddressNoPort()
         return ipAddr
     end
 end
-
 
 function playerMeta:setAction(text, time, callback, startTime, finishTime)
     if time and time <= 0 then
@@ -31,7 +28,6 @@ function playerMeta:setAction(text, time, callback, startTime, finishTime)
     if callback then timer.Create("liaAct" .. self:UniqueID(), time, 1, function() if IsValid(self) then callback(self) end end) end
 end
 
-
 function playerMeta:PlaySound(sound, pitch)
     net.Start("LiliaPlaySound")
     net.WriteString(tostring(sound))
@@ -42,14 +38,13 @@ end
 function playerMeta:OpenUI(panel)
     net.Start("OpenVGUI")
     net.WriteString(panel)
-	net.Send(self)
+    net.Send(self)
 end
 
 function playerMeta:getPlayTime()
     local diff = os.time(lia.util.dateToNumber(self.lastJoin)) - os.time(lia.util.dateToNumber(self.firstJoin))
     return diff + (RealTime() - (self.liaJoinTime or RealTime()))
 end
-
 
 function playerMeta:CreateServerRagdoll(DontSetPlayer)
     local entity = ents.Create("prop_ragdoll")
@@ -82,7 +77,6 @@ function playerMeta:CreateServerRagdoll(DontSetPlayer)
     return entity
 end
 
-
 function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
     local uniqueID = "liaStare" .. self:UniqueID()
     local data = {}
@@ -111,16 +105,13 @@ function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
     )
 end
 
-
 function playerMeta:notify(message)
     lia.util.notify(message, self)
 end
 
-
 function playerMeta:notifyLocalized(message, ...)
     lia.util.notifyLocalized(message, self, ...)
 end
-
 
 function playerMeta:requestString(title, subTitle, callback, default)
     local d
@@ -141,7 +132,6 @@ function playerMeta:requestString(title, subTitle, callback, default)
     return d
 end
 
-
 function playerMeta:isStuck()
     return     util.TraceEntity(
         {
@@ -152,7 +142,6 @@ function playerMeta:isStuck()
         self
     ).StartSolid
 end
-
 
 function playerMeta:createRagdoll(freeze)
     local entity = ents.Create("prop_ragdoll")
@@ -183,7 +172,6 @@ function playerMeta:createRagdoll(freeze)
     end
     return entity
 end
-
 
 function playerMeta:setRagdolled(state, time, getUpGrace)
     getUpGrace = getUpGrace or time or 5
@@ -299,7 +287,6 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
     end
 end
 
-
 function playerMeta:setWhitelisted(faction, whitelisted)
     if not whitelisted then whitelisted = nil end
     local data = lia.faction.indices[faction]
@@ -313,7 +300,6 @@ function playerMeta:setWhitelisted(faction, whitelisted)
     end
     return false
 end
-
 
 function playerMeta:syncVars()
     for entity, data in pairs(lia.net) do
@@ -329,7 +315,6 @@ function playerMeta:syncVars()
     end
 end
 
-
 function playerMeta:setLocalVar(key, value)
     if checkBadType(key, value) then return end
     lia.net[self] = lia.net[self] or {}
@@ -337,13 +322,11 @@ function playerMeta:setLocalVar(key, value)
     netstream.Start(self, "nLcl", key, value)
 end
 
-
 function playerMeta:SendMessage(...)
     net.Start("SendMessage")
     net.WriteTable({...} or {})
     net.Send(self)
 end
-
 
 function playerMeta:SendPrint(...)
     net.Start("SendPrint")
@@ -351,10 +334,8 @@ function playerMeta:SendPrint(...)
     net.Send(self)
 end
 
-
 function playerMeta:SendPrintTable(...)
     net.Start("SendPrintTable")
     net.WriteTable({...} or {})
     net.Send(self)
 end
-

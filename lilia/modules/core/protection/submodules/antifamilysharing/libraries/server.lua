@@ -1,5 +1,4 @@
-﻿
-function AntiFamilySharing:PlayerAuthed(client, steamid)
+﻿function AntiFamilySharing:PlayerAuthed(client, steamid)
     if not self.FamilySharingEnabled then return end
     local steamID64 = util.SteamIDTo64(steamid)
     local OwnerSteamID64 = client:OwnerSteamID64()
@@ -20,4 +19,3 @@ function AntiFamilySharing:PlayerAuthed(client, steamid)
         end
     end
 end
-

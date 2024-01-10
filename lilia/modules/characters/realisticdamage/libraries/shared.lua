@@ -1,10 +1,8 @@
-﻿
-function RealisticDamageCore:GetPlayerDeathSound(_, isFemale)
+﻿function RealisticDamageCore:GetPlayerDeathSound(_, isFemale)
     local soundTable
     soundTable = isFemale and self.FemaleDeathSounds or self.MaleDeathSounds
     return soundTable and soundTable[math.random(#soundTable)]
 end
-
 
 function RealisticDamageCore:GetPlayerPainSound(_, paintype, isFemale)
     local soundTable
@@ -16,11 +14,9 @@ function RealisticDamageCore:GetPlayerPainSound(_, paintype, isFemale)
     return soundTable and soundTable[math.random(#soundTable)]
 end
 
-
 function RealisticDamageCore:GetFallDamage(_, speed)
     return math.max(0, (speed - 580) * (100 / 444))
 end
-
 
 function RealisticDamageCore:GetInjuredText(client)
     local health = client:Health()
@@ -28,4 +24,3 @@ function RealisticDamageCore:GetInjuredText(client)
         if (health / client:GetMaxHealth()) < k then return v[1], v[2] end
     end
 end
-

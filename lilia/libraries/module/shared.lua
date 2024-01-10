@@ -1,14 +1,8 @@
-
-lia.module = lia.module or {}
-
+﻿lia.module = lia.module or {}
 lia.module.enabilitystatus = {}
-
 lia.module.list = lia.module.list or {}
-
 lia.module.unloaded = lia.module.unloaded or {}
-
 lia.module.ModuleFolders = {"dependencies", "config", "permissions", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim", "logger"}
-
 lia.module.ModuleFiles = {
     ["client.lua"] = "client",
     ["cl_module.lua"] = "client",
@@ -17,7 +11,6 @@ lia.module.ModuleFiles = {
     ["config.lua"] = "shared",
     ["sconfig.lua"] = "server",
 }
-
 
 lia.module.ModuleConditions = {
     ["stormfox2"] = {
@@ -85,7 +78,6 @@ lia.module.ModuleConditions = {
         global = "pac"
     }
 }
-
 
 function lia.module.load(uniqueID, path, isSingleFile, variable)
     local lowerVariable = variable:lower()
@@ -187,7 +179,6 @@ function lia.module.loadExtras(path)
     hook.Run("DoModuleIncludes", path, MODULE)
 end
 
-
 function lia.module.initialize()
     local schema = engine.ActiveGamemode()
     lia.module.loadFromDir(schema .. "/preload", "schema")
@@ -202,7 +193,6 @@ function lia.module.initialize()
     hook.Run("InitializedModules")
 end
 
-
 function lia.module.loadFromDir(directory, group)
     local location = group == "schema" and "SCHEMA" or "MODULE"
     local files, folders = file.Find(directory .. "/*", "LUA")
@@ -215,8 +205,6 @@ function lia.module.loadFromDir(directory, group)
     end
 end
 
-
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
-

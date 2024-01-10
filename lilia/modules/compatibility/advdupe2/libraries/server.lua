@@ -1,5 +1,4 @@
-﻿
-function AdvDupe2Compatibility:CanTool(client, _, tool)
+﻿function AdvDupe2Compatibility:CanTool(client, _, tool)
     local privilege = "Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
     local entity = client:GetTracedEntity()
     local validEntity = IsValid(entity)
@@ -21,18 +20,14 @@ function AdvDupe2Compatibility:CanTool(client, _, tool)
     end
 end
 
-
 function AdvDupe2Compatibility:PlayerSpawnProp(client)
     if client.AdvDupe2 and client.AdvDupe2.Entities then return true end
 end
-
 
 function AdvDupe2Compatibility:PlayerSpawnObject(client, _, _)
     if client.AdvDupe2 and client.AdvDupe2.Entities then return true end
 end
 
-
 function AdvDupe2Compatibility:PlayerSpawnRagdoll(client)
     if client.AdvDupe2 and client.AdvDupe2.Entities then return true end
 end
-

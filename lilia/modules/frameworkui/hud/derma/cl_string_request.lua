@@ -1,5 +1,4 @@
-﻿
-function String_Request(name, onRun, onCancel, okBtnText)
+﻿function String_Request(name, onRun, onCancel, okBtnText)
     if not okBtnText or okBtnText == "" or okBtnText == " " then okBtnText = "Ok" end
     local bb = vgui.Create("DPanel")
     bb:SetSize(ScrW(), ScrH())
@@ -143,4 +142,3 @@ function String_Request(name, onRun, onCancel, okBtnText)
     )
     return bb.pop
 end
-

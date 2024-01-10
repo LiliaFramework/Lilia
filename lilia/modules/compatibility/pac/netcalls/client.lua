@@ -1,5 +1,4 @@
-﻿
-net.Receive(
+﻿net.Receive(
     "liaPACSync",
     function()
         for _, client in ipairs(player.GetAll()) do
@@ -9,7 +8,6 @@ net.Receive(
         end
     end
 )
-
 
 net.Receive(
     "liaPACPartAdd",
@@ -21,7 +19,6 @@ net.Receive(
     end
 )
 
-
 net.Receive(
     "liaPACPartRemove",
     function()
@@ -31,7 +28,6 @@ net.Receive(
         PACCompatibility:removePart(client, id)
     end
 )
-
 
 net.Receive(
     "liaPACPartReset",
@@ -47,4 +43,3 @@ net.Receive(
         end
     end
 )
-

@@ -1,5 +1,4 @@
-﻿
-function RealisticDamageCore:ScalePlayerDamage(_, hitgroup, dmgInfo)
+﻿function RealisticDamageCore:ScalePlayerDamage(_, hitgroup, dmgInfo)
     local damageScale = self.DamageScale
     if hitgroup == HITGROUP_HEAD then
         damageScale = self.HeadShotDamage
@@ -10,13 +9,11 @@ function RealisticDamageCore:ScalePlayerDamage(_, hitgroup, dmgInfo)
     dmgInfo:ScaleDamage(damageScale)
 end
 
-
 function RealisticDamageCore:PlayerDeath(client)
     if not self.DeathSoundEnabled then return end
     local deathSound = hook.Run("GetPlayerDeathSound", client, client:isFemale())
     if deathSound then client:EmitSound(deathSound) end
 end
-
 
 function RealisticDamageCore:EntityTakeDamage(client, _)
     if not self.PainSoundEnabled or not client:IsPlayer() or client:Health() <= 0 then return end
@@ -28,12 +25,10 @@ function RealisticDamageCore:EntityTakeDamage(client, _)
     end
 end
 
-
 function RealisticDamageCore:PlayerDisconnected(client)
     local steamID64 = client:SteamID64()
     if timer.Exists("DrownTimer_" .. steamID64) then timer.Remove("DrownTimer_" .. steamID64) end
 end
-
 
 function RealisticDamageCore:PlayerLoadedChar(client)
     local steamID64 = client:SteamID64()
@@ -64,7 +59,6 @@ function RealisticDamageCore:PlayerLoadedChar(client)
     timer.Create("DrownTimer_" .. steamID64, 1, 0, applyDrowningEffects)
 end
 
-
 function RealisticDamageCore:EntityTakeDamage(entity, dmgInfo)
     if self.DamageInCars and entity:IsVehicle() and entity:GetClass() == "gmod_sent_vehicle_fphysics_base" then
         local client = entity:GetDriver()
@@ -83,4 +77,3 @@ function RealisticDamageCore:EntityTakeDamage(entity, dmgInfo)
         end
     end
 end
-

@@ -1,6 +1,4 @@
-﻿
-local GM = GM or GAMEMODE
-
+﻿local GM = GM or GAMEMODE
 function GM:PlayerNoClip(client, state)
     if CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip Outside Staff Character", nil) or client:isStaffOnDuty() then
         if state then
@@ -42,8 +40,6 @@ function GM:PlayerNoClip(client, state)
     return false
 end
 
-
 function NoClipCore:OnPlayerObserve(client, state)
     lia.log.add(client, (state and "observerEnter") or "observerExit")
 end
-

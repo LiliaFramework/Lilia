@@ -1,12 +1,10 @@
-﻿
-netstream.Hook(
+﻿netstream.Hook(
     "rgnDone",
     function()
         local client = LocalPlayer()
         hook.Run("OnCharRecognized", client, id)
     end
 )
-
 
 netstream.Hook(
     "rgnMenu",
@@ -26,4 +24,3 @@ netstream.Hook(
         menu:Center()
     end
 )
-

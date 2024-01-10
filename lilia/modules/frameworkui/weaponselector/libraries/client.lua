@@ -1,18 +1,10 @@
-
-local weaponInfo = {"Author", "Contact", "Purpose", "Instructions"}
-
+﻿local weaponInfo = {"Author", "Contact", "Purpose", "Instructions"}
 WSCore.index = WSCore.index or 1
-
 WSCore.deltaIndex = WSCore.deltaIndex or WSCore.index
-
 WSCore.infoAlpha = WSCore.infoAlpha or 0
-
 WSCore.alpha = WSCore.alpha or 0
-
 WSCore.alphaDelta = WSCore.alphaDelta or WSCore.alpha
-
 WSCore.fadeTime = WSCore.fadeTime or 0
-
 function WSCore:HUDPaint()
     local frameTime = FrameTime()
     self.alphaDelta = Lerp(frameTime * 10, self.alphaDelta, self.alpha)
@@ -58,7 +50,6 @@ function WSCore:HUDPaint()
     end
 end
 
-
 function WSCore:onIndexChanged()
     self.alpha = 1
     self.fadeTime = CurTime() + 5
@@ -83,7 +74,6 @@ function WSCore:onIndexChanged()
         client:EmitSound(source or "common/talk.wav", 50, 180)
     end
 end
-
 
 function WSCore:PlayerBindPress(client, bind, pressed)
     local weapon = client:GetActiveWeapon()
@@ -114,4 +104,3 @@ function WSCore:PlayerBindPress(client, bind, pressed)
         end
     end
 end
-

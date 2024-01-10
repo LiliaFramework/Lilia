@@ -1,5 +1,4 @@
-﻿
-lia.command.add(
+﻿lia.command.add(
     "banooc",
     {
         privilege = "Ban OOC",
@@ -7,7 +6,6 @@ lia.command.add(
         onRun = function() end
     }
 )
-
 
 lia.command.add(
     "unbanooc",
@@ -18,7 +16,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "blockooc",
     {
@@ -27,7 +24,6 @@ lia.command.add(
         onRun = function() end
     }
 )
-
 
 lia.command.add(
     "clearchat",
@@ -38,7 +34,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "refreshfonts",
     {
@@ -47,4 +42,3 @@ lia.command.add(
         onRun = function() end
     }
 )
-

@@ -1,5 +1,4 @@
-
-netstream.Hook(
+﻿netstream.Hook(
     "adminClearChat",
     function()
         if ChatboxCore and IsValid(ChatboxCore.panel) then
@@ -10,7 +9,6 @@ netstream.Hook(
         end
     end
 )
-
 
 netstream.Hook(
     "cMsg",
@@ -32,4 +30,3 @@ netstream.Hook(
         end
     end
 )
-

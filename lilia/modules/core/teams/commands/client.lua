@@ -1,5 +1,4 @@
-﻿
-lia.command.add(
+﻿lia.command.add(
     "classwhitelist",
     {
         adminOnly = true,
@@ -7,7 +6,6 @@ lia.command.add(
         onRun = function() end
     }
 )
-
 
 lia.command.add(
     "plytransfer",
@@ -19,7 +17,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "plywhitelist",
     {
@@ -29,7 +26,6 @@ lia.command.add(
         onRun = function() end
     }
 )
-
 
 lia.command.add(
     "plyunwhitelist",
@@ -41,7 +37,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "beclass",
     {
@@ -51,7 +46,6 @@ lia.command.add(
         onRun = function() end
     }
 )
-
 
 lia.command.add(
     "factionlist",
@@ -63,7 +57,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "setclass",
     {
@@ -74,7 +67,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "classunwhitelist",
     {
@@ -83,4 +75,3 @@ lia.command.add(
         onRun = function() end
     }
 )
-

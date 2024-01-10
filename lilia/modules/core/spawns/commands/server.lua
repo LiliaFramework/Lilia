@@ -1,5 +1,4 @@
-
-lia.command.add(
+﻿lia.command.add(
     "spawnadd",
     {
         privilege = "Change Spawns",
@@ -57,7 +56,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "respawn",
     {
@@ -73,7 +71,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "spawnremove",
@@ -101,7 +98,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "returnitems",
@@ -141,4 +137,3 @@ lia.command.add(
         end
     }
 )
-

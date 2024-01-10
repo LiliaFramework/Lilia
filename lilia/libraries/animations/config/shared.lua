@@ -1,5 +1,4 @@
-﻿
-lia.anim.HoldTypeTranslator = {
+﻿lia.anim.HoldTypeTranslator = {
     [""] = "normal",
     ["physgun"] = "smg",
     ["ar2"] = "smg",

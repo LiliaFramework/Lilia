@@ -1,5 +1,4 @@
-﻿
-PIM:AddOption(
+﻿PIM:AddOption(
     "Give Money",
     {
         serverRun = false,
@@ -53,4 +52,3 @@ PIM:AddOption(
         end
     }
 )
-

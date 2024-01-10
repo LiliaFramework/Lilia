@@ -1,12 +1,7 @@
-﻿
-local ScrW, ScrH = ScrW(), ScrH()
-
+﻿local ScrW, ScrH = ScrW(), ScrH()
 local logoMat = Material("lilia/logo.png")
-
 local textureID = surface.GetTextureID("models/effects/portalfunnel_sheet")
-
 local PANEL = {}
-
 do
     for _, v in ipairs(CreditsCore.GamemodeCreators) do
         steamworks.RequestPlayerInfo(v.steamid, function(steamName) v.name = steamName or "Loading..." end)
@@ -82,12 +77,10 @@ function PANEL:Init()
     self:SizeToChildren(true, true)
 end
 
-
 function PANEL:Paint()
 end
 
 vgui.Register("CreditsContribPanel", PANEL, "DPanel")
-
 PANEL = {}
 function PANEL:Init()
 end
@@ -105,18 +98,13 @@ function PANEL:setPerson(data, left)
     self[id]:SetWide((self:GetWide() / 2) + 32)
 end
 
-
 function PANEL:Paint()
 end
 
-
 vgui.Register("CreditsCreditsList", PANEL, "DPanel")
-
 PANEL = {}
-
 function PANEL:Init()
 end
-
 
 function PANEL:Paint(w, h)
     surface.SetMaterial(logoMat)
@@ -124,11 +112,8 @@ function PANEL:Paint(w, h)
     surface.DrawTexturedRect((w / 2) - 128, (h / 2) - 128, 256, 256)
 end
 
-
 vgui.Register("CreditsLogo", PANEL, "DPanel")
-
 PANEL = {}
-
 function PANEL:Init()
     if lia.gui.creditsPanel then lia.gui.creditsPanel:Remove() end
     lia.gui.creditsPanel = self
@@ -166,10 +151,7 @@ function PANEL:Init()
     self.contribPanel:Dock(TOP)
 end
 
-
 function PANEL:Paint()
 end
 
-
 vgui.Register("liaCreditsList", PANEL, "DPanel")
-

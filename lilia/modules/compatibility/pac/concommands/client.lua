@@ -1,6 +1,4 @@
-﻿
-concommand.Remove("pac_restart")
-
+﻿concommand.Remove("pac_restart")
 function _G.pac_Restart()
     PAC_MDL_SALT = PAC_MDL_SALT + 1
     local editor_was_open
@@ -134,9 +132,5 @@ function _G.pac_Restart()
     if model_browser_opened then RunConsoleCommand("pac_asset_browser") end
 end
 
-
 concommand.Add("pac_restart", _G.pac_Restart)
-
-concommand.Add("pac_clear_parts", function()
-    RunConsoleCommand("pac_restart")
-end)
+concommand.Add("pac_clear_parts", function() RunConsoleCommand("pac_restart") end)

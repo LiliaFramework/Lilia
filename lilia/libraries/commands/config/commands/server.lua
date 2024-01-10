@@ -1,5 +1,4 @@
-﻿
-lia.command.add(
+﻿lia.command.add(
     "charsetspeed",
     {
         adminOnly = true,
@@ -17,27 +16,33 @@ lia.command.add(
     }
 )
 
-lia.command.add("playglobalsound", {
-    superAdminOnly = true,
-    privilege = "Play Global Sounds",
-    onRun = function()
-        local sound = arguments[1]
-        for _, v in pairs(player.GetAll()) do
-            v:PlaySound(sound)
+lia.command.add(
+    "playglobalsound",
+    {
+        superAdminOnly = true,
+        privilege = "Play Global Sounds",
+        onRun = function()
+            local sound = arguments[1]
+            for _, v in pairs(player.GetAll()) do
+                v:PlaySound(sound)
+            end
         end
-    end
-})
+    }
+)
 
-lia.command.add("playsound", {
-    superAdminOnly = true,
-    privilege = "Play Targetted Sounds",
-    syntax = "<string name> <string sound>",
-    onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
-        local sound = arguments[2]
-        target:PlaySound(sound)
-    end
-})
+lia.command.add(
+    "playsound",
+    {
+        superAdminOnly = true,
+        privilege = "Play Targetted Sounds",
+        syntax = "<string name> <string sound>",
+        onRun = function(client, arguments)
+            local target = lia.command.findPlayer(client, arguments[1])
+            local sound = arguments[2]
+            target:PlaySound(sound)
+        end
+    }
+)
 
 lia.command.add(
     "charsetjump",
@@ -56,7 +61,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "charaddmoney",
@@ -79,7 +83,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "charban",
@@ -111,7 +114,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "charsetdesc",
     {
@@ -133,7 +135,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "charsetname",
     {
@@ -153,7 +154,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "chargetmodel",
     {
@@ -170,7 +170,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "charsetmodel",
@@ -189,7 +188,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "charsetbodygroup",
@@ -217,7 +215,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "charsetskin",
     {
@@ -236,7 +233,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "chargetmoney",
     {
@@ -254,7 +250,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "charsetmoney",
@@ -278,7 +273,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "clearinv",
     {
@@ -297,7 +291,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "flaggive",
@@ -324,7 +317,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "flagtake",
     {
@@ -342,7 +334,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "charkick",
@@ -366,7 +357,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "viewcoreinformation",
     {
@@ -378,7 +368,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "charunban",
@@ -428,7 +417,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "flagpet",
     {
@@ -447,7 +435,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "flagragdoll",
     {
@@ -462,7 +449,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "flags",
@@ -481,7 +467,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "freezeallprops",
@@ -508,7 +493,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "checkmoney",
     {
@@ -525,7 +509,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "status",
@@ -544,7 +527,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "redownloadlightmaps",
     {
@@ -556,7 +538,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "cleanitems",
@@ -575,7 +556,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "cleanprops",
     {
@@ -593,7 +573,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "forcesave",
     {
@@ -609,7 +588,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "cleannpcs",
@@ -630,7 +608,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "flags",
     {
@@ -643,7 +620,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "checkallmoney",
@@ -658,7 +634,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "return",
@@ -682,7 +657,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "findallflags",
     {
@@ -695,7 +669,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "chargiveitem",
@@ -731,7 +704,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "netmessagelogs",
     {
@@ -740,7 +712,6 @@ lia.command.add(
         onRun = function(client) sendData(1, client) end
     }
 )
-
 
 lia.command.add(
     "announce",
@@ -758,7 +729,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "listents",
@@ -787,7 +757,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "flip",
     {
@@ -804,7 +773,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "liststaff",
     {
@@ -817,7 +785,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "listondutystaff",
@@ -832,7 +799,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "listvip",
     {
@@ -846,7 +812,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "listusers",
     {
@@ -859,7 +824,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "rolld",
@@ -893,7 +857,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "roll",
     {
@@ -902,7 +865,6 @@ lia.command.add(
         onRun = function(client) lia.chat.send(client, "roll", math.random(0, 100)) end
     }
 )
-
 
 lia.command.add(
     "chardesc",
@@ -921,7 +883,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "chargetup",
@@ -944,7 +905,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "givemoney",
@@ -977,7 +937,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "bringlostitems",
     {
@@ -990,7 +949,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "carddraw",
@@ -1005,7 +963,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "fallover",
@@ -1041,7 +998,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "getpos",
     {
@@ -1050,7 +1006,6 @@ lia.command.add(
         onRun = function(client) client:ChatPrint("MY POSITION: " .. tostring(client:GetPos())) end
     }
 )
-
 
 lia.command.add(
     "entname",
@@ -1063,7 +1018,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "dropmoney",
@@ -1091,4 +1045,3 @@ lia.command.add(
         end
     }
 )
-

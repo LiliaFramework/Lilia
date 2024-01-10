@@ -1,5 +1,4 @@
-
-function AmmoSaveCore:CharacterPreSave(character)
+﻿function AmmoSaveCore:CharacterPreSave(character)
     local client = character:getPlayer()
     if not IsValid(client) then return end
     if self.SaveCharacterAmmo then
@@ -14,7 +13,6 @@ function AmmoSaveCore:CharacterPreSave(character)
         character:setData("ammo", ammoTable)
     end
 end
-
 
 function AmmoSaveCore:PlayerLoadedChar(client)
     local character = client:getChar()
@@ -32,7 +30,6 @@ function AmmoSaveCore:PlayerLoadedChar(client)
     )
 end
 
-
 function AmmoSaveCore:PlayerDeath(client, _, _)
     if not client:getChar() then return end
     local char = client:getChar()
@@ -44,4 +41,3 @@ function AmmoSaveCore:PlayerDeath(client, _, _)
         end
     end
 end
-

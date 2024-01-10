@@ -1,6 +1,4 @@
-﻿
-file.CreateDir("lilia")
-
+﻿file.CreateDir("lilia")
 function lia.data.set(key, value, global, ignoreMap)
     local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local path = "lilia/" .. (global and "" or folder .. "/") .. (ignoreMap and "" or game.GetMap() .. "/")
@@ -10,7 +8,6 @@ function lia.data.set(key, value, global, ignoreMap)
     lia.data.stored[key] = value
     return path
 end
-
 
 function lia.data.delete(key, global, ignoreMap)
     local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
@@ -25,7 +22,6 @@ function lia.data.delete(key, global, ignoreMap)
     end
 end
 
-
 timer.Create(
     "liaSaveData",
     lia.config.DataSaveInterval,
@@ -35,4 +31,3 @@ timer.Create(
         hook.Run("PersistenceSave")
     end
 )
-

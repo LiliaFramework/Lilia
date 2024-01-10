@@ -1,5 +1,4 @@
-﻿
-lia.log.addType(
+﻿lia.log.addType(
     "itemTake",
     function(client, ...)
         local data = {...}
@@ -8,7 +7,6 @@ lia.log.addType(
         return string.format("%s has picked up %dx%s.", client:Name(), itemCount, itemName)
     end
 )
-
 
 lia.log.addType(
     "itemDrop",
@@ -20,7 +18,6 @@ lia.log.addType(
     end
 )
 
-
 lia.log.addType(
     "itemUse",
     function(client, ...)
@@ -29,4 +26,3 @@ lia.log.addType(
         return Format("%s tried '%s' on item '%s'(#%s)", client:Name(), arg[1], item.name, item.id)
     end
 )
-

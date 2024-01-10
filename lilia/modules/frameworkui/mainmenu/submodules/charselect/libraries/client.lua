@@ -1,13 +1,10 @@
-﻿
-function CharacterSelection:LiliaLoaded()
+﻿function CharacterSelection:LiliaLoaded()
     vgui.Create("liaCharacter")
 end
-
 
 function CharacterSelection:KickedFromCharacter(_, isCurrentChar)
     if isCurrentChar then vgui.Create("liaCharacter") end
 end
-
 
 function CharacterSelection:CreateMenuButtons(tabs)
     tabs["characters"] = function(_)
@@ -16,4 +13,3 @@ function CharacterSelection:CreateMenuButtons(tabs)
         vgui.Create("liaCharacter")
     end
 end
-

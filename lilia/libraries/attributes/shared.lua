@@ -1,8 +1,5 @@
-﻿
-lia.attribs = lia.attribs or {}
-
+﻿lia.attribs = lia.attribs or {}
 lia.attribs.list = lia.attribs.list or {}
-
 function lia.attribs.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName
@@ -21,7 +18,6 @@ function lia.attribs.loadFromDir(directory)
         ATTRIBUTE = nil
     end
 end
-
 
 lia.char.registerVar(
     "attribs",
@@ -50,4 +46,3 @@ lia.char.registerVar(
         shouldDisplay = function(_) return table.Count(lia.attribs.list) > 0 end
     }
 )
-

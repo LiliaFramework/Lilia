@@ -1,5 +1,4 @@
-
-net.Receive(
+﻿net.Receive(
     "AFKWarning",
     function()
         local enable = net.ReadBool()
@@ -10,7 +9,6 @@ net.Receive(
         end
     end
 )
-
 
 net.Receive(
     "AFKAnnounce",
@@ -24,4 +22,3 @@ net.Receive(
         chat.AddText(Color(255, 0, 0, 255), "Player ", Color(255, 255, 255, 255), name, Color(255, 0, 0, 255), " has been character kicked for being AFK.")
     end
 )
-

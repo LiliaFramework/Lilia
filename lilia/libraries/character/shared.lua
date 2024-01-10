@@ -1,24 +1,13 @@
-﻿
-local charMeta = lia.meta.character or {}
-
+﻿local charMeta = lia.meta.character or {}
 lia.char = lia.char or {}
-
 lia.char.loaded = lia.char.loaded or {}
-
 lia.char.names = lia.char.names or {}
-
 lia.char.varHooks = lia.char.varHooks or {}
-
 lia.char.vars = lia.char.vars or {}
-
 charMeta.__index = charMeta
-
 charMeta.id = charMeta.id or 0
-
 charMeta.vars = charMeta.vars or {}
-
 debug.getregistry().Character = lia.meta.character
-
 if SERVER then
     if #lia.char.names < 1 then
         lia.db.query(
@@ -66,7 +55,6 @@ function lia.getCharData(charID, key)
     return data
 end
 
-
 function lia.char.new(data, id, client, steamID)
     local character = setmetatable(
         {
@@ -91,12 +79,10 @@ function lia.char.new(data, id, client, steamID)
     return character
 end
 
-
 function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
     lia.char.varHooks[varName][hookName] = func
 end
-
 
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
@@ -140,7 +126,6 @@ function lia.char.registerVar(key, data)
 
     charMeta.vars[key] = data.default
 end
-
 
 lia.char.registerVar(
     "name",
@@ -188,7 +173,6 @@ lia.char.registerVar(
     }
 )
 
-
 lia.char.registerVar(
     "desc",
     {
@@ -202,7 +186,6 @@ lia.char.registerVar(
         end
     }
 )
-
 
 lia.char.registerVar(
     "model",
@@ -297,14 +280,12 @@ lia.char.registerVar(
     }
 )
 
-
 lia.char.registerVar(
     "class",
     {
         noDisplay = true,
     }
 )
-
 
 lia.char.registerVar(
     "faction",
@@ -335,7 +316,6 @@ lia.char.registerVar(
     }
 )
 
-
 lia.char.registerVar(
     "money",
     {
@@ -345,7 +325,6 @@ lia.char.registerVar(
         noDisplay = true
     }
 )
-
 
 lia.char.registerVar(
     "data",
@@ -373,7 +352,6 @@ lia.char.registerVar(
         end
     }
 )
-
 
 lia.char.registerVar(
     "var",
@@ -411,7 +389,6 @@ lia.char.registerVar(
     }
 )
 
-
 do
     local playerMeta = FindMetaTable("Player")
     playerMeta.steamName = playerMeta.steamName or playerMeta.Name
@@ -428,4 +405,3 @@ do
     playerMeta.Nick = playerMeta.Name
     playerMeta.GetName = playerMeta.Name
 end
-

@@ -1,18 +1,13 @@
-﻿
-chat.liaAddText = chat.liaAddText or chat.AddText
-
+﻿chat.liaAddText = chat.liaAddText or chat.AddText
 LIA_CVAR_CHATFILTER = CreateClientConVar("lia_chatfilter", "", true, false)
-
 function ChatboxCore:createChat()
     if IsValid(self.panel) then return end
     self.panel = vgui.Create("liaChatBox")
 end
 
-
 function ChatboxCore:InitPostEntity()
     self:createChat()
 end
-
 
 function ChatboxCore:PlayerBindPress(_, bind, pressed)
     bind = bind:lower()
@@ -22,18 +17,15 @@ function ChatboxCore:PlayerBindPress(_, bind, pressed)
     end
 end
 
-
 function ChatboxCore:HUDShouldDraw(element)
     if element == "CHudChat" then return false end
 end
-
 
 function chat.AddText(...)
     local show = true
     if IsValid(ChatboxCore.panel) then show = ChatboxCore.panel:addText(...) end
     if show then chat.liaAddText(...) end
 end
-
 
 function ChatboxCore:ChatText(_, _, text, messageType)
     if messageType == "none" and IsValid(self.panel) then
@@ -45,7 +37,6 @@ function ChatboxCore:ChatText(_, _, text, messageType)
         end
     end
 end
-
 
 function ChatboxCore:ChatAddText(text, ...)
     if ChatboxCore.ChatSizeDiff then
@@ -72,7 +63,6 @@ function ChatboxCore:ChatAddText(text, ...)
     end
 end
 
-
 concommand.Add(
     "fixchatplz",
     function()
@@ -82,4 +72,3 @@ concommand.Add(
         end
     end
 )
-

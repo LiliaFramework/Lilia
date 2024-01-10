@@ -1,5 +1,4 @@
-﻿
-concommand.Add(
+﻿concommand.Add(
     "lia",
     function(client, _, arguments)
         local command = arguments[1]
@@ -7,4 +6,3 @@ concommand.Add(
         lia.command.parse(client, nil, command or "", arguments)
     end
 )
-

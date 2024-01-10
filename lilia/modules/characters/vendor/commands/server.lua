@@ -1,5 +1,4 @@
-﻿
-lia.command.add(
+﻿lia.command.add(
     "restockallvendors",
     {
         privilege = "Restock Vendors",
@@ -15,7 +14,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "resetallvendormoney",
     {
@@ -30,4 +28,3 @@ lia.command.add(
         end
     }
 )
-

@@ -1,5 +1,4 @@
-﻿
-function RecognitionCore:IsCharRecognized(char, id)
+﻿function RecognitionCore:IsCharRecognized(char, id)
     local client = char:getPlayer()
     local recognized = char:getData("rgn", "")
     local other = lia.char.loaded[id]
@@ -13,7 +12,6 @@ function RecognitionCore:IsCharRecognized(char, id)
     return false
 end
 
-
 function RecognitionCore:IsCharFakeRecognized(char, id)
     local other = lia.char.loaded[id]
     local CharNameList = char:getRecognizedAs()
@@ -21,14 +19,12 @@ function RecognitionCore:IsCharFakeRecognized(char, id)
     return self.FakeNamesEnabled and self:IsFakeNameExistant(clientName, CharNameList)
 end
 
-
 function RecognitionCore:IsFakeNameExistant(clientName, CharNameList)
     for _, n in pairs(CharNameList) do
         if n == clientName then return true end
     end
     return false
 end
-
 
 lia.char.registerVar(
     "RecognizedAs",
@@ -38,4 +34,3 @@ lia.char.registerVar(
         noDisplay = true
     }
 )
-

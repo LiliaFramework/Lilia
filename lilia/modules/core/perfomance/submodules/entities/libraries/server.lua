@@ -1,13 +1,10 @@
-﻿
-function EntityPerfomance:PlayerEnteredVehicle(_, vehicle)
+﻿function EntityPerfomance:PlayerEnteredVehicle(_, vehicle)
     if vehicle:GetClass() == "prop_vehicle_prisoner_pod" then vehicle:RemoveEFlags(EFL_NO_THINK_FUNCTION) end
 end
-
 
 function EntityPerfomance:PropBreak(_, ent)
     if ent:IsValid() and ent:GetPhysicsObject():IsValid() then constraint.RemoveAll(ent) end
 end
-
 
 function EntityPerfomance:PlayerInitialSpawn(_)
     local annoying = ents.FindByName("music")
@@ -22,11 +19,9 @@ function EntityPerfomance:PlayerInitialSpawn(_)
     end
 end
 
-
 function EntityPerfomance:EntityEmitSound(tab)
     if self.SoundsToMute[tab.SoundName] then return false end
 end
-
 
 function EntityPerfomance:ServersideInitializedModules()
     if self.GarbageCleaningTimer > 0 then
@@ -43,12 +38,10 @@ function EntityPerfomance:ServersideInitializedModules()
     end
 end
 
-
 function EntityPerfomance:ServerOnEntityCreated(entity)
     if entity:GetClass() == "prop_vehicle_prisoner_pod" then entity:AddEFlags(EFL_NO_THINK_FUNCTION) end
     if entity:IsWidget() then hook.Add("PlayerTick", "GODisableEntWidgets2", function(_, n) widgets.PlayerTick(entity, n) end) end
 end
-
 
 function EntityPerfomance:EntityRemoved(entity)
     if entity:IsRagdoll() and not entity:getNetVar("player", nil) and self.RagdollCleaningTimer > 0 then
@@ -68,7 +61,6 @@ function EntityPerfomance:EntityRemoved(entity)
         )
     end
 end
-
 
 function EntityPerfomance:PlayerLeaveVehicle(_, vehicle)
     if vehicle:GetClass() == "prop_vehicle_prisoner_pod" then
@@ -92,7 +84,6 @@ function EntityPerfomance:PlayerLeaveVehicle(_, vehicle)
         )
     end
 end
-
 
 function EntityPerfomance:InitPostEntity()
     for _, v in pairs(ents.FindByClass("prop_physics")) do
@@ -121,4 +112,3 @@ function EntityPerfomance:InitPostEntity()
         v:Remove()
     end
 end
-

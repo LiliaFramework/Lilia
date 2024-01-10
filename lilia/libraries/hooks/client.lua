@@ -1,21 +1,16 @@
-﻿
-local GM = GM or GAMEMODE
-
+﻿local GM = GM or GAMEMODE
 function GM:DrawLiliaModelView(_, ent)
     if IsValid(ent.weapon) then ent.weapon:DrawModel() end
 end
-
 
 function GM:ClientInitPostEntity()
     lia.joinTime = RealTime() - 0.9716
     if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
 end
 
-
 function GM:OnChatReceived()
     if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
 end
-
 
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
@@ -41,7 +36,6 @@ function GM:PlayerBindPress(client, bind, pressed)
     end
 end
 
-
 function GM:CalcView(client, origin, angles, fov)
     local view = self.BaseClass:CalcView(client, origin, angles, fov)
     local entity = Entity(client:getLocalVar("ragdoll", 0))
@@ -63,13 +57,11 @@ function GM:CalcView(client, origin, angles, fov)
     return view
 end
 
-
 function GM:HUDPaintBackground()
     lia.bar.drawAll()
     lia.menu.drawAll()
     self.BaseClass.PaintWorldTips(self.BaseClass)
 end
-
 
 function GM:CharacterListLoaded()
     timer.Create(
@@ -84,13 +76,11 @@ function GM:CharacterListLoaded()
     )
 end
 
-
 function GM:OnContextMenuOpen()
     self.BaseClass:OnContextMenuOpen()
     lia.bar.drawAction()
     vgui.Create("liaQuick")
 end
-
 
 function GM:OnContextMenuClose()
     self.BaseClass:OnContextMenuClose()
@@ -98,23 +88,18 @@ function GM:OnContextMenuClose()
     if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
 end
 
-
 function GM:HUDDrawTargetID()
     return false
 end
-
 
 function GM:HUDDrawPickupHistory()
     return false
 end
 
-
 function GM:HUDAmmoPickedUp()
     return false
 end
 
-
 function GM:DrawDeathNotice()
     return false
 end
-

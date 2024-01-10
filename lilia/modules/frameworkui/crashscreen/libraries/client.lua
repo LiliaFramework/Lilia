@@ -1,14 +1,8 @@
-﻿
-local lastServerData1
-
+﻿local lastServerData1
 local lastServerData2
-
 local nextCrashThink = 0
-
 local nextCrashAnalysis
-
 local crashAnalysisAttempts = 0
-
 function CrashScreenCore:Think()
     if not SERVER_DOWN and nextCrashAnalysis and nextCrashAnalysis < CurTime() then
         nextCrashAnalysis = CurTime() + 0.05
@@ -50,11 +44,9 @@ function CrashScreenCore:Think()
     end
 end
 
-
 function CrashScreenCore:CharacterLoaded()
     CRASHSCREEN_ALLOW = true
 end
-
 
 function CrashScreenCore:HUDPaint()
     if SERVER_DOWN and CRASHSCREEN_ALLOW then
@@ -64,4 +56,3 @@ function CrashScreenCore:HUDPaint()
         CRASH_SCREEN:AlphaTo(0, 1.2, nil, function() if IsValid(CRASH_SCREEN) then CRASH_SCREEN:Remove() end end)
     end
 end
-

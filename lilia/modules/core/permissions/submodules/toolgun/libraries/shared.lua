@@ -1,5 +1,4 @@
-﻿
-function ToolGunCore:InitializedModules()
+﻿function ToolGunCore:InitializedModules()
     for _, wep in pairs(weapons.GetList()) do
         if wep.ClassName == "gmod_tool" then
             for ToolName, _ in pairs(wep.Tool) do
@@ -18,4 +17,3 @@ function ToolGunCore:InitializedModules()
         end
     end
 end
-

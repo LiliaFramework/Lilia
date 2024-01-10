@@ -1,6 +1,4 @@
-﻿
-ChatboxCore.OOCBans = ChatboxCore.OOCBans or {}
-
+﻿ChatboxCore.OOCBans = ChatboxCore.OOCBans or {}
 lia.command.add(
     "banooc",
     {
@@ -18,7 +16,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "unbanooc",
     {
@@ -33,7 +30,6 @@ lia.command.add(
         end
     }
 )
-
 
 lia.command.add(
     "blockooc",
@@ -52,7 +48,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "clearchat",
     {
@@ -61,7 +56,6 @@ lia.command.add(
         onRun = function() netstream.Start(player.GetAll(), "adminClearChat") end
     }
 )
-
 
 lia.command.add(
     "refreshfonts",
@@ -75,4 +69,3 @@ lia.command.add(
         end
     }
 )
-

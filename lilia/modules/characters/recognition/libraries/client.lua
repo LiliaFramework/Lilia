@@ -1,8 +1,6 @@
-﻿
-function RecognitionCore:IsRecognizedChatType(chatType)
+﻿function RecognitionCore:IsRecognizedChatType(chatType)
     return table.HasValue(self.ChatIsRecognized, chatType)
 end
-
 
 function RecognitionCore:GetDisplayedDescription(client, isHUD)
     if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar():getID()) then
@@ -10,7 +8,6 @@ function RecognitionCore:GetDisplayedDescription(client, isHUD)
         return "You do not recognize this person."
     end
 end
-
 
 function RecognitionCore:GetDisplayedName(client, chatType)
     local character = client:getChar()
@@ -24,23 +21,18 @@ function RecognitionCore:GetDisplayedName(client, chatType)
     end
 end
 
-
 function RecognitionCore:ShouldAllowScoreboardOverride(client, var)
     local character = client:getChar()
     local ourCharacter = LocalPlayer():getChar()
     if self.RecognitionEnabled and IsValid(ourCharacter) and IsValid(character) and table.HasValue(self.ScoreboardHiddenVars, var) and (client ~= LocalPlayer()) and not (ourCharacter:doesRecognize(character:getID()) and ourCharacter:doesFakeRecognize(character:getID())) then return true end
 end
 
-
 function RecognitionCore:OnCharRecognized(_, _)
     surface.PlaySound("buttons/button17.wav")
 end
-
 
 function CharRecognize(level, name)
     netstream.Start("rgn", level, name)
 end
 
-
 concommand.Add("dev_reloadsb", function() if IsValid(lia.gui.score) then lia.gui.score:Remove() end end)
-

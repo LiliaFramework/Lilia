@@ -1,5 +1,4 @@
-﻿
-function FrameworkHUD:TooltipInitialize(var, panel)
+﻿function FrameworkHUD:TooltipInitialize(var, panel)
     if panel.liaToolTip or panel.itemID then
         var.markupObject = lia.markup.parse(var:GetText(), ScrW() * .15)
         var:SetText("")
@@ -11,7 +10,6 @@ function FrameworkHUD:TooltipInitialize(var, panel)
     end
 end
 
-
 function FrameworkHUD:TooltipPaint(var, w, h)
     if var.isItemTooltip then
         lia.util.drawBlur(var, 2, 2)
@@ -22,8 +20,6 @@ function FrameworkHUD:TooltipPaint(var, w, h)
     end
 end
 
-
 function FrameworkHUD:TooltipLayout(var)
     if var.isItemTooltip then return true end
 end
-

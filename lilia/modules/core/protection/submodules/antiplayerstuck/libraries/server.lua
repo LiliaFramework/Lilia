@@ -1,15 +1,12 @@
-﻿
-function APSCore:CanCollide(ent1, ent2)
+﻿function APSCore:CanCollide(ent1, ent2)
     local ShouldCollide = hook.Run("ShouldCollide", ent1, ent2)
     if ShouldCollide == nil then ShouldCollide = true end
     return ShouldCollide
 end
 
-
 function APSCore:ShouldCheck(client)
     return IsValid(client) and client:IsPlayer() and client:Alive() and not client:InVehicle() and not client:IsNoClipping() and client:IsSolid()
 end
-
 
 function APSCore:CheckIfPlayerStuck()
     local function handleStuckPlayer(client)
@@ -46,8 +43,6 @@ function APSCore:CheckIfPlayerStuck()
     )
 end
 
-
 function APSCore:ShouldCollide(ent1, ent2)
     if table.HasValue(self.BlockedCollideEntities, ent1:GetClass()) and table.HasValue(self.BlockedCollideEntities, ent2:GetClass()) then return false end
 end
-

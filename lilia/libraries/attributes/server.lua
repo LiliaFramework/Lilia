@@ -1,5 +1,4 @@
-﻿
-function lia.attribs.setup(client)
+﻿function lia.attribs.setup(client)
     local character = client:getChar()
     if character then
         for k, v in pairs(lia.attribs.list) do
@@ -7,4 +6,3 @@ function lia.attribs.setup(client)
         end
     end
 end
-

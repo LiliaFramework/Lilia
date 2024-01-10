@@ -1,5 +1,4 @@
-﻿
-lia.command.add(
+﻿lia.command.add(
     "auditmoney",
     {
         privilege = "Audit Money",
@@ -17,7 +16,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "report",
     {
@@ -27,4 +25,3 @@ lia.command.add(
         onRun = function(client, arguments) netstream.Start(client, "liaReport", CoreCharacterAnalysis:GenerateReport(arguments[1])) end
     }
 )
-

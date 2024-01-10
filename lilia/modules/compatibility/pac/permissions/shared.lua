@@ -1,5 +1,4 @@
-﻿
-PACCompatibility.CAMIPrivileges = {
+﻿PACCompatibility.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Use PAC3",
         MinAccess = "superadmin",
@@ -7,6 +6,4 @@ PACCompatibility.CAMIPrivileges = {
     }
 }
 
-
 lia.flag.add("P", "Access to PAC3.")
-

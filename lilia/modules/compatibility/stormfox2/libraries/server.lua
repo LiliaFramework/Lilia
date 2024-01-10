@@ -1,5 +1,4 @@
-﻿
-function Stormfox2Compatibility:OnLoaded()
+﻿function Stormfox2Compatibility:OnLoaded()
     timer.Simple(
         2,
         function()
@@ -9,4 +8,3 @@ function Stormfox2Compatibility:OnLoaded()
         end
     )
 end
-

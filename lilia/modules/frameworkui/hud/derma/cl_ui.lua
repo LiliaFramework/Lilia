@@ -1,5 +1,4 @@
-﻿
-function Empty_Popup(callback, sw, sh)
+﻿function Empty_Popup(callback, sw, sh)
     sw = sw or 500
     sh = sh or 250
     CreateOverBlur(
@@ -16,7 +15,6 @@ function Empty_Popup(callback, sw, sh)
         end
     )
 end
-
 
 function String_Request(question, ok, _, numeric)
     question = question or "Unset Question"
@@ -61,7 +59,6 @@ function String_Request(question, ok, _, numeric)
         end
     )
 end
-
 
 function Choice_Request(question, yes, no, modify)
     question = question or "Unset Question"
@@ -110,7 +107,6 @@ function Choice_Request(question, yes, no, modify)
     )
 end
 
-
 function Important_Notification(message)
     Empty_Popup(
         function(frame)
@@ -136,4 +132,3 @@ function Important_Notification(message)
         end
     )
 end
-

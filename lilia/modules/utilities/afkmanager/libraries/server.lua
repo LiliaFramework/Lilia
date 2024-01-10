@@ -1,8 +1,5 @@
-
-util.AddNetworkString("AFKWarning")
-
+﻿util.AddNetworkString("AFKWarning")
 util.AddNetworkString("AFKAnnounce")
-
 function AFKKicker:WarnPlayer(client)
     net.Start("AFKWarning")
     net.WriteBool(true)
@@ -10,14 +7,12 @@ function AFKKicker:WarnPlayer(client)
     client.HasWarning = true
 end
 
-
 function AFKKicker:RemoveWarning(client)
     net.Start("AFKWarning")
     net.WriteBool(false)
     net.Send(client)
     client.HasWarning = false
 end
-
 
 function AFKKicker:CharKick(client)
     net.Start("AFKAnnounce")
@@ -27,22 +22,18 @@ function AFKKicker:CharKick(client)
     timer.Simple(1 + (client:Ping() / 1000), function() client:getChar():kick() end)
 end
 
-
 function AFKKicker:ResetAFKTime(client)
     client.AFKTime = 0
     if client.HasWarning then self:RemoveWarning(client) end
 end
 
-
 function AFKKicker:PlayerButtonUp(client)
     self:ResetAFKTime(client)
 end
 
-
 function AFKKicker:PlayerButtonDown(client)
     self:ResetAFKTime(client)
 end
-
 
 timer.Create(
     "AFKTimer",
@@ -66,4 +57,3 @@ timer.Create(
         end
     end
 )
-

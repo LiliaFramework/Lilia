@@ -1,6 +1,4 @@
-﻿
-local ClientGetInfo = FindMetaTable("Player").GetInfo
-
+﻿local ClientGetInfo = FindMetaTable("Player").GetInfo
 function L(key, client, ...)
     local languages = lia.lang.stored
     local langKey = ClientGetInfo(client, "lia_language")
@@ -8,14 +6,12 @@ function L(key, client, ...)
     return string.format(info and info[key] or key, ...)
 end
 
-
 function L2(key, client, ...)
     local languages = lia.lang.stored
     local langKey = ClientGetInfo(client, "lia_language")
     local info = languages[langKey] or languages.english
     if info and info[key] then return string.format(info[key], ...) end
 end
-
 
 function L3(key, langKey, ...)
     local languages = lia.lang.stored
@@ -26,4 +22,3 @@ function L3(key, langKey, ...)
         return key
     end
 end
-

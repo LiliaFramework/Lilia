@@ -1,44 +1,23 @@
-﻿
-util.AddNetworkString("liaCharacterInvList")
-
+﻿util.AddNetworkString("liaCharacterInvList")
 util.AddNetworkString("liaItemDelete")
-
 util.AddNetworkString("liaItemInstance")
-
 util.AddNetworkString("liaInventoryInit")
-
 util.AddNetworkString("liaInventoryData")
-
 util.AddNetworkString("liaInventoryDelete")
-
 util.AddNetworkString("liaInventoryAdd")
-
 util.AddNetworkString("liaInventoryRemove")
-
 util.AddNetworkString("liaNotify")
-
 util.AddNetworkString("liaNotifyL")
-
 util.AddNetworkString("liaStringReq")
-
 util.AddNetworkString("liaTransferItem")
-
 util.AddNetworkString("announcement_client")
-
 util.AddNetworkString("SendMessage")
-
 util.AddNetworkString("SendPrintTable")
-
 util.AddNetworkString("SendPrint")
-
 util.AddNetworkString("StringRequest")
-
 util.AddNetworkString("ReloadLightMaps")
-
 util.AddNetworkString("OpenInformationMenu")
-
 util.AddNetworkString("OpenVGUI")
-
 net.Receive(
     "StringRequest",
     function(_, client)
@@ -51,7 +30,6 @@ net.Receive(
     end
 )
 
-
 netstream.Hook(
     "liaCharKickSelf",
     function(client)
@@ -62,7 +40,6 @@ netstream.Hook(
         end
     end
 )
-
 
 net.Receive(
     "liaStringReq",
@@ -76,7 +53,6 @@ net.Receive(
     end
 )
 
-
 net.Receive(
     "liaTransferItem",
     function(_, client)
@@ -88,7 +64,6 @@ net.Receive(
     end
 )
 
-
 netstream.Hook(
     "invMv",
     function(client)
@@ -98,7 +73,6 @@ netstream.Hook(
         client:ChatPrint("Instead, the liaTransferItem net message should be used.")
     end
 )
-
 
 netstream.Hook(
     "invAct",
@@ -130,7 +104,6 @@ netstream.Hook(
     end
 )
 
-
 netstream.Hook(
     "cmd",
     function(client, command, arguments)
@@ -145,4 +118,3 @@ netstream.Hook(
         end
     end
 )
-

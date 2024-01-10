@@ -1,5 +1,4 @@
-﻿
-lia.command.add(
+﻿lia.command.add(
     "auditmoney",
     {
         privilege = "Audit Money",
@@ -7,7 +6,6 @@ lia.command.add(
         onRun = function() end
     }
 )
-
 
 lia.command.add(
     "report",
@@ -18,4 +16,3 @@ lia.command.add(
         onRun = function() end
     }
 )
-

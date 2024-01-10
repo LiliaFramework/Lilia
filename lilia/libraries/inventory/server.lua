@@ -1,14 +1,8 @@
-﻿
-local INV_FIELDS = {"_invID", "_invType", "_charID"}
-
+﻿local INV_FIELDS = {"_invID", "_invType", "_charID"}
 local INV_TABLE = "inventories"
-
 local DATA_FIELDS = {"_key", "_value"}
-
 local DATA_TABLE = "invdata"
-
 local ITEMS_TABLE = "items"
-
 function lia.inventory.loadByID(id, noCache)
     local instance = lia.inventory.instances[invID]
     if instance and not noCache then
@@ -28,7 +22,6 @@ function lia.inventory.loadByID(id, noCache)
     assert(isnumber(id) and id >= 0, "No inventories implement loadFromStorage for ID " .. tostring(id))
     return lia.inventory.loadFromDefaultStorage(id, noCache)
 end
-
 
 function lia.inventory.loadFromDefaultStorage(id, noCache)
     return     deferred.all({lia.db.select(INV_FIELDS, INV_TABLE, "_invID = " .. id, 1), lia.db.select(DATA_FIELDS, DATA_TABLE, "_invID = " .. id)}):next(
@@ -63,7 +56,6 @@ function lia.inventory.loadFromDefaultStorage(id, noCache)
     )
 end
 
-
 function lia.inventory.instance(typeID, initialData)
     local invType = lia.inventory.types[typeID]
     assert(istable(invType), "invalid inventory type " .. tostring(typeID))
@@ -81,12 +73,10 @@ function lia.inventory.instance(typeID, initialData)
     )
 end
 
-
 function lia.inventory.loadAllFromCharID(charID)
     assert(isnumber(charID), "charID must be a number")
     return lia.db.select({"_invID"}, INV_TABLE, "_charID = " .. charID):next(function(res) return deferred.map(res.results or {}, function(result) return lia.inventory.loadByID(tonumber(result._invID)) end) end)
 end
-
 
 function lia.inventory.deleteByID(id)
     lia.db.delete(DATA_TABLE, "_invID = " .. id)
@@ -96,10 +86,8 @@ function lia.inventory.deleteByID(id)
     if instance then instance:destroy() end
 end
 
-
 function lia.inventory.cleanUpForCharacter(character)
     for _, inventory in pairs(character:getInv(true)) do
         inventory:destroy()
     end
 end
-

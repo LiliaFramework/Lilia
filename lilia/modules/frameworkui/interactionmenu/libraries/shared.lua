@@ -1,10 +1,7 @@
-﻿
-PIM.options = PIM.options or {}
-
+﻿PIM.options = PIM.options or {}
 function PIM:AddOption(name, data)
     self.options[name] = data
 end
-
 
 function PIM:CheckPossibilities()
     for _, v in pairs(self.options) do
@@ -14,13 +11,10 @@ function PIM:CheckPossibilities()
     return false
 end
 
-
 function PIM:InitializedModules()
     hook.Run("AddPIMOption", self.options)
 end
 
-
 function PIM:CheckDistance(client, ent)
     return ent:GetPos():DistToSqr(client:GetPos()) < self.MaxInteractionDistance
 end
-

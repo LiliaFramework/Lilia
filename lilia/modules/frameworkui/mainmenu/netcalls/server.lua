@@ -1,14 +1,8 @@
-﻿
-util.AddNetworkString("liaCharChoose")
-
+﻿util.AddNetworkString("liaCharChoose")
 util.AddNetworkString("liaCharCreate")
-
 util.AddNetworkString("liaCharDelete")
-
 util.AddNetworkString("liaCharList")
-
 util.AddNetworkString("liaCharMenu")
-
 net.Receive(
     "liaCharChoose",
     function(_, client)
@@ -36,7 +30,6 @@ net.Receive(
         hook.Run("PostPlayerLoadedChar", client, character, currentChar)
     end
 )
-
 
 net.Receive(
     "liaCharCreate",
@@ -97,7 +90,6 @@ net.Receive(
     end
 )
 
-
 net.Receive(
     "liaCharDelete",
     function(_, client)
@@ -111,4 +103,3 @@ net.Receive(
         end
     end
 )
-

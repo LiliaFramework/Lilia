@@ -1,5 +1,4 @@
-﻿
-lia.command.add(
+﻿lia.command.add(
     "storagelock",
     {
         privilege = "Lock Storage",
@@ -9,7 +8,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "trunk",
     {
@@ -18,4 +16,3 @@ lia.command.add(
         onRun = function() end
     }
 )
-

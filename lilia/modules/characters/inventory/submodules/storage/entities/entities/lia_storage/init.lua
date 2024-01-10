@@ -1,10 +1,6 @@
-﻿
-include("shared.lua")
-
+﻿include("shared.lua")
 AddCSLuaFile("cl_init.lua")
-
 AddCSLuaFile("shared.lua")
-
 function ENT:Initialize()
     self:SetModel("models/props_junk/watermelon01.mdl")
     self:SetSolid(SOLID_VPHYSICS)
@@ -19,13 +15,11 @@ function ENT:Initialize()
     end
 end
 
-
 function ENT:setInventory(inventory)
     assert(inventory, "Storage setInventory called without an inventory!")
     self:setNetVar("id", inventory:getID())
     hook.Run("StorageInventorySet", self, inventory, false)
 end
-
 
 function ENT:deleteInventory()
     local inventory = self:getInv()
@@ -35,7 +29,6 @@ function ENT:deleteInventory()
         self:setNetVar("id", nil)
     end
 end
-
 
 function ENT:OnRemove()
     if not self.liaForceDelete then
@@ -47,7 +40,6 @@ function ENT:OnRemove()
     self:deleteInventory()
     LiliaStorage:SaveData()
 end
-
 
 function ENT:openInv(activator)
     local inventory = self:getInv()
@@ -73,7 +65,6 @@ function ENT:openInv(activator)
     )
 end
 
-
 function ENT:Use(activator)
     if not activator:getChar() then return end
     if (activator.liaNextOpen or 0) > CurTime() then return end
@@ -97,4 +88,3 @@ function ENT:Use(activator)
 
     activator.liaNextOpen = CurTime() + LiliaStorage.StorageOpenTime * 1.5
 end
-

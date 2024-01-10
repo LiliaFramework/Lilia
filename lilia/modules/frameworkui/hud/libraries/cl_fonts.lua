@@ -1,5 +1,4 @@
-﻿
-function FrameworkHUD:LoadFonts(_)
+﻿function FrameworkHUD:LoadFonts(_)
     surface.CreateFont(
         "WB_Small",
         {
@@ -82,4 +81,3 @@ function FrameworkHUD:LoadFonts(_)
         }
     )
 end
-

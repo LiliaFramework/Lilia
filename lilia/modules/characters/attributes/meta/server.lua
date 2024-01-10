@@ -1,6 +1,4 @@
-﻿
-local playerMeta = FindMetaTable("Player")
-
+﻿local playerMeta = FindMetaTable("Player")
 function playerMeta:restoreStamina(amount)
     local current = self:getLocalVar("stamina", 0)
     local maxStamina = self:getChar():getMaxStamina()
@@ -12,7 +10,6 @@ function playerMeta:restoreStamina(amount)
     end
 end
 
-
 function playerMeta:consumeStamina(amount)
     local current = self:getLocalVar("stamina", 0)
     local value = math.Clamp(current - amount, 0, self:getChar():getMaxStamina())
@@ -22,4 +19,3 @@ function playerMeta:consumeStamina(amount)
         hook.Run("PlayerStaminaLost", self)
     end
 end
-

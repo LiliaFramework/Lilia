@@ -1,12 +1,9 @@
-
-local GM = GM or GAMEMODE
-
+﻿local GM = GM or GAMEMODE
 local defaultAngleData = {
     ["models/items/car_battery01.mdl"] = Angle(-15, 180, 0),
     ["models/props_junk/harpoon002a.mdl"] = Angle(0, 0, 0),
     ["models/props_junk/propane_tank001a.mdl"] = Angle(-90, 0, 0),
 }
-
 
 function GM:PlayerSay(client, message)
     local chatType, message, anonymous = lia.chat.parse(client, message, true)
@@ -21,7 +18,6 @@ function GM:PlayerSay(client, message)
     return ""
 end
 
-
 function GM:GetGameDescription()
     if lia.config.GamemodeName ~= "A Lilia Gamemode" then
         return lia.config.GamemodeName
@@ -31,11 +27,9 @@ function GM:GetGameDescription()
     return lia.config.GamemodeName
 end
 
-
 function GM:OnChatReceived()
     if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
 end
-
 
 function GM:ServerInitPostEntity()
     lia.faction.formatModelData()
@@ -48,7 +42,6 @@ function GM:ServerInitPostEntity()
     )
 end
 
-
 function GM:PlayerSpawn(client)
     client:SetNoDraw(false)
     client:UnLock()
@@ -59,7 +52,6 @@ function GM:PlayerSpawn(client)
         client:ManipulateBoneAngles(client:LookupBone(client:GetBoneName(i)), Angle(0, 0, 0))
     end
 end
-
 
 function GM:EntityTakeDamage(entity, dmgInfo)
     if IsValid(entity.liaPlayer) then
@@ -75,7 +67,6 @@ function GM:EntityTakeDamage(entity, dmgInfo)
         entity.liaPlayer:TakeDamageInfo(dmgInfo)
     end
 end
-
 
 function GM:KeyPress(client, key)
     if key == IN_ATTACK2 and IsValid(client.Grabbed) then
@@ -93,7 +84,6 @@ function GM:KeyPress(client, key)
     end
 end
 
-
 function GM:KeyRelease(client, key)
     if key == IN_ATTACK2 then
         local wep = client:GetActiveWeapon()
@@ -101,17 +91,14 @@ function GM:KeyRelease(client, key)
     end
 end
 
-
 function GM:EntityNetworkedVarChanged(entity, varName, _, newVal)
     if varName == "Model" and entity.SetModel then hook.Run("PlayerModelChanged", entity, newVal) end
 end
-
 
 function GM:PlayerUse(client, _)
     if client:getNetVar("handcuffed") then return false end
     return true
 end
-
 
 function GM:PlayerInitialSpawn(client)
     if client:IsBot() then
@@ -160,7 +147,6 @@ function GM:PlayerInitialSpawn(client)
     hook.Run("PostPlayerInitialSpawn", client)
 end
 
-
 function GM:PlayerLoadout(client)
     local character = client:getChar()
     if client.liaSkipLoadout then
@@ -189,14 +175,12 @@ function GM:PlayerLoadout(client)
     client:SelectWeapon("lia_hands")
 end
 
-
 function GM:PostPlayerLoadout(client)
     local character = client:getChar()
     if not (IsValid(client) or character) then return end
     client:Give("lia_hands")
     client:SetupHands()
 end
-
 
 function GM:PlayerDisconnected(client)
     client:saveLiliaData()
@@ -223,7 +207,6 @@ function GM:PlayerDisconnected(client)
     end
 end
 
-
 function GM:GetPreferredCarryAngles(entity)
     if entity.preferedAngle then return entity.preferedAngle end
     local class = entity:GetClass()
@@ -239,7 +222,6 @@ function GM:GetPreferredCarryAngles(entity)
     end
 end
 
-
 function GM:PlayerDeath(client, _, _)
     local char = client:getChar()
     if not char then return end
@@ -250,7 +232,6 @@ function GM:PlayerDeath(client, _, _)
     end
 end
 
-
 function GM:InitializedSchema()
     local persistString = GetConVar("sbox_persist"):GetString()
     if persistString == "" or string.StartWith(persistString, "lia_") then
@@ -258,4 +239,3 @@ function GM:InitializedSchema()
         game.ConsoleCommand("sbox_persist " .. newValue .. "\n")
     end
 end
-

@@ -1,5 +1,4 @@
-﻿
-PhysGunCore.CAMIPrivileges = {
+﻿PhysGunCore.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Grab World Props",
         MinAccess = "superadmin",
@@ -36,4 +35,3 @@ PhysGunCore.CAMIPrivileges = {
         Description = "Allows access to Reloading Physgun.",
     },
 }
-

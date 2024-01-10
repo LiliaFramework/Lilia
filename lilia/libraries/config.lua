@@ -1,8 +1,5 @@
-﻿
-local GM = GM or GAMEMODE
-
+﻿local GM = GM or GAMEMODE
 lia.config = lia.config or {}
-
 if not ConfigWasInitialized then
     lia.config = {
         WalkSpeed = 130, -- How fast characters walk
@@ -43,8 +40,6 @@ if not ConfigWasInitialized then
     ConfigWasInitialized = true
 end
 
-
 function GM:InitializedConfig()
     hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
 end
-

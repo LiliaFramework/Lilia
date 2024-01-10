@@ -1,5 +1,4 @@
 ﻿RecognitionCore = RecognitionCore or lia.module.list["recognition"]
-
 PIM:AddOption(
     "Allow This Player To Recognize You",
     {
@@ -13,7 +12,6 @@ PIM:AddOption(
     }
 )
 
-
 PIM:AddOption(
     "Allow This Player To Recognize You With A Fake Name",
     {
@@ -26,4 +24,3 @@ PIM:AddOption(
         onRun = function(_, target) if CLIENT then Derma_StringRequest("Allow this person to recognize you by a fake name.", "Enter a fake name to display to this player.", default or "", function(text) if text then netstream.Start("rgnDirect", target, text) end end) end end
     }
 )
-

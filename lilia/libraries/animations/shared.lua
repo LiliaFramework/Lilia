@@ -1,12 +1,7 @@
-﻿
-local translations = {}
-
+﻿local translations = {}
 lia.anim = lia.anim or {}
-
 player_manager.anim = player_manager.anim or {}
-
 TranslateModel = TranslateModel or player_manager.TranslateToPlayerModelName
-
 lia.anim.citizen_male = {
     normal = {
         [ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE},
@@ -72,7 +67,6 @@ lia.anim.citizen_male = {
         chair = {ACT_BUSY_SIT_CHAIR, Vector(1, 0, -23)}
     },
 }
-
 
 lia.anim.citizen_female = {
     normal = {
@@ -198,7 +192,6 @@ lia.anim.metrocop = {
     }
 }
 
-
 lia.anim.overwatch = {
     normal = {
         [ACT_MP_STAND_IDLE] = {"idle_unarmed", "idle_unarmed"},
@@ -253,7 +246,6 @@ lia.anim.overwatch = {
     glide = ACT_GLIDE
 }
 
-
 lia.anim.vort = {
     normal = {
         [ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE},
@@ -307,7 +299,6 @@ lia.anim.vort = {
     glide = ACT_GLIDE
 }
 
-
 lia.anim.player = {
     normal = {
         [ACT_MP_STAND_IDLE] = ACT_HL2MP_IDLE,
@@ -323,7 +314,6 @@ lia.anim.player = {
     }
 }
 
-
 lia.anim.zombie = {
     [ACT_MP_STAND_IDLE] = ACT_HL2MP_IDLE_ZOMBIE,
     [ACT_MP_CROUCH_IDLE] = ACT_HL2MP_IDLE_CROUCH_ZOMBIE,
@@ -331,7 +321,6 @@ lia.anim.zombie = {
     [ACT_MP_WALK] = ACT_HL2MP_WALK_ZOMBIE_02,
     [ACT_MP_RUN] = ACT_HL2MP_RUN_ZOMBIE
 }
-
 
 lia.anim.fastZombie = {
     [ACT_MP_STAND_IDLE] = ACT_HL2MP_WALK_ZOMBIE,
@@ -341,12 +330,10 @@ lia.anim.fastZombie = {
     [ACT_MP_RUN] = ACT_HL2MP_RUN_ZOMBIE_FAST
 }
 
-
 function lia.anim.setModelClass(model, class)
     if not lia.anim[class] then error("'" .. tostring(class) .. "' is not a valid animation class!") end
     translations[model:lower()] = class
 end
-
 
 function lia.anim.getModelClass(model)
     model = string.lower(model)
@@ -364,7 +351,6 @@ function lia.anim.getModelClass(model)
     return class
 end
 
-
 function player_manager.TranslateToPlayerModelName(model)
     model = model:lower():gsub("\\", "/")
     local result = TranslateModel(model)
@@ -381,4 +367,3 @@ function player_manager.TranslateToPlayerModelName(model)
     end
     return result
 end
-

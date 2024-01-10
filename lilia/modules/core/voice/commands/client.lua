@@ -1,5 +1,4 @@
-﻿
-lia.command.add(
+﻿lia.command.add(
     "charvoiceunban",
     {
         adminOnly = true,
@@ -8,7 +7,6 @@ lia.command.add(
         onRun = function() end
     }
 )
-
 
 lia.command.add(
     "charvoiceban",
@@ -20,7 +18,6 @@ lia.command.add(
     }
 )
 
-
 lia.command.add(
     "voicetoggle",
     {
@@ -30,4 +27,3 @@ lia.command.add(
         onRun = function() end
     }
 )
-

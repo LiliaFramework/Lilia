@@ -1,10 +1,7 @@
-
---[[ Enable or disable the Whitelist ]]
+﻿--[[ Enable or disable the Whitelist ]]
 WhitelistCore.WhitelistEnabled = false
-
 --[[ Enable or disable the Blacklist ]]
 WhitelistCore.BlacklistedEnabled = true
-
 --[[ Specify SteamID64s to be blacklisted from your server   ]]
 --[[ This individual is known for lua stealing, scamming and hacking in game. I recommend keeping this ]]
 WhitelistCore.BlacklistedSteamID64 = {
@@ -17,4 +14,3 @@ WhitelistCore.BlacklistedSteamID64 = {
 
 --[[ Specify SteamID64s to be whitelisted from your server ]]
 WhitelistCore.WhitelistedSteamID64 = {"76561198312513285",}
-

@@ -1,6 +1,4 @@
-﻿
-local HELP_DEFAULT
-
+﻿local HELP_DEFAULT
 function F1MenuCore:PlayerBindPress(client, bind, pressed)
     if bind:lower():find("gm_showhelp") and pressed then
         if IsValid(lia.gui.menu) then
@@ -11,7 +9,6 @@ function F1MenuCore:PlayerBindPress(client, bind, pressed)
         return true
     end
 end
-
 
 function F1MenuCore:OnCharInfoSetup(infoPanel)
     if not IsValid(infoPanel.model) then return end
@@ -48,7 +45,6 @@ function F1MenuCore:OnCharInfoSetup(infoPanel)
         ent:ResetSequence(act2)
     end
 end
-
 
 function F1MenuCore:CreateMenuButtons(tabs)
     if (hook.GetTable()["CanPlayerViewInventory"] and hook.Run("CanPlayerViewInventory") ~= false) or (not hook.GetTable()["CanPlayerViewInventory"] and LocalPlayer():Alive()) then
@@ -184,7 +180,6 @@ function F1MenuCore:CreateMenuButtons(tabs)
     end
 end
 
-
 function F1MenuCore:BuildHelpMenu(tabs)
     tabs["commands"] = function(_, _)
         local body = ""
@@ -247,7 +242,6 @@ function F1MenuCore:BuildHelpMenu(tabs)
     if self.TutorialEnabled then tabs["Tutorial"] = function() return F1MenuCore:GenerateTutorial() end end
 end
 
-
 function F1MenuCore:OpenDescGenerator()
     if not self.AutomaticDescriptionEnabled then
         LocalPlayer():ChatPrint("This feature is disabled. Please tell the server owner to enable it.")
@@ -293,4 +287,3 @@ function F1MenuCore:OpenDescGenerator()
         frame:Remove()
     end
 end
-

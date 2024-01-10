@@ -1,9 +1,7 @@
-﻿
-function FrameworkHUD:ShouldDrawAmmo(weapon)
+﻿function FrameworkHUD:ShouldDrawAmmo(weapon)
     if IsValid(weapon) and weapon.DrawAmmo ~= false then return self.AmmoDrawEnabled end
     return true
 end
-
 
 function FrameworkHUD:DrawAmmo(weapon)
     if not IsValid(weapon) then return end
@@ -30,4 +28,3 @@ function FrameworkHUD:DrawAmmo(weapon)
         lia.util.drawText(clip == -1 and count or clip .. "/" .. count, x + 64, y + 32, nil, 1, 1, "liaBigFont")
     end
 end
-

@@ -1,5 +1,4 @@
-
-netstream.Hook(
+﻿netstream.Hook(
     "doorMenu",
     function(entity, access, door2)
         if IsValid(lia.gui.door) then return lia.gui.door:Remove() end
@@ -9,7 +8,6 @@ netstream.Hook(
         end
     end
 )
-
 
 netstream.Hook(
     "doorPerm",
@@ -26,4 +24,3 @@ netstream.Hook(
         end
     end
 )
-
