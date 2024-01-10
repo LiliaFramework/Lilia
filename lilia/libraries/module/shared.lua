@@ -162,7 +162,6 @@ function lia.module.loadExtras(path)
     local ModuleLibraryFolder = path .. "/libraries"
     local GamemodeLibraryFolder = path .. "/libs"
     local consoleCommands = path .. "/concommands"
-
     local configFolder = path .. "/config"
     for fileName, state in pairs(lia.module.ModuleFiles) do
         local filePath = path .. "/" .. fileName
