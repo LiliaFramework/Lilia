@@ -98,7 +98,7 @@ lia.util.include("lilia/libraries/inventory/meta/shared.lua")
 lia.util.include("lilia/libraries/inventory/meta/server.lua")
 
 lia.util.include("lilia/libraries/inventory/meta/client.lua")
--------------------------------
+
 lia.util.include("lilia/libraries/items/meta/shared.lua")
 
 lia.util.include("lilia/libraries/items/meta/client.lua")
@@ -178,6 +178,6 @@ lia.lang.loadFromDir("lilia/libraries/languages/config/languages")
 lia.util.loadEntities("lilia/libraries/currency/entities")
 
 lia.util.loadEntities("lilia/libraries/items/entities")
-----------------------------
+
 lia.util.loadEntities("lilia/libraries/entities")
 

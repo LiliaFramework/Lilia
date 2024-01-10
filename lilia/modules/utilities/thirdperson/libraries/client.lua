@@ -110,7 +110,7 @@ function ThirdPersonCore:InputMouseApply(_, x, y, _)
     end
 end
 
---------------------------------------------------------------------------------------------------------------------------
+-------------------
 function ThirdPersonCore:PlayerButtonDown(_, button)
     if self.ThirdPersonEnabled and button == KEY_F4 and IsFirstTimePredicted() then
         if ThirdPerson:GetInt() == 1 then
@@ -127,13 +127,13 @@ function ThirdPersonCore:ShouldDrawLocalPlayer()
     if client:GetViewEntity() == client and not IsValid(client:GetVehicle()) and client:CanOverrideView() then return true end
 end
 
---------------------------------------------------------------------------------------------------------------------------
+-------------------
 function playerMeta:CanOverrideView()
     local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
     if IsValid(lia.gui.char) and lia.gui.char:IsVisible() then return false end
     return ThirdPerson:GetBool() and not IsValid(self:GetVehicle()) and ThirdPersonCore.ThirdPersonEnabled and IsValid(self) and self:getChar() and not IsValid(ragdoll)
 end
 
---------------------------------------------------------------------------------------------------------------------------
+-------------------
 concommand.Add("tp_toggle", function() ThirdPerson:SetInt(ThirdPerson:GetInt() == 0 and 1 or 0) end)
 

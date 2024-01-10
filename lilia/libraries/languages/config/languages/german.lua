@@ -262,4 +262,4 @@ LANGUAGE = {
     mustProvideString = "Du musst eine Zeichenfolge für die Variable angeben",
     toggleModulesDesc = "Ausgewählte Modules werden deaktiviert.\nDie Karte muss nach den Änderungen neu gestartet werden!",
 }
---------------------------------------------------------------
+

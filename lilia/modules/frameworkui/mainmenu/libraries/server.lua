@@ -1,4 +1,4 @@
-﻿----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+﻿
 function MainMenu:PlayerLiliaDataLoaded(client)
     lia.char.restore(
         client,
@@ -43,7 +43,7 @@ function MainMenu:CanPlayerUseChar(_, character)
     return true
 end
 
-------------------------------------
+
 function MainMenu:CanPlayerSwitchChar(client, character, newCharacter)
     local banned = character:getData("banned")
     if character:getID() == newCharacter:getID() then return false, "You are already using this character!" end
@@ -65,4 +65,4 @@ function MainMenu:CharacterLoaded(id)
     local client = character:getPlayer()
     lia.log.add(client, "charLoad", id, character:getName())
 end
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+

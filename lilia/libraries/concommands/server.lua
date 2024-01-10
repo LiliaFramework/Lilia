@@ -8,4 +8,3 @@ concommand.Add("stopsoundall", function(client)
         client:Notify("You must be a Super Admin to forcefully stopsound everyone!")
     end
 end)
------------------------------------------------------------------------------------------------------------------------------

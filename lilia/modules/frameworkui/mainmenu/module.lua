@@ -8,7 +8,7 @@ MODULE.discord = "@liliaplayer"
 MODULE.desc = "Adds a Main Menu that allows to access several characters options."
 
 MODULE.identifier = "MainMenu"
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 if SERVER then
     function MODULE:syncCharList(client)
         if not client.liaCharList then return end
@@ -98,4 +98,4 @@ end
 
 
 lia.util.include("server.lua")
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+

@@ -247,7 +247,7 @@ function F1MenuCore:BuildHelpMenu(tabs)
     if self.TutorialEnabled then tabs["Tutorial"] = function() return F1MenuCore:GenerateTutorial() end end
 end
 
-------------------------------
+
 function F1MenuCore:OpenDescGenerator()
     if not self.AutomaticDescriptionEnabled then
         LocalPlayer():ChatPrint("This feature is disabled. Please tell the server owner to enable it.")
