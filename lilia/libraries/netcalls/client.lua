@@ -430,7 +430,7 @@ net.Receive(
     end
 )
 
-net.Receive("LiliaPlaySound", function(len, client)
+net.Receive("LiliaPlaySound", function()
 	LocalPlayer():EmitSound(tostring(net.ReadString()), tonumber(net.ReadUInt(7)) or 100)
 end)
 

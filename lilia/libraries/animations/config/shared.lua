@@ -1,4 +1,4 @@
-﻿.
+﻿
 lia.anim.HoldTypeTranslator = {
     [""] = "normal",
     ["physgun"] = "smg",
@@ -16,7 +16,6 @@ lia.anim.HoldTypeTranslator = {
     ["revolver"] = "pistol"
 }
 
-.
 lia.anim.PlayerHoldTypeTranslator = {
     [""] = "normal",
     ["normal"] = "normal",
@@ -32,7 +31,6 @@ lia.anim.PlayerHoldTypeTranslator = {
     ["bugbait"] = "normal"
 }
 
-.
 lia.anim.DefaultTposingFixer = {
     ["models/police.mdl"] = "metrocop",
     ["models/combine_super_soldier.mdl"] = "overwatch",
@@ -45,4 +43,3 @@ lia.anim.DefaultTposingFixer = {
     ["models/alyx.mdl"] = "citizen_female",
     ["models/mossman.mdl"] = "citizen_female",
 }
-.
