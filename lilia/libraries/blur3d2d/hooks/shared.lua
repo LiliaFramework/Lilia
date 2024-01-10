@@ -38,4 +38,4 @@ function GM:PostDrawTranslucentRenderables()
         SUPPRESS_FROM_STENCIL = nil
     end
 end
---
+

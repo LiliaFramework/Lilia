@@ -15,7 +15,6 @@ WhitelistCore.BlacklistedSteamID64 = {
     "76561199085223874", -- Logan's Alt
 }
 
-
 --[[ Specify SteamID64s to be whitelisted from your server ]]
 WhitelistCore.WhitelistedSteamID64 = {"76561198312513285",}
 

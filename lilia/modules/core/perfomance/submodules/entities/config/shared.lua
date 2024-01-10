@@ -12,7 +12,7 @@ EntityPerfomance.RagdollCleaningTimer = 300
 EntityPerfomance.Perfomancekillers = {"class C_PhysPropClientside", "class C_ClientRagdoll"}
 
 EntityPerfomance.SoundsToMute = {
-    "weapons/airboat/airboat_gun_lastshot1.wav", -- ToolGun Sound -- ToolGun Sound
+    "weapons/airboat/airboat_gun_lastshot1.wav", -- ToolGun Sound
     "weapons/airboat/airboat_gun_lastshot2.wav",
 }
 

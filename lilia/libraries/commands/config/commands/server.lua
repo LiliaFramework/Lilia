@@ -1064,7 +1064,7 @@ lia.command.add(
     }
 )
 
---
+
 lia.command.add(
     "dropmoney",
     {
@@ -1091,4 +1091,4 @@ lia.command.add(
         end
     }
 )
---
+
