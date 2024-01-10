@@ -22,7 +22,7 @@ lia.command.add("playglobalsound", {
     privilege = "Play Global Sounds",
     onRun = function()
         local sound = arguments[1]
-        for k, v in pairs(player.GetAll()) do
+        for _, v in pairs(player.GetAll()) do
             v:PlaySound(sound)
         end
     end

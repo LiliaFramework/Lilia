@@ -9,6 +9,21 @@ lia.command.add(
     }
 )
 
+lia.command.add("playglobalsound", {
+    superAdminOnly = true,
+    privilege = "Play Global Sounds",
+    onRun = function()
+
+    end
+})
+
+lia.command.add("playsound", {
+    superAdminOnly = true,
+    privilege = "Play Targetted Sounds",
+    syntax = "<string name> <string sound>",
+    onRun = function()
+    end
+})
 
 lia.command.add(
     "redownloadlightmaps",

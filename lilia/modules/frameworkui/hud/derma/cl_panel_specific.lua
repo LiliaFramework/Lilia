@@ -164,7 +164,6 @@ for _, v in pairs(mps) do
             )
         end
     end
-
     
     function FrameworkHUD.GetWorkPanel(panel, paddingTop, paddingLeft, paddingRight, paddingBottom, center)
         center = center or false

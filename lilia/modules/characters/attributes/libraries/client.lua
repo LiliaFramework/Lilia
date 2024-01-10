@@ -43,3 +43,4 @@ if not StaminaBarAdded then
     lia.bar.add(function() return AttributesCore.predictedStamina / 100 end, Color(200, 200, 40), nil, "stamina")
     StaminaBarAdded = true
 end
+   

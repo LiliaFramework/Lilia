@@ -13,7 +13,6 @@ do
     end
 end
 
-
 function PANEL:Init()
     self.avatarImage = self:Add("AvatarImage")
     self.avatarImage:Dock(LEFT)
@@ -25,7 +24,6 @@ function PANEL:Init()
     self.desc:SetFont("liaSmallCredits")
 end
 
-
 function PANEL:setAvatarImage(id)
     if not self.avatarImage then return end
     self.avatarImage:SetSteamID(id, 64)
@@ -36,7 +34,6 @@ function PANEL:setAvatarImage(id)
     end
 end
 
-
 function PANEL:setName(name, color)
     if not IsValid(self.name) then return end
     self.name:SetText(name)
@@ -46,7 +43,6 @@ function PANEL:setName(name, color)
     self.name:DockMargin(ScrW * 0.01, 0, 0, 0)
 end
 
-
 function PANEL:setDesc(desc)
     if not self.desc then return end
     self.desc:SetText(desc)
@@ -55,17 +51,13 @@ function PANEL:setDesc(desc)
     self.desc:DockMargin(ScrW * 0.01, 0, 0, 0)
 end
 
-
 function PANEL:Paint(w, h)
     surface.SetTexture(textureID)
     surface.DrawTexturedRect(0, 0, w, h)
 end
 
-
 vgui.Register("CreditsNamePanel", PANEL, "DPanel")
-
 PANEL = {}
-
 function PANEL:Init()
     self.contButton = self:Add("DButton")
     self.contButton:SetFont("liaBigCredits")
@@ -94,14 +86,11 @@ end
 function PANEL:Paint()
 end
 
-
 vgui.Register("CreditsContribPanel", PANEL, "DPanel")
 
 PANEL = {}
-
 function PANEL:Init()
 end
-
 
 function PANEL:setPerson(data, left)
     local id = left and "creditleft" or "creditright"
