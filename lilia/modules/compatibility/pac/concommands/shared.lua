@@ -17,7 +17,7 @@ function _G.pac_Restart()
 				selected_part_uid = pace.current_part:GetUniqueID()
 			end
 
-			for key, part in pairs(pac.GetLocalParts()) do
+			for _, part in pairs(pac.GetLocalParts()) do
 				if not part:HasParent() and part:GetShowInEditor() then
 					local ok, err = pcall(function()
 						table.insert(prev_parts, part:ToTable())
@@ -52,7 +52,7 @@ function _G.pac_Restart()
 		end
 
 		for hook_name, hooks in pairs(hook.GetTable()) do
-			for id, func in pairs(hooks) do
+			for id, _ in pairs(hooks) do
 				if isstring(id) and (id:StartWith("pace_") or id:StartWith("pac_") or id:StartWith("pac3_") or id:StartWith("pacx_")) then
 					hook.Remove(hook_name, id)
 				end
