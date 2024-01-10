@@ -159,8 +159,10 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function lia.module.loadExtras(path)
-    local libraryFolder = path .. "/libraries"
-    local subLibraryFolder = path .. "/libraries/libs"
+    local ModuleLibraryFolder = path .. "/libraries"
+    local GamemodeLibraryFolder = path .. "/libs"
+    local consoleCommands = path .. "/concommands"
+
     local configFolder = path .. "/config"
     for fileName, state in pairs(lia.module.ModuleFiles) do
         local filePath = path .. "/" .. fileName
@@ -168,8 +170,9 @@ function lia.module.loadExtras(path)
     end
 
     if file.Exists(configFolder, "LUA") then lia.util.includeDir(configFolder, true, true) end
-    if file.Exists(libraryFolder, "LUA") then lia.util.includeDir(libraryFolder, true, false) end
-    if file.Exists(subLibraryFolder, "LUA") then lia.util.includeDir(subLibraryFolder, true, true) end
+    if file.Exists(ModuleLibraryFolder, "LUA") then lia.util.includeDir(ModuleLibraryFolder, true, false) end
+    if file.Exists(GamemodeLibraryFolder, "LUA") then lia.util.includeDir(GamemodeLibraryFolder, true, true) end
+    if file.Exists(consoleCommands, "LUA") then lia.util.includeDir(consoleCommands, true, true) end
     for _, folder in ipairs(lia.module.ModuleFolders) do
         local subFolders = path .. "/" .. folder
         if file.Exists(subFolders, "LUA") then lia.util.includeDir(subFolders, true, true) end
