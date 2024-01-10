@@ -1,11 +1,9 @@
 ﻿local b = vgui.GetControlTable("DButton")
-
 function b:SetColorAcc(col)
     self.defaultColor = col or Color(255, 0, 0)
     self.color = col or Color(255, 0, 0)
     AccessorFunc(self, "color", "Color")
 end
-
 
 function b:SetupHover(hoverCol)
     if not self.GetColor or not self.SetColor or not self.color then self:SetColorAcc() end
@@ -18,7 +16,6 @@ function b:SetupHover(hoverCol)
         self:ColorTo(self.defaultColor, 0.15)
     end
 end
-
 
 function b:Flash(text, color, time, noAdjust, callback)
     noAdjust = noAdjust or false
@@ -47,24 +44,20 @@ function b:Flash(text, color, time, noAdjust, callback)
         end
     end
 
-    timer.Simple(
-        time,
-        function()
-            if not self or not IsValid(self) then return end
-            self:SetText(ogText)
-            self.Paint = ogPaint
-            self:SizeTo(ogSizeW, ogSizeH, 0.2, 0, -1, function() self.flashing = false end)
-            if self.ogOCEn and self.ogOCEx and self.ogCol then
-                self.OnCursorEntered = self.ogOCEn
-                self.OnCursorExited = self.ogOCEx
-                self:ColorTo(self.ogCol, 0.3, 0)
-            end
-
-            if callback then callback() end
+    timer.Simple(time, function()
+        if not self or not IsValid(self) then return end
+        self:SetText(ogText)
+        self.Paint = ogPaint
+        self:SizeTo(ogSizeW, ogSizeH, 0.2, 0, -1, function() self.flashing = false end)
+        if self.ogOCEn and self.ogOCEx and self.ogCol then
+            self.OnCursorEntered = self.ogOCEn
+            self.OnCursorExited = self.ogOCEx
+            self:ColorTo(self.ogCol, 0.3, 0)
         end
-    )
-end
 
+        if callback then callback() end
+    end)
+end
 
 function b:GInflate(color, over)
     if not self.GetColor then Error("Panel deosn't have '.GetColor()'") end
@@ -91,9 +84,7 @@ function b:GInflate(color, over)
     end
 end
 
-
 local te = vgui.GetControlTable("DTextEntry")
-
 function te:SetPlaceholder(text)
     local ogThink = self.Think
     self.placeholder = text
@@ -105,21 +96,17 @@ function te:SetPlaceholder(text)
     end
 end
 
-
 function te:SetError(err, ogCol)
     AccessorFunc(self, "color", "Color")
     self:SetEditable(false)
     local ogText = self:GetText()
     self:SetText(err)
-    timer.Simple(
-        1,
-        function()
-            if self and IsValid(self) then
-                self:SetText(ogText)
-                self:SetEditable(true)
-            end
+    timer.Simple(1, function()
+        if self and IsValid(self) then
+            self:SetText(ogText)
+            self:SetEditable(true)
         end
-    )
+    end)
 
     self.color = Color(255, 0, 0)
     self:ColorTo(ogCol, 0.5, 0)
@@ -129,9 +116,7 @@ function te:SetError(err, ogCol)
     end
 end
 
-
 local mps = {"DPanel", "DButton", "DLabel", "DFrame", "DTextEntry", "WButton", "WLabel", "WScrollList"}
-
 for _, v in pairs(mps) do
     local m = vgui.GetControlTable(v)
     if m then
@@ -153,18 +138,13 @@ for _, v in pairs(mps) do
 
         function m:FadeOutRem(time, callback)
             time = time or 0.2
-            self:AlphaTo(
-                0,
-                time,
-                0,
-                function()
-                    self:Remove()
-                    if callback then callback() end
-                end
-            )
+            self:AlphaTo(0, time, 0, function()
+                self:Remove()
+                if callback then callback() end
+            end)
         end
     end
-    
+
     function FrameworkHUD.GetWorkPanel(panel, paddingTop, paddingLeft, paddingRight, paddingBottom, center)
         center = center or false
         if paddingTop ~= nil and not paddingLeft and not paddingRight and not paddingBottom then
@@ -183,4 +163,3 @@ for _, v in pairs(mps) do
         return wp
     end
 end
-
