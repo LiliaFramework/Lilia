@@ -68,21 +68,25 @@ function ITEM:onInstanced()
         h = self.invHeight
     }
 
-    lia.inventory.instance("grid", data):next(function(inventory)
-        self:setData("id", inventory:getID())
-        hook.Run("SetupBagInventoryAccessRules", inventory)
-        inventory:sync()
-        self:resolveInvAwaiters(inventory)
-    end)
+    lia.inventory.instance("grid", data):next(
+        function(inventory)
+            self:setData("id", inventory:getID())
+            hook.Run("SetupBagInventoryAccessRules", inventory)
+            inventory:sync()
+            self:resolveInvAwaiters(inventory)
+        end
+    )
 end
 
 function ITEM:onRestored()
     local invID = self:getData("id")
     if invID then
-        lia.inventory.loadByID(invID):next(function(inventory)
-            hook.Run("SetupBagInventoryAccessRules", inventory)
-            self:resolveInvAwaiters(inventory)
-        end)
+        lia.inventory.loadByID(invID):next(
+            function(inventory)
+                hook.Run("SetupBagInventoryAccessRules", inventory)
+                self:resolveInvAwaiters(inventory)
+            end
+        )
     end
 end
 
@@ -115,11 +119,13 @@ function ITEM:onCombine(other)
     if not invID then return end
     local res = hook.Run("HandleItemTransferRequest", client, other:getID(), nil, nil, invID)
     if not res then return end
-    res:next(function(res)
-        if not IsValid(client) then return end
-        if istable(res) and isstring(res.error) then return client:notifyLocalized(res.error) end
-        client:EmitSound(unpack(self.BagSound))
-    end)
+    res:next(
+        function(res)
+            if not IsValid(client) then return end
+            if istable(res) and isstring(res.error) then return client:notifyLocalized(res.error) end
+            client:EmitSound(unpack(self.BagSound))
+        end
+    )
 end
 
 if SERVER then
