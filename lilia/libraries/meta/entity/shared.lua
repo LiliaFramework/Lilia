@@ -8,14 +8,12 @@ function entityMeta:NearEntity(radius)
     for _, v in ipairs(ents.FindInSphere(self:GetPos(), radius or 96)) do
         if v:GetClass() == self then return true end
     end
-
     return false
 end
 
 function entityMeta:GetViewAngle(pos)
     local diff = pos - self:EyePos()
     diff:Normalize()
-
     return math.abs(math.deg(math.acos(self:EyeAngles():Forward():Dot(diff))))
 end
 
@@ -24,7 +22,7 @@ function entityMeta:InFov(ent, fov)
 end
 
 function entityMeta:InTrace(ent)
-    return util.TraceLine(
+    return     util.TraceLine(
         {
             start = ent:EyePos(),
             endpos = self:EyePos()
@@ -46,12 +44,9 @@ function entityMeta:CanSeeEntity(entity)
     if not self:IsLineOfSightClear(entity) then return false end
     local diff = entity:GetPos() - self:GetShootPos()
     if self:GetAimVector():Dot(diff) / diff:Length() < 0.455 then return false end
-
     return true
 end
 
 for _, v in pairs(list.Get("Vehicles")) do
-    if v.Category == "Chairs" then
-        ChairCache[v.Model] = true
-    end
+    if v.Category == "Chairs" then ChairCache[v.Model] = true end
 end
