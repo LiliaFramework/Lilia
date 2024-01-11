@@ -2,7 +2,7 @@
 lia.module.enabilitystatus = {}
 lia.module.list = lia.module.list or {}
 lia.module.unloaded = lia.module.unloaded or {}
-lia.module.ModuleFolders = {"dependencies", "config", "permissions", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim", "logger"}
+lia.module.ModuleFolders = {"dependencies", "config", "permissions", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim", "logger", "concommands"}
 lia.module.ModuleFiles = {
     ["client.lua"] = "client",
     ["cl_module.lua"] = "client",
@@ -150,19 +150,11 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
 end
 
 function lia.module.loadExtras(path)
-    local ModuleLibraryFolder = path .. "/libraries"
-    local GamemodeLibraryFolder = path .. "/libs"
-    local consoleCommands = path .. "/concommands"
-    local configFolder = path .. "/config"
     for fileName, state in pairs(lia.module.ModuleFiles) do
         local filePath = path .. "/" .. fileName
         if file.Exists(filePath, "LUA") then lia.util.include(filePath, state) end
     end
 
-    if file.Exists(configFolder, "LUA") then lia.util.includeDir(configFolder, true, true) end
-    if file.Exists(ModuleLibraryFolder, "LUA") then lia.util.includeDir(ModuleLibraryFolder, true, false) end
-    if file.Exists(GamemodeLibraryFolder, "LUA") then lia.util.includeDir(GamemodeLibraryFolder, true, true) end
-    if file.Exists(consoleCommands, "LUA") then lia.util.includeDir(consoleCommands, true, true) end
     for _, folder in ipairs(lia.module.ModuleFolders) do
         local subFolders = path .. "/" .. folder
         if file.Exists(subFolders, "LUA") then lia.util.includeDir(subFolders, true, true) end
