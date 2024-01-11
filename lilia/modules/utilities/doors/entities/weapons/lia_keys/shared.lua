@@ -60,8 +60,7 @@ function SWEP:PrimaryAttack()
     self:SetNextSecondaryFire(CurTime() + time2)
     if not IsFirstTimePredicted() then return end
     if not IsValid(entity) then return end
-    if hook.Run("KeyLockOverride", owner, entity) then return end
-    if SERVER then self:ServerPrimaryAttack(owner, entity, time) end
+    hook.Run("KeyLock", owner, entity, time)
 end
 
 function SWEP:SecondaryAttack()
@@ -77,6 +76,5 @@ function SWEP:SecondaryAttack()
     self:SetNextSecondaryFire(CurTime() + time2)
     if not IsFirstTimePredicted() then return end
     if not IsValid(entity) then return end
-    if hook.Run("KeyUnlockOverride", owner, entity) then return end
-    if SERVER then self:ServerSecondaryAttack(owner, entity, time) end
+ hook.Run("KeyUnlock", owner, entity, time) 
 end

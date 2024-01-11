@@ -163,3 +163,54 @@ function DoorsCore:PlayerDisconnected(client)
         if v.isDoor and v:isDoor() and v:GetDTEntity(0) == client then v:removeDoorAccessData() end
     end
 end
+
+
+
+function DoorsCore:KeyLock(client, entity, time)
+    if not IsValid(entity) then return end
+    if  entity:IsVehicle() and entity:GetCreator() == client then
+        client:setAction("@locking", time, function() self:ToggleLock(client, entity, true) end)
+        return true 
+    end
+end
+
+function DoorsCore:KeyUnlock(client, entity, time)
+    if not IsValid(entity) then return end 
+    if IsValid(owner) and owner:GetPos():Distance(door:GetPos()) > 96 then return end
+    self:ToggleLock(client, entity, true)
+    return true 
+end
+
+function DoorsCore:ToggleLock(owner, door, state)
+    if IsValid(owner) and owner:GetPos():Distance(door:GetPos()) > 96 then return end
+    local partner = door:getDoorPartner()
+
+
+    if entity:isDoor() and entity:checkDoorAccess(owner) then
+        if state then
+            owner:setAction("@locking", time, function()
+                if IsValid(partner) then partner:Fire("lock") end
+                door:Fire("lock")
+                owner:EmitSound("doors/door_latch3.wav")
+            end)
+        else
+            owner:setAction("@unlocking", time, function()
+                if IsValid(partner) then partner:Fire("unlock") end
+                door:Fire("unlock")
+                owner:EmitSound("doors/door_latch1.wav")
+            end)
+        end
+    elseif door:IsVehicle() then
+        if state then
+            owner:setAction("@locking", time, function()
+                door:Fire("lock")
+                owner:EmitSound("doors/door_latch3.wav")
+            end)
+        else
+            owner:setAction("@unlocking", time, function()
+                door:Fire("unlock")
+                owner:EmitSound("doors/door_latch1.wav")
+            end)
+        end
+    end
+end

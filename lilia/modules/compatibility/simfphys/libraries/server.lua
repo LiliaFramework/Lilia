@@ -98,3 +98,22 @@ function SimfphysCompatibility:CheckValidSit(client, _)
     local entity = client:GetTracedEntity()
     if simfphys.IsCar(entity) then return false end
 end
+
+function SimfphysCompatibility:KeyLockOverride(client, entity, time)
+    if IsValid(entity) and simfphys.IsCar(entity) then
+        client:setAction("@locking", time, function() self:ToggleLock(client, entity, true) end)
+        return true 
+    end
+end
+
+function SimfphysCompatibility:KeyUnlockOverride(client, entity, time)
+    if IsValid(entity) and simfphys.IsCar(entity) then
+        client:setAction("@unlocking", time, function() self:ToggleLock(client, entity, false) end)
+        return true 
+    end
+end
+
+function SimfphysCompatibility:ToggleLock(owner, door, state)
+    door.IsLocked = not state
+    owner:EmitSound(state and "doors/door_latch3.wav" or "doors/door_latch1.wav")
+end

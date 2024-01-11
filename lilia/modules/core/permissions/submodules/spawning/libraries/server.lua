@@ -84,7 +84,6 @@ function GM:PlayerSpawnedRagdoll(client, _, entity)
 end
 
 function GM:PlayerSpawnedSENT(client, entity)
-    if not client then return true end
     self:PlayerSpawnedEntity(client, entity)
 end
 
