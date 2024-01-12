@@ -1,5 +1,16 @@
 ﻿function SimfphysCompatibility:simfphysUse(entity, client)
-    if simfphys.IsCar(entity) and self.TimeToEnterVehicle > 0 and not (entity.IsBeingEntered or entity.IsLocked) then
+    if entity.IsBeingEntered then
+        client:notify("Someone is entering this car!")
+
+        return true
+    end
+
+    if entity.IsLocked then
+        client:notify("This car is locked!")
+
+        return true
+    end
+    if simfphys.IsCar(entity) and self.TimeToEnterVehicle > 0 then
         entity.IsBeingEntered = true
         client:setAction("Entering Vehicle...", self.TimeToEnterVehicle)
         client:doStaredAction(
@@ -15,10 +26,13 @@
                     client:setAction()
                 end
 
-                if IsValid(client) then client:setAction() end
+                if IsValid(client) then
+                    client:setAction()
+                end
             end
         )
     end
+
     return self.CarEntryDelayEnabled
 end
 
@@ -28,6 +42,7 @@ function SimfphysCompatibility:OnEntityCreated(entity)
         entity.PhysicsCollide = function(vehicle, data, physobj)
             if not self.DamageInCars then
                 entity:PhysicsCollideBack(data, physobj)
+
                 return
             end
 
@@ -35,7 +50,10 @@ function SimfphysCompatibility:OnEntityCreated(entity)
             local speed = data.Speed
             local mass = 1
             local hitEnt = data.HitEntity
-            if not hitEnt:IsWorld() then mass = math.Clamp(data.HitObject:GetMass() / physobj:GetMass(), 0, 1) end
+            if not hitEnt:IsWorld() then
+                mass = math.Clamp(data.HitObject:GetMass() / physobj:GetMass(), 0, 1)
+            end
+
             local dmg = speed * speed * mass / 5000
             if not dmg or dmg < 1 then return end
             local pos = data.HitPos
@@ -99,21 +117,34 @@ function SimfphysCompatibility:CheckValidSit(client, _)
     if simfphys.IsCar(entity) then return false end
 end
 
-function SimfphysCompatibility:KeyLockOverride(client, entity, time)
-    if IsValid(entity) and simfphys.IsCar(entity) then
-        client:setAction("@locking", time, function() self:ToggleLock(client, entity, true) end)
-        return true 
-    end
+function SimfphysCompatibility:KeyLock(client, entity, time)
+    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not simfphys.IsCar(entity) or entity:GetCreator() ~= client then return end
+    client:setAction(
+        "@locking",
+        time,
+        function()
+            self:ToggleLock(client, entity, true)
+        end
+    )
+
+    return true
 end
 
-function SimfphysCompatibility:KeyUnlockOverride(client, entity, time)
-    if IsValid(entity) and simfphys.IsCar(entity) then
-        client:setAction("@unlocking", time, function() self:ToggleLock(client, entity, false) end)
-        return true 
-    end
+function SimfphysCompatibility:KeyUnlock(client, entity, time)
+    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not simfphys.IsCar(entity) or entity:GetCreator() ~= client then return end
+    client:setAction(
+        "@unlocking",
+        time,
+        function()
+            self:ToggleLock(client, entity, false)
+        end
+    )
+
+    return true
 end
 
-function SimfphysCompatibility:ToggleLock(owner, door, state)
-    door.IsLocked = not state
-    owner:EmitSound(state and "doors/door_latch3.wav" or "doors/door_latch1.wav")
+function SimfphysCompatibility:ToggleLock(client, entity, state)
+    entity.IsLocked = not state
+    entity:Fire(state and "lock" or "unlock")
+    client:EmitSound(state and "doors/door_latch3.wav" or "doors/door_latch1.wav")
 end

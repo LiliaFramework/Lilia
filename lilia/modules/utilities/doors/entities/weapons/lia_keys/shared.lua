@@ -4,7 +4,6 @@ SWEP.Purpose = "Locking and Unlocking Stuff."
 SWEP.Drop = false
 SWEP.ViewModelFOV = 45
 SWEP.ViewModelFlip = false
-SWEP.AnimPrefix = "passive"
 SWEP.ViewTranslation = 4
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
@@ -23,7 +22,7 @@ SWEP.LowerAngles = Angle(0, 5, -14)
 SWEP.LowerAngles2 = Angle(0, 5, -22)
 SWEP.IsAlwaysLowered = true
 SWEP.FireWhenLowered = true
-SWEP.HoldType = "normal"
+SWEP.HoldType = "passive"
 ACT_VM_FISTS_HOLSTER = 2
 function SWEP:Deploy()
     if not IsValid(self:GetOwner()) then return end

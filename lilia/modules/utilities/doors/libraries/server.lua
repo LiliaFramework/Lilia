@@ -1,12 +1,20 @@
 ﻿local Variables = {"disabled", "name", "price", "noSell", "faction", "factions", "class", "hidden"}
 local DarkRPVariables = {
-    ["DarkRPNonOwnable"] = function(ent, _) ent:setNetVar("noSell", true) end,
-    ["DarkRPTitle"] = function(ent, val) ent:setNetVar("name", val) end,
-    ["DarkRPCanLockpick"] = function(ent, val) ent.noPick = tobool(val) end
+    ["DarkRPNonOwnable"] = function(ent, _)
+        ent:setNetVar("noSell", true)
+    end,
+    ["DarkRPTitle"] = function(ent, val)
+        ent:setNetVar("name", val)
+    end,
+    ["DarkRPCanLockpick"] = function(ent, val)
+        ent.noPick = tobool(val)
+    end
 }
 
 function DoorsCore:EntityKeyValue(ent, key, value)
-    if ent:isDoor() and DarkRPVariables[key] then DarkRPVariables[key](ent, value) end
+    if ent:isDoor() and DarkRPVariables[key] then
+        DarkRPVariables[key](ent, value)
+    end
 end
 
 function DoorsCore:copyParentDoor(child)
@@ -14,7 +22,9 @@ function DoorsCore:copyParentDoor(child)
     if IsValid(parent) then
         for _, v in ipairs(Variables) do
             local value = parent:getNetVar(v)
-            if child:getNetVar(v) ~= value then child:setNetVar(v, value) end
+            if child:getNetVar(v) ~= value then
+                child:setNetVar(v, value)
+            end
         end
     end
 end
@@ -30,7 +40,9 @@ function DoorsCore:LoadData()
                     entity.liaChildren = v2
                     for index, _ in pairs(v2) do
                         local door = ents.GetMapCreatedEntity(index)
-                        if IsValid(door) then door.liaParent = entity end
+                        if IsValid(door) then
+                            door.liaParent = entity
+                        end
                     end
                 else
                     entity:setNetVar(k2, v2)
@@ -44,7 +56,9 @@ function DoorsCore:SaveData()
     local data = {}
     local doors = {}
     for _, v in ipairs(ents.GetAll()) do
-        if v:isDoor() then doors[v:MapCreationID()] = v end
+        if v:isDoor() then
+            doors[v:MapCreationID()] = v
+        end
     end
 
     local doorData
@@ -52,13 +66,26 @@ function DoorsCore:SaveData()
         doorData = {}
         for _, v2 in ipairs(Variables) do
             local value = v:getNetVar(v2)
-            if value then doorData[v2] = v:getNetVar(v2) end
+            if value then
+                doorData[v2] = v:getNetVar(v2)
+            end
         end
 
-        if v.liaChildren then doorData.children = v.liaChildren end
-        if v.liaClassID then doorData.class = v.liaClassID end
-        if v.liaFactionID then doorData.faction = v.liaFactionID end
-        if table.Count(doorData) > 0 then data[k] = doorData end
+        if v.liaChildren then
+            doorData.children = v.liaChildren
+        end
+
+        if v.liaClassID then
+            doorData.class = v.liaClassID
+        end
+
+        if v.liaFactionID then
+            doorData.faction = v.liaFactionID
+        end
+
+        if table.Count(doorData) > 0 then
+            data[k] = doorData
+        end
     end
 
     self:setData(data)
@@ -76,7 +103,9 @@ function DoorsCore:callOnDoorChildren(entity, callback)
         callback(parent)
         for k, _ in pairs(parent.liaChildren) do
             local child = ents.GetMapCreatedEntity(k)
-            if IsValid(child) then callback(child) end
+            if IsValid(child) then
+                callback(child)
+            end
         end
     end
 end
@@ -120,7 +149,9 @@ function DoorsCore:CanPlayerAccessDoor(client, door, _)
     local factions = door:getNetVar("factions")
     if factions ~= nil then
         local facs = util.JSONToTable(factions)
-        if facs ~= nil and facs ~= "[]" then if facs[client:Team()] then return true end end
+        if facs ~= nil and facs ~= "[]" then
+            if facs[client:Team()] then return true end
+        end
     end
 
     local class = door:getNetVar("class")
@@ -133,6 +164,7 @@ function DoorsCore:CanPlayerAccessDoor(client, door, _)
         else
             if charClass ~= class then return false end
         end
+
         return true
     end
 end
@@ -146,13 +178,17 @@ function DoorsCore:ShowTeam(client)
     if IsValid(entity) and entity:isDoor() and not entity:getNetVar("faction") and not entity:getNetVar("class") then
         if entity:checkDoorAccess(client, DOOR_TENANT) then
             local door = entity
-            if IsValid(door.liaParent) then door = door.liaParent end
+            if IsValid(door.liaParent) then
+                door = door.liaParent
+            end
+
             netstream.Start(client, "doorMenu", door, door.liaAccess, entity)
         elseif not IsValid(entity:GetDTEntity(0)) then
             lia.command.run(client, "doorbuy")
         else
             client:notifyLocalized("notAllowed")
         end
+
         return true
     end
 end
@@ -160,57 +196,63 @@ end
 function DoorsCore:PlayerDisconnected(client)
     for _, v in ipairs(ents.GetAll()) do
         if v == client then return end
-        if v.isDoor and v:isDoor() and v:GetDTEntity(0) == client then v:removeDoorAccessData() end
+        if v.isDoor and v:isDoor() and v:GetDTEntity(0) == client then
+            v:removeDoorAccessData()
+        end
     end
 end
 
-
-
 function DoorsCore:KeyLock(client, entity, time)
-    if not IsValid(entity) then return end
-    if  entity:IsVehicle() and entity:GetCreator() == client then
-        client:setAction("@locking", time, function() self:ToggleLock(client, entity, true) end)
-        return true 
-    end
+    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or (simfphys and simfphys.IsCar(entity)) then return end
+    client:setAction(
+        "@locking",
+        time,
+        function()
+            self:ToggleLock(client, entity, true)
+        end
+    )
+
+    return true
 end
 
 function DoorsCore:KeyUnlock(client, entity, time)
-    if not IsValid(entity) then return end 
-    if IsValid(owner) and owner:GetPos():Distance(door:GetPos()) > 96 then return end
-    self:ToggleLock(client, entity, true)
-    return true 
+    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or (simfphys and simfphys.IsCar(entity)) then return end
+    client:setAction(
+        "@unlocking",
+        time,
+        function()
+            self:ToggleLock(client, entity, false)
+        end
+    )
+
+    return true
 end
 
-function DoorsCore:ToggleLock(owner, door, state)
-    if IsValid(owner) and owner:GetPos():Distance(door:GetPos()) > 96 then return end
-    local partner = door:getDoorPartner()
-
-
-    if entity:isDoor() and entity:checkDoorAccess(owner) then
+function DoorsCore:ToggleLock(client, entity, state)
+    local partner = entity:getDoorPartner()
+    if entity:isDoor() and entity:checkDoorAccess(client) then
         if state then
-            owner:setAction("@locking", time, function()
-                if IsValid(partner) then partner:Fire("lock") end
-                door:Fire("lock")
-                owner:EmitSound("doors/door_latch3.wav")
-            end)
+            if IsValid(partner) then
+                partner:Fire("lock")
+            end
+
+            entity:Fire("lock")
+            client:EmitSound("doors/door_latch3.wav")
         else
-            owner:setAction("@unlocking", time, function()
-                if IsValid(partner) then partner:Fire("unlock") end
-                door:Fire("unlock")
-                owner:EmitSound("doors/door_latch1.wav")
-            end)
+            if IsValid(partner) then
+                partner:Fire("unlock")
+            end
+
+            entity:Fire("unlock")
+            client:EmitSound("doors/door_latch1.wav")
         end
-    elseif door:IsVehicle() then
+    elseif (simfphys and not simfphys.IsCar(entity)) and entity:IsVehicle() and entity:GetCreator() == client then
         if state then
-            owner:setAction("@locking", time, function()
-                door:Fire("lock")
-                owner:EmitSound("doors/door_latch3.wav")
-            end)
+            entity:Fire("lock")
+            client:EmitSound("doors/door_latch3.wav")
         else
-            owner:setAction("@unlocking", time, function()
-                door:Fire("unlock")
-                owner:EmitSound("doors/door_latch1.wav")
-            end)
+            entity:Fire("unlock")
+            client:EmitSound("doors/door_latch1.wav")
         end
     end
 end

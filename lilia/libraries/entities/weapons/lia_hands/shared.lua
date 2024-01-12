@@ -10,7 +10,6 @@ SWEP.ViewModel = Model("models/weapons/c_arms.mdl")
 SWEP.WorldModel = ""
 SWEP.ViewModelFOV = 54
 SWEP.UseHands = false
-SWEP.HoldType = "fist"
 SWEP.Primary.Automatic = true
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = 1
@@ -92,13 +91,19 @@ function SWEP:DealDamage()
         )
     end
 
-    if tr.Hit and not (game.SinglePlayer() and CLIENT) then self:EmitSound(self.HitSound) end
+    if tr.Hit and not (game.SinglePlayer() and CLIENT) then
+        self:EmitSound(self.HitSound)
+    end
+
     local hit = false
     local scale = phys_pushscale:GetFloat()
     if SERVER and IsValid(tr.Entity) and (tr.Entity:IsNPC() or tr.Entity:IsPlayer() or tr.Entity:Health() > 0) then
         local dmginfo = DamageInfo()
         local attacker = self:GetOwner()
-        if not IsValid(attacker) then attacker = self end
+        if not IsValid(attacker) then
+            attacker = self
+        end
+
         dmginfo:SetAttacker(attacker)
         dmginfo:SetInflictor(self)
         dmginfo:SetDamage(math.random(5, 8))
@@ -119,7 +124,9 @@ function SWEP:DealDamage()
 
     if IsValid(tr.Entity) then
         local phys = tr.Entity:GetPhysicsObject()
-        if IsValid(phys) then phys:ApplyForceOffset(self:GetOwner():GetAimVector() * 80 * phys:GetMass() * scale, tr.HitPos) end
+        if IsValid(phys) then
+            phys:ApplyForceOffset(self:GetOwner():GetAimVector() * 80 * phys:GetMass() * scale, tr.HitPos)
+        end
     end
 
     if SERVER then
@@ -144,12 +151,16 @@ function SWEP:Deploy()
     self:SetNextPrimaryFire(CurTime() + vm:SequenceDuration())
     self:SetNextSecondaryFire(CurTime() + vm:SequenceDuration())
     self:UpdateNextIdle()
-    if SERVER then self:SetCombo(0) end
+    if SERVER then
+        self:SetCombo(0)
+    end
+
     return true
 end
 
 function SWEP:Holster()
     self:SetNextMeleeAttack(0)
+
     return true
 end
 
@@ -167,10 +178,13 @@ function SWEP:Think()
         self:SetNextMeleeAttack(0)
     end
 
-    if SERVER and CurTime() > self:GetNextPrimaryFire() + 0.1 then self:SetCombo(0) end
+    if SERVER and CurTime() > self:GetNextPrimaryFire() + 0.1 then
+        self:SetCombo(0)
+    end
 end
 
 function SWEP:CanPickup(ent, physObj)
     if not IsValid(ent) or not IsValid(physObj) then return false end
+
     return ent ~= game.GetWorld() and ent:GetPos():Distance(self:GetOwner():GetPos()) < self.GrabRange and physObj:IsMotionEnabled() and physObj:GetMass() < 200 and not ent:IsPlayerHolding() and hook.Run("PlayerCanPickupItem", self:GetOwner(), ent)
 end
