@@ -331,10 +331,7 @@ lia.anim.fastZombie = {
 }
 
 function lia.anim.setModelClass(model, class)
-    if not lia.anim[class] then
-        error("'" .. tostring(class) .. "' is not a valid animation class!")
-    end
-
+    if not lia.anim[class] then error("'" .. tostring(class) .. "' is not a valid animation class!") end
     translations[model:lower()] = class
 end
 
@@ -351,7 +348,6 @@ function lia.anim.getModelClass(model)
     end
 
     lia.anim.setModelClass(model, class)
-
     return class
 end
 
@@ -369,6 +365,5 @@ function player_manager.TranslateToPlayerModelName(model)
         result = TranslateModel(model2)
         if result ~= "kleiner" then return result end
     end
-
     return result
 end
