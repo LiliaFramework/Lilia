@@ -80,7 +80,7 @@ function SimfphysCompatibility:OnEntityCreated(entity)
     end
 end
 
-function SimfphysCompatibility:EntityTakeDamage(entity, dmgInfo)
+function c:EntityTakeDamage(entity, dmgInfo)
     local damageType = dmgInfo:GetDamageType()
     if self.DamageInCars and entity:IsVehicle() and table.HasValue(self.ValidCarDamages, damageType) then
         local client = entity:GetDriver()
@@ -125,4 +125,9 @@ function SimfphysCompatibility:ToggleLock(client, entity, state)
     entity.IsLocked = not state
     entity:Fire(state and "lock" or "unlock")
     client:EmitSound(state and "doors/door_latch3.wav" or "doors/door_latch1.wav")
+    if state then
+        car:Lock()
+    else
+        car:UnLock()
+    end
 end

@@ -22,5 +22,3 @@ function EntityPerfomance:ClientOnEntityCreated(entity)
     entity:DrawShadow(false)
 end
 
-function widgets.PlayerTick()
-end

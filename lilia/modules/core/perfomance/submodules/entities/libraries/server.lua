@@ -43,6 +43,13 @@ function EntityPerfomance:ServerOnEntityCreated(entity)
     if entity:IsWidget() then hook.Add("PlayerTick", "GODisableEntWidgets2", function(_, n) widgets.PlayerTick(entity, n) end) end
 end
 
+function EntityPerfomance:PreGamemodeLoaded()
+    function widgets.PlayerTick()
+    end
+
+    hook.Remove("PlayerTick", "TickWidgets")
+end
+
 function EntityPerfomance:EntityRemoved(entity)
     if entity:IsRagdoll() and not entity:getNetVar("player", nil) and self.RagdollCleaningTimer > 0 then
         timer.Simple(

@@ -4,3 +4,5 @@ SimfphysCompatibility.TimeToEnterVehicle = 1
 SimfphysCompatibility.CarEntryDelayEnabled = true
 --[[ Indicates whether damage while in cars is enabled   ]]
 SimfphysCompatibility.DamageInCars = true
+--[[ Valid Damages When DMGing a Car]]
+RealisticDamageCore.ValidCarDamages = {DMG_VEHICLE, DMG_BULLET}
