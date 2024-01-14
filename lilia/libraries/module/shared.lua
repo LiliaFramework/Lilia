@@ -163,10 +163,9 @@ function lia.module.loadExtras(path)
         local subFolders = path .. "/" .. folder
         if file.Exists(subFolders, "LUA") then lia.util.includeDir(subFolders, true, true) end
     end
+
     lia.util.loadEntities(path .. "/entities")
     lia.item.loadFromDir(path .. "/items", false)
-
-
     lia.module.loadFromDir(path .. "/submodules", "module")
     lia.module.loadFromDir(path .. "/modules", "module")
     hook.Run("DoModuleIncludes", path, MODULE)
