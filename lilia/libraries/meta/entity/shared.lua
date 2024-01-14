@@ -1,7 +1,12 @@
 ﻿local entityMeta = FindMetaTable("Entity")
 local ChairCache = {}
+
 function entityMeta:isProp()
     return self:GetClass() == "prop_physics"
+end
+function entityMeta:IsSimfphysCar()
+    if not simfphys then return false
+    return self:GetClass( ) == "gmod_sent_vehicle_fphysics_base"
 end
 
 function entityMeta:NearEntity(radius)

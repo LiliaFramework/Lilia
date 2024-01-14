@@ -9,7 +9,7 @@
         return true
     end
 
-    if entity.IsSimfphyscar and self.TimeToEnterVehicle > 0 then
+    if entity:IsSimfphysCar and self.TimeToEnterVehicle > 0 then
         entity.IsBeingEntered = true
         client:setAction("Entering Vehicle...", self.TimeToEnterVehicle)
         client:doStaredAction(
@@ -33,7 +33,7 @@
 end
 
 function SimfphysCompatibility:OnEntityCreated(entity)
-    if entity.IsSimfphyscar then
+    if entity:IsSimfphysCar then
         entity.PhysicsCollideBack = entity.PhysicsCollide
         entity.PhysicsCollide = function(vehicle, data, physobj)
             if not self.DamageInCars then
@@ -101,22 +101,22 @@ function SimfphysCompatibility:EntityTakeDamage(entity, dmgInfo)
 end
 
 function SimfphysCompatibility:isSuitableForTrunk(entity)
-    if IsValid(entity) and entity.IsSimfphyscar then return true end
+    if IsValid(entity) and entity:IsSimfphysCar then return true end
 end
 
 function SimfphysCompatibility:CheckValidSit(client, _)
     local entity = client:GetTracedEntity()
-    if entity.IsSimfphyscar then return false end
+    if entity:IsSimfphysCar then return false end
 end
 
 function SimfphysCompatibility:KeyLock(client, entity, time)
-    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not entity.IsSimfphyscar or entity:GetCreator() ~= client then return end
+    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not entity:IsSimfphysCar or entity:GetCreator() ~= client then return end
     client:setAction("@locking", time, function() self:ToggleLock(client, entity, true) end)
     return true
 end
 
 function SimfphysCompatibility:KeyUnlock(client, entity, time)
-    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not entity.IsSimfphyscar or entity:GetCreator() ~= client then return end
+    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not entity:IsSimfphysCar or entity:GetCreator() ~= client then return end
     client:setAction("@unlocking", time, function() self:ToggleLock(client, entity, false) end)
     return true
 end

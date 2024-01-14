@@ -133,7 +133,7 @@ end
 
 function LiliaStorage:OnEntityCreated(entity)
     if not LiliaStorage:isSuitableForTrunk(entity) then return end
-    if entity.IsSimfphyscar then netstream.Start(nil, "trunkInitStorage", entity) end
+    if entity:IsSimfphysCar then netstream.Start(nil, "trunkInitStorage", entity) end
     self:InitializeStorage(entity)
 end
 
