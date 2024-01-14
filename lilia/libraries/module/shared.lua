@@ -1,12 +1,3 @@
-﻿﻿
-
-
-
-
-
-
-
-
 lia.module = lia.module or {}
 lia.module.enabilitystatus = {}
 lia.module.list = lia.module.list or {}
