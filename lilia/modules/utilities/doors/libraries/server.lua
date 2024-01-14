@@ -188,7 +188,7 @@ function DoorsCore:ToggleLock(client, entity, state)
             entity:Fire("unlock")
             client:EmitSound("doors/door_latch1.wav")
         end
-    elseif not entity.IsSimfphyscar  and entity:IsVehicle() and entity:GetCreator() == client then
+    elseif not entity.IsSimfphyscar and entity:IsVehicle() and entity:GetCreator() == client then
         if state then
             entity:Fire("lock")
             client:EmitSound("doors/door_latch3.wav")
