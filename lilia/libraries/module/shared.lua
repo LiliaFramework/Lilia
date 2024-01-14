@@ -1,4 +1,4 @@
-﻿lia.module = lia.module or {}
+﻿﻿lia.module = lia.module or {}
 lia.module.enabilitystatus = {}
 lia.module.list = lia.module.list or {}
 lia.module.unloaded = lia.module.unloaded or {}
@@ -150,6 +150,10 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
 end
 
 function lia.module.loadExtras(path)
+    lia.lang.loadFromDir(path .. "/languages")
+    lia.faction.loadFromDir(path .. "/factions")
+    lia.class.loadFromDir(path .. "/classes")
+    lia.attribs.loadFromDir(path .. "/attributes")
     for fileName, state in pairs(lia.module.ModuleFiles) do
         local filePath = path .. "/" .. fileName
         if file.Exists(filePath, "LUA") then lia.util.include(filePath, state) end
@@ -159,13 +163,10 @@ function lia.module.loadExtras(path)
         local subFolders = path .. "/" .. folder
         if file.Exists(subFolders, "LUA") then lia.util.includeDir(subFolders, true, true) end
     end
-
-    lia.lang.loadFromDir(path .. "/languages")
-    lia.faction.loadFromDir(path .. "/factions")
-    lia.class.loadFromDir(path .. "/classes")
-    lia.attribs.loadFromDir(path .. "/attributes")
     lia.util.loadEntities(path .. "/entities")
     lia.item.loadFromDir(path .. "/items", false)
+
+
     lia.module.loadFromDir(path .. "/submodules", "module")
     lia.module.loadFromDir(path .. "/modules", "module")
     hook.Run("DoModuleIncludes", path, MODULE)
