@@ -1,4 +1,13 @@
-﻿﻿lia.module = lia.module or {}
+﻿﻿
+
+
+
+
+
+
+
+
+lia.module = lia.module or {}
 lia.module.enabilitystatus = {}
 lia.module.list = lia.module.list or {}
 lia.module.unloaded = lia.module.unloaded or {}
@@ -11,7 +20,6 @@ lia.module.ModuleFiles = {
     ["config.lua"] = "shared",
     ["sconfig.lua"] = "server",
 }
-
 lia.module.ModuleConditions = {
     ["stormfox2"] = {
         name = "StormFox 2",
