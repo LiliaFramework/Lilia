@@ -4,7 +4,7 @@
     local toolobj = client:GetActiveWeapon():GetToolObject()
     local validEntity = IsValid(entity)
     if tool == "adv_duplicator" and IsValid(client) and (client:getChar():hasFlags("t") or client:isStaffOnDuty()) and CAMI.PlayerHasAccess(client, privilege, nil) then
-        if table.HasValue(RestrictionCore.DuplicatorBlackList, entity) and validEntity then return false end
+        if table.HasValue(PermissionCore.DuplicatorBlackList, entity) and validEntity then return false end
         if toolobj.Entities then
             for _, v in pairs(toolobj.Entities) do
                 if not v.ModelScale then return false end

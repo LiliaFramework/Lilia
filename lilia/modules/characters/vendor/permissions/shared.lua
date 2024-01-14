@@ -1,4 +1,4 @@
-﻿RestrictionCore.CAMIPrivileges = {
+﻿VendorCore.CAMIPrivileges = {
     {
         Name = "Lilia - Staff Permissions - Can Edit Vendors",
         MinAccess = "admin",

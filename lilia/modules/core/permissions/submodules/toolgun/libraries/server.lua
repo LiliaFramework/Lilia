@@ -12,7 +12,7 @@ function GM:CanTool(client, _, tool)
         if tool == "material" and validEntity and (entity:GetClass() == "prop_vehicle_jeep" or string.lower(tool:GetClientInfo("override")) == "pp/copy") then return false end
         if tool == "weld" and validEntity and entity:GetClass() == "sent_ball" then return false end
         if tool == "duplicator" then
-            if table.HasValue(RestrictionCore.DuplicatorBlackList, entity) and validEntity then return false end
+            if table.HasValue(PermissionCore.DuplicatorBlackList, entity) and validEntity then return false end
             if client.CurrentDupe and client.CurrentDupe.Entities then
                 for _, v in pairs(client.CurrentDupe.Entities) do
                     if not v.ModelScale then return false end
@@ -28,7 +28,7 @@ function GM:CanTool(client, _, tool)
         end
 
         if tool == "remover" and validEntity then
-            if table.HasValue(RestrictionCore.RemoverBlockedEntities, entity:GetClass()) then
+            if table.HasValue(PermissionCore.RemoverBlockedEntities, entity:GetClass()) then
                 return CAMI.PlayerHasAccess(client, "Staff Permissions - Can Remove Blocked Entities", nil)
             elseif entity:IsWorld() then
                 return CAMI.PlayerHasAccess(client, "Staff Permissions - Can Remove World Entities", nil)
@@ -36,13 +36,13 @@ function GM:CanTool(client, _, tool)
             return true
         end
 
-        if tool == "button" and not table.HasValue(RestrictionCore.ButtonList, client:GetInfo("button_model")) then
+        if tool == "button" and not table.HasValue(PermissionCore.ButtonList, client:GetInfo("button_model")) then
             client:ConCommand("button_model models/maxofs2d/button_05.mdl")
             client:ConCommand("button_model")
             return false
         end
 
-        client.ToolInterval = CurTime() + RestrictionCore.ToolInterval
+        client.ToolInterval = CurTime() + PermissionCore.ToolInterval
         return true
     end
     return false

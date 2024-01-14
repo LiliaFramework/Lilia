@@ -1,4 +1,4 @@
-﻿RestrictionCore.CAMIPrivileges = {
+﻿PermissionCore.CAMIPrivileges = {
     {
         Name = "UserGroups - Staff Group",
         MinAccess = "admin",
@@ -8,5 +8,10 @@
         Name = "UserGroups - VIP Group",
         MinAccess = "superadmin",
         Description = "Defines Player as VIP."
+    },
+    {
+        Name = "Staff Permissions - List Entities",
+        MinAccess = "superadmin",
+        Description = "Allows a User to List Entities."
     },
 }

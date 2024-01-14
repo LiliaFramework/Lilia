@@ -2,7 +2,7 @@
 function GM:PhysgunPickup(client, entity)
     if entity:GetCreator() == client and entity:GetClass() == "prop_physics" then return true end
     if CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup", nil) or client:isStaffOnDuty() then
-        if table.HasValue(RestrictionCore.RestrictedEnts, entity:GetClass()) then
+        if table.HasValue(PermissionCore.RestrictedEnts, entity:GetClass()) then
             return CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup on Restricted Entities", nil)
         elseif entity:IsVehicle() then
             return CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup on Vehicles", nil)
@@ -43,6 +43,6 @@ function GM:OnPhysgunFreeze(_, physObj, entity, client)
     client:AddFrozenPhysicsObject(entity, physObj)
     client:SendHint("PhysgunUnfreeze", 0.3)
     client:SuppressHint("PhysgunFreeze")
-    if RestrictionCore.PassableOnFreeze then physObj:EnableCollisions(false) end
+    if PermissionCore.PassableOnFreeze then physObj:EnableCollisions(false) end
     return true
 end
