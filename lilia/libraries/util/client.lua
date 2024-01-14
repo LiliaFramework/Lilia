@@ -14,7 +14,11 @@ function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
         alpha or (color.a * 0.575)
     )
 end
-
+function lia.util.DrawTexture(material, color, x, y, w, h)
+    surface.SetDrawColor(color or color_white)
+    surface.SetMaterial(lia.util.getMaterial(material))
+    surface.DrawTexturedRect(x, y, w, h)
+end
 function lia.util.notifQuery(question, option1, option2, manualDismiss, notifType, callback)
     if not callback or not isfunction(callback) then Error("A callback function must be specified") end
     if not question or not isstring(question) then Error("A question string must be specified") end
