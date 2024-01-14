@@ -42,10 +42,10 @@ function GM:CalcView(client, origin, angles, fov)
     local ragdoll = client:GetRagdollEntity()
     if client:GetViewEntity() ~= client then return view end
     if (not client:ShouldDrawLocalPlayer() and IsValid(entity) and entity:IsRagdoll()) or (not LocalPlayer():Alive() and IsValid(ragdoll)) then
-        local entity = LocalPlayer():Alive() and entity or ragdoll
-        local index = entity:LookupAttachment("eyes")
+        local ent = LocalPlayer():Alive() and entity or ragdoll
+        local index = ent:LookupAttachment("eyes")
         if index then
-            local data = entity:GetAttachment(index)
+            local data = ent:GetAttachment(index)
             if data then
                 view = view or {}
                 view.origin = data.Pos

@@ -17,7 +17,6 @@ concommand.Add(
             for _, entity in pairs(ents.GetAll()) do
                 local className = entity:GetClass()
                 local entityName = entity:GetName()
-                local entityID = entity:EntIndex()
 
                 entityCount[className] = (entityCount[className] or {})
                 entityCount[className][entityName] = (entityCount[className][entityName] or 0) + 1
