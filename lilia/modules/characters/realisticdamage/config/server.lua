@@ -18,4 +18,3 @@ RealisticDamageCore.DrownTime = 30
 RealisticDamageCore.DrownDamage = 10
 --[[ Hitgroups considered as limbs ]]
 RealisticDamageCore.LimbHitgroups = {HITGROUP_GEAR, HITGROUP_RIGHTARM, HITGROUP_LEFTARM}
-RealisticDamageCore.ValidCarDamages = {DMG_VEHICLE, DMG_BULLET}

@@ -1,4 +1,4 @@
-﻿local VendorCore = VendorCore
+﻿
 function VendorCore:SaveData()
     local data = {}
     for _, v in ipairs(ents.FindByClass("lia_vendor")) do

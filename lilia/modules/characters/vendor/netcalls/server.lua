@@ -1,4 +1,4 @@
-﻿local VendorCore = VendorCore
+﻿
 local EDITOR = include(VendorCore.path .. "/libs/sv_vendor.lua")
 util.AddNetworkString("liaVendorAllowClass")
 util.AddNetworkString("liaVendorAllowFaction")
