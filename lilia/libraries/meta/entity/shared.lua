@@ -21,6 +21,15 @@ function entityMeta:InFov(ent, fov)
     return self:GetViewAngle(ent:EyePos()) < (fov or 88)
 end
 
+function entityMeta:isInRoom(target)
+    local tracedata = {}
+    tracedata.start = self:GetPos()
+    tracedata.endpos = target:GetPos()
+    local trace = util.TraceLine(tracedata)
+
+    return not trace.HitWorld
+end
+
 function entityMeta:InTrace(ent)
     return     util.TraceLine(
         {
