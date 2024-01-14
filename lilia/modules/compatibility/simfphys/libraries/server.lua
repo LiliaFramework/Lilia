@@ -126,8 +126,8 @@ function SimfphysCompatibility:ToggleLock(client, entity, state)
     entity:Fire(state and "lock" or "unlock")
     client:EmitSound(state and "doors/door_latch3.wav" or "doors/door_latch1.wav")
     if state then
-        car:Lock()
+        entity:Lock()
     else
-        car:UnLock()
+        entity:UnLock()
     end
 end
