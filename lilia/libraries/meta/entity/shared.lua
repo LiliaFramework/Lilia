@@ -1,12 +1,12 @@
 ﻿local entityMeta = FindMetaTable("Entity")
 local ChairCache = {}
-
 function entityMeta:isProp()
     return self:GetClass() == "prop_physics"
 end
+
 function entityMeta:IsSimfphysCar()
-    if not simfphys then return false
-    return self:GetClass( ) == "gmod_sent_vehicle_fphysics_base"
+    if not simfphys then return false end
+    return self:GetClass() == "gmod_sent_vehicle_fphysics_base"
 end
 
 function entityMeta:NearEntity(radius)
@@ -35,12 +35,10 @@ function entityMeta:isInRoom(target)
 end
 
 function entityMeta:InTrace(entity)
-    return     util.TraceLine(
-        {
-            start = entity:EyePos(),
-            endpos = self:EyePos()
-        }
-    ).Entity == self
+    return util.TraceLine({
+        start = entity:EyePos(),
+        endpos = self:EyePos()
+    }).Entity == self
 end
 
 function entityMeta:IsScreenVisible(entity, maxDist, fov)
