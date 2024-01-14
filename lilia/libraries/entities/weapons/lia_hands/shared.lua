@@ -169,7 +169,7 @@ function SWEP:Think()
     if SERVER and CurTime() > self:GetNextPrimaryFire() + 0.1 then self:SetCombo(0) end
 end
 
-function SWEP:CanPickup(ent, physObj)
-    if not IsValid(ent) or not IsValid(physObj) then return false end
-    return ent ~= game.GetWorld() and ent:GetPos():Distance(self:GetOwner():GetPos()) < self.GrabRange and physObj:IsMotionEnabled() and physObj:GetMass() < 200 and not ent:IsPlayerHolding() and hook.Run("PlayerCanPickupItem", self:GetOwner(), ent)
+function SWEP:CanPickup(entity, physObj)
+    if not IsValid(entity) or not IsValid(physObj) then return false end
+    return entity ~= game.GetWorld() and entity:GetPos():Distance(self:GetOwner():GetPos()) < self.GrabRange and physObj:IsMotionEnabled() and physObj:GetMass() < 200 and not entity:IsPlayerHolding() and hook.Run("PlayerCanPickupItem", self:GetOwner(), entity)
 end

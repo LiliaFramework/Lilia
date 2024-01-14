@@ -2,8 +2,8 @@
     "BodygrouperMenu",
     function()
         if IsValid(BodygrouperCore.Menu) then BodygrouperCore.Menu:Remove() end
-        local ent = net.ReadEntity()
+        local entity = net.ReadEntity()
         BodygrouperCore.Menu = vgui.Create("BodygrouperMenu")
-        BodygrouperCore.Menu:SetTarget(IsValid(ent) and ent or LocalPlayer())
+        BodygrouperCore.Menu:SetTarget(IsValid(entity) and entity or LocalPlayer())
     end
 )

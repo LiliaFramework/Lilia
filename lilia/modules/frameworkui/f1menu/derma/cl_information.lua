@@ -126,11 +126,11 @@ function PANEL:setup()
             self.model.Entity:SetBodygroup(v.id, LocalPlayer():GetBodygroup(v.id))
         end
 
-        local ent = self.model.Entity
-        if ent and IsValid(ent) then
+        local entity = self.model.Entity
+        if entity and IsValid(entity) then
             local mats = LocalPlayer():GetMaterials()
             for k, _ in pairs(mats) do
-                ent:SetSubMaterial(k - 1, LocalPlayer():GetSubMaterial(k - 1))
+                entity:SetSubMaterial(k - 1, LocalPlayer():GetSubMaterial(k - 1))
             end
         end
     end

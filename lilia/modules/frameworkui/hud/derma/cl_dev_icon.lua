@@ -86,13 +86,13 @@ local function buildActionText(self, setModel)
     local icon = p.model
     local iconModel = p1.model
     if not iconModel then return end
-    local ent = iconModel:GetEntity()
+    local entity = iconModel:GetEntity()
     local tab = {}
-    tab.ent = ent
+    tab.entity = entity
     tab.cam_pos = iconModel:GetCamPos()
     tab.cam_ang = iconModel:GetLookAng()
     tab.cam_fov = iconModel:GetFOV()
-    if setModel and icon then icon:SetModel(ent:GetModel()) end
+    if setModel and icon then icon:SetModel(entity:GetModel()) end
     local text = "ITEM.model = \"" .. ICON_INFO.modelName:gsub("\\", "/"):lower() .. "\"" .. "\n" .. "ITEM.width = " .. ICON_INFO.w .. "\n" .. "ITEM.height = " .. ICON_INFO.h .. "\n" .. "ITEM.iconCam = {" .. "\n" .. "\tpos = Vector(" .. tab.cam_pos.x .. ", " .. tab.cam_pos.y .. ", " .. tab.cam_pos.z .. "),\n" .. "\tang = Angle(" .. tab.cam_ang.p .. ", " .. tab.cam_ang.y .. ", " .. tab.cam_ang.r .. "),\n" .. "\tfov = " .. tab.cam_fov .. "," .. "\n"
     if ICON_INFO.outline then text = text .. "\toutline = true," .. "\n" .. "\toutlineColor = Color(" .. ICON_INFO.outlineColor.r .. ", " .. ICON_INFO.outlineColor.g .. ", " .. ICON_INFO.outlineColor.b .. ")," .. "\n" end
     text = text .. "}"
@@ -344,9 +344,9 @@ end
 
 function PANEL:BestGuessLayout()
     local p = self.prev
-    local ent = p.model:GetEntity()
-    local pos = ent:GetPos()
-    local tab = PositionSpawnIcon(ent, pos)
+    local entity = p.model:GetEntity()
+    local pos = entity:GetPos()
+    local tab = PositionSpawnIcon(entity, pos)
     if tab then
         ICON_INFO.camPos = tab.origin
         ICON_INFO.FOV = tab.fov
@@ -356,8 +356,8 @@ end
 
 function PANEL:FullFrontalLayout()
     local p = self.prev
-    local ent = p.model:GetEntity()
-    local pos = ent:GetPos()
+    local entity = p.model:GetEntity()
+    local pos = entity:GetPos()
     local campos = pos + Vector(-200, 0, 0)
     ICON_INFO.camPos = campos
     ICON_INFO.FOV = 45
@@ -366,8 +366,8 @@ end
 
 function PANEL:AboveLayout()
     local p = self.prev
-    local ent = p.model:GetEntity()
-    local pos = ent:GetPos()
+    local entity = p.model:GetEntity()
+    local pos = entity:GetPos()
     local campos = pos + Vector(0, 0, 200)
     ICON_INFO.camPos = campos
     ICON_INFO.FOV = 45
@@ -376,8 +376,8 @@ end
 
 function PANEL:RightLayout()
     local p = self.prev
-    local ent = p.model:GetEntity()
-    local pos = ent:GetPos()
+    local entity = p.model:GetEntity()
+    local pos = entity:GetPos()
     local campos = pos + Vector(0, 200, 0)
     ICON_INFO.camPos = campos
     ICON_INFO.FOV = 45
@@ -386,8 +386,8 @@ end
 
 function PANEL:OriginLayout()
     local p = self.prev
-    local ent = p.model:GetEntity()
-    local pos = ent:GetPos()
+    local entity = p.model:GetEntity()
+    local pos = entity:GetPos()
     local campos = pos + Vector(0, 0, 0)
     ICON_INFO.camPos = campos
     ICON_INFO.FOV = 45

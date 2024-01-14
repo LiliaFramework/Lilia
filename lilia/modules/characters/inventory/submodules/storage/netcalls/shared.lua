@@ -1,12 +1,12 @@
 ﻿netstream.Hook(
     "trunkInitStorage",
-    function(ent)
-        if istable(ent) then
-            for vehicle, _ in pairs(ent) do
+    function(entity)
+        if istable(entity) then
+            for vehicle, _ in pairs(entity) do
                 LiliaStorage:InitializeStorage(vehicle)
             end
         else
-            LiliaStorage:InitializeStorage(ent)
+            LiliaStorage:InitializeStorage(entity)
         end
     end
 )

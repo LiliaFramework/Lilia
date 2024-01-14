@@ -33,9 +33,9 @@ function _G.pac_Restart()
             pace.Panic()
         end
 
-        for _, ent in pairs(ents.GetAll()) do
-            for k in pairs(ent:GetTable()) do
-                if k:sub(0, 4) == "pac_" then ent[k] = nil end
+        for _, entity in pairs(ents.GetAll()) do
+            for k in pairs(entity:GetTable()) do
+                if k:sub(0, 4) == "pac_" then entity[k] = nil end
             end
         end
 

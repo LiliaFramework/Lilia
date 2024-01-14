@@ -2,8 +2,8 @@
     if vehicle:GetClass() == "prop_vehicle_prisoner_pod" then vehicle:RemoveEFlags(EFL_NO_THINK_FUNCTION) end
 end
 
-function EntityPerfomance:PropBreak(_, ent)
-    if ent:IsValid() and ent:GetPhysicsObject():IsValid() then constraint.RemoveAll(ent) end
+function EntityPerfomance:PropBreak(_, entity)
+    if entity:IsValid() and entity:GetPhysicsObject():IsValid() then constraint.RemoveAll(entity) end
 end
 
 function EntityPerfomance:PlayerInitialSpawn(_)

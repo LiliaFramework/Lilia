@@ -121,8 +121,8 @@ function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
     self.data = self.data or {}
     self.data[key] = value
     if not noCheckEntity then
-        local ent = self:getEntity()
-        if IsValid(ent) then ent:setNetVar("data", self.data) end
+        local entity = self:getEntity()
+        if IsValid(entity) then entity:setNetVar("data", self.data) end
     end
 
     if receivers or self:getOwner() then netstream.Start(receivers or self:getOwner(), "invData", self:getID(), key, value) end
@@ -169,8 +169,8 @@ end
 function ITEM:setQuantity(quantity, receivers, noCheckEntity)
     self.quantity = quantity
     if not noCheckEntity then
-        local ent = self:getEntity()
-        if IsValid(ent) then ent:setNetVar("quantity", self.quantity) end
+        local entity = self:getEntity()
+        if IsValid(entity) then entity:setNetVar("quantity", self.quantity) end
     end
 
     if receivers or self:getOwner() then netstream.Start(receivers or self:getOwner(), "invQuantity", self:getID(), self.quantity) end

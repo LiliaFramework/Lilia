@@ -46,8 +46,8 @@ function PANEL:DoLamar()
         self.lamar:SetFOV(90)
         self.lamar:SetModel("models/lamarr.mdl")
         self.lamar:SetAnimated(true)
-        function self.lamar:LayoutEntity(ent)
-            ent:FrameAdvance()
+        function self.lamar:LayoutEntity(entity)
+            entity:FrameAdvance()
             return
         end
 

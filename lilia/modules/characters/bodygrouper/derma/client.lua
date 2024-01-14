@@ -136,14 +136,14 @@ function PANEL:SetTarget(target)
     self.m_eTarget = target
     self.model:SetModel(target:GetModel())
     self.model:fitFOV()
-    local ent = self.model.Entity
-    if IsValid(ent) then
+    local entity = self.model.Entity
+    if IsValid(entity) then
         self.originalSkin = target:GetSkin()
-        ent:SetSkin(target:GetSkin())
+        entity:SetSkin(target:GetSkin())
         self.originalBodygroups = {}
-        for i = 0, ent:GetNumBodyGroups() - 1 do
+        for i = 0, entity:GetNumBodyGroups() - 1 do
             self.originalBodygroups[i] = target:GetBodygroup(i)
-            ent:SetBodygroup(i, target:GetBodygroup(i))
+            entity:SetBodygroup(i, target:GetBodygroup(i))
         end
     end
 

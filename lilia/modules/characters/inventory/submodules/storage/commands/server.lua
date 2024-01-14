@@ -5,16 +5,16 @@
         adminOnly = true,
         syntax = "[string password]",
         onRun = function(client, arguments)
-            local ent = client:GetTracedEntity()
-            if ent and ent:IsValid() then
+            local entity = client:GetTracedEntity()
+            if entity and entity:IsValid() then
                 local password = table.concat(arguments, " ")
                 if password ~= "" then
-                    ent:setNetVar("locked", true)
-                    ent.password = password
+                    entity:setNetVar("locked", true)
+                    entity.password = password
                     client:notifyLocalized("storPass", password)
                 else
-                    ent:setNetVar("locked", nil)
-                    ent.password = nil
+                    entity:setNetVar("locked", nil)
+                    entity.password = nil
                     client:notifyLocalized("storPassRmv")
                 end
 
@@ -32,11 +32,11 @@ lia.command.add(
         privilege = "Default User Commands",
         adminOnly = false,
         onRun = function(client)
-            local ent = client:GetEyeTrace().Entity
+            local entity = client:GetEyeTrace().Entity
             local maxDistance = LiliaStorage.TrunkOpenDistance
             local openTime = LiliaStorage.TrunkOpenTime
-            local clientPos = client:GetPos():Distance(ent:GetPos())
-            if not hook.Run("isSuitableForTrunk", ent) then
+            local clientPos = client:GetPos():Distance(entity:GetPos())
+            if not hook.Run("isSuitableForTrunk", entity) then
                 client:notify("You're not looking at any vehicle!", client)
                 return
             end
@@ -46,7 +46,7 @@ lia.command.add(
                 return
             end
 
-            client.liaStorageEntity = ent
+            client.liaStorageEntity = entity
             client:setAction(
                 "Opening...",
                 openTime,
@@ -56,12 +56,12 @@ lia.command.add(
                         return
                     end
 
-                    ent.receivers[client] = true
-                    lia.inventory.instances[ent:getNetVar("inv")]:sync(client)
+                    entity.receivers[client] = true
+                    lia.inventory.instances[entity:getNetVar("inv")]:sync(client)
                     net.Start("liaStorageOpen")
-                    net.WriteEntity(ent)
+                    net.WriteEntity(entity)
                     net.Send(client)
-                    ent:EmitSound("items/ammocrate_open.wav")
+                    entity:EmitSound("items/ammocrate_open.wav")
                 end
             )
         end

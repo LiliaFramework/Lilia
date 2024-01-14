@@ -1,6 +1,6 @@
 ﻿local GM = GM or GAMEMODE
-function GM:DrawLiliaModelView(_, ent)
-    if IsValid(ent.weapon) then ent.weapon:DrawModel() end
+function GM:DrawLiliaModelView(_, entity)
+    if IsValid(entity.weapon) then entity.weapon:DrawModel() end
 end
 
 function GM:ClientInitPostEntity()
@@ -42,10 +42,10 @@ function GM:CalcView(client, origin, angles, fov)
     local ragdoll = client:GetRagdollEntity()
     if client:GetViewEntity() ~= client then return view end
     if (not client:ShouldDrawLocalPlayer() and IsValid(entity) and entity:IsRagdoll()) or (not LocalPlayer():Alive() and IsValid(ragdoll)) then
-        local ent = LocalPlayer():Alive() and entity or ragdoll
-        local index = ent:LookupAttachment("eyes")
+        local entity = LocalPlayer():Alive() and entity or ragdoll
+        local index = entity:LookupAttachment("eyes")
         if index then
-            local data = ent:GetAttachment(index)
+            local data = entity:GetAttachment(index)
             if data then
                 view = view or {}
                 view.origin = data.Pos

@@ -10,8 +10,8 @@ ITEM.functions.Place = {
         data.start = client:GetShootPos()
         data.endpos = data.start + client:GetAimVector() * 96
         data.filter = client
-        local ent = ents.Create(itemTable.entityid)
-        ent:SetPos(data.endpos)
-        ent:Spawn()
+        local entity = ents.Create(itemTable.entityid)
+        entity:SetPos(data.endpos)
+        entity:Spawn()
     end
 }

@@ -6,19 +6,31 @@
         lia.command.parse(client, nil, command or "", arguments)
     end
 )
-
 concommand.Add(
     "list_entities",
     function(client)
-        local count = 0
+        local entityCount = {}
+        local totalEntities = 0
+
         if client:IsSuperAdmin() then
             print("Entities on the server:")
-            for _, ent in pairs(ents.GetAll()) do
-                count = count + 1
-                print(string.format("Entity #%d - Class: %s", ent:EntIndex(), ent:GetClass()))
+            for _, entity in pairs(ents.GetAll()) do
+                local className = entity:GetClass()
+                local entityName = entity:GetName()
+                local entityID = entity:EntIndex()
+
+                entityCount[className] = (entityCount[className] or {})
+                entityCount[className][entityName] = (entityCount[className][entityName] or 0) + 1
+                totalEntities = totalEntities + 1
             end
 
-            print("There is currently " .. count .. " entities on the server.")
+            for className, entities in pairs(entityCount) do
+                for entityName, count in pairs(entities) do
+                    print(string.format("Name: %s | Class: %s | Count: %d", entityName, className, count))
+                end
+            end
+
+            print("Total entities on the server: " .. totalEntities)
         else
             print("Nuh-uh!")
         end

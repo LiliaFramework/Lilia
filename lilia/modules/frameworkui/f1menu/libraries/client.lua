@@ -13,21 +13,21 @@ end
 function F1MenuCore:OnCharInfoSetup(infoPanel)
     if not IsValid(infoPanel.model) then return end
     local mdl = infoPanel.model
-    local ent = mdl.Entity
+    local entity = mdl.Entity
     local client = LocalPlayer()
     if not IsValid(client) or not client:Alive() then return end
     local weapon = client:GetActiveWeapon()
     if not IsValid(weapon) then return end
     local weapModel = ClientsideModel(weapon:GetModel(), RENDERGROUP_BOTH)
     if not IsValid(weapModel) then return end
-    weapModel:SetParent(ent)
+    weapModel:SetParent(entity)
     weapModel:AddEffects(EF_BONEMERGE)
     weapModel:SetSkin(weapon:GetSkin())
     weapModel:SetColor(weapon:GetColor())
     weapModel:SetNoDraw(true)
-    ent.weapon = weapModel
+    entity.weapon = weapModel
     local act = ACT_MP_STAND_IDLE
-    local model = ent:GetModel():lower()
+    local model = entity:GetModel():lower()
     local class = lia.anim.getModelClass(model)
     local tree = lia.anim[class]
     if not tree then return end
@@ -37,12 +37,12 @@ function F1MenuCore:OnCharInfoSetup(infoPanel)
         local branch = tree[subClass][act]
         local act2 = istable(branch) and branch[1] or branch
         if isstring(act2) then
-            act2 = ent:LookupSequence(act2)
+            act2 = entity:LookupSequence(act2)
         else
-            act2 = ent:SelectWeightedSequence(act2)
+            act2 = entity:SelectWeightedSequence(act2)
         end
 
-        ent:ResetSequence(act2)
+        entity:ResetSequence(act2)
     end
 end
 

@@ -53,7 +53,7 @@ jobs:
       - name: Lint with gluacheck
         working-directory: lilia
         run: >-
-          luacheck . --no-redefined
+          luacheck .
           --no-global --no-self
           --no-max-line-length --no-max-code-line-length
           --no-max-string-line-length --no-max-comment-line-length

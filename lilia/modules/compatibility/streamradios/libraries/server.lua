@@ -1,9 +1,9 @@
 ﻿function StreamRadiosCompatibility:LoadData()
     local savedTable = self:getData() or {}
     for _, v in ipairs(savedTable) do
-        local ent = StreamRadioLib.SpawnRadio(v.client, v.mdl, v.pos, v.ang, v.settings)
-        if not IsValid(ent) then return end
-        local phys = ent:GetPhysicsObject()
+        local entity = StreamRadioLib.SpawnRadio(v.client, v.mdl, v.pos, v.ang, v.settings)
+        if not IsValid(entity) then return end
+        local phys = entity:GetPhysicsObject()
         if IsValid(phys) then
             phys:EnableCollisions(not nocollide)
             phys:EnableMotion(false)

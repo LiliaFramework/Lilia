@@ -26,8 +26,8 @@ function PACCompatibility:PrePACConfigApply(client)
     return self:isAllowedToUsePAC(client)
 end
 
-function PACCompatibility:TryViewModel(ent)
-    return ent == pac.LocalPlayer:GetViewModel() and pac.LocalPlayer or ent
+function PACCompatibility:TryViewModel(entity)
+    return entity == pac.LocalPlayer:GetViewModel() and pac.LocalPlayer or entity
 end
 
 function PACCompatibility:PAC3RegisterEvents()
@@ -37,9 +37,9 @@ function PACCompatibility:PAC3RegisterEvents()
             name = "weapon_raised",
             args = {},
             available = function() return playerMeta.isWepRaised ~= nil end,
-            func = function(_, _, ent)
-                ent = self:TryViewModel(ent)
-                return ent.isWepRaised and ent:isWepRaised() or false
+            func = function(_, _, entity)
+                entity = self:TryViewModel(entity)
+                return entity.isWepRaised and entity:isWepRaised() or false
             end
         }
     }

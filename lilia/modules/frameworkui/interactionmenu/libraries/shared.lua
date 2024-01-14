@@ -15,6 +15,6 @@ function PIM:InitializedModules()
     hook.Run("AddPIMOption", self.options)
 end
 
-function PIM:CheckDistance(client, ent)
-    return ent:GetPos():DistToSqr(client:GetPos()) < self.MaxInteractionDistance
+function PIM:CheckDistance(client, entity)
+    return entity:GetPos():DistToSqr(client:GetPos()) < self.MaxInteractionDistance
 end

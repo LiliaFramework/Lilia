@@ -5,11 +5,11 @@ function SWEP:Grab()
     local client = self:GetOwner()
     client:LagCompensation(true)
     local trace = client:GetEyeTraceNoCursor()
-    local ent = trace.Entity
-    local physObj = IsValid(ent) and ent:GetPhysicsObject() or NULL
-    if self:CanPickup(ent, physObj) then
-        client:PickupObject(ent)
-        client.Grabbed = ent
+    local entity = trace.Entity
+    local physObj = IsValid(entity) and entity:GetPhysicsObject() or NULL
+    if self:CanPickup(entity, physObj) then
+        client:PickupObject(entity)
+        client.Grabbed = entity
     end
 
     client:LagCompensation(false)

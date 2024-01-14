@@ -124,17 +124,17 @@ function LiliaStorage:CanPlayerInteractItem(_, action, itemObject, _)
     if inventory and inventory.isStorage == true and PROHIBITED_ACTIONS[action] then return false, "forbiddenActionStorage" end
 end
 
-function LiliaStorage:EntityRemoved(ent)
-    LiliaStorage.Vehicles[ent] = nil
-    if not LiliaStorage:isSuitableForTrunk(ent) then return end
-    local storageInv = lia.inventory.instances[ent:getNetVar("inv")]
+function LiliaStorage:EntityRemoved(entity)
+    LiliaStorage.Vehicles[entity] = nil
+    if not LiliaStorage:isSuitableForTrunk(entity) then return end
+    local storageInv = lia.inventory.instances[entity:getNetVar("inv")]
     if storageInv then storageInv:delete() end
 end
 
-function LiliaStorage:OnEntityCreated(ent)
-    if not LiliaStorage:isSuitableForTrunk(ent) then return end
-    if ent.IsSimfphyscar then netstream.Start(nil, "trunkInitStorage", ent) end
-    self:InitializeStorage(ent)
+function LiliaStorage:OnEntityCreated(entity)
+    if not LiliaStorage:isSuitableForTrunk(entity) then return end
+    if entity.IsSimfphyscar then netstream.Start(nil, "trunkInitStorage", entity) end
+    self:InitializeStorage(entity)
 end
 
 function LiliaStorage:PlayerInitialSpawn(client)

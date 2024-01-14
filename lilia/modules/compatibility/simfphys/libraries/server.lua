@@ -9,7 +9,7 @@
         return true
     end
 
-    if simfphys.IsCar(entity) and self.TimeToEnterVehicle > 0 then
+    if entity.IsSimfphyscar and self.TimeToEnterVehicle > 0 then
         entity.IsBeingEntered = true
         client:setAction("Entering Vehicle...", self.TimeToEnterVehicle)
         client:doStaredAction(
@@ -33,7 +33,7 @@
 end
 
 function SimfphysCompatibility:OnEntityCreated(entity)
-    if simfphys.IsCar(entity) then
+    if entity.IsSimfphyscar then
         entity.PhysicsCollideBack = entity.PhysicsCollide
         entity.PhysicsCollide = function(vehicle, data, physobj)
             if not self.DamageInCars then
@@ -49,7 +49,7 @@ function SimfphysCompatibility:OnEntityCreated(entity)
             local dmg = speed * speed * mass / 5000
             if not dmg or dmg < 1 then return end
             local pos = data.HitPos
-            if simfphys.IsCar(hitEnt) then
+            if hitEnt.IsSimfphyscar then
                 local vel = data.OurOldVelocity
                 local tvel = data.TheirOldVelocity
                 local dif = data.OurNewVelocity - tvel
@@ -100,23 +100,23 @@ function c:EntityTakeDamage(entity, dmgInfo)
     end
 end
 
-function SimfphysCompatibility:isSuitableForTrunk(ent)
-    if IsValid(ent) and simfphys.IsCar(ent) then return true end
+function SimfphysCompatibility:isSuitableForTrunk(entity)
+    if IsValid(entity) and entity.IsSimfphyscar then return true end
 end
 
 function SimfphysCompatibility:CheckValidSit(client, _)
     local entity = client:GetTracedEntity()
-    if simfphys.IsCar(entity) then return false end
+    if entity.IsSimfphyscar then return false end
 end
 
 function SimfphysCompatibility:KeyLock(client, entity, time)
-    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not simfphys.IsCar(entity) or entity:GetCreator() ~= client then return end
+    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not entity.IsSimfphyscar or entity:GetCreator() ~= client then return end
     client:setAction("@locking", time, function() self:ToggleLock(client, entity, true) end)
     return true
 end
 
 function SimfphysCompatibility:KeyUnlock(client, entity, time)
-    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not simfphys.IsCar(entity) or entity:GetCreator() ~= client then return end
+    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not entity.IsSimfphyscar or entity:GetCreator() ~= client then return end
     client:setAction("@unlocking", time, function() self:ToggleLock(client, entity, false) end)
     return true
 end

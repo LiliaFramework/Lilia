@@ -17,8 +17,8 @@ function entityMeta:GetViewAngle(pos)
     return math.abs(math.deg(math.acos(self:EyeAngles():Forward():Dot(diff))))
 end
 
-function entityMeta:InFov(ent, fov)
-    return self:GetViewAngle(ent:EyePos()) < (fov or 88)
+function entityMeta:InFov(entity, fov)
+    return self:GetViewAngle(entity:EyePos()) < (fov or 88)
 end
 
 function entityMeta:isInRoom(target)
@@ -29,17 +29,17 @@ function entityMeta:isInRoom(target)
     return not trace.HitWorld
 end
 
-function entityMeta:InTrace(ent)
+function entityMeta:InTrace(entity)
     return     util.TraceLine(
         {
-            start = ent:EyePos(),
+            start = entity:EyePos(),
             endpos = self:EyePos()
         }
     ).Entity == self
 end
 
-function entityMeta:IsScreenVisible(ent, maxDist, fov)
-    return self:EyePos():DistToSqr(ent:EyePos()) < (maxDist or 512 * 512) and self:IsLineOfSightClear(ent:EyePos()) and self:InFov(ent, fov)
+function entityMeta:IsScreenVisible(entity, maxDist, fov)
+    return self:EyePos():DistToSqr(entity:EyePos()) < (maxDist or 512 * 512) and self:IsLineOfSightClear(entity:EyePos()) and self:InFov(entity, fov)
 end
 
 function entityMeta:isChair()

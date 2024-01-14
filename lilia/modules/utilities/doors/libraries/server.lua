@@ -1,12 +1,12 @@
 ﻿local Variables = {"disabled", "name", "price", "noSell", "faction", "factions", "class", "hidden"}
 local DarkRPVariables = {
-    ["DarkRPNonOwnable"] = function(ent, _) ent:setNetVar("noSell", true) end,
-    ["DarkRPTitle"] = function(ent, val) ent:setNetVar("name", val) end,
-    ["DarkRPCanLockpick"] = function(ent, val) ent.noPick = tobool(val) end
+    ["DarkRPNonOwnable"] = function(entity, _) entity:setNetVar("noSell", true) end,
+    ["DarkRPTitle"] = function(entity, val) entity:setNetVar("name", val) end,
+    ["DarkRPCanLockpick"] = function(entity, val) entity.noPick = tobool(val) end
 }
 
-function DoorsCore:EntityKeyValue(ent, key, value)
-    if ent:isDoor() and DarkRPVariables[key] then DarkRPVariables[key](ent, value) end
+function DoorsCore:EntityKeyValue(entity, key, value)
+    if entity:isDoor() and DarkRPVariables[key] then DarkRPVariables[key](entity, value) end
 end
 
 function DoorsCore:copyParentDoor(child)
@@ -165,13 +165,13 @@ function DoorsCore:PlayerDisconnected(client)
 end
 
 function DoorsCore:KeyLock(client, entity, time)
-    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or (simfphys and simfphys.IsCar(entity)) then return end
+    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or (simfphys and entity.IsSimfphyscar) then return end
     client:setAction("@locking", time, function() self:ToggleLock(client, entity, true) end)
     return true
 end
 
 function DoorsCore:KeyUnlock(client, entity, time)
-    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or (simfphys and simfphys.IsCar(entity)) then return end
+    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or (simfphys and entity.IsSimfphyscar) then return end
     client:setAction("@unlocking", time, function() self:ToggleLock(client, entity, false) end)
     return true
 end
@@ -188,7 +188,7 @@ function DoorsCore:ToggleLock(client, entity, state)
             entity:Fire("unlock")
             client:EmitSound("doors/door_latch1.wav")
         end
-    elseif (simfphys and not simfphys.IsCar(entity)) and entity:IsVehicle() and entity:GetCreator() == client then
+    elseif (simfphys and not entity.IsSimfphyscar) and entity:IsVehicle() and entity:GetCreator() == client then
         if state then
             entity:Fire("lock")
             client:EmitSound("doors/door_latch3.wav")

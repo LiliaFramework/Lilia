@@ -12,12 +12,12 @@ function APSCore:CheckIfPlayerStuck()
     local function handleStuckPlayer(client)
         local offset = client.Stuck and Vector(2, 2, 2) or Vector(5, 5, 5)
         local stuck = false
-        for _, ent in pairs(ents.FindInBox(client:GetPos() + client:OBBMins() + offset, client:GetPos() + client:OBBMaxs() - offset)) do
-            if self:ShouldCheck(ent) and ent ~= client and self:CanCollide(client, ent) then
+        for _, entity in pairs(ents.FindInBox(client:GetPos() + client:OBBMins() + offset, client:GetPos() + client:OBBMaxs() - offset)) do
+            if self:ShouldCheck(entity) and entity ~= client and self:CanCollide(client, entity) then
                 client:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
-                local velocity = ent:GetForward() * 200
+                local velocity = entity:GetForward() * 200
                 client:SetVelocity(velocity)
-                ent:SetVelocity(-velocity)
+                entity:SetVelocity(-velocity)
                 stuck = true
             end
         end

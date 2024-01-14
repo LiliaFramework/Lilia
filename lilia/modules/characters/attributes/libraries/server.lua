@@ -62,10 +62,10 @@ function AttributesCore:PlayerStaminaLost(client)
 end
 
 function AttributesCore:PlayerThrowPunch(client, _)
-    local ent = client:GetTracedEntity()
-    if ent:IsPlayer() and CAMI.PlayerHasAccess(client, "Staff Permissions - One Punch Man", nil) and IsValid(ent) and client:isStaffOnDuty() then
-        client:consumeStamina(ent:getChar():getMaxStamina())
-        ent:EmitSound("weapons/crowbar/crowbar_impact" .. math.random(1, 2) .. ".wav", 70)
+    local entity = client:GetTracedEntity()
+    if entity:IsPlayer() and CAMI.PlayerHasAccess(client, "Staff Permissions - One Punch Man", nil) and IsValid(entity) and client:isStaffOnDuty() then
+        client:consumeStamina(entity:getChar():getMaxStamina())
+        entity:EmitSound("weapons/crowbar/crowbar_impact" .. math.random(1, 2) .. ".wav", 70)
         client:setRagdolled(true, 10)
     end
 end

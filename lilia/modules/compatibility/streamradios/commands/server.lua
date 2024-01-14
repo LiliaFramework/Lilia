@@ -5,8 +5,8 @@
         syntax = "<string name>",
         privilege = "Ban Characters",
         onRun = function(client)
-            for _, ent in pairs(ents.FindByClass("sent_streamradio")) do
-                ent:Remove()
+            for _, entity in pairs(ents.FindByClass("sent_streamradio")) do
+                entity:Remove()
             end
 
             client:notify("Cleanup done")
