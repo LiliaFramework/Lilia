@@ -165,13 +165,13 @@ function DoorsCore:PlayerDisconnected(client)
 end
 
 function DoorsCore:KeyLock(client, entity, time)
-    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or (simfphys and entity.IsSimfphyscar) then return end
+    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or entity.IsSimfphyscar then return end
     client:setAction("@locking", time, function() self:ToggleLock(client, entity, true) end)
     return true
 end
 
 function DoorsCore:KeyUnlock(client, entity, time)
-    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or (simfphys and entity.IsSimfphyscar) then return end
+    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or entity.IsSimfphyscar then return end
     client:setAction("@unlocking", time, function() self:ToggleLock(client, entity, false) end)
     return true
 end
@@ -188,7 +188,7 @@ function DoorsCore:ToggleLock(client, entity, state)
             entity:Fire("unlock")
             client:EmitSound("doors/door_latch1.wav")
         end
-    elseif (simfphys and not entity.IsSimfphyscar) and entity:IsVehicle() and entity:GetCreator() == client then
+    elseif not entity.IsSimfphyscar  and entity:IsVehicle() and entity:GetCreator() == client then
         if state then
             entity:Fire("lock")
             client:EmitSound("doors/door_latch3.wav")
