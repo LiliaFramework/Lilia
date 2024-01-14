@@ -80,7 +80,7 @@ function SimfphysCompatibility:OnEntityCreated(entity)
     end
 end
 
-function c:EntityTakeDamage(entity, dmgInfo)
+function SimfphysCompatibility:EntityTakeDamage(entity, dmgInfo)
     local damageType = dmgInfo:GetDamageType()
     if self.DamageInCars and entity:IsVehicle() and table.HasValue(self.ValidCarDamages, damageType) then
         local client = entity:GetDriver()
