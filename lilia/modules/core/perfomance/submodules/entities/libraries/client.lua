@@ -21,4 +21,3 @@ function EntityPerfomance:ClientOnEntityCreated(entity)
     if not self.DrawEntityShadows then return end
     entity:DrawShadow(false)
 end
-

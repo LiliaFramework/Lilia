@@ -17,10 +17,13 @@
         file.Write("lilia/" .. SCHEMA.folder .. "/familyshared/" .. client:SteamID64() .. ".txt", util.TableToJSON(logTable, true))
         for _, admin in ipairs(player.GetAll()) do
             if IsValid(admin) and CAMI.PlayerHasAccess(admin, "Staff Permissions - Can See Family Sharing Notifications", nil) then
-                steamworks.RequestPlayerInfo(OwnerSteamID64, function(name)
-                    OwnerAccount = name or OwnerAccount
-                    admin:ChatPrint("Family share account " .. JoiningPlayerName .. " [" .. steamID64 .. "] attempted to join the server. Original owner: " .. OwnerAccount)
-                end)
+                steamworks.RequestPlayerInfo(
+                    OwnerSteamID64,
+                    function(name)
+                        OwnerAccount = name or OwnerAccount
+                        admin:ChatPrint("Family share account " .. JoiningPlayerName .. " [" .. steamID64 .. "] attempted to join the server. Original owner: " .. OwnerAccount)
+                    end
+                )
             end
         end
     end

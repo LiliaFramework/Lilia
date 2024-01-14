@@ -26,7 +26,6 @@ function entityMeta:isInRoom(target)
     tracedata.start = self:GetPos()
     tracedata.endpos = target:GetPos()
     local trace = util.TraceLine(tracedata)
-
     return not trace.HitWorld
 end
 
