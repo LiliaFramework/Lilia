@@ -10,7 +10,7 @@ ITEM.NeedsEquip = true
 ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
 if CLIENT then
     function ITEM:paintOver(item, w, h)
-        if item:getData("equip") then
+        if item:getData("equip", false) then
             surface.SetDrawColor(110, 255, 110, 100)
             surface.DrawRect(w - 14, h - 14, 8, 8)
         end
@@ -20,21 +20,39 @@ end
 ITEM.functions.Equip = {
     name = "Equip",
     icon = "icon16/tick.png",
-    onClick = function(item)
+    onRun = function(item)
         item:setData("equip", true)
+
         return false
     end,
-    onCanRun = function(item) return not IsValid(item.entity) and not item:getData("equip", false) and ITEM.NeedsEquip end
+    onCanRun = function(item)
+        if not IsValid(item.entity) then
+            if not item.NeedsEquip then
+                return true
+            else
+                return item:getData("equip", false) ~= true
+            end
+        end
+    end
 }
 
 ITEM.functions.Unequip = {
     name = "Unequip",
     icon = "icon16/cross.png",
-    onClick = function(item)
+    onRun = function(item)
         item:setData("equip", false)
+
         return false
     end,
-    onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip", false) and ITEM.NeedsEquip end
+    onCanRun = function(item)
+        if not IsValid(item.entity) then
+            if not item.NeedsEquip then
+                return true
+            else
+                return item:getData("equip", false) == true
+            end
+        end
+    end
 }
 
 ITEM.functions.View = {
@@ -44,7 +62,10 @@ ITEM.functions.View = {
         if not inventory then return false end
         local panel = lia.gui["inv" .. inventory:getID()]
         local parent = item.invID and lia.gui["inv" .. item.invID] or nil
-        if IsValid(panel) then panel:Remove() end
+        if IsValid(panel) then
+            panel:Remove()
+        end
+
         if inventory then
             local panel = lia.inventory.show(inventory, parent)
             if IsValid(panel) then
@@ -56,9 +77,18 @@ ITEM.functions.View = {
             local index = item:getData("id", "nil")
             ErrorNoHalt("Invalid inventory " .. index .. " for bag item " .. itemID .. "\n")
         end
+
         return false
     end,
-    onCanRun = function(item) return not IsValid(item.entity) and item:getInv() and (item.NeedsEquip and item:getData("equip", false)) or not item.NeedsEquip end
+    onCanRun = function(item)
+        if not IsValid(item.entity) and item:getInv() then
+            if not item.NeedsEquip then
+                return true
+            else
+                return item:getData("equip", false) == true
+            end
+        end
+    end
 }
 
 function ITEM:onInstanced()
@@ -92,7 +122,9 @@ end
 
 function ITEM:onRemoved()
     local invID = self:getData("id")
-    if invID then lia.inventory.deleteByID(invID) end
+    if invID then
+        lia.inventory.deleteByID(invID)
+    end
 end
 
 function ITEM:getInv()
@@ -101,7 +133,9 @@ end
 
 function ITEM:onSync(recipient)
     local inventory = self:getInv()
-    if inventory then inventory:sync(recipient) end
+    if inventory then
+        inventory:sync(recipient)
+    end
 end
 
 function ITEM.postHooks:drop()
@@ -131,7 +165,9 @@ end
 if SERVER then
     function ITEM:onDisposed()
         local inventory = self:getInv()
-        if inventory then inventory:destroy() end
+        if inventory then
+            inventory:destroy()
+        end
     end
 
     function ITEM:resolveInvAwaiters(inventory)
@@ -153,6 +189,7 @@ if SERVER then
             self.awaitingInv = self.awaitingInv or {}
             self.awaitingInv[#self.awaitingInv + 1] = d
         end
+
         return d
     end
 end
