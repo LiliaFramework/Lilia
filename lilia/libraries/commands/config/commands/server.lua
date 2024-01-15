@@ -346,7 +346,7 @@ lia.command.add("flaggiveall", {
             return
         end
 
-        for k, v in SortedPairs(lia.flag.list) do
+        for k, _ in SortedPairs(lia.flag.list) do
             if not char:hasFlags(k) then target:getChar():giveFlags(k) end
         end
 
@@ -366,7 +366,7 @@ lia.command.add("flagtakeall", {
             return
         end
 
-        for k, v in SortedPairs(lia.flag.list) do
+        for k, _ in SortedPairs(lia.flag.list) do
             if char:hasFlags(k) then target:getChar():takeFlags(k) end
         end
 
