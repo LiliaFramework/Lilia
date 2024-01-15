@@ -5,44 +5,34 @@ local ClassicThirdPerson = CreateClientConVar("tp_classic", "0", true)
 local ThirdPersonVerticalView = CreateClientConVar("tp_vertical", 10, true)
 local ThirdPersonHorizontalView = CreateClientConVar("tp_horizontal", 0, true)
 local ThirdPersonViewDistance = CreateClientConVar("tp_distance", 50, true)
+local ThirdPersonIsEnabled = ThirdPerson:GetInt() == 1
 crouchFactor = 0
 function ThirdPersonCore:SetupQuickMenu(menu)
     if self.ThirdPersonEnabled then
-        menu:addCheck(
-            L"thirdpersonToggle",
-            function(_, state)
-                if state then
-                    RunConsoleCommand("tp_enabled", "1")
-                else
-                    RunConsoleCommand("tp_enabled", "0")
-                end
-            end,
-            ThirdPerson:GetBool()
-        )
-
-        menu:addCheck(
-            L"thirdpersonClassic",
-            function(_, state)
-                if state then
-                    RunConsoleCommand("tp_classic", "1")
-                else
-                    RunConsoleCommand("tp_classic", "0")
-                end
-            end,
-            ClassicThirdPerson:GetBool()
-        )
-
-        menu:addButton(
-            L"thirdpersonConfig",
-            function()
-                if lia.gui.tpconfig and lia.gui.tpconfig:IsVisible() then
-                    lia.gui.tpconfig:Close()
-                    lia.gui.tpconfig = nil
-                end
-
-                lia.gui.tpconfig = vgui.Create("ThirdPersonConfig")
+        menu:addCheck(L"thirdpersonToggle", function(_, state)
+            if state then
+                RunConsoleCommand("tp_enabled", "1")
+            else
+                RunConsoleCommand("tp_enabled", "0")
             end
-        )
+        end, ThirdPerson:GetBool())
+
+        menu:addCheck(L"thirdpersonClassic", function(_, state)
+            if state then
+                RunConsoleCommand("tp_classic", "1")
+            else
+                RunConsoleCommand("tp_classic", "0")
+            end
+        end, ClassicThirdPerson:GetBool())
+
+        menu:addButton(L"thirdpersonConfig", function()
+            if lia.gui.tpconfig and lia.gui.tpconfig:IsVisible() then
+                lia.gui.tpconfig:Close()
+                lia.gui.tpconfig = nil
+            end
+
+            lia.gui.tpconfig = vgui.Create("ThirdPersonConfig")
+        end)
 
         menu:addSpacer()
     end
@@ -99,18 +89,21 @@ function ThirdPersonCore:InputMouseApply(_, x, y, _)
 end
 
 function ThirdPersonCore:PlayerButtonDown(_, button)
-    if self.ThirdPersonEnabled and button == KEY_F4 and IsFirstTimePredicted() then
-        if ThirdPerson:GetInt() == 1 then
-            ThirdPerson:SetInt(0)
-        else
-            ThirdPerson:SetInt(1)
-        end
-    end
+    if self.ThirdPersonEnabled and button == KEY_F4 and IsFirstTimePredicted() then ThirdPerson:SetInt(ThirdPersonIsEnabled and 0 or 1) end
 end
 
 function ThirdPersonCore:ShouldDrawLocalPlayer()
     local client = LocalPlayer()
     if client:GetViewEntity() == client and not IsValid(client:GetVehicle()) and client:CanOverrideView() then return true end
+end
+
+function ThirdPersonCore:EntityEmitSound(data)
+    local steps = {".stepleft", ".stepright"}
+    if ThirdPersonIsEnabled then
+        if not IsValid(data.Entity) and not data.Entity:IsPlayer() then return end
+        local sName = data.OriginalSoundName
+        if sName:find(steps[1]) or sName:find(steps[2]) then return false end
+    end
 end
 
 function playerMeta:CanOverrideView()
