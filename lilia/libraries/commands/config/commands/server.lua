@@ -334,45 +334,53 @@ lia.command.add(
         end
     }
 )
-lia.command.add("flaggiveall", {
-    adminOnly = true,
-    syntax = "<string name> [string flags]",
-    privilege = "Toggle All Flags",
-    onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
-        local char = target:getChar()
-        if not char or not target then
-            client:notify("Invalid Target!")
-            return
+
+lia.command.add(
+    "flaggiveall",
+    {
+        adminOnly = true,
+        syntax = "<string name> [string flags]",
+        privilege = "Toggle All Flags",
+        onRun = function(client, arguments)
+            local target = lia.command.findPlayer(client, arguments[1])
+            local char = target:getChar()
+            if not char or not target then
+                client:notify("Invalid Target!")
+                return
+            end
+
+            for k, _ in SortedPairs(lia.flag.list) do
+                if not char:hasFlags(k) then target:getChar():giveFlags(k) end
+            end
+
+            client:notify("You gave this player all flags!")
         end
+    }
+)
 
-        for k, _ in SortedPairs(lia.flag.list) do
-            if not char:hasFlags(k) then target:getChar():giveFlags(k) end
+lia.command.add(
+    "flagtakeall",
+    {
+        adminOnly = true,
+        syntax = "<string name> [string flags]",
+        privilege = "Toggle All Flags",
+        onRun = function(client, arguments)
+            local target = lia.command.findPlayer(client, arguments[1])
+            local char = target:getChar()
+            if not char or not target then
+                client:notify("Invalid Target!")
+                return
+            end
+
+            for k, _ in SortedPairs(lia.flag.list) do
+                if char:hasFlags(k) then target:getChar():takeFlags(k) end
+            end
+
+            client:notify("You took this players flags!")
         end
+    }
+)
 
-        client:notify("You gave this player all flags!")
-    end
-})
-
-lia.command.add("flagtakeall", {
-    adminOnly = true,
-    syntax = "<string name> [string flags]",
-    privilege = "Toggle All Flags",
-    onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
-        local char = target:getChar()
-        if not char or not target then
-            client:notify("Invalid Target!")
-            return
-        end
-
-        for k, _ in SortedPairs(lia.flag.list) do
-            if char:hasFlags(k) then target:getChar():takeFlags(k) end
-        end
-
-        client:notify("You took this players flags!")
-    end
-})
 lia.command.add(
     "flagtake",
     {
