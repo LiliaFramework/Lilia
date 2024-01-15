@@ -9,30 +9,41 @@ local ThirdPersonIsEnabled = ThirdPerson:GetInt() == 1
 crouchFactor = 0
 function ThirdPersonCore:SetupQuickMenu(menu)
     if self.ThirdPersonEnabled then
-        menu:addCheck(L"thirdpersonToggle", function(_, state)
-            if state then
-                RunConsoleCommand("tp_enabled", "1")
-            else
-                RunConsoleCommand("tp_enabled", "0")
-            end
-        end, ThirdPerson:GetBool())
+        menu:addCheck(
+            L"thirdpersonToggle",
+            function(_, state)
+                if state then
+                    RunConsoleCommand("tp_enabled", "1")
+                else
+                    RunConsoleCommand("tp_enabled", "0")
+                end
+            end,
+            ThirdPerson:GetBool()
+        )
 
-        menu:addCheck(L"thirdpersonClassic", function(_, state)
-            if state then
-                RunConsoleCommand("tp_classic", "1")
-            else
-                RunConsoleCommand("tp_classic", "0")
-            end
-        end, ClassicThirdPerson:GetBool())
+        menu:addCheck(
+            L"thirdpersonClassic",
+            function(_, state)
+                if state then
+                    RunConsoleCommand("tp_classic", "1")
+                else
+                    RunConsoleCommand("tp_classic", "0")
+                end
+            end,
+            ClassicThirdPerson:GetBool()
+        )
 
-        menu:addButton(L"thirdpersonConfig", function()
-            if lia.gui.tpconfig and lia.gui.tpconfig:IsVisible() then
-                lia.gui.tpconfig:Close()
-                lia.gui.tpconfig = nil
-            end
+        menu:addButton(
+            L"thirdpersonConfig",
+            function()
+                if lia.gui.tpconfig and lia.gui.tpconfig:IsVisible() then
+                    lia.gui.tpconfig:Close()
+                    lia.gui.tpconfig = nil
+                end
 
-            lia.gui.tpconfig = vgui.Create("ThirdPersonConfig")
-        end)
+                lia.gui.tpconfig = vgui.Create("ThirdPersonConfig")
+            end
+        )
 
         menu:addSpacer()
     end
