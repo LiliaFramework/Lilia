@@ -7,9 +7,7 @@
         if table.HasValue(PermissionCore.DuplicatorBlackList, entity) and validEntity then return false end
         if toolobj.Entities then
             for _, v in pairs(toolobj.Entities) do
-                if not v.ModelScale then
-                    v.ModelScale = 1
-                end
+  
 
                 if v.ModelScale > 10 then
                     client:notify("A model within this duplication exceeds the size limit!")
