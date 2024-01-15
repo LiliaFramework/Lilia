@@ -27,20 +27,20 @@ end
 function charMeta:getItemWeapon()
     local client = self:getPlayer()
     local inv = self:getInv()
-	local items = inv:getItems()
-	local weapon = client:GetActiveWeapon()
+    local items = inv:getItems()
+    local weapon = client:GetActiveWeapon()
     if not IsValid(weapon) then return false end
-	for _, v in pairs(items) do
-		if v.class then
-			if v.class == weapon:GetClass() then
-				if v:getData("equip", false) then
-					return weapon, v
-				else
-					return false
-				end
-			end
-		end
-	end
+    for _, v in pairs(items) do
+        if v.class then
+            if v.class == weapon:GetClass() then
+                if v:getData("equip", false) then
+                    return weapon, v
+                else
+                    return false
+                end
+            end
+        end
+    end
 end
 
 function charMeta:getAttrib(key, default)
