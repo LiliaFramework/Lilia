@@ -81,10 +81,7 @@ end
 function VendorCore:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
     local canAccess, reason = hook.Run("CanPlayerTradeWithVendor", client, vendor, itemType, isSellingToVendor)
     if canAccess == false then
-        if isstring(reason) then
-            client:notifyLocalized(reason)
-        end
-
+        if isstring(reason) then client:notifyLocalized(reason) end
         return
     end
 
@@ -121,29 +118,18 @@ function VendorCore:VendorSellEvent(client, vendor, itemType, _, character, pric
         local canTransfer, reason = VENDOR_INVENTORY_MEASURE:canAccess("transfer", context)
         if not canTransfer then
             client:notifyLocalized(reason or "vendorError")
-
             return
         end
 
         local canTransferItem, reason = hook.Run("CanItemBeTransfered", item, inventory, VENDOR_INVENTORY_MEASURE, client)
         if canTransferItem == false then
             client:notifyLocalized(reason or "vendorError")
-
             return
         end
 
         vendor:takeMoney(price)
         character:giveMoney(price)
-        item:remove():next(
-            function()
-                client.vendorTransaction = nil
-            end
-        ):catch(
-            function()
-                client.vendorTransaction = nil
-            end
-        )
-
+        item:remove():next(function() client.vendorTransaction = nil end):catch(function() client.vendorTransaction = nil end)
         vendor:addStock(itemType)
         lia.log.add(client, "vendorSell", itemType, vendor:getNetVar("name"))
     end
@@ -161,12 +147,8 @@ function VendorCore:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, 
         end
     ):catch(
         function(_)
-            if IsValid(client) then
-                client:notifyLocalized("Cannot add to inventory! Giving money back!")
-            end
-
+            if IsValid(client) then client:notifyLocalized("Cannot add to inventory! Giving money back!") end
             client.vendorTransaction = nil
-
             return character:giveMoney(price)
         end
     ):catch(

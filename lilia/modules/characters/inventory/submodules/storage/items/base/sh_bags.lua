@@ -22,7 +22,6 @@ ITEM.functions.Equip = {
     icon = "icon16/tick.png",
     onRun = function(item)
         item:setData("equip", true)
-
         return false
     end,
     onCanRun = function(item)
@@ -41,7 +40,6 @@ ITEM.functions.Unequip = {
     icon = "icon16/cross.png",
     onRun = function(item)
         item:setData("equip", false)
-
         return false
     end,
     onCanRun = function(item)
@@ -62,10 +60,7 @@ ITEM.functions.View = {
         if not inventory then return false end
         local panel = lia.gui["inv" .. inventory:getID()]
         local parent = item.invID and lia.gui["inv" .. item.invID] or nil
-        if IsValid(panel) then
-            panel:Remove()
-        end
-
+        if IsValid(panel) then panel:Remove() end
         if inventory then
             local panel = lia.inventory.show(inventory, parent)
             if IsValid(panel) then
@@ -77,7 +72,6 @@ ITEM.functions.View = {
             local index = item:getData("id", "nil")
             ErrorNoHalt("Invalid inventory " .. index .. " for bag item " .. itemID .. "\n")
         end
-
         return false
     end,
     onCanRun = function(item)
@@ -122,9 +116,7 @@ end
 
 function ITEM:onRemoved()
     local invID = self:getData("id")
-    if invID then
-        lia.inventory.deleteByID(invID)
-    end
+    if invID then lia.inventory.deleteByID(invID) end
 end
 
 function ITEM:getInv()
@@ -133,9 +125,7 @@ end
 
 function ITEM:onSync(recipient)
     local inventory = self:getInv()
-    if inventory then
-        inventory:sync(recipient)
-    end
+    if inventory then inventory:sync(recipient) end
 end
 
 function ITEM.postHooks:drop()
@@ -165,9 +155,7 @@ end
 if SERVER then
     function ITEM:onDisposed()
         local inventory = self:getInv()
-        if inventory then
-            inventory:destroy()
-        end
+        if inventory then inventory:destroy() end
     end
 
     function ITEM:resolveInvAwaiters(inventory)
@@ -189,7 +177,6 @@ if SERVER then
             self.awaitingInv = self.awaitingInv or {}
             self.awaitingInv[#self.awaitingInv + 1] = d
         end
-
         return d
     end
 end

@@ -26,7 +26,6 @@ SWEP.HoldType = "normal"
 ACT_VM_FISTS_HOLSTER = 2
 function SWEP:Deploy()
     if not IsValid(self:GetOwner()) then return end
-
     return true
 end
 
@@ -37,7 +36,6 @@ function SWEP:Holster()
         viewModel:SetPlaybackRate(1)
         viewModel:ResetSequence(ACT_VM_FISTS_HOLSTER)
     end
-
     return true
 end
 
