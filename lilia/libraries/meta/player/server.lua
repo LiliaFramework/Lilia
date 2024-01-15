@@ -41,6 +41,12 @@ function playerMeta:OpenUI(panel)
     net.Send(self)
 end
 
+function playerMeta:OpenPage(url)
+    net.Start("OpenPage")
+    net.WriteString(url)
+    net.Send(self)
+end
+
 function playerMeta:getPlayTime()
     local diff = os.time(lia.util.dateToNumber(self.lastJoin)) - os.time(lia.util.dateToNumber(self.firstJoin))
     return diff + (RealTime() - (self.liaJoinTime or RealTime()))

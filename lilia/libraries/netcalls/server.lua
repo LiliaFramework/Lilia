@@ -18,6 +18,8 @@ util.AddNetworkString("StringRequest")
 util.AddNetworkString("ReloadLightMaps")
 util.AddNetworkString("OpenInformationMenu")
 util.AddNetworkString("OpenVGUI")
+util.AddNetworkString("OpenPage")
+
 net.Receive(
     "StringRequest",
     function(_, client)
