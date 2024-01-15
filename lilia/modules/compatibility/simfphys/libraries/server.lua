@@ -131,3 +131,9 @@ function SimfphysCompatibility:ToggleLock(client, entity, state)
         entity:UnLock()
     end
 end
+
+function SimfphysCompatibility:InitializedModules()
+    for k, v in pairs(self.SimfphysConsoleCommands) do
+        RunConsoleCommand(k, v)
+    end
+end
