@@ -71,6 +71,25 @@ function playerMeta:isVIP()
     return CAMI.PlayerHasAccess(self, "UserGroups - VIP Group", nil)
 end
 
+function playerMeta:getItemWeapon()
+	local char = self:getChar()
+	local inv = char:getInv()
+	local items = inv:getItems()
+	local weapon = self:GetActiveWeapon()
+    if not IsValid(weapon) then return false end
+	for _, v in pairs(items) do
+		if v.class then
+			if v.class == weapon:GetClass() then
+				if v:getData("equip", false) then
+					return weapon, v
+				else
+					return false
+				end
+			end
+		end
+	end
+end
+
 function playerMeta:TakeMoney(amt)
     local char = self:getChar()
     if char then char:giveMoney(-amt) end
