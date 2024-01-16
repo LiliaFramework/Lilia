@@ -16,8 +16,7 @@ function ThirdPersonCore:SetupQuickMenu(menu)
                 else
                     RunConsoleCommand("tp_enabled", "0")
                 end
-            end,
-            ThirdPerson:GetBool()
+            end, ThirdPerson:GetBool()
         )
 
         menu:addCheck(
@@ -28,8 +27,7 @@ function ThirdPersonCore:SetupQuickMenu(menu)
                 else
                     RunConsoleCommand("tp_classic", "0")
                 end
-            end,
-            ClassicThirdPerson:GetBool()
+            end, ClassicThirdPerson:GetBool()
         )
 
         menu:addButton(
@@ -70,7 +68,10 @@ function ThirdPersonCore:CalcView(client)
         traceData2.start = aimOrigin
         traceData2.endpos = aimOrigin + curAng:Forward() * 65535
         traceData2.filter = client
-        if ClassicThirdPerson:GetBool() or (client.isWepRaised and client:isWepRaised() or (client:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and client:GetVelocity():Length() >= 10)) then client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle()) end
+        if ClassicThirdPerson:GetBool() or (client.isWepRaised and client:isWepRaised() or (client:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and client:GetVelocity():Length() >= 10)) then
+            client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle())
+        end
+
         return view
     end
 end
@@ -84,23 +85,30 @@ function ThirdPersonCore:CreateMove(cmd)
         diff = diff / 90
         cmd:SetForwardMove(fm + sm * diff)
         cmd:SetSideMove(sm + fm * diff)
+
         return false
     end
 end
 
 function ThirdPersonCore:InputMouseApply(_, x, y, _)
     local client = LocalPlayer()
-    if not client.camAng then client.camAng = Angle(0, 0, 0) end
+    if not client.camAng then
+        client.camAng = Angle(0, 0, 0)
+    end
+
     if client:CanOverrideView() and client:GetViewEntity() == client then
         client.camAng.p = math.Clamp(math.NormalizeAngle(client.camAng.p + y / 50), -85, 85)
         client.camAng.y = math.NormalizeAngle(client.camAng.y - x / 50)
+
         return true
     end
 end
 
 function ThirdPersonCore:PlayerButtonDown(_, button)
     local ThirdPersonIsEnabled = ThirdPerson:GetInt() == 1
-    if self.ThirdPersonEnabled and button == KEY_F4 and IsFirstTimePredicted() then ThirdPerson:SetInt(ThirdPersonIsEnabled and 0 or 1) end
+    if self.ThirdPersonEnabled and button == KEY_F4 and IsFirstTimePredicted() then
+        ThirdPerson:SetInt(ThirdPersonIsEnabled and 0 or 1)
+    end
 end
 
 function ThirdPersonCore:ShouldDrawLocalPlayer()
@@ -121,7 +129,13 @@ end
 function playerMeta:CanOverrideView()
     local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
     if IsValid(lia.gui.char) and lia.gui.char:IsVisible() then return false end
+
     return ThirdPerson:GetBool() and not IsValid(self:GetVehicle()) and ThirdPersonCore.ThirdPersonEnabled and IsValid(self) and self:getChar() and not IsValid(ragdoll)
 end
 
-concommand.Add("tp_toggle", function() ThirdPerson:SetInt(ThirdPerson:GetInt() == 0 and 1 or 0) end)
+concommand.Add(
+    "tp_toggle",
+    function()
+        ThirdPerson:SetInt(ThirdPerson:GetInt() == 0 and 1 or 0)
+    end
+)
