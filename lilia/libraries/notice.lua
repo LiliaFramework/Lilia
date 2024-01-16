@@ -105,7 +105,7 @@ function CreateNoticePanel(length, notimer)
     return notice
 end
 
-function OrganizeNotices(i)
+function OrganizeNotices()
     local scrW = ScrW()
     local lastHeight = ScrH() - 100
     for k, v in ipairs(lia.notices) do
