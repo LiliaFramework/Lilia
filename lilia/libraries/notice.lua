@@ -115,7 +115,7 @@ function OrganizeNotices(i)
     end
 end
 
-function notification.AddLegacy(text, _, __)
+function notification.AddLegacy(text)
     lia.util.notify(tostring(text))
 end
 
