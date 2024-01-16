@@ -8,6 +8,11 @@
 - **Module Location:** https://github.com/Lilia-Framework/Lilia/tree/main/lilia/modules/compatibility/pcasino
 - **Addon URL:** https://www.gmodstore.com/market/view/pcasino-the-perfect-casino-addon-roulette-blackjack-slots-prize-wheel
 
+# Prone Mod
+
+- **Module Location:** https://github.com/Lilia-Framework/Lilia/tree/main/lilia/modules/compatibility/prone
+- **Addon URL:** https://github.com/gspetrou/Prone-Mod
+
 #  ULX
 
 - **Module Location:** https://github.com/Lilia-Framework/Lilia/tree/main/lilia/modules/compatibility/ulx 
