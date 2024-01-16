@@ -10,10 +10,11 @@ function GM:CanTool(client, _, tool)
     end
 
     if client:getChar():hasFlags("t") or client:isStaffOnDuty() or CAMI.PlayerHasAccess(client, privilege, nil) then
+        if tool == "permaall" and IsValid(entity) and string.StartWith(entity:GetClass(), "lia_") then return false end
         if tool == "material" and validEntity and (entity:GetClass() == "prop_vehicle_jeep" or string.lower(tool:GetClientInfo("override")) == "pp/copy") then return false end
         if tool == "weld" and validEntity and entity:GetClass() == "sent_ball" then return false end
         if tool == "duplicator" then
-            if table.HasValue(PermissionCore.DuplicatorBlackList, entity) and validEntity then return false end
+            if (table.HasValue(PermissionCore.DuplicatorBlackList, entity) or entity.NoDuplicate) and validEntity then return false end
             if client.CurrentDupe and client.CurrentDupe.Entities then
                 for _, v in pairs(client.CurrentDupe.Entities) do
                     if v.ModelScale > 10 then

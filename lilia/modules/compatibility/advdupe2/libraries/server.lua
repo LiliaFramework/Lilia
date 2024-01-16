@@ -3,7 +3,7 @@
     local entity = client:GetTracedEntity()
     local validEntity = IsValid(entity)
     if tool == "advdupe2" and IsValid(client) and (client:getChar():hasFlags("t") or client:isStaffOnDuty()) and CAMI.PlayerHasAccess(client, privilege, nil) then
-        if table.HasValue(PermissionCore.DuplicatorBlackList, entity) and validEntity then return false end
+        if (table.HasValue(PermissionCore.DuplicatorBlackList, entity) or entity.NoDuplicate) and validEntity then return false end
         if client.AdvDupe2 and client.AdvDupe2.Entities then
             for _, v in pairs(client.AdvDupe2.Entities) do
                 if v.ModelScale > 10 then
