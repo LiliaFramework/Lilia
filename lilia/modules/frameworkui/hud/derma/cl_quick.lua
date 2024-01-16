@@ -1,6 +1,9 @@
 ﻿local PANEL = {}
 function PANEL:Init()
-    if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
+    if IsValid(lia.gui.quick) then
+        lia.gui.quick:Remove()
+    end
+
     lia.gui.quick = self
     self:SetSize(400, 36)
     self:SetPos(ScrW() - 36, -36)
@@ -24,7 +27,7 @@ function PANEL:Init()
 
     self.expand = self:Add("DButton")
     self.expand:SetContentAlignment(5)
-    self.expand:SetText("`")
+    self.expand:SetText("❖")
     self.expand:SetFont("liaIconsMedium")
     self.expand:SetPaintBackground(false)
     self.expand:SetTextColor(color_white)
@@ -32,7 +35,17 @@ function PANEL:Init()
     self.expand:SetSize(36, 36)
     self.expand.DoClick = function()
         if self.expanded then
-            self:SizeTo(self:GetWide(), 36, 0.15, nil, nil, function() self:MoveTo(ScrW() - 36, 30, 0.15) end)
+            self:SizeTo(
+                self:GetWide(),
+                36,
+                0.15,
+                nil,
+                nil,
+                function()
+                    self:MoveTo(ScrW() - 36, 30, 0.15)
+                end
+            )
+
             self.expanded = false
         else
             self:MoveTo(
@@ -44,7 +57,9 @@ function PANEL:Init()
                 function()
                     local height = 0
                     for _, v in pairs(self.items) do
-                        if IsValid(v) then height = height + v:GetTall() + 1 end
+                        if IsValid(v) then
+                            height = height + v:GetTall() + 1
+                        end
                     end
 
                     height = math.min(height, ScrH() * 0.5)
@@ -88,8 +103,12 @@ function PANEL:addButton(text, callback)
     button:SetTextInset(8, 0)
     button:SetTextColor(color_white)
     button.Paint = paintButton
-    if callback then button.DoClick = callback end
+    if callback then
+        button.DoClick = callback
+    end
+
     self.items[#self.items + 1] = button
+
     return button
 end
 
@@ -104,6 +123,7 @@ function PANEL:addSpacer()
     end
 
     self.items[#self.items + 1] = panel
+
     return panel
 end
 
@@ -131,6 +151,7 @@ function PANEL:addSlider(text, callback, value, min, max, decimal)
     end
 
     self.items[#self.items + 1] = slider
+
     return slider
 end
 
@@ -141,7 +162,9 @@ function PANEL:addCheck(text, callback, checked)
         text,
         function(panel)
             panel.checked = not panel.checked
-            if callback then callback(panel, panel.checked) end
+            if callback then
+                callback(panel, panel.checked)
+            end
         end
     )
 
@@ -157,6 +180,7 @@ function PANEL:addCheck(text, callback, checked)
     end
 
     button.checked = checked
+
     return button
 end
 
