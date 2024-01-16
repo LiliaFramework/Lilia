@@ -24,9 +24,7 @@ function Realistic1stPersonView:CalcView(client, origin, angles)
                 end
             end
 
-            if IsValid(matrix) then
-                matrix:SetScale(Vector(0, 0, 0))
-            end
+            if IsValid(matrix) then matrix:SetScale(Vector(0, 0, 0)) end
         end
 
         view.origin = head.Pos + head.Ang:Up()
@@ -35,7 +33,6 @@ function Realistic1stPersonView:CalcView(client, origin, angles)
         else
             view.angles = Angle(head.Ang.p, head.Ang.y, angles.r)
         end
-
         return view
     end
 end
@@ -50,7 +47,8 @@ function Realistic1stPersonView:SetupQuickMenu(menu)
                 else
                     RunConsoleCommand("rview_enabled", "0")
                 end
-            end, RealisticViewEnabled:GetBool()
+            end,
+            RealisticViewEnabled:GetBool()
         )
 
         menu:addCheck(
@@ -61,7 +59,8 @@ function Realistic1stPersonView:SetupQuickMenu(menu)
                 else
                     RunConsoleCommand("rview_fullbody", "0")
                 end
-            end, RealisticViewUseFullBody:GetBool()
+            end,
+            RealisticViewUseFullBody:GetBool()
         )
 
         menu:addSpacer()

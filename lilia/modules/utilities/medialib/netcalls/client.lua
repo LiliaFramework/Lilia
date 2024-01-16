@@ -1,4 +1,4 @@
-net.Receive(
+﻿net.Receive(
     "MusicPlayer",
     function()
         local str = net.ReadString()
@@ -16,23 +16,11 @@ net.Receive(
     end
 )
 
-net.Receive(
-    "MusicPlayerStop",
-    function()
-        if music and IsValid(music) then
-            music:stop()
-        end
-    end
-)
-
+net.Receive("MusicPlayerStop", function() if music and IsValid(music) then music:stop() end end)
 net.Receive(
     "MusicPlayerSetVolume",
     function()
         local volume = net.ReadString()
-        if volume and volume ~= "" then
-            if music and IsValid(music) then
-                music:setVolume(volume)
-            end
-        end
+        if volume and volume ~= "" then if music and IsValid(music) then music:setVolume(volume) end end
     end
 )

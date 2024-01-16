@@ -1,4 +1,4 @@
-concommand.Add(
+﻿concommand.Add(
     "play_music",
     function(client)
         if not client:IsSuperAdmin() then return end

@@ -31,9 +31,7 @@ function OrganizeNoticess()
     for k, v in ipairs(lia.noticess) do
         local topMargin = 0
         for k2, v2 in pairs(lia.noticess) do
-            if k < k2 then
-                topMargin = topMargin + v2:GetTall() + 5
-            end
+            if k < k2 then topMargin = topMargin + v2:GetTall() + 5 end
         end
 
         v:MoveTo(v:GetX(), topMargin + 5, 0.15, 0, 5)
@@ -43,17 +41,7 @@ end
 function RemoveNoticess(notice)
     for k, v in ipairs(lia.noticess) do
         if v == notice then
-            notice:SizeTo(
-                notice:GetWide(),
-                0,
-                0.2,
-                0,
-                -1,
-                function()
-                    notice:Remove()
-                end
-            )
-
+            notice:SizeTo(notice:GetWide(), 0, 0.2, 0, -1, function() notice:Remove() end)
             table.remove(lia.noticess, k)
             OrganizeNoticess()
             break
@@ -62,10 +50,7 @@ function RemoveNoticess(notice)
 end
 
 function CreateNoticePanel(length, notimer)
-    if not notimer then
-        notimer = false
-    end
-
+    if not notimer then notimer = false end
     local notice = vgui.Create("noticePanel")
     notice.start = CurTime() + 0.25
     notice.endTime = CurTime() + length
@@ -93,15 +78,7 @@ function CreateNoticePanel(length, notimer)
         end
     end
 
-    if not notimer then
-        timer.Simple(
-            length,
-            function()
-                RemoveNoticess(notice)
-            end
-        )
-    end
-
+    if not notimer then timer.Simple(length, function() RemoveNoticess(notice) end) end
     return notice
 end
 
@@ -137,9 +114,7 @@ function lia.util.notify(message)
                     function()
                         notice:Remove()
                         for v, k in pairs(lia.notices) do
-                            if k == notice then
-                                table.remove(lia.notices, v)
-                            end
+                            if k == notice then table.remove(lia.notices, v) end
                         end
 
                         OrganizeNotices(i)
@@ -153,26 +128,11 @@ function lia.util.notify(message)
 end
 
 function lia.util.notifQuery(question, option1, option2, manualDismiss, notifType, callback)
-    if not callback or not isfunction(callback) then
-        Error("A callback function must be specified")
-    end
-
-    if not question or not isstring(question) then
-        Error("A question string must be specified")
-    end
-
-    if not option1 then
-        option1 = "Yes"
-    end
-
-    if not option2 then
-        option2 = "No"
-    end
-
-    if not manualDismiss then
-        manualDismiss = false
-    end
-
+    if not callback or not isfunction(callback) then Error("A callback function must be specified") end
+    if not question or not isstring(question) then Error("A question string must be specified") end
+    if not option1 then option1 = "Yes" end
+    if not option2 then option2 = "No" end
+    if not manualDismiss then manualDismiss = false end
     local notice = CreateNoticePanel(10, manualDismiss)
     local i = table.insert(lia.noticess, notice)
     notice.isQuery = true
@@ -182,10 +142,7 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
     notice:CalcWidth(120)
     notice:CenterHorizontal()
     notice.notifType = notifType or 7
-    if manualDismiss then
-        notice.start = nil
-    end
-
+    if manualDismiss then notice.start = nil end
     notice.opt1 = notice:Add("DButton")
     notice.opt1:SetAlpha(0)
     notice.opt2 = notice:Add("DButton")
@@ -229,15 +186,7 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
                         self:ColorTo(Color(24, 215, 37), 0.2, 0)
                         notice.respondToKeys = false
                         callback(1, notice)
-                        timer.Simple(
-                            1,
-                            function()
-                                if notice and IsValid(notice) then
-                                    RemoveNotice(notice)
-                                end
-                            end
-                        )
-
+                        timer.Simple(1, function() if notice and IsValid(notice) then RemoveNotice(notice) end end)
                         notice.lastKey = CurTime()
                     end
                 end
@@ -258,15 +207,7 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
                         self:ColorTo(Color(24, 215, 37), 0.2, 0)
                         notice.respondToKeys = false
                         callback(2, notice)
-                        timer.Simple(
-                            1,
-                            function()
-                                if notice and IsValid(notice) then
-                                    RemoveNotice(notice)
-                                end
-                            end
-                        )
-
+                        timer.Simple(1, function() if notice and IsValid(notice) then RemoveNotice(notice) end end)
                         notice.lastKey = CurTime()
                     end
                 end
@@ -278,25 +219,17 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
                 if not self.respondToKeys then return end
                 local queries = {}
                 for _, v in pairs(lia.noticess) do
-                    if v.isQuery then
-                        queries[#queries + 1] = v
-                    end
+                    if v.isQuery then queries[#queries + 1] = v end
                 end
 
                 for _, v in pairs(queries) do
                     if v == self and k > 1 then return end
                 end
 
-                if self.opt1 and IsValid(self.opt1) then
-                    self.opt1:keyThink()
-                end
-
-                if self.opt2 and IsValid(self.opt2) then
-                    self.opt2:keyThink()
-                end
+                if self.opt1 and IsValid(self.opt1) then self.opt1:keyThink() end
+                if self.opt2 and IsValid(self.opt2) then self.opt2:keyThink() end
             end
         end
     )
-
     return notice
 end
