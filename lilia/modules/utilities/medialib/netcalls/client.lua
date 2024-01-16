@@ -1,6 +1,6 @@
 net.Receive(
     "MusicPlayer",
-    function(len)
+    function()
         local str = net.ReadString()
         if str and str ~= "" then
             local service = MediaLibrary.load("media").guessService(str)

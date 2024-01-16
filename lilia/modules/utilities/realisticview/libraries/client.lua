@@ -1,6 +1,6 @@
 ﻿local RealisticViewEnabled = CreateClientConVar("rview_enabled", 0, true)
 local RealisticViewUseFullBody = CreateClientConVar("rview_fullbody", 0, true)
-function Realistic1stPersonView:CalcView(client, origin, angles, fov)
+function Realistic1stPersonView:CalcView(client, origin, angles)
     if self.FirstPersonViewEnabled then
         local view = {
             origin = origin,

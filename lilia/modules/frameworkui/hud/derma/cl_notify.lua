@@ -9,7 +9,7 @@ end
 
 function PANEL:SetMessage(...)
 	local msg = "<font=liaMediumFont>"
-	for k, v in ipairs({...}) do
+	for _, v in ipairs({...}) do
 		if type(v) == "table" then
 			msg = msg .. "<color=" .. v.r .. "," .. v.g .. "," .. v.b .. ">"
 		elseif type(v) == "Player" then
