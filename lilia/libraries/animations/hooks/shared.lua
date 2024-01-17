@@ -153,6 +153,5 @@ function GM:InitializedModules()
     for tpose, animtype in pairs(lia.anim.DefaultTposingFixer) do
         lia.anim.setModelClass(tpose, animtype)
     end
-
-    if CLIENT then hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont) end
+    if CLIENT then hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont) RunConsoleCommand("spawnmenu_reload") end
 end
