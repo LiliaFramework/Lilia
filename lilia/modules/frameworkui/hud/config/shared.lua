@@ -1,5 +1,5 @@
 ﻿--[[ Enable Vignette Effect ]]
-FrameworkHUD.Vignette = false
+FrameworkHUD.Vignette = true
 --[[ Activate Branch Warning ]]
 FrameworkHUD.BranchWarning = true
 --[[ Enable Crosshair ]]
