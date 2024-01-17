@@ -14,23 +14,15 @@ end
 
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
-
     if bind:find("jump") then
         lia.command.send("chargetup")
-
     elseif bind:find("speed") and client:KeyDown(IN_WALK) and pressed then
         RunConsoleCommand(client:Crouching() and "-duck" or "+duck")
-
     elseif (bind:find("use") or bind:find("attack")) and pressed then
         local menu, callback = lia.menu.getActiveMenu()
-        
-        if menu and lia.menu.onButtonPressed(menu, callback) then
-            return true
-        end
-
+        if menu and lia.menu.onButtonPressed(menu, callback) then return true end
         if bind:find("use") then
             local entity = client:GetTracedEntity()
-            
             if IsValid(entity) then
                 if entity:IsPlayer() then
                     hook.Run("ShowPlayerCard", entity)
@@ -41,7 +33,6 @@ function GM:PlayerBindPress(client, bind, pressed)
         end
     end
 end
-
 
 function GM:CalcView(client, origin, angles, fov)
     local view = self.BaseClass:CalcView(client, origin, angles, fov)
@@ -71,16 +62,11 @@ function GM:HUDPaintBackground()
 end
 
 function GM:CharacterListLoaded()
-    timer.Create(
-        "liaWaitUntilPlayerValid",
-        1,
-        0,
-        function()
-            if not IsValid(LocalPlayer()) then return end
-            timer.Remove("liaWaitUntilPlayerValid")
-            hook.Run("LiliaLoaded")
-        end
-    )
+    timer.Create("liaWaitUntilPlayerValid", 1, 0, function()
+        if not IsValid(LocalPlayer()) then return end
+        timer.Remove("liaWaitUntilPlayerValid")
+        hook.Run("LiliaLoaded")
+    end)
 end
 
 function GM:OnContextMenuOpen()

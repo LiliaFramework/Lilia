@@ -34,12 +34,10 @@ end
 function GM:ServerInitPostEntity()
     lia.faction.formatModelData()
     timer.Simple(2, function() lia.entityDataLoaded = true end)
-    lia.db.waitForTablesToLoad():next(
-        function()
-            hook.Run("LoadData")
-            hook.Run("PostLoadData")
-        end
-    )
+    lia.db.waitForTablesToLoad():next(function()
+        hook.Run("LoadData")
+        hook.Run("PostLoadData")
+    end)
 end
 
 function GM:PlayerSpawn(client)
@@ -78,16 +76,13 @@ function GM:KeyPress(client, key)
             endpos = client:GetShootPos() + client:GetAimVector() * 96,
             filter = client
         })
-        
+
         local entity = trace.Entity
-        if IsValid(entity) and (entity:isDoor() or entity:IsPlayer()) then
-            hook.Run("PlayerUse", client, entity)
-        end
+        if IsValid(entity) and (entity:isDoor() or entity:IsPlayer()) then hook.Run("PlayerUse", client, entity) end
     elseif key == IN_JUMP then
         local traceStart = client:GetShootPos() + Vector(0, 0, 15)
         local traceEndHi = traceStart + client:GetAimVector() * 30
         local traceEndLo = traceStart + client:GetAimVector() * 30
-
         local trHi = util.TraceLine({
             start = traceStart,
             endpos = traceEndHi,
@@ -129,17 +124,12 @@ function GM:PlayerInitialSpawn(client)
         local index = math.random(1, table.Count(lia.faction.indices))
         local faction = lia.faction.indices[index]
         local inventory = lia.inventory.new("grid")
-        local character = lia.char.new(
-            {
-                name = client:Name(),
-                faction = faction and faction.uniqueID or "unknown",
-                desc = "This is a bot. BotID is " .. botID .. ".",
-                model = "models/gman.mdl",
-            },
-            botID,
-            client,
-            client:SteamID64()
-        )
+        local character = lia.char.new({
+            name = client:Name(),
+            faction = faction and faction.uniqueID or "unknown",
+            desc = "This is a bot. BotID is " .. botID .. ".",
+            model = "models/gman.mdl",
+        }, botID, client, client:SteamID64())
 
         character.isBot = true
         character.vars.inv = {}
@@ -153,19 +143,17 @@ function GM:PlayerInitialSpawn(client)
     end
 
     client.liaJoinTime = RealTime()
-    client:loadLiliaData(
-        function(data)
-            if not IsValid(client) then return end
-            local address = client:IPAddress()
-            client:setLiliaData("lastIP", address)
-            netstream.Start(client, "liaDataSync", data, client.firstJoin, client.lastJoin)
-            for _, v in pairs(lia.item.instances) do
-                if v.entity and v.invID == 0 then v:sync(client) end
-            end
-
-            hook.Run("PlayerLiliaDataLoaded", client)
+    client:loadLiliaData(function(data)
+        if not IsValid(client) then return end
+        local address = client:IPAddress()
+        client:setLiliaData("lastIP", address)
+        netstream.Start(client, "liaDataSync", data, client.firstJoin, client.lastJoin)
+        for _, v in pairs(lia.item.instances) do
+            if v.entity and v.invID == 0 then v:sync(client) end
         end
-    )
+
+        hook.Run("PlayerLiliaDataLoaded", client)
+    end)
 
     hook.Run("PostPlayerInitialSpawn", client)
 end
