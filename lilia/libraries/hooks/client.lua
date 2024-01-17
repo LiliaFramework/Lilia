@@ -14,27 +14,34 @@ end
 
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
-    if bind:find("say") and string.find(bind:lower(), "/fallover") then
-        client:ChatPrint("Nuh-uh! No exploiting!")
-        return
+
+    if bind:find("jump") then
+        lia.command.send("chargetup")
+
+    elseif bind:find("speed") and client:KeyDown(IN_WALK) and pressed then
+        RunConsoleCommand(client:Crouching() and "-duck" or "+duck")
+
     elseif (bind:find("use") or bind:find("attack")) and pressed then
         local menu, callback = lia.menu.getActiveMenu()
+        
         if menu and lia.menu.onButtonPressed(menu, callback) then
             return true
-        elseif bind:find("use") and pressed then
-            local entity = client:GetTracedEntity()
-            if IsValid(entity) and (entity:GetClass() == "lia_item" or entity.hasMenu == true) then hook.Run("ItemShowEntityMenu", entity) end
         end
-    elseif bind:find("jump") then
-        lia.command.send("chargetup")
-    elseif bind:find("speed") and client:KeyDown(IN_WALK) and pressed then
-        if LocalPlayer():Crouching() then
-            RunConsoleCommand("-duck")
-        else
-            RunConsoleCommand("+duck")
+
+        if bind:find("use") then
+            local entity = client:GetTracedEntity()
+            
+            if IsValid(entity) then
+                if entity:IsPlayer() then
+                    hook.Run("ShowPlayerCard", entity)
+                elseif entity:GetClass() == "lia_item" or entity.hasMenu then
+                    hook.Run("ItemShowEntityMenu", entity)
+                end
+            end
         end
     end
 end
+
 
 function GM:CalcView(client, origin, angles, fov)
     local view = self.BaseClass:CalcView(client, origin, angles, fov)

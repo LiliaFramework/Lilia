@@ -72,15 +72,38 @@ function GM:KeyPress(client, key)
     if key == IN_ATTACK2 and IsValid(client.Grabbed) then
         client:DropObject(client.Grabbed)
         client.Grabbed = NULL
-    end
+    elseif key == IN_USE then
+        local trace = util.TraceLine({
+            start = client:GetShootPos(),
+            endpos = client:GetShootPos() + client:GetAimVector() * 96,
+            filter = client
+        })
+        
+        local entity = trace.Entity
+        if IsValid(entity) and (entity:isDoor() or entity:IsPlayer()) then
+            hook.Run("PlayerUse", client, entity)
+        end
+    elseif key == IN_JUMP then
+        local traceStart = client:GetShootPos() + Vector(0, 0, 15)
+        local traceEndHi = traceStart + client:GetAimVector() * 30
+        local traceEndLo = traceStart + client:GetAimVector() * 30
 
-    if key == IN_USE then
-        local data = {}
-        data.start = client:GetShootPos()
-        data.endpos = data.start + client:GetAimVector() * 96
-        data.filter = client
-        local entity = util.TraceLine(data).Entity
-        if IsValid(entity) and entity:isDoor() or entity:IsPlayer() then hook.Run("PlayerUse", client, entity) end
+        local trHi = util.TraceLine({
+            start = traceStart,
+            endpos = traceEndHi,
+            filter = client
+        })
+
+        local trLo = util.TraceLine({
+            start = client:GetShootPos(),
+            endpos = traceEndLo,
+            filter = client
+        })
+
+        if trLo.Hit and not trHi.Hit then
+            local dist = math.abs(trHi.HitPos.z - client:GetPos().z)
+            client:SetVelocity(Vector(0, 0, 50 + dist * 3))
+        end
     end
 end
 
