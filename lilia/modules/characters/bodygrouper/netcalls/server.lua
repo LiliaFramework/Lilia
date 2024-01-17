@@ -1,5 +1,6 @@
 ﻿util.AddNetworkString("BodygrouperMenu")
 util.AddNetworkString("BodygrouperMenuClose")
+util.AddNetworkString("BodygrouperMenuCloseClientside")
 net.Receive(
     "BodygrouperMenuClose",
     function(_, client)
@@ -60,8 +61,11 @@ net.Receive(
             client:notifyLocalized("bodygroupChanged", target:Name() .. "'s")
             target:notifyLocalized("bodygroupChangedBy", client:Name())
         end
+        
+        net.Start("BodygrouperMenuCloseClientside")
+        net.Send(client)
 
-        client:SendLua("if IsValid(BodygrouperMenu) then BodygrouperMenu:Close() end")
+        client:SendLua("BodygrouperCore.Menu:Close()")
         if closetuser then
             for _, v in pairs(ents.FindByClass("lia_bodygrouper")) do
                 if v:HasUser(target) then v:RemoveUser(target) end
