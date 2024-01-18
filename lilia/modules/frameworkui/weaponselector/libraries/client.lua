@@ -1,106 +1,97 @@
-﻿local weaponInfo = {"Author", "Contact", "Purpose", "Instructions"}
-WSCore.index = WSCore.index or 1
-WSCore.deltaIndex = WSCore.deltaIndex or WSCore.index
-WSCore.infoAlpha = WSCore.infoAlpha or 0
-WSCore.alpha = WSCore.alpha or 0
-WSCore.alphaDelta = WSCore.alphaDelta or WSCore.alpha
-WSCore.fadeTime = WSCore.fadeTime or 0
-function WSCore:HUDPaint()
-    local frameTime = FrameTime()
-    self.alphaDelta = Lerp(frameTime * 10, self.alphaDelta, self.alpha)
-    local fraction = self.alphaDelta
-    if fraction > 0 then
-        local client = LocalPlayer()
-        local weapons = client:GetWeapons()
-        local total = #weapons
-        local x, y = ScrW() * 0.5, ScrH() * 0.5
-        local spacing = math.pi * 0.85
-        local radius = 240 * self.alphaDelta
-        self.deltaIndex = Lerp(frameTime * 12, self.deltaIndex, self.index)
-        math.Approach(self.deltaIndex, self.index, frameTime * 12)
-        local index = self.deltaIndex
-        for k, v in ipairs(weapons) do
-            if not weapons[self.index] then self.index = total end
-            local theta = (k - index) * 0.1
-            local color = ColorAlpha(k == self.index and lia.config.Color or color_white, (255 - math.abs(theta * 3) * 255) * fraction)
-            local lastY = 0
-            local shiftX = ScrW() * .02
-            if self.markup and k < self.index then
-                local _, h = self.markup:Size()
-                lastY = h * fraction
-                if k == self.index - 1 then
-                    self.infoAlpha = Lerp(frameTime * 3, self.infoAlpha, 255)
-                    self.markup:Draw(x + 6 + shiftX, y + 30, 0, 0, self.infoAlpha * fraction)
-                end
-            end
+﻿WSCore.lastSlot = WSCore.lastSlot or 1
+WSCore.lifeTime = WSCore.lifeTime or 0
+WSCore.deathTime = WSCore.deathTime or 0
+local LIFE_TIME = 4
+local DEATH_TIME = 5
+function WSCore:OnSlotChanged()
+    self.lifeTime = CurTime() + LIFE_TIME
+    self.deathTime = CurTime() + DEATH_TIME
+    for k, v in SortedPairs(LocalPlayer():GetWeapons()) do
+        if k == self.lastSlot then
+            if v.Instructions and string.find(v.Instructions, "%S") then
+                self.markup = markup.Parse("<font=Monofonto24>" .. v.Instructions .. "</font>")
 
-            surface.SetFont("liaSubTitleFont")
-            local _, ty = surface.GetTextSize(v:GetPrintName():upper())
-            local scale = 1 - math.abs(theta * 2)
-            local matrix = Matrix()
-            matrix:Translate(Vector(shiftX + x + math.cos(theta * spacing + math.pi) * radius + radius, y + lastY + math.sin(theta * spacing + math.pi) * radius - ty / 2, 1))
-            matrix:Rotate(angle or Angle(0, 0, 0))
-            matrix:Scale(Vector(1, 1, 0) * scale)
-            cam.PushModelMatrix(matrix)
-            lia.util.drawText(v:GetPrintName():upper(), 2, ty / 2, color, 0, 1, "liaSubTitleFont")
-            cam.PopModelMatrix()
-        end
-
-        if self.fadeTime < CurTime() and self.alpha > 0 then self.alpha = 0 end
-    end
-end
-
-function WSCore:onIndexChanged()
-    self.alpha = 1
-    self.fadeTime = CurTime() + 5
-    local client = LocalPlayer()
-    local weapon = client:GetWeapons()[self.index]
-    self.markup = nil
-    if IsValid(weapon) then
-        local text = ""
-        for _, v in ipairs(weaponInfo) do
-            if weapon[v] and weapon[v]:find("%S") then
-                local color = lia.config.Color
-                text = text .. "<font=liaItemBoldFont><color=" .. color.r .. "," .. color.g .. "," .. color.b .. ">" .. L(v) .. "</font></color>\n" .. weapon[v] .. "\n"
+                return
+            else
+                self.markup = nil
             end
         end
-
-        if text ~= "" then
-            self.markup = markup.Parse("<font=liaItemDescFont>" .. text, ScrW() * 0.3)
-            self.infoAlpha = 0
-        end
-
-        local source = hook.Run("WeaponCycleSound") or "common/talk.wav"
-        client:EmitSound(source or "common/talk.wav", 50, 180)
     end
 end
 
 function WSCore:PlayerBindPress(client, bind, pressed)
     local weapon = client:GetActiveWeapon()
     if not client:InVehicle() and (not IsValid(weapon) or weapon:GetClass() ~= "weapon_physgun" or not client:KeyDown(IN_ATTACK)) then
-        if IsValid(weapon) and weapon.CW20Weapon and not bind:find("invprev") and not bind:find("invnext") and not (bind:find("attack") and self.alpha > 0) and not (bind:find("slot") and weapon.dt.State ~= CW_CUSTOMIZE) then return end
-        bind = bind:lower()
-        if bind:find("invprev") and pressed then
-            self.index = self.index - 1
-            if self.index < 1 then self.index = #client:GetWeapons() end
-            self:onIndexChanged()
-            return true
-        elseif bind:find("invnext") and pressed then
-            self.index = self.index + 1
-            if self.index > #client:GetWeapons() then self.index = 1 end
-            self:onIndexChanged()
-            return true
-        elseif bind:find("slot") then
-            self.index = math.Clamp(tonumber(bind:match("slot(%d)")) or 1, 1, #client:GetWeapons())
-            self:onIndexChanged()
-            return true
-        elseif bind:find("attack") and pressed and self.alpha > 0 then
-            if self ~= nil and client ~= nil and client:GetWeapons() ~= nil and client:GetWeapons()[self.index] ~= nil then
-                client:EmitSound(hook.Run("WeaponSelectSound", client:GetWeapons()[self.index]) or "buttons/button16.wav")
-                client:SelectWeapon(client:GetWeapons()[self.index]:GetClass())
-                self.alpha = 0
-                return true
+        bind = string.lower(bind)
+        if string.find(bind, "invprev") and pressed then
+            self.lastSlot = self.lastSlot - 1
+            if self.lastSlot <= 0 then
+                self.lastSlot = #client:GetWeapons()
             end
+
+            self:OnSlotChanged()
+
+            return true
+        elseif string.find(bind, "invnext") and pressed then
+            self.lastSlot = self.lastSlot + 1
+            if self.lastSlot > #client:GetWeapons() then
+                self.lastSlot = 1
+            end
+
+            self:OnSlotChanged()
+
+            return true
+        elseif string.find(bind, "+attack") and pressed then
+            if CurTime() < self.deathTime then
+                self.lifeTime = 0
+                self.deathTime = 0
+                for k, v in SortedPairs(LocalPlayer():GetWeapons()) do
+                    if k == self.lastSlot then
+                        RunConsoleCommand("lia_selectwep", v:GetClass())
+
+                        return true
+                    end
+                end
+            end
+        elseif string.find(bind, "slot") then
+            self.lastSlot = math.Clamp(tonumber(string.match(bind, "slot(%d)")) or 1, 1, #LocalPlayer():GetWeapons())
+            self.lifeTime = CurTime() + LIFE_TIME
+            self.deathTime = CurTime() + DEATH_TIME
+
+            return true
         end
     end
+end
+
+function WSCore:HUDPaint()
+    local x = ScrW() * 0.55
+    for k, v in SortedPairs(LocalPlayer():GetWeapons()) do
+        local y = (ScrH() * 0.4) + (k * 24)
+        local color = Color(255, 255, 255, 255)
+        if k == self.lastSlot then
+            local foColor = lia.config.Color
+            color.r = foColor.r
+            color.g = foColor.g
+            color.b = foColor.b
+        end
+
+        color.a = math.Clamp(255 - math.TimeFraction(self.lifeTime, self.deathTime, CurTime()) * 255, 0, 255)
+        lia.util.drawText(string.upper(v:GetPrintName()), x, y, color)
+        if k == self.lastSlot and self.markup then
+            surface.SetDrawColor(30, 30, 30, color.a * 0.95)
+            surface.DrawRect(x + 118, ScrH() * 0.4 - 4, self.markup:GetWidth() + 20, self.markup:GetHeight() + 18)
+            self.markup:Draw(x + 128, ScrH() * 0.4 + 24, 0, 1, color.a)
+        end
+    end
+end
+
+function WSCore:LoadFonts(font)
+    surface.CreateFont(
+        "Monofonto24",
+        {
+            font = "Monofonto",
+            size = 24,
+            weight = 500
+        }
+    )
 end

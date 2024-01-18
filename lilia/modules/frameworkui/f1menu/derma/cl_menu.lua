@@ -1,6 +1,32 @@
 ﻿local PANEL = {}
+local gradient = lia.util.getMaterial("vgui/gradient-u")
 function PANEL:Init()
-    if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end
+    if IsValid(lia.gui.menu) then
+        lia.gui.menu:Remove()
+    end
+
+    ThirdPerson = GetConVar("tp_enabled")
+    ThirdPersonVerticalView = GetConVar("tp_vertical")
+    ThirdPersonHorizontalView = GetConVar("tp_horizontal")
+    ThirdPersonViewDistance = GetConVar("tp_distance")
+    ClassicThirdPerson = GetConVar("tp_classic")
+    if ThirdPerson:GetInt() ~= 1 then
+        wasThirdPerson = false
+        RunConsoleCommand("tp_enabled", "1")
+    else
+        wasThirdPerson = true
+    end
+
+    if ClassicThirdPerson:GetInt() == 1 then
+        wasClassic = true
+        RunConsoleCommand("tp_classic", "0")
+    else
+        wasClassic = false
+    end
+
+    ThirdPersonVerticalView:SetInt(0)
+    ThirdPersonHorizontalView:SetInt(0)
+    ThirdPersonViewDistance:SetInt(ThirdPersonCore.MaxValues.distance or 100)
     lia.gui.menu = self
     self:SetSize(ScrW(), ScrH())
     self:SetAlpha(0)
@@ -26,7 +52,7 @@ function PANEL:Init()
     hook.Run("CreateMenuButtons", tabs)
     self.tabList = {}
     for name, callback in SortedPairs(tabs) do
-        if isstring(callback) then
+        if type(callback) == "string" then
             local body = callback
             if body:sub(1, 4) == "http" then
                 callback = function(panel)
@@ -58,31 +84,30 @@ end
 
 function PANEL:OnKeyCodePressed(key)
     self.noAnchor = CurTime() + .5
-    if key == KEY_F1 then self:remove() end
+    if key == KEY_F1 then
+        self:remove()
+    end
 end
 
 function PANEL:Think()
     local key = input.IsKeyDown(KEY_F1)
     if key and (self.noAnchor or CurTime() + .4) < CurTime() and self.anchorMode == true then
         self.anchorMode = false
-        surface.PlaySound(F1MenuCore.F1MenuLaunchUnanchor)
+        surface.PlaySound("buttons/lightswitch2.wav")
     end
 
     if not self.anchorMode then
-        if IsValid(self.info) and self.info.desc:IsEditing() then return end
-        if not key then self:remove() end
+        if IsValid(self.info) then return end
+        if not key then
+            self:remove()
+        end
     end
 end
 
 function PANEL:Paint(w, h)
-    lia.util.drawBlur(self, 12)
     surface.SetDrawColor(0, 0, 0)
-    surface.SetMaterial(lia.util.getMaterial("vgui/gradient-u"))
+    surface.SetMaterial(gradient)
     surface.DrawTexturedRect(0, 0, w, h)
-    surface.SetDrawColor(30, 30, 30, 80)
-    surface.DrawRect(0, 0, w, 78)
-    surface.SetDrawColor(Color(240, 240, 240, 180))
-    surface.DrawRect(0, 78, w, 8)
 end
 
 function PANEL:addTab(name, callback, uniqueID)
@@ -110,7 +135,10 @@ function PANEL:addTab(name, callback, uniqueID)
     tab:SetWide(w + 32)
     tab.Paint = paintTab
     tab.DoClick = function(this)
-        if IsValid(lia.gui.info) then lia.gui.info:Remove() end
+        if IsValid(lia.gui.info) then
+            lia.gui.info:Remove()
+        end
+
         self.panel:Clear()
         self.title:SetText(this:GetText())
         self.title:SizeToContentsY()
@@ -118,27 +146,52 @@ function PANEL:addTab(name, callback, uniqueID)
         self.title:MoveAbove(self.panel, 8)
         self.panel:AlphaTo(255, 0.5, 0.1)
         self.activeTab = this
-        lastMeliaab = uniqueID
-        if callback then callback(self.panel, this) end
+        lastMenuTab = uniqueID
+        if callback then
+            callback(self.panel, this)
+        end
     end
 
     self.tabs:AddPanel(tab)
     self.tabs:SetWide(math.min(self.tabs:GetWide() + tab:GetWide(), ScrW()))
     self.tabs:SetPos((ScrW() * 0.5) - (self.tabs:GetWide() * 0.5), 0)
+
     return tab
 end
 
 function PANEL:setActiveTab(key)
-    if IsValid(self.tabList[key]) then self.tabList[key]:DoClick() end
+    if IsValid(self.tabList[key]) then
+        self.tabList[key]:DoClick()
+    end
+end
+
+function PANEL:OnRemove()
+    if wasThirdPerson == false then
+        RunConsoleCommand("tp_enabled", "0")
+    end
+
+    if wasClassic == true then
+        RunConsoleCommand("tp_classic", "1")
+    end
 end
 
 function PANEL:remove()
     CloseDermaMenus()
     if not self.closing then
-        self:AlphaTo(0, 0.25, 0, function() self:Remove() end)
+        self:AlphaTo(
+            0,
+            0.25,
+            0,
+            function()
+                self:Remove()
+            end
+        )
+
         self.closing = true
     end
 end
 
 vgui.Register("liaMenu", PANEL, "EditablePanel")
-if IsValid(lia.gui.menu) then vgui.Create("liaMenu") end
+if IsValid(lia.gui.menu) then
+    vgui.Create("liaMenu")
+end

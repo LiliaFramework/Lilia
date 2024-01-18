@@ -1,104 +1,84 @@
 ﻿local PANEL = {}
 function PANEL:Init()
-    if IsValid(lia.gui.info) then lia.gui.info:Remove() end
-    lia.gui.info = self
-    self:SetSize(ScrW() * 0.6, ScrH() * 0.7)
-    self:Dock(FILL)
-    self:DockMargin(0, 100, 0, 0)
-    local suppress = hook.Run("CanCreateCharInfo", self)
-    if not suppress or (suppress and not suppress.all) then
-        if not suppress or not suppress.model then
-            self.model = self:Add("liaModelPanel")
-            self.model:SetSize(ScrW() * 0.25, ScrH() * 0.325)
-            self.model:SetPos(ScrW() * 0.375, ScrH() * 0.08)
-            self.model:SetFOV(75)
-            self.model.enableHook = true
-            self.model.copyLocalSequence = true
-        end
-
-        if not suppress or not suppress.info then
-            self.info = self:Add("DPanel")
-            self.info:SetSize(ScrW() * 0.4, ScrH() * 0.4)
-            self.info:SetPos(ScrW() * 0.3, ScrH() - ScrH() * 0.4 - ScrH() * 0.2)
-            self.info:SetDrawBackground(false)
-        end
-
-        if not suppress or not suppress.name then
-            self.name = self.info:Add("DLabel")
-            self.name:SetFont("liaHugeFont")
-            self.name:SetTall(72)
-            self.name:Dock(TOP)
-            self.name:DockMargin(0, 0, 0, 4)
-            self.name:SetTextColor(color_white)
-            self.name:SetExpensiveShadow(1, Color(0, 0, 0, 150))
-        end
-
-        if not suppress or not suppress.desc then
-            self.desc = self.info:Add("DTextEntry")
-            self.desc:Dock(TOP)
-            self.desc:SetFont("liaMediumLightFont")
-            self.desc:SetTall(28)
-            self.descReset = self.info:Add("DButton")
-            self.descReset:Dock(TOP)
-            self.descReset:SetFont("liaMediumLightFont")
-            self.descReset:SetTall(28)
-            self.descReset:SetText("Generate a Description")
-            self.descReset:SetTextColor(color_white)
-        end
-
-        if not suppress or not suppress.money then
-            self.money = self.info:Add("DLabel")
-            self.money:Dock(TOP)
-            self.money:SetFont("liaMediumFont")
-            self.money:SetTextColor(color_white)
-            self.money:SetExpensiveShadow(1, Color(0, 0, 0, 150))
-            self.money:DockMargin(0, 10, 0, 0)
-        end
-
-        if not suppress or not suppress.faction then
-            self.faction = self.info:Add("DLabel")
-            self.faction:Dock(TOP)
-            self.faction:SetFont("liaMediumFont")
-            self.faction:SetTextColor(color_white)
-            self.faction:SetExpensiveShadow(1, Color(0, 0, 0, 150))
-            self.faction:DockMargin(0, 10, 0, 0)
-        end
-
-        if not suppress or not suppress.class then
-            local class = lia.class.list[LocalPlayer():getChar():getClass()]
-            if class then
-                self.class = self.info:Add("DLabel")
-                self.class:Dock(TOP)
-                self.class:SetFont("liaMediumFont")
-                self.class:SetTextColor(color_white)
-                self.class:SetExpensiveShadow(1, Color(0, 0, 0, 150))
-                self.class:DockMargin(0, 10, 0, 0)
-            end
-        end
-
-        hook.Run("CreateCharInfoText", self, suppress)
+    local char = LocalPlayer():getChar()
+    local class = lia.class.list[char:getClass()]
+    if IsValid(lia.gui.info) then
+        lia.gui.info:Remove()
     end
 
+    lia.gui.info = self
+    local panelWidth = ScrW() * 0.25
+    local panelHeight = ScrH() * 0.25
+    local textFontSize = 20
+    local textFont = "liaSmallFont"
+    local textColor = color_white
+    self:SetSize(panelWidth, panelHeight)
+    self:SetPos(ScrW() * 0.73, ScrH() * 0.02)
+    self.info = vgui.Create("DFrame", self)
+    self.info:SetTitle("Character Information")
+    self.info:SetSize(panelWidth, panelHeight)
+    self.info:ShowCloseButton(false)
+    self.info:SetDraggable(false)
+    self.info.Paint = function(_, w, h)
+        draw.RoundedBox(8, 0, 0, w, h, Color(0, 0, 0, 200))
+    end
+
+    self.infoBox = self.info:Add("DPanel")
+    self.infoBox:Dock(FILL)
+    self.infoBox.Paint = function(_, w, h)
+        draw.RoundedBox(8, 0, 0, w, h, Color(0, 0, 0, 100))
+    end
+
+    self.name = self.infoBox:Add("DLabel")
+    self.name:SetFont(textFont)
+    self.name:SetTall(textFontSize)
+    self.name:Dock(TOP)
+    self.name:SetTextColor(textColor)
+    self.name:DockMargin(8, 8, 8, 4)
+    self.money = self.infoBox:Add("DLabel")
+    self.money:Dock(TOP)
+    self.money:SetFont(textFont)
+    self.money:SetTall(textFontSize)
+    self.money:SetTextColor(textColor)
+    self.money:DockMargin(8, 0, 8, 0)
+    self.faction = self.infoBox:Add("DLabel")
+    self.faction:Dock(TOP)
+    self.faction:SetFont(textFont)
+    self.faction:SetTall(textFontSize)
+    self.faction:SetTextColor(textColor)
+    self.faction:DockMargin(8, 0, 8, 0)
+    if class then
+        self.class = self.infoBox:Add("DLabel")
+        self.class:Dock(TOP)
+        self.class:SetFont(textFont)
+        self.class:SetTall(textFontSize)
+        self.class:SetTextColor(textColor)
+        self.class:DockMargin(8, 0, 8, 0)
+    end
+
+    self.desc = self.infoBox:Add("DTextEntry")
+    self.desc:Dock(BOTTOM)
+    self.desc:SetFont(textFont)
+    self.desc:SetTall(textFontSize)
+    self.desc:SetMultiline(true)
+    self.desc:SetTextColor(textColor)
+    self.desc:SetDrawBorder(false)
+    self.desc:SetPaintBackground(false)
+    self.desc:SetText(char:getDesc())
+    local btnEditDesc = self.infoBox:Add("DButton")
+    btnEditDesc:SetText("Edit Description")
+    btnEditDesc:Dock(BOTTOM)
+    btnEditDesc.DoClick = function()
+        local newDesc = self.desc:GetValue()
+        lia.command.send("chardesc", newDesc)
+    end
+
+    hook.Run("CreateCharInfoText", self, suppress)
     hook.Run("CreateCharInfo", self)
 end
 
 function PANEL:setup()
     local char = LocalPlayer():getChar()
-    if self.desc then
-        self.desc:SetText(char:getDesc():gsub("#", "\226\128\139#"))
-        self.desc.OnEnter = function(this)
-            local newDesc = this:GetText():gsub("\226\128\139#", "#")
-            Derma_Query("Are you sure you want to modify your characters description?", "Change Description", "Yes", function() lia.command.send("chardesc", newDesc) end, "No")
-        end
-    end
-
-    if self.descReset then
-        self.descReset.DoClick = function()
-            lia.gui.menu:Remove()
-            F1MenuCore:OpenDescGenerator()
-        end
-    end
-
     if self.name then
         self.name:SetText(LocalPlayer():Name():gsub("#", "\226\128\139#"))
         hook.Add(
@@ -112,26 +92,18 @@ function PANEL:setup()
         )
     end
 
-    if self.money then self.money:SetText(L("charMoney", lia.currency.get(char:getMoney()))) end
-    if self.faction then self.faction:SetText(L("charFaction", L(team.GetName(LocalPlayer():Team())))) end
-    if self.class then
-        local class = lia.class.list[char:getClass()]
-        if class then self.class:SetText(L("charClass", L(class.name))) end
+    if self.money then
+        self.money:SetText(L("charMoney", lia.currency.get(char:getMoney())))
     end
 
-    if self.model then
-        self.model:SetModel(LocalPlayer():GetModel())
-        self.model.Entity:SetSkin(LocalPlayer():GetSkin())
-        for _, v in ipairs(LocalPlayer():GetBodyGroups()) do
-            self.model.Entity:SetBodygroup(v.id, LocalPlayer():GetBodygroup(v.id))
-        end
+    if self.faction then
+        self.faction:SetText(L("charFaction", L(team.GetName(LocalPlayer():Team()))))
+    end
 
-        local entity = self.model.Entity
-        if entity and IsValid(entity) then
-            local mats = LocalPlayer():GetMaterials()
-            for k, _ in pairs(mats) do
-                entity:SetSubMaterial(k - 1, LocalPlayer():GetSubMaterial(k - 1))
-            end
+    if self.class then
+        local class = lia.class.list[char:getClass()]
+        if class then
+            self.class:SetText(L("charClass", L(class.name)))
         end
     end
 

@@ -1,4 +1,13 @@
-﻿local HELP_DEFAULT
+﻿local HELP_DEFAULT = [[
+    <div id="parent">
+        <div id="child">
+            <center>
+                <img src="https://i.imgur.com/yY3wT30.png"></img><br><br>
+                <font size=15>]] .. L"helpDefault" .. [[</font>
+            </center>
+        </div>
+    </div>
+]]
 function F1MenuCore:PlayerBindPress(client, bind, pressed)
     if bind:lower():find("gm_showhelp") and pressed then
         if IsValid(lia.gui.menu) then
@@ -6,6 +15,7 @@ function F1MenuCore:PlayerBindPress(client, bind, pressed)
         elseif client:getChar() then
             vgui.Create("liaMenu")
         end
+
         return true
     end
 end
@@ -70,7 +80,13 @@ function F1MenuCore:CreateMenuButtons(tabs)
                 x = x + panel:GetWide() + 10
             end
 
-            hook.Add("PostRenderVGUI", mainPanel, function() hook.Run("PostDrawInventory", mainPanel) end)
+            hook.Add(
+                "PostRenderVGUI",
+                mainPanel,
+                function()
+                    hook.Run("PostDrawInventory", mainPanel)
+                end
+            )
         end
     end
 
@@ -80,20 +96,15 @@ function F1MenuCore:CreateMenuButtons(tabs)
             if not lia.class.canBe(LocalPlayer(), k) then
                 continue
             else
-                tabs["classes"] = function(panel) panel:Add("liaClasses") end
+                tabs["classes"] = function(panel)
+                    panel:Add("liaClasses")
+                end
+
                 return
             end
         end
     end
 
-    HELP_DEFAULT = [[
-			<div id="parent"><div id="child">
-				<center>
-				    <img src="https://i.imgur.com/yY3wT30.png"></img>
-					<br><font size=15>]] .. L"helpDefault" .. [[</font>
-				</center>
-			</div></div>
-		]]
     tabs["help"] = function(panel)
         local html
         local header = [[<html>
@@ -130,8 +141,14 @@ function F1MenuCore:CreateMenuButtons(tabs)
         tree.OnNodeSelected = function(_, node)
             if node.onGetHTML then
                 local source = node:onGetHTML()
-                if IsValid(helpPanel) then helpPanel:Remove() end
-                if lia.gui.creditsPanel then lia.gui.creditsPanel:Remove() end
+                if IsValid(helpPanel) then
+                    helpPanel:Remove()
+                end
+
+                if lia.gui.creditsPanel then
+                    lia.gui.creditsPanel:Remove()
+                end
+
                 helpPanel = panel:Add("DListView")
                 helpPanel:Dock(FILL)
                 helpPanel.Paint = function() end
@@ -173,8 +190,11 @@ function F1MenuCore:BuildHelpMenu(tabs)
     tabs["commands"] = function(_, _)
         local body = ""
         for k, v in SortedPairs(lia.command.list) do
-            if lia.command.hasAccess(LocalPlayer(), k, nil) then body = body .. "<h2>/" .. k .. "</h2><strong>Syntax:</strong> <em>" .. v.syntax .. "</em><br /><br />" end
+            if lia.command.hasAccess(LocalPlayer(), k, nil) then
+                body = body .. "<h2>/" .. k .. "</h2><strong>Syntax:</strong> <em>" .. v.syntax .. "</em><br /><br />"
+            end
         end
+
         return body
     end
 
@@ -196,6 +216,7 @@ function F1MenuCore:BuildHelpMenu(tabs)
                 </tr>
             ]], icon, k, v.desc)
         end
+
         return body .. "</table>"
     end
 
@@ -210,10 +231,14 @@ function F1MenuCore:BuildHelpMenu(tabs)
                     <b>%s</b>: %s<br />
                     <b>%s</b>: %s<br /> <!-- Added line break here -->
                     <b>%s</b>: %s<br />
-                ]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", "Discord", v.discord, L"author", lia.module.namecache[v.author] or v.author)
-            if v.version then body = body .. "<br /><b>" .. L"version" .. "</b>: " .. v.version end
+                ]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", "Discord", v.discord or "Unknown", L"author", lia.module.namecache[v.author] or v.author or "Unknown")
+            if v.version then
+                body = body .. "<br /><b>" .. L"version" .. "</b>: " .. v.version
+            end
+
             body = body .. "</span></p>"
         end
+
         return body
     end
 
@@ -223,56 +248,16 @@ function F1MenuCore:BuildHelpMenu(tabs)
             for title, text in SortedPairs(self.FAQQuestions) do
                 body = body .. "<h2>" .. title .. "</h2>" .. text .. "<br /><br />"
             end
+
             return body
         end
     end
 
-    if self.RulesEnabled then tabs["Rules"] = function() return F1MenuCore:GenerateRules() end end
-    if self.TutorialEnabled then tabs["Tutorial"] = function() return F1MenuCore:GenerateTutorial() end end
-end
-
-function F1MenuCore:OpenDescGenerator()
-    if not self.AutomaticDescriptionEnabled then
-        LocalPlayer():ChatPrint("This feature is disabled. Please tell the server owner to enable it.")
-        return
+    if self.RulesEnabled then
+        tabs["Rules"] = function() return F1MenuCore:GenerateRules() end
     end
 
-    local frame = vgui.Create("DFrame")
-    frame:SetSize(300, 150)
-    frame:SetTitle("Description Generator")
-    frame:Center()
-    frame:MakePopup()
-    local elements = {}
-    for _, option in ipairs(self.AutomaticDescriptionCustomizationOptions) do
-        local label = vgui.Create("DLabel", frame)
-        label:SetPos(10, 30 + (_ - 1) * 18)
-        label:SetText(option.Name)
-        label:SizeToContents()
-        local dropdown = vgui.Create("DComboBox", frame)
-        dropdown:SetPos(120, 30 + (_ - 1) * 18)
-        dropdown:SetSize(160, 18)
-        for _, subOption in ipairs(option.Options) do
-            dropdown:AddChoice(subOption)
-        end
-
-        elements[option.Name] = {
-            Label = label,
-            Dropdown = dropdown
-        }
-    end
-
-    local setDescButton = vgui.Create("DButton", frame)
-    setDescButton:SetText("Set Description")
-    setDescButton:SetPos(10, 120)
-    setDescButton:SetSize(280, 18)
-    setDescButton.DoClick = function()
-        local description = "A "
-        local gender = elements["Gender"].Dropdown:GetValue() or "Unknown"
-        local height = elements["Height"].Dropdown:GetValue() or "Unknown"
-        local hairColor = elements["Hair Color"].Dropdown:GetValue() or "Unknown"
-        local eyeColor = elements["Eye Color"].Dropdown:GetValue() or "Unknown"
-        description = description .. gender .. " appears in front of you, being " .. height .. " and having " .. hairColor .. " colored hair and " .. eyeColor .. " eyes."
-        lia.command.send("chardesc", description)
-        frame:Remove()
+    if self.TutorialEnabled then
+        tabs["Tutorial"] = function() return F1MenuCore:GenerateTutorial() end
     end
 end
