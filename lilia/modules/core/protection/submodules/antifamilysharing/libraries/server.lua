@@ -1,7 +1,5 @@
-function AntiFamilySharing:PlayerAuthed(client, steamid)
-
+﻿function AntiFamilySharing:PlayerAuthed(client, steamid)
     local steamworks = steamworks or _G.steamworks
-
     if not steamworks then
         print("Error: 'steamworks' is not available.")
         return
@@ -44,9 +42,7 @@ function AntiFamilySharing:PlayerAuthed(client, steamid)
 
     local function notifyCallback(printMessage)
         for _, admin in ipairs(player.GetAll()) do
-            if IsValid(admin) and CAMI.PlayerHasAccess(admin, "Staff Permissions - Can See Family Sharing Notifications", nil) then
-                admin:ChatPrint(printMessage)
-            end
+            if IsValid(admin) and CAMI.PlayerHasAccess(admin, "Staff Permissions - Can See Family Sharing Notifications", nil) then admin:ChatPrint(printMessage) end
         end
     end
 
