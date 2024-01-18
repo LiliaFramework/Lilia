@@ -1,5 +1,4 @@
-if SERVER then return end
-
+﻿if SERVER then return end
 local PANEL = {}
 local VoicePanels = {}
 function PANEL:Init()
