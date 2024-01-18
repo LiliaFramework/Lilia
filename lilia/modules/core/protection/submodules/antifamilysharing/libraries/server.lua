@@ -1,10 +1,9 @@
-﻿function AntiFamilySharing:PlayerAuthed(client, steamid)
+function AntiFamilySharing:PlayerAuthed(client, steamid)
     local OwnerAccount = "Unknown"
     local steamID64 = util.SteamIDTo64(steamid)
     local OwnerSteamID64 = client:OwnerSteamID64()
     local JoiningPlayerName = client:steamName()
     local JoiningPlayerSteamID = client:SteamID()
-
     local function notifyAdmin(isBanned, isSharingEnabled, isBlacklisted)
         for _, admin in ipairs(player.GetAll()) do
             if IsValid(admin) and CAMI and CAMI.PlayerHasAccess(admin, "Staff Permissions - Can See Family Sharing Notifications", nil) then
@@ -12,7 +11,7 @@
                     OwnerAccount = name or OwnerAccount
                     local printMessage = "Family share account " .. JoiningPlayerName .. " [" .. steamID64 .. "] attempted to join the server."
                     if isBanned then
-                        if isBlacklisted then 
+                        if isBlacklisted then
                             printMessage = printMessage .. " The account was banned as it was blacklisted. Original owner: " .. OwnerAccount
                         else
                             printMessage = printMessage .. " The account was banned as it was ALTing for a banned player. Original owner: " .. OwnerAccount
@@ -32,7 +31,6 @@
     end
 
     local isBanned, banReason = self:CheckBans(OwnerSteamID64)
-
     if self.FamilySharingEnabled then
         if WhitelistCore and table.HasValue(WhitelistCore.BlacklistedSteamID64, OwnerSteamID64) then
             client:Ban("You are using an account whose family share is blacklisted from this server!")
