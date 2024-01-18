@@ -31,6 +31,11 @@ function RecognitionCore:ShouldAllowScoreboardOverride(client, var)
     local isRecognized = ourCharacter:doesRecognize(characterID)
     local isFakeRecognized = ourCharacter:doesFakeRecognize(characterID)
     local isNotRecognizedAndNotFakeRecognized = not (isRecognized and isFakeRecognized)
+    print("RecognitionEnabled:", self.RecognitionEnabled)
+    print("ScoreboardHiddenVars contains var:", table.HasValue(self.ScoreboardHiddenVars, var))
+    print("Client is not the local player:", client ~= LocalPlayer())
+    print("Our character recognizes the client's character:", ourCharacter:doesRecognize(character:getID()))
+    print("Our character fake recognizes the client's character:", ourCharacter:doesFakeRecognize(character:getID()))
     if isRecognitionEnabled and isVarHiddenInScoreboard and isClientNotLocalPlayer and isNotRecognizedAndNotFakeRecognized then return true end
     return false
 end
