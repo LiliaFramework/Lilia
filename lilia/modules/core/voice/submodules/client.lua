@@ -1,4 +1,6 @@
-﻿local PANEL = {}
+if SERVER then return end
+
+local PANEL = {}
 local VoicePanels = {}
 function PANEL:Init()
     local hi = vgui.Create("DLabel", self)
