@@ -2,10 +2,7 @@
 function PANEL:Init()
     local char = LocalPlayer():getChar()
     local class = lia.class.list[char:getClass()]
-    if IsValid(lia.gui.info) then
-        lia.gui.info:Remove()
-    end
-
+    if IsValid(lia.gui.info) then lia.gui.info:Remove() end
     lia.gui.info = self
     local panelWidth = ScrW() * 0.25
     local panelHeight = ScrH() * 0.25
@@ -19,16 +16,10 @@ function PANEL:Init()
     self.info:SetSize(panelWidth, panelHeight)
     self.info:ShowCloseButton(false)
     self.info:SetDraggable(false)
-    self.info.Paint = function(_, w, h)
-        draw.RoundedBox(8, 0, 0, w, h, Color(0, 0, 0, 200))
-    end
-
+    self.info.Paint = function(_, w, h) draw.RoundedBox(8, 0, 0, w, h, Color(0, 0, 0, 200)) end
     self.infoBox = self.info:Add("DPanel")
     self.infoBox:Dock(FILL)
-    self.infoBox.Paint = function(_, w, h)
-        draw.RoundedBox(8, 0, 0, w, h, Color(0, 0, 0, 100))
-    end
-
+    self.infoBox.Paint = function(_, w, h) draw.RoundedBox(8, 0, 0, w, h, Color(0, 0, 0, 100)) end
     self.name = self.infoBox:Add("DLabel")
     self.name:SetFont(textFont)
     self.name:SetTall(textFontSize)
@@ -92,19 +83,11 @@ function PANEL:setup()
         )
     end
 
-    if self.money then
-        self.money:SetText(L("charMoney", lia.currency.get(char:getMoney())))
-    end
-
-    if self.faction then
-        self.faction:SetText(L("charFaction", L(team.GetName(LocalPlayer():Team()))))
-    end
-
+    if self.money then self.money:SetText(L("charMoney", lia.currency.get(char:getMoney()))) end
+    if self.faction then self.faction:SetText(L("charFaction", L(team.GetName(LocalPlayer():Team())))) end
     if self.class then
         local class = lia.class.list[char:getClass()]
-        if class then
-            self.class:SetText(L("charClass", L(class.name)))
-        end
+        if class then self.class:SetText(L("charClass", L(class.name))) end
     end
 
     hook.Run("OnCharInfoSetup", self)

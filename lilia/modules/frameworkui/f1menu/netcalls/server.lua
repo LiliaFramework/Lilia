@@ -1,4 +1,4 @@
-util.AddNetworkString("F1AlterDescription")
+﻿util.AddNetworkString("F1AlterDescription")
 net.Receive(
     "F1AlterDescription",
     function(_, client)

@@ -10,7 +10,6 @@ function WSCore:OnSlotChanged()
         if k == self.lastSlot then
             if v.Instructions and string.find(v.Instructions, "%S") then
                 self.markup = markup.Parse("<font=Monofonto24>" .. v.Instructions .. "</font>")
-
                 return
             else
                 self.markup = nil
@@ -25,21 +24,13 @@ function WSCore:PlayerBindPress(client, bind, pressed)
         bind = string.lower(bind)
         if string.find(bind, "invprev") and pressed then
             self.lastSlot = self.lastSlot - 1
-            if self.lastSlot <= 0 then
-                self.lastSlot = #client:GetWeapons()
-            end
-
+            if self.lastSlot <= 0 then self.lastSlot = #client:GetWeapons() end
             self:OnSlotChanged()
-
             return true
         elseif string.find(bind, "invnext") and pressed then
             self.lastSlot = self.lastSlot + 1
-            if self.lastSlot > #client:GetWeapons() then
-                self.lastSlot = 1
-            end
-
+            if self.lastSlot > #client:GetWeapons() then self.lastSlot = 1 end
             self:OnSlotChanged()
-
             return true
         elseif string.find(bind, "+attack") and pressed then
             if CurTime() < self.deathTime then
@@ -48,7 +39,6 @@ function WSCore:PlayerBindPress(client, bind, pressed)
                 for k, v in SortedPairs(LocalPlayer():GetWeapons()) do
                     if k == self.lastSlot then
                         RunConsoleCommand("lia_selectwep", v:GetClass())
-
                         return true
                     end
                 end
@@ -57,7 +47,6 @@ function WSCore:PlayerBindPress(client, bind, pressed)
             self.lastSlot = math.Clamp(tonumber(string.match(bind, "slot(%d)")) or 1, 1, #LocalPlayer():GetWeapons())
             self.lifeTime = CurTime() + LIFE_TIME
             self.deathTime = CurTime() + DEATH_TIME
-
             return true
         end
     end
