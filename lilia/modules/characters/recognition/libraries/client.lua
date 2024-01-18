@@ -24,8 +24,27 @@ end
 function RecognitionCore:ShouldAllowScoreboardOverride(client, var)
     local character = client:getChar()
     local ourCharacter = LocalPlayer():getChar()
-    if self.RecognitionEnabled and table.HasValue(self.ScoreboardHiddenVars, var) and (client ~= LocalPlayer()) and not (ourCharacter:doesRecognize(character:getID()) and ourCharacter:doesFakeRecognize(character:getID())) then return true end
+    local characterID = character:getID()
+
+    local isRecognitionEnabled = self.RecognitionEnabled
+    local isVarHiddenInScoreboard = table.HasValue(self.ScoreboardHiddenVars, var)
+    local isClientNotLocalPlayer = (client ~= LocalPlayer())
+    
+    local isRecognized = ourCharacter:doesRecognize(characterID)
+    local isFakeRecognized = ourCharacter:doesFakeRecognize(characterID)
+    local isNotRecognizedAndNotFakeRecognized = not (isRecognized and isFakeRecognized)
+    print("RecognitionEnabled:", self.RecognitionEnabled)
+    print("ScoreboardHiddenVars contains var:", table.HasValue(self.ScoreboardHiddenVars, var))
+    print("Client is not the local player:", client ~= LocalPlayer())
+    print("Our character recognizes the client's character:", ourCharacter:doesRecognize(character:getID()))
+    print("Our character fake recognizes the client's character:", ourCharacter:doesFakeRecognize(character:getID()))
+
+    if isRecognitionEnabled and isVarHiddenInScoreboard and isClientNotLocalPlayer and isNotRecognizedAndNotFakeRecognized then
+        return true
+    end
+    return false
 end
+
 
 function RecognitionCore:OnCharRecognized(_, _)
     surface.PlaySound("buttons/button17.wav")
