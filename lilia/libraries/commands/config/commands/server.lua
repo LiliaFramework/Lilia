@@ -938,7 +938,7 @@ lia.command.add(
         syntax = "<string desc>",
         onRun = function(client, arguments)
             arguments = table.concat(arguments, " ")
-            if not arguments:find("%S") then return client:requestString("@chgDesc", "@chgDescDesc", function(text) lia.command.run(client, "chardesc", {text}) end, client:getChar():getDesc()) end
+            if not arguments:find("%S") then return client:requestString("Change Description", "Change Your Description", function(text) lia.command.run(client, "chardesc", {text}) end, client:getChar():getDesc()) end
             local info = lia.char.vars.desc
             local result, fault, count = info.onValidate(arguments)
             if result == false then return "@" .. fault, count end

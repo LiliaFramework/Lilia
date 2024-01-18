@@ -114,7 +114,12 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     _G[variable] = MODULE
     MODULE.loading = true
     MODULE.path = path
-    lia.util.include(isSingleFile and path or (ModuleCore and normalpath or ExtendedCore and extendedpath))
+    if isSingleFile then
+        lia.util.include(path, "shared")
+    else
+        lia.util.include(ModuleCore and normalpath or ExtendedCore and extendedpath, "shared")
+    end
+
     hook.Run("ModuleDependenciesPreLoad", uniqueID, MODULE.identifier, MODULE)
     if hook.Run("VerifyModuleValidity", uniqueID, MODULE, MODULE.identifier) then
         lia.module.enabilitystatus[tostring(MODULE.name)] = true

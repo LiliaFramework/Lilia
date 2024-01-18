@@ -1,6 +1,6 @@
 ﻿lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
-lia.bar.list = lia.bar.list or {}
+lia.bar.list = {}
 lia.bar.actionText = ""
 lia.bar.actionStart = 0
 lia.bar.actionEnd = 0
@@ -81,7 +81,6 @@ function lia.bar.drawAction()
 end
 
 function lia.bar.drawAll()
-    lia.bar.drawAction()
     if hook.Run("ShouldHideBars") then return end
     local w, h = ScrW() * 0.35, 10
     local x, y = 4, 4

@@ -28,7 +28,4 @@ function AttributesCore:HUDPaintBackground()
     end
 end
 
-if not StaminaBarAdded then
-    lia.bar.add(function() return predictedStamina / 100 end, Color(200, 200, 40), nil, "stamina")
-    StaminaBarAdded = true
-end
+lia.bar.add(function() return LocalPlayer():getLocalVar("stamina", 0) / 100 end, Color(200, 200, 40), nil, "stamina")
