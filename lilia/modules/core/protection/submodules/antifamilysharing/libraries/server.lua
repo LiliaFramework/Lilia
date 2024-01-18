@@ -1,4 +1,4 @@
-function AntiFamilySharing:PlayerAuthed(client, steamid)
+﻿function AntiFamilySharing:PlayerAuthed(client, steamid)
     local OwnerAccount = "Unknown"
     local steamID64 = util.SteamIDTo64(steamid)
     local OwnerSteamID64 = client:OwnerSteamID64()
@@ -7,25 +7,29 @@ function AntiFamilySharing:PlayerAuthed(client, steamid)
     local function notifyAdmin(isBanned, isSharingEnabled, isBlacklisted)
         for _, admin in ipairs(player.GetAll()) do
             if IsValid(admin) and CAMI and CAMI.PlayerHasAccess(admin, "Staff Permissions - Can See Family Sharing Notifications", nil) then
-                steamworks.RequestPlayerInfo(OwnerSteamID64, function(name)
-                    OwnerAccount = name or OwnerAccount
-                    local printMessage = "Family share account " .. JoiningPlayerName .. " [" .. steamID64 .. "] attempted to join the server."
-                    if isBanned then
-                        if isBlacklisted then
-                            printMessage = printMessage .. " The account was banned as it was blacklisted. Original owner: " .. OwnerAccount
+                steamworks.RequestPlayerInfo(
+                    OwnerSteamID64,
+                    function(name)
+                        OwnerAccount = name or OwnerAccount
+                        local printMessage = "Family share account " .. JoiningPlayerName .. " [" .. steamID64 .. "] attempted to join the server."
+                        if isBanned then
+                            if isBlacklisted then
+                                printMessage = printMessage .. " The account was banned as it was blacklisted. Original owner: " .. OwnerAccount
+                            else
+                                printMessage = printMessage .. " The account was banned as it was ALTing for a banned player. Original owner: " .. OwnerAccount
+                            end
                         else
-                            printMessage = printMessage .. " The account was banned as it was ALTing for a banned player. Original owner: " .. OwnerAccount
+                            if isSharingEnabled then
+                                printMessage = printMessage .. " Original owner: " .. OwnerAccount
+                            else
+                                printMessage = JoiningPlayerName .. " (" .. JoiningPlayerSteamID .. ") tried to join but is using a family shared account therefore, he was kicked."
+                            end
                         end
-                    else
-                        if isSharingEnabled then
-                            printMessage = printMessage .. " Original owner: " .. OwnerAccount
-                        else
-                            printMessage = JoiningPlayerName .. " (" .. JoiningPlayerSteamID .. ") tried to join but is using a family shared account therefore, he was kicked."
-                        end
-                    end
 
-                    admin:ChatPrint(printMessage)
-                end, function(error) print("Steamworks request error:", error) end)
+                        admin:ChatPrint(printMessage)
+                    end,
+                    function(error) print("Steamworks request error:", error) end
+                )
             end
         end
     end

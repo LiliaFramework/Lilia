@@ -1,4 +1,4 @@
-function RecognitionCore:isRecognizedChatType(chatType)
+﻿function RecognitionCore:isRecognizedChatType(chatType)
     return table.HasValue(self.ChatIsRecognized, chatType)
 end
 
