@@ -1,12 +1,18 @@
 ﻿function AntiFamilySharing:PlayerAuthed(client, steamid)
-    local OwnerAccount = "Unknown"
+    local steamworks = steamworks or _G.steamworks
+    if not steamworks then
+        print("Error: 'steamworks' is not available.")
+        return
+    end
+
     local steamID64 = util.SteamIDTo64(steamid)
     local OwnerSteamID64 = client:OwnerSteamID64()
     local JoiningPlayerName = client:steamName()
     local JoiningPlayerSteamID = client:SteamID()
-    local function notifyAdmin(isBanned, isSharingEnabled, isBlacklisted)
+    local OwnerAccount = "Unknown"
+    local function notifyAdmin(isBanned, isSharingEnabled, isBlacklisted, callback)
         for _, admin in ipairs(player.GetAll()) do
-            if IsValid(admin) and CAMI and CAMI.PlayerHasAccess(admin, "Staff Permissions - Can See Family Sharing Notifications", nil) then
+            if IsValid(admin) and CAMI.PlayerHasAccess(admin, "Staff Permissions - Can See Family Sharing Notifications", nil) then
                 steamworks.RequestPlayerInfo(
                     OwnerSteamID64,
                     function(name)
@@ -26,7 +32,7 @@
                             end
                         end
 
-                        admin:ChatPrint(printMessage)
+                        callback(printMessage)
                     end,
                     function(error) print("Steamworks request error:", error) end
                 )
@@ -34,24 +40,30 @@
         end
     end
 
+    local function notifyCallback(printMessage)
+        for _, admin in ipairs(player.GetAll()) do
+            if IsValid(admin) and CAMI.PlayerHasAccess(admin, "Staff Permissions - Can See Family Sharing Notifications", nil) then admin:ChatPrint(printMessage) end
+        end
+    end
+
     local isBanned, banReason = self:CheckBans(OwnerSteamID64)
     if self.FamilySharingEnabled then
         if WhitelistCore and table.HasValue(WhitelistCore.BlacklistedSteamID64, OwnerSteamID64) then
             client:Ban("You are using an account whose family share is blacklisted from this server!")
-            notifyAdmin(true, true, true)
+            notifyAdmin(true, true, true, notifyCallback)
         elseif OwnerSteamID64 ~= steamID64 then
             if isBanned then
                 client:Ban(banReason)
-                notifyAdmin(isBanned, true, false)
+                notifyAdmin(isBanned, true, true, notifyCallback)
             end
         end
     else
         if isBanned then
             client:Ban(banReason)
-            notifyAdmin(isBanned, false, false)
+            notifyAdmin(isBanned, true, true, notifyCallback)
         else
             client:Kick("Sorry! We do not allow family shared accounts in this server! Reason: Family Sharing")
-            notifyAdmin(false, false, false)
+            notifyAdmin(false, false, false, notifyCallback)
             print(client:steamName() .. " (" .. client:SteamID() .. ") kicked for family sharing.")
         end
     end
