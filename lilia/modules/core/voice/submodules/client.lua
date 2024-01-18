@@ -41,7 +41,7 @@ function PANEL:Think()
     if self.fadeAnim then self.fadeAnim:Run() end
 end
 
-function PANEL:FadeOut(anim, delta, data)
+function PANEL:FadeOut(anim, delta)
     if anim.Finished then
         if IsValid(VoicePanels[self.client]) then
             VoicePanels[self.client]:Remove()
@@ -75,7 +75,7 @@ function MODULE:PlayerStartVoice(client)
 end
 
 local function VoiceClean()
-    for k, v in pairs(VoicePanels) do
+    for k, _ in pairs(VoicePanels) do
         if not IsValid(k) then hook.Run("PlayerEndVoice", k) end
     end
 end
