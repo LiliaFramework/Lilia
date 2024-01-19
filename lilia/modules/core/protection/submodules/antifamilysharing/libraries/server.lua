@@ -4,7 +4,6 @@
     local OwnerSteamID64 = client:OwnerSteamID64()
     local SteamName = client:steamName()
     local SteamID = client:SteamID()
-
     if self.FamilySharingEnabled and OwnerSteamID64 ~= steamID64 then
         client:Kick("Sorry! We do not allow family-shared accounts in this server!")
         self:NotifyAdmin(SteamName .. " (" .. SteamID .. ") kicked for family sharing.")
@@ -16,8 +15,6 @@ end
 
 function AntiFamilySharing:NotifyAdmin(notification)
     for _, admin in ipairs(player.GetAll()) do
-        if IsValid(admin) and CAMI.PlayerHasAccess(admin, "Staff Permissions - Can See Family Sharing Notifications", nil) then
-            admin:ChatPrint(notification)
-        end
+        if IsValid(admin) and CAMI.PlayerHasAccess(admin, "Staff Permissions - Can See Family Sharing Notifications", nil) then admin:ChatPrint(notification) end
     end
 end
