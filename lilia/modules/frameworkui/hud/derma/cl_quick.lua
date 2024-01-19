@@ -35,22 +35,15 @@ function PANEL:Init()
             self:SizeTo(self:GetWide(), 36, 0.15, nil, nil, function() self:MoveTo(ScrW() - 36, 30, 0.15) end)
             self.expanded = false
         else
-            self:MoveTo(
-                ScrW() - 400,
-                30,
-                0.15,
-                nil,
-                nil,
-                function()
-                    local height = 0
-                    for _, v in pairs(self.items) do
-                        if IsValid(v) then height = height + v:GetTall() + 1 end
-                    end
-
-                    height = math.min(height, ScrH() * 0.5)
-                    self:SizeTo(self:GetWide(), height, 0.15)
+            self:MoveTo(ScrW() - 400, 30, 0.15, nil, nil, function()
+                local height = 0
+                for _, v in pairs(self.items) do
+                    if IsValid(v) then height = height + v:GetTall() + 1 end
                 end
-            )
+
+                height = math.min(height, ScrH() * 0.5)
+                self:SizeTo(self:GetWide(), height, 0.15)
+            end)
 
             self.expanded = true
         end
@@ -137,13 +130,10 @@ end
 function PANEL:addCheck(text, callback, checked)
     local x, y
     local color
-    local button = self:addButton(
-        text,
-        function(panel)
-            panel.checked = not panel.checked
-            if callback then callback(panel, panel.checked) end
-        end
-    )
+    local button = self:addButton(text, function(panel)
+        panel.checked = not panel.checked
+        if callback then callback(panel, panel.checked) end
+    end)
 
     button.PaintOver = function(this, w, h)
         x, y = w - 8, h * 0.5

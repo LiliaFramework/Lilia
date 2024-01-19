@@ -86,34 +86,31 @@ if SERVER then
         end
     end
 
-    net.Receive(
-        "NetStreamDS",
-        function(length, player)
-            local NS_DS_NAME = net.ReadString()
-            local NS_DS_LENGTH = net.ReadUInt(32)
-            local NS_DS_DATA = net.ReadData(NS_DS_LENGTH)
-            if NS_DS_NAME and NS_DS_DATA and NS_DS_LENGTH then
-                player.nsDataStreamName = NS_DS_NAME
-                player.nsDataStreamData = ""
-                if player.nsDataStreamName and player.nsDataStreamData then
-                    player.nsDataStreamData = NS_DS_DATA
-                    if netstream.stored[player.nsDataStreamName] then
-                        local bStatus, value = pcall(pon.decode, player.nsDataStreamData)
-                        if bStatus then
-                            netstream.stored[player.nsDataStreamName](player, unpack(value))
-                        else
-                            ErrorNoHalt("NetStream: '" .. NS_DS_NAME .. "'\n" .. value .. "\n")
-                        end
+    net.Receive("NetStreamDS", function(length, player)
+        local NS_DS_NAME = net.ReadString()
+        local NS_DS_LENGTH = net.ReadUInt(32)
+        local NS_DS_DATA = net.ReadData(NS_DS_LENGTH)
+        if NS_DS_NAME and NS_DS_DATA and NS_DS_LENGTH then
+            player.nsDataStreamName = NS_DS_NAME
+            player.nsDataStreamData = ""
+            if player.nsDataStreamName and player.nsDataStreamData then
+                player.nsDataStreamData = NS_DS_DATA
+                if netstream.stored[player.nsDataStreamName] then
+                    local bStatus, value = pcall(pon.decode, player.nsDataStreamData)
+                    if bStatus then
+                        netstream.stored[player.nsDataStreamName](player, unpack(value))
+                    else
+                        ErrorNoHalt("NetStream: '" .. NS_DS_NAME .. "'\n" .. value .. "\n")
                     end
-
-                    player.nsDataStreamName = nil
-                    player.nsDataStreamData = nil
                 end
-            end
 
-            NS_DS_NAME, NS_DS_DATA, NS_DS_LENGTH = nil, nil, nil
+                player.nsDataStreamName = nil
+                player.nsDataStreamData = nil
+            end
         end
-    )
+
+        NS_DS_NAME, NS_DS_DATA, NS_DS_LENGTH = nil, nil, nil
+    end)
 else
     -- A function to start a net stream.
     function netstream.Start(name, ...)
@@ -128,25 +125,22 @@ else
         end
     end
 
-    net.Receive(
-        "NetStreamDS",
-        function(length)
-            local NS_DS_NAME = net.ReadString()
-            local NS_DS_LENGTH = net.ReadUInt(32)
-            local NS_DS_DATA = net.ReadData(NS_DS_LENGTH)
-            if NS_DS_NAME and NS_DS_DATA and NS_DS_LENGTH then
-                if netstream.stored[NS_DS_NAME] then
-                    local bStatus, value = pcall(pon.decode, NS_DS_DATA)
-                    if bStatus then
-                        netstream.stored[NS_DS_NAME](unpack(value))
-                    else
-                        ErrorNoHalt("NetStream: '" .. NS_DS_NAME .. "'\n" .. value .. "\n")
-                    end
+    net.Receive("NetStreamDS", function(length)
+        local NS_DS_NAME = net.ReadString()
+        local NS_DS_LENGTH = net.ReadUInt(32)
+        local NS_DS_DATA = net.ReadData(NS_DS_LENGTH)
+        if NS_DS_NAME and NS_DS_DATA and NS_DS_LENGTH then
+            if netstream.stored[NS_DS_NAME] then
+                local bStatus, value = pcall(pon.decode, NS_DS_DATA)
+                if bStatus then
+                    netstream.stored[NS_DS_NAME](unpack(value))
+                else
+                    ErrorNoHalt("NetStream: '" .. NS_DS_NAME .. "'\n" .. value .. "\n")
                 end
             end
-
-            NS_DS_NAME, NS_DS_DATA, NS_DS_LENGTH = nil, nil, nil
         end
-    )
+
+        NS_DS_NAME, NS_DS_DATA, NS_DS_LENGTH = nil, nil, nil
+    end)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

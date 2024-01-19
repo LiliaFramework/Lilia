@@ -19,7 +19,7 @@ local function ThrowConnectionFault(fault)
 end
 
 local function promisifyIfNoCallback(queryHandler)
-    return     function(query, callback)
+    return function(query, callback)
         local d
         local function throw(err)
             if d then
@@ -32,12 +32,10 @@ local function promisifyIfNoCallback(queryHandler)
         if not isfunction(callback) then
             d = deferred.new()
             callback = function(results, lastID)
-                d:resolve(
-                    {
-                        results = results,
-                        lastID = lastID
-                    }
-                )
+                d:resolve({
+                    results = results,
+                    lastID = lastID
+                })
             end
         end
 
@@ -47,17 +45,15 @@ local function promisifyIfNoCallback(queryHandler)
 end
 
 modules.sqlite = {
-    query = promisifyIfNoCallback(
-        function(query, callback, throw)
-            local data = sql.Query(query)
-            local err = sql.LastError()
-            if data == false then throw(err) end
-            if callback then
-                local lastID = tonumber(sql.QueryValue("SELECT last_insert_rowid()"))
-                callback(data, lastID)
-            end
+    query = promisifyIfNoCallback(function(query, callback, throw)
+        local data = sql.Query(query)
+        local err = sql.LastError()
+        if data == false then throw(err) end
+        if callback then
+            local lastID = tonumber(sql.QueryValue("SELECT last_insert_rowid()"))
+            callback(data, lastID)
         end
-    ),
+    end),
     escape = function(value) return sql.SQLStr(value, true) end,
     connect = function(callback)
         lia.db.query = modules.sqlite.query
@@ -66,28 +62,22 @@ modules.sqlite = {
 }
 
 modules.tmysql4 = {
-    query = promisifyIfNoCallback(
-        function(query, callback, throw)
-            if lia.db.object then
-                lia.db.object:Query(
-                    query,
-                    function(status, result)
-                        if result then
-                            result = result[1]
-                            local queryStatus, queryError, affected, lastID, time, data = result.status, result.error, result.affected, result.lastid, result.time, result.data
-                            if queryStatus and queryStatus == true and callback then callback(data, lastID) end
-                        else
-                            file.Write("lia_queryerror.txt", query)
-                            throw(queryError)
-                        end
-                    end,
-                    3
-                )
-            else
-                lia.db.queryQueue[#lia.db.queryQueue] = {query, callback}
-            end
+    query = promisifyIfNoCallback(function(query, callback, throw)
+        if lia.db.object then
+            lia.db.object:Query(query, function(status, result)
+                if result then
+                    result = result[1]
+                    local queryStatus, queryError, affected, lastID, time, data = result.status, result.error, result.affected, result.lastid, result.time, result.data
+                    if queryStatus and queryStatus == true and callback then callback(data, lastID) end
+                else
+                    file.Write("lia_queryerror.txt", query)
+                    throw(queryError)
+                end
+            end, 3)
+        else
+            lia.db.queryQueue[#lia.db.queryQueue] = {query, callback}
         end
-    ),
+    end),
     escape = function(value)
         if lia.db.object then return lia.db.object:Escape(value) end
         return tmysql and tmysql.escape and tmysql.escape(value) or sql.SQLStr(value, true)
@@ -113,32 +103,30 @@ modules.tmysql4 = {
 }
 
 modules.mysqloo = {
-    query = promisifyIfNoCallback(
-        function(query, callback, throw)
-            if lia.db.getObject and lia.db.getObject() then
-                local object = lia.db.getObject():query(query)
-                if callback then
-                    function object:onSuccess(data)
-                        callback(data, self:lastInsert())
-                    end
+    query = promisifyIfNoCallback(function(query, callback, throw)
+        if lia.db.getObject and lia.db.getObject() then
+            local object = lia.db.getObject():query(query)
+            if callback then
+                function object:onSuccess(data)
+                    callback(data, self:lastInsert())
                 end
-
-                function object:onError(fault)
-                    if lia.db.getObject():status() == mysqloo.DATABASE_NOT_CONNECTED then
-                        lia.db.queryQueue[#lia.db.queryQueue + 1] = {query, callback}
-                        lia.db.connect(nil, true)
-                        return
-                    end
-
-                    throw(fault)
-                end
-
-                object:start()
-            else
-                lia.db.queryQueue[#lia.db.queryQueue + 1] = {query, callback}
             end
+
+            function object:onError(fault)
+                if lia.db.getObject():status() == mysqloo.DATABASE_NOT_CONNECTED then
+                    lia.db.queryQueue[#lia.db.queryQueue + 1] = {query, callback}
+                    lia.db.connect(nil, true)
+                    return
+                end
+
+                throw(fault)
+            end
+
+            object:start()
+        else
+            lia.db.queryQueue[#lia.db.queryQueue + 1] = {query, callback}
         end
-    ),
+    end),
     escape = function(value)
         local object = lia.db.getObject and lia.db.getObject()
         if object then
@@ -273,17 +261,15 @@ function lia.db.connect(callback, reconnect)
     local dbModule = modules[lia.db.module]
     if dbModule then
         if (reconnect or not lia.db.connected) and not lia.db.object then
-            dbModule.connect(
-                function()
-                    lia.db.connected = true
-                    if isfunction(callback) then callback() end
-                    for i = 1, #lia.db.queryQueue do
-                        lia.db.query(unpack(lia.db.queryQueue[i]))
-                    end
-
-                    lia.db.queryQueue = {}
+            dbModule.connect(function()
+                lia.db.connected = true
+                if isfunction(callback) then callback() end
+                for i = 1, #lia.db.queryQueue do
+                    lia.db.query(unpack(lia.db.queryQueue[i]))
                 end
-            )
+
+                lia.db.queryQueue = {}
+            end)
         end
 
         lia.db.escape = dbModule.escape
@@ -295,13 +281,10 @@ end
 
 function lia.db.wipeTables(callback)
     local function realCallback()
-        lia.db.query(
-            "SET FOREIGN_KEY_CHECKS = 1;",
-            function()
-                MsgC(Color(255, 0, 0), "[Lilia] ALL LILIA DATA HAS BEEN WIPED\n")
-                if isfunction(callback) then callback() end
-            end
-        )
+        lia.db.query("SET FOREIGN_KEY_CHECKS = 1;", function()
+            MsgC(Color(255, 0, 0), "[Lilia] ALL LILIA DATA HAS BEEN WIPED\n")
+            if isfunction(callback) then callback() end
+        end)
     end
 
     if lia.db.object then
@@ -315,13 +298,10 @@ function lia.db.wipeTables(callback)
                     continue
                 end
 
-                lia.db.query(
-                    queries[i],
-                    function()
-                        done = done + 1
-                        if done >= #queries then realCallback() end
-                    end
-                )
+                lia.db.query(queries[i], function()
+                    done = done + 1
+                    if done >= #queries then realCallback() end
+                end)
             end
         end
 
@@ -350,13 +330,10 @@ function lia.db.loadTables()
                 return doNextQuery()
             end
 
-            lia.db.query(
-                query,
-                function()
-                    i = i + 1
-                    doNextQuery()
-                end
-            )
+            lia.db.query(query, function()
+                i = i + 1
+                doNextQuery()
+            end)
         end
 
         doNextQuery()
@@ -433,17 +410,12 @@ function lia.db.select(fields, dbTable, condition, limit)
     local query = "SELECT " .. from .. " FROM " .. tableName
     if condition then query = query .. " WHERE " .. tostring(condition) end
     if limit then query = query .. " LIMIT " .. tostring(limit) end
-    lia.db.query(
-        query,
-        function(results, lastID)
-            d:resolve(
-                {
-                    results = results,
-                    lastID = lastID
-                }
-            )
-        end
-    )
+    lia.db.query(query, function(results, lastID)
+        d:resolve({
+            results = results,
+            lastID = lastID
+        })
+    end)
     return d
 end
 
@@ -456,17 +428,12 @@ function lia.db.upsert(value, dbTable)
     end
 
     local d = deferred.new()
-    lia.db.query(
-        query,
-        function(results, lastID)
-            d:resolve(
-                {
-                    results = results,
-                    lastID = lastID
-                }
-            )
-        end
-    )
+    lia.db.query(query, function(results, lastID)
+        d:resolve({
+            results = results,
+            lastID = lastID
+        })
+    end)
     return d
 end
 
@@ -480,16 +447,11 @@ function lia.db.delete(dbTable, condition)
     end
 
     local d = deferred.new()
-    lia.db.query(
-        query,
-        function(results, lastID)
-            d:resolve(
-                {
-                    results = results,
-                    lastID = lastID
-                }
-            )
-        end
-    )
+    lia.db.query(query, function(results, lastID)
+        d:resolve({
+            results = results,
+            lastID = lastID
+        })
+    end)
     return d
 end

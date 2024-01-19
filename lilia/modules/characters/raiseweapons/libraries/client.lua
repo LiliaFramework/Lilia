@@ -16,15 +16,11 @@ end
 
 function RaisedWeaponCore:SetupQuickMenu(menu)
     menu:addSpacer()
-    menu:addCheck(
-        L"altLower",
-        function(_, state)
-            if state then
-                RunConsoleCommand("lia_usealtlower", "1")
-            else
-                RunConsoleCommand("lia_usealtlower", "0")
-            end
-        end,
-        LIA_CVAR_LOWER2:GetBool()
-    )
+    menu:addCheck(L"altLower", function(_, state)
+        if state then
+            RunConsoleCommand("lia_usealtlower", "1")
+        else
+            RunConsoleCommand("lia_usealtlower", "0")
+        end
+    end, LIA_CVAR_LOWER2:GetBool())
 end

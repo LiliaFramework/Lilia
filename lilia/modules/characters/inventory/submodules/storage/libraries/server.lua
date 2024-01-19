@@ -31,20 +31,17 @@ function LiliaStorage:PlayerSpawnedProp(client, model, entity)
     storage:SetModel(model)
     storage:SetSolid(SOLID_VPHYSICS)
     storage:PhysicsInit(SOLID_VPHYSICS)
-    lia.inventory.instance(data.invType, data.invData):next(
-        function(inventory)
-            if IsValid(storage) then
-                inventory.isStorage = true
-                storage:setInventory(inventory)
-                self:SaveData()
-                if isfunction(data.onSpawn) then data.onSpawn(storage) end
-            end
-        end,
-        function(err)
-            ErrorNoHalt("Unable to create storage entity for " .. client:Name() .. "\n" .. err .. "\n")
-            if IsValid(storage) then storage:Remove() end
+    lia.inventory.instance(data.invType, data.invData):next(function(inventory)
+        if IsValid(storage) then
+            inventory.isStorage = true
+            storage:setInventory(inventory)
+            self:SaveData()
+            if isfunction(data.onSpawn) then data.onSpawn(storage) end
         end
-    )
+    end, function(err)
+        ErrorNoHalt("Unable to create storage entity for " .. client:Name() .. "\n" .. err .. "\n")
+        if IsValid(storage) then storage:Remove() end
+    end)
 
     entity:Remove()
 end
@@ -95,17 +92,15 @@ function LiliaStorage:LoadData()
             storage:setNetVar("locked", true)
         end
 
-        lia.inventory.loadByID(invID):next(
-            function(inventory)
-                if inventory and IsValid(storage) then
-                    inventory.isStorage = true
-                    storage:setInventory(inventory)
-                    hook.Run("StorageRestored", storage, inventory)
-                elseif IsValid(storage) then
-                    timer.Simple(1, function() if IsValid(storage) then storage:Remove() end end)
-                end
+        lia.inventory.loadByID(invID):next(function(inventory)
+            if inventory and IsValid(storage) then
+                inventory.isStorage = true
+                storage:setInventory(inventory)
+                hook.Run("StorageRestored", storage, inventory)
+            elseif IsValid(storage) then
+                timer.Simple(1, function() if IsValid(storage) then storage:Remove() end end)
             end
-        )
+        end)
 
         local physObject = storage:GetPhysicsObject()
         if physObject then physObject:EnableMotion() end

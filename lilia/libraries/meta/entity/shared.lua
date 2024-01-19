@@ -35,12 +35,10 @@ function entityMeta:isInRoom(target)
 end
 
 function entityMeta:InTrace(entity)
-    return     util.TraceLine(
-        {
-            start = entity:EyePos(),
-            endpos = self:EyePos()
-        }
-    ).Entity == self
+    return util.TraceLine({
+        start = entity:EyePos(),
+        endpos = self:EyePos()
+    }).Entity == self
 end
 
 function entityMeta:IsScreenVisible(entity, maxDist, fov)

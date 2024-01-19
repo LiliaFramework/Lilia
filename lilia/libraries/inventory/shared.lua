@@ -35,11 +35,8 @@ end
 function lia.inventory.new(typeID)
     local class = lia.inventory.types[typeID]
     assert(class ~= nil, "bad inventory type " .. typeID)
-    return     setmetatable(
-        {
-            items = {},
-            config = table.Copy(class.config)
-        },
-        class
-    )
+    return setmetatable({
+        items = {},
+        config = table.Copy(class.config)
+    }, class)
 end

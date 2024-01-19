@@ -6,7 +6,7 @@ end
 
 function lia.util.dateToNumber(str)
     str = str or os.date("%Y-%m-%d %H:%M:%S", os.time())
-    return     {
+    return {
         year = tonumber(str:sub(1, 4)),
         month = tonumber(str:sub(6, 7)),
         day = tonumber(str:sub(9, 10)),
@@ -132,27 +132,17 @@ function lia.util.loadEntities(path)
         end
     end
 
-    HandleEntityInclusion(
-        "entities",
-        "ENT",
-        scripted_ents.Register,
-        {
-            Type = "anim",
-            Base = "base_gmodentity",
-            Spawnable = true
-        }
-    )
+    HandleEntityInclusion("entities", "ENT", scripted_ents.Register, {
+        Type = "anim",
+        Base = "base_gmodentity",
+        Spawnable = true
+    })
 
-    HandleEntityInclusion(
-        "weapons",
-        "SWEP",
-        weapons.Register,
-        {
-            Primary = {},
-            Secondary = {},
-            Base = "weapon_base"
-        }
-    )
+    HandleEntityInclusion("weapons", "SWEP", weapons.Register, {
+        Primary = {},
+        Secondary = {},
+        Base = "weapon_base"
+    })
 
     HandleEntityInclusion("effects", "EFFECT", effects and effects.Register, nil, true)
 end

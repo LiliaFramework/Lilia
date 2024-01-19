@@ -22,13 +22,10 @@ function GM:LiliaLoaded()
             if namecache[authorID] ~= nil then
                 MODULE.author = namecache[authorID]
             else
-                steamworks.RequestPlayerInfo(
-                    authorID,
-                    function(newName)
-                        namecache[authorID] = newName
-                        MODULE.author = newName or MODULE.author
-                    end
-                )
+                steamworks.RequestPlayerInfo(authorID, function(newName)
+                    namecache[authorID] = newName
+                    MODULE.author = newName or MODULE.author
+                end)
             end
         end
     end

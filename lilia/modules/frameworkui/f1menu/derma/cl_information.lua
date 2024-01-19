@@ -72,15 +72,11 @@ function PANEL:setup()
     local char = LocalPlayer():getChar()
     if self.name then
         self.name:SetText(LocalPlayer():Name():gsub("#", "\226\128\139#"))
-        hook.Add(
-            "OnCharVarChanged",
-            self,
-            function(_, character, key, _, value)
-                if char ~= character then return end
-                if key ~= "name" then return end
-                self.name:SetText(value:gsub("#", "\226\128\139#"))
-            end
-        )
+        hook.Add("OnCharVarChanged", self, function(_, character, key, _, value)
+            if char ~= character then return end
+            if key ~= "name" then return end
+            self.name:SetText(value:gsub("#", "\226\128\139#"))
+        end)
     end
 
     if self.money then self.money:SetText(L("charMoney", lia.currency.get(char:getMoney()))) end

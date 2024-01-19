@@ -13,12 +13,9 @@ end
 function GM:CreateDefaultInventory(character)
     local charID = character:getID()
     if lia.inventory.types["grid"] then
-        return         lia.inventory.instance(
-            "grid",
-            {
-                char = charID
-            }
-        )
+        return lia.inventory.instance("grid", {
+            char = charID
+        })
     end
 end
 
@@ -32,14 +29,9 @@ end
 
 function GM:PlayerLoadedChar(client, character, lastChar)
     local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
-    lia.db.updateTable(
-        {
-            _lastJoinTime = timeStamp
-        },
-        nil,
-        "characters",
-        "_id = " .. character:getID()
-    )
+    lia.db.updateTable({
+        _lastJoinTime = timeStamp
+    }, nil, "characters", "_id = " .. character:getID())
 
     if lastChar then
         local charEnts = lastChar:getVar("charEnts") or {}
@@ -66,18 +58,13 @@ function GM:CharacterLoaded(id)
         local client = character:getPlayer()
         if IsValid(client) then
             local uniqueID = "liaSaveChar" .. client:SteamID()
-            timer.Create(
-                uniqueID,
-                lia.config.CharacterDataSaveInterval,
-                0,
-                function()
-                    if IsValid(client) and client:getChar() then
-                        client:getChar():save()
-                    else
-                        timer.Remove(uniqueID)
-                    end
+            timer.Create(uniqueID, lia.config.CharacterDataSaveInterval, 0, function()
+                if IsValid(client) and client:getChar() then
+                    client:getChar():save()
+                else
+                    timer.Remove(uniqueID)
                 end
-            )
+            end)
         end
     end
 end

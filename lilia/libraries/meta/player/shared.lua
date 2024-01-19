@@ -8,13 +8,11 @@ function playerMeta:isObserving()
 end
 
 function playerMeta:isOutside()
-    local trace = util.TraceLine(
-        {
-            start = self:GetPos(),
-            endpos = self:GetPos() + self:GetUp() * 9999999999,
-            filter = self
-        }
-    )
+    local trace = util.TraceLine({
+        start = self:GetPos(),
+        endpos = self:GetPos() + self:GetUp() * 9999999999,
+        filter = self
+    })
     return trace.HitSky
 end
 
@@ -23,14 +21,11 @@ function playerMeta:IsNoClipping()
 end
 
 function playerMeta:IsStuck()
-    return     util.TraceEntity(
-        {
-            start = self:GetPos(),
-            endpos = self:GetPos(),
-            filter = self
-        },
-        self
-    ).StartSolid
+    return util.TraceEntity({
+        start = self:GetPos(),
+        endpos = self:GetPos(),
+        filter = self
+    }, self).StartSolid
 end
 
 function playerMeta:AddMoney(amount)

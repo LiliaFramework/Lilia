@@ -4,16 +4,11 @@
 end
 
 function LiliaStorage:StorageUnlockPrompt(_)
-    Derma_StringRequest(
-        L("storPassWrite"),
-        L("storPassWrite"),
-        "",
-        function(val)
-            net.Start("liaStorageUnlock")
-            net.WriteString(val)
-            net.SendToServer()
-        end
-    )
+    Derma_StringRequest(L("storPassWrite"), L("storPassWrite"), "", function(val)
+        net.Start("liaStorageUnlock")
+        net.WriteString(val)
+        net.SendToServer()
+    end)
 end
 
 function LiliaStorage:StorageOpen(storage)
@@ -69,12 +64,9 @@ function LiliaStorage:PopulateContent(pnlContent, tree)
         for model, _ in pairs(LiliaStorage.StorageDefinitions) do
             local mdlicon = spawnmenu.GetContentType("model")
             if mdlicon then
-                mdlicon(
-                    ViewPanel,
-                    {
-                        model = model
-                    }
-                )
+                mdlicon(ViewPanel, {
+                    model = model
+                })
             end
         end
     end

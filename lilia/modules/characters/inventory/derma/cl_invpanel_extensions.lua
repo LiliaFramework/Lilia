@@ -11,18 +11,14 @@ function PANEL:liaListenForInventoryChanges(inventory)
     self.liaToRemoveHooks[id] = {}
     local function listenForInventoryChange(name, panelHook)
         panelHook = panelHook or name
-        hook.Add(
-            name,
-            hookID,
-            function(inventory, ...)
-                if not IsValid(self) then return end
-                if not isfunction(self[panelHook]) then return end
-                local args = {...}
-                args[#args + 1] = inventory
-                self[panelHook](self, unpack(args))
-                if name == "InventoryDeleted" and self.deleteInventoryHooks then self:deleteInventoryHooks(id) end
-            end
-        )
+        hook.Add(name, hookID, function(inventory, ...)
+            if not IsValid(self) then return end
+            if not isfunction(self[panelHook]) then return end
+            local args = {...}
+            args[#args + 1] = inventory
+            self[panelHook](self, unpack(args))
+            if name == "InventoryDeleted" and self.deleteInventoryHooks then self:deleteInventoryHooks(id) end
+        end)
 
         table.insert(self.liaToRemoveHooks[id], name)
     end
@@ -32,15 +28,11 @@ function PANEL:liaListenForInventoryChanges(inventory)
     listenForInventoryChange("InventoryDataChanged")
     listenForInventoryChange("InventoryItemAdded")
     listenForInventoryChange("InventoryItemRemoved")
-    hook.Add(
-        "ItemDataChanged",
-        hookID,
-        function(item, key, oldValue, newValue)
-            if not IsValid(self) or not inventory.items[item:getID()] then return end
-            if not isfunction(self.InventoryItemDataChanged) then return end
-            self:InventoryItemDataChanged(item, key, oldValue, newValue, inventory)
-        end
-    )
+    hook.Add("ItemDataChanged", hookID, function(item, key, oldValue, newValue)
+        if not IsValid(self) or not inventory.items[item:getID()] then return end
+        if not isfunction(self.InventoryItemDataChanged) then return end
+        self:InventoryItemDataChanged(item, key, oldValue, newValue, inventory)
+    end)
 
     table.insert(self.liaToRemoveHooks[id], "ItemDataChanged")
 end

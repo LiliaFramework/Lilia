@@ -65,18 +65,13 @@ function PANEL:Init()
     self.sellScale.TextArea:SetTextColor(color_white)
     self.sellScale:SetDecimals(2)
     self.sellScale.OnValueChanged = function(_, value)
-        timer.Create(
-            "liaVendorScale",
-            0.5,
-            1,
-            function()
-                if IsValid(self) and IsValid(self.sellScale) then
-                    value = self.sellScale:GetValue()
-                    local diff = math.abs(value - entity:getSellScale())
-                    if diff > 0.05 then EDITOR.scale(value) end
-                end
+        timer.Create("liaVendorScale", 0.5, 1, function()
+            if IsValid(self) and IsValid(self.sellScale) then
+                value = self.sellScale:GetValue()
+                local diff = math.abs(value - entity:getSellScale())
+                if diff > 0.05 then EDITOR.scale(value) end
             end
-        )
+        end)
     end
 
     self.faction = self:Add("DButton")
@@ -105,54 +100,30 @@ function PANEL:Init()
         mode:AddOption(L"vendorBoth", function() EDITOR.mode(uniqueID, VENDOR_SELLANDBUY) end):SetImage("icon16/cog.png")
         mode:AddOption(L"vendorBuy", function() EDITOR.mode(uniqueID, VENDOR_BUYONLY) end):SetImage("icon16/cog_delete.png")
         mode:AddOption(L"vendorSell", function() EDITOR.mode(uniqueID, VENDOR_SELLONLY) end):SetImage("icon16/cog_add.png")
-        menu:AddOption(
-            L"price",
-            function()
-                Derma_StringRequest(
-                    itemTable:getName(),
-                    L"vendorPriceReq",
-                    entity:getPrice(uniqueID),
-                    function(text)
-                        text = tonumber(text)
-                        EDITOR.price(uniqueID, text)
-                    end
-                )
-            end
-        ):SetImage("icon16/coins.png")
+        menu:AddOption(L"price", function()
+            Derma_StringRequest(itemTable:getName(), L"vendorPriceReq", entity:getPrice(uniqueID), function(text)
+                text = tonumber(text)
+                EDITOR.price(uniqueID, text)
+            end)
+        end):SetImage("icon16/coins.png")
 
         local stock, panel = menu:AddSubMenu(L"stock")
         panel:SetImage("icon16/table.png")
         stock:AddOption(L"disable", function() EDITOR.stockDisable(uniqueID) end):SetImage("icon16/table_delete.png")
-        stock:AddOption(
-            L"edit",
-            function()
-                local _, max = entity:getStock(uniqueID)
-                Derma_StringRequest(
-                    itemTable:getName(),
-                    L"vendorStockReq",
-                    max or 1,
-                    function(text)
-                        text = math.max(math.Round(tonumber(text) or 1), 1)
-                        EDITOR.stockMax(uniqueID, text)
-                    end
-                )
-            end
-        ):SetImage("icon16/table_edit.png")
+        stock:AddOption(L"edit", function()
+            local _, max = entity:getStock(uniqueID)
+            Derma_StringRequest(itemTable:getName(), L"vendorStockReq", max or 1, function(text)
+                text = math.max(math.Round(tonumber(text) or 1), 1)
+                EDITOR.stockMax(uniqueID, text)
+            end)
+        end):SetImage("icon16/table_edit.png")
 
-        stock:AddOption(
-            L"vendorEditCurStock",
-            function()
-                Derma_StringRequest(
-                    itemTable:getName(),
-                    L"vendorStockCurReq",
-                    entity:getStock(uniqueID) or 0,
-                    function(text)
-                        text = math.Round(tonumber(text) or 0)
-                        EDITOR.stock(uniqueID, text)
-                    end
-                )
-            end
-        ):SetImage("icon16/table_edit.png")
+        stock:AddOption(L"vendorEditCurStock", function()
+            Derma_StringRequest(itemTable:getName(), L"vendorStockCurReq", entity:getStock(uniqueID) or 0, function(text)
+                text = math.Round(tonumber(text) or 0)
+                EDITOR.stock(uniqueID, text)
+            end)
+        end):SetImage("icon16/table_edit.png")
 
         menu:Open()
     end
@@ -185,13 +156,10 @@ end
 
 function PANEL:OnFocusChanged(gained)
     if not gained then
-        timer.Simple(
-            0,
-            function()
-                if not IsValid(self) then return end
-                self:MakePopup()
-            end
-        )
+        timer.Simple(0, function()
+            if not IsValid(self) then return end
+            self:MakePopup()
+        end)
     end
 end
 

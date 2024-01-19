@@ -44,22 +44,19 @@ function SpawnsCore:CharacterPreSave(character)
 end
 
 function SpawnsCore:PlayerLoadedChar(client, character, _)
-    timer.Simple(
-        0,
-        function()
-            if IsValid(client) then
-                local position = character:getData("pos")
-                if position then
-                    if position[3] and position[3]:lower() == game.GetMap():lower() then
-                        client:SetPos(position[1].x and position[1] or client:GetPos())
-                        client:SetEyeAngles(position[2].p and position[2] or Angle(0, 0, 0))
-                    end
-
-                    character:setData("pos", nil)
+    timer.Simple(0, function()
+        if IsValid(client) then
+            local position = character:getData("pos")
+            if position then
+                if position[3] and position[3]:lower() == game.GetMap():lower() then
+                    client:SetPos(position[1].x and position[1] or client:GetPos())
+                    client:SetEyeAngles(position[2].p and position[2] or Angle(0, 0, 0))
                 end
+
+                character:setData("pos", nil)
             end
         end
-    )
+    end)
 end
 
 function SpawnsCore:PlayerDeath(client, _, attacker)

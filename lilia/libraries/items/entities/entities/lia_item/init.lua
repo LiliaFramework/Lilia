@@ -9,15 +9,12 @@ function ENT:Initialize()
     self.health = 250
     local physObj = self:GetPhysicsObject()
     if IsValid(physObj) then physObj:EnableMotion(false) end
-    timer.Simple(
-        3,
-        function()
-            if IsValid(physObj) then
-                physObj:EnableMotion(true)
-                physObj:Wake()
-            end
+    timer.Simple(3, function()
+        if IsValid(physObj) then
+            physObj:EnableMotion(true)
+            physObj:Wake()
         end
-    )
+    end)
 
     hook.Run("OnItemSpawned", self)
 end

@@ -51,14 +51,11 @@ do
         return medialib.Modules[name]
     end
 
-    local medialibg = setmetatable(
-        {
-            medialib = medialib
-        },
-        {
-            __index = _G
-        }
-    )
+    local medialibg = setmetatable({
+        medialib = medialib
+    }, {
+        __index = _G
+    })
 
     local real_file_meta = {
         read = function(self) return file.Read(self.lua_path, "LUA") end,
@@ -85,31 +82,19 @@ do
     function medialib.folderIterator(folder)
         local files = {}
         for _, fname in pairs(file.Find("medialib/" .. folder .. "/*.lua", "LUA")) do
-            table.insert(
-                files,
-                setmetatable(
-                    {
-                        name = fname,
-                        lua_path = "medialib/" .. folder .. "/" .. fname
-                    },
-                    real_file_meta
-                )
-            )
+            table.insert(files, setmetatable({
+                name = fname,
+                lua_path = "medialib/" .. folder .. "/" .. fname
+            }, real_file_meta))
         end
 
         for k, item in pairs(medialib.FolderItems) do
             local mfolder = k:match("^([^/]*).+")
             if mfolder == folder then
-                table.insert(
-                    files,
-                    setmetatable(
-                        {
-                            name = k:match("^[^/]*/(.+)"),
-                            source = item
-                        },
-                        virt_file_meta
-                    )
-                )
+                table.insert(files, setmetatable({
+                    name = k:match("^[^/]*/(.+)"),
+                    source = item
+                }, virt_file_meta))
             end
         end
         return pairs(files)
@@ -122,47 +107,37 @@ do
             end
         end
 
-        concommand.Add(
-            "medialib_noflash",
-            function(_, _, args)
-                if args[1] == "rainbow" then Rainbow() end
-                SetClipboardText("http://get.adobe.com/flashplayer/otherversions/")
-                MsgN("[ MediaLib: How to get Flash Player ]")
-                MsgN("1. Open this website in your browser (not the ingame Steam browser): " .. "http://get.adobe.com/flashplayer/otherversions/")
-                MsgN("   (the link has been automatically copied to your clipboard)")
-                MsgN("2. Download and install the NSAPI (for Firefox) version")
-                MsgN("3. Restart your Garry's Mod and rejoin this server")
-                MsgN("[ ======================= ]")
-            end
-        )
+        concommand.Add("medialib_noflash", function(_, _, args)
+            if args[1] == "rainbow" then Rainbow() end
+            SetClipboardText("http://get.adobe.com/flashplayer/otherversions/")
+            MsgN("[ MediaLib: How to get Flash Player ]")
+            MsgN("1. Open this website in your browser (not the ingame Steam browser): " .. "http://get.adobe.com/flashplayer/otherversions/")
+            MsgN("   (the link has been automatically copied to your clipboard)")
+            MsgN("2. Download and install the NSAPI (for Firefox) version")
+            MsgN("3. Restart your Garry's Mod and rejoin this server")
+            MsgN("[ ======================= ]")
+        end)
 
-        concommand.Add(
-            "medialib_lowaudio",
-            function(_, _, args)
-                if args[1] == "rainbow" then Rainbow() end
-                SetClipboardText("http://windows.microsoft.com/en-us/windows7/adjust-the-sound-level-on-your-computer")
-                MsgN("[ MediaLib: How to fix muted sound ]")
-                MsgN("1. Follow instructions here: " .. "http://windows.microsoft.com/en-us/windows7/adjust-the-sound-level-on-your-computer")
-                MsgN("   (the link has been automatically copied to your clipboard, you can open it in the steam ingame browser)")
-                MsgN("2. Increase the volume of a process called 'Awesomium Core'")
-                MsgN("3. You should immediately start hearing sound if a mediaclip is playing")
-                MsgN("[ ======================= ]")
-            end
-        )
+        concommand.Add("medialib_lowaudio", function(_, _, args)
+            if args[1] == "rainbow" then Rainbow() end
+            SetClipboardText("http://windows.microsoft.com/en-us/windows7/adjust-the-sound-level-on-your-computer")
+            MsgN("[ MediaLib: How to fix muted sound ]")
+            MsgN("1. Follow instructions here: " .. "http://windows.microsoft.com/en-us/windows7/adjust-the-sound-level-on-your-computer")
+            MsgN("   (the link has been automatically copied to your clipboard, you can open it in the steam ingame browser)")
+            MsgN("2. Increase the volume of a process called 'Awesomium Core'")
+            MsgN("3. You should immediately start hearing sound if a mediaclip is playing")
+            MsgN("[ ======================= ]")
+        end)
 
-        hook.Add(
-            "OnPlayerChat",
-            "MediaLib.ShowInstructions",
-            function(_, text)
-                if text:match("!ml_noflash") then
-                    RunConsoleCommand("medialib_noflash", "rainbow")
-                    RunConsoleCommand("showconsole")
-                elseif text:match("!ml_lowvolume") then
-                    RunConsoleCommand("medialib_lowaudio", "rainbow")
-                    RunConsoleCommand("showconsole")
-                end
+        hook.Add("OnPlayerChat", "MediaLib.ShowInstructions", function(_, text)
+            if text:match("!ml_noflash") then
+                RunConsoleCommand("medialib_noflash", "rainbow")
+                RunConsoleCommand("showconsole")
+            elseif text:match("!ml_lowvolume") then
+                RunConsoleCommand("medialib_lowaudio", "rainbow")
+                RunConsoleCommand("showconsole")
             end
-        )
+        end)
     end
 end
 
@@ -207,12 +182,9 @@ do
         cls.name = name
         cls.super = par_cls
         -- Add a subtable for class members ie methods and class/super handles
-        cls.members = setmetatable(
-            {},
-            {
-                __index = cls.super
-            }
-        )
+        cls.members = setmetatable({}, {
+            __index = cls.super
+        })
 
         -- Add built-in "keywords" that Instances can access
         cls.members.class = cls
@@ -311,16 +283,13 @@ do
         -- Fetching or there was an error (TODO make error available to user)
         if md == true or type(md) == "string" then return nil end
         self._metadata = true
-        self:getService():query(
-            self:getUrl(),
-            function(err, data)
-                if err then
-                    self._metadata = err
-                else
-                    self._metadata = data
-                end
+        self:getService():query(self:getUrl(), function(err, data)
+            if err then
+                self._metadata = err
+            else
+                self._metadata = data
             end
-        )
+        end)
         return nil
     end
 
@@ -465,12 +434,9 @@ end
 medialib.modulePlaceholder("mediaregistry")
 do
     local mediaregistry = medialib.module("mediaregistry")
-    local cache = setmetatable(
-        {},
-        {
-            __mode = "v"
-        }
-    )
+    local cache = setmetatable({}, {
+        __mode = "v"
+    })
 
     function mediaregistry.add(media)
         table.insert(cache, media)
@@ -481,55 +447,39 @@ do
     end
 
     concommand.Add("medialib_listall", function() hook.Run("MediaLib_ListAll") end)
-    hook.Add(
-        "MediaLib_ListAll",
-        "MediaLib_" .. medialib.INSTANCE,
-        function()
-            print("Media for medialib version " .. medialib.INSTANCE .. ":")
-            for _, v in pairs(cache) do
-                print(v:getDebugInfo())
-            end
+    hook.Add("MediaLib_ListAll", "MediaLib_" .. medialib.INSTANCE, function()
+        print("Media for medialib version " .. medialib.INSTANCE .. ":")
+        for _, v in pairs(cache) do
+            print(v:getDebugInfo())
         end
-    )
+    end)
 
     concommand.Add("medialib_stopall", function() hook.Run("MediaLib_StopAll") end)
-    hook.Add(
-        "MediaLib_StopAll",
-        "MediaLib_" .. medialib.INSTANCE,
-        function()
-            for _, v in pairs(cache) do
-                v:stop()
-            end
-
-            table.Empty(cache)
+    hook.Add("MediaLib_StopAll", "MediaLib_" .. medialib.INSTANCE, function()
+        for _, v in pairs(cache) do
+            v:stop()
         end
-    )
+
+        table.Empty(cache)
+    end)
 
     local cvar_debug = CreateConVar("medialib_debugmedia", "0")
-    hook.Add(
-        "HUDPaint",
-        "MediaLib_G_DebugMedia",
-        function()
-            if not cvar_debug:GetBool() then return end
-            local counter = {0}
-            hook.Run("MediaLib_DebugPaint", counter)
-        end
-    )
+    hook.Add("HUDPaint", "MediaLib_G_DebugMedia", function()
+        if not cvar_debug:GetBool() then return end
+        local counter = {0}
+        hook.Run("MediaLib_DebugPaint", counter)
+    end)
 
-    hook.Add(
-        "MediaLib_DebugPaint",
-        "MediaLib_" .. medialib.INSTANCE,
-        function(counter)
-            local i = counter[1]
-            for _, media in pairs(cache) do
-                local t = string.format("#%d %s", i, media:getDebugInfo())
-                draw.SimpleText(t, "DermaDefault", 10, 10 + i * 15)
-                i = i + 1
-            end
-
-            counter[1] = i
+    hook.Add("MediaLib_DebugPaint", "MediaLib_" .. medialib.INSTANCE, function(counter)
+        local i = counter[1]
+        for _, media in pairs(cache) do
+            local t = string.format("#%d %s", i, media:getDebugInfo())
+            draw.SimpleText(t, "DermaDefault", 10, 10 + i * 15)
+            i = i + 1
         end
-    )
+
+        counter[1] = i
+    end)
 end
 
 -- 'servicebase'; CodeLen/MinifiedLen 2234/2234; Dependencies [oop,mediaregistry]
@@ -561,13 +511,10 @@ do
         media:setDefaultTag()
         hook.Run("Medialib_ProcessOpts", media, opts or {})
         mediaregistry.add(media)
-        self:resolveUrl(
-            url,
-            function(resolvedUrl, resolvedData)
-                media:openUrl(resolvedUrl)
-                if resolvedData and resolvedData.start and (not opts or not opts.dontSeek) then media:seek(resolvedData.start) end
-            end
-        )
+        self:resolveUrl(url, function(resolvedUrl, resolvedData)
+            media:openUrl(resolvedUrl)
+            if resolvedData and resolvedData.start and (not opts or not opts.dontSeek) then media:seek(resolvedData.start) end
+        end)
     end
 
     function Service:isValidUrl()
@@ -592,12 +539,9 @@ do
 
     -- Query calls direct query and then passes the data through a medialib hook
     function Service:query(url, callback)
-        local cbchain = setmetatable(
-            {
-                _callbacks = {}
-            },
-            _service_cbchain_meta
-        )
+        local cbchain = setmetatable({
+            _callbacks = {}
+        }, _service_cbchain_meta)
 
         -- First add the data gotten from the service itself
         cbchain:addCallback(function(_, _, cb) return self:directQuery(url, cb) end)
@@ -694,16 +638,11 @@ do
     hook.Add("MediaLib_HTMLPoolInfo", medialib.INSTANCE, function() print(medialib.INSTANCE .. "> Free HTMLPool instance count: " .. #HTMLPool.instances .. "/" .. GetMaxPoolInstances()) end)
     concommand.Add("medialib_htmlpoolinfo", function() hook.Run("MediaLib_HTMLPoolInfo") end)
     -- Automatic periodic cleanup of html pool objects
-    timer.Create(
-        "MediaLib." .. medialib.INSTANCE .. ".HTMLPoolCleaner",
-        60,
-        0,
-        function()
-            if #HTMLPool.instances == 0 then return end
-            local inst = table.remove(HTMLPool.instances, 1)
-            if IsValid(inst) then inst:Remove() end
-        end
-    )
+    timer.Create("MediaLib." .. medialib.INSTANCE .. ".HTMLPoolCleaner", 60, 0, function()
+        if #HTMLPool.instances == 0 then return end
+        local inst = table.remove(HTMLPool.instances, 1)
+        if IsValid(inst) then inst:Remove() end
+    end)
 
     function HTMLPool.newInstance()
         return vgui.Create("DHTML")
@@ -747,18 +686,14 @@ do
         pnl:SetPos(0, 0)
         pnl:SetSize(panel_width, panel_height)
         local hookid = "MediaLib.HTMLMedia.FakeThink-" .. self:hashCode()
-        hook.Add(
-            "Think",
-            hookid,
-            function()
-                if not IsValid(self.panel) then
-                    hook.Remove("Think", hookid)
-                    return
-                end
-
-                self.panel:Think()
+        hook.Add("Think", hookid, function()
+            if not IsValid(self.panel) then
+                hook.Remove("Think", hookid)
+                return
             end
-        )
+
+            self.panel:Think()
+        end)
 
         local oldcm = pnl._OldCM or pnl.ConsoleMessage
         pnl._OldCM = oldcm
@@ -774,15 +709,11 @@ do
             return oldcm(pself, msg)
         end
 
-        pnl:AddFunction(
-            "console",
-            "warn",
-            function(param)
-                -- Youtube seems to spam lots of useless stuff here (that requires this function still?), so block by default
-                if not cvar_showAllMessages:GetBool() then return end
-                pnl:ConsoleMessage(param)
-            end
-        )
+        pnl:AddFunction("console", "warn", function(param)
+            -- Youtube seems to spam lots of useless stuff here (that requires this function still?), so block by default
+            if not cvar_showAllMessages:GetBool() then return end
+            pnl:ConsoleMessage(param)
+        end)
 
         pnl:SetPaintedManually(true)
         pnl:SetVisible(false)
@@ -826,13 +757,10 @@ do
                 fn()
             end
         elseif id == "error" then
-            self:emit(
-                "error",
-                {
-                    errorId = "service_error",
-                    errorName = "Error from service: " .. tostring(event.message)
-                }
-            )
+            self:emit("error", {
+                errorId = "service_error",
+                errorName = "Error from service: " .. tostring(event.message)
+            })
         else
             MsgN("[MediaLib] Unhandled HTML event " .. tostring(id))
         end
@@ -938,12 +866,9 @@ do
         HTMLPool.free(self.panel)
         self.panel = nil
         self.timeKeeper:pause()
-        self:emit(
-            "ended",
-            {
-                stopped = true
-            }
-        )
+        self:emit("ended", {
+            stopped = true
+        })
 
         self:emit("destroyed")
     end
@@ -1082,17 +1007,12 @@ do
     end
 
     function BASSMedia:startStateChecker()
-        timer.Create(
-            "MediaLib_BASS_EndChecker_" .. self:hashCode(),
-            1,
-            0,
-            function()
-                if IsValid(self.chan) and self.chan:GetState() == GMOD_CHANNEL_STOPPED then
-                    self:emit("ended")
-                    self:stopStateChecker()
-                end
+        timer.Create("MediaLib_BASS_EndChecker_" .. self:hashCode(), 1, 0, function()
+            if IsValid(self.chan) and self.chan:GetState() == GMOD_CHANNEL_STOPPED then
+                self:emit("ended")
+                self:stopStateChecker()
             end
-        )
+        end)
     end
 
     function BASSMedia:stopStateChecker()
@@ -1128,28 +1048,26 @@ do
     end
 
     function BASSMedia:seek(time)
-        self:runCommand(
-            function(chan)
-                if chan:IsBlockStreamed() then return end
-                self._seekingTo = time
-                local timerId = "MediaLib_BASSMedia_Seeker_" .. self:hashCode()
-                local function AttemptSeek()
-                    -- someone used :seek with other time
-                    if self._seekingTo ~= time or not IsValid(chan) then
-                        -- chan not valid
-                        timer.Destroy(timerId)
-                        return
-                    end
-
-                    chan:SetTime(time)
-                    -- seek succeeded
-                    if math.abs(chan:GetTime() - time) < 0.25 then timer.Destroy(timerId) end
+        self:runCommand(function(chan)
+            if chan:IsBlockStreamed() then return end
+            self._seekingTo = time
+            local timerId = "MediaLib_BASSMedia_Seeker_" .. self:hashCode()
+            local function AttemptSeek()
+                -- someone used :seek with other time
+                if self._seekingTo ~= time or not IsValid(chan) then
+                    -- chan not valid
+                    timer.Destroy(timerId)
+                    return
                 end
 
-                timer.Create(timerId, 0.2, 0, AttemptSeek)
-                AttemptSeek()
+                chan:SetTime(time)
+                -- seek succeeded
+                if math.abs(chan:GetTime() - time) < 0.25 then timer.Destroy(timerId) end
             end
-        )
+
+            timer.Create(timerId, 0.2, 0, AttemptSeek)
+            AttemptSeek()
+        end)
     end
 
     function BASSMedia:getTime()
@@ -1164,46 +1082,39 @@ do
         if bassState == GMOD_CHANNEL_PLAYING then return "playing" end
         if bassState == GMOD_CHANNEL_PAUSED then return "paused" end
         if bassState == GMOD_CHANNEL_STALLED then return "buffering" end
-        if bassState == GMOD_CHANNEL_STOPPED then return "paused" end -- umm??
+        if bassState == GMOD_CHANNEL_STOPPED then -- umm??
+            return "paused"
+        end
         return
     end
 
     function BASSMedia:play()
-        self:runCommand(
-            function(chan)
-                chan:Play()
-                self:emit("playing")
-                self._commandState = "play"
-            end
-        )
+        self:runCommand(function(chan)
+            chan:Play()
+            self:emit("playing")
+            self._commandState = "play"
+        end)
     end
 
     function BASSMedia:pause()
-        self:runCommand(
-            function(chan)
-                chan:Pause()
-                self:emit("paused")
-                self._commandState = "pause"
-            end
-        )
+        self:runCommand(function(chan)
+            chan:Pause()
+            self:emit("paused")
+            self._commandState = "pause"
+        end)
     end
 
     function BASSMedia:stop()
         self._stopped = true
-        self:runCommand(
-            function(chan)
-                chan:Stop()
-                self:emit(
-                    "ended",
-                    {
-                        stopped = true
-                    }
-                )
+        self:runCommand(function(chan)
+            chan:Stop()
+            self:emit("ended", {
+                stopped = true
+            })
 
-                self:emit("destroyed")
-                self:stopStateChecker()
-            end
-        )
+            self:emit("destroyed")
+            self:stopStateChecker()
+        end)
     end
 
     function BASSMedia:isValid()
@@ -1215,27 +1126,20 @@ do
     if CLIENT then
         -- Logic for reloading BASS streams after map cleanups
         -- Workaround until gmod issue #2874 gets fixed
-        net.Receive(
-            netmsgid,
-            function()
-                for _, v in pairs(mediaregistry.get()) do
-                    -- BASS media that should play, yet does not
-                    if v:getBaseService() == "bass" and v:isValid() and IsValid(v.chan) and v.chan:GetState() == GMOD_CHANNEL_STOPPED then v:reload() end
-                end
+        net.Receive(netmsgid, function()
+            for _, v in pairs(mediaregistry.get()) do
+                -- BASS media that should play, yet does not
+                if v:getBaseService() == "bass" and v:isValid() and IsValid(v.chan) and v.chan:GetState() == GMOD_CHANNEL_STOPPED then v:reload() end
             end
-        )
+        end)
     end
 
     if SERVER then
         util.AddNetworkString(netmsgid)
-        hook.Add(
-            "PostCleanupMap",
-            "MediaLib_BassReload" .. medialib.INSTANCE,
-            function()
-                net.Start(netmsgid)
-                net.Broadcast()
-            end
-        )
+        hook.Add("PostCleanupMap", "MediaLib_BassReload" .. medialib.INSTANCE, function()
+            net.Start(netmsgid)
+            net.Broadcast()
+        end)
     end
 end
 

@@ -75,12 +75,9 @@ function WSCore:HUDPaint()
 end
 
 function WSCore:LoadFonts()
-    surface.CreateFont(
-        "Monofonto24",
-        {
-            font = "Monofonto",
-            size = 24,
-            weight = 500
-        }
-    )
+    surface.CreateFont("Monofonto24", {
+        font = "Monofonto",
+        size = 24,
+        weight = 500
+    })
 end

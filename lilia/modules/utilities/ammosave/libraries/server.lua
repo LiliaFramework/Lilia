@@ -18,16 +18,13 @@ function AmmoSaveCore:PlayerLoadedChar(client)
     local character = client:getChar()
     local ammoTable = character:getData("ammo", {})
     if not self.SaveCharacterAmmo or table.IsEmpty(ammoTable) then return end
-    timer.Simple(
-        0.25,
-        function()
-            for ammoType, ammoCount in pairs(ammoTable) do
-                client:GiveAmmo(ammoCount, ammoType, true)
-            end
-
-            character:setData("ammo", nil)
+    timer.Simple(0.25, function()
+        for ammoType, ammoCount in pairs(ammoTable) do
+            client:GiveAmmo(ammoCount, ammoType, true)
         end
-    )
+
+        character:setData("ammo", nil)
+    end)
 end
 
 function AmmoSaveCore:PlayerDeath(client, _, _)

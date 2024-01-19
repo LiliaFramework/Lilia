@@ -12,17 +12,14 @@ function lia.menu.add(options, position, onRemove)
         entity = position
         position = entity:WorldToLocal(LocalPlayer():GetEyeTrace().HitPos)
     end
-    return     table.insert(
-        lia.menu.list,
-        {
-            position = position or LocalPlayer():GetEyeTrace().HitPos,
-            options = options,
-            width = width + 8,
-            height = table.Count(options) * 28,
-            entity = entity,
-            onRemove = onRemove
-        }
-    )
+    return table.insert(lia.menu.list, {
+        position = position or LocalPlayer():GetEyeTrace().HitPos,
+        options = options,
+        width = width + 8,
+        height = table.Count(options) * 28,
+        entity = entity,
+        onRemove = onRemove
+    })
 end
 
 function lia.menu.drawAll()

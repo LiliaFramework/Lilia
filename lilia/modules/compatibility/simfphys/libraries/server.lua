@@ -12,22 +12,17 @@
     if entity:IsSimfphysCar() and self.TimeToEnterVehicle > 0 then
         entity.IsBeingEntered = true
         client:setAction("Entering Vehicle...", self.TimeToEnterVehicle)
-        client:doStaredAction(
-            entity,
-            function()
+        client:doStaredAction(entity, function()
+            entity.IsBeingEntered = false
+            entity:SetPassenger(client)
+        end, self.TimeToEnterVehicle, function()
+            if IsValid(entity) then
                 entity.IsBeingEntered = false
-                entity:SetPassenger(client)
-            end,
-            self.TimeToEnterVehicle,
-            function()
-                if IsValid(entity) then
-                    entity.IsBeingEntered = false
-                    client:setAction()
-                end
-
-                if IsValid(client) then client:setAction() end
+                client:setAction()
             end
-        )
+
+            if IsValid(client) then client:setAction() end
+        end)
     end
     return self.CarEntryDelayEnabled
 end

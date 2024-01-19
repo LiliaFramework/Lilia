@@ -1,18 +1,14 @@
 ﻿local useCheapBlur = CreateClientConVar("lia_cheapblur", 0, true):GetBool()
 function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
     color = color or color_white
-    return     draw.TextShadow(
-        {
-            text = text,
-            font = font or "liaGenericFont",
-            pos = {x, y},
-            color = color,
-            xalign = alignX or 0,
-            yalign = alignY or 0
-        },
-        1,
-        alpha or (color.a * 0.575)
-    )
+    return draw.TextShadow({
+        text = text,
+        font = font or "liaGenericFont",
+        pos = {x, y},
+        color = color,
+        xalign = alignX or 0,
+        yalign = alignY or 0
+    }, 1, alpha or (color.a * 0.575))
 end
 
 function lia.util.DrawTexture(material, color, x, y, w, h)
@@ -111,19 +107,14 @@ function lia.util.ScreenScaleH(n, type)
     return n * (ScrH() / 480)
 end
 
-timer.Create(
-    "liaResolutionMonitor",
-    1,
-    0,
-    function()
-        local scrW, scrH = ScrW(), ScrH()
-        if scrW ~= LAST_WIDTH or scrH ~= LAST_HEIGHT then
-            hook.Run("ScreenResolutionChanged", LAST_WIDTH, LAST_HEIGHT)
-            LAST_WIDTH = scrW
-            LAST_HEIGHT = scrH
-        end
+timer.Create("liaResolutionMonitor", 1, 0, function()
+    local scrW, scrH = ScrW(), ScrH()
+    if scrW ~= LAST_WIDTH or scrH ~= LAST_HEIGHT then
+        hook.Run("ScreenResolutionChanged", LAST_WIDTH, LAST_HEIGHT)
+        LAST_WIDTH = scrW
+        LAST_HEIGHT = scrH
     end
-)
+end)
 
 function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCancel, strButtonText, strButtonCancelText)
     local Window = vgui.Create("DFrame")
@@ -213,26 +204,22 @@ function lia.util.FetchImage(id, callback, failImg, pngParameters, imageProvider
             callback(false)
         end
     else
-        http.Fetch(
-            (imageProvider or "https://i.imgur.com/") .. id .. ".png",
-            function(body, size, headers, code)
-                if code ~= 200 then
-                    callback(false)
-                    return
-                end
+        http.Fetch((imageProvider or "https://i.imgur.com/") .. id .. ".png", function(body, size, headers, code)
+            if code ~= 200 then
+                callback(false)
+                return
+            end
 
-                if not body or body == "" then
-                    callback(false)
-                    return
-                end
+            if not body or body == "" then
+                callback(false)
+                return
+            end
 
-                file.Write("lilia/images/" .. id .. ".png", body)
-                local mat = Material("data/lilia/images/" .. id .. ".png", "noclamp smooth")
-                lia.util.LoadedImages[id] = mat
-                if callback then callback(mat) end
-            end,
-            function() if callback then callback(false) end end
-        )
+            file.Write("lilia/images/" .. id .. ".png", body)
+            local mat = Material("data/lilia/images/" .. id .. ".png", "noclamp smooth")
+            lia.util.LoadedImages[id] = mat
+            if callback then callback(mat) end
+        end, function() if callback then callback(false) end end)
     end
 end
 

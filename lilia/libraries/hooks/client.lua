@@ -62,16 +62,11 @@ function GM:HUDPaintBackground()
 end
 
 function GM:CharacterListLoaded()
-    timer.Create(
-        "liaWaitUntilPlayerValid",
-        1,
-        0,
-        function()
-            if not IsValid(LocalPlayer()) then return end
-            timer.Remove("liaWaitUntilPlayerValid")
-            hook.Run("LiliaLoaded")
-        end
-    )
+    timer.Create("liaWaitUntilPlayerValid", 1, 0, function()
+        if not IsValid(LocalPlayer()) then return end
+        timer.Remove("liaWaitUntilPlayerValid")
+        hook.Run("LiliaLoaded")
+    end)
 end
 
 function GM:OnContextMenuOpen()

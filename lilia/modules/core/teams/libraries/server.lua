@@ -21,13 +21,10 @@ function TeamsCore:PlayerLoadedChar(client, character, _)
     if class and data then
         local oldClass = character:getClass()
         if client:Team() == class.faction then
-            timer.Simple(
-                .3,
-                function()
-                    character:setClass(class.index)
-                    hook.Run("OnPlayerJoinClass", client, class.index, oldClass)
-                end
-            )
+            timer.Simple(.3, function()
+                character:setClass(class.index)
+                hook.Run("OnPlayerJoinClass", client, class.index, oldClass)
+            end)
         end
     end
 

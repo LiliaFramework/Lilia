@@ -19,21 +19,15 @@ function AFKKicker:DisableWarning()
 end
 
 function AFKKicker:LoadFonts()
-    surface.CreateFont(
-        "AFKKicker25",
-        {
-            font = "Roboto",
-            size = 25,
-            weight = 400
-        }
-    )
+    surface.CreateFont("AFKKicker25", {
+        font = "Roboto",
+        size = 25,
+        weight = 400
+    })
 
-    surface.CreateFont(
-        "AFKKicker120",
-        {
-            font = "Roboto",
-            size = 120,
-            weight = 400
-        }
-    )
+    surface.CreateFont("AFKKicker120", {
+        font = "Roboto",
+        size = 120,
+        weight = 400
+    })
 end

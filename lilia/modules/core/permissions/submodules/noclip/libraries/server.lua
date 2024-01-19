@@ -14,14 +14,11 @@ function GM:PlayerNoClip(client, state)
             if client.liaObsData then
                 if client:GetInfoNum("lia_obstpback", 0) > 0 then
                     local position, angles = client.liaObsData[1], client.liaObsData[2]
-                    timer.Simple(
-                        0,
-                        function()
-                            client:SetPos(position)
-                            client:SetEyeAngles(angles)
-                            client:SetVelocity(Vector(0, 0, 0))
-                        end
-                    )
+                    timer.Simple(0, function()
+                        client:SetPos(position)
+                        client:SetEyeAngles(angles)
+                        client:SetVelocity(Vector(0, 0, 0))
+                    end)
                 end
 
                 client.liaObsData = nil

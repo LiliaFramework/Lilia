@@ -91,28 +91,22 @@ function InventoryCore:HandleItemTransferRequest(client, itemID, x, y, invID)
 
     local tryCombineWith
     local originalAddRes
-    return     oldInventory:removeItem(itemID, true):next(function() return inventory:add(item, x, y) end):next(
-        function(res)
-            if not res or not res.error then return end
-            local conflictingItem = istable(res.error) and res.error.item
-            if conflictingItem then tryCombineWith = conflictingItem end
-            originalAddRes = res
-            return oldInventory:add(item, oldX, oldY)
+    return oldInventory:removeItem(itemID, true):next(function() return inventory:add(item, x, y) end):next(function(res)
+        if not res or not res.error then return end
+        local conflictingItem = istable(res.error) and res.error.item
+        if conflictingItem then tryCombineWith = conflictingItem end
+        originalAddRes = res
+        return oldInventory:add(item, oldX, oldY)
+    end):next(function(res)
+        if res and res.error then return res end
+        if tryCombineWith and IsValid(client) then if hook.Run("ItemCombine", client, item, tryCombineWith) then return end end
+    end):next(function(res)
+        client.invTransferTransaction = nil
+        if res and res.error then
+            fail()
+        else
+            hook.Run("ItemTransfered", context)
         end
-    ):next(
-        function(res)
-            if res and res.error then return res end
-            if tryCombineWith and IsValid(client) then if hook.Run("ItemCombine", client, item, tryCombineWith) then return end end
-        end
-    ):next(
-        function(res)
-            client.invTransferTransaction = nil
-            if res and res.error then
-                fail()
-            else
-                hook.Run("ItemTransfered", context)
-            end
-            return originalAddRes
-        end
-    ):catch(fail)
+        return originalAddRes
+    end):catch(fail)
 end

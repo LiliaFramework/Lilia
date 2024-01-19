@@ -13,19 +13,14 @@
         end
     end
 
-    timer.Create(
-        uniqueID,
-        0.25,
-        0,
-        function()
-            if not IsValid(client) then
-                timer.Remove(uniqueID)
-                return
-            end
-
-            self:CalcStaminaChange(client)
+    timer.Create(uniqueID, 0.25, 0, function()
+        if not IsValid(client) then
+            timer.Remove(uniqueID)
+            return
         end
-    )
+
+        self:CalcStaminaChange(client)
+    end)
 end
 
 function AttributesCore:KeyRelease(client, key)
@@ -48,17 +43,12 @@ function AttributesCore:PlayerStaminaLost(client)
     if client.isBreathing then return end
     client:EmitSound("player/breathe1.wav", 35, 100)
     client.isBreathing = true
-    timer.Create(
-        "liaStamBreathCheck" .. client:SteamID(),
-        1,
-        0,
-        function()
-            if client:getLocalVar("stamina", 0) < self.StaminaBreathingThreshold then return end
-            client:StopSound("player/breathe1.wav")
-            client.isBreathing = nil
-            timer.Remove("liaStamBreathCheck" .. client:SteamID())
-        end
-    )
+    timer.Create("liaStamBreathCheck" .. client:SteamID(), 1, 0, function()
+        if client:getLocalVar("stamina", 0) < self.StaminaBreathingThreshold then return end
+        client:StopSound("player/breathe1.wav")
+        client.isBreathing = nil
+        timer.Remove("liaStamBreathCheck" .. client:SteamID())
+    end)
 end
 
 function AttributesCore:PlayerThrowPunch(client, _)

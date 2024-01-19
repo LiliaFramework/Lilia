@@ -69,26 +69,22 @@ end
 function SWEP:DealDamage()
     local anim = self:GetSequenceName(self:GetOwner():GetViewModel():GetSequence())
     self:GetOwner():LagCompensation(true)
-    local tr = util.TraceLine(
-        {
+    local tr = util.TraceLine({
+        start = self:GetOwner():GetShootPos(),
+        endpos = self:GetOwner():GetShootPos() + self:GetOwner():GetAimVector() * self.HitDistance,
+        filter = self:GetOwner(),
+        mask = MASK_SHOT_HULL
+    })
+
+    if not IsValid(tr.Entity) then
+        tr = util.TraceHull({
             start = self:GetOwner():GetShootPos(),
             endpos = self:GetOwner():GetShootPos() + self:GetOwner():GetAimVector() * self.HitDistance,
             filter = self:GetOwner(),
+            mins = Vector(-10, -10, -8),
+            maxs = Vector(10, 10, 8),
             mask = MASK_SHOT_HULL
-        }
-    )
-
-    if not IsValid(tr.Entity) then
-        tr = util.TraceHull(
-            {
-                start = self:GetOwner():GetShootPos(),
-                endpos = self:GetOwner():GetShootPos() + self:GetOwner():GetAimVector() * self.HitDistance,
-                filter = self:GetOwner(),
-                mins = Vector(-10, -10, -8),
-                maxs = Vector(10, 10, 8),
-                mask = MASK_SHOT_HULL
-            }
-        )
+        })
     end
 
     if tr.Hit and not (game.SinglePlayer() and CLIENT) then self:EmitSound(self.HitSound) end

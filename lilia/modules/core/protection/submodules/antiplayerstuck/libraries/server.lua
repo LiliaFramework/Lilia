@@ -31,16 +31,11 @@ function APSCore:CheckIfPlayerStuck()
         end
     end
 
-    timer.Create(
-        "CheckIfPlayerStuck",
-        5,
-        0,
-        function()
-            for _, client in ipairs(player.GetAll()) do
-                if self:ShouldCheck(client) then handleStuckPlayer(client) end
-            end
+    timer.Create("CheckIfPlayerStuck", 5, 0, function()
+        for _, client in ipairs(player.GetAll()) do
+            if self:ShouldCheck(client) then handleStuckPlayer(client) end
         end
-    )
+    end)
 end
 
 function APSCore:ShouldCollide(ent1, ent2)

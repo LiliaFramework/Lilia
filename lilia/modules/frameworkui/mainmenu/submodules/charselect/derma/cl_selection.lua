@@ -55,26 +55,20 @@ function PANEL:onCharacterSelected(character)
     if self.choosing then return end
     if character == LocalPlayer():getChar() then return lia.gui.character:fadeOut() end
     self.choosing = true
-    lia.gui.character:setFadeToBlack(true):next(function() return MainMenu:chooseCharacter(character:getID()) end):next(
-        function(_)
-            self.choosing = false
-            if IsValid(lia.gui.character) then
-                timer.Simple(
-                    0.25,
-                    function()
-                        if not IsValid(lia.gui.character) then return end
-                        lia.gui.character:setFadeToBlack(false)
-                        lia.gui.character:Remove()
-                    end
-                )
-            end
-        end,
-        function(err)
-            self.choosing = false
-            lia.gui.character:setFadeToBlack(false)
-            lia.util.notify(err)
+    lia.gui.character:setFadeToBlack(true):next(function() return MainMenu:chooseCharacter(character:getID()) end):next(function(_)
+        self.choosing = false
+        if IsValid(lia.gui.character) then
+            timer.Simple(0.25, function()
+                if not IsValid(lia.gui.character) then return end
+                lia.gui.character:setFadeToBlack(false)
+                lia.gui.character:Remove()
+            end)
         end
-    )
+    end, function(err)
+        self.choosing = false
+        lia.gui.character:setFadeToBlack(false)
+        lia.util.notify(err)
+    end)
 end
 
 vgui.Register("liaCharacterSelection", PANEL, "EditablePanel")

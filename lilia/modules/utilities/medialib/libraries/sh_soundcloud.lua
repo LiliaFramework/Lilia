@@ -8,7 +8,7 @@ function SoundcloudService:parseUrl(url)
     for _, pattern in pairs(all_patterns) do
         local path = string.match(url, pattern)
         if path then
-            return             {
+            return {
                 path = path
             }
         end
@@ -16,7 +16,7 @@ function SoundcloudService:parseUrl(url)
 
     local id = string.match(url, id_pattern)
     if id then
-        return         {
+        return {
             id = id
         }
     end
@@ -39,19 +39,16 @@ function SoundcloudService:resolveUrl(url, callback)
         -- id passed directly; nice, we can skip resolve.json
         callback(string.format("https://api.soundcloud.com/tracks/%s/stream?client_id=%s", urlData.id, apiKey), {})
     else
-        http.Fetch(
-            string.format("https://api.soundcloud.com/resolve.json?url=http://soundcloud.com/%s&client_id=%s", urlData.path, apiKey),
-            function(data)
-                local jsonTable = util.JSONToTable(data)
-                if not jsonTable then
-                    ErrorNoHalt("Failed to retrieve SC track id for " .. urlData.path .. ": empty JSON")
-                    return
-                end
-
-                local id = jsonTable.id
-                callback(string.format("https://api.soundcloud.com/tracks/%s/stream?client_id=%s", id, apiKey), {})
+        http.Fetch(string.format("https://api.soundcloud.com/resolve.json?url=http://soundcloud.com/%s&client_id=%s", urlData.path, apiKey), function(data)
+            local jsonTable = util.JSONToTable(data)
+            if not jsonTable then
+                ErrorNoHalt("Failed to retrieve SC track id for " .. urlData.path .. ": empty JSON")
+                return
             end
-        )
+
+            local id = jsonTable.id
+            callback(string.format("https://api.soundcloud.com/tracks/%s/stream?client_id=%s", id, apiKey), {})
+        end)
     end
 end
 
@@ -71,32 +68,25 @@ function SoundcloudService:directQuery(url, callback)
         metaurl = string.format("https://api.soundcloud.com/tracks/%s?client_id=%s", urlData.id, apiKey)
     end
 
-    http.Fetch(
-        metaurl,
-        function(result, size)
-            if size == 0 then
-                callback("http body size = 0")
-                return
-            end
+    http.Fetch(metaurl, function(result, size)
+        if size == 0 then
+            callback("http body size = 0")
+            return
+        end
 
-            local entry = util.JSONToTable(result)
-            if entry.errors then
-                local msg = entry.errors[1].error_message or "error"
-                local translated = msg
-                if string.StartWith(msg, "404") then translated = "Invalid id" end
-                callback(translated)
-                return
-            end
+        local entry = util.JSONToTable(result)
+        if entry.errors then
+            local msg = entry.errors[1].error_message or "error"
+            local translated = msg
+            if string.StartWith(msg, "404") then translated = "Invalid id" end
+            callback(translated)
+            return
+        end
 
-            callback(
-                nil,
-                {
-                    title = entry.title,
-                    duration = tonumber(entry.duration) / 1000
-                }
-            )
-        end,
-        function(err) callback("HTTP: " .. err) end
-    )
+        callback(nil, {
+            title = entry.title,
+            duration = tonumber(entry.duration) / 1000
+        })
+    end, function(err) callback("HTTP: " .. err) end)
 end
 return SoundcloudService

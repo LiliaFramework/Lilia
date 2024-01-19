@@ -26,12 +26,10 @@ end
 function ITEM:remove()
     local d = deferred.new()
     if IsValid(self.entity) then self.entity:Remove() end
-    self:removeFromInventory():next(
-        function()
-            d:resolve()
-            return self:delete()
-        end
-    )
+    self:removeFromInventory():next(function()
+        d:resolve()
+        return self:delete()
+    end)
     return d
 end
 
@@ -132,14 +130,9 @@ function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
         if MYSQLOO_PREPARED then
             lia.db.preparedCall("item" .. key, nil, value, self:getID())
         else
-            lia.db.updateTable(
-                {
-                    ["_" .. key] = value
-                },
-                nil,
-                "items",
-                "_itemID = " .. self:getID()
-            )
+            lia.db.updateTable({
+                ["_" .. key] = value
+            }, nil, "items", "_itemID = " .. self:getID())
         end
         return
     end
@@ -149,14 +142,9 @@ function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
     if MYSQLOO_PREPARED then
         lia.db.preparedCall("itemData", nil, self.data, self:getID())
     else
-        lia.db.updateTable(
-            {
-                _data = self.data
-            },
-            nil,
-            "items",
-            "_itemID = " .. self:getID()
-        )
+        lia.db.updateTable({
+            _data = self.data
+        }, nil, "items", "_itemID = " .. self:getID())
     end
 
     self.data.x, self.data.y = x, y
@@ -178,14 +166,9 @@ function ITEM:setQuantity(quantity, receivers, noCheckEntity)
     if MYSQLOO_PREPARED then
         lia.db.preparedCall("itemq", nil, self.quantity, self:getID())
     else
-        lia.db.updateTable(
-            {
-                _quantity = self.quantity
-            },
-            nil,
-            "items",
-            "_itemID = " .. self:getID()
-        )
+        lia.db.updateTable({
+            _quantity = self.quantity
+        }, nil, "items", "_itemID = " .. self:getID())
     end
 end
 

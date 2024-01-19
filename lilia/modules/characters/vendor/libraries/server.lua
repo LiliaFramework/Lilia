@@ -139,22 +139,16 @@ function VendorCore:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, 
     vendor:giveMoney(price)
     character:takeMoney(price)
     vendor:takeStock(itemType)
-    character:getInv():add(itemType):next(
-        function(item)
-            lia.log.add(client, "vendorBuy", itemType, vendor:getNetVar("name"))
-            hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
-            client.vendorTransaction = nil
-        end
-    ):catch(
-        function(_)
-            if IsValid(client) then client:notifyLocalized("Cannot add to inventory! Giving money back!") end
-            client.vendorTransaction = nil
-            return character:giveMoney(price)
-        end
-    ):catch(
-        function(err)
-            client:notifyLocalized(err)
-            client.vendorTransaction = nil
-        end
-    )
+    character:getInv():add(itemType):next(function(item)
+        lia.log.add(client, "vendorBuy", itemType, vendor:getNetVar("name"))
+        hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
+        client.vendorTransaction = nil
+    end):catch(function(_)
+        if IsValid(client) then client:notifyLocalized("Cannot add to inventory! Giving money back!") end
+        client.vendorTransaction = nil
+        return character:giveMoney(price)
+    end):catch(function(err)
+        client:notifyLocalized(err)
+        client.vendorTransaction = nil
+    end)
 end

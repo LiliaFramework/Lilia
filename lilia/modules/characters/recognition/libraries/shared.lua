@@ -25,11 +25,8 @@ function RecognitionCore:isFakeNameExistant(clientName, CharNameList)
     return false
 end
 
-lia.char.registerVar(
-    "RecognizedAs",
-    {
-        field = "recognized_as",
-        default = {},
-        noDisplay = true
-    }
-)
+lia.char.registerVar("RecognizedAs", {
+    field = "recognized_as",
+    default = {},
+    noDisplay = true
+})

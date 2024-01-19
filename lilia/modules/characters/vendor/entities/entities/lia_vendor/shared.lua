@@ -22,13 +22,10 @@ end
 
 function ENT:Initialize()
     if CLIENT then
-        timer.Simple(
-            1,
-            function()
-                if not IsValid(self) then return end
-                self:setAnim()
-            end
-        )
+        timer.Simple(1, function()
+            if not IsValid(self) then return end
+            self:setAnim()
+        end)
         return
     end
 

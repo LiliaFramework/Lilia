@@ -6,7 +6,7 @@ function WebmService:parseUrl(url)
     for _, pattern in pairs(all_patterns) do
         local id = string.match(url, pattern)
         if id then
-            return             {
+            return {
                 id = id
             }
         end
@@ -21,20 +21,14 @@ local player_url = "http://wyozi.github.io/gmod-medialib/webm.html?id=%s"
 function WebmService:resolveUrl(url, callback)
     local urlData = self:parseUrl(url)
     local playerUrl = string.format(player_url, urlData.id)
-    callback(
-        playerUrl,
-        {
-            start = urlData.start
-        }
-    )
+    callback(playerUrl, {
+        start = urlData.start
+    })
 end
 
 function WebmService:directQuery(url, callback)
-    callback(
-        nil,
-        {
-            title = url:match("([^/]+)$")
-        }
-    )
+    callback(nil, {
+        title = url:match("([^/]+)$")
+    })
 end
 return WebmService

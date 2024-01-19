@@ -1,8 +1,5 @@
-﻿lia.command.add(
-    "logs",
-    {
-        adminOnly = false,
-        privilege = "Default User Commands",
-        onRun = function() end
-    }
-)
+﻿lia.command.add("logs", {
+    adminOnly = false,
+    privilege = "Default User Commands",
+    onRun = function() end
+})

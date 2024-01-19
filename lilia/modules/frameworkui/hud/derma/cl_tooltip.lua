@@ -62,15 +62,12 @@ function PANEL:OpenForPanel(panel)
     hook.Run("TooltipInitialize", self, panel)
     if 0.01 > 0 then
         self:SetVisible(false)
-        timer.Simple(
-            0.01,
-            function()
-                if not IsValid(self) then return end
-                if not IsValid(panel) then return end
-                self:PositionTooltip()
-                self:SetVisible(true)
-            end
-        )
+        timer.Simple(0.01, function()
+            if not IsValid(self) then return end
+            if not IsValid(panel) then return end
+            self:PositionTooltip()
+            self:SetVisible(true)
+        end)
     end
 end
 

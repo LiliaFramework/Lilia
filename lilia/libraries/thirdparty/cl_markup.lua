@@ -254,14 +254,11 @@ local function ExtractParams(p1, p2, p3)
             w = tonumber(sizeData[1]) or 16
             h = tonumber(sizeData[2]) or 16
             if texture then
-                table.insert(
-                    blocks,
-                    {
-                        texture = texture,
-                        w = w,
-                        h = h
-                    }
-                )
+                table.insert(blocks, {
+                    texture = texture,
+                    w = w,
+                    h = h
+                })
             end
         end
     end

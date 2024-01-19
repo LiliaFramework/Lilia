@@ -202,15 +202,10 @@ function PANEL:setFadeToBlack(fade)
         self.fade = fade
     elseif IsValid(self.fade) then
         local fadePanel = self.fade
-        fadePanel:AlphaTo(
-            0,
-            self.FADE_SPEED,
-            0,
-            function()
-                fadePanel:Remove()
-                d:resolve()
-            end
-        )
+        fadePanel:AlphaTo(0, self.FADE_SPEED, 0, function()
+            fadePanel:Remove()
+            d:resolve()
+        end)
     end
     return d
 end

@@ -24,18 +24,15 @@ else
     function MODULE:chooseCharacter(id)
         assert(isnumber(id), "id must be a number")
         local d = deferred.new()
-        net.Receive(
-            "liaCharChoose",
-            function()
-                local message = net.ReadString()
-                if message == "" then
-                    d:resolve()
-                    hook.Run("CharacterLoaded", lia.char.loaded[id])
-                else
-                    d:reject(message)
-                end
+        net.Receive("liaCharChoose", function()
+            local message = net.ReadString()
+            if message == "" then
+                d:resolve()
+                hook.Run("CharacterLoaded", lia.char.loaded[id])
+            else
+                d:reject(message)
             end
-        )
+        end)
 
         net.Start("liaCharChoose")
         net.WriteUInt(id, 32)
@@ -58,18 +55,15 @@ else
             payload[key] = value
         end
 
-        net.Receive(
-            "liaCharCreate",
-            function()
-                local id = net.ReadUInt(32)
-                local reason = net.ReadString()
-                if id > 0 then
-                    d:resolve(id)
-                else
-                    d:reject(reason)
-                end
+        net.Receive("liaCharCreate", function()
+            local id = net.ReadUInt(32)
+            local reason = net.ReadString()
+            if id > 0 then
+                d:resolve(id)
+            else
+                d:reject(reason)
             end
-        )
+        end)
 
         net.Start("liaCharCreate")
         net.WriteUInt(table.Count(payload), 32)

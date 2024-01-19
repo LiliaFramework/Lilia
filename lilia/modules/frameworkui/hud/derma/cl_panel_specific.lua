@@ -44,22 +44,19 @@ function b:Flash(text, color, time, noAdjust, callback)
         end
     end
 
-    timer.Simple(
-        time,
-        function()
-            if not self or not IsValid(self) then return end
-            self:SetText(ogText)
-            self.Paint = ogPaint
-            self:SizeTo(ogSizeW, ogSizeH, 0.2, 0, -1, function() self.flashing = false end)
-            if self.ogOCEn and self.ogOCEx and self.ogCol then
-                self.OnCursorEntered = self.ogOCEn
-                self.OnCursorExited = self.ogOCEx
-                self:ColorTo(self.ogCol, 0.3, 0)
-            end
-
-            if callback then callback() end
+    timer.Simple(time, function()
+        if not self or not IsValid(self) then return end
+        self:SetText(ogText)
+        self.Paint = ogPaint
+        self:SizeTo(ogSizeW, ogSizeH, 0.2, 0, -1, function() self.flashing = false end)
+        if self.ogOCEn and self.ogOCEx and self.ogCol then
+            self.OnCursorEntered = self.ogOCEn
+            self.OnCursorExited = self.ogOCEx
+            self:ColorTo(self.ogCol, 0.3, 0)
         end
-    )
+
+        if callback then callback() end
+    end)
 end
 
 function b:GInflate(color, over)
@@ -104,15 +101,12 @@ function te:SetError(err, ogCol)
     self:SetEditable(false)
     local ogText = self:GetText()
     self:SetText(err)
-    timer.Simple(
-        1,
-        function()
-            if self and IsValid(self) then
-                self:SetText(ogText)
-                self:SetEditable(true)
-            end
+    timer.Simple(1, function()
+        if self and IsValid(self) then
+            self:SetText(ogText)
+            self:SetEditable(true)
         end
-    )
+    end)
 
     self.color = Color(255, 0, 0)
     self:ColorTo(ogCol, 0.5, 0)
@@ -144,15 +138,10 @@ for _, v in pairs(mps) do
 
         function m:FadeOutRem(time, callback)
             time = time or 0.2
-            self:AlphaTo(
-                0,
-                time,
-                0,
-                function()
-                    self:Remove()
-                    if callback then callback() end
-                end
-            )
+            self:AlphaTo(0, time, 0, function()
+                self:Remove()
+                if callback then callback() end
+            end)
         end
     end
 

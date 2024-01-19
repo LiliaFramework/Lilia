@@ -9,21 +9,16 @@
     local timerFunc = timer.Exists(timerID) and timer.Adjust or timer.Create
     local delay = (class and class.payTimer) or (faction and faction.payTimer) or self.SalaryInterval
     if PayAmount > 0 then
-        timerFunc(
-            timerID,
-            delay,
-            0,
-            function()
-                if not IsValid(client) or client:getChar() ~= character then
-                    timer.Remove(timerID)
-                    return
-                end
-
-                if SalaryLimit then return end
-                character:giveMoney(PayAmount)
-                client:notifyLocalized("salary", lia.currency.get(PayAmount))
+        timerFunc(timerID, delay, 0, function()
+            if not IsValid(client) or client:getChar() ~= character then
+                timer.Remove(timerID)
+                return
             end
-        )
+
+            if SalaryLimit then return end
+            character:giveMoney(PayAmount)
+            client:notifyLocalized("salary", lia.currency.get(PayAmount))
+        end)
     end
 end
 

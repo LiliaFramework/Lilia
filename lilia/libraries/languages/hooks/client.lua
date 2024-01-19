@@ -12,20 +12,16 @@ function GM:SetupQuickMenu(menu)
             name = name2
         end
 
-        local button = menu:addCheck(
-            name,
-            function(panel)
-                panel.checked = true
-                if IsValid(current) then
-                    if current == panel then return end
-                    current.checked = false
-                end
+        local button = menu:addCheck(name, function(panel)
+            panel.checked = true
+            if IsValid(current) then
+                if current == panel then return end
+                current.checked = false
+            end
 
-                current = panel
-                RunConsoleCommand("lia_language", k)
-            end,
-            enabled
-        )
+            current = panel
+            RunConsoleCommand("lia_language", k)
+        end, enabled)
 
         if enabled and not IsValid(current) then current = button end
     end

@@ -54,31 +54,28 @@ end
 
 function PACCompatibility:OnEntityCreated(entity)
     local class = entity:GetClass()
-    timer.Simple(
-        0,
-        function()
-            if class == "prop_ragdoll" then
-                if entity:getNetVar("player") then
-                    entity.RenderOverride = function()
-                        entity.objCache = entity:getNetVar("player")
-                        entity:DrawModel()
-                        hook.Run("DrawPlayerRagdoll", entity)
-                    end
-                end
-            end
-
-            if class:find("HL2MPRagdoll") then
-                for _, v in ipairs(player.GetAll()) do
-                    if v:GetRagdollEntity() == entity then entity.objCache = v end
-                end
-
+    timer.Simple(0, function()
+        if class == "prop_ragdoll" then
+            if entity:getNetVar("player") then
                 entity.RenderOverride = function()
+                    entity.objCache = entity:getNetVar("player")
                     entity:DrawModel()
                     hook.Run("DrawPlayerRagdoll", entity)
                 end
             end
         end
-    )
+
+        if class:find("HL2MPRagdoll") then
+            for _, v in ipairs(player.GetAll()) do
+                if v:GetRagdollEntity() == entity then entity.objCache = v end
+            end
+
+            entity.RenderOverride = function()
+                entity:DrawModel()
+                hook.Run("DrawPlayerRagdoll", entity)
+            end
+        end
+    end)
 end
 
 function PACCompatibility:OnPlayerObserve(client, state)

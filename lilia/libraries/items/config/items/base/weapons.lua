@@ -18,22 +18,19 @@ if CLIENT then
     end
 end
 
-ITEM:hook(
-    "drop",
-    function(item)
-        if item:getData("equip") then
-            item:setData("equip", nil)
-            item.player.carryWeapons = item.player.carryWeapons or {}
-            local weapon = item.player.carryWeapons[item.weaponCategory]
-            if IsValid(weapon) then
-                item:setData("ammo", weapon:Clip1())
-                item.player:StripWeapon(item.class)
-                item.player.carryWeapons[item.weaponCategory] = nil
-                item.player:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
-            end
+ITEM:hook("drop", function(item)
+    if item:getData("equip") then
+        item:setData("equip", nil)
+        item.player.carryWeapons = item.player.carryWeapons or {}
+        local weapon = item.player.carryWeapons[item.weaponCategory]
+        if IsValid(weapon) then
+            item:setData("ammo", weapon:Clip1())
+            item.player:StripWeapon(item.class)
+            item.player.carryWeapons[item.weaponCategory] = nil
+            item.player:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
         end
     end
-)
+end)
 
 ITEM.functions.EquipUn = {
     name = "Unequip",

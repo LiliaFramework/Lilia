@@ -203,13 +203,10 @@ function PANEL:addText(...)
             text = text .. "<color=" .. color.r .. "," .. color.g .. "," .. color.b .. ">" .. v:Name():gsub("<", "&lt;"):gsub(">", "&gt;"):gsub("#", "\226\128\139#")
         else
             text = text .. tostring(v):gsub("<", "&lt;"):gsub(">", "&gt;")
-            text = text:gsub(
-                "%b**",
-                function(value)
-                    local inner = value:sub(2, -2)
-                    if inner:find("%S") then return "<font=liaChatFontItalics>" .. value:sub(2, -2) .. "</font>" end
-                end
-            )
+            text = text:gsub("%b**", function(value)
+                local inner = value:sub(2, -2)
+                if inner:find("%S") then return "<font=liaChatFontItalics>" .. value:sub(2, -2) .. "</font>" end
+            end)
         end
     end
 

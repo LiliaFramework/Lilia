@@ -14,16 +14,13 @@ end
 function StreamRadiosCompatibility:SaveData()
     local savedTable = {}
     for _, v in ipairs(ents.FindByClass("sent_streamradio")) do
-        table.insert(
-            savedTable,
-            {
-                client = v.pl,
-                mdl = v:GetModel(),
-                pos = v:GetPos(),
-                ang = v:GetAngles(),
-                settings = v.SettingVar
-            }
-        )
+        table.insert(savedTable, {
+            client = v.pl,
+            mdl = v:GetModel(),
+            pos = v:GetPos(),
+            ang = v:GetAngles(),
+            settings = v.SettingVar
+        })
     end
 
     self:setData(savedTable)

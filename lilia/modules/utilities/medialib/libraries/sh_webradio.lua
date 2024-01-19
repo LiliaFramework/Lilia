@@ -6,7 +6,7 @@ function WebRadioService:parseUrl(url)
     for _, pattern in pairs(all_patterns) do
         local id = string.match(url, pattern)
         if id then
-            return             {
+            return {
                 id = id
             }
         end
@@ -22,11 +22,8 @@ function WebRadioService:resolveUrl(url, callback)
 end
 
 function WebRadioService:directQuery(url, callback)
-    callback(
-        nil,
-        {
-            title = url:match("([^/]+)$") -- the filename is the best we can get (unless we parse pls?)
-        }
-    )
+    callback(nil, {
+        title = url:match("([^/]+)$") -- the filename is the best we can get (unless we parse pls?)
+    })
 end
 return WebRadioService

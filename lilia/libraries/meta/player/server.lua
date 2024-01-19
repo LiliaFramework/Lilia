@@ -87,28 +87,23 @@ function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
     local uniqueID = "liaStare" .. self:UniqueID()
     local data = {}
     data.filter = self
-    timer.Create(
-        uniqueID,
-        0.1,
-        time / 0.1,
-        function()
-            if IsValid(self) and IsValid(entity) then
-                data.start = self:GetShootPos()
-                data.endpos = data.start + self:GetAimVector() * (distance or 96)
-                local targetEntity = util.TraceLine(data).Entity
-                if IsValid(targetEntity) and targetEntity:GetClass() == "prop_ragdoll" and IsValid(targetEntity:getNetVar("player")) then targetEntity = targetEntity:getNetVar("player") end
-                if targetEntity ~= entity then
-                    timer.Remove(uniqueID)
-                    if onCancel then onCancel() end
-                elseif callback and timer.RepsLeft(uniqueID) == 0 then
-                    callback()
-                end
-            else
+    timer.Create(uniqueID, 0.1, time / 0.1, function()
+        if IsValid(self) and IsValid(entity) then
+            data.start = self:GetShootPos()
+            data.endpos = data.start + self:GetAimVector() * (distance or 96)
+            local targetEntity = util.TraceLine(data).Entity
+            if IsValid(targetEntity) and targetEntity:GetClass() == "prop_ragdoll" and IsValid(targetEntity:getNetVar("player")) then targetEntity = targetEntity:getNetVar("player") end
+            if targetEntity ~= entity then
                 timer.Remove(uniqueID)
                 if onCancel then onCancel() end
+            elseif callback and timer.RepsLeft(uniqueID) == 0 then
+                callback()
             end
+        else
+            timer.Remove(uniqueID)
+            if onCancel then onCancel() end
         end
-    )
+    end)
 end
 
 function playerMeta:notify(message)
@@ -148,14 +143,11 @@ function playerMeta:requestString(title, subTitle, callback, default)
 end
 
 function playerMeta:isStuck()
-    return     util.TraceEntity(
-        {
-            start = self:GetPos(),
-            endpos = self:GetPos(),
-            filter = self
-        },
-        self
-    ).StartSolid
+    return util.TraceEntity({
+        start = self:GetPos(),
+        endpos = self:GetPos(),
+        filter = self
+    }, self).StartSolid
 end
 
 function playerMeta:createRagdoll(freeze)
@@ -194,48 +186,45 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
         if IsValid(self.liaRagdoll) then self.liaRagdoll:Remove() end
         local entity = self:createRagdoll()
         entity:setNetVar("player", self)
-        entity:CallOnRemove(
-            "fixer",
-            function()
-                if IsValid(self) then
-                    self:setLocalVar("blur", nil)
-                    self:setLocalVar("ragdoll", nil)
-                    if not entity.liaNoReset then self:SetPos(entity:GetPos()) end
-                    self:SetNoDraw(false)
-                    self:SetNotSolid(false)
-                    self:Freeze(false)
-                    self:SetMoveType(MOVETYPE_WALK)
-                    self:SetLocalVelocity(IsValid(entity) and entity.liaLastVelocity or vector_origin)
-                end
+        entity:CallOnRemove("fixer", function()
+            if IsValid(self) then
+                self:setLocalVar("blur", nil)
+                self:setLocalVar("ragdoll", nil)
+                if not entity.liaNoReset then self:SetPos(entity:GetPos()) end
+                self:SetNoDraw(false)
+                self:SetNotSolid(false)
+                self:Freeze(false)
+                self:SetMoveType(MOVETYPE_WALK)
+                self:SetLocalVelocity(IsValid(entity) and entity.liaLastVelocity or vector_origin)
+            end
 
-                if IsValid(self) and not entity.liaIgnoreDelete then
-                    if entity.liaWeapons then
-                        for _, v in ipairs(entity.liaWeapons) do
-                            self:Give(v)
-                            if entity.liaAmmo then
-                                for k2, v2 in ipairs(entity.liaAmmo) do
-                                    if v == v2[1] then self:SetAmmo(v2[2], tostring(k2)) end
-                                end
+            if IsValid(self) and not entity.liaIgnoreDelete then
+                if entity.liaWeapons then
+                    for _, v in ipairs(entity.liaWeapons) do
+                        self:Give(v)
+                        if entity.liaAmmo then
+                            for k2, v2 in ipairs(entity.liaAmmo) do
+                                if v == v2[1] then self:SetAmmo(v2[2], tostring(k2)) end
                             end
-                        end
-
-                        for _, v in ipairs(self:GetWeapons()) do
-                            v:SetClip1(0)
                         end
                     end
 
-                    if self:isStuck() then
-                        entity:DropToFloor()
-                        self:SetPos(entity:GetPos() + Vector(0, 0, 16))
-                        local positions = lia.util.findEmptySpace(self, {entity, self})
-                        for _, v in ipairs(positions) do
-                            self:SetPos(v)
-                            if not self:isStuck() then return end
-                        end
+                    for _, v in ipairs(self:GetWeapons()) do
+                        v:SetClip1(0)
+                    end
+                end
+
+                if self:isStuck() then
+                    entity:DropToFloor()
+                    self:SetPos(entity:GetPos() + Vector(0, 0, 16))
+                    local positions = lia.util.findEmptySpace(self, {entity, self})
+                    for _, v in ipairs(positions) do
+                        self:SetPos(v)
+                        if not self:isStuck() then return end
                     end
                 end
             end
-        )
+        end)
 
         self:setLocalVar("blur", 25)
         self.liaRagdoll = entity
@@ -265,33 +254,28 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
         self:SetMoveType(MOVETYPE_NONE)
         if time then
             local uniqueID = "liaUnRagdoll" .. self:SteamID()
-            timer.Create(
-                uniqueID,
-                0.33,
-                0,
-                function()
-                    if IsValid(entity) and IsValid(self) then
-                        local velocity = entity:GetVelocity()
-                        entity.liaLastVelocity = velocity
-                        self:SetPos(entity:GetPos())
-                        if velocity:Length2D() >= 8 then
-                            if not entity.liaPausing then
-                                self:setAction()
-                                entity.liaPausing = true
-                            end
-                            return
-                        elseif entity.liaPausing then
-                            self:setAction("@wakingUp", time)
-                            entity.liaPausing = false
+            timer.Create(uniqueID, 0.33, 0, function()
+                if IsValid(entity) and IsValid(self) then
+                    local velocity = entity:GetVelocity()
+                    entity.liaLastVelocity = velocity
+                    self:SetPos(entity:GetPos())
+                    if velocity:Length2D() >= 8 then
+                        if not entity.liaPausing then
+                            self:setAction()
+                            entity.liaPausing = true
                         end
-
-                        time = time - 0.33
-                        if time <= 0 then entity:Remove() end
-                    else
-                        timer.Remove(uniqueID)
+                        return
+                    elseif entity.liaPausing then
+                        self:setAction("@wakingUp", time)
+                        entity.liaPausing = false
                     end
+
+                    time = time - 0.33
+                    if time <= 0 then entity:Remove() end
+                else
+                    timer.Remove(uniqueID)
                 end
-            )
+            end)
         end
 
         self:setLocalVar("ragdoll", entity:EntIndex())

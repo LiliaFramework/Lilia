@@ -100,7 +100,7 @@ function PANEL:Paint(w, h)
 end
 
 local buildActionFunc = function(action, actionIndex, itemTable, invID, sub)
-    return     function()
+    return function()
         itemTable.player = LocalPlayer()
         local send = true
         if action.onClick then send = action.onClick(itemTable, sub and sub.data) end

@@ -59,16 +59,13 @@ function Promise:next(onResolve, onReject)
     }
 
     if self.state ~= PENDING then
-        timer.Simple(
-            0,
-            function()
-                if self.state == FULFILLED then
-                    self:_handle(self.value)
-                else
-                    self:_handle(self.reason)
-                end
+        timer.Simple(0, function()
+            if self.state == FULFILLED then
+                self:_handle(self.value)
+            else
+                self:_handle(self.reason)
             end
-        )
+        end)
     end
 
     if DEBUG_IGNOREUNHANDLED then return promise end
@@ -103,17 +100,14 @@ function Promise:_handle(value)
             if value.state == PENDING then
                 self.value = value.value
                 self.reason = value.reason
-                value:next(
-                    function(newValue)
-                        self:resolve(newValue)
-                        return newValue
-                    end,
-                    function(reason)
-                        self:reject(reason)
-                        value.rejectionHandlerID = nil
-                        return reason
-                    end
-                )
+                value:next(function(newValue)
+                    self:resolve(newValue)
+                    return newValue
+                end, function(reason)
+                    self:reject(reason)
+                    value.rejectionHandlerID = nil
+                    return reason
+                end)
             elseif value.state == FULFILLED then
                 self:_handle(value.value)
             else
@@ -182,16 +176,13 @@ function Promise:_handle(value)
     self.handlers = {}
     if isRejected and not DEBUG_IGNOREUNHANDLED then
         local trace = debug.traceback()
-        timer.Simple(
-            0.1,
-            function()
-                if UNHANDLED_PROMISES[self.rejectionHandlerID] and not DEBUG_IGNOREUNHANDLED then
-                    UNHANDLED_PROMISES[self.rejectionHandlerID] = nil
-                    ErrorNoHalt("Unhandled rejection: " .. tostring(self.reason or "") .. "\n")
-                    print(trace)
-                end
+        timer.Simple(0.1, function()
+            if UNHANDLED_PROMISES[self.rejectionHandlerID] and not DEBUG_IGNOREUNHANDLED then
+                UNHANDLED_PROMISES[self.rejectionHandlerID] = nil
+                ErrorNoHalt("Unhandled rejection: " .. tostring(self.reason or "") .. "\n")
+                print(trace)
             end
-        )
+        end)
     end
 end
 
@@ -228,7 +219,7 @@ function deferred.all(promises)
     local finished = 0
     if finished == expected then return d:resolve(results) end
     local onFinish = function(i, resolved)
-        return         function(value)
+        return function(value)
             results[i] = value
             if not resolved then method = "reject" end
             finished = finished + 1
@@ -252,14 +243,11 @@ function deferred.map(args, fn)
     local d = deferred.new()
     if expected == 0 then return d:resolve(results) end
     for i = 1, expected do
-        fn(args[i], i, expected):next(
-            function(value)
-                results[i] = value
-                finished = finished + 1
-                if finished == expected then d:resolve(results) end
-            end,
-            function(reason) d:reject(reason) end
-        )
+        fn(args[i], i, expected):next(function(value)
+            results[i] = value
+            finished = finished + 1
+            if finished == expected then d:resolve(results) end
+        end, function(reason) d:reject(reason) end)
     end
     return d
 end
@@ -294,25 +282,17 @@ function deferred.fold(promises, folder, initial)
 end
 
 function deferred.filter(promises, filter)
-    return     deferred.fold(
-        promises,
-        function(acc, value)
-            if filter(value) then acc[#acc + 1] = value end
-            return acc
-        end,
-        {}
-    )
+    return deferred.fold(promises, function(acc, value)
+        if filter(value) then acc[#acc + 1] = value end
+        return acc
+    end, {})
 end
 
 function deferred.each(promises, fn)
-    return     deferred.fold(
-        promises,
-        function(_, value, i, length)
-            -- Ignore return value.
-            fn(value, i, length)
-        end,
-        nil
-    ):next(function() return nil end)
+    return deferred.fold(promises, function(_, value, i, length)
+        -- Ignore return value.
+        fn(value, i, length)
+    end, nil):next(function() return nil end)
 end
 
 -- Clear the return value.
@@ -324,16 +304,13 @@ function deferred.some(promises, count)
     local finished = 0
     if count == finished then return d:resolve(results) end
     for _, promise in ipairs(promises) do
-        promise:next(
-            function(value)
-                if d.state ~= PENDING then return value end
-                finished = finished + 1
-                results[finished] = value
-                if finished == count then d:resolve(results) end
-                return value
-            end,
-            function(reason) d:reject(reason) end
-        )
+        promise:next(function(value)
+            if d.state ~= PENDING then return value end
+            finished = finished + 1
+            results[finished] = value
+            if finished == count then d:resolve(results) end
+            return value
+        end, function(reason) d:reject(reason) end)
     end
     return d
 end

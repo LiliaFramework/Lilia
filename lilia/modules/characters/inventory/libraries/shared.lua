@@ -15,8 +15,7 @@ local function CanNotAddItemIfNoSpace(inventory, action, context)
     if not x or not y then return false, "noFit" end
     local doesFit, item = inventory:doesItemFitAtPos(context.item, x, y)
     if not doesFit then
-        return         false,
-        {
+        return false, {
             item = item
         }
     end
@@ -207,11 +206,9 @@ if SERVER then
         local canAccess, reason = targetInventory:canAccess("add", context)
         if not canAccess then
             if istable(reason) then
-                return                 d:resolve(
-                    {
-                        error = reason
-                    }
-                )
+                return d:resolve({
+                    error = reason
+                })
             else
                 return d:reject(tostring(reason or "noAccess"))
             end
@@ -231,57 +228,45 @@ if SERVER then
             end
         end
 
-        data = table.Merge(
-            {
-                x = x,
-                y = y
-            },
-            data or {}
-        )
+        data = table.Merge({
+            x = x,
+            y = y
+        }, data or {})
 
         local itemType = item.uniqueID
-        lia.item.instance(
-            targetInventory:getID(),
-            itemType,
-            data,
-            0,
-            0,
-            function(item)
-                if targetInventory.occupied then
-                    for x2 = 0, (item.width or 1) - 1 do
-                        for y2 = 0, (item.height or 1) - 1 do
-                            targetInventory.occupied[(x + x2) .. (y + y2)] = nil
-                        end
-                    end
-                end
-
-                targetInventory:addItem(item)
-                d:resolve(item)
-            end
-        ):next(
-            function(item)
-                if isStackCommand and remainingQuantity > 0 then
-                    for targetItem, assignedQuantity in pairs(targetAssignments) do
-                        targetItem:addQuantity(assignedQuantity)
-                    end
-
-                    local overStacks = math.ceil(remainingQuantity / item.maxQuantity) - 1
-                    if overStacks > 0 then
-                        local items = {}
-                        for i = 1, overStacks do
-                            items[i] = self:add(itemTypeOrItem)
-                        end
-
-                        deferred.all(items):next(nil, function(_) hook.Run("OnPlayerLostStackItem", itemTypeOrItem) end)
-                        item:setQuantity(remainingQuantity - (item.maxQuantity * overStacks))
-                        targetInventory:addItem(item)
-                        return d:resolve(items)
-                    else
-                        item:setQuantity(remainingQuantity)
+        lia.item.instance(targetInventory:getID(), itemType, data, 0, 0, function(item)
+            if targetInventory.occupied then
+                for x2 = 0, (item.width or 1) - 1 do
+                    for y2 = 0, (item.height or 1) - 1 do
+                        targetInventory.occupied[(x + x2) .. (y + y2)] = nil
                     end
                 end
             end
-        )
+
+            targetInventory:addItem(item)
+            d:resolve(item)
+        end):next(function(item)
+            if isStackCommand and remainingQuantity > 0 then
+                for targetItem, assignedQuantity in pairs(targetAssignments) do
+                    targetItem:addQuantity(assignedQuantity)
+                end
+
+                local overStacks = math.ceil(remainingQuantity / item.maxQuantity) - 1
+                if overStacks > 0 then
+                    local items = {}
+                    for i = 1, overStacks do
+                        items[i] = self:add(itemTypeOrItem)
+                    end
+
+                    deferred.all(items):next(nil, function(_) hook.Run("OnPlayerLostStackItem", itemTypeOrItem) end)
+                    item:setQuantity(remainingQuantity - (item.maxQuantity * overStacks))
+                    targetInventory:addItem(item)
+                    return d:resolve(items)
+                else
+                    item:setQuantity(remainingQuantity)
+                end
+            end
+        end)
         return d
     end
 

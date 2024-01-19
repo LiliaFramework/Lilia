@@ -82,23 +82,15 @@ function PANEL:onFinish()
         self:showError(err)
     end
 
-    MainMenu:createCharacter(self.context):next(
-        function()
-            onResponse()
-            if IsValid(lia.gui.character) then lia.gui.character:showContent() end
-        end,
-        onFail
-    )
+    MainMenu:createCharacter(self.context):next(function()
+        onResponse()
+        if IsValid(lia.gui.character) then lia.gui.character:showContent() end
+    end, onFail)
 
-    timer.Create(
-        "liaFailedToCreate",
-        60,
-        1,
-        function()
-            if not IsValid(self) or not self.creating then return end
-            onFail("unknownError")
-        end
-    )
+    timer.Create("liaFailedToCreate", 60, 1, function()
+        if not IsValid(self) or not self.creating then return end
+        onFail("unknownError")
+    end)
 end
 
 function PANEL:showError(message, ...)
@@ -247,17 +239,12 @@ function PANEL:onStepChanged(oldStep, newStep)
     end
 
     if IsValid(oldStep) then
-        oldStep:AlphaTo(
-            0,
-            ANIM_SPEED,
-            0,
-            function()
-                self:showError()
-                oldStep:SetVisible(false)
-                oldStep:onHide()
-                showNewStep()
-            end
-        )
+        oldStep:AlphaTo(0, ANIM_SPEED, 0, function()
+            self:showError()
+            oldStep:SetVisible(false)
+            oldStep:onHide()
+            showNewStep()
+        end)
     else
         showNewStep()
     end

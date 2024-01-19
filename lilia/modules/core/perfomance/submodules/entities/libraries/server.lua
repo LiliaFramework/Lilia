@@ -25,16 +25,11 @@ end
 
 function EntityPerfomance:ServersideInitializedModules()
     if self.GarbageCleaningTimer > 0 then
-        timer.Create(
-            "CleanupGarbage",
-            self.GarbageCleaningTimer,
-            0,
-            function()
-                for _, v in ipairs(ents.GetAll()) do
-                    if table.HasValue(self.Perfomancekillers, v:GetClass()) then SafeRemoveEntity(v) end
-                end
+        timer.Create("CleanupGarbage", self.GarbageCleaningTimer, 0, function()
+            for _, v in ipairs(ents.GetAll()) do
+                if table.HasValue(self.Perfomancekillers, v:GetClass()) then SafeRemoveEntity(v) end
             end
-        )
+        end)
     end
 end
 
@@ -52,43 +47,33 @@ end
 
 function EntityPerfomance:EntityRemoved(entity)
     if entity:IsRagdoll() and not entity:getNetVar("player", nil) and self.RagdollCleaningTimer > 0 then
-        timer.Simple(
-            self.RagdollCleaningTimer,
-            function()
+        timer.Simple(self.RagdollCleaningTimer, function()
+            if not IsValid(entity) then return end
+            entity:SetSaveValue("m_bFadingOut", true)
+            timer.Simple(3, function()
                 if not IsValid(entity) then return end
-                entity:SetSaveValue("m_bFadingOut", true)
-                timer.Simple(
-                    3,
-                    function()
-                        if not IsValid(entity) then return end
-                        entity:Remove()
-                    end
-                )
-            end
-        )
+                entity:Remove()
+            end)
+        end)
     end
 end
 
 function EntityPerfomance:PlayerLeaveVehicle(_, vehicle)
     if vehicle:GetClass() == "prop_vehicle_prisoner_pod" then
         local sName = "PodFix" .. vehicle:EntIndex()
-        hook.Add(
-            "Think",
-            sName,
-            function()
-                if vehicle:IsValid() then
-                    local tSave = vehicle:GetSaveTable()
-                    if tSave.m_bEnterAnimOn then
-                        hook.Remove("Think", sName)
-                    elseif not tSave.m_bExitAnimOn then
-                        vehicle:AddEFlags(EFL_NO_THINK_FUNCTION)
-                        hook.Remove("Think", sName)
-                    end
-                else
+        hook.Add("Think", sName, function()
+            if vehicle:IsValid() then
+                local tSave = vehicle:GetSaveTable()
+                if tSave.m_bEnterAnimOn then
+                    hook.Remove("Think", sName)
+                elseif not tSave.m_bExitAnimOn then
+                    vehicle:AddEFlags(EFL_NO_THINK_FUNCTION)
                     hook.Remove("Think", sName)
                 end
+            else
+                hook.Remove("Think", sName)
             end
-        )
+        end)
     end
 end
 

@@ -28,25 +28,21 @@ lia.item.defaultfunctions = {
             client.itemTakeTransactionTimeout = RealTime()
             if not inventory then return false end
             local d = deferred.new()
-            inventory:add(item):next(
-                function(res)
-                    client.itemTakeTransaction = nil
-                    if IsValid(entity) then
-                        entity.liaIsSafe = true
-                        entity:Remove()
-                    end
+            inventory:add(item):next(function(res)
+                client.itemTakeTransaction = nil
+                if IsValid(entity) then
+                    entity.liaIsSafe = true
+                    entity:Remove()
+                end
 
-                    if not IsValid(client) then return end
-                    lia.log.add(client, "itemTake", item.name, 1)
-                    d:resolve()
-                end
-            ):catch(
-                function(err)
-                    client.itemTakeTransaction = nil
-                    client:notifyLocalized(err)
-                    d:reject()
-                end
-            )
+                if not IsValid(client) then return end
+                lia.log.add(client, "itemTake", item.name, 1)
+                d:resolve()
+            end):catch(function(err)
+                client.itemTakeTransaction = nil
+                client:notifyLocalized(err)
+                d:reject()
+            end)
             return d
         end,
         onCanRun = function(item) return IsValid(item.entity) end
@@ -77,19 +73,16 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     if baseID then assert(baseTable, "Item " .. uniqueID .. " has a non-existent base " .. baseID) end
     local targetTable = isBaseItem and lia.item.base or lia.item.list
     if luaGenerated then
-        ITEM = setmetatable(
-            {
-                hooks = table.Copy(baseTable.hooks or {}),
-                postHooks = table.Copy(baseTable.postHooks or {}),
-                BaseClass = baseTable,
-                __tostring = baseTable.__tostring,
-            },
-            {
-                __eq = baseTable.__eq,
-                __tostring = baseTable.__tostring,
-                __index = baseTable
-            }
-        )
+        ITEM = setmetatable({
+            hooks = table.Copy(baseTable.hooks or {}),
+            postHooks = table.Copy(baseTable.postHooks or {}),
+            BaseClass = baseTable,
+            __tostring = baseTable.__tostring,
+        }, {
+            __eq = baseTable.__eq,
+            __tostring = baseTable.__tostring,
+            __index = baseTable
+        })
 
         ITEM.__tostring = baseTable.__tostring
         ITEM.desc = "noDesc"
@@ -99,19 +92,16 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         ITEM.category = ITEM.category or "misc"
         ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or lia.item.defaultfunctions)
     else
-        ITEM = targetTable[uniqueID] or setmetatable(
-            {
-                hooks = table.Copy(baseTable.hooks or {}),
-                postHooks = table.Copy(baseTable.postHooks or {}),
-                BaseClass = baseTable,
-                __tostring = baseTable.__tostring,
-            },
-            {
-                __eq = baseTable.__eq,
-                __tostring = baseTable.__tostring,
-                __index = baseTable
-            }
-        )
+        ITEM = targetTable[uniqueID] or setmetatable({
+            hooks = table.Copy(baseTable.hooks or {}),
+            postHooks = table.Copy(baseTable.postHooks or {}),
+            BaseClass = baseTable,
+            __tostring = baseTable.__tostring,
+        }, {
+            __eq = baseTable.__eq,
+            __tostring = baseTable.__tostring,
+            __index = baseTable
+        })
 
         ITEM.__tostring = baseTable.__tostring
         ITEM.desc = "noDesc"
@@ -158,17 +148,14 @@ function lia.item.new(uniqueID, id)
     if lia.item.instances[id] and lia.item.instances[id].uniqueID == uniqueID then return lia.item.instances[id] end
     local stockItem = lia.item.list[uniqueID]
     if stockItem then
-        local item = setmetatable(
-            {
-                id = id,
-                data = {}
-            },
-            {
-                __eq = stockItem.__eq,
-                __tostring = stockItem.__tostring,
-                __index = stockItem
-            }
-        )
+        local item = setmetatable({
+            id = id,
+            data = {}
+        }, {
+            __eq = stockItem.__eq,
+            __tostring = stockItem.__tostring,
+            __index = stockItem
+        })
 
         lia.item.instances[id] = item
         return item
@@ -194,26 +181,21 @@ function lia.item.registerInv(invType, w, h)
 end
 
 function lia.item.newInv(owner, invType, callback)
-    lia.inventory.instance(
-        invType,
-        {
-            char = owner
-        }
-    ):next(
-        function(inventory)
-            inventory.invType = invType
-            if owner and owner > 0 then
-                for k, v in ipairs(player.GetAll()) do
-                    if v:getChar() and v:getChar():getID() == owner then
-                        inventory:sync(v)
-                        break
-                    end
+    lia.inventory.instance(invType, {
+        char = owner
+    }):next(function(inventory)
+        inventory.invType = invType
+        if owner and owner > 0 then
+            for k, v in ipairs(player.GetAll()) do
+                if v:getChar() and v:getChar():getID() == owner then
+                    inventory:sync(v)
+                    break
                 end
             end
-
-            if callback then callback(inventory) end
         end
-    )
+
+        if callback then callback(inventory) end
+    end)
 end
 
 function lia.item.getInv(invID)
@@ -234,28 +216,25 @@ function lia.item.createInv(w, h, id)
     return instance
 end
 
-lia.char.registerVar(
-    "inv",
-    {
-        noNetworking = true,
-        noDisplay = true,
-        onGet = function(character, index)
-            if index and not isnumber(index) then return character.vars.inv or {} end
-            return character.vars.inv and character.vars.inv[index or 1]
-        end,
-        onSync = function(character, recipient)
-            net.Start("liaCharacterInvList")
-            net.WriteUInt(character:getID(), 32)
-            net.WriteUInt(#character.vars.inv, 32)
-            for i = 1, #character.vars.inv do
-                net.WriteType(character.vars.inv[i].id)
-            end
-
-            if recipient == nil then
-                net.Broadcast()
-            else
-                net.Send(recipient)
-            end
+lia.char.registerVar("inv", {
+    noNetworking = true,
+    noDisplay = true,
+    onGet = function(character, index)
+        if index and not isnumber(index) then return character.vars.inv or {} end
+        return character.vars.inv and character.vars.inv[index or 1]
+    end,
+    onSync = function(character, recipient)
+        net.Start("liaCharacterInvList")
+        net.WriteUInt(character:getID(), 32)
+        net.WriteUInt(#character.vars.inv, 32)
+        for i = 1, #character.vars.inv do
+            net.WriteType(character.vars.inv[i].id)
         end
-    }
-)
+
+        if recipient == nil then
+            net.Broadcast()
+        else
+            net.Send(recipient)
+        end
+    end
+})

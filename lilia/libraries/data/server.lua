@@ -22,12 +22,7 @@ function lia.data.delete(key, global, ignoreMap)
     end
 end
 
-timer.Create(
-    "liaSaveData",
-    lia.config.DataSaveInterval,
-    0,
-    function()
-        hook.Run("SaveData")
-        hook.Run("PersistenceSave")
-    end
-)
+timer.Create("liaSaveData", lia.config.DataSaveInterval, 0, function()
+    hook.Run("SaveData")
+    hook.Run("PersistenceSave")
+end)

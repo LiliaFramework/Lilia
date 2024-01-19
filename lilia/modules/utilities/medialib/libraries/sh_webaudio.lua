@@ -6,7 +6,7 @@ function WebAudioService:parseUrl(url)
     for _, pattern in pairs(all_patterns) do
         local id = string.match(url, pattern)
         if id then
-            return             {
+            return {
                 id = id
             }
         end
@@ -22,11 +22,8 @@ function WebAudioService:resolveUrl(url, callback)
 end
 
 function WebAudioService:directQuery(url, callback)
-    callback(
-        nil,
-        {
-            title = url:match("([^/]+)$")
-        }
-    )
+    callback(nil, {
+        title = url:match("([^/]+)$")
+    })
 end
 return WebAudioService

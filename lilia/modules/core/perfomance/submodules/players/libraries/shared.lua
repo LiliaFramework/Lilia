@@ -68,25 +68,20 @@ function PlayerPerfomance:BeginExpand(client)
     data.Expanding = true
     local timerID = "PerfomanceTicks:" .. client:EntIndex()
     local currentRange = 0
-    timer.Create(
-        timerID,
-        1,
-        0,
-        function()
-            if not IsValid(client) then
-                timer.Remove(timerID)
-                return
-            end
-
-            currentRange = math.min(5500, currentRange + 512)
-            self:PlayerUpdateTransmitStates(client, currentRange)
-            if currentRange == 5500 then
-                timer.Remove(timerID)
-                data.Expanded = true
-                data.Expanding = false
-            end
+    timer.Create(timerID, 1, 0, function()
+        if not IsValid(client) then
+            timer.Remove(timerID)
+            return
         end
-    )
+
+        currentRange = math.min(5500, currentRange + 512)
+        self:PlayerUpdateTransmitStates(client, currentRange)
+        if currentRange == 5500 then
+            timer.Remove(timerID)
+            data.Expanded = true
+            data.Expanding = false
+        end
+    end)
 end
 
 function PlayerPerfomance:PlayerExpandedUpdate()

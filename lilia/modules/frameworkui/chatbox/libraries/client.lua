@@ -63,12 +63,9 @@ function ChatboxCore:ChatAddText(text, ...)
     end
 end
 
-concommand.Add(
-    "fixchatplz",
-    function()
-        if IsValid(ChatboxCore.panel) then
-            ChatboxCore.panel:Remove()
-            ChatboxCore:createChat()
-        end
+concommand.Add("fixchatplz", function()
+    if IsValid(ChatboxCore.panel) then
+        ChatboxCore.panel:Remove()
+        ChatboxCore:createChat()
     end
-)
+end)

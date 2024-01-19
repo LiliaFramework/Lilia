@@ -173,22 +173,19 @@ function PANEL:addPlayer(client, parent)
     end
 
     slot.model:SetTooltip(L("sbOptions", client:Name()))
-    timer.Simple(
-        0,
-        function()
-            if not IsValid(slot) then return end
-            local entity = slot.model.Entity
-            if IsValid(entity) then
-                for _, v in ipairs(client:GetBodyGroups()) do
-                    entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
-                end
+    timer.Simple(0, function()
+        if not IsValid(slot) then return end
+        local entity = slot.model.Entity
+        if IsValid(entity) then
+            for _, v in ipairs(client:GetBodyGroups()) do
+                entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
+            end
 
-                for k, _ in ipairs(client:GetMaterials()) do
-                    entity:SetSubMaterial(k - 1, client:GetSubMaterial(k - 1))
-                end
+            for k, _ in ipairs(client:GetMaterials()) do
+                entity:SetSubMaterial(k - 1, client:GetSubMaterial(k - 1))
             end
         end
-    )
+    end)
 
     slot.name = slot:Add("DLabel")
     slot.name:Dock(TOP)
@@ -261,15 +258,12 @@ function PANEL:addPlayer(client, parent)
             self.lastSkin = skin
         end
 
-        timer.Simple(
-            0,
-            function()
-                if not IsValid(entity) or not IsValid(client) then return end
-                for _, v in ipairs(client:GetBodyGroups()) do
-                    entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
-                end
+        timer.Simple(0, function()
+            if not IsValid(entity) or not IsValid(client) then return end
+            for _, v in ipairs(client:GetBodyGroups()) do
+                entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
             end
-        )
+        end)
     end
 
     self.slots[#self.slots + 1] = slot

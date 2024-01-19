@@ -27,7 +27,7 @@ function YoutubeService:parseUrl(url)
             else
                 time_sec = tonumber(time1)
             end
-            return             {
+            return {
                 id = id,
                 start = time_sec
             }
@@ -43,12 +43,9 @@ local player_url = "http://wyozi.github.io/gmod-medialib/youtube.html?id=%s"
 function YoutubeService:resolveUrl(url, callback)
     local urlData = self:parseUrl(url)
     local playerUrl = string.format(player_url, urlData.id)
-    callback(
-        playerUrl,
-        {
-            start = urlData.start
-        }
-    )
+    callback(playerUrl, {
+        start = urlData.start
+    })
 end
 
 -- http://en.wikipedia.org/wiki/ISO_8601#Durations
@@ -65,42 +62,38 @@ function YoutubeService:directQuery(url, callback)
     local apiKey = medialib.YOUTUBE_API_KEY or DEFAULT_API_KEY
     local urlData = self:parseUrl(url)
     local metaurl = string.format("https://www.googleapis.com/youtube/v3/videos?part=snippet%%2CcontentDetails&id=%s&key=%s", urlData.id, apiKey)
-    http.Fetch(
-        metaurl,
-        function(result, size)
-            if size == 0 then
-                callback("http body size = 0")
+    http.Fetch(metaurl, function(result, size)
+        if size == 0 then
+            callback("http body size = 0")
+            return
+        end
+
+        local data = {}
+        data.id = urlData.id
+        local jsontbl = util.JSONToTable(result)
+        if jsontbl and jsontbl.items then
+            local item = jsontbl.items[1]
+            if not item then
+                callback("No video id found")
                 return
             end
 
-            local data = {}
-            data.id = urlData.id
-            local jsontbl = util.JSONToTable(result)
-            if jsontbl and jsontbl.items then
-                local item = jsontbl.items[1]
-                if not item then
-                    callback("No video id found")
-                    return
-                end
-
-                data.title = item.snippet.title
-                local live = item.snippet.liveBroadcastContent == "live"
-                if live then
-                    data.live = true
-                else
-                    data.duration = tonumber(PTToSeconds(item.contentDetails.duration))
-                end
-
-                data.raw = item
+            data.title = item.snippet.title
+            local live = item.snippet.liveBroadcastContent == "live"
+            if live then
+                data.live = true
             else
-                callback(result)
-                return
+                data.duration = tonumber(PTToSeconds(item.contentDetails.duration))
             end
 
-            callback(nil, data)
-        end,
-        function(err) callback("HTTP: " .. err) end
-    )
+            data.raw = item
+        else
+            callback(result)
+            return
+        end
+
+        callback(nil, data)
+    end, function(err) callback("HTTP: " .. err) end)
 end
 
 function YoutubeService:hasReliablePlaybackEvents()

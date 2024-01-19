@@ -4,14 +4,9 @@ function Inventory:addItem(item)
     item.invID = self:getID()
     local id = self.id
     if not isnumber(id) then id = NULL end
-    lia.db.updateTable(
-        {
-            _invID = id
-        },
-        nil,
-        "items",
-        "_itemID = " .. item:getID()
-    )
+    lia.db.updateTable({
+        _invID = id
+    }, nil, "items", "_itemID = " .. item:getID())
 
     self:syncItemAdded(item)
     hook.Run("OnItemAdded", item:getOwner(), item)
@@ -36,34 +31,26 @@ end
 function Inventory:initializeStorage(initialData)
     local d = deferred.new()
     local charID = initialData.char
-    lia.db.insertTable(
-        {
-            _invType = self.typeID,
-            _charID = charID
-        },
-        function(results, lastID)
-            local count = 0
-            local expected = table.Count(initialData)
-            if initialData.char then expected = expected - 1 end
-            if expected == 0 then return d:resolve(lastID) end
-            for key, value in pairs(initialData) do
-                if key == "char" then continue end
-                lia.db.insertTable(
-                    {
-                        _invID = lastID,
-                        _key = key,
-                        _value = {value}
-                    },
-                    function()
-                        count = count + 1
-                        if count == expected then d:resolve(lastID) end
-                    end,
-                    "invdata"
-                )
-            end
-        end,
-        "inventories"
-    )
+    lia.db.insertTable({
+        _invType = self.typeID,
+        _charID = charID
+    }, function(results, lastID)
+        local count = 0
+        local expected = table.Count(initialData)
+        if initialData.char then expected = expected - 1 end
+        if expected == 0 then return d:resolve(lastID) end
+        for key, value in pairs(initialData) do
+            if key == "char" then continue end
+            lia.db.insertTable({
+                _invID = lastID,
+                _key = key,
+                _value = {value}
+            }, function()
+                count = count + 1
+                if count == expected then d:resolve(lastID) end
+            end, "invdata")
+        end
+    end, "inventories")
     return d
 end
 
@@ -84,14 +71,9 @@ function Inventory:removeItem(itemID, preserveItem)
         if not preserveItem then
             d:resolve(instance:delete())
         else
-            lia.db.updateTable(
-                {
-                    _invID = NULL
-                },
-                function() d:resolve() end,
-                "items",
-                "_itemID = " .. itemID
-            )
+            lia.db.updateTable({
+                _invID = NULL
+            }, function() d:resolve() end, "items", "_itemID = " .. itemID)
         end
     else
         d:resolve()
@@ -108,26 +90,18 @@ function Inventory:setData(key, value)
     self.data[key] = value
     local keyData = self.config.data[key]
     if key == "char" then
-        lia.db.updateTable(
-            {
-                _charID = value
-            },
-            nil,
-            "inventories",
-            "_invID = " .. self:getID()
-        )
+        lia.db.updateTable({
+            _charID = value
+        }, nil, "inventories", "_invID = " .. self:getID())
     elseif not keyData or not keyData.notPersistent then
         if value == nil then
             lia.db.delete("invdata", "_invID = " .. self.id .. " AND _key = '" .. lia.db.escape(key) .. "'")
         else
-            lia.db.upsert(
-                {
-                    _invID = self.id,
-                    _key = key,
-                    _value = {value}
-                },
-                "invdata"
-            )
+            lia.db.upsert({
+                _invID = self.id,
+                _key = key,
+                _value = {value}
+            }, "invdata")
         end
     end
 
@@ -162,12 +136,9 @@ end
 function Inventory:getRecipients()
     local recipients = {}
     for _, client in ipairs(player.GetAll()) do
-        if self:canAccess(
-            "repl",
-            {
-                client = client
-            }
-        ) then
+        if self:canAccess("repl", {
+            client = client
+        }) then
             recipients[#recipients + 1] = client
         end
     end
@@ -183,33 +154,31 @@ end
 function Inventory:loadItems()
     local ITEM_TABLE = "items"
     local ITEM_FIELDS = {"_itemID", "_uniqueID", "_data", "_x", "_y", "_quantity"}
-    return     lia.db.select(ITEM_FIELDS, ITEM_TABLE, "_invID = " .. self.id):next(
-        function(res)
-            local items = {}
-            for _, result in ipairs(res.results or {}) do
-                local itemID = tonumber(result._itemID)
-                local uniqueID = result._uniqueID
-                local itemTable = lia.item.list[uniqueID]
-                if not itemTable then
-                    ErrorNoHalt("Inventory " .. self.id .. " contains invalid item " .. uniqueID .. " (" .. itemID .. ")\n")
-                    continue
-                end
-
-                local item = lia.item.new(uniqueID, itemID)
-                item.invID = self.id
-                if result._data then item.data = table.Merge(item.data, util.JSONToTable(result._data) or {}) end
-                item.data.x = tonumber(result._x)
-                item.data.y = tonumber(result._y)
-                item.quantity = tonumber(result._quantity)
-                items[itemID] = item
-                item:onRestored(self)
+    return lia.db.select(ITEM_FIELDS, ITEM_TABLE, "_invID = " .. self.id):next(function(res)
+        local items = {}
+        for _, result in ipairs(res.results or {}) do
+            local itemID = tonumber(result._itemID)
+            local uniqueID = result._uniqueID
+            local itemTable = lia.item.list[uniqueID]
+            if not itemTable then
+                ErrorNoHalt("Inventory " .. self.id .. " contains invalid item " .. uniqueID .. " (" .. itemID .. ")\n")
+                continue
             end
 
-            self.items = items
-            self:onItemsLoaded(items)
-            return items
+            local item = lia.item.new(uniqueID, itemID)
+            item.invID = self.id
+            if result._data then item.data = table.Merge(item.data, util.JSONToTable(result._data) or {}) end
+            item.data.x = tonumber(result._x)
+            item.data.y = tonumber(result._y)
+            item.quantity = tonumber(result._quantity)
+            items[itemID] = item
+            item:onRestored(self)
         end
-    )
+
+        self.items = items
+        self:onItemsLoaded(items)
+        return items
+    end)
 end
 
 function Inventory:onItemsLoaded(items)

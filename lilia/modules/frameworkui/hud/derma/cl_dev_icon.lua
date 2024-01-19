@@ -108,23 +108,16 @@ end
 local function renderAction(self)
     local text = buildActionText(self, true)
     if not text then return end
-    ikon:renderIcon(
-        "iconEditor",
-        ICON_INFO.w,
-        ICON_INFO.h,
-        ICON_INFO.modelName,
-        {
-            pos = ICON_INFO.camPos,
-            ang = ICON_INFO.camAng,
-            fov = ICON_INFO.FOV,
-            outline = ICON_INFO.outline,
-            outlineColor = ICON_INFO.outlineColor,
-            drawHook = ICON_INFO.drawHook,
-            entAng = ICON_INFO.entAng,
-            drawPostHook = ICON_INFO.drawPostHook,
-        },
-        true
-    )
+    ikon:renderIcon("iconEditor", ICON_INFO.w, ICON_INFO.h, ICON_INFO.modelName, {
+        pos = ICON_INFO.camPos,
+        ang = ICON_INFO.camAng,
+        fov = ICON_INFO.FOV,
+        outline = ICON_INFO.outline,
+        outlineColor = ICON_INFO.outlineColor,
+        drawHook = ICON_INFO.drawHook,
+        entAng = ICON_INFO.entAng,
+        drawPostHook = ICON_INFO.drawPostHook,
+    }, true)
 end
 
 PANEL = {}

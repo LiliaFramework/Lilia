@@ -33,15 +33,12 @@ function PANEL:Init()
     end
 
     self:SetAlpha(0)
-    timer.Simple(
-        0.05,
-        function()
-            local x, y = self:GetPos()
-            self:SetPos(x + 50, y + 50)
-            self:MoveTo(x, y, 0.3, 0, -1)
-            self:AlphaTo(255, 0.3, 0.15)
-        end
-    )
+    timer.Simple(0.05, function()
+        local x, y = self:GetPos()
+        self:SetPos(x + 50, y + 50)
+        self:MoveTo(x, y, 0.3, 0, -1)
+        self:AlphaTo(255, 0.3, 0.15)
+    end)
 end
 
 function PANEL:GetWorkPanel()

@@ -16,23 +16,18 @@ function FrameworkHUD:ShouldDrawVignette()
     if hasVignetteMaterial then return self.Vignette end
 end
 
-timer.Create(
-    "liaVignetteChecker",
-    1,
-    0,
-    function()
-        local client = LocalPlayer()
-        if IsValid(client) then
-            local data = {}
-            data.start = client:GetPos()
-            data.endpos = data.start + Vector(0, 0, 768)
-            data.filter = client
-            local trace = util.TraceLine(data)
-            if trace and trace.Hit then
-                vignetteAlphaGoal = 80
-            else
-                vignetteAlphaGoal = 0
-            end
+timer.Create("liaVignetteChecker", 1, 0, function()
+    local client = LocalPlayer()
+    if IsValid(client) then
+        local data = {}
+        data.start = client:GetPos()
+        data.endpos = data.start + Vector(0, 0, 768)
+        data.filter = client
+        local trace = util.TraceLine(data)
+        if trace and trace.Hit then
+            vignetteAlphaGoal = 80
+        else
+            vignetteAlphaGoal = 0
         end
     end
-)
+end)

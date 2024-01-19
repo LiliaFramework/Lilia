@@ -11,28 +11,21 @@ function PANEL:Init()
         table.insert(waits, {SysTime() + s, function() if IsValid(self) then f() end end})
     end
 
-    wait(
-        3.33,
-        function()
-            http.Fetch(
-                "http://api.steampowered.com/ISteamApps/GetServersAtAddress/v0001?addr=" .. game.GetIPAddress(),
-                function(json)
-                    if not IsValid(self) then return end
-                    local data = util.JSONToTable(json)
-                    if not data["response"]["servers"] or not data["response"]["servers"][0] then
-                        self.ServerIsOff = true
-                        self:DoLamar()
-                    else
-                        self.ServerIsOff = false
-                    end
-                end,
-                function()
-                    if not IsValid(self) then return end
-                    self.ServerIsOff = false
-                end
-            )
-        end
-    )
+    wait(3.33, function()
+        http.Fetch("http://api.steampowered.com/ISteamApps/GetServersAtAddress/v0001?addr=" .. game.GetIPAddress(), function(json)
+            if not IsValid(self) then return end
+            local data = util.JSONToTable(json)
+            if not data["response"]["servers"] or not data["response"]["servers"][0] then
+                self.ServerIsOff = true
+                self:DoLamar()
+            else
+                self.ServerIsOff = false
+            end
+        end, function()
+            if not IsValid(self) then return end
+            self.ServerIsOff = false
+        end)
+    end)
 end
 
 function PANEL:DoLamar()
@@ -70,42 +63,36 @@ function PANEL:DoLamar()
     end
 
     local r = 1
-    wait(
-        r,
-        function()
-            surface.PlaySound("npc/headcrab/pain1.wav")
-            local x = 0
-            x = x + 1
-            wait(x, function() surface.PlaySound("vo/k_lab/kl_comeout.wav") end)
-            x = x + 2.3
-            wait(x, function() surface.PlaySound("npc/headcrab/alert1.wav") end)
-            x = x + 2
-            wait(x, function() surface.PlaySound("vo/k_lab/kl_lamarr.wav") end)
-            x = x + 2.6
-            wait(x, function() surface.PlaySound("npc/headcrab/pain3.wav") end)
-            x = x + 2
-            wait(x, function() surface.PlaySound("vo/k_lab/kl_nocareful.wav") end)
-            x = x + 2.1
-            wait(x, doAnim)
-            x = x + 1.6
-            wait(x, function() surface.PlaySound("npc/headcrab/attack2.wav") end)
-            x = x + 0.6
-            wait(
-                x,
-                function()
-                    surface.PlaySound("vehicles/v8/vehicle_impact_heavy1.wav")
-                    surface.PlaySound("ambient/energy/zap6.wav")
-                    timer.Simple(0.3, function() surface.PlaySound("ambient/energy/zap7.wav") end)
-                end
-            )
+    wait(r, function()
+        surface.PlaySound("npc/headcrab/pain1.wav")
+        local x = 0
+        x = x + 1
+        wait(x, function() surface.PlaySound("vo/k_lab/kl_comeout.wav") end)
+        x = x + 2.3
+        wait(x, function() surface.PlaySound("npc/headcrab/alert1.wav") end)
+        x = x + 2
+        wait(x, function() surface.PlaySound("vo/k_lab/kl_lamarr.wav") end)
+        x = x + 2.6
+        wait(x, function() surface.PlaySound("npc/headcrab/pain3.wav") end)
+        x = x + 2
+        wait(x, function() surface.PlaySound("vo/k_lab/kl_nocareful.wav") end)
+        x = x + 2.1
+        wait(x, doAnim)
+        x = x + 1.6
+        wait(x, function() surface.PlaySound("npc/headcrab/attack2.wav") end)
+        x = x + 0.6
+        wait(x, function()
+            surface.PlaySound("vehicles/v8/vehicle_impact_heavy1.wav")
+            surface.PlaySound("ambient/energy/zap6.wav")
+            timer.Simple(0.3, function() surface.PlaySound("ambient/energy/zap7.wav") end)
+        end)
 
-            wait(x + 2.5, doPostText)
-            x = x + 3
-            wait(x, function() surface.PlaySound("ambient/energy/spark1.wav") end)
-            x = x + 1.2
-            wait(x, function() surface.PlaySound("ambient/energy/spark3.wav") end)
-        end
-    )
+        wait(x + 2.5, doPostText)
+        x = x + 3
+        wait(x, function() surface.PlaySound("ambient/energy/spark1.wav") end)
+        x = x + 1.2
+        wait(x, function() surface.PlaySound("ambient/energy/spark3.wav") end)
+    end)
 end
 
 function PANEL:Think()

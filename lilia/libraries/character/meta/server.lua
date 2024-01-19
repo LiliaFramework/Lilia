@@ -89,15 +89,10 @@ function charMeta:save(callback)
 
     local shouldSave = hook.Run("CharacterPreSave", self)
     if shouldSave ~= false then
-        lia.db.updateTable(
-            data,
-            function()
-                if callback then callback() end
-                hook.Run("CharacterPostSave", self)
-            end,
-            nil,
-            "_id = " .. self:getID()
-        )
+        lia.db.updateTable(data, function()
+            if callback then callback() end
+            hook.Run("CharacterPostSave", self)
+        end, nil, "_id = " .. self:getID())
     end
 end
 
