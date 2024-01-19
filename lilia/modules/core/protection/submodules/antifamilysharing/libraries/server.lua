@@ -1,5 +1,4 @@
 ﻿function AntiFamilySharing:PlayerAuthed(client, steamid)
-    local steamworks = steamworks or _G.steamworks
     local steamID64 = util.SteamIDTo64(steamid)
     local OwnerSteamID64 = client:OwnerSteamID64()
     local SteamName = client:steamName()
