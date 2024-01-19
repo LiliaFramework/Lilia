@@ -85,7 +85,7 @@ jobs:
       - name: Download GLuaFixer (Step 1)
         run: |
           echo "Step 1: Downloading GLuaFixer..."
-          curl -L -o glualint.zip https://github.com/FPtje/GLuaFixer/releases/download/1.26.0/glualint-1.26.0-x86_64-linux.zip
+          curl -L -o glualint.zip https://github.com/FPtje/GLuaFixer/releases/download/1.28.0/glualint-1.28.0-x86_64-linux.zip
           unzip glualint.zip -d glualint
           mv glualint/glualint glualint_executable
         working-directory: "${{ github.workspace }}"
