@@ -7,7 +7,5 @@
 
     if SERVER then
         self:ServersideInitializedModules()
-    else
-        self:ClientsideInitializedModules()
     end
 end
