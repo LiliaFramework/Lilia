@@ -1,5 +1,4 @@
 ﻿local PANEL = {}
-
 PANEL.WHITE = Color(255, 255, 255, 150)
 PANEL.SELECTED = Color(255, 255, 255, 230)
 PANEL.HOVERED = Color(255, 255, 255, 50)
