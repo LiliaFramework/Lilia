@@ -16,8 +16,6 @@ function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
     if bind:find("jump") then
         lia.command.send("chargetup")
-    elseif bind:find("speed") and client:KeyDown(IN_WALK) and pressed then
-        RunConsoleCommand(client:Crouching() and "-duck" or "+duck")
     elseif (bind:find("use") or bind:find("attack")) and pressed then
         local menu, callback = lia.menu.getActiveMenu()
         if menu and lia.menu.onButtonPressed(menu, callback) then return true end
