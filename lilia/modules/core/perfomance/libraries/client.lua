@@ -1,4 +1,4 @@
-﻿function PerfomanceCore:ClientsideInitializedModules()
+﻿function PerfomanceCore:PlayerInitialSpawn()
     for _, timerName in pairs(self.TimersToRemove) do
         if timer.Exists(timerName) then timer.Remove(timerName) end
     end
