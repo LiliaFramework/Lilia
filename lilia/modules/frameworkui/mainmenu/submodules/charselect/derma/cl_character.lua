@@ -45,9 +45,9 @@ function PANEL:createTitle()
 end
 
 function PANEL:CreateBG()
-    local bg = self.background:Add("DHTML")
-    bg:SetSize(1920, 1080)
-    bg:SetHTML([[
+    self.background = self:Add("DHTML")
+    self.background:SetSize(ScrW(), ScrH())
+    self.background:SetHTML([[
         <html>
         <head>
             <style>
@@ -62,22 +62,26 @@ function PANEL:CreateBG()
             </style>
         </head>
         <body>
-            <iframe src="]] .. MainMenu.BackgroundURL .. [[" frameborder="0" allowfullscreen style="width: 100%; height: 100%; pointer-events: none;"></iframe>
+            <iframe src="]] .. "https://www.youtube.com/embed/" .. MainMenu.BackgroundURL .."?autoplay=1&controls=0&loop=1&mute=0" .. [[" frameborder="0" allowfullscreen style="width: 100%; height: 100%; pointer-events: none;"></iframe>
         </body>
         </html>
     ]])
-    bg:SetAllowLua(true)
+    self.background:SetAllowLua(true) -- Enable running Lua scripts in the DHTML panel
+    if MainMenu.CharMenuBGInputDisabled then
+        self.background:SetMouseInputEnabled(false) -- Disable mouse input
+        self.background:SetKeyboardInputEnabled(false) -- Disable keyboard input
+    end
 end
 
 function PANEL:loadBackground()
     local url = MainMenu.BackgroundURL
     local logo = MainMenu.LogoURL
     if url ~= "" then
-        self.background = self:Add("DHTML")
-        self.background:SetSize(ScrW(), ScrH())
-        if MainMenu.BackgroundIsVideo then
+        if MainMenu.BackgroundIsYoutubeVideo then
             self:CreateBG()
         elseif url:find("%S") then
+            self.background = self:Add("DHTML")
+            self.background:SetSize(ScrW(), ScrH())
             if url:find("http") then
                 self.background:OpenURL(url)
             else
@@ -212,7 +216,6 @@ end
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self)
-    self:paintBackground(w, h)
 end
 
 function PANEL:hoverSound()

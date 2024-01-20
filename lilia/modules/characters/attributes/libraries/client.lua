@@ -28,4 +28,41 @@ function AttributesCore:HUDPaintBackground()
     end
 end
 
+function AttributesCore:CreateMenuButtons(tabs)
+    if table.Count(lia.attribs.list) > 0 then
+        tabs["Attributes"] = function(panel)
+            panel.attribs = panel:Add("DScrollPanel")
+            panel.attribs:Dock(FILL)
+            panel.attribs:DockMargin(0, 10, 0, 0)
+            if not IsValid(panel.attribs) then return end
+            local char = LocalPlayer():getChar()
+            local boost = char:getBoosts()
+            for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
+                local attribBoost = 0
+                if boost[k] then
+                    for _, bValue in pairs(boost[k]) do
+                        attribBoost = attribBoost + bValue
+                    end
+                end
+
+                local bar = panel.attribs:Add("liaAttribBar")
+                bar:Dock(TOP)
+                bar:DockMargin(0, 0, 0, 3)
+                local attribValue = char:getAttrib(k, 0)
+                if attribBoost then
+                    bar:setValue(attribValue - attribBoost or 0)
+                else
+                    bar:setValue(attribValue)
+                end
+
+                local maximum = v.maxValue or lia.config.MaxAttributes
+                bar:setMax(maximum)
+                bar:setReadOnly()
+                bar:setText(Format("%s [%.1f/%.1f] (%.1f", L(v.name), attribValue, maximum, attribValue / maximum * 100) .. "%)")
+                if attribBoost then bar:setBoost(attribBoost) end
+            end
+        end
+    end
+end
+
 lia.bar.add(function() return LocalPlayer():getLocalVar("stamina", 0) / 100 end, Color(200, 200, 40), nil, "stamina")

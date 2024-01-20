@@ -9,6 +9,7 @@
     if self.FactionAutoRecognize and (char:getFaction() == other:getFaction() and (self.MemberToMemberAutoRecognition[char:getFaction()] and self.MemberToMemberAutoRecognition[other:getFaction()])) then return true end
     if client:isStaffOnDuty() or otherclient:isStaffOnDuty() then return true end
     if recognized ~= "" and recognized:find("," .. id .. ",") then return true end
+    return false
 end
 
 function RecognitionCore:isCharFakeRecognized(char, id)

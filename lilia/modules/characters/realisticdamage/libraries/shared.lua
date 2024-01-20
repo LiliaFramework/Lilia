@@ -20,7 +20,16 @@ end
 
 function RealisticDamageCore:GetInjuredText(client)
     local health = client:Health()
-    for k, v in pairs(self.InjuriesTable) do
-        if (health / client:GetMaxHealth()) < k then return v[1], v[2] end
+    local severities = {}
+    for k, _ in pairs(self.InjuriesTable) do
+        table.insert(severities, k)
+    end
+
+    table.sort(severities)
+    for _, k in ipairs(severities) do
+        local v = self.InjuriesTable[k]
+        local severity = k
+        local injury, color = unpack(v)
+        if (health / client:GetMaxHealth()) < severity then return injury, color end
     end
 end

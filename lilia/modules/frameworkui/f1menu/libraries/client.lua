@@ -34,6 +34,7 @@ function F1MenuCore:OnCharInfoSetup(infoPanel)
     weapModel:SetSkin(weapon:GetSkin())
     weapModel:SetColor(weapon:GetColor())
     weapModel:SetNoDraw(true)
+    if not IsValid(entity) then return end
     entity.weapon = weapModel
     local act = ACT_MP_STAND_IDLE
     local model = entity:GetModel():lower()
