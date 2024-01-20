@@ -5,9 +5,9 @@ MainMenu.Music = ""
 --[[ Set Main Menu Logo ]]
 MainMenu.LogoURL = ""
 --[[ Set Background Image URL (if applicable) ]]
-MainMenu.BackgroundURL = "SeMXa5lBGYc"
+MainMenu.BackgroundURL = "" -- Example: "SeMXa5lBGYc"
 --[[ Set If Background Screen is a YT video ]]
-MainMenu.BackgroundIsYoutubeVideo = true
+MainMenu.BackgroundIsYoutubeVideo = false
 --[[ Disable Background Input during Main Menu Lookup ]]
 MainMenu.CharMenuBGInputDisabled = true
 --[[ Set Transparent Background during Character Creation ]]

@@ -1,5 +1,4 @@
-﻿lia.log = lia.log or {}
-lia.log.types = lia.log.types or {}
+﻿lia.log.types = lia.log.types or {}
 function lia.log.loadTables()
     file.CreateDir("lilia/logs")
 end

@@ -1,4 +1,5 @@
-﻿FLAG_NORMAL = 0
+﻿lia.log = lia.log or {}
+FLAG_NORMAL = 0
 FLAG_SUCCESS = 1
 FLAG_WARNING = 2
 FLAG_DANGER = 3
