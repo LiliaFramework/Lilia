@@ -1056,13 +1056,13 @@ do
                 -- someone used :seek with other time
                 if self._seekingTo ~= time or not IsValid(chan) then
                     -- chan not valid
-                    timer.Destroy(timerId)
+                    timer.Remove(timerId)
                     return
                 end
 
                 chan:SetTime(time)
                 -- seek succeeded
-                if math.abs(chan:GetTime() - time) < 0.25 then timer.Destroy(timerId) end
+                if math.abs(chan:GetTime() - time) < 0.25 then timer.Remove(timerId) end
             end
 
             timer.Create(timerId, 0.2, 0, AttemptSeek)
