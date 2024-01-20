@@ -1,8 +1,4 @@
-﻿function ChatboxCore:PostPlayerSay(client, message, chatType)
-    lia.log.add(client, "chat", chatType and chatType:upper() or "??", message)
-end
-
-function ChatboxCore:SaveData()
+﻿function ChatboxCore:SaveData()
     self:setData(self.OOCBans)
 end
 

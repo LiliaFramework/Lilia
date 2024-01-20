@@ -6,6 +6,7 @@ end
 
 function entityMeta:IsSimfphysCar()
     if not simfphys then return false end
+    if not IsValid(self) then return false end
     return self:GetClass() == "gmod_sent_vehicle_fphysics_base"
 end
 
