@@ -17,7 +17,7 @@ function PANEL:Init()
     self.info:SetSize(panelWidth, panelHeight)
     self.info:ShowCloseButton(false)
     self.info:SetDraggable(false)
-    self.info.Paint = function(_, w, h) end
+    self.info.Paint = function() end
     self.infoBox = self.info:Add("DPanel")
     self.infoBox:Dock(FILL)
     self.infoBox.Paint = function(_, w, h) draw.RoundedBox(8, 0, 0, w, h, panelColor) end

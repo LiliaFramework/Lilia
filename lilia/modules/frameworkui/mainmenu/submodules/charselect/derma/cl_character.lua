@@ -214,7 +214,7 @@ function PANEL:setFadeToBlack(fade)
     return d
 end
 
-function PANEL:Paint(w, h)
+function PANEL:Paint()
     lia.util.drawBlur(self)
 end
 
