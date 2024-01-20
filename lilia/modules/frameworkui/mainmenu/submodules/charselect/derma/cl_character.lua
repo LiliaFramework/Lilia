@@ -62,7 +62,7 @@ function PANEL:CreateBG()
             </style>
         </head>
         <body>
-            <iframe src="]] .. "https://www.youtube.com/embed/" .. MainMenu.BackgroundURL .. "?autoplay=1&controls=0&loop=1&mute=0" .. [[" frameborder="0" allowfullscreen style="width: 100%; height: 100%; pointer-events: none;"></iframe>
+            <iframe src="]] .. "https://www.youtube.com/embed/" .. MainMenu.BackgroundURL .."?autoplay=1&controls=0&loop=1&mute=0" .. [[" frameborder="0" allowfullscreen style="width: 100%; height: 100%; pointer-events: none;"></iframe>
         </body>
         </html>
     ]])

@@ -1,5 +1,5 @@
 ﻿--[[ Is Stamina Blur Enabled ]]
-AttributesCore.StaminaBlur = true
+AttributesCore.StaminaBlur = false
 --[[ Is Stamina Slowdown Enabled ]]
 AttributesCore.StaminaSlowdown = true
 --[[ Set Default Stamina Value ]]

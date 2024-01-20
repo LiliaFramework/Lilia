@@ -35,7 +35,7 @@ function RecognitionCore:ShouldAllowScoreboardOverride(client, var)
     local isClientNotLocalPlayer = client ~= LocalPlayer()
     local isRecognized = ourCharacter:doesRecognize(characterID)
     local isFakeRecognized = ourCharacter:doesFakeRecognize(characterID)
-    local isNotRecognizedAndNotFakeRecognized = not (isRecognized and isFakeRecognized)
+    local isNotRecognizedAndNotFakeRecognized = not (isRecognized or isFakeRecognized)
     return isRecognitionEnabled and isVarHiddenInScoreboard and isClientNotLocalPlayer and isNotRecognizedAndNotFakeRecognized
 end
 
