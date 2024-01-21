@@ -201,14 +201,14 @@ function charMeta:giveMoney(amount, takingMoney)
                 lia.log.add(client, "money", maxMoneyLimit)
             else
                 self:setMoney(totalMoney)
-                lia.log.add(client, "money", -amount)
+                lia.log.add(client, "money", amount)
             end
         else
-            lia.log.add(client, "money", -amount)
+            lia.log.add(client, "money", amount)
             self:setMoney(totalMoney)
         end
     else
-        lia.log.add(client, "money", -amount)
+        lia.log.add(client, "money", amount)
         self:setMoney(negativeTotalMoney)
     end
     return true

@@ -2,7 +2,7 @@
 lia.module.enabilitystatus = {}
 lia.module.list = lia.module.list or {}
 lia.module.unloaded = lia.module.unloaded or {}
-lia.module.ModuleFolders = {"dependencies", "config", "permissions", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim", "logger", "concommands"}
+lia.module.ModuleFolders = {"dependencies", "config", "permissions", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim", "concommands"}
 lia.module.ModuleFiles = {
     ["client.lua"] = "client",
     ["cl_module.lua"] = "client",

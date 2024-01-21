@@ -11,7 +11,7 @@ lia.item.defaultfunctions = {
         onRun = function(item)
             local client = item.player
             item:removeFromInventory(true):next(function() item:spawn(client) end)
-            lia.log.add(item.player, "itemDrop", item.name, 1)
+			lia.log.add(item.player, "itemDrop", item.name, 1)
             return false
         end,
         onCanRun = function(item) return item.entity == nil and not IsValid(item.entity) and not item.noDrop end

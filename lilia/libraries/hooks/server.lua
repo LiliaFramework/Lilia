@@ -5,18 +5,45 @@ local defaultAngleData = {
     ["models/props_junk/propane_tank001a.mdl"] = Angle(-90, 0, 0),
 }
 
-function GM:PlayerSay(client, message)
-    local chatType, message, anonymous = lia.chat.parse(client, message, true)
-    if (chatType == "ic") and lia.command.parse(client, message) then return "" end
-    local charlimit = lia.config.MaxChatLength
-    if utf8.len(message) <= charlimit then
-        lia.chat.send(client, chatType, message, anonymous)
-        hook.Run("PostPlayerSay", client, message, chatType, anonymous)
-    else
-        client:notify("Your message is too long and has not been sent.")
+
+
+function GM:OnPlayerInteractItem(client, action, item)
+    if (isentity(item)) then
+        if (IsValid(item)) then
+            local itemID = item.liaItemID
+            item = lia.item.instances[itemID]
+        else
+            return
+        end
+    elseif (isnumber(item)) then
+        item = lia.item.instances[item]
     end
-    return ""
+
+    if (!item) then
+        return
+    end
+
+    lia.log.add(client, "itemUse", action, item)
 end
+
+function GM:PlayerSay(client, message)
+	local chatType, message, anonymous = lia.chat.parse(client, message, true)
+	if (chatType == "ic") and (lia.command.parse(client, message)) then
+		return ""
+	end
+    if utf8.len(message) <= lia.config.MaxChatLength then
+
+	lia.chat.send(client, chatType, message, anonymous)
+	lia.log.add(client, "chat", chatType and chatType:upper() or "??", message)
+
+	hook.Run("PostPlayerSay", client, message, chatType, anonymous)
+    else
+    client:notify("Your message is too long and has not been sent.")
+
+    end
+	return ""
+end
+
 
 function GM:GetGameDescription()
     if lia.config.GamemodeName ~= "A Lilia Gamemode" then
@@ -204,6 +231,7 @@ function GM:PlayerDisconnected(client)
 
         hook.Run("OnCharDisconnect", client, character)
         character:save()
+        lia.log.add(client, "playerDisconnected")
     end
 
     if IsValid(client.liaRagdoll) then
@@ -216,6 +244,19 @@ function GM:PlayerDisconnected(client)
     for _, entity in pairs(ents.GetAll()) do
         if entity:GetCreator() == client then entity:Remove() end
     end
+end
+function GM:PlayerAuthed(client, steamID)
+	lia.log.add(client, "playerConnected", client, steamID)
+end
+
+function GM:PlayerHurt(client, attacker, health, damage)
+    lia.log.add(
+		client,
+		"playerHurt",
+		attacker:IsPlayer() and attacker:Name() or attacker:GetClass(),
+		damage,
+		health
+	)
 end
 
 function GM:GetPreferredCarryAngles(entity)
@@ -249,4 +290,13 @@ function GM:InitializedSchema()
         local newValue = "lia_" .. SCHEMA.folder
         game.ConsoleCommand("sbox_persist " .. newValue .. "\n")
     end
+end
+
+function GM:OnServerLog(client, logType, ...)
+	for _, v in pairs(lia.util.getAdmins()) do
+
+		if (hook.Run("CanPlayerSeeLog", v, logType) ~= false) then
+			lia.log.send(v, lia.log.getString(client, logType, ...))
+		end
+	end
 end
