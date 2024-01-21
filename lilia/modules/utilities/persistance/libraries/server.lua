@@ -3,7 +3,7 @@ properties.Add("persist", {
     MenuLabel = "#makepersistent",
     Order = 400,
     MenuIcon = "icon16/link.png",
-    Filter = function(self, ent, client)
+    Filter = function(_, ent, client)
         if ent:IsPlayer() then return false end
         if PersistanceCore.blacklist[ent:GetClass()] then return false end
         if not gamemode.Call("CanProperty", client, "persist", ent) then return false end
@@ -14,7 +14,7 @@ properties.Add("persist", {
         net.WriteEntity(ent)
         self:MsgEnd()
     end,
-    Receive = function(self, length, client)
+    Receive = function(self, _, client)
         local ent = net.ReadEntity()
         if not IsValid(ent) then return end
         if not self:Filter(ent, client) then return end
@@ -28,7 +28,7 @@ properties.Add("persist_end", {
     MenuLabel = "#stoppersisting",
     Order = 400,
     MenuIcon = "icon16/link_break.png",
-    Filter = function(self, ent, client)
+    Filter = function(_, ent, client)
         if ent:IsPlayer() then return false end
         if not gamemode.Call("CanProperty", client, "persist", ent) then return false end
         return ent:getNetVar("persistent", false)
@@ -38,13 +38,13 @@ properties.Add("persist_end", {
         net.WriteEntity(ent)
         self:MsgEnd()
     end,
-    Receive = function(self, length, client)
+    Receive = function(self, _, client)
         local ent = net.ReadEntity()
         if not IsValid(ent) then return end
         if not properties.CanBeTargeted(ent, client) then return end
         if not self:Filter(ent, client) then return end
         ent:setNetVar("persistent", false)
-        for k, v in ipairs(PersistanceCore.entities) do
+        for _, v in ipairs(PersistanceCore.entities) do
             if v == entity then
                 PersistanceCore.entities[k] = nil
                 break
@@ -55,13 +55,13 @@ properties.Add("persist_end", {
     end
 })
 
-function PersistanceCore:PhysgunPickup(client, entity)
+function PersistanceCore:PhysgunPickup(_, entity)
     if entity:getNetVar("persistent", false) then return false end
 end
 
 function PersistanceCore:SaveData()
     local data = {}
-    for k, v in ipairs(self.entities) do
+    for _, v in ipairs(self.entities) do
         if IsValid(v) then
             local entData = {}
             entData.class = v:GetClass()
