@@ -1,4 +1,4 @@
-function PerfomanceCore:PlayerSpawnVehicle(client)
+﻿function PerfomanceCore:PlayerSpawnVehicle(client)
     local playerCount = #player.GetAll()
     if playerCount >= self.PlayerCountCarLimit and self.PlayerCountCarLimitEnabled then
         client:notify("You can't spawn this as the playerlimit to spawn car has been hit!")

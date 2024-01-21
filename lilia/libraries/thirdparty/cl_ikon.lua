@@ -37,14 +37,11 @@
 			Include Copyright
 			Include License
 ]]
-
 ikon = ikon or {}
 ikon.dev = false
 ikon.maxSize = 8
-
 local schemaName = schemaName or (SCHEMA and SCHEMA.folder)
 local List = {}
-
 function ikon:init()
     if self.dev then
         hook.Add("HUDPaint", "ikon_dev2", ikon.showResult)
@@ -70,19 +67,15 @@ function ikon:init()
     file.CreateDir("Icon/" .. schemaName)
 end
 
-
 if schemaName then ikon:init() end
-
 hook.Add("InitializedSchema", "updatePath", function()
     schemaName = SCHEMA.folder
     ikon:init()
 end)
 
-
 --[[
 	IKON Library Essential Material/Texture Declare
 ]]
-
 local TEXTURE_FLAGS_CLAMP_S = 0x0004
 local TEXTURE_FLAGS_CLAMP_T = 0x0008
 ikon.max = ikon.maxSize * 64
@@ -93,18 +86,15 @@ local mat_outline = CreateMaterial("IconRenderedTemp", "UnlitGeneric", {
     ["$translucent"] = 1
 })
 
-
 --[[
 	Developer hook.
 	returns nothing.
 ]]
 -- Okay, sovietUnion wasn't pretty good name for the variation.
-
 local lightPositions = {
     BOX_TOP = Color(255, 255, 255),
     BOX_FRONT = Color(255, 255, 255),
 }
-
 
 function ikon:renderHook()
     -- Go Away, GMOD Halo.
@@ -214,9 +204,7 @@ function ikon:renderHook()
     end, function(rrer) print(rrer) end)
 end
 
-
 local testName = "renderedMeme"
-
 function ikon:showResult()
     local x, y = ScrW() / 2, ScrH() / 2
     local w, h = ikon.curWidth * 64, ikon.curHeight * 64
@@ -226,17 +214,14 @@ function ikon:showResult()
     surface.DrawTexturedRect(x, 0, w, h)
 end
 
-
 --[[
 	Renders the Icon with given arguments.
 	returns nothing
 ]]
-
 ikon.requestList = ikon.requestList or {}
 IKON_BUSY = 1
 IKON_PROCESSING = 0
 IKON_SOMETHINGWRONG = -1
-
 function ikon:renderIcon(name, w, h, mdl, camInfo, updateCache)
     if #ikon.requestList > 0 then return IKON_BUSY end
     if ikon.requestList[name] then return IKON_PROCESSING end
@@ -287,14 +272,11 @@ function ikon:renderIcon(name, w, h, mdl, camInfo, updateCache)
     return true
 end
 
-
 --[[
 	Gets rendered icon with given unique name.
 	returns IMaterial
 ]]
-
 ikon.cache = ikon.cache or {}
-
 function ikon:getIcon(name)
     if ikon.cache[name] then -- yeah return cache
         return ikon.cache[name]
@@ -310,7 +292,6 @@ function ikon:getIcon(name)
 end
 
 -- retryd
-
 concommand.Add("lia_flushicon", function()
     ikon.cache = {}
     local caf = "Icon/" .. schemaName .. "/*.png"
@@ -318,4 +299,3 @@ concommand.Add("lia_flushicon", function()
         file.Delete("Icon/" .. schemaName .. "/" .. v)
     end
 end)
-

@@ -1,5 +1,4 @@
-﻿
-function surface.DrawBlurRect(x, y, w, h, amount, heavyness, alpha)
+﻿function surface.DrawBlurRect(x, y, w, h, amount, heavyness, alpha)
     local blur = Material("pp/blurscreen")
     local X, Y = 0, 0
     local scrW, scrH = ScrW(), ScrH()
@@ -15,7 +14,6 @@ function surface.DrawBlurRect(x, y, w, h, amount, heavyness, alpha)
     end
 end
 
-
 function ClientsidePhysicsModel(modelpath, pos)
     if not modelpath or not pos then return end
     local prop = ents.CreateClientProp(modelpath)
@@ -28,4 +26,3 @@ function ClientsidePhysicsModel(modelpath, pos)
     prop:SetMoveType(MOVETYPE_VPHYSICS)
     return prop
 end
-

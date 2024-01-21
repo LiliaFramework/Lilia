@@ -27,13 +27,11 @@ V 1.2.1
 THANKS TO...
  - VERCAS for the inspiration.
 ]]
-
 local pon = {}
 _G.pon = pon
 local type, count = type, table.Count
 local tonumber = tonumber
 local format = string.format
-
 do
     local type, count = type, table.Count
     local tonumber = tonumber
@@ -357,4 +355,3 @@ do
         return res
     end
 end
-
