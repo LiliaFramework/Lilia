@@ -1,4 +1,4 @@
-PersistanceCore.entities = PersistanceCore.entities or {}
+﻿PersistanceCore.entities = PersistanceCore.entities or {}
 properties.Add("persist", {
     MenuLabel = "#makepersistent",
     Order = 400,
