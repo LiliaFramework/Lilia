@@ -44,7 +44,7 @@ properties.Add("persist_end", {
         if not properties.CanBeTargeted(ent, client) then return end
         if not self:Filter(ent, client) then return end
         ent:setNetVar("persistent", false)
-        for _, v in ipairs(PersistanceCore.entities) do
+        for k, v in ipairs(PersistanceCore.entities) do
             if v == entity then
                 PersistanceCore.entities[k] = nil
                 break
@@ -82,7 +82,7 @@ function PersistanceCore:SaveData()
 end
 
 function PersistanceCore:LoadData()
-    for k, v in pairs(self:getData() or {}) do
+    for _, v in pairs(self:getData() or {}) do
         local ent = ents.Create(v.class)
         ent:SetPos(v.pos)
         ent:SetAngles(v.angles)
