@@ -107,14 +107,14 @@ function ThirdPersonCore:EntityEmitSound(data)
     end
 end
 
-function ThirdPersonCore:PrePlayerDraw(dPlayer, flags)
+function ThirdPersonCore:PrePlayerDraw(drawnClient)
     local client = LocalPlayer()
     local clientPos = client:GetShootPos()
     local allPlayers = player.GetAll()
-    if not dPlayer:IsDormant() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:CanOverrideView() then
+    if not drawnClient:IsDormant() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:CanOverrideView() then
         local bBoneHit = false
-        for i = 0, dPlayer:GetBoneCount() - 1 do
-            local bonePos = dPlayer:GetBonePosition(i)
+        for i = 0, drawnClient:GetBoneCount() - 1 do
+            local bonePos = drawnClient:GetBonePosition(i)
             local traceLine = util.TraceLine({
                 start = clientPos,
                 endpos = bonePos,
@@ -143,18 +143,18 @@ function ThirdPersonCore:PrePlayerDraw(dPlayer, flags)
         end
 
         if not bBoneHit then
-            if not dPlayer.IsHidden then
-                dPlayer:DrawShadow(false)
-                dPlayer.IsHidden = true
+            if not drawnClient.IsHidden then
+                drawnClient:DrawShadow(false)
+                drawnClient.IsHidden = true
             end
             return true
-        elseif dPlayer.IsHidden and bBoneHit then
-            dPlayer:DrawShadow(true)
-            dPlayer.IsHidden = false
+        elseif drawnClient.IsHidden and bBoneHit then
+            drawnClient:DrawShadow(true)
+            drawnClient.IsHidden = false
         end
-    elseif dPlayer.IsHidden then
-        dPlayer:DrawShadow(true)
-        dPlayer.IsHidden = false
+    elseif drawnClient.IsHidden then
+        drawnClient:DrawShadow(true)
+        drawnClient.IsHidden = false
     end
 end
 
