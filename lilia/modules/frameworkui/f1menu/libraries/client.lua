@@ -84,8 +84,7 @@ function F1MenuCore:CreateMenuButtons(tabs)
         end
     end
 
-    local cnt = table.Count(lia.class.list)
-    if cnt > 1 then
+    if table.Count(lia.class.list) > 1 then
         for k, _ in ipairs(lia.class.list) do
             if not lia.class.canBe(LocalPlayer(), k) then
                 continue
