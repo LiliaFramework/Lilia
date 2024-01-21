@@ -21,10 +21,6 @@ function MainMenu:OnCharacterDelete(client, id)
     lia.log.add(client, "charDelete", id)
 end
 
-function MainMenu:OnCharacterDelete(client, id)
-    lia.log.add(client, "charDelete", id)
-end
-
 function MainMenu:OnCharCreated(client, character)
     lia.log.add(client, "charCreate", character)
 end

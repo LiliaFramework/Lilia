@@ -1,5 +1,4 @@
-﻿lia.log.types = lia.log.types or {}
-function lia.log.loadTables()
+﻿function lia.log.loadTables()
     file.CreateDir("lilia/logs")
 end
 
@@ -10,10 +9,10 @@ function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end
 
-function lia.log.getString(client, logType, _)
+function lia.log.getString(client, logType, ...)
     local text = lia.log.types[logType]
     if isfunction(text) then
-        local success, result = pcall(text, client, _)
+        local success, result = pcall(text, client, ...)
         if success then return result end
     end
 end
@@ -24,10 +23,10 @@ function lia.log.addRaw(logString, shouldNotify, flag)
     if not noSave then file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n") end
 end
 
-function lia.log.add(client, logType, _)
-    local logString = lia.log.getString(client, logType, _)
+function lia.log.add(client, logType, ...)
+    local logString = lia.log.getString(client, logType, ...)
     if not isstring(logString) then return end
-    hook.Run("OnServerLog", client, logType, logString, _)
+    hook.Run("OnServerLog", client, logType, ...)
     Msg("[LOG] ", logString .. "\n")
     if noSave then return end
     file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n")

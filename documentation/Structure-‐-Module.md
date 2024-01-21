@@ -70,7 +70,6 @@ MODULE.CAMIPrivileges = {
 - meta
 - derma
 - pim
-- logger
 - concommands
 ---
 
