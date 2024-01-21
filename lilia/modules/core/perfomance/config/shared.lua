@@ -1,4 +1,8 @@
-﻿--[[ Timers to be removed on the client ]]
+﻿--[[ Is Car Wipe enabled? ]]
+PerfomanceCore.PlayerCountCarLimitEnabled = true
+--[[ How many players are needed for cars to wipe ]]
+PerfomanceCore.PlayerCountCarLimit = 50
+--[[ Timers to be removed on the client ]]
 PerfomanceCore.TimersToRemove = {"HostnameThink", "CheckHookTimes", "HintSystem_OpeningMenu", "HintSystem_Annoy1", "HintSystem_Annoy2"}
 --[[ Hooks to be removed ]]
 PerfomanceCore.RemovableHooks = {

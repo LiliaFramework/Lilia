@@ -2,7 +2,7 @@
 local stmBlurAmount = 0
 local stmBlurAlpha = 0
 function AttributesCore:ConfigureCharacterCreationSteps(panel)
-    panel:addStep(vgui.Create("liaCharacterAttribs"), 99)
+    panel:addStep(vgui.Create("liaCharacterAttribs"), 98)
 end
 
 function AttributesCore:Think()

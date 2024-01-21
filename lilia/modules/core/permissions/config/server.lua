@@ -18,7 +18,3 @@ PermissionCore.PassableOnFreeze = false
 PermissionCore.PlayerSpawnVehicleDelay = 30
 --[[ Adds ToolGun Cooldown ]]
 PermissionCore.ToolInterval = 0.5
---[[ Is Car Wipe enabled? ]]
-PermissionCore.PlayerCountCarLimitEnabled = true
---[[ How many players are needed for cars to wipe ]]
-PermissionCore.PlayerCountCarLimit = 50

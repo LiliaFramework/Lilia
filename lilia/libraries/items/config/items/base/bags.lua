@@ -6,7 +6,6 @@ ITEM.isBag = true
 ITEM.invWidth = 2
 ITEM.invHeight = 2
 ITEM.RequiredSkillLevels = nil
-ITEM.NeedsEquip = true
 ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
 if CLIENT then
     function ITEM:paintOver(item, w, h)
@@ -21,18 +20,19 @@ ITEM.functions.Equip = {
     name = "Equip",
     icon = "icon16/tick.png",
     onRun = function(item)
+        local client = item.player
+        local items = client:getChar():getInv():getItems()
+        for _, v in pairs(items) do
+            if v.id ~= item.id and v.isBag and v:getData("equip") then
+                client:notifyLocalized("There's already a bag equipped!")
+                return false
+            end
+        end
+
         item:setData("equip", true)
         return false
     end,
-    onCanRun = function(item)
-        if not IsValid(item.entity) then
-            if not item.NeedsEquip then
-                return true
-            else
-                return item:getData("equip", false) ~= true
-            end
-        end
-    end
+    onCanRun = function(item) if not IsValid(item.entity) then return item:getData("equip", false) ~= true end end
 }
 
 ITEM.functions.Unequip = {
@@ -42,15 +42,7 @@ ITEM.functions.Unequip = {
         item:setData("equip", false)
         return false
     end,
-    onCanRun = function(item)
-        if not IsValid(item.entity) then
-            if not item.NeedsEquip then
-                return true
-            else
-                return item:getData("equip", false) == true
-            end
-        end
-    end
+    onCanRun = function(item) if not IsValid(item.entity) then return item:getData("equip", false) == true end end
 }
 
 ITEM.functions.View = {
@@ -74,15 +66,7 @@ ITEM.functions.View = {
         end
         return false
     end,
-    onCanRun = function(item)
-        if not IsValid(item.entity) and item:getInv() then
-            if not item.NeedsEquip then
-                return true
-            else
-                return item:getData("equip", false) == true
-            end
-        end
-    end
+    onCanRun = function(item) if not IsValid(item.entity) and item:getInv() then return item:getData("equip", false) == true end end
 }
 
 function ITEM:onInstanced()

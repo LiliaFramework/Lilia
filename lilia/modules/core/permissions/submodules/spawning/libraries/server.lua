@@ -50,8 +50,6 @@ function GM:PlayerSpawnObject(client, _, _)
 end
 
 function GM:PlayerSpawnVehicle(client, _, name, _)
-    local playerCount = #player.GetAll()
-    if playerCount >= PermissionCore.PlayerCountCarLimit and PermissionCore.PlayerCountCarLimitEnabled then client:notify("You can't spawn this as the playerlimit to spawn car has been hit!") end
     if IsValid(client) and client:getChar():hasFlags("C") or CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Cars", nil) then
         if table.HasValue(PermissionCore.RestrictedVehicles, name) and not CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Restricted Cars", nil) then
             client:notify("You can't spawn this vehicle since it's restricted!")
@@ -92,16 +90,4 @@ end
 
 function GM:PlayerSpawnedEntity(client, entity)
     entity:SetCreator(client)
-end
-
-function SpawningCore:PlayerInitialSpawn()
-    local playerCount = #player.GetAll()
-    local ents = ents.GetAll()
-    if playerCount >= PermissionCore.PlayerCountCarLimit and PermissionCore.PlayerCountCarLimitEnabled then
-        for _, car in pairs(ents) do
-            if car:IsVehicle() then car:Remove() end
-        end
-
-        print("Cars deleted. Player count reached the limit. Please disable  PermissionCore.PlayerCountCarLimitEnabled if you don't want this. ")
-    end
 end
