@@ -13,7 +13,6 @@
             if hook.Run("ShouldDeleteSavedItems") == true then
                 lia.db.query("DELETE FROM lia_items WHERE _itemID IN " .. range)
                 print("Server Deleted Server Items (does not includes Logical Items)")
-                print(range)
             else
                 lia.db.query("SELECT _itemID, _uniqueID, _data FROM lia_items WHERE _itemID IN " .. range, function(data)
                     if data then
