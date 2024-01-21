@@ -57,7 +57,7 @@ function F1MenuCore:OnCharInfoSetup(infoPanel)
 end
 
 function F1MenuCore:CreateMenuButtons(tabs)
-    if (hook.GetTable()["CanPlayerViewInventory"] and hook.Run("CanPlayerViewInventory") ~= false) or (not hook.GetTable()["CanPlayerViewInventory"] and LocalPlayer():Alive()) then
+    if hook.Run("CanPlayerViewInventory") ~= false then
         tabs["inv"] = function(panel)
             local inventory = LocalPlayer():getChar():getInv()
             if not inventory then return end
