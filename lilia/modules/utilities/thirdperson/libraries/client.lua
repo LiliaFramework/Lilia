@@ -107,6 +107,57 @@ function ThirdPersonCore:EntityEmitSound(data)
     end
 end
 
+function ThirdPersonCore:PrePlayerDraw(dPlayer, flags)
+    local client = LocalPlayer()
+    local clientPos = client:GetShootPos()
+    local allPlayers = player.GetAll()
+    if not dPlayer:IsDormant() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:CanOverrideView() then
+        local bBoneHit = false
+        for i = 0, dPlayer:GetBoneCount() - 1 do
+            local bonePos = dPlayer:GetBonePosition(i)
+            local traceLine = util.TraceLine({
+                start = clientPos,
+                endpos = bonePos,
+                filter = allPlayers,
+                mask = MASK_SHOT_HULL
+            })
+
+            local entity = traceLine.Entity
+            local entityClass = IsValid(entity) and entity:GetClass()
+            if traceLine.HitPos == bonePos then
+                bBoneHit = true
+                break
+            elseif (self.NotSolidMatTypes[traceLine.MatType] or self.NotSolidTextures[traceLine.HitTexture]) or ((entity and (entityClass == "prop_dynamic" or entityClass == "prop_physics")) and self.NotSolidModels[entity:GetModel()]) then
+                local traceLine2 = util.TraceLine({
+                    start = bonePos,
+                    endpos = clientPos,
+                    filter = allPlayers,
+                    mask = MASK_SHOT_HULL
+                })
+
+                if traceLine.Entity == traceLine2.Entity then
+                    bBoneHit = true
+                    break
+                end
+            end
+        end
+
+        if not bBoneHit then
+            if not dPlayer.IsHidden then
+                dPlayer:DrawShadow(false)
+                dPlayer.IsHidden = true
+            end
+            return true
+        elseif dPlayer.IsHidden and bBoneHit then
+            dPlayer:DrawShadow(true)
+            dPlayer.IsHidden = false
+        end
+    elseif dPlayer.IsHidden then
+        dPlayer:DrawShadow(true)
+        dPlayer.IsHidden = false
+    end
+end
+
 function playerMeta:CanOverrideView()
     local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
     if IsValid(lia.gui.char) and lia.gui.char:IsVisible() then return false end
