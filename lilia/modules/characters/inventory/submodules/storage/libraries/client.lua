@@ -14,7 +14,7 @@ end
 
 function LiliaStorage:SetupQuickMenu(menu)
     if CAMI.PlayerHasAccess(client, "Staff Permissions - Can Spawn Storage", nil) then
-        menu:addCheck("Spawn Storage Props as Storages", function(panel, state)
+        menu:addCheck("Spawn Storage Props as Storages", function(_, state)
             if state then
                 RunConsoleCommand("can_spawn_storage", "1")
             else
