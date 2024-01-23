@@ -149,7 +149,10 @@ function SWEP:Holster()
 end
 
 function SWEP:Think()
-    local vm = self:GetOwner():GetViewModel()
+    local owner = self:GetOwner()
+    if not IsValid(owner) then return end
+    local vm = owner:GetViewModel()
+    if not IsValid(vm) then return end
     local idletime = self:GetNextIdle()
     if idletime > 0 and CurTime() > idletime then
         vm:SendViewModelMatchingSequence(vm:LookupSequence("fists_idle_0" .. math.random(1, 2)))

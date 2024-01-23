@@ -1,4 +1,5 @@
-﻿function LiliaStorage:exitStorage()
+﻿CanSpawnStorage = CreateClientConVar("can_spawn_storage", 1, true, true)
+function LiliaStorage:exitStorage()
     net.Start("liaStorageExit")
     net.SendToServer()
 end
@@ -9,6 +10,20 @@ function LiliaStorage:StorageUnlockPrompt(_)
         net.WriteString(val)
         net.SendToServer()
     end)
+end
+
+function LiliaStorage:SetupQuickMenu(menu)
+    if CAMI.PlayerHasAccess(client, "Staff Permissions - Can Spawn Storage", nil) then
+        menu:addCheck("Spawn Storage Props as Storages", function(panel, state)
+            if state then
+                RunConsoleCommand("can_spawn_storage", "1")
+            else
+                RunConsoleCommand("can_spawn_storage", "0")
+            end
+        end, CanSpawnStorage:GetBool())
+
+        menu:addSpacer()
+    end
 end
 
 function LiliaStorage:StorageOpen(storage)
