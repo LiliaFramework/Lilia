@@ -58,14 +58,14 @@ function WSCore:HUDPaint()
         local y = (ScrH() * 0.4) + (k * 24)
         local color = Color(255, 255, 255, 255)
         if k == self.lastSlot then
-            local foColor = lia.config.Color
-            color.r = foColor.r
-            color.g = foColor.g
-            color.b = foColor.b
+            local schemaColor = lia.config.Color
+            color.r = schemaColor.r
+            color.g = schemaColor.g
+            color.b = schemaColor.b
         end
 
         color.a = math.Clamp(255 - math.TimeFraction(self.lifeTime, self.deathTime, CurTime()) * 255, 0, 255)
-        lia.util.drawText(string.upper(v:GetPrintName()), x, y, color)
+        lia.util.drawText(string.upper(v:GetPrintName()), x, y, color, 0, 0, "liaWeaponSelectorFont")
         if k == self.lastSlot and self.markup then
             surface.SetDrawColor(30, 30, 30, color.a * 0.95)
             surface.DrawRect(x + 118, ScrH() * 0.4 - 4, self.markup:GetWidth() + 20, self.markup:GetHeight() + 18)
@@ -74,10 +74,16 @@ function WSCore:HUDPaint()
     end
 end
 
-function WSCore:LoadFonts()
+function WSCore:LoadFonts(_, genericFont)
     surface.CreateFont("Monofonto24", {
         font = "Monofonto",
         size = 24,
+        weight = 500
+    })
+
+    surface.CreateFont("liaWeaponSelectorFont", {
+        font = genericFont,
+        size = 36,
         weight = 500
     })
 end
