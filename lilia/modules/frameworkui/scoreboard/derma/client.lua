@@ -232,7 +232,7 @@ function PANEL:addPlayer(client, parent)
 
         if self.lastModel ~= model or self.lastSkin ~= skin then
             self.model:SetModel(client:GetModel(), client:GetSkin())
-            if (CAMI.PlayerHasAccess(client, "Staff Permissions - Can Access Scoreboard Info Out Of Staff") and CAMI.PlayerHasAccess(client, "Staff Permissions - Can Access Scoreboard Admin Options")) or (LocalPlayer() == client) or (CAMI.PlayerHasAccess(client, "Staff Permissions - Can Access Scoreboard Admin Options") and LocalPlayer():isStaffOnDuty()) then
+            if CAMI.PlayerHasAccess(LocalPlayer(), "Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (CAMI.PlayerHasAccess(LocalPlayer(), "Staff Permissions - Can Access Scoreboard Admin Options") and LocalPlayer():isStaffOnDuty()) then
                 self.model:SetTooltip(L("sbOptions", client:Name()))
             else
                 self.model:SetTooltip("You do not have access to see this information")
