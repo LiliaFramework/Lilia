@@ -19,10 +19,10 @@ function PANEL:Init()
     self.leave:SetFont("liaVendorButtonFont")
     self.leave:SetText(L("leave"):upper())
     self.leave:SetTextColor(color_white)
-    self.leave:SetContentAlignment(9)
+    self.leave:SetContentAlignment(5)
     self.leave:SetExpensiveShadow(2, color_black)
     self.leave.DoClick = function(_) self:Remove() end
-    self.leave:SizeToContents()
+    self.leave:Dock(FILL)
     self.leave:SetPaintBackground(false)
     self.leave.x = ScrW() * 0.5 - (self.leave:GetWide() * 0.5)
     if LocalPlayer():CanEditVendor() then
@@ -30,13 +30,14 @@ function PANEL:Init()
         self.editor:SetFont("liaVendorButtonFont")
         self.editor:SetText(L("editor"):upper())
         self.editor:SetTextColor(color_white)
-        self.editor:SetContentAlignment(9)
+        self.editor:SetContentAlignment(8)
         self.editor:SetExpensiveShadow(2, color_black)
         self.editor.DoClick = function(_) vgui.Create("liaVendorEditor"):SetZPos(99) end
+        self.editor:Dock(RIGHT)
         self.editor:SizeToContents()
         self.editor:SetPaintBackground(false)
+        self.leave:DockMargin(0, 10, 0, 0)
         self.leave.x = self.leave.x + 16 + self.leave:GetWide() * 0.5
-        self.editor.x = ScrW() * 0.5 - 16 - self.editor:GetWide()
     end
 
     self.vendor = self:Add("liaVendorTrader")
