@@ -29,7 +29,6 @@ function PANEL:Init()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
     lia.gui.score = self
     self:SetSize(ScrW() * ScoreboardCore.sbWidth, ScrH() * ScoreboardCore.sbHeight)
-    self:Center()
     self.staff1 = self:Add("DLabel")
     self.staff1:SetText("Staff Online: 0")
     self.staff1:SetFont("liaMediumFont")
@@ -105,20 +104,13 @@ function PANEL:Think()
         local visible, amount
         for k, v in ipairs(self.teams) do
             visible, amount = v:IsVisible(), teamNumPlayers(k)
-            if visible and k == FACTION_STAFF and LocalPlayer():isStaffOnDuty() then
-                v:SetVisible(true)
-                self.layout:InvalidateLayout()
-            elseif visible and k == FACTION_STAFF then
-                v:SetVisible(false)
-                self.layout:InvalidateLayout()
+            if k == FACTION_STAFF then
+                v:SetVisible(ScoreboardCore.ShowStaff and LocalPlayer():isStaffOnDuty())
+            else
+                v:SetVisible(visible and amount > 0)
             end
 
-            if visible and amount == 0 then
-                v:SetVisible(false)
-                self.layout:InvalidateLayout()
-            elseif not visible and amount > 0 and k ~= FACTION_STAFF then
-                v:SetVisible(true)
-            end
+            self.layout:InvalidateLayout()
         end
 
         for _, v in pairs(self.slots) do
