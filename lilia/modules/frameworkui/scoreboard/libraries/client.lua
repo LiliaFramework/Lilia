@@ -4,11 +4,11 @@
 end
 
 function ScoreboardCore:ScoreboardShow()
-    if LocalPlayer():getChar() then
+    if LocalPlayer():getChar() and (PIM and not PIM:CheckPossibilities()) then
         local liaMenu = vgui.Create("liaMenu")
-        liaMenu:setActiveTab("scoreboard")
+        liaMenu:setActiveTab("Scoreboard")
+        return true
     end
-    return true
 end
 
 function ScoreboardCore:OnReloaded()
@@ -16,7 +16,7 @@ function ScoreboardCore:OnReloaded()
 end
 
 function ScoreboardCore:CreateMenuButtons(tabs)
-    tabs["scoreboard"] = function(panel) panel:Add("liaScoreboard") end
+    tabs["Scoreboard"] = function(panel) panel:Add("liaScoreboard") end
 end
 
 function ScoreboardCore:ShowPlayerOptions(client, options)

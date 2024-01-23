@@ -1,6 +1,6 @@
 ﻿PIM_Frame = nil
-function PIM:PlayerBindPress(_, bind, pressed)
-    if bind == "+showscores" and pressed and self:CheckPossibilities() then
+function PIM:ScoreboardShow()
+    if LocalPlayer():getChar() and self:CheckPossibilities() then
         self:OpenPIM()
         return true
     end
