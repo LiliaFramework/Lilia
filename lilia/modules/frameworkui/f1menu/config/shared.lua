@@ -4,7 +4,8 @@ F1MenuCore.RulesEnabled = false
 F1MenuCore.TutorialEnabled = false
 --[[ Enable FAQ Display ]]
 F1MenuCore.FAQEnabled = false
---[[ Enable Automatic Description ]]
+--[[ Enable Automatic F1 Third Person ]]
+F1MenuCore.F1ThirdPersonEnabled = true
 F1MenuCore.InfoMenuLocation = "BottomCenter" -- Possible Choices: TopLeft, TopRight, BottomLeft, BottomRight, BottomCenter | Default is BottomCenter
 F1MenuCore.F1MenuLaunchUnanchor = "buttons/lightswitch2.wav"
 F1MenuCore.MenuButtonRollover = "ui/buttonrollover.wav"

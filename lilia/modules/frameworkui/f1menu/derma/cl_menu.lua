@@ -7,23 +7,22 @@ function PANEL:Init()
     ThirdPersonHorizontalView = GetConVar("tp_horizontal")
     ThirdPersonViewDistance = GetConVar("tp_distance")
     ClassicThirdPerson = GetConVar("tp_classic")
-    if ThirdPerson:GetInt() ~= 1 then
-        wasThirdPerson = false
-        RunConsoleCommand("tp_enabled", "1")
-    else
-        wasThirdPerson = true
+    if F1MenuCore.F1ThirdPersonEnabled then
+        if ThirdPerson:GetInt() ~= 1 then
+            wasThirdPerson = false
+            RunConsoleCommand("tp_enabled", "1")
+        else
+            wasThirdPerson = true
+        end
+
+        if ClassicThirdPerson:GetInt() == 1 then
+            wasClassic = true
+            RunConsoleCommand("tp_classic", "0")
+        else
+            wasClassic = false
+        end
     end
 
-    if ClassicThirdPerson:GetInt() == 1 then
-        wasClassic = true
-        RunConsoleCommand("tp_classic", "0")
-    else
-        wasClassic = false
-    end
-
-    ThirdPersonVerticalView:SetInt(0)
-    ThirdPersonHorizontalView:SetInt(0)
-    ThirdPersonViewDistance:SetInt(ThirdPersonCore.MaxValues.distance or 100)
     lia.gui.menu = self
     self:SetSize(ScrW(), ScrH())
     self:SetAlpha(0)
