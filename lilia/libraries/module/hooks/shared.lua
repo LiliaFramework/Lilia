@@ -37,7 +37,7 @@ function GM:ModuleLoaded(uniqueID, ModuleGlobal, MODULE)
     local ModuleWorkshopContent = MODULE.WorkshopContent
     local ModuleCAMIPermissions = MODULE.CAMIPrivileges
     local IsValidForGlobal = ModuleGlobal ~= "" and ModuleGlobal ~= nil
-    if ModuleCAMIPermissions then
+    if ModuleCAMIPermissions and istable(ModuleCAMIPermissions) then
         for _, privilegeData in ipairs(ModuleCAMIPermissions) do
             local privilegeInfo = {
                 Name = privilegeData.Name,
