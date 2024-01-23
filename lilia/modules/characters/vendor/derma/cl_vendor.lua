@@ -21,9 +21,10 @@ function PANEL:Init()
     self.leave:SetTextColor(color_white)
     self.leave:SetContentAlignment(5)
     self.leave:SetExpensiveShadow(2, color_black)
-    self.leave.DoClick = function(_) self:Remove() end
+    self.leave.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 0)) end
     self.leave:Dock(FILL)
     self.leave:SetPaintBackground(false)
+    self.leave:DockMargin(0, 0, 250, 0)
     self.leave.x = ScrW() * 0.5 - (self.leave:GetWide() * 0.5)
     if LocalPlayer():CanEditVendor() then
         self.editor = self.buttons:Add("DButton")
@@ -32,12 +33,13 @@ function PANEL:Init()
         self.editor:SetTextColor(color_white)
         self.editor:SetContentAlignment(8)
         self.editor:SetExpensiveShadow(2, color_black)
-        self.editor.DoClick = function(_) vgui.Create("liaVendorEditor"):SetZPos(99) end
-        self.editor:Dock(RIGHT)
+        self.editor.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 0)) end
+        self.editor:Dock(FILL)
         self.editor:SizeToContents()
         self.editor:SetPaintBackground(false)
-        self.leave:DockMargin(0, 10, 0, 0)
-        self.leave.x = self.leave.x + 16 + self.leave:GetWide() * 0.5
+        self.editor.DoClick = function(_) vgui.Create("liaVendorEditor"):SetZPos(99) end
+        self.editor:DockMargin(300, 0, 20, 0)
+        self.leave.x = self.leave.x + self.leave:GetWide() * 0.5
     end
 
     self.vendor = self:Add("liaVendorTrader")
