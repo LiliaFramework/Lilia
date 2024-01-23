@@ -3,6 +3,7 @@
     local recognized = char:getData("rgn", "")
     local other = lia.char.loaded[id]
     local otherclient = other:getPlayer()
+    if not IsValid(otherclient) then return false end
     if char.id == id then return true end
     local faction = lia.faction.indices[other:getFaction()]
     if faction and faction.isGloballyRecognized then return true end
