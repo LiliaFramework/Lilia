@@ -30,29 +30,14 @@ function PANEL:Init()
     lia.gui.score = self
     self:SetSize(ScrW() * ScoreboardCore.sbWidth, ScrH() * ScoreboardCore.sbHeight)
     self:Center()
-    self.title = self:Add("DLabel")
-    self.title:SetText(GetHostName())
-    self.title:SetFont("liaBigFont")
-    self.title:SetContentAlignment(5)
-    self.title:SetTextColor(color_white)
-    self.title:SetExpensiveShadow(1, color_black)
-    self.title:Dock(TOP)
-    self.title:SizeToContentsY()
-    self.title:SetTall(self.title:GetTall() + 16)
-    self.title.Paint = function(_, w, h)
-        surface.SetDrawColor(0, 0, 0, 150)
-        surface.DrawRect(0, 0, w, h)
-    end
-
     self.staff1 = self:Add("DLabel")
     self.staff1:SetText("Staff Online: 0")
-    self.staff1:SetFont("liaBigFont")
+    self.staff1:SetFont("liaMediumFont")
     self.staff1:SetContentAlignment(5)
     self.staff1:SetTextColor(color_white)
     self.staff1:SetExpensiveShadow(1, color_black)
     self.staff1:Dock(BOTTOM)
     self.staff1:SizeToContentsY()
-    self.staff1:SetTall(self.title:GetTall() - 16)
     self.staff1.Paint = function(_, w, h)
         surface.SetDrawColor(0, 0, 0, 150)
         surface.DrawRect(0, 0, w, h)
@@ -112,12 +97,11 @@ function PANEL:UpdateStaff()
         if target:isStaffOnDuty() then StaffOnDutyCount = StaffOnDutyCount + 1 end
     end
 
-    self.staff1:SetText("Staff On Duty: " .. StaffOnDutyCount .. " | Staff Online: " .. StaffCount)
+    self.staff1:SetText("Players Online: " .. #player.GetAll() .. " | Staff On Duty: " .. StaffOnDutyCount .. " | Staff Online: " .. StaffCount)
 end
 
 function PANEL:Think()
     if (self.nextUpdate or 0) < CurTime() then
-        self.title:SetText(ScoreboardCore.sbTitle)
         local visible, amount
         for k, v in ipairs(self.teams) do
             visible, amount = v:IsVisible(), teamNumPlayers(k)
