@@ -141,6 +141,16 @@ jobs:
         run: |
           echo "Step 10: Deleting GLuaFixer_executable..."
           rm glualint_executable
+      - name: Remove the GLuaFixer folder (Step 8)
+        run: |
+          echo "Step 8: Removing the GLuaFixer folder..."
+          rm -r documentation
+        working-directory: "${{ github.workspace }}"
+        shell: bash
+      - name: Cloned Wiki
+        run: |
+          echo "Step 10: Deleting GLuaFixer_executable..."
+          git clone https://github.com/Lilia-Framework/Lilia.wiki.git documentation
         working-directory: "${{ github.workspace }}"
         shell: bash
       - name: Commit changes
