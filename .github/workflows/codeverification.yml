@@ -2,12 +2,7 @@ name: Commit Verification
 
 on:
   push:
-    paths:
-      - "lilia/**"
   pull_request:
-    paths:
-      - "lilia/**"
-
 permissions:
   actions: write
   checks: write
@@ -79,7 +74,9 @@ jobs:
       - name: Run GLuaFixer on Lilia
         run: |
           echo "Running GLuaFixer pretty-print on 'gamemode', 'libraries', and 'modules' in 'lilia'..."
-          sudo ./glualint_executable pretty-print lilia/gamemode/* lilia/libraries/* lilia/modules/*
+          sudo ./glualint_executable pretty-print lilia/gamemode/*
+          sudo ./glualint_executable pretty-print lilia/libraries/*
+          sudo ./glualint_executable pretty-print lilia/modules/*
 
       - name: Remove the GLuaFixer folder
         run: |
