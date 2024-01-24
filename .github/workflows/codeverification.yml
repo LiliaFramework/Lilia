@@ -77,7 +77,8 @@ jobs:
           sudo ./glualint_executable pretty-print lilia/gamemode/*
           sudo ./glualint_executable pretty-print lilia/libraries/*
           sudo ./glualint_executable pretty-print lilia/modules/*
-
+        working-directory: ${{ github.workspace }}
+        shell: bash
       - name: Remove the GLuaFixer folder
         run: |
           echo "Removing the GLuaFixer folder..."
