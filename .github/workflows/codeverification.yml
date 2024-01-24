@@ -72,13 +72,13 @@ jobs:
           sudo chmod +x glualint_executable
 
       - name: Run GLuaFixer on Lilia
+        working-directory: lilia
         run: |
-          cd lilia
           ls
           echo "Running GLuaFixer pretty-print on 'gamemode', 'libraries', and 'modules' in 'lilia'..."
-          sudo ./glualint_executable pretty-print lilia/modules/*
-          sudo ./glualint_executable pretty-print lilia/gamemode/*
-          sudo ./glualint_executable pretty-print lilia/libraries/*
+          sudo ./glualint_executable pretty-print modules/*
+          sudo ./glualint_executable pretty-print gamemode/*
+          sudo ./glualint_executable pretty-print libraries/*
       - name: Remove the GLuaFixer folder
         run: |
           echo "Removing the GLuaFixer folder..."
