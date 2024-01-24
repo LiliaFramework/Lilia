@@ -21,6 +21,10 @@ lia.module.ModuleConditions = {
         name = "Prone Mod",
         global = "prone"
     },
+    ["playx"] = {
+        name = "PlayX",
+        global = "PlayX"
+    },
     ["streamradios"] = {
         name = "3D Stream Radios",
         global = "StreamRadioLib"
