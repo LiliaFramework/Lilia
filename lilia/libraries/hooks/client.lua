@@ -14,6 +14,7 @@ function GM:ClientInitPostEntity()
         end
     end
 end
+
 function GM:OnChatReceived()
     if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
 end
