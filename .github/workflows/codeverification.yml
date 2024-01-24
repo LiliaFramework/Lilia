@@ -73,6 +73,7 @@ jobs:
 
       - name: Run GLuaFixer on Lilia
         run: |
+          ls
           echo "Running GLuaFixer pretty-print on 'gamemode', 'libraries', and 'modules' in 'lilia'..."
           sudo ./glualint_executable pretty-print lilia/gamemode/*
           sudo ./glualint_executable pretty-print lilia/libraries/*
