@@ -73,7 +73,6 @@ jobs:
 
       - name: Run GLuaFixer on Lilia
         run: |
-          ls
           cd lilia
           ls
           echo "Running GLuaFixer pretty-print on 'gamemode', 'libraries', and 'modules' in 'lilia'..."
