@@ -1,4 +1,4 @@
-function PlayXCompatibility:LoadData()
+﻿function PlayXCompatibility:LoadData()
     local screen = ents.Create("gmod_playx")
     screen:SetModel("models/dav0r/camera.mdl")
     screen:SetPos(self.screenPos)
