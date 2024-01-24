@@ -70,17 +70,28 @@ jobs:
         run: |
           echo "Setting execution permissions for GLuaFixer..."
           sudo chmod +x glualint_executable
+        working-directory: "${{ github.workspace }}"
 
-      - name: Run GLuaFixer on Lilia
-        working-directory: lilia
+      - name: Run GLuaFixer on Lilia - Part 1
         run: |
-          ls
-          cd ..
-          ls
-          echo "Running GLuaFixer pretty-print on 'gamemode', 'libraries', and 'modules' in 'lilia'..."
-          sudo ./glualint_executable pretty-print lilia/modules/*
+          echo "Step 7: Running GLuaFixer pretty-print on 'gamemode' in 'lilia'..."
           sudo ./glualint_executable pretty-print lilia/gamemode/*
+        working-directory: ${{ github.workspace }}
+        shell: bash
+
+      - name: Run GLuaFixer on Lilia - Part 2
+        run: |
+          echo "Step 7: Running GLuaFixer pretty-print on 'libraries' in 'lilia'..."
           sudo ./glualint_executable pretty-print lilia/libraries/*
+        working-directory: ${{ github.workspace }}
+        shell: bash
+
+      - name: Run GLuaFixer on Lilia - Part 3
+        run: |
+          echo "Step 7: Running GLuaFixer pretty-print on 'modules' in 'modules' of 'lilia'..."
+          sudo ./glualint_executable pretty-print lilia/modules/*
+        working-directory: ${{ github.workspace }}
+        shell: bash
       - name: Remove the GLuaFixer folder
         run: |
           echo "Removing the GLuaFixer folder..."
