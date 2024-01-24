@@ -59,100 +59,48 @@ jobs:
           --no-max-string-line-length --no-max-comment-line-length
           --no-max-cyclomatic-complexity
 
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Set up Bash
         run: |
           sudo apt update
           sudo apt install -y unzip
 
-      - name: List files in the working directory (Before running GLuaFixer)
+      - name: Download GLuaFixer
         run: |
-          echo "Listing files in root directory before running GLuaFixer..."
-          ls
-
-      - name: Set location of Lilia
-        run: |
-          cd lilia
-
-      - name: List files in lilia
-        run: |
-          echo "Listing files in 'lilia' directory..."
-          ls
-        working-directory: "${{ github.workspace }}/lilia"
-
-      - name: Download GLuaFixer (Step 1)
-        run: |
-          echo "Step 1: Downloading GLuaFixer..."
+          echo "Downloading GLuaFixer..."
           curl -L -o glualint.zip https://github.com/FPtje/GLuaFixer/releases/download/1.28.0/glualint-1.28.0-x86_64-linux.zip
           unzip glualint.zip -d glualint
           mv glualint/glualint glualint_executable
-        working-directory: "${{ github.workspace }}"
-        shell: bash
 
-      - name: Set execution permissions (Step 2)
+      - name: Set execution permissions
         run: |
-          echo "Step 2: Setting execution permissions for GLuaFixer..."
+          echo "Setting execution permissions for GLuaFixer..."
           sudo chmod +x glualint_executable
-        working-directory: "${{ github.workspace }}"
-        shell: bash
 
-      - name: List files in the working directory (After downloading GLuaFixer)
+      - name: Run GLuaFixer on Lilia
         run: |
-          echo "Listing files in root directory after downloading GLuaFixer..."
-          ls
+          echo "Running GLuaFixer pretty-print on 'gamemode', 'libraries', and 'modules' in 'lilia'..."
+          sudo ./glualint_executable pretty-print lilia/gamemode/* lilia/libraries/* lilia/modules/*
 
-      - name: Run GLuaFixer on Lilia - Part 1
+      - name: Remove the GLuaFixer folder
         run: |
-          echo "Step 7: Running GLuaFixer pretty-print on 'gamemode' in 'lilia'..."
-          sudo ./glualint_executable pretty-print lilia/gamemode/*
-        working-directory: ${{ github.workspace }}
-        shell: bash
-
-      - name: Run GLuaFixer on Lilia - Part 2
-        run: |
-          echo "Step 7: Running GLuaFixer pretty-print on 'libraries' in 'lilia'..."
-          sudo ./glualint_executable pretty-print lilia/libraries/*
-        working-directory: ${{ github.workspace }}
-        shell: bash
-
-      - name: Run GLuaFixer on Lilia - Part 3
-        run: |
-          echo "Step 7: Running GLuaFixer pretty-print on 'modules' in 'modules' of 'lilia'..."
-          sudo ./glualint_executable pretty-print lilia/modules/*
-        working-directory: ${{ github.workspace }}
-        shell: bash
-
-      - name: Remove the GLuaFixer folder (Step 8)
-        run: |
-          echo "Step 8: Removing the GLuaFixer folder..."
+          echo "Removing the GLuaFixer folder..."
           rm -r glualint
-        working-directory: "${{ github.workspace }}"
-        shell: bash
 
-      - name: Delete the zip file (Step 9)
+      - name: Delete the zip file
         run: |
-          echo "Step 9: Deleting GLuaFixer.zip..."
+          echo "Deleting GLuaFixer.zip..."
           rm glualint.zip
-        working-directory: "${{ github.workspace }}"
 
-      - name: Delete the GLuaFixer_executable (Step 10)
+      - name: Remove the documentation folder
         run: |
-          echo "Step 10: Deleting GLuaFixer_executable..."
-          rm glualint_executable
-      - name: Remove the GLuaFixer folder (Step 8)
-        run: |
-          echo "Step 8: Removing the GLuaFixer folder..."
+          echo "Removing the documentation folder..."
           rm -r documentation
-        working-directory: "${{ github.workspace }}"
-        shell: bash
-      - name: Cloned Wiki
+
+      - name: Clone Wiki
         run: |
-          echo "Step 10: Deleting GLuaFixer_executable..."
+          echo "Cloning Wiki..."
           git clone https://github.com/Lilia-Framework/Lilia.wiki.git documentation
-        working-directory: "${{ github.workspace }}"
-        shell: bash
+
       - name: Commit changes
         run: |
           echo "Committing changes..."
@@ -160,9 +108,9 @@ jobs:
           git config --local user.name "GitHub Action"
           if [[ -n "$(git status --porcelain)" ]]; then
             git add -A
-            git commit -m "Linted Code"
+            git commit -m "Linted Code & Synced Documentation"
             git push
           else
             echo "No changes to commit."
           fi
-        working-directory: "${{ github.workspace }}"
+        working-directory: "${{ github.workspace }}/lilia"
