@@ -74,17 +74,16 @@ jobs:
       - name: Run GLuaFixer on Lilia
         run: |
           ls
+          cd lilia
+          ls
           echo "Running GLuaFixer pretty-print on 'gamemode', 'libraries', and 'modules' in 'lilia'..."
+          sudo ./glualint_executable pretty-print lilia/modules/*
           sudo ./glualint_executable pretty-print lilia/gamemode/*
           sudo ./glualint_executable pretty-print lilia/libraries/*
-          sudo ./glualint_executable pretty-print lilia/modules/*
-        working-directory: ${{ github.workspace }}
-        shell: bash
       - name: Remove the GLuaFixer folder
         run: |
           echo "Removing the GLuaFixer folder..."
           rm -r glualint
-
       - name: Delete the zip file
         run: |
           echo "Deleting GLuaFixer.zip..."
