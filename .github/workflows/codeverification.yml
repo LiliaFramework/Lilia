@@ -143,11 +143,6 @@ jobs:
           rm glualint_executable
         working-directory: "${{ github.workspace }}"
         shell: bash
-      - name: Clone Wiki
-        run: |
-          echo "Cloning Wiki..."
-          git clone https://github.com/Lilia-Framework/Lilia.wiki.git documentation
-
       - name: Commit changes
         run: |
           echo "Committing changes..."
@@ -155,9 +150,9 @@ jobs:
           git config --local user.name "GitHub Action"
           if [[ -n "$(git status --porcelain)" ]]; then
             git add -A
-            git commit -m "Linted Code & Synced Documentation"
+            git commit -m "Linted Code"
             git push
           else
             echo "No changes to commit."
           fi
-        working-directory: "${{ github.workspace }}/lilia"
+        working-directory: "${{ github.workspace }}"
