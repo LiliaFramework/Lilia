@@ -35,7 +35,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.NEWRELIC_BOT_TOKEN }}
-          ref: develop
       - name: Sync Wiki to Documentation
         uses: newrelic/wiki-sync-action@main
         with:
@@ -44,3 +43,4 @@ jobs:
           token: ${{ secrets.NEWRELIC_BOT_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
+            Error: The process '/usr/bin/git' failed with exit code 1
