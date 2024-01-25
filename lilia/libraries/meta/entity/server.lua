@@ -22,7 +22,6 @@ function entityMeta:sendNetVar(key, receiver)
     netstream.Start(receiver, "nVar", self:EntIndex(), key, lia.net[self] and lia.net[self][key])
 end
 
-
 function entityMeta:AssignCreator(client)
     self:SetCreator(client)
 end
