@@ -139,14 +139,6 @@ jobs:
           rm glualint_executable
         working-directory: "${{ github.workspace }}"
         shell: bash
-      - name: Remove the Documentation folder (Step 8)
-        run: |
-          echo "Step 8: Removing the Documentation folder..."
-          rm -r documentation
-      - name: Clone Wiki
-        run: |
-          echo "Cloning Wiki..."
-          git clone https://github.com/Lilia-Framework/Lilia.wiki.git documentation
       - name: Commit changes
         run: |
           echo "Committing changes..."
