@@ -36,7 +36,7 @@ jobs:
         with:
           token: ${{ secrets.NEWRELIC_BOT_TOKEN }}
           ref: develop
-      - name: Sync Wiki to Docs
+      - name: Sync Wiki to Documentation
         uses: newrelic/wiki-sync-action@main
         with:
           source: wiki
