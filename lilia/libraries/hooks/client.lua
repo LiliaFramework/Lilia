@@ -3,18 +3,6 @@ function GM:DrawLiliaModelView(_, entity)
     if IsValid(entity.weapon) then entity.weapon:DrawModel() end
 end
 
-function GM:ClientInitPostEntity()
-    lia.joinTime = RealTime() - 0.9716
-    if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
-    for command, value in pairs(lia.config.StartupConsoleCommands) do
-        local client_command = command .. " " .. value
-        if concommand.GetTable()[command] ~= nil then
-            LocalPlayer():ConCommand(client_command)
-            print(string.format("Executed console command on client: %s", client_command))
-        end
-    end
-end
-
 function GM:OnChatReceived()
     if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
 end
