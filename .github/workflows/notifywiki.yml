@@ -31,7 +31,7 @@ jobs:
       - name: Notify discord
         uses: th0th/notify-discord@v0.4.1
         if: ${{ always() }}
-        env:
+        with:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_JOB_NAME: "Just Updated The Wiki!"
