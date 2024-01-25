@@ -3,8 +3,6 @@ on:
   push:
     paths:
       - "documentation/**"
-  repository_dispatch:
-    types: [documentation]
   gollum:
 
 permissions:
