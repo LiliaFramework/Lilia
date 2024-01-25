@@ -1,12 +1,15 @@
 on:
-  push:
+  gollum:
+    paths:
+      - '**.md'
+
 jobs:
   WikiNotify:
     runs-on: ubuntu-latest
 
     steps:
       - name: Placeholder Build Step
-        run: echo "Running build step"
+        run: echo "Running Notifier"
 
       - name: Notify discord
         uses: th0th/notify-discord@v0.4.1
@@ -14,5 +17,5 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_JOB_NAME: "Notify Wiki"
+          GITHUB_JOB_NAME: "Just Updated The Wiki!"
           GITHUB_JOB_STATUS: ${{ job.status }}
