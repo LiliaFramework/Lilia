@@ -1,0 +1,18 @@
+on:
+  push:
+
+jobs:
+  WikiNotify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Your previous build steps
+
+      - name: Notify discord
+        uses: th0th/notify-discord@v0.4.1
+        if: ${{ always() }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_JOB_NAME: "Notify Wiki"
+          GITHUB_JOB_STATUS: ${{ job.status }}
