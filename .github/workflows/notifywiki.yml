@@ -1,4 +1,4 @@
-name: Documentation Notification
+name: Documentation Changes
 
 on:
   gollum:
@@ -24,9 +24,11 @@ jobs:
   WikiNotify:
     runs-on: ubuntu-latest
 
-    steps:        
-      - name: Notify discord
+    steps:
+      - name: Echo Build
         run: echo "Running Notifier"
+
+      - name: Notify discord
         uses: th0th/notify-discord@v0.4.1
         if: ${{ always() }}
         env:
@@ -34,4 +36,3 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_JOB_NAME: "Just Updated The Wiki!"
           GITHUB_JOB_STATUS: ${{ job.status }}
-
