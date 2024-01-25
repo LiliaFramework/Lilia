@@ -88,7 +88,7 @@ function GM:PlayerSpawnedProp(client, _, entity)
     if entity:GetMaterial() and string.lower(entity:GetMaterial()) == "pp/copy" then entity:Remove() end
 end
 
-function GM:PlayerSpawnedEntity(client, entity, class, id, group, hasName)
+function GM:PlayerSpawnedEntity(client, entity, class, _, group, hasName)
     local entityName = entity:GetName() or "Unnamed"
     local entityModel = entity:GetModel() or "Unknown Model"
     lia.log.add(client, "spawned_ent", group, class, hasName, entityName, entityModel)
