@@ -1,9 +1,11 @@
 name: Documentation Notifications
-
 on:
-  gollum:
+  push:
     paths:
-      - '**.md'
+      - "documentation/**"
+  repository_dispatch:
+    types: [documentation]
+  gollum:
 
 permissions:
   actions: write
