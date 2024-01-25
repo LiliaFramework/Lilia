@@ -1,4 +1,8 @@
 ﻿local GM = GM or GAMEMODE
+function GM:PlayerSpawnedSENT(client, entity)
+    entity:AssignCreator(client)
+end
+
 function GM:PlayerSpawnNPC(client)
     if IsValid(client) and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn NPCs", nil) or client:getChar():hasFlags("n") then return true end
     return false
@@ -62,32 +66,30 @@ end
 
 function GM:PlayerSpawnedNPC(client, entity)
     if ProtectionCore.NPCsDropWeapons then entity:SetKeyValue("spawnflags", "8192") end
-    self:PlayerSpawnedEntity(client, entity)
+    self:PlayerSpawnedEntity(client, entity, entity:GetClass(), entity:GetName(), "NPC", true)
 end
 
 function GM:PlayerSpawnedVehicle(client, entity)
     local delay = PermissionCore.PlayerSpawnVehicleDelay
     if not CAMI.PlayerHasAccess(client, "Spawn Permissions - No Car Spawn Delay", nil) then client.NextVehicleSpawn = SysTime() + delay end
-    self:PlayerSpawnedEntity(client, entity)
+    self:PlayerSpawnedEntity(client, entity, entity:GetClass(), entity:GetName(), "Vehicle", true)
 end
 
 function GM:PlayerSpawnedEffect(client, _, entity)
-    self:PlayerSpawnedEntity(client, entity)
+    self:PlayerSpawnedEntity(client, entity, entity:GetClass(), entity:GetName(), "Effect", true)
 end
 
 function GM:PlayerSpawnedRagdoll(client, _, entity)
-    self:PlayerSpawnedEntity(client, entity)
-end
-
-function GM:PlayerSpawnedSENT(client, entity)
-    self:PlayerSpawnedEntity(client, entity)
+    self:PlayerSpawnedEntity(client, entity, entity:GetClass(), entity:GetModel(), "Ragdoll", false)
 end
 
 function GM:PlayerSpawnedProp(client, _, entity)
-    self:PlayerSpawnedEntity(client, entity)
-    if string.lower(entity:GetMaterial()) == "pp/copy" then entity:Remove() end
+    self:PlayerSpawnedEntity(client, entity, entity:GetClass(), entity:GetModel(), "Model", false)
+    if entity:GetMaterial() and string.lower(entity:GetMaterial()) == "pp/copy" then entity:Remove() end
 end
 
-function GM:PlayerSpawnedEntity(client, entity)
-    entity:SetCreator(client)
+function GM:PlayerSpawnedEntity(client, entity, class, id, group, hasName)
+    local entityName = entity:GetName() or "Unnamed"
+    local entityModel = entity:GetModel() or "Unknown Model"
+    lia.log.add(client, "spawned_ent", group, class, hasName, entityName, entityModel)
 end
