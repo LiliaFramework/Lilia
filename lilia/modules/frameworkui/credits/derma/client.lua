@@ -1,5 +1,5 @@
 ﻿local ScrW, ScrH = ScrW(), ScrH()
-local logoMat = Material("lilia/logo.png")
+local logoMat = Material("lilia/lilia.png")
 local textureID = surface.GetTextureID("models/effects/portalfunnel_sheet")
 local PANEL = {}
 do
