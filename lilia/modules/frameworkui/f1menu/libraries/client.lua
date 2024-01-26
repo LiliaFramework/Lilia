@@ -20,8 +20,8 @@ function F1MenuCore:PlayerBindPress(client, bind, pressed)
 end
 
 function F1MenuCore:OnCharInfoSetup(infoPanel)
-    if not IsValid(infoPanel.model) then return end
-    local mdl = infoPanel.model
+    if not IsValid(infoPanel) then return end
+    local mdl = infoPanel
     local entity = mdl.Entity
     local client = LocalPlayer()
     if not IsValid(client) or not client:Alive() then return end
@@ -56,6 +56,7 @@ function F1MenuCore:OnCharInfoSetup(infoPanel)
     end
 end
 
+--------------------------------------------------------------------------------------------------------
 function F1MenuCore:CreateMenuButtons(tabs)
     if hook.Run("CanPlayerViewInventory") ~= false then
         tabs["inv"] = function(panel)
