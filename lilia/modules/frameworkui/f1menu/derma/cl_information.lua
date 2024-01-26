@@ -1,15 +1,16 @@
 ﻿local PANEL = {}
 function PANEL:Init()
-    local char = LocalPlayer():getChar()
+    local client = LocalPlayer()
+    local char = client:getChar()
     local class = lia.class.list[char:getClass()]
     if IsValid(lia.gui.info) then lia.gui.info:Remove() end
     lia.gui.info = self
     local panelWidth = ScrW() * 0.25
-    local panelHeight = ScrH() * 0.25
+    local panelHeight = ScrH() * 0.8
     local textFontSize = 20
     local textFont = "liaSmallFont"
     local textColor = color_white
-    local panelColor = Color(0, 0, 0, 235)
+    local shadowColor = Color(30, 30, 30, 150)
     self:SetSize(panelWidth, panelHeight)
     if F1MenuCore.InfoMenuLocation == "TopLeft" then
         self:SetPos(10, 10)
@@ -19,10 +20,8 @@ function PANEL:Init()
         self:SetPos(10, ScrH() - panelHeight - 10)
     elseif F1MenuCore.InfoMenuLocation == "BottomRight" then
         self:SetPos(ScrW() - panelWidth - 10, ScrH() - panelHeight - 10)
-    elseif F1MenuCore.InfoMenuLocation == "BottomCenter" then
-        self:SetPos((ScrW() - panelWidth) / 2, ScrH() * 0.75)
     else
-        self:SetPos((ScrW() - panelWidth) / 2, ScrH() * 0.75)
+        self:SetPos(ScrW() - panelWidth - 10, 10)
     end
 
     self.info = vgui.Create("DFrame", self)
@@ -33,72 +32,48 @@ function PANEL:Init()
     self.info.Paint = function() end
     self.infoBox = self.info:Add("DPanel")
     self.infoBox:Dock(FILL)
-    self.infoBox.Paint = function(_, w, h) draw.RoundedBox(8, 0, 0, w, h, panelColor) end
-    self.name = self.infoBox:Add("DLabel")
-    self.name:SetFont(textFont)
-    self.name:SetTall(textFontSize)
-    self.name:Dock(TOP)
-    self.name:SetTextColor(textColor)
-    self.name:DockMargin(8, 8, 8, 8)
-    self.money = self.infoBox:Add("DLabel")
-    self.money:Dock(TOP)
-    self.money:SetFont(textFont)
-    self.money:SetTall(textFontSize)
-    self.money:SetTextColor(textColor)
-    self.money:DockMargin(8, 8, 8, 8)
-    self.faction = self.infoBox:Add("DLabel")
-    self.faction:Dock(TOP)
-    self.faction:SetFont(textFont)
-    self.faction:SetTall(textFontSize)
-    self.faction:SetTextColor(textColor)
-    self.faction:DockMargin(8, 8, 8, 8)
-    if class then
-        self.class = self.infoBox:Add("DLabel")
-        self.class:Dock(TOP)
-        self.class:SetFont(textFont)
-        self.class:SetTall(textFontSize)
-        self.class:SetTextColor(textColor)
-        self.class:DockMargin(8, 8, 8, 8)
+    self.infoBox.Paint = function(_, w, h) end
+    self:CreateTextEntryWithBackgroundAndLabel("name", textFont, textFontSize, textColor, shadowColor, "Character Name")
+    self:CreateTextEntryWithBackgroundAndLabel("desc", textFont, textFontSize, textColor, shadowColor, "Character Description")
+    self:CreateTextEntryWithBackgroundAndLabel("faction", textFont, textFontSize, textColor, shadowColor, "Character Faction")
+    self:CreateTextEntryWithBackgroundAndLabel("money", textFont, textFontSize, textColor, shadowColor, "Character Money")
+    if class then self:CreateTextEntryWithBackgroundAndLabel("class", textFont, textFontSize, textColor, shadowColor, "Character Class") end
+    self:setup()
+end
+
+function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor, shadowColor, labelText, dockMarginTop)
+    local entryContainer = self.infoBox:Add("DPanel")
+    entryContainer:Dock(TOP)
+    entryContainer:SetTall(size + 25)
+    entryContainer:DockMargin(8, 8, 8, dockMarginTop or 8)
+    entryContainer.Paint = function(_, w, h)
+        surface.SetDrawColor(shadowColor)
+        surface.DrawRect(0, 0, w, h)
     end
 
-    self.desc = self.infoBox:Add("DTextEntry")
-    self.desc:Dock(BOTTOM)
-    self.desc:SetFont(textFont)
-    self.desc:SetTall(textFontSize * 2)
-    self.desc:SetMultiline(true)
-    self.desc:SetTextColor(textColor)
-    self.desc:SetDrawBorder(false)
-    self.desc:SetPaintBackground(false)
-    self.desc:SetText(char:getDesc())
-    self.desc:DockMargin(8, -5, 8, 8)
-    hook.Run("AddCharacterInfo", self)
-    local btnEditDesc = self.infoBox:Add("DButton")
-    btnEditDesc:SetText("Edit Description")
-    btnEditDesc:Dock(BOTTOM)
-    btnEditDesc:DockMargin(8, 8, 8, 8)
-    btnEditDesc.DoClick = function()
-        local newDesc = self.desc:GetValue()
-        lia.command.send("chardesc", newDesc)
-    end
+    local label = entryContainer:Add("DLabel")
+    label:SetFont(font)
+    label:SetTall(25)
+    label:Dock(TOP)
+    label:SetTextColor(textColor)
+    label:SetText(labelText)
+    label:SetContentAlignment(5)
+    self[name] = entryContainer:Add("DTextEntry")
+    self[name]:SetFont(font)
+    self[name]:SetTall(size)
+    self[name]:SetEditable(name == "desc" and true or false)
+    self[name]:Dock(FILL)
+    self[name]:SetTextColor(textColor)
 end
 
 function PANEL:setup()
-    local char = LocalPlayer():getChar()
-    if self.name then
-        self.name:SetText("Your name is " .. LocalPlayer():Name():gsub("#", "\226\128\139#"))
-        hook.Add("OnCharVarChanged", self, function(_, character, key, _, value)
-            if char ~= character then return end
-            if key ~= "name" then return end
-            self.name:SetText(value:gsub("#", "\226\128\139#"))
-        end)
-    end
-
-    if self.money then self.money:SetText(L("charMoney", lia.currency.get(char:getMoney()))) end
-    if self.faction then self.faction:SetText(L("charFaction", L(team.GetName(LocalPlayer():Team())))) end
-    if self.class and class then self.class:SetText("You are on the class " .. class.name) end
-end
-
-function PANEL:Paint()
+    local client = LocalPlayer()
+    local char = client:getChar()
+    if self.name then self.name:SetText(char:getName()) end
+    if self.desc then self.desc:SetText(char:getDesc()) end
+    if self.money then self.money:SetText(char:getMoney() .. " " .. lia.currency.plural) end
+    if self.faction then self.faction:SetText(L(team.GetName(client:Team()))) end
+    if self.class then self.class:SetText((class and class.name) or "None") end
 end
 
 vgui.Register("liaCharInfo", PANEL, "EditablePanel")

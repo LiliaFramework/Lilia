@@ -1,28 +1,36 @@
 ﻿local PANEL = {}
 local gradient = lia.util.getMaterial("vgui/gradient-u")
 function PANEL:Init()
-    if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end
+    self.initialValues = {
+        ThirdPerson = GetConVar("tp_enabled"):GetInt(),
+        ThirdPersonVerticalView = GetConVar("tp_vertical"):GetInt(),
+        ThirdPersonHorizontalView = GetConVar("tp_horizontal"):GetInt(),
+        ThirdPersonViewDistance = GetConVar("tp_distance"):GetInt(),
+        ClassicThirdPerson = GetConVar("tp_classic"):GetInt()
+    }
+
     ThirdPerson = GetConVar("tp_enabled")
     ThirdPersonVerticalView = GetConVar("tp_vertical")
     ThirdPersonHorizontalView = GetConVar("tp_horizontal")
     ThirdPersonViewDistance = GetConVar("tp_distance")
     ClassicThirdPerson = GetConVar("tp_classic")
-    if F1MenuCore.F1ThirdPersonEnabled then
-        if ThirdPerson:GetInt() ~= 1 then
-            wasThirdPerson = false
-            RunConsoleCommand("tp_enabled", "1")
-        else
-            wasThirdPerson = true
-        end
-
-        if ClassicThirdPerson:GetInt() == 1 then
-            wasClassic = true
-            RunConsoleCommand("tp_classic", "0")
-        else
-            wasClassic = false
-        end
+    if ThirdPerson:GetInt() ~= 1 then
+        wasThirdPerson = false
+        RunConsoleCommand("tp_enabled", "1")
+    else
+        wasThirdPerson = true
     end
 
+    if ClassicThirdPerson:GetInt() == 1 then
+        wasClassic = true
+        RunConsoleCommand("tp_classic", "0")
+    else
+        wasClassic = false
+    end
+
+    ThirdPersonVerticalView:SetInt(0)
+    ThirdPersonHorizontalView:SetInt(0)
+    ThirdPersonViewDistance:SetInt(100)
     lia.gui.menu = self
     self:SetSize(ScrW(), ScrH())
     self:SetAlpha(0)
@@ -81,6 +89,11 @@ end
 function PANEL:OnKeyCodePressed(key)
     self.noAnchor = CurTime() + .5
     if key == KEY_F1 then self:remove() end
+end
+
+function PANEL:Update()
+    self:Remove()
+    vgui.Create("liaMenu")
 end
 
 function PANEL:Think()
@@ -150,14 +163,26 @@ function PANEL:setActiveTab(key)
 end
 
 function PANEL:OnRemove()
-    if wasThirdPerson == false then RunConsoleCommand("tp_enabled", "0") end
-    if wasClassic == true then RunConsoleCommand("tp_classic", "1") end
+    self:RestoreConVars()
+end
+
+function PANEL:RestoreConVars()
+    RunConsoleCommand("tp_enabled", tostring(self.initialValues.ThirdPerson))
+    RunConsoleCommand("tp_vertical", tostring(self.initialValues.ThirdPersonVerticalView))
+    RunConsoleCommand("tp_horizontal", tostring(self.initialValues.ThirdPersonHorizontalView))
+    RunConsoleCommand("tp_distance", tostring(self.initialValues.ThirdPersonViewDistance))
+    RunConsoleCommand("tp_classic", tostring(self.initialValues.ClassicThirdPerson))
 end
 
 function PANEL:remove()
     CloseDermaMenus()
     if not self.closing then
-        self:AlphaTo(0, 0.25, 0, function() self:Remove() end)
+        self:AlphaTo(0, 0.25, 0, function()
+            -- Reset ConVars when the menu is closed
+            self:RestoreConVars()
+            self:Remove()
+        end)
+
         self.closing = true
     end
 end
