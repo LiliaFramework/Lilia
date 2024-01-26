@@ -31,6 +31,11 @@ end
 function SKIN:PaintWindowMinimizeButton()
 end
 
+function SKIN:PaintListRow(panel, width, height)
+    surface.SetDrawColor(0, 0, 0, 150)
+    surface.DrawRect(0, 0, width, height)
+end
+
 function SKIN:PaintTextEntry(pnl, w, h)
     if not pnl.IsDarkReady then
         pnl:SetTextColor(self.TextColor)

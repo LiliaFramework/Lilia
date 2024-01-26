@@ -17,6 +17,14 @@ function lia.util.DrawTexture(material, color, x, y, w, h)
     surface.DrawTexturedRect(x, y, w, h)
 end
 
+function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
+    local skin = (ispanel(panel) and IsValid(panel)) and panel:GetSkin() or derma.GetDefaultSkin()
+    if not skin then return end
+    local func = skin[name]
+    if not func then return end
+    return func(skin, panel, a, b, c, d, e, f, g)
+end
+
 function lia.util.wrapText(text, width, font)
     font = font or "liaChatFont"
     surface.SetFont(font)
