@@ -31,7 +31,7 @@ end
 function SKIN:PaintWindowMinimizeButton()
 end
 
-function SKIN:PaintListRow(panel, width, height)
+function SKIN:PaintListRow(_, width, height)
     surface.SetDrawColor(0, 0, 0, 150)
     surface.DrawRect(0, 0, width, height)
 end

@@ -1,4 +1,4 @@
-lia.log.addType("chat", function(client, ...)
+﻿lia.log.addType("chat", function(client, ...)
     local arg = {...}
     return string.format("[%s] %s: %s", arg[1], client:Name(), arg[2])
 end)

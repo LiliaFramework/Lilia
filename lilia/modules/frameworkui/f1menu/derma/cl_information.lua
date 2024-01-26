@@ -32,7 +32,7 @@ function PANEL:Init()
     self.info.Paint = function() end
     self.infoBox = self.info:Add("DPanel")
     self.infoBox:Dock(FILL)
-    self.infoBox.Paint = function(_, w, h) end
+    self.infoBox.Paint = function() end
     self:CreateTextEntryWithBackgroundAndLabel("name", textFont, textFontSize, textColor, shadowColor, "Character Name")
     self:CreateTextEntryWithBackgroundAndLabel("desc", textFont, textFontSize, textColor, shadowColor, "Character Description")
     self:CreateTextEntryWithBackgroundAndLabel("faction", textFont, textFontSize, textColor, shadowColor, "Character Faction")

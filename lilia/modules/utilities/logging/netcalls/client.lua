@@ -1,4 +1,4 @@
-net.Receive("liaDrawLogs", function()
+﻿net.Receive("liaDrawLogs", function()
     local client = LocalPlayer()
     if not CAMI.PlayerHasAccess(client, "Commands - View Logs", nil) then
         client:notify(":|")
