@@ -53,7 +53,7 @@ lia.chat.register("mefar", {
 })
 
 lia.chat.register("itclose", {
-    onChatAdd = function(speaker, text) chat.AddText(lia.config.get("chatColor"), "**" .. text) end,
+    onChatAdd = function(_, text) chat.AddText(lia.config.get("chatColor"), "**" .. text) end,
     onCanHear = ChatboxCore.ChatRange * 0.25,
     prefix = {"/itclose"},
     font = "liaChatFontItalics",
@@ -62,7 +62,7 @@ lia.chat.register("itclose", {
 })
 
 lia.chat.register("itfar", {
-    onChatAdd = function(speaker, text) chat.AddText(ChatboxCore.ChatColor, "**" .. text) end,
+    onChatAdd = function(_, text) chat.AddText(ChatboxCore.ChatColor, "**" .. text) end,
     onCanHear = ChatboxCore.ChatRange * 2,
     prefix = {"/itfar"},
     font = "liaChatFontItalics",
