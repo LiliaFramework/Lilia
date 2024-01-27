@@ -4,6 +4,11 @@
         steamid = "76561198312513285",
         color = Color(34, 139, 34)
     },
+    {
+        desc = "Contributor", -- Bozy
+        steamid = "76561198237485902",
+        color = Color(34, 139, 34)
+    },
 }
 
 CreditsCore.contributors = {
