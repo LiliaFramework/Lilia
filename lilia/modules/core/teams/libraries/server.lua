@@ -90,13 +90,28 @@ function TeamsCore:FactionOnLoadout(client)
     end
 
     if faction.armor then client:SetArmor(faction.armor) end
+    if faction.onSpawn then faction:onSpawn(client) end
     if faction.weapons then
-        for _, v in ipairs(faction.weapons) do
-            client:Give(v)
+        if istable(faction.weapons) then
+            for _, v in ipairs(faction.weapons) do
+                client:Give(v)
+            end
+        else
+            client:Give(faction.weapons)
         end
     end
 
-    if faction.onSpawn then faction:onSpawn(client) end
+    if faction.bodyGroups and istable(faction.bodyGroups) then
+        local groups = {}
+        for k, value in pairs(faction.bodyGroups) do
+            local index = client:FindBodygroupByName(k)
+            if index > -1 then groups[index] = value end
+        end
+
+        for index, value in pairs(groups) do
+            client:SetBodygroup(index, value)
+        end
+    end
 end
 
 function TeamsCore:ClassOnLoadout(client)
@@ -152,11 +167,28 @@ function TeamsCore:ClassOnLoadout(client)
         client:SetHealth(class.health)
     end
 
+    if class.model then client:SetModel(class.model) end
     if class.armor then client:SetArmor(class.armor) end
     if class.onSpawn then class:onSpawn(client) end
     if class.weapons then
-        for _, v in ipairs(class.weapons) do
-            client:Give(v)
+        if istable(class.weapons) then
+            for _, v in ipairs(class.weapons) do
+                client:Give(v)
+            end
+        else
+            client:Give(class.weapons)
+        end
+    end
+
+    if class.bodyGroups and istable(class.bodyGroups) then
+        local groups = {}
+        for k, value in pairs(class.bodyGroups) do
+            local index = client:FindBodygroupByName(k)
+            if index > -1 then groups[index] = value end
+        end
+
+        for index, value in pairs(groups) do
+            client:SetBodygroup(index, value)
         end
     end
 end
