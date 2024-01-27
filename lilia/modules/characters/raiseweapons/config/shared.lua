@@ -1,5 +1,5 @@
 ﻿--[[ Determine if weapons are always raised ]]
-RaisedWeaponCore.WepAlwaysRaised = false
+RaisedWeaponCore.WepAlwaysRaised = true
 --[[ Weapons that are always raised ]]
 RaisedWeaponCore.PermaRaisedWeapons = {
     ["weapon_physgun"] = true,
