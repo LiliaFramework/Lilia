@@ -34,6 +34,61 @@
     filter = "ooc"
 })
 
+lia.chat.register("meclose", {
+    format = "**%s %s",
+    onCanHear = ChatboxCore.ChatRange * 0.25,
+    prefix = {"/meclose", "/actionclose"},
+    font = "liaChatFontItalics",
+    filter = "actions",
+    deadCanChat = true
+})
+
+lia.chat.register("mefar", {
+    format = "**%s %s",
+    onCanHear = ChatboxCore.ChatRange * 2,
+    prefix = {"/mefar", "/actionfar"},
+    font = "liaChatFontItalics",
+    filter = "actions",
+    deadCanChat = true
+})
+
+lia.chat.register("itclose", {
+    onChatAdd = function(speaker, text) chat.AddText(lia.config.get("chatColor"), "**" .. text) end,
+    onCanHear = ChatboxCore.ChatRange * 0.25,
+    prefix = {"/itclose"},
+    font = "liaChatFontItalics",
+    filter = "actions",
+    deadCanChat = true
+})
+
+lia.chat.register("itfar", {
+    onChatAdd = function(speaker, text) chat.AddText(ChatboxCore.ChatColor, "**" .. text) end,
+    onCanHear = ChatboxCore.ChatRange * 2,
+    prefix = {"/itfar"},
+    font = "liaChatFontItalics",
+    filter = "actions",
+    deadCanChat = true
+})
+
+lia.chat.register("coinflip", {
+    format = "%s flipped a coin and it landed on %s.",
+    onCanHear = ChatboxCore.ChatRange,
+    prefix = {"/coinflip"},
+    color = Color(236, 100, 9),
+    filter = "actions",
+    font = "liaChatFontItalics",
+    deadCanChat = false
+})
+
+lia.chat.register("announce", {
+    format = "%s announces \"%s\"",
+    onCanHear = ChatboxCore.ChatRange * 4,
+    prefix = {"/announce", "/announcement"},
+    color = Color(255, 150, 0),
+    font = "liaChatFontBold",
+    deadCanChat = false
+})
+
 lia.chat.register("ic", {
     format = "%s says \"%s\"",
     onGetColor = function(speaker, _)
