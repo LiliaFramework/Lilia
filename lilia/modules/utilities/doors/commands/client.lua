@@ -3,6 +3,12 @@
     onRun = function() end
 })
 
+lia.command.add("doorsetlocked", {
+    adminOnly = true,
+    privilege = "Manage Doors",
+    onRun = function() end
+})
+
 lia.command.add("doorbuy", {
     privilege = "Default User Commands",
     onRun = function() end

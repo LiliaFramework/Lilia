@@ -20,6 +20,38 @@
     end
 })
 
+lia.command.add("doorsetlocked", {
+    adminOnly = true,
+    privilege = "Manage Doors",
+    syntax = "<bool locked>",
+    onRun = function(client, arguments)
+        local entity = client:GetEyeTrace().Entity
+        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
+            local locked = tobool(arguments[1] or true)
+            if locked then
+                entity:Fire("lock")
+                entity:EmitSound("doors/door_latch3.wav")
+            else
+                entity:Fire("unlock")
+                entity:EmitSound("doors/door_latch1.wav")
+            end
+
+            local partner = entity:getDoorPartner()
+            if IsValid(partner) then
+                if locked then
+                    partner:Fire("lock")
+                else
+                    partner:Fire("unlock")
+                end
+            end
+
+            client:notify("Set as Locked!")
+        else
+            client:notify("Invalid Door!")
+        end
+    end
+})
+
 lia.command.add("doorbuy", {
     privilege = "Default User Commands",
     onRun = function(client)
