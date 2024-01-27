@@ -52,6 +52,7 @@ To install a roleplay schema for your Lilia framework, follow these steps:
 1. Download one of the available schemas from the repositories listed below, based on your server's theme:
 
 - [Framework](https://github.com/Lilia-Framework/Lilia)
+- [1942RP Schema](https://github.com/Lilia-Framework/Lilia-1942RP)
 - [Skeleton Schema](https://github.com/Lilia-Framework/Lilia-Skeleton)
 - [MafiaRP Schema](https://github.com/Lilia-Framework/Lilia-MafiaRP)
 - [HL2RP Schema](https://github.com/Lilia-Framework/Lilia-HL2RP)
