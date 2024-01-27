@@ -53,6 +53,7 @@ function WSCore:PlayerBindPress(client, bind, pressed)
 end
 
 function WSCore:HUDPaint()
+    if not LocalPlayer():getChar() then return end
     local x = ScrW() * 0.55
     for k, v in SortedPairs(LocalPlayer():GetWeapons()) do
         local y = (ScrH() * 0.4) + (k * 24)
