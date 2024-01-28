@@ -4,5 +4,5 @@ ScoreboardCore.sbWidth = 0.35
 ScoreboardCore.sbHeight = 0.65
 --[[ Should Staff Show In Scoreboard  ]]
 ScoreboardCore.ShowStaff = true
---[[ Scoreboard Table of Factions that are hiden  ]]
+--[[ Scoreboard Table of Factions that are hidden  ]]
 ScoreboardCore.HiddenFactions = {}
