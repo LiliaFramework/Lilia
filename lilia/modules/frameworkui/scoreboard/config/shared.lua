@@ -1,4 +1,4 @@
---[[ Scoreboard Width  ]]
+﻿--[[ Scoreboard Width  ]]
 ScoreboardCore.sbWidth = 0.35
 --[[ Scoreboard Height  ]]
 ScoreboardCore.sbHeight = 0.65
