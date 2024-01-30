@@ -1,25 +1,25 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function EntityPerfomanceCore:PlayerInitialSpawn(client)
+function PlayerPerfomanceCore:PlayerInitialSpawn(client)
     self:RegisterPlayer(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function EntityPerfomanceCore:EntityRemoved(entity)
+function PlayerPerfomanceCore:EntityRemoved(entity)
     if entity:IsPlayer() then self:RemovePlayer(entity) end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function EntityPerfomanceCore:GetPlayerData(client)
+function PlayerPerfomanceCore:GetPlayerData(client)
     return PerfomanceCore.tblPlayers[client:EntIndex()]
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function EntityPerfomanceCore:RemovePlayer(client)
+function PlayerPerfomanceCore:RemovePlayer(client)
     PerfomanceCore.tblPlayers[client:EntIndex()] = nil
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function EntityPerfomanceCore:RegisterPlayer(client)
+function PlayerPerfomanceCore:RegisterPlayer(client)
     PerfomanceCore.tblPlayers[client:EntIndex()] = {
         Player = client,
         Expanding = false,
@@ -32,7 +32,7 @@ function EntityPerfomanceCore:RegisterPlayer(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function EntityPerfomanceCore:PlayerUpdateTransmitStates(client, intRange)
+function PlayerPerfomanceCore:PlayerUpdateTransmitStates(client, intRange)
     if intRange then
         for _, v in pairs(ents.GetAll()) do
             if table.HasValue(self.tblAlwaysSend, v:GetClass()) then
@@ -69,7 +69,7 @@ function EntityPerfomanceCore:PlayerUpdateTransmitStates(client, intRange)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function EntityPerfomanceCore:BeginExpand(client)
+function PlayerPerfomanceCore:BeginExpand(client)
     local data = self:GetPlayerData(client)
     if not data then return end
     data.Expanding = true
@@ -92,7 +92,7 @@ function EntityPerfomanceCore:BeginExpand(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function EntityPerfomanceCore:PlayerExpandedUpdate()
+function PlayerPerfomanceCore:PlayerExpandedUpdate()
     for k, data in pairs(PerfomanceCore.tblPlayers) do
         if not data or not data.Expanded then continue end
         if not IsValid(data.Player) then
@@ -105,5 +105,5 @@ function EntityPerfomanceCore:PlayerExpandedUpdate()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-timer.Create("PlayerExpandedUpdate", 1, 0, function() EntityPerfomanceCore:PlayerExpandedUpdate() end)
+timer.Create("PlayerExpandedUpdate", 1, 0, function() PlayerPerfomanceCore:PlayerExpandedUpdate() end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
