@@ -111,7 +111,6 @@ function GM:DoAnimationEvent(client, event, data)
     end
     return ACT_INVALID
 end
-
 function GM:HandlePlayerLanding(client, velocity, wasOnGround)
     if client:GetMoveType() == MOVETYPE_NOCLIP then return end
     if client:IsOnGround() and not wasOnGround then

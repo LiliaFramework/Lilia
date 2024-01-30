@@ -305,22 +305,6 @@ function GM:OnCharVarChanged(char, varName, oldVar, newVar)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function GM:InitializedModules()
-    for _, model in pairs(lia.config.PlayerModelTposingFixer) do
-        lia.anim.setModelClass(model, "player")
-    end
-
-    for tpose, animtype in pairs(lia.anim.DefaultTposingFixer) do
-        lia.anim.setModelClass(tpose, animtype)
-    end
-
-    if CLIENT then
-        hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
-        RunConsoleCommand("spawnmenu_reload")
-    end
-end
-
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:Move(client, moveData)
     local char = client:getChar()
     if not char then return end

@@ -337,16 +337,8 @@ end
 
 function lia.anim.getModelClass(model)
     model = string.lower(model)
-    local class = translations[model]
+    local class = translations[model] or "player"
     if class then return class end
-    if model:find("/player") then
-        class = "player"
-    elseif string.find(model, "female") then
-        class = "citizen_female"
-    else
-        class = "citizen_male"
-    end
-
     lia.anim.setModelClass(model, class)
     return class
 end
