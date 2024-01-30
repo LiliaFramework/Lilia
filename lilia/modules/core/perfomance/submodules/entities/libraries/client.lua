@@ -1,15 +1,15 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function EntityPerfomance:PostGamemodeLoaded()
+function EntityPerfomanceCore:PostGamemodeLoaded()
     scripted_ents.GetStored("base_gmodentity").t.Think = nil
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function EntityPerfomance:GrabEarAnimation()
+function EntityPerfomanceCore:GrabEarAnimation()
     return nil
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function EntityPerfomance:MouthMoveAnimation()
+function EntityPerfomanceCore:MouthMoveAnimation()
     return nil
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

@@ -1,13 +1,13 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local function DrawWarning()
-    if AFKKicker.Alpha < 230 then AFKKicker.Alpha = AFKKicker.Alpha + (FrameTime() * 200) end
-    draw.RoundedBox(0, 0, (ScrH() / 2) - ScreenScale(60), ScrW(), ScreenScale(120), Color(0, 0, 0, AFKKicker.Alpha))
-    draw.DrawText(AFKKicker.WarningHead, "AFKKicker120", ScrW() * 0.5, (ScrH() * 0.5) - ScreenScale(50), Color(255, 0, 0, AFKKicker.Alpha), TEXT_ALIGN_CENTER)
-    draw.DrawText(AFKKicker.WarningSub .. "\nYou will be kicked in " .. math.floor(math.max(AFKKicker.KickTime - (CurTime() - AFKKicker.WarningStart), 0)) .. "s", "AFKKicker25", ScrW() * 0.5, ScrH() * 0.5, Color(255, 255, 255, AFKKicker.Alpha), TEXT_ALIGN_CENTER)
+    if AFKKickerCore.Alpha < 230 then AFKKickerCore.Alpha = AFKKickerCore.Alpha + (FrameTime() * 200) end
+    draw.RoundedBox(0, 0, (ScrH() / 2) - ScreenScale(60), ScrW(), ScreenScale(120), Color(0, 0, 0, AFKKickerCore.Alpha))
+    draw.DrawText(AFKKickerCore.WarningHead, "AFKKicker120", ScrW() * 0.5, (ScrH() * 0.5) - ScreenScale(50), Color(255, 0, 0, AFKKickerCore.Alpha), TEXT_ALIGN_CENTER)
+    draw.DrawText(AFKKickerCore.WarningSub .. "\nYou will be kicked in " .. math.floor(math.max(AFKKickerCore.KickTime - (CurTime() - AFKKickerCore.WarningStart), 0)) .. "s", "AFKKicker25", ScrW() * 0.5, ScrH() * 0.5, Color(255, 255, 255, AFKKickerCore.Alpha), TEXT_ALIGN_CENTER)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AFKKicker:EnableWarning()
+function AFKKickerCore:EnableWarning()
     self.Alpha = 0
     self.WarningStart = CurTime()
     surface.PlaySound("HL1/fvox/bell.wav")
@@ -15,14 +15,14 @@ function AFKKicker:EnableWarning()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AFKKicker:DisableWarning()
+function AFKKickerCore:DisableWarning()
     self.Alpha = nil
     self.AlphaRising = nil
     hook.Remove("HUDPaint", "AFKWarning")
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AFKKicker:LoadFonts()
+function AFKKickerCore:LoadFonts()
     surface.CreateFont("AFKKicker25", {
         font = "Roboto",
         size = 25,

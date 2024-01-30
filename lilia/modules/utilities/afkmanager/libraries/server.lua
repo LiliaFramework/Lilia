@@ -3,7 +3,7 @@ util.AddNetworkString("AFKWarning")
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 util.AddNetworkString("AFKAnnounce")
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AFKKicker:WarnPlayer(client)
+function AFKKickerCore:WarnPlayer(client)
     net.Start("AFKWarning")
     net.WriteBool(true)
     net.Send(client)
@@ -11,7 +11,7 @@ function AFKKicker:WarnPlayer(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AFKKicker:RemoveWarning(client)
+function AFKKickerCore:RemoveWarning(client)
     net.Start("AFKWarning")
     net.WriteBool(false)
     net.Send(client)
@@ -19,7 +19,7 @@ function AFKKicker:RemoveWarning(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AFKKicker:CharKick(client)
+function AFKKickerCore:CharKick(client)
     net.Start("AFKAnnounce")
     net.WriteString(client:Nick())
     net.Broadcast()
@@ -28,35 +28,35 @@ function AFKKicker:CharKick(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AFKKicker:ResetAFKTime(client)
+function AFKKickerCore:ResetAFKTime(client)
     client.AFKTime = 0
     if client.HasWarning then self:RemoveWarning(client) end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AFKKicker:PlayerButtonUp(client)
+function AFKKickerCore:PlayerButtonUp(client)
     self:ResetAFKTime(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AFKKicker:PlayerButtonDown(client)
+function AFKKickerCore:PlayerButtonDown(client)
     self:ResetAFKTime(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-timer.Create("AFKTimer", AFKKicker.TimerInterval, 0, function()
+timer.Create("AFKTimer", AFKKickerCore.TimerInterval, 0, function()
     local clientCount = player.GetCount()
     local maxPlayers = game.MaxPlayers()
     for _, client in ipairs(player.GetAll()) do
         if not client:getChar() and clientCount < maxPlayers then continue end
-        if table.HasValue(AFKKicker.AFKAllowedPlayers, client:SteamID64()) or client:IsBot() then continue end
-        client.AFKTime = (client.AFKTime or 0) + AFKKicker.TimerInterval
-        if client.AFKTime >= AFKKicker.WarningTime and not client.HasWarning then AFKKicker:WarnPlayer(client) end
-        if client.AFKTime >= AFKKicker.WarningTime + AFKKicker.KickTime then
+        if table.HasValue(AFKKickerCore.AFKAllowedPlayers, client:SteamID64()) or client:IsBot() then continue end
+        client.AFKTime = (client.AFKTime or 0) + AFKKickerCore.TimerInterval
+        if client.AFKTime >= AFKKickerCore.WarningTime and not client.HasWarning then AFKKickerCore:WarnPlayer(client) end
+        if client.AFKTime >= AFKKickerCore.WarningTime + AFKKickerCore.KickTime then
             if clientCount >= maxPlayers then
-                client:Kick(AFKKicker.KickMessage)
+                client:Kick(AFKKickerCore.KickMessage)
             elseif client:getChar() then
-                AFKKicker:CharKick(client)
+                AFKKickerCore:CharKick(client)
             end
         end
     end

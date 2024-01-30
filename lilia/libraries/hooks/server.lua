@@ -289,9 +289,9 @@ function GM:InitializedSchema()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function GM:OnServerLog(client, logType, ...)
+function GM:OnServerLog(client, logType, logString)
     for _, v in pairs(lia.util.getAdmins()) do
-        if hook.Run("CanPlayerSeeLog", v, logType) ~= false then lia.log.send(v, lia.log.getString(client, logType, ...)) end
+        if hook.Run("CanPlayerSeeLog", v, logType) ~= false then lia.log.send(v, lia.log.getString(client, logType, logString) end
     end
 end
 
