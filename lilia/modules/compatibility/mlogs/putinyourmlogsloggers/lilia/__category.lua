@@ -1,7 +1,18 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-mLogs.addCategory("lia", "lia", Color(38, 166, 91), function() return lia ~= nil end)
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+mLogs.addCategory(
+	"Lilia",
+	"lia", 
+	Color( 121, 65, 203 ),
+	function()
+		return lia != nil
+	end,
+	nil,
+	105
+)
+
 mLogs.addCategoryDefinitions("lia", {
-    ScriptLog = function(data) return mLogs.doLogReplace({"[Script Log]", "^log"}, data) end,
+	LiliaLog = function(data) return mLogs.doLogReplace({"[Lilia Log]", "^log"}, data) end,
 })
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
+if (SERVER) then
+	mLogs.addLogger("Lilia Log", "LiliaLog", "lia")
+end

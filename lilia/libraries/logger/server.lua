@@ -26,7 +26,8 @@ end
 function lia.log.add(client, logType, ...)
     local logString = lia.log.getString(client, logType, ...)
     if not isstring(logString) then return end
-    hook.Run("OnServerLog", client, logType, logString)
+    if mLogs then hook.Run("MLogsLoad", logString) end
+    hook.Run("OnServerLog", client, logType, ...)
     Msg("[LOG] ", logString .. "\n")
     if noSave then return end
     file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n")
