@@ -1,6 +1,7 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function pace.LoadParts()
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PACCompatibility:AdjustPACPartData(wearer, id, data)
     local item = lia.item.list[id]
@@ -9,12 +10,14 @@ function PACCompatibility:AdjustPACPartData(wearer, id, data)
         if result ~= nil then return result end
     end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PACCompatibility:getAdjustedPartData(wearer, id)
     if not self.partData[id] then return end
     local data = table.Copy(self.partData[id])
     return hook.Run("AdjustPACPartData", wearer, id, data) or data
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PACCompatibility:attachPart(client, id)
     if not pac then return end
@@ -25,6 +28,7 @@ function PACCompatibility:attachPart(client, id)
     client.liaPACParts = client.liaPACParts or {}
     client.liaPACParts[id] = part
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PACCompatibility:removePart(client, id)
     if not client.RemovePACPart or not client.liaPACParts then return end
@@ -34,6 +38,7 @@ function PACCompatibility:removePart(client, id)
         client.liaPACParts[id] = nil
     end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PACCompatibility:DrawPlayerRagdoll(entity)
     local client = entity.objCache
@@ -52,6 +57,7 @@ function PACCompatibility:DrawPlayerRagdoll(entity)
         entity.overridePAC3 = true
     end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PACCompatibility:OnEntityCreated(entity)
     local class = entity:GetClass()
@@ -78,6 +84,7 @@ function PACCompatibility:OnEntityCreated(entity)
         end
     end)
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PACCompatibility:OnPlayerObserve(client, state)
     local curParts = client:getParts()
@@ -90,6 +97,7 @@ function PACCompatibility:OnPlayerObserve(client, state)
         end
     end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 RunConsoleCommand("pac_debug_clmdl", "1")
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

@@ -103,6 +103,7 @@ function PlayerPerfomance:PlayerExpandedUpdate()
         self:PlayerUpdateTransmitStates(data.Player, 5500)
     end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 timer.Create("PlayerExpandedUpdate", 1, 0, function() PlayerPerfomance:PlayerExpandedUpdate() end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

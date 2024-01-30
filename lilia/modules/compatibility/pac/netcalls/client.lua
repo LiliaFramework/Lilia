@@ -6,6 +6,7 @@ net.Receive("liaPACSync", function()
         end
     end
 end)
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 net.Receive("liaPACPartAdd", function()
     local client = net.ReadEntity()
@@ -13,6 +14,7 @@ net.Receive("liaPACPartAdd", function()
     if not IsValid(client) then return end
     PACCompatibility:attachPart(client, id)
 end)
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 net.Receive("liaPACPartRemove", function()
     local client = net.ReadEntity()
@@ -20,6 +22,7 @@ net.Receive("liaPACPartRemove", function()
     if not IsValid(client) then return end
     PACCompatibility:removePart(client, id)
 end)
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 net.Receive("liaPACPartReset", function()
     local client = net.ReadEntity()

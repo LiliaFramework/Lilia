@@ -6,6 +6,7 @@ function PerfomanceCore:PlayerSpawnVehicle(client)
         return false
     end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PerfomanceCore:PlayerInitialSpawn()
     local playerCount = #player.GetAll()

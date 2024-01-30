@@ -12,6 +12,7 @@ function AntiFamilySharing:PlayerAuthed(client, steamid)
         self:NotifyAdmin(SteamName .. " (" .. SteamID .. ") was banned for family sharing ALTing when blacklisting.")
     end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function AntiFamilySharing:NotifyAdmin(notification)
     for _, admin in ipairs(player.GetAll()) do

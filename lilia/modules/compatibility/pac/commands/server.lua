@@ -15,11 +15,13 @@ lia.command.add("fixpac", {
         timer.Simple(1.5, function() if IsValid(client) then client:ChatPrint("PAC has been successfully restarted. You might need to run this command twice!") end end)
     end
 })
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("pacenable", {
     privilege = "Default User Commands",
     onRun = function(client) client:SendLua([[RunConsoleCommand("pac_enable", "1")]]) end
 })
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("pacdisable", {
     privilege = "Default User Commands",

@@ -16,12 +16,14 @@ function EntityPerfomance:InitializedModules()
         end
     end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function EntityPerfomance:InitPostEntity()
     for _, v in next, list.Get("ThrusterSounds") do
         self.SoundsToMute[v.thruster_soundname] = true
     end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function EntityPerfomance:OnEntityCreated(entity)
     if CLIENT then
