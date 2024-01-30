@@ -10,9 +10,9 @@ mLogs.addCategory(
 )
 
 mLogs.addCategoryDefinitions("lia", {
-	LiliaLog = function(data) return mLogs.doLogReplace({"[Lilia Log]", "^log"}, data) end,
+	LiliaLog = function(data) return mLogs.doLogReplace({"[Lilia Logs]", "^log"}, data) end,
 })
 
 if (SERVER) then
-	mLogs.addLogger("Lilia Log", "LiliaLog", "lia")
+	mLogs.addLogger("Lilia Logs", "LiliaLog", "lia")
 end
