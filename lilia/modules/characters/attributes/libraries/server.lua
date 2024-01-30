@@ -1,4 +1,5 @@
-﻿function AttributesCore:PostPlayerLoadout(client)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function AttributesCore:PostPlayerLoadout(client)
     local uniqueID = "StamCheck" .. client:SteamID()
     local character = client:getChar()
     if character and character:getInv() then
@@ -23,6 +24,7 @@
     end)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function AttributesCore:KeyRelease(client, key)
     if self.StaminaSlowdown and key == IN_JUMP and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:getChar() then
         client:consumeStamina(15)
@@ -34,11 +36,13 @@ function AttributesCore:KeyRelease(client, key)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function AttributesCore:PlayerLoadedChar(client, character)
     local maxstm = character:getMaxStamina()
     timer.Simple(0.25, function() client:setLocalVar("stamina", maxstm) end)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function AttributesCore:PlayerStaminaLost(client)
     if client.isBreathing then return end
     client:EmitSound("player/breathe1.wav", 35, 100)
@@ -51,6 +55,7 @@ function AttributesCore:PlayerStaminaLost(client)
     end)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function AttributesCore:PlayerThrowPunch(client, _)
     local entity = client:GetTracedEntity()
     if entity:IsPlayer() and CAMI.PlayerHasAccess(client, "Staff Permissions - One Punch Man", nil) and IsValid(entity) and client:isStaffOnDuty() then
@@ -60,7 +65,9 @@ function AttributesCore:PlayerThrowPunch(client, _)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function AttributesCore:OnCharAttribBoosted(client, character, attribID)
     local attribute = lia.attribs.list[attribID]
     if attribute and isfunction(attribute.onSetup) then attribute:onSetup(client, character:getAttrib(attribID, 0)) end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

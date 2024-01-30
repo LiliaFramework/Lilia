@@ -1,4 +1,5 @@
-﻿function SimfphysCompatibility:simfphysUse(entity, client)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function SimfphysCompatibility:simfphysUse(entity, client)
     if entity.IsBeingEntered then
         client:notify("Someone is entering this car!")
         return true
@@ -27,6 +28,7 @@
     return self.CarEntryDelayEnabled
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function SimfphysCompatibility:OnEntityCreated(entity)
     if entity:IsSimfphysCar() then
         entity.PhysicsCollideBack = entity.PhysicsCollide
@@ -75,6 +77,7 @@ function SimfphysCompatibility:OnEntityCreated(entity)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function SimfphysCompatibility:EntityTakeDamage(entity, dmgInfo)
     local damageType = dmgInfo:GetDamageType()
     if self.DamageInCars and entity:IsVehicle() and table.HasValue(self.ValidCarDamages, damageType) then
@@ -95,27 +98,32 @@ function SimfphysCompatibility:EntityTakeDamage(entity, dmgInfo)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function SimfphysCompatibility:isSuitableForTrunk(entity)
     if IsValid(entity) and entity:IsSimfphysCar() then return true end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function SimfphysCompatibility:CheckValidSit(client, _)
     local entity = client:GetTracedEntity()
     if entity:IsSimfphysCar() then return false end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function SimfphysCompatibility:KeyLock(client, entity, time)
     if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not entity:IsSimfphysCar() or entity:GetCreator() ~= client then return end
     client:setAction("@locking", time, function() self:ToggleLock(client, entity, true) end)
     return true
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function SimfphysCompatibility:KeyUnlock(client, entity, time)
     if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not entity:IsSimfphysCar() or entity:GetCreator() ~= client then return end
     client:setAction("@unlocking", time, function() self:ToggleLock(client, entity, false) end)
     return true
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function SimfphysCompatibility:ToggleLock(client, entity, state)
     entity.IsLocked = not state
     entity:Fire(state and "lock" or "unlock")
@@ -127,8 +135,10 @@ function SimfphysCompatibility:ToggleLock(client, entity, state)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function SimfphysCompatibility:InitializedModules()
     for k, v in pairs(self.SimfphysConsoleCommands) do
         RunConsoleCommand(k, v)
     end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

@@ -1,8 +1,10 @@
-﻿netstream.Hook("rgnDone", function()
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+netstream.Hook("rgnDone", function()
     local client = LocalPlayer()
     hook.Run("OnCharRecognized", client, id)
 end)
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 netstream.Hook("rgnMenu", function()
     local menu = DermaMenu()
     menu:AddOption("Allow those in a whispering range to recognize you.", function() RecognitionCore:CharRecognize(2) end)
@@ -18,3 +20,4 @@ netstream.Hook("rgnMenu", function()
     menu:MakePopup()
     menu:Center()
 end)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

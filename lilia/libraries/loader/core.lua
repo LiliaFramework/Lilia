@@ -1,4 +1,5 @@
-﻿lia.config.RealmIdentifiers = {
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+lia.config.RealmIdentifiers = {
     client = "client",
     server = "server",
     shared = "shared",
@@ -9,6 +10,7 @@
     sconfig = "server",
 }
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.util.include(fileName, state)
     if not fileName then error("[Lilia] No file name specified for including.") end
     local matchResult = string.match(fileName, "/([^/]+)%.lua$")
@@ -27,6 +29,7 @@ function lia.util.include(fileName, state)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.util.includeDir(directory, fromLua, recursive)
     local baseDir = "lilia"
     if SCHEMA and SCHEMA.folder and SCHEMA.loading then
@@ -63,3 +66,4 @@ function lia.util.includeDir(directory, fromLua, recursive)
         end
     end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

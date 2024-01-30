@@ -1,4 +1,5 @@
-﻿local function addNetHandler(name, handler)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local function addNetHandler(name, handler)
     assert(isfunction(handler), "handler is not a function")
     net.Receive("liaVendor" .. name, function()
         if not IsValid(liaVendorEnt) then return end
@@ -6,6 +7,7 @@
     end)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 addNetHandler("Money", function(vendor)
     local money = net.ReadInt(32)
     if money < 0 then money = nil end
@@ -13,6 +15,7 @@ addNetHandler("Money", function(vendor)
     hook.Run("VendorMoneyUpdated", vendor, money, vendor.money)
 end)
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 addNetHandler("Price", function(vendor)
     local itemType = net.ReadString()
     local value = net.ReadInt(32)
@@ -22,6 +25,7 @@ addNetHandler("Price", function(vendor)
     hook.Run("VendorItemPriceUpdated", vendor, itemType, value)
 end)
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 addNetHandler("Mode", function(vendor)
     local itemType = net.ReadString()
     local value = net.ReadInt(8)
@@ -31,6 +35,7 @@ addNetHandler("Mode", function(vendor)
     hook.Run("VendorItemModeUpdated", vendor, itemType, value)
 end)
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 addNetHandler("Stock", function(vendor)
     local itemType = net.ReadString()
     local value = net.ReadUInt(32)
@@ -39,6 +44,7 @@ addNetHandler("Stock", function(vendor)
     hook.Run("VendorItemStockUpdated", vendor, itemType, value)
 end)
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 addNetHandler("MaxStock", function(vendor)
     local itemType = net.ReadString()
     local value = net.ReadUInt(32)
@@ -48,6 +54,7 @@ addNetHandler("MaxStock", function(vendor)
     hook.Run("VendorItemMaxStockUpdated", vendor, itemType, value)
 end)
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 addNetHandler("AllowFaction", function(vendor)
     local id = net.ReadUInt(8)
     local allowed = net.ReadBool()
@@ -60,6 +67,7 @@ addNetHandler("AllowFaction", function(vendor)
     hook.Run("VendorFactionUpdated", vendor, id, allowed)
 end)
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 addNetHandler("AllowClass", function(vendor)
     local id = net.ReadUInt(8)
     local allowed = net.ReadBool()
@@ -71,3 +79,4 @@ addNetHandler("AllowClass", function(vendor)
 
     hook.Run("VendorClassUpdated", vendor, id, allowed)
 end)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

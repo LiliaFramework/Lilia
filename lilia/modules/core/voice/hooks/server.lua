@@ -1,4 +1,6 @@
-﻿local GM = GM or GAMEMODE
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local GM = GM or GAMEMODE
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
     local HasCharacter = speaker:getChar()
     if not HasCharacter then return false end
@@ -11,7 +13,8 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     if IsVoiceEnabled and (listener ~= speaker) and speaker:GetPos():DistToSqr(listener:GetPos()) <= VoiceRadiusSquared then return true, true end
     return false, false
 end
-
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function VoiceCore:PostPlayerLoadout(client)
     client:setNetVar("VoiceType", "Talking")
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

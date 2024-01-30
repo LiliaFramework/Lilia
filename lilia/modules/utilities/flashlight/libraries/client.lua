@@ -1,4 +1,5 @@
-﻿function MODULE:PostDrawOpaqueRenderables()
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function FlashlightCore:PostDrawOpaqueRenderables()
     local client = LocalPlayer()
     if not client:FlashlightIsOn() then return end
     local flashlight = DynamicLight(client:EntIndex())
@@ -13,3 +14,4 @@
         flashlight.DieTime = CurTime() + 1
     end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

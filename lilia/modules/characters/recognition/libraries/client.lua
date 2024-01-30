@@ -1,7 +1,9 @@
-﻿function RecognitionCore:isRecognizedChatType(chatType)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function RecognitionCore:isRecognizedChatType(chatType)
     return table.HasValue(self.ChatIsRecognized, chatType)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function RecognitionCore:GetDisplayedDescription(client, isHUD)
     if not IsValid(client) or not IsValid(LocalPlayer()) then return "Unknown" end
     if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar():getID()) then
@@ -10,6 +12,7 @@ function RecognitionCore:GetDisplayedDescription(client, isHUD)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function RecognitionCore:GetDisplayedName(client, chatType)
     if not IsValid(client) or not IsValid(LocalPlayer()) then return "Unknown" end
     local character = client:getChar()
@@ -24,6 +27,7 @@ function RecognitionCore:GetDisplayedName(client, chatType)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function RecognitionCore:ShouldAllowScoreboardOverride(client, var)
     if not IsValid(client) or not IsValid(LocalPlayer()) then return false end
     local character = client:getChar()
@@ -39,10 +43,13 @@ function RecognitionCore:ShouldAllowScoreboardOverride(client, var)
     return isRecognitionEnabled and isVarHiddenInScoreboard and isClientNotLocalPlayer and isNotRecognizedAndNotFakeRecognized
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function RecognitionCore:OnCharRecognized(_, _)
     surface.PlaySound("buttons/button17.wav")
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function RecognitionCore:CharRecognize(level, name)
     netstream.Start("rgn", level, name)
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

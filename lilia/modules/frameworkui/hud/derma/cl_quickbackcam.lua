@@ -1,4 +1,5 @@
-﻿local function getDarkPanel()
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local function getDarkPanel()
     local dark = vgui.Create("DPanel")
     dark:SetSize(ScrW(), ScrH())
     dark:Center()
@@ -10,6 +11,7 @@
     return dark
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function QuickBackground(time, callback)
     local dark = getDarkPanel()
     dark:SetAlpha(0)
@@ -33,6 +35,7 @@ function QuickBackground(time, callback)
     return "CalcView", "Camerabackground"
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function RemoveBackground(time, callback)
     local dark = getDarkPanel()
     dark:SetAlpha(0)
@@ -45,3 +48,4 @@ function RemoveBackground(time, callback)
         end)
     end)
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

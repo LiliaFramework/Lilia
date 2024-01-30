@@ -1,4 +1,5 @@
-﻿function MODULE:PlayerSwitchFlashlight(client, isEnabled)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function FlashlightCore:PlayerSwitchFlashlight(client, isEnabled)
     local hasFlashlight = false
     local itemNeeded = self.FlashlightItems
     if self.FlashlightEnabled and (client.FlashlightCooldown or 0) < CurTime() then
@@ -24,8 +25,9 @@
         end
 
         client.FlashlightCooldown = CurTime() + self.FlashlightCooldown
-        client:SendLua(Format("RunConsoleCommand('r_shadows', %s)", isEnabled and "\"1\"" or "\"0\""))
+        client:ConCommand("r_shadows " .. (isEnabled and "1" or "0"))
         return hasFlashlight
     end
     return false
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

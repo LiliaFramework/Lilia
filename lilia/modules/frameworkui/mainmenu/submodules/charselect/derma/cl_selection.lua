@@ -1,4 +1,6 @@
-﻿local PANEL = {}
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local PANEL = {}
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:Init()
     self:Dock(FILL)
     self:DockMargin(0, 64, 0, 0)
@@ -31,6 +33,7 @@ function PANEL:Init()
     hook.Add("CharacterListUpdated", self, function() self:createCharacterSlots() end)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:createCharacterSlots()
     self.scroll:Clear()
     if #lia.characters == 0 then return lia.gui.character:showContent() end
@@ -51,6 +54,7 @@ function PANEL:createCharacterSlots()
     self.scroll:DockMargin(math.max(0, self.scroll:GetWide() * 0.5 - totalWide * 0.5), 0, 0, 0)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:onCharacterSelected(character)
     if self.choosing then return end
     if character == LocalPlayer():getChar() then return lia.gui.character:fadeOut() end
@@ -71,4 +75,6 @@ function PANEL:onCharacterSelected(character)
     end)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 vgui.Register("liaCharacterSelection", PANEL, "EditablePanel")
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

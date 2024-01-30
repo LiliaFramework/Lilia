@@ -1,4 +1,6 @@
-﻿local entityMeta = FindMetaTable("Entity")
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local entityMeta = FindMetaTable("Entity")
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function entityMeta:checkDoorAccess(client, access)
     if not self:isDoor() then return false end
     access = access or DOOR_GUEST
@@ -8,3 +10,4 @@ function entityMeta:checkDoorAccess(client, access)
     if self.liaAccess and (self.liaAccess[client] or 0) >= access then return true end
     return false
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

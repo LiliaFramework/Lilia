@@ -1,4 +1,5 @@
-﻿function AdvDupeCompatibility:CanTool(client, _, tool)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function AdvDupeCompatibility:CanTool(client, _, tool)
     local privilege = "Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
     local entity = client:GetTracedEntity()
     local toolobj = client:GetActiveWeapon():GetToolObject()
@@ -19,21 +20,22 @@
         return true
     end
 end
-
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function AdvDupeCompatibility:PlayerSpawnProp(client)
     local toolobj = client:GetActiveWeapon():GetToolObject()
     local usingToolgun = client:GetActiveWeapon():GetClass() == "gmod_tool"
     if usingToolgun and toolobj.Entities then return true end
 end
-
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function AdvDupeCompatibility:PlayerSpawnObject(client, _, _)
     local toolobj = client:GetActiveWeapon():GetToolObject()
     local usingToolgun = client:GetActiveWeapon():GetClass() == "gmod_tool"
     if usingToolgun and toolobj.Entities then return true end
 end
-
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function AdvDupeCompatibility:PlayerSpawnRagdoll(client)
     local toolobj = client:GetActiveWeapon():GetToolObject()
     local usingToolgun = client:GetActiveWeapon():GetClass() == "gmod_tool"
     if usingToolgun and toolobj.Entities then return true end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

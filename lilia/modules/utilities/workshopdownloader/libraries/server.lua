@@ -1,4 +1,5 @@
-﻿function WorkshoperCore:InitializedModules()
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function WorkshoperCore:InitializedModules()
     if self.GamemodeWorkshop then
         for i = 1, #self.GamemodeWorkshop do
             resource.AddWorkshop(self.GamemodeWorkshop[i])
@@ -11,3 +12,4 @@
         end
     end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

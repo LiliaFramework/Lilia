@@ -1,4 +1,6 @@
-﻿local PANEL = {}
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local PANEL = {}
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:Init()
     local client = LocalPlayer()
     local char = client:getChar()
@@ -41,6 +43,7 @@ function PANEL:Init()
     self:setup()
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor, shadowColor, labelText, dockMarginTop)
     local entryContainer = self.infoBox:Add("DPanel")
     entryContainer:Dock(TOP)
@@ -66,6 +69,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor
     self[name]:SetTextColor(textColor)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:setup()
     local client = LocalPlayer()
     local char = client:getChar()
@@ -76,4 +80,6 @@ function PANEL:setup()
     if self.class then self.class:SetText((class and class.name) or "None") end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 vgui.Register("liaCharInfo", PANEL, "EditablePanel")
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

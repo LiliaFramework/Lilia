@@ -1,4 +1,5 @@
-﻿function VendorCore:SaveData()
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function VendorCore:SaveData()
     local data = {}
     for _, v in ipairs(ents.FindByClass("lia_vendor")) do
         data[#data + 1] = {
@@ -19,6 +20,7 @@
     self:setData(data)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function VendorCore:LoadData()
     for _, v in ipairs(self:getData() or {}) do
         local entity = ents.Create("lia_vendor")
@@ -37,6 +39,7 @@ function VendorCore:LoadData()
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function VendorCore:CanPlayerAccessVendor(client, vendor)
     if client:CanEditVendor() then return true end
     local character = client:getChar()
@@ -44,6 +47,7 @@ function VendorCore:CanPlayerAccessVendor(client, vendor)
     if vendor:isFactionAllowed(client:Team()) then return true end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function VendorCore:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)
     if not vendor.items[itemType] then return false end
     local state = vendor:getTradeMode(itemType)
@@ -78,6 +82,7 @@ if not VENDOR_INVENTORY_MEASURE then
     VENDOR_INVENTORY_MEASURE:onInstanced()
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function VendorCore:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
     local canAccess, reason = hook.Run("CanPlayerTradeWithVendor", client, vendor, itemType, isSellingToVendor)
     if canAccess == false then
@@ -97,6 +102,7 @@ function VendorCore:VendorTradeAttempt(client, vendor, itemType, isSellingToVend
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function VendorCore:PlayerAccessVendor(client, vendor)
     vendor:addReceiver(client)
     net.Start("liaVendorOpen")
@@ -104,6 +110,7 @@ function VendorCore:PlayerAccessVendor(client, vendor)
     net.Send(client)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function VendorCore:VendorSellEvent(client, vendor, itemType, _, character, price)
     local inventory = character:getInv()
     local item = inventory:getFirstItemOfType(itemType)
@@ -135,6 +142,7 @@ function VendorCore:VendorSellEvent(client, vendor, itemType, _, character, pric
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function VendorCore:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
     vendor:giveMoney(price)
     character:takeMoney(price)
@@ -152,3 +160,4 @@ function VendorCore:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, 
         client.vendorTransaction = nil
     end)
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

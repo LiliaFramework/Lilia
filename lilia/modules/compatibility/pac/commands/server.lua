@@ -1,4 +1,5 @@
-﻿lia.command.add("fixpac", {
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+lia.command.add("fixpac", {
     privilege = "Default User Commands",
     syntax = "<No Input>",
     onRun = function(client)
@@ -14,12 +15,12 @@
         timer.Simple(1.5, function() if IsValid(client) then client:ChatPrint("PAC has been successfully restarted. You might need to run this command twice!") end end)
     end
 })
-
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("pacenable", {
     privilege = "Default User Commands",
     onRun = function(client) client:SendLua([[RunConsoleCommand("pac_enable", "1")]]) end
 })
-
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("pacdisable", {
     privilege = "Default User Commands",
     onRun = function(client)
@@ -27,3 +28,4 @@ lia.command.add("pacdisable", {
         client:SendLua([[chat.AddText("PAC has been disabled to boost performance. If you would like to re-enable it type /pacenable in chat.")]])
     end
 })
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

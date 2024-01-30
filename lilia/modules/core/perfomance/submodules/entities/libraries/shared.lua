@@ -1,4 +1,5 @@
-﻿function EntityPerfomance:InitializedModules()
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function EntityPerfomance:InitializedModules()
     if CLIENT then
         if self.DrawEntityShadows then
             for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
@@ -15,13 +16,13 @@
         end
     end
 end
-
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function EntityPerfomance:InitPostEntity()
     for _, v in next, list.Get("ThrusterSounds") do
         self.SoundsToMute[v.thruster_soundname] = true
     end
 end
-
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function EntityPerfomance:OnEntityCreated(entity)
     if CLIENT then
         if self.DrawEntityShadows then entity:DrawShadow(false) end
@@ -30,3 +31,4 @@ function EntityPerfomance:OnEntityCreated(entity)
         if entity:IsWidget() then hook.Add("PlayerTick", "GODisableEntWidgets2", function(_, n) widgets.PlayerTick(entity, n) end) end
     end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

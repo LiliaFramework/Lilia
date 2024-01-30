@@ -1,14 +1,18 @@
-﻿local Variables = {"disabled", "name", "price", "noSell", "faction", "factions", "class", "hidden"}
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local Variables = {"disabled", "name", "price", "noSell", "faction", "factions", "class", "hidden"}
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local DarkRPVariables = {
     ["DarkRPNonOwnable"] = function(entity, _) entity:setNetVar("noSell", true) end,
     ["DarkRPTitle"] = function(entity, val) entity:setNetVar("name", val) end,
     ["DarkRPCanLockpick"] = function(entity, val) entity.noPick = tobool(val) end
 }
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function DoorsCore:EntityKeyValue(entity, key, value)
     if entity:isDoor() and DarkRPVariables[key] then DarkRPVariables[key](entity, value) end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function DoorsCore:copyParentDoor(child)
     local parent = child.liaParent
     if IsValid(parent) then
@@ -19,6 +23,7 @@ function DoorsCore:copyParentDoor(child)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function DoorsCore:LoadData()
     local data = self:getData()
     if not data then return end
@@ -40,6 +45,7 @@ function DoorsCore:LoadData()
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function DoorsCore:SaveData()
     local data = {}
     local doors = {}
@@ -64,6 +70,7 @@ function DoorsCore:SaveData()
     self:setData(data)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function DoorsCore:callOnDoorChildren(entity, callback)
     local parent
     if entity.liaChildren then
@@ -81,6 +88,7 @@ function DoorsCore:callOnDoorChildren(entity, callback)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function DoorsCore:InitPostEntity()
     local doors = ents.FindByClass("prop_door_rotating")
     for _, v in ipairs(doors) do
@@ -100,6 +108,7 @@ function DoorsCore:InitPostEntity()
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function DoorsCore:PlayerUse(client, entity)
     if entity:isDoor() then
         local result = hook.Run("CanPlayerUseDoor", client, entity)
@@ -112,10 +121,12 @@ function DoorsCore:PlayerUse(client, entity)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function DoorsCore:CanPlayerUseDoor(_, entity)
     if entity:getNetVar("disabled") then return false end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function DoorsCore:CanPlayerAccessDoor(client, door, _)
     local factions = door:getNetVar("factions")
     if factions ~= nil then
@@ -137,10 +148,12 @@ function DoorsCore:CanPlayerAccessDoor(client, door, _)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function DoorsCore:PostPlayerLoadout(client)
     client:Give("lia_keys")
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function DoorsCore:ShowTeam(client)
     local entity = client:GetTracedEntity()
     if IsValid(entity) and entity:isDoor() and not entity:getNetVar("faction") and not entity:getNetVar("class") then
@@ -157,6 +170,7 @@ function DoorsCore:ShowTeam(client)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function DoorsCore:PlayerDisconnected(client)
     for _, v in ipairs(ents.GetAll()) do
         if v == client then return end
@@ -164,18 +178,21 @@ function DoorsCore:PlayerDisconnected(client)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function DoorsCore:KeyLock(client, entity, time)
     if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not (entity:IsSimfphysCar() or entity:isDoor() or entity:IsVehicle()) then return end
     client:setAction("@locking", time, function() self:ToggleLock(client, entity, true) end)
     return true
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function DoorsCore:KeyUnlock(client, entity, time)
     if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not (entity:IsSimfphysCar() or entity:isDoor() or entity:IsVehicle()) then return end
     client:setAction("@unlocking", time, function() self:ToggleLock(client, entity, false) end)
     return true
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function DoorsCore:ToggleLock(client, entity, state)
     local partner = entity:getDoorPartner()
     if entity:isDoor() and entity:checkDoorAccess(client) then
@@ -198,3 +215,4 @@ function DoorsCore:ToggleLock(client, entity, state)
         end
     end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

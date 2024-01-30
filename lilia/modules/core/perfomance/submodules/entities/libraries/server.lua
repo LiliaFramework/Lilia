@@ -1,11 +1,14 @@
-﻿function EntityPerfomance:PlayerEnteredVehicle(_, vehicle)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function EntityPerfomance:PlayerEnteredVehicle(_, vehicle)
     if vehicle:GetClass() == "prop_vehicle_prisoner_pod" then vehicle:RemoveEFlags(EFL_NO_THINK_FUNCTION) end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function EntityPerfomance:PropBreak(_, entity)
     if entity:IsValid() and entity:GetPhysicsObject():IsValid() then constraint.RemoveAll(entity) end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function EntityPerfomance:PlayerInitialSpawn(_)
     local annoying = ents.FindByName("music")
     local val = ents.GetMapCreatedEntity(1733)
@@ -19,10 +22,12 @@ function EntityPerfomance:PlayerInitialSpawn(_)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function EntityPerfomance:EntityEmitSound(tab)
     if self.SoundsToMute[tab.SoundName] then return false end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function EntityPerfomance:PreGamemodeLoaded()
     function widgets.PlayerTick()
     end
@@ -30,6 +35,7 @@ function EntityPerfomance:PreGamemodeLoaded()
     hook.Remove("PlayerTick", "TickWidgets")
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function EntityPerfomance:EntityRemoved(entity)
     if entity:IsRagdoll() and not entity:getNetVar("player", nil) and self.RagdollCleaningTimer > 0 then
         timer.Simple(self.RagdollCleaningTimer, function()
@@ -43,6 +49,7 @@ function EntityPerfomance:EntityRemoved(entity)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function EntityPerfomance:PlayerLeaveVehicle(_, vehicle)
     if vehicle:GetClass() == "prop_vehicle_prisoner_pod" then
         local sName = "PodFix" .. vehicle:EntIndex()
@@ -62,6 +69,7 @@ function EntityPerfomance:PlayerLeaveVehicle(_, vehicle)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function EntityPerfomance:InitPostEntity()
     for _, v in pairs(ents.FindByClass("prop_physics")) do
         if table.HasValue(self.UnOptimizableModels, v:GetModel()) then continue end
@@ -89,3 +97,4 @@ function EntityPerfomance:InitPostEntity()
         v:Remove()
     end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

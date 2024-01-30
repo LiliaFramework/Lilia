@@ -1,8 +1,14 @@
-﻿lia.module = lia.module or {}
-lia.module.enabilitystatus = {}
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+lia.module = lia.module or {}
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+lia.module.EnabledList = {}
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.module.list = lia.module.list or {}
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.module.unloaded = lia.module.unloaded or {}
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.module.ModuleFolders = {"dependencies", "config", "permissions", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim", "concommands"}
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.module.ModuleFiles = {
     ["client.lua"] = "client",
     ["cl_module.lua"] = "client",
@@ -12,6 +18,7 @@ lia.module.ModuleFiles = {
     ["sconfig.lua"] = "server",
 }
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.module.ModuleConditions = {
     ["stormfox2"] = {
         name = "StormFox 2",
@@ -87,6 +94,7 @@ lia.module.ModuleConditions = {
     }
 }
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.module.load(uniqueID, path, isSingleFile, variable)
     local lowerVariable = variable:lower()
     local normalpath = path .. "/" .. lowerVariable .. ".lua"
@@ -126,10 +134,10 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
 
     hook.Run("ModuleDependenciesPreLoad", uniqueID, MODULE.identifier, MODULE)
     if hook.Run("VerifyModuleValidity", uniqueID, MODULE, MODULE.identifier) then
-        lia.module.enabilitystatus[tostring(MODULE.name)] = true
+        lia.module.EnabledList[tostring(MODULE.name)] = true
     else
         if lia.module.ModuleConditions[uniqueID] == nil then print(MODULE.name .. " is disabled. Disabling!") end
-        lia.module.enabilitystatus[MODULE.name] = false
+        lia.module.EnabledList[MODULE.name] = false
         return
     end
 
@@ -162,6 +170,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     if MODULE.OnLoaded then MODULE:OnLoaded() end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.module.loadExtras(path)
     lia.lang.loadFromDir(path .. "/languages")
     lia.faction.loadFromDir(path .. "/factions")
@@ -184,6 +193,7 @@ function lia.module.loadExtras(path)
     hook.Run("DoModuleIncludes", path, MODULE)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.module.initialize()
     local schema = engine.ActiveGamemode()
     lia.module.loadFromDir(schema .. "/preload", "schema")
@@ -198,6 +208,7 @@ function lia.module.initialize()
     hook.Run("InitializedModules")
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.module.loadFromDir(directory, group)
     local location = group == "schema" and "SCHEMA" or "MODULE"
     local files, folders = file.Find(directory .. "/*", "LUA")
@@ -210,6 +221,8 @@ function lia.module.loadFromDir(directory, group)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

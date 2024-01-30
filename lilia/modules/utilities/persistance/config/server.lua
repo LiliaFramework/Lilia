@@ -1,4 +1,5 @@
-﻿PersistanceCore.blacklist = PersistanceCore.blacklist or {
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+PersistanceCore.blacklist = PersistanceCore.blacklist or {
     ["func_button"] = true,
     ["class C_BaseEntity"] = true,
     ["func_brush"] = true,
@@ -10,3 +11,4 @@
     ["prop_dynamic"] = true,
     ["prop_physics_override"] = true,
 }
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

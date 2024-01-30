@@ -1,4 +1,6 @@
-﻿local PANEL = {}
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local PANEL = {}
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:Init()
     self.list = self:Add("DIconLayout")
     function self.list.Think(this)
@@ -34,7 +36,7 @@ function PANEL:Init()
     local function defaultLayout(panel)
         local parent = panel:GetParent()
         local ogPL = panel.PerformLayout
-        function panel:PerformLayout(w, h)
+        function PANEL:PerformLayout(w, h)
             ogPL(self, w, h)
             self:SetSize(parent:GetWide() * 0.95, 30)
             self:Center()
@@ -67,4 +69,6 @@ function PANEL:Init()
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 vgui.Register("WolfForm", PANEL, "DScrollPanel")
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

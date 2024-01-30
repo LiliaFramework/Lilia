@@ -1,4 +1,5 @@
-﻿function VoiceCore:PlayerButtonDown(client, button)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function VoiceCore:PlayerButtonDown(client, button)
     if button == KEY_F2 and IsFirstTimePredicted() then
         local menu = DermaMenu()
         menu:AddOption("Change voice mode to Whispering range.", function()
@@ -22,6 +23,7 @@
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function VoiceCore:LoadFonts(_)
     surface.CreateFont("3DVoiceDebug", {
         font = "Arial",
@@ -31,3 +33,4 @@ function VoiceCore:LoadFonts(_)
         underline = true,
     })
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

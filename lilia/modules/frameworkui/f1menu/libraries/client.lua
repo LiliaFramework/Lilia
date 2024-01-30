@@ -1,4 +1,5 @@
-﻿local HELP_DEFAULT = [[
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local HELP_DEFAULT = [[
     <div id="parent">
         <div id="child">
             <center>
@@ -8,6 +9,7 @@
         </div>
     </div>
 ]]
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function F1MenuCore:PlayerBindPress(client, bind, pressed)
     if bind:lower():find("gm_showhelp") and pressed then
         if IsValid(lia.gui.menu) then
@@ -19,6 +21,7 @@ function F1MenuCore:PlayerBindPress(client, bind, pressed)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function F1MenuCore:OnCharInfoSetup(infoPanel)
     if not IsValid(infoPanel) then return end
     local mdl = infoPanel
@@ -56,7 +59,7 @@ function F1MenuCore:OnCharInfoSetup(infoPanel)
     end
 end
 
---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function F1MenuCore:CreateMenuButtons(tabs)
     if hook.Run("CanPlayerViewInventory") ~= false then
         tabs["inv"] = function(panel)
@@ -171,6 +174,7 @@ function F1MenuCore:CreateMenuButtons(tabs)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function F1MenuCore:BuildHelpMenu(tabs)
     tabs["commands"] = function(_, _)
         local body = ""
@@ -203,7 +207,7 @@ function F1MenuCore:BuildHelpMenu(tabs)
 
     tabs["modules"] = function(_)
         local body = ""
-        for _, v in SortedPairsByMemberValue(lia.module.list, "name") do
+        for _, v in SortedPairsByMemberValue(lia.MODULE.list, "name") do
             if v.MenuNoShow then continue end
             body = (body .. [[
                 <p>
@@ -212,7 +216,7 @@ function F1MenuCore:BuildHelpMenu(tabs)
                     <b>%s</b>: %s<br />
                     <b>%s</b>: %s<br /> <!-- Added line break here -->
                     <b>%s</b>: %s<br />
-                ]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", "Discord", v.discord or "Unknown", L"author", lia.module.namecache[v.author] or v.author or "Unknown")
+                ]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", "Discord", v.discord or "Unknown", L"author", lia.MODULE.namecache[v.author] or v.author or "Unknown")
             if v.version then body = body .. "<br /><b>" .. L"version" .. "</b>: " .. v.version end
             body = body .. "</span></p>"
         end
@@ -232,3 +236,4 @@ function F1MenuCore:BuildHelpMenu(tabs)
     if self.RulesEnabled then tabs["Rules"] = function() return F1MenuCore:GenerateRules() end end
     if self.TutorialEnabled then tabs["Tutorial"] = function() return F1MenuCore:GenerateTutorial() end end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

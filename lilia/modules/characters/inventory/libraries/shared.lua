@@ -1,6 +1,10 @@
-﻿local GridInv = lia.Inventory:extend("GridInv")
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local GridInv = lia.Inventory:extend("GridInv")
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.meta.item.width = 1
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.meta.item.height = 1
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
     if inventory.virtual then return action == "transfer" end
     local ownerID = inventory:getData("char")
@@ -8,6 +12,7 @@ local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
     if table.HasValue(client.liaCharList or {}, ownerID) then return true end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local function CanNotAddItemIfNoSpace(inventory, action, context)
     if action ~= "add" then return end
     if inventory.virtual then return true end
@@ -22,24 +27,29 @@ local function CanNotAddItemIfNoSpace(inventory, action, context)
     return true
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GridInv:getWidth()
     return self:getData("w", lia.config.invW)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GridInv:getHeight()
     return self:getData("h", lia.config.invH)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GridInv:getSize()
     return self:getWidth(), self:getHeight()
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GridInv:canItemFitInInventory(item, x, y)
     local invW, invH = self:getSize()
     local itemW, itemH = (item.width or 1) - 1, (item.height or 1) - 1
     return x >= 1 and y >= 1 and (x + itemW) <= invW and (y + itemH) <= invH
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
     local testX2, testY2 = x + (testItem.width or 1), y + (testItem.height or 1)
     local itemX, itemY = item:getData("x"), item:getData("y")
@@ -50,6 +60,7 @@ function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
     return true
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GridInv:doesItemFitAtPos(testItem, x, y)
     if not self:canItemFitInInventory(testItem, x, y) then return false end
     for _, item in pairs(self.items) do
@@ -66,6 +77,7 @@ function GridInv:doesItemFitAtPos(testItem, x, y)
     return true
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GridInv:findFreePosition(item)
     local width, height = self:getSize()
     for x = 1, width do
@@ -75,6 +87,7 @@ function GridInv:findFreePosition(item)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GridInv:configure()
     if SERVER then
         self:addAccessRule(CanNotAddItemIfNoSpace)
@@ -82,6 +95,7 @@ function GridInv:configure()
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GridInv:getItems(noRecurse)
     local items = self.items
     if noRecurse then return items end
@@ -94,11 +108,13 @@ function GridInv:getItems(noRecurse)
 end
 
 if SERVER then
+    ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
     function GridInv:setSize(w, h)
         self:setData("w", w)
         self:setData("h", h)
     end
 
+    ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
     function GridInv:setOwner(owner, fullUpdate)
         if type(owner) == "Player" and owner:getChar() then
             owner = owner:getChar():getID()
@@ -122,6 +138,7 @@ if SERVER then
         self.owner = owner
     end
 
+    ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
     function GridInv:add(itemTypeOrItem, xOrQuantity, yOrData)
         local x, y, data
         local quantity = 1
@@ -270,6 +287,7 @@ if SERVER then
         return d
     end
 
+    ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
     function GridInv:remove(itemTypeOrID, quantity)
         quantity = quantity or 1
         assert(isnumber(quantity), "quantity must be a number")
@@ -288,6 +306,7 @@ if SERVER then
         return d
     end
 else
+    ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
     function GridInv:requestTransfer(itemID, destinationID, x, y)
         local inventory = lia.inventory.instances[destinationID]
         if not inventory then return end
@@ -303,4 +322,6 @@ else
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 GridInv:register("grid")
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

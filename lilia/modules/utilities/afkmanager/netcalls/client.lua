@@ -1,4 +1,5 @@
-﻿net.Receive("AFKWarning", function()
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+net.Receive("AFKWarning", function()
     local enable = net.ReadBool()
     if enable then
         AFKKicker:EnableWarning()
@@ -7,6 +8,7 @@
     end
 end)
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 net.Receive("AFKAnnounce", function(_, client)
     local name = net.ReadString()
     if client == LocalPlayer() then
@@ -16,3 +18,4 @@ net.Receive("AFKAnnounce", function(_, client)
 
     chat.AddText(Color(255, 0, 0, 255), "Player ", Color(255, 255, 255, 255), name, Color(255, 0, 0, 255), " has been character kicked for being AFK.")
 end)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

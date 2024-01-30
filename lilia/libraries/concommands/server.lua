@@ -1,4 +1,5 @@
-﻿concommand.Add("stopsoundall", function(client)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+concommand.Add("stopsoundall", function(client)
     if client:IsSuperAdmin() then
         for _, v in pairs(player.GetAll()) do
             v:ConCommand("stopsound")
@@ -7,3 +8,4 @@
         client:Notify("You must be a Super Admin to forcefully stopsound everyone!")
     end
 end)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

@@ -1,9 +1,11 @@
-﻿lia.command.add("classwhitelist", {
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+lia.command.add("classwhitelist", {
     adminOnly = true,
     syntax = "<string name> <string class>",
     onRun = function() end
 })
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("plytransfer", {
     adminOnly = true,
     syntax = "<string name> <string faction>",
@@ -11,6 +13,7 @@ lia.command.add("plytransfer", {
     onRun = function() end
 })
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("plywhitelist", {
     adminOnly = true,
     privilege = "Whitelist Characters",
@@ -18,6 +21,7 @@ lia.command.add("plywhitelist", {
     onRun = function() end
 })
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("plyunwhitelist", {
     adminOnly = true,
     privilege = "Un-Whitelist Characters",
@@ -25,6 +29,7 @@ lia.command.add("plyunwhitelist", {
     onRun = function() end
 })
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("beclass", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -32,6 +37,7 @@ lia.command.add("beclass", {
     onRun = function() end
 })
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("factionlist", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -39,6 +45,7 @@ lia.command.add("factionlist", {
     onRun = function() end
 })
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("setclass", {
     privilege = "Set Class",
     adminOnly = true,
@@ -46,8 +53,10 @@ lia.command.add("setclass", {
     onRun = function() end
 })
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("classunwhitelist", {
     adminOnly = true,
     syntax = "<string name> <string class>",
     onRun = function() end
 })
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

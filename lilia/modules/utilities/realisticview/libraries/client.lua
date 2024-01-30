@@ -1,5 +1,8 @@
-﻿local RealisticViewEnabled = CreateClientConVar("rview_enabled", 0, true)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local RealisticViewEnabled = CreateClientConVar("rview_enabled", 0, true)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local RealisticViewUseFullBody = CreateClientConVar("rview_fullbody", 0, true)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function Realistic1stPersonView:CalcView(client, origin, angles)
     if self.FirstPersonViewEnabled then
         local view = {
@@ -37,6 +40,7 @@ function Realistic1stPersonView:CalcView(client, origin, angles)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function Realistic1stPersonView:SetupQuickMenu(menu)
     if self.FirstPersonViewEnabled then
         menu:addCheck("Realistic View Enabled", function(_, state)
@@ -58,3 +62,4 @@ function Realistic1stPersonView:SetupQuickMenu(menu)
         menu:addSpacer()
     end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

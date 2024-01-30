@@ -1,4 +1,6 @@
-﻿local playerMeta = FindMetaTable("Player")
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local playerMeta = FindMetaTable("Player")
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:IPAddressNoPort()
     local ipAddr = self:IPAddress()
     local ipAddrExploded = string.Explode(":", ipAddr, false)
@@ -9,6 +11,7 @@ function playerMeta:IPAddressNoPort()
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:setAction(text, time, callback, startTime, finishTime)
     if time and time <= 0 then
         if callback then callback(self) end
@@ -28,6 +31,7 @@ function playerMeta:setAction(text, time, callback, startTime, finishTime)
     if callback then timer.Create("liaAct" .. self:UniqueID(), time, 1, function() if IsValid(self) then callback(self) end end) end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:PlaySound(sound, pitch)
     net.Start("LiliaPlaySound")
     net.WriteString(tostring(sound))
@@ -35,23 +39,27 @@ function playerMeta:PlaySound(sound, pitch)
     net.Send(self)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:OpenUI(panel)
     net.Start("OpenVGUI")
     net.WriteString(panel)
     net.Send(self)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:OpenPage(url)
     net.Start("OpenPage")
     net.WriteString(url)
     net.Send(self)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:getPlayTime()
     local diff = os.time(lia.util.dateToNumber(self.lastJoin)) - os.time(lia.util.dateToNumber(self.firstJoin))
     return diff + (RealTime() - (self.liaJoinTime or RealTime()))
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:CreateServerRagdoll(DontSetPlayer)
     local entity = ents.Create("prop_ragdoll")
     entity:SetPos(self:GetPos())
@@ -83,6 +91,7 @@ function playerMeta:CreateServerRagdoll(DontSetPlayer)
     return entity
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
     local uniqueID = "liaStare" .. self:UniqueID()
     local data = {}
@@ -106,23 +115,28 @@ function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
     end)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:notify(message)
     lia.util.notify(message, self)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:notifyLocalized(message, ...)
     lia.util.notifyLocalized(message, self, ...)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:chatNotify(message)
     lia.chat.send(client, "flip", message)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:chatNotifyLocalized(message, ...)
     message = L(message, self, ...)
     lia.chat.send(client, "flip", message)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:requestString(title, subTitle, callback, default)
     local d
     if not isfunction(callback) and default == nil then
@@ -142,6 +156,7 @@ function playerMeta:requestString(title, subTitle, callback, default)
     return d
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:isStuck()
     return util.TraceEntity({
         start = self:GetPos(),
@@ -150,6 +165,7 @@ function playerMeta:isStuck()
     }, self).StartSolid
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:createRagdoll(freeze)
     local entity = ents.Create("prop_ragdoll")
     entity:SetPos(self:GetPos())
@@ -180,6 +196,7 @@ function playerMeta:createRagdoll(freeze)
     return entity
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:setRagdolled(state, time, getUpGrace)
     getUpGrace = getUpGrace or time or 5
     if state then
@@ -286,6 +303,7 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:setWhitelisted(faction, whitelisted)
     if not whitelisted then whitelisted = nil end
     local data = lia.faction.indices[faction]
@@ -300,6 +318,7 @@ function playerMeta:setWhitelisted(faction, whitelisted)
     return false
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:syncVars()
     for entity, data in pairs(lia.net) do
         if entity == "globals" then
@@ -314,6 +333,7 @@ function playerMeta:syncVars()
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:setLocalVar(key, value)
     if checkBadType(key, value) then return end
     lia.net[self] = lia.net[self] or {}
@@ -321,20 +341,24 @@ function playerMeta:setLocalVar(key, value)
     netstream.Start(self, "nLcl", key, value)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:SendMessage(...)
     net.Start("SendMessage")
     net.WriteTable({...} or {})
     net.Send(self)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:SendPrint(...)
     net.Start("SendPrint")
     net.WriteTable({...} or {})
     net.Send(self)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:SendPrintTable(...)
     net.Start("SendPrintTable")
     net.WriteTable({...} or {})
     net.Send(self)
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

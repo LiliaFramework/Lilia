@@ -1,4 +1,6 @@
-﻿local PANEL = {}
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local PANEL = {}
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:Init()
     local border = 32
     local scrW, scrH = ScrW(), ScrH()
@@ -70,6 +72,7 @@ function PANEL:Init()
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:Paint(w, h)
     if self.active then
         lia.util.drawBlur(self, 10)
@@ -80,6 +83,7 @@ function PANEL:Paint(w, h)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:setActive(state)
     self.active = state
     if state then
@@ -133,6 +137,7 @@ function PANEL:setActive(state)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local function OnDrawText(text, font, x, y, color, _, _, alpha)
     alpha = alpha or 255
     surface.SetTextPos(x + 1, y + 1)
@@ -145,6 +150,7 @@ local function OnDrawText(text, font, x, y, color, _, _, alpha)
     surface.DrawText(text)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local function PaintFilterButton(this, w, h)
     if this.active then
         surface.SetDrawColor(40, 40, 40)
@@ -158,6 +164,7 @@ local function PaintFilterButton(this, w, h)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:addFilterButton(filter)
     local name = L(filter)
     local tab = self.tabs:Add("DButton")
@@ -188,6 +195,7 @@ function PANEL:addFilterButton(filter)
     if LIA_CVAR_CHATFILTER:GetString():lower():find(filter) then tab.active = true end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:addText(...)
     local text = "<font=liaChatFont>"
     if CHAT_CLASS then text = "<font=" .. (CHAT_CLASS.font or "liaChatFont") .. ">" end
@@ -239,6 +247,7 @@ function PANEL:addText(...)
     return panel:IsVisible()
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:setFilter(filter, state)
     if state then
         for _, v in ipairs(self.list) do
@@ -269,6 +278,7 @@ function PANEL:setFilter(filter, state)
     if IsValid(lastChild) then self.scroll:ScrollToChild(lastChild) end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:Think()
     if gui.IsGameUIVisible() and self.active then
         self.tabs:SetVisible(false)
@@ -277,4 +287,6 @@ function PANEL:Think()
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 vgui.Register("liaChatBox", PANEL, "DPanel")
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

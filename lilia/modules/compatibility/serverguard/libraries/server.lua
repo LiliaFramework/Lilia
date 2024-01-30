@@ -1,4 +1,5 @@
-﻿local function OnPrivilegeRegistered(privilege)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local function OnPrivilegeRegistered(privilege)
     local permission = privilege.Name
     serverguard.permission:Add(permission)
     local defaultRank = privilege.MinAccess
@@ -8,6 +9,7 @@
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local function RegisterPrivileges()
     if CAMI then
         for _, v in pairs(CAMI.GetPrivileges()) do
@@ -16,4 +18,6 @@ local function RegisterPrivileges()
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 hook.Add("serverguard.RanksLoaded", "serverguard.RanksLoaded", RegisterPrivileges)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

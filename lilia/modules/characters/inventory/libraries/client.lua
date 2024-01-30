@@ -1,4 +1,5 @@
-﻿function InventoryCore:CreateInventoryPanel(inventory, parent)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function InventoryCore:CreateInventoryPanel(inventory, parent)
     if inventory.typeID ~= "grid" then return end
     local panel = vgui.Create("liaGridInventory", parent)
     panel:setInventory(inventory)
@@ -6,6 +7,7 @@
     return panel
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function InventoryCore:getItemStackKey(item)
     local elements = {}
     for key, value in SortedPairs(item.data) do
@@ -15,6 +17,7 @@ function InventoryCore:getItemStackKey(item)
     return item.uniqueID .. pon.encode(elements)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function InventoryCore:getItemStacks(inventory)
     local stacks = {}
     local stack, key
@@ -26,3 +29,4 @@ function InventoryCore:getItemStacks(inventory)
     end
     return stacks
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

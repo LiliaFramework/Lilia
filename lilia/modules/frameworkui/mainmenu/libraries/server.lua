@@ -1,4 +1,5 @@
-﻿function MainMenu:PlayerLiliaDataLoaded(client)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function MainMenu:PlayerLiliaDataLoaded(client)
     lia.char.restore(client, function(charList)
         if not IsValid(client) then return end
         MsgN("Loaded (" .. table.concat(charList, ", ") .. ") for " .. client:Name())
@@ -17,20 +18,24 @@
     end)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MainMenu:OnCharacterDelete(client, id)
     lia.log.add(client, "charDelete", id)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MainMenu:OnCharCreated(client, character)
     lia.log.add(client, "charCreate", character)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MainMenu:CanPlayerUseChar(_, character)
     local banned = character:getData("banned")
     if banned and isnumber(banned) and banned > os.time() then return false, "@charBanned" end
     return true
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MainMenu:CanPlayerSwitchChar(client, character, newCharacter)
     local banned = character:getData("banned")
     if character:getID() == newCharacter:getID() then return false, "You are already using this character!" end
@@ -41,12 +46,15 @@ function MainMenu:CanPlayerSwitchChar(client, character, newCharacter)
     return true
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MainMenu:PlayerLoadedChar(client)
     client:Spawn()
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MainMenu:CharacterLoaded(id)
     local character = lia.char.loaded[id]
     local client = character:getPlayer()
     lia.log.add(client, "charLoad", id, character:getName())
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

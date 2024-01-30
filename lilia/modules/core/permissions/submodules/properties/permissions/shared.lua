@@ -1,4 +1,5 @@
-﻿PropertiesCore.CAMIPrivileges = {
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+PropertiesCore.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Property World Entities",
         MinAccess = "superadmin",
@@ -10,3 +11,4 @@
         Description = "Allows access to using Entity Properties on Blocked Entities."
     },
 }
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

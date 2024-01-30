@@ -1,4 +1,6 @@
-﻿local LIA_CVAR_LOWER2 = CreateClientConVar("lia_usealtlower", "0", true)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local LIA_CVAR_LOWER2 = CreateClientConVar("lia_usealtlower", "0", true)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function RaisedWeaponCore:CalcViewModelView(weapon, _, _, _, _, eyeAngles)
     if not IsValid(weapon) then return end
     local vm_angles = eyeAngles
@@ -14,6 +16,7 @@ function RaisedWeaponCore:CalcViewModelView(weapon, _, _, _, _, eyeAngles)
     client.liaRaisedFrac = Lerp(FrameTime() * 2, client.liaRaisedFrac or 0, value)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function RaisedWeaponCore:SetupQuickMenu(menu)
     menu:addSpacer()
     menu:addCheck(L"altLower", function(_, state)
@@ -24,3 +27,4 @@ function RaisedWeaponCore:SetupQuickMenu(menu)
         end
     end, LIA_CVAR_LOWER2:GetBool())
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

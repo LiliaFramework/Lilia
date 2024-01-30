@@ -1,4 +1,5 @@
-﻿function TeamsCore:OnPlayerJoinClass(client, class, oldClass)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function TeamsCore:OnPlayerJoinClass(client, class, oldClass)
     local char = client:getChar()
     if char and self.PermaClass then char:setData("pclass", class) end
     local info = lia.class.list[class]
@@ -8,6 +9,7 @@
     netstream.Start(nil, "classUpdate", client)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function TeamsCore:CanPlayerJoinClass(client, class, classTable)
     if classTable.isWhitelisted ~= true then return end
     local char = client:getChar()
@@ -15,6 +17,7 @@ function TeamsCore:CanPlayerJoinClass(client, class, classTable)
     return wl[class] or false
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function TeamsCore:PlayerLoadedChar(client, character, _)
     local data = character:getData("pclass")
     local class = data and lia.class.list[data]
@@ -38,6 +41,7 @@ function TeamsCore:PlayerLoadedChar(client, character, _)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function TeamsCore:FactionOnLoadout(client)
     local faction = lia.faction.indices[client:Team()]
     if not faction then return end
@@ -114,6 +118,7 @@ function TeamsCore:FactionOnLoadout(client)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function TeamsCore:ClassOnLoadout(client)
     local character = client:getChar()
     local class = lia.class.list[character:getClass()]
@@ -193,12 +198,15 @@ function TeamsCore:ClassOnLoadout(client)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function TeamsCore:CanPlayerUseChar(client, character)
     local faction = lia.faction.indices[character:getFaction()]
     if faction and hook.Run("CheckFactionLimitReached", faction, character, client) then return false, "@limitFaction" end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function TeamsCore:CanPlayerSwitchChar(client, _, newCharacter)
     local faction = lia.faction.indices[newCharacter:getFaction()]
     if self:CheckFactionLimitReached(faction, newCharacter, client) then return false, "@limitFaction" end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

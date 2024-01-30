@@ -1,12 +1,11 @@
-﻿function OpenPlayerModelUI(target)
-    AdminStick.IsOpen = true
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function OpenPlayerModelUI(target)
     local frame = vgui.Create("DFrame")
     frame:SetTitle("Change Playermodel")
     frame:SetSize(450, 300)
     frame:Center()
     function frame:OnClose()
         frame:Remove()
-        AdminStick.IsOpen = false
     end
 
     local scroll = vgui.Create("DScrollPanel", frame)
@@ -23,7 +22,6 @@
         local txt = edit:GetValue()
         RunConsoleCommand("say", "/charsetmodel " .. target:SteamID() .. " " .. txt)
         frame:Remove()
-        AdminStick.IsOpen = false
     end
 
     for name, model in SortedPairs(player_manager.AllValidModels()) do
@@ -38,3 +36,4 @@
 
     frame:MakePopup()
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

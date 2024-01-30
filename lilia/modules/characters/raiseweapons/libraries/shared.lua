@@ -1,4 +1,6 @@
-﻿local KEY_BLACKLIST = bit.bor(IN_ATTACK, IN_ATTACK2)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local KEY_BLACKLIST = bit.bor(IN_ATTACK, IN_ATTACK2)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function RaisedWeaponCore:StartCommand(client, command)
     local weapon = client:GetActiveWeapon()
     if not client:isWepRaised() then
@@ -7,6 +9,8 @@ function RaisedWeaponCore:StartCommand(client, command)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function RaisedWeaponCore:CanPlayerThrowPunch(client)
     if not client:isWepRaised() then return false end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

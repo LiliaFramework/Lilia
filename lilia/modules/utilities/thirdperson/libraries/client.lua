@@ -1,11 +1,20 @@
-﻿local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng, diff, fm, sm
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng, diff, fm, sm
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local playerMeta = FindMetaTable("Player")
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local ThirdPerson = CreateClientConVar("tp_enabled", 0, true)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local ClassicThirdPerson = CreateClientConVar("tp_classic", 0, true)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local ThirdPersonVerticalView = CreateClientConVar("tp_vertical", 10, true)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local ThirdPersonHorizontalView = CreateClientConVar("tp_horizontal", 0, true)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local ThirdPersonViewDistance = CreateClientConVar("tp_distance", 50, true)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 crouchFactor = 0
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function ThirdPersonCore:SetupQuickMenu(menu)
     if self.ThirdPersonEnabled then
         menu:addCheck(L"thirdpersonToggle", function(_, state)
@@ -37,6 +46,7 @@ function ThirdPersonCore:SetupQuickMenu(menu)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function ThirdPersonCore:CalcView(client)
     ft = FrameTime()
     if client:CanOverrideView() and client:GetViewEntity() == client then
@@ -64,6 +74,7 @@ function ThirdPersonCore:CalcView(client)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function ThirdPersonCore:CreateMove(cmd)
     local client = LocalPlayer()
     if client:CanOverrideView() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:GetViewEntity() == client then
@@ -77,6 +88,7 @@ function ThirdPersonCore:CreateMove(cmd)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function ThirdPersonCore:InputMouseApply(_, x, y, _)
     local client = LocalPlayer()
     if not client.camAng then client.camAng = Angle(0, 0, 0) end
@@ -87,16 +99,19 @@ function ThirdPersonCore:InputMouseApply(_, x, y, _)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function ThirdPersonCore:PlayerButtonDown(_, button)
     local ThirdPersonIsEnabled = ThirdPerson:GetInt() == 1
     if self.ThirdPersonEnabled and button == KEY_F4 and IsFirstTimePredicted() then ThirdPerson:SetInt(ThirdPersonIsEnabled and 0 or 1) end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function ThirdPersonCore:ShouldDrawLocalPlayer()
     local client = LocalPlayer()
     if client:GetViewEntity() == client and not IsValid(client:GetVehicle()) and client:CanOverrideView() then return true end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function ThirdPersonCore:EntityEmitSound(data)
     local steps = {".stepleft", ".stepright"}
     local ThirdPersonIsEnabled = ThirdPerson:GetInt() == 1
@@ -107,6 +122,7 @@ function ThirdPersonCore:EntityEmitSound(data)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function ThirdPersonCore:PrePlayerDraw(drawnClient)
     local client = LocalPlayer()
     local clientPos = client:GetShootPos()
@@ -158,10 +174,13 @@ function ThirdPersonCore:PrePlayerDraw(drawnClient)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:CanOverrideView()
     local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
     if IsValid(lia.gui.char) and lia.gui.char:IsVisible() then return false end
     return ThirdPerson:GetBool() and not IsValid(self:GetVehicle()) and ThirdPersonCore.ThirdPersonEnabled and IsValid(self) and self:getChar() and not IsValid(ragdoll)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 concommand.Add("tp_toggle", function() ThirdPerson:SetInt(ThirdPerson:GetInt() == 0 and 1 or 0) end)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

@@ -1,4 +1,5 @@
-﻿function lia.command.findPlayer(client, name)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function lia.command.findPlayer(client, name)
     if isstring(name) then
         if name == "^" then
             return client
@@ -23,6 +24,7 @@
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.command.findFaction(client, name)
     if lia.faction.teams[name] then return lia.faction.teams[name] end
     for _, v in ipairs(lia.faction.indices) do
@@ -32,6 +34,7 @@ function lia.command.findFaction(client, name)
     client:notifyLocalized("invalidFaction")
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.command.findPlayerSilent(client, name)
     local target = type(name) == "string" and lia.util.findPlayer(name) or NULL
     if type(name) == "string" and name == "@" then
@@ -42,6 +45,7 @@ function lia.command.findPlayerSilent(client, name)
     if IsValid(target) then return target end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.command.findFaction(client, name)
     if lia.faction.teams[name] then return lia.faction.teams[name] end
     for _, v in ipairs(lia.faction.indices) do
@@ -51,6 +55,7 @@ function lia.command.findFaction(client, name)
     client:notifyLocalized("invalidFaction")
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.command.run(client, command, arguments)
     command = lia.command.list[command:lower()]
     if command then
@@ -72,6 +77,7 @@ function lia.command.run(client, command, arguments)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.command.parse(client, text, realCommand, arguments)
     if realCommand or text:utf8sub(1, 1) == "/" then
         local match = realCommand or text:lower():match("/" .. "([_%w]+)")
@@ -98,3 +104,4 @@ function lia.command.parse(client, text, realCommand, arguments)
     end
     return false
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

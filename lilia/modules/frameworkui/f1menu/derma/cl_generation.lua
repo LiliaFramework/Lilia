@@ -1,4 +1,5 @@
-﻿function F1MenuCore:GenerateRules()
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function F1MenuCore:GenerateRules()
     local body = "<h1>Game Server Rules</h1>"
     -- Introduction
     body = body .. "<p>Welcome to our game server! To ensure a fun and fair gaming experience for everyone, please abide by the following rules:</p>"
@@ -31,6 +32,7 @@
     return body
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function F1MenuCore:GenerateTutorial()
     local body = "<h1>How to Make Perfect Scrambled Eggs</h1>"
     -- Introduction
@@ -73,3 +75,4 @@ function F1MenuCore:GenerateTutorial()
     body = body .. "<p>Transfer your scrambled eggs to a plate, and they're ready to enjoy! Season with additional salt and pepper if needed.</p>"
     return body
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

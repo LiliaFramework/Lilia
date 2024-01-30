@@ -1,4 +1,5 @@
-﻿function SalaryCore:CreateSalaryTimer(client)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function SalaryCore:CreateSalaryTimer(client)
     if not client:getChar() then return end
     local character = client:getChar()
     local timerID = "liaSalary" .. client:SteamID()
@@ -27,16 +28,20 @@
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function SalaryCore:PlayerLoadedChar(client, _, _)
     hook.Run("CreateSalaryTimer", client)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function SalaryCore:OnReloaded()
     for _, client in ipairs(player.GetAll()) do
         hook.Run("CreateSalaryTimer", client)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function SalaryCore:GetSalaryAmount(client, faction, _)
     if faction.index == FACTION_STAFF or client.HasWarning then return 0 end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

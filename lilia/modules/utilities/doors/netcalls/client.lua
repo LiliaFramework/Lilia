@@ -1,4 +1,5 @@
-﻿netstream.Hook("doorMenu", function(entity, access, door2)
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+netstream.Hook("doorMenu", function(entity, access, door2)
     if IsValid(lia.gui.door) then return lia.gui.door:Remove() end
     if IsValid(entity) then
         lia.gui.door = vgui.Create("liaDoorMenu")
@@ -6,6 +7,7 @@
     end
 end)
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 netstream.Hook("doorPerm", function(door, client, access)
     local panel = door.liaPanel
     if IsValid(panel) and IsValid(client) then
@@ -18,3 +20,4 @@ netstream.Hook("doorPerm", function(door, client, access)
         end
     end
 end)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

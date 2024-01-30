@@ -1,10 +1,13 @@
-﻿local GM = GM or GAMEMODE
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local GM = GM or GAMEMODE
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local defaultAngleData = {
     ["models/items/car_battery01.mdl"] = Angle(-15, 180, 0),
     ["models/props_junk/harpoon002a.mdl"] = Angle(0, 0, 0),
     ["models/props_junk/propane_tank001a.mdl"] = Angle(-90, 0, 0),
 }
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:OnPlayerInteractItem(client, action, item)
     if isentity(item) then
         if IsValid(item) then
@@ -21,6 +24,7 @@ function GM:OnPlayerInteractItem(client, action, item)
     lia.log.add(client, "itemUse", action, item)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerSay(client, message)
     local chatType, message, anonymous = lia.chat.parse(client, message, true)
     if (chatType == "ic") and lia.command.parse(client, message) then return "" end
@@ -34,6 +38,7 @@ function GM:PlayerSay(client, message)
     return ""
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:GetGameDescription()
     if lia.config.GamemodeName ~= "A Lilia Gamemode" then
         return lia.config.GamemodeName
@@ -43,10 +48,12 @@ function GM:GetGameDescription()
     return lia.config.GamemodeName
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:OnChatReceived()
     if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerSpawn(client)
     client:SetNoDraw(false)
     client:UnLock()
@@ -58,6 +65,7 @@ function GM:PlayerSpawn(client)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:EntityTakeDamage(entity, dmgInfo)
     if IsValid(entity.liaPlayer) then
         if dmgInfo:IsDamageType(DMG_CRUSH) then
@@ -73,6 +81,7 @@ function GM:EntityTakeDamage(entity, dmgInfo)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:KeyPress(client, key)
     if key == IN_ATTACK2 and IsValid(client.Grabbed) then
         client:DropObject(client.Grabbed)
@@ -109,6 +118,7 @@ function GM:KeyPress(client, key)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:KeyRelease(client, key)
     if key == IN_ATTACK2 then
         local wep = client:GetActiveWeapon()
@@ -116,15 +126,18 @@ function GM:KeyRelease(client, key)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:EntityNetworkedVarChanged(entity, varName, _, newVal)
     if varName == "Model" and entity.SetModel then hook.Run("PlayerModelChanged", entity, newVal) end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerUse(client, _)
     if client:getNetVar("handcuffed") then return false end
     return true
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerInitialSpawn(client)
     if client:IsBot() then
         local botID = os.time()
@@ -165,6 +178,7 @@ function GM:PlayerInitialSpawn(client)
     hook.Run("PostPlayerInitialSpawn", client)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerLoadout(client)
     local character = client:getChar()
     if client.liaSkipLoadout then
@@ -193,6 +207,7 @@ function GM:PlayerLoadout(client)
     client:SelectWeapon("lia_hands")
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PostPlayerLoadout(client)
     local character = client:getChar()
     if not (IsValid(client) or character) then return end
@@ -200,6 +215,7 @@ function GM:PostPlayerLoadout(client)
     client:SetupHands()
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerDisconnected(client)
     client:saveLiliaData()
     local character = client:getChar()
@@ -226,14 +242,17 @@ function GM:PlayerDisconnected(client)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerAuthed(client, steamID)
     lia.log.add(client, "playerConnected", client, steamID)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerHurt(client, attacker, health, damage)
     lia.log.add(client, "playerHurt", attacker:IsPlayer() and attacker:Name() or attacker:GetClass(), damage, health)
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:GetPreferredCarryAngles(entity)
     if entity.preferedAngle then return entity.preferedAngle end
     local class = entity:GetClass()
@@ -249,6 +268,7 @@ function GM:GetPreferredCarryAngles(entity)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerDeath(client, _, _)
     local char = client:getChar()
     if not char then return end
@@ -259,6 +279,7 @@ function GM:PlayerDeath(client, _, _)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:InitializedSchema()
     local persistString = GetConVar("sbox_persist"):GetString()
     if persistString == "" or string.StartWith(persistString, "lia_") then
@@ -267,12 +288,14 @@ function GM:InitializedSchema()
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:OnServerLog(client, logType, ...)
     for _, v in pairs(lia.util.getAdmins()) do
         if hook.Run("CanPlayerSeeLog", v, logType) ~= false then lia.log.send(v, lia.log.getString(client, logType, ...)) end
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:OnCharVarChanged(char, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
         for _, v in pairs(lia.char.varHooks[varName]) do
@@ -281,6 +304,7 @@ function GM:OnCharVarChanged(char, varName, oldVar, newVar)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:InitializedModules()
     for _, model in pairs(lia.config.PlayerModelTposingFixer) do
         lia.anim.setModelClass(model, "player")
@@ -296,6 +320,7 @@ function GM:InitializedModules()
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:Move(client, moveData)
     local char = client:getChar()
     if not char then return end
@@ -320,6 +345,7 @@ function GM:Move(client, moveData)
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:InitPostEntity()
     if SERVER then
         lia.faction.formatModelData()
@@ -341,26 +367,33 @@ function GM:InitPostEntity()
     end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:CanDrive(client)
     if not client:IsSuperAdmin() then return false end
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerSpray(_)
     return true
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerDeathSound()
     return true
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:CanPlayerSuicide(_)
     return false
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:AllowPlayerPickup(_, _)
     return false
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerShouldTakeDamage(client, _)
     return client:getChar() ~= nil
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
