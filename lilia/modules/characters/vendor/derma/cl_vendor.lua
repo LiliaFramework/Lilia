@@ -23,7 +23,7 @@ function PANEL:Init()
     self.leave:SetTextColor(color_white)
     self.leave:SetContentAlignment(9)
     self.leave:SetExpensiveShadow(2, color_black)
-    self.leave.DoClick = function(button) self:Remove() end
+    self.leave.DoClick = function() self:Remove() end
     self.leave:SizeToContents()
     self.leave:SetPaintBackground(false)
     self.leave.Paint = function() end
@@ -35,7 +35,7 @@ function PANEL:Init()
         self.editor:SetTextColor(color_white)
         self.editor:SetContentAlignment(9)
         self.editor:SetExpensiveShadow(2, color_black)
-        self.editor.DoClick = function(button) vgui.Create("liaVendorEditor"):SetZPos(99) end
+        self.editor.DoClick = function() vgui.Create("liaVendorEditor"):SetZPos(99) end
         self.editor:SizeToContents()
         self.editor:SetPaintBackground(false)
         self.leave.x = self.leave.x + 16 + self.leave:GetWide() * 0.5
