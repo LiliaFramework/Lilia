@@ -30,7 +30,7 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function chat.AddText(...)
     local show = true
-    if IsValid(MODULE.panel) then show = MODULE.panel:addText(...) end
+    if IsValid(ChatboxCore.panel) then show = ChatboxCore.panel:addText(...) end
     if show then chat.liaAddText(...) end
 end
 
@@ -48,7 +48,7 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:ChatAddText(text, ...)
-    if MODULE.ChatSizeDiff then
+    if self.ChatSizeDiff then
         local chatText = {...}
         local chatMode = #chatText <= 4 and chatText[2] or chatText[3]
         if not chatMode or istable(chatMode) then
@@ -74,9 +74,9 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 concommand.Add("fixchatplz", function()
-    if IsValid(MODULE.panel) then
-        MODULE.panel:Remove()
-        MODULE:createChat()
+    if IsValid(ChatboxCore.panel) then
+        ChatboxCore.panel:Remove()
+        ChatboxCore:createChat()
     end
 end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

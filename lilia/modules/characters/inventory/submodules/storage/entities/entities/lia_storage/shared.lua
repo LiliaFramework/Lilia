@@ -18,6 +18,6 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function ENT:getStorageInfo()
     self.lowerModel = self.lowerModel or self:GetModel()
-    return MODULE.StorageDefinitions[self.lowerModel]
+    return LiliaStorage.StorageDefinitions[self.lowerModel]
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

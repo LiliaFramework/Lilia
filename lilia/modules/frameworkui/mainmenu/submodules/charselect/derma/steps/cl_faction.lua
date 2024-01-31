@@ -14,7 +14,7 @@ function PANEL:Init()
         surface.DrawRect(0, 0, w, h)
     end
 
-    self.faction:SetTextColor(MODULE.ColorText)
+    self.faction:SetTextColor(MainMenu.ColorText)
     self.faction.OnSelect = function(_, _, _, id) self:onFactionSelected(lia.faction.teams[id]) end
     self.desc = self:addLabel("desc")
     self.desc:DockMargin(0, 8, 0, 0)

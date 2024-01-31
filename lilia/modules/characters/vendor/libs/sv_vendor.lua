@@ -76,7 +76,7 @@ end
 EDITOR.useMoney = function(vendor, _)
     local useMoney = net.ReadBool()
     if useMoney then
-        vendor:setMoney(MODULE.DefaultVendorMoney)
+        vendor:setMoney(VendorCore.DefaultVendorMoney)
     else
         vendor:setMoney(nil)
     end

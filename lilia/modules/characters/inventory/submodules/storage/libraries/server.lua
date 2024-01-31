@@ -131,22 +131,22 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:EntityRemoved(entity)
-    MODULE.Vehicles[entity] = nil
-    if not MODULE:isSuitableForTrunk(entity) then return end
+    self.Vehicles[entity] = nil
+    if not self:isSuitableForTrunk(entity) then return end
     local storageInv = lia.inventory.instances[entity:getNetVar("inv")]
     if storageInv then storageInv:delete() end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:OnEntityCreated(entity)
-    if not MODULE:isSuitableForTrunk(entity) then return end
+    if not self:isSuitableForTrunk(entity) then return end
     if entity:IsSimfphysCar() then netstream.Start(nil, "trunkInitStorage", entity) end
     self:InitializeStorage(entity)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:PlayerInitialSpawn(client)
-    netstream.Start(client, "trunkInitStorage", MODULE.Vehicles)
+    netstream.Start(client, "trunkInitStorage", self.Vehicles)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

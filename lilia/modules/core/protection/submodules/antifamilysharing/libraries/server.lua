@@ -7,7 +7,7 @@ function MODULE:PlayerAuthed(client, steamid)
     if self.FamilySharingEnabled and OwnerSteamID64 ~= steamID64 then
         client:Kick("Sorry! We do not allow family-shared accounts in this server!")
         self:NotifyAdmin(SteamName .. " (" .. SteamID .. ") kicked for family sharing.")
-    elseif WhitelistCore and table.HasValue(MODULE.BlacklistedSteamID64, OwnerSteamID64) then
+    elseif WhitelistCore and table.HasValue(WhitelistCore.BlacklistedSteamID64, OwnerSteamID64) then
         client:Ban("You are using an account whose family share is blacklisted from this server!")
         self:NotifyAdmin(SteamName .. " (" .. SteamID .. ") was banned for family sharing ALTing when blacklisting.")
     end

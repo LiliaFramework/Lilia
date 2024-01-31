@@ -6,11 +6,11 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:InitializeStorage(entity)
-    if MODULE.Vehicles[entity] then return end
-    MODULE.Vehicles[entity] = true
+    if self.Vehicles[entity] then return end
+    self.Vehicles[entity] = true
     if SERVER then
         entity.receivers = {}
-        lia.inventory.instance(MODULE.VehicleTrunk.invType, MODULE.VehicleTrunk.invData):next(function(inv)
+        lia.inventory.instance(self.VehicleTrunk.invType, self.VehicleTrunk.invData):next(function(inv)
             inv.isStorage = true
             entity:setNetVar("inv", inv:getID())
             hook.Run("StorageInventorySet", self, inv, true)

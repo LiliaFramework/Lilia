@@ -5,7 +5,7 @@ function MODULE:CanTool(client, _, tool)
     local toolobj = client:GetActiveWeapon():GetToolObject()
     local validEntity = IsValid(entity)
     if tool == "adv_duplicator" and IsValid(client) and (client:getChar():hasFlags("t") or client:isStaffOnDuty()) and CAMI.PlayerHasAccess(client, privilege, nil) then
-        if (table.HasValue(MODULE.DuplicatorBlackList, entity) or entity.NoDuplicate) and validEntity then return false end
+        if (table.HasValue(PermissionCore.DuplicatorBlackList, entity) or entity.NoDuplicate) and validEntity then return false end
         if toolobj.Entities then
             for _, v in pairs(toolobj.Entities) do
                 if v.ModelScale > 10 then

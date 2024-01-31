@@ -87,7 +87,7 @@ function PANEL:onFinish()
         self:showError(err)
     end
 
-    MODULE:createCharacter(self.context):next(function()
+    MainMenu:createCharacter(self.context):next(function()
         onResponse()
         if IsValid(lia.gui.character) then lia.gui.character:showContent() end
     end, onFail)

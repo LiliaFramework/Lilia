@@ -233,7 +233,7 @@ function MODULE:BuildHelpMenu(tabs)
         end
     end
 
-    if self.RulesEnabled then tabs["Rules"] = function() return MODULE:GenerateRules() end end
-    if self.TutorialEnabled then tabs["Tutorial"] = function() return MODULE:GenerateTutorial() end end
+    if self.RulesEnabled then tabs["Rules"] = function() return F1MenuCore:GenerateRules() end end
+    if self.TutorialEnabled then tabs["Tutorial"] = function() return F1MenuCore:GenerateTutorial() end end
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

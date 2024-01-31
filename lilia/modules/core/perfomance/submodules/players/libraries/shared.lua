@@ -10,17 +10,17 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:GetPlayerData(client)
-    return MODULE.tblPlayers[client:EntIndex()]
+    return self.tblPlayers[client:EntIndex()]
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:RemovePlayer(client)
-    MODULE.tblPlayers[client:EntIndex()] = nil
+    self.tblPlayers[client:EntIndex()] = nil
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:RegisterPlayer(client)
-    MODULE.tblPlayers[client:EntIndex()] = {
+    self.tblPlayers[client:EntIndex()] = {
         Player = client,
         Expanding = false,
         Expanded = false,
@@ -93,10 +93,10 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:PlayerExpandedUpdate()
-    for k, data in pairs(MODULE.tblPlayers) do
+    for k, data in pairs(self.tblPlayers) do
         if not data or not data.Expanded then continue end
         if not IsValid(data.Player) then
-            MODULE.tblPlayers[k] = nil
+            self.tblPlayers[k] = nil
             continue
         end
 
@@ -105,5 +105,5 @@ function MODULE:PlayerExpandedUpdate()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-timer.Create("PlayerExpandedUpdate", 1, 0, function() MODULE:PlayerExpandedUpdate() end)
+timer.Create("PlayerExpandedUpdate", 1, 0, function() PlayerPerfomanceCore:PlayerExpandedUpdate() end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

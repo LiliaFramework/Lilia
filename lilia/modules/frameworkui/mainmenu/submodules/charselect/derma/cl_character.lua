@@ -71,12 +71,12 @@ function PANEL:CreateBG()
             </style>
         </head>
         <body>
-            <iframe src="]] .. "https://www.youtube.com/embed/" .. MODULE.BackgroundURL .. "?autoplay=1&controls=0&loop=1&mute=0" .. [[" frameborder="0" allowfullscreen style="width: 100%; height: 100%; pointer-events: none;"></iframe>
+            <iframe src="]] .. "https://www.youtube.com/embed/" .. MainMenu.BackgroundURL .. "?autoplay=1&controls=0&loop=1&mute=0" .. [[" frameborder="0" allowfullscreen style="width: 100%; height: 100%; pointer-events: none;"></iframe>
         </body>
         </html>
     ]])
     self.background:SetAllowLua(true) -- Enable running Lua scripts in the DHTML panel
-    if MODULE.CharMenuBGInputDisabled then
+    if MainMenu.CharMenuBGInputDisabled then
         self.background:SetMouseInputEnabled(false) -- Disable mouse input
         self.background:SetKeyboardInputEnabled(false) -- Disable keyboard input
     end
@@ -84,10 +84,10 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:loadBackground()
-    local url = MODULE.BackgroundURL
-    local logo = MODULE.LogoURL
+    local url = MainMenu.BackgroundURL
+    local logo = MainMenu.LogoURL
     if url ~= "" then
-        if MODULE.BackgroundIsYoutubeVideo then
+        if MainMenu.BackgroundIsYoutubeVideo then
             self:CreateBG()
         elseif url:find("%S") then
             self.background = self:Add("DHTML")
@@ -110,7 +110,7 @@ function PANEL:loadBackground()
 
         self.background:MoveToBack()
         self.background:SetZPos(-999)
-        if MODULE.CharMenuBGInputDisabled then
+        if MainMenu.CharMenuBGInputDisabled then
             self.background:SetMouseInputEnabled(false)
             self.background:SetKeyboardInputEnabled(false)
         end
@@ -239,17 +239,17 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:hoverSound()
-    LocalPlayer():EmitSound(unpack(MODULE.CharHover))
+    LocalPlayer():EmitSound(unpack(MainMenu.CharHover))
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:clickSound()
-    LocalPlayer():EmitSound(unpack(MODULE.CharClick))
+    LocalPlayer():EmitSound(unpack(MainMenu.CharClick))
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:warningSound()
-    LocalPlayer():EmitSound(unpack(MODULE.CharWarning))
+    LocalPlayer():EmitSound(unpack(MainMenu.CharWarning))
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

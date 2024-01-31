@@ -17,7 +17,7 @@ lia.command.add("storagelock", {
                 client:notifyLocalized("storPassRmv")
             end
 
-            MODULE:SaveData()
+            LiliaStorage:SaveData()
         else
             client:notifyLocalized("invalid", "Entity")
         end
@@ -30,8 +30,8 @@ lia.command.add("trunk", {
     adminOnly = false,
     onRun = function(client)
         local entity = client:GetEyeTrace().Entity
-        local maxDistance = MODULE.TrunkOpenDistance
-        local openTime = MODULE.TrunkOpenTime
+        local maxDistance = LiliaStorage.TrunkOpenDistance
+        local openTime = LiliaStorage.TrunkOpenTime
         local clientPos = client:GetPos():Distance(entity:GetPos())
         if not hook.Run("isSuitableForTrunk", entity) then
             client:notify("You're not looking at any vehicle!", client)

@@ -6,7 +6,7 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:ScoreboardShow()
-    if LocalPlayer():getChar() and (PIM and not MODULE:CheckPossibilities()) then
+    if LocalPlayer():getChar() and (PIM and not PIM:CheckPossibilities()) then
         local liaMenu = vgui.Create("liaMenu")
         liaMenu:setActiveTab("Scoreboard")
         return true

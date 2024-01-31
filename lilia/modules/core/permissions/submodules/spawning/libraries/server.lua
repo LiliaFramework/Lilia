@@ -66,7 +66,7 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerSpawnVehicle(client, _, name, _)
     if IsValid(client) and client:getChar():hasFlags("C") or CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Cars", nil) then
-        if table.HasValue(MODULE.RestrictedVehicles, name) and not CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Restricted Cars", nil) then
+        if table.HasValue(PermissionCore.RestrictedVehicles, name) and not CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Restricted Cars", nil) then
             client:notify("You can't spawn this vehicle since it's restricted!")
             return false
         end
@@ -77,13 +77,13 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerSpawnedNPC(client, entity)
-    if MODULE.NPCsDropWeapons then entity:SetKeyValue("spawnflags", "8192") end
+    if PermissionCore.NPCsDropWeapons then entity:SetKeyValue("spawnflags", "8192") end
     self:PlayerSpawnedEntity(client, entity, entity:GetClass(), "NPC", true)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerSpawnedVehicle(client, entity)
-    local delay = MODULE.PlayerSpawnVehicleDelay
+    local delay = PermissionCore.PlayerSpawnVehicleDelay
     if not CAMI.PlayerHasAccess(client, "Spawn Permissions - No Car Spawn Delay", nil) then client.NextVehicleSpawn = SysTime() + delay end
     self:PlayerSpawnedEntity(client, entity, entity:GetClass(), "Vehicle", true)
 end

@@ -40,13 +40,13 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function ENT:OnRemove()
     if not self.liaForceDelete then
-        if not lia.entityDataLoaded or not MODULE.loadedData then return end
+        if not lia.entityDataLoaded or not LiliaStorage.loadedData then return end
         if self.liaIsSafe then return end
         if lia.shuttingDown then return end
     end
 
     self:deleteInventory()
-    MODULE:SaveData()
+    LiliaStorage:SaveData()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
@@ -90,6 +90,6 @@ function ENT:Use(activator)
         self:openInv(activator)
     end
 
-    activator.liaNextOpen = CurTime() + MODULE.StorageOpenTime * 1.5
+    activator.liaNextOpen = CurTime() + LiliaStorage.StorageOpenTime * 1.5
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

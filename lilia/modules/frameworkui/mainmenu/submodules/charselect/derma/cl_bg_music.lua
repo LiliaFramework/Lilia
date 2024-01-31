@@ -10,12 +10,12 @@ function PANEL:Init()
 
     self:SetVisible(false)
     timer.Remove("liaMusicFader")
-    local source = MODULE.Music
+    local source = MainMenu.Music
     if not source:find("%S") then return end
     if source:find("http") then
         sound.PlayURL(source, "noplay", function(music, errorID, fault)
             if music then
-                music:SetVolume(MODULE.MusicVolume)
+                music:SetVolume(MainMenu.MusicVolume)
                 lia.menuMusic = music
                 lia.menuMusic:Play()
             else
@@ -26,7 +26,7 @@ function PANEL:Init()
     else
         sound.PlayFile("sound/" .. source, "noplay", function(music, errorID, fault)
             if music then
-                music:SetVolume(MODULE.MusicVolume)
+                music:SetVolume(MainMenu.MusicVolume)
                 lia.menuMusic = music
                 lia.menuMusic:Play()
             else
@@ -47,9 +47,9 @@ function PANEL:OnRemove()
         if lia.menuMusic then
             fraction = 1 - math.TimeFraction(start, finish, RealTime())
             if music.ChangeVolume then
-                music:ChangeVolume(fraction * MODULE.MusicVolume, 0.1)
+                music:ChangeVolume(fraction * MainMenu.MusicVolume, 0.1)
             elseif music.SetVolume then
-                music:SetVolume(fraction * MODULE.MusicVolume)
+                music:SetVolume(fraction * MainMenu.MusicVolume)
             end
 
             if fraction <= 0 then

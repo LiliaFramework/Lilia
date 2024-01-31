@@ -2,9 +2,9 @@
 net.Receive("AFKWarning", function()
     local enable = net.ReadBool()
     if enable then
-        MODULE:EnableWarning()
+        AFKKickerCore:EnableWarning()
     else
-        MODULE:DisableWarning()
+        AFKKickerCore:DisableWarning()
     end
 end)
 

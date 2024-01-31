@@ -59,8 +59,8 @@ function MODULE:CalcView(client)
         curAng = client.camAng or Angle(0, 0, 0)
         view = {}
         traceData = {}
-        traceData.start = client:GetPos() + client:GetViewOffset() + curAng:Up() * math.Clamp(ThirdPersonVerticalView:GetInt(), 0, MODULE.MaxValues.height) + curAng:Right() * math.Clamp(ThirdPersonHorizontalView:GetInt(), -MODULE.MaxValues.horizontal, MODULE.MaxValues.horizontal) - client:GetViewOffsetDucked() * .5 * crouchFactor
-        traceData.endpos = traceData.start - curAng:Forward() * math.Clamp(ThirdPersonViewDistance:GetInt(), 0, MODULE.MaxValues.distance)
+        traceData.start = client:GetPos() + client:GetViewOffset() + curAng:Up() * math.Clamp(ThirdPersonVerticalView:GetInt(), 0, self.MaxValues.height) + curAng:Right() * math.Clamp(ThirdPersonHorizontalView:GetInt(), -self.MaxValues.horizontal, self.MaxValues.horizontal) - client:GetViewOffsetDucked() * .5 * crouchFactor
+        traceData.endpos = traceData.start - curAng:Forward() * math.Clamp(ThirdPersonViewDistance:GetInt(), 0, self.MaxValues.distance)
         traceData.filter = client
         view.origin = util.TraceLine(traceData).HitPos
         aimOrigin = view.origin
@@ -75,7 +75,7 @@ function MODULE:CalcView(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MODULE:CreateMove(cmd)
+function self:CreateMove(cmd)
     local client = LocalPlayer()
     if client:CanOverrideView() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:GetViewEntity() == client then
         fm = cmd:GetForwardMove()
@@ -178,7 +178,7 @@ end
 function playerMeta:CanOverrideView()
     local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
     if IsValid(lia.gui.char) and lia.gui.char:IsVisible() then return false end
-    return ThirdPerson:GetBool() and not IsValid(self:GetVehicle()) and MODULE.ThirdPersonEnabled and IsValid(self) and self:getChar() and not IsValid(ragdoll)
+    return ThirdPerson:GetBool() and not IsValid(self:GetVehicle()) and self.ThirdPersonEnabled and IsValid(self) and self:getChar() and not IsValid(ragdoll)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

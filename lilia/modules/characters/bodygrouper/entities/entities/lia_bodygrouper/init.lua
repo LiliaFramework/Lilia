@@ -6,7 +6,7 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function ENT:Initialize()
-    self:SetModel(MODULE.BodygrouperModel)
+    self:SetModel(BodygrouperCore.BodygrouperModel)
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:SetUseType(SIMPLE_USE)

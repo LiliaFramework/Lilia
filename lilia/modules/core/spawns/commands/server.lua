@@ -38,10 +38,10 @@ lia.command.add("spawnadd", {
                     class = ""
                 end
 
-                MODULE.spawns[faction] = MODULE.spawns[faction] or {}
-                MODULE.spawns[faction][class] = MODULE.spawns[faction][class] or {}
-                table.insert(MODULE.spawns[faction][class], client:GetPos())
-                MODULE:SaveData()
+                SpawnsCore.spawns[faction] = SpawnsCore.spawns[faction] or {}
+                SpawnsCore.spawns[faction][class] = SpawnsCore.spawns[faction][class] or {}
+                table.insert(SpawnsCore.spawns[faction][class], client:GetPos())
+                SpawnsCore:SaveData()
                 local name = L(info.name, client)
                 if info2 then name = name .. " (" .. L(info2.name, client) .. ")" end
                 return L("spawnAdded", client, name)
@@ -62,7 +62,7 @@ lia.command.add("respawn", {
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
-            MODULE:PostPlayerLoadout(target)
+            SpawnsCore:PostPlayerLoadout(target)
             client:notify("You teleported " .. target:Nick() .. " back to their faction spawn point.")
         end
     end
@@ -77,7 +77,7 @@ lia.command.add("spawnremove", {
         local position = client:GetPos()
         local radius = tonumber(arguments[1]) or 120
         local i = 0
-        for _, v in pairs(MODULE.spawns) do
+        for _, v in pairs(SpawnsCore.spawns) do
             for _, v2 in pairs(v) do
                 for _, v3 in pairs(v2) do
                     if v3:Distance(position) <= radius then
@@ -88,7 +88,7 @@ lia.command.add("spawnremove", {
             end
         end
 
-        if i > 0 then MODULE:SaveData() end
+        if i > 0 then SpawnsCore:SaveData() end
         return L("spawnDeleted", client, i)
     end
 })
@@ -100,7 +100,7 @@ lia.command.add("returnitems", {
     privilege = "Return Items",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if MODULE.LoseWeapononDeathHuman or MODULE.LoseWeapononDeathNPC then
+        if SpawnsCore.LoseWeapononDeathHuman or SpawnsCore.LoseWeapononDeathNPC then
             if IsValid(target) then
                 if not target.LostItems then
                     client:notify("The target hasn't died recently or they had their items returned already!")

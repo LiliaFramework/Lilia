@@ -3,7 +3,7 @@ util.AddNetworkString("AFKWarning")
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 util.AddNetworkString("AFKAnnounce")
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MODULE:WarnPlayer(client)
+function AFKKickerCore:WarnPlayer(client)
     net.Start("AFKWarning")
     net.WriteBool(true)
     net.Send(client)
@@ -44,19 +44,19 @@ function MODULE:PlayerButtonDown(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-timer.Create("AFKTimer", MODULE.TimerInterval, 0, function()
+timer.Create("AFKTimer", AFKKickerCore.TimerInterval, 0, function()
     local clientCount = player.GetCount()
     local maxPlayers = game.MaxPlayers()
     for _, client in ipairs(player.GetAll()) do
         if not client:getChar() and clientCount < maxPlayers then continue end
-        if table.HasValue(MODULE.AFKAllowedPlayers, client:SteamID64()) or client:IsBot() then continue end
-        client.AFKTime = (client.AFKTime or 0) + MODULE.TimerInterval
-        if client.AFKTime >= MODULE.WarningTime and not client.HasWarning then MODULE:WarnPlayer(client) end
-        if client.AFKTime >= MODULE.WarningTime + MODULE.KickTime then
+        if table.HasValue(AFKKickerCore.AFKAllowedPlayers, client:SteamID64()) or client:IsBot() then continue end
+        client.AFKTime = (client.AFKTime or 0) + AFKKickerCore.TimerInterval
+        if client.AFKTime >= AFKKickerCore.WarningTime and not client.HasWarning then AFKKickerCore:WarnPlayer(client) end
+        if client.AFKTime >= AFKKickerCore.WarningTime + AFKKickerCore.KickTime then
             if clientCount >= maxPlayers then
-                client:Kick(MODULE.KickMessage)
+                client:Kick(AFKKickerCore.KickMessage)
             elseif client:getChar() then
-                MODULE:CharKick(client)
+                AFKKickerCore:CharKick(client)
             end
         end
     end

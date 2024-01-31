@@ -8,7 +8,7 @@ local textureID = surface.GetTextureID("models/effects/portalfunnel_sheet")
 local PANEL = {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 do
-    for _, v in ipairs(MODULE.GamemodeCreators) do
+    for _, v in ipairs(CreditsCore.GamemodeCreators) do
         steamworks.RequestPlayerInfo(v.steamid, function(steamName) v.name = steamName or "Loading..." end)
     end
 end
@@ -69,20 +69,20 @@ PANEL = {}
 function PANEL:Init()
     self.contButton = self:Add("DButton")
     self.contButton:SetFont("liaBigCredits")
-    self.contButton:SetText(MODULE.contributors.desc)
+    self.contButton:SetText(CreditsCore.contributors.desc)
     self.contButton.DoClick = function()
         surface.PlaySound("buttons/button14.wav")
-        gui.OpenURL(MODULE.contributors.url)
+        gui.OpenURL(CreditsCore.contributors.url)
     end
 
     self.contButton.Paint = function() end
     self.contButton:Dock(TOP)
     self.discordButton = self:Add("DButton")
     self.discordButton:SetFont("liaBigCredits")
-    self.discordButton:SetText(MODULE.discord.desc)
+    self.discordButton:SetText(CreditsCore.discord.desc)
     self.discordButton.DoClick = function()
         surface.PlaySound("buttons/button14.wav")
-        gui.OpenURL(MODULE.discord.url)
+        gui.OpenURL(CreditsCore.discord.url)
     end
 
     self.discordButton.Paint = function() end
@@ -157,7 +157,7 @@ function PANEL:Init()
     self.contributors:DockMargin(dockLeft, 0, 0, ScrH * 0.025)
     self.creditPanels = {}
     local curNum = 0
-    for k, v in ipairs(MODULE.GamemodeCreators) do
+    for k, v in ipairs(CreditsCore.GamemodeCreators) do
         if k % 2 ~= 0 then
             self.creditPanels[k] = self:Add("CreditsCreditsList")
             curNum = k
