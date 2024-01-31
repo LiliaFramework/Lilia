@@ -117,7 +117,7 @@ lia.log.addType("playerConnected", function(client, ...)
 end)
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-lia.log.addType("spawned_ent", function(client, group, class, hasName, entityName, entityModel) return string.format("[Group Spawn] %s has spawned a %s with class %s and %s: %s", client:Nick(), group, class, hasName and "Name" or "Model", hasName and entityName or entityModel) end)
+lia.log.addType("spawned_ent", function(client, group, class, hasName, entityName, entityModel) return string.format("%s has spawned a %s with class %s and %s: %s", client:Nick(), group, class, hasName and "Name" or "Model", hasName and entityName or entityModel) end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.log.addType("playerDisconnected", function(client, ...) return string.format("%s[%s] has disconnected from the server.", client:Name(), client:SteamID()) end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

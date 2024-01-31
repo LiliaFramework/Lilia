@@ -15,7 +15,7 @@ function WSCore:OnSlotChanged()
     for k, v in SortedPairs(LocalPlayer():GetWeapons()) do
         if k == self.lastSlot then
             if v.Instructions and string.find(v.Instructions, "%S") then
-                self.markup = markup.Parse("<font=Monofonto24>" .. v.Instructions .. "</font>")
+                self.markup = markup.Parse("<font=liaItemBoldFont>" .. v.Instructions .. "</font>")
                 return
             else
                 self.markup = nil
@@ -74,7 +74,7 @@ function WSCore:HUDPaint()
         end
 
         color.a = math.Clamp(255 - math.TimeFraction(self.lifeTime, self.deathTime, CurTime()) * 255, 0, 255)
-        lia.util.drawText(string.upper(v:GetPrintName()), x, y, color, 0, 0, "liaWeaponSelectorFont")
+        lia.util.drawText(string.upper(v:GetPrintName()), x, y, color, 0, 0, "liaItemBoldFont")
         if k == self.lastSlot and self.markup then
             surface.SetDrawColor(30, 30, 30, color.a * 0.95)
             surface.DrawRect(x + 118, ScrH() * 0.4 - 4, self.markup:GetWidth() + 20, self.markup:GetHeight() + 18)
