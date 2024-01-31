@@ -83,10 +83,11 @@ function GM:LiliaLoaded()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function GM:ModuleLoaded(uniqueID, ModuleGlobal, MODULE)
+function GM:ModuleDependenciesPreLoad(uniqueID, ModuleGlobal, MODULE)
     local ModuleWorkshopContent = MODULE.WorkshopContent
     local ModuleCAMIPermissions = MODULE.CAMIPrivileges
     local IsValidForGlobal = ModuleGlobal ~= "" and ModuleGlobal ~= nil
+    if IsValidForGlobal and uniqueID ~= "schema" then _G[ModuleGlobal] = MODULE end
     if ModuleCAMIPermissions and istable(ModuleCAMIPermissions) then
         for _, privilegeData in ipairs(ModuleCAMIPermissions) do
             local privilegeInfo = {
@@ -114,12 +115,6 @@ function GM:ModuleLoaded(uniqueID, ModuleGlobal, MODULE)
             resource.AddWorkshop(ModuleWorkshopContent)
         end
     end
-end
-
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function GM:ModuleDependenciesPreLoad(uniqueID, ModuleGlobal, MODULE)
-    local IsValidForGlobal = ModuleGlobal ~= "" and ModuleGlobal ~= nil
-    if IsValidForGlobal and uniqueID ~= "schema" then _G[ModuleGlobal] = MODULE end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

@@ -14,13 +14,13 @@ function PANEL:Init()
     local textColor = color_white
     local shadowColor = Color(30, 30, 30, 150)
     self:SetSize(panelWidth, panelHeight)
-    if F1MenuCore .. InfoMenuLocation == "TopLeft" then
+    if F1MenuCore.InfoMenuLocation == "TopLeft" then
         self:SetPos(10, 10)
-    elseif F1MenuCore .. InfoMenuLocation == "TopRight" then
+    elseif F1MenuCore.InfoMenuLocation == "TopRight" then
         self:SetPos(ScrW() - panelWidth - 10, 10)
-    elseif F1MenuCore .. InfoMenuLocation == "BottomLeft" then
+    elseif F1MenuCore.InfoMenuLocation == "BottomLeft" then
         self:SetPos(10, ScrH() - panelHeight - 10)
-    elseif F1MenuCore .. InfoMenuLocation == "BottomRight" then
+    elseif F1MenuCore.InfoMenuLocation == "BottomRight" then
         self:SetPos(ScrW() - panelWidth - 10, ScrH() - panelHeight - 10)
     else
         self:SetPos(ScrW() - panelWidth - 10, 10)

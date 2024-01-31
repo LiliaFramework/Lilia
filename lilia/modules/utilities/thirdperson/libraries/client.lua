@@ -75,7 +75,7 @@ function MODULE:CalcView(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function self:CreateMove(cmd)
+function MODULE:CreateMove(cmd)
     local client = LocalPlayer()
     if client:CanOverrideView() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:GetViewEntity() == client then
         fm = cmd:GetForwardMove()
@@ -102,7 +102,9 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:PlayerButtonDown(_, button)
     local ThirdPersonIsEnabled = ThirdPerson:GetInt() == 1
-    if self.ThirdPersonEnabled and button == KEY_F4 and IsFirstTimePredicted() then ThirdPerson:SetInt(ThirdPersonIsEnabled and 0 or 1) end
+    if self.ThirdPersonEnabled and button == KEY_F4 and IsFirstTimePredicted() then
+        ThirdPerson:SetInt(ThirdPersonIsEnabled and 0 or 1)
+    end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
@@ -178,7 +180,7 @@ end
 function playerMeta:CanOverrideView()
     local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
     if IsValid(lia.gui.char) and lia.gui.char:IsVisible() then return false end
-    return ThirdPerson:GetBool() and not IsValid(self:GetVehicle()) and self.ThirdPersonEnabled and IsValid(self) and self:getChar() and not IsValid(ragdoll)
+    return ThirdPerson:GetBool() and not IsValid(self:GetVehicle()) and ThirdPersonCore.ThirdPersonEnabled and IsValid(self) and self:getChar() and not IsValid(ragdoll)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
