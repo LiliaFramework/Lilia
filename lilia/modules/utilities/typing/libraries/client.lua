@@ -3,21 +3,21 @@ local data = {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local offset1, offset2, offset3, alpha, y
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function TypingCore:StartChat()
+function MODULE:StartChat()
     net.Start("liaTypeStatus")
     net.WriteBool(false)
     net.SendToServer()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function TypingCore:FinishChat()
+function MODULE:FinishChat()
     net.Start("liaTypeStatus")
     net.WriteBool(true)
     net.SendToServer()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function TypingCore:HUDPaint()
+function MODULE:HUDPaint()
     local client = LocalPlayer()
     local ourPos = client:GetPos()
     local time = RealTime() * 5

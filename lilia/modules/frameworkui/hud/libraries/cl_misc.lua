@@ -74,12 +74,12 @@ function strPosAngConv(str)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:ColorBrighten(col)
+function MODULE:ColorBrighten(col)
     return Color(col.r + 10, col.g + 10, col.b + 10, col.a)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:StyleButton(pnl, hoverCol, idleCol, roundCorners, smoothHover)
+function MODULE:StyleButton(pnl, hoverCol, idleCol, roundCorners, smoothHover)
     AccessorFunc(pnl, "color", "Color")
     pnl:SetColor(idleCol)
     if smoothHover or false then
@@ -172,7 +172,7 @@ function follow(pnl1, pnl2, side)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-FrameworkHUD.drawTextEntry = function(panel, w, h)
+MODULE.drawTextEntry = function(panel, w, h)
     if panel:IsEditing() then
         color = color_white
     else

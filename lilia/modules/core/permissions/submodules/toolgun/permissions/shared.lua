@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-ToolGunCore.CAMIPrivileges = {
+MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Remove Blocked Entities",
         MinAccess = "admin",

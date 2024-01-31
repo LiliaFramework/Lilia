@@ -155,7 +155,7 @@ for _, v in pairs(mps) do
         end
     end
 
-    function FrameworkHUD.GetWorkPanel(panel, paddingTop, paddingLeft, paddingRight, paddingBottom, center)
+    function MODULE.GetWorkPanel(panel, paddingTop, paddingLeft, paddingRight, paddingBottom, center)
         center = center or false
         if paddingTop ~= nil and not paddingLeft and not paddingRight and not paddingBottom then
             paddingLeft = paddingTop

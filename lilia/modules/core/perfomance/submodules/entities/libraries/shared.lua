@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function EntityPerfomanceCore:InitializedModules()
+function MODULE:InitializedModules()
     if CLIENT then
         if self.DrawEntityShadows then
             for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
@@ -18,14 +18,14 @@ function EntityPerfomanceCore:InitializedModules()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function EntityPerfomanceCore:InitPostEntity()
+function MODULE:InitPostEntity()
     for _, v in next, list.Get("ThrusterSounds") do
         self.SoundsToMute[v.thruster_soundname] = true
     end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function EntityPerfomanceCore:OnEntityCreated(entity)
+function MODULE:OnEntityCreated(entity)
     if CLIENT then
         if self.DrawEntityShadows then entity:DrawShadow(false) end
     else

@@ -7,7 +7,7 @@ util.AddNetworkString("liaRequestLogs")
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 net.Receive("liaRequestLogs", function(_, client)
     local selectedDate = net.ReadString()
-    local logs = LoggerCore:ReadLogsFromFile(selectedDate)
+    local logs = MODULE:ReadLogsFromFile(selectedDate)
     net.Start("liaDrawLogs")
     net.WriteTable(logs)
     net.Send(client)

@@ -28,7 +28,7 @@ local RULES = {
 }
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:PlayerSpawnedProp(client, model, entity)
+function MODULE:PlayerSpawnedProp(client, model, entity)
     local data = self.StorageDefinitions[model:lower()]
     if not data then return end
     if hook.Run("CanPlayerSpawnStorage", client, entity, data) == false then return end
@@ -55,19 +55,19 @@ function LiliaStorage:PlayerSpawnedProp(client, model, entity)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:CanPlayerSpawnStorage(client, _, info)
+function MODULE:CanPlayerSpawnStorage(client, _, info)
     if client:GetInfoNum("can_spawn_storage", 1) == 0 then return false end
     if not CAMI.PlayerHasAccess(client, "Staff Permissions - Can Spawn Storage", nil) then return false end
     if not info.invType or not lia.inventory.types[info.invType] then return false end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:CanSaveData(_, _)
+function MODULE:CanSaveData(_, _)
     return self.SaveData
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:SaveData()
+function MODULE:SaveData()
     local data = {}
     for _, entity in ipairs(ents.FindByClass("lia_storage")) do
         if hook.Run("CanSaveData", entity, entity:getInv()) == false then
@@ -82,12 +82,12 @@ function LiliaStorage:SaveData()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:StorageItemRemoved(_, _)
+function MODULE:StorageItemRemoved(_, _)
     self:SaveData()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:LoadData()
+function MODULE:LoadData()
     local data = self:getData()
     if not data then return end
     for _, info in ipairs(data) do
@@ -124,33 +124,33 @@ function LiliaStorage:LoadData()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:CanPlayerInteractItem(_, action, itemObject, _)
+function MODULE:CanPlayerInteractItem(_, action, itemObject, _)
     local inventory = lia.inventory.instances[itemObject.invID]
     if inventory and inventory.isStorage == true and PROHIBITED_ACTIONS[action] then return false, "forbiddenActionStorage" end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:EntityRemoved(entity)
-    LiliaStorage.Vehicles[entity] = nil
-    if not LiliaStorage:isSuitableForTrunk(entity) then return end
+function MODULE:EntityRemoved(entity)
+    MODULE.Vehicles[entity] = nil
+    if not MODULE:isSuitableForTrunk(entity) then return end
     local storageInv = lia.inventory.instances[entity:getNetVar("inv")]
     if storageInv then storageInv:delete() end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:OnEntityCreated(entity)
-    if not LiliaStorage:isSuitableForTrunk(entity) then return end
+function MODULE:OnEntityCreated(entity)
+    if not MODULE:isSuitableForTrunk(entity) then return end
     if entity:IsSimfphysCar() then netstream.Start(nil, "trunkInitStorage", entity) end
     self:InitializeStorage(entity)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:PlayerInitialSpawn(client)
-    netstream.Start(client, "trunkInitStorage", LiliaStorage.Vehicles)
+function MODULE:PlayerInitialSpawn(client)
+    netstream.Start(client, "trunkInitStorage", MODULE.Vehicles)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:StorageInventorySet(_, inventory, isCar)
+function MODULE:StorageInventorySet(_, inventory, isCar)
     if isCar then
         inventory:addAccessRule(RULES.AccessIfCarStorageReceiver)
     else

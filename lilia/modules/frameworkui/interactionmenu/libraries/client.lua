@@ -1,7 +1,7 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 PIM_Frame = nil
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PIM:ScoreboardShow()
+function MODULE:ScoreboardShow()
     if LocalPlayer():getChar() and self:CheckPossibilities() then
         self:OpenPIM()
         return true
@@ -9,7 +9,7 @@ function PIM:ScoreboardShow()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PIM:OpenPIM()
+function MODULE:OpenPIM()
     if IsValid(PIM_Frame) then PIM_Frame:Close() end
     local frame = vgui.Create("DFrame")
     frame:SetSize(300, 120)

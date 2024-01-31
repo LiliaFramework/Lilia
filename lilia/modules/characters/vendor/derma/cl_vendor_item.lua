@@ -41,7 +41,7 @@ function PANEL:setIsSelling(isSelling)
 end
 
 local function clickEffects()
-    LocalPlayer():EmitSound(unpack(VendorCore.VendorClick))
+    LocalPlayer():EmitSound(unpack(MODULE.VendorClick))
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

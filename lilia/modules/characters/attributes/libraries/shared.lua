@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AttributesCore:CalcStaminaChange(client)
+function MODULE:CalcStaminaChange(client)
     local character = client:getChar()
     if not character or client:IsNoClipping() then return 0 end
     local walkSpeed = client:GetWalkSpeed()
@@ -32,12 +32,12 @@ function AttributesCore:CalcStaminaChange(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AttributesCore:StartCommand(client, cmd)
+function MODULE:StartCommand(client, cmd)
     if self.StaminaSlowdown and (not client:IsNoClipping() and client:getNetVar("brth", false) and cmd:KeyDown(IN_JUMP)) then cmd:RemoveKey(IN_JUMP) end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AttributesCore:SetupMove(client, cMoveData)
+function MODULE:SetupMove(client, cMoveData)
     if not self.StaminaSlowdown then return end
     if client:getNetVar("brth", false) then
         cMoveData:SetMaxClientSpeed(client:GetWalkSpeed())

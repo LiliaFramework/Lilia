@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function StreamRadiosCompatibility:LoadData()
+function MODULE:LoadData()
     local savedTable = self:getData() or {}
     for _, v in ipairs(savedTable) do
         local entity = StreamRadioLib.SpawnRadio(v.client, v.mdl, v.pos, v.ang, v.settings)
@@ -13,7 +13,7 @@ function StreamRadiosCompatibility:LoadData()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function StreamRadiosCompatibility:SaveData()
+function MODULE:SaveData()
     local savedTable = {}
     for _, v in ipairs(ents.FindByClass("sent_streamradio")) do
         table.insert(savedTable, {

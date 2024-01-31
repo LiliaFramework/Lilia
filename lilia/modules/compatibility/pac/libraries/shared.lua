@@ -1,44 +1,44 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PACCompatibility:setupPACDataFromItems()
+function MODULE:setupPACDataFromItems()
     for itemType, item in pairs(lia.item.list) do
         if istable(item.pacData) then self.partData[itemType] = item.pacData end
     end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PACCompatibility:InitializedModules()
+function MODULE:InitializedModules()
     if CLIENT then hook.Remove("HUDPaint", "pac_in_editor") end
     timer.Simple(1, function() self:setupPACDataFromItems() end)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PACCompatibility:isAllowedToUsePAC(client)
+function MODULE:isAllowedToUsePAC(client)
     if CAMI.PlayerHasAccess(client, "Staff Permissions - Can Use PAC3", nil) or client:getChar():hasFlags("P") then return true end
     return false
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PACCompatibility:CanWearParts(client)
+function MODULE:CanWearParts(client)
     return self:isAllowedToUsePAC(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PACCompatibility:PrePACEditorOpen(client)
+function MODULE:PrePACEditorOpen(client)
     return self:isAllowedToUsePAC(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PACCompatibility:PrePACConfigApply(client)
+function MODULE:PrePACConfigApply(client)
     return self:isAllowedToUsePAC(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PACCompatibility:TryViewModel(entity)
+function MODULE:TryViewModel(entity)
     return entity == pac.LocalPlayer:GetViewModel() and pac.LocalPlayer or entity
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PACCompatibility:PAC3RegisterEvents()
+function MODULE:PAC3RegisterEvents()
     local playerMeta = FindMetaTable("Player")
     local events = {
         {

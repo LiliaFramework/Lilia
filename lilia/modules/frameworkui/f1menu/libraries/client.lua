@@ -10,7 +10,7 @@ local HELP_DEFAULT = [[
     </div>
 ]]
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function F1MenuCore:PlayerBindPress(client, bind, pressed)
+function MODULE:PlayerBindPress(client, bind, pressed)
     if bind:lower():find("gm_showhelp") and pressed then
         if IsValid(lia.gui.menu) then
             lia.gui.menu:remove()
@@ -22,7 +22,7 @@ function F1MenuCore:PlayerBindPress(client, bind, pressed)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function F1MenuCore:OnCharInfoSetup(infoPanel)
+function MODULE:OnCharInfoSetup(infoPanel)
     if not IsValid(infoPanel) then return end
     local mdl = infoPanel
     local entity = mdl.Entity
@@ -60,7 +60,7 @@ function F1MenuCore:OnCharInfoSetup(infoPanel)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function F1MenuCore:CreateMenuButtons(tabs)
+function MODULE:CreateMenuButtons(tabs)
     if hook.Run("CanPlayerViewInventory") ~= false then
         tabs["inv"] = function(panel)
             local inventory = LocalPlayer():getChar():getInv()
@@ -175,7 +175,7 @@ function F1MenuCore:CreateMenuButtons(tabs)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function F1MenuCore:BuildHelpMenu(tabs)
+function MODULE:BuildHelpMenu(tabs)
     tabs["commands"] = function(_, _)
         local body = ""
         for k, v in SortedPairs(lia.command.list) do
@@ -233,7 +233,7 @@ function F1MenuCore:BuildHelpMenu(tabs)
         end
     end
 
-    if self.RulesEnabled then tabs["Rules"] = function() return F1MenuCore:GenerateRules() end end
-    if self.TutorialEnabled then tabs["Tutorial"] = function() return F1MenuCore:GenerateTutorial() end end
+    if self.RulesEnabled then tabs["Rules"] = function() return MODULE:GenerateRules() end end
+    if self.TutorialEnabled then tabs["Tutorial"] = function() return MODULE:GenerateTutorial() end end
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SaveItemsCore:LoadData()
+function MODULE:LoadData()
     local items = self:getData()
     if items then
         local idRange = {}
@@ -43,7 +43,7 @@ function SaveItemsCore:LoadData()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SaveItemsCore:SaveData()
+function MODULE:SaveData()
     local items = {}
     for _, v in ipairs(ents.FindByClass("lia_item")) do
         if v.liaItemID and not v.temp then items[#items + 1] = {v.liaItemID, v:GetPos()} end
@@ -53,7 +53,7 @@ function SaveItemsCore:SaveData()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SaveItemsCore:ShouldDeleteSavedItems()
+function MODULE:ShouldDeleteSavedItems()
     return self.DeleteItemsOnRestart
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

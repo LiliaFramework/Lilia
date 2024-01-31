@@ -1,14 +1,14 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-ThirdPersonCore.ThirdPersonEnabled = true
+MODULE.ThirdPersonEnabled = true
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-ThirdPersonCore.MaxValues = {
+MODULE.MaxValues = {
     height = 30,
     horizontal = 30,
     distance = 100
 }
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-ThirdPersonCore.NotSolidTextures = {
+MODULE.NotSolidTextures = {
     ["TOOLS/TOOLSNODRAW"] = true,
     ["METAL/METALBAR001C"] = true,
     ["METAL/METALGATE001A"] = true,
@@ -20,7 +20,7 @@ ThirdPersonCore.NotSolidTextures = {
 }
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-ThirdPersonCore.NotSolidModels = {
+MODULE.NotSolidModels = {
     ["models/props_wasteland/exterior_fence002c.mdl"] = true,
     ["models/props_wasteland/exterior_fence002b.mdl"] = true,
     ["models/props_wasteland/exterior_fence003a.mdl"] = true,
@@ -30,7 +30,7 @@ ThirdPersonCore.NotSolidModels = {
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 MAT_GLASS2 = 45
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-ThirdPersonCore.NotSolidMatTypes = {
+MODULE.NotSolidMatTypes = {
     [MAT_GLASS] = true,
     [MAT_GLASS2] = true
 }

@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-VendorCore.CAMIPrivileges = {
+MODULE.CAMIPrivileges = {
     {
         Name = "Lilia - Staff Permissions - Can Edit Vendors",
         MinAccess = "admin",

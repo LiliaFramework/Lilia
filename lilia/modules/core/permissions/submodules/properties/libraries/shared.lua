@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PropertiesCore:InitializedModules()
+function MODULE:InitializedModules()
     if properties.List then
         for name, _ in pairs(properties.List) do
             if (name == "persist") or (name == "drive") or (name == "bonemanipulate") then continue end

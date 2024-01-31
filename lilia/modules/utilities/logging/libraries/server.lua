@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LoggerCore:ReadLogFiles()
+function MODULE:ReadLogFiles()
     local logs = {}
     local logFilePath = "lilia/logs/*.txt"
     local logFiles = file.Find(logFilePath, "DATA")
@@ -11,7 +11,7 @@ function LoggerCore:ReadLogFiles()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LoggerCore:ReadLogsFromFile(selectedDate)
+function MODULE:ReadLogsFromFile(selectedDate)
     local logs = {}
     local logFilePath = "lilia/logs/" .. selectedDate:gsub("/", "-") .. ".txt"
     if file.Exists(logFilePath, "DATA") then

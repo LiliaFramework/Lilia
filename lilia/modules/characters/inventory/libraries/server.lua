@@ -36,25 +36,25 @@ local function CanNotTransferBagIfNestedItemCanNotBe(_, action, context)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function InventoryCore:SetupBagInventoryAccessRules(inventory)
+function MODULE:SetupBagInventoryAccessRules(inventory)
     inventory:addAccessRule(CanNotTransferBagIntoBag, 1)
     inventory:addAccessRule(CanNotTransferBagIfNestedItemCanNotBe, 1)
     inventory:addAccessRule(CanAccessIfPlayerHasAccessToBag)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function InventoryCore:ItemCombine(client, item, target)
+function MODULE:ItemCombine(client, item, target)
     if target.onCombine and target:call("onCombine", client, nil, item) then return end
     if item.onCombineTo and item and item:call("onCombineTo", client, nil, target) then return end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function InventoryCore:ItemDraggedOutOfInventory(client, item)
+function MODULE:ItemDraggedOutOfInventory(client, item)
     item:interact("drop", client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function InventoryCore:HandleItemTransferRequest(client, itemID, x, y, invID)
+function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
     local inventory = lia.inventory.instances[invID]
     local item = lia.item.instances[itemID]
     if not item then return end

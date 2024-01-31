@@ -15,7 +15,7 @@ local toScreen = FindMetaTable("Vector").ToScreen
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local DescWidth = CreateClientConVar("lia_hud_descwidth", 0.5, true, false)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:DrawEntityInfo(entity, alpha, position)
+function MODULE:DrawEntityInfo(entity, alpha, position)
     if not entity.IsPlayer(entity) then return end
     if hook.Run("ShouldDrawPlayerInfo", entity) == false then return end
     local character = entity.getChar(entity)
@@ -62,13 +62,13 @@ function FrameworkHUD:DrawEntityInfo(entity, alpha, position)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:SetupQuickMenu(menu)
+function MODULE:SetupQuickMenu(menu)
     menu:addSlider("HUD Desc Width Modifier", function(_, value) DescWidth:SetFloat(value) end, DescWidth:GetFloat(), 0.1, 1, 2)
     menu:addSpacer()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:RenderEntities()
+function MODULE:RenderEntities()
     local client = LocalPlayer()
     if client.getChar(client) then
         local frameTime = FrameTime()

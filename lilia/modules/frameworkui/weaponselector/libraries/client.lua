@@ -1,15 +1,15 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-WSCore.lastSlot = WSCore.lastSlot or 1
+MODULE.lastSlot = MODULE.lastSlot or 1
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-WSCore.lifeTime = WSCore.lifeTime or 0
+MODULE.lifeTime = MODULE.lifeTime or 0
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-WSCore.deathTime = WSCore.deathTime or 0
+MODULE.deathTime = MODULE.deathTime or 0
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local LIFE_TIME = 4
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local DEATH_TIME = 5
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function WSCore:OnSlotChanged()
+function MODULE:OnSlotChanged()
     self.lifeTime = CurTime() + LIFE_TIME
     self.deathTime = CurTime() + DEATH_TIME
     for k, v in SortedPairs(LocalPlayer():GetWeapons()) do
@@ -25,7 +25,7 @@ function WSCore:OnSlotChanged()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function WSCore:PlayerBindPress(client, bind, pressed)
+function MODULE:PlayerBindPress(client, bind, pressed)
     local weapon = client:GetActiveWeapon()
     if not client:InVehicle() and (not IsValid(weapon) or weapon:GetClass() ~= "weapon_physgun" or not client:KeyDown(IN_ATTACK)) then
         bind = string.lower(bind)
@@ -60,7 +60,7 @@ function WSCore:PlayerBindPress(client, bind, pressed)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function WSCore:HUDPaint()
+function MODULE:HUDPaint()
     if not LocalPlayer():getChar() then return end
     local x = ScrW() * 0.55
     for k, v in SortedPairs(LocalPlayer():GetWeapons()) do
@@ -84,7 +84,7 @@ function WSCore:HUDPaint()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function WSCore:LoadFonts(_, genericFont)
+function MODULE:LoadFonts(_, genericFont)
     surface.CreateFont("Monofonto24", {
         font = "Monofonto",
         size = 24,

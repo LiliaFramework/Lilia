@@ -1,24 +1,24 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Enable Vignette Effect ]]
-FrameworkHUD.Vignette = true
+MODULE.Vignette = true
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Activate Branch Warning ]]
-FrameworkHUD.BranchWarning = true
+MODULE.BranchWarning = true
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Enable Crosshair ]]
-FrameworkHUD.CrosshairEnabled = false
+MODULE.CrosshairEnabled = false
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Disable Bars ]]
-FrameworkHUD.BarsDisabled = false
+MODULE.BarsDisabled = false
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Enable Ammo Draw ]]
-FrameworkHUD.AmmoDrawEnabled = true
+MODULE.AmmoDrawEnabled = true
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Weapons with No Crosshair ]]
-FrameworkHUD.NoDrawCrosshairWeapon = {"weapon_crowbar", "weapon_stunstick", "weapon_bugbait"}
+MODULE.NoDrawCrosshairWeapon = {"weapon_crowbar", "weapon_stunstick", "weapon_bugbait"}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Disable Sandbox HUD Elements ]]
-FrameworkHUD.HiddenHUDElements = {"CHUDAutoAim", "CHudHealth", "CHudCrosshair", "CHudBattery", "CHudAmmo", "CHudSecondaryAmmo", "CHudHistoryResource"}
+MODULE.HiddenHUDElements = {"CHUDAutoAim", "CHudHealth", "CHudCrosshair", "CHudBattery", "CHudAmmo", "CHudSecondaryAmmo", "CHudHistoryResource"}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Toggle Dark Theme ]]
-FrameworkHUD.DarkTheme = true
+MODULE.DarkTheme = true

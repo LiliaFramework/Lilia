@@ -16,7 +16,7 @@ function QuickBackground(time, callback)
     local dark = getDarkPanel()
     dark:SetAlpha(0)
     dark:AlphaTo(255, time / 2, 0, function()
-        FrameworkHUD.backCam = true
+        MODULE.backCam = true
         dark:AlphaTo(0, time / 2, 0, function()
             dark:Remove()
             if callback then callback() end
@@ -24,7 +24,7 @@ function QuickBackground(time, callback)
     end)
 
     hook.Add("CalcView", "Camerabackground", function(client, _, ang, fov)
-        if not FrameworkHUD.backCam then return end
+        if not MODULE.backCam then return end
         local view = {}
         view.origin = client:GetPos() + Vector(0, 0, 300)
         view.angles = ang + Angle(0, 45, 0)
@@ -41,7 +41,7 @@ function RemoveBackground(time, callback)
     dark:SetAlpha(0)
     dark:AlphaTo(255, time / 2, 0, function()
         hook.Remove("CalcView", "Camerabackground")
-        FrameworkHUD.backCam = false
+        MODULE.backCam = false
         dark:AlphaTo(0, time / 2, 0, function()
             dark:Remove()
             if callback then callback() end

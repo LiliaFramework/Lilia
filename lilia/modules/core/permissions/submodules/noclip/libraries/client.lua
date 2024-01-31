@@ -7,7 +7,7 @@ local marginx, marginy = sy * 0.1, sy * 0.1
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local scrPos, x, y, teamColor, distance, factor, size, alpha
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function NoClipCore:HUDPaint()
+function MODULE:HUDPaint()
     local client = LocalPlayer()
     if (CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip ESP Outside Staff Character", nil) or client:isStaffOnDuty()) and client:IsNoClipping() and not client:InVehicle() then
         for _, v in ipairs(ents.GetAll()) do

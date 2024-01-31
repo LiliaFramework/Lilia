@@ -6,18 +6,18 @@ lia.chat.register("ooc", {
             return false
         end
 
-        if ChatboxCore.OOCBans[speaker:SteamID()] then
+        if MODULE.OOCBans[speaker:SteamID()] then
             speaker:notify("You have been banned from using OOC!")
             return false
         end
 
-        if string.len(text) > ChatboxCore.OOCLimit then
+        if string.len(text) > MODULE.OOCLimit then
             speaker:notify("Text too big!")
             return false
         end
 
         local customDelay = hook.Run("getOOCDelay", speaker)
-        local oocDelay = customDelay or ChatboxCore.OOCDelay
+        local oocDelay = customDelay or MODULE.OOCDelay
         if not CAMI.PlayerHasAccess(speaker, "Staff Permissions - No OOC Cooldown") and oocDelay > 0 and speaker.liaLastOOC then
             local lastOOC = CurTime() - speaker.liaLastOOC
             if lastOOC <= oocDelay then
@@ -38,7 +38,7 @@ lia.chat.register("ooc", {
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.chat.register("meclose", {
     format = "**%s %s",
-    onCanHear = ChatboxCore.ChatRange * 0.25,
+    onCanHear = MODULE.ChatRange * 0.25,
     prefix = {"/meclose", "/actionclose"},
     font = "liaChatFontItalics",
     filter = "actions",
@@ -48,7 +48,7 @@ lia.chat.register("meclose", {
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.chat.register("mefar", {
     format = "**%s %s",
-    onCanHear = ChatboxCore.ChatRange * 2,
+    onCanHear = MODULE.ChatRange * 2,
     prefix = {"/mefar", "/actionfar"},
     font = "liaChatFontItalics",
     filter = "actions",
@@ -58,7 +58,7 @@ lia.chat.register("mefar", {
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.chat.register("itclose", {
     onChatAdd = function(_, text) chat.AddText(lia.config.get("chatColor"), "**" .. text) end,
-    onCanHear = ChatboxCore.ChatRange * 0.25,
+    onCanHear = MODULE.ChatRange * 0.25,
     prefix = {"/itclose"},
     font = "liaChatFontItalics",
     filter = "actions",
@@ -67,8 +67,8 @@ lia.chat.register("itclose", {
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.chat.register("itfar", {
-    onChatAdd = function(_, text) chat.AddText(ChatboxCore.ChatColor, "**" .. text) end,
-    onCanHear = ChatboxCore.ChatRange * 2,
+    onChatAdd = function(_, text) chat.AddText(MODULE.ChatColor, "**" .. text) end,
+    onCanHear = MODULE.ChatRange * 2,
     prefix = {"/itfar"},
     font = "liaChatFontItalics",
     filter = "actions",
@@ -78,7 +78,7 @@ lia.chat.register("itfar", {
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.chat.register("coinflip", {
     format = "%s flipped a coin and it landed on %s.",
-    onCanHear = ChatboxCore.ChatRange,
+    onCanHear = MODULE.ChatRange,
     prefix = {"/coinflip"},
     color = Color(236, 100, 9),
     filter = "actions",
@@ -89,7 +89,7 @@ lia.chat.register("coinflip", {
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.chat.register("announce", {
     format = "%s announces \"%s\"",
-    onCanHear = ChatboxCore.ChatRange * 4,
+    onCanHear = MODULE.ChatRange * 4,
     prefix = {"/announce", "/announcement"},
     color = Color(255, 150, 0),
     font = "liaChatFontBold",
@@ -100,12 +100,12 @@ lia.chat.register("announce", {
 lia.chat.register("ic", {
     format = "%s says \"%s\"",
     onGetColor = function(speaker, _)
-        if LocalPlayer():GetEyeTrace().Entity == speaker then return ChatboxCore.ChatListenColor end
-        return ChatboxCore.ChatColor
+        if LocalPlayer():GetEyeTrace().Entity == speaker then return MODULE.ChatListenColor end
+        return MODULE.ChatColor
     end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():Distance(listener:EyePos()) <= ChatboxCore.ChatRange then return true end
+        if speaker:EyePos():Distance(listener:EyePos()) <= MODULE.ChatRange then return true end
         return false
     end,
 })
@@ -116,7 +116,7 @@ lia.chat.register("me", {
     onGetColor = lia.chat.classes.ic.onGetColor,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():Distance(listener:EyePos()) <= ChatboxCore.ChatRange then return true end
+        if speaker:EyePos():Distance(listener:EyePos()) <= MODULE.ChatRange then return true end
         return false
     end,
     prefix = {"/me", "/action"},
@@ -127,10 +127,10 @@ lia.chat.register("me", {
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.chat.register("it", {
-    onChatAdd = function(_, text) chat.AddText(lia.chat.timestamp(false), ChatboxCore.ChatColor, "**" .. text) end,
+    onChatAdd = function(_, text) chat.AddText(lia.chat.timestamp(false), MODULE.ChatColor, "**" .. text) end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():Distance(listener:EyePos()) <= ChatboxCore.ChatRange then return true end
+        if speaker:EyePos():Distance(listener:EyePos()) <= MODULE.ChatRange then return true end
         return false
     end,
     prefix = {"/it"},
@@ -148,7 +148,7 @@ lia.chat.register("w", {
     end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():Distance(listener:EyePos()) <= ChatboxCore.ChatRange * 0.25 then return true end
+        if speaker:EyePos():Distance(listener:EyePos()) <= MODULE.ChatRange * 0.25 then return true end
         return false
     end,
     prefix = {"/w", "/whisper"}
@@ -172,7 +172,7 @@ lia.chat.register("y", {
     end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():Distance(listener:EyePos()) <= ChatboxCore.ChatRange * 2 then return true end
+        if speaker:EyePos():Distance(listener:EyePos()) <= MODULE.ChatRange * 2 then return true end
         return false
     end,
     prefix = {"/y", "/yell"}
@@ -181,10 +181,10 @@ lia.chat.register("y", {
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.chat.register("looc", {
     onCanSay = function(speaker, _)
-        local delay = ChatboxCore.LOOCDelay
-        if speaker:IsAdmin() and ChatboxCore.LOOCDelayAdmin and delay > 0 and speaker.liaLastLOOC then
+        local delay = MODULE.LOOCDelay
+        if speaker:IsAdmin() and MODULE.LOOCDelayAdmin and delay > 0 and speaker.liaLastLOOC then
             local lastLOOC = CurTime() - speaker.liaLastLOOC
-            if lastLOOC <= delay and (not speaker:IsAdmin() or speaker:IsAdmin() and ChatboxCore.LOOCDelayAdmin) then
+            if lastLOOC <= delay and (not speaker:IsAdmin() or speaker:IsAdmin() and MODULE.LOOCDelayAdmin) then
                 speaker:notifyLocalized("loocDelay", delay - math.ceil(lastLOOC))
                 return false
             end
@@ -192,10 +192,10 @@ lia.chat.register("looc", {
 
         speaker.liaLastLOOC = CurTime()
     end,
-    onChatAdd = function(speaker, text) chat.AddText(Color(255, 50, 50), "[LOOC] ", ChatboxCore.ChatColor, speaker:Name() .. ": " .. text) end,
+    onChatAdd = function(speaker, text) chat.AddText(Color(255, 50, 50), "[LOOC] ", MODULE.ChatColor, speaker:Name() .. ": " .. text) end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():Distance(listener:EyePos()) <= ChatboxCore.ChatRange then return true end
+        if speaker:EyePos():Distance(listener:EyePos()) <= MODULE.ChatRange then return true end
         return false
     end,
     prefix = {".//", "[[", "/looc"},
@@ -230,7 +230,7 @@ lia.chat.register("roll", {
     deadCanChat = true,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():Distance(listener:EyePos()) <= ChatboxCore.ChatRange then return true end
+        if speaker:EyePos():Distance(listener:EyePos()) <= MODULE.ChatRange then return true end
         return false
     end,
 })
@@ -248,7 +248,7 @@ lia.chat.register("eventlocal", {
     onCanSay = function(speaker, _) return CAMI.PlayerHasAccess(speaker, "Staff Permissions - Local Event Chat", nil) end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():Distance(listener:EyePos()) <= ChatboxCore.ChatRange * 6 then return true end
+        if speaker:EyePos():Distance(listener:EyePos()) <= MODULE.ChatRange * 6 then return true end
         return false
     end,
     onChatAdd = function(_, text) chat.AddText(Color(255, 150, 0), text) end,
@@ -273,7 +273,7 @@ lia.chat.register("rolld", {
     font = "liaChatFontItalics",
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():Distance(listener:EyePos()) <= ChatboxCore.ChatRange then return true end
+        if speaker:EyePos():Distance(listener:EyePos()) <= MODULE.ChatRange then return true end
         return false
     end,
     deadCanChat = true
@@ -287,7 +287,7 @@ lia.chat.register("flip", {
     font = "liaChatFontItalics",
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():Distance(listener:EyePos()) <= ChatboxCore.ChatRange then return true end
+        if speaker:EyePos():Distance(listener:EyePos()) <= MODULE.ChatRange then return true end
         return false
     end,
     deadCanChat = true

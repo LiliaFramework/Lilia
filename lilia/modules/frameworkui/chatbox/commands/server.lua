@@ -1,4 +1,4 @@
-﻿ChatboxCore.OOCBans = ChatboxCore.OOCBans or {}
+﻿MODULE.OOCBans = MODULE.OOCBans or {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("banooc", {
     privilege = "Ban OOC",
@@ -6,7 +6,7 @@ lia.command.add("banooc", {
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target then
-            ChatboxCore.OOCBans[target:SteamID()] = true
+            MODULE.OOCBans[target:SteamID()] = true
             client:notify(target:Name() .. " has been banned from OOC.")
         else
             client:notify("Invalid target.")
@@ -21,7 +21,7 @@ lia.command.add("unbanooc", {
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target then
-            ChatboxCore.OOCBans[target:SteamID()] = nil
+            MODULE.OOCBans[target:SteamID()] = nil
             client:notify(target:Name() .. " has been unbanned from OOC.")
         end
     end

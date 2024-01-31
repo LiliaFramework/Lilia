@@ -5,7 +5,7 @@ local blurGoal = 0
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local blurValue = 0
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:DrawBlur()
+function MODULE:DrawBlur()
     local client = LocalPlayer()
     blurGoal = client:getLocalVar("blur", 0) + (hook.Run("AdjustBlurAmount", blurGoal) or 0)
     if blurValue ~= blurGoal then blurValue = math.Approach(blurValue, blurGoal, FrameTime() * 20) end
@@ -13,7 +13,7 @@ function FrameworkHUD:DrawBlur()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:ShouldDrawBlur()
+function MODULE:ShouldDrawBlur()
     local client = LocalPlayer()
     return client:Alive()
 end

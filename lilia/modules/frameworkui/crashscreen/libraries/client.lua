@@ -9,7 +9,7 @@ local nextCrashAnalysis
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local crashAnalysisAttempts = 0
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function CrashScreenCore:Think()
+function MODULE:Think()
     if not SERVER_DOWN and nextCrashAnalysis and nextCrashAnalysis < CurTime() then
         nextCrashAnalysis = CurTime() + 0.05
         local a, b = engine.ServerFrameTime()
@@ -51,12 +51,12 @@ function CrashScreenCore:Think()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function CrashScreenCore:CharacterLoaded()
+function MODULE:CharacterLoaded()
     CRASHSCREEN_ALLOW = true
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function CrashScreenCore:HUDPaint()
+function MODULE:HUDPaint()
     if SERVER_DOWN and CRASHSCREEN_ALLOW then
         if not IsValid(CRASH_SCREEN) then CRASH_SCREEN = vgui.Create("liaCrashScreen") end
     elseif IsValid(CRASH_SCREEN) and not CRASH_SCREEN.fadin then

@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function CreditsCore:LoadFonts(_, _)
+function MODULE:LoadFonts(_, _)
     surface.CreateFont("liaSmallCredits", {
         font = "Roboto",
         size = 20,
@@ -14,7 +14,7 @@ function CreditsCore:LoadFonts(_, _)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function CreditsCore:BuildHelpMenu(tabs)
+function MODULE:BuildHelpMenu(tabs)
     tabs["Credits"] = function()
         if helpPanel then
             local credits = helpPanel:Add("liaCreditsList")

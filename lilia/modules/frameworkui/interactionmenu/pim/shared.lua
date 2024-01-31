@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-PIM:AddOption("Give Money", {
+MODULE:AddOption("Give Money", {
     serverRun = false,
     shouldShow = function(client, target) return IsValid(target) and client:getChar():getMoney() > 0 end,
     onRun = function(client, target)

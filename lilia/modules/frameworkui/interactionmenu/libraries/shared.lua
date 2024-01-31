@@ -1,12 +1,12 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-PIM.options = PIM.options or {}
+MODULE.options = MODULE.options or {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PIM:AddOption(name, data)
+function MODULE:AddOption(name, data)
     self.options[name] = data
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PIM:CheckPossibilities()
+function MODULE:CheckPossibilities()
     for _, v in pairs(self.options) do
         if not LocalPlayer():GetEyeTrace().Entity:IsPlayer() then return end
         if v.shouldShow(LocalPlayer(), LocalPlayer():GetEyeTrace().Entity) then return true end
@@ -15,12 +15,12 @@ function PIM:CheckPossibilities()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PIM:InitializedModules()
+function MODULE:InitializedModules()
     hook.Run("AddPIMOption", self.options)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PIM:CheckDistance(client, entity)
+function MODULE:CheckDistance(client, entity)
     return entity:GetPos():DistToSqr(client:GetPos()) < self.MaxInteractionDistance
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

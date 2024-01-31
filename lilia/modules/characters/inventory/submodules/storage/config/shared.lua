@@ -1,21 +1,21 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-LiliaStorage.Vehicles = LiliaStorage.Vehicles or {}
+MODULE.Vehicles = MODULE.Vehicles or {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Enable or disable the saving of storage data ]]
-LiliaStorage.SaveStorage = true
+MODULE.SaveStorage = true
 --[[ Set the delay (in seconds) until password retries are allowed ]]
-LiliaStorage.PasswordDelay = 1
+MODULE.PasswordDelay = 1
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Set the duration (in seconds) for how long a storage container takes to open ]]
-LiliaStorage.StorageOpenTime = 0.7
+MODULE.StorageOpenTime = 0.7
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Set the duration (in seconds) for how long a trunk takes to open ]]
-LiliaStorage.TrunkOpenTime = 0.7
+MODULE.TrunkOpenTime = 0.7
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Set the distance a trunk must be to be opened ]]
-LiliaStorage.TrunkOpenDistance = 110
+MODULE.TrunkOpenDistance = 110
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-LiliaStorage.StorageDefinitions = {
+MODULE.StorageDefinitions = {
     ["models/props_junk/wood_crate001a.mdl"] = {
         name = "Wood Crate",
         desc = "A crate made out of wood.",
@@ -95,7 +95,7 @@ LiliaStorage.StorageDefinitions = {
 }
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-LiliaStorage.VehicleTrunk = {
+MODULE.VehicleTrunk = {
     name = "Trunk",
     desc = "A car's trunk.",
     invType = "grid",

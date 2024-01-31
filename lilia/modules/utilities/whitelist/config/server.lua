@@ -1,13 +1,13 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Enable or disable the Whitelist ]]
-WhitelistCore.WhitelistEnabled = false
+MODULE.WhitelistEnabled = false
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Enable or disable the Blacklist ]]
-WhitelistCore.BlacklistedEnabled = true
+MODULE.BlacklistedEnabled = true
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Specify SteamID64s to be blacklisted from your server   ]]
 --[[ This individual is known for lua stealing, scamming and hacking in game. I recommend keeping this ]]
-WhitelistCore.BlacklistedSteamID64 = {
+MODULE.BlacklistedSteamID64 = {
     "76561199132186869", -- Logan's Main Account
     "76561199246162295", -- Logan's Alt
     "76561198095382821", -- Logan's Alt
@@ -17,5 +17,5 @@ WhitelistCore.BlacklistedSteamID64 = {
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Specify SteamID64s to be whitelisted from your server ]]
-WhitelistCore.WhitelistedSteamID64 = {"76561198312513285",}
+MODULE.WhitelistedSteamID64 = {"76561198312513285",}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

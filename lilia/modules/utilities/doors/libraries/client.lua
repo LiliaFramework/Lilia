@@ -1,12 +1,12 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local toScreen = FindMetaTable("Vector").ToScreen
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function DoorsCore:ShouldDrawEntityInfo(entity)
+function MODULE:ShouldDrawEntityInfo(entity)
     if IsValid(entity) and entity.isDoor(entity) and not entity.getNetVar(entity, "disabled") then return true end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function DoorsCore:DrawEntityInfo(entity, alpha)
+function MODULE:DrawEntityInfo(entity, alpha)
     if entity.isDoor(entity) and not entity:getNetVar("hidden") then
         local position = toScreen(entity.LocalToWorld(entity, entity.OBBCenter(entity)))
         local x, y = position.x, position.y

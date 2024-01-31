@@ -1,11 +1,11 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:ShouldDrawAmmo(weapon)
+function MODULE:ShouldDrawAmmo(weapon)
     if IsValid(weapon) and weapon.DrawAmmo ~= false then return self.AmmoDrawEnabled end
     return true
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:DrawAmmo(weapon)
+function MODULE:DrawAmmo(weapon)
     if not IsValid(weapon) then return end
     local clip = weapon:Clip1()
     local count = LocalPlayer():GetAmmoCount(weapon:GetPrimaryAmmoType())

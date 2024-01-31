@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:TooltipInitialize(var, panel)
+function MODULE:TooltipInitialize(var, panel)
     if panel.liaToolTip or panel.itemID then
         var.markupObject = lia.markup.parse(var:GetText(), ScrW() * .15)
         var:SetText("")
@@ -12,7 +12,7 @@ function FrameworkHUD:TooltipInitialize(var, panel)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:TooltipPaint(var, w, h)
+function MODULE:TooltipPaint(var, w, h)
     if var.isItemTooltip then
         lia.util.drawBlur(var, 2, 2)
         surface.SetDrawColor(0, 0, 0, 230)
@@ -23,7 +23,7 @@ function FrameworkHUD:TooltipPaint(var, w, h)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:TooltipLayout(var)
+function MODULE:TooltipLayout(var)
     if var.isItemTooltip then return true end
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
