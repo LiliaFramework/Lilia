@@ -113,6 +113,7 @@ ITEM.functions.Equip = {
                 item:setData("oldMdl", item.player:GetModel())
             elseif item.replacement or item.replacements then
                 if istable(item.replacements) then
+                    item:setData("oldMdl", item.player:GetModel())
                     if #item.replacements == 2 and isstring(item.replacements[1]) then
                         local newModel = item.player:GetModel():lower():gsub(item.replacement[1], item.replacements[2]):lower()
                         char:setModel(newModel)
@@ -122,10 +123,9 @@ ITEM.functions.Equip = {
                         end
                     end
                 else
+                    item:setData("oldMdl", item.player:GetModel())
                     char:setModel(tostring(item.replacement or item.replacements))
                 end
-
-                item:setData("oldMdl", item.player:GetModel())
             end
 
             if isnumber(item.newSkin) then
