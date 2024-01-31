@@ -207,7 +207,7 @@ function F1MenuCore:BuildHelpMenu(tabs)
 
     tabs["modules"] = function(_)
         local body = ""
-        for _, v in SortedPairsByMemberValue(lia.MODULE.list, "name") do
+        for _, v in SortedPairsByMemberValue(lia.module.list, "name") do
             if v.MenuNoShow then continue end
             body = (body .. [[
                 <p>
@@ -216,7 +216,7 @@ function F1MenuCore:BuildHelpMenu(tabs)
                     <b>%s</b>: %s<br />
                     <b>%s</b>: %s<br /> <!-- Added line break here -->
                     <b>%s</b>: %s<br />
-                ]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", "Discord", v.discord or "Unknown", L"author", lia.MODULE.namecache[v.author] or v.author or "Unknown")
+                ]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", "Discord", v.discord or "Unknown", L"author", lia.module.namecache[v.author] or v.author or "Unknown")
             if v.version then body = body .. "<br /><b>" .. L"version" .. "</b>: " .. v.version end
             body = body .. "</span></p>"
         end
