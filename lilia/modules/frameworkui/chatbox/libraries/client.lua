@@ -3,18 +3,18 @@ chat.liaAddText = chat.liaAddText or chat.AddText
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 LIA_CVAR_CHATFILTER = CreateClientConVar("lia_chatfilter", "", true, false)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function ChatboxCore:createChat()
+function MODULE:createChat()
     if IsValid(self.panel) then return end
     self.panel = vgui.Create("liaChatBox")
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function ChatboxCore:InitPostEntity()
+function MODULE:InitPostEntity()
     self:createChat()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function ChatboxCore:PlayerBindPress(_, bind, pressed)
+function MODULE:PlayerBindPress(_, bind, pressed)
     bind = bind:lower()
     if bind:find("messagemode") and pressed then
         if not self.panel.active then self.panel:setActive(true) end
@@ -23,19 +23,19 @@ function ChatboxCore:PlayerBindPress(_, bind, pressed)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function ChatboxCore:HUDShouldDraw(element)
+function MODULE:HUDShouldDraw(element)
     if element == "CHudChat" then return false end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function chat.AddText(...)
     local show = true
-    if IsValid(ChatboxCore.panel) then show = ChatboxCore.panel:addText(...) end
+    if IsValid(MODULE.panel) then show = MODULE.panel:addText(...) end
     if show then chat.liaAddText(...) end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function ChatboxCore:ChatText(_, _, text, messageType)
+function MODULE:ChatText(_, _, text, messageType)
     if messageType == "none" and IsValid(self.panel) then
         self.panel:addText(text)
         if self.CustomChatSound and self.CustomChatSound ~= "" then
@@ -47,8 +47,8 @@ function ChatboxCore:ChatText(_, _, text, messageType)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function ChatboxCore:ChatAddText(text, ...)
-    if ChatboxCore.ChatSizeDiff then
+function MODULE:ChatAddText(text, ...)
+    if MODULE.ChatSizeDiff then
         local chatText = {...}
         local chatMode = #chatText <= 4 and chatText[2] or chatText[3]
         if not chatMode or istable(chatMode) then
@@ -74,9 +74,9 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 concommand.Add("fixchatplz", function()
-    if IsValid(ChatboxCore.panel) then
-        ChatboxCore.panel:Remove()
-        ChatboxCore:createChat()
+    if IsValid(MODULE.panel) then
+        MODULE.panel:Remove()
+        MODULE:createChat()
     end
 end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

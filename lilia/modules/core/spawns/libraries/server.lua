@@ -1,17 +1,17 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-SpawnsCore.spawns = SpawnsCore.spawns or {}
+MODULE.spawns = MODULE.spawns or {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SpawnsCore:LoadData()
+function MODULE:LoadData()
     self.spawns = self:getData() or {}
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SpawnsCore:SaveData()
+function MODULE:SaveData()
     self:setData(self.spawns)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SpawnsCore:PostPlayerLoadout(client)
+function MODULE:PostPlayerLoadout(client)
     local character = client:getChar()
     if IsValid(client) or character and self.spawns and table.Count(self.spawns) > 0 then
         local class = character:getClass()
@@ -42,14 +42,14 @@ function SpawnsCore:PostPlayerLoadout(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SpawnsCore:CharacterPreSave(character)
+function MODULE:CharacterPreSave(character)
     local client = character:getPlayer()
     local vehicle = client:GetVehicle()
     if IsValid(client) and not IsValid(vehicle) or not vehicle:IsVehicle() then character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()}) end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SpawnsCore:PlayerLoadedChar(client, character, _)
+function MODULE:PlayerLoadedChar(client, character, _)
     timer.Simple(0, function()
         if IsValid(client) then
             local position = character:getData("pos")
@@ -66,7 +66,7 @@ function SpawnsCore:PlayerLoadedChar(client, character, _)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SpawnsCore:PlayerDeath(client, _, attacker)
+function MODULE:PlayerDeath(client, _, attacker)
     local char = client:getChar()
     if not char then return end
     if attacker:IsPlayer() then
@@ -86,7 +86,7 @@ function SpawnsCore:PlayerDeath(client, _, attacker)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SpawnsCore:RemoveAllEquippedWeapons(client)
+function MODULE:RemoveAllEquippedWeapons(client)
     local char = client:getChar()
     local inventory = char:getInv()
     local items = inventory:getItems()

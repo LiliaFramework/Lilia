@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SimfphysCompatibility:simfphysUse(entity, client)
+function MODULE:simfphysUse(entity, client)
     if entity.IsBeingEntered then
         client:notify("Someone is entering this car!")
         return true
@@ -29,7 +29,7 @@ function SimfphysCompatibility:simfphysUse(entity, client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SimfphysCompatibility:OnEntityCreated(entity)
+function MODULE:OnEntityCreated(entity)
     if entity:IsSimfphysCar() then
         entity.PhysicsCollideBack = entity.PhysicsCollide
         entity.PhysicsCollide = function(vehicle, data, physobj)
@@ -78,7 +78,7 @@ function SimfphysCompatibility:OnEntityCreated(entity)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SimfphysCompatibility:EntityTakeDamage(entity, dmgInfo)
+function MODULE:EntityTakeDamage(entity, dmgInfo)
     local damageType = dmgInfo:GetDamageType()
     if self.DamageInCars and entity:IsVehicle() and table.HasValue(self.ValidCarDamages, damageType) then
         local client = entity:GetDriver()
@@ -99,32 +99,32 @@ function SimfphysCompatibility:EntityTakeDamage(entity, dmgInfo)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SimfphysCompatibility:isSuitableForTrunk(entity)
+function MODULE:isSuitableForTrunk(entity)
     if IsValid(entity) and entity:IsSimfphysCar() then return true end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SimfphysCompatibility:CheckValidSit(client, _)
+function MODULE:CheckValidSit(client, _)
     local entity = client:GetTracedEntity()
     if entity:IsSimfphysCar() then return false end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SimfphysCompatibility:KeyLock(client, entity, time)
+function MODULE:KeyLock(client, entity, time)
     if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not entity:IsSimfphysCar() or entity:GetCreator() ~= client then return end
     client:setAction("@locking", time, function() self:ToggleLock(client, entity, true) end)
     return true
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SimfphysCompatibility:KeyUnlock(client, entity, time)
+function MODULE:KeyUnlock(client, entity, time)
     if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not entity:IsSimfphysCar() or entity:GetCreator() ~= client then return end
     client:setAction("@unlocking", time, function() self:ToggleLock(client, entity, false) end)
     return true
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SimfphysCompatibility:ToggleLock(client, entity, state)
+function MODULE:ToggleLock(client, entity, state)
     entity.IsLocked = not state
     entity:Fire(state and "lock" or "unlock")
     client:EmitSound(state and "doors/door_latch3.wav" or "doors/door_latch1.wav")
@@ -136,7 +136,7 @@ function SimfphysCompatibility:ToggleLock(client, entity, state)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SimfphysCompatibility:InitializedModules()
+function MODULE:InitializedModules()
     for k, v in pairs(self.SimfphysConsoleCommands) do
         RunConsoleCommand(k, v)
     end

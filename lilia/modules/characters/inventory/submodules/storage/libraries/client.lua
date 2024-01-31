@@ -1,13 +1,13 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 CanSpawnStorage = CreateClientConVar("can_spawn_storage", 1, true, true)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:exitStorage()
+function MODULE:exitStorage()
     net.Start("liaStorageExit")
     net.SendToServer()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:StorageUnlockPrompt(_)
+function MODULE:StorageUnlockPrompt(_)
     Derma_StringRequest(L("storPassWrite"), L("storPassWrite"), "", function(val)
         net.Start("liaStorageUnlock")
         net.WriteString(val)
@@ -16,7 +16,7 @@ function LiliaStorage:StorageUnlockPrompt(_)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:SetupQuickMenu(menu)
+function MODULE:SetupQuickMenu(menu)
     if CAMI.PlayerHasAccess(client, "Staff Permissions - Can Spawn Storage", nil) then
         menu:addCheck("Spawn Storage Props as Storages", function(_, state)
             if state then
@@ -31,7 +31,7 @@ function LiliaStorage:SetupQuickMenu(menu)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:StorageOpen(storage, normal)
+function MODULE:StorageOpen(storage, normal)
     if not IsValid(storage) then return end
     if not normal then
         local localInv = LocalPlayer():getChar() and LocalPlayer():getChar():getInv()
@@ -68,7 +68,7 @@ function LiliaStorage:StorageOpen(storage, normal)
         if not IsValid(storage) then return end
         local localInv = LocalPlayer():getChar() and LocalPlayer():getChar():getInv()
         local storageInv = storage:getInv()
-        if not localInv or not storageInv then return LiliaStorage:exitStorage() end
+        if not localInv or not storageInv then return MODULE:exitStorage() end
         local localInvPanel = localInv:show()
         local storageInvPanel = storageInv:show()
         storageInvPanel:SetTitle(L(storage:getStorageInfo().name))
@@ -85,7 +85,7 @@ function LiliaStorage:StorageOpen(storage, normal)
         local function exitStorageOnRemove(panel)
             if firstToRemove then
                 firstToRemove = false
-                LiliaStorage:exitStorage()
+                MODULE:exitStorage()
                 local otherPanel = panel == localInvPanel and storageInvPanel or localInvPanel
                 if IsValid(otherPanel) then otherPanel:Remove() end
             end
@@ -100,7 +100,7 @@ function LiliaStorage:StorageOpen(storage, normal)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function LiliaStorage:transferItem(itemID)
+function MODULE:transferItem(itemID)
     if not lia.item.instances[itemID] then return end
     net.Start("liaStorageTransfer")
     net.WriteUInt(itemID, 32)

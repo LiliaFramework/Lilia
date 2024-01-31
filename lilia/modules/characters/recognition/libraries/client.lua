@@ -1,10 +1,10 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RecognitionCore:isRecognizedChatType(chatType)
+function MODULE:isRecognizedChatType(chatType)
     return table.HasValue(self.ChatIsRecognized, chatType)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RecognitionCore:GetDisplayedDescription(client, isHUD)
+function MODULE:GetDisplayedDescription(client, isHUD)
     if not IsValid(client) or not IsValid(LocalPlayer()) then return "Unknown" end
     if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar():getID()) then
         if isHUD then return client:getChar():getDesc() end
@@ -13,7 +13,7 @@ function RecognitionCore:GetDisplayedDescription(client, isHUD)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RecognitionCore:GetDisplayedName(client, chatType)
+function MODULE:GetDisplayedName(client, chatType)
     if not IsValid(client) or not IsValid(LocalPlayer()) then return "Unknown" end
     local character = client:getChar()
     local ourCharacter = LocalPlayer():getChar()
@@ -28,7 +28,7 @@ function RecognitionCore:GetDisplayedName(client, chatType)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RecognitionCore:ShouldAllowScoreboardOverride(client, var)
+function MODULE:ShouldAllowScoreboardOverride(client, var)
     if not IsValid(client) or not IsValid(LocalPlayer()) then return false end
     local character = client:getChar()
     local ourCharacter = LocalPlayer():getChar()
@@ -44,12 +44,12 @@ function RecognitionCore:ShouldAllowScoreboardOverride(client, var)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RecognitionCore:OnCharRecognized(_, _)
+function MODULE:OnCharRecognized(_, _)
     surface.PlaySound("buttons/button17.wav")
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RecognitionCore:CharRecognize(level, name)
+function MODULE:CharRecognize(level, name)
     netstream.Start("rgn", level, name)
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

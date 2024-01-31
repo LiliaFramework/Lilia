@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:ShouldDrawCrosshair()
+function MODULE:ShouldDrawCrosshair()
     local client = LocalPlayer()
     local entity = Entity(client:getLocalVar("ragdoll", 0))
     if not self.CrosshairEnabled then return false end
@@ -14,7 +14,7 @@ function FrameworkHUD:ShouldDrawCrosshair()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:DrawCrosshair()
+function MODULE:DrawCrosshair()
     local client = LocalPlayer()
     local t = util.QuickTrace(client:GetShootPos(), client:GetAimVector() * 15000, client)
     local pos = t.HitPos:ToScreen()

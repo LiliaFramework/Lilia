@@ -1,26 +1,26 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PlayerPerfomanceCore:PlayerInitialSpawn(client)
+function MODULE:PlayerInitialSpawn(client)
     self:RegisterPlayer(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PlayerPerfomanceCore:EntityRemoved(entity)
+function MODULE:EntityRemoved(entity)
     if entity:IsPlayer() then self:RemovePlayer(entity) end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PlayerPerfomanceCore:GetPlayerData(client)
-    return PerfomanceCore.tblPlayers[client:EntIndex()]
+function MODULE:GetPlayerData(client)
+    return MODULE.tblPlayers[client:EntIndex()]
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PlayerPerfomanceCore:RemovePlayer(client)
-    PerfomanceCore.tblPlayers[client:EntIndex()] = nil
+function MODULE:RemovePlayer(client)
+    MODULE.tblPlayers[client:EntIndex()] = nil
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PlayerPerfomanceCore:RegisterPlayer(client)
-    PerfomanceCore.tblPlayers[client:EntIndex()] = {
+function MODULE:RegisterPlayer(client)
+    MODULE.tblPlayers[client:EntIndex()] = {
         Player = client,
         Expanding = false,
         Expanded = false,
@@ -32,7 +32,7 @@ function PlayerPerfomanceCore:RegisterPlayer(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PlayerPerfomanceCore:PlayerUpdateTransmitStates(client, intRange)
+function MODULE:PlayerUpdateTransmitStates(client, intRange)
     if intRange then
         for _, v in pairs(ents.GetAll()) do
             if table.HasValue(self.tblAlwaysSend, v:GetClass()) then
@@ -69,7 +69,7 @@ function PlayerPerfomanceCore:PlayerUpdateTransmitStates(client, intRange)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PlayerPerfomanceCore:BeginExpand(client)
+function MODULE:BeginExpand(client)
     local data = self:GetPlayerData(client)
     if not data then return end
     data.Expanding = true
@@ -92,11 +92,11 @@ function PlayerPerfomanceCore:BeginExpand(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PlayerPerfomanceCore:PlayerExpandedUpdate()
-    for k, data in pairs(PerfomanceCore.tblPlayers) do
+function MODULE:PlayerExpandedUpdate()
+    for k, data in pairs(MODULE.tblPlayers) do
         if not data or not data.Expanded then continue end
         if not IsValid(data.Player) then
-            PerfomanceCore.tblPlayers[k] = nil
+            MODULE.tblPlayers[k] = nil
             continue
         end
 
@@ -105,5 +105,5 @@ function PlayerPerfomanceCore:PlayerExpandedUpdate()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-timer.Create("PlayerExpandedUpdate", 1, 0, function() PlayerPerfomanceCore:PlayerExpandedUpdate() end)
+timer.Create("PlayerExpandedUpdate", 1, 0, function() MODULE:PlayerExpandedUpdate() end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

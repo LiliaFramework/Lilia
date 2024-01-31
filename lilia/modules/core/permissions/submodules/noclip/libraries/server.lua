@@ -40,7 +40,7 @@ function GM:PlayerNoClip(client, state)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function NoClipCore:OnPlayerObserve(client, state)
+function MODULE:OnPlayerObserve(client, state)
     lia.log.add(client, (state and "observerEnter") or "observerExit")
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

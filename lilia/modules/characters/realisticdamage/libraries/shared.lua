@@ -1,12 +1,12 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RealisticDamageCore:GetPlayerDeathSound(_, isFemale)
+function MODULE:GetPlayerDeathSound(_, isFemale)
     local soundTable
     soundTable = isFemale and self.FemaleDeathSounds or self.MaleDeathSounds
     return soundTable and soundTable[math.random(#soundTable)]
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RealisticDamageCore:GetPlayerPainSound(_, paintype, isFemale)
+function MODULE:GetPlayerPainSound(_, paintype, isFemale)
     local soundTable
     if paintype == "drown" then
         soundTable = isFemale and self.FemaleDrownSounds or self.MaleDrownSounds
@@ -17,12 +17,12 @@ function RealisticDamageCore:GetPlayerPainSound(_, paintype, isFemale)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RealisticDamageCore:GetFallDamage(_, speed)
+function MODULE:GetFallDamage(_, speed)
     return math.max(0, (speed - 580) * (100 / 444))
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RealisticDamageCore:GetInjuredText(client)
+function MODULE:GetInjuredText(client)
     local health = client:Health()
     local severities = {}
     for k, _ in pairs(self.InjuriesTable) do

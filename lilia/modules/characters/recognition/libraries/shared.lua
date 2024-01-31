@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RecognitionCore:isCharRecognized(char, id)
+function MODULE:isCharRecognized(char, id)
     local client = char:getPlayer()
     local recognized = char:getData("rgn", "")
     local other = lia.char.loaded[id]
@@ -15,7 +15,7 @@ function RecognitionCore:isCharRecognized(char, id)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RecognitionCore:isCharFakeRecognized(char, id)
+function MODULE:isCharFakeRecognized(char, id)
     local other = lia.char.loaded[id]
     local CharNameList = char:getRecognizedAs()
     local clientName = CharNameList[other:getID()]
@@ -23,7 +23,7 @@ function RecognitionCore:isCharFakeRecognized(char, id)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RecognitionCore:isFakeNameExistant(clientName, CharNameList)
+function MODULE:isFakeNameExistant(clientName, CharNameList)
     for _, n in pairs(CharNameList) do
         if n == clientName then return true end
     end

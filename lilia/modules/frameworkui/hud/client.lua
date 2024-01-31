@@ -1,22 +1,22 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:ShouldHideBars()
+function MODULE:ShouldHideBars()
     return self.BarsDisabled
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:HUDShouldDraw(element)
+function MODULE:HUDShouldDraw(element)
     if table.HasValue(self.HiddenHUDElements, element) then return false end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:HUDPaintBackground()
+function MODULE:HUDPaintBackground()
     if self:ShouldDrawBranchWarning() then self:DrawBranchWarning() end
     if self:ShouldDrawBlur() then self:DrawBlur() end
     self:RenderEntities()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:HUDPaint()
+function MODULE:HUDPaint()
     local weapon = LocalPlayer():GetActiveWeapon()
     if self:ShouldDrawAmmo(weapon) then self:DrawAmmo(weapon) end
     if self:ShouldDrawCrosshair() then self:DrawCrosshair() end
@@ -24,12 +24,12 @@ function FrameworkHUD:HUDPaint()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:ForceDermaSkin()
+function MODULE:ForceDermaSkin()
     return self.DarkTheme and "lilia_darktheme" or "lilia"
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:ShowPlayerCard(target)
+function MODULE:ShowPlayerCard(target)
     self.F3 = vgui.Create("DFrame")
     self.F3:SetSize(ScrW() * 0.35, ScrH() * 0.25)
     self.F3:Center()

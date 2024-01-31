@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PlayXCompatibility:LoadData()
+function MODULE:LoadData()
     local screen = ents.Create("gmod_playx")
     screen:SetModel("models/dav0r/camera.mdl")
     screen:SetPos(self.screenPos)
@@ -16,7 +16,7 @@ function PlayXCompatibility:LoadData()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PlayXCompatibility:KeyPress(client, key)
+function MODULE:KeyPress(client, key)
     if key == IN_USE then
         local data = {}
         data.start = client:GetShootPos()

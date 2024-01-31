@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-ScoreboardCore.CAMIPrivileges = {
+MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Access Scoreboard Admin Options",
         MinAccess = "admin",

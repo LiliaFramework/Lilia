@@ -14,7 +14,7 @@ function ENT:SpawnFunction(client, trace)
     entity:SetPos(trace.HitPos)
     entity:SetAngles(angles)
     entity:Spawn()
-    VendorCore:SaveData()
+    MODULE:SaveData()
     return entity
 end
 
@@ -207,7 +207,7 @@ function ENT:OnRemove()
     net.Start("liaVendorExit")
     net.Send(self.receivers)
     if lia.shuttingDown or self.liaIsSafe then return end
-    VendorCore:SaveData()
+    MODULE:SaveData()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

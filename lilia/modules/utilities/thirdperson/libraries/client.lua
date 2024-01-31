@@ -15,7 +15,7 @@ local ThirdPersonViewDistance = CreateClientConVar("tp_distance", 50, true)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 crouchFactor = 0
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function ThirdPersonCore:SetupQuickMenu(menu)
+function MODULE:SetupQuickMenu(menu)
     if self.ThirdPersonEnabled then
         menu:addCheck(L"thirdpersonToggle", function(_, state)
             if state then
@@ -47,7 +47,7 @@ function ThirdPersonCore:SetupQuickMenu(menu)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function ThirdPersonCore:CalcView(client)
+function MODULE:CalcView(client)
     ft = FrameTime()
     if client:CanOverrideView() and client:GetViewEntity() == client then
         if (client:OnGround() and client:KeyDown(IN_DUCK)) or client:Crouching() then
@@ -59,8 +59,8 @@ function ThirdPersonCore:CalcView(client)
         curAng = client.camAng or Angle(0, 0, 0)
         view = {}
         traceData = {}
-        traceData.start = client:GetPos() + client:GetViewOffset() + curAng:Up() * math.Clamp(ThirdPersonVerticalView:GetInt(), 0, ThirdPersonCore.MaxValues.height) + curAng:Right() * math.Clamp(ThirdPersonHorizontalView:GetInt(), -ThirdPersonCore.MaxValues.horizontal, ThirdPersonCore.MaxValues.horizontal) - client:GetViewOffsetDucked() * .5 * crouchFactor
-        traceData.endpos = traceData.start - curAng:Forward() * math.Clamp(ThirdPersonViewDistance:GetInt(), 0, ThirdPersonCore.MaxValues.distance)
+        traceData.start = client:GetPos() + client:GetViewOffset() + curAng:Up() * math.Clamp(ThirdPersonVerticalView:GetInt(), 0, MODULE.MaxValues.height) + curAng:Right() * math.Clamp(ThirdPersonHorizontalView:GetInt(), -MODULE.MaxValues.horizontal, MODULE.MaxValues.horizontal) - client:GetViewOffsetDucked() * .5 * crouchFactor
+        traceData.endpos = traceData.start - curAng:Forward() * math.Clamp(ThirdPersonViewDistance:GetInt(), 0, MODULE.MaxValues.distance)
         traceData.filter = client
         view.origin = util.TraceLine(traceData).HitPos
         aimOrigin = view.origin
@@ -75,7 +75,7 @@ function ThirdPersonCore:CalcView(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function ThirdPersonCore:CreateMove(cmd)
+function MODULE:CreateMove(cmd)
     local client = LocalPlayer()
     if client:CanOverrideView() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:GetViewEntity() == client then
         fm = cmd:GetForwardMove()
@@ -89,7 +89,7 @@ function ThirdPersonCore:CreateMove(cmd)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function ThirdPersonCore:InputMouseApply(_, x, y, _)
+function MODULE:InputMouseApply(_, x, y, _)
     local client = LocalPlayer()
     if not client.camAng then client.camAng = Angle(0, 0, 0) end
     if client:CanOverrideView() and client:GetViewEntity() == client then
@@ -100,19 +100,19 @@ function ThirdPersonCore:InputMouseApply(_, x, y, _)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function ThirdPersonCore:PlayerButtonDown(_, button)
+function MODULE:PlayerButtonDown(_, button)
     local ThirdPersonIsEnabled = ThirdPerson:GetInt() == 1
     if self.ThirdPersonEnabled and button == KEY_F4 and IsFirstTimePredicted() then ThirdPerson:SetInt(ThirdPersonIsEnabled and 0 or 1) end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function ThirdPersonCore:ShouldDrawLocalPlayer()
+function MODULE:ShouldDrawLocalPlayer()
     local client = LocalPlayer()
     if client:GetViewEntity() == client and not IsValid(client:GetVehicle()) and client:CanOverrideView() then return true end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function ThirdPersonCore:EntityEmitSound(data)
+function MODULE:EntityEmitSound(data)
     local steps = {".stepleft", ".stepright"}
     local ThirdPersonIsEnabled = ThirdPerson:GetInt() == 1
     if ThirdPersonIsEnabled then
@@ -123,7 +123,7 @@ function ThirdPersonCore:EntityEmitSound(data)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function ThirdPersonCore:PrePlayerDraw(drawnClient)
+function MODULE:PrePlayerDraw(drawnClient)
     local client = LocalPlayer()
     local clientPos = client:GetShootPos()
     local allPlayers = player.GetAll()
@@ -178,7 +178,7 @@ end
 function playerMeta:CanOverrideView()
     local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
     if IsValid(lia.gui.char) and lia.gui.char:IsVisible() then return false end
-    return ThirdPerson:GetBool() and not IsValid(self:GetVehicle()) and ThirdPersonCore.ThirdPersonEnabled and IsValid(self) and self:getChar() and not IsValid(ragdoll)
+    return ThirdPerson:GetBool() and not IsValid(self:GetVehicle()) and MODULE.ThirdPersonEnabled and IsValid(self) and self:getChar() and not IsValid(ragdoll)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

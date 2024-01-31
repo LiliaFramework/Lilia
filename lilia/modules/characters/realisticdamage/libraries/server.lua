@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RealisticDamageCore:ScalePlayerDamage(_, hitgroup, dmgInfo)
+function MODULE:ScalePlayerDamage(_, hitgroup, dmgInfo)
     local damageScale = self.DamageScale
     if hitgroup == HITGROUP_HEAD then
         damageScale = self.HeadShotDamage
@@ -11,14 +11,14 @@ function RealisticDamageCore:ScalePlayerDamage(_, hitgroup, dmgInfo)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RealisticDamageCore:PlayerDeath(client)
+function MODULE:PlayerDeath(client)
     if not self.DeathSoundEnabled then return end
     local deathSound = hook.Run("GetPlayerDeathSound", client, client:isFemale())
     if deathSound then client:EmitSound(deathSound) end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RealisticDamageCore:EntityTakeDamage(client, _)
+function MODULE:EntityTakeDamage(client, _)
     if not self.PainSoundEnabled or not client:IsPlayer() or client:Health() <= 0 then return end
     local painSound = self:GetPlayerPainSound(client, "hurt", client:isFemale())
     if client:WaterLevel() >= 3 then painSound = self:GetPlayerPainSound(client, "drown", client:isFemale()) end
@@ -29,13 +29,13 @@ function RealisticDamageCore:EntityTakeDamage(client, _)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RealisticDamageCore:PlayerDisconnected(client)
+function MODULE:PlayerDisconnected(client)
     local steamID64 = client:SteamID64()
     if timer.Exists("DrownTimer_" .. steamID64) then timer.Remove("DrownTimer_" .. steamID64) end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RealisticDamageCore:PlayerLoadedChar(client)
+function MODULE:PlayerLoadedChar(client)
     local steamID64 = client:SteamID64()
     if not (client:getChar() or client:Alive() or self.DrowningEnabled) or hook.Run("ShouldclientDrown", client) == false then return end
     if timer.Exists("DrownTimer_" .. steamID64) then timer.Remove("DrownTimer_" .. steamID64) end

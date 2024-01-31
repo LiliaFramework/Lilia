@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function Stormfox2Compatibility:OnLoaded()
+function MODULE:OnLoaded()
     timer.Simple(2, function()
         StormFox2.Setting.Set("time_speed", 1)
         StormFox2.Setting.Set("day_length", 720)

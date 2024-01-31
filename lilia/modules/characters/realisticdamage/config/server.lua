@@ -1,31 +1,31 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Indicates whether drowning is enabled   ]]
-RealisticDamageCore.DrowningEnabled = true
+MODULE.DrowningEnabled = true
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Indicates whether damage scaling is enabled   ]]
-RealisticDamageCore.DamageScalerEnabled = true
+MODULE.DamageScalerEnabled = true
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Indicates whether hurt sounds are enabled   ]]
-RealisticDamageCore.HurtSoundEnabled = true
+MODULE.HurtSoundEnabled = true
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Indicates whether death sounds are enabled   ]]
-RealisticDamageCore.DeathSoundEnabled = true
+MODULE.DeathSoundEnabled = true
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Damage multiplier for limb hits   ]]
-RealisticDamageCore.LimbDamage = 0.5
+MODULE.LimbDamage = 0.5
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Global damage scale multiplier   ]]
-RealisticDamageCore.DamageScale = 1
+MODULE.DamageScale = 1
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Damage multiplier for headshots   ]]
-RealisticDamageCore.HeadShotDamage = 2
+MODULE.HeadShotDamage = 2
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Time (in seconds) it takes for a character to drown   ]]
-RealisticDamageCore.DrownTime = 30
+MODULE.DrownTime = 30
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Amount of damage dealt per second while drowning   ]]
-RealisticDamageCore.DrownDamage = 10
+MODULE.DrownDamage = 10
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Hitgroups considered as limbs ]]
-RealisticDamageCore.LimbHitgroups = {HITGROUP_GEAR, HITGROUP_RIGHTARM, HITGROUP_LEFTARM}
+MODULE.LimbHitgroups = {HITGROUP_GEAR, HITGROUP_RIGHTARM, HITGROUP_LEFTARM}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

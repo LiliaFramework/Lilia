@@ -1,12 +1,12 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-PersistanceCore.entities = PersistanceCore.entities or {}
+MODULE.entities = MODULE.entities or {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PersistanceCore:PhysgunPickup(_, entity)
+function MODULE:PhysgunPickup(_, entity)
     if entity:getNetVar("persistent", false) then return false end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PersistanceCore:SaveData()
+function MODULE:SaveData()
     local data = {}
     for _, v in ipairs(self.entities) do
         if IsValid(v) then
@@ -29,7 +29,7 @@ function PersistanceCore:SaveData()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PersistanceCore:LoadData()
+function MODULE:LoadData()
     for _, v in pairs(self:getData() or {}) do
         local ent = ents.Create(v.class)
         ent:SetPos(v.pos)
@@ -58,7 +58,7 @@ properties.Add("persist", {
     MenuIcon = "icon16/link.png",
     Filter = function(_, ent, client)
         if ent:IsPlayer() then return false end
-        if PersistanceCore.blacklist[ent:GetClass()] then return false end
+        if MODULE.blacklist[ent:GetClass()] then return false end
         if not gamemode.Call("CanProperty", client, "persist", ent) then return false end
         return not ent:getNetVar("persistent", false)
     end,
@@ -72,7 +72,7 @@ properties.Add("persist", {
         if not IsValid(ent) then return end
         if not self:Filter(ent, client) then return end
         ent:setNetVar("persistent", true)
-        PersistanceCore.entities[#PersistanceCore.entities + 1] = ent
+        MODULE.entities[#MODULE.entities + 1] = ent
         lia.log.add(client, "persistedEntity", ent)
     end
 })
@@ -98,9 +98,9 @@ properties.Add("persist_end", {
         if not properties.CanBeTargeted(ent, client) then return end
         if not self:Filter(ent, client) then return end
         ent:setNetVar("persistent", false)
-        for k, v in ipairs(PersistanceCore.entities) do
+        for k, v in ipairs(MODULE.entities) do
             if v == entity then
-                PersistanceCore.entities[k] = nil
+                MODULE.entities[k] = nil
                 break
             end
         end

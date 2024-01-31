@@ -1,7 +1,7 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local LIA_CVAR_LOWER2 = CreateClientConVar("lia_usealtlower", "0", true)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RaisedWeaponCore:CalcViewModelView(weapon, _, _, _, _, eyeAngles)
+function MODULE:CalcViewModelView(weapon, _, _, _, _, eyeAngles)
     if not IsValid(weapon) then return end
     local vm_angles = eyeAngles
     local client = LocalPlayer()
@@ -17,7 +17,7 @@ function RaisedWeaponCore:CalcViewModelView(weapon, _, _, _, _, eyeAngles)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function RaisedWeaponCore:SetupQuickMenu(menu)
+function MODULE:SetupQuickMenu(menu)
     menu:addSpacer()
     menu:addCheck(L"altLower", function(_, state)
         if state then

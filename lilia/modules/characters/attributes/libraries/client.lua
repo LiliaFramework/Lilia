@@ -5,12 +5,12 @@ local stmBlurAmount = 0
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local stmBlurAlpha = 0
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AttributesCore:ConfigureCharacterCreationSteps(panel)
+function MODULE:ConfigureCharacterCreationSteps(panel)
     panel:addStep(vgui.Create("liaCharacterAttribs"), 98)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AttributesCore:Think()
+function MODULE:Think()
     local client = LocalPlayer()
     if not client:getChar() then return end
     local char = client:getChar()
@@ -21,7 +21,7 @@ function AttributesCore:Think()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AttributesCore:HUDPaintBackground()
+function MODULE:HUDPaintBackground()
     local client = LocalPlayer()
     if not (self.StaminaBlur or client:getChar()) then return end
     local char = client:getChar()
@@ -35,7 +35,7 @@ function AttributesCore:HUDPaintBackground()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function AttributesCore:CreateMenuButtons(tabs)
+function MODULE:CreateMenuButtons(tabs)
     if table.Count(lia.attribs.list) > 0 then
         tabs["Attributes"] = function(panel)
             panel.attribs = panel:Add("DScrollPanel")

@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function VendorCore:LoadFonts(font)
+function MODULE:LoadFonts(font)
     surface.CreateFont("liaVendorButtonFont", {
         font = font,
         weight = 200,

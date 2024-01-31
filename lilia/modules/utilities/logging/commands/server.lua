@@ -4,7 +4,7 @@ lia.command.add("logs", {
     privilege = "View Logs",
     onRun = function(client)
         net.Start("liaRequestLogs")
-        net.WriteTable(LoggerCore:ReadLogFiles())
+        net.WriteTable(MODULE:ReadLogFiles())
         net.Send(client)
     end
 })

@@ -5,7 +5,7 @@ local vignetteAlphaDelta = 0
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local hasVignetteMaterial = lia.util.getMaterial("lilia/gui/vignette.png") ~= "___error"
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:DrawVignette()
+function MODULE:DrawVignette()
     if hasVignetteMaterial then
         local frameTime = FrameTime()
         local scrW, scrH = ScrW(), ScrH()
@@ -17,7 +17,7 @@ function FrameworkHUD:DrawVignette()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:ShouldDrawVignette()
+function MODULE:ShouldDrawVignette()
     if hasVignetteMaterial then return self.Vignette end
 end
 

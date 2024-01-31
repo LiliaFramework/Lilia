@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PerfomanceCore:PlayerSpawnVehicle(client)
+function MODULE:PlayerSpawnVehicle(client)
     local playerCount = #player.GetAll()
     if playerCount >= self.PlayerCountCarLimit and self.PlayerCountCarLimitEnabled then
         client:notify("You can't spawn this as the playerlimit to spawn car has been hit!")
@@ -8,7 +8,7 @@ function PerfomanceCore:PlayerSpawnVehicle(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PerfomanceCore:PlayerInitialSpawn()
+function MODULE:PlayerInitialSpawn()
     local playerCount = #player.GetAll()
     local ents = ents.GetAll()
     if playerCount >= self.PlayerCountCarLimit and self.PlayerCountCarLimitEnabled then
@@ -16,7 +16,7 @@ function PerfomanceCore:PlayerInitialSpawn()
             if car:IsVehicle() then car:Remove() end
         end
 
-        print("Cars deleted. Player count reached the limit. Please disable PerfomanceCore.PlayerCountCarLimitEnabled if you don't want this. ")
+        print("Cars deleted. Player count reached the limit. Please disable MODULE.PlayerCountCarLimitEnabled if you don't want this. ")
     end
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

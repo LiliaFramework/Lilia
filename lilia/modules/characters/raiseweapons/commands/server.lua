@@ -5,7 +5,7 @@ lia.command.add("toggleraise", {
     onRun = function(client)
         if (client.liaNextToggle or 0) < CurTime() then
             client:toggleWepRaised()
-            client.liaNextToggle = CurTime() + RaisedWeaponCore.WeaponToggleDelay
+            client.liaNextToggle = CurTime() + MODULE.WeaponToggleDelay
         end
     end
 })

@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MainMenu:PlayerLiliaDataLoaded(client)
+function MODULE:PlayerLiliaDataLoaded(client)
     lia.char.restore(client, function(charList)
         if not IsValid(client) then return end
         MsgN("Loaded (" .. table.concat(charList, ", ") .. ") for " .. client:Name())
@@ -19,24 +19,24 @@ function MainMenu:PlayerLiliaDataLoaded(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MainMenu:OnCharacterDelete(client, id)
+function MODULE:OnCharacterDelete(client, id)
     lia.log.add(client, "charDelete", id)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MainMenu:OnCharCreated(client, character)
+function MODULE:OnCharCreated(client, character)
     lia.log.add(client, "charCreate", character)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MainMenu:CanPlayerUseChar(_, character)
+function MODULE:CanPlayerUseChar(_, character)
     local banned = character:getData("banned")
     if banned and isnumber(banned) and banned > os.time() then return false, "@charBanned" end
     return true
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MainMenu:CanPlayerSwitchChar(client, character, newCharacter)
+function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
     local banned = character:getData("banned")
     if character:getID() == newCharacter:getID() then return false, "You are already using this character!" end
     if banned and isnumber(banned) and banned > os.time() then return false, "@charBanned" end
@@ -47,12 +47,12 @@ function MainMenu:CanPlayerSwitchChar(client, character, newCharacter)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MainMenu:PlayerLoadedChar(client)
+function MODULE:PlayerLoadedChar(client)
     client:Spawn()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MainMenu:CharacterLoaded(id)
+function MODULE:CharacterLoaded(id)
     local character = lia.char.loaded[id]
     local client = character:getPlayer()
     lia.log.add(client, "charLoad", id, character:getName())

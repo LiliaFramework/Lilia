@@ -7,14 +7,14 @@ function playerMeta:isWepRaised()
     if override ~= nil then return override end
     if IsValid(weapon) then
         local weaponClass = weapon:GetClass()
-        if RaisedWeaponCore.PermaRaisedWeapons[weaponClass] or weapon.IsAlwaysRaised or weapon.AlwaysRaised then
+        if MODULE.PermaRaisedWeapons[weaponClass] or weapon.IsAlwaysRaised or weapon.AlwaysRaised then
             return true
         elseif weapon.IsAlwaysLowered or weapon.NeverRaised then
             return false
         end
     end
 
-    if RaisedWeaponCore.WepAlwaysRaised then return true end
+    if MODULE.WepAlwaysRaised then return true end
     return self:getNetVar("raised", false)
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

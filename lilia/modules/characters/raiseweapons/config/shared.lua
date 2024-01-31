@@ -1,9 +1,9 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Determine if weapons are always raised ]]
-RaisedWeaponCore.WepAlwaysRaised = true
+MODULE.WepAlwaysRaised = true
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Weapons that are always raised ]]
-RaisedWeaponCore.PermaRaisedWeapons = {
+MODULE.PermaRaisedWeapons = {
     ["weapon_physgun"] = true,
     ["gmod_tool"] = true,
     ["lia_poshelper"] = true,
@@ -11,5 +11,5 @@ RaisedWeaponCore.PermaRaisedWeapons = {
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ Time Between Weapon Toggles ]]
-RaisedWeaponCore.WeaponToggleDelay = 1
+MODULE.WeaponToggleDelay = 1
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

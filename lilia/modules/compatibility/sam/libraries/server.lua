@@ -1,12 +1,12 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SAMCompatibility:InitializedModules()
+function MODULE:InitializedModules()
     sam.config.set("Restrictions.Tool", false)
     sam.config.set("Restrictions.Limits", false)
     sam.config.set("Restrictions.Spawning", false)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SAMCompatibility:PlayerInitialSpawn(client)
+function MODULE:PlayerInitialSpawn(client)
     local StaffRank = self.DefaultStaff[client:SteamID()]
     if StaffRank then
         RunConsoleCommand("sam", "setrank", client:SteamID(), StaffRank)
@@ -16,7 +16,7 @@ function SAMCompatibility:PlayerInitialSpawn(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SAMCompatibility:PlayerSpawnProp(client)
+function MODULE:PlayerSpawnProp(client)
     if not FindMetaTable("Player").GetLimit then return end
     local limit = client:GetLimit("props")
     if limit < 0 then return end
@@ -35,7 +35,7 @@ function SAMCompatibility:PlayerSpawnProp(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SAMCompatibility:PlayerCheckLimit(client, name)
+function MODULE:PlayerCheckLimit(client, name)
     if not FindMetaTable("Player").GetLimit then return end
     if name == "props" then
         if client:isStaffOnDuty() then return true end
@@ -49,7 +49,7 @@ function SAMCompatibility:PlayerCheckLimit(client, name)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function SAMCompatibility:PlayerSpawnRagdoll(client)
+function MODULE:PlayerSpawnRagdoll(client)
     if not FindMetaTable("Player").GetLimit then return end
     local limit = client:GetLimit("ragdolls")
     if limit < 0 then return end

@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-SpawningCore.CAMIPrivileges = {
+MODULE.CAMIPrivileges = {
     {
         Name = "Spawn Permissions - Can Spawn Ragdolls",
         MinAccess = "admin",

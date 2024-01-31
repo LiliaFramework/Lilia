@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function FrameworkHUD:LoadFonts(_)
+function MODULE:LoadFonts(_)
     surface.CreateFont("WB_Small", {
         font = "Product Sans",
         size = 17

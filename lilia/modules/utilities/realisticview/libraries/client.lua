@@ -3,7 +3,7 @@ local RealisticViewEnabled = CreateClientConVar("rview_enabled", 0, true)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local RealisticViewUseFullBody = CreateClientConVar("rview_fullbody", 0, true)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function Realistic1stPersonViewCore:CalcView(client, origin, angles)
+function MODULE:CalcView(client, origin, angles)
     if self.FirstPersonViewEnabled then
         local view = {
             origin = origin,
@@ -41,7 +41,7 @@ function Realistic1stPersonViewCore:CalcView(client, origin, angles)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function Realistic1stPersonViewCore:SetupQuickMenu(menu)
+function MODULE:SetupQuickMenu(menu)
     if self.FirstPersonViewEnabled then
         menu:addCheck("Realistic View Enabled", function(_, state)
             if state then

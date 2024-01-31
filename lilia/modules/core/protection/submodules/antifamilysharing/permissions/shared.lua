@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-AntiFamilySharingCore.CAMIPrivileges = {
+MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can See Family Sharing Notifications",
         MinAccess = "admin",

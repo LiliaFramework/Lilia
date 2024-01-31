@@ -14,7 +14,7 @@ function PANEL:confirmDelete()
         return
     end
 
-    vgui.Create("liaCharacterConfirm"):setMessage(L("Deleting a character cannot be undone.")):onConfirm(function() MainMenu:deleteCharacter(id) end)
+    vgui.Create("liaCharacterConfirm"):setMessage(L("Deleting a character cannot be undone.")):onConfirm(function() MODULE:deleteCharacter(id) end)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

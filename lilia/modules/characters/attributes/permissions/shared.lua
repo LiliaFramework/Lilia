@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-AttributesCore.CAMIPrivileges = {
+MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - One Punch Man",
         MinAccess = "superadmin",

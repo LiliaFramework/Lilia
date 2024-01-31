@@ -78,7 +78,7 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function SWEP:PrimaryAttack()
-    local time = DoorsCore.DoorLockTime or 0.5
+    local time = MODULE.DoorLockTime or 0.5
     local time2 = math.max(time, 1)
     local owner = self:GetOwner()
     local data = {}
@@ -95,7 +95,7 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function SWEP:SecondaryAttack()
-    local time = DoorsCore.DoorLockTime
+    local time = MODULE.DoorLockTime
     local time2 = math.max(time, 1)
     local owner = self:GetOwner()
     local data = {}

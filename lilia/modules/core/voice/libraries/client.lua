@@ -64,8 +64,8 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 vgui.Register("VoicePanel", PANEL, "DPanel")
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function VoiceCore:PlayerStartVoice(client)
-    if not IsValid(g_VoicePanelList) or not VoiceCore.IsVoiceEnabled then return end
+function MODULE:PlayerStartVoice(client)
+    if not IsValid(g_VoicePanelList) or not MODULE.IsVoiceEnabled then return end
     hook.Run("PlayerEndVoice", client)
     if IsValid(VoicePanels[client]) then
         if VoicePanels[client].fadeAnim then
@@ -91,7 +91,7 @@ local function VoiceClean()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function VoiceCore:PlayerEndVoice(client)
+function MODULE:PlayerEndVoice(client)
     if IsValid(VoicePanels[client]) then
         if VoicePanels[client].fadeAnim then return end
         VoicePanels[client].fadeAnim = Derma_Anim("FadeOut", VoicePanels[client], VoicePanels[client].FadeOut)

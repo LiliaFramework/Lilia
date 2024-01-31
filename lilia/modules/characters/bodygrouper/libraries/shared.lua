@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function BodygrouperCore:CanAccessMenu(client)
+function MODULE:CanAccessMenu(client)
     for _, v in pairs(ents.FindByClass("lia_bodygrouper")) do
         if v:GetPos():Distance(client:GetPos()) <= 128 then return true end
     end
@@ -7,7 +7,7 @@ function BodygrouperCore:CanAccessMenu(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function BodygrouperCore:CanProperty(_, property, entity)
+function MODULE:CanProperty(_, property, entity)
     if property == "persist" and (IsValid(entity) and entity:GetClass() == "lia_bodygrouper") then return false end
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

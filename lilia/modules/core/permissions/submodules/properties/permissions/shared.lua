@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-PropertiesCore.CAMIPrivileges = {
+MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Property World Entities",
         MinAccess = "superadmin",
