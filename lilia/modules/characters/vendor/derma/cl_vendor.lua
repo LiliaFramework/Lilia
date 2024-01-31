@@ -21,38 +21,37 @@ function PANEL:Init()
     self.leave:SetFont("liaVendorButtonFont")
     self.leave:SetText(L("leave"):upper())
     self.leave:SetTextColor(color_white)
-    self.leave:SetContentAlignment(5)
+    self.leave:SetContentAlignment(9)
     self.leave:SetExpensiveShadow(2, color_black)
-    self.leave.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 0)) end
-    self.leave:Dock(FILL)
+    self.leave.DoClick = function(button) self:Remove() end
+    self.leave:SizeToContents()
     self.leave:SetPaintBackground(false)
-    self.leave:DockMargin(0, 0, 250, 0)
+    self.leave.Paint = function() end
     self.leave.x = ScrW() * 0.5 - (self.leave:GetWide() * 0.5)
     if LocalPlayer():CanEditVendor() then
         self.editor = self.buttons:Add("DButton")
         self.editor:SetFont("liaVendorButtonFont")
         self.editor:SetText(L("editor"):upper())
         self.editor:SetTextColor(color_white)
-        self.editor:SetContentAlignment(8)
+        self.editor:SetContentAlignment(9)
         self.editor:SetExpensiveShadow(2, color_black)
-        self.editor.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 0)) end
-        self.editor:Dock(FILL)
+        self.editor.DoClick = function(button) vgui.Create("liaVendorEditor"):SetZPos(99) end
         self.editor:SizeToContents()
         self.editor:SetPaintBackground(false)
-        self.editor.DoClick = function(_) vgui.Create("liaVendorEditor"):SetZPos(99) end
-        self.editor:DockMargin(300, 0, 20, 0)
-        self.leave.x = self.leave.x + self.leave:GetWide() * 0.5
+        self.leave.x = self.leave.x + 16 + self.leave:GetWide() * 0.5
+        self.editor.x = ScrW() * 0.5 - 16 - self.editor:GetWide()
+        self.editor.Paint = function() end
     end
 
     self.vendor = self:Add("liaVendorTrader")
     self.vendor:SetWide(math.max(ScrW() * 0.25, 220))
-    self.vendor:SetPos(ScrW() * 0.5 - self.vendor:GetWide() - 32, 64 + self.leave:GetTall())
+    self.vendor:SetPos(ScrW() * 0.5 - self.vendor:GetWide() - 64 / 2, 64 + self.leave:GetTall())
     self.vendor:SetTall(ScrH() - self.vendor.y - 64)
     self.vendor:setName(liaVendorEnt:getNetVar("name"))
     self.vendor:setMoney(liaVendorEnt:getMoney())
     self.me = self:Add("liaVendorTrader")
     self.me:SetSize(self.vendor:GetSize())
-    self.me:SetPos(ScrW() * 0.5 + 32, self.vendor.y)
+    self.me:SetPos(ScrW() * 0.5 + 64 / 2, self.vendor.y)
     self.me:setName(L"you")
     self.me:setMoney(LocalPlayer():getChar():getMoney())
     self:listenForChanges()
