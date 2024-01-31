@@ -162,7 +162,7 @@ function MODULE:CreateMenuButtons(tabs)
         end
 
         tabs = {}
-        if hook.Run("CanPlayerViewHelpMenu") ~= false then hook.Run("BuildHelpMenu", tabs) end
+        hook.Run("BuildHelpMenu", tabs)
         for k, v in SortedPairs(tabs) do
             if not isfunction(v) then
                 local source = v

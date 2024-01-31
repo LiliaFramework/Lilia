@@ -911,7 +911,10 @@ lia.command.add("fallover", {
     privilege = "Default User Commands",
     syntax = "[number time]",
     onRun = function(client, arguments)
-        if client:IsFrozen() then
+        if client:GetNWBool("FallOverCooldown", false) then
+            client:notify("This Command Is In Cooldown!")
+            return
+        elseif client:IsFrozen() then
             client:notify("You cannot use this while frozen!")
             return
         elseif not client:Alive() then
@@ -933,7 +936,11 @@ lia.command.add("fallover", {
             time = nil
         end
 
-        if not IsValid(client.liaRagdoll) then client:setRagdolled(true, time) end
+        client:SetNWBool("FallOverCooldown", true)
+        if not IsValid(client.liaRagdoll) then
+            client:setRagdolled(true, time)
+            timer.Simple(10, function() client:SetNWBool("FallOverCooldown", false) end)
+        end
     end
 })
 
