@@ -102,9 +102,7 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:PlayerButtonDown(_, button)
     local ThirdPersonIsEnabled = ThirdPerson:GetInt() == 1
-    if self.ThirdPersonEnabled and button == KEY_F4 and IsFirstTimePredicted() then
-        ThirdPerson:SetInt(ThirdPersonIsEnabled and 0 or 1)
-    end
+    if self.ThirdPersonEnabled and button == KEY_F4 and IsFirstTimePredicted() then ThirdPerson:SetInt(ThirdPersonIsEnabled and 0 or 1) end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
