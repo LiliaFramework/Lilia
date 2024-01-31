@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-MODULE:AddOption("Allow This Player To Recognize You", {
+PIM:AddOption("Allow This Player To Recognize You", {
     runServer = false,
     shouldShow = function(client, target)
         local ourChar = client:getChar()
@@ -10,7 +10,7 @@ MODULE:AddOption("Allow This Player To Recognize You", {
 })
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-MODULE:AddOption("Allow This Player To Recognize You With A Fake Name", {
+PIM:AddOption("Allow This Player To Recognize You With A Fake Name", {
     runServer = false,
     shouldShow = function(client, target)
         local ourChar = client:getChar()
