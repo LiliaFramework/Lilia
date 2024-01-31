@@ -3,5 +3,6 @@
     "base"       "sandbox"
     "title"      "Lilia"
     "author"     "Leonheart"
+    "menusystem" 	"1"
     "category"   "rp"
 }
