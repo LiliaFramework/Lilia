@@ -54,20 +54,18 @@ function ENT:openInv(activator)
     local inventory = self:getInv()
     local storage = self:getStorageInfo()
     if isfunction(storage.onOpen) then storage.onOpen(self, activator) end
-    activator:setAction(L("Opening...", activator), LiliaStorage.StorageOpenTime, function()
-        if activator:GetPos():Distance(self:GetPos()) > 96 then
-            activator.liaStorageEntity = nil
-            return
-        end
+    if activator:GetPos():Distance(self:GetPos()) > 96 then
+        activator.liaStorageEntity = nil
+        return
+    end
 
-        self.receivers[activator] = true
-        inventory:sync(activator)
-        net.Start("liaStorageOpen")
-        net.WriteEntity(self)
-        net.Send(activator)
-        local openSound = self:getStorageInfo().openSound
-        self:EmitSound(openSound or "items/ammocrate_open.wav")
-    end)
+    self.receivers[activator] = true
+    inventory:sync(activator)
+    net.Start("liaStorageOpen")
+    net.WriteEntity(self)
+    net.Send(activator)
+    local openSound = self:getStorageInfo().openSound
+    self:EmitSound(openSound or "items/ammocrate_open.wav")
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
