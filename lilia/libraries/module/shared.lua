@@ -204,6 +204,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     hook.Run("ModuleLoaded", uniqueID, MODULE.identifier, MODULE)
     if MODULE.OnLoaded then MODULE:OnLoaded() end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.module.loadExtras(path)
     lia.lang.loadFromDir(path .. "/languages")
@@ -241,6 +242,7 @@ function lia.module.initialize()
     lia.module.loadFromDir(schema .. "/modules", "module")
     hook.Run("InitializedModules")
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.module.verifyModuleValidity(uniqueID, isEnabled)
     if uniqueID == "schema" then return true end
@@ -255,6 +257,7 @@ function lia.module.verifyModuleValidity(uniqueID, isEnabled)
     end
     return isEnabled ~= false
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.module.loadFromDir(directory, group)
     local location = group == "schema" and "SCHEMA" or "MODULE"
