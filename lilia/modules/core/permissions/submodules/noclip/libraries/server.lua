@@ -2,15 +2,15 @@
 local GM = GM or GAMEMODE
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerNoClip(client, state)
-    if CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip Outside Staff Character", nil) or client:isStaffOnDuty() then
+    if (not client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip Outside Staff Character", nil)) or client:isStaffOnDuty()then
         if state then
-            client.liaObsData = {client:GetPos(), client:EyeAngles()}
             client:SetNoDraw(true)
             client:SetNotSolid(true)
             client:DrawWorldModel(false)
             client:DrawShadow(false)
             client:GodEnable()
             client:SetNoTarget(true)
+            client.liaObsData = {client:GetPos(), client:EyeAngles()}
             hook.Run("OnPlayerObserve", client, state)
         else
             if client.liaObsData then
