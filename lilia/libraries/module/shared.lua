@@ -7,7 +7,7 @@ lia.module.list = lia.module.list or {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.module.unloaded = lia.module.unloaded or {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-lia.module.ModuleFolders = {"dependencies", "config", "permissions", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim", "concommands"}
+lia.module.ModuleFolders = {"dependencies", "config", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim", "concommands"}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.module.ModuleFiles = {
     ["client.lua"] = "client",
@@ -132,8 +132,43 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         lia.util.include(ModuleCore and normalpath or ExtendedCore and extendedpath, "shared")
     end
 
-    hook.Run("ModuleDependenciesPreLoad", uniqueID, MODULE.identifier, MODULE)
-    if hook.Run("VerifyModuleValidity", uniqueID, MODULE, MODULE.identifier) then
+    local ModuleWorkshopContent = MODULE.WorkshopContent
+    local ModuleCAMIPermissions = MODULE.CAMIPrivileges
+    local ModuleGlobal = MODULE.identifier
+    local IsValidForGlobal = ModuleGlobal ~= "" and ModuleGlobal ~= nil
+    if IsValidForGlobal and uniqueID ~= "schema" then _G[ModuleGlobal] = MODULE end
+    if ModuleCAMIPermissions and istable(ModuleCAMIPermissions) then
+        for _, privilegeData in ipairs(ModuleCAMIPermissions) do
+            local privilegeInfo = {
+                Name = privilegeData.Name,
+                MinAccess = privilegeData.MinAccess or "admin",
+                Description = privilegeData.Description or ("Allows access to " .. privilegeData.Name:gsub("^%l", string.upper))
+            }
+
+            if not CAMI.GetPrivilege(privilegeData.Name) then
+                CAMI.RegisterPrivilege(privilegeInfo)
+                print("[" .. MODULE.name .. "] " .. "Registering Privilege " .. privilegeData.Name)
+            end
+        end
+    end
+
+    if IsValidForGlobal and uniqueID ~= "schema" then _G[ModuleGlobal] = MODULE end
+    if ModuleWorkshopContent and SERVER then
+        if istable(ModuleWorkshopContent) then
+            for i = 1, #ModuleWorkshopContent do
+                local workshopID = ModuleWorkshopContent[i]
+                if isstring(workshopID) and workshopID:match("^%d+$") then
+                    resource.AddWorkshop(workshopID)
+                else
+                    print("Invalid Workshop ID:", workshopID)
+                end
+            end
+        else
+            resource.AddWorkshop(ModuleWorkshopContent)
+        end
+    end
+
+    if lia.module.verifyModuleValidity(uniqueID, MODULE.enabled) then
         lia.module.EnabledList[tostring(MODULE.name)] = true
     else
         if lia.module.ModuleConditions[uniqueID] == nil then print(MODULE.name .. " is disabled. Disabling!") end
@@ -169,7 +204,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     hook.Run("ModuleLoaded", uniqueID, MODULE.identifier, MODULE)
     if MODULE.OnLoaded then MODULE:OnLoaded() end
 end
-
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.module.loadExtras(path)
     lia.lang.loadFromDir(path .. "/languages")
@@ -207,7 +241,20 @@ function lia.module.initialize()
     lia.module.loadFromDir(schema .. "/modules", "module")
     hook.Run("InitializedModules")
 end
-
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function lia.module.verifyModuleValidity(uniqueID, isEnabled)
+    if uniqueID == "schema" then return true end
+    for ModuleName, conditions in pairs(lia.module.ModuleConditions) do
+        if uniqueID ~= ModuleName then continue end
+        if _G[conditions.global] ~= nil then
+            print(conditions.name .. " found. Activating Compatibility!")
+            return true
+        else
+            return false
+        end
+    end
+    return isEnabled ~= false
+end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.module.loadFromDir(directory, group)
     local location = group == "schema" and "SCHEMA" or "MODULE"
