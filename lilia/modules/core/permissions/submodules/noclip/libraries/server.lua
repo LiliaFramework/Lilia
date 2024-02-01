@@ -2,7 +2,7 @@
 local GM = GM or GAMEMODE
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerNoClip(client, state)
-    if (not client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip Outside Staff Character", nil)) or client:isStaffOnDuty()then
+    if (not client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip Outside Staff Character", nil)) or client:isStaffOnDuty() then
         if state then
             client:SetNoDraw(true)
             client:SetNotSolid(true)
