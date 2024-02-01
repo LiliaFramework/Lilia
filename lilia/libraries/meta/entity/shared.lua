@@ -21,10 +21,12 @@ function entityMeta:NearEntity(radius)
     end
     return false
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function entityMeta:isDoorLocked()
-	return self:GetSaveTable().m_bLocked or self.locked or false
+    return self:GetSaveTable().m_bLocked or self.locked or false
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function entityMeta:GetViewAngle(pos)
     local diff = pos - self:EyePos()
