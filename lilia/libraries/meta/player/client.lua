@@ -27,7 +27,7 @@ function playerMeta:SetWeighPoint(name, vector, OnReach)
 
     concommand.Add("weighpoint_stop", function()
         hook.Add("HUDPaint", "WeighPoint", function() end)
-        OnReach()
+        if IsValid(OnReach) then OnReach() end
     end)
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
