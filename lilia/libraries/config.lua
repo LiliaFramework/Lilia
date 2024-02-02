@@ -130,7 +130,6 @@ if not ConfigWasInitialized then
             ["cl_pred_optimize"] = "2",
         },
         --[[ Timers to be removed on the client ]]
-        TimersToRemove = {"HostnameThink", "CheckHookTimes", "HintSystem_OpeningMenu", "HintSystem_Annoy1", "HintSystem_Annoy2"},
         PlayerModelTposingFixer = {}, -- Models to fix T-pose issues
     }
 
