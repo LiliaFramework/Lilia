@@ -82,8 +82,11 @@ function MODULE:PlayerDeath(client, _, attacker)
     end
 
     if (not attacker:IsPlayer() and self.LoseWeapononDeathNPC) or (self.LoseWeapononDeathWorld and attacker:IsWorld()) then self:RemoveAllEquippedWeapons(client) end
-    net.Start("RespawnButtonDeath")
-    net.Send(client)
+    timer.Simple(lia.config.SpawnTime + 1, function()
+        net.Start("RespawnButtonDeath")
+        net.Send(client)
+    end)
+
     char:setData("deathPos", client:GetPos())
 end
 

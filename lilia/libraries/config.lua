@@ -36,8 +36,6 @@ if not ConfigWasInitialized then
             50,
             250
         },
-        --[[ Timers to be removed on the client ]]
-        TimersToRemove = {"HostnameThink", "CheckHookTimes", "HintSystem_OpeningMenu", "HintSystem_Annoy1", "HintSystem_Annoy2"},
         --[[ Hooks to be removed ]]
         RemovableHooks = {
             ["StartChat"] = {"StartChatIndicator",},
@@ -131,6 +129,8 @@ if not ConfigWasInitialized then
             ["cl_smooth"] = "0",
             ["cl_pred_optimize"] = "2",
         },
+        --[[ Timers to be removed on the client ]]
+        TimersToRemove = {"HostnameThink", "CheckHookTimes", "HintSystem_OpeningMenu", "HintSystem_Annoy1", "HintSystem_Annoy2"},
         PlayerModelTposingFixer = {}, -- Models to fix T-pose issues
     }
 
