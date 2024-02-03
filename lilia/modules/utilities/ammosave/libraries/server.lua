@@ -21,8 +21,9 @@ function MODULE:PlayerLoadedChar(client)
     local ammoTable = character:getData("ammo", {})
     if not self.SaveCharacterAmmo or table.IsEmpty(ammoTable) then return end
     timer.Simple(0.25, function()
+        if not IsValid(ammoTable) then return end
         for ammoType, ammoCount in pairs(ammoTable) do
-            client:GiveAmmo(ammoCount, ammoType, true)
+            if IsValid(ammoCount) or IsValid(ammoCount) then client:GiveAmmo(ammoCount, ammoType, true) end
         end
 
         character:setData("ammo", nil)
