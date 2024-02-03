@@ -63,11 +63,14 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:PlayerSpawnVehicle(client, _, name, _)
+    local delay = PermissionCore.PlayerSpawnVehicleDelay
     if IsValid(client) and client:getChar():hasFlags("C") or CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Cars", nil) then
         if table.HasValue(PermissionCore.RestrictedVehicles, name) and not CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Restricted Cars", nil) then
             client:notify("You can't spawn this vehicle since it's restricted!")
             return false
         end
+
+        if not CAMI.PlayerHasAccess(client, "Spawn Permissions - No Car Spawn Delay", nil) then client.NextVehicleSpawn = SysTime() + delay end
         return true
     end
     return false
@@ -81,8 +84,6 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:PlayerSpawnedVehicle(client, entity)
-    local delay = PermissionCore.PlayerSpawnVehicleDelay
-    if not CAMI.PlayerHasAccess(client, "Spawn Permissions - No Car Spawn Delay", nil) then client.NextVehicleSpawn = SysTime() + delay end
     self:PlayerSpawnedEntity(client, entity, entity:GetClass(), "Vehicle", true)
 end
 
