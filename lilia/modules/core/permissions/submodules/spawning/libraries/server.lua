@@ -1,6 +1,6 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:PlayerSpawnedSENT(client, entity)
-    entity:AssignCreator(client)
+    entity:SetCreator(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
@@ -107,6 +107,6 @@ function MODULE:PlayerSpawnedEntity(client, entity, class, group, hasName)
     local entityName = entity:GetName() or "Unnamed"
     local entityModel = entity:GetModel() or "Unknown Model"
     lia.log.add(client, "spawned_ent", group, class, hasName, entityName, entityModel)
-    entity:AssignCreator(client)
+    entity:SetCreator(client)
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
