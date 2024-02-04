@@ -9,5 +9,5 @@ MODULE.HackCommands = {"loki_menu", "cheadle_api", "gear_printents", "gw_toggle"
 MODULE.HackGlobals = {"cheadle_api", "bSendPacket", "ValidNetString", "totalExploits", "addExploit", "AutoReload", "CircleStrafe", "toomanysploits", "Sploit", "R8", "ValidateESP", "ValidateAimbot"}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ List of Hack Menu Commands ]]
-MODULE.BadCVars = {"lenny","cheadle_api", "smeg", "wallhack", "nospread", "antiaim", "hvh", "autostrafe", "circlestrafe", "spinbot", "odium", "ragebot", "legitbot", "fakeangles", "anticac", "antiscreenshot", "fakeduck", "lagexploit", "exploits_open", "gmodhack", "cathack"}
+MODULE.BadCVars = {"lenny", "cheadle_api", "smeg", "wallhack", "nospread", "antiaim", "hvh", "autostrafe", "circlestrafe", "spinbot", "odium", "ragebot", "legitbot", "fakeangles", "anticac", "antiscreenshot", "fakeduck", "lagexploit", "exploits_open", "gmodhack", "cathack"}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
