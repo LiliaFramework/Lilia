@@ -4,7 +4,7 @@ local RealisticViewEnabled = CreateClientConVar("rview_enabled", 0, true)
 local RealisticViewUseFullBody = CreateClientConVar("rview_fullbody", 0, true)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:CalcView(client, origin, angles)
-    if self.FirstPersonViewEnabled then
+    if not client:InVehicle() and self.FirstPersonViewEnabled and RealisticViewEnabled:GetBool() then
         local view = {
             origin = origin,
             angles = angles,
@@ -14,7 +14,7 @@ function MODULE:CalcView(client, origin, angles)
 
         local head = client:LookupAttachment("eyes")
         head = client:GetAttachment(head)
-        if (not head or not head.Pos) or IsValid(lia.gui.menu) or client:GetMoveType() == MOVETYPE_NOCLIP or not RealisticViewEnabled:GetBool() then return end
+        if (not head or not head.Pos) or IsValid(lia.gui.menu) or client:GetMoveType() == MOVETYPE_NOCLIP then return end
         if not client.BonesRattled then
             client.BonesRattled = true
             client:InvalidateBoneCache()

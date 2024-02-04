@@ -317,6 +317,16 @@ lia.command.add("doorsetchild", {
 })
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+lia.command.add("savedoors", {
+    adminOnly = true,
+    privilege = "Manage Doors",
+    onRun = function(client)
+        MODULE:SaveData()
+        client:notify("Saved Doors")
+    end
+})
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("doorremovechild", {
     adminOnly = true,
     privilege = "Manage Doors",

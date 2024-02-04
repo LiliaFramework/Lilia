@@ -108,7 +108,7 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:ShouldDrawLocalPlayer()
     local client = LocalPlayer()
-    if client:GetViewEntity() == client and not IsValid(client:GetVehicle()) and client:CanOverrideView() then return true end
+    if client:GetViewEntity() == client and  client:CanOverrideView() then return true end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
@@ -178,7 +178,7 @@ end
 function playerMeta:CanOverrideView()
     local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
     if IsValid(lia.gui.char) and lia.gui.char:IsVisible() then return false end
-    return ThirdPerson:GetBool() and not IsValid(self:GetVehicle()) and ThirdPersonCore.ThirdPersonEnabled and IsValid(self) and self:getChar() and not IsValid(ragdoll)
+    return ThirdPerson:GetBool() and ThirdPersonCore.ThirdPersonEnabled and (IsValid(self) and self:getChar() and not IsValid(ragdoll))
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

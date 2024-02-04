@@ -2,7 +2,12 @@
 local entityMeta = FindMetaTable("Entity")
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function entityMeta:isDoor()
-    return self:GetClass():find("door")
+    local class = self:GetClass():lower()
+    local doorPrefixes = {"prop_door", "func_door", "func_door_rotating", "door_",}
+    for _, prefix in ipairs(doorPrefixes) do
+        if class:find(prefix) then return true end
+    end
+    return false
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
