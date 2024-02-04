@@ -1,4 +1,6 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local MODULE = MODULE
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local PANEL = {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:Init()
@@ -239,7 +241,7 @@ function PANEL:delta(delta)
         local oldPoints = self.points
         self.points = self.parent:onPointChange(self.key, delta)
         self:updateQuantity()
-        if oldPoints ~= self.points then LocalPlayer():EmitSound(unpack(AttributesCore.CharAttrib)) end
+        if oldPoints ~= self.points then LocalPlayer():EmitSound(unpack(MODULE.CharAttrib)) end
     end
 end
 

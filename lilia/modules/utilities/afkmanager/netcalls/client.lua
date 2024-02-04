@@ -1,10 +1,12 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local MODULE = MODULE
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 net.Receive("AFKWarning", function()
     local enable = net.ReadBool()
     if enable then
-        AFKKickerCore:EnableWarning()
+        MODULE:EnableWarning()
     else
-        AFKKickerCore:DisableWarning()
+        MODULE:DisableWarning()
     end
 end)
 

@@ -1,4 +1,6 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local MODULE = MODULE
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 util.AddNetworkString("BodygrouperMenu")
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 util.AddNetworkString("BodygrouperMenuClose")
@@ -24,7 +26,7 @@ net.Receive("BodygrouperMenu", function(_, client)
             return
         end
     else
-        if not BodygrouperCore:CanAccessMenu(client) then
+        if not MODULE:CanAccessMenu(client) then
             client:notifyLocalized("noAccess")
             return
         end

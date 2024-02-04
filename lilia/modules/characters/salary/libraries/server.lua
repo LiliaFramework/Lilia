@@ -6,7 +6,7 @@ function MODULE:CreateSalaryTimer(client)
     local faction = lia.faction.indices[character:getFaction()]
     local class = lia.class.list[character:getClass()]
     local PayAmount = hook.Run("GetSalaryAmount", client, faction, class) or (class and class.pay) or (faction and faction.pay) or 0
-    local SalaryLimit = hook.Run("GetSalaryLimit", client, faction, class) or (class and class.payLimit) or (faction and faction.payLimit) or SalaryCore.SalaryThreshold
+    local SalaryLimit = hook.Run("GetSalaryLimit", client, faction, class) or (class and class.payLimit) or (faction and faction.payLimit) or self.SalaryThreshold
     local timerFunc = timer.Exists(timerID) and timer.Adjust or timer.Create
     local delay = (class and class.payTimer) or (faction and faction.payTimer) or self.SalaryInterval
     if PayAmount > 0 then

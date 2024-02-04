@@ -1,4 +1,6 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local MODULE = MODULE
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local PANEL = {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local StaffCount = 0
@@ -37,7 +39,7 @@ paintFunctions[1] = function(_, _, _) end
 function PANEL:Init()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
     lia.gui.score = self
-    self:SetSize(ScrW() * ScoreboardCore.sbWidth, ScrH() * ScoreboardCore.sbHeight)
+    self:SetSize(ScrW() * MODULE.sbWidth, ScrH() * MODULE.sbHeight)
     self.staff1 = self:Add("DLabel")
     self.staff1:SetText("Staff Online: 0")
     self.staff1:SetFont("liaMediumFont")
@@ -61,7 +63,7 @@ function PANEL:Init()
     self.slots = {}
     self.i = {}
     for k, v in ipairs(lia.faction.indices) do
-        if table.HasValue(ScoreboardCore.HiddenFactions, k) then continue end
+        if table.HasValue(MODULE.HiddenFactions, k) then continue end
         local color = team.GetColor(k)
         local r, g, b = color.r, color.g, color.b
         local list = self.layout:Add("DListLayout")
@@ -116,7 +118,7 @@ function PANEL:Think()
         for k, v in ipairs(self.teams) do
             visible, amount = v:IsVisible(), teamNumPlayers(k)
             if k == FACTION_STAFF then
-                v:SetVisible(ScoreboardCore.ShowStaff and LocalPlayer():isStaffOnDuty())
+                v:SetVisible(MODULE.ShowStaff and LocalPlayer():isStaffOnDuty())
             else
                 v:SetVisible(visible and amount > 0)
             end

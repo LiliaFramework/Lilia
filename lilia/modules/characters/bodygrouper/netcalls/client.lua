@@ -1,11 +1,13 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local MODULE = MODULE
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 net.Receive("BodygrouperMenu", function()
-    if IsValid(BodygrouperCore.Menu) then BodygrouperCore.Menu:Remove() end
+    if IsValid(MODULE.Menu) then MODULE.Menu:Remove() end
     local entity = net.ReadEntity()
-    BodygrouperCore.Menu = vgui.Create("BodygrouperMenu")
-    BodygrouperCore.Menu:SetTarget(IsValid(entity) and entity or LocalPlayer())
+    MODULE.Menu = vgui.Create("BodygrouperMenu")
+    MODULE.Menu:SetTarget(IsValid(entity) and entity or LocalPlayer())
 end)
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-net.Receive("BodygrouperMenuCloseClientside", function() if IsValid(BodygrouperCore.Menu) then BodygrouperCore.Menu:Remove() end end)
+net.Receive("BodygrouperMenuCloseClientside", function() if IsValid(MODULE.Menu) then MODULE.Menu:Remove() end end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

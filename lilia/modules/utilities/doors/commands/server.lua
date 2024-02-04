@@ -1,4 +1,6 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local MODULE = MODULE
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("doorsell", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -6,12 +8,12 @@ lia.command.add("doorsell", {
         local entity = client:GetTracedEntity()
         if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
             if client == entity:GetDTEntity(0) then
-                local price = math.Round(entity:getNetVar("price", DoorsCore.DoorCost) * DoorsCore.DoorSellRatio)
+                local price = math.Round(entity:getNetVar("price", MODULE.DoorCost) * MODULE.DoorSellRatio)
                 entity:removeDoorAccessData()
-                DoorsCore:callOnDoorChildren(entity, function(child) child:removeDoorAccessData() end)
+                MODULE:callOnDoorChildren(entity, function(child) child:removeDoorAccessData() end)
                 client:getChar():giveMoney(price)
                 client:notifyLocalized("dSold", lia.currency.get(price))
-                hook.Run("OnPlayerPurchaseDoor", client, entity, false, DoorsCore.callOnDoorChildren)
+                hook.Run("OnPlayerPurchaseDoor", client, entity, false, MODULE.callOnDoorChildren)
                 lia.log.add(client, "selldoor")
             else
                 client:notifyLocalized("notOwner")
@@ -68,17 +70,17 @@ lia.command.add("doorbuy", {
                 return false
             end
 
-            local price = entity:getNetVar("price", DoorsCore.DoorCost)
+            local price = entity:getNetVar("price", MODULE.DoorCost)
             if client:getChar():hasMoney(price) then
                 entity:SetDTEntity(0, client)
                 entity.liaAccess = {
                     [client] = DOOR_OWNER
                 }
 
-                DoorsCore:callOnDoorChildren(entity, function(child) child:SetDTEntity(0, client) end)
+                MODULE:callOnDoorChildren(entity, function(child) child:SetDTEntity(0, client) end)
                 client:getChar():takeMoney(price)
                 client:notifyLocalized("dPurchased", lia.currency.get(price))
-                hook.Run("OnPlayerPurchaseDoor", client, entity, true, DoorsCore.callOnDoorChildren)
+                hook.Run("OnPlayerPurchaseDoor", client, entity, true, MODULE.callOnDoorChildren)
                 lia.log.add(client, "buydoor")
             else
                 client:notifyLocalized("canNotAfford")
@@ -100,13 +102,13 @@ lia.command.add("doorsetunownable", {
         if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
             entity:setNetVar("noSell", true)
             if arguments[1] and name:find("%S") then entity:setNetVar("name", name) end
-            DoorsCore:callOnDoorChildren(entity, function(child)
+            MODULE:callOnDoorChildren(entity, function(child)
                 child:setNetVar("noSell", true)
                 if arguments[1] and name:find("%S") then child:setNetVar("name", name) end
             end)
 
             client:notifyLocalized("dMadeUnownable")
-            DoorsCore:SaveData()
+            MODULE:SaveData()
         else
             client:notifyLocalized("dNotValid")
         end
@@ -124,13 +126,13 @@ lia.command.add("doorsetownable", {
         if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
             entity:setNetVar("noSell", nil)
             if arguments[1] and name:find("%S") then entity:setNetVar("name", name) end
-            DoorsCore:callOnDoorChildren(entity, function(child)
+            MODULE:callOnDoorChildren(entity, function(child)
                 child:setNetVar("noSell", nil)
                 if arguments[1] and name:find("%S") then child:setNetVar("name", name) end
             end)
 
             client:notifyLocalized("dMadeOwnable")
-            DoorsCore:SaveData()
+            MODULE:SaveData()
         else
             client:notifyLocalized("dNotValid")
         end
@@ -163,7 +165,7 @@ lia.command.add("dooraddfaction", {
                 facs[faction.index] = true
                 local json = util.TableToJSON(facs)
                 entity:setNetVar("factions", json)
-                DoorsCore:callOnDoorChildren(entity, function()
+                MODULE:callOnDoorChildren(entity, function()
                     local facs = entity:getNetVar("factions", "[]")
                     facs = util.JSONToTable(facs)
                     facs[faction.index] = true
@@ -176,11 +178,11 @@ lia.command.add("dooraddfaction", {
                 client:notifyLocalized("invalidFaction")
             else
                 entity:setNetVar("factions", "[]")
-                DoorsCore:callOnDoorChildren(entity, function() entity:setNetVar("factions", "[]") end)
+                MODULE:callOnDoorChildren(entity, function() entity:setNetVar("factions", "[]") end)
                 client:notifyLocalized("dRemoveFaction")
             end
 
-            DoorsCore:SaveData()
+            MODULE:SaveData()
         end
     end
 })
@@ -211,7 +213,7 @@ lia.command.add("doorremovefaction", {
                 facs[faction.index] = nil
                 local json = util.TableToJSON(facs)
                 entity:setNetVar("factions", json)
-                DoorsCore:callOnDoorChildren(entity, function()
+                MODULE:callOnDoorChildren(entity, function()
                     local facs = entity:getNetVar("factions", "[]")
                     facs = util.JSONToTable(facs)
                     facs[faction.index] = nil
@@ -224,11 +226,11 @@ lia.command.add("doorremovefaction", {
                 client:notifyLocalized("invalidFaction")
             else
                 entity:setNetVar("factions", "[]")
-                DoorsCore:callOnDoorChildren(entity, function() entity:setNetVar("factions", "[]") end)
+                MODULE:callOnDoorChildren(entity, function() entity:setNetVar("factions", "[]") end)
                 client:notifyLocalized("dRemoveFaction")
             end
 
-            DoorsCore:SaveData()
+            MODULE:SaveData()
         end
     end
 })
@@ -243,9 +245,9 @@ lia.command.add("doorsetdisabled", {
         if IsValid(entity) and entity:isDoor() then
             local disabled = tobool(arguments[1] or true)
             entity:setNetVar("disabled", disabled)
-            DoorsCore:callOnDoorChildren(entity, function(child) child:setNetVar("disabled", disabled) end)
+            MODULE:callOnDoorChildren(entity, function(child) child:setNetVar("disabled", disabled) end)
             client:notifyLocalized("dSet" .. (disabled and "" or "Not") .. "Disabled")
-            DoorsCore:SaveData()
+            MODULE:SaveData()
         else
             client:notifyLocalized("dNotValid")
         end
@@ -265,7 +267,7 @@ lia.command.add("doorsettitle", {
                 entity:setNetVar("title", name)
             elseif client:IsAdmin() then
                 entity:setNetVar("name", name)
-                DoorsCore:callOnDoorChildren(entity, function(child) child:setNetVar("name", name) end)
+                MODULE:callOnDoorChildren(entity, function(child) child:setNetVar("name", name) end)
             else
                 client:notifyLocalized("notOwner")
             end
@@ -303,8 +305,8 @@ lia.command.add("doorsetchild", {
                 client.liaDoorParent.liaChildren[entity:MapCreationID()] = true
                 entity.liaParent = client.liaDoorParent
                 client:notifyLocalized("dAddChildDoor")
-                DoorsCore:SaveData()
-                DoorsCore:copyParentDoor(entity)
+                MODULE:SaveData()
+                MODULE:copyParentDoor(entity)
             else
                 client:notifyLocalized("dNoParentDoor")
             end
@@ -322,7 +324,7 @@ lia.command.add("doorremovechild", {
         local entity = client:GetEyeTrace().Entity
         if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
             if client.liaDoorParent == entity then
-                DoorsCore:callOnDoorChildren(entity, function(child) child.liaParent = nil end)
+                MODULE:callOnDoorChildren(entity, function(child) child.liaParent = nil end)
                 entity.liaChildren = nil
                 return client:notifyLocalized("dRemoveChildren")
             end
@@ -331,7 +333,7 @@ lia.command.add("doorremovechild", {
                 entity.liaParent.liaChildren[entity:MapCreationID()] = nil
                 entity.liaParent = nil
                 client:notifyLocalized("dRemoveChildDoor")
-                DoorsCore:SaveData()
+                MODULE:SaveData()
             end
         else
             client:notifyLocalized("dNotValid")
@@ -349,9 +351,9 @@ lia.command.add("doorsethidden", {
         if IsValid(entity) and entity:isDoor() then
             local hidden = tobool(arguments[1] or true)
             entity:setNetVar("hidden", hidden)
-            DoorsCore:callOnDoorChildren(entity, function(child) child:setNetVar("hidden", hidden) end)
+            MODULE:callOnDoorChildren(entity, function(child) child:setNetVar("hidden", hidden) end)
             client:notifyLocalized("dSet" .. (hidden and "" or "Not") .. "Hidden")
-            DoorsCore:SaveData()
+            MODULE:SaveData()
         else
             client:notifyLocalized("dNotValid")
         end
@@ -380,7 +382,7 @@ lia.command.add("doorsetclass", {
             if class then
                 entity.liaClassID = class
                 entity:setNetVar("class", class)
-                DoorsCore:callOnDoorChildren(entity, function()
+                MODULE:callOnDoorChildren(entity, function()
                     entity.liaClassID = class
                     entity:setNetVar("class", class)
                 end)
@@ -390,11 +392,11 @@ lia.command.add("doorsetclass", {
                 client:notifyLocalized("invalidClass")
             else
                 entity:setNetVar("class", nil)
-                DoorsCore:callOnDoorChildren(entity, function() entity:setNetVar("class", nil) end)
+                MODULE:callOnDoorChildren(entity, function() entity:setNetVar("class", nil) end)
                 client:notifyLocalized("dRemoveClass")
             end
 
-            DoorsCore:SaveData()
+            MODULE:SaveData()
         end
     end,
     alias = {"jobdoor"}

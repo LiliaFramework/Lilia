@@ -1,4 +1,6 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local MODULE = MODULE
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 MODULE.entities = MODULE.entities or {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:PhysgunPickup(_, entity)
@@ -58,7 +60,7 @@ properties.Add("persist", {
     MenuIcon = "icon16/link.png",
     Filter = function(_, ent, client)
         if ent:IsPlayer() then return false end
-        if PersistanceCore.blacklist[ent:GetClass()] then return false end
+        if MODULE.blacklist[ent:GetClass()] then return false end
         if not gamemode.Call("CanProperty", client, "persist", ent) then return false end
         return not ent:getNetVar("persistent", false)
     end,
