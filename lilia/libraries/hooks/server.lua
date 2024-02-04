@@ -164,7 +164,7 @@ function GM:EntityTakeDamage(entity, dmgInfo)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function GM:PlayerDeathThink(client)
+function GM:PlayerDeathThink()
     return true
 end
 
