@@ -108,7 +108,7 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:ShouldDrawLocalPlayer()
     local client = LocalPlayer()
-    if client:GetViewEntity() == client and  client:CanOverrideView() then return true end
+    if client:GetViewEntity() == client and client:CanOverrideView() then return true end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
