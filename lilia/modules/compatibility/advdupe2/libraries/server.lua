@@ -7,7 +7,7 @@ function MODULE:CanTool(client, _, tool)
         if (table.HasValue(PermissionCore.DuplicatorBlackList, entity) or entity.NoDuplicate) and validEntity then return false end
         if client.AdvDupe2 and client.AdvDupe2.Entities then
             for _, v in pairs(client.AdvDupe2.Entities) do
-                if v.ModelScale > 10 then
+                if v.ModelScale and v.ModelScale > 10 then
                     client:notify("A model within this duplication exceeds the size limit!")
                     print("[Server Warning] Potential server crash using dupes attempt by player: " .. client:Nick() .. " (" .. client:SteamID() .. ")")
                     return false
