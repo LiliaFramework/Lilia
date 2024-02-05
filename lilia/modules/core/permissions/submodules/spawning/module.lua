@@ -25,7 +25,7 @@ MODULE.CAMIPrivileges = {
     },
     {
         Name = "Spawn Permissions - Can Spawn Props",
-        MinAccess = "user",
+        MinAccess = "admin",
         Description = "Allows access to spawning Props."
     },
     {
