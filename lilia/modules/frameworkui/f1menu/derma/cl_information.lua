@@ -45,7 +45,6 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor, shadowColor, labelText, dockMarginTop)
-    local isDesc = name == "desc"
     local entryContainer = self.infoBox:Add("DPanel")
     entryContainer:Dock(TOP)
     entryContainer:SetTall(size + 25)
@@ -65,7 +64,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor
     self[name] = entryContainer:Add("DTextEntry")
     self[name]:SetFont(font)
     self[name]:SetTall(size)
-    self[name]:SetEditable(isDesc and true or false)
+    self[name]:SetEditable(name == "desc" and true or false)
     self[name]:Dock(FILL)
     self[name]:SetTextColor(textColor)
 end

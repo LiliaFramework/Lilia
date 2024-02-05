@@ -36,7 +36,7 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:CreateMenuButtons(tabs)
-    if table.Count(lia.attribs.list) > 0 then
+    if table.Count(lia.attribs.list) > 0 and hook.Run("CanPlayerViewAttributes") ~= false then
         tabs["Attributes"] = function(panel)
             panel.attribs = panel:Add("DScrollPanel")
             panel.attribs:Dock(FILL)
