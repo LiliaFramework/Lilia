@@ -12,8 +12,9 @@ concommand.Add("list_entities", function(client)
     if client:IsSuperAdmin() then
         print("Entities on the server:")
         for _, entity in pairs(ents.GetAll()) do
-            local className = entity:GetClass()
-            local entityName = entity:GetName()
+            local className = entity:GetClass() or "Unknown"
+            local entityName = "Unknown"
+            if entity.GetName then entityName = entity:GetName() end
             entityCount[className] = entityCount[className] or {}
             entityCount[className][entityName] = (entityCount[className][entityName] or 0) + 1
             totalEntities = totalEntities + 1
