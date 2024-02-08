@@ -107,5 +107,5 @@ function MODULE:PlayerExpandedUpdate()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-timer.Create("PlayerExpandedUpdate", 1, 0, function() PlayerPerfomanceCore:PlayerExpandedUpdate() end)
+timer.Create("PlayerExpandedUpdate", 1, 0, function() MODULE:PlayerExpandedUpdate() end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
