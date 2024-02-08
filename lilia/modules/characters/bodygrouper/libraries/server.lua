@@ -10,16 +10,14 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:LoadData()
-    timer.Simple(1, function()
-        for _, v in pairs(self:getData()) do
-            local closet = ents.Create("lia_bodygrouper")
-            closet:SetPos(v[1])
-            closet:SetAngles(v[2])
-            closet:Spawn()
-            local phys = closet:GetPhysicsObject()
-            if IsValid(phys) then phys:EnableMotion(false) end
-        end
-    end)
+    for _, v in pairs(self:getData()) do
+        local closet = ents.Create("lia_bodygrouper")
+        closet:SetPos(v[1])
+        closet:SetAngles(v[2])
+        closet:Spawn()
+        local phys = closet:GetPhysicsObject()
+        if IsValid(phys) then phys:EnableMotion(false) end
+    end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

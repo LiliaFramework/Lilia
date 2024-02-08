@@ -352,25 +352,6 @@ lia.command.add("doorremovechild", {
 })
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-lia.command.add("doorsethidden", {
-    adminOnly = true,
-    syntax = "<bool hidden>",
-    privilege = "Manage Doors",
-    onRun = function(client, arguments)
-        local entity = client:GetEyeTrace().Entity
-        if IsValid(entity) and entity:isDoor() then
-            local hidden = tobool(arguments[1] or true)
-            entity:setNetVar("hidden", hidden)
-            MODULE:callOnDoorChildren(entity, function(child) child:setNetVar("hidden", hidden) end)
-            client:notifyLocalized("dSet" .. (hidden and "" or "Not") .. "Hidden")
-            MODULE:SaveData()
-        else
-            client:notifyLocalized("dNotValid")
-        end
-    end
-})
-
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("doorsetclass", {
     adminOnly = true,
     syntax = "[string faction]",

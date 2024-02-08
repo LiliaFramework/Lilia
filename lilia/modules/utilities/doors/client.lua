@@ -2,12 +2,12 @@
 local toScreen = FindMetaTable("Vector").ToScreen
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:ShouldDrawEntityInfo(entity)
-    if IsValid(entity) and entity:isDoor() and not entity:getNetVar("hidden", false) then return true end
+    if entity:isDoor() then return true end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:DrawEntityInfo(entity, alpha)
-    if entity:isDoor() and not entity:getNetVar("hidden", false) then
+    if entity:isDoor() then
         local position = toScreen(entity.LocalToWorld(entity, entity.OBBCenter(entity)))
         local x, y = position.x, position.y
         local owner = entity.GetDTEntity(entity, 0)

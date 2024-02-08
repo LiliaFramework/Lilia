@@ -226,6 +226,18 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerInitialSpawn(client)
+    client:SuppressHint("Annoy1")
+    client:SuppressHint("Annoy2")
+    client:SuppressHint("OpeningMenu")
+    client:SuppressHint("OpeningContext")
+    client:SuppressHint("ContextClick")
+    client:SuppressHint("PhysgunFreeze")
+    client:SuppressHint("PhysgunUnfreeze")
+    client:SuppressHint("PhysgunUse")
+    client:SuppressHint("VehicleView")
+    client:SuppressHint("EditingSpawnlists")
+    client:SuppressHint("ColorRoom")
+    client:SuppressHint("EditingSpawnlistsSave")
     if client:IsBot() then
         local botID = os.time()
         local index = math.random(1, table.Count(lia.faction.indices))
@@ -421,28 +433,6 @@ function GM:Move(client, moveData)
 
         moveData:SetForwardSpeed(mf * speed)
         moveData:SetSideSpeed(ms * speed)
-    end
-end
-
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function GM:InitPostEntity()
-    if SERVER then
-        lia.faction.formatModelData()
-        timer.Simple(2, function() lia.entityDataLoaded = true end)
-        lia.db.waitForTablesToLoad():next(function()
-            hook.Run("LoadData")
-            hook.Run("PostLoadData")
-        end)
-    else
-        lia.joinTime = RealTime() - 0.9716
-        if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
-        for command, value in pairs(lia.config.StartupConsoleCommands) do
-            local client_command = command .. " " .. value
-            if concommand.GetTable()[command] ~= nil then
-                LocalPlayer():ConCommand(client_command)
-                print(string.format("Executed console command on client: %s", client_command))
-            end
-        end
     end
 end
 
