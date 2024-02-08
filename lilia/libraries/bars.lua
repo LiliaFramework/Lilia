@@ -93,6 +93,7 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.bar.drawAll()
+    lia.bar.drawAction()
     if hook.Run("ShouldHideBars") then return end
     local w, h = ScrW() * 0.35, 10
     local x, y = 4, 4
