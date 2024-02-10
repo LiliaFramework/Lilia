@@ -24,7 +24,7 @@ function MODULE:HUDPaint()
     data.start = client:EyePos()
     data.filter = client
     for _, v in ipairs(player.GetAll()) do
-        if v ~= client and v:getNetVar("typing") and v:GetMoveType() == MOVETYPE_WALK then
+        if v ~= client and v:getNetVar("typing", false) and v:GetMoveType() == MOVETYPE_WALK then
             data.endpos = v:EyePos()
             if util.TraceLine(data).Entity ~= v then continue end
             local position = v:GetPos()
