@@ -680,13 +680,6 @@ lia.command.add("chargiveitem", {
 })
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-lia.command.add("netmessagelogs", {
-    superAdminOnly = true,
-    privilege = "Check Net Message Log",
-    onRun = function(client) sendData(1, client) end
-})
-
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("announce", {
     superAdminOnly = true,
     syntax = "<string factions> <string text>",
