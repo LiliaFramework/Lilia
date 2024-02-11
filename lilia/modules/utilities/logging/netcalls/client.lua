@@ -23,7 +23,7 @@ net.Receive("liaDrawLogs", function()
 end)
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-net.Receive("liaRequestLogs", function()
+net.Receive("liaRequestLogsClient", function()
     local client = LocalPlayer()
     if not CAMI.PlayerHasAccess(client, "Commands - View Logs", nil) then
         client:notify(":|")
@@ -31,6 +31,12 @@ net.Receive("liaRequestLogs", function()
     end
 
     local logFiles = net.ReadTable()
+    local logType = net.ReadString()
+    if table.Count(logFiles) <= 0 then
+        LocalPlayer():ChatPrint("No logs of this type!")
+        return
+    end
+
     local datePicker = vgui.Create("DFrame")
     datePicker:SetSize(300, 100)
     datePicker:SetTitle("Select Date")
@@ -53,7 +59,8 @@ net.Receive("liaRequestLogs", function()
     confirmButton:SetText("Confirm")
     confirmButton.DoClick = function()
         local selectedDate = dateDropdown:GetValue()
-        net.Start("liaRequestLogs")
+        net.Start("liaRequestLogsServer")
+        net.WriteString(logType)
         net.WriteString(selectedDate)
         net.SendToServer()
         datePicker:Close()

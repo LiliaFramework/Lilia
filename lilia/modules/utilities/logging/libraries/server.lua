@@ -1,7 +1,7 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MODULE:ReadLogFiles()
+function MODULE:ReadLogFiles(logtype)
     local logs = {}
-    local logFilePath = "lilia/logs/*.txt"
+    local logFilePath = "lilia/" .. logtype .. "/*.txt"
     local logFiles = file.Find(logFilePath, "DATA")
     for _, fileName in ipairs(logFiles) do
         local strippedName = string.StripExtension(fileName)
@@ -11,9 +11,9 @@ function MODULE:ReadLogFiles()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MODULE:ReadLogsFromFile(selectedDate)
+function MODULE:ReadLogsFromFile(logtype, selectedDate)
     local logs = {}
-    local logFilePath = "lilia/logs/" .. selectedDate:gsub("/", "-") .. ".txt"
+    local logFilePath = "lilia/" .. logtype .. "/" .. selectedDate:gsub("/", "-") .. ".txt"
     if file.Exists(logFilePath, "DATA") then
         local logFileContent = file.Read(logFilePath, "DATA")
         for line in logFileContent:gmatch("[^\r\n]+") do

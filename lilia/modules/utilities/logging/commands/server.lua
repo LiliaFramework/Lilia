@@ -5,8 +5,33 @@ lia.command.add("logs", {
     superAdminOnly = true,
     privilege = "View Logs",
     onRun = function(client)
-        net.Start("liaRequestLogs")
-        net.WriteTable(MODULE:ReadLogFiles())
+        net.Start("liaRequestLogsClient")
+        net.WriteTable(MODULE:ReadLogFiles("logs"))
+        net.WriteString("logs")
+        net.Send(client)
+    end
+})
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+lia.command.add("netlogs", {
+    superAdminOnly = true,
+    privilege = "View Logs",
+    onRun = function(client)
+        net.Start("liaRequestLogsClient")
+        net.WriteTable(MODULE:ReadLogFiles("netlogs"))
+        net.WriteString("netlogs")
+        net.Send(client)
+    end
+})
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+lia.command.add("concommandlogs", {
+    superAdminOnly = true,
+    privilege = "View Logs",
+    onRun = function(client)
+        net.Start("liaRequestLogsClient")
+        net.WriteTable(MODULE:ReadLogFiles("concommandlogs"))
+        net.WriteString("concommandlogs")
         net.Send(client)
     end
 })
