@@ -1,8 +1,16 @@
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local MODULE = MODULE
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 AntiHacking = AntiHacking or {}
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 AntiHacking.antiNetSpam = {}
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 AntiHacking.flaggedNetPlayers = {}
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 AntiHacking.antiConSpam = {}
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 AntiHacking.flaggedConPlayers = {}
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 AntiHacking.threshold = 20
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:InitializedModules()
@@ -30,6 +38,7 @@ function net.Incoming(len, client)
     local flaggedNetPlayers = AntiHacking.flaggedNetPlayers
     antiNetSpam[plySteamid] = antiNetSpam[plySteamid] or {}
     antiNetSpam[plySteamid][name] = (antiNetSpam[plySteamid][name] or 0) + 1
+    if table.HasValue(MODULE.NetMessageWhitelist, name) then return end
     if antiNetSpam[plySteamid][name] > AntiHacking.threshold then
         if not flaggedNetPlayers[plySteamid] then
             ServerLog(string.format("Net spam attempted on Net Message: %s Client: %s (STEAMID: %s) (IP: %s) \n", name, plyNick, plySteamid, plyIP))
@@ -61,6 +70,7 @@ end
 AntiHacking.crun = AntiHacking.crun or concommand.Run
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function concommand.Run(ply, cmd, args, argStr)
+    if MODULE.ConCommandWhitelist then return AntiHacking.crun(ply, cmd, args, argStr) end
     if not IsValid(ply) then return AntiHacking.crun(ply, cmd, args, argStr) end
     if not cmd then return AntiHacking.crun(ply, cmd, args, argStr) end
     local plySteamid = IsValid(ply) and ply:SteamID() or "UNKNOWN STEAMID"

@@ -2,7 +2,7 @@
 local MODULE = MODULE
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("logs", {
-    superAdminOnly = true,
+    AdminOnly = true,
     privilege = "View Logs",
     onRun = function(client)
         net.Start("liaRequestLogsClient")
@@ -15,7 +15,7 @@ lia.command.add("logs", {
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("netlogs", {
     superAdminOnly = true,
-    privilege = "View Logs",
+    privilege = "View Advanced Logs",
     onRun = function(client)
         net.Start("liaRequestLogsClient")
         net.WriteTable(MODULE:ReadLogFiles("netlogs"))
@@ -27,7 +27,7 @@ lia.command.add("netlogs", {
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("concommandlogs", {
     superAdminOnly = true,
-    privilege = "View Logs",
+    privilege = "View Advanced Logs",
     onRun = function(client)
         net.Start("liaRequestLogsClient")
         net.WriteTable(MODULE:ReadLogFiles("concommandlogs"))
