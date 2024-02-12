@@ -869,6 +869,7 @@ lia.command.add("givemoney", {
             target:notifyLocalized("moneyTaken", lia.currency.get(amount))
             client:notifyLocalized("moneyGiven", lia.currency.get(amount))
             client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_GMOD_GESTURE_ITEM_PLACE, true)
+            lia.log.add("moneyGiven", client, target:Name(), amount)
         else
             client:notify("You need to be looking at someone!")
         end

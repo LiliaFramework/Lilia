@@ -3,9 +3,8 @@ local MODULE = MODULE
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 MODULE:AddOption("Give Money", {
     serverRun = false,
-    shouldShow = function(client, target) return IsValid(target) and client:getChar():getMoney() > 0 end,
+    shouldShow = function(client, target) return IsValid(target) and target:IsPlayer() and client:getChar():getMoney() > 0 end,
     onRun = function(client, target)
-        if not target:IsPlayer() then return end
         local frame = vgui.Create("WolfFrame")
         frame:SetSize(600, 250)
         frame:Center()
