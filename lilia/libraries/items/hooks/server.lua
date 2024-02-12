@@ -3,8 +3,8 @@ local GM = GM or GAMEMODE
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:CanItemBeTransfered(item, curInv, inventory)
     if item.isBag and curInv ~= inventory and item.getInv and item:getInv() and table.Count(item:getInv():getItems()) > 0 then
-        local char = lia.char.loaded[curInv.client]
-        if SERVER and char and char:getPlayer() then
+        local character = lia.char.loaded[curInv.client]
+        if SERVER and character and character:getPlayer() then
             char:getPlayer():notify("You can't transfer a backpack that has items inside of it.")
         elseif CLIENT then
             lia.util.notify("You can't transfer a backpack that has items inside of it.")
@@ -95,7 +95,7 @@ function GM:CanPlayerTakeItem(client, item)
         client:notifyLocalized("forbiddenActionStorage")
         return false
     elseif IsValid(item.entity) then
-        local char = client:getChar()
+        local character = client:getChar()
         if item.entity.SteamID64 == client:SteamID() and item.entity.liaCharID ~= char:getID() then
             client:notifyLocalized("playerCharBelonging")
             return false

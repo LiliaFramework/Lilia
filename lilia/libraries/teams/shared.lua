@@ -61,8 +61,8 @@ end
 function lia.class.getPlayers(class)
     local players = {}
     for _, v in ipairs(player.GetAll()) do
-        local char = v:getChar()
-        if char and char:getClass() == class then table.insert(players, v) end
+        local character = v:getChar()
+        if character and character:getClass() == class then table.insert(players, v) end
     end
     return players
 end

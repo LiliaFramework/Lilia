@@ -110,12 +110,12 @@ lia.command.add("beclass", {
     syntax = "<string class>",
     onRun = function(client, arguments)
         local class = table.concat(arguments, " ")
-        local char = client:getChar()
-        if IsValid(client) and char then
+        local character = client:getChar()
+        if IsValid(client) and character then
             local num = isnumber(tonumber(class)) and tonumber(class) or -1
             if lia.class.list[num] then
                 local v = lia.class.list[num]
-                if char:joinClass(num) then
+                if character:joinClass(num) then
                     client:notifyLocalized("becomeClass", L(v.name, client))
                     return
                 else
@@ -125,7 +125,7 @@ lia.command.add("beclass", {
             else
                 for k, v in ipairs(lia.class.list) do
                     if lia.util.stringMatches(v.uniqueID, class) or lia.util.stringMatches(L(v.name, client), class) then
-                        if char:joinClass(k) then
+                        if character:joinClass(k) then
                             client:notifyLocalized("becomeClass", L(v.name, client))
                             return
                         else

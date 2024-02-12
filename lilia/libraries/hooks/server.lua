@@ -369,8 +369,8 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerDeath(client, _, _)
-    local char = client:getChar()
-    if not char then return end
+    local character = client:getChar()
+    if not character then return end
     if IsValid(client.liaRagdoll) then
         client.liaRagdoll.liaIgnoreDelete = true
         client.liaRagdoll:Remove()
@@ -403,18 +403,18 @@ function GM:OnServerLog(client, logType, ...)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function GM:OnCharVarChanged(char, varName, oldVar, newVar)
+function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
         for _, v in pairs(lia.char.varHooks[varName]) do
-            v(char, oldVar, newVar)
+            v(character, oldVar, newVar)
         end
     end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:Move(client, moveData)
-    local char = client:getChar()
-    if not char then return end
+    local character = client:getChar()
+    if not character then return end
     if client:GetMoveType() == MOVETYPE_WALK and moveData:KeyDown(IN_WALK) then
         local mf, ms = 0, 0
         local speed = client:GetWalkSpeed()

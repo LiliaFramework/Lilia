@@ -64,9 +64,9 @@ function PANEL:setClass(data)
         if istable(model):lower() then model = table.Random(model) end
         self.icon:SetModel(model)
     else
-        local char = LocalPlayer():getChar()
+        local character = LocalPlayer():getChar()
         local model = LocalPlayer():GetModel()
-        if char then model = char:getModel() end
+        if character then model = character:getModel() end
         self.icon:SetModel(model)
     end
 

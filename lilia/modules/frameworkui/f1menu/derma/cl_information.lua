@@ -3,8 +3,8 @@ local PANEL = {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:Init()
     local client = LocalPlayer()
-    local char = client:getChar()
-    local class = lia.class.list[char:getClass()]
+    local character = client:getChar()
+    local class = lia.class.list[character:getClass()]
     if IsValid(lia.gui.info) then lia.gui.info:Remove() end
     lia.gui.info = self
     local panelWidth = ScrW() * 0.25
@@ -72,10 +72,10 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:setup()
     local client = LocalPlayer()
-    local char = client:getChar()
-    if self.name then self.name:SetText(char:getName()) end
-    if self.desc then self.desc:SetText(char:getDesc()) end
-    if self.money then self.money:SetText(char:getMoney() .. " " .. lia.currency.plural) end
+    local character = client:getChar()
+    if self.name then self.name:SetText(character:getName()) end
+    if self.desc then self.desc:SetText(character:getDesc()) end
+    if self.money then self.money:SetText(character:getMoney() .. " " .. lia.currency.plural) end
     if self.faction then self.faction:SetText(L(team.GetName(client:Team()))) end
     if self.class then self.class:SetText((class and class.name) or "None") end
 end

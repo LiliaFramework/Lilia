@@ -1,7 +1,7 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:OnPlayerJoinClass(client, class, oldClass)
-    local char = client:getChar()
-    if char and self.PermaClass then char:setData("pclass", class) end
+    local character = client:getChar()
+    if character and self.PermaClass then character:setData("pclass", class) end
     local info = lia.class.list[class]
     local info2 = lia.class.list[oldClass]
     if info.onSet then info:onSet(client) end
@@ -12,8 +12,8 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:CanPlayerJoinClass(client, class, classTable)
     if classTable.isWhitelisted ~= true then return end
-    local char = client:getChar()
-    local wl = char:getData("whitelist", {})
+    local character = client:getChar()
+    local wl = character:getData("whitelist", {})
     return wl[class] or false
 end
 

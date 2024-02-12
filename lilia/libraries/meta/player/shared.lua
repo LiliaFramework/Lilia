@@ -35,24 +35,24 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:AddMoney(amount)
-    local char = self:getChar()
-    if not char then return end
-    local currentMoney = char:getMoney()
+    local character = self:getChar()
+    if not character then return end
+    local currentMoney = character:getMoney()
     local maxMoneyLimit = lia.config.MoneyLimit or 0
     if hook.Run("WalletLimit", self) ~= nil then maxMoneyLimit = hook.Run("WalletLimit", self) end
     if maxMoneyLimit > 0 then
         local totalMoney = currentMoney + amount
         if totalMoney > maxMoneyLimit then
             local remainingMoney = totalMoney - maxMoneyLimit
-            char:giveMoney(maxMoneyLimit)
+            character:giveMoney(maxMoneyLimit)
             local money = lia.currency.spawn(self:getItemDropPos(), remainingMoney)
             money.client = self
-            money.charID = char:getID()
+            money.charID = character:getID()
         else
-            char:giveMoney(amount)
+            character:giveMoney(amount)
         end
     else
-        char:giveMoney(amount)
+        character:giveMoney(amount)
     end
 end
 
@@ -78,8 +78,8 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:getItemWeapon()
-    local char = self:getChar()
-    local inv = char:getInv()
+    local character = self:getChar()
+    local inv = character:getInv()
     local items = inv:getItems()
     local weapon = self:GetActiveWeapon()
     if not IsValid(weapon) then return false end
@@ -98,61 +98,61 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:TakeMoney(amt)
-    local char = self:getChar()
-    if char then char:giveMoney(-amt) end
+    local character = self:getChar()
+    if character then character:giveMoney(-amt) end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:addMoney(amount)
-    local char = self:getChar()
-    if not char then return end
-    local currentMoney = char:getMoney()
+    local character = self:getChar()
+    if not character then return end
+    local currentMoney = character:getMoney()
     local maxMoneyLimit = lia.config.MoneyLimit or 0
     if hook.Run("WalletLimit", self) ~= nil then maxMoneyLimit = hook.Run("WalletLimit", self) end
     if maxMoneyLimit > 0 then
         local totalMoney = currentMoney + amount
         if totalMoney > maxMoneyLimit then
             local remainingMoney = totalMoney - maxMoneyLimit
-            char:giveMoney(maxMoneyLimit)
+            character:giveMoney(maxMoneyLimit)
             local money = lia.currency.spawn(self:getItemDropPos(), remainingMoney)
             money.client = self
-            money.charID = char:getID()
+            money.charID = character:getID()
         else
-            char:giveMoney(amount)
+            character:giveMoney(amount)
         end
     else
-        char:giveMoney(amount)
+        character:giveMoney(amount)
     end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:takeMoney(amt)
-    local char = self:getChar()
-    if char then char:giveMoney(-amt) end
+    local character = self:getChar()
+    if character then character:giveMoney(-amt) end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:getMoney()
-    local char = self:getChar()
-    return char and char:getMoney() or 0
+    local character = self:getChar()
+    return character and character:getMoney() or 0
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:canAfford(amount)
-    local char = self:getChar()
-    return char and char:hasMoney(amount)
+    local character = self:getChar()
+    return character and character:hasMoney(amount)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:GetMoney()
-    local char = self:getChar()
-    return char and char:getMoney() or 0
+    local character = self:getChar()
+    return character and character:getMoney() or 0
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:CanAfford(amount)
-    local char = self:getChar()
-    return char and char:hasMoney(amount)
+    local character = self:getChar()
+    return character and character:hasMoney(amount)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
@@ -193,17 +193,17 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:getItems()
-    local char = self:getChar()
-    if char then
-        local inv = char:getInv()
+    local character = self:getChar()
+    if character then
+        local inv = character:getInv()
         if inv then return inv:getItems() end
     end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:getClass()
-    local char = self:getChar()
-    if char then return char:getClass() end
+    local character = self:getChar()
+    if character then return character:getClass() end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
@@ -230,9 +230,9 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:getClassData()
-    local char = self:getChar()
-    if char then
-        local class = char:getClass()
+    local character = self:getChar()
+    if character then
+        local class = character:getClass()
         if class then
             local classData = lia.class.list[class]
             return classData

@@ -69,8 +69,8 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:PlayerDeath(client, _, attacker)
-    local char = client:getChar()
-    if not char then return end
+    local character = client:getChar()
+    if not character then return end
     if attacker:IsPlayer() then
         if self.LoseWeapononDeathHuman then self:RemoveAllEquippedWeapons(client) end
         if self.DeathPopupEnabled then
@@ -87,14 +87,14 @@ function MODULE:PlayerDeath(client, _, attacker)
         net.Send(client)
     end)
 
-    char:setData("pos", nil)
-    char:setData("deathPos", client:GetPos())
+    character:setData("pos", nil)
+    character:setData("deathPos", client:GetPos())
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:RemoveAllEquippedWeapons(client)
-    local char = client:getChar()
-    local inventory = char:getInv()
+    local character = client:getChar()
+    local inventory = character:getInv()
     local items = inventory:getItems()
     client.carryWeapons = {}
     client.LostItems = {}

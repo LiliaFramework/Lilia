@@ -33,8 +33,8 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:PlayerDeath(client, _, _)
     if not client:getChar() then return end
-    local char = client:getChar()
-    local inventory = char:getInv()
+    local character = client:getChar()
+    local inventory = character:getInv()
     local items = inventory:getItems()
     if inventory and not self.KeepAmmoOnDeath then
         for _, v in pairs(items) do

@@ -80,8 +80,8 @@ function charMeta:getPlayer()
         end
     else
         for _, v in ipairs(player.GetAll()) do
-            local char = v:getChar()
-            if char and (char:getID() == self:getID()) then
+            local character = v:getChar()
+            if character and (character:getID() == self:getID()) then
                 self.player = v
                 return v
             end

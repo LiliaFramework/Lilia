@@ -112,9 +112,9 @@ lia.command.add("returnitems", {
                     return
                 end
 
-                local char = target:getChar()
-                if not char then return end
-                local inv = char:getInv()
+                local character = target:getChar()
+                if not character then return end
+                local inv = character:getInv()
                 if not inv then return end
                 for _, v in pairs(target.LostItems) do
                     inv:add(v)

@@ -13,8 +13,8 @@ end
 function MODULE:Think()
     local client = LocalPlayer()
     if not client:getChar() then return end
-    local char = client:getChar()
-    local maxStamina = char:getMaxStamina()
+    local character = client:getChar()
+    local maxStamina = character:getMaxStamina()
     local offset = self:CalcStaminaChange(client)
     offset = math.Remap(FrameTime(), 0, 0.25, 0, offset)
     if offset ~= 0 then predictedStamina = math.Clamp(predictedStamina + offset, 0, maxStamina) end
@@ -24,8 +24,8 @@ end
 function MODULE:HUDPaintBackground()
     local client = LocalPlayer()
     if not (self.StaminaBlur or client:getChar()) then return end
-    local char = client:getChar()
-    local maxStamina = char:getMaxStamina()
+    local character = client:getChar()
+    local maxStamina = character:getMaxStamina()
     local Stamina = client:getLocalVar("stamina", maxStamina)
     if Stamina <= self.StaminaBlurThreshold then
         stmBlurAlpha = Lerp(RealFrameTime() / 2, stmBlurAlpha, 255)
@@ -42,8 +42,8 @@ function MODULE:CreateMenuButtons(tabs)
             panel.attribs:Dock(FILL)
             panel.attribs:DockMargin(0, 10, 0, 0)
             if not IsValid(panel.attribs) then return end
-            local char = LocalPlayer():getChar()
-            local boost = char:getBoosts()
+            local character = LocalPlayer():getChar()
+            local boost = character:getBoosts()
             for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
                 local attribBoost = 0
                 if boost[k] then
@@ -55,7 +55,7 @@ function MODULE:CreateMenuButtons(tabs)
                 local bar = panel.attribs:Add("liaAttribBar")
                 bar:Dock(TOP)
                 bar:DockMargin(0, 0, 0, 3)
-                local attribValue = char:getAttrib(k, 0)
+                local attribValue = character:getAttrib(k, 0)
                 if attribBoost then
                     bar:setValue(attribValue - attribBoost or 0)
                 else

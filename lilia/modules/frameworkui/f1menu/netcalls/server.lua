@@ -2,8 +2,8 @@
 util.AddNetworkString("F1AlterDescription")
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 net.Receive("F1AlterDescription", function(_, client)
-    local char = client:getChar()
+    local character = client:getChar()
     local newDesc = net.ReadString()
-    char:setDesc(newDesc)
+    character:setDesc(newDesc)
 end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

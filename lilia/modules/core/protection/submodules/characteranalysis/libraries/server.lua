@@ -1,7 +1,7 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:SanitizeSteamID(sid)
-    for _, char in ipairs(string.Explode("", sid, false)) do
-        if not tonumber(char) then return false end
+    for _, character in ipairs(string.Explode("", sid, false)) do
+        if not tonumber(character) then return false end
     end
     return sid
 end
@@ -19,7 +19,7 @@ function MODULE:GenerateReport(steamID64)
             if id then
                 characters[id] = {}
                 local data = {}
-                for k2, v2 in pairs(lia.char.vars) do
+                for k2, v2 in pairs(lia.character.vars) do
                     if v2.field and v[v2.field] then
                         local value = tostring(v[v2.field])
                         if type(v2.default) == "number" then

@@ -80,10 +80,10 @@ lia.command.add("charaddmoney", {
         if not amount or not isnumber(amount) or amount < 0 then return "@invalidArg", 2 end
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
-            local char = target:getChar()
-            if char and amount then
+            local character = target:getChar()
+            if character and amount then
                 amount = math.Round(amount)
-                char:giveMoney(amount)
+                character:giveMoney(amount)
                 client:notify("You gave " .. lia.currency.get(amount) .. " to " .. target:Name())
             end
         end
@@ -98,18 +98,18 @@ lia.command.add("charban", {
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
-            local char = target:getChar()
-            if char then
+            local character = target:getChar()
+            if character then
                 client:notifyLocalized("charBan", client:Name(), target:Name())
-                char:setData("banned", true)
-                char:setData("charBanInfo", {
+                character:setData("banned", true)
+                character:setData("charBanInfo", {
                     name = client.steamName and client:steamName() or client:Nick(),
                     steamID = client:SteamID(),
                     rank = client:GetUserGroup()
                 })
 
-                char:save()
-                char:kick()
+                character:save()
+                character:kick()
             end
         end
     end
@@ -230,8 +230,8 @@ lia.command.add("chargetmoney", {
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and target:getChar() then
-            local char = target:getChar()
-            client:notify(char:getMoney())
+            local character = target:getChar()
+            client:notify(character:getMoney())
         else
             client:notify("Invalid Target")
         end
@@ -248,10 +248,10 @@ lia.command.add("charsetmoney", {
         if not amount or not isnumber(amount) or amount < 0 then return "@invalidArg", 2 end
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
-            local char = target:getChar()
-            if char and amount then
+            local character = target:getChar()
+            if character and amount then
                 amount = math.Round(amount)
-                char:setMoney(amount)
+                character:setMoney(amount)
                 client:notifyLocalized("setMoney", target:Name(), lia.currency.get(amount))
             end
         end
@@ -305,14 +305,14 @@ lia.command.add("flaggiveall", {
     privilege = "Toggle All Flags",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        local char = target:getChar()
-        if not char or not target then
+        local character = target:getChar()
+        if not character or not target then
             client:notify("Invalid Target!")
             return
         end
 
         for k, _ in SortedPairs(lia.flag.list) do
-            if not char:hasFlags(k) then target:getChar():giveFlags(k) end
+            if not character:hasFlags(k) then target:getChar():giveFlags(k) end
         end
 
         client:notify("You gave this player all flags!")
@@ -326,14 +326,14 @@ lia.command.add("flagtakeall", {
     privilege = "Toggle All Flags",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        local char = target:getChar()
-        if not char or not target then
+        local character = target:getChar()
+        if not character or not target then
             client:notify("Invalid Target!")
             return
         end
 
         for k, _ in SortedPairs(lia.flag.list) do
-            if char:hasFlags(k) then target:getChar():takeFlags(k) end
+            if character:hasFlags(k) then target:getChar():takeFlags(k) end
         end
 
         client:notify("You took this players flags!")
@@ -364,13 +364,13 @@ lia.command.add("charkick", {
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
-            local char = target:getChar()
-            if char then
+            local character = target:getChar()
+            if character then
                 for _, v in ipairs(player.GetAll()) do
                     v:notifyLocalized("charKick", client:Name(), target:Name())
                 end
 
-                char:kick()
+                character:kick()
             end
         end
     end
@@ -512,10 +512,10 @@ lia.command.add("status", {
     privilege = "Default User Commands",
     onRun = function(client)
         if not client.metaAntiSpam or client.metaAntiSpam < CurTime() and SERVER then
-            local char = client:getChar()
+            local character = client:getChar()
             client:ChatPrint("________________________________" .. "\n➣ Your SteamID: " .. client:SteamID() .. "\n➣ Your ping: " .. client:Ping() .. " ms")
             client:ChatPrint("➣ Your faction: " .. team.GetName(client:Team()) .. "\n➣ Your health: " .. client:Health())
-            client:ChatPrint("➣ Your description: " .. "\n[ " .. char:getDesc() .. " ]")
+            client:ChatPrint("➣ Your description: " .. "\n[ " .. character:getDesc() .. " ]")
             client:ChatPrint("➣ Your max health: " .. client:GetMaxHealth() .. "\n➣ Your max run speed: " .. client:GetRunSpeed() .. "\n➣ Your max walk speed: " .. client:GetWalkSpeed() .. "\n➣________________________________")
             client.metaAntiSpam = CurTime() + 8
         end
@@ -622,11 +622,11 @@ lia.command.add("return", {
     privilege = "Return",
     onRun = function(client)
         if IsValid(client) and client:Alive() then
-            local char = client:getChar()
-            local oldPos = char:getData("deathPos")
+            local character = client:getChar()
+            local oldPos = character:getData("deathPos")
             if oldPos then
                 client:SetPos(oldPos)
-                char:setData("deathPos", nil)
+                character:setData("deathPos", nil)
             else
                 client:notify("No death position saved.")
             end

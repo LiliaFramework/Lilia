@@ -97,8 +97,8 @@ ITEM.functions.Equip = {
     tip = "equipTip",
     icon = "icon16/tick.png",
     onRun = function(item)
-        local char = item.player:getChar()
-        local items = char:getInv():getItems()
+        local character = item.player:getChar()
+        local items = character:getInv():getItems()
         for _, other in pairs(items) do
             if item ~= other and item.outfitCategory == other.outfitCategory and other:getData("equip") then
                 item.player:notifyLocalized("sameOutfitCategory")

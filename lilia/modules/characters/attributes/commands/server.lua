@@ -11,11 +11,11 @@ lia.command.add("charsetattrib", {
         if not attribNumber or not isnumber(attribNumber) then return L("invalidArg", client, 3) end
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
-            local char = target:getChar()
-            if char then
+            local character = target:getChar()
+            if character then
                 for k, v in pairs(lia.attribs.list) do
                     if lia.util.stringMatches(L(v.name, client), attribName) or lia.util.stringMatches(k, attribName) then
-                        char:setAttrib(k, math.abs(attribNumber))
+                        character:setAttrib(k, math.abs(attribNumber))
                         client:notifyLocalized("attribSet", target:Name(), L(v.name, client), math.abs(attribNumber))
                         return
                     end
@@ -38,11 +38,11 @@ lia.command.add("charaddattrib", {
         if not attribNumber or not isnumber(attribNumber) then return L("invalidArg", client, 3) end
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
-            local char = target:getChar()
-            if char then
+            local character = target:getChar()
+            if character then
                 for k, v in pairs(lia.attribs.list) do
                     if lia.util.stringMatches(L(v.name, client), attribName) or lia.util.stringMatches(k, attribName) then
-                        char:updateAttrib(k, math.abs(attribNumber))
+                        character:updateAttrib(k, math.abs(attribNumber))
                         client:notifyLocalized("attribUpdate", target:Name(), L(v.name, client), math.abs(attribNumber))
                         return
                     end

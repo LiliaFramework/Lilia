@@ -52,10 +52,10 @@ end)
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 netstream.Hook("liaCharKickSelf", function(client)
-    local char = client:getChar()
-    if char then
-        if not client:Alive() then char:setData("pos", nil) end
-        char:kick()
+    local character = client:getChar()
+    if character then
+        if not client:Alive() then character:setData("pos", nil) end
+        character:kick()
     end
 end)
 

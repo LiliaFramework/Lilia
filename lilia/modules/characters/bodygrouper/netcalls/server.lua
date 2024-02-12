@@ -48,15 +48,15 @@ net.Receive("BodygrouperMenu", function(_, client)
         end
     end
 
-    local char = target:getChar()
-    if not char then return end
+    local character = target:getChar()
+    if not character then return end
     target:SetSkin(skn)
-    char:setData("skin", skn)
+    character:setData("skin", skn)
     for k, v in pairs(groups) do
         target:SetBodygroup(k, v)
     end
 
-    char:setData("groups", groups)
+    character:setData("groups", groups)
     if target == client then
         target:notifyLocalized("bodygroupChanged", "your")
     else
