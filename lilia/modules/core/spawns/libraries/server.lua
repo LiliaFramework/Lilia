@@ -87,6 +87,7 @@ function MODULE:PlayerDeath(client, _, attacker)
         net.Send(client)
     end)
 
+    char:setData("pos", nil)
     char:setData("deathPos", client:GetPos())
 end
 
