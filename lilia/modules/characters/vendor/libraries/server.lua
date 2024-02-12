@@ -49,6 +49,7 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)
+    local item = lia.item.list[id]
     if not vendor.items[itemType] then return false end
     local state = vendor:getTradeMode(itemType)
     if isSellingToVendor and state == VENDOR_SELLONLY then return false end
@@ -69,6 +70,13 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     end
 
     if money and money < price then return false, isSellingToVendor and "vendorNoMoney" or "canNotAfford" end
+    if item.VendorSteamIDWhitelist then
+        if istable(item.VendorSteamIDWhitelist) and not table.HasValue(item.VendorSteamIDWhitelist, client:SteamID()) then
+            return false, "You are not whitelisted to use this item!"
+        elseif isstring(item.VendorSteamIDWhitelist) and client:SteamID() ~= item.VendorSteamIDWhitelist then
+            return false, "You are not whitelisted to use this item!"
+        end
+    end
 end
 
 if not VENDOR_INVENTORY_MEASURE then

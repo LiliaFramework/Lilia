@@ -109,33 +109,33 @@ ITEM.functions.Equip = {
         item:setData("equip", true)
         if hook.Run("CanOutfitChangeModel", item) ~= false then
             if isfunction(item.onGetReplacement) then
-                char:setModel(item:onGetReplacement())
+                character:setModel(item:onGetReplacement())
                 item:setData("oldMdl", item.player:GetModel())
             elseif item.replacement or item.replacements then
                 if istable(item.replacements) then
                     item:setData("oldMdl", item.player:GetModel())
                     if #item.replacements == 2 and isstring(item.replacements[1]) then
                         local newModel = item.player:GetModel():lower():gsub(item.replacement[1], item.replacements[2]):lower()
-                        char:setModel(newModel)
+                        character:setModel(newModel)
                     else
                         for _, v in ipairs(item.replacements) do
-                            char:setModel(item.player:GetModel():gsub(v[1], v[2]))
+                            character:setModel(item.player:GetModel():gsub(v[1], v[2]))
                         end
                     end
                 else
                     item:setData("oldMdl", item.player:GetModel())
-                    char:setModel(tostring(item.replacement or item.replacements))
+                    character:setModel(tostring(item.replacement or item.replacements))
                 end
             end
 
             if isnumber(item.newSkin) then
                 item:setData("oldSkin", item.player:GetSkin())
-                char:setData("skin", item.newSkin)
+                character:setData("skin", item.newSkin)
                 item.player:SetSkin(item.newSkin)
             end
 
             if istable(item.bodyGroups) then
-                local oldGroups = char:getData("oldGroups", {})
+                local oldGroups = character:getData("oldGroups", {})
                 local groups = {}
                 for k, value in pairs(item.bodyGroups) do
                     local index = item.player:FindBodygroupByName(k)
@@ -145,21 +145,21 @@ ITEM.functions.Equip = {
                     end
                 end
 
-                char:setData("oldGroups", oldGroups)
+                character:setData("oldGroups", oldGroups)
                 item:setData("oldGroups", oldGroups)
-                local newGroups = char:getData("groups", {})
+                local newGroups = character:getData("groups", {})
                 for index, value in pairs(groups) do
                     newGroups[index] = value
                     item.player:SetBodygroup(index, value)
                 end
 
-                if table.Count(newGroups) > 0 then char:setData("groups", newGroups) end
+                if table.Count(newGroups) > 0 then character:setData("groups", newGroups) end
             end
         end
 
         if istable(item.attribBoosts) then
             for attribute, boost in pairs(item.attribBoosts) do
-                char:addBoost(item.uniqueID, attribute, boost)
+                character:addBoost(item.uniqueID, attribute, boost)
             end
         end
 

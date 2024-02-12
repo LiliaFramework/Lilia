@@ -5,7 +5,7 @@ function GM:CanItemBeTransfered(item, curInv, inventory)
     if item.isBag and curInv ~= inventory and item.getInv and item:getInv() and table.Count(item:getInv():getItems()) > 0 then
         local character = lia.char.loaded[curInv.client]
         if SERVER and character and character:getPlayer() then
-            char:getPlayer():notify("You can't transfer a backpack that has items inside of it.")
+            character:getPlayer():notify("You can't transfer a backpack that has items inside of it.")
         elseif CLIENT then
             lia.util.notify("You can't transfer a backpack that has items inside of it.")
         end
@@ -22,7 +22,7 @@ end
 function GM:CanPlayerInteractItem(client, action, item)
     if not client:Alive() or client:getLocalVar("ragdoll") then return false end
     if client:getNetVar("fallingover") then return false end
-    if item.steamID and not table.HasValue(item.steamID, client:SteamID()) then
+    if item.SteamIDUseWhitelist and not table.HasValue(item.SteamIDUseWhitelist, client:SteamID()) then
         client:notify("This item is whitelisted!")
         return false
     end
@@ -96,7 +96,7 @@ function GM:CanPlayerTakeItem(client, item)
         return false
     elseif IsValid(item.entity) then
         local character = client:getChar()
-        if item.entity.SteamID64 == client:SteamID() and item.entity.liaCharID ~= char:getID() then
+        if item.entity.SteamID64 == client:SteamID() and item.entity.liaCharID ~= character:getID() then
             client:notifyLocalized("playerCharBelonging")
             return false
         end
