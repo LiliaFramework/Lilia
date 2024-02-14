@@ -1,5 +1,7 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MODULE:PhysgunPickup(client, entity)
+local GM = GM or GAMEMODE
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function GM:PhysgunPickup(client, entity)
     if entity:GetCreator() == client and entity:GetClass() == "prop_physics" then return true end
     if CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup", nil) or client:isStaffOnDuty() then
         if table.HasValue(PermissionCore.RestrictedEnts, entity:GetClass()) then
@@ -17,23 +19,23 @@ function MODULE:PhysgunPickup(client, entity)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MODULE:OnPhysgunPickup(_, entity)
+function GM:OnPhysgunPickup(_, entity)
     if entity:GetClass() == "prop_physics" and entity:GetCollisionGroup() == COLLISION_GROUP_NONE then entity:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR) end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MODULE:OnPhysgunReload(_, client)
+function GM:OnPhysgunReload(_, client)
     if not CAMI.PlayerHasAccess(client, "Staff Permissions - Can Physgun Reload", nil) then return false end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MODULE:PhysgunDrop(_, entity)
+function GM:PhysgunDrop(_, entity)
     if entity:GetClass() ~= "prop_physics" then return end
     timer.Simple(5, function() if IsValid(entity) and entity:GetCollisionGroup() == COLLISION_GROUP_PASSABLE_DOOR then entity:SetCollisionGroup(COLLISION_GROUP_NONE) end end)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MODULE:OnPhysgunFreeze(_, physObj, entity, client)
+function GM:OnPhysgunFreeze(_, physObj, entity, client)
     if not physObj:IsMoveable() then return false end
     if entity:GetUnFreezable() then return false end
     physObj:EnableMotion(false)

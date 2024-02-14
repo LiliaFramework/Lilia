@@ -378,14 +378,6 @@ function GM:PlayerDeath(client, _, _)
     end
 end
 
-hook.Add("KeyPress", "OverrideRespawn", function(ply, key)
-    if key == IN_JUMP and ply:Alive() then
-        -- Perform your custom respawn logic here
-        -- For example, you can prevent the respawn or trigger a different respawn method
-        return true -- Returning true will prevent the default action (respawning)
-    end
-end)
-
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:InitializedSchema()
     local persistString = GetConVar("sbox_persist"):GetString()
