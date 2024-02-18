@@ -239,7 +239,6 @@ function Inventory:sync(recipients)
     local compressedTable = util.Compress(util.TableToJSON(items))
     net.WriteUInt(#compressedTable, 32)
     net.WriteData(compressedTable, #compressedTable)
-    local res = net.Send(recipients or self:getRecipients())
     for _, item in pairs(self.items) do
         item:onSync(recipients)
     end
