@@ -4,7 +4,26 @@ local MODULE = MODULE
 MODULE.tblPlayers = MODULE.tblPlayers or {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:PlayerInitialSpawn(client)
-    self:RegisterPlayer(client)
+    if SERVER then
+    local annoying = ents.FindByName("music")
+    local playerCount = #player.GetAll()
+    local ents = ents.GetAll()
+  
+    if #annoying > 0 then
+        annoying[1]:SetKeyValue("RefireTime", 99999999)
+        annoying[1]:Fire("Disable")
+        annoying[1]:Fire("Kill")
+    end
+
+    if playerCount >= self.PlayerCountCarLimit and self.PlayerCountCarLimitEnabled then
+        for _, car in pairs(ents) do
+            if car:IsVehicle() then car:Remove() end
+        end
+
+        print("Cars deleted. Player count reached the limit. Please disable MODULE.PlayerCountCarLimitEnabled if you don't want this. ")
+    end
+end
+self:RegisterPlayer(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
