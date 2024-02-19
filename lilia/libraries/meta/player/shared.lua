@@ -57,6 +57,23 @@ function playerMeta:AddMoney(amount)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function playerMeta:isNearPlayer(radius, entity)
+    local squaredRadius = radius * radius
+    local squaredDistance = self:GetPos():DistToSqr(entity:GetPos())
+    return squaredDistance <= squaredRadius
+end
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function playerMeta:entitiesNearPlayer(radius, playerOnly)
+    local nearbyEntities = {}
+    for _, v in ipairs(ents.FindInSphere(self:GetPos(), radius)) do
+        if playerOnly and not v:IsPlayer() then continue end
+        table.insert(nearbyEntities, v)
+    end
+    return nearbyEntities
+end
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:isUser()
     return self:IsUserGroup("user")
 end
