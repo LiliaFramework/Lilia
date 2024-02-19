@@ -343,9 +343,18 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:nearPlayer(radius)
     for k, v in ipairs(ents.FindInSphere(self:GetPos(), radius)) do
-			if v:IsPlayer() and v:Alive() and v:IsValid() then
-				return true
-			end
+		if v:IsPlayer() and v:Alive() and v:IsValid() then
+			return true
+		end
+	end
+	return false
+end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function PLAYER:nearEntity(entity, radius)
+	for k, v in ipairs(ents.FindInSphere(self:GetPos(), radius)) do
+		if (v:GetClass() == entity) then
+			return true
+		end
 	end
 	return false
 end
