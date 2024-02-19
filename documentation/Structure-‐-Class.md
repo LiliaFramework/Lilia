@@ -4,7 +4,7 @@
 CLASS.name = "Steve"
 CLASS.desc = "The Steves of the Minecrafter Faction."
 CLASS.isDefault = true
-CLASS.faction = CLASS_MINECRAFTER
+CLASS.faction = FACTION_MINECRAFTER
 CLASS.color = Color(0, 255, 0)
 CLASS.weapons = {"gold_pickaxe", "netherite_spade"}
 CLASS.pay = 50
