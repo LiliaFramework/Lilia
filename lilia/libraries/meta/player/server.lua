@@ -340,7 +340,15 @@ function playerMeta:setLocalVar(key, value)
     lia.net[self][key] = value
     netstream.Start(self, "nLcl", key, value)
 end
-
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function playerMeta:nearPlayer(radius)
+    for k, v in ipairs(ents.FindInSphere(self:GetPos(), radius)) do
+			if v:IsPlayer() and v:Alive() and v:IsValid() then
+				return true
+			end
+	end
+	return false
+end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:SendMessage(...)
     net.Start("SendMessage")
