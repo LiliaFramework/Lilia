@@ -1,4 +1,23 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function MODULE:ServerSidePlayerInitialSpawn(client)
+    local music = ents.FindByName("music")
+    local playerCount = #player.GetAll()
+    if #music > 0 then
+        music[1]:SetKeyValue("RefireTime", 99999999)
+        music[1]:Fire("Disable")
+        music[1]:Fire("Kill")
+    end
+
+    if playerCount >= self.PlayerCountCarLimit and self.PlayerCountCarLimitEnabled then
+        for _, car in pairs(ents.GetAll()) do
+            if car:IsVehicle() then car:Remove() end
+        end
+
+        print("Cars deleted. Player count reached the limit. Please disable MODULE.PlayerCountCarLimitEnabled if you don't want this. ")
+    end
+end
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:PlayerSpawnVehicle(client)
     local playerCount = #player.GetAll()
     if playerCount >= self.PlayerCountCarLimit and self.PlayerCountCarLimitEnabled then
@@ -6,6 +25,7 @@ function MODULE:PlayerSpawnVehicle(client)
         return false
     end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:PropBreak(_, entity)
     if entity:IsValid() and entity:GetPhysicsObject():IsValid() then constraint.RemoveAll(entity) end
@@ -32,6 +52,7 @@ function MODULE:EntityRemoved(entity)
         end)
     end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:Initialize()
     hook.Remove("StartChat", "StartChatIndicator")
