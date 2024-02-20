@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MODULE:ServerSidePlayerInitialSpawn(client)
+function MODULE:ServerSidePlayerInitialSpawn()
     local music = ents.FindByName("music")
     local playerCount = #player.GetAll()
     if #music > 0 then
