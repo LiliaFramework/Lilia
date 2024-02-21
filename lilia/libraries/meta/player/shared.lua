@@ -57,6 +57,16 @@ function playerMeta:AddMoney(amount)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function playerMeta:squaredDistanceFromEnt(entity)
+    return self:GetPos():DistToSqr(entity)
+end
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function playerMeta:distanceFromEnt(entity)
+    return self:GetPos():Distance(entity)
+end
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:isNearPlayer(radius, entity)
     local squaredRadius = radius * radius
     local squaredDistance = self:GetPos():DistToSqr(entity:GetPos())
