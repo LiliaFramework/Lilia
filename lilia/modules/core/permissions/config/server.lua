@@ -15,7 +15,7 @@ MODULE.RestrictedVehicles = {}
 MODULE.BlackListedProps = {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ List of props restricted from perma propping ]]
-MODULE.CanNotPermaProp = {}
+MODULE.CanNotPermaProp = {"lia_vendor", "lia_bodygrouper"}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ List of button models to prevent button exploit ]]
 MODULE.ButtonList = {"models/maxofs2d/button_01.mdl", "models/maxofs2d/button_02.mdl", "models/maxofs2d/button_03.mdl", "models/maxofs2d/button_04.mdl", "models/maxofs2d/button_05.mdl", "models/maxofs2d/button_06.mdl", "models/maxofs2d/button_slider.mdl"}
