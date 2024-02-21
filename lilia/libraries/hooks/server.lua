@@ -431,7 +431,7 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:CanPlayerEnterVehicle(client, entity)
     local VehicleEnteringTime = lia.config.TimeToEnterVehicle
-        if entity.IsLocked then
+    if entity.IsLocked then
         client:notify("This car is locked!")
         return false
     elseif entity.IsBeingEntered then
