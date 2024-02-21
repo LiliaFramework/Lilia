@@ -20,7 +20,7 @@ Lilia stands as an advanced roleplay gamemode framework for Garry's Mod, meticul
 - **Abundant Free Content:** Enjoy a wealth of resources at your disposal.
 - **Swift Support:** Our dedicated team ensures prompt assistance.
 - **Robust Security:** Comprehensive anti-exploit and anti-hacking systems.
-- **Seamless Roleplay Enhancement:** Non-intrusive utilities to enrich your roleplay experience. Explore our extensive list [here](https://github.com/Lilia-Framework/Lilia/wiki/Information-%E2%80%90-Module-List).
+- **Seamless Roleplay Enhancement:** Non-intrusive utilities to enrich your roleplay experience. Explore our extensive list [here](https://github.com/Lilia-Framework/Lilia/wiki/Information-%E2%80%90-Feature-List).
 - **Continuous Improvement:** Expect regular updates for stability and new features.
 - **Streamlined Permission Management:** Effortlessly manage permissions directly from the game with our system.
 - **Addon Compatibility:** Compatible with various commonly used addons.
