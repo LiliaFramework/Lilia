@@ -196,6 +196,7 @@ end
 function MODULE:ToggleLock(client, entity, state)
     local partner = entity:getDoorPartner()
     if entity:isDoor() and entity:checkDoorAccess(client) then
+        entity.IsLocked = not state
         if state then
             if IsValid(partner) then partner:Fire("lock") end
             entity:Fire("lock")
@@ -206,6 +207,7 @@ function MODULE:ToggleLock(client, entity, state)
             client:EmitSound("doors/door_latch1.wav")
         end
     elseif entity:IsVehicle() and entity:GetCreator() == client then
+        entity.IsLocked = not state
         if state then
             entity:Fire("lock")
             client:EmitSound("doors/door_latch3.wav")

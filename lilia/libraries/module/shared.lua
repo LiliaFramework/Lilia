@@ -231,7 +231,7 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.module.initialize()
     local schema = engine.ActiveGamemode()
-    lia.module.loadFromDir(schema .. "/preload", "schema")
+    lia.module.loadFromDir(schema .. "/overrides", "module")
     lia.module.load("schema", schema .. "/schema", false, "schema")
     hook.Run("InitializedSchema")
     lia.module.loadFromDir("lilia/modules/core", "module")
@@ -239,6 +239,7 @@ function lia.module.initialize()
     lia.module.loadFromDir("lilia/modules/characters", "module")
     lia.module.loadFromDir("lilia/modules/utilities", "module")
     lia.module.loadFromDir("lilia/modules/compatibility", "module")
+    lia.module.loadFromDir(schema .. "/preload", "module")
     lia.module.loadFromDir(schema .. "/modules", "module")
     hook.Run("InitializedModules")
 end

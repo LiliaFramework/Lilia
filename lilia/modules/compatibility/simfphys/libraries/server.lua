@@ -10,13 +10,13 @@ function MODULE:simfphysUse(entity, client)
         return true
     end
 
-    if entity:IsSimfphysCar() and self.TimeToEnterVehicle > 0 then
+    if lia.config.CarEntryDelayEnabled and entity:IsSimfphysCar() and lia.config.TimeToEnterVehicle > 0 then
         entity.IsBeingEntered = true
-        client:setAction("Entering Vehicle...", self.TimeToEnterVehicle)
+        client:setAction("Entering Vehicle...", lia.config.TimeToEnterVehicle)
         client:doStaredAction(entity, function()
             entity.IsBeingEntered = false
             entity:SetPassenger(client)
-        end, self.TimeToEnterVehicle, function()
+        end, lia.config.TimeToEnterVehicle, function()
             if IsValid(entity) then
                 entity.IsBeingEntered = false
                 client:setAction()
@@ -25,7 +25,6 @@ function MODULE:simfphysUse(entity, client)
             if IsValid(client) then client:setAction() end
         end)
     end
-    return self.CarEntryDelayEnabled
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

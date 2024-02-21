@@ -31,6 +31,8 @@ if not ConfigWasInitialized then
         AmericanDates = true, -- Use American date format
         AmericanTimeStamp = true, -- Use American timestamp format
         MinDescLen = 16, -- How long the description has to be
+        TimeToEnterVehicle = 1, -- Time (in seconds) required to enter a vehicle 
+        CarEntryDelayEnabled = true, -- If Car Entry Delay is Applicable
         Notify = {
             "garrysmod/content_downloaded.wav", -- Notification Sound
             50,

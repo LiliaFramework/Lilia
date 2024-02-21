@@ -429,6 +429,39 @@ function GM:Move(client, moveData)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function GM:CanPlayerEnterVehicle(client, entity)
+    local VehicleEnteringTime = lia.config.TimeToEnterVehicle
+        if entity.IsLocked then
+        client:notify("This car is locked!")
+        return false
+    elseif entity.IsBeingEntered then
+        client:notify("Someone is entering this car!")
+        return false
+    end
+
+    if lia.config.CarEntryDelayEnabled then
+        if VehicleEnteringTime > 0 then
+            entity.IsBeingEntered = true
+            client:setAction("Entering Vehicle...", VehicleEnteringTime)
+            client:doStaredAction(entity, function()
+                if IsValid(entity) then
+                    entity.IsBeingEntered = false
+                    client:EnterVehicle(entity)
+                end
+            end, VehicleEnteringTime, function()
+                if IsValid(entity) then
+                    entity.IsBeingEntered = false
+                    client:setAction()
+                end
+
+                if IsValid(client) then client:setAction() end
+            end)
+        end
+        return false
+    end
+end
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:CanDrive(client)
     if not client:IsSuperAdmin() then return false end
 end
