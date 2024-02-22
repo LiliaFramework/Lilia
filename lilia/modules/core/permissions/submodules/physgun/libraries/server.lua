@@ -3,13 +3,14 @@ local GM = GM or GAMEMODE
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PhysgunPickup(client, entity)
     if entity:GetCreator() == client and (entity:GetClass() == "prop_physics" or entity:GetClass() == "lia_item") then return true end
+    if client:IsSuperAdmin() then return true end
     if CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup", nil) or client:isStaffOnDuty() then
         if table.HasValue(PermissionCore.RestrictedEnts, entity:GetClass()) then
             return CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup on Restricted Entities", nil)
         elseif entity:IsVehicle() then
             return CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup on Vehicles", nil)
         elseif entity:IsPlayer() then
-            return CAMI.PlayerHasAccess(entity, "Staff Permissions - Can't be Grabbed with PhysGun", nil) and CAMI.PlayerHasAccess(client, "Staff Permissions - Can Grab Players", nil)
+            return not CAMI.PlayerHasAccess(entity, "Staff Permissions - Can't be Grabbed with PhysGun", nil) and CAMI.PlayerHasAccess(client, "Staff Permissions - Can Grab Players", nil)
         elseif entity:IsWorld() or entity:CreatedByMap() then
             return CAMI.PlayerHasAccess(client, "Staff Permissions - Can Grab World Props", nil)
         end
