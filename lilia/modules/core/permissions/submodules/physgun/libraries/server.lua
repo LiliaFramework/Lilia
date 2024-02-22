@@ -1,4 +1,4 @@
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local GM = GM or GAMEMODE
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PhysgunPickup(client, entity)
@@ -30,7 +30,7 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PhysgunDrop(_, entity)
-    if (entity:GetClass() ~= "prop_physics" or entity:GetClass() ~= "lia_item") then return end
+    if entity:GetClass() ~= "prop_physics" or entity:GetClass() ~= "lia_item" then return end
     timer.Simple(5, function() if IsValid(entity) and entity:GetCollisionGroup() == COLLISION_GROUP_PASSABLE_DOOR then entity:SetCollisionGroup(COLLISION_GROUP_NONE) end end)
 end
 
