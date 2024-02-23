@@ -157,4 +157,15 @@ function lia.util.loadEntities(path)
 
     HandleEntityInclusion("effects", "EFFECT", effects and effects.Register, nil, true)
 end
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function lia.util.getCharData(charID, key)
+    local charIDsafe = tonumber(charID)
+    if not charIDsafe then return end
+    local findData = sql.Query("SELECT * FROM lia_characters WHERE _id=" .. charIDsafe)
+    if not findData or not findData[1] then return false end
+    local data = util.JSONToTable(findData[1]._data) or {}
+    if key then return data[key] end
+    return data
+end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
