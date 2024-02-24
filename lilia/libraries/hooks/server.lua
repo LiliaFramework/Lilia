@@ -142,9 +142,6 @@ function GM:PlayerSpawn(client)
     client:SetNotSolid(false)
     client:setAction()
     hook.Run("PlayerLoadout", client)
-    for i = 0, client:GetBoneCount() - 1 do
-        client:ManipulateBoneAngles(client:LookupBone(client:GetBoneName(i)), Angle(0, 0, 0))
-    end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
