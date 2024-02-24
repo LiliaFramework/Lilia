@@ -496,16 +496,16 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 timer.Create("flagBlacklistTick", 10, 0, function()
-    for k, v in pairs(player.GetAll()) do
+    for D_NU, v in pairs(player.GetAll()) do
         local blacklistLog = v:getLiliaData("flagblacklistlog")
         if blacklistLog then
-            for m, bl in pairs(blacklistLog) do
+            for _, bl in pairs(blacklistLog) do
                 if not bl.active and not bl.remove then continue end
                 if (bl.endtime <= 0 or bl.endtime > os.time()) and not bl.remove then continue end
                 bl.active = false
                 bl.remove = nil
                 local flagBuffer = bl.flags
-                for a, b in pairs(blacklistLog) do
+                for _, b in pairs(blacklistLog) do
                     if b ~= bl and b.active then
                         for i = 1, #b.flags do
                             flagBuffer = string.Replace(flagBuffer, b.flags[i], "")

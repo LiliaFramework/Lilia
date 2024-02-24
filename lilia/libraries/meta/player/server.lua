@@ -52,7 +52,7 @@ function playerMeta:givePermFlags(flags)
 
     self:setPermFlags(curFlags)
     if self.liaCharList then
-        for k, v in pairs(self.liaCharList) do
+        for _, v in pairs(self.liaCharList) do
             local char = lia.char.loaded[v]
             if char then char:giveFlags(flags) end
         end
@@ -68,7 +68,7 @@ function playerMeta:takePermFlags(flags)
 
     self:setPermFlags(curFlags)
     if self.liaCharList then
-        for k, v in pairs(self.liaCharList) do
+        for _, v in pairs(self.liaCharList) do
             local char = lia.char.loaded[v]
             if char then char:takeFlags(flags) end
         end
@@ -418,7 +418,7 @@ function playerMeta:setRagdolled(state, time, getUpGrace)
         hook.Run("OnCharFallover", self, entity, true)
     elseif IsValid(self.liaRagdoll) then
         self.liaRagdoll:Remove()
-        hook.Run("OnCharFallover", self, entity, false)
+        hook.Run("OnCharFallover", self, nil, false)
     end
 end
 

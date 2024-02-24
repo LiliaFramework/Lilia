@@ -60,7 +60,7 @@ netstream.Hook("openBlacklistLog", function(target, blacklists, blacklistLog)
     end
 
     table.sort(blacklistLog, function(a, b) return a.starttime > b.starttime end)
-    for k, v in pairs(blacklistLog) do
+    for _, v in pairs(blacklistLog) do
         local ln = listView:AddLine(os.date("%d/%m/%Y %H:%M:%S", v.starttime), v.active and "Yes" or "No", v.endtime ~= 0 and os.date("%d/%m/%Y %H:%M:%S", v.endtime) or "Never", v.time ~= 0 and string.NiceTime(v.time) or "Perm", v.flags, v.adminsteam, v.admin, v.reason)
         if v.active then
             ln.OldPaint = ln.Paint
