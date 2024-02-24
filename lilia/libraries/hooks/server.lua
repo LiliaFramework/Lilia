@@ -401,6 +401,12 @@ function GM:OnCharVarChanged(character, varName, oldVar, newVar)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function GM:OnCharCreated(client, char)
+    local permFlags = client:getPermFlags()
+    if permFlags and #permFlags > 0 then char:giveFlags(permFlags) end
+end
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:Move(client, moveData)
     local character = client:getChar()
     if not character then return end
@@ -487,4 +493,29 @@ end
 function GM:PlayerShouldTakeDamage(client, _)
     return client:getChar() ~= nil
 end
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+timer.Create("flagBlacklistTick", 10, 0, function()
+    for k, v in pairs(player.GetAll()) do
+        local blacklistLog = v:getLiliaData("flagblacklistlog")
+        if blacklistLog then
+            for m, bl in pairs(blacklistLog) do
+                if not bl.active and not bl.remove then continue end
+                if (bl.endtime <= 0 or bl.endtime > os.time()) and not bl.remove then continue end
+                bl.active = false
+                bl.remove = nil
+                local flagBuffer = bl.flags
+                for a, b in pairs(blacklistLog) do
+                    if b ~= bl and b.active then
+                        for i = 1, #b.flags do
+                            flagBuffer = string.Replace(flagBuffer, b.flags[i], "")
+                        end
+                    end
+                end
+
+                v:removeFlagBlacklist(flagBuffer)
+            end
+        end
+    end
+end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
