@@ -957,8 +957,8 @@ lia.command.add("entname", {
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("permflaggive", {
-    adminOnly = true,
-    privilege = "Give Permanent Flags",
+    superAdminOnly = true,
+    privilege = "Manage Permanent Flags",
     syntax = "<string name> [string flags]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -983,8 +983,8 @@ lia.command.add("permflaggive", {
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("permflagtake", {
-    adminOnly = true,
-    privilege = "Take Permanent Flags",
+    superAdminOnly = true,
+    privilege = "Manage Permanent Flags",
     syntax = "<string name> [string flags]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -1004,7 +1004,7 @@ lia.command.add("permflagtake", {
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("permflags", {
     adminOnly = true,
-    privilege = "List Permanent Flags",
+    privilege = "Check Permanent Flags",
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -1014,8 +1014,8 @@ lia.command.add("permflags", {
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("flagblacklist", {
-    adminOnly = true,
-    privilege = "Blacklist Flags",
+    superAdminOnly = true,
+    privilege = "Manage Permanent Flags",
     syntax = "<string name> <string flags> <number minutes> <string reason>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -1053,8 +1053,8 @@ lia.command.add("flagblacklist", {
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("flagunblacklist", {
-    adminOnly = true,
-    privilege = "UnBlacklist Flags",
+    superAdminOnly = true,
+    privilege = "Manage Permanent Flags",
     syntax = "<string name> [string flags]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -1074,8 +1074,8 @@ lia.command.add("flagunblacklist", {
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("flagblacklists", {
-    adminOnly = true,
-    privilege = "List Blacklisted Flags",
+    superAdminOnly = true,
+    privilege = "Manage Permanent Flags",
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
