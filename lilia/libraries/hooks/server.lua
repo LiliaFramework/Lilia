@@ -496,7 +496,7 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 timer.Create("flagBlacklistTick", 10, 0, function()
-    for D_NU, v in pairs(player.GetAll()) do
+    for _, v in pairs(player.GetAll()) do
         local blacklistLog = v:getLiliaData("flagblacklistlog")
         if blacklistLog then
             for _, bl in pairs(blacklistLog) do
