@@ -79,11 +79,24 @@ net.Receive("liaTransferItem", function(_, client)
 end)
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-netstream.Hook("invMv", function(client)
-    print("Tell the developer that 'invMv' has been deprecated!")
-    print("Instead, the liaTransferItem net message should be used.")
-    client:ChatPrint("Tell the developer that 'invMv' has been deprecated!")
-    client:ChatPrint("Instead, the liaTransferItem net message should be used.")
+netstream.Hook("unflagblacklistRequest", function(ply, target, bid)
+    if not (CAMI.PlayerHasAccess(ply, "Commands - Manage Permanent Flags", nil) or ply:IsSuperAdmin()) then return end
+    if not IsValid(target) then
+        ply:notify("That target is no longer online")
+        return
+    end
+
+    local bData = target:getLiliaData("flagblacklistlog", {})[bid]
+    if not bData then
+        ply:notify("Blacklist ID invalid")
+        return
+    end
+
+    bData = target:getLiliaData("flagblacklistlog")
+    bData[bid].remove = true
+    target:setLiliaData("flagblacklistlog", bData)
+    target:saveLiliaData()
+    ply:notify("Target blacklist has been flagged for deactivation. It may take up to 10 seconds.")
 end)
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
