@@ -16,16 +16,8 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function entityMeta:getEntItemDropPos()
-    local data = {}
-    data.start = self:GetShootPos()
-    data.endpos = self:GetShootPos() + self:GetAimVector() * 86
-    data.filter = self
-    local trace = util.TraceLine(data)
-    data.start = trace.HitPos
-    data.endpos = data.start + trace.HitNormal * 46
-    data.filter = {}
-    trace = util.TraceLine(data)
-    return trace.HitPos
+    local offset = Vector(-50, 0, 0) -- Adjust the offset as needed
+    return self:GetPos() + offset
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
