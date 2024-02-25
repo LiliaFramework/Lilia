@@ -59,12 +59,12 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 AntiHacking.crun = AntiHacking.crun or concommand.Run
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function concommand.Run(ply, cmd, args, argStr)
-    if not IsValid(ply) then return AntiHacking.crun(ply, cmd, args, argStr) end
-    if not cmd then return AntiHacking.crun(ply, cmd, args, argStr) end
-    local plySteamid = IsValid(ply) and ply:SteamID() or "UNKNOWN STEAMID"
-    local plyNick = IsValid(ply) and ply:Nick() or "UNKNOWN PLAYER NAME"
-    local plyIP = IsValid(ply) and ply:IPAddress() or "UNKNOWN IP"
+function concommand.Run(client, cmd, args, argStr)
+    if not IsValid(client) then return AntiHacking.crun(client, cmd, args, argStr) end
+    if not cmd then return AntiHacking.crun(client, cmd, args, argStr) end
+    local plySteamid = IsValid(client) and client:SteamID() or "UNKNOWN STEAMID"
+    local plyNick = IsValid(client) and client:Nick() or "UNKNOWN PLAYER NAME"
+    local plyIP = IsValid(client) and client:IPAddress() or "UNKNOWN IP"
     local antiConSpam = AntiHacking.antiConSpam
     local flaggedConPlayers = AntiHacking.flaggedConPlayers
     antiConSpam[plySteamid] = antiConSpam[plySteamid] or {}
@@ -76,6 +76,6 @@ function concommand.Run(ply, cmd, args, argStr)
     end
 
     file.Append("lilia/concommandlogs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. "Player " .. "'" .. plyNick .. "'" .. " (" .. plySteamid .. ") " .. "(" .. plyIP .. ")" .. " has executed this command: " .. cmd .. " args: " .. temp .. "\r\n")
-    return AntiHacking.crun(ply, cmd, args, argStr)
+    return AntiHacking.crun(client, cmd, args, argStr)
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

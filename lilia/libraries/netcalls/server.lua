@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 util.AddNetworkString("liaCharacterInvList")
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 util.AddNetworkString("liaItemDelete")
@@ -85,16 +85,16 @@ net.Receive("liaTransferItem", function(_, client)
 end)
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-netstream.Hook("unflagblacklistRequest", function(ply, target, bid)
-    if not (CAMI.PlayerHasAccess(ply, "Commands - Manage Permanent Flags", nil) or ply:IsSuperAdmin()) then return end
+netstream.Hook("unflagblacklistRequest", function(client, target, bid)
+    if not (CAMI.PlayerHasAccess(client, "Commands - Manage Permanent Flags", nil) or client:IsSuperAdmin()) then return end
     if not IsValid(target) then
-        ply:notify("That target is no longer online")
+        client:notify("That target is no longer online")
         return
     end
 
     local bData = target:getLiliaData("flagblacklistlog", {})[bid]
     if not bData then
-        ply:notify("Blacklist ID invalid")
+        client:notify("Blacklist ID invalid")
         return
     end
 
@@ -102,7 +102,7 @@ netstream.Hook("unflagblacklistRequest", function(ply, target, bid)
     bData[bid].remove = true
     target:setLiliaData("flagblacklistlog", bData)
     target:saveLiliaData()
-    ply:notify("Target blacklist has been flagged for deactivation. It may take up to 10 seconds.")
+    client:notify("Target blacklist has been flagged for deactivation. It may take up to 10 seconds.")
 end)
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

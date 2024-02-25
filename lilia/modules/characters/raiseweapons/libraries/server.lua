@@ -1,9 +1,9 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MODULE:PlayerSwitchWeapon(ply, _, newWeapon)
+function MODULE:PlayerSwitchWeapon(client, _, newWeapon)
     if self.WepAlwaysRaised then return end
-    if IsValid(ply) and IsValid(newWeapon) then
+    if IsValid(client) and IsValid(newWeapon) then
         local weaponClass = newWeapon:GetClass()
-        if weaponClass ~= "lia_hands" and weaponClass ~= "lia_keys" then timer.Simple(1, function() ply:setWepRaised(true) end) end
+        if weaponClass ~= "lia_hands" and weaponClass ~= "lia_keys" then timer.Simple(1, function() client:setWepRaised(true) end) end
     end
 end
 
