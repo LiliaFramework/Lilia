@@ -15,6 +15,20 @@ function entityMeta:IsSimfphysCar()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function entityMeta:getEntItemDropPos()
+    local data = {}
+    data.start = self:GetShootPos()
+    data.endpos = self:GetShootPos() + self:GetAimVector() * 86
+    data.filter = self
+    local trace = util.TraceLine(data)
+    data.start = trace.HitPos
+    data.endpos = data.start + trace.HitNormal * 46
+    data.filter = {}
+    trace = util.TraceLine(data)
+    return trace.HitPos
+end
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function entityMeta:NearEntity(radius)
     for _, v in ipairs(ents.FindInSphere(self:GetPos(), radius or 96)) do
         if v:GetClass() == self then return true end
