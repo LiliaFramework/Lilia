@@ -808,22 +808,21 @@ lia.command.add("rolld", {
         lia.chat.send(client, "rolld", msg)
     end
 })
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("vieweventlog", {
-	adminOnly = false,
-	privilege = "Default User Commands",
-	onRun = function(client)
-		GM:OpenEventLog(client, false)
-	end
+    adminOnly = false,
+    privilege = "Default User Commands",
+    onRun = function(client) GM:OpenEventLog(client, false) end
 })
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("editeventlog", {
-	adminOnly = true,
-	privilege = "Can Edit Event Log",
-	onRun = function(client)
-		GM:OpenEventLog(client, true)
-	end
+    adminOnly = true,
+    privilege = "Can Edit Event Log",
+    onRun = function(client) GM:OpenEventLog(client, true) end
 })
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("roll", {
     adminOnly = false,

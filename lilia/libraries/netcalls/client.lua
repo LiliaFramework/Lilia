@@ -10,6 +10,7 @@ net.Receive("liaNotifyL", function()
 
     lia.util.notifyLocalized(message, unpack(args))
 end)
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 netstream.Hook("lia_eventLogOpen", function(eventLog, edit)
     local data = eventLog.data
@@ -51,6 +52,7 @@ netstream.Hook("lia_eventLogOpen", function(eventLog, edit)
         notesGUI:SetEnabled(false)
     end
 end)
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 netstream.Hook("openBlacklistLog", function(target, blacklists, blacklistLog)
     if not (CAMI.PlayerHasAccess(LocalPlayer(), "Commands - Manage Permanent Flags", nil) or LocalPlayer():IsSuperAdmin()) then return end

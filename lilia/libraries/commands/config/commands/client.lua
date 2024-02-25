@@ -338,18 +338,22 @@ lia.command.add("listusers", {
     adminOnly = false,
     privilege = "List Users",
     onRun = function() end
-})---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-lia.command.add("vieweventlog", {
-	adminOnly = false,
-	privilege = "Default User Commands",
-	onRun = function()end
 })
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+lia.command.add("vieweventlog", {
+    adminOnly = false,
+    privilege = "Default User Commands",
+    onRun = function() end
+})
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("editeventlog", {
-	adminOnly = true,
-	privilege = "Can Edit Event Log",
-	onRun = function()end
+    adminOnly = true,
+    privilege = "Can Edit Event Log",
+    onRun = function() end
 })
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("rolld", {
     adminOnly = false,
