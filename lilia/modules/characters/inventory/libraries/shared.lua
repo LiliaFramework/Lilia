@@ -61,6 +61,21 @@ function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function GridInv:doesFitInventory(item)
+    x, y = self:findFreePosition(item)
+    if not x or not y then
+        for _, bagItem in pairs(self:getItems(true)) do
+            if bagItem.isBag == true then
+                self = bagItem:getInv()
+                x, y = self:findFreePosition(item)
+                if x and y then break end
+            end
+        end
+    end
+    return x ~= nil and y ~= nil
+end
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GridInv:doesItemFitAtPos(testItem, x, y)
     if not self:canItemFitInInventory(testItem, x, y) then return false end
     for _, item in pairs(self.items) do
