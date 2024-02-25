@@ -273,7 +273,20 @@ function GM:PlayerInitialSpawn(client)
 
     hook.Run("PostPlayerInitialSpawn", client)
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function GM:OpenEventLog(client, edit)
+    local path = "lilia/"..SCHEMA.folder.."/eventlog.txt"
 
+    local eventLog = {
+        name = "Event Log",
+        data = file.Read(path) or "",
+        size = {400, 400},
+        pos = {0.29, 0.5},
+        saveFunc = "lia_eventLogSave",
+    }
+
+    netstream.Start(client, "lia_eventLogOpen", eventLog, edit)
+end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:PlayerLoadout(client)
     local character = client:getChar()
