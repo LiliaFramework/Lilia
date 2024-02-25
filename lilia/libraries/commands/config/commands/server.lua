@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-local GM = GM or GAMEMODE 
+local GM = GM or GAMEMODE
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("charsetspeed", {
     adminOnly = true,
@@ -812,7 +812,7 @@ lia.command.add("rolld", {
 lia.command.add("vieweventlog", {
 	adminOnly = false,
 	privilege = "Default User Commands",
-	onRun = function(client, arguments)
+	onRun = function(client)
 		GM:OpenEventLog(client, false)
 	end
 })
@@ -820,7 +820,7 @@ lia.command.add("vieweventlog", {
 lia.command.add("editeventlog", {
 	adminOnly = true,
 	privilege = "Can Edit Event Log",
-	onRun = function(client, arguments)
+	onRun = function(client)
 		GM:OpenEventLog(client, true)
 	end
 })

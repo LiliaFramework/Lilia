@@ -13,41 +13,37 @@ end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 netstream.Hook("lia_eventLogOpen", function(eventLog, edit)
     local data = eventLog.data
-
     local noteFrame = vgui.Create("DFrame")
     noteFrame:SetTitle(eventLog.name)
     noteFrame:SetSize(eventLog.size[1] or 400, eventLog.size[2] or 400)
     noteFrame:SetPos(ScrW() * (eventLog.pos[1] or 0.5), ScrH() * (eventLog.pos[2] or 0.5))
     noteFrame:MakePopup()
     noteFrame:ShowCloseButton(true)
-
     local scroll = vgui.Create("DScrollPanel", noteFrame)
     scroll:Dock(FILL)
-
     local notesGUI = vgui.Create("DTextEntry", scroll)
     notesGUI:DockMargin(0, 8, 0, 0)
     notesGUI:SetSize(160, ScrH() * 0.2)
     notesGUI:Dock(FILL)
     notesGUI:SetFont("liaCharSubTitleFont")
-    notesGUI:SetTextColor(Color(255,255,255))
+    notesGUI:SetTextColor(Color(255, 255, 255))
     notesGUI:SetVerticalScrollbarEnabled(true)
     notesGUI:SetText(data or "")
     notesGUI:SetPaintBackground(false)
     notesGUI:SetWrap(true)
     notesGUI:SetMultiline(true)
     notesGUI:SetEditable(true)
-
-    if(edit) then
+    if edit then
         local notesGUIB = vgui.Create("DButton", noteFrame)
         notesGUIB:SetText("Save")
         notesGUIB:SetSize(20, 100)
         notesGUIB:Dock(BOTTOM)
         notesGUIB.DoClick = function()
             netstream.Start(eventLog.saveFunc, notesGUI:GetText())
-            
             noteFrame:Remove()
         end
-        notesGUIB.Paint = function(self, w, h)
+
+        notesGUIB.Paint = function(_, w, h)
             surface.SetDrawColor(Color(20, 20, 20, 255))
             surface.DrawRect(0, 0, w, h)
         end
