@@ -1,4 +1,4 @@
-## FACTION:onGetDefaultName(client)
+## FACTION:getDefaultName(client)
 Called when the default name for a character needs to be retrieved (i.e upon initial character creation).
 
 ### Parameters
@@ -12,7 +12,7 @@ Defines the default name for the newly created character
 
 ### EXAMPLE USAGE
 ```lua
-function FACTION:onGetDefaultName(client)
+function FACTION:getDefaultName(client)
     return "CT-" .. math.random(111111, 999999) -- This will set their name as CT-XXXXXX where as those 6 numerals are random generated 
 end
 ```
