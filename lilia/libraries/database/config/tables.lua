@@ -34,7 +34,7 @@ MySQLTableCreate = [[
         `_invType` VARCHAR(24) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         PRIMARY KEY (`_invID`)
     );
-
+    
     CREATE TABLE IF NOT EXISTS `lia_items` (
         `_itemID` INT(12) NOT NULL AUTO_INCREMENT,
         `_invID` INT(12) NULL DEFAULT NULL,
@@ -45,7 +45,7 @@ MySQLTableCreate = [[
         `_y` INT(4),
         PRIMARY KEY (`_itemID`)
     );
-
+    
     CREATE TABLE IF NOT EXISTS `lia_invdata` (
         `_invID` INT(12) NOT NULL,
         `_key` VARCHAR(32) NOT NULL COLLATE 'utf8mb4_general_ci',
@@ -53,14 +53,14 @@ MySQLTableCreate = [[
         FOREIGN KEY (`_invID`) REFERENCES lia_inventories(_invID) ON DELETE CASCADE,
         PRIMARY KEY (`_invID`, `_key`)
     );
-
+    
     CREATE TABLE IF NOT EXISTS `lilia_logs` (
         `id` INT(12) NOT NULL AUTO_INCREMENT,
         `category` TEXT NOT NULL,
         `log` TEXT NOT NULL,
         `time` INT(12) NOT NULL,
         PRIMARY KEY (`id`)
-    );
+    );    
 ]]
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 SqlLiteTableCreate = [[
@@ -112,8 +112,8 @@ SqlLiteTableCreate = [[
         _value text,
         FOREIGN KEY(_invID) REFERENCES lia_inventories(_invID),
         PRIMARY KEY (_invID, _key)
-    )
-
+    );
+    
     CREATE TABLE IF NOT EXISTS lilia_logs (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         category TEXT NOT NULL,
@@ -129,7 +129,6 @@ MySQLTableDrop = [[
     DROP TABLE IF EXISTS `lia_items`;
     DROP TABLE IF EXISTS `lia_invdata`;
     DROP TABLE IF EXISTS `lia_inventories`;
-    DROP TABLE IF EXISTS `lilia_logs`;
 ]]
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 SqlLiteTableDrop = [[
@@ -139,6 +138,5 @@ SqlLiteTableDrop = [[
     DROP TABLE IF EXISTS lia_items;
     DROP TABLE IF EXISTS lia_invdata;
     DROP TABLE IF EXISTS lia_inventories;
-    DROP TABLE IF EXISTS lilia_logs;
 ]]
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
