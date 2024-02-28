@@ -13,21 +13,6 @@ env:
   GIT_AUTHOR_EMAIL: actions@github.com
 
 jobs:
-  job-sync-documentation-to-wiki:
-    runs-on: ubuntu-latest
-    if: github.event_name != 'gollum'
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-      - name: Sync documentation to wiki
-        uses: newrelic/wiki-sync-action@main
-        with:
-          source: documentation
-          destination: wiki
-          token: ${{ secrets.NEWRELIC_BOT_TOKEN }}
-          gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
-          gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
-  
   job-sync-wiki-to-documentation:
     runs-on: ubuntu-latest
     if: github.event_name == 'gollum'
