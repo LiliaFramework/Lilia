@@ -103,8 +103,13 @@ function MODULE:RemoveAllEquippedWeapons(client)
     client.LostItems = {}
     for _, v in pairs(items) do
         if (v.isWeapon or v.isCW) and v:getData("equip") then
-            table.insert(client.LostItems, v.uniqueID)
+            table.insert(client.LostItems, {
+                name = v.name,
+                id = v.id
+            })
+
             v:remove()
+            lia.log.add("Weapon Lost", client, v.name, v.id)
         end
     end
 

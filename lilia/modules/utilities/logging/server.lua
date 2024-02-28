@@ -119,6 +119,8 @@ end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.log.addType("spawned_ent", function(client, group, class, hasName, entityName, entityModel) return string.format("%s has spawned a %s with class %s and %s: %s", client:Nick(), group, class, hasName and "Name" or "Model", hasName and entityName or entityModel) end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+lia.log.addType("Weapon Lost", function(client, weaponName, weaponID) return string.format("%s died & lost their %s (#%s)", client:Name(), weaponName, weaponID) end)
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.log.addType("moneyGiven", function(client, targetName, amount) return string.format("%s has given %s %s.", client:Name(), targetName, lia.currency.get(amount)) end)
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.log.addType("moneyGivenTAB", function(client, targetName, amount) return string.format("%s has given %s %s using TAB.", client:Name(), targetName, lia.currency.get(amount)) end)
