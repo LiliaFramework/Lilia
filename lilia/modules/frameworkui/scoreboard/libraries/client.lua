@@ -39,5 +39,4 @@ function MODULE:ShowPlayerOptions(client, options)
         options["Check Flags"] = {"icon16/user.png", function() if IsValid(client) then LocalPlayer():ConCommand("say /flags " .. client:SteamID()) end end}
     end
 end
-
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
