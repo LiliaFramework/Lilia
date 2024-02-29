@@ -29,6 +29,11 @@ MODULE.CAMIPrivileges = {
         Description = "Allows access to spawning Props."
     },
     {
+        Name = "Spawn Permissions - Can Spawn Blacklisted Props",
+        MinAccess = "superadmin",
+        Description = "Allows access to spawning Blacklisted Props."
+    },
+    {
         Name = "Spawn Permissions - Can Spawn NPCs",
         MinAccess = "superadmin",
         Description = "Allows access to spawning NPCs."

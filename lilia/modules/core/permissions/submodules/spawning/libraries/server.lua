@@ -12,10 +12,11 @@ function GM:PlayerSpawnNPC(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function GM:PlayerSpawnProp(client)
+function GM:PlayerSpawnProp(client, model)
+    local isBlacklistedProp = table.HasValue(PermissionCore.BlackListedProps, model)
     if not client then return true end
     if client.CurrentDupe and client.CurrentDupe.Entities then return true end
-    if IsValid(client) and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Props", nil) or client:getChar():hasFlags("e") or client:isStaffOnDuty() then return true end
+    if IsValid(client) and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Props", nil) or client:getChar():hasFlags("e") or client:isStaffOnDuty() then return (isBlacklistedProp and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Blacklisted Props", nil)) or true end
     return false
 end
 
