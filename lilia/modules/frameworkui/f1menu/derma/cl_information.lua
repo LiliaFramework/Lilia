@@ -1,4 +1,6 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local MDOULE = MODULE
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local PANEL = {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:Init()
@@ -19,9 +21,9 @@ function PANEL:Init()
     elseif F1MenuCore.InfoMenuLocation == "TopRight" then
         self:SetPos(ScrW() - panelWidth - 10, 10)
     elseif F1MenuCore.InfoMenuLocation == "BottomRight" then
-        self:SetPos(ScrW() - panelWidth - 10, 900)
+        self:SetPos(ScrW() - panelWidth - 10, 800)
     elseif F1MenuCore.InfoMenuLocation == "BottomCenter" then
-        self:SetPos((ScrW() - panelWidth) / 2, 900)
+        self:SetPos((ScrW() - panelWidth) / 2, 800)
     else
         self:SetPos(ScrW() - panelWidth - 10, 10)
     end
@@ -40,6 +42,15 @@ function PANEL:Init()
     self:CreateTextEntryWithBackgroundAndLabel("faction", textFont, textFontSize, textColor, shadowColor, "Character Faction")
     self:CreateTextEntryWithBackgroundAndLabel("money", textFont, textFontSize, textColor, shadowColor, "Character Money")
     if class then self:CreateTextEntryWithBackgroundAndLabel("class", textFont, textFontSize, textColor, shadowColor, "Character Class") end
+    if MDOULE.F1DisplayAttributes then
+        for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
+            local attribValue = character:getAttrib(k, 0)
+            local maximum = v.maxValue or lia.config.MaxAttributes
+            if v.NoF1Show then continue end
+            self:CreateFillableBarWithBackgroundAndLabel(v.name, textFont, textFontSize, Color(255, 255, 255), shadowColor, attribValue .. "/" .. maximum, 0, maximum, 20, attribValue)
+        end
+    end
+
     self:setup()
 end
 

@@ -22,6 +22,11 @@ function MODULE:PlayerBindPress(client, bind, pressed)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function MODULE:CanPlayerViewAttributes()
+    if self.F1DisplayAttributes then return false end
+end
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:OnCharInfoSetup(infoPanel)
     if not IsValid(infoPanel) then return end
     local mdl = infoPanel
