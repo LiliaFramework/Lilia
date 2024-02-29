@@ -47,7 +47,7 @@ function PANEL:Init()
             local attribValue = character:getAttrib(k, 0)
             local maximum = v.maxValue or lia.config.MaxAttributes
             if v.NoF1Show then continue end
-            self:CreateFillableBarWithBackgroundAndLabel(v.name, textFont, textFontSize, Color(255, 255, 255), shadowColor, attribValue .. "/" .. maximum, 0, maximum, 20, attribValue)
+            self:CreateFillableBarWithBackgroundAndLabel(v.name, textFont, textFontSize, Color(255, 255, 255), shadowColor, attribValue .. "/" .. maximum, 0, maximum, 1, attribValue)
         end
     end
 
