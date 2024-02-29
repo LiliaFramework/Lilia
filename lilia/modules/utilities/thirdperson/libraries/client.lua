@@ -177,7 +177,8 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function playerMeta:CanOverrideView()
     local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
-    if IsValid(lia.gui.char) and lia.gui.char:IsVisible() then return false end
+    if IsValid(lia.gui.char) then return false end
+    if not F1MenuCore.F1ThirdPersonEnabled and IsValid(lia.gui.menu) and IsVisible(lia.gui.menu) then return false end
     return ThirdPerson:GetBool() and ThirdPersonCore.ThirdPersonEnabled and (IsValid(self) and self:getChar() and not IsValid(ragdoll))
 end
 

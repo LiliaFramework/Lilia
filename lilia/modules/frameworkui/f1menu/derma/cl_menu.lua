@@ -1,39 +1,67 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+local MODULE = MODULE
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local PANEL = {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local gradient = lia.util.getMaterial("vgui/gradient-u")
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:Init()
-    self.initialValues = {
-        ThirdPerson = GetConVar("tp_enabled"):GetInt(),
-        ThirdPersonVerticalView = GetConVar("tp_vertical"):GetInt(),
-        ThirdPersonHorizontalView = GetConVar("tp_horizontal"):GetInt(),
-        ThirdPersonViewDistance = GetConVar("tp_distance"):GetInt(),
-        ClassicThirdPerson = GetConVar("tp_classic"):GetInt()
-    }
+    if MODULE.F1ThirdPersonEnabled then
+        self.initialValues = {
+            ThirdPerson = GetConVar("tp_enabled"):GetInt(),
+            ThirdPersonVerticalView = GetConVar("tp_vertical"):GetInt(),
+            ThirdPersonHorizontalView = GetConVar("tp_horizontal"):GetInt(),
+            ThirdPersonViewDistance = GetConVar("tp_distance"):GetInt(),
+            ClassicThirdPerson = GetConVar("tp_classic"):GetInt()
+        }
 
-    ThirdPerson = GetConVar("tp_enabled")
-    ThirdPersonVerticalView = GetConVar("tp_vertical")
-    ThirdPersonHorizontalView = GetConVar("tp_horizontal")
-    ThirdPersonViewDistance = GetConVar("tp_distance")
-    ClassicThirdPerson = GetConVar("tp_classic")
-    if ThirdPerson:GetInt() ~= 1 then
-        wasThirdPerson = false
-        RunConsoleCommand("tp_enabled", "1")
-    else
-        wasThirdPerson = true
+        ThirdPerson = GetConVar("tp_enabled")
+        ThirdPersonVerticalView = GetConVar("tp_vertical")
+        ThirdPersonHorizontalView = GetConVar("tp_horizontal")
+        ThirdPersonViewDistance = GetConVar("tp_distance")
+        ClassicThirdPerson = GetConVar("tp_classic")
+        if ThirdPerson:GetInt() ~= 1 then
+            wasThirdPerson = false
+            RunConsoleCommand("tp_enabled", "1")
+        else
+            wasThirdPerson = true
+        end
+
+        if ClassicThirdPerson:GetInt() == 1 then
+            wasClassic = true
+            RunConsoleCommand("tp_classic", "0")
+        else
+            wasClassic = false
+        end
+
+        ThirdPersonVerticalView:SetInt(0)
+        ThirdPersonHorizontalView:SetInt(0)
+        ThirdPersonViewDistance:SetInt(100)
     end
 
-    if ClassicThirdPerson:GetInt() == 1 then
-        wasClassic = true
-        RunConsoleCommand("tp_classic", "0")
-    else
-        wasClassic = false
+    if MODULE.F1DisplayModel then
+        self.model = self:Add("liaModelPanel")
+        self.model:SetWide(ScrW() * 0.25)
+        self.model:Dock(LEFT)
+        self.model:SetFOV(50)
+        self.model:SetTall(self:GetTall())
+        self.model.enableHook = true
+        self.model.copyLocalSequence = true
+        self.model:SetModel(LocalPlayer():GetModel())
+        self.model.Entity:SetSkin(LocalPlayer():GetSkin())
+        for k, v in ipairs(LocalPlayer():GetBodyGroups()) do
+            self.model.Entity:SetBodygroup(v.id, LocalPlayer():GetBodygroup(v.id))
+        end
+
+        local ent = self.model.Entity
+        if ent and IsValid(ent) then
+            local mats = LocalPlayer():GetMaterials()
+            for k, v in pairs(mats) do
+                ent:SetSubMaterial(k - 1, LocalPlayer():GetSubMaterial(k - 1))
+            end
+        end
     end
 
-    ThirdPersonVerticalView:SetInt(0)
-    ThirdPersonHorizontalView:SetInt(0)
-    ThirdPersonViewDistance:SetInt(100)
     lia.gui.menu = self
     self:SetSize(ScrW(), ScrH())
     self:SetAlpha(0)
@@ -173,7 +201,7 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:OnRemove()
-    self:RestoreConVars()
+    if MODULE.F1ThirdPersonEnabled then self:RestoreConVars() end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
@@ -190,8 +218,7 @@ function PANEL:remove()
     CloseDermaMenus()
     if not self.closing then
         self:AlphaTo(0, 0.25, 0, function()
-            -- Reset ConVars when the menu is closed
-            self:RestoreConVars()
+            if MODULE.F1ThirdPersonEnabled then self:RestoreConVars() end
             self:Remove()
         end)
 

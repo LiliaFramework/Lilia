@@ -45,10 +45,11 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor, shadowColor, labelText, dockMarginTop)
+    local isDesc = name == "desc"
     local entryContainer = self.infoBox:Add("DPanel")
     entryContainer:Dock(TOP)
-    entryContainer:SetTall(size + 25)
-    entryContainer:DockMargin(8, 8, 8, dockMarginTop or 8)
+    entryContainer:SetTall(size + 5)
+    entryContainer:DockMargin(8, 1, 8, dockMarginTop or 1)
     entryContainer.Paint = function(_, w, h)
         surface.SetDrawColor(shadowColor)
         surface.DrawRect(0, 0, w, h)
@@ -56,17 +57,52 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor
 
     local label = entryContainer:Add("DLabel")
     label:SetFont(font)
+    label:SetWide(150)
     label:SetTall(25)
-    label:Dock(TOP)
+    label:Dock(LEFT)
     label:SetTextColor(textColor)
     label:SetText(labelText)
     label:SetContentAlignment(5)
     self[name] = entryContainer:Add("DTextEntry")
     self[name]:SetFont(font)
     self[name]:SetTall(size)
-    self[name]:SetEditable(name == "desc" and true or false)
     self[name]:Dock(FILL)
     self[name]:SetTextColor(textColor)
+    self[name]:SetEditable(isDesc and true or false)
+    self[name]:SetMultiline(isDesc and true or false)
+end
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function PANEL:CreateFillableBarWithBackgroundAndLabel(name, font, size, textColor, shadowColor, labelText, minVal, maxVal, dockMarginTop, value)
+    local entryContainer = self.infoBox:Add("DPanel")
+    entryContainer:Dock(TOP)
+    entryContainer:SetTall(size + 25)
+    entryContainer:DockMargin(8, 1, 8, 1)
+    entryContainer.Paint = function(_, w, h)
+        surface.SetDrawColor(shadowColor)
+        surface.DrawRect(0, 0, w, h)
+    end
+
+    local label = entryContainer:Add("DLabel")
+    label:SetFont(font)
+    label:SetWide(150)
+    label:SetTall(10)
+    label:Dock(LEFT)
+    label:SetTextColor(textColor)
+    label:SetText(name)
+    label:SetContentAlignment(5)
+    local bar = entryContainer:Add("DPanel")
+    bar:Dock(FILL)
+    bar.Paint = function(self, w, h)
+        local percentage = math.Clamp((tonumber(value) - tonumber(minVal)) / (tonumber(maxVal) - tonumber(minVal)), 0, 1)
+        local filledWidth = percentage * w
+        local filledColor = Color(45, 45, 45, 255)
+        surface.SetDrawColor(filledColor)
+        surface.DrawRect(0, 0, filledWidth, h)
+        draw.SimpleText(labelText, font, w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    self[name] = bar
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
