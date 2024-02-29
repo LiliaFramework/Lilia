@@ -34,7 +34,7 @@ function MODULE:ShowPlayerOptions(client, options)
         options["Slay Player"] = {"icon16/user.png", function() if IsValid(client) then LocalPlayer():ConCommand("say !slay " .. client:SteamID()) end end}
         options["Respawn Player"] = {"icon16/user.png", function() if IsValid(client) then LocalPlayer():ConCommand("say !respawn " .. client:SteamID()) end end}
         options["Change Name"] = {"icon16/user.png", function() if IsValid(client) then LocalPlayer():ConCommand("say /charsetname " .. client:SteamID()) end end}
-        options["Change Description"] = {"icon16/user.png", function() if IsValid(client) then LocalPlayer():ConCommand("say /charsetname " .. client:SteamID()) end end}
+        options["Change Description"] = {"icon16/user.png", function() if IsValid(client) then LocalPlayer():ConCommand("say /charsetdesc " .. client:SteamID()) end end}
         options["Change Model"] = {"icon16/user.png", function() if IsValid(client) then OpenPlayerModelUI(client) end end}
         options["Check Flags"] = {"icon16/user.png", function() if IsValid(client) then LocalPlayer():ConCommand("say /flags " .. client:SteamID()) end end}
     end
