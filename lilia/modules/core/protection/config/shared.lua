@@ -23,3 +23,6 @@ MODULE.CarRagdoll = true
 --[[ Entities To Avoid Collisions with ]]
 MODULE.BlockedCollideEntities = {"lia_item", "lia_money"}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+--[[ Does Damage cooldown applies to all entities or just humans  ]]
+MODULE.SwitchCooldownOnAllEntities = true
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
