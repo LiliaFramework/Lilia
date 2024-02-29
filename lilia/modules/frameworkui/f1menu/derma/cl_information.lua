@@ -18,10 +18,10 @@ function PANEL:Init()
         self:SetPos(10, 10)
     elseif F1MenuCore.InfoMenuLocation == "TopRight" then
         self:SetPos(ScrW() - panelWidth - 10, 10)
-    elseif F1MenuCore.InfoMenuLocation == "BottomLeft" then
-        self:SetPos(10, ScrH() - panelHeight - 10)
     elseif F1MenuCore.InfoMenuLocation == "BottomRight" then
-        self:SetPos(ScrW() - panelWidth - 10, ScrH() - panelHeight - 10)
+        self:SetPos(ScrW() - panelWidth - 10, 900)
+    elseif F1MenuCore.InfoMenuLocation == "BottomCenter" then
+        self:SetPos((ScrW() - panelWidth) / 2, 900)
     else
         self:SetPos(ScrW() - panelWidth - 10, 10)
     end
