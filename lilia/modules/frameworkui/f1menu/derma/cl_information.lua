@@ -88,7 +88,7 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(name, font, size, textCol
     local entryContainer = self.infoBox:Add("DPanel")
     entryContainer:Dock(TOP)
     entryContainer:SetTall(size + 25)
-    entryContainer:DockMargin(8, 1, 8, 1)
+    entryContainer:DockMargin(8, 1, 8, dockMarginTop or 1)
     entryContainer.Paint = function(_, w, h)
         surface.SetDrawColor(shadowColor)
         surface.DrawRect(0, 0, w, h)
@@ -104,7 +104,7 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(name, font, size, textCol
     label:SetContentAlignment(5)
     local bar = entryContainer:Add("DPanel")
     bar:Dock(FILL)
-    bar.Paint = function(self, w, h)
+    bar.Paint = function(_, w, h)
         local percentage = math.Clamp((tonumber(value) - tonumber(minVal)) / (tonumber(maxVal) - tonumber(minVal)), 0, 1)
         local filledWidth = percentage * w
         local filledColor = Color(45, 45, 45, 255)
