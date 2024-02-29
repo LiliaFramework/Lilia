@@ -12,7 +12,7 @@ MODULE.DuplicatorBlackList = {"lia_storage", "lia_money"}
 MODULE.RestrictedVehicles = {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ List of props restricted from general spawn ]]
-MODULE.BlackListedProps = {}
+MODULE.BlackListedProps = { }
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 --[[ List of props restricted from perma propping ]]
 MODULE.CanNotPermaProp = {"lia_vendor", "lia_bodygrouper"}
