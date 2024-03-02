@@ -30,7 +30,7 @@ function lia.util.include(fileName, state)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function lia.util.includeDir(directory, fromLua, recursive)
+function lia.util.includeDir(directory, fromLua, recursive, realm)
     local baseDir = "lilia"
     if SCHEMA and SCHEMA.folder and SCHEMA.loading then
         baseDir = SCHEMA.folder .. "/schema/"
@@ -48,7 +48,7 @@ function lia.util.includeDir(directory, fromLua, recursive)
 
             for _, v in pairs(files) do
                 local fullPath = folder .. "/" .. v
-                lia.util.include(fullPath)
+                lia.util.include(fullPath, realm)
             end
 
             for _, v in pairs(folders) do
@@ -62,7 +62,7 @@ function lia.util.includeDir(directory, fromLua, recursive)
     else
         for _, v in ipairs(file.Find((fromLua and "" or baseDir) .. directory .. "/*.lua", "LUA")) do
             local fullPath = directory .. "/" .. v
-            lia.util.include(fullPath)
+            lia.util.include(fullPath, realm)
         end
     end
 end
