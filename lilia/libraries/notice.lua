@@ -92,6 +92,7 @@ end
 function OrganizeNotices()
     local scrW = ScrW()
     local lastHeight = ScrH() - 100
+    if not IsValid(lia.notices) then return end
     for k, v in ipairs(lia.notices) do
         local height = lastHeight - v:GetTall() - 10
         v:MoveTo(scrW - v:GetWide(), height, 0.15, (k / #lia.notices) * 0.25, nil)
