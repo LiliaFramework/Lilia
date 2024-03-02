@@ -463,18 +463,7 @@ table_Inherit(metaTable_TweenUnpacked, metaTable_Tween)
 metaTable_TweenUnpacked.__index = metaTable_TweenUnpacked
 
 function TweenUnpacked(base_object, from, to, duration, ease_type, callback)
-	local Tween = {
-		base_object = base_object,
-		from = from,
-		to = to,
-		duration = duration,
-		ease_type = ease_type,
-		callback = callback,
-		value = from,
-		time_left = duration,
-		permanent = false,
-		running = false
-	}
+	local Tween = {base_object = base_object,from = from,to = to,duration = duration,ease_type = ease_type,callback = callback,value = from,time_left = duration,permanent = false,running = false}
 	
 	return setmetatable(Tween, metaTable_TweenUnpacked)
 end
@@ -496,7 +485,7 @@ local metaTable_BezierTween = {
 			local points = self.points
 			local time = SysTime()
 			self.time_left = self.end_time - time
-			
+
 			if time >= self.end_time then
 				self.running = false
 				self.value = points[#points]
@@ -531,26 +520,14 @@ table_Inherit(metaTable_BezierTween, metaTable_Tween)
 metaTable_BezierTween.__index = metaTable_BezierTween
 
 function BezierTween(points, duration, ease_type, callback)
-	local Tween = {
-		points = points,
-		duration = duration,
-		ease_type = ease_type,
-		callback = callback,
-		value = points[1],
-		time_left = duration,
-		permanent = false,
-		running = false,
-	}
-	
+	local Tween = {points = points,duration = duration,ease_type = ease_type,callback = callback,value = points[1],time_left = duration,permanent = false,running = false,}
 	return setmetatable(Tween, metaTable_BezierTween)
 end
 
 hook.Add("Think", "process_tweens", function()
 	if table.IsEmpty(running_tweens) then return end
-	
 	for tween in next, running_tweens do
-		if tween == nil then continue end
-		
+		if tween == nil then continue end	
 		tween:Update()
 	end
 end)
