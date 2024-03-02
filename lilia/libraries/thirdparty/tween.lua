@@ -130,15 +130,15 @@ function tween.LerpAngle(from, to, t)
 	)
 end
 
-local LerpAngle = tween.LerpAngle
+LerpAngle = tween.LerpAngle
 
-local function LerpVector2Unpacked(vector2, from, to, t)
+function LerpVector2Unpacked(vector2, from, to, t)
 	local lerped_vector2 = Lerp(from, to, t)
 	
 	vector2:SetUnpacked(lerped_vector2.x, lerped_vector2.y)
 end
 
-local function LerpVectorUnpacked(vector, from, to, t)
+function LerpVectorUnpacked(vector, from, to, t)
 	local lerped_vector = Lerp(from, to, t)
 	
 	vector:SetUnpacked(lerped_vector.x, lerped_vector.y, lerped_vector.z)
