@@ -44,7 +44,6 @@ function PANEL:Init()
         self.model:SetWide(ScrW() * 0.25)
         self.model:Dock(LEFT)
         self.model:SetFOV(50)
-        self.model:SetTall(self:GetTall())
         self.model.enableHook = true
         self.model.copyLocalSequence = true
         self.model:SetModel(LocalPlayer():GetModel())
