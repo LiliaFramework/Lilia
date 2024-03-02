@@ -1,3 +1,5 @@
+-- OTween
+-- Discord: bozdev
 tween = {}
 
 local isfunction = isfunction
