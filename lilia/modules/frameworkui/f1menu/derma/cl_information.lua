@@ -1,5 +1,5 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-local MDOULE = MODULE
+local MODULE = MODULE
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local PANEL = {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
@@ -42,7 +42,7 @@ function PANEL:Init()
     self:CreateTextEntryWithBackgroundAndLabel("faction", textFont, textFontSize, textColor, shadowColor, "Character Faction")
     self:CreateTextEntryWithBackgroundAndLabel("money", textFont, textFontSize, textColor, shadowColor, "Character Money")
     if class then self:CreateTextEntryWithBackgroundAndLabel("class", textFont, textFontSize, textColor, shadowColor, "Character Class") end
-    if MDOULE.F1DisplayAttributes then
+    if MODULE.F1DisplayAttributes then
         for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
             local attribValue = character:getAttrib(k, 0)
             local maximum = v.maxValue or lia.config.MaxAttributes
