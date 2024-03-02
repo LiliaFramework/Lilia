@@ -133,6 +133,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     end
 
     local ModuleWorkshopContent = MODULE.WorkshopContent
+    local ModuleDependencies = MODULE.Dependencies
     local ModuleCAMIPermissions = MODULE.CAMIPrivileges
     local ModuleGlobal = MODULE.identifier
     local IsValidForGlobal = ModuleGlobal ~= "" and ModuleGlobal ~= nil
@@ -165,6 +166,18 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
             end
         else
             resource.AddWorkshop(ModuleWorkshopContent)
+        end
+    end
+
+    if ModuleDependencies then
+        if istable(ModuleDependencies) then
+            for _, dependency in ipairs(ModuleDependencies) do
+                local filepath = dependency.File
+                local realm = dependency.Realm
+                lia.util.include(filepath, realm)
+            end
+        else
+            lia.util.include(filepath)
         end
     end
 
@@ -201,8 +214,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         _G[variable] = oldModule
     end
 
-    hook.Run("ModuleLoaded", uniqueID, MODULE.identifier, MODULE)
-    if MODULE.OnLoaded then MODULE:OnLoaded() end
+    hook.Run("ModuleLoaded")
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
