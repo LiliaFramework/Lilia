@@ -88,6 +88,14 @@ lia.log.addType("vendorBuy", function(client, ...)
 end)
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+lia.log.addType("vendorBuyFail", function(client, ...)
+    local data = {...}
+    local vendorName = data[1] or "unknown"
+    local itemName = data[2] or "unknown"
+    return string.format("%s has tried to buy a %s from %s. He had no space!", client:Name(), itemName, vendorName)
+end)
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.log.addType("money", function(client, ...)
     local data = {...}
     local amount = data[1] or 0

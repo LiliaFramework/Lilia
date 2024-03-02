@@ -152,19 +152,19 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
+    if character:getInv():doesFitInventory(itemType) then
+        lia.log.add(client, "vendorBuyFail", itemType, vendor:getNetVar("name"))
+        client:notifyLocalized("Cannot add to inventory! Giving money back!")
+        client.vendorTransaction = nil
+        return
+    end
+
     vendor:giveMoney(price)
     character:takeMoney(price)
     vendor:takeStock(itemType)
     character:getInv():add(itemType):next(function(item)
         lia.log.add(client, "vendorBuy", itemType, vendor:getNetVar("name"))
         hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
-        client.vendorTransaction = nil
-    end):catch(function(_)
-        if IsValid(client) then client:notifyLocalized("Cannot add to inventory! Giving money back!") end
-        client.vendorTransaction = nil
-        return character:giveMoney(price)
-    end):catch(function(err)
-        client:notifyLocalized(err)
         client.vendorTransaction = nil
     end)
 end

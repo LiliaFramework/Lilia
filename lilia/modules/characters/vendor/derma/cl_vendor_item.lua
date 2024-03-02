@@ -42,6 +42,7 @@ function PANEL:setIsSelling(isSelling)
     self:updatePrice()
 end
 
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local function clickEffects()
     LocalPlayer():EmitSound(unpack(MODULE.VendorClick))
 end
