@@ -483,6 +483,7 @@ lia.command.add("dropmoney", {
     syntax = "<number amount>",
     onRun = function() end
 })
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("membercount", {
     adminOnly = false,
