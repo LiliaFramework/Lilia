@@ -1,8 +1,8 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 local MODULE = MODULE
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-lia.command.add("logs", {
-    AdminOnly = true,
+lia.command.add("legacylogs", {
+    adminOnly = true,
     privilege = "View Logs",
     onRun = function(client)
         net.Start("liaRequestLogsClient")
@@ -13,8 +13,18 @@ lia.command.add("logs", {
 })
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+lia.command.add("logger", {
+    adminOnly = true,
+    privilege = "View Logs",
+    onRun = function(client)
+        net.Start("OpenLogger")
+        net.Send(client)
+    end
+})
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("netlogs", {
-    superAdminOnly = true,
+    superadminOnly = true,
     privilege = "View Advanced Logs",
     onRun = function(client)
         net.Start("liaRequestLogsClient")
@@ -26,7 +36,7 @@ lia.command.add("netlogs", {
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("concommandlogs", {
-    superAdminOnly = true,
+    superadminOnly = true,
     privilege = "View Advanced Logs",
     onRun = function(client)
         net.Start("liaRequestLogsClient")
