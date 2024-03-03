@@ -50,6 +50,10 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)
     local item = lia.item.list[itemType]
+    local SteamIDWhitelist = item.SteamIDWhitelist
+    local FactionWhitelist = item.FactionWhitelist
+    local UserGroupWhitelist = item.UsergroupWhitelist
+    local VIPOnly = item.VIP
     if not vendor.items[itemType] then return false end
     local state = vendor:getTradeMode(itemType)
     if isSellingToVendor and state == VENDOR_SELLONLY then return false end
@@ -70,12 +74,14 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     end
 
     if money and money < price then return false, isSellingToVendor and "vendorNoMoney" or "canNotAfford" end
-    if item.VendorSteamIDWhitelist then
-        if istable(item.VendorSteamIDWhitelist) and not table.HasValue(item.VendorSteamIDWhitelist, client:SteamID()) then
-            return false, "You are not whitelisted to use this item!"
-        elseif isstring(item.VendorSteamIDWhitelist) and client:SteamID() ~= item.VendorSteamIDWhitelist then
-            return false, "You are not whitelisted to use this item!"
-        end
+    if SteamIDWhitelist and ((istable(SteamIDWhitelist) and not table.HasValue(SteamIDWhitelist, client:SteamID())) or (isstring(SteamIDWhitelist) and client:SteamID() ~= SteamIDWhitelist)) then
+        return false, "You are not whitelisted to buy this item!"
+    elseif FactionWhitelist and ((istable(FactionWhitelist) and not table.HasValue(FactionWhitelist, client:Team())) or (isstring(FactionWhitelist) and client:Team() ~= FactionWhitelist)) then
+        return false, "Your faction is not whitelisted to buy this item!"
+    elseif UserGroupWhitelist and ((istable(UserGroupWhitelist) and not table.HasValue(UserGroupWhitelist, client:GetUserGroup())) or (isstring(UserGroupWhitelist) and client:GetUserGroup() ~= UserGroupWhitelist)) then
+        return false, "Your usergroup is not whitelisted to buy this item!"
+    elseif VIPOnly and not client:isVIP() then
+        return false, "This item is meant for VIPs!"
     end
 end
 
@@ -152,9 +158,9 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
-    if character:getInv():doesFitInventory(itemType) then
+    if not character:getInv():doesFitInventory(itemType) then
+        client:ChatPrint("You don't have space for this item!")
         lia.log.add(client, "vendorBuyFail", itemType, vendor:getNetVar("name"))
-        client:notifyLocalized("Cannot add to inventory! Giving money back!")
         client.vendorTransaction = nil
         return
     end

@@ -20,11 +20,23 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function GM:CanPlayerInteractItem(client, action, item)
+    local SteamIDWhitelist = item.ItemInteractSteamIDWhitelist
+    local FactionWhitelist = item.ItemInteractFactionWhitelist
+    local UserGroupWhitelist = item.ItemInteractUsergroupWhitelist
+    local VIPOnly = item.ItemInteractVIP
     if not client:Alive() or client:getLocalVar("ragdoll") then return false end
     if client:getNetVar("fallingover") then return false end
-    if item.SteamIDUseWhitelist and not table.HasValue(item.SteamIDUseWhitelist, client:SteamID()) then
-        client:notify("This item is whitelisted!")
-        return false
+    if SteamIDWhitelist then
+        local isWhitelisted = istable(SteamIDWhitelist) and table.HasValue(SteamIDWhitelist, client:SteamID()) or isstring(SteamIDWhitelist) and client:SteamID() == SteamIDWhitelist
+        if not isWhitelisted then return false, "You are not whitelisted to use this item!" end
+    elseif FactionWhitelist then
+        local isWhitelisted = istable(FactionWhitelist) and table.HasValue(FactionWhitelist, client:Team()) or isstring(FactionWhitelist) and client:Team() == FactionWhitelist
+        if not isWhitelisted then return false, "Your faction is not whitelisted to use this item!" end
+    elseif UserGroupWhitelist then
+        local isWhitelisted = istable(UserGroupWhitelist) and table.HasValue(UserGroupWhitelist, client:GetUserGroup()) or isstring(UserGroupWhitelist) and client:GetUserGroup() == UserGroupWhitelist
+        if not isWhitelisted then return false, "Your usergroup is not whitelisted to use this item!" end
+    elseif VIPOnly and not client:isVIP() then
+        return false, "This item is meant for VIPs!"
     end
 
     if action == "drop" then
