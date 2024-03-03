@@ -24,7 +24,7 @@ lia.command.add("playtime", {
             local seconds = playTimeInSeconds % 60
             client:ChatPrint(string.format("Your playtime: %d hours, %d minutes, %d seconds", hours, minutes, seconds))
         else
-            client:ChatPrint("Could not retrieve your playtime. Please try again or contact an admin if the issue persists.")
+            client:notify("Could not retrieve your playtime. Please try again or contact an admin if the issue persists.")
         end
     end
 })
