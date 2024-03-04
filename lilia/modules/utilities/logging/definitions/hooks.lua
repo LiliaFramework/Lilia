@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 local color = Color(52, 152, 219)
 --  > Say
 local log = MODULE:addCategory("Player Say", color)
