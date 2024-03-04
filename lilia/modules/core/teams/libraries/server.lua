@@ -119,6 +119,15 @@ function MODULE:FactionOnLoadout(client)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+function MODULE:CanCharBeTransfered(character, faction)
+    if faction.oneCharOnly then
+        for _, otherCharacter in next, lia.char.loaded do
+            if otherCharacter.steamID == character.steamID and faction.index == otherCharacter:getFaction() then return false, "This player already has another character in this faction!" end
+        end
+    end
+end
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:ClassOnLoadout(client)
     local character = client:getChar()
     local class = lia.class.list[character:getClass()]
