@@ -2,27 +2,27 @@
 lia.command.add("legacylogs", {
     adminOnly = true,
     privilege = "View Logs",
-    onRun = function(client) end
+    onRun = function() end
 })
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("logger", {
     adminOnly = true,
     privilege = "View Logs",
-    onRun = function(client) end
+    onRun = function() end
 })
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("netlogs", {
     superadminOnly = true,
     privilege = "View Advanced Logs",
-    onRun = function(client) end
+    onRun = function() end
 })
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.command.add("concommandlogs", {
     superadminOnly = true,
     privilege = "View Advanced Logs",
-    onRun = function(client) end
+    onRun = function() end
 })
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

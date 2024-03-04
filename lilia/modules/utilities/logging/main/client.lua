@@ -13,7 +13,7 @@ local function lerpColor(t, fColor, eColor)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MODULE:drawGradient(x, y, w, h, color, end_color)
+function MODULE:drawGradient(_, _, w, h, color, end_color)
     for x = 0, w do
         surface.SetDrawColor(lerpColor(x / w, color, end_color))
         surface.DrawLine(x, 0, x, h)
@@ -68,10 +68,10 @@ function MODULE:InitPostEntity()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-net.Receive("SyncCategories", function(len)
+net.Receive("SyncCategories", function()
     MODULE.categories = {}
     local count = net.ReadUInt(MODULE.maxCategoriesInBits)
-    for i = 1, count do
+    for _ = 1, count do
         local name, color = net.ReadString(), net.ReadColor()
         MODULE.categories[name] = {
             name = name,
@@ -94,7 +94,7 @@ net.Receive("OpenLogger", function()
     panel:MakePopup()
     panel:SetAlpha(0)
     panel:AlphaTo(255, .2, 0)
-    panel.Paint = function(self, w, h)
+    panel.Paint = function(_, w, h)
         w = w - ScrW() / 8
         MODULE:drawGradient(0, 0, w, h, ColorPatters.fg, ColorPatters.bg)
         surface.SetDrawColor(ColorPatters.fg)
@@ -129,7 +129,7 @@ net.Receive("OpenLogger", function()
 
     local nav = panel:Add("UINav")
     local i, before_word = 0
-    for k, v in SortedPairs(MODULE.categories or {}) do
+    for _, v in SortedPairs(MODULE.categories or {}) do
         local new_word = string.match(v.name, "^(%w+)")
         local c = Color(math.Clamp(v.color.r - 30, 0, 255), math.Clamp(v.color.g - 30, 0, 255), math.Clamp(v.color.b - 30, 0, 255))
         local cat = nav:AddButton(v.name, v.color, c)
@@ -147,7 +147,7 @@ net.Receive("OpenLogger", function()
                 if not IsValid(cat) then return end
                 log:Clear()
                 if logs and max_page then
-                    for id, lv in ipairs(logs) do
+                    for _, lv in ipairs(logs) do
                         log:AddLog(lv.log, tonumber(lv.time))
                     end
 

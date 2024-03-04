@@ -39,13 +39,13 @@ function MODULE:networkCategories(ply)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-net.Receive("SyncCategories", function(len, ply)
+net.Receive("SyncCategories", function(_, ply)
     if not CAMI.PlayerHasAccess(ply, "Commands - View Logs", nil) then return end
     MODULE:networkCategories(ply)
 end)
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-net.Receive("SyncLogs", function(len, ply)
+net.Receive("SyncLogs", function(_, ply)
     if not CAMI.PlayerHasAccess(ply, "Commands - View Logs", nil) then return end
     local page = net.ReadUInt(MODULE.maxPagesInBits)
     local category_name = net.ReadString()
@@ -59,7 +59,7 @@ net.Receive("SyncLogs", function(len, ply)
     end
 
     local count = select(2, next(sql.Query(("SELECT COUNT( * ) FROM lilia_logs WHERE category = %s"):format(escaped_category_name))[1]))
-    for i, v in ipairs(logs) do
+    for _, v in ipairs(logs) do
         v.category = nil
         v.id = nil
     end
@@ -72,8 +72,7 @@ net.Receive("SyncLogs", function(len, ply)
 end)
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-concommand.Add("Logger_delete_logs", function(ply, cmd, args)
-    if not (args[1] == "yes") then return print("Logger - Are you sure to do this command? This command deletes all logs from the database. If you are sure, enter 'Logger_delete_logs yes'.") end
+concommand.Add("Logger_delete_logs", function(ply)
     if sql.Query("DELETE FROM `lilia_logs` WHERE time > 0") then
         print("Logger - All logs have been erased")
     else

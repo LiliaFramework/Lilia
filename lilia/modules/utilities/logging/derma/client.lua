@@ -27,14 +27,14 @@ function PANEL:Init()
         surface.DrawRect(w / 2, 0, w / 2, h)
     end
 
-    vbar.btnGrip.Paint = function(_self, w, h)
+    vbar.btnGrip.Paint = function(_, w, h)
         surface.SetDrawColor(Color(40, 58, 75))
         surface.DrawRect(w / 2, 0, w / 2, h)
     end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function PANEL:Paint(w, h)
+function PANEL:Paint()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
