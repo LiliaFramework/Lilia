@@ -31,8 +31,6 @@ lia.command.add("resetallvendormoney", {
 lia.command.add("savevendors", {
     privilege = "Reset Vendor Money",
     superAdminOnly = true,
-    onRun = function()
-        MODULE:SaveData()
-    end
+    onRun = function() MODULE:SaveData() end
 })
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
