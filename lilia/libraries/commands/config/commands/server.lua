@@ -1127,4 +1127,27 @@ lia.command.add("dropmoney", {
         timer.Simple(5, function() if IsValid(client) then client:SetNWBool("DropMoneyCooldown", false) end end)
     end
 })
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+lia.command.add("membercount", {
+    adminOnly = false,
+    privilege = "Default User Commands",
+    onRun = function(client)
+        local staffCount = 0
+        local onDutyStaffCount = 0
+        local vipCount = 0
+        local userCount = 0
+        for _, target in ipairs(player.GetAll()) do
+            if target:isStaff() then staffCount = staffCount + 1 end
+            if target:isStaffOnDuty() then onDutyStaffCount = onDutyStaffCount + 1 end
+            if target:isVIP() then vipCount = vipCount + 1 end
+            if target:isUser() then userCount = userCount + 1 end
+        end
+
+        client:ChatPrint("Total Off Duty Staff Members: " .. staffCount)
+        client:ChatPrint("Total On Duty Staff Members: " .. onDutyStaffCount)
+        client:ChatPrint("Total VIP Members: " .. vipCount)
+        client:ChatPrint("Total Regular Users: " .. userCount)
+    end
+})
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

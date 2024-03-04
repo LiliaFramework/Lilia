@@ -159,7 +159,7 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
     if not character:getInv():doesFitInventory(itemType) then
-        client:ChatPrint("You don't have space for this item!")
+        client:notify("You don't have space for this item!")
         lia.log.add(client, "vendorBuyFail", itemType, vendor:getNetVar("name"))
         client.vendorTransaction = nil
         return

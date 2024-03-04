@@ -54,6 +54,7 @@ lia.command.add("plytransfer", {
             end
 
             if faction then
+                if hook.Run("CanCharBeTransfered", target:getChar(), faction, target:Team()) == false then return end
                 target:getChar().vars.faction = faction.uniqueID
                 target:getChar():setFaction(faction.index)
                 hook.Run("PlayerOnFactionTransfer", target)
