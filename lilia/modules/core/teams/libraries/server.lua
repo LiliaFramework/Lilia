@@ -120,7 +120,9 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:CanCharBeTransfered(character, faction)
-    if faction.oneCharOnly then
+    local client = character:getPlayer()
+    local hasBypass = CAMI.PlayerHasAccess(client, "Staff Permissions - Bypass OneCharOnly Limit", nil)
+    if faction.oneCharOnly and not hasBypass then
         for _, otherCharacter in next, lia.char.loaded do
             if otherCharacter.steamID == character.steamID and faction.index == otherCharacter:getFaction() then return false, "This player already has another character in this faction!" end
         end
