@@ -130,7 +130,7 @@ if DarkRP then
     end)
 
     hook.Add("playerGetSalary", "Logger:log", function(ply, amount) log(("*%s* (%s) has got his salary of &%d&$ as ~%s~"):format(ply:GetName(), ply:SteamID(), amount, team.GetName(ply:Team()))) end)
-    hook.Add("onPropertyTax", "Logger:log", function(ply, tax) log(("*%s* (%s) has paid &%d&$ of tax"):format(ply:GetName(), ply:SteamID(), amount)) end)
+    hook.Add("onPropertyTax", "Logger:log", function(ply, tax) log(("*%s* (%s) has paid &%d&$ of tax"):format(ply:GetName(), ply:SteamID(), tax)) end)
     --  > Arrest
     local log = MODULE:addCategory("DarkRP Arrest", color)
     hook.Add("playerArrested", "Logger:log", function(ply, time, actor) log(("*%s* (%s) has been arrested by *%s* (%s) for &%d&s"):format(ply:GetName(), ply:SteamID(), actor:GetName(), actor:SteamID(), time)) end)

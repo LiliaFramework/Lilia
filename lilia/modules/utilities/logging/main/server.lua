@@ -30,7 +30,7 @@ end
 function MODULE:networkCategories(ply)
     net.Start("SyncCategories")
     net.WriteUInt(table.Count(self.categories), self.maxCategoriesInBits)
-    for k, v in pairs(self.categories) do
+    for _, v in pairs(self.categories) do
         net.WriteString(v.name)
         net.WriteColor(v.color)
     end
@@ -72,7 +72,7 @@ net.Receive("SyncLogs", function(_, ply)
 end)
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-concommand.Add("Logger_delete_logs", function(ply)
+concommand.Add("Logger_delete_logs", function()
     if sql.Query("DELETE FROM `lilia_logs` WHERE time > 0") then
         print("Logger - All logs have been erased")
     else
