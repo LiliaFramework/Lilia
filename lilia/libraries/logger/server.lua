@@ -7,6 +7,15 @@ These hooks are used in faction tables that are created in `schema/factions/sh_f
 regular gamemode hooks.
 ]]
 -- @hooks sex
+function lia.log.loadTables()
+    file.CreateDir("lilia/logs")
+    file.CreateDir("lilia/netlogs")
+    file.CreateDir("lilia/concommandlogs")
+end
+
+function lia.log.resetTables()
+end
+
 --- Called when the default name for a character needs to be retrieved (i.e upon initial creation).
 -- @realm shared
 -- @player client Client to get the default name for
@@ -15,15 +24,6 @@ regular gamemode hooks.
 -- 	return "MPF-RCT." .. tostring(math.random(1, 99999))
 -- end
 function getDefaultName(client)
-end
-
-function lia.log.loadTables()
-    file.CreateDir("lilia/logs")
-    file.CreateDir("lilia/netlogs")
-    file.CreateDir("lilia/concommandlogs")
-end
-
-function lia.log.resetTables()
 end
 
 function lia.log.addType(logType, func)
