@@ -9,9 +9,12 @@ end
 function lia.log.resetTables()
 end
 
--- Adds a new log type to the lia.log module.
--- @param logType (string) The type of log to add.
--- @param func (function) The function to handle the logging for the specified type.
+--- Summary ends with a period.
+-- Some description, can be over several lines.
+-- @param p1 first parameter
+-- @param p2 second parameter
+-- @return a string value
+-- @see second_fun
 function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end
