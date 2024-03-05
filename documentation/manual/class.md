@@ -1,4 +1,4 @@
-# CLASS Structure
+# Class Structure
 
 ```lua
 CLASS.name = "Steve"
