@@ -8,7 +8,6 @@ lia.menu.list = lia.menu.list or {}
 -- Library functions for lilia logs
 -- @moduleCommentEnd
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-
 -- @type function lia.menu.add(options, positions, onRemove)
 -- @typeCommentStart
 -- Adds a new menu to the list of drawn menus.
@@ -42,7 +41,6 @@ function lia.menu.add(options, position, onRemove)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-
 -- @type function lia.menu.drawAll()
 -- @typeCommentStart
 -- A function to draw all of the active menus or hide them when needed.
@@ -111,7 +109,6 @@ function lia.menu.drawAll()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-
 -- @type function lia.menu.getActiveMenu()
 -- @typeCommentStart
 -- Determines which menu is being looked at.
@@ -159,7 +156,6 @@ function lia.menu.getActiveMenu()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-
 -- @type function lia.menu.onButtonPressed(menu, callback)
 -- @typeCommentStart
 -- Handles whenever a button has been pressed.
