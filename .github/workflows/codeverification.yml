@@ -2,12 +2,7 @@ name: Commit Verification
 
 on:
   push:
-    paths:
-      - "lilia/**"
-  pull_request:
-    paths:
-      - "lilia/**"
-  
+  pull_request:  
 permissions:
   actions: write
   checks: write
