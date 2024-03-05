@@ -59,7 +59,6 @@ new_type("panel", "Panels", true)
 tparam_alias("char", "Character")
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
-tparam_alias("ixtype", "ix.type")
 tparam_alias("date", "date")
 
 -- standard types
