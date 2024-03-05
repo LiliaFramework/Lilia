@@ -53,7 +53,7 @@ If the plugin uses a special variable (e.g. `cwPluginName`) for the plugin, chan
 # The `Character` Object
 One main thing that is very notable is how the character is referenced using `client:GetCharacter()` which returns a character object. The way the object works is just like an entity you spawn. It has its own properties like the model, color, etc. that makes it unique. You can access all the characters in a table which stores loaded characters with `ix.char.loaded`.
 
-The character object comes with many predefined methods. You can look at how they are defined [by clicking here](https://github.com/NebulousCloud/helix/blob/master/gamemode/core/meta/sh_character.lua). The character object makes it very simple to manager character information.
+The character object comes with many predefined methods. You can look at how they are defined [by clicking here](https://github.com/bleonheart/LiliaTest/blob/master/gamemode/core/meta/sh_character.lua). The character object makes it very simple to manager character information.
 
 You will notice throughout the framework, the character object is used a lot. The use of the character object makes a large barrier between what belongs to the character and what belongs to the player. For example: flags, models, factions, data, and other things are stored on the character and can be accessed by the character object.
 
@@ -87,7 +87,7 @@ Attributes allow the player to boost certain abilities over time. Both framework
 
 One extra feature for attributes in Helix is `ATTRIBUTE:OnSetup(client, value)` which is a function that gets called on spawn to apply any effects. For example, the stamina attribute changes the player's run speed by adding the amount of stamina points the player has.
 
-You can find an example at [https://github.com/NebulousCloud/helix/blob/master/plugins/stamina/attributes/sh_stm.lua](https://github.com/NebulousCloud/helix/blob/master/plugins/stamina/attributes/sh_stm.lua)
+You can find an example at [https://github.com/bleonheart/LiliaTest/blob/master/plugins/stamina/attributes/sh_stm.lua](https://github.com/bleonheart/LiliaTest/blob/master/plugins/stamina/attributes/sh_stm.lua)
 
 ## Classes (`ix.class`)
 Classes are a part of the factions. They basically are a more specific form of a faction. Factions in Helix and Clockwork work similarly. For instance, all classes are placed in the `classes` folder under the schema folder and use `CLASS` as the main variable inside the file.
@@ -100,7 +100,7 @@ However:
 - Classes are *optional* for factions rather than being required.
 
 ## Commands (`ix.command`)
-Commands no longer need to be in separate files. Instead, they are just placed into one large file. However, if you really wanted you can register multiple commands across multiple files or however you want. One thing you may notice is Clockwork uses a _COMMAND_ table while Helix does not always. It is simply a design preference. You can find examples at [https://github.com/NebulousCloud/helix/blob/master/gamemode/core/sh_commands.lua](https://github.com/NebulousCloud/helix/blob/master/gamemode/core/sh_commands.lua)
+Commands no longer need to be in separate files. Instead, they are just placed into one large file. However, if you really wanted you can register multiple commands across multiple files or however you want. One thing you may notice is Clockwork uses a _COMMAND_ table while Helix does not always. It is simply a design preference. You can find examples at [https://github.com/bleonheart/LiliaTest/blob/master/gamemode/core/sh_commands.lua](https://github.com/bleonheart/LiliaTest/blob/master/gamemode/core/sh_commands.lua)
 
 It should be noted that:
 
@@ -111,7 +111,7 @@ It should be noted that:
 - `COMMAND.access` for checking whether or not a person is a (super)admin can be replaced with `adminOnly = true` or `superAdminOnly = true` in the command table.
 
 ## Configurations (`ix.config`)
-In Helix, the method of adding configurations that can be changed by server owners is heavily simplified. [See an example here](https://github.com/NebulousCloud/helix/blob/master/gamemode/config/sh_config.lua).
+In Helix, the method of adding configurations that can be changed by server owners is heavily simplified. [See an example here](https://github.com/bleonheart/LiliaTest/blob/master/gamemode/config/sh_config.lua).
 
 Adding a configuration is as follows:
 
@@ -127,7 +127,7 @@ You'll notice that ellipses (...) were added at the end. This is because there a
 - `Clockwork.config:ShareKey()` is not needed.
 - The 3rd argument for `Clockwork.config:AddToSystem(name, key, description, min, max)` is also the 3rd argument for `ix.config.Add`
 - The 4th argument for `ix.config.Add` is an optional function that is called when the configuration is changed.
-- The 5th argument for `ix.config.Add` is a table. You can specify the category for the configuration to group it with other configurations. There is also a data table inside which can be used to determine the minimum value and maximum value for numbers. Check out [an example here](https://github.com/NebulousCloud/helix/blob/master/gamemode/config/sh_config.lua). See also `ix.config`.
+- The 5th argument for `ix.config.Add` is a table. You can specify the category for the configuration to group it with other configurations. There is also a data table inside which can be used to determine the minimum value and maximum value for numbers. Check out [an example here](https://github.com/bleonheart/LiliaTest/blob/master/gamemode/config/sh_config.lua). See also `ix.config`.
 
 ## Currency (`ix.currency`)
 Updating your currency code is simple:
@@ -254,7 +254,7 @@ ITEM.functions.Use = {
 
 All item functions are defined in the `ITEM.functions` table. This allows the drop-down menus when using the item a lot easier and cleaner to generate dynamically. There is also more control of the icons used for the options, whether or not the function should be displayed, etc.
 
-You can see an example of a water item here: [https://github.com/NebulousCloud/helix-hl2rp/blob/master/schema/items/sh_water.lua](https://github.com/NebulousCloud/helix-hl2rp/blob/master/schema/items/sh_water.lua)
+You can see an example of a water item here: [https://github.com/bleonheart/LiliaTest-hl2rp/blob/master/schema/items/sh_water.lua](https://github.com/bleonheart/LiliaTest-hl2rp/blob/master/schema/items/sh_water.lua)
 
 Here, we can define what happens when the function is run, what the icon is, and what sound it plays when used. It is basically put into one area rather than being scattered among hooks and stuff.
 
@@ -326,4 +326,4 @@ You can see the documented hooks for the schema and plugins in the `Plugin` sect
 # Conclusion
 Overall, most of the conversion from Clockwork to Helix is simply renaming a certain function and/or switching the order of arguments around. Both are frameworks so they function similarly.
 
-You may want to use our HL2 RP schema example for reference which can be found at [https://github.com/NebulousCloud/helix-hl2rp](https://github.com/NebulousCloud/helix-hl2rp)
+You may want to use our HL2 RP schema example for reference which can be found at [https://github.com/bleonheart/LiliaTest-hl2rp](https://github.com/bleonheart/LiliaTest-hl2rp)
