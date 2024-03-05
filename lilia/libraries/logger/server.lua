@@ -11,10 +11,8 @@ end
 
 --- Summary ends with a period.
 -- Some description, can be over several lines.
--- @param p1 first parameter
--- @param p2 second parameter
--- @return a string value
--- @see second_fun
+-- @param logType first parameter
+-- @param func second parameter
 function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end
