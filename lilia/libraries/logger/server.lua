@@ -4,6 +4,7 @@
 -- Library functions for lilia logs
 -- @moduleCommentEnd
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+-- @log Logging
 -- @type function lia.log.loadTables()
 -- @typeCommentStart
 -- Used to load tables into the database
@@ -18,6 +19,7 @@ function lia.log.loadTables()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+-- @log Logging
 -- @type function lia.log.resetTables()
 -- @typeCommentStart
 -- Used to reset tables into database
@@ -29,6 +31,7 @@ function lia.log.resetTables()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+-- @log Logging
 -- @type function lia.log.addType(logType, func)
 -- @typeCommentStart
 -- Used to reset tables into database
@@ -50,6 +53,7 @@ function lia.log.addType(logType, func)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+-- @log Logging
 -- @type function lia.log.getString(client, logType, ...)
 -- @typeCommentStart
 -- Formats a string that is in log.type
@@ -70,6 +74,7 @@ function lia.log.getString(client, logType, ...)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+-- @log Logging
 -- @type function lia.log.addRaw(logString, shouldNotify, flag)
 -- @typeCommentStart
 -- Adds a raw that does not require formatting
@@ -86,6 +91,7 @@ function lia.log.addRaw(logString, shouldNotify, flag)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+-- @log Logging
 -- @type function lia.log.add(client, logType, ...)
 -- @typeCommentStart
 -- Displays a line of the log according to the match described in the log type
@@ -111,6 +117,7 @@ function lia.log.add(client, logType, ...)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+-- @log Logging
 -- @type function lia.log.send(client, logString, flag)
 -- @typeCommentStart
 -- Display log raw on client console
@@ -126,6 +133,7 @@ function lia.log.send(client, logString, flag)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+-- @log Logging
 -- @type function lia.log.send(client, logString, flag)
 -- @typeCommentStart
 -- Display log raw on client console
