@@ -156,6 +156,7 @@ jobs:
             echo "No changes to commit."
           fi
         working-directory: "${{ github.workspace }}"
+
   documentation:
     runs-on: ubuntu-latest
     needs: CodeVerifierAndIndenter
