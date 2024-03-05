@@ -55,6 +55,7 @@ lia.item.DefaultFunctions = {
         onCanRun = function(item) return IsValid(item.entity) end
     },
 }
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 
 -- @type function lia.item.get(identifier)
@@ -72,6 +73,7 @@ lia.item.DefaultFunctions = {
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 
 -- @type function lia.item.load(identifier)
@@ -86,7 +88,6 @@ end
 -- @usageStart
 -- lia.item.load("sh_guacamole.lua", "foodstuff", false")
 -- @usageEnd
-
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua") or path:match("([_%w]+)%.lua")
@@ -110,7 +111,6 @@ end
 -- lia.item.isItem(lia.item.instances[1])
 -- "true"
 -- @usageEnd
-
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.item.isItem(object)
     return istable(object) and object.isItem == true
@@ -132,7 +132,6 @@ end
 -- @usageStart
 -- lia.item.register("example", "base_food", false, "sh_example.lua", false)
 -- @usageEnd
-
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     assert(isstring(uniqueID), "uniqueID must be a string")
@@ -186,6 +185,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     ITEM = nil
     return targetTable[itemType]
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 
 -- @type function lia.item.loadFromDir(directory)
@@ -219,6 +219,7 @@ function lia.item.loadFromDir(directory, isFirstLoad)
 
     if isFirstLoad then hook.Run("InitializedItems") end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 
 -- @type function lia.item.new(uniqueID, id)
@@ -231,7 +232,6 @@ end
 -- @usageStart
 -- local item = lia.item.new("example", 15)
 -- @usageEnd
-
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id

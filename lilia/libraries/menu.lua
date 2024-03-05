@@ -40,6 +40,7 @@ function lia.menu.add(options, position, onRemove)
         onRemove = onRemove
     })
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 
 -- @type function lia.menu.drawAll()
@@ -47,7 +48,6 @@ end
 -- A function to draw all of the active menus or hide them when needed.
 -- @typeCommentEnd
 -- @realm client
-
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.menu.drawAll()
     local frameTime = FrameTime() * 30
@@ -109,6 +109,7 @@ function lia.menu.drawAll()
         end
     end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 
 -- @type function lia.menu.getActiveMenu()
@@ -118,7 +119,6 @@ end
 -- @realm client
 -- @treturn table The active menu.
 -- @treturn function The currently hovered option callback.
-
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.menu.getActiveMenu()
     local mX, mY = ScrW() * 0.5, ScrH() * 0.5
@@ -157,6 +157,7 @@ function lia.menu.getActiveMenu()
         end
     end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 
 -- @type function lia.menu.onButtonPressed(menu, callback)
@@ -167,7 +168,6 @@ end
 -- @int menu The menu index.
 -- @func callback The callback that checks whether the button can be pressed.
 -- @treturn bool Whether or not the button can be pressed.
-
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.menu.onButtonPressed(menu, callback)
     table.remove(lia.menu.list, menu)
