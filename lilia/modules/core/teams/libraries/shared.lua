@@ -10,7 +10,7 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function MODULE:GetDefaultCharName(client, faction)
     local info = lia.faction.indices[faction]
-    if info and info.onGetDefaultName then return info:onGetDefaultName(client) end
+    if info and info.getDefaultName then return info:getDefaultName(client) end
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------

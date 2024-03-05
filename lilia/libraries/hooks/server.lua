@@ -415,7 +415,7 @@ function GM:OnCharVarChanged(character, varName, oldVar, newVar)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function GM:OnCharCreated(client, char)
+function GM:onCharCreated(client, char)
     local permFlags = client:getPermFlags()
     if permFlags and #permFlags > 0 then char:giveFlags(permFlags) end
 end

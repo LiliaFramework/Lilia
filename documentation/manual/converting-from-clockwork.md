@@ -11,7 +11,7 @@ If you are converting Clockwork code to Lilia, keep in mind that `_player` is no
 # Basics of Conversion
 
 ## Folders
-Clockwork code and file structure is not too different from Lilia. In the schema, the plugins folder and schema folder stay in the same place. There are some minor differences in naming however:
+Clockwork code and file structure is not too different from Lilia. In the schema, the modules folder and schema folder stay in the same place. There are some minor differences in naming however:
 
 - The `schema/entities` folder should be moved outside out of the schema folder.
 - The `libraries` folder needs to be renamed to `libs` to load.
@@ -28,27 +28,27 @@ Inside of the `schema` folder of the actual schema, you should see a file named 
 ## Including Files
 Both frameworks come with a utility function to include a file without worrying about sending them to the client and stuff. In Clockwork, this function is `Clockwork.kernel:IncludePrefixed("sh_myfile.lua")`. Change this to `ix.util.Include("sh_myfile.lua") `and save.
 
-# The Plugin
+# The Module
 
 ## Introduction
-Plugins serve as a means to add on to a schema or framework without directly modifying either. This allows for easier modifications that can be added/removed with ease. It is recommended that you keep all custom modifications left to plugins rather than editing the framework or the schema if possible.
+Modules serve as a means to add on to a schema or framework without directly modifying either. This allows for easier modifications that can be added/removed with ease. It is recommended that you keep all custom modifications left to modules rather than editing the framework or the schema if possible.
 
 ## Structure
-All plugins in Clockwork and Lilia go into the `plugins` folder. However, there are many differences with the CW plugin structure. First of all, there are two things you see when you open a plugin folder: `plugin` again and `plugin.ini`.
+All modules in Clockwork and Lilia go into the `modules` folder. However, there are many differences with the CW module structure. First of all, there are two things you see when you open a module folder: `module` again and `module.ini`.
 
-Lilia only has one file needed: `sh_plugin.lua` which acts like `sh_schema.lua` but for plugins.
+Lilia only has one file needed: `sh_module.lua` which acts like `sh_schema.lua` but for modules.
 
 ## Conversion
-The first step is to move all of the contents from the `plugin` folder to the main folder of the plugin folder. The `sh_plugin.lua` file needs to be changed to provide basic information about the plugin.You need to define three things in `sh_plugin.lua` which can be found within the `plugin.ini` file:
+The first step is to move all of the contents from the `module` folder to the main folder of the module folder. The `sh_module.lua` file needs to be changed to provide basic information about the module.You need to define three things in `sh_module.lua` which can be found within the `module.ini` file:
 
-- `PLUGIN.name = "Plugin Name"`
-- `PLUGIN.author = "Plugin Author"`
-- `PLUGIN.description = "Plugin Description"`
+- `MODULE.name = "Module Name"`
+- `MODULE.author = "Module Author"`
+- `MODULE.description = "Module Description"`
 
-If the plugin uses a special variable (e.g. `cwPluginName`) for the plugin, change it to `PLUGIN`.
+If the module uses a special variable (e.g. `cwModuleName`) for the module, change it to `MODULE`.
 
-- Note that the `PLUGIN` table is removed after the plugin is loaded. So if you want to use `PLUGIN` after the plugin has loaded (such as in console commands, in entities, etc.), add `local PLUGIN = PLUGIN` at the top.
-- You can see if a global variable is defined for it by looking for `PLUGIN:SetGlobalAlias("cwMyPlugin")`. So, one would change `cwMyPlugin` to `PLUGIN`.
+- Note that the `MODULE` table is removed after the module is loaded. So if you want to use `MODULE` after the module has loaded (such as in console commands, in entities, etc.), add `local MODULE = MODULE` at the top.
+- You can see if a global variable is defined for it by looking for `MODULE:SetGlobalAlias("cwMyModule")`. So, one would change `cwMyModule` to `MODULE`.
 
 # The `Character` Object
 One main thing that is very notable is how the character is referenced using `client:GetCharacter()` which returns a character object. The way the object works is just like an entity you spawn. It has its own properties like the model, color, etc. that makes it unique. You can access all the characters in a table which stores loaded characters with `ix.char.loaded`.
@@ -87,7 +87,7 @@ Attributes allow the player to boost certain abilities over time. Both framework
 
 One extra feature for attributes in Lilia is `ATTRIBUTE:OnSetup(client, value)` which is a function that gets called on spawn to apply any effects. For example, the stamina attribute changes the player's run speed by adding the amount of stamina points the player has.
 
-You can find an example at [https://github.com/bleonheart/LiliaTest/blob/master/plugins/stamina/attributes/sh_stm.lua](https://github.com/bleonheart/LiliaTest/blob/master/plugins/stamina/attributes/sh_stm.lua)
+You can find an example at [https://github.com/bleonheart/LiliaTest/blob/master/modules/stamina/attributes/sh_stm.lua](https://github.com/bleonheart/LiliaTest/blob/master/modules/stamina/attributes/sh_stm.lua)
 
 ## Classes (`ix.class`)
 Classes are a part of the factions. They basically are a more specific form of a faction. Factions in Lilia and Clockwork work similarly. For instance, all classes are placed in the `classes` folder under the schema folder and use `CLASS` as the main variable inside the file.
@@ -223,7 +223,7 @@ To access a player's inventory, you need to use `client:GetCharacter():GetInvent
 As discussed above, inventories contain items. Items are still used in inventories and world entities, use default class data, have callback functions, and can contain unique item data per instance.
 
 ### Setting up items
-Every time needs to be registered, or have information about it (such as the name, model, what it does, etc.) defined. In Clockwork, you have your items defined in schemas/plugins under the items folder.
+Every time needs to be registered, or have information about it (such as the name, model, what it does, etc.) defined. In Clockwork, you have your items defined in schemas/modules under the items folder.
 
 So let's start with the differences in structure in the item file.
 
@@ -307,7 +307,7 @@ client:GetCharacter():GetInventory():Add("test")
 So in these two examples, the whole deal of instancing items is done for you in Lilia!
 
 # Hooks
-You will need to modify the function name and arguments for your schema or plugin hooks.
+You will need to modify the function name and arguments for your schema or module hooks.
 
 ```
 -- before
@@ -321,7 +321,7 @@ function Schema:GetPlayerPainSound(client)
 end
 ```
 
-You can see the documented hooks for the schema and plugins in the `Plugin` section.
+You can see the documented hooks for the schema and modules in the `Module` section.
 
 # Conclusion
 Overall, most of the conversion from Clockwork to Lilia is simply renaming a certain function and/or switching the order of arguments around. Both are frameworks so they function similarly.

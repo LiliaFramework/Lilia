@@ -24,7 +24,7 @@ function MODULE:OnCharacterDelete(client, id)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-function MODULE:OnCharCreated(client, character)
+function MODULE:onCharCreated(client, character)
     lia.log.add(client, "charCreate", character)
 end
 
