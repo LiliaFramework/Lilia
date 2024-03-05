@@ -20,9 +20,9 @@ charMeta.vars = charMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @module lia.char
--- @moduleCommentStart
+
 -- Library functions for Lilia Characters
--- @moduleCommentEnd
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 if SERVER then
     if #lia.char.names < 1 then
@@ -63,9 +63,9 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.char.new(data, id, client, steamID)
--- @typeCommentStart
+
 -- Creates a new character object with the given data and metadata.
--- @typeCommentEnd
+
 -- @realm shared
 -- @classmod Character
 -- @table data A table containing the character data.
@@ -103,9 +103,9 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.char.registerVar()
--- @typeCommentStart
+
 -- Sets up a new character variable.
--- @typeCommentEnd
+
 -- @realm shared
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.char.registerVar(key, data)

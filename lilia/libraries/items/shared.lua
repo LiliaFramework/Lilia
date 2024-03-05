@@ -12,9 +12,9 @@ lia.item.inventories = lia.inventory.instances or {}
 lia.item.inventoryTypes = lia.item.inventoryTypes or {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @module lia.item
--- @moduleCommentStart
+
 -- Library functions for Lilia's Items
--- @moduleCommentEnd
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.item.DefaultFunctions = {
     drop = {
@@ -63,9 +63,9 @@ lia.item.DefaultFunctions = {
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.item.get(identifier)
--- @typeCommentStart
+
 -- Retrieves an item table.
--- @typeCommentEnd
+
 -- @realm shared
 -- @string identifier Unique ID of the item
 -- @treturn item Item table
@@ -80,9 +80,9 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.item.load(identifier)
--- @typeCommentStart
+
 -- Loads item from file.
--- @typeCommentEnd
+
 -- @realm shared
 -- @internal
 -- @string path Path of the item file
@@ -104,9 +104,9 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.item.isItem(object)
--- @typeCommentStart
+
 -- Returns whether input is an item object or not.
--- @typeCommentEnd
+
 -- @realm shared
 -- @table object Object to check
 -- @usageStart
@@ -120,9 +120,9 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
--- @typeCommentStart
+
 -- Registers an item with a given uniqueID.
--- @typeCommentEnd
+
 -- @realm shared
 -- @internal
 -- @string uniqueID Unique ID of the item
@@ -189,9 +189,9 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.item.loadFromDir(directory)
--- @typeCommentStart
+
 -- Loads items from a directory.
--- @typeCommentEnd
+
 -- @realm shared
 -- @string directory Directory to load items from
 -- @usageStart
@@ -222,9 +222,9 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.item.new(uniqueID, id)
--- @typeCommentStart
+
 -- Creates a new item object.
--- @typeCommentEnd
+
 -- @realm shared
 -- @string uniqueID Unique ID of the item
 -- @number id ID of the item

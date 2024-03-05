@@ -1,13 +1,13 @@
 ﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @module lia.log
--- @moduleCommentStart
+
 -- Library functions for Lilia's Logs
--- @moduleCommentEnd
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.log.loadTables()
--- @typeCommentStart
+
 -- Used to load tables into the database
--- @typeCommentEnd
+
 -- @realm server
 -- @internal
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
@@ -19,9 +19,9 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.log.resetTables()
--- @typeCommentStart
+
 -- Used to reset tables into database
--- @typeCommentEnd
+
 -- @realm server
 -- @internal
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
@@ -31,9 +31,9 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 
 -- @type function lia.log.addType(logType, func)
--- @typeCommentStart
+
 -- Used to reset tables into database
--- @typeCommentEnd
+
 -- @realm server
 -- @string logType
 -- @function (client, ...) log format callback
@@ -53,9 +53,9 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 
 -- @type function lia.log.getString(client, logType, ...)
--- @typeCommentStart
+
 -- Formats a string that is in log.type
--- @typeCommentEnd
+
 -- @player client Default argument for format string
 -- @string logType 
 -- @vararg ... Other arguments on log format
@@ -74,9 +74,9 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 
 -- @type function lia.log.addRaw(logString, shouldNotify, flag)
--- @typeCommentStart
+
 -- Adds a raw that does not require formatting
--- @typeCommentEnd
+
 -- @string logString Log string data
 -- @bool sholdNotify Display log notification in the administration console
 -- @int flag Log color flag
@@ -91,9 +91,9 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 
 -- @type function lia.log.add(client, logType, ...)
--- @typeCommentStart
+
 -- Displays a line of the log according to the match described in the log type
--- @typeCommentEnd
+
 -- @player client player name on displayed log
 -- @string logType type of log
 -- @vararg ... other arguments for log
@@ -117,9 +117,9 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 
 -- @type function lia.log.send(client, logString, flag)
--- @typeCommentStart
+
 -- Display log raw on client console
--- @typeCommentEnd
+
 -- @player client player name on displayed log
 -- @string logString log string
 -- @int flag Color flag on log string
@@ -133,9 +133,9 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 
 -- @type function lia.log.send(client, logString, flag)
--- @typeCommentStart
+
 -- Display log raw on client console
--- @typeCommentEnd
+
 -- @string logString log string
 -- @realm server
 -- @internal
