@@ -1,5 +1,6 @@
 ﻿--- Library functions for Lilia's Logs
 -- @module lia.log
+lia.log.types = lia.log.types or {}
 -- @type function lia.log.loadTables()
 -- Used to load tables into the database
 -- @realm server
