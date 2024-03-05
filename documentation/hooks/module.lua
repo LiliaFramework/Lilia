@@ -1,3 +1,4 @@
+-- luacheck: ignore 111
 --[[--
 Global hooks for general use.
 
