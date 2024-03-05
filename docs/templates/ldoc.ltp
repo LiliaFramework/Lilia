@@ -1,0 +1,90 @@
+
+{%
+local baseUrl = ldoc.css:gsub("ldoc.css", "")
+local repo = "https://github.com/nebulouscloud/helix/"
+local pageTitle = mod and (ldoc.display_name(mod) .. " - " .. ldoc.title) or ldoc.title
+
+local oldmarkup = ldoc.markup
+function ldoc.markup(text, item)
+	return oldmarkup(text, item, ldoc.plain)
+end
+
+function ldoc.url(path)
+	return baseUrl .. path
+end
+
+function ldoc.realm_icon(realm)
+	return "<span class=\"realm " .. (realm or "") .. "\"></span>";
+end
+
+function ldoc.is_kind_classmethod(kind)
+	return kind ~= "libraries"
+end
+
+function ldoc.repo_reference(item)
+	return repo .. "tree/master" .. item.file.filename:gsub(item.file.base, "/gamemode") .. "#L" .. item.lineno
+end
+
+local function moduleDescription(mod)
+	if (mod.type == "topic") then
+		return mod.body:gsub(mod.display_name, ""):gsub("#", ""):sub(1, 256) .. "..."
+	end
+
+	return mod.summary
+end
+%}
+
+<html>
+	<head>
+		<title>{{pageTitle}}</title>
+
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="{{pageTitle}}" />
+		<meta property="og:site_name" content="Helix Documentation" />
+
+		{% if (mod) then %}
+			<meta property="og:description" content="{{moduleDescription(mod)}}" />
+		{% else %}
+			<meta property="og:description" content="Documentation and function reference for the Helix framework." />
+		{% end %}
+
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro" />
+		<link rel="stylesheet" href="{* ldoc.css *}" />
+		<link rel="stylesheet" href="{* ldoc.url('highlight.css') *}" />
+	</head>
+
+	<body>
+		<main>
+			{(docs/templates/sidebar.ltp)}
+
+			<article>
+				{% if (ldoc.root) then -- we're rendering the landing page (index.html) %}
+					{(docs/templates/landing.ltp)}
+				{% elseif (ldoc.body) then -- we're rendering non-code elements %}
+					<div class="wrapper">
+						{* ldoc.body *}
+					</div>
+				{% elseif (module) then -- we're rendering libary contents %}
+					<div class="wrapper">
+						{(docs/templates/module.ltp)}
+					</div>
+				{% end %}
+			</article>
+		</main>
+
+		<script type="text/javascript" src="{* ldoc.url('app.js') *}"></script>
+		<script type="text/javascript" src="{* ldoc.url('highlight.min.js') *}"></script>
+		<script type="text/javascript">
+			var elements = document.querySelectorAll("pre code")
+
+			hljs.configure({
+				languages: ["lua"]
+			});
+
+			for (var i = 0; i < elements.length; i++)
+			{
+				hljs.highlightBlock(elements[i]);
+			}
+		</script>
+	</body>
+</html>
