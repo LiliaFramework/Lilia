@@ -56,7 +56,6 @@ function lia.getCharData(charID, key)
     return data
 end
 
-
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @char Characters
 -- @type function lia.char.new(data, id, client, steamID)
@@ -97,6 +96,7 @@ function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
     lia.char.varHooks[varName][hookName] = func
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @char Characters
 -- @type function lia.char.registerVar()
