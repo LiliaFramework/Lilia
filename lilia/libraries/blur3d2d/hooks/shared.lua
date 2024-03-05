@@ -1,6 +1,4 @@
-﻿
-local GM = GM or GAMEMODE
-
+﻿local GM = GM or GAMEMODE
 function GM:PostDrawTranslucentRenderables()
     render.ClearStencil()
     render.SetStencilEnable(true)
@@ -38,4 +36,3 @@ function GM:PostDrawTranslucentRenderables()
         SUPPRESS_FROM_STENCIL = nil
     end
 end
-

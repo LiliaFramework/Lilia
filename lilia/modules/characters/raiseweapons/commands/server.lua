@@ -1,6 +1,4 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 lia.command.add("toggleraise", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -11,4 +9,3 @@ lia.command.add("toggleraise", {
         end
     end
 })
-

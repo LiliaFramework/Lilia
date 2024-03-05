@@ -1,6 +1,4 @@
-﻿
-NAME = "Español"
-
+﻿NAME = "Español"
 LANGUAGE = {
     loading = "Cargando",
     dbError = "Fallo de conexión con la Base de Datos",
@@ -255,4 +253,3 @@ LANGUAGE = {
     lookToUseAt = "Necesitas estar buscando a alguien para usar '@'",
     mustProvideString = "Debes proporcionar una string para la variable.",
 }
-

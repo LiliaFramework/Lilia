@@ -1,22 +1,12 @@
-﻿
-ITEM.name = "Bag"
-
+﻿ITEM.name = "Bag"
 ITEM.desc = "A bag to hold more items."
-
 ITEM.model = "models/props_c17/suitcase001a.mdl"
-
 ITEM.category = "Storage"
-
 ITEM.isBag = true
-
 ITEM.invWidth = 2
-
 ITEM.invHeight = 2
-
 ITEM.RequiredSkillLevels = nil
-
 ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
-
 if CLIENT then
     function ITEM:paintOver(item, w, h)
         if item:getData("equip", false) then
@@ -25,7 +15,6 @@ if CLIENT then
         end
     end
 end
-
 
 ITEM.functions.Equip = {
     name = "Equip",
@@ -46,7 +35,6 @@ ITEM.functions.Equip = {
     onCanRun = function(item) if not IsValid(item.entity) then return item:getData("equip", false) ~= true end end
 }
 
-
 ITEM.functions.Unequip = {
     name = "Unequip",
     icon = "icon16/cross.png",
@@ -56,7 +44,6 @@ ITEM.functions.Unequip = {
     end,
     onCanRun = function(item) if not IsValid(item.entity) then return item:getData("equip", false) == true end end
 }
-
 
 ITEM.functions.View = {
     icon = "icon16/briefcase.png",
@@ -82,7 +69,6 @@ ITEM.functions.View = {
     onCanRun = function(item) if not IsValid(item.entity) and item:getInv() then return item:getData("equip", false) == true end end
 }
 
-
 function ITEM:onInstanced()
     local data = {
         item = self:getID(),
@@ -98,7 +84,6 @@ function ITEM:onInstanced()
     end)
 end
 
-
 function ITEM:onRestored()
     local invID = self:getData("id")
     if invID then
@@ -109,23 +94,19 @@ function ITEM:onRestored()
     end
 end
 
-
 function ITEM:onRemoved()
     local invID = self:getData("id")
     if invID then lia.inventory.deleteByID(invID) end
 end
 
-
 function ITEM:getInv()
     return lia.inventory.instances[self:getData("id")]
 end
-
 
 function ITEM:onSync(recipient)
     local inventory = self:getInv()
     if inventory then inventory:sync(recipient) end
 end
-
 
 function ITEM.postHooks:drop()
     local invID = self:getData("id")
@@ -135,7 +116,6 @@ function ITEM.postHooks:drop()
         net.Send(self.player)
     end
 end
-
 
 function ITEM:onCombine(other)
     local client = self.player
@@ -149,7 +129,6 @@ function ITEM:onCombine(other)
         client:EmitSound(unpack(self.BagSound))
     end)
 end
-
 
 if SERVER then
     function ITEM:onDisposed()
@@ -179,4 +158,3 @@ if SERVER then
         return d
     end
 end
-

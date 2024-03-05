@@ -1,6 +1,4 @@
-﻿
-local PANEL = {}
-
+﻿local PANEL = {}
 function PANEL:Init()
     self.btnClose:Hide()
     self.close = self:Add("DButton")
@@ -43,7 +41,6 @@ function PANEL:Init()
     end)
 end
 
-
 function PANEL:GetWorkPanel()
     local wp = self:Add("DPanel")
     wp:SetSize(self:GetWide(), self:GetTall() - self.close:GetTall())
@@ -58,17 +55,13 @@ function PANEL:GetWorkPanel()
     return wp
 end
 
-
 function PANEL:OnKeyCodePressed(key)
     if key == KEY_F1 then self:Remove() end
 end
-
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 4)
     draw.RoundedBox(4, 0, 0, w, h, Color(50, 50, 50, 230))
 end
 
-
 vgui.Register("WolfFrame", PANEL, "DFrame")
-

@@ -1,5 +1,4 @@
-﻿
-function MODULE:InitializedModules()
+﻿function MODULE:InitializedModules()
     RunConsoleCommand("sitting_can_sit_on_players", "1")
     RunConsoleCommand("sitting_can_sit_on_player_ent", "1")
     RunConsoleCommand("sitting_can_damage_players_sitting", "1")
@@ -9,9 +8,7 @@ function MODULE:InitializedModules()
     RunConsoleCommand("sitting_anti_tool_abuse", "1")
 end
 
-
 function MODULE:CheckValidSit(client, _)
     local entity = client:GetTracedEntity()
     if entity:IsVehicle() or entity:IsPlayer() then return false end
 end
-

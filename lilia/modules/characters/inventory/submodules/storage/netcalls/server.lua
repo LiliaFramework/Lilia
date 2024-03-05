@@ -1,20 +1,13 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 util.AddNetworkString("liaStorageOpen")
-
 util.AddNetworkString("liaStorageExit")
-
 util.AddNetworkString("liaStorageUnlock")
-
 util.AddNetworkString("liaStorageTransfer")
-
 net.Receive("liaStorageExit", function(_, client)
     local storage = client.liaStorageEntity
     if IsValid(storage) then storage.receivers[client] = nil end
     client.liaStorageEntity = nil
 end)
-
 
 net.Receive("liaStorageUnlock", function(_, client)
     local password = net.ReadString()
@@ -40,7 +33,6 @@ net.Receive("liaStorageUnlock", function(_, client)
         client.lastPasswordAttempt = CurTime()
     end
 end)
-
 
 net.Receive("liaStorageTransfer", function(_, client)
     local itemID = net.ReadUInt(32)
@@ -88,4 +80,3 @@ net.Receive("liaStorageTransfer", function(_, client)
         if IsValid(client) then client:notifyLocalized("itemOnGround") end
     end)
 end)
-

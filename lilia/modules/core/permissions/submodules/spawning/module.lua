@@ -1,12 +1,7 @@
-﻿
-MODULE.name = "Permissions - Spawning"
-
+﻿MODULE.name = "Permissions - Spawning"
 MODULE.author = "76561198312513285"
-
 MODULE.discord = "@liliaplayer"
-
 MODULE.desc = "A Module that Manages Spawning."
-
 MODULE.CAMIPrivileges = {
     {
         Name = "Spawn Permissions - Can Spawn Ragdolls",
@@ -64,4 +59,3 @@ MODULE.CAMIPrivileges = {
         Description = "Allows access to Spawning SENTs."
     },
 }
-

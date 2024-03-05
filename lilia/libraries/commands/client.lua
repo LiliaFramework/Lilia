@@ -1,5 +1,3 @@
-﻿
-function lia.command.send(command, ...)
+﻿function lia.command.send(command, ...)
     netstream.Start("cmd", command, {...})
 end
-

@@ -1,6 +1,4 @@
-﻿
-local PANEL = {}
-
+﻿local PANEL = {}
 function PANEL:Init()
     self.title = self:addLabel("Select a faction")
     self.faction = self:Add("DComboBox")
@@ -30,14 +28,12 @@ function PANEL:Init()
     end
 end
 
-
 function PANEL:onDisplay()
     self.skipFirstSelect = true
     local _, id = self.faction:GetSelected()
     local faction = lia.faction.teams[id]
     if faction then self:onFactionSelected(faction) end
 end
-
 
 function PANEL:onFactionSelected(faction)
     if self:getContext("faction") == faction.index then return end
@@ -54,11 +50,9 @@ function PANEL:onFactionSelected(faction)
     lia.gui.character:clickSound()
 end
 
-
 function PANEL:shouldSkip()
     return #self.faction.Choices == 1
 end
-
 
 function PANEL:onSkip()
     local _, id = self.faction:GetSelected()
@@ -67,6 +61,4 @@ function PANEL:onSkip()
     self:setContext("model", self:getContext("model", 1))
 end
 
-
 vgui.Register("liaCharacterFaction", PANEL, "liaCharacterCreateStep")
-

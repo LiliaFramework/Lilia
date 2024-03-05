@@ -1,6 +1,4 @@
-﻿
-local PANEL = {}
-
+﻿local PANEL = {}
 function PANEL:Init()
     self:Dock(FILL)
     self:DockMargin(ScrW() * 0.25, ScrH() * 0.25, ScrW() * 0.25, ScrH() * 0.25)
@@ -9,7 +7,6 @@ function PANEL:Init()
     self.listView = self:Add("DListView")
     self.listView:Dock(FILL)
 end
-
 
 function PANEL:populateRows(data)
     local columns = table.GetKeys(data[1])
@@ -29,6 +26,4 @@ function PANEL:populateRows(data)
     end
 end
 
-
 vgui.Register("liaAuditPanel", PANEL, "DFrame")
-

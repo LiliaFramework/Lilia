@@ -1,18 +1,12 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 util.AddNetworkString("BodygrouperMenu")
-
 util.AddNetworkString("BodygrouperMenuClose")
-
 util.AddNetworkString("BodygrouperMenuCloseClientside")
-
 net.Receive("BodygrouperMenuClose", function(_, client)
     for _, v in pairs(ents.FindByClass("lia_bodygrouper")) do
         if v:HasUser(client) then v:RemoveUser(client) end
     end
 end)
-
 
 net.Receive("BodygrouperMenu", function(_, client)
     local target = net.ReadEntity()
@@ -72,4 +66,3 @@ net.Receive("BodygrouperMenu", function(_, client)
         end
     end
 end)
-

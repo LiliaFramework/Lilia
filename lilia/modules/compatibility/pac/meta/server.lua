@@ -1,16 +1,12 @@
-﻿
-local playerMeta = FindMetaTable("Entity")
-
+﻿local playerMeta = FindMetaTable("Entity")
 function playerMeta:getParts()
     return self:getNetVar("parts", {})
 end
-
 
 function playerMeta:syncParts()
     net.Start("liaPACSync")
     net.Send(self)
 end
-
 
 function playerMeta:addPart(partID)
     if self:getParts()[partID] then return end
@@ -23,7 +19,6 @@ function playerMeta:addPart(partID)
     self:setNetVar("parts", parts)
 end
 
-
 function playerMeta:removePart(partID)
     net.Start("liaPACPartRemove")
     net.WriteEntity(self)
@@ -34,11 +29,9 @@ function playerMeta:removePart(partID)
     self:setNetVar("parts", parts)
 end
 
-
 function playerMeta:resetParts()
     net.Start("liaPACPartReset")
     net.WriteEntity(self)
     net.Broadcast()
     self:setNetVar("parts", {})
 end
-

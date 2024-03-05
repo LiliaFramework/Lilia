@@ -1,6 +1,4 @@
-﻿
-local PANEL = {}
-
+﻿local PANEL = {}
 function PANEL:Init()
     self.tabs = {}
     self.btnTextCol = color_black
@@ -11,17 +9,14 @@ function PANEL:Init()
     AccessorFunc(self, "btnCol", "ButtonColor")
 end
 
-
 function PANEL:SetPanelType(pt, setCall)
     self.wpPnlType = pt
     self.cpCall = setCall
 end
 
-
 function PANEL:GetPanelType()
     return self.wpPnlType, self.cpCall
 end
-
 
 function PANEL:AddTab(title, onClick)
     self.tabs[#self.tabs + 1] = {
@@ -29,7 +24,6 @@ function PANEL:AddTab(title, onClick)
         onClick = onClick
     }
 end
-
 
 function PANEL:WorkPanel()
     if self.wp and IsValid(self.wp) then self.wp:Remove() end
@@ -40,7 +34,6 @@ function PANEL:WorkPanel()
     self.wp.Paint = nil
     return self.wp
 end
-
 
 function PANEL:SwitchTab(onClick)
     local er = nil
@@ -53,7 +46,6 @@ function PANEL:SwitchTab(onClick)
     onClick(wp, er)
     if self.OnTabSwitchFinished then self.OnTabSwitchFinished(er) end
 end
-
 
 function PANEL:ShowTabs()
     self.scroll = self:Add("DScrollPanel")
@@ -90,10 +82,7 @@ function PANEL:ShowTabs()
     end
 end
 
-
 function PANEL:Paint(_, _)
 end
 
-
 vgui.Register("WTabs", PANEL, "DPanel")
-

@@ -1,17 +1,12 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 local parse = function() end
-
 function MODULE:addRegex(regex, color)
     MODULE.regex[regex] = color
 end
 
-
 local function lerpColor(t, fColor, eColor)
     return Color(Lerp(t, fColor.r, eColor.r), Lerp(t, fColor.g, eColor.g), Lerp(t, fColor.b, eColor.b))
 end
-
 
 function MODULE:drawGradient(_, _, w, h, color, end_color)
     for x = 0, w do
@@ -19,7 +14,6 @@ function MODULE:drawGradient(_, _, w, h, color, end_color)
         surface.DrawLine(x, 0, x, h)
     end
 end
-
 
 function MODULE:createButton(parent, text, dock, doclick, color, end_color)
     local color = color or ColorPatters.blue_fg
@@ -45,7 +39,6 @@ function MODULE:createButton(parent, text, dock, doclick, color, end_color)
     return button
 end
 
-
 net.Receive("SyncLogs", function(len)
     local max_pages = net.ReadUInt(MODULE.maxPagesInBits)
     if max_pages > 0 then
@@ -56,17 +49,14 @@ net.Receive("SyncLogs", function(len)
     end
 end)
 
-
 local function retrieve_categories()
     net.Start("SyncCategories")
     net.SendToServer()
 end
 
-
 function MODULE:InitPostEntity()
     retrieve_categories()
 end
-
 
 net.Receive("SyncCategories", function()
     MODULE.categories = {}
@@ -173,16 +163,9 @@ net.Receive("OpenLogger", function()
     log:SetSize(panel:GetWide() - nav:GetWide() - 30, ScrH() / 1.8)
 end)
 
-
 MODULE.addRegex("*", Color(52, 152, 219))
-
 MODULE.addRegex("&", Color(46, 204, 113))
-
 MODULE.addRegex("~", Color(46, 204, 113))
-
 MODULE.addRegex("!", Color(46, 204, 113))
-
 MODULE.addRegex("?", Color(155, 89, 182))
-
 concommand.Add("logger_retrieve_categories", retrieve_categories)
-

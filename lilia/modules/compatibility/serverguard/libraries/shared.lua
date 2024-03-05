@@ -1,6 +1,4 @@
-﻿
-serverguard.plugin:Toggle("restrictions", false)
-
+﻿serverguard.plugin:Toggle("restrictions", false)
 hook.Add("CAMI.OnPrivilegeRegistered", "serverguard.CAMI.OnPrivilegeRegistered", function(privilege)
     local permission = privilege.Name
     serverguard.permission:Add(permission)
@@ -13,9 +11,7 @@ hook.Add("CAMI.OnPrivilegeRegistered", "serverguard.CAMI.OnPrivilegeRegistered",
     end
 end)
 
-
 hook.Add("CAMI.PlayerHasAccess", "serverguard.CAMI.PlayerHasAccess", function(client, privilege, callback)
     callback(not not serverguard.player:HasPermission(client, privilege), "serverguard")
     return true
 end)
-

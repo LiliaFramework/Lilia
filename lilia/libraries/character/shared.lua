@@ -1,27 +1,15 @@
-﻿
-local charMeta = lia.meta.character or {}
-
+﻿local charMeta = lia.meta.character or {}
 lia.char = lia.char or {}
-
 lia.char.loaded = lia.char.loaded or {}
-
 lia.char.names = lia.char.names or {}
-
 lia.char.varHooks = lia.char.varHooks or {}
-
 lia.char.vars = lia.char.vars or {}
-
 charMeta.__index = charMeta
-
 charMeta.id = charMeta.id or 0
-
 charMeta.vars = charMeta.vars or {}
-
 debug.getregistry().Character = lia.meta.character
-
 --- Library functions for Lilia Characters
 -- @module lia.char
-
 if SERVER then
     if #lia.char.names < 1 then
         lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
@@ -48,7 +36,6 @@ else
     if #lia.char.names < 1 then netstream.Start("liaCharFetchNames") end
 end
 
-
 function lia.getCharData(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
@@ -59,7 +46,6 @@ function lia.getCharData(charID, key)
     return data
 end
 
-
 -- @type function lia.char.new(data, id, client, steamID)
 -- Creates a new character object with the given data and metadata.
 -- @realm shared
@@ -69,7 +55,6 @@ end
 -- @Player client The player associated with the character.
 -- @string[opt] steamID The SteamID of the player associated with the character.
 -- @treturn table The newly created character object.
-
 function lia.char.new(data, id, client, steamID)
     local character = setmetatable({
         vars = {}
@@ -91,17 +76,14 @@ function lia.char.new(data, id, client, steamID)
     return character
 end
 
-
 function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
     lia.char.varHooks[varName][hookName] = func
 end
 
-
 -- @type function lia.char.registerVar()
 -- Sets up a new character variable.
 -- @realm shared
-
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
     data.index = data.index or table.Count(lia.char.vars)
@@ -144,7 +126,6 @@ function lia.char.registerVar(key, data)
 
     charMeta.vars[key] = data.default
 end
-
 
 lia.char.registerVar("name", {
     field = "_name",
@@ -189,7 +170,6 @@ lia.char.registerVar("name", {
     end
 })
 
-
 lia.char.registerVar("desc", {
     field = "_desc",
     default = "",
@@ -200,7 +180,6 @@ lia.char.registerVar("desc", {
         if not value or #value:gsub("%s", "") < minLength then return false, "descMinLen", minLength end
     end
 })
-
 
 lia.char.registerVar("model", {
     field = "_model",
@@ -292,11 +271,9 @@ lia.char.registerVar("model", {
     end
 })
 
-
 lia.char.registerVar("class", {
     noDisplay = true,
 })
-
 
 lia.char.registerVar("faction", {
     field = "_faction",
@@ -324,14 +301,12 @@ lia.char.registerVar("faction", {
     onAdjust = function(_, _, value, newData) newData.faction = lia.faction.indices[value].uniqueID end
 })
 
-
 lia.char.registerVar("money", {
     field = "_money",
     default = 0,
     isLocal = true,
     noDisplay = true
 })
-
 
 lia.char.registerVar("data", {
     default = {},
@@ -356,7 +331,6 @@ lia.char.registerVar("data", {
         end
     end
 })
-
 
 lia.char.registerVar("var", {
     default = {},
@@ -391,7 +365,6 @@ lia.char.registerVar("var", {
     end
 })
 
-
 do
     local playerMeta = FindMetaTable("Player")
     playerMeta.steamName = playerMeta.steamName or playerMeta.Name
@@ -408,4 +381,3 @@ do
     playerMeta.Nick = playerMeta.Name
     playerMeta.GetName = playerMeta.Name
 end
-

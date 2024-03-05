@@ -1,6 +1,4 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 MODULE:AddOption("Give Money", {
     serverRun = false,
     shouldShow = function(client, target) return IsValid(target) and target:IsPlayer() and client:getChar():getMoney() > 0 end,
@@ -51,4 +49,3 @@ MODULE:AddOption("Give Money", {
         end
     end
 })
-

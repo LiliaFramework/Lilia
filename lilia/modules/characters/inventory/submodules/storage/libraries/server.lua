@@ -1,9 +1,7 @@
-﻿
-local PROHIBITED_ACTIONS = {
+﻿local PROHIBITED_ACTIONS = {
     ["Equip"] = true,
     ["EquipUn"] = true,
 }
-
 
 local RULES = {
     AccessIfStorageReceiver = function(inventory, _, context)
@@ -26,7 +24,6 @@ local RULES = {
         if storage.receivers[client] then return true end
     end
 }
-
 
 function MODULE:PlayerSpawnedProp(client, model, entity)
     local data = self.StorageDefinitions[model:lower()]
@@ -54,7 +51,6 @@ function MODULE:PlayerSpawnedProp(client, model, entity)
     entity:Remove()
 end
 
-
 function MODULE:CanPlayerSpawnStorage(client, _, info)
     if not client then return true end
     if client:GetInfoNum("can_spawn_storage", 1) == 0 then return false end
@@ -62,11 +58,9 @@ function MODULE:CanPlayerSpawnStorage(client, _, info)
     if not info.invType or not lia.inventory.types[info.invType] then return false end
 end
 
-
 function MODULE:CanSaveData(_, _)
     return self.SaveData
 end
-
 
 function MODULE:SaveData()
     local data = {}
@@ -82,11 +76,9 @@ function MODULE:SaveData()
     self:setData(data)
 end
 
-
 function MODULE:StorageItemRemoved(_, _)
     self:SaveData()
 end
-
 
 function MODULE:LoadData()
     local data = self:getData()
@@ -124,12 +116,10 @@ function MODULE:LoadData()
     self.loadedData = true
 end
 
-
 function MODULE:CanPlayerInteractItem(_, action, itemObject, _)
     local inventory = lia.inventory.instances[itemObject.invID]
     if inventory and inventory.isStorage == true and PROHIBITED_ACTIONS[action] then return false, "forbiddenActionStorage" end
 end
-
 
 function MODULE:EntityRemoved(entity)
     self.Vehicles[entity] = nil
@@ -138,18 +128,15 @@ function MODULE:EntityRemoved(entity)
     if storageInv then storageInv:delete() end
 end
 
-
 function MODULE:OnEntityCreated(entity)
     if not self:isSuitableForTrunk(entity) then return end
     if entity:IsSimfphysCar() then netstream.Start(nil, "trunkInitStorage", entity) end
     self:InitializeStorage(entity)
 end
 
-
 function MODULE:PlayerInitialSpawn(client)
     netstream.Start(client, "trunkInitStorage", self.Vehicles)
 end
-
 
 function MODULE:StorageInventorySet(_, inventory, isCar)
     if isCar then
@@ -158,6 +145,4 @@ function MODULE:StorageInventorySet(_, inventory, isCar)
         inventory:addAccessRule(RULES.AccessIfStorageReceiver)
     end
 end
-
 return RULES
-

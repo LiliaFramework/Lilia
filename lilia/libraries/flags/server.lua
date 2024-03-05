@@ -1,5 +1,4 @@
-﻿
-function lia.flag.onSpawn(client)
+﻿function lia.flag.onSpawn(client)
     if client:getChar() then
         local flags = client:getChar():getFlags()
         for i = 1, #flags do
@@ -9,4 +8,3 @@ function lia.flag.onSpawn(client)
         end
     end
 end
-

@@ -1,15 +1,11 @@
-﻿
-local PANEL = {}
-
+﻿local PANEL = {}
 local baseSizeW, baseSizeH = ScrW() / 5, 20
-
 function PANEL:Init()
     self.message = markup.Parse("")
     self:SetSize(baseSizeW, baseSizeH)
     self.startTime = CurTime()
     self.endTime = CurTime() + 10
 end
-
 
 function PANEL:SetMessage(...)
     local msg = "<font=liaMediumFont>"
@@ -33,7 +29,6 @@ end
 
 local gradient = Material("vgui/gradient-r")
 local darkCol = lia.config.Color
-
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self)
     surface.SetDrawColor(ColorAlpha(lia.config.Color, 5))
@@ -47,6 +42,4 @@ function PANEL:Paint(w, h)
     surface.DrawRect(w2, h - 2, w - w2, 2)
 end
 
-
 vgui.Register("liaNotify", PANEL, "DPanel")
-

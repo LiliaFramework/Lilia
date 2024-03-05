@@ -1,6 +1,4 @@
-﻿
-local PANEL = {}
-
+﻿local PANEL = {}
 function PANEL:Init()
     self:SetTitle("Third Person Configuration")
     self:SetSize(300, 140)
@@ -35,6 +33,4 @@ function PANEL:Init()
     cfg3:DockMargin(10, 0, 0, 5)
 end
 
-
 vgui.Register("ThirdPersonConfig", PANEL, "DFrame")
-

@@ -1,5 +1,4 @@
-﻿
-lia.command.add("charsetattrib", {
+﻿lia.command.add("charsetattrib", {
     superAdminOnly = true,
     syntax = "<string charname> <string attribname> <number level>",
     privilege = "Change Attributes",
@@ -24,7 +23,6 @@ lia.command.add("charsetattrib", {
         end
     end
 })
-
 
 lia.command.add("charaddattrib", {
     superAdminOnly = true,
@@ -51,4 +49,3 @@ lia.command.add("charaddattrib", {
         end
     end
 })
-

@@ -1,3 +1,1 @@
-﻿
-MODULE.FamilySharingEnabled = false
-
+﻿MODULE.FamilySharingEnabled = false

@@ -1,10 +1,7 @@
-﻿
---[[ Enable or disable the Whitelist ]]
+﻿--[[ Enable or disable the Whitelist ]]
 MODULE.WhitelistEnabled = false
-
 --[[ Enable or disable the Blacklist ]]
 MODULE.BlacklistedEnabled = true
-
 --[[ Specify SteamID64s to be blacklisted from your server   ]]
 --[[ This individual is known for lua stealing, scamming and hacking in game. I recommend keeping this ]]
 MODULE.BlacklistedSteamID64 = {
@@ -15,7 +12,5 @@ MODULE.BlacklistedSteamID64 = {
     "76561199085223874", -- Logan's Alt
 }
 
-
 --[[ Specify SteamID64s to be whitelisted from your server ]]
 MODULE.WhitelistedSteamID64 = {"76561198312513285",}
-

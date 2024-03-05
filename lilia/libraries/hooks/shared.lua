@@ -1,6 +1,4 @@
-﻿
-local GM = GM or GAMEMODE
-
+﻿local GM = GM or GAMEMODE
 function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
         for _, v in pairs(lia.char.varHooks[varName]) do
@@ -8,7 +6,6 @@ function GM:OnCharVarChanged(character, varName, oldVar, newVar)
         end
     end
 end
-
 
 function GM:InitializedModules()
     for model, animtype in pairs(lia.anim.DefaultTposingFixer) do
@@ -20,7 +17,6 @@ function GM:InitializedModules()
         RunConsoleCommand("spawnmenu_reload")
     end
 end
-
 
 function GM:Move(client, moveData)
     local character = client:getChar()
@@ -46,7 +42,6 @@ function GM:Move(client, moveData)
     end
 end
 
-
 function GM:LiliaLoaded()
     local namecache = {}
     for _, MODULE in pairs(lia.module.list) do
@@ -66,7 +61,6 @@ function GM:LiliaLoaded()
     lia.module.namecache = namecache
 end
 
-
 function GM:InitPostEntity()
     if SERVER then
         lia.faction.formatModelData()
@@ -81,33 +75,26 @@ function GM:InitPostEntity()
     end
 end
 
-
 function GM:CanDrive(client)
     if not client:IsSuperAdmin() then return false end
 end
-
 
 function GM:PlayerSpray(_)
     return true
 end
 
-
 function GM:PlayerDeathSound()
     return true
 end
-
 
 function GM:CanPlayerSuicide(_)
     return false
 end
 
-
 function GM:AllowPlayerPickup(_, _)
     return false
 end
 
-
 function GM:PlayerShouldTakeDamage(client, _)
     return client:getChar() ~= nil
 end
-

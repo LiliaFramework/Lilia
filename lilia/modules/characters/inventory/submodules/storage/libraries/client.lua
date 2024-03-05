@@ -1,13 +1,9 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 CanSpawnStorage = CreateClientConVar("can_spawn_storage", 1, true, true)
-
 function MODULE:exitStorage()
     net.Start("liaStorageExit")
     net.SendToServer()
 end
-
 
 function MODULE:StorageUnlockPrompt(_)
     Derma_StringRequest(L("storPassWrite"), L("storPassWrite"), "", function(val)
@@ -16,7 +12,6 @@ function MODULE:StorageUnlockPrompt(_)
         net.SendToServer()
     end)
 end
-
 
 function MODULE:SetupQuickMenu(menu)
     if CAMI.PlayerHasAccess(client, "Staff Permissions - Can Spawn Storage", nil) then
@@ -31,7 +26,6 @@ function MODULE:SetupQuickMenu(menu)
         menu:addSpacer()
     end
 end
-
 
 function MODULE:StorageOpen(storage, normal)
     if not IsValid(storage) then return end
@@ -101,11 +95,9 @@ function MODULE:StorageOpen(storage, normal)
     end
 end
 
-
 function MODULE:transferItem(itemID)
     if not lia.item.instances[itemID] then return end
     net.Start("liaStorageTransfer")
     net.WriteUInt(itemID, 32)
     net.SendToServer()
 end
-

@@ -1,5 +1,4 @@
-﻿
-local HELP_DEFAULT = [[
+﻿local HELP_DEFAULT = [[
     <div id="parent">
         <div id="child">
             <center>
@@ -9,7 +8,6 @@ local HELP_DEFAULT = [[
         </div>
     </div>
 ]]
-
 function MODULE:PlayerBindPress(client, bind, pressed)
     if bind:lower():find("gm_showhelp") and pressed then
         if IsValid(lia.gui.menu) then
@@ -21,11 +19,9 @@ function MODULE:PlayerBindPress(client, bind, pressed)
     end
 end
 
-
 function MODULE:CanPlayerViewAttributes()
     if self.F1DisplayAttributes then return false end
 end
-
 
 function MODULE:OnCharInfoSetup(infoPanel)
     if not IsValid(infoPanel) then return end
@@ -63,7 +59,6 @@ function MODULE:OnCharInfoSetup(infoPanel)
         entity:ResetSequence(act2)
     end
 end
-
 
 function MODULE:CreateMenuButtons(tabs)
     if hook.Run("CanPlayerViewInventory") ~= false then
@@ -179,7 +174,6 @@ function MODULE:CreateMenuButtons(tabs)
     end
 end
 
-
 function MODULE:BuildHelpMenu(tabs)
     tabs["commands"] = function(_, _)
         local body = ""
@@ -241,4 +235,3 @@ function MODULE:BuildHelpMenu(tabs)
     if self.RulesEnabled then tabs["Rules"] = function() return F1MenuCore:GenerateRules() end end
     if self.TutorialEnabled then tabs["Tutorial"] = function() return F1MenuCore:GenerateTutorial() end end
 end
-

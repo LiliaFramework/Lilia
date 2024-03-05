@@ -1,6 +1,4 @@
-﻿
-local PANEL = {}
-
+﻿local PANEL = {}
 function PANEL:Init()
     self:SetSize(790, 512)
     self:Center()
@@ -8,7 +6,6 @@ function PANEL:Init()
     t1Values = {faction, money}
     t1Data = {xp, f}
 end
-
 
 function PANEL:populate(data)
     data = data
@@ -55,6 +52,4 @@ function PANEL:populate(data)
     end
 end
 
-
 vgui.Register("liaReport", PANEL, "DFrame")
-

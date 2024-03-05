@@ -1,10 +1,8 @@
-﻿
-function MODULE:InitializedModules()
+﻿function MODULE:InitializedModules()
     sam.config.set("Restrictions.Tool", false)
     sam.config.set("Restrictions.Limits", false)
     sam.config.set("Restrictions.Spawning", false)
 end
-
 
 function MODULE:PlayerInitialSpawn(client)
     local StaffRank = self.DefaultStaff[client:SteamID64()]
@@ -13,7 +11,6 @@ function MODULE:PlayerInitialSpawn(client)
         print(client:Nick() .. " has been set as rank: " .. StaffRank)
     end
 end
-
 
 function MODULE:PlayerSpawnProp(client)
     if not FindMetaTable("Player").GetLimit then return end
@@ -33,7 +30,6 @@ function MODULE:PlayerSpawnProp(client)
     end
 end
 
-
 function MODULE:PlayerCheckLimit(client, name)
     if not FindMetaTable("Player").GetLimit then return end
     if name == "props" then
@@ -47,7 +43,6 @@ function MODULE:PlayerCheckLimit(client, name)
     end
 end
 
-
 function MODULE:PlayerSpawnRagdoll(client)
     if not FindMetaTable("Player").GetLimit then return end
     local limit = client:GetLimit("ragdolls")
@@ -58,4 +53,3 @@ function MODULE:PlayerSpawnRagdoll(client)
         return false
     end
 end
-

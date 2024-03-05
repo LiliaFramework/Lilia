@@ -1,5 +1,4 @@
-﻿
-MODULE.blacklist = MODULE.blacklist or {
+﻿MODULE.blacklist = MODULE.blacklist or {
     ["func_button"] = true,
     ["class C_BaseEntity"] = true,
     ["func_brush"] = true,
@@ -11,4 +10,3 @@ MODULE.blacklist = MODULE.blacklist or {
     ["prop_dynamic"] = true,
     ["prop_physics_override"] = true,
 }
-

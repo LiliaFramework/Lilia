@@ -1,10 +1,8 @@
-﻿
-concommand.Add("lia", function(client, _, arguments)
+﻿concommand.Add("lia", function(client, _, arguments)
     local command = arguments[1]
     table.remove(arguments, 1)
     lia.command.parse(client, nil, command or "", arguments)
 end)
-
 
 concommand.Add("list_entities", function(client)
     local entityCount = {}
@@ -31,4 +29,3 @@ concommand.Add("list_entities", function(client)
         print("Nuh-uh!")
     end
 end)
-

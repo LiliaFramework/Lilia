@@ -1,10 +1,6 @@
-﻿
-AddCSLuaFile("cl_init.lua")
-
+﻿AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
-
 include("shared.lua")
-
 function ENT:Initialize()
     self:SetModel("models/props_junk/watermelon01.mdl")
     self:SetSolid(SOLID_VPHYSICS)
@@ -23,11 +19,9 @@ function ENT:Initialize()
     hook.Run("OnItemSpawned", self)
 end
 
-
 function ENT:setHealth(amount)
     self.health = amount
 end
-
 
 function ENT:OnTakeDamage(dmginfo)
     local damage = dmginfo:GetDamage()
@@ -37,7 +31,6 @@ function ENT:OnTakeDamage(dmginfo)
         self:Remove()
     end
 end
-
 
 function ENT:setItem(itemID)
     local itemTable = lia.item.instances[itemID]
@@ -70,7 +63,6 @@ function ENT:setItem(itemID)
     if itemTable.onEntityCreated then itemTable:onEntityCreated(self) end
 end
 
-
 function ENT:breakEffects()
     self:EmitSound("physics/cardboard/cardboard_box_break" .. math.random(1, 3) .. ".wav")
     local position = self:LocalToWorld(self:OBBCenter())
@@ -80,7 +72,6 @@ function ENT:breakEffects()
     effect:SetScale(3)
     util.Effect("GlassImpact", effect)
 end
-
 
 function ENT:OnRemove()
     local itemTable = self:getItemTable()
@@ -93,11 +84,9 @@ function ENT:OnRemove()
     if not lia.shuttingDown and not self.liaIsSafe and self.liaItemID then lia.item.deleteByID(self.liaItemID) end
 end
 
-
 function ENT:Think()
     local itemTable = self:getItemTable()
     if itemTable and itemTable.think then return itemTable:think(self) end
     self:NextThink(CurTime() + 1)
     return true
 end
-

@@ -1,5 +1,4 @@
-﻿
-netstream.Hook("doorPerm", function(client, door, target, access)
+﻿netstream.Hook("doorPerm", function(client, door, target, access)
     if IsValid(target) and target:getChar() and door.liaAccess and door:GetDTEntity(0) == client and target ~= client then
         access = math.Clamp(access or 0, DOOR_NONE, DOOR_TENANT)
         if access == door.liaAccess[target] then return end
@@ -12,4 +11,3 @@ netstream.Hook("doorPerm", function(client, door, target, access)
         if #recipient > 0 then netstream.Start(recipient, "doorPerm", door, target, access) end
     end
 end)
-

@@ -1,9 +1,7 @@
-﻿
-lia.command.add("doorsell", {
+﻿lia.command.add("doorsell", {
     privilege = "Default User Commands",
     onRun = function() end
 })
-
 
 lia.command.add("doorsetlocked", {
     adminOnly = true,
@@ -11,19 +9,16 @@ lia.command.add("doorsetlocked", {
     onRun = function() end
 })
 
-
 lia.command.add("savedoors", {
     adminOnly = true,
     privilege = "Manage Doors",
     onRun = function() end
 })
 
-
 lia.command.add("doorbuy", {
     privilege = "Default User Commands",
     onRun = function() end
 })
-
 
 lia.command.add("doorsetunownable", {
     adminOnly = true,
@@ -32,14 +27,12 @@ lia.command.add("doorsetunownable", {
     onRun = function() end
 })
 
-
 lia.command.add("doorsetownable", {
     adminOnly = true,
     syntax = "[string name]",
     privilege = "Manage Doors",
     onRun = function() end
 })
-
 
 lia.command.add("dooraddfaction", {
     adminOnly = true,
@@ -48,14 +41,12 @@ lia.command.add("dooraddfaction", {
     onRun = function() end
 })
 
-
 lia.command.add("doorremovefaction", {
     adminOnly = true,
     syntax = "[string faction]",
     privilege = "Manage Doors",
     onRun = function() end
 })
-
 
 lia.command.add("doorsetdisabled", {
     adminOnly = true,
@@ -64,13 +55,11 @@ lia.command.add("doorsetdisabled", {
     onRun = function() end
 })
 
-
 lia.command.add("doorsettitle", {
     syntax = "<string title>",
     privilege = "Manage Doors",
     onRun = function() end
 })
-
 
 lia.command.add("doorsetparent", {
     adminOnly = true,
@@ -78,20 +67,17 @@ lia.command.add("doorsetparent", {
     onRun = function() end
 })
 
-
 lia.command.add("doorsetchild", {
     adminOnly = true,
     privilege = "Manage Doors",
     onRun = function() end
 })
 
-
 lia.command.add("doorremovechild", {
     adminOnly = true,
     privilege = "Manage Doors",
     onRun = function() end
 })
-
 
 lia.command.add("doorsetclass", {
     adminOnly = true,
@@ -100,4 +86,3 @@ lia.command.add("doorsetclass", {
     onRun = function() end,
     alias = {"jobdoor"}
 })
-

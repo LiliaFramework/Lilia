@@ -1,6 +1,4 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 lia.command.add("legacylogs", {
     adminOnly = true,
     privilege = "View Logs",
@@ -12,7 +10,6 @@ lia.command.add("legacylogs", {
     end
 })
 
-
 lia.command.add("logger", {
     adminOnly = true,
     privilege = "View Logs",
@@ -21,7 +18,6 @@ lia.command.add("logger", {
         net.Send(client)
     end
 })
-
 
 lia.command.add("netlogs", {
     superadminOnly = true,
@@ -34,7 +30,6 @@ lia.command.add("netlogs", {
     end
 })
 
-
 lia.command.add("concommandlogs", {
     superadminOnly = true,
     privilege = "View Advanced Logs",
@@ -45,4 +40,3 @@ lia.command.add("concommandlogs", {
         net.Send(client)
     end
 })
-

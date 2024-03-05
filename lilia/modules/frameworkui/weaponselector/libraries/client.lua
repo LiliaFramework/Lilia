@@ -1,14 +1,8 @@
-﻿
-MODULE.lastSlot = MODULE.lastSlot or 1
-
+﻿MODULE.lastSlot = MODULE.lastSlot or 1
 MODULE.lifeTime = MODULE.lifeTime or 0
-
 MODULE.deathTime = MODULE.deathTime or 0
-
 local LIFE_TIME = 4
-
 local DEATH_TIME = 5
-
 function MODULE:OnSlotChanged()
     self.lifeTime = CurTime() + LIFE_TIME
     self.deathTime = CurTime() + DEATH_TIME
@@ -23,7 +17,6 @@ function MODULE:OnSlotChanged()
         end
     end
 end
-
 
 function MODULE:PlayerBindPress(client, bind, pressed)
     local weapon = client:GetActiveWeapon()
@@ -59,7 +52,6 @@ function MODULE:PlayerBindPress(client, bind, pressed)
     end
 end
 
-
 function MODULE:HUDPaint()
     if not LocalPlayer():getChar() then return end
     local x = ScrW() * 0.55
@@ -83,7 +75,6 @@ function MODULE:HUDPaint()
     end
 end
 
-
 function MODULE:LoadFonts(_, genericFont)
     surface.CreateFont("Monofonto24", {
         font = "Monofonto",
@@ -97,4 +88,3 @@ function MODULE:LoadFonts(_, genericFont)
         weight = 500
     })
 end
-

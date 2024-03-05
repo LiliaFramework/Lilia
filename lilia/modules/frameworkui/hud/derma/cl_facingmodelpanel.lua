@@ -1,15 +1,11 @@
-﻿
-local PANEL = {}
-
+﻿local PANEL = {}
 function PANEL:Init()
     self:SetFOV(15)
 end
 
-
 function PANEL:SetWT(wt)
     self:SetSize(wt, wt)
 end
-
 
 function PANEL:LayoutEntity(entity)
     if not entity then return end
@@ -22,6 +18,4 @@ function PANEL:LayoutEntity(entity)
     entity:SetAngles(Angle(0, 45, 0))
 end
 
-
 vgui.Register("FacingModelPanel", PANEL, "DModelPanel")
-

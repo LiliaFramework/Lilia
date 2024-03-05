@@ -1,8 +1,5 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 MODULE.OOCBans = MODULE.OOCBans or {}
-
 lia.command.add("banooc", {
     privilege = "Ban OOC",
     syntax = "<string target>",
@@ -17,7 +14,6 @@ lia.command.add("banooc", {
     end
 })
 
-
 lia.command.add("unbanooc", {
     privilege = "Unban OOC",
     syntax = "<string target>",
@@ -29,7 +25,6 @@ lia.command.add("unbanooc", {
         end
     end
 })
-
 
 lia.command.add("blockooc", {
     privilege = "Block OOC",
@@ -45,13 +40,11 @@ lia.command.add("blockooc", {
     end
 })
 
-
 lia.command.add("clearchat", {
     superAdminOnly = true,
     privilege = "Clear Chat",
     onRun = function() netstream.Start(player.GetAll(), "adminClearChat") end
 })
-
 
 lia.command.add("refreshfonts", {
     privilege = "Refresh Fonts",
@@ -62,4 +55,3 @@ lia.command.add("refreshfonts", {
         client:ChatPrint("Fonts have been refreshed!")
     end
 })
-

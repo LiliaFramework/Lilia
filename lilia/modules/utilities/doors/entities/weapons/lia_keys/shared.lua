@@ -1,63 +1,34 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 SWEP.Author = "Leonheart"
-
 SWEP.Instructions = "Primary Fire: Lock\nSecondary Fire: Unlock"
-
 SWEP.Purpose = "Locking and Unlocking Stuff."
-
 SWEP.Drop = false
-
 SWEP.ViewModelFOV = 45
-
 SWEP.ViewModelFlip = false
-
 SWEP.ViewTranslation = 4
-
 SWEP.Primary.ClipSize = -1
-
 SWEP.Primary.DefaultClip = -1
-
 SWEP.Primary.Automatic = false
-
 SWEP.Primary.Ammo = ""
-
 SWEP.Primary.Damage = 5
-
 SWEP.Primary.Delay = 0.75
-
 SWEP.Secondary.ClipSize = -1
-
 SWEP.Secondary.DefaultClip = 0
-
 SWEP.Secondary.Automatic = false
-
 SWEP.Secondary.Ammo = ""
-
 SWEP.ViewModel = Model("models/weapons/c_arms_animations.mdl")
-
 SWEP.WorldModel = ""
-
 SWEP.UseHands = false
-
 SWEP.LowerAngles = Angle(0, 5, -14)
-
 SWEP.LowerAngles2 = Angle(0, 5, -22)
-
 SWEP.IsAlwaysLowered = true
-
 SWEP.FireWhenLowered = true
-
 SWEP.HoldType = "normal"
-
 ACT_VM_FISTS_HOLSTER = 2
-
 function SWEP:Deploy()
     if not IsValid(self:GetOwner()) then return end
     return true
 end
-
 
 function SWEP:Holster()
     if not IsValid(self:GetOwner()) then return end
@@ -69,15 +40,12 @@ function SWEP:Holster()
     return true
 end
 
-
 function SWEP:Precache()
 end
-
 
 function SWEP:Initialize()
     self:SetHoldType(self.HoldType)
 end
-
 
 function SWEP:PrimaryAttack()
     local time = MODULE.DoorLockTime or 0.5
@@ -95,7 +63,6 @@ function SWEP:PrimaryAttack()
     hook.Run("KeyLock", owner, entity, time)
 end
 
-
 function SWEP:SecondaryAttack()
     local time = MODULE.DoorLockTime
     local time2 = math.max(time, 1)
@@ -111,4 +78,3 @@ function SWEP:SecondaryAttack()
     if not IsValid(entity) then return end
     hook.Run("KeyUnlock", owner, entity, time)
 end
-

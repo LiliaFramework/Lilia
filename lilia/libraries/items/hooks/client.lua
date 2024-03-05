@@ -1,6 +1,4 @@
-﻿
-local GM = GM or GAMEMODE
-
+﻿local GM = GM or GAMEMODE
 function GM:ItemShowEntityMenu(entity)
     for k, v in ipairs(lia.menu.list) do
         if v.entity == entity then table.remove(lia.menu.list, k) end
@@ -31,4 +29,3 @@ function GM:ItemShowEntityMenu(entity)
     itemTable.player = nil
     itemTable.entity = nil
 end
-

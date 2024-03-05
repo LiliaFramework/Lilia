@@ -1,5 +1,4 @@
-﻿
-function MODULE:CanTool(client, _, tool)
+﻿function MODULE:CanTool(client, _, tool)
     local privilege = "Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
     local entity = client:GetTracedEntity()
     local toolobj = client:GetActiveWeapon():GetToolObject()
@@ -21,13 +20,11 @@ function MODULE:CanTool(client, _, tool)
     end
 end
 
-
 function MODULE:PlayerSpawnProp(client)
     local toolobj = client:GetActiveWeapon():GetToolObject()
     local usingToolgun = client:GetActiveWeapon():GetClass() == "gmod_tool"
     if usingToolgun and toolobj.Entities then return true end
 end
-
 
 function MODULE:PlayerSpawnObject(client, _, _)
     local toolobj = client:GetActiveWeapon():GetToolObject()
@@ -35,10 +32,8 @@ function MODULE:PlayerSpawnObject(client, _, _)
     if usingToolgun and toolobj.Entities then return true end
 end
 
-
 function MODULE:PlayerSpawnRagdoll(client)
     local toolobj = client:GetActiveWeapon():GetToolObject()
     local usingToolgun = client:GetActiveWeapon():GetClass() == "gmod_tool"
     if usingToolgun and toolobj.Entities then return true end
 end
-

@@ -1,11 +1,9 @@
-﻿
-function MODULE:SanitizeSteamID(sid)
+﻿function MODULE:SanitizeSteamID(sid)
     for _, character in ipairs(string.Explode("", sid, false)) do
         if not tonumber(character) then return false end
     end
     return sid
 end
-
 
 function MODULE:GenerateReport(steamID64)
     steamID64 = self:SanitizeSteamID(steamID64)
@@ -59,8 +57,6 @@ function MODULE:GenerateReport(steamID64)
     return characters
 end
 
-
 function MODULE:SendReport(reportPly, receiver)
     netstream.Start(receiver, "liaReport", self:GenerateReport(reportPly:SteamID64()))
 end
-
