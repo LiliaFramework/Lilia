@@ -24,7 +24,7 @@ format = "markdown"
 ignore = true
 topics = "documentation/manual"
 use_markdown_titles = true
-kind_names = {module = "Libraries", topic = "Structure"}
+kind_names = {module = "Libraries", topic = "Manual"}
 merge = true
 sort = true
 sort_modules = true
@@ -54,7 +54,6 @@ custom_display_name_handler = function(item, default_handler)
 end
 
 new_type("hooks", "Functions", true)
-new_type("panel", "Panels", true)
 new_type("panel", "Panels", true)
 
 tparam_alias("char", "Character")
