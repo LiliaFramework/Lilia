@@ -18,10 +18,10 @@ end
 
 --- Called when a character has been initally created and assigned to this faction.
 -- @realm server
--- @player client Client that owns the character
--- @char character Character that has been created
--- @usage function FACTION:onCharCreated(client, character)
--- 	local inventory = character:GetInventory()
+-- @logType client Client that owns the character
+-- @func character Character that has been created
+-- @usage function lia.log.addType(logType, func)
+-- 	local inventory = logType:GetInventory()
 -- 	inventory:Add("pistol")
 -- end
 function lia.log.addType(logType, func)
