@@ -13,8 +13,8 @@ module_file = {
 }
 
 dir = "documentation/html"
-project = "Helix"
-title = "Helix Documentation"
+project = "Lilia"
+title = "Lilia Documentation"
 
 no_space_before_args = true
 style = "documentation/css"
@@ -55,7 +55,6 @@ end
 new_type("hooks", "Hooks", true)
 new_type("panel", "Panels", true)
 
--- helix types
 tparam_alias("char", "Character")
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")

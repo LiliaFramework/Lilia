@@ -434,7 +434,7 @@ function DrawCharacterOverview()
 end
 
 --- @realm client
-function DrawHelixModelView(panel, entity)
+function DrawLiliaModelView(panel, entity)
 end
 
 --- @realm client
@@ -784,7 +784,7 @@ function PostChatboxDraw(width, height, alpha)
 end
 
 --- @realm client
-function PostDrawHelixModelView(panel, entity)
+function PostDrawLiliaModelView(panel, entity)
 end
 
 --- @realm client

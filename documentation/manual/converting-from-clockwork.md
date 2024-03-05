@@ -1,29 +1,29 @@
-# Clockwork to Helix Migration
+# Clockwork to Lilia Migration
 
-If you are here, you probably want to be converting your code from another framework to Helix. Doing so should not be a difficult task. Most of the previous functions are probably within Helix in one form or another! This means all you need to do is match *x* function found in the old framework to *y* function in Helix. Some headings will contain a link - this will bring you to the documentation for Helix's equivalent library or class.
+If you are here, you probably want to be converting your code from another framework to Lilia. Doing so should not be a difficult task. Most of the previous functions are probably within Lilia in one form or another! This means all you need to do is match *x* function found in the old framework to *y* function in Lilia. Some headings will contain a link - this will bring you to the documentation for Lilia's equivalent library or class.
 
 This tutorial assumes basic to intermediate knowledge and experience with Garry's Mod Lua.
 
-**Before you start!** You will notice that Helix uses client for the variable that represents a player. Clockwork uses player for the variable instead, but this will conflict with the player library. So if you see `_player` being used in Clockwork, it means the Garry's Mod player library. This is just a preference and does not affect anything besides appear. So keep in mind throughout the tutorial, you may see player being used for Clockwork code and client being used for Helix code. They represent the same thing, just with a different name.
+**Before you start!** You will notice that Lilia uses client for the variable that represents a player. Clockwork uses player for the variable instead, but this will conflict with the player library. So if you see `_player` being used in Clockwork, it means the Garry's Mod player library. This is just a preference and does not affect anything besides appear. So keep in mind throughout the tutorial, you may see player being used for Clockwork code and client being used for Lilia code. They represent the same thing, just with a different name.
 
-If you are converting Clockwork code to Helix, keep in mind that `_player` is not defined so you will need to either define `_player` yourself or switch it to player instead and change the variable name to client for player objects.
+If you are converting Clockwork code to Lilia, keep in mind that `_player` is not defined so you will need to either define `_player` yourself or switch it to player instead and change the variable name to client for player objects.
 
 # Basics of Conversion
 
 ## Folders
-Clockwork code and file structure is not too different from Helix. In the schema, the plugins folder and schema folder stay in the same place. There are some minor differences in naming however:
+Clockwork code and file structure is not too different from Lilia. In the schema, the plugins folder and schema folder stay in the same place. There are some minor differences in naming however:
 
 - The `schema/entities` folder should be moved outside out of the schema folder.
 - The `libraries` folder needs to be renamed to `libs` to load.
 - The `commands` tab will not load as each command is now defined in a single shared file, does not matter which one.
 
-## Deriving from Helix
-This is pretty important. If you want to use Helix as the base, you need to set it as the base. So, go to your Clockwork schema's `gamemode` folder. Inside should be two files: `init.lua `and `cl_init.lua`. Open both, and you should see something along the lines of `DeriveGamemode("Clockwork")`. Change this to `DeriveGamemode("helix")`.
+## Deriving from Lilia
+This is pretty important. If you want to use Lilia as the base, you need to set it as the base. So, go to your Clockwork schema's `gamemode` folder. Inside should be two files: `init.lua `and `cl_init.lua`. Open both, and you should see something along the lines of `DeriveGamemode("Clockwork")`. Change this to `DeriveGamemode("lilia")`.
 
 # The Schema
 
 ## Introduction
-Inside of the `schema` folder of the actual schema, you should see a file named `sh_schema.lua`. This is the main schema file in both Clockwork and Helix. Most of your changes may actually be within this file.
+Inside of the `schema` folder of the actual schema, you should see a file named `sh_schema.lua`. This is the main schema file in both Clockwork and Lilia. Most of your changes may actually be within this file.
 
 ## Including Files
 Both frameworks come with a utility function to include a file without worrying about sending them to the client and stuff. In Clockwork, this function is `Clockwork.kernel:IncludePrefixed("sh_myfile.lua")`. Change this to `ix.util.Include("sh_myfile.lua") `and save.
@@ -34,9 +34,9 @@ Both frameworks come with a utility function to include a file without worrying 
 Plugins serve as a means to add on to a schema or framework without directly modifying either. This allows for easier modifications that can be added/removed with ease. It is recommended that you keep all custom modifications left to plugins rather than editing the framework or the schema if possible.
 
 ## Structure
-All plugins in Clockwork and Helix go into the `plugins` folder. However, there are many differences with the CW plugin structure. First of all, there are two things you see when you open a plugin folder: `plugin` again and `plugin.ini`.
+All plugins in Clockwork and Lilia go into the `plugins` folder. However, there are many differences with the CW plugin structure. First of all, there are two things you see when you open a plugin folder: `plugin` again and `plugin.ini`.
 
-Helix only has one file needed: `sh_plugin.lua` which acts like `sh_schema.lua` but for plugins.
+Lilia only has one file needed: `sh_plugin.lua` which acts like `sh_schema.lua` but for plugins.
 
 ## Conversion
 The first step is to move all of the contents from the `plugin` folder to the main folder of the plugin folder. The `sh_plugin.lua` file needs to be changed to provide basic information about the plugin.You need to define three things in `sh_plugin.lua` which can be found within the `plugin.ini` file:
@@ -63,7 +63,7 @@ In Clockwork, there is no use of an object. Instead, the character information i
 -- in Clockwork
 player:SetCharacterData("foo", "bar")
 
--- in Helix
+-- in Lilia
 client:GetCharacter():SetData("foo", "bar")
 ```
 
@@ -72,7 +72,7 @@ The use of the character object allows you to access other characters a player m
 # The Libraries
 
 ## Animations (`ix.anim`)
-Clockwork features many functions to set up animations for a specific model. Helix too has this functionality. Helix has one function instead that pairs a model to a specific "animation class" (grouping of animation types). So, all one needs to do is find the appropriate animation class to match the model with. Looking at the Clockwork function name should tell you.
+Clockwork features many functions to set up animations for a specific model. Lilia too has this functionality. Lilia has one function instead that pairs a model to a specific "animation class" (grouping of animation types). So, all one needs to do is find the appropriate animation class to match the model with. Looking at the Clockwork function name should tell you.
 
 ```
 -- before
@@ -83,14 +83,14 @@ ix.anim.SetModelClass("models/mymodel.mdl", "metrocop")
 ```
 
 ## Attributes (`ix.attributes`)
-Attributes allow the player to boost certain abilities over time. Both frameworks require one to register attributes, but they are done differently. In Clockwork, the `ATTRIBUTE` table needs to be defined and registered manually. In Helix, the `ATTRIBUTE` table is automatically defined and registered for you. All you need to do is have `ATTRIBUTE.value = "value"`. The basic parts of the attribute needed is `ATTRIBUTE.name` and `ATTRIBUTE.description`.
+Attributes allow the player to boost certain abilities over time. Both frameworks require one to register attributes, but they are done differently. In Clockwork, the `ATTRIBUTE` table needs to be defined and registered manually. In Lilia, the `ATTRIBUTE` table is automatically defined and registered for you. All you need to do is have `ATTRIBUTE.value = "value"`. The basic parts of the attribute needed is `ATTRIBUTE.name` and `ATTRIBUTE.description`.
 
-One extra feature for attributes in Helix is `ATTRIBUTE:OnSetup(client, value)` which is a function that gets called on spawn to apply any effects. For example, the stamina attribute changes the player's run speed by adding the amount of stamina points the player has.
+One extra feature for attributes in Lilia is `ATTRIBUTE:OnSetup(client, value)` which is a function that gets called on spawn to apply any effects. For example, the stamina attribute changes the player's run speed by adding the amount of stamina points the player has.
 
 You can find an example at [https://github.com/bleonheart/LiliaTest/blob/master/plugins/stamina/attributes/sh_stm.lua](https://github.com/bleonheart/LiliaTest/blob/master/plugins/stamina/attributes/sh_stm.lua)
 
 ## Classes (`ix.class`)
-Classes are a part of the factions. They basically are a more specific form of a faction. Factions in Helix and Clockwork work similarly. For instance, all classes are placed in the `classes` folder under the schema folder and use `CLASS` as the main variable inside the file.
+Classes are a part of the factions. They basically are a more specific form of a faction. Factions in Lilia and Clockwork work similarly. For instance, all classes are placed in the `classes` folder under the schema folder and use `CLASS` as the main variable inside the file.
 
 However:
 
@@ -100,7 +100,7 @@ However:
 - Classes are *optional* for factions rather than being required.
 
 ## Commands (`ix.command`)
-Commands no longer need to be in separate files. Instead, they are just placed into one large file. However, if you really wanted you can register multiple commands across multiple files or however you want. One thing you may notice is Clockwork uses a _COMMAND_ table while Helix does not always. It is simply a design preference. You can find examples at [https://github.com/bleonheart/LiliaTest/blob/master/gamemode/core/sh_commands.lua](https://github.com/bleonheart/LiliaTest/blob/master/gamemode/core/sh_commands.lua)
+Commands no longer need to be in separate files. Instead, they are just placed into one large file. However, if you really wanted you can register multiple commands across multiple files or however you want. One thing you may notice is Clockwork uses a _COMMAND_ table while Lilia does not always. It is simply a design preference. You can find examples at [https://github.com/bleonheart/LiliaTest/blob/master/gamemode/core/sh_commands.lua](https://github.com/bleonheart/LiliaTest/blob/master/gamemode/core/sh_commands.lua)
 
 It should be noted that:
 
@@ -111,7 +111,7 @@ It should be noted that:
 - `COMMAND.access` for checking whether or not a person is a (super)admin can be replaced with `adminOnly = true` or `superAdminOnly = true` in the command table.
 
 ## Configurations (`ix.config`)
-In Helix, the method of adding configurations that can be changed by server owners is heavily simplified. [See an example here](https://github.com/bleonheart/LiliaTest/blob/master/gamemode/config/sh_config.lua).
+In Lilia, the method of adding configurations that can be changed by server owners is heavily simplified. [See an example here](https://github.com/bleonheart/LiliaTest/blob/master/gamemode/config/sh_config.lua).
 
 Adding a configuration is as follows:
 
@@ -145,7 +145,7 @@ ix.currency.Set("$", "dollar", "dollars")
 Note that you need to provide a symbol for that currency (€ for Euro, £ for Pound, ¥ for Yen, etc.) or just leave it as an empty string (`""`) and then provide the singular form of the name for the currency, then the plural form.
 
 ## Datastream
-Helix uses the [net library](http://wiki.garrysmod.com/page/Net_Library_Usage) whereas Clockwork uses datastream ([netstream](https://github.com/alexgrist/NetStream/blob/master/netstream2.lua)).
+Lilia uses the [net library](http://wiki.garrysmod.com/page/Net_Library_Usage) whereas Clockwork uses datastream ([netstream](https://github.com/alexgrist/NetStream/blob/master/netstream2.lua)).
 
 If you're unfamiliar with the net library, you can include the netstream library to your schema by downloading [netstream](https://github.com/alexgrist/NetStream/blob/master/netstream2.lua) to `schema/libs/thirdparty/sh_netstream2.lua` and adding `ix.util.Include("libs/thirdparty/sh_netstream2.lua")` to your `sh_schema.lua` file.
 
@@ -178,7 +178,7 @@ end)
 ```
 
 ## Factions (`ix.faction`)
-Factions, like classes, are pretty similar too. They share pretty much the same differences as classes in Clockwork and Helix do.
+Factions, like classes, are pretty similar too. They share pretty much the same differences as classes in Clockwork and Lilia do.
 
 For instance:
 
@@ -190,7 +190,7 @@ For instance:
 - `FACTION_MYFACTION = FACTION:Register()` becomes `FACTION_MYFACTION = FACTION.index`
 
 ## Flags (`ix.flag`)
-Flags are functionally equivalent in Helix. To add a new flag:
+Flags are functionally equivalent in Lilia. To add a new flag:
 
 ```
 -- before
@@ -233,7 +233,7 @@ So let's start with the differences in structure in the item file.
 - `ITEM:Register()` is removed
 
 ### Item Sizes
-Helix's inventory uses a grid and utilizes width and height instead of weight as a means of inventory capacity. This means you will have to change your item's weight (`ITEM.weight`) to something that might be analagous to the item's size using `ITEM.width` and `ITEM.height`. The item's size must be at least one by one grid cell. It's up to you to balance the sizes of items in your use case - taking into account how many items a character might have at once, the default inventory size set in the config, etc.
+Lilia's inventory uses a grid and utilizes width and height instead of weight as a means of inventory capacity. This means you will have to change your item's weight (`ITEM.weight`) to something that might be analagous to the item's size using `ITEM.width` and `ITEM.height`. The item's size must be at least one by one grid cell. It's up to you to balance the sizes of items in your use case - taking into account how many items a character might have at once, the default inventory size set in the config, etc.
 
 ### Item Functions
 Item functions are defined very differently than they are in Clockwork. For example:
@@ -267,9 +267,9 @@ Clockwork also uses an item instance system where you have to instance an item. 
 item = Clockwork.item:CreateInstance("item")
 ```
 
-And this would create a new instance of an item. Helix's instancing system is slightly different. Instead of having the function return the instance like it does in Clockwork, Helix relies on a callback to pass the instance. The reason for this is the item must be inserted into the database to get a unique number to represent that item. This is not done instantly, otherwise servers would freeze when new items are made. Clockwork uses the time and adds a number to get the numeric ID for an item, which allows the item to be returned which "solves" the issue, but I digress.
+And this would create a new instance of an item. Lilia's instancing system is slightly different. Instead of having the function return the instance like it does in Clockwork, Lilia relies on a callback to pass the instance. The reason for this is the item must be inserted into the database to get a unique number to represent that item. This is not done instantly, otherwise servers would freeze when new items are made. Clockwork uses the time and adds a number to get the numeric ID for an item, which allows the item to be returned which "solves" the issue, but I digress.
 
-The Helix equivalent would be:
+The Lilia equivalent would be:
 
 ```
 ix.item.Instance(0, "item", data, x, y, function(item) end)
@@ -277,12 +277,12 @@ ix.item.Instance(0, "item", data, x, y, function(item) end)
 
 Let's break down the differences:
 
-- For Helix's item instance, the 1st argument (`0`) is the inventory that the item belongs to. You can specify 0 so it does not belong to any inventory.
+- For Lilia's item instance, the 1st argument (`0`) is the inventory that the item belongs to. You can specify 0 so it does not belong to any inventory.
 - The data argument is *optional* and is just a table for the item data.
 - *x* and *y* are the position of the items in inventory. You can find an available *x* and *y* with `inventory:FindEmptySlot()`.
 - The function is an *optional* argument that passes the item instance. This is where you can directly access the new item.
 
-Keep in mind that Helix will simplify the item system for you when it can. Normally, you would not need to instance an item yourself unless you were doing something advanced.
+Keep in mind that Lilia will simplify the item system for you when it can. Normally, you would not need to instance an item yourself unless you were doing something advanced.
 
 So you might be wondering, how do I spawn an item in the map, and how do I give a player an item? In Clockwork, you would do the following:
 
@@ -294,7 +294,7 @@ Clockwork.entity:CreateItem(player, Clockwork.item:CreateInstance("item"), Vecto
 player:GiveItem(Clockwork.item:CreateInstance("item"));
 ```
 
-The equivalent in Helix would be:
+The equivalent in Lilia would be:
 
 ```
 -- spawning an item in the map
@@ -304,7 +304,7 @@ ix.item.Spawn("item", Vector(1, 2, 3))
 client:GetCharacter():GetInventory():Add("test")
 ```
 
-So in these two examples, the whole deal of instancing items is done for you in Helix!
+So in these two examples, the whole deal of instancing items is done for you in Lilia!
 
 # Hooks
 You will need to modify the function name and arguments for your schema or plugin hooks.
@@ -324,6 +324,6 @@ end
 You can see the documented hooks for the schema and plugins in the `Plugin` section.
 
 # Conclusion
-Overall, most of the conversion from Clockwork to Helix is simply renaming a certain function and/or switching the order of arguments around. Both are frameworks so they function similarly.
+Overall, most of the conversion from Clockwork to Lilia is simply renaming a certain function and/or switching the order of arguments around. Both are frameworks so they function similarly.
 
 You may want to use our HL2 RP schema example for reference which can be found at [https://github.com/bleonheart/LiliaTest-hl2rp](https://github.com/bleonheart/LiliaTest-hl2rp)

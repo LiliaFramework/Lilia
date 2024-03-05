@@ -40,12 +40,12 @@ end
 
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content="{{pageTitle}}" />
-		<meta property="og:site_name" content="Helix Documentation" />
+		<meta property="og:site_name" content="Lilia Documentation" />
 
 		{% if (mod) then %}
 			<meta property="og:description" content="{{moduleDescription(mod)}}" />
 		{% else %}
-			<meta property="og:description" content="Documentation and function reference for the Helix framework." />
+			<meta property="og:description" content="Documentation and function reference for the Lilia framework." />
 		{% end %}
 
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro" />
