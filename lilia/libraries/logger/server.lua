@@ -1,6 +1,5 @@
 ﻿--- Helper library for reading/writing files to the data folder.
 -- @module ix.data
-lia.log.types = lia.log.types or {}
 function lia.log.loadTables()
     file.CreateDir("lilia/logs")
     file.CreateDir("lilia/netlogs")
@@ -10,10 +9,9 @@ end
 function lia.log.resetTables()
 end
 
---- Adds a log type
--- @realm server
--- @string logType Log category
--- @string func The string format that log messages should use
+-- Adds a new log type to the lia.log module.
+-- @param logType (string) The type of log to add.
+-- @param func (function) The function to handle the logging for the specified type.
 function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end

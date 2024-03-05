@@ -1,5 +1,4 @@
-﻿-- @module lia.item
-lia.item = lia.item or {}
+﻿lia.item = lia.item or {}
 lia.item.base = lia.item.base or {}
 lia.item.list = lia.item.list or {}
 lia.item.instances = lia.item.instances or {}
