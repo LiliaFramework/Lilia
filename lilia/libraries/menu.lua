@@ -4,14 +4,10 @@ lia.menu = lia.menu or {}
 lia.menu.list = lia.menu.list or {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @module lia.menu
-
 -- Library functions for Lilia's Menus
-
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.menu.add(options, positions, onRemove)
-
 -- Adds a new menu to the list of drawn menus.
-
 -- @realm client
 -- @table options A table of button text as keys and their callbacks as values.
 -- @vector position The position of the menu or an entity to follow.
@@ -42,9 +38,7 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.menu.drawAll()
-
 -- A function to draw all of the active menus or hide them when needed.
-
 -- @realm client
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.menu.drawAll()
@@ -110,9 +104,7 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.menu.getActiveMenu()
-
 -- Determines which menu is being looked at.
-
 -- @realm client
 -- @treturn table The active menu.
 -- @treturn function The currently hovered option callback.
@@ -157,9 +149,7 @@ end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.menu.onButtonPressed(menu, callback)
-
 -- Handles whenever a button has been pressed.
-
 -- @realm client
 -- @int menu The menu index.
 -- @func callback The callback that checks whether the button can be pressed.
