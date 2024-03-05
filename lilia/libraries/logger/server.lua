@@ -1,8 +1,7 @@
 ﻿--- Library functions for Lilia's Logs
 -- @module lia.log
-lia.log.types = lia.log.types or {}
+--- Used to load tables into the database
 -- @type function lia.log.loadTables()
--- Used to load tables into the database
 -- @realm server
 -- @internal
 function lia.log.loadTables()
@@ -11,15 +10,15 @@ function lia.log.loadTables()
     file.CreateDir("lilia/concommandlogs")
 end
 
+--- Used to reset tables into database
 -- @type function lia.log.resetTables()
--- Used to reset tables into database
 -- @realm server
 -- @internal
 function lia.log.resetTables()
 end
 
+--- Used to reset tables into database
 -- @type function lia.log.addType(logType, func)
--- Used to reset tables into database
 -- @realm server
 -- @string logType
 -- @function (client, ...) log format callback
@@ -35,8 +34,8 @@ function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end
 
+--- Formats a string that is in log.type
 -- @type function lia.log.getString(client, logType, ...)
--- Formats a string that is in log.type
 -- @player client Default argument for format string
 -- @string logType 
 -- @vararg ... Other arguments on log format
@@ -51,8 +50,8 @@ function lia.log.getString(client, logType, ...)
     end
 end
 
+--- Adds a raw that does not require formatting
 -- @type function lia.log.addRaw(logString, shouldNotify, flag)
--- Adds a raw that does not require formatting
 -- @string logString Log string data
 -- @bool sholdNotify Display log notification in the administration console
 -- @int flag Log color flag
@@ -63,8 +62,8 @@ function lia.log.addRaw(logString, shouldNotify, flag)
     if not noSave then file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n") end
 end
 
+--- Displays a line of the log according to the match described in the log type
 -- @type function lia.log.add(client, logType, ...)
--- Displays a line of the log according to the match described in the log type
 -- @player client player name on displayed log
 -- @string logType type of log
 -- @vararg ... other arguments for log
@@ -84,8 +83,8 @@ function lia.log.add(client, logType, ...)
     file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n")
 end
 
+--- Display log raw on client console
 -- @type function lia.log.send(client, logString, flag)
--- Display log raw on client console
 -- @player client player name on displayed log
 -- @string logString log string
 -- @int flag Color flag on log string
@@ -95,8 +94,8 @@ function lia.log.send(client, logString, flag)
     netstream.Start(client, "liaLogStream", logString, flag)
 end
 
+--- Sync MLogs and Lilia Logs
 -- @type function lia.log.send(client, logString, flag)
--- Display log raw on client console
 -- @string logString log string
 -- @realm server
 -- @internal
