@@ -13,8 +13,7 @@ end
 --- Adds a log type
 -- @realm server
 -- @string logType Log category
--- @string format The string format that log messages should use
--- @number flag Log level
+-- @string func The string format that log messages should use
 function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end
