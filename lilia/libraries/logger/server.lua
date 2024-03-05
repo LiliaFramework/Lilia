@@ -10,6 +10,7 @@ function lia.log.resetTables()
 end
 
 --- first function.
+-- @realm shared
 -- @todo check if this works!
 function lia.log.addType(logType, func)
     lia.log.types[logType] = func
