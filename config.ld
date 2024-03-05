@@ -11,7 +11,7 @@ module_file = {
 	Item = "documentation/hooks/class.lua",
 	Player = "documentation/hooks/class.lua"
 }
-not_luadoc = true
+
 dir = "documentation/html"
 project = "Lilia"
 title = "Lilia Documentation"
