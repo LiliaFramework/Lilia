@@ -1,4 +1,4 @@
-# Command Example
+# Command Structure
 
 ```lua
 lia.command.add("charsetskin", {
