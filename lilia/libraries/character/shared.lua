@@ -19,6 +19,11 @@ charMeta.vars = charMeta.vars or {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 debug.getregistry().Character = lia.meta.character
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+-- @module lia.char
+-- @moduleCommentStart
+-- Library functions for lilia logs
+-- @moduleCommentEnd
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 if SERVER then
     if #lia.char.names < 1 then
         lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
@@ -58,7 +63,7 @@ end
 
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
--- @char Characters
+
 -- @type function lia.char.new(data, id, client, steamID)
 -- @typeCommentStart
 -- Creates a new character object with the given data and metadata.
@@ -98,7 +103,7 @@ function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName][hookName] = func
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
--- @char Characters
+
 -- @type function lia.char.registerVar()
 -- @typeCommentStart
 -- Sets up a new character variable.

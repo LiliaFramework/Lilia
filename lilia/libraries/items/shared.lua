@@ -56,7 +56,7 @@ lia.item.DefaultFunctions = {
     },
 }
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
--- @item Item
+
 -- @type function lia.item.get(identifier)
 -- @typeCommentStart
 -- Retrieves an item table.
@@ -73,7 +73,7 @@ function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
--- @item Item
+
 -- @type function lia.item.load(identifier)
 -- @typeCommentStart
 -- Loads item from file.
@@ -99,7 +99,7 @@ function lia.item.load(path, baseID, isBaseItem)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
--- @item Item
+
 -- @type function lia.item.isItem(object)
 -- @typeCommentStart
 -- Returns whether input is an item object or not.
@@ -117,7 +117,7 @@ function lia.item.isItem(object)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
--- @item Item
+
 -- @type function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
 -- @typeCommentStart
 -- Registers an item with a given uniqueID.
@@ -187,7 +187,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     return targetTable[itemType]
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
--- @item Item
+
 -- @type function lia.item.loadFromDir(directory)
 -- @typeCommentStart
 -- Loads items from a directory.
@@ -220,7 +220,7 @@ function lia.item.loadFromDir(directory, isFirstLoad)
     if isFirstLoad then hook.Run("InitializedItems") end
 end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
--- @item Item
+
 -- @type function lia.item.new(uniqueID, id)
 -- @typeCommentStart
 -- Creates a new item object.
