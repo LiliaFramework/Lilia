@@ -65,7 +65,6 @@ function lia.item.load(path, baseID, isBaseItem)
     end
 end
 
-
 function lia.item.isItem(object)
     return istable(object) and object.isItem == true
 end
@@ -123,7 +122,6 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     return targetTable[itemType]
 end
 
-
 function lia.item.loadFromDir(directory, isFirstLoad)
     local files, folders
     files = file.Find(directory .. "/base/*.lua", "LUA")
@@ -145,7 +143,6 @@ function lia.item.loadFromDir(directory, isFirstLoad)
 
     if isFirstLoad then hook.Run("InitializedItems") end
 end
-
 
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
