@@ -19,13 +19,13 @@ end
 --- Called when a character has been initally created and assigned to this faction.
 -- @realm server
 -- @logType client Client that owns the character
--- @func character Character that has been created
--- @usage function lia.log.addType(logType, func)
+-- @sex Character that has been created
+-- @usage function lia.log.addType(logType, sex)
 -- 	local inventory = logType:GetInventory()
 -- 	inventory:Add("pistol")
 -- end
-function lia.log.addType(logType, func)
-    lia.log.types[logType] = func
+function lia.log.addType(logType, sex)
+    lia.log.types[logType] = sex
 end
 
 function lia.log.getString(client, logType, ...)
