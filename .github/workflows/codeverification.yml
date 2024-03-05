@@ -2,12 +2,7 @@ name: Commit Verification
 
 on:
   push:
-    paths:
-      - "lilia/**"
-  pull_request:
-    paths:
-      - "lilia/**"
-  
+  pull_request:  
 permissions:
   actions: write
   checks: write
@@ -156,13 +151,7 @@ jobs:
             echo "No changes to commit."
           fi
         working-directory: "${{ github.workspace }}"
-        
 
-
-name: Docs
-on: [push, pull_request]
-
-jobs:
   documentation:
     runs-on: ubuntu-latest
     needs: CodeVerifierAndIndenter
