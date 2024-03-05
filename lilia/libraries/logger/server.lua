@@ -1,5 +1,5 @@
-﻿--- Helper library for reading/writing files to the data folder.
--- @module ix.data
+﻿--- Testing annotations
+-- @module annot1
 function lia.log.loadTables()
     file.CreateDir("lilia/logs")
     file.CreateDir("lilia/netlogs")
@@ -9,22 +9,8 @@ end
 function lia.log.resetTables()
 end
 
---- Summary ends with a period.
--- Some description, can be over several lines.
--- Some description, can be over several lines.
--- Some description, can be over several lines.
--- Some description, can be over several lines.
--- Some description, can be over several lines.
--- Some description, can be over several lines.
--- Some description, can be over several lines.
--- Some description, can be over several lines.
--- Some description, can be over several lines.
--- Some description, can be over several lines.
--- Some description, can be over several lines.
--- Some description, can be over several lines.
--- @realm shared
--- @param logType first parameter
--- @param func second parameter
+--- first function.
+-- @todo check if this works!
 function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end
