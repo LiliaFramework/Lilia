@@ -1,5 +1,4 @@
-﻿--- Library functions for Lilia Characters
--- @module lia.char
+﻿-- @module lia.char
 local charMeta = lia.meta.character or {}
 lia.char = lia.char or {}
 lia.char.loaded = lia.char.loaded or {}

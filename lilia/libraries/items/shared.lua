@@ -1,5 +1,4 @@
-﻿--- Library functions for Lilia's Items
--- @module lia.item
+﻿-- @module lia.item
 lia.item = lia.item or {}
 lia.item.base = lia.item.base or {}
 lia.item.list = lia.item.list or {}

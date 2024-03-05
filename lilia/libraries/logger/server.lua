@@ -1,5 +1,4 @@
-﻿--- Library functions for Lilia's Logs
--- @module lia.log
+﻿-- @module lia.log
 lia.log.types = lia.log.types or {}
 function lia.log.loadTables()
     file.CreateDir("lilia/logs")
