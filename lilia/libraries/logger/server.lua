@@ -19,7 +19,6 @@ function lia.log.loadTables()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-
 -- @type function lia.log.resetTables()
 -- @typeCommentStart
 -- Used to reset tables into database
