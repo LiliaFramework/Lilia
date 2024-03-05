@@ -1,5 +1,3 @@
-
-
 --[[--
 Faction setup hooks.
 
@@ -9,7 +7,6 @@ These hooks are used in faction tables that are created in `schema/factions/sh_f
 regular gamemode hooks.
 ]]
 -- @hooks Faction
-
 --- Called when the default name for a character needs to be retrieved (i.e upon initial creation).
 -- @realm shared
 -- @player client Client to get the default name for
