@@ -1,4 +1,5 @@
-﻿--[[ List of entities blocked from physgun move ]]
+﻿
+--[[ List of entities blocked from physgun move ]]
 MODULE.RestrictedEnts = {"func_button", "class C_BaseEntity", "func_brush", "func_tracktrain", "func_door", "func_door_rotating", "prop_static", "prop_physics_override", "prop_dynamic", "func_movelinear", "prop_door_rotating", "lia_vendor"}
 
 --[[ List of entities blocked from the remover tool ]]
@@ -27,3 +28,4 @@ MODULE.PlayerSpawnVehicleDelay = 30
 
 --[[ Adds ToolGun Cooldown ]]
 MODULE.ToolInterval = 0.5
+
