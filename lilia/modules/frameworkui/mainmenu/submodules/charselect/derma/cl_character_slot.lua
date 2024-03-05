@@ -1,12 +1,12 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 local PANEL = {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:isCursorWithinBounds()
     local x, y = self:LocalCursorPos()
     return x >= 0 and x <= self:GetWide() and y >= 0 and y < self:GetTall()
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:confirmDelete()
     local id = self.character:getID()
     if hook.Run("CanDeleteChar", id) == false then
@@ -17,7 +17,7 @@ function PANEL:confirmDelete()
     vgui.Create("liaCharacterConfirm"):setMessage(L("Deleting a character cannot be undone.")):onConfirm(function() MainMenu:deleteCharacter(id) end)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:Init()
     self:SetWide(240)
     self:SetPaintBackground(false)
@@ -80,11 +80,11 @@ function PANEL:Init()
     self.delete.showY = self.delete.y - self.delete:GetTall()
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:onSelected()
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:setCharacter(character)
     self.character = character
     self.name:SetText(character:getName():gsub("#", "\226\128\139#"):upper())
@@ -105,12 +105,12 @@ function PANEL:setCharacter(character)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:setBanned(banned)
     self.banned = banned
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:onHoverChanged(isHovered)
     local ANIM_SPEED = lia.gui.character.ANIM_SPEED
     if self.isHovered == isHovered then return end
@@ -127,7 +127,7 @@ function PANEL:onHoverChanged(isHovered)
     self.faction:AlphaTo(isHovered and 250 or 100, ANIM_SPEED)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self)
     surface.SetDrawColor(0, 0, 0, 50)
@@ -135,11 +135,11 @@ function PANEL:Paint(w, h)
     if not self:isCursorWithinBounds() and self.isHovered then self:onHoverChanged(false) end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:OnCursorEntered()
     self:onHoverChanged(true)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 vgui.Register("liaCharacterSlot", PANEL, "DPanel")
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

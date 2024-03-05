@@ -1,8 +1,8 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 local PANEL = {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 local VoicePanels = {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:Init()
     local hi = vgui.Create("DLabel", self)
     hi:SetFont("liaIconsMedium")
@@ -23,7 +23,7 @@ function PANEL:Init()
     self:Dock(BOTTOM)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:Setup(client)
     self.client = client
     self.name = hook.Run("ShouldAllowScoreboardOverride", client, "name") and hook.Run("GetDisplayedName", client) or client:getChar():getName()
@@ -31,7 +31,7 @@ function PANEL:Setup(client)
     self:InvalidateLayout()
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:Paint(w, h)
     if not IsValid(self.client) then return end
     lia.util.drawBlur(self, 1, 2)
@@ -41,13 +41,13 @@ function PANEL:Paint(w, h)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:Think()
     if IsValid(self.client) then self.LabelName:SetText(self.name) end
     if self.fadeAnim then self.fadeAnim:Run() end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:FadeOut(anim, delta)
     if anim.Finished then
         if IsValid(VoicePanels[self.client]) then
@@ -61,9 +61,9 @@ function PANEL:FadeOut(anim, delta)
     self:SetAlpha(255 - (255 * (delta * 2)))
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 vgui.Register("VoicePanel", PANEL, "DPanel")
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PlayerStartVoice(client)
     if not IsValid(g_VoicePanelList) or not self.IsVoiceEnabled then return end
     hook.Run("PlayerEndVoice", client)
@@ -83,14 +83,14 @@ function MODULE:PlayerStartVoice(client)
     VoicePanels[client] = pnl
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 local function VoiceClean()
     for k, _ in pairs(VoicePanels) do
         if not IsValid(k) then hook.Run("PlayerEndVoice", k) end
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PlayerEndVoice(client)
     if IsValid(VoicePanels[client]) then
         if VoicePanels[client].fadeAnim then return end
@@ -99,7 +99,7 @@ function MODULE:PlayerEndVoice(client)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 local function CreateVoiceVGUI()
     gmod.GetGamemode().PlayerStartVoice = function() end
     gmod.GetGamemode().PlayerEndVoice = function() end
@@ -111,8 +111,8 @@ local function CreateVoiceVGUI()
     g_VoicePanelList:SetPaintBackground(false)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 timer.Create("VoiceClean", 10, 0, VoiceClean)
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 hook.Add("InitPostEntity", "CreateVoiceVGUI", CreateVoiceVGUI)
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

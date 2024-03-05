@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 lia.command.add("classwhitelist", {
     adminOnly = true,
     syntax = "<string name> <string class>",
@@ -34,7 +34,7 @@ lia.command.add("classwhitelist", {
     end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("plytransfer", {
     adminOnly = true,
     syntax = "<string name> <string faction>",
@@ -68,7 +68,7 @@ lia.command.add("plytransfer", {
     end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("plywhitelist", {
     adminOnly = true,
     privilege = "Whitelist Characters",
@@ -86,7 +86,7 @@ lia.command.add("plywhitelist", {
     end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("plyunwhitelist", {
     adminOnly = true,
     privilege = "Un-Whitelist Characters",
@@ -104,7 +104,7 @@ lia.command.add("plyunwhitelist", {
     end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("beclass", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -144,7 +144,7 @@ lia.command.add("beclass", {
     end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("factionlist", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -156,7 +156,7 @@ lia.command.add("factionlist", {
     end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("setclass", {
     privilege = "Set Class",
     adminOnly = true,
@@ -187,7 +187,7 @@ lia.command.add("setclass", {
     end,
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("classunwhitelist", {
     adminOnly = true,
     syntax = "<string name> <string class>",
@@ -222,4 +222,4 @@ lia.command.add("classunwhitelist", {
         target:notify(string.format("Class '%s' have been unassigned from your current character.", classTable.name))
     end
 })
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

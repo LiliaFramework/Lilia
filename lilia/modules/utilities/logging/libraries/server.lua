@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 function MODULE:ReadLogFiles(logtype)
     local logs = {}
     local logFilePath = "lilia/" .. logtype .. "/*.txt"
@@ -10,7 +10,7 @@ function MODULE:ReadLogFiles(logtype)
     return logs
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:ReadLogsFromFile(logtype, selectedDate)
     local logs = {}
     local logFilePath = "lilia/" .. logtype .. "/" .. selectedDate:gsub("/", "-") .. ".txt"
@@ -28,4 +28,4 @@ function MODULE:ReadLogsFromFile(logtype, selectedDate)
     end
     return logs
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

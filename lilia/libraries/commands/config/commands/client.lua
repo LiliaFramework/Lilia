@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 lia.command.add("charsetspeed", {
     adminOnly = true,
     privilege = "Set Character Speed",
@@ -6,14 +6,14 @@ lia.command.add("charsetspeed", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("playglobalsound", {
     superAdminOnly = true,
     privilege = "Play Global Sounds",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("playsound", {
     superAdminOnly = true,
     privilege = "Play Targetted Sounds",
@@ -21,14 +21,14 @@ lia.command.add("playsound", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("redownloadlightmaps", {
     adminOnly = false,
     privilege = "Default User Commands",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("charsetjump", {
     adminOnly = true,
     privilege = "Set Character Jump",
@@ -36,7 +36,7 @@ lia.command.add("charsetjump", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("charsetscale", {
     superAdminOnly = true,
     privilege = "Set Character scale",
@@ -44,7 +44,7 @@ lia.command.add("charsetscale", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("charaddmoney", {
     privilege = "Add Money",
     superAdminOnly = true,
@@ -52,7 +52,7 @@ lia.command.add("charaddmoney", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("charban", {
     superAdminOnly = true,
     syntax = "<string name>",
@@ -60,7 +60,7 @@ lia.command.add("charban", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("charsetdesc", {
     adminOnly = true,
     syntax = "<string name> <string desc>",
@@ -68,7 +68,7 @@ lia.command.add("charsetdesc", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("charsetname", {
     adminOnly = true,
     syntax = "<string name> [string newName]",
@@ -76,7 +76,7 @@ lia.command.add("charsetname", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("chargetmodel", {
     adminOnly = true,
     syntax = "<string name>",
@@ -84,7 +84,7 @@ lia.command.add("chargetmodel", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("charsetmodel", {
     adminOnly = true,
     syntax = "<string name> <string model>",
@@ -92,7 +92,7 @@ lia.command.add("charsetmodel", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("charsetbodygroup", {
     adminOnly = true,
     privilege = "Change Bodygroups",
@@ -100,7 +100,7 @@ lia.command.add("charsetbodygroup", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("charsetskin", {
     adminOnly = true,
     syntax = "<string name> [number skin]",
@@ -108,7 +108,7 @@ lia.command.add("charsetskin", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("chargetmoney", {
     adminOnly = true,
     syntax = "<string name>",
@@ -116,7 +116,7 @@ lia.command.add("chargetmoney", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("charsetmoney", {
     superAdminOnly = true,
     syntax = "<string target> <number amount>",
@@ -124,7 +124,7 @@ lia.command.add("charsetmoney", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("clearinv", {
     superAdminOnly = true,
     syntax = "<string name>",
@@ -132,7 +132,7 @@ lia.command.add("clearinv", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("flaggive", {
     adminOnly = true,
     syntax = "<string name> [string flags]",
@@ -140,7 +140,7 @@ lia.command.add("flaggive", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("flaggiveall", {
     adminOnly = true,
     syntax = "<string name> [string flags]",
@@ -148,7 +148,7 @@ lia.command.add("flaggiveall", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("flagtakeall", {
     adminOnly = true,
     syntax = "<string name> [string flags]",
@@ -156,7 +156,7 @@ lia.command.add("flagtakeall", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("flagtake", {
     adminOnly = true,
     syntax = "<string name> [string flags]",
@@ -164,7 +164,7 @@ lia.command.add("flagtake", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("charkick", {
     adminOnly = true,
     syntax = "<string name>",
@@ -172,7 +172,7 @@ lia.command.add("charkick", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("charunban", {
     syntax = "<string name>",
     superAdminOnly = true,
@@ -180,14 +180,14 @@ lia.command.add("charunban", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("flagpet", {
     privilege = "Give pet Flags",
     syntax = "[character name]",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("flagragdoll", {
     adminOnly = true,
     privilege = "Hand Ragdoll Medals",
@@ -195,7 +195,7 @@ lia.command.add("flagragdoll", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("flags", {
     privilege = "Check Flags",
     adminOnly = true,
@@ -203,14 +203,14 @@ lia.command.add("flags", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("freezeallprops", {
     superAdminOnly = true,
     privilege = "Freeze All Props",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("checkmoney", {
     syntax = "<string target>",
     privilege = "Check Money",
@@ -218,41 +218,41 @@ lia.command.add("checkmoney", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("status", {
     privilege = "Default User Commands",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("cleanitems", {
     superAdminOnly = true,
     privilege = "Clean Items",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("cleanprops", {
     superAdminOnly = true,
     privilege = "Clean Props",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("forcesave", {
     superAdminOnly = true,
     privilege = "Force Save Server",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("cleannpcs", {
     superAdminOnly = true,
     privilege = "Clean NPCs",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("flags", {
     adminOnly = true,
     syntax = "<string name>",
@@ -260,7 +260,7 @@ lia.command.add("flags", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("checkallmoney", {
     superAdminOnly = true,
     syntax = "<string charname>",
@@ -268,21 +268,21 @@ lia.command.add("checkallmoney", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("return", {
     adminOnly = true,
     privilege = "Return",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("findallflags", {
     adminOnly = false,
     privilege = "Find All Flags",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("chargiveitem", {
     superAdminOnly = true,
     syntax = "<string name> <string item>",
@@ -290,7 +290,7 @@ lia.command.add("chargiveitem", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("announce", {
     superAdminOnly = true,
     syntax = "<string factions> <string text>",
@@ -298,63 +298,63 @@ lia.command.add("announce", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("listents", {
     privilege = "Default User Commands",
     syntax = "<No Input>",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("flip", {
     adminOnly = false,
     privilege = "Default User Commands",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("liststaff", {
     adminOnly = false,
     privilege = "List Staff",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("listondutystaff", {
     adminOnly = false,
     privilege = "List Staff",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("listvip", {
     adminOnly = false,
     privilege = "List VIPs",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("listusers", {
     adminOnly = false,
     privilege = "List Users",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("vieweventlog", {
     adminOnly = false,
     privilege = "Default User Commands",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("editeventlog", {
     adminOnly = true,
     privilege = "Can Edit Event Log",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("rolld", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -362,14 +362,14 @@ lia.command.add("rolld", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("roll", {
     adminOnly = false,
     privilege = "Default User Commands",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("chardesc", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -377,14 +377,14 @@ lia.command.add("chardesc", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("chargetup", {
     adminOnly = false,
     privilege = "Default User Commands",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("givemoney", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -392,21 +392,21 @@ lia.command.add("givemoney", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("bringlostitems", {
     adminOnly = false,
     privilege = "Default User Commands",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("carddraw", {
     adminOnly = false,
     privilege = "Default User Commands",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("permflaggive", {
     adminOnly = true,
     privilege = "Give Permanent Flags",
@@ -414,7 +414,7 @@ lia.command.add("permflaggive", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("permflagtake", {
     adminOnly = true,
     privilege = "Take Permanent Flags",
@@ -422,7 +422,7 @@ lia.command.add("permflagtake", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("permflags", {
     adminOnly = true,
     privilege = "List Permanent Flags",
@@ -430,7 +430,7 @@ lia.command.add("permflags", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("flagblacklist", {
     adminOnly = true,
     privilege = "Blacklist Flags",
@@ -438,7 +438,7 @@ lia.command.add("flagblacklist", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("flagunblacklist", {
     adminOnly = true,
     privilege = "UnBlacklist Flags",
@@ -446,7 +446,7 @@ lia.command.add("flagunblacklist", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("flagblacklists", {
     adminOnly = true,
     privilege = "List Blacklisted Flags",
@@ -454,7 +454,7 @@ lia.command.add("flagblacklists", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("fallover", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -462,21 +462,21 @@ lia.command.add("fallover", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("getpos", {
     adminOnly = false,
     privilege = "Default User Commands",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("entname", {
     adminOnly = false,
     privilege = "Default User Commands",
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("dropmoney", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -484,10 +484,10 @@ lia.command.add("dropmoney", {
     onRun = function() end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("membercount", {
     adminOnly = false,
     privilege = "Default User Commands",
     onRun = function() end
 })
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

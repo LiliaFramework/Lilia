@@ -1,6 +1,6 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 local playerMeta = FindMetaTable("Player")
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function playerMeta:loadLiliaData(callback)
     local name = self:steamName()
     local steamID64 = self:SteamID64()
@@ -29,7 +29,7 @@ function playerMeta:loadLiliaData(callback)
     end)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function playerMeta:saveLiliaData()
     local name = self:steamName()
     local steamID64 = self:SteamID64()
@@ -41,14 +41,14 @@ function playerMeta:saveLiliaData()
     }, nil, "players", "_steamID = " .. steamID64)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function playerMeta:setLiliaData(key, value, noNetworking)
     self.liaData = self.liaData or {}
     self.liaData[key] = value
     if not noNetworking then netstream.Start(self, "liaData", key, value) end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function playerMeta:getLiliaData(key, default)
     if key == true then return self.liaData end
     local data = self.liaData and self.liaData[key]
@@ -58,4 +58,4 @@ function playerMeta:getLiliaData(key, default)
         return data
     end
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

@@ -1,21 +1,21 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 function MODULE:ShouldHideBars()
     return self.BarsDisabled
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:HUDShouldDraw(element)
     if table.HasValue(self.HiddenHUDElements, element) then return false end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:HUDPaintBackground()
     if self:ShouldDrawBranchWarning() then self:DrawBranchWarning() end
     if self:ShouldDrawBlur() then self:DrawBlur() end
     self:RenderEntities()
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:HUDPaint()
     local weapon = LocalPlayer():GetActiveWeapon()
     if self:ShouldDrawAmmo(weapon) then self:DrawAmmo(weapon) end
@@ -23,12 +23,12 @@ function MODULE:HUDPaint()
     if self:ShouldDrawVignette() then self:DrawVignette() end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:ForceDermaSkin()
     return self.DarkTheme and "lilia_darktheme" or "lilia"
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:ShowPlayerCard(target)
     self.F3 = vgui.Create("DFrame")
     self.F3:SetSize(ScrW() * 0.35, ScrH() * 0.25)
@@ -83,4 +83,4 @@ function MODULE:ShowPlayerCard(target)
     pingLabel:SetTextColor(Color(255, 255, 255, 255))
     pingLabel:PerformLayout()
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

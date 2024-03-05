@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 function MODULE:isCharRecognized(character, id)
     local client = character:getPlayer()
     local recognized = character:getData("rgn", "")
@@ -14,7 +14,7 @@ function MODULE:isCharRecognized(character, id)
     return false
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:isCharFakeRecognized(character, id)
     local other = lia.char.loaded[id]
     local CharNameList = character:getRecognizedAs()
@@ -22,7 +22,7 @@ function MODULE:isCharFakeRecognized(character, id)
     return self.FakeNamesEnabled and self:isFakeNameExistant(clientName, CharNameList)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:isFakeNameExistant(clientName, CharNameList)
     for _, n in pairs(CharNameList) do
         if n == clientName then return true end
@@ -30,10 +30,10 @@ function MODULE:isFakeNameExistant(clientName, CharNameList)
     return false
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.char.registerVar("RecognizedAs", {
     field = "_recognized_as",
     default = {},
     noDisplay = true
 })
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 function MODULE:ScalePlayerDamage(_, hitgroup, dmgInfo)
     local damageScale = self.DamageScale
     if hitgroup == HITGROUP_HEAD then
@@ -10,14 +10,14 @@ function MODULE:ScalePlayerDamage(_, hitgroup, dmgInfo)
     dmgInfo:ScaleDamage(damageScale)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PlayerDeath(client)
     if not self.DeathSoundEnabled then return end
     local deathSound = hook.Run("GetPlayerDeathSound", client, client:isFemale())
     if deathSound then client:EmitSound(deathSound) end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:EntityTakeDamage(client, _)
     if not self.PainSoundEnabled or not client:IsPlayer() or client:Health() <= 0 then return end
     local painSound = self:GetPlayerPainSound(client, "hurt", client:isFemale())
@@ -28,13 +28,13 @@ function MODULE:EntityTakeDamage(client, _)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PlayerDisconnected(client)
     local steamID64 = client:SteamID64()
     if timer.Exists("DrownTimer_" .. steamID64) then timer.Remove("DrownTimer_" .. steamID64) end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PlayerLoadedChar(client)
     local steamID64 = client:SteamID64()
     if not (client:getChar() or client:Alive() or self.DrowningEnabled) or hook.Run("ShouldclientDrown", client) == false then return end
@@ -63,4 +63,4 @@ function MODULE:PlayerLoadedChar(client)
 
     timer.Create("DrownTimer_" .. steamID64, 1, 0, applyDrowningEffects)
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

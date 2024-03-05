@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 function MODULE:PlayerLiliaDataLoaded(client)
     lia.char.restore(client, function(charList)
         if not IsValid(client) then return end
@@ -18,24 +18,24 @@ function MODULE:PlayerLiliaDataLoaded(client)
     end)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:OnCharacterDelete(client, id)
     lia.log.add(client, "charDelete", id)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:onCharCreated(client, character)
     lia.log.add(client, "charCreate", character)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:CanPlayerUseChar(_, character)
     local banned = character:getData("banned")
     if banned and isnumber(banned) and banned > os.time() then return false, "@charBanned" end
     return true
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
     local banned = character:getData("banned")
     if character:getID() == newCharacter:getID() then return false, "You are already using this character!" end
@@ -46,15 +46,15 @@ function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
     return true
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PlayerLoadedChar(client)
     client:Spawn()
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:CharacterLoaded(id)
     local character = lia.char.loaded[id]
     local client = character:getPlayer()
     lia.log.add(client, "charLoad", id, character:getName())
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

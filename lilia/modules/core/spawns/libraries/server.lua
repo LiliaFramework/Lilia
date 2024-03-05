@@ -1,18 +1,18 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 local MODULE = MODULE
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 MODULE.spawns = MODULE.spawns or {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:LoadData()
     self.spawns = self:getData() or {}
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:SaveData()
     self:setData(self.spawns)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PostPlayerLoadout(client)
     local character = client:getChar()
     if IsValid(client) or character and self.spawns and table.Count(self.spawns) > 0 then
@@ -43,7 +43,7 @@ function MODULE:PostPlayerLoadout(client)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:CharacterPreSave(character)
     local client = character:getPlayer()
     local vehicle = client:GetVehicle()
@@ -53,7 +53,7 @@ function MODULE:CharacterPreSave(character)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PlayerLoadedChar(client, character, _)
     timer.Simple(0, function()
         if IsValid(client) then
@@ -70,7 +70,7 @@ function MODULE:PlayerLoadedChar(client, character, _)
     end)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PlayerDeath(client, _, attacker)
     local character = client:getChar()
     if not character then return end
@@ -94,7 +94,7 @@ function MODULE:PlayerDeath(client, _, attacker)
     character:setData("deathPos", client:GetPos())
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:RemoveAllEquippedWeapons(client)
     local character = client:getChar()
     local inventory = character:getInv()
@@ -118,4 +118,4 @@ function MODULE:RemoveAllEquippedWeapons(client)
         client:notify("Because you died, you have lost " .. amount .. ".")
     end
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

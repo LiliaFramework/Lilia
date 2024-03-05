@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 netstream.Hook("adminClearChat", function()
     if ChatboxCore and IsValid(ChatboxCore.panel) then
         ChatboxCore.panel:Remove()
@@ -8,7 +8,7 @@ netstream.Hook("adminClearChat", function()
     end
 end)
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 netstream.Hook("cMsg", function(client, chatType, text, anonymous)
     if IsValid(client) then
         local class = lia.chat.classes[chatType]
@@ -26,4 +26,4 @@ netstream.Hook("cMsg", function(client, chatType, text, anonymous)
         end
     end
 end)
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

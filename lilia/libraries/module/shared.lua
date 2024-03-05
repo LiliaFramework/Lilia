@@ -1,14 +1,14 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 lia.module = lia.module or {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.module.EnabledList = {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.module.list = lia.module.list or {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.module.unloaded = lia.module.unloaded or {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.module.ModuleFolders = {"dependencies", "config", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim", "concommands"}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.module.ModuleFiles = {
     ["client.lua"] = "client",
     ["cl_module.lua"] = "client",
@@ -18,7 +18,7 @@ lia.module.ModuleFiles = {
     ["sconfig.lua"] = "server",
 }
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.module.ModuleConditions = {
     ["stormfox2"] = {
         name = "StormFox 2",
@@ -94,7 +94,7 @@ lia.module.ModuleConditions = {
     }
 }
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.module.load(uniqueID, path, isSingleFile, variable)
     local lowerVariable = variable:lower()
     local normalpath = path .. "/" .. lowerVariable .. ".lua"
@@ -217,7 +217,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     hook.Run("ModuleLoaded")
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.module.loadExtras(path)
     lia.lang.loadFromDir(path .. "/languages")
     lia.faction.loadFromDir(path .. "/factions")
@@ -240,7 +240,7 @@ function lia.module.loadExtras(path)
     hook.Run("DoModuleIncludes", path, MODULE)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.module.initialize()
     local schema = engine.ActiveGamemode()
     lia.module.loadFromDir(schema .. "/overrides", "module")
@@ -256,7 +256,7 @@ function lia.module.initialize()
     hook.Run("InitializedModules")
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.module.verifyModuleValidity(uniqueID, isEnabled)
     if uniqueID == "schema" then return true end
     for ModuleName, conditions in pairs(lia.module.ModuleConditions) do
@@ -271,7 +271,7 @@ function lia.module.verifyModuleValidity(uniqueID, isEnabled)
     return isEnabled ~= false
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.module.loadFromDir(directory, group)
     local location = group == "schema" and "SCHEMA" or "MODULE"
     local files, folders = file.Find(directory .. "/*", "LUA")
@@ -284,8 +284,8 @@ function lia.module.loadFromDir(directory, group)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

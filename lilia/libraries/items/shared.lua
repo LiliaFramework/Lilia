@@ -1,19 +1,19 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 lia.item = lia.item or {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.item.base = lia.item.base or {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.item.list = lia.item.list or {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.item.instances = lia.item.instances or {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.item.inventories = lia.inventory.instances or {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.item.inventoryTypes = lia.item.inventoryTypes or {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 --- Library functions for Lilia's Items
 -- @module lia.item
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.item.DefaultFunctions = {
     drop = {
         tip = "dropTip",
@@ -59,7 +59,7 @@ lia.item.DefaultFunctions = {
     },
 }
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 -- @type function lia.item.get(identifier)
 -- Retrieves an item table.
 -- @realm shared
@@ -69,12 +69,12 @@ lia.item.DefaultFunctions = {
 -- print(lia.item.get("example"))
 -- "item[example][0]"
 -- @usageEnd
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 -- @type function lia.item.load(identifier)
 -- Loads item from file.
 -- @realm shared
@@ -85,7 +85,7 @@ end
 -- @usageStart
 -- lia.item.load("sh_guacamole.lua", "foodstuff", false")
 -- @usageEnd
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua") or path:match("([_%w]+)%.lua")
     if uniqueID then
@@ -96,7 +96,7 @@ function lia.item.load(path, baseID, isBaseItem)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 -- @type function lia.item.isItem(object)
 -- Returns whether input is an item object or not.
 -- @realm shared
@@ -105,12 +105,12 @@ end
 -- lia.item.isItem(lia.item.instances[1])
 -- "true"
 -- @usageEnd
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.item.isItem(object)
     return istable(object) and object.isItem == true
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 -- @type function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
 -- Registers an item with a given uniqueID.
 -- @realm shared
@@ -123,7 +123,7 @@ end
 -- @usageStart
 -- lia.item.register("example", "base_food", false, "sh_example.lua", false)
 -- @usageEnd
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     assert(isstring(uniqueID), "uniqueID must be a string")
     local baseTable = lia.item.base[baseID] or lia.meta.item
@@ -177,7 +177,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     return targetTable[itemType]
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 -- @type function lia.item.loadFromDir(directory)
 -- Loads items from a directory.
 -- @realm shared
@@ -185,7 +185,7 @@ end
 -- @usageStart
 -- lia.item.loadFromDir("items")
 -- @usageEnd
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.item.loadFromDir(directory, isFirstLoad)
     local files, folders
     files = file.Find(directory .. "/base/*.lua", "LUA")
@@ -208,7 +208,7 @@ function lia.item.loadFromDir(directory, isFirstLoad)
     if isFirstLoad then hook.Run("InitializedItems") end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 -- @type function lia.item.new(uniqueID, id)
 -- Creates a new item object.
 -- @realm shared
@@ -217,7 +217,7 @@ end
 -- @usageStart
 -- local item = lia.item.new("example", 15)
 -- @usageEnd
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
     assert(isnumber(id), "non-number ID given to lia.item.new")
@@ -240,7 +240,7 @@ function lia.item.new(uniqueID, id)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.item.registerInv(invType, w, h)
     local GridInv = FindMetaTable("GridInv")
     assert(GridInv, "GridInv not found")
@@ -257,7 +257,7 @@ function lia.item.registerInv(invType, w, h)
     inventory:register(invType)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.item.newInv(owner, invType, callback)
     lia.inventory.instance(invType, {
         char = owner
@@ -276,12 +276,12 @@ function lia.item.newInv(owner, invType, callback)
     end)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.item.getInv(invID)
     return lia.inventory.instances[invID]
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.item.createInv(w, h, id)
     local GridInv = FindMetaTable("GridInv")
     assert(GridInv, "GridInv not found")
@@ -296,7 +296,7 @@ function lia.item.createInv(w, h, id)
     return instance
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.char.registerVar("inv", {
     noNetworking = true,
     noDisplay = true,
@@ -319,4 +319,4 @@ lia.char.registerVar("inv", {
         end
     end
 })
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

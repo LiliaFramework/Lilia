@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 function MODULE:CheckFactionLimitReached(faction, character, client)
     if isfunction(faction.onCheckLimitReached) then return faction:onCheckLimitReached(character, client) end
     if not isnumber(faction.limit) then return false end
@@ -7,15 +7,15 @@ function MODULE:CheckFactionLimitReached(faction, character, client)
     return team.NumPlayers(faction.index) >= maxPlayers
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:GetDefaultCharName(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.getDefaultName then return info:getDefaultName(client) end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.onGetDefaultDesc then return info:onGetDefaultDesc(client) end
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

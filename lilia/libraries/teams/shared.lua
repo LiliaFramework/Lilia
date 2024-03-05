@@ -1,8 +1,8 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 lia.class = lia.class or {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.class.list = lia.class.list or {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.class.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local index = #lia.class.list + 1
@@ -41,7 +41,7 @@ function lia.class.loadFromDir(directory)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.class.canBe(client, class)
     local info = lia.class.list[class]
     if not info then return false, "no info" end
@@ -52,12 +52,12 @@ function lia.class.canBe(client, class)
     return info:onCanBe(client)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.class.get(identifier)
     return lia.class.list[identifier]
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.class.getPlayers(class)
     local players = {}
     for _, v in ipairs(player.GetAll()) do
@@ -67,11 +67,11 @@ function lia.class.getPlayers(class)
     return players
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.class.retrieveClass(class)
     for key, classTable in pairs(lia.class.list) do
         if lia.util.stringMatches(classTable.uniqueID, class) or lia.util.stringMatches(classTable.name, class) then return key end
     end
     return nil
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

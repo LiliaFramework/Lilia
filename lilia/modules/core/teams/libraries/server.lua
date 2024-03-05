@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 function MODULE:OnPlayerJoinClass(client, class, oldClass)
     local character = client:getChar()
     if character and self.PermaClass then character:setData("pclass", class) end
@@ -9,7 +9,7 @@ function MODULE:OnPlayerJoinClass(client, class, oldClass)
     netstream.Start(nil, "classUpdate", client)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:CanPlayerJoinClass(client, class, classTable)
     if classTable.isWhitelisted ~= true then return end
     local character = client:getChar()
@@ -17,7 +17,7 @@ function MODULE:CanPlayerJoinClass(client, class, classTable)
     return wl[class] or false
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PlayerLoadedChar(client, character, _)
     local data = character:getData("pclass")
     local class = data and lia.class.list[data]
@@ -41,7 +41,7 @@ function MODULE:PlayerLoadedChar(client, character, _)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:FactionOnLoadout(client)
     local faction = lia.faction.indices[client:Team()]
     if not faction then return end
@@ -118,7 +118,7 @@ function MODULE:FactionOnLoadout(client)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:CanCharBeTransfered(character, faction)
     if faction.oneCharOnly then
         for _, otherCharacter in next, lia.char.loaded do
@@ -127,7 +127,7 @@ function MODULE:CanCharBeTransfered(character, faction)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:ClassOnLoadout(client)
     local character = client:getChar()
     local class = lia.class.list[character:getClass()]
@@ -207,15 +207,15 @@ function MODULE:ClassOnLoadout(client)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:CanPlayerUseChar(client, character)
     local faction = lia.faction.indices[character:getFaction()]
     if faction and hook.Run("CheckFactionLimitReached", faction, character, client) then return false, "@limitFaction" end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:CanPlayerSwitchChar(client, _, newCharacter)
     local faction = lia.faction.indices[newCharacter:getFaction()]
     if self:CheckFactionLimitReached(faction, newCharacter, client) then return false, "@limitFaction" end
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 lia.command.add("fixpac", {
     privilege = "Default User Commands",
     syntax = "<No Input>",
@@ -16,13 +16,13 @@ lia.command.add("fixpac", {
     end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("pacenable", {
     privilege = "Default User Commands",
     onRun = function(client) client:SendLua([[RunConsoleCommand("pac_enable", "1")]]) end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("pacdisable", {
     privilege = "Default User Commands",
     onRun = function(client)
@@ -30,4 +30,4 @@ lia.command.add("pacdisable", {
         client:SendLua([[chat.AddText("PAC has been disabled to boost performance. If you would like to re-enable it type /pacenable in chat.")]])
     end
 })
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

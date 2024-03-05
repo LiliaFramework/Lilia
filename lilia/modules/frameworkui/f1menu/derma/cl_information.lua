@@ -1,8 +1,8 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 local MODULE = MODULE
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 local PANEL = {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:Init()
     local client = LocalPlayer()
     local character = client:getChar()
@@ -54,7 +54,7 @@ function PANEL:Init()
     self:setup()
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor, shadowColor, labelText, dockMarginTop)
     local isDesc = name == "desc"
     local entryContainer = self.infoBox:Add("DPanel")
@@ -83,7 +83,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor
     self[name]:SetMultiline(isDesc and true or false)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:CreateFillableBarWithBackgroundAndLabel(name, font, size, textColor, shadowColor, labelText, minVal, maxVal, dockMarginTop, value)
     local entryContainer = self.infoBox:Add("DPanel")
     entryContainer:Dock(TOP)
@@ -116,7 +116,7 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(name, font, size, textCol
     self[name] = bar
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function PANEL:setup()
     local client = LocalPlayer()
     local character = client:getChar()
@@ -127,6 +127,6 @@ function PANEL:setup()
     if self.class then self.class:SetText((class and class.name) or "None") end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 vgui.Register("liaCharInfo", PANEL, "EditablePanel")
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

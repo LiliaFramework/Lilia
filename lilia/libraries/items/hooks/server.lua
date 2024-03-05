@@ -1,6 +1,6 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 local GM = GM or GAMEMODE
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function GM:CanItemBeTransfered(item, curInv, inventory)
     if item.isBag and curInv ~= inventory and item.getInv and item:getInv() and table.Count(item:getInv():getItems()) > 0 then
         local character = lia.char.loaded[curInv.client]
@@ -18,7 +18,7 @@ function GM:CanItemBeTransfered(item, curInv, inventory)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function GM:CanPlayerInteractItem(client, action, item)
     local SteamIDWhitelist = item.ItemInteractSteamIDWhitelist
     local FactionWhitelist = item.ItemInteractFactionWhitelist
@@ -85,7 +85,7 @@ function GM:CanPlayerInteractItem(client, action, item)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function GM:CanPlayerEquipItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.equipDelay ~= nil then
@@ -97,7 +97,7 @@ function GM:CanPlayerEquipItem(client, item)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function GM:CanPlayerTakeItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.takeDelay ~= nil then
@@ -115,7 +115,7 @@ function GM:CanPlayerTakeItem(client, item)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function GM:CanPlayerDropItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.dropDelay ~= nil then
@@ -134,4 +134,4 @@ function GM:CanPlayerDropItem(client, item)
         return false
     end
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

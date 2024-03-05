@@ -1,8 +1,8 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 lia.notices = lia.notices or {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.noticess = lia.noticess or {}
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.config.NotifTypes = {
     [1] = {
         col = Color(200, 60, 60),
@@ -30,7 +30,7 @@ lia.config.NotifTypes = {
     }
 }
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function OrganizeNoticess()
     for k, v in ipairs(lia.noticess) do
         local topMargin = 0
@@ -42,7 +42,7 @@ function OrganizeNoticess()
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function RemoveNoticess(notice)
     for k, v in ipairs(lia.noticess) do
         if v == notice then
@@ -54,7 +54,7 @@ function RemoveNoticess(notice)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function CreateNoticePanel(length, notimer)
     if not notimer then notimer = false end
     local notice = vgui.Create("noticePanel")
@@ -88,7 +88,7 @@ function CreateNoticePanel(length, notimer)
     return notice
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function OrganizeNotices()
     local scrW = ScrW()
     local lastHeight = ScrH() - 100
@@ -99,12 +99,12 @@ function OrganizeNotices()
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function notification.AddLegacy(text)
     lia.util.notify(tostring(text))
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.util.notify(message)
     local notice = vgui.Create("liaNotify")
     local i = table.insert(lia.notices, notice)
@@ -128,7 +128,7 @@ function lia.util.notify(message)
     MsgN(message)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function lia.util.notifQuery(question, option1, option2, manualDismiss, notifType, callback)
     if not callback or not isfunction(callback) then Error("A callback function must be specified") end
     if not question or not isstring(question) then Error("A question string must be specified") end
@@ -228,4 +228,4 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
     end)
     return notice
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

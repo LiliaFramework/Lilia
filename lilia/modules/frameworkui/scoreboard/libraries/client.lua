@@ -1,10 +1,10 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 function MODULE:ScoreboardHide()
     if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
     return true
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:ScoreboardShow()
     if LocalPlayer():getChar() and (PIM and not PIM:CheckPossibilities()) then
         local liaMenu = vgui.Create("liaMenu")
@@ -13,17 +13,17 @@ function MODULE:ScoreboardShow()
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:OnReloaded()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:CreateMenuButtons(tabs)
     tabs["Scoreboard"] = function(panel) panel:Add("liaScoreboard") end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:ShowPlayerOptions(client, options)
     if CAMI.PlayerHasAccess(LocalPlayer(), "Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (CAMI.PlayerHasAccess(LocalPlayer(), "Staff Permissions - Can Access Scoreboard Admin Options") and LocalPlayer():isStaffOnDuty()) then
         options["Player Profile"] = {"icon16/user.png", function() if IsValid(client) then client:ShowProfile() end end}
@@ -39,4 +39,4 @@ function MODULE:ShowPlayerOptions(client, options)
         options["Check Flags"] = {"icon16/user.png", function() if IsValid(client) then LocalPlayer():ConCommand("say /flags " .. client:SteamID()) end end}
     end
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

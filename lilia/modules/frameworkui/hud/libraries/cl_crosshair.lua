@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 function MODULE:ShouldDrawCrosshair()
     local client = LocalPlayer()
     local entity = Entity(client:getLocalVar("ragdoll", 0))
@@ -13,7 +13,7 @@ function MODULE:ShouldDrawCrosshair()
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:DrawCrosshair()
     local client = LocalPlayer()
     local t = util.QuickTrace(client:GetShootPos(), client:GetAimVector() * 15000, client)
@@ -26,4 +26,4 @@ function MODULE:DrawCrosshair()
     size = size - 2
     draw.RoundedBox(0, pos[1] - size / 2, pos[2] - size / 2, size, size, col[2])
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
