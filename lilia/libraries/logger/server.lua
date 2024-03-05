@@ -6,7 +6,17 @@ once it's created and assigned to a certain faction. For example, giving a polic
 These hooks are used in faction tables that are created in `schema/factions/sh_factionname.lua` and cannot be used like
 regular gamemode hooks.
 ]]
--- @hooks Faction
+-- @hooks sex
+--- Called when the default name for a character needs to be retrieved (i.e upon initial creation).
+-- @realm shared
+-- @player client Client to get the default name for
+-- @treturn string Default name for the newly created character
+-- @usage function FACTION:GetDefaultName(client)
+-- 	return "MPF-RCT." .. tostring(math.random(1, 99999))
+-- end
+function getDefaultName(client)
+end
+
 function lia.log.loadTables()
     file.CreateDir("lilia/logs")
     file.CreateDir("lilia/netlogs")
@@ -16,14 +26,6 @@ end
 function lia.log.resetTables()
 end
 
---- Called when a character has been initally created and assigned to this faction.
--- @realm server
--- @player logType Client that owns the character
--- @func func Character that has been created
--- @usage function lia.log.addType(logType, func)
--- 	local inventory = logType:GetInventory()
--- 	inventory:Add("pistol")
--- end
 function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end
