@@ -409,7 +409,7 @@ a.reference {
 }
 
 .method header .anchor:target h1 {
-	background-color: rgba(115, 53, 142, 0.2);
+	background-color: rgba(53, 133, 66, 0.2);
 	background-clip: content-box;
 }
 
@@ -504,7 +504,7 @@ a.type {
 }
 
 .or {
-	color: rgba(115, 53, 142, 0.5);
+	color: rgba(53, 133, 66, 0.5);
 	background-color: inherit;
 
 	width: calc(100% - 32px);
@@ -513,7 +513,7 @@ a.type {
 
 	text-align: center;
 	font-weight: 600;
-	border-bottom: 1px solid rgba(115, 53, 142, 0.5);
+	border-bottom: 1px solid rgba(53, 133, 66, 0.5);
 }
 
 .or span {
