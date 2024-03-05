@@ -1,39 +1,28 @@
-﻿
-local charMeta = lia.meta.character or {}
-
+﻿local charMeta = lia.meta.character or {}
 charMeta.__index = charMeta
-
 charMeta.id = charMeta.id or 0
-
 charMeta.vars = charMeta.vars or {}
-
 debug.getregistry().Character = lia.meta.character
-
 function charMeta:__tostring()
     return "character[" .. (self.id or 0) .. "]"
 end
-
 
 function charMeta:__eq(other)
     return self:getID() == other:getID()
 end
 
-
 function charMeta:getID()
     return self.id
 end
-
 
 function charMeta:getBoost(attribID)
     local boosts = self:getBoosts()
     return boosts[attribID]
 end
 
-
 function charMeta:getBoosts()
     return self:getVar("boosts", {})
 end
-
 
 function charMeta:getItemWeapon()
     local client = self:getPlayer()
@@ -54,7 +43,6 @@ function charMeta:getItemWeapon()
     end
 end
 
-
 function charMeta:getAttrib(key, default)
     local att = self:getAttribs()[key] or default or 0
     local boosts = self:getBoosts()[key]
@@ -65,7 +53,6 @@ function charMeta:getAttrib(key, default)
     end
     return att
 end
-
 
 function charMeta:getPlayer()
     if IsValid(self.player) then
@@ -89,17 +76,14 @@ function charMeta:getPlayer()
     end
 end
 
-
 function charMeta:hasMoney(amount)
     if amount < 0 then print("Negative Money Check Received.") end
     return self:getMoney() >= amount
 end
 
-
 function charMeta:getFlags()
     return self:getData("f", "")
 end
-
 
 function charMeta:hasFlags(flags)
     for i = 1, #flags do
@@ -107,7 +91,6 @@ function charMeta:hasFlags(flags)
     end
     return hook.Run("CharacterFlagCheck", self, flags) or false
 end
-
 
 function charMeta:joinClass(class, isForced)
     if not class then
@@ -126,7 +109,6 @@ function charMeta:joinClass(class, isForced)
     end
 end
 
-
 function charMeta:kickClass()
     local client = self:getPlayer()
     if not client then return end
@@ -142,11 +124,8 @@ function charMeta:kickClass()
     hook.Run("OnPlayerJoinClass", client, goClass)
 end
 
-
 function charMeta:isFaction(faction)
     return self:getFaction() == faction
 end
 
-
 lia.meta.character = charMeta
-

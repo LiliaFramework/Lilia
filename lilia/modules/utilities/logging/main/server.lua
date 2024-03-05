@@ -1,12 +1,7 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 util.AddNetworkString("SyncLogs")
-
 util.AddNetworkString("SyncCategories")
-
 util.AddNetworkString("OpenLogger")
-
 function MODULE:addCategory(name, color)
     if not isstring(name) or not IsColor(color) then return false end
     local t = {
@@ -18,14 +13,12 @@ function MODULE:addCategory(name, color)
     return function(log) return self:addLog(name, log) end
 end
 
-
 function MODULE:addLog(category, log)
     if not isstring(category) or not isstring(log) then return false end
     if not self.categories[category] then return false end
     local query = ("INSERT INTO lilia_logs ( log, category, time ) VALUES ( %s, %s, %d )"):format(SQLStr(log), SQLStr(category), os.time())
     return sql.Query(query) == nil and true or false
 end
-
 
 function MODULE:networkCategories(ply)
     net.Start("SyncCategories")
@@ -38,12 +31,10 @@ function MODULE:networkCategories(ply)
     net.Send(ply)
 end
 
-
 net.Receive("SyncCategories", function(_, ply)
     if not CAMI.PlayerHasAccess(ply, "Commands - View Logs", nil) then return end
     MODULE:networkCategories(ply)
 end)
-
 
 net.Receive("SyncLogs", function(_, ply)
     if not CAMI.PlayerHasAccess(ply, "Commands - View Logs", nil) then return end
@@ -71,7 +62,6 @@ net.Receive("SyncLogs", function(_, ply)
     net.Send(ply)
 end)
 
-
 concommand.Add("Logger_delete_logs", function()
     if sql.Query("DELETE FROM `lilia_logs` WHERE time > 0") then
         print("Logger - All logs have been erased")
@@ -80,6 +70,4 @@ concommand.Add("Logger_delete_logs", function()
     end
 end)
 
-
 hook.Add("PostGamemodeLoaded", "hooks", function() sql.Query("CREATE TABLE IF NOT EXISTS lilia_logs ( id INTEGER PRIMARY KEY AUTOINCREMENT, category TEXT NOT NULL, log TEXT NOT NULL, time INTEGER NOT NULL )") end)
-

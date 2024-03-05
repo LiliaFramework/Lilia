@@ -1,19 +1,13 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 local PANEL = {}
-
 local EDITOR = include(MODULE.path .. "/libs/cl_vendor.lua")
-
 local function onFactionStateChanged(checkBox, state)
     EDITOR.faction(checkBox.factionID, state)
 end
 
-
 local function onClassStateChanged(checkBox, state)
     EDITOR.class(checkBox.classID, state)
 end
-
 
 function PANEL:Init()
     if IsValid(lia.gui.vendorFactionEditor) then lia.gui.vendorFactionEditor:Remove() end
@@ -59,7 +53,6 @@ function PANEL:Init()
     hook.Add("VendorClassUpdated", self, self.updateChecked)
 end
 
-
 function PANEL:updateChecked()
     local entity = liaVendorEnt
     for id, panel in pairs(self.factions) do
@@ -71,6 +64,4 @@ function PANEL:updateChecked()
     end
 end
 
-
 vgui.Register("liaVendorFactionEditor", PANEL, "DFrame")
-

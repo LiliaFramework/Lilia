@@ -1,5 +1,4 @@
-﻿
-netstream.Hook("classUpdate", function(joinedClient)
+﻿netstream.Hook("classUpdate", function(joinedClient)
     if lia.gui.classes and lia.gui.classes:IsVisible() then
         if joinedClient == LocalPlayer() then
             lia.gui.classes:loadClasses()
@@ -11,4 +10,3 @@ netstream.Hook("classUpdate", function(joinedClient)
         end
     end
 end)
-

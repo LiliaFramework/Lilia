@@ -1,12 +1,9 @@
-﻿
-local b = vgui.GetControlTable("DButton")
-
+﻿local b = vgui.GetControlTable("DButton")
 function b:SetColorAcc(col)
     self.defaultColor = col or Color(255, 0, 0)
     self.color = col or Color(255, 0, 0)
     AccessorFunc(self, "color", "Color")
 end
-
 
 function b:SetupHover(hoverCol)
     if not self.GetColor or not self.SetColor or not self.color then self:SetColorAcc() end
@@ -19,7 +16,6 @@ function b:SetupHover(hoverCol)
         self:ColorTo(self.defaultColor, 0.15)
     end
 end
-
 
 function b:Flash(text, color, time, noAdjust, callback)
     noAdjust = noAdjust or false
@@ -63,7 +59,6 @@ function b:Flash(text, color, time, noAdjust, callback)
     end)
 end
 
-
 function b:GInflate(color, over)
     if not self.GetColor then Error("Panel deosn't have '.GetColor()'") end
     color = color or Color(250, 250, 250, 50)
@@ -89,9 +84,7 @@ function b:GInflate(color, over)
     end
 end
 
-
 local te = vgui.GetControlTable("DTextEntry")
-
 function te:SetPlaceholder(text)
     local ogThink = self.Think
     self.placeholder = text
@@ -102,7 +95,6 @@ function te:SetPlaceholder(text)
         ogThink(self)
     end
 end
-
 
 function te:SetError(err, ogCol)
     AccessorFunc(self, "color", "Color")
@@ -124,9 +116,7 @@ function te:SetError(err, ogCol)
     end
 end
 
-
 local mps = {"DPanel", "DButton", "DLabel", "DFrame", "DTextEntry", "WButton", "WLabel", "WScrollList"}
-
 for _, v in pairs(mps) do
     local m = vgui.GetControlTable(v)
     if m then
@@ -173,4 +163,3 @@ for _, v in pairs(mps) do
         return wp
     end
 end
-

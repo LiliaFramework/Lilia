@@ -1,17 +1,13 @@
-﻿
-local Variables = {"disabled", "name", "price", "noSell", "faction", "factions", "class", "hidden"}
-
+﻿local Variables = {"disabled", "name", "price", "noSell", "faction", "factions", "class", "hidden"}
 local DarkRPVariables = {
     ["DarkRPNonOwnable"] = function(entity, _) entity:setNetVar("noSell", true) end,
     ["DarkRPTitle"] = function(entity, val) entity:setNetVar("name", val) end,
     ["DarkRPCanLockpick"] = function(entity, val) entity.noPick = tobool(val) end
 }
 
-
 function MODULE:EntityKeyValue(entity, key, value)
     if entity:isDoor() and DarkRPVariables[key] then DarkRPVariables[key](entity, value) end
 end
-
 
 function MODULE:copyParentDoor(child)
     local parent = child.liaParent
@@ -22,7 +18,6 @@ function MODULE:copyParentDoor(child)
         end
     end
 end
-
 
 function MODULE:LoadData()
     local data = self:getData()
@@ -44,7 +39,6 @@ function MODULE:LoadData()
         end
     end
 end
-
 
 function MODULE:SaveData()
     local data = {}
@@ -70,7 +64,6 @@ function MODULE:SaveData()
     self:setData(data)
 end
 
-
 function MODULE:callOnDoorChildren(entity, callback)
     local parent
     if entity.liaChildren then
@@ -87,7 +80,6 @@ function MODULE:callOnDoorChildren(entity, callback)
         end
     end
 end
-
 
 function MODULE:InitPostEntity()
     local doors = ents.FindByClass("prop_door_rotating")
@@ -108,7 +100,6 @@ function MODULE:InitPostEntity()
     end
 end
 
-
 function MODULE:PlayerUse(client, entity)
     if entity:isDoor() then
         local result = hook.Run("CanPlayerUseDoor", client, entity)
@@ -121,11 +112,9 @@ function MODULE:PlayerUse(client, entity)
     end
 end
 
-
 function MODULE:CanPlayerUseDoor(_, entity)
     if entity:getNetVar("disabled") then return false end
 end
-
 
 function MODULE:CanPlayerAccessDoor(client, door, _)
     local factions = door:getNetVar("factions")
@@ -148,11 +137,9 @@ function MODULE:CanPlayerAccessDoor(client, door, _)
     end
 end
 
-
 function MODULE:PostPlayerLoadout(client)
     client:Give("lia_keys")
 end
-
 
 function MODULE:ShowTeam(client)
     local entity = client:GetTracedEntity()
@@ -170,7 +157,6 @@ function MODULE:ShowTeam(client)
     end
 end
 
-
 function MODULE:PlayerDisconnected(client)
     for _, v in ipairs(ents.GetAll()) do
         if v == client then return end
@@ -178,20 +164,17 @@ function MODULE:PlayerDisconnected(client)
     end
 end
 
-
 function MODULE:KeyLock(client, entity, time)
     if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not (entity:IsSimfphysCar() or entity:isDoor() or entity:IsVehicle()) then return end
     client:setAction("@locking", time, function() self:ToggleLock(client, entity, true) end)
     return true
 end
 
-
 function MODULE:KeyUnlock(client, entity, time)
     if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not (entity:IsSimfphysCar() or entity:isDoor() or entity:IsVehicle()) then return end
     client:setAction("@unlocking", time, function() self:ToggleLock(client, entity, false) end)
     return true
 end
-
 
 function MODULE:ToggleLock(client, entity, state)
     local partner = entity:getDoorPartner()
@@ -217,4 +200,3 @@ function MODULE:ToggleLock(client, entity, state)
         end
     end
 end
-

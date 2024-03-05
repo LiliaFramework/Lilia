@@ -1,9 +1,7 @@
-﻿
-function MODULE:isSuitableForTrunk(entity)
+﻿function MODULE:isSuitableForTrunk(entity)
     if IsValid(entity) and entity:IsVehicle() then return true end
     return false
 end
-
 
 function MODULE:InitializeStorage(entity)
     if self.Vehicles[entity] then return end
@@ -17,4 +15,3 @@ function MODULE:InitializeStorage(entity)
         end)
     end
 end
-

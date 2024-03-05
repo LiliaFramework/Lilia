@@ -1,5 +1,4 @@
-﻿
-MODULE.GamemodeCreators = {
+﻿MODULE.GamemodeCreators = {
     {
         desc = "Creator of Lilia", -- Leonheart
         steamid = "76561198312513285",
@@ -12,15 +11,12 @@ MODULE.GamemodeCreators = {
     },
 }
 
-
 MODULE.contributors = {
     desc = "View All Contributors",
     url = "https://github.com/Lilia-Framework/Lilia/graphs/contributors"
 }
 
-
 MODULE.discord = {
     desc = "Join the Lilia Development Discord",
     url = "https://discord.gg/jjrhyeuzYV"
 }
-

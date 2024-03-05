@@ -1,14 +1,8 @@
-﻿
-util.AddNetworkString("liaCharChoose")
-
+﻿util.AddNetworkString("liaCharChoose")
 util.AddNetworkString("liaCharCreate")
-
 util.AddNetworkString("liaCharDelete")
-
 util.AddNetworkString("liaCharList")
-
 util.AddNetworkString("liaCharMenu")
-
 net.Receive("liaCharChoose", function(_, client)
     local function response(message)
         net.Start("liaCharChoose")
@@ -33,7 +27,6 @@ net.Receive("liaCharChoose", function(_, client)
     response()
     hook.Run("PostPlayerLoadedChar", client, character, currentChar)
 end)
-
 
 net.Receive("liaCharCreate", function(_, client)
     if hook.Run("CanPlayerCreateCharacter", client) == false then return end
@@ -88,7 +81,6 @@ net.Receive("liaCharCreate", function(_, client)
     end)
 end)
 
-
 net.Receive("liaCharDelete", function(_, client)
     local id = net.ReadUInt(32)
     local character = lia.char.loaded[id]
@@ -99,4 +91,3 @@ net.Receive("liaCharDelete", function(_, client)
         timer.Simple(.5, function() MainMenu:syncCharList(client) end)
     end
 end)
-

@@ -1,18 +1,10 @@
-﻿
-paintedEntitiesCache = {}
-
+﻿paintedEntitiesCache = {}
 local nextUpdate = 0
-
 local lastTrace = {}
-
 local charInfo = {}
-
 local lastEntity
-
 local toScreen = FindMetaTable("Vector").ToScreen
-
 local DescWidth = CreateClientConVar("lia_hud_descwidth", 0.5, true, false)
-
 function MODULE:DrawEntityInfo(entity, alpha, position)
     if not entity.IsPlayer(entity) then return end
     if hook.Run("ShouldDrawPlayerInfo", entity) == false then return end
@@ -59,12 +51,10 @@ function MODULE:DrawEntityInfo(entity, alpha, position)
     end
 end
 
-
 function MODULE:SetupQuickMenu(menu)
     menu:addSlider("HUD Desc Width Modifier", function(_, value) DescWidth:SetFloat(value) end, DescWidth:GetFloat(), 0.1, 1, 2)
     menu:addSpacer()
 end
-
 
 function MODULE:RenderEntities()
     local client = LocalPlayer()
@@ -110,7 +100,6 @@ function MODULE:RenderEntities()
     end
 end
 
-
 function MODULE:ShouldDrawEntityInfo(entity)
     if IsValid(entity) then
         if entity:IsPlayer() and entity:getChar() then
@@ -126,4 +115,3 @@ function MODULE:ShouldDrawEntityInfo(entity)
     end
     return false
 end
-

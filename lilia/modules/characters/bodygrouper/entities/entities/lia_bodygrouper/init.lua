@@ -1,12 +1,7 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 AddCSLuaFile("cl_init.lua")
-
 AddCSLuaFile("shared.lua")
-
 include("shared.lua")
-
 function ENT:Initialize()
     self:SetModel(MODULE.BodygrouperModel)
     self:PhysicsInit(SOLID_VPHYSICS)
@@ -21,4 +16,3 @@ function ENT:Use(activator)
         self:AddUser(activator)
     end
 end
-

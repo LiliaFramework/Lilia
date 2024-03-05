@@ -1,17 +1,12 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 MODULE.spawns = MODULE.spawns or {}
-
 function MODULE:LoadData()
     self.spawns = self:getData() or {}
 end
 
-
 function MODULE:SaveData()
     self:setData(self.spawns)
 end
-
 
 function MODULE:PostPlayerLoadout(client)
     local character = client:getChar()
@@ -43,7 +38,6 @@ function MODULE:PostPlayerLoadout(client)
     end
 end
 
-
 function MODULE:CharacterPreSave(character)
     local client = character:getPlayer()
     local vehicle = client:GetVehicle()
@@ -52,7 +46,6 @@ function MODULE:CharacterPreSave(character)
         character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()})
     end
 end
-
 
 function MODULE:PlayerLoadedChar(client, character, _)
     timer.Simple(0, function()
@@ -69,7 +62,6 @@ function MODULE:PlayerLoadedChar(client, character, _)
         end
     end)
 end
-
 
 function MODULE:PlayerDeath(client, _, attacker)
     local character = client:getChar()
@@ -94,7 +86,6 @@ function MODULE:PlayerDeath(client, _, attacker)
     character:setData("deathPos", client:GetPos())
 end
 
-
 function MODULE:RemoveAllEquippedWeapons(client)
     local character = client:getChar()
     local inventory = character:getInv()
@@ -118,4 +109,3 @@ function MODULE:RemoveAllEquippedWeapons(client)
         client:notify("Because you died, you have lost " .. amount .. ".")
     end
 end
-

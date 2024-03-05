@@ -1,13 +1,10 @@
-﻿
-PIM_Frame = nil
-
+﻿PIM_Frame = nil
 function MODULE:ScoreboardShow()
     if LocalPlayer():getChar() and self:CheckPossibilities() then
         self:OpenPIM()
         return true
     end
 end
-
 
 function MODULE:OpenPIM()
     if IsValid(PIM_Frame) then PIM_Frame:Close() end
@@ -81,4 +78,3 @@ function MODULE:OpenPIM()
     frame:CenterVertical()
     PIM_Frame = frame
 end
-

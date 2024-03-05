@@ -1,6 +1,4 @@
-﻿
-local useCheapBlur = CreateClientConVar("lia_cheapblur", 0, true):GetBool()
-
+﻿local useCheapBlur = CreateClientConVar("lia_cheapblur", 0, true):GetBool()
 function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
     color = color or color_white
     return draw.TextShadow({
@@ -13,13 +11,11 @@ function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
     }, 1, alpha or (color.a * 0.575))
 end
 
-
 function lia.util.DrawTexture(material, color, x, y, w, h)
     surface.SetDrawColor(color or color_white)
     surface.SetMaterial(lia.util.getMaterial(material))
     surface.DrawTexturedRect(x, y, w, h)
 end
-
 
 function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
     local skin = (ispanel(panel) and IsValid(panel)) and panel:GetSkin() or derma.GetDefaultSkin()
@@ -28,7 +24,6 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
     if not func then return end
     return func(skin, panel, a, b, c, d, e, f, g)
 end
-
 
 function lia.util.wrapText(text, width, font)
     font = font or "liaChatFont"
@@ -58,16 +53,13 @@ function lia.util.wrapText(text, width, font)
     return lines, maxW
 end
 
-
 function lia.util.notify(message)
     chat.AddText(message)
 end
 
-
 function lia.util.notifyLocalized(message, ...)
     lia.util.notify(L(message, ...))
 end
-
 
 function lia.util.drawBlur(panel, amount, passes)
     amount = amount or 5
@@ -86,7 +78,6 @@ function lia.util.drawBlur(panel, amount, passes)
         end
     end
 end
-
 
 function lia.util.drawBlurAt(x, y, w, h, amount, passes)
     amount = amount or 5
@@ -108,7 +99,6 @@ function lia.util.drawBlurAt(x, y, w, h, amount, passes)
     end
 end
 
-
 function lia.util.getInjuredColor(client)
     local health_color = color_white
     if not IsValid(client) then return health_color end
@@ -116,7 +106,6 @@ function lia.util.getInjuredColor(client)
     if (health / healthMax) < .95 then health_color = lia.color.LerpHSV(nil, nil, healthMax, health, 0) end
     return health_color
 end
-
 
 function lia.util.ScreenScaleH(n, type)
     if type then
@@ -126,7 +115,6 @@ function lia.util.ScreenScaleH(n, type)
     return n * (ScrH() / 480)
 end
 
-
 timer.Create("liaResolutionMonitor", 1, 0, function()
     local scrW, scrH = ScrW(), ScrH()
     if scrW ~= LAST_WIDTH or scrH ~= LAST_HEIGHT then
@@ -135,7 +123,6 @@ timer.Create("liaResolutionMonitor", 1, 0, function()
         LAST_HEIGHT = scrH
     end
 end)
-
 
 function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCancel, strButtonText, strButtonCancelText)
     local Window = vgui.Create("DFrame")
@@ -203,13 +190,10 @@ function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCanc
     return Window
 end
 
-
 file.CreateDir("lilia/images")
-
 lia.util.LoadedImages = lia.util.LoadedImages or {
     [0] = Material("icon16/cross.png")
 }
-
 
 function lia.util.FetchImage(id, callback, failImg, pngParameters, imageProvider)
     failImg = failImg
@@ -247,6 +231,4 @@ function lia.util.FetchImage(id, callback, failImg, pngParameters, imageProvider
     end
 end
 
-
 cvars.AddChangeCallback("lia_cheapblur", function(name, old, new) useCheapBlur = (tonumber(new) or 0) > 0 end)
-

@@ -1,10 +1,6 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 local PANEL = {}
-
 local gradient = lia.util.getMaterial("vgui/gradient-u")
-
 function PANEL:Init()
     if MODULE.F1ThirdPersonEnabled then
         self.initialValues = {
@@ -116,18 +112,15 @@ function PANEL:Init()
     self.info:AlphaTo(255, 0.5)
 end
 
-
 function PANEL:OnKeyCodePressed(key)
     self.noAnchor = CurTime() + .5
     if key == KEY_F1 then self:remove() end
 end
 
-
 function PANEL:Update()
     self:Remove()
     vgui.Create("liaMenu")
 end
-
 
 function PANEL:Think()
     local key = input.IsKeyDown(KEY_F1)
@@ -142,13 +135,11 @@ function PANEL:Think()
     end
 end
 
-
 function PANEL:Paint(w, h)
     surface.SetDrawColor(0, 0, 0)
     surface.SetMaterial(gradient)
     surface.DrawTexturedRect(0, 0, w, h)
 end
-
 
 function PANEL:addTab(name, callback, uniqueID)
     name = L(name)
@@ -193,16 +184,13 @@ function PANEL:addTab(name, callback, uniqueID)
     return tab
 end
 
-
 function PANEL:setActiveTab(key)
     if IsValid(self.tabList[key]) then self.tabList[key]:DoClick() end
 end
 
-
 function PANEL:OnRemove()
     if MODULE.F1ThirdPersonEnabled then self:RestoreConVars() end
 end
-
 
 function PANEL:RestoreConVars()
     RunConsoleCommand("tp_enabled", tostring(self.initialValues.ThirdPerson))
@@ -211,7 +199,6 @@ function PANEL:RestoreConVars()
     RunConsoleCommand("tp_distance", tostring(self.initialValues.ThirdPersonViewDistance))
     RunConsoleCommand("tp_classic", tostring(self.initialValues.ClassicThirdPerson))
 end
-
 
 function PANEL:remove()
     CloseDermaMenus()
@@ -225,8 +212,5 @@ function PANEL:remove()
     end
 end
 
-
 vgui.Register("liaMenu", PANEL, "EditablePanel")
-
 if IsValid(lia.gui.menu) then vgui.Create("liaMenu") end
-

@@ -1,8 +1,5 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 local PANEL = {}
-
 function PANEL:Init()
     self:SetTall(20)
     self.add = self:Add("DImageButton")
@@ -79,12 +76,10 @@ function PANEL:Init()
     self.label:SetContentAlignment(5)
 end
 
-
 function PANEL:Think()
     if self.pressing and ((self.nextPress or 0) < CurTime()) then self:doChange() end
     self.deltaValue = math.Approach(self.deltaValue, self.value, FrameTime() * 15)
 end
-
 
 function PANEL:doChange()
     if (self.value == 0 and self.pressing == -1) or (self.value == self.max and self.pressing == 1) then return end
@@ -92,52 +87,41 @@ function PANEL:doChange()
     if self:onChanged(self.pressing) ~= false then self.value = math.Clamp(self.value + self.pressing, 0, self.max) end
 end
 
-
 function PANEL:onChanged(_)
 end
-
 
 function PANEL:getValue()
     return self.value
 end
 
-
 function PANEL:setValue(value)
     self.value = value
 end
-
 
 function PANEL:setBoost(value)
     self.boostValue = value
 end
 
-
 function PANEL:setMax(max)
     self.max = max
 end
 
-
 function PANEL:setText(text)
     self.label:SetText(text)
 end
-
 
 function PANEL:setReadOnly()
     self.sub:Remove()
     self.add:Remove()
 end
 
-
 function PANEL:Paint(w, h)
     surface.SetDrawColor(0, 0, 0, 200)
     surface.DrawRect(0, 0, w, h)
 end
 
-
 vgui.Register("liaAttribBar", PANEL, "DPanel")
-
 PANEL = {}
-
 function PANEL:Init()
     self.title = self:addLabel("attributes")
     self.leftLabel = self:addLabel("points left")
@@ -150,11 +134,9 @@ function PANEL:Init()
     end
 end
 
-
 function PANEL:updatePointsLeft()
     self.leftLabel:SetText(L("points left"):upper() .. ": " .. self.left)
 end
-
 
 function PANEL:onDisplay()
     local attribs = self:getContext("attribs", {})
@@ -171,14 +153,12 @@ function PANEL:onDisplay()
     end
 end
 
-
 function PANEL:addAttribute(key, attribute)
     local row = self:Add("liaCharacterAttribsRow")
     row:setAttribute(key, attribute)
     row.parent = self
     return row
 end
-
 
 function PANEL:onPointChange(key, delta)
     if not key then return 0 end
@@ -195,11 +175,8 @@ function PANEL:onPointChange(key, delta)
     return newQuantity
 end
 
-
 vgui.Register("liaCharacterAttribs", PANEL, "liaCharacterCreateStep")
-
 PANEL = {}
-
 function PANEL:Init()
     self:Dock(TOP)
     self:DockMargin(0, 0, 0, 4)
@@ -227,14 +204,12 @@ function PANEL:Init()
     self.name:DockMargin(8, 0, 0, 0)
 end
 
-
 function PANEL:setAttribute(key, attribute)
     self.key = key
     local startingMax = lia.attribs.list[key].startingMax or nil
     self.name:SetText(L(attribute.name))
     self:SetTooltip(L(attribute.desc or "noDesc") .. (startingMax and " Max: " .. startingMax or ""))
 end
-
 
 function PANEL:delta(delta)
     if IsValid(self.parent) then
@@ -244,7 +219,6 @@ function PANEL:delta(delta)
         if oldPoints ~= self.points then LocalPlayer():EmitSound(unpack(MODULE.CharAttrib)) end
     end
 end
-
 
 function PANEL:addButton(symbol, delta)
     local button = self.buttons:Add("liaCharButton")
@@ -263,7 +237,6 @@ function PANEL:addButton(symbol, delta)
     return button
 end
 
-
 function PANEL:Think()
     local curTime = CurTime()
     if self.autoDelta and (self.nextAuto or 0) < curTime then
@@ -272,11 +245,9 @@ function PANEL:Think()
     end
 end
 
-
 function PANEL:updateQuantity()
     self.quantity:SetText(self.points)
 end
-
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self)
@@ -284,6 +255,4 @@ function PANEL:Paint(w, h)
     surface.DrawRect(0, 0, w, h)
 end
 
-
 vgui.Register("liaCharacterAttribsRow", PANEL, "DPanel")
-

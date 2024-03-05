@@ -1,12 +1,7 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 local PANEL = {}
-
 local StaffCount = 0
-
 local StaffOnDutyCount = 0
-
 local function teamGetPlayers(teamID)
     local players = {}
     for _, client in next, player.GetAll() do
@@ -20,22 +15,17 @@ local function teamGetPlayers(teamID)
     return players
 end
 
-
 local function teamNumPlayers(teamID)
     return #teamGetPlayers(teamID)
 end
 
-
 local paintFunctions = {}
-
 paintFunctions[0] = function(_, w, h)
     surface.SetDrawColor(0, 0, 0, 50)
     surface.DrawRect(0, 0, w, h)
 end
 
-
 paintFunctions[1] = function(_, _, _) end
-
 function PANEL:Init()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
     lia.gui.score = self
@@ -99,7 +89,6 @@ function PANEL:Init()
     end
 end
 
-
 function PANEL:UpdateStaff()
     StaffCount = 0
     StaffOnDutyCount = 0
@@ -110,7 +99,6 @@ function PANEL:UpdateStaff()
 
     self.staff1:SetText("Players Online: " .. #player.GetAll() .. " | Staff On Duty: " .. StaffOnDutyCount .. " | Staff Online: " .. StaffCount)
 end
-
 
 function PANEL:Think()
     if (self.nextUpdate or 0) < CurTime() then
@@ -135,7 +123,6 @@ function PANEL:Think()
         self:UpdateStaff()
     end
 end
-
 
 function PANEL:addPlayer(client, parent)
     if not client:getChar() or not IsValid(parent) then return end
@@ -272,11 +259,9 @@ function PANEL:addPlayer(client, parent)
     return slot
 end
 
-
 function PANEL:OnRemove()
     CloseDermaMenus()
 end
-
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 10)
@@ -286,6 +271,4 @@ function PANEL:Paint(w, h)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
 
-
 vgui.Register("liaScoreboard", PANEL, "EditablePanel")
-

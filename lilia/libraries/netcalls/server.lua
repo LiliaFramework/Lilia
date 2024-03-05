@@ -1,46 +1,24 @@
-﻿
-util.AddNetworkString("liaCharacterInvList")
-
+﻿util.AddNetworkString("liaCharacterInvList")
 util.AddNetworkString("liaItemDelete")
-
 util.AddNetworkString("liaItemInstance")
-
 util.AddNetworkString("liaInventoryInit")
-
 util.AddNetworkString("liaInventoryData")
-
 util.AddNetworkString("liaInventoryDelete")
-
 util.AddNetworkString("liaInventoryAdd")
-
 util.AddNetworkString("liaInventoryRemove")
-
 util.AddNetworkString("liaNotify")
-
 util.AddNetworkString("liaNotifyL")
-
 util.AddNetworkString("liaStringReq")
-
 util.AddNetworkString("liaTransferItem")
-
 util.AddNetworkString("announcement_client")
-
 util.AddNetworkString("SendMessage")
-
 util.AddNetworkString("SendPrintTable")
-
 util.AddNetworkString("SendPrint")
-
 util.AddNetworkString("StringRequest")
-
 util.AddNetworkString("ReloadLightMaps")
-
 util.AddNetworkString("OpenInformationMenu")
-
 util.AddNetworkString("OpenVGUI")
-
 util.AddNetworkString("OpenPage")
-
 net.Receive("StringRequest", function(_, client)
     local time = net.ReadUInt(32)
     local text = net.ReadString()
@@ -50,12 +28,10 @@ net.Receive("StringRequest", function(_, client)
     end
 end)
 
-
 netstream.Hook("lia_eventLogSave", function(_, eventLog)
     local path = "lilia/" .. SCHEMA.folder .. "/eventlog.txt"
     file.Write(path, eventLog)
 end)
-
 
 netstream.Hook("liaCharKickSelf", function(client)
     local character = client:getChar()
@@ -64,7 +40,6 @@ netstream.Hook("liaCharKickSelf", function(client)
         character:kick()
     end
 end)
-
 
 net.Receive("liaStringReq", function(_, client)
     local id = net.ReadUInt(32)
@@ -75,7 +50,6 @@ net.Receive("liaStringReq", function(_, client)
     end
 end)
 
-
 net.Receive("liaTransferItem", function(_, client)
     local itemID = net.ReadUInt(32)
     local x = net.ReadUInt(32)
@@ -83,7 +57,6 @@ net.Receive("liaTransferItem", function(_, client)
     local invID = net.ReadType()
     hook.Run("HandleItemTransferRequest", client, itemID, x, y, invID)
 end)
-
 
 netstream.Hook("unflagblacklistRequest", function(client, target, bid)
     if not (CAMI.PlayerHasAccess(client, "Commands - Manage Permanent Flags", nil) or client:IsSuperAdmin()) then return end
@@ -104,7 +77,6 @@ netstream.Hook("unflagblacklistRequest", function(client, target, bid)
     target:saveLiliaData()
     client:notify("Target blacklist has been flagged for deactivation. It may take up to 10 seconds.")
 end)
-
 
 netstream.Hook("invAct", function(client, action, item, _, data)
     local character = client:getChar()
@@ -133,7 +105,6 @@ netstream.Hook("invAct", function(client, action, item, _, data)
     item:interact(action, client, entity, data)
 end)
 
-
 netstream.Hook("cmd", function(client, command, arguments)
     if (client.liaNextCmd or 0) < CurTime() then
         local arguments2 = {}
@@ -145,4 +116,3 @@ netstream.Hook("cmd", function(client, command, arguments)
         client.liaNextCmd = CurTime() + 0.2
     end
 end)
-

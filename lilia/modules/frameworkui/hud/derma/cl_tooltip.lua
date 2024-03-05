@@ -1,6 +1,4 @@
-﻿
-local PANEL = {}
-
+﻿local PANEL = {}
 function PANEL:Init()
     self:SetDrawOnTop(true)
     self.DeleteContentsOnClose = false
@@ -8,11 +6,9 @@ function PANEL:Init()
     self:SetFont("liaToolTipText")
 end
 
-
 function PANEL:UpdateColours()
     return self:SetTextStyleColor(color_black)
 end
-
 
 function PANEL:SetContents(panel, bDelete)
     panel:SetParent(self)
@@ -22,7 +18,6 @@ function PANEL:SetContents(panel, bDelete)
     self:InvalidateLayout(true)
     self.Contents:SetVisible(false)
 end
-
 
 function PANEL:PerformLayout()
     local override = hook.Run("TooltipLayout", self)
@@ -37,7 +32,6 @@ function PANEL:PerformLayout()
         self:SetContentAlignment(5)
     end
 end
-
 
 function PANEL:PositionTooltip()
     if not IsValid(self.TargetPanel) then
@@ -55,14 +49,12 @@ function PANEL:PositionTooltip()
     self:SetPos(math.Clamp(x - w * 0.5, 0, ScrW() - self:GetWide()), math.Clamp(y, 0, ScrH() - self:GetTall()))
 end
 
-
 function PANEL:Paint(w, h)
     self:PositionTooltip()
     local override = hook.Run("TooltipPaint", self, w, h)
     if override then return end
     derma.SkinHook("Paint", "Tooltip", self, w, h)
 end
-
 
 function PANEL:OpenForPanel(panel)
     self.TargetPanel = panel
@@ -79,7 +71,6 @@ function PANEL:OpenForPanel(panel)
     end
 end
 
-
 function PANEL:Close()
     if not self.DeleteContentsOnClose and self.Contents then
         self.Contents:SetVisible(false)
@@ -89,6 +80,4 @@ function PANEL:Close()
     self:Remove()
 end
 
-
 derma.DefineControl("DTooltip", "", PANEL, "DLabel")
-

@@ -1,10 +1,8 @@
-﻿
-function MODULE:GetPlayerDeathSound(_, isFemale)
+﻿function MODULE:GetPlayerDeathSound(_, isFemale)
     local soundTable
     soundTable = isFemale and self.FemaleDeathSounds or self.MaleDeathSounds
     return soundTable and soundTable[math.random(#soundTable)]
 end
-
 
 function MODULE:GetPlayerPainSound(_, paintype, isFemale)
     local soundTable
@@ -16,11 +14,9 @@ function MODULE:GetPlayerPainSound(_, paintype, isFemale)
     return soundTable and soundTable[math.random(#soundTable)]
 end
 
-
 function MODULE:GetFallDamage(_, speed)
     return math.max(0, (speed - 580) * (100 / 444))
 end
-
 
 function MODULE:GetInjuredText(client)
     local health = client:Health()
@@ -37,4 +33,3 @@ function MODULE:GetInjuredText(client)
         if (health / client:GetMaxHealth()) < severity then return injury, color end
     end
 end
-

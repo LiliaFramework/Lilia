@@ -1,5 +1,4 @@
-﻿
-function OpenPlayerModelUI(target)
+﻿function OpenPlayerModelUI(target)
     local frame = vgui.Create("DFrame")
     frame:SetTitle("Change Playermodel")
     frame:SetSize(450, 300)
@@ -36,4 +35,3 @@ function OpenPlayerModelUI(target)
 
     frame:MakePopup()
 end
-

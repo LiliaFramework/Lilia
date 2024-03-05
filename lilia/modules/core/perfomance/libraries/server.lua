@@ -1,5 +1,4 @@
-﻿
-function MODULE:ServerSidePlayerInitialSpawn()
+﻿function MODULE:ServerSidePlayerInitialSpawn()
     local music = ents.FindByName("music")
     local playerCount = #player.GetAll()
     if #music > 0 then
@@ -17,7 +16,6 @@ function MODULE:ServerSidePlayerInitialSpawn()
     end
 end
 
-
 function MODULE:PlayerSpawnVehicle(client)
     local playerCount = #player.GetAll()
     if playerCount >= self.PlayerCountCarLimit and self.PlayerCountCarLimitEnabled then
@@ -26,11 +24,9 @@ function MODULE:PlayerSpawnVehicle(client)
     end
 end
 
-
 function MODULE:PropBreak(_, entity)
     if entity:IsValid() and entity:GetPhysicsObject():IsValid() then constraint.RemoveAll(entity) end
 end
-
 
 function MODULE:PreGamemodeLoaded()
     function widgets.PlayerTick()
@@ -38,7 +34,6 @@ function MODULE:PreGamemodeLoaded()
 
     hook.Remove("PlayerTick", "TickWidgets")
 end
-
 
 function MODULE:EntityRemoved(entity)
     if entity:IsRagdoll() and not entity:getNetVar("player", nil) and self.RagdollCleaningTimer > 0 then
@@ -52,7 +47,6 @@ function MODULE:EntityRemoved(entity)
         end)
     end
 end
-
 
 function MODULE:Initialize()
     hook.Remove("StartChat", "StartChatIndicator")
@@ -87,4 +81,3 @@ function MODULE:Initialize()
     timer.Remove("CheckHookTimes")
     timer.Remove("HostnameThink")
 end
-

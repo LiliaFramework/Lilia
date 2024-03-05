@@ -1,6 +1,4 @@
-﻿
-NAME = "Polski"
-
+﻿NAME = "Polski"
 LANGUAGE = {
     loading = "Ładowanie",
     dbError = "Połączenie z bazą danych nie powiodło się",
@@ -205,4 +203,3 @@ LANGUAGE = {
     ziptied = "Zostałeś związany.",
     viewProfile = "Obejrzyj profil Steam."
 }
-

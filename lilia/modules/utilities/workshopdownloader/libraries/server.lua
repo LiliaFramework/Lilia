@@ -1,5 +1,4 @@
-﻿
-function MODULE:InitializedModules()
+﻿function MODULE:InitializedModules()
     if self.GamemodeWorkshop then
         for i = 1, #self.GamemodeWorkshop do
             resource.AddWorkshop(self.GamemodeWorkshop[i])
@@ -12,4 +11,3 @@ function MODULE:InitializedModules()
         end
     end
 end
-

@@ -1,5 +1,4 @@
-﻿
---[[ Console Commands To Be Ran on Initialize  ]]
+﻿--[[ Console Commands To Be Ran on Initialize  ]]
 MODULE.VJBaseConsoleCommands = {
     ["vj_npc_processtime"] = "1",
     ["vj_npc_corpsefade"] = "1",
@@ -14,4 +13,3 @@ MODULE.VJBaseConsoleCommands = {
     ["vj_npc_dropweapon"] = "0",
     ["vj_npc_plypickupdropwep"] = "0",
 }
-

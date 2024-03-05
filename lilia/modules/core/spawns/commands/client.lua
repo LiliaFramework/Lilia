@@ -1,11 +1,9 @@
-﻿
-lia.command.add("spawnadd", {
+﻿lia.command.add("spawnadd", {
     privilege = "Change Spawns",
     adminOnly = true,
     syntax = "<string faction> [string class]",
     onRun = function() end
 })
-
 
 lia.command.add("returnitems", {
     superAdminOnly = true,
@@ -14,7 +12,6 @@ lia.command.add("returnitems", {
     onRun = function() end
 })
 
-
 lia.command.add("respawn", {
     privilege = "Forcelly Respawn",
     adminOnly = true,
@@ -22,11 +19,9 @@ lia.command.add("respawn", {
     onRun = function() end
 })
 
-
 lia.command.add("spawnremove", {
     privilege = "Change Spawns",
     adminOnly = true,
     syntax = "[number radius]",
     onRun = function() end
 })
-

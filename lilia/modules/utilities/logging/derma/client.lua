@@ -1,8 +1,5 @@
-﻿
-local PANEL = {}
-
+﻿local PANEL = {}
 local MODULE = MODULE
-
 ColorPatters = {
     fg = Color(52, 73, 94),
     bg = Color(44, 62, 80),
@@ -10,11 +7,9 @@ ColorPatters = {
     blue_bg = Color(41, 128, 185),
 }
 
-
 local function letters(txt)
     return txt:gmatch(".")
 end
-
 
 function PANEL:Init()
     self.buttons = {}
@@ -33,16 +28,13 @@ function PANEL:Init()
     end
 end
 
-
 function PANEL:Paint()
 end
-
 
 function PANEL:Clear()
     self.buttons = {}
     self.scroll:Clear()
 end
-
 
 function PANEL:AddDelimiter(txt)
     local delimiter = self.scroll:Add("DPanel")
@@ -53,7 +45,6 @@ function PANEL:AddDelimiter(txt)
         draw.SimpleText(txt, nil, w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 end
-
 
 function PANEL:AddLog(txt, time)
     local current_date, current_formated_date, last_button = os.date("*t", time), os.date("%d %B %Y (%d/%m/%y)", time), self.buttons[#self.buttons]
@@ -115,11 +106,8 @@ function PANEL:AddLog(txt, time)
     return log
 end
 
-
 vgui.Register("UILog", PANEL, "DPanel")
-
 PANEL = {}
-
 function PANEL:Init()
     self.buttons = {}
     self:Dock(RIGHT)
@@ -132,7 +120,6 @@ function PANEL:Init()
     vbar:SetWide(0)
 end
 
-
 function PANEL:Paint(w, h)
     surface.SetDrawColor(44, 62, 80)
     surface.DrawRect(0, 0, w, h)
@@ -140,13 +127,10 @@ function PANEL:Paint(w, h)
     draw.SimpleText("Lilia's Official Logging System", "DermaDefaultBold", w / 2, 60, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
-
 function PANEL:AddButton(txt, color, end_color)
     local button = MODULE:createButton(self.scroll, txt, TOP, nil, color, end_color)
     self.buttons[#self.buttons + 1] = button
     return button
 end
 
-
 vgui.Register("UINav", PANEL, "DPanel")
-

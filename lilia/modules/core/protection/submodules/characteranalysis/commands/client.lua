@@ -1,10 +1,8 @@
-﻿
-lia.command.add("auditmoney", {
+﻿lia.command.add("auditmoney", {
     privilege = "Audit Money",
     superAdminOnly = true,
     onRun = function() end
 })
-
 
 lia.command.add("report", {
     privilege = "Check Player Reports",
@@ -12,4 +10,3 @@ lia.command.add("report", {
     superAdminOnly = true,
     onRun = function() end
 })
-

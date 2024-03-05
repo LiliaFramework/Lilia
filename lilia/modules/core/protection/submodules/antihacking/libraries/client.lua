@@ -1,5 +1,4 @@
-﻿
-local lastcheck
+﻿local lastcheck
 function MODULE:Think()
     if not lastcheck then lastcheck = CurTime() end
     if CurTime() - lastcheck > 60 then
@@ -28,4 +27,3 @@ function MODULE:Think()
         lastcheck = CurTime()
     end
 end
-

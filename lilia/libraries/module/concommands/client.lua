@@ -1,5 +1,4 @@
-﻿
-concommand.Add("enabledmodules", function()
+﻿concommand.Add("enabledmodules", function()
     local enabledModulesMenu = vgui.Create("DFrame")
     enabledModulesMenu:SetSize(400, 300)
     enabledModulesMenu:SetTitle("Enabled Modules")
@@ -12,7 +11,6 @@ concommand.Add("enabledmodules", function()
         if isEnabled then moduleList:AddLine(uniqueID) end
     end
 end)
-
 
 concommand.Add("disabled_modules", function()
     local disabledModulesMenu = vgui.Create("DFrame")
@@ -27,4 +25,3 @@ concommand.Add("disabled_modules", function()
         if not isEnabled then moduleList:AddLine(uniqueID) end
     end
 end)
-

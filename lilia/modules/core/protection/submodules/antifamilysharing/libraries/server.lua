@@ -1,5 +1,4 @@
-﻿
-function MODULE:PlayerAuthed(client, steamid)
+﻿function MODULE:PlayerAuthed(client, steamid)
     local steamID64 = util.SteamIDTo64(steamid)
     local OwnerSteamID64 = client:OwnerSteamID64()
     local SteamName = client:steamName()
@@ -13,10 +12,8 @@ function MODULE:PlayerAuthed(client, steamid)
     end
 end
 
-
 function MODULE:NotifyAdmin(notification)
     for _, admin in ipairs(player.GetAll()) do
         if IsValid(admin) and CAMI.PlayerHasAccess(admin, "Staff Permissions - Can See Family Sharing Notifications", nil) then admin:ChatPrint(notification) end
     end
 end
-

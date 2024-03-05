@@ -1,5 +1,4 @@
-﻿
-function MODULE:GenerateRules()
+﻿function MODULE:GenerateRules()
     local body = "<h1>Game Server Rules</h1>"
     -- Introduction
     body = body .. "<p>Welcome to our game server! To ensure a fun and fair gaming experience for everyone, please abide by the following rules:</p>"
@@ -31,7 +30,6 @@ function MODULE:GenerateRules()
     body = body .. "<p>Thank you for being a part of our gaming community. By following these rules, you contribute to a positive and enjoyable gaming environment for everyone.</p>"
     return body
 end
-
 
 function MODULE:GenerateTutorial()
     local body = "<h1>How to Make Perfect Scrambled Eggs</h1>"
@@ -75,4 +73,3 @@ function MODULE:GenerateTutorial()
     body = body .. "<p>Transfer your scrambled eggs to a plate, and they're ready to enjoy! Season with additional salt and pepper if needed.</p>"
     return body
 end
-

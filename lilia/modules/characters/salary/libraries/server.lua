@@ -1,5 +1,4 @@
-﻿
-function MODULE:CreateSalaryTimer(client)
+﻿function MODULE:CreateSalaryTimer(client)
     if not client:getChar() then return end
     local character = client:getChar()
     local timerID = "liaSalary" .. client:SteamID()
@@ -28,11 +27,9 @@ function MODULE:CreateSalaryTimer(client)
     end
 end
 
-
 function MODULE:PlayerLoadedChar(client, _, _)
     hook.Run("CreateSalaryTimer", client)
 end
-
 
 function MODULE:OnReloaded()
     for _, client in ipairs(player.GetAll()) do
@@ -40,8 +37,6 @@ function MODULE:OnReloaded()
     end
 end
 
-
 function MODULE:GetSalaryAmount(client, faction, _)
     if faction.index == FACTION_STAFF or client.HasWarning then return 0 end
 end
-

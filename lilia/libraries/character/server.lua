@@ -1,5 +1,4 @@
-﻿
-function lia.char.create(data, callback)
+﻿function lia.char.create(data, callback)
     local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
     data.money = data.money or lia.config.DefaultMoney
     lia.db.insertTable({
@@ -33,7 +32,6 @@ function lia.char.create(data, callback)
     end)
 end
 
-
 function lia.setCharData(charID, key, val)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
@@ -49,7 +47,6 @@ function lia.setCharData(charID, key, val)
     if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setData(key, val) end
     return true
 end
-
 
 function lia.char.restore(client, callback, _, id)
     local steamID64 = client:SteamID64()
@@ -122,7 +119,6 @@ function lia.char.restore(client, callback, _, id)
     end)
 end
 
-
 function lia.char.cleanUpForPlayer(client)
     for _, charID in pairs(client.liaCharList or {}) do
         local character = lia.char.loaded[charID]
@@ -134,7 +130,6 @@ function lia.char.cleanUpForPlayer(client)
     end
 end
 
-
 local function removePlayer(client)
     if client:getChar() then
         client:KillSilent()
@@ -143,7 +138,6 @@ local function removePlayer(client)
         netstream.Start(client, "charKick", nil, true)
     end
 end
-
 
 function lia.char.delete(id, client)
     assert(isnumber(id), "id must be a number")
@@ -178,4 +172,3 @@ function lia.char.delete(id, client)
 
     hook.Run("OnCharacterDelete", client, id)
 end
-

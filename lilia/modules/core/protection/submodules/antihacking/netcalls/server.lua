@@ -1,10 +1,6 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 util.AddNetworkString("IAmHackingOwO")
-
 net.Receive("IAmHackingOwO", function(_, client) ProtectionCore:ApplyPunishment(client, "Hacking", true, true, 0) end)
-
 for _, v in pairs(MODULE.KnownExploits) do
     net.Receive(tostring(v), function(_, client)
         client.nextExploitNotify = client.nextExploitNotify or 0
@@ -15,4 +11,3 @@ for _, v in pairs(MODULE.KnownExploits) do
         end
     end)
 end
-

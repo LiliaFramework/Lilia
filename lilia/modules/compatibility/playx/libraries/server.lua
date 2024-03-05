@@ -1,5 +1,4 @@
-﻿
-function MODULE:LoadData()
+﻿function MODULE:LoadData()
     local screen = ents.Create("gmod_playx")
     screen:SetModel("models/dav0r/camera.mdl")
     screen:SetPos(self.screenPos)
@@ -14,7 +13,6 @@ function MODULE:LoadData()
         phys:Sleep()
     end
 end
-
 
 function MODULE:KeyPress(client, key)
     if key == IN_USE then
@@ -44,4 +42,3 @@ function MODULE:KeyPress(client, key)
         end
     end
 end
-
