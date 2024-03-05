@@ -11,6 +11,17 @@ end
 
 --- Summary ends with a period.
 -- Some description, can be over several lines.
+-- Some description, can be over several lines.
+-- Some description, can be over several lines.
+-- Some description, can be over several lines.
+-- Some description, can be over several lines.
+-- Some description, can be over several lines.
+-- Some description, can be over several lines.
+-- Some description, can be over several lines.
+-- Some description, can be over several lines.
+-- Some description, can be over several lines.
+-- Some description, can be over several lines.
+-- Some description, can be over several lines.
 -- @realm shared
 -- @param logType first parameter
 -- @param func second parameter
