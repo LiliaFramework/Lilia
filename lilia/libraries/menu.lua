@@ -2,6 +2,17 @@
 lia.menu = lia.menu or {}
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 lia.menu.list = lia.menu.list or {}
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+-- @type function lia.menu.add(options, positions, onRemove)
+-- @typeCommentStart
+-- Adds a new menu to the list of drawn menus.
+-- @typeCommentEnd
+-- @realm client
+-- @table options A table of button text as keys and their callbacks as values.
+-- @vector position The position of the menu or an entity to follow.
+-- @function onRemove A function to call after the menu has faded out.
+-- @treturn number The index of the menu in the list.
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.menu.add(options, position, onRemove)
     local width = 0
@@ -24,6 +35,12 @@ function lia.menu.add(options, position, onRemove)
         onRemove = onRemove
     })
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+-- @type function lia.menu.drawAll()
+-- @typeCommentStart
+-- A function to draw all of the active menus or hide them when needed.
+-- @typeCommentEnd
+-- @realm client
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.menu.drawAll()
@@ -86,6 +103,14 @@ function lia.menu.drawAll()
         end
     end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+-- @type function lia.menu.getActiveMenu()
+-- @typeCommentStart
+-- Determines which menu is being looked at.
+-- @typeCommentEnd
+-- @realm client
+-- @treturn table The active menu.
+-- @treturn function The currently hovered option callback.
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.menu.getActiveMenu()
@@ -125,6 +150,15 @@ function lia.menu.getActiveMenu()
         end
     end
 end
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+-- @type function lia.menu.onButtonPressed(menu, callback)
+-- @typeCommentStart
+-- Handles whenever a button has been pressed.
+-- @typeCommentEnd
+-- @realm client
+-- @int menu The menu index.
+-- @func callback The callback that checks whether the button can be pressed.
+-- @treturn bool Whether or not the button can be pressed.
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.menu.onButtonPressed(menu, callback)

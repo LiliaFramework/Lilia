@@ -56,6 +56,19 @@ function lia.getCharData(charID, key)
     return data
 end
 
+
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+-- @type function lia.char.new(data, id, client, steamID)
+-- @typeCommentStart
+-- Creates a new character object with the given data and metadata.
+-- @typeCommentEnd
+-- @realm shared
+-- @classmod Character
+-- @table data A table containing the character data.
+-- @int[default=0] id The ID of the character.
+-- @Player client The player associated with the character.
+-- @string[opt] steamID The SteamID of the player associated with the character.
+-- @treturn table The newly created character object.
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.char.new(data, id, client, steamID)
     local character = setmetatable({
@@ -83,7 +96,12 @@ function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
     lia.char.varHooks[varName][hookName] = func
 end
-
+---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+-- @type function lia.char.registerVar()
+-- @typeCommentStart
+-- Sets up a new character variable.
+-- @typeCommentEnd
+-- @realm shared
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
