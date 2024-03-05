@@ -29,7 +29,6 @@ function lia.log.resetTables()
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-
 -- @type function lia.log.addType(logType, func)
 
 -- Used to reset tables into database
@@ -51,7 +50,6 @@ function lia.log.addType(logType, func)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-
 -- @type function lia.log.getString(client, logType, ...)
 
 -- Formats a string that is in log.type
@@ -72,7 +70,6 @@ function lia.log.getString(client, logType, ...)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-
 -- @type function lia.log.addRaw(logString, shouldNotify, flag)
 
 -- Adds a raw that does not require formatting
@@ -89,7 +86,6 @@ function lia.log.addRaw(logString, shouldNotify, flag)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-
 -- @type function lia.log.add(client, logType, ...)
 
 -- Displays a line of the log according to the match described in the log type
@@ -115,7 +111,6 @@ function lia.log.add(client, logType, ...)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-
 -- @type function lia.log.send(client, logString, flag)
 
 -- Display log raw on client console
@@ -131,7 +126,6 @@ function lia.log.send(client, logString, flag)
 end
 
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
-
 -- @type function lia.log.send(client, logString, flag)
 
 -- Display log raw on client console
