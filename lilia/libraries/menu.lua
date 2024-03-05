@@ -2,6 +2,7 @@
 lia.menu.list = lia.menu.list or {}
 --- Library functions for Lilia's Menus
 -- @module lia.menu
+
 -- @type function lia.menu.add(options, positions, onRemove)
 -- Adds a new menu to the list of drawn menus.
 -- @realm client
