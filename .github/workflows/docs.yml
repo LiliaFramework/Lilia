@@ -38,7 +38,7 @@ jobs:
           cp -v docs/js/* docs/html
 
       - name: Deploy
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository == 'Lilia-Framework/Lilia' && success()
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository == 'Lilia-Framework/LiliaTest' && success()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
