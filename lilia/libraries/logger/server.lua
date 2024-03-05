@@ -27,6 +27,7 @@ end
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 function lia.log.resetTables()
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.log.addType(logType, func)
 -- @typeCommentStart
@@ -47,6 +48,7 @@ end
 function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.log.getString(client, logType, ...)
 -- @typeCommentStart
@@ -66,6 +68,7 @@ function lia.log.getString(client, logType, ...)
         if success then return result end
     end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.log.addRaw(logString, shouldNotify, flag)
 -- @typeCommentStart
@@ -81,6 +84,7 @@ function lia.log.addRaw(logString, shouldNotify, flag)
     Msg("[LOG] ", logString .. "\n")
     if not noSave then file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n") end
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.log.add(client, logType, ...)
 -- @typeCommentStart
@@ -105,6 +109,7 @@ function lia.log.add(client, logType, ...)
     if noSave then return end
     file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n")
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.log.send(client, logString, flag)
 -- @typeCommentStart
@@ -119,6 +124,7 @@ end
 function lia.log.send(client, logString, flag)
     netstream.Start(client, "liaLogStream", logString, flag)
 end
+
 ---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
 -- @type function lia.log.send(client, logString, flag)
 -- @typeCommentStart
