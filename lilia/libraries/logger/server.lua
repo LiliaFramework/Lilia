@@ -1,48 +1,24 @@
 ﻿--- Library functions for Lilia's Logs
 -- @module lia.log
 lia.log.types = lia.log.types or {}
---- Used to load tables into the database
--- @type function lia.log.loadTables()
--- @realm server
--- @internal
 function lia.log.loadTables()
     file.CreateDir("lilia/logs")
     file.CreateDir("lilia/netlogs")
     file.CreateDir("lilia/concommandlogs")
 end
 
---- Used to reset tables into database
--- @type function lia.log.resetTables()
--- @realm server
--- @internal
 function lia.log.resetTables()
 end
 
---- Used to reset tables into database
--- @type function lia.log.addType(logType, func)
+--- Adds a log type
 -- @realm server
--- @string logType
--- @function (client, ...) log format callback
--- @usageStart
--- lia.log.addType("playerConnected", function(client, ...)
---		local data = {...}
---		local steamID = data[2]
---
---		return string.format("%s[%s] has connected to the server.", client:Name(), steamID or client:SteamID())
---	end)
--- @usageEnd
+-- @string logType Log category
+-- @string format The string format that log messages should use
+-- @number flag Log level
 function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end
 
---- Formats a string that is in log.type
--- @type function lia.log.getString(client, logType, ...)
--- @player client Default argument for format string
--- @string logType 
--- @vararg ... Other arguments on log format
--- @realm server
--- @treturn string Formatted string
--- @internal
 function lia.log.getString(client, logType, ...)
     local text = lia.log.types[logType]
     if isfunction(text) then
@@ -51,29 +27,12 @@ function lia.log.getString(client, logType, ...)
     end
 end
 
---- Adds a raw that does not require formatting
--- @type function lia.log.addRaw(logString, shouldNotify, flag)
--- @string logString Log string data
--- @bool sholdNotify Display log notification in the administration console
--- @int flag Log color flag
--- @realm server
 function lia.log.addRaw(logString, shouldNotify, flag)
     if shouldNotify then lia.log.send(lia.util.getAdmins(), logString, flag) end
     Msg("[LOG] ", logString .. "\n")
     if not noSave then file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n") end
 end
 
---- Displays a line of the log according to the match described in the log type
--- @type function lia.log.add(client, logType, ...)
--- @player client player name on displayed log
--- @string logType type of log
--- @vararg ... other arguments for log
--- @realm server
--- @usageStart
--- function GM:PlayerAuthed(client, steamID, uniqueID)
---	lia.log.add(client, "playerConnected", client, steamID)
--- end
--- @usageEnd
 function lia.log.add(client, logType, ...)
     local logString = lia.log.getString(client, logType, ...)
     if not isstring(logString) then return end
@@ -84,22 +43,10 @@ function lia.log.add(client, logType, ...)
     file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n")
 end
 
---- Display log raw on client console
--- @type function lia.log.send(client, logString, flag)
--- @player client player name on displayed log
--- @string logString log string
--- @int flag Color flag on log string
--- @realm server
--- @internal
 function lia.log.send(client, logString, flag)
     netstream.Start(client, "liaLogStream", logString, flag)
 end
 
---- Sync MLogs and Lilia Logs
--- @type function lia.log.send(client, logString, flag)
--- @string logString log string
--- @realm server
--- @internal
 function lia.log.mLogsLoad(str)
     mLogs.log("LiliaLog", "lia", {
         log = str

@@ -1,4 +1,6 @@
-﻿local charMeta = lia.meta.character or {}
+﻿--- Library functions for Lilia Characters
+-- @module lia.char
+local charMeta = lia.meta.character or {}
 lia.char = lia.char or {}
 lia.char.loaded = lia.char.loaded or {}
 lia.char.names = lia.char.names or {}
@@ -8,8 +10,6 @@ charMeta.__index = charMeta
 charMeta.id = charMeta.id or 0
 charMeta.vars = charMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
---- Library functions for Lilia Characters
--- @module lia.char
 if SERVER then
     if #lia.char.names < 1 then
         lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
@@ -46,15 +46,6 @@ function lia.getCharData(charID, key)
     return data
 end
 
--- @type function lia.char.new(data, id, client, steamID)
--- Creates a new character object with the given data and metadata.
--- @realm shared
--- @classmod Character
--- @table data A table containing the character data.
--- @int[default=0] id The ID of the character.
--- @Player client The player associated with the character.
--- @string[opt] steamID The SteamID of the player associated with the character.
--- @treturn table The newly created character object.
 function lia.char.new(data, id, client, steamID)
     local character = setmetatable({
         vars = {}
@@ -81,9 +72,6 @@ function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName][hookName] = func
 end
 
--- @type function lia.char.registerVar()
--- Sets up a new character variable.
--- @realm shared
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
     data.index = data.index or table.Count(lia.char.vars)
