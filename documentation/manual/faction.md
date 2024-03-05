@@ -1,4 +1,4 @@
-## Faction Example
+# Faction Example
 
 ```lua
 FACTION.name = "Minecrafters"
@@ -14,7 +14,7 @@ FACTION_MINECRAFTER = FACTION.index
 
 [View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/modules/core/teams/libraries/server.lua#L48)
 
-## Faction Variables
+#Faction Variables
 
 - **FACTION.name**: The name of your faction.
 
