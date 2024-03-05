@@ -38,9 +38,7 @@ Structures:
             optional
             Function that decides whether a player can execute this privilege,
             optionally on another player (target).
-    }
-]]
--- Version number in YearMonthDay format.
+    }-- Version number in YearMonthDay format.
 local version = 20190102
 if CAMI and CAMI.Version >= version then return end
 CAMI = CAMI or {}

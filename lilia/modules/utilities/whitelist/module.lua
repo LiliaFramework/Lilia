@@ -8,4 +8,3 @@ MODULE.discord = "@liliaplayer"
 MODULE.desc = "Adds a Server Whitelist"
 
 MODULE.identifier = "WhitelistCore"
-]]

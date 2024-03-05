@@ -16,4 +16,3 @@ MODULE.CAMIPrivileges = {
         Description = "Allows access to Spawning Menu Items.",
     }
 }
-]]
