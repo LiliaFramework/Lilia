@@ -143,6 +143,7 @@ jobs:
           rm glualint_executable
         working-directory: "${{ github.workspace }}"
         shell: bash
+
       - name: Commit changes
         run: |
           echo "Committing changes..."
@@ -156,10 +157,9 @@ jobs:
             echo "No changes to commit."
           fi
         working-directory: "${{ github.workspace }}"
-        
-
 
 name: Docs
+
 on: [push, pull_request]
 
 jobs:
