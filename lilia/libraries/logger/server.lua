@@ -1,4 +1,5 @@
-﻿-- @module lia.log
+﻿--- Helper library for reading/writing files to the data folder.
+-- @module ix.data
 lia.log.types = lia.log.types or {}
 function lia.log.loadTables()
     file.CreateDir("lilia/logs")
