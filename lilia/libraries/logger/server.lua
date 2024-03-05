@@ -1,5 +1,12 @@
-﻿--- Testing annotations
--- @module annot1
+﻿--[[--
+Faction setup hooks.
+
+Factions get their own hooks that are called for various reasons, but the most common one is to set up a character
+once it's created and assigned to a certain faction. For example, giving a police faction character a weapon on creation.
+These hooks are used in faction tables that are created in `schema/factions/sh_factionname.lua` and cannot be used like
+regular gamemode hooks.
+]]
+-- @hooks Faction
 function lia.log.loadTables()
     file.CreateDir("lilia/logs")
     file.CreateDir("lilia/netlogs")
@@ -9,9 +16,14 @@ end
 function lia.log.resetTables()
 end
 
---- first function.
--- @realm shared
--- @todo check if this works!
+--- Called when a character has been initally created and assigned to this faction.
+-- @realm server
+-- @player client Client that owns the character
+-- @char character Character that has been created
+-- @usage function FACTION:onCharCreated(client, character)
+-- 	local inventory = character:GetInventory()
+-- 	inventory:Add("pistol")
+-- end
 function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end
