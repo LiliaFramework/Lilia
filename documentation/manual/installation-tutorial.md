@@ -25,7 +25,7 @@ If you haven't already, set up your Garry's Mod server and ensure it's running w
 ## Step 3: Extracting Lilia
 
 1. After downloading, locate the ZIP file and extract its contents to a temporary folder on your computer.
-2. You should now have a folder named something like "Lilia-master."
+2. You should now have a folder named something like "Lilia-main."
 
 ## Step 4: Uploading Lilia to Your Server
 
