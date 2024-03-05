@@ -4,14 +4,6 @@ file = {
 	exclude = {"lilia/libraries/thirdparty"}
 }
 
-module_file = {
-	Character = "lilia/libraries/data/shared.lua",
-	Entity = "lilia/libraries/data/shared.lua",
-	Inventory = "lilia/libraries/data/shared.lua",
-	Item = "lilia/libraries/data/shared.lua",
-	Player = "lilia/libraries/data/shared.lua"
-}
-
 dir = "documentation/html"
 project = "Lilia"
 title = "Lilia Documentation"
