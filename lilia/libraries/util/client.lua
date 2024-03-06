@@ -1,4 +1,4 @@
-local useCheapBlur = CreateClientConVar("lia_cheapblur", 0, true):GetBool()
+﻿local useCheapBlur = CreateClientConVar("lia_cheapblur", 0, true):GetBool()
 function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
     color = color or color_white
     return draw.TextShadow({
