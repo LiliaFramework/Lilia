@@ -139,6 +139,7 @@ jobs:
           rm glualint_executable
         working-directory: "${{ github.workspace }}"
         shell: bash
+
       - name: Commit changes
         run: |
           echo "Committing changes..."
@@ -189,10 +190,15 @@ jobs:
           cp -v docs/css/* docs/html
           cp -v docs/js/* docs/html
 
+      - name: Set git configuration
+        run: |
+          cd ${{ github.workspace }}
+          git config user.email "actions@github.com"
+        shell: bash
+
       - name: Deploy
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'Lilia-Framework/Lilia' && success()
         run: |
-          git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
           git clone git@github.com:Lilia-Framework/Lilia-Framework.github.io.git deploy
           cp -r lilia/docs/html/* deploy
