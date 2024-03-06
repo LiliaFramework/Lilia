@@ -100,7 +100,11 @@ function MODULE:FactionOnLoadout(client)
             client:Give(faction.weapons)
         end
     end
+end
 
+function MODULE:FactionPostLoadout(client)
+    local faction = lia.faction.indices[client:Team()]
+    if not faction then return end
     if faction.bodyGroups and istable(faction.bodyGroups) then
         local groups = {}
         for k, value in pairs(faction.bodyGroups) do
@@ -187,7 +191,11 @@ function MODULE:ClassOnLoadout(client)
             client:Give(class.weapons)
         end
     end
+end
 
+function MODULE:ClassPostLoadout(client)
+    local faction = lia.faction.indices[client:Team()]
+    if not faction then return end
     if class.bodyGroups and istable(class.bodyGroups) then
         local groups = {}
         for k, value in pairs(class.bodyGroups) do
