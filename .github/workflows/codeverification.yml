@@ -204,7 +204,7 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Commit and push changes to Lilia-Framework.github.io repository
-          run: |
+        run: |
           git config --local user.email "test@test.com"
           git config --local user.name "Leon"
           git add .
