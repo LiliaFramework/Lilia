@@ -154,7 +154,7 @@ jobs:
           fi
         working-directory: "${{ github.workspace }}"
 
-    WikiDeploy:
+  WikiDeploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
