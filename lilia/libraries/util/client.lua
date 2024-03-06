@@ -1,4 +1,4 @@
-﻿local useCheapBlur = CreateClientConVar("lia_cheapblur", 0, true):GetBool()
+local useCheapBlur = CreateClientConVar("lia_cheapblur", 0, true):GetBool()
 function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
     color = color or color_white
     return draw.TextShadow({
@@ -97,6 +97,11 @@ function lia.util.drawBlurAt(x, y, w, h, amount, passes)
             surface.DrawTexturedRectUV(x, y, w, h, x2, y2, w2, h2)
         end
     end
+end
+
+function lia.util.colorToText(color)
+    if not IsColor(color) then return end
+    return (color.r or 255) .. "," .. (color.g or 255) .. "," .. (color.b or 255) .. "," .. (color.a or 255)
 end
 
 function lia.util.endCaption(text, duration)

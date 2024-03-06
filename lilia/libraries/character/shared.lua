@@ -160,10 +160,27 @@ lia.char.registerVar("desc", {
     field = "_desc",
     default = "",
     index = 2,
-    onValidate = function(value, _)
-        if noDesc then return true end
+    onValidate = function(value, data, client)
+        local desc, override = hook.Run("GetDefaultCharDesc", client, data.faction, data)
         local minLength = lia.config.MinDescLen
+        if isstring(desc) and override then return true end
         if not value or #value:gsub("%s", "") < minLength then return false, "descMinLen", minLength end
+    end,
+    onAdjust = function(client, data, value, newData)
+        local desc, override = hook.Run("GetDefaultCharDesc", client, data.faction, data)
+        if isstring(desc) and override then newData.desc = desc end
+    end,
+    onPostSetup = function(panel, faction, payload)
+        local desc, disabled = hook.Run("GetDefaultCharDesc", LocalPlayer(), faction)
+        if desc then
+            panel:SetText(desc)
+            payload.desc = desc
+        end
+
+        if disabled then
+            panel:SetDisabled(true)
+            panel:SetEditable(false)
+        end
     end
 })
 
