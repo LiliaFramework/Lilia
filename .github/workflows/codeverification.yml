@@ -189,25 +189,10 @@ WikiDeploy:
       run: |
         cp -v docs/css/* docs/html
         cp -v docs/js/* docs/html
-
-    - name: Checkout Lilia-Framework.github.io repository
-      uses: actions/checkout@v2
+    - name: Deploy
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'Lilia-Framework/Lilia' && success()
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        repository: Lilia-Framework/Lilia-Framework.github.io
-        token: ${{ secrets.GITHUB_TOKEN }}
-        ref: main
-        path: lilia-website
-
-    - name: Copy generated documentation to Lilia-Framework.github.io repository
-      run: |
-        cp -r lilia/docs/html/* lilia-website
-      working-directory: ${{ github.workspace }}
-
-    - name: Commit and push changes to Lilia-Framework.github.io repository
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add .
-        git commit -m "Update documentation"
-        git push origin main
-      working-directory: lilia-website
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: helix/docs/html
+          cname: lilia-framework.github.io/docs
