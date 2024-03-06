@@ -154,7 +154,7 @@ lia.char.registerVar("desc", {
         if isstring(desc) and override then return true end
         if not value or #value:gsub("%s", "") < minLength then return false, "descMinLen", minLength end
     end,
-    onAdjust = function(client, data, value, newData)
+    onAdjust = function(client, data, _, newData)
         local desc, override = hook.Run("GetDefaultCharDesc", client, data.faction)
         if isstring(desc) and override then
             newData.desc = desc
