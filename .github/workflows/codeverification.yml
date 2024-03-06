@@ -192,7 +192,6 @@ jobs:
       - name: Update Wiki
         run: |
           echo "Committing changes..."
-          cd "${{ github.workspace }}"  # Change to the correct directory
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
           if [[ -n "$(git status --porcelain)" ]]; then
