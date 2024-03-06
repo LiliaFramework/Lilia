@@ -1,4 +1,4 @@
-# Information - Converting From Nutscript
+# Information - Porting From NS
 ```
 | Nutscript | Lilia  |
 |------------|---------|

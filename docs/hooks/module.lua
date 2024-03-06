@@ -4,8 +4,8 @@
 --[[--
 Global hooks for general use.
 
-Plugin hooks are regular hooks that can be used in your schema with `Schema:HookName(args)`, in your plugin with
-`PLUGIN:HookName(args)`, or in your addon with `hook.Add("HookName", function(args) end)`.
+Plugin hooks are regular hooks that can be used in your schema with `Schema:HookName(args)`, in your module with
+`MODULE:HookName(args)`, or in your addon with `hook.Add("HookName", function(args) end)`.
 ]]
 -- @hooks Plugin
 
@@ -14,7 +14,7 @@ Plugin hooks are regular hooks that can be used in your schema with `Schema:Hook
 -- @player client Player that is creating the character
 -- @tab payload Table of data to be used for character creation
 -- @tab newPayload Table of data be merged with the current payload
--- @usage function PLUGIN:AdjustCreationPayload(client, payload, newPayload)
+-- @usage function MODULE:AdjustCreationPayload(client, payload, newPayload)
 -- 	newPayload.money = payload.attributes["stm"] -- Sets the characters initial money to the stamina attribute value.
 -- end
 function AdjustCreationPayload(client, payload, newPayload)
@@ -27,7 +27,7 @@ end
 -- @number baseOffset Amount the stamina is changing by. This can be a positive or negative number depending if they are
 -- exhausting or regaining stamina
 -- @treturn number New offset to use
--- @usage function PLUGIN:AdjustStaminaOffset(client, baseOffset)
+-- @usage function MODULE:AdjustStaminaOffset(client, baseOffset)
 -- 	return baseOffset * 2 -- Drain/Regain stamina twice as fast.
 -- end
 function AdjustStaminaOffset(client, baseOffset)
@@ -36,7 +36,7 @@ end
 --- Creates the business panel in the tab menu.
 -- @realm client
 -- @treturn bool Whether or not to create the business menu
--- @usage function PLUGIN:BuildBusinessMenu()
+-- @usage function MODULE:BuildBusinessMenu()
 -- 	return LocalPlayer():IsAdmin() -- Only builds the business menu for admins.
 -- end
 function BuildBusinessMenu()
@@ -48,7 +48,7 @@ end
 -- @string chatType Chat type of the message. This will be something registered with `ix.chat.Register` - like `ic`, `ooc`, etc.
 -- @string text Unformatted text of the message
 -- @treturn bool Whether or not to allow auto formatting on the message
--- @usage function PLUGIN:CanAutoFormatMessage(speaker, chatType, text)
+-- @usage function MODULE:CanAutoFormatMessage(speaker, chatType, text)
 -- 	return false -- Disable auto formatting outright.
 -- end
 function CanAutoFormatMessage(speaker, chatType, text)
@@ -68,8 +68,8 @@ end
 -- - `money` - current money the character has
 -- - `attributes` - attributes list for the character
 --
--- Note that schemas/plugins can add additional character info panels.
--- @usage function PLUGIN:CanCreateCharacterInfo(suppress)
+-- Note that schemas/modules can add additional character info panels.
+-- @usage function MODULE:CanCreateCharacterInfo(suppress)
 -- 	suppress.attributes = true -- Hides the attributes panel from the character info tab
 -- end
 function CanCreateCharacterInfo(suppress)
@@ -79,7 +79,7 @@ end
 -- @realm client
 -- @entity weapon Weapon the player currently is holding
 -- @treturn bool Whether or not to draw the ammo hud
--- @usage function PLUGIN:CanDrawAmmoHUD(weapon)
+-- @usage function MODULE:CanDrawAmmoHUD(weapon)
 -- 	if (weapon:GetClass() == "weapon_frag") then -- Hides the ammo hud when holding grenades.
 -- 		return false
 -- 	end
@@ -93,7 +93,7 @@ end
 -- @entity door The door entity itself.
 -- @number access The access level used when called.
 -- @treturn bool Whether or not to allow the client access.
--- @usage function PLUGIN:CanPlayerAccessDoor(client, door, access)
+-- @usage function MODULE:CanPlayerAccessDoor(client, door, access)
 -- 	return true -- Always allow access.
 -- end
 function CanPlayerAccessDoor(client, door, access)
@@ -105,7 +105,7 @@ end
 -- @number item instance ID of the item being dropped onto
 -- @number other instance ID of the item being combined into the first item, this can be invalid due to it being from clientside
 -- @treturn bool Whether or not to allow the player to combine the items
--- @usage function PLUGIN:CanPlayerCombineItem(client, item, other)
+-- @usage function MODULE:CanPlayerCombineItem(client, item, other)
 --		local otherItem = ix.item.instances[other]
 --
 --		if (otherItem and otherItem.uniqueID == "soda") then
@@ -124,7 +124,7 @@ end
 -- calls to this hook from running.
 -- @treturn string Language phrase to use for the error message
 -- @treturn ... Arguments to use for the language phrase
--- @usage function PLUGIN:CanPlayerCreateCharacter(client, payload)
+-- @usage function MODULE:CanPlayerCreateCharacter(client, payload)
 -- 	if (!client:IsAdmin()) then
 -- 		return false, "notNow" -- only allow admins to create a character
 -- 	end
@@ -138,7 +138,7 @@ end
 -- @player client Player attempting to drop an item
 -- @number item instance ID of the item being dropped
 -- @treturn bool Whether or not to allow the player to drop the item
--- @usage function PLUGIN:CanPlayerDropItem(client, item)
+-- @usage function MODULE:CanPlayerDropItem(client, item)
 -- 	return false -- Never allow dropping items.
 -- end
 function CanPlayerDropItem(client, item)
@@ -150,7 +150,7 @@ end
 -- @player client Player to give money to
 -- @tab faction Faction of the player's character
 -- @treturn bool Whether or not to allow the player to earn salary
--- @usage function PLUGIN:CanPlayerEarnSalary(client, faction)
+-- @usage function MODULE:CanPlayerEarnSalary(client, faction)
 -- 	return client:IsAdmin() -- Restricts earning salary to admins only.
 -- end
 function CanPlayerEarnSalary(client, faction)
@@ -161,19 +161,19 @@ end
 -- @realm server
 -- @player client Player attempting to enter observer
 -- @treturn bool Whether or not to allow the player to enter observer
--- @usage function PLUGIN:CanPlayerEnterObserver(client)
+-- @usage function MODULE:CanPlayerEnterObserver(client)
 -- 	return true -- Always allow observer.
 -- end
 function CanPlayerEnterObserver(client)
 end
 
 --- Whether or not a player can equip the given `item`. This is called for items with `outfit`, `pacoutfit`, or `weapons` as
--- their base. Schemas/plugins can utilize this hook for their items.
+-- their base. Schemas/modules can utilize this hook for their items.
 -- @realm server
 -- @player client Player attempting to equip the item
 -- @tab item Item being equipped
 -- @treturn bool Whether or not to allow the player to equip the item
--- @usage function PLUGIN:CanPlayerEquipItem(client, item)
+-- @usage function MODULE:CanPlayerEquipItem(client, item)
 -- 	return client:IsAdmin() -- Restrict equipping items to admins only.
 -- end
 function CanPlayerEquipItem(client, item)
@@ -184,7 +184,7 @@ end
 -- @player client Player attempting to hold an entity
 -- @entity entity Entity being held
 -- @treturn bool Whether or not to allow the player to hold the entity
--- @usage function PLUGIN:CanPlayerHoldObject(client, entity)
+-- @usage function MODULE:CanPlayerHoldObject(client, entity)
 -- 	return !(client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle()) -- Disallow players in observer holding objects.
 -- end
 function CanPlayerHoldObject(client, entity)
@@ -197,7 +197,7 @@ end
 -- @string option Option selected by the player
 -- @param data Any data passed with the interaction option
 -- @treturn bool Whether or not to allow the player to interact with the entity
--- @usage function PLUGIN:CanPlayerInteractEntity(client, entity, option, data)
+-- @usage function MODULE:CanPlayerInteractEntity(client, entity, option, data)
 -- 	return false -- Disallow interacting with any entity.
 -- end
 function CanPlayerInteractEntity(client, entity, option, data)
@@ -212,7 +212,7 @@ end
 -- @param item Item's instance ID or item table
 -- @param data Any data passed with the action
 -- @treturn bool Whether or not to allow the player to interact with the item
--- @usage function PLUGIN:CanPlayerInteractItem(client, action, item, data)
+-- @usage function MODULE:CanPlayerInteractItem(client, action, item, data)
 -- 	return false -- Disallow interacting with any item.
 -- end
 function CanPlayerInteractItem(client, action, item, data)
@@ -224,7 +224,7 @@ end
 -- @number class ID of the class
 -- @tab info The class table
 -- @treturn bool Whether or not to allow the player to join the class
--- @usage function PLUGIN:CanPlayerJoinClass(client, class, info)
+-- @usage function MODULE:CanPlayerJoinClass(client, class, info)
 -- 	return client:IsAdmin() -- Restrict joining classes to admins only.
 -- end
 function CanPlayerJoinClass(client, class, info)
@@ -235,7 +235,7 @@ end
 -- @player client Player attempting to knock
 -- @entity entity Door being knocked on
 -- @treturn bool Whether or not to allow the player to knock on the door
--- @usage function PLUGIN:CanPlayerKnock(client, entity)
+-- @usage function MODULE:CanPlayerKnock(client, entity)
 -- 	return false -- Disable knocking on doors outright.
 -- end
 function CanPlayerKnock(client, entity)
@@ -246,7 +246,7 @@ end
 -- @player client Player attempting to open the shipment
 -- @entity entity Shipment entity
 -- @treturn bool Whether or not to allow the player to open the shipment
--- @usage function PLUGIN:CanPlayerOpenShipment(client, entity)
+-- @usage function MODULE:CanPlayerOpenShipment(client, entity)
 -- 	return client:Team() == FACTION_BMD -- Restricts opening shipments to FACTION_BMD.
 -- end
 function CanPlayerOpenShipment(client, entity)
@@ -258,7 +258,7 @@ end
 -- @string model Model of the container being spawned
 -- @entity entity Container entity
 -- @treturn bool Whether or not to allow the player to spawn the container
--- @usage function PLUGIN:CanPlayerSpawnContainer(client, model, entity)
+-- @usage function MODULE:CanPlayerSpawnContainer(client, model, entity)
 -- 	return client:IsAdmin() -- Restrict spawning containers to admins.
 -- end
 function CanPlayerSpawnContainer(client, model, entity)
@@ -269,7 +269,7 @@ end
 -- @player client Player attempting to take the item
 -- @entity item Entity corresponding to the item
 -- @treturn bool Whether or not to allow the player to take the item
--- @usage function PLUGIN:CanPlayerTakeItem(client, item)
+-- @usage function MODULE:CanPlayerTakeItem(client, item)
 -- 	return !(client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle()) -- Disallow players in observer taking items.
 -- end
 function CanPlayerTakeItem(client, item)
@@ -279,7 +279,7 @@ end
 -- @realm shared
 -- @player client Player attempting throw a punch
 -- @treturn bool Whether or not to allow the player to punch
--- @usage function PLUGIN:CanPlayerThrowPunch(client)
+-- @usage function MODULE:CanPlayerThrowPunch(client)
 -- 	return client:GetCharacter():GetAttribute("str", 0) > 0 -- Only allow players with strength to punch.
 -- end
 function CanPlayerThrowPunch(client)
@@ -292,7 +292,7 @@ end
 -- @string uniqueID The uniqueID of the item being traded.
 -- @bool isSellingToVendor If the client is selling to the vendor
 -- @treturn bool Whether or not to allow the client to trade with the vendor
--- @usage function PLUGIN:CanPlayerTradeWithVendor(client, entity, uniqueID, isSellingToVendor)
+-- @usage function MODULE:CanPlayerTradeWithVendor(client, entity, uniqueID, isSellingToVendor)
 -- 	return false -- Disallow trading with vendors outright.
 -- end
 function CanPlayerTradeWithVendor(client, entity, uniqueID, isSellingToVendor)
@@ -303,7 +303,7 @@ end
 -- @player client Player attempting to unequip an item
 -- @tab item Item being unequipped
 -- @treturn bool Whether or not to allow the player to unequip the item
--- @usage function PLUGIN:CanPlayerUnequipItem(client, item)
+-- @usage function MODULE:CanPlayerUnequipItem(client, item)
 -- 	return false -- Disallow unequipping items.
 -- end
 function CanPlayerUnequipItem(client, item)
@@ -426,7 +426,7 @@ function DatabaseConnectionFailed(error)
 end
 
 --- @realm shared
-function DoPluginIncludes(path, pluginTable)
+function DoPluginIncludes(path, moduleTable)
 end
 
 --- @realm client
@@ -475,11 +475,11 @@ end
 -- @player client Player that died
 -- @treturn[1] string Sound to play
 -- @treturn[2] bool `false` if a sound shouldn't be played at all
--- @usage function PLUGIN:GetPlayerDeathSound(client)
+-- @usage function MODULE:GetPlayerDeathSound(client)
 -- 	-- play impact sound every time someone dies
 -- 	return "physics/body/body_medium_impact_hard1.wav"
 -- end
--- @usage function PLUGIN:GetPlayerDeathSound(client)
+-- @usage function MODULE:GetPlayerDeathSound(client)
 -- 	-- don't play a sound at all
 -- 	return false
 -- end
@@ -513,7 +513,7 @@ end
 --- Registers chat classes after the core framework chat classes have been registered. You should usually create your chat
 -- classes in this hook - especially if you want to reference the properties of a framework chat class.
 -- @realm shared
--- @usage function PLUGIN:InitializedChatClasses()
+-- @usage function MODULE:InitializedChatClasses()
 -- 	-- let's say you wanted to reference an existing chat class's color
 -- 	ix.chat.Register("myclass", {
 -- 		format = "%s says \"%s\"",
@@ -612,7 +612,7 @@ end
 -- `entity:GetItemTable()`.
 -- @realm server
 -- @entity entity Spawned item entity
--- @usage function PLUGIN:OnItemSpawned(entity)
+-- @usage function MODULE:OnItemSpawned(entity)
 -- 	local item = entity:GetItemTable()
 -- 	-- do something with the item here
 -- end
@@ -740,7 +740,7 @@ function PlayerWeaponChanged(client, weapon)
 end
 
 --- @realm shared
-function PluginLoaded(uniqueID, pluginTable)
+function PluginLoaded(uniqueID, moduleTable)
 end
 
 --- @realm shared
@@ -823,7 +823,7 @@ end
 -- @string message Contents of the message
 -- @bool bAnonymous Whether or not the player is sending the message anonymously
 -- @treturn bool Whether or not to prevent the message from being sent
--- @usage function PLUGIN:PrePlayerMessageSend(client, chatType, message, bAnonymous)
+-- @usage function MODULE:PrePlayerMessageSend(client, chatType, message, bAnonymous)
 -- 	if (!client:IsAdmin()) then
 -- 		return false -- only allow admins to talk in chat
 -- 	end
@@ -883,7 +883,7 @@ end
 -- @entity inflictor Entity that inflicted the killing blow
 -- @entity attacker Other player or entity that killed the player
 -- @treturn bool `false` if the player should not be permakilled
--- @usage function PLUGIN:ShouldPermakillCharacter(client, character, inflictor, attacker)
+-- @usage function MODULE:ShouldPermakillCharacter(client, character, inflictor, attacker)
 -- 		if (client:IsAdmin()) then
 -- 			return false -- all non-admin players will have their character permakilled
 -- 		end
