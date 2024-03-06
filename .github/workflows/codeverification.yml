@@ -154,63 +154,60 @@ jobs:
           fi
         working-directory: "${{ github.workspace }}"
 
-  WikiDeploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          path: lilia
+WikiDeploy:
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        path: lilia
 
-      - name: Setup Lua
-        uses: leafo/gh-actions-lua@v8.0.0
-        with:
-          luaVersion: "5.2"
+    - name: Setup Lua
+      uses: leafo/gh-actions-lua@v8.0.0
+      with:
+        luaVersion: "5.2"
 
-      - name: Setup LuaRocks
-        uses: leafo/gh-actions-luarocks@v4.0.0
+    - name: Setup LuaRocks
+      uses: leafo/gh-actions-luarocks@v4.0.0
 
-      - name: Pull LDoc
-        uses: actions/checkout@v2
-        with:
-          repository: impulsh/LDoc
-          path: ldoc
+    - name: Pull LDoc
+      uses: actions/checkout@v2
+      with:
+        repository: impulsh/LDoc
+        path: ldoc
 
-      - name: Build LDoc
-        working-directory: ldoc
-        run: luarocks make
+    - name: Build LDoc
+      working-directory: ldoc
+      run: luarocks make
 
-      - name: Build docs
-        working-directory: lilia
-        run: ldoc . --fatalwarnings
+    - name: Build docs
+      working-directory: lilia
+      run: ldoc . --fatalwarnings
 
-      - name: Copy assets
-        working-directory: lilia
-        run: |
-          cp -v docs/css/* docs/html
-          cp -v docs/js/* docs/html
+    - name: Copy assets
+      working-directory: lilia
+      run: |
+        cp -v docs/css/* docs/html
+        cp -v docs/js/* docs/html
 
-      - name: Checkout Lilia-Framework.github.io repository
-        uses: actions/checkout@v2
-        with:
-          repository: Lilia-Framework/Lilia-Framework.github.io
-          token: ${{ secrets.GHTOKEN }}
-          ref: main
-          path: lilia-website
+    - name: Checkout Lilia-Framework.github.io repository
+      uses: actions/checkout@v2
+      with:
+        repository: Lilia-Framework/Lilia-Framework.github.io
+        token: ${{ secrets.GITHUB_TOKEN }}
+        ref: main
+        path: lilia-website
 
-      - name: Copy generated documentation to Lilia-Framework.github.io repository
-        run: |
-          cp -r lilia/docs/html/* lilia-website
-        working-directory: ${{ github.workspace }}
+    - name: Copy generated documentation to Lilia-Framework.github.io repository
+      run: |
+        cp -r lilia/docs/html/* lilia-website
+      working-directory: ${{ github.workspace }}
 
-      - name: Commit and push changes to Lilia-Framework.github.io repository
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "Update documentation"
-          git remote set-url origin "https://Lilia-Framework:${GHTOKEN}@github.com/Lilia-Framework/Lilia-Framework.github.io"
-          git push origin main
-        working-directory: lilia-website
- 
-  
+    - name: Commit and push changes to Lilia-Framework.github.io repository
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "Update documentation"
+        git push origin main
+      working-directory: lilia-website
