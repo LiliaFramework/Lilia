@@ -196,7 +196,7 @@ jobs:
           repository: Lilia-Framework/Lilia-Framework.github.io
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: main
-          path: lilia-website # Path where the repository is checked out
+          path: lilia-website
 
       - name: Copy generated documentation to Lilia-Framework.github.io repository
         run: |
@@ -204,11 +204,10 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Commit and push changes to Lilia-Framework.github.io repository
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          run: |
+          git config --local user.email "test@test.com"
+          git config --local user.name "Leon"
           git add .
           git commit -m "Update documentation"
-          git push https://${{ secrets.GH_TOKEN }}@github.com/Lilia-Framework/Lilia-Framework.github.io.git main
-
+          git push https://bleonheart:${{ secrets.GH_TOKEN }}@github.com/Lilia-Framework/Lilia-Framework.github.io.git
         working-directory: lilia-website
