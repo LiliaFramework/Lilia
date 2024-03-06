@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 function Empty_Popup(callback, sw, sh)
     sw = sw or 500
     sh = sh or 250
@@ -15,7 +15,7 @@ function Empty_Popup(callback, sw, sh)
     end)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function String_Request(question, ok, _, numeric)
     question = question or "Unset Question"
     numeric = numeric or false
@@ -58,7 +58,7 @@ function String_Request(question, ok, _, numeric)
     end)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function Choice_Request(question, yes, no, modify)
     question = question or "Unset Question"
     Empty_Popup(function(frame)
@@ -104,7 +104,7 @@ function Choice_Request(question, yes, no, modify)
     end)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function Important_Notification(message)
     Empty_Popup(function(frame)
         local wp = frame:GetWorkPanel()
@@ -128,4 +128,4 @@ function Important_Notification(message)
         g:FadeIn()
     end)
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

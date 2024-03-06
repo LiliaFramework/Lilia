@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 lia.chat.register("ooc", {
     onCanSay = function(speaker, text)
         if GetGlobalBool("oocblocked", false) then
@@ -35,7 +35,7 @@ lia.chat.register("ooc", {
     filter = "ooc"
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("meclose", {
     format = "**%s %s",
     onCanHear = ChatboxCore.ChatRange * 0.25,
@@ -45,7 +45,7 @@ lia.chat.register("meclose", {
     deadCanChat = true
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("mefar", {
     format = "**%s %s",
     onCanHear = ChatboxCore.ChatRange * 2,
@@ -55,7 +55,7 @@ lia.chat.register("mefar", {
     deadCanChat = true
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("itclose", {
     onChatAdd = function(_, text) chat.AddText(lia.config.get("chatColor"), "**" .. text) end,
     onCanHear = ChatboxCore.ChatRange * 0.25,
@@ -65,7 +65,7 @@ lia.chat.register("itclose", {
     deadCanChat = true
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("itfar", {
     onChatAdd = function(_, text) chat.AddText(ChatboxCore.ChatColor, "**" .. text) end,
     onCanHear = ChatboxCore.ChatRange * 2,
@@ -75,7 +75,7 @@ lia.chat.register("itfar", {
     deadCanChat = true
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("coinflip", {
     format = "%s flipped a coin and it landed on %s.",
     onCanHear = ChatboxCore.ChatRange,
@@ -86,7 +86,7 @@ lia.chat.register("coinflip", {
     deadCanChat = false
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("announce", {
     format = "%s announces \"%s\"",
     onCanHear = ChatboxCore.ChatRange * 4,
@@ -96,7 +96,7 @@ lia.chat.register("announce", {
     deadCanChat = false
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("ic", {
     format = "%s says \"%s\"",
     onGetColor = function(speaker, _)
@@ -110,7 +110,7 @@ lia.chat.register("ic", {
     end,
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("me", {
     format = "**%s %s",
     onGetColor = lia.chat.classes.ic.onGetColor,
@@ -125,7 +125,7 @@ lia.chat.register("me", {
     deadCanChat = true
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("it", {
     onChatAdd = function(_, text) chat.AddText(lia.chat.timestamp(false), ChatboxCore.ChatColor, "**" .. text) end,
     onCanHear = function(speaker, listener)
@@ -139,7 +139,7 @@ lia.chat.register("it", {
     deadCanChat = true
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("w", {
     format = "%s whispers \"%s\"",
     onGetColor = function(speaker, text)
@@ -154,7 +154,7 @@ lia.chat.register("w", {
     prefix = {"/w", "/whisper"}
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("notice", {
     onCanSay = function(speaker, _) return not IsValid(speaker) end,
     onCanHear = function(_, _) return true end,
@@ -163,7 +163,7 @@ lia.chat.register("notice", {
     font = "liaMediumFont"
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("y", {
     format = "%s yells \"%s\"",
     onGetColor = function(speaker, text)
@@ -178,7 +178,7 @@ lia.chat.register("y", {
     prefix = {"/y", "/yell"}
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("looc", {
     onCanSay = function(speaker, _)
         local delay = ChatboxCore.LOOCDelay
@@ -203,7 +203,7 @@ lia.chat.register("looc", {
     filter = "ooc"
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("adminchat", {
     onGetColor = function(_, _) return Color(0, 196, 255) end,
     onCanHear = function(_, listener)
@@ -221,7 +221,7 @@ lia.chat.register("adminchat", {
     prefix = "/adminchat"
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("roll", {
     format = "%s has rolled %s.",
     color = Color(155, 111, 176),
@@ -235,7 +235,7 @@ lia.chat.register("roll", {
     end,
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("pm", {
     format = "[PM] %s: %s.",
     color = Color(249, 211, 89),
@@ -243,7 +243,7 @@ lia.chat.register("pm", {
     deadCanChat = true
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("eventlocal", {
     onCanSay = function(speaker, _) return CAMI.PlayerHasAccess(speaker, "Staff Permissions - Local Event Chat", nil) end,
     onCanHear = function(speaker, listener)
@@ -256,7 +256,7 @@ lia.chat.register("eventlocal", {
     font = "liaMediumFont"
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("event", {
     onCanSay = function(speaker, _) return CAMI.PlayerHasAccess(speaker, "Staff Permissions - Event Chat", nil) end,
     onCanHear = function(_, _) return true end,
@@ -265,7 +265,7 @@ lia.chat.register("event", {
     font = "liaMediumFont"
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("rolld", {
     format = "%s has %s.",
     color = Color(155, 111, 176),
@@ -279,7 +279,7 @@ lia.chat.register("rolld", {
     deadCanChat = true
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.chat.register("flip", {
     format = "%s flipped a coin and it landed on %s.",
     color = Color(155, 111, 176),
@@ -292,4 +292,4 @@ lia.chat.register("flip", {
     end,
     deadCanChat = true
 })
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

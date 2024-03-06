@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 function MODULE:PostPlayerLoadout(client)
     local uniqueID = "StamCheck" .. client:SteamID()
     local character = client:getChar()
@@ -24,7 +24,7 @@ function MODULE:PostPlayerLoadout(client)
     end)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:KeyRelease(client, key)
     if self.StaminaSlowdown and key == IN_JUMP and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:getChar() then
         client:consumeStamina(15)
@@ -36,13 +36,13 @@ function MODULE:KeyRelease(client, key)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PlayerLoadedChar(client, character)
     local maxstm = character:getMaxStamina()
     timer.Simple(0.25, function() client:setLocalVar("stamina", maxstm) end)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PlayerStaminaLost(client)
     if client.isBreathing then return end
     client:EmitSound("player/breathe1.wav", 35, 100)
@@ -55,7 +55,7 @@ function MODULE:PlayerStaminaLost(client)
     end)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PlayerThrowPunch(client, _)
     local entity = client:GetTracedEntity()
     if entity:IsPlayer() and CAMI.PlayerHasAccess(client, "Staff Permissions - One Punch Man", nil) and IsValid(entity) and client:isStaffOnDuty() then
@@ -65,9 +65,9 @@ function MODULE:PlayerThrowPunch(client, _)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:OnCharAttribBoosted(client, character, attribID)
     local attribute = lia.attribs.list[attribID]
     if attribute and isfunction(attribute.onSetup) then attribute:onSetup(client, character:getAttrib(attribID, 0)) end
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 function MODULE:SaveData()
     local data = {}
     for _, v in ipairs(ents.FindByClass("lia_vendor")) do
@@ -20,7 +20,7 @@ function MODULE:SaveData()
     self:setData(data)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:LoadData()
     for _, v in ipairs(self:getData() or {}) do
         local entity = ents.Create("lia_vendor")
@@ -39,7 +39,7 @@ function MODULE:LoadData()
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:CanPlayerAccessVendor(client, vendor)
     if client:CanEditVendor() then return true end
     local character = client:getChar()
@@ -47,7 +47,7 @@ function MODULE:CanPlayerAccessVendor(client, vendor)
     if vendor:isFactionAllowed(client:Team()) then return true end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)
     local item = lia.item.list[itemType]
     local SteamIDWhitelist = item.SteamIDWhitelist
@@ -96,7 +96,7 @@ if not VENDOR_INVENTORY_MEASURE then
     VENDOR_INVENTORY_MEASURE:onInstanced()
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
     local canAccess, reason = hook.Run("CanPlayerTradeWithVendor", client, vendor, itemType, isSellingToVendor)
     if canAccess == false then
@@ -116,7 +116,7 @@ function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PlayerAccessVendor(client, vendor)
     vendor:addReceiver(client)
     net.Start("liaVendorOpen")
@@ -124,7 +124,7 @@ function MODULE:PlayerAccessVendor(client, vendor)
     net.Send(client)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:VendorSellEvent(client, vendor, itemType, _, character, price)
     local inventory = character:getInv()
     local item = inventory:getFirstItemOfType(itemType)
@@ -156,7 +156,7 @@ function MODULE:VendorSellEvent(client, vendor, itemType, _, character, price)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
     if not character:getInv():doesFitInventory(itemType) then
         client:notify("You don't have space for this item!")
@@ -174,4 +174,4 @@ function MODULE:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, char
         client.vendorTransaction = nil
     end)
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

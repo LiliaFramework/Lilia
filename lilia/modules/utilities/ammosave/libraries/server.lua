@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 function MODULE:CharacterPreSave(character)
     local client = character:getPlayer()
     if not IsValid(client) then return end
@@ -15,7 +15,7 @@ function MODULE:CharacterPreSave(character)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PlayerLoadedChar(client)
     local character = client:getChar()
     local ammoTable = character:getData("ammo", {})
@@ -30,7 +30,7 @@ function MODULE:PlayerLoadedChar(client)
     end)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:PlayerDeath(client, _, _)
     if not client:getChar() then return end
     local character = client:getChar()
@@ -42,4 +42,4 @@ function MODULE:PlayerDeath(client, _, _)
         end
     end
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

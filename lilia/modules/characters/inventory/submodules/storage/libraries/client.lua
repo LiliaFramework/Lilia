@@ -1,14 +1,14 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 local MODULE = MODULE
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 CanSpawnStorage = CreateClientConVar("can_spawn_storage", 1, true, true)
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:exitStorage()
     net.Start("liaStorageExit")
     net.SendToServer()
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:StorageUnlockPrompt(_)
     Derma_StringRequest(L("storPassWrite"), L("storPassWrite"), "", function(val)
         net.Start("liaStorageUnlock")
@@ -17,7 +17,7 @@ function MODULE:StorageUnlockPrompt(_)
     end)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:SetupQuickMenu(menu)
     if CAMI.PlayerHasAccess(client, "Staff Permissions - Can Spawn Storage", nil) then
         menu:addCheck("Spawn Storage Props as Storages", function(_, state)
@@ -32,7 +32,7 @@ function MODULE:SetupQuickMenu(menu)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:StorageOpen(storage, normal)
     if not IsValid(storage) then return end
     if not normal then
@@ -101,11 +101,11 @@ function MODULE:StorageOpen(storage, normal)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:transferItem(itemID)
     if not lia.item.instances[itemID] then return end
     net.Start("liaStorageTransfer")
     net.WriteUInt(itemID, 32)
     net.SendToServer()
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

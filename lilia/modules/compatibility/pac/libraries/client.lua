@@ -1,8 +1,8 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 function pace.LoadParts()
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:AdjustPACPartData(wearer, id, data)
     local item = lia.item.list[id]
     if item and isfunction(item.pacAdjust) then
@@ -11,14 +11,14 @@ function MODULE:AdjustPACPartData(wearer, id, data)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:getAdjustedPartData(wearer, id)
     if not self.partData[id] then return end
     local data = table.Copy(self.partData[id])
     return hook.Run("AdjustPACPartData", wearer, id, data) or data
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:attachPart(client, id)
     if not pac then return end
     local part = self:getAdjustedPartData(client, id)
@@ -29,7 +29,7 @@ function MODULE:attachPart(client, id)
     client.liaPACParts[id] = part
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:removePart(client, id)
     if not client.RemovePACPart or not client.liaPACParts then return end
     local part = client.liaPACParts[id]
@@ -39,7 +39,7 @@ function MODULE:removePart(client, id)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:DrawPlayerRagdoll(entity)
     local client = entity.objCache
     if IsValid(client) and not entity.overridePAC3 then
@@ -58,7 +58,7 @@ function MODULE:DrawPlayerRagdoll(entity)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:OnEntityCreated(entity)
     local class = entity:GetClass()
     timer.Simple(0, function()
@@ -85,7 +85,7 @@ function MODULE:OnEntityCreated(entity)
     end)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:OnPlayerObserve(client, state)
     local curParts = client:getParts()
     if curParts then client:resetParts() end
@@ -98,6 +98,6 @@ function MODULE:OnPlayerObserve(client, state)
     end
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 RunConsoleCommand("pac_debug_clmdl", "1")
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

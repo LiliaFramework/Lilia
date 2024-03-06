@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 net.Receive("liaDrawLogs", function()
     local client = LocalPlayer()
     if not CAMI.PlayerHasAccess(client, "Commands - View Logs", nil) then
@@ -22,7 +22,7 @@ net.Receive("liaDrawLogs", function()
     end
 end)
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 net.Receive("liaRequestLogsClient", function()
     local client = LocalPlayer()
     if not CAMI.PlayerHasAccess(client, "Commands - View Logs", nil) then
@@ -66,4 +66,4 @@ net.Receive("liaRequestLogsClient", function()
         datePicker:Close()
     end
 end)
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

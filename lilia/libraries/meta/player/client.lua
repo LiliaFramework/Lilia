@@ -1,17 +1,17 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 local playerMeta = FindMetaTable("Player")
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function playerMeta:getPlayTime()
     local diff = os.time(lia.util.dateToNumber(lia.lastJoin)) - os.time(lia.util.dateToNumber(lia.firstJoin))
     return diff + (RealTime() - lia.joinTime or 0)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function playerMeta:OpenUI(panel)
     return vgui.Create(panel)
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function playerMeta:SetWeighPoint(name, vector, OnReach)
     hook.Add("HUDPaint", "WeighPoint", function()
         local dist = self:GetPos():Distance(vector)
@@ -30,4 +30,4 @@ function playerMeta:SetWeighPoint(name, vector, OnReach)
         if IsValid(OnReach) then OnReach() end
     end)
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

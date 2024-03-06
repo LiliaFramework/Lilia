@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 function MODULE:GenerateRules()
     local body = "<h1>Game Server Rules</h1>"
     -- Introduction
@@ -32,7 +32,7 @@ function MODULE:GenerateRules()
     return body
 end
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 function MODULE:GenerateTutorial()
     local body = "<h1>How to Make Perfect Scrambled Eggs</h1>"
     -- Introduction
@@ -75,4 +75,4 @@ function MODULE:GenerateTutorial()
     body = body .. "<p>Transfer your scrambled eggs to a plate, and they're ready to enjoy! Season with additional salt and pepper if needed.</p>"
     return body
 end
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+

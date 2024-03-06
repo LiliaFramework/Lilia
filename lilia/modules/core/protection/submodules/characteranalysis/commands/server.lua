@@ -1,4 +1,4 @@
-﻿---------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+﻿
 lia.command.add("auditmoney", {
     privilege = "Audit Money",
     superAdminOnly = true,
@@ -11,11 +11,11 @@ lia.command.add("auditmoney", {
     end
 })
 
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
 lia.command.add("report", {
     privilege = "Check Player Reports",
     syntax = "<steamID64>",
     superAdminOnly = true,
     onRun = function(client, arguments) netstream.Start(client, "liaReport", CharacterAnalysisCore:GenerateReport(arguments[1])) end
 })
----------------------------------------------------------------------------[[//////////////////]]---------------------------------------------------------------------------
+
