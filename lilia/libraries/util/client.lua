@@ -100,13 +100,13 @@ function lia.util.drawBlurAt(x, y, w, h, amount, passes)
 end
 
 function lia.util.endCaption(text, duration)
-	RunConsoleCommand("closecaption", "1")
-	gui.AddCaption(text, duration or string.len(text) * 0.1)
+    RunConsoleCommand("closecaption", "1")
+    gui.AddCaption(text, duration or string.len(text) * 0.1)
 end
 
 function lia.util.startCaption(text, duration)
-	RunConsoleCommand("closecaption", "1")
-	gui.AddCaption(text, duration or string.len(text) * 0.1)
+    RunConsoleCommand("closecaption", "1")
+    gui.AddCaption(text, duration or string.len(text) * 0.1)
 end
 
 function lia.util.getInjuredColor(client)
