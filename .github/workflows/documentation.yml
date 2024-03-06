@@ -2,8 +2,9 @@ name: Deploy GitHub Pages
 
 on:
   push:
-    jobs:
-      - build:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -54,14 +55,18 @@ jobs:
         uses: actions/checkout@v2
         
       - name: Set up Git
-        uses: actions/setup-git@v2
-        with:
-          repository: Lilia-Framework/Lilia-Framework.github.io
-          token: ${{ secrets.PAT_TOKEN }}
-
-      - name: Pull gh-pages branch
-        run: git pull origin gh-pages
-
-      - name: Push changes to destination repo
         run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+      
+      - name: Pull gh-pages branch
+        run: |
+          git clone https://github.com/Lilia-Framework/Lilia-Framework.github.io tmp
+          cp -R tmp/* ./
+          rm -rf tmp
+          
+      - name: Commit and push changes to destination repo
+        run: |
+          git add .
+          git commit -m "Update gh-pages from main branch"
           git push origin gh-pages
