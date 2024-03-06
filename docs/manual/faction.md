@@ -1,4 +1,4 @@
-# Faction Structure
+# Structure - Faction
 
 ```lua
 FACTION.name = "Minecrafters"

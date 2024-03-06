@@ -1,4 +1,4 @@
-# Installation Tutorial
+# Information - Installation Tutorial
 
 Lilia is a versatile roleplaying framework for the Garry's Mod game. This tutorial will guide you through the process of installing Lilia for your Garry's Mod server.
 
@@ -36,9 +36,7 @@ If you haven't already, set up your Garry's Mod server and ensure it's running w
 ## Step 5: Configuring Lilia
 
 1. Before making any changes, consider making a backup of the default configuration.
-2. Edit this [configuration](https://github.com/bleonheart/Lilia-Skeleton/blob/main/skeleton/schema/sh_config.lua) to override any default values you wish.
-3. Copy the modified configuration to your schema folder.
-4. Include it in your sh_schema using the [following line](https://github.com/bleonheart/Lilia-Skeleton/blob/main/skeleton/schema/sh_schema.lua#L8C1-L9C1).
+2. Edit this [configuration](https://github.com/Lilia-Framework/Lilia-Skeleton/blob/main/skeleton/schema/config/shared.lua) to override any default values you wish.
 
 ## Step 6: Starting Lilia on Your Server
 
@@ -60,7 +58,7 @@ To install a roleplay schema for your Lilia framework, follow these steps:
 - [Public Modules](https://github.com/Lilia-Framework/Lilia-Modules)
 - [Bozy's Modules](https://github.com/B0zy/Boz-Lilia-Modules)
 
-2. Set up factions, items, and modules as required, following the specific schema's documentation or online resources.
+2. Set up factions, items, and modules as required.
 3. Set the startup gamemode to the schema folder ID within your server's startup configuration.
 
 That's it! You've successfully installed a roleplay schema using Lilia. Enjoy your customized roleplaying experience!

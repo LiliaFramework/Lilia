@@ -1,4 +1,5 @@
-# Item Structure
+# Structure - Items
+
 Items with a specific base must be organized within a folder named after that base. For example, if you have a weapon that uses the 'weapons' base, you should save it under 'items/weapons/ItemID.lua'. If an item is not found within a corresponding base folder or if its base is missing, it will default to the basic item base, which only allows for dropping
 
 ### Default Item Example:
