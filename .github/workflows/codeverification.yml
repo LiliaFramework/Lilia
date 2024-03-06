@@ -205,6 +205,8 @@ jobs:
 
       - name: Commit and push changes to Lilia-Framework.github.io repository
         run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git add .
           git commit -m "Update documentation"
           GHTOKEN git push https://Lilia-Framework:${GHTOKEN}@github.com/Lilia-Framework/Lilia-Framework.github.io
