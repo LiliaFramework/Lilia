@@ -83,7 +83,7 @@ SqlLiteTableCreate = [[
         _data VARCHAR,
         _money VARCHAR,
         _faction VARCHAR,
-        _recognized_as TEXT NOT NULL DEFAULT '',
+        _recognized_as TEXT NOT NULL DEFAULT ''
     );
     
     CREATE TABLE IF NOT EXISTS lia_inventories (
