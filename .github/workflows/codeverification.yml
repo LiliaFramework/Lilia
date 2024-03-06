@@ -209,5 +209,5 @@ jobs:
           git config --local user.name "GitHub Action"
           git add .
           git commit -m "Update documentation"
-          GHTOKEN git push https://Lilia-Framework:${GHTOKEN}@github.com/Lilia-Framework/Lilia-Framework.github.io
+          git push https://Lilia-Framework:${GHTOKEN}@github.com/Lilia-Framework/Lilia-Framework.github.io
         working-directory: lilia-website
