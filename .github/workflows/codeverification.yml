@@ -192,8 +192,9 @@ jobs:
       - name: Update Wiki
         run: |
           echo "Committing changes..."
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          cd "${{ github.workspace }}"  # Change to the correct directory
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
           if [[ -n "$(git status --porcelain)" ]]; then
             git add -A
             git commit -m "Linted Code"
@@ -201,4 +202,4 @@ jobs:
           else
             echo "No changes to commit."
           fi
-        working-directory: "${{ github.workspace }}" 
+        working-directory: "${{ github.workspace }}"
