@@ -6,23 +6,23 @@ file = {
 }
 
 module_file = {
-	Character = "documentation/hooks/class.lua",
-	Entity = "documentation/hooks/class.lua",
-	Inventory = "documentation/hooks/class.lua",
-	Item = "documentation/hooks/class.lua",
-	Player = "documentation/hooks/class.lua"
+	Character = "gamemode/core/meta/sh_character.lua",
+	Entity = "gamemode/core/meta/sh_entity.lua",
+	Inventory = "gamemode/core/meta/sh_inventory.lua",
+	Item = "gamemode/core/meta/sh_item.lua",
+	Player = "gamemode/core/meta/sh_player.lua"
 }
 
-dir = "documentation/html"
-project = "Lilia"
-title = "Lilia Documentation"
+dir = "docs/html"
+project = "Helix"
+title = "Helix Documentation"
 
 no_space_before_args = true
-style = "documentation/css"
-template = "documentation/templates"
+style = "docs/css"
+template = "docs/templates"
 format = "markdown"
 ignore = true
-topics = "documentation/manual"
+topics = "docs/manual"
 use_markdown_titles = true
 kind_names = {module = "Libraries", topic = "Manual"}
 merge = true
@@ -56,9 +56,11 @@ end
 new_type("hooks", "Hooks", true)
 new_type("panel", "Panels", true)
 
+-- helix types
 tparam_alias("char", "Character")
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
+tparam_alias("ixtype", "ix.type")
 tparam_alias("date", "date")
 
 -- standard types
