@@ -189,11 +189,11 @@ jobs:
         run: |
           cp -v docs/css/* docs/html
           cp -v docs/js/* docs/html
-      - name: Update Wiki
+      - name: Commit changes
         run: |
           echo "Committing changes..."
-          git config user.email "action@github.com"
-          git config user.name "GitHub Action"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           if [[ -n "$(git status --porcelain)" ]]; then
             git add -A
             git commit -m "Linted Code"
