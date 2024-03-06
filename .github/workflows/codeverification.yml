@@ -209,6 +209,6 @@ jobs:
           git config --local user.name "GitHub Action"
           git add .
           git commit -m "Update documentation"
-          git push https://${{ secrets.GH_TOKEN }}@github.com/Lilia-Framework/Lilia-Framework.github.io.git master
+          git push https://${{ secrets.GH_TOKEN }}@github.com/Lilia-Framework/Lilia-Framework.github.io.git main
 
         working-directory: lilia-website
