@@ -1,7 +1,7 @@
 
 {%
 local baseUrl = ldoc.css:gsub("ldoc.css", "")
-local repo = "https://github.com/bleonheart/LiliaTest/"
+local repo = "https://github.com/Lilia-Framework/Lilia-Experimental/"
 local pageTitle = mod and (ldoc.display_name(mod) .. " - " .. ldoc.title) or ldoc.title
 
 local oldmarkup = ldoc.markup
@@ -55,18 +55,18 @@ end
 
 	<body>
 		<main>
-			{(documentation/templates/sidebar.ltp)}
+			{(docs/templates/sidebar.ltp)}
 
 			<article>
 				{% if (ldoc.root) then -- we're rendering the landing page (index.html) %}
-					{(documentation/templates/landing.ltp)}
+					{(docs/templates/landing.ltp)}
 				{% elseif (ldoc.body) then -- we're rendering non-code elements %}
 					<div class="wrapper">
 						{* ldoc.body *}
 					</div>
 				{% elseif (module) then -- we're rendering libary contents %}
 					<div class="wrapper">
-						{(documentation/templates/module.ltp)}
+						{(docs/templates/module.ltp)}
 					</div>
 				{% end %}
 			</article>
