@@ -3,6 +3,7 @@ name: Commit Verification
 on:
   push:
   pull_request:  
+
 permissions:
   actions: write
   checks: write
@@ -151,18 +152,22 @@ jobs:
             echo "No changes to commit."
           fi
         working-directory: "${{ github.workspace }}"
+
   WikiDeploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
         with:
           path: lilia
 
-      - uses: leafo/gh-actions-lua@v8.0.0
+      - name: Setup Lua
+        uses: leafo/gh-actions-lua@v8.0.0
         with:
           luaVersion: "5.2"
 
-      - uses: leafo/gh-actions-luarocks@v4.0.0
+      - name: Setup LuaRocks
+        uses: leafo/gh-actions-luarocks@v4.0.0
 
       - name: Pull LDoc
         uses: actions/checkout@v2
@@ -189,10 +194,9 @@ jobs:
         run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
-          git clone https://github.com/Lilia-Framework/Lilia-Framework.github.io.git deploy
+          git clone git@github.com:Lilia-Framework/Lilia-Framework.github.io.git deploy
           cp -r lilia/docs/html/* deploy
           cd deploy
           git add .
           git commit -m "Update Wiki"
           git push origin main
-
