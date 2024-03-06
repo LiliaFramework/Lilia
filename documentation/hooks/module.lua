@@ -173,7 +173,6 @@ end
 -- @player client Player attempting to equip the item
 -- @tab item Item being equipped
 -- @treturn bool Whether or not to allow the player to equip the item
--- @see CanPlayerUnequipItem
 -- @usage function PLUGIN:CanPlayerEquipItem(client, item)
 -- 	return client:IsAdmin() -- Restrict equipping items to admins only.
 -- end
@@ -304,7 +303,6 @@ end
 -- @player client Player attempting to unequip an item
 -- @tab item Item being unequipped
 -- @treturn bool Whether or not to allow the player to unequip the item
--- @see CanPlayerEquipItem
 -- @usage function PLUGIN:CanPlayerUnequipItem(client, item)
 -- 	return false -- Disallow unequipping items.
 -- end
@@ -528,8 +526,6 @@ end
 -- 		-- etc.
 -- 	})
 -- end
--- @see ix.chat.Register
--- @see ix.chat.classes
 function InitializedChatClasses()
 end
 
