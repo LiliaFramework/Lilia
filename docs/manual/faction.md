@@ -34,6 +34,8 @@ FACTION_MINECRAFTER = FACTION.index
 
 - **FACTION.limit**: _(Optional)_ The limit of players in this faction at a given time. This restricts how many players can be members of this faction simultaneously.
 
+- **FACTION.oneCharOnly**: _(Optional)_ Adds a limit that prevents a player from having more than one character in a faction when being transferred.
+
 - **FACTION.health**: _(Optional)_ This variable represents the default health of players in the faction. You can set a numerical value, such as 100, to specify the default health. Players in this faction will start with this amount of health unless modified by other in-game factors. **Default is 100**.
 
 - **FACTION.armor**: _(Optional)_ Similar to health, this variable represents the default armor value of players in the faction. Armor can provide additional protection against damage. Set a numerical value, such as 50, to determine the default armor value for faction members. **Default is 0**.
