@@ -9,7 +9,7 @@ once it's created and assigned to a certain faction. For example, giving a polic
 These hooks are used in faction tables that are created in `schema/factions/sh_factionname.lua` and cannot be used like
 regular gamemode hooks.
 ]]
--- @hooks Faction
+-- @functions Faction
 
 --- Called when the default name for a character needs to be retrieved (i.e upon initial creation).
 -- @realm shared
