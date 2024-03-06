@@ -1,4 +1,5 @@
 
+-- luacheck: ignore 111
 
 --[[--
 Faction setup hooks.
@@ -17,31 +18,31 @@ regular gamemode hooks.
 -- @usage function FACTION:GetDefaultName(client)
 -- 	return "MPF-RCT." .. tostring(math.random(1, 99999))
 -- end
-function getDefaultName(client)
+function GetDefaultName(client)
 end
 
 --- Called when a character has been initally created and assigned to this faction.
 -- @realm server
 -- @player client Client that owns the character
 -- @char character Character that has been created
--- @usage function FACTION:onCharCreated(client, character)
+-- @usage function FACTION:OnCharacterCreated(client, character)
 -- 	local inventory = character:GetInventory()
 -- 	inventory:Add("pistol")
 -- end
-function onCharCreated(client, character)
+function OnCharacterCreated(client, character)
 end
 
 --- Called when a character in this faction has spawned in the world.
 -- @realm server
 -- @player client Player that has just spawned
-function onSpawn(client)
+function OnSpawn(client)
 end
 
 --- Called when a player's character has been transferred to this faction.
 -- @realm server
 -- @char character Character that was transferred
--- @usage function FACTION:onTransferred(character)
+-- @usage function FACTION:OnTransferred(character)
 -- 	character:SetModel(self.models[1])
 -- end
-function onTransferred(character)
+function OnTransferred(character)
 end

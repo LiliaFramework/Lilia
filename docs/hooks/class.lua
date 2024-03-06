@@ -1,4 +1,5 @@
 
+-- luacheck: ignore 111
 
 --[[--
 Class setup hooks.
@@ -15,14 +16,14 @@ valid in class tables that are created in `schema/classes/sh_classname.lua`, and
 -- @usage function CLASS:CanSwitchTo(client)
 -- 	return client:IsAdmin() -- only admins allowed in this class!
 -- end
-function onCanBe(client)
+function CanSwitchTo(client)
 end
 
 --- Called when a character has left this class and has joined a different one. You can get the class the character has
 -- has joined by calling `character:GetClass()`.
 -- @realm server
 -- @player client Player who left this class
-function onLeave(client)
+function OnLeave(client)
 end
 
 --- Called when a character has joined this class.
@@ -31,11 +32,11 @@ end
 -- @usage function CLASS:OnSet(client)
 -- 	client:SetModel("models/police.mdl")
 -- end
-function onSet(client)
+function OnSet(client)
 end
 
 --- Called when a character in this class has spawned in the world.
 -- @realm server
 -- @player client Player that has just spawned
-function onSpawn(client)
+function OnSpawn(client)
 end
