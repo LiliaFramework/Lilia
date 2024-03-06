@@ -187,7 +187,7 @@ jobs:
       - name: Deploy
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'Lilia-Framework/Lilia' && success()
         run: |
-          git clone git@github.com:Lilia-Framework/Lilia-Framework.github.io.git deploy
+          git clone https://github.com/Lilia-Framework/Lilia-Framework.github.io.git deploy
           cp -r lilia/docs/html/* deploy
           cd deploy
           git config --local user.email "action@github.com"
