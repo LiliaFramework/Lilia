@@ -6,16 +6,16 @@ file = {
 }
 
 module_file = {
-	Character = "gamemode/core/meta/sh_character.lua",
-	Entity = "gamemode/core/meta/sh_entity.lua",
-	Inventory = "gamemode/core/meta/sh_inventory.lua",
-	Item = "gamemode/core/meta/sh_item.lua",
-	Player = "gamemode/core/meta/sh_player.lua"
+	Character = "lilia/libraries/character/meta/shared.lua",
+	Entity = "lilia/libraries/meta/entity/shared.lua",
+	Inventory = "lilia/libraries/inventory/meta/shared.lua",
+	Item = "lilia/libraries/items/meta/shared.lua",
+	Player = "lilia/libraries/meta/player/shared.lua"
 }
 
 dir = "documentation/html"
-project = "Helix"
-title = "Helix Documentation"
+project = "Lilia"
+title = "Lilia Documentation"
 
 no_space_before_args = true
 style = "documentation/css"
@@ -56,7 +56,6 @@ end
 new_type("hooks", "Hooks", true)
 new_type("panel", "Panels", true)
 
--- helix types
 tparam_alias("char", "Character")
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
