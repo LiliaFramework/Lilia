@@ -271,14 +271,6 @@ function lia.db.wipeTables(callback)
 end
 
 function lia.db.loadTables()
-    local ignore = function() end
-    lia.db.query("SHOW COLUMNS FROM lia_characters WHERE Field = 'recognized_as'"):next(function(result)
-        if result and result[1] and result[1].Field == "recognized_as" then
-            print("Renaming SQL table...")
-            lia.db.query("ALTER TABLE lia_characters CHANGE recognized_as _recognized_as TEXT NOT NULL COLLATE 'utf8mb4_general_ci'"):catch(ignore)
-        end
-    end):catch(ignore)
-
     local function done()
         lia.db.tablesLoaded = true
         hook.Run("LiliaTablesLoaded")

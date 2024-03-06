@@ -195,9 +195,8 @@ function MODULE:ClassOnLoadout(client)
 end
 
 function MODULE:ClassPostLoadout(client)
-    local faction = lia.faction.indices[client:Team()]
-    if not faction then return end
-    if class.bodyGroups and istable(class.bodyGroups) then
+    local class = data and lia.class.list[data]
+    if class and data and class.bodyGroups and istable(class.bodyGroups) then
         local groups = {}
         for k, value in pairs(class.bodyGroups) do
             local index = client:FindBodygroupByName(k)

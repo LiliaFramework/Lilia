@@ -37,13 +37,6 @@ end
 
 function GM:LiliaTablesLoaded()
     local ignore = function() end
-    lia.db.query("SHOW COLUMNS FROM lia_characters WHERE Field = 'recognized_as'"):next(function(result)
-        if result and result[1] and result[1].Field == "recognized_as" then
-            print("Renaming SQL table...")
-            lia.db.query("ALTER TABLE lia_characters CHANGE recognized_as _recognized_as TEXT NOT NULL COLLATE 'utf8mb4_general_ci'"):catch(ignore)
-        end
-    end):catch(ignore)
-
     lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE IF EXISTS lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)

@@ -142,46 +142,26 @@ lia.char.registerVar("name", {
             newData.name = string.Trim(value):sub(1, 70)
         end
     end,
-    onPostSetup = function(panel, faction, payload)
-        local name, disabled = hook.Run("GetDefaultCharName", LocalPlayer(), faction)
-        if name then
-            panel:SetText(name)
-            payload.name = name
-        end
-
-        if disabled then
-            panel:SetDisabled(true)
-            panel:SetEditable(false)
-        end
-    end
 })
 
 lia.char.registerVar("desc", {
     field = "_desc",
-    default = "",
+    default = "Please Enter Your Description With The Minimum Of " .. lia.config.MinDescLen .. " Characters!",
     index = 2,
     onValidate = function(value, data, client)
-        local desc, override = hook.Run("GetDefaultCharDesc", client, data.faction, data)
+        local desc, override = hook.Run("GetDefaultCharDesc", client, data.faction)
         local minLength = lia.config.MinDescLen
         if isstring(desc) and override then return true end
         if not value or #value:gsub("%s", "") < minLength then return false, "descMinLen", minLength end
     end,
     onAdjust = function(client, data, value, newData)
-        local desc, override = hook.Run("GetDefaultCharDesc", client, data.faction, data)
-        if isstring(desc) and override then newData.desc = desc end
+        local desc, override = hook.Run("GetDefaultCharDesc", client, data.faction)
+        if isstring(desc) and override then
+            newData.desc = desc
+        else
+            newData.name = ""
+        end
     end,
-    onPostSetup = function(panel, faction, payload)
-        local desc, disabled = hook.Run("GetDefaultCharDesc", LocalPlayer(), faction)
-        if desc then
-            panel:SetText(desc)
-            payload.desc = desc
-        end
-
-        if disabled then
-            panel:SetDisabled(true)
-            panel:SetEditable(false)
-        end
-    end
 })
 
 lia.char.registerVar("model", {
