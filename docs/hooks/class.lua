@@ -13,17 +13,21 @@ valid in class tables that are created in `schema/classes/sh_classname.lua`, and
 -- @realm shared
 -- @player client Client that wants to switch to this class
 -- @treturn bool True if the player is allowed to switch to this class
--- @usage function CLASS:CanSwitchTo(client)
--- 	return client:IsAdmin() -- only admins allowed in this class!
--- end
-function CanSwitchTo(client)
+-- @usage function CLASS:onCanBe(client)
+--return client:IsAdmin() or client:getChar():hasFlags("Z") -- Only admins or people with the Z flag are allowed in this class!
+--end
+function onCanBe(client)
 end
 
 --- Called when a character has left this class and has joined a different one. You can get the class the character has
 -- has joined by calling `character:GetClass()`.
 -- @realm server
 -- @player client Player who left this class
-function OnLeave(client)
+-- @usage function CLASS:onSpawn(client)
+--local character = client:getChar()
+--character:SetMode("models/player/alyx.mdl")
+--end
+function onLeave(client)
 end
 
 --- Called when a character has joined this class.
@@ -32,11 +36,15 @@ end
 -- @usage function CLASS:OnSet(client)
 -- 	client:SetModel("models/police.mdl")
 -- end
-function OnSet(client)
+function onSet(client)
 end
 
 --- Called when a character in this class has spawned in the world.
 -- @realm server
 -- @player client Player that has just spawned
-function OnSpawn(client)
+-- @usage function CLASS:onSpawn(client)
+--client:SetMaxHealth(500) -- Sets your Max Health to 500
+--client:SetHealth(500) -- Subsequently sets your Health to 500
+--end
+function onSpawn(client)
 end
