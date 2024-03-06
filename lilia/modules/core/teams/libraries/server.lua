@@ -128,7 +128,8 @@ end
 
 function MODULE:ClassOnLoadout(client)
     local character = client:getChar()
-    local class = lia.class.list[character:getClass()]
+    local data = character:getData("pclass")
+    local class = data and lia.class.list[data]
     if not class then return end
     if class.None then return end
     if class.scale then
