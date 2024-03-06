@@ -23,7 +23,6 @@
         `_money` INT(10) UNSIGNED NULL DEFAULT '0',
         `_faction` VARCHAR(24) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         `_recognized_as` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
-        `_recognized_as` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
         PRIMARY KEY (`_id`)
     );
     
