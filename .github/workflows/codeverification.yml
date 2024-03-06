@@ -188,7 +188,7 @@ jobs:
       - name: Deploy
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'Lilia-Framework/Lilia' && success()
         env:
-          GH_PAT: ${{ secrets.PAT}}
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git clone https://github.com/Lilia-Framework/Lilia-Framework.github.io.git deploy
           cp -r lilia/docs/html/* deploy
