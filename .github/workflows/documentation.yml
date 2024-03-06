@@ -2,9 +2,8 @@ name: Deploy GitHub Pages
 
 on:
   push:
-    branches:
-      - main
-
+    jobs:
+      - build:
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -46,3 +45,23 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: lilia/documentation/html
           cname: https://lilia-framework.github.io/documentation
+          name: Upload gh-pages to Another Repo
+
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        
+      - name: Set up Git
+        uses: actions/setup-git@v2
+        with:
+          repository: Lilia-Framework/Lilia-Framework.github.io
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Pull gh-pages branch
+        run: git pull origin gh-pages
+
+      - name: Push changes to destination repo
+        run: |
+          git push origin gh-pages
