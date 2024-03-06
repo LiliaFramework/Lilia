@@ -1,6 +1,6 @@
 
 file = {
-	"documentation/hooks",
+	"docs/hooks",
 	"lilia",
 	exclude = {"lilia/libraries/thirdparty"}
 }
@@ -13,16 +13,16 @@ module_file = {
 	Player = "lilia/libraries/meta/player/shared.lua"
 }
 
-dir = "documentation/html"
+dir = "docs/html"
 project = "Lilia"
 title = "Lilia Documentation"
 
 no_space_before_args = true
-style = "documentation/css"
-template = "documentation/templates"
+style = "docs/css"
+template = "docs/templates"
 format = "markdown"
 ignore = true
-topics = "documentation/manual"
+topics = "docs/manual"
 use_markdown_titles = true
 kind_names = {module = "Libraries", topic = "Manual"}
 merge = true
