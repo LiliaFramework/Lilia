@@ -1,6 +1,4 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 lia.command.add("doorsell", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -23,7 +21,6 @@ lia.command.add("doorsell", {
         end
     end
 })
-
 
 lia.command.add("doorsetlocked", {
     adminOnly = true,
@@ -56,7 +53,6 @@ lia.command.add("doorsetlocked", {
         end
     end
 })
-
 
 lia.command.add("doorbuy", {
     adminOnly = false,
@@ -91,7 +87,6 @@ lia.command.add("doorbuy", {
     end
 })
 
-
 lia.command.add("doorsetunownable", {
     adminOnly = true,
     syntax = "[string name]",
@@ -115,7 +110,6 @@ lia.command.add("doorsetunownable", {
     end
 })
 
-
 lia.command.add("doorsetownable", {
     adminOnly = true,
     syntax = "[string name]",
@@ -138,7 +132,6 @@ lia.command.add("doorsetownable", {
         end
     end
 })
-
 
 lia.command.add("dooraddfaction", {
     adminOnly = true,
@@ -187,7 +180,6 @@ lia.command.add("dooraddfaction", {
     end
 })
 
-
 lia.command.add("doorremovefaction", {
     adminOnly = true,
     syntax = "[string faction]",
@@ -235,7 +227,6 @@ lia.command.add("doorremovefaction", {
     end
 })
 
-
 lia.command.add("doorsetdisabled", {
     adminOnly = true,
     syntax = "<bool disabled>",
@@ -253,7 +244,6 @@ lia.command.add("doorsetdisabled", {
         end
     end
 })
-
 
 lia.command.add("doorsettitle", {
     syntax = "<string title>",
@@ -277,7 +267,6 @@ lia.command.add("doorsettitle", {
     end
 })
 
-
 lia.command.add("doorsetparent", {
     adminOnly = true,
     privilege = "Manage Doors",
@@ -291,7 +280,6 @@ lia.command.add("doorsetparent", {
         end
     end
 })
-
 
 lia.command.add("doorsetchild", {
     adminOnly = true,
@@ -316,7 +304,6 @@ lia.command.add("doorsetchild", {
     end
 })
 
-
 lia.command.add("savedoors", {
     adminOnly = true,
     privilege = "Manage Doors",
@@ -325,7 +312,6 @@ lia.command.add("savedoors", {
         client:notify("Saved Doors")
     end
 })
-
 
 lia.command.add("doorremovechild", {
     adminOnly = true,
@@ -350,7 +336,6 @@ lia.command.add("doorremovechild", {
         end
     end
 })
-
 
 lia.command.add("doorsetclass", {
     adminOnly = true,
@@ -392,4 +377,3 @@ lia.command.add("doorsetclass", {
     end,
     alias = {"jobdoor"}
 })
-

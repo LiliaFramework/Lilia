@@ -1,6 +1,4 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 net.Receive("liaPACSync", function()
     for _, client in ipairs(player.GetAll()) do
         for id in pairs(client:getParts()) do
@@ -9,7 +7,6 @@ net.Receive("liaPACSync", function()
     end
 end)
 
-
 net.Receive("liaPACPartAdd", function()
     local client = net.ReadEntity()
     local id = net.ReadString()
@@ -17,14 +14,12 @@ net.Receive("liaPACPartAdd", function()
     MODULE:attachPart(client, id)
 end)
 
-
 net.Receive("liaPACPartRemove", function()
     local client = net.ReadEntity()
     local id = net.ReadString()
     if not IsValid(client) then return end
     MODULE:removePart(client, id)
 end)
-
 
 net.Receive("liaPACPartReset", function()
     local client = net.ReadEntity()
@@ -37,4 +32,3 @@ net.Receive("liaPACPartReset", function()
         client.liaPACParts = nil
     end
 end)
-

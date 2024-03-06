@@ -1,12 +1,7 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 util.AddNetworkString("liaDrawLogs")
-
 util.AddNetworkString("liaRequestLogsClient")
-
 util.AddNetworkString("liaRequestLogsServer")
-
 net.Receive("liaRequestLogsServer", function(_, client)
     if not CAMI.PlayerHasAccess(client, "Commands - View Logs", nil) then
         client:notify(":|")
@@ -20,4 +15,3 @@ net.Receive("liaRequestLogsServer", function(_, client)
     net.WriteTable(logs)
     net.Send(client)
 end)
-

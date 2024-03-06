@@ -1,6 +1,4 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 function group()
     local g = {}
     function g:FadeOutRem(callback, fullRem)
@@ -52,12 +50,10 @@ function group()
     return g
 end
 
-
 function getHovCol(col)
     if not col then return end
     return Color(col.r + 10, col.g + 10, col.b + 10, col.a)
 end
-
 
 function DebugPanel(pnl)
     function pnl:Paint(w, h)
@@ -65,7 +61,6 @@ function DebugPanel(pnl)
         surface.DrawRect(0, 0, w, h)
     end
 end
-
 
 function strPosAngConv(str)
     local pos = str:Split(";")[1]:Split("setpos")[2]:Split(" ")
@@ -75,11 +70,9 @@ function strPosAngConv(str)
     return pos, ang
 end
 
-
 function MODULE:ColorBrighten(col)
     return Color(col.r + 10, col.g + 10, col.b + 10, col.a)
 end
-
 
 function MODULE:StyleButton(pnl, hoverCol, idleCol, roundCorners, smoothHover)
     AccessorFunc(pnl, "color", "Color")
@@ -98,7 +91,6 @@ function MODULE:StyleButton(pnl, hoverCol, idleCol, roundCorners, smoothHover)
         draw.RoundedBox(roundCorners, 0, 0, w, h, self:GetColor())
     end
 end
-
 
 function draw.Circle(x, y, radius, seg)
     local cir = {}
@@ -130,7 +122,6 @@ function draw.Circle(x, y, radius, seg)
     surface.DrawPoly(cir)
 end
 
-
 function CreateOverBlur(callback)
     local blur = vgui.Create("DPanel")
     blur:SetSize(ScrW(), ScrH())
@@ -160,7 +151,6 @@ function CreateOverBlur(callback)
     return blur
 end
 
-
 function follow(pnl1, pnl2, side)
     side = side or BOTTOM
     if side == BOTTOM then
@@ -173,7 +163,6 @@ function follow(pnl1, pnl2, side)
     end
 end
 
-
 MODULE.drawTextEntry = function(panel, w, h)
     if panel:IsEditing() then
         color = color_white
@@ -184,4 +173,3 @@ MODULE.drawTextEntry = function(panel, w, h)
     draw.RoundedBox(4, 0, 0, w, h, color)
     panel:DrawTextEntryText(color_black, Color(75, 75, 235), color_black)
 end
-

@@ -1,5 +1,4 @@
-﻿
-netstream.Hook("rgnDirect", function(client, target, name)
+﻿netstream.Hook("rgnDirect", function(client, target, name)
     if target:GetPos():DistToSqr(client:GetPos()) > 100000 then return end
     if target:getChar():recognize(client:getChar(), name) then
         netstream.Start(client, "rgnDone")
@@ -9,7 +8,6 @@ netstream.Hook("rgnDirect", function(client, target, name)
         client:notifyLocalized("already_recognized")
     end
 end)
-
 
 netstream.Hook("rgn", function(client, level, name)
     local targets = {}
@@ -40,4 +38,3 @@ netstream.Hook("rgn", function(client, level, name)
         end
     end
 end)
-

@@ -1,12 +1,7 @@
-﻿
-MODULE.name = "Framework UI - Scoreboard"
-
+﻿MODULE.name = "Framework UI - Scoreboard"
 MODULE.author = "76561198312513285"
-
 MODULE.discord = "@liliaplayer"
-
 MODULE.desc = "Adds a RPish Scoreboard with Recognition"
-
 MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Access Scoreboard Admin Options",
@@ -19,4 +14,3 @@ MODULE.CAMIPrivileges = {
         Description = "Allows access to Scoreboard Info Out Of Staff.",
     },
 }
-

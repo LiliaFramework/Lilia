@@ -1,11 +1,8 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 netstream.Hook("rgnDone", function()
     local client = LocalPlayer()
     hook.Run("OnCharRecognized", client, id)
 end)
-
 
 netstream.Hook("rgnMenu", function()
     local menu = DermaMenu()
@@ -22,4 +19,3 @@ netstream.Hook("rgnMenu", function()
     menu:MakePopup()
     menu:Center()
 end)
-

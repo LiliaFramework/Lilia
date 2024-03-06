@@ -1,5 +1,4 @@
-﻿
-MySQLTableCreate = [[
+﻿MySQLTableCreate = [[
     CREATE TABLE IF NOT EXISTS `lia_players` (
         `_steamID` VARCHAR(20) NOT NULL COLLATE 'utf8mb4_general_ci',
         `_steamName` VARCHAR(32) NOT NULL COLLATE 'utf8mb4_general_ci',
@@ -23,8 +22,8 @@ MySQLTableCreate = [[
         `_data` VARCHAR(1024) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         `_money` INT(10) UNSIGNED NULL DEFAULT '0',
         `_faction` VARCHAR(24) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-        `recognized_as` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
-        `chars_we_know` TEXT NOT NULL COLLATE 'utf8mb4_general_ci', 
+        `_recognized_as` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
+        `_recognized_as` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
         PRIMARY KEY (`_id`)
     );
     
@@ -62,7 +61,6 @@ MySQLTableCreate = [[
         PRIMARY KEY (`id`)
     );    
 ]]
-
 SqlLiteTableCreate = [[
     CREATE TABLE IF NOT EXISTS lia_players (
         _steamID varchar,
@@ -86,8 +84,7 @@ SqlLiteTableCreate = [[
         _data VARCHAR,
         _money VARCHAR,
         _faction VARCHAR,
-        recognized_as TEXT NOT NULL DEFAULT '',
-        chars_we_know TEXT NOT NULL DEFAULT ''    
+        _recognized_as TEXT NOT NULL DEFAULT '',
     );
     
     CREATE TABLE IF NOT EXISTS lia_inventories (
@@ -121,7 +118,6 @@ SqlLiteTableCreate = [[
         time INTEGER NOT NULL
     );
 ]]
-
 MySQLTableDrop = [[
     DROP TABLE IF EXISTS `lia_players`;
     DROP TABLE IF EXISTS `lia_characters`;
@@ -130,7 +126,6 @@ MySQLTableDrop = [[
     DROP TABLE IF EXISTS `lia_invdata`;
     DROP TABLE IF EXISTS `lia_inventories`;
 ]]
-
 SqlLiteTableDrop = [[
     DROP TABLE IF EXISTS lia_players;
     DROP TABLE IF EXISTS lia_characters;
@@ -139,4 +134,3 @@ SqlLiteTableDrop = [[
     DROP TABLE IF EXISTS lia_invdata;
     DROP TABLE IF EXISTS lia_inventories;
 ]]
-

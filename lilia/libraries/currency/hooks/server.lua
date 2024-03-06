@@ -1,6 +1,4 @@
-﻿
-local GM = GM or GAMEMODE
-
+﻿local GM = GM or GAMEMODE
 function GM:OnPickupMoney(client, moneyEntity)
     if moneyEntity and moneyEntity:IsValid() then
         local amount = moneyEntity:getAmount()
@@ -8,4 +6,3 @@ function GM:OnPickupMoney(client, moneyEntity)
         client:notifyLocalized("moneyTaken", lia.currency.get(amount))
     end
 end
-

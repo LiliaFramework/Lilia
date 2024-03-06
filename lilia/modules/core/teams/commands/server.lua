@@ -1,5 +1,4 @@
-﻿
-lia.command.add("classwhitelist", {
+﻿lia.command.add("classwhitelist", {
     adminOnly = true,
     syntax = "<string name> <string class>",
     onRun = function(client, arguments)
@@ -34,7 +33,6 @@ lia.command.add("classwhitelist", {
     end
 })
 
-
 lia.command.add("plytransfer", {
     adminOnly = true,
     syntax = "<string name> <string faction>",
@@ -57,7 +55,7 @@ lia.command.add("plytransfer", {
                 if hook.Run("CanCharBeTransfered", target:getChar(), faction, target:Team()) == false then return end
                 target:getChar().vars.faction = faction.uniqueID
                 target:getChar():setFaction(faction.index)
-                hook.Run("PlayerOnFactionTransfer", target)
+                hook.Run("onTransferred", target)
                 if faction.onTransfered then faction:onTransfered(target) end
                 client:notify("You have transferred " .. target:Name() .. " to " .. faction.name)
                 target:notify("You have been transferred to " .. faction.name .. " by " .. client:Name())
@@ -67,7 +65,6 @@ lia.command.add("plytransfer", {
         end
     end
 })
-
 
 lia.command.add("plywhitelist", {
     adminOnly = true,
@@ -86,7 +83,6 @@ lia.command.add("plywhitelist", {
     end
 })
 
-
 lia.command.add("plyunwhitelist", {
     adminOnly = true,
     privilege = "Un-Whitelist Characters",
@@ -103,7 +99,6 @@ lia.command.add("plyunwhitelist", {
         end
     end
 })
-
 
 lia.command.add("beclass", {
     adminOnly = false,
@@ -144,7 +139,6 @@ lia.command.add("beclass", {
     end
 })
 
-
 lia.command.add("factionlist", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -155,7 +149,6 @@ lia.command.add("factionlist", {
         end
     end
 })
-
 
 lia.command.add("setclass", {
     privilege = "Set Class",
@@ -186,7 +179,6 @@ lia.command.add("setclass", {
         end
     end,
 })
-
 
 lia.command.add("classunwhitelist", {
     adminOnly = true,
@@ -222,4 +214,3 @@ lia.command.add("classunwhitelist", {
         target:notify(string.format("Class '%s' have been unassigned from your current character.", classTable.name))
     end
 })
-

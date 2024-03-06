@@ -1,6 +1,4 @@
-﻿
-local vjThink = 0
-
+﻿local vjThink = 0
 function MODULE:Think()
     if vjThink <= CurTime() then
         for k, v in pairs(self.VJBaseConsoleCommands) do
@@ -11,8 +9,5 @@ function MODULE:Think()
     end
 end
 
-
 hook.Remove("PlayerInitialSpawn", "VJBaseSpawn")
-
 hook.Remove("PlayerInitialSpawn", "drvrejplayerInitialSpawn")
-

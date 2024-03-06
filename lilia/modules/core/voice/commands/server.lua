@@ -1,5 +1,4 @@
-﻿
-lia.command.add("charvoiceunban", {
+﻿lia.command.add("charvoiceunban", {
     adminOnly = true,
     privilege = "Voice Unban Character",
     syntax = "<string name>",
@@ -15,7 +14,6 @@ lia.command.add("charvoiceunban", {
         target:notify("You've been unmuted by the admin.")
     end
 })
-
 
 lia.command.add("charvoiceban", {
     adminOnly = true,
@@ -33,7 +31,6 @@ lia.command.add("charvoiceban", {
         target:notify("You've been muted by the admin.")
     end
 })
-
 
 lia.command.add("voicetoggle", {
     superAdminOnly = true,
@@ -55,4 +52,3 @@ lia.command.add("voicetoggle", {
         SetGlobalBool("EnabledVoice", not voiceEnabled)
     end
 })
-

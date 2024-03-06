@@ -1,12 +1,7 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 include("shared.lua")
-
 AddCSLuaFile("cl_init.lua")
-
 AddCSLuaFile("shared.lua")
-
 function ENT:SpawnFunction(client, trace)
     local angles = (trace.HitPos - client:GetPos()):Angle()
     angles.r = 0
@@ -19,7 +14,6 @@ function ENT:SpawnFunction(client, trace)
     MODULE:SaveData()
     return entity
 end
-
 
 function ENT:Use(activator)
     if not hook.Run("CanPlayerAccessVendor", activator, self) then
@@ -34,7 +28,6 @@ function ENT:Use(activator)
     hook.Run("PlayerAccessVendor", activator, self)
 end
 
-
 function ENT:setMoney(value)
     if not isnumber(value) or value < 0 then value = nil end
     self.money = value
@@ -43,16 +36,13 @@ function ENT:setMoney(value)
     net.Send(self.receivers)
 end
 
-
 function ENT:giveMoney(value)
     if self.money then self:setMoney(self:getMoney() + value) end
 end
 
-
 function ENT:takeMoney(value)
     if self.money then self:giveMoney(-value) end
 end
-
 
 function ENT:setStock(itemType, value)
     self.items[itemType] = self.items[itemType] or {}
@@ -64,19 +54,16 @@ function ENT:setStock(itemType, value)
     net.Send(self.receivers)
 end
 
-
 function ENT:addStock(itemType, value)
     local current = self:getStock(itemType)
     if not current then return end
     self:setStock(itemType, self:getStock(itemType) + (value or 1))
 end
 
-
 function ENT:takeStock(itemType, value)
     if not self.items[itemType] or not self.items[itemType][VENDOR_MAXSTOCK] then return end
     self:addStock(itemType, -(value or 1))
 end
-
 
 function ENT:setMaxStock(itemType, value)
     if value == 0 or not isnumber(value) then value = nil end
@@ -87,7 +74,6 @@ function ENT:setMaxStock(itemType, value)
     net.WriteUInt(value, 32)
     net.Send(self.receivers)
 end
-
 
 function ENT:setFactionAllowed(factionID, isAllowed)
     if isAllowed then
@@ -105,7 +91,6 @@ function ENT:setFactionAllowed(factionID, isAllowed)
     end
 end
 
-
 function ENT:setClassAllowed(classID, isAllowed)
     if isAllowed then
         self.classes[classID] = true
@@ -118,7 +103,6 @@ function ENT:setClassAllowed(classID, isAllowed)
     net.WriteBool(self.classes[classID] == true)
     net.Send(self.receivers)
 end
-
 
 function ENT:removeReceiver(client, requestedByPlayer)
     table.RemoveByValue(self.receivers, client)
@@ -135,14 +119,12 @@ local ALLOWED_MODES = {
     [VENDOR_BUYONLY] = true
 }
 
-
 function ENT:setName(name)
     self:setNetVar("name", name)
     net.Start("liaVendorEdit")
     net.WriteString("name")
     net.Send(self.receivers)
 end
-
 
 function ENT:setDesc(desc)
     self:setNetVar("desc", desc)
@@ -151,14 +133,12 @@ function ENT:setDesc(desc)
     net.Send(self.receivers)
 end
 
-
 function ENT:setNoBubble(noBubble)
     self:setNetVar("noBubble", noBubble)
     net.Start("liaVendorEdit")
     net.WriteString("bubble")
     net.Send(self.receivers)
 end
-
 
 function ENT:setTradeMode(itemType, mode)
     if not ALLOWED_MODES[mode] then mode = nil end
@@ -170,7 +150,6 @@ function ENT:setTradeMode(itemType, mode)
     net.Send(self.receivers)
 end
 
-
 function ENT:setItemPrice(itemType, value)
     if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
@@ -180,7 +159,6 @@ function ENT:setItemPrice(itemType, value)
     net.WriteInt(value or -1, 32)
     net.Send(self.receivers)
 end
-
 
 function ENT:setItemStock(itemType, value)
     if not isnumber(value) or value < 0 then value = nil end
@@ -192,7 +170,6 @@ function ENT:setItemStock(itemType, value)
     net.Send(self.receivers)
 end
 
-
 function ENT:setItemMaxStock(itemType, value)
     if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
@@ -203,7 +180,6 @@ function ENT:setItemMaxStock(itemType, value)
     net.Send(self.receivers)
 end
 
-
 function ENT:OnRemove()
     LIA_VENDORS[self:EntIndex()] = nil
     net.Start("liaVendorExit")
@@ -211,7 +187,6 @@ function ENT:OnRemove()
     if lia.shuttingDown or self.liaIsSafe then return end
     MODULE:SaveData()
 end
-
 
 function ENT:setModel(model)
     assert(isstring(model), "model must be a string")
@@ -223,7 +198,6 @@ function ENT:setModel(model)
     net.Send(self.receivers)
 end
 
-
 function ENT:setSellScale(scale)
     assert(isnumber(scale), "scale must be a number")
     self:setNetVar("scale", scale)
@@ -231,7 +205,6 @@ function ENT:setSellScale(scale)
     net.WriteString("scale")
     net.Send(self.receivers)
 end
-
 
 function ENT:sync(client)
     net.Start("liaVendorSync")
@@ -264,10 +237,8 @@ function ENT:sync(client)
     end
 end
 
-
 function ENT:addReceiver(client, noSync)
     if not table.HasValue(self.receivers, client) then self.receivers[#self.receivers + 1] = client end
     if noSync then return end
     self:sync(client)
 end
-

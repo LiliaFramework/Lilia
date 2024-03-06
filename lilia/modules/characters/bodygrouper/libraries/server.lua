@@ -1,5 +1,4 @@
-﻿
-function MODULE:SaveData()
+﻿function MODULE:SaveData()
     local data = {}
     for _, v in pairs(ents.FindByClass("lia_bodygrouper")) do
         data[#data + 1] = {v:GetPos(), v:GetAngles()}
@@ -7,7 +6,6 @@ function MODULE:SaveData()
 
     self:setData(data)
 end
-
 
 function MODULE:LoadData()
     for _, v in pairs(self:getData()) do
@@ -20,15 +18,12 @@ function MODULE:LoadData()
     end
 end
 
-
 function MODULE:BodygrouperClosetAddUser(closet, _)
     local opensound = self.BodygrouperOpenSound
     if opensound then closet:EmitSound(opensound) end
 end
 
-
 function MODULE:BodygrouperClosetRemoveUser(closet, _)
     local closesound = self.BodygrouperCloseSound
     if closesound then closet:EmitSound(closesound) end
 end
-

@@ -1,5 +1,4 @@
-﻿
-net.Receive("liaDrawLogs", function()
+﻿net.Receive("liaDrawLogs", function()
     local client = LocalPlayer()
     if not CAMI.PlayerHasAccess(client, "Commands - View Logs", nil) then
         client:notify(":|")
@@ -21,7 +20,6 @@ net.Receive("liaDrawLogs", function()
         logList:AddLine(logEntry.timestamp, logEntry.message)
     end
 end)
-
 
 net.Receive("liaRequestLogsClient", function()
     local client = LocalPlayer()
@@ -66,4 +64,3 @@ net.Receive("liaRequestLogsClient", function()
         datePicker:Close()
     end
 end)
-

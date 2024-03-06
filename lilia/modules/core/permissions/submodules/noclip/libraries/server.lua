@@ -1,5 +1,4 @@
-﻿
-function MODULE:PlayerNoClip(client, state)
+﻿function MODULE:PlayerNoClip(client, state)
     if (not client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip Outside Staff Character", nil)) or client:isStaffOnDuty() then
         if state then
             client:SetNoDraw(true)
@@ -37,8 +36,6 @@ function MODULE:PlayerNoClip(client, state)
     return false
 end
 
-
 function MODULE:OnPlayerObserve(client, state)
     lia.log.add(client, (state and "observerEnter") or "observerExit")
 end
-

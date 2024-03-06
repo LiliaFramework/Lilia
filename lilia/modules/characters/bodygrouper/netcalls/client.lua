@@ -1,6 +1,4 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 net.Receive("BodygrouperMenu", function()
     if IsValid(MODULE.Menu) then MODULE.Menu:Remove() end
     local entity = net.ReadEntity()
@@ -8,6 +6,4 @@ net.Receive("BodygrouperMenu", function()
     MODULE.Menu:SetTarget(IsValid(entity) and entity or LocalPlayer())
 end)
 
-
 net.Receive("BodygrouperMenuCloseClientside", function() if IsValid(MODULE.Menu) then MODULE.Menu:Remove() end end)
-

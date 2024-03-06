@@ -1,5 +1,4 @@
-﻿
-lia.anim.HoldTypeTranslator = {
+﻿lia.anim.HoldTypeTranslator = {
     [""] = "normal",
     ["physgun"] = "smg",
     ["ar2"] = "smg",
@@ -16,7 +15,6 @@ lia.anim.HoldTypeTranslator = {
     ["revolver"] = "pistol"
 }
 
-
 lia.anim.PlayerHoldTypeTranslator = {
     [""] = "normal",
     ["normal"] = "normal",
@@ -31,7 +29,6 @@ lia.anim.PlayerHoldTypeTranslator = {
     ["duel"] = "normal",
     ["bugbait"] = "normal"
 }
-
 
 lia.anim.DefaultTposingFixer = {
     ["models/Zombie/Classic.mdl"] = "zombie",
@@ -244,4 +241,3 @@ lia.anim.DefaultTposingFixer = {
     ["models/suits/group3/male_04_shirt.mdl"] = "citizen_male",
     ["models/suits/group1/male_05_open_tie.mdl"] = "citizen_male",
 }
-

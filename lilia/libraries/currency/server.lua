@@ -1,5 +1,4 @@
-﻿
-function lia.currency.spawn(pos, amount, angle)
+﻿function lia.currency.spawn(pos, amount, angle)
     if not pos then
         print("[Lilia] Can't create currency entity: Invalid Position")
     elseif not amount or amount < 0 then
@@ -14,4 +13,3 @@ function lia.currency.spawn(pos, amount, angle)
         return money
     end
 end
-

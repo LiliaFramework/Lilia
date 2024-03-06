@@ -1,8 +1,5 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 local playerMeta = FindMetaTable("Player")
-
 function playerMeta:isWepRaised()
     local weapon = self:GetActiveWeapon()
     local override = hook.Run("ShouldWeaponBeRaised", self, weapon)
@@ -19,4 +16,3 @@ function playerMeta:isWepRaised()
     if MODULE.WepAlwaysRaised then return true end
     return self:getNetVar("raised", false)
 end
-

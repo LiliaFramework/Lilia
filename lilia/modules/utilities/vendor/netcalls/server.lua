@@ -1,37 +1,21 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 local EDITOR = include(MODULE.path .. "/libs/sv_vendor.lua")
-
 util.AddNetworkString("liaVendorAllowClass")
-
 util.AddNetworkString("liaVendorAllowFaction")
-
 util.AddNetworkString("liaVendorExit")
-
 util.AddNetworkString("liaVendorEdit")
-
 util.AddNetworkString("liaVendorMode")
-
 util.AddNetworkString("liaVendorMoney")
-
 util.AddNetworkString("liaVendorOpen")
-
 util.AddNetworkString("liaVendorPrice")
-
 util.AddNetworkString("liaVendorStock")
-
 util.AddNetworkString("liaVendorMaxStock")
-
 util.AddNetworkString("liaVendorSync")
-
 util.AddNetworkString("liaVendorTrade")
-
 net.Receive("liaVendorExit", function(_, client)
     local vendor = client.liaVendor
     if IsValid(vendor) then vendor:removeReceiver(client, true) end
 end)
-
 
 net.Receive("liaVendorEdit", function(_, client)
     local key = net.ReadString()
@@ -41,7 +25,6 @@ net.Receive("liaVendorEdit", function(_, client)
     EDITOR[key](vendor, client, key)
     MODULE:SaveData()
 end)
-
 
 net.Receive("liaVendorTrade", function(_, client)
     local uniqueID = net.ReadString()
@@ -58,4 +41,3 @@ net.Receive("liaVendorTrade", function(_, client)
     if not hook.Run("CanPlayerAccessVendor", client, entity) then return end
     hook.Run("VendorTradeAttempt", client, entity, uniqueID, isSellingToVendor)
 end)
-

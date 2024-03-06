@@ -1,6 +1,4 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 lia.command.add("storagelock", {
     privilege = "Lock Storage",
     adminOnly = true,
@@ -25,7 +23,6 @@ lia.command.add("storagelock", {
         end
     end
 })
-
 
 lia.command.add("trunk", {
     privilege = "Default User Commands",
@@ -61,4 +58,3 @@ lia.command.add("trunk", {
         end)
     end
 })
-

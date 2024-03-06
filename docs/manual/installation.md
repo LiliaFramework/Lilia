@@ -1,4 +1,4 @@
-## Lilia Installation Tutorial
+# Installation Tutorial
 
 Lilia is a versatile roleplaying framework for the Garry's Mod game. This tutorial will guide you through the process of installing Lilia for your Garry's Mod server.
 

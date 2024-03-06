@@ -1,14 +1,8 @@
-﻿
-ITEM.name = "Vehicles Base"
-
+﻿ITEM.name = "Vehicles Base"
 ITEM.model = ""
-
 ITEM.desc = ""
-
 ITEM.category = "Vehicles"
-
 ITEM.vehicleid = ""
-
 ITEM.functions.Place = {
     onRun = function(itemTable)
         local client = itemTable.player
@@ -21,4 +15,3 @@ ITEM.functions.Place = {
         entity:Spawn()
     end
 }
-

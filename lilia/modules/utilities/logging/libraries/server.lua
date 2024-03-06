@@ -1,5 +1,4 @@
-﻿
-function MODULE:ReadLogFiles(logtype)
+﻿function MODULE:ReadLogFiles(logtype)
     local logs = {}
     local logFilePath = "lilia/" .. logtype .. "/*.txt"
     local logFiles = file.Find(logFilePath, "DATA")
@@ -9,7 +8,6 @@ function MODULE:ReadLogFiles(logtype)
     end
     return logs
 end
-
 
 function MODULE:ReadLogsFromFile(logtype, selectedDate)
     local logs = {}
@@ -28,4 +26,3 @@ function MODULE:ReadLogsFromFile(logtype, selectedDate)
     end
     return logs
 end
-

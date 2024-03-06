@@ -1,5 +1,4 @@
-﻿
-function MODULE:LoadFonts(font)
+﻿function MODULE:LoadFonts(font)
     surface.CreateFont("liaVendorButtonFont", {
         font = font,
         weight = 200,
@@ -18,4 +17,3 @@ function MODULE:LoadFonts(font)
         size = 22
     })
 end
-

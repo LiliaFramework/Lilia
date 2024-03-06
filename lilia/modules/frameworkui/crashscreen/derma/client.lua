@@ -1,10 +1,6 @@
-﻿
-local PANEL = {}
-
+﻿local PANEL = {}
 local waits = {}
-
 local w, h = ScrW(), ScrH()
-
 function PANEL:Init()
     self:SetSize(w, h)
     self:Center()
@@ -31,7 +27,6 @@ function PANEL:Init()
         end)
     end)
 end
-
 
 function PANEL:DoLamar()
     local function wait(s, f)
@@ -100,7 +95,6 @@ function PANEL:DoLamar()
     end)
 end
 
-
 function PANEL:Think()
     self:MoveToFront()
     for v, k in pairs(waits) do
@@ -110,7 +104,6 @@ function PANEL:Think()
         end
     end
 end
-
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 10)
@@ -132,6 +125,4 @@ function PANEL:PaintOver()
     end
 end
 
-
 vgui.Register("liaCrashScreen", PANEL, "DPanel")
-

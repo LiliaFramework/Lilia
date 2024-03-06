@@ -1,5 +1,4 @@
-﻿
-function lia.scroll.add(text, callback)
+﻿function lia.scroll.add(text, callback)
     local info = {
         text = "",
         callback = callback,
@@ -21,4 +20,3 @@ function lia.scroll.add(text, callback)
         end
     end)
 end
-

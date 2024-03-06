@@ -1,8 +1,5 @@
-﻿
-lia.data = lia.data or {}
-
+﻿lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
-
 function lia.data.get(key, default, global, ignoreMap, refresh)
     if not refresh then
         local stored = lia.data.stored[key]
@@ -29,4 +26,3 @@ function lia.data.get(key, default, global, ignoreMap, refresh)
         return default
     end
 end
-

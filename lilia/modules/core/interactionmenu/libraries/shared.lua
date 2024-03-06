@@ -1,10 +1,7 @@
-﻿
-MODULE.options = MODULE.options or {}
-
+﻿MODULE.options = MODULE.options or {}
 function MODULE:AddOption(name, data)
     self.options[name] = data
 end
-
 
 function MODULE:CheckPossibilities()
     for _, v in pairs(self.options) do
@@ -14,13 +11,10 @@ function MODULE:CheckPossibilities()
     return false
 end
 
-
 function MODULE:InitializedModules()
     hook.Run("AddPIMOption", self.options)
 end
 
-
 function MODULE:CheckDistance(client, entity)
     return entity:GetPos():DistToSqr(client:GetPos()) < self.MaxInteractionDistance
 end
-

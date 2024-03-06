@@ -1,6 +1,4 @@
-﻿
-local PANEL = {}
-
+﻿local PANEL = {}
 function PANEL:Init()
     self:SetSize(256, 36)
     self:SetContentAlignment(5)
@@ -9,7 +7,6 @@ function PANEL:Init()
     self:SetTextColor(color_white)
     self:SetDrawOnTop(true)
 end
-
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 3, 2)
@@ -26,9 +23,7 @@ function PANEL:Paint(w, h)
 end
 
 vgui.Register("liaNotice", PANEL, "DLabel")
-
 PANEL = {}
-
 function PANEL:Init()
     self.padding = 60
     self:SetSize(256, 36)
@@ -45,12 +40,10 @@ function PANEL:Init()
     end
 end
 
-
 function PANEL:CalcWidth(padding)
     self.text:SizeToContents()
     self:SetWide(self.text:GetWide() + padding)
 end
-
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 10)
@@ -66,6 +59,4 @@ function PANEL:Paint(w, h)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
 
-
 vgui.Register("noticePanel", PANEL, "DPanel")
-

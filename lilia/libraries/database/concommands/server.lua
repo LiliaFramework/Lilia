@@ -1,6 +1,4 @@
-﻿
-local resetCalled = 0
-
+﻿local resetCalled = 0
 concommand.Add("lia_recreatedb", function(client)
     if not IsValid(client) then
         if resetCalled < RealTime() then
@@ -14,4 +12,3 @@ concommand.Add("lia_recreatedb", function(client)
         end
     end
 end)
-

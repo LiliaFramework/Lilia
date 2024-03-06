@@ -1,16 +1,9 @@
-﻿
-lia.item = lia.item or {}
-
+﻿lia.item = lia.item or {}
 lia.item.base = lia.item.base or {}
-
 lia.item.list = lia.item.list or {}
-
 lia.item.instances = lia.item.instances or {}
-
 lia.item.inventories = lia.inventory.instances or {}
-
 lia.item.inventoryTypes = lia.item.inventoryTypes or {}
-
 lia.item.DefaultFunctions = {
     drop = {
         tip = "dropTip",
@@ -56,11 +49,9 @@ lia.item.DefaultFunctions = {
     },
 }
 
-
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
-
 
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua") or path:match("([_%w]+)%.lua")
@@ -72,11 +63,9 @@ function lia.item.load(path, baseID, isBaseItem)
     end
 end
 
-
 function lia.item.isItem(object)
     return istable(object) and object.isItem == true
 end
-
 
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     assert(isstring(uniqueID), "uniqueID must be a string")
@@ -131,7 +120,6 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     return targetTable[itemType]
 end
 
-
 function lia.item.loadFromDir(directory, isFirstLoad)
     local files, folders
     files = file.Find(directory .. "/base/*.lua", "LUA")
@@ -153,7 +141,6 @@ function lia.item.loadFromDir(directory, isFirstLoad)
 
     if isFirstLoad then hook.Run("InitializedItems") end
 end
-
 
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
@@ -177,7 +164,6 @@ function lia.item.new(uniqueID, id)
     end
 end
 
-
 function lia.item.registerInv(invType, w, h)
     local GridInv = FindMetaTable("GridInv")
     assert(GridInv, "GridInv not found")
@@ -193,7 +179,6 @@ function lia.item.registerInv(invType, w, h)
 
     inventory:register(invType)
 end
-
 
 function lia.item.newInv(owner, invType, callback)
     lia.inventory.instance(invType, {
@@ -213,11 +198,9 @@ function lia.item.newInv(owner, invType, callback)
     end)
 end
 
-
 function lia.item.getInv(invID)
     return lia.inventory.instances[invID]
 end
-
 
 function lia.item.createInv(w, h, id)
     local GridInv = FindMetaTable("GridInv")
@@ -232,7 +215,6 @@ function lia.item.createInv(w, h, id)
     lia.inventory.instances[id] = instance
     return instance
 end
-
 
 lia.char.registerVar("inv", {
     noNetworking = true,
@@ -256,4 +238,3 @@ lia.char.registerVar("inv", {
         end
     end
 })
-

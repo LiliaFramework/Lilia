@@ -1,21 +1,16 @@
-﻿
-local data = {}
-
+﻿local data = {}
 local offset1, offset2, offset3, alpha, y
-
 function MODULE:StartChat()
     net.Start("liaTypeStatus")
     net.WriteBool(false)
     net.SendToServer()
 end
 
-
 function MODULE:FinishChat()
     net.Start("liaTypeStatus")
     net.WriteBool(true)
     net.SendToServer()
 end
-
 
 function MODULE:HUDPaint()
     local client = LocalPlayer()
@@ -41,4 +36,3 @@ function MODULE:HUDPaint()
         end
     end
 end
-

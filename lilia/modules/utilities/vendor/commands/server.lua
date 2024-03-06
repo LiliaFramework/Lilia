@@ -1,6 +1,4 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 lia.command.add("restockallvendors", {
     privilege = "Restock Vendors",
     superAdminOnly = true,
@@ -14,7 +12,6 @@ lia.command.add("restockallvendors", {
     end
 })
 
-
 lia.command.add("resetallvendormoney", {
     privilege = "Reset Vendor Money",
     superAdminOnly = true,
@@ -27,10 +24,8 @@ lia.command.add("resetallvendormoney", {
     end
 })
 
-
 lia.command.add("savevendors", {
     privilege = "Reset Vendor Money",
     superAdminOnly = true,
     onRun = function() MODULE:SaveData() end
 })
-

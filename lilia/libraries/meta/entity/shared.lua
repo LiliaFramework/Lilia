@@ -1,12 +1,8 @@
-﻿
-local entityMeta = FindMetaTable("Entity")
-
+﻿local entityMeta = FindMetaTable("Entity")
 local ChairCache = {}
-
 function entityMeta:isProp()
     return self:GetClass() == "prop_physics"
 end
-
 
 function entityMeta:IsSimfphysCar()
     if not simfphys then return false end
@@ -14,12 +10,10 @@ function entityMeta:IsSimfphysCar()
     return self:GetClass():lower() == "gmod_sent_vehicle_fphysics_base"
 end
 
-
 function entityMeta:getEntItemDropPos()
     local offset = Vector(-50, 0, 0) -- Adjust the offset as needed
     return self:GetPos() + offset
 end
-
 
 function entityMeta:NearEntity(radius)
     for _, v in ipairs(ents.FindInSphere(self:GetPos(), radius or 96)) do
@@ -28,11 +22,9 @@ function entityMeta:NearEntity(radius)
     return false
 end
 
-
 function entityMeta:isDoorLocked()
     return self:GetSaveTable().m_bLocked or self.locked or false
 end
-
 
 function entityMeta:GetViewAngle(pos)
     local diff = pos - self:EyePos()
@@ -40,11 +32,9 @@ function entityMeta:GetViewAngle(pos)
     return math.abs(math.deg(math.acos(self:EyeAngles():Forward():Dot(diff))))
 end
 
-
 function entityMeta:InFov(entity, fov)
     return self:GetViewAngle(entity:EyePos()) < (fov or 88)
 end
-
 
 function entityMeta:isInRoom(target)
     local tracedata = {}
@@ -54,7 +44,6 @@ function entityMeta:isInRoom(target)
     return not trace.HitWorld
 end
 
-
 function entityMeta:InTrace(entity)
     return util.TraceLine({
         start = entity:EyePos(),
@@ -62,16 +51,13 @@ function entityMeta:InTrace(entity)
     }).Entity == self
 end
 
-
 function entityMeta:IsScreenVisible(entity, maxDist, fov)
     return self:EyePos():DistToSqr(entity:EyePos()) < (maxDist or 512 * 512) and self:IsLineOfSightClear(entity:EyePos()) and self:InFov(entity, fov)
 end
 
-
 function entityMeta:isChair()
     return ChairCache[self:GetModel()]
 end
-
 
 function entityMeta:CanSeeEntity(entity)
     if not (IsValid(self) and IsValid(entity)) then return false end
@@ -82,8 +68,6 @@ function entityMeta:CanSeeEntity(entity)
     return true
 end
 
-
 for _, v in pairs(list.Get("Vehicles")) do
     if v.Category == "Chairs" then ChairCache[v.Model] = true end
 end
-

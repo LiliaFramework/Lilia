@@ -1,5 +1,4 @@
-﻿
-function lia.util.notify(message, recipient)
+﻿function lia.util.notify(message, recipient)
     net.Start("liaNotify")
     net.WriteString(message)
     if recipient == nil then
@@ -8,7 +7,6 @@ function lia.util.notify(message, recipient)
         net.Send(recipient)
     end
 end
-
 
 function lia.util.notifyLocalized(message, recipient, ...)
     local args = {...}
@@ -30,7 +28,6 @@ function lia.util.notifyLocalized(message, recipient, ...)
         net.Send(recipient)
     end
 end
-
 
 function lia.util.findEmptySpace(entity, filter, spacing, size, height, tolerance)
     spacing = spacing or 32
@@ -61,7 +58,6 @@ function lia.util.findEmptySpace(entity, filter, spacing, size, height, toleranc
     return output
 end
 
-
 function lia.util.spawnProp(model, position, force, lifetime, angles, collision)
     local entity = ents.Create("prop_physics")
     entity:SetModel(model)
@@ -79,21 +75,17 @@ function lia.util.spawnProp(model, position, force, lifetime, angles, collision)
     return entity
 end
 
-
 function lia.util.DebugLog(str)
     MsgC(Color("sky_blue"), os.date("(%d/%m/%Y - %H:%M:%S)", os.time()), Color("yellow"), " [LOG] ", color_white, str, "\n")
 end
-
 
 function lia.util.DebugMessage(msg, ...)
     MsgC(Color(70, 150, 255), "[CityRP] DEBUG: ", string.format(msg, ...), "\n")
 end
 
-
 function lia.util.DWarningMessage(message, ...)
     MsgC(Color(255, 100, 0), string.format(message, ...), "\n")
 end
-
 
 function lia.util.setCharData(charID, key, val)
     local charIDsafe = tonumber(charID)
@@ -110,4 +102,3 @@ function lia.util.setCharData(charID, key, val)
     if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setData(key, val) end
     return true
 end
-

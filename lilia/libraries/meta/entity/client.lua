@@ -1,10 +1,7 @@
-﻿
-local entityMeta = FindMetaTable("Entity")
-
+﻿local entityMeta = FindMetaTable("Entity")
 function entityMeta:isDoor()
     return self:GetClass():find("door")
 end
-
 
 function entityMeta:getDoorPartner()
     local owner = self:GetOwner() or self.liaDoorOwner
@@ -17,13 +14,10 @@ function entityMeta:getDoorPartner()
     end
 end
 
-
 function entityMeta:getNetVar(key, default)
     local index = self:EntIndex()
     if lia.net[index] and lia.net[index][key] ~= nil then return lia.net[index][key] end
     return default
 end
 
-
 FindMetaTable("Player").getLocalVar = entityMeta.getNetVar
-

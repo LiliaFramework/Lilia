@@ -1,5 +1,4 @@
-﻿
-function MODULE:LoadFonts(_)
+﻿function MODULE:LoadFonts(_)
     surface.CreateFont("WB_Small", {
         font = "Product Sans",
         size = 17
@@ -55,4 +54,3 @@ function MODULE:LoadFonts(_)
         antialias = true
     })
 end
-

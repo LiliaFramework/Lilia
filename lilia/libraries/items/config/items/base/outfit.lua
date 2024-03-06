@@ -1,24 +1,13 @@
-﻿
-ITEM.name = "Outfit"
-
+﻿ITEM.name = "Outfit"
 ITEM.desc = "A Outfit Base."
-
 ITEM.category = "Outfit"
-
 ITEM.model = "models/props_c17/BriefCase001a.mdl"
-
 ITEM.width = 1
-
 ITEM.height = 1
-
 ITEM.outfitCategory = "model"
-
 ITEM.pacData = {}
-
 ITEM.isOutfit = true
-
 ITEM.RequiredSkillLevels = nil
-
 if CLIENT then
     function ITEM:paintOver(item, w, h)
         if item:getData("equip") then
@@ -27,14 +16,12 @@ if CLIENT then
         end
     end
 else
-    
     ITEM.visualData = {
         model = {},
         skin = {},
         bodygroups = {}
     }
 end
-
 
 function ITEM:removeOutfit(client)
     local character = client:getChar()
@@ -72,13 +59,11 @@ function ITEM:removeOutfit(client)
     self:call("onTakeOff", client)
 end
 
-
 function ITEM:wearOutfit(client, isForLoadout)
     if isnumber(self.armor) then client:SetArmor(client:Armor() + self.armor) end
     if self.pacData and client.addPart then client:addPart(self.uniqueID) end
     self:call("onWear", client, nil, isForLoadout)
 end
-
 
 ITEM.functions.EquipUn = {
     name = "Unequip",
@@ -90,7 +75,6 @@ ITEM.functions.EquipUn = {
     end,
     onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip") == true end
 }
-
 
 ITEM.functions.Equip = {
     name = "Equip",
@@ -169,30 +153,23 @@ ITEM.functions.Equip = {
     onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip") ~= true end
 }
 
-
 function ITEM:onCanBeTransfered(oldInventory, newInventory)
     if newInventory and self:getData("equip") then return false end
     return true
 end
 
-
 function ITEM:onLoadout()
     if self:getData("equip") then self:wearOutfit(self.player, true) end
 end
-
 
 function ITEM:onRemoved()
     if (IsValid(receiver) and receiver:IsPlayer()) and self:getData("equip") then self:removeOutfit(receiver) end
 end
 
-
 function ITEM:onWear(isFirstTime)
 end
-
 
 function ITEM:onTakeOff()
 end
 
-
 ITEM:hook("drop", function(item) if item:getData("equip") then item:removeOutfit(item.player) end end)
-

@@ -1,5 +1,4 @@
-﻿
-lia.command.add("viewBodygroups", {
+﻿lia.command.add("viewBodygroups", {
     adminOnly = true,
     privilege = "Change Bodygroups",
     syntax = "[string name]",
@@ -10,4 +9,3 @@ lia.command.add("viewBodygroups", {
         net.Send(client)
     end
 })
-

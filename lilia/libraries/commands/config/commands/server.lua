@@ -1,6 +1,4 @@
-﻿
-local GM = GM or GAMEMODE
-
+﻿local GM = GM or GAMEMODE
 lia.command.add("charsetspeed", {
     adminOnly = true,
     privilege = "Set Character Speed",
@@ -16,7 +14,6 @@ lia.command.add("charsetspeed", {
     end
 })
 
-
 lia.command.add("playglobalsound", {
     superAdminOnly = true,
     privilege = "Play Global Sounds",
@@ -28,7 +25,6 @@ lia.command.add("playglobalsound", {
     end
 })
 
-
 lia.command.add("playsound", {
     superAdminOnly = true,
     privilege = "Play Targetted Sounds",
@@ -39,7 +35,6 @@ lia.command.add("playsound", {
         target:PlaySound(sound)
     end
 })
-
 
 lia.command.add("charsetscale", {
     superAdminOnly = true,
@@ -56,7 +51,6 @@ lia.command.add("charsetscale", {
     end
 })
 
-
 lia.command.add("charsetjump", {
     adminOnly = true,
     privilege = "Set Character Jump",
@@ -71,7 +65,6 @@ lia.command.add("charsetjump", {
         end
     end
 })
-
 
 lia.command.add("charaddmoney", {
     privilege = "Add Money",
@@ -91,7 +84,6 @@ lia.command.add("charaddmoney", {
         end
     end
 })
-
 
 lia.command.add("charban", {
     superAdminOnly = true,
@@ -117,7 +109,6 @@ lia.command.add("charban", {
     end
 })
 
-
 lia.command.add("charsetdesc", {
     adminOnly = true,
     syntax = "<string name> <string desc>",
@@ -136,7 +127,6 @@ lia.command.add("charsetdesc", {
     end
 })
 
-
 lia.command.add("charsetname", {
     adminOnly = true,
     syntax = "<string name> [string newName]",
@@ -153,7 +143,6 @@ lia.command.add("charsetname", {
     end
 })
 
-
 lia.command.add("chargetmodel", {
     adminOnly = true,
     syntax = "<string name>",
@@ -167,7 +156,6 @@ lia.command.add("chargetmodel", {
         end
     end
 })
-
 
 lia.command.add("charsetmodel", {
     adminOnly = true,
@@ -183,7 +171,6 @@ lia.command.add("charsetmodel", {
         end
     end
 })
-
 
 lia.command.add("charsetbodygroup", {
     adminOnly = true,
@@ -208,7 +195,6 @@ lia.command.add("charsetbodygroup", {
     end
 })
 
-
 lia.command.add("charsetskin", {
     adminOnly = true,
     syntax = "<string name> [number skin]",
@@ -224,7 +210,6 @@ lia.command.add("charsetskin", {
     end
 })
 
-
 lia.command.add("chargetmoney", {
     adminOnly = true,
     syntax = "<string name>",
@@ -239,7 +224,6 @@ lia.command.add("chargetmoney", {
         end
     end
 })
-
 
 lia.command.add("charsetmoney", {
     superAdminOnly = true,
@@ -260,7 +244,6 @@ lia.command.add("charsetmoney", {
     end
 })
 
-
 lia.command.add("clearinv", {
     superAdminOnly = true,
     syntax = "<string name>",
@@ -276,7 +259,6 @@ lia.command.add("clearinv", {
         end
     end
 })
-
 
 lia.command.add("flaggive", {
     adminOnly = true,
@@ -300,7 +282,6 @@ lia.command.add("flaggive", {
     end
 })
 
-
 lia.command.add("flaggiveall", {
     adminOnly = true,
     syntax = "<string name> [string flags]",
@@ -320,7 +301,6 @@ lia.command.add("flaggiveall", {
         client:notify("You gave this player all flags!")
     end
 })
-
 
 lia.command.add("flagtakeall", {
     adminOnly = true,
@@ -342,7 +322,6 @@ lia.command.add("flagtakeall", {
     end
 })
 
-
 lia.command.add("flagtake", {
     adminOnly = true,
     syntax = "<string name> [string flags]",
@@ -357,7 +336,6 @@ lia.command.add("flagtake", {
         end
     end
 })
-
 
 lia.command.add("charkick", {
     adminOnly = true,
@@ -378,7 +356,6 @@ lia.command.add("charkick", {
     end
 })
 
-
 lia.command.add("viewcoreinformation", {
     privilege = "See Core Information",
     superAdminOnly = true,
@@ -387,7 +364,6 @@ lia.command.add("viewcoreinformation", {
         net.Send(client)
     end
 })
-
 
 lia.command.add("charunban", {
     syntax = "<string name>",
@@ -426,7 +402,6 @@ lia.command.add("charunban", {
     end
 })
 
-
 lia.command.add("flagpet", {
     privilege = "Give pet Flags",
     syntax = "[character name]",
@@ -442,7 +417,6 @@ lia.command.add("flagpet", {
     end
 })
 
-
 lia.command.add("flagragdoll", {
     adminOnly = true,
     privilege = "Hand Ragdoll Medals",
@@ -454,7 +428,6 @@ lia.command.add("flagragdoll", {
         target:notifyLocalized("You have been given Ragdoll flags by " .. client:Name())
     end
 })
-
 
 lia.command.add("flags", {
     privilege = "Check Flags",
@@ -470,7 +443,6 @@ lia.command.add("flags", {
         if IsValid(target) and target:getChar() then client:notify("Their character flags are: '" .. target:getChar():getFlags() .. "'") end
     end
 })
-
 
 lia.command.add("freezeallprops", {
     superAdminOnly = true,
@@ -494,7 +466,6 @@ lia.command.add("freezeallprops", {
     end
 })
 
-
 lia.command.add("checkmoney", {
     syntax = "<string target>",
     privilege = "Check Money",
@@ -508,7 +479,6 @@ lia.command.add("checkmoney", {
         end
     end
 })
-
 
 lia.command.add("status", {
     privilege = "Default User Commands",
@@ -524,7 +494,6 @@ lia.command.add("status", {
     end
 })
 
-
 lia.command.add("redownloadlightmaps", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -533,7 +502,6 @@ lia.command.add("redownloadlightmaps", {
         net.Send(client)
     end
 })
-
 
 lia.command.add("cleanitems", {
     superAdminOnly = true,
@@ -549,7 +517,6 @@ lia.command.add("cleanitems", {
     end
 })
 
-
 lia.command.add("cleanprops", {
     superAdminOnly = true,
     privilege = "Clean Props",
@@ -564,7 +531,6 @@ lia.command.add("cleanprops", {
     end
 })
 
-
 lia.command.add("forcesave", {
     superAdminOnly = true,
     privilege = "Force Save Server",
@@ -577,7 +543,6 @@ lia.command.add("forcesave", {
         client:notify("You've force-saved all data.")
     end
 })
-
 
 lia.command.add("cleannpcs", {
     superAdminOnly = true,
@@ -595,7 +560,6 @@ lia.command.add("cleannpcs", {
     end
 })
 
-
 lia.command.add("flags", {
     adminOnly = true,
     syntax = "<string name>",
@@ -605,7 +569,6 @@ lia.command.add("flags", {
         if IsValid(target) and target:getChar() then client:notify("Their character flags are: '" .. target:getChar():getFlags() .. "'") end
     end
 })
-
 
 lia.command.add("checkallmoney", {
     superAdminOnly = true,
@@ -617,7 +580,6 @@ lia.command.add("checkallmoney", {
         end
     end
 })
-
 
 lia.command.add("return", {
     adminOnly = true,
@@ -638,7 +600,6 @@ lia.command.add("return", {
     end
 })
 
-
 lia.command.add("findallflags", {
     adminOnly = false,
     privilege = "Find All Flags",
@@ -648,7 +609,6 @@ lia.command.add("findallflags", {
         end
     end
 })
-
 
 lia.command.add("chargiveitem", {
     superAdminOnly = true,
@@ -681,7 +641,6 @@ lia.command.add("chargiveitem", {
     end
 })
 
-
 lia.command.add("announce", {
     superAdminOnly = true,
     syntax = "<string factions> <string text>",
@@ -695,7 +654,6 @@ lia.command.add("announce", {
         client:notify("Announcement sent.")
     end
 })
-
 
 lia.command.add("listents", {
     privilege = "Default User Commands",
@@ -721,7 +679,6 @@ lia.command.add("listents", {
     end
 })
 
-
 lia.command.add("flip", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -735,7 +692,6 @@ lia.command.add("flip", {
     end
 })
 
-
 lia.command.add("liststaff", {
     adminOnly = false,
     privilege = "List Staff",
@@ -745,7 +701,6 @@ lia.command.add("liststaff", {
         end
     end
 })
-
 
 lia.command.add("listondutystaff", {
     adminOnly = false,
@@ -757,7 +712,6 @@ lia.command.add("listondutystaff", {
     end
 })
 
-
 lia.command.add("listvip", {
     adminOnly = false,
     privilege = "List VIPs",
@@ -768,7 +722,6 @@ lia.command.add("listvip", {
     end
 })
 
-
 lia.command.add("listusers", {
     adminOnly = false,
     privilege = "List Users",
@@ -778,7 +731,6 @@ lia.command.add("listusers", {
         end
     end
 })
-
 
 lia.command.add("rolld", {
     adminOnly = false,
@@ -809,13 +761,11 @@ lia.command.add("rolld", {
     end
 })
 
-
 lia.command.add("vieweventlog", {
     adminOnly = false,
     privilege = "Default User Commands",
     onRun = function(client) GM:OpenEventLog(client, false) end
 })
-
 
 lia.command.add("editeventlog", {
     adminOnly = true,
@@ -823,13 +773,11 @@ lia.command.add("editeventlog", {
     onRun = function(client) GM:OpenEventLog(client, true) end
 })
 
-
 lia.command.add("roll", {
     adminOnly = false,
     privilege = "Default User Commands",
     onRun = function(client) lia.chat.send(client, "roll", math.random(0, 100)) end
 })
-
 
 lia.command.add("chardesc", {
     adminOnly = false,
@@ -846,7 +794,6 @@ lia.command.add("chardesc", {
     end
 })
 
-
 lia.command.add("chargetup", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -861,7 +808,6 @@ lia.command.add("chargetup", {
         end
     end
 })
-
 
 lia.command.add("givemoney", {
     adminOnly = false,
@@ -892,7 +838,6 @@ lia.command.add("givemoney", {
     end
 })
 
-
 lia.command.add("bringlostitems", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -902,7 +847,6 @@ lia.command.add("bringlostitems", {
         end
     end
 })
-
 
 lia.command.add("carddraw", {
     adminOnly = false,
@@ -914,7 +858,6 @@ lia.command.add("carddraw", {
         lia.chat.send(client, "rolld", msg)
     end
 })
-
 
 lia.command.add("fallover", {
     adminOnly = false,
@@ -954,13 +897,11 @@ lia.command.add("fallover", {
     end
 })
 
-
 lia.command.add("getpos", {
     adminOnly = false,
     privilege = "Default User Commands",
     onRun = function(client) client:ChatPrint("MY POSITION: " .. tostring(client:GetPos())) end
 })
-
 
 lia.command.add("entname", {
     adminOnly = false,
@@ -970,7 +911,6 @@ lia.command.add("entname", {
         if IsValid(tr.Entity) then client:ChatPrint("I saw a " .. tr.Entity:GetName()) end
     end
 })
-
 
 lia.command.add("permflaggive", {
     superAdminOnly = true,
@@ -997,7 +937,6 @@ lia.command.add("permflaggive", {
     end
 })
 
-
 lia.command.add("permflagtake", {
     superAdminOnly = true,
     privilege = "Manage Permanent Flags",
@@ -1017,7 +956,6 @@ lia.command.add("permflagtake", {
     end
 })
 
-
 lia.command.add("permflags", {
     adminOnly = true,
     privilege = "Check Permanent Flags",
@@ -1027,7 +965,6 @@ lia.command.add("permflags", {
         if IsValid(target) and target:getChar() then client:notifyP("Their PermFlags are: '" .. target:getPermFlags() .. "'") end
     end
 })
-
 
 lia.command.add("flagblacklist", {
     superAdminOnly = true,
@@ -1067,7 +1004,6 @@ lia.command.add("flagblacklist", {
     end
 })
 
-
 lia.command.add("flagunblacklist", {
     superAdminOnly = true,
     privilege = "Manage Permanent Flags",
@@ -1088,7 +1024,6 @@ lia.command.add("flagunblacklist", {
     end
 })
 
-
 lia.command.add("flagblacklists", {
     superAdminOnly = true,
     privilege = "Manage Permanent Flags",
@@ -1102,7 +1037,6 @@ lia.command.add("flagblacklists", {
         end
     end
 })
-
 
 lia.command.add("dropmoney", {
     privilege = "Default User Commands",
@@ -1128,7 +1062,6 @@ lia.command.add("dropmoney", {
     end
 })
 
-
 lia.command.add("membercount", {
     adminOnly = false,
     privilege = "Default User Commands",
@@ -1150,4 +1083,3 @@ lia.command.add("membercount", {
         client:ChatPrint("Total Regular Users: " .. userCount)
     end
 })
-

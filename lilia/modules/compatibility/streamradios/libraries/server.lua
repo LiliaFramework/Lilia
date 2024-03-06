@@ -1,5 +1,4 @@
-﻿
-function MODULE:LoadData()
+﻿function MODULE:LoadData()
     local savedTable = self:getData() or {}
     for _, v in ipairs(savedTable) do
         local entity = StreamRadioLib.SpawnRadio(v.client, v.mdl, v.pos, v.ang, v.settings)
@@ -11,7 +10,6 @@ function MODULE:LoadData()
         end
     end
 end
-
 
 function MODULE:SaveData()
     local savedTable = {}
@@ -27,4 +25,3 @@ function MODULE:SaveData()
 
     self:setData(savedTable)
 end
-

@@ -1,5 +1,4 @@
-﻿
-function MODULE:OnPlayerJoinClass(client, class, oldClass)
+﻿function MODULE:OnPlayerJoinClass(client, class, oldClass)
     local character = client:getChar()
     if character and self.PermaClass then character:setData("pclass", class) end
     local info = lia.class.list[class]
@@ -9,14 +8,12 @@ function MODULE:OnPlayerJoinClass(client, class, oldClass)
     netstream.Start(nil, "classUpdate", client)
 end
 
-
 function MODULE:CanPlayerJoinClass(client, class, classTable)
     if classTable.isWhitelisted ~= true then return end
     local character = client:getChar()
     local wl = character:getData("whitelist", {})
     return wl[class] or false
 end
-
 
 function MODULE:PlayerLoadedChar(client, character, _)
     local data = character:getData("pclass")
@@ -40,7 +37,6 @@ function MODULE:PlayerLoadedChar(client, character, _)
         end
     end
 end
-
 
 function MODULE:FactionOnLoadout(client)
     local faction = lia.faction.indices[client:Team()]
@@ -118,20 +114,13 @@ function MODULE:FactionOnLoadout(client)
     end
 end
 
-
 function MODULE:CanCharBeTransfered(character, faction)
-    local client = character:getPlayer()
-    local hasBypass = CAMI.PlayerHasAccess(client, "Staff Permissions - Bypass OneCharOnly Limit", nil)
-    if faction.oneCharOnly and not hasBypass then
+    if faction.oneCharOnly then
         for _, otherCharacter in next, lia.char.loaded do
-            if otherCharacter.steamID == character.steamID and faction.index == otherCharacter:getFaction() then
-                client:notify("This player already has another character in this faction!")
-                return false
-            end
+            if otherCharacter.steamID == character.steamID and faction.index == otherCharacter:getFaction() then return false, "This player already has another character in this faction!" end
         end
     end
 end
-
 
 function MODULE:ClassOnLoadout(client)
     local character = client:getChar()
@@ -212,15 +201,12 @@ function MODULE:ClassOnLoadout(client)
     end
 end
 
-
 function MODULE:CanPlayerUseChar(client, character)
     local faction = lia.faction.indices[character:getFaction()]
     if faction and hook.Run("CheckFactionLimitReached", faction, character, client) then return false, "@limitFaction" end
 end
 
-
 function MODULE:CanPlayerSwitchChar(client, _, newCharacter)
     local faction = lia.faction.indices[newCharacter:getFaction()]
     if self:CheckFactionLimitReached(faction, newCharacter, client) then return false, "@limitFaction" end
 end
-

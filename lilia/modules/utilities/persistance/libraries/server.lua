@@ -1,12 +1,8 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 MODULE.entities = MODULE.entities or {}
-
 function MODULE:PhysgunPickup(_, entity)
     if entity:getNetVar("persistent", false) then return false end
 end
-
 
 function MODULE:SaveData()
     local data = {}
@@ -30,7 +26,6 @@ function MODULE:SaveData()
     self:setData(data)
 end
 
-
 function MODULE:LoadData()
     for _, v in pairs(self:getData() or {}) do
         local ent = ents.Create(v.class)
@@ -52,7 +47,6 @@ function MODULE:LoadData()
         self.entities[#self.entities + 1] = ent
     end
 end
-
 
 properties.Add("persist", {
     MenuLabel = "#makepersistent",
@@ -78,7 +72,6 @@ properties.Add("persist", {
         lia.log.add(client, "persistedEntity", ent)
     end
 })
-
 
 properties.Add("persist_end", {
     MenuLabel = "#stoppersisting",
@@ -110,4 +103,3 @@ properties.Add("persist_end", {
         lia.log.add(client, "unpersistedEntity", ent)
     end
 })
-

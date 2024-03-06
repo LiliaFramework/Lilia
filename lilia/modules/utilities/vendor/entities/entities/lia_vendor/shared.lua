@@ -1,20 +1,11 @@
-﻿
-LIA_VENDORS = LIA_VENDORS or {}
-
+﻿LIA_VENDORS = LIA_VENDORS or {}
 ENT.Type = "anim"
-
 ENT.PrintName = "Vendor"
-
 ENT.Category = "Lilia"
-
 ENT.Spawnable = true
-
 ENT.AdminOnly = true
-
 ENT.isVendor = true
-
 ENT.DrawEntityInfo = true
-
 function ENT:setupVars()
     if SERVER then
         self:setNetVar("name", "John Doe")
@@ -28,7 +19,6 @@ function ENT:setupVars()
     self.classes = {}
     self.hasSetupVars = true
 end
-
 
 function ENT:Initialize()
     if CLIENT then
@@ -55,11 +45,9 @@ function ENT:Initialize()
     LIA_VENDORS[self:EntIndex()] = self
 end
 
-
 function ENT:getMoney()
     return self.money
 end
-
 
 function ENT:hasMoney(amount)
     local money = self:getMoney()
@@ -67,16 +55,13 @@ function ENT:hasMoney(amount)
     return money >= amount
 end
 
-
 function ENT:getStock(uniqueID)
     if self.items[uniqueID] and self.items[uniqueID][VENDOR_MAXSTOCK] then return self.items[uniqueID][VENDOR_STOCK] or 0, self.items[uniqueID][VENDOR_MAXSTOCK] end
 end
 
-
 function ENT:getMaxStock(itemType)
     if self.items[itemType] then return self.items[itemType][VENDOR_MAXSTOCK] end
 end
-
 
 function ENT:isItemInStock(itemType, amount)
     amount = amount or 1
@@ -87,18 +72,15 @@ function ENT:isItemInStock(itemType, amount)
     return info[VENDOR_STOCK] >= amount
 end
 
-
 function ENT:getPrice(uniqueID, isSellingToVendor)
     local price = lia.item.list[uniqueID] and self.items[uniqueID] and self.items[uniqueID][VENDOR_PRICE] or lia.item.list[uniqueID]:getPrice()
     if isSellingToVendor then price = math.floor(price * self:getSellScale()) end
     return price
 end
 
-
 function ENT:getTradeMode(itemType)
     if self.items[itemType] then return self.items[itemType][VENDOR_MODE] end
 end
-
 
 function ENT:isClassAllowed(classID)
     local class = lia.class.list[classID]
@@ -108,31 +90,25 @@ function ENT:isClassAllowed(classID)
     return self.classes[classID] == true
 end
 
-
 function ENT:isFactionAllowed(factionID)
     return self.factions[factionID] == true
 end
-
 
 function ENT:getSellScale()
     return self:getNetVar("scale", 0.5)
 end
 
-
 function ENT:getName()
     return self:getNetVar("name", "")
 end
-
 
 function ENT:getDesc()
     return self:getNetVar("desc", "")
 end
 
-
 function ENT:getNoBubble()
     return self:getNetVar("noBubble") == true
 end
-
 
 function ENT:setAnim()
     for k, v in ipairs(self:GetSequenceList()) do
@@ -141,4 +117,3 @@ function ENT:setAnim()
 
     self:ResetSequence(4)
 end
-

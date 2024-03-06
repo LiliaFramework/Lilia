@@ -1,5 +1,4 @@
-﻿
-lia.command.add("cleardecals", {
+﻿lia.command.add("cleardecals", {
     adminOnly = true,
     privilege = "Clear Decals",
     onRun = function()
@@ -8,7 +7,6 @@ lia.command.add("cleardecals", {
         end
     end
 })
-
 
 lia.command.add("playtime", {
     adminOnly = true,
@@ -28,4 +26,3 @@ lia.command.add("playtime", {
         end
     end
 })
-

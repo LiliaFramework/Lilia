@@ -1,6 +1,4 @@
-﻿
-local entityMeta = FindMetaTable("Entity")
-
+﻿local entityMeta = FindMetaTable("Entity")
 function entityMeta:isDoor()
     local class = self:GetClass():lower()
     local doorPrefixes = {"prop_door", "func_door", "func_door_rotating", "door_",}
@@ -10,11 +8,9 @@ function entityMeta:isDoor()
     return false
 end
 
-
 function entityMeta:getDoorPartner()
     return self.liaPartner
 end
-
 
 function entityMeta:isLocked()
     if self:IsVehicle() then
@@ -27,22 +23,18 @@ function entityMeta:isLocked()
     return
 end
 
-
 function entityMeta:sendNetVar(key, receiver)
     netstream.Start(receiver, "nVar", self:EntIndex(), key, lia.net[self] and lia.net[self][key])
 end
-
 
 function entityMeta:AssignCreator(client)
     self:SetCreator(client)
 end
 
-
 function entityMeta:clearNetVars(receiver)
     lia.net[self] = nil
     netstream.Start(receiver, "nDel", self:EntIndex())
 end
-
 
 function entityMeta:setNetVar(key, value, receiver)
     if checkBadType(key, value) then return end
@@ -51,12 +43,9 @@ function entityMeta:setNetVar(key, value, receiver)
     self:sendNetVar(key, receiver)
 end
 
-
 function entityMeta:getNetVar(key, default)
     if lia.net[self] and lia.net[self][key] ~= nil then return lia.net[self][key] end
     return default
 end
 
-
 FindMetaTable("Player").getLocalVar = entityMeta.getNetVar
-

@@ -1,5 +1,4 @@
-﻿
-function Empty_Popup(callback, sw, sh)
+﻿function Empty_Popup(callback, sw, sh)
     sw = sw or 500
     sh = sh or 250
     CreateOverBlur(function(blur)
@@ -14,7 +13,6 @@ function Empty_Popup(callback, sw, sh)
         if callback then callback(frame) end
     end)
 end
-
 
 function String_Request(question, ok, _, numeric)
     question = question or "Unset Question"
@@ -57,7 +55,6 @@ function String_Request(question, ok, _, numeric)
         end
     end)
 end
-
 
 function Choice_Request(question, yes, no, modify)
     question = question or "Unset Question"
@@ -104,7 +101,6 @@ function Choice_Request(question, yes, no, modify)
     end)
 end
 
-
 function Important_Notification(message)
     Empty_Popup(function(frame)
         local wp = frame:GetWorkPanel()
@@ -128,4 +124,3 @@ function Important_Notification(message)
         g:FadeIn()
     end)
 end
-

@@ -1,12 +1,10 @@
-﻿
-function MODULE:CreateInventoryPanel(inventory, parent)
+﻿function MODULE:CreateInventoryPanel(inventory, parent)
     if inventory.typeID ~= "grid" then return end
     local panel = vgui.Create("liaGridInventory", parent)
     panel:setInventory(inventory)
     panel:Center()
     return panel
 end
-
 
 function MODULE:getItemStackKey(item)
     local elements = {}
@@ -16,7 +14,6 @@ function MODULE:getItemStackKey(item)
     end
     return item.uniqueID .. pon.encode(elements)
 end
-
 
 function MODULE:getItemStacks(inventory)
     local stacks = {}
@@ -29,4 +26,3 @@ function MODULE:getItemStacks(inventory)
     end
     return stacks
 end
-

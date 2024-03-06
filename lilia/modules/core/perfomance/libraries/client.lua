@@ -1,5 +1,4 @@
-﻿
-function MODULE:InitPostEntity()
+﻿function MODULE:InitPostEntity()
     hook.Remove("StartChat", "StartChatIndicator")
     hook.Remove("FinishChat", "EndChatIndicator")
     hook.Remove("PostPlayerDraw", "DarkRP_ChatIndicator")
@@ -72,18 +71,14 @@ function MODULE:InitPostEntity()
     RunConsoleCommand("filesystem_unbuffered_io", "0")
 end
 
-
 function MODULE:PostGamemodeLoaded()
     scripted_ents.GetStored("base_gmodentity").t.Think = nil
 end
-
 
 function MODULE:GrabEarAnimation()
     return nil
 end
 
-
 function MODULE:MouthMoveAnimation()
     return nil
 end
-

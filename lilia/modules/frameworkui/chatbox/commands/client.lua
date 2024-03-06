@@ -1,10 +1,8 @@
-﻿
-lia.command.add("banooc", {
+﻿lia.command.add("banooc", {
     privilege = "Ban OOC",
     syntax = "<string target>",
     onRun = function() end
 })
-
 
 lia.command.add("unbanooc", {
     privilege = "Unban OOC",
@@ -12,13 +10,11 @@ lia.command.add("unbanooc", {
     onRun = function() end
 })
 
-
 lia.command.add("blockooc", {
     privilege = "Block OOC",
     syntax = "<string target>",
     onRun = function() end
 })
-
 
 lia.command.add("clearchat", {
     superAdminOnly = true,
@@ -26,10 +22,8 @@ lia.command.add("clearchat", {
     onRun = function() end
 })
 
-
 lia.command.add("refreshfonts", {
     privilege = "Refresh Fonts",
     syntax = "<No Input>",
     onRun = function() end
 })
-

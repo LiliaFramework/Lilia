@@ -1,23 +1,14 @@
-﻿
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 AntiHacking = AntiHacking or {}
-
 AntiHacking.antiNetSpam = {}
-
 AntiHacking.flaggedNetPlayers = {}
-
 AntiHacking.antiConSpam = {}
-
 AntiHacking.flaggedConPlayers = {}
-
 AntiHacking.threshold = 20
-
 function MODULE:InitializedModules()
     file.CreateDir("lilia/netlogs")
     file.CreateDir("lilia/concommandlogs")
 end
-
 
 timer.Create("AntiHacking.CleanSpam", 1, 0, function()
     AntiHacking.antiNetSpam = {}
@@ -25,7 +16,6 @@ timer.Create("AntiHacking.CleanSpam", 1, 0, function()
     AntiHacking.antiConSpam = {}
     AntiHacking.flaggedConPlayers = {}
 end)
-
 
 function net.Incoming(len, client)
     local i = net.ReadHeader()
@@ -56,9 +46,7 @@ function net.Incoming(len, client)
     if not status then file.Append("lilia/netlogs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. string.format("Error during net message (%s). Reasoning: %s \n", name, error) .. "\r\n") end
 end
 
-
 AntiHacking.crun = AntiHacking.crun or concommand.Run
-
 function concommand.Run(client, cmd, args, argStr)
     if not IsValid(client) then return AntiHacking.crun(client, cmd, args, argStr) end
     if not cmd then return AntiHacking.crun(client, cmd, args, argStr) end
@@ -78,4 +66,3 @@ function concommand.Run(client, cmd, args, argStr)
     file.Append("lilia/concommandlogs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. "Player " .. "'" .. clientNick .. "'" .. " (" .. clientSteamid .. ") " .. "(" .. clientIP .. ")" .. " has executed this command: " .. cmd .. " args: " .. temp .. "\r\n")
     return AntiHacking.crun(client, cmd, args, argStr)
 end
-
