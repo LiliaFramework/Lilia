@@ -154,7 +154,7 @@ jobs:
           fi
         working-directory: "${{ github.workspace }}"
 
-  WikiDeploy:
+    WikiDeploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -189,16 +189,25 @@ jobs:
         run: |
           cp -v docs/css/* docs/html
           cp -v docs/js/* docs/html
-      - name: Commit changes
+
+      - name: Checkout Lilia-Framework.github.io repository
+        uses: actions/checkout@v2
+        with:
+          repository: Lilia-Framework/Lilia-Framework.github.io
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
+          path: lilia-website # Path where the repository is checked out
+
+      - name: Copy generated documentation to Lilia-Framework.github.io repository
         run: |
-          echo "Committing changes..."
+          cp -r lilia/docs/html/* lilia-website
+        working-directory: ${{ github.workspace }}
+
+      - name: Commit and push changes to Lilia-Framework.github.io repository
+        run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          if [[ -n "$(git status --porcelain)" ]]; then
-            git add -A
-            git commit -m "Linted Code"
-            git push
-          else
-            echo "No changes to commit."
-          fi
-        working-directory: "${{ github.workspace }}"
+          git add .
+          git commit -m "Update documentation"
+          git push
+        working-directory: lilia-website
