@@ -55,18 +55,18 @@ end
 
 	<body>
 		<main>
-			{(docs/templates/sidebar.ltp)}
+			{(documentation/templates/sidebar.ltp)}
 
 			<article>
 				{% if (ldoc.root) then -- we're rendering the landing page (index.html) %}
-					{(docs/templates/landing.ltp)}
+					{(documentation/templates/landing.ltp)}
 				{% elseif (ldoc.body) then -- we're rendering non-code elements %}
 					<div class="wrapper">
 						{* ldoc.body *}
 					</div>
 				{% elseif (module) then -- we're rendering libary contents %}
 					<div class="wrapper">
-						{(docs/templates/module.ltp)}
+						{(documentation/templates/module.ltp)}
 					</div>
 				{% end %}
 			</article>
