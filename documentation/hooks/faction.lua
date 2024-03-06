@@ -1,3 +1,5 @@
+-- luacheck: ignore 111
+
 --[[--
 Faction setup hooks.
 
