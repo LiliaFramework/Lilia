@@ -13,5 +13,5 @@ end
 
 function MODULE:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
-    if info and info.onGetDefaultDesc then return info:onGetDefaultDesc(client) end
+    if info and info.getDefaultDesc then return info:getDefaultDesc(client) end
 end

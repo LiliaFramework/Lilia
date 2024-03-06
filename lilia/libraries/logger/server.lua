@@ -7,9 +7,6 @@ end
 function lia.log.resetTables()
 end
 
-function getDefaultName(client)
-end
-
 function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end
