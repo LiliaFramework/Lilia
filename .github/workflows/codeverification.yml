@@ -211,3 +211,4 @@ jobs:
           git commit -m "Update documentation"
           git push https://Lilia-Framework:${{ secrets.GH_TOKEN }}@github.com/Lilia-Framework/Lilia-Framework.github.io.git
         working-directory: lilia-website
+        
