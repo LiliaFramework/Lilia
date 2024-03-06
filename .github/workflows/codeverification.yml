@@ -195,7 +195,7 @@ jobs:
         with:
           repository: Lilia-Framework/Lilia-Framework.github.io
           token: ${{ secrets.GHTOKEN }}
-          ref: xxx
+          ref: main
           path: lilia-website
 
       - name: Copy generated documentation to Lilia-Framework.github.io repository
@@ -210,7 +210,7 @@ jobs:
           git add .
           git commit -m "Update documentation"
           git remote set-url origin "https://Lilia-Framework:${GHTOKEN}@github.com/Lilia-Framework/Lilia-Framework.github.io"
-          git push origin xxx
+          git push origin main
         working-directory: lilia-website
  
   
