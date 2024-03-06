@@ -300,6 +300,8 @@ function GM:PostPlayerLoadout(client)
     if not (IsValid(client) or character) then return end
     client:Give("lia_hands")
     client:SetupHands()
+    hook.Run("ClassPostLoadout", client)
+    hook.Run("FactionPostLoadout", client)
 end
 
 function GM:PlayerDisconnected(client)
