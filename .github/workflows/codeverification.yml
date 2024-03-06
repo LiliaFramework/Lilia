@@ -194,7 +194,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: Lilia-Framework/Lilia-Framework.github.io
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.GHTOKEN }}
           ref: main
           path: lilia-website
 
