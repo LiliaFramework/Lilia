@@ -77,7 +77,7 @@ ITEM.functions.Equip = {
         end
 
         if client:HasWeapon(item.class) then client:StripWeapon(item.class) end
-        local weapon = client:Give(item.class)
+        local weapon = client:Give(item.class, false)
         if IsValid(weapon) then
             timer.Simple(0, function() client:SelectWeapon(weapon:GetClass()) end)
             client.carryWeapons[item.weaponCategory] = weapon
@@ -104,7 +104,7 @@ function ITEM:onLoadout()
     if self:getData("equip") then
         local client = self.player
         client.carryWeapons = client.carryWeapons or {}
-        local weapon = client:Give(self.class)
+        local weapon = client:Give(self.class, false)
         if IsValid(weapon) then
             client:RemoveAmmo(weapon:Clip1(), weapon:GetPrimaryAmmoType())
             client.carryWeapons[self.weaponCategory] = weapon

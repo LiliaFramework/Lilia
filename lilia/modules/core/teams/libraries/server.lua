@@ -94,10 +94,10 @@ function MODULE:FactionOnLoadout(client)
     if faction.weapons then
         if istable(faction.weapons) then
             for _, v in ipairs(faction.weapons) do
-                client:Give(v)
+                client:Give(v, false)
             end
         else
-            client:Give(faction.weapons)
+            client:Give(faction.weapons, false)
         end
     end
 end
@@ -186,10 +186,10 @@ function MODULE:ClassOnLoadout(client)
     if class.weapons then
         if istable(class.weapons) then
             for _, v in ipairs(class.weapons) do
-                client:Give(v)
+                client:Give(v, false)
             end
         else
-            client:Give(class.weapons)
+            client:Give(class.weapons, false)
         end
     end
 end
