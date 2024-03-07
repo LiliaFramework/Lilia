@@ -8,7 +8,6 @@ ITEM.height = 2
 ITEM.isWeapon = true
 ITEM.weaponCategory = "sidearm"
 ITEM.RequiredSkillLevels = nil
-ITEM.TeamBlacklist = {}
 if CLIENT then
     function ITEM:paintOver(item, w, h)
         if item:getData("equip") then
@@ -20,14 +19,15 @@ end
 
 ITEM:hook("drop", function(item)
     if item:getData("equip") then
+        local client = item.player
         item:setData("equip", nil)
-        item.player.carryWeapons = item.player.carryWeapons or {}
-        local weapon = item.player.carryWeapons[item.weaponCategory]
+        client.carryWeapons = client.carryWeapons or {}
+        local weapon = client.carryWeapons[item.weaponCategory]
         if IsValid(weapon) then
             item:setData("ammo", weapon:Clip1())
-            item.player:StripWeapon(item.class)
-            item.player.carryWeapons[item.weaponCategory] = nil
-            item.player:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
+            client:StripWeapon(item.class)
+            client.carryWeapons[item.weaponCategory] = nil
+            client:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
         end
     end
 end)
@@ -37,20 +37,22 @@ ITEM.functions.EquipUn = {
     tip = "equipTip",
     icon = "icon16/cross.png",
     onRun = function(item)
-        item.player.carryWeapons = item.player.carryWeapons or {}
-        local weapon = item.player.carryWeapons[item.weaponCategory]
-        if not weapon or not IsValid(weapon) then weapon = item.player:GetWeapon(item.class) end
+        local client = item.player
+        client.carryWeapons = client.carryWeapons or {}
+        local weapon = client.carryWeapons[item.weaponCategory]
+        if not weapon or not IsValid(weapon) then weapon = client:GetWeapon(item.class) end
         if weapon and weapon:IsValid() then
             item:setData("ammo", weapon:Clip1())
-            item.player:StripWeapon(item.class)
+            client:StripWeapon(item.class)
         else
             print(Format("[Lilia] Weapon %s does not exist!", item.class))
         end
 
-        item.player:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
-        item.player.carryWeapons[item.weaponCategory] = nil
+        client:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
+        client.carryWeapons[item.weaponCategory] = nil
         item:setData("equip", nil)
-        if item.onUnequipWeapon then item:onUnequipWeapon(item.player, weapon) end
+        lia.chat.send(client, "iteminternal", Format("holsters his %s.", item.name), false)
+        if item.onUnequipWeapon then item:onUnequipWeapon(client, weapon) end
         return false
     end,
     onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip", false) end
@@ -71,11 +73,6 @@ ITEM.functions.Equip = {
             end
         end
 
-        if table.HasValue(item.TeamBlacklist, client:Team()) then
-            client:notify("Your faction is not allowed to equip this item!")
-            return false
-        end
-
         if client:HasWeapon(item.class) then client:StripWeapon(item.class) end
         local weapon = client:Give(item.class, false)
         if IsValid(weapon) then
@@ -86,6 +83,7 @@ ITEM.functions.Equip = {
             if ammoCount == weapon:Clip1() and item:getData("ammo", 0) == 0 then client:RemoveAmmo(weapon:Clip1(), weapon:GetPrimaryAmmoType()) end
             item:setData("equip", true)
             weapon:SetClip1(item:getData("ammo", 0))
+            lia.chat.send(client, "iteminternal", Format("unholsters his %s.", item.name), false)
             if item.onEquipWeapon then item:onEquipWeapon(client, weapon) end
         else
             print(Format("[Lilia] Weapon %s does not exist!", item.class))
@@ -116,6 +114,7 @@ function ITEM:onLoadout()
 end
 
 function ITEM:onSave()
-    local weapon = self.player:GetWeapon(self.class)
+    local client = self.player
+    local weapon = client:GetWeapon(self.class)
     if IsValid(weapon) then self:setData("ammo", weapon:Clip1()) end
 end

@@ -6,6 +6,8 @@ function playerMeta:setWepRaised(state)
         weapon:SetNextPrimaryFire(CurTime() + 1)
         weapon:SetNextSecondaryFire(CurTime() + 1)
     end
+
+    lia.chat.send(self, "iteminternal", state and "raises his weapon" or "lowers his weapon", false)
 end
 
 function playerMeta:toggleWepRaised()

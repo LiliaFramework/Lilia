@@ -38,9 +38,10 @@ function GM:CanPlayerInteractItem(client, action, item)
 
     if action == "drop" then
         if hook.Run("CanPlayerDropItem", client, item) ~= false then
-            if client.dropDelay == nil then
+            if not client.dropDelay then
                 client.dropDelay = true
                 timer.Create("DropDelay." .. client:SteamID64(), lia.config.DropDelay, 1, function() if IsValid(client) then client.dropDelay = nil end end)
+                lia.chat.send(client, "iteminternal", Format("drops their %s.", item.name), false)
                 return true
             else
                 client:notify("You need to wait before dropping something again!")
@@ -53,9 +54,10 @@ function GM:CanPlayerInteractItem(client, action, item)
 
     if action == "take" then
         if hook.Run("CanPlayerTakeItem", client, item) ~= false then
-            if client.takeDelay == nil then
+            if not client.takeDelay then
                 client.takeDelay = true
                 timer.Create("TakeDelay." .. client:SteamID64(), lia.config.TakeDelay, 1, function() if IsValid(client) then client.takeDelay = nil end end)
+                lia.chat.send(client, "iteminternal", Format("picks up the %s.", item.name), false)
                 return true
             else
                 client:notify("You need to wait before picking something up again!")
@@ -68,7 +70,7 @@ function GM:CanPlayerInteractItem(client, action, item)
 
     if action == "equip" then
         if hook.Run("CanPlayerEquipItem", client, item) ~= false then
-            if client.equipDelay == nil then
+            if not client.equipDelay then
                 client.equipDelay = true
                 timer.Create("EquipDelay." .. client:SteamID64(), lia.config.EquipDelay, 1, function() if IsValid(client) then client.equipDelay = nil end end)
                 return true

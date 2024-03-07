@@ -1,37 +1,17 @@
-﻿lia.chat.register("ooc", {
-    onCanSay = function(speaker, text)
-        if GetGlobalBool("oocblocked", false) then
-            speaker:notify("The OOC is Globally Blocked!")
-            return false
-        end
+﻿lia.chat.register("meclose", {
+    format = "**%s %s",
+    onCanHear = ChatboxCore.ChatRange * 0.25,
+    prefix = {"/meclose", "/actionclose"},
+    font = "liaChatFontItalics",
+    filter = "actions",
+    deadCanChat = true
+})
 
-        if ChatboxCore.OOCBans[speaker:SteamID()] then
-            speaker:notify("You have been banned from using OOC!")
-            return false
-        end
-
-        if string.len(text) > ChatboxCore.OOCLimit then
-            speaker:notify("Text too big!")
-            return false
-        end
-
-        local customDelay = hook.Run("getOOCDelay", speaker)
-        local oocDelay = customDelay or ChatboxCore.OOCDelay
-        if not CAMI.PlayerHasAccess(speaker, "Staff Permissions - No OOC Cooldown") and oocDelay > 0 and speaker.liaLastOOC then
-            local lastOOC = CurTime() - speaker.liaLastOOC
-            if lastOOC <= oocDelay then
-                speaker:notifyLocalized("oocDelay", oocDelay - math.ceil(lastOOC))
-                return false
-            end
-        end
-
-        speaker.liaLastOOC = CurTime()
-    end,
-    onCanHear = function() return true end,
-    onChatAdd = function(speaker, text) chat.AddText(Color(255, 50, 50), " [OOC] ", speaker, color_white, ": " .. text) end,
-    prefix = {"//", "/ooc"},
-    noSpaceAfter = true,
-    filter = "ooc"
+lia.chat.register("iteminternal", {
+    format = "**%s %s",
+    color = Color(255, 150, 0),
+    onCanHear = ChatboxCore.ChatRange,
+    deadCanChat = true
 })
 
 lia.chat.register("meclose", {
@@ -270,4 +250,40 @@ lia.chat.register("flip", {
         return false
     end,
     deadCanChat = true
+})
+
+lia.chat.register("ooc", {
+    onCanSay = function(speaker, text)
+        if GetGlobalBool("oocblocked", false) then
+            speaker:notify("The OOC is Globally Blocked!")
+            return false
+        end
+
+        if ChatboxCore.OOCBans[speaker:SteamID()] then
+            speaker:notify("You have been banned from using OOC!")
+            return false
+        end
+
+        if string.len(text) > ChatboxCore.OOCLimit then
+            speaker:notify("Text too big!")
+            return false
+        end
+
+        local customDelay = hook.Run("getOOCDelay", speaker)
+        local oocDelay = customDelay or ChatboxCore.OOCDelay
+        if not CAMI.PlayerHasAccess(speaker, "Staff Permissions - No OOC Cooldown") and oocDelay > 0 and speaker.liaLastOOC then
+            local lastOOC = CurTime() - speaker.liaLastOOC
+            if lastOOC <= oocDelay then
+                speaker:notifyLocalized("oocDelay", oocDelay - math.ceil(lastOOC))
+                return false
+            end
+        end
+
+        speaker.liaLastOOC = CurTime()
+    end,
+    onCanHear = function() return true end,
+    onChatAdd = function(speaker, text) chat.AddText(Color(255, 50, 50), " [OOC] ", speaker, color_white, ": " .. text) end,
+    prefix = {"//", "/ooc"},
+    noSpaceAfter = true,
+    filter = "ooc"
 })
