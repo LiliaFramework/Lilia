@@ -12,16 +12,6 @@ function GM:PrePlayerLoadedChar(client, _, _)
     client:Freeze(false)
 end
 
-function GM:OnLoadTables()
-    lia.db.query("SELECT * FROM lia_characters ", function(data)
-        for _, v in pairs(data) do
-            for k2, _ in pairs(v) do
-                if k2 == "recognized_as" then lia.db.query("ALTER TABLE lia_characters RENAME COLUMN recognized_as TO _recognized_as") end
-            end
-        end
-    end)
-end
-
 function GM:CreateDefaultInventory(character)
     local charID = character:getID()
     if lia.inventory.types["grid"] then

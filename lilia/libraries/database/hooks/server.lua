@@ -37,6 +37,7 @@ end
 
 function GM:LiliaTablesLoaded()
     local ignore = function() end
+    lia.db.query("ALTER TABLE IF EXISTS lia_characters RENAME COLUMN recognized_as TO _recognized_as"):catch(ignore)
     lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE IF EXISTS lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
