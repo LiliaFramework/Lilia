@@ -1,4 +1,4 @@
-MODULE.isDownTime = false
+﻿MODULE.isDownTime = false
 function MODULE:PlayerLoadedChar()
     if not self.EnableDownTime then return end
     local players = player.GetAll()
