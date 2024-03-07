@@ -22,7 +22,7 @@
         `_data` VARCHAR(1024) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         `_money` INT(10) UNSIGNED NULL DEFAULT '0',
         `_faction` VARCHAR(24) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-        `_recognized_as` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
+        `recognized_as` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
         PRIMARY KEY (`_id`)
     );
     
@@ -83,7 +83,7 @@ SqlLiteTableCreate = [[
         _data VARCHAR,
         _money VARCHAR,
         _faction VARCHAR,
-        _recognized_as TEXT NOT NULL DEFAULT ''
+        recognized_as TEXT NOT NULL DEFAULT ''
     );
     
     CREATE TABLE IF NOT EXISTS lia_inventories (

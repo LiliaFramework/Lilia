@@ -11,7 +11,7 @@
         _steamID = data.steamID,
         _faction = data.faction or "Unknown",
         _money = data.money,
-        _recognized_as = "",
+        recognized_as = "",
         _data = data.data
     }, function(_, charID)
         local client

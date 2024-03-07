@@ -34,11 +34,11 @@ function PANEL:Init()
     self.infoBox = self.info:Add("DPanel")
     self.infoBox:Dock(FILL)
     self.infoBox.Paint = function() end
-    self:CreateTextEntryWithBackgroundAndLabel("name", textFont, textFontSize, textColor, shadowColor, "Character Name")
-    self:CreateTextEntryWithBackgroundAndLabel("desc", textFont, textFontSize, textColor, shadowColor, "Character Description")
-    self:CreateTextEntryWithBackgroundAndLabel("faction", textFont, textFontSize, textColor, shadowColor, "Character Faction")
-    self:CreateTextEntryWithBackgroundAndLabel("money", textFont, textFontSize, textColor, shadowColor, "Character Money")
-    if class then self:CreateTextEntryWithBackgroundAndLabel("class", textFont, textFontSize, textColor, shadowColor, "Character Class") end
+    self:CreateTextEntryWithBackgroundAndLabel("name", textFont, textFontSize, textColor, shadowColor, "Name")
+    self:CreateTextEntryWithBackgroundAndLabel("desc", textFont, textFontSize, textColor, shadowColor, "Description")
+    self:CreateTextEntryWithBackgroundAndLabel("faction", textFont, textFontSize, textColor, shadowColor, "Faction")
+    self:CreateTextEntryWithBackgroundAndLabel("money", textFont, textFontSize, textColor, shadowColor, "Money")
+    if class then self:CreateTextEntryWithBackgroundAndLabel("class", textFont, textFontSize, textColor, shadowColor, "Class") end
     if MODULE.F1DisplayAttributes then
         for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
             local attribValue = character:getAttrib(k, 0)
@@ -51,12 +51,12 @@ function PANEL:Init()
     self:setup()
 end
 
-function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor, shadowColor, labelText, dockMarginTop)
+function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor, shadowColor, labelText, dockMarginBot, dockMarginTop)
     local isDesc = name == "desc"
     local entryContainer = self.infoBox:Add("DPanel")
     entryContainer:Dock(TOP)
     entryContainer:SetTall(size + 5)
-    entryContainer:DockMargin(8, 1, 8, dockMarginTop or 1)
+    entryContainer:DockMargin(8, dockMarginTop or 1, 8, dockMarginBot or 1)
     entryContainer.Paint = function(_, w, h)
         surface.SetDrawColor(shadowColor)
         surface.DrawRect(0, 0, w, h)
@@ -64,11 +64,12 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor
 
     local label = entryContainer:Add("DLabel")
     label:SetFont(font)
-    label:SetWide(150)
+    label:SetWide(85)
     label:SetTall(25)
-    label:Dock(LEFT)
     label:SetTextColor(textColor)
     label:SetText(labelText)
+    label:Dock(LEFT)
+    label:DockMargin(0, 0, 0, 0)
     label:SetContentAlignment(5)
     self[name] = entryContainer:Add("DTextEntry")
     self[name]:SetFont(font)
@@ -82,8 +83,8 @@ end
 function PANEL:CreateFillableBarWithBackgroundAndLabel(name, font, size, textColor, shadowColor, labelText, minVal, maxVal, dockMarginTop, value)
     local entryContainer = self.infoBox:Add("DPanel")
     entryContainer:Dock(TOP)
-    entryContainer:SetTall(size + 25)
-    entryContainer:DockMargin(8, 1, 8, dockMarginTop or 1)
+    entryContainer:SetTall(25)
+    entryContainer:DockMargin(8, dockMarginTop or 1, 8, 1)
     entryContainer.Paint = function(_, w, h)
         surface.SetDrawColor(shadowColor)
         surface.DrawRect(0, 0, w, h)
@@ -91,7 +92,7 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(name, font, size, textCol
 
     local label = entryContainer:Add("DLabel")
     label:SetFont(font)
-    label:SetWide(150)
+    label:SetWide(85)
     label:SetTall(10)
     label:Dock(LEFT)
     label:SetTextColor(textColor)
@@ -99,7 +100,7 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(name, font, size, textCol
     label:SetContentAlignment(5)
     local bar = entryContainer:Add("DPanel")
     bar:Dock(FILL)
-    bar.Paint = function(_, w, h)
+    bar.Paint = function(self, w, h)
         local percentage = math.Clamp((tonumber(value) - tonumber(minVal)) / (tonumber(maxVal) - tonumber(minVal)), 0, 1)
         local filledWidth = percentage * w
         local filledColor = Color(45, 45, 45, 255)

@@ -28,7 +28,7 @@ function MODULE:isFakeNameExistant(clientName, CharNameList)
 end
 
 lia.char.registerVar("RecognizedAs", {
-    field = "_recognized_as",
+    field = "recognized_as",
     default = {},
     noDisplay = true
 })
