@@ -1,4 +1,17 @@
-﻿-- @libraries lia.log
+﻿--[[--
+Logging helper functions.
+
+Predefined flags:
+	FLAG_NORMAL
+	FLAG_SUCCESS
+	FLAG_WARNING
+	FLAG_DANGER
+	FLAG_SERVER
+	FLAG_DEV
+]]
+-- @module lia.log
+
+
 -- @type table lia.log.types()
 -- @typeCommentStart
 -- Stores log types and their formatting functions
