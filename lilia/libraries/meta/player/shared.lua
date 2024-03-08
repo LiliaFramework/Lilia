@@ -1,4 +1,8 @@
-﻿local playerMeta = FindMetaTable("Player")
+﻿-- @module Player
+-- @moduleCommentStart
+-- Player meta functions.
+-- @moduleCommentEnd
+local playerMeta = FindMetaTable("Player")
 function playerMeta:isObserving()
     if self:GetMoveType() == MOVETYPE_NOCLIP and not self:InVehicle() then
         return true

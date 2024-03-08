@@ -1,4 +1,8 @@
-﻿lia.log = lia.log or {}
+﻿-- @module lilia.log
+-- @moduleCommentStart
+-- Library functions for lilia logs
+-- @moduleCommentEnd
+lia.log = lia.log or {}
 FLAG_NORMAL = 0
 FLAG_SUCCESS = 1
 FLAG_WARNING = 2

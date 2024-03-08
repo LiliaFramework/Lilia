@@ -1,4 +1,8 @@
-﻿local charMeta = lia.meta.character or {}
+﻿-- @module lia.char
+-- @moduleCommentStart
+-- Library functions for character
+-- @moduleCommentEnd
+local charMeta = lia.meta.character or {}
 lia.char = lia.char or {}
 lia.char.loaded = lia.char.loaded or {}
 lia.char.names = lia.char.names or {}
