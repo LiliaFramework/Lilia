@@ -3,7 +3,7 @@ Entity Meta.
 
 The Client Entity Meta.
 ]]
--- @meta Entity
+-- libraries Entity
 local entityMeta = FindMetaTable("Entity")
 function entityMeta:isDoor()
     return self:GetClass():find("door")

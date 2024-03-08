@@ -5,6 +5,14 @@ file = {
 	exclude = {"lilia/libraries/thirdparty"}
 }
 
+module_file = {
+	Character = "lilia/libraries/character/meta/shared.lua",
+	Entity = "lilia/libraries/meta/entity/shared.lua",
+	Inventory = "lilia/libraries/inventory/meta/shared.lua",
+	Item = "lilia/libraries/items/meta/shared.lua",
+	Player = "lilia/libraries/meta/player/shared.lua"
+}
+
 dir = "docs/html"
 project = "Lilia"
 title = "Lilia Documentation"
@@ -16,13 +24,7 @@ format = "markdown"
 ignore = true
 topics = "docs/manual"
 use_markdown_titles = true
-kind_names = {
-   topic = "Manual",
-   libraries = "Libraries",
-   functions = "Functions",
-   meta = "Meta",
-   panel = "Panels",
-}
+kind_names = {module = "Libraries", topic = "Manual"}
 merge = true
 sort = true
 sort_modules = true
@@ -50,9 +52,9 @@ custom_display_name_handler = function(item, default_handler)
 
 	return default_handler(item)
 end
+
 new_type("functions", "Functions", true)
 new_type("libraries", "Libraries", true)
-new_type("meta", "Meta", true)
 new_type("panel", "Panels", true)
 
 tparam_alias("char", "Character")
