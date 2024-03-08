@@ -1,4 +1,8 @@
-﻿local translations = {}
+﻿-- @module lia.anim
+-- @moduleCommentStart
+-- Library functions for lia.anim
+-- @moduleCommentEnd
+local translations = {}
 lia.anim = lia.anim or {}
 player_manager.anim = player_manager.anim or {}
 TranslateModel = TranslateModel or player_manager.TranslateToPlayerModelName
@@ -330,11 +334,25 @@ lia.anim.fastZombie = {
     [ACT_MP_RUN] = ACT_HL2MP_RUN_ZOMBIE_FAST
 }
 
+-- @type function lia.anim.setModelClass(model, class)
+-- @typeCommentStart
+-- Sets the animation class for a specified model.
+-- @typeCommentEnd
+-- @realm shared
+-- @string model The model for which to set the animation class.
+-- @string class The animation class to set.
 function lia.anim.setModelClass(model, class)
     if not lia.anim[class] then error("'" .. tostring(class) .. "' is not a valid animation class!") end
     translations[model:lower()] = class
 end
 
+-- @type function lia.anim.getModelClass(model)
+-- @typeCommentStart
+-- Gets the animation class for a specified model. If an animation class has not yet been set for the model, it sets a default animation class based on the model's name.
+-- @typeCommentEnd
+-- @realm shared
+-- @string model The model for which to get the animation class.
+-- @treturn string The animation class for the specified model.
 function lia.anim.getModelClass(model)
     model = string.lower(model)
     local class = translations[model] or "player"
