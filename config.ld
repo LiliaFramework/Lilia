@@ -16,10 +16,7 @@ format = "markdown"
 ignore = true
 topics = "docs/manual"
 use_markdown_titles = true
-kind_names = {
-   topic = "Manual",
-   module = "Libraries"
-}
+kind_names = {module = "Libraries", topic = "Manual"}
 merge = true
 sort = true
 sort_modules = true
@@ -47,20 +44,13 @@ custom_display_name_handler = function(item, default_handler)
 
 	return default_handler(item)
 end
-kind_names = {
-   topic = "Manual",
-}
-new_type("functions", "Functions", true)
-new_type("libraries", "Libraries", true)
-new_type("panel", "Panels", true)
 
+new_type("hooks", "Hooks", true)
+new_type("panel", "Panels", true)
 tparam_alias("char", "Character")
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
-tparam_alias("ixtype", "ix.type")
 tparam_alias("date", "date")
-
--- standard types
 tparam_alias("string", "string")
 tparam_alias("bool", "boolean")
 tparam_alias("func", "function")
