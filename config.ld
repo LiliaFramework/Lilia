@@ -45,7 +45,7 @@ custom_display_name_handler = function(item, default_handler)
 	if (item.type == "function" and item.module) then
 		if (item.module.type == "classmod" or item.module.type == "panel") then
 			return item.module.mod_name .. ":" .. default_handler(item)
-		elseif (item.module.type == "hooks") then
+		elseif (item.module.type == "module") then
 			return item.module.mod_name:upper() .. ":" .. default_handler(item)
 		end
 	end
