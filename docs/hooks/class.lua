@@ -1,9 +1,3 @@
---[[--
-Class setup hooks.
-
-As with `Faction`s, `Class`es get their own hooks for when players leave/join a class, etc. These hooks are only
-valid in class tables that are created in `schema/classes/sh_classname.lua`, and cannot be used like regular gamemode hooks.
-]]
 -- @functions Class
 --- Whether or not a player can switch to this class.
 -- @realm shared
