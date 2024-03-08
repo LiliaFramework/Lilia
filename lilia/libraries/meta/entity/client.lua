@@ -1,10 +1,4 @@
-﻿--[[--
-Entity Meta.
-
-The Client Entity Meta.
-]]
--- @classmod Entity
-local entityMeta = FindMetaTable("Entity")
+﻿local entityMeta = FindMetaTable("Entity")
 function entityMeta:isDoor()
     return self:GetClass():find("door")
 end

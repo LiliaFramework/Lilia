@@ -1,16 +1,4 @@
-﻿-- @libraries lia.log
---[[--
-Logging helper functions.
-
-Predefined flags:
-	FLAG_NORMAL
-	FLAG_SUCCESS
-	FLAG_WARNING
-	FLAG_DANGER
-	FLAG_SERVER
-	FLAG_DEV
-]]
-lia.log = lia.log or {}
+﻿lia.log = lia.log or {}
 FLAG_NORMAL = 0
 FLAG_SUCCESS = 1
 FLAG_WARNING = 2
