@@ -1,7 +1,15 @@
-﻿-- @module lilia.log
--- @moduleCommentStart
--- Library functions for lilia logs
--- @moduleCommentEnd
+﻿--[[--
+Logging helper functions.
+
+Predefined flags:
+	FLAG_NORMAL
+	FLAG_SUCCESS
+	FLAG_WARNING
+	FLAG_DANGER
+	FLAG_SERVER
+	FLAG_DEV
+]]
+-- @module lia.log
 lia.log = lia.log or {}
 FLAG_NORMAL = 0
 FLAG_SUCCESS = 1

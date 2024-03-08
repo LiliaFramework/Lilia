@@ -1,7 +1,10 @@
+--[[--
+Entity menu manipulation.
+
+The Basic Syntax For Lilia Documentation
+]]
 -- @module Syntax
--- @moduleCommentStart
 -- Syntax for Lilia documentation.
--- @moduleCommentEnd
 
 --[[
 @type command module

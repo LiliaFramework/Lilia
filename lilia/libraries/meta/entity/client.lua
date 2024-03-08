@@ -1,7 +1,4 @@
 ﻿-- @module Entity
--- @moduleCommentStart
--- Entity meta functions.
--- @moduleCommentEnd
 local entityMeta = FindMetaTable("Entity")
 function entityMeta:isDoor()
     return self:GetClass():find("door")
