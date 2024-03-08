@@ -18,6 +18,10 @@ topics = "docs/manual"
 use_markdown_titles = true
 kind_names = {
    topic = "Manual",
+   libraries = "Libraries",
+   functions = "Functions",
+   meta = "Meta",
+   panel = "Panels",
 }
 merge = true
 sort = true
@@ -46,14 +50,6 @@ custom_display_name_handler = function(item, default_handler)
 
 	return default_handler(item)
 end
-kind_names = {
-   topic = "Manual",
-   script = "Programs"
-}
-new_type("functions", "Functions", true)
-new_type("libraries", "Libraries", true)
-new_type("meta", "Meta", true)
-new_type("panel", "Panels", true)
 
 tparam_alias("char", "Character")
 tparam_alias("inventory", "Inventory")
