@@ -1,12 +1,4 @@
-﻿--[[--
-Entity menu manipulation.
-
-The Basic Syntax For Lilia Documentation.
-Top-level library containing all Lilia libraries. A large majority of the framework is split into respective libraries that
-reside within `lia`.
-]]
--- @libraries lia
-DeriveGamemode("sandbox")
+﻿DeriveGamemode("sandbox")
 GM.Name = "Lilia"
 GM.Author = "Leonheart"
 GM.Website = "https://discord.gg/jjrhyeuzYV"

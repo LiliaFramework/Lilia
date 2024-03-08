@@ -54,6 +54,7 @@ kind_names = {
 }
 new_type("functions", "Functions", true)
 new_type("libraries", "Libraries", true)
+new_type("meta", "Meta", true)
 new_type("panel", "Panels", true)
 
 tparam_alias("char", "Character")
