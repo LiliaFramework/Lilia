@@ -16,7 +16,7 @@ If you find that your models are T-posing when they work elsewhere, you'll proba
 model with `lia.anim.setModelClass` in order for the correct animations to be used. If you'd like to add your own animation
 class, simply add to the `lia.anim` table with a model class name and the required animation translation table.
 ]]
--- @module lia.anim
+-- @libraries lia.anim
 local translations = {}
 lia.anim = lia.anim or {}
 player_manager.anim = player_manager.anim or {}

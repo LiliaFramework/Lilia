@@ -9,7 +9,7 @@ Predefined flags:
 	FLAG_SERVER
 	FLAG_DEV
 ]]
--- @module lia.log
+-- @libraries lia.log
 lia.log = lia.log or {}
 FLAG_NORMAL = 0
 FLAG_SUCCESS = 1

@@ -4,7 +4,7 @@ Character creation and management.
 **NOTE:** For the most part you shouldn't use this library unless you know what you're doing. You can very easily corrupt
 character data using these functions!
 ]]
--- @module lia.char
+-- @libraries lia.char
 local charMeta = lia.meta.character or {}
 lia.char = lia.char or {}
 lia.char.loaded = lia.char.loaded or {}
