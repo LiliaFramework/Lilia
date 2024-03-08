@@ -7,6 +7,7 @@ ITEM.invWidth = 2
 ITEM.invHeight = 2
 ITEM.RequiredSkillLevels = nil
 ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
+ITEM.pacData = {}
 if CLIENT then
     function ITEM:paintOver(item, w, h)
         if item:getData("equip", false) then
@@ -29,6 +30,7 @@ ITEM.functions.Equip = {
             end
         end
 
+        if item.pacData and client.addPart then client:addPart(item.uniqueID) end
         item:setData("equip", true)
         return false
     end,
@@ -39,6 +41,7 @@ ITEM.functions.Unequip = {
     name = "Unequip",
     icon = "icon16/cross.png",
     onRun = function(item)
+        if item.pacData and client.removePart then client:removePart(item.uniqueID) end
         item:setData("equip", false)
         return false
     end,
