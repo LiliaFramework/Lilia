@@ -2,7 +2,6 @@ name: Commit Verification
 
 on:
   push:
-  pull_request:  
 
 permissions:
   actions: write
@@ -194,6 +193,6 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'Lilia-Framework/Lilia' && success()
         uses: peaceiris/actions-gh-pages@v3
         with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            publish_dir: lilia/docs/html
-            cname: lilia-framework.github.io
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: lilia/docs/html
+          cname: lilia-framework.github.io
