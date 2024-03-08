@@ -1,7 +1,7 @@
 --[[--
 Lilia Documentation.
 
-The Basic Syntax For Lilia Documentation
+The Basic Syntax For Lilia Documentation.
 ]]
 -- @module Syntax
 -- Syntax for Lilia documentation.
