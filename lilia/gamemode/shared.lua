@@ -1,7 +1,7 @@
 ﻿--[[--
 Entity menu manipulation.
 
-The Basic Syntax For Lilia Documentation
+The Basic Syntax For Lilia Documentation.
 Top-level library containing all Lilia libraries. A large majority of the framework is split into respective libraries that
 reside within `lia`.
 ]]
