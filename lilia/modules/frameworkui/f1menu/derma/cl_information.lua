@@ -80,7 +80,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor
     self[name]:SetMultiline(isDesc and true or false)
 end
 
-function PANEL:CreateFillableBarWithBackgroundAndLabel(name, font, size, textColor, shadowColor, labelText, minVal, maxVal, dockMarginTop, value)
+function PANEL:CreateFillableBarWithBackgroundAndLabel(name, font, _, textColor, shadowColor, labelText, minVal, maxVal, dockMarginTop, value)
     local entryContainer = self.infoBox:Add("DPanel")
     entryContainer:Dock(TOP)
     entryContainer:SetTall(25)
@@ -100,7 +100,7 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(name, font, size, textCol
     label:SetContentAlignment(5)
     local bar = entryContainer:Add("DPanel")
     bar:Dock(FILL)
-    bar.Paint = function(self, w, h)
+    bar.Paint = function(_, w, h)
         local percentage = math.Clamp((tonumber(value) - tonumber(minVal)) / (tonumber(maxVal) - tonumber(minVal)), 0, 1)
         local filledWidth = percentage * w
         local filledColor = Color(45, 45, 45, 255)
