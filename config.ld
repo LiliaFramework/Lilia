@@ -18,8 +18,6 @@ topics = "docs/manual"
 use_markdown_titles = true
 kind_names = {
    topic = "Manual",
-   script = "Programs",
-   module = "Libraries"
 }
 merge = true
 sort = true
