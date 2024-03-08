@@ -1,4 +1,3 @@
--- luacheck: ignore 111
 --[[--
 Class setup hooks.
 

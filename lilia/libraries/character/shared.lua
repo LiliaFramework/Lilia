@@ -1,11 +1,4 @@
-﻿--[[--
-Character creation and management.
-
-**NOTE:** For the most part you shouldn't use this library unless you know what you're doing. You can very easily corrupt
-character data using these functions!
-]]
--- @libraries lia.char
-local charMeta = lia.meta.character or {}
+﻿local charMeta = lia.meta.character or {}
 lia.char = lia.char or {}
 lia.char.loaded = lia.char.loaded or {}
 lia.char.names = lia.char.names or {}
@@ -51,6 +44,7 @@ function lia.getCharData(charID, key)
     return data
 end
 
+-- @libraries lia.char
 -- @type function lia.char.new(data, id, client, steamID)
 -- @typeCommentStart
 -- Creates a new character object with the given data and metadata.
