@@ -154,7 +154,6 @@ jobs:
         working-directory: "${{ github.workspace }}"
 
   WikiDeploy:
-    needs: CodeVerifierAndIndenter
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
