@@ -1,4 +1,9 @@
-﻿-- @module Entity
+﻿--[[--
+Entity Meta.
+
+The Client Entity Meta.
+]]
+-- @module Entity
 local entityMeta = FindMetaTable("Entity")
 function entityMeta:isDoor()
     return self:GetClass():find("door")

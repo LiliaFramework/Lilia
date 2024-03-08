@@ -1,5 +1,5 @@
 --[[--
-Entity menu manipulation.
+Lilia Documentation.
 
 The Basic Syntax For Lilia Documentation
 ]]
