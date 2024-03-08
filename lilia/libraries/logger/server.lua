@@ -10,15 +10,12 @@ Predefined flags:
 	FLAG_DEV
 ]]
 -- @libraries lia.log
-
-
 -- @type table lia.log.types()
 -- @typeCommentStart
 -- Stores log types and their formatting functions
 -- @typeCommentEnd
 -- @realm server
 lia.log.types = lia.log.types or {}
-
 -- @type function lia.log.loadTables()
 -- @typeCommentStart
 -- Used to load tables into the database

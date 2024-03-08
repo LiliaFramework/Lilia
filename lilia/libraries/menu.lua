@@ -4,8 +4,6 @@ The `menu` library allows you to open up a context menu of arbitrary options who
 from the panel that shows up for the player.
 ]]
 -- @libraries lia.menu
-
-
 lia.menu = lia.menu or {}
 lia.menu.list = lia.menu.list or {}
 -- @type function lia.menu.add(options, positions, onRemove)
