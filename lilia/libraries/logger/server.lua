@@ -1,4 +1,5 @@
 ﻿-- @libraries lia.log
+
 -- @type table lia.log.types()
 -- @typeCommentStart
 -- Stores log types and their formatting functions
