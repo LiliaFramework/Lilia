@@ -339,7 +339,7 @@ lia.command.add("doorremovechild", {
 
 lia.command.add("doorsetclass", {
     adminOnly = true,
-    syntax = "[string faction]",
+    syntax = "[string class]",
     privilege = "Manage Doors",
     onRun = function(client, arguments)
         local entity = client:GetEyeTrace().Entity
