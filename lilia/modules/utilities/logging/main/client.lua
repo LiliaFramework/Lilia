@@ -71,8 +71,8 @@ net.Receive("SyncCategories", function()
 end)
 
 net.Receive("OpenLogger", function()
-    local ply = LocalPlayer()
-    if not CAMI.PlayerHasAccess(ply, "Commands - View Logs", nil) then return end
+    local client = LocalPlayer()
+    if not CAMI.PlayerHasAccess(client, "Commands - View Logs", nil) then return end
     local panel = vgui.Create("DFrame")
     panel:DockPadding(0, 0, 0, 0)
     panel:SetSize(ScrW() / 1.96, ScrH() / 1.7)

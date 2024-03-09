@@ -20,7 +20,7 @@ function MODULE:addLog(category, log)
     return sql.Query(query) == nil and true or false
 end
 
-function MODULE:networkCategories(ply)
+function MODULE:networkCategories(client)
     net.Start("SyncCategories")
     net.WriteUInt(table.Count(self.categories), self.maxCategoriesInBits)
     for _, v in pairs(self.categories) do
@@ -28,16 +28,16 @@ function MODULE:networkCategories(ply)
         net.WriteColor(v.color)
     end
 
-    net.Send(ply)
+    net.Send(client)
 end
 
-net.Receive("SyncCategories", function(_, ply)
-    if not CAMI.PlayerHasAccess(ply, "Commands - View Logs", nil) then return end
-    MODULE:networkCategories(ply)
+net.Receive("SyncCategories", function(_, client)
+    if not CAMI.PlayerHasAccess(client, "Commands - View Logs", nil) then return end
+    MODULE:networkCategories(client)
 end)
 
-net.Receive("SyncLogs", function(_, ply)
-    if not CAMI.PlayerHasAccess(ply, "Commands - View Logs", nil) then return end
+net.Receive("SyncLogs", function(_, client)
+    if not CAMI.PlayerHasAccess(client, "Commands - View Logs", nil) then return end
     local page = net.ReadUInt(MODULE.maxPagesInBits)
     local category_name = net.ReadString()
     local escaped_category_name = SQLStr(category_name)
@@ -45,7 +45,7 @@ net.Receive("SyncLogs", function(_, ply)
     if not logs then
         net.Start("SyncLogs")
         net.WriteUInt(0, MODULE.maxPagesInBits)
-        net.Send(ply)
+        net.Send(client)
         return
     end
 
@@ -59,7 +59,7 @@ net.Receive("SyncLogs", function(_, ply)
     net.Start("SyncLogs")
     net.WriteUInt(math.ceil(count / MODULE.logsPerPage), MODULE.maxPagesInBits)
     net.WriteData(data, #data)
-    net.Send(ply)
+    net.Send(client)
 end)
 
 concommand.Add("Logger_delete_logs", function()
