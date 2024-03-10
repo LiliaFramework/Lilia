@@ -60,12 +60,12 @@ jobs:
         luaVersion: 5.4
     - name: Setup Lua Rocks
       uses: leafo/gh-actions-luarocks@v4
-    - name: Setup dependencies
-      run: luarocks install --only-deps ldoc-dev-1.rockspec
+    - name: Setup dependencies 
+      run: luarocks install --only-deps ldoc-1.5.0-1.rockspec
     - name: Build docs
       run: make doc-site
     - name: Deploy
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
       uses: peaceiris/actions-gh-pages@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.LiliaGitSecret }}
