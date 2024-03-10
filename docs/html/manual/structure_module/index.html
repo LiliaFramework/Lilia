@@ -1,0 +1,294 @@
+
+
+<html>
+	<head>
+		<title>Structure - Module - Lilia Documentation</title>
+
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Structure - Module - Lilia Documentation" />
+		<meta property="og:site_name" content="Lilia Documentation" />
+
+			<meta property="og:description" content=" Structure - Module
+
+```lua
+--------------------------------------------------------------------------------------------------------------------------
+MODULE.name = &quot;Core - Permissions&quot;
+----------------------------------------------------------------------..." />
+
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro" />
+		<link rel="stylesheet" href="../../ldoc.css" />
+		<link rel="stylesheet" href="../../highlight.css" />
+	</head>
+
+	<body>
+		<main>
+
+
+<nav>
+	<header>
+			<h1><a href="../../">Lilia Documentation</a></h1>
+		<input id="search" type="search" autocomplete="off" placeholder="Search..." />
+	</header>
+
+	<section>
+				<details class="category" open>
+					<summary>
+						<h2>Hooks</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<details >
+									<summary><a href="../index/">Class</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm shared"></span>
+											<a href="../index/#onCanBe">
+onCanBe											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onLeave">
+onLeave											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onSet">
+onSet											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onSpawn">
+onSpawn											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+							<li>
+									<details >
+									<summary><a href="../hooks/faction/">Faction</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm shared"></span>
+											<a href="../hooks/faction/#getDefaultName">
+getDefaultName											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onCharCreated">
+onCharCreated											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onSpawn">
+onSpawn											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onTransferred">
+onTransferred											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+					</ul>
+				</details>
+				<details class="category" open>
+					<summary>
+						<h2>Libraries</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<details >
+									<summary><a href="../libraries/lia.log/">lia.log</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm server"></span>
+											<a href="../libraries/lia.log/#lia.log.add">
+add											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../libraries/lia.log/#log">
+log											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+					</ul>
+				</details>
+				<details class="category" open>
+					<summary>
+						<h2>Manual</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<a href="../manual/info_converting-from-nutscript/">Information - Porting From NS</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/info_features/">Information - Feature List</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/info_installation/">Information - Installation Tutorial</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_class/">Structure - Class</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_command/">Structure - Command</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_faction/">Structure - Faction</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_items/">Structure - Items</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_module/">Structure - Module</a>
+
+
+
+							</li>
+					</ul>
+				</details>
+	</section>
+</nav>
+
+
+			<article>
+					<div class="wrapper">
+
+<h1>Structure - Module</h1>
+
+
+<pre>
+<span class="comment">--------------------------------------------------------------------------------------------------------------------------
+</span>MODULE.name = <span class="string">"Core - Permissions"</span>
+<span class="comment">--------------------------------------------------------------------------------------------------------------------------
+</span>MODULE.author = <span class="string">"76561198312513285"</span>
+<span class="comment">--------------------------------------------------------------------------------------------------------------------------
+</span>MODULE.discord = <span class="string">"@liliaplayer"</span>
+<span class="comment">--------------------------------------------------------------------------------------------------------------------------
+</span>MODULE.desc = <span class="string">"Implements CAMI Based Permissions."</span>
+<span class="comment">--------------------------------------------------------------------------------------------------------------------------
+</span>MODULE.identifier = <span class="string">"RestrictionCore"</span>
+<span class="comment">--------------------------------------------------------------------------------------------------------------------------
+</span>MODULE.WorkshopContent = {<span class="string">"2959728255"</span>}
+<span class="comment">-------------------------------------------f-------------------------------------------------------------------------------
+</span>MODULE.enabled = <span class="keyword">true</span>
+<span class="comment">--------------------------------------------------------------------------------------------------------------------------
+</span>MODULE.CAMIPrivileges = {
+    {
+        Name = <span class="string">"Staff Permissions - One Punch Man"</span>,
+        MinAccess = <span class="string">"superadmin"</span>,
+        Description = <span class="string">"Allows access to OPM to Ragdoll Minges."</span>,
+    },
+}
+<span class="comment">--------------------------------------------------------------------------------------------------------------------------</span>
+</pre>
+
+
+<hr/>
+
+<p><a name="_View_source_____https___github_com_Lilia_Framework_Lilia_blob_main_lilia_modules_core_permissions_module_lua_"></a></p>
+<h2><a href="https://github.com/Lilia-Framework/Lilia/blob/main/lilia/modules/core/permissions/module.lua">View source »</a></h2>
+
+<p><a name="Module_Configuration"></a></p>
+<h2>Module Configuration</h2>
+
+<ul>
+    <li><p>**<code>MODULE.name</code>:** Specifies the name of the module, which is "Core - Permissions" in this case. This variable identifies the module.</p></li>
+    <li><p>**<code>MODULE.author</code>:** Indicates the author of the module. It can be a STEAMID64 or Name. Replace "76561198312513285" with the actual author information.</p></li>
+    <li><p>**<code>MODULE.discord</code>:** Indicates the discord of the module creator, in this case, as shown, is liliaplayer.</p></li>
+    <li><p>**<code>MODULE.desc</code>:** Provides a brief description of the module's purpose. In this case, it states that the module adds skills functionality to the framework.</p></li>
+    <li><p>**<code>MODULE.CAMIPrivileges</code>:** An example CAMI permission that is loaded alongside the module.</p></li>
+    <li><p>**<code>MODULE.WorkshopContent</code>:** Workshop Content to be added.</p></li>
+    <li><p>**<code>MODULE.enabled</code>:** Indicates if the module is active or not. If False, then it won't be.</p></li>
+</ul>
+
+<h3>Automatically Included Files and Folders in the Module:</h3>
+
+<p><strong>Files:</strong></p>
+
+<ul>
+    <li>client.lua</li>
+    <li>cl_module.lua</li>
+    <li>sv_module.lua</li>
+    <li>server.lua</li>
+    <li>config.lua</li>
+    <li>sconfig.lua</li>
+</ul>
+
+<p><strong>Folders:</strong></p>
+
+<ul>
+    <li><p>dependencies</p></li>
+    <li><p>config</p></li>
+    <li><p>permissions</p></li>
+    <li><p>libs</p></li>
+    <li><p>hooks</p></li>
+    <li><p>libraries</p></li>
+    <li><p>commands</p></li>
+    <li><p>netcalls</p></li>
+    <li><p>meta</p></li>
+    <li><p>derma</p></li>
+    <li><p>pim</p></li>
+    <li><h2>concommands</h2></li>
+    <li><p><a href="https://github.com/Lilia-Framework/Lilia/wiki/Module-List">Default Module List</a>: This link directs you to the Module List.</p></li>
+</ul>
+
+					</div>
+			</article>
+		</main>
+
+		<script type="text/javascript" src="../../app.js"></script>
+		<script type="text/javascript" src="../../highlight.min.js"></script>
+		<script type="text/javascript">
+			var elements = document.querySelectorAll("pre code")
+
+			hljs.configure({
+				languages: ["lua"]
+			});
+
+			for (var i = 0; i < elements.length; i++)
+			{
+				hljs.highlightBlock(elements[i]);
+			}
+		</script>
+	</body>
+</html>

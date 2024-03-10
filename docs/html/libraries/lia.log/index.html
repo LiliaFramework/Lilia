@@ -1,0 +1,341 @@
+
+
+<html>
+	<head>
+		<title>lia.log - Lilia Documentation</title>
+
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="lia.log - Lilia Documentation" />
+		<meta property="og:site_name" content="Lilia Documentation" />
+
+			<meta property="og:description" content="Logging helper functions." />
+
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro" />
+		<link rel="stylesheet" href="../../ldoc.css" />
+		<link rel="stylesheet" href="../../highlight.css" />
+	</head>
+
+	<body>
+		<main>
+
+
+<nav>
+	<header>
+			<h1><a href="../../">Lilia Documentation</a></h1>
+		<input id="search" type="search" autocomplete="off" placeholder="Search..." />
+	</header>
+
+	<section>
+				<details class="category" open>
+					<summary>
+						<h2>Hooks</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<details >
+									<summary><a href="../index/">Class</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm shared"></span>
+											<a href="../index/#onCanBe">
+onCanBe											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onLeave">
+onLeave											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onSet">
+onSet											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onSpawn">
+onSpawn											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+							<li>
+									<details >
+									<summary><a href="../hooks/faction/">Faction</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm shared"></span>
+											<a href="../hooks/faction/#getDefaultName">
+getDefaultName											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onCharCreated">
+onCharCreated											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onSpawn">
+onSpawn											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onTransferred">
+onTransferred											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+					</ul>
+				</details>
+				<details class="category" open>
+					<summary>
+						<h2>Libraries</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<details open>
+									<summary><a href="../libraries/lia.log/">lia.log</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm server"></span>
+											<a href="../libraries/lia.log/#lia.log.add">
+add											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../libraries/lia.log/#log">
+log											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+					</ul>
+				</details>
+				<details class="category" open>
+					<summary>
+						<h2>Manual</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<a href="../manual/info_converting-from-nutscript/">Information - Porting From NS</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/info_features/">Information - Feature List</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/info_installation/">Information - Installation Tutorial</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_class/">Structure - Class</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_command/">Structure - Command</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_faction/">Structure - Faction</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_items/">Structure - Items</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_module/">Structure - Module</a>
+
+
+
+							</li>
+					</ul>
+				</details>
+	</section>
+</nav>
+
+
+			<article>
+					<div class="wrapper">
+
+<header class="module">
+	<h1>lia.log</h1>
+	<h2>Logging helper functions.</h2>
+</header>
+
+<p>
+
+
+<p>Predefined flags:</p>
+<pre><code>FLAG_NORMAL
+FLAG_SUCCESS
+FLAG_WARNING
+FLAG_DANGER
+FLAG_SERVER
+FLAG_DEV
+</code></pre>
+</p>
+
+	<h1 class="title">Functions</h1>
+
+		<section class="method">
+			<header>
+				<a class="anchor" id="lia.log.add">
+					<h1><span class="realm server"></span></span>lia.log.add(client, logType, ...)</h1>
+				</a>
+
+
+					<a class="reference" href="https://github.com/Lilia-Framework/Liliatree/main/home/runner/work/Lilia/Lilia/Lilia/lilia/libraries/logger/server.lua#L52">View source &raquo;</a>
+
+					<p>Add a log message.</p>
+			</header>
+
+
+					<h3>Parameters</h3>
+
+
+					<ul>
+
+							<li>
+								<span class="tag parameter">client</span>
+
+									<span class="tag"><span class="type">Player</span></span>
+
+
+								<p> Player who instigated the log</p>
+							</li>
+					</ul>
+
+					<ul>
+
+							<li>
+								<span class="tag parameter">logType</span>
+
+									<span class="tag"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+
+								<p> Log category</p>
+							</li>
+					</ul>
+
+					<ul>
+
+							<li>
+								<span class="tag parameter">...</span>
+
+
+
+								<p> Arguments to pass to the log</p>
+							</li>
+					</ul>
+
+
+
+		</section>
+		<section class="method">
+			<header>
+				<a class="anchor" id="log">
+					<h1><span class="realm server"></span></span>log(logType, client, ...)</h1>
+				</a>
+
+
+					<a class="reference" href="https://github.com/Lilia-Framework/Liliatree/main/home/runner/work/Lilia/Lilia/Lilia/lilia/libraries/logger/server.lua#L29">View source &raquo;</a>
+
+					<p>Adds a log type.</p>
+			</header>
+
+
+					<h3>Parameters</h3>
+
+
+					<ul>
+
+							<li>
+								<span class="tag parameter">logType</span>
+
+									<span class="tag"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+
+								<p> Log category</p>
+							</li>
+					</ul>
+
+					<ul>
+
+							<li>
+								<span class="tag parameter">client</span>
+
+
+
+								<p> Client object</p>
+							</li>
+					</ul>
+
+					<ul>
+
+							<li>
+								<span class="tag parameter">...</span>
+
+
+
+								<p> Additional parameters for the log format callback</p>
+							</li>
+					</ul>
+
+
+				<h3>Example Usage</h3>
+					<pre><code>function(client, ...) log format callback
+</code></pre>
+
+		</section>
+
+					</div>
+			</article>
+		</main>
+
+		<script type="text/javascript" src="../../app.js"></script>
+		<script type="text/javascript" src="../../highlight.min.js"></script>
+		<script type="text/javascript">
+			var elements = document.querySelectorAll("pre code")
+
+			hljs.configure({
+				languages: ["lua"]
+			});
+
+			for (var i = 0; i < elements.length; i++)
+			{
+				hljs.highlightBlock(elements[i]);
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,264 @@
+
+
+<html>
+	<head>
+		<title>Structure - Class - Lilia Documentation</title>
+
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Structure - Class - Lilia Documentation" />
+		<meta property="og:site_name" content="Lilia Documentation" />
+
+			<meta property="og:description" content=" Structure - Class
+
+```lua
+CLASS.name = &quot;Steve&quot;
+CLASS.desc = &quot;The Steves of the Minecrafter Faction.&quot;
+CLASS.isDefault = true
+CLASS.faction = FACTION_MINECRAFTER
+CLASS.color = Color(0, 255, 0)
+CLASS.weapons = {&quot;gold_pickaxe&quot;, &quot;netherite_spade&quot;}
+CLASS.pay = ..." />
+
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro" />
+		<link rel="stylesheet" href="../../ldoc.css" />
+		<link rel="stylesheet" href="../../highlight.css" />
+	</head>
+
+	<body>
+		<main>
+
+
+<nav>
+	<header>
+			<h1><a href="../../">Lilia Documentation</a></h1>
+		<input id="search" type="search" autocomplete="off" placeholder="Search..." />
+	</header>
+
+	<section>
+				<details class="category" open>
+					<summary>
+						<h2>Hooks</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<details >
+									<summary><a href="../index/">Class</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm shared"></span>
+											<a href="../index/#onCanBe">
+onCanBe											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onLeave">
+onLeave											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onSet">
+onSet											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onSpawn">
+onSpawn											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+							<li>
+									<details >
+									<summary><a href="../hooks/faction/">Faction</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm shared"></span>
+											<a href="../hooks/faction/#getDefaultName">
+getDefaultName											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onCharCreated">
+onCharCreated											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onSpawn">
+onSpawn											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onTransferred">
+onTransferred											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+					</ul>
+				</details>
+				<details class="category" open>
+					<summary>
+						<h2>Libraries</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<details >
+									<summary><a href="../libraries/lia.log/">lia.log</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm server"></span>
+											<a href="../libraries/lia.log/#lia.log.add">
+add											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../libraries/lia.log/#log">
+log											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+					</ul>
+				</details>
+				<details class="category" open>
+					<summary>
+						<h2>Manual</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<a href="../manual/info_converting-from-nutscript/">Information - Porting From NS</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/info_features/">Information - Feature List</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/info_installation/">Information - Installation Tutorial</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_class/">Structure - Class</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_command/">Structure - Command</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_faction/">Structure - Faction</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_items/">Structure - Items</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_module/">Structure - Module</a>
+
+
+
+							</li>
+					</ul>
+				</details>
+	</section>
+</nav>
+
+
+			<article>
+					<div class="wrapper">
+
+<h1>Structure - Class</h1>
+
+
+<pre>
+CLASS.name = <span class="string">"Steve"</span>
+CLASS.desc = <span class="string">"The Steves of the Minecrafter Faction."</span>
+CLASS.isDefault = <span class="keyword">true</span>
+CLASS.faction = FACTION_MINECRAFTER
+CLASS.color = Color(<span class="number">0</span>, <span class="number">255</span>, <span class="number">0</span>)
+CLASS.weapons = {<span class="string">"gold_pickaxe"</span>, <span class="string">"netherite_spade"</span>}
+CLASS.pay = <span class="number">50</span>
+CLASS.payTimer = <span class="number">3600</span>
+CLASS_STEVE = CLASS.index
+</pre>
+
+
+<p><a href="https://github.com/Lilia-Framework/Lilia/blob/main/lilia/modules/core/teams/libraries/server.lua#L110">View source »</a></p>
+
+<p><a name="CLASS_Variables"></a></p>
+<h2>CLASS Variables</h2>
+
+<ul>
+    <li><p><strong>CLASS.name</strong>: The name of your class.</p></li>
+    <li><p><strong>CLASS.desc</strong>: A description of your class.</p></li>
+    <li><p><strong>CLASS.isDefault</strong>: Indicates whether this is the default class. Set to true if it's the default class, allowing anyone to join.</p></li>
+    <li><p><strong>CLASS.color</strong>: <em>(Optional)</em> The color associated with your class. This can be used for class-specific coloring.</p></li>
+    <li><p><strong>CLASS.weapons</strong>: <em>(Optional)</em> Weapons that players in this class can use. This can include weapon IDs or references to the weapons available to class members.</p></li>
+    <li><p><strong>CLASS.pay</strong>: <em>(Optional)</em> The payment amount associated with the class. This represents any in-game currency or rewards tied to being a member of this class.</p></li>
+    <li><p><strong>CLASS.payTimer</strong>: <em>(Optional)</em> The timer or schedule for payments. Specify the interval in seconds for payments to occur. For example, if payments are made every 30 minutes, set this value to 1800 (30 minutes * 60 seconds).</p></li>
+    <li><p><strong>CLASS.limit</strong>: <em>(Optional)</em> The limit of players in this class at a given time. This restricts how many players can be members of this class simultaneously.</p></li>
+    <li><p><strong>CLASS.health</strong>: <em>(Optional)</em> This variable represents the default health of players in the class. You can set a numerical value, such as 100, to specify the default health. Players in this class will start with this amount of health unless modified by other in-game factors. <strong>Default is 100</strong>.</p></li>
+    <li><p><strong>CLASS.armor</strong>: <em>(Optional)</em> Similar to health, this variable represents the default armor value of players in the class. Armor can provide additional protection against damage. Set a numerical value, such as 50, to determine the default armor value for class members. <strong>Default is 0</strong>.</p></li>
+    <li><p><strong>CLASS.scale</strong>: <em>(Optional)</em> Scale affects the size of the player model. You can set a value like 1.2 to make class members slightly larger or 0.8 to make them smaller. This can be used for visual customization. <strong>Default is 1</strong>.</p></li>
+    <li><p><strong>CLASS.runSpeed</strong>: <em>(Optional)</em> This variable determines the default running speed of players in the class. You can set a numerical value like 300 to specify the speed in units per second. <strong>Default is lia.config.RunSpeed or 1 if multiplier is enabled</strong>.</p></li>
+    <li><p><strong>CLASS.runSpeedMultiplier</strong>: <em>(Optional)</em> When set to true, this indicates that the runSpeed value should be multiplied by the default speed set in the game configuration. When set to false, it means that the runSpeed value should directly set the running speed, overriding the game's default. <strong>Default is false</strong>.</p></li>
+    <li><p><strong>CLASS.walkSpeed</strong>: <em>(Optional)</em> Similar to runSpeed, this variable sets the default walking speed of players in the class. You can set a numerical value like 150 to specify the walking speed in units per second. <strong>Default is lia.config.WalkSpeed or 1 if multiplier is enabled</strong>.</p></li>
+    <li><p><strong>CLASS.walkSpeedMultiplier</strong>: <em>(Optional)</em> Like runSpeedMultiplier, when set to true, it multiplies the walkSpeed value by the default walk speed set in the game configuration. When set to false, it directly sets the walking speed. <strong>Default is false</strong>.</p></li>
+    <li><p><strong>CLASS.jumpPower</strong>: <em>(Optional)</em> This variable determines the default jump power of players in the class. Jump power controls how high a player can jump. You can set a numerical value like 200 to specify the jump power. <strong>Default is 160 or 1 if multiplier is enabled</strong>.</p></li>
+    <li><p><strong>CLASS.jumpPowerMultiplier</strong>: <em>(Optional)</em> When set to true, jumpPower is multiplied by the default jump power configured in the game. When set to false, it directly sets the jump power for class members. <strong>Default is false</strong>.</p></li>
+    <li><p><strong>CLASS.bloodcolor</strong>: <em>(Optional)</em> This variable allows you to specify the blood color of players in the class when they take damage. You can use the blood enums provided by Garry's Mod, which are listed in <a href="https://wiki.facepunch.com/gmod/Enums/BLOOD_COLOR">Blood Color ENUMS</a>. For example, you can set it to BLOOD<em>COLOR</em>YELLOW to make the class's blood appear yellow when they are injured. <strong>Default is BLOOD<em>COLOR</em>RED</strong>.</p></li>
+    <li><p><strong>CLASS.bodyGroups</strong>: <em>(Optional)</em> This variable allows you to define class-specific bodygroups for player models upon spawn. Bodygroups control the appearance and configuration of specific parts of the player model. You can specify the bodygroups using a table format. Each entry in the table represents a bodygroup and its corresponding value.</p></li>
+    <li><p><strong>CLASS.model</strong>: <em>(Optional)</em> This variable allows you to define class-specific models that get set on spawn.</p></li>
+    <li><p><strong>CLASS.index</strong>: The Unique ID (UniqueID) of the class. This is a unique identifier used to distinguish this class from others.</p></li>
+</ul>
+
+					</div>
+			</article>
+		</main>
+
+		<script type="text/javascript" src="../../app.js"></script>
+		<script type="text/javascript" src="../../highlight.min.js"></script>
+		<script type="text/javascript">
+			var elements = document.querySelectorAll("pre code")
+
+			hljs.configure({
+				languages: ["lua"]
+			});
+
+			for (var i = 0; i < elements.length; i++)
+			{
+				hljs.highlightBlock(elements[i]);
+			}
+		</script>
+	</body>
+</html>

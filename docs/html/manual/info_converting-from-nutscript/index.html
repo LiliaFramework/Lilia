@@ -1,0 +1,240 @@
+
+
+<html>
+	<head>
+		<title>Information - Porting From NS - Lilia Documentation</title>
+
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Information - Porting From NS - Lilia Documentation" />
+		<meta property="og:site_name" content="Lilia Documentation" />
+
+			<meta property="og:description" content=" Information - Porting From NS
+
+If you&#39;re considering porting Nutscript Plugins to Lilia Modules, here are some helpful pointers on replaceable variables. It&#39;s worth noting that while porting from Nutscript to Lilia is feasible and supported, going the oth..." />
+
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro" />
+		<link rel="stylesheet" href="../../ldoc.css" />
+		<link rel="stylesheet" href="../../highlight.css" />
+	</head>
+
+	<body>
+		<main>
+
+
+<nav>
+	<header>
+			<h1><a href="../../">Lilia Documentation</a></h1>
+		<input id="search" type="search" autocomplete="off" placeholder="Search..." />
+	</header>
+
+	<section>
+				<details class="category" open>
+					<summary>
+						<h2>Hooks</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<details >
+									<summary><a href="../index/">Class</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm shared"></span>
+											<a href="../index/#onCanBe">
+onCanBe											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onLeave">
+onLeave											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onSet">
+onSet											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onSpawn">
+onSpawn											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+							<li>
+									<details >
+									<summary><a href="../hooks/faction/">Faction</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm shared"></span>
+											<a href="../hooks/faction/#getDefaultName">
+getDefaultName											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onCharCreated">
+onCharCreated											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onSpawn">
+onSpawn											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onTransferred">
+onTransferred											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+					</ul>
+				</details>
+				<details class="category" open>
+					<summary>
+						<h2>Libraries</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<details >
+									<summary><a href="../libraries/lia.log/">lia.log</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm server"></span>
+											<a href="../libraries/lia.log/#lia.log.add">
+add											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../libraries/lia.log/#log">
+log											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+					</ul>
+				</details>
+				<details class="category" open>
+					<summary>
+						<h2>Manual</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<a href="../manual/info_converting-from-nutscript/">Information - Porting From NS</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/info_features/">Information - Feature List</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/info_installation/">Information - Installation Tutorial</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_class/">Structure - Class</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_command/">Structure - Command</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_faction/">Structure - Faction</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_items/">Structure - Items</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_module/">Structure - Module</a>
+
+
+
+							</li>
+					</ul>
+				</details>
+	</section>
+</nav>
+
+
+			<article>
+					<div class="wrapper">
+
+<h1>Information - Porting From NS</h1>
+
+<p>If you're considering porting Nutscript Plugins to Lilia Modules, here are some helpful pointers on replaceable variables. It's worth noting that while porting from Nutscript to Lilia is feasible and supported, going the other way around can be complex and may lead to long-term issues, as certain key hooks used in Lilia are not present in Nutscript.</p>
+
+
+<pre><code> |  **Nutscript**   |    **Lilia**      |
+ |:---------------: |:---------------:  |
+ |       nut        |       lia         |
+ |      PLUGIN      |      MODULE       |
+ |    sh_plugin     |      module       |
+ |    sh_schema     |      schema       |
+ | nut.plugin.list  | lia.module.list   |
+ |    sh_itemid     |      itemid       |
+ |   sh_factionid   |    factionid      |
+ |  sh_attributeid  |     attribid      |
+</code></pre>
+
+
+
+<p>Make sure to check the following available content to get assistance with your porting:</p>
+
+<ul>
+    <li><p><a href="https://lilia-framework.github.io/Lilia/manual/class/">Class Structure</a></p></li>
+    <li><p><a href="https://lilia-framework.github.io/Lilia/manual/command/">Command Structure</a></p></li>
+    <li><p><a href="https://lilia-framework.github.io/Lilia/manual/faction/">Faction Structure</a></p></li>
+    <li><p><a href="https://lilia-framework.github.io/Lilia/manual/items">Item Structure</a></p></li>
+</ul>
+
+					</div>
+			</article>
+		</main>
+
+		<script type="text/javascript" src="../../app.js"></script>
+		<script type="text/javascript" src="../../highlight.min.js"></script>
+		<script type="text/javascript">
+			var elements = document.querySelectorAll("pre code")
+
+			hljs.configure({
+				languages: ["lua"]
+			});
+
+			for (var i = 0; i < elements.length; i++)
+			{
+				hljs.highlightBlock(elements[i]);
+			}
+		</script>
+	</body>
+</html>
