@@ -49,11 +49,9 @@ lia.item.DefaultFunctions = {
     },
 }
 
-
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
-
 
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua") or path:match("([_%w]+)%.lua")
@@ -64,7 +62,6 @@ function lia.item.load(path, baseID, isBaseItem)
         ErrorNoHalt("[Lilia] Item at '" .. path .. "' follows an invalid naming convention!\n")
     end
 end
-
 
 function lia.item.isItem(object)
     return istable(object) and object.isItem == true
@@ -123,7 +120,6 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     return targetTable[itemType]
 end
 
-
 function lia.item.loadFromDir(directory, isFirstLoad)
     local files, folders
     files = file.Find(directory .. "/base/*.lua", "LUA")
@@ -145,7 +141,6 @@ function lia.item.loadFromDir(directory, isFirstLoad)
 
     if isFirstLoad then hook.Run("InitializedItems") end
 end
-
 
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
