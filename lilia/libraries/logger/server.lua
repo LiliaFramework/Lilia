@@ -10,6 +10,8 @@ Predefined flags:
 	FLAG_DEV
 ]]
 -- @module lia.log
+
+
 function lia.log.loadTables()
     file.CreateDir("lilia/logs")
     file.CreateDir("lilia/netlogs")
@@ -26,6 +28,7 @@ end
 -- @param ... Additional parameters for the log format callback
 -- @function log
 -- @usage function(client, ...) log format callback
+
 function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end
@@ -49,6 +52,7 @@ end
 -- @player client Player who instigated the log
 -- @string logType Log category
 -- @param ... Arguments to pass to the log
+
 function lia.log.add(client, logType, ...)
     local logString = lia.log.getString(client, logType, ...)
     if not isstring(logString) then return end
