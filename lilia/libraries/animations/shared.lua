@@ -392,14 +392,3 @@ function player_manager.TranslateToPlayerModelName(model)
     end
     return result
 end
-
----
--- This function calculates the area of a rectangle.
---
--- @param length The length of the rectangle.
--- @param width The width of the rectangle.
--- @return The area of the rectangle.
---
-function calculateRectangleArea(length, width)
-    return length * width
-end
