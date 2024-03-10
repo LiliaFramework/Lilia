@@ -56,10 +56,11 @@ jobs:
           cp -v docs/js/* docs/html
       - name: Commit changes
         run: |
+          echo "Pre Back..."
           ls
           cd .. 
+          echo "Post Back..."
           ls
-          echo "Committing changes..."
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           if [[ -n "$(git status --porcelain)" ]]; then
