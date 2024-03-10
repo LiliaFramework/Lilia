@@ -104,6 +104,7 @@ jobs:
           git config --global user.email "aaa@aaaa.com"
           git config --global user.name "bleonheart"
           git clone https://${{ env.ORG_NAME }}:${{ secrets.PAT }}@github.com/${{ env.ORG_NAME }}/Lilia-Framework.github.io.git
+          ls
           cd lilia-Framework.github.io.git
           git remote add ${{ env.ORIGINAL_REPO_NAME }} https://${{ env.ORG_NAME }}:${{ secrets.PAT }}@github.com/${{ env.ORG_NAME }}/${{ env.ORIGINAL_REPO_NAME }}.git
           git remote update
