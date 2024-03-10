@@ -1,0 +1,68 @@
+name: Wiki Deploy
+
+on:
+  push:
+    permissions:
+      actions: write
+      checks: write
+      contents: write
+      deployments: write
+      id-token: write
+      issues: write
+      discussions: write
+      packages: write
+      pages: write
+      pull-requests: write
+      repository-projects: write
+      security-events: write
+      statuses: write
+
+jobs:
+  WikiDeploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: lilia
+
+      - name: Setup Lua
+        uses: leafo/gh-actions-lua@v8.0.0
+        with:
+          luaVersion: "5.2"
+
+      - name: Setup LuaRocks
+        uses: leafo/gh-actions-luarocks@v4.0.0
+
+      - name: Pull LDoc
+        uses: actions/checkout@v2
+        with:
+          repository: impulsh/LDoc
+          path: ldoc
+
+      - name: Build LDoc
+        working-directory: ldoc
+        run: luarocks make
+
+      - name: Build docs
+        working-directory: lilia
+        run: ldoc . --fatalwarnings
+
+      - name: Copy assets
+        working-directory: lilia
+        run: |
+          cp -v docs/css/* docs/html
+          cp -v docs/js/* docs/html
+      - name: Commit changes
+        run: |
+          echo "Committing changes..."
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git add -A
+            git commit -m "Linted Code"
+            git push
+          else
+            echo "No changes to commit."
+          fi
+        working-directory: "${{ github.workspace }}"
