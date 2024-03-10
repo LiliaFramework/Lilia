@@ -26,10 +26,6 @@ kind_names = {module = "Libraries", topic = "Manual"}
 merge = true
 sort = true
 sort_modules = true
-link_module = false
-link_class = false
-link_function = false
-link_variable = false
 
 simple_args_string = true -- we show optionals/defaults outside of the display name
 strip_metamethod_prefix = true -- remove the name of the table when displaying metamethod names
