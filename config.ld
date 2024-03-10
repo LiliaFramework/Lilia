@@ -21,18 +21,18 @@ template = "docs/templates"
 format = "markdown"
 ignore = true
 topics = "docs/manual"
-use_markdown_titles = true
+tht = true
 kind_names = {module = "Libraries", topic = "Manual"}
 merge = true
 sort = true
 sort_modules = true
 
 simple_args_string = true -- we show optionals/defaults outside of the display name
-strip_metamethod_prefix = true -- remove the name of the table when displaying metamethod names
+strip_metamethod_prefix = false -- remove the name of the table when displaying metamethod names
 no_viewed_topic_at_top = true -- don't put the currently viewed topic at the top
 use_new_templates = true -- new templating system
-pretty_urls = true -- avoid showing .html in urls
-pretty_topic_names = true -- strips extension from manual filenames, this does not check filename collisions
+pretty_urls = false -- avoid showing .html in urls
+pretty_topic_names = false -- strips extension from manual filenames, this does not check filename collisions
 
 custom_tags = {
 	{"realm", hidden = true},
