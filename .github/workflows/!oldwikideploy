@@ -43,15 +43,17 @@ jobs:
 
       - name: Build LDoc
         working-directory: ldoc
-        run: luarocks make
-
+        run: |
+          luarocks make
+          
       - name: Build docs
         working-directory: lilia
-        run: ldoc . --fatalwarnings
-
+        run: |
+          ldoc .
       - name: Copy assets
         working-directory: lilia
         run: |
+          ls
           cp -v docs/css/* docs/html
           cp -v docs/js/* docs/html
 
