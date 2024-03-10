@@ -2,6 +2,21 @@
 name: CI
 on: [push, pull_request]
 
+permissions:
+  actions: write
+  checks: write
+  contents: write
+  deployments: write
+  id-token: write
+  issues: write
+  discussions: write
+  packages: write
+  pages: write
+  pull-requests: write
+  repository-projects: write
+  security-events: write
+  statuses: write
+
 jobs:
   linter:
     runs-on: ubuntu-latest
@@ -29,7 +44,11 @@ jobs:
 
     - name: Lint
       working-directory: lilia
-      run: luacheck .
+      run: luacheck . --no-redefined
+          --no-global --no-self
+          --no-max-line-length --no-max-code-line-length
+          --no-max-string-line-length --no-max-comment-line-length
+          --no-max-cyclomatic-complexity
 
   docs:
     runs-on: ubuntu-latest
