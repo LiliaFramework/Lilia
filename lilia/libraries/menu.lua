@@ -6,15 +6,16 @@ from the panel that shows up for the player.
 -- @module lia.menu
 lia.menu = lia.menu or {}
 lia.menu.list = lia.menu.list or {}
--- @type function lia.menu.add(options, positions, onRemove)
--- @typeCommentStart
+---
 -- Adds a new menu to the list of drawn menus.
--- @typeCommentEnd
+--
+-- @function lia.menu.add
 -- @realm client
--- @table options A table of button text as keys and their callbacks as values.
--- @vector position The position of the menu or an entity to follow.
--- @function onRemove A function to call after the menu has faded out.
+-- @param options A table of button text as keys and their callbacks as values.
+-- @param position The position of the menu or an entity to follow.
+-- @param onRemove A function to call after the menu has faded out.
 -- @treturn number The index of the menu in the list.
+--
 function lia.menu.add(options, position, onRemove)
     local width = 0
     local entity
@@ -37,11 +38,12 @@ function lia.menu.add(options, position, onRemove)
     })
 end
 
--- @type function lia.menu.drawAll()
--- @typeCommentStart
+---
 -- A function to draw all of the active menus or hide them when needed.
--- @typeCommentEnd
+--
+-- @function lia.menu.drawAll
 -- @realm client
+--
 function lia.menu.drawAll()
     local frameTime = FrameTime() * 30
     local mX, mY = ScrW() * 0.5, ScrH() * 0.5
