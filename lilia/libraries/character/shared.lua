@@ -54,7 +54,6 @@ end
 ---
 -- Creates a new character object with the given data and metadata.
 --
--- @function lia.char.new
 -- @realm shared
 -- @classmod Character
 -- @param data A table containing the character data.
