@@ -47,7 +47,9 @@ jobs:
 
       - name: Build docs
         working-directory: lilia
-        run: ldoc .
+        run:
+          ls 
+          ldoc .
 
       - name: Copy assets
         working-directory: lilia
