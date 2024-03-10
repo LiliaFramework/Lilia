@@ -41,7 +41,7 @@ end
 								end %}
 
 								{% for k, v in pairs(currentMod.items) do %}
-									{% if (v.kind == "hooks") then %}
+									{% if (v.kind == "functions") then %}
 										<li>
 											{* ldoc.realm_icon(v.tags.realm[1]) *}
 											<a href="{* ldoc.ref_to_module(currentMod) *}#{{v.name}}">

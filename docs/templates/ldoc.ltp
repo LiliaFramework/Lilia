@@ -1,7 +1,7 @@
 
 {%
 local baseUrl = ldoc.css:gsub("ldoc.css", "")
-local repo = "https://github.com/Lilia-Framework/Lilia-Experimental/"
+local repo = "https://github.com/Lilia-Framework/Lilia"
 local pageTitle = mod and (ldoc.display_name(mod) .. " - " .. ldoc.title) or ldoc.title
 
 local oldmarkup = ldoc.markup
