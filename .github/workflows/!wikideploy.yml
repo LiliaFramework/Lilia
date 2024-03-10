@@ -38,7 +38,7 @@ jobs:
       - name: Pull LDoc
         uses: actions/checkout@v2
         with:
-          repository: impulsh/LDoc
+          repository: lunarmodules/ldoc
           path: ldoc
 
       - name: Build LDoc
