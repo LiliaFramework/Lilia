@@ -1,7 +1,7 @@
 
 {%
 local function isKindExpandable(kind)
-	return false
+	return kind ~= "Manual"
 end
 %}
 
