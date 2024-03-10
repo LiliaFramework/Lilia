@@ -1,11 +1,4 @@
-﻿--[[--
-Character creation and management.
-
-**NOTE:** For the most part you shouldn't use this library unless you know what you're doing. You can very easily corrupt
-character data using these functions!
-]]
--- @module lia.char
-local charMeta = lia.meta.character or {}
+﻿local charMeta = lia.meta.character or {}
 lia.char = lia.char or {}
 lia.char.loaded = lia.char.loaded or {}
 lia.char.names = lia.char.names or {}
@@ -51,17 +44,6 @@ function lia.getCharData(charID, key)
     return data
 end
 
----
--- Creates a new character object with the given data and metadata.
---
--- @realm shared
--- @classmod Character
--- @param data A table containing the character data.
--- @param id The ID of the character. [default=0]
--- @param client The player associated with the character. Must be of type Player.
--- @param[opt] steamID The SteamID of the player associated with the character.
--- @treturn table The newly created character object.
---
 function lia.char.new(data, id, client, steamID)
     local character = setmetatable({
         vars = {}
@@ -88,12 +70,7 @@ function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName][hookName] = func
 end
 
----
--- Sets up a new character variable.
---
--- @function lia.char.registerVar
--- @realm shared
---
+
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
     data.index = data.index or table.Count(lia.char.vars)

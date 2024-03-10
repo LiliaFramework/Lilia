@@ -1,22 +1,6 @@
-﻿---
--- Entity menu manipulation.
---
--- The `menu` library allows you to open up a context menu of arbitrary options whose callbacks will be run when they are selected
--- from the panel that shows up for the player.
---
--- @module lia.menu
-lia.menu = lia.menu or {}
+﻿lia.menu = lia.menu or {}
 lia.menu.list = lia.menu.list or {}
----
--- Adds a new menu to the list of drawn menus.
---
--- @function lia.menu.add
--- @realm client
--- @param options A table of button text as keys and their callbacks as values.
--- @param position The position of the menu or an entity to follow.
--- @param onRemove A function to call after the menu has faded out.
--- @treturn number The index of the menu in the list.
---
+
 function lia.menu.add(options, position, onRemove)
     local width = 0
     local entity
@@ -39,12 +23,7 @@ function lia.menu.add(options, position, onRemove)
     })
 end
 
----
--- A function to draw all of the active menus or hide them when needed.
---
--- @function lia.menu.drawAll
--- @realm client
---
+
 function lia.menu.drawAll()
     local frameTime = FrameTime() * 30
     local mX, mY = ScrW() * 0.5, ScrH() * 0.5
@@ -106,14 +85,7 @@ function lia.menu.drawAll()
     end
 end
 
----
--- Determines which menu is being looked at.
---
--- @function lia.menu.getActiveMenu
--- @realm client
--- @treturn table The active menu.
--- @treturn function The currently hovered option callback.
---
+
 function lia.menu.getActiveMenu()
     local mX, mY = ScrW() * 0.5, ScrH() * 0.5
     local position2 = LocalPlayer():GetPos()
@@ -152,15 +124,7 @@ function lia.menu.getActiveMenu()
     end
 end
 
----
--- Handles whenever a button has been pressed.
---
--- @function lia.menu.onButtonPressed
--- @realm client
--- @param menu The menu index.
--- @param callback The callback that checks whether the button can be pressed.
--- @treturn bool Whether or not the button can be pressed.
---
+
 function lia.menu.onButtonPressed(menu, callback)
     table.remove(lia.menu.list, menu)
     if callback then

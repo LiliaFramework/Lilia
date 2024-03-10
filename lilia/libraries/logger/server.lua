@@ -1,16 +1,4 @@
-﻿---
--- Logging helper functions.
---
--- Predefined flags:
---   FLAG_NORMAL
---   FLAG_SUCCESS
---   FLAG_WARNING
---   FLAG_DANGER
---   FLAG_SERVER
---   FLAG_DEV
---
--- @module lia.log
---
+﻿
 function lia.log.loadTables()
     file.CreateDir("lilia/logs")
     file.CreateDir("lilia/netlogs")
@@ -20,14 +8,6 @@ end
 function lia.log.resetTables()
 end
 
----
--- Adds a log type.
---
--- @param logType Log category.
--- @param format The string format that log messages should use.
--- @param flag Log level.
--- @realm server
---
 function lia.log.addType(logType, format, flag)
     lia.log.types[logType] = {
         format = format,
@@ -53,14 +33,6 @@ function lia.log.addRaw(logString, shouldNotify, flag)
     if not noSave then file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n") end
 end
 
----
--- Add a log message.
---
--- @realm server
--- @player client Player who instigated the log.
--- @param logType Log category.
--- @param ... Arguments to pass to the log.
---
 function lia.log.add(client, logType, ...)
     local logString = lia.log.getString(client, logType, ...)
     if not isstring(logString) then return end

@@ -1,21 +1,4 @@
-﻿---
--- Player model animation.
---
--- Lilia comes with support for using NPC animations/models as regular player models by manually translating animations. Don't worry, you will still have player animations by default. There are a few standard animation sets that are built-in that should cover most non-player models:
---   - citizen_male
---   - citizen_female
---   - metrocop
---   - overwatch
---   - vortigaunt
---   - player
---   - zombie
---   - fastZombie
---
--- If you find that your models are T-posing when they work elsewhere, you'll probably need to set the model class for your
--- model with `lia.anim.setModelClass` in order for the correct animations to be used. If you'd like to add your own animation
--- class, simply add to the `lia.anim` table with a model class name and the required animation translation table.
---
--- @module lia.anim
+﻿
 local translations = {}
 lia.anim = lia.anim or {}
 player_manager.anim = player_manager.anim or {}
@@ -348,27 +331,12 @@ lia.anim.fastZombie = {
     [ACT_MP_RUN] = ACT_HL2MP_RUN_ZOMBIE_FAST
 }
 
----
--- Sets the animation class for a specified model.
---
--- @function lia.anim.setModelClass
--- @realm shared
--- @param model The model for which to set the animation class.
--- @param class The animation class to set.
---
+
 function lia.anim.setModelClass(model, class)
     if not lia.anim[class] then error("'" .. tostring(class) .. "' is not a valid animation class!") end
     translations[model:lower()] = class
 end
 
----
--- Gets the animation class for a specified model. If an animation class has not yet been set for the model, it sets a default animation class based on the model's name.
---
--- @function lia.anim.getModelClass
--- @realm shared
--- @param model The model for which to get the animation class.
--- @treturn string The animation class for the specified model.
---
 function lia.anim.getModelClass(model)
     model = string.lower(model)
     local class = translations[model] or "player"

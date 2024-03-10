@@ -14,30 +14,10 @@ function entityMeta:getDoorPartner()
     end
 end
 
----
--- Returns the networked variable of the entity.
---
--- @function Entity:getNetVar
--- @realm shared
--- @classmod Entity
--- @param key The key of the networked variable.
--- @param default The default value to return if the networked variable is not set.
--- @treturn any The networked variable.
---
 function entityMeta:getNetVar(key, default)
     local index = self:EntIndex()
     if lia.net[index] and lia.net[index][key] ~= nil then return lia.net[index][key] end
     return default
 end
 
----
--- Returns the networked variable of a player.
---
--- @function Entity:getLocalVar
--- @realm shared
--- @classmod Player
--- @param key The key of the networked variable.
--- @param default The default value to return if the networked variable is not set.
--- @treturn any The networked variable.
---
 FindMetaTable("Player").getLocalVar = entityMeta.getNetVar
