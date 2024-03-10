@@ -65,7 +65,7 @@ jobs:
           git config --local user.name "GitHub Action"
           if [[ -n "$(git status --porcelain)" ]]; then
             git add -A
-            git commit -m "Linted Code"
+            git commit -m "Building Wiki"
             git push
           else
             echo "No changes to commit."

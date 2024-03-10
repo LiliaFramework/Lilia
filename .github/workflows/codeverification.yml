@@ -138,7 +138,6 @@ jobs:
           rm glualint_executable
         working-directory: "${{ github.workspace }}"
         shell: bash
-
       - name: Commit changes
         run: |
           echo "Committing changes..."
