@@ -62,9 +62,9 @@ jobs:
       uses: leafo/gh-actions-luarocks@v4
     - name: Clone Rockspec
       run: |
-          git clone https://github.com/lunarmodules/ldoc.git ldoc && cd ldoc
+          git clone https://github.com/lunarmodules/ldoc.git ldoc
     - name: Setup dependencies 
-      run: luarocks install --only-deps ldoc-dev-1.rockspec
+      run: luarocks install --only-deps ldoc/ldoc-dev-1.rockspec
     - name: Build docs
       run: make doc-site
     - name: Deploy
