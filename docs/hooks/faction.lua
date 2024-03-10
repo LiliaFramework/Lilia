@@ -1,4 +1,4 @@
--- @functions Faction
+-- @hooks Faction
 
 
 --- Called when the default name for a character needs to be retrieved (i.e upon initial creation).

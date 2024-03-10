@@ -1,4 +1,4 @@
--- @functions Class
+-- @hooks Class
 --- Whether or not a player can switch to this class.
 -- @realm shared
 -- @player client Client that wants to switch to this class
