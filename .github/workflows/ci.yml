@@ -98,7 +98,6 @@ jobs:
     steps:
       - name: Checkout source repository
         uses: actions/checkout@v2
-
       - name: Push to destination repository
         run: |
           git config --global user.email "aaa@aaaa.com"
