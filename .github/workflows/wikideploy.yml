@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: lunarmodules/ldoc
-          path: ldoc
+          path: ldoc . -l
 
       - name: Build LDoc
         working-directory: ldoc
