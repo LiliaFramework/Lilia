@@ -1,0 +1,392 @@
+
+
+<html>
+	<head>
+		<title>Information - Feature List - Lilia Documentation</title>
+
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Information - Feature List - Lilia Documentation" />
+		<meta property="og:site_name" content="Lilia Documentation" />
+
+			<meta property="og:description" content=" Information - Feature List
+
+ Main Features
+
+- Improved security.
+
+- Extensive customization out of the box.
+
+- Permissions limited by user groups, using CAMI.
+
+- Extensive faction and class system.
+
+- Extensive addon compatibility list.
+
+- Extreme modular..." />
+
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro" />
+		<link rel="stylesheet" href="../../ldoc.css" />
+		<link rel="stylesheet" href="../../highlight.css" />
+	</head>
+
+	<body>
+		<main>
+
+
+<nav>
+	<header>
+			<h1><a href="../../">Lilia Documentation</a></h1>
+		<input id="search" type="search" autocomplete="off" placeholder="Search..." />
+	</header>
+
+	<section>
+				<details class="category" open>
+					<summary>
+						<h2>Hooks</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<details >
+									<summary><a href="../index/">Class</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm shared"></span>
+											<a href="../index/#onCanBe">
+onCanBe											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onLeave">
+onLeave											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onSet">
+onSet											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onSpawn">
+onSpawn											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+							<li>
+									<details >
+									<summary><a href="../hooks/faction/">Faction</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm shared"></span>
+											<a href="../hooks/faction/#getDefaultName">
+getDefaultName											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onCharCreated">
+onCharCreated											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onSpawn">
+onSpawn											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onTransferred">
+onTransferred											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+					</ul>
+				</details>
+				<details class="category" open>
+					<summary>
+						<h2>Libraries</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<details >
+									<summary><a href="../libraries/lia.log/">lia.log</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm server"></span>
+											<a href="../libraries/lia.log/#lia.log.add">
+add											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../libraries/lia.log/#log">
+log											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+					</ul>
+				</details>
+				<details class="category" open>
+					<summary>
+						<h2>Manual</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<a href="../manual/info_converting-from-nutscript/">Information - Porting From NS</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/info_features/">Information - Feature List</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/info_installation/">Information - Installation Tutorial</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_class/">Structure - Class</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_command/">Structure - Command</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_faction/">Structure - Faction</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_items/">Structure - Items</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_module/">Structure - Module</a>
+
+
+
+							</li>
+					</ul>
+				</details>
+	</section>
+</nav>
+
+
+			<article>
+					<div class="wrapper">
+
+<h1>Information - Feature List</h1>
+
+<h1>Main Features</h1>
+
+<ul>
+    <li><p>Improved security.</p></li>
+    <li><p>Extensive customization out of the box.</p></li>
+    <li><p>Permissions limited by user groups, using CAMI.</p></li>
+    <li><p>Extensive faction and class system.</p></li>
+    <li><p>Extensive addon compatibility list.</p></li>
+    <li><p>Extreme modularity - You can find most content modularly, making it easy to edit.</p></li>
+    <li><p>Loads of free content.</p></li>
+    <li><p>Major method libraries that aim to ease coding sessions.</p></li>
+    <li><p>Friendly support.</p></li>
+    <li><p>Regular updates.</p></li>
+</ul>
+
+<h1>Improvements/Fixes Comparing Forked Framework</h1>
+
+<ul>
+    <li><p>Fixed Vendor Crash Exploit that used Item Spawning Spam </p></li>
+    <li><p>Limited Commands to UserGroups, rather than just <a href="https://wiki.facepunch.com/gmod/Player:IsAdmin">IsAdmin</a> or <a href="https://wiki.facepunch.com/gmod/Player:IsSuperAdmin">IsSuperAdmin</a></p></li>
+    <li><p>Added Several New Commands, both for utility as well as adminstration</p></li>
+    <li><p>Added New Chat Types</p></li>
+    <li><p>Made Config Hardcoded, avoiding any potential lack of sync on configuration</p></li>
+    <li><p>Improved Logging System, adding an log viewing menu</p></li>
+    <li><p>Moved all permissions to CAMI, tying them with UserGroups by doing such.</p></li>
+    <li><p>Made PlayerModel animations default, instead of Citizen animations</p></li>
+    <li><p>Improved F1 Menu and Main Menu, allowing for a extreme customization by simply modifying your config files.</p></li>
+    <li><p>Rewrote Notification Derma</p></li>
+    <li><p>Expanded on Faction and Classes System</p></li>
+    <li><p>Fixed Several Exploits within the Inventory, like equipping weapons within inventories that aren't directly connected to the player </p></li>
+    <li><p>Added Multiple Player, Character and Entity Meta to allow for simpler coding.</p></li>
+    <li><p>Improved Recognition, adding the ability to use Fake Names</p></li>
+    <li><p>Adding Voice Tones, allowing for you to Yell, Whisper and Talk normally over Voice Chat</p></li>
+    <li><p>Added an Interaction Menu, allowing players to run customizable tasks by simply walking up to a player and holding tab</p></li>
+    <li><p>Improved Scoreboard, adding Players Online, Staff on Duty Online and Staff Online</p></li>
+    <li><p>Added a Crash Screen</p></li>
+    <li><p>Added Multi Faction Support to Doors</p></li>
+    <li><p>Added a Third Person Bind</p></li>
+    <li><p>Added an Weapon Item Generator</p></li>
+    <li><p>Bettered Protection towards several exploits, both originally on the forked framework as well on GMOD</p></li>
+    <li><p>Categorized Permissions, allowing for stuff like limiting PhysGun Pickups to certain entities or using certain tools</p></li>
+    <li><p>Added an Anti Alting System</p></li>
+    <li><p>Added an Anti Cheat</p></li>
+    <li><p>Improved Perfomance by Tweaking Rendering</p></li>
+    <li><p>Limited Vendor Editting</p></li>
+    <li><p>Added Blacklisting and Whitelisting</p></li>
+    <li><p>Added Workshop Downloader</p></li>
+    <li><p>Added NetMessage Logging </p></li>
+    <li><p>Added Console Command Logging  </p></li>
+    <li><p>Created an Expanded Wiki for Players to be able to understand the framework easily
+    <a name="__Addons_with_Improved_Compatibility"></a></p>
+    <h2># Addons with Improved Compatibility</h2></li>
+</ul>
+
+<h4>MLogs</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://www.gmodstore.com/market/view/mlogs-2-m4d-logs-the-ultimate-logger">MLogs - The Ultimate Logger</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Implemented a section for Lilia's Logs, allowing for easier log reading.</p></li>
+</ul>
+
+<h4>PCasino</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://www.gmodstore.com/market/view/pcasino-the-perfect-casino-addon-roulette-blackjack-slots-prize-wheel">PCasino - The Perfect Casino Addon</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Added monetary compatibility.</p></li>
+</ul>
+
+<h4>Prone Mod</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://github.com/gspetrou/Prone-Mod">Prone Mod</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Made animations reset at proper times.</p></li>
+</ul>
+
+<h4>ULX</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=557962280">ULX</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Removed obsolete hooks.</p></li>
+</ul>
+
+<h4>SAM</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://www.gmodstore.com/market/view/sam">SAM</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Implemented an auto administrator setter and fixed prop limits to work with SAM.</p></li>
+</ul>
+
+<h4>Serverguard</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://www.gmodstore.com/market/view/serverguard">Serverguard</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Allowed CAMI (permissions system) to work with Lilia and Serverguard.</p></li>
+</ul>
+
+<h4>Advanced Dupe 2</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=773402917">Advanced Dupe 2</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Fixed several crashing exploits.</p></li>
+</ul>
+
+<h4>Advanced Dupe 1</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=163806212">Advanced Dupe 1</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Fixed several crashing exploits.</p></li>
+</ul>
+
+<h4>PermaProps</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=220336312">PermaProps</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Removed the ability to PermaProp certain restricted entities.</p></li>
+</ul>
+
+<h4>PAC3</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://steamcommunity.com/workshop/filedetails/?id=104691717">PAC3</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Restricted PAC to a flag and permission, and made it reset when needed.</p></li>
+</ul>
+
+<h4>Simfphys Vehicles</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=771487490">Simfphys Vehicles</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Added car crash damage and implemented some console commands for performance.</p></li>
+</ul>
+
+<h4>Sit Anywhere</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=108176967">Sit Anywhere</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Removed the ability to sit on certain mingy locations and added damage on seats by default.</p></li>
+</ul>
+
+<h4>Stormfox 2</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://steamcommunity.com/workshop/filedetails/?id=2447774443">Stormfox 2</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Improved SF2 lighting reload.</p></li>
+</ul>
+
+<h4>3D Stream Radio</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=246756300">3D Stream Radio</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Added ability for radios to save on the map.</p></li>
+</ul>
+
+<h4>VCMod</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://www.gmodstore.com/market/view/vcmod-main">VCMod Main</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Added monetary compatibility.</p></li>
+</ul>
+
+<h4>VJBase</h4>
+
+<ul>
+    <li><p><strong>Addon URL:</strong> <a href="https://steamcommunity.com/workshop/filedetails/?id=131759821">VJBase</a></p></li>
+    <li><p><strong>Compatibility Added:</strong> Made the server enable certain settings by default, improving performance, and removed some harmful hooks.</p></li>
+</ul>
+
+					</div>
+			</article>
+		</main>
+
+		<script type="text/javascript" src="../../app.js"></script>
+		<script type="text/javascript" src="../../highlight.min.js"></script>
+		<script type="text/javascript">
+			var elements = document.querySelectorAll("pre code")
+
+			hljs.configure({
+				languages: ["lua"]
+			});
+
+			for (var i = 0; i < elements.length; i++)
+			{
+				hljs.highlightBlock(elements[i]);
+			}
+		</script>
+	</body>
+</html>

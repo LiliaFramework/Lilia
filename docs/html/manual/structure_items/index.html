@@ -1,0 +1,338 @@
+
+
+<html>
+	<head>
+		<title>Structure - Items - Lilia Documentation</title>
+
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Structure - Items - Lilia Documentation" />
+		<meta property="og:site_name" content="Lilia Documentation" />
+
+			<meta property="og:description" content=" Structure - Items
+
+Items with a specific base must be organized within a folder named after that base. For example, if you have a weapon that uses the &#39;weapons&#39; base, you should save it under &#39;items&#47;weapons&#47;ItemID.lua&#39;. If an item is not found within a co..." />
+
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro" />
+		<link rel="stylesheet" href="../../ldoc.css" />
+		<link rel="stylesheet" href="../../highlight.css" />
+	</head>
+
+	<body>
+		<main>
+
+
+<nav>
+	<header>
+			<h1><a href="../../">Lilia Documentation</a></h1>
+		<input id="search" type="search" autocomplete="off" placeholder="Search..." />
+	</header>
+
+	<section>
+				<details class="category" open>
+					<summary>
+						<h2>Hooks</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<details >
+									<summary><a href="../index/">Class</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm shared"></span>
+											<a href="../index/#onCanBe">
+onCanBe											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onLeave">
+onLeave											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onSet">
+onSet											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../index/#onSpawn">
+onSpawn											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+							<li>
+									<details >
+									<summary><a href="../hooks/faction/">Faction</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm shared"></span>
+											<a href="../hooks/faction/#getDefaultName">
+getDefaultName											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onCharCreated">
+onCharCreated											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onSpawn">
+onSpawn											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../hooks/faction/#onTransferred">
+onTransferred											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+					</ul>
+				</details>
+				<details class="category" open>
+					<summary>
+						<h2>Libraries</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<details >
+									<summary><a href="../libraries/lia.log/">lia.log</a></summary>
+
+									<ul>
+
+
+										<li>
+											<span class="realm server"></span>
+											<a href="../libraries/lia.log/#lia.log.add">
+add											</a>
+										</li>
+										<li>
+											<span class="realm server"></span>
+											<a href="../libraries/lia.log/#log">
+log											</a>
+										</li>
+
+									</ul>
+									</details>
+							</li>
+					</ul>
+				</details>
+				<details class="category" open>
+					<summary>
+						<h2>Manual</h2>
+					</summary>
+
+					<ul>
+							<li>
+									<a href="../manual/info_converting-from-nutscript/">Information - Porting From NS</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/info_features/">Information - Feature List</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/info_installation/">Information - Installation Tutorial</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_class/">Structure - Class</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_command/">Structure - Command</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_faction/">Structure - Faction</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_items/">Structure - Items</a>
+
+
+
+							</li>
+							<li>
+									<a href="../manual/structure_module/">Structure - Module</a>
+
+
+
+							</li>
+					</ul>
+				</details>
+	</section>
+</nav>
+
+
+			<article>
+					<div class="wrapper">
+
+<h1>Structure - Items</h1>
+
+<p>Items with a specific base must be organized within a folder named after that base. For example, if you have a weapon that uses the 'weapons' base, you should save it under 'items/weapons/ItemID.lua'. If an item is not found within a corresponding base folder or if its base is missing, it will default to the basic item base, which only allows for dropping</p>
+
+<h3>Default Item Example:</h3>
+
+
+<pre>
+ITEM.name = <span class="string">"Test Item"</span> <span class="comment">-- The name of the item
+</span>ITEM.desc = <span class="string">"A test item!"</span> <span class="comment">-- A brief description of the item
+</span>ITEM.model = <span class="string">"models/props_c17/oildrum001.mdl"</span> <span class="comment">-- The 3D model for the item</span>
+</pre>
+
+
+<p><a href="https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/items/config/items/defaultitem.txt">View source »</a></p>
+
+<h3>Weapons Item Example:</h3>
+
+
+<pre>
+ITEM.name = <span class="string">"AR2"</span> <span class="comment">-- The name of the weapon
+</span>ITEM.desc = <span class="string">"A Weapon."</span> <span class="comment">-- A brief description of the weapon
+</span>ITEM.model = <span class="string">"models/weapons/w_IRifle.mdl"</span> <span class="comment">-- The 3D model for the weapon
+</span>ITEM.class = <span class="string">"weapon_ar2"</span> <span class="comment">-- The class used to spawn this weapon
+</span>ITEM.weaponCategory = <span class="string">"primary"</span> <span class="comment">-- The category of the weapon
+</span>ITEM.width = <span class="number">4</span> <span class="comment">-- The width of the weapon in inventory
+</span>ITEM.height = <span class="number">2</span> <span class="comment">-- The height of the weapon in inventory</span>
+</pre>
+
+
+<p><a href="https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/items/config/items/weapons/ar2.txt">View source »</a></p>
+
+<p>If you don't wish to manually code weapons, you can enable <a href="https://github.com/Lilia-Framework/Lilia/blob/2.0/lilia/modules/development/modules/easyitemgenerator/config.lua#L2">this</a></p>
+
+<h3>Vehicles Item Example:</h3>
+
+
+<pre>
+ITEM.name = <span class="string">"A Vehicle"</span> <span class="comment">-- The name of the vehicle
+</span>ITEM.desc = <span class="string">"A Vehicle"</span> <span class="comment">-- A brief description of the vehicle
+</span>ITEM.model = <span class="string">"models/props_c17/BriefCase001a.mdl"</span> <span class="comment">-- The 3D model for the vehicle
+</span>ITEM.category = <span class="string">"Vehicles"</span> <span class="comment">-- The category of the vehicle
+</span>ITEM.vehicleid = <span class="string">"VehicleID"</span> <span class="comment">-- The identifier for the vehicle</span>
+</pre>
+
+
+<p><a href="https://github.com/Lilia-Framework/Lilia/blob/2.0/lilia/modules/core/items/vehicles/vehicleexample.txt">View source »</a></p>
+
+<h3>Simfphyscars Item Example:</h3>
+
+
+<pre>
+ITEM.name = <span class="string">"A Simfphys Car"</span> <span class="comment">-- The name of the Simfphys car
+</span>ITEM.desc = <span class="string">"A Simfphys Car"</span> <span class="comment">-- A brief description of the Simfphys car
+</span>ITEM.model = <span class="string">"models/props_c17/BriefCase001a.mdl"</span> <span class="comment">-- The 3D model for the Simfphys car
+</span>ITEM.category = <span class="string">"Vehicles"</span> <span class="comment">-- The category of the Simfphys car
+</span>ITEM.vehicleid = <span class="string">"VehicleID"</span> <span class="comment">-- The identifier for the Simfphys car</span>
+</pre>
+
+
+<p><a href="https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/items/config/items/simfphyscars/carexample.txt">View source »</a></p>
+
+<h3>Outfit Item Example:</h3>
+
+
+<pre>
+ITEM.name = <span class="string">"Combine Armor"</span> <span class="comment">-- The name of the outfit
+</span>ITEM.desc = <span class="string">"Protects your insides from the outsides"</span> <span class="comment">-- A brief description of the outfit
+</span>ITEM.model = <span class="string">"models/props_c17/BriefCase001a.mdl"</span> <span class="comment">-- The 3D model for the outfit
+</span>ITEM.width = <span class="number">2</span> <span class="comment">-- The width of the outfit in inventory
+</span>ITEM.height = <span class="number">2</span> <span class="comment">-- The height of the outfit in inventory
+</span>ITEM.replacements = <span class="string">"models/player/combine_soldier.mdl"</span> <span class="comment">-- Model replacement for the player wearing the outfit</span>
+</pre>
+
+
+<p><a href="https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/items/config/items/outfit/rebel_armor.txt">View source »</a></p>
+
+<h3>Entities Item Example:</h3>
+
+
+<pre>
+ITEM.name = <span class="string">"Item Suit"</span> <span class="comment">-- The name of the entities item
+</span>ITEM.desc = <span class="string">"An HL2 Item Suit"</span> <span class="comment">-- A brief description of the entities item
+</span>ITEM.model = <span class="string">"models/props_c17/BriefCase001a.mdl"</span> <span class="comment">-- The 3D model for the entities item
+</span>ITEM.category = <span class="string">"Entities"</span> <span class="comment">-- The category of the entities item
+</span>ITEM.entityid = <span class="string">"item_suit"</span> <span class="comment">-- The identifier for the entities item</span>
+</pre>
+
+
+<p><a href="https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/items/config/items/entities/item_suit.txt">View source »</a></p>
+
+<h3>Books Item Example:</h3>
+
+
+<pre>
+ITEM.name = <span class="string">"Example"</span> <span class="comment">-- The name of the book
+</span>ITEM.desc = <span class="string">"An Example"</span> <span class="comment">-- A brief description of the book
+</span>ITEM.contents = <span class="string">[[
+&lt;h1&gt;An Example&lt;/h1&gt;
+&lt;h3&gt;By Example&lt;/h3&gt;
+&lt;p&gt;
+EXAMPLE PARA.
+EXAMPLE PARA.
+EXAMPLE PARAGRAPH.
+EXAMPLE PARAGRAH!
+&lt;/p&gt;
+]]</span> <span class="comment">-- The contents of the book, in HTML format</span>
+</pre>
+
+
+<p><a href="https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/items/config/items/books/book.txt">View source »</a></p>
+
+<h3>Ammo Item Example:</h3>
+
+
+<pre>
+ITEM.name = <span class="string">".357 Ammo"</span> <span class="comment">-- The name of the ammo
+</span>ITEM.model = <span class="string">"models/items/357ammo.mdl"</span> <span class="comment">-- The 3D model for the ammo
+</span>ITEM.ammo = <span class="string">"357"</span> <span class="comment">-- The type of ammo
+</span>ITEM.ammoAmount = <span class="number">12</span> <span class="comment">-- The amount of ammo in the box
+</span>ITEM.ammoDesc = <span class="string">"A Box that contains %s of .357 Ammo"</span> <span class="comment">-- Description of the ammo box</span>
+</pre>
+
+
+<p><a href="https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/items/config/items/ammo/357ammo.txt">View source »</a></p>
+
+					</div>
+			</article>
+		</main>
+
+		<script type="text/javascript" src="../../app.js"></script>
+		<script type="text/javascript" src="../../highlight.min.js"></script>
+		<script type="text/javascript">
+			var elements = document.querySelectorAll("pre code")
+
+			hljs.configure({
+				languages: ["lua"]
+			});
+
+			for (var i = 0; i < elements.length; i++)
+			{
+				hljs.highlightBlock(elements[i]);
+			}
+		</script>
+	</body>
+</html>
