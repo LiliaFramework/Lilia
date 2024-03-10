@@ -7,13 +7,10 @@ end
 function lia.log.resetTables()
 end
 
-function lia.log.addType(logType, format, flag)
-    lia.log.types[logType] = {
-        format = format,
-        flag = flag
-    }
-end
-
+--- Adds a log type
+-- @realm server
+-- @string logType Log category
+-- @function (client, ...) log format callback
 function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end
@@ -32,6 +29,11 @@ function lia.log.addRaw(logString, shouldNotify, flag)
     if not noSave then file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n") end
 end
 
+--- Add a log message
+-- @realm server
+-- @player client Player who instigated the log
+-- @string logType Log category
+-- @param ... Arguments to pass to the log
 function lia.log.add(client, logType, ...)
     local logString = lia.log.getString(client, logType, ...)
     if not isstring(logString) then return end
