@@ -31,7 +31,7 @@ simple_args_string = true -- we show optionals/defaults outside of the display n
 strip_metamethod_prefix = true -- remove the name of the table when displaying metamethod names
 no_viewed_topic_at_top = true -- don't put the currently viewed topic at the top
 use_new_templates = true -- new templating system
-pretty_urls = true -- avoid showing .html in urls
+pretty_urls = false -- avoid showing .html in urls
 pretty_topic_names = true -- strips extension from manual filenames, this does not check filename collisions
 
 custom_tags = {
