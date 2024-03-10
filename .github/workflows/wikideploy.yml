@@ -54,11 +54,8 @@ jobs:
           cp -v docs/css/* docs/html
           cp -v docs/js/* docs/html
       - name: Commit changes
-        working-directory: "${{ github.workspace }}"
         run: |
-          ls
           echo "Committing changes..."
-          ls
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           if [[ -n "$(git status --porcelain)" ]]; then
@@ -68,4 +65,4 @@ jobs:
           else
             echo "No changes to commit."
           fi
-          
+        working-directory: "${{ github.workspace }}"
