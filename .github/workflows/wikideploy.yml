@@ -54,24 +54,19 @@ jobs:
         run: |
           cp -v docs/css/* docs/html
           cp -v docs/js/* docs/html
-
-      - name: Display current directory
-        run: pwd
-        working-directory: "${{ github.workspace }}"
-
-      - name: List files in the current directory
-        run: ls -al
-        working-directory: "${{ github.workspace }}"
-
       - name: Commit changes
         run: |
+          ls
+          cd .. 
+          ls
           echo "Committing changes..."
-          git config --global user.email "action@github.com"
-          git config --global user.name "GitHub Action"
-          git status
-          git add -A
-          git status
-          git commit -m "Linted Code"
-          git status
-          git push
-        working-directory: "${{ github.workspace }}"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git add -A
+            git commit -m "Linted Code"
+            git push
+          else
+            echo "No changes to commit."
+          fi
+
