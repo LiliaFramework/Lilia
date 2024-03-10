@@ -52,7 +52,7 @@ jobs:
 
   docs:
     runs-on: ubuntu-latest
-
+    needs: linter
     steps:
       - uses: actions/checkout@v2
         with:
@@ -94,13 +94,14 @@ jobs:
 
   sync:
     runs-on: ubuntu-latest
+    needs: docs
     steps:
       - name: Checkout source repository
         uses: actions/checkout@v2
       - name: Push to destination repository
         run: |
-          git config --global user.email "aaa@aaaa.com"
-          git config --global user.name "bleonheart"
+          git config --global user.email "githubactions@github.com"
+          git config --global user.name "Github Actions"
           git clone https://${{ env.ORG_NAME }}:${{ secrets.LiliaGitSecret }}@github.com/${{ env.ORG_NAME }}/Lilia-Framework.github.io.git liliagit
           cd liliagit
           git remote add ${{ env.ORIGINAL_REPO_NAME }} https://${{ env.ORG_NAME }}:${{ secrets.LiliaGitSecret }}@github.com/${{ env.ORG_NAME }}/${{ env.ORIGINAL_REPO_NAME }}.git
