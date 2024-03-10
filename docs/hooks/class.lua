@@ -17,7 +17,7 @@ function onCanBe(client)
 end
 
 --- Called when a character has left this class and has joined a different one. You can get the class the character has
--- has joined by calling `character:GetClass()`.
+-- has joined by calling `character:getClass()`.
 -- @realm server
 -- @player client Player who left this class
 -- @usage function CLASS:onSpawn(client)
@@ -30,7 +30,7 @@ end
 --- Called when a character has joined this class.
 -- @realm server
 -- @player client Player who has joined this class
--- @usage function CLASS:OnSet(client)
+-- @usage function CLASS:onSet(client)
 -- 	client:SetModel("models/police.mdl")
 -- end
 function onSet(client)
