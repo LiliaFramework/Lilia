@@ -4,14 +4,6 @@ file = {
 	exclude = {"lilia/libraries/thirdparty"}
 }
 
-module_file = {
-	Character = "lilia/libraries/character/meta/shared.lua",
-	Entity = "lilia/libraries/meta/entity/shared.lua",
-	Inventory = "lilia/libraries/inventory/meta/shared.lua",
-	Item = "lilia/libraries/items/meta/shared.lua",
-	Player = "lilia/libraries/meta/player/shared.lua"
-}
-
 dir = "docs/html"
 project = "Lilia"
 title = "Lilia Documentation"
@@ -30,7 +22,7 @@ sort_modules = true
 simple_args_string = true -- we show optionals/defaults outside of the display name
 strip_metamethod_prefix = true -- remove the name of the table when displaying metamethod names
 no_viewed_topic_at_top = true -- don't put the currently viewed topic at the top
-use_new_templates = false -- new templating system
+use_new_templates = true -- new templating system
 pretty_urls = true -- avoid showing .html in urls
 pretty_topic_names = true -- strips extension from manual filenames, this does not check filename collisions
 
