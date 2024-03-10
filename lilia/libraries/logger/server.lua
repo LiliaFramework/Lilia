@@ -10,7 +10,6 @@ Predefined flags:
 	FLAG_DEV
 ]]
 -- @module lia.log
-
 function lia.log.loadTables()
     file.CreateDir("lilia/logs")
     file.CreateDir("lilia/netlogs")
