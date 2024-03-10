@@ -22,10 +22,14 @@ end
 --- Adds a log type.
 -- @realm server
 -- @string logType Log category
--- @function (client, ...) log format callback
+-- @param client Client object
+-- @param ... Additional parameters for the log format callback
+-- @function log
+-- @usage function(client, ...) log format callback
 function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end
+
 
 function lia.log.getString(client, logType, ...)
     local text = lia.log.types[logType]
