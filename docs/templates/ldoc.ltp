@@ -55,18 +55,18 @@ end
 
 	<body>
 		<main>
-			{(lilia/docs/templates/sidebar.ltp)}
+			{(docs/templates/sidebar.ltp)}
 
 			<article>
 				{% if (ldoc.root) then -- we're rendering the landing page (index.html) %}
-					{(lilia/docs/templates/landing.ltp)}
+					{(docs/templates/landing.ltp)}
 				{% elseif (ldoc.body) then -- we're rendering non-code elements %}
 					<div class="wrapper">
 						{* ldoc.body *}
 					</div>
 				{% elseif (module) then -- we're rendering libary contents %}
 					<div class="wrapper">
-						{(lilia/docs/templates/module.ltp)}
+						{(docs/templates/module.ltp)}
 					</div>
 				{% end %}
 			</article>

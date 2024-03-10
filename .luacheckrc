@@ -10,6 +10,6 @@ exclude_files = {
     "development/**",
     "lilia/*.png",
     "lilia/*.txt",
-    "lilia/docs/*.lua",
-    "lilia/docs/**/*.lua",
+    "docs/*.lua",
+    "docs/**/*.lua",
 }

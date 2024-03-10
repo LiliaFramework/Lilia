@@ -52,13 +52,13 @@ jobs:
       - name: Copy assets
         working-directory: lilia
         run: |
-          cp -v lilia/docs/css/* lilia/docs/html
-          cp -v lilia/docs/js/* lilia/docs/html
+          cp -v docs/css/* docs/html
+          cp -v docs/js/* docs/html
 
       - name: Deploy
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'Lilia-Framework/Lilia' && success()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: lilia/docs/html
+          publish_dir: docs/html
           cname: lilia-framework.github.io
