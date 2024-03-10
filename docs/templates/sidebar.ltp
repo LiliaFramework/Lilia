@@ -8,7 +8,7 @@ end
 <nav>
 	<header>
 		{% if (not ldoc.root) then %}
-			<h1><a href="{* ldoc.url('') *}">Helix Documentation</a></h1>
+			<h1><a href="{* ldoc.url('') *}">Lilia Documentation</a></h1>
 		{% end %}
 		<input id="search" type="search" autocomplete="off" placeholder="Search..." />
 	</header>

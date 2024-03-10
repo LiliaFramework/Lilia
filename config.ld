@@ -4,10 +4,17 @@ file = {
 	exclude = {"lilia/libraries/thirdparty"}
 }
 
-dir = "docs/html"
-project = "Helix"
-title = "Helix Documentation"
+module_file = {
+	Character = "lilia/libraries/character/meta/shared.lua",
+	Entity = "lilia/libraries/meta/entity/shared.lua",
+	Inventory = "lilia/libraries/inventory/meta/shared.lua",
+	Item = "lilia/libraries/items/meta/shared.lua",
+	Player = "lilia/libraries/meta/player/shared.lua"
+}
 
+dir = "docs/html"
+project = "Lilia"
+title = "Lilia Documentation"
 no_space_before_args = true
 style = "docs/css"
 template = "docs/templates"
@@ -46,7 +53,6 @@ end
 
 new_type("hooks", "Hooks", true)
 new_type("panel", "Panels", true)
-
 tparam_alias("char", "Character")
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
