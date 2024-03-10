@@ -26,7 +26,6 @@ merge = true
 sort = true
 sort_modules = true
 
-simple_args_string = true -- we show optionals/defaults outside of the display name
 strip_metamethod_prefix = true -- remove the name of the table when displaying metamethod names
 no_viewed_topic_at_top = true -- don't put the currently viewed topic at the top
 pretty_urls = true -- avoid showing .html in urls
