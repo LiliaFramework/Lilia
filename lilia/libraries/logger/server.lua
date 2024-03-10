@@ -1,4 +1,17 @@
-﻿function lia.log.loadTables()
+﻿--[[--
+Logging helper functions.
+
+Predefined flags:
+	FLAG_NORMAL
+	FLAG_SUCCESS
+	FLAG_WARNING
+	FLAG_DANGER
+	FLAG_SERVER
+	FLAG_DEV
+]]
+-- @module lia.log
+
+function lia.log.loadTables()
     file.CreateDir("lilia/logs")
     file.CreateDir("lilia/netlogs")
     file.CreateDir("lilia/concommandlogs")
