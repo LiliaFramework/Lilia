@@ -12,10 +12,6 @@
 	{% for item in items() do %}
 		<section class="method">
 			<header>
-				<a class="anchor" id="{{item.name}}">
-					<h1>{* ldoc.realm_icon(item.tags.realm[1]) *}</span>{{ldoc.display_name(item)}}</h1>
-				</a>
-
 				{% if (item.tags.internal) then %}
 					<div class="notice error">
 						<div class="title">Internal</div>
