@@ -1,6 +1,6 @@
 file = {
 	"docs/hooks",
-	"lilia/**/**",
+	"lilia",
 	exclude = {"lilia/libraries/thirdparty"}
 }
 
