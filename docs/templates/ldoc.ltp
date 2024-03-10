@@ -1,7 +1,7 @@
 
 {%
 local baseUrl = ldoc.css:gsub("ldoc.css", "")
-local repo = "https://github.com/Lilia-Framework/Lilia"
+local repo = "https://github.com/nebulouscloud/helix/"
 local pageTitle = mod and (ldoc.display_name(mod) .. " - " .. ldoc.title) or ldoc.title
 
 local oldmarkup = ldoc.markup
@@ -22,7 +22,7 @@ function ldoc.is_kind_classmethod(kind)
 end
 
 function ldoc.repo_reference(item)
-	return repo .. "tree/main" .. item.file.filename:gsub(item.file.base, "/gamemode") .. "#L" .. item.lineno
+	return repo .. "tree/master" .. item.file.filename:gsub(item.file.base, "/gamemode") .. "#L" .. item.lineno
 end
 
 local function moduleDescription(mod)
@@ -40,12 +40,12 @@ end
 
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content="{{pageTitle}}" />
-		<meta property="og:site_name" content="Lilia Documentation" />
+		<meta property="og:site_name" content="Helix Documentation" />
 
 		{% if (mod) then %}
 			<meta property="og:description" content="{{moduleDescription(mod)}}" />
 		{% else %}
-			<meta property="og:description" content="Documentation and function reference for the Lilia framework." />
+			<meta property="og:description" content="Documentation and function reference for the Helix framework." />
 		{% end %}
 
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro" />
