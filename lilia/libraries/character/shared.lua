@@ -70,7 +70,6 @@ function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName][hookName] = func
 end
 
-
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
     data.index = data.index or table.Count(lia.char.vars)

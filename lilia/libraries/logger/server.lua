@@ -1,5 +1,4 @@
-﻿
-function lia.log.loadTables()
+﻿function lia.log.loadTables()
     file.CreateDir("lilia/logs")
     file.CreateDir("lilia/netlogs")
     file.CreateDir("lilia/concommandlogs")

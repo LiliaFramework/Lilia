@@ -1,5 +1,4 @@
-﻿
-local translations = {}
+﻿local translations = {}
 lia.anim = lia.anim or {}
 player_manager.anim = player_manager.anim or {}
 TranslateModel = TranslateModel or player_manager.TranslateToPlayerModelName
@@ -330,7 +329,6 @@ lia.anim.fastZombie = {
     [ACT_MP_WALK] = ACT_HL2MP_WALK_ZOMBIE_06,
     [ACT_MP_RUN] = ACT_HL2MP_RUN_ZOMBIE_FAST
 }
-
 
 function lia.anim.setModelClass(model, class)
     if not lia.anim[class] then error("'" .. tostring(class) .. "' is not a valid animation class!") end
