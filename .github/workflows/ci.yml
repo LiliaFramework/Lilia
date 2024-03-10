@@ -60,8 +60,12 @@ jobs:
         luaVersion: 5.4
     - name: Setup Lua Rocks
       uses: leafo/gh-actions-luarocks@v4
+    - name: Clone Rockspec
+      run: 
+          git clone https://github.com/lunarmodules/ldoc.git ldoc
+          cd ldoc
     - name: Setup dependencies 
-      run: luarocks install --only-deps ldoc-1.5.0-1.rockspec
+      run: luarocks install --only-deps ldoc-dev-1.rockspec
     - name: Build docs
       run: make doc-site
     - name: Deploy
