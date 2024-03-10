@@ -67,7 +67,7 @@ jobs:
       - name: Pull LDoc
         uses: actions/checkout@v2
         with:
-          repository: impulsh/LDoc
+          repository: bleonheart/LDoc
           path: ldoc
 
       - name: Build LDoc
