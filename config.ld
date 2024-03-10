@@ -9,8 +9,7 @@ project = "Lilia"
 title = "Lilia Documentation"
 no_space_before_args = true
 style = "docs/css"
-template = "docs/tem
-plates
+template = "docs/templates"
 format = "markdown"
 ignore = true
 topics = "docs/manual"
