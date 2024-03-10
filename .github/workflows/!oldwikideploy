@@ -18,6 +18,7 @@ permissions:
   security-events: write
   statuses: write
 
+
 jobs:
   WikiDeploy:
     runs-on: ubuntu-latest
