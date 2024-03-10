@@ -5,8 +5,9 @@ file = {
 }
 
 dir = "docs/html"
-project = "Lilia"
-title = "Lilia Documentation"
+project = "Helix"
+title = "Helix Documentation"
+
 no_space_before_args = true
 style = "docs/css"
 template = "docs/templates"
@@ -18,6 +19,13 @@ kind_names = {module = "Libraries", topic = "Manual"}
 merge = true
 sort = true
 sort_modules = true
+
+simple_args_string = true -- we show optionals/defaults outside of the display name
+strip_metamethod_prefix = true -- remove the name of the table when displaying metamethod names
+no_viewed_topic_at_top = true -- don't put the currently viewed topic at the top
+use_new_templates = true -- new templating system
+pretty_urls = true -- avoid showing .html in urls
+pretty_topic_names = true -- strips extension from manual filenames, this does not check filename collisions
 
 custom_tags = {
 	{"realm", hidden = true},
@@ -38,6 +46,7 @@ end
 
 new_type("hooks", "Hooks", true)
 new_type("panel", "Panels", true)
+
 tparam_alias("char", "Character")
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
