@@ -4,6 +4,14 @@ file = {
 	exclude = {"lilia/libraries/thirdparty"}
 }
 
+module_file = {
+	Character = "lilia/libraries/character/meta/shared.lua",
+	Entity = "lilia/libraries/meta/entity/shared.lua",
+	Inventory = "lilia/libraries/inventory/meta/shared.lua",
+	Item = "lilia/libraries/items/meta/shared.lua",
+	Player = "lilia/libraries/meta/player/shared.lua"
+}
+
 dir = "docs/html"
 project = "Lilia"
 title = "Lilia Documentation"
@@ -18,6 +26,10 @@ kind_names = {module = "Libraries", topic = "Manual"}
 merge = true
 sort = true
 sort_modules = true
+link_module = false
+link_class = false
+link_function = false
+link_variable = false
 
 simple_args_string = true -- we show optionals/defaults outside of the display name
 strip_metamethod_prefix = true -- remove the name of the table when displaying metamethod names
@@ -30,6 +42,19 @@ custom_tags = {
 	{"realm", hidden = true},
 	{"internal", hidden = true}
 }
+
+custom_display_name_handler = function(item, default_handler)
+	if (item.type == "function" and item.module) then
+		if (item.module.type == "classmod" or item.module.type == "panel") then
+			return item.module.mod_name .. ":" .. default_handler(item)
+		elseif (item.module.type == "hooks") then
+			return item.module.mod_name:upper() .. ":" .. default_handler(item)
+		end
+	end
+
+	return default_handler(item)
+end
+
 new_type("hooks", "Hooks", true)
 new_type("panel", "Panels", true)
 tparam_alias("char", "Character")
