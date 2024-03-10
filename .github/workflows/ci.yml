@@ -76,7 +76,7 @@ jobs:
 
       - name: Build docs
         working-directory: lilia
-        run: ldoc . --fatalwarnings
+        run: ldoc . --fatalwarnings 
 
       - name: Copy assets
         working-directory: lilia
