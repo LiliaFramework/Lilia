@@ -53,14 +53,17 @@ jobs:
       - name: Copy assets
         working-directory: lilia
         run: |
-          ls
           cp -v docs/css/* docs/html
           cp -v docs/js/* docs/html
 
-      - name: Deploy
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'Lilia-Framework/Lilia' && success()
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/html
-          cname: lilia-framework.github.io
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git add -A
+            git commit -m "Building Wiki"
+            git push
+          else
+            echo "No changes to commit."
+          fi
