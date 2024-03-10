@@ -26,11 +26,6 @@ merge = true
 sort = true
 sort_modules = true
 
-strip_metamethod_prefix = true -- remove the name of the table when displaying metamethod names
-no_viewed_topic_at_top = true -- don't put the currently viewed topic at the top
-pretty_urls = true -- avoid showing .html in urls
-pretty_topic_names = true -- strips extension from manual filenames, this does not check filename collisions
-
 custom_tags = {
 	{"realm", hidden = true},
 	{"internal", hidden = true}
