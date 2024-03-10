@@ -52,8 +52,8 @@ jobs:
       - name: Copy assets
         working-directory: lilia
         run: |
-          cp -v docs/css/* docs/html
-          cp -v docs/js/* docs/html
+          cp -v lilia/docs/css/* lilia/docs/html
+          cp -v lilia/docs/js/* lilia/docs/html
 
       - name: Deploy
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'Lilia-Framework/Lilia' && success()
