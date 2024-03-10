@@ -1,14 +1,7 @@
 file = {
+	"docs/hooks",
 	"lilia",
 	exclude = {"lilia/libraries/thirdparty"}
-}
-
-module_file = {
-	Character = "lilia/libraries/character/meta/shared.lua",
-	Entity = "lilia/libraries/meta/entity/shared.lua",
-	Inventory = "lilia/libraries/inventory/meta/shared.lua",
-	Item = "lilia/libraries/items/meta/shared.lua",
-	Player = "lilia/libraries/meta/player/shared.lua"
 }
 
 dir = "docs/html"
