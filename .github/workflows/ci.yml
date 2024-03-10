@@ -101,13 +101,13 @@ jobs:
         run: |
           git config --global user.email "aaa@aaaa.com"
           git config --global user.name "bleonheart"
-          git clone https://${{ env.ORG_NAME }}:${{ secrets.PAT_TOKEN }}@github.com/${{ env.ORG_NAME }}/Lilia-Framework.github.io.git liliagit
+          git clone https://${{ env.ORG_NAME }}:${{ secrets.LiliaGitSecret }}@github.com/${{ env.ORG_NAME }}/Lilia-Framework.github.io.git liliagit
           cd liliagit
-          git remote add ${{ env.ORIGINAL_REPO_NAME }} https://${{ env.ORG_NAME }}:${{ secrets.PAT_TOKEN }}@github.com/${{ env.ORG_NAME }}/${{ env.ORIGINAL_REPO_NAME }}.git
+          git remote add ${{ env.ORIGINAL_REPO_NAME }} https://${{ env.ORG_NAME }}:${{ secrets.LiliaGitSecret }}@github.com/${{ env.ORG_NAME }}/${{ env.ORIGINAL_REPO_NAME }}.git
           git remote update
           git merge ${{ env.ORIGINAL_REPO_NAME }}/gh-pages --allow-unrelated-histories gh-pages
           git push origin gh-pages 
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
           ORIGINAL_REPO_NAME: ${{ github.event.repository.name }}
           ORG_NAME: Lilia-Framework
