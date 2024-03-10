@@ -58,7 +58,7 @@ jobs:
         run: |
           echo "Pre Back..."
           ls
-          cd lilia 
+          cd Lilia 
           echo "Post Join..."
           ls
           git config --local user.email "action@github.com"
