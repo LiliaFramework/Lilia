@@ -25,7 +25,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          path: lilia
+          path: Lilia
 
       - name: Setup Lua
         uses: leafo/gh-actions-lua@v8.0.0
@@ -46,11 +46,11 @@ jobs:
         run: luarocks make
 
       - name: Build docs
-        working-directory: lilia
+        working-directory: Lilia
         run: ldoc . --fatalwarnings
 
       - name: Copy assets
-        working-directory: lilia
+        working-directory: Lilia
         run: |
           cp -v docs/css/* docs/html
           cp -v docs/js/* docs/html
