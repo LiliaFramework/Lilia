@@ -10,7 +10,7 @@ function ldoc.markup(text, item)
 end
 
 function ldoc.url(path)
-	return baseUrl .. path
+	return baseUrl .. path.. "test"
 end
 
 function ldoc.realm_icon(realm)
