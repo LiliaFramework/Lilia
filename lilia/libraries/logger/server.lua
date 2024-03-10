@@ -30,7 +30,6 @@ function lia.log.addType(logType, func)
     lia.log.types[logType] = func
 end
 
-
 function lia.log.getString(client, logType, ...)
     local text = lia.log.types[logType]
     if isfunction(text) then
