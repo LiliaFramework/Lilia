@@ -61,4 +61,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: lilia/docs/html
-          cname: lilia-framework.github.io
