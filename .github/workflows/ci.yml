@@ -106,7 +106,7 @@ jobs:
           cd liliagit
           git remote add ${{ env.ORIGINAL_REPO_NAME }} https://${{ env.ORG_NAME }}:${{ secrets.PAT }}@github.com/${{ env.ORG_NAME }}/${{ env.ORIGINAL_REPO_NAME }}.git
           git remote update
-          git merge ${{ env.ORIGINAL_REPO_NAME }}/main
+          git merge ${{ env.ORIGINAL_REPO_NAME }}/main --allow-unrelated-histories source/main
           git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
