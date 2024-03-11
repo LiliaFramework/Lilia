@@ -2,38 +2,49 @@
 Class setup hooks.
 
 As with `Faction`s, `Class`es get their own hooks for when players leave/join a class, etc. These hooks are only
-valid in class tables that are created in `schema/classes/sh_classname.lua`, and cannot be used like regular gamemode hooks.
+valid in class tables that are created in `schema/classes/classname.lua`, and cannot be used like regular gamemode hooks.
 ]]
 -- @hooks Class
 
 --- Whether or not a player can switch to this class.
 -- @realm shared
--- @player client Client that wants to switch to this class
+-- @param client Player who wants to switch to this class
 -- @treturn bool True if the player is allowed to switch to this class
--- @usage function CLASS:CanSwitchTo(client)
--- 	return client:IsAdmin() -- only admins allowed in this class!
+-- @usage
+-- function CLASS:onCanBe(client)
+--     return client:IsAdmin() or client:getChar():hasFlags("Z") -- Only admins or people with the Z flag are allowed in this class!
 -- end
-function CanSwitchTo(client)
+function CLASS:onCanBe(client)
 end
 
---- Called when a character has left this class and has joined a different one. You can get the class the character has
--- has joined by calling `character:GetClass()`.
+--- Called when a character has left this class and has joined a different one.
 -- @realm server
--- @player client Player who left this class
-function OnLeave(client)
+-- @param client Player who left this class
+-- @usage
+-- function CLASS:onLeave(client)
+--     local character = client:getChar()
+--     character:setModel("models/player/alyx.mdl")
+-- end
+function CLASS:onLeave(client)
 end
 
 --- Called when a character has joined this class.
 -- @realm server
--- @player client Player who has joined this class
--- @usage function CLASS:OnSet(client)
--- 	client:SetModel("models/police.mdl")
+-- @param client Player who has joined this class
+-- @usage
+-- function CLASS:onSet(client)
+--     client:setModel("models/police.mdl")
 -- end
-function OnSet(client)
+function CLASS:onSet(client)
 end
 
 --- Called when a character in this class has spawned in the world.
 -- @realm server
--- @player client Player that has just spawned
-function OnSpawn(client)
+-- @param client Player that has just spawned
+-- @usage
+-- function CLASS:onSpawn(client)
+--     client:SetMaxHealth(500) -- Sets your Max Health to 500
+--     client:SetHealth(500) -- Subsequently sets your Health to 500
+-- end
+function CLASS:onSpawn(client)
 end
