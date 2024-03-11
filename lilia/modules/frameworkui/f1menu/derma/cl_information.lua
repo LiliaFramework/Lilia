@@ -35,7 +35,7 @@ function PANEL:Init()
     self.infoBox:Dock(FILL)
     self.infoBox.Paint = function() end
     self:CreateTextEntryWithBackgroundAndLabel("name", textFont, textFontSize, textColor, shadowColor, "Name")
-    self:CreateTextEntryWithBackgroundAndLabel("desc", textFont, textFontSize, textColor, shadowColor, "Description")
+    self:CreateTextEntryWithBackgroundAndLabel("desc", textFont, textFontSize * 2, textColor, shadowColor, "Description")
     self:CreateTextEntryWithBackgroundAndLabel("faction", textFont, textFontSize, textColor, shadowColor, "Faction")
     self:CreateTextEntryWithBackgroundAndLabel("money", textFont, textFontSize, textColor, shadowColor, "Money")
     if class then self:CreateTextEntryWithBackgroundAndLabel("class", textFont, textFontSize, textColor, shadowColor, "Class") end
