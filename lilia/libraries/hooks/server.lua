@@ -377,14 +377,6 @@ function GM:OnServerLog(client, logType, ...)
     end
 end
 
-function GM:OnCharVarChanged(character, varName, oldVar, newVar)
-    if lia.char.varHooks[varName] then
-        for _, v in pairs(lia.char.varHooks[varName]) do
-            v(character, oldVar, newVar)
-        end
-    end
-end
-
 function GM:onCharCreated(client, char)
     local permFlags = client:getPermFlags()
     if permFlags and #permFlags > 0 then char:giveFlags(permFlags) end
