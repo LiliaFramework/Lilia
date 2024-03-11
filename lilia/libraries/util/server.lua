@@ -8,6 +8,20 @@
     end
 end
 
+function lia.util.SpawnEntities(entityTable)
+    for entity, position in pairs(entityTable) do
+        if isvector(position) then
+            local newEnt = ents.Create(entity)
+            if IsValid(newEnt) then
+                newEnt:SetPos(position)
+                newEnt:Spawn()
+            end
+        else
+            print("Invalid position for entity", entity)
+        end
+    end
+end
+
 function lia.util.notifyLocalized(message, recipient, ...)
     local args = {...}
     if recipient ~= nil and not istable(recipient) and type(recipient) ~= "Player" then
