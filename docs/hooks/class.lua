@@ -20,9 +20,9 @@ end
 -- has joined by calling `character:GetClass()`.
 -- @realm server
 -- @player client Player who left this class
--- @usage function CLASS:onSpawn(client)
+-- @usage function CLASS:onLeave(client)
 --local character = client:getChar()
---character:SetMode("models/player/alyx.mdl")
+--character:setMode("models/player/alyx.mdl")
 --end
 function onLeave(client)
 end
@@ -31,7 +31,7 @@ end
 -- @realm server
 -- @player client Player who has joined this class
 -- @usage function CLASS:OnSet(client)
--- 	client:SetModel("models/police.mdl")
+-- 	client:setModel("models/police.mdl")
 -- end
 function onSet(client)
 end
