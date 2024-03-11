@@ -13,7 +13,7 @@
 
 MODULE.contributors = {
     desc = "View All Contributors",
-    url = "https://github.com/Lilia-Framework/Lilia/graphs/contributors"
+    url = "https://github.com/LiliaFramework/Lilia/graphs/contributors"
 }
 
 MODULE.discord = {

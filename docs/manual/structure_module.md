@@ -28,7 +28,7 @@ MODULE.CAMIPrivileges = {
 
 ---
 
-## [View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/modules/core/permissions/module.lua)
+## [View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/modules/core/permissions/module.lua)
 
 ## Module Configuration
 
@@ -73,4 +73,4 @@ MODULE.CAMIPrivileges = {
 - concommands
 ---
 
-- [Default Module List](https://github.com/Lilia-Framework/Lilia/wiki/Module-List): This link directs you to the Module List.
+- [Default Module List](https://github.com/LiliaFramework/Lilia/wiki/Module-List): This link directs you to the Module List.

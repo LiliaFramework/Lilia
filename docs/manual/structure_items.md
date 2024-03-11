@@ -10,7 +10,7 @@ ITEM.desc = "A test item!" -- A brief description of the item
 ITEM.model = "models/props_c17/oildrum001.mdl" -- The 3D model for the item
 ```
 
-[View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/items/config/items/defaultitem.txt)
+[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/libraries/items/config/items/defaultitem.txt)
 
 ### Weapons Item Example:
 
@@ -24,9 +24,9 @@ ITEM.width = 4 -- The width of the weapon in inventory
 ITEM.height = 2 -- The height of the weapon in inventory
 ```
 
-[View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/items/config/items/weapons/ar2.txt)
+[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/libraries/items/config/items/weapons/ar2.txt)
 
-If you don't wish to manually code weapons, you can enable [this](https://github.com/Lilia-Framework/Lilia/blob/2.0/lilia/modules/development/modules/easyitemgenerator/config.lua#L2)
+If you don't wish to manually code weapons, you can enable [this](https://github.com/LiliaFramework/Lilia/blob/2.0/lilia/modules/development/modules/easyitemgenerator/config.lua#L2)
 
 ### Vehicles Item Example:
 
@@ -38,7 +38,7 @@ ITEM.category = "Vehicles" -- The category of the vehicle
 ITEM.vehicleid = "VehicleID" -- The identifier for the vehicle
 ```
 
-[View source »](https://github.com/Lilia-Framework/Lilia/blob/2.0/lilia/modules/core/items/vehicles/vehicleexample.txt)
+[View source »](https://github.com/LiliaFramework/Lilia/blob/2.0/lilia/modules/core/items/vehicles/vehicleexample.txt)
 
 ### Simfphyscars Item Example:
 
@@ -50,7 +50,7 @@ ITEM.category = "Vehicles" -- The category of the Simfphys car
 ITEM.vehicleid = "VehicleID" -- The identifier for the Simfphys car
 ```
 
-[View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/items/config/items/simfphyscars/carexample.txt)
+[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/libraries/items/config/items/simfphyscars/carexample.txt)
 
 ### Outfit Item Example:
 
@@ -63,7 +63,7 @@ ITEM.height = 2 -- The height of the outfit in inventory
 ITEM.replacements = "models/player/combine_soldier.mdl" -- Model replacement for the player wearing the outfit
 ```
 
-[View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/items/config/items/outfit/rebel_armor.txt)
+[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/libraries/items/config/items/outfit/rebel_armor.txt)
 
 ### Entities Item Example:
 
@@ -75,7 +75,7 @@ ITEM.category = "Entities" -- The category of the entities item
 ITEM.entityid = "item_suit" -- The identifier for the entities item
 ```
 
-[View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/items/config/items/entities/item_suit.txt)
+[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/libraries/items/config/items/entities/item_suit.txt)
 
 ### Books Item Example:
 
@@ -94,7 +94,7 @@ EXAMPLE PARAGRAH!
 ]] -- The contents of the book, in HTML format
 ```
 
-[View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/items/config/items/books/book.txt)
+[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/libraries/items/config/items/books/book.txt)
 
 ### Ammo Item Example:
 
@@ -106,4 +106,4 @@ ITEM.ammoAmount = 12 -- The amount of ammo in the box
 ITEM.ammoDesc = "A Box that contains %s of .357 Ammo" -- Description of the ammo box
 ```
 
-[View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/items/config/items/ammo/357ammo.txt)
+[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/libraries/items/config/items/ammo/357ammo.txt)

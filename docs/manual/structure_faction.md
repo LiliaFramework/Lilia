@@ -12,7 +12,7 @@ FACTION.payTimer = 3600
 FACTION_MINECRAFTER = FACTION.index
 ```
 
-[View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/modules/core/teams/libraries/server.lua#L48)
+[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/modules/core/teams/libraries/server.lua#L48)
 
 #Faction Variables
 

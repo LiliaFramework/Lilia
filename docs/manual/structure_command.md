@@ -35,7 +35,7 @@ lia.command.add("charsetskin", {
 
 ```
 
-[View source »](https://github.com/Lilia-Framework/Lilia/blob/main/lilia/libraries/commands/config/commands/server.lua#L200)
+[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/libraries/commands/config/commands/server.lua#L200)
 
 ## Command Variables
 

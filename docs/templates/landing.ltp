@@ -12,7 +12,7 @@
 	<p>Questions? Want to show off your work? Maybe drop a new module release? Come join our community <a href="https://discord.gg/wFeBbzNdCf" target="_blank">Discord server</a>.</p>
 	<h2>Contributing</h2>
 	<p>Lilia is still early on its lifespan and there are still a few things missing here and there. Contributions to the documentation - from function references, to simple typo fixes - are welcomed!>
-	<p>If you'd like to contribute code, you can visit the <a href="https://github.com/Lilia-Framework/Lilia/" target="_blank">GitHub repository</a> and make a pull request.</p>
+	<p>If you'd like to contribute code, you can visit the <a href="https://github.com/LiliaFramework/Lilia/" target="_blank">GitHub repository</a> and make a pull request.</p>
 	<h2>Learning</h2>
 	<p>Getting started on developing with the Lilia framework requires an intermediate level of Garry's Mod Lua knowledge. You'll want to learn the basics before you get starting making a schema. The <a href="https://wiki.facepunch.com/gmod/" target="_blank">Garry's Mod Wiki</a> is a good place to start.</p>
 </div>

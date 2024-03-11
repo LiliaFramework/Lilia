@@ -19,10 +19,10 @@ If you're considering porting Nutscript Plugins to Lilia Modules, here are some 
 
 Make sure to check the following available content to get assistance with your porting:
 
-- [Class Structure](https://lilia-framework.github.io/Lilia/manual/class/)
+- [Class Structure](https://LiliaFramework.github.io/Lilia/manual/class/)
 
-- [Command Structure](https://lilia-framework.github.io/Lilia/manual/command/)
+- [Command Structure](https://LiliaFramework.github.io/Lilia/manual/command/)
 
-- [Faction Structure](https://lilia-framework.github.io/Lilia/manual/faction/)
+- [Faction Structure](https://LiliaFramework.github.io/Lilia/manual/faction/)
 
-- [Item Structure](https://lilia-framework.github.io/Lilia/manual/items)
+- [Item Structure](https://LiliaFramework.github.io/Lilia/manual/items)
