@@ -1,4 +1,3 @@
-
 {%
 local function isKindExpandable(kind)
 	return kind ~= "Manual"

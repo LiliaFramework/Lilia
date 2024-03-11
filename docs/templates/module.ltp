@@ -1,3 +1,5 @@
+secondary | 00:06:05 | ReviewTube
+-
 
 <header class="module">
 	<h1>{{mod.name}}</h1>
@@ -108,6 +110,15 @@
 				{% for usage in ldoc.modules.iter(item.usage) do %}
 					<pre><code>{* usage *}</code></pre>
 				{% end %}
+			{% end %}
+
+			{% if (item.see) then %}
+				<h3>See Also</h3>
+				<ul>
+					{% for see in ldoc.modules.iter(item.see) do %}
+						<li><a href="{* ldoc.href(see) *}">{{see.label}}</a></li>
+					{% end %}
+				</ul>
 			{% end %}
 		</section>
 	{% end %}
