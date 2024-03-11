@@ -109,15 +109,6 @@
 					<pre><code>{* usage *}</code></pre>
 				{% end %}
 			{% end %}
-
-			{% if (item.see) then %}
-				<h3>See Also</h3>
-				<ul>
-					{% for see in ldoc.modules.iter(item.see) do %}
-						<li><a href="{* ldoc.href(see) *}">{{see.label}}</a></li>
-					{% end %}
-				</ul>
-			{% end %}
 		</section>
 	{% end %}
 {% end %}
