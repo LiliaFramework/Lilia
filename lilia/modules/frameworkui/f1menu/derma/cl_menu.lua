@@ -38,7 +38,7 @@ function PANEL:Init()
     if MODULE.F1DisplayModel then
         self.model = self:Add("liaModelPanel")
         self.model:SetWide(ScrW() * 0.25)
-        self.model:Dock(LEFT)
+        self.model:Dock(RIGHT)
         self.model:SetFOV(50)
         self.model.enableHook = true
         self.model.copyLocalSequence = true

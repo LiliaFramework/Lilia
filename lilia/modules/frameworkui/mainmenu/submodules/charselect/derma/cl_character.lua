@@ -20,7 +20,7 @@ function PANEL:createTabs()
         self:addTab("leave", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() LocalPlayer():ConCommand("disconnect") end) end, true)
     end
 
-    local totalWidth = -32
+    local totalWidth = 0
     for _, v in ipairs(self.tabs:GetChildren()) do
         totalWidth = totalWidth + v:GetWide()
     end
