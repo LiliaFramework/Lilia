@@ -1,6 +1,3 @@
-secondary | 00:06:05 | ReviewTube
--
-
 <header class="module">
 	<h1>{{mod.name}}</h1>
 	<h2>{* ldoc.markup(mod.summary) *}</h2>
