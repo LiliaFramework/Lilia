@@ -2,17 +2,21 @@
 lia.command.list = lia.command.list or {}
 function lia.command.add(command, data)
     data.syntax = data.syntax or "[none]"
+    local superAdminOnly = data.superAdminOnly
+    local adminOnly = data.adminOnly
+    local acessLevels = superAdminOnly and "superadmin" or (adminOnly and "admin" or "user")
+    local userCommand = acessLevels == "user"
     if not data.onRun then return ErrorNoHalt("Command '" .. command .. "' does not have a callback, not adding!\n") end
     if data.group then
         ErrorNoHalt("Command '" .. data.name .. "' tried to use the deprecated field 'group'!\n")
         return
     end
 
-    local privilege = "Commands - " .. (isstring(data.privilege) and data.privilege or command)
+    local privilege = "Commands - " .. (isstring(data.privilege) and data.privilege or (userCommand and "Default User Commands" or command))
     if not CAMI.GetPrivilege(privilege) then
         CAMI.RegisterPrivilege({
             Name = privilege,
-            MinAccess = data.superAdminOnly and "superadmin" or (data.adminOnly and "admin" or "user"),
+            MinAccess = superAdminOnly and "superadmin" or (adminOnly and "admin" or "user"),
             Description = data.description
         })
     end
