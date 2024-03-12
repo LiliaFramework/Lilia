@@ -1,6 +1,6 @@
 ﻿lia.command.add("viewBodygroups", {
     adminOnly = true,
-    privilege = "Change Bodygroups",
+    privilege = "Manage Bodygroups",
     syntax = "[string name]",
     onRun = function() end
 })

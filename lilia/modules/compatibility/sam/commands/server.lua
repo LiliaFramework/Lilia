@@ -9,8 +9,7 @@
 })
 
 lia.command.add("playtime", {
-    adminOnly = true,
-    privilege = "Default User Commands",
+    adminOnly = false,
     onRun = function(client)
         local steamID = client:SteamID()
         local query = "SELECT play_time FROM sam_players WHERE steamid = " .. SQLStr(steamID) .. ";"

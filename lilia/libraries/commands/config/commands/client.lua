@@ -1,4 +1,5 @@
-﻿lia.command.add("charsetspeed", {
+﻿
+lia.command.add("charsetspeed", {
     adminOnly = true,
     privilege = "Set Character Speed",
     syntax = "<string name> <number speed>",
@@ -18,9 +19,10 @@ lia.command.add("playsound", {
     onRun = function() end
 })
 
-lia.command.add("redownloadlightmaps", {
-    adminOnly = false,
-    privilege = "Default User Commands",
+lia.command.add("charsetscale", {
+    superAdminOnly = true,
+    privilege = "Set Character scale",
+    syntax = "<string name> <number value>",
     onRun = function() end
 })
 
@@ -28,13 +30,6 @@ lia.command.add("charsetjump", {
     adminOnly = true,
     privilege = "Set Character Jump",
     syntax = "<string name> <number power>",
-    onRun = function() end
-})
-
-lia.command.add("charsetscale", {
-    superAdminOnly = true,
-    privilege = "Set Character scale",
-    syntax = "<string name> <number value>",
     onRun = function() end
 })
 
@@ -55,14 +50,14 @@ lia.command.add("charban", {
 lia.command.add("charsetdesc", {
     adminOnly = true,
     syntax = "<string name> <string desc>",
-    privilege = "Change Description",
+    privilege = "Manage Character Informations",
     onRun = function() end
 })
 
 lia.command.add("charsetname", {
     adminOnly = true,
     syntax = "<string name> [string newName]",
-    privilege = "Change Name",
+    privilege = "Manage Character Informations",
     onRun = function() end
 })
 
@@ -76,13 +71,13 @@ lia.command.add("chargetmodel", {
 lia.command.add("charsetmodel", {
     adminOnly = true,
     syntax = "<string name> <string model>",
-    privilege = "Change Model",
+    privilege = "Manage Character Informations",
     onRun = function() end
 })
 
 lia.command.add("charsetbodygroup", {
     adminOnly = true,
-    privilege = "Change Bodygroups",
+    privilege = "Manage Bodygroups",
     syntax = "<string name> <string bodyGroup> [number value]",
     onRun = function() end
 })
@@ -90,7 +85,7 @@ lia.command.add("charsetbodygroup", {
 lia.command.add("charsetskin", {
     adminOnly = true,
     syntax = "<string name> [number skin]",
-    privilege = "Change Skin",
+    privilege = "Manage Character Informations",
     onRun = function() end
 })
 
@@ -150,6 +145,12 @@ lia.command.add("charkick", {
     onRun = function() end
 })
 
+lia.command.add("viewcoreinformation", {
+    privilege = "See Core Information",
+    superAdminOnly = true,
+    onRun = function() end
+})
+
 lia.command.add("charunban", {
     syntax = "<string name>",
     superAdminOnly = true,
@@ -191,7 +192,13 @@ lia.command.add("checkmoney", {
 })
 
 lia.command.add("status", {
-    privilege = "Default User Commands",
+    
+    onRun = function() end
+})
+
+lia.command.add("redownloadlightmaps", {
+    adminOnly = false,
+    
     onRun = function() end
 })
 
@@ -260,14 +267,14 @@ lia.command.add("announce", {
 })
 
 lia.command.add("listents", {
-    privilege = "Default User Commands",
+    
     syntax = "<No Input>",
     onRun = function() end
 })
 
 lia.command.add("flip", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function() end
 })
 
@@ -295,9 +302,16 @@ lia.command.add("listusers", {
     onRun = function() end
 })
 
+lia.command.add("rolld", {
+    adminOnly = false,
+    
+    syntax = "<number dice> <number pips> <number bonus>",
+    onRun = function() end
+})
+
 lia.command.add("vieweventlog", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function() end
 })
 
@@ -307,121 +321,113 @@ lia.command.add("editeventlog", {
     onRun = function() end
 })
 
-lia.command.add("rolld", {
-    adminOnly = false,
-    privilege = "Default User Commands",
-    syntax = "<number dice> <number pips> <number bonus>",
-    onRun = function() end
-})
-
 lia.command.add("roll", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function() end
 })
 
 lia.command.add("chardesc", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     syntax = "<string desc>",
     onRun = function() end
 })
 
 lia.command.add("chargetup", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function() end
 })
 
 lia.command.add("givemoney", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     syntax = "<number amount>",
     onRun = function() end
 })
 
 lia.command.add("bringlostitems", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function() end
 })
 
 lia.command.add("carddraw", {
     adminOnly = false,
-    privilege = "Default User Commands",
-    onRun = function() end
-})
-
-lia.command.add("permflaggive", {
-    adminOnly = true,
-    privilege = "Give Permanent Flags",
-    syntax = "<string name> [string flags]",
-    onRun = function() end
-})
-
-lia.command.add("permflagtake", {
-    adminOnly = true,
-    privilege = "Take Permanent Flags",
-    syntax = "<string name> [string flags]",
-    onRun = function() end
-})
-
-lia.command.add("permflags", {
-    adminOnly = true,
-    privilege = "List Permanent Flags",
-    syntax = "<string name>",
-    onRun = function() end
-})
-
-lia.command.add("flagblacklist", {
-    adminOnly = true,
-    privilege = "Blacklist Flags",
-    syntax = "<string name> <string flags> <number minutes> <string reason>",
-    onRun = function() end
-})
-
-lia.command.add("flagunblacklist", {
-    adminOnly = true,
-    privilege = "UnBlacklist Flags",
-    syntax = "<string name> [string flags]",
-    onRun = function() end
-})
-
-lia.command.add("flagblacklists", {
-    adminOnly = true,
-    privilege = "List Blacklisted Flags",
-    syntax = "<string name>",
+    
     onRun = function() end
 })
 
 lia.command.add("fallover", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     syntax = "[number time]",
     onRun = function() end
 })
 
 lia.command.add("getpos", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function() end
 })
 
 lia.command.add("entname", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
+    onRun = function() end
+})
+
+lia.command.add("permflaggive", {
+    superAdminOnly = true,
+    privilege = "Manage Permanent Flags",
+    syntax = "<string name> [string flags]",
+    onRun = function() end
+})
+
+lia.command.add("permflagtake", {
+    superAdminOnly = true,
+    privilege = "Manage Permanent Flags",
+    syntax = "<string name> [string flags]",
+    onRun = function() end
+})
+
+lia.command.add("permflags", {
+    adminOnly = true,
+    privilege = "Check Permanent Flags",
+    syntax = "<string name>",
+    onRun = function() end
+})
+
+lia.command.add("flagblacklist", {
+    superAdminOnly = true,
+    privilege = "Manage Permanent Flags",
+    syntax = "<string name> <string flags> <number minutes> <string reason>",
+    onRun = function() end
+})
+
+lia.command.add("flagunblacklist", {
+    superAdminOnly = true,
+    privilege = "Manage Permanent Flags",
+    syntax = "<string name> [string flags]",
+    onRun = function() end
+})
+
+lia.command.add("flagblacklists", {
+    superAdminOnly = true,
+    privilege = "Manage Permanent Flags",
+    syntax = "<string name>",
     onRun = function() end
 })
 
 lia.command.add("dropmoney", {
-    adminOnly = false,
-    privilege = "Default User Commands",
+    
     syntax = "<number amount>",
     onRun = function() end
 })
 
 lia.command.add("membercount", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function() end
 })

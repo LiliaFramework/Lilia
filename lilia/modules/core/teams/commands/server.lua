@@ -1,5 +1,6 @@
 ﻿lia.command.add("classwhitelist", {
     adminOnly = true,
+    privilege = "Manage Whitelists",
     syntax = "<string name> <string class>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -36,7 +37,7 @@
 lia.command.add("plytransfer", {
     adminOnly = true,
     syntax = "<string name> <string faction>",
-    privilege = "Transfer Player",
+    privilege = "Manage Transfers",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local name = table.concat(arguments, " ", 2)
@@ -63,12 +64,13 @@ lia.command.add("plytransfer", {
                 return "@invalidFaction"
             end
         end
-    end
+    end,
+    alias = {"charsetfaction"}
 })
 
 lia.command.add("plywhitelist", {
     adminOnly = true,
-    privilege = "Whitelist Characters",
+    privilege = "Manage Whitelists",
     syntax = "<string name> <string faction>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -85,7 +87,7 @@ lia.command.add("plywhitelist", {
 
 lia.command.add("plyunwhitelist", {
     adminOnly = true,
-    privilege = "Un-Whitelist Characters",
+    privilege = "Manage Whitelists",
     syntax = "<string name> <string faction>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -102,7 +104,6 @@ lia.command.add("plyunwhitelist", {
 
 lia.command.add("beclass", {
     adminOnly = false,
-    privilege = "Default User Commands",
     syntax = "<string class>",
     onRun = function(client, arguments)
         local class = table.concat(arguments, " ")
@@ -139,20 +140,9 @@ lia.command.add("beclass", {
     end
 })
 
-lia.command.add("factionlist", {
-    adminOnly = false,
-    privilege = "Default User Commands",
-    syntax = "<string text>",
-    onRun = function(client)
-        for _, v in ipairs(lia.faction.indices) do
-            client:ChatPrint("NAME: " .. v.name .. " ID: " .. v.uniqueID)
-        end
-    end
-})
-
 lia.command.add("setclass", {
-    privilege = "Set Class",
     adminOnly = true,
+    privilege = "Manage Classes",
     syntax = "<string target> <string class>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -182,6 +172,7 @@ lia.command.add("setclass", {
 
 lia.command.add("classunwhitelist", {
     adminOnly = true,
+    privilege = "Manage Classes",
     syntax = "<string name> <string class>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -212,5 +203,15 @@ lia.command.add("classunwhitelist", {
         target:getChar():setData("whitelist", wl)
         client:notify("Unwhitelisted properly.")
         target:notify(string.format("Class '%s' have been unassigned from your current character.", classTable.name))
+    end
+})
+
+lia.command.add("factionlist", {
+    adminOnly = false,
+    syntax = "<string text>",
+    onRun = function(client)
+        for _, v in ipairs(lia.faction.indices) do
+            client:ChatPrint("NAME: " .. v.name .. " ID: " .. v.uniqueID)
+        end
     end
 })

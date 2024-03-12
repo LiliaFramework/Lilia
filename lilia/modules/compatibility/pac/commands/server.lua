@@ -1,5 +1,5 @@
 ﻿lia.command.add("fixpac", {
-    privilege = "Default User Commands",
+    adminonly = false,
     syntax = "<No Input>",
     onRun = function(client)
         timer.Simple(0, function() if IsValid(client) then client:ConCommand("pac_clear_parts") end end)
@@ -16,12 +16,12 @@
 })
 
 lia.command.add("pacenable", {
-    privilege = "Default User Commands",
+    adminonly = false,
     onRun = function(client) client:SendLua([[RunConsoleCommand("pac_enable", "1")]]) end
 })
 
 lia.command.add("pacdisable", {
-    privilege = "Default User Commands",
+    adminonly = false,
     onRun = function(client)
         client:SendLua([[RunConsoleCommand("pac_enable", "0")]])
         client:SendLua([[chat.AddText("PAC has been disabled to boost performance. If you would like to re-enable it type /pacenable in chat.")]])

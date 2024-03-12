@@ -1,7 +1,7 @@
 ﻿lia.command.add("charsetattrib", {
     superAdminOnly = true,
     syntax = "<string charname> <string attribname> <number level>",
-    privilege = "Change Attributes",
+    privilege = "Manage Attributes",
     onRun = function(client, arguments)
         local attribName = arguments[2]
         if not attribName then return L("invalidArg", client, 2) end
@@ -27,7 +27,7 @@
 lia.command.add("charaddattrib", {
     superAdminOnly = true,
     syntax = "<string charname> <string attribname> <number level>",
-    privilege = "Change Attributes",
+    privilege = "Manage Attributes",
     onRun = function(client, arguments)
         local attribName = arguments[2]
         if not attribName then return L("invalidArg", client, 2) end

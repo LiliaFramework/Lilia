@@ -25,7 +25,6 @@ lia.command.add("storagelock", {
 })
 
 lia.command.add("trunk", {
-    privilege = "Default User Commands",
     adminOnly = false,
     onRun = function(client)
         local entity = client:GetEyeTrace().Entity

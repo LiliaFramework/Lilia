@@ -5,5 +5,6 @@
 })
 
 lia.command.add("playtime", {
-    onRun = function() end
+    adminOnly = false,
+    onRun = function(client) end
 })

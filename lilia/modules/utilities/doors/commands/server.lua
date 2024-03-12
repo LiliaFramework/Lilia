@@ -1,7 +1,6 @@
 ﻿local MODULE = MODULE
 lia.command.add("doorsell", {
     adminOnly = false,
-    privilege = "Default User Commands",
     onRun = function(client)
         local entity = client:GetTracedEntity()
         if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
@@ -56,7 +55,6 @@ lia.command.add("doorsetlocked", {
 
 lia.command.add("doorbuy", {
     adminOnly = false,
-    privilege = "Default User Commands",
     onRun = function(client)
         local entity = client:GetTracedEntity()
         if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
@@ -246,6 +244,7 @@ lia.command.add("doorsetdisabled", {
 })
 
 lia.command.add("doorsettitle", {
+    adminOnly = true,
     syntax = "<string title>",
     privilege = "Manage Doors",
     onRun = function(client, arguments)
@@ -301,15 +300,6 @@ lia.command.add("doorsetchild", {
         else
             client:notifyLocalized("dNotValid")
         end
-    end
-})
-
-lia.command.add("savedoors", {
-    adminOnly = true,
-    privilege = "Manage Doors",
-    onRun = function(client)
-        MODULE:SaveData()
-        client:notify("Saved Doors")
     end
 })
 
@@ -376,4 +366,13 @@ lia.command.add("doorsetclass", {
         end
     end,
     alias = {"jobdoor"}
+})
+
+lia.command.add("savedoors", {
+    adminOnly = true,
+    privilege = "Manage Doors",
+    onRun = function(client)
+        MODULE:SaveData()
+        client:notify("Saved Doors")
+    end
 })

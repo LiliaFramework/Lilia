@@ -1,6 +1,7 @@
 ﻿local MODULE = MODULE
 MODULE.OOCBans = MODULE.OOCBans or {}
 lia.command.add("banooc", {
+    adminOnly = true,
     privilege = "Ban OOC",
     syntax = "<string target>",
     onRun = function(client, arguments)
@@ -15,6 +16,7 @@ lia.command.add("banooc", {
 })
 
 lia.command.add("unbanooc", {
+    adminOnly = true,
     privilege = "Unban OOC",
     syntax = "<string target>",
     onRun = function(client, arguments)
@@ -27,6 +29,7 @@ lia.command.add("unbanooc", {
 })
 
 lia.command.add("blockooc", {
+    superAdminOnly = true,
     privilege = "Block OOC",
     syntax = "<string target>",
     onRun = function(client)
@@ -40,13 +43,8 @@ lia.command.add("blockooc", {
     end
 })
 
-lia.command.add("clearchat", {
-    superAdminOnly = true,
-    privilege = "Clear Chat",
-    onRun = function() netstream.Start(player.GetAll(), "adminClearChat") end
-})
-
 lia.command.add("refreshfonts", {
+    superAdminOnly = true,
     privilege = "Refresh Fonts",
     syntax = "<No Input>",
     onRun = function(client)
@@ -54,4 +52,10 @@ lia.command.add("refreshfonts", {
         hook.Run("LoadFonts", lia.config.Font)
         client:ChatPrint("Fonts have been refreshed!")
     end
+})
+
+lia.command.add("clearchat", {
+    adminOnly = true,
+    privilege = "Clear Chat",
+    onRun = function() netstream.Start(player.GetAll(), "adminClearChat") end
 })

@@ -1,6 +1,6 @@
 ﻿local MODULE = MODULE
 lia.command.add("spawnadd", {
-    privilege = "Change Spawns",
+    privilege = "Manage Spawns",
     adminOnly = true,
     syntax = "<string faction> [string class]",
     onRun = function(client, arguments)
@@ -68,7 +68,7 @@ lia.command.add("respawn", {
 })
 
 lia.command.add("spawnremove", {
-    privilege = "Change Spawns",
+    privilege = "Manage Spawns",
     adminOnly = true,
     syntax = "[number radius]",
     onRun = function(client, arguments)

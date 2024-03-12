@@ -1,22 +1,17 @@
 ﻿lia.command.add("doorsell", {
-    privilege = "Default User Commands",
+    adminOnly = false,
     onRun = function() end
 })
 
 lia.command.add("doorsetlocked", {
     adminOnly = true,
     privilege = "Manage Doors",
-    onRun = function() end
-})
-
-lia.command.add("savedoors", {
-    adminOnly = true,
-    privilege = "Manage Doors",
+    syntax = "<bool locked>",
     onRun = function() end
 })
 
 lia.command.add("doorbuy", {
-    privilege = "Default User Commands",
+    adminOnly = false,
     onRun = function() end
 })
 
@@ -56,6 +51,7 @@ lia.command.add("doorsetdisabled", {
 })
 
 lia.command.add("doorsettitle", {
+    adminOnly = true,
     syntax = "<string title>",
     privilege = "Manage Doors",
     onRun = function() end
@@ -85,4 +81,10 @@ lia.command.add("doorsetclass", {
     privilege = "Manage Doors",
     onRun = function() end,
     alias = {"jobdoor"}
+})
+
+lia.command.add("savedoors", {
+    adminOnly = true,
+    privilege = "Manage Doors",
+    onRun = function() end
 })

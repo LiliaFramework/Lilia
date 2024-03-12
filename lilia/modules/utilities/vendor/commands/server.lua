@@ -1,6 +1,6 @@
 ﻿local MODULE = MODULE
 lia.command.add("restockallvendors", {
-    privilege = "Restock Vendors",
+    privilege = "Manage Vendors",
     superAdminOnly = true,
     onRun = function()
         for _, v in ipairs(ents.FindByClass("lia_vendor")) do
@@ -13,7 +13,7 @@ lia.command.add("restockallvendors", {
 })
 
 lia.command.add("resetallvendormoney", {
-    privilege = "Reset Vendor Money",
+    privilege = "Manage Vendors",
     superAdminOnly = true,
     syntax = "<int amount>",
     onRun = function(_, arguments)
@@ -25,7 +25,7 @@ lia.command.add("resetallvendormoney", {
 })
 
 lia.command.add("savevendors", {
-    privilege = "Reset Vendor Money",
     superAdminOnly = true,
+    privilege = "Manage Vendors",
     onRun = function() MODULE:SaveData() end
 })

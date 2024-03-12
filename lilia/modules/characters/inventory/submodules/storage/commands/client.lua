@@ -6,7 +6,6 @@
 })
 
 lia.command.add("trunk", {
-    privilege = "Default User Commands",
     adminOnly = false,
     onRun = function() end
 })

@@ -1,4 +1,4 @@
-﻿local GM = GM or GAMEMODE
+﻿
 lia.command.add("charsetspeed", {
     adminOnly = true,
     privilege = "Set Character Speed",
@@ -112,7 +112,7 @@ lia.command.add("charban", {
 lia.command.add("charsetdesc", {
     adminOnly = true,
     syntax = "<string name> <string desc>",
-    privilege = "Change Description",
+    privilege = "Manage Character Informations",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if not IsValid(target) then return end
@@ -130,7 +130,7 @@ lia.command.add("charsetdesc", {
 lia.command.add("charsetname", {
     adminOnly = true,
     syntax = "<string name> [string newName]",
-    privilege = "Change Name",
+    privilege = "Manage Character Informations",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and not arguments[2] then return client:requestString("@chgName", "@chgNameDesc", function(text) lia.command.run(client, "charsetname", {target:Name(), text}) end, target:Name()) end
@@ -160,7 +160,7 @@ lia.command.add("chargetmodel", {
 lia.command.add("charsetmodel", {
     adminOnly = true,
     syntax = "<string name> <string model>",
-    privilege = "Change Model",
+    privilege = "Manage Character Informations",
     onRun = function(client, arguments)
         if not arguments[2] then return L("invalidArg", client, 2) end
         local target = lia.command.findPlayer(client, arguments[1])
@@ -174,7 +174,7 @@ lia.command.add("charsetmodel", {
 
 lia.command.add("charsetbodygroup", {
     adminOnly = true,
-    privilege = "Change Bodygroups",
+    privilege = "Manage Bodygroups",
     syntax = "<string name> <string bodyGroup> [number value]",
     onRun = function(client, arguments)
         local value = tonumber(arguments[3])
@@ -198,7 +198,7 @@ lia.command.add("charsetbodygroup", {
 lia.command.add("charsetskin", {
     adminOnly = true,
     syntax = "<string name> [number skin]",
-    privilege = "Change Skin",
+    privilege = "Manage Character Informations",
     onRun = function(client, arguments)
         local skin = tonumber(arguments[2])
         local target = lia.command.findPlayer(client, arguments[1])
@@ -481,7 +481,7 @@ lia.command.add("checkmoney", {
 })
 
 lia.command.add("status", {
-    privilege = "Default User Commands",
+    
     onRun = function(client)
         if not client.metaAntiSpam or client.metaAntiSpam < CurTime() and SERVER then
             local character = client:getChar()
@@ -496,7 +496,7 @@ lia.command.add("status", {
 
 lia.command.add("redownloadlightmaps", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function(client)
         net.Start("ReloadLightMaps")
         net.Send(client)
@@ -656,7 +656,7 @@ lia.command.add("announce", {
 })
 
 lia.command.add("listents", {
-    privilege = "Default User Commands",
+    
     syntax = "<No Input>",
     onRun = function(client)
         local cent = {}
@@ -681,7 +681,7 @@ lia.command.add("listents", {
 
 lia.command.add("flip", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function(client)
         local roll = math.random(0, 1)
         if roll == 1 then
@@ -734,7 +734,7 @@ lia.command.add("listusers", {
 
 lia.command.add("rolld", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     syntax = "<number dice> <number pips> <number bonus>",
     onRun = function(client, arguments)
         local dice = math.Clamp(tonumber(arguments[1]) or 1, 1, 100)
@@ -763,25 +763,25 @@ lia.command.add("rolld", {
 
 lia.command.add("vieweventlog", {
     adminOnly = false,
-    privilege = "Default User Commands",
-    onRun = function(client) GM:OpenEventLog(client, false) end
+    
+    onRun = function(client) GAMEMODE:OpenEventLog(client, false) end
 })
 
 lia.command.add("editeventlog", {
     adminOnly = true,
     privilege = "Can Edit Event Log",
-    onRun = function(client) GM:OpenEventLog(client, true) end
+    onRun = function(client) GAMEMODE:OpenEventLog(client, true) end
 })
 
 lia.command.add("roll", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function(client) lia.chat.send(client, "roll", math.random(0, 100)) end
 })
 
 lia.command.add("chardesc", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     syntax = "<string desc>",
     onRun = function(client, arguments)
         arguments = table.concat(arguments, " ")
@@ -796,7 +796,7 @@ lia.command.add("chardesc", {
 
 lia.command.add("chargetup", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function(client)
         local entity = client.liaRagdoll
         if IsValid(entity) and entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
@@ -811,7 +811,7 @@ lia.command.add("chargetup", {
 
 lia.command.add("givemoney", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     syntax = "<number amount>",
     onRun = function(client, arguments)
         local number = tonumber(arguments[1])
@@ -840,7 +840,7 @@ lia.command.add("givemoney", {
 
 lia.command.add("bringlostitems", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function(client)
         for _, v in pairs(ents.FindInSphere(client:GetPos(), 500)) do
             if v:GetClass() == "lia_item" then v:SetPos(client:GetPos()) end
@@ -850,7 +850,7 @@ lia.command.add("bringlostitems", {
 
 lia.command.add("carddraw", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function(client)
         local cards = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Ace", "Queen", "King", "Jack"}
         local family = {"Spades", "Hearts", "Diamonds", "Clubs"}
@@ -861,7 +861,7 @@ lia.command.add("carddraw", {
 
 lia.command.add("fallover", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     syntax = "[number time]",
     onRun = function(client, arguments)
         if client:GetNWBool("FallOverCooldown", false) then
@@ -899,13 +899,13 @@ lia.command.add("fallover", {
 
 lia.command.add("getpos", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function(client) client:ChatPrint("MY POSITION: " .. tostring(client:GetPos())) end
 })
 
 lia.command.add("entname", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function(client)
         local tr = util.TraceLine(util.GetPlayerTrace(client))
         if IsValid(tr.Entity) then client:ChatPrint("I saw a " .. tr.Entity:GetName()) end
@@ -1039,7 +1039,7 @@ lia.command.add("flagblacklists", {
 })
 
 lia.command.add("dropmoney", {
-    privilege = "Default User Commands",
+    
     syntax = "<number amount>",
     onRun = function(client, arguments)
         if client:GetNWBool("DropMoneyCooldown", false) then
@@ -1064,7 +1064,7 @@ lia.command.add("dropmoney", {
 
 lia.command.add("membercount", {
     adminOnly = false,
-    privilege = "Default User Commands",
+    
     onRun = function(client)
         local staffCount = 0
         local onDutyStaffCount = 0
