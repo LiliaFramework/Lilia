@@ -1,5 +1,5 @@
-﻿
-function GAMEMODE:OnCharVarChanged(character, varName, oldVar, newVar)
+﻿local GM = GM or GAMEMODE
+function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
         for _, v in pairs(lia.char.varHooks[varName]) do
             v(character, oldVar, newVar)
@@ -7,7 +7,7 @@ function GAMEMODE:OnCharVarChanged(character, varName, oldVar, newVar)
     end
 end
 
-function GAMEMODE:InitializedModules()
+function GM:InitializedModules()
     for model, animtype in pairs(lia.anim.DefaultTposingFixer) do
         lia.anim.setModelClass(model, animtype)
     end
@@ -18,7 +18,7 @@ function GAMEMODE:InitializedModules()
     end
 end
 
-function GAMEMODE:Move(client, moveData)
+function GM:Move(client, moveData)
     local character = client:getChar()
     if not character then return end
     if client:GetMoveType() == MOVETYPE_WALK and moveData:KeyDown(IN_WALK) then
@@ -42,7 +42,7 @@ function GAMEMODE:Move(client, moveData)
     end
 end
 
-function GAMEMODE:LiliaLoaded()
+function GM:LiliaLoaded()
     local namecache = {}
     for _, MODULE in pairs(lia.module.list) do
         local authorID = (tonumber(MODULE.author) and tostring(MODULE.author)) or (string.match(MODULE.author, "STEAM_") and util.SteamIDTo64(MODULE.author)) or "Unknown"
@@ -61,7 +61,7 @@ function GAMEMODE:LiliaLoaded()
     lia.module.namecache = namecache
 end
 
-function GAMEMODE:InitPostEntity()
+function GM:InitPostEntity()
     if SERVER then
         lia.faction.formatModelData()
         timer.Simple(2, function() lia.entityDataLoaded = true end)
@@ -75,26 +75,26 @@ function GAMEMODE:InitPostEntity()
     end
 end
 
-function GAMEMODE:CanDrive(client)
+function GM:CanDrive(client)
     if not client:IsSuperAdmin() then return false end
 end
 
-function GAMEMODE:PlayerSpray(_)
+function GM:PlayerSpray(_)
     return true
 end
 
-function GAMEMODE:PlayerDeathSound()
+function GM:PlayerDeathSound()
     return true
 end
 
-function GAMEMODE:CanPlayerSuicide(_)
+function GM:CanPlayerSuicide(_)
     return false
 end
 
-function GAMEMODE:AllowPlayerPickup(_, _)
+function GM:AllowPlayerPickup(_, _)
     return false
 end
 
-function GAMEMODE:PlayerShouldTakeDamage(client, _)
+function GM:PlayerShouldTakeDamage(client, _)
     return client:getChar() ~= nil
 end

@@ -1,17 +1,17 @@
-﻿
-function GAMEMODE:PreCleanupMap()
+﻿local GM = GM or GAMEMODE
+function GM:PreCleanupMap()
     lia.shuttingDown = true
     hook.Run("SaveData")
     hook.Run("PersistenceSave")
 end
 
-function GAMEMODE:PostCleanupMap()
+function GM:PostCleanupMap()
     lia.shuttingDown = false
     hook.Run("LoadData")
     hook.Run("PostLoadData")
 end
 
-function GAMEMODE:ShutDown()
+function GM:ShutDown()
     if hook.Run("ShouldDataBeSaved") == false then return end
     lia.shuttingDown = true
     hook.Run("SaveData")

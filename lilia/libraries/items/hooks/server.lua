@@ -1,5 +1,5 @@
-﻿
-function GAMEMODE:CanItemBeTransfered(item, curInv, inventory)
+﻿local GM = GM or GAMEMODE
+function GM:CanItemBeTransfered(item, curInv, inventory)
     if item.isBag and curInv ~= inventory and item.getInv and item:getInv() and table.Count(item:getInv():getItems()) > 0 then
         local character = lia.char.loaded[curInv.client]
         if SERVER and character and character:getPlayer() then
@@ -16,7 +16,7 @@ function GAMEMODE:CanItemBeTransfered(item, curInv, inventory)
     end
 end
 
-function GAMEMODE:CanPlayerInteractItem(client, action, item)
+function GM:CanPlayerInteractItem(client, action, item)
     local SteamIDWhitelist = item.ItemInteractSteamIDWhitelist
     local FactionWhitelist = item.ItemInteractFactionWhitelist
     local UserGroupWhitelist = item.ItemInteractUsergroupWhitelist
@@ -84,7 +84,7 @@ function GAMEMODE:CanPlayerInteractItem(client, action, item)
     end
 end
 
-function GAMEMODE:CanPlayerEquipItem(client, item)
+function GM:CanPlayerEquipItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.equipDelay ~= nil then
         client:notify("You need to wait before equipping something again!")
@@ -95,7 +95,7 @@ function GAMEMODE:CanPlayerEquipItem(client, item)
     end
 end
 
-function GAMEMODE:CanPlayerTakeItem(client, item)
+function GM:CanPlayerTakeItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.takeDelay ~= nil then
         client:notify("You need to wait before picking something up again!")
@@ -112,7 +112,7 @@ function GAMEMODE:CanPlayerTakeItem(client, item)
     end
 end
 
-function GAMEMODE:CanPlayerDropItem(client, item)
+function GM:CanPlayerDropItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.dropDelay ~= nil then
         client:notify("You need to wait before dropping something again!")

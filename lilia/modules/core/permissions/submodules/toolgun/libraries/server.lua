@@ -1,5 +1,5 @@
-﻿
-function GAMEMODE:CanTool(client, _, tool)
+﻿local GM = GM or GAMEMODE
+function GM:CanTool(client, _, tool)
     local privilege = "Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
     local entity = client:GetTracedEntity()
     local validEntity = IsValid(entity)

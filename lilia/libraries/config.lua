@@ -1,4 +1,4 @@
-﻿
+﻿local GM = GM or GAMEMODE
 lia.config = lia.config or {}
 if not ConfigWasInitialized then
     lia.config = {
@@ -41,6 +41,6 @@ if not ConfigWasInitialized then
     ConfigWasInitialized = true
 end
 
-function GAMEMODE:InitializedConfig()
+function GM:InitializedConfig()
     hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
 end

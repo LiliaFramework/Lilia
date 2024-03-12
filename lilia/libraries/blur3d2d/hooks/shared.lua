@@ -1,5 +1,5 @@
-﻿
-function GAMEMODE:PostDrawTranslucentRenderables()
+﻿local GM = GM or GAMEMODE
+function GM:PostDrawTranslucentRenderables()
     render.ClearStencil()
     render.SetStencilEnable(true)
     render.SetStencilWriteMask(99)

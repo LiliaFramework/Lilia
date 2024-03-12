@@ -1,13 +1,13 @@
-﻿
-function GAMEMODE:DrawLiliaModelView(_, entity)
+﻿local GM = GM or GAMEMODE
+function GM:DrawLiliaModelView(_, entity)
     if IsValid(entity.weapon) then entity.weapon:DrawModel() end
 end
 
-function GAMEMODE:OnChatReceived()
+function GM:OnChatReceived()
     if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
 end
 
-function GAMEMODE:PlayerBindPress(client, bind, pressed)
+function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
     if bind:find("jump") then
         lia.command.send("chargetup")
@@ -27,7 +27,7 @@ function GAMEMODE:PlayerBindPress(client, bind, pressed)
     end
 end
 
-function GAMEMODE:CalcView(client, origin, angles, fov)
+function GM:CalcView(client, origin, angles, fov)
     local view = self.BaseClass:CalcView(client, origin, angles, fov)
     local entity = Entity(client:getLocalVar("ragdoll", 0))
     local ragdoll = client:GetRagdollEntity()
@@ -47,13 +47,13 @@ function GAMEMODE:CalcView(client, origin, angles, fov)
     end
 end
 
-function GAMEMODE:HUDPaintBackground()
+function GM:HUDPaintBackground()
     lia.bar.drawAll()
     lia.menu.drawAll()
     self.BaseClass.PaintWorldTips(self.BaseClass)
 end
 
-function GAMEMODE:CharacterListLoaded()
+function GM:CharacterListLoaded()
     timer.Create("liaWaitUntilPlayerValid", 1, 0, function()
         if not IsValid(LocalPlayer()) then return end
         timer.Remove("liaWaitUntilPlayerValid")
@@ -61,30 +61,30 @@ function GAMEMODE:CharacterListLoaded()
     end)
 end
 
-function GAMEMODE:OnContextMenuOpen()
+function GM:OnContextMenuOpen()
     self.BaseClass:OnContextMenuOpen()
     lia.bar.drawAction()
     vgui.Create("liaQuick")
 end
 
-function GAMEMODE:OnContextMenuClose()
+function GM:OnContextMenuClose()
     self.BaseClass:OnContextMenuClose()
     lia.bar.drawAction()
     if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
 end
 
-function GAMEMODE:HUDDrawTargetID()
+function GM:HUDDrawTargetID()
     return false
 end
 
-function GAMEMODE:HUDDrawPickupHistory()
+function GM:HUDDrawPickupHistory()
     return false
 end
 
-function GAMEMODE:HUDAmmoPickedUp()
+function GM:HUDAmmoPickedUp()
     return false
 end
 
-function GAMEMODE:DrawDeathNotice()
+function GM:DrawDeathNotice()
     return false
 end

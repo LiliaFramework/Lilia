@@ -3,12 +3,12 @@ GM.Name = "Lilia"
 GM.Author = "Leonheart"
 GM.Website = "https://discord.gg/jjrhyeuzYV"
 ModulesLoaded = false
-function GAMEMODE:Initialize()
+function GM:Initialize()
     hook.Run("LoadLiliaFonts", "Arial", "Segoe UI")
     lia.module.initialize()
 end
 
-function GAMEMODE:OnReloaded()
+function GM:OnReloaded()
     if not ModulesLoaded then
         lia.module.initialize()
         ModulesLoaded = true
