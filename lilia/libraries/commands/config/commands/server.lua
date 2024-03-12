@@ -118,9 +118,6 @@ lia.command.add("charsetdesc", {
         if not target:getChar() then return "No character loaded" end
         local arg = table.concat(arguments, " ", 2)
         if not arg:find("%S") then return client:requestString("Change " .. target:Nick() .. "'s Description", "Enter new description", function(text) lia.command.run(client, "charsetdesc", {arguments[1], text}) end, target:getChar():getDesc()) end
-        local info = lia.char.vars.desc
-        local result, fault, count = info.onValidate(arg)
-        if result == false then return "@" .. fault, count end
         target:getChar():setDesc(arg)
         return "Successfully changed " .. target:Nick() .. "'s description"
     end
@@ -777,9 +774,6 @@ lia.command.add("chardesc", {
     onRun = function(client, arguments)
         arguments = table.concat(arguments, " ")
         if not arguments:find("%S") then return client:requestString("Change Description", "Change Your Description", function(text) lia.command.run(client, "chardesc", {text}) end, client:getChar():getDesc()) end
-        local info = lia.char.vars.desc
-        local result, fault, count = info.onValidate(arguments)
-        if result == false then return "@" .. fault, count end
         client:getChar():setDesc(arguments)
         return "@descChanged"
     end

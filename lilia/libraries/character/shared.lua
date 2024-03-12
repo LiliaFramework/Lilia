@@ -157,11 +157,7 @@ lia.char.registerVar("desc", {
     end,
     onAdjust = function(client, data, _, newData)
         local desc, override = hook.Run("GetDefaultCharDesc", client, data.faction)
-        if isstring(desc) and override then
-            newData.desc = desc
-        else
-            newData.name = ""
-        end
+        if isstring(desc) and override then newData.desc = desc end
     end,
 })
 
