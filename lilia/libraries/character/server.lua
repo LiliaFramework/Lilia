@@ -32,21 +32,6 @@
     end)
 end
 
-function lia.setCharData(charID, key, val)
-    local charIDsafe = tonumber(charID)
-    if not charIDsafe then return end
-    local data = lia.getCharData(charID)
-    if not data then return false end
-    data[key] = val
-    local setQ = "UPDATE lia_characters SET _data=" .. sql.SQLStr(util.TableToJSON(data)) .. " WHERE _id=" .. charIDsafe
-    if sql.Query(setQ) == false then
-        print("lia.setCharData SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
-        return false
-    end
-
-    if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setData(key, val) end
-    return true
-end
 
 function lia.char.restore(client, callback, _, id)
     local steamID64 = client:SteamID64()
@@ -171,4 +156,20 @@ function lia.char.delete(id, client)
     end)
 
     hook.Run("OnCharacterDelete", client, id)
+end
+
+function lia.char.setCharData(charID, key, val)
+    local charIDsafe = tonumber(charID)
+    if not charIDsafe then return end
+    local data = lia.char.getCharData(charID)
+    if not data then return false end
+    data[key] = val
+    local setQ = "UPDATE lia_characters SET _data=" .. sql.SQLStr(util.TableToJSON(data)) .. " WHERE _id=" .. charIDsafe
+    if sql.Query(setQ) == false then
+        print("lia.setCharData SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
+        return false
+    end
+
+    if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setData(key, val) end
+    return true
 end
