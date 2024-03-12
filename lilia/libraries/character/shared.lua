@@ -34,16 +34,6 @@ else
     if #lia.char.names < 1 then netstream.Start("liaCharFetchNames") end
 end
 
-function lia.getCharData(charID, key)
-    local charIDsafe = tonumber(charID)
-    if not charIDsafe then return end
-    local findData = sql.Query("SELECT * FROM lia_characters WHERE _id=" .. charIDsafe)
-    if not findData or not findData[1] then return false end
-    local data = util.JSONToTable(findData[1]._data) or {}
-    if key then return data[key] end
-    return data
-end
-
 function lia.char.new(data, id, client, steamID)
     local character = setmetatable({
         vars = {}
@@ -360,4 +350,14 @@ do
 
     playerMeta.Nick = playerMeta.Name
     playerMeta.GetName = playerMeta.Name
+end
+
+function lia.char.getCharData(charID, key)
+    local charIDsafe = tonumber(charID)
+    if not charIDsafe then return end
+    local findData = sql.Query("SELECT * FROM lia_characters WHERE _id=" .. charIDsafe)
+    if not findData or not findData[1] then return false end
+    local data = util.JSONToTable(findData[1]._data) or {}
+    if key then return data[key] end
+    return data
 end
