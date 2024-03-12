@@ -1,5 +1,5 @@
-﻿local GM = GM or GAMEMODE
-function GM:LoadLiliaFonts(font, genericFont)
+﻿
+function GAMEMODE:LoadLiliaFonts(font, genericFont)
     local oldFont, oldGenericFont = font, genericFont
     local scale = math.Round(1, 2)
     surface.CreateFont("DarkSkinSmall", {

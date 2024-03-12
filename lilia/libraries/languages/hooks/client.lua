@@ -1,6 +1,6 @@
 ﻿LIA_CVAR_LANG = CreateClientConVar("lia_language", "english", true, true)
-local GM = GM or GAMEMODE
-function GM:SetupQuickMenu(menu)
+
+function GAMEMODE:SetupQuickMenu(menu)
     local current
     for k, _ in SortedPairs(lia.lang.stored) do
         local name = lia.lang.names[k]

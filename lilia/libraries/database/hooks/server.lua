@@ -1,6 +1,6 @@
-﻿local GM = GM or GAMEMODE
+﻿
 local resetCalled = 0
-function GM:RegisterPreparedStatements()
+function GAMEMODE:RegisterPreparedStatements()
     MsgC(Color(0, 255, 0), "[Lilia] ADDED 5 PREPARED STATEMENTS\n")
     lia.db.prepare("itemData", "UPDATE lia_items SET _data = ? WHERE _itemID = ?", {MYSQLOO_STRING, MYSQLOO_INTEGER})
     lia.db.prepare("itemx", "UPDATE lia_items SET _x = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
@@ -9,7 +9,7 @@ function GM:RegisterPreparedStatements()
     lia.db.prepare("itemInstance", "INSERT INTO lia_items (_invID, _uniqueID, _data, _x, _y, _quantity) VALUES (?, ?, ?, ?, ?, ?)", {MYSQLOO_INTEGER, MYSQLOO_STRING, MYSQLOO_STRING, MYSQLOO_INTEGER, MYSQLOO_INTEGER, MYSQLOO_INTEGER,})
 end
 
-function GM:SetupDatabase()
+function GAMEMODE:SetupDatabase()
     local databasePath = engine.ActiveGamemode() .. "/database.json"
     local databaseOverrideExists = file.Exists(databasePath, "DATA")
     if databaseOverrideExists then
@@ -30,12 +30,12 @@ function GM:SetupDatabase()
     end
 end
 
-function GM:OnMySQLOOConnected()
+function GAMEMODE:OnMySQLOOConnected()
     hook.Run("RegisterPreparedStatements")
     MYSQLOO_PREPARED = true
 end
 
-function GM:LiliaTablesLoaded()
+function GAMEMODE:LiliaTablesLoaded()
     local ignore = function() end
     lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
     lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)

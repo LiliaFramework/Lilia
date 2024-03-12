@@ -1,5 +1,5 @@
-﻿local GM = GM or GAMEMODE
-function GM:PhysgunPickup(client, entity)
+﻿
+function GAMEMODE:PhysgunPickup(client, entity)
     if entity:GetCreator() == client and (entity:GetClass() == "prop_physics" or entity:GetClass() == "lia_item") then return true end
     if client:IsSuperAdmin() then return true end
     if CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup", nil) or client:isStaffOnDuty() then
@@ -17,20 +17,20 @@ function GM:PhysgunPickup(client, entity)
     return false
 end
 
-function GM:OnPhysgunPickup(_, entity)
+function GAMEMODE:OnPhysgunPickup(_, entity)
     if (entity:GetClass() == "prop_physics" or entity:GetClass() == "lia_item") and entity:GetCollisionGroup() == COLLISION_GROUP_NONE then entity:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR) end
 end
 
-function GM:OnPhysgunReload(_, client)
+function GAMEMODE:OnPhysgunReload(_, client)
     if not CAMI.PlayerHasAccess(client, "Staff Permissions - Can Physgun Reload", nil) then return false end
 end
 
-function GM:PhysgunDrop(_, entity)
+function GAMEMODE:PhysgunDrop(_, entity)
     if entity:GetClass() ~= "prop_physics" or entity:GetClass() ~= "lia_item" then return end
     timer.Simple(5, function() if IsValid(entity) and entity:GetCollisionGroup() == COLLISION_GROUP_PASSABLE_DOOR then entity:SetCollisionGroup(COLLISION_GROUP_NONE) end end)
 end
 
-function GM:OnPhysgunFreeze(_, physObj, entity, client)
+function GAMEMODE:OnPhysgunFreeze(_, physObj, entity, client)
     if not physObj:IsMoveable() then return false end
     if entity:GetUnFreezable() then return false end
     physObj:EnableMotion(false)

@@ -1,4 +1,4 @@
-﻿local GM = GM or GAMEMODE
+﻿
 local getModelClass = lia.anim.getModelClass
 local IsValid = IsValid
 local string = string
@@ -8,7 +8,7 @@ local normalizeAngle = math.NormalizeAngle
 local oldCalcSeqOverride
 local PLAYER_HOLDTYPE_TRANSLATOR = lia.anim.PlayerHoldTypeTranslator
 local HOLDTYPE_TRANSLATOR = lia.anim.HoldTypeTranslator
-function GM:TranslateActivity(client, act)
+function GAMEMODE:TranslateActivity(client, act)
     local model = string.lower(client.GetModel(client))
     local class = getModelClass(model) or "player"
     local weapon = client.GetActiveWeapon(client)
@@ -78,7 +78,7 @@ function GM:TranslateActivity(client, act)
     end
 end
 
-function GM:DoAnimationEvent(client, event, data)
+function GAMEMODE:DoAnimationEvent(client, event, data)
     local class = lia.anim.getModelClass(client:GetModel())
     if class == "player" then
         return self.BaseClass:DoAnimationEvent(client, event, data)
@@ -112,7 +112,7 @@ function GM:DoAnimationEvent(client, event, data)
     return ACT_INVALID
 end
 
-function GM:HandlePlayerLanding(client, velocity, wasOnGround)
+function GAMEMODE:HandlePlayerLanding(client, velocity, wasOnGround)
     if client:GetMoveType() == MOVETYPE_NOCLIP then return end
     if client:IsOnGround() and not wasOnGround then
         local length = (client.lastVelocity or velocity):LengthSqr()
@@ -123,7 +123,7 @@ function GM:HandlePlayerLanding(client, velocity, wasOnGround)
     end
 end
 
-function GM:CalcMainActivity(client, velocity)
+function GAMEMODE:CalcMainActivity(client, velocity)
     client.CalcIdeal = ACT_MP_STAND_IDLE
     oldCalcSeqOverride = client.CalcSeqOverride
     client.CalcSeqOverride = -1

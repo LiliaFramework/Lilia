@@ -1,5 +1,5 @@
-﻿local GM = GM or GAMEMODE
-function GM:CanProperty(client, property, entity)
+﻿
+function GAMEMODE:CanProperty(client, property, entity)
     if (property == "persist") or (property == "drive") or (property == "bonemanipulate") then
         client:notify("This is disabled to avoid issues with Lilia's Core Features")
         return false

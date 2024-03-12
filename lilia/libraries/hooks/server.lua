@@ -1,18 +1,18 @@
-﻿local GM = GM or GAMEMODE
+﻿
 local defaultAngleData = {
     ["models/items/car_battery01.mdl"] = Angle(-15, 180, 0),
     ["models/props_junk/harpoon002a.mdl"] = Angle(0, 0, 0),
     ["models/props_junk/propane_tank001a.mdl"] = Angle(-90, 0, 0),
 }
 
-function GM:PrePlayerLoadedChar(client, _, _)
+function GAMEMODE:PrePlayerLoadedChar(client, _, _)
     client:SetBodyGroups("000000000")
     client:SetSkin(0)
     client:ExitVehicle()
     client:Freeze(false)
 end
 
-function GM:CreateDefaultInventory(character)
+function GAMEMODE:CreateDefaultInventory(character)
     local charID = character:getID()
     if lia.inventory.types["grid"] then
         return lia.inventory.instance("grid", {
@@ -21,7 +21,7 @@ function GM:CreateDefaultInventory(character)
     end
 end
 
-function GM:CharacterPreSave(character)
+function GAMEMODE:CharacterPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
     for _, v in pairs(character:getInv():getItems()) do
@@ -29,7 +29,7 @@ function GM:CharacterPreSave(character)
     end
 end
 
-function GM:PlayerLoadedChar(client, character, lastChar)
+function GAMEMODE:PlayerLoadedChar(client, character, lastChar)
     local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
     lia.db.updateTable({
         _lastJoinTime = timeStamp
@@ -54,7 +54,7 @@ function GM:PlayerLoadedChar(client, character, lastChar)
     hook.Run("PlayerLoadout", client)
 end
 
-function GM:CharacterLoaded(id)
+function GAMEMODE:CharacterLoaded(id)
     local character = lia.char.loaded[id]
     if character then
         local client = character:getPlayer()
@@ -71,7 +71,7 @@ function GM:CharacterLoaded(id)
     end
 end
 
-function GM:OnCharFallover(client, entity, bFallenOver)
+function GAMEMODE:OnCharFallover(client, entity, bFallenOver)
     bFallenOver = bFallenOver or false
     if IsValid(entity) then
         entity:SetCollisionGroup(COLLISION_GROUP_NONE)
@@ -81,7 +81,7 @@ function GM:OnCharFallover(client, entity, bFallenOver)
     client:setNetVar("fallingover", bFallenOver)
 end
 
-function GM:OnPlayerInteractItem(client, action, item)
+function GAMEMODE:OnPlayerInteractItem(client, action, item)
     if isentity(item) then
         if IsValid(item) then
             local itemID = item.liaItemID
@@ -97,7 +97,7 @@ function GM:OnPlayerInteractItem(client, action, item)
     lia.log.add(client, "itemUse", action, item)
 end
 
-function GM:PlayerSay(client, message)
+function GAMEMODE:PlayerSay(client, message)
     local chatType, message, anonymous = lia.chat.parse(client, message, true)
     if (chatType == "ic") and lia.command.parse(client, message) then return "" end
     if utf8.len(message) <= lia.config.MaxChatLength then
@@ -110,7 +110,7 @@ function GM:PlayerSay(client, message)
     return ""
 end
 
-function GM:GetGameDescription()
+function GAMEMODE:GetGameDescription()
     if lia.config.GamemodeName ~= "A Lilia Gamemode" then
         return lia.config.GamemodeName
     else
@@ -119,11 +119,11 @@ function GM:GetGameDescription()
     return lia.config.GamemodeName
 end
 
-function GM:OnChatReceived()
+function GAMEMODE:OnChatReceived()
     if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
 end
 
-function GM:PlayerSpawn(client)
+function GAMEMODE:PlayerSpawn(client)
     client:SetNoDraw(false)
     client:UnLock()
     client:SetNotSolid(false)
@@ -131,7 +131,7 @@ function GM:PlayerSpawn(client)
     hook.Run("PlayerLoadout", client)
 end
 
-function GM:EntityTakeDamage(entity, dmgInfo)
+function GAMEMODE:EntityTakeDamage(entity, dmgInfo)
     if IsValid(entity.liaPlayer) then
         if dmgInfo:IsDamageType(DMG_CRUSH) then
             if (entity.liaFallGrace or 0) < CurTime() then
@@ -146,11 +146,11 @@ function GM:EntityTakeDamage(entity, dmgInfo)
     end
 end
 
-function GM:PlayerDeathThink()
+function GAMEMODE:PlayerDeathThink()
     return true
 end
 
-function GM:KeyPress(client, key)
+function GAMEMODE:KeyPress(client, key)
     if key == IN_ATTACK2 and IsValid(client.Grabbed) then
         client:DropObject(client.Grabbed)
         client.Grabbed = NULL
@@ -186,23 +186,23 @@ function GM:KeyPress(client, key)
     end
 end
 
-function GM:KeyRelease(client, key)
+function GAMEMODE:KeyRelease(client, key)
     if key == IN_ATTACK2 then
         local wep = client:GetActiveWeapon()
         if IsValid(wep) and wep.IsHands and wep.ReadyToPickup then wep:Grab() end
     end
 end
 
-function GM:EntityNetworkedVarChanged(entity, varName, _, newVal)
+function GAMEMODE:EntityNetworkedVarChanged(entity, varName, _, newVal)
     if varName == "Model" and entity.SetModel then hook.Run("PlayerModelChanged", entity, newVal) end
 end
 
-function GM:PlayerUse(client, _)
+function GAMEMODE:PlayerUse(client, _)
     if client:getNetVar("handcuffed") then return false end
     return true
 end
 
-function GM:PlayerInitialSpawn(client)
+function GAMEMODE:PlayerInitialSpawn(client)
     client:SuppressHint("Annoy1")
     client:SuppressHint("Annoy2")
     client:SuppressHint("OpeningMenu")
@@ -254,7 +254,7 @@ function GM:PlayerInitialSpawn(client)
     hook.Run("PostPlayerInitialSpawn", client)
 end
 
-function GM:OpenEventLog(client, edit)
+function GAMEMODE:OpenEventLog(client, edit)
     local path = "lilia/" .. SCHEMA.folder .. "/eventlog.txt"
     local eventLog = {
         name = "Event Log",
@@ -267,7 +267,7 @@ function GM:OpenEventLog(client, edit)
     netstream.Start(client, "lia_eventLogOpen", eventLog, edit)
 end
 
-function GM:PlayerLoadout(client)
+function GAMEMODE:PlayerLoadout(client)
     local character = client:getChar()
     if client.liaSkipLoadout then
         client.liaSkipLoadout = nil
@@ -295,7 +295,7 @@ function GM:PlayerLoadout(client)
     client:SelectWeapon("lia_hands")
 end
 
-function GM:PostPlayerLoadout(client)
+function GAMEMODE:PostPlayerLoadout(client)
     local character = client:getChar()
     if not (IsValid(client) or character) then return end
     client:Give("lia_hands")
@@ -304,7 +304,7 @@ function GM:PostPlayerLoadout(client)
     hook.Run("ClassPostLoadout", client)
 end
 
-function GM:PlayerDisconnected(client)
+function GAMEMODE:PlayerDisconnected(client)
     client:saveLiliaData()
     local character = client:getChar()
     if character then
@@ -330,15 +330,15 @@ function GM:PlayerDisconnected(client)
     end
 end
 
-function GM:PlayerAuthed(client, steamID)
+function GAMEMODE:PlayerAuthed(client, steamID)
     lia.log.add(client, "playerConnected", client, steamID)
 end
 
-function GM:PlayerHurt(client, attacker, health, damage)
+function GAMEMODE:PlayerHurt(client, attacker, health, damage)
     lia.log.add(client, "playerHurt", attacker:IsPlayer() and attacker:Name() or attacker:GetClass(), damage, health)
 end
 
-function GM:GetPreferredCarryAngles(entity)
+function GAMEMODE:GetPreferredCarryAngles(entity)
     if entity.preferedAngle then return entity.preferedAngle end
     local class = entity:GetClass()
     if class == "lia_item" then
@@ -353,7 +353,7 @@ function GM:GetPreferredCarryAngles(entity)
     end
 end
 
-function GM:PlayerDeath(client, _, _)
+function GAMEMODE:PlayerDeath(client, _, _)
     local character = client:getChar()
     if not character then return end
     if IsValid(client.liaRagdoll) then
@@ -363,7 +363,7 @@ function GM:PlayerDeath(client, _, _)
     end
 end
 
-function GM:InitializedSchema()
+function GAMEMODE:InitializedSchema()
     local persistString = GetConVar("sbox_persist"):GetString()
     if persistString == "" or string.StartWith(persistString, "lia_") then
         local newValue = "lia_" .. SCHEMA.folder
@@ -371,18 +371,18 @@ function GM:InitializedSchema()
     end
 end
 
-function GM:OnServerLog(client, logType, ...)
+function GAMEMODE:OnServerLog(client, logType, ...)
     for _, v in pairs(lia.util.getAdmins()) do
         if hook.Run("CanPlayerSeeLog", v, logType) ~= false then lia.log.send(v, lia.log.getString(client, logType, ...)) end
     end
 end
 
-function GM:onCharCreated(client, char)
+function GAMEMODE:onCharCreated(client, char)
     local permFlags = client:getPermFlags()
     if permFlags and #permFlags > 0 then char:giveFlags(permFlags) end
 end
 
-function GM:Move(client, moveData)
+function GAMEMODE:Move(client, moveData)
     local character = client:getChar()
     if not character then return end
     if client:GetMoveType() == MOVETYPE_WALK and moveData:KeyDown(IN_WALK) then
@@ -406,7 +406,7 @@ function GM:Move(client, moveData)
     end
 end
 
-function GM:CanPlayerEnterVehicle(client, entity)
+function GAMEMODE:CanPlayerEnterVehicle(client, entity)
     local VehicleEnteringTime = lia.config.TimeToEnterVehicle
     if entity.IsLocked then
         client:notify("This car is locked!")
@@ -438,27 +438,27 @@ function GM:CanPlayerEnterVehicle(client, entity)
     end
 end
 
-function GM:CanDrive(client)
+function GAMEMODE:CanDrive(client)
     if not client:IsSuperAdmin() then return false end
 end
 
-function GM:PlayerSpray(_)
+function GAMEMODE:PlayerSpray(_)
     return true
 end
 
-function GM:PlayerDeathSound()
+function GAMEMODE:PlayerDeathSound()
     return true
 end
 
-function GM:CanPlayerSuicide(_)
+function GAMEMODE:CanPlayerSuicide(_)
     return false
 end
 
-function GM:AllowPlayerPickup(_, _)
+function GAMEMODE:AllowPlayerPickup(_, _)
     return false
 end
 
-function GM:PlayerShouldTakeDamage(client, _)
+function GAMEMODE:PlayerShouldTakeDamage(client, _)
     return client:getChar() ~= nil
 end
 
