@@ -1,5 +1,4 @@
-﻿
-lia.command.add("charsetspeed", {
+﻿lia.command.add("charsetspeed", {
     adminOnly = true,
     privilege = "Set Character Speed",
     syntax = "<string name> <number speed>",
@@ -113,28 +112,28 @@ lia.command.add("clearinv", {
 lia.command.add("flaggive", {
     adminOnly = true,
     syntax = "<string name> [string flags]",
-    privilege = "Toggle Flags",
+    privilege = "Manage Flags",
     onRun = function() end
 })
 
 lia.command.add("flaggiveall", {
     adminOnly = true,
     syntax = "<string name> [string flags]",
-    privilege = "Toggle All Flags",
+    privilege = "Manage All Flags",
     onRun = function() end
 })
 
 lia.command.add("flagtakeall", {
     adminOnly = true,
     syntax = "<string name> [string flags]",
-    privilege = "Toggle All Flags",
+    privilege = "Manage All Flags",
     onRun = function() end
 })
 
 lia.command.add("flagtake", {
     adminOnly = true,
     syntax = "<string name> [string flags]",
-    privilege = "Toggle Flags",
+    privilege = "Manage Flags",
     onRun = function() end
 })
 
@@ -192,13 +191,11 @@ lia.command.add("checkmoney", {
 })
 
 lia.command.add("status", {
-    
     onRun = function() end
 })
 
 lia.command.add("redownloadlightmaps", {
     adminOnly = false,
-    
     onRun = function() end
 })
 
@@ -267,14 +264,12 @@ lia.command.add("announce", {
 })
 
 lia.command.add("listents", {
-    
     syntax = "<No Input>",
     onRun = function() end
 })
 
 lia.command.add("flip", {
     adminOnly = false,
-    
     onRun = function() end
 })
 
@@ -304,14 +299,12 @@ lia.command.add("listusers", {
 
 lia.command.add("rolld", {
     adminOnly = false,
-    
     syntax = "<number dice> <number pips> <number bonus>",
     onRun = function() end
 })
 
 lia.command.add("vieweventlog", {
     adminOnly = false,
-    
     onRun = function() end
 })
 
@@ -323,58 +316,49 @@ lia.command.add("editeventlog", {
 
 lia.command.add("roll", {
     adminOnly = false,
-    
     onRun = function() end
 })
 
 lia.command.add("chardesc", {
     adminOnly = false,
-    
     syntax = "<string desc>",
     onRun = function() end
 })
 
 lia.command.add("chargetup", {
     adminOnly = false,
-    
     onRun = function() end
 })
 
 lia.command.add("givemoney", {
     adminOnly = false,
-    
     syntax = "<number amount>",
     onRun = function() end
 })
 
 lia.command.add("bringlostitems", {
     adminOnly = false,
-    
     onRun = function() end
 })
 
 lia.command.add("carddraw", {
     adminOnly = false,
-    
     onRun = function() end
 })
 
 lia.command.add("fallover", {
     adminOnly = false,
-    
     syntax = "[number time]",
     onRun = function() end
 })
 
 lia.command.add("getpos", {
     adminOnly = false,
-    
     onRun = function() end
 })
 
 lia.command.add("entname", {
     adminOnly = false,
-    
     onRun = function() end
 })
 
@@ -421,13 +405,11 @@ lia.command.add("flagblacklists", {
 })
 
 lia.command.add("dropmoney", {
-    
     syntax = "<number amount>",
     onRun = function() end
 })
 
 lia.command.add("membercount", {
     adminOnly = false,
-    
     onRun = function() end
 })
