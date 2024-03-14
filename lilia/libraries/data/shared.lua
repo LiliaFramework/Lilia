@@ -8,9 +8,9 @@ if SERVER then
     -- @realm shared
     -- @string key Name of the file to save
     -- @param value Some sort of data to save
-    -- @bool[opt=false] bGlobal Whether or not to write directly to the `data/lilia` folder, or the `data/lilia/schema` folder,
+    -- @bool[opt=false] global Whether or not to write directly to the `data/lilia` folder, or the `data/lilia/schema` folder,
     -- where `schema` is the name of the current schema.
-    -- @bool[opt=false] bIgnoreMap Whether or not to ignore the map and save in the schema folder, rather than
+    -- @bool[opt=false] ignoreMap Whether or not to ignore the map and save in the schema folder, rather than
     -- `data/lilia/schema/map`, where `map` is the name of the current map.
     -- @treturn string The path where the file is saved
     function lia.data.set(key, value, global, ignoreMap)
@@ -26,9 +26,9 @@ if SERVER then
     --- Deletes the contents of a saved file in the `data/lilia` folder.
     -- @realm shared
     -- @string key Name of the file to delete
-    -- @bool[opt=false] bGlobal Whether or not the data is in the `data/lilia` folder, or the `data/lilia/schema` folder,
+    -- @bool[opt=false] global Whether or not the data is in the `data/lilia` folder, or the `data/lilia/schema` folder,
     -- where `schema` is the name of the current schema.
-    -- @bool[opt=false] bIgnoreMap Whether or not to ignore the map and delete from the schema folder, rather than
+    -- @bool[opt=false] ignoreMap Whether or not to ignore the map and delete from the schema folder, rather than
     -- `data/lilia/schema/map`, where `map` is the name of the current map.
     -- @treturn bool Whether or not the deletion has succeeded
     function lia.data.delete(key, global, ignoreMap)
@@ -54,11 +54,11 @@ end
 -- @realm shared
 -- @string key Name of the file to load
 -- @param default Value to return if the file could not be loaded successfully
--- @bool[opt=false] bGlobal Whether or not the data is in the `data/lilia` folder, or the `data/lilia/schema` folder,
+-- @bool[opt=false] global Whether or not the data is in the `data/lilia` folder, or the `data/lilia/schema` folder,
 -- where `schema` is the name of the current schema.
--- @bool[opt=false] bIgnoreMap Whether or not to ignore the map and load from the schema folder, rather than
+-- @bool[opt=false] ignoreMap Whether or not to ignore the map and load from the schema folder, rather than
 -- `data/lilia/schema/map`, where `map` is the name of the current map.
--- @bool[opt=false] bRefresh Whether or not to skip the cache and forcefully load from disk.
+-- @bool[opt=false] refresh Whether or not to skip the cache and forcefully load from disk.
 -- @return Value associated with the key, or the default that was given if it doesn't exist
 function lia.data.get(key, default, global, ignoreMap, refresh)
     if not refresh then
