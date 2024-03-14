@@ -49,37 +49,6 @@ function charMeta:removeBoost(boostID, attribID)
     return self:setVar("boosts", boosts, nil, self:getPlayer())
 end
 
-function charMeta:setFlags(flags)
-    self:setData("f", flags)
-end
-
-function charMeta:giveFlags(flags)
-    local addedFlags = ""
-    for i = 1, #flags do
-        local flag = flags:sub(i, i)
-        local info = lia.flag.list[flag]
-        if info then
-            if not self:hasFlags(flag) then addedFlags = addedFlags .. flag end
-            if info.callback then info.callback(self:getPlayer(), true) end
-        end
-    end
-
-    if addedFlags ~= "" then self:setFlags(self:getFlags() .. addedFlags) end
-end
-
-function charMeta:takeFlags(flags)
-    local oldFlags = self:getFlags()
-    local newFlags = oldFlags
-    for i = 1, #flags do
-        local flag = flags:sub(i, i)
-        local info = lia.flag.list[flag]
-        if info and info.callback then info.callback(self:getPlayer(), false) end
-        newFlags = newFlags:gsub(flag, "")
-    end
-
-    if newFlags ~= oldFlags then self:setFlags(newFlags) end
-end
-
 function charMeta:save(callback)
     if self.isBot then return end
     local data = {}

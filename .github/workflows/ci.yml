@@ -92,6 +92,7 @@ jobs:
           publish_dir: lilia/docs/html
 
   sync:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'LiliaFramework/Lilia' && success()
     runs-on: ubuntu-latest
     needs: docs
     steps:

@@ -1,4 +1,11 @@
-﻿lia.menu = lia.menu or {}
+﻿--[[--
+Entity menu manipulation.
+
+The `menu` library allows you to open up a context menu of arbitrary options whose callbacks will be ran when they are selected
+from the panel that shows up for the player.
+]]
+-- @module lia.menu
+lia.menu = lia.menu or {}
 lia.menu.list = lia.menu.list or {}
 function lia.menu.add(options, position, onRemove)
     local width = 0

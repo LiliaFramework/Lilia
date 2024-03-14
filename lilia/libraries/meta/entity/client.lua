@@ -14,6 +14,8 @@ function entityMeta:getDoorPartner()
     end
 end
 
+
+
 function entityMeta:getNetVar(key, default)
     local index = self:EntIndex()
     if lia.net[index] and lia.net[index][key] ~= nil then return lia.net[index][key] end

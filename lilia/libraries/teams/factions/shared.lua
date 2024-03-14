@@ -1,7 +1,13 @@
-﻿lia.faction = lia.faction or {}
+﻿
+--- Helper library for loading/getting faction information.
+-- @module lia.faction
+lia.faction = lia.faction or {}
 lia.faction.indices = lia.faction.indices or {}
 lia.faction.teams = lia.faction.teams or {}
 lia.faction.DefaultModels = {"models/humans/group01/male_01.mdl", "models/humans/group01/male_02.mdl", "models/humans/group01/male_04.mdl", "models/humans/group01/male_05.mdl", "models/humans/group01/male_06.mdl", "models/humans/group01/male_07.mdl", "models/humans/group01/male_08.mdl", "models/humans/group01/male_09.mdl", "models/humans/group02/male_01.mdl", "models/humans/group02/male_03.mdl", "models/humans/group02/male_05.mdl", "models/humans/group02/male_07.mdl", "models/humans/group02/male_09.mdl", "models/humans/group01/female_01.mdl", "models/humans/group01/female_02.mdl", "models/humans/group01/female_03.mdl", "models/humans/group01/female_06.mdl", "models/humans/group01/female_07.mdl", "models/humans/group02/female_01.mdl", "models/humans/group02/female_03.mdl", "models/humans/group02/female_06.mdl", "models/humans/group01/female_04.mdl"}
+--- Loads factions from a directory.
+-- @realm shared
+-- @string directory The path to the factions files.
 function lia.faction.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName
@@ -50,10 +56,20 @@ function lia.faction.loadFromDir(directory)
     end
 end
 
+--- Retrieves a faction table.
+-- @realm shared
+-- @param identifier Index or name of the faction
+-- @treturn table Faction table
+-- @usage print(lia.faction.get(Entity(1):Team()).name)
+-- > "Citizen"
 function lia.faction.get(identifier)
     return lia.faction.indices[identifier] or lia.faction.teams[identifier]
 end
 
+--- Retrieves a faction index.
+-- @realm shared
+-- @string uniqueID Unique ID of the faction
+-- @treturn number Faction index
 function lia.faction.getIndex(uniqueID)
     return lia.faction.teams[uniqueID] and lia.faction.teams[uniqueID].index
 end
@@ -122,4 +138,19 @@ function lia.faction.jobGenerate(index, name, color, default, models)
     lia.faction.teams[name] = FACTION
     team.SetUp(FACTION.index, FACTION.name, FACTION.color)
     return FACTION
+end
+if CLIENT then
+--- Returns true if a faction requires a whitelist.
+-- @realm client
+-- @number faction Index of the faction
+-- @treturn bool Whether or not the faction requires a whitelist
+    function lia.faction.hasWhitelist(faction)
+        local data = lia.faction.indices[faction]
+        if data then
+            if data.isDefault then return true end
+            local liaData = lia.localData and lia.localData.whitelists or {}
+            return liaData[SCHEMA.folder] and liaData[SCHEMA.folder][data.uniqueID] == true or false
+        end
+        return false
+    end
 end

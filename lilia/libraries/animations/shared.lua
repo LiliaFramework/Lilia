@@ -1,4 +1,24 @@
-﻿local translations = {}
+﻿
+--[[--
+Player model animation.
+
+Lilia comes with support for using Player-Models, although, there are
+a few standard animation sets that are built-in that should cover most non-player models:
+	citizen_male
+	citizen_female
+	metrocop
+	overwatch
+	vortigaunt
+	player
+	zombie
+	fastZombie
+
+If you find that your models are T-posing when they work elsewhere, you'll probably need to set the model class for your
+model with `lia.anim.setModelClass` in order for the correct animations to be used. If you'd like to add your own animation
+class, simply add to the `lia.anim` table with a model class name and the required animation translation table.
+]]
+-- @module lia.anim
+local translations = {}
 lia.anim = lia.anim or {}
 player_manager.anim = player_manager.anim or {}
 TranslateModel = TranslateModel or player_manager.TranslateToPlayerModelName
@@ -330,11 +350,23 @@ lia.anim.fastZombie = {
     [ACT_MP_RUN] = ACT_HL2MP_RUN_ZOMBIE_FAST
 }
 
+--- Sets a model's animation class.
+-- @realm shared
+-- @string model Model name to set the animation class for
+-- @string class Animation class to assign to the model
+-- @usage lia.anim.setModelClass("models/police.mdl", "metrocop")
 function lia.anim.setModelClass(model, class)
     if not lia.anim[class] then error("'" .. tostring(class) .. "' is not a valid animation class!") end
     translations[model:lower()] = class
 end
 
+--- Gets a model's animation class.
+-- @realm shared
+-- @string model Model to get the animation class for
+-- @treturn[1] string Animation class of the model
+-- @treturn[2] nil If there was no animation associated with the given model
+-- @usage lia.anim.getModelClass("models/police.mdl")
+-- > metrocop
 function lia.anim.getModelClass(model)
     model = string.lower(model)
     local class = translations[model] or "player"

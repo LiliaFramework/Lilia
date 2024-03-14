@@ -81,17 +81,6 @@ function charMeta:hasMoney(amount)
     return self:getMoney() >= amount
 end
 
-function charMeta:getFlags()
-    return self:getData("f", "")
-end
-
-function charMeta:hasFlags(flags)
-    for i = 1, #flags do
-        if self:getFlags():find(flags:sub(i, i), 1, true) then return true end
-    end
-    return hook.Run("CharacterFlagCheck", self, flags) or false
-end
-
 function charMeta:joinClass(class, isForced)
     if not class then
         self:kickClass()
