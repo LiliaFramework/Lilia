@@ -3,7 +3,6 @@
 file.CreateDir("lilia")
 lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
-
 if SERVER then
     --- Populates a file in the `data/lilia` folder with some serialized data.
     -- @realm shared

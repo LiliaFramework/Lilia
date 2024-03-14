@@ -32,7 +32,6 @@
     end)
 end
 
-
 function lia.char.restore(client, callback, _, id)
     local steamID64 = client:SteamID64()
     local fields = {"_id"}

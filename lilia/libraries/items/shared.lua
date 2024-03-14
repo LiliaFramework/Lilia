@@ -62,6 +62,7 @@ lia.item.DefaultFunctions = {
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
+
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua") or path:match("([_%w]+)%.lua")
     if uniqueID then
@@ -341,14 +342,14 @@ if SERVER then
             end
         end)
     end
-    
-	--- Instances and spawns a given item type.
-	-- @realm server
-	-- @string uniqueID Unique ID of the item
-	-- @vector position The position in which the item's entity will be spawned
-	-- @func[opt=nil] callback Function to call when the item entity is created
-	-- @angle[opt=angle_zero] angles The angles at which the item's entity will spawn
-	-- @tab[opt=nil] data Additional data for this item instance
+
+    --- Instances and spawns a given item type.
+    -- @realm server
+    -- @string uniqueID Unique ID of the item
+    -- @vector position The position in which the item's entity will be spawned
+    -- @func[opt=nil] callback Function to call when the item entity is created
+    -- @angle[opt=angle_zero] angles The angles at which the item's entity will spawn
+    -- @tab[opt=nil] data Additional data for this item instance
     function lia.item.spawn(uniqueID, position, callback, angles, data)
         local d
         if not isfunction(callback) then

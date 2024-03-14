@@ -1,5 +1,4 @@
-﻿
---[[--
+﻿--[[--
 Player model animation.
 
 Lilia comes with support for using Player-Models, although, there are

@@ -69,7 +69,6 @@ end
 -- @usage print(client:getNetVar("example"))
 -- > Hello World!
 -- @see setNetVar
-
 function entityMeta:getNetVar(key, default)
     if lia.net[self] and lia.net[self][key] ~= nil then return lia.net[self][key] end
     return default
