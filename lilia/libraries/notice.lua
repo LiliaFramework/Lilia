@@ -208,7 +208,7 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
                 if v.isQuery then queries[#queries + 1] = v end
             end
 
-            for _, v in pairs(queries) do
+            for k, v in pairs(queries) do
                 if v == self and k > 1 then return end
             end
 
