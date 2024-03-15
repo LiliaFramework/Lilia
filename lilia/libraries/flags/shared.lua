@@ -56,8 +56,6 @@ if SERVER then
         end
     end
 
-    --- Flag util functions for character
-    -- @classmod Character
     --- Sets this character's accessible flags. Note that this method overwrites **all** flags instead of adding them.
     -- @realm server
     -- @string flags Flag(s) this charater is allowed to have
