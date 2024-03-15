@@ -14,7 +14,6 @@ valid in class tables that are created in `schema/classes/classname.lua`, and ca
 -- end
 function onCanBe(client)
 end
-
 --- Called when a character has left this class and has joined a different one.
 -- @realm server
 -- @param client Player who left this class
@@ -24,7 +23,6 @@ end
 -- end
 function onLeave(client)
 end
-
 --- Called when a character has joined this class.
 -- @realm server
 -- @param client Player who has joined this class
@@ -33,7 +31,6 @@ end
 -- end
 function onSet(client)
 end
-
 --- Called when a character in this class has spawned in the world.
 -- @realm server
 -- @param client Player that has just spawned
