@@ -30,7 +30,7 @@ lia.flag.list = lia.flag.list or {}
 --- Creates a flag. This should be called shared in order for the client to be aware of the flag's existence.
 -- @realm shared
 -- @string flag Alphanumeric character to use for the flag
--- @string description Description of the flag
+-- @string desc Description of the flag
 -- @func callback Function to call when the flag is given or taken from a player
 function lia.flag.add(flag, desc, callback)
     lia.flag.list[flag] = {
@@ -70,7 +70,7 @@ if SERVER then
     -- @realm server
     -- @string flags Flag(s) this character should be given
     -- @usage character:GiveFlags("pet")
-    -- -- gives p, e, and t flags to the character
+    -- gives p, e, and t flags to the character
     -- @see hasFlags
     function charMeta:giveFlags(flags)
         local addedFlags = ""
