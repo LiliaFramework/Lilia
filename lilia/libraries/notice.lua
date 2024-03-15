@@ -38,7 +38,7 @@ function OrganizeNoticess()
     end
 end
 
-function RemoveNoticess(notice)
+function RemoveNotices(notice)
     for k, v in ipairs(lia.noticess) do
         if v == notice then
             notice:SizeTo(notice:GetWide(), 0, 0.2, 0, -1, function() notice:Remove() end)
@@ -78,7 +78,7 @@ function CreateNoticePanel(length, notimer)
         end
     end
 
-    if not notimer then timer.Simple(length, function() RemoveNoticess(notice) end) end
+    if not notimer then timer.Simple(length, function() RemoveNotices(notice) end) end
     return notice
 end
 
@@ -172,7 +172,7 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
                     self:ColorTo(Color(24, 215, 37), 0.2, 0)
                     notice.respondToKeys = false
                     callback(1, notice)
-                    timer.Simple(1, function() if notice and IsValid(notice) then RemoveNotice(notice) end end)
+                    timer.Simple(1, function() if notice and IsValid(notice) then RemoveNotices(notice) end end)
                     notice.lastKey = CurTime()
                 end
             end
@@ -193,7 +193,7 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
                     self:ColorTo(Color(24, 215, 37), 0.2, 0)
                     notice.respondToKeys = false
                     callback(2, notice)
-                    timer.Simple(1, function() if notice and IsValid(notice) then RemoveNotice(notice) end end)
+                    timer.Simple(1, function() if notice and IsValid(notice) then RemoveNotices(notice) end end)
                     notice.lastKey = CurTime()
                 end
             end
