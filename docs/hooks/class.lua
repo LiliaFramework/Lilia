@@ -13,7 +13,7 @@ valid in class tables that are created in `schema/classes/classname.lua`, and ca
 -- @usage function CLASS:onCanBe(client)
 -- 	return client:IsAdmin() or client:getChar():hasFlags("Z") -- Only admins or people with the Z flag are allowed in this class!
 -- end
-function CLASS:onCanBe(client)
+function onCanBe(client)
 end
 
 --- Called when a character has left this class and has joined a different one.
@@ -24,7 +24,7 @@ end
 -- 	local character = client:getChar()
 -- 	character:setModel("models/player/alyx.mdl")
 -- end
-function CLASS:onLeave(client)
+function onLeave(client)
 end
 
 --- Called when a character has joined this class.
@@ -34,7 +34,7 @@ end
 -- function CLASS:onSet(client)
 -- 	client:setModel("models/police.mdl")
 -- end
-function CLASS:onSet(client)
+function onSet(client)
 end
 
 --- Called when a character in this class has spawned in the world.
@@ -45,5 +45,5 @@ end
 -- 	client:SetMaxHealth(500) -- Sets your Max Health to 500.
 -- 	client:SetHealth(500) -- Subsequently sets your Health to 500.
 -- end
-function CLASS:onSpawn(client)
+function onSpawn(client)
 end
