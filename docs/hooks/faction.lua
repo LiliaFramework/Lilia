@@ -23,7 +23,7 @@ end
 -- @param faction The faction ID for which the default description is being retrieved
 -- @treturn string The default description for the newly created character
 -- @usage function FACTION:getDefaultDesc(client, faction)
---     return "A police officer" -- Example default description.
+-- 	return "A police officer" -- Example default description.
 -- end
 function getDefaultDesc(client, faction)
 end
@@ -32,8 +32,8 @@ end
 -- @param client The client that owns the character
 -- @param character The character that has been created
 -- @usage function FACTION:onCharCreated(client, character)
---     local inventory = character:getInv()
---     inventory:add("fancy_suit") -- Adds a Fancy Suit item to the character's inventory.
+-- 	local inventory = character:getInv()
+-- 	inventory:add("fancy_suit") -- Adds a Fancy Suit item to the character's inventory.
 -- end
 function onCharCreated(client, character)
 end
@@ -41,7 +41,7 @@ end
 -- @realm server
 -- @param client The player that has just spawned
 -- @usage function FACTION:onSpawn(client)
---     client:ChatPrint("You have spawned!") -- Notifies the client that they have spawned.
+-- 	client:ChatPrint("You have spawned!") -- Notifies the client that they have spawned.
 -- end
 function onSpawn(client)
 end
@@ -49,8 +49,8 @@ end
 -- @realm server
 -- @param character The character that was transferred
 -- @usage function FACTION:onTransferred(character)
---     local randomModelIndex = math.random(1, #self.models)
---     character:setModel(self.models[randomModelIndex]) -- Sets a random model from the faction's model list as the character's model.
+-- 	local randomModelIndex = math.random(1, #self.models)
+-- 	character:setModel(self.models[randomModelIndex]) -- Sets a random model from the faction's model list as the character's model.
 -- end
 function onTransferred(character)
 end
