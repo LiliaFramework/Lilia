@@ -10,7 +10,7 @@ valid in class tables that are created in `schema/classes/classname.lua`, and ca
 -- @param client Player who wants to switch to this class
 -- @treturn bool True if the player is allowed to switch to this class
 -- @usage function CLASS:onCanBe(client)
---     return client:IsAdmin() or client:getChar():hasFlags("Z") -- Only admins or people with the Z flag are allowed in this class!
+-- 	return client:IsAdmin() or client:getChar():hasFlags("Z") -- Only admins or people with the Z flag are allowed in this class!
 -- end
 function onCanBe(client)
 end
@@ -18,8 +18,8 @@ end
 -- @realm server
 -- @param client Player who left this class
 -- @usage function CLASS:onLeave(client)
---     local character = client:getChar()
---     character:setModel("models/player/alyx.mdl")
+-- 	local character = client:getChar()
+-- 	character:setModel("models/player/alyx.mdl")
 -- end
 function onLeave(client)
 end
@@ -27,7 +27,7 @@ end
 -- @realm server
 -- @param client Player who has joined this class
 -- @usage function CLASS:onSet(client)
---     client:setModel("models/police.mdl")
+-- 	client:setModel("models/police.mdl")
 -- end
 function onSet(client)
 end
@@ -35,8 +35,8 @@ end
 -- @realm server
 -- @param client Player that has just spawned
 -- @usage function CLASS:onSpawn(client)
---     client:SetMaxHealth(500) -- Sets your Max Health to 500.
---     client:SetHealth(500) -- Subsequently sets your Health to 500.
+-- 	client:SetMaxHealth(500) -- Sets your Max Health to 500.
+-- 	client:SetHealth(500) -- Subsequently sets your Health to 500.
 -- end
 function onSpawn(client)
 end
