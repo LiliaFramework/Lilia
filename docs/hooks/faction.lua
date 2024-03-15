@@ -16,7 +16,6 @@ regular gamemode hooks.
 -- end
 function getDefaultName(client)
 end
-
 --- Called when the default description for a character needs to be retrieved.
 -- This function allows factions to define custom default descriptions for characters.
 -- @realm shared
@@ -28,7 +27,6 @@ end
 -- end
 function getDefaultDesc(client, faction)
 end
-
 --- Called when a character has been initially created and assigned to this faction.
 -- @realm server
 -- @param client The client that owns the character
@@ -39,7 +37,6 @@ end
 -- end
 function onCharCreated(client, character)
 end
-
 --- Called when a character in this faction has spawned in the world.
 -- @realm server
 -- @param client The player that has just spawned
@@ -48,7 +45,6 @@ end
 -- end
 function onSpawn(client)
 end
-
 --- Called when a player's character has been transferred to this faction.
 -- @realm server
 -- @param character The character that was transferred
