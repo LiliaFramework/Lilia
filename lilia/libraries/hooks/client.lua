@@ -8,8 +8,9 @@ function GM:OnChatReceived()
 end
 
 function GM:PlayerBindPress(client, bind, pressed)
+    local entity = client.liaRagdoll
     bind = bind:lower()
-    if bind:find("jump") then
+    if bind:find("jump") and entity then
         lia.command.send("chargetup")
     elseif (bind:find("use") or bind:find("attack")) and pressed then
         local menu, callback = lia.menu.getActiveMenu()
