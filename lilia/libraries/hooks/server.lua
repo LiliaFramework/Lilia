@@ -71,14 +71,12 @@ function GM:CharacterLoaded(id)
     end
 end
 
-function GM:OnCharFallover(client, entity, bFallenOver)
-    bFallenOver = bFallenOver or false
+function GM:OnCharFallover(client, entity, fallenOver)
+    fallenOver = fallenOver or false
     if IsValid(entity) then
         entity:SetCollisionGroup(COLLISION_GROUP_NONE)
         entity:SetCustomCollisionCheck(false)
     end
-
-    client:setNetVar("fallingover", bFallenOver)
 end
 
 function GM:OnPlayerInteractItem(client, action, item)
