@@ -6,7 +6,7 @@ function MODULE:HUDPaint()
     local client = LocalPlayer()
     if (CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip ESP Outside Staff Character", nil) or client:isStaffOnDuty()) and client:IsNoClipping() and not client:InVehicle() then
         for _, v in ipairs(ents.GetAll()) do
-            if IsValid(v) and IsValid(client) and (v:GetClass() == "lia_item" or v:IsPlayer()) then
+            if IsValid(v) and IsValid(client) and (v:GetClass() == "lia_item" or v:IsPlayer()) and v ~= LocalPlayer() then
                 local vPos = v:GetPos()
                 local clientPos = client:GetPos()
                 if vPos ~= nil and clientPos then
