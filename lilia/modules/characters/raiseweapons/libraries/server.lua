@@ -7,5 +7,5 @@
 end
 
 function MODULE:KeyPress(client, key)
-    if key == IN_RELOAD then client:toggleWepRaised() end
+    if key == IN_RELOAD and not self.WepAlwaysRaised then client:toggleWepRaised() end
 end
