@@ -1,5 +1,5 @@
 ﻿--[[ Determine if weapons are always raised ]]
-MODULE.WepAlwaysRaised = true
+MODULE.WepAlwaysRaised = false
 --[[ Weapons that are always raised ]]
 MODULE.PermaRaisedWeapons = {
     ["weapon_physgun"] = true,

@@ -6,6 +6,10 @@
     end
 end
 
+function MODULE:KeyRelease(client, key)
+    if key == IN_RELOAD then timer.Remove("WeaponHolstering" .. client:SteamID64()) end
+end
+
 function MODULE:KeyPress(client, key)
-    if key == IN_RELOAD and not self.WepAlwaysRaised then client:toggleWepRaised() end
+    if key == IN_RELOAD then timer.Create("WeaponHolstering" .. client:SteamID64(), 1, 1, function() if IsValid(client) then client:toggleWepRaised() end end) end
 end
