@@ -1,5 +1,4 @@
-﻿local GM = GM or GAMEMODE
---[[--
+﻿--[[--
 Configuration options for Lilia.
 
 This module contains various configuration options used in the Lilia gamemode. Each option in the `lia.config` table serves a specific purpose and defines various aspects of the gamemode's functionality.
@@ -38,8 +37,9 @@ This module contains various configuration options used in the Lilia gamemode. E
   - `Notify[3]`: (integer) Notification pitch.
 
 These configuration options control various aspects of the gamemode's mechanics, user interface, and gameplay experience.
---]]
+]]
 -- @module lia.config
+local GM = GM or GAMEMODE
 lia.config = lia.config or {}
 if not ConfigWasInitialized then
     lia.config = {
