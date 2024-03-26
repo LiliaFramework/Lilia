@@ -140,10 +140,10 @@ function lia.faction.jobGenerate(index, name, color, default, models)
 end
 
 if CLIENT then
-    --- Returns true if a faction requires a whitelist.
-    -- @realm client
-    -- @number faction Index of the faction
-    -- @treturn bool Whether or not the faction requires a whitelist
+--- Returns true if a faction requires a whitelist.
+-- @realm client
+-- @number faction Index of the faction
+-- @treturn bool Whether or not the faction requires a whitelist
     function lia.faction.hasWhitelist(faction)
         local data = lia.faction.indices[faction]
         if data then
