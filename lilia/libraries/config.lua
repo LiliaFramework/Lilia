@@ -1,160 +1,79 @@
 ﻿local GM = GM or GAMEMODE
+--[[--
+Configuration options for Lilia.
 
---- Helper library for creating/setting config options.
+This module contains various configuration options used in the Lilia gamemode. Each option in the `lia.config` table serves a specific purpose and defines various aspects of the gamemode's functionality.
+
+- `WalkSpeed`: (integer) Controls how fast characters walk.
+- `RunSpeed`: (integer) Controls how fast characters run.
+- `WalkRatio`: (float) Defines the walk speed ratio when holding the Alt key.
+- `AllowExistNames`: (boolean) Determines whether duplicated character names are allowed.
+- `GamemodeName`: (string) Specifies the name of the gamemode.
+- `Color`: (color) Sets the theme color used throughout the gamemode.
+- `Font`: (string) Specifies the core font used for UI elements.
+- `GenericFont`: (string) Specifies the secondary font used for UI elements.
+- `MoneyModel`: (string) Defines the model used for representing money in the game.
+- `MaxCharacters`: (integer) Sets the maximum number of characters per player.
+- `DataSaveInterval`: (integer) Time interval between data saves.
+- `CharacterDataSaveInterval`: (integer) Time interval between character data saves.
+- `MoneyLimit`: (integer) Sets the limit of money a player can have (0 for infinite).
+- `invW`: (integer) Defines the width of the default inventory.
+- `invH`: (integer) Defines the height of the default inventory.
+- `DefaultMoney`: (integer) Specifies the default amount of money a player starts with.
+- `MaxChatLength`: (integer) Sets the maximum length of chat messages.
+- `CurrencySymbol`: (string) Specifies the currency symbol used in the game.
+- `SpawnTime`: (integer) Time to respawn after death.
+- `MaxAttributes`: (integer) Maximum attributes a character can have.
+- `CurrencySingularName`: (string) Singular name of the in-game currency.
+- `CurrencyPluralName`: (string) Plural name of the in-game currency.
+- `SchemaYear`: (integer) Year in the gamemode's schema.
+- `AmericanDates`: (boolean) Determines whether to use the American date format.
+- `AmericanTimeStamp`: (boolean) Determines whether to use the American timestamp format.
+- `MinDescLen`: (integer) Minimum length required for a character's description.
+- `TimeToEnterVehicle`: (integer) Time (in seconds) required to enter a vehicle.
+- `CarEntryDelayEnabled`: (boolean) Determines if the car entry delay is applicable.
+- `Notify`: (table) Contains notification sound and volume settings.
+  - `Notify[1]`: (string) Notification sound file path.
+  - `Notify[2]`: (integer) Notification volume.
+  - `Notify[3]`: (integer) Notification pitch.
+
+These configuration options control various aspects of the gamemode's mechanics, user interface, and gameplay experience.
+--]]
 -- @module lia.config
 lia.config = lia.config or {}
-
 if not ConfigWasInitialized then
     lia.config = {
-        --- How fast characters walk.
-        -- @realm shared
-        -- @int Default Walk Speed.
         WalkSpeed = 130,
-
-        --- How fast characters run.
-        -- @realm shared
-        -- @int Default Running Speed.
         RunSpeed = 235,
-
-        --- Walk speed ratio when holding Alt.
-        -- @realm shared
-        -- @float Default Walk Speed Ratio.
         WalkRatio = 0.5,
-
-        --- Maximum number of characters per player.
-        -- @realm shared
-        -- @int Default Character Amount.
-        MaxCharacters = 5,
-
-        --- Period between data saves.
-        -- @realm shared
-        -- @int Time in Seconds.
-        DataSaveInterval = 600,
-
-        --- Time between character data saves.
-        -- @realm shared
-        -- @int Time in Seconds.
-        CharacterDataSaveInterval = 300,
-
-        --- The limit of money you can have on yourself at a given time.
-        -- @realm shared
-        -- @int Limit Of Money (0 = infinite).
-        MoneyLimit = 0,
-
-        --- Default inventory width.
-        -- @realm shared
-        -- @int Inventory Width.
-        invW = 6,
-
-        --- Default inventory height.
-        -- @realm shared
-        -- @int Inventory Height.
-        invH = 4,
-
-        --- Default money amount.
-        -- @realm shared
-        -- @int Default Money Amount.
-        DefaultMoney = 0,
-
-        --- Maximum chat message length.
-        -- @realm shared
-        -- @int Max Chat Length.
-        MaxChatLength = 256,
-
-        --- Currency symbol.
-        -- @realm shared
-        -- @string Currency Symbol.
-        CurrencySymbol = "$",
-
-        --- Time to respawn after death.
-        -- @realm shared
-        -- @int Time to Respawn.
-        SpawnTime = 5,
-
-        --- Maximum attributes one can have.
-        -- @realm shared
-        -- @int Maximum Attributes.
-        MaxAttributes = 30,
-
-        --- Year in the gamemode's schema.
-        -- @realm shared
-        -- @int Schema Year.
-        SchemaYear = 2023,
-
-        --- Minimum length of a character's description.
-        -- @realm shared
-        -- @int Minimum Description Length.
-        MinDescLen = 16,
-
-        --- Time required to enter a vehicle.
-        -- @realm shared
-        -- @int Time to Enter Vehicle.
-        TimeToEnterVehicle = 1,
-
-        --- Allow duplicated character names.
-        -- @realm shared
-        -- @bool AllowExistNames.
         AllowExistNames = true,
-
-        --- Name of the gamemode.
-        -- @realm shared
-        -- @string Gamemode Name.
         GamemodeName = "A Lilia Gamemode",
-
-        --- Theme color.
-        -- @realm shared
-        -- @color Color.
         Color = Color(34, 139, 34),
-
-        --- Core font.
-        -- @realm shared
-        -- @string Font.
         Font = "Arial",
-
-        --- Secondary font.
-        -- @realm shared
-        -- @string Generic Font.
         GenericFont = "Segoe UI",
-
-        --- Money model.
-        -- @realm shared
-        -- @string Money Model.
         MoneyModel = "models/props_lab/box01a.mdl",
-
-        --- Singular currency name.
-        -- @realm shared
-        -- @string Currency Singular Name.
+        MaxCharacters = 5,
+        DataSaveInterval = 600,
+        CharacterDataSaveInterval = 300,
+        MoneyLimit = 0,
+        invW = 6,
+        invH = 4,
+        DefaultMoney = 0,
+        MaxChatLength = 256,
+        CurrencySymbol = "$",
+        SpawnTime = 5,
+        MaxAttributes = 30,
         CurrencySingularName = "Dollar",
-
-        --- Plural currency name.
-        -- @realm shared
-        -- @string Currency Plural Name.
         CurrencyPluralName = "Dollars",
-
-        --- Use American date format.
-        -- @realm shared
-        -- @bool American Dates.
+        SchemaYear = 2023,
         AmericanDates = true,
-
-        --- Use American timestamp format.
-        -- @realm shared
-        -- @bool American TimeStamp.
         AmericanTimeStamp = true,
-
-        --- If Car Entry Delay is Applicable.
-        -- @realm shared
-        -- @bool Car Entry Delay Enabled.
+        MinDescLen = 16,
+        TimeToEnterVehicle = 1,
         CarEntryDelayEnabled = true,
-
-        --- Notification sound and volume.
-        -- @realm shared
-        -- @table Notify.
-        Notify = {
-            "garrysmod/content_downloaded.wav",
-            50,
-            250
-        }
+        Notify = {"garrysmod/content_downloaded.wav", 50, 250},
     }
+
     hook.Run("InitializedConfig")
     ConfigWasInitialized = true
 end
