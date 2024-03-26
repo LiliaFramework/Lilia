@@ -8,32 +8,32 @@ if not ConfigWasInitialized then
     lia.config = {
         --- How fast characters walk.
         -- @realm shared
-        -- @int Default Walk Speed 
+        -- @int Default Walk Speed
         WalkSpeed = 130,
 
         --- How fast characters run.
         -- @realm shared
-        -- @int Default Running Speed 
+        -- @int Default Running Speed
         RunSpeed = 235,
 
         --- Walk speed ratio when holding Alt.
         -- @realm shared
-        -- @float Default Walk Speed Ratio 
+        -- @float Default Walk Speed Ratio
         WalkRatio = 0.5,
 
         --- Maximum number of characters per player.
         -- @realm shared
-        -- @int Default Character Amount 
+        -- @int Default Character Amount
         MaxCharacters = 5,
 
         --- Period between data saves.
         -- @realm shared
-        -- @int Time in Seconds 
+        -- @int Time in Seconds
         DataSaveInterval = 600,
 
         --- Time between character data saves.
         -- @realm shared
-        -- @int Time in Seconds 
+        -- @int Time in Seconds
         CharacterDataSaveInterval = 300,
 
         --- The limit of money you can have on yourself at a given time.
@@ -53,7 +53,7 @@ if not ConfigWasInitialized then
 
         --- Default money amount.
         -- @realm shared
-        -- @int Default Money Amount 
+        -- @int Default Money Amount
         DefaultMoney = 0,
 
         --- Maximum chat message length.
@@ -93,7 +93,7 @@ if not ConfigWasInitialized then
 
         --- Allow duplicated character names.
         -- @realm shared
-        -- @bool AllowExistNames 
+        -- @bool AllowExistNames
         AllowExistNames = true,
 
         --- Name of the gamemode.
@@ -103,42 +103,42 @@ if not ConfigWasInitialized then
 
         --- Theme color.
         -- @realm shared
-        -- @color Color 
+        -- @color Color
         Color = Color(34, 139, 34),
 
         --- Core font.
         -- @realm shared
-        -- @string Font 
+        -- @string Font
         Font = "Arial",
 
         --- Secondary font.
         -- @realm shared
-        -- @string Generic Font 
+        -- @string Generic Font
         GenericFont = "Segoe UI",
 
         --- Money model.
         -- @realm shared
-        -- @string Money Model 
+        -- @string Money Model
         MoneyModel = "models/props_lab/box01a.mdl",
 
         --- Singular currency name.
         -- @realm shared
-        -- @string Currency Singular Name 
+        -- @string Currency Singular Name
         CurrencySingularName = "Dollar",
 
         --- Plural currency name.
         -- @realm shared
-        -- @string Currency Plural Name 
+        -- @string Currency Plural Name
         CurrencyPluralName = "Dollars",
 
         --- Use American date format.
         -- @realm shared
-        -- @bool American Dates 
+        -- @bool American Dates
         AmericanDates = true,
 
         --- Use American timestamp format.
         -- @realm shared
-        -- @bool American TimeStamp 
+        -- @bool American TimeStamp
         AmericanTimeStamp = true,
 
         --- If Car Entry Delay is Applicable.
@@ -148,7 +148,7 @@ if not ConfigWasInitialized then
 
         --- Notification sound and volume.
         -- @realm shared
-        -- @table Notify 
+        -- @table Notify
         Notify = {
             "garrysmod/content_downloaded.wav", -- Notification Sound
             50, -- Notification Volume
