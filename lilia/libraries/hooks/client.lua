@@ -17,8 +17,8 @@ function GM:PlayerBindPress(client, bind, pressed)
         if bind:find("use") then
             local entity = client:GetTracedEntity()
             if IsValid(entity) then
-                if entity:IsPlayer() and (client:IsSuperAdmin() or client:isStaffOnDuty()) then
-                    hook.Run("ShowPlayerCard", entity)
+                if entity:IsPlayer() then
+                    hook.Run("ShowPlayerCard", entity, client:IsSuperAdmin() or client:isStaffOnDuty())
                 elseif entity:GetClass() == "lia_item" or entity.hasMenu then
                     hook.Run("ItemShowEntityMenu", entity)
                 end
