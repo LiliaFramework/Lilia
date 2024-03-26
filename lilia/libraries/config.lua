@@ -155,7 +155,6 @@ if not ConfigWasInitialized then
             250 -- Notification Pitch
         }
     }
-    
     hook.Run("InitializedConfig")
     ConfigWasInitialized = true
 end
