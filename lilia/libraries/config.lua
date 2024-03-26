@@ -48,7 +48,7 @@ if not ConfigWasInitialized then
         WalkRatio = 0.5,
         AllowExistNames = true,
         GamemodeName = "A Lilia Gamemode",
-        Color = Color[34, 139, 34],
+        Color = Color(34, 139, 34),
         Font = "Arial",
         GenericFont = "Segoe UI",
         MoneyModel = "models/props_lab/box01a.mdl",
@@ -74,10 +74,10 @@ if not ConfigWasInitialized then
         Notify = {"garrysmod/content_downloaded.wav", 50, 250},
     }
 
-    hook.Run["InitializedConfig"]
+    hook.Run("InitializedConfig")
     ConfigWasInitialized = true
 end
 
-function GM:InitializedConfig[]
-    hook.Run["LoadLiliaFonts", lia.config.Font, lia.config.GenericFont]
+function GM:InitializedConfig()
+    hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
 end
