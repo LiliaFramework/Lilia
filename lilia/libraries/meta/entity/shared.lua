@@ -7,7 +7,7 @@ end
 function entityMeta:IsSimfphysCar()
     if not simfphys then return false end
     if not IsValid(self) then return false end
-    return self:GetClass():lower() == "gmod_sent_vehicle_fphysics_base"
+    return self:GetClass():lower() == "gmod_sent_vehicle_fphysics_base" or self.IsSimfphyscar
 end
 
 function entityMeta:getEntItemDropPos()

@@ -165,15 +165,17 @@ function MODULE:PlayerDisconnected(client)
 end
 
 function MODULE:KeyLock(client, entity, time)
-    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not (entity:IsSimfphysCar() or entity:isDoor() or entity:IsVehicle()) then return end
-    client:setAction("@locking", time, function() self:ToggleLock(client, entity, true) end)
-    return true
+    if IsValid(entity) and client:GetPos():Distance(entity:GetPos()) <= 256 and (entity:isDoor() or entity:IsVehicle()) then
+        client:setAction("@locking", time, function() end)
+        client:doStaredAction(entity, function() self:ToggleLock(client, entity, true) end, time, function() client:setAction() end)
+    end
 end
 
 function MODULE:KeyUnlock(client, entity, time)
-    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 96 or not (entity:IsSimfphysCar() or entity:isDoor() or entity:IsVehicle()) then return end
-    client:setAction("@unlocking", time, function() self:ToggleLock(client, entity, false) end)
-    return true
+    if IsValid(entity) and client:GetPos():Distance(entity:GetPos()) <= 256 and (entity:isDoor() or entity:IsVehicle()) then
+        client:setAction("@unlocking", time, function() end)
+        client:doStaredAction(entity, function() self:ToggleLock(client, entity, false) end, time, function() client:setAction() end)
+    end
 end
 
 function MODULE:ToggleLock(client, entity, state)
@@ -189,7 +191,7 @@ function MODULE:ToggleLock(client, entity, state)
             entity:Fire("unlock")
             client:EmitSound("doors/door_latch1.wav")
         end
-    elseif entity:IsVehicle() and entity:GetCreator() == client then
+    elseif entity:IsVehicle() and (entity:GetCreator() == client or client:IsSuperAdmin() or client:isStaffOnDuty()) then
         entity.IsLocked = not state
         if state then
             entity:Fire("lock")
