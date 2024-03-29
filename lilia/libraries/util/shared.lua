@@ -106,7 +106,7 @@ function lia.util.loadEntities(path)
             local path2 = path .. "/" .. folder .. "/" .. v .. "/"
             _G[variable] = table.Copy(default)
             _G[variable].ClassName = v
-            if IncludeFiles(path2, clientOnly) and not client then
+            if IncludeFiles(path2, clientOnly) then
                 if clientOnly then
                     if CLIENT then register(_G[variable], v) end
                 else
