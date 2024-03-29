@@ -146,3 +146,17 @@ function lia.util.loadEntities(path)
 
     HandleEntityInclusion("effects", "EFFECT", effects and effects.Register, nil, true)
 end
+
+function lia.util.findPlayerBySteamID64(SteamID64)
+    for _, client in ipairs(player.GetAll()) do
+        if client:SteamID64() == SteamID64 then return client end
+    end
+    return nil
+end
+
+function lia.util.findPlayerBySteamID(SteamID)
+    for _, client in ipairs(player.GetAll()) do
+        if client:SteamID() == SteamID then return client end
+    end
+    return nil
+end
