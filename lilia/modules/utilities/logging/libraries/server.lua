@@ -27,7 +27,7 @@ function MODULE:ReadLogsFromFile(logtype, selectedDate)
     return logs
 end
 
-function MODULE:OnServerLog(client, logType, logString, category, color, ...)
+function MODULE:OnServerLog(_, _, logString, category, color)
     local LogEvent = self:addCategory(category, color)
     LogEvent(logString)
 end
