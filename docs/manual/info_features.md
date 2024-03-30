@@ -89,12 +89,6 @@
 - Created an Expanded Wiki for Players to be able to understand the framework easily
 ## # Addons with Improved Compatibility
 
-#### MLogs
-
-- **Addon URL:** [MLogs - The Ultimate Logger](https://www.gmodstore.com/market/view/mlogs-2-m4d-logs-the-ultimate-logger)
-
-- **Compatibility Added:** Implemented a section for Lilia's Logs, allowing for easier log reading.
-
 #### PCasino
 
 - **Addon URL:** [PCasino - The Perfect Casino Addon](https://www.gmodstore.com/market/view/pcasino-the-perfect-casino-addon-roulette-blackjack-slots-prize-wheel)
