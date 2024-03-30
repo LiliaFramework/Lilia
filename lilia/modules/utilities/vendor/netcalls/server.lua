@@ -1,23 +1,23 @@
 ﻿local MODULE = MODULE
 local EDITOR = include(MODULE.path .. "/libs/sv_vendor.lua")
-util.AddNetworkString("liaVendorAllowClass")
-util.AddNetworkString("liaVendorAllowFaction")
-util.AddNetworkString("liaVendorExit")
-util.AddNetworkString("liaVendorEdit")
-util.AddNetworkString("liaVendorMode")
-util.AddNetworkString("liaVendorMoney")
-util.AddNetworkString("liaVendorOpen")
-util.AddNetworkString("liaVendorPrice")
-util.AddNetworkString("liaVendorStock")
-util.AddNetworkString("liaVendorMaxStock")
-util.AddNetworkString("liaVendorSync")
-util.AddNetworkString("liaVendorTrade")
-net.Receive("liaVendorExit", function(_, client)
+util.AddNetworkString("VendorAllowClass")
+util.AddNetworkString("VendorAllowFaction")
+util.AddNetworkString("VendorExit")
+util.AddNetworkString("VendorEdit")
+util.AddNetworkString("VendorMode")
+util.AddNetworkString("VendorMoney")
+util.AddNetworkString("VendorOpen")
+util.AddNetworkString("VendorPrice")
+util.AddNetworkString("VendorStock")
+util.AddNetworkString("VendorMaxStock")
+util.AddNetworkString("VendorSync")
+util.AddNetworkString("VendorTrade")
+net.Receive("VendorExit", function(_, client)
     local vendor = client.liaVendor
     if IsValid(vendor) then vendor:removeReceiver(client, true) end
 end)
 
-net.Receive("liaVendorEdit", function(_, client)
+net.Receive("VendorEdit", function(_, client)
     local key = net.ReadString()
     if not client:CanEditVendor() then return end
     local vendor = client.liaVendor
@@ -26,7 +26,7 @@ net.Receive("liaVendorEdit", function(_, client)
     MODULE:SaveData()
 end)
 
-net.Receive("liaVendorTrade", function(_, client)
+net.Receive("VendorTrade", function(_, client)
     local uniqueID = net.ReadString()
     local isSellingToVendor = net.ReadBool()
     if not client:getChar() or not client:getChar():getInv() then return end

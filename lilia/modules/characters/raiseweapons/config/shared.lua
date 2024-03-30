@@ -4,7 +4,7 @@ MODULE.WepAlwaysRaised = false
 MODULE.PermaRaisedWeapons = {
     ["weapon_physgun"] = true,
     ["gmod_tool"] = true,
-    ["lia_poshelper"] = true,
+    ["lia_keys"] = true,
 }
 
 --[[ Time Between Weapon Toggles ]]

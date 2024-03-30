@@ -1,17 +1,17 @@
 ﻿function MODULE:LoadFonts(font)
-    surface.CreateFont("liaVendorButtonFont", {
+    surface.CreateFont("VendorButtonFont", {
         font = font,
         weight = 200,
         size = 40
     })
 
-    surface.CreateFont("liaVendorSmallFont", {
+    surface.CreateFont("VendorSmallFont", {
         font = font,
         weight = 500,
         size = 22
     })
 
-    surface.CreateFont("liaVendorLightFont", {
+    surface.CreateFont("VendorLightFont", {
         font = font,
         weight = 200,
         size = 22

@@ -31,7 +31,7 @@ end
 function ENT:setMoney(value)
     if not isnumber(value) or value < 0 then value = nil end
     self.money = value
-    net.Start("liaVendorMoney")
+    net.Start("VendorMoney")
     net.WriteInt(value or -1, 32)
     net.Send(self.receivers)
 end
@@ -48,7 +48,7 @@ function ENT:setStock(itemType, value)
     self.items[itemType] = self.items[itemType] or {}
     if not self.items[itemType][VENDOR_MAXSTOCK] then self:setMaxStock(itemType, value) end
     self.items[itemType][VENDOR_STOCK] = math.Clamp(value, 0, self.items[itemType][VENDOR_MAXSTOCK])
-    net.Start("liaVendorStock")
+    net.Start("VendorStock")
     net.WriteString(itemType)
     net.WriteUInt(value, 32)
     net.Send(self.receivers)
@@ -69,7 +69,7 @@ function ENT:setMaxStock(itemType, value)
     if value == 0 or not isnumber(value) then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_MAXSTOCK] = value
-    net.Start("liaVendorMaxStock")
+    net.Start("VendorMaxStock")
     net.WriteString(itemType)
     net.WriteUInt(value, 32)
     net.Send(self.receivers)
@@ -82,7 +82,7 @@ function ENT:setFactionAllowed(factionID, isAllowed)
         self.factions[factionID] = nil
     end
 
-    net.Start("liaVendorAllowFaction")
+    net.Start("VendorAllowFaction")
     net.WriteUInt(factionID, 8)
     net.WriteBool(self.factions[factionID] == true)
     net.Send(self.receivers)
@@ -98,7 +98,7 @@ function ENT:setClassAllowed(classID, isAllowed)
         self.classes[classID] = nil
     end
 
-    net.Start("liaVendorAllowClass")
+    net.Start("VendorAllowClass")
     net.WriteUInt(classID, 8)
     net.WriteBool(self.classes[classID] == true)
     net.Send(self.receivers)
@@ -108,7 +108,7 @@ function ENT:removeReceiver(client, requestedByPlayer)
     table.RemoveByValue(self.receivers, client)
     if client.liaVendor == self then client.liaVendor = nil end
     if requestedByPlayer then return end
-    net.Start("liaVendorExit")
+    net.Start("VendorExit")
     net.Send(client)
     lia.log.add(activator, "vendorExit", self:getNetVar("name"))
 end
@@ -121,21 +121,21 @@ local ALLOWED_MODES = {
 
 function ENT:setName(name)
     self:setNetVar("name", name)
-    net.Start("liaVendorEdit")
+    net.Start("VendorEdit")
     net.WriteString("name")
     net.Send(self.receivers)
 end
 
 function ENT:setDesc(desc)
     self:setNetVar("desc", desc)
-    net.Start("liaVendorEdit")
+    net.Start("VendorEdit")
     net.WriteString("desc")
     net.Send(self.receivers)
 end
 
 function ENT:setNoBubble(noBubble)
     self:setNetVar("noBubble", noBubble)
-    net.Start("liaVendorEdit")
+    net.Start("VendorEdit")
     net.WriteString("bubble")
     net.Send(self.receivers)
 end
@@ -144,7 +144,7 @@ function ENT:setTradeMode(itemType, mode)
     if not ALLOWED_MODES[mode] then mode = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_MODE] = mode
-    net.Start("liaVendorMode")
+    net.Start("VendorMode")
     net.WriteString(itemType)
     net.WriteInt(mode or -1, 8)
     net.Send(self.receivers)
@@ -154,7 +154,7 @@ function ENT:setItemPrice(itemType, value)
     if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_PRICE] = value
-    net.Start("liaVendorPrice")
+    net.Start("VendorPrice")
     net.WriteString(itemType)
     net.WriteInt(value or -1, 32)
     net.Send(self.receivers)
@@ -164,7 +164,7 @@ function ENT:setItemStock(itemType, value)
     if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_STOCK] = value
-    net.Start("liaVendorStock")
+    net.Start("VendorStock")
     net.WriteString(itemType)
     net.WriteInt(value, 32)
     net.Send(self.receivers)
@@ -174,7 +174,7 @@ function ENT:setItemMaxStock(itemType, value)
     if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_MAXSTOCK] = value
-    net.Start("liaVendorMaxStock")
+    net.Start("VendorMaxStock")
     net.WriteString(itemType)
     net.WriteInt(value, 32)
     net.Send(self.receivers)
@@ -182,7 +182,7 @@ end
 
 function ENT:OnRemove()
     LIA_VENDORS[self:EntIndex()] = nil
-    net.Start("liaVendorExit")
+    net.Start("VendorExit")
     net.Send(self.receivers)
     if lia.shuttingDown or self.liaIsSafe then return end
     MODULE:SaveData()
@@ -193,7 +193,7 @@ function ENT:setModel(model)
     model = model:lower()
     self:SetModel(model)
     self:setAnim()
-    net.Start("liaVendorEdit")
+    net.Start("VendorEdit")
     net.WriteString("model")
     net.Send(self.receivers)
 end
@@ -201,13 +201,13 @@ end
 function ENT:setSellScale(scale)
     assert(isnumber(scale), "scale must be a number")
     self:setNetVar("scale", scale)
-    net.Start("liaVendorEdit")
+    net.Start("VendorEdit")
     net.WriteString("scale")
     net.Send(self.receivers)
 end
 
 function ENT:sync(client)
-    net.Start("liaVendorSync")
+    net.Start("VendorSync")
     net.WriteEntity(self)
     net.WriteInt(self:getMoney() or -1, 32)
     net.WriteUInt(table.Count(self.items), 16)
@@ -222,14 +222,14 @@ function ENT:sync(client)
     net.Send(client)
     if client:CanEditVendor() then
         for factionID in pairs(self.factions) do
-            net.Start("liaVendorAllowFaction")
+            net.Start("VendorAllowFaction")
             net.WriteUInt(factionID, 8)
             net.WriteBool(true)
             net.Send(client)
         end
 
         for classID in pairs(self.classes) do
-            net.Start("liaVendorAllowClass")
+            net.Start("VendorAllowClass")
             net.WriteUInt(classID, 8)
             net.WriteBool(true)
             net.Send(client)

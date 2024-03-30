@@ -113,7 +113,7 @@ end
 
 function MODULE:PlayerAccessVendor(client, vendor)
     vendor:addReceiver(client)
-    net.Start("liaVendorOpen")
+    net.Start("VendorOpen")
     net.WriteEntity(vendor)
     net.Send(client)
 end

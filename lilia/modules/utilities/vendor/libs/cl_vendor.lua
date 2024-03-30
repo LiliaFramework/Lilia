@@ -1,7 +1,7 @@
 ﻿local EDITOR = {}
 local function addEditor(name, callback)
     EDITOR[name] = function(...)
-        net.Start("liaVendorEdit")
+        net.Start("VendorEdit")
         net.WriteString(name)
         if isfunction(callback) then callback(...) end
         net.SendToServer()

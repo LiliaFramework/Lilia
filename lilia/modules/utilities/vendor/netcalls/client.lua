@@ -1,4 +1,4 @@
-﻿net.Receive("liaVendorSync", function()
+﻿net.Receive("VendorSync", function()
     local vendor = net.ReadEntity()
     if not IsValid(vendor) then return end
     vendor.money = net.ReadInt(32)
@@ -25,7 +25,7 @@
     hook.Run("VendorSynchronized", vendor)
 end)
 
-net.Receive("liaVendorOpen", function()
+net.Receive("VendorOpen", function()
     local vendor = net.ReadEntity()
     if IsValid(vendor) then
         liaVendorEnt = vendor
@@ -33,12 +33,12 @@ net.Receive("liaVendorOpen", function()
     end
 end)
 
-net.Receive("liaVendorExit", function()
+net.Receive("VendorExit", function()
     liaVendorEnt = nil
     hook.Run("VendorExited")
 end)
 
-net.Receive("liaVendorEdit", function()
+net.Receive("VendorEdit", function()
     local key = net.ReadString()
     timer.Simple(0.25, function()
         if not IsValid(liaVendorEnt) then return end
@@ -46,7 +46,7 @@ net.Receive("liaVendorEdit", function()
     end)
 end)
 
-net.Receive("liaVendorFaction", function()
+net.Receive("VendorFaction", function()
     local factionID = net.ReadUInt(8)
     if IsValid(liaVendorEnt) then liaVendorEnt.factions[factionID] = true end
 end)

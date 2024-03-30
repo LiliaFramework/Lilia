@@ -66,7 +66,7 @@ function PANEL:Init()
     self.sellScale.TextArea:SetTextColor(color_white)
     self.sellScale:SetDecimals(2)
     self.sellScale.OnValueChanged = function(_, value)
-        timer.Create("liaVendorScale", 0.5, 1, function()
+        timer.Create("VendorScale", 0.5, 1, function()
             if IsValid(self) and IsValid(self.sellScale) then
                 value = self.sellScale:GetValue()
                 local diff = math.abs(value - entity:getSellScale())
@@ -78,9 +78,9 @@ function PANEL:Init()
     self.faction = self:Add("DButton")
     self.faction:SetText(L"vendorFaction")
     self.faction:Dock(TOP)
-    self.faction:SetTextColor(color_white)
+    self.faction:SetTextColor(color_black)
     self.faction:DockMargin(0, 4, 0, 0)
-    self.faction.DoClick = function(_) vgui.Create("liaVendorFactionEditor"):MoveLeftOf(self, 4) end
+    self.faction.DoClick = function(_) vgui.Create("VendorFactionEditor"):MoveLeftOf(self, 4) end
     local menu
     self.items = self:Add("DListView")
     self.items:Dock(FILL)
@@ -225,4 +225,4 @@ function PANEL:listenForUpdates()
     hook.Add("VendorItemMaxStockUpdated", self, self.onItemStockUpdated)
 end
 
-vgui.Register("liaVendorEditor", PANEL, "DFrame")
+vgui.Register("VendorEditor", PANEL, "DFrame")

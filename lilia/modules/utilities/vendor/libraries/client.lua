@@ -1,5 +1,5 @@
 ﻿function MODULE:VendorOpened(_)
-    vgui.Create("liaVendor")
+    vgui.Create("Vendor")
     hook.Run("OnOpenVendorMenu", self)
 end
 

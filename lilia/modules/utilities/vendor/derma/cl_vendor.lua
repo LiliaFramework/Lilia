@@ -16,7 +16,7 @@ function PANEL:Init()
     self.buttons:SetPaintBackground(false)
     self.buttons:SetTall(36)
     self.leave = self.buttons:Add("DButton")
-    self.leave:SetFont("liaVendorButtonFont")
+    self.leave:SetFont("VendorButtonFont")
     self.leave:SetText(L("leave"):upper())
     self.leave:SetTextColor(color_white)
     self.leave:SetContentAlignment(9)
@@ -28,12 +28,12 @@ function PANEL:Init()
     self.leave.x = ScrW() * 0.5 - (self.leave:GetWide() * 0.5)
     if LocalPlayer():CanEditVendor() then
         self.editor = self.buttons:Add("DButton")
-        self.editor:SetFont("liaVendorButtonFont")
+        self.editor:SetFont("VendorButtonFont")
         self.editor:SetText(L("editor"):upper())
         self.editor:SetTextColor(color_white)
         self.editor:SetContentAlignment(9)
         self.editor:SetExpensiveShadow(2, color_black)
-        self.editor.DoClick = function() vgui.Create("liaVendorEditor"):SetZPos(99) end
+        self.editor.DoClick = function() vgui.Create("VendorEditor"):SetZPos(99) end
         self.editor:SizeToContents()
         self.editor:SetPaintBackground(false)
         self.leave.x = self.leave.x + 16 + self.leave:GetWide() * 0.5
@@ -41,13 +41,13 @@ function PANEL:Init()
         self.editor.Paint = function() end
     end
 
-    self.vendor = self:Add("liaVendorTrader")
+    self.vendor = self:Add("VendorTrader")
     self.vendor:SetWide(math.max(ScrW() * 0.25, 220))
     self.vendor:SetPos(ScrW() * 0.5 - self.vendor:GetWide() - 64 / 2, 64 + self.leave:GetTall())
     self.vendor:SetTall(ScrH() - self.vendor.y - 64)
     self.vendor:setName(liaVendorEnt:getNetVar("name"))
     self.vendor:setMoney(liaVendorEnt:getMoney())
-    self.me = self:Add("liaVendorTrader")
+    self.me = self:Add("VendorTrader")
     self.me:SetSize(self.vendor:GetSize())
     self.me:SetPos(ScrW() * 0.5 + 64 / 2, self.vendor.y)
     self.me:setName(L"you")
@@ -63,14 +63,14 @@ function PANEL:Init()
 end
 
 function PANEL:buyItemFromVendor(itemType)
-    net.Start("liaVendorTrade")
+    net.Start("VendorTrade")
     net.WriteString(itemType)
     net.WriteBool(false)
     net.SendToServer()
 end
 
 function PANEL:sellItemToVendor(itemType)
-    net.Start("liaVendorTrade")
+    net.Start("VendorTrade")
     net.WriteString(itemType)
     net.WriteBool(true)
     net.SendToServer()
@@ -102,7 +102,7 @@ function PANEL:updateItem(itemType, parent, quantity)
     end
 
     if not IsValid(panel) then
-        panel = parent.items:Add("liaVendorItem")
+        panel = parent.items:Add("VendorItem")
         panel:setItemType(itemType)
         panel:setIsSelling(parent == self.me)
         self.items[parent][itemType] = panel
@@ -180,7 +180,7 @@ end
 
 function PANEL:OnRemove()
     if not self.noSendExit then
-        net.Start("liaVendorExit")
+        net.Start("VendorExit")
         net.SendToServer()
         self.noSendExit = true
     end
@@ -195,5 +195,5 @@ function PANEL:OnKeyCodePressed(_)
     if useKey then self:Remove() end
 end
 
-vgui.Register("liaVendor", PANEL, "EditablePanel")
-if IsValid(lia.gui.vendor) then vgui.Create("liaVendor") end
+vgui.Register("Vendor", PANEL, "EditablePanel")
+if IsValid(lia.gui.vendor) then vgui.Create("Vendor") end

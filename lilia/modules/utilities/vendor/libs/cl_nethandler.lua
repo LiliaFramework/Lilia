@@ -1,6 +1,6 @@
 ﻿local function addNetHandler(name, handler)
     assert(isfunction(handler), "handler is not a function")
-    net.Receive("liaVendor" .. name, function()
+    net.Receive("Vendor" .. name, function()
         if not IsValid(liaVendorEnt) then return end
         handler(liaVendorEnt)
     end)

@@ -28,6 +28,7 @@ function PANEL:Init()
         panel:DockMargin(0, 0, 0, 4)
         local faction = panel:Add("DCheckBoxLabel")
         faction:Dock(TOP)
+        faction:SetTextColor(color_black)
         faction:SetText(L(v.name))
         faction:DockMargin(0, 0, 0, 4)
         faction.factionID = k
@@ -64,4 +65,4 @@ function PANEL:updateChecked()
     end
 end
 
-vgui.Register("liaVendorFactionEditor", PANEL, "DFrame")
+vgui.Register("VendorFactionEditor", PANEL, "DFrame")
