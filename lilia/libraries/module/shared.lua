@@ -41,10 +41,6 @@ lia.module.ModuleConditions = {
         name = "PCasino",
         global = "PerfectCasino"
     },
-    ["mlogs"] = {
-        name = "mLogs",
-        global = "mLogs"
-    },
     ["sam"] = {
         name = "SAM Admin Mod",
         global = "sam"
