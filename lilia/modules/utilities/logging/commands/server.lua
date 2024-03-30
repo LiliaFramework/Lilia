@@ -20,6 +20,20 @@ lia.command.add("logger", {
     end
 })
 
+lia.command.add("deletelogs", {
+    superAdminOnly = true,
+    privilege = "Erase Logs",
+    onRun = function(client)
+        lia.db.query("DELETE FROM `lilia_logs` WHERE time > 0", function(result)
+            if result then
+                client:ChatPrint("All logs with time greater than 0 have been erased")
+            else
+                client:ChatPrint("Failed to erase logs: " .. sql.LastError())
+            end
+        end)
+    end
+})
+
 lia.command.add("netlogs", {
     superadminOnly = true,
     privilege = "View Advanced Logs",

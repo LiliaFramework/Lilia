@@ -10,6 +10,12 @@ lia.command.add("logger", {
     onRun = function() end
 })
 
+lia.command.add("deletelogs", {
+    superAdminOnly = true,
+    privilege = "Erase Logs",
+    onRun = function() end
+})
+
 lia.command.add("netlogs", {
     superadminOnly = true,
     privilege = "View Advanced Logs",
