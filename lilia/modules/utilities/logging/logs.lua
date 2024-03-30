@@ -107,7 +107,6 @@ lia.log.addType("playerConnected", function(client, ...)
 end, "Connection Logs")
 
 lia.log.addType("spawned_ent", function(client, group, class, hasName, entityName, entityModel) return string.format("%s has spawned a %s with class %s and %s: %s", client:Nick(), group, class, hasName and "Name" or "Model", hasName and entityName or entityModel) end, "Spawn Logs")
-lia.log.addType("Weapon Lost", function(client, weaponName, weaponID) return string.format("%s died & lost their %s (#%s)", client:Name(), weaponName, weaponID) end, "Character Logs")
 lia.log.addType("moneyGiven", function(client, targetName, amount) return string.format("%s has given %s %s.", client:Name(), targetName, lia.currency.get(amount)) end, "Character Logs")
 lia.log.addType("moneyGivenTAB", function(client, targetName, amount) return string.format("%s has given %s %s using TAB.", client:Name(), targetName, lia.currency.get(amount)) end, "Character Logs")
 lia.log.addType("playerDisconnected", function(client, ...) return string.format("%s[%s] has disconnected from the server.", client:Name(), client:SteamID()) end, "Connection Logs")

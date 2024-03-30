@@ -100,7 +100,6 @@ function MODULE:RemoveAllEquippedWeapons(client)
             })
 
             v:remove()
-            lia.log.add("Weapon Lost", client, v.name, v.id)
         end
     end
 
