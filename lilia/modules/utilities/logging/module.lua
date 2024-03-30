@@ -15,11 +15,7 @@ MODULE.Dependencies = {
         File = MODULE.path .. "/main/server.lua",
     },
     {
-        File = MODULE.path .. "/definitions/hooks.lua",
-        Realm = "server",
-    },
-    {
-        File = MODULE.path .. "/definitions/logs.lua",
+        File = MODULE.path .. "/logs.lua",
         Realm = "server",
     },
 }

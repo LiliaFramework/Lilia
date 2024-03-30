@@ -14,6 +14,7 @@ lia.command.add("logger", {
     adminOnly = true,
     privilege = "View Logs",
     onRun = function(client)
+        client:ConCommand("logger_retrieve_categories")
         net.Start("OpenLogger")
         net.Send(client)
     end

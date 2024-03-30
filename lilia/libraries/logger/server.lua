@@ -22,19 +22,24 @@ end
 --- Adds a log type.
 -- @realm server
 -- @string logType Log category
--- @param client Client object
--- @param ... Additional parameters for the log format callback
--- @function log
+-- @param func format callback function(client, ...)
+-- @param category Log category
+-- @param color Log color (optional, defaults to Color(52, 152, 219))
 -- @usage function(client, ...) log format callback
-function lia.log.addType(logType, func)
-    lia.log.types[logType] = func
+function lia.log.addType(logType, func, category, color)
+    color = color or Color(52, 152, 219)
+    lia.log.types[logType] = {
+        func = func,
+        category = category,
+        color = color
+    }
 end
 
 function lia.log.getString(client, logType, ...)
-    local text = lia.log.types[logType]
-    if isfunction(text) then
-        local success, result = pcall(text, client, ...)
-        if success then return result end
+    local logData = lia.log.types[logType]
+    if isfunction(logData.func) then
+        local success, result = pcall(logData.func, client, ...)
+        if success then return result, logData.category, logData.color end
     end
 end
 
@@ -50,10 +55,9 @@ end
 -- @string logType Log category
 -- @param ... Arguments to pass to the log
 function lia.log.add(client, logType, ...)
-    local logString = lia.log.getString(client, logType, ...)
-    if not isstring(logString) then return end
-    if mLogs then lia.log.mLogsLoad(logString) end
-    hook.Run("OnServerLog", client, logType, ...)
+    local logString, category, color = lia.log.getString(client, logType, ...)
+    if not isstring(logString) or not isstring(category) or not IsColor(color) then return end
+    hook.Run("OnServerLog", client, logType, logString, category, color)
     Msg("[LOG] ", logString .. "\n")
     if noSave then return end
     file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n")
@@ -61,10 +65,4 @@ end
 
 function lia.log.send(client, logString, flag)
     netstream.Start(client, "liaLogStream", logString, flag)
-end
-
-function lia.log.mLogsLoad(str)
-    mLogs.log("LiliaLog", "lia", {
-        log = str
-    })
 end

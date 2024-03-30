@@ -62,9 +62,9 @@ net.Receive("SyncLogs", function(_, client)
     net.Send(client)
 end)
 
-concommand.Add("Logger_delete_logs", function()
-    if sql.Query("DELETE FROM `lilia_logs` WHERE time > 0") then
-        print("Logger - All logs have been erased")
+concommand.Add("logger_delete_logs", function()
+    if lia.db.query("DELETE FROM `lilia_logs` WHERE time > 0") then
+        print("Logger - All logs with time greater than 0 have been erased")
     else
         print("Logger - Failed : " .. sql.LastError())
     end
