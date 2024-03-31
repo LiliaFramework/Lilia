@@ -160,3 +160,11 @@ function lia.util.findPlayerBySteamID(SteamID)
     end
     return nil
 end
+
+function lia.util.getFactionClasses(factionID)
+    local classes = {}
+    for k, v in pairs(lia.class.list) do
+        if v.faction == factionID then table.insert(classes, k) end
+    end
+    return classes
+end
