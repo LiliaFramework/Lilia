@@ -15,10 +15,6 @@ local function teamGetPlayers(teamID)
     return players
 end
 
-local function teamNumPlayers(teamID)
-    return #teamGetPlayers(teamID)
-end
-
 local paintFunctions = {}
 paintFunctions[0] = function(_, w, h)
     surface.SetDrawColor(0, 0, 0, 50)
@@ -104,7 +100,7 @@ function PANEL:Think()
     if (self.nextUpdate or 0) < CurTime() then
         local visible, amount
         for k, v in ipairs(self.teams) do
-            visible, amount = v:IsVisible(), teamNumPlayers(k)
+            visible, amount = v:IsVisible(), lia.faction.getPlayerCount(k)
             if k == FACTION_STAFF then
                 v:SetVisible(MODULE.ShowStaff and LocalPlayer():isStaffOnDuty())
             else

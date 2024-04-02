@@ -116,6 +116,15 @@ function lia.faction.formatModelData()
     end
 end
 
+function lia.faction.getPlayerCount(faction)
+    local count = 0
+    for _, v in ipairs(player.GetAll()) do
+        local character = v:getChar()
+        if character and character:getFaction() == faction then count = count + 1 end
+    end
+    return count
+end
+
 function lia.faction.jobGenerate(index, name, color, default, models)
     local FACTION = {}
     FACTION.index = index
@@ -140,10 +149,10 @@ function lia.faction.jobGenerate(index, name, color, default, models)
 end
 
 if CLIENT then
---- Returns true if a faction requires a whitelist.
--- @realm client
--- @number faction Index of the faction
--- @treturn bool Whether or not the faction requires a whitelist
+    --- Returns true if a faction requires a whitelist.
+    -- @realm client
+    -- @number faction Index of the faction
+    -- @treturn bool Whether or not the faction requires a whitelist
     function lia.faction.hasWhitelist(faction)
         local data = lia.faction.indices[faction]
         if data then

@@ -61,6 +61,15 @@ function lia.class.getPlayers(class)
     return players
 end
 
+function lia.class.getPlayerCount(class)
+    local count = 0
+    for _, v in ipairs(player.GetAll()) do
+        local character = v:getChar()
+        if character and character:getClass() == class then count = count + 1 end
+    end
+    return count
+end
+
 function lia.class.retrieveClass(class)
     for key, classTable in pairs(lia.class.list) do
         if lia.util.stringMatches(classTable.uniqueID, class) or lia.util.stringMatches(classTable.name, class) then return key end
