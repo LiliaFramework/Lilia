@@ -2,19 +2,6 @@
 local PANEL = {}
 local StaffCount = 0
 local StaffOnDutyCount = 0
-local function teamGetPlayers(teamID)
-    local players = {}
-    for _, client in next, player.GetAll() do
-        local isDisguised = hook.Run("GetDisguised", client)
-        if isDisguised and isDisguised == teamID then
-            table.insert(players, client)
-        elseif not isDisguised and client:Team() == teamID then
-            table.insert(players, client)
-        end
-    end
-    return players
-end
-
 local paintFunctions = {}
 paintFunctions[0] = function(_, w, h)
     surface.SetDrawColor(0, 0, 0, 50)
@@ -56,7 +43,7 @@ function PANEL:Init()
         list:Dock(TOP)
         list:SetTall(28)
         list.Think = function(this)
-            for _, v2 in ipairs(teamGetPlayers(k)) do
+            for _, v2 in ipairs(lia.faction.getPlayers(k)) do
                 if hook.Run("ShouldShowPlayerOnScoreboard", v2) == false then continue end
                 if not IsValid(v2.liaScoreSlot) or v2.liaScoreSlot:GetParent() ~= this then
                     if IsValid(v2.liaScoreSlot) then
@@ -72,7 +59,6 @@ function PANEL:Init()
         header:Dock(TOP)
         header:SetText(L(v.name))
         header:SetTextInset(3, 0)
-        header:SetContentAlignment(5)
         header:SetFont("liaMediumFont")
         header:SetTextColor(color_white)
         header:SetExpensiveShadow(1, color_black)

@@ -116,6 +116,15 @@ function lia.faction.formatModelData()
     end
 end
 
+function lia.faction.getPlayers(faction)
+    local players = {}
+    for _, v in ipairs(player.GetAll()) do
+        local character = v:getChar()
+        if character and character:getFaction() == faction then table.insert(players, v) end
+    end
+    return players
+end
+
 function lia.faction.getPlayerCount(faction)
     local count = 0
     for _, v in ipairs(player.GetAll()) do
