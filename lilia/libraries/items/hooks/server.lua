@@ -22,7 +22,7 @@ function GM:CanPlayerInteractItem(client, action, item)
     local UserGroupWhitelist = item.ItemInteractUsergroupWhitelist
     local VIPOnly = item.ItemInteractVIP
     if not client:Alive() or client:getLocalVar("ragdoll") then return false end
-    if client.liaRagdoll then return false, "You can't interact with items while ragdolled!" end
+    if IsValid(client.liaRagdoll) then return false, "You can't interact with items while ragdolled!" end
     if SteamIDWhitelist then
         local isWhitelisted = istable(SteamIDWhitelist) and table.HasValue(SteamIDWhitelist, client:SteamID()) or isstring(SteamIDWhitelist) and client:SteamID() == SteamIDWhitelist
         if not isWhitelisted then return false, "You are not whitelisted to use this item!" end
