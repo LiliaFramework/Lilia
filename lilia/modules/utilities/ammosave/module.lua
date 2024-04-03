@@ -1,8 +1,4 @@
-﻿MODULE.name = "Utilities - Ammo Save"
-MODULE.author = "76561198312513285"
-MODULE.discord = "@liliaplayer"
-MODULE.desc = "Adds an Ammo Saving Feature"
---[[--
+﻿--[[--
 Ammo Save Module.
 
 This module manages the saving of ammunition during several player events.
@@ -11,3 +7,7 @@ This module manages the saving of ammunition during several player events.
 - **SaveCharacterAmmo**: Should ammunition be kept on character disconnection? | **bool**.
 ]]
 -- @module lia.ammosave
+MODULE.name = "Utilities - Ammo Save"
+MODULE.author = "76561198312513285"
+MODULE.discord = "@liliaplayer"
+MODULE.desc = "Adds an Ammo Saving Feature"
