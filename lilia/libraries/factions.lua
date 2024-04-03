@@ -73,7 +73,6 @@ function lia.faction.getIndex(uniqueID)
     return lia.faction.teams[uniqueID] and lia.faction.teams[uniqueID].index
 end
 
-
 --- Returns a table containing the classes associated with a faction.
 -- @realm shared
 -- @int faction number The index of the faction
@@ -85,6 +84,7 @@ function lia.faction.getClasses(faction)
     end
     return classes
 end
+
 --- Returns a table containing the players belonging to a specific faction.
 -- @realm shared
 -- @int faction number The index of the faction

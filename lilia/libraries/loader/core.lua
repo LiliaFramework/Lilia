@@ -1,4 +1,6 @@
-﻿lia.config.RealmIdentifiers = {
+﻿--- Core library that manages how files and folders are loaded into the gamemode.
+-- @module lia.include
+lia.config.RealmIdentifiers = {
     client = "client",
     server = "server",
     shared = "shared",
@@ -8,9 +10,15 @@
     permissions = "shared",
     sconfig = "server",
 }
-
-function lia.util.include(fileName, state)
-    if not fileName then error("[Lilia] No file name specified for including.") end
+--- Loads a Lua file into the server, client, or shared realm.
+-- This function includes a Lua file into the server, client, or shared realm depending on the specified state.
+-- This function has an legacy alias "lia.util.include" that can be used instead of lia.include.
+-- @string fileName The name of the Lua file to be included.
+-- @string state The state in which the Lua file should be included: "server", "client", or "shared".
+-- @return If the Lua file is included on the server and the state is "server", it returns the included file; otherwise, no return value.
+-- @realm shared
+function lia.include(fileName, state)
+    if not fileName then error("[Lilia] No file name specified for inclusion.") end
     local matchResult = string.match(fileName, "/([^/]+)%.lua$")
     local fileRealm = matchResult and lia.config.RealmIdentifiers[matchResult] or "NULL"
     if (state == "server" or fileRealm == "server" or fileName:find("sv_")) and SERVER then
@@ -27,7 +35,15 @@ function lia.util.include(fileName, state)
     end
 end
 
-function lia.util.includeDir(directory, fromLua, recursive, realm)
+--- Loads Lua files from a directory into the server, client, or shared realm.
+-- This function recursively includes Lua files from a directory into the specified realm.
+-- This function has a legacy alias "lia.util.includeDir" that can be used instead of lia.includeDir.
+-- @string directory The directory containing the Lua files to be included.
+-- @bool fromLua Specifies if the Lua files are located in the lua/ folder.
+-- @bool recursive Specifies if subdirectories should be included recursively.
+-- @string realm string The realm in which the Lua files should be included: "server", "client", or "shared".
+-- @realm shared
+function lia.includeDir(directory, fromLua, recursive, realm)
     local baseDir = "lilia"
     if SCHEMA and SCHEMA.folder and SCHEMA.loading then
         baseDir = SCHEMA.folder .. "/schema/"
@@ -45,7 +61,7 @@ function lia.util.includeDir(directory, fromLua, recursive, realm)
 
             for _, v in pairs(files) do
                 local fullPath = folder .. "/" .. v
-                lia.util.include(fullPath, realm)
+                lia.include(fullPath, realm)
             end
 
             for _, v in pairs(folders) do
@@ -59,7 +75,14 @@ function lia.util.includeDir(directory, fromLua, recursive, realm)
     else
         for _, v in ipairs(file.Find((fromLua and "" or baseDir) .. directory .. "/*.lua", "LUA")) do
             local fullPath = directory .. "/" .. v
-            lia.util.include(fullPath, realm)
+            lia.include(fullPath, realm)
         end
     end
 end
+
+
+--[[
+Legacy Includer Support :)
+]]
+lia.util.include = lia.include
+lia.util.includeDir = lia.includeDir
