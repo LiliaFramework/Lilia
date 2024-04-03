@@ -10,4 +10,4 @@ This module manages the saving of ammunition during several player events.
 - **KeepAmmoOnDeath**: Should ammunition be kept on character death? | **bool**.
 - **SaveCharacterAmmo**: Should ammunition be kept on character disconnection? | **bool**.
 ]]
--- @module ammosave
+-- @module lia.ammosave
