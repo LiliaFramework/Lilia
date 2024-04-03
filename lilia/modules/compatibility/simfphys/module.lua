@@ -3,6 +3,8 @@ Compatibility - Simfphys
 
 This module implements compatibility to Simfphys.
 
+-- Configuration Values.
+
 - **DamageInCars**: Either or not you take damage while in cars? | **bool**.
 
 - **ValidCarDamages**: The valid types of damage on cars that should apply to the client | **table**.

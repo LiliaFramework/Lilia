@@ -1,0 +1,459 @@
+--[[--
+Core - Protection.
+
+-- @moduleinfo protection
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Protection - Anti Exploits.
+
+-- @moduleinfo antiexploits
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Anti Exploits - GMOD Version.
+
+-- @moduleinfo gmod
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Anti Exploits - Lilia Version.
+
+-- @moduleinfo lilia
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Protection - Anti Family Sharing.
+
+-- @moduleinfo antifamilysharing
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Protection - Anti Hacking.
+
+-- @moduleinfo antihacking
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Protection - Character Analysis.
+
+-- @moduleinfo characteranalysis
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Core - Spawns.
+
+-- @moduleinfo spawns
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Core - Teams.
+
+-- @moduleinfo teams
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Core - 3D Voice.
+
+-- @moduleinfo voice
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Framework UI - Chatbox.
+
+-- @moduleinfo chatbox
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Framework UI - Crash Screen.
+
+-- @moduleinfo crashscreen
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Framework UI - Credits.
+
+-- @moduleinfo credits
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Framework UI - F1 Menu.
+
+-- @moduleinfo f1menu
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Framework UI - HUD.
+
+-- @moduleinfo hud
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Framework UI - Main Menu.
+
+-- @moduleinfo mainmenu
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+Main Menu - Character Selection.
+
+-- @moduleinfo charselect
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Framework UI - Scoreboard.
+
+-- @moduleinfo scoreboard
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Framework UI - Weapon Selector.
+
+-- @moduleinfo weaponselector
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Characters - Attributes.
+
+-- @moduleinfo attributes
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Characters - Bodygrouper.
+
+-- @moduleinfo bodygrouper
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Characters - Framework Inventory.
+
+-- @moduleinfo inventory
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Framework Inventory - Storage.
+
+-- @moduleinfo storage
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Characters - Permakill.
+
+-- @moduleinfo permakill
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Characters - Raised Weapons.
+
+-- @moduleinfo raiseweapons
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Characters - Realistic Damage.
+
+-- @moduleinfo realisticdamage
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Characters - Recognition.
+
+-- @moduleinfo recognition
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Characters - Salary.
+
+-- @moduleinfo salary
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Utilities - Doors.
+
+-- @moduleinfo doors
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Utilities - DownTime Notifier.
+
+-- @moduleinfo downtime
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Utilities - Save Items.
+
+-- @moduleinfo itemsave
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Utilities - Logger.
+
+-- @moduleinfo logging
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Utilities - Persistance.
+
+-- @moduleinfo persistance
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Utilities - Third Person.
+
+-- @moduleinfo thirdperson
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Utilities - Typing.
+
+-- @moduleinfo typing
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Utilities - Vendors.
+
+-- @moduleinfo vendor
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Utilities - Easy Weapons.
+
+-- @moduleinfo wepgenerator
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Utilities - Server Whitelist.
+
+-- @moduleinfo whitelist
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Utilities - Workshop Downloader.
+
+-- @moduleinfo workshopdownloader
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+
+--[[--
+Utilities - Doors
+
+-- @moduleinfo doors
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Framework UI - F1 Menu
+
+-- @moduleinfo f1menu
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Framework UI - HUD
+
+-- @moduleinfo hud
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Characters - Framework Inventory
+
+-- @moduleinfo inventory
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Framework Inventory - Storage
+
+-- @moduleinfo storage
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Characters - Salary
+
+-- @moduleinfo salary
+
+This module manages .
+
+- ****: Should | **bool**.
+]]
+
+--[[--
+Framework UI - Scoreboard
+
+-- @moduleinfo scoreboard
+
+This module manages .
+
+- ****: Should | **bool**.
+]]

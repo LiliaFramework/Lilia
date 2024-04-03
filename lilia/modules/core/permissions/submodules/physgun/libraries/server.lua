@@ -44,6 +44,10 @@ function GM:OnPhysgunFreeze(_, physObj, entity, client)
     client:AddFrozenPhysicsObject(entity, physObj)
     client:SendHint("PhysgunUnfreeze", 0.3)
     client:SuppressHint("PhysgunFreeze")
-    if PermissionCore.PassableOnFreeze then physObj:EnableCollisions(false) end
+    if PermissionCore.PassableOnFreeze then
+        entity:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
+    else
+        entity:SetCollisionGroup(COLLISION_GROUP_NONE)
+    end
     return true
 end
