@@ -141,7 +141,7 @@ function lia.faction.jobGenerate(index, name, color, default, models)
     FACTION.name = name
     FACTION.desc = ""
     FACTION.color = color
-    FACTION.models = models or lia.faction.DefaultModels
+    FACTION.models = models or lia.faction.DefaultModels -- Use default models if 'models' is nil
     FACTION.uniqueID = name
     for _, v in pairs(FACTION.models) do
         if isstring(v) then
