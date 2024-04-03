@@ -73,6 +73,107 @@ function lia.faction.getIndex(uniqueID)
     return lia.faction.teams[uniqueID] and lia.faction.teams[uniqueID].index
 end
 
+
+--- Returns a table containing the classes associated with a faction.
+-- @realm client
+-- @param faction number The index of the faction
+-- @treturn table A table containing the indices of the classes associated with the faction
+function lia.faction.getClasses(faction)
+    local classes = {}
+    for _, class in pairs(lia.class.list) do
+        if class.faction == faction then table.insert(classes, class.index) end
+    end
+    return classes
+end
+--- Returns a table containing the players belonging to a specific faction.
+-- @realm client
+-- @param faction number The index of the faction
+-- @treturn table A table containing the players belonging to the specified faction
+function lia.faction.getPlayers(faction)
+    local players = {}
+    for _, v in ipairs(player.GetAll()) do
+        local character = v:getChar()
+        if character and character:getFaction() == faction then table.insert(players, v) end
+    end
+    return players
+end
+--- Returns the number of players belonging to a specific faction.
+-- @realm client
+-- @param faction number The index of the faction
+-- @treturn number The number of players belonging to the specified faction
+function lia.faction.getPlayerCount(faction)
+    local count = 0
+    for _, v in ipairs(player.GetAll()) do
+        local character = v:getChar()
+        if character and character:getFaction() == faction then count = count + 1 end
+    end
+    return count
+end
+
+--- Generates a faction job.
+-- @realm server
+-- @number index The index of the faction. This should be a unique numerical identifier for the faction.
+-- @string name The name of the faction.
+-- @table color The color of the faction.
+-- @bool default Whether the faction is default or not.
+-- @table models (Optional) The models associated with the faction.
+-- @usage 
+-- function GenerateCustomFaction()
+--     -- This function is an example of how to create a custom faction using lia.faction.jobGenerate.
+--     -- It is not recommended to use this method directly as it may lead to unexpected behavior.
+--     -- Instead, consider using more appropriate methods provided by the framework, such as faction files.
+--     local index = 1
+--     local name = "Custom Faction"
+--     local color = Color(255, 0, 0)
+--     local default = false
+--     local models = {
+--         "models/player/custom_model.mdl",
+--         "models/player/custom_accessory.mdl"
+--     }
+--     local factionData = lia.faction.jobGenerate(index, name, color, default, models)
+-- end
+function lia.faction.jobGenerate(index, name, color, default, models)
+    -- This function should not be used directly. It is not recommended to use this method for creating faction jobs.
+    -- It may lead to unexpected behavior and should be replaced with more appropriate methods.
+    local FACTION = {}
+    FACTION.index = index
+    FACTION.isDefault = default
+    FACTION.name = name
+    FACTION.desc = ""
+    FACTION.color = color
+    FACTION.models = models or lia.faction.DefaultModels
+    FACTION.uniqueID = name
+    for _, v in pairs(FACTION.models) do
+        if isstring(v) then
+            util.PrecacheModel(v)
+        elseif istable(v) then
+            util.PrecacheModel(v[1])
+        end
+    end
+
+    lia.faction.indices[FACTION.index] = FACTION
+    lia.faction.teams[name] = FACTION
+    team.SetUp(FACTION.index, FACTION.name, FACTION.color)
+    return FACTION
+end
+
+
+if CLIENT then
+    --- Returns true if a faction requires a whitelist.
+    -- @realm client
+    -- @number faction Index of the faction
+    -- @treturn bool Whether or not the faction requires a whitelist
+    function lia.faction.hasWhitelist(faction)
+        local data = lia.faction.indices[faction]
+        if data then
+            if data.isDefault then return true end
+            local liaData = lia.localData and lia.localData.whitelists or {}
+            return liaData[SCHEMA.folder] and liaData[SCHEMA.folder][data.uniqueID] == true or false
+        end
+        return false
+    end
+end
+
 function lia.faction.formatModelData()
     for name, faction in pairs(lia.faction.teams) do
         if faction.models then
@@ -113,70 +214,5 @@ function lia.faction.formatModelData()
                 end
             end
         end
-    end
-end
-
-function lia.faction.getClasses(faction)
-    local classes = {}
-    for _, class in pairs(lia.class.list) do
-        if class.faction == faction then table.insert(classes, class.index) end
-    end
-    return classes
-end
-
-function lia.faction.getPlayers(faction)
-    local players = {}
-    for _, v in ipairs(player.GetAll()) do
-        local character = v:getChar()
-        if character and character:getFaction() == faction then table.insert(players, v) end
-    end
-    return players
-end
-
-function lia.faction.getPlayerCount(faction)
-    local count = 0
-    for _, v in ipairs(player.GetAll()) do
-        local character = v:getChar()
-        if character and character:getFaction() == faction then count = count + 1 end
-    end
-    return count
-end
-
-function lia.faction.jobGenerate(index, name, color, default, models)
-    local FACTION = {}
-    FACTION.index = index
-    FACTION.isDefault = default
-    FACTION.name = name
-    FACTION.desc = ""
-    FACTION.color = color
-    FACTION.models = models or lia.faction.DefaultModels
-    FACTION.uniqueID = name
-    for _, v in pairs(FACTION.models) do
-        if isstring(v) then
-            util.PrecacheModel(v)
-        elseif istable(v) then
-            util.PrecacheModel(v[1])
-        end
-    end
-
-    lia.faction.indices[FACTION.index] = FACTION
-    lia.faction.teams[name] = FACTION
-    team.SetUp(FACTION.index, FACTION.name, FACTION.color)
-    return FACTION
-end
-
-if CLIENT then
-    --- Returns true if a faction requires a whitelist.
-    -- @realm client
-    -- @number faction Index of the faction
-    -- @treturn bool Whether or not the faction requires a whitelist
-    function lia.faction.hasWhitelist(faction)
-        local data = lia.faction.indices[faction]
-        if data then
-            if data.isDefault then return true end
-            local liaData = lia.localData and lia.localData.whitelists or {}
-            return liaData[SCHEMA.folder] and liaData[SCHEMA.folder][data.uniqueID] == true or false
-        end
-        return false
     end
 end
