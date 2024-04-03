@@ -1,7 +1,7 @@
 ﻿--[[--
 Core - Interaction Menu.
 
-This module implements a Interaction Menu, that can be opened using tab. This module allows an developer to add easy P2P interactions, like giving money, to a menu. 
+This module implements a Interaction Menu, that can be opened using tab. This module allows an developer to add easy P2P interactions, like giving money, to a menu.
 
 -- Configuration Values.
 

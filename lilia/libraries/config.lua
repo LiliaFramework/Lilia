@@ -64,7 +64,7 @@ This library contains various configuration options used in the Lilia gamemode. 
   - **Notify[1]**: Notification sound file path | **string**.
 
   - **Notify[2]**: Notification volume | **integer**.
-  
+
   - **Notify[3]**: Notification pitch | **integer**.
 
 These configuration options control various aspects of the gamemode's mechanics, user interface, and gameplay experience.
