@@ -89,12 +89,6 @@
 - Created an Expanded Wiki for Players to be able to understand the framework easily
 ## # Addons with Improved Compatibility
 
-#### PCasino
-
-- **Addon URL:** [PCasino - The Perfect Casino Addon](https://www.gmodstore.com/market/view/pcasino-the-perfect-casino-addon-roulette-blackjack-slots-prize-wheel)
-
-- **Compatibility Added:** Added monetary compatibility.
-
 #### Prone Mod
 
 - **Addon URL:** [Prone Mod](https://github.com/gspetrou/Prone-Mod)
