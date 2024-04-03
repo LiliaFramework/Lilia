@@ -1,7 +1,7 @@
 ﻿--[[--
 Configuration options for Lilia.
 
-This module contains various configuration options used in the Lilia gamemode. Each option in the **lia.config** table serves a specific purpose and defines various aspects of the gamemode's functionality.
+This library contains various configuration options used in the Lilia gamemode. Each option in the **lia.config** table serves a specific purpose and defines various aspects of the gamemode's functionality.
 
 - **WalkSpeed**: Controls how fast characters walk | **integer**.
 - **RunSpeed**: Controls how fast characters run | **integer**.
