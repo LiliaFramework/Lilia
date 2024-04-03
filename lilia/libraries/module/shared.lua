@@ -101,6 +101,7 @@ lia.module.ModuleConditions = {
 -- @string path string The path to the module.
 -- @bool isSingleFile boolean Specifies if the module is contained in a single file.
 -- @string variable string The variable name to assign the module to.
+-- @realm shared
 -- @internal
 function lia.module.load(uniqueID, path, isSingleFile, variable)
     local lowerVariable = variable:lower()
@@ -220,8 +221,10 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         lia.module.list[uniqueID] = MODULE
         _G[variable] = oldModule
     end
-
-    hook.Run("ModuleLoaded")
+    
+    if MODULE.ModuleLoaded and isfunction(MODULE.ModuleLoaded) then
+        MODULE:ModuleLoaded()
+    end
 end
 
 function lia.module.loadExtras(path)
