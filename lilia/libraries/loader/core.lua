@@ -10,9 +10,10 @@ lia.config.RealmIdentifiers = {
     permissions = "shared",
     sconfig = "server",
 }
+
 --- Loads a Lua file into the server, client, or shared realm.
 -- This function includes a Lua file into the server, client, or shared realm depending on the specified state.
--- This function has an legacy alias "lia.util.include" that can be used instead of lia.include.
+-- This function has an legacy alias *lia.util.include* that can be used instead of lia.include.
 -- @string fileName The name of the Lua file to be included.
 -- @string state The state in which the Lua file should be included: "server", "client", or "shared".
 -- @return If the Lua file is included on the server and the state is "server", it returns the included file; otherwise, no return value.
@@ -37,7 +38,7 @@ end
 
 --- Loads Lua files from a directory into the server, client, or shared realm.
 -- This function recursively includes Lua files from a directory into the specified realm.
--- This function has a legacy alias "lia.util.includeDir" that can be used instead of lia.includeDir.
+-- This function has a legacy alias *lia.util.includeDir* that can be used instead of lia.includeDir.
 -- @string directory The directory containing the Lua files to be included.
 -- @bool fromLua Specifies if the Lua files are located in the lua/ folder.
 -- @bool recursive Specifies if subdirectories should be included recursively.

@@ -12,18 +12,7 @@ lia.module.ModuleFolders = {"dependencies", "config", "libs", "hooks", "librarie
 --- The list of files to be included by default within a module. Those follow the default inclusion method: lia.util.include(file).
 -- @realm shared
 -- @internal
-lia.module.ModuleFiles = {
-    ["client.lua"] = "client",
-    ["cl_module.lua"] = "client",
-    ["sv_module.lua"] = "server",
-    ["server.lua"] = "server",
-    ["config.lua"] = "shared",
-    ["sconfig.lua"] = "server",
-}
-
---- The list of globals and subsequent modules to be activated upon detection. This allows compatibility modules to activate only when the addon is present.
--- @realm shared
--- @internal
+lia.module.ModuleFiles = {"client.lua", "cl_module.lua", "sv_module.lua", "server.lua", "config.lua", "sconfig.lua",}
 lia.module.ModuleConditions = {
     ["stormfox2"] = {
         name = "StormFox 2",
@@ -232,9 +221,9 @@ function lia.module.loadExtras(path)
     lia.faction.loadFromDir(path .. "/factions")
     lia.class.loadFromDir(path .. "/classes")
     lia.attribs.loadFromDir(path .. "/attributes")
-    for fileName, state in pairs(lia.module.ModuleFiles) do
+    for _, fileName in ipairs(lia.module.ModuleFiles) do
         local filePath = path .. "/" .. fileName
-        if file.Exists(filePath, "LUA") then lia.util.include(filePath, state) end
+        if file.Exists(filePath, "LUA") then lia.include(filePath) end
     end
 
     for _, folder in ipairs(lia.module.ModuleFolders) do
