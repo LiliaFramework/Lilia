@@ -279,6 +279,7 @@ end
 -- This function loads modules from a specified directory into the system.
 -- @string directory The path to the directory containing modules.
 -- @string group The group of the modules (e.g., "schema" or "module").
+-- @realm shared
 function lia.module.loadFromDir(directory, group)
     local location = group == "schema" and "SCHEMA" or "MODULE"
     local files, folders = file.Find(directory .. "/*", "LUA")
@@ -295,6 +296,7 @@ end
 -- This function retrieves a module table based on its identifier.
 -- @string identifier The identifier of the module.
 -- @return table The module object.
+-- @realm shared
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
