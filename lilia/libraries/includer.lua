@@ -1,5 +1,6 @@
-﻿--- Core library that manages how files and folders are loaded into the gamemode.
--- @module lia.include
+﻿--- Top-level library containing all Lilia libraries. A large majority of the framework is split into respective libraries that
+-- reside within `lia`.
+-- @module lia
 lia.config.RealmIdentifiers = {
     client = "client",
     server = "server",

@@ -1,6 +1,4 @@
-﻿--- Top-level library containing all Lilia libraries. A large majority of the framework is split into respective libraries that
--- reside within `lia`.
--- @module lia
+﻿
 DeriveGamemode("sandbox")
 lia = lia or {
     util = {},
