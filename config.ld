@@ -53,7 +53,7 @@ custom_display_name_handler = function(item, default_handler)
 end
 
 new_type("hooks", "Hooks", true)
-new_type("module_info", "Module Configuration", true)
+new_type("module_info", "Modules", true)
 new_type("panel", "Panels", true)
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
