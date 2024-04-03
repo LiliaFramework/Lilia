@@ -221,7 +221,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         lia.module.list[uniqueID] = MODULE
         _G[variable] = oldModule
     end
-    
+
     if MODULE.ModuleLoaded and isfunction(MODULE.ModuleLoaded) then
         MODULE:ModuleLoaded()
     end
@@ -293,4 +293,3 @@ end
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
-
