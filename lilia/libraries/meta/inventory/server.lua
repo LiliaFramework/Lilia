@@ -34,7 +34,7 @@ function Inventory:initializeStorage(initialData)
     lia.db.insertTable({
         _invType = self.typeID,
         _charID = charID
-    }, function(results, lastID)
+    }, function(_, lastID)
         local count = 0
         local expected = table.Count(initialData)
         if initialData.char then expected = expected - 1 end
@@ -54,7 +54,7 @@ function Inventory:initializeStorage(initialData)
     return d
 end
 
-function Inventory:restoreFromStorage(id)
+function Inventory:restoreFromStorage()
 end
 
 function Inventory:removeItem(itemID, preserveItem)
@@ -181,7 +181,7 @@ function Inventory:loadItems()
     end)
 end
 
-function Inventory:onItemsLoaded(items)
+function Inventory:onItemsLoaded()
 end
 
 function Inventory:instance(initialData)
@@ -219,7 +219,7 @@ function Inventory:sync(recipients)
     local compressedTable = util.Compress(util.TableToJSON(items))
     net.WriteUInt(#compressedTable, 32)
     net.WriteData(compressedTable, #compressedTable)
-    local res = net.Send(recipients or self:getRecipients())
+    net.Send(recipients or self:getRecipients())
     for _, item in pairs(self.items) do
         item:onSync(recipients)
     end

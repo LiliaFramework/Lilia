@@ -19,7 +19,7 @@ function Inventory:extend(className)
     return subClass
 end
 
-function Inventory:configure(config)
+function Inventory:configure()
 end
 
 function Inventory:addDataProxy(key, onChange)
