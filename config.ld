@@ -41,7 +41,7 @@ custom_tags = {
 
 custom_display_name_handler = function(item, default_handler)
 	if (item.type == "function" and item.module) then
-		if (item.module.type == "classmod" or item.module.type == "panel" or item.module.type == "module_info") then
+		if (item.module.type == "classmod" or item.module.type == "panel" or item.module.type == "moduleinfo") then
 			return item.module.mod_name .. ":" .. default_handler(item)
 		elseif (item.module.type == "hooks") then
 			return item.module.mod_name:upper() .. ":" .. default_handler(item)
@@ -53,7 +53,7 @@ custom_display_name_handler = function(item, default_handler)
 end
 
 new_type("hooks", "Hooks", true)
-new_type("module_info", "Modules", true)
+new_type("moduleinfo", "Modules", true)
 new_type("panel", "Panels", true)
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
