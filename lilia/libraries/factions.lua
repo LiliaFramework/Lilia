@@ -122,9 +122,8 @@ This function is an example of how to create a custom faction using `lia.faction
 -- @bool default Whether the faction is default or not.
 -- @table models (Optional) The models associated with the faction.
 -- @usage
---     lia.faction.jobGenerate(9, "Custom Faction", Color(255, 0, 0), false, {"models/player/custom_model.mdl",
---         "models/player/custom_accessory.mdl"})
---     lia.faction.jobGenerate(10, "Another Custom Faction", Color(255, 255, 0), false, lia.faction.DefaultModels)
+-- 	lia.faction.jobGenerate(9, "Custom Faction", Color(255, 0, 0), false, {"models/player/custom_model.mdl", "models/player/custom_accessory.mdl"})   
+-- 	lia.faction.jobGenerate(10, "Another Custom Faction", Color(255, 255, 0), false, lia.faction.DefaultModels)
 function lia.faction.jobGenerate(index, name, color, default, models)
     local FACTION = {}
     FACTION.index = index
