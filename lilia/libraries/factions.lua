@@ -110,7 +110,11 @@ function lia.faction.getPlayerCount(faction)
     return count
 end
 
---- Generates a faction job.
+--[[--
+Generates a faction job.
+
+This function is an example of how to create a custom faction using `lia.faction.jobGenerate`. It is not recommended to use this method directly as it may lead to unexpected behavior. Instead, consider using more appropriate methods provided by the framework, such as faction files.
+]]
 -- @realm server
 -- @number index The index of the faction. This should be a unique numerical identifier for the faction.
 -- @string name The name of the faction.
@@ -118,30 +122,17 @@ end
 -- @bool default Whether the faction is default or not.
 -- @table models (Optional) The models associated with the faction.
 -- @usage
--- function GenerateCustomFaction()
---     -- This function is an example of how to create a custom faction using lia.faction.jobGenerate.
---     -- It is not recommended to use this method directly as it may lead to unexpected behavior.
---     -- Instead, consider using more appropriate methods provided by the framework, such as faction files.
---     local index = 1
---     local name = "Custom Faction"
---     local color = Color(255, 0, 0)
---     local default = false
---     local models = {
---         "models/player/custom_model.mdl",
---         "models/player/custom_accessory.mdl"
---     }
---     local factionData = lia.faction.jobGenerate(index, name, color, default, models)
--- end
+--     lia.faction.jobGenerate(9, "Custom Faction", Color(255, 0, 0), false, {"models/player/custom_model.mdl",
+--         "models/player/custom_accessory.mdl"})
+--     lia.faction.jobGenerate(10, "Another Custom Faction", Color(255, 255, 0), false, lia.faction.DefaultModels)
 function lia.faction.jobGenerate(index, name, color, default, models)
-    -- This function should not be used directly. It is not recommended to use this method for creating faction jobs.
-    -- It may lead to unexpected behavior and should be replaced with more appropriate methods.
     local FACTION = {}
     FACTION.index = index
     FACTION.isDefault = default
     FACTION.name = name
     FACTION.desc = ""
     FACTION.color = color
-    FACTION.models = models or lia.faction.DefaultModels -- Use default models if 'models' is nil
+    FACTION.models = models or lia.faction.DefaultModels
     FACTION.uniqueID = name
     for _, v in pairs(FACTION.models) do
         if isstring(v) then
