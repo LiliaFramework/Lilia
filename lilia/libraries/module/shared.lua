@@ -4,14 +4,7 @@ lia.module = lia.module or {}
 lia.module.EnabledList = {}
 lia.module.list = lia.module.list or {}
 lia.module.unloaded = lia.module.unloaded or {}
-
---- The list of folders to be included by default within a module. Those follow the default inclusion method; lia.util.includeDir(folder).
--- @realm shared
--- @internal
 lia.module.ModuleFolders = {"dependencies", "config", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim", "concommands"}
---- The list of files to be included by default within a module. Those follow the default inclusion method: lia.util.include(file).
--- @realm shared
--- @internal
 lia.module.ModuleFiles = {"client.lua", "cl_module.lua", "sv_module.lua", "server.lua", "config.lua", "sconfig.lua"}
 lia.module.ModuleConditions = {
     ["stormfox2"] = {
@@ -124,9 +117,9 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     MODULE.loading = true
     MODULE.path = path
     if isSingleFile then
-        lia.util.include(path, "shared")
+        lia.include(path, "shared")
     else
-        lia.util.include(ModuleCore and normalpath or ExtendedCore and extendedpath, "shared")
+        lia.include(ModuleCore and normalpath or ExtendedCore and extendedpath, "shared")
     end
 
     local ModuleWorkshopContent = MODULE.WorkshopContent
@@ -171,10 +164,10 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
             for _, dependency in ipairs(ModuleDependencies) do
                 local filepath = dependency.File
                 local realm = dependency.Realm
-                lia.util.include(filepath, realm)
+                lia.include(filepath, realm)
             end
         else
-            lia.util.include(filepath)
+            lia.include(filepath)
         end
     end
 
@@ -228,7 +221,7 @@ function lia.module.loadExtras(path)
 
     for _, folder in ipairs(lia.module.ModuleFolders) do
         local subFolders = path .. "/" .. folder
-        if file.Exists(subFolders, "LUA") then lia.util.includeDir(subFolders, true, true) end
+        if file.Exists(subFolders, "LUA") then lia.includeDir(subFolders, true, true) end
     end
 
     lia.util.loadEntities(path .. "/entities")

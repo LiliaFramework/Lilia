@@ -22,7 +22,7 @@ function lia.faction.loadFromDir(directory)
         }
 
         if MODULE then FACTION.module = MODULE.uniqueID end
-        lia.util.include(directory .. "/" .. v, "shared")
+        lia.include(directory .. "/" .. v, "shared")
         if not FACTION.name then
             FACTION.name = "Unknown"
             ErrorNoHalt("Faction '" .. niceName .. "' is missing a name. You need to add a FACTION.name = \"Name\"\n")

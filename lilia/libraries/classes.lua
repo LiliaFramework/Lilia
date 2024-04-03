@@ -25,7 +25,7 @@ function lia.class.loadFromDir(directory)
         CLASS.desc = "No description available."
         CLASS.limit = 0
         if MODULE then CLASS.module = MODULE.uniqueID end
-        lia.util.include(directory .. "/" .. v, "shared")
+        lia.include(directory .. "/" .. v, "shared")
         if not CLASS.faction or not team.Valid(CLASS.faction) then
             ErrorNoHalt("Class '" .. niceName .. "' does not have a valid faction!\n")
             CLASS = nil

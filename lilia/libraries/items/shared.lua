@@ -122,7 +122,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or lia.item.DefaultFunctions)
     end
 
-    if not luaGenerated and path then lia.util.include(path, "shared") end
+    if not luaGenerated and path then lia.include(path, "shared") end
     ITEM:onRegistered()
     local itemType = ITEM.uniqueID
     targetTable[itemType] = ITEM

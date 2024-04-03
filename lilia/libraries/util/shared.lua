@@ -89,11 +89,11 @@ function lia.util.loadEntities(path)
     local files, folders
     local function IncludeFiles(path2, clientOnly)
         if (SERVER and file.Exists(path2 .. "init.lua", "LUA")) or (CLIENT and file.Exists(path2 .. "cl_init.lua", "LUA")) then
-            lia.util.include(path2 .. "init.lua", clientOnly and "client" or "server")
-            if file.Exists(path2 .. "cl_init.lua", "LUA") then lia.util.include(path2 .. "cl_init.lua", "client") end
+            lia.include(path2 .. "init.lua", clientOnly and "client" or "server")
+            if file.Exists(path2 .. "cl_init.lua", "LUA") then lia.include(path2 .. "cl_init.lua", "client") end
             return true
         elseif file.Exists(path2 .. "shared.lua", "LUA") then
-            lia.util.include(path2 .. "shared.lua", "shared")
+            lia.include(path2 .. "shared.lua", "shared")
             return true
         end
         return false
@@ -121,7 +121,7 @@ function lia.util.loadEntities(path)
             local niceName = string.StripExtension(v)
             _G[variable] = table.Copy(default)
             _G[variable].ClassName = niceName
-            lia.util.include(path .. "/" .. folder .. "/" .. v, clientOnly and "client" or "shared")
+            lia.include(path .. "/" .. folder .. "/" .. v, clientOnly and "client" or "shared")
             if clientOnly then
                 if CLIENT then register(_G[variable], niceName) end
             else
