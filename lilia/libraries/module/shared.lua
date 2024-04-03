@@ -12,7 +12,7 @@ lia.module.ModuleFolders = {"dependencies", "config", "libs", "hooks", "librarie
 --- The list of files to be included by default within a module. Those follow the default inclusion method: lia.util.include(file).
 -- @realm shared
 -- @internal
-lia.module.ModuleFiles = {"client.lua", "cl_module.lua", "sv_module.lua", "server.lua", "config.lua", "sconfig.lua",}
+lia.module.ModuleFiles = {"client.lua", "cl_module.lua", "sv_module.lua", "server.lua", "config.lua", "sconfig.lua"}
 lia.module.ModuleConditions = {
     ["stormfox2"] = {
         name = "StormFox 2",
