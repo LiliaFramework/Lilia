@@ -15,10 +15,6 @@ lia.module.ModuleConditions = {
         name = "Prone Mod",
         global = "prone"
     },
-    ["playx"] = {
-        name = "PlayX",
-        global = "PlayX"
-    },
     ["streamradios"] = {
         name = "3D Stream Radios",
         global = "StreamRadioLib"
@@ -30,10 +26,6 @@ lia.module.ModuleConditions = {
     ["vjbase"] = {
         name = "VJ Base",
         global = "VJ"
-    },
-    ["pcasino"] = {
-        name = "PCasino",
-        global = "PerfectCasino"
     },
     ["sam"] = {
         name = "SAM Admin Mod",
@@ -204,10 +196,9 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         _G[variable] = oldModule
     end
 
-    if MODULE.ModuleLoaded and isfunction(MODULE.ModuleLoaded) then
-        MODULE:ModuleLoaded()
-    end
+    if MODULE.ModuleLoaded and isfunction(MODULE.ModuleLoaded) then MODULE:ModuleLoaded() end
 end
+
 --- Loads the additional files associated with the module.
 -- This function loads extra files tied to the module, such as language files, factions, classes, and attributes.
 -- @string path The path to the module directory.
