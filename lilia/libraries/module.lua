@@ -208,7 +208,11 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         MODULE:ModuleLoaded()
     end
 end
-
+--- Loads the additional files associated with the module.
+-- This function loads extra files tied to the module, such as language files, factions, classes, and attributes.
+-- @string path The path to the module directory.
+-- @realm shared
+-- @internal
 function lia.module.loadExtras(path)
     lia.lang.loadFromDir(path .. "/languages")
     lia.faction.loadFromDir(path .. "/factions")
@@ -231,6 +235,10 @@ function lia.module.loadExtras(path)
     hook.Run("DoModuleIncludes", path, MODULE)
 end
 
+--- Loads and initializes the modules.
+-- This function loads and initializes modules located under their respective folders.
+-- @realm shared
+-- @internal
 function lia.module.initialize()
     local schema = engine.ActiveGamemode()
     lia.module.loadFromDir(schema .. "/overrides", "module")
@@ -246,6 +254,13 @@ function lia.module.initialize()
     hook.Run("InitializedModules")
 end
 
+--- Checks if a module should load.
+-- This function verifies whether a module should be loaded based on its unique ID and conditions.
+-- @bool uniqueID The unique identifier of the module.
+-- @string isEnabled Is the module enabled?
+-- @return boolean Should the module be loaded?
+-- @realm shared
+-- @internal
 function lia.module.verifyModuleValidity(uniqueID, isEnabled)
     if uniqueID == "schema" then return true end
     for ModuleName, conditions in pairs(lia.module.ModuleConditions) do
@@ -260,6 +275,10 @@ function lia.module.verifyModuleValidity(uniqueID, isEnabled)
     return isEnabled ~= false
 end
 
+--- Loads modules from a directory.
+-- This function loads modules from a specified directory into the system.
+-- @string directory The path to the directory containing modules.
+-- @string group The group of the modules (e.g., "schema" or "module").
 function lia.module.loadFromDir(directory, group)
     local location = group == "schema" and "SCHEMA" or "MODULE"
     local files, folders = file.Find(directory .. "/*", "LUA")
@@ -272,6 +291,10 @@ function lia.module.loadFromDir(directory, group)
     end
 end
 
+--- Retrieves a module.
+-- This function retrieves a module table based on its identifier.
+-- @string identifier The identifier of the module.
+-- @return table The module object.
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end

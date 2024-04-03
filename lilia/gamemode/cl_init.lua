@@ -8,6 +8,6 @@ lia = lia or {
 include("lilia/libraries/config.lua")
 include("lilia/gamemode/shared.lua")
 include("lilia/libraries/fonts.lua")
-include("lilia/libraries/loader/core.lua")
-include("lilia/libraries/loader/libraries.lua")
+include("lilia/libraries/includer.lua")
+include("lilia/libraries/loader.lua")
 include("lilia/libraries/data/shared.lua")
