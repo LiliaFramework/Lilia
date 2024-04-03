@@ -118,9 +118,9 @@ This function is an example of how to create a custom faction using `lia.faction
 -- @realm server
 -- @number index The index of the faction. This should be a unique numerical identifier for the faction.
 -- @string name The name of the faction.
--- @table color The color of the faction.
+-- @tab color The color of the faction.
 -- @bool default Whether the faction is default or not.
--- @table models (Optional) The models associated with the faction.
+-- @tab models (Optional) The models associated with the faction.
 -- @usage
 -- 	lia.faction.jobGenerate(9, "Custom Faction", Color(255, 0, 0), false, {"models/player/custom_model.mdl", "models/player/custom_accessory.mdl"})   
 -- 	lia.faction.jobGenerate(10, "Another Custom Faction", Color(255, 255, 0), false, lia.faction.DefaultModels)
