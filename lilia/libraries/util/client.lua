@@ -214,7 +214,7 @@ function lia.util.notify(message)
     notice:SetMessage(message)
     notice:SetPos(ScrW(), ScrH() - (i - 1) * (notice:GetTall() + 4) + 4)
     notice:MoveToFront()
-    OrganizeNotices(i)
+    OrganizeNotices(false)
     timer.Simple(10, function()
         if IsValid(notice) then
             notice:AlphaTo(0, 1, 0, function()
@@ -223,7 +223,7 @@ function lia.util.notify(message)
                     if k == notice then table.remove(lia.notices, v) end
                 end
 
-                OrganizeNotices(i)
+                OrganizeNotices(false)
             end)
         end
     end)
@@ -252,7 +252,7 @@ function lia.util.notifQuery(question, option1, option2, manualDismiss, notifTyp
     notice.opt2 = notice:Add("DButton")
     notice.opt2:SetAlpha(0)
     notice.oh = notice:GetTall()
-    OrganizeNotices()
+    OrganizeNotices(false)
     notice:SetTall(0)
     notice:SizeTo(notice:GetWide(), 36 * 2.3, 0.2, 0, -1, function()
         notice.text:SetPos(0, 0)
