@@ -1,12 +1,22 @@
 ﻿function MODULE:ScoreboardHide()
-    if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
+    if IsValid(lia.gui.score) then
+        lia.gui.score:SetVisible(false)
+        CloseDermaMenus()
+    end
+
+    gui.EnableScreenClicker(false)
     return true
 end
 
 function MODULE:ScoreboardShow()
     if LocalPlayer():getChar() and (PIM and not PIM:CheckPossibilities()) then
-        local liaMenu = vgui.Create("liaMenu")
-        liaMenu:setActiveTab("Scoreboard")
+        if IsValid(lia.gui.score) then
+            lia.gui.score:SetVisible(true)
+        else
+            vgui.Create("liaScoreboard")
+        end
+
+        gui.EnableScreenClicker(true)
         return true
     end
 end
