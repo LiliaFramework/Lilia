@@ -118,10 +118,8 @@ end
 
 function lia.faction.getClasses(faction)
     local classes = {}
-    for _, v in ipairs(player.GetAll()) do
-        for _, class in pairs(lia.class.list) do
-            if class.faction == faction then table.insert(classes, class.index) end
-        end
+    for _, class in pairs(lia.class.list) do
+        if class.faction == faction then table.insert(classes, class.index) end
     end
     return classes
 end
