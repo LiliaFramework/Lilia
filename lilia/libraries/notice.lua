@@ -27,23 +27,12 @@ lia.config.NotifTypes = {
     }
 }
 
-function OrganizeNoticess()
-    for k, v in ipairs(lia.noticess) do
-        local topMargin = 0
-        for k2, v2 in pairs(lia.noticess) do
-            if k < k2 then topMargin = topMargin + v2:GetTall() + 5 end
-        end
-
-        v:MoveTo(v:GetX(), topMargin + 5, 0.15, 0, 5)
-    end
-end
-
 function RemoveNotices(notice)
     for k, v in ipairs(lia.noticess) do
         if v == notice then
             notice:SizeTo(notice:GetWide(), 0, 0.2, 0, -1, function() notice:Remove() end)
             table.remove(lia.noticess, k)
-            OrganizeNoticess()
+            OrganizeNotices(true)
             break
         end
     end
@@ -82,13 +71,24 @@ function CreateNoticePanel(length, notimer)
     return notice
 end
 
-function OrganizeNotices()
+function OrganizeNotices(alternate)
     local scrW = ScrW()
     local lastHeight = ScrH() - 100
-    for k, v in ipairs(lia.notices) do
-        local height = lastHeight - v:GetTall() - 10
-        v:MoveTo(scrW - v:GetWide(), height, 0.15, (k / #lia.notices) * 0.25, nil)
-        lastHeight = height
+    if alternate then
+        for k, v in ipairs(lia.noticess) do
+            local topMargin = 0
+            for k2, v2 in pairs(lia.noticess) do
+                if k < k2 then topMargin = topMargin + v2:GetTall() + 5 end
+            end
+
+            v:MoveTo(v:GetX(), topMargin + 5, 0.15, 0, 5)
+        end
+    else
+        for k, v in ipairs(lia.notices) do
+            local height = lastHeight - v:GetTall() - 10
+            v:MoveTo(scrW - v:GetWide(), height, 0.15, (k / #lia.notices) * 0.25, nil)
+            lastHeight = height
+        end
     end
 end
 

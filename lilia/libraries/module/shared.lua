@@ -1,8 +1,17 @@
-﻿lia.module = lia.module or {}
+﻿--- Core library that manages module loading behaviors.
+-- @module lia.module
+lia.module = lia.module or {}
 lia.module.EnabledList = {}
 lia.module.list = lia.module.list or {}
 lia.module.unloaded = lia.module.unloaded or {}
+
+--- The list of folders to be included by default within a module. Those follow the default inclusion method; lia.util.includeDir(folder).
+-- @realm shared
+-- @internal
 lia.module.ModuleFolders = {"dependencies", "config", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim", "concommands"}
+--- The list of files to be included by default within a module. Those follow the default inclusion method: lia.util.include(file).
+-- @realm shared
+-- @internal
 lia.module.ModuleFiles = {
     ["client.lua"] = "client",
     ["cl_module.lua"] = "client",
@@ -12,6 +21,9 @@ lia.module.ModuleFiles = {
     ["sconfig.lua"] = "server",
 }
 
+--- The list of globals and subsequent modules to be activated upon detection. This allows compatibility modules to activate only when the addon is present.
+-- @realm shared
+-- @internal
 lia.module.ModuleConditions = {
     ["stormfox2"] = {
         name = "StormFox 2",
@@ -83,6 +95,13 @@ lia.module.ModuleConditions = {
     }
 }
 
+--- Loads a module into the system.
+-- This function loads a module into the system, making its functionality available. It sets up the module environment, including defining globals and loading necessary files.
+-- @string uniqueID string The unique identifier of the module.
+-- @string path string The path to the module.
+-- @bool isSingleFile boolean Specifies if the module is contained in a single file.
+-- @string variable string The variable name to assign the module to.
+-- @internal
 function lia.module.load(uniqueID, path, isSingleFile, variable)
     local lowerVariable = variable:lower()
     local normalpath = path .. "/" .. lowerVariable .. ".lua"
@@ -271,3 +290,4 @@ end
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
+

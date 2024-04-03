@@ -57,7 +57,7 @@ end
 
 --- Retrieves a faction table.
 -- @realm shared
--- @param identifier Index or name of the faction
+-- @int identifier Index or name of the faction
 -- @treturn table Faction table
 -- @usage print(lia.faction.get(Entity(1):Team()).name)
 -- > "Citizen"
@@ -75,8 +75,8 @@ end
 
 
 --- Returns a table containing the classes associated with a faction.
--- @realm client
--- @param faction number The index of the faction
+-- @realm shared
+-- @int faction number The index of the faction
 -- @treturn table A table containing the indices of the classes associated with the faction
 function lia.faction.getClasses(faction)
     local classes = {}
@@ -86,8 +86,8 @@ function lia.faction.getClasses(faction)
     return classes
 end
 --- Returns a table containing the players belonging to a specific faction.
--- @realm client
--- @param faction number The index of the faction
+-- @realm shared
+-- @int faction number The index of the faction
 -- @treturn table A table containing the players belonging to the specified faction
 function lia.faction.getPlayers(faction)
     local players = {}
@@ -98,8 +98,8 @@ function lia.faction.getPlayers(faction)
     return players
 end
 --- Returns the number of players belonging to a specific faction.
--- @realm client
--- @param faction number The index of the faction
+-- @realm shared
+-- @int faction number The index of the faction
 -- @treturn number The number of players belonging to the specified faction
 function lia.faction.getPlayerCount(faction)
     local count = 0
@@ -115,7 +115,7 @@ Generates a faction job.
 
 This function is an example of how to create a custom faction using `lia.faction.jobGenerate`. It is not recommended to use this method directly as it may lead to unexpected behavior. Instead, consider using more appropriate methods provided by the framework, such as faction files.
 ]]
--- @realm server
+-- @realm shared
 -- @number index The index of the faction. This should be a unique numerical identifier for the faction.
 -- @string name The name of the faction.
 -- @tab color The color of the faction.

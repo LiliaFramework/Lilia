@@ -10,7 +10,7 @@ regular gamemode hooks.
 
 --- Called when the default name for a character needs to be retrieved (i.e., upon initial creation).
 -- @realm shared
--- @param client The client for whom the default name is being retrieved
+-- @player client The client for whom the default name is being retrieved
 -- @treturn string The default name for the newly created character
 -- @usage function FACTION:getDefaultName(client)
 -- 	return "CT-" .. math.random(111111, 999999)
@@ -21,8 +21,8 @@ end
 --- Called when the default description for a character needs to be retrieved.
 -- This function allows factions to define custom default descriptions for characters.
 -- @realm shared
--- @param client The client for whom the default description is being retrieved
--- @param faction The faction ID for which the default description is being retrieved
+-- @player client The client for whom the default description is being retrieved
+-- @character faction The faction ID for which the default description is being retrieved
 -- @treturn string The default description for the newly created character
 -- @usage function FACTION:getDefaultDesc(client, faction)
 -- 	return "A police officer"
@@ -32,8 +32,8 @@ end
 
 --- Called when a character has been initially created and assigned to this faction.
 -- @realm server
--- @param client The client that owns the character
--- @param character The character that has been created
+-- @player client The client that owns the character
+-- @character character The character that has been created
 -- @usage function FACTION:onCharCreated(client, character)
 -- 	local inventory = character:getInv()
 -- 	inventory:add("fancy_suit")
@@ -43,7 +43,7 @@ end
 
 --- Called when a character in this faction has spawned in the world.
 -- @realm server
--- @param client The player that has just spawned
+-- @player client The player that has just spawned
 -- @usage function FACTION:onSpawn(client)
 -- 	client:ChatPrint("You have spawned!")
 -- end
@@ -52,7 +52,7 @@ end
 
 --- Called when a player's character has been transferred to this faction.
 -- @realm server
--- @param character The character that was transferred
+-- @character character The character that was transferred
 -- @usage function FACTION:onTransferred(character)
 -- 	local randomModelIndex = math.random(1, #self.models)
 -- 	character:setModel(self.models[randomModelIndex])

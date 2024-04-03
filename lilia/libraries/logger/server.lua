@@ -23,8 +23,8 @@ end
 -- @realm server
 -- @string logType Log category
 -- @param func format callback function(client, ...)
--- @param category Log category
--- @param color Log color (optional, defaults to Color(52, 152, 219))
+-- @string category Log category
+-- @color color Log color (optional, defaults to Color(52, 152, 219))
 -- @usage function(client, ...) log format callback
 function lia.log.addType(logType, func, category, color)
     color = color or Color(52, 152, 219)
