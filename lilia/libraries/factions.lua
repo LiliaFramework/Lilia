@@ -117,7 +117,7 @@ end
 -- @table color The color of the faction.
 -- @bool default Whether the faction is default or not.
 -- @table models (Optional) The models associated with the faction.
--- @usage 
+-- @usage
 -- function GenerateCustomFaction()
 --     -- This function is an example of how to create a custom faction using lia.faction.jobGenerate.
 --     -- It is not recommended to use this method directly as it may lead to unexpected behavior.
@@ -155,23 +155,6 @@ function lia.faction.jobGenerate(index, name, color, default, models)
     lia.faction.teams[name] = FACTION
     team.SetUp(FACTION.index, FACTION.name, FACTION.color)
     return FACTION
-end
-
-
-if CLIENT then
-    --- Returns true if a faction requires a whitelist.
-    -- @realm client
-    -- @number faction Index of the faction
-    -- @treturn bool Whether or not the faction requires a whitelist
-    function lia.faction.hasWhitelist(faction)
-        local data = lia.faction.indices[faction]
-        if data then
-            if data.isDefault then return true end
-            local liaData = lia.localData and lia.localData.whitelists or {}
-            return liaData[SCHEMA.folder] and liaData[SCHEMA.folder][data.uniqueID] == true or false
-        end
-        return false
-    end
 end
 
 function lia.faction.formatModelData()
@@ -214,5 +197,21 @@ function lia.faction.formatModelData()
                 end
             end
         end
+    end
+end
+
+if CLIENT then
+    --- Returns true if a faction requires a whitelist.
+    -- @realm client
+    -- @number faction Index of the faction
+    -- @treturn bool Whether or not the faction requires a whitelist
+    function lia.faction.hasWhitelist(faction)
+        local data = lia.faction.indices[faction]
+        if data then
+            if data.isDefault then return true end
+            local liaData = lia.localData and lia.localData.whitelists or {}
+            return liaData[SCHEMA.folder] and liaData[SCHEMA.folder][data.uniqueID] == true or false
+        end
+        return false
     end
 end
