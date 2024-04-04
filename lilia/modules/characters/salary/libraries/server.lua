@@ -37,6 +37,7 @@ function MODULE:OnReloaded()
     end
 end
 
-function MODULE:GetSalaryAmount(client, faction, _)
+function MODULE:GetSalaryAmount(client, faction, class)
     if faction.index == FACTION_STAFF or client.HasWarning then return 0 end
+    return (faction and faction.pay ~= nil and faction.pay) or (class and class.pay ~= nil and class.pay)
 end
