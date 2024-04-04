@@ -3,7 +3,7 @@ Compatibility - Simfphys
 
 This module implements compatibility to Simfphys.
 
--- Configuration Values.
+**Configuration Values:**.
 
 - **DamageInCars**: Either or not you take damage while in cars? | **bool**.
 

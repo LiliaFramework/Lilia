@@ -3,7 +3,7 @@ Core - Perfomance.
 
 This module adds several perfomance improving tweaks, both to clients and servers.
 
--- Configuration Values.
+**Configuration Values:**.
 
 - **PlayerCountCarLimitEnabled**: Should Car Wipe be enabled?| **bool**.
 
