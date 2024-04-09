@@ -160,31 +160,3 @@ function lia.util.findPlayerBySteamID(SteamID)
     end
     return nil
 end
-
-function lia.util.CanFit(pos, mins, maxs, filter)
-    mins = mins ~= nil and mins or Vector(16, 16, 0)
-    local tr = util.TraceHull({
-        start = pos + Vector(0, 0, 1),
-        mask = MASK_PLAYERSOLID,
-        filter = filter,
-        endpos = pos,
-        mins = mins.x > 0 and mins * -1 or mins,
-        maxs = maxs ~= nil and maxs or mins
-    })
-    return not tr.Hit
-end
-
-function lia.util.Chance(chance)
-    local rand = math.random(0, 100)
-    if rand <= chance then return true end
-    return false
-end
-
-function lia.util.PlayerInRadius(pos, dist)
-    dist = dist * dist
-    local t = {}
-    for _, ply in ipairs(player.GetAll()) do
-        if IsValid(ply) and ply:GetPos():DistToSqr(pos) < dist then t[#t + 1] = ply end
-    end
-    return t
-end

@@ -35,7 +35,7 @@ function PANEL:Init()
     self.teams = {}
     self.slots = {}
     self.i = {}
-    self:Center()
+	self:Center()
     for k, v in ipairs(lia.faction.indices) do
         if table.HasValue(MODULE.HiddenFactions, k) then continue end
         local color = team.GetColor(k)

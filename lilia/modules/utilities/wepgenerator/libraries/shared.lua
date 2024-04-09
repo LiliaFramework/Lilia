@@ -1,4 +1,4 @@
-﻿function MODULE:InitializedModules()
+function MODULE:InitializedModules()
     if self.AutomaticWeaponRegister then self:RegisterWeapons() end
 end
 

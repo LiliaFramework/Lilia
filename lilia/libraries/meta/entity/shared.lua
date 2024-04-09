@@ -5,12 +5,13 @@ function entityMeta:isProp()
 end
 
 function entityMeta:IsSimfphysCar()
-    if not simfphys or not IsValid(self) then return false end
-    return self:GetClass() == "gmod_sent_vehicle_fphysics_base" or self.IsSimfphyscar or self:GetClass() == "gmod_sent_vehicle_fphysics_wheel" or self.Base == "gmod_sent_vehicle_fphysics_base" or self.Base == "gmod_sent_vehicle_fphysics_wheel"
+    if not simfphys then return false end
+    if not IsValid(self) then return false end
+    return self:GetClass():lower() == "gmod_sent_vehicle_fphysics_base" or self.IsSimfphyscar
 end
 
 function entityMeta:getEntItemDropPos()
-    local offset = Vector(-50, 0, 0)
+    local offset = Vector(-50, 0, 0) -- Adjust the offset as needed
     return self:GetPos() + offset
 end
 
