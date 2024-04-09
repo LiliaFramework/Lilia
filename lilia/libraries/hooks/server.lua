@@ -323,7 +323,7 @@ function GM:PlayerDisconnected(client)
 
     lia.char.cleanUpForPlayer(client)
     for _, entity in pairs(ents.GetAll()) do
-        if entity:GetCreator() == client then entity:Remove() end
+        if entity:GetCreator() == client and not string.StartsWith(entity:GetClass(), "lia_") then entity:Remove() end
     end
 end
 
