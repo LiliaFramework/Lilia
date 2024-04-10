@@ -7,7 +7,7 @@ end)
 concommand.Add("list_entities", function(client)
     local entityCount = {}
     local totalEntities = 0
-    if client:IsSuperAdmin() then
+    if not IsValid(client) or client:IsSuperAdmin() then
         print("Entities on the server:")
         for _, entity in pairs(ents.GetAll()) do
             local className = entity:GetClass() or "Unknown"
