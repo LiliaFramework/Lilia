@@ -62,10 +62,22 @@ function lia.char.registerVar(key, data)
     if SERVER and not data.isNotModifiable then
         if data.onSet then
             charMeta["set" .. upperName] = data.onSet
+            charMeta["Set" .. upperName] = data.onSet
         elseif data.noNetworking then
             charMeta["set" .. upperName] = function(self, value) self.vars[key] = value end
+            charMeta["Set" .. upperName] = function(self, value) self.vars[key] = value end
         elseif data.isLocal then
             charMeta["set" .. upperName] = function(self, value)
+                local curChar = self:getPlayer() and self:getPlayer():getChar()
+                local sendID = true
+                if curChar and curChar == self then sendID = false end
+                local oldVar = self.vars[key]
+                self.vars[key] = value
+                netstream.Start(self.player, "charSet", key, value, sendID and self:getID() or nil)
+                hook.Run("OnCharVarChanged", self, key, oldVar, value)
+            end
+
+            charMeta["Set" .. upperName] = function(self, value)
                 local curChar = self:getPlayer() and self:getPlayer():getChar()
                 local sendID = true
                 if curChar and curChar == self then sendID = false end
@@ -81,13 +93,26 @@ function lia.char.registerVar(key, data)
                 netstream.Start(nil, "charSet", key, value, self:getID())
                 hook.Run("OnCharVarChanged", self, key, oldVar, value)
             end
+            charMeta["Set" .. upperName] = function(self, value)
+                local oldVar = self.vars[key]
+                self.vars[key] = value
+                netstream.Start(nil, "charSet", key, value, self:getID())
+                hook.Run("OnCharVarChanged", self, key, oldVar, value)
+            end
         end
     end
 
     if data.onGet then
         charMeta["get" .. upperName] = data.onGet
+        charMeta["Get" .. upperName] = data.onGet
     else
         charMeta["get" .. upperName] = function(self, default)
+            local value = self.vars[key]
+            if value ~= nil then return value end
+            if default == nil then return lia.char.vars[key] and lia.char.vars[key].default or nil end
+            return default
+        end
+        charMeta["Get" .. upperName] = function(self, default)
             local value = self.vars[key]
             if value ~= nil then return value end
             if default == nil then return lia.char.vars[key] and lia.char.vars[key].default or nil end
@@ -343,6 +368,7 @@ do
         return character and character.getName(character) or self.steamName(self)
     end
 
+    playerMeta.GetCharacter = playerMeta.getChar 
     playerMeta.Nick = playerMeta.Name
     playerMeta.GetName = playerMeta.Name
 end
