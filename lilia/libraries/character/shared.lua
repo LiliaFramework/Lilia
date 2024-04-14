@@ -24,11 +24,6 @@ if SERVER then
         lia.char.names[character:getID()] = nil
         netstream.Start(client, "liaCharFetchNames", lia.char.names)
     end)
-
-    hook.Add("onCharCreated", "liaCharAddName", function(client, character, data)
-        lia.char.names[character:getID()] = data.name
-        netstream.Start(client, "liaCharFetchNames", lia.char.names)
-    end)
 else
     netstream.Hook("liaCharFetchNames", function(data) lia.char.names = data end)
     if #lia.char.names < 1 then netstream.Start("liaCharFetchNames") end
