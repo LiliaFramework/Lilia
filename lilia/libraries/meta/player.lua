@@ -668,6 +668,7 @@ if SERVER then
         netstream.Start(self, "nLcl", key, value)
     end
 
+    playerMeta.SetLocalVar = playerMeta.setLocalVar
     function playerMeta:notifyP(tx)
         self:notify(tx)
         self:ChatPrint(tx)
@@ -727,7 +728,6 @@ playerMeta.IsStaff = playerMeta.isStaff
 playerMeta.IsVIP = playerMeta.isVIP
 playerMeta.IsStaffOnDuty = playerMeta.isStaffOnDuty
 playerMeta.IsObserving = playerMeta.isObserving
-playerMeta.IsMoving = playerMeta.isMoving
 playerMeta.IsOutside = playerMeta.isOutside
 playerMeta.IsNoClipping = playerMeta.isNoClipping
 playerMeta.SquaredDistanceFromEnt = playerMeta.squaredDistanceFromEnt
@@ -743,8 +743,6 @@ playerMeta.IsRunning = playerMeta.isRunning
 playerMeta.IsFemale = playerMeta.isFemale
 playerMeta.GetItemDropPos = playerMeta.getItemDropPos
 playerMeta.HasWhitelist = playerMeta.hasWhitelist
-playerMeta.GetItems = playerMeta.getItems
-playerMeta.GetClass = playerMeta.getClass
 playerMeta.GetTracedEntity = playerMeta.getTracedEntity
 playerMeta.GetTrace = playerMeta.getTrace
 playerMeta.GetClassData = playerMeta.getClassData
@@ -772,12 +770,9 @@ playerMeta.Notify = playerMeta.notify
 playerMeta.NotifyLocalized = playerMeta.notifyLocalized
 playerMeta.ChatNotify = playerMeta.chatNotify
 playerMeta.ChatNotifyLocalized = playerMeta.chatNotifyLocalized
-playerMeta.IsStuck = playerMeta.isStuck
-playerMeta.CreateRagdoll = playerMeta.createRagdoll
 playerMeta.SetRagdolled = playerMeta.setRagdolled
 playerMeta.SetWhitelisted = playerMeta.setWhitelisted
 playerMeta.SyncVars = playerMeta.syncVars
-playerMeta.SetLocalVar = playerMeta.setLocalVar
 playerMeta.NotifyP = playerMeta.notifyP
 playerMeta.SendMessage = playerMeta.sendMessage
 playerMeta.SendPrint = playerMeta.sendPrint

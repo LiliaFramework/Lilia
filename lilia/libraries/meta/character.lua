@@ -318,4 +318,19 @@ if SERVER then
     end
 end
 
+charMeta.GetBoost = charMeta.getBoost
+charMeta.GetBoosts = charMeta.getBoosts
+charMeta.GetAttribute = charMeta.getAttrib
+charMeta.GetPlayer = charMeta.getPlayer
+charMeta.HasMoney = charMeta.hasMoney
+charMeta.JoinClass = charMeta.joinClass
+charMeta.KickClass = charMeta.kickClass
+charMeta.UpdateAttribute = charMeta.updateAttrib
+charMeta.SetAttribute = charMeta.setAttrib
+charMeta.AddBoost = charMeta.addBoost
+charMeta.RemoveBoost = charMeta.removeBoost
+charMeta.Save = charMeta.save
+charMeta.Sync = charMeta.sync
+charMeta.GiveMoney = charMeta.giveMoney
+charMeta.TakeMoney = charMeta.takeMoney
 lia.meta.character = charMeta

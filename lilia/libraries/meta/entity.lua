@@ -10,13 +10,14 @@ See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Entity) for 
 local playerMeta = FindMetaTable("Player")
 local entityMeta = FindMetaTable("Entity")
 local ChairCache = {}
-
 function entityMeta:isProp()
     return self:GetClass() == "prop_physics"
 end
+
 function entityMeta:isItem()
     return self:GetClass() == "lia_item"
 end
+
 function entityMeta:isMoney()
     return self:GetClass() == "lia_money"
 end
@@ -112,8 +113,8 @@ if SERVER then
     function entityMeta:getDoorPartner()
         return self.liaPartner
     end
-    entityMeta.GetDoorPartner = entityMeta.getDoorPartner
 
+    entityMeta.GetDoorPartner = entityMeta.getDoorPartner
     function entityMeta:assignCreator(client)
         self:SetCreator(client)
     end
@@ -126,8 +127,8 @@ if SERVER then
     function entityMeta:sendNetVar(key, receiver)
         netstream.Start(receiver, "nVar", self:EntIndex(), key, lia.net[self] and lia.net[self][key])
     end
-    entityMeta.SendNetVar = entityMeta.sendNetVar
 
+    entityMeta.SendNetVar = entityMeta.sendNetVar
     --- Clears all of the networked variables.
     -- @realm server
     -- @internal
@@ -136,8 +137,8 @@ if SERVER then
         lia.net[self] = nil
         netstream.Start(receiver, "nDel", self:EntIndex())
     end
-entityMeta.ClearNetVars = entityMeta.clearNetVars
 
+    entityMeta.ClearNetVars = entityMeta.clearNetVars
     --- Sets the value of a networked variable.
     -- @realm server
     -- @string key Identifier of the networked variable
@@ -151,8 +152,8 @@ entityMeta.ClearNetVars = entityMeta.clearNetVars
         if lia.net[self][key] ~= value then lia.net[self][key] = value end
         self:sendNetVar(key, receiver)
     end
-    entityMeta.SetNetVar = entityMeta.setNetVar
 
+    entityMeta.SetNetVar = entityMeta.setNetVar
     --- Retrieves a networked variable. If it is not set, it'll return the default that you've specified.
     -- @realm shared
     -- @string key Identifier of the networked variable
@@ -172,8 +173,8 @@ else
     function entityMeta:isDoor()
         return self:GetClass():find("door")
     end
-    entityMeta.IsDoor = entityMeta.isDoor
 
+    entityMeta.IsDoor = entityMeta.isDoor
     function entityMeta:getDoorPartner()
         local owner = self:GetOwner() or self.liaDoorOwner
         if IsValid(owner) and owner:isDoor() then return owner end
@@ -184,8 +185,8 @@ else
             end
         end
     end
-    entityMeta.GetDoorPartner = entityMeta.getDoorPartner
 
+    entityMeta.GetDoorPartner = entityMeta.getDoorPartner
     function entityMeta:getNetVar(key, default)
         local index = self:EntIndex()
         if lia.net[index] and lia.net[index][key] ~= nil then return lia.net[index][key] end

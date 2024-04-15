@@ -355,12 +355,7 @@ else
 end
 
 ITEM.GetQuantity = ITEM.getQuantity
-ITEM.GetID = ITEM.getID
-ITEM.GetModel = ITEM.getModel
-ITEM.GetSkin = ITEM.getSkin
 ITEM.GetPrice = ITEM.getPrice
-ITEM.Call = ITEM.call
-ITEM.GetOwner = ITEM.getOwner
 ITEM.GetData = ITEM.getData
 ITEM.Hook = ITEM.hook
 ITEM.PostHook = ITEM.postHook
@@ -371,11 +366,7 @@ ITEM.Print = ITEM.Print
 ITEM.PrintData = ITEM.PrintData
 ITEM.RemoveFromInventory = ITEM.removeFromInventory
 ITEM.Delete = ITEM.delete
-ITEM.Remove = ITEM.remove
-ITEM.Destroy = ITEM.destroy
 ITEM.OnDisposed = ITEM.onDisposed
-ITEM.GetEntity = ITEM.getEntity
-ITEM.Spawn = ITEM.spawn
 ITEM.Transfer = ITEM.transfer
 ITEM.OnInstanced = ITEM.onInstanced
 ITEM.OnSync = ITEM.onSync
