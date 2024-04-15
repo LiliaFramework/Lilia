@@ -194,6 +194,3 @@ else
         netstream.Start("cmd", command, {...})
     end
 end
-
-lia.include("lilia/commands/client.lua")
-lia.include("lilia/commands/server.lua")

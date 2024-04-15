@@ -377,4 +377,4 @@ if SERVER then
     end
 end
 
-lia.item.loadFromDir("lilia/config/items", true)
+lia.item.loadFromDir("lilia/gamemode/objects/items", true)

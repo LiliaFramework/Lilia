@@ -1,7 +1,7 @@
 ﻿--- Top-level library containing all Lilia libraries. A large majority of the framework is split into respective libraries that
 -- reside within `lia`.
 -- @module lia
-lia.config.RealmIdentifiers = {
+lia.RealmIdentifiers = {
     client = "client",
     server = "server",
     shared = "shared",
@@ -10,6 +10,49 @@ lia.config.RealmIdentifiers = {
     schema = "shared",
     permissions = "shared",
     sconfig = "server",
+}
+
+lia.FilesToLoad = {
+    {path = "lilia/gamemode/libraries/database.lua", realm = "server"},
+    {path = "lilia/gamemode/meta/database.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/util.lua", realm = "shared"},
+    {path = "lilia/gamemode/meta/character.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/character.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/animations.lua", realm = "shared"},
+    {path = "lilia/gamemode/config/animations.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/hooks/core/shared.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/hooks/core/client.lua", realm = "client"},
+    {path = "lilia/gamemode/libraries/hooks/core/server.lua", realm = "server"},
+    {path = "lilia/gamemode/libraries/chatbox.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/commands.lua", realm = "shared"},
+    {path = "lilia/gamemode/objects/commands/client.lua", realm = "client"},
+    {path = "lilia/gamemode/objects/commands/server.lua", realm = "server"},
+    {path = "lilia/gamemode/libraries/flags.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/inventory.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/item.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/languages.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/networking.lua", realm = "server"},
+    {path = "lilia/gamemode/libraries/attributes.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/factions.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/classes.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/currency.lua", realm = "shared"},
+    {path = "lilia/gamemode/hooks/currency.lua", realm = "server"},
+    {path = "lilia/gamemode/libraries/date.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/module.lua", realm = "shared"},
+    {path = "lilia/gamemode/meta/inventory.lua", realm = "shared"},
+    {path = "lilia/gamemode/meta/item.lua", realm = "shared"},
+    {path = "lilia/gamemode/hooks/items.lua", realm = "shared"},
+    {path = "lilia/gamemode/meta/entity.lua", realm = "shared"},
+    {path = "lilia/gamemode/meta/player.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/logger.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/concommands.lua", realm = "shared"},
+    {path = "lilia/gamemode/libraries/color.lua", realm = "client"},
+    {path = "lilia/gamemode/libraries/menu.lua", realm = "client"},
+    {path = "lilia/gamemode/libraries/notice.lua", realm = "client"},
+    {path = "lilia/gamemode/libraries/bars.lua", realm = "client"},
+    {path = "lilia/gamemode/hooks/animations.lua", realm = "shared"}
+    {path = "lilia/gamemode/netcalls/client.lua", realm = "client"}
+    {path = "lilia/gamemode/netcalls/server.lua", realm = "server"}
 }
 
 --- Loads a Lua file into the server, client, or shared realm.
@@ -22,7 +65,7 @@ lia.config.RealmIdentifiers = {
 function lia.include(fileName, state)
     if not fileName then error("[Lilia] No file name specified for inclusion.") end
     local matchResult = string.match(fileName, "/([^/]+)%.lua$")
-    local fileRealm = matchResult and lia.config.RealmIdentifiers[matchResult] or "NULL"
+    local fileRealm = matchResult and lia.RealmIdentifiers[matchResult] or "NULL"
     if (state == "server" or fileRealm == "server" or fileName:find("sv_")) and SERVER then
         return include(fileName)
     elseif state == "shared" or fileRealm == "shared" or fileName:find("sh_") then
@@ -36,6 +79,7 @@ function lia.include(fileName, state)
         end
     end
 end
+lia.util.include = lia.include
 
 --- Loads Lua files from a directory into the server, client, or shared realm.
 -- This function recursively includes Lua files from a directory into the specified realm.
@@ -81,6 +125,7 @@ function lia.includeDir(directory, fromLua, recursive, realm)
         end
     end
 end
+lia.util.includeDir = lia.includeDir
 
 function lia.includeEntities(path)
     local files, folders
@@ -144,13 +189,16 @@ function lia.includeEntities(path)
     HandleEntityInclusion("effects", "EFFECT", effects and effects.Register, nil, true)
 end
 
---[[
-Legacy Includer Support :)
-]]
-lia.util.include = lia.include
-lia.util.includeDir = lia.includeDir
 lia.util.loadEntities = lia.includeEntities
 
-
-lia.include("lilia/netcalls/client.lua")
-lia.include("lilia/netcalls/server.lua")
+lia.includeDir("lilia/gamemode/libraries/thirdparty", true, true)
+lia.includeEntities("lilia/gamemode/objects/entities")
+for _, file in ipairs(lia.config.filesToLoad) do
+    if file.realm == "server" then
+        lia.include(file.path, "server")
+    elseif file.realm == "client" then
+        lia.include(file.path, "client")
+    elseif file.realm == "shared" then
+        lia.include(file.path, "shared")
+    end
+end

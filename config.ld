@@ -1,15 +1,15 @@
 file = {
 	"docs/hooks",
 	"lilia",
-	exclude = {"lilia/libraries/thirdparty"}
+	exclude = {"lilia/gamemode/libraries/thirdparty"}
 }
 
 module_file = {
-	Character = "lilia/libraries/meta/character.lua",
-	Entity = "lilia/libraries/meta/entity.lua",
-	Inventory = "lilia/libraries/meta/inventory.lua",
-	Item = "lilia/libraries/meta/item.lua",
-	Player = "lilia/libraries/meta/player.lua"
+	Character = "lilia/gamemode/libraries/meta/character.lua",
+	Entity = "lilia/gamemode/libraries/meta/entity.lua",
+	Inventory = "lilia/gamemode/libraries/meta/inventory.lua",
+	Item = "lilia/gamemode/libraries/meta/item.lua",
+	Player = "lilia/gamemode/libraries/meta/player.lua"
 }
 
 dir = "docs/html"

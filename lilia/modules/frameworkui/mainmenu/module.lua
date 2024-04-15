@@ -83,5 +83,3 @@ else
         net.SendToServer()
     end
 end
-
-lia.include("server.lua")
