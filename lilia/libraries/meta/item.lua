@@ -287,7 +287,7 @@ if SERVER then
             if reason then client:notifyLocalized(reason) end
             return false
         end
-    
+
         local oldPlayer, oldEntity = self.player, self.entity
         self.player = client
         self.entity = entity
@@ -297,14 +297,14 @@ if SERVER then
             self.entity = oldEntity
             return false
         end
-    
+
         local canRun = (isfunction(callback.onCanRun) and not callback.onCanRun(self, data)) or (isfunction(callback.OnCanRun) and not callback.OnCanRun(self, data)) or true
         if not canRun then
             self.player = oldPlayer
             self.entity = oldEntity
             return false
         end
-    
+
         local result
         if isfunction(self.hooks[action]) then result = self.hooks[action](self, data) end
         if result == nil then
@@ -314,7 +314,7 @@ if SERVER then
                 result = callback.OnRun(self, data)
             end
         end
-    
+
         if self.postHooks[action] then self.postHooks[action](self, result, data) end
         hook.Run("OnPlayerInteractItem", client, action, self, result, data)
         lia.log.add(client, "itemUse", action, item)
@@ -325,7 +325,7 @@ if SERVER then
                 self:remove()
             end
         end
-    
+
         self.player = oldPlayer
         self.entity = oldEntity
         return true
