@@ -1,5 +1,4 @@
 local playerMeta = FindMetaTable("Player")
-
 function playerMeta:isUser()
     return self:IsUserGroup("user")
 end
@@ -82,12 +81,10 @@ function playerMeta:getItemWeapon()
     if not IsValid(weapon) then return false end
     for _, v in pairs(items) do
         if v.class then
-            if v.class == weapon:GetClass() then
-                if v:getData("equip", false) then
-                    return weapon, v
-                else
-                    return false
-                end
+            if v.class == weapon:GetClass() and v:getData("equip", false) then
+                return weapon, v
+            else
+                return false
             end
         end
     end
@@ -247,13 +244,13 @@ if SERVER then
             return ipAddr
         end
     end
-    
+
     function playerMeta:setAction(text, time, callback, startTime, finishTime)
         if time and time <= 0 then
             if callback then callback(self) end
             return
         end
-    
+
         time = time or 5
         startTime = startTime or CurTime()
         finishTime = finishTime or (startTime + time)
@@ -262,27 +259,27 @@ if SERVER then
             netstream.Start(self, "actBar")
             return
         end
-    
+
         netstream.Start(self, "actBar", startTime, finishTime, text)
         if callback then timer.Create("liaAct" .. self:UniqueID(), time, 1, function() if IsValid(self) then callback(self) end end) end
     end
-    
+
     function playerMeta:getPermFlags()
         return self:getLiliaData("permflags", "")
     end
-    
+
     function playerMeta:setPermFlags(val)
         self:setLiliaData("permflags", val or "")
         self:saveLiliaData()
     end
-    
+
     function playerMeta:givePermFlags(flags)
         local curFlags = self:getPermFlags()
         for i = 1, #flags do
             local flag = flags[i]
             if not self:hasPermFlag(flag) and not self:hasFlagBlacklist(flag) then curFlags = curFlags .. flag end
         end
-    
+
         self:setPermFlags(curFlags)
         if self.liaCharList then
             for _, v in pairs(self.liaCharList) do
@@ -291,13 +288,13 @@ if SERVER then
             end
         end
     end
-    
+
     function playerMeta:takePermFlags(flags)
         local curFlags = self:getPermFlags()
         for i = 1, #flags do
             curFlags = curFlags:gsub(flags[i], "")
         end
-    
+
         self:setPermFlags(curFlags)
         if self.liaCharList then
             for _, v in pairs(self.liaCharList) do
@@ -306,7 +303,7 @@ if SERVER then
             end
         end
     end
-    
+
     function playerMeta:hasPermFlag(flag)
         if not flag or #flag ~= 1 then return end
         local curFlags = self:getPermFlags()
@@ -315,23 +312,23 @@ if SERVER then
         end
         return false
     end
-    
+
     function playerMeta:getFlagBlacklist()
         return self:getLiliaData("flagblacklist", "")
     end
-    
+
     function playerMeta:setFlagBlacklist(flags)
         self:setLiliaData("flagblacklist", flags)
         self:saveLiliaData()
     end
-    
+
     function playerMeta:addFlagBlacklist(flags, blacklistInfo)
         local curBlack = self:getFlagBlacklist()
         for i = 1, #flags do
             local curFlag = flags[i]
             if not self:hasFlagBlacklist(curFlag) then curBlack = curBlack .. flags[i] end
         end
-    
+
         self:setFlagBlacklist(curBlack)
         self:takePermFlags(flags)
         if blacklistInfo then
@@ -349,17 +346,17 @@ if SERVER then
             self:saveLiliaData()
         end
     end
-    
+
     function playerMeta:removeFlagBlacklist(flags)
         local curBlack = self:getFlagBlacklist()
         for i = 1, #flags do
             local curFlag = flags[i]
             curBlack = curBlack:gsub(curFlag, "")
         end
-    
+
         self:setFlagBlacklist(curBlack)
     end
-    
+
     function playerMeta:hasFlagBlacklist(flag)
         local flags = self:getFlagBlacklist()
         for i = 1, #flags do
@@ -367,40 +364,40 @@ if SERVER then
         end
         return false
     end
-    
+
     function playerMeta:hasAnyFlagBlacklist(flags)
         for i = 1, #flags do
             if self:hasFlagBlacklist(flags[i]) then return true end
         end
         return false
     end
-    
+
     function playerMeta:playSound(sound, pitch)
         net.Start("LiliaPlaySound")
         net.WriteString(tostring(sound))
         net.WriteUInt(tonumber(pitch) or 100, 7)
         net.Send(self)
     end
-    
+
     function playerMeta:openUI(panel)
         net.Start("OpenVGUI")
         net.WriteString(panel)
         net.Send(self)
     end
-    playerMeta.OpenUI = playerMeta.openUI
 
+    playerMeta.OpenUI = playerMeta.openUI
     function playerMeta:openPage(url)
         net.Start("OpenPage")
         net.WriteString(url)
         net.Send(self)
     end
-    
+
     function playerMeta:getPlayTime()
         local diff = os.time(lia.util.dateToNumber(self.lastJoin)) - os.time(lia.util.dateToNumber(self.firstJoin))
         return diff + (RealTime() - (self.liaJoinTime or RealTime()))
     end
-    playerMeta.GetPlayTime = playerMeta.getPlayTime
 
+    playerMeta.GetPlayTime = playerMeta.getPlayTime
     function playerMeta:createServerRagdoll(DontSetPlayer)
         local entity = ents.Create("prop_ragdoll")
         entity:SetPos(self:GetPos())
@@ -410,7 +407,7 @@ if SERVER then
         for _, v in ipairs(self:GetBodyGroups()) do
             entity:SetBodygroup(v.id, self:GetBodygroup(v.id))
         end
-    
+
         entity:Spawn()
         if not DontSetPlayer then entity:SetNetVar("player", self) end
         entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
@@ -431,7 +428,7 @@ if SERVER then
         end
         return entity
     end
-    
+
     function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
         local uniqueID = "liaStare" .. self:UniqueID()
         local data = {}
@@ -454,24 +451,24 @@ if SERVER then
             end
         end)
     end
-    
+
     function playerMeta:notify(message)
         lia.util.notify(message, self)
     end
-    
+
     function playerMeta:notifyLocalized(message, ...)
         lia.util.notifyLocalized(message, self, ...)
     end
-    
+
     function playerMeta:chatNotify(message)
         lia.chat.send(client, "flip", message)
     end
-    
+
     function playerMeta:chatNotifyLocalized(message, ...)
         message = L(message, self, ...)
         lia.chat.send(client, "flip", message)
     end
-    
+
     function playerMeta:requestString(title, subTitle, callback, default)
         local d
         if not isfunction(callback) and default == nil then
@@ -479,7 +476,7 @@ if SERVER then
             d = deferred.new()
             callback = function(value) d:resolve(value) end
         end
-    
+
         self.liaStrReqs = self.liaStrReqs or {}
         local id = table.insert(self.liaStrReqs, callback)
         net.Start("liaStringReq")
@@ -510,7 +507,7 @@ if SERVER then
                     physObj:SetPos(position)
                     physObj:SetAngles(angles)
                 end
-    
+
                 if freeze then
                     physObj:EnableMotion(false)
                 else
@@ -520,7 +517,7 @@ if SERVER then
         end
         return entity
     end
-    
+
     function playerMeta:setRagdolled(state, time, getUpGrace)
         getUpGrace = getUpGrace or time or 5
         if state then
@@ -538,7 +535,7 @@ if SERVER then
                     self:SetMoveType(MOVETYPE_WALK)
                     self:SetLocalVelocity(IsValid(entity) and entity.liaLastVelocity or vector_origin)
                 end
-    
+
                 if IsValid(self) and not entity.liaIgnoreDelete then
                     if entity.liaWeapons then
                         for _, v in ipairs(entity.liaWeapons) do
@@ -549,12 +546,12 @@ if SERVER then
                                 end
                             end
                         end
-    
+
                         for _, v in ipairs(self:GetWeapons()) do
                             v:SetClip1(0)
                         end
                     end
-    
+
                     if self:isStuck() then
                         entity:DropToFloor()
                         self:SetPos(entity:GetPos() + Vector(0, 0, 16))
@@ -566,7 +563,7 @@ if SERVER then
                     end
                 end
             end)
-    
+
             self:setLocalVar("blur", 25)
             self.liaRagdoll = entity
             entity.liaWeapons = {}
@@ -578,7 +575,7 @@ if SERVER then
                 entity.liaFinish = entity.liaStart + time
                 self:setAction("@wakingUp", nil, nil, entity.liaStart, entity.liaFinish)
             end
-    
+
             for _, v in ipairs(self:GetWeapons()) do
                 entity.liaWeapons[#entity.liaWeapons + 1] = v:GetClass()
                 local clip = v:Clip1()
@@ -586,7 +583,7 @@ if SERVER then
                 local ammo = clip + reserve
                 entity.liaAmmo[v:GetPrimaryAmmoType()] = {v:GetClass(), ammo}
             end
-    
+
             self:GodDisable()
             self:StripWeapons()
             self:Freeze(true)
@@ -610,7 +607,7 @@ if SERVER then
                             self:setAction("@wakingUp", time)
                             entity.liaPausing = false
                         end
-    
+
                         time = time - 0.33
                         if time <= 0 then entity:Remove() end
                     else
@@ -618,7 +615,7 @@ if SERVER then
                     end
                 end)
             end
-    
+
             self:setLocalVar("ragdoll", entity:EntIndex())
             hook.Run("OnCharFallover", self, entity, true)
         elseif IsValid(self.liaRagdoll) then
@@ -626,7 +623,7 @@ if SERVER then
             hook.Run("OnCharFallover", self, nil, false)
         end
     end
-    
+
     function playerMeta:setWhitelisted(faction, whitelisted)
         if not whitelisted then whitelisted = nil end
         local data = lia.faction.indices[faction]
@@ -640,7 +637,7 @@ if SERVER then
         end
         return false
     end
-    
+
     function playerMeta:syncVars()
         for entity, data in pairs(lia.net) do
             if entity == "globals" then
@@ -654,49 +651,48 @@ if SERVER then
             end
         end
     end
-    
+
     function playerMeta:setLocalVar(key, value)
         if checkBadType(key, value) then return end
         lia.net[self] = lia.net[self] or {}
         lia.net[self][key] = value
         netstream.Start(self, "nLcl", key, value)
     end
-    
+
     function playerMeta:notifyP(tx)
         self:notify(tx)
         self:ChatPrint(tx)
     end
-    
+
     function playerMeta:sendMessage(...)
         net.Start("SendMessage")
         net.WriteTable({...} or {})
         net.Send(self)
     end
-    
+
     function playerMeta:sendPrint(...)
         net.Start("SendPrint")
         net.WriteTable({...} or {})
         net.Send(self)
     end
-    
+
     function playerMeta:sendPrintTable(...)
         net.Start("SendPrintTable")
         net.WriteTable({...} or {})
         net.Send(self)
     end
-    
 else
     function playerMeta:getPlayTime()
         local diff = os.time(lia.util.dateToNumber(lia.lastJoin)) - os.time(lia.util.dateToNumber(lia.firstJoin))
         return diff + (RealTime() - lia.joinTime or 0)
     end
-    playerMeta.GetPlayTime = playerMeta.getPlayTime
 
+    playerMeta.GetPlayTime = playerMeta.getPlayTime
     function playerMeta:openUI(panel)
         return vgui.Create(panel)
     end
-    playerMeta.OpenUI = playerMeta.openUI
 
+    playerMeta.OpenUI = playerMeta.openUI
     function playerMeta:setWeighPoint(name, vector, OnReach)
         hook.Add("HUDPaint", "WeighPoint", function()
             local dist = self:GetPos():Distance(vector)
@@ -709,13 +705,12 @@ else
             render.SuppressEngineLighting(false)
             if howclose <= 3 then RunConsoleCommand("weighpoint_stop") end
         end)
-    
+
         concommand.Add("weighpoint_stop", function()
             hook.Add("HUDPaint", "WeighPoint", function() end)
             if IsValid(OnReach) then OnReach() end
         end)
     end
-    
 end
 
 playerMeta.IsUser = playerMeta.isUser

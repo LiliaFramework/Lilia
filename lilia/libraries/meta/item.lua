@@ -10,7 +10,6 @@ ITEM.isStackable = false
 ITEM.quantity = 1
 ITEM.maxQuantity = 1
 ITEM.canSplit = true
-
 function ITEM:getQuantity()
     if self.id == 0 then return self.maxQuantity end
     return self.quantity
@@ -111,14 +110,13 @@ if SERVER then
     function ITEM:getName()
         return self.name
     end
-    ITEM.GetName = ITEM.getName
 
+    ITEM.GetName = ITEM.getName
     function ITEM:getDesc()
         return self.desc
     end
 
     ITEM.GetDescription = ITEM.getDesc
-
     function ITEM:removeFromInventory(preserveItem)
         local inventory = lia.inventory.instances[self.invID]
         self.invID = 0
@@ -197,16 +195,16 @@ if SERVER then
         return true
     end
 
-    function ITEM:onInstanced(id)
+    function ITEM:onInstanced()
     end
 
-    function ITEM:onSync(recipient)
+    function ITEM:onSync()
     end
 
     function ITEM:onRemoved()
     end
 
-    function ITEM:onRestored(inventory)
+    function ITEM:onRestored()
     end
 
     function ITEM:sync(recipient)
@@ -344,14 +342,14 @@ else
     function ITEM:getName()
         return L(self.name)
     end
-    ITEM.GetName = ITEM.getName
 
+    ITEM.GetName = ITEM.getName
     function ITEM:getDesc()
         return L(self.desc)
     end
+
     ITEM.GetDescription = ITEM.getDesc
 end
-
 
 ITEM.GetQuantity = ITEM.getQuantity
 ITEM.GetID = ITEM.getID

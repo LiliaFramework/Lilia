@@ -368,7 +368,7 @@ do
         return character and character.getName(character) or self.steamName(self)
     end
 
-    playerMeta.GetCharacter = playerMeta.getChar 
+    playerMeta.GetCharacter = playerMeta.getChar
     playerMeta.Nick = playerMeta.Name
     playerMeta.GetName = playerMeta.Name
 end

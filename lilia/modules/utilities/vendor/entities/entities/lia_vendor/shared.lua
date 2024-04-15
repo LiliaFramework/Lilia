@@ -75,17 +75,13 @@ end
 function ENT:getPrice(uniqueID, isSellingToVendor)
     local price = lia.item.list[uniqueID] and self.items[uniqueID] and self.items[uniqueID][VENDOR_PRICE] or lia.item.list[uniqueID]:getPrice()
     local overridePrice = hook.Run("getPriceOverride", self, uniqueID, price, isSellingToVendor)
-
     if overridePrice then
         price = overridePrice
     else
-        if isSellingToVendor then 
-            price = math.floor(price * self:getSellScale()) 
-        end
-    end    
+        if isSellingToVendor then price = math.floor(price * self:getSellScale()) end
+    end
     return price
 end
-
 
 function ENT:getTradeMode(itemType)
     if self.items[itemType] then return self.items[itemType][VENDOR_MODE] end
