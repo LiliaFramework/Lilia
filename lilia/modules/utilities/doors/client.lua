@@ -1,4 +1,5 @@
-﻿local toScreen = FindMetaTable("Vector").ToScreen
+﻿local vectorMeta = FindMetaTable("Vector")
+local toScreen = vectorMeta.ToScreen
 function MODULE:ShouldDrawEntityInfo(entity)
     if entity:isDoor() then return true end
 end

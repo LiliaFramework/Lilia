@@ -1,4 +1,4 @@
-﻿lia.flag.add("P", "Access to PAC3.")
+﻿local playerMeta = FindMetaTable("Player")
 function MODULE:setupPACDataFromItems()
     for itemType, item in pairs(lia.item.list) do
         if istable(item.pacData) then self.partData[itemType] = item.pacData end
@@ -32,7 +32,6 @@ function MODULE:TryViewModel(entity)
 end
 
 function MODULE:PAC3RegisterEvents()
-    local playerMeta = FindMetaTable("Player")
     local events = {
         {
             name = "weapon_raised",
@@ -56,3 +55,4 @@ function MODULE:PAC3RegisterEvents()
         pac.RegisterEvent(eventObject)
     end
 end
+lia.flag.add("P", "Access to PAC3.")

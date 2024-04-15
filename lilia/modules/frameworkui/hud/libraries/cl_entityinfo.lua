@@ -3,7 +3,8 @@ local nextUpdate = 0
 local lastTrace = {}
 local charInfo = {}
 local lastEntity
-local toScreen = FindMetaTable("Vector").ToScreen
+local vectorMeta = FindMetaTable("Vector")
+local toScreen = vectorMeta.ToScreen
 local DescWidth = CreateClientConVar("lia_hud_descwidth", 0.5, true, false)
 function MODULE:DrawEntityInfo(entity, alpha, position)
     if not entity.IsPlayer(entity) then return end

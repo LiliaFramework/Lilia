@@ -1,4 +1,5 @@
-﻿local toScreen = FindMetaTable("Vector").ToScreen
+﻿local vectorMeta = FindMetaTable("Vector")
+local toScreen = vectorMeta.ToScreen
 include("shared.lua")
 function ENT:onDrawEntityInfo(alpha)
     local locked = self.getNetVar(self, "locked", false)
