@@ -153,8 +153,6 @@ entityMeta.ClearNetVars = entityMeta.clearNetVars
     end
     entityMeta.SetNetVar = entityMeta.setNetVar
 
-    --- Entity networked variable functions
-    -- @classmod Entity
     --- Retrieves a networked variable. If it is not set, it'll return the default that you've specified.
     -- @realm shared
     -- @string key Identifier of the networked variable
