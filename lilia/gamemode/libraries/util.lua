@@ -566,7 +566,7 @@ else
         [0] = Material("icon16/cross.png")
     }
 
-    function lia.util.FetchImage(id, callback, failImg, pngParameters, imageProvider)
+    function lia.util.FetchImage(id, callback, _, pngParameters, imageProvider)
         local loadedImage = lia.util.LoadedImages[id]
         if loadedImage then
             if callback then callback(loadedImage) end

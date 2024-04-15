@@ -23,7 +23,7 @@ ITEM.functions.use = {
     tip = "useTip",
     icon = "icon16/add.png",
     isMulti = true,
-    multiOptions = function(item, data)
+    multiOptions = function(item)
         local options = {}
         table.insert(options, {
             name = L("ammoLoadAll"),
