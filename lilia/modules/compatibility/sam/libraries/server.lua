@@ -1,4 +1,6 @@
-﻿function MODULE:InitializedModules()
+﻿local playerMeta = FindMetaTable("Player")
+
+function MODULE:InitializedModules()
     sam.config.set("Restrictions.Tool", false)
     sam.config.set("Restrictions.Limits", false)
     sam.config.set("Restrictions.Spawning", false)
@@ -13,7 +15,7 @@ function MODULE:PlayerInitialSpawn(client)
 end
 
 function MODULE:PlayerSpawnProp(client)
-    if not FindMetaTable("Player").GetLimit then return end
+    if not playerMeta.GetLimit then return end
     local limit = client:GetLimit("props")
     if limit < 0 then return end
     local props = client:GetCount("props") + 1
@@ -31,7 +33,7 @@ function MODULE:PlayerSpawnProp(client)
 end
 
 function MODULE:PlayerCheckLimit(client, name)
-    if not FindMetaTable("Player").GetLimit then return end
+    if not playerMeta.GetLimit then return end
     if name == "props" then
         if client:isStaffOnDuty() then return true end
         if client:GetLimit("props") < 0 then return end
@@ -44,7 +46,7 @@ function MODULE:PlayerCheckLimit(client, name)
 end
 
 function MODULE:PlayerSpawnRagdoll(client)
-    if not FindMetaTable("Player").GetLimit then return end
+    if not playerMeta.GetLimit then return end
     local limit = client:GetLimit("ragdolls")
     if limit < 0 then return end
     local ragdolls = client:GetCount("ragdolls") + 1

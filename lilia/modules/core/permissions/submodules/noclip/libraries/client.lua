@@ -6,7 +6,7 @@ function MODULE:HUDPaint()
     local client = LocalPlayer()
     if (CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip ESP Outside Staff Character", nil) or client:isStaffOnDuty()) and client:IsNoClipping() and not client:InVehicle() then
         for _, v in ipairs(ents.GetAll()) do
-            if IsValid(v) and IsValid(client) and (v:GetClass() == "lia_item" or v:IsPlayer()) and v ~= LocalPlayer() then
+            if IsValid(v) and IsValid(client) and (v:isItem() or v:IsPlayer()) and v ~= LocalPlayer() then
                 local vPos = v:GetPos()
                 local clientPos = client:GetPos()
                 if vPos ~= nil and clientPos then
@@ -24,7 +24,7 @@ function MODULE:HUDPaint()
                         lia.util.drawText(v:Name():gsub("#", "\226\128\139#"), x, y - size, ColorAlpha(teamColor, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, nil, alpha)
                     end
 
-                    if v:GetClass() == "lia_item" then
+                    if v:isItem() then
                         surface.SetDrawColor(30, 30, 30, alpha)
                         local name = "invalid"
                         if v.getItemTable and v:getItemTable() then name = v:getItemTable().name end

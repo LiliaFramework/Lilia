@@ -19,7 +19,7 @@ function GM:PlayerBindPress(client, bind, pressed)
             if IsValid(entity) then
                 if entity:IsPlayer() then
                     hook.Run("ShowPlayerCard", entity, client:IsSuperAdmin() or client:isStaffOnDuty())
-                elseif entity:GetClass() == "lia_item" or entity.hasMenu then
+                elseif entity:isItem() or entity.hasMenu then
                     hook.Run("ItemShowEntityMenu", entity)
                 end
             end

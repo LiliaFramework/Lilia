@@ -344,7 +344,7 @@ function GM:GetPreferredCarryAngles(entity)
             local preferedAngle = itemTable.preferedAngle
             if preferedAngle then return preferedAngle end
         end
-    elseif class == "prop_physics" then
+    elseif entity:isProp() then
         local model = entity:GetModel():lower()
         return defaultAngleData[model]
     end

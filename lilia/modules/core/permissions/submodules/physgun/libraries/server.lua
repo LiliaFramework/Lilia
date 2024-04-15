@@ -1,6 +1,6 @@
 ﻿local GM = GM or GAMEMODE
 function GM:PhysgunPickup(client, entity)
-    if entity:GetCreator() == client and (entity:GetClass() == "prop_physics" or entity:GetClass() == "lia_item") then return true end
+    if entity:GetCreator() == client and (entity:isProp() or entity:isItem()) then return true end
     if client:IsSuperAdmin() then return true end
     if CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup", nil) or client:isStaffOnDuty() then
         if table.HasValue(PermissionCore.RestrictedEnts, entity:GetClass()) then
@@ -18,7 +18,7 @@ function GM:PhysgunPickup(client, entity)
 end
 
 function GM:OnPhysgunPickup(_, entity)
-    if (entity:GetClass() == "prop_physics" or entity:GetClass() == "lia_item") and entity:GetCollisionGroup() == COLLISION_GROUP_NONE then entity:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR) end
+    if (entity:isProp() or entity:isItem()) and entity:GetCollisionGroup() == COLLISION_GROUP_NONE then entity:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR) end
 end
 
 function GM:OnPhysgunReload(_, client)
@@ -26,7 +26,7 @@ function GM:OnPhysgunReload(_, client)
 end
 
 function GM:PhysgunDrop(_, entity)
-    if entity:GetClass() ~= "prop_physics" or entity:GetClass() ~= "lia_item" then return end
+    if not entity:isProp() or not entity:isItem() then return end
     timer.Simple(5, function() if IsValid(entity) and entity:GetCollisionGroup() == COLLISION_GROUP_PASSABLE_DOOR then entity:SetCollisionGroup(COLLISION_GROUP_NONE) end end)
 end
 

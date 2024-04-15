@@ -516,9 +516,11 @@ lia.command.add("cleanprops", {
     privilege = "Clean Props",
     onRun = function(client)
         local count = 0
-        for _, v in pairs(ents.FindByClass("prop_physics")) do
-            count = count + 1
-            v:Remove()
+        for _, v in pairs(ents.GetAll()) do
+            if v:isProp() then
+                count = count + 1
+                v:Remove()
+            end
         end
 
         client:notify(count .. " props have been cleaned up from the map.")
@@ -825,7 +827,7 @@ lia.command.add("bringlostitems", {
     adminOnly = false,
     onRun = function(client)
         for _, v in pairs(ents.FindInSphere(client:GetPos(), 500)) do
-            if v:GetClass() == "lia_item" then v:SetPos(client:GetPos()) end
+            if v:isItem() then v:SetPos(client:GetPos()) end
         end
     end
 })

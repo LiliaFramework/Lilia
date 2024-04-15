@@ -5,11 +5,11 @@ file = {
 }
 
 module_file = {
-	Character = "lilia/libraries/character/meta/shared.lua",
-	Entity = "lilia/libraries/meta/entity/shared.lua",
-	Inventory = "lilia/libraries/inventory/meta/shared.lua",
-	Item = "lilia/libraries/items/meta/shared.lua",
-	Player = "lilia/libraries/meta/player/shared.lua"
+	Character = "lilia/libraries/meta/character.lua",
+	Entity = "lilia/libraries/meta/entity.lua",
+	Inventory = "lilia/libraries/meta/inventory.lua",
+	Item = "lilia/libraries/meta/item.lua",
+	Player = "lilia/libraries/meta/player.lua"
 }
 
 dir = "docs/html"
