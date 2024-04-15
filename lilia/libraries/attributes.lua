@@ -1,6 +1,5 @@
 ﻿--- Helper library that manages roleplay improving attributes.
 -- @module lia.attribs
-
 lia.attribs = lia.attribs or {}
 lia.attribs.list = lia.attribs.list or {}
 function lia.attribs.loadFromDir(directory)

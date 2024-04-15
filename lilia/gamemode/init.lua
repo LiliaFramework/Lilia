@@ -1,5 +1,4 @@
-﻿
-DeriveGamemode("sandbox")
+﻿DeriveGamemode("sandbox")
 lia = lia or {
     util = {},
     meta = {}

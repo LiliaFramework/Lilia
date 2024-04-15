@@ -1,4 +1,4 @@
---[[--
+﻿--[[--
 Physical representation of connected player.
 
 `Player`s are a type of `Entity`. They are a physical representation of a `Character` - and can possess at most one `Character`

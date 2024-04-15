@@ -82,7 +82,6 @@ function lia.includeDir(directory, fromLua, recursive, realm)
     end
 end
 
-
 --[[
 Legacy Includer Support :)
 ]]

@@ -1,4 +1,4 @@
---[[--
+﻿--[[--
 Holds items within a grid layout.
 
 Inventories are an object that contains `Item`s in a grid layout. Every `Character` will have exactly one inventory attached to
@@ -17,7 +17,6 @@ You may be looking for the following common functions:
 `hasItem` Which checks if the inventory has an item.
 ]]
 -- @classmod Inventory
-
 local Inventory = lia.Inventory or {}
 Inventory.__index = Inventory
 lia.Inventory = Inventory
