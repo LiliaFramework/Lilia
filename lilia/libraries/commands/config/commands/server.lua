@@ -78,7 +78,7 @@ lia.command.add("charaddmoney", {
             if character and amount then
                 amount = math.Round(amount)
                 character:giveMoney(amount)
-                client:notify("You gave " .. lia.currency.get(amount) .. " to " .. target:Name())
+                client:notify("You gave " .. lia.currency.get(amount) .. " to " .. hook.Run("GetDisplayedName", target) or target:getChar():getName())
             end
         end
     end
