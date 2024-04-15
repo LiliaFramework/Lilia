@@ -1,3 +1,5 @@
+lia.util.cachedMaterials = lia.util.cachedMaterials or {}
+
 function lia.util.isSteamID(value)
     if string.match(value, "STEAM_(%d+):(%d+):(%d+)") then return true end
     return false
@@ -565,7 +567,6 @@ else
     }
 
     function lia.util.FetchImage(id, callback, failImg, pngParameters, imageProvider)
-        failImg = failImg
         local loadedImage = lia.util.LoadedImages[id]
         if loadedImage then
             if callback then callback(loadedImage) end
@@ -581,7 +582,7 @@ else
                 callback(false)
             end
         else
-            http.Fetch((imageProvider or "https://i.imgur.com/") .. id .. ".png", function(body, size, headers, code)
+            http.Fetch((imageProvider or "https://i.imgur.com/") .. id .. ".png", function(body, _, _, code)
                 if code ~= 200 then
                     callback(false)
                     return
@@ -595,15 +596,14 @@ else
                 file.Write("lilia/images/" .. id .. ".png", body)
                 local mat = Material("data/lilia/images/" .. id .. ".png", "noclamp smooth")
                 lia.util.LoadedImages[id] = mat
-                if callback then callback(mat) end
+                if callback then callback(mat) endf
             end, function() if callback then callback(false) end end)
         end
     end
 
-    cvars.AddChangeCallback("lia_cheapblur", function(name, old, new) useCheapBlur = (tonumber(new) or 0) > 0 end)
+    cvars.AddChangeCallback("lia_cheapblur", function(_, _, new) useCheapBlur = (tonumber(new) or 0) > 0 end)
 end
 
-lia.util.cachedMaterials = lia.util.cachedMaterials or {}
 function lia.util.getMaterial(materialPath)
     lia.util.cachedMaterials[materialPath] = lia.util.cachedMaterials[materialPath] or Material(materialPath)
     return lia.util.cachedMaterials[materialPath]

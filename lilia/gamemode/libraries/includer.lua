@@ -11,7 +11,6 @@ lia.RealmIdentifiers = {
     permissions = "shared",
     sconfig = "server",
 }
-
 lia.FilesToLoad = {
     {path = "lilia/gamemode/libraries/database.lua", realm = "server"},
     {path = "lilia/gamemode/meta/database.lua", realm = "shared"},
@@ -50,8 +49,8 @@ lia.FilesToLoad = {
     {path = "lilia/gamemode/libraries/menu.lua", realm = "client"},
     {path = "lilia/gamemode/libraries/notice.lua", realm = "client"},
     {path = "lilia/gamemode/libraries/bars.lua", realm = "client"},
-    {path = "lilia/gamemode/hooks/animations.lua", realm = "shared"}
-    {path = "lilia/gamemode/netcalls/client.lua", realm = "client"}
+    {path = "lilia/gamemode/hooks/animations.lua", realm = "shared"},
+    {path = "lilia/gamemode/netcalls/client.lua", realm = "client"},
     {path = "lilia/gamemode/netcalls/server.lua", realm = "server"}
 }
 

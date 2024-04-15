@@ -136,7 +136,7 @@ modules.mysqloo = {
         local password = lia.db.password
         local database = lia.db.database
         local port = lia.db.port
-        local object = mysqloo.connect(hostname, username, password, database, port)
+        mysqloo.connect(hostname, username, password, database, port)
         lia.db.pool = {}
         local poolNum = 6
         local connectedPools = 0
@@ -179,7 +179,7 @@ modules.mysqloo = {
     preparedCall = function(key, callback, ...)
         local preparedStatement = lia.db.prepared[key]
         if preparedStatement then
-            local freeDB, freeIndex = lia.db.getObject()
+            local _, freeIndex = lia.db.getObject()
             PREPARE_CACHE[key] = PREPARE_CACHE[key] or {}
             PREPARE_CACHE[key][freeIndex] = PREPARE_CACHE[key][freeIndex] or lia.db.getObject():prepare(preparedStatement.query)
             local prepObj = PREPARE_CACHE[key][freeIndex]
@@ -194,7 +194,7 @@ modules.mysqloo = {
             local arguments = {...}
             if table.Count(arguments) == table.Count(preparedStatement.values) then
                 local index = 1
-                for name, type in pairs(preparedStatement.values) do
+                for _, type in pairs(preparedStatement.values) do
                     if type == MYSQLOO_INTEGER then
                         prepObj:setNumber(index, arguments[index])
                     elseif type == MYSQLOO_STRING then

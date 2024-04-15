@@ -32,7 +32,7 @@ lia.item.DefaultFunctions = {
             client.itemTakeTransactionTimeout = RealTime()
             if not inventory then return false end
             local d = deferred.new()
-            inventory:add(item):next(function(res)
+            inventory:add(item):next(function()
                 client.itemTakeTransaction = nil
                 if IsValid(entity) then
                     entity.liaIsSafe = true
@@ -195,7 +195,7 @@ function lia.item.newInv(owner, invType, callback)
     }):next(function(inventory)
         inventory.invType = invType
         if owner and owner > 0 then
-            for k, v in ipairs(player.GetAll()) do
+            for _, v in ipairs(player.GetAll()) do
                 if v:getChar() and v:getChar():getID() == owner then
                     inventory:sync(v)
                     break
@@ -272,7 +272,7 @@ if SERVER then
             itemData.y = nil
         end
 
-        local function onItemCreated(data, itemID)
+        local function onItemCreated(_, itemID)
             local item = lia.item.new(uniqueID, itemID)
             if item then
                 item.data = itemData
@@ -310,7 +310,7 @@ if SERVER then
         end
     end
 
-    function lia.item.loadItemByID(itemIndex, recipientFilter)
+    function lia.item.loadItemByID(itemIndex)
         local range
         if istable(itemIndex) then
             range = "(" .. table.concat(itemIndex, ", ") .. ")"

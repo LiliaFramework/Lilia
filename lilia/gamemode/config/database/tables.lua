@@ -8,7 +8,7 @@
         `_intro` BINARY(1) NULL DEFAULT 0,
         PRIMARY KEY (`_steamID`)
     );
-    
+
     CREATE TABLE IF NOT EXISTS `lia_characters` (
         `_id` INT(12) NOT NULL AUTO_INCREMENT,
         `_steamID` VARCHAR(20) NOT NULL COLLATE 'utf8mb4_general_ci',
@@ -25,14 +25,14 @@
         `recognized_as` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
         PRIMARY KEY (`_id`)
     );
-    
+
     CREATE TABLE IF NOT EXISTS `lia_inventories` (
         `_invID` INT(12) NOT NULL AUTO_INCREMENT,
         `_charID` INT(12) NULL DEFAULT NULL,
         `_invType` VARCHAR(24) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         PRIMARY KEY (`_invID`)
     );
-    
+
     CREATE TABLE IF NOT EXISTS `lia_items` (
         `_itemID` INT(12) NOT NULL AUTO_INCREMENT,
         `_invID` INT(12) NULL DEFAULT NULL,
@@ -43,7 +43,7 @@
         `_y` INT(4),
         PRIMARY KEY (`_itemID`)
     );
-    
+
     CREATE TABLE IF NOT EXISTS `lia_invdata` (
         `_invID` INT(12) NOT NULL,
         `_key` VARCHAR(32) NOT NULL COLLATE 'utf8mb4_general_ci',
@@ -51,7 +51,7 @@
         FOREIGN KEY (`_invID`) REFERENCES lia_inventories(_invID) ON DELETE CASCADE,
         PRIMARY KEY (`_invID`, `_key`)
     );
-    
+
     CREATE TABLE IF NOT EXISTS `lilia_logs` (
         `id` INT(12) NOT NULL AUTO_INCREMENT,
         `category` TEXT NOT NULL,
@@ -69,7 +69,7 @@ SqlLiteTableCreate = [[
         _data varchar,
         _intro binary
     );
-    
+
     CREATE TABLE IF NOT EXISTS lia_characters (
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         _steamID VARCHAR,
@@ -85,13 +85,13 @@ SqlLiteTableCreate = [[
         _faction VARCHAR,
         recognized_as TEXT NOT NULL DEFAULT ''
     );
-    
+
     CREATE TABLE IF NOT EXISTS lia_inventories (
         _invID integer PRIMARY KEY AUTOINCREMENT,
         _charID integer,
         _invType varchar
     );
-    
+
     CREATE TABLE IF NOT EXISTS lia_items (
         _itemID integer PRIMARY KEY AUTOINCREMENT,
         _invID integer,
@@ -101,7 +101,7 @@ SqlLiteTableCreate = [[
         _x integer,
         _y integer
     );
-    
+
     CREATE TABLE IF NOT EXISTS lia_invdata (
         _invID integer,
         _key text,
@@ -109,7 +109,7 @@ SqlLiteTableCreate = [[
         FOREIGN KEY(_invID) REFERENCES lia_inventories(_invID),
         PRIMARY KEY (_invID, _key)
     );
-    
+
     CREATE TABLE IF NOT EXISTS lilia_logs (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         category TEXT NOT NULL,

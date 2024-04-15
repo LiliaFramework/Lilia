@@ -93,6 +93,7 @@ function lia.char.registerVar(key, data)
                 netstream.Start(nil, "charSet", key, value, self:getID())
                 hook.Run("OnCharVarChanged", self, key, oldVar, value)
             end
+
             charMeta["Set" .. upperName] = function(self, value)
                 local oldVar = self.vars[key]
                 self.vars[key] = value
@@ -112,6 +113,7 @@ function lia.char.registerVar(key, data)
             if default == nil then return lia.char.vars[key] and lia.char.vars[key].default or nil end
             return default
         end
+
         charMeta["Get" .. upperName] = function(self, default)
             local value = self.vars[key]
             if value ~= nil then return value end
@@ -382,6 +384,7 @@ function lia.char.getCharData(charID, key)
     if key then return data[key] end
     return data
 end
+
 if SERVER then
     function lia.char.create(data, callback)
         local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
@@ -406,7 +409,7 @@ if SERVER then
                     break
                 end
             end
-    
+
             local character = lia.char.new(data, charID, client, data.steamID)
             character.vars.inv = {}
             hook.Run("CreateDefaultInventory", character):next(function(inventory)
@@ -416,14 +419,14 @@ if SERVER then
             end)
         end)
     end
-    
+
     function lia.char.restore(client, callback, _, id)
         local steamID64 = client:SteamID64()
         local fields = {"_id"}
         for _, var in pairs(lia.char.vars) do
             if var.field then fields[#fields + 1] = var.field end
         end
-    
+
         fields = table.concat(fields, ", ")
         local condition = "_schema = '" .. lia.db.escape(SCHEMA.folder) .. "' AND _steamID = " .. steamID64
         if id then condition = condition .. " AND _id = " .. id end
@@ -436,14 +439,14 @@ if SERVER then
                 if callback then callback(characters) end
                 return
             end
-    
+
             for _, v in ipairs(results) do
                 local id = tonumber(v._id)
                 if not id then
                     ErrorNoHalt("[Lilia] Attempt to load character '" .. (data._name or "nil") .. "' with invalid ID!")
                     continue
                 end
-    
+
                 local data = {}
                 for k2, v2 in pairs(lia.char.vars) do
                     if v2.field and v[v2.field] then
@@ -455,11 +458,11 @@ if SERVER then
                         elseif istable(v2.default) then
                             value = util.JSONToTable(value)
                         end
-    
+
                         data[k2] = value
                     end
                 end
-    
+
                 characters[#characters + 1] = id
                 local character = lia.char.new(data, id, client)
                 hook.Run("CharacterRestored", character)
@@ -487,7 +490,7 @@ if SERVER then
             end
         end)
     end
-    
+
     function lia.char.cleanUpForPlayer(client)
         for _, charID in pairs(client.liaCharList or {}) do
             local character = lia.char.loaded[charID]
@@ -498,7 +501,7 @@ if SERVER then
             hook.Run("CharacterCleanUp", character)
         end
     end
-    
+
     local function removePlayer(client)
         if client:getChar() then
             client:KillSilent()
@@ -507,7 +510,7 @@ if SERVER then
             netstream.Start(client, "charKick", nil, true)
         end
     end
-    
+
     function lia.char.delete(id, client)
         assert(isnumber(id), "id must be a number")
         if IsValid(client) then
@@ -519,7 +522,7 @@ if SERVER then
                 removePlayer(target)
             end
         end
-    
+
         hook.Run("PreCharacterDelete", id)
         for index, charID in pairs(client.liaCharList) do
             if charID == id then
@@ -527,7 +530,7 @@ if SERVER then
                 break
             end
         end
-    
+
         lia.char.loaded[id] = nil
         netstream.Start(nil, "charDel", id)
         lia.db.query("DELETE FROM lia_characters WHERE _id = " .. id)
@@ -538,10 +541,10 @@ if SERVER then
                 end
             end
         end)
-    
+
         hook.Run("OnCharacterDelete", client, id)
     end
-    
+
     function lia.char.setCharData(charID, key, val)
         local charIDsafe = tonumber(charID)
         if not charIDsafe then return end
@@ -553,9 +556,8 @@ if SERVER then
             print("lia.setCharData SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
-    
+
         if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setData(key, val) end
         return true
     end
-
 end
