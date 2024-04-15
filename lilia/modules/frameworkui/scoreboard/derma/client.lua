@@ -86,11 +86,12 @@ end
 
 function PANEL:Think()
     if (self.nextUpdate or 0) < CurTime() then
+        LocalPlayer():ChatPrint("Updated!")
         local visible, amount
         for k, v in ipairs(self.teams) do
             visible, amount = v:IsVisible(), lia.faction.getPlayerCount(k)
             if k == FACTION_STAFF then
-                v:SetVisible(MODULE.ShowStaff and LocalPlayer():isStaffOnDuty())
+                v:SetVisible(not MODULE.ShowStaff and LocalPlayer():isStaffOnDuty() or amount > 0)
             else
                 v:SetVisible(visible and amount > 0)
             end

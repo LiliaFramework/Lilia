@@ -108,3 +108,15 @@ function MODULE:RemoveAllEquippedWeapons(client)
         client:notify("Because you died, you have lost " .. amount .. ".")
     end
 end
+
+function MODULE:PlayerSpawn(client)
+    if client:getChar() and client:isStaffOnDuty() then
+        if self.StaffHasGodMode then
+            client:GodEnable()
+        else
+            client:GodDisable()
+        end
+    else
+        client:GodDisable()
+    end
+end

@@ -6,3 +6,4 @@ MODULE.LoseWeapononDeathHuman = false
 MODULE.LoseWeapononDeathWorld = false
 --[[ Enable or disable the death information popup ]]
 MODULE.DeathPopupEnabled = true
+MODULE.StaffHasGodMode = true

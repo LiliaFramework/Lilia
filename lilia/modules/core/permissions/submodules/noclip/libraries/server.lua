@@ -5,7 +5,6 @@
             client:SetNotSolid(true)
             client:DrawWorldModel(false)
             client:DrawShadow(false)
-            client:GodEnable()
             client:SetNoTarget(true)
             client.liaObsData = {client:GetPos(), client:EyeAngles()}
             hook.Run("OnPlayerObserve", client, state)
@@ -27,7 +26,6 @@
             client:SetNotSolid(false)
             client:DrawWorldModel(true)
             client:DrawShadow(true)
-            client:GodDisable()
             client:SetNoTarget(false)
             hook.Run("OnPlayerObserve", client, state)
         end
