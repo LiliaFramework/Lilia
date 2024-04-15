@@ -8,6 +8,7 @@ See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for 
 ]]
 -- @classmod Player
 local playerMeta = FindMetaTable("Player")
+local vectorMeta = FindMetaTable("Vector")
 function playerMeta:isUser()
     return self:IsUserGroup("user")
 end
@@ -137,7 +138,7 @@ function playerMeta:canAfford(amount)
 end
 
 function playerMeta:isRunning()
-    return FindMetaTable("Vector").Length2D(self:GetVelocity()) > (self:GetWalkSpeed() + 10)
+    return vectorMeta.Length2D(self:GetVelocity()) > (self:GetWalkSpeed() + 10)
 end
 
 function playerMeta:isFemale()

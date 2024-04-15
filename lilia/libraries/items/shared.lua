@@ -52,7 +52,7 @@ lia.item.DefaultFunctions = {
         onCanRun = function(item) return IsValid(item.entity) end
     },
 }
-
+local GridInv = FindMetaTable("GridInv")
 --- Retrieves an item table.
 -- @realm shared
 -- @string identifier Unique ID of the item
@@ -175,7 +175,6 @@ function lia.item.new(uniqueID, id)
 end
 
 function lia.item.registerInv(invType, w, h)
-    local GridInv = FindMetaTable("GridInv")
     assert(GridInv, "GridInv not found")
     local inventory = GridInv:extend("GridInv" .. invType)
     inventory.invType = invType
@@ -213,7 +212,6 @@ function lia.item.getInv(invID)
 end
 
 function lia.item.createInv(w, h, id)
-    local GridInv = FindMetaTable("GridInv")
     assert(GridInv, "GridInv not found")
     local instance = GridInv:new()
     instance.id = id
