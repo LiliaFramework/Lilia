@@ -93,7 +93,6 @@ function lia.char.registerVar(key, data)
                 netstream.Start(nil, "charSet", key, value, self:getID())
                 hook.Run("OnCharVarChanged", self, key, oldVar, value)
             end
-
             charMeta["Set" .. upperName] = function(self, value)
                 local oldVar = self.vars[key]
                 self.vars[key] = value
@@ -113,7 +112,6 @@ function lia.char.registerVar(key, data)
             if default == nil then return lia.char.vars[key] and lia.char.vars[key].default or nil end
             return default
         end
-
         charMeta["Get" .. upperName] = function(self, default)
             local value = self.vars[key]
             if value ~= nil then return value end

@@ -1,4 +1,4 @@
-﻿local playerMeta = FindMetaTable("Player")
+local playerMeta = FindMetaTable("Player")
 if SERVER then
     function playerMeta:loadLiliaData(callback)
         local name = self:steamName()

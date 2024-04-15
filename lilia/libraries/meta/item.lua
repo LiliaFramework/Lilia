@@ -1,4 +1,4 @@
-﻿--[[--
+--[[--
 Interactable entities that can be held in inventories.
 
 Items are objects that are contained inside of an `Inventory`, or as standalone entities if they are dropped in the world. They

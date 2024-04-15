@@ -1,4 +1,4 @@
-﻿--[[--
+--[[--
 Physical object in the game world.
 
 Entities are physical representations of objects in the game world. Lilia extends the functionality of entities to interface

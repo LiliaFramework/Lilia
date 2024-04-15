@@ -1,4 +1,6 @@
 ﻿local useCheapBlur = CreateClientConVar("lia_cheapblur", 0, true):GetBool()
+
+
 function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
     color = color or color_white
     return draw.TextShadow({
@@ -204,6 +206,7 @@ function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCanc
     Window:DoModal()
     return Window
 end
+
 
 function lia.util.notify(message)
     local notice = vgui.Create("liaNotify")

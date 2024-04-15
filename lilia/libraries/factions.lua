@@ -97,7 +97,6 @@ function lia.faction.getPlayers(faction)
     end
     return players
 end
-
 --- Returns the number of players belonging to a specific faction.
 -- @realm shared
 -- @int faction number The index of the faction
