@@ -58,7 +58,7 @@
         `log` TEXT NOT NULL,
         `time` INT(12) NOT NULL,
         PRIMARY KEY (`id`)
-    );    
+    );
 ]]
 SqlLiteTableCreate = [[
     CREATE TABLE IF NOT EXISTS lia_players (

@@ -596,7 +596,7 @@ else
                 file.Write("lilia/images/" .. id .. ".png", body)
                 local mat = Material("data/lilia/images/" .. id .. ".png", "noclamp smooth")
                 lia.util.LoadedImages[id] = mat
-                if callback then callback(mat) endf
+                if callback then callback(mat) end
             end, function() if callback then callback(false) end end)
         end
     end

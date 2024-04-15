@@ -13,7 +13,7 @@ function ITEM:getDesc()
     return Format(self.ammoDesc or self.desc, self:getQuantity())
 end
 
-function ITEM:paintOver(item, w, h)
+function ITEM:paintOver(item)
     local quantity = item:getQuantity()
     lia.util.drawText(quantity, 8, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "liaChatFont")
 end
@@ -23,7 +23,7 @@ ITEM.functions.use = {
     tip = "useTip",
     icon = "icon16/add.png",
     isMulti = true,
-    multiOptions = function(item, client)
+    multiOptions = function(item, data)
         local options = {}
         table.insert(options, {
             name = L("ammoLoadAll"),
@@ -45,7 +45,7 @@ ITEM.functions.use = {
         })
         return options
     end,
-    onClick = function(item, data) if data == -1 then return false end end,
+    onClick = function(_, data) if data == -1 then return false end end,
     onRun = function(item, data)
         data = data or 0
         if data > 0 then

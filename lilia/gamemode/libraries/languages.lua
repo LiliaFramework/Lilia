@@ -90,7 +90,7 @@ else
         local info = lia.lang.stored[langKey]
         if info and info[key] then return string.format(info[key], ...) end
     end
- 
+
     local GM = GM or GAMEMODE
     function GM:SetupQuickMenu(menu)
         local current

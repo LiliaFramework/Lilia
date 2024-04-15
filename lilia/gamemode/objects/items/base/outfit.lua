@@ -155,7 +155,7 @@ ITEM.functions.Equip = {
     onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip") ~= true end
 }
 
-function ITEM:onCanBeTransfered(oldInventory, newInventory)
+function ITEM:onCanBeTransfered(_, newInventory)
     if newInventory and self:getData("equip") then return false end
     return true
 end
@@ -168,7 +168,7 @@ function ITEM:onRemoved()
     if (IsValid(receiver) and receiver:IsPlayer()) and self:getData("equip") then self:removeOutfit(receiver) end
 end
 
-function ITEM:onWear(isFirstTime)
+function ITEM:onWear()
 end
 
 function ITEM:onTakeOff()
