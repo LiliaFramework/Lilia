@@ -147,7 +147,7 @@ function lia.command.extractArgs(text)
 end
 
 if SERVER then
-    	--- Attempts to find a player by an identifier. If unsuccessful, a notice will be displayed to the specified player. The
+	--- Attempts to find a player by an identifier. If unsuccessful, a notice will be displayed to the specified player. The
 	-- search criteria is derived from `lia.command.findPlayer`.
 	-- @realm server
 	-- @player client Player to give a notification to if the player could not be found
