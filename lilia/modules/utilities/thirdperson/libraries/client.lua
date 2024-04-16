@@ -123,11 +123,10 @@ function MODULE:PrePlayerDraw(drawnClient)
             })
 
             local entity = traceLine.Entity
-            local entityClass = IsValid(entity) and entity:GetClass()
             if traceLine.HitPos == bonePos then
                 bBoneHit = true
                 break
-            elseif (self.NotSolidMatTypes[traceLine.MatType] or self.NotSolidTextures[traceLine.HitTexture]) or ((entity and (entityClass == "prop_dynamic" or entity:isProp())) and self.NotSolidModels[entity:GetModel()]) then
+            elseif (self.NotSolidMatTypes[traceLine.MatType] or self.NotSolidTextures[traceLine.HitTexture]) or ((IsValid(entity) and (entity:GetClass() == "prop_dynamic" or entity:isProp())) and self.NotSolidModels[entity:GetModel()]) then
                 local traceLine2 = util.TraceLine({
                     start = bonePos,
                     endpos = clientPos,

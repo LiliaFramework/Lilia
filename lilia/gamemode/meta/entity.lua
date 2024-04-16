@@ -14,7 +14,6 @@ local ChairCache = {}
 -- @realm shared
 -- @treturn bool True if the entity is a physics prop, false otherwise.
 function entityMeta:isProp()
-    if not IsValid(self) then return false end
     return self:GetClass() == "prop_physics"
 end
 
@@ -22,7 +21,6 @@ end
 -- @realm shared
 -- @treturn bool True if the entity is an item entity, false otherwise.
 function entityMeta:isItem()
-    if not IsValid(self) then return false end
     return self:GetClass() == "lia_item"
 end
 
@@ -30,7 +28,6 @@ end
 -- @realm shared
 -- @treturn bool True if the entity is a money entity, false otherwise.
 function entityMeta:isMoney()
-    if not IsValid(self) then return false end
     return self:GetClass() == "lia_money"
 end
 
@@ -38,8 +35,7 @@ end
 -- @realm shared
 -- @treturn bool True if the entity is a simfphys car, false otherwise.
 function entityMeta:isSimfphysCar()
-    if not simfphys or not IsValid(self) then return false end
-    return self:GetClass() == "gmod_sent_vehicle_fphysics_base" or self.IsSimfphyscar or self:GetClass() == "gmod_sent_vehicle_fphysics_wheel" or self.Base == "gmod_sent_vehicle_fphysics_base" or self.Base == "gmod_sent_vehicle_fphysics_wheel"
+    return simfphys and (self:GetClass() == "gmod_sent_vehicle_fphysics_base" or self.IsSimfphyscar or self:GetClass() == "gmod_sent_vehicle_fphysics_wheel" or self.Base == "gmod_sent_vehicle_fphysics_base" or self.Base == "gmod_sent_vehicle_fphysics_wheel")
 end
 
 --- Retrieves the drop position for an item associated with the entity.
