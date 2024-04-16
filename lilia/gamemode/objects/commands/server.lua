@@ -133,6 +133,7 @@ Commands
 
 - **membercount**: Displays the count of members in the server.
 ]]
+-- @configurations Commands
 local GM = GM or GAMEMODE
 lia.command.add("charsetspeed", {
     adminOnly = true,

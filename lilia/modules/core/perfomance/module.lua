@@ -13,7 +13,7 @@ Core - Perfomance.
 
 - **SoundsToMute**: What sounds should be muted. | **table**.
 ]]
--- @moduleinfo perfomance
+-- @configurations perfomance
 MODULE.tblPlayers = MODULE.tblPlayers or {}
 MODULE.name = "Core - Perfomance"
 MODULE.author = "76561198312513285"

@@ -7,7 +7,7 @@ Compatibility - Simfphys
 
 - **ValidCarDamages**: The valid types of damage on cars that should apply to the client | **table**.
 ]]
--- @moduleinfo simfphys
+-- @configurations simfphys
 MODULE.name = "Compatibility - Simfphys"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
