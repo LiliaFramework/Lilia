@@ -21,7 +21,7 @@ function PANEL:populateRows(data)
         if table.HasValue(table.GetKeys(row), "_steamID") and string.StartWith(row["_steamID"], "STEAM") then row["_steamID"] = util.SteamIDTo64(row["_steamID"]) end
         if table.HasValue(table.GetKeys(row), "_lastJoinTime") then row["_lastJoinTime"] = string.FormattedTime(row["_lastJoinTime"], "%02i:%02i:%02i") end
         local row = table.ClearKeys(row)
-        table.insert(row, table.GetLastKey(row) + 1, util.SteamIDFrom64(row[4]))
+        table.insert(row, #row + 1, util.SteamIDFrom64(row[4]))
         self.listView:AddLine(unpack(row))
     end
 end

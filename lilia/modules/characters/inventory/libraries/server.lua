@@ -99,7 +99,7 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
         return oldInventory:add(item, oldX, oldY)
     end):next(function(res)
         if res and res.error then return res end
-        if tryCombineWith and IsValid(client) then if hook.Run("ItemCombine", client, item, tryCombineWith) then return end end
+        if tryCombineWith and IsValid(client) and hook.Run("ItemCombine", client, item, tryCombineWith) then return end
     end):next(function(res)
         client.invTransferTransaction = nil
         if res and res.error then

@@ -123,7 +123,7 @@ net.Receive("OpenLogger", function()
         local new_word = string.match(v.name, "^(%w+)")
         local c = Color(math.Clamp(v.color.r - 30, 0, 255), math.Clamp(v.color.g - 30, 0, 255), math.Clamp(v.color.b - 30, 0, 255))
         local cat = nav:AddButton(v.name, v.color, c)
-        if before_word and not (before_word == new_word) then cat:DockMargin(0, 5, 0, 0) end
+        if before_word and (before_word ~= new_word) then cat:DockMargin(0, 5, 0, 0) end
         function cat:DoClick()
             if log.category ~= self then pager.cur_page = 1 end
             log.category = self
