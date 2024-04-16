@@ -140,18 +140,6 @@ function lia.char.registerVar(key, data)
 
     charMeta.vars[key] = data.default
 end
-	--- Default character vars
-	-- @classmod Character
-
-	--- Sets this character's name. This is automatically networked.
-	-- @realm server
-	-- @string name New name for the character
-	-- @function setName/SetName
-
-	--- Returns this character's name.
-	-- @realm shared
-	-- @treturn string This character's current name
-	-- @function getName/GetName
 
 lia.char.registerVar("name", {
     field = "_name",
@@ -183,15 +171,6 @@ lia.char.registerVar("name", {
         end
     end,
 })
-	--- Sets this character's physical description. This is automatically networked.
-	-- @realm server
-	-- @string description New description for this character
-	-- @function setDesc/SetDescription
-
-	--- Returns this character's physical description.
-	-- @realm shared
-	-- @treturn string This character's current description
-	-- @function getDesc/GetDescription
 lia.char.registerVar("desc", {
     field = "_desc",
     default = "Please Enter Your Description With The Minimum Of " .. lia.config.MinDescLen .. " Characters!",
@@ -208,16 +187,7 @@ lia.char.registerVar("desc", {
         if isstring(desc) and override then newData.desc = desc end
     end,
 })
-	--- Sets this character's model. This sets the player's current model to the given one, and saves it to the character.
-	-- It is automatically networked.
-	-- @realm server
-	-- @string model New model for the character
-	-- @function setModel/SetModel
 
-	--- Returns this character's model.
-	-- @realm shared
-	-- @treturn string This character's current model
-	-- @function getModel/GetModel
 lia.char.registerVar("model", {
     field = "_model",
     default = "models/error.mdl",
@@ -307,25 +277,12 @@ lia.char.registerVar("model", {
         end
     end
 })
-	-- setClass shouldn't be used here, character:joinClass should be used instead
-	--- Returns this character's current class.
-	-- @realm shared
-	-- @treturn number Index of the class this character is in
-	-- @function getClass
+
 lia.char.registerVar("class", {
     noDisplay = true,
 })
 
-	--- Sets this character's faction. Note that this doesn't do the initial setup for the player after the faction has been
-	-- changed, so you'll have to update some character vars manually.
-	-- @realm server
-	-- @number faction Index of the faction to transfer this character to
-	-- @function setFaction/SetFaction
 
-	--- Returns this character's faction.
-	-- @realm shared
-	-- @treturn number Index of the faction this character is currently in
-	-- @function getFaction/GetFaction
 lia.char.registerVar("faction", {
     field = "_faction",
     default = "Citizen",
@@ -351,37 +308,13 @@ lia.char.registerVar("faction", {
     end,
     onAdjust = function(_, _, value, newData) newData.faction = lia.faction.indices[value].uniqueID end
 })
-	--- Sets this character's current money. Money is only networked to the player that owns this character.
-	-- @realm server
-	-- @number money New amount of money this character should have
-	-- @function setMoney/SetMoney
-
-	--- Returns this character's money. This is only valid on the server and the owning client.
-	-- @realm shared
-	-- @treturn number Current money of this character
-	-- @function getMoney/GetMoney
 lia.char.registerVar("money", {
     field = "_money",
     default = 0,
     isLocal = true,
     noDisplay = true
 })
-	--- Sets a data field on this character. This is useful for storing small bits of data that you need persisted on this
-	-- character. This is networked only to the owning client. If you are going to be accessing this data field frequently with
-	-- a getter/setter, consider using `lia.char.registerVar` instead.
-	-- @realm server
-	-- @string key Name of the field that holds the data
-	-- @param value Any value to store in the field, as long as it's supported by GMod's JSON parser
-	-- @function setData/SetData
 
-	--- Returns a data field set on this character. If it doesn't exist, it will return the given default or `nil`. This is only
-	-- valid on the server and the owning client.
-	-- @realm shared
-	-- @string key Name of the field that's holding the data
-	-- @param default Value to return if the given key doesn't exist, or is `nil`
-	-- @return[1] Data stored in the field
-	-- @treturn[2] nil If the data doesn't exist, or is `nil`
-	-- @function getData/GetData
 lia.char.registerVar("data", {
     default = {},
     isLocal = true,
