@@ -1,3 +1,7 @@
+--[[--
+Inventory manipulation and helper functions.
+]]
+-- @module lia.inventory
 lia.inventory = lia.inventory or {}
 lia.inventory.types = lia.inventory.types or {}
 lia.inventory.instances = lia.inventory.instances or {}
@@ -24,6 +28,11 @@ local function checkType(typeID, struct, expected, prefix)
     end
 end
 
+--- Creates a new inventory type.
+-- @realm shared
+-- @function lia.inventory.newType
+-- @tparam string typeID The unique identifier for the new inventory type.
+-- @tparam table invTypeStruct The structure defining the behavior and configuration of the new inventory type.
 function lia.inventory.newType(typeID, invTypeStruct)
     assert(not lia.inventory.types[typeID], "duplicate inventory type " .. typeID)
     assert(istable(invTypeStruct), "expected table for argument #2")
@@ -32,6 +41,11 @@ function lia.inventory.newType(typeID, invTypeStruct)
     lia.inventory.types[typeID] = invTypeStruct
 end
 
+--- Creates a new inventory instance of the specified type.
+-- @realm shared
+-- @function lia.inventory.new
+-- @tparam string typeID The unique identifier for the type of inventory to create.
+-- @treturn Inventory A new instance of the specified inventory type.
 function lia.inventory.new(typeID)
     local class = lia.inventory.types[typeID]
     assert(class ~= nil, "bad inventory type " .. typeID)
@@ -47,6 +61,15 @@ if SERVER then
     local DATA_FIELDS = {"_key", "_value"}
     local DATA_TABLE = "invdata"
     local ITEMS_TABLE = "items"
+    --- Loads an inventory instance by its ID from cache or default storage if not cached.
+    -- If the inventory is found in the cache and `noCache` is not set, it will return the cached instance.
+    -- If the inventory is not found in the cache or `noCache` is set, it attempts to load it from storage.
+    -- If the inventory is not found in storage, it falls back to the default storage.
+    -- @realm server
+    -- @function lia.inventory.loadByID
+    -- @tparam number id The ID of the inventory to load.
+    -- @tparam[opt=false] boolean noCache If true, forces loading from storage even if cached.
+    -- @treturn Deferred A deferred object that resolves with the loaded inventory instance or nil if not found.
     function lia.inventory.loadByID(id, noCache)
         local instance = lia.inventory.instances[invID]
         if instance and not noCache then
@@ -67,6 +90,12 @@ if SERVER then
         return lia.inventory.loadFromDefaultStorage(id, noCache)
     end
 
+    --- Loads an inventory instance from the default storage.
+    -- @realm server
+    -- @function lia.inventory.loadFromDefaultStorage
+    -- @tparam number id The ID of the inventory to load.
+    -- @tparam[opt=false] boolean noCache If true, forces loading from storage even if cached.
+    -- @treturn Deferred A deferred object that resolves with the loaded inventory instance or nil if not found.
     function lia.inventory.loadFromDefaultStorage(id, noCache)
         return deferred.all({lia.db.select(INV_FIELDS, INV_TABLE, "_invID = " .. id, 1), lia.db.select(DATA_FIELDS, DATA_TABLE, "_invID = " .. id)}):next(function(res)
             if lia.inventory.instances[id] and not noCache then return lia.inventory.instances[id] end
@@ -97,6 +126,12 @@ if SERVER then
         end)
     end
 
+    --- Creates and initializes a new inventory instance based on the specified type ID and initial data.
+    -- @realm server
+    -- @function lia.inventory.instance
+    -- @tparam string typeID The ID of the inventory type.
+    -- @tparam[opt] table initialData Initial data to be assigned to the inventory.
+    -- @treturn Deferred A deferred object that resolves with the created inventory instance.
     function lia.inventory.instance(typeID, initialData)
         local invType = lia.inventory.types[typeID]
         assert(istable(invType), "invalid inventory type " .. tostring(typeID))
@@ -112,11 +147,20 @@ if SERVER then
         end)
     end
 
+    --- Loads all inventory instances associated with a character ID.
+    -- @realm server
+    -- @function lia.inventory.loadAllFromCharID
+    -- @tparam number charID The character ID to load inventory instances for.
+    -- @treturn Deferred A deferred object that resolves with an array of loaded inventory instances.
     function lia.inventory.loadAllFromCharID(charID)
         assert(isnumber(charID), "charID must be a number")
         return lia.db.select({"_invID"}, INV_TABLE, "_charID = " .. charID):next(function(res) return deferred.map(res.results or {}, function(result) return lia.inventory.loadByID(tonumber(result._invID)) end) end)
     end
 
+    --- Deletes an inventory instance by its ID from the database and cache.
+    -- @realm server
+    -- @function lia.inventory.deleteByID
+    -- @tparam number id The ID of the inventory to delete.
     function lia.inventory.deleteByID(id)
         lia.db.delete(DATA_TABLE, "_invID = " .. id)
         lia.db.delete(INV_TABLE, "_invID = " .. id)
@@ -125,12 +169,22 @@ if SERVER then
         if instance then instance:destroy() end
     end
 
+    --- Cleans up all inventory instances associated with a character.
+    -- @realm server
+    -- @function lia.inventory.cleanUpForCharacter
+    -- @tparam Character character The character for which to clean up inventory instances.
     function lia.inventory.cleanUpForCharacter(character)
         for _, inventory in pairs(character:getInv(true)) do
             inventory:destroy()
         end
     end
 else
+    --- Displays the graphical representation of an inventory.
+    -- @realm client
+    -- @function lia.inventory.show
+    -- @tparam Inventory inventory The inventory to display.
+    -- @tparam Panel parent The parent panel to attach the inventory to.
+    -- @treturn Panel The panel displaying the inventory.
     function lia.inventory.show(inventory, parent)
         local globalName = "inv" .. inventory.id
         if IsValid(lia.gui[globalName]) then lia.gui[globalName]:Remove() end
