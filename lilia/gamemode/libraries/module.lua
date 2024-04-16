@@ -291,3 +291,62 @@ end
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
+
+--- The list of fields of modules.
+-- @realm shared
+-- @table ModuleFields
+
+--- Module Configuration.
+-- @section module_configuration
+
+--- Specifies the name of the module.
+-- Identifies the module.
+-- @field MODULE.name string
+
+--- Indicates the author of the module.
+-- It can be a STEAMID64 or Name.
+-- @field MODULE.author string
+
+--- Indicates the Discord of the module creator.
+-- @field MODULE.discord string
+
+--- Provides a brief description of the module's purpose.
+-- @field MODULE.desc string
+
+--- An example CAMI permission that is loaded alongside the module.
+-- @field MODULE.CAMIPrivileges table
+
+--- Workshop Content to be added.
+-- @field MODULE.WorkshopContent string
+
+--- Indicates if the module is active or not.
+-- If False, then it won't be.
+-- @field MODULE.enabled boolean
+
+--- Files and corresponding realms to be included.
+-- @field MODULE.Dependencies table
+
+--- Automatically Included Files and Folders in the Module.
+-- @section included_files_and_folders
+
+--- Files:
+-- @field client.lua
+-- @field cl_module.lua
+-- @field sv_module.lua
+-- @field server.lua
+-- @field config.lua
+-- @field sconfig.lua
+
+--- Folders:
+-- @field dependencies
+-- @field config
+-- @field permissions
+-- @field libs
+-- @field hooks
+-- @field libraries
+-- @field commands
+-- @field netcalls
+-- @field meta
+-- @field derma
+-- @field pim
+-- @field concommands
