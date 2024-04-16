@@ -50,6 +50,7 @@ function Inventory:extend(className)
 end
 
 --- Configures the inventory.
+-- @realm shared
 -- This function is meant to be overridden in subclasses to define specific configurations.
 -- @function Inventory:configure
 function Inventory:configure()
