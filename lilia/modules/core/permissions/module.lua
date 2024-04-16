@@ -1,8 +1,6 @@
 ﻿--[[--
 Core - Permissions.
 
-This module manages general permission configurations. It also contains the permission management modules within itself.
-
 **Configuration Values:**.
 
 - **RestrictedEnts**: List of entities blocked from physgun pick up and proprieties when used by regular players | **table**.

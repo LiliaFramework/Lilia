@@ -1,7 +1,5 @@
 ﻿--[[--
-Compatibility - SAM
-
-This module implements compatibility to SAM Admin Mod.
+Compatibility - SAM Admin Mod
 
 **Configuration Values:**.
 
