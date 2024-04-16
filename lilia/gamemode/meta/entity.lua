@@ -261,7 +261,7 @@ else
     --- Retrieves the value of a networked variable associated with the entity.
     -- @realm shared
     -- @tparam string key The identifier of the networked variable.
-    -- @param[opt] any default The default value to return if the networked variable does not exist.
+    -- @param default The default value to return if the networked variable does not exist.
     -- @treturn any The value of the networked variable, or the default value if it doesn't exist.
     function entityMeta:getNetVar(key, default)
         local index = self:EntIndex()
