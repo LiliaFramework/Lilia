@@ -32,7 +32,7 @@ function lia.util.stripRealmPrefix(name)
 
 	return (prefix == "sh_" or prefix == "sv_" or prefix == "cl_") and name:sub(4) or name
 end
-    
+
 --- Attempts to find a player by matching their name or Steam ID.
 -- @realm shared
 -- @string identifier Search query
