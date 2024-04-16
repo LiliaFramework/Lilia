@@ -220,7 +220,7 @@ if SERVER then
 
     entityMeta.SetNetVar = entityMeta.setNetVar
     --- Retrieves a networked variable. If it is not set, it'll return the default that you've specified.
-    -- @realm shared
+    -- @realm server
     -- @string key Identifier of the networked variable
     -- @param default Default value to return if the networked variable is not set
     -- @return Value associated with the key, or the default that was given if it doesn't exist
@@ -259,7 +259,7 @@ else
 
     entityMeta.GetDoorPartner = entityMeta.getDoorPartner
     --- Retrieves the value of a networked variable associated with the entity.
-    -- @realm shared
+    -- @realm client
     -- @tparam string key The identifier of the networked variable.
     -- @param default The default value to return if the networked variable does not exist.
     -- @treturn any The value of the networked variable, or the default value if it doesn't exist.
