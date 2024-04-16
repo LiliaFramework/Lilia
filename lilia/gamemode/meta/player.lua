@@ -458,16 +458,6 @@ if SERVER then
         end
     end
 
-    function playerMeta:ipAddressNoPort()
-        local ipAddr = self:IPAddress()
-        local ipAddrExploded = string.Explode(":", ipAddr, false)
-        if table.Count(ipAddrExploded) == 2 then
-            return ipAddrExploded[1]
-        else
-            return ipAddr
-        end
-    end
-
     function playerMeta:setAction(text, time, callback, startTime, finishTime)
         if time and time <= 0 then
             if callback then callback(self) end
@@ -1086,7 +1076,6 @@ playerMeta.GetClassData = playerMeta.getClassData
 playerMeta.HasSkillLevel = playerMeta.hasSkillLevel
 playerMeta.MeetsRequiredSkills = playerMeta.meetsRequiredSkills
 playerMeta.GetEyeEnt = playerMeta.getEyeEnt
-playerMeta.IpAddressNoPort = playerMeta.ipAddressNoPort
 playerMeta.SetAction = playerMeta.setAction
 playerMeta.GetPermFlags = playerMeta.getPermFlags
 playerMeta.SetPermFlags = playerMeta.setPermFlags
