@@ -130,6 +130,120 @@
 - **dropmoney**: Drops money at the character's position.
 
 - **membercount**: Displays the count of members in the server.
+
+- **charsetattrib**: Sets the attributes of the character. | **Staff Command**.
+
+- **charaddattrib**: Adds attributes to the character. | **Staff Command**.
+
+- **viewBodygroups**: Displays the bodygroups of the character. | **Staff Command**.
+
+- **storagelock**: Locks the storage container.
+
+- **trunk**: Accesses the trunk of a vehicle.
+
+- **pktoggle**: Toggles the player's PK mode. | **Staff Command**.
+
+- **toggleraise**: Toggles whether the player raises their weapon.
+
+- **fixpac**: Fixes the PAC3 outfit of the player. | **Staff Command**.
+
+- **pacenable**: Enables PAC3 for the player. | **Staff Command**.
+
+- **pacdisable**: Disables PAC3 for the player. | **Staff Command**.
+
+- **cleardecals**: Clears all decals from the world. | **Staff Command**.
+
+- **playtime**: Displays the playtime of the player. | **Staff Command**.
+
+- **3dradioclean**: Cleans up 3D radio entities on the map. | **Staff Command**.
+
+- **auditmoney**: Audits the money transactions on the server. | **Staff Command**.
+
+- **report**: Reports a player to the staff team. | **Player Command**.
+
+- **spawnadd**: Adds a spawn point to the map. | **Staff Command**.
+
+- **respawn**: Respawns the player at their last location. | **Player Command**.
+
+- **spawnremove**: Removes a spawn point from the map. | **Staff Command**.
+
+- **returnitems**: Returns lost items to the player's inventory. | **Staff Command**.
+
+- **classwhitelist**: Whitelists a class for spawning. | **Staff Command**.
+
+- **plytransfer**: Transfers a player to a different server. | **Staff Command**.
+
+- **plywhitelist**: Whitelists a player for spawning. | **Staff Command**.
+
+- **plyunwhitelist**: Removes a player from the whitelist. | **Staff Command**.
+
+- **beclass**: Sets the player's class.
+
+- **setclass**: Sets the player's class. | **Staff Command**.
+
+- **classunwhitelist**: Removes a class from the whitelist. | **Staff Command**.
+
+- **factionlist**: Displays a list of factions.
+
+- **charvoiceunban**: Unbans a character's voice. | **Staff Command**.
+
+- **charvoiceban**: Bans a character's voice. | **Staff Command**.
+
+- **voicetoggle**: Toggles the player's voice. | **Staff Command**.
+
+- **banooc**: Bans OOC chat for the player. | **Staff Command**.
+
+- **unbanooc**: Unbans OOC chat for the player. | **Staff Command**.
+
+- **blockooc**: Blocks OOC chat for the player. | **Staff Command**.
+
+- **refreshfonts**: Refreshes the fonts for the player. | **Staff Command**.
+
+- **clearchat**: Clears the chat for the player. | **Staff Command**.
+
+- **doorsell**: Sells a door to the player. | **Staff Command**.
+
+- **doorsetlocked**: Sets the door as locked. | **Staff Command**.
+
+- **doorbuy**: Buys a door for the player. | **Staff Command**.
+
+- **doorsetunownable**: Sets the door as unownable. | **Staff Command**.
+
+- **doorsetownable**: Sets the door as ownable. | **Staff Command**.
+
+- **dooraddfaction**: Adds a faction to the door. | **Staff Command**.
+
+- **doorremovefaction**: Removes a faction from the door. | **Staff Command**.
+
+- **doorsetdisabled**: Sets the door as disabled. | **Staff Command**.
+
+- **doorsettitle**: Sets the title of the door. | **Staff Command**.
+
+- **doorsetparent**: Sets the parent of the door. | **Staff Command**.
+
+- **doorsetchild**: Sets the child of the door. | **Staff Command**.
+
+- **doorremovechild**: Removes the child from the door. | **Staff Command**.
+
+- **doorsetclass**: Sets the class of the door. | **Staff Command**.
+
+- **savedoors**: Saves the state of the doors. | **Staff Command**.
+
+- **legacylogs**: Views the legacy logs. | **Staff Command**.
+
+- **logger**: Views the server's log. | **Staff Command**.
+
+- **deletelogs**: Deletes the logs. | **Staff Command**.
+
+- **netlogs**: Views the network logs. | **Staff Command**.
+
+- **concommandlogs**: Views the concommand logs. | **Staff Command**.
+
+- **restockallvendors**: Restocks all vendors on the map. | **Staff Command**.
+
+- **resetallvendormoney**: Resets all vendor money on the map. | **Staff Command**.
+
+- **savevendors**: Saves the state of the vendors. | **Staff Command**.
 ]]
 -- @configurations Commands
 local GM = GM or GAMEMODE
