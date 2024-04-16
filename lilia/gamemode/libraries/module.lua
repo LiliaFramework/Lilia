@@ -292,61 +292,14 @@ function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
 
---- The list of fields of modules.
+--- A list of available MODULE fields.
 -- @realm shared
--- @table ModuleFields
-
---- Module Configuration.
--- @section module_configuration
-
---- Specifies the name of the module.
--- Identifies the module.
--- @field MODULE.name string
-
---- Indicates the author of the module.
--- It can be a STEAMID64 or Name.
--- @field MODULE.author string
-
---- Indicates the Discord of the module creator.
--- @field MODULE.discord string
-
---- Provides a brief description of the module's purpose.
--- @field MODULE.desc string
-
---- An example CAMI permission that is loaded alongside the module.
--- @field MODULE.CAMIPrivileges table
-
---- Workshop Content to be added.
--- @field MODULE.WorkshopContent string
-
---- Indicates if the module is active or not.
--- If False, then it won't be.
--- @field MODULE.enabled boolean
-
---- Files and corresponding realms to be included.
--- @field MODULE.Dependencies table
-
---- Automatically Included Files and Folders in the Module.
--- @section included_files_and_folders
-
---- Files:
--- @field client.lua
--- @field cl_module.lua
--- @field sv_module.lua
--- @field server.lua
--- @field config.lua
--- @field sconfig.lua
-
---- Folders:
--- @field dependencies
--- @field config
--- @field permissions
--- @field libs
--- @field hooks
--- @field libraries
--- @field commands
--- @field netcalls
--- @field meta
--- @field derma
--- @field pim
--- @field concommands
+-- @table CommandList
+-- @field `MODULE.name` Specifies the name of the module, which is "Core - Permissions" in this case. This variable identifies the module.
+-- @field `MODULE.author` Indicates the author of the module. It can be a STEAMID64 or Name. Replace "76561198312513285" with the actual author information.
+-- @field `MODULE.discord` Indicates the discord of the module creator, in this case, as shown, is liliaplayer.
+-- @field `MODULE.desc` Provides a brief description of the module's purpose. In this case, it states that the module adds skills functionality to the framework.
+-- @field `MODULE.CAMIPrivileges` An example CAMI permission that is loaded alongside the module.
+-- @field `MODULE.WorkshopContent` Workshop Content to be added.
+-- @field `MODULE.enabled` Indicates if the module is active or not. If False, then it won't be.
+-- @field `MODULE.Dependencies` Files and corresponding realms to be included.
