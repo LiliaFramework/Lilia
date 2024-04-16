@@ -3,85 +3,85 @@ Commands
 
 **Commands List:**.
 
-- **charsetspeed**: Sets the speed of the character. | Staff Command.
+- **charsetspeed**: Sets the speed of the character. | **Staff Command**.
 
-- **playglobalsound**: Plays a sound globally for all players. | Staff Command.
+- **playglobalsound**: Plays a sound globally for all players. | **Staff Command**.
 
-- **playsound**: Plays a sound for the invoking player. | Staff Command.
+- **playsound**: Plays a sound for the invoking player. | **Staff Command**.
 
-- **charsetscale**: Sets the scale of the character. | Staff Command.
+- **charsetscale**: Sets the scale of the character. | **Staff Command**.
 
-- **charsetjump**: Sets the jump height of the character. | Staff Command.
+- **charsetjump**: Sets the jump height of the character. | **Staff Command**.
 
-- **charaddmoney**: Adds money to the character's account. | Staff Command.
+- **charaddmoney**: Adds money to the character's account. | **Staff Command**.
 
-- **charban**: Bans a character from the server. | Staff Command.
+- **charban**: Bans a character from the server. | **Staff Command**.
 
-- **charsetdesc**: Sets the description of the character. | Staff Command.
+- **charsetdesc**: Sets the description of the character. | **Staff Command**.
 
-- **charsetname**: Sets the name of the character. | Staff Command.
+- **charsetname**: Sets the name of the character. | **Staff Command**.
 
-- **chargetmodel**: Sets the target model for a character. | Staff Command.
+- **chargetmodel**: Sets the target model for a character. | **Staff Command**.
 
-- **charsetmodel**: Sets the model of the character. | Staff Command.
+- **charsetmodel**: Sets the model of the character. | **Staff Command**.
 
-- **charsetbodygroup**: Sets the bodygroup of the character. | Staff Command.
+- **charsetbodygroup**: Sets the bodygroup of the character. | **Staff Command**.
 
-- **charsetskin**: Sets the skin of the character. | Staff Command.
+- **charsetskin**: Sets the skin of the character. | **Staff Command**.
 
-- **chargetmoney**: Sets the target money for a character. | Staff Command.
+- **chargetmoney**: Sets the target money for a character. | **Staff Command**.
 
-- **charsetmoney**: Sets the money of the character. | Staff Command.
+- **charsetmoney**: Sets the money of the character. | **Staff Command**.
 
-- **clearinv**: Clears the inventory of the character. | Staff Command.
+- **clearinv**: Clears the inventory of the character. | **Staff Command**.
 
-- **flaggive**: Gives a flag to a character. | Staff Command.
+- **flaggive**: Gives a flag to a character. | **Staff Command**.
 
-- **flaggiveall**: Gives a flag to all characters. | Staff Command.
+- **flaggiveall**: Gives a flag to all characters. | **Staff Command**.
 
-- **flagtakeall**: Removes all flags from all characters. | Staff Command.
+- **flagtakeall**: Removes all flags from all characters. | **Staff Command**.
 
-- **flagtake**: Removes a flag from a character. | Staff Command.
+- **flagtake**: Removes a flag from a character. | **Staff Command**.
 
-- **charkick**: Kicks a character from the server. | Staff Command.
+- **charkick**: Kicks a character from the server. | **Staff Command**.
 
-- **viewcoreinformation**: Displays core faction information. | Staff Command.
+- **viewcoreinformation**: Displays core faction information. | **Staff Command**.
 
-- **charunban**: Unbans a character from the server. | Staff Command.
+- **charunban**: Unbans a character from the server. | **Staff Command**.
 
-- **flagpet**: Sets a character as a pet. | Staff Command.
+- **flagpet**: Sets a character as a pet. | **Staff Command**.
 
-- **flagragdoll**: Sets a character as a ragdoll. | Staff Command.
+- **flagragdoll**: Sets a character as a ragdoll. | **Staff Command**.
 
-- **flags**: Displays all available flags. | Staff Command.
+- **flags**: Displays all available flags. | **Staff Command**.
 
-- **freezeallprops**: Freezes all props on the map. | Staff Command.
+- **freezeallprops**: Freezes all props on the map. | **Staff Command**.
 
-- **checkmoney**: Checks the money of a character. | Staff Command.
+- **checkmoney**: Checks the money of a character. | **Staff Command**.
 
 - **status**: Displays your character's status information.
 
-- **redownloadlightmaps**: Forces a redownload of lightmaps. | Staff Command.
+- **redownloadlightmaps**: Forces a redownload of lightmaps. | **Staff Command**.
 
-- **cleanitems**: Cleans up all dropped items on the map. | Staff Command.
+- **cleanitems**: Cleans up all dropped items on the map. | **Staff Command**.
 
-- **cleanprops**: Cleans up all props on the map. | Staff Command.
+- **cleanprops**: Cleans up all props on the map. | **Staff Command**.
 
-- **forcesave**: Forces a save of server data. | Staff Command.
+- **forcesave**: Forces a save of server data. | **Staff Command**.
 
-- **cleannpcs**: Cleans up all NPCs on the map. | Staff Command.
+- **cleannpcs**: Cleans up all NPCs on the map. | **Staff Command**.
 
-- **checkallmoney**: Checks the money of all characters. | Staff Command.
+- **checkallmoney**: Checks the money of all characters. | **Staff Command**.
 
-- **return**: Returns to a previous position. | Staff Command.
+- **return**: Returns to a previous position. | **Staff Command**.
 
-- **findallflags**: Finds all characters with a specific flag. | Staff Command.
+- **findallflags**: Finds all characters with a specific flag. | **Staff Command**.
 
-- **chargiveitem**: Gives an item to a character. | Staff Command.
+- **chargiveitem**: Gives an item to a character. | **Staff Command**.
 
-- **announce**: Announces a message to all players. | Staff Command.
+- **announce**: Announces a message to all players. | **Staff Command**.
 
-- **listents**: Lists all entities on the server. | Staff Command.
+- **listents**: Lists all entities on the server. | **Staff Command**.
 
 - **flip**: Flips a coin.
 
@@ -93,11 +93,11 @@ Commands
 
 - **listusers**: Lists all users on the server.
 
-- **rolld**: Rolls a specific-sided die. | Staff Command.
+- **rolld**: Rolls a specific-sided die. | **Staff Command**.
 
-- **vieweventlog**: Views the server's event log. | Staff Command.
+- **vieweventlog**: Views the server's event log. | **Staff Command**.
 
-- **editeventlog**: Edits the server's event log. | Staff Command.
+- **editeventlog**: Edits the server's event log. | **Staff Command**.
 
 - **roll**: Rolls a die.
 
@@ -107,7 +107,7 @@ Commands
 
 - **givemoney**: Gives money to a character.
 
-- **bringlostitems**: Brings lost items back to the character's inventory. | Staff Command.
+- **bringlostitems**: Brings lost items back to the character's inventory. | **Staff Command**.
 
 - **carddraw**: Draws a card from a deck.
 
@@ -117,17 +117,17 @@ Commands
 
 - **entname**: Gets the name of an entity.
 
-- **permflaggive**: Gives a flag permanently to a character. | Staff Command.
+- **permflaggive**: Gives a flag permanently to a character. | **Staff Command**.
 
-- **permflagtake**: Removes a flag permanently from a character. | Staff Command.
+- **permflagtake**: Removes a flag permanently from a character. | **Staff Command**.
 
-- **permflags**: Displays all permanent flags. | Staff Command.
+- **permflags**: Displays all permanent flags. | **Staff Command**.
 
-- **flagblacklist**: Adds a flag to the blacklist. | Staff Command.
+- **flagblacklist**: Adds a flag to the blacklist. | **Staff Command**.
 
-- **flagunblacklist**: Removes a flag from the blacklist. | Staff Command.
+- **flagunblacklist**: Removes a flag from the blacklist. | **Staff Command**.
 
-- **flagblacklists**: Displays all flags on the blacklist. | Staff Command.
+- **flagblacklists**: Displays all flags on the blacklist. | **Staff Command**.
 
 - **dropmoney**: Drops money at the character's position.
 
