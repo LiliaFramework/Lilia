@@ -1,6 +1,4 @@
 ﻿--[[--
-Commands
-
 **Commands List:**.
 
 - **charsetspeed**: Sets the speed of the character. | **Staff Command**.
