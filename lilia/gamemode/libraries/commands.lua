@@ -95,8 +95,9 @@ end
 
 --- Returns true if a player is allowed to run a certain command.
 -- @realm shared
--- @player client Player to check access for
--- @string command Name of the command to check access for
+-- @param client Player to check access for
+-- @param command Name of the command to check access for
+-- @param data Optional command data, if not provided, it will be fetched from `lia.command.list`
 -- @treturn bool Whether or not the player is allowed to run the command
 function lia.command.hasAccess(client, command, data)
     if data == nil then data = lia.command.list[command] end
