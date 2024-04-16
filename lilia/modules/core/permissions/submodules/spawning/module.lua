@@ -1,10 +1,4 @@
-﻿--[[--
-Permissions - Spawning.
-
-This module manages spawning permissions and also patches some exploits.
-]]
--- @moduleinfo spawning
-MODULE.name = "Permissions - Spawning"
+﻿MODULE.name = "Permissions - Spawning"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "A Module that Manages Spawning."

@@ -1,10 +1,4 @@
-﻿--[[--
-Permissions - Properties.
-
-This module manages properties permissions.
-]]
--- @moduleinfo properties
-MODULE.name = "Permissions - Properties"
+﻿MODULE.name = "Permissions - Properties"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "A Module that Manages Properties."

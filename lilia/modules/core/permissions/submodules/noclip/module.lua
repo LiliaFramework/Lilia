@@ -1,10 +1,4 @@
-﻿--[[--
-Permissions - No-Clip.
-
-This module manages no-clip Permissions.
-]]
--- @moduleinfo noclip
-MODULE.name = "Permissions - No-Clip"
+﻿MODULE.name = "Permissions - No-Clip"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "A Module that Manages No-Clipping."

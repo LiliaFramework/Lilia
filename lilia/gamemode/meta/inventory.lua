@@ -17,7 +17,6 @@ You may be looking for the following common functions:
 `hasItem` Which checks if the inventory has an item.
 ]]
 -- @classmod Inventory
-
 local Inventory = lia.Inventory or {}
 Inventory.__index = Inventory
 lia.Inventory = Inventory
