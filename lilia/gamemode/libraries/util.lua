@@ -31,7 +31,7 @@ function lia.util.stripRealmPrefix(name)
 	local prefix = name:sub(1, 3)
 
 	return (prefix == "sh_" or prefix == "sv_" or prefix == "cl_") and name:sub(4) or name
-
+end
     
 --- Attempts to find a player by matching their name or Steam ID.
 -- @realm shared
@@ -605,7 +605,7 @@ else
         end
     end
 
-	--- Draws a blurred rectangle with the given position and bounds. This shouldn't be used for panels, see `ix.util.DrawBlur`
+	--- Draws a blurred rectangle with the given position and bounds. This shouldn't be used for panels, see `lia.util.drawBlur`
 	-- instead.
 	-- @realm client
 	-- @number x X-position of the rectangle

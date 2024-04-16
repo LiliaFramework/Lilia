@@ -30,7 +30,7 @@ else
     if #lia.char.names < 1 then netstream.Start("liaCharFetchNames") end
 end
 
---- Creates a new empty `Character` object. If you are looking to create a usable character, see `ix.char.Create`.
+--- Creates a new empty `Character` object. If you are looking to create a usable character, see `lia.char.create`.
 -- @realm shared
 -- @internal
 -- @tab data Character vars to assign
@@ -360,7 +360,7 @@ lia.char.registerVar("money", {
 })
 	--- Sets a data field on this character. This is useful for storing small bits of data that you need persisted on this
 	-- character. This is networked only to the owning client. If you are going to be accessing this data field frequently with
-	-- a getter/setter, consider using `ix.char.RegisterVar` instead.
+	-- a getter/setter, consider using `lia.char.registerVar` instead.
 	-- @realm server
 	-- @string key Name of the field that holds the data
 	-- @param value Any value to store in the field, as long as it's supported by GMod's JSON parser
@@ -435,7 +435,7 @@ do
     local playerMeta = FindMetaTable("Player")
     playerMeta.steamName = playerMeta.steamName or playerMeta.Name
     playerMeta.SteamName = playerMeta.steamName
-    	--- Returns this player's currently possessed `Character` object if it exists.
+	--- Returns this player's currently possessed `Character` object if it exists.
 	-- @realm shared
 	-- @treturn[1] Character Currently loaded character
 	-- @treturn[2] nil If this player has no character loaded
@@ -468,7 +468,7 @@ function lia.char.getCharData(charID, key)
 end
 
 if SERVER then
-    	--- Creates a character object with its assigned properties and saves it to the database.
+	--- Creates a character object with its assigned properties and saves it to the database.
 	-- @realm server
 	-- @tab data Properties to assign to this character. If fields are missing from the table, then it will use the default
 	-- value for that property
