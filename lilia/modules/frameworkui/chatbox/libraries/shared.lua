@@ -14,15 +14,6 @@ lia.chat.register("iteminternal", {
     deadCanChat = true
 })
 
-lia.chat.register("meclose", {
-    format = "**%s %s",
-    onCanHear = ChatboxCore.ChatRange * 0.25,
-    prefix = {"/meclose", "/actionclose"},
-    font = "liaChatFontItalics",
-    filter = "actions",
-    deadCanChat = true
-})
-
 lia.chat.register("mefar", {
     format = "**%s %s",
     onCanHear = ChatboxCore.ChatRange * 2,
