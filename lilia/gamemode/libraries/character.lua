@@ -148,7 +148,7 @@ end
 	-- @string name New name for the character
 	-- @function setName/SetName
 
-	--- Returns this character's name
+	--- Returns this character's name.
 	-- @realm shared
 	-- @treturn string This character's current name
 	-- @function getName/GetName
@@ -519,7 +519,7 @@ if SERVER then
 	-- @realm server
 	-- @player client Player to load the characters for
 	-- @func[opt=nil] callback Function to call when the characters have been loaded
-	-- @bool[opt=false] bNoCache Whether or not to skip the cache; players that leave and join again later will already have
+	-- @bool[opt=false] _ Whether or not to skip the cache; players that leave and join again later will already have
 	-- their characters loaded which will skip the database query and load quicker
 	-- @number[opt=nil] id The ID of a specific character to load instead of all of the player's characters
 
