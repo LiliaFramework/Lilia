@@ -36,7 +36,7 @@ end
 --- Attempts to find a player by matching their name or Steam ID.
 -- @realm shared
 -- @string identifier Search query
--- @bool[opt=false] bAllowPatterns Whether or not to accept Lua patterns in `identifier`
+-- @bool[opt=false] allowPatterns Whether or not to accept Lua patterns in `identifier`
 -- @treturn player Player that matches the given search query - this will be `nil` if a player could not be found
 function lia.util.findPlayer(identifier, allowPatterns)
     if lia.util.isSteamID(identifier) then return player.GetBySteamID(identifier) end
@@ -308,7 +308,7 @@ else
 	-- otherwise it will break a word if it's too long.
 	-- @realm client
 	-- @string text Text to wrap
-	-- @number maxWidth Maximum allowed width in pixels
+	-- @number width Maximum allowed width in pixels
 	-- @string[opt="liaChatFont"] font Font to use for the text
 
     function lia.util.wrapText(text, width, font)
@@ -583,8 +583,7 @@ else
 	-- @tparam panel panel Panel to draw the blur for
 	-- @number[opt=5] amount Intensity of the blur. This should be kept between 0 and 10 for performance reasons
 	-- @number[opt=0.2] passes Quality of the blur. This should be kept as default
-	-- @number[opt=255] alpha Opacity of the blur
-	-- @usage function PANEL:Paint(width, height)
+    -- @usage function PANEL:Paint(width, height)
 	-- 	lia.util.drawBlur(self)
 	-- end
     function lia.util.drawBlur(panel, amount, passes)
@@ -610,11 +609,10 @@ else
 	-- @realm client
 	-- @number x X-position of the rectangle
 	-- @number y Y-position of the rectangle
-	-- @number width Width of the rectangle
-	-- @number height Height of the rectangle
+	-- @number w Width of the rectangle
+	-- @number h Height of the rectangle
 	-- @number[opt=5] amount Intensity of the blur. This should be kept between 0 and 10 for performance reasons
 	-- @number[opt=0.2] passes Quality of the blur. This should be kept as default
-	-- @number[opt=255] alpha Opacity of the blur
 	-- @usage hook.Add("HUDPaint", "MyHUDPaint", function()
 	-- 	lia.util.drawBlurAt(0, 0, ScrW(), ScrH())
 	-- end)
