@@ -7,7 +7,7 @@ Core - Interaction Menu.
 
 - **CarSearchRadius**: Search radius for Interaction Menu to find a car | **integer**.
 ]]
--- @configurations interactionmenu
+-- @configurations InteractionMenu
 MODULE.name = "Core - Interaction Menu"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
