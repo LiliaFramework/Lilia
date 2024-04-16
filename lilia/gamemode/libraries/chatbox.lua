@@ -42,22 +42,22 @@ end
 -- be a table of strings if you want to allow multiple prefixes, such as `{"//", "/ooc"}`.
 --
 -- **NOTE:** the prefix should usually start with a `/` to be consistent with the rest of the framework. However, you are able
--- to use something different like the `looc` chat class where the prefixes are `.//`, `[[`, and `/looc`.
--- character in the prefix is non-alphanumeric (i.e `noSpaceAfter` with `/Y` will not work, but `/!` will).
+-- to use something different like the `LOOC` chat class where the prefixes are `.//`, `[[`, and `/looc`.
+-- @field[type=bool,opt=false] noSpaceAfter Whether or not the `prefix` can be used without a space after it. For example, the
+-- `OOC` chat class allows you to type `//my message` instead of `// my message`. **NOTE:** this only works if the last
+-- character in the prefix is non-alphanumeric (i.e `noSpaceAfter` with `/y` will not work, but `/!` will).
 -- @field[type=string,opt="%s: \"%s\""] format How to format a message with this chat class. The first `%s` will be the speaking
 -- player's name, and the second one will be their message
 -- @field[type=color,opt=Color(242 230 160)] color Color to use when displaying a message with this chat class
--- @field[type=bool,opt=false] bNoIndicator Whether or not to avoid showing the typing indicator above the speaking player's
--- head
 -- @field[type=string,opt=liaChatFont] font Font to use for displaying a message with this chat class
 -- @field[type=bool,opt=false] deadCanChat Whether or not a dead player can send a message with this chat class
--- @field[type=number] CanHear This can be either a `number` representing how far away another player can hear this message.
--- IC messages will use the `chatRange` config, for example. This can also be a function, which returns `true` if the given
+-- @field[type=number] onCanHear This can be either a `number` representing how far away another player can hear this message.
+-- IC messages will use the `ChatboxCore.ChatRange`, for example. This can also be a function, which returns `true` if the given
 -- listener can hear the message emitted from a speaker.
 -- 	-- message can be heard by any player 1000 units away from the speaking player
--- 	CanHear = 1000
+-- 	onCanHear = 1000
 -- OR
--- 	CanHear = function(self, speaker, listener)
+-- 	onCanHear = function(self, speaker, listener)
 -- 		-- the speaking player will be heard by everyone
 -- 		return true
 -- 	end
