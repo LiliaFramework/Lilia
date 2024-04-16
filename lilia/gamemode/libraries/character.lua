@@ -397,7 +397,11 @@ do
     playerMeta.Nick = playerMeta.Name
     playerMeta.GetName = playerMeta.Name
 end
-
+--- Loads data for a character from the database.
+-- @param charID The ID of the character to load data for.
+-- @param key Optional key to retrieve a specific value from the character's data.
+-- @return If key is provided, returns the value associated with that key in the character's data. Otherwise, returns the entire data table.
+-- @realm shared
 function lia.char.getCharData(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
@@ -455,7 +459,6 @@ if SERVER then
 	-- @bool[opt=false] _ Whether or not to skip the cache; players that leave and join again later will already have
 	-- their characters loaded which will skip the database query and load quicker
 	-- @number[opt=nil] id The ID of a specific character to load instead of all of the player's characters
-
     function lia.char.restore(client, callback, _, id)
         local steamID64 = client:SteamID64()
         local fields = {"_id"}
@@ -526,6 +529,9 @@ if SERVER then
             end
         end)
     end
+--- Cleans up a player's characters, removing them from memory and database.
+-- @param client The player whose characters to clean up.
+-- @realm server
 
     function lia.char.cleanUpForPlayer(client)
         for _, charID in pairs(client.liaCharList or {}) do
@@ -546,7 +552,10 @@ if SERVER then
             netstream.Start(client, "charKick", nil, true)
         end
     end
-
+--- Deletes a character from memory and database.
+-- @param id The ID of the character to delete.
+-- @param client The player associated with the character.
+-- @realm server
     function lia.char.delete(id, client)
         assert(isnumber(id), "id must be a number")
         if IsValid(client) then
@@ -580,7 +589,12 @@ if SERVER then
 
         hook.Run("OnCharacterDelete", client, id)
     end
-
+--- Sets data for a character in the database and in memory.
+-- @param charID The ID of the character to set data for.
+-- @param key The key of the data to set.
+-- @param val The value to set for the specified key.
+-- @return True if the data was successfully set, false otherwise.
+-- @realm server
     function lia.char.setCharData(charID, key, val)
         local charIDsafe = tonumber(charID)
         if not charIDsafe then return end

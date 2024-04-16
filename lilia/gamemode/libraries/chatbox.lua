@@ -157,6 +157,7 @@ end
 -- @realm shared
 -- @player client Player who is speaking
 -- @string message Message to parse
+-- @internal
 -- @bool[opt=false] noSend Whether or not to send the chat message after parsing
 -- @treturn string Name of the chat type
 -- @treturn string Message that was parsed

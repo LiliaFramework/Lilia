@@ -5,7 +5,7 @@ lia.attribs = lia.attribs or {}
 lia.attribs.list = lia.attribs.list or {}
 
 --- Loads attribute data from Lua files in the specified directory.
--- @param directory The directory path from which to load attribute data
+-- @param directory The directory path from which to load attribute files.
 -- @realm shared
 function lia.attribs.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
@@ -53,8 +53,9 @@ lia.char.registerVar("attribs", {
 })
 
 if SERVER then
-  --- Sets up attributes for a given character.
+--- Sets up attributes for a given character.
 -- @realm server
+-- @internal
 -- @param client The player for whom attributes are being set up
 function lia.attribs.setup(client)
     local character = client:getChar()
