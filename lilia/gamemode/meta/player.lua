@@ -9,22 +9,42 @@ See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for 
 -- @classmod Player
 local playerMeta = FindMetaTable("Player")
 local vectorMeta = FindMetaTable("Vector")
+--- Checks if the player belongs to the "user" user group.
+-- @function playerMeta:isUser
+-- @realm shared
+-- @treturn bool Whether the player belongs to the "user" user group.
 function playerMeta:isUser()
     return self:IsUserGroup("user")
 end
 
+--- Checks if the player is a staff member.
+-- @function playerMeta:isStaff
+-- @realm shared
+-- @treturn bool Whether the player is a staff member.
 function playerMeta:isStaff()
     return CAMI.PlayerHasAccess(self, "UserGroups - Staff Group", nil) or self:IsSuperAdmin()
 end
 
+--- Checks if the player is a VIP.
+-- @function playerMeta:isVIP
+-- @realm shared
+-- @treturn bool Whether the player is a VIP.
 function playerMeta:isVIP()
     return CAMI.PlayerHasAccess(self, "UserGroups - VIP Group", nil)
 end
 
+--- Checks if the staff member is currently on duty (FACTION_STAFF).
+-- @function playerMeta:isStaffOnDuty
+-- @realm shared
+-- @treturn bool Whether the staff member is currently on duty.
 function playerMeta:isStaffOnDuty()
     return self:Team() == FACTION_STAFF
 end
 
+--- Checks if the player is currently observing.
+-- @function playerMeta:isObserving
+-- @realm shared
+-- @treturn bool Whether the player is currently observing.
 function playerMeta:isObserving()
     if self:GetMoveType() == MOVETYPE_NOCLIP and not self:InVehicle() then
         return true
@@ -33,12 +53,20 @@ function playerMeta:isObserving()
     end
 end
 
+--- Checks if the player is currently moving.
+-- @function playerMeta:isMoving
+-- @realm shared
+-- @treturn bool Whether the player is currently moving.
 function playerMeta:isMoving()
     if not IsValid(self) or not self:Alive() then return false end
     local keydown = self:KeyDown(IN_FORWARD) or self:KeyDown(IN_BACK) or self:KeyDown(IN_MOVELEFT) or self:KeyDown(IN_MOVERIGHT)
     return keydown and self:OnGround()
 end
 
+--- Checks if the player is currently outside (in the sky).
+-- @function playerMeta:isOutside
+-- @realm shared
+-- @treturn bool Whether the player is currently outside (in the sky).
 function playerMeta:isOutside()
     local trace = util.TraceLine({
         start = self:GetPos(),
@@ -48,10 +76,18 @@ function playerMeta:isOutside()
     return trace.HitSky
 end
 
+--- Checks if the player is currently in noclip mode.
+-- @function playerMeta:isNoClipping
+-- @realm shared
+-- @treturn bool Whether the player is in noclip mode.
 function playerMeta:isNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP
 end
 
+--- Checks if the player is stuck.
+-- @function playerMeta:isStuck
+-- @realm shared
+-- @treturn bool Whether the player is stuck.
 function playerMeta:isStuck()
     return util.TraceEntity({
         start = self:GetPos(),
@@ -60,20 +96,42 @@ function playerMeta:isStuck()
     }, self).StartSolid
 end
 
+--- Calculates the squared distance from the player to the specified entity.
+-- @function playerMeta:squaredDistanceFromEnt
+-- @realm shared
+-- @param entity The entity to calculate the distance to.
+-- @treturn number The squared distance from the player to the entity.
 function playerMeta:squaredDistanceFromEnt(entity)
     return self:GetPos():DistToSqr(entity)
 end
 
+--- Calculates the distance from the player to the specified entity.
+-- @function playerMeta:distanceFromEnt
+-- @realm shared
+-- @param entity The entity to calculate the distance to.
+-- @treturn number The distance from the player to the entity.
 function playerMeta:distanceFromEnt(entity)
     return self:GetPos():Distance(entity)
 end
 
+--- Checks if the player is near another entity within a specified radius.
+-- @function playerMeta:isNearPlayer
+-- @realm shared
+-- @param radius The radius within which to check for proximity.
+-- @param entity The entity to check proximity to.
+-- @treturn bool Whether the player is near the specified entity within the given radius.
 function playerMeta:isNearPlayer(radius, entity)
     local squaredRadius = radius * radius
     local squaredDistance = self:GetPos():DistToSqr(entity:GetPos())
     return squaredDistance <= squaredRadius
 end
 
+--- Retrieves entities near the player within a specified radius.
+-- @function playerMeta:entitiesNearPlayer
+-- @realm shared
+-- @param radius The radius within which to search for entities.
+-- @param playerOnly (Optional) If true, only return player entities.
+-- @treturn table A table containing the entities near the player.
 function playerMeta:entitiesNearPlayer(radius, playerOnly)
     local nearbyEntities = {}
     for _, v in ipairs(ents.FindInSphere(self:GetPos(), radius)) do
@@ -83,6 +141,10 @@ function playerMeta:entitiesNearPlayer(radius, playerOnly)
     return nearbyEntities
 end
 
+--- Retrieves the active weapon item of the player.
+-- @function playerMeta:getItemWeapon
+-- @realm shared
+-- @treturn Entity|nil The active weapon entity of the player, or nil if not found.
 function playerMeta:getItemWeapon()
     local character = self:getChar()
     local inv = character:getInv()
@@ -100,6 +162,10 @@ function playerMeta:getItemWeapon()
     end
 end
 
+--- Adds money to the player's character.
+-- @function playerMeta:addMoney
+-- @realm shared
+-- @param amount The amount of money to add.
 function playerMeta:addMoney(amount)
     local character = self:getChar()
     if not character then return end
@@ -122,30 +188,55 @@ function playerMeta:addMoney(amount)
     end
 end
 
+--- Takes money from the player's character.
+-- @function playerMeta:takeMoney
+-- @realm shared
+-- @param amt The amount of money to take.
 function playerMeta:takeMoney(amt)
     local character = self:getChar()
     if character then character:giveMoney(-amt) end
 end
 
+--- Retrieves the amount of money owned by the player's character.
+-- @function playerMeta:getMoney
+-- @realm shared
+-- @treturn number The amount of money owned by the player's character.
 function playerMeta:getMoney()
     local character = self:getChar()
     return character and character:getMoney() or 0
 end
 
+--- Checks if the player's character can afford a specified amount of money.
+-- @function playerMeta:canAfford
+-- @realm shared
+-- @param amount The amount of money to check.
+-- @treturn bool Whether the player's character can afford the specified amount of money.
 function playerMeta:canAfford(amount)
     local character = self:getChar()
     return character and character:hasMoney(amount)
 end
 
+--- Checks if the player is running.
+-- @function playerMeta:isRunning
+-- @realm shared
+-- @treturn bool Whether the player is running.
 function playerMeta:isRunning()
     return vectorMeta.Length2D(self:GetVelocity()) > (self:GetWalkSpeed() + 10)
 end
 
+--- Checks if the player's character is female based on the model.
+-- @function playerMeta:isFemale
+-- @realm shared
+-- @treturn bool Whether the player's character is female.
 function playerMeta:isFemale()
     local model = self:GetModel():lower()
     return model:find("female") or model:find("alyx") or model:find("mossman") or lia.anim.getModelClass(model) == "citizen_female"
 end
 
+--- Calculates the position to drop an item from the player's inventory.
+-- @function playerMeta:getItemDropPos
+-- @realm shared
+-- @treturn Vector The position to drop an item from the player's inventory.
 function playerMeta:getItemDropPos()
     local data = {}
     data.start = self:GetShootPos()
@@ -159,6 +250,11 @@ function playerMeta:getItemDropPos()
     return trace.HitPos
 end
 
+--- Checks if the player has whitelisted access to a faction.
+-- @function playerMeta:hasWhitelist
+-- @realm shared
+-- @param faction The faction to check for whitelisting.
+-- @treturn bool Whether the player has whitelisted access to the specified faction.
 function playerMeta:hasWhitelist(faction)
     local data = lia.faction.indices[faction]
     if data then
@@ -169,6 +265,10 @@ function playerMeta:hasWhitelist(faction)
     return false
 end
 
+--- Retrieves the items of the player's character inventory.
+-- @function playerMeta:getItems
+-- @realm shared
+-- @treturn table|nil A table containing the items in the player's character inventory, or nil if not found.
 function playerMeta:getItems()
     local character = self:getChar()
     if character then
@@ -177,11 +277,19 @@ function playerMeta:getItems()
     end
 end
 
+--- Retrieves the class of the player's character.
+-- @function playerMeta:getClass
+-- @realm shared
+-- @treturn string|nil The class of the player's character, or nil if not found.
 function playerMeta:getClass()
     local character = self:getChar()
     if character then return character:getClass() end
 end
 
+--- Retrieves the entity traced by the player's aim.
+-- @function playerMeta:getTracedEntity
+-- @realm shared
+-- @treturn Entity|nil The entity traced by the player's aim, or nil if not found.
 function playerMeta:getTracedEntity()
     local data = {}
     data.start = self:GetShootPos()
@@ -191,6 +299,10 @@ function playerMeta:getTracedEntity()
     return target
 end
 
+--- Performs a trace from the player's view.
+-- @function playerMeta:getTrace
+-- @realm shared
+-- @treturn table A table containing the trace result.
 function playerMeta:getTrace()
     local data = {}
     data.start = self:GetShootPos()
@@ -202,6 +314,10 @@ function playerMeta:getTrace()
     return trace
 end
 
+--- Retrieves the data of the player's character class.
+-- @function playerMeta:getClassData
+-- @realm shared
+-- @treturn table|nil A table containing the data of the player's character class, or nil if not found.
 function playerMeta:getClassData()
     local character = self:getChar()
     if character then
@@ -213,11 +329,22 @@ function playerMeta:getClassData()
     end
 end
 
+--- Checks if the player has a skill level equal to or greater than the specified level.
+-- @function playerMeta:hasSkillLevel
+-- @realm shared
+-- @param skill The skill to check.
+-- @param level The required skill level.
+-- @treturn bool Whether the player's skill level meets or exceeds the specified level.
 function playerMeta:hasSkillLevel(skill, level)
     local currentLevel = self:getChar():getAttrib(skill, 0)
     return currentLevel >= level
 end
 
+--- Checks if the player meets the required skill levels.
+-- @function playerMeta:meetsRequiredSkills
+-- @realm shared
+-- @param requiredSkillLevels A table containing the required skill levels.
+-- @treturn bool Whether the player meets all the required skill levels.
 function playerMeta:meetsRequiredSkills(requiredSkillLevels)
     if not requiredSkillLevels then return true end
     for skill, level in pairs(requiredSkillLevels) do
@@ -226,12 +353,24 @@ function playerMeta:meetsRequiredSkills(requiredSkillLevels)
     return true
 end
 
+--- Retrieves the entity within the player's line of sight.
+-- @function playerMeta:getEyeEnt
+-- @realm shared
+-- @param[opt=150] distance The maximum distance to consider.
+-- @treturn Entity|nil The entity within the player's line of sight, or nil if not found.
 function playerMeta:getEyeEnt(distance)
     distance = distance or 150
     local e = self:GetEyeTrace().Entity
     return e:GetPos():Distance(self:GetPos()) <= distance and e or nil
 end
 
+--- Requests a string input from the player.
+-- @function playerMeta:RequestString
+-- @realm shared
+-- @param title The title of the request.
+-- @param subTitle The subtitle of the request.
+-- @param callback The function to call upon receiving the string input.
+-- @param default The default value for the string input.
 function playerMeta:RequestString(title, subTitle, callback, default)
     local time = math.floor(os.time())
     self.StrReqs = self.StrReqs or {}
@@ -245,80 +384,80 @@ function playerMeta:RequestString(title, subTitle, callback, default)
 end
 
 if SERVER then
-        --- Loads Lilia data for the player from the database.
--- @function playerMeta:loadLiliaData
--- @param callback[opt=nil] Function to call after the data is loaded, passing the loaded data as an argument.
--- @realm server
+    --- Loads Lilia data for the player from the database.
+    -- @function playerMeta:loadLiliaData
+    -- @param callback[opt=nil] Function to call after the data is loaded, passing the loaded data as an argument.
+    -- @realm server
+    function playerMeta:loadLiliaData(callback)
+        local name = self:steamName()
+        local steamID64 = self:SteamID64()
+        local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
+        lia.db.query("SELECT _data, _firstJoin, _lastJoin FROM lia_players WHERE _steamID = " .. steamID64, function(data)
+            if IsValid(self) and data and data[1] and data[1]._data then
+                lia.db.updateTable({
+                    _lastJoin = timeStamp,
+                }, nil, "players", "_steamID = " .. steamID64)
 
-function playerMeta:loadLiliaData(callback)
-    local name = self:steamName()
-    local steamID64 = self:SteamID64()
-    local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
-    lia.db.query("SELECT _data, _firstJoin, _lastJoin FROM lia_players WHERE _steamID = " .. steamID64, function(data)
-        if IsValid(self) and data and data[1] and data[1]._data then
-            lia.db.updateTable({
-                _lastJoin = timeStamp,
-            }, nil, "players", "_steamID = " .. steamID64)
+                self.firstJoin = data[1]._firstJoin or timeStamp
+                self.lastJoin = data[1]._lastJoin or timeStamp
+                self.liaData = util.JSONToTable(data[1]._data)
+                if callback then callback(self.liaData) end
+            else
+                lia.db.insertTable({
+                    _steamID = steamID64,
+                    _steamName = name,
+                    _firstJoin = timeStamp,
+                    _lastJoin = timeStamp,
+                    _data = {}
+                }, nil, "players")
 
-            self.firstJoin = data[1]._firstJoin or timeStamp
-            self.lastJoin = data[1]._lastJoin or timeStamp
-            self.liaData = util.JSONToTable(data[1]._data)
-            if callback then callback(self.liaData) end
-        else
-            lia.db.insertTable({
-                _steamID = steamID64,
-                _steamName = name,
-                _firstJoin = timeStamp,
-                _lastJoin = timeStamp,
-                _data = {}
-            }, nil, "players")
-
-            if callback then callback({}) end
-        end
-    end)
-end
---- Saves the player's Lilia data to the database.
--- @function playerMeta:saveLiliaData
--- @realm server
-
-function playerMeta:saveLiliaData()
-    local name = self:steamName()
-    local steamID64 = self:SteamID64()
-    local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
-    lia.db.updateTable({
-        _steamName = name,
-        _lastJoin = timeStamp,
-        _data = self.liaData
-    }, nil, "players", "_steamID = " .. steamID64)
-end
---- Sets a key-value pair in the player's Lilia data.
--- @function playerMeta:setLiliaData
--- @param key The key for the data.
--- @param value The value to set.
--- @param noNetworking[opt=false] If true, suppresses network broadcasting of the update.
--- @realm server
-
-function playerMeta:setLiliaData(key, value, noNetworking)
-    self.liaData = self.liaData or {}
-    self.liaData[key] = value
-    if not noNetworking then netstream.Start(self, "liaData", key, value) end
-end
---- Retrieves a value from the player's Lilia data.
--- @function playerMeta:getLiliaData
--- @param key The key for the data.
--- @param default[opt=nil] The default value to return if the key does not exist.
--- @realm server
--- @treturn any The value corresponding to the key, or the default value if the key does not exist.
-
-function playerMeta:getLiliaData(key, default)
-    if key == true then return self.liaData end
-    local data = self.liaData and self.liaData[key]
-    if data == nil then
-        return default
-    else
-        return data
+                if callback then callback({}) end
+            end
+        end)
     end
-end
+
+    --- Saves the player's Lilia data to the database.
+    -- @function playerMeta:saveLiliaData
+    -- @realm server
+    function playerMeta:saveLiliaData()
+        local name = self:steamName()
+        local steamID64 = self:SteamID64()
+        local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
+        lia.db.updateTable({
+            _steamName = name,
+            _lastJoin = timeStamp,
+            _data = self.liaData
+        }, nil, "players", "_steamID = " .. steamID64)
+    end
+
+    --- Sets a key-value pair in the player's Lilia data.
+    -- @function playerMeta:setLiliaData
+    -- @param key The key for the data.
+    -- @param value The value to set.
+    -- @param noNetworking[opt=false] If true, suppresses network broadcasting of the update.
+    -- @realm server
+    function playerMeta:setLiliaData(key, value, noNetworking)
+        self.liaData = self.liaData or {}
+        self.liaData[key] = value
+        if not noNetworking then netstream.Start(self, "liaData", key, value) end
+    end
+
+    --- Retrieves a value from the player's Lilia data.
+    -- @function playerMeta:getLiliaData
+    -- @param key The key for the data.
+    -- @param default[opt=nil] The default value to return if the key does not exist.
+    -- @realm server
+    -- @treturn any The value corresponding to the key, or the default value if the key does not exist.
+    function playerMeta:getLiliaData(key, default)
+        if key == true then return self.liaData end
+        local data = self.liaData and self.liaData[key]
+        if data == nil then
+            return default
+        else
+            return data
+        end
+    end
+
     function playerMeta:ipAddressNoPort()
         local ipAddr = self:IPAddress()
         local ipAddrExploded = string.Explode(":", ipAddr, false)
@@ -431,6 +570,10 @@ end
         end
     end
 
+    --- Removes flags from the player's flag blacklist.
+    -- @function playerMeta:removeFlagBlacklist
+    -- @realm server
+    -- @param flags A table containing the flags to remove from the blacklist.
     function playerMeta:removeFlagBlacklist(flags)
         local curBlack = self:getFlagBlacklist()
         for i = 1, #flags do
@@ -441,6 +584,11 @@ end
         self:setFlagBlacklist(curBlack)
     end
 
+    --- Checks if the player has a specific flag blacklisted.
+    -- @function playerMeta:hasFlagBlacklist
+    -- @realm server
+    -- @param flag The flag to check for in the blacklist.
+    -- @treturn bool Whether the player has the specified flag blacklisted.
     function playerMeta:hasFlagBlacklist(flag)
         local flags = self:getFlagBlacklist()
         for i = 1, #flags do
@@ -449,6 +597,11 @@ end
         return false
     end
 
+    --- Checks if the player has any of the specified flags blacklisted.
+    -- @function playerMeta:hasAnyFlagBlacklist
+    -- @realm server
+    -- @param flags A table containing the flags to check for in the blacklist.
+    -- @treturn bool Whether the player has any of the specified flags blacklisted.
     function playerMeta:hasAnyFlagBlacklist(flags)
         for i = 1, #flags do
             if self:hasFlagBlacklist(flags[i]) then return true end
@@ -456,6 +609,11 @@ end
         return false
     end
 
+    --- Plays a sound for the player.
+    -- @function playerMeta:playSound
+    -- @realm client
+    -- @param sound The sound to play.
+    -- @param[opt=100] pitch The pitch of the sound.
     function playerMeta:playSound(sound, pitch)
         net.Start("LiliaPlaySound")
         net.WriteString(tostring(sound))
@@ -463,6 +621,10 @@ end
         net.Send(self)
     end
 
+    --- Opens a VGUI panel for the player.
+    -- @function playerMeta:openUI
+    -- @realm client
+    -- @param panel The name of the VGUI panel to open.
     function playerMeta:openUI(panel)
         net.Start("OpenVGUI")
         net.WriteString(panel)
@@ -470,18 +632,31 @@ end
     end
 
     playerMeta.OpenUI = playerMeta.openUI
+    --- Opens a web page for the player.
+    -- @function playerMeta:openPage
+    -- @realm client
+    -- @param url The URL of the web page to open.
     function playerMeta:openPage(url)
         net.Start("OpenPage")
         net.WriteString(url)
         net.Send(self)
     end
 
+    --- Retrieves the player's total playtime.
+    -- @function playerMeta:getPlayTime
+    -- @realm shared
+    -- @treturn number The total playtime of the player.
     function playerMeta:getPlayTime()
         local diff = os.time(lia.util.dateToNumber(self.lastJoin)) - os.time(lia.util.dateToNumber(self.firstJoin))
         return diff + (RealTime() - (self.liaJoinTime or RealTime()))
     end
 
     playerMeta.GetPlayTime = playerMeta.getPlayTime
+    --- Creates a ragdoll entity for the player on the server.
+    -- @function playerMeta:createServerRagdoll
+    -- @realm server
+    -- @param[opt=false] DontSetPlayer Determines whether to associate the player with the ragdoll.
+    -- @treturn Entity The created ragdoll entity.
     function playerMeta:createServerRagdoll(DontSetPlayer)
         local entity = ents.Create("prop_ragdoll")
         entity:SetPos(self:GetPos())
@@ -513,6 +688,14 @@ end
         return entity
     end
 
+    --- Performs a stared action towards an entity for a certain duration.
+    -- @function playerMeta:doStaredAction
+    -- @realm server
+    -- @param entity The entity towards which the player performs the stared action.
+    -- @param callback The function to call when the stared action is completed.
+    -- @param[opt] time The duration of the stared action in seconds.
+    -- @param[opt] onCancel The function to call if the stared action is canceled.
+    -- @param[opt] distance The maximum distance for the stared action.
     function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
         local uniqueID = "liaStare" .. self:UniqueID()
         local data = {}
@@ -536,23 +719,31 @@ end
         end)
     end
 
+    --- Notifies the player with a message.
+    -- @function playerMeta:notify
+    -- @realm shared
+    -- @param message The message to notify the player.
     function playerMeta:notify(message)
         lia.util.notify(message, self)
     end
 
+    --- Notifies the player with a localized message.
+    -- @function playerMeta:notifyLocalized
+    -- @realm shared
+    -- @param message The key of the localized message to notify the player.
+    -- @param ... Additional arguments to format the localized message.
     function playerMeta:notifyLocalized(message, ...)
         lia.util.notifyLocalized(message, self, ...)
     end
 
-    function playerMeta:chatNotify(message)
-        lia.chat.send(client, "flip", message)
-    end
-
-    function playerMeta:chatNotifyLocalized(message, ...)
-        message = L(message, self, ...)
-        lia.chat.send(client, "flip", message)
-    end
-
+    --- Requests a string input from the player.
+    -- @function playerMeta:requestString
+    -- @realm shared
+    -- @param title The title of the string input dialog.
+    -- @param subTitle The subtitle or description of the string input dialog.
+    -- @param callback The function to call with the entered string.
+    -- @param[opt] default The default value for the string input.
+    -- @treturn Promise A promise object resolving with the entered string.
     function playerMeta:requestString(title, subTitle, callback, default)
         local d
         if not isfunction(callback) and default == nil then
@@ -572,6 +763,11 @@ end
         return d
     end
 
+    --- Creates a ragdoll entity for the player.
+    -- @function playerMeta:createRagdoll
+    -- @realm server
+    -- @param freeze Whether to freeze the ragdoll initially.
+    -- @treturn Entity The created ragdoll entity.
     function playerMeta:createRagdoll(freeze)
         local entity = ents.Create("prop_ragdoll")
         entity:SetPos(self:GetPos())
@@ -602,6 +798,12 @@ end
         return entity
     end
 
+    --- Sets the player to a ragdolled state or removes the ragdoll.
+    -- @function playerMeta:setRagdolled
+    -- @realm server
+    -- @param state Whether to set the player to a ragdolled state (`true`) or remove the ragdoll (`false`).
+    -- @param[opt] time The duration for which the player remains ragdolled.
+    -- @param[opt] getUpGrace The grace period for the player to get up before the ragdoll is removed.
     function playerMeta:setRagdolled(state, time, getUpGrace)
         getUpGrace = getUpGrace or time or 5
         if state then
@@ -708,6 +910,12 @@ end
         end
     end
 
+    --- Sets whether the player is whitelisted for a faction.
+    -- @function playerMeta:setWhitelisted
+    -- @realm server
+    -- @param faction The faction ID.
+    -- @param whitelisted Whether the player should be whitelisted for the faction.
+    -- @treturn bool Whether the operation was successful.
     function playerMeta:setWhitelisted(faction, whitelisted)
         if not whitelisted then whitelisted = nil end
         local data = lia.faction.indices[faction]
@@ -722,6 +930,9 @@ end
         return false
     end
 
+    --- Synchronizes networked variables with the player.
+    -- @function playerMeta:syncVars
+    -- @realm server
     function playerMeta:syncVars()
         for entity, data in pairs(lia.net) do
             if entity == "globals" then
@@ -736,6 +947,11 @@ end
         end
     end
 
+    --- Sets a local variable for the player.
+    -- @function playerMeta:setLocalVar
+    -- @realm server
+    -- @param key The key of the variable.
+    -- @param value The value of the variable.
     function playerMeta:setLocalVar(key, value)
         if checkBadType(key, value) then return end
         lia.net[self] = lia.net[self] or {}
@@ -744,40 +960,71 @@ end
     end
 
     playerMeta.SetLocalVar = playerMeta.setLocalVar
-    function playerMeta:notifyP(tx)
-        self:notify(tx)
-        self:ChatPrint(tx)
+    --- Notifies the player with a message and prints the message to their chat.
+    -- @function playerMeta:notifyP
+    -- @realm server
+    -- @param text The message to notify and print.
+    function playerMeta:notifyP(text)
+        self:notify(text)
+        self:ChatPrint(text)
     end
 
+    --- Sends a message to the player.
+    -- @function playerMeta:sendMessage
+    -- @realm server
+    -- @param ... The message(s) to send.
     function playerMeta:sendMessage(...)
         net.Start("SendMessage")
         net.WriteTable({...} or {})
         net.Send(self)
     end
 
+    --- Sends a message to the player to be printed.
+    -- @function playerMeta:sendPrint
+    -- @realm server
+    -- @param ... The message(s) to print.
     function playerMeta:sendPrint(...)
         net.Start("SendPrint")
         net.WriteTable({...} or {})
         net.Send(self)
     end
 
+    --- Sends a table to the player to be printed.
+    -- @function playerMeta:sendPrintTable
+    -- @realm server
+    -- @param ... The table(s) to print.
     function playerMeta:sendPrintTable(...)
         net.Start("SendPrintTable")
         net.WriteTable({...} or {})
         net.Send(self)
     end
 else
+    --- Retrieves the player's total playtime.
+    -- @function playerMeta:getPlayTime
+    -- @realm client
+    -- @treturn number The total playtime of the player.
     function playerMeta:getPlayTime()
         local diff = os.time(lia.util.dateToNumber(lia.lastJoin)) - os.time(lia.util.dateToNumber(lia.firstJoin))
         return diff + (RealTime() - lia.joinTime or 0)
     end
 
     playerMeta.GetPlayTime = playerMeta.getPlayTime
+    --- Opens a UI panel for the player.
+    -- @function playerMeta:openUI
+    -- @param panel The panel type to create.
+    -- @realm client
+    -- @treturn Panel The created UI panel.
     function playerMeta:openUI(panel)
         return vgui.Create(panel)
     end
 
     playerMeta.OpenUI = playerMeta.openUI
+    --- Sets a waypoint for the player.
+    -- @function playerMeta:setWeighPoint
+    -- @param name The name of the waypoint.
+    -- @param vector The position vector of the waypoint.
+    -- @param OnReach[opt=nil] Function to call when the player reaches the waypoint.
+    -- @realm client
     function playerMeta:setWeighPoint(name, vector, OnReach)
         hook.Add("HUDPaint", "WeighPoint", function()
             local dist = self:GetPos():Distance(vector)
@@ -796,20 +1043,21 @@ else
             if IsValid(OnReach) then OnReach() end
         end)
     end
-        --- Retrieves a value from the local Lilia data.
--- @function playerMeta:getLiliaData
--- @param key The key for the data.
--- @param default[opt=nil] The default value to return if the key does not exist.
--- @realm client
--- @treturn any The value corresponding to the key, or the default value if the key does not exist.
-function playerMeta:getLiliaData(key, default)
-    local data = lia.localData and lia.localData[key]
-    if data == nil then
-        return default
-    else
-        return data
+
+    --- Retrieves a value from the local Lilia data.
+    -- @function playerMeta:getLiliaData
+    -- @param key The key for the data.
+    -- @param default[opt=nil] The default value to return if the key does not exist.
+    -- @realm client
+    -- @treturn any The value corresponding to the key, or the default value if the key does not exist.
+    function playerMeta:getLiliaData(key, default)
+        local data = lia.localData and lia.localData[key]
+        if data == nil then
+            return default
+        else
+            return data
+        end
     end
-end
 end
 
 playerMeta.IsUser = playerMeta.isUser
@@ -857,8 +1105,6 @@ playerMeta.CreateServerRagdoll = playerMeta.createServerRagdoll
 playerMeta.DoStaredAction = playerMeta.doStaredAction
 playerMeta.Notify = playerMeta.notify
 playerMeta.NotifyLocalized = playerMeta.notifyLocalized
-playerMeta.ChatNotify = playerMeta.chatNotify
-playerMeta.ChatNotifyLocalized = playerMeta.chatNotifyLocalized
 playerMeta.SetRagdolled = playerMeta.setRagdolled
 playerMeta.SetWhitelisted = playerMeta.setWhitelisted
 playerMeta.SyncVars = playerMeta.syncVars

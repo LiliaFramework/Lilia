@@ -52,6 +52,7 @@ lia.item.DefaultFunctions = {
         onCanRun = function(item) return IsValid(item.entity) end
     },
 }
+
 local GridInv = FindMetaTable("GridInv")
 --- Retrieves an item table.
 -- @realm shared
@@ -341,13 +342,13 @@ if SERVER then
         end)
     end
 
---- Instances and spawns a given item type.
--- @realm server
--- @string uniqueID Unique ID of the item
--- @vector position The position in which the item's entity will be spawned
--- @func[opt=nil] callback Function to call when the item entity is created
--- @angle[opt=angle_zero] angles The angles at which the item's entity will spawn
--- @tab[opt=nil] data Additional data for this item instance
+    --- Instances and spawns a given item type.
+    -- @realm server
+    -- @string uniqueID Unique ID of the item
+    -- @vector position The position in which the item's entity will be spawned
+    -- @func[opt=nil] callback Function to call when the item entity is created
+    -- @angle[opt=angle_zero] angles The angles at which the item's entity will spawn
+    -- @tab[opt=nil] data Additional data for this item instance
     function lia.item.spawn(uniqueID, position, callback, angles, data)
         local d
         if not isfunction(callback) then

@@ -23,12 +23,23 @@ lia.Inventory = Inventory
 Inventory.data = {}
 Inventory.items = {}
 Inventory.id = -1
+--- Retrieves data associated with a specified key from the inventory.
+-- @realm shared
+-- @function Inventory:getData
+-- @tparam any key The key for the data.
+-- @param[opt] any default The default value to return if the key does not exist.
+-- @treturn any The value associated with the key, or the default value if the key does not exist.
 function Inventory:getData(key, default)
     local value = self.data[key]
     if value == nil then return default end
     return value
 end
 
+--- Extends the inventory to create a subclass with a specified class name.
+-- @realm shared
+-- @function Inventory:extend
+-- @tparam string className The name of the subclass.
+-- @treturn table A subclass of the Inventory class.
 function Inventory:extend(className)
     local base = debug.getregistry()[className] or {}
     table.Empty(base)
@@ -38,16 +49,30 @@ function Inventory:extend(className)
     return subClass
 end
 
+--- Configures the inventory.
+-- This function is meant to be overridden in subclasses to define specific configurations.
+-- @function Inventory:configure
 function Inventory:configure()
 end
 
+--- Adds a data proxy to the inventory for a specified key.
+-- @realm shared
+-- @function Inventory:addDataProxy
+-- @tparam any key The key for the data proxy.
+-- @tparam function onChange The function to call when the data associated with the key changes.
 function Inventory:addDataProxy(key, onChange)
     local dataConfig = self.config.data[key] or {}
     dataConfig.proxies[#dataConfig.proxies + 1] = onChange
     self.config.data[key] = dataConfig
 end
 
-function Inventory:GetItemsByUniqueID(uniqueID, onlyMain)
+--- Retrieves items with a specified unique ID from the inventory.
+-- @realm shared
+-- @function Inventory:getItemsByUniqueID
+-- @tparam string uniqueID The unique ID of the items to retrieve.
+-- @tparam[opt=false] boolean onlyMain Whether to retrieve only main items.
+-- @treturn table An array containing the items with the specified unique ID.
+function Inventory:getItemsByUniqueID(uniqueID, onlyMain)
     local items = {}
     for _, v in pairs(self:getItems(onlyMain)) do
         if v.uniqueID == uniqueID then items[#items + 1] = v end
@@ -55,6 +80,14 @@ function Inventory:GetItemsByUniqueID(uniqueID, onlyMain)
     return items
 end
 
+--- Registers the inventory with a specified type ID.
+-- @realm shared
+-- @function Inventory:register
+-- @tparam string typeID The type ID to register the inventory with.
+-- @raise If the argument `typeID` is not a string.
+-- @usage
+-- inventory:register("grid")
+-- @see lia.inventory.newType
 function Inventory:register(typeID)
     assert(isstring(typeID), "Expected argument #1 of " .. self.className .. ".register to be a string")
     self.typeID = typeID
@@ -74,18 +107,38 @@ function Inventory:register(typeID)
     end
 end
 
+--- Creates a new instance of the inventory.
+-- @realm shared
+-- @function Inventory:new
+-- @treturn table A new instance of the Inventory class.
+-- @usage
+-- local newInventory = Inventory:new()
 function Inventory:new()
     return lia.inventory.new(self.typeID)
 end
 
+--- Returns a string representation of the inventory.
+-- @function Inventory:__tostring
+-- @realm shared
+-- @treturn string A string representation of the inventory, including its class name and ID.
 function Inventory:__tostring()
     return self.className .. "[" .. tostring(self.id) .. "]"
 end
 
+--- Retrieves the type of the inventory.
+-- @function Inventory:getType
+-- @realm shared
+-- @treturn table The type of the inventory.
 function Inventory:getType()
     return lia.inventory.types[self.typeID]
 end
 
+--- Callback function called when data associated with a key changes.
+-- @function Inventory:onDataChanged
+-- @realm shared
+-- @tparam any key The key whose data has changed.
+-- @param oldValue The old value of the data.
+-- @param newValue The new value of the data.
 function Inventory:onDataChanged(key, oldValue, newValue)
     local keyData = self.config.data[key]
     if keyData and keyData.proxies then
@@ -95,10 +148,19 @@ function Inventory:onDataChanged(key, oldValue, newValue)
     end
 end
 
+--- Retrieves all items in the inventory.
+-- @function Inventory:getItems
+-- @realm shared
+-- @treturn table An array containing all items in the inventory.
 function Inventory:getItems()
     return self.items
 end
 
+--- Retrieves items of a specific type from the inventory.
+-- @function Inventory:getItemsOfType
+-- @realm shared
+-- @tparam string itemType The type of items to retrieve.
+-- @treturn table An array containing items of the specified type.
 function Inventory:getItemsOfType(itemType)
     local items = {}
     for _, item in pairs(self:getItems()) do
@@ -107,12 +169,22 @@ function Inventory:getItemsOfType(itemType)
     return items
 end
 
+--- Retrieves the first item of a specific type from the inventory.
+-- @function Inventory:getFirstItemOfType
+-- @realm shared
+-- @tparam string itemType The type of item to retrieve.
+-- @treturn table|nil The first item of the specified type, or nil if not found.
 function Inventory:getFirstItemOfType(itemType)
     for _, item in pairs(self:getItems()) do
         if item.uniqueID == itemType then return item end
     end
 end
 
+--- Checks if the inventory contains an item of a specific type.
+-- @function Inventory:hasItem
+-- @realm shared
+-- @tparam string itemType The type of item to check for.
+-- @treturn boolean Returns true if the inventory contains an item of the specified type, otherwise false.
 function Inventory:hasItem(itemType)
     for _, item in pairs(self:getItems()) do
         if item.uniqueID == itemType then return true end
@@ -120,6 +192,11 @@ function Inventory:hasItem(itemType)
     return false
 end
 
+--- Retrieves the total count of items in the inventory, optionally filtered by item type.
+-- @function Inventory:getItemCount
+-- @realm shared
+-- @tparam[opt] string itemType The type of item to count. If nil, counts all items.
+-- @treturn number The total count of items in the inventory, optionally filtered by item type.
 function Inventory:getItemCount(itemType)
     local count = 0
     for _, item in pairs(self:getItems()) do
@@ -128,15 +205,29 @@ function Inventory:getItemCount(itemType)
     return count
 end
 
+--- Retrieves the ID of the inventory.
+-- @function Inventory:getID
+-- @realm shared
+-- @treturn any The ID of the inventory.
 function Inventory:getID()
     return self.id
 end
 
+--- Checks if two inventories are equal based on their IDs.
+-- @function Inventory:__eq
+-- @realm shared
+-- @tparam Inventory other The other inventory to compare with.
+-- @treturn boolean Returns true if the inventories have the same ID, otherwise false.
 function Inventory:__eq(other)
     return self:getID() == other:getID()
 end
 
 if SERVER then
+    --- Adds an item to the inventory.
+    -- @function Inventory:addItem
+    -- @realm server
+    -- @tparam Item item The item to add to the inventory.
+    -- @treturn Inventory Returns the inventory itself.
     function Inventory:addItem(item)
         self.items[item:getID()] = item
         item.invID = self:getID()
@@ -152,11 +243,20 @@ if SERVER then
     end
 
     Inventory.AddItem = Inventory.addItem
+    --- Alias for `addItem` function.
+    -- @function Inventory:add
+    -- @realm server
+    -- @tparam Item item The item to add to the inventory.
+    -- @treturn Inventory Returns the inventory itself.
     function Inventory:add(item)
         return self:addItem(item)
     end
 
     Inventory.Add = Inventory.add
+    --- Synchronizes the addition of an item with clients.
+    -- @function Inventory:syncItemAdded
+    -- @realm server
+    -- @tparam Item item The item being added.
     function Inventory:syncItemAdded(item)
         assert(istable(item) and item.getID, "cannot sync non-item")
         assert(self.items[item:getID()], "Item " .. item:getID() .. " does not belong to " .. self.id)
@@ -168,6 +268,11 @@ if SERVER then
         net.Send(recipients)
     end
 
+    --- Initializes the storage for the inventory.
+    -- @function Inventory:initializeStorage
+    -- @realm server
+    -- @tparam table initialData Initial data for the inventory.
+    -- @treturn Deferred A deferred promise.
     function Inventory:initializeStorage(initialData)
         local d = deferred.new()
         local charID = initialData.char
@@ -197,6 +302,12 @@ if SERVER then
     function Inventory:restoreFromStorage()
     end
 
+    --- Removes an item from the inventory.
+    -- @function Inventory:removeItem
+    -- @realm server
+    -- @tparam number itemID The ID of the item to remove.
+    -- @tparam[opt=false] boolean preserveItem Whether to preserve the item's data in the database.
+    -- @treturn Deferred A deferred promise.
     function Inventory:removeItem(itemID, preserveItem)
         assert(isnumber(itemID), "itemID must be a number for remove")
         local d = deferred.new()
@@ -222,11 +333,20 @@ if SERVER then
     end
 
     Inventory.RemoveItem = Inventory.removeItem
+    --- Alias for `removeItem` function.
+    -- @function Inventory.Remove
+    -- @realm server
     function Inventory:remove(itemID)
         return self:removeItem(itemID)
     end
 
     Inventory.Remove = Inventory.remove
+    --- Sets data associated with a key in the inventory.
+    -- @function Inventory:setData
+    -- @realm server
+    -- @tparam any key The key to associate the data with.
+    -- @param value The value to set for the key.
+    -- @treturn Inventory Returns the inventory itself.
     function Inventory:setData(key, value)
         local oldValue = self.data[key]
         self.data[key] = value
@@ -253,6 +373,13 @@ if SERVER then
     end
 
     Inventory.SetData = Inventory.setData
+    --- Checks if a certain action is permitted for the inventory.
+    -- @function Inventory:canAccess
+    -- @realm server
+    -- @tparam string action The action to check for access.
+    -- @tparam[opt] table context Additional context for the access check.
+    -- @treturn boolean|nil Returns true if the action is permitted, false if denied, or nil if not applicable.
+    -- @treturn[opt] string A reason for the access result.
     function Inventory:canAccess(action, context)
         context = context or {}
         local result
@@ -262,6 +389,12 @@ if SERVER then
         end
     end
 
+    --- Adds an access rule to the inventory.
+    -- @function Inventory:addAccessRule
+    -- @realm server
+    -- @tparam function rule The access rule function.
+    -- @tparam[opt] number priority The priority of the access rule.
+    -- @treturn Inventory Returns the inventory itself.
     function Inventory:addAccessRule(rule, priority)
         if isnumber(priority) then
             table.insert(self.config.accessRules, priority, rule)
@@ -271,11 +404,20 @@ if SERVER then
         return self
     end
 
+    --- Removes an access rule from the inventory.
+    -- @function Inventory:removeAccessRule
+    -- @realm server
+    -- @tparam function rule The access rule function to remove.
+    -- @treturn Inventory Returns the inventory itself.
     function Inventory:removeAccessRule(rule)
         table.RemoveByValue(self.config.accessRules, rule)
         return self
     end
 
+    --- Retrieves the recipients for synchronization.
+    -- @function Inventory:getRecipients
+    -- @realm server
+    -- @treturn table An array containing the recipients for synchronization.
     function Inventory:getRecipients()
         local recipients = {}
         for _, client in ipairs(player.GetAll()) do
@@ -288,12 +430,23 @@ if SERVER then
         return recipients
     end
 
+    --- Initializes an instance of the inventory.
+    -- @function Inventory:onInstanced
+    -- @realm server
     function Inventory:onInstanced()
     end
 
+    --- Callback function called when the inventory is loaded.
+    -- @function Inventory:onLoaded
+    -- @realm server
     function Inventory:onLoaded()
+        -- Function implementation
     end
 
+    --- Loads items from the database into the inventory.
+    -- @function Inventory:loadItems
+    -- @realm server
+    -- @treturn Deferred A deferred promise.
     function Inventory:loadItems()
         local ITEM_TABLE = "items"
         local ITEM_FIELDS = {"_itemID", "_uniqueID", "_data", "_x", "_y", "_quantity"}
@@ -324,13 +477,26 @@ if SERVER then
         end)
     end
 
+    --- Callback function called when items are loaded into the inventory.
+    -- @function Inventory:onItemsLoaded
+    -- @realm server
     function Inventory:onItemsLoaded()
     end
 
+    --- Instantiates a new inventory instance.
+    -- @function Inventory:instance
+    -- @realm server
+    -- @tparam table initialData Initial data for the inventory instance.
+    -- @treturn Inventory The newly instantiated inventory instance.
     function Inventory:instance(initialData)
         return lia.inventory.instance(self.typeID, initialData)
     end
 
+    --- Synchronizes data changes with clients.
+    -- @function Inventory:syncData
+    -- @realm server
+    -- @tparam any key The key whose data has changed.
+    -- @tparam[opt] table recipients The recipients to synchronize with.
     function Inventory:syncData(key, recipients)
         if self.config.data[key] and self.config.data[key].noReplication then return end
         net.Start("liaInventoryData")
@@ -340,6 +506,10 @@ if SERVER then
         net.Send(recipients or self:getRecipients())
     end
 
+    --- Synchronizes the inventory with clients.
+    -- @function Inventory:sync
+    -- @realm server
+    -- @tparam[opt] table recipients The recipients to synchronize with.
     function Inventory:sync(recipients)
         net.Start("liaInventoryInit")
         net.WriteType(self.id)
@@ -368,10 +538,16 @@ if SERVER then
         end
     end
 
+    --- Deletes the inventory.
+    -- @function Inventory:delete
+    -- @realm server
     function Inventory:delete()
         lia.inventory.deleteByID(self.id)
     end
 
+    --- Destroys the inventory and its associated items.
+    -- @function Inventory:destroy
+    -- @realm server
     function Inventory:destroy()
         for _, item in pairs(self:getItems()) do
             item:destroy()
@@ -383,6 +559,10 @@ if SERVER then
         net.Broadcast()
     end
 else
+    --- Displays the inventory UI to the specified parent element.
+    -- @tparam[opt] any parent The parent element to which the inventory UI will be displayed.
+    -- @return The result of the `lia.inventory.show` function.
+    -- @realm client
     function Inventory:show(parent)
         return lia.inventory.show(self, parent)
     end

@@ -11,46 +11,160 @@ lia.RealmIdentifiers = {
     permissions = "shared",
     sconfig = "server",
 }
+
 lia.FilesToLoad = {
-    {path = "lilia/gamemode/libraries/database.lua", realm = "server"},
-    {path = "lilia/gamemode/libraries/util.lua", realm = "shared"},
-    {path = "lilia/gamemode/meta/character.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/character.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/animations.lua", realm = "shared"},
-    {path = "lilia/gamemode/config/animations.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/hooks/core/shared.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/hooks/core/client.lua", realm = "client"},
-    {path = "lilia/gamemode/libraries/hooks/core/server.lua", realm = "server"},
-    {path = "lilia/gamemode/libraries/chatbox.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/commands.lua", realm = "shared"},
-    {path = "lilia/gamemode/objects/commands/client.lua", realm = "client"},
-    {path = "lilia/gamemode/objects/commands/server.lua", realm = "server"},
-    {path = "lilia/gamemode/libraries/flags.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/inventory.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/item.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/languages.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/networking.lua", realm = "server"},
-    {path = "lilia/gamemode/libraries/attributes.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/factions.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/classes.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/currency.lua", realm = "shared"},
-    {path = "lilia/gamemode/hooks/currency.lua", realm = "server"},
-    {path = "lilia/gamemode/libraries/date.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/module.lua", realm = "shared"},
-    {path = "lilia/gamemode/meta/inventory.lua", realm = "shared"},
-    {path = "lilia/gamemode/meta/item.lua", realm = "shared"},
-    {path = "lilia/gamemode/hooks/items.lua", realm = "shared"},
-    {path = "lilia/gamemode/meta/entity.lua", realm = "shared"},
-    {path = "lilia/gamemode/meta/player.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/logger.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/concommands.lua", realm = "shared"},
-    {path = "lilia/gamemode/libraries/color.lua", realm = "client"},
-    {path = "lilia/gamemode/libraries/menu.lua", realm = "client"},
-    {path = "lilia/gamemode/libraries/notice.lua", realm = "client"},
-    {path = "lilia/gamemode/libraries/bars.lua", realm = "client"},
-    {path = "lilia/gamemode/hooks/animations.lua", realm = "shared"},
-    {path = "lilia/gamemode/netcalls/client.lua", realm = "client"},
-    {path = "lilia/gamemode/netcalls/server.lua", realm = "server"}
+    {
+        path = "lilia/gamemode/libraries/util.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/meta/character.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/character.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/animations.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/config/animations.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/hooks/core/shared.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/hooks/core/client.lua",
+        realm = "client"
+    },
+    {
+        path = "lilia/gamemode/hooks/core/server.lua",
+        realm = "server"
+    },
+    {
+        path = "lilia/gamemode/libraries/module.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/chatbox.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/commands.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/objects/commands/client.lua",
+        realm = "client"
+    },
+    {
+        path = "lilia/gamemode/objects/commands/server.lua",
+        realm = "server"
+    },
+    {
+        path = "lilia/gamemode/libraries/flags.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/inventory.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/meta/item.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/item.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/languages.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/networking.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/attributes.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/factions.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/classes.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/currency.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/hooks/currency.lua",
+        realm = "server"
+    },
+    {
+        path = "lilia/gamemode/libraries/date.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/meta/inventory.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/hooks/items.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/meta/entity.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/meta/player.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/logger.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/concommands.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/color.lua",
+        realm = "client"
+    },
+    {
+        path = "lilia/gamemode/libraries/menu.lua",
+        realm = "client"
+    },
+    {
+        path = "lilia/gamemode/libraries/notice.lua",
+        realm = "client"
+    },
+    {
+        path = "lilia/gamemode/libraries/bars.lua",
+        realm = "client"
+    },
+    {
+        path = "lilia/gamemode/hooks/animations.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/netcalls/client.lua",
+        realm = "client"
+    },
+    {
+        path = "lilia/gamemode/netcalls/server.lua",
+        realm = "server"
+    }
 }
 
 --- Loads a Lua file into the server, client, or shared realm.
@@ -77,8 +191,8 @@ function lia.include(fileName, state)
         end
     end
 end
-lia.util.include = lia.include
 
+lia.util.include = lia.include
 --- Loads Lua files from a directory into the server, client, or shared realm.
 -- This function recursively includes Lua files from a directory into the specified realm.
 -- This function has a legacy alias *lia.util.includeDir* that can be used instead of lia.includeDir.
@@ -123,8 +237,9 @@ function lia.includeDir(directory, fromLua, recursive, realm)
         end
     end
 end
-lia.util.includeDir = lia.includeDir
 
+lia.includeDir("lilia/gamemode/libraries/thirdparty", true, true)
+lia.util.includeDir = lia.includeDir
 function lia.includeEntities(path)
     local files, folders
     local function IncludeFiles(path2, clientOnly)
@@ -188,15 +303,13 @@ function lia.includeEntities(path)
 end
 
 lia.util.loadEntities = lia.includeEntities
-
-lia.includeDir("lilia/gamemode/libraries/thirdparty", true, true)
 lia.includeEntities("lilia/gamemode/objects/entities")
-for _, file in ipairs(lia.config.filesToLoad) do
-    if file.realm == "server" then
-        lia.include(file.path, "server")
-    elseif file.realm == "client" then
-        lia.include(file.path, "client")
-    elseif file.realm == "shared" then
-        lia.include(file.path, "shared")
+for _, filepath in ipairs(lia.FilesToLoad) do
+    if filepath.realm == "server" then
+        lia.include(filepath.path, "server")
+    elseif filepath.realm == "client" then
+        lia.include(filepath.path, "client")
+    elseif filepath.realm == "shared" then
+        lia.include(filepath.path, "shared")
     end
 end

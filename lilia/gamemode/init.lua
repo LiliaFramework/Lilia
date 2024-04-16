@@ -1,36 +1,23 @@
-﻿
-DeriveGamemode("sandbox")
+﻿DeriveGamemode("sandbox")
 lia = lia or {
     util = {},
     meta = {}
 }
 
 AddCSLuaFile("lilia/gamemode/libraries/config.lua")
-
 include("lilia/gamemode/libraries/config.lua")
-
 include("lilia/gamemode/shared.lua")
-
-include("lilia/gamemode/libraries/includer.lua")
-
-include("lilia/gamemode/libraries/data.lua")
-
-include("lilia/gamemode/hooks/data.lua")
-
-include("lilia/config/database/database.lua")
-
-include("lilia/config/database/tables.lua")
-
+include("lilia/gamemode/config/database/database.lua")
+include("lilia/gamemode/config/database/tables.lua")
 include("lilia/gamemode/libraries/database.lua")
-
+include("lilia/gamemode/hooks/database.lua")
+include("lilia/gamemode/libraries/includer.lua")
+include("lilia/gamemode/libraries/data.lua")
+include("lilia/gamemode/hooks/data.lua")
 AddCSLuaFile("lilia/gamemode/libraries/fonts.lua")
-
 AddCSLuaFile("lilia/gamemode/libraries/includer.lua")
-
 AddCSLuaFile("lilia/gamemode/libraries/data.lua")
-
 AddCSLuaFile("lilia/gamemode/shared.lua")
-
 timer.Simple(0, function()
     hook.Run("SetupDatabase")
     lia.db.connect(function()

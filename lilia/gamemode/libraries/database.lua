@@ -234,7 +234,7 @@ function lia.db.connect(callback, reconnect)
         lia.db.escape = dbModule.escape
         lia.db.query = dbModule.query
     else
-        ErrorNoHalt("[Lilia] '" .. (lia.db.module or "nil") .. "' is not a valid data storage method! \n")
+        ErrorNoHalt("[Lilia] '" .. (lia.db.module or "Unavailable") .. "' is not a valid data storage method! \n")
     end
 end
 
