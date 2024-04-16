@@ -30,7 +30,7 @@ end
 
 --- Returns true if this character is equal to another character. Internally, this checks character IDs.
 -- @realm shared
--- @char other Character to compare to
+-- @character other Character to compare to
 -- @return bool Whether or not this character is equal to the given character
 -- @usage print(lia.char.loaded[1] == lia.char.loaded[2])
 -- > false
