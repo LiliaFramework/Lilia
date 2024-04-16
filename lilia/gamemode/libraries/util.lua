@@ -1,3 +1,7 @@
+--- Various useful helper functions.
+-- @module lia.util
+
+
 lia.util.cachedMaterials = lia.util.cachedMaterials or {}
 
 function lia.util.isSteamID(value)
@@ -17,6 +21,23 @@ function lia.util.dateToNumber(str)
     }
 end
 
+--- Removes the realm prefix from a file name. The returned string will be unchanged if there is no prefix found.
+-- @realm shared
+-- @string name String to strip prefix from
+-- @treturn string String stripped of prefix
+-- @usage print(lia.util.stripRealmPrefix("sv_init.lua"))
+-- > init.lua
+function lia.util.stripRealmPrefix(name)
+	local prefix = name:sub(1, 3)
+
+	return (prefix == "sh_" or prefix == "sv_" or prefix == "cl_") and name:sub(4) or name
+
+    
+--- Attempts to find a player by matching their name or Steam ID.
+-- @realm shared
+-- @string identifier Search query
+-- @bool[opt=false] bAllowPatterns Whether or not to accept Lua patterns in `identifier`
+-- @treturn player Player that matches the given search query - this will be `nil` if a player could not be found
 function lia.util.findPlayer(identifier, allowPatterns)
     if lia.util.isSteamID(identifier) then return player.GetBySteamID(identifier) end
     if not allowPatterns then identifier = string.PatternSafe(identifier) end
@@ -43,6 +64,15 @@ function lia.util.getAllChar()
     return charTable
 end
 
+--- Emits sounds one after the other from an entity.
+-- @realm shared
+-- @entity entity Entity to play sounds from
+-- @tab sounds Sound paths to play
+-- @number delay[opt=0] How long to wait before starting to play the sounds
+-- @number spacing[opt=0.1] How long to wait between playing each sound
+-- @number volume[opt=75] The sound level of each sound
+-- @number pitch[opt=100] Pitch percentage of each sound
+-- @treturn number How long the entire sequence of sounds will take to play
 function lia.util.emitQueuedSounds(entity, sounds, delay, spacing, volume, pitch)
     delay = delay or 0
     spacing = spacing or 0.1
@@ -61,6 +91,12 @@ function lia.util.emitQueuedSounds(entity, sounds, delay, spacing, volume, pitch
     return delay
 end
 
+--- Checks to see if two strings are equivalent using a fuzzy manner. Both strings will be lowered, and will return `true` if
+-- the strings are identical, or if `b` is a substring of `a`.
+-- @realm shared
+-- @string a First string to check
+-- @string b Second string to check
+-- @treturn bool Whether or not the strings are equivalent
 function lia.util.stringMatches(a, b)
     if a and b then
         local a2, b2 = a:lower(), b:lower()
@@ -231,6 +267,17 @@ if SERVER then
         netstream.Start(target, "ChatPrint", {...})
     end
 else
+
+	--- Draws some text with a shadow.
+	-- @realm client
+	-- @string text Text to draw
+	-- @number x X-position of the text
+	-- @number y Y-position of the text
+	-- @color color Color of the text to draw
+	-- @number[opt=TEXT_ALIGN_LEFT] alignX Horizontal alignment of the text, using one of the `TEXT_ALIGN_*` constants
+	-- @number[opt=TEXT_ALIGN_LEFT] alignY Vertical alignment of the text, using one of the `TEXT_ALIGN_*` constants
+	-- @string[opt="ixGenericFont"] font Font to use for the text
+	-- @number[opt=color.a * 0.575] alpha Alpha of the shadow
     function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
         color = color or color_white
         return draw.TextShadow({
@@ -256,6 +303,13 @@ else
         if not func then return end
         return func(skin, panel, a, b, c, d, e, f, g)
     end
+
+	--- Wraps text so it does not pass a certain width. This function will try and break lines between words if it can,
+	-- otherwise it will break a word if it's too long.
+	-- @realm client
+	-- @string text Text to wrap
+	-- @number maxWidth Maximum allowed width in pixels
+	-- @string[opt="liaChatFont"] font Font to use for the text
 
     function lia.util.wrapText(text, width, font)
         font = font or "liaChatFont"
@@ -523,6 +577,16 @@ else
     end
 
     local useCheapBlur = CreateClientConVar("lia_cheapblur", 0, true):GetBool()
+    --- Blurs the content underneath the given panel. This will fall back to a simple darkened rectangle if the player has
+	-- blurring disabled.
+	-- @realm client
+	-- @tparam panel panel Panel to draw the blur for
+	-- @number[opt=5] amount Intensity of the blur. This should be kept between 0 and 10 for performance reasons
+	-- @number[opt=0.2] passes Quality of the blur. This should be kept as default
+	-- @number[opt=255] alpha Opacity of the blur
+	-- @usage function PANEL:Paint(width, height)
+	-- 	lia.util.drawBlur(self)
+	-- end
     function lia.util.drawBlur(panel, amount, passes)
         amount = amount or 5
         if useCheapBlur then
@@ -541,6 +605,19 @@ else
         end
     end
 
+	--- Draws a blurred rectangle with the given position and bounds. This shouldn't be used for panels, see `ix.util.DrawBlur`
+	-- instead.
+	-- @realm client
+	-- @number x X-position of the rectangle
+	-- @number y Y-position of the rectangle
+	-- @number width Width of the rectangle
+	-- @number height Height of the rectangle
+	-- @number[opt=5] amount Intensity of the blur. This should be kept between 0 and 10 for performance reasons
+	-- @number[opt=0.2] passes Quality of the blur. This should be kept as default
+	-- @number[opt=255] alpha Opacity of the blur
+	-- @usage hook.Add("HUDPaint", "MyHUDPaint", function()
+	-- 	lia.util.drawBlurAt(0, 0, ScrW(), ScrH())
+	-- end)
     function lia.util.drawBlurAt(x, y, w, h, amount, passes)
         amount = amount or 5
         if useCheapBlur then
@@ -604,6 +681,12 @@ else
     cvars.AddChangeCallback("lia_cheapblur", function(_, _, new) useCheapBlur = (tonumber(new) or 0) > 0 end)
 end
 
+--- Returns a cached copy of the given material, or creates and caches one if it doesn't exist. This is a quick helper function
+-- if you aren't locally storing a `Material()` call.
+-- @realm shared
+-- @string materialPath Path to the material
+-- @treturn[1] material The cached material
+-- @treturn[2] nil If the material doesn't exist in the filesystem
 function lia.util.getMaterial(materialPath)
     lia.util.cachedMaterials[materialPath] = lia.util.cachedMaterials[materialPath] or Material(materialPath)
     return lia.util.cachedMaterials[materialPath]

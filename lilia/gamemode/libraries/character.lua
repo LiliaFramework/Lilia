@@ -8,6 +8,7 @@ charMeta.__index = charMeta
 charMeta.id = charMeta.id or 0
 charMeta.vars = charMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
+
 if SERVER then
     if #lia.char.names < 1 then
         lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
@@ -29,6 +30,13 @@ else
     if #lia.char.names < 1 then netstream.Start("liaCharFetchNames") end
 end
 
+--- Creates a new empty `Character` object. If you are looking to create a usable character, see `ix.char.Create`.
+-- @realm shared
+-- @internal
+-- @tab data Character vars to assign
+-- @number id Unique ID of the character
+-- @player client Player that will own the character
+-- @string[opt=client:SteamID64()] steamID SteamID64 of the player that will own the character
 function lia.char.new(data, id, client, steamID)
     local character = setmetatable({
         vars = {}
@@ -124,6 +132,18 @@ function lia.char.registerVar(key, data)
 
     charMeta.vars[key] = data.default
 end
+	--- Default character vars
+	-- @classmod Character
+
+	--- Sets this character's name. This is automatically networked.
+	-- @realm server
+	-- @string name New name for the character
+	-- @function setName/SetName
+
+	--- Returns this character's name
+	-- @realm shared
+	-- @treturn string This character's current name
+	-- @function getName/GetName
 
 lia.char.registerVar("name", {
     field = "_name",
@@ -155,7 +175,15 @@ lia.char.registerVar("name", {
         end
     end,
 })
+	--- Sets this character's physical description. This is automatically networked.
+	-- @realm server
+	-- @string description New description for this character
+	-- @function setDesc/SetDescription
 
+	--- Returns this character's physical description.
+	-- @realm shared
+	-- @treturn string This character's current description
+	-- @function getDesc/GetDescription
 lia.char.registerVar("desc", {
     field = "_desc",
     default = "Please Enter Your Description With The Minimum Of " .. lia.config.MinDescLen .. " Characters!",
@@ -172,7 +200,16 @@ lia.char.registerVar("desc", {
         if isstring(desc) and override then newData.desc = desc end
     end,
 })
+	--- Sets this character's model. This sets the player's current model to the given one, and saves it to the character.
+	-- It is automatically networked.
+	-- @realm server
+	-- @string model New model for the character
+	-- @function setModel/SetModel
 
+	--- Returns this character's model.
+	-- @realm shared
+	-- @treturn string This character's current model
+	-- @function getModel/GetModel
 lia.char.registerVar("model", {
     field = "_model",
     default = "models/error.mdl",
@@ -262,11 +299,25 @@ lia.char.registerVar("model", {
         end
     end
 })
-
+	-- setClass shouldn't be used here, character:joinClass should be used instead
+	--- Returns this character's current class.
+	-- @realm shared
+	-- @treturn number Index of the class this character is in
+	-- @function getClass
 lia.char.registerVar("class", {
     noDisplay = true,
 })
 
+	--- Sets this character's faction. Note that this doesn't do the initial setup for the player after the faction has been
+	-- changed, so you'll have to update some character vars manually.
+	-- @realm server
+	-- @number faction Index of the faction to transfer this character to
+	-- @function setFaction/SetFaction
+
+	--- Returns this character's faction.
+	-- @realm shared
+	-- @treturn number Index of the faction this character is currently in
+	-- @function getFaction/GetFaction
 lia.char.registerVar("faction", {
     field = "_faction",
     default = "Citizen",
@@ -292,14 +343,37 @@ lia.char.registerVar("faction", {
     end,
     onAdjust = function(_, _, value, newData) newData.faction = lia.faction.indices[value].uniqueID end
 })
+	--- Sets this character's current money. Money is only networked to the player that owns this character.
+	-- @realm server
+	-- @number money New amount of money this character should have
+	-- @function setMoney/SetMoney
 
+	--- Returns this character's money. This is only valid on the server and the owning client.
+	-- @realm shared
+	-- @treturn number Current money of this character
+	-- @function getMoney/GetMoney
 lia.char.registerVar("money", {
     field = "_money",
     default = 0,
     isLocal = true,
     noDisplay = true
 })
+	--- Sets a data field on this character. This is useful for storing small bits of data that you need persisted on this
+	-- character. This is networked only to the owning client. If you are going to be accessing this data field frequently with
+	-- a getter/setter, consider using `ix.char.RegisterVar` instead.
+	-- @realm server
+	-- @string key Name of the field that holds the data
+	-- @param value Any value to store in the field, as long as it's supported by GMod's JSON parser
+	-- @function setData/SetData
 
+	--- Returns a data field set on this character. If it doesn't exist, it will return the given default or `nil`. This is only
+	-- valid on the server and the owning client.
+	-- @realm shared
+	-- @string key Name of the field that's holding the data
+	-- @param default Value to return if the given key doesn't exist, or is `nil`
+	-- @return[1] Data stored in the field
+	-- @treturn[2] nil If the data doesn't exist, or is `nil`
+	-- @function getData/GetData
 lia.char.registerVar("data", {
     default = {},
     isLocal = true,
@@ -361,10 +435,18 @@ do
     local playerMeta = FindMetaTable("Player")
     playerMeta.steamName = playerMeta.steamName or playerMeta.Name
     playerMeta.SteamName = playerMeta.steamName
+    	--- Returns this player's currently possessed `Character` object if it exists.
+	-- @realm shared
+	-- @treturn[1] Character Currently loaded character
+	-- @treturn[2] nil If this player has no character loaded
     function playerMeta:getChar()
         return lia.char.loaded[self.getNetVar(self, "char")]
     end
 
+	--- Returns this player's current name.
+	-- @realm shared
+	-- @treturn[1] string Name of this player's currently loaded character
+	-- @treturn[2] string Steam name of this player if the player has no character loaded
     function playerMeta:Name()
         local character = self.getChar(self)
         return character and character.getName(character) or self.steamName(self)
@@ -386,6 +468,12 @@ function lia.char.getCharData(charID, key)
 end
 
 if SERVER then
+    	--- Creates a character object with its assigned properties and saves it to the database.
+	-- @realm server
+	-- @tab data Properties to assign to this character. If fields are missing from the table, then it will use the default
+	-- value for that property
+	-- @func callback Function to call after the character saves
+
     function lia.char.create(data, callback)
         local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
         data.money = data.money or lia.config.DefaultMoney
@@ -419,6 +507,13 @@ if SERVER then
             end)
         end)
     end
+	--- Loads all of a player's characters into memory.
+	-- @realm server
+	-- @player client Player to load the characters for
+	-- @func[opt=nil] callback Function to call when the characters have been loaded
+	-- @bool[opt=false] bNoCache Whether or not to skip the cache; players that leave and join again later will already have
+	-- their characters loaded which will skip the database query and load quicker
+	-- @number[opt=nil] id The ID of a specific character to load instead of all of the player's characters
 
     function lia.char.restore(client, callback, _, id)
         local steamID64 = client:SteamID64()
