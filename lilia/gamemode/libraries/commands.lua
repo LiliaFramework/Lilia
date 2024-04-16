@@ -236,128 +236,126 @@ end
 -- Each command is represented by a table with fields defining its functionality.
 -- @realm shared
 -- @table CommandList
--- @field CommandStructure[] List of commands with their descriptions and access levels.
 
--- **Commands List**:
--- * **charsetspeed**: Sets the speed of the character. | **Staff Command**.
--- * **playglobalsound**: Plays a sound globally for all players. | **Staff Command**.
--- * **playsound**: Plays a sound for the invoking player. | **Staff Command**.
--- * **charsetscale**: Sets the scale of the character. | **Staff Command**.
--- * **charsetjump**: Sets the jump height of the character. | **Staff Command**.
--- * **charaddmoney**: Adds money to the character's account. | **Staff Command**.
--- * **charban**: Bans a character from the server. | **Staff Command**.
--- * **charsetdesc**: Sets the description of the character. | **Staff Command**.
--- * **charsetname**: Sets the name of the character. | **Staff Command**.
--- * **chargetmodel**: Sets the target model for a character. | **Staff Command**.
--- * **charsetmodel**: Sets the model of the character. | **Staff Command**.
--- * **charsetbodygroup**: Sets the bodygroup of the character. | **Staff Command**.
--- * **charsetskin**: Sets the skin of the character. | **Staff Command**.
--- * **chargetmoney**: Sets the target money for a character. | **Staff Command**.
--- * **charsetmoney**: Sets the money of the character. | **Staff Command**.
--- * **clearinv**: Clears the inventory of the character. | **Staff Command**.
--- * **flaggive**: Gives a flag to a character. | **Staff Command**.
--- * **flaggiveall**: Gives a flag to all characters. | **Staff Command**.
--- * **flagtakeall**: Removes all flags from all characters. | **Staff Command**.
--- * **flagtake**: Removes a flag from a character. | **Staff Command**.
--- * **charkick**: Kicks a character from the server. | **Staff Command**.
--- * **viewcoreinformation**: Displays core faction information. | **Staff Command**.
--- * **charunban**: Unbans a character from the server. | **Staff Command**.
--- * **flagpet**: Sets a character as a pet. | **Staff Command**.
--- * **flagragdoll**: Sets a character as a ragdoll. | **Staff Command**.
--- * **flags**: Displays all available flags. | **Staff Command**.
--- * **freezeallprops**: Freezes all props on the map. | **Staff Command**.
--- * **checkmoney**: Checks the money of a character. | **Staff Command**.
--- * **status**: Displays your character's status information.
--- * **redownloadlightmaps**: Forces a redownload of lightmaps. | **Staff Command**.
--- * **cleanitems**: Cleans up all dropped items on the map. | **Staff Command**.
--- * **cleanprops**: Cleans up all props on the map. | **Staff Command**.
--- * **forcesave**: Forces a save of server data. | **Staff Command**.
--- * **cleannpcs**: Cleans up all NPCs on the map. | **Staff Command**.
--- * **checkallmoney**: Checks the money of all characters. | **Staff Command**.
--- * **return**: Returns to a previous position. | **Staff Command**.
--- * **findallflags**: Finds all characters with a specific flag. | **Staff Command**.
--- * **chargiveitem**: Gives an item to a character. | **Staff Command**.
--- * **announce**: Announces a message to all players. | **Staff Command**.
--- * **listents**: Lists all entities on the server. | **Staff Command**.
--- * **flip**: Flips a coin.
--- * **liststaff**: Lists all staff members on the server.
--- * **listondutystaff**: Lists all staff members currently on duty.
--- * **listvip**: Lists all VIP members on the server.
--- * **listusers**: Lists all users on the server.
--- * **rolld**: Rolls a specific-sided die. | **Staff Command**.
--- * **vieweventlog**: Views the server's event log. | **Staff Command**.
--- * **editeventlog**: Edits the server's event log. | **Staff Command**.
--- * **roll**: Rolls a die.
--- * **chardesc**: Sets the description of a character.
--- * **chargetup**: Sets the target usergroup of a character.
--- * **givemoney**: Gives money to a character.
--- * **bringlostitems**: Brings lost items back to the character's inventory. | **Staff Command**.
--- * **carddraw**: Draws a card from a deck.
--- * **fallover**: Causes an entity to fall over.
--- * **getpos**: Gets the position of an entity.
--- * **entname**: Gets the name of an entity.
--- * **permflaggive**: Gives a flag permanently to a character. | **Staff Command**.
--- * **permflagtake**: Removes a flag permanently from a character. | **Staff Command**.
--- * **permflags**: Displays all permanent flags. | **Staff Command**.
--- * **flagblacklist**: Adds a flag to the blacklist. | **Staff Command**.
--- * **flagunblacklist**: Removes a flag from the blacklist. | **Staff Command**.
--- * **flagblacklists**: Displays all flags on the blacklist. | **Staff Command**.
--- * **dropmoney**: Drops money at the character's position.
--- * **membercount**: Displays the count of members in the server.
--- * **charsetattrib**: Sets the attributes of the character. | **Staff Command**.
--- * **charaddattrib**: Adds attributes to the character. | **Staff Command**.
--- * **viewBodygroups**: Displays the bodygroups of the character. | **Staff Command**.
--- * **storagelock**: Locks the storage container.
--- * **trunk**: Accesses the trunk of a vehicle.
--- * **pktoggle**: Toggles the player's PK mode. | **Staff Command**.
--- * **toggleraise**: Toggles whether the player raises their weapon.
--- * **fixpac**: Fixes the PAC3 outfit of the player. | **Staff Command**.
--- * **pacenable**: Enables PAC3 for the player. | **Staff Command**.
--- * **pacdisable**: Disables PAC3 for the player. | **Staff Command**.
--- * **cleardecals**: Clears all decals from the world. | **Staff Command**.
--- * **playtime**: Displays the playtime of the player. | **Staff Command**.
--- * **3dradioclean**: Cleans up 3D radio entities on the map. | **Staff Command**.
--- * **auditmoney**: Audits the money transactions on the server. | **Staff Command**.
--- * **report**: Reports a player to the staff team. | **Player Command**.
--- * **spawnadd**: Adds a spawn point to the map. | **Staff Command**.
--- * **respawn**: Respawns the player at their last location. | **Player Command**.
--- * **spawnremove**: Removes a spawn point from the map. | **Staff Command**.
--- * **returnitems**: Returns lost items to the player's inventory. | **Staff Command**.
--- * **classwhitelist**: Whitelists a class for spawning. | **Staff Command**.
--- * **plytransfer**: Transfers a player to a different server. | **Staff Command**.
--- * **plywhitelist**: Whitelists a player for spawning. | **Staff Command**.
--- * **plyunwhitelist**: Removes a player from the whitelist. | **Staff Command**.
--- * **beclass**: Sets the player's class.
--- * **setclass**: Sets the player's class. | **Staff Command**.
--- * **classunwhitelist**: Removes a class from the whitelist. | **Staff Command**.
--- * **factionlist**: Displays a list of factions.
--- * **charvoiceunban**: Unbans a character's voice. | **Staff Command**.
--- * **charvoiceban**: Bans a character's voice. | **Staff Command**.
--- * **voicetoggle**: Toggles the player's voice. | **Staff Command**.
--- * **banooc**: Bans OOC chat for the player. | **Staff Command**.
--- * **unbanooc**: Unbans OOC chat for the player. | **Staff Command**.
--- * **blockooc**: Blocks OOC chat for the player. | **Staff Command**.
--- * **refreshfonts**: Refreshes the fonts for the player. | **Staff Command**.
--- * **clearchat**: Clears the chat for the player. | **Staff Command**.
--- * **doorsell**: Sells a door to the player. | **Staff Command**.
--- * **doorsetlocked**: Sets the door as locked. | **Staff Command**.
--- * **doorbuy**: Buys a door for the player. | **Staff Command**.
--- * **doorsetunownable**: Sets the door as unownable. | **Staff Command**.
--- * **doorsetownable**: Sets the door as ownable. | **Staff Command**.
--- * **dooraddfaction**: Adds a faction to the door. | **Staff Command**.
--- * **doorremovefaction**: Removes a faction from the door. | **Staff Command**.
--- * **doorsetdisabled**: Sets the door as disabled. | **Staff Command**.
--- * **doorsettitle**: Sets the title of the door. | **Staff Command**.
--- * **doorsetparent**: Sets the parent of the door. | **Staff Command**.
--- * **doorsetchild**: Sets the child of the door. | **Staff Command**.
--- * **doorremovechild**: Removes the child from the door. | **Staff Command**.
--- * **doorsetclass**: Sets the class of the door. | **Staff Command**.
--- * **savedoors**: Saves the state of the doors. | **Staff Command**.
--- * **legacylogs**: Views the legacy logs. | **Staff Command**.
--- * **logger**: Views the server's log. | **Staff Command**.
--- * **deletelogs**: Deletes the logs. | **Staff Command**.
--- * **netlogs**: Views the network logs. | **Staff Command**.
--- * **concommandlogs**: Views the concommand logs. | **Staff Command**.
--- * **restockallvendors**: Restocks all vendors on the map. | **Staff Command**.
--- * **resetallvendormoney**: Resets all vendor money on the map. | **Staff Command**.
--- * **savevendors**: Saves the state of the vendors. | **Staff Command**.
+-- @field **charsetspeed**: Sets the speed of the character. | **Staff Command**.
+-- @field **playglobalsound**: Plays a sound globally for all players. | **Staff Command**.
+-- @field **playsound**: Plays a sound for the invoking player. | **Staff Command**.
+-- @field **charsetscale**: Sets the scale of the character. | **Staff Command**.
+-- @field **charsetjump**: Sets the jump height of the character. | **Staff Command**.
+-- @field **charaddmoney**: Adds money to the character's account. | **Staff Command**.
+-- @field **charban**: Bans a character from the server. | **Staff Command**.
+-- @field **charsetdesc**: Sets the description of the character. | **Staff Command**.
+-- @field **charsetname**: Sets the name of the character. | **Staff Command**.
+-- @field **chargetmodel**: Sets the target model for a character. | **Staff Command**.
+-- @field **charsetmodel**: Sets the model of the character. | **Staff Command**.
+-- @field **charsetbodygroup**: Sets the bodygroup of the character. | **Staff Command**.
+-- @field **charsetskin**: Sets the skin of the character. | **Staff Command**.
+-- @field **chargetmoney**: Sets the target money for a character. | **Staff Command**.
+-- @field **charsetmoney**: Sets the money of the character. | **Staff Command**.
+-- @field **clearinv**: Clears the inventory of the character. | **Staff Command**.
+-- @field **flaggive**: Gives a flag to a character. | **Staff Command**.
+-- @field **flaggiveall**: Gives a flag to all characters. | **Staff Command**.
+-- @field **flagtakeall**: Removes all flags from all characters. | **Staff Command**.
+-- @field **flagtake**: Removes a flag from a character. | **Staff Command**.
+-- @field **charkick**: Kicks a character from the server. | **Staff Command**.
+-- @field **viewcoreinformation**: Displays core faction information. | **Staff Command**.
+-- @field **charunban**: Unbans a character from the server. | **Staff Command**.
+-- @field **flagpet**: Sets a character as a pet. | **Staff Command**.
+-- @field **flagragdoll**: Sets a character as a ragdoll. | **Staff Command**.
+-- @field **flags**: Displays all available flags. | **Staff Command**.
+-- @field **freezeallprops**: Freezes all props on the map. | **Staff Command**.
+-- @field **checkmoney**: Checks the money of a character. | **Staff Command**.
+-- @field **status**: Displays your character's status information.
+-- @field **redownloadlightmaps**: Forces a redownload of lightmaps. | **Staff Command**.
+-- @field **cleanitems**: Cleans up all dropped items on the map. | **Staff Command**.
+-- @field **cleanprops**: Cleans up all props on the map. | **Staff Command**.
+-- @field **forcesave**: Forces a save of server data. | **Staff Command**.
+-- @field **cleannpcs**: Cleans up all NPCs on the map. | **Staff Command**.
+-- @field **checkallmoney**: Checks the money of all characters. | **Staff Command**.
+-- @field **return**: Returns to a previous position. | **Staff Command**.
+-- @field **findallflags**: Finds all characters with a specific flag. | **Staff Command**.
+-- @field **chargiveitem**: Gives an item to a character. | **Staff Command**.
+-- @field **announce**: Announces a message to all players. | **Staff Command**.
+-- @field **listents**: Lists all entities on the server. | **Staff Command**.
+-- @field **flip**: Flips a coin.
+-- @field **liststaff**: Lists all staff members on the server.
+-- @field **listondutystaff**: Lists all staff members currently on duty.
+-- @field **listvip**: Lists all VIP members on the server.
+-- @field **listusers**: Lists all users on the server.
+-- @field **rolld**: Rolls a specific-sided die. | **Staff Command**.
+-- @field **vieweventlog**: Views the server's event log. | **Staff Command**.
+-- @field **editeventlog**: Edits the server's event log. | **Staff Command**.
+-- @field **roll**: Rolls a die.
+-- @field **chardesc**: Sets the description of a character.
+-- @field **chargetup**: Sets the target usergroup of a character.
+-- @field **givemoney**: Gives money to a character.
+-- @field **bringlostitems**: Brings lost items back to the character's inventory. | **Staff Command**.
+-- @field **carddraw**: Draws a card from a deck.
+-- @field **fallover**: Causes an entity to fall over.
+-- @field **getpos**: Gets the position of an entity.
+-- @field **entname**: Gets the name of an entity.
+-- @field **permflaggive**: Gives a flag permanently to a character. | **Staff Command**.
+-- @field **permflagtake**: Removes a flag permanently from a character. | **Staff Command**.
+-- @field **permflags**: Displays all permanent flags. | **Staff Command**.
+-- @field **flagblacklist**: Adds a flag to the blacklist. | **Staff Command**.
+-- @field **flagunblacklist**: Removes a flag from the blacklist. | **Staff Command**.
+-- @field **flagblacklists**: Displays all flags on the blacklist. | **Staff Command**.
+-- @field **dropmoney**: Drops money at the character's position.
+-- @field **membercount**: Displays the count of members in the server.
+-- @field **charsetattrib**: Sets the attributes of the character. | **Staff Command**.
+-- @field **charaddattrib**: Adds attributes to the character. | **Staff Command**.
+-- @field **viewBodygroups**: Displays the bodygroups of the character. | **Staff Command**.
+-- @field **storagelock**: Locks the storage container.
+-- @field **trunk**: Accesses the trunk of a vehicle.
+-- @field **pktoggle**: Toggles the player's PK mode. | **Staff Command**.
+-- @field **toggleraise**: Toggles whether the player raises their weapon.
+-- @field **fixpac**: Fixes the PAC3 outfit of the player. | **Staff Command**.
+-- @field **pacenable**: Enables PAC3 for the player. | **Staff Command**.
+-- @field **pacdisable**: Disables PAC3 for the player. | **Staff Command**.
+-- @field **cleardecals**: Clears all decals from the world. | **Staff Command**.
+-- @field **playtime**: Displays the playtime of the player. | **Staff Command**.
+-- @field **3dradioclean**: Cleans up 3D radio entities on the map. | **Staff Command**.
+-- @field **auditmoney**: Audits the money transactions on the server. | **Staff Command**.
+-- @field **report**: Reports a player to the staff team. | **Player Command**.
+-- @field **spawnadd**: Adds a spawn point to the map. | **Staff Command**.
+-- @field **respawn**: Respawns the player at their last location. | **Player Command**.
+-- @field **spawnremove**: Removes a spawn point from the map. | **Staff Command**.
+-- @field **returnitems**: Returns lost items to the player's inventory. | **Staff Command**.
+-- @field **classwhitelist**: Whitelists a class for spawning. | **Staff Command**.
+-- @field **plytransfer**: Transfers a player to a different server. | **Staff Command**.
+-- @field **plywhitelist**: Whitelists a player for spawning. | **Staff Command**.
+-- @field **plyunwhitelist**: Removes a player from the whitelist. | **Staff Command**.
+-- @field **beclass**: Sets the player's class.
+-- @field **setclass**: Sets the player's class. | **Staff Command**.
+-- @field **classunwhitelist**: Removes a class from the whitelist. | **Staff Command**.
+-- @field **factionlist**: Displays a list of factions.
+-- @field **charvoiceunban**: Unbans a character's voice. | **Staff Command**.
+-- @field **charvoiceban**: Bans a character's voice. | **Staff Command**.
+-- @field **voicetoggle**: Toggles the player's voice. | **Staff Command**.
+-- @field **banooc**: Bans OOC chat for the player. | **Staff Command**.
+-- @field **unbanooc**: Unbans OOC chat for the player. | **Staff Command**.
+-- @field **blockooc**: Blocks OOC chat for the player. | **Staff Command**.
+-- @field **refreshfonts**: Refreshes the fonts for the player. | **Staff Command**.
+-- @field **clearchat**: Clears the chat for the player. | **Staff Command**.
+-- @field **doorsell**: Sells a door to the player. | **Staff Command**.
+-- @field **doorsetlocked**: Sets the door as locked. | **Staff Command**.
+-- @field **doorbuy**: Buys a door for the player. | **Staff Command**.
+-- @field **doorsetunownable**: Sets the door as unownable. | **Staff Command**.
+-- @field **doorsetownable**: Sets the door as ownable. | **Staff Command**.
+-- @field **dooraddfaction**: Adds a faction to the door. | **Staff Command**.
+-- @field **doorremovefaction**: Removes a faction from the door. | **Staff Command**.
+-- @field **doorsetdisabled**: Sets the door as disabled. | **Staff Command**.
+-- @field **doorsettitle**: Sets the title of the door. | **Staff Command**.
+-- @field **doorsetparent**: Sets the parent of the door. | **Staff Command**.
+-- @field **doorsetchild**: Sets the child of the door. | **Staff Command**.
+-- @field **doorremovechild**: Removes the child from the door. | **Staff Command**.
+-- @field **doorsetclass**: Sets the class of the door. | **Staff Command**.
+-- @field **savedoors**: Saves the state of the doors. | **Staff Command**.
+-- @field **legacylogs**: Views the legacy logs. | **Staff Command**.
+-- @field **logger**: Views the server's log. | **Staff Command**.
+-- @field **deletelogs**: Deletes the logs. | **Staff Command**.
+-- @field **netlogs**: Views the network logs. | **Staff Command**.
+-- @field **concommandlogs**: Views the concommand logs. | **Staff Command**.
+-- @field **restockallvendors**: Restocks all vendors on the map. | **Staff Command**.
+-- @field **resetallvendormoney**: Resets all vendor money on the map. | **Staff Command**.
+-- @field **savevendors**: Saves the state of the vendors. | **Staff Command**.
