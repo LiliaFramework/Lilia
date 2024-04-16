@@ -14,6 +14,7 @@ local ChairCache = {}
 -- @realm shared
 -- @treturn bool True if the entity is a physics prop, false otherwise.
 function entityMeta:isProp()
+    if not IsValid(self) then return false end
     return self:GetClass() == "prop_physics"
 end
 
@@ -21,6 +22,7 @@ end
 -- @realm shared
 -- @treturn bool True if the entity is an item entity, false otherwise.
 function entityMeta:isItem()
+    if not IsValid(self) then return false end
     return self:GetClass() == "lia_item"
 end
 
@@ -28,6 +30,7 @@ end
 -- @realm shared
 -- @treturn bool True if the entity is a money entity, false otherwise.
 function entityMeta:isMoney()
+    if not IsValid(self) then return false end
     return self:GetClass() == "lia_money"
 end
 
@@ -43,6 +46,7 @@ end
 -- @realm shared
 -- @treturn Vector The drop position for the item.
 function entityMeta:getEntItemDropPos()
+    if not IsValid(self) then return false end
     local offset = Vector(-50, 0, 0)
     return self:GetPos() + offset
 end
