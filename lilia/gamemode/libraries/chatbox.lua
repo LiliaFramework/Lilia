@@ -153,6 +153,14 @@ function lia.chat.register(chatType, data)
     lia.chat.classes[chatType] = data
 end
 
+--- Identifies which chat mode should be used.
+-- @realm shared
+-- @player client Player who is speaking
+-- @string message Message to parse
+-- @bool[opt=false] noSend Whether or not to send the chat message after parsing
+-- @treturn string Name of the chat type
+-- @treturn string Message that was parsed
+-- @treturn bool Whether or not the speaker should be anonymous
 function lia.chat.parse(client, message, noSend)
     local anonymous = false
     local chatType = "ic"
@@ -187,19 +195,27 @@ function lia.chat.parse(client, message, noSend)
 end
 
 if SERVER then
-    function lia.chat.send(speaker, chatType, text, anonymous, receivers)
-        local class = lia.chat.classes[chatType]
-        if class and class.onCanSay(speaker, text) ~= false then
-            if class.onCanHear and not receivers then
-                receivers = {}
-                for _, v in ipairs(player.GetAll()) do
-                    if v:getChar() and class.onCanHear(speaker, v) ~= false then receivers[#receivers + 1] = v end
-                end
-
-                if #receivers == 0 then return end
+--- Sends a chat message from a speaker to specified receivers, based on the provided chat type and text.
+-- The message is processed according to the properties and functions defined for the chat class.
+-- @realm server
+-- @param speaker Entity sending the message
+-- @string chatType Type of the chat message
+-- @string text The message content
+-- @bool[opt=false] anonymous Whether the message should be sent anonymously
+-- @tparam[opt] table receivers List of entities to receive the message (if specified)
+function lia.chat.send(speaker, chatType, text, anonymous, receivers)
+    local class = lia.chat.classes[chatType]
+    if class and class.onCanSay(speaker, text) ~= false then
+        if class.onCanHear and not receivers then
+            receivers = {}
+            for _, v in ipairs(player.GetAll()) do
+                if v:getChar() and class.onCanHear(speaker, v) ~= false then receivers[#receivers + 1] = v end
             end
 
-            netstream.Start(receivers, "cMsg", speaker, chatType, hook.Run("PlayerMessageSend", speaker, chatType, text, anonymous, receivers) or text, anonymous)
+            if #receivers == 0 then return end
         end
+
+        netstream.Start(receivers, "cMsg", speaker, chatType, hook.Run("PlayerMessageSend", speaker, chatType, text, anonymous, receivers) or text, anonymous)
     end
+end
 end
