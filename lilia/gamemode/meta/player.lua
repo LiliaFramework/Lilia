@@ -245,6 +245,80 @@ function playerMeta:RequestString(title, subTitle, callback, default)
 end
 
 if SERVER then
+        --- Loads Lilia data for the player from the database.
+-- @function playerMeta:loadLiliaData
+-- @param callback[opt=nil] Function to call after the data is loaded, passing the loaded data as an argument.
+-- @realm server
+
+function playerMeta:loadLiliaData(callback)
+    local name = self:steamName()
+    local steamID64 = self:SteamID64()
+    local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
+    lia.db.query("SELECT _data, _firstJoin, _lastJoin FROM lia_players WHERE _steamID = " .. steamID64, function(data)
+        if IsValid(self) and data and data[1] and data[1]._data then
+            lia.db.updateTable({
+                _lastJoin = timeStamp,
+            }, nil, "players", "_steamID = " .. steamID64)
+
+            self.firstJoin = data[1]._firstJoin or timeStamp
+            self.lastJoin = data[1]._lastJoin or timeStamp
+            self.liaData = util.JSONToTable(data[1]._data)
+            if callback then callback(self.liaData) end
+        else
+            lia.db.insertTable({
+                _steamID = steamID64,
+                _steamName = name,
+                _firstJoin = timeStamp,
+                _lastJoin = timeStamp,
+                _data = {}
+            }, nil, "players")
+
+            if callback then callback({}) end
+        end
+    end)
+end
+--- Saves the player's Lilia data to the database.
+-- @function playerMeta:saveLiliaData
+-- @realm server
+
+function playerMeta:saveLiliaData()
+    local name = self:steamName()
+    local steamID64 = self:SteamID64()
+    local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
+    lia.db.updateTable({
+        _steamName = name,
+        _lastJoin = timeStamp,
+        _data = self.liaData
+    }, nil, "players", "_steamID = " .. steamID64)
+end
+--- Sets a key-value pair in the player's Lilia data.
+-- @function playerMeta:setLiliaData
+-- @param key The key for the data.
+-- @param value The value to set.
+-- @param noNetworking[opt=false] If true, suppresses network broadcasting of the update.
+-- @realm server
+
+function playerMeta:setLiliaData(key, value, noNetworking)
+    self.liaData = self.liaData or {}
+    self.liaData[key] = value
+    if not noNetworking then netstream.Start(self, "liaData", key, value) end
+end
+--- Retrieves a value from the player's Lilia data.
+-- @function playerMeta:getLiliaData
+-- @param key The key for the data.
+-- @param default[opt=nil] The default value to return if the key does not exist.
+-- @realm server
+-- @treturn any The value corresponding to the key, or the default value if the key does not exist.
+
+function playerMeta:getLiliaData(key, default)
+    if key == true then return self.liaData end
+    local data = self.liaData and self.liaData[key]
+    if data == nil then
+        return default
+    else
+        return data
+    end
+end
     function playerMeta:ipAddressNoPort()
         local ipAddr = self:IPAddress()
         local ipAddrExploded = string.Explode(":", ipAddr, false)
@@ -722,6 +796,20 @@ else
             if IsValid(OnReach) then OnReach() end
         end)
     end
+        --- Retrieves a value from the local Lilia data.
+-- @function playerMeta:getLiliaData
+-- @param key The key for the data.
+-- @param default[opt=nil] The default value to return if the key does not exist.
+-- @realm client
+-- @treturn any The value corresponding to the key, or the default value if the key does not exist.
+function playerMeta:getLiliaData(key, default)
+    local data = lia.localData and lia.localData[key]
+    if data == nil then
+        return default
+    else
+        return data
+    end
+end
 end
 
 playerMeta.IsUser = playerMeta.isUser

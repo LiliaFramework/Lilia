@@ -13,7 +13,6 @@ lia.RealmIdentifiers = {
 }
 lia.FilesToLoad = {
     {path = "lilia/gamemode/libraries/database.lua", realm = "server"},
-    {path = "lilia/gamemode/meta/database.lua", realm = "shared"},
     {path = "lilia/gamemode/libraries/util.lua", realm = "shared"},
     {path = "lilia/gamemode/meta/character.lua", realm = "shared"},
     {path = "lilia/gamemode/libraries/character.lua", realm = "shared"},
