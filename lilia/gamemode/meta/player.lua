@@ -10,7 +10,7 @@ See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for 
 local playerMeta = FindMetaTable("Player")
 local vectorMeta = FindMetaTable("Vector")
 --- Checks if the player belongs to the "user" user group.
--- @function playerMeta:isUser
+
 -- @realm shared
 -- @treturn bool Whether the player belongs to the "user" user group.
 function playerMeta:isUser()
@@ -18,7 +18,7 @@ function playerMeta:isUser()
 end
 
 --- Checks if the player is a staff member.
--- @function playerMeta:isStaff
+
 -- @realm shared
 -- @treturn bool Whether the player is a staff member.
 function playerMeta:isStaff()
@@ -26,7 +26,7 @@ function playerMeta:isStaff()
 end
 
 --- Checks if the player is a VIP.
--- @function playerMeta:isVIP
+
 -- @realm shared
 -- @treturn bool Whether the player is a VIP.
 function playerMeta:isVIP()
@@ -34,7 +34,7 @@ function playerMeta:isVIP()
 end
 
 --- Checks if the staff member is currently on duty (FACTION_STAFF).
--- @function playerMeta:isStaffOnDuty
+
 -- @realm shared
 -- @treturn bool Whether the staff member is currently on duty.
 function playerMeta:isStaffOnDuty()
@@ -42,7 +42,7 @@ function playerMeta:isStaffOnDuty()
 end
 
 --- Checks if the player is currently observing.
--- @function playerMeta:isObserving
+
 -- @realm shared
 -- @treturn bool Whether the player is currently observing.
 function playerMeta:isObserving()
@@ -54,7 +54,7 @@ function playerMeta:isObserving()
 end
 
 --- Checks if the player is currently moving.
--- @function playerMeta:isMoving
+
 -- @realm shared
 -- @treturn bool Whether the player is currently moving.
 function playerMeta:isMoving()
@@ -64,7 +64,7 @@ function playerMeta:isMoving()
 end
 
 --- Checks if the player is currently outside (in the sky).
--- @function playerMeta:isOutside
+
 -- @realm shared
 -- @treturn bool Whether the player is currently outside (in the sky).
 function playerMeta:isOutside()
@@ -77,7 +77,7 @@ function playerMeta:isOutside()
 end
 
 --- Checks if the player is currently in noclip mode.
--- @function playerMeta:isNoClipping
+
 -- @realm shared
 -- @treturn bool Whether the player is in noclip mode.
 function playerMeta:isNoClipping()
@@ -85,7 +85,7 @@ function playerMeta:isNoClipping()
 end
 
 --- Checks if the player is stuck.
--- @function playerMeta:isStuck
+
 -- @realm shared
 -- @treturn bool Whether the player is stuck.
 function playerMeta:isStuck()
@@ -97,7 +97,7 @@ function playerMeta:isStuck()
 end
 
 --- Calculates the squared distance from the player to the specified entity.
--- @function playerMeta:squaredDistanceFromEnt
+
 -- @realm shared
 -- @param entity The entity to calculate the distance to.
 -- @treturn number The squared distance from the player to the entity.
@@ -106,7 +106,7 @@ function playerMeta:squaredDistanceFromEnt(entity)
 end
 
 --- Calculates the distance from the player to the specified entity.
--- @function playerMeta:distanceFromEnt
+
 -- @realm shared
 -- @param entity The entity to calculate the distance to.
 -- @treturn number The distance from the player to the entity.
@@ -115,7 +115,7 @@ function playerMeta:distanceFromEnt(entity)
 end
 
 --- Checks if the player is near another entity within a specified radius.
--- @function playerMeta:isNearPlayer
+
 -- @realm shared
 -- @param radius The radius within which to check for proximity.
 -- @param entity The entity to check proximity to.
@@ -127,7 +127,7 @@ function playerMeta:isNearPlayer(radius, entity)
 end
 
 --- Retrieves entities near the player within a specified radius.
--- @function playerMeta:entitiesNearPlayer
+
 -- @realm shared
 -- @param radius The radius within which to search for entities.
 -- @param playerOnly (Optional) If true, only return player entities.
@@ -142,7 +142,7 @@ function playerMeta:entitiesNearPlayer(radius, playerOnly)
 end
 
 --- Retrieves the active weapon item of the player.
--- @function playerMeta:getItemWeapon
+
 -- @realm shared
 -- @treturn Entity|nil The active weapon entity of the player, or nil if not found.
 function playerMeta:getItemWeapon()
@@ -163,7 +163,7 @@ function playerMeta:getItemWeapon()
 end
 
 --- Adds money to the player's character.
--- @function playerMeta:addMoney
+
 -- @realm shared
 -- @param amount The amount of money to add.
 function playerMeta:addMoney(amount)
@@ -189,7 +189,7 @@ function playerMeta:addMoney(amount)
 end
 
 --- Takes money from the player's character.
--- @function playerMeta:takeMoney
+
 -- @realm shared
 -- @param amt The amount of money to take.
 function playerMeta:takeMoney(amt)
@@ -198,7 +198,7 @@ function playerMeta:takeMoney(amt)
 end
 
 --- Retrieves the amount of money owned by the player's character.
--- @function playerMeta:getMoney
+
 -- @realm shared
 -- @treturn number The amount of money owned by the player's character.
 function playerMeta:getMoney()
@@ -207,7 +207,7 @@ function playerMeta:getMoney()
 end
 
 --- Checks if the player's character can afford a specified amount of money.
--- @function playerMeta:canAfford
+
 -- @realm shared
 -- @param amount The amount of money to check.
 -- @treturn bool Whether the player's character can afford the specified amount of money.
@@ -217,7 +217,7 @@ function playerMeta:canAfford(amount)
 end
 
 --- Checks if the player is running.
--- @function playerMeta:isRunning
+
 -- @realm shared
 -- @treturn bool Whether the player is running.
 function playerMeta:isRunning()
@@ -225,7 +225,7 @@ function playerMeta:isRunning()
 end
 
 --- Checks if the player's character is female based on the model.
--- @function playerMeta:isFemale
+
 -- @realm shared
 -- @treturn bool Whether the player's character is female.
 function playerMeta:isFemale()
@@ -234,7 +234,7 @@ function playerMeta:isFemale()
 end
 
 --- Calculates the position to drop an item from the player's inventory.
--- @function playerMeta:getItemDropPos
+
 -- @realm shared
 -- @treturn Vector The position to drop an item from the player's inventory.
 function playerMeta:getItemDropPos()
@@ -251,7 +251,7 @@ function playerMeta:getItemDropPos()
 end
 
 --- Checks if the player has whitelisted access to a faction.
--- @function playerMeta:hasWhitelist
+
 -- @realm shared
 -- @param faction The faction to check for whitelisting.
 -- @treturn bool Whether the player has whitelisted access to the specified faction.
@@ -266,7 +266,7 @@ function playerMeta:hasWhitelist(faction)
 end
 
 --- Retrieves the items of the player's character inventory.
--- @function playerMeta:getItems
+
 -- @realm shared
 -- @treturn table|nil A table containing the items in the player's character inventory, or nil if not found.
 function playerMeta:getItems()
@@ -278,7 +278,7 @@ function playerMeta:getItems()
 end
 
 --- Retrieves the class of the player's character.
--- @function playerMeta:getClass
+
 -- @realm shared
 -- @treturn string|nil The class of the player's character, or nil if not found.
 function playerMeta:getClass()
@@ -287,7 +287,7 @@ function playerMeta:getClass()
 end
 
 --- Retrieves the entity traced by the player's aim.
--- @function playerMeta:getTracedEntity
+
 -- @realm shared
 -- @treturn Entity|nil The entity traced by the player's aim, or nil if not found.
 function playerMeta:getTracedEntity()
@@ -300,7 +300,7 @@ function playerMeta:getTracedEntity()
 end
 
 --- Performs a trace from the player's view.
--- @function playerMeta:getTrace
+
 -- @realm shared
 -- @treturn table A table containing the trace result.
 function playerMeta:getTrace()
@@ -315,7 +315,7 @@ function playerMeta:getTrace()
 end
 
 --- Retrieves the data of the player's character class.
--- @function playerMeta:getClassData
+
 -- @realm shared
 -- @treturn table|nil A table containing the data of the player's character class, or nil if not found.
 function playerMeta:getClassData()
@@ -330,7 +330,7 @@ function playerMeta:getClassData()
 end
 
 --- Checks if the player has a skill level equal to or greater than the specified level.
--- @function playerMeta:hasSkillLevel
+
 -- @realm shared
 -- @param skill The skill to check.
 -- @param level The required skill level.
@@ -341,7 +341,7 @@ function playerMeta:hasSkillLevel(skill, level)
 end
 
 --- Checks if the player meets the required skill levels.
--- @function playerMeta:meetsRequiredSkills
+
 -- @realm shared
 -- @param requiredSkillLevels A table containing the required skill levels.
 -- @treturn bool Whether the player meets all the required skill levels.
@@ -354,7 +354,7 @@ function playerMeta:meetsRequiredSkills(requiredSkillLevels)
 end
 
 --- Retrieves the entity within the player's line of sight.
--- @function playerMeta:getEyeEnt
+
 -- @realm shared
 -- @param[opt=150] distance The maximum distance to consider.
 -- @treturn Entity|nil The entity within the player's line of sight, or nil if not found.
@@ -365,7 +365,7 @@ function playerMeta:getEyeEnt(distance)
 end
 
 --- Requests a string input from the player.
--- @function playerMeta:RequestString
+
 -- @realm shared
 -- @param title The title of the request.
 -- @param subTitle The subtitle of the request.
@@ -458,7 +458,7 @@ if SERVER then
         end
     end
 --- Sets an action bar for the player.
--- @function playerMeta:setAction
+
 -- @param text The text to display on the action bar.
 -- @param[opt] time The duration for the action bar to display, defaults to 5 seconds. Set to 0 or nil to remove the action bar immediately.
 -- @param[opt] callback Function to execute when the action bar timer expires.
@@ -484,7 +484,7 @@ if SERVER then
         if callback then timer.Create("liaAct" .. self:UniqueID(), time, 1, function() if IsValid(self) then callback(self) end end) end
     end
 --- Retrieves the player's permission flags.
--- @function playerMeta:getPermFlags
+
 -- @realm server
 -- @treturn string The player's permission flags.
 
@@ -492,7 +492,7 @@ if SERVER then
         return self:getLiliaData("permflags", "")
     end
 --- Sets the player's permission flags.
--- @function playerMeta:setPermFlags
+
 -- @param flags The permission flags to set.
 -- @realm server
 
@@ -501,7 +501,7 @@ if SERVER then
         self:saveLiliaData()
     end
 --- Grants permission flags to the player.
--- @function playerMeta:givePermFlags
+
 -- @param flags The permission flags to grant.
 -- @realm server
 
@@ -521,7 +521,7 @@ if SERVER then
         end
     end
 --- Revokes permission flags from the player.
--- @function playerMeta:takePermFlags
+
 -- @param flags The permission flags to revoke.
 -- @realm server
     function playerMeta:takePermFlags(flags)
@@ -539,7 +539,7 @@ if SERVER then
         end
     end
 --- Checks if the player has a specific permission flag.
--- @function playerMeta:hasPermFlag
+
 -- @param flag The permission flag to check.
 -- @realm server
 -- @treturn bool Whether or not the player has the permission flag.
@@ -553,7 +553,7 @@ if SERVER then
         return false
     end
 --- Retrieves the player's flag blacklist.
--- @function playerMeta:getFlagBlacklist
+
 -- @realm server
 -- @treturn string The player's flag blacklist.
 
@@ -561,7 +561,7 @@ if SERVER then
         return self:getLiliaData("flagblacklist", "")
     end
 --- Sets the player's flag blacklist.
--- @function playerMeta:setFlagBlacklist
+
 -- @param flags The flag blacklist to set.
 -- @realm server
 
@@ -570,7 +570,7 @@ if SERVER then
         self:saveLiliaData()
     end
 --- Adds flags to the player's flag blacklist.
--- @function playerMeta:addFlagBlacklist
+
 -- @param flags The flags to add to the blacklist.
 -- @param[opt] blacklistInfo Additional information about the blacklist entry.
 -- @realm server

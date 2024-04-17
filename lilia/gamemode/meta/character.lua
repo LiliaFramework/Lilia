@@ -19,6 +19,7 @@ charMeta.vars = charMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
 --- Returns a string representation of this character
 -- @realm shared
+
 -- @return string String representation
 -- @usage print(lia.char.loaded[1])
 -- > "character[1]"
@@ -28,6 +29,7 @@ end
 
 --- Returns true if this character is equal to another character. Internally, this checks character IDs.
 -- @realm shared
+
 -- @character other Character to compare to
 -- @return bool Whether or not this character is equal to the given character
 -- @usage print(lia.char.loaded[1] == lia.char.loaded[2])
@@ -38,15 +40,18 @@ end
 
 --- Returns this character's database ID. This is guaranteed to be unique.
 -- @realm shared
+
 -- @return number Unique ID of character
 function charMeta:getID()
     return self.id
 end
 
 --- Retrieves the boost value for a specific attribute.
--- @function charMeta:getBoost
--- @int attribID The ID of the attribute for which to retrieve the boost.
 -- @realm shared
+
+
+-- @int attribID The ID of the attribute for which to retrieve the boost.
+
 -- @return number|nil The boost value for the specified attribute, or nil if no boost is found.
 -- @usage local boostValue = char:getBoost("some_attribute_id")
 function charMeta:getBoost(attribID)
@@ -55,8 +60,10 @@ function charMeta:getBoost(attribID)
 end
 
 --- Retrieves all boosts applied to the character's attributes.
--- @function charMeta:getBoosts
 -- @realm shared
+
+
+
 -- @return table A table containing all boosts applied to the character's attributes.
 -- @usage local boostsTable = char:getBoosts()
 function charMeta:getBoosts()
@@ -64,8 +71,10 @@ function charMeta:getBoosts()
 end
 
 --- Retrieves the character's equipped weapon and its corresponding item from the inventory.
--- @function charMeta:getItemWeapon
 -- @realm shared
+
+
+
 -- @return Entity|false The equipped weapon entity, or false if no weapon is equipped.
 -- @return Item|false The corresponding item from the character's inventory, or false if no corresponding item is found.
 -- @usage local weapon, item = char:getItemWeapon()
@@ -87,10 +96,12 @@ function charMeta:getItemWeapon()
 end
 
 --- Retrieves the value of a character attribute, including applied boosts.
--- @function charMeta:getAttrib
+-- @realm shared
+
+
 -- @string key The key of the attribute to retrieve.
 -- @int[opt=0] default The default value to return if the attribute is not found.
--- @realm shared
+
 -- @return number The value of the specified attribute, including applied boosts.
 -- @usage local attributeValue = char:getAttrib("some_attribute_key")
 function charMeta:getAttrib(key, default)
@@ -106,6 +117,7 @@ end
 
 --- Returns the player that owns this character.
 -- @realm shared
+
 -- @return player Player that owns this character
 function charMeta:getPlayer()
     if IsValid(self.player) then
@@ -130,9 +142,8 @@ function charMeta:getPlayer()
 end
 
 --- Checks if the character has at least the specified amount of money.
--- @function charMeta:hasMoney
+
 -- @int amount The amount of money to check for.
--- @realm shared
 -- @return bool Whether the character has at least the specified amount of money.
 -- @usage local hasEnoughMoney = char:hasMoney(100)
 function charMeta:hasMoney(amount)
@@ -141,10 +152,12 @@ function charMeta:hasMoney(amount)
 end
 
 --- Sets the character's class to the specified class.
--- @function charMeta:joinClass
+-- @realm shared
+
+
 -- @string class The class to join.
 -- @bool[opt=false] isForced Whether to force the character to join the class even if conditions are not met.
--- @realm shared
+
 -- @return bool Whether the character successfully joined the class.
 -- @usage local success = char:joinClass("some_class")
 function charMeta:joinClass(class, isForced)
@@ -165,8 +178,10 @@ function charMeta:joinClass(class, isForced)
 end
 
 --- Kicks the character from their current class and joins them to the default class of their faction.
--- @function charMeta:kickClass
 -- @realm shared
+
+
+
 -- @usage char:kickClass()
 function charMeta:kickClass()
     local client = self:getPlayer()
@@ -184,9 +199,11 @@ function charMeta:kickClass()
 end
 
 --- Checks if the character belongs to the specified faction.
--- @function charMeta:isFaction
--- @int faction Index of the faction to check against.
 -- @realm shared
+
+
+-- @int faction Index of the faction to check against.
+
 -- @return bool Whether the character belongs to the specified faction.
 -- @usage local isInFaction = char:isFaction("some_faction")
 function charMeta:isFaction(faction)
@@ -195,6 +212,8 @@ end
 
 if SERVER then
     --- Updates the value of a character attribute by adding a specified value to it.
+    -- @realm server
+
     -- @function charMeta:updateAttrib
     -- @string key The key of the attribute to update.
     -- @int value The value to add to the attribute.
@@ -216,6 +235,8 @@ if SERVER then
     end
 
     --- Sets the value of a character attribute.
+    -- @realm server
+
     -- @function charMeta:setAttrib
     -- @string key The key of the attribute to set.
     -- @int value The value to set for the attribute.
@@ -237,6 +258,8 @@ if SERVER then
     end
 
     --- Adds a boost to the character's attributes.
+    -- @realm server
+
     -- @function charMeta:addBoost
     -- @string boostID The ID of the boost to add.
     -- @string attribID The ID of the attribute to which the boost should be added.
@@ -252,6 +275,8 @@ if SERVER then
     end
 
     --- Removes a boost from the character's attributes.
+    -- @realm server
+
     -- @function charMeta:removeBoost
     -- @string boostID The ID of the boost to remove.
     -- @string attribID The ID of the attribute from which the boost should be removed.
@@ -381,15 +406,17 @@ if SERVER then
     end
 
     --- Deletes the character from the character database and removes it from memory.
+    -- @realm server
     -- @function charMeta:delete
-    -- @realm shared
+    
     function charMeta:delete()
         lia.char.delete(self:getID(), self:getPlayer())
     end
 
     --- Destroys the character, removing it from memory and notifying clients to remove it.
+    -- @realm server
     -- @function charMeta:destroy
-    -- @realm shared
+    
     function charMeta:destroy()
         local id = self:getID()
         lia.char.loaded[id] = nil
@@ -397,10 +424,11 @@ if SERVER then
     end
 
     --- Gives or takes money from the character's wallet.
+    -- @realm server
     -- @function charMeta:giveMoney
     -- @int amount The amount of money to give or take.
     -- @bool[opt=false] takingMoney Whether the operation is to take money from the character.
-    -- @realm shared
+    
     -- @return bool Whether the operation was successful.
     function charMeta:giveMoney(amount, takingMoney)
         local client = self:getPlayer()
@@ -435,9 +463,10 @@ if SERVER then
     end
 
     --- Takes money from the character's wallet.
+    -- @realm server
     -- @function charMeta:takeMoney
     -- @int amount The amount of money to take.
-    -- @realm shared
+    
     -- @return bool Whether the operation was successful.
     function charMeta:takeMoney(amount)
         amount = math.abs(amount)

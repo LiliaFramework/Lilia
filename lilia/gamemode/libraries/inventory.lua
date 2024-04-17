@@ -30,7 +30,7 @@ end
 
 --- Creates a new inventory type.
 -- @realm shared
--- @function lia.inventory.newType
+
 -- @tparam string typeID The unique identifier for the new inventory type.
 -- @tparam table invTypeStruct The structure defining the behavior and configuration of the new inventory type.
 function lia.inventory.newType(typeID, invTypeStruct)
@@ -43,7 +43,7 @@ end
 
 --- Creates a new inventory instance of the specified type.
 -- @realm shared
--- @function lia.inventory.new
+
 -- @tparam string typeID The unique identifier for the type of inventory to create.
 -- @treturn Inventory A new instance of the specified inventory type.
 function lia.inventory.new(typeID)

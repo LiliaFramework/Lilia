@@ -25,7 +25,7 @@ Inventory.items = {}
 Inventory.id = -1
 --- Retrieves data associated with a specified key from the inventory.
 -- @realm shared
--- @function Inventory:getData
+
 -- @tparam any key The key for the data.
 -- @param[opt] any default The default value to return if the key does not exist.
 -- @treturn any The value associated with the key, or the default value if the key does not exist.
@@ -37,7 +37,7 @@ end
 
 --- Extends the inventory to create a subclass with a specified class name.
 -- @realm shared
--- @function Inventory:extend
+
 -- @tparam string className The name of the subclass.
 -- @treturn table A subclass of the Inventory class.
 function Inventory:extend(className)
@@ -52,13 +52,13 @@ end
 --- Configures the inventory.
 -- @realm shared
 -- This function is meant to be overridden in subclasses to define specific configurations.
--- @function Inventory:configure
+
 function Inventory:configure()
 end
 
 --- Adds a data proxy to the inventory for a specified key.
 -- @realm shared
--- @function Inventory:addDataProxy
+
 -- @tparam any key The key for the data proxy.
 -- @tparam function onChange The function to call when the data associated with the key changes.
 function Inventory:addDataProxy(key, onChange)
@@ -69,7 +69,7 @@ end
 
 --- Retrieves items with a specified unique ID from the inventory.
 -- @realm shared
--- @function Inventory:getItemsByUniqueID
+
 -- @tparam string uniqueID The unique ID of the items to retrieve.
 -- @tparam[opt=false] boolean onlyMain Whether to retrieve only main items.
 -- @treturn table An array containing the items with the specified unique ID.
@@ -83,7 +83,7 @@ end
 
 --- Registers the inventory with a specified type ID.
 -- @realm shared
--- @function Inventory:register
+
 -- @tparam string typeID The type ID to register the inventory with.
 -- @raise If the argument `typeID` is not a string.
 -- @usage
@@ -110,7 +110,7 @@ end
 
 --- Creates a new instance of the inventory.
 -- @realm shared
--- @function Inventory:new
+
 -- @treturn table A new instance of the Inventory class.
 -- @usage
 -- local newInventory = Inventory:new()
@@ -119,7 +119,7 @@ function Inventory:new()
 end
 
 --- Returns a string representation of the inventory.
--- @function Inventory:__tostring
+
 -- @realm shared
 -- @treturn string A string representation of the inventory, including its class name and ID.
 function Inventory:__tostring()
@@ -127,7 +127,7 @@ function Inventory:__tostring()
 end
 
 --- Retrieves the type of the inventory.
--- @function Inventory:getType
+
 -- @realm shared
 -- @treturn table The type of the inventory.
 function Inventory:getType()
@@ -135,7 +135,7 @@ function Inventory:getType()
 end
 
 --- Callback function called when data associated with a key changes.
--- @function Inventory:onDataChanged
+
 -- @realm shared
 -- @tparam any key The key whose data has changed.
 -- @param oldValue The old value of the data.
@@ -150,7 +150,7 @@ function Inventory:onDataChanged(key, oldValue, newValue)
 end
 
 --- Retrieves all items in the inventory.
--- @function Inventory:getItems
+
 -- @realm shared
 -- @treturn table An array containing all items in the inventory.
 function Inventory:getItems()
@@ -158,7 +158,7 @@ function Inventory:getItems()
 end
 
 --- Retrieves items of a specific type from the inventory.
--- @function Inventory:getItemsOfType
+
 -- @realm shared
 -- @tparam string itemType The type of items to retrieve.
 -- @treturn table An array containing items of the specified type.
@@ -171,7 +171,7 @@ function Inventory:getItemsOfType(itemType)
 end
 
 --- Retrieves the first item of a specific type from the inventory.
--- @function Inventory:getFirstItemOfType
+
 -- @realm shared
 -- @tparam string itemType The type of item to retrieve.
 -- @treturn table|nil The first item of the specified type, or nil if not found.
@@ -182,7 +182,7 @@ function Inventory:getFirstItemOfType(itemType)
 end
 
 --- Checks if the inventory contains an item of a specific type.
--- @function Inventory:hasItem
+
 -- @realm shared
 -- @tparam string itemType The type of item to check for.
 -- @treturn boolean Returns true if the inventory contains an item of the specified type, otherwise false.
@@ -194,7 +194,7 @@ function Inventory:hasItem(itemType)
 end
 
 --- Retrieves the total count of items in the inventory, optionally filtered by item type.
--- @function Inventory:getItemCount
+
 -- @realm shared
 -- @tparam[opt] string itemType The type of item to count. If nil, counts all items.
 -- @treturn number The total count of items in the inventory, optionally filtered by item type.
@@ -207,7 +207,7 @@ function Inventory:getItemCount(itemType)
 end
 
 --- Retrieves the ID of the inventory.
--- @function Inventory:getID
+
 -- @realm shared
 -- @treturn any The ID of the inventory.
 function Inventory:getID()
@@ -215,7 +215,7 @@ function Inventory:getID()
 end
 
 --- Checks if two inventories are equal based on their IDs.
--- @function Inventory:__eq
+
 -- @realm shared
 -- @tparam Inventory other The other inventory to compare with.
 -- @treturn boolean Returns true if the inventories have the same ID, otherwise false.

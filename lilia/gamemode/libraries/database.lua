@@ -221,7 +221,7 @@ lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueu
 
 --- Establishes a connection to the database module specified in the configuration.
 -- If the database is not connected yet or if reconnection is forced, it connects to the database module.
--- @function lia.db.connect
+
 -- @param callback[opt] A function to be called after the database connection is established.
 -- @param reconnect[opt=false] Whether to force a reconnection to the database module.
 -- @realm server
@@ -248,7 +248,7 @@ function lia.db.connect(callback, reconnect)
 end
 
 --- Wipes all Lilia-related tables in the database.
--- @function lia.db.wipeTables
+
 -- @param callback[opt] A function to be called after the wipe operation is completed.
 -- @realm server
 function lia.db.wipeTables(callback)
@@ -283,7 +283,7 @@ function lia.db.wipeTables(callback)
     end
 end
 --- Loads the necessary tables into the database.
--- @function lia.db.loadTables
+
 -- @realm server
 function lia.db.loadTables()
     local function done()
@@ -316,7 +316,7 @@ function lia.db.loadTables()
     hook.Run("OnLoadTables")
 end
 --- Waits for the database tables to be loaded.
--- @function lia.db.waitForTablesToLoad
+
 -- @treturn Deferred A deferred object that resolves when the tables are loaded.
 -- @realm server
 function lia.db.waitForTablesToLoad()
@@ -332,7 +332,7 @@ function lia.db.waitForTablesToLoad()
     return d
 end
 --- Converts a Lua value to a format suitable for insertion into the database.
--- @function lia.db.convertDataType
+
 -- @param value The value to be converted.
 -- @param noEscape[opt=false] Whether to skip escaping the value. Defaults to false.
 -- @treturn string The converted value suitable for database insertion.
@@ -377,7 +377,7 @@ local function genUpdateList(value)
 end
 
 --- Inserts a new row into the specified database table with the provided values.
--- @function lia.db.insertTable
+
 -- @param value The values to be inserted into the table.
 -- @param callback[opt] A function to be called after the insertion operation is completed.
 -- @param dbTable[opt="characters"] The name of the database table. Defaults to "characters".
@@ -388,7 +388,7 @@ function lia.db.insertTable(value, callback, dbTable)
 end
 
 --- Updates rows in the specified database table with the provided values based on the given condition.
--- @function lia.db.updateTable
+
 -- @param value The values to be updated in the table.
 -- @param callback[opt] A function to be called after the update operation is completed.
 -- @param dbTable[opt="characters"] The name of the database table. Defaults to "characters".
@@ -399,7 +399,7 @@ function lia.db.updateTable(value, callback, dbTable, condition)
     lia.db.query(query, callback)
 end
 --- Selects data from the specified database table based on the provided fields, condition, and limit.
--- @function lia.db.select
+
 -- @param fields The fields to select from the table.
 -- @param dbTable[opt="characters"] The name of the database table. Defaults to "characters".
 -- @param condition[opt] The condition to apply to the selection.
@@ -422,7 +422,7 @@ function lia.db.select(fields, dbTable, condition, limit)
     return d
 end
 --- Inserts or updates rows in the specified database table with the provided values.
--- @function lia.db.upsert
+
 -- @param value The values to be inserted or updated in the table.
 -- @param dbTable[opt="characters"] The name of the database table. Defaults to "characters".
 -- @treturn Deferred A deferred object that resolves to a table containing the insertion or update results and the last inserted ID.
@@ -446,7 +446,7 @@ function lia.db.upsert(value, dbTable)
 end
 
 --- Deletes rows from the specified database table based on the given condition.
--- @function lia.db.delete
+
 -- @param dbTable[opt="character"] The name of the database table. Defaults to "character".
 -- @param condition[opt] The condition to apply to the deletion.
 -- @treturn Deferred A deferred object that resolves to a table containing the deletion results and the last inserted ID.
