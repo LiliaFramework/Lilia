@@ -9,7 +9,7 @@ lia.bar.actionEnd = 0
 --- Retrieves information about a bar identified by its identifier.
 -- @param identifier (any) The identifier of the bar.
 -- @return (table or nil) The information about the bar if found, nil otherwise.
--- @realm shared
+-- @realm client
 function lia.bar.get(identifier)
     for i = 1, #lia.bar.list do
         local bar = lia.bar.list[i]
@@ -22,7 +22,7 @@ end
 -- @param priority (number) Optional. The priority of the bar in the draw order.
 -- @param identifier (any) Optional. The identifier of the bar.
 -- @return (number) The priority of the added or updated bar.
--- @realm shared
+-- @realm client
 function lia.bar.add(getValue, color, priority, identifier)
     if identifier then
         local oldBar = lia.bar.get(identifier)
@@ -42,7 +42,7 @@ function lia.bar.add(getValue, color, priority, identifier)
 end
 --- Removes a bar identified by its identifier.
 -- @param identifier (any) The identifier of the bar to remove.
--- @realm shared
+-- @realm client
 function lia.bar.remove(identifier)
     local bar
     for _, v in ipairs(lia.bar.list) do
@@ -61,7 +61,7 @@ end
 -- @param h (number) The height of the bar.
 -- @param value (number) The current value of the bar (0 to 1).
 -- @param color (table) The color of the bar.
--- @realm shared
+-- @realm client
 
 function lia.bar.draw(x, y, w, h, value, color)
     lia.util.drawBlurAt(x, y, w, h)
@@ -76,7 +76,7 @@ function lia.bar.draw(x, y, w, h, value, color)
     surface.DrawTexturedRect(x, y, w, h)
 end
 --- Draws the action bar, if applicable.
--- @realm shared
+-- @realm client
 function lia.bar.drawAction()
     local start, finish = lia.bar.actionStart, lia.bar.actionEnd
     local curTime = CurTime()
@@ -103,7 +103,7 @@ function lia.bar.drawAction()
     end
 end
 --- Draws all bars in the list.
--- @realm shared
+-- @realm client
 function lia.bar.drawAll()
     lia.bar.drawAction()
     if hook.Run("ShouldHideBars") then return end
