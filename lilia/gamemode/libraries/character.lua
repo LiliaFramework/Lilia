@@ -134,8 +134,7 @@ function lia.char.registerVar(key, data)
 
     charMeta.vars[key] = data.default
 end
--- Register the character name.
--- @realm shared
+
 lia.char.registerVar("name", {
     field = "_name",
     default = "John Doe",
@@ -166,8 +165,7 @@ lia.char.registerVar("name", {
         end
     end,
 })
--- Register the character description.
--- @realm shared
+
 lia.char.registerVar("desc", {
     field = "_desc",
     default = "Please Enter Your Description With The Minimum Of " .. lia.config.MinDescLen .. " Characters!",
@@ -184,8 +182,7 @@ lia.char.registerVar("desc", {
         if isstring(desc) and override then newData.desc = desc end
     end,
 })
--- Register the character model.
--- @realm shared
+
 lia.char.registerVar("model", {
     field = "_model",
     default = "models/error.mdl",
@@ -275,13 +272,11 @@ lia.char.registerVar("model", {
         end
     end
 })
--- Register the character class.
--- @realm shared
+
 lia.char.registerVar("class", {
     noDisplay = true,
 })
--- Register the character faction.
--- @realm shared
+
 lia.char.registerVar("faction", {
     field = "_faction",
     default = "Citizen",
@@ -307,16 +302,14 @@ lia.char.registerVar("faction", {
     end,
     onAdjust = function(_, _, value, newData) newData.faction = lia.faction.indices[value].uniqueID end
 })
--- Register the character money.
--- @realm shared
+
 lia.char.registerVar("money", {
     field = "_money",
     default = 0,
     isLocal = true,
     noDisplay = true
 })
--- Register the character data.
--- @realm shared
+
 lia.char.registerVar("data", {
     default = {},
     isLocal = true,
@@ -340,8 +333,7 @@ lia.char.registerVar("data", {
         end
     end
 })
--- Register the character vars.
--- @realm shared
+
 lia.char.registerVar("var", {
     default = {},
     noDisplay = true,
@@ -374,8 +366,8 @@ lia.char.registerVar("var", {
         end
     end
 })
--- Register the character attributes.
--- @realm shared
+
+
 lia.char.registerVar("attribs", {
     field = "_attribs",
     default = {},
@@ -400,8 +392,7 @@ lia.char.registerVar("attribs", {
     end,
     shouldDisplay = function(_) return table.Count(lia.attribs.list) > 0 end
 })
--- Register the character inventory.
--- @realm shared
+
 lia.char.registerVar("inv", {
     noNetworking = true,
     noDisplay = true,
