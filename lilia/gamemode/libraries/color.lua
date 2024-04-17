@@ -65,7 +65,7 @@ do
         dark_aqua = Color(0, 206, 209),
         beige = Color(245, 245, 220),
         dark_beige = Color(139, 131, 120)
-    }    
+    }
 
     local old_color = _OLD_COLOR_FN_ or Color
     _OLD_COLOR_FN_ = old_color
