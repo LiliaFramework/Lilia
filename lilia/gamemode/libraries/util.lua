@@ -258,7 +258,7 @@ if SERVER then
     end
 
     lia.util.NotifyLocalized = lia.util.notifyLocalized
-    
+
     --- Finds empty spaces around an entity where another entity can be placed.
     -- @realm server
     -- @param entity The entity to find empty spaces around
