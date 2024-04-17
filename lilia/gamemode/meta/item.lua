@@ -190,9 +190,8 @@ if SERVER then
     ITEM.GetDescription = ITEM.getDesc
     --- Removes the item from its current inventory.
     -- @realm server
-
--- @param preserveItem (boolean) Optional. If true, the item is not fully deleted from the database.
--- @return (deferred) A deferred object representing the asynchronous operation of removing the item.
+    -- @param preserveItem (boolean) Optional. If true, the item is not fully deleted from the database.
+    -- @return (deferred) A deferred object representing the asynchronous operation of removing the item.
     function ITEM:removeFromInventory(preserveItem)
         local inventory = lia.inventory.instances[self.invID]
         self.invID = 0
@@ -285,8 +284,9 @@ if SERVER then
     end
 --- Transfers the item to another inventory.
 -- @realm server
--- @bool bBypass Whether to bypass access checks for transferring the item.
--- @treturn bool Whether the item was successfully transferred or not.
+-- @param newInventory (Inventory) The inventory to which the item should be transferred.
+-- @param bBypass (boolean) Whether to bypass access checks for transferring the item.
+-- @treturn boolean Whether the item was successfully transferred or not.
 
     function ITEM:transfer(newInventory, bBypass)
         if not bBypass and not newInventory:canAccess("transfer") then return false end
