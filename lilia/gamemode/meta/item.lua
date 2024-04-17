@@ -480,7 +480,6 @@ else
 -- @realm client
 -- @treturn string The description of the item
 
-
     function ITEM:getDesc()
         return L(self.desc)
     end

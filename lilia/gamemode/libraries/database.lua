@@ -356,7 +356,6 @@ function lia.db.convertDataType(value, noEscape)
     return value
 end
 
-
 local function genInsertValues(value, dbTable)
     local query = "lia_" .. (dbTable or "characters") .. " ("
     local keys = {}

@@ -66,7 +66,7 @@ if SERVER then
     -- If the inventory is not found in the cache or `noCache` is set, it attempts to load it from storage.
     -- If the inventory is not found in storage, it falls back to the default storage.
     -- @realm server
-    
+
     -- @tparam number id The ID of the inventory to load.
     -- @tparam[opt=false] boolean noCache If true, forces loading from storage even if cached.
     -- @treturn Deferred A deferred object that resolves with the loaded inventory instance or nil if not found.
@@ -92,7 +92,7 @@ if SERVER then
 
     --- Loads an inventory instance from the default storage.
     -- @realm server
-    
+
     -- @tparam number id The ID of the inventory to load.
     -- @tparam[opt=false] boolean noCache If true, forces loading from storage even if cached.
     -- @treturn Deferred A deferred object that resolves with the loaded inventory instance or nil if not found.
@@ -128,7 +128,7 @@ if SERVER then
 
     --- Creates and initializes a new inventory instance based on the specified type ID and initial data.
     -- @realm server
-    
+
     -- @tparam string typeID The ID of the inventory type.
     -- @tparam[opt] table initialData Initial data to be assigned to the inventory.
     -- @treturn Deferred A deferred object that resolves with the created inventory instance.
@@ -149,7 +149,7 @@ if SERVER then
 
     --- Loads all inventory instances associated with a character ID.
     -- @realm server
-    
+
     -- @tparam number charID The character ID to load inventory instances for.
     -- @treturn Deferred A deferred object that resolves with an array of loaded inventory instances.
     function lia.inventory.loadAllFromCharID(charID)
@@ -159,7 +159,7 @@ if SERVER then
 
     --- Deletes an inventory instance by its ID from the database and cache.
     -- @realm server
-    
+
     -- @tparam number id The ID of the inventory to delete.
     function lia.inventory.deleteByID(id)
         lia.db.delete(DATA_TABLE, "_invID = " .. id)
@@ -171,7 +171,7 @@ if SERVER then
 
     --- Cleans up all inventory instances associated with a character.
     -- @realm server
-    
+
     -- @tparam Character character The character for which to clean up inventory instances.
     function lia.inventory.cleanUpForCharacter(character)
         for _, inventory in pairs(character:getInv(true)) do
@@ -181,7 +181,7 @@ if SERVER then
 else
     --- Displays the graphical representation of an inventory.
     -- @realm client
-    
+
     -- @tparam Inventory inventory The inventory to display.
     -- @tparam Panel parent The parent panel to attach the inventory to.
     -- @treturn Panel The panel displaying the inventory.

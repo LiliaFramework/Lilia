@@ -367,7 +367,6 @@ lia.char.registerVar("var", {
     end
 })
 
-
 lia.char.registerVar("attribs", {
     field = "_attribs",
     default = {},

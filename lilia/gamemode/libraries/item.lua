@@ -263,8 +263,6 @@ function lia.item.createInv(w, h, id)
     return instance
 end
 
-
-
 if SERVER then
 
 --- Instantiates an item and adds it to an inventory.

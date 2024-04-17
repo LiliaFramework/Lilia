@@ -214,7 +214,7 @@ if SERVER then
     --- Updates the value of a character attribute by adding a specified value to it.
     -- @realm server
 
-    
+
     -- @string key The key of the attribute to update.
     -- @int value The value to add to the attribute.
     -- @realm server
@@ -237,7 +237,7 @@ if SERVER then
     --- Sets the value of a character attribute.
     -- @realm server
 
-    
+
     -- @string key The key of the attribute to set.
     -- @int value The value to set for the attribute.
     -- @realm server
@@ -260,7 +260,7 @@ if SERVER then
     --- Adds a boost to the character's attributes.
     -- @realm server
 
-    
+
     -- @string boostID The ID of the boost to add.
     -- @string attribID The ID of the attribute to which the boost should be added.
     -- @int boostAmount The amount of boost to add to the attribute.
@@ -277,7 +277,7 @@ if SERVER then
     --- Removes a boost from the character's attributes.
     -- @realm server
 
-    
+
     -- @string boostID The ID of the boost to remove.
     -- @string attribID The ID of the attribute from which the boost should be removed.
     -- @realm server
@@ -407,14 +407,14 @@ if SERVER then
 
     --- Deletes the character from the character database and removes it from memory.
     -- @realm server
-    
+
     function charMeta:delete()
         lia.char.delete(self:getID(), self:getPlayer())
     end
 
     --- Destroys the character, removing it from memory and notifying clients to remove it.
     -- @realm server
-    
+
     function charMeta:destroy()
         local id = self:getID()
         lia.char.loaded[id] = nil
@@ -423,7 +423,7 @@ if SERVER then
 
     --- Gives or takes money from the character's wallet.
     -- @realm server
-    
+
     -- @int amount The amount of money to give or take.
     -- @bool[opt=false] takingMoney Whether the operation is to take money from the character.
     -- @return bool Whether the operation was successful.
@@ -461,7 +461,7 @@ if SERVER then
 
     --- Takes money from the character's wallet.
     -- @realm server
-    
+
     -- @int amount The amount of money to take.
     -- @return bool Whether the operation was successful.
     function charMeta:takeMoney(amount)
