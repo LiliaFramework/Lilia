@@ -4,22 +4,6 @@
 
 lia.util.cachedMaterials = lia.util.cachedMaterials or {}
 
-function lia.util.isSteamID(value)
-    if string.match(value, "STEAM_(%d+):(%d+):(%d+)") then return true end
-    return false
-end
-
-function lia.util.dateToNumber(str)
-    str = str or os.date("%Y-%m-%d %H:%M:%S", os.time())
-    return {
-        year = tonumber(str:sub(1, 4)),
-        month = tonumber(str:sub(6, 7)),
-        day = tonumber(str:sub(9, 10)),
-        hour = tonumber(str:sub(12, 13)),
-        min = tonumber(str:sub(15, 16)),
-        sec = tonumber(str:sub(18, 19)),
-    }
-end
 
 --- Removes the realm prefix from a file name. The returned string will be unchanged if there is no prefix found.
 -- @realm shared
@@ -46,23 +30,6 @@ function lia.util.findPlayer(identifier, allowPatterns)
     end
 end
 
-function lia.util.gridVector(vec, gridSize)
-    if gridSize <= 0 then gridSize = 1 end
-    for i = 1, 3 do
-        vec[i] = vec[i] / gridSize
-        vec[i] = math.Round(vec[i])
-        vec[i] = vec[i] * gridSize
-    end
-    return vec
-end
-
-function lia.util.getAllChar()
-    local charTable = {}
-    for _, v in ipairs(player.GetAll()) do
-        if v:getChar() then table.insert(charTable, v:getChar():getID()) end
-    end
-    return charTable
-end
 
 --- Emits sounds one after the other from an entity.
 -- @realm shared
@@ -108,6 +75,61 @@ function lia.util.stringMatches(a, b)
     return false
 end
 
+--- Rounds a vector to the nearest multiple of a given grid size.
+-- @param vec Vector to be rounded
+-- @param gridSize Grid size to round to
+-- @treturn Vector The rounded vector
+-- @realm shared
+
+function lia.util.gridVector(vec, gridSize)
+    if gridSize <= 0 then gridSize = 1 end
+    for i = 1, 3 do
+        vec[i] = vec[i] / gridSize
+        vec[i] = math.Round(vec[i])
+        vec[i] = vec[i] * gridSize
+    end
+    return vec
+end
+
+--- Retrieves the SteamIDs of all connected players.
+-- @treturn table Table containing SteamIDs of all connected players
+-- @realm shared
+function lia.util.getAllChar()
+    local charTable = {}
+    for _, v in ipairs(player.GetAll()) do
+        if v:getChar() then table.insert(charTable, v:getChar():getID()) end
+    end
+    return charTable
+end
+
+--- Checks if a given value is a SteamID.
+-- @param value The value to check
+-- @treturn boolean True if the value is a SteamID, false otherwise
+-- @realm shared
+function lia.util.isSteamID(value)
+    if string.match(value, "STEAM_(%d+):(%d+):(%d+)") then return true end
+    return false
+end
+
+--- Converts a date string to a table containing date and time components.
+-- @param str[opt] The date string in the format "YYYY-MM-DD HH:MM:SS"
+-- @treturn table Table containing date and time components
+-- @realm shared
+function lia.util.dateToNumber(str)
+    str = str or os.date("%Y-%m-%d %H:%M:%S", os.time())
+    return {
+        year = tonumber(str:sub(1, 4)),
+        month = tonumber(str:sub(6, 7)),
+        day = tonumber(str:sub(9, 10)),
+        hour = tonumber(str:sub(12, 13)),
+        min = tonumber(str:sub(15, 16)),
+        sec = tonumber(str:sub(18, 19)),
+    }
+end
+
+--- Retrieves all online players with administrative permissions.
+-- @treturn table Table containing all online players with administrative permissions
+-- @realm shared
 function lia.util.getAdmins()
     local staff = {}
     for _, client in ipairs(player.GetAll()) do
@@ -117,13 +139,20 @@ function lia.util.getAdmins()
     return staff
 end
 
+--- Finds a player by their SteamID64.
+-- @param SteamID64 The SteamID64 of the player to find
+-- @treturn Player The player object if found, nil otherwise
+-- @realm shared
 function lia.util.findPlayerBySteamID64(SteamID64)
     for _, client in ipairs(player.GetAll()) do
         if client:SteamID64() == SteamID64 then return client end
     end
     return nil
 end
-
+--- Finds a player by their SteamID.
+-- @param SteamID The SteamID of the player to find
+-- @treturn Player The player object if found, nil otherwise
+-- @realm shared
 function lia.util.findPlayerBySteamID(SteamID)
     for _, client in ipairs(player.GetAll()) do
         if client:SteamID() == SteamID then return client end
@@ -131,6 +160,13 @@ function lia.util.findPlayerBySteamID(SteamID)
     return nil
 end
 
+--- Checks if a position can fit a player's collision hull.
+-- @param pos The position to check
+-- @param mins[opt] The minimum size of the collision hull
+-- @param maxs[opt] The maximum size of the collision hull
+-- @param filter[opt] Entities to filter out from the collision check
+-- @treturn boolean True if the position can fit the collision hull, false otherwise
+-- @realm shared
 function lia.util.CanFit(pos, mins, maxs, filter)
     mins = mins ~= nil and mins or Vector(16, 16, 0)
     local tr = util.TraceHull({
@@ -144,12 +180,21 @@ function lia.util.CanFit(pos, mins, maxs, filter)
     return not tr.Hit
 end
 
+--- Rolls a chance based on a given probability.
+-- @param chance The probability of success in percentage
+-- @treturn boolean True if the chance is successful, false otherwise
+-- @realm shared
 function lia.util.Chance(chance)
     local rand = math.random(0, 100)
     if rand <= chance then return true end
     return false
 end
 
+--- Retrieves all players within a certain radius from a given position.
+-- @param pos The center position
+-- @param dist The maximum distance from the center
+-- @treturn table Table containing players within the specified radius
+-- @realm shared
 function lia.util.PlayerInRadius(pos, dist)
     dist = dist * dist
     local t = {}
@@ -158,8 +203,12 @@ function lia.util.PlayerInRadius(pos, dist)
     end
     return t
 end
-
 if SERVER then
+    --- Notifies a player or all players with a message.
+	-- @realm server
+-- @param message The message to be notified
+-- @param recipient The player to receive the notification (optional, if nil, broadcast to all players)
+
     function lia.util.notify(message, recipient)
         net.Start("liaNotify")
         net.WriteString(message)
@@ -169,6 +218,9 @@ if SERVER then
             net.Send(recipient)
         end
     end
+--- Spawns entities from a table of entity-position pairs.
+-- @realm server
+-- @param entityTable Table containing entity-position pairs
 
     function lia.util.SpawnEntities(entityTable)
         for entity, position in pairs(entityTable) do
@@ -183,6 +235,11 @@ if SERVER then
             end
         end
     end
+--- Notifies a player or all players with a localized message.
+	-- @realm server
+-- @param message The localized message to be notified
+-- @param recipient The player to receive the notification (optional, if nil, broadcast to all players)
+-- @param ... Additional parameters for message formatting
 
     function lia.util.notifyLocalized(message, recipient, ...)
         local args = {...}
@@ -204,6 +261,15 @@ if SERVER then
             net.Send(recipient)
         end
     end
+--- Finds empty spaces around an entity where another entity can be placed.
+	-- @realm server
+-- @param entity The entity to find empty spaces around
+-- @param filter Entities to filter out from the collision check (optional)
+-- @param spacing Spacing between empty spaces (default is 32 units)
+-- @param size Size of the search grid (default is 3)
+-- @param height Height of the search grid (default is 36 units)
+-- @param tolerance Tolerance for collision checking (default is 5 units)
+-- @return Table containing positions of empty spaces
 
     function lia.util.findEmptySpace(entity, filter, spacing, size, height, tolerance)
         spacing = spacing or 32
@@ -211,12 +277,12 @@ if SERVER then
         height = height or 36
         tolerance = tolerance or 5
         local position = entity:GetPos()
-        local mins = Vector(-spacing * 0.5, -spacing * 0.5, 0)
-        local maxs = Vector(spacing * 0.5, spacing * 0.5, height)
+        local mins = Vector(-spacing * 0.5, -acing * 0.5, 0)
+        local maxs = Vector(spacing * 0.5, sping * 0.5, height)
         local output = {}
         for x = -size, size do
             for y = -size, size do
-                local origin = position + Vector(x * spacing, y * spacing, 0)
+                local origin = position + Vecr(x * spacing, y * spacing, 0)
                 local data = {}
                 data.start = origin + mins + Vector(0, 0, tolerance)
                 data.endpos = origin + maxs
@@ -233,6 +299,16 @@ if SERVER then
         table.sort(output, function(a, b) return a:Distance(position) < b:Distance(position) end)
         return output
     end
+--- Spawns a prop at a given position with optional parameters.
+	-- @realm server
+
+-- @param model Model of the prop to spawn
+-- @param position Position to spawn the prop
+-- @param force Force to apply to the prop (optional)
+-- @param lifetime Lifetime of the prop in seconds (optional)
+-- @param angles Angles of the prop (optional)
+-- @param collision Collision group of the prop (optional)
+-- @return The spawned prop entity
 
     function lia.util.spawnProp(model, position, force, lifetime, angles, collision)
         local entity = ents.Create("prop_physics")
@@ -250,18 +326,37 @@ if SERVER then
         if (lifetime or 0) > 0 then timer.Simple(lifetime, function() if IsValid(entity) then entity:Remove() end end) end
         return entity
     end
+--- Logs a message with a timestamp to the console.
+	-- @realm server
+
+-- @param str The message to be logged
 
     function lia.util.DebugLog(str)
         MsgC(Color("sky_blue"), os.date("(%d/%m/%Y - %H:%M:%S)", os.time()), Color("yellow"), " [LOG] ", color_white, str, "\n")
     end
+--- Logs a debug message to the console.
+	-- @realm server
+
+-- @param msg The debug message string
+-- @param ... Additional parameters for message formatting
 
     function lia.util.DebugMessage(msg, ...)
         MsgC(Color(70, 150, 255), "[CityRP] DEBUG: ", string.format(msg, ...), "\n")
     end
+--- Logs a warning message to the console.
+	-- @realm server
+
+-- @param message The warning message string
+-- @param ... Additional parameters for message formatting
 
     function lia.util.DWarningMessage(message, ...)
         MsgC(Color(255, 100, 0), string.format(message, ...), "\n")
     end
+--- Prints a message to a player's chat.
+	-- @realm server
+
+-- @param target The player to receive the chat message
+-- @param ... The message or messages to print
 
     function lia.util.ChatPrint(target, ...)
         netstream.Start(target, "ChatPrint", {...})
@@ -289,14 +384,34 @@ else
             yalign = alignY or 0
         }, 1, alpha or (color.a * 0.575))
     end
+--- Draws a textured rectangle with a specified material and color.
+-- @param material Material to use for the texture
+-- @param color Color of the texture to draw
+-- @param x X-position of the top-left corner of the rectangle
+-- @param y Y-position of the top-left corner of the rectangle
+-- @param w Width of the rectangle
+-- @param h Height of the rectangle
+	-- @realm client
 
     function lia.util.DrawTexture(material, color, x, y, w, h)
         surface.SetDrawColor(color or color_white)
         surface.SetMaterial(lia.util.getMaterial(material))
         surface.DrawTexturedRect(x, y, w, h)
     end
+--- Calls a named skin function with optional arguments on a panel.
+-- @param name Name of the skin function to call
+-- @param panel Panel to apply the skin function to
+-- @param a Argument 1 (optional)
+-- @param b Argument 2 (optional)
+-- @param c Argument 3 (optional)
+-- @param d Argument 4 (optional)
+-- @param e Argument 5 (optional)
+-- @param f Argument 6 (optional)
+-- @param g Argument 7 (optional)
+-- @return The result of the skin function call
+	-- @realm client
 
-    function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
+function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         local skin = (ispanel(panel) and IsValid(panel)) and panel:GetSkin() or derma.GetDefaultSkin()
         if not skin then return end
         local func = skin[name]
@@ -310,6 +425,7 @@ else
 	-- @string text Text to wrap
 	-- @number width Maximum allowed width in pixels
 	-- @string[opt="liaChatFont"] font Font to use for the text
+	-- @realm client
 
     function lia.util.wrapText(text, width, font)
         font = font or "liaChatFont"
@@ -338,29 +454,52 @@ else
         if line ~= "" then lines[#lines + 1] = line end
         return lines, maxW
     end
+--- Displays a notification message in the chat.
+-- @param message The message to display
+	-- @realm client
 
     function lia.util.notify(message)
         chat.AddText(message)
     end
+--- Displays a localized notification message in the chat.
+-- @param message The message to display (localized)
+-- @param ... Additional parameters for string formatting
+	-- @realm client
 
     function lia.util.notifyLocalized(message, ...)
         lia.util.notify(L(message, ...))
     end
+--- Converts a color object to a string representation.
+-- @param color The color object to convert
+-- @return A string representation of the color in the format "r,g,b,a"
+	-- @realm client
 
     function lia.util.colorToText(color)
         if not IsColor(color) then return end
         return (color.r or 255) .. "," .. (color.g or 255) .. "," .. (color.b or 255) .. "," .. (color.a or 255)
     end
+--- Displays a caption message on the screen for a specified duration.
+-- @param text The caption text to display
+-- @param duration The duration (in seconds) for which to display the caption (optional, default is the length of the text multiplied by 0.1)
+	-- @realm client
 
     function lia.util.endCaption(text, duration)
         RunConsoleCommand("closecaption", "1")
         gui.AddCaption(text, duration or string.len(text) * 0.1)
     end
+--- Displays a caption message on the screen for a specified duration.
+-- @param text The caption text to display
+-- @param duration The duration (in seconds) for which to display the caption (optional, default is the length of the text multiplied by 0.1)
+	-- @realm client
 
     function lia.util.startCaption(text, duration)
         RunConsoleCommand("closecaption", "1")
         gui.AddCaption(text, duration or string.len(text) * 0.1)
     end
+--- Determines the color indicating the health status of a player.
+-- @param client The player for which to determine the color
+-- @return The color representing the player's health status
+	-- @realm client
 
     function lia.util.getInjuredColor(client)
         local health_color = color_white
@@ -369,6 +508,11 @@ else
         if (health / healthMax) < .95 then health_color = lia.color.LerpHSV(nil, nil, healthMax, health, 0) end
         return health_color
     end
+--- Scales a value proportionally based on the screen height.
+-- @param n The value to scale
+-- @param type If true, scales based on vertical resolution; if false or nil, scales based on default values
+-- @return The scaled value
+	-- @realm client
 
     function lia.util.ScreenScaleH(n, type)
         if type then
@@ -386,6 +530,16 @@ else
             LAST_HEIGHT = scrH
         end
     end)
+--- Displays a numeric input request dialog.
+-- @param strTitle The title of the dialog window
+-- @param strText The text to display in the dialog
+-- @param strDefaultText The default text to display in the input field
+-- @param fnEnter The function to call when the Enter key is pressed, with the input value as its argument
+-- @param fnCancel The function to call when the dialog is canceled or closed, with the input value as its argument (optional)
+-- @param strButtonText The text to display on the confirmation button (optional, default is "OK")
+-- @param strButtonCancelText The text to display on the cancel button (optional, default is localized string "derma_request_cancel")
+-- @return The created DFrame window
+	-- @realm client
 
     function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCancel, strButtonText, strButtonCancelText)
         local Window = vgui.Create("DFrame")
@@ -452,6 +606,9 @@ else
         Window:DoModal()
         return Window
     end
+    --- Displays a notification message in the chat.
+-- @param message The message to display
+	-- @realm client
 
     function lia.util.notify(message)
         local notice = vgui.Create("liaNotify")
@@ -475,6 +632,15 @@ else
 
         MsgN(message)
     end
+--- Displays a query notification panel with options.
+-- @param question The question or prompt to display
+-- @param option1 The text for the first option
+-- @param option2 The text for the second option
+-- @param manualDismiss If true, the panel requires manual dismissal (optional, default is false)
+-- @param notifType The type of notification (optional, default is 7)
+-- @param callback The function to call when an option is selected, with the option index and the notice panel as arguments
+-- @return The created notification panel
+	-- @realm client
 
     function lia.util.notifQuery(question, option1, option2, manualDismiss, notifType, callback)
         if not callback or not isfunction(callback) then Error("A callback function must be specified") end
@@ -640,6 +806,13 @@ else
     lia.util.LoadedImages = lia.util.LoadedImages or {
         [0] = Material("icon16/cross.png")
     }
+--- Fetches an image from either local data or a remote server and provides it to a callback function.
+-- @param id The unique identifier or filename of the image
+-- @param callback The function to call with the loaded image material as its argument, or false if the image could not be loaded
+-- @param _ Unused parameter, kept for compatibility
+-- @param pngParameters Optional parameters for loading PNG images (default is "noclamp smooth")
+-- @param imageProvider Optional URL for the remote image provider (default is "https://i.imgur.com/")
+-- @realm client
 
     function lia.util.FetchImage(id, callback, _, pngParameters, imageProvider)
         local loadedImage = lia.util.LoadedImages[id]

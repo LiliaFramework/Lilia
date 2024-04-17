@@ -86,6 +86,10 @@ lia.FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/hooks/languages.lua",
+        realm = "client"
+    },
+    {
         path = "lilia/gamemode/libraries/networking.lua",
         realm = "shared"
     },

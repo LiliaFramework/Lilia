@@ -53,20 +53,37 @@ end
 if SERVER then
     local playerMeta = FindMetaTable("Player")
     local ClientGetInfo = playerMeta.GetInfo
+    --- Retrieves a localized string based on the specified key and client's language setting.
+    -- @param key The key corresponding to the desired localized string.
+    -- @param client The client for whom the localized string is intended.
+    -- @param ... Additional parameters to format the localized string.
+    -- @return The formatted localized string.
+    -- @realm server
     function L(key, client, ...)
         local languages = lia.lang.stored
         local langKey = ClientGetInfo(client, "lia_language")
         local info = languages[langKey] or languages.english
         return string.format(info and info[key] or key, ...)
     end
-
+    --- Retrieves a localized string based on the specified key and client's language setting.
+    -- Similar to L(), but returns nil if the key is not found in the language table.
+    -- @param key The key corresponding to the desired localized string.
+    -- @param client The client for whom the localized string is intended.
+    -- @param ... Additional parameters to format the localized string.
+    -- @return The formatted localized string, or nil if the key is not found.
+    -- @realm server
     function L2(key, client, ...)
         local languages = lia.lang.stored
         local langKey = ClientGetInfo(client, "lia_language")
         local info = languages[langKey] or languages.english
         if info and info[key] then return string.format(info[key], ...) end
     end
-
+    --- Retrieves a localized string based on the specified key and language key.
+    -- @param key The key corresponding to the desired localized string.
+    -- @param langKey The language key to use for localization.
+    -- @param ... Additional parameters to format the localized string.
+    -- @return The formatted localized string, or the key if not found.
+    -- @realm server
     function L3(key, langKey, ...)
         local languages = lia.lang.stored
         if langKey then
@@ -78,47 +95,27 @@ if SERVER then
     end
 else
     LIA_CVAR_LANG = CreateClientConVar("lia_language", "english", true, true)
+    --- Creates a client-side ConVar to store the language setting and retrieves a localized string based on it.
+    -- @param key The key corresponding to the desired localized string.
+    -- @param ... Additional parameters to format the localized string.
+    -- @return The formatted localized string.
+    -- @realm client
     function L(key, ...)
         local languages = lia.lang.stored
         local langKey = LIA_CVAR_LANG:GetString()
         local info = languages[langKey] or languages.english
         return string.format(info and info[key] or key, ...)
     end
-
+    --- Retrieves a localized string based on the specified key and client's language setting.
+    -- Similar to L(), but returns nil if the key is not found in the language table.
+    -- @param key The key corresponding to the desired localized string.
+    -- @param ... Additional parameters to format the localized string.
+    -- @return The formatted localized string, or nil if the key is not found.
+    -- @realm client
     function L2(key, ...)
         local langKey = LIA_CVAR_LANG:GetString()
         local info = lia.lang.stored[langKey]
         if info and info[key] then return string.format(info[key], ...) end
-    end
-
-    local GM = GM or GAMEMODE
-    function GM:SetupQuickMenu(menu)
-        local current
-        for k, _ in SortedPairs(lia.lang.stored) do
-            local name = lia.lang.names[k]
-            local name2 = k:sub(1, 1):upper() .. k:sub(2)
-            local enabled = LIA_CVAR_LANG:GetString():match(k)
-            if name then
-                name = name .. " (" .. name2 .. ")"
-            else
-                name = name2
-            end
-
-            local button = menu:addCheck(name, function(panel)
-                panel.checked = true
-                if IsValid(current) then
-                    if current == panel then return end
-                    current.checked = false
-                end
-
-                current = panel
-                RunConsoleCommand("lia_language", k)
-            end, enabled)
-
-            if enabled and not IsValid(current) then current = button end
-        end
-
-        menu:addSpacer()
     end
 end
 
