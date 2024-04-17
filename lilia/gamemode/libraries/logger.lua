@@ -30,6 +30,7 @@ lia.log.color = {
 if SERVER then
 
 --- Creates directories for storing logs.
+-- @realm server
 function lia.log.loadTables()
     file.CreateDir("lilia/logs")
     file.CreateDir("lilia/netlogs")

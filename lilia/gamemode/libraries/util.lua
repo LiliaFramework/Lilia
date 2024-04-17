@@ -76,10 +76,10 @@ function lia.util.stringMatches(a, b)
 end
 
 --- Rounds a vector to the nearest multiple of a given grid size.
+-- @realm shared
 -- @param vec Vector to be rounded
 -- @param gridSize Grid size to round to
 -- @treturn Vector The rounded vector
--- @realm shared
 
 function lia.util.gridVector(vec, gridSize)
     if gridSize <= 0 then gridSize = 1 end
