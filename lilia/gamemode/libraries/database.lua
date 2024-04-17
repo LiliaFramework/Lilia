@@ -219,14 +219,12 @@ modules.mysqloo = {
 lia.db.escape = lia.db.escape or modules.sqlite.escape
 lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueue + 1] = {...} end
 
---- Establishes a connection to the database using the configured database module.
+--- Establishes a connection to the database module specified in the configuration.
+-- If the database is not connected yet or if reconnection is forced, it connects to the database module.
+-- @function lia.db.connect
+-- @param callback[opt] A function to be called after the database connection is established.
+-- @param reconnect[opt=false] Whether to force a reconnection to the database module.
 -- @realm server
--- If a callback function is provided, it will be called upon successful connection.
--- If 'reconnect' is set to true or the database is not currently connected, it attempts to reconnect.
--- @param callback (function) A function to execute upon successful connection. (Optional)
--- @param reconnect (boolean) Whether to force a reconnection even if the database is already connected. (Optional)
-
-
 function lia.db.connect(callback, reconnect)
     local dbModule = modules[lia.db.module]
     if dbModule then
@@ -249,12 +247,10 @@ function lia.db.connect(callback, reconnect)
     end
 end
 
---- Wipes all data from the database tables.
+--- Wipes all Lilia-related tables in the database.
+-- @function lia.db.wipeTables
+-- @param callback[opt] A function to be called after the wipe operation is completed.
 -- @realm server
--- This function is typically used for resetting the database to its initial state.
--- @param callback (function) A function to execute after wiping the tables. (Optional)
-
-
 function lia.db.wipeTables(callback)
     local function realCallback()
         lia.db.query("SET FOREIGN_KEY_CHECKS = 1;", function()
@@ -286,12 +282,9 @@ function lia.db.wipeTables(callback)
         lia.db.query(SqlLiteTableDrop, realCallback)
     end
 end
-
---- Loads database tables into memory.
+--- Loads the necessary tables into the database.
+-- @function lia.db.loadTables
 -- @realm server
--- This function is typically used during server startup to ensure that all required tables are available.
-
-
 function lia.db.loadTables()
     local function done()
         lia.db.tablesLoaded = true
@@ -322,13 +315,10 @@ function lia.db.loadTables()
 
     hook.Run("OnLoadTables")
 end
-
---- Waits for database tables to finish loading.
+--- Waits for the database tables to be loaded.
+-- @function lia.db.waitForTablesToLoad
+-- @treturn Deferred A deferred object that resolves when the tables are loaded.
 -- @realm server
--- This function is used to ensure that code requiring loaded tables does not execute prematurely.
--- @return (deferred) A deferred object representing the completion of table loading.
-
-
 function lia.db.waitForTablesToLoad()
     TABLE_WAIT_ID = TABLE_WAIT_ID or 0
     local d = deferred.new()
@@ -341,15 +331,12 @@ function lia.db.waitForTablesToLoad()
     TABLE_WAIT_ID = TABLE_WAIT_ID + 1
     return d
 end
-
---- Converts a Lua value into a format suitable for database storage.
+--- Converts a Lua value to a format suitable for insertion into the database.
+-- @function lia.db.convertDataType
+-- @param value The value to be converted.
+-- @param noEscape[opt=false] Whether to skip escaping the value. Defaults to false.
+-- @treturn string The converted value suitable for database insertion.
 -- @realm server
--- This function handles different data types and escapes strings as needed.
--- @param value The value to convert.
--- @param noEscape (boolean) Whether to skip escaping for strings. (Optional)
--- @return The converted value.
-
-
 function lia.db.convertDataType(value, noEscape)
     if isstring(value) then
         if noEscape then
@@ -368,6 +355,7 @@ function lia.db.convertDataType(value, noEscape)
     end
     return value
 end
+
 
 local function genInsertValues(value, dbTable)
     local query = "lia_" .. (dbTable or "characters") .. " ("
@@ -388,39 +376,36 @@ local function genUpdateList(value)
     return table.concat(changes, ", ")
 end
 
---- Inserts data into a database table.
+--- Inserts a new row into the specified database table with the provided values.
+-- @function lia.db.insertTable
+-- @param value The values to be inserted into the table.
+-- @param callback[opt] A function to be called after the insertion operation is completed.
+-- @param dbTable[opt="characters"] The name of the database table. Defaults to "characters".
 -- @realm server
--- @param value The Lua table containing data to insert.
--- @param callback (function) A function to execute after the insert operation. (Optional)
--- @param dbTable The name of the database table. (Optional)
-
-
 function lia.db.insertTable(value, callback, dbTable)
     local query = "INSERT INTO " .. genInsertValues(value, dbTable)
     lia.db.query(query, callback)
 end
 
---- Updates data in a database table.
+--- Updates rows in the specified database table with the provided values based on the given condition.
+-- @function lia.db.updateTable
+-- @param value The values to be updated in the table.
+-- @param callback[opt] A function to be called after the update operation is completed.
+-- @param dbTable[opt="characters"] The name of the database table. Defaults to "characters".
+-- @param condition[opt] The condition to apply to the update operation.
 -- @realm server
--- @param value The Lua table containing data to update.
--- @param callback (function) A function to execute after the update operation. (Optional)
--- @param dbTable The name of the database table. (Optional)
--- @param condition The condition to filter the update operation. (Optional)
-
-
 function lia.db.updateTable(value, callback, dbTable, condition)
     local query = "UPDATE " .. ("lia_" .. (dbTable or "characters")) .. " SET " .. genUpdateList(value) .. (condition and " WHERE " .. condition or "")
     lia.db.query(query, callback)
 end
-
---- Selects data from a database table.
+--- Selects data from the specified database table based on the provided fields, condition, and limit.
+-- @function lia.db.select
+-- @param fields The fields to select from the table.
+-- @param dbTable[opt="characters"] The name of the database table. Defaults to "characters".
+-- @param condition[opt] The condition to apply to the selection.
+-- @param limit[opt] The maximum number of rows to retrieve.
+-- @treturn Deferred A deferred object that resolves to a table containing the selected results and the last inserted ID.
 -- @realm server
--- @param fields The fields to select, can be either a string or a table of strings
--- @param dbTable The name of the database table
--- @param condition The condition for the selection query
--- @param limit The limit for the number of results to be returned
--- @return A deferred object that resolves to a table containing the results and last inserted ID
-
 function lia.db.select(fields, dbTable, condition, limit)
     local d = deferred.new()
     local from = istable(fields) and table.concat(fields, ", ") or tostring(fields)
@@ -436,14 +421,12 @@ function lia.db.select(fields, dbTable, condition, limit)
     end)
     return d
 end
---- Selects data from a database table.
+--- Inserts or updates rows in the specified database table with the provided values.
+-- @function lia.db.upsert
+-- @param value The values to be inserted or updated in the table.
+-- @param dbTable[opt="characters"] The name of the database table. Defaults to "characters".
+-- @treturn Deferred A deferred object that resolves to a table containing the insertion or update results and the last inserted ID.
 -- @realm server
--- @param fields The fields to select. Can be a string or a table of field names.
--- @param dbTable The name of the database table. (Optional)
--- @param condition The condition to filter the select operation. (Optional)
--- @param limit The maximum number of rows to select. (Optional)
--- @return (deferred) A deferred object representing the select operation.
-
 function lia.db.upsert(value, dbTable)
     local query
     if lia.db.object then
@@ -462,14 +445,12 @@ function lia.db.upsert(value, dbTable)
     return d
 end
 
---- Inserts or updates data in a database table.
+--- Deletes rows from the specified database table based on the given condition.
+-- @function lia.db.delete
+-- @param dbTable[opt="character"] The name of the database table. Defaults to "character".
+-- @param condition[opt] The condition to apply to the deletion.
+-- @treturn Deferred A deferred object that resolves to a table containing the deletion results and the last inserted ID.
 -- @realm server
--- If a record with the same primary key exists, it updates the record. Otherwise, it inserts a new record.
--- @param value The Lua table containing data to insert or update.
--- @param dbTable The name of the database table. (Optional)
--- @return (deferred) A deferred object representing the upsert operation.
-
-
 function lia.db.delete(dbTable, condition)
     local query
     dbTable = "lia_" .. (dbTable or "character")
