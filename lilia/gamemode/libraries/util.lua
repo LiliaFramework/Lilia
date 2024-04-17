@@ -615,9 +615,8 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         return Window
     end
     --- Displays a notification message in the chat.
-    	-- @realm client
-
--- @param message The message to display
+    -- @realm client
+    -- @param message The message to display
 
     function lia.util.notify(message)
         local notice = vgui.Create("liaNotify")
