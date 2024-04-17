@@ -385,7 +385,7 @@ end
 
 if SERVER then
     --- Loads Lilia data for the player from the database.
-    -- @function playerMeta:loadLiliaData
+    
     -- @param callback[opt=nil] Function to call after the data is loaded, passing the loaded data as an argument.
     -- @realm server
     function playerMeta:loadLiliaData(callback)
@@ -417,7 +417,7 @@ if SERVER then
     end
 
     --- Saves the player's Lilia data to the database.
-    -- @function playerMeta:saveLiliaData
+    
     -- @realm server
     function playerMeta:saveLiliaData()
         local name = self:steamName()
@@ -431,7 +431,7 @@ if SERVER then
     end
 
     --- Sets a key-value pair in the player's Lilia data.
-    -- @function playerMeta:setLiliaData
+    
     -- @param key The key for the data.
     -- @param value The value to set.
     -- @param noNetworking[opt=false] If true, suppresses network broadcasting of the update.
@@ -443,7 +443,7 @@ if SERVER then
     end
 
     --- Retrieves a value from the player's Lilia data.
-    -- @function playerMeta:getLiliaData
+    
     -- @param key The key for the data.
     -- @param default[opt=nil] The default value to return if the key does not exist.
     -- @realm server
@@ -601,7 +601,7 @@ if SERVER then
     end
 
     --- Removes flags from the player's flag blacklist.
-    -- @function playerMeta:removeFlagBlacklist
+    
     -- @realm server
     -- @param flags A table containing the flags to remove from the blacklist.
     function playerMeta:removeFlagBlacklist(flags)
@@ -615,7 +615,7 @@ if SERVER then
     end
 
     --- Checks if the player has a specific flag blacklisted.
-    -- @function playerMeta:hasFlagBlacklist
+    
     -- @realm server
     -- @param flag The flag to check for in the blacklist.
     -- @treturn bool Whether the player has the specified flag blacklisted.
@@ -628,7 +628,7 @@ if SERVER then
     end
 
     --- Checks if the player has any of the specified flags blacklisted.
-    -- @function playerMeta:hasAnyFlagBlacklist
+    
     -- @realm server
     -- @param flags A table containing the flags to check for in the blacklist.
     -- @treturn bool Whether the player has any of the specified flags blacklisted.
@@ -640,7 +640,7 @@ if SERVER then
     end
 
     --- Plays a sound for the player.
-    -- @function playerMeta:playSound
+    
     -- @realm client
     -- @param sound The sound to play.
     -- @param[opt=100] pitch The pitch of the sound.
@@ -652,7 +652,7 @@ if SERVER then
     end
 
     --- Opens a VGUI panel for the player.
-    -- @function playerMeta:openUI
+    
     -- @realm client
     -- @param panel The name of the VGUI panel to open.
     function playerMeta:openUI(panel)
@@ -663,7 +663,7 @@ if SERVER then
 
     playerMeta.OpenUI = playerMeta.openUI
     --- Opens a web page for the player.
-    -- @function playerMeta:openPage
+    
     -- @realm client
     -- @param url The URL of the web page to open.
     function playerMeta:openPage(url)
@@ -673,7 +673,7 @@ if SERVER then
     end
 
     --- Retrieves the player's total playtime.
-    -- @function playerMeta:getPlayTime
+    
     -- @realm shared
     -- @treturn number The total playtime of the player.
     function playerMeta:getPlayTime()
@@ -683,7 +683,7 @@ if SERVER then
 
     playerMeta.GetPlayTime = playerMeta.getPlayTime
     --- Creates a ragdoll entity for the player on the server.
-    -- @function playerMeta:createServerRagdoll
+    
     -- @realm server
     -- @param[opt=false] DontSetPlayer Determines whether to associate the player with the ragdoll.
     -- @treturn Entity The created ragdoll entity.
@@ -719,7 +719,7 @@ if SERVER then
     end
 
     --- Performs a stared action towards an entity for a certain duration.
-    -- @function playerMeta:doStaredAction
+    
     -- @realm server
     -- @param entity The entity towards which the player performs the stared action.
     -- @param callback The function to call when the stared action is completed.
@@ -750,7 +750,7 @@ if SERVER then
     end
 
     --- Notifies the player with a message.
-    -- @function playerMeta:notify
+    
     -- @realm shared
     -- @param message The message to notify the player.
     function playerMeta:notify(message)
@@ -758,7 +758,7 @@ if SERVER then
     end
 
     --- Notifies the player with a localized message.
-    -- @function playerMeta:notifyLocalized
+    
     -- @realm shared
     -- @param message The key of the localized message to notify the player.
     -- @param ... Additional arguments to format the localized message.
@@ -767,7 +767,7 @@ if SERVER then
     end
 
     --- Requests a string input from the player.
-    -- @function playerMeta:requestString
+    
     -- @realm shared
     -- @param title The title of the string input dialog.
     -- @param subTitle The subtitle or description of the string input dialog.
@@ -794,7 +794,7 @@ if SERVER then
     end
 
     --- Creates a ragdoll entity for the player.
-    -- @function playerMeta:createRagdoll
+    
     -- @realm server
     -- @param freeze Whether to freeze the ragdoll initially.
     -- @treturn Entity The created ragdoll entity.
@@ -829,7 +829,7 @@ if SERVER then
     end
 
     --- Sets the player to a ragdolled state or removes the ragdoll.
-    -- @function playerMeta:setRagdolled
+    
     -- @realm server
     -- @param state Whether to set the player to a ragdolled state (`true`) or remove the ragdoll (`false`).
     -- @param[opt] time The duration for which the player remains ragdolled.
@@ -941,7 +941,7 @@ if SERVER then
     end
 
     --- Sets whether the player is whitelisted for a faction.
-    -- @function playerMeta:setWhitelisted
+    
     -- @realm server
     -- @param faction The faction ID.
     -- @param whitelisted Whether the player should be whitelisted for the faction.
@@ -961,7 +961,7 @@ if SERVER then
     end
 
     --- Synchronizes networked variables with the player.
-    -- @function playerMeta:syncVars
+    
     -- @realm server
     function playerMeta:syncVars()
         for entity, data in pairs(lia.net) do
@@ -978,7 +978,7 @@ if SERVER then
     end
 
     --- Sets a local variable for the player.
-    -- @function playerMeta:setLocalVar
+    
     -- @realm server
     -- @param key The key of the variable.
     -- @param value The value of the variable.
@@ -991,7 +991,7 @@ if SERVER then
 
     playerMeta.SetLocalVar = playerMeta.setLocalVar
     --- Notifies the player with a message and prints the message to their chat.
-    -- @function playerMeta:notifyP
+    
     -- @realm server
     -- @param text The message to notify and print.
     function playerMeta:notifyP(text)
@@ -1000,7 +1000,7 @@ if SERVER then
     end
 
     --- Sends a message to the player.
-    -- @function playerMeta:sendMessage
+    
     -- @realm server
     -- @param ... The message(s) to send.
     function playerMeta:sendMessage(...)
@@ -1010,7 +1010,7 @@ if SERVER then
     end
 
     --- Sends a message to the player to be printed.
-    -- @function playerMeta:sendPrint
+    
     -- @realm server
     -- @param ... The message(s) to print.
     function playerMeta:sendPrint(...)
@@ -1020,7 +1020,7 @@ if SERVER then
     end
 
     --- Sends a table to the player to be printed.
-    -- @function playerMeta:sendPrintTable
+    
     -- @realm server
     -- @param ... The table(s) to print.
     function playerMeta:sendPrintTable(...)
@@ -1030,7 +1030,7 @@ if SERVER then
     end
 else
     --- Retrieves the player's total playtime.
-    -- @function playerMeta:getPlayTime
+    
     -- @realm client
     -- @treturn number The total playtime of the player.
     function playerMeta:getPlayTime()
@@ -1040,7 +1040,7 @@ else
 
     playerMeta.GetPlayTime = playerMeta.getPlayTime
     --- Opens a UI panel for the player.
-    -- @function playerMeta:openUI
+    
     -- @param panel The panel type to create.
     -- @realm client
     -- @treturn Panel The created UI panel.
@@ -1050,7 +1050,7 @@ else
 
     playerMeta.OpenUI = playerMeta.openUI
     --- Sets a waypoint for the player.
-    -- @function playerMeta:setWeighPoint
+    
     -- @param name The name of the waypoint.
     -- @param vector The position vector of the waypoint.
     -- @param OnReach[opt=nil] Function to call when the player reaches the waypoint.
@@ -1075,7 +1075,7 @@ else
     end
 
     --- Retrieves a value from the local Lilia data.
-    -- @function playerMeta:getLiliaData
+    
     -- @param key The key for the data.
     -- @param default[opt=nil] The default value to return if the key does not exist.
     -- @realm client
