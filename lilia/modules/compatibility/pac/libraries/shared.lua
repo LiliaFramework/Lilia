@@ -55,4 +55,5 @@ function MODULE:PAC3RegisterEvents()
         pac.RegisterEvent(eventObject)
     end
 end
+
 lia.flag.add("P", "Access to PAC3.")

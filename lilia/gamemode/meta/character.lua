@@ -1,4 +1,4 @@
---[[--
+﻿--[[--
 Contains information about a player's current game state.
 
 Characters are a fundamental object type in Lilia. They are distinct from players, where players are the representation of a

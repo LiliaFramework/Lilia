@@ -7,7 +7,6 @@ from the panel that shows up for the player.
 -- @module lia.menu
 lia.menu = lia.menu or {}
 lia.menu.list = lia.menu.list or {}
-
 --- Adds a menu with the provided options.
 -- @param options Table containing the menu options
 -- @param position Position of the menu (either a vector or an entity)
@@ -139,6 +138,7 @@ function lia.menu.getActiveMenu()
         end
     end
 end
+
 --- Executes a callback function when a menu button is pressed and removes the menu.
 -- @param menu Index of the menu to remove
 -- @param callback Callback function to execute

@@ -1,5 +1,4 @@
-﻿
---[[--
+﻿--[[--
 Date and time handling.
 
 All of Lua's time functions are dependent on the Unix epoch, which means we can't have dates that go further than 1970. This
@@ -7,9 +6,7 @@ library remedies this problem. Time/date is represented by a `date` object that 
 since the epoch.
 ]]
 -- @module lia.date
-
 lia.date = lia.date or {}
-
 --- Generates a formatted date string based on the current system time.
 -- @realm shared
 -- @param StartingMessage (optional) A message to prepend to the formatted date.
@@ -63,6 +60,7 @@ function lia.date.GetFormattedDate(StartingMessage, includeWeekDay, includeDay, 
     end
     return output
 end
+
 --- Generates a formatted date string based on the current system time for in-game usage.
 -- @realm shared
 -- @param StartingMessage (optional) A message to prepend to the formatted date.
@@ -116,6 +114,7 @@ function lia.date.GetFormattedDateInGame(StartingMessage, includeWeekDay, includ
     end
     return output
 end
+
 --- Generates a pre-formatted date string based on the provided time.
 -- @realm shared
 -- @param StartingMessage (optional) A message to prepend to the formatted date.
@@ -170,6 +169,7 @@ function lia.date.GetPreFormattedDate(StartingMessage, timeToFormat, includeWeek
     end
     return output
 end
+
 --- Generates a pre-formatted date string based on the provided time for in-game usage.
 -- @realm shared
 -- @param StartingMessage (optional) A message to prepend to the formatted date.
@@ -180,7 +180,6 @@ end
 -- @param includeYear (optional) Whether to include the year in the formatted date.
 -- @param includeTime (optional) Whether to include the time in the formatted date.
 -- @return The formatted date string.
-
 function lia.date.GetPreFormattedDateInGame(StartingMessage, timeToFormat, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
     local currentTime = tostring(timeToFormat)
     if StartingMessage then

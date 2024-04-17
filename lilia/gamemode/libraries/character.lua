@@ -1,5 +1,4 @@
-﻿
---[[--
+﻿--[[--
 Character creation and management.
 
 **NOTE:** For the most part you shouldn't use this library unless you know what you're doing. You can very easily corrupt
@@ -16,7 +15,6 @@ charMeta.__index = charMeta
 charMeta.id = charMeta.id or 0
 charMeta.vars = charMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
-
 if SERVER then
     if #lia.char.names < 1 then
         lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
@@ -171,6 +169,7 @@ lia.char.registerVar("name", {
         end
     end,
 })
+
 lia.char.registerVar("desc", {
     field = "_desc",
     default = "Please Enter Your Description With The Minimum Of " .. lia.config.MinDescLen .. " Characters!",
@@ -282,7 +281,6 @@ lia.char.registerVar("class", {
     noDisplay = true,
 })
 
-
 lia.char.registerVar("faction", {
     field = "_faction",
     default = "Citizen",
@@ -308,6 +306,7 @@ lia.char.registerVar("faction", {
     end,
     onAdjust = function(_, _, value, newData) newData.faction = lia.faction.indices[value].uniqueID end
 })
+
 lia.char.registerVar("money", {
     field = "_money",
     default = 0,
@@ -376,18 +375,18 @@ do
     local playerMeta = FindMetaTable("Player")
     playerMeta.steamName = playerMeta.steamName or playerMeta.Name
     playerMeta.SteamName = playerMeta.steamName
-	--- Returns this player's currently possessed `Character` object if it exists.
-	-- @realm shared
-	-- @treturn[1] Character Currently loaded character
-	-- @treturn[2] nil If this player has no character loaded
+    --- Returns this player's currently possessed `Character` object if it exists.
+    -- @realm shared
+    -- @treturn[1] Character Currently loaded character
+    -- @treturn[2] nil If this player has no character loaded
     function playerMeta:getChar()
         return lia.char.loaded[self.getNetVar(self, "char")]
     end
 
-	--- Returns this player's current name.
-	-- @realm shared
-	-- @treturn[1] string Name of this player's currently loaded character
-	-- @treturn[2] string Steam name of this player if the player has no character loaded
+    --- Returns this player's current name.
+    -- @realm shared
+    -- @treturn[1] string Name of this player's currently loaded character
+    -- @treturn[2] string Steam name of this player if the player has no character loaded
     function playerMeta:Name()
         local character = self.getChar(self)
         return character and character.getName(character) or self.steamName(self)
@@ -397,6 +396,7 @@ do
     playerMeta.Nick = playerMeta.Name
     playerMeta.GetName = playerMeta.Name
 end
+
 --- Loads data for a character from the database.
 -- @param charID The ID of the character to load data for.
 -- @param key Optional key to retrieve a specific value from the character's data.
@@ -413,12 +413,11 @@ function lia.char.getCharData(charID, key)
 end
 
 if SERVER then
-	--- Creates a character object with its assigned properties and saves it to the database.
-	-- @realm server
-	-- @tab data Properties to assign to this character. If fields are missing from the table, then it will use the default
-	-- value for that property
-	-- @func callback Function to call after the character saves
-
+    --- Creates a character object with its assigned properties and saves it to the database.
+    -- @realm server
+    -- @tab data Properties to assign to this character. If fields are missing from the table, then it will use the default
+    -- value for that property
+    -- @func callback Function to call after the character saves
     function lia.char.create(data, callback)
         local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
         data.money = data.money or lia.config.DefaultMoney
@@ -452,13 +451,14 @@ if SERVER then
             end)
         end)
     end
-	--- Loads all of a player's characters into memory.
-	-- @realm server
-	-- @player client Player to load the characters for
-	-- @func[opt=nil] callback Function to call when the characters have been loaded
-	-- @bool[opt=false] _ Whether or not to skip the cache; players that leave and join again later will already have
-	-- their characters loaded which will skip the database query and load quicker
-	-- @number[opt=nil] id The ID of a specific character to load instead of all of the player's characters
+
+    --- Loads all of a player's characters into memory.
+    -- @realm server
+    -- @player client Player to load the characters for
+    -- @func[opt=nil] callback Function to call when the characters have been loaded
+    -- @bool[opt=false] _ Whether or not to skip the cache; players that leave and join again later will already have
+    -- their characters loaded which will skip the database query and load quicker
+    -- @number[opt=nil] id The ID of a specific character to load instead of all of the player's characters
     function lia.char.restore(client, callback, _, id)
         local steamID64 = client:SteamID64()
         local fields = {"_id"}
@@ -529,10 +529,10 @@ if SERVER then
             end
         end)
     end
---- Cleans up a player's characters, removing them from memory and database.
--- @param client The player whose characters to clean up.
--- @realm server
 
+    --- Cleans up a player's characters, removing them from memory and database.
+    -- @param client The player whose characters to clean up.
+    -- @realm server
     function lia.char.cleanUpForPlayer(client)
         for _, charID in pairs(client.liaCharList or {}) do
             local character = lia.char.loaded[charID]
@@ -552,10 +552,11 @@ if SERVER then
             netstream.Start(client, "charKick", nil, true)
         end
     end
---- Deletes a character from memory and database.
--- @param id The ID of the character to delete.
--- @param client The player associated with the character.
--- @realm server
+
+    --- Deletes a character from memory and database.
+    -- @param id The ID of the character to delete.
+    -- @param client The player associated with the character.
+    -- @realm server
     function lia.char.delete(id, client)
         assert(isnumber(id), "id must be a number")
         if IsValid(client) then
@@ -589,12 +590,13 @@ if SERVER then
 
         hook.Run("OnCharacterDelete", client, id)
     end
---- Sets data for a character in the database and in memory.
--- @param charID The ID of the character to set data for.
--- @param key The key of the data to set.
--- @param val The value to set for the specified key.
--- @return True if the data was successfully set, false otherwise.
--- @realm server
+
+    --- Sets data for a character in the database and in memory.
+    -- @param charID The ID of the character to set data for.
+    -- @param key The key of the data to set.
+    -- @param val The value to set for the specified key.
+    -- @return True if the data was successfully set, false otherwise.
+    -- @realm server
     function lia.char.setCharData(charID, key, val)
         local charIDsafe = tonumber(charID)
         if not charIDsafe then return end

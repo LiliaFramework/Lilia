@@ -1,4 +1,4 @@
---[[--
+﻿--[[--
 Holds items within a grid layout.
 
 Inventories are an object that contains `Item`s in a grid layout. Every `Character` will have exactly one inventory attached to

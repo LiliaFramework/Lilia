@@ -8,10 +8,7 @@ chat classes can affect how the message is displayed in each player's chatbox. S
 to create your own chat classes.
 ]]
 -- @module lia.chat
-
 lia.chat = lia.chat or {}
-
-
 --- List of all chat classes that have been registered by the framework, where each key is the name of the chat class, and value
 -- is the chat class data. Accessing a chat class's data is useful for when you want to copy some functionality or properties
 -- to use in your own. Note that if you're accessing this table, you should do so inside of the `InitializedChatClasses` hook.
@@ -29,9 +26,9 @@ local DUMMY_COMMAND = {
 function lia.chat.timestamp(ooc)
     return lia.config.ChatShowTime and (ooc and " " or "") .. "(" .. lia.date.GetFormattedDate(nil, false, false, false, false, true) .. ")" .. (ooc and "" or " ") or ""
 end
+
 -- note we can't use commas in the "color" field's default value since the metadata is separated by commas which will break the
 -- formatting for that field
-
 --- Chat messages can have different classes or "types" of messages that have different properties. This can include how the
 -- text is formatted, color, hearing distance, etc.
 -- @realm shared
@@ -86,7 +83,6 @@ end
 -- 		-- adds white text in the form of "Player Name: Message contents"
 -- 		chat.AddText(color_white, speaker:GetName(), ": ", text)
 -- 	end
-
 --- Registers a new chat type with the information provided. Chat classes should usually be created inside of the
 -- `InitializedChatClasses` hook.
 -- @realm shared
@@ -196,27 +192,27 @@ function lia.chat.parse(client, message, noSend)
 end
 
 if SERVER then
---- Sends a chat message from a speaker to specified receivers, based on the provided chat type and text.
--- The message is processed according to the properties and functions defined for the chat class.
--- @realm server
--- @param speaker Entity sending the message
--- @string chatType Type of the chat message
--- @string text The message content
--- @bool[opt=false] anonymous Whether the message should be sent anonymously
--- @tparam[opt] table receivers List of entities to receive the message (if specified)
-function lia.chat.send(speaker, chatType, text, anonymous, receivers)
-    local class = lia.chat.classes[chatType]
-    if class and class.onCanSay(speaker, text) ~= false then
-        if class.onCanHear and not receivers then
-            receivers = {}
-            for _, v in ipairs(player.GetAll()) do
-                if v:getChar() and class.onCanHear(speaker, v) ~= false then receivers[#receivers + 1] = v end
+    --- Sends a chat message from a speaker to specified receivers, based on the provided chat type and text.
+    -- The message is processed according to the properties and functions defined for the chat class.
+    -- @realm server
+    -- @param speaker Entity sending the message
+    -- @string chatType Type of the chat message
+    -- @string text The message content
+    -- @bool[opt=false] anonymous Whether the message should be sent anonymously
+    -- @tparam[opt] table receivers List of entities to receive the message (if specified)
+    function lia.chat.send(speaker, chatType, text, anonymous, receivers)
+        local class = lia.chat.classes[chatType]
+        if class and class.onCanSay(speaker, text) ~= false then
+            if class.onCanHear and not receivers then
+                receivers = {}
+                for _, v in ipairs(player.GetAll()) do
+                    if v:getChar() and class.onCanHear(speaker, v) ~= false then receivers[#receivers + 1] = v end
+                end
+
+                if #receivers == 0 then return end
             end
 
-            if #receivers == 0 then return end
+            netstream.Start(receivers, "cMsg", speaker, chatType, hook.Run("PlayerMessageSend", speaker, chatType, text, anonymous, receivers) or text, anonymous)
         end
-
-        netstream.Start(receivers, "cMsg", speaker, chatType, hook.Run("PlayerMessageSend", speaker, chatType, text, anonymous, receivers) or text, anonymous)
     end
-end
 end

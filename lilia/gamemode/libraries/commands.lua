@@ -1,16 +1,12 @@
---[[--
+﻿--[[--
 Registration, parsing, and handling of commands.
 
 Commands can be ran through the chat with slash commands or they can be executed through the console. Commands can be manually
 restricted to certain usergroups using a [CAMI](https://github.com/glua/CAMI)-compliant admin mod.
 ]]
 -- @module lia.command
-
-
 lia.command = lia.command or {}
-
 lia.command.list = lia.command.list or {}
-
 --- When registering commands with `lia.command.add`, you'll need to pass in a valid command structure. This is simply a table
 -- with various fields defined to describe the functionality of the command.
 -- @realm shared
@@ -27,7 +23,6 @@ lia.command.list = lia.command.list or {}
 -- This callback should NOT** be used in conjunction with `adminOnly` or `superAdminOnly`, as populating those
 -- fields create a custom a `OnCheckAccess` callback for you internally. This is used in cases where you want more fine-grained
 -- access control for your command.
-
 -- Consider this example command:
 -- 	lia.command.add("slap", {
 -- 		adminOnly = true,
@@ -36,8 +31,6 @@ lia.command.list = lia.command.list or {}
 -- 			-- WHAM!
 -- 		end
 -- 	})
-
-
 --- Creates a new command.
 -- @realm shared
 -- @string command Name of the command (recommended in UpperCamelCase)
@@ -148,14 +141,14 @@ function lia.command.extractArgs(text)
 end
 
 if SERVER then
-	--- Attempts to find a player by an identifier. If unsuccessful, a notice will be displayed to the specified player. The
-	-- search criteria is derived from `lia.command.findPlayer`.
-	-- @realm server
-	-- @player client Player to give a notification to if the player could not be found
-	-- @string name Search query
-	-- @treturn[1] player Player that matches the given search query
-	-- @treturn[2] nil If a player could not be found
-	-- @see lia.util.findPlayer
+    --- Attempts to find a player by an identifier. If unsuccessful, a notice will be displayed to the specified player. The
+    -- search criteria is derived from `lia.command.findPlayer`.
+    -- @realm server
+    -- @player client Player to give a notification to if the player could not be found
+    -- @string name Search query
+    -- @treturn[1] player Player that matches the given search query
+    -- @treturn[2] nil If a player could not be found
+    -- @see lia.util.findPlayer
     function lia.command.findPlayer(client, name)
         if isstring(name) then
             if name == "^" then
@@ -180,12 +173,13 @@ if SERVER then
             client:notifyLocalized("mustProvideString")
         end
     end
---- Attempts to find a faction by an identifier.
--- @realm server
--- @param client Player to give a notification to if the faction could not be found
--- @param name Search query
--- @treturn[1] table Faction that matches the given search query
--- @treturn[2] nil If a faction could not be found
+
+    --- Attempts to find a faction by an identifier.
+    -- @realm server
+    -- @param client Player to give a notification to if the faction could not be found
+    -- @param name Search query
+    -- @treturn[1] table Faction that matches the given search query
+    -- @treturn[2] nil If a faction could not be found
     function lia.command.findFaction(client, name)
         if lia.faction.teams[name] then return lia.faction.teams[name] end
         for _, v in ipairs(lia.faction.indices) do
@@ -194,11 +188,12 @@ if SERVER then
 
         client:notifyLocalized("invalidFaction")
     end
---- Attempts to find a player by an identifier silently.
--- @realm server
--- @param client Player to give a notification to if the player could not be found
--- @param name Search query
--- @treturn player|nil Player that matches the given search query, or nil if not found
+
+    --- Attempts to find a player by an identifier silently.
+    -- @realm server
+    -- @param client Player to give a notification to if the player could not be found
+    -- @param name Search query
+    -- @treturn player|nil Player that matches the given search query, or nil if not found
     function lia.command.findPlayerSilent(client, name)
         local target = type(name) == "string" and lia.util.findPlayer(name) or NULL
         if type(name) == "string" and name == "@" then
@@ -209,13 +204,13 @@ if SERVER then
         if IsValid(target) then return target end
     end
 
---- Forces a player to execute a command by name.
-	-- @realm server
-	-- @player client Player who is executing the command
-	-- @string command Full name of the command to be executed. This string gets lowered, but it's good practice to stick with
-	-- the exact name of the command
-	-- @tab arguments Array of arguments to be passed to the command
-	-- @usage lia.command.run(player.GetByID(1), "Roll", {10})
+    --- Forces a player to execute a command by name.
+    -- @realm server
+    -- @player client Player who is executing the command
+    -- @string command Full name of the command to be executed. This string gets lowered, but it's good practice to stick with
+    -- the exact name of the command
+    -- @tab arguments Array of arguments to be passed to the command
+    -- @usage lia.command.run(player.GetByID(1), "Roll", {10})
     function lia.command.run(client, command, arguments)
         command = lia.command.list[command:lower()]
         if command then
@@ -236,16 +231,17 @@ if SERVER then
             end
         end
     end
-	-- format `/CommandName some arguments`
-	-- @realm server
-	-- @player client Player who is executing the command
-	-- @string text Input string to search for the command format
-	-- @string[opt] realCommand Specific command to check for. If this is specified, it will not try to run any command that's
-	-- found at the beginning - only if it matches `realCommand`
-	-- @tab[opt] arguments Array of arguments to pass to the command. If not specified, it will try to extract it from the
-	-- string specified in `text` using `ix.command.ExtractArgs`
-	-- @treturn bool Whether or not a command has been found
-	-- @usage ix.lia.command.parse(player.GetByID(1), "/roll 10")
+
+    -- format `/CommandName some arguments`
+    -- @realm server
+    -- @player client Player who is executing the command
+    -- @string text Input string to search for the command format
+    -- @string[opt] realCommand Specific command to check for. If this is specified, it will not try to run any command that's
+    -- found at the beginning - only if it matches `realCommand`
+    -- @tab[opt] arguments Array of arguments to pass to the command. If not specified, it will try to extract it from the
+    -- string specified in `text` using `ix.command.ExtractArgs`
+    -- @treturn bool Whether or not a command has been found
+    -- @usage ix.lia.command.parse(player.GetByID(1), "/roll 10")
     function lia.command.parse(client, text, realCommand, arguments)
         if realCommand or text:utf8sub(1, 1) == "/" then
             local match = realCommand or text:lower():match("/" .. "([_%w]+)")
@@ -273,16 +269,15 @@ if SERVER then
         return false
     end
 else
-	--- Request the server to run a command. This mimics similar functionality to the client typing `/CommandName` in the chatbox.
-	-- @realm client
-	-- @string command Unique ID of the command
-	-- @param ... Arguments to pass to the command
-	-- @usage lia.command.send("roll", 10)
+    --- Request the server to run a command. This mimics similar functionality to the client typing `/CommandName` in the chatbox.
+    -- @realm client
+    -- @string command Unique ID of the command
+    -- @param ... Arguments to pass to the command
+    -- @usage lia.command.send("roll", 10)
     function lia.command.send(command, ...)
         netstream.Start("cmd", command, {...})
     end
 end
-
 --- A list of available commands for use within the game.
 -- Each command is represented by a table with fields defining its functionality.
 -- @realm shared

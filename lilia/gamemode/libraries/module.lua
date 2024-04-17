@@ -291,7 +291,6 @@ end
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
-
 --- A list of available MODULE fields.
 -- @realm shared
 -- @table CommandList

@@ -28,87 +28,81 @@ lia.log.color = {
 }
 
 if SERVER then
-
---- Creates directories for storing logs.
--- @realm server
-function lia.log.loadTables()
-    file.CreateDir("lilia/logs")
-    file.CreateDir("lilia/netlogs")
-    file.CreateDir("lilia/concommandlogs")
-end
-
-
---- Adds a log type.
--- @realm server
--- @string logType Log category
--- @param func format callback function(client, ...)
--- @string category Log category
--- @color color Log color (optional, defaults to Color(52, 152, 219))
--- @usage function(client, ...) log format callback
-function lia.log.addType(logType, func, category, color)
-    color = color or Color(52, 152, 219)
-    lia.log.types[logType] = {
-        func = func,
-        category = category,
-        color = color
-    }
-end
---- Retrieves a formatted log string based on the specified log type and additional arguments.
--- @param client The client for which the log is generated
--- @param logType The type of log to generate
--- @param ... Additional arguments to be passed to the log generation function
--- @return The formatted log string, its category, and color
--- @realm server
-function lia.log.getString(client, logType, ...)
-    local logData = lia.log.types[logType]
-    if isfunction(logData.func) then
-        local success, result = pcall(logData.func, client, ...)
-        if success then return result, logData.category, logData.color end
+    --- Creates directories for storing logs.
+    -- @realm server
+    function lia.log.loadTables()
+        file.CreateDir("lilia/logs")
+        file.CreateDir("lilia/netlogs")
+        file.CreateDir("lilia/concommandlogs")
     end
-end
 
---- Adds a raw log string to the log system and optionally notifies admins.
--- @param logString The raw log string to add
--- @param shouldNotify Whether to notify admins about this log (default: false)
--- @param flag The flag associated with the log (optional)
--- @realm server
-function lia.log.addRaw(logString, shouldNotify, flag)
-    if shouldNotify then lia.log.send(lia.util.getAdmins(), logString, flag) end
-    Msg("[LOG] ", logString .. "\n")
-    if not noSave then file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n") end
-end
+    --- Adds a log type.
+    -- @realm server
+    -- @string logType Log category
+    -- @param func format callback function(client, ...)
+    -- @string category Log category
+    -- @color color Log color (optional, defaults to Color(52, 152, 219))
+    -- @usage function(client, ...) log format callback
+    function lia.log.addType(logType, func, category, color)
+        color = color or Color(52, 152, 219)
+        lia.log.types[logType] = {
+            func = func,
+            category = category,
+            color = color
+        }
+    end
 
---- Add a log message.
--- @realm server
--- @player client Player who instigated the log
--- @string logType Log category
--- @param ... Arguments to pass to the log
-function lia.log.add(client, logType, ...)
-    local logString, category, color = lia.log.getString(client, logType, ...)
-    if not isstring(logString) or not isstring(category) or not IsColor(color) then return end
-    hook.Run("OnServerLog", client, logType, logString, category, color)
-    Msg("[LOG] ", logString .. "\n")
-    if noSave then return end
-    file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n")
-end
+    --- Retrieves a formatted log string based on the specified log type and additional arguments.
+    -- @param client The client for which the log is generated
+    -- @param logType The type of log to generate
+    -- @param ... Additional arguments to be passed to the log generation function
+    -- @return The formatted log string, its category, and color
+    -- @realm server
+    function lia.log.getString(client, logType, ...)
+        local logData = lia.log.types[logType]
+        if isfunction(logData.func) then
+            local success, result = pcall(logData.func, client, ...)
+            if success then return result, logData.category, logData.color end
+        end
+    end
 
---- Sends a log message to a specified client.
--- @param client The client to whom the log message will be sent.
--- @param logString The log message to be sent.
--- @param flag (Optional) A flag associated with the log message.
--- @realm server
-function lia.log.send(client, logString, flag)
-    netstream.Start(client, "liaLogStream", logString, flag)
-end
+    --- Adds a raw log string to the log system and optionally notifies admins.
+    -- @param logString The raw log string to add
+    -- @param shouldNotify Whether to notify admins about this log (default: false)
+    -- @param flag The flag associated with the log (optional)
+    -- @realm server
+    function lia.log.addRaw(logString, shouldNotify, flag)
+        if shouldNotify then lia.log.send(lia.util.getAdmins(), logString, flag) end
+        Msg("[LOG] ", logString .. "\n")
+        if not noSave then file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n") end
+    end
 
+    --- Add a log message.
+    -- @realm server
+    -- @player client Player who instigated the log
+    -- @string logType Log category
+    -- @param ... Arguments to pass to the log
+    function lia.log.add(client, logType, ...)
+        local logString, category, color = lia.log.getString(client, logType, ...)
+        if not isstring(logString) or not isstring(category) or not IsColor(color) then return end
+        hook.Run("OnServerLog", client, logType, logString, category, color)
+        Msg("[LOG] ", logString .. "\n")
+        if noSave then return end
+        file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n")
+    end
+
+    --- Sends a log message to a specified client.
+    -- @param client The client to whom the log message will be sent.
+    -- @param logString The log message to be sent.
+    -- @param flag (Optional) A flag associated with the log message.
+    -- @realm server
+    function lia.log.send(client, logString, flag)
+        netstream.Start(client, "liaLogStream", logString, flag)
+    end
 else
-
---- Hooks into the NetStream message "liaLogStream" to handle received log messages.
--- @param logString The log message received.
--- @param flag (Optional) A flag associated with the log message.
--- @realm client
-netstream.Hook("liaLogStream", function(logString, flag)
-    MsgC(Color(50, 200, 50), "[SERVER] ", lia.log.color[flag] or color_white, tostring(logString) .. "\n")
-end)
-
+    --- Hooks into the NetStream message "liaLogStream" to handle received log messages.
+    -- @param logString The log message received.
+    -- @param flag (Optional) A flag associated with the log message.
+    -- @realm client
+    netstream.Hook("liaLogStream", function(logString, flag) MsgC(Color(50, 200, 50), "[SERVER] ", lia.log.color[flag] or color_white, tostring(logString) .. "\n") end)
 end

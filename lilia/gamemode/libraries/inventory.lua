@@ -1,4 +1,4 @@
---[[--
+﻿--[[--
 Inventory manipulation and helper functions.
 ]]
 -- @module lia.inventory

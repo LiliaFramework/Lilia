@@ -50,7 +50,7 @@ function PANEL:AddLog(txt, time)
     local current_date, current_formated_date, last_button = os.date("*t", time), os.date("%d %B %Y (%d/%m/%y)", time), self.buttons[#self.buttons]
     if last_button then
         local last_date = os.date("*t", last_button.time)
-        if (current_date.day ~= last_date.day) or  (current_date.month ~= last_date.month) or (current_date.year ~= last_date.year) then self:AddDelimiter(current_formated_date) end
+        if (current_date.day ~= last_date.day) or (current_date.month ~= last_date.month) or (current_date.year ~= last_date.year) then self:AddDelimiter(current_formated_date) end
     else
         self:AddDelimiter(current_formated_date)
     end

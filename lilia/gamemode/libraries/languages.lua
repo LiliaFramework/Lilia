@@ -65,6 +65,7 @@ if SERVER then
         local info = languages[langKey] or languages.english
         return string.format(info and info[key] or key, ...)
     end
+
     --- Retrieves a localized string based on the specified key and client's language setting.
     -- Similar to L(), but returns nil if the key is not found in the language table.
     -- @param key The key corresponding to the desired localized string.
@@ -78,6 +79,7 @@ if SERVER then
         local info = languages[langKey] or languages.english
         if info and info[key] then return string.format(info[key], ...) end
     end
+
     --- Retrieves a localized string based on the specified key and language key.
     -- @param key The key corresponding to the desired localized string.
     -- @param langKey The language key to use for localization.
@@ -106,6 +108,7 @@ else
         local info = languages[langKey] or languages.english
         return string.format(info and info[key] or key, ...)
     end
+
     --- Retrieves a localized string based on the specified key and client's language setting.
     -- Similar to L(), but returns nil if the key is not found in the language table.
     -- @param key The key corresponding to the desired localized string.

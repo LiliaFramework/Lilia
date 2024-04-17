@@ -41,10 +41,10 @@ end
 
 local charMeta = lia.meta.character
 if SERVER then
--- Called to apply flags when a player has spawned.
--- @realm server
--- @internal
--- @player client Player to setup flags for
+    -- Called to apply flags when a player has spawned.
+    -- @realm server
+    -- @internal
+    -- @player client Player to setup flags for
     function lia.flag.onSpawn(client)
         if client:getChar() then
             local flags = client:getChar():getFlags()
@@ -56,20 +56,20 @@ if SERVER then
         end
     end
 
---- Sets this character's accessible flags. Note that this method overwrites **all** flags instead of adding them.
--- @realm server
--- @string flags Flag(s) this charater is allowed to have
--- @see giveFlags
+    --- Sets this character's accessible flags. Note that this method overwrites **all** flags instead of adding them.
+    -- @realm server
+    -- @string flags Flag(s) this charater is allowed to have
+    -- @see giveFlags
     function charMeta:setFlags(flags)
         self:setData("f", flags)
     end
 
---- Adds a flag to the list of this character's accessible flags. This does not overwrite existing flags.
--- @realm server
--- @string flags Flag(s) this character should be given
--- @usage character:GiveFlags("pet")
--- gives p, e, and t flags to the character
--- @see hasFlags
+    --- Adds a flag to the list of this character's accessible flags. This does not overwrite existing flags.
+    -- @realm server
+    -- @string flags Flag(s) this character should be given
+    -- @usage character:GiveFlags("pet")
+    -- gives p, e, and t flags to the character
+    -- @see hasFlags
     function charMeta:giveFlags(flags)
         local addedFlags = ""
         for i = 1, #flags do
@@ -84,12 +84,12 @@ if SERVER then
         if addedFlags ~= "" then self:setFlags(self:getFlags() .. addedFlags) end
     end
 
---- Removes this character's access to the given flags.
--- @realm server
--- @string flags Flag(s) to remove from this character
--- @usage -- for a character with "pet" flags
--- character:takeFlags("p")
--- -- character now has e, and t flags
+    --- Removes this character's access to the given flags.
+    -- @realm server
+    -- @string flags Flag(s) to remove from this character
+    -- @usage -- for a character with "pet" flags
+    -- character:takeFlags("p")
+    -- -- character now has e, and t flags
     function charMeta:takeFlags(flags)
         local oldFlags = self:getFlags()
         local newFlags = oldFlags
