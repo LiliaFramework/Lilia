@@ -204,8 +204,8 @@ function lia.util.PlayerInRadius(pos, dist)
     return t
 end
 if SERVER then
-    --- Notifies a player or all players with a message.
-	-- @realm server
+--- Notifies a player or all players with a message.
+-- @realm server
 -- @param message The message to be notified
 -- @param recipient The player to receive the notification (optional, if nil, broadcast to all players)
 
@@ -236,7 +236,7 @@ if SERVER then
         end
     end
 --- Notifies a player or all players with a localized message.
-	-- @realm server
+-- @realm server
 -- @param message The localized message to be notified
 -- @param recipient The player to receive the notification (optional, if nil, broadcast to all players)
 -- @param ... Additional parameters for message formatting
@@ -262,7 +262,7 @@ if SERVER then
         end
     end
 --- Finds empty spaces around an entity where another entity can be placed.
-	-- @realm server
+-- @realm server
 -- @param entity The entity to find empty spaces around
 -- @param filter Entities to filter out from the collision check (optional)
 -- @param spacing Spacing between empty spaces (default is 32 units)
@@ -299,17 +299,15 @@ if SERVER then
         table.sort(output, function(a, b) return a:Distance(position) < b:Distance(position) end)
         return output
     end
---- Spawns a prop at a given position with optional parameters.
+	--- Spawns a prop at a given position with optional parameters.
 	-- @realm server
-
--- @param model Model of the prop to spawn
--- @param position Position to spawn the prop
--- @param force Force to apply to the prop (optional)
--- @param lifetime Lifetime of the prop in seconds (optional)
--- @param angles Angles of the prop (optional)
--- @param collision Collision group of the prop (optional)
--- @return The spawned prop entity
-
+	-- @param model Model of the prop to spawn
+	-- @param position Position to spawn the prop
+	-- @param force Force to apply to the prop (optional)
+	-- @param lifetime Lifetime of the prop in seconds (optional)
+	-- @param angles Angles of the prop (optional)
+	-- @param collision Collision group of the prop (optional)
+	-- @return The spawned prop entity
     function lia.util.spawnProp(model, position, force, lifetime, angles, collision)
         local entity = ents.Create("prop_physics")
         entity:SetModel(model)
@@ -326,37 +324,33 @@ if SERVER then
         if (lifetime or 0) > 0 then timer.Simple(lifetime, function() if IsValid(entity) then entity:Remove() end end) end
         return entity
     end
---- Logs a message with a timestamp to the console.
+	--- Logs a message with a timestamp to the console.
 	-- @realm server
-
--- @param str The message to be logged
+	-- @param str The message to be logged
 
     function lia.util.DebugLog(str)
         MsgC(Color("sky_blue"), os.date("(%d/%m/%Y - %H:%M:%S)", os.time()), Color("yellow"), " [LOG] ", color_white, str, "\n")
     end
---- Logs a debug message to the console.
+	--- Logs a debug message to the console.
 	-- @realm server
-
--- @param msg The debug message string
--- @param ... Additional parameters for message formatting
+	-- @param msg The debug message string
+	-- @param ... Additional parameters for message formatting
 
     function lia.util.DebugMessage(msg, ...)
         MsgC(Color(70, 150, 255), "[CityRP] DEBUG: ", string.format(msg, ...), "\n")
     end
---- Logs a warning message to the console.
+	--- Logs a warning message to the console.
 	-- @realm server
-
--- @param message The warning message string
--- @param ... Additional parameters for message formatting
+	-- @param message The warning message string
+	-- @param ... Additional parameters for message formatting
 
     function lia.util.DWarningMessage(message, ...)
         MsgC(Color(255, 100, 0), string.format(message, ...), "\n")
     end
---- Prints a message to a player's chat.
+	--- Prints a message to a player's chat.
 	-- @realm server
-
--- @param target The player to receive the chat message
--- @param ... The message or messages to print
+	-- @param target The player to receive the chat message
+	-- @param ... The message or messages to print
 
     function lia.util.ChatPrint(target, ...)
         netstream.Start(target, "ChatPrint", {...})
@@ -385,8 +379,7 @@ else
         }, 1, alpha or (color.a * 0.575))
     end
 --- Draws a textured rectangle with a specified material and color.
-	-- @realm client
-
+-- @realm client
 -- @param material Material to use for the texture
 -- @param color Color of the texture to draw
 -- @param x X-position of the top-left corner of the rectangle
@@ -400,8 +393,7 @@ else
         surface.DrawTexturedRect(x, y, w, h)
     end
 --- Calls a named skin function with optional arguments on a panel.
-	-- @realm client
-
+-- @realm client
 -- @param name Name of the skin function to call
 -- @param panel Panel to apply the skin function to
 -- @param a Argument 1 (optional)
@@ -414,12 +406,12 @@ else
 -- @return The result of the skin function call
 
 function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
-        local skin = (ispanel(panel) and IsValid(panel)) and panel:GetSkin() or derma.GetDefaultSkin()
-        if not skin then return end
-        local func = skin[name]
-        if not func then return end
-        return func(skin, panel, a, b, c, d, e, f, g)
-    end
+    local skin = (ispanel(panel) and IsValid(panel)) and panel:GetSkin() or derma.GetDefaultSkin()
+    if not skin then return end
+    local func = skin[name]
+    if not func then return end
+    return func(skin, panel, a, b, c, d, e, f, g)
+end
 
 	--- Wraps text so it does not pass a certain width. This function will try and break lines between words if it can,
 	-- otherwise it will break a word if it's too long.
@@ -457,14 +449,13 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
     end
 --- Displays a notification message in the chat.
 -- @param message The message to display
-	-- @realm client
+-- @realm client
 
     function lia.util.notify(message)
         chat.AddText(message)
     end
 --- Displays a localized notification message in the chat.
-	-- @realm client
-
+-- @realm client
 -- @param message The message to display (localized)
 -- @param ... Additional parameters for string formatting
 
@@ -472,8 +463,7 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         lia.util.notify(L(message, ...))
     end
 --- Converts a color object to a string representation.
-	-- @realm client
-
+-- @realm client
 -- @param color The color object to convert
 -- @return A string representation of the color in the format "r,g,b,a"
 
@@ -482,8 +472,7 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         return (color.r or 255) .. "," .. (color.g or 255) .. "," .. (color.b or 255) .. "," .. (color.a or 255)
     end
 --- Displays a caption message on the screen for a specified duration.
-	-- @realm client
-
+-- @realm client
 -- @param text The caption text to display
 -- @param duration The duration (in seconds) for which to display the caption (optional, default is the length of the text multiplied by 0.1)
 
@@ -492,8 +481,7 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         gui.AddCaption(text, duration or string.len(text) * 0.1)
     end
 --- Displays a caption message on the screen for a specified duration.
-	-- @realm client
-
+-- @realm client
 -- @param text The caption text to display
 -- @param duration The duration (in seconds) for which to display the caption (optional, default is the length of the text multiplied by 0.1)
 
@@ -502,8 +490,7 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         gui.AddCaption(text, duration or string.len(text) * 0.1)
     end
 --- Determines the color indicating the health status of a player.
-	-- @realm client
-
+-- @realm client
 -- @param client The player for which to determine the color
 -- @return The color representing the player's health status
 
@@ -515,14 +502,13 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         return health_color
     end
 --- Scales a value proportionally based on the screen height.
-	-- @realm client
-
+-- @realm client
 -- @param n The value to scale
 -- @param type If true, scales based on vertical resolution; if false or nil, scales based on default values
 -- @return The scaled value
 
-    function lia.util.ScreenScaleH(n, type)
-        if type then
+    function lia.util.ScreenScaleH(n, bool)
+        if bool then
             if ScrH() > 720 then return n end
             return math.ceil(n / 1080 * ScrH())
         end
@@ -538,8 +524,7 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         end
     end)
 --- Displays a numeric input request dialog.
-	-- @realm client
-
+-- @realm client
 -- @param strTitle The title of the dialog window
 -- @param strText The text to display in the dialog
 -- @param strDefaultText The default text to display in the input field
@@ -641,7 +626,7 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         MsgN(message)
     end
 --- Displays a query notification panel with options.
-	-- @realm client
+-- @realm client
 -- @param question The question or prompt to display
 -- @param option1 The text for the first option
 -- @param option2 The text for the second option
