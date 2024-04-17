@@ -391,7 +391,12 @@ function lia.db.updateTable(value, callback, dbTable, condition)
     local query = "UPDATE " .. ("lia_" .. (dbTable or "characters")) .. " SET " .. genUpdateList(value) .. (condition and " WHERE " .. condition or "")
     lia.db.query(query, callback)
 end
-
+--- Selects data from a database table.
+-- @param fields The fields to select, can be either a string or a table of strings
+-- @param dbTable The name of the database table
+-- @param condition The condition for the selection query
+-- @param limit The limit for the number of results to be returned
+-- @return A deferred object that resolves to a table containing the results and last inserted ID
 -- @realm server
 function lia.db.select(fields, dbTable, condition, limit)
     local d = deferred.new()
