@@ -1,16 +1,28 @@
-﻿lia.bar = lia.bar or {}
+﻿--- Helper library for generating bars.
+-- @module lia.bar
+lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
 lia.bar.list = {}
 lia.bar.actionText = ""
 lia.bar.actionStart = 0
 lia.bar.actionEnd = 0
+--- Retrieves information about a bar identified by its identifier.
+-- @param identifier (any) The identifier of the bar.
+-- @return (table or nil) The information about the bar if found, nil otherwise.
+-- @realm shared
 function lia.bar.get(identifier)
     for i = 1, #lia.bar.list do
         local bar = lia.bar.list[i]
         if bar and bar.identifier == identifier then return bar end
     end
 end
-
+--- Adds a new bar or updates an existing one.
+-- @param getValue (function) The function to retrieve the current value of the bar.
+-- @param color (table) Optional. The color of the bar.
+-- @param priority (number) Optional. The priority of the bar in the draw order.
+-- @param identifier (any) Optional. The identifier of the bar.
+-- @return (number) The priority of the added or updated bar.
+-- @realm shared
 function lia.bar.add(getValue, color, priority, identifier)
     if identifier then
         local oldBar = lia.bar.get(identifier)
@@ -28,7 +40,9 @@ function lia.bar.add(getValue, color, priority, identifier)
     }
     return priority
 end
-
+--- Removes a bar identified by its identifier.
+-- @param identifier (any) The identifier of the bar to remove.
+-- @realm shared
 function lia.bar.remove(identifier)
     local bar
     for _, v in ipairs(lia.bar.list) do
@@ -40,6 +54,14 @@ function lia.bar.remove(identifier)
 
     if bar then table.remove(lia.bar.list, bar.priority) end
 end
+--- Draws a single bar with the specified parameters.
+-- @param x (number) The x-coordinate of the top-left corner of the bar.
+-- @param y (number) The y-coordinate of the top-left corner of the bar.
+-- @param w (number) The width of the bar.
+-- @param h (number) The height of the bar.
+-- @param value (number) The current value of the bar (0 to 1).
+-- @param color (table) The color of the bar.
+-- @realm shared
 
 function lia.bar.draw(x, y, w, h, value, color)
     lia.util.drawBlurAt(x, y, w, h)
@@ -53,7 +75,8 @@ function lia.bar.draw(x, y, w, h, value, color)
     surface.SetMaterial(lia.util.getMaterial("vgui/gradient-u"))
     surface.DrawTexturedRect(x, y, w, h)
 end
-
+--- Draws the action bar, if applicable.
+-- @realm shared
 function lia.bar.drawAction()
     local start, finish = lia.bar.actionStart, lia.bar.actionEnd
     local curTime = CurTime()
@@ -79,7 +102,8 @@ function lia.bar.drawAction()
         end
     end
 end
-
+--- Draws all bars in the list.
+-- @realm shared
 function lia.bar.drawAll()
     lia.bar.drawAction()
     if hook.Run("ShouldHideBars") then return end

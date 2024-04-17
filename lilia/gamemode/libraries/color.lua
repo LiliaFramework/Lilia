@@ -1,4 +1,6 @@
-﻿lia.color = lia.color or {}
+﻿--- Helper library for managing colors.
+-- @module lia.color
+lia.color = lia.color or {}
 function lia.color.Lighten(colot, amount)
     return Color(math.Clamp(colot.r + amount, 0, 255), math.Clamp(colot.g + amount, 0, 255), math.Clamp(colot.b + amount, 0, 255), colot.a)
 end

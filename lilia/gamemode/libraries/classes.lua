@@ -1,5 +1,16 @@
-﻿lia.class = lia.class or {}
+﻿--[[--
+Helper library for loading/getting class information.
+
+Classes are temporary assignments for characters - analogous to a "job" in a faction. For example, you may have a police faction
+in your schema, and have "police recruit" and "police chief" as different classes in your faction. Anyone can join a class in
+their faction by default, but you can restrict this as you need with `CLASS.onCanBe`.
+]]
+-- @module lia.class
+lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
+--- Loads class information from Lua files in the specified directory.
+-- @realm shared
+-- @param directory (string) The directory path from which to load class Lua files.
 function lia.class.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local index = #lia.class.list + 1
@@ -37,6 +48,12 @@ function lia.class.loadFromDir(directory)
         CLASS = nil
     end
 end
+--- Checks if a player can join a particular class.
+-- @realm shared
+-- @param client (Player) The player wanting to join the class.
+-- @param class (number) The identifier of the class.
+-- @return (boolean) Whether the player can join the class.
+-- @return (string) Reason for the failure, if any.
 
 function lia.class.canBe(client, class)
     local info = lia.class.list[class]
@@ -47,10 +64,18 @@ function lia.class.canBe(client, class)
     if hook.Run("CanPlayerJoinClass", client, class, info) == false then return false end
     return info:onCanBe(client)
 end
+--- Retrieves information about a class.
+-- @realm shared
+-- @param identifier (number) The identifier of the class.
+-- @return (table) Information about the class.
 
 function lia.class.get(identifier)
     return lia.class.list[identifier]
 end
+--- Retrieves a list of players belonging to a specific class.
+-- @realm shared
+-- @param class (number) The identifier of the class.
+-- @return (table) List of players belonging to the class.
 
 function lia.class.getPlayers(class)
     local players = {}
@@ -60,6 +85,10 @@ function lia.class.getPlayers(class)
     end
     return players
 end
+--- Retrieves the count of players belonging to a specific class.
+-- @realm shared
+-- @param class (number) The identifier of the class.
+-- @return (number) The count of players belonging to the class.
 
 function lia.class.getPlayerCount(class)
     local count = 0
@@ -69,6 +98,10 @@ function lia.class.getPlayerCount(class)
     end
     return count
 end
+--- Retrieves the identifier of a class based on its unique ID or name.
+-- @realm shared
+-- @param class (string) The unique ID or name of the class.
+-- @return (number or nil) The identifier of the class if found, nil otherwise.
 
 function lia.class.retrieveClass(class)
     for key, classTable in pairs(lia.class.list) do

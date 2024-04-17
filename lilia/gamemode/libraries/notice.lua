@@ -1,4 +1,7 @@
-﻿lia.notices = lia.notices or {}
+﻿--- Notification helper functions
+-- @module lia.notices
+
+lia.notices = lia.notices or {}
 lia.noticess = lia.noticess or {}
 lia.config.NotifTypes = {
     [1] = {

@@ -1,4 +1,6 @@
-﻿lia.db = lia.db or {}
+﻿--- Helper library for managing database.
+-- @module lia.db
+lia.db = lia.db or {}
 lia.db.queryQueue = lia.db.queue or {}
 lia.db.prepared = lia.db.prepared or {}
 MYSQLOO_QUEUE = MYSQLOO_QUEUE or {}
