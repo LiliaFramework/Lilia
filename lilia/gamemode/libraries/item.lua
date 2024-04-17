@@ -63,6 +63,11 @@ local GridInv = FindMetaTable("GridInv")
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
+-- Loads an item from a Lua file.
+-- @param path (string) - The path to the Lua file.
+-- @param baseID (string) - The base ID of the item.
+-- @param isBaseItem (boolean) - Whether the item is a base item.
+-- @realm shared
 
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua") or path:match("([_%w]+)%.lua")
@@ -73,11 +78,21 @@ function lia.item.load(path, baseID, isBaseItem)
         ErrorNoHalt("[Lilia] Item at '" .. path .. "' follows an invalid naming convention!\n")
     end
 end
-
+-- Checks if an object is an item.
+-- @param object (table) - The object to check.
+-- @return (boolean) - Whether the object is an item.
+-- @realm shared
 function lia.item.isItem(object)
     return istable(object) and object.isItem == true
 end
-
+-- Registers a new item.
+-- @param uniqueID (string) - The unique ID of the item.
+-- @param baseID (string) - The base ID of the item.
+-- @param isBaseItem (boolean) - Indicates if the item is a base item.
+-- @param path (string) - The file path of the item.
+-- @param luaGenerated (boolean) - Indicates if the item is Lua-generated.
+-- @return (table) - The registered item.
+-- @realm shared
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     assert(isstring(uniqueID), "uniqueID must be a string")
     local baseTable = lia.item.base[baseID] or lia.meta.item
@@ -130,7 +145,10 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     ITEM = nil
     return targetTable[itemType]
 end
-
+-- Loads items from a directory.
+-- @param directory (string) - The directory path.
+-- @param isFirstLoad (boolean) - Indicates if it's the first load.
+-- @realm shared
 function lia.item.loadFromDir(directory, isFirstLoad)
     local files, folders
     files = file.Find(directory .. "/base/*.lua", "LUA")
@@ -152,7 +170,11 @@ function lia.item.loadFromDir(directory, isFirstLoad)
 
     if isFirstLoad then hook.Run("InitializedItems") end
 end
-
+-- Creates a new item instance.
+-- @param uniqueID (string) - The unique ID of the item.
+-- @param id (number) - The ID of the item.
+-- @return (table) - The new item instance.
+-- @realm shared
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
     assert(isnumber(id), "non-number ID given to lia.item.new")
@@ -174,7 +196,11 @@ function lia.item.new(uniqueID, id)
         error("[Lilia] Attempt to create an unknown item '" .. tostring(uniqueID) .. "'\n")
     end
 end
-
+-- Registers a new inventory type.
+-- @param invType (string) - The inventory type.
+-- @param w (number) - The width of the inventory.
+-- @param h (number) - The height of the inventory.
+-- @realm shared
 function lia.item.registerInv(invType, w, h)
     assert(GridInv, "GridInv not found")
     local inventory = GridInv:extend("GridInv" .. invType)
@@ -189,7 +215,11 @@ function lia.item.registerInv(invType, w, h)
 
     inventory:register(invType)
 end
-
+-- Creates a new inventory.
+-- @param owner (number) - The owner of the inventory.
+-- @param invType (string) - The inventory type.
+-- @param callback (function) - The callback function.
+-- @realm shared
 function lia.item.newInv(owner, invType, callback)
     lia.inventory.instance(invType, {
         char = owner
@@ -207,11 +237,19 @@ function lia.item.newInv(owner, invType, callback)
         if callback then callback(inventory) end
     end)
 end
-
+-- Retrieves an inventory by its ID.
+-- @param invID (number) - The ID of the inventory.
+-- @return (table) - The inventory object.
+-- @realm shared
 function lia.item.getInv(invID)
     return lia.inventory.instances[invID]
 end
-
+-- Creates a new inventory instance.
+-- @param w (number) - The width of the inventory.
+-- @param h (number) - The height of the inventory.
+-- @param id (number) - The ID of the inventory.
+-- @return (table) - The new inventory instance.
+-- @realm shared
 function lia.item.createInv(w, h, id)
     assert(GridInv, "GridInv not found")
     local instance = GridInv:new()
@@ -225,31 +263,21 @@ function lia.item.createInv(w, h, id)
     return instance
 end
 
-lia.char.registerVar("inv", {
-    noNetworking = true,
-    noDisplay = true,
-    onGet = function(character, index)
-        if index and not isnumber(index) then return character.vars.inv or {} end
-        return character.vars.inv and character.vars.inv[index or 1]
-    end,
-    onSync = function(character, recipient)
-        net.Start("liaCharacterInvList")
-        net.WriteUInt(character:getID(), 32)
-        net.WriteUInt(#character.vars.inv, 32)
-        for i = 1, #character.vars.inv do
-            net.WriteType(character.vars.inv[i].id)
-        end
 
-        if recipient == nil then
-            net.Broadcast()
-        else
-            net.Send(recipient)
-        end
-    end
-})
 
 if SERVER then
-    function lia.item.instance(index, uniqueID, itemData, x, y, callback)
+
+-- Instantiates an item and adds it to an inventory.
+-- @param index (string|number) - The inventory index or unique ID.
+-- @param uniqueID (string|table) - The unique ID of the item or item data.
+-- @param itemData (table) - The item data.
+-- @param x (number) - The x-coordinate.
+-- @param y (number) - The y-coordinate.
+-- @param callback (function) - The callback function.
+-- @return (table) - A deferred promise.
+
+    -- @realm server
+function lia.item.instance(index, uniqueID, itemData, x, y, callback)
         if isstring(index) and (istable(uniqueID) or (itemData == nil and x == nil)) then
             itemData = uniqueID
             uniqueID = index
@@ -302,16 +330,22 @@ if SERVER then
         end
         return d
     end
+-- Deletes an item by its ID.
+-- @param id (number) - The ID of the item.
 
-    function lia.item.deleteByID(id)
+    -- @realm server
+function lia.item.deleteByID(id)
         if lia.item.instances[id] then
             lia.item.instances[id]:delete()
         else
             lia.db.delete("items", "_itemID = " .. id)
         end
     end
+-- Loads an item by its ID.
+-- @param itemIndex (number|table) - The item index or array of indices.
 
-    function lia.item.loadItemByID(itemIndex)
+    -- @realm server
+function lia.item.loadItemByID(itemIndex)
         local range
         if istable(itemIndex) then
             range = "(" .. table.concat(itemIndex, ", ") .. ")"
@@ -367,8 +401,13 @@ if SERVER then
         end)
         return d
     end
-
-    function lia.item.restoreInv(invID, w, h, callback)
+-- Restores an inventory with the specified dimensions.
+-- @param invID (number) - The inventory ID.
+-- @param w (number) - The width of the inventory.
+-- @param h (number) - The height of the inventory.
+-- @param callback (function) - The callback function.
+-- @realm server
+function lia.item.restoreInv(invID, w, h, callback)
         lia.inventory.loadByID(invID):next(function(inventory)
             if not inventory then return end
             inventory:setData("w", w)

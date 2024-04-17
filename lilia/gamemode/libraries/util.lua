@@ -161,7 +161,7 @@ end
 -- @param filter[opt] Entities to filter out from the collision check
 -- @treturn boolean True if the position can fit the collision hull, false otherwise
 -- @realm shared
-function lia.util.CanFit(pos, mins, maxs, filter)
+function lia.util.canFit(pos, mins, maxs, filter)
     mins = mins ~= nil and mins or Vector(16, 16, 0)
     local tr = util.TraceHull({
         start = pos + Vector(0, 0, 1),
@@ -178,7 +178,7 @@ end
 -- @param chance The probability of success in percentage
 -- @treturn boolean True if the chance is successful, false otherwise
 -- @realm shared
-function lia.util.Chance(chance)
+function lia.util.chance(chance)
     local rand = math.random(0, 100)
     if rand <= chance then return true end
     return false
@@ -189,7 +189,7 @@ end
 -- @param dist The maximum distance from the center
 -- @treturn table Table containing players within the specified radius
 -- @realm shared
-function lia.util.PlayerInRadius(pos, dist)
+function lia.util.playerInRadius(pos, dist)
     dist = dist * dist
     local t = {}
     for _, ply in ipairs(player.GetAll()) do
@@ -216,7 +216,7 @@ if SERVER then
     --- Spawns entities from a table of entity-position pairs.
     -- @realm server
     -- @param entityTable Table containing entity-position pairs
-    function lia.util.SpawnEntities(entityTable)
+    function lia.util.spawnEntities(entityTable)
         for entity, position in pairs(entityTable) do
             if isvector(position) then
                 local newEnt = ents.Create(entity)
@@ -323,7 +323,7 @@ if SERVER then
     --- Logs a message with a timestamp to the console.
     -- @realm server
     -- @param str The message to be logged
-    function lia.util.DebugLog(str)
+    function lia.util.debugLog(str)
         MsgC(Color("sky_blue"), os.date("(%d/%m/%Y - %H:%M:%S)", os.time()), Color("yellow"), " [LOG] ", color_white, str, "\n")
     end
 
@@ -331,7 +331,7 @@ if SERVER then
     -- @realm server
     -- @param msg The debug message string
     -- @param ... Additional parameters for message formatting
-    function lia.util.DebugMessage(msg, ...)
+    function lia.util.debugMessage(msg, ...)
         MsgC(Color(70, 150, 255), "[CityRP] DEBUG: ", string.format(msg, ...), "\n")
     end
 
@@ -339,7 +339,7 @@ if SERVER then
     -- @realm server
     -- @param message The warning message string
     -- @param ... Additional parameters for message formatting
-    function lia.util.DWarningMessage(message, ...)
+    function lia.util.dWarningMessage(message, ...)
         MsgC(Color(255, 100, 0), string.format(message, ...), "\n")
     end
 
@@ -399,7 +399,7 @@ else
     -- @param f Argument 6 (optional)
     -- @param g Argument 7 (optional)
     -- @return The result of the skin function call
-    function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
+    function lia.util.skinFunc(name, panel, a, b, c, d, e, f, g)
         local skin = (ispanel(panel) and IsValid(panel)) and panel:GetSkin() or derma.GetDefaultSkin()
         if not skin then return end
         local func = skin[name]
@@ -500,7 +500,7 @@ else
     -- @param n The value to scale
     -- @param bool If true, scales based on vertical resolution; if false or nil, scales based on default values
     -- @return The scaled value
-    function lia.util.ScreenScaleH(n, bool)
+    function lia.util.screenScaleH(n, bool)
         if bool then
             if ScrH() > 720 then return n end
             return math.ceil(n / 1080 * ScrH())
@@ -800,7 +800,7 @@ else
     -- @param _ Unused parameter, kept for compatibility
     -- @param pngParameters Optional parameters for loading PNG images (default is "noclamp smooth")
     -- @param imageProvider Optional URL for the remote image provider (default is "https://i.imgur.com/")
-    function lia.util.FetchImage(id, callback, _, pngParameters, imageProvider)
+    function lia.util.fetchImage(id, callback, _, pngParameters, imageProvider)
         local loadedImage = lia.util.LoadedImages[id]
         if loadedImage then
             if callback then callback(loadedImage) end
@@ -848,3 +848,42 @@ function lia.util.getMaterial(materialPath)
     lia.util.cachedMaterials[materialPath] = lia.util.cachedMaterials[materialPath] or Material(materialPath)
     return lia.util.cachedMaterials[materialPath]
 end
+lia.util.FindPlayer = lia.util.findPlayer,
+lia.util.EmitQueuedSounds = lia.util.emitQueuedSounds,
+lia.util.StringMatches = lia.util.stringMatches,
+lia.util.GridVector = lia.util.gridVector,
+lia.util.GetAllChar = lia.util.getAllChar,
+lia.util.IsSteamID = lia.util.isSteamID,
+lia.util.DateToNumber = lia.util.dateToNumber,
+lia.util.GetAdmins = lia.util.getAdmins,
+lia.util.FindPlayerBySteamID64 = lia.util.findPlayerBySteamID64,
+lia.util.FindPlayerBySteamID = lia.util.findPlayerBySteamID,
+lia.util.CanFit = lia.util.canFit,
+lia.util.Chance = lia.util.chance,
+lia.util.PlayerInRadius = lia.util.playerInRadius,
+lia.util.Notify = lia.util.notify,
+lia.util.SpawnEntities = lia.util.spawnEntities,
+lia.util.NotifyLocalized = lia.util.notifyLocalized,
+lia.util.FindEmptySpace = lia.util.findEmptySpace,
+lia.util.SpawnProp = lia.util.spawnProp,
+lia.util.DebugLog = lia.util.debugLog,
+lia.util.DebugMessage = lia.util.debugMessage,
+lia.util.DWarningMessage = lia.util.dWarningMessage,
+lia.util.ChatPrint = lia.util.chatPrint,
+lia.util.DrawText = lia.util.drawText,
+lia.util.DrawTexture = lia.util.drawTexture,
+lia.util.SkinFunc = lia.util.skinFunc,
+lia.util.WrapText = lia.util.wrapText,
+lia.util.Notify = lia.util.notify,
+lia.util.NotifyLocalized = lia.util.notifyLocalized,
+lia.util.ColorToText = lia.util.colorToText,
+lia.util.EndCaption = lia.util.endCaption,
+lia.util.StartCaption = lia.util.startCaption,
+lia.util.GetInjuredColor = lia.util.getInjuredColor,
+lia.util.ScreenScaleH = lia.util.screenScaleH,
+lia.util.Notify = lia.util.notify,
+lia.util.NotifQuery = lia.util.notifQuery,
+lia.util.DrawBlur = lia.util.drawBlur,
+lia.util.DrawBlurAt = lia.util.drawBlurAt,
+lia.util.FetchImage = lia.util.fetchImage,
+lia.util.GetMaterial = lia.util.getMaterial

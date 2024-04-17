@@ -23,6 +23,10 @@ local DUMMY_COMMAND = {
     onRun = function() end
 }
 
+--- Generates a timestamp string for chat messages.
+-- @param ooc (boolean) Whether the message is Out of Character (OOC).
+-- @return (string) The formatted timestamp string, including date and time if configured to show.
+-- @realm shared
 function lia.chat.timestamp(ooc)
     return lia.config.ChatShowTime and (ooc and " " or "") .. "(" .. lia.date.GetFormattedDate(nil, false, false, false, false, true) .. ")" .. (ooc and "" or " ") or ""
 end

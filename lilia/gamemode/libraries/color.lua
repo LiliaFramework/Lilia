@@ -1,28 +1,71 @@
 ﻿--- Helper library for managing colors.
 -- @module lia.color
 lia.color = lia.color or {}
+
+--- Lightens a color by the specified amount.
+-- @param colot Color: The color to lighten.
+-- @param amount number: The amount by which to lighten the color.
+-- @return Color: The resulting lightened color.
+-- @realm client
 function lia.color.Lighten(colot, amount)
     return Color(math.Clamp(colot.r + amount, 0, 255), math.Clamp(colot.g + amount, 0, 255), math.Clamp(colot.b + amount, 0, 255), colot.a)
 end
-
+--- Darkens a color by the specified amount.
+-- @param colot Color: The color to darken.
+-- @param amount number: The amount by which to darken the color.
+-- @return Color: The resulting darkened color.
+-- @realm client
 function lia.color.Darken(colot, amount)
     return Color(math.Clamp(colot.r - amount, 0, 255), math.Clamp(colot.g - amount, 0, 255), math.Clamp(colot.b - amount, 0, 255), colot.a)
 end
 
 do
     local colors = {
-        blue = Color(0, 0, 255),
-        sky_blue = Color(0, 255, 255),
+        black = Color(0, 0, 0),
+        white = Color(255, 255, 255),
+        gray = Color(128, 128, 128),
+        dark_gray = Color(64, 64, 64),
+        light_gray = Color(192, 192, 192),
         red = Color(255, 0, 0),
-        orange = Color(252, 177, 3),
-        dark_lime = Color(50, 255, 50),
-        light_lime = Color(50, 200, 50),
-        yellow = Color(255, 255, 0),
-        light_gray = Color(197, 197, 197),
+        dark_red = Color(139, 0, 0),
+        light_red = Color(255, 99, 71),
         green = Color(0, 255, 0),
-        light_green = Color(100, 255, 100),
-        gray = Color(167, 167, 167)
-    }
+        dark_green = Color(0, 100, 0),
+        light_green = Color(144, 238, 144),
+        blue = Color(0, 0, 255),
+        dark_blue = Color(0, 0, 139),
+        light_blue = Color(173, 216, 230),
+        cyan = Color(0, 255, 255),
+        dark_cyan = Color(0, 139, 139),
+        magenta = Color(255, 0, 255),
+        dark_magenta = Color(139, 0, 139),
+        yellow = Color(255, 255, 0),
+        dark_yellow = Color(139, 139, 0),
+        orange = Color(255, 165, 0),
+        dark_orange = Color(255, 140, 0),
+        purple = Color(128, 0, 128),
+        dark_purple = Color(75, 0, 130),
+        pink = Color(255, 192, 203),
+        dark_pink = Color(199, 21, 133),
+        brown = Color(165, 42, 42),
+        dark_brown = Color(139, 69, 19),
+        maroon = Color(128, 0, 0),
+        dark_maroon = Color(139, 28, 98),
+        navy = Color(0, 0, 128),
+        dark_navy = Color(0, 0, 139),
+        olive = Color(128, 128, 0),
+        dark_olive = Color(85, 107, 47),
+        teal = Color(0, 128, 128),
+        dark_teal = Color(0, 128, 128),
+        peach = Color(255, 218, 185),
+        dark_peach = Color(255, 218, 185),
+        lavender = Color(230, 230, 250),
+        dark_lavender = Color(148, 0, 211),
+        aqua = Color(0, 255, 255),
+        dark_aqua = Color(0, 206, 209),
+        beige = Color(245, 245, 220),
+        dark_beige = Color(139, 131, 120)
+    }    
 
     local old_color = _OLD_COLOR_FN_ or Color
     _OLD_COLOR_FN_ = old_color
@@ -39,7 +82,11 @@ do
             return old_color(r, g, b, a)
         end
     end
-
+--- Registers a custom color with a specified name.
+-- @param name string: The name of the color to register.
+-- @param color Color: The color value to register.
+-- @param force boolean: If true, forces registration even if the name already exists.
+-- @realm client
     function lia.color.register(name, color, force)
         if not force and colors[name] then return end
         colors[name] = color
@@ -51,7 +98,14 @@ do
         local delta = max - min
         return (val - min) / delta
     end
-
+--- Interpolates between two colors in the HSV color space.
+-- @param start_color Color: The starting color.
+-- @param end_color Color: The ending color.
+-- @param maxValue number: The maximum value to interpolate between (used for normalization).
+-- @param currentValue number: The current value to interpolate (used for normalization).
+-- @param minValue number (optional): The minimum value to interpolate between (used for normalization). Defaults to 0.
+-- @return Color: The resulting interpolated color.
+-- @realm client
     function lia.color.LerpHSV(start_color, end_color, maxValue, currentValue, minValue)
         start_color = start_color or Color("green")
         end_color = end_color or Color("red")
@@ -62,7 +116,12 @@ do
         return HSVToColor(linear, 1, 1)
     end
 end
-
+--- Converts RGB values to a Color object.
+-- @param r number: The red component (0-255).
+-- @param g number: The green component (0-255).
+-- @param b number: The blue component (0-255).
+-- @return Color: The resulting color.
+-- @realm client
 function rgb(r, g, b)
     return Color(r / 255, g / 255, b / 255)
 end

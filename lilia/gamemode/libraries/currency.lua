@@ -4,17 +4,30 @@ lia.currency = lia.currency or {}
 lia.currency.symbol = lia.currency.symbol or "$"
 lia.currency.singular = lia.currency.singular or "dollar"
 lia.currency.plural = lia.currency.plural or "dollars"
+-- Sets the symbol, singular, and plural forms of the currency.
+-- @param symbol (string) The currency symbol.
+-- @param singular (string) The singular form of the currency name.
+-- @param plural (string) The plural form of the currency name.
 function lia.currency.set(symbol, singular, plural)
     lia.currency.symbol = symbol
     lia.currency.singular = singular
     lia.currency.plural = plural
 end
 
+-- Retrieves the formatted currency string based on the amount.
+-- @param amount (number) The amount of currency.
+-- @return (string) The formatted currency string.
 function lia.currency.get(amount)
     return lia.currency.symbol .. (amount == 1 and ("1 " .. lia.currency.singular) or (amount .. " " .. lia.currency.plural))
 end
 
 if SERVER then
+-- Spawns a currency entity at the specified position with the given amount and angle.
+-- This function is only available on the server.
+-- @param pos (Vector) The position where the currency entity will be spawned.
+-- @param amount (number) The amount of currency for the spawned entity.
+-- @param angle (Angle) (Optional) The angle of the spawned entity. Default is Angle(0, 0, 0).
+-- @realm server
     function lia.currency.spawn(pos, amount, angle)
         if not pos then
             print("[Lilia] Can't create currency entity: Invalid Position")

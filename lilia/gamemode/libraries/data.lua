@@ -5,7 +5,7 @@ lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
 if SERVER then
     --- Populates a file in the `data/lilia` folder with some serialized data.
-    -- @realm shared
+    -- @realm server
     -- @string key Name of the file to save
     -- @param value Some sort of data to save
     -- @bool[opt=false] global Whether or not to write directly to the `data/lilia` folder, or the `data/lilia/schema` folder,
@@ -24,7 +24,7 @@ if SERVER then
     end
 
     --- Deletes the contents of a saved file in the `data/lilia` folder.
-    -- @realm shared
+    -- @realm server
     -- @string key Name of the file to delete
     -- @bool[opt=false] global Whether or not the data is in the `data/lilia` folder, or the `data/lilia/schema` folder,
     -- where `schema` is the name of the current schema.

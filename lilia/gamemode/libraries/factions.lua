@@ -148,6 +148,9 @@ function lia.faction.jobGenerate(index, name, color, default, models)
     return FACTION
 end
 
+-- Iterates through faction model data and formats the model groups.
+-- This function is used to ensure consistency and correctness in model group data.
+-- @realm shared
 function lia.faction.formatModelData()
     for name, faction in pairs(lia.faction.teams) do
         if faction.models then

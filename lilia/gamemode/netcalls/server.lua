@@ -116,3 +116,5 @@ netstream.Hook("cmd", function(client, command, arguments)
         client.liaNextCmd = CurTime() + 0.2
     end
 end)
+
+netstream.Hook("liaCharFetchNames", function(client) netstream.Start(client, "liaCharFetchNames", lia.char.names) end)

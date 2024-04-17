@@ -15,25 +15,14 @@ charMeta.__index = charMeta
 charMeta.id = charMeta.id or 0
 charMeta.vars = charMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
-if SERVER then
-    if #lia.char.names < 1 then
-        lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
-            if data and #data > 0 then
-                for _, v in pairs(data) do
-                    lia.char.names[v._id] = v._name
-                end
+if SERVER and #lia.char.names < 1 then
+    lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
+        if data and #data > 0 then
+            for _, v in pairs(data) do
+                lia.char.names[v._id] = v._name
             end
-        end)
-    end
-
-    netstream.Hook("liaCharFetchNames", function(client) netstream.Start(client, "liaCharFetchNames", lia.char.names) end)
-    hook.Add("liaCharDeleted", "liaCharRemoveName", function(client, character)
-        lia.char.names[character:getID()] = nil
-        netstream.Start(client, "liaCharFetchNames", lia.char.names)
+        end
     end)
-else
-    netstream.Hook("liaCharFetchNames", function(data) lia.char.names = data end)
-    if #lia.char.names < 1 then netstream.Start("liaCharFetchNames") end
 end
 
 --- Creates a new empty `Character` object. If you are looking to create a usable character, see `lia.char.create`.
@@ -63,12 +52,19 @@ function lia.char.new(data, id, client, steamID)
     if IsValid(client) or steamID then character.steamID = IsValid(client) and client:SteamID64() or steamID end
     return character
 end
-
+--- Adds a hook function to be called when a character variable is modified.
+-- @param varName (string) The name of the character variable.
+-- @param hookName (string) The name of the hook.
+-- @param func (function) The function to be called when the character variable is modified.
+-- @realm shared
 function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
     lia.char.varHooks[varName][hookName] = func
 end
-
+--- Registers a character variable with specified data and associated hooks.
+-- @param key (any) The key identifier for the character variable.
+-- @param data (table) The data associated with the character variable.
+-- @realm shared
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
     data.index = data.index or table.Count(lia.char.vars)
@@ -138,7 +134,8 @@ function lia.char.registerVar(key, data)
 
     charMeta.vars[key] = data.default
 end
-
+-- Register the character name.
+-- @realm shared
 lia.char.registerVar("name", {
     field = "_name",
     default = "John Doe",
@@ -169,7 +166,8 @@ lia.char.registerVar("name", {
         end
     end,
 })
-
+-- Register the character description.
+-- @realm shared
 lia.char.registerVar("desc", {
     field = "_desc",
     default = "Please Enter Your Description With The Minimum Of " .. lia.config.MinDescLen .. " Characters!",
@@ -186,7 +184,8 @@ lia.char.registerVar("desc", {
         if isstring(desc) and override then newData.desc = desc end
     end,
 })
-
+-- Register the character model.
+-- @realm shared
 lia.char.registerVar("model", {
     field = "_model",
     default = "models/error.mdl",
@@ -276,11 +275,13 @@ lia.char.registerVar("model", {
         end
     end
 })
-
+-- Register the character class.
+-- @realm shared
 lia.char.registerVar("class", {
     noDisplay = true,
 })
-
+-- Register the character faction.
+-- @realm shared
 lia.char.registerVar("faction", {
     field = "_faction",
     default = "Citizen",
@@ -306,14 +307,16 @@ lia.char.registerVar("faction", {
     end,
     onAdjust = function(_, _, value, newData) newData.faction = lia.faction.indices[value].uniqueID end
 })
-
+-- Register the character money.
+-- @realm shared
 lia.char.registerVar("money", {
     field = "_money",
     default = 0,
     isLocal = true,
     noDisplay = true
 })
-
+-- Register the character data.
+-- @realm shared
 lia.char.registerVar("data", {
     default = {},
     isLocal = true,
@@ -337,7 +340,8 @@ lia.char.registerVar("data", {
         end
     end
 })
-
+-- Register the character vars.
+-- @realm shared
 lia.char.registerVar("var", {
     default = {},
     noDisplay = true,
@@ -370,7 +374,56 @@ lia.char.registerVar("var", {
         end
     end
 })
+-- Register the character attributes.
+-- @realm shared
+lia.char.registerVar("attribs", {
+    field = "_attribs",
+    default = {},
+    isLocal = true,
+    index = 4,
+    onValidate = function(value, _, client)
+        if value ~= nil then
+            if istable(value) then
+                local count = 0
+                for k, v in pairs(value) do
+                    local max = lia.attribs.list[k] and lia.attribs.list[k].startingMax or nil
+                    if max and max < v then return false, lia.attribs.list[k].name .. " too high" end
+                    count = count + v
+                end
 
+                local points = hook.Run("GetStartAttribPoints", client, count) or lia.config.MaxAttributes
+                if count > points then return false, "unknownError" end
+            else
+                return false, "unknownError"
+            end
+        end
+    end,
+    shouldDisplay = function(_) return table.Count(lia.attribs.list) > 0 end
+})
+-- Register the character inventory.
+-- @realm shared
+lia.char.registerVar("inv", {
+    noNetworking = true,
+    noDisplay = true,
+    onGet = function(character, index)
+        if index and not isnumber(index) then return character.vars.inv or {} end
+        return character.vars.inv and character.vars.inv[index or 1]
+    end,
+    onSync = function(character, recipient)
+        net.Start("liaCharacterInvList")
+        net.WriteUInt(character:getID(), 32)
+        net.WriteUInt(#character.vars.inv, 32)
+        for i = 1, #character.vars.inv do
+            net.WriteType(character.vars.inv[i].id)
+        end
+
+        if recipient == nil then
+            net.Broadcast()
+        else
+            net.Send(recipient)
+        end
+    end
+})
 do
     local playerMeta = FindMetaTable("Player")
     playerMeta.steamName = playerMeta.steamName or playerMeta.Name
