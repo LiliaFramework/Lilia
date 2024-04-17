@@ -41,7 +41,7 @@ end
 
 local charMeta = lia.meta.character
 if SERVER then
-    -- Called to apply flags when a player has spawned.
+    --- Called to apply flags when a player has spawned.
     -- @realm server
     -- @internal
     -- @player client Player to setup flags for

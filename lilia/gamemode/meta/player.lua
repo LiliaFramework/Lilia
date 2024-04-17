@@ -457,7 +457,14 @@ if SERVER then
             return data
         end
     end
-
+--- Sets an action bar for the player.
+-- @function playerMeta:setAction
+-- @param text The text to display on the action bar.
+-- @param[opt] time The duration for the action bar to display, defaults to 5 seconds. Set to 0 or nil to remove the action bar immediately.
+-- @param[opt] callback Function to execute when the action bar timer expires.
+-- @param[opt] startTime The start time of the action bar, defaults to the current time.
+-- @param[opt] finishTime The finish time of the action bar, defaults to startTime + time.
+-- @realm server
     function playerMeta:setAction(text, time, callback, startTime, finishTime)
         if time and time <= 0 then
             if callback then callback(self) end
@@ -476,15 +483,27 @@ if SERVER then
         netstream.Start(self, "actBar", startTime, finishTime, text)
         if callback then timer.Create("liaAct" .. self:UniqueID(), time, 1, function() if IsValid(self) then callback(self) end end) end
     end
+--- Retrieves the player's permission flags.
+-- @function playerMeta:getPermFlags
+-- @realm server
+-- @treturn string The player's permission flags.
 
     function playerMeta:getPermFlags()
         return self:getLiliaData("permflags", "")
     end
+--- Sets the player's permission flags.
+-- @function playerMeta:setPermFlags
+-- @param flags The permission flags to set.
+-- @realm server
 
     function playerMeta:setPermFlags(val)
         self:setLiliaData("permflags", val or "")
         self:saveLiliaData()
     end
+--- Grants permission flags to the player.
+-- @function playerMeta:givePermFlags
+-- @param flags The permission flags to grant.
+-- @realm server
 
     function playerMeta:givePermFlags(flags)
         local curFlags = self:getPermFlags()
@@ -501,7 +520,10 @@ if SERVER then
             end
         end
     end
-
+--- Revokes permission flags from the player.
+-- @function playerMeta:takePermFlags
+-- @param flags The permission flags to revoke.
+-- @realm server
     function playerMeta:takePermFlags(flags)
         local curFlags = self:getPermFlags()
         for i = 1, #flags do
@@ -516,6 +538,11 @@ if SERVER then
             end
         end
     end
+--- Checks if the player has a specific permission flag.
+-- @function playerMeta:hasPermFlag
+-- @param flag The permission flag to check.
+-- @realm server
+-- @treturn bool Whether or not the player has the permission flag.
 
     function playerMeta:hasPermFlag(flag)
         if not flag or #flag ~= 1 then return end
@@ -525,15 +552,28 @@ if SERVER then
         end
         return false
     end
+--- Retrieves the player's flag blacklist.
+-- @function playerMeta:getFlagBlacklist
+-- @realm server
+-- @treturn string The player's flag blacklist.
 
     function playerMeta:getFlagBlacklist()
         return self:getLiliaData("flagblacklist", "")
     end
+--- Sets the player's flag blacklist.
+-- @function playerMeta:setFlagBlacklist
+-- @param flags The flag blacklist to set.
+-- @realm server
 
     function playerMeta:setFlagBlacklist(flags)
         self:setLiliaData("flagblacklist", flags)
         self:saveLiliaData()
     end
+--- Adds flags to the player's flag blacklist.
+-- @function playerMeta:addFlagBlacklist
+-- @param flags The flags to add to the blacklist.
+-- @param[opt] blacklistInfo Additional information about the blacklist entry.
+-- @realm server
 
     function playerMeta:addFlagBlacklist(flags, blacklistInfo)
         local curBlack = self:getFlagBlacklist()

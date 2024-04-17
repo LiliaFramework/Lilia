@@ -111,11 +111,7 @@ function lia.faction.getPlayerCount(faction)
     return count
 end
 
---[[--
-Generates a faction job.
-
-This function is an example of how to create a custom faction using `lia.faction.jobGenerate`. It is not recommended to use this method directly as it may lead to unexpected behavior. Instead, consider using more appropriate methods provided by the framework, such as faction files.
-]]
+--- This function is an example of how to create a custom faction using `lia.faction.jobGenerate`. It is not recommended to use this method directly as it may lead to unexpected behavior. Instead, consider using more appropriate methods provided by the framework, such as faction files.
 -- @realm shared
 -- @number index The index of the faction. This should be a unique numerical identifier for the faction.
 -- @string name The name of the faction.
@@ -148,7 +144,7 @@ function lia.faction.jobGenerate(index, name, color, default, models)
     return FACTION
 end
 
--- Iterates through faction model data and formats the model groups.
+--- Iterates through faction model data and formats the model groups.
 -- This function is used to ensure consistency and correctness in model group data.
 -- @realm shared
 function lia.faction.formatModelData()

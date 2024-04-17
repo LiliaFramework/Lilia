@@ -98,7 +98,7 @@ function lia.menu.drawAll()
     end
 end
 
--- Retrieves the index and the choice of the active menu, if any.
+--- Retrieves the index and the choice of the active menu, if any.
 -- @return Index of the active menu in the `lia.menu.list` table, and the chosen option
 -- @realm client
 function lia.menu.getActiveMenu()

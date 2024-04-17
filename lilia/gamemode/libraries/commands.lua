@@ -232,42 +232,40 @@ if SERVER then
         end
     end
 
-    -- format `/CommandName some arguments`
-    -- @realm server
-    -- @player client Player who is executing the command
-    -- @string text Input string to search for the command format
-    -- @string[opt] realCommand Specific command to check for. If this is specified, it will not try to run any command that's
-    -- found at the beginning - only if it matches `realCommand`
-    -- @tab[opt] arguments Array of arguments to pass to the command. If not specified, it will try to extract it from the
-    -- string specified in `text` using `ix.command.ExtractArgs`
-    -- @treturn bool Whether or not a command has been found
-    -- @usage ix.lia.command.parse(player.GetByID(1), "/roll 10")
-    function lia.command.parse(client, text, realCommand, arguments)
-        if realCommand or text:utf8sub(1, 1) == "/" then
-            local match = realCommand or text:lower():match("/" .. "([_%w]+)")
-            if not match then
-                local post = string.Explode(" ", text)
-                local len = string.len(post[1])
-                match = post[1]:utf8sub(2, len)
-            end
-
-            match = match:lower()
-            local command = lia.command.list[match]
-            if command then
-                if not arguments then arguments = lia.command.extractArgs(text:sub(#match + 3)) end
-                lia.command.run(client, match, arguments)
-                if not realCommand then lia.log.add(client, "command", text) end
-            else
-                if IsValid(client) then
-                    client:notifyLocalized("cmdNoExist")
-                else
-                    print("Sorry, that command does not exist.")
-                end
-            end
-            return true
+--- Parses a command from an input string and executes it.
+-- @param client The player who is executing the command
+-- @param text Input string to search for the command format
+-- @param[opt] realCommand Specific command to check for. If specified, it will only try to run this command
+-- @param[opt] arguments Array of arguments to pass to the command. If not specified, it will try to extract them from the text
+-- @return bool Whether or not a command has been found and executed
+-- @usage ix.lia.command.parse(player.GetByID(1), "/roll 10")
+function lia.command.parse(client, text, realCommand, arguments)
+    if realCommand or text:utf8sub(1, 1) == "/" then
+        local match = realCommand or text:lower():match("/" .. "([_%w]+)")
+        if not match then
+            local post = string.Explode(" ", text)
+            local len = string.len(post[1])
+            match = post[1]:utf8sub(2, len)
         end
-        return false
+
+        match = match:lower()
+        local command = lia.command.list[match]
+        if command then
+            if not arguments then arguments = lia.command.extractArgs(text:sub(#match + 3)) end
+            lia.command.run(client, match, arguments)
+            if not realCommand then lia.log.add(client, "command", text) end
+        else
+            if IsValid(client) then
+                client:notifyLocalized("cmdNoExist")
+            else
+                print("Sorry, that command does not exist.")
+            end
+        end
+        return true
     end
+    return false
+end
+
 else
     --- Request the server to run a command. This mimics similar functionality to the client typing `/CommandName` in the chatbox.
     -- @realm client

@@ -36,7 +36,7 @@ function charMeta:__eq(other)
     return self:getID() == other:getID()
 end
 
--- Returns this character's database ID. This is guaranteed to be unique.
+--- Returns this character's database ID. This is guaranteed to be unique.
 -- @realm shared
 -- @return number Unique ID of character
 function charMeta:getID()
