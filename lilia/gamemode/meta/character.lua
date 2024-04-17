@@ -185,7 +185,6 @@ end
 
 if SERVER then
     --- Updates the value of a character attribute by adding a specified value to it.
-    -- @realm server
     -- @string key The key of the attribute to update.
     -- @int value The value to add to the attribute.
     -- @realm server
@@ -206,7 +205,7 @@ if SERVER then
     end
 
     --- Sets the value of a character attribute.
-    -- @realm server
+    
     -- @string key The key of the attribute to set.
     -- @int value The value to set for the attribute.
     -- @realm server
@@ -231,7 +230,6 @@ if SERVER then
     -- @string boostID The ID of the boost to add.
     -- @string attribID The ID of the attribute to which the boost should be added.
     -- @int boostAmount The amount of boost to add to the attribute.
-    -- @realm server
     -- @usage char:removeBoost("some_boost_id", "some_attribute_id", 10)
     function charMeta:addBoost(boostID, attribID, boostAmount)
         local boosts = self:getVar("boosts", {})
@@ -245,7 +243,6 @@ if SERVER then
     -- @realm server
     -- @string boostID The ID of the boost to remove.
     -- @string attribID The ID of the attribute from which the boost should be removed.
-    -- @realm server
     -- @usage char:removeBoost("some_boost_id", "some_attribute_id")
     function charMeta:removeBoost(boostID, attribID)
         local boosts = self:getVar("boosts", {})
