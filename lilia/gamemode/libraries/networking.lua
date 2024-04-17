@@ -1,5 +1,5 @@
 ﻿--- Networking helper functions
--- @module ix.net
+-- @module lia.net
 
 lia.net = lia.net or {}
 lia.net.globals = lia.net.globals or {}
