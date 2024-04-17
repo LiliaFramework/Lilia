@@ -8,6 +8,7 @@ lia.currency.plural = lia.currency.plural or "dollars"
 -- @param symbol (string) The currency symbol.
 -- @param singular (string) The singular form of the currency name.
 -- @param plural (string) The plural form of the currency name.
+-- @realm shared
 function lia.currency.set(symbol, singular, plural)
     lia.currency.symbol = symbol
     lia.currency.singular = singular
@@ -17,6 +18,7 @@ end
 -- Retrieves the formatted currency string based on the amount.
 -- @param amount (number) The amount of currency.
 -- @return (string) The formatted currency string.
+-- @realm shared
 function lia.currency.get(amount)
     return lia.currency.symbol .. (amount == 1 and ("1 " .. lia.currency.singular) or (amount .. " " .. lia.currency.plural))
 end
