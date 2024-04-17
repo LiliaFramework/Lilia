@@ -212,6 +212,7 @@ if SERVER then
             net.Send(recipient)
         end
     end
+    lia.util.Notify = lia.util.notify
 
     --- Spawns entities from a table of entity-position pairs.
     -- @realm server
@@ -256,6 +257,8 @@ if SERVER then
         end
     end
 
+    lia.util.NotifyLocalized = lia.util.notifyLocalized
+    
     --- Finds empty spaces around an entity where another entity can be placed.
     -- @realm server
     -- @param entity The entity to find empty spaces around
@@ -447,6 +450,7 @@ else
     function lia.util.notify(message)
         chat.AddText(message)
     end
+    lia.util.Notify = lia.util.notify
 
     --- Displays a localized notification message in the chat.
     -- @realm client
@@ -455,6 +459,7 @@ else
     function lia.util.notifyLocalized(message, ...)
         lia.util.notify(L(message, ...))
     end
+    lia.util.NotifyLocalized = lia.util.notifyLocalized
 
     --- Converts a color object to a string representation.
     -- @realm client
@@ -591,32 +596,6 @@ else
         Window:MakePopup()
         Window:DoModal()
         return Window
-    end
-
-    --- Displays a notification message in the chat.
-    -- @realm client
-    -- @param message The message to display
-    function lia.util.notify(message)
-        local notice = vgui.Create("liaNotify")
-        local i = table.insert(lia.notices, notice)
-        notice:SetMessage(message)
-        notice:SetPos(ScrW(), ScrH() - (i - 1) * (notice:GetTall() + 4) + 4)
-        notice:MoveToFront()
-        OrganizeNotices(false)
-        timer.Simple(10, function()
-            if IsValid(notice) then
-                notice:AlphaTo(0, 1, 0, function()
-                    notice:Remove()
-                    for v, k in pairs(lia.notices) do
-                        if k == notice then table.remove(lia.notices, v) end
-                    end
-
-                    OrganizeNotices(false)
-                end)
-            end
-        end)
-
-        MsgN(message)
     end
 
     --- Displays a query notification panel with options.
@@ -862,9 +841,7 @@ lia.util.FindPlayerBySteamID = lia.util.findPlayerBySteamID
 lia.util.CanFit = lia.util.canFit
 lia.util.Chance = lia.util.chance
 lia.util.PlayerInRadius = lia.util.playerInRadius
-lia.util.Notify = lia.util.notify
 lia.util.SpawnEntities = lia.util.spawnEntities
-lia.util.NotifyLocalized = lia.util.notifyLocalized
 lia.util.FindEmptySpace = lia.util.findEmptySpace
 lia.util.SpawnProp = lia.util.spawnProp
 lia.util.DebugLog = lia.util.debugLog
@@ -875,14 +852,11 @@ lia.util.DrawText = lia.util.drawText
 lia.util.DrawTexture = lia.util.drawTexture
 lia.util.SkinFunc = lia.util.skinFunc
 lia.util.WrapText = lia.util.wrapText
-lia.util.Notify = lia.util.notify
-lia.util.NotifyLocalized = lia.util.notifyLocalized
 lia.util.ColorToText = lia.util.colorToText
 lia.util.EndCaption = lia.util.endCaption
 lia.util.StartCaption = lia.util.startCaption
 lia.util.GetInjuredColor = lia.util.getInjuredColor
 lia.util.ScreenScaleH = lia.util.screenScaleH
-lia.util.Notify = lia.util.notify
 lia.util.NotifQuery = lia.util.notifQuery
 lia.util.DrawBlur = lia.util.drawBlur
 lia.util.DrawBlurAt = lia.util.drawBlurAt

@@ -94,7 +94,35 @@ function OrganizeNotices(alternate)
         end
     end
 end
+--- Displays a notification message in the chat.
+-- @realm client
+-- @param message The message to display
+function lia.util.notify(message)
+    local notice = vgui.Create("liaNotify")
+    local i = table.insert(lia.notices, notice)
+    notice:SetMessage(message)
+    notice:SetPos(ScrW(), ScrH() - (i - 1) * (notice:GetTall() + 4) + 4)
+    notice:MoveToFront()
+    OrganizeNotices(false)
+    timer.Simple(10, function()
+        if IsValid(notice) then
+            notice:AlphaTo(0, 1, 0, function()
+                notice:Remove()
+                for v, k in pairs(lia.notices) do
+                    if k == notice then table.remove(lia.notices, v) end
+                end
 
+                OrganizeNotices(false)
+            end)
+        end
+    end)
+
+    MsgN(message)
+end
+
+--- Adds a legacy notification.
+-- @realm client
+-- @param text The text of the notification
 function notification.AddLegacy(text)
     lia.util.notify(tostring(text))
 end
