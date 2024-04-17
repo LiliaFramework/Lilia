@@ -504,7 +504,7 @@ end
 --- Scales a value proportionally based on the screen height.
 -- @realm client
 -- @param n The value to scale
--- @param type If true, scales based on vertical resolution; if false or nil, scales based on default values
+-- @param bool If true, scales based on vertical resolution; if false or nil, scales based on default values
 -- @return The scaled value
 
     function lia.util.ScreenScaleH(n, bool)
