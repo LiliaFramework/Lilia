@@ -61,7 +61,7 @@ function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
     lia.char.varHooks[varName][hookName] = func
 end
----- Registers a character variable with specified data and associated hooks.
+--- Registers a character variable with specified data and associated hooks.
 -- @param key (any) The key identifier for the character variable.
 -- @param data (table) The data associated with the character variable.
 -- @realm shared
