@@ -205,7 +205,6 @@ if SERVER then
     end
 
     --- Sets the value of a character attribute.
-    
     -- @string key The key of the attribute to set.
     -- @int value The value to set for the attribute.
     -- @realm server
@@ -224,7 +223,6 @@ if SERVER then
 
         hook.Run("OnCharAttribUpdated", client, self, key, value)
     end
-
     --- Adds a boost to the character's attributes.
     -- @realm server
     -- @string boostID The ID of the boost to add.
