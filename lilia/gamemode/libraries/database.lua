@@ -218,12 +218,14 @@ modules.mysqloo = {
 
 lia.db.escape = lia.db.escape or modules.sqlite.escape
 lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueue + 1] = {...} end
+
 -- Establishes a connection to the database using the configured database module.
 -- If a callback function is provided, it will be called upon successful connection.
 -- If 'reconnect' is set to true or the database is not currently connected, it attempts to reconnect.
 -- @param callback (function) A function to execute upon successful connection. (Optional)
 -- @param reconnect (boolean) Whether to force a reconnection even if the database is already connected. (Optional)
 -- @realm server
+
 function lia.db.connect(callback, reconnect)
     local dbModule = modules[lia.db.module]
     if dbModule then
@@ -245,10 +247,12 @@ function lia.db.connect(callback, reconnect)
         ErrorNoHalt("[Lilia] '" .. (lia.db.module or "Unavailable") .. "' is not a valid data storage method! \n")
     end
 end
+
 -- Wipes all data from the database tables.
 -- This function is typically used for resetting the database to its initial state.
 -- @param callback (function) A function to execute after wiping the tables. (Optional)
 -- @realm server
+
 function lia.db.wipeTables(callback)
     local function realCallback()
         lia.db.query("SET FOREIGN_KEY_CHECKS = 1;", function()
@@ -280,9 +284,11 @@ function lia.db.wipeTables(callback)
         lia.db.query(SqlLiteTableDrop, realCallback)
     end
 end
+
 -- Loads database tables into memory.
 -- This function is typically used during server startup to ensure that all required tables are available.
 -- @realm server
+
 function lia.db.loadTables()
     local function done()
         lia.db.tablesLoaded = true
@@ -313,10 +319,12 @@ function lia.db.loadTables()
 
     hook.Run("OnLoadTables")
 end
+
 -- Waits for database tables to finish loading.
 -- This function is used to ensure that code requiring loaded tables does not execute prematurely.
 -- @return (deferred) A deferred object representing the completion of table loading.
 -- @realm server
+
 function lia.db.waitForTablesToLoad()
     TABLE_WAIT_ID = TABLE_WAIT_ID or 0
     local d = deferred.new()
@@ -372,25 +380,30 @@ local function genUpdateList(value)
     end
     return table.concat(changes, ", ")
 end
+
 -- Inserts data into a database table.
 -- @param value The Lua table containing data to insert.
 -- @param callback (function) A function to execute after the insert operation. (Optional)
 -- @param dbTable The name of the database table. (Optional)
 -- @realm server
+
 function lia.db.insertTable(value, callback, dbTable)
     local query = "INSERT INTO " .. genInsertValues(value, dbTable)
     lia.db.query(query, callback)
 end
+
 -- Updates data in a database table.
 -- @param value The Lua table containing data to update.
 -- @param callback (function) A function to execute after the update operation. (Optional)
 -- @param dbTable The name of the database table. (Optional)
 -- @param condition The condition to filter the update operation. (Optional)
 -- @realm server
+
 function lia.db.updateTable(value, callback, dbTable, condition)
     local query = "UPDATE " .. ("lia_" .. (dbTable or "characters")) .. " SET " .. genUpdateList(value) .. (condition and " WHERE " .. condition or "")
     lia.db.query(query, callback)
 end
+
 --- Selects data from a database table.
 -- @param fields The fields to select, can be either a string or a table of strings
 -- @param dbTable The name of the database table
@@ -398,6 +411,7 @@ end
 -- @param limit The limit for the number of results to be returned
 -- @return A deferred object that resolves to a table containing the results and last inserted ID
 -- @realm server
+
 function lia.db.select(fields, dbTable, condition, limit)
     local d = deferred.new()
     local from = istable(fields) and table.concat(fields, ", ") or tostring(fields)
@@ -444,6 +458,7 @@ end
 -- @param dbTable The name of the database table. (Optional)
 -- @return (deferred) A deferred object representing the upsert operation.
 -- @realm server
+
 function lia.db.delete(dbTable, condition)
     local query
     dbTable = "lia_" .. (dbTable or "character")
