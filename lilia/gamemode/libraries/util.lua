@@ -385,13 +385,14 @@ else
         }, 1, alpha or (color.a * 0.575))
     end
 --- Draws a textured rectangle with a specified material and color.
+	-- @realm client
+
 -- @param material Material to use for the texture
 -- @param color Color of the texture to draw
 -- @param x X-position of the top-left corner of the rectangle
 -- @param y Y-position of the top-left corner of the rectangle
 -- @param w Width of the rectangle
 -- @param h Height of the rectangle
-	-- @realm client
 
     function lia.util.DrawTexture(material, color, x, y, w, h)
         surface.SetDrawColor(color or color_white)
@@ -399,6 +400,8 @@ else
         surface.DrawTexturedRect(x, y, w, h)
     end
 --- Calls a named skin function with optional arguments on a panel.
+	-- @realm client
+
 -- @param name Name of the skin function to call
 -- @param panel Panel to apply the skin function to
 -- @param a Argument 1 (optional)
@@ -409,7 +412,6 @@ else
 -- @param f Argument 6 (optional)
 -- @param g Argument 7 (optional)
 -- @return The result of the skin function call
-	-- @realm client
 
 function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         local skin = (ispanel(panel) and IsValid(panel)) and panel:GetSkin() or derma.GetDefaultSkin()
@@ -425,7 +427,6 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
 	-- @string text Text to wrap
 	-- @number width Maximum allowed width in pixels
 	-- @string[opt="liaChatFont"] font Font to use for the text
-	-- @realm client
 
     function lia.util.wrapText(text, width, font)
         font = font or "liaChatFont"
@@ -462,44 +463,49 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         chat.AddText(message)
     end
 --- Displays a localized notification message in the chat.
+	-- @realm client
+
 -- @param message The message to display (localized)
 -- @param ... Additional parameters for string formatting
-	-- @realm client
 
     function lia.util.notifyLocalized(message, ...)
         lia.util.notify(L(message, ...))
     end
 --- Converts a color object to a string representation.
+	-- @realm client
+
 -- @param color The color object to convert
 -- @return A string representation of the color in the format "r,g,b,a"
-	-- @realm client
 
     function lia.util.colorToText(color)
         if not IsColor(color) then return end
         return (color.r or 255) .. "," .. (color.g or 255) .. "," .. (color.b or 255) .. "," .. (color.a or 255)
     end
 --- Displays a caption message on the screen for a specified duration.
+	-- @realm client
+
 -- @param text The caption text to display
 -- @param duration The duration (in seconds) for which to display the caption (optional, default is the length of the text multiplied by 0.1)
-	-- @realm client
 
     function lia.util.endCaption(text, duration)
         RunConsoleCommand("closecaption", "1")
         gui.AddCaption(text, duration or string.len(text) * 0.1)
     end
 --- Displays a caption message on the screen for a specified duration.
+	-- @realm client
+
 -- @param text The caption text to display
 -- @param duration The duration (in seconds) for which to display the caption (optional, default is the length of the text multiplied by 0.1)
-	-- @realm client
 
     function lia.util.startCaption(text, duration)
         RunConsoleCommand("closecaption", "1")
         gui.AddCaption(text, duration or string.len(text) * 0.1)
     end
 --- Determines the color indicating the health status of a player.
+	-- @realm client
+
 -- @param client The player for which to determine the color
 -- @return The color representing the player's health status
-	-- @realm client
 
     function lia.util.getInjuredColor(client)
         local health_color = color_white
@@ -509,10 +515,11 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         return health_color
     end
 --- Scales a value proportionally based on the screen height.
+	-- @realm client
+
 -- @param n The value to scale
 -- @param type If true, scales based on vertical resolution; if false or nil, scales based on default values
 -- @return The scaled value
-	-- @realm client
 
     function lia.util.ScreenScaleH(n, type)
         if type then
@@ -531,6 +538,8 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         end
     end)
 --- Displays a numeric input request dialog.
+	-- @realm client
+
 -- @param strTitle The title of the dialog window
 -- @param strText The text to display in the dialog
 -- @param strDefaultText The default text to display in the input field
@@ -539,7 +548,6 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
 -- @param strButtonText The text to display on the confirmation button (optional, default is "OK")
 -- @param strButtonCancelText The text to display on the cancel button (optional, default is localized string "derma_request_cancel")
 -- @return The created DFrame window
-	-- @realm client
 
     function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCancel, strButtonText, strButtonCancelText)
         local Window = vgui.Create("DFrame")
@@ -607,8 +615,9 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         return Window
     end
     --- Displays a notification message in the chat.
+    	-- @realm client
+
 -- @param message The message to display
-	-- @realm client
 
     function lia.util.notify(message)
         local notice = vgui.Create("liaNotify")
@@ -633,6 +642,7 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         MsgN(message)
     end
 --- Displays a query notification panel with options.
+	-- @realm client
 -- @param question The question or prompt to display
 -- @param option1 The text for the first option
 -- @param option2 The text for the second option
@@ -640,7 +650,6 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
 -- @param notifType The type of notification (optional, default is 7)
 -- @param callback The function to call when an option is selected, with the option index and the notice panel as arguments
 -- @return The created notification panel
-	-- @realm client
 
     function lia.util.notifQuery(question, option1, option2, manualDismiss, notifType, callback)
         if not callback or not isfunction(callback) then Error("A callback function must be specified") end
@@ -807,12 +816,12 @@ function lia.util.SkinFunc(name, panel, a, b, c, d, e, f, g)
         [0] = Material("icon16/cross.png")
     }
 --- Fetches an image from either local data or a remote server and provides it to a callback function.
+-- @realm client
 -- @param id The unique identifier or filename of the image
 -- @param callback The function to call with the loaded image material as its argument, or false if the image could not be loaded
 -- @param _ Unused parameter, kept for compatibility
 -- @param pngParameters Optional parameters for loading PNG images (default is "noclamp smooth")
 -- @param imageProvider Optional URL for the remote image provider (default is "https://i.imgur.com/")
--- @realm client
 
     function lia.util.FetchImage(id, callback, _, pngParameters, imageProvider)
         local loadedImage = lia.util.LoadedImages[id]
