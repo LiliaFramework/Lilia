@@ -111,24 +111,24 @@ function lia.menu.getActiveMenu()
         local width, height = v.width, v.height
         if entity then
             if IsValid(entity) then
-                position = (v.entPos or entiWorld(v.position)):ToScreen()
+                position = (v.entPos or entity:LocalToWorld(v.position)):ToScreen()
             else
-                table.remove(lia.menu.list, 
+                table.remove(lia.menu.list, k)
                 continue
             end
         else
             position = v.position:ToScreen()
         end
 
-        local startX, startY = position.x - .5), position.y
-        local inRange = position2:Distance(Intity) and v.entity:GetPos() or v.position) <= 96
-        local inside = (mX >= startX and mX  + width) and mY >= startY and mY <= (startY + height)) and inRange
+        local startX, startY = position.x - (width * 0.5), position.y
+        local inRange = position2:Distance(IsValid(v.entity) and v.entity:GetPos() or v.position) <= 96
+        local inside = (mX >= startX and mX <= (startX + width) and mY >= startY and mY <= (startY + height)) and inRange
         if inRange and inside then
             local choice
             local i = 0
-            for _, v2 in SortedPairs(v.optio
+            for _, v2 in SortedPairs(v.options) do
                 local y = startY + (i * 28)
-                if inside and mY >= y and mY8) then
+                if inside and mY >= y and mY <= (y + 28) then
                     choice = v2
                     break
                 end
