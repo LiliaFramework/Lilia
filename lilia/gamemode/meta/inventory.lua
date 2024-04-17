@@ -25,7 +25,6 @@ Inventory.items = {}
 Inventory.id = -1
 --- Retrieves data associated with a specified key from the inventory.
 -- @realm shared
-
 -- @tparam any key The key for the data.
 -- @param[opt] any default The default value to return if the key does not exist.
 -- @treturn any The value associated with the key, or the default value if the key does not exist.
@@ -37,7 +36,6 @@ end
 
 --- Extends the inventory to create a subclass with a specified class name.
 -- @realm shared
-
 -- @tparam string className The name of the subclass.
 -- @treturn table A subclass of the Inventory class.
 function Inventory:extend(className)
@@ -52,13 +50,11 @@ end
 --- Configures the inventory.
 -- @realm shared
 -- This function is meant to be overridden in subclasses to define specific configurations.
-
 function Inventory:configure()
 end
 
 --- Adds a data proxy to the inventory for a specified key.
 -- @realm shared
-
 -- @tparam any key The key for the data proxy.
 -- @tparam function onChange The function to call when the data associated with the key changes.
 function Inventory:addDataProxy(key, onChange)
@@ -69,7 +65,6 @@ end
 
 --- Retrieves items with a specified unique ID from the inventory.
 -- @realm shared
-
 -- @tparam string uniqueID The unique ID of the items to retrieve.
 -- @tparam[opt=false] boolean onlyMain Whether to retrieve only main items.
 -- @treturn table An array containing the items with the specified unique ID.
@@ -83,7 +78,6 @@ end
 
 --- Registers the inventory with a specified type ID.
 -- @realm shared
-
 -- @tparam string typeID The type ID to register the inventory with.
 -- @raise If the argument `typeID` is not a string.
 -- @usage
@@ -110,7 +104,6 @@ end
 
 --- Creates a new instance of the inventory.
 -- @realm shared
-
 -- @treturn table A new instance of the Inventory class.
 -- @usage
 -- local newInventory = Inventory:new()
@@ -135,7 +128,6 @@ function Inventory:getType()
 end
 
 --- Callback function called when data associated with a key changes.
-
 -- @realm shared
 -- @tparam any key The key whose data has changed.
 -- @param oldValue The old value of the data.
@@ -150,7 +142,6 @@ function Inventory:onDataChanged(key, oldValue, newValue)
 end
 
 --- Retrieves all items in the inventory.
-
 -- @realm shared
 -- @treturn table An array containing all items in the inventory.
 function Inventory:getItems()
@@ -158,7 +149,6 @@ function Inventory:getItems()
 end
 
 --- Retrieves items of a specific type from the inventory.
-
 -- @realm shared
 -- @tparam string itemType The type of items to retrieve.
 -- @treturn table An array containing items of the specified type.
@@ -171,7 +161,6 @@ function Inventory:getItemsOfType(itemType)
 end
 
 --- Retrieves the first item of a specific type from the inventory.
-
 -- @realm shared
 -- @tparam string itemType The type of item to retrieve.
 -- @treturn table|nil The first item of the specified type, or nil if not found.
@@ -182,7 +171,6 @@ function Inventory:getFirstItemOfType(itemType)
 end
 
 --- Checks if the inventory contains an item of a specific type.
-
 -- @realm shared
 -- @tparam string itemType The type of item to check for.
 -- @treturn boolean Returns true if the inventory contains an item of the specified type, otherwise false.
@@ -194,7 +182,6 @@ function Inventory:hasItem(itemType)
 end
 
 --- Retrieves the total count of items in the inventory, optionally filtered by item type.
-
 -- @realm shared
 -- @tparam[opt] string itemType The type of item to count. If nil, counts all items.
 -- @treturn number The total count of items in the inventory, optionally filtered by item type.
@@ -207,7 +194,6 @@ function Inventory:getItemCount(itemType)
 end
 
 --- Retrieves the ID of the inventory.
-
 -- @realm shared
 -- @treturn any The ID of the inventory.
 function Inventory:getID()
@@ -215,7 +201,6 @@ function Inventory:getID()
 end
 
 --- Checks if two inventories are equal based on their IDs.
-
 -- @realm shared
 -- @tparam Inventory other The other inventory to compare with.
 -- @treturn boolean Returns true if the inventories have the same ID, otherwise false.
@@ -225,7 +210,6 @@ end
 
 if SERVER then
     --- Adds an item to the inventory.
-
     -- @realm server
     -- @tparam Item item The item to add to the inventory.
     -- @treturn Inventory Returns the inventory itself.
@@ -245,7 +229,6 @@ if SERVER then
 
     Inventory.AddItem = Inventory.addItem
     --- Alias for `addItem` function.
-
     -- @realm server
     -- @tparam Item item The item to add to the inventory.
     -- @treturn Inventory Returns the inventory itself.
@@ -255,7 +238,6 @@ if SERVER then
 
     Inventory.Add = Inventory.add
     --- Synchronizes the addition of an item with clients.
-
     -- @realm server
     -- @tparam Item item The item being added.
     function Inventory:syncItemAdded(item)
@@ -270,7 +252,6 @@ if SERVER then
     end
 
     --- Initializes the storage for the inventory.
-
     -- @realm server
     -- @tparam table initialData Initial data for the inventory.
     -- @treturn Deferred A deferred promise.
@@ -304,7 +285,6 @@ if SERVER then
     end
 
     --- Removes an item from the inventory.
-
     -- @realm server
     -- @tparam number itemID The ID of the item to remove.
     -- @tparam[opt=false] boolean preserveItem Whether to preserve the item's data in the database.
@@ -335,7 +315,6 @@ if SERVER then
 
     Inventory.RemoveItem = Inventory.removeItem
     --- Alias for `removeItem` function.
-
     -- @realm server
     function Inventory:remove(itemID)
         return self:removeItem(itemID)
@@ -343,7 +322,6 @@ if SERVER then
 
     Inventory.Remove = Inventory.remove
     --- Sets data associated with a key in the inventory.
-
     -- @realm server
     -- @tparam any key The key to associate the data with.
     -- @param value The value to set for the key.
@@ -375,7 +353,6 @@ if SERVER then
 
     Inventory.SetData = Inventory.setData
     --- Checks if a certain action is permitted for the inventory.
-
     -- @realm server
     -- @tparam string action The action to check for access.
     -- @tparam[opt] table context Additional context for the access check.
@@ -391,7 +368,6 @@ if SERVER then
     end
 
     --- Adds an access rule to the inventory.
-
     -- @realm server
     -- @tparam function rule The access rule function.
     -- @tparam[opt] number priority The priority of the access rule.
@@ -406,7 +382,6 @@ if SERVER then
     end
 
     --- Removes an access rule from the inventory.
-
     -- @realm server
     -- @tparam function rule The access rule function to remove.
     -- @treturn Inventory Returns the inventory itself.
@@ -416,7 +391,6 @@ if SERVER then
     end
 
     --- Retrieves the recipients for synchronization.
-
     -- @realm server
     -- @treturn table An array containing the recipients for synchronization.
     function Inventory:getRecipients()
@@ -432,20 +406,17 @@ if SERVER then
     end
 
     --- Initializes an instance of the inventory.
-
     -- @realm server
     function Inventory:onInstanced()
     end
 
     --- Callback function called when the inventory is loaded.
-
     -- @realm server
     function Inventory:onLoaded()
         -- Function implementation
     end
 
     --- Loads items from the database into the inventory.
-
     -- @realm server
     -- @treturn Deferred A deferred promise.
     function Inventory:loadItems()
@@ -479,13 +450,11 @@ if SERVER then
     end
 
     --- Callback function called when items are loaded into the inventory.
-
     -- @realm server
     function Inventory:onItemsLoaded()
     end
 
     --- Instantiates a new inventory instance.
-
     -- @realm server
     -- @tparam table initialData Initial data for the inventory instance.
     -- @treturn Inventory The newly instantiated inventory instance.
@@ -494,7 +463,6 @@ if SERVER then
     end
 
     --- Synchronizes data changes with clients.
-
     -- @realm server
     -- @tparam any key The key whose data has changed.
     -- @tparam[opt] table recipients The recipients to synchronize with.
@@ -508,7 +476,6 @@ if SERVER then
     end
 
     --- Synchronizes the inventory with clients.
-
     -- @realm server
     -- @tparam[opt] table recipients The recipients to synchronize with.
     function Inventory:sync(recipients)
@@ -540,14 +507,12 @@ if SERVER then
     end
 
     --- Deletes the inventory.
-
     -- @realm server
     function Inventory:delete()
         lia.inventory.deleteByID(self.id)
     end
 
     --- Destroys the inventory and its associated items.
-
     -- @realm server
     function Inventory:destroy()
         for _, item in pairs(self:getItems()) do

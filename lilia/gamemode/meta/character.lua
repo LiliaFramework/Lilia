@@ -19,17 +19,14 @@ charMeta.vars = charMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
 --- Returns a string representation of this character
 -- @realm shared
-
 -- @return string String representation
 -- @usage print(lia.char.loaded[1])
 -- > "character[1]"
 function charMeta:__tostring()
     return "character[" .. (self.id or 0) .. "]"
 end
-
 --- Returns true if this character is equal to another character. Internally, this checks character IDs.
 -- @realm shared
-
 -- @character other Character to compare to
 -- @return bool Whether or not this character is equal to the given character
 -- @usage print(lia.char.loaded[1] == lia.char.loaded[2])
@@ -40,7 +37,6 @@ end
 
 --- Returns this character's database ID. This is guaranteed to be unique.
 -- @realm shared
-
 -- @return number Unique ID of character
 function charMeta:getID()
     return self.id
@@ -48,10 +44,7 @@ end
 
 --- Retrieves the boost value for a specific attribute.
 -- @realm shared
-
-
 -- @int attribID The ID of the attribute for which to retrieve the boost.
-
 -- @return number|nil The boost value for the specified attribute, or nil if no boost is found.
 -- @usage local boostValue = char:getBoost("some_attribute_id")
 function charMeta:getBoost(attribID)
@@ -61,9 +54,6 @@ end
 
 --- Retrieves all boosts applied to the character's attributes.
 -- @realm shared
-
-
-
 -- @return table A table containing all boosts applied to the character's attributes.
 -- @usage local boostsTable = char:getBoosts()
 function charMeta:getBoosts()
@@ -72,9 +62,6 @@ end
 
 --- Retrieves the character's equipped weapon and its corresponding item from the inventory.
 -- @realm shared
-
-
-
 -- @return Entity|false The equipped weapon entity, or false if no weapon is equipped.
 -- @return Item|false The corresponding item from the character's inventory, or false if no corresponding item is found.
 -- @usage local weapon, item = char:getItemWeapon()
@@ -97,11 +84,8 @@ end
 
 --- Retrieves the value of a character attribute, including applied boosts.
 -- @realm shared
-
-
 -- @string key The key of the attribute to retrieve.
 -- @int[opt=0] default The default value to return if the attribute is not found.
-
 -- @return number The value of the specified attribute, including applied boosts.
 -- @usage local attributeValue = char:getAttrib("some_attribute_key")
 function charMeta:getAttrib(key, default)
@@ -117,7 +101,6 @@ end
 
 --- Returns the player that owns this character.
 -- @realm shared
-
 -- @return player Player that owns this character
 function charMeta:getPlayer()
     if IsValid(self.player) then
@@ -142,7 +125,6 @@ function charMeta:getPlayer()
 end
 
 --- Checks if the character has at least the specified amount of money.
-
 -- @int amount The amount of money to check for.
 -- @return bool Whether the character has at least the specified amount of money.
 -- @usage local hasEnoughMoney = char:hasMoney(100)
@@ -153,11 +135,8 @@ end
 
 --- Sets the character's class to the specified class.
 -- @realm shared
-
-
 -- @string class The class to join.
 -- @bool[opt=false] isForced Whether to force the character to join the class even if conditions are not met.
-
 -- @return bool Whether the character successfully joined the class.
 -- @usage local success = char:joinClass("some_class")
 function charMeta:joinClass(class, isForced)
@@ -179,9 +158,6 @@ end
 
 --- Kicks the character from their current class and joins them to the default class of their faction.
 -- @realm shared
-
-
-
 -- @usage char:kickClass()
 function charMeta:kickClass()
     local client = self:getPlayer()
@@ -200,10 +176,7 @@ end
 
 --- Checks if the character belongs to the specified faction.
 -- @realm shared
-
-
 -- @int faction Index of the faction to check against.
-
 -- @return bool Whether the character belongs to the specified faction.
 -- @usage local isInFaction = char:isFaction("some_faction")
 function charMeta:isFaction(faction)
@@ -213,8 +186,6 @@ end
 if SERVER then
     --- Updates the value of a character attribute by adding a specified value to it.
     -- @realm server
-
-
     -- @string key The key of the attribute to update.
     -- @int value The value to add to the attribute.
     -- @realm server
@@ -236,8 +207,6 @@ if SERVER then
 
     --- Sets the value of a character attribute.
     -- @realm server
-
-
     -- @string key The key of the attribute to set.
     -- @int value The value to set for the attribute.
     -- @realm server
@@ -259,8 +228,6 @@ if SERVER then
 
     --- Adds a boost to the character's attributes.
     -- @realm server
-
-
     -- @string boostID The ID of the boost to add.
     -- @string attribID The ID of the attribute to which the boost should be added.
     -- @int boostAmount The amount of boost to add to the attribute.
@@ -276,8 +243,6 @@ if SERVER then
 
     --- Removes a boost from the character's attributes.
     -- @realm server
-
-
     -- @string boostID The ID of the boost to remove.
     -- @string attribID The ID of the attribute from which the boost should be removed.
     -- @realm server
@@ -423,7 +388,6 @@ if SERVER then
 
     --- Gives or takes money from the character's wallet.
     -- @realm server
-
     -- @int amount The amount of money to give or take.
     -- @bool[opt=false] takingMoney Whether the operation is to take money from the character.
     -- @return bool Whether the operation was successful.
@@ -461,7 +425,6 @@ if SERVER then
 
     --- Takes money from the character's wallet.
     -- @realm server
-
     -- @int amount The amount of money to take.
     -- @return bool Whether the operation was successful.
     function charMeta:takeMoney(amount)

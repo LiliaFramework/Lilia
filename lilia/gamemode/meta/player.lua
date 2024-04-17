@@ -10,7 +10,6 @@ See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for 
 local playerMeta = FindMetaTable("Player")
 local vectorMeta = FindMetaTable("Vector")
 --- Checks if the player belongs to the "user" user group.
-
 -- @realm shared
 -- @treturn bool Whether the player belongs to the "user" user group.
 function playerMeta:isUser()
@@ -18,7 +17,6 @@ function playerMeta:isUser()
 end
 
 --- Checks if the player is a staff member.
-
 -- @realm shared
 -- @treturn bool Whether the player is a staff member.
 function playerMeta:isStaff()
@@ -26,7 +24,6 @@ function playerMeta:isStaff()
 end
 
 --- Checks if the player is a VIP.
-
 -- @realm shared
 -- @treturn bool Whether the player is a VIP.
 function playerMeta:isVIP()
@@ -34,7 +31,6 @@ function playerMeta:isVIP()
 end
 
 --- Checks if the staff member is currently on duty (FACTION_STAFF).
-
 -- @realm shared
 -- @treturn bool Whether the staff member is currently on duty.
 function playerMeta:isStaffOnDuty()
@@ -42,7 +38,6 @@ function playerMeta:isStaffOnDuty()
 end
 
 --- Checks if the player is currently observing.
-
 -- @realm shared
 -- @treturn bool Whether the player is currently observing.
 function playerMeta:isObserving()
@@ -54,7 +49,6 @@ function playerMeta:isObserving()
 end
 
 --- Checks if the player is currently moving.
-
 -- @realm shared
 -- @treturn bool Whether the player is currently moving.
 function playerMeta:isMoving()
@@ -64,7 +58,6 @@ function playerMeta:isMoving()
 end
 
 --- Checks if the player is currently outside (in the sky).
-
 -- @realm shared
 -- @treturn bool Whether the player is currently outside (in the sky).
 function playerMeta:isOutside()
@@ -77,7 +70,6 @@ function playerMeta:isOutside()
 end
 
 --- Checks if the player is currently in noclip mode.
-
 -- @realm shared
 -- @treturn bool Whether the player is in noclip mode.
 function playerMeta:isNoClipping()
@@ -85,7 +77,6 @@ function playerMeta:isNoClipping()
 end
 
 --- Checks if the player is stuck.
-
 -- @realm shared
 -- @treturn bool Whether the player is stuck.
 function playerMeta:isStuck()
@@ -97,7 +88,6 @@ function playerMeta:isStuck()
 end
 
 --- Calculates the squared distance from the player to the specified entity.
-
 -- @realm shared
 -- @param entity The entity to calculate the distance to.
 -- @treturn number The squared distance from the player to the entity.
@@ -106,7 +96,6 @@ function playerMeta:squaredDistanceFromEnt(entity)
 end
 
 --- Calculates the distance from the player to the specified entity.
-
 -- @realm shared
 -- @param entity The entity to calculate the distance to.
 -- @treturn number The distance from the player to the entity.
@@ -115,7 +104,6 @@ function playerMeta:distanceFromEnt(entity)
 end
 
 --- Checks if the player is near another entity within a specified radius.
-
 -- @realm shared
 -- @param radius The radius within which to check for proximity.
 -- @param entity The entity to check proximity to.
@@ -127,7 +115,6 @@ function playerMeta:isNearPlayer(radius, entity)
 end
 
 --- Retrieves entities near the player within a specified radius.
-
 -- @realm shared
 -- @param radius The radius within which to search for entities.
 -- @param playerOnly (Optional) If true, only return player entities.
@@ -142,7 +129,6 @@ function playerMeta:entitiesNearPlayer(radius, playerOnly)
 end
 
 --- Retrieves the active weapon item of the player.
-
 -- @realm shared
 -- @treturn Entity|nil The active weapon entity of the player, or nil if not found.
 function playerMeta:getItemWeapon()
@@ -163,7 +149,6 @@ function playerMeta:getItemWeapon()
 end
 
 --- Adds money to the player's character.
-
 -- @realm shared
 -- @param amount The amount of money to add.
 function playerMeta:addMoney(amount)
@@ -189,7 +174,6 @@ function playerMeta:addMoney(amount)
 end
 
 --- Takes money from the player's character.
-
 -- @realm shared
 -- @param amt The amount of money to take.
 function playerMeta:takeMoney(amt)
@@ -198,16 +182,13 @@ function playerMeta:takeMoney(amt)
 end
 
 --- Retrieves the amount of money owned by the player's character.
-
 -- @realm shared
 -- @treturn number The amount of money owned by the player's character.
 function playerMeta:getMoney()
     local character = self:getChar()
     return character and character:getMoney() or 0
 end
-
 --- Checks if the player's character can afford a specified amount of money.
-
 -- @realm shared
 -- @param amount The amount of money to check.
 -- @treturn bool Whether the player's character can afford the specified amount of money.
@@ -217,7 +198,6 @@ function playerMeta:canAfford(amount)
 end
 
 --- Checks if the player is running.
-
 -- @realm shared
 -- @treturn bool Whether the player is running.
 function playerMeta:isRunning()
@@ -225,7 +205,6 @@ function playerMeta:isRunning()
 end
 
 --- Checks if the player's character is female based on the model.
-
 -- @realm shared
 -- @treturn bool Whether the player's character is female.
 function playerMeta:isFemale()
@@ -234,7 +213,6 @@ function playerMeta:isFemale()
 end
 
 --- Calculates the position to drop an item from the player's inventory.
-
 -- @realm shared
 -- @treturn Vector The position to drop an item from the player's inventory.
 function playerMeta:getItemDropPos()
@@ -251,7 +229,6 @@ function playerMeta:getItemDropPos()
 end
 
 --- Checks if the player has whitelisted access to a faction.
-
 -- @realm shared
 -- @param faction The faction to check for whitelisting.
 -- @treturn bool Whether the player has whitelisted access to the specified faction.
@@ -266,7 +243,6 @@ function playerMeta:hasWhitelist(faction)
 end
 
 --- Retrieves the items of the player's character inventory.
-
 -- @realm shared
 -- @treturn table|nil A table containing the items in the player's character inventory, or nil if not found.
 function playerMeta:getItems()
@@ -278,7 +254,6 @@ function playerMeta:getItems()
 end
 
 --- Retrieves the class of the player's character.
-
 -- @realm shared
 -- @treturn string|nil The class of the player's character, or nil if not found.
 function playerMeta:getClass()
@@ -287,7 +262,6 @@ function playerMeta:getClass()
 end
 
 --- Retrieves the entity traced by the player's aim.
-
 -- @realm shared
 -- @treturn Entity|nil The entity traced by the player's aim, or nil if not found.
 function playerMeta:getTracedEntity()
@@ -300,7 +274,6 @@ function playerMeta:getTracedEntity()
 end
 
 --- Performs a trace from the player's view.
-
 -- @realm shared
 -- @treturn table A table containing the trace result.
 function playerMeta:getTrace()
@@ -315,7 +288,6 @@ function playerMeta:getTrace()
 end
 
 --- Retrieves the data of the player's character class.
-
 -- @realm shared
 -- @treturn table|nil A table containing the data of the player's character class, or nil if not found.
 function playerMeta:getClassData()
@@ -330,7 +302,6 @@ function playerMeta:getClassData()
 end
 
 --- Checks if the player has a skill level equal to or greater than the specified level.
-
 -- @realm shared
 -- @param skill The skill to check.
 -- @param level The required skill level.
@@ -341,7 +312,6 @@ function playerMeta:hasSkillLevel(skill, level)
 end
 
 --- Checks if the player meets the required skill levels.
-
 -- @realm shared
 -- @param requiredSkillLevels A table containing the required skill levels.
 -- @treturn bool Whether the player meets all the required skill levels.
@@ -354,7 +324,6 @@ function playerMeta:meetsRequiredSkills(requiredSkillLevels)
 end
 
 --- Retrieves the entity within the player's line of sight.
-
 -- @realm shared
 -- @param[opt=150] distance The maximum distance to consider.
 -- @treturn Entity|nil The entity within the player's line of sight, or nil if not found.
@@ -365,7 +334,6 @@ function playerMeta:getEyeEnt(distance)
 end
 
 --- Requests a string input from the player.
-
 -- @realm shared
 -- @param title The title of the request.
 -- @param subTitle The subtitle of the request.
@@ -385,7 +353,6 @@ end
 
 if SERVER then
     --- Loads Lilia data for the player from the database.
-
     -- @param callback[opt=nil] Function to call after the data is loaded, passing the loaded data as an argument.
     -- @realm server
     function playerMeta:loadLiliaData(callback)
@@ -417,7 +384,6 @@ if SERVER then
     end
 
     --- Saves the player's Lilia data to the database.
-
     -- @realm server
     function playerMeta:saveLiliaData()
         local name = self:steamName()
@@ -431,7 +397,6 @@ if SERVER then
     end
 
     --- Sets a key-value pair in the player's Lilia data.
-
     -- @param key The key for the data.
     -- @param value The value to set.
     -- @param noNetworking[opt=false] If true, suppresses network broadcasting of the update.
@@ -443,7 +408,6 @@ if SERVER then
     end
 
     --- Retrieves a value from the player's Lilia data.
-
     -- @param key The key for the data.
     -- @param default[opt=nil] The default value to return if the key does not exist.
     -- @realm server
@@ -458,7 +422,6 @@ if SERVER then
         end
     end
 --- Sets an action bar for the player.
-
 -- @param text The text to display on the action bar.
 -- @param[opt] time The duration for the action bar to display, defaults to 5 seconds. Set to 0 or nil to remove the action bar immediately.
 -- @param[opt] callback Function to execute when the action bar timer expires.
@@ -484,7 +447,6 @@ if SERVER then
         if callback then timer.Create("liaAct" .. self:UniqueID(), time, 1, function() if IsValid(self) then callback(self) end end) end
     end
 --- Retrieves the player's permission flags.
-
 -- @realm server
 -- @treturn string The player's permission flags.
 
@@ -492,7 +454,6 @@ if SERVER then
         return self:getLiliaData("permflags", "")
     end
 --- Sets the player's permission flags.
-
 -- @param flags The permission flags to set.
 -- @realm server
 
@@ -501,7 +462,6 @@ if SERVER then
         self:saveLiliaData()
     end
 --- Grants permission flags to the player.
-
 -- @param flags The permission flags to grant.
 -- @realm server
 
@@ -521,7 +481,6 @@ if SERVER then
         end
     end
 --- Revokes permission flags from the player.
-
 -- @param flags The permission flags to revoke.
 -- @realm server
     function playerMeta:takePermFlags(flags)
@@ -539,7 +498,6 @@ if SERVER then
         end
     end
 --- Checks if the player has a specific permission flag.
-
 -- @param flag The permission flag to check.
 -- @realm server
 -- @treturn bool Whether or not the player has the permission flag.
@@ -553,7 +511,6 @@ if SERVER then
         return false
     end
 --- Retrieves the player's flag blacklist.
-
 -- @realm server
 -- @treturn string The player's flag blacklist.
 
@@ -561,7 +518,6 @@ if SERVER then
         return self:getLiliaData("flagblacklist", "")
     end
 --- Sets the player's flag blacklist.
-
 -- @param flags The flag blacklist to set.
 -- @realm server
 
@@ -570,7 +526,6 @@ if SERVER then
         self:saveLiliaData()
     end
 --- Adds flags to the player's flag blacklist.
-
 -- @param flags The flags to add to the blacklist.
 -- @param[opt] blacklistInfo Additional information about the blacklist entry.
 -- @realm server
@@ -601,7 +556,6 @@ if SERVER then
     end
 
     --- Removes flags from the player's flag blacklist.
-
     -- @realm server
     -- @param flags A table containing the flags to remove from the blacklist.
     function playerMeta:removeFlagBlacklist(flags)
@@ -615,7 +569,6 @@ if SERVER then
     end
 
     --- Checks if the player has a specific flag blacklisted.
-
     -- @realm server
     -- @param flag The flag to check for in the blacklist.
     -- @treturn bool Whether the player has the specified flag blacklisted.
@@ -628,7 +581,6 @@ if SERVER then
     end
 
     --- Checks if the player has any of the specified flags blacklisted.
-
     -- @realm server
     -- @param flags A table containing the flags to check for in the blacklist.
     -- @treturn bool Whether the player has any of the specified flags blacklisted.
@@ -640,7 +592,6 @@ if SERVER then
     end
 
     --- Plays a sound for the player.
-
     -- @realm client
     -- @param sound The sound to play.
     -- @param[opt=100] pitch The pitch of the sound.
@@ -652,7 +603,6 @@ if SERVER then
     end
 
     --- Opens a VGUI panel for the player.
-
     -- @realm client
     -- @param panel The name of the VGUI panel to open.
     function playerMeta:openUI(panel)
@@ -663,7 +613,6 @@ if SERVER then
 
     playerMeta.OpenUI = playerMeta.openUI
     --- Opens a web page for the player.
-
     -- @realm client
     -- @param url The URL of the web page to open.
     function playerMeta:openPage(url)
@@ -673,7 +622,6 @@ if SERVER then
     end
 
     --- Retrieves the player's total playtime.
-
     -- @realm shared
     -- @treturn number The total playtime of the player.
     function playerMeta:getPlayTime()
@@ -683,7 +631,6 @@ if SERVER then
 
     playerMeta.GetPlayTime = playerMeta.getPlayTime
     --- Creates a ragdoll entity for the player on the server.
-
     -- @realm server
     -- @param[opt=false] DontSetPlayer Determines whether to associate the player with the ragdoll.
     -- @treturn Entity The created ragdoll entity.
@@ -750,7 +697,6 @@ if SERVER then
     end
 
     --- Notifies the player with a message.
-
     -- @realm shared
     -- @param message The message to notify the player.
     function playerMeta:notify(message)
@@ -758,7 +704,6 @@ if SERVER then
     end
 
     --- Notifies the player with a localized message.
-
     -- @realm shared
     -- @param message The key of the localized message to notify the player.
     -- @param ... Additional arguments to format the localized message.
@@ -767,7 +712,6 @@ if SERVER then
     end
 
     --- Requests a string input from the player.
-
     -- @realm shared
     -- @param title The title of the string input dialog.
     -- @param subTitle The subtitle or description of the string input dialog.
@@ -794,7 +738,6 @@ if SERVER then
     end
 
     --- Creates a ragdoll entity for the player.
-
     -- @realm server
     -- @param freeze Whether to freeze the ragdoll initially.
     -- @treturn Entity The created ragdoll entity.
@@ -829,7 +772,6 @@ if SERVER then
     end
 
     --- Sets the player to a ragdolled state or removes the ragdoll.
-
     -- @realm server
     -- @param state Whether to set the player to a ragdolled state (`true`) or remove the ragdoll (`false`).
     -- @param[opt] time The duration for which the player remains ragdolled.
@@ -941,7 +883,6 @@ if SERVER then
     end
 
     --- Sets whether the player is whitelisted for a faction.
-
     -- @realm server
     -- @param faction The faction ID.
     -- @param whitelisted Whether the player should be whitelisted for the faction.
@@ -961,7 +902,6 @@ if SERVER then
     end
 
     --- Synchronizes networked variables with the player.
-
     -- @realm server
     function playerMeta:syncVars()
         for entity, data in pairs(lia.net) do
@@ -978,7 +918,6 @@ if SERVER then
     end
 
     --- Sets a local variable for the player.
-
     -- @realm server
     -- @param key The key of the variable.
     -- @param value The value of the variable.
@@ -991,7 +930,6 @@ if SERVER then
 
     playerMeta.SetLocalVar = playerMeta.setLocalVar
     --- Notifies the player with a message and prints the message to their chat.
-
     -- @realm server
     -- @param text The message to notify and print.
     function playerMeta:notifyP(text)
@@ -1000,7 +938,6 @@ if SERVER then
     end
 
     --- Sends a message to the player.
-
     -- @realm server
     -- @param ... The message(s) to send.
     function playerMeta:sendMessage(...)
@@ -1010,7 +947,6 @@ if SERVER then
     end
 
     --- Sends a message to the player to be printed.
-
     -- @realm server
     -- @param ... The message(s) to print.
     function playerMeta:sendPrint(...)
@@ -1020,7 +956,6 @@ if SERVER then
     end
 
     --- Sends a table to the player to be printed.
-
     -- @realm server
     -- @param ... The table(s) to print.
     function playerMeta:sendPrintTable(...)
@@ -1030,7 +965,6 @@ if SERVER then
     end
 else
     --- Retrieves the player's total playtime.
-
     -- @realm client
     -- @treturn number The total playtime of the player.
     function playerMeta:getPlayTime()
@@ -1050,7 +984,6 @@ else
 
     playerMeta.OpenUI = playerMeta.openUI
     --- Sets a waypoint for the player.
-
     -- @param name The name of the waypoint.
     -- @param vector The position vector of the waypoint.
     -- @param OnReach[opt=nil] Function to call when the player reaches the waypoint.
@@ -1075,7 +1008,6 @@ else
     end
 
     --- Retrieves a value from the local Lilia data.
-
     -- @param key The key for the data.
     -- @param default[opt=nil] The default value to return if the key does not exist.
     -- @realm client
