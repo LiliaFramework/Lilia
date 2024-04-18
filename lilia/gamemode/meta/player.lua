@@ -9,6 +9,23 @@ See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for 
 -- @classmod Player
 local playerMeta = FindMetaTable("Player")
 local vectorMeta = FindMetaTable("Vector")
+
+--- Returns this player's currently possessed `Character` object if it exists.
+-- @realm shared
+-- @treturn[1] Character Currently loaded character
+-- @treturn[2] nil If this player has no character loaded
+function playerMeta:getChar()
+return lia.char.loaded[self.getNetVar(self, "char")]
+end
+
+--- Returns this player's current name.
+-- @realm shared
+-- @treturn[1] string Name of this player's currently loaded character
+-- @treturn[2] string Steam name of this player if the player has no character loaded
+function playerMeta:Name()
+    local character = self.getChar(self)
+    return character and character.getName(character) or self.steamName(self)
+end
 --- Checks if the player belongs to the "user" user group.
 -- @realm shared
 -- @treturn bool Whether the player belongs to the "user" user group.
@@ -642,7 +659,7 @@ if SERVER then
         end
 
         entity:Spawn()
-        if not DontSetPlayer then entity:SetNetVar("player", self) end
+        if not dontSetPlayer then entity:SetNetVar("player", self) end
         entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
         entity:Activate()
         hook.Run("OnCreatePlayerServerRagdoll", self)
@@ -1017,7 +1034,11 @@ else
         end
     end
 end
-
+playerMeta.steamName = playerMeta.steamName or playerMeta.Name
+playerMeta.SteamName = playerMeta.steamName
+playerMeta.GetCharacter = playerMeta.getChar
+playerMeta.Nick = playerMeta.Name
+playerMeta.GetName = playerMeta.Name
 playerMeta.IsUser = playerMeta.isUser
 playerMeta.IsStaff = playerMeta.isStaff
 playerMeta.IsVIP = playerMeta.isVIP
