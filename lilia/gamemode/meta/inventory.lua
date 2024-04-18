@@ -112,7 +112,6 @@ function Inventory:new()
 end
 
 --- Returns a string representation of the inventory.
-
 -- @realm shared
 -- @treturn string A string representation of the inventory, including its class name and ID.
 function Inventory:__tostring()
@@ -120,7 +119,6 @@ function Inventory:__tostring()
 end
 
 --- Retrieves the type of the inventory.
-
 -- @realm shared
 -- @treturn table The type of the inventory.
 function Inventory:getType()

@@ -449,14 +449,12 @@ if SERVER then
 --- Retrieves the player's permission flags.
 -- @realm server
 -- @treturn string The player's permission flags.
-
     function playerMeta:getPermFlags()
         return self:getLiliaData("permflags", "")
     end
 --- Sets the player's permission flags.
 -- @param flags The permission flags to set.
 -- @realm server
-
     function playerMeta:setPermFlags(val)
         self:setLiliaData("permflags", val or "")
         self:saveLiliaData()
@@ -464,7 +462,6 @@ if SERVER then
 --- Grants permission flags to the player.
 -- @param flags The permission flags to grant.
 -- @realm server
-
     function playerMeta:givePermFlags(flags)
         local curFlags = self:getPermFlags()
         for i = 1, #flags do
@@ -666,7 +663,6 @@ if SERVER then
     end
 
     --- Performs a stared action towards an entity for a certain duration.
-
     -- @realm server
     -- @param entity The entity towards which the player performs the stared action.
     -- @param callback The function to call when the stared action is completed.
@@ -974,7 +970,6 @@ else
 
     playerMeta.GetPlayTime = playerMeta.getPlayTime
     --- Opens a UI panel for the player.
-
     -- @param panel The panel type to create.
     -- @realm client
     -- @treturn Panel The created UI panel.
