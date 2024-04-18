@@ -293,6 +293,7 @@ function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
 --- A list of available MODULE fields.
+-- @see [Module Structure](https://liliaframework.github.io/manual/structure_module.html)
 -- @realm shared
 -- @table CommandList
 -- @field `MODULE.name` Specifies the name of the module, which is "Core - Permissions" in this case. This variable identifies the module.
