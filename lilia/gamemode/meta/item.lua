@@ -189,7 +189,7 @@ if SERVER then
     ITEM.GetDescription = ITEM.getDesc
     --- Removes the item from its current inventory.
     -- @realm server
-    -- @bool[opt] preserveItem. If true, the item is not fully deleted from the database.
+    -- @bool[opt] preserveItem If true, the item is not fully deleted from the database.
     -- @return (deferred) A deferred object representing the asynchronous operation of removing the item.
     function ITEM:removeFromInventory(preserveItem)
         local inventory = lia.inventory.instances[self.invID]

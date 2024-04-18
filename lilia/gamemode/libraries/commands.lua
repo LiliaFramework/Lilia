@@ -89,7 +89,7 @@ end
 --- Returns true if a player is allowed to run a certain command.
 -- @realm shared
 -- @internal
--- @client to check access for
+-- @client client to check access for
 -- @string command Name of the command to check access for
 -- @tab data Optional command data, if not provided, it will be fetched from `lia.command.list`
 -- @treturn bool Whether or not the player is allowed to run the command
@@ -179,7 +179,7 @@ if SERVER then
 
     --- Attempts to find a faction by an identifier.
     -- @realm server
-    -- @client to give a notification to if the faction could not be found
+    -- @client client to give a notification to if the faction could not be found
     -- @string name Search query
     -- @treturn[1] table Faction that matches the given search query
     -- @treturn[2] nil If a faction could not be found
@@ -194,7 +194,7 @@ if SERVER then
 
     --- Attempts to find a player by an identifier silently.
     -- @realm server
-    -- @client to give a notification to if the player could not be found
+    -- @client client to give a notification to if the player could not be found
     -- @string name Search query
     -- @treturn player|nil Player that matches the given search query, or nil if not found
     function lia.command.findPlayerSilent(client, name)
