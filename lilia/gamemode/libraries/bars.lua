@@ -76,7 +76,8 @@ function lia.bar.draw(x, y, w, h, value, color)
     surface.DrawTexturedRect(x, y, w, h)
 end
 --- Draws the action bar, if applicable.
--- @realm client
+-- @realm 
+-- @internal
 function lia.bar.drawAction()
     local start, finish = lia.bar.actionStart, lia.bar.actionEnd
     local curTime = CurTime()
@@ -104,6 +105,7 @@ function lia.bar.drawAction()
 end
 --- Draws all bars in the list.
 -- @realm client
+-- @internal
 function lia.bar.drawAll()
     lia.bar.drawAction()
     if hook.Run("ShouldHideBars") then return end

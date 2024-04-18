@@ -68,7 +68,6 @@ end
 -- @param baseID (string) - The base ID of the item.
 -- @param isBaseItem (boolean) - Whether the item is a base item.
 -- @realm shared
-
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua") or path:match("([_%w]+)%.lua")
     if uniqueID then

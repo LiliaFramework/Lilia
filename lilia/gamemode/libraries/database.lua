@@ -224,6 +224,7 @@ lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueu
 -- @param callback[opt] A function to be called after the database connection is established.
 -- @param reconnect[opt=false] Whether to force a reconnection to the database module.
 -- @realm server
+-- @internal
 function lia.db.connect(callback, reconnect)
     local dbModule = modules[lia.db.module]
     if dbModule then
@@ -249,6 +250,7 @@ end
 --- Wipes all Lilia-related tables in the database.
 -- @param callback[opt] A function to be called after the wipe operation is completed.
 -- @realm server
+-- @internal
 function lia.db.wipeTables(callback)
     local function realCallback()
         lia.db.query("SET FOREIGN_KEY_CHECKS = 1;", function()
@@ -282,6 +284,7 @@ function lia.db.wipeTables(callback)
 end
 --- Loads the necessary tables into the database.
 -- @realm server
+-- @internal
 function lia.db.loadTables()
     local function done()
         lia.db.tablesLoaded = true
@@ -315,6 +318,7 @@ end
 --- Waits for the database tables to be loaded.
 -- @treturn Deferred A deferred object that resolves when the tables are loaded.
 -- @realm server
+-- @internal
 function lia.db.waitForTablesToLoad()
     TABLE_WAIT_ID = TABLE_WAIT_ID or 0
     local d = deferred.new()
@@ -332,6 +336,7 @@ end
 -- @param noEscape[opt=false] Whether to skip escaping the value. Defaults to false.
 -- @treturn string The converted value suitable for database insertion.
 -- @realm server
+-- @internal
 function lia.db.convertDataType(value, noEscape)
     if isstring(value) then
         if noEscape then

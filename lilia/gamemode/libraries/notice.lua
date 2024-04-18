@@ -1,7 +1,4 @@
-﻿--- Notification helper functions
--- @module lia.notices
-
-lia.notices = lia.notices or {}
+﻿lia.notices = lia.notices or {}
 lia.noticess = lia.noticess or {}
 lia.config.NotifTypes = {
     [1] = {
@@ -94,9 +91,7 @@ function OrganizeNotices(alternate)
         end
     end
 end
---- Displays a notification message in the chat.
--- @realm client
--- @param message The message to display
+
 function lia.util.notify(message)
     local notice = vgui.Create("liaNotify")
     local i = table.insert(lia.notices, notice)
@@ -120,9 +115,6 @@ function lia.util.notify(message)
     MsgN(message)
 end
 
---- Adds a legacy notification.
--- @realm client
--- @param text The text of the notification
 function notification.AddLegacy(text)
     lia.util.notify(tostring(text))
 end

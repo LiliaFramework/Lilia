@@ -898,6 +898,7 @@ if SERVER then
     end
 
     --- Synchronizes networked variables with the player.
+    -- @internal
     -- @realm server
     function playerMeta:syncVars()
         for entity, data in pairs(lia.net) do

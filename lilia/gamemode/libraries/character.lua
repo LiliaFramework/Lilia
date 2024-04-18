@@ -576,6 +576,7 @@ if SERVER then
     --- Cleans up a player's characters, removing them from memory and database.
     -- @param client The player whose characters to clean up.
     -- @realm server
+    -- @internal
     function lia.char.cleanUpForPlayer(client)
         for _, charID in pairs(client.liaCharList or {}) do
             local character = lia.char.loaded[charID]

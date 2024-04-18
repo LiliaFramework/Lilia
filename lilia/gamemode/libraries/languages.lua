@@ -26,7 +26,6 @@ lia.lang.names = lia.lang.names or {}
 lia.lang.stored = lia.lang.stored or {}
 --- Loads language files from a directory.
 -- @realm shared
--- @internal
 -- @string directory Directory to load language files from
 function lia.lang.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do

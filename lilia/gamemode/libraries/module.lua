@@ -271,6 +271,7 @@ end
 -- @string directory The path to the directory containing modules.
 -- @string group The group of the modules (e.g., "schema" or "module").
 -- @realm shared
+-- @internal
 function lia.module.loadFromDir(directory, group)
     local location = group == "schema" and "SCHEMA" or "MODULE"
     local files, folders = file.Find(directory .. "/*", "LUA")

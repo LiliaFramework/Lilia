@@ -88,6 +88,7 @@ end
 
 --- Returns true if a player is allowed to run a certain command.
 -- @realm shared
+-- @internal
 -- @param client Player to check access for
 -- @param command Name of the command to check access for
 -- @param data Optional command data, if not provided, it will be fetched from `lia.command.list`
@@ -239,7 +240,8 @@ if SERVER then
 -- @param[opt] realCommand Specific command to check for. If specified, it will only try to run this command
 -- @param[opt] arguments Array of arguments to pass to the command. If not specified, it will try to extract them from the text
 -- @return bool Whether or not a command has been found and executed
--- @usage ix.lia.command.parse(player.GetByID(1), "/roll 10")
+-- @usage lia.command.parse(player.GetByID(1), "/roll 10")
+-- @internal
 function lia.command.parse(client, text, realCommand, arguments)
     if realCommand or text:utf8sub(1, 1) == "/" then
         local match = realCommand or text:lower():match("/" .. "([_%w]+)")

@@ -30,6 +30,7 @@ lia.log.color = {
 if SERVER then
     --- Creates directories for storing logs.
     -- @realm server
+    -- @internal
     function lia.log.loadTables()
         file.CreateDir("lilia/logs")
         file.CreateDir("lilia/netlogs")
@@ -58,6 +59,7 @@ if SERVER then
     -- @param ... Additional arguments to be passed to the log generation function
     -- @return The formatted log string, its category, and color
     -- @realm server
+    -- @internal
     function lia.log.getString(client, logType, ...)
         local logData = lia.log.types[logType]
         if isfunction(logData.func) then
@@ -96,6 +98,7 @@ if SERVER then
     -- @param logString The log message to be sent.
     -- @param flag (Optional) A flag associated with the log message.
     -- @realm server
+    -- @internal
     function lia.log.send(client, logString, flag)
         netstream.Start(client, "liaLogStream", logString, flag)
     end

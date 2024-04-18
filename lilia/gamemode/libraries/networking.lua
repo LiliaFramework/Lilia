@@ -11,6 +11,7 @@ if SERVER then
     -- @param object The object to be checked for bad types
     -- @return True if a bad type is found, false otherwise
     -- @realm server
+    -- @internal
     function checkBadType(name, object)
         if isfunction(object) then
             ErrorNoHalt("Net var '" .. name .. "' contains a bad object type!")

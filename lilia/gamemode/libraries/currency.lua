@@ -9,6 +9,7 @@ lia.currency.plural = lia.currency.plural or "dollars"
 -- @param singular (string) The singular form of the currency name.
 -- @param plural (string) The plural form of the currency name.
 -- @realm shared
+-- @internal
 function lia.currency.set(symbol, singular, plural)
     lia.currency.symbol = symbol
     lia.currency.singular = singular
