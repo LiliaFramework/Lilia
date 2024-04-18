@@ -10,7 +10,7 @@ regular gamemode hooks.
 
 --- Called when the default name for a character needs to be retrieved (i.e., upon initial creation).
 -- @realm shared
--- @player client The client for whom the default name is being retrieved
+-- @client client The client for whom the default name is being retrieved
 -- @treturn string The default name for the newly created character
 -- @usage function FACTION:getDefaultName(client)
 -- 	return "CT-" .. math.random(111111, 999999)
@@ -21,7 +21,7 @@ end
 --- Called when the default description for a character needs to be retrieved.
 -- This function allows factions to define custom default descriptions for characters.
 -- @realm shared
--- @player client The client for whom the default description is being retrieved
+-- @client client The client for whom the default description is being retrieved
 -- @character faction The faction ID for which the default description is being retrieved
 -- @treturn string The default description for the newly created character
 -- @usage function FACTION:getDefaultDesc(client, faction)
@@ -32,7 +32,7 @@ end
 
 --- Called when a character has been initially created and assigned to this faction.
 -- @realm server
--- @player client The client that owns the character
+-- @client client The client that owns the character
 -- @character character The character that has been created
 -- @usage function FACTION:onCharCreated(client, character)
 -- 	local inventory = character:getInv()
@@ -43,7 +43,7 @@ end
 
 --- Called when a character in this faction has spawned in the world.
 -- @realm server
--- @player client The player that has just spawned
+-- @client client The player that has just spawned
 -- @usage function FACTION:onSpawn(client)
 -- 	client:ChatPrint("You have spawned!")
 -- end
