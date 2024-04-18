@@ -1,7 +1,6 @@
 ﻿function simfphys.IsCar(ent)
     if not IsValid(ent) then return false end
-    local IsVehicle = ent:GetClass():lower() == "gmod_sent_vehicle_fphysics_base"
-    return IsVehicle
+    return ent:GetClass() == "gmod_sent_vehicle_fphysics_base" or ent.IsSimfphyscar or ent:GetClass() == "gmod_sent_vehicle_fphysics_wheel" or ent.Base == "gmod_sent_vehicle_fphysics_base" or ent.Base == "gmod_sent_vehicle_fphysics_wheel"
 end
 
 function MODULE:simfphysPhysicsCollide()
