@@ -103,9 +103,5 @@ if SERVER then
         netstream.Start(client, "liaLogStream", logString, flag)
     end
 else
-    --- Hooks into the NetStream message "liaLogStream" to handle received log messages.
-    -- @string logString The log message received.
-    -- @string[opt] flag A flag associated with the log message.
-    -- @realm client
     netstream.Hook("liaLogStream", function(logString, flag) MsgC(Color(50, 200, 50), "[SERVER] ", lia.log.color[flag] or color_white, tostring(logString) .. "\n") end)
 end
