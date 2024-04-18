@@ -386,7 +386,7 @@ else
     -- @int y Y-position of the top-left corner of the rectangle
     -- @int w Width of the rectangle
     -- @int h Height of the rectangle
-    function lia.util.DrawTexture(material, color, x, y, w, h)
+    function lia.util.drawTexture(material, color, x, y, w, h)
         surface.SetDrawColor(color or color_white)
         surface.SetMaterial(lia.util.getMaterial(material))
         surface.DrawTexturedRect(x, y, w, h)
