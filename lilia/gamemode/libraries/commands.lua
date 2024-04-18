@@ -233,6 +233,7 @@ if SERVER then
     end
 
 --- Parses a command from an input string and executes it.
+-- @realm server
 -- @param client The player who is executing the command
 -- @param text Input string to search for the command format
 -- @param[opt] realCommand Specific command to check for. If specified, it will only try to run this command
