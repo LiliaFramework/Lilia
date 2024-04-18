@@ -265,7 +265,7 @@ end
 if SERVER then
 
 --- Instantiates an item and adds it to an inventory.
--- @param index- The inventory index or unique ID.
+-- @int index- The inventory index or unique ID.
 -- @param uniqueID - The unique ID of the item or item data.
 -- @tab itemData The item data.
 -- @int x The x-coordinate.

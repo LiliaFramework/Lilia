@@ -29,7 +29,7 @@ if SERVER then
 -- This function is only available on the server.
 -- @vector pos The position where the currency entity will be spawned.
 -- @int amount The amount of currency for the spawned entity.
--- @angle angle (Optional) The angle of the spawned entity. Default is Angle(0, 0, 0).
+-- @angle angle The angle of the spawned entity. Default is Angle(0, 0, 0).
 -- @realm server
     function lia.currency.spawn(pos, amount, angle)
         if not pos then

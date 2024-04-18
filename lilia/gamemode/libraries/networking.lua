@@ -7,7 +7,7 @@ local playerMeta = FindMetaTable("Player")
 local entityMeta = FindMetaTable("Entity")
 if SERVER then
     --- Checks if the provided object or any of its nested elements contain a bad type.
-    -- @param name The name of the networked variable
+    -- @string name The name of the networked variable
     -- @param object The object to be checked for bad types
     -- @return True if a bad type is found, false otherwise
     -- @realm server
@@ -26,7 +26,7 @@ if SERVER then
     --- Sets the value of a networked global variable.
     -- @param key The key of the networked global variable
     -- @param value The value to set
-    -- @param receiver The receiver of the network update (optional)
+    -- @client[opt] receiver The receiver of the network update
     -- @realm server
     function setNetVar(key, value, receiver)
         if checkBadType(key, value) then return end

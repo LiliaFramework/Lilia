@@ -283,7 +283,7 @@ if SERVER then
     end
 --- Transfers the item to another inventory.
 -- @realm server
--- @param newInventory (Inventory) The inventory to which the item should be transferred.
+-- @param newInventory The inventory to which the item should be transferred.
 -- @bool bBypass Whether to bypass access checks for transferring the item.
 -- @treturn boolean Whether the item was successfully transferred or not.
 

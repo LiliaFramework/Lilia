@@ -89,7 +89,7 @@ end
 
 --- Calculates the squared distance from the player to the specified entity.
 -- @realm shared
--- @param entity The entity to calculate the distance to.
+-- @entity entity The entity to calculate the distance to.
 -- @treturn number The squared distance from the player to the entity.
 function playerMeta:squaredDistanceFromEnt(entity)
     return self:GetPos():DistToSqr(entity)
@@ -97,7 +97,7 @@ end
 
 --- Calculates the distance from the player to the specified entity.
 -- @realm shared
--- @param entity The entity to calculate the distance to.
+-- @entity entity The entity to calculate the distance to.
 -- @treturn number The distance from the player to the entity.
 function playerMeta:distanceFromEnt(entity)
     return self:GetPos():Distance(entity)
@@ -105,8 +105,8 @@ end
 
 --- Checks if the player is near another entity within a specified radius.
 -- @realm shared
--- @param radius The radius within which to check for proximity.
--- @param entity The entity to check proximity to.
+-- @int radius The radius within which to check for proximity.
+-- @entity entity The entity to check proximity to.
 -- @treturn bool Whether the player is near the specified entity within the given radius.
 function playerMeta:isNearPlayer(radius, entity)
     local squaredRadius = radius * radius
@@ -116,7 +116,7 @@ end
 
 --- Retrieves entities near the player within a specified radius.
 -- @realm shared
--- @param radius The radius within which to search for entities.
+-- @int radius The radius within which to search for entities.
 -- @bool[opt] playerOnly If true, only return player entities.
 -- @treturn table A table containing the entities near the player.
 function playerMeta:entitiesNearPlayer(radius, playerOnly)
@@ -150,7 +150,7 @@ end
 
 --- Adds money to the player's character.
 -- @realm shared
--- @param amount The amount of money to add.
+-- @int amount The amount of money to add.
 function playerMeta:addMoney(amount)
     local character = self:getChar()
     if not character then return end
@@ -175,10 +175,10 @@ end
 
 --- Takes money from the player's character.
 -- @realm shared
--- @param amt The amount of money to take.
-function playerMeta:takeMoney(amt)
+-- @int amount The amount of money to take.
+function playerMeta:takeMoney(amount)
     local character = self:getChar()
-    if character then character:giveMoney(-amt) end
+    if character then character:giveMoney(-amount) end
 end
 
 --- Retrieves the amount of money owned by the player's character.
@@ -190,7 +190,7 @@ function playerMeta:getMoney()
 end
 --- Checks if the player's character can afford a specified amount of money.
 -- @realm shared
--- @param amount The amount of money to check.
+-- @int amount The amount of money to check.
 -- @treturn bool Whether the player's character can afford the specified amount of money.
 function playerMeta:canAfford(amount)
     local character = self:getChar()
@@ -230,7 +230,7 @@ end
 
 --- Checks if the player has whitelisted access to a faction.
 -- @realm shared
--- @param faction The faction to check for whitelisting.
+-- @int faction The faction to check for whitelisting.
 -- @treturn bool Whether the player has whitelisted access to the specified faction.
 function playerMeta:hasWhitelist(faction)
     local data = lia.faction.indices[faction]
@@ -303,8 +303,8 @@ end
 
 --- Checks if the player has a skill level equal to or greater than the specified level.
 -- @realm shared
--- @param skill The skill to check.
--- @param level The required skill level.
+-- @string skill The skill to check.
+-- @int level The required skill level.
 -- @treturn bool Whether the player's skill level meets or exceeds the specified level.
 function playerMeta:hasSkillLevel(skill, level)
     local currentLevel = self:getChar():getAttrib(skill, 0)
@@ -313,7 +313,7 @@ end
 
 --- Checks if the player meets the required skill levels.
 -- @realm shared
--- @param requiredSkillLevels A table containing the required skill levels.
+-- @tab requiredSkillLevels A table containing the required skill levels.
 -- @treturn bool Whether the player meets all the required skill levels.
 function playerMeta:meetsRequiredSkills(requiredSkillLevels)
     if not requiredSkillLevels then return true end
@@ -325,7 +325,7 @@ end
 
 --- Retrieves the entity within the player's line of sight.
 -- @realm shared
--- @param[opt=150] distance The maximum distance to consider.
+-- @int[opt] distance The maximum distance to consider.
 -- @treturn Entity|nil The entity within the player's line of sight, or nil if not found.
 function playerMeta:getEyeEnt(distance)
     distance = distance or 150
@@ -335,10 +335,10 @@ end
 
 --- Requests a string input from the player.
 -- @realm shared
--- @param title The title of the request.
--- @param subTitle The subtitle of the request.
--- @param callback The function to call upon receiving the string input.
--- @param default The default value for the string input.
+-- @string title The title of the request.
+-- @string subTitle The subtitle of the request.
+-- @funct callback The function to call upon receiving the string input.
+-- @string default The default value for the string input.
 function playerMeta:RequestString(title, subTitle, callback, default)
     local time = math.floor(os.time())
     self.StrReqs = self.StrReqs or {}
@@ -353,7 +353,7 @@ end
 
 if SERVER then
     --- Loads Lilia data for the player from the database.
-    -- @param callback[opt=nil] Function to call after the data is loaded, passing the loaded data as an argument.
+    -- @func[opt] callback Function to call after the data is loaded, passing the loaded data as an argument.
     -- @realm server
     function playerMeta:loadLiliaData(callback)
         local name = self:steamName()
@@ -397,9 +397,9 @@ if SERVER then
     end
 
     --- Sets a key-value pair in the player's Lilia data.
-    -- @param key The key for the data.
+    -- @string key The key for the data.
     -- @param value The value to set.
-    -- @param noNetworking[opt=false] If true, suppresses network broadcasting of the update.
+    -- @bool[opt] noNetworking If true, suppresses network broadcasting of the update.
     -- @realm server
     function playerMeta:setLiliaData(key, value, noNetworking)
         self.liaData = self.liaData or {}
@@ -408,7 +408,7 @@ if SERVER then
     end
 
     --- Retrieves a value from the player's Lilia data.
-    -- @param key The key for the data.
+    -- @string key The key for the data.
     -- @param default[opt=nil] The default value to return if the key does not exist.
     -- @realm server
     -- @treturn any The value corresponding to the key, or the default value if the key does not exist.
@@ -422,11 +422,11 @@ if SERVER then
         end
     end
 --- Sets an action bar for the player.
--- @param text The text to display on the action bar.
--- @param[opt] time The duration for the action bar to display, defaults to 5 seconds. Set to 0 or nil to remove the action bar immediately.
--- @param[opt] callback Function to execute when the action bar timer expires.
--- @param[opt] startTime The start time of the action bar, defaults to the current time.
--- @param[opt] finishTime The finish time of the action bar, defaults to startTime + time.
+-- @string text The text to display on the action bar.
+-- @int[opt] time The duration for the action bar to display, defaults to 5 seconds. Set to 0 or nil to remove the action bar immediately.
+-- @func[opt] callback Function to execute when the action bar timer expires.
+-- @int[opt] startTime The start time of the action bar, defaults to the current time.
+-- @int[opt] finishTime The finish time of the action bar, defaults to startTime + time.
 -- @realm server
     function playerMeta:setAction(text, time, callback, startTime, finishTime)
         if time and time <= 0 then
@@ -446,21 +446,21 @@ if SERVER then
         netstream.Start(self, "actBar", startTime, finishTime, text)
         if callback then timer.Create("liaAct" .. self:UniqueID(), time, 1, function() if IsValid(self) then callback(self) end end) end
     end
---- Retrieves the player's permission flags.
+--- Retrieves the player's permanent flags.
 -- @realm server
--- @treturn string The player's permission flags.
+-- @treturn string The player's permanent flags.
     function playerMeta:getPermFlags()
         return self:getLiliaData("permflags", "")
     end
---- Sets the player's permission flags.
--- @param flags The permission flags to set.
+--- Sets the player's permanent flags.
+-- @string flags The permanent flags to set.
 -- @realm server
     function playerMeta:setPermFlags(flags)
         self:setLiliaData("permflags", flags or "")
         self:saveLiliaData()
     end
---- Grants permission flags to the player.
--- @param flags The permission flags to grant.
+--- Grants permanent flags to the player.
+-- @tab flags The permanent flags to grant.
 -- @realm server
     function playerMeta:givePermFlags(flags)
         local curFlags = self:getPermFlags()
@@ -477,8 +477,8 @@ if SERVER then
             end
         end
     end
---- Revokes permission flags from the player.
--- @param flags The permission flags to revoke.
+--- Revokes permanent flags from the player.
+-- @tab flags The permanent flags to revoke.
 -- @realm server
     function playerMeta:takePermFlags(flags)
         local curFlags = self:getPermFlags()
@@ -494,10 +494,10 @@ if SERVER then
             end
         end
     end
---- Checks if the player has a specific permission flag.
--- @param flag The permission flag to check.
+--- Checks if the player has a specific permanent flag.
+-- @string flag The permanent flag to check.
 -- @realm server
--- @treturn bool Whether or not the player has the permission flag.
+-- @treturn bool Whether or not the player has the permanent flag.
 
     function playerMeta:hasPermFlag(flag)
         if not flag or #flag ~= 1 then return end
@@ -515,7 +515,7 @@ if SERVER then
         return self:getLiliaData("flagblacklist", "")
     end
 --- Sets the player's flag blacklist.
--- @param flags The flag blacklist to set.
+-- @tab flags The flag blacklist to set.
 -- @realm server
 
     function playerMeta:setFlagBlacklist(flags)
@@ -523,8 +523,8 @@ if SERVER then
         self:saveLiliaData()
     end
 --- Adds flags to the player's flag blacklist.
--- @param flags The flags to add to the blacklist.
--- @param[opt] blacklistInfo Additional information about the blacklist entry.
+-- @tab flags The flags to add to the blacklist.
+-- @tab[opt] blacklistInfo Additional information about the blacklist entry.
 -- @realm server
 
     function playerMeta:addFlagBlacklist(flags, blacklistInfo)
@@ -554,7 +554,7 @@ if SERVER then
 
     --- Removes flags from the player's flag blacklist.
     -- @realm server
-    -- @param flags A table containing the flags to remove from the blacklist.
+    -- @tab flags A table containing the flags to remove from the blacklist.
     function playerMeta:removeFlagBlacklist(flags)
         local curBlack = self:getFlagBlacklist()
         for i = 1, #flags do
@@ -567,7 +567,7 @@ if SERVER then
 
     --- Checks if the player has a specific flag blacklisted.
     -- @realm server
-    -- @param flag The flag to check for in the blacklist.
+    -- @string flag The flag to check for in the blacklist.
     -- @treturn bool Whether the player has the specified flag blacklisted.
     function playerMeta:hasFlagBlacklist(flag)
         local flags = self:getFlagBlacklist()
@@ -579,7 +579,7 @@ if SERVER then
 
     --- Checks if the player has any of the specified flags blacklisted.
     -- @realm server
-    -- @param flags A table containing the flags to check for in the blacklist.
+    -- @tab flags A table containing the flags to check for in the blacklist.
     -- @treturn bool Whether the player has any of the specified flags blacklisted.
     function playerMeta:hasAnyFlagBlacklist(flags)
         for i = 1, #flags do
@@ -590,8 +590,8 @@ if SERVER then
 
     --- Plays a sound for the player.
     -- @realm client
-    -- @param sound The sound to play.
-    -- @param[opt=100] pitch The pitch of the sound.
+    -- @string sound The sound to play.
+    -- @int[opt] pitch The pitch of the sound.
     function playerMeta:playSound(sound, pitch)
         net.Start("LiliaPlaySound")
         net.WriteString(tostring(sound))
@@ -611,7 +611,7 @@ if SERVER then
     playerMeta.OpenUI = playerMeta.openUI
     --- Opens a web page for the player.
     -- @realm client
-    -- @param url The URL of the web page to open.
+    -- @string url The URL of the web page to open.
     function playerMeta:openPage(url)
         net.Start("OpenPage")
         net.WriteString(url)
@@ -629,9 +629,9 @@ if SERVER then
     playerMeta.GetPlayTime = playerMeta.getPlayTime
     --- Creates a ragdoll entity for the player on the server.
     -- @realm server
-    -- @param[opt=false] DontSetPlayer Determines whether to associate the player with the ragdoll.
+    -- @bool[opt] dontSetPlayer Determines whether to associate the player with the ragdoll.
     -- @treturn Entity The created ragdoll entity.
-    function playerMeta:createServerRagdoll(DontSetPlayer)
+    function playerMeta:createServerRagdoll(dontSetPlayer)
         local entity = ents.Create("prop_ragdoll")
         entity:SetPos(self:GetPos())
         entity:SetAngles(self:EyeAngles())
@@ -664,11 +664,11 @@ if SERVER then
 
     --- Performs a stared action towards an entity for a certain duration.
     -- @realm server
-    -- @param entity The entity towards which the player performs the stared action.
-    -- @param callback The function to call when the stared action is completed.
-    -- @param[opt] time The duration of the stared action in seconds.
-    -- @param[opt] onCancel The function to call if the stared action is canceled.
-    -- @param[opt] distance The maximum distance for the stared action.
+    -- @entity entity The entity towards which the player performs the stared action.
+    -- @func callback The function to call when the stared action is completed.
+    -- @int[opt] time The duration of the stared action in seconds.
+    -- @func[opt] onCancel The function to call if the stared action is canceled.
+    -- @int[opt] distance The maximum distance for the stared action.
     function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
         local uniqueID = "liaStare" .. self:UniqueID()
         local data = {}
@@ -694,24 +694,24 @@ if SERVER then
 
     --- Notifies the player with a message.
     -- @realm shared
-    -- @param message The message to notify the player.
+    -- @string message The message to notify the player.
     function playerMeta:notify(message)
         lia.util.notify(message, self)
     end
 
     --- Notifies the player with a localized message.
     -- @realm shared
-    -- @param message The key of the localized message to notify the player.
-    -- @param ... Additional arguments to format the localized message.
+    -- @string message The key of the localized message to notify the player.
+    -- @tab ... Additional arguments to format the localized message.
     function playerMeta:notifyLocalized(message, ...)
         lia.util.notifyLocalized(message, self, ...)
     end
 
     --- Requests a string input from the player.
     -- @realm shared
-    -- @param title The title of the string input dialog.
-    -- @param subTitle The subtitle or description of the string input dialog.
-    -- @param callback The function to call with the entered string.
+    -- @string title The title of the string input dialog.
+    -- @string subTitle The subtitle or description of the string input dialog.
+    -- @func callback The function to call with the entered string.
     -- @param[opt] default The default value for the string input.
     -- @treturn Promise A promise object resolving with the entered string.
     function playerMeta:requestString(title, subTitle, callback, default)
@@ -735,7 +735,7 @@ if SERVER then
 
     --- Creates a ragdoll entity for the player.
     -- @realm server
-    -- @param freeze Whether to freeze the ragdoll initially.
+    -- @bool freeze Whether to freeze the ragdoll initially.
     -- @treturn Entity The created ragdoll entity.
     function playerMeta:createRagdoll(freeze)
         local entity = ents.Create("prop_ragdoll")
@@ -769,9 +769,9 @@ if SERVER then
 
     --- Sets the player to a ragdolled state or removes the ragdoll.
     -- @realm server
-    -- @param state Whether to set the player to a ragdolled state (`true`) or remove the ragdoll (`false`).
-    -- @param[opt] time The duration for which the player remains ragdolled.
-    -- @param[opt] getUpGrace The grace period for the player to get up before the ragdoll is removed.
+    -- @bool state Whether to set the player to a ragdolled state (`true`) or remove the ragdoll (`false`).
+    -- @int[opt] time The duration for which the player remains ragdolled.
+    -- @int[opt] getUpGrace The grace period for the player to get up before the ragdoll is removed.
     function playerMeta:setRagdolled(state, time, getUpGrace)
         getUpGrace = getUpGrace or time or 5
         if state then
@@ -880,8 +880,8 @@ if SERVER then
 
     --- Sets whether the player is whitelisted for a faction.
     -- @realm server
-    -- @param faction The faction ID.
-    -- @param whitelisted Whether the player should be whitelisted for the faction.
+    -- @int faction The faction ID.
+    -- @bool whitelisted Whether the player should be whitelisted for the faction.
     -- @treturn bool Whether the operation was successful.
     function playerMeta:setWhitelisted(faction, whitelisted)
         if not whitelisted then whitelisted = nil end
@@ -916,7 +916,7 @@ if SERVER then
 
     --- Sets a local variable for the player.
     -- @realm server
-    -- @param key The key of the variable.
+    -- @string key The key of the variable.
     -- @param value The value of the variable.
     function playerMeta:setLocalVar(key, value)
         if checkBadType(key, value) then return end
@@ -928,7 +928,7 @@ if SERVER then
     playerMeta.SetLocalVar = playerMeta.setLocalVar
     --- Notifies the player with a message and prints the message to their chat.
     -- @realm server
-    -- @param text The message to notify and print.
+    -- @string text The message to notify and print.
     function playerMeta:notifyP(text)
         self:notify(text)
         self:ChatPrint(text)
@@ -936,7 +936,7 @@ if SERVER then
 
     --- Sends a message to the player.
     -- @realm server
-    -- @param ... The message(s) to send.
+    -- @tab ... The message(s) to send.
     function playerMeta:sendMessage(...)
         net.Start("SendMessage")
         net.WriteTable({...} or {})
@@ -980,11 +980,11 @@ else
 
     playerMeta.OpenUI = playerMeta.openUI
     --- Sets a waypoint for the player.
-    -- @param name The name of the waypoint.
-    -- @param vector The position vector of the waypoint.
-    -- @param OnReach[opt=nil] Function to call when the player reaches the waypoint.
+    -- @string name The name of the waypoint.
+    -- @vector vector The position vector of the waypoint.
+    -- @func onReach[opt=nil] Function to call when the player reaches the waypoint.
     -- @realm client
-    function playerMeta:setWeighPoint(name, vector, OnReach)
+    function playerMeta:setWeighPoint(name, vector, onReach)
         hook.Add("HUDPaint", "WeighPoint", function()
             local dist = self:GetPos():Distance(vector)
             local spos = vector:ToScreen()
@@ -999,13 +999,13 @@ else
 
         concommand.Add("weighpoint_stop", function()
             hook.Add("HUDPaint", "WeighPoint", function() end)
-            if IsValid(OnReach) then OnReach() end
+            if IsValid(onReach) then onReach() end
         end)
     end
 
     --- Retrieves a value from the local Lilia data.
-    -- @param key The key for the data.
-    -- @param default[opt=nil] The default value to return if the key does not exist.
+    -- @string key The key for the data.
+    -- @param[opt] default The default value to return if the key does not exist.
     -- @realm client
     -- @treturn any The value corresponding to the key, or the default value if the key does not exist.
     function playerMeta:getLiliaData(key, default)

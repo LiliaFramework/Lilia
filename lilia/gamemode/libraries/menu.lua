@@ -8,9 +8,9 @@ from the panel that shows up for the player.
 lia.menu = lia.menu or {}
 lia.menu.list = lia.menu.list or {}
 --- Adds a menu with the provided options.
--- @param options Table containing the menu options
--- @param position Position of the menu (either a vector or an entity)
--- @param onRemove Callback function to execute when the menu is removed (optional)
+-- @tab options Table containing the menu options
+-- @vector position Position of the menu (either a vector or an entity)
+-- @func[opt] onRemove Callback function to execute when the menu is removed
 -- @return The index of the added menu in the `lia.menu.list` table
 -- @realm client
 function lia.menu.add(options, position, onRemove)
@@ -140,8 +140,8 @@ function lia.menu.getActiveMenu()
 end
 
 --- Executes a callback function when a menu button is pressed and removes the menu.
--- @param menu Index of the menu to remove
--- @param callback Callback function to execute
+-- @string menu Index of the menu to remove
+-- @func callback Callback function to execute
 -- @return True if a callback was provided and executed, false otherwise
 -- @realm client
 function lia.menu.onButtonPressed(menu, callback)

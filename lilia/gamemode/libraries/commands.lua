@@ -91,7 +91,7 @@ end
 -- @internal
 -- @client client to check access for
 -- @string command Name of the command to check access for
--- @tab data Optional command data, if not provided, it will be fetched from `lia.command.list`
+-- @tab[opt] data command data, if not provided, it will be fetched from `lia.command.list`
 -- @treturn bool Whether or not the player is allowed to run the command
 function lia.command.hasAccess(client, command, data)
     if data == nil then data = lia.command.list[command] end
