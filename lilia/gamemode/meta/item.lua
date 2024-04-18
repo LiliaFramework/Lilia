@@ -115,9 +115,8 @@ end
 --- Returns the value stored on a key within the item's data.
 -- @realm shared
 -- @string key The key in which the value is stored
--- @param[opt=nil] default The value to return in case there is no value stored in the key
+-- @param[opt] default The value to return in case there is no value stored in the key
 -- @return The value stored within the key
-
 function ITEM:getData(key, default)
     self.data = self.data or {}
     if key == true then return self.data end
@@ -412,7 +411,7 @@ if SERVER then
 -- @string action The interaction action to perform.
 -- @client client The player performing the interaction.
 -- @entity entity The entity associated with the interaction, if any.
--- @tab[opt] data. Additional data related to the interaction.
+-- @tab[opt] data Additional data related to the interaction.
 -- @return (boolean) Whether the interaction was successful.
 
     function ITEM:interact(action, client, entity, data)

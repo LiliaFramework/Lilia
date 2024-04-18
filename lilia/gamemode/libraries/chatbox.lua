@@ -199,7 +199,7 @@ if SERVER then
     --- Sends a chat message from a speaker to specified receivers, based on the provided chat type and text.
     -- The message is processed according to the properties and functions defined for the chat class.
     -- @realm server
-    -- @entity Entity sending the message
+    -- @entity speaker sending the message
     -- @string chatType Type of the chat message
     -- @string text The message content
     -- @bool[opt=false] anonymous Whether the message should be sent anonymously

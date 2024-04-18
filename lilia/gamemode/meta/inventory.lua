@@ -285,7 +285,7 @@ if SERVER then
     --- Removes an item from the inventory.
     -- @realm server
     -- @tparam number itemID The ID of the item to remove.
-    -- @tparam[opt=false] boolean preserveItem Whether to preserve the item's data in the database.
+    -- @bool[opt] preserveItem Whether to preserve the item's data in the database.
     -- @treturn Deferred A deferred promise.
     function Inventory:removeItem(itemID, preserveItem)
         assert(isnumber(itemID), "itemID must be a number for remove")
