@@ -34,7 +34,7 @@ lia.command.list = lia.command.list or {}
 --- Creates a new command.
 -- @realm shared
 -- @string command Name of the command (recommended in UpperCamelCase)
--- @tparam CommandStructure data Data describing the command
+-- @tab data Data describing the command
 -- @see CommandStructure
 function lia.command.add(command, data)
     data.syntax = data.syntax or "[none]"
@@ -96,10 +96,12 @@ end
 function lia.command.hasAccess(client, command, data)
     if data == nil then data = lia.command.list[command] end
     local privilege = data.privilege
-    if not privilege then privilege = command end
-    local bHasAccess, _ = CAMI.PlayerHasAccess(client, "Commands - " .. privilege, nil)
-    if hook.GetTable()["CanPlayerUseCommand"] then return hook.Run("CanPlayerUseCommand") end
-    return bHasAccess
+    local superAdminOnly = data.superAdminOnly
+    local adminOnly = data.adminOnly
+    local acessLevels = superAdminOnly and "superadmin" or (adminOnly and "admin" or "user")
+    if not privilege then privilege = acessLevels == "user" and "Default User Commands" or command end
+    local hasAccess, _ = CAMI.PlayerHasAccess(client, "Commands - " .. privilege, nil)
+    return hasAccess
 end
 
 --- Returns a table of arguments from a given string.
@@ -145,7 +147,7 @@ if SERVER then
     --- Attempts to find a player by an identifier. If unsuccessful, a notice will be displayed to the specified player. The
     -- search criteria is derived from `lia.command.findPlayer`.
     -- @realm server
-    -- @player client Player to give a notification to if the player could not be found
+    -- @client client Player to give a notification to if the player could not be found
     -- @string name Search query
     -- @treturn[1] player Player that matches the given search query
     -- @treturn[2] nil If a player could not be found
@@ -207,7 +209,7 @@ if SERVER then
 
     --- Forces a player to execute a command by name.
     -- @realm server
-    -- @player client Player who is executing the command
+    -- @client client Player who is executing the command
     -- @string command Full name of the command to be executed. This string gets lowered, but it's good practice to stick with
     -- the exact name of the command
     -- @tab arguments Array of arguments to be passed to the command
