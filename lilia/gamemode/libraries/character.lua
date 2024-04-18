@@ -499,10 +499,9 @@ if SERVER then
     -- @realm server
     -- @client client Player to load the characters for
     -- @func[opt=nil] callback Function to call when the characters have been loaded
-    -- @bool[opt=false] _ Whether or not to skip the cache; players that leave and join again later will already have
     -- their characters loaded which will skip the database query and load quicker
     -- @number[opt=nil] id The ID of a specific character to load instead of all of the player's characters
-    function lia.char.restore(client, callback, _, id)
+    function lia.char.restore(client, callback, id)
         local steamID64 = client:SteamID64()
         local fields = {"_id"}
         for _, var in pairs(lia.char.vars) do
