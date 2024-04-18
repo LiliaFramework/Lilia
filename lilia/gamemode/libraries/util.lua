@@ -157,7 +157,7 @@ function lia.util.findPlayerBySteamID(SteamID)
 end
 
 --- Checks if a position can fit a player's collision hull.
--- @vecotr pos The position to check
+-- @vector pos The position to check
 -- @vector[opt] mins The minimum size of the collision hull
 -- @vector[opt] maxs The maximum size of the collision hull
 -- @tab[opt] filter Entities to filter out from the collision check

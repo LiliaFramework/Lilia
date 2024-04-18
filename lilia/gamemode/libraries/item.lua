@@ -79,7 +79,7 @@ function lia.item.load(path, baseID, isBaseItem)
 end
 --- Checks if an object is an item.
 -- @tab object The object to check.
--- @bool Whether the object is an item.
+-- @return Whether the object is an item.
 -- @realm shared
 function lia.item.isItem(object)
     return istable(object) and object.isItem == true
