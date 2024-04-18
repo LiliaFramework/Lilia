@@ -247,7 +247,7 @@ lia.util.includeDir = lia.includeDir
 --- Dynamically loads Lua files for entities, weapons, and effects into the server, client, or shared realm of a Garry's Mod Lua project.
 -- This function iterates through a specified directory and its subdirectories, including Lua files for entities, weapons, and effects into the appropriate realm.
 -- This function also has a legacy alias lia.util.loadEntities that can be used instead of lia.includeEntities.
--- @param path The directory containing the Lua files to be included.
+-- @string path The directory containing the Lua files to be included.
 -- @realm shared
 function lia.includeEntities(path)
     local files, folders

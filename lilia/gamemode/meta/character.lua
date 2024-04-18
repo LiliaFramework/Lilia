@@ -279,7 +279,7 @@ if SERVER then
     -- This is done automatically by the framework.
     -- @internal
     -- @realm server
-    -- @player[opt=nil] receiver Player to send the information to. This will sync to all connected players if set to `nil`.
+    -- @client[opt=nil] receiver Player to send the information to. This will sync to all connected players if set to `nil`.
     function charMeta:sync(receiver)
         if receiver == nil then
             for _, v in ipairs(player.GetAll()) do

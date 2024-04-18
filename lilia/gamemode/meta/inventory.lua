@@ -25,7 +25,7 @@ Inventory.items = {}
 Inventory.id = -1
 --- Retrieves data associated with a specified key from the inventory.
 -- @realm shared
--- @param key The key for the data.
+-- @string key The key for the data.
 -- @param[opt] default The default value to return if the key does not exist.
 -- @treturn any The value associated with the key, or the default value if the key does not exist.
 function Inventory:getData(key, default)

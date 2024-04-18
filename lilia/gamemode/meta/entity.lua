@@ -223,7 +223,7 @@ if SERVER then
     -- @realm server
     -- @string key Identifier of the networked variable
     -- @param default Default value to return if the networked variable is not set
-    -- @return Value associated with the key, or the default that was given if it doesn't exist
+    -- @return value associated with the key, or the default that was given if it doesn't exist
     -- @usage print(client:getNetVar("example"))
     -- > Hello World!
     -- @see setNetVar
@@ -260,7 +260,7 @@ else
     entityMeta.GetDoorPartner = entityMeta.getDoorPartner
     --- Retrieves the value of a networked variable associated with the entity.
     -- @realm client
-    -- @tparam string key The identifier of the networked variable.
+    -- @string key The identifier of the networked variable.
     -- @param default The default value to return if the networked variable does not exist.
     -- @treturn any The value of the networked variable, or the default value if it doesn't exist.
     function entityMeta:getNetVar(key, default)

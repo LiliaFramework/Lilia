@@ -3,20 +3,20 @@
 lia.color = lia.color or {}
 
 --- Lightens a color by the specified amount.
--- @param colot Color: The color to lighten.
--- @param amount number: The amount by which to lighten the color.
+-- @color color Color: The color to lighten.
+-- @int amount number: The amount by which to lighten the color.
 -- @return Color: The resulting lightened color.
 -- @realm client
-function lia.color.Lighten(colot, amount)
-    return Color(math.Clamp(colot.r + amount, 0, 255), math.Clamp(colot.g + amount, 0, 255), math.Clamp(colot.b + amount, 0, 255), colot.a)
+function lia.color.Lighten(color, amount)
+    return Color(math.Clamp(color.r + amount, 0, 255), math.Clamp(color.g + amount, 0, 255), math.Clamp(color.b + amount, 0, 255), color.a)
 end
 --- Darkens a color by the specified amount.
--- @param colot Color: The color to darken.
--- @param amount number: The amount by which to darken the color.
+-- @color color Color: The color to darken.
+-- @int amount number: The amount by which to darken the color.
 -- @return Color: The resulting darkened color.
 -- @realm client
-function lia.color.Darken(colot, amount)
-    return Color(math.Clamp(colot.r - amount, 0, 255), math.Clamp(colot.g - amount, 0, 255), math.Clamp(colot.b - amount, 0, 255), colot.a)
+function lia.color.Darken(color, amount)
+    return Color(math.Clamp(color.r - amount, 0, 255), math.Clamp(color.g - amount, 0, 255), math.Clamp(color.b - amount, 0, 255), color.a)
 end
 
 do
@@ -83,9 +83,9 @@ do
         end
     end
 --- Registers a custom color with a specified name.
--- @param name string: The name of the color to register.
--- @param color Color: The color value to register.
--- @param force boolean: If true, forces registration even if the name already exists.
+-- @string name: The name of the color to register.
+-- @color color: The color value to register.
+-- @bool force: If true, forces registration even if the name already exists.
 -- @realm client
     function lia.color.register(name, color, force)
         if not force and colors[name] then return end
@@ -99,11 +99,11 @@ do
         return (val - min) / delta
     end
 --- Interpolates between two colors in the HSV color space.
--- @param start_color Color: The starting color.
--- @param end_color Color: The ending color.
--- @param maxValue number: The maximum value to interpolate between (used for normalization).
--- @param currentValue number: The current value to interpolate (used for normalization).
--- @param minValue number (optional): The minimum value to interpolate between (used for normalization). Defaults to 0.
+-- @color start_color: The starting color.
+-- @color end_color: The ending color.
+-- @int maxValue: The maximum value to interpolate between (used for normalization).
+-- @int currentValue: The current value to interpolate (used for normalization).
+-- @int minValue (optional): The minimum value to interpolate between (used for normalization). Defaults to 0.
 -- @return Color: The resulting interpolated color.
 -- @realm client
     function lia.color.LerpHSV(start_color, end_color, maxValue, currentValue, minValue)
@@ -117,9 +117,9 @@ do
     end
 end
 --- Converts RGB values to a Color object.
--- @param r number: The red component (0-255).
--- @param g number: The green component (0-255).
--- @param b number: The blue component (0-255).
+-- @int r: The red component (0-255).
+-- @int g: The green component (0-255).
+-- @int b: The blue component (0-255).
 -- @return Color: The resulting color.
 -- @realm client
 function rgb(r, g, b)

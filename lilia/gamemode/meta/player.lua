@@ -945,7 +945,7 @@ if SERVER then
 
     --- Sends a message to the player to be printed.
     -- @realm server
-    -- @param ... The message(s) to print.
+    -- @tab ... The message(s) to print.
     function playerMeta:sendPrint(...)
         net.Start("SendPrint")
         net.WriteTable({...} or {})
@@ -954,7 +954,7 @@ if SERVER then
 
     --- Sends a table to the player to be printed.
     -- @realm server
-    -- @param ... The table(s) to print.
+    -- @tab ... The table(s) to print.
     function playerMeta:sendPrintTable(...)
         net.Start("SendPrintTable")
         net.WriteTable({...} or {})

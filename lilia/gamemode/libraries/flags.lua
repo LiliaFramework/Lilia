@@ -44,7 +44,7 @@ if SERVER then
     --- Called to apply flags when a player has spawned.
     -- @realm server
     -- @internal
-    -- @player client Player to setup flags for
+    -- @client client Player to setup flags for
     function lia.flag.onSpawn(client)
         if client:getChar() then
             local flags = client:getChar():getFlags()

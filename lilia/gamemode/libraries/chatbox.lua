@@ -24,8 +24,8 @@ local DUMMY_COMMAND = {
 }
 
 --- Generates a timestamp string for chat messages.
--- @param ooc (boolean) Whether the message is Out of Character (OOC).
--- @return (string) The formatted timestamp string, including date and time if configured to show.
+-- @bool ooc Whether the message is Out of Character (OOC).
+-- @return string The formatted timestamp string, including date and time if configured to show.
 -- @realm shared
 function lia.chat.timestamp(ooc)
     return lia.config.ChatShowTime and (ooc and " " or "") .. "(" .. lia.date.GetFormattedDate(nil, false, false, false, false, true) .. ")" .. (ooc and "" or " ") or ""
@@ -155,7 +155,7 @@ end
 
 --- Identifies which chat mode should be used.
 -- @realm shared
--- @player client Player who is speaking
+-- @client client Player who is speaking
 -- @string message Message to parse
 -- @internal
 -- @bool[opt=false] noSend Whether or not to send the chat message after parsing
@@ -199,7 +199,7 @@ if SERVER then
     --- Sends a chat message from a speaker to specified receivers, based on the provided chat type and text.
     -- The message is processed according to the properties and functions defined for the chat class.
     -- @realm server
-    -- @param speaker Entity sending the message
+    -- @entity Entity sending the message
     -- @string chatType Type of the chat message
     -- @string text The message content
     -- @bool[opt=false] anonymous Whether the message should be sent anonymously

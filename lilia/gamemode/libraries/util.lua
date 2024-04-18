@@ -73,8 +73,8 @@ end
 
 --- Rounds a vector to the nearest multiple of a given grid size.
 -- @realm shared
--- @param vec Vector to be rounded
--- @param gridSize Grid size to round to
+-- @vector vec Vector to be rounded
+-- @int gridSize Grid size to round to
 -- @treturn Vector The rounded vector
 function lia.util.gridVector(vec, gridSize)
     if gridSize <= 0 then gridSize = 1 end
@@ -776,12 +776,11 @@ else
 
     --- Fetches an image from either local data or a remote server and provides it to a callback function.
     -- @realm client
-    -- @param id The unique identifier or filename of the image
-    -- @param callback The function to call with the loaded image material as its argument, or false if the image could not be loaded
-    -- @param _ Unused parameter, kept for compatibility
-    -- @param pngParameters Optional parameters for loading PNG images (default is "noclamp smooth")
-    -- @param imageProvider Optional URL for the remote image provider (default is "https://i.imgur.com/")
-    function lia.util.fetchImage(id, callback, _, pngParameters, imageProvider)
+    -- @string id The unique identifier or filename of the image
+    -- @func callback The function to call with the loaded image material as its argument, or false if the image could not be loaded
+    -- @string[opt] pngParameters Optional parameters for loading PNG images (default is "noclamp smooth")
+    -- @string[opt] imageProvider Optional URL for the remote image provider (default is "https://i.imgur.com/")
+    function lia.util.fetchImage(id, callback, pngParameters, imageProvider)
         local loadedImage = lia.util.LoadedImages[id]
         if loadedImage then
             if callback then callback(loadedImage) end

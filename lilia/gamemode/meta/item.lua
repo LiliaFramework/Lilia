@@ -80,9 +80,9 @@ end
 --- Calls one of the item's methods.
 -- @realm shared
 -- @string method The method to be called
--- @player client The client to pass when calling the method, if applicable
+-- @client client The client to pass when calling the method, if applicable
 -- @entity entity The eneity to pass when calling the method, if applicable
--- @param ... Arguments to pass to the method
+-- @tab ... Arguments to pass to the method
 -- @return The values returned by the method
 
 function ITEM:call(method, client, entity, ...)
@@ -190,7 +190,7 @@ if SERVER then
     ITEM.GetDescription = ITEM.getDesc
     --- Removes the item from its current inventory.
     -- @realm server
-    -- @param preserveItem (boolean) Optional. If true, the item is not fully deleted from the database.
+    -- @bool[opt] preserveItem. If true, the item is not fully deleted from the database.
     -- @return (deferred) A deferred object representing the asynchronous operation of removing the item.
     function ITEM:removeFromInventory(preserveItem)
         local inventory = lia.inventory.instances[self.invID]
@@ -250,8 +250,8 @@ if SERVER then
     end
 	--- Spawn an item entity based off the item table.
 	-- @realm server
-	-- @param[type=vector] position The position in which the item's entity will be spawned
-	-- @param[type=angle] angles The angles at which the item's entity will spawn
+	-- @vector position The position in which the item's entity will be spawned
+	-- @angle angles The angles at which the item's entity will spawn
 	-- @treturn entity The spawned entity
 
     function ITEM:spawn(position, angles)
@@ -285,7 +285,7 @@ if SERVER then
 --- Transfers the item to another inventory.
 -- @realm server
 -- @param newInventory (Inventory) The inventory to which the item should be transferred.
--- @param bBypass (boolean) Whether to bypass access checks for transferring the item.
+-- @bool bBypass Whether to bypass access checks for transferring the item.
 -- @treturn boolean Whether the item was successfully transferred or not.
 
     function ITEM:transfer(newInventory, bBypass)
@@ -314,7 +314,7 @@ if SERVER then
     function ITEM:onRestored()
     end
 --- Synchronizes the item data with the specified recipient or broadcasts it to all clients if no recipient is specified.
--- @param recipient (Player) The player to whom the item data should be synchronized. If set to nil, the data is broadcasted to all clients.
+-- @client recipient The player to whom the item data should be synchronized. If set to nil, the data is broadcasted to all clients.
 -- @realm server
 
     function ITEM:sync(recipient)
@@ -376,9 +376,9 @@ if SERVER then
     end
 --- Adds a specified quantity to the item's current quantity.
 -- @realm server
--- @param quantity (number) The quantity to add.
--- @param receivers (table) Optional. Players who should receive updates about the quantity change.
--- @param noCheckEntity (boolean) Optional. If true, entity checks will be skipped.
+-- @int quantity The quantity to add.
+-- @tab[opt] receivers Players who should receive updates about the quantity change.
+-- @bool[opt] noCheckEntity If true, entity checks will be skipped.
 
     function ITEM:addQuantity(quantity, receivers, noCheckEntity)
         self:setQuantity(self:getQuantity() + quantity, receivers, noCheckEntity)
@@ -386,9 +386,9 @@ if SERVER then
 
 --- Sets the quantity of the item to the specified value.
 -- @realm server
--- @param quantity (number) The new quantity value.
--- @param receivers (table) Optional. Players who should receive updates about the quantity change.
--- @param noCheckEntity (boolean) Optional. If true, entity checks will be skipped.
+-- @int quantity (number) The new quantity value.
+-- @tab receivers (table) Optional. Players who should receive updates about the quantity change.
+-- @bool noCheckEntity (boolean) Optional. If true, entity checks will be skipped.
 
     function ITEM:setQuantity(quantity, receivers, noCheckEntity)
         self.quantity = quantity
@@ -409,10 +409,10 @@ if SERVER then
     end
 --- Performs an interaction action with the item.
 -- @realm server
--- @param action (string) The interaction action to perform.
--- @param client (Player) The player performing the interaction.
--- @param entity (Entity) The entity associated with the interaction, if any.
--- @param data (table) Optional. Additional data related to the interaction.
+-- @string action The interaction action to perform.
+-- @client client The player performing the interaction.
+-- @entity entity The entity associated with the interaction, if any.
+-- @tab[opt] data. Additional data related to the interaction.
 -- @return (boolean) Whether the interaction was successful.
 
     function ITEM:interact(action, client, entity, data)
@@ -469,7 +469,7 @@ else
 
 --- Returns the name of the item.
 -- @realm client
--- @treturn string The name of the item
+-- @return string The name of the item
 
     function ITEM:getName()
         return L(self.name)
@@ -478,7 +478,7 @@ else
     ITEM.GetName = ITEM.getName
     --- Returns the description of the item.
 -- @realm client
--- @treturn string The description of the item
+-- @return string The description of the item
 
     function ITEM:getDesc()
         return L(self.desc)

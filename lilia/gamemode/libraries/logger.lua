@@ -81,7 +81,7 @@ if SERVER then
 
     --- Add a log message.
     -- @realm server
-    -- @player client Player who instigated the log
+    -- @client client Player who instigated the log
     -- @string logType Log category
     -- @param ... Arguments to pass to the log
     function lia.log.add(client, logType, ...)
