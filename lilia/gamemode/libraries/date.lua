@@ -9,13 +9,13 @@ since the epoch.
 lia.date = lia.date or {}
 --- Generates a formatted date string based on the current system time.
 -- @realm shared
--- @param StartingMessage (optional) A message to prepend to the formatted date.
--- @param includeWeekDay (optional) Whether to include the day of the week in the formatted date.
--- @param includeDay (optional) Whether to include the day of the month in the formatted date.
--- @param includeMonth (optional) Whether to include the month in the formatted date.
--- @param includeYear (optional) Whether to include the year in the formatted date.
--- @param includeTime (optional) Whether to include the time in the formatted date.
--- @return The formatted date string.
+-- @string[opt] StartingMessage A message to prepend to the formatted date.
+-- @bool[opt] includeWeekDay Whether to include the day of the week in the formatted date.
+-- @bool[opt] includeDay Whether to include the day of the month in the formatted date.
+-- @bool[opt] includeMonth Whether to include the month in the formatted date.
+-- @bool[opt] includeYear Whether to include the year in the formatted date.
+-- @bool[opt] includeTime Whether to include the time in the formatted date.
+-- @return string The formatted date string.
 function lia.date.GetFormattedDate(StartingMessage, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
     local currentTime = os.date("*t")
     if StartingMessage then
@@ -63,13 +63,13 @@ end
 
 --- Generates a formatted date string based on the current system time for in-game usage.
 -- @realm shared
--- @param StartingMessage (optional) A message to prepend to the formatted date.
--- @param includeWeekDay (optional) Whether to include the day of the week in the formatted date.
--- @param includeDay (optional) Whether to include the day of the month in the formatted date.
--- @param includeMonth (optional) Whether to include the month in the formatted date.
--- @param includeYear (optional) Whether to include the year in the formatted date.
--- @param includeTime (optional) Whether to include the time in the formatted date.
--- @return The formatted date string.
+-- @string[opt] StartingMessage A message to prepend to the formatted date.
+-- @bool[opt] includeWeekDay Whether to include the day of the week in the formatted date.
+-- @bool[opt] includeDay Whether to include the day of the month in the formatted date.
+-- @bool[opt] includeMonth Whether to include the month in the formatted date.
+-- @bool[opt] includeYear Whether to include the year in the formatted date.
+-- @bool[opt] includeTime Whether to include the time in the formatted date.
+-- @return string The formatted date string.
 function lia.date.GetFormattedDateInGame(StartingMessage, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
     local currentTime = os.date("*t")
     if StartingMessage then
@@ -117,14 +117,14 @@ end
 
 --- Generates a pre-formatted date string based on the provided time.
 -- @realm shared
--- @param StartingMessage (optional) A message to prepend to the formatted date.
--- @param timeToFormat The time to format.
--- @param includeWeekDay (optional) Whether to include the day of the week in the formatted date.
--- @param includeDay (optional) Whether to include the day of the month in the formatted date.
--- @param includeMonth (optional) Whether to include the month in the formatted date.
--- @param includeYear (optional) Whether to include the year in the formatted date.
--- @param includeTime (optional) Whether to include the time in the formatted date.
--- @return The formatted date string.
+-- @string[opt] StartingMessage A message to prepend to the formatted date.
+-- @tab timeToFormat The time to format.
+-- @bool[opt] includeWeekDay Whether to include the day of the week in the formatted date.
+-- @bool[opt] includeDay Whether to include the day of the month in the formatted date.
+-- @bool[opt] includeMonth Whether to include the month in the formatted date.
+-- @bool[opt] includeYear Whether to include the year in the formatted date.
+-- @bool[opt] includeTime Whether to include the time in the formatted date.
+-- @return string The formatted date string.
 function lia.date.GetPreFormattedDate(StartingMessage, timeToFormat, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
     local currentTime = tostring(timeToFormat)
     if StartingMessage then
@@ -172,14 +172,14 @@ end
 
 --- Generates a pre-formatted date string based on the provided time for in-game usage.
 -- @realm shared
--- @param StartingMessage (optional) A message to prepend to the formatted date.
--- @param timeToFormat The time to format.
--- @param includeWeekDay (optional) Whether to include the day of the week in the formatted date.
--- @param includeDay (optional) Whether to include the day of the month in the formatted date.
--- @param includeMonth (optional) Whether to include the month in the formatted date.
--- @param includeYear (optional) Whether to include the year in the formatted date.
--- @param includeTime (optional) Whether to include the time in the formatted date.
--- @return The formatted date string.
+-- @string[opt] StartingMessage A message to prepend to the formatted date.
+-- @tab timeToFormat The time to format.
+-- @bool[opt] includeWeekDay Whether to include the day of the week in the formatted date.
+-- @bool[opt] includeDay Whether to include the day of the month in the formatted date.
+-- @bool[opt] includeMonth Whether to include the month in the formatted date.
+-- @bool[opt] includeYear Whether to include the year in the formatted date.
+-- @bool[opt] includeTime Whether to include the time in the formatted date.
+-- @return string The formatted date string.
 function lia.date.GetPreFormattedDateInGame(StartingMessage, timeToFormat, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
     local currentTime = tostring(timeToFormat)
     if StartingMessage then

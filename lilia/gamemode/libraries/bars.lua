@@ -18,9 +18,9 @@ function lia.bar.get(identifier)
 end
 --- Adds a new bar or updates an existing one.
 -- @func getValue The function to retrieve the current value of the bar.
--- @color[opt] color [Optional]. The color of the bar.
--- @int[opt] priority Optional. The priority of the bar in the draw order.
--- @string[opt] identifier Optional. The identifier of the bar.
+-- @color[opt] color The color of the bar.
+-- @int[opt] priority The priority of the bar in the draw order.
+-- @string[opt] identifier The identifier of the bar.
 -- @return int The priority of the added or updated bar.
 -- @realm client
 function lia.bar.add(getValue, color, priority, identifier)

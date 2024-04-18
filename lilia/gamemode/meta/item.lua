@@ -385,9 +385,9 @@ if SERVER then
 
 --- Sets the quantity of the item to the specified value.
 -- @realm server
--- @int quantity (number) The new quantity value.
--- @tab receivers (table) Optional. Players who should receive updates about the quantity change.
--- @bool noCheckEntity (boolean) Optional. If true, entity checks will be skipped.
+-- @int quantity The new quantity value.
+-- @tab[opt] receivers Players who should receive updates about the quantity change.
+-- @bool[opt] noCheckEntity If true, entity checks will be skipped.
 
     function ITEM:setQuantity(quantity, receivers, noCheckEntity)
         self.quantity = quantity
@@ -412,7 +412,7 @@ if SERVER then
 -- @client client The player performing the interaction.
 -- @entity entity The entity associated with the interaction, if any.
 -- @tab[opt] data Additional data related to the interaction.
--- @return (boolean) Whether the interaction was successful.
+-- @return bool Whether the interaction was successful.
 
     function ITEM:interact(action, client, entity, data)
         assert(type(client) == "Player" and IsValid(client), "Item action cannot be performed without a player")

@@ -53,17 +53,17 @@ function lia.char.new(data, id, client, steamID)
     return character
 end
 --- Adds a hook function to be called when a character variable is modified.
--- @param varName (string) The name of the character variable.
--- @param hookName (string) The name of the hook.
--- @param func (function) The function to be called when the character variable is modified.
+-- @string varName The name of the character variable.
+-- @string hookName The name of the hook.
+-- @func func The function to be called when the character variable is modified.
 -- @realm shared
 function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
     lia.char.varHooks[varName][hookName] = func
 end
 --- Registers a character variable with specified data and associated hooks.
--- @param key (any) The key identifier for the character variable.
--- @param data (table) The data associated with the character variable.
+-- @param key The key identifier for the character variable.
+-- @tab data The data associated with the character variable.
 -- @realm shared
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
@@ -441,8 +441,8 @@ do
 end
 
 --- Loads data for a character from the database.
--- @param charID The ID of the character to load data for.
--- @param key Optional key to retrieve a specific value from the character's data.
+-- @int charID The ID of the character to load data for.
+-- @string[opt] key key to retrieve a specific value from the character's data.
 -- @return If key is provided, returns the value associated with that key in the character's data. Otherwise, returns the entire data table.
 -- @realm shared
 function lia.char.getCharData(charID, key)
@@ -574,7 +574,7 @@ if SERVER then
     end
 
     --- Cleans up a player's characters, removing them from memory and database.
-    -- @param client The player whose characters to clean up.
+    -- @client client The player whose characters to clean up.
     -- @realm server
     -- @internal
     function lia.char.cleanUpForPlayer(client)
@@ -598,8 +598,8 @@ if SERVER then
     end
 
     --- Deletes a character from memory and database.
-    -- @param id The ID of the character to delete.
-    -- @param client The player associated with the character.
+    -- @int id The ID of the character to delete.
+    -- @client client The player associated with the character.
     -- @realm server
     function lia.char.delete(id, client)
         assert(isnumber(id), "id must be a number")
@@ -636,8 +636,8 @@ if SERVER then
     end
 
     --- Sets data for a character in the database and in memory.
-    -- @param charID The ID of the character to set data for.
-    -- @param key The key of the data to set.
+    -- @int charID The ID of the character to set data for.
+    -- @string key The key of the data to set.
     -- @param val The value to set for the specified key.
     -- @return True if the data was successfully set, false otherwise.
     -- @realm server

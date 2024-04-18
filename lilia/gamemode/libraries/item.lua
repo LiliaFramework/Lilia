@@ -64,9 +64,9 @@ function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
 --- Loads an item from a Lua file.
--- @param path (string) - The path to the Lua file.
--- @param baseID (string) - The base ID of the item.
--- @param isBaseItem (boolean) - Whether the item is a base item.
+-- @string path The path to the Lua file.
+-- @string baseID The base ID of the item.
+-- @bool isBaseItem Whether the item is a base item.
 -- @realm shared
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua") or path:match("([_%w]+)%.lua")
@@ -78,19 +78,19 @@ function lia.item.load(path, baseID, isBaseItem)
     end
 end
 --- Checks if an object is an item.
--- @param object (table) - The object to check.
--- @return (boolean) - Whether the object is an item.
+-- @tab object The object to check.
+-- @bool Whether the object is an item.
 -- @realm shared
 function lia.item.isItem(object)
     return istable(object) and object.isItem == true
 end
 --- Registers a new item.
--- @param uniqueID (string) - The unique ID of the item.
--- @param baseID (string) - The base ID of the item.
--- @param isBaseItem (boolean) - Indicates if the item is a base item.
--- @param path (string) - The file path of the item.
--- @param luaGenerated (boolean) - Indicates if the item is Lua-generated.
--- @return (table) - The registered item.
+-- @string uniqueID The unique ID of the item.
+-- @string baseID The base ID of the item.
+-- @bool isBaseItem Indicates if the item is a base item.
+-- @string path The file path of the item.
+-- @bool luaGenerated Indicates if the item is Lua-generated.
+-- @return tab The registered item.
 -- @realm shared
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     assert(isstring(uniqueID), "uniqueID must be a string")
@@ -145,8 +145,8 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     return targetTable[itemType]
 end
 --- Loads items from a directory.
--- @param directory (string) - The directory path.
--- @param isFirstLoad (boolean) - Indicates if it's the first load.
+-- @string directory The directory path.
+-- @bool isFirstLoad Indicates if it's the first load.
 -- @realm shared
 function lia.item.loadFromDir(directory, isFirstLoad)
     local files, folders
@@ -170,9 +170,9 @@ function lia.item.loadFromDir(directory, isFirstLoad)
     if isFirstLoad then hook.Run("InitializedItems") end
 end
 --- Creates a new item instance.
--- @param uniqueID (string) - The unique ID of the item.
--- @param id (number) - The ID of the item.
--- @return (table) - The new item instance.
+-- @string uniqueID The unique ID of the item.
+-- @int id The ID of the item.
+-- @return tab The new item instance.
 -- @realm shared
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
@@ -196,9 +196,9 @@ function lia.item.new(uniqueID, id)
     end
 end
 --- Registers a new inventory type.
--- @param invType (string) - The inventory type.
--- @param w (number) - The width of the inventory.
--- @param h (number) - The height of the inventory.
+-- @string invType The inventory type.
+-- @int w The width of the inventory.
+-- @int h The height of the inventory.
 -- @realm shared
 function lia.item.registerInv(invType, w, h)
     assert(GridInv, "GridInv not found")
@@ -215,9 +215,9 @@ function lia.item.registerInv(invType, w, h)
     inventory:register(invType)
 end
 --- Creates a new inventory.
--- @param owner (number) - The owner of the inventory.
--- @param invType (string) - The inventory type.
--- @param callback (function) - The callback function.
+-- @int owner The owner of the inventory.
+-- @string invType The inventory type.
+-- @func callback The callback function.
 -- @realm shared
 function lia.item.newInv(owner, invType, callback)
     lia.inventory.instance(invType, {
@@ -237,17 +237,17 @@ function lia.item.newInv(owner, invType, callback)
     end)
 end
 --- Retrieves an inventory by its ID.
--- @param invID (number) - The ID of the inventory.
--- @return (table) - The inventory object.
+-- @int invID The ID of the inventory.
+-- @return tab The inventory object.
 -- @realm shared
 function lia.item.getInv(invID)
     return lia.inventory.instances[invID]
 end
 --- Creates a new inventory instance.
--- @param w (number) - The width of the inventory.
--- @param h (number) - The height of the inventory.
--- @param id (number) - The ID of the inventory.
--- @return (table) - The new inventory instance.
+-- @int w The width of the inventory.
+-- @int h The height of the inventory.
+-- @int id The ID of the inventory.
+-- @return tab The new inventory instance.
 -- @realm shared
 function lia.item.createInv(w, h, id)
     assert(GridInv, "GridInv not found")
@@ -265,13 +265,13 @@ end
 if SERVER then
 
 --- Instantiates an item and adds it to an inventory.
--- @param index (string|number) - The inventory index or unique ID.
--- @param uniqueID (string|table) - The unique ID of the item or item data.
--- @param itemData (table) - The item data.
--- @param x (number) - The x-coordinate.
--- @param y (number) - The y-coordinate.
--- @param callback (function) - The callback function.
--- @return (table) - A deferred promise.
+-- @param index- The inventory index or unique ID.
+-- @param uniqueID - The unique ID of the item or item data.
+-- @tab itemData The item data.
+-- @int x The x-coordinate.
+-- @int y The y-coordinate.
+-- @func callback The callback function.
+-- @return tab A deferred promise.
 -- @realm server
 function lia.item.instance(index, uniqueID, itemData, x, y, callback)
         if isstring(index) and (istable(uniqueID) or (itemData == nil and x == nil)) then
@@ -327,7 +327,7 @@ function lia.item.instance(index, uniqueID, itemData, x, y, callback)
         return d
     end
 --- Deletes an item by its ID.
--- @param id (number) - The ID of the item.
+-- @int id The ID of the item.
 -- @realm server
 function lia.item.deleteByID(id)
         if lia.item.instances[id] then
@@ -337,7 +337,7 @@ function lia.item.deleteByID(id)
         end
     end
 --- Loads an item by its ID.
--- @param itemIndex (number|table) - The item index or array of indices.
+-- @param itemIndex The item index or array of indices.
 -- @realm server
 function lia.item.loadItemByID(itemIndex)
         local range
@@ -396,10 +396,10 @@ function lia.item.loadItemByID(itemIndex)
         return d
     end
 --- Restores an inventory with the specified dimensions.
--- @param invID (number) - The inventory ID.
--- @param w (number) - The width of the inventory.
--- @param h (number) - The height of the inventory.
--- @param callback (function) - The callback function.
+-- @int invID The inventory ID.
+-- @int w The width of the inventory.
+-- @int h The height of the inventory.
+-- @func callback The callback function.
 -- @realm server
 function lia.item.restoreInv(invID, w, h, callback)
         lia.inventory.loadByID(invID):next(function(inventory)

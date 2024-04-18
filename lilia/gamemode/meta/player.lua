@@ -117,7 +117,7 @@ end
 --- Retrieves entities near the player within a specified radius.
 -- @realm shared
 -- @param radius The radius within which to search for entities.
--- @param playerOnly (Optional) If true, only return player entities.
+-- @bool[opt] playerOnly If true, only return player entities.
 -- @treturn table A table containing the entities near the player.
 function playerMeta:entitiesNearPlayer(radius, playerOnly)
     local nearbyEntities = {}
