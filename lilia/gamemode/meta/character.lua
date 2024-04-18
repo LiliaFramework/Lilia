@@ -126,6 +126,7 @@ end
 
 --- Checks if the character has at least the specified amount of money.
 -- @int amount The amount of money to check for.
+-- @realm shared
 -- @return bool Whether the character has at least the specified amount of money.
 -- @usage local hasEnoughMoney = char:hasMoney(100)
 function charMeta:hasMoney(amount)
