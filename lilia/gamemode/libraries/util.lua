@@ -1,6 +1,8 @@
 ﻿--- Various useful helper functions.
 -- @module lia.util
 lia.util.cachedMaterials = lia.util.cachedMaterials or {}
+
+
 --- Removes the realm prefix from a file name. The returned string will be unchanged if there is no prefix found.
 -- @realm shared
 -- @string name String to strip prefix from
@@ -817,7 +819,7 @@ else
     cvars.AddChangeCallback("lia_cheapblur", function(_, _, new) useCheapBlur = (tonumber(new) or 0) > 0 end)
 end
 
---- Returns a cached copy of the given material, or creates and caches one if it doesn't exist. This is a quick helper function
+--- Returns a cached copy of the given material, or creates and caches one if it doesn't exist. This is a quick helper function.
 -- if you aren't locally storing a `Material()` call.
 -- @realm shared
 -- @string materialPath Path to the material
