@@ -456,7 +456,7 @@ if SERVER then
 -- @param flags The permission flags to set.
 -- @realm server
     function playerMeta:setPermFlags(flags)
-        self:setLiliaData("permflags", val or "")
+        self:setLiliaData("permflags", flags or "")
         self:saveLiliaData()
     end
 --- Grants permission flags to the player.
