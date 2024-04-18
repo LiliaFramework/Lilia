@@ -30,7 +30,7 @@ end
 -- @internal
 -- @tab data Character vars to assign
 -- @number id Unique ID of the character
--- @player client Player that will own the character
+-- @client client Player that will own the character
 -- @string[opt=client:SteamID64()] steamID SteamID64 of the player that will own the character
 function lia.char.new(data, id, client, steamID)
     local character = setmetatable({
@@ -497,7 +497,7 @@ if SERVER then
 
     --- Loads all of a player's characters into memory.
     -- @realm server
-    -- @player client Player to load the characters for
+    -- @client client Player to load the characters for
     -- @func[opt=nil] callback Function to call when the characters have been loaded
     -- @bool[opt=false] _ Whether or not to skip the cache; players that leave and join again later will already have
     -- their characters loaded which will skip the database query and load quicker
