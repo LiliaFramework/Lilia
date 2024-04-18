@@ -210,8 +210,7 @@ if SERVER then
     --- Forces a player to execute a command by name.
     -- @realm server
     -- @client client Player who is executing the command
-    -- @string command Full name of the command to be executed. This string gets lowered, but it's good practice to stick with
-    -- the exact name of the command
+    -- @string command Full name of the command to be executed. This string gets lowered, but it's good practice to stick with the exact name of the command
     -- @tab arguments Array of arguments to be passed to the command
     -- @usage lia.command.run(player.GetByID(1), "Roll", {10})
     function lia.command.run(client, command, arguments)
