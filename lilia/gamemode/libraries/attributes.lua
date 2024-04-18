@@ -26,7 +26,7 @@ end
 
 if SERVER then
     --- Sets up attributes for a given character.
-    -- Please refer to ATTRIBUTE:onSetup(client, attribute_points) for an non-internal version of this.
+    -- Please refer to ATTRIBUTE:onSetup() for an non-internal version of this.
     -- @realm server
     -- @internal
     -- @client client The player for whom attributes are being set up
