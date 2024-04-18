@@ -414,31 +414,6 @@ lia.char.registerVar("inv", {
         end
     end
 })
-do
-    local playerMeta = FindMetaTable("Player")
-    playerMeta.steamName = playerMeta.steamName or playerMeta.Name
-    playerMeta.SteamName = playerMeta.steamName
-    --- Returns this player's currently possessed `Character` object if it exists.
-    -- @realm shared
-    -- @treturn[1] Character Currently loaded character
-    -- @treturn[2] nil If this player has no character loaded
-    function playerMeta:getChar()
-        return lia.char.loaded[self.getNetVar(self, "char")]
-    end
-
-    --- Returns this player's current name.
-    -- @realm shared
-    -- @treturn[1] string Name of this player's currently loaded character
-    -- @treturn[2] string Steam name of this player if the player has no character loaded
-    function playerMeta:Name()
-        local character = self.getChar(self)
-        return character and character.getName(character) or self.steamName(self)
-    end
-
-    playerMeta.GetCharacter = playerMeta.getChar
-    playerMeta.Nick = playerMeta.Name
-    playerMeta.GetName = playerMeta.Name
-end
 
 --- Loads data for a character from the database.
 -- @int charID The ID of the character to load data for.
