@@ -354,7 +354,7 @@ end
 -- @realm shared
 -- @string title The title of the request.
 -- @string subTitle The subtitle of the request.
--- @funct callback The function to call upon receiving the string input.
+-- @func callback The function to call upon receiving the string input.
 -- @string default The default value for the string input.
 function playerMeta:RequestString(title, subTitle, callback, default)
     local time = math.floor(os.time())
