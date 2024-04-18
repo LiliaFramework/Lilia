@@ -7,8 +7,8 @@ lia.bar.actionText = ""
 lia.bar.actionStart = 0
 lia.bar.actionEnd = 0
 --- Retrieves information about a bar identified by its identifier.
--- @param identifier (any) The identifier of the bar.
--- @return (table or nil) The information about the bar if found, nil otherwise.
+-- @string identifier The identifier of the bar.
+-- @return table The information about the bar if found, nil otherwise.
 -- @realm client
 function lia.bar.get(identifier)
     for i = 1, #lia.bar.list do
@@ -17,11 +17,11 @@ function lia.bar.get(identifier)
     end
 end
 --- Adds a new bar or updates an existing one.
--- @param getValue (function) The function to retrieve the current value of the bar.
--- @param color (table) Optional. The color of the bar.
--- @param priority (number) Optional. The priority of the bar in the draw order.
--- @param identifier (any) Optional. The identifier of the bar.
--- @return (number) The priority of the added or updated bar.
+-- @func getValue The function to retrieve the current value of the bar.
+-- @color[opt] color [Optional]. The color of the bar.
+-- @int[opt] priority Optional. The priority of the bar in the draw order.
+-- @string[opt] identifier Optional. The identifier of the bar.
+-- @return int The priority of the added or updated bar.
 -- @realm client
 function lia.bar.add(getValue, color, priority, identifier)
     if identifier then
@@ -41,7 +41,7 @@ function lia.bar.add(getValue, color, priority, identifier)
     return priority
 end
 --- Removes a bar identified by its identifier.
--- @param identifier (any) The identifier of the bar to remove.
+-- @string identifier The identifier of the bar to remove.
 -- @realm client
 function lia.bar.remove(identifier)
     local bar
@@ -55,12 +55,12 @@ function lia.bar.remove(identifier)
     if bar then table.remove(lia.bar.list, bar.priority) end
 end
 --- Draws a single bar with the specified parameters.
--- @param x (number) The x-coordinate of the top-left corner of the bar.
--- @param y (number) The y-coordinate of the top-left corner of the bar.
--- @param w (number) The width of the bar.
--- @param h (number) The height of the bar.
--- @param value (number) The current value of the bar (0 to 1).
--- @param color (table) The color of the bar.
+-- @int x The x-coordinate of the top-left corner of the bar.
+-- @int y The y-coordinate of the top-left corner of the bar.
+-- @int w The width of the bar.
+-- @int h The height of the bar.
+-- @int value The current value of the bar (0 to 1).
+-- @tab color The color of the bar.
 -- @realm client
 function lia.bar.draw(x, y, w, h, value, color)
     lia.util.drawBlurAt(x, y, w, h)
