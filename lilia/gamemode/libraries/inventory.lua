@@ -42,7 +42,6 @@ end
 
 --- Creates a new inventory instance of the specified type.
 -- @realm shared
-
 -- @tparam string typeID The unique identifier for the type of inventory to create.
 -- @treturn Inventory A new instance of the specified inventory type.
 function lia.inventory.new(typeID)
