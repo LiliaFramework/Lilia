@@ -1,4 +1,4 @@
-file = {
+e = {
 	"docs/hooks",
 	"lilia",
 	exclude = {"lilia/gamemode/libraries/thirdparty"}
@@ -22,7 +22,7 @@ format = "markdown"
 ignore = true
 topics = "docs/manual"
 use_markdown_titles = true
-kind_names = {module = "Libraries", topic = "Manual", configurations = "Configurations"}
+kind_names = {module = "Libraries", topic = "Manual"}
 merge = true
 sort = true
 sort_modules = true
