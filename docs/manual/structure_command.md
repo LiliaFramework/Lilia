@@ -6,7 +6,7 @@ lia.command.add("charsetskin", {
     adminOnly = true,
 
     -- Specifies the required privilege for using this command
-    privilege = "Change Skin",
+    privilege = "Change Skin", -- This would end up being the permission "Commands - Change Skin"
 
     -- Command syntax with name and an optional skin number
     syntax = "<string name> [number skin]",

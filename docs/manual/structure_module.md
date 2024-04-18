@@ -1,47 +1,39 @@
 # Structure - Module
 
 ```lua
---------------------------------------------------------------------------------------------------------------------------
-MODULE.name = "Core - Permissions"
---------------------------------------------------------------------------------------------------------------------------
+MODULE.name = "A Module"
+
 MODULE.author = "76561198312513285"
---------------------------------------------------------------------------------------------------------------------------
+
 MODULE.discord = "@liliaplayer"
---------------------------------------------------------------------------------------------------------------------------
-MODULE.desc = "Implements CAMI Based Permissions."
---------------------------------------------------------------------------------------------------------------------------
-MODULE.identifier = "RestrictionCore"
---------------------------------------------------------------------------------------------------------------------------
+
+MODULE.desc = "This is a Example Module."
+
 MODULE.WorkshopContent = {"2959728255"}
--------------------------------------------f-------------------------------------------------------------------------------
+
 MODULE.enabled = true
---------------------------------------------------------------------------------------------------------------------------
+
 MODULE.CAMIPrivileges = {
     {
-        Name = "Staff Permissions - One Punch Man",
+        Name = "Staff Permissions - Kekw",
         MinAccess = "superadmin",
-        Description = "Allows access to OPM to Ragdoll Minges.",
+        Description = "Allows access to kewking.",
     },
 }
---------------------------------------------------------------------------------------------------------------------------
+
 MODULE.Dependencies = {
-
     {
-        File = MODULE.path .. "/permissinons.lua",
+        File = MODULE.path .. "/nicebogusfile.lua",
         Realm = "server",
     },
     {
-        File = MODULE.path .. "/logs.lua",
-        Realm = "server",
+        File = MODULE.path .. "/badbogusfile.lua",
+        Realm = "client",
     },
 }
-
---------------------------------------------------------------------------------------------------------------------------
 ```
 
 ---
-
-## [View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/modules/core/permissions/module.lua)
 
 ## Module Configuration
 
@@ -53,13 +45,15 @@ MODULE.Dependencies = {
 
 -   **`MODULE.desc`:** Provides a brief description of the module's purpose. In this case, it states that the module adds skills functionality to the framework.
 
--   **`MODULE.CAMIPrivileges`:** An example CAMI permission that is loaded alongside the module.
+-   **`MODULE.identifier`:** This global variable uniquely identifies the module and allows it to be accessed from outside its scope. **[OPTIONAL]**
 
--   **`MODULE.WorkshopContent`:** Workshop Content to be added.
+-   **`MODULE.CAMIPrivileges`:** An example CAMI permission that is loaded alongside the module. **[OPTIONAL]**
 
--   **`MODULE.enabled`:** Indicates if the module is active or not. If False, then it won't be.
+-   **`MODULE.WorkshopContent`:** Workshop Content to be added. **[OPTIONAL]**
 
--   **`MODULE.Dependencies`:** Files and corresponding realms to be included.
+-   **`MODULE.enabled`:** Indicates if the module is active or not. If False, then it won't be. **[OPTIONAL]**
+
+-   **`MODULE.Dependencies`:** Files and corresponding realms to be included. **[OPTIONAL]**
 
 ### Automatically Included Files and Folders in the Module:
 

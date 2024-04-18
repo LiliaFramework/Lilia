@@ -1,4 +1,8 @@
-﻿--- Helper library for loading/getting faction information.
+﻿--[[--
+Helper library for loading/getting faction information.
+
+If you are looking for the faction structure, you can find it [here](https://liliaframework.github.io/manual/structure_faction.html).
+]]
 -- @module lia.faction
 lia.faction = lia.faction or {}
 lia.faction.indices = lia.faction.indices or {}

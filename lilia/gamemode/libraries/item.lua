@@ -1,5 +1,7 @@
 ﻿--[[--
 Item manipulation and helper functions.
+
+If you are looking for the faction structure, you can find it [here](https://liliaframework.github.io/manual/structure_items.html).
 ]]
 -- @module lia.item
 lia.item = lia.item or {}

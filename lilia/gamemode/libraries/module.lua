@@ -1,4 +1,8 @@
-﻿--- Core library that manages module loading behaviors.
+﻿--[[--
+Core library that manages module loading behaviors.
+
+If you are looking for the module structure, you can find it [here](https://liliaframework.github.io/manual/structure_module.html).
+]]
 -- @module lia.module
 lia.module = lia.module or {}
 lia.module.EnabledList = {}
@@ -293,7 +297,6 @@ function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
 --- A list of available MODULE fields.
--- @see [Module Structure](https://liliaframework.github.io/manual/structure_module.html)
 -- @realm shared
 -- @table CommandList
 -- @field `MODULE.name` Specifies the name of the module, which is "Core - Permissions" in this case. This variable identifies the module.
@@ -304,3 +307,4 @@ end
 -- @field `MODULE.WorkshopContent` Workshop Content to be added.
 -- @field `MODULE.enabled` Indicates if the module is active or not. If False, then it won't be.
 -- @field `MODULE.Dependencies` Files and corresponding realms to be included.
+-- @field `MODULE.identifier` This global variable uniquely identifies the module and allows it to be accessed from outside its scope.

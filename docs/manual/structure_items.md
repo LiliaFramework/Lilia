@@ -10,24 +10,6 @@ ITEM.desc = "A test item!" -- A brief description of the item
 ITEM.model = "models/props_c17/oildrum001.mdl" -- The 3D model for the item
 ```
 
-[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/libraries/items/config/items/defaultitem.txt)
-
-### Weapons Item Example:
-
-```lua
-ITEM.name = "AR2" -- The name of the weapon
-ITEM.desc = "A Weapon." -- A brief description of the weapon
-ITEM.model = "models/weapons/w_IRifle.mdl" -- The 3D model for the weapon
-ITEM.class = "weapon_ar2" -- The class used to spawn this weapon
-ITEM.weaponCategory = "primary" -- The category of the weapon
-ITEM.width = 4 -- The width of the weapon in inventory
-ITEM.height = 2 -- The height of the weapon in inventory
-```
-
-[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/libraries/items/config/items/weapons/ar2.txt)
-
-If you don't wish to manually code weapons, you can enable [this](https://github.com/LiliaFramework/Lilia/blob/2.0/lilia/modules/development/modules/easyitemgenerator/config.lua#L2)
-
 ### Vehicles Item Example:
 
 ```lua
@@ -37,20 +19,6 @@ ITEM.model = "models/props_c17/BriefCase001a.mdl" -- The 3D model for the vehicl
 ITEM.category = "Vehicles" -- The category of the vehicle
 ITEM.vehicleid = "VehicleID" -- The identifier for the vehicle
 ```
-
-[View source »](https://github.com/LiliaFramework/Lilia/blob/2.0/lilia/modules/core/items/vehicles/vehicleexample.txt)
-
-### Simfphyscars Item Example:
-
-```lua
-ITEM.name = "A Simfphys Car" -- The name of the Simfphys car
-ITEM.desc = "A Simfphys Car" -- A brief description of the Simfphys car
-ITEM.model = "models/props_c17/BriefCase001a.mdl" -- The 3D model for the Simfphys car
-ITEM.category = "Vehicles" -- The category of the Simfphys car
-ITEM.vehicleid = "VehicleID" -- The identifier for the Simfphys car
-```
-
-[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/libraries/items/config/items/simfphyscars/carexample.txt)
 
 ### Outfit Item Example:
 
@@ -63,8 +31,6 @@ ITEM.height = 2 -- The height of the outfit in inventory
 ITEM.replacements = "models/player/combine_soldier.mdl" -- Model replacement for the player wearing the outfit
 ```
 
-[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/libraries/items/config/items/outfit/rebel_armor.txt)
-
 ### Entities Item Example:
 
 ```lua
@@ -74,8 +40,6 @@ ITEM.model = "models/props_c17/BriefCase001a.mdl" -- The 3D model for the entiti
 ITEM.category = "Entities" -- The category of the entities item
 ITEM.entityid = "item_suit" -- The identifier for the entities item
 ```
-
-[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/libraries/items/config/items/entities/item_suit.txt)
 
 ### Books Item Example:
 
@@ -94,8 +58,6 @@ EXAMPLE PARAGRAH!
 ]] -- The contents of the book, in HTML format
 ```
 
-[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/libraries/items/config/items/books/book.txt)
-
 ### Ammo Item Example:
 
 ```lua
@@ -106,4 +68,16 @@ ITEM.ammoAmount = 12 -- The amount of ammo in the box
 ITEM.ammoDesc = "A Box that contains %s of .357 Ammo" -- Description of the ammo box
 ```
 
-[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/libraries/items/config/items/ammo/357ammo.txt)
+### Weapons Item Example:
+
+```lua
+ITEM.name = "AR2" -- The name of the weapon
+ITEM.desc = "A Weapon." -- A brief description of the weapon
+ITEM.model = "models/weapons/w_IRifle.mdl" -- The 3D model for the weapon
+ITEM.class = "weapon_ar2" -- The class used to spawn this weapon
+ITEM.weaponCategory = "primary" -- The category of the weapon
+ITEM.width = 4 -- The width of the weapon in inventory
+ITEM.height = 2 -- The height of the weapon in inventory
+```
+
+If you don't wish to manually code weapons, you can enable [this](https://github.com/LiliaFramework/Lilia/blob/main/lilia/modules/utilities/wepgenerator/config/shared.lua#L1)

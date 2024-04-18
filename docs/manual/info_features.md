@@ -1,27 +1,3 @@
-# Information - Feature List
-
-# Main Features
-
-- Improved security.
-
-- Extensive customization out of the box.
-
-- Permissions limited by user groups, using CAMI.
-
-- Extensive faction and class system.
-
-- Extensive addon compatibility list.
-
-- Extreme modularity - You can find most content modularly, making it easy to edit.
-
-- Loads of free content.
-
-- Major method libraries that aim to ease coding sessions.
-
-- Friendly support.
-
-- Regular updates.
-
 # Improvements/Fixes Comparing Forked Framework
 
 - Fixed Vendor Crash Exploit that used Item Spawning Spam 
@@ -87,6 +63,7 @@
 - Added Console Command Logging  
 
 - Created an Expanded Wiki for Players to be able to understand the framework easily
+
 ## # Addons with Improved Compatibility
 
 #### Prone Mod
