@@ -62,7 +62,6 @@ end
 -- @param value (number) The current value of the bar (0 to 1).
 -- @param color (table) The color of the bar.
 -- @realm client
-
 function lia.bar.draw(x, y, w, h, value, color)
     lia.util.drawBlurAt(x, y, w, h)
     surface.SetDrawColor(255, 255, 255, 15)
@@ -76,7 +75,7 @@ function lia.bar.draw(x, y, w, h, value, color)
     surface.DrawTexturedRect(x, y, w, h)
 end
 --- Draws the action bar, if applicable.
--- @realm 
+-- @realm client
 -- @internal
 function lia.bar.drawAction()
     local start, finish = lia.bar.actionStart, lia.bar.actionEnd
