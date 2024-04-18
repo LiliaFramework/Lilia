@@ -184,7 +184,74 @@ function charMeta:isFaction(faction)
     return self:getFaction() == faction
 end
 
+--- Returns all of the flags this character has.
+-- @realm shared
+-- @treturn string Flags this character has represented as one string. You can access individual flags by iterating through
+-- the string letter by letter
+function charMeta:getFlags()
+    return self:getData("f", "")
+end
+
+--- Returns `true` if the character has the given flag(s).
+-- @realm shared
+-- @string flags Flag(s) to check access for
+-- @treturn bool Whether or not this character has access to the given flag(s)
+function charMeta:hasFlags(flags)
+    for i = 1, #flags do
+        if self:getFlags():find(flags:sub(i, i), 1, true) then return true end
+    end
+    return hook.Run("CharacterFlagCheck", self, flags) or false
+end
+
 if SERVER then
+
+    --- Sets this character's accessible flags. Note that this method overwrites **all** flags instead of adding them.
+    -- @realm server
+    -- @string flags Flag(s) this charater is allowed to have
+    -- @see giveFlags
+    function charMeta:setFlags(flags)
+        self:setData("f", flags)
+    end
+
+    --- Adds a flag to the list of this character's accessible flags. This does not overwrite existing flags.
+    -- @realm server
+    -- @string flags Flag(s) this character should be given
+    -- @usage character:GiveFlags("pet")
+    -- gives p, e, and t flags to the character
+    -- @see hasFlags
+    function charMeta:giveFlags(flags)
+        local addedFlags = ""
+        for i = 1, #flags do
+            local flag = flags:sub(i, i)
+            local info = lia.flag.list[flag]
+            if info then
+                if not self:hasFlags(flag) then addedFlags = addedFlags .. flag end
+                if info.callback then info.callback(self:getPlayer(), true) end
+            end
+        end
+
+        if addedFlags ~= "" then self:setFlags(self:getFlags() .. addedFlags) end
+    end
+
+    --- Removes this character's access to the given flags.
+    -- @realm server
+    -- @string flags Flag(s) to remove from this character
+    -- @usage -- for a character with "pet" flags
+    -- character:takeFlags("p")
+    -- -- character now has e, and t flags
+    function charMeta:takeFlags(flags)
+        local oldFlags = self:getFlags()
+        local newFlags = oldFlags
+        for i = 1, #flags do
+            local flag = flags:sub(i, i)
+            local info = lia.flag.list[flag]
+            if info and info.callback then info.callback(self:getPlayer(), false) end
+            newFlags = newFlags:gsub(flag, "")
+        end
+
+        if newFlags ~= oldFlags then self:setFlags(newFlags) end
+    end
+
     --- Updates the value of a character attribute by adding a specified value to it.
     -- @string key The key of the attribute to update.
     -- @int value The value to add to the attribute.
