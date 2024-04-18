@@ -1,13 +1,8 @@
 ﻿MODULE.Vehicles = MODULE.Vehicles or {}
---[[ Enable or disable the saving of storage data ]]
 MODULE.SaveStorage = true
---[[ Set the delay (in seconds) until password retries are allowed ]]
 MODULE.PasswordDelay = 1
---[[ Set the duration (in seconds) for how long a storage container takes to open ]]
 MODULE.StorageOpenTime = 0.7
---[[ Set the duration (in seconds) for how long a trunk takes to open ]]
 MODULE.TrunkOpenTime = 0.7
---[[ Set the distance a trunk must be to be opened ]]
 MODULE.TrunkOpenDistance = 110
 MODULE.StorageDefinitions = {
     ["models/props_junk/wood_crate001a.mdl"] = {

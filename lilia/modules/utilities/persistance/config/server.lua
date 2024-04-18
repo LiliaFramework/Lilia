@@ -1,4 +1,4 @@
-﻿MODULE.blacklist = MODULE.blacklist or {
+﻿MODULE.blacklist = {
     ["func_button"] = true,
     ["class C_BaseEntity"] = true,
     ["func_brush"] = true,
