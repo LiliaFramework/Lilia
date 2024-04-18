@@ -273,8 +273,7 @@ if SERVER then
 -- @param y (number) - The y-coordinate.
 -- @param callback (function) - The callback function.
 -- @return (table) - A deferred promise.
-
-    -- @realm server
+-- @realm server
 function lia.item.instance(index, uniqueID, itemData, x, y, callback)
         if isstring(index) and (istable(uniqueID) or (itemData == nil and x == nil)) then
             itemData = uniqueID
@@ -330,8 +329,7 @@ function lia.item.instance(index, uniqueID, itemData, x, y, callback)
     end
 --- Deletes an item by its ID.
 -- @param id (number) - The ID of the item.
-
-    -- @realm server
+-- @realm server
 function lia.item.deleteByID(id)
         if lia.item.instances[id] then
             lia.item.instances[id]:delete()
@@ -341,8 +339,7 @@ function lia.item.deleteByID(id)
     end
 --- Loads an item by its ID.
 -- @param itemIndex (number|table) - The item index or array of indices.
-
-    -- @realm server
+-- @realm server
 function lia.item.loadItemByID(itemIndex)
         local range
         if istable(itemIndex) then
