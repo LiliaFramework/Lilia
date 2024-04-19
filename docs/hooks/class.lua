@@ -5,6 +5,7 @@ As with `Faction`s, `Class`es get their own hooks for when players leave/join a 
 valid in class tables that are created in `schema/classes/classname.lua`, and cannot be used like regular gamemode hooks.
 ]]
 -- @hooks Class
+
 --- Whether or not a player can switch to this class.
 -- @realm shared
 -- @client client Player who wants to switch to this class
