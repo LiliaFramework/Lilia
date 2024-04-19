@@ -1,5 +1,4 @@
-﻿
---[[--
+﻿--[[--
 Utilities - Easy Weapons
 
 **Configuration Values:**.

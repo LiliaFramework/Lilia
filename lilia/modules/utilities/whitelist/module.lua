@@ -1,5 +1,4 @@
-﻿
---[[--
+﻿--[[--
 Utilities - Server Whitelist
 
 **Configuration Values:**.

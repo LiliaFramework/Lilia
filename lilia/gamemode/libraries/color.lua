@@ -1,7 +1,6 @@
 ﻿--- Helper library for managing colors.
 -- @module lia.color
 lia.color = lia.color or {}
-
 --- Lightens a color by the specified amount.
 -- @color color The color to lighten.
 -- @int amount The amount by which to lighten the color.
@@ -10,6 +9,7 @@ lia.color = lia.color or {}
 function lia.color.Lighten(color, amount)
     return Color(math.Clamp(color.r + amount, 0, 255), math.Clamp(color.g + amount, 0, 255), math.Clamp(color.b + amount, 0, 255), color.a)
 end
+
 --- Darkens a color by the specified amount.
 -- @color color Color: The color to darken.
 -- @int amount number: The amount by which to darken the color.
@@ -82,11 +82,12 @@ do
             return old_color(r, g, b, a)
         end
     end
---- Registers a custom color with a specified name.
--- @string name The name of the color to register.
--- @color color The color value to register.
--- @bool force If true, forces registration even if the name already exists.
--- @realm client
+
+    --- Registers a custom color with a specified name.
+    -- @string name The name of the color to register.
+    -- @color color The color value to register.
+    -- @bool force If true, forces registration even if the name already exists.
+    -- @realm client
     function lia.color.register(name, color, force)
         if not force and colors[name] then return end
         colors[name] = color
@@ -98,14 +99,15 @@ do
         local delta = max - min
         return (val - min) / delta
     end
---- Interpolates between two colors in the HSV color space.
--- @color start_color The starting color.
--- @color end_color The ending color.
--- @int maxValue The maximum value to interpolate between (used for normalization).
--- @int currentValue The current value to interpolate (used for normalization).
--- @int[opt] minValue The minimum value to interpolate between (used for normalization). Defaults to 0.
--- @return color The resulting interpolated color.
--- @realm client
+
+    --- Interpolates between two colors in the HSV color space.
+    -- @color start_color The starting color.
+    -- @color end_color The ending color.
+    -- @int maxValue The maximum value to interpolate between (used for normalization).
+    -- @int currentValue The current value to interpolate (used for normalization).
+    -- @int[opt] minValue The minimum value to interpolate between (used for normalization). Defaults to 0.
+    -- @return color The resulting interpolated color.
+    -- @realm client
     function lia.color.LerpHSV(start_color, end_color, maxValue, currentValue, minValue)
         start_color = start_color or Color("green")
         end_color = end_color or Color("red")
@@ -116,6 +118,7 @@ do
         return HSVToColor(linear, 1, 1)
     end
 end
+
 --- Converts RGB values to a Color object.
 -- @int r The red component (0-255).
 -- @int g The green component (0-255).

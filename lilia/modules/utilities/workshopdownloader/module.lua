@@ -1,5 +1,4 @@
-﻿
---[[--
+﻿--[[--
 Utilities - Workshop Downloader
 
 **Configuration Values:**.

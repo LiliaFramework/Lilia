@@ -16,6 +16,7 @@ function lia.bar.get(identifier)
         if bar and bar.identifier == identifier then return bar end
     end
 end
+
 --- Adds a new bar or updates an existing one.
 -- @func getValue The function to retrieve the current value of the bar.
 -- @color[opt] color The color of the bar.
@@ -40,6 +41,7 @@ function lia.bar.add(getValue, color, priority, identifier)
     }
     return priority
 end
+
 --- Removes a bar identified by its identifier.
 -- @string identifier The identifier of the bar to remove.
 -- @realm client
@@ -54,6 +56,7 @@ function lia.bar.remove(identifier)
 
     if bar then table.remove(lia.bar.list, bar.priority) end
 end
+
 --- Draws a single bar with the specified parameters.
 -- @int x The x-coordinate of the top-left corner of the bar.
 -- @int y The y-coordinate of the top-left corner of the bar.
@@ -74,6 +77,7 @@ function lia.bar.draw(x, y, w, h, value, color)
     surface.SetMaterial(lia.util.getMaterial("vgui/gradient-u"))
     surface.DrawTexturedRect(x, y, w, h)
 end
+
 --- Draws the action bar, if applicable.
 -- @realm client
 -- @internal
@@ -102,6 +106,7 @@ function lia.bar.drawAction()
         end
     end
 end
+
 --- Draws all bars in the list.
 -- @realm client
 -- @internal

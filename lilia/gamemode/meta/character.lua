@@ -25,6 +25,7 @@ debug.getregistry().Character = lia.meta.character
 function charMeta:__tostring()
     return "character[" .. (self.id or 0) .. "]"
 end
+
 --- Returns true if this character is equal to another character. Internally, this checks character IDs.
 -- @realm shared
 -- @character other Character to compare to
@@ -204,7 +205,6 @@ function charMeta:hasFlags(flags)
 end
 
 if SERVER then
-
     --- Sets this character's accessible flags. Note that this method overwrites **all** flags instead of adding them.
     -- @realm server
     -- @string flags Flag(s) this charater is allowed to have
@@ -291,6 +291,7 @@ if SERVER then
 
         hook.Run("OnCharAttribUpdated", client, self, key, value)
     end
+
     --- Adds a boost to the character's attributes.
     -- @realm server
     -- @string boostID The ID of the boost to add.
@@ -435,14 +436,12 @@ if SERVER then
 
     --- Deletes the character from the character database and removes it from memory.
     -- @realm server
-
     function charMeta:delete()
         lia.char.delete(self:getID(), self:getPlayer())
     end
 
     --- Destroys the character, removing it from memory and notifying clients to remove it.
     -- @realm server
-
     function charMeta:destroy()
         local id = self:getID()
         lia.char.loaded[id] = nil

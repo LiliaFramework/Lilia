@@ -25,12 +25,12 @@ function lia.currency.get(amount)
 end
 
 if SERVER then
---- Spawns a currency entity at the specified position with the given amount and angle.
--- This function is only available on the server.
--- @vector pos The position where the currency entity will be spawned.
--- @int amount The amount of currency for the spawned entity.
--- @angle angle The angle of the spawned entity. Default is Angle(0, 0, 0).
--- @realm server
+    --- Spawns a currency entity at the specified position with the given amount and angle.
+    -- This function is only available on the server.
+    -- @vector pos The position where the currency entity will be spawned.
+    -- @int amount The amount of currency for the spawned entity.
+    -- @angle angle The angle of the spawned entity. Default is Angle(0, 0, 0).
+    -- @realm server
     function lia.currency.spawn(pos, amount, angle)
         if not pos then
             print("[Lilia] Can't create currency entity: Invalid Position")

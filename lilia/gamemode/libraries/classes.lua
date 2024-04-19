@@ -50,13 +50,13 @@ function lia.class.loadFromDir(directory)
         CLASS = nil
     end
 end
+
 --- Checks if a player can join a particular class.
 -- @realm shared
 -- @client client The player wanting to join the class.
 -- @int class The identifier of the class.
 -- @return bool Whether the player can join the class.
 -- @return string Reason for the failure, if any.
-
 function lia.class.canBe(client, class)
     local info = lia.class.list[class]
     if not info then return false, "no info" end
@@ -66,19 +66,19 @@ function lia.class.canBe(client, class)
     if hook.Run("CanPlayerJoinClass", client, class, info) == false then return false end
     return info:onCanBe(client)
 end
+
 --- Retrieves information about a class.
 -- @realm shared
 -- @int identifier The identifier of the class.
 -- @return tab Information about the class.
-
 function lia.class.get(identifier)
     return lia.class.list[identifier]
 end
+
 --- Retrieves a list of players belonging to a specific class.
 -- @realm shared
 -- @int class The identifier of the class.
 -- @return tab List of players belonging to the class.
-
 function lia.class.getPlayers(class)
     local players = {}
     for _, v in ipairs(player.GetAll()) do
@@ -87,11 +87,11 @@ function lia.class.getPlayers(class)
     end
     return players
 end
+
 --- Retrieves the count of players belonging to a specific class.
 -- @realm shared
 -- @int class The identifier of the class.
 -- @return int The count of players belonging to the class.
-
 function lia.class.getPlayerCount(class)
     local count = 0
     for _, v in ipairs(player.GetAll()) do
@@ -100,11 +100,11 @@ function lia.class.getPlayerCount(class)
     end
     return count
 end
+
 --- Retrieves the identifier of a class based on its unique ID or name.
 -- @realm shared
 -- @string class The unique ID or name of the class.
 -- @return int The identifier of the class if found, nil otherwise.
-
 function lia.class.retrieveClass(class)
     for key, classTable in pairs(lia.class.list) do
         if lia.util.stringMatches(classTable.uniqueID, class) or lia.util.stringMatches(classTable.name, class) then return key end

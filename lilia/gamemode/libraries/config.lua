@@ -8,7 +8,6 @@ These configuration options control various aspects of the gamemode's mechanics,
 -- @module lia.config
 local GM = GM or GAMEMODE
 lia.config = lia.config or {}
-
 --- A list of available commands for use within the game.
 -- Each command is represented by a table with fields defining its functionality.
 -- @realm shared

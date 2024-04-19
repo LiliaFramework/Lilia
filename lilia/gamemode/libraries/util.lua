@@ -1,8 +1,6 @@
 ﻿--- Various useful helper functions.
 -- @module lia.util
 lia.util.cachedMaterials = lia.util.cachedMaterials or {}
-
-
 --- Removes the realm prefix from a file name. The returned string will be unchanged if there is no prefix found.
 -- @realm shared
 -- @string name String to strip prefix from
@@ -214,8 +212,8 @@ if SERVER then
             net.Send(recipient)
         end
     end
-    lia.util.Notify = lia.util.notify
 
+    lia.util.Notify = lia.util.notify
     --- Spawns entities from a table of entity-position pairs.
     -- @realm server
     -- @tab entityTable Table containing entity-position pairs
@@ -260,7 +258,6 @@ if SERVER then
     end
 
     lia.util.NotifyLocalized = lia.util.notifyLocalized
-
     --- Finds empty spaces around an entity where another entity can be placed.
     -- @realm server
     -- @client entity The client to find empty spaces around
@@ -452,8 +449,8 @@ else
     function lia.util.notify(message)
         chat.AddText(message)
     end
-    lia.util.Notify = lia.util.notify
 
+    lia.util.Notify = lia.util.notify
     --- Displays a localized notification message in the chat.
     -- @realm client
     -- @string message The message to display (localized)
@@ -461,8 +458,8 @@ else
     function lia.util.notifyLocalized(message, ...)
         lia.util.notify(L(message, ...))
     end
-    lia.util.NotifyLocalized = lia.util.notifyLocalized
 
+    lia.util.NotifyLocalized = lia.util.notifyLocalized
     --- Converts a color object to a string representation.
     -- @realm client
     -- @color color The color object to convert

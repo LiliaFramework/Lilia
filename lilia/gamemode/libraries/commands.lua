@@ -236,42 +236,41 @@ if SERVER then
         end
     end
 
---- Parses a command from an input string and executes it.
--- @realm server
--- @client client The player who is executing the command
--- @string text Input string to search for the command format
--- @string[opt] realCommand Specific command to check for. If specified, it will only try to run this command
--- @tab[opt] arguments Array of arguments to pass to the command. If not specified, it will try to extract them from the text
--- @return bool Whether or not a command has been found and executed
--- @usage lia.command.parse(player.GetByID(1), "/roll 10")
--- @internal
-function lia.command.parse(client, text, realCommand, arguments)
-    if realCommand or text:utf8sub(1, 1) == "/" then
-        local match = realCommand or text:lower():match("/" .. "([_%w]+)")
-        if not match then
-            local post = string.Explode(" ", text)
-            local len = string.len(post[1])
-            match = post[1]:utf8sub(2, len)
-        end
-
-        match = match:lower()
-        local command = lia.command.list[match]
-        if command then
-            if not arguments then arguments = lia.command.extractArgs(text:sub(#match + 3)) end
-            lia.command.run(client, match, arguments)
-            if not realCommand then lia.log.add(client, "command", text) end
-        else
-            if IsValid(client) then
-                client:notifyLocalized("cmdNoExist")
-            else
-                print("Sorry, that command does not exist.")
+    --- Parses a command from an input string and executes it.
+    -- @realm server
+    -- @client client The player who is executing the command
+    -- @string text Input string to search for the command format
+    -- @string[opt] realCommand Specific command to check for. If specified, it will only try to run this command
+    -- @tab[opt] arguments Array of arguments to pass to the command. If not specified, it will try to extract them from the text
+    -- @return bool Whether or not a command has been found and executed
+    -- @usage lia.command.parse(player.GetByID(1), "/roll 10")
+    -- @internal
+    function lia.command.parse(client, text, realCommand, arguments)
+        if realCommand or text:utf8sub(1, 1) == "/" then
+            local match = realCommand or text:lower():match("/" .. "([_%w]+)")
+            if not match then
+                local post = string.Explode(" ", text)
+                local len = string.len(post[1])
+                match = post[1]:utf8sub(2, len)
             end
-        end
-        return true
-    end
-    return false
-end
 
+            match = match:lower()
+            local command = lia.command.list[match]
+            if command then
+                if not arguments then arguments = lia.command.extractArgs(text:sub(#match + 3)) end
+                lia.command.run(client, match, arguments)
+                if not realCommand then lia.log.add(client, "command", text) end
+            else
+                if IsValid(client) then
+                    client:notifyLocalized("cmdNoExist")
+                else
+                    print("Sorry, that command does not exist.")
+                end
+            end
+            return true
+        end
+        return false
+    end
 else
     --- Request the server to run a command. This mimics similar functionality to the client typing `/CommandName` in the chatbox.
     -- @realm client

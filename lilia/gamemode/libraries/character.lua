@@ -52,6 +52,7 @@ function lia.char.new(data, id, client, steamID)
     if IsValid(client) or steamID then character.steamID = IsValid(client) and client:SteamID64() or steamID end
     return character
 end
+
 --- Adds a hook function to be called when a character variable is modified.
 -- @string varName The name of the character variable.
 -- @string hookName The name of the hook.
@@ -61,6 +62,7 @@ function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
     lia.char.varHooks[varName][hookName] = func
 end
+
 --- Registers a character variable with specified data and associated hooks.
 -- @param key The key identifier for the character variable.
 -- @tab data The data associated with the character variable.

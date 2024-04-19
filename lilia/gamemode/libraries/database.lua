@@ -218,7 +218,6 @@ modules.mysqloo = {
 
 lia.db.escape = lia.db.escape or modules.sqlite.escape
 lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueue + 1] = {...} end
-
 --- Establishes a connection to the database module specified in the configuration.
 -- If the database is not connected yet or if reconnection is forced, it connects to the database module.
 -- @func[opt] callback A function to be called after the database connection is established.
@@ -282,6 +281,7 @@ function lia.db.wipeTables(callback)
         lia.db.query(SqlLiteTableDrop, realCallback)
     end
 end
+
 --- Loads the necessary tables into the database.
 -- @realm server
 -- @internal
@@ -315,6 +315,7 @@ function lia.db.loadTables()
 
     hook.Run("OnLoadTables")
 end
+
 --- Waits for the database tables to be loaded.
 -- @treturn Deferred A deferred object that resolves when the tables are loaded.
 -- @realm server
@@ -331,6 +332,7 @@ function lia.db.waitForTablesToLoad()
     TABLE_WAIT_ID = TABLE_WAIT_ID + 1
     return d
 end
+
 --- Converts a Lua value to a format suitable for insertion into the database.
 -- @param value The value to be converted.
 -- @bool[opt] noEscape Whether to skip escaping the value. Defaults to false.
@@ -395,6 +397,7 @@ function lia.db.updateTable(value, callback, dbTable, condition)
     local query = "UPDATE " .. ("lia_" .. (dbTable or "characters")) .. " SET " .. genUpdateList(value) .. (condition and " WHERE " .. condition or "")
     lia.db.query(query, callback)
 end
+
 --- Selects data from the specified database table based on the provided fields, condition, and limit.
 -- @tab fields The fields to select from the table.
 -- @string[opt] dbTable The name of the database table. Defaults to "characters".
@@ -417,6 +420,7 @@ function lia.db.select(fields, dbTable, condition, limit)
     end)
     return d
 end
+
 --- Inserts or updates rows in the specified database table with the provided values.
 -- @param value The values to be inserted or updated in the table.
 -- @string dbTable The name of the database table. Defaults to "characters".
