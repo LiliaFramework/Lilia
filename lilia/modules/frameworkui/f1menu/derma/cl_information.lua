@@ -1,4 +1,4 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 local PANEL = {}
 function PANEL:Init()
     local client = LocalPlayer()
@@ -78,6 +78,14 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor
     self[name]:SetTextColor(textColor)
     self[name]:SetEditable(isDesc and true or false)
     self[name]:SetMultiline(isDesc and true or false)
+
+    if isDesc then
+        self[name].OnEnter = function()
+            local descText = self[name]:GetText()
+            LocalPlayer():notify("You changed your description.")
+            lia.command.send("chardesc", descText)
+        end
+    end
 end
 
 function PANEL:CreateFillableBarWithBackgroundAndLabel(name, font, _, textColor, shadowColor, labelText, minVal, maxVal, dockMarginTop, value)
