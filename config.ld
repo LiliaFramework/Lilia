@@ -1,4 +1,4 @@
-e = {
+file = {
 	"docs/hooks",
 	"lilia",
 	exclude = {"lilia/gamemode/libraries/thirdparty"}
