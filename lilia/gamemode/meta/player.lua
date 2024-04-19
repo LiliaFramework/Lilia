@@ -7,26 +7,33 @@ object at a time that you can interface with.
 See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for all other methods that the `Player` class has.
 ]]
 -- @classmod Player
-
 local playerMeta = FindMetaTable("Player")
 local vectorMeta = FindMetaTable("Vector")
+do
+    playerMeta.steamName = playerMeta.steamName or playerMeta.Name
+    playerMeta.SteamName = playerMeta.steamName
+    --- Returns this player's currently possessed `Character` object if it exists.
+    -- @realm shared
+    -- @treturn[1] Character Currently loaded character
+    -- @treturn[2] nil If this player has no character loaded
+    function playerMeta:getChar()
+        return lia.char.loaded[self.getNetVar(self, "char")]
+    end
 
---- Returns this player's currently possessed `Character` object if it exists.
--- @realm shared
--- @treturn[1] Character Currently loaded character
--- @treturn[2] nil If this player has no character loaded
-function playerMeta:getChar()
-return lia.char.loaded[self.getNetVar(self, "char")]
+    --- Returns this player's current name.
+    -- @realm shared
+    -- @treturn[1] string Name of this player's currently loaded character
+    -- @treturn[2] string Steam name of this player if the player has no character loaded
+    function playerMeta:Name()
+        local character = self.getChar(self)
+        return character and character.getName(character) or self.steamName(self)
+    end
+
+    playerMeta.GetCharacter = playerMeta.getChar
+    playerMeta.Nick = playerMeta.Name
+    playerMeta.GetName = playerMeta.Name
 end
 
---- Returns this player's current name.
--- @realm shared
--- @treturn[1] string Name of this player's currently loaded character
--- @treturn[2] string Steam name of this player if the player has no character loaded
-function playerMeta:Name()
-    local character = self.getChar(self)
-    return character and character.getName(character) or self.steamName(self)
-end
 --- Checks if the player belongs to the "user" user group.
 -- @realm shared
 -- @treturn bool Whether the player belongs to the "user" user group.
@@ -206,6 +213,7 @@ function playerMeta:getMoney()
     local character = self:getChar()
     return character and character:getMoney() or 0
 end
+
 --- Checks if the player's character can afford a specified amount of money.
 -- @realm shared
 -- @int amount The amount of money to check.
@@ -439,13 +447,14 @@ if SERVER then
             return data
         end
     end
---- Sets an action bar for the player.
--- @string text The text to display on the action bar.
--- @int[opt] time The duration for the action bar to display, defaults to 5 seconds. Set to 0 or nil to remove the action bar immediately.
--- @func[opt] callback Function to execute when the action bar timer expires.
--- @int[opt] startTime The start time of the action bar, defaults to the current time.
--- @int[opt] finishTime The finish time of the action bar, defaults to startTime + time.
--- @realm server
+
+    --- Sets an action bar for the player.
+    -- @string text The text to display on the action bar.
+    -- @int[opt] time The duration for the action bar to display, defaults to 5 seconds. Set to 0 or nil to remove the action bar immediately.
+    -- @func[opt] callback Function to execute when the action bar timer expires.
+    -- @int[opt] startTime The start time of the action bar, defaults to the current time.
+    -- @int[opt] finishTime The finish time of the action bar, defaults to startTime + time.
+    -- @realm server
     function playerMeta:setAction(text, time, callback, startTime, finishTime)
         if time and time <= 0 then
             if callback then callback(self) end
@@ -464,22 +473,25 @@ if SERVER then
         netstream.Start(self, "actBar", startTime, finishTime, text)
         if callback then timer.Create("liaAct" .. self:UniqueID(), time, 1, function() if IsValid(self) then callback(self) end end) end
     end
---- Retrieves the player's permanent flags.
--- @realm server
--- @treturn string The player's permanent flags.
+
+    --- Retrieves the player's permanent flags.
+    -- @realm server
+    -- @treturn string The player's permanent flags.
     function playerMeta:getPermFlags()
         return self:getLiliaData("permflags", "")
     end
---- Sets the player's permanent flags.
--- @string flags The permanent flags to set.
--- @realm server
+
+    --- Sets the player's permanent flags.
+    -- @string flags The permanent flags to set.
+    -- @realm server
     function playerMeta:setPermFlags(flags)
         self:setLiliaData("permflags", flags or "")
         self:saveLiliaData()
     end
---- Grants permanent flags to the player.
--- @tab flags The permanent flags to grant.
--- @realm server
+
+    --- Grants permanent flags to the player.
+    -- @tab flags The permanent flags to grant.
+    -- @realm server
     function playerMeta:givePermFlags(flags)
         local curFlags = self:getPermFlags()
         for i = 1, #flags do
@@ -495,9 +507,10 @@ if SERVER then
             end
         end
     end
---- Revokes permanent flags from the player.
--- @tab flags The permanent flags to revoke.
--- @realm server
+
+    --- Revokes permanent flags from the player.
+    -- @tab flags The permanent flags to revoke.
+    -- @realm server
     function playerMeta:takePermFlags(flags)
         local curFlags = self:getPermFlags()
         for i = 1, #flags do
@@ -512,11 +525,11 @@ if SERVER then
             end
         end
     end
---- Checks if the player has a specific permanent flag.
--- @string flag The permanent flag to check.
--- @realm server
--- @treturn bool Whether or not the player has the permanent flag.
 
+    --- Checks if the player has a specific permanent flag.
+    -- @string flag The permanent flag to check.
+    -- @realm server
+    -- @treturn bool Whether or not the player has the permanent flag.
     function playerMeta:hasPermFlag(flag)
         if not flag or #flag ~= 1 then return end
         local curFlags = self:getPermFlags()
@@ -525,26 +538,26 @@ if SERVER then
         end
         return false
     end
---- Retrieves the player's flag blacklist.
--- @realm server
--- @treturn string The player's flag blacklist.
 
+    --- Retrieves the player's flag blacklist.
+    -- @realm server
+    -- @treturn string The player's flag blacklist.
     function playerMeta:getFlagBlacklist()
         return self:getLiliaData("flagblacklist", "")
     end
---- Sets the player's flag blacklist.
--- @tab flags The flag blacklist to set.
--- @realm server
 
+    --- Sets the player's flag blacklist.
+    -- @tab flags The flag blacklist to set.
+    -- @realm server
     function playerMeta:setFlagBlacklist(flags)
         self:setLiliaData("flagblacklist", flags)
         self:saveLiliaData()
     end
---- Adds flags to the player's flag blacklist.
--- @tab flags The flags to add to the blacklist.
--- @tab[opt] blacklistInfo Additional information about the blacklist entry.
--- @realm server
 
+    --- Adds flags to the player's flag blacklist.
+    -- @tab flags The flags to add to the blacklist.
+    -- @tab[opt] blacklistInfo Additional information about the blacklist entry.
+    -- @realm server
     function playerMeta:addFlagBlacklist(flags, blacklistInfo)
         local curBlack = self:getFlagBlacklist()
         for i = 1, #flags do
@@ -1035,11 +1048,7 @@ else
         end
     end
 end
-playerMeta.steamName = playerMeta.steamName or playerMeta.Name
-playerMeta.SteamName = playerMeta.steamName
-playerMeta.GetCharacter = playerMeta.getChar
-playerMeta.Nick = playerMeta.Name
-playerMeta.GetName = playerMeta.Name
+
 playerMeta.IsUser = playerMeta.isUser
 playerMeta.IsStaff = playerMeta.isStaff
 playerMeta.IsVIP = playerMeta.isVIP
