@@ -1,4 +1,4 @@
-﻿local GM = GM or GAMEMODE
+local GM = GM or GAMEMODE
 function GM:PhysgunPickup(client, entity)
     if entity:GetCreator() == client and (entity:isProp() or entity:isItem()) then return true end
     if client:IsSuperAdmin() then return true end
@@ -31,19 +31,24 @@ function GM:PhysgunDrop(_, entity)
 end
 
 function GM:OnPhysgunFreeze(_, physObj, entity, client)
+    if not IsValid(physObj) or not IsValid(entity) then return false end
     if not physObj:IsMoveable() then return false end
     if entity:GetUnFreezable() then return false end
     physObj:EnableMotion(false)
     if entity:GetClass() == "prop_vehicle_jeep" then
         local objects = entity:GetPhysicsObjectCount()
         for i = 0, objects - 1 do
-            entity:GetPhysicsObjectNum(i):EnableMotion(false)
+            local physObjNum = entity:GetPhysicsObjectNum(i)
+            if IsValid(physObjNum) then physObjNum:EnableMotion(false) end
         end
     end
 
-    client:AddFrozenPhysicsObject(entity, physObj)
-    client:SendHint("PhysgunUnfreeze", 0.3)
-    client:SuppressHint("PhysgunFreeze")
+    if IsValid(client) then
+        client:AddFrozenPhysicsObject(entity, physObj)
+        client:SendHint("PhysgunUnfreeze", 0.3)
+        client:SuppressHint("PhysgunFreeze")
+    end
+
     if PermissionCore.PassableOnFreeze then
         entity:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
     else
