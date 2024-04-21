@@ -79,7 +79,7 @@ lia.command.add("charaddmoney", {
             if character and amount then
                 amount = math.Round(amount)
                 character:giveMoney(amount)
-                client:notify("You gave " .. lia.currency.get(amount) .. " to " .. hook.Run("GetDisplayedName", target) or target:getChar():getName())
+                client:notify("You added " .. lia.currency.get(amount) .. " to " .. target:Name())
             end
         end
     end
@@ -97,7 +97,7 @@ lia.command.add("charban", {
                 client:notifyLocalized("charBan", client:Name(), target:Name())
                 character:setData("banned", true)
                 character:setData("charBanInfo", {
-                    name = client.steamName and client:steamName() or client:Nick(),
+                    name = client.steamName and client:steamName() or client:Name(),
                     steamID = client:SteamID(),
                     rank = client:GetUserGroup()
                 })
@@ -118,9 +118,9 @@ lia.command.add("charsetdesc", {
         if not IsValid(target) then return end
         if not target:getChar() then return "No character loaded" end
         local arg = table.concat(arguments, " ", 2)
-        if not arg:find("%S") then return client:requestString("Change " .. target:Nick() .. "'s Description", "Enter new description", function(text) lia.command.run(client, "charsetdesc", {arguments[1], text}) end, target:getChar():getDesc()) end
+        if not arg:find("%S") then return client:requestString("Change " .. target:Name() .. "'s Description", "Enter new description", function(text) lia.command.run(client, "charsetdesc", {arguments[1], text}) end, target:getChar():getDesc()) end
         target:getChar():setDesc(arg)
-        return "Successfully changed " .. target:Nick() .. "'s description"
+        return "Successfully changed " .. target:Name() .. "'s description"
     end
 })
 
@@ -235,7 +235,7 @@ lia.command.add("charsetmoney", {
             if character and amount then
                 amount = math.Round(amount)
                 character:setMoney(amount)
-                client:notifyLocalized("setMoney", target:Name(), lia.currency.get(amount))
+                client:notify("You set " .. target:Name() .. "'s money to " .. lia.currency.get(amount))
             end
         end
     end
@@ -457,8 +457,8 @@ lia.command.add("freezeallprops", {
                 end
             end
 
-            client:notify("You have frozen all of " .. target:Nick() .. "'s Entities.")
-            client:SendMessage("Frozen " .. count .. " Entities belonging to " .. target:Nick())
+            client:notify("You have frozen all of " .. target:Name() .. "'s Entities.")
+            client:SendMessage("Frozen " .. count .. " Entities belonging to " .. target:Name())
         end
     end
 })
@@ -814,8 +814,12 @@ lia.command.add("givemoney", {
             if not client:getChar():hasMoney(amount) then return end
             target:getChar():giveMoney(amount)
             client:getChar():takeMoney(amount)
-            target:notifyLocalized("moneyTaken", lia.currency.get(amount))
-            client:notifyLocalized("moneyGiven", lia.currency.get(amount))
+            local character = client:getChar()
+            local id = target:getChar():getID()
+            local tCharacter = target:getChar()
+            local charID = client:getChar():getID()
+            target:notify("You were given " .. lia.currency.get(amount) .. " by " .. (hook.Run("isCharRecognized", tCharacter, charID) and client:Name() or "someone you don't recognize"))
+            client:notify("You gave " .. lia.currency.get(amount) .. " to " .. (hook.Run("isCharRecognized", character, id) and target:Name() or "someone you don't recognize"))
             client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_GMOD_GESTURE_ITEM_PLACE, true)
             lia.log.add("moneyGiven", client, target:Name(), amount)
         else
