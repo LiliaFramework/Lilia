@@ -22,7 +22,7 @@ function net.Incoming(len, client)
     local name = util.NetworkIDToString(i)
     if not name then return end
     local clientSteamid = IsValid(client) and client:SteamID() or "UNKNOWN STEAMID"
-    local clientNick = IsValid(client) and client:Nick() or "UNKNOWN PLAYER NAME"
+    local clientNick = IsValid(client) and client:Name() or "UNKNOWN PLAYER NAME"
     local clientIP = IsValid(client) and client:IPAddress() or "UNKNOWN IP"
     local antiNetSpam = AntiHacking.antiNetSpam
     local flaggedNetPlayers = AntiHacking.flaggedNetPlayers
@@ -51,7 +51,7 @@ function concommand.Run(client, cmd, args, argStr)
     if not IsValid(client) then return AntiHacking.crun(client, cmd, args, argStr) end
     if not cmd then return AntiHacking.crun(client, cmd, args, argStr) end
     local clientSteamid = IsValid(client) and client:SteamID() or "UNKNOWN STEAMID"
-    local clientNick = IsValid(client) and client:Nick() or "UNKNOWN PLAYER NAME"
+    local clientNick = IsValid(client) and client:Name() or "UNKNOWN PLAYER NAME"
     local clientIP = IsValid(client) and client:IPAddress() or "UNKNOWN IP"
     local antiConSpam = AntiHacking.antiConSpam
     local flaggedConPlayers = AntiHacking.flaggedConPlayers

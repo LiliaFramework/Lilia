@@ -18,7 +18,7 @@ function GM:CanTool(client, _, tool)
                 for _, v in pairs(client.CurrentDupe.Entities) do
                     if v.ModelScale and v.ModelScale > 10 then
                         client:notify("A model within this duplication exceeds the size limit!")
-                        print("[Server Warning] Potential server crash using dupes attempt by player: " .. client:Nick() .. " (" .. client:SteamID() .. ")")
+                        print("[Server Warning] Potential server crash using dupes attempt by player: " .. client:Name() .. " (" .. client:SteamID() .. ")")
                         return false
                     end
 

@@ -57,7 +57,7 @@ netstream.Hook("openBlacklistLog", function(target, blacklists, blacklistLog)
     fr:SetSize(700, 500)
     fr:Center()
     fr:MakePopup()
-    fr:SetTitle(target:Nick() .. " (" .. target:SteamID() .. ")'s Blacklists")
+    fr:SetTitle(target:Name() .. " (" .. target:SteamID() .. ")'s Blacklists")
     local blText = "N/A"
     if blacklists and blacklists ~= "" then blText = blacklists end
     local label = vgui.Create("DLabel", fr)
@@ -111,7 +111,7 @@ netstream.Hook("openBlacklistLog", function(target, blacklists, blacklistLog)
         end
 
         ln.bID = v.bID
-        ln.printData = target:Nick() .. " [" .. target:SteamID() .. "] Blacklist ID " .. v.bID .. "\nStart: " .. os.date("%d/%m/%Y %H:%M:%S", v.starttime) .. "\n" .. "Active: " .. (v.active and "Yes" or "No") .. "\nEnd Time: " .. (v.endtime ~= 0 and os.date("%d/%m/%Y %H:%M:%S", v.endtime) or "Never") .. "\nLength: " .. (v.time ~= 0 and string.NiceTime(v.time) or "Perm") .. "\nFlags: " .. v.flags .. "\nAdminSteam: " .. v.adminsteam .. "\nAdmin: " .. v.admin .. "\nReason: " .. v.reason
+        ln.printData = target:Name() .. " [" .. target:SteamID() .. "] Blacklist ID " .. v.bID .. "\nStart: " .. os.date("%d/%m/%Y %H:%M:%S", v.starttime) .. "\n" .. "Active: " .. (v.active and "Yes" or "No") .. "\nEnd Time: " .. (v.endtime ~= 0 and os.date("%d/%m/%Y %H:%M:%S", v.endtime) or "Never") .. "\nLength: " .. (v.time ~= 0 and string.NiceTime(v.time) or "Perm") .. "\nFlags: " .. v.flags .. "\nAdminSteam: " .. v.adminsteam .. "\nAdmin: " .. v.admin .. "\nReason: " .. v.reason
     end
 end)
 

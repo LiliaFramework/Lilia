@@ -9,7 +9,7 @@ function MODULE:PlayerInitialSpawn(client)
     local StaffRank = self.DefaultStaff[client:SteamID64()]
     if StaffRank then
         RunConsoleCommand("sam", "setrank", client:SteamID(), StaffRank)
-        print(client:Nick() .. " has been set as rank: " .. StaffRank)
+        print(client:Name() .. " has been set as rank: " .. StaffRank)
     end
 end
 

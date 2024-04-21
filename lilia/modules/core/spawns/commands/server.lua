@@ -62,7 +62,7 @@ lia.command.add("respawn", {
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
             MODULE:PostPlayerLoadout(target)
-            client:notify("You teleported " .. target:Nick() .. " back to their faction spawn point.")
+            client:notify("You teleported " .. target:Name() .. " back to their faction spawn point.")
         end
     end
 })
