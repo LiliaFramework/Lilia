@@ -1,4 +1,24 @@
-﻿MODULE.name = "Framework UI - Main Menu"
+﻿--[[--
+Framework UI - Main Menu
+
+**Configuration Values:**.
+
+- **MusicVolume**: Set Music Volume on Main Menu | **float**.
+
+- **Music**: Set Main Menu Background Music | **string**.
+
+- **LogoURL**: Set Main Menu Logo | **string**.
+
+- **BackgroundURL**: Set Background Image URL (if applicable) | **string**.
+
+- **BackgroundIsYoutubeVideo**: Set If Background Screen is a YT video | **bool**.
+
+- **CharMenuBGInputDisabled**: Disable Background Input during Main Menu Lookup | **bool**.
+
+- **CharCreationTransparentBackground**: Set Transparent Background during Character Creation | **bool**.
+]]
+-- @configurations MainMenu
+MODULE.name = "Framework UI - Main Menu"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "Adds a Main Menu that allows to access several characters options."
