@@ -1,18 +1,13 @@
-﻿--[[ Time until a dropped SWEP is removed ]]
-MODULE.TimeUntilDroppedSWEPRemoved = 15
---[[ NPCs drop weapons on death  ]]
+﻿MODULE.TimeUntilDroppedSWEPRemoved = 15
 MODULE.NPCsDropWeapons = true
---[[ Cooldown for character switching ]]
 MODULE.CharacterSwitchCooldownTimer = 5
---[[ Enable cooldown on character switching  ]]
 MODULE.CharacterSwitchCooldown = true
---[[ Cooldown for character switching ]]
 MODULE.OnDamageCharacterSwitchCooldownTimer = 15
---[[ Enable cooldown on character switching  ]]
 MODULE.OnDamageCharacterSwitchCooldown = true
---[[ Enable Car Ragdolling on impact  ]]
 MODULE.CarRagdoll = true
---[[ Entities To Avoid Collisions with ]]
 MODULE.BlockedCollideEntities = {"lia_item", "lia_money"}
---[[ Does Damage cooldown applies to all entities or just humans  ]]
 MODULE.SwitchCooldownOnAllEntities = true
+MODULE.KnownExploits = {"npctool_relman_up", "cheadle_api", "npctool_spawner_clearundo", "sv_npctool_spawner_ppoint", "wire_expression2_request_file", "wire_adv_upload", "wire_expression2_request_list", "wire_adv_unwire", "wire_expression2_client_request_set_extension_status"}
+MODULE.HackCommands = {"loki_menu", "cheadle_api", "gear_printents", "gw_toggle", "gw_pos", "gearmenu", "gb_reload", "gb_toggle", "+gb", "-gb", "gb_menu", "gear2_menu", "ahack_menu", "sasha_menu", "showents", "showhxmenu", "SmegHack_Menu", "sCheat_menu", "lowkey_menu"}
+MODULE.HackGlobals = {"cheadle_api", "bSendPacket", "ValidNetString", "totalExploits", "addExploit", "AutoReload", "CircleStrafe", "toomanysploits", "Sploit", "R8", "ValidateESP", "ValidateAimbot"}
+MODULE.BadCVars = {"lenny", "cheadle_api", "smeg", "wallhack", "nospread", "antiaim", "hvh", "autostrafe", "circlestrafe", "spinbot", "odium", "ragebot", "legitbot", "fakeangles", "anticac", "antiscreenshot", "fakeduck", "lagexploit", "exploits_open", "gmodhack", "cathack"}

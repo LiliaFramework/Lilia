@@ -1,7 +1,6 @@
-﻿local MODULE = MODULE
-util.AddNetworkString("IAmHackingOwO")
+﻿util.AddNetworkString("IAmHackingOwO")
 net.Receive("IAmHackingOwO", function(_, client) ProtectionCore:ApplyPunishment(client, "Hacking", true, true, 0) end)
-for _, v in pairs(MODULE.KnownExploits) do
+for _, v in pairs(ProtectionCore.KnownExploits) do
     net.Receive(tostring(v), function(_, client)
         client.nextExploitNotify = client.nextExploitNotify or 0
         if client.nextExploitNotify > CurTime() then return end

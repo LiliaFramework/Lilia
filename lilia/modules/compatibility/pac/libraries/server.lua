@@ -9,8 +9,3 @@ end
 function MODULE:ModuleLoaded()
     game.ConsoleCommand("sv_pac_webcontent_limit 35840\n")
 end
-
-function MODULE:PlayerSpawn(client)
-    if not (client:IsValid() or client:Alive() or client:getChar()) then return end
-    client:ConCommand("pac_restart")
-end
