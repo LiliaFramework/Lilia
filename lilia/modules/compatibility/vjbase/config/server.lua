@@ -1,5 +1,4 @@
-﻿--[[ Console Commands To Be Ran on Initialize  ]]
-MODULE.VJBaseConsoleCommands = {
+﻿MODULE.VJBaseConsoleCommands = {
     ["vj_npc_processtime"] = "1",
     ["vj_npc_corpsefade"] = "1",
     ["vj_npc_corpsefadetime"] = "5",

@@ -1,6 +1,4 @@
-﻿--[[ Is Voice Chat Enabled ]]
-MODULE.IsVoiceEnabled = true
---[[ Talk Ranges for Different Modes ]]
+﻿MODULE.IsVoiceEnabled = true
 MODULE.TalkRanges = {
     ["Whispering"] = 120,
     ["Talking"] = 300,

@@ -1,5 +1,5 @@
 ﻿MODULE.AutomaticWeaponRegister = true
-MODULE.RegisterWeaponsBlackList = {"lazy", "_mine_weapon", "npc_awoi_weapon_752_engdrapis", "npc_awoi_weapon_752_fren1766_cavpist", "npc_awoi_weapon_752_epee", "npc_awoi_weapon_752_sabre", "npc_awoi_weapon_752_longland", "npc_awoi_weapon_752_shortland", "npc_awoi_weapon_752_model1728", "npc_awoi_weapon_752_swedish_m1731", "npc_awoi_weapon_752_austrian_m1756", "npc_awoi_weapon_752_model1763", "tfa_shotty_base", "tfa_melee_base", "tfa_3dbash_base", "tfa_bow_base", "tfa_gun_base", "cw_grenade_base", "tfa_melee_base", "cw_base", "weapon_swsft_awoi_base", "arccw_base_nade", "_base_launcher_", "tfa_knife_base", "tfa_bash_base", "tfa_scoped_base", "tfa_akimbo_base", "arccw_base_melee", "tfa_cssnade_base", "weapon_swsft_dod_base", "deika_base", "cw_melee_base", "tfa_nade_base", "tfa_3dscoped_base", "sf2_tool", "weapon_fists", "weapon_medkit", "gmod_camera", "gmod_tool", "lightning_gun", "weapon_base", "lia_hands", "lia_keys",}
+MODULE.RegisterWeaponsBlackList = {"sf2_tool", "weapon_fists", "weapon_medkit", "gmod_camera", "gmod_tool", "lightning_gun", "lia_hands", "lia_keys",}
 MODULE.WeaponNameOverrides = {
     [""] = "",
 }
