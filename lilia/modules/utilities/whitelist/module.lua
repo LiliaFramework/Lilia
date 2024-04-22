@@ -3,13 +3,13 @@ Utilities - Server Whitelist
 
 **Configuration Values:**.
 
-- **WhitelistEnabled**: Is Whitelisted Enabled | **bool**.
+- **WhitelistEnabled**: Enable or disable the Whitelist | **bool**.
 
-- **BlacklistedEnabled**: Is BlacklistedEnabled | **bool**.
+- **BlacklistedEnabled**: Enable or disable the Blacklist | **bool**.
 
-- **BlacklistedSteamID64**: Whitelisted Players | **table**.
+- **BlacklistedSteamID64**: Specify SteamID64s to be blacklisted from your server | **table**.
 
-- **WhitelistedSteamID64**: Blacklisted Players | **table**.
+- **WhitelistedSteamID64**: Specify SteamID64s to be whitelisted from your server | **table**.
 
 ]]
 -- @configurations Whitelist

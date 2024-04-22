@@ -1,5 +1,4 @@
-﻿
---[[--
+﻿--[[--
 Framework UI - HUD
 
 **Configuration Values:**.
@@ -16,9 +15,9 @@ Framework UI - HUD
 
 - **AmmoDrawEnabled**: Enable Ammo Draw | **bool**.
 
-- **DarkTheme**: Toggle Dark Theme | **string**.
+- **DarkTheme**: Toggle Dark Theme | **bool**.
 
-- **HiddenHUDElements**: Disable Sandbox HUD Elements | **table**.
+- **HiddenHUDElements**: Disabled Sandbox HUD Elements | **table**.
 
 ]]
 -- @configurations HUD
