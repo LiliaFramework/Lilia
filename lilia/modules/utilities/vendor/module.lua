@@ -5,6 +5,14 @@
 - **DefaultVendorMoney**: The Default Vendor Money | **integer**.
 
 - **VendorClick**: The sound that plays when using a vendor | **table**.
+
+**Commands:**.
+
+- X
+
+- Y
+
+- Z
 ]]
 -- @configurations Vendors
 MODULE.name = "Utilities - Vendors"
