@@ -1,5 +1,4 @@
 ﻿--[[--
-Framework UI - Chatbox
 
 **Configuration Values:**.
 

@@ -1,5 +1,4 @@
 ﻿--[[--
-Compatibility - Simfphys
 
 **Configuration Values:**.
 

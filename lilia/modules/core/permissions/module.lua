@@ -1,5 +1,4 @@
 ﻿--[[--
-Core - Permissions.
 
 **Configuration Values:**.
 

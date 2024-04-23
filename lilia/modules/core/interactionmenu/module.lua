@@ -1,5 +1,4 @@
 ﻿--[[--
-Core - Interaction Menu.
 
 **Configuration Values:**.
 

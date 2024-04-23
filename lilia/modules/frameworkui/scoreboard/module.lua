@@ -1,5 +1,4 @@
 ﻿--[[--
-Framework UI - Scoreboard
 
 **Configuration Values:**.
 

@@ -1,5 +1,4 @@
 ﻿--[[--
-Core - Voice
 
 **Configuration Values:**.
 

@@ -1,5 +1,4 @@
 ﻿--[[--
-Characters - Permakill
 
 **Configuration Values:**.
 

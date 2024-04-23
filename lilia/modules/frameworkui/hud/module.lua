@@ -1,5 +1,4 @@
 ﻿--[[--
-Framework UI - HUD
 
 **Configuration Values:**.
 

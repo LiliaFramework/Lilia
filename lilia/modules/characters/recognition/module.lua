@@ -1,5 +1,4 @@
 ﻿--[[--
-Characters - Recognition
 
 **Configuration Values:**.
 

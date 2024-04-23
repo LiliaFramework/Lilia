@@ -1,5 +1,4 @@
 ﻿--[[--
-Core - Teams.
 
 **Configuration Values:**.
 

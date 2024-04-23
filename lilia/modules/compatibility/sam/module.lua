@@ -1,5 +1,4 @@
 ﻿--[[--
-Compatibility - SAM Admin Mod
 
 **Configuration Values:**.
 

@@ -1,5 +1,4 @@
 ﻿--[[--
-Characters - Realistic Damage
 
 **Configuration Values:**.
 

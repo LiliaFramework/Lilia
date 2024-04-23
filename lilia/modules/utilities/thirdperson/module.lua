@@ -1,5 +1,4 @@
 ﻿--[[--
-Utilities - Third Person
 
 **Configuration Values:**.
 

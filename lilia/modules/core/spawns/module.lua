@@ -1,5 +1,4 @@
 ﻿--[[--
-Core - Spawns
 
 **Configuration Values:**.
 

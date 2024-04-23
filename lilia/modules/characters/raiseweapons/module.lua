@@ -1,5 +1,4 @@
 ﻿--[[--
-Characters - Raised Weapons
 
 **Configuration Values:**.
 

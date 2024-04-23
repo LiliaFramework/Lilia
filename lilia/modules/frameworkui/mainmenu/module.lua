@@ -1,5 +1,4 @@
 ﻿--[[--
-Framework UI - Main Menu
 
 **Configuration Values:**.
 

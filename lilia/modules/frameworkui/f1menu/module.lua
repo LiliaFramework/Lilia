@@ -1,6 +1,5 @@
 ﻿
 --[[--
-Framework UI - F1 Menu
 
 **Configuration Values:**.
 

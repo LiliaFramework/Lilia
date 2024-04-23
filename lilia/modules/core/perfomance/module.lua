@@ -1,5 +1,4 @@
 ﻿--[[--
-Core - Perfomance.
 
 **Configuration Values:**.
 

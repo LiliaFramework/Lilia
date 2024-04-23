@@ -1,5 +1,4 @@
 ﻿--[[--
-Utilities - Vendors
 
 **Configuration Values:**.
 

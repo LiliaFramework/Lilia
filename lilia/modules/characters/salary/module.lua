@@ -1,5 +1,4 @@
 ﻿--[[--
-Characters - Salary
 
 **Configuration Values:**.
 
