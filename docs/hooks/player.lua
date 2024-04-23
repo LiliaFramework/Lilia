@@ -181,7 +181,7 @@ end
 
 --- Called when a character is loaded.
 -- This function is called after a character has been successfully loaded.
--- @param ix.char character The character that has been loaded
+-- @param character The character that has been loaded
 -- @realm shared
 -- @usage function CharacterLoaded(character)
 --     -- Implement logic to handle character loading
@@ -193,7 +193,7 @@ end
 
 --- Called after a character has been saved.
 -- This function is called after a character has been successfully saved.
--- @param ix.char character The character that has been saved
+-- @param character The character that has been saved
 -- @realm server
 -- @usage function CharacterPostSave(character)
 --     -- Implement logic to handle post-save operations
@@ -205,7 +205,7 @@ end
 
 --- Called before a character is saved.
 -- This function is called before a character is about to be saved.
--- @param ix.char character The character about to be saved
+-- @param character The character about to be saved
 -- @realm shared
 -- @usage function CharacterPreSave(character)
 --     -- Implement logic to handle pre-save operations

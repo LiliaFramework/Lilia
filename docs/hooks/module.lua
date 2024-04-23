@@ -6,6 +6,7 @@ These hooks are regular hooks that can be used in your schema with `SCHEMA:HookN
 They can be used for an assorted of reasons, depending on what you are trying to achieve.
 ]]
 -- @hooks General
+
 --- Called after a player sends a chat message.
 -- @realm server
 -- @client client The player entity who sent the message.
@@ -118,14 +119,15 @@ end
 --- Called when a player interacts with a vendor entity.
 -- This function adds the player to the vendor's receivers list and notifies the player
 -- about accessing the vendor.
--- @param activator The player accessing the vendor
--- @usage function PlayerAccessVendor(activator, entity)
+-- @param client The player accessing the vendor
+-- @param entity The vendor
+-- @usage function PlayerAccessVendor(client, entity)
 --     -- Add the player to the vendor's receivers list
---     entity.receivers[#entity.receivers + 1] = activator
+--     entity.receivers[#entity.receivers + 1] = client
 --
 --     -- Notify the player about accessing the vendor
 --     if entity.messages[VENDOR_WELCOME] then
---         activator:notify(entity:getNetVar("name") .. ": " .. entity.messages[VENDOR_WELCOME])
+--         client:notify(entity:getNetVar("name") .. ": " .. entity.messages[VENDOR_WELCOME])
 --     end
 -- end
 --- @realm shared
@@ -134,28 +136,28 @@ end
 
 --- Called when a player sells an item to a vendor.
 -- This function handles the event where a player sells an item to a vendor.
--- @param player client The player selling the item
--- @param entity vendor The vendor entity
+-- @param client The player selling the item
+-- @param vendor The vendor entity
 -- @param string itemType The type of item being sold
--- @param any Unknown
--- @param ix.char character The character of the player selling the item
--- @param number price The price at which the item is sold
+-- @param isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
+-- @param character The character of the player selling the item
+-- @param price The price at which the item is sold
 -- @usage function MODULE:VendorSellEvent(client, vendor, itemType, _, character, price)
 --     -- Implement logic to handle the event where a player sells an item to a vendor
 --     -- For example, deducting money from the vendor and adding it to the player's character
 --     -- Also, remove the sold item from the player's inventory and update vendor's stock
 -- end
-function VendorSellEvent(client, vendor, itemType, _, character, price)
+function VendorSellEvent(client, vendor, itemType, isSellingToVendor, character, price)
 end
 
 --- Called when a player successfully buys an item from a vendor.
 -- This function is called when a player successfully completes a purchase from a vendor.
--- @param Player client The player who made the purchase
--- @param Entity vendor The vendor entity from which the item was bought
--- @param any itemType The type of item being bought
--- @param boolean isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
--- @param ix.char character The character of the player involved in the trade
--- @param number price The price of the item being bought
+-- @param client The player who made the purchase
+-- @param vendor The vendor entity from which the item was bought
+-- @param itemType The type of item being bought
+-- @param isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
+-- @param character The character of the player involved in the trade
+-- @param price The price of the item being bought
 -- @realm shared
 -- @usage function MODULE:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
 --     -- Implement logic to handle a successful purchase from a vendor
@@ -167,9 +169,9 @@ end
 --- Determines whether an item can be transferred between inventories.
 -- This hook allows custom logic to be implemented to determine if an item can be transferred
 -- from one inventory to another. It can be used to impose restrictions on item transfers.
--- @param ix.item item The item being transferred
--- @param ix.inventory currentInv The current inventory from which the item is being transferred
--- @param ix.inventory oldInv The old inventory to which the item belonged
+-- @param item The item being transferred
+-- @param currentInv The current inventory from which the item is being transferred
+-- @param oldInv The old inventory to which the item belonged
 -- @return boolean|string Whether the item can be transferred, or false and a reason if not
 -- @usage function CanItemBeTransfered(item, currentInv, oldInv)
 --     -- Implement custom logic to determine if the item can be transferred
