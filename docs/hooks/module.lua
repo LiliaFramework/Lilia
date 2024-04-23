@@ -47,7 +47,7 @@ end
 -- 	end
 -- end
 -- -- non-admins will see the message "You are not allowed to do this right now!"
-function CanPlayerCreateCharacter(client, payload)
+function CanPlayerCreateCharacter(client)
 end
 
 --- Whether or not a player is allowed to drop the given `item`.
@@ -63,7 +63,7 @@ end
 
 --- Called after the player's inventory is drawn.
 -- @realm client
--- @param panel Panel - The panel containing the inventory.
+-- @panel panel The panel containing the inventory.
 function PostDrawInventory(panel)
 end
 
@@ -90,38 +90,38 @@ end
 --- Called after a character is deleted.
 -- @realm server
 -- @client client The player entity.
--- @char The character being deleted.
+-- @character The character being deleted.
 function PostCharDelete(client, character)
 end
 
 --- Called after a character is deleted.
 -- @realm server
--- @param client The player entity.
--- @param character The character being deleted.
+-- @client client The player entity.
+-- @character character The character being deleted.
 function CharDeleted(client, character)
 end
 
 --- Called before a player's character is loaded.
 -- @realm server
--- @param client The player entity.
--- @param character The character being loaded.
--- @param currentChar The current character of the player.
+-- @client client The player entity.
+-- @character character The character being loaded.
+-- @character currentChar The current character of the player.
 function PrePlayerLoadedChar(client, character, currentChar)
 end
 
 --- Called when a player's character is loaded.
 -- @realm server
--- @param client The player entity.
--- @param character The character being loaded.
--- @param currentChar The current character of the player.
+-- @client client The player entity.
+-- @character character The character being loaded.
+-- @character currentChar The current character of the player.
 function PlayerLoadedChar(client, character, currentChar)
 end
 
 --- Called after a player's character is loaded.
 -- @realm server
--- @param client The player entity.
--- @param character The character being loaded.
--- @param currentChar The current character of the player.
+-- @client client The player entity.
+-- @character character The character being loaded.
+-- @character currentChar The current character of the player.
 function PostPlayerLoadedChar(client, character, currentChar)
 end
 
@@ -132,8 +132,8 @@ end
 
 --- Called when the screen resolution changes.
 -- @realm client
--- @param width number The new width of the screen.
--- @param height number The new height of the screen.
+-- @int width number The new width of the screen.
+-- @int height number The new height of the screen.
 function ScreenResolutionChanged(width, height)
 end
 
@@ -174,7 +174,7 @@ end
 
 --- Displays the context menu for interacting with an item entity.
 --- @realm client
---- @param entity Entity The item entity for which the context menu is displayed.
+--- @entity entity The item entity for which the context menu is displayed.
 function ItemShowEntityMenu(entity)
 end
 
