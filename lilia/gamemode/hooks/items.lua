@@ -83,6 +83,21 @@ if SERVER then
                 return false
             end
         end
+
+        if action == "unequip" then
+            if hook.Run("CanPlayerUnequipItem", client, item) ~= false then
+                if not client.unequipDelay then
+                    client.unequipDelay = true
+                    timer.Create("UnequipDelay." .. client:SteamID64(), lia.config.UnequipDelay, 1, function() if IsValid(client) then client.unequipDelay = nil end end)
+                    return true
+                else
+                    client:notify("You need to wait before unequipping something again!")
+                    return false
+                end
+            else
+                return false
+            end
+        end
     end
 
     function GM:CanPlayerEquipItem(client, item)

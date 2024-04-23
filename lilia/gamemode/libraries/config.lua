@@ -70,6 +70,7 @@ if not ConfigWasInitialized then
         SpawnTime = 5,
         MaxAttributes = 30,
         EquipDelay = 2,
+        UnequipDelay = 2,
         DropDelay = 2,
         TakeDelay = 2,
         CurrencySingularName = "Dollar",

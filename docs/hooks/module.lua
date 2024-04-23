@@ -1,53 +1,44 @@
 --[[--
-Global hooks for general use.
+General Hooks.
 
-Module hooks are regular hooks that can be used in your schema with `SCHEMA:HookName(args)`, in your module with
+These hooks are regular hooks that can be used in your schema with `SCHEMA:HookName(args)`, in your module with
 `MODULE:HookName(args)`, or in your addon with `hook.Add("HookName", function(args) end)`.
+They can be used for an assorted of reasons, depending on what you are trying to achieve.
 ]]
--- @hooks Module
+-- @hooks General
 
--- This function determines whether certain information can be displayed in the character info panel in the F1 menu.
--- @realm client
--- @table Information to **NOT** display in the UI. This is a table of the names of some panels to avoid displaying. Valid names include:
--- `name` name of the character
--- `desc` description of the character
--- `faction` faction name of the character
--- `money` current money the character has
--- `class` name of the character's class if they're in one
--- Note that schemas/modules can add additional character info panels.
--- @usage function MODULE:CanDisplayCharacterInfo(suppress)
--- 	suppress.faction = true
--- end
-function CanDisplayCharacterInfo(suppress)
-end
-
---- Whether or not the ammo HUD should be drawn.
--- @realm client
--- @entity weapon Weapon the player currently is holding
--- @treturn bool Whether or not to draw the ammo hud
--- @usage function MODULE:ShouldDrawAmmoHUD(weapon)
--- 	if (weapon:GetClass() == "weapon_frag") then
--- 		return false
--- 	end
--- end
-function ShouldDrawAmmoHUD(weapon)
-end
-
---- Whether or not a player is allowed to create a new character.
+--- Called after a player sends a chat message.
 -- @realm server
--- @client client Player attempting to create a new character
--- @treturn bool Whether or not the player is allowed to create the character. This function defaults to `true`, so you
--- should only ever return `false` if you're disallowing creation. Otherwise, don't return anything as you'll prevent any other
--- calls to this hook from running.
--- @treturn string Language phrase to use for the error message
--- @treturn ... Arguments to use for the language phrase
--- @usage function MODULE:CanPlayerCreateCharacter(client)
--- 	if (!client:IsAdmin()) then
--- 		return false, "notNow" -- only allow admins to create a character
--- 	end
+-- @client client The player entity who sent the message.
+-- @string message The message sent by the player.
+-- @string chatType The type of chat message (e.g., "ic" for in-character, "ooc" for out-of-character).
+-- @bool anonymous Whether the message was sent anonymously (true) or not (false).
+function PostPlayerSay(client, message, chatType, anonymous)
+end
+
+--- Whether or not a player can trade with a vendor.
+-- @realm server
+-- @client client Player attempting to trade
+-- @entity entity Vendor entity
+-- @string uniqueID The uniqueID of the item being traded.
+-- @bool isSellingToVendor If the client is selling to the vendor
+-- @treturn bool Whether or not to allow the client to trade with the vendor
+-- @usage function MODULE:CanPlayerTradeWithVendor(client, entity, uniqueID, isSellingToVendor)
+-- 	return false -- Disallow trading with vendors outright.
 -- end
--- -- non-admins will see the message "You are not allowed to do this right now!"
-function CanPlayerCreateCharacter(client)
+function CanPlayerTradeWithVendor(client, entity, uniqueID, isSellingToVendor)
+end
+
+--- Whether or not a player can unequip an item.
+-- @realm server
+-- @client client Player attempting to unequip an item
+-- @tab item Item being unequipped
+-- @treturn bool Whether or not to allow the player to unequip the item
+-- @see CanPlayerEquipItem
+-- @usage function MODULE:CanPlayerUnequipItem(client, item)
+-- 	return false -- Disallow unequipping items.
+-- end
+function CanPlayerUnequipItem(client, item)
 end
 
 --- Whether or not a player is allowed to drop the given `item`.
@@ -61,115 +52,42 @@ end
 function CanPlayerDropItem(client, item)
 end
 
---- Called after the player's inventory is drawn.
--- @realm client
--- @panel panel The panel containing the inventory.
-function PostDrawInventory(panel)
-end
-
---- Called after data has been loaded.
+--- Whether or not a player is allowed to take an item and put it in their inventory.
 -- @realm server
-function PostLoadData()
+-- @client client Player attempting to take the item
+-- @entity item Entity corresponding to the item
+-- @treturn bool Whether or not to allow the player to take the item
+-- @usage function MODULE:CanPlayerTakeItem(client, item)
+-- 	return !(client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle()) -- Disallow players in observer taking items.
+-- end
+function CanPlayerTakeItem(client, item)
 end
 
---- Called after a player's loadout is applied.
+--- Whether or not a player can equip the given `item`. This is called for items with `outfit`, `pacoutfit`, or `weapons` as
+-- their base. Schemas/modules can utilize this hook for their items.
 -- @realm server
--- @client client The player entity.
-function PostPlayerLoadout(client)
+-- @client client Player attempting to equip the item
+-- @tab item Item being equipped
+-- @treturn bool Whether or not to allow the player to equip the item
+-- @see CanPlayerUnequipItem
+-- @usage function MODULE:CanPlayerEquipItem(client, item)
+-- 	return client:IsAdmin() -- Restrict equipping items to admins only.
+-- end
+function CanPlayerEquipItem(client, item)
 end
 
---- Called after a player sends a chat message.
+--- Whether or not a player is allowed to interact with an item via an inventory action (e.g picking up, dropping, transferring
+-- inventories, etc). Note that this is for an item *table*, not an item *entity*. This is called after `CanPlayerDropItem`
+-- and `CanPlayerTakeItem`.
 -- @realm server
--- @client client The player entity who sent the message.
--- @string message The message sent by the player.
--- @string chatType The type of chat message (e.g., "ic" for in-character, "ooc" for out-of-character).
--- @bool anonymous Whether the message was sent anonymously (true) or not (false).
-function PostPlayerSay(client, message, chatType, anonymous)
-end
-
---- Called after a character is deleted.
--- @realm server
--- @client client The player entity.
--- @character The character being deleted.
-function PostCharDelete(client, character)
-end
-
---- Called after a character is deleted.
--- @realm server
--- @client client The player entity.
--- @character character The character being deleted.
-function CharDeleted(client, character)
-end
-
---- Called before a player's character is loaded.
--- @realm server
--- @client client The player entity.
--- @character character The character being loaded.
--- @character currentChar The current character of the player.
-function PrePlayerLoadedChar(client, character, currentChar)
-end
-
---- Called when a player's character is loaded.
--- @realm server
--- @client client The player entity.
--- @character character The character being loaded.
--- @character currentChar The current character of the player.
-function PlayerLoadedChar(client, character, currentChar)
-end
-
---- Called after a player's character is loaded.
--- @realm server
--- @client client The player entity.
--- @character character The character being loaded.
--- @character currentChar The current character of the player.
-function PostPlayerLoadedChar(client, character, currentChar)
-end
-
---- Saves the server data.
--- @realm server
-function SaveData()
-end
-
---- Called when the screen resolution changes.
--- @realm client
--- @int width number The new width of the screen.
--- @int height number The new height of the screen.
-function ScreenResolutionChanged(width, height)
-end
-
---- Determines whether a bar should be drawn.
--- @realm client
--- @tab bar The bar object.
--- @return boolean True if the bar should be drawn, false otherwise.
-function ShouldBarDraw(bar)
-end
-
---- Determines whether the crosshair should be drawn for a specific client and weapon.
---- @realm client
---- @client client The player entity.
---- @string weapon The weapon entity.
---- @return boolean True if the crosshair should be drawn, false otherwise.
-function ShouldDrawCrosshair(client, weapon)
-end
-
---- Determines whether bars should be hidden.
---- @realm client
---- @return boolean True if bars should be hidden, false otherwise.
-function ShouldHideBars()
-end
-
---- Determines whether a client should drown.
--- @realm server
--- @client client The player entity.
--- @return boolean True if the client should drown, false otherwise.
-function ShouldClientDrown(client)
-end
-
---- Determines whether a player should be shown on the scoreboard.
---- @realm client
---- @client client The player entity to be evaluated.
---- @return bool True if the player should be shown on the scoreboard, false otherwise.
-function ShouldShowPlayerOnScoreboard(client)
+-- @client client Player attempting interaction
+-- @string action The action being performed
+-- @param item Item's instance ID or item table
+-- @treturn bool Whether or not to allow the player to interact with the item
+-- @usage function MODULE:CanPlayerInteractItem(client, action, item, data)
+-- 	return false -- Disallow interacting with any item.
+-- end
+function CanPlayerInteractItem(client, action, item)
 end
 
 --- Displays the context menu for interacting with an item entity.
@@ -182,4 +100,97 @@ end
 --- @realm client
 --- @bool state Indicates whether the third person mode is enabled (`true`) or disabled (`false`).
 function thirdPersonToggled(state)
+end
+
+--- Called when a player interacts with a vendor entity.
+-- This function adds the player to the vendor's receivers list and notifies the player
+-- about accessing the vendor.
+-- @param activator The player accessing the vendor
+-- @usage function PlayerAccessVendor(activator, entity)
+--     -- Add the player to the vendor's receivers list
+--     entity.receivers[#entity.receivers + 1] = activator
+--
+--     -- Notify the player about accessing the vendor
+--     if entity.messages[VENDOR_WELCOME] then
+--         activator:notify(entity:getNetVar("name") .. ": " .. entity.messages[VENDOR_WELCOME])
+--     end
+-- end
+--- @realm shared
+function CharacterVendorTraded(client, entity, uniqueID, isSellingToVendor)
+end
+
+--- Called when a character trades with a vendor entity.
+-- This function can be used to perform additional actions when a character trades
+-- with a vendor entity.
+-- @realm shared
+-- @client client The player character trading with the vendor
+-- @param entity The vendor entity being traded with
+-- @param uniqueID The unique identifier of the traded item
+-- @param isSellingToVendor Whether the trade involves selling to the vendor
+-- @usage function CharacterVendorTraded(client, entity, uniqueID, isSellingToVendor)
+--     -- Perform additional actions when a character trades with the vendor
+-- end
+function PlayerAccessVendor(client, entity)
+end
+
+--- Called when a player sells an item to a vendor.
+-- This function handles the event where a player sells an item to a vendor.
+-- @param player client The player selling the item
+-- @param entity vendor The vendor entity
+-- @param string itemType The type of item being sold
+-- @param any Unknown
+-- @param ix.char character The character of the player selling the item
+-- @param number price The price at which the item is sold
+-- @usage function MODULE:VendorSellEvent(client, vendor, itemType, _, character, price)
+--     -- Implement logic to handle the event where a player sells an item to a vendor
+--     -- For example, deducting money from the vendor and adding it to the player's character
+--     -- Also, remove the sold item from the player's inventory and update vendor's stock
+-- end
+function VendorSellEvent(client, vendor, itemType, _, character, price)
+end
+
+--- Called when a player successfully buys an item from a vendor.
+-- This function is called when a player successfully completes a purchase from a vendor.
+-- @param Player client The player who made the purchase
+-- @param Entity vendor The vendor entity from which the item was bought
+-- @param any itemType The type of item being bought
+-- @param boolean isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
+-- @param ix.char character The character of the player involved in the trade
+-- @param number price The price of the item being bought
+-- @realm shared
+-- @usage function MODULE:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
+--     -- Implement logic to handle a successful purchase from a vendor
+--     -- This could involve deducting money, adding the item to the player's inventory, and logging the transaction
+-- end
+function VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
+end
+
+--- Determines whether an item can be transferred between inventories.
+-- This hook allows custom logic to be implemented to determine if an item can be transferred
+-- from one inventory to another. It can be used to impose restrictions on item transfers.
+-- @param ix.item item The item being transferred
+-- @param ix.inventory currentInv The current inventory from which the item is being transferred
+-- @param ix.inventory oldInv The old inventory to which the item belonged
+-- @return boolean|string Whether the item can be transferred, or false and a reason if not
+-- @usage function CanItemBeTransfered(item, currentInv, oldInv)
+--     -- Implement custom logic to determine if the item can be transferred
+--     -- For example, check if the item is allowed to be transferred based on specific conditions
+--     -- If allowed, return true; otherwise, return false and a reason
+-- end
+function CanItemBeTransfered(item, currentInv, oldInv)
+end
+
+--- Saves the server data.
+-- @realm server
+function SaveData()
+end
+
+--- Loads the server data.
+-- @realm server
+function LoadData()
+end
+
+--- Called after data has been loaded.
+-- @realm server
+function PostLoadData()
 end
