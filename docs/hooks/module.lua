@@ -6,6 +6,7 @@ These hooks are regular hooks that can be used in your schema with `SCHEMA:HookN
 They can be used for an assorted of reasons, depending on what you are trying to achieve.
 ]]
 -- @hooks General
+
 --- Called after a player sends a chat message.
 -- @realm server
 -- @client client The player entity who sent the message.
