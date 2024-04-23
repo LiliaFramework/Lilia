@@ -3,7 +3,6 @@ local PANEL = {}
 function PANEL:Init()
     local client = LocalPlayer()
     local character = client:getChar()
-    local class = lia.class.list[character:getClass()]
     if IsValid(lia.gui.info) then lia.gui.info:Remove() end
     lia.gui.info = self
     local panelWidth = ScrW() * 0.25
@@ -38,7 +37,7 @@ function PANEL:Init()
     self:CreateTextEntryWithBackgroundAndLabel("desc", textFont, textFontSize * 2, textColor, shadowColor, "Description")
     self:CreateTextEntryWithBackgroundAndLabel("faction", textFont, textFontSize, textColor, shadowColor, "Faction")
     self:CreateTextEntryWithBackgroundAndLabel("money", textFont, textFontSize, textColor, shadowColor, "Money")
-    if class then self:CreateTextEntryWithBackgroundAndLabel("class", textFont, textFontSize, textColor, shadowColor, "Class") end
+    self:CreateTextEntryWithBackgroundAndLabel("class", textFont, textFontSize, textColor, shadowColor, "Class")
     if MODULE.F1DisplayAttributes then
         for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
             local attribValue = character:getAttrib(k, 0)
@@ -61,8 +60,8 @@ function PANEL:Init()
     self:setup()
 end
 
-
 function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor, shadowColor, labelText, dockMarginBot, dockMarginTop)
+    if hook.Run("CanDisplayCharacterInfo", name) == false then return true end 
     local isDesc = name == "desc"
     local entryContainer = self.infoBox:Add("DPanel")
     entryContainer:Dock(TOP)

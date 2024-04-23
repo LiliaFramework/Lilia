@@ -1,6 +1,5 @@
 ﻿function MODULE:ShouldDrawAmmo(weapon)
-    if IsValid(weapon) and weapon.DrawAmmo ~= false then return self.AmmoDrawEnabled end
-    return true
+    if IsValid(weapon) and weapon.DrawAmmo ~= false and self.AmmoDrawEnabled then return true end
 end
 
 function MODULE:DrawAmmo(weapon)

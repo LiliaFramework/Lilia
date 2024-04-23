@@ -14,6 +14,8 @@ function MODULE:SetupQuickMenu(menu)
             else
                 RunConsoleCommand("tp_enabled", "0")
             end
+
+            hook.Run("thirdPersonToggled", ThirdPerson:GetBool())
         end, ThirdPerson:GetBool())
 
         menu:addCheck(L"thirdpersonClassic", function(_, state)
@@ -88,8 +90,11 @@ function MODULE:InputMouseApply(_, x, y, _)
 end
 
 function MODULE:PlayerButtonDown(_, button)
-    local ThirdPersonIsEnabled = ThirdPerson:GetInt() == 1
-    if self.ThirdPersonEnabled and button == KEY_F4 and IsFirstTimePredicted() then ThirdPerson:SetInt(ThirdPersonIsEnabled and 0 or 1) end
+    if button == KEY_F4 and IsFirstTimePredicted() then
+        local ThirdPersonIsEnabled = ThirdPerson:GetInt() == 1
+        ThirdPerson:SetInt(ThirdPersonIsEnabled and 0 or 1)
+        hook.Run("thirdPersonToggled", ThirdPerson:GetBool())
+    end
 end
 
 function MODULE:ShouldDrawLocalPlayer()
@@ -164,4 +169,7 @@ function playerMeta:CanOverrideView()
     return ThirdPerson:GetBool() and ThirdPersonCore.ThirdPersonEnabled and (IsValid(self) and self:getChar() and not IsValid(ragdoll))
 end
 
-concommand.Add("tp_toggle", function() ThirdPerson:SetInt(ThirdPerson:GetInt() == 0 and 1 or 0) end)
+concommand.Add("tp_toggle", function()
+    ThirdPerson:SetInt(ThirdPerson:GetInt() == 0 and 1 or 0)
+    hook.Run("thirdPersonToggled", ThirdPerson:GetBool())
+end)

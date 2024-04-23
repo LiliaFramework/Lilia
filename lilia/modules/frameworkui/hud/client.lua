@@ -1,5 +1,5 @@
 ﻿function MODULE:ShouldHideBars()
-    return self.BarsDisabled
+    if self.BarsDisabled then return false end
 end
 
 function MODULE:HUDShouldDraw(element)
@@ -15,7 +15,7 @@ end
 function MODULE:HUDPaint()
     local weapon = LocalPlayer():GetActiveWeapon()
     if self:ShouldDrawAmmo(weapon) then self:DrawAmmo(weapon) end
-    if self:ShouldDrawCrosshair() then self:DrawCrosshair() end
+    if self:ShouldDrawAmmoHUD() then self:DrawCrosshair() end
     if self:ShouldDrawVignette() then self:DrawVignette() end
 end
 

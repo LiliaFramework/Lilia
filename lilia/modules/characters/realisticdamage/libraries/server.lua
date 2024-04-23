@@ -32,7 +32,7 @@ end
 
 function MODULE:PlayerLoadedChar(client)
     local steamID64 = client:SteamID64()
-    if not (client:getChar() or client:Alive() or self.DrowningEnabled) or hook.Run("ShouldclientDrown", client) == false then return end
+    if not (client:getChar() or client:Alive() or self.DrowningEnabled) or hook.Run("ShouldClientDrown", client) == false then return end
     if timer.Exists("DrownTimer_" .. steamID64) then timer.Remove("DrownTimer_" .. steamID64) end
     local function applyDrowningEffects()
         if client:WaterLevel() >= 3 then

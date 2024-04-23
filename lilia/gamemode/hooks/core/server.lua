@@ -374,7 +374,8 @@ function GM:OnServerLog(client, logType, ...)
     end
 end
 
-function GM:onCharCreated(client, char)
+function GM:onCharCreated(client, char, data)
+    hook.Run("onCharCreated", client, char, data)
     local permFlags = client:getPermFlags()
     if permFlags and #permFlags > 0 then char:giveFlags(permFlags) end
 end
