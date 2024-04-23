@@ -6,7 +6,6 @@ These hooks are regular hooks that can be used in your schema with `SCHEMA:HookN
 They can be used for an assorted of reasons, depending on what you are trying to achieve.
 ]]
 -- @hooks General
-
 --- Called after a player sends a chat message.
 -- @realm server
 -- @client client The player entity who sent the message.
@@ -102,6 +101,20 @@ end
 function thirdPersonToggled(state)
 end
 
+--- Called when a character trades with a vendor entity.
+-- This function can be used to perform additional actions when a character trades
+-- with a vendor entity.
+-- @realm shared
+-- @client client The player character trading with the vendor
+-- @param entity The vendor entity being traded with
+-- @param uniqueID The unique identifier of the traded item
+-- @param isSellingToVendor Whether the trade involves selling to the vendor
+-- @usage function CharacterVendorTraded(client, entity, uniqueID, isSellingToVendor)
+--     -- Perform additional actions when a character trades with the vendor
+-- end
+function CharacterVendorTraded(client, entity, uniqueID, isSellingToVendor)
+end
+
 --- Called when a player interacts with a vendor entity.
 -- This function adds the player to the vendor's receivers list and notifies the player
 -- about accessing the vendor.
@@ -116,20 +129,6 @@ end
 --     end
 -- end
 --- @realm shared
-function CharacterVendorTraded(client, entity, uniqueID, isSellingToVendor)
-end
-
---- Called when a character trades with a vendor entity.
--- This function can be used to perform additional actions when a character trades
--- with a vendor entity.
--- @realm shared
--- @client client The player character trading with the vendor
--- @param entity The vendor entity being traded with
--- @param uniqueID The unique identifier of the traded item
--- @param isSellingToVendor Whether the trade involves selling to the vendor
--- @usage function CharacterVendorTraded(client, entity, uniqueID, isSellingToVendor)
---     -- Perform additional actions when a character trades with the vendor
--- end
 function PlayerAccessVendor(client, entity)
 end
 
