@@ -76,6 +76,7 @@ function CanDisplayCharacterInfo(suppress)
 end
 
 --- Determines whether a player is allowed to view their inventory.
+-- @realm client
 -- This hook can be used to implement custom checks to determine if a player is
 -- allowed to view their inventory.
 -- @return boolean Whether the player is allowed to view their inventory
