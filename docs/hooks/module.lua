@@ -6,7 +6,6 @@ These hooks are regular hooks that can be used in your schema with `SCHEMA:HookN
 They can be used for an assorted of reasons, depending on what you are trying to achieve.
 ]]
 -- @hooks General
-
 --- Called after a player sends a chat message.
 -- @realm server
 -- @client client The player entity who sent the message.
@@ -135,10 +134,11 @@ function PlayerAccessVendor(client, entity)
 end
 
 --- Called when a player sells an item to a vendor.
+-- @realm shared
 -- This function handles the event where a player sells an item to a vendor.
 -- @param client The player selling the item
 -- @param vendor The vendor entity
--- @param string itemType The type of item being sold
+-- @param itemType The type of item being sold
 -- @param isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
 -- @param character The character of the player selling the item
 -- @param price The price at which the item is sold
@@ -167,6 +167,7 @@ function VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, 
 end
 
 --- Determines whether an item can be transferred between inventories.
+-- @realm shared
 -- This hook allows custom logic to be implemented to determine if an item can be transferred
 -- from one inventory to another. It can be used to impose restrictions on item transfers.
 -- @param item The item being transferred
