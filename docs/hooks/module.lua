@@ -6,7 +6,6 @@ These hooks are regular hooks that can be used in your schema with `SCHEMA:HookN
 They can be used for an assorted of reasons, depending on what you are trying to achieve.
 ]]
 -- @hooks General
-
 --- Called after a player sends a chat message.
 -- @realm server
 -- @client client The player entity who sent the message.
@@ -143,11 +142,6 @@ end
 -- @param isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
 -- @param character The character of the player selling the item
 -- @param price The price at which the item is sold
--- @usage function MODULE:VendorSellEvent(client, vendor, itemType, _, character, price)
---     -- Implement logic to handle the event where a player sells an item to a vendor
---     -- For example, deducting money from the vendor and adding it to the player's character
---     -- Also, remove the sold item from the player's inventory and update vendor's stock
--- end
 function VendorSellEvent(client, vendor, itemType, isSellingToVendor, character, price)
 end
 
@@ -160,10 +154,6 @@ end
 -- @param character The character of the player involved in the trade
 -- @param price The price of the item being bought
 -- @realm shared
--- @usage function MODULE:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
---     -- Implement logic to handle a successful purchase from a vendor
---     -- This could involve deducting money, adding the item to the player's inventory, and logging the transaction
--- end
 function VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
 end
 
@@ -196,4 +186,248 @@ end
 --- Called after data has been loaded.
 -- @realm server
 function PostLoadData()
+end
+
+--- Whether or not a player is allowed to create a new character.
+-- @realm server
+-- @client client Player attempting to create a new character
+-- @treturn bool Whether or not the player is allowed to create the character. This function defaults to `true`, so you
+-- should only ever return `false` if you're disallowing creation. Otherwise, don't return anything as you'll prevent any other
+-- calls to this hook from running.
+-- @treturn string Language phrase to use for the error message
+-- @treturn ... Arguments to use for the language phrase
+-- @usage function MODULE:CanPlayerCreateCharacter(client)
+-- 	if (!client:IsAdmin()) then
+-- 		return false, "notNow" -- only allow admins to create a character
+-- 	end
+-- end
+-- -- non-admins will see the message "You are not allowed to do this right now!"
+function CanPlayerCreateCharacter(client)
+end
+
+--- Called after a character is deleted.
+-- @realm server
+-- @client client The player entity.
+-- @character character The character being deleted.
+function PostCharDelete(client, character)
+end
+
+--- Called after a player's loadout is applied.
+-- @realm server
+-- @client client The player entity.
+function PostPlayerLoadout(client)
+end
+
+--- Called after a character is deleted.
+-- @realm server
+-- @client client The player entity.
+-- @character character The character being deleted.
+function CharDeleted(client, character)
+end
+
+--- Called before a player's character is loaded.
+-- @realm server
+-- @client client The player entity.
+-- @character character The character being loaded.
+-- @character currentChar The current character of the player.
+function PrePlayerLoadedChar(client, character, currentChar)
+end
+
+--- Called when a player's character is loaded.
+-- @realm server
+-- @client client The player entity.
+-- @character character The character being loaded.
+-- @character currentChar The current character of the player.
+function PlayerLoadedChar(client, character, currentChar)
+end
+
+--- Called after a player's character is loaded.
+-- @realm server
+-- @client client The player entity.
+-- @character character The character being loaded.
+-- @character currentChar The current character of the player.
+function PostPlayerLoadedChar(client, character, currentChar)
+end
+
+--- Determines whether a client should drown.
+-- @realm server
+-- @client client The player entity.
+-- @return boolean True if the client should drown, false otherwise.
+function ShouldClientDrown(client)
+end
+
+--- Called when a player tries to use abilities on the door, such as locking.
+-- @realm shared
+-- @client client The client trying something on the door.
+-- @entity door The door entity itself.
+-- @number access The access level used when called.
+-- @treturn bool Whether or not to allow the client access.
+-- @usage function MODULE:CanPlayerAccessDoor(client, door, access)
+--     return true -- Always allow access.
+-- end
+function CanPlayerAccessDoor(client, door, access)
+end
+
+--- Whether or not a plyer is allowed to join a class.
+-- @realm shared
+-- @client client Player attempting to join
+-- @number class ID of the class
+-- @tab info The class table
+-- @treturn bool Whether or not to allow the player to join the class
+-- @usage function MODULE:CanPlayerJoinClass(client, class, info)
+-- 	return client:IsAdmin() -- Restrict joining classes to admins only.
+-- end
+function CanPlayerJoinClass(client, class, info)
+end
+
+--- Whether or not a player can earn money at regular intervals. This hook runs only if the player's character faction has
+-- a salary set i.e `FACTION.pay` is set to something other than `0` for their faction.
+-- @realm server
+-- @client client Player to give money to
+-- @tab faction Faction of the player's character
+-- @tab class Class of the player's character
+-- @treturn bool Whether or not to allow the player to earn salary
+-- @usage function MODULE:CanPlayerEarnSalary(client, faction)
+-- 	return client:IsAdmin() -- Restricts earning salary to admins only.
+-- end
+function CanPlayerEarnSalary(client, faction, class)
+end
+
+--- Whether or not the player is allowed to punch with the hands SWEP.
+-- @realm shared
+-- @client client Player attempting throw a punch
+-- @treturn bool Whether or not to allow the player to punch
+-- @usage function MODULE:CanPlayerThrowPunch(client)
+-- 	return client:GetCharacter():GetAttribute("str", 0) > 0 -- Only allow players with strength to punch.
+-- end
+function CanPlayerThrowPunch(client)
+end
+
+--- Determines whether a player is allowed to use a specific character.
+-- This hook can be used to implement custom checks to determine if a player is
+-- allowed to use a particular character.
+-- @realm shared
+-- @client client The player attempting to use the character
+-- @param character The character being considered for use
+-- @treturn boolean Whether the player is allowed to use the character
+-- @treturn string|nil If disallowed, a reason for the disallowance; otherwise, nil
+function CanPlayerUseChar(client, character)
+end
+
+--- Determines whether a player is allowed to use a door entity.
+-- This hook can be used to implement custom checks to determine if a player is
+-- allowed to use a specific door entity.
+-- @realm server
+-- @client client The player attempting to use the door
+-- @param entity The door entity being considered for use
+-- @treturn boolean Whether the player is allowed to use the door
+function CanPlayerUseDoor(client, entity)
+end
+
+--- Determines whether a player is allowed to access a vendor entity.
+-- This hook can be used to implement custom checks to determine if a player is
+-- allowed to access a specific vendor entity.
+-- @realm server
+-- @param activator The player attempting to access the vendor
+function CanPlayerAccessVendor(activator)
+end
+
+--- Called when a character is loaded.
+-- This function is called after a character has been successfully loaded.
+-- @param character The character that has been loaded
+-- @realm shared
+function CharacterLoaded(character)
+    -- Implementation details omitted for brevity
+end
+
+--- Called after a character has been saved.
+-- This function is called after a character has been successfully saved.
+-- @param character The character that has been saved
+-- @realm server
+function CharacterPostSave(character)
+    -- Implementation details omitted for brevity
+end
+
+--- Called before a character is saved.
+-- This function is called before a character is about to be saved.
+-- @param character The character about to be saved
+-- @realm shared
+function CharacterPreSave(character)
+    -- Implementation details omitted for brevity
+end
+
+--- Whether or not the ammo HUD should be drawn.
+-- @realm client
+-- @entity weapon Weapon the player currently is holding
+-- @treturn bool Whether or not to draw the ammo hud
+-- @usage function MODULE:ShouldDrawAmmoHUD(weapon)
+-- 	if (weapon:GetClass() == "weapon_frag") then
+-- 		return false
+-- 	end
+-- end
+function ShouldDrawAmmoHUD(weapon)
+end
+
+--- Determines whether a bar should be drawn.
+-- @realm client
+-- @tab bar The bar object.
+-- @return boolean True if the bar should be drawn, false otherwise.
+function ShouldBarDraw(bar)
+end
+
+--- Determines whether the crosshair should be drawn for a specific client and weapon.
+--- @realm client
+--- @client client The player entity.
+--- @string weapon The weapon entity.
+--- @return boolean True if the crosshair should be drawn, false otherwise.
+function ShouldDrawCrosshair(client, weapon)
+end
+
+--- Determines whether bars should be hidden.
+--- @realm client
+--- @return boolean True if bars should be hidden, false otherwise.
+function ShouldHideBars()
+end
+
+--- Called when the screen resolution changes.
+-- @realm client
+-- @int width number The new width of the screen.
+-- @int height number The new height of the screen.
+function ScreenResolutionChanged(width, height)
+end
+
+--- Determines whether a player should be shown on the scoreboard.
+--- @realm client
+--- @client client The player entity to be evaluated.
+--- @return bool True if the player should be shown on the scoreboard, false otherwise.
+function ShouldShowPlayerOnScoreboard(client)
+end
+
+--- Called after the player's inventory is drawn.
+-- @realm client
+-- @panel panel The panel containing the inventory.
+function PostDrawInventory(panel)
+end
+
+-- This function determines whether certain information can be displayed in the character info panel in the F1 menu.
+-- @realm client
+-- @table Information to **NOT** display in the UI. This is a table of the names of some panels to avoid displaying. Valid names include:
+-- `name` name of the character
+-- `desc` description of the character
+-- `faction` faction name of the character
+-- `money` current money the character has
+-- `class` name of the character's class if they're in one
+-- Note that schemas/modules can add additional character info panels.
+-- @usage function MODULE:CanDisplayCharacterInfo(suppress)
+-- 	suppress.faction = true
+-- end
+function CanDisplayCharacterInfo(suppress)
+end
+
+--- Determines whether a player is allowed to view their inventory.
+-- @realm client
+-- This hook can be used to implement custom checks to determine if a player is
+-- allowed to view their inventory.
+-- @return boolean Whether the player is allowed to view their inventory
+function CanPlayerViewInventory()
 end
