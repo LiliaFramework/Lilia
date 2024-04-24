@@ -160,7 +160,7 @@ end
 
 --- Called to determine whether data should be saved before shutting down the server.
 -- This function is called to determine whether data should be saved before the server shuts down.
--- @return boolean True if data should be saved, false otherwise
+-- @treturn boolean True if data should be saved, false otherwise
 -- @realm server
 function ShouldDataBeSaved()
 end
@@ -179,7 +179,7 @@ end
 -- @param item The item being transferred
 -- @param currentInv The current inventory from which the item is being transferred
 -- @param oldInv The old inventory to which the item belonged
--- @return boolean|string Whether the item can be transferred, or false and a reason if not
+-- @treturn boolean|string Whether the item can be transferred, or false and a reason if not
 function CanItemBeTransfered(item, currentInv, oldInv)
 end
 
@@ -216,7 +216,7 @@ end
 
 --- Retrieves the maximum number of characters a player can have.
 --- @client client The player for whom to retrieve the maximum number of characters.
---- @return int The maximum number of characters the player can have.
+--- @treturn int The maximum number of characters the player can have.
 --- @realm shared
 function GetMaxPlayerCharacter(client)
 end
@@ -295,7 +295,7 @@ end
 --- Determines whether a client should drown.
 -- @realm server
 -- @client client The player entity.
--- @return boolean True if the client should drown, false otherwise.
+-- @treturn boolean True if the client should drown, false otherwise.
 function ShouldClientDrown(client)
 end
 
@@ -422,7 +422,7 @@ end
 --- Determines whether a bar should be drawn.
 -- @realm client
 -- @tab bar The bar object.
--- @return boolean True if the bar should be drawn, false otherwise.
+-- @treturn boolean True if the bar should be drawn, false otherwise.
 function ShouldBarDraw(bar)
 end
 
@@ -430,13 +430,13 @@ end
 --- @realm client
 --- @client client The player entity.
 --- @string weapon The weapon entity.
---- @return boolean True if the crosshair should be drawn, false otherwise.
+--- @treturn boolean True if the crosshair should be drawn, false otherwise.
 function ShouldDrawCrosshair(client, weapon)
 end
 
 --- Determines whether bars should be hidden.
 --- @realm client
---- @return boolean True if bars should be hidden, false otherwise.
+--- @treturn boolean True if bars should be hidden, false otherwise.
 function ShouldHideBars()
 end
 
@@ -450,7 +450,7 @@ end
 --- Determines whether a player should be shown on the scoreboard.
 --- @realm client
 --- @client client The player entity to be evaluated.
---- @return bool True if the player should be shown on the scoreboard, false otherwise.
+--- @treturn bool True if the player should be shown on the scoreboard, false otherwise.
 function ShouldShowPlayerOnScoreboard(client)
 end
 
@@ -479,7 +479,7 @@ end
 -- @realm client
 -- This hook can be used to implement custom checks to determine if a player is
 -- allowed to view their inventory.
--- @return boolean Whether the player is allowed to view their inventory
+-- @treturn boolean Whether the player is allowed to view their inventory
 function CanPlayerViewInventory()
 end
 
@@ -503,7 +503,7 @@ end
 -- @realm shared
 --- @string name The name to check.
 --- @tab nameList A list of character names.
---- @return True if the name exists in the list, false otherwise.
+--- @treturn True if the name exists in the list, false otherwise.
 function isFakeNameExistant(name, nameList)
 end
 
@@ -566,7 +566,7 @@ end
 --- @client client The player whose eligibility for salary is being checked.
 --- @tab faction The faction the player belongs to.
 --- @tab class The class of the player's character.
---- @return True if the player is allowed to earn salary, false otherwise.
+--- @treturn True if the player is allowed to earn salary, false otherwise.
 --- @realm shared
 function CanPlayerEarnSalary(client, faction, class)
 end
@@ -580,7 +580,7 @@ end
 --- @client client The player for whom to retrieve the salary limit.
 --- @tab faction The faction the player belongs to.
 --- @tab class The class of the player's character.
---- @return The salary limit for the player.
+--- @treturn The salary limit for the player.
 --- @realm shared
 function GetSalaryLimit(client, faction, class)
 end
@@ -589,7 +589,7 @@ end
 --- @client client The player receiving the salary.
 --- @tab faction The faction the player belongs to.
 --- @tab class The class of the player's character.
---- @return The amount of salary the player should receive.
+--- @treturn The amount of salary the player should receive.
 --- @realm shared
 function GetSalaryAmount(client, faction, class)
 end
@@ -606,7 +606,7 @@ end
 -- @client client The player attempting to spawn a container.
 -- @entity entity The container entity being spawned.
 -- @tab data Additional data related to the container being spawned.
--- @return bool Whether or not to allow the player to spawn the container.
+-- @treturn bool Whether or not to allow the player to spawn the container.
 -- @realm server
 -- @usage function MODULE:CanPlayerSpawnStorage(client, entity, data)
 --     return client:IsAdmin() -- Restrict spawning containers to admins.
@@ -616,7 +616,7 @@ end
 --- Determines if a player can throw a punch with a weapon.
 --- @client client The player attempting to throw a punch.
 --- @tab trace The trace result.
---- @return True if the player can throw a punch, false otherwise.
+--- @treturn True if the player can throw a punch, false otherwise.
 --- @realm shared
 function CanPlayerThrowPunch(client, trace)
 end
@@ -658,7 +658,7 @@ end
 --- Determines if a character has the given flag(s).
 --- @character character The character to check for flags.
 --- @string flags The flag(s) to check access for.
---- @return bool Whether or not this character has access to the given flag(s).
+--- @treturn bool Whether or not this character has access to the given flag(s).
 --- @realm shared
 function CharHasFlags(character, flags)
 end
