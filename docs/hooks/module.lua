@@ -180,11 +180,6 @@ end
 -- @param currentInv The current inventory from which the item is being transferred
 -- @param oldInv The old inventory to which the item belonged
 -- @return boolean|string Whether the item can be transferred, or false and a reason if not
--- @usage function CanItemBeTransfered(item, currentInv, oldInv)
---     -- Implement custom logic to determine if the item can be transferred
---     -- For example, check if the item is allowed to be transferred based on specific conditions
---     -- If allowed, return true; otherwise, return false and a reason
--- end
 function CanItemBeTransfered(item, currentInv, oldInv)
 end
 
