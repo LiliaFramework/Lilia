@@ -45,7 +45,7 @@ function MODULE:PlayerLoadedChar(client)
     client:Spawn()
 end
 
-function MODULE:CharacterLoaded(id)
+function MODULE:CharLoaded(id)
     local character = lia.char.loaded[id]
     local client = character:getPlayer()
     lia.log.add(client, "charLoad", id, character:getName())

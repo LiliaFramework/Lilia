@@ -333,7 +333,7 @@ if SERVER then
             if v.field and self.vars[k] ~= nil then data[v.field] = self.vars[k] end
         end
 
-        local shouldSave = hook.Run("CharacterPreSave", self)
+        local shouldSave = hook.Run("CharPreSave", self)
         if shouldSave ~= false then
             lia.db.updateTable(data, function()
                 if callback then callback() end
@@ -400,7 +400,7 @@ if SERVER then
                 self:sync()
             end
 
-            hook.Run("CharacterLoaded", self:getID())
+            hook.Run("CharLoaded", self:getID())
             self.firstTimeLoaded = true
         end
     end

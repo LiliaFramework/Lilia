@@ -47,7 +47,7 @@ else
             local message = net.ReadString()
             if message == "" then
                 d:resolve()
-                hook.Run("CharacterLoaded", lia.char.loaded[id])
+                hook.Run("CharLoaded", lia.char.loaded[id])
             else
                 d:reject(message)
             end

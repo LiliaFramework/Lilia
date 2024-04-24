@@ -22,6 +22,11 @@ function GM:CreateDefaultInventory(character)
 end
 
 function GM:CharacterPreSave(character)
+    print("CharacterPreSave is deprecated. Use CharPreSave for optimization purposes.")
+    self:CharPreSave(character)
+end
+
+function GM:CharPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
     for _, v in pairs(character:getInv():getItems()) do
@@ -55,6 +60,11 @@ function GM:PlayerLoadedChar(client, character, lastChar)
 end
 
 function GM:CharacterLoaded(id)
+    print("CharacterLoaded is deprecated. Use oaded for optimization purposes.")
+    self:CharLoaded(id)
+end
+
+function GM:CharLoaded(id)
     local character = lia.char.loaded[id]
     if character then
         local client = character:getPlayer()

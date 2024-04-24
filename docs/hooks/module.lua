@@ -407,7 +407,7 @@ end
 -- This function is called before a character is about to be saved.
 -- @param character The character about to be saved
 -- @realm shared
-function CharacterPreSave(character)
+function CharPreSave(character)
     -- Implementation details omitted for brevity
 end
 

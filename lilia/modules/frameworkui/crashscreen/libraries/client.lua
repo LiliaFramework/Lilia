@@ -44,7 +44,7 @@ function MODULE:Think()
     end
 end
 
-function MODULE:CharacterLoaded()
+function MODULE:CharLoaded()
     CRASHSCREEN_ALLOW = true
 end
 

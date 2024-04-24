@@ -1,4 +1,4 @@
-﻿function MODULE:CharacterPreSave(character)
+﻿function MODULE:CharPreSave(character)
     local client = character:getPlayer()
     if not IsValid(client) then return end
     if self.SaveCharacterAmmo then
