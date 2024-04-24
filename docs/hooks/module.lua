@@ -107,9 +107,9 @@ end
 -- with a vendor entity.
 -- @realm shared
 -- @client client The player character trading with the vendor
--- @param entity The vendor entity being traded with
--- @param uniqueID The unique identifier of the traded item
--- @param isSellingToVendor Whether the trade involves selling to the vendor
+-- @entity entity The vendor entity being traded with
+-- @string uniqueID The unique identifier of the traded item
+-- @bool isSellingToVendor Whether the trade involves selling to the vendor
 -- @usage function CharacterVendorTraded(client, entity, uniqueID, isSellingToVendor)
 --     -- Perform additional actions when a character trades with the vendor
 -- end
@@ -119,8 +119,8 @@ end
 --- Called when a player interacts with a vendor entity.
 -- This function adds the player to the vendor's receivers list and notifies the player
 -- about accessing the vendor.
--- @param client The player accessing the vendor
--- @param entity The vendor
+-- @client client The player accessing the vendor
+-- @entity entity The vendor
 -- @usage function PlayerAccessVendor(client, entity)
 --     -- Add the player to the vendor's receivers list
 --     entity.receivers[#entity.receivers + 1] = client
@@ -137,23 +137,23 @@ end
 --- Called when a player sells an item to a vendor.
 -- @realm shared
 -- This function handles the event where a player sells an item to a vendor.
--- @param client The player selling the item
--- @param vendor The vendor entity
--- @param itemType The type of item being sold
--- @param isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
--- @param character The character of the player selling the item
--- @param price The price at which the item is sold
+-- @client client The player selling the item
+-- @entity vendor The vendor entity
+-- @string itemType The uniqueID of item being sold
+-- @bool isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
+-- @character character The character of the player selling the item
+-- @int price The price at which the item is sold
 function VendorSellEvent(client, vendor, itemType, isSellingToVendor, character, price)
 end
 
 --- Called when a player successfully buys an item from a vendor.
 -- This function is called when a player successfully completes a purchase from a vendor.
--- @param client The player who made the purchase
--- @param vendor The vendor entity from which the item was bought
--- @param itemType The type of item being bought
--- @param isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
--- @param character The character of the player involved in the trade
--- @param price The price of the item being bought
+-- @client client The player who made the purchase
+-- @entity vendor The vendor entity from which the item was bought
+-- @string itemType The uniqueID of item being sold
+-- @bool isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
+-- @character character The character of the player involved in the trade
+-- @int price The price of the item being bought
 -- @realm shared
 function VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
 end
@@ -219,9 +219,16 @@ end
 function PostPlayerLoadout(client)
 end
 
+--- Retrieves the maximum number of characters a player can have.
+--- @client client The player for whom to retrieve the maximum number of characters.
+--- @return int The maximum number of characters the player can have.
+--- @realm shared
+function GetMaxPlayerCharacter(client)
+end
+
 --- Called after all of the player's loadout hooks are executed (PlayerLoadout, FactionOnLoadout, ClassOnLoadout).
 -- This hook is called after a player's loadout has been fully applied, including faction and class loadouts.
--- @param client The player entity for whom the loadout was applied.
+-- @client client The player entity for whom the loadout was applied.
 -- @realm server
 function PostPlayerLoadout(client)
     -- Your implementation here
@@ -229,7 +236,7 @@ end
 
 --- Called after PlayerLoadout is executed.
 -- This hook is called after a player's faction loadout has been applied.
--- @param client The player entity for whom the faction loadout was applied.
+-- @client client The player entity for whom the faction loadout was applied.
 -- @realm server
 function FactionOnLoadout(client)
     -- Your implementation here
@@ -237,7 +244,7 @@ end
 
 --- Called after FactionOnLoadout is executed.
 -- This hook is called after a player's class loadout has been applied.
--- @param client The player entity for whom the class loadout was applied.
+-- @client client The player entity for whom the class loadout was applied.
 -- @realm server
 function ClassOnLoadout(client)
     -- Your implementation here
@@ -245,7 +252,7 @@ end
 
 --- Called after PostPlayerLoadout is executed.
 -- This hook is called after additional actions related to a player's faction loadout have been performed.
--- @param client The player entity for whom the faction loadout was applied.
+-- @client client The player entity for whom the faction loadout was applied.
 -- @realm server
 function FactionPostLoadout(client)
     -- Your implementation here
@@ -253,7 +260,7 @@ end
 
 --- Called after FactionPostLoadout is executed.
 -- This hook is called after additional actions related to a player's class loadout have been performed.
--- @param client The player entity for whom the class loadout was applied.
+-- @client client The player entity for whom the class loadout was applied.
 -- @realm server
 function ClassPostLoadout(client)
     -- Your implementation here
@@ -349,7 +356,7 @@ end
 -- allowed to use a particular character.
 -- @realm shared
 -- @client client The player attempting to use the character
--- @param character The character being considered for use
+-- @character character The character being considered for use
 -- @treturn boolean Whether the player is allowed to use the character
 -- @treturn string|nil If disallowed, a reason for the disallowance; otherwise, nil
 function CanPlayerUseChar(client, character)
@@ -360,7 +367,7 @@ end
 -- allowed to use a specific door entity.
 -- @realm server
 -- @client client The player attempting to use the door
--- @param entity The door entity being considered for use
+-- @entity entity The door entity being considered for use
 -- @treturn boolean Whether the player is allowed to use the door
 function CanPlayerUseDoor(client, entity)
 end
@@ -369,32 +376,40 @@ end
 -- This hook can be used to implement custom checks to determine if a player is
 -- allowed to access a specific vendor entity.
 -- @realm server
--- @param activator The player attempting to access the vendor
-function CanPlayerAccessVendor(activator)
+-- @client client The player attempting to access the vendor
+function CanPlayerAccessVendor(client)
 end
 
 --- Called when a character is loaded.
 -- This function is called after a character has been successfully loaded.
--- @param character The character that has been loaded
+-- @character character The character that has been loaded
 -- @realm shared
 function CharLoaded(character)
-    -- Implementation details omitted for brevity
 end
 
 --- Called after a character has been saved.
 -- This function is called after a character has been successfully saved.
--- @param character The character that has been saved
+-- @character character The character that has been saved
 -- @realm server
 function CharPostSave(character)
-    -- Implementation details omitted for brevity
 end
 
 --- Called before a character is saved.
 -- This function is called before a character is about to be saved.
--- @param character The character about to be saved
+-- @character character The character about to be saved
 -- @realm shared
 function CharPreSave(character)
-    -- Implementation details omitted for brevity
+end
+
+--- Called whenever an item entity has spawned in the world. You can access the entity's item table with
+-- `entity:getItemTable()`.
+-- @realm server
+-- @entity entity Spawned item entity
+-- @usage function MODULE:OnItemSpawned(entity)
+-- 	local item = entity:getItemTable()
+-- 	-- do something with the item here
+-- end
+function OnItemSpawned(entity)
 end
 
 --- Whether or not the ammo HUD should be drawn.
@@ -473,6 +488,194 @@ end
 function CanPlayerViewInventory()
 end
 
+
+--- Checks if a character is recognized.
+--- @character character The character to check.
+--- @int id Identifier for the character.
+function isCharRecognized(character, id)
+
+end
+
+--- Checks if a character is fake recognized.
+--- @character character The character to check.
+--- @int id Identifier for the character.
+function isCharFakeRecognized(character, id)
+end
+
+--- Checks if a fake name exists in the given character name list.
+--- @string name The name to check.
+--- @tab nameList A list of character names.
+--- @return True if the name exists in the list, false otherwise.
+function isFakeNameExistant(name, nameList)
+end
+
+--- Called when a character is recognized.
+--- @client client The client whose character is recognized.
+--- @int id Identifier for the recognized character.
+--- @realm client
+function OnCharRecognized(client, id)
+end
+
+--- Initiates character recognition process.
+--- @int level The recognition level.
+--- @string name The name of the character to be recognized.
+function CharRecognize(level, name)
+end
+
+--- Creates menu buttons for the F1 menu.
+--- @tab tabs A table to store the created buttons.
+--- @realm client
+function CreateMenuButtons(tabs)
+end
+
+--- Called when lia.config has been initialized.
+--- @realm shared
+function InitializedConfig()
+end
+
+--- Called when all the modules have been initialized.
+--- @realm shared
+function InitializedModules()
+end
+
+--- Called when the schema has been initialized.
+--- @realm shared
+function InitializedSchema()
+end
+
+--- Loads custom fonts for the client.
+--- @string font The path to the font file.
+--- @string genericFont The path to the generic font file.
+--- @realm client
+function LoadFonts(font, genericFont)
+end
+
+--- Loads Core Lilia fonts for the client.
+--- @string font The path to the font file.
+--- @string genericFontThe path to the generic font file.
+--- @realm client
+function LoadLiliaFonts(font, genericFont)
+end
+
+--- Creates a timer to manage player salary.
+--- @client client The player for whom the salary timer is created.
+--- @realm shared
+function CreateSalaryTimer(client)
+end
+
+--- Determines if a player is allowed to earn salary.
+--- @client client The player whose eligibility for salary is being checked.
+--- @tab faction The faction the player belongs to.
+--- @tab class The class of the player's character.
+--- @return True if the player is allowed to earn salary, false otherwise.
+--- @realm shared
+function CanPlayerEarnSalary(client, faction, class)
+end
+
+--- Called when a module has finished loading.
+--- @realm shared
+function ModuleLoaded()
+end
+
+--- Retrieves the salary limit for a player.
+--- @client client The player for whom to retrieve the salary limit.
+--- @tab faction The faction the player belongs to.
+--- @tab class The class of the player's character.
+--- @return The salary limit for the player.
+--- @realm shared
+function GetSalaryLimit(client, faction, class)
+end
+
+--- Retrieves the amount of salary a player should receive.
+--- @client client The player receiving the salary.
+--- @tab faction The faction the player belongs to.
+--- @tab class The class of the player's character.
+--- @return The amount of salary the player should receive.
+--- @realm shared
+function GetSalaryAmount(client, faction, class)
+end
+
+
+--- Called to draw additional content within the model view panel.
+--- @panel panel The panel containing the model view.
+--- @entity entity The entity being drawn.
+--- @realm client
+function DrawLiliaModelView(panel, entity)
+end
+
+--- Whether or not a player is allowed to spawn a container entity.
+-- @realm server
+-- @player client Player attempting to spawn a container
+-- @string model Model of the container being spawned
+-- @entity entity Container entity
+-- @treturn bool Whether or not to allow the player to spawn the container
+-- @usage function MODULE:CanPlayerSpawnStorage(client, model, entity)
+-- 	return client:IsAdmin() -- Restrict spawning containers to admins.
+-- end
+function CanPlayerSpawnStorage(client, model, entity)
+end
+--- Determines if a player can throw a punch with a weapon.
+--- @client client The player attempting to throw a punch.
+--- @tab trace The trace result.
+--- @return True if the player can throw a punch, false otherwise.
+--- @realm shared
+function CanPlayerThrowPunch(client, trace)
+end
+
+--- Called when a player purchases a door.
+--- @client client The player who purchased the door.
+--- @entity entity The door entity that was purchased.
+--- @bool buying True if the player is buying the door, false if selling.
+--- @func CallOnDoorChild A function to call on door children.
+--- @realm server
+function OnPlayerPurchaseDoor(client, entity, buying, CallOnDoorChild)
+end
+--- Called when a character's attribute is updated.
+--- @client client The client associated with the character.
+--- @character character The character whose attribute is updated.
+--- @string attribID The ID of the attribute being updated.
+--- @string boostID The ID of the boost being applied to the attribute.
+--- @int boostAmount The amount of boost being applied to the attribute.
+--- @realm shared
+function OnCharAttribUpdated(client, character, attribID, boostID, boostAmount)
+
+end
+
+--- Called when a character's attribute is updated.
+--- @client client The client associated with the character.
+--- @character character The character whose attribute is updated.
+--- @string key The key of the attribute being updated.
+--- @int value The new value of the attribute.
+--- @realm shared
+function OnCharAttribUpdated(client, character, key, value)
+end
+--- Called when a player's model is changed.
+--- @param client Player: The client whose model is changed.
+--- @param model string: The new model path.
+--- @realm shared
+function PlayerModelChanged(client, model)
+
+end
+--- Determines if a character has the given flag(s).
+--- @character character The character to check for flags.
+--- @string flags The flag(s) to check access for.
+--- @bool Whether or not this character has access to the given flag(s).
+--- @realm shared
+function CharHasFlags(character, flags)
+end
+
+--- Called when a player gains stamina.
+--- @client client The player who gained stamina.
+--- @realm server
+function PlayerStaminaGained(client)
+end
+
+--- Called when a player loses stamina.
+--- @client client The player who lost stamina.
+--- @realm server
+function PlayerStaminaLost(client)
+end
+
 --- Saves the server data.
 -- @realm server
 function SaveData()
@@ -487,3 +690,19 @@ end
 -- @realm server
 function PostLoadData()
 end
+
+--- Called when the database has been successfully connected.
+--- @realm server
+function DatabaseConnected()
+end
+
+--- Called after wiping tables.
+--- @realm server
+function OnWipeTables()
+end
+
+--- Sets up the database.
+--- @realm server
+function SetupDatabase()
+end
+
