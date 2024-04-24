@@ -21,7 +21,7 @@ function MODULE:OnCharacterDelete(client, id)
     lia.log.add(client, "charDelete", id)
 end
 
-function MODULE:onCharCreated(client, character)
+function MODULE:CharCreated(client, character)
     lia.log.add(client, "charCreate", character)
 end
 

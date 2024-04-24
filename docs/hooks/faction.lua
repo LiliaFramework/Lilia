@@ -34,11 +34,11 @@ end
 -- @realm server
 -- @client client The client that owns the character
 -- @character character The character that has been created
--- @usage function FACTION:onCharCreated(client, character)
+-- @usage function FACTION:CharCreated(client, character)
 -- 	local inventory = character:getInv()
 -- 	inventory:add("fancy_suit")
 -- end
-function onCharCreated(client, character)
+function CharCreated(client, character)
 end
 
 --- Called when a character in this faction has spawned in the world.

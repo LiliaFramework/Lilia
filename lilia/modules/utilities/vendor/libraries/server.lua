@@ -118,7 +118,7 @@ function MODULE:PlayerAccessVendor(client, vendor)
     net.Send(client)
 end
 
-function MODULE:VendorSellEvent(client, vendor, itemType, _, character, price)
+function MODULE:VendorSellEvent(client, vendor, itemType, isSellingToVendor, character, price)
     local inventory = character:getInv()
     local item = inventory:getFirstItemOfType(itemType)
     if item then
@@ -145,6 +145,7 @@ function MODULE:VendorSellEvent(client, vendor, itemType, _, character, price)
         character:giveMoney(price)
         item:remove():next(function() client.vendorTransaction = nil end):catch(function() client.vendorTransaction = nil end)
         vendor:addStock(itemType)
+        hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
         lia.log.add(client, "vendorSell", itemType, vendor:getNetVar("name"))
     end
 end

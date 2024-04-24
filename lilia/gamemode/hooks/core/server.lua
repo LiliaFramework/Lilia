@@ -289,6 +289,8 @@ function GM:PlayerLoadout(client)
     hook.Run("ClassOnLoadout", client)
     lia.flag.onSpawn(client)
     hook.Run("PostPlayerLoadout", client)
+    hook.Run("FactionPostLoadout", client)
+    hook.Run("ClassPostLoadout", client)
     client:SelectWeapon("lia_hands")
 end
 
@@ -297,8 +299,6 @@ function GM:PostPlayerLoadout(client)
     if not (IsValid(client) or character) then return end
     client:Give("lia_hands")
     client:SetupHands()
-    hook.Run("FactionPostLoadout", client)
-    hook.Run("ClassPostLoadout", client)
 end
 
 function GM:PlayerDisconnected(client)
@@ -374,7 +374,7 @@ function GM:OnServerLog(client, logType, ...)
     end
 end
 
-function GM:onCharCreated(client, char, data)
+function GM:CharCreated(client, char, data)
     hook.Run("onCharCreated", client, char, data)
     local permFlags = client:getPermFlags()
     if permFlags and #permFlags > 0 then char:giveFlags(permFlags) end

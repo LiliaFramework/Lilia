@@ -5,7 +5,7 @@ These hooks are regular hooks that can be used in your schema with `SCHEMA:HookN
 `MODULE:HookName(args)`, or in your addon with `hook.Add("HookName", function(args) end)`.
 They can be used for an assorted of reasons, depending on what you are trying to achieve.
 ]]
--- @hooks MODULE
+-- @hooks Module
 
 --- Called after a player sends a chat message.
 -- @realm server
@@ -158,6 +158,21 @@ end
 function VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
 end
 
+--- Called to determine whether data should be saved before shutting down the server.
+-- This function is called to determine whether data should be saved before the server shuts down.
+-- @return boolean True if data should be saved, false otherwise
+-- @realm shared
+function ShouldDataBeSaved()
+end
+
+--- Called when a player picks up money.
+-- This function is called when a player picks up money from the ground.
+-- @client client The player who picked up the money
+-- @entity moneyEntity The entity representing the money being picked up
+-- @realm shared
+
+function OnPickupMoney(client, moneyEntity)
+end
 --- Determines whether an item can be transferred between inventories.
 -- @realm shared
 -- This hook allows custom logic to be implemented to determine if an item can be transferred
@@ -217,6 +232,46 @@ end
 -- @realm server
 -- @client client The player entity.
 function PostPlayerLoadout(client)
+end
+
+--- Called after all of the player's loadout hooks are executed (PlayerLoadout, FactionOnLoadout, ClassOnLoadout).
+-- This hook is called after a player's loadout has been fully applied, including faction and class loadouts.
+-- @param client The player entity for whom the loadout was applied.
+-- @realm server
+function PostPlayerLoadout(client)
+    -- Your implementation here
+end
+
+--- Called after PlayerLoadout is executed.
+-- This hook is called after a player's faction loadout has been applied.
+-- @param client The player entity for whom the faction loadout was applied.
+-- @realm server
+function FactionOnLoadout(client)
+    -- Your implementation here
+end
+
+--- Called after FactionOnLoadout is executed.
+-- This hook is called after a player's class loadout has been applied.
+-- @param client The player entity for whom the class loadout was applied.
+-- @realm server
+function ClassOnLoadout(client)
+    -- Your implementation here
+end
+
+--- Called after PostPlayerLoadout is executed.
+-- This hook is called after additional actions related to a player's faction loadout have been performed.
+-- @param client The player entity for whom the faction loadout was applied.
+-- @realm server
+function FactionPostLoadout(client)
+    -- Your implementation here
+end
+
+--- Called after FactionPostLoadout is executed.
+-- This hook is called after additional actions related to a player's class loadout have been performed.
+-- @param client The player entity for whom the class loadout was applied.
+-- @realm server
+function ClassPostLoadout(client)
+    -- Your implementation here
 end
 
 --- Called after a character is deleted.
