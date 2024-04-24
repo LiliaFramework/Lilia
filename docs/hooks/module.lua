@@ -521,6 +521,7 @@ end
 
 --- Initiates character recognition process.
 --- @int level The recognition level.
+--- @realm client
 --- @string name The name of the character to be recognized.
 function CharRecognize(level, name)
 end
@@ -662,7 +663,7 @@ end
 --- Determines if a character has the given flag(s).
 --- @character character The character to check for flags.
 --- @string flags The flag(s) to check access for.
---- @bool Whether or not this character has access to the given flag(s).
+--- @return bool Whether or not this character has access to the given flag(s).
 --- @realm shared
 function CharHasFlags(character, flags)
 end
