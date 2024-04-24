@@ -51,7 +51,7 @@ if SERVER then
         netstream.Start(client, "liaCharFetchNames", lia.char.names)
     end)
 
-    hook.Add("CharCreated", "liaCharAddName", function(client, character, data)
+    hook.Add("onCharCreated", "liaCharAddName", function(client, character, data)
         lia.char.names[character:getID()] = data.name
         netstream.Start(client, "liaCharFetchNames", lia.char.names)
     end)

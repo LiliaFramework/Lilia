@@ -161,7 +161,7 @@ end
 --- Called to determine whether data should be saved before shutting down the server.
 -- This function is called to determine whether data should be saved before the server shuts down.
 -- @return boolean True if data should be saved, false otherwise
--- @realm shared
+-- @realm server
 function ShouldDataBeSaved()
 end
 
@@ -169,8 +169,7 @@ end
 -- This function is called when a player picks up money from the ground.
 -- @client client The player who picked up the money
 -- @entity moneyEntity The entity representing the money being picked up
--- @realm shared
-
+-- @realm server
 function OnPickupMoney(client, moneyEntity)
 end
 --- Determines whether an item can be transferred between inventories.
