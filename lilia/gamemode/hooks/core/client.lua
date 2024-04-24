@@ -51,14 +51,23 @@ function GM:HUDPaintBackground()
     self.BaseClass.PaintWorldTips(self.BaseClass)
 end
 
-function GM:CharacterListLoaded()
+function GM:CharacterListLoaded(newCharList)
+    print("CharacterListLoaded is deprecated. Use CharListLoaded for optimization purposes.")
+    hook.Run("CharListLoaded", newCharList)
+
+end
+function GM:CharacterListUpdated(oldCharList, newCharList)
+    print("CharacterListUpdated is deprecated. Use CharListUpdated for optimization purposes.")
+    hook.Run("CharListUpdated", oldCharList, newCharList)
+
+end
+function GM:CharListLoaded()
     timer.Create("liaWaitUntilPlayerValid", 1, 0, function()
         if not IsValid(LocalPlayer()) then return end
         timer.Remove("liaWaitUntilPlayerValid")
         hook.Run("LiliaLoaded")
     end)
 end
-
 function GM:OnContextMenuOpen()
     self.BaseClass:OnContextMenuOpen()
     lia.bar.drawAction()

@@ -391,7 +391,7 @@ end
 -- This function is called after a character has been successfully loaded.
 -- @param character The character that has been loaded
 -- @realm shared
-function CharacterLoaded(character)
+function CharLoaded(character)
     -- Implementation details omitted for brevity
 end
 
@@ -399,7 +399,7 @@ end
 -- This function is called after a character has been successfully saved.
 -- @param character The character that has been saved
 -- @realm server
-function CharacterPostSave(character)
+function CharPostSave(character)
     -- Implementation details omitted for brevity
 end
 

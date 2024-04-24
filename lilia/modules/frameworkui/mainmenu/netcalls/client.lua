@@ -8,8 +8,8 @@
     local oldCharList = lia.characters
     lia.characters = newCharList
     if oldCharList then
-        hook.Run("CharacterListUpdated", oldCharList, newCharList)
+        hook.Run("CharListUpdated", oldCharList, newCharList)
     else
-        hook.Run("CharacterListLoaded", newCharList)
+        hook.Run("CharListLoaded", newCharList)
     end
 end)

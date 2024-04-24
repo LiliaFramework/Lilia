@@ -28,7 +28,7 @@ function PANEL:Init()
     end
 
     self:createCharacterSlots()
-    hook.Add("CharacterListUpdated", self, function() self:createCharacterSlots() end)
+    hook.Add("CharListUpdated", self, function() self:createCharacterSlots() end)
 end
 
 function PANEL:createCharacterSlots()

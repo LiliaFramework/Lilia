@@ -23,7 +23,7 @@ end
 
 function GM:CharacterPreSave(character)
     print("CharacterPreSave is deprecated. Use CharPreSave for optimization purposes.")
-    self:CharPreSave(character)
+    hook.Run("CharPreSave", character)
 end
 
 function GM:CharPreSave(character)
@@ -61,7 +61,7 @@ end
 
 function GM:CharacterLoaded(id)
     print("CharacterLoaded is deprecated. Use oaded for optimization purposes.")
-    self:CharLoaded(id)
+    hook.Run("CharLoaded", id)
 end
 
 function GM:CharLoaded(id)
