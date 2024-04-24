@@ -130,7 +130,7 @@ function PANEL:openActionMenu()
     end
 
     for k, v in SortedPairs(itemTable.functions) do
-        if hook.Run("onCanRunItemAction", itemTable, k) == false or isfunction(v.onCanRun) and not v.onCanRun(itemTable) then continue end
+        if hook.Run("CanRunItemAction", itemTable, k) == false or isfunction(v.onCanRun) and not v.onCanRun(itemTable) then continue end
         if v.isMulti then
             local subMenu, subMenuOption = menu:AddSubMenu(L(v.name or k), buildActionFunc(v, k, itemTable, self.invID))
             subMenuOption:SetImage(v.icon or "icon16/brick.png")

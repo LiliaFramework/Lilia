@@ -164,7 +164,7 @@ else
         if input.IsShiftDown() then callback("take") end
         for k, v in SortedPairs(itemTable.functions) do
             if k == "combine" then continue end
-            if (hook.Run("onCanRunItemAction", itemTable, k) == false or isfunction(v.onCanRun)) and (not v.onCanRun(itemTable)) then continue end
+            if (hook.Run("CanRunItemAction", itemTable, k) == false or isfunction(v.onCanRun)) and (not v.onCanRun(itemTable)) then continue end
             options[L(v.name or k)] = function()
                 local send = true
                 if v.onClick then send = v.onClick(itemTable) end
