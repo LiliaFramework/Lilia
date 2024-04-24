@@ -20,9 +20,9 @@ function MODULE:isCharFakeRecognized(character, id)
     return self.FakeNamesEnabled and self:isFakeNameExistant(clientName, CharNameList)
 end
 
-function MODULE:isFakeNameExistant(clientName, CharNameList)
-    for _, n in pairs(CharNameList) do
-        if n == clientName then return true end
+function MODULE:isFakeNameExistant(name, nameList)
+    for _, n in pairs(nameList) do
+        if n == name then return true end
     end
     return false
 end
