@@ -1,7 +1,7 @@
 ﻿local MODULE = MODULE
 local charMeta = lia.meta.character
 function charMeta:getMaxStamina()
-    local maxStamina = hook.Run("CharacterMaxStamina", self) or MODULE.DefaultStamina
+    local maxStamina = hook.Run("CharMaxStamina", self) or MODULE.DefaultStamina
     return maxStamina
 end
 

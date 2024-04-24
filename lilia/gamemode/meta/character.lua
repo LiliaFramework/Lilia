@@ -201,7 +201,7 @@ function charMeta:hasFlags(flags)
     for i = 1, #flags do
         if self:getFlags():find(flags:sub(i, i), 1, true) then return true end
     end
-    return hook.Run("CharacterFlagCheck", self, flags) or false
+    return hook.Run("CharHasFlags", self, flags) or false
 end
 
 if SERVER then
@@ -337,7 +337,7 @@ if SERVER then
         if shouldSave ~= false then
             lia.db.updateTable(data, function()
                 if callback then callback() end
-                hook.Run("CharacterPostSave", self)
+                hook.Run("CharPostSave", self)
             end, nil, "_id = " .. self:getID())
         end
     end

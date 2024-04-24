@@ -523,7 +523,7 @@ if SERVER then
 
                 characters[#characters + 1] = id
                 local character = lia.char.new(data, id, client)
-                hook.Run("CharacterRestored", character)
+                hook.Run("CharRestored", character)
                 character.vars.inv = {}
                 lia.inventory.loadAllFromCharID(id):next(function(inventories)
                     if #inventories == 0 then
@@ -560,7 +560,7 @@ if SERVER then
             netstream.Start(nil, "charDel", character:getID())
             lia.inventory.cleanUpForCharacter(character)
             lia.char.loaded[charID] = nil
-            hook.Run("CharacterCleanUp", character)
+            hook.Run("CharCleanUp", character)
         end
     end
 

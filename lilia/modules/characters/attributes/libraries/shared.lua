@@ -30,6 +30,11 @@
     end
 end
 
+function MODULE:CharacterMaxStamina(character)
+    print("CharacterMaxStamina is deprecated. Use CharMaxStamina for optimization purposes.")
+    hook.Run("CharMaxStamina", character)
+end
+
 function MODULE:StartCommand(client, cmd)
     if self.StaminaSlowdown and (not client:IsNoClipping() and client:getNetVar("brth", false) and cmd:KeyDown(IN_JUMP)) then cmd:RemoveKey(IN_JUMP) end
 end

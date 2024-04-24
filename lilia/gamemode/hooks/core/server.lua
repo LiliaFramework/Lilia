@@ -60,7 +60,7 @@ function GM:PlayerLoadedChar(client, character, lastChar)
 end
 
 function GM:CharacterLoaded(id)
-    print("CharacterLoaded is deprecated. Use oaded for optimization purposes.")
+    print("CharacterLoaded is deprecated. Use CharLoaded for optimization purposes.")
     hook.Run("CharLoaded", id)
 end
 
