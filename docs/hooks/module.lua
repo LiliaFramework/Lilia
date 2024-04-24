@@ -110,6 +110,8 @@ end
 -- @entity entity The vendor entity being traded with
 -- @string uniqueID The unique identifier of the traded item
 -- @bool isSellingToVendor Whether the trade involves selling to the vendor
+-- @see VendorSellEvent
+-- @see VendorBuyEvent
 -- @usage function CharacterVendorTraded(client, entity, uniqueID, isSellingToVendor)
 --     -- Perform additional actions when a character trades with the vendor
 -- end
@@ -131,6 +133,7 @@ end
 --     end
 -- end
 --- @realm shared
+--- @treturn bool True if the player can access the vendor.
 function PlayerAccessVendor(client, entity)
 end
 
@@ -143,6 +146,7 @@ end
 -- @bool isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
 -- @character character The character of the player selling the item
 -- @int price The price at which the item is sold
+-- @see VendorBuyEvent
 function VendorSellEvent(client, vendor, itemType, isSellingToVendor, character, price)
 end
 
@@ -155,6 +159,7 @@ end
 -- @character character The character of the player involved in the trade
 -- @int price The price of the item being bought
 -- @realm shared
+-- @see VendorSellEvent
 function VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
 end
 
@@ -226,7 +231,6 @@ end
 -- @client client The player entity for whom the loadout was applied.
 -- @realm server
 function PostPlayerLoadout(client)
-    -- Your implementation here
 end
 
 --- Called after PlayerLoadout is executed.
@@ -234,7 +238,6 @@ end
 -- @client client The player entity for whom the faction loadout was applied.
 -- @realm server
 function FactionOnLoadout(client)
-    -- Your implementation here
 end
 
 --- Called after FactionOnLoadout is executed.
@@ -242,7 +245,6 @@ end
 -- @client client The player entity for whom the class loadout was applied.
 -- @realm server
 function ClassOnLoadout(client)
-    -- Your implementation here
 end
 
 --- Called after PostPlayerLoadout is executed.
@@ -250,7 +252,6 @@ end
 -- @client client The player entity for whom the faction loadout was applied.
 -- @realm server
 function FactionPostLoadout(client)
-    -- Your implementation here
 end
 
 --- Called after FactionPostLoadout is executed.
@@ -258,7 +259,6 @@ end
 -- @client client The player entity for whom the class loadout was applied.
 -- @realm server
 function ClassPostLoadout(client)
-    -- Your implementation here
 end
 
 --- Called after a character is deleted.
@@ -553,6 +553,7 @@ end
 --- @string font The path to the font file.
 --- @string genericFont The path to the generic font file.
 --- @realm client
+-- @internal
 function LoadLiliaFonts(font, genericFont)
 end
 
@@ -593,7 +594,6 @@ end
 --- @realm shared
 function GetSalaryAmount(client, faction, class)
 end
-
 
 --- Called to draw additional content within the model view panel.
 --- @panel panel The panel containing the model view.
@@ -637,7 +637,6 @@ end
 --- @int boostAmount The amount of boost being applied to the attribute.
 --- @realm shared
 function OnCharAttribUpdated(client, character, attribID, boostID, boostAmount)
-
 end
 
 --- Called when a character's attribute is updated.
@@ -653,7 +652,6 @@ end
 --- @string model The new model path.
 --- @realm shared
 function PlayerModelChanged(client, model)
-
 end
 --- Determines if a character has the given flag(s).
 --- @character character The character to check for flags.
@@ -692,16 +690,19 @@ end
 
 --- Called when the database has been successfully connected.
 --- @realm server
+-- @internal
 function DatabaseConnected()
 end
 
 --- Called after wiping tables.
 --- @realm server
+-- @internal
 function OnWipeTables()
 end
 
 --- Sets up the database.
 --- @realm server
+-- @internal
 function SetupDatabase()
 end
 
