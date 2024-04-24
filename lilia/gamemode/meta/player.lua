@@ -502,8 +502,8 @@ if SERVER then
         self:setPermFlags(curFlags)
         if self.liaCharList then
             for _, v in pairs(self.liaCharList) do
-                local char = lia.char.loaded[v]
-                if char then char:giveFlags(flags) end
+                local character = lia.char.loaded[v]
+                if character then char:giveFlags(flags) end
             end
         end
     end
@@ -520,8 +520,8 @@ if SERVER then
         self:setPermFlags(curFlags)
         if self.liaCharList then
             for _, v in pairs(self.liaCharList) do
-                local char = lia.char.loaded[v]
-                if char then char:takeFlags(flags) end
+                local character = lia.char.loaded[v]
+                if character then char:takeFlags(flags) end
             end
         end
     end

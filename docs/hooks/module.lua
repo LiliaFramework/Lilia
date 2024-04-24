@@ -188,20 +188,6 @@ end
 function CanItemBeTransfered(item, currentInv, oldInv)
 end
 
---- Saves the server data.
--- @realm server
-function SaveData()
-end
-
---- Loads the server data.
--- @realm server
-function LoadData()
-end
-
---- Called after data has been loaded.
--- @realm server
-function PostLoadData()
-end
 
 --- Whether or not a player is allowed to create a new character.
 -- @realm server
@@ -323,7 +309,7 @@ end
 function CanPlayerAccessDoor(client, door, access)
 end
 
---- Whether or not a plyer is allowed to join a class.
+--- Whether or not a player is allowed to join a class.
 -- @realm shared
 -- @client client Player attempting to join
 -- @number class ID of the class
@@ -485,4 +471,19 @@ end
 -- allowed to view their inventory.
 -- @return boolean Whether the player is allowed to view their inventory
 function CanPlayerViewInventory()
+end
+
+--- Saves the server data.
+-- @realm server
+function SaveData()
+end
+
+--- Loads the server data.
+-- @realm server
+function LoadData()
+end
+
+--- Called after data has been loaded.
+-- @realm server
+function PostLoadData()
 end

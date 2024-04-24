@@ -47,7 +47,7 @@ end
 -- @realm shared
 -- @int attribID The ID of the attribute for which to retrieve the boost.
 -- @return number|nil The boost value for the specified attribute, or nil if no boost is found.
--- @usage local boostValue = char:getBoost("some_attribute_id")
+-- @usage local boostValue = character:getBoost("some_attribute_id")
 function charMeta:getBoost(attribID)
     local boosts = self:getBoosts()
     return boosts[attribID]
@@ -56,7 +56,7 @@ end
 --- Retrieves all boosts applied to the character's attributes.
 -- @realm shared
 -- @return table A table containing all boosts applied to the character's attributes.
--- @usage local boostsTable = char:getBoosts()
+-- @usage local boostsTable = character:getBoosts()
 function charMeta:getBoosts()
     return self:getVar("boosts", {})
 end
@@ -65,7 +65,7 @@ end
 -- @realm shared
 -- @return Entity|false The equipped weapon entity, or false if no weapon is equipped.
 -- @return Item|false The corresponding item from the character's inventory, or false if no corresponding item is found.
--- @usage local weapon, item = char:getItemWeapon()
+-- @usage local weapon, item = character:getItemWeapon()
 function charMeta:getItemWeapon()
     local client = self:getPlayer()
     local inv = self:getInv()
@@ -88,7 +88,7 @@ end
 -- @string key The key of the attribute to retrieve.
 -- @int[opt=0] default The default value to return if the attribute is not found.
 -- @return number The value of the specified attribute, including applied boosts.
--- @usage local attributeValue = char:getAttrib("some_attribute_key")
+-- @usage local attributeValue = character:getAttrib("some_attribute_key")
 function charMeta:getAttrib(key, default)
     local att = self:getAttribs()[key] or default or 0
     local boosts = self:getBoosts()[key]
@@ -129,7 +129,7 @@ end
 -- @int amount The amount of money to check for.
 -- @realm shared
 -- @return bool Whether the character has at least the specified amount of money.
--- @usage local hasEnoughMoney = char:hasMoney(100)
+-- @usage local hasEnoughMoney = character:hasMoney(100)
 function charMeta:hasMoney(amount)
     if amount < 0 then print("Negative Money Check Received.") end
     return self:getMoney() >= amount
@@ -140,7 +140,7 @@ end
 -- @string class The class to join.
 -- @bool[opt=false] isForced Whether to force the character to join the class even if conditions are not met.
 -- @return bool Whether the character successfully joined the class.
--- @usage local success = char:joinClass("some_class")
+-- @usage local success = character:joinClass("some_class")
 function charMeta:joinClass(class, isForced)
     if not class then
         self:kickClass()
@@ -160,7 +160,7 @@ end
 
 --- Kicks the character from their current class and joins them to the default class of their faction.
 -- @realm shared
--- @usage char:kickClass()
+-- @usage character:kickClass()
 function charMeta:kickClass()
     local client = self:getPlayer()
     if not client then return end
@@ -180,7 +180,7 @@ end
 -- @realm shared
 -- @int faction Index of the faction to check against.
 -- @return bool Whether the character belongs to the specified faction.
--- @usage local isInFaction = char:isFaction("some_faction")
+-- @usage local isInFaction = character:isFaction("some_faction")
 function charMeta:isFaction(faction)
     return self:getFaction() == faction
 end
@@ -256,7 +256,7 @@ if SERVER then
     -- @string key The key of the attribute to update.
     -- @int value The value to add to the attribute.
     -- @realm server
-    -- @usage char:updateAttrib("some_attribute_key", 10)
+    -- @usage character:updateAttrib("some_attribute_key", 10)
     function charMeta:updateAttrib(key, value)
         local client = self:getPlayer()
         local attribute = lia.attribs.list[key]
@@ -276,7 +276,7 @@ if SERVER then
     -- @string key The key of the attribute to set.
     -- @int value The value to set for the attribute.
     -- @realm server
-    -- @usage char:setAttrib("some_attribute_key", 10)
+    -- @usage character:setAttrib("some_attribute_key", 10)
     function charMeta:setAttrib(key, value)
         local client = self:getPlayer()
         local attribute = lia.attribs.list[key]
@@ -297,7 +297,7 @@ if SERVER then
     -- @string boostID The ID of the boost to add.
     -- @string attribID The ID of the attribute to which the boost should be added.
     -- @int boostAmount The amount of boost to add to the attribute.
-    -- @usage char:removeBoost("some_boost_id", "some_attribute_id", 10)
+    -- @usage character:removeBoost("some_boost_id", "some_attribute_id", 10)
     function charMeta:addBoost(boostID, attribID, boostAmount)
         local boosts = self:getVar("boosts", {})
         boosts[attribID] = boosts[attribID] or {}
@@ -310,7 +310,7 @@ if SERVER then
     -- @realm server
     -- @string boostID The ID of the boost to remove.
     -- @string attribID The ID of the attribute from which the boost should be removed.
-    -- @usage char:removeBoost("some_boost_id", "some_attribute_id")
+    -- @usage character:removeBoost("some_boost_id", "some_attribute_id")
     function charMeta:removeBoost(boostID, attribID)
         local boosts = self:getVar("boosts", {})
         boosts[attribID] = boosts[attribID] or {}
