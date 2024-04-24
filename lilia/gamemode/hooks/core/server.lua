@@ -389,10 +389,9 @@ function GM:onCharCreated(client, character, data)
     hook.Run("OnCharCreated", client, character, data)
 
 end
-function GM:OnCharCreated(client, character, data)
+function GM:OnCharCreated(client, character)
     local permFlags = client:getPermFlags()
     if permFlags and #permFlags > 0 then character:giveFlags(permFlags) end
-
 end
 
 function GM:onTransferred(client)
