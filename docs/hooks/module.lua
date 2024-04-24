@@ -492,6 +492,7 @@ end
 --- Checks if a character is recognized.
 --- @character character The character to check.
 --- @int id Identifier for the character.
+-- @realm shared
 function isCharRecognized(character, id)
 
 end
@@ -499,10 +500,12 @@ end
 --- Checks if a character is fake recognized.
 --- @character character The character to check.
 --- @int id Identifier for the character.
+-- @realm shared
 function isCharFakeRecognized(character, id)
 end
 
 --- Checks if a fake name exists in the given character name list.
+-- @realm shared
 --- @string name The name to check.
 --- @tab nameList A list of character names.
 --- @return True if the name exists in the list, false otherwise.
@@ -552,7 +555,7 @@ end
 
 --- Loads Core Lilia fonts for the client.
 --- @string font The path to the font file.
---- @string genericFontThe path to the generic font file.
+--- @string genericFont The path to the generic font file.
 --- @realm client
 function LoadLiliaFonts(font, genericFont)
 end
@@ -604,15 +607,15 @@ function DrawLiliaModelView(panel, entity)
 end
 
 --- Whether or not a player is allowed to spawn a container entity.
+-- @client client The player attempting to spawn a container.
+-- @entity entity The container entity being spawned.
+-- @tab data Additional data related to the container being spawned.
+-- @return bool Whether or not to allow the player to spawn the container.
 -- @realm server
--- @player client Player attempting to spawn a container
--- @string model Model of the container being spawned
--- @entity entity Container entity
--- @treturn bool Whether or not to allow the player to spawn the container
--- @usage function MODULE:CanPlayerSpawnStorage(client, model, entity)
--- 	return client:IsAdmin() -- Restrict spawning containers to admins.
+-- @usage function MODULE:CanPlayerSpawnStorage(client, entity, data)
+--     return client:IsAdmin() -- Restrict spawning containers to admins.
 -- end
-function CanPlayerSpawnStorage(client, model, entity)
+function CanPlayerSpawnStorage(client, entity, data)
 end
 --- Determines if a player can throw a punch with a weapon.
 --- @client client The player attempting to throw a punch.
