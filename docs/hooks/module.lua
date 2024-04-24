@@ -654,8 +654,8 @@ end
 function OnCharAttribUpdated(client, character, key, value)
 end
 --- Called when a player's model is changed.
---- @param client Player: The client whose model is changed.
---- @param model string: The new model path.
+--- @client client The client whose model is changed.
+--- @string model The new model path.
 --- @realm shared
 function PlayerModelChanged(client, model)
 
