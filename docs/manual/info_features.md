@@ -1,4 +1,4 @@
-# Improves & Fixes
+# Improvements & Fixes
 - Fixed Vendor Crash Exploit that used Item Spawning Spam.
 
 - Limited Commands to Permissions, rather than just [IsAdmin](https://wiki.facepunch.com/gmod/Player:IsAdmin) or [IsSuperAdmin](https://wiki.facepunch.com/gmod/Player:IsSuperAdmin).
