@@ -138,7 +138,7 @@ lia.FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/hooks/concommands.lua",
+        path = "lilia/gamemode/libraries/concommands.lua",
         realm = "shared"
     },
     {

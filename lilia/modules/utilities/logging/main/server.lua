@@ -61,19 +61,3 @@ net.Receive("SyncLogs", function(_, client)
     net.WriteData(data, #data)
     net.Send(client)
 end)
-
-concommand.Add("logger_delete_logs", function(client)
-    if not IsValid(client) then
-        lia.db.query("DELETE FROM `lilia_logs` WHERE time > 0", function(result)
-            if result then
-                print("Logger - All logs with time greater than 0 have been erased")
-            else
-                print("Logger - Failed : " .. sql.LastError())
-            end
-        end)
-    else
-        client:ChatPrint("Nuh-uh")
-    end
-end)
-
-hook.Add("PostGamemodeLoaded", "hooks", function() sql.Query("CREATE TABLE IF NOT EXISTS lilia_logs ( id INTEGER PRIMARY KEY AUTOINCREMENT, category TEXT NOT NULL, log TEXT NOT NULL, time INTEGER NOT NULL )") end)

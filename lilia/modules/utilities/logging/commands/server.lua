@@ -9,7 +9,6 @@ lia.command.add("legacylogs", {
         net.Send(client)
     end
 })
-
 lia.command.add("logger", {
     adminOnly = true,
     privilege = "View Logs",

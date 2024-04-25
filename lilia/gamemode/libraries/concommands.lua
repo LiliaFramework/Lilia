@@ -42,6 +42,19 @@ if SERVER then
         end
     end)
 
+    concommand.Add("logger_delete_logs", function(client)
+        if not IsValid(client) then
+            lia.db.query("DELETE FROM `lilia_logs` WHERE time > 0", function(result)
+                if result then
+                    print("Logger - All logs with time greater than 0 have been erased")
+                else
+                    print("Logger - Failed : " .. sql.LastError())
+                end
+            end)
+        else
+            client:ChatPrint("Nuh-uh")
+        end
+    end)
     concommand.Add("lia_recreatedb", function(client)
         if not IsValid(client) then
             if resetCalled < RealTime() then
