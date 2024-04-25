@@ -12,8 +12,6 @@ CLASS.payTimer = 3600
 CLASS_STEVE = CLASS.index
 ```
 
-[View source »](https://github.com/LiliaFramework/Lilia/blob/main/lilia/modules/core/teams/libraries/server.lua#L110)
-
 ## CLASS Variables
 
 - **CLASS.name**: The name of your class.
