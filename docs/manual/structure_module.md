@@ -45,15 +45,15 @@ MODULE.Dependencies = {
 
 -   **`MODULE.desc`:** Provides a brief description of the module's purpose. In this case, it states that the module adds skills functionality to the framework.
 
--   **`MODULE.identifier`:** This global variable uniquely identifies the module and allows it to be accessed from outside its scope. **[Optional]**
+-   **`MODULE.identifier`:** This global variable uniquely identifies the module and allows it to be accessed from outside its scope. **Optional**
 
--   **`MODULE.CAMIPrivileges`:** An example CAMI permission that is loaded alongside the module. **[Optional]**
+-   **`MODULE.CAMIPrivileges`:** An example CAMI permission that is loaded alongside the module. **Optional**
 
--   **`MODULE.WorkshopContent`:** Workshop Content to be added. **[Optional]**
+-   **`MODULE.WorkshopContent`:** Workshop Content to be added. **Optional**
 
--   **`MODULE.enabled`:** Indicates if the module is active or not. If False, then it won't be. **[Optional]**
+-   **`MODULE.enabled`:** Indicates if the module is active or not. If False, then it won't be. **Optional**
 
--   **`MODULE.Dependencies`:** Files and corresponding realms to be included. **[Optional]**
+-   **`MODULE.Dependencies`:** Files and corresponding realms to be included. **Optional**
 
 ### Automatically Included Files and Folders in the Module:
 
