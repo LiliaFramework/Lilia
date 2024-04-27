@@ -23,13 +23,12 @@ function MODULE:CanPlayerViewAttributes()
     if self.F1DisplayAttributes then return false end
 end
 
-function MODULE:CanDisplayCharacterInfo(suppress)
+function MODULE:CanDisplayCharacterInfo(name)
     local client = LocalPlayer()
     local character = client:getChar()
     local class = lia.class.list[character:getClass()]
-    if not class then
-        suppress.class = true
-    end
+    if name == "class" and not class then return false end
+    return true
 end
 
 function MODULE:OnCharInfoSetup(infoPanel)

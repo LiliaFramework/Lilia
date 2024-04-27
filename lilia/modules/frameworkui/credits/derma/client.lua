@@ -44,6 +44,7 @@ function PANEL:setDesc(desc)
     self.desc:SetText(desc)
     self.desc:SizeToContents()
     self.desc:Dock(TOP)
+    self.desc:SetTextColor(Color(255, 255, 255))
     self.desc:DockMargin(ScrW * 0.01, 0, 0, 0)
 end
 
@@ -54,10 +55,12 @@ end
 
 vgui.Register("CreditsNamePanel", PANEL, "DPanel")
 PANEL = {}
+
 function PANEL:Init()
     self.contButton = self:Add("DButton")
     self.contButton:SetFont("liaBigCredits")
     self.contButton:SetText(MODULE.contributors.desc)
+    self.contButton:SetTextColor(Color(255, 255, 255))
     self.contButton.DoClick = function()
         surface.PlaySound("buttons/button14.wav")
         gui.OpenURL(MODULE.contributors.url)
@@ -65,16 +68,6 @@ function PANEL:Init()
 
     self.contButton.Paint = function() end
     self.contButton:Dock(TOP)
-    self.discordButton = self:Add("DButton")
-    self.discordButton:SetFont("liaBigCredits")
-    self.discordButton:SetText(MODULE.discord.desc)
-    self.discordButton.DoClick = function()
-        surface.PlaySound("buttons/button14.wav")
-        gui.OpenURL(MODULE.discord.url)
-    end
-
-    self.discordButton.Paint = function() end
-    self.discordButton:Dock(TOP)
     self:SizeToChildren(true, true)
 end
 
@@ -82,6 +75,7 @@ function PANEL:Paint()
 end
 
 vgui.Register("CreditsContribPanel", PANEL, "DPanel")
+
 PANEL = {}
 function PANEL:Init()
 end
@@ -120,12 +114,14 @@ function PANEL:Init()
     lia.gui.creditsPanel = self
     self:SetSize(ScrW * 0.3, ScrH * 0.7)
     self.logo = self:Add("CreditsLogo")
+    self:SetPos(ScrW / 5,0)
     self.logo:SetSize(ScrW * 0.4, ScrW * 0.1)
     self.logo:Dock(TOP)
     self.logo:DockMargin(0, 0, 0, ScrH * 0.05)
     self.contributors = self:Add("DLabel")
     self.contributors:SetFont("liaBigCredits")
     self.contributors:SetText("Lilia Development Team")
+    self.contributors:SetTextColor(Color(255,255,255))
     self.contributors:SizeToContents()
     self.contributors:Dock(TOP)
     local dockLeft = ScrW * 0.15 - self.contributors:GetContentSize() / 2
