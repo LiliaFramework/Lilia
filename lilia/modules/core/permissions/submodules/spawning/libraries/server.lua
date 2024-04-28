@@ -27,7 +27,7 @@ function GM:PlayerSpawnObject(client, _, _)
 end
 
 function GM:PlayerSpawnRagdoll(client)
-    return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Ragdolls", nil)) or client:getChar():hasFlags("r")
+    return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Ragdolls", nil)) or client:getChar():hasFlags("e")
 end
 
 function GM:PlayerSpawnProp(client, model)
@@ -38,7 +38,7 @@ function GM:PlayerSpawnProp(client, model)
     end
 
     if isBlacklistedProp and not CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Blacklisted Props", nil) then return false end
-    return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Props", nil)) or client:getChar():hasFlags("r")
+    return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Props", nil)) or client:getChar():hasFlags("")
 end
 
 function GM:PlayerSpawnSWEP(client)
