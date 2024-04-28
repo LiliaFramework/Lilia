@@ -16,7 +16,6 @@ function GM:PlayerSpawnObject(client, _, _)
     end
 
     if CAMI.PlayerHasAccess(client, "Spawn Permissions - No Spawn Delay", nil) then return true end
-    if client.CurrentDupe and client.CurrentDupe.Entities then return true end
     if client.NextSpawn < CurTime() then
         client.NextSpawn = CurTime() + 0.75
     else
