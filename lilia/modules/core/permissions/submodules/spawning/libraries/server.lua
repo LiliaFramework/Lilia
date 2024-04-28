@@ -31,13 +31,13 @@ end
 
 function GM:PlayerSpawnProp(client, model)
     local isBlacklistedProp = table.HasValue(PermissionCore.BlackListedProps, model)
-        print(client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Props", nil),client:getChar():hasFlags("e"),isBlacklistedProp)
-
+    if isBlacklistedProp and not CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Blacklisted Props", nil) then return false end
     if IsValid(client:GetActiveWeapon()) and client:GetActiveWeapon():GetClass() == "gmod_tool" then
         local toolobj = client:GetActiveWeapon():GetToolObject()
         if (client.AdvDupe2 and client.AdvDupe2.Entities) or (client.CurrentDupe and client.CurrentDupe.Entities) or toolobj.Entities then return true end
     end
-    if isBlacklistedProp and not CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Blacklisted Props", nil) then return false end
+
+    print(client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Props", nil), client:getChar():hasFlags("e"), isBlacklistedProp)
     return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Props", nil)) or client:getChar():hasFlags("e")
 end
 
