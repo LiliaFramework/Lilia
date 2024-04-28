@@ -1,4 +1,4 @@
-﻿local GM = GM or GAMEMODE
+local GM = GM or GAMEMODE
 function GM:CanTool(client, _, tool)
     local privilege = "Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
     local toolobj = client:GetActiveWeapon():GetToolObject()
@@ -80,5 +80,5 @@ function GM:CanTool(client, _, tool)
     end
 
     client.ToolInterval = CurTime() + PermissionCore.ToolInterval
-    return client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, privilege, nil)
+    return (client:isStaffOnDuty() or client:getChar():hasFlags("t")) and CAMI.PlayerHasAccess(client, privilege, nil)
 end
