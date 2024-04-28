@@ -44,10 +44,11 @@ function GM:CanTool(client, _, tool)
                 print("[Server Warning] Potential server crash using dupes attempt by player: " .. client:Name() .. " (" .. client:SteamID() .. ")")
                 return false
             end
+
             v.ModelScale = 1
         end
     end
-    
+
     if tool == "advdupe2" and client.AdvDupe2 and client.AdvDupe2.Entities then
         for _, v in pairs(client.AdvDupe2.Entities) do
             if v.ModelScale and v.ModelScale > 10 then
@@ -55,10 +56,11 @@ function GM:CanTool(client, _, tool)
                 print("[Server Warning] Potential server crash using dupes attempt by player: " .. client:Name() .. " (" .. client:SteamID() .. ")")
                 return false
             end
+
             v.ModelScale = 1
         end
     end
-    
+
     if tool == "adv_duplicator" and toolobj.Entities then
         for _, v in pairs(toolobj.Entities) do
             if v.ModelScale and v.ModelScale > 10 then
@@ -66,15 +68,17 @@ function GM:CanTool(client, _, tool)
                 print("[Server Warning] Potential server crash using dupes attempt by player: " .. client:Name() .. " (" .. client:SteamID() .. ")")
                 return false
             end
+
             v.ModelScale = 1
         end
     end
-    
+
     if tool == "button" and not table.HasValue(PermissionCore.ButtonList, client:GetInfo("button_model")) then
         client:ConCommand("button_model models/maxofs2d/button_05.mdl")
         client:ConCommand("button_model")
         return false
     end
+
     client.ToolInterval = CurTime() + PermissionCore.ToolInterval
     return client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, privilege, nil)
 end
