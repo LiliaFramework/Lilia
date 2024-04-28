@@ -8,19 +8,37 @@ function GM:PlayerSpawnNPC(client)
     return false
 end
 
-function GM:PlayerSpawnProp(client, model)
-    local isBlacklistedProp = table.HasValue(PermissionCore.BlackListedProps, model)
-    if not client then return true end
+function GM:PlayerSpawnObject(client, _, _)
+    if not client.NextSpawn then client.NextSpawn = CurTime() end
+    if IsValid(client:GetActiveWeapon()) and client:GetActiveWeapon():GetClass() == "gmod_tool" then
+        local toolobj = client:GetActiveWeapon():GetToolObject()
+        if (client.AdvDupe2 and client.AdvDupe2.Entities) or (client.CurrentDupe and client.CurrentDupe.Entities) or toolobj.Entities then return true end
+    end
+
+    if CAMI.PlayerHasAccess(client, "Spawn Permissions - No Spawn Delay", nil) then return true end
     if client.CurrentDupe and client.CurrentDupe.Entities then return true end
-    if IsValid(client) and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Props", nil) or client:getChar():hasFlags("e") or client:isStaffOnDuty() then return (isBlacklistedProp and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Blacklisted Props", nil)) or true end
-    return false
+    if client.NextSpawn < CurTime() then
+        client.NextSpawn = CurTime() + 0.75
+    else
+        client:notify("You can't spawn props that fast!")
+        return false
+    end
+    return true
 end
 
 function GM:PlayerSpawnRagdoll(client)
-    if not client then return true end
-    if client.CurrentDupe and client.CurrentDupe.Entities then return true end
-    if IsValid(client) and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Ragdolls", nil) or client:getChar():hasFlags("r") or client:isStaffOnDuty() then return true end
-    return false
+    return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Ragdolls", nil)) or client:getChar():hasFlags("r")
+end
+
+function GM:PlayerSpawnProp(client, model)
+    local isBlacklistedProp = table.HasValue(PermissionCore.BlackListedProps, model)
+    if IsValid(client:GetActiveWeapon()) and client:GetActiveWeapon():GetClass() == "gmod_tool" then
+        local toolobj = client:GetActiveWeapon():GetToolObject()
+        if (client.AdvDupe2 and client.AdvDupe2.Entities) or (client.CurrentDupe and client.CurrentDupe.Entities) or toolobj.Entities then return true end
+    end
+
+    if isBlacklistedProp and not CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Blacklisted Props", nil) then return false end
+    return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Props", nil)) or client:getChar():hasFlags("r")
 end
 
 function GM:PlayerSpawnSWEP(client)
@@ -40,18 +58,6 @@ end
 function GM:PlayerSpawnSENT(client)
     if IsValid(client) and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn SENTs", nil) or client:getChar():hasFlags("E") then return true end
     return false
-end
-
-function GM:PlayerSpawnObject(client, _, _)
-    if CAMI.PlayerHasAccess(client, "Spawn Permissions - No Spawn Delay", nil) then return true end
-    if client.CurrentDupe and client.CurrentDupe.Entities then return true end
-    if (client.NextSpawn or 0) < CurTime() then
-        client.NextSpawn = CurTime() + 0.75
-    else
-        client:notify("You can't spawn props that fast!")
-        return false
-    end
-    return true
 end
 
 function GM:PlayerSpawnVehicle(client, _, name, _)

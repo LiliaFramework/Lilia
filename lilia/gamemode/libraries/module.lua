@@ -23,10 +23,6 @@ lia.module.ModuleConditions = {
         name = "3D Stream Radios",
         global = "StreamRadioLib"
     },
-    ["permaprops"] = {
-        name = "PermaProps",
-        global = "PermaProps"
-    },
     ["vjbase"] = {
         name = "VJ Base",
         global = "VJ"
@@ -42,14 +38,6 @@ lia.module.ModuleConditions = {
     ["serverguard"] = {
         name = "ServerGuard Admin Mod",
         global = "serverguard"
-    },
-    ["advdupe2"] = {
-        name = "Advanced Dupe 2",
-        global = "AdvDupe2"
-    },
-    ["advdupe"] = {
-        name = "Advanced Dupe 1",
-        global = "AdvDupe"
     },
     ["zmc"] = {
         name = "Zero's MasterChef",
