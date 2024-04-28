@@ -1,7 +1,6 @@
 ﻿local playerMeta = FindMetaTable("Player")
 function MODULE:InitializedModules()
     sam.config.set("Restrictions.Tool", false)
-    sam.config.set("Restrictions.Limits", false)
     sam.config.set("Restrictions.Spawning", false)
 end
 
