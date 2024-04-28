@@ -1,6 +1,5 @@
 <p align="center">
   <strong>Lilia - A Superior Roleplay Gamemode Framework</strong><br>
-  <em>(Inspired by Lillia, a character from League of Legends)</em>
 </p>
 
 <p align="center">
