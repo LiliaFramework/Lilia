@@ -51,9 +51,8 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     local UserGroupWhitelist = item.UsergroupWhitelist
     local VIPOnly = item.VIPWhitelist
     local CanBuy = true
-    local errorMessage
     local hasWhitelist = false
-
+    local errorMessage
     if not vendor.items[itemType] then return false end
     local state = vendor:getTradeMode(itemType)
     if isSellingToVendor and state == VENDOR_SELLONLY then return false end
@@ -74,9 +73,8 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     end
 
     if money and money < price then return false, isSellingToVendor and "vendorNoMoney" or "canNotAfford" end
-
     if SteamIDWhitelist and not hasWhitelist then
-        if  (not table.HasValue(SteamIDWhitelist, client:SteamID()) or client:SteamID() ~= SteamIDWhitelist) then
+        if not table.HasValue(SteamIDWhitelist, client:SteamID()) or client:SteamID() ~= SteamIDWhitelist then
             CanBuy = false
             errorMessage = "You are not whitelisted to buy this item!"
         else
@@ -85,7 +83,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     end
 
     if FactionWhitelist and not hasWhitelist then
-        if  (not table.HasValue(FactionWhitelist, client:Team()) or client:Team() ~= FactionWhitelist) then
+        if not table.HasValue(FactionWhitelist, client:Team()) or client:Team() ~= FactionWhitelist then
             CanBuy = false
             errorMessage = "Your faction is not whitelisted to buy this item!"
         else
@@ -94,7 +92,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     end
 
     if UserGroupWhitelist and not hasWhitelist then
-        if  (not table.HasValue(UserGroupWhitelist, client:GetUserGroup()) or client:IsUserGroup(UserGroupWhitelist)) then
+        if not table.HasValue(UserGroupWhitelist, client:GetUserGroup()) or client:IsUserGroup(UserGroupWhitelist) then
             CanBuy = false
             errorMessage = "Your usergroup is not whitelisted to buy this item!"
         else
@@ -110,7 +108,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
             hasWhitelist = true
         end
     end
-    return CanBuy, errorMessage
+    return CanBuy, errorMessage, hasWhitelist
 end
 
 if not VENDOR_INVENTORY_MEASURE then
