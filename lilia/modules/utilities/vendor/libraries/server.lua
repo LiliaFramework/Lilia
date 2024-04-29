@@ -51,8 +51,8 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     local UserGroupWhitelist = item.UsergroupWhitelist
     local VIPOnly = item.VIPWhitelist
     local CanBuy = true
-    local hasWhitelist = false
     local errorMessage
+    local hasWhitelist = false
 
     if not vendor.items[itemType] then return false end
     local state = vendor:getTradeMode(itemType)
