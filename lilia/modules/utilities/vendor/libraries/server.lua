@@ -49,7 +49,11 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     local SteamIDWhitelist = item.SteamIDWhitelist
     local FactionWhitelist = item.FactionWhitelist
     local UserGroupWhitelist = item.UsergroupWhitelist
-    local VIPOnly = item.VIP
+    local VIPOnly = item.VIPWhitelist
+    local CanBuy = true
+    local hasWhitelist = false
+    local errorMessage
+
     if not vendor.items[itemType] then return false end
     local state = vendor:getTradeMode(itemType)
     if isSellingToVendor and state == VENDOR_SELLONLY then return false end
@@ -70,15 +74,43 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     end
 
     if money and money < price then return false, isSellingToVendor and "vendorNoMoney" or "canNotAfford" end
-    if SteamIDWhitelist and ((istable(SteamIDWhitelist) and not table.HasValue(SteamIDWhitelist, client:SteamID())) or (isstring(SteamIDWhitelist) and client:SteamID() ~= SteamIDWhitelist)) then
-        return false, "You are not whitelisted to buy this item!"
-    elseif FactionWhitelist and ((istable(FactionWhitelist) and not table.HasValue(FactionWhitelist, client:Team())) or (isstring(FactionWhitelist) and client:Team() ~= FactionWhitelist)) then
-        return false, "Your faction is not whitelisted to buy this item!"
-    elseif UserGroupWhitelist and ((istable(UserGroupWhitelist) and not table.HasValue(UserGroupWhitelist, client:GetUserGroup())) or (isstring(UserGroupWhitelist) and client:GetUserGroup() ~= UserGroupWhitelist)) then
-        return false, "Your usergroup is not whitelisted to buy this item!"
-    elseif VIPOnly and not client:isVIP() then
-        return false, "This item is meant for VIPs!"
+
+    if SteamIDWhitelist and not hasWhitelist then
+        if  (not table.HasValue(SteamIDWhitelist, client:SteamID()) or client:SteamID() ~= SteamIDWhitelist) then
+            CanBuy = false
+            errorMessage = "You are not whitelisted to buy this item!"
+        else
+            hasWhitelist = true
+        end
     end
+
+    if FactionWhitelist and not hasWhitelist then
+        if  (not table.HasValue(FactionWhitelist, client:Team()) or client:Team() ~= FactionWhitelist) then
+            CanBuy = false
+            errorMessage = "Your faction is not whitelisted to buy this item!"
+        else
+            hasWhitelist = true
+        end
+    end
+
+    if UserGroupWhitelist and not hasWhitelist then
+        if  (not table.HasValue(UserGroupWhitelist, client:GetUserGroup()) or client:IsUserGroup(UserGroupWhitelist)) then
+            CanBuy = false
+            errorMessage = "Your usergroup is not whitelisted to buy this item!"
+        else
+            hasWhitelist = true
+        end
+    end
+
+    if VIPOnly and not hasWhitelist then
+        if not client:isVIP() then
+            CanBuy = false
+            errorMessage = "This item is meant for VIPs!"
+        else
+            hasWhitelist = true
+        end
+    end
+    return CanBuy, errorMessage
 end
 
 if not VENDOR_INVENTORY_MEASURE then
