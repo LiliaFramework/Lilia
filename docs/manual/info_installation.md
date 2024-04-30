@@ -48,7 +48,7 @@ If you haven't already, set up your Garry's Mod server and ensure it's running w
 
 -   Before making any changes, consider making a backup of the default configuration.
 
--   Edit this [configuration](https://github.com/LiliaFramework/Lilia-Skeleton/blob/main/skeleton/schema/config/shared.lua) to override any default values you wish.
+-   Edit this [configuration](https://github.com/LiliaFramework/Skeleton/blob/main/skeleton/schema/config/shared.lua) to override any default values you wish.
 
 ## Step 6: Starting Lilia on Your Server
 
@@ -63,17 +63,17 @@ To install a roleplay schema for your Lilia framework, follow these steps:
 -   Download one of the available schemas from the repositories listed below, based on your server's theme:
     -   [Framework](https://github.com/LiliaFramework/Lilia)
 
-    -   [Skeleton Schema](https://github.com/LiliaFramework/Lilia-Skeleton)
+    -   [Skeleton Schema](https://github.com/LiliaFramework/Skeleton)
 
-    -   [MafiaRP Schema](https://github.com/LiliaFramework/Lilia-MafiaRP)
+    -   [MafiaRP Schema](https://github.com/LiliaFramework/MafiaRP)
 
-    -   [HL2RP Schema](https://github.com/LiliaFramework/Lilia-HL2RP)
+    -   [HL2RP Schema](https://github.com/LiliaFramework/HL2RP)
 
-    -   [MetroRP Schema](https://github.com/LiliaFramework/Lilia-MetroRP)
+    -   [MetroRP Schema](https://github.com/LiliaFramework/MetroRP)
 
-    -   [1942RP Schema](https://github.com/LiliaFramework/Lilia-1942RP)
+    -   [1942RP Schema](https://github.com/LiliaFramework/1942RP)
 
-    -   [Public Modules](https://github.com/LiliaFramework/Lilia-Modules)
+    -   [Public Modules](https://github.com/LiliaFramework/Modules)
 
     -   [Bozy's Modules](https://github.com/B0zy/Boz-Lilia-Modules)
 
