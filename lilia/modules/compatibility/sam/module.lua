@@ -2,7 +2,7 @@
 
 **Configuration Values:**.
 
-- **DefaultStaff**: List of Default Staff and correspondent usergroups | **table**.
+- DefaultStaff: List of Default Staff and correspondent usergroups | table.
 ]]
 -- @configurations SAM
 MODULE.name = "Compatibility - SAM"

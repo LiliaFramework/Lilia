@@ -1,17 +1,17 @@
 ﻿--[[--
 **Configuration Values:**.
 
-- **StaminaBlur**: Is Stamina Blur Enabled? | **bool**.
+- StaminaBlur: Is Stamina Blur Enabled? | bool.
 
-- **StaminaSlowdown**: Is Stamina Slowdown Enabled? | **bool**.
+- StaminaSlowdown: Is Stamina Slowdown Enabled? | bool.
 
-- **DefaultStamina**: Sets Default Stamina Value | **integer**.
+- DefaultStamina: Sets Default Stamina Value | integer.
 
-- **StaminaBlurThreshold**: Sets Stamina Threshold for Blur to Show | **integer**.
+- StaminaBlurThreshold: Sets Stamina Threshold for Blur to Show | integer.
 
-- **StaminaBreathingThreshold**: Sets Stamina Threshold for Breathing to Happen | **integer**.
+- StaminaBreathingThreshold: Sets Stamina Threshold for Breathing to Happen | integer.
 
-- **CharAttrib**: Sets Sounds Made when hitting the attribute abutton | **table**.
+- CharAttrib: Sets Sounds Made when hitting the attribute abutton | table.
 
 ]]
 -- @configurations Attributes

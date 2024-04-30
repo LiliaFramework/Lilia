@@ -2,9 +2,9 @@
 
 **Configuration Values:**.
 
-- **MaxInteractionDistance**: Maximum distance for Interaction Menu to interact with other entities | **integer**.
+- MaxInteractionDistance: Maximum distance for Interaction Menu to interact with other entities | integer.
 
-- **CarSearchRadius**: Search radius for Interaction Menu to find a car | **integer**.
+- CarSearchRadius: Search radius for Interaction Menu to find a car | integer.
 ]]
 -- @configurations InteractionMenu
 MODULE.name = "Core - Interaction Menu"

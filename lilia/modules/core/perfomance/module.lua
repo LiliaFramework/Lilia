@@ -2,15 +2,15 @@
 
 **Configuration Values:**.
 
-- **PlayerCountCarLimitEnabled**: Should Car Wipe be enabled?| **bool**.
+- PlayerCountCarLimitEnabled: Should Car Wipe be enabled?| bool.
 
-- **PlayerCountCarLimit**: How many players are needed for cars to wipe | **integer**.
+- PlayerCountCarLimit: How many players are needed for cars to wipe | integer.
 
-- **tblAlwaysSend**: Entities that transmit States | **table**.
+- tblAlwaysSend: Entities that transmit States | table.
 
-- **RagdollCleaningTimer**: Time between Ragdolling Cleanups | **integer**.
+- RagdollCleaningTimer: Time between Ragdolling Cleanups | integer.
 
-- **SoundsToMute**: What sounds should be muted. | **table**.
+- SoundsToMute: What sounds should be muted. | table.
 ]]
 -- @configurations Perfomance
 MODULE.tblPlayers = MODULE.tblPlayers or {}

@@ -2,21 +2,21 @@
 
 **Configuration Values:**.
 
-- **Vignette**: Enable Vignette Effect | **bool**.
+- Vignette: Enable Vignette Effect | bool.
 
-- **BranchWarning**: Activate Branch Warning | **bool**.
+- BranchWarning: Activate Branch Warning | bool.
 
-- **CrosshairEnabled**: Enable Crosshair | **bool**.
+- CrosshairEnabled: Enable Crosshair | bool.
 
-- **BarsDisabled**: Disable Bars | **bool**.
+- BarsDisabled: Disable Bars | bool.
 
-- **NoDrawCrosshairWeapon**: Weapons with No Crosshair | **table**.
+- NoDrawCrosshairWeapon: Weapons with No Crosshair | table.
 
-- **AmmoDrawEnabled**: Enable Ammo Draw | **bool**.
+- AmmoDrawEnabled: Enable Ammo Draw | bool.
 
-- **DarkTheme**: Toggle Dark Theme | **bool**.
+- DarkTheme: Toggle Dark Theme | bool.
 
-- **HiddenHUDElements**: Disabled Sandbox HUD Elements | **table**.
+- HiddenHUDElements: Disabled Sandbox HUD Elements | table.
 
 ]]
 -- @configurations HUD

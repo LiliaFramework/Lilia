@@ -2,9 +2,9 @@
 
 **Configuration Values:**.
 
-- **StaminaBlur**: The Workshop IDs for addons that Lilia downloads by default | **table**.
+- StaminaBlur: The Workshop IDs for addons that Lilia downloads by default | table.
 
-- **AutoWorkshopDownloader**: Enable or disable automatic workshop collection downloads | **bool**.
+- AutoWorkshopDownloader: Enable or disable automatic workshop collection downloads | bool.
 ]]
 -- @configurations WorkshopDownloader
 MODULE.name = "Utilities - Workshop Downloader"

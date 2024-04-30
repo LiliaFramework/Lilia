@@ -2,9 +2,9 @@
 
 **Configuration Values:**.
 
-- **SalaryInterval**: Default Time interval between salary payments in seconds | **integer**.
+- SalaryInterval: Default Time interval between salary payments in seconds | integer.
 
-- **SalaryThreshold**: Money threshold above which salaries will not be given | **integer**.
+- SalaryThreshold: Money threshold above which salaries will not be given | integer.
 ]]
 -- @configurations Salary
 MODULE.name = "Characters - Salary"

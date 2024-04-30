@@ -2,17 +2,17 @@
 
 **Configuration Values:**.
 
-- **RecognitionEnabled**: Is character recognition enabled? | **bool**.
+- RecognitionEnabled: Is character recognition enabled? | bool.
 
-- **FactionAutoRecognize**: Do members from the same faction always auto-recognize each other? | **bool**.
+- FactionAutoRecognize: Do members from the same faction always auto-recognize each other? | bool.
 
-- **FakeNamesEnabled**: Are fake names enabled? | **bool**.
+- FakeNamesEnabled: Are fake names enabled? | bool.
 
-- **ScoreboardHiddenVars**: Variables to hide from a non-recognized character in the scoreboard | **table**.
+- ScoreboardHiddenVars: Variables to hide from a non-recognized character in the scoreboard | table.
 
-- **ChatIsRecognized**: Chat types that are recognized | **table**.
+- ChatIsRecognized: Chat types that are recognized | table.
 
-- **MemberToMemberAutoRecognition**: Factions that auto-recognize members between each other | **table**.
+- MemberToMemberAutoRecognition: Factions that auto-recognize members between each other | table.
 ]]
 -- @configurations Recognition
 MODULE.name = "Characters - Recognition"

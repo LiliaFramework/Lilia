@@ -2,9 +2,9 @@
 
 **Configuration Values:**.
 
-- **DamageInCars**: Either or not you take damage while in cars? | **bool**.
+- DamageInCars: Either or not you take damage while in cars? | bool.
 
-- **ValidCarDamages**: The valid types of damage on cars that should apply to the client | **table**.
+- ValidCarDamages: The valid types of damage on cars that should apply to the client | table.
 ]]
 -- @configurations Simfphys
 MODULE.name = "Compatibility - Simfphys"

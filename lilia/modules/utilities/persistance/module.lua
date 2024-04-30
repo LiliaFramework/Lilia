@@ -2,7 +2,7 @@
 
 **Configuration Values:**.
 
-- **blacklist**: The entities blacklisted from being persistent | **table**.
+- blacklist: The entities blacklisted from being persistent | table.
 ]]
 -- @configurations Persistance
 MODULE.name = "Utilities - Persistance"

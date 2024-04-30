@@ -2,9 +2,9 @@
 
 **Configuration Values:**.
 
-- **ThirdPersonEnabled**: Are players allowed to use third person? | **bool**.
+- ThirdPersonEnabled: Are players allowed to use third person? | bool.
 
-- **MaxValues**: Max Value for Third Person | **table**.
+- MaxValues: Max Value for Third Person | table.
 ]]
 -- @configurations ThirdPerson
 MODULE.name = "Utilities - Third Person"

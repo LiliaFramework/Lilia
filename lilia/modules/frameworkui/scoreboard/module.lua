@@ -2,13 +2,13 @@
 
 **Configuration Values:**.
 
-- **HiddenFactions**: Scoreboard Table of Factions that are hidden | **table**.
+- HiddenFactions: Scoreboard Table of Factions that are hidden | table.
 
-- **sbHeight**: Scoreboard Height | **float**.
+- sbHeight: Scoreboard Height | float.
 
-- **sbWidth**: Scoreboard Width | **float**.
+- sbWidth: Scoreboard Width | float.
 
-- **ShowStaff**: Should Staff Show In Scoreboard | **bool**.
+- ShowStaff: Should Staff Show In Scoreboard | bool.
 ]]
 -- @configurations Scoreboard
 MODULE.name = "Framework UI - Scoreboard"

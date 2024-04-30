@@ -2,7 +2,7 @@
 
 **Configuration Values:**.
 
-- **DeleteItemsOnRestart**: Enable or disable item deletion on restart | **bool**.
+- DeleteItemsOnRestart: Enable or disable item deletion on restart | bool.
 ]]
 -- @configurations SaveItems
 MODULE.name = "Utilities - Save Items"

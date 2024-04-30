@@ -2,19 +2,19 @@
 
 **Configuration Values:**.
 
-- **MusicVolume**: Set Music Volume on Main Menu | **float**.
+- MusicVolume: Set Music Volume on Main Menu | float.
 
-- **Music**: Set Main Menu Background Music | **string**.
+- Music: Set Main Menu Background Music | string.
 
-- **LogoURL**: Set Main Menu Logo | **string**.
+- LogoURL: Set Main Menu Logo | string.
 
-- **BackgroundURL**: Set Background Image URL (if applicable) | **string**.
+- BackgroundURL: Set Background Image URL (if applicable) | string.
 
-- **BackgroundIsYoutubeVideo**: Set If Background Screen is a YT video | **bool**.
+- BackgroundIsYoutubeVideo: Set If Background Screen is a YT video | bool.
 
-- **CharMenuBGInputDisabled**: Disable Background Input during Main Menu Lookup | **bool**.
+- CharMenuBGInputDisabled: Disable Background Input during Main Menu Lookup | bool.
 
-- **CharCreationTransparentBackground**: Set Transparent Background during Character Creation | **bool**.
+- CharCreationTransparentBackground: Set Transparent Background during Character Creation | bool.
 ]]
 -- @configurations MainMenu
 MODULE.name = "Framework UI - Main Menu"
