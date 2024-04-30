@@ -44,9 +44,9 @@ lia.config = lia.config or {}
 -- @field TimeToEnterVehicle: Time **[in seconds]** required to enter a vehicle | integer.
 -- @field CarEntryDelayEnabled: Determines if the car entry delay is applicable | boolean.
 -- @field Notify: Contains notification sound and volume settings | table.
--- @field Notify[1]: Notification sound file path | string.
--- @field Notify[2]: Notification volume | integer.
--- @field Notify[3]: Notification pitch | integer.
+-- @field Notify Argument 1: Notification sound file path | string.
+-- @field Notify Argument 2: Notification volume | integer.
+-- @field Notify Argument 3: Notification pitch | integer.
 if not ConfigWasInitialized then
     lia.config = {
         WalkSpeed = 130,
