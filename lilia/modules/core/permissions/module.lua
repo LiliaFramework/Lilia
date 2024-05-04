@@ -21,6 +21,8 @@
 - PlayerSpawnVehicleDelay: Delay for spawning a vehicle after the previous one | integer.
 
 - ToolInterval: ToolGun Usage Cooldown | integer.
+
+- SpawnMenuLimit: Should Spawn Menu be limited to pet flag holders/staff | bool.
 ]]
 -- @configurations Permissions
 MODULE.name = "Core - Permissions"
