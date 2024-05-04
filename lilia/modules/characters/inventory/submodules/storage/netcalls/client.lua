@@ -4,6 +4,8 @@
 end)
 
 net.Receive("liaStorageOpen", function()
+    local isCar = net.ReadBool() or false
     local entity = net.ReadEntity()
-    hook.Run("StorageOpen", entity, true)
+    local carInv = lia.inventory.instances[entity:getNetVar("inv")]
+    hook.Run("StorageOpen", isCar and carInv or entity, isCar)
 end)

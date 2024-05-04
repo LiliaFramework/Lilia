@@ -27,14 +27,12 @@ function MODULE:SetupQuickMenu(menu)
     end
 end
 
-function MODULE:StorageOpen(storage, normal)
-    if not IsValid(storage) then return end
-    if not normal then
+function MODULE:StorageOpen(storage, isCar)
+    if isCar then
         local localInv = LocalPlayer():getChar() and LocalPlayer():getChar():getInv()
-        local storageInv = lia.inventory.instances[storage:getNetVar("inv")]
-        if not localInv or not storageInv then return self:exitStorage() end
+        if not localInv then return MODULE:exitStorage() end
         local localInvPanel = localInv:show()
-        local storageInvPanel = storageInv:show()
+        local storageInvPanel = storage:show()
         storageInvPanel:SetTitle("Car Trunk")
         localInvPanel:ShowCloseButton(true)
         storageInvPanel:ShowCloseButton(true)
@@ -49,7 +47,7 @@ function MODULE:StorageOpen(storage, normal)
         local function exitStorageOnRemove(panel)
             if firstToRemove then
                 firstToRemove = false
-                self:exitStorage()
+                MODULE:exitStorage()
                 local otherPanel = panel == localInvPanel and storageInvPanel or localInvPanel
                 if IsValid(otherPanel) then otherPanel:Remove() end
             end

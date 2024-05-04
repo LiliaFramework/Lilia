@@ -851,7 +851,7 @@ lia.command.add("fallover", {
     adminOnly = false,
     syntax = "[number time]",
     onRun = function(client, arguments)
-        if client:GetNWBool("FallOverCooldown", false) then
+        if client:GetNW2Bool("FallOverCooldown", false) then
             client:notify("This Command Is In Cooldown!")
             return
         elseif client:IsFrozen() then
@@ -876,10 +876,10 @@ lia.command.add("fallover", {
             time = nil
         end
 
-        client:SetNWBool("FallOverCooldown", true)
+        client:SetNW2Bool("FallOverCooldown", true)
         if not IsValid(client.liaRagdoll) then
             client:setRagdolled(true, time)
-            timer.Simple(10, function() client:SetNWBool("FallOverCooldown", false) end)
+            timer.Simple(10, function() client:SetNW2Bool("FallOverCooldown", false) end)
         end
     end
 })
@@ -1026,8 +1026,8 @@ lia.command.add("flagblacklists", {
 lia.command.add("dropmoney", {
     syntax = "<number amount>",
     onRun = function(client, arguments)
-        if client:GetNWBool("DropMoneyCooldown", false) then
-            local remainingTime = math.ceil(client:GetNWFloat("DropMoneyCooldownEnd", 0) - CurTime())
+        if client:GetNW2Bool("DropMoneyCooldown", false) then
+            local remainingTime = math.ceil(client:GetNW2Float("DropMoneyCooldownEnd", 0) - CurTime())
             client:notify("You can't use this command yet. Cooldown remaining: " .. remainingTime .. " seconds.")
             return
         end
@@ -1040,9 +1040,9 @@ lia.command.add("dropmoney", {
         local money = lia.currency.spawn(client:getItemDropPos(), amount)
         money.client = client
         money.charID = client:getChar():getID()
-        client:SetNWBool("DropMoneyCooldown", true)
-        client:SetNWFloat("DropMoneyCooldownEnd", CurTime() + 5)
-        timer.Simple(5, function() if IsValid(client) then client:SetNWBool("DropMoneyCooldown", false) end end)
+        client:SetNW2Bool("DropMoneyCooldown", true)
+        client:SetNW2Float("DropMoneyCooldownEnd", CurTime() + 5)
+        timer.Simple(5, function() if IsValid(client) then client:SetNW2Bool("DropMoneyCooldown", false) end end)
     end
 })
 

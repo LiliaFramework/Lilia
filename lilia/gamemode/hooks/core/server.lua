@@ -387,8 +387,8 @@ end
 function GM:onCharCreated(client, character, data)
     print("onCharCreated is deprecated. Use OnCharCreated for optimization purposes.")
     hook.Run("OnCharCreated", client, character, data)
-
 end
+
 function GM:OnCharCreated(client, character)
     local permFlags = client:getPermFlags()
     if permFlags and #permFlags > 0 then character:giveFlags(permFlags) end
@@ -398,7 +398,6 @@ function GM:onTransferred(client)
     print("onTransferred is deprecated. Use OnTransferred for optimization purposes.")
     hook.Run("OnTransferred", client)
 end
-
 
 function GM:Move(client, moveData)
     local character = client:getChar()
@@ -421,38 +420,6 @@ function GM:Move(client, moveData)
 
         moveData:SetForwardSpeed(mf * speed)
         moveData:SetSideSpeed(ms * speed)
-    end
-end
-
-function GM:CanPlayerEnterVehicle(client, entity)
-    local VehicleEnteringTime = lia.config.TimeToEnterVehicle
-    if entity.IsLocked then
-        client:notify("This car is locked!")
-        return false
-    elseif entity.IsBeingEntered then
-        client:notify("Someone is entering this car!")
-        return false
-    end
-
-    if lia.config.CarEntryDelayEnabled then
-        if VehicleEnteringTime > 0 then
-            entity.IsBeingEntered = true
-            client:setAction("Entering Vehicle...", VehicleEnteringTime)
-            client:doStaredAction(entity, function()
-                if IsValid(entity) then
-                    entity.IsBeingEntered = false
-                    client:EnterVehicle(entity)
-                end
-            end, VehicleEnteringTime, function()
-                if IsValid(entity) then
-                    entity.IsBeingEntered = false
-                    client:setAction()
-                end
-
-                if IsValid(client) then client:setAction() end
-            end)
-        end
-        return false
     end
 end
 

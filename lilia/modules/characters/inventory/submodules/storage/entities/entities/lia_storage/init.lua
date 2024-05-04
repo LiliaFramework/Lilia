@@ -55,6 +55,7 @@ function ENT:openInv(activator)
     self.receivers[activator] = true
     inventory:sync(activator)
     net.Start("liaStorageOpen")
+    net.WriteBool(false)
     net.WriteEntity(self)
     net.Send(activator)
     local openSound = self:getStorageInfo().openSound

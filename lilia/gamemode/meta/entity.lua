@@ -35,7 +35,7 @@ end
 -- @realm shared
 -- @treturn bool True if the entity is a simfphys car, false otherwise.
 function entityMeta:isSimfphysCar()
-    return simfphys and (self:GetClass() == "gmod_sent_vehicle_fphysics_base" or self.IsSimfphyscar or self:GetClass() == "gmod_sent_vehicle_fphysics_wheel" or self.Base == "gmod_sent_vehicle_fphysics_base" or self.Base == "gmod_sent_vehicle_fphysics_wheel")
+    return simfphys and (self:GetClass() == "gmod_sent_vehicle_fphysics_base" or self.IsSimfphyscar or self:GetClass() == "gmod_sent_vehicle_fphysics_wheel" or self:GetClass() == "prop_vehicle_prisoner_pod" or self.Base == "gmod_sent_vehicle_fphysics_base" or self.Base == "gmod_sent_vehicle_fphysics_wheel")
 end
 
 --- Retrieves the drop position for an item associated with the entity.
@@ -135,20 +135,6 @@ function entityMeta:canSeeEntity(entity)
     local diff = entity:GetPos() - self:GetShootPos()
     if self:GetAimVector():Dot(diff) / diff:Length() < 0.455 then return false end
     return true
-end
-
---- Checks if the entity is locked.
--- @realm shared
--- @treturn[1] bool True if the entity is locked, false if it is not locked, or nil if the lock status cannot be determined.
-function entityMeta:isLocked()
-    if self:IsVehicle() then
-        local datatable = self:GetSaveTable()
-        if datatable then return datatable.VehicleLocked end
-    else
-        local datatable = self:GetSaveTable()
-        if datatable then return datatable.m_bLocked end
-    end
-    return nil
 end
 
 for _, v in pairs(list.Get("Vehicles")) do
@@ -276,7 +262,6 @@ end
 entityMeta.IsProp = entityMeta.isProp
 entityMeta.IsItem = entityMeta.isItem
 entityMeta.IsMoney = entityMeta.isMoney
-entityMeta.IsSimfphysCar = entityMeta.isSimfphysCar
 entityMeta.GetEntItemDropPos = entityMeta.getEntItemDropPos
 entityMeta.NearEntity = entityMeta.nearEntity
 entityMeta.IsDoorLocked = entityMeta.isDoorLocked
@@ -288,4 +273,3 @@ entityMeta.IsScreenVisible = entityMeta.isScreenVisible
 entityMeta.IsChair = entityMeta.isChair
 entityMeta.CanSeeEntity = entityMeta.canSeeEntity
 entityMeta.AssignCreator = entityMeta.assignCreator
-entityMeta.IsLocked = entityMeta.isLocked

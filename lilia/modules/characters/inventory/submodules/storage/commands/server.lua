@@ -51,6 +51,7 @@ lia.command.add("trunk", {
             entity.receivers[client] = true
             lia.inventory.instances[entity:getNetVar("inv")]:sync(client)
             net.Start("liaStorageOpen")
+            net.WriteBool(true)
             net.WriteEntity(entity)
             net.Send(client)
             entity:EmitSound("items/ammocrate_open.wav")
