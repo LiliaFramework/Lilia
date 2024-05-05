@@ -1,12 +1,18 @@
 ﻿PIM_Frame = nil
 function MODULE:ScoreboardShow()
-    if LocalPlayer():getChar() and self:CheckPossibilities() then
-        self:OpenPIM()
+    local traceEnt = LocalPlayer():GetEyeTrace().Entity
+    if LocalPlayer():getChar() and self:CheckPossibilities(traceEnt) then
+        self:OpenPIM(traceEnt, true)
         return true
     end
 end
 
-function MODULE:OpenPIM()
+function MODULE:PlayerButtonDown(_, button)
+    local traceEnt = LocalPlayer():GetEyeTrace().Entity
+    if button == self.AlternativeInteractionMenuKeybind and IsFirstTimePredicted() and IsValid(traceEnt) and not traceEnt:IsPlayer() then self:OpenPIM(traceEnt, false) end
+end
+
+function MODULE:OpenPIM(traceEnt, needsPlayer)
     if IsValid(PIM_Frame) then PIM_Frame:Close() end
     local frame = vgui.Create("DFrame")
     frame:SetSize(300, 120)
@@ -47,9 +53,8 @@ function MODULE:OpenPIM()
     frame.list = frame.scroll:Add("DIconLayout")
     frame.list:SetSize(frame.scroll:GetSize())
     local visibleOptionsCount = 0
-    local traceEnt = LocalPlayer():GetEyeTrace().Entity
     for name, opt in pairs(self.options) do
-        if opt.shouldShow(LocalPlayer(), traceEnt) and traceEnt:IsPlayer() and self:CheckDistance(LocalPlayer(), traceEnt) then
+        if opt.shouldShow(LocalPlayer(), traceEnt) and (not needsPlayer or traceEnt:IsPlayer()) and self:CheckDistance(LocalPlayer(), traceEnt) then
             visibleOptionsCount = visibleOptionsCount + 1
             local p = frame.list:Add("DButton")
             p:SetText(name)
