@@ -1,7 +1,7 @@
 ﻿function MODULE:simfphysUse(entity, client)
     if entity.IsBeingEntered then client:notify("Someone is entering this car!") end
     if entity.IsLocked then client:notify("This car is locked!") end
-    if lia.config.CarEntryDelayEnabled and entity:IsSimfphysCar() and lia.config.TimeToEnterVehicle > 0 then
+    if lia.config.CarEntryDelayEnabled and entity:isSimfphysCar() and lia.config.TimeToEnterVehicle > 0 then
         entity.IsBeingEntered = true
         client:setAction("Entering Vehicle...", lia.config.TimeToEnterVehicle)
         client:doStaredAction(entity, function()
@@ -40,23 +40,23 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
 end
 
 function MODULE:isSuitableForTrunk(entity)
-    if IsValid(entity) and entity:IsSimfphysCar() then return true end
+    if IsValid(entity) and entity:isSimfphysCar() then return true end
 end
 
 function MODULE:CheckValidSit(client, _)
     local entity = client:GetTracedEntity()
-    if entity:IsSimfphysCar() then return false end
+    if entity:isSimfphysCar() then return false end
 end
 
 function MODULE:KeyLock(client, entity, time)
-    if IsValid(entity) and client:GetPos():Distance(entity:GetPos()) <= 256 and (entity:IsSimfphysCar() and entity:GetCreator() == client) then
+    if IsValid(entity) and client:GetPos():Distance(entity:GetPos()) <= 256 and (entity:isSimfphysCar() and entity:GetCreator() == client) then
         client:setAction("@locking", time, function() end)
         client:doStaredAction(entity, function() self:ToggleLock(client, entity, true) end, time, function() client:setAction() end)
     end
 end
 
 function MODULE:KeyUnlock(client, entity, time)
-    if IsValid(entity) and client:GetPos():Distance(entity:GetPos()) <= 256 and (entity:IsSimfphysCar() and entity:GetCreator() == client or client:IsSuperAdmin() or client:isStaffOnDuty()) then
+    if IsValid(entity) and client:GetPos():Distance(entity:GetPos()) <= 256 and (entity:isSimfphysCar() and entity:GetCreator() == client or client:IsSuperAdmin() or client:isStaffOnDuty()) then
         client:setAction("@unlocking", time, function() end)
         client:doStaredAction(entity, function() self:ToggleLock(client, entity, false) end, time, function() client:setAction() end)
     end

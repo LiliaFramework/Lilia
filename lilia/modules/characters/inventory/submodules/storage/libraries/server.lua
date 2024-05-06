@@ -130,7 +130,7 @@ end
 
 function MODULE:OnEntityCreated(entity)
     if not self:isSuitableForTrunk(entity) then return end
-    if entity:IsSimfphysCar() then netstream.Start(nil, "trunkInitStorage", entity) end
+    if entity:isSimfphysCar() then netstream.Start(nil, "trunkInitStorage", entity) end
     self:InitializeStorage(entity)
 end
 
