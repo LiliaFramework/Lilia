@@ -3,9 +3,10 @@ function MODULE:AddOption(name, data)
     self.options[name] = data
 end
 
-function MODULE:CheckPossibilities(traceEnt)
+function MODULE:CheckPossibilities()
     for _, v in pairs(self.options) do
-        if IsValid(traceEnt) and v.shouldShow(LocalPlayer(), traceEnt) then return true end
+        if not LocalPlayer():GetEyeTrace().Entity:IsPlayer() then return end
+        if v.shouldShow(LocalPlayer(), LocalPlayer():GetEyeTrace().Entity) then return true end
     end
     return false
 end
