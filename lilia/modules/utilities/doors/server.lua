@@ -102,8 +102,6 @@ end
 
 function MODULE:PlayerUse(client, entity)
     if entity:isDoor() then
-        if not entity.doorCooldown then entity.doorCooldown = 0 end
-        if entity.doorCooldown > CurTime() then return false end
         local result = hook.Run("CanPlayerUseDoor", client, entity)
         if result == false then
             return false
@@ -111,8 +109,6 @@ function MODULE:PlayerUse(client, entity)
             result = hook.Run("PlayerUseDoor", client, entity)
             if result ~= nil then return result end
         end
-
-        entity.doorCooldown = CurTime() + 0.85
     end
 end
 
