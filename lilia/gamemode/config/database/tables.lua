@@ -1,6 +1,7 @@
 ﻿--- Default tables for database tables.
 -- These tables define the structure of the database tables used in Lilia.
 -- @configurations DatableConnection
+
 -- @table DatabaseTables
 -- @realm server
 -- @field MySQLTableCreate SQL query for creating tables in MySQL database | **string**
