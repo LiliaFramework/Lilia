@@ -1,6 +1,6 @@
 ﻿--[[--
 
-**Configuration Values:**.
+**Configuration Values:**
 
 - WepAlwaysRaised: Determine if weapons are always raised | **bool**.
 

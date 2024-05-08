@@ -1,6 +1,6 @@
 ﻿--[[--
 
-**Configuration Values:**.
+**Configuration Values:**
 
 - DefaultStaff: List of Default Staff and correspondent usergroups | **table**.
 

@@ -1,6 +1,6 @@
 ﻿--[[--
 
-**Configuration Values:**.
+**Configuration Values:**
 
 - WhitelistEnabled: Enable or disable the Whitelist | **bool**.
 

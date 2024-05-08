@@ -1,5 +1,5 @@
 ﻿--[[--
-**Configuration Values:**.
+**Configuration Values:**
 
 - SaveStorage: Enable or disable the saving of storage data | **bool**.
 

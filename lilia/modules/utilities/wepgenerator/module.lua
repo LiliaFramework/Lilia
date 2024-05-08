@@ -1,6 +1,6 @@
 ﻿--[[--
 
-**Configuration Values:**.
+**Configuration Values:**
 
 - AutomaticWeaponRegister: Are Weapon Items Automatically Generated? | **bool**.
 

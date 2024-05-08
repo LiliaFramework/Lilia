@@ -1,6 +1,6 @@
 ﻿--[[--
 
-**Configuration Values:**.
+**Configuration Values:**
 
 - PKWorld: When marked for Perma Kill, does world deaths count as perma killing? | **bool**.
 ]]

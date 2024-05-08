@@ -1,6 +1,6 @@
 ﻿--[[--
 
-**Configuration Values:**.
+**Configuration Values:**
 
 - RecognitionEnabled: Is character recognition enabled? | **bool**.
 

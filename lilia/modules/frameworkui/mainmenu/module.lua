@@ -1,6 +1,6 @@
 ﻿--[[--
 
-**Configuration Values:**.
+**Configuration Values:**
 
 - MusicVolume: Set Music Volume on Main Menu | **float**.
 

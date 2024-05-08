@@ -1,6 +1,6 @@
 ﻿--[[--
 
-**Configuration Values:**.
+**Configuration Values:**
 
 - DefaultVendorMoney: The Default Vendor Money | **integer**.
 

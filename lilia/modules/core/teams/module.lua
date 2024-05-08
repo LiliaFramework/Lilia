@@ -1,6 +1,6 @@
 ﻿--[[--
 
-**Configuration Values:**.
+**Configuration Values:**
 
 - PermaClass: Whether or not classes are saved in characters | **bool**.
 ]]

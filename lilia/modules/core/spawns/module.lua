@@ -1,6 +1,6 @@
 ﻿--[[--
 
-**Configuration Values:**.
+**Configuration Values:**
 
 - LoseWeapononDeathNPC: Determine if weapons are lost on death by NPCs | **bool**.
 
