@@ -1,6 +1,4 @@
-﻿--[[--
-Configuration for SAM Compatibility Module.
-]]
+﻿--- Configuration for SAM Compatibility Module.
 -- @table DatabaseConnection
 -- @realm server
 -- @field DefaultStaff List of Default Staff and corresponding usergroups | **table**
