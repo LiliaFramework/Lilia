@@ -1,5 +1,6 @@
 ﻿--- Configuration for InteractionMenu Module.
 -- @realm shared
+-- @configurations InteractionMenu
 
 -- @table Configuration
 -- @field MaxInteractionDistance Maximum distance for Interaction Menu to interact with other entities | **integer**
