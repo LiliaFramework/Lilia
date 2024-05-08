@@ -1,6 +1,7 @@
 ﻿--- Configuration for Raised Weapons Module.
 -- @realm shared
 -- @configurations RaisedWeapons
+
 -- @table Configuration
 -- @field PermaRaisedWeapons Weapons that are always raised | **table**
 -- @field WeaponToggleDelay Time Between Weapon Toggles | **integer**

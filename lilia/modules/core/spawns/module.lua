@@ -1,6 +1,7 @@
 ﻿--- Configuration for Spawns Module.
 -- @realm shared
 -- @configurations Spawns
+
 -- @table Configuration
 -- @field LoseWeapononDeathNPC Determine if weapons are lost on death by NPCs | **bool**
 -- @field LoseWeapononDeathHuman Determine if weapons are lost on death by Humans | **bool**

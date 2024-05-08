@@ -1,6 +1,7 @@
 ﻿--- Configuration for Storage Module.
 -- @realm shared
 -- @configurations Storage
+
 -- @table Configuration
 -- @field SaveStorage Enable or disable the saving of storage data | bool
 -- @field PasswordDelay Set the delay (in seconds) until password retries are allowed | integer

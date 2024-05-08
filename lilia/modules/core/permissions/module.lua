@@ -1,6 +1,7 @@
 ﻿--- Configuration for Permissions Module.
 -- @realm shared
 -- @configurations Permissions
+
 -- @table Configuration
 -- @field RestrictedEnts List of entities blocked from physgun pick up and proprieties when used by regular players | table
 -- @field RemoverBlockedEntities List of entities blocked from the remover tool when used by regular players | table

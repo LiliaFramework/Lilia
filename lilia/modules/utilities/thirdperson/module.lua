@@ -1,6 +1,7 @@
 ﻿--- Configuration for ThirdPerson Module.
 -- @realm shared
 -- @configurations ThirdPerson
+
 -- @table Configuration
 -- @field ThirdPersonEnabled Are players allowed to use third person? | **bool**
 -- @field MaxValues Max Value for Third Person | **table**

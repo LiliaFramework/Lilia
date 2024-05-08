@@ -1,6 +1,7 @@
 ﻿--- Configuration for Server Whitelist Module.
 -- @realm shared
 -- @configurations Whitelist
+
 -- @table Configuration
 -- @field WhitelistEnabled Enable or disable the Whitelist | **bool**
 -- @field BlacklistedEnabled Enable or disable the Blacklist | **bool**

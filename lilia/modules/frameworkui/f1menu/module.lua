@@ -1,6 +1,7 @@
 ﻿--- Configuration for F1Menu Module.
--- @realm shared
 -- @configurations F1Menu
+-- @realm shared
+
 -- @table Configuration
 -- @field KickOnEnteringMainMenu Set Music Volume on Main Menu | **bool**
 -- @field F1ThirdPersonEnabled Set Music Volume on Main Menu | **bool**

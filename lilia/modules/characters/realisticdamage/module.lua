@@ -1,6 +1,7 @@
 ﻿--- Configuration for RealisticDamage Module.
 -- @realm shared
 -- @configurations RealisticDamage
+
 -- @table Configuration
 -- @field DrowningEnabled Indicates whether drowning is enabled | bool
 -- @field DamageScalerEnabled Indicates whether damage scaling is enabled | bool

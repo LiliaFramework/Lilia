@@ -1,6 +1,7 @@
 ﻿--- Configuration for Vendors Module.
 -- @realm shared
 -- @configurations Vendors
+
 -- @table Configuration
 -- @field DefaultVendorMoney The Default Vendor Money | **integer**
 -- @field VendorClick The sound that plays when using a vendor | **table**

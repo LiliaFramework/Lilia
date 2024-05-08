@@ -2,6 +2,7 @@
 -- @configurations SAM
 
 -- @realm shared
+
 -- @table Configuration
 -- @field DefaultStaff List of Default Staff and corresponding usergroups | **table**
 -- @field DisplayStaffCommands Should staff commands appear in chat? | **bool**

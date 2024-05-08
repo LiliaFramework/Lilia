@@ -2,6 +2,7 @@
 -- @realm shared
 -- @configurations Recognition
 
+
 -- @table Configuration
 -- @field RecognitionEnabled Is character recognition enabled? | **bool**
 -- @field FactionAutoRecognize Do members from the same faction always auto-recognize each other? | **bool**

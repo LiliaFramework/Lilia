@@ -1,5 +1,6 @@
 ﻿--- Configuration for Chatbox Module.
 -- @realm shared
+
 -- @table Configuration
 -- @configurations Chatbox
 -- @field CustomChatSound Change Chat Sound on Message Send | bool

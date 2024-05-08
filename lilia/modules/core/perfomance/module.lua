@@ -1,6 +1,7 @@
 ﻿--- Configuration for Perfomance Module.
 -- @realm shared
 -- @configurations Perfomance
+
 -- @table Configuration
 -- @field PlayerCountCarLimitEnabled Should Car Wipe be enabled? | bool
 -- @field PlayerCountCarLimit How many players are needed for cars to wipe | integer

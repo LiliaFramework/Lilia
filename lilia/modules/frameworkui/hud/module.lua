@@ -1,6 +1,7 @@
 ﻿--- Configuration for HUD Module.
 -- @realm shared
 -- @configurations HUD
+
 -- @table Configuration
 -- @field Vignette Enable Vignette Effect | **bool**
 -- @field BranchWarning Activate Branch Warning | **bool**

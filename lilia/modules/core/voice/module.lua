@@ -1,6 +1,7 @@
 ﻿--- Configuration for Voice Module.
 -- @realm shared
 -- @configurations Voice
+
 -- @table Configuration
 -- @field IsVoiceEnabled Wheter or not voice chat is enabled | **bool**
 -- @field TalkRanges Voice hearing ranges per talking mode | **table**

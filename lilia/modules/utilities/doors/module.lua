@@ -1,6 +1,7 @@
 ﻿--- Configuration for Doors Module.
 -- @realm shared
 -- @configurations Doors
+
 -- @table Configuration
 -- @field DoorCost The Cost of a door | **integer**
 -- @field DoorSellRatio Percentage you can sell a door for | **float**

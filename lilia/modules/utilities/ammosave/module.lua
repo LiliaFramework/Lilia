@@ -1,6 +1,7 @@
 ﻿--- Configuration for AmmoSave Module.
 -- @realm shared
 -- @configurations AmmoSave
+
 -- @table Configuration
 -- @field KeepAmmoOnDeath Should ammunition be kept on character death? | **bool**
 -- @field SaveCharacterAmmo Should ammunition be kept on character disconnection? | **bool**

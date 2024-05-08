@@ -1,6 +1,7 @@
 ﻿--- Configuration for Persistence Module.
 -- @realm shared
 -- @configurations Persistance
+
 -- @table Configuration
 -- @field blacklist The entities blacklisted from being persistent | **table**
 MODULE.name = "Utilities - Persistance"

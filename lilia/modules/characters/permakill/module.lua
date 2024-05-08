@@ -1,6 +1,7 @@
 ﻿--- Configuration for Permakill Module.
 -- @realm shared
 -- @configurations Permakill
+
 -- @table Configuration
 -- @field PKWorld When marked for Perma Kill, does world deaths count as perma killing? | **bool**
 MODULE.name = "Characters - Permakill"

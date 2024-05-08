@@ -1,6 +1,7 @@
 ﻿--- Configuration for Bodygrouper Module.
 -- @realm shared
 -- @configurations Bodygrouper
+
 -- @table Configuration
 -- @field BodygrouperOpenSound Sound played when the Bodygrouper Closet opens | **string**
 -- @field BodygrouperCloseSound Sound played when the Bodygrouper Closet closes | **string**
