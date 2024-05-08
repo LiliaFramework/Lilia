@@ -1,5 +1,4 @@
-﻿--- **Configuration Values:**
--- @configurations DatableConnection
+﻿-- @configurations DatableConnection
 
 --- Default database configuration for Lilia.
 -- This table defines the default settings for connecting to the database used in Lilia.

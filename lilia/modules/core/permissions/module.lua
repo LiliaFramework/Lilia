@@ -1,6 +1,5 @@
 ﻿--[[--
 
-**Configuration Values:**.
 
 - RestrictedEnts: List of entities blocked from physgun pick up and proprieties when used by regular players | table.
 

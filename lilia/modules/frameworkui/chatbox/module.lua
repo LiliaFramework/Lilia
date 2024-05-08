@@ -1,6 +1,5 @@
 ﻿--[[--
 
-**Configuration Values:**.
 
 - CustomChatSound: Change Chat Sound on Message Send | bool.
 

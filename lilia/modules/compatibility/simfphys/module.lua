@@ -1,6 +1,5 @@
 ﻿--[[--
 
-**Configuration Values:**
 
 - DamageInCars: Either or not you take damage while in cars? | **bool**.
 

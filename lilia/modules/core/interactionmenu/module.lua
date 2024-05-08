@@ -1,6 +1,5 @@
 ﻿--[[--
 
-**Configuration Values:**
 
 - MaxInteractionDistance: Maximum distance for Interaction Menu to interact with other entities | **integer**.
 

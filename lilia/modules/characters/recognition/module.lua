@@ -1,7 +1,5 @@
 ﻿--[[--
 
-**Configuration Values:**
-
 - RecognitionEnabled: Is character recognition enabled? | **bool**.
 
 - FactionAutoRecognize: Do members from the same faction always auto-recognize each other? | **bool**.

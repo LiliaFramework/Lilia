@@ -1,6 +1,5 @@
 ﻿--[[--
 
-**Configuration Values:**
 
 - Vignette: Enable Vignette Effect | **bool**.
 

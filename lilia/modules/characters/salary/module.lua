@@ -1,6 +1,5 @@
 ﻿--[[--
 
-**Configuration Values:**
 
 - SalaryInterval: Default Time interval between salary payments in seconds | **integer**.
 

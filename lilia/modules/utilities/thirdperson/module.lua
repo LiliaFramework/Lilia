@@ -1,6 +1,5 @@
 ﻿--[[--
 
-**Configuration Values:**
 
 - ThirdPersonEnabled: Are players allowed to use third person? | **bool**.
 
