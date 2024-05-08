@@ -1,5 +1,6 @@
 ﻿--- Configuration for Save Items Module.
 -- @realm shared
+-- @configurations SaveItems
 
 -- @table Configuration
 -- @field DeleteItemsOnRestart Enable or disable item deletion on restart | **bool**
