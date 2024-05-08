@@ -211,7 +211,7 @@ if SERVER then
     -- @realm server
     -- @tparam Item item The item to add to the inventory.
     -- @treturn Inventory Returns the inventory itself.
-    function Inventory:addItem(item)
+    function Inventory:addItem(item, noReplicate)
         self.items[item:getID()] = item
         item.invID = self:getID()
         local id = self.id
@@ -221,7 +221,7 @@ if SERVER then
         }, nil, "items", "_itemID = " .. item:getID())
 
         self:syncItemAdded(item)
-        hook.Run("OnItemAdded", item:getOwner(), item)
+        if not noReplicate then hook.Run("OnItemAdded", item:getOwner(), item) end
         return self
     end
 

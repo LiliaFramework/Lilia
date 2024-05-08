@@ -136,7 +136,7 @@ if SERVER then
         self.owner = owner
     end
 
-    function GridInv:add(itemTypeOrItem, xOrQuantity, yOrData)
+    function GridInv:add(itemTypeOrItem, xOrQuantity, yOrData, noReplicate)
         local x, y, data
         local quantity = 1
         local isStackCommand = isstring(itemTypeOrItem) and isnumber(xOrQuantity)
@@ -146,7 +146,7 @@ if SERVER then
             if quantity > 1 then
                 local items = {}
                 for i = 1, quantity do
-                    items[i] = self:add(itemTypeOrItem, 1, data)
+                    items[i] = self:add(itemTypeOrItem, 1, data, noReplicate)
                 end
                 return deferred.all(items)
             end
@@ -231,7 +231,7 @@ if SERVER then
         if not isStackCommand and justAddDirectly then
             item:setData("x", x)
             item:setData("y", y)
-            targetInventory:addItem(item)
+            targetInventory:addItem(item, noReplicate)
             return d:resolve(item)
         end
 
@@ -257,7 +257,7 @@ if SERVER then
                 end
             end
 
-            targetInventory:addItem(item)
+            targetInventory:addItem(item, noReplicate)
             d:resolve(item)
         end):next(function(item)
             if isStackCommand and remainingQuantity > 0 then
@@ -274,7 +274,7 @@ if SERVER then
 
                     deferred.all(items):next(nil, function(_) hook.Run("OnPlayerLostStackItem", itemTypeOrItem) end)
                     item:setQuantity(remainingQuantity - (item.maxQuantity * overStacks))
-                    targetInventory:addItem(item)
+                    targetInventory:addItem(item, noReplicate)
                     return d:resolve(items)
                 else
                     item:setQuantity(remainingQuantity)
