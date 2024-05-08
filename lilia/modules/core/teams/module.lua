@@ -1,9 +1,7 @@
-﻿--[[--
-
-**Configuration Values:**
-
-- PermaClass: Whether or not classes are saved in characters | **bool**.
-]]
+﻿--- Configuration for Teams Module.
+-- @realm shared
+-- @table Configuration
+-- @field PermaClass Whether or not classes are saved in characters | **bool**
 -- @configurations Teams
 
 MODULE.name = "Core - Teams"

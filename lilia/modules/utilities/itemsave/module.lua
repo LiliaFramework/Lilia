@@ -1,10 +1,9 @@
-﻿--[[--
+﻿--- Configuration for Save Items Module.
+-- @realm shared
+-- @table Configuration
+-- @field DeleteItemsOnRestart Enable or disable item deletion on restart | **bool**
+-- @field BodygrouperOpenSound Sound played when the Bodygrouper Closet opens | **string**
 
-**Configuration Values:**
-
-- DeleteItemsOnRestart: Enable or disable item deletion on restart | **bool**.
-]]
--- @configurations SaveItems
 MODULE.name = "Utilities - Save Items"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"

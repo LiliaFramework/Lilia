@@ -1,9 +1,8 @@
-﻿--[[--
-
-**Configuration Values:**
-
-- blacklist: The entities blacklisted from being persistent | **table**.
-]]
+﻿
+--- Configuration for Persistence Module.
+-- @realm shared
+-- @table Configuration
+-- @field blacklist The entities blacklisted from being persistent | **table**
 -- @configurations Persistance
 MODULE.name = "Utilities - Persistance"
 MODULE.author = "76561198312513285"

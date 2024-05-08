@@ -1,19 +1,12 @@
-﻿--[[--
-**Configuration Values:**
-
-- StaminaBlur: Is Stamina Blur Enabled? | **bool**.
-
-- StaminaSlowdown: Is Stamina Slowdown Enabled? | **bool**.
-
-- DefaultStamina: Sets Default Stamina Value | **integer**.
-
-- StaminaBlurThreshold: Sets Stamina Threshold for Blur to Show | **integer**.
-
-- StaminaBreathingThreshold: Sets Stamina Threshold for Breathing to Happen | **integer**.
-
-- CharAttrib: Sets Sounds Made when hitting the attribute abutton | **table**.
-
-]]
+﻿--- Configuration for Attributes Module.
+-- @realm shared
+-- @table Configuration
+-- @field StaminaBlur Is Stamina Blur Enabled? | **bool**
+-- @field StaminaSlowdown Is Stamina Slowdown Enabled? | **bool**
+-- @field DefaultStamina Sets Default Stamina Value | **integer**
+-- @field StaminaBlurThreshold Sets Stamina Threshold for Blur to Show | **integer**
+-- @field StaminaBreathingThreshold Sets Stamina Threshold for Breathing to Happen | **integer**
+-- @field CharAttrib Sets Sounds Made when hitting the attribute button | **table**
 -- @configurations Attributes
 MODULE.name = "Characters - Attributes"
 MODULE.author = "76561198312513285"

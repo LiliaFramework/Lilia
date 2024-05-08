@@ -1,24 +1,15 @@
-﻿--[[--
+﻿--- Configuration for HUD Module.
+-- @realm shared
+-- @table Configuration
+-- @field Vignette Enable Vignette Effect | **bool**
+-- @field BranchWarning Activate Branch Warning | **bool**
+-- @field CrosshairEnabled Enable Crosshair | **bool**
+-- @field BarsDisabled Disable Bars | **bool**
+-- @field NoDrawCrosshairWeapon Weapons with No Crosshair | **table**
+-- @field AmmoDrawEnabled Enable Ammo Draw | **bool**
+-- @field DarkTheme Toggle Dark Theme | **bool**
+-- @field HiddenHUDElements Disabled Sandbox HUD Elements | **table**
 
-**Configuration Values:**
-
-- Vignette: Enable Vignette Effect | **bool**.
-
-- BranchWarning: Activate Branch Warning | **bool**.
-
-- CrosshairEnabled: Enable Crosshair | **bool**.
-
-- BarsDisabled: Disable Bars | **bool**.
-
-- NoDrawCrosshairWeapon: Weapons with No Crosshair | **table**.
-
-- AmmoDrawEnabled: Enable Ammo Draw | **bool**.
-
-- DarkTheme: Toggle Dark Theme | **bool**.
-
-- HiddenHUDElements: Disabled Sandbox HUD Elements | **table**.
-
-]]
 -- @configurations HUD
 MODULE.name = "Framework UI - HUD"
 MODULE.author = "76561198312513285"

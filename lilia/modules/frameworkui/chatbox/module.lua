@@ -1,30 +1,19 @@
-﻿--[[--
+﻿--- Configuration for Chatbox Module.
+-- @realm shared
+-- @table Configuration
+-- @field CustomChatSound Change Chat Sound on Message Send | bool
+-- @field ChatColor Chat Color | color
+-- @field ChatRange Range of Chat can be heard | integer
+-- @field ChatShowTime Should chat show timestamp | bool
+-- @field OOCLimit Limit of characters on OOC | integer
+-- @field ChatListenColor Color of chat when directly working at someone | color
+-- @field OOCDelayAdmin Should Admins to have OOC Delay | bool
+-- @field LOOCDelayAdmin Should Admins to have LOOC Delay | bool
+-- @field OOCDelay Set OOC Text Delay | integer
+-- @field LOOCDelay Set LOOC Text Delay | integer
+-- @field ChatSizeDiff Enable Different Chat Size Diff | bool
 
-**Configuration Values:**.
 
-- CustomChatSound: Change Chat Sound on Message Send | bool.
-
-- ChatColor: Chat Color| color.
-
-- ChatRange: Range of Chat can be heard| integer.
-
-- ChatShowTime: Should chat show timestamp | bool.
-
-- OOCLimit: Limit of characters on OOC | integer.
-
-- ChatListenColor: Color of chat when directly working at someone **folor.
-
-- OOCDelayAdmin: Should Admins to have OOC Delay | bool.
-
-- LOOCDelayAdmin: Should Admins to have LOOC Delay | bool.
-
-- OOCDelay: Set OOC Text Delay | integer.
-
-- LOOCDelay: Set LOOC Text Delay | integer.
-
-- ChatSizeDiff: Enable Different Chat Size Diff | bool.
-
-]]
 -- @configurations Chatbox
 MODULE.name = "Framework UI - Chatbox"
 MODULE.author = "76561198312513285"

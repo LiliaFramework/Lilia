@@ -1,13 +1,9 @@
-﻿--[[--
-
-**Configuration Values:**
-
-- DoorCost: The Cost of a door | **integer**.
-
-- DoorSellRatio: Percentage you can sell a door for | **float**.
-
-- DoorLockTime: Time it takes to lock a door | **float**.
-]]
+﻿--- Configuration for Doors Module.
+-- @realm shared
+-- @table Configuration
+-- @field DoorCost The Cost of a door | **integer**
+-- @field DoorSellRatio Percentage you can sell a door for | **float**
+-- @field DoorLockTime Time it takes to lock a door | **float**
 -- @configurations Doors
 DOOR_OWNER = 3
 DOOR_TENANT = 2
