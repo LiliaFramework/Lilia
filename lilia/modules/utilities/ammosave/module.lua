@@ -1,5 +1,6 @@
 ﻿--[[--
 
+**Configuration Values:**
 
 - KeepAmmoOnDeath: Should ammunition be kept on character death? | **bool**.
 

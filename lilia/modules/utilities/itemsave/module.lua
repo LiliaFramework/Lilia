@@ -1,5 +1,6 @@
 ﻿--[[--
 
+**Configuration Values:**
 
 - DeleteItemsOnRestart: Enable or disable item deletion on restart | **bool**.
 ]]

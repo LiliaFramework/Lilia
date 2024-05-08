@@ -1,5 +1,6 @@
 ﻿--[[--
 
+**Configuration Values:**
 
 - HiddenFactions: Scoreboard Table of Factions that are hidden | **table**.
 

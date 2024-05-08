@@ -1,5 +1,6 @@
 ﻿--[[--
 
+**Configuration Values:**.
 
 - RPMinimumPlayerCount: Minimum Players To Start RP | integer.
 

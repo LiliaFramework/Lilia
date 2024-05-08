@@ -1,4 +1,5 @@
 ﻿--[[--
+**Configuration Values:**
 
 - BodygrouperOpenSound: Sound played when the Bodygrouper Closet opens | **string**
 .

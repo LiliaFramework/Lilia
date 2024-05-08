@@ -1,5 +1,6 @@
 ﻿--[[--
 
+**Configuration Values:**
 
 - blacklist: The entities blacklisted from being persistent | **table**.
 ]]

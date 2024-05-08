@@ -1,5 +1,7 @@
 ﻿--[[--
 
+**Configuration Values:
+
 - FamilySharingEnabled: Indicates whether Family Sharing is enabled on this server. | bool.
 
 - CarRagdoll: Determines whether being hit by a car results in ragdolling. | bool.

@@ -1,4 +1,5 @@
 ﻿--[[--
+**Configuration Values:**
 
 - StaminaBlur: Is Stamina Blur Enabled? | **bool**.
 

@@ -1,6 +1,7 @@
 ﻿
 --[[--
 
+**Configuration Values:**
 
 - KickOnEnteringMainMenu: Set Music Volume on Main Menu | **bool**.
 

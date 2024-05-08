@@ -1,5 +1,6 @@
 ﻿--[[--
 
+**Configuration Values:**
 
 - StaminaBlur: The Workshop IDs for addons that Lilia downloads by default | **table**.
 

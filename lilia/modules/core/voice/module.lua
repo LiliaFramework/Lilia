@@ -1,5 +1,6 @@
 ﻿--[[--
 
+**Configuration Values:**
 
 - IsVoiceEnabled: Wheter or not voice chat is enabled | **bool**.
 

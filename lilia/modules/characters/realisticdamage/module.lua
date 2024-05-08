@@ -1,5 +1,6 @@
 ﻿--[[--
 
+**Configuration Values:**.
 
 - DrowningEnabled: Indicates whether drowning is enabled | bool.
 

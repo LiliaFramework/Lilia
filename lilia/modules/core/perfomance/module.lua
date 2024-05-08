@@ -1,5 +1,6 @@
 ﻿--[[--
 
+**Configuration Values:**.
 
 - PlayerCountCarLimitEnabled: Should Car Wipe be enabled?| bool.
 
