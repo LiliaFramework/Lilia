@@ -2,11 +2,11 @@
 
 **Configuration Values:**.
 
-- WepAlwaysRaised: Determine if weapons are always raised | bool.
+- WepAlwaysRaised: Determine if weapons are always raised | **bool**.
 
-- PermaRaisedWeapons: Weapons that are always raised | table.
+- PermaRaisedWeapons: Weapons that are always raised | **table**.
 
-- WeaponToggleDelay: Time Between Weapon Toggles | integer.
+- WeaponToggleDelay: Time Between Weapon Toggles | **integer**.
 ]]
 -- @configurations RaisedWeapons
 MODULE.name = "Characters - Raised Weapons"

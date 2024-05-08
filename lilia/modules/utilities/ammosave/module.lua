@@ -2,9 +2,9 @@
 
 **Configuration Values:**.
 
-- KeepAmmoOnDeath: Should ammunition be kept on character death? | bool.
+- KeepAmmoOnDeath: Should ammunition be kept on character death? | **bool**.
 
-- SaveCharacterAmmo: Should ammunition be kept on character disconnection? | bool.
+- SaveCharacterAmmo: Should ammunition be kept on character disconnection? | **bool**.
 ]]
 -- @configurations AmmoSave
 MODULE.name = "Utilities - Ammo Save"

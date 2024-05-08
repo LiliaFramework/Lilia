@@ -2,11 +2,11 @@
 
 **Configuration Values:**.
 
-- DoorCost: The Cost of a door | integer.
+- DoorCost: The Cost of a door | **integer**.
 
-- DoorSellRatio: Percentage you can sell a door for | float.
+- DoorSellRatio: Percentage you can sell a door for | **float**.
 
-- DoorLockTime: Time it takes to lock a door | float.
+- DoorLockTime: Time it takes to lock a door | **float**.
 ]]
 -- @configurations Doors
 DOOR_OWNER = 3

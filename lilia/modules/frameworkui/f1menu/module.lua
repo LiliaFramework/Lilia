@@ -3,21 +3,21 @@
 
 **Configuration Values:**.
 
-- KickOnEnteringMainMenu: Set Music Volume on Main Menu | bool.
+- KickOnEnteringMainMenu: Set Music Volume on Main Menu | **bool**.
 
-- F1ThirdPersonEnabled: Set Music Volume on Main Menu | bool.
+- F1ThirdPersonEnabled: Set Music Volume on Main Menu | **bool**.
 
-- F1DisplayModel: Set Music Volume on Main Menu | bool.
+- F1DisplayModel: Set Music Volume on Main Menu | **bool**.
 
-- RulesEnabled: Set Music Volume on Main Menu | bool.
+- RulesEnabled: Set Music Volume on Main Menu | **bool**.
 
-- TutorialEnabled: Set Music Volume on Main Menu | bool.
+- TutorialEnabled: Set Music Volume on Main Menu | **bool**.
 
-- FAQEnabled: Set Music Volume on Main Menu | bool.
+- FAQEnabled: Set Music Volume on Main Menu | **bool**.
 
-- InfoMenuLocation: What corner does your Information appear on (TopLeft, TopRight, BottomRight, BottomCenter)| string.
+- InfoMenuLocation: What corner does your Information appear on (TopLeft, TopRight, BottomRight, BottomCenter)| **string**.
 
-- FAQQuestions: Set Music Volume on Main Menu | table.
+- FAQQuestions: Set Music Volume on Main Menu | **table**.
 
 ]]
 -- @configurations F1Menu

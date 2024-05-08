@@ -1,11 +1,11 @@
 ﻿--[[--
 **Configuration Values:**.
 
-- BodygrouperOpenSound: Sound played when the Bodygrouper Closet opens | string**
+- BodygrouperOpenSound: Sound played when the Bodygrouper Closet opens | **string**
 .
-- BodygrouperCloseSound: Sound played when the Bodygrouper Closet closes | string.
+- BodygrouperCloseSound: Sound played when the Bodygrouper Closet closes | **string**.
 
-- BodygrouperModel: Model used for the Bodygrouper Closet | string.
+- BodygrouperModel: Model used for the Bodygrouper Closet | **string**.
 ]]
 -- @configurations Bodygrouper
 MODULE.name = "Characters - Bodygrouper"

@@ -2,9 +2,9 @@
 
 **Configuration Values:**.
 
-- IsVoiceEnabled: Wheter or not voice chat is enabled | bool.
+- IsVoiceEnabled: Wheter or not voice chat is enabled | **bool**.
 
-- TalkRanges: Voice hearing ranges per talking mode | table.
+- TalkRanges: Voice hearing ranges per talking mode | **table**.
 
 ]]
 -- @configurations Voice

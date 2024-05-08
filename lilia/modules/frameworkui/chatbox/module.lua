@@ -2,27 +2,27 @@
 
 **Configuration Values:**.
 
-- CustomChatSound: Change Chat Sound on Message Send | bool.
+- CustomChatSound: Change Chat Sound on Message Send | **bool**.
 
 - ChatColor: Chat Color| color.
 
-- ChatRange: Range of Chat can be heard| integer.
+- ChatRange: Range of Chat can be heard| **integer**.
 
-- ChatShowTime: Should chat show timestamp | bool.
+- ChatShowTime: Should chat show timestamp | **bool**.
 
-- OOCLimit: Limit of characters on OOC | integer.
+- OOCLimit: Limit of characters on OOC | **integer**.
 
 - ChatListenColor: Color of chat when directly working at someone **folor.
 
-- OOCDelayAdmin: Should Admins to have OOC Delay | bool.
+- OOCDelayAdmin: Should Admins to have OOC Delay | **bool**.
 
-- LOOCDelayAdmin: Should Admins to have LOOC Delay | bool.
+- LOOCDelayAdmin: Should Admins to have LOOC Delay | **bool**.
 
-- OOCDelay: Set OOC Text Delay | integer.
+- OOCDelay: Set OOC Text Delay | **integer**.
 
-- LOOCDelay: Set LOOC Text Delay | integer.
+- LOOCDelay: Set LOOC Text Delay | **integer**.
 
-- ChatSizeDiff: Enable Different Chat Size Diff | bool.
+- ChatSizeDiff: Enable Different Chat Size Diff | **bool**.
 
 ]]
 -- @configurations Chatbox

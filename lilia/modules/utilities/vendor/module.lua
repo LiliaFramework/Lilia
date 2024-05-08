@@ -2,9 +2,9 @@
 
 **Configuration Values:**.
 
-- DefaultVendorMoney: The Default Vendor Money | integer.
+- DefaultVendorMoney: The Default Vendor Money | **integer**.
 
-- VendorClick: The sound that plays when using a vendor | table.
+- VendorClick: The sound that plays when using a vendor | **table**.
 
 ]]
 -- @configurations Vendors

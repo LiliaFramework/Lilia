@@ -2,7 +2,7 @@
 
 **Configuration Values:**.
 
-- PKWorld: When marked for Perma Kill, does world deaths count as perma killing? | bool.
+- PKWorld: When marked for Perma Kill, does world deaths count as perma killing? | **bool**.
 ]]
 -- @configurations Permakill
 MODULE.name = "Characters - Permakill"
