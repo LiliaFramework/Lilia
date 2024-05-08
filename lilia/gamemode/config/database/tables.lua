@@ -1,4 +1,4 @@
-﻿--- **Configuration Values:**
+﻿--- **Configuration Values:**.
 -- @configurations DatabaseTables
 
 --- Default tables for database tables.

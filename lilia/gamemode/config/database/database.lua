@@ -1,4 +1,4 @@
-﻿--- **Configuration Values:**
+﻿--- **Configuration Values:**.
 -- @configurations DatableConnection
 
 --- Default database configuration for Lilia.
