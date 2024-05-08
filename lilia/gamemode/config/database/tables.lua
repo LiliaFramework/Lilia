@@ -7,6 +7,7 @@
 --- Default tables for database tables.
 -- These tables define the structure of the database tables used in Lilia.
 -- @table DatabaseTables
+-- @realm server
 -- @field MySQLTableCreate SQL query for creating tables in MySQL database | string
 -- @field SqlLiteTableCreate SQL query for creating tables in SQLite database | string
 -- @field SqlLiteTableDrop SQL query for dropping tables in SQLite database | string
