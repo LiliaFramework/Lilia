@@ -1,9 +1,5 @@
 ﻿--- Configuration for SAM Compatibility Module.
 -- @configurations SAM
--- @table Configuration
--- @realm shared
--- @field DefaultStaff List of Default Staff and corresponding usergroups | **table**
--- @field DisplayStaffCommands Should staff commands appear in chat? | **bool**
 
 
 MODULE.name = "Compatibility - SAM"
