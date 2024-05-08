@@ -209,7 +209,7 @@ end
 if SERVER then
     --- Adds an item to the inventory.
     -- @realm server
-    -- @tparam item The item to add to the inventory.
+    -- @tparam item item to add to the inventory.
     -- @bool noReplicate Set to true to prevent OnItemAdded to be called on the added item.
     -- @treturn Inventory Returns the inventory itself.
     function Inventory:addItem(item, noReplicate)

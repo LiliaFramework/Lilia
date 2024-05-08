@@ -152,7 +152,6 @@ end
 
 --- Loads items from a directory.
 -- @string directory The directory path.
--- @bool isFirstLoad Indicates if it's the first load.
 -- @realm shared
 function lia.item.loadFromDir(directory)
     local files, folders
