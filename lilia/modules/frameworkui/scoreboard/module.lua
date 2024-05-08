@@ -1,12 +1,11 @@
 ﻿--- Configuration for Scoreboard Module.
 -- @realm shared
+-- @configurations Scoreboard
 -- @table Configuration
 -- @field HiddenFactions Scoreboard Table of Factions that are hidden | **table**
 -- @field sbHeight Scoreboard Height | **float**
 -- @field sbWidth Scoreboard Width | **float**
 -- @field ShowStaff Should Staff Show In Scoreboard | **bool**
-
--- @configurations Scoreboard
 MODULE.name = "Framework UI - Scoreboard"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"

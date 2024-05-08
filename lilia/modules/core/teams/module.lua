@@ -1,9 +1,8 @@
 ﻿--- Configuration for Teams Module.
 -- @realm shared
+-- @configurations Teams
 -- @table Configuration
 -- @field PermaClass Whether or not classes are saved in characters | **bool**
--- @configurations Teams
-
 MODULE.name = "Core - Teams"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"

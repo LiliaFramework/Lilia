@@ -55,7 +55,6 @@ end
 
 vgui.Register("CreditsNamePanel", PANEL, "DPanel")
 PANEL = {}
-
 function PANEL:Init()
     self.contButton = self:Add("DButton")
     self.contButton:SetFont("liaBigCredits")
@@ -75,7 +74,6 @@ function PANEL:Paint()
 end
 
 vgui.Register("CreditsContribPanel", PANEL, "DPanel")
-
 PANEL = {}
 function PANEL:Init()
 end
@@ -114,14 +112,14 @@ function PANEL:Init()
     lia.gui.creditsPanel = self
     self:SetSize(ScrW * 0.3, ScrH * 0.7)
     self.logo = self:Add("CreditsLogo")
-    self:SetPos(ScrW / 5,0)
+    self:SetPos(ScrW / 5, 0)
     self.logo:SetSize(ScrW * 0.4, ScrW * 0.1)
     self.logo:Dock(TOP)
     self.logo:DockMargin(0, 0, 0, ScrH * 0.05)
     self.contributors = self:Add("DLabel")
     self.contributors:SetFont("liaBigCredits")
     self.contributors:SetText("Lilia Development Team")
-    self.contributors:SetTextColor(Color(255,255,255))
+    self.contributors:SetTextColor(Color(255, 255, 255))
     self.contributors:SizeToContents()
     self.contributors:Dock(TOP)
     local dockLeft = ScrW * 0.15 - self.contributors:GetContentSize() / 2

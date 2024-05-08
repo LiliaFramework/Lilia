@@ -16,11 +16,7 @@ function GM:PlayerBindPress(client, bind, pressed)
         if menu and lia.menu.onButtonPressed(menu, callback) then return true end
         if bind:find("use") then
             local entity = client:GetTracedEntity()
-            if IsValid(entity) then
-                if entity:isItem() or entity.hasMenu then
-                    hook.Run("ItemShowEntityMenu", entity)
-                end
-            end
+            if IsValid(entity) then if entity:isItem() or entity.hasMenu then hook.Run("ItemShowEntityMenu", entity) end end
         end
     end
 end
@@ -54,13 +50,13 @@ end
 function GM:CharacterListLoaded(newCharList)
     print("CharacterListLoaded is deprecated. Use CharListLoaded for optimization purposes.")
     hook.Run("CharListLoaded", newCharList)
-
 end
+
 function GM:CharacterListUpdated(oldCharList, newCharList)
     print("CharacterListUpdated is deprecated. Use CharListUpdated for optimization purposes.")
     hook.Run("CharListUpdated", oldCharList, newCharList)
-
 end
+
 function GM:CharListLoaded()
     timer.Create("liaWaitUntilPlayerValid", 1, 0, function()
         if not IsValid(LocalPlayer()) then return end
@@ -68,6 +64,7 @@ function GM:CharListLoaded()
         hook.Run("LiliaLoaded")
     end)
 end
+
 function GM:OnContextMenuOpen()
     self.BaseClass:OnContextMenuOpen()
     lia.bar.drawAction()

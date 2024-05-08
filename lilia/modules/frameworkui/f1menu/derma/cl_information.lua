@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 local PANEL = {}
 function PANEL:Init()
     local client = LocalPlayer()

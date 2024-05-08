@@ -1,5 +1,6 @@
 ﻿--- Configuration for Permissions Module.
 -- @realm shared
+-- @configurations Permissions
 -- @table Configuration
 -- @field RestrictedEnts List of entities blocked from physgun pick up and proprieties when used by regular players | table
 -- @field RemoverBlockedEntities List of entities blocked from the remover tool when used by regular players | table
@@ -12,7 +13,6 @@
 -- @field PlayerSpawnVehicleDelay Delay for spawning a vehicle after the previous one | integer
 -- @field ToolInterval ToolGun Usage Cooldown | integer
 -- @field SpawnMenuLimit Should Spawn Menu be limited to pet flag holders/staff | bool
--- @configurations Permissions
 MODULE.name = "Core - Permissions"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"

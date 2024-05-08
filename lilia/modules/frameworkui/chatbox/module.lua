@@ -1,6 +1,7 @@
 ﻿--- Configuration for Chatbox Module.
 -- @realm shared
 -- @table Configuration
+-- @configurations Chatbox
 -- @field CustomChatSound Change Chat Sound on Message Send | bool
 -- @field ChatColor Chat Color | color
 -- @field ChatRange Range of Chat can be heard | integer
@@ -12,9 +13,6 @@
 -- @field OOCDelay Set OOC Text Delay | integer
 -- @field LOOCDelay Set LOOC Text Delay | integer
 -- @field ChatSizeDiff Enable Different Chat Size Diff | bool
-
-
--- @configurations Chatbox
 MODULE.name = "Framework UI - Chatbox"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"

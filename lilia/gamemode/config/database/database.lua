@@ -9,7 +9,6 @@
 -- @field password Password for accessing the database | **string**
 -- @field database Name of the database to connect to | **string**
 -- @field port Port number for the database server | **integer**
-
 DefaultDatabase = {
     module = "sqlite",
     hostname = "127.0.0.1",

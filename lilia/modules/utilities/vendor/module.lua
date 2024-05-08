@@ -1,11 +1,9 @@
 ﻿--- Configuration for Vendors Module.
 -- @realm shared
+-- @configurations Vendors
 -- @table Configuration
 -- @field DefaultVendorMoney The Default Vendor Money | **integer**
 -- @field VendorClick The sound that plays when using a vendor | **table**
-
-
--- @configurations Vendors
 MODULE.name = "Utilities - Vendors"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"

@@ -79,7 +79,7 @@ lia.command.add("charaddmoney", {
             if character and amount then
                 amount = math.Round(amount)
                 character:giveMoney(amount)
-                client:notify("You added " .. lia.currency.get(amount) .. " to " .. target:Name().. " wallet's")
+                client:notify("You added " .. lia.currency.get(amount) .. " to " .. target:Name() .. " wallet's")
             end
         end
     end

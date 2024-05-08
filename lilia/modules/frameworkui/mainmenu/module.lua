@@ -1,5 +1,6 @@
 ﻿--- Configuration for MainMenu Module.
 -- @realm shared
+-- @configurations MainMenu
 -- @table Configuration
 -- @field MusicVolume Set Music Volume on Main Menu | **float**
 -- @field Music Set Main Menu Background Music | **string**
@@ -8,8 +9,6 @@
 -- @field BackgroundIsYoutubeVideo Set If Background Screen is a YT video | **bool**
 -- @field CharMenuBGInputDisabled Disable Background Input during Main Menu Lookup | **bool**
 -- @field CharCreationTransparentBackground Set Transparent Background during Character Creation | **bool**
-
--- @configurations MainMenu
 MODULE.name = "Framework UI - Main Menu"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"

@@ -1,5 +1,6 @@
 ﻿--- Configuration for Protection Module.
 -- @realm shared
+-- @configurations Protection
 -- @table Configuration
 -- @field FamilySharingEnabled Indicates whether Family Sharing is enabled on this server. | bool
 -- @field CarRagdoll Determines whether being hit by a car results in ragdolling. | bool
@@ -16,8 +17,6 @@
 -- @field HackGlobals Lists global variables accessible in the hack menu. | table
 -- @field BadCVars Lists undesirable console variables. | table
 -- @field ExploitableNetMessages Lists exploitable Net Messages. | table
--- @configurations Protection
-
 MODULE.name = "Core - Protection"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"

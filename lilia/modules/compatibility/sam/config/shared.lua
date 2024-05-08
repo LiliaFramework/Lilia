@@ -1,1 +1,1 @@
-MODULE.DisplayStaffCommands = false
+﻿MODULE.DisplayStaffCommands = false

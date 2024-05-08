@@ -1,5 +1,6 @@
 ﻿--- Configuration for Storage Module.
 -- @realm shared
+-- @configurations Storage
 -- @table Configuration
 -- @field SaveStorage Enable or disable the saving of storage data | bool
 -- @field PasswordDelay Set the delay (in seconds) until password retries are allowed | integer
@@ -8,12 +9,6 @@
 -- @field TrunkOpenDistance Set the distance a trunk must be to be opened | integer
 -- @field StorageDefinitions List of props that will become storaged when spawned | table
 -- @field VehicleTrunk List of settings for car trunks | table
--- @configurations Storage
-
-
-
-
-
 MODULE.name = "Framework Inventory - Storage"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"

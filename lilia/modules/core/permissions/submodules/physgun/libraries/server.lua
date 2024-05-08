@@ -1,4 +1,4 @@
-local GM = GM or GAMEMODE
+﻿local GM = GM or GAMEMODE
 function GM:PhysgunPickup(client, entity)
     if entity:GetCreator() == client and (entity:isProp() or entity:isItem()) then return true end
     if client:IsSuperAdmin() then return true end

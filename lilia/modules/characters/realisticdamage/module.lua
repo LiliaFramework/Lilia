@@ -1,5 +1,6 @@
 ﻿--- Configuration for RealisticDamage Module.
 -- @realm shared
+-- @configurations RealisticDamage
 -- @table Configuration
 -- @field DrowningEnabled Indicates whether drowning is enabled | bool
 -- @field DamageScalerEnabled Indicates whether damage scaling is enabled | bool
@@ -17,7 +18,6 @@
 -- @field FemaleHurtSounds Sounds played when a female character is hurt | table
 -- @field DrownSounds Sounds played when a character is drowning | table
 -- @field InjuriesTable Defines the text referring to condition that appears when looking at someone | table
--- @configurations RealisticDamage
 MODULE.name = "Characters - Realistic Damage"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"

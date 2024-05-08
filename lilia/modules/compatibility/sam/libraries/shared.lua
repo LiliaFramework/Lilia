@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 function sam.player.send_message(ply, msg, tbl)
     if SERVER then
         if sam.isconsole(ply) then

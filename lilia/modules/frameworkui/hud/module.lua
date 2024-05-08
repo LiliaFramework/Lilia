@@ -1,5 +1,6 @@
 ﻿--- Configuration for HUD Module.
 -- @realm shared
+-- @configurations HUD
 -- @table Configuration
 -- @field Vignette Enable Vignette Effect | **bool**
 -- @field BranchWarning Activate Branch Warning | **bool**
@@ -9,8 +10,6 @@
 -- @field AmmoDrawEnabled Enable Ammo Draw | **bool**
 -- @field DarkTheme Toggle Dark Theme | **bool**
 -- @field HiddenHUDElements Disabled Sandbox HUD Elements | **table**
-
--- @configurations HUD
 MODULE.name = "Framework UI - HUD"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"

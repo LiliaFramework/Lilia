@@ -41,19 +41,19 @@ function MODULE:HUDPaint()
                     if v:isProp() and ESP_Props:GetBool() then
                         surface.SetDrawColor(30, 30, 30, alpha)
                         local name = v:GetModel()
-                        lia.util.drawText("Prop Model: " .. name, x, y - size, ColorAlpha(Color(255,255,255, 255), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, nil, alpha)
+                        lia.util.drawText("Prop Model: " .. name, x, y - size, ColorAlpha(Color(255, 255, 255, 255), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, nil, alpha)
                     end
 
                     if table.HasValue(PermissionCore.NoClipESPEntities, v:GetClass()) and ESP_Entities:GetBool() then
                         surface.SetDrawColor(30, 30, 30, alpha)
                         local name = v:GetClass()
-                        lia.util.drawText("Entity Class: " .. name, x, y - size, ColorAlpha(Color(255,255,255, 255), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, nil, alpha)
+                        lia.util.drawText("Entity Class: " .. name, x, y - size, ColorAlpha(Color(255, 255, 255, 255), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, nil, alpha)
                     end
 
                     if v:isItem() and ESP_Items:GetBool() then
                         surface.SetDrawColor(30, 30, 30, alpha)
                         local name = ((v.getItemTable and v:getItemTable()) and v:getItemTable().name) or "invalid"
-                        lia.util.drawText("item: " .. name, x, y - size, ColorAlpha(Color(255,255,255, 255), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, nil, alpha)
+                        lia.util.drawText("item: " .. name, x, y - size, ColorAlpha(Color(255, 255, 255, 255), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, nil, alpha)
                     end
                 end
             end
