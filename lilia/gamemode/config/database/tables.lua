@@ -1,4 +1,17 @@
-﻿MySQLTableCreate = [[
+﻿--[[--
+**Default Values:**
+]]
+-- @configurations DatabaseTables
+
+
+--- Default tables for database tables.
+-- These tables define the structure of the database tables used in Lilia.
+-- @table DatabaseTables
+-- @field MySQLTableCreate SQL query for creating tables in MySQL database | string
+-- @field SqlLiteTableCreate SQL query for creating tables in SQLite database | string
+-- @field SqlLiteTableDrop SQL query for dropping tables in SQLite database | string
+-- @field MySQLTableDrop SQL query for dropping tables in MySQL database | string
+MySQLTableCreate = [[
     CREATE TABLE IF NOT EXISTS `lia_players` (
         `_steamID` VARCHAR(20) NOT NULL COLLATE 'utf8mb4_general_ci',
         `_steamName` VARCHAR(32) NOT NULL COLLATE 'utf8mb4_general_ci',
