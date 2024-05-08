@@ -1,8 +1,5 @@
-﻿--[[--
-**Default Values:**
-]]
+﻿--- **Configuration Values:**
 -- @configurations DatabaseTables
-
 
 --- Default tables for database tables.
 -- These tables define the structure of the database tables used in Lilia.

@@ -1,10 +1,10 @@
 ﻿--[[--
 
-**Configuration Values:**
+**Configuration Values:**.
 
-- RPMinimumPlayerCount: Minimum Players To Start RP | **integer**.
+- RPMinimumPlayerCount: Minimum Players To Start RP | integer.
 
-- EnableDownTime: Should DownTime be Enabled | **bool**.
+- EnableDownTime: Should DownTime be Enabled | bool.
 ]]
 -- @configurations DownTimeNotifier
 MODULE.name = "Utilities - DownTime Notifier"
