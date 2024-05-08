@@ -154,7 +154,7 @@ end
 -- @string directory The directory path.
 -- @bool isFirstLoad Indicates if it's the first load.
 -- @realm shared
-function lia.item.loadFromDir(directory, isFirstLoad)
+function lia.item.loadFromDir(directory)
     local files, folders
     files = file.Find(directory .. "/base/*.lua", "LUA")
     for _, v in ipairs(files) do
@@ -173,7 +173,7 @@ function lia.item.loadFromDir(directory, isFirstLoad)
         lia.item.load(directory .. "/" .. v)
     end
 
-    if isFirstLoad then hook.Run("InitializedItems") end
+    hook.Run("InitializedItems")
 end
 
 --- Creates a new item instance.
@@ -424,4 +424,4 @@ if SERVER then
     end
 end
 
-lia.item.loadFromDir("lilia/gamemode/objects/items", true)
+lia.item.loadFromDir("lilia/gamemode/objects/items")
