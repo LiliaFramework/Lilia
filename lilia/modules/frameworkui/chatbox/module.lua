@@ -1,8 +1,8 @@
 ﻿--- Configuration for Chatbox Module.
 -- @realm shared
+-- @configurations Chatbox
 
 -- @table Configuration
--- @configurations Chatbox
 -- @field CustomChatSound Change Chat Sound on Message Send | bool
 -- @field ChatColor Chat Color | color
 -- @field ChatRange Range of Chat can be heard | integer
