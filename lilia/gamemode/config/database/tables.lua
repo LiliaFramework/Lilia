@@ -3,7 +3,7 @@
 
 
 --- These tables define the structure of the database tables used in Lilia.
--- @table DatabaseTables
+-- @table Configuration
 -- @realm server
 -- @field MySQLTableCreate SQL query for creating tables in MySQL database | **string**
 -- @field SqlLiteTableCreate SQL query for creating tables in SQLite database | **string**

@@ -3,7 +3,7 @@
 
 
 --- This table defines the default settings for connecting to the database used in Lilia.
--- @table DefaultDatabaseDetails
+-- @table Configuration
 -- @realm server
 -- @field module Database module to be used (sqlite or mysqloo) | **string**
 -- @field hostname Hostname of the database server | **string**
