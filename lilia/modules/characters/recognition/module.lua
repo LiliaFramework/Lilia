@@ -1,8 +1,9 @@
 ﻿--- Configuration for Recognition Module.
--- @realm shared
 -- @configurations Recognition
 
 
+--- This table defines the default settings for the Recognition Module.
+-- @realm shared
 -- @table Configuration
 -- @field RecognitionEnabled Is character recognition enabled? | **bool**
 -- @field FactionAutoRecognize Do members from the same faction always auto-recognize each other? | **bool**

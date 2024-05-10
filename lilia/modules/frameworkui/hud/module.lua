@@ -1,7 +1,8 @@
 ﻿--- Configuration for HUD Module.
--- @realm shared
 -- @configurations HUD
 
+--- This table defines the default settings for the HUD Module.
+-- @realm shared
 -- @table Configuration
 -- @field Vignette Enable Vignette Effect | **bool**
 -- @field BranchWarning Activate Branch Warning | **bool**

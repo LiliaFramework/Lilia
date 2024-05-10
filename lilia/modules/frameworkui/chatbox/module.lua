@@ -1,7 +1,8 @@
 ﻿--- Configuration for Chatbox Module.
--- @realm shared
 -- @configurations Chatbox
 
+--- This table defines the default settings for the ChatBox Module.
+-- @realm shared
 -- @table Configuration
 -- @field CustomChatSound Change Chat Sound on Message Send | bool
 -- @field ChatColor Chat Color | color

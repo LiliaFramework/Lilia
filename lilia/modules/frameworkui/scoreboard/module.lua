@@ -1,7 +1,8 @@
 ﻿--- Configuration for Scoreboard Module.
--- @realm shared
 -- @configurations Scoreboard
 
+--- This table defines the default settings for the Scoreboard Module.
+-- @realm shared
 -- @table Configuration
 -- @field HiddenFactions Scoreboard Table of Factions that are hidden | **table**
 -- @field sbHeight Scoreboard Height | **float**

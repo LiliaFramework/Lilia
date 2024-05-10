@@ -1,7 +1,9 @@
 ﻿--- Configuration for Raised Weapons Module.
--- @realm shared
 -- @configurations RaisedWeapons
 
+
+--- This table defines the default settings for the RaisedWeapons Module.
+-- @realm shared
 -- @table Configuration
 -- @field PermaRaisedWeapons Weapons that are always raised | **table**
 -- @field WeaponToggleDelay Time Between Weapon Toggles | **integer**

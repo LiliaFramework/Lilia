@@ -1,7 +1,8 @@
 ﻿--- Configuration for InteractionMenu Module.
--- @realm shared
 -- @configurations InteractionMenu
 
+--- This table defines the default settings for the InteractionMenu Module.
+-- @realm shared
 -- @table Configuration
 -- @field MaxInteractionDistance Maximum distance for Interaction Menu to interact with other entities | **integer**
 -- @field CarSearchRadius Search radius for Interaction Menu to find a car | **integer**

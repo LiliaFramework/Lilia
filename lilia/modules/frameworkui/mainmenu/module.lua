@@ -1,7 +1,8 @@
 ﻿--- Configuration for MainMenu Module.
--- @realm shared
 -- @configurations MainMenu
 
+--- This table defines the default settings for the MainMenu Module.
+-- @realm shared
 -- @table Configuration
 -- @field MusicVolume Set Music Volume on Main Menu | **float**
 -- @field Music Set Main Menu Background Music | **string**

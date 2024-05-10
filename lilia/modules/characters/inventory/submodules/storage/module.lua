@@ -1,7 +1,9 @@
 ﻿--- Configuration for Storage Module.
--- @realm shared
 -- @configurations Storage
 
+
+--- This table defines the default settings for the Storage Module.
+-- @realm shared
 -- @table Configuration
 -- @field SaveStorage Enable or disable the saving of storage data | bool
 -- @field PasswordDelay Set the delay (in seconds) until password retries are allowed | integer

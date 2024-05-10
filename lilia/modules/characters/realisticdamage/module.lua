@@ -1,7 +1,9 @@
 ﻿--- Configuration for RealisticDamage Module.
--- @realm shared
 -- @configurations RealisticDamage
 
+
+--- This table defines the default settings for the RealisticDamage Module.
+-- @realm shared
 -- @table Configuration
 -- @field DrowningEnabled Indicates whether drowning is enabled | bool
 -- @field DamageScalerEnabled Indicates whether damage scaling is enabled | bool

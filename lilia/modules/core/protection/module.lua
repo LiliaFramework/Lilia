@@ -1,7 +1,8 @@
 ﻿--- Configuration for Protection Module.
--- @realm shared
 -- @configurations Protection
 
+--- This table defines the default settings for the Protection Module.
+-- @realm shared
 -- @table Configuration
 -- @field FamilySharingEnabled Indicates whether Family Sharing is enabled on this server. | bool
 -- @field CarRagdoll Determines whether being hit by a car results in ragdolling. | bool

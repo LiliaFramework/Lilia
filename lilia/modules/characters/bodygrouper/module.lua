@@ -2,7 +2,7 @@
 -- @configurations Bodygrouper
 
 
---- This table defines the default settings for the Attributes Module.
+--- This table defines the default settings for the Bodygrouper Module.
 -- @realm shared
 -- @table Configuration
 -- @field BodygrouperOpenSound Sound played when the Bodygrouper Closet opens | **string**
