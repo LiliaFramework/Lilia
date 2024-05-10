@@ -1,7 +1,9 @@
-﻿-- @configurations Attributes
-
---- Configuration for Attributes Module.
+﻿--- Configuration for Attributes Module.
 -- @realm shared
+-- @configurations Attributes
+
+
+--- This table defines the default settings for the Attributes Module.
 -- @table Configuration
 -- @field StaminaBlur Is Stamina Blur Enabled? | **bool**
 -- @field StaminaSlowdown Is Stamina Slowdown Enabled? | **bool**
