@@ -1,7 +1,7 @@
-﻿--- Configuration for Attributes Module.
--- @realm shared
--- @configurations Attributes
+﻿-- @configurations Attributes
 
+--- Configuration for Attributes Module.
+-- @realm shared
 -- @table Configuration
 -- @field StaminaBlur Is Stamina Blur Enabled? | **bool**
 -- @field StaminaSlowdown Is Stamina Slowdown Enabled? | **bool**
