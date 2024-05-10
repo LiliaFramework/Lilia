@@ -10,7 +10,6 @@ function MODULE:RegisterWeapons()
         ITEM.desc = "A Weapon"
         ITEM.model = wep.WorldModel
         ITEM.class = wep.ClassName
-        ITEM.weaponCategory = "primary"
         ITEM.height = 2
         ITEM.width = 2
         ITEM.category = "Weapons"
