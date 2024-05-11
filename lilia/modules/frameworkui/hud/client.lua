@@ -13,10 +13,15 @@ function MODULE:HUDPaintBackground()
 end
 
 function MODULE:HUDPaint()
-    local weapon = LocalPlayer():GetActiveWeapon()
-    if self:ShouldDrawAmmo(weapon) then self:DrawAmmo(weapon) end
-    if self:ShouldDrawCrosshair() then self:DrawCrosshair() end
-    if self:ShouldDrawVignette() then self:DrawVignette() end
+    if LocalPlayer():Alive() then
+        local weapon = LocalPlayer():GetActiveWeapon()
+        if self:ShouldDrawAmmo(weapon) then self:DrawAmmo(weapon) end
+        if self:ShouldDrawCrosshair() then self:DrawCrosshair() end
+        if self:ShouldDrawVignette() then self:DrawVignette() end
+    else
+        surface.SetDrawColor(0, 0, 0, 255)
+        surface.DrawRect(0, 0, ScrW(), ScrH())
+    end
 end
 
 function MODULE:ForceDermaSkin()
