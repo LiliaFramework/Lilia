@@ -1,6 +1,5 @@
 ﻿function MODULE:simfphysUse(entity, client)
     if entity.IsBeingEntered then client:notify("Someone is entering this car!") end
-    if entity.IsLocked then client:notify("This car is locked!") end
     if lia.config.CarEntryDelayEnabled and entity:isSimfphysCar() and lia.config.TimeToEnterVehicle > 0 then
         entity.IsBeingEntered = true
         client:setAction("Entering Vehicle...", lia.config.TimeToEnterVehicle)
@@ -46,26 +45,6 @@ end
 function MODULE:CheckValidSit(client, _)
     local entity = client:GetTracedEntity()
     if entity:isSimfphysCar() then return false end
-end
-
-function MODULE:KeyLock(client, entity, time)
-    if IsValid(entity) and client:GetPos():Distance(entity:GetPos()) <= 256 and (entity:isSimfphysCar() and entity:GetCreator() == client) then
-        client:setAction("@locking", time, function() end)
-        client:doStaredAction(entity, function() self:ToggleLock(client, entity, true) end, time, function() client:setAction() end)
-    end
-end
-
-function MODULE:KeyUnlock(client, entity, time)
-    if IsValid(entity) and client:GetPos():Distance(entity:GetPos()) <= 256 and (entity:isSimfphysCar() and entity:GetCreator() == client or client:IsSuperAdmin() or client:isStaffOnDuty()) then
-        client:setAction("@unlocking", time, function() end)
-        client:doStaredAction(entity, function() self:ToggleLock(client, entity, false) end, time, function() client:setAction() end)
-    end
-end
-
-function MODULE:ToggleLock(client, entity, state)
-    entity.IsLocked = not state
-    entity:Fire(state and "lock" or "unlock")
-    client:EmitSound(state and "doors/door_latch3.wav" or "doors/door_latch1.wav")
 end
 
 function MODULE:InitializedModules()

@@ -371,8 +371,5 @@ lia.command.add("doorsetclass", {
 lia.command.add("savedoors", {
     adminOnly = true,
     privilege = "Manage Doors",
-    onRun = function(client)
-        MODULE:SaveData()
-        client:notify("Saved Doors")
-    end
+    onRun = function(client) MODULE:SaveData() end
 })
