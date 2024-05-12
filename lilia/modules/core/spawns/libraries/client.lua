@@ -1,5 +1,5 @@
 function MODULE:PlayerButtonDown(client, button)
-    if LocalPlayer():Alive() or LocalPlayer():GetNW2Int("deathTime", 0) > os.time() then return end
+    if client:Alive() or client:GetNW2Int("deathTime", 0) > os.time() then return end
     if button == KEY_SPACE and IsFirstTimePredicted() then
         net.Start("RespawnButtonPress")
         net.SendToServer()
