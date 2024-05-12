@@ -17,6 +17,7 @@
     end
 
     self:setData(data)
+    print("Amount of vendors saved:", table.Count(data))
 end
 
 function MODULE:LoadData()
