@@ -77,7 +77,7 @@ lia.command.add("spawnremove", {
         local i = 0
         for _, v in pairs(MODULE.spawns) do
             for _, v2 in pairs(v) do
-                for _, v3 in pairs(v2) do
+                for k3, v3 in pairs(v2) do
                     if v3:Distance(position) <= radius then
                         v2[k3] = nil
                         i = i + 1
