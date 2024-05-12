@@ -204,11 +204,6 @@ function GM:EntityNetworkedVarChanged(entity, varName, _, newVal)
     if varName == "Model" and entity.SetModel then hook.Run("PlayerModelChanged", entity, newVal) end
 end
 
-function GM:PlayerUse(client, _)
-    if client:getNetVar("handcuffed") then return false end
-    return true
-end
-
 function GM:PlayerInitialSpawn(client)
     client:SuppressHint("Annoy1")
     client:SuppressHint("Annoy2")
