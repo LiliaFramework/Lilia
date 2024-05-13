@@ -1,6 +1,6 @@
 ﻿MODULE.F1ThirdPersonEnabled = false
 MODULE.F1DisplayModel = false
-MODULE.F1DisplayAttributes = true
+MODULE.F1DisplayAttributes = false
 MODULE.RulesEnabled = false
 MODULE.TutorialEnabled = false
 MODULE.FAQEnabled = false
