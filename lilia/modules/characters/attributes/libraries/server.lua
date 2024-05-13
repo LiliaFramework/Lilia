@@ -26,7 +26,7 @@ end
 function MODULE:KeyRelease(client, key)
     if self.StaminaSlowdown and key == IN_JUMP and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:getChar() then
         client:consumeStamina(15)
-        local stm = client:getLocalVar("stm", 0)
+        local stm = client:getLocalVar("stamina", 0)
         if stm == 0 then
             client:setNetVar("brth", true)
             client:ConCommand("-speed")
