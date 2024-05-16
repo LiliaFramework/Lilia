@@ -41,7 +41,7 @@ function MODULE:PlayerSpawnedProp(client, model, entity)
             inventory.isStorage = true
             storage:setInventory(inventory)
             self:SaveData()
-            if isfunction(data.onSpawn) then data.onSpawn(storage) end
+            if isfunction(data.OnSpawn) then data.OnSpawn(storage) end
         end
     end, function(err)
         ErrorNoHalt("Unable to create storage entity for " .. client:Name() .. "\n" .. err .. "\n")

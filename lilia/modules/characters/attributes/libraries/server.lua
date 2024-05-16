@@ -62,5 +62,5 @@ end
 
 function MODULE:OnCharAttribBoosted(client, character, attribID)
     local attribute = lia.attribs.list[attribID]
-    if attribute and isfunction(attribute.onSetup) then attribute:onSetup(client, character:getAttrib(attribID, 0)) end
+    if attribute and isfunction(attribute.OnSetup) then attribute:OnSetup(client, character:getAttrib(attribID, 0)) end
 end

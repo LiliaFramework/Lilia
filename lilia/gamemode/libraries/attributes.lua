@@ -26,7 +26,7 @@ end
 
 if SERVER then
     --- Sets up attributes for a given character.
-    -- Please refer to ATTRIBUTE:onSetup() for an non-internal version of this.
+    -- Please refer to ATTRIBUTE:OnSetup() for an non-internal version of this.
     -- @realm server
     -- @internal
     -- @client client The player for whom attributes are being set up
@@ -34,7 +34,10 @@ if SERVER then
         local character = client:getChar()
         if character then
             for k, v in pairs(lia.attribs.list) do
-                if v.onSetup then v:onSetup(client, character:getAttrib(k, 0)) end
+                if v.OnSetup or v.onSetup then
+                    if v.onSetup then print("onSetup is deprecated. Use OnSetup for optimization purposes.") end
+                    v:OnSetup(client, character:getAttrib(k, 0))
+                end
             end
         end
     end

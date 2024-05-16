@@ -11,8 +11,9 @@ if SERVER then
             return false
         end
 
-        if item.onCanBeTransfered then
-            local itemHook = item:onCanBeTransfered(curInv, inventory)
+        if item.OnCanBeTransfered or item.onCanBeTransfered then
+            if item.onCanBeTransfered then print("onCanBeTransfered is deprecated. Use OnCanBeTransfered for optimization purposes.") end
+            local itemHook = item:OnCanBeTransfered(curInv, inventory)
             return itemHook ~= false
         end
     end

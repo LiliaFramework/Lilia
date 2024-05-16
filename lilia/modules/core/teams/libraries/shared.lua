@@ -1,5 +1,9 @@
 ﻿function MODULE:CheckFactionLimitReached(faction, character, client)
-    if isfunction(faction.onCheckLimitReached) then return faction:onCheckLimitReached(character, client) end
+    if isfunction(faction.OnCheckLimitReached) or isfunction(faction.onCheckLimitReached) then
+        if faction.onCheckLimitReached then print("onCheckLimitReached is deprecated. Use onCheckLimitReached for optimization purposes.") end
+        return faction:OnCheckLimitReached(character, client)
+    end
+
     if not isnumber(faction.limit) then return false end
     local maxPlayers = faction.limit
     if faction.limit < 1 then maxPlayers = math.Round(#player.GetAll() * faction.limit) end

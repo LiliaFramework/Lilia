@@ -30,7 +30,10 @@ function GM:CharPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
     for _, v in pairs(character:getInv():getItems()) do
-        if v.onSave then v:call("onSave", client) end
+        if v.OnSave or v.onSave then
+            if v.onSave then print("onSave is deprecated. Use OnSave for optimization purposes.") end
+            v:call("onSave", client)
+        end
     end
 end
 
@@ -377,6 +380,11 @@ function GM:OnServerLog(client, logType, ...)
     for _, v in pairs(lia.util.getAdmins()) do
         if hook.Run("CanPlayerSeeLog", v, logType) ~= false then lia.log.send(v, lia.log.getString(client, logType, ...)) end
     end
+end
+
+function GM:onCharCreated(client, character, data)
+    print("onCharCreated is deprecated. Use OnCharCreated for optimization purposes.")
+    hook.Run("OnCharCreated", client, character, data)
 end
 
 function GM:OnCharCreated(client, character)

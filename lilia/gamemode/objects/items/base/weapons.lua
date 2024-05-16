@@ -109,7 +109,7 @@ ITEM.functions.Equip = {
     onCanRun = function(item) return not IsValid(item.entity) and not item:getData("equip", false) end
 }
 
-function ITEM:onCanBeTransfered(_, newInventory)
+function ITEM:OnCanBeTransfered(_, newInventory)
     if newInventory and self:getData("equip") then return false end
     return true
 end

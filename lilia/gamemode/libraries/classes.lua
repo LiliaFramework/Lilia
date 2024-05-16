@@ -3,7 +3,7 @@ Helper library for loading/getting class information.
 
 Classes are temporary assignments for characters - analogous to a "job" in a faction. For example, you may have a police faction
 in your schema, and have "police recruit" and "police chief" as different classes in your faction. Anyone can join a class in
-their faction by default, but you can restrict this as you need with `CLASS.onCanBe`.
+their faction by default, but you can restrict this as you need with `CLASS.OnCanBe`.
 
 If you are looking for the class structure, you can find it [here](https://liliaframework.github.io/manual/structure_class).
 ]]
@@ -45,7 +45,11 @@ function lia.class.loadFromDir(directory)
             continue
         end
 
-        if not CLASS.onCanBe then CLASS.onCanBe = function(_) return true end end
+        if not CLASS.OnCanBe then
+            if CLASS.onCanBe then print("onCanBe is deprecated. Use OnCanBe for optimization purposes.") end
+            CLASS.OnCanBe = function(_) return true end
+        end
+
         lia.class.list[index] = CLASS
         CLASS = nil
     end
@@ -64,7 +68,7 @@ function lia.class.canBe(client, class)
     if client:getChar():getClass() == class then return false, "same class request" end
     if info.limit > 0 and #lia.class.getPlayers(info.index) >= info.limit then return false, "class is full" end
     if hook.Run("CanPlayerJoinClass", client, class, info) == false then return false end
-    return info:onCanBe(client)
+    return info:OnCanBe(client)
 end
 
 --- Retrieves information about a class.

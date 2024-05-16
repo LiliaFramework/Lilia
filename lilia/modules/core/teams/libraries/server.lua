@@ -3,8 +3,8 @@
     if character and self.PermaClass then character:setData("pclass", class) end
     local info = lia.class.list[class]
     local info2 = lia.class.list[oldClass]
-    if info.onSet then info:onSet(client) end
-    if info2 and info2.onLeave then info2:onLeave(client) end
+    if info.OnSet then info:OnSet(client) end
+    if info2 and info2.OnLeave then info2:OnLeave(client) end
     netstream.Start(nil, "classUpdate", client)
 end
 
@@ -90,7 +90,12 @@ function MODULE:FactionOnLoadout(client)
     end
 
     if faction.armor then client:SetArmor(faction.armor) end
-    if faction.onSpawn then faction:onSpawn(client) end
+    if faction.OnSpawn or faction.onSpawn then
+        if faction.onSpawn then end
+        print("onSpawn is deprecated. Use OnSpawn for optimization purposes.")
+        faction:OnSpawn(client)
+    end
+
     if faction.weapons then
         if istable(faction.weapons) then
             for _, v in ipairs(faction.weapons) do
@@ -182,7 +187,11 @@ function MODULE:ClassOnLoadout(client)
 
     if class.model then client:SetModel(class.model) end
     if class.armor then client:SetArmor(class.armor) end
-    if class.onSpawn then class:onSpawn(client) end
+    if class.OnSpawn or class.onSpawn then
+        if class.onSpawn then print("onSpawn is deprecated. Use OnSpawn for optimization purposes.") end
+        class:OnSpawn(client)
+    end
+
     if class.weapons then
         if istable(class.weapons) then
             for _, v in ipairs(class.weapons) do
