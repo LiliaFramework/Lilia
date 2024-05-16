@@ -91,8 +91,7 @@ function MODULE:FactionOnLoadout(client)
 
     if faction.armor then client:SetArmor(faction.armor) end
     if faction.OnSpawn or faction.onSpawn then
-        if faction.onSpawn then end
-        print("onSpawn is deprecated. Use OnSpawn for optimization purposes.")
+        if faction.onSpawn then print("onSpawn is deprecated. Use OnSpawn for optimization purposes.") end
         faction:OnSpawn(client)
     end
 
