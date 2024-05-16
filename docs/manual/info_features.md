@@ -69,7 +69,7 @@
 
 - Added Command List to wiki.
 
-- Added new item bases. Check [Item Structure](https://liliaframework.github.io/manual/structure_items/) for more information.
+- Added new item bases. Check the Items section for more information.
 
 - Created an extremely detailed wiki so that even the average joe can understand the framework easily.
 
