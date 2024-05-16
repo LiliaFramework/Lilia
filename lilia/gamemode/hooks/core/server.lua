@@ -379,11 +379,6 @@ function GM:OnServerLog(client, logType, ...)
     end
 end
 
-function GM:onCharCreated(client, character, data)
-    print("onCharCreated is deprecated. Use OnCharCreated for optimization purposes.")
-    hook.Run("OnCharCreated", client, character, data)
-end
-
 function GM:OnCharCreated(client, character)
     local permFlags = client:getPermFlags()
     if permFlags and #permFlags > 0 then character:giveFlags(permFlags) end
