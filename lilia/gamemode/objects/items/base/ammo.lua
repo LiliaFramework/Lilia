@@ -1,4 +1,20 @@
-﻿local loadAmount = {5, 10, 30, 45, 90, 150, 300}
+﻿
+--- Structure of Ammunition Item Base.
+-- @configurations items
+
+--- This table defines the default structure of the ammo item base.
+-- @realm shared
+-- @table Configuration
+-- @field name Name of the item | **string**
+-- @field desc Description of the item | **string**
+-- @field model Model path of the item | **string**
+-- @field width Width of the item | **number**
+-- @field height Height of the item | **number**
+-- @field category Category of the item | **string**
+-- @field RequiredSkillLevels Required attribute levels for using the item | **table**
+-- @field ammo Type of ammunition contained in the item | **string**
+
+local loadAmount = {5, 10, 30, 45, 90, 150, 300}
 ITEM.name = "Ammo Base"
 ITEM.model = "models/Items/BoxSRounds.mdl"
 ITEM.width = 1
@@ -49,7 +65,7 @@ ITEM.functions.use = {
     onRun = function(item, data)
         data = data or 0
         if data > 0 then
-            local num = tonumber(data)
+            local num = tointeger(data)
             item:addQuantity(-num)
             item.player:GiveAmmo(num, item.ammo)
             item.player:EmitSound(item.useSound or "items/ammo_pickup.wav", 110)
