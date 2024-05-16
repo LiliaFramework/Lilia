@@ -8,7 +8,7 @@ function playerMeta:setWepRaised(state, notification)
         weapon:SetNextSecondaryFire(CurTime() + 1)
     end
 
-	if weponclass == "lia_hands" then  
+	if weponclass == "lia_hands" then
 	    if notification then lia.chat.send(self, "iteminternal", state and "raises his hands" or "lowers his hands", false) end
 	else
 		if notification then lia.chat.send(self, "iteminternal", state and "raises his weapon" or "lowers his weapon", false) end
