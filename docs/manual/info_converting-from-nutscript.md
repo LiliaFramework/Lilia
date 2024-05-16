@@ -25,6 +25,4 @@ Make sure to check the following available content to get assistance with your p
 
 - [Faction Structure](https://LiliaFramework.github.io/Lilia/manual/structure_faction/)
 
-- [Item Structure](https://LiliaFramework.github.io/Lilia/manual/structure_items)
-
 - [Module Structure](https://LiliaFramework.github.io/Lilia/manual/structure_module)
