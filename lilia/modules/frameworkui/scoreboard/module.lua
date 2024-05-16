@@ -5,8 +5,8 @@
 -- @realm shared
 -- @table Configuration
 -- @field HiddenFactions Scoreboard Table of Factions that are hidden | **table**
--- @field sbHeight Scoreboard Height | **float**
--- @field sbWidth Scoreboard Width | **float**
+-- @field sbHeight Scoreboard Height | **number**
+-- @field sbWidth Scoreboard Width | **number**
 -- @field ShowStaff Should Staff Show In Scoreboard | **bool**
 MODULE.name = "Framework UI - Scoreboard"
 MODULE.author = "76561198312513285"
