@@ -12,10 +12,10 @@ regular gamemode hooks.
 -- @realm shared
 -- @client client The client for whom the default name is being retrieved
 -- @treturn string The default name for the newly created character
--- @usage function FACTION:getDefaultName(client)
+-- @usage function FACTION:GetDefaultName(client)
 -- 	return "CT-" .. math.random(111111, 999999)
 -- end
-function getDefaultName(client)
+function GetDefaultName(client)
 end
 
 --- Called when the default description for a character needs to be retrieved.
@@ -24,10 +24,10 @@ end
 -- @client client The client for whom the default description is being retrieved
 -- @character faction The faction ID for which the default description is being retrieved
 -- @treturn string The default description for the newly created character
--- @usage function FACTION:getDefaultDesc(client, faction)
+-- @usage function FACTION:GetDefaultDesc(client, faction)
 -- 	return "A police officer"
 -- end
-function getDefaultDesc(client, faction)
+function GetDefaultDesc(client, faction)
 end
 
 --- Called when a character has been initially created and assigned to this faction.
