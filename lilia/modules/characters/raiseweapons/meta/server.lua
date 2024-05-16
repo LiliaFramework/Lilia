@@ -2,17 +2,12 @@ local playerMeta = FindMetaTable("Player")
 function playerMeta:setWepRaised(state, notification)
     self:setNetVar("raised", state)
     local weapon = self:GetActiveWeapon()
-	local weponclass = self:GetActiveWeapon():GetClass()
-	if IsValid(weapon) then
+    if IsValid(weapon) then
         weapon:SetNextPrimaryFire(CurTime() + 1)
         weapon:SetNextSecondaryFire(CurTime() + 1)
     end
 
-	if weponclass == "lia_hands" then  
-	    if notification then lia.chat.send(self, "iteminternal", state and "raises his hands" or "lowers his hands", false) end
-	else
-		if notification then lia.chat.send(self, "iteminternal", state and "raises his weapon" or "lowers his weapon", false) end
-	end
+    if notification then lia.chat.send(self, "iteminternal", state and "raises his weapon" or "lowers his weapon", false) end
 end
 
 function playerMeta:toggleWepRaised()
