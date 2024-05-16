@@ -11,7 +11,7 @@
 -- @field height Height of the item | **number**
 -- @field category Category of the item | **string**
 -- @field RequiredSkillLevels Required attribute levels for using the item | **table**
--- @field outfitCategory The category of clothing of the item. This prevents you from equipping 2 of the same outfit types. | **string**
+-- @field outfitCategory The category of clothing of the item. This prevents you from equipping 2 of the same outfit types | **string**
 -- @field pacData PAC3 data that gets implemented when equipping the outfit | **table**
 
 ITEM.name = "Outfit"

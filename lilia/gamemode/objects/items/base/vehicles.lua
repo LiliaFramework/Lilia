@@ -12,7 +12,7 @@
 -- @field category Category of the item | **string**
 -- @field vehicleid The vehicle to be spawned | **string**
 -- @field shouldRemove Whether or not the item should be removed after the usage | **bool**
--- @field vehicleCooldown The cooldown that the item has before being reusable. | **number**
+-- @field vehicleCooldown The cooldown that the item has before being reusable | **number**
 
 ITEM.name = "Entities Base"
 ITEM.model = ""

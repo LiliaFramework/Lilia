@@ -12,7 +12,7 @@
 -- @field category Category of the item | **string**
 -- @field vehicleid The simfphys vehicle to be spawned | **string**
 -- @field shouldRemove Whether or not the item should be removed after the usage | **bool**
--- @field vehicleCooldown The cooldown that the item has before being reusable. | **number**
+-- @field vehicleCooldown The cooldown that the item has before being reusable | **number**
 
 ITEM.name = "Simfphys Vehicle Base"
 ITEM.model = ""

@@ -13,7 +13,7 @@
 -- @field category Category of the item | **string**
 -- @field entityid The entity to be spawned | **string**
 -- @field shouldRemove Whether or not the item should be removed after the usage | **bool**
--- @field entityCooldown The cooldown that the item has before being reusable. | **number**
+-- @field entityCooldown The cooldown that the item has before being reusable | **number**
 
 ITEM.name = "Entities Base"
 ITEM.model = ""
