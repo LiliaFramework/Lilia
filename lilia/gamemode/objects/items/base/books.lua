@@ -1,5 +1,5 @@
 ﻿--- Structure of Book Item Base.
--- @configurations items
+-- @items Books
 
 --- This table defines the default structure of the book item base.
 -- @realm shared

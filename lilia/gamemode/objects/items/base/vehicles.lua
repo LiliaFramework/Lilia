@@ -1,5 +1,5 @@
 ﻿--- Structure of Vehicle Item Base.
--- @configurations items
+-- @items Vehicles
 
 --- This table defines the default structure of the vehicle item base.
 -- @realm shared
