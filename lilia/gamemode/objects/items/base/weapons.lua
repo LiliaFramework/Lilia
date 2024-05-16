@@ -1,6 +1,5 @@
 ﻿--- Structure of Weapon Item Base.
 -- @items Weapon
-
 --- This table defines the default structure of the weapon item base.
 -- @realm shared
 -- @table Configuration
@@ -13,7 +12,6 @@
 -- @field RequiredSkillLevels Required attribute levels for using the item | **table**
 -- @field class The class of the weapon | **string**
 -- @field weaponCategory The weapon category of the item. This prevents you from equipping 2 of the same weapon category types | **string**
-
 ITEM.name = "Weapon"
 ITEM.desc = "A Weapon."
 ITEM.category = "Weapons"
@@ -67,7 +65,7 @@ ITEM.functions.EquipUn = {
         client:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
         client.carryWeapons[item.weaponCategory] = nil
         item:setData("equip", nil)
-        lia.chat.send(client, "iteminternal", Format("puts away his %s.", item.name), false)
+        lia.chat.send(client, "iteminternal", "puts away his weapon", false)
         if item.onUnequipWeapon then item:onUnequipWeapon(client, weapon) end
         return false
     end,
@@ -99,7 +97,7 @@ ITEM.functions.Equip = {
             if ammoCount == weapon:Clip1() and item:getData("ammo", 0) == 0 then client:RemoveAmmo(weapon:Clip1(), weapon:GetPrimaryAmmoType()) end
             item:setData("equip", true)
             weapon:SetClip1(item:getData("ammo", 0))
-            lia.chat.send(client, "iteminternal", Format("takes out his %s.", item.name), false)
+            lia.chat.send(client, "iteminternal", "takes out his weapon", false)
             if item.onEquipWeapon then item:onEquipWeapon(client, weapon) end
         else
             print(Format("[Lilia] Weapon %s does not exist!", item.class))
