@@ -370,7 +370,7 @@ function lia.anim.getModelClass(model)
     model = string.lower(model)
     local class = translations[model] or "player"
     if class ~= "player" then return class end
-    local isCitizenGroup = string.find(model, "models/thespireroleplay/humans") or string.find(model, "models/suits/humans") or string.find(model, "models/hts/comradebear") 
+    local isCitizenGroup = string.find(model, "models/thespireroleplay/humans") or string.find(model, "models/suits/humans") or string.find(model, "models/hts/comradebear")
     if isCitizenGroup then
         if string.find(model, "female_") then
             return "citizen_female"
