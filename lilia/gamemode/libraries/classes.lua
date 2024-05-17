@@ -45,7 +45,11 @@ function lia.class.loadFromDir(directory)
             continue
         end
 
-        if not CLASS.OnCanBe then CLASS.OnCanBe = function(_) return true end end
+        if not CLASS.OnCanBe then
+            if CLASS.onCanBe then print("onCanBe is deprecated. Use OnCanBe for optimization purposes.") end
+            CLASS.OnCanBe = function(_) return true end
+        end
+
         lia.class.list[index] = CLASS
         CLASS = nil
     end
@@ -64,7 +68,7 @@ function lia.class.canBe(client, class)
     if client:getChar():getClass() == class then return false, "same class request" end
     if info.limit > 0 and #lia.class.getPlayers(info.index) >= info.limit then return false, "class is full" end
     if hook.Run("CanPlayerJoinClass", client, class, info) == false then return false end
-    return info:OnCanBe(client) or info:onCanBe(client)
+    return info:OnCanBe(client) or info.isDefault
 end
 
 --- Retrieves information about a class.
