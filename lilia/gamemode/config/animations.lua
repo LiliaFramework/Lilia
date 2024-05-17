@@ -1,6 +1,4 @@
-﻿lia.anim.CitizenModelPaths = {"models/thespireroleplay/humans", "models/suits/humans", "models/hts/comradebear",}
-
-lia.anim.HoldTypeTranslator = {
+﻿lia.anim.HoldTypeTranslator = {
     [""] = "normal",
     ["physgun"] = "smg",
     ["ar2"] = "smg",
@@ -43,10 +41,6 @@ lia.anim.DefaultTposingFixer = {
     ["models/Combine_Soldier.mdl"] = "overwatch",
     ["models/Combine_Soldier_PrisonGuard.mdl"] = "overwatch",
     ["models/Combine_Super_Soldier.mdl"] = "overwatch",
-    ["models/police.mdl"] = "metrocop",
-    ["models/combine_super_soldier.mdl"] = "overwatch",
-    ["models/combine_soldier_prisonGuard.mdl"] = "overwatch",
-    ["models/combine_soldier.mdl"] = "overwatch",
     ["models/vortigaunt.mdl"] = "vort",
     ["models/vortigaunt_blue.mdl"] = "vort",
     ["models/vortigaunt_doctor.mdl"] = "vort",
@@ -60,3 +54,5 @@ lia.anim.DefaultTposingFixer = {
     ["models/Kleiner.mdl"] = "citizen_male",
     ["models/monk.mdl"] = "citizen_male",
 }
+
+lia.anim.CitizenModelPaths = {"models/thespireroleplay/humans", "models/suits/humans", "models/hts/comradebear", "models/Humans/Group01", "models/Humans/Group02", "models/Humans/Group03", "models/Humans/Group03m",}
