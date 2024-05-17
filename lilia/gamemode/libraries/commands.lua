@@ -227,8 +227,6 @@ if SERVER then
                     else
                         client:notify(result)
                     end
-
-                    lia.log.add(client, "command", command, table.concat(arguments, ", "))
                 else
                     print(result)
                 end
