@@ -47,16 +47,6 @@ function PANEL:Init()
         end
     end
 
-    local changeDescButton = vgui.Create("DButton", self.infoBox)
-    changeDescButton:SetText("Change Description")
-    changeDescButton:SetFont("Default")
-    changeDescButton:Dock(TOP)
-    changeDescButton:DockMargin(8, 8, 8, 8)
-    changeDescButton.DoClick = function()
-        local newDesc = self.desc:GetText()
-        lia.command.send("chardesc", newDesc)
-    end
-
     self:setup()
 end
 
@@ -65,7 +55,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor
     local isDesc = name == "desc"
     local entryContainer = self.infoBox:Add("DPanel")
     entryContainer:Dock(TOP)
-    entryContainer:SetTall(size + 5)
+    entryContainer:SetTall(isDesc and (size + 15) or (size + 5))
     entryContainer:DockMargin(8, dockMarginTop or 1, 8, dockMarginBot or 1)
     entryContainer.Paint = function(_, w, h)
         surface.SetDrawColor(shadowColor)
@@ -126,7 +116,11 @@ function PANEL:setup()
     local client = LocalPlayer()
     local character = client:getChar()
     if self.name then self.name:SetText(character:getName()) end
-    if self.desc then self.desc:SetText(character:getDesc()) end
+    if self.desc then
+        self.desc:SetText(character:getDesc())
+        self.desc.OnEnter = function(panel) lia.command.send("chardesc", panel:GetText():gsub("\226\128\139#", "#")) end
+    end
+
     if self.money then self.money:SetText(character:getMoney() .. " " .. lia.currency.plural) end
     if self.faction then self.faction:SetText(L(team.GetName(client:Team()))) end
     if self.class then self.class:SetText((class and class.name) or "None") end

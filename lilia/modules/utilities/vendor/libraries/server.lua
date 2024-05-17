@@ -147,6 +147,21 @@ function MODULE:PlayerAccessVendor(client, vendor)
     net.Start("VendorOpen")
     net.WriteEntity(vendor)
     net.Send(client)
+    if client:CanEditVendor() then
+        for factionID in pairs(vendor.factions) do
+            net.Start("VendorAllowFaction")
+            net.WriteUInt(factionID, 8)
+            net.WriteBool(true)
+            net.Send(client)
+        end
+
+        for classID in pairs(vendor.classes) do
+            net.Start("VendorAllowClass")
+            net.WriteUInt(classID, 8)
+            net.WriteBool(true)
+            net.Send(client)
+        end
+    end
 end
 
 function MODULE:VendorSellEvent(client, vendor, itemType, isSellingToVendor, character, price)

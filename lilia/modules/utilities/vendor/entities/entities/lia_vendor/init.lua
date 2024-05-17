@@ -220,21 +220,6 @@ function ENT:sync(client)
     end
 
     net.Send(client)
-    if client:CanEditVendor() then
-        for factionID in pairs(self.factions) do
-            net.Start("VendorAllowFaction")
-            net.WriteUInt(factionID, 8)
-            net.WriteBool(true)
-            net.Send(client)
-        end
-
-        for classID in pairs(self.classes) do
-            net.Start("VendorAllowClass")
-            net.WriteUInt(classID, 8)
-            net.WriteBool(true)
-            net.Send(client)
-        end
-    end
 end
 
 function ENT:addReceiver(client, noSync)
