@@ -13,7 +13,7 @@ end
 function MODULE:GetDefaultCharName(client, faction)
     local info = lia.faction.indices[faction]
     if info and (info.GetDefaultName or info.getDefaultName) then
-        if faction.getDefaultName then
+        if info.getDefaultName then
             print("getDefaultName is deprecated. Use getDefaultName for optimization purposes.")
             return info:getDefaultName(client)
         end
@@ -24,7 +24,7 @@ end
 function MODULE:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
     if info and (info.GetDefaultDesc or info.getDefaultDesc) then
-        if faction.getDefaultDesc then
+        if info.getDefaultDesc then
             print("getDefaultDesc is deprecated. Use getDefaultDesc for optimization purposes.")
             return info:getDefaultDesc(client)
         end
