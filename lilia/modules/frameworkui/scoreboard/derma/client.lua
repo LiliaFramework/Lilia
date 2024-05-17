@@ -45,7 +45,6 @@ function PANEL:Init()
         list:SetTall(28)
         list.Think = function(this)
             for _, v2 in ipairs(lia.faction.getPlayers(k)) do
-                if hook.Run("ShouldShowPlayerOnScoreboard", v2) == false then continue end
                 if not IsValid(v2.liaScoreSlot) or v2.liaScoreSlot:GetParent() ~= this then
                     if IsValid(v2.liaScoreSlot) then
                         v2.liaScoreSlot:SetParent(this)
@@ -109,7 +108,7 @@ function PANEL:Think()
 end
 
 function PANEL:addPlayer(client, parent)
-    if not client:getChar() or not IsValid(parent) then return end
+    if not client:getChar() or not IsValid(parent) or hook.Run("ShouldShowPlayerOnScoreboard", client) == false then return end
     local slot = parent:Add("DPanel")
     slot:Dock(TOP)
     slot:SetTall(64)
