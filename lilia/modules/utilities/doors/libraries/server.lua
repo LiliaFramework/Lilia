@@ -165,43 +165,45 @@ function MODULE:PlayerDisconnected(client)
     end
 end
 
-function MODULE:KeyLock(client, entity, time)
-    if IsValid(entity) and client:GetPos():Distance(entity:GetPos()) <= 256 and (entity:isDoor() or entity:IsVehicle()) then
+function MODULE:KeyLock(client, door, time)
+    if IsValid(door) and client:GetPos():Distance(door:GetPos()) <= 256 and (door:isDoor() or door:IsVehicle()) then
         client:setAction("@locking", time, function() end)
-        client:doStaredAction(entity, function() self:ToggleLock(client, entity, true) end, time, function() client:setAction() end)
+        client:doStaredAction(door, function() self:ToggleLock(client, door, true) end, time, function() client:setAction() end)
     end
 end
 
-function MODULE:KeyUnlock(client, entity, time)
-    if IsValid(entity) and client:GetPos():Distance(entity:GetPos()) <= 256 and (entity:isDoor() or entity:IsVehicle()) then
+function MODULE:KeyUnlock(client, door, time)
+    if IsValid(door) and client:GetPos():Distance(door:GetPos()) <= 256 and (door:isDoor() or door:IsVehicle()) then
         client:setAction("@unlocking", time, function() end)
-        client:doStaredAction(entity, function() self:ToggleLock(client, entity, false) end, time, function() client:setAction() end)
+        client:doStaredAction(door, function() self:ToggleLock(client, door, false) end, time, function() client:setAction() end)
     end
 end
 
 function MODULE:ToggleLock(client, door, state)
-    if entity:GetCreator() == client or (client:IsSuperAdmin() or client:isStaffOnDuty()) then
-        if door:isDoor() then
-            local partner = door:getDoorPartner()
-            if state then
-                if IsValid(partner) then partner:Fire("lock") end
-                door:Fire("lock")
-                client:EmitSound("doors/door_latch3.wav")
-            else
-                if IsValid(partner) then partner:Fire("unlock") end
-                door:Fire("unlock")
-                client:EmitSound("doors/door_latch1.wav")
-            end
-        elseif door:IsVehicle() then
-            if state then
-                door:Fire("lock")
-                if door:isSimfphysCar() then door:Lock() end
-                client:EmitSound("doors/door_latch3.wav")
-            else
-                door:Fire("unlock")
-                if door:isSimfphysCar() then door:UnLock() end
-                client:EmitSound("doors/door_latch1.wav")
-            end
+    if door:isDoor() then
+        local partner = door:getDoorPartner()
+        if state then
+            if IsValid(partner) then partner:Fire("lock") end
+            door:Fire("lock")
+            client:EmitSound("doors/door_latch3.wav")
+            lia.chat.send(client, "iteminternal", "locks the door.", false)
+        else
+            if IsValid(partner) then partner:Fire("unlock") end
+            door:Fire("unlock")
+            client:EmitSound("doors/door_latch1.wav")
+            lia.chat.send(client, "iteminternal", "unlocks the door.", false)
+        end
+    elseif (door:GetCreator() == client or client:IsSuperAdmin() or client:isStaffOnDuty()) and door:IsVehicle() then
+        if state then
+            door:Fire("lock")
+            if door:isSimfphysCar() then door:Lock() end
+            client:EmitSound("doors/door_latch3.wav")
+            lia.chat.send(client, "iteminternal", "locks the vehicle.", false)
+        else
+            door:Fire("unlock")
+            if door:isSimfphysCar() then door:UnLock() end
+            client:EmitSound("doors/door_latch1.wav")
+            lia.chat.send(client, "iteminternal", "unlocks the vehicle.", false)
         end
     end
 end
