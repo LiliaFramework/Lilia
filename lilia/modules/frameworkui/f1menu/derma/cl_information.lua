@@ -55,7 +55,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor
     local isDesc = name == "desc"
     local entryContainer = self.infoBox:Add("DPanel")
     entryContainer:Dock(TOP)
-    entryContainer:SetTall(isDesc and (size + 15) or (size + 5))
+    entryContainer:SetTall(size + 5)
     entryContainer:DockMargin(8, dockMarginTop or 1, 8, dockMarginBot or 1)
     entryContainer.Paint = function(_, w, h)
         surface.SetDrawColor(shadowColor)
@@ -77,7 +77,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor
     self[name]:Dock(FILL)
     self[name]:SetTextColor(textColor)
     self[name]:SetEditable(isDesc and true or false)
-    self[name]:SetMultiline(isDesc and true or false)
+    self[name]:SetMultiline(isDesc)
 end
 
 function PANEL:CreateFillableBarWithBackgroundAndLabel(name, font, _, textColor, shadowColor, labelText, minVal, maxVal, dockMarginTop, value)
@@ -115,10 +115,15 @@ end
 function PANEL:setup()
     local client = LocalPlayer()
     local character = client:getChar()
-    if self.name then self.name:SetText(character:getName()) end
+    local name = character:getName()
+    local desc = character:getDesc()
+    if self.name then self.name:SetText(name) end
     if self.desc then
-        self.desc:SetText(character:getDesc())
-        self.desc.OnEnter = function(panel) lia.command.send("chardesc", panel:GetText():gsub("\226\128\139#", "#")) end
+        self.desc:SetText(desc)
+        self.desc.OnLoseFocus = function(panel)
+            local panelDesc = panel:GetText():gsub("\226\128\139#", "#")
+            if desc ~= panelDesc then lia.command.send("chardesc", panelDesc) end
+        end
     end
 
     if self.money then self.money:SetText(character:getMoney() .. " " .. lia.currency.plural) end
