@@ -319,15 +319,15 @@ lia.anim.vort = {
 }
 
 lia.anim.cwplayer = {
-	[ACT_HL2MP_GESTURE_RANGE_ATTACK] = ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE2,
-	[ACT_HL2MP_GESTURE_RELOAD] = ACT_HL2MP_GESTURE_RELOAD_MELEE2,
-	[ACT_HL2MP_WALK_CROUCH] = ACT_HL2MP_WALK_CROUCH_MELEE2,
-	[ACT_HL2MP_IDLE_CROUCH] = ACT_HL2MP_IDLE_CROUCH_MELEE2,
-	[ACT_RANGE_ATTACK1] = ACT_RANGE_ATTACK1_MELEE2,
-	[ACT_HL2MP_IDLE] = ACT_HL2MP_IDLE_MELEE2,
-	[ACT_HL2MP_WALK] = ACT_HL2MP_WALK_MELEE2,
-	[ACT_HL2MP_JUMP] = ACT_HL2MP_JUMP_MELEE2,
-	[ACT_HL2MP_RUN] = ACT_HL2MP_RUN_MELEE2
+    [ACT_HL2MP_GESTURE_RANGE_ATTACK] = ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE2,
+    [ACT_HL2MP_GESTURE_RELOAD] = ACT_HL2MP_GESTURE_RELOAD_MELEE2,
+    [ACT_HL2MP_WALK_CROUCH] = ACT_HL2MP_WALK_CROUCH_MELEE2,
+    [ACT_HL2MP_IDLE_CROUCH] = ACT_HL2MP_IDLE_CROUCH_MELEE2,
+    [ACT_RANGE_ATTACK1] = ACT_RANGE_ATTACK1_MELEE2,
+    [ACT_HL2MP_IDLE] = ACT_HL2MP_IDLE_MELEE2,
+    [ACT_HL2MP_WALK] = ACT_HL2MP_WALK_MELEE2,
+    [ACT_HL2MP_JUMP] = ACT_HL2MP_JUMP_MELEE2,
+    [ACT_HL2MP_RUN] = ACT_HL2MP_RUN_MELEE2
 }
 
 lia.anim.player = {
@@ -385,11 +385,10 @@ function lia.anim.getModelClass(model)
     local isCitizenGroup = string.find(model, "models/thespireroleplay/humans") or string.find(model, "models/suits/humans") or string.find(model, "models/hts/comradebear")
     if isCitizenGroup then
         if string.find(model, "female_") then
-            return "citizen_female"
+            class = "citizen_female"
         elseif string.find(model, "male_") then
-            return "citizen_male"
+            class = "citizen_male"
         end
-        return "citizen_male"
     end
 
     lia.anim.setModelClass(model, class)
