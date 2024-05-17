@@ -1,4 +1,5 @@
-﻿MODULE.lastSlot = MODULE.lastSlot or 1
+﻿WepSelectInvert = CreateClientConVar("wepselect_invert", 0, true)
+MODULE.lastSlot = MODULE.lastSlot or 1
 MODULE.lifeTime = MODULE.lifeTime or 0
 MODULE.deathTime = MODULE.deathTime or 0
 local LIFE_TIME = 4
@@ -18,16 +19,30 @@ function MODULE:OnSlotChanged()
     end
 end
 
+function MODULE:SetupQuickMenu(menu)
+    menu:addCheck("Invert direction of weapon selection scroll", function(panel, state)
+        if state then
+            RunConsoleCommand("wepselect_invert", "1")
+        else
+            RunConsoleCommand("wepselect_invert", "0")
+        end
+    end, WepSelectInvert:GetBool())
+
+    menu:addSpacer()
+end
+
 function MODULE:PlayerBindPress(client, bind, pressed)
+    local invprev, invnext = isnumber(bind:find("invprev")), isnumber(bind:find("invnext"))
     local weapon = client:GetActiveWeapon()
     if not client:InVehicle() and (not IsValid(weapon) or weapon:GetClass() ~= "weapon_physgun" or not client:KeyDown(IN_ATTACK)) then
         bind = string.lower(bind)
-        if string.find(bind, "invprev") and pressed then
+        if WepSelectInvert:GetBool() then invprev, invnext = invnext, invprev end
+        if invprev and pressed then
             self.lastSlot = self.lastSlot - 1
             if self.lastSlot <= 0 then self.lastSlot = #client:GetWeapons() end
             self:OnSlotChanged()
             return true
-        elseif string.find(bind, "invnext") and pressed then
+        elseif invnext and pressed then
             self.lastSlot = self.lastSlot + 1
             if self.lastSlot > #client:GetWeapons() then self.lastSlot = 1 end
             self:OnSlotChanged()
