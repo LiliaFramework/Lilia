@@ -20,7 +20,7 @@ function MODULE:OnSlotChanged()
 end
 
 function MODULE:SetupQuickMenu(menu)
-    menu:addCheck("Invert direction of weapon selection scroll", function(panel, state)
+    menu:addCheck("Invert direction of weapon selection scroll", function(_, state)
         if state then
             RunConsoleCommand("wepselect_invert", "1")
         else
