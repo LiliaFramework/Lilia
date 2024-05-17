@@ -1,4 +1,6 @@
-﻿lia.anim.HoldTypeTranslator = {
+﻿lia.anim.CitizenModelPaths = {"models/thespireroleplay/humans", "models/suits/humans", "models/hts/comradebear",}
+
+lia.anim.HoldTypeTranslator = {
     [""] = "normal",
     ["physgun"] = "smg",
     ["ar2"] = "smg",

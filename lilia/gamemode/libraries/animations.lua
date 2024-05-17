@@ -382,12 +382,17 @@ function lia.anim.getModelClass(model)
     model = string.lower(model)
     local class = translations[model] or "player"
     if class ~= "player" then return class end
-    local isCitizenGroup = string.find(model, "models/thespireroleplay/humans") or string.find(model, "models/suits/humans") or string.find(model, "models/hts/comradebear")
-    if isCitizenGroup then
-        if string.find(model, "female_") then
-            class = "citizen_female"
-        elseif string.find(model, "male_") then
-            class = "citizen_male"
+    for _, path in ipairs(lia.anim.CitizenModelPaths) do
+        if string.find(model, path) == 1 then
+            if string.find(model, "female_") then
+                class = "citizen_female"
+            elseif string.find(model, "male_") then
+                class = "citizen_male"
+            else
+                class = "citizen_male"
+            end
+
+            break
         end
     end
 
