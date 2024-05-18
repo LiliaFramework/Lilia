@@ -383,6 +383,7 @@ function lia.anim.getModelClass(model)
     local class = translations[model] or "player"
     if class ~= "player" then return class end
     for _, path in ipairs(lia.anim.CitizenModelPaths) do
+        path = string.lower(path)
         if string.find(model, path) == 1 then
             if string.find(model, "female_") then
                 class = "citizen_female"
