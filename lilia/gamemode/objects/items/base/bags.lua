@@ -1,6 +1,5 @@
 ﻿--- Structure of Bag Item Base.
 -- @items Backpack
-
 --- This table defines the default structure of the bag item base.
 -- @realm shared
 -- @table Configuration
@@ -15,7 +14,6 @@
 -- @field RequiredSkillLevels Required attribute levels for using the item | **table**
 -- @field BagSound Sound that plays when opening the bag | **string**
 -- @field pacData PAC3 data that gets implemented when equipping the bag | **table**
-
 ITEM.name = "Bag"
 ITEM.desc = "A bag to hold more items."
 ITEM.model = "models/props_c17/suitcase001a.mdl"
@@ -52,18 +50,19 @@ ITEM.functions.Equip = {
         item:setData("equip", true)
         return false
     end,
-    onCanRun = function(item) if not IsValid(item.entity) then return item:getData("equip", false) ~= true end end
+    onCanRun = function(item) if not IsValid(item.entity) then return not item:getData("equip", false) end end
 }
 
 ITEM.functions.Unequip = {
     name = "Unequip",
     icon = "icon16/cross.png",
     onRun = function(item)
+        local client = item.player
         if item.pacData and client.removePart then client:removePart(item.uniqueID) end
         item:setData("equip", false)
         return false
     end,
-    onCanRun = function(item) if not IsValid(item.entity) then return item:getData("equip", false) == true end end
+    onCanRun = function(item) if not IsValid(item.entity) then return item:getData("equip", false) end end
 }
 
 ITEM.functions.View = {
