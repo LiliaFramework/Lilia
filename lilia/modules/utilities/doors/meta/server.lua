@@ -9,3 +9,7 @@ function entityMeta:removeDoorAccessData()
         self:SetDTEntity(0, nil)
     end
 end
+
+function entityMeta:SetLocked(state)
+    self.isLocked = state
+end

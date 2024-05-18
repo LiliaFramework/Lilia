@@ -26,7 +26,7 @@ if SERVER then
                 if not client.dropDelay then
                     client.dropDelay = true
                     timer.Create("DropDelay." .. client:SteamID64(), lia.config.DropDelay, 1, function() if IsValid(client) then client.dropDelay = nil end end)
-                    lia.chat.send(client, "iteminternal", Format("drops their %s.", item.name), false)
+                    lia.chat.send(client, "actions", Format("drops their %s.", item.name), false)
                     return true
                 else
                     client:notify("You need to wait before dropping something again!")
@@ -42,7 +42,7 @@ if SERVER then
                 if not client.takeDelay then
                     client.takeDelay = true
                     timer.Create("TakeDelay." .. client:SteamID64(), lia.config.TakeDelay, 1, function() if IsValid(client) then client.takeDelay = nil end end)
-                    lia.chat.send(client, "iteminternal", Format("picks up the %s.", item.name), false)
+                    lia.chat.send(client, "actions", Format("picks up the %s.", item.name), false)
                     return true
                 else
                     client:notify("You need to wait before picking something up again!")

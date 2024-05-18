@@ -8,3 +8,7 @@ function entityMeta:checkDoorAccess(client, access)
     if self.liaAccess and (self.liaAccess[client] or 0) >= access then return true end
     return false
 end
+
+function entityMeta:IsLocked()
+    return self.isLocked
+end

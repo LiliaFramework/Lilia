@@ -10,7 +10,7 @@ function playerMeta:setWepRaised(state, notification)
 	local weaponClass = weapon:GetClass()
 	local action = state and "raises" or "lowers"
 	local itemType = weaponClass == "lia_hands" and "hands" or "weapon"
-	if notification then lia.chat.send(self, "iteminternal", action .. " his " .. itemType, false) end
+	if notification then lia.chat.send(self, "actions", action .. " his " .. itemType, false) end
 end
 
 function playerMeta:toggleWepRaised()

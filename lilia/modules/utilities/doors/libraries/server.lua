@@ -101,27 +101,27 @@ function MODULE:InitPostEntity()
     end
 end
 
-function MODULE:PlayerUse(client, entity)
-    if entity:isDoor() then
-        local result = hook.Run("CanPlayerUseDoor", client, entity)
+function MODULE:PlayerUse(client, door)
+    if door:isDoor() then
+        local result = hook.Run("CanPlayerUseDoor", client, door)
         if result == false then
             return false
         else
-            result = hook.Run("PlayerUseDoor", client, entity)
+            result = hook.Run("PlayerUseDoor", client, door)
             if result ~= nil then return result end
         end
     end
 end
 
-function MODULE:CanPlayerUseDoor(_, entity)
-    if entity:getNetVar("disabled") then return false end
+function MODULE:CanPlayerUseDoor(_, door)
+    if door:getNetVar("disabled") then return false end
 end
 
 function MODULE:CanPlayerAccessDoor(client, door, _)
     local factions = door:getNetVar("factions")
     if factions ~= nil then
         local facs = util.JSONToTable(factions)
-        if facs ~= nil and facs ~= "[]" then if facs[client:Team()] then return true end end
+        if facs ~= nil and facs ~= "[]" and facs[client:Team()] then return true end
     end
 
     local class = door:getNetVar("class")
@@ -166,14 +166,14 @@ function MODULE:PlayerDisconnected(client)
 end
 
 function MODULE:KeyLock(client, door, time)
-    if IsValid(door) and client:GetPos():Distance(door:GetPos()) <= 256 and (door:isDoor() or door:IsVehicle()) then
+    if not door:IsLocked() and IsValid(door) and client:GetPos():Distance(door:GetPos()) <= 256 and (door:isDoor() or (door:GetCreator() == client or client:IsSuperAdmin() or client:isStaffOnDuty() and door:IsVehicle())) then
         client:setAction("@locking", time, function() end)
         client:doStaredAction(door, function() self:ToggleLock(client, door, true) end, time, function() client:setAction() end)
     end
 end
 
 function MODULE:KeyUnlock(client, door, time)
-    if IsValid(door) and client:GetPos():Distance(door:GetPos()) <= 256 and (door:isDoor() or door:IsVehicle()) then
+    if door:IsLocked() and IsValid(door) and client:GetPos():Distance(door:GetPos()) <= 256 and (door:isDoor() or (door:GetCreator() == client or client:IsSuperAdmin() or client:isStaffOnDuty() and door:IsVehicle())) then
         client:setAction("@unlocking", time, function() end)
         client:doStaredAction(door, function() self:ToggleLock(client, door, false) end, time, function() client:setAction() end)
     end
@@ -186,24 +186,28 @@ function MODULE:ToggleLock(client, door, state)
             if IsValid(partner) then partner:Fire("lock") end
             door:Fire("lock")
             client:EmitSound("doors/door_latch3.wav")
-            lia.chat.send(client, "iteminternal", "locks the door.", false)
+            lia.chat.send(client, "actions", "locks the door.", false)
         else
             if IsValid(partner) then partner:Fire("unlock") end
             door:Fire("unlock")
             client:EmitSound("doors/door_latch1.wav")
-            lia.chat.send(client, "iteminternal", "unlocks the door.", false)
+            lia.chat.send(client, "actions", "unlocks the door.", false)
         end
+
+        door:SetLocked(state)
     elseif (door:GetCreator() == client or client:IsSuperAdmin() or client:isStaffOnDuty()) and door:IsVehicle() then
         if state then
             door:Fire("lock")
             if door:isSimfphysCar() then door:Lock() end
             client:EmitSound("doors/door_latch3.wav")
-            lia.chat.send(client, "iteminternal", "locks the vehicle.", false)
+            lia.chat.send(client, "actions", "locks the vehicle.", false)
         else
             door:Fire("unlock")
             if door:isSimfphysCar() then door:UnLock() end
             client:EmitSound("doors/door_latch1.wav")
-            lia.chat.send(client, "iteminternal", "unlocks the vehicle.", false)
+            lia.chat.send(client, "actions", "unlocks the vehicle.", false)
         end
+
+        door:SetLocked(state)
     end
 end

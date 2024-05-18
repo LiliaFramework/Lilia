@@ -7,7 +7,7 @@
     deadCanChat = true
 })
 
-lia.chat.register("iteminternal", {
+lia.chat.register("actions", {
     format = "**%s %s",
     color = Color(255, 150, 0),
     onCanHear = ChatboxCore.ChatRange,

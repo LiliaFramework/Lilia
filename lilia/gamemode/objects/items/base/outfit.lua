@@ -41,7 +41,7 @@ end
 
 function ITEM:removeOutfit(client)
     local character = client:getChar()
-    lia.chat.send(client, "iteminternal", "removes a piece of clothing", false)
+    lia.chat.send(client, "actions", "removes a piece of clothing", false)
     self:setData("equip", nil)
     if hook.Run("CanOutfitChangeModel", self) ~= false then
         character:setModel(self:getData("oldMdl", character:getModel()))
@@ -77,7 +77,7 @@ function ITEM:removeOutfit(client)
 end
 
 function ITEM:wearOutfit(client, isForLoadout)
-    lia.chat.send(client, "iteminternal", "equips a piece of clothing", false)
+    lia.chat.send(client, "actions", "equips a piece of clothing", false)
     if isnumber(self.armor) then client:SetArmor(client:Armor() + self.armor) end
     if self.pacData and client.addPart then client:addPart(self.uniqueID) end
     self:call("onWear", client, nil, isForLoadout)
