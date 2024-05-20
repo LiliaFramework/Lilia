@@ -197,13 +197,13 @@ end
 -- calls to this hook from running.
 -- @treturn string Language phrase to use for the error message
 -- @treturn ... Arguments to use for the language phrase
--- @usage function MODULE:CanPlayerCreateCharacter(client)
+-- @usage function MODULE:CanPlayerCreateChar(client)
 -- 	if (!client:IsAdmin()) then
 -- 		return false, "notNow" -- only allow admins to create a character
 -- 	end
 -- end
 -- -- non-admins will see the message "You are not allowed to do this right now!"
-function CanPlayerCreateCharacter(client)
+function CanPlayerCreateChar(client)
 end
 
 --- Called after a character is deleted.
@@ -223,7 +223,7 @@ end
 --- @client client The player for whom to retrieve the maximum number of characters.
 --- @treturn int The maximum number of characters the player can have.
 --- @realm shared
-function GetMaxPlayerCharacter(client)
+function GetMaxPlayerChar(client)
 end
 
 --- Called after all of the player's loadout hooks are executed (PlayerLoadout, FactionOnLoadout, ClassOnLoadout).
@@ -469,10 +469,10 @@ end
 -- `money` current money the character has
 -- `class` name of the character's class if they're in one
 -- Note that schemas/modules can add additional character info panels.
--- @usage function MODULE:CanDisplayCharacterInfo(suppress)
+-- @usage function MODULE:CanDisplayCharInfo(suppress)
 -- 	suppress.faction = true
 -- end
-function CanDisplayCharacterInfo(suppress)
+function CanDisplayCharInfo(suppress)
 end
 
 --- Determines whether a player is allowed to view their inventory.
