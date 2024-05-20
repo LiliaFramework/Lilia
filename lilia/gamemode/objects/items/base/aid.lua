@@ -1,4 +1,3 @@
-
 --- Structure of Ammunition Item Base.
 -- @items Ammunition
 

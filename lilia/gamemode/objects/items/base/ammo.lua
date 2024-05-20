@@ -1,5 +1,4 @@
-﻿
---- Structure of Ammunition Item Base.
+﻿--- Structure of Ammunition Item Base.
 -- @items Ammunition
 
 --- This table defines the default structure of the ammo item base.

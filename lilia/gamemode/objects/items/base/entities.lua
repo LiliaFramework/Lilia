@@ -1,5 +1,4 @@
-﻿
---- Structure of Entity Item Base.
+﻿--- Structure of Entity Item Base.
 -- @items Entities
 
 --- This table defines the default structure of the entity item base.
