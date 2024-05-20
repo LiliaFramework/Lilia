@@ -248,10 +248,7 @@ lia.command.add("clearinv", {
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and target:getChar() then
-            for _, v in pairs(target:getChar():getInv():getItems()) do
-                v:remove()
-            end
-
+            target:getChar():getInv():wipeItems()
             client:notifyLocalized("resetInv", target:getChar():getName())
         end
     end

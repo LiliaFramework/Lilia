@@ -113,6 +113,12 @@ if SERVER then
         self:setData("h", h)
     end
 
+    function GridInv:wipeItems()
+        for _, item in pairs(self:getItems()) do
+            item:remove()
+        end
+    end
+
     function GridInv:setOwner(owner, fullUpdate)
         if type(owner) == "Player" and owner:getChar() then
             owner = owner:getChar():getID()
