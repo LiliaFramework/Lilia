@@ -115,6 +115,16 @@ function lia.faction.getPlayerCount(faction)
     return count
 end
 
+--- Checks if a given faction is part of a specified category of factions.
+-- @realm shared
+-- @int faction The index of the faction to check.
+-- @tab categoryFactions A table containing faction indices that define the category.
+-- @treturn bool True if the faction is in the category, false otherwise.
+function lia.faction.isFactionCategory(faction, categoryFactions)
+    if table.HasValue(categoryFactions, faction) then return true end
+    return false
+end
+
 --- This function is an example of how to create a custom faction using `lia.faction.jobGenerate`. It is not recommended to use this method directly as it may lead to unexpected behavior. Instead, consider using more appropriate methods provided by the framework, such as faction files.
 -- @realm shared
 -- @number index The index of the faction. This should be a unique numerical identifier for the faction.
