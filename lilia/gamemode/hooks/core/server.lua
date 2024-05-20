@@ -30,10 +30,7 @@ function GM:CharPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
     for _, v in pairs(character:getInv():getItems()) do
-        if v.OnSave or v.onSave then
-            if v.onSave then print("onSave is deprecated. Use OnSave for optimization purposes.") end
-            v:call("onSave", client)
-        end
+        if v.onSave then v:call("onSave", client) end
     end
 end
 
