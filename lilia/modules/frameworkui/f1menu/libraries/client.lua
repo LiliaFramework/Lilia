@@ -221,9 +221,9 @@ function MODULE:BuildHelpMenu(tabs)
                     <span style="font-size: 22;"><b>%s</b><br /></span>
                     <span style="font-size: smaller;">
                     <b>%s</b>: %s<br />
-                    <b>%s</b>: %s<br /> <!-- Added line break here -->
                     <b>%s</b>: %s<br />
-                ]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", "Discord", v.discord or "Unknown", L"author", lia.module.namecache[v.author] or v.author or "Unknown")
+                    <b>%s</b>: %s<br />
+                ]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", "Discord", v.discord or "Unknown", L"author", ((not isstring(v.author) and lia.module.namecache[v.author]) or v.author) or "Unknown")
             if v.version then body = body .. "<br /><b>" .. L"version" .. "</b>: " .. v.version end
             body = body .. "</span></p>"
         end
