@@ -168,7 +168,11 @@ lia.FilesToLoad = {
     {
         path = "lilia/gamemode/netcalls/server.lua",
         realm = "server"
-    }
+    },
+    {
+        path = "lilia/gamemode/meta/string.lua",
+        realm = "shared"
+    },
 }
 
 --- Loads a Lua file into the server, client, or shared realm.
