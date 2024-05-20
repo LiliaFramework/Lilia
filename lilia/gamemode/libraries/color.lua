@@ -8,8 +8,8 @@ lia.color = lia.color or {}
 -- @realm client
 function lia.color.Lighten(color, amount)
     local hue, saturation, lightness = ColorToHSL(color)
-    lightness  = math.Clamp(lightness / 255 + amount, 0, 1)
-    return HSLToColor(hue, saturation, lightness) 
+    lightness = math.Clamp(lightness / 255 + amount, 0, 1)
+    return HSLToColor(hue, saturation, lightness)
 end
 
 --- Darkens a color by the specified amount.
