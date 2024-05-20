@@ -55,4 +55,4 @@ lia.anim.DefaultTposingFixer = {
     ["models/monk.mdl"] = "citizen_male",
 }
 
-lia.anim.CitizenModelPaths = {"models/thespireroleplay/humans", "models/suits/humans", "models/hts/comradebear", "models/Humans/Group01", "models/Humans/Group02", "models/Humans/Group03", "models/Humans/Group03m",}
+lia.anim.CitizenModelPaths = {"models/thespireroleplay/humans", "models/suits/humans", "models/Humans/Group01", "models/Humans/Group02", "models/Humans/Group03", "models/Humans/Group03m",}

@@ -12,6 +12,23 @@ function GM:InitializedModules()
         lia.anim.setModelClass(model, animtype)
     end
 
+    for _, model in pairs(player_manager.AllValidModels()) do
+        model = string.lower(model)
+        for _, path in ipairs(lia.anim.CitizenModelPaths) do
+            path = string.lower(path)
+            if string.find(model, path) == 1 then
+                if string.find(model, "female_") then
+                    class = "citizen_female"
+                else
+                    class = "citizen_male"
+                end
+
+                lia.anim.setModelClass(model, class)
+                print("Set model class for", model, "to", class)
+            end
+        end
+    end
+
     if CLIENT then
         hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
         RunConsoleCommand("spawnmenu_reload")
