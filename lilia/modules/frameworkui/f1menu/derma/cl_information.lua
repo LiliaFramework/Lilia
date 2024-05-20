@@ -51,7 +51,7 @@ function PANEL:Init()
 end
 
 function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor, shadowColor, labelText, dockMarginBot, dockMarginTop)
-    if hook.Run("CanDisplayCharacterInfo", name) == false then return end
+    if hook.Run("CanDisplayCharInfo", name) == false then return end
     local isDesc = name == "desc"
     local entryContainer = self.infoBox:Add("DPanel")
     entryContainer:Dock(TOP)

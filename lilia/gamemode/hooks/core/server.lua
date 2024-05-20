@@ -64,6 +64,16 @@ function GM:CharacterLoaded(id)
     hook.Run("CharLoaded", id)
 end
 
+function GM:PreCharacterDelete(id)
+    print("PreCharacterDelete is deprecated. Use PreCharDelete for optimization purposes.")
+    hook.Run("PreCharDelete", id)
+end
+
+function GM:OnCharacterDelete(client, id)
+    print("OnCharacterDelete is deprecated. Use OnCharDelete for optimization purposes.")
+    hook.Run("OnCharDelete", client, id)
+end
+
 function GM:CharLoaded(id)
     local character = lia.char.loaded[id]
     if character then

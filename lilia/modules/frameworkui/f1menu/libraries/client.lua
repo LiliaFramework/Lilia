@@ -23,7 +23,7 @@ function MODULE:CanPlayerViewAttributes()
     if self.F1DisplayAttributes then return false end
 end
 
-function MODULE:CanDisplayCharacterInfo(name)
+function MODULE:CanDisplayCharInfo(name)
     local client = LocalPlayer()
     local character = client:getChar()
     local class = lia.class.list[character:getClass()]

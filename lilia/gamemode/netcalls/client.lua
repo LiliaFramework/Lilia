@@ -422,7 +422,7 @@ net.Receive("LiliaPlaySound", function() LocalPlayer():EmitSound(tostring(net.Re
 netstream.Hook("ChatPrint", function(data) chat.AddText(unpack(data)) end)
 netstream.Hook("charInfo", function(data, id, client) lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client) end)
 net.Receive("ReloadLightMaps", function() render.RedownloadAllLightmaps(true) end)
-netstream.Hook("charKick", function(id, isCurrentChar) hook.Run("KickedFromCharacter", id, isCurrentChar) end)
+netstream.Hook("charKick", function(id, isCurrentChar) hook.Run("KickedFromChar", id, isCurrentChar) end)
 net.Receive("SendMessage", function() chat.AddText(Color(255, 255, 255), unpack(net.ReadTable())) end)
 netstream.Hook("gVar", function(key, value) lia.net.globals[key] = value end)
 net.Receive("SendPrint", function() print(unpack(net.ReadTable())) end)

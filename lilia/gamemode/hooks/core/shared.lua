@@ -78,6 +78,16 @@ function GM:LiliaLoaded()
     lia.module.namecache = namecache
 end
 
+function GM:GetMaxPlayerCharacter(client)
+    print("GetMaxPlayerCharacter is deprecated. Use GetMaxPlayerChar for optimization purposes.")
+    hook.Run("GetMaxPlayerChar", client)
+end
+
+function GM:CanPlayerCreateCharacter(client)
+    print("CanPlayerCreateChar is deprecated. Use CanPlayerCreateChar for optimization purposes.")
+    hook.Run("CanPlayerCreateChar", client)
+end
+
 function GM:InitPostEntity()
     if SERVER then
         lia.faction.formatModelData()

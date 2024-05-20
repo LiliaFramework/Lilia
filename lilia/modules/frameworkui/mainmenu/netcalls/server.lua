@@ -29,7 +29,7 @@ net.Receive("liaCharChoose", function(_, client)
 end)
 
 net.Receive("liaCharCreate", function(_, client)
-    if hook.Run("CanPlayerCreateCharacter", client) == false then return end
+    if hook.Run("CanPlayerCreateChar", client) == false then return end
     local function response(id, message, ...)
         net.Start("liaCharCreate")
         net.WriteUInt(id or 0, 32)

@@ -589,7 +589,7 @@ if SERVER then
             end
         end
 
-        hook.Run("PreCharacterDelete", id)
+        hook.Run("PreCharDelete", id)
         for index, charID in pairs(client.liaCharList) do
             if charID == id then
                 table.remove(client.liaCharList, index)
@@ -608,7 +608,7 @@ if SERVER then
             end
         end)
 
-        hook.Run("OnCharacterDelete", client, id)
+        hook.Run("OnCharDelete", client, id)
     end
 
     --- Sets data for a character in the database and in memory.

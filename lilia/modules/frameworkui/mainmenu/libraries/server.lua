@@ -17,11 +17,11 @@
     end)
 end
 
-function MODULE:OnCharacterDelete(client, id)
+function MODULE:OnCharDelete(client, id)
     lia.log.add(client, "charDelete", id)
 end
 
-function MODULE:onCharCreated(client, character)
+function MODULE:OnCharCreated(client, character)
     lia.log.add(client, "charCreate", character)
 end
 

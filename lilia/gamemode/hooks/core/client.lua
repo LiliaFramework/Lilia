@@ -47,6 +47,16 @@ function GM:HUDPaintBackground()
     self.BaseClass.PaintWorldTips(self.BaseClass)
 end
 
+function GM:CanDisplayCharacterInfo(client, id)
+    print("CanDisplayCharacterInfo is deprecated. Use CanDisplayCharInfo for optimization purposes.")
+    hook.Run("CanDisplayCharInfo", client, id)
+end
+
+function GM:KickedFromCharacter(id, isCurrentChar)
+    print("KickedFromCharacter is deprecated. Use KickedFromChar for optimization purposes.")
+    hook.Run("KickedFromChar", id, isCurrentChar)
+end
+
 function GM:CharacterListLoaded(newCharList)
     print("CharacterListLoaded is deprecated. Use CharListLoaded for optimization purposes.")
     hook.Run("CharListLoaded", newCharList)
