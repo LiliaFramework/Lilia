@@ -13,6 +13,6 @@ function MODULE:RegisterWeapons()
         ITEM.height = 2
         ITEM.width = 2
         ITEM.category = "Weapons"
-        if ITEM.name ~= wep.ClassName then print("Generated weapon:", ITEM.name) end
+        if ITEM.name ~= wep.ClassName and self.NotifyWeaponRegister then print("Generated weapon:", ITEM.name) end
     end
 end
