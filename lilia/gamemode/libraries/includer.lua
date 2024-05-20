@@ -170,7 +170,7 @@ lia.FilesToLoad = {
         realm = "server"
     },
     {
-        path = "lilia/gamemode/meta/string.lua",
+        path = "lilia/gamemode/libraries/string.lua",
         realm = "shared"
     },
 }
