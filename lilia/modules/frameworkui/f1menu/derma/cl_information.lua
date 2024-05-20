@@ -67,7 +67,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(name, font, size, textColor
     label:SetWide(85)
     label:SetTall(25)
     label:SetTextColor(textColor)
-    label:SetText(labelText)
+    label:SetText(L(labelText))
     label:Dock(LEFT)
     label:DockMargin(0, 0, 0, 0)
     label:SetContentAlignment(5)
