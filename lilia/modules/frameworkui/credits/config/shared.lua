@@ -9,6 +9,10 @@
         steamid = "76561198237485902",
         color = Color(255, 255, 255)
     },
+        desc = "Contributor", -- Sintact | Max
+        steamid = "76561199065653221",
+        color = Color(255, 255, 255)
+    },
 }
 
 MODULE.contributors = {
