@@ -17,13 +17,13 @@ lia.command.add("deletelogs", {
 })
 
 lia.command.add("netlogs", {
-    superadminOnly = true,
+    superAdminOnly = true,
     privilege = "View Advanced Logs",
     onRun = function() end
 })
 
 lia.command.add("concommandlogs", {
-    superadminOnly = true,
+    superAdminOnly = true,
     privilege = "View Advanced Logs",
     onRun = function() end
 })
