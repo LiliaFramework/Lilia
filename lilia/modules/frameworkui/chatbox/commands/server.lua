@@ -57,5 +57,5 @@ lia.command.add("refreshfonts", {
 lia.command.add("clearchat", {
     adminOnly = true,
     privilege = "Clear Chat",
-    onRun = function() netstream.Start(player.Iterator(), "adminClearChat") end
+    onRun = function() netstream.Start(player.GetAll(), "adminClearChat") end
 })

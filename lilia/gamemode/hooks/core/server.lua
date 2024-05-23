@@ -453,7 +453,7 @@ function GM:PlayerShouldTakeDamage(client, _)
 end
 
 timer.Create("flagBlacklistTick", 10, 0, function()
-    for _, v in player.Iterator() do
+    for _, v in pairs(player.GetAll()) do
         local blacklistLog = v:getLiliaData("flagblacklistlog")
         if blacklistLog then
             for _, bl in pairs(blacklistLog) do

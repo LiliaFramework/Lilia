@@ -75,12 +75,12 @@ end
 function PANEL:UpdateStaff()
     StaffCount = 0
     StaffOnDutyCount = 0
-    for _, target in player.Iterator() do
+    for _, target in pairs(player.GetAll()) do
         if target:isStaff() then StaffCount = StaffCount + 1 end
         if target:isStaffOnDuty() then StaffOnDutyCount = StaffOnDutyCount + 1 end
     end
 
-    self.staff1:SetText("Players Online: " .. player.GetCount() .. " | Staff On Duty: " .. StaffOnDutyCount .. " | Staff Online: " .. StaffCount)
+    self.staff1:SetText("Players Online: " ..player.GetCount() .. " | Staff On Duty: " .. StaffOnDutyCount .. " | Staff Online: " .. StaffCount)
 end
 
 function PANEL:Think()
