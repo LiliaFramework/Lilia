@@ -128,7 +128,7 @@ if SERVER then
 
         if SERVER then
             if fullUpdate then
-                for _, client in ipairs(player.GetAll()) do
+                for _, client in player.Iterator() do
                     if client:getChar():getID() == owner then
                         self:sync(client)
                         break

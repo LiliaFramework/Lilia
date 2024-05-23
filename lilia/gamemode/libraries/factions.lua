@@ -95,7 +95,7 @@ end
 -- @treturn table A table containing the players belonging to the specified faction
 function lia.faction.getPlayers(faction)
     local players = {}
-    for _, v in ipairs(player.GetAll()) do
+    for _, v in player.Iterator() do
         local character = v:getChar()
         if character and character:getFaction() == faction then table.insert(players, v) end
     end
@@ -108,7 +108,7 @@ end
 -- @treturn number The number of players belonging to the specified faction
 function lia.faction.getPlayerCount(faction)
     local count = 0
-    for _, v in ipairs(player.GetAll()) do
+    for _, v in player.Iterator() do
         local character = v:getChar()
         if character and character:getFaction() == faction then count = count + 1 end
     end

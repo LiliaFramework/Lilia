@@ -77,7 +77,7 @@ lia.command.add("plywhitelist", {
         if IsValid(target) then
             local faction = lia.command.findFaction(client, table.concat(arguments, " ", 2))
             if faction and target:setWhitelisted(faction.index, true) then
-                for _, v in ipairs(player.GetAll()) do
+                for _, v in player.Iterator() do
                     v:notifyLocalized("whitelist", client:Name(), target:Name(), L(faction.name, v))
                 end
             end
@@ -94,7 +94,7 @@ lia.command.add("plyunwhitelist", {
         if IsValid(target) then
             local faction = lia.command.findFaction(client, table.concat(arguments, " ", 2))
             if faction and target:setWhitelisted(faction.index, false) then
-                for _, v in ipairs(player.GetAll()) do
+                for _, v in player.Iterator() do
                     v:notifyLocalized("unwhitelist", client:Name(), target:Name(), L(faction.name, v))
                 end
             end

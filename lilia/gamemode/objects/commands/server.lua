@@ -340,7 +340,7 @@ lia.command.add("charkick", {
         if IsValid(target) then
             local character = target:getChar()
             if character then
-                for _, v in ipairs(player.GetAll()) do
+                for _, v in player.Iterator() do
                     v:notifyLocalized("charKick", client:Name(), target:Name())
                 end
 
@@ -530,7 +530,7 @@ lia.command.add("forcesave", {
     privilege = "Force Save Server",
     onRun = function(client)
         hook.Run("SaveData")
-        for _, v in ipairs(player.GetAll()) do
+        for _, v in player.Iterator() do
             if v:getChar() then v:getChar():save() end
         end
 
@@ -688,7 +688,7 @@ lia.command.add("liststaff", {
     adminOnly = false,
     privilege = "List Staff",
     onRun = function(client)
-        for _, target in ipairs(player.GetAll()) do
+        for _, target in player.Iterator() do
             if target:isStaff() then client:ChatPrint("Off Duty Staff Meber: " .. target:Name()) end
         end
     end
@@ -698,7 +698,7 @@ lia.command.add("listondutystaff", {
     adminOnly = false,
     privilege = "List Staff",
     onRun = function(client)
-        for _, target in ipairs(player.GetAll()) do
+        for _, target in player.Iterator() do
             if target:isStaffOnDuty() then client:ChatPrint("Off Duty Staff Meber: " .. target:Name()) end
         end
     end
@@ -708,7 +708,7 @@ lia.command.add("listvip", {
     adminOnly = false,
     privilege = "List VIPs",
     onRun = function(client)
-        for _, target in ipairs(player.GetAll()) do
+        for _, target in player.Iterator() do
             if target:isVIP() then client:ChatPrint("VIP Member: " .. target:Name()) end
         end
     end
@@ -718,7 +718,7 @@ lia.command.add("listusers", {
     adminOnly = false,
     privilege = "List Users",
     onRun = function(client)
-        for _, target in ipairs(player.GetAll()) do
+        for _, target in player.Iterator() do
             if target:isUser() then client:ChatPrint("User Member: " .. target:Name()) end
         end
     end
@@ -1050,7 +1050,7 @@ lia.command.add("membercount", {
         local onDutyStaffCount = 0
         local vipCount = 0
         local userCount = 0
-        for _, target in ipairs(player.GetAll()) do
+        for _, target in player.Iterator() do
             if target:isStaff() then staffCount = staffCount + 1 end
             if target:isStaffOnDuty() then onDutyStaffCount = onDutyStaffCount + 1 end
             if target:isVIP() then vipCount = vipCount + 1 end

@@ -20,7 +20,7 @@ end
 function lia.util.findPlayer(identifier, allowPatterns)
     if lia.util.isSteamID(identifier) then return player.GetBySteamID(identifier) end
     if not allowPatterns then identifier = string.PatternSafe(identifier) end
-    for _, v in ipairs(player.GetAll()) do
+    for _, v in player.Iterator() do
         if lia.util.stringMatches(v:Name(), identifier) then return v end
     end
 end
@@ -89,7 +89,7 @@ end
 -- @realm shared
 function lia.util.getAllChar()
     local charTable = {}
-    for _, v in ipairs(player.GetAll()) do
+    for _, v in player.Iterator() do
         if v:getChar() then table.insert(charTable, v:getChar():getID()) end
     end
     return charTable
@@ -125,7 +125,7 @@ end
 -- @realm shared
 function lia.util.getAdmins()
     local staff = {}
-    for _, client in ipairs(player.GetAll()) do
+    for _, client in player.Iterator() do
         local hasPermission = CAMI.PlayerHasAccess(client, "UserGroups - Staff Group", nil)
         if hasPermission then staff[#staff + 1] = client end
     end
@@ -137,7 +137,7 @@ end
 -- @treturn Player The player object if found, nil otherwise
 -- @realm shared
 function lia.util.findPlayerBySteamID64(SteamID64)
-    for _, client in ipairs(player.GetAll()) do
+    for _, client in player.Iterator() do
         if client:SteamID64() == SteamID64 then return client end
     end
     return nil
@@ -148,7 +148,7 @@ end
 -- @treturn Player The player object if found, nil otherwise
 -- @realm shared
 function lia.util.findPlayerBySteamID(SteamID)
-    for _, client in ipairs(player.GetAll()) do
+    for _, client in player.Iterator() do
         if client:SteamID() == SteamID then return client end
     end
     return nil
@@ -192,7 +192,7 @@ end
 function lia.util.playerInRadius(pos, dist)
     dist = dist * dist
     local t = {}
-    for _, ply in ipairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         if IsValid(ply) and ply:GetPos():DistToSqr(pos) < dist then t[#t + 1] = ply end
     end
     return t

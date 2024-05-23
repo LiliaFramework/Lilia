@@ -107,7 +107,7 @@ function ITEM:getOwner()
     local inventory = lia.inventory.instances[self.invID]
     if inventory and SERVER then return inventory:getRecipients()[1] end
     local id = self:getID()
-    for _, v in ipairs(player.GetAll()) do
+    for _, v in player.Iterator() do
         local character = v:getChar()
         if character and character:getInv() and character:getInv().items[id] then return v end
     end

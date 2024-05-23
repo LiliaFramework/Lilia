@@ -1,4 +1,10 @@
-﻿lia.anim.HoldTypeTranslator = {
+﻿--- Default animation configurations for Lilia.
+-- @configurations Animations
+
+-- This table defines the animation hold type translations for various weapon types in the game.
+-- These translations determine the animation style a character will use when holding a particular weapon.
+-- @realm shared
+lia.anim.HoldTypeTranslator = {
     [""] = "normal",
     ["physgun"] = "smg",
     ["ar2"] = "smg",
@@ -15,6 +21,9 @@
     ["revolver"] = "pistol"
 }
 
+-- This table defines the player hold type translations for various weapon types in the game.
+-- These translations determine the default animation style a character will use for certain player actions.
+-- @realm shared
 lia.anim.PlayerHoldTypeTranslator = {
     [""] = "normal",
     ["normal"] = "normal",
@@ -30,6 +39,9 @@ lia.anim.PlayerHoldTypeTranslator = {
     ["bugbait"] = "normal"
 }
 
+--- This table defines the default model-to-animation type mappings used to fix T-posing issues in Lilia.
+-- You can override these settings by placing a modified version in your config folder within the schema.
+-- @realm shared
 lia.anim.DefaultTposingFixer = {
     ["models/Zombie/Classic.mdl"] = "zombie",
     ["models/Zombie/Classic_legs.mdl"] = "zombie",
@@ -55,4 +67,8 @@ lia.anim.DefaultTposingFixer = {
     ["models/monk.mdl"] = "citizen_male",
 }
 
+--- This table defines the default paths for citizen models in Lilia.
+-- These paths are used to determine which models should use citizen animations.
+-- You can override these settings by placing a modified version in your config folder within the schema.
+-- @realm shared
 lia.anim.CitizenModelPaths = {"models/thespireroleplay/humans", "models/suits/humans", "models/Humans/Group01", "models/Humans/Group02", "models/Humans/Group03", "models/Humans/Group03m",}

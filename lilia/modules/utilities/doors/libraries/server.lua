@@ -43,7 +43,7 @@ end
 function MODULE:SaveData()
     local data = {}
     local doors = {}
-    for _, v in ipairs(ents.GetAll()) do
+    for _, v in ents.Iterator() do
         if v:isDoor() then doors[v:MapCreationID()] = v end
     end
 
@@ -159,7 +159,7 @@ function MODULE:ShowTeam(client)
 end
 
 function MODULE:PlayerDisconnected(client)
-    for _, v in ipairs(ents.GetAll()) do
+    for _, v in ents.Iterator() do
         if v == client then return end
         if v.isDoor and v:isDoor() and v:GetDTEntity(0) == client then v:removeDoorAccessData() end
     end
@@ -168,14 +168,14 @@ end
 function MODULE:KeyLock(client, door, time)
     if not door:IsLocked() and IsValid(door) and client:GetPos():Distance(door:GetPos()) <= 256 and (door:isDoor() or (door:GetCreator() == client or client:IsSuperAdmin() or client:isStaffOnDuty() and door:IsVehicle())) then
         client:setAction("@locking", time, function() end)
-        client:doStaredAction(door, function() self:ToggleLock(client, door, true) end, time, function() client:setAction() end)
+        client:doStaredAction(door, function() self:ToggleLock(client, door, true) end, time, function() client:stopAction() end)
     end
 end
 
 function MODULE:KeyUnlock(client, door, time)
     if door:IsLocked() and IsValid(door) and client:GetPos():Distance(door:GetPos()) <= 256 and (door:isDoor() or (door:GetCreator() == client or client:IsSuperAdmin() or client:isStaffOnDuty() and door:IsVehicle())) then
         client:setAction("@unlocking", time, function() end)
-        client:doStaredAction(door, function() self:ToggleLock(client, door, false) end, time, function() client:setAction() end)
+        client:doStaredAction(door, function() self:ToggleLock(client, door, false) end, time, function() client:stopAction() end)
     end
 end
 

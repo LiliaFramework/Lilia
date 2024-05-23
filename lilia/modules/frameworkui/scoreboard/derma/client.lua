@@ -164,6 +164,18 @@ function PANEL:addPlayer(client, parent)
     slot.ping:SetTextColor(color_white)
     slot.ping:SetTextInset(16, 0)
     slot.ping:SetExpensiveShadow(1, color_black)
+    slot.ping.Think = function(this)
+        if IsValid(client) then
+            local ping = client:Ping()
+            local text = this:GetText()
+            if text ~= ping then
+                this:SetText(ping)
+                this:SizeToContentsX()
+                this:SetPos(self:GetWide() - (24 + (string.len(this:GetText()) * 4)))
+            end
+        end
+    end
+
     slot.desc = slot:Add("DLabel")
     slot.desc:Dock(FILL)
     slot.desc:DockMargin(65, 0, 48, 0)

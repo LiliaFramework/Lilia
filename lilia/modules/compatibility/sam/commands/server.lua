@@ -25,3 +25,16 @@ lia.command.add("playtime", {
         end
     end
 })
+
+lia.command.add("asay", {
+    adminOnly = false,
+    syntax = "<string message>",
+    onRun = function(client, arguments)
+        if CAMI.PlayerHasAccess(client, "Staff Permissions - Speak in Admin Chat", nil) then
+            local text = table.concat(arguments, " ")
+            if text:find("%S") then lia.chat.send(client, "asay", text) end
+        else
+            client:notify("No access!")
+        end
+    end
+})

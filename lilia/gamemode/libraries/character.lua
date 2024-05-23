@@ -455,7 +455,7 @@ if SERVER then
             _data = data.data
         }, function(_, charID)
             local client
-            for _, v in ipairs(player.GetAll()) do
+            for _, v in player.Iterator() do
                 if v:SteamID64() == data.steamID then
                     client = v
                     break
@@ -557,7 +557,6 @@ if SERVER then
         for _, charID in pairs(client.liaCharList or {}) do
             local character = lia.char.loaded[charID]
             if not character then return end
-            netstream.Start(nil, "charDel", character:getID())
             lia.inventory.cleanUpForCharacter(character)
             lia.char.loaded[charID] = nil
             hook.Run("CharCleanUp", character)
@@ -582,7 +581,7 @@ if SERVER then
         if IsValid(client) then
             removePlayer(client)
         else
-            for _, target in ipairs(player.GetAll()) do
+            for _, target in player.Iterator() do
                 if not table.HasValue(target.liaCharList or {}, id) then continue end
                 table.RemoveByValue(target.liaCharList, id)
                 removePlayer(target)
@@ -598,7 +597,6 @@ if SERVER then
         end
 
         lia.char.loaded[id] = nil
-        netstream.Start(nil, "charDel", id)
         lia.db.query("DELETE FROM lia_characters WHERE _id = " .. id)
         lia.db.query("SELECT _invID FROM lia_inventories WHERE _charID = " .. id, function(data)
             if data then
