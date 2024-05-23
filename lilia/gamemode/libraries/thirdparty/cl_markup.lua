@@ -509,7 +509,8 @@ function parse(ml, maxwidth)
                             end
 
                             local m = 1
-                            while string.utf8sub(ch, m, m) == " " and m <= string.utf8len(ch) do
+                            local chLen = string.utf8len(ch)
+                            while m <= chLen and string.utf8sub(ch, m, m) == " " do
                                 m = m + 1
                             end
 
