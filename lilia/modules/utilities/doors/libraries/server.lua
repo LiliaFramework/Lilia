@@ -43,7 +43,7 @@ end
 function MODULE:SaveData()
     local data = {}
     local doors = {}
-    for _, v in ipairs(ents.GetAll()) do
+    for _, v in ents.Iterator() do
         if v:isDoor() then doors[v:MapCreationID()] = v end
     end
 
@@ -159,7 +159,7 @@ function MODULE:ShowTeam(client)
 end
 
 function MODULE:PlayerDisconnected(client)
-    for _, v in ipairs(ents.GetAll()) do
+    for _, v in ents.Iterator() do
         if v == client then return end
         if v.isDoor and v:isDoor() and v:GetDTEntity(0) == client then v:removeDoorAccessData() end
     end
