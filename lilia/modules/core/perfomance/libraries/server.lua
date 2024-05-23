@@ -8,7 +8,7 @@
     end
 
     if playerCount >= self.PlayerCountCarLimit and self.PlayerCountCarLimitEnabled then
-        for _, car in pairs(ents.GetAll()) do
+        for _, car in pairs(ents.Iterator()) do
             if car:IsVehicle() then car:Remove() end
         end
 

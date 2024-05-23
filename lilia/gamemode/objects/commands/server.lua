@@ -514,7 +514,7 @@ lia.command.add("cleanprops", {
     privilege = "Clean Props",
     onRun = function(client)
         local count = 0
-        for _, v in pairs(ents.GetAll()) do
+        for _, v in pairs(ents.Iterator()) do
             if v:isProp() then
                 count = count + 1
                 v:Remove()
@@ -543,7 +543,7 @@ lia.command.add("cleannpcs", {
     privilege = "Clean NPCs",
     onRun = function(client)
         local count = 0
-        for _, v in pairs(ents.GetAll()) do
+        for _, v in pairs(ents.Iterator()) do
             if IsValid(v) and v:IsNPC() then
                 count = count + 1
                 v:Remove()
@@ -653,7 +653,7 @@ lia.command.add("listents", {
     syntax = "<No Input>",
     onRun = function(client)
         local cent = {}
-        for _, v in pairs(ents.GetAll()) do
+        for _, v in pairs(ents.Iterator()) do
             local class = v:GetClass()
             if not cent[class] then
                 cent[class] = 1

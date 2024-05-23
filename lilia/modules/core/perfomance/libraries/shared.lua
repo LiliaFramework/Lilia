@@ -31,7 +31,7 @@ end
 
 function MODULE:PlayerUpdateTransmitStates(client, intRange)
     if intRange then
-        for _, v in pairs(ents.GetAll()) do
+        for _, v in pairs(ents.Iterator()) do
             if table.HasValue(self.tblAlwaysSend, v:GetClass()) then
                 v:SetPreventTransmit(client, false)
                 continue
@@ -49,7 +49,7 @@ function MODULE:PlayerUpdateTransmitStates(client, intRange)
             end
         end
     else
-        for _, v in pairs(ents.GetAll()) do
+        for _, v in pairs(ents.Iterator()) do
             if table.HasValue(self.tblAlwaysSend, v:GetClass()) then
                 v:SetPreventTransmit(client, false)
                 continue
