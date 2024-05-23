@@ -474,6 +474,14 @@ if SERVER then
         if callback then timer.Create("liaAct" .. self:UniqueID(), time, 1, function() if IsValid(self) then callback(self) end end) end
     end
 
+    --- Stops the action bar for the player.
+    -- Removes the action bar currently being displayed.
+    -- @realm server
+    function playerMeta:stopAction()
+        timer.Remove("liaAct" .. self:UniqueID())
+        netstream.Start(self, "actBar")
+    end
+
     --- Retrieves the player's permanent flags.
     -- @realm server
     -- @treturn string The player's permanent flags.
@@ -1076,6 +1084,7 @@ playerMeta.HasSkillLevel = playerMeta.hasSkillLevel
 playerMeta.MeetsRequiredSkills = playerMeta.meetsRequiredSkills
 playerMeta.GetEyeEnt = playerMeta.getEyeEnt
 playerMeta.SetAction = playerMeta.setAction
+playerMeta.StopAction = playerMeta.stopAction
 playerMeta.GetPermFlags = playerMeta.getPermFlags
 playerMeta.SetPermFlags = playerMeta.setPermFlags
 playerMeta.GivePermFlags = playerMeta.givePermFlags
