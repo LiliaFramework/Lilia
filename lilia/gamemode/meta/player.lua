@@ -465,20 +465,20 @@ if SERVER then
         startTime = startTime or CurTime()
         finishTime = finishTime or (startTime + time)
         if text == false then
-            timer.Remove("liaAct" .. self:UniqueID())
+            timer.Remove("liaAct" .. self:SteamID64())
             netstream.Start(self, "actBar")
             return
         end
 
         netstream.Start(self, "actBar", startTime, finishTime, text)
-        if callback then timer.Create("liaAct" .. self:UniqueID(), time, 1, function() if IsValid(self) then callback(self) end end) end
+        if callback then timer.Create("liaAct" .. self:SteamID64(), time, 1, function() if IsValid(self) then callback(self) end end) end
     end
 
     --- Stops the action bar for the player.
     -- Removes the action bar currently being displayed.
     -- @realm server
     function playerMeta:stopAction()
-        timer.Remove("liaAct" .. self:UniqueID())
+        timer.Remove("liaAct" .. self:SteamID64())
         netstream.Start(self, "actBar")
     end
 
@@ -709,7 +709,7 @@ if SERVER then
     -- @func[opt] onCancel The function to call if the stared action is canceled.
     -- @int[opt] distance The maximum distance for the stared action.
     function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
-        local uniqueID = "liaStare" .. self:UniqueID()
+        local uniqueID = "liaStare" .. self:SteamID64()
         local data = {}
         data.filter = self
         timer.Create(uniqueID, 0.1, time / 0.1, function()
