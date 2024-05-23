@@ -1,4 +1,4 @@
-﻿MODULE. = {
+﻿MODULE.GamemodeCreators = {
     {
         desc = "Creator", -- Samael
         steamid = "76561198312513285",
