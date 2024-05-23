@@ -1,6 +1,6 @@
 ﻿MODULE.GamemodeCreators = {
     {
-        desc = "Creator", -- Leonheart
+        desc = "Creator", -- Samael
         steamid = "76561198312513285",
         color = Color(255, 255, 255)
     },
