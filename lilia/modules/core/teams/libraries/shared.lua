@@ -6,7 +6,7 @@
 
     if not isnumber(faction.limit) then return false end
     local maxPlayers = faction.limit
-    if faction.limit < 1 then maxPlayers = math.Round(#player.GetAll() * faction.limit) end
+    if faction.limit < 1 then maxPlayers = math.Round(#player.Iterator() * faction.limit) end
     return team.NumPlayers(faction.index) >= maxPlayers
 end
 

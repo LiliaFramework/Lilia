@@ -19,7 +19,7 @@ lia.command.add("playglobalsound", {
     privilege = "Play Global Sounds",
     onRun = function(_, arguments)
         local sound = arguments[1]
-        for _, v in pairs(player.GetAll()) do
+        for _, v in player.Iterator() do
             v:PlaySound(sound)
         end
     end
@@ -569,7 +569,7 @@ lia.command.add("checkallmoney", {
     syntax = "<string charname>",
     privilege = "Check All Money",
     onRun = function(client)
-        for _, v in pairs(player.GetAll()) do
+        for _, v in player.Iterator() do
             if v:getChar() then client:ChatPrint(v:Name() .. " has " .. v:getChar():getMoney()) end
         end
     end

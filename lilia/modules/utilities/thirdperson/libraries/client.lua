@@ -115,7 +115,7 @@ end
 function MODULE:PrePlayerDraw(drawnClient)
     local client = LocalPlayer()
     local clientPos = client:GetShootPos()
-    local allPlayers = player.GetAll()
+    local allPlayers = player.Iterator()
     if not drawnClient:IsDormant() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:CanOverrideView() then
         local bBoneHit = false
         for i = 0, drawnClient:GetBoneCount() - 1 do

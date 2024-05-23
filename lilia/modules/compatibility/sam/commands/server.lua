@@ -2,7 +2,7 @@
     adminOnly = true,
     privilege = "Clear Decals",
     onRun = function()
-        for _, v in pairs(player.GetAll()) do
+        for _, v in player.Iterator() do
             v:ConCommand("r_cleardecals")
         end
     end

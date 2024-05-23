@@ -1,6 +1,6 @@
 ﻿function MODULE:ServerSidePlayerInitialSpawn()
     local music = ents.FindByName("music")
-    local playerCount = #player.GetAll()
+    local playerCount = #player.Iterator()
     if #music > 0 then
         music[1]:SetKeyValue("RefireTime", 99999999)
         music[1]:Fire("Disable")
@@ -17,7 +17,7 @@
 end
 
 function MODULE:PlayerSpawnVehicle(client)
-    local playerCount = #player.GetAll()
+    local playerCount = #player.Iterator()
     if playerCount >= self.PlayerCountCarLimit and self.PlayerCountCarLimitEnabled then
         client:notify("You can't spawn this as the playerlimit to spawn car has been hit!")
         return false

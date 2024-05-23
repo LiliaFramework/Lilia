@@ -34,7 +34,7 @@ end)
 if SERVER then
     concommand.Add("stopsoundall", function(client)
         if client:IsSuperAdmin() then
-            for _, v in pairs(player.GetAll()) do
+            for _, v in player.Iterator() do
                 v:ConCommand("stopsound")
             end
         else
