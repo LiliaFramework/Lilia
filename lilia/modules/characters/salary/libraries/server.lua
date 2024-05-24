@@ -33,7 +33,7 @@ function MODULE:PlayerLoadedChar(client, _, _)
 end
 
 function MODULE:OnReloaded()
-    for _, client in player.Iterator() do
+    for _, client in ipairs(player.GetAll()) do
         hook.Run("CreateSalaryTimer", client)
     end
 end

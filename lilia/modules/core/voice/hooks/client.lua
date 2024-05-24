@@ -3,17 +3,17 @@
         local menu = DermaMenu()
         menu:AddOption("Change voice mode to Whispering range.", function()
             netstream.Start("ChangeSpeakMode", "Whispering")
-            client:ChatNotify("You have changed your voice mode to Whispering!")
+            client:ChatPrint("You have changed your voice mode to Whispering!")
         end)
 
         menu:AddOption("Change voice mode to Talking range.", function()
             netstream.Start("ChangeSpeakMode", "Talking")
-            client:ChatNotify("You have changed your voice mode to Talking!")
+            client:ChatPrint("You have changed your voice mode to Talking!")
         end)
 
         menu:AddOption("Change voice mode to Yelling range.", function()
             netstream.Start("ChangeSpeakMode", "Yelling")
-            client:ChatNotify("You have changed your voice mode to Yelling!")
+            client:ChatPrint("You have changed your voice mode to Yelling!")
         end)
 
         menu:Open()

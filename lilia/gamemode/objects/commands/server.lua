@@ -340,7 +340,7 @@ lia.command.add("charkick", {
         if IsValid(target) then
             local character = target:getChar()
             if character then
-                for _, v in player.Iterator() do
+                for _, v in ipairs(player.GetAll()) do
                     v:notifyLocalized("charKick", client:Name(), target:Name())
                 end
 
@@ -467,9 +467,9 @@ lia.command.add("checkmoney", {
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target then
-            client:ChatNotify(target:GetName() .. " has: " .. target:getChar():getMoney() .. lia.currency.plural .. " (s)")
+            client:ChatPrint(target:GetName() .. " has: " .. target:getChar():getMoney() .. lia.currency.plural .. " (s)")
         else
-            client:ChatNotify("Invalid Target")
+            client:ChatPrint("Invalid Target")
         end
     end
 })
@@ -478,10 +478,10 @@ lia.command.add("status", {
     onRun = function(client)
         if not client.metaAntiSpam or client.metaAntiSpam < CurTime() and SERVER then
             local character = client:getChar()
-            client:ChatNotify("________________________________" .. "\n➣ Your SteamID: " .. client:SteamID() .. "\n➣ Your ping: " .. client:Ping() .. " ms")
-            client:ChatNotify("➣ Your faction: " .. team.GetName(client:Team()) .. "\n➣ Your health: " .. client:Health())
-            client:ChatNotify("➣ Your description: " .. "\n[ " .. character:getDesc() .. " ]")
-            client:ChatNotify("➣ Your max health: " .. client:GetMaxHealth() .. "\n➣ Your max run speed: " .. client:GetRunSpeed() .. "\n➣ Your max walk speed: " .. client:GetWalkSpeed() .. "\n➣________________________________")
+            client:ChatPrint("________________________________" .. "\n➣ Your SteamID: " .. client:SteamID() .. "\n➣ Your ping: " .. client:Ping() .. " ms")
+            client:ChatPrint("➣ Your faction: " .. team.GetName(client:Team()) .. "\n➣ Your health: " .. client:Health())
+            client:ChatPrint("➣ Your description: " .. "\n[ " .. character:getDesc() .. " ]")
+            client:ChatPrint("➣ Your max health: " .. client:GetMaxHealth() .. "\n➣ Your max run speed: " .. client:GetRunSpeed() .. "\n➣ Your max walk speed: " .. client:GetWalkSpeed() .. "\n➣________________________________")
             client.metaAntiSpam = CurTime() + 8
         end
     end
@@ -530,7 +530,7 @@ lia.command.add("forcesave", {
     privilege = "Force Save Server",
     onRun = function(client)
         hook.Run("SaveData")
-        for _, v in player.Iterator() do
+        for _, v in ipairs(player.GetAll()) do
             if v:getChar() then v:getChar():save() end
         end
 
@@ -570,7 +570,7 @@ lia.command.add("checkallmoney", {
     privilege = "Check All Money",
     onRun = function(client)
         for _, v in pairs(player.GetAll()) do
-            if v:getChar() then client:ChatNotify(v:Name() .. " has " .. v:getChar():getMoney()) end
+            if v:getChar() then client:ChatPrint(v:Name() .. " has " .. v:getChar():getMoney()) end
         end
     end
 })
@@ -599,7 +599,7 @@ lia.command.add("findallflags", {
     privilege = "Find All Flags",
     onRun = function(client)
         for _, v in pairs(player.GetHumans()) do
-            client:ChatNotify(v:Name() .. " — " .. v:getChar():getFlags())
+            client:ChatPrint(v:Name() .. " — " .. v:getChar():getFlags())
         end
     end
 })
@@ -668,7 +668,7 @@ lia.command.add("listents", {
         end
 
         output = output:sub(1, -3) .. "\n}"
-        client:ChatNotify(output)
+        client:ChatPrint(output)
     end
 })
 
@@ -688,8 +688,8 @@ lia.command.add("liststaff", {
     adminOnly = false,
     privilege = "List Staff",
     onRun = function(client)
-        for _, target in player.Iterator() do
-            if target:isStaff() then client:ChatNotify("Off Duty Staff Meber: " .. target:Name()) end
+        for _, target in ipairs(player.GetAll()) do
+            if target:isStaff() then client:ChatPrint("Off Duty Staff Meber: " .. target:Name()) end
         end
     end
 })
@@ -698,8 +698,8 @@ lia.command.add("listondutystaff", {
     adminOnly = false,
     privilege = "List Staff",
     onRun = function(client)
-        for _, target in player.Iterator() do
-            if target:isStaffOnDuty() then client:ChatNotify("Off Duty Staff Meber: " .. target:Name()) end
+        for _, target in ipairs(player.GetAll()) do
+            if target:isStaffOnDuty() then client:ChatPrint("Off Duty Staff Meber: " .. target:Name()) end
         end
     end
 })
@@ -708,8 +708,8 @@ lia.command.add("listvip", {
     adminOnly = false,
     privilege = "List VIPs",
     onRun = function(client)
-        for _, target in player.Iterator() do
-            if target:isVIP() then client:ChatNotify("VIP Member: " .. target:Name()) end
+        for _, target in ipairs(player.GetAll()) do
+            if target:isVIP() then client:ChatPrint("VIP Member: " .. target:Name()) end
         end
     end
 })
@@ -718,8 +718,8 @@ lia.command.add("listusers", {
     adminOnly = false,
     privilege = "List Users",
     onRun = function(client)
-        for _, target in player.Iterator() do
-            if target:isUser() then client:ChatNotify("User Member: " .. target:Name()) end
+        for _, target in ipairs(player.GetAll()) do
+            if target:isUser() then client:ChatPrint("User Member: " .. target:Name()) end
         end
     end
 })
@@ -883,14 +883,14 @@ lia.command.add("fallover", {
 
 lia.command.add("getpos", {
     adminOnly = false,
-    onRun = function(client) client:ChatNotify("MY POSITION: " .. tostring(client:GetPos())) end
+    onRun = function(client) client:ChatPrint("MY POSITION: " .. tostring(client:GetPos())) end
 })
 
 lia.command.add("entname", {
     adminOnly = false,
     onRun = function(client)
         local tr = util.TraceLine(util.GetPlayerTrace(client))
-        if IsValid(tr.Entity) then client:ChatNotify("I saw a " .. tr.Entity:GetName()) end
+        if IsValid(tr.Entity) then client:ChatPrint("I saw a " .. tr.Entity:GetName()) end
     end
 })
 
@@ -1050,16 +1050,16 @@ lia.command.add("membercount", {
         local onDutyStaffCount = 0
         local vipCount = 0
         local userCount = 0
-        for _, target in player.Iterator() do
+        for _, target in ipairs(player.GetAll()) do
             if target:isStaff() then staffCount = staffCount + 1 end
             if target:isStaffOnDuty() then onDutyStaffCount = onDutyStaffCount + 1 end
             if target:isVIP() then vipCount = vipCount + 1 end
             if target:isUser() then userCount = userCount + 1 end
         end
 
-        client:ChatNotify("Total Off Duty Staff Members: " .. staffCount)
-        client:ChatNotify("Total On Duty Staff Members: " .. onDutyStaffCount)
-        client:ChatNotify("Total VIP Members: " .. vipCount)
-        client:ChatNotify("Total Regular Users: " .. userCount)
+        client:ChatPrint("Total Off Duty Staff Members: " .. staffCount)
+        client:ChatPrint("Total On Duty Staff Members: " .. onDutyStaffCount)
+        client:ChatPrint("Total VIP Members: " .. vipCount)
+        client:ChatPrint("Total Regular Users: " .. userCount)
     end
 })

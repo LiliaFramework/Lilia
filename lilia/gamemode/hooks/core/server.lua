@@ -144,7 +144,7 @@ function GM:PlayerSpawn(client)
     client:SetNoDraw(false)
     client:UnLock()
     client:SetNotSolid(false)
-    client:stopAction()
+    client:setAction()
     hook.Run("PlayerLoadout", client)
 end
 

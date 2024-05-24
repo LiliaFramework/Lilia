@@ -108,14 +108,14 @@ function charMeta:getPlayer()
         return self.player
     elseif self.steamID then
         local steamID = self.steamID
-        for _, v in player.Iterator() do
+        for _, v in ipairs(player.GetAll()) do
             if v:SteamID64() == steamID then
                 self.player = v
                 return v
             end
         end
     else
-        for _, v in player.Iterator() do
+        for _, v in ipairs(player.GetAll()) do
             local character = v:getChar()
             if character and (character:getID() == self:getID()) then
                 self.player = v
@@ -350,7 +350,7 @@ if SERVER then
     -- @client[opt=nil] receiver Player to send the information to. This will sync to all connected players if set to `nil`.
     function charMeta:sync(receiver)
         if receiver == nil then
-            for _, v in player.Iterator() do
+            for _, v in ipairs(player.GetAll()) do
                 self:sync(v)
             end
         elseif receiver == self.player then

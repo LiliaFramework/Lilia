@@ -455,7 +455,7 @@ if SERVER then
             _data = data.data
         }, function(_, charID)
             local client
-            for _, v in player.Iterator() do
+            for _, v in ipairs(player.GetAll()) do
                 if v:SteamID64() == data.steamID then
                     client = v
                     break
@@ -538,7 +538,7 @@ if SERVER then
                 end, function(err)
                     print("Failed to load inventories for " .. tostring(id))
                     print(err)
-                    if IsValid(client) then client:ChatNotify("A server error occured while loading your" .. " inventories. Check server log for details.") end
+                    if IsValid(client) then client:ChatPrint("A server error occured while loading your" .. " inventories. Check server log for details.") end
                 end):next(function(inventories)
                     character.vars.inv = inventories
                     lia.char.loaded[id] = character
@@ -581,7 +581,7 @@ if SERVER then
         if IsValid(client) then
             removePlayer(client)
         else
-            for _, target in player.Iterator() do
+            for _, target in ipairs(player.GetAll()) do
                 if not table.HasValue(target.liaCharList or {}, id) then continue end
                 table.RemoveByValue(target.liaCharList, id)
                 removePlayer(target)

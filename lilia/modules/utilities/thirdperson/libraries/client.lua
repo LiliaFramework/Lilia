@@ -115,7 +115,7 @@ end
 function MODULE:PrePlayerDraw(drawnClient)
     local client = LocalPlayer()
     local clientPos = client:GetShootPos()
-    local onlinePlayers = player.GetAll()
+    local allPlayers = player.GetAll()
     if not drawnClient:IsDormant() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:CanOverrideView() then
         local bBoneHit = false
         for i = 0, drawnClient:GetBoneCount() - 1 do
@@ -123,7 +123,7 @@ function MODULE:PrePlayerDraw(drawnClient)
             local traceLine = util.TraceLine({
                 start = clientPos,
                 endpos = bonePos,
-                filter = onlinePlayers,
+                filter = allPlayers,
                 mask = MASK_SHOT_HULL
             })
 
@@ -135,7 +135,7 @@ function MODULE:PrePlayerDraw(drawnClient)
                 local traceLine2 = util.TraceLine({
                     start = bonePos,
                     endpos = clientPos,
-                    filter = onlinePlayers,
+                    filter = allPlayers,
                     mask = MASK_SHOT_HULL
                 })
 

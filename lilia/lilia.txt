@@ -3,5 +3,4 @@
 	"base"		"sandbox"
 	"title"		"Lilia"
 	"author"	"Samael"
-	"category"	"rp"
 }

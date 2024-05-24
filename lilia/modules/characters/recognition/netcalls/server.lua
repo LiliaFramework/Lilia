@@ -20,7 +20,7 @@ netstream.Hook("rgn", function(client, level, name)
         end
 
         class = lia.chat.classes[class]
-        for _, v in player.Iterator() do
+        for _, v in ipairs(player.GetAll()) do
             if client == v then continue end
             if v:getChar() and class.onCanHear(client, v) then targets[#targets + 1] = v end
         end

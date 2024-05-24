@@ -1,6 +1,6 @@
 ﻿local MODULE = MODULE
 net.Receive("liaPACSync", function()
-    for _, client in player.Iterator() do
+    for _, client in ipairs(player.GetAll()) do
         for id in pairs(client:getParts()) do
             MODULE:attachPart(client, id)
         end

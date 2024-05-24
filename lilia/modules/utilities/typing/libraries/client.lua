@@ -18,7 +18,7 @@ function MODULE:HUDPaint()
     local time = RealTime() * 5
     data.start = client:EyePos()
     data.filter = client
-    for _, v in player.Iterator() do
+    for _, v in ipairs(player.GetAll()) do
         if v ~= client and v:getNetVar("typing", false) and v:GetMoveType() == MOVETYPE_WALK then
             data.endpos = v:EyePos()
             if util.TraceLine(data).Entity ~= v then continue end

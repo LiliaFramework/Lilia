@@ -233,7 +233,7 @@ function lia.item.newInv(owner, invType, callback)
     }):next(function(inventory)
         inventory.invType = invType
         if owner and owner > 0 then
-            for _, v in player.Iterator() do
+            for _, v in ipairs(player.GetAll()) do
                 if v:getChar() and v:getChar():getID() == owner then
                     inventory:sync(v)
                     break
