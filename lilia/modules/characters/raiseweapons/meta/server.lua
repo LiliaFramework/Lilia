@@ -1,4 +1,5 @@
 local playerMeta = FindMetaTable("Player")
+local MODULE = MODULE
 function playerMeta:setWepRaised(state, notification)
 	self:setNetVar("raised", state)
 	local weapon = self:GetActiveWeapon()
@@ -14,7 +15,7 @@ function playerMeta:setWepRaised(state, notification)
 end
 
 function playerMeta:toggleWepRaised()
-	timer.Simple(1, function() self:setWepRaised(not self:isWepRaised(), true) end)
+	timer.Simple(1, function() self:setWepRaised(not self:isWepRaised(), MODULE.ShouldPrintMessage) end)
 	local weapon = self:GetActiveWeapon()
 	if IsValid(weapon) then
 		if self:isWepRaised() and weapon.OnRaised then
