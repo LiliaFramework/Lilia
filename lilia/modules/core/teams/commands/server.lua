@@ -211,7 +211,7 @@ lia.command.add("factionlist", {
     syntax = "<string text>",
     onRun = function(client)
         for _, v in ipairs(lia.faction.indices) do
-            client:ChatPrint("NAME: " .. v.name .. " ID: " .. v.uniqueID)
+            client:ChatNotify("NAME: " .. v.name .. " ID: " .. v.uniqueID)
         end
     end
 })

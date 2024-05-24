@@ -433,6 +433,22 @@ if SERVER then
         if not noNetworking then netstream.Start(self, "liaData", key, value) end
     end
 
+    --- Displays a notification for this player in the chatbox.
+    -- @realm server
+    -- @string message Text to display in the notification
+    function playerMeta:chatNotify(message)
+        lia.chat.send(nil, "notice", message)
+    end
+
+    --- Displays a notification for this player in the chatbox with the given language phrase.
+    -- @realm server
+    -- @string message ID of the phrase to display to the player
+    -- @param ... Arguments to pass to the phrase
+    function playerMeta:chatNotifyLocalized(message, ...)
+        message = L(message, self, ...)
+        lia.chat.send(nil, "notice", message)
+    end
+
     --- Retrieves a value from the player's Lilia data.
     -- @string key The key for the data.
     -- @param default[opt=nil] The default value to return if the key does not exist.
@@ -1000,6 +1016,24 @@ if SERVER then
         net.Send(self)
     end
 else
+    --- Displays a notification for this player in the chatbox.
+    -- @realm client
+    -- @string message Text to display in the notification
+    function playerMeta:ChatNotify(message)
+        if self == LocalPlayer() then lia.chat.send(LocalPlayer(), "notice", message) end
+    end
+
+    --- Displays a notification for this player in the chatbox with the given language phrase.
+    -- @realm client
+    -- @string message ID of the phrase to display to the player
+    -- @param ... Arguments to pass to the phrase
+    function playerMeta:ChatNotifyLocalized(message, ...)
+        if self == LocalPlayer() then
+            message = L(message, ...)
+            lia.chat.send(LocalPlayer(), "notice", message)
+        end
+    end
+
     --- Retrieves the player's total playtime.
     -- @realm client
     -- @treturn number The total playtime of the player.
@@ -1060,6 +1094,8 @@ end
 playerMeta.IsUser = playerMeta.isUser
 playerMeta.IsStaff = playerMeta.isStaff
 playerMeta.IsVIP = playerMeta.isVIP
+playerMeta.ChatNotify = playerMeta.chatNotify
+playerMeta.ChatNotifyLocalized = playerMeta.chatNotifyLocalized
 playerMeta.IsStaffOnDuty = playerMeta.isStaffOnDuty
 playerMeta.IsObserving = playerMeta.isObserving
 playerMeta.IsOutside = playerMeta.isOutside
