@@ -31,7 +31,7 @@ net.Receive("liaRequestLogsClient", function()
     local logFiles = net.ReadTable()
     local logType = net.ReadString()
     if table.Count(logFiles) <= 0 then
-        LocalPlayer():ChatPrint("No logs of this type!")
+        LocalPlayer():ChatNotify("No logs of this type!")
         return
     end
 
