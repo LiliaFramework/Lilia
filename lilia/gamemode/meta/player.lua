@@ -892,7 +892,7 @@ if SERVER then
                         self:SetPos(entity:GetPos())
                         if velocity:Length2D() >= 8 then
                             if not entity.liaPausing then
-                                self:setAction()
+                                self:stopaction()
                                 entity.liaPausing = true
                             end
                             return

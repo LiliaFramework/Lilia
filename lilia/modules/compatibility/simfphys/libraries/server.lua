@@ -9,10 +9,10 @@
         end, lia.config.TimeToEnterVehicle, function()
             if IsValid(entity) then
                 entity.IsBeingEntered = false
-                client:setAction()
+                client:stopaction()
             end
 
-            if IsValid(client) then client:setAction() end
+            if IsValid(client) then client:stopaction() end
         end)
     end
     return true
