@@ -50,8 +50,9 @@ function lia.lang.loadFromDir(directory)
 end
 
 --- Adds a table of phrases to a language.
+-- @realm shared
 -- @string name The name of the language to add the phrases to.
--- @tab tbl The table of phrases to add.
+-- @table tbl The table of phrases to add.
 function lia.lang.AddTable(name, tbl)
     lia.lang.stored[name] = table.Merge(lia.lang.stored[name] or {}, tbl)
 end
