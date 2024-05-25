@@ -26,16 +26,16 @@ lia.command.add("deletelogs", {
     onRun = function(client)
         lia.db.query("DELETE FROM `lilia_logs` WHERE time > 0", function(result)
             if result then
-                client:ChatPrint("All logs with time greater than 0 have been erased")
+                client:ChatNotify("All logs with time greater than 0 have been erased")
             else
-                client:ChatPrint("Failed to erase logs: " .. sql.LastError())
+                client:ChatNotify("Failed to erase logs: " .. sql.LastError())
             end
         end)
     end
 })
 
 lia.command.add("netlogs", {
-    superadminOnly = true,
+    superAdminOnly = true,
     privilege = "View Advanced Logs",
     onRun = function(client)
         net.Start("liaRequestLogsClient")
@@ -46,7 +46,7 @@ lia.command.add("netlogs", {
 })
 
 lia.command.add("concommandlogs", {
-    superadminOnly = true,
+    superAdminOnly = true,
     privilege = "View Advanced Logs",
     onRun = function(client)
         net.Start("liaRequestLogsClient")

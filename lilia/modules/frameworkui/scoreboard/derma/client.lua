@@ -80,7 +80,7 @@ function PANEL:UpdateStaff()
         if target:isStaffOnDuty() then StaffOnDutyCount = StaffOnDutyCount + 1 end
     end
 
-    self.staff1:SetText("Players Online: " .. #player.GetAll() .. " | Staff On Duty: " .. StaffOnDutyCount .. " | Staff Online: " .. StaffCount)
+    self.staff1:SetText("Players Online: " ..player.GetCount() .. " | Staff On Duty: " .. StaffOnDutyCount .. " | Staff Online: " .. StaffCount)
 end
 
 function PANEL:Think()
@@ -164,6 +164,18 @@ function PANEL:addPlayer(client, parent)
     slot.ping:SetTextColor(color_white)
     slot.ping:SetTextInset(16, 0)
     slot.ping:SetExpensiveShadow(1, color_black)
+    slot.ping.Think = function(this)
+        if IsValid(client) then
+            local ping = client:Ping()
+            local text = this:GetText()
+            if text ~= ping then
+                this:SetText(ping)
+                this:SizeToContentsX()
+                this:SetPos(self:GetWide() - (24 + (string.len(this:GetText()) * 4)))
+            end
+        end
+    end
+
     slot.desc = slot:Add("DLabel")
     slot.desc:Dock(FILL)
     slot.desc:DockMargin(65, 0, 48, 0)

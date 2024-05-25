@@ -8,3 +8,9 @@ lia.command.add("playtime", {
     adminOnly = false,
     onRun = function() end
 })
+
+lia.command.add("asay", {
+    adminOnly = false,
+    syntax = "<string message>",
+    onRun = function() end
+})

@@ -445,7 +445,6 @@ if SERVER then
     function charMeta:destroy()
         local id = self:getID()
         lia.char.loaded[id] = nil
-        netstream.Start(nil, "charDel", id)
     end
 
     --- Gives or takes money from the character's wallet.

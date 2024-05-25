@@ -19,9 +19,22 @@ lia.command.add("playtime", {
             local hours = math.floor(playTimeInSeconds / 3600)
             local minutes = math.floor((playTimeInSeconds % 3600) / 60)
             local seconds = playTimeInSeconds % 60
-            client:ChatPrint(string.format("Your playtime: %d hours, %d minutes, %d seconds", hours, minutes, seconds))
+            client:ChatNotify(string.format("Your playtime: %d hours, %d minutes, %d seconds", hours, minutes, seconds))
         else
             client:notify("Could not retrieve your playtime. Please try again or contact an admin if the issue persists.")
+        end
+    end
+})
+
+lia.command.add("asay", {
+    adminOnly = false,
+    syntax = "<string message>",
+    onRun = function(client, arguments)
+        if CAMI.PlayerHasAccess(client, "Staff Permissions - Speak in Admin Chat", nil) then
+            local text = table.concat(arguments, " ")
+            if text:find("%S") then lia.chat.send(client, "asay", text) end
+        else
+            client:notify("No access!")
         end
     end
 })

@@ -1,3 +1,3 @@
 ﻿MODULE.DefaultStaff = {
-    ["76561198312513285"] = "superadmin",
+    ["00000000000000000"] = "superadmin",
 }

@@ -27,6 +27,12 @@ if SERVER then
 
         net.Send(client)
     end
+
+    function MODULE:CanPlayerCreateChar(client)
+        local count = #client.liaCharList or 0
+        local maxChars = hook.Run("GetMaxPlayerChar", client) or lia.config.MaxCharacters
+        if (count or 0) >= maxChars then return false end
+    end
 else
     function MODULE:chooseCharacter(id)
         assert(isnumber(id), "id must be a number")
@@ -89,10 +95,4 @@ else
         net.WriteUInt(id, 32)
         net.SendToServer()
     end
-end
-
-function MODULE:CanPlayerCreateChar(client)
-    local count = #client.liaCharList or 0
-    local maxChars = hook.Run("GetMaxPlayerChar", client) or lia.config.MaxCharacters
-    if (count or 0) >= maxChars then return false end
 end

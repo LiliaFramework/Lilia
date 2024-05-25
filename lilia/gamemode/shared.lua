@@ -1,6 +1,6 @@
 ﻿DeriveGamemode("sandbox")
 GM.Name = "Lilia"
-GM.Author = "Leonheart"
+GM.Author = "Samael"
 GM.Website = "https://discord.gg/jjrhyeuzYV"
 ModulesLoaded = false
 function GM:Initialize()

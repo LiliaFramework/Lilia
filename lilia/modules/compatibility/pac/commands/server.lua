@@ -11,7 +11,7 @@
         end)
 
         timer.Simple(1.0, function() if IsValid(client) then client:ConCommand("pac_restart") end end)
-        timer.Simple(1.5, function() if IsValid(client) then client:ChatPrint("PAC has been successfully restarted. You might need to run this command twice!") end end)
+        timer.Simple(1.5, function() if IsValid(client) then client:ChatNotify("PAC has been successfully restarted. You might need to run this command twice!") end end)
     end
 })
 

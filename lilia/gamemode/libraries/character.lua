@@ -538,7 +538,7 @@ if SERVER then
                 end, function(err)
                     print("Failed to load inventories for " .. tostring(id))
                     print(err)
-                    if IsValid(client) then client:ChatPrint("A server error occured while loading your" .. " inventories. Check server log for details.") end
+                    if IsValid(client) then client:ChatNotify("A server error occured while loading your" .. " inventories. Check server log for details.") end
                 end):next(function(inventories)
                     character.vars.inv = inventories
                     lia.char.loaded[id] = character
@@ -557,7 +557,6 @@ if SERVER then
         for _, charID in pairs(client.liaCharList or {}) do
             local character = lia.char.loaded[charID]
             if not character then return end
-            netstream.Start(nil, "charDel", character:getID())
             lia.inventory.cleanUpForCharacter(character)
             lia.char.loaded[charID] = nil
             hook.Run("CharCleanUp", character)
@@ -598,7 +597,6 @@ if SERVER then
         end
 
         lia.char.loaded[id] = nil
-        netstream.Start(nil, "charDel", id)
         lia.db.query("DELETE FROM lia_characters WHERE _id = " .. id)
         lia.db.query("SELECT _invID FROM lia_inventories WHERE _charID = " .. id, function(data)
             if data then
