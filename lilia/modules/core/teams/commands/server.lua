@@ -1,40 +1,4 @@
-﻿lia.command.add("classwhitelist", {
-    adminOnly = true,
-    privilege = "Manage Whitelists",
-    syntax = "<string name> <string class>",
-    onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
-        if not IsValid(target) or not target:getChar() then
-            client:notifyLocalized("illegalAccess")
-            return
-        end
-
-        local class = lia.class.retrieveClass(table.concat(arguments, " ", 2))
-        if not class or not isnumber(class) then
-            client:notifyLocalized("invalid", L("class", client))
-            return
-        end
-
-        local classTable = lia.class.list[class]
-        local wl = target:getChar():getData("whitelist", {})
-        if target:Team() ~= classTable.faction then
-            client:notify("Couldn't be whitelisted outside of the faction.")
-            return false
-        end
-
-        if wl[class] then
-            client:notify("Already whitelisted.")
-            return false
-        end
-
-        wl[class] = true
-        target:getChar():setData("whitelist", wl)
-        client:notify("Whitelisted properly.")
-        target:notify(string.format("Class '%s' have been assigned to your current character.", classTable.name))
-    end
-})
-
-lia.command.add("plytransfer", {
+﻿lia.command.add("plytransfer", {
     adminOnly = true,
     syntax = "<string name> <string faction>",
     privilege = "Manage Transfers",
@@ -82,7 +46,8 @@ lia.command.add("plywhitelist", {
                 end
             end
         end
-    end
+    end,
+    alias = {"factionwhitelist"}
 })
 
 lia.command.add("plyunwhitelist", {
@@ -99,7 +64,8 @@ lia.command.add("plyunwhitelist", {
                 end
             end
         end
-    end
+    end,
+    alias = {"factionunwhitelist"}
 })
 
 lia.command.add("beclass", {
@@ -170,6 +136,45 @@ lia.command.add("setclass", {
     end,
 })
 
+lia.command.add("classwhitelist", {
+    adminOnly = true,
+    privilege = "Manage Whitelists",
+    syntax = "<string name> <string class>",
+    onRun = function(client, arguments)
+        local target = lia.command.findPlayer(client, arguments[1])
+        if not IsValid(target) or not target:getChar() then
+            client:notifyLocalized("illegalAccess")
+            return
+        end
+
+        local class = lia.class.retrieveClass(table.concat(arguments, " ", 2))
+        if not class or not isnumber(class) then
+            client:notifyLocalized("invalid", L("class", client))
+            return
+        end
+
+        if not lia.class.hasWhitelist(class) then
+            client:notify("This faction doesn't require a whitelist!.")
+            return false
+        end
+
+        local classTable = lia.class.list[class]
+        if target:Team() ~= classTable.faction then
+            client:notify("Couldn't be whitelisted outside of the faction.")
+            return false
+        end
+
+        if not target:hasClassWhitelist(class) then
+            client:notify("Already whitelisted.")
+            return false
+        end
+
+        target:ClassWhitelist(class)
+        client:notify("Whitelisted properly.")
+        target:notify(string.format("Class '%s' have been assigned to your current character.", classTable.name))
+    end
+})
+
 lia.command.add("classunwhitelist", {
     adminOnly = true,
     privilege = "Manage Classes",
@@ -187,31 +192,35 @@ lia.command.add("classunwhitelist", {
             return
         end
 
+        if not lia.class.hasWhitelist(class) then
+            client:notify("This faction doesn't require a whitelist!.")
+            return false
+        end
+
         local classTable = lia.class.list[class]
-        local wl = target:getChar():getData("whitelist", {})
         if target:Team() ~= classTable.faction then
             client:notify("Couldn't be whitelisted outside of the faction.")
             return false
         end
 
-        if not wl[class] then
+        if not target:hasClassWhitelist(class) then
             client:notify("Not whitelisted.")
             return false
         end
 
-        wl[class] = false
-        target:getChar():setData("whitelist", wl)
+        target:ClassUnWhitelist(class)
         client:notify("Unwhitelisted properly.")
         target:notify(string.format("Class '%s' have been unassigned from your current character.", classTable.name))
     end
 })
 
-lia.command.add("factionlist", {
+lia.command.add("classlist", {
     adminOnly = false,
     syntax = "<string text>",
     onRun = function(client)
-        for _, v in ipairs(lia.faction.indices) do
-            client:ChatNotify("NAME: " .. v.name .. " ID: " .. v.uniqueID)
+        for _, v in ipairs(lia.class.list) do
+            client:ChatNotify("NAME: " .. v.name .. " ID: " .. v.uniqueID .. " FACTION: " .. team.GetName(v.faction))
         end
-    end
+    end,
+    alias = {"classes"}
 })

@@ -1,11 +1,4 @@
-﻿lia.command.add("classwhitelist", {
-    adminOnly = true,
-    privilege = "Manage Whitelists",
-    syntax = "<string name> <string class>",
-    onRun = function() end
-})
-
-lia.command.add("plytransfer", {
+﻿lia.command.add("plytransfer", {
     adminOnly = true,
     syntax = "<string name> <string faction>",
     privilege = "Manage Transfers",
@@ -17,14 +10,16 @@ lia.command.add("plywhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
     syntax = "<string name> <string faction>",
-    onRun = function() end
+    onRun = function() end,
+    alias = {"factionwhitelist"}
 })
 
 lia.command.add("plyunwhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
     syntax = "<string name> <string faction>",
-    onRun = function() end
+    onRun = function() end,
+    alias = {"factionunwhitelist"}
 })
 
 lia.command.add("beclass", {
@@ -37,6 +32,20 @@ lia.command.add("setclass", {
     adminOnly = true,
     privilege = "Manage Classes",
     syntax = "<string target> <string class>",
+    onRun = function() end,
+})
+
+lia.command.add("factionlist", {
+    adminOnly = false,
+    syntax = "<string text>",
+    onRun = function(client) end,
+    alias = {"jobs"}
+})
+
+lia.command.add("classwhitelist", {
+    adminOnly = true,
+    privilege = "Manage Whitelists",
+    syntax = "<string name> <string class>",
     onRun = function() end
 })
 
@@ -47,8 +56,9 @@ lia.command.add("classunwhitelist", {
     onRun = function() end
 })
 
-lia.command.add("factionlist", {
+lia.command.add("classlist", {
     adminOnly = false,
     syntax = "<string text>",
-    onRun = function() end
+    onRun = function() end,
+    alias = {"classes"}
 })
