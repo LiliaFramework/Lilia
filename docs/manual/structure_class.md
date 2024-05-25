@@ -20,6 +20,8 @@ CLASS_STEVE = CLASS.index
 
 - **CLASS.isDefault**: Indicates whether this is the default class. Set to true if it's the default class, allowing anyone to join.
 
+- **CLASS.isWhitelisted**: Indicates whether this is a whitelist class. Set to true if it is a class that needs whitelisting.
+
 - **CLASS.color**: The color associated with your class. This can be used for class-specific coloring.
 
 - **CLASS.weapons**: Weapons that players in this class can use. This can include weapon IDs or references to the weapons available to class members. **Optional**
@@ -52,6 +54,6 @@ CLASS_STEVE = CLASS.index
 
 - **CLASS.bodyGroups**: This variable allows you to define class-specific bodygroups for player models upon spawn. Bodygroups control the appearance and configuration of specific parts of the player model. You can specify the bodygroups using a table format. Each entry in the table represents a bodygroup and its corresponding value.b**Optional**
 
-- **CLASS.model**: This variable allows you to define class-specific models that get set on spawn. **Optional** 
+- **CLASS.model**: This variable allows you to define class-specific models that get set on spawn. **Optional**
 
 - **CLASS.index**: The Unique ID (UniqueID) of the class. This is a unique identifier used to distinguish this class from others.
