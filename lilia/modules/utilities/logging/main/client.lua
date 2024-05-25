@@ -16,8 +16,8 @@ function MODULE:drawGradient(_, _, w, h, color, end_color)
 end
 
 function MODULE:createButton(parent, text, dock, doclick, color, end_color)
-    local color = color or ColorPatters.blue_fg
-    local end_color = end_color or ColorPatters.blue_bg
+    color = color or ColorPatters.blue_fg
+    end_color = end_color or ColorPatters.blue_bg
     local button = parent:Add("DButton")
     button:Dock(dock)
     button:SetText(text)

@@ -34,8 +34,6 @@ if SERVER then
     function lia.log.loadTables()
         sql.Query("CREATE TABLE IF NOT EXISTS lilia_logs ( id INTEGER PRIMARY KEY AUTOINCREMENT, category TEXT NOT NULL, log TEXT NOT NULL, time INTEGER NOT NULL )")
         file.CreateDir("lilia/logs")
-        file.CreateDir("lilia/netlogs")
-        file.CreateDir("lilia/concommandlogs")
     end
 
     --- Adds a log type.

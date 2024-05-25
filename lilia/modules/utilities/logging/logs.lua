@@ -116,3 +116,6 @@ lia.log.addType("observerEnter", function(client, ...) return string.format("%s 
 lia.log.addType("observerExit", function(client, ...) return string.format("%s has left observer.", client:Name()) end, "Staff Logs")
 lia.log.addType("buydoor", function(client, ...) return string.format("%s purchased the door", client:Name()) end, "Character Logs")
 lia.log.addType("selldoor", function(client, ...) return string.format("%s sold the door", client:Name()) end, "Character Logs")
+lia.log.addType("net", function(client, messageName) return string.format("[Net Log] Player %s (%s) sent net message %s.", client:GetName(), client:SteamID(), messageName) end, "Network Logs")
+lia.log.addType("invalidNet", function(client) return string.format("[Net Log] Player %s (%s) tried to send invalid net message!", client:GetName(), client:SteamID()) end, "Network Logs")
+lia.log.addType("concommand", function(client, cmd, argStr) return string.format("[ConCommand Log] Player %s (%s) ran command %s with arguments: %s.", client:GetName(), client:SteamID(), cmd, argStr) end, "Command Logs")

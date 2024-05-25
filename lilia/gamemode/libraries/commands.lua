@@ -400,8 +400,6 @@ end
 -- @field legacylogs Views the legacy logs | **Staff Command**.
 -- @field logger Views the server's log | **Staff Command**.
 -- @field deletelogs Deletes the logs | **Staff Command**.
--- @field netlogs Views the network logs | **Staff Command**.
--- @field concommandlogs Views the concommand logs | **Staff Command**.
 -- @field restockallvendors Restocks all vendors on the map | **Staff Command**.
 -- @field resetallvendormoney Resets all vendor money on the map | **Staff Command**.
 -- @field savevendors Saves the state of the vendors | **Staff Command**.

@@ -15,15 +15,3 @@ lia.command.add("deletelogs", {
     privilege = "Erase Logs",
     onRun = function() end
 })
-
-lia.command.add("netlogs", {
-    superAdminOnly = true,
-    privilege = "View Advanced Logs",
-    onRun = function() end
-})
-
-lia.command.add("concommandlogs", {
-    superAdminOnly = true,
-    privilege = "View Advanced Logs",
-    onRun = function() end
-})

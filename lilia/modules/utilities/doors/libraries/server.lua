@@ -160,8 +160,7 @@ end
 
 function MODULE:PlayerDisconnected(client)
     for _, v in ipairs(ents.GetAll()) do
-        if v == client then return end
-        if v.isDoor and v:isDoor() and v:GetDTEntity(0) == client then v:removeDoorAccessData() end
+        if v ~= client and v.isDoor and v:isDoor() and v:GetDTEntity(0) == client then v:removeDoorAccessData() end
     end
 end
 
