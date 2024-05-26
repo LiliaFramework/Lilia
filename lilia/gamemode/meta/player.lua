@@ -293,7 +293,7 @@ end
 
 --- Checks if the player has whitelisted access to a class.
 -- @realm shared
--- @int faction The class to check for whitelisting.
+-- @int class The class to check for whitelisting.
 -- @treturn bool Whether the player has whitelisted access to the specified faction.
 function playerMeta:hasClassWhitelist(class)
     local char = client:getChar()
