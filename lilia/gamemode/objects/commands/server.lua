@@ -1093,3 +1093,86 @@ lia.command.add("getfactionwhitelists", {
         client:notify("Whitelisted to all Factions")
     end
 })
+
+lia.command.add("setdatanumber", {
+    privilege = "Set Item Data",
+    superAdminOnly = true,
+    onRun = function(client, arguments)
+        local key = arguments[1]
+        local data = tonumber(arguments[2])
+        if not isnumber(data) then
+            client:notify("Error: Data argument is not a valid number.")
+            return
+        end
+
+        local trace = client:GetEyeTraceNoCursor()
+        local hitpos = trace.HitPos + trace.HitNormal * 5
+        local items = lia.item.instances
+        for k, v in pairs(items) do
+            if v:getEntity() then
+                local distance = v:getEntity():GetPos():Distance(hitpos)
+                if distance <= 32 then
+                    v:setData(key, data)
+                    client:notify("Data set successfully.")
+                end
+            end
+        end
+    end
+})
+
+lia.command.add("setdatastring", {
+    privilege = "Set Item Data",
+    superAdminOnly = true,
+    onRun = function(client, arguments)
+        local key = arguments[1]
+        local data = tostring(arguments[2])
+        if not isstring(data) then
+            client:notify("Error: Data argument is not a valid number.")
+            return
+        end
+
+        local trace = client:GetEyeTraceNoCursor()
+        local hitpos = trace.HitPos + trace.HitNormal * 5
+        local items = lia.item.instances
+        for k, v in pairs(items) do
+            if v:getEntity() then
+                local distance = v:getEntity():GetPos():Distance(hitpos)
+                if distance <= 32 then
+                    v:setData(key, data)
+                    client:notify("Data set successfully.")
+                end
+            end
+        end
+    end
+})
+
+lia.command.add("playerstatus", {
+    syntax = "<string target>",
+    privilege = "Check Status",
+    adminOnly = true,
+    onRun = function(client, arguments)
+        local target = lia.command.findPlayer(client, arguments[1])
+        if target then
+            client:notify("Character Name: " .. target:Name())
+            client:notify("Steam Name: " .. target:steamName())
+            client:notify("SteamID: " .. target:SteamID())
+            client:notify("Health: " .. target:Health())
+            client:notify("Armor: " .. target:Armor())
+        end
+    end
+})
+
+lia.command.add("listbodygroups", {
+    syntax = "<string target>",
+    privilege = "List Bodygroups",
+    adminOnly = true,
+    onRun = function(client, arguments)
+        local target = lia.command.findPlayer(client, arguments[1])
+        if target then
+            client:chatnotify("Available bodygroups for \"" .. target:GetModel() .. "\":")
+            for i = 0, target:GetNumBodyGroups() - 1 do
+                if target:GetBodygroupCount(i) > 1 then client:chatnotify(i .. " = " .. target:GetBodygroupName(i) .. "(0-" .. (target:GetBodygroupCount(i) - 1) .. ")") end
+            end
+        end
+    end
+})

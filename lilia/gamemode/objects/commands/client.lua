@@ -434,3 +434,29 @@ lia.command.add("getfactionwhitelists", {
     superAdminOnly = true,
     onRun = function() end
 })
+
+lia.command.add("setdatanumber", {
+    privilege = "Set Item Data",
+    superAdminOnly = true,
+    onRun = function() end
+})
+
+lia.command.add("setdatastring", {
+    privilege = "Set Item Data",
+    superAdminOnly = true,
+    onRun = function() end
+})
+
+lia.command.add("playerstatus", {
+    syntax = "<string target>",
+    privilege = "Check Status",
+    adminOnly = true,
+    onRun = function() end
+})
+
+lia.command.add("listbodygroups", {
+    syntax = "<string target>",
+    privilege = "List Bodygroups",
+    adminOnly = true,
+    onRun = function() end
+})
