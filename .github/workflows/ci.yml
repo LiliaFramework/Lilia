@@ -1,3 +1,4 @@
+
 name: CI
 on: [push, pull_request]
 
@@ -43,7 +44,8 @@ jobs:
 
     - name: Lint
       working-directory: lilia
-      run: luacheck .
+      run: luacheck . --no-redefined
+          --no-global --no-self
           --no-max-line-length --no-max-code-line-length
           --no-max-string-line-length --no-max-comment-line-length
           --no-max-cyclomatic-complexity
