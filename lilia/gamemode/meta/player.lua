@@ -268,6 +268,35 @@ function playerMeta:hasWhitelist(faction)
     return false
 end
 
+--- Checks if the player has whitelisted access to a class.
+-- @realm shared
+-- @int faction The class to check for whitelisting.
+-- @treturn bool Whether the player has whitelisted access to the specified faction.
+function playerMeta:hasClassWhitelist(class)
+    local char = client:getChar()
+    if not char then return false end
+    local wl = char:getData("whitelist", {})
+    return wl[class] ~= nil
+end
+
+--- Whitelists the player for a specific class.
+-- @realm shared
+-- @int class The class to whitelist the player for.
+function playerMeta:classWhitelist(class)
+    local wl = self:getChar():getData("whitelist", {})
+    wl[class] = true
+    self:getChar():setData("whitelist", wl)
+end
+
+--- Removes the whitelist status for a specific class from the player.
+-- @realm shared
+-- @int class The class to remove the whitelist status for.
+function playerMeta:classUnWhitelist(class)
+    local wl = self:getChar():getData("whitelist", {})
+    wl[class] = false
+    self:getChar():setData("whitelist", wl)
+end
+
 --- Retrieves the items of the player's character inventory.
 -- @realm shared
 -- @treturn table|nil A table containing the items in the player's character inventory, or nil if not found.
@@ -1113,6 +1142,9 @@ playerMeta.IsRunning = playerMeta.isRunning
 playerMeta.IsFemale = playerMeta.isFemale
 playerMeta.GetItemDropPos = playerMeta.getItemDropPos
 playerMeta.HasWhitelist = playerMeta.hasWhitelist
+playerMeta.HasClassWhitelist = playerMeta.hasClassWhitelist
+playerMeta.ClassWhitelist = playerMeta.classWhitelist
+playerMeta.ClassUnWhitelist = playerMeta.classUnWhitelist
 playerMeta.GetTracedEntity = playerMeta.getTracedEntity
 playerMeta.GetTrace = playerMeta.getTrace
 playerMeta.GetClassData = playerMeta.getClassData

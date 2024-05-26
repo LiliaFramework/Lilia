@@ -115,3 +115,11 @@ function lia.class.retrieveClass(class)
     end
     return nil
 end
+
+--- Checks if a class has an whitelist.
+-- @realm shared
+-- @int class The identifier of the class.
+function lia.class.hasWhitelist(class)
+    local data = lia.faction.indices[class]
+    return data and (not data.isDefault or data.isWhitelisted)
+end

@@ -8,11 +8,9 @@
     netstream.Start(nil, "classUpdate", client)
 end
 
-function MODULE:CanPlayerJoinClass(client, class, classTable)
-    if classTable.isWhitelisted ~= true then return end
-    local character = client:getChar()
-    local wl = character:getData("whitelist", {})
-    return wl[class] or false
+function MODULE:CanPlayerJoinClass(client, class)
+    if not lia.class.hasWhitelist then return true end
+    return client:hasClassWhitelist(class)
 end
 
 function MODULE:PlayerLoadedChar(client, character, _)

@@ -61,6 +61,33 @@ function charMeta:getBoosts()
     return self:getVar("boosts", {})
 end
 
+--- Checks if the player has whitelisted access to a class.
+-- @realm shared
+-- @int faction The class to check for whitelisting.
+-- @treturn bool Whether the player has whitelisted access to the specified faction.
+function charMeta:hasClassWhitelist(class)
+    local wl = self:getData("whitelist", {})
+    return wl[class] ~= nil
+end
+
+--- Whitelists the character for a specific class.
+-- @realm shared
+-- @int class The class to whitelist the character for.
+function charMeta:classWhitelist(class)
+    local wl = self:getData("whitelist", {})
+    wl[class] = true
+    self:setData("whitelist", wl)
+end
+
+--- Removes the whitelist for a specific class from the character.
+-- @realm shared
+-- @int class The class to remove the whitelist status for.
+function charMeta:classUnWhitelist(class)
+    local wl = self:getData("whitelist", {})
+    wl[class] = false
+    self:setData("whitelist", wl)
+end
+
 --- Retrieves the character's equipped weapon and its corresponding item from the inventory.
 -- @realm shared
 -- @return Entity|false The equipped weapon entity, or false if no weapon is equipped.
@@ -497,6 +524,9 @@ if SERVER then
 end
 
 charMeta.GetBoost = charMeta.getBoost
+charMeta.HasClassWhitelist = charMeta.hasClassWhitelist
+charMeta.ClassWhitelist = charMeta.classWhitelist
+charMeta.ClassUnWhitelist = charMeta.classUnWhitelist
 charMeta.GetBoosts = charMeta.getBoosts
 charMeta.GetAttribute = charMeta.getAttrib
 charMeta.GetPlayer = charMeta.getPlayer
