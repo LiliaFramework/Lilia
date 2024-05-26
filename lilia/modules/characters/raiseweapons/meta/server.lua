@@ -1,5 +1,5 @@
-local playerMeta = FindMetaTable("Player")
 local MODULE = MODULE
+local playerMeta = FindMetaTable("Player")
 function playerMeta:setWepRaised(state, notification)
 	self:setNetVar("raised", state)
 	local weapon = self:GetActiveWeapon()
