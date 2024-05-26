@@ -1,5 +1,5 @@
 --- Configuration for Raised Weapons Module.
--- @config_module RaisedWeapons
+-- @configurationmodule RaisedWeapons
 
 --- This table defines the default settings for the RaisedWeapons Module.
 -- @realm shared

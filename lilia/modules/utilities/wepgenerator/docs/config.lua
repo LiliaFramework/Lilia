@@ -1,5 +1,5 @@
 --- Configuration for Easy Weapons Module.
--- @config_module EasyWeapons
+-- @configurationmodule EasyWeapons
 
 --- This table defines the default settings for the EasyWeapons Module.
 -- @realm shared

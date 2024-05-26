@@ -1,5 +1,5 @@
 ﻿--- Structure of Simfphys Item Base.
--- @structure_items Simfphys
+-- @structureitems Simfphys
 
 --- This table defines the default structure of the simfphys item base.
 -- @realm shared

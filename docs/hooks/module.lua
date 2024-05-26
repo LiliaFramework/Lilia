@@ -5,7 +5,7 @@ These hooks are regular hooks that can be used in your schema with `SCHEMA:HookN
 `MODULE:HookName(args)`, or in your addon with `hook.Add("HookName", function(args) end)`.
 They can be used for an assorted of reasons, depending on what you are trying to achieve.
 ]]
--- @hooks_general Module
+-- @hooksgeneral Module
 
 --- Called after a player sends a chat message.
 -- @realm server
@@ -455,7 +455,7 @@ end
 
 --- Called after the player's inventory is drawn.
 -- @realm client
--- @ui_panels panel The panel containing the inventory.
+-- @panels panel The panel containing the inventory.
 function PostDrawInventory(panel)
 end
 
@@ -594,7 +594,7 @@ function GetSalaryAmount(client, faction, class)
 end
 
 --- Called to draw additional content within the model view panel.
---- @ui_panels panel The panel containing the model view.
+--- @panels panel The panel containing the model view.
 --- @entity entity The entity being drawn.
 --- @realm client
 function DrawLiliaModelView(panel, entity)

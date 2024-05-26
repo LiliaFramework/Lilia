@@ -1,5 +1,5 @@
 --- Configuration for InteractionMenu Module.
--- @config_module InteractionMenu
+-- @configurationmodule InteractionMenu
 
 --- This table defines the default settings for the InteractionMenu Module.
 -- @realm shared

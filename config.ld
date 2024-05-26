@@ -40,19 +40,19 @@ custom_tags = {
 }
 
 
-new_type("structure_items", "Structures - Items", true)
-new_type("structure_factions", "Structures - Factions", true)
-new_type("structure_classes", "Structures - Classes", true)
-new_type("structure_commands", "Structures - Commands", true)
-new_type("structure_module", "Structures - Module", true)
+new_type("structureitems", "Structures - Items", true)
+new_type("structurefactions", "Structures - Factions", true)
+new_type("structureclasses", "Structures - Classes", true)
+new_type("structurecommands", "Structures - Commands", true)
+new_type("structuremodule", "Structures - Module", true)
 
-new_type("config_module", "Config - Module", true)
-new_type("config_general", "Confg - General", true)
+new_type("configurationmodule", "Config - Module", true)
+new_type("configurationgeneral", "Confg - General", true)
 
-new_type("hooks_general", "Hooks - General", true)
-new_type("hooks_module", "Hooks - Module", true)
+new_type("hooksgeneral", "Hooks - General", true)
+new_type("hooksmodule", "Hooks - Module", true)
 
-new_type("ui_panels", "UI - Panels", true)
+new_type("panels", "UI - Panels", true)
 
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")

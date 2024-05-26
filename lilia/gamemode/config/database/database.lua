@@ -1,5 +1,5 @@
 ﻿--- Default database configuration for Lilia.
--- @config_general DatabaseConnection
+-- @configurationgeneral DatabaseConnection
 
 --- This table defines the default settings for connecting to the database used in Lilia.
 -- @table Configuration

@@ -1,5 +1,5 @@
 --- Configuration for Workshop Downloader Module.
--- @config_module WorkshopDownloader
+-- @configurationmodule WorkshopDownloader
 
 --- This table defines the default settings for the WorkshopDownloader Module.
 -- @realm shared

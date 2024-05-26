@@ -1,5 +1,5 @@
 ﻿--- Structure of Weapon Item Base.
--- @structure_items Weapon
+-- @structureitems Weapon
 
 --- This table defines the default structure of the weapon item base.
 -- @realm shared

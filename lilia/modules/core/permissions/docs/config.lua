@@ -1,5 +1,5 @@
 --- Configuration for Permissions Module.
--- @config_module Permissions
+-- @configurationmodule Permissions
 
 --- This table defines the default settings for the Permissions Module.
 -- @realm shared

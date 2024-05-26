@@ -1,5 +1,5 @@
 --- Configuration for Teams Module.
--- @config_module Teams
+-- @configurationmodule Teams
 
 --- This table defines the default settings for the Teams Module.
 -- @realm shared

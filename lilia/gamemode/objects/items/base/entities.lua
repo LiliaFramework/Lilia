@@ -1,5 +1,5 @@
 ﻿--- Structure of Entity Item Base.
--- @structure_items Entities
+-- @structureitems Entities
 
 --- This table defines the default structure of the entity item base.
 -- @realm shared

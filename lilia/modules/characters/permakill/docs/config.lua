@@ -1,5 +1,5 @@
 --- Configuration for Permakill Module.
--- @config_module Permakill
+-- @configurationmodule Permakill
 
 --- This table defines the default settings for the Permakill Module.
 -- @realm shared
