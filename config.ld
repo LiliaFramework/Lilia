@@ -40,13 +40,6 @@ custom_tags = {
 }
 
 
-custom_display_name_handler = function(item, default_handler)
-	if (item.type == "function" and item.module) then
-		if (item.module.type == "classmod" or item.module.type == "panel" or item.module.type == "configurations") then
-			return item.module.mod_name .. ":" .. default_handler(item)
-	end
-	return default_handler(item)
-end
 new_type("genhooks", "General - Hooks", true)
 new_type("items", "Items", true)
 new_type("factions", "Factions", true)
