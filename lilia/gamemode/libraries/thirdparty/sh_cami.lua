@@ -85,8 +85,6 @@ CAMI.RegisterUsergroup
             Use this to make sure CAMI.RegisterUsergroup function and the
             CAMI.OnUsergroupRegistered hook don't cause an infinite loop
 
-
-
     Return value:
         CAMI_USERGROUP
             The usergroup given as argument.

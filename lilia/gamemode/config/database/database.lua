@@ -1,7 +1,6 @@
 ﻿--- Default database configuration for Lilia.
 -- @configurations DatabaseConnection
 
-
 --- This table defines the default settings for connecting to the database used in Lilia.
 -- @table Configuration
 -- @realm server

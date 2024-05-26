@@ -1,7 +1,6 @@
 ﻿--- Default tables for database tables.
 -- @configurations DatabaseTables
 
-
 --- These tables define the structure of the database tables used in Lilia.
 -- @table Configuration
 -- @realm server

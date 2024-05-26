@@ -188,7 +188,6 @@ end
 function CanItemBeTransfered(item, currentInv, oldInv)
 end
 
-
 --- Whether or not a player is allowed to create a new character.
 -- @realm server
 -- @client client Player attempting to create a new character
@@ -482,7 +481,6 @@ end
 -- @treturn boolean Whether the player is allowed to view their inventory
 function CanPlayerViewInventory()
 end
-
 
 --- Checks if a character is recognized.
 --- @character character The character to check.
