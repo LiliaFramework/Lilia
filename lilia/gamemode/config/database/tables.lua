@@ -1,5 +1,5 @@
 ﻿--- Default tables for database tables.
--- @configurations DatabaseTables
+-- @genconfig DatabaseTables
 
 --- These tables define the structure of the database tables used in Lilia.
 -- @table Configuration

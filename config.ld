@@ -40,15 +40,6 @@ custom_tags = {
 }
 
 custom_display_name_handler = function(item, default_handler)
-	if (item.type == "function" and item.module) then
-		if (item.module.type == "classmod" or item.module.type == "panel" or item.module.type == "configurations") then
-			return item.module.mod_name .. ":" .. default_handler(item)
-		elseif (item.module.type == "hooks") then
-			return item.module.mod_name:upper() .. ":" .. default_handler(item)
-			
-		end
-	end
-
 	return default_handler(item)
 end
 
@@ -56,6 +47,7 @@ new_type("genhooks", "General - Hooks", true)
 new_type("items", "Items", true)
 new_type("factions", "Factions", true)
 new_type("config", "Module - Config", true)
+new_type("genconfig", "General - Config", true)
 new_type("modhooks", "Module - Hooks", true)
 new_type("panel", "Panels", true)
 tparam_alias("inventory", "Inventory")

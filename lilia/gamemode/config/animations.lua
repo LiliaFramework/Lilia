@@ -1,5 +1,5 @@
 ﻿--- Default animation configurations for Lilia.
--- @configurations Animations
+-- @genconfig Animations
 
 -- This table defines the animation hold type translations for various weapon types in the game.
 -- These translations determine the animation style a character will use when holding a particular weapon.
