@@ -1,6 +1,6 @@
 ﻿--- Top-level library containing all Lilia libraries. A large majority of the framework is split into respective libraries that
 -- reside within `lia`.
--- @core_libs lia
+-- @module lia
 lia.RealmIdentifiers = {
     client = "client",
     server = "server",

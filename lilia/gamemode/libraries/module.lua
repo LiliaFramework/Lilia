@@ -3,7 +3,7 @@ Core library that manages module loading behaviors.
 
 If you are looking for the module structure, you can find it [here](https://liliaframework.github.io/manual/structure_module).
 ]]
--- @core_libs lia.module
+-- @module lia.module
 lia.module = lia.module or {}
 lia.module.EnabledList = {}
 lia.module.list = lia.module.list or {}

@@ -7,7 +7,7 @@ their faction by default, but you can restrict this as you need with `CLASS.OnCa
 
 If you are looking for the class structure, you can find it [here](https://liliaframework.github.io/manual/structure_class).
 ]]
--- @core_libs lia.class
+-- @module lia.class
 lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
 --- Loads class information from Lua files in the specified directory.

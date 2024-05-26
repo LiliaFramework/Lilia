@@ -4,7 +4,7 @@ Entity menu manipulation.
 The `menu` library allows you to open up a context menu of arbitrary options whose callbacks will be ran when they are selected
 from the panel that shows up for the player.
 ]]
--- @core_libs lia.menu
+-- @module lia.menu
 lia.menu = lia.menu or {}
 lia.menu.list = lia.menu.list or {}
 --- Adds a menu with the provided options.

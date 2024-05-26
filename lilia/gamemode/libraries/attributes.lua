@@ -1,5 +1,5 @@
 ﻿--- Helper library that manages roleplay improving attributes.
--- @core_libs lia.attribs
+-- @module lia.attribs
 lia.attribs = lia.attribs or {}
 lia.attribs.list = lia.attribs.list or {}
 --- Loads attribute data from Lua files in the specified directory.

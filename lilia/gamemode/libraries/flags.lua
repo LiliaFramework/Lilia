@@ -24,7 +24,7 @@ functionality whenever the flag is added or removed. For example:
 
 Check out `Character:giveFlags` and `Character:takeFlags` for additional info.
 ]]
--- @core_libs lia.flag
+-- @module lia.flag
 lia.flag = lia.flag or {}
 lia.flag.list = lia.flag.list or {}
 --- Creates a flag. This should be called shared in order for the client to be aware of the flag's existence.
