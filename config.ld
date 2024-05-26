@@ -22,7 +22,7 @@ format = "markdown"
 ignore = true
 topics = "docs/manual"
 use_markdown_titles = true
-kind_names = {core_libs = "Libraries", topic = "Manual"}
+kind_names = {libraries = "Libraries", topic = "Manual"}
 merge = true
 sort = true
 sort_modules = true
