@@ -47,7 +47,7 @@ new_type("structurecommands", "Structures - Commands", true)
 new_type("structuremodule", "Structures - Module", true)
 
 new_type("configurationmodule", "Config - Module", true)
-new_type("configurationgeneral", "Confg - General", true)
+new_type("configurationgeneral", "Config - General", true)
 
 new_type("hooksgeneral", "Hooks - General", true)
 new_type("hooksmodule", "Hooks - Module", true)
