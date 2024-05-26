@@ -44,7 +44,7 @@ lia.command.add("voicetoggle", {
             if VoiceCore.IsVoiceEnabled then
                 client:notify("You have re-enabled voice!")
             else
-                client:notify("Voice isn't activated in config!!")
+                client:notify("Voice isn't activated in config!")
                 return
             end
         end
