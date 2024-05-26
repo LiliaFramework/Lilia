@@ -413,3 +413,24 @@ lia.command.add("membercount", {
     adminOnly = false,
     onRun = function() end
 })
+
+lia.command.add("getallwhitelists", {
+    syntax = "<string target>",
+    privilege = "Get All Whitelists",
+    superAdminOnly = true,
+    onRun = function() end
+})
+
+lia.command.add("getclasswhitelists", {
+    syntax = "<string target>",
+    privilege = "Get All Whitelists",
+    superAdminOnly = true,
+    onRun = function() end
+})
+
+lia.command.add("getfactionwhitelists", {
+    syntax = "<string target>",
+    privilege = "Get All Whitelists",
+    superAdminOnly = true,
+    onRun = function() end
+})

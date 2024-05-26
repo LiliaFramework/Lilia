@@ -34,6 +34,29 @@ do
     playerMeta.GetName = playerMeta.Name
 end
 
+--- Whitelists all classes for the player.
+-- @realm shared
+function playerMeta:WhitelistAllClasses()
+    for class, _ in pairs(lia.class.list) do
+        if lia.class.hasWhitelist(class) then self:classWhitelist(class) end
+    end
+end
+
+--- Whitelists all factions for the player.
+-- @realm shared
+function playerMeta:WhitelistAllFactions()
+    for faction, _ in pairs(lia.faction.indices) do
+        self:setWhitelisted(faction, true)
+    end
+end
+
+--- Whitelists everything (all classes and factions) for the player.
+-- @realm shared
+function playerMeta:WhitelistEverything()
+    self:WhitelistAllFactions()
+    self:WhitelistAllClasses()
+end
+
 --- Checks if the player belongs to the "user" user group.
 -- @realm shared
 -- @treturn bool Whether the player belongs to the "user" user group.

@@ -1063,3 +1063,33 @@ lia.command.add("membercount", {
         client:ChatNotify("Total Regular Users: " .. userCount)
     end
 })
+
+lia.command.add("getallwhitelists", {
+    syntax = "<string target>",
+    privilege = "Get All Whitelists",
+    superAdminOnly = true,
+    onRun = function(client, arguments)
+        client:WhitelistEverything()
+        client:notify("Whitelisted to all Factions and Classes")
+    end
+})
+
+lia.command.add("getclasswhitelists", {
+    syntax = "<string target>",
+    privilege = "Get All Whitelists",
+    superAdminOnly = true,
+    onRun = function(client, arguments)
+        client:WhitelistAllClasses()
+        client:notify("Whitelisted to all Classes")
+    end
+})
+
+lia.command.add("getfactionwhitelists", {
+    syntax = "<string target>",
+    privilege = "Get All Whitelists",
+    superAdminOnly = true,
+    onRun = function(client, arguments)
+        client:WhitelistAllFactions()
+        client:notify("Whitelisted to all Factions")
+    end
+})
