@@ -1,7 +1,7 @@
 ﻿--[[--
 Inventory manipulation and helper functions.
 ]]
--- @module lia.inventory
+-- @core_libs lia.inventory
 lia.inventory = lia.inventory or {}
 lia.inventory.types = lia.inventory.types or {}
 lia.inventory.instances = lia.inventory.instances or {}

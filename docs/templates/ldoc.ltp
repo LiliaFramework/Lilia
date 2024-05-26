@@ -26,7 +26,7 @@ function ldoc.repo_reference(item)
 end
 
 local function moduleDescription(mod)
-	if (mod.type == "topic") then
+	if (mod.type == "manual") then
 		return mod.body:gsub(mod.display_name, ""):gsub("#", ""):sub(1, 256) .. "..."
 	end
 

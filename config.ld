@@ -22,7 +22,7 @@ format = "markdown"
 ignore = true
 topics = "docs/manual"
 use_markdown_titles = true
-kind_names = {module = "Libraries", topic = "Manual"}
+kind_names = {core_libs = "Core - Libraries", core_manual = "Core - Manual"}
 merge = true
 sort = true
 sort_modules = true
@@ -40,16 +40,19 @@ custom_tags = {
 }
 
 
-new_type("items", "Config - Items", true)
-new_type("config", "Config - Module", true)
-new_type("factions", "Config - Factions", true)
-new_type("genconfig", "Config - General", true)
-new_type("genconfig", "Config - Structures", true)
+new_type("structure_items", "Structures - Items", true)
+new_type("structure_factions", "Structures - Factions", true)
+new_type("structure_classes", "Structures - Classes", true)
+new_type("structure_commands", "Structures - Commands", true)
+new_type("structure_module", "Structures - Module", true)
 
-new_type("genhooks", "Hooks - General", true)
-new_type("modhooks", "Hooks - Module", true)
+new_type("config_module", "Config - Module", true)
+new_type("config_general", "Confg - General", true)
 
-new_type("panel", "UI - Panels", true)
+new_type("hooks_general", "Hooks - General", true)
+new_type("hooks_module", "Hooks - Module", true)
+
+new_type("ui_panels", "UI - Panels", true)
 
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")

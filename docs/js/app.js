@@ -37,7 +37,6 @@ class SearchManager
 
 		const categoryElements = contents.querySelectorAll(".category");
 
-		// iterate each kind (hooks/libraries/classes/etc)
 		for (const category of categoryElements)
 		{
 			const nameElement = category.querySelector(":scope > summary > h2");

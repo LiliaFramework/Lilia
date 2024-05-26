@@ -20,7 +20,7 @@ formatting arguments:
 	print(L("victory", "Nicholas"))
 	> Nicholas achieved victory!
 ]]
--- @module lia.lang
+-- @core_libs lia.lang
 lia.lang = lia.lang or {}
 lia.lang.names = lia.lang.names or {}
 lia.lang.stored = lia.lang.stored or {}
