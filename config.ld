@@ -40,13 +40,17 @@ custom_tags = {
 }
 
 
-new_type("genhooks", "General - Hooks", true)
-new_type("items", "Items", true)
-new_type("factions", "Factions", true)
-new_type("config", "Module - Config", true)
-new_type("genconfig", "General - Config", true)
-new_type("modhooks", "Module - Hooks", true)
-new_type("panel", "Panels", true)
+new_type("items", "Config - Items", true)
+new_type("config", "Config - Module", true)
+new_type("factions", "Config - Factions", true)
+new_type("genconfig", "Config - General", true)
+new_type("genconfig", "Config - Structures", true)
+
+new_type("genhooks", "Hooks - General", true)
+new_type("modhooks", "Hooks - Module", true)
+
+new_type("panel", "UI - Panels", true)
+
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
 tparam_alias("date", "date")
