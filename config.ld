@@ -52,10 +52,11 @@ custom_display_name_handler = function(item, default_handler)
 	return default_handler(item)
 end
 
-new_type("hooks", "Hooks", true)
+new_type("genhooks", "General - Hooks", true)
 new_type("items", "Items", true)
 new_type("factions", "Factions", true)
-new_type("configurations", "Configurations", true)
+new_type("config", "Module - Config", true)
+new_type("modhooks", "Module - Hooks", true)
 new_type("panel", "Panels", true)
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")

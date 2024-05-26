@@ -1,5 +1,5 @@
 --- Configuration for Salary Module.
--- @configurations Salary
+-- @config Salary
 
 --- This table defines the default settings for the Salary Module.
 -- @realm shared

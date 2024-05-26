@@ -1,5 +1,5 @@
 --- Configuration for SAM Compatibility Module.
--- @configurations SAM
+-- @config SAM
 
 --- This table defines the default settings for the SAM Module.
 -- @realm shared

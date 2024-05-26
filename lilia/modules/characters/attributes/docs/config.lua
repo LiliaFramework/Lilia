@@ -1,5 +1,5 @@
 --- Configuration for Attributes Module.
--- @configurations Attributes
+-- @config Attributes
 
 --- This table defines the default settings for the Attributes Module.
 -- @realm shared

@@ -1,5 +1,5 @@
 --- Configuration for Bodygrouper Module.
--- @configurations Bodygrouper
+-- @config Bodygrouper
 
 --- This table defines the default settings for the Bodygrouper Module.
 -- @realm shared
