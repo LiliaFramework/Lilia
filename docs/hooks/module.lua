@@ -164,44 +164,44 @@ function VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, 
 end
 
 --- Called to determine whether data should be saved before shutting down the server.
--- This function is called to determine whether data should be saved before the server shuts down.
+-- This function is called to determine whether data should be saved bore the server shuts down.
 -- @treturn boolean True if data should be saved, false otherwise
 -- @realm server
 function ShouldDataBeSaved()
 end
 
 --- Called when a player picks up money.
--- This function is called when a player picks up money from the ground.
+-- This function is called when a player picks up money from the groun
 -- @client client The player who picked up the money
--- @entity moneyEntity The entity representing the money being picked up
+-- @entity moneyEntity The entity representing the money being picked 
 -- @realm server
 function OnPickupMoney(client, moneyEntity)
 end
 --- Determines whether an item can be transferred between inventories.
 -- @realm shared
--- This hook allows custom logic to be implemented to determine if an item can be transferred
--- from one inventory to another. It can be used to impose restrictions on item transfers.
+-- This hook allows custom logic to be implemented to determine if an em can be transferred
+-- from one inventory to another. It can be used to impose restrictionon item transfers.
 -- @param item The item being transferred
--- @param currentInv The current inventory from which the item is being transferred
+-- @param currentInv The current inventory from which the item is beintransferred
 -- @param oldInv The old inventory to which the item belonged
--- @treturn boolean|string Whether the item can be transferred, or false and a reason if not
+-- @treturn boolean|string Whether the item can be transferred, or fal and a reason if not
 function CanItemBeTransfered(item, currentInv, oldInv)
 end
 
 --- Whether or not a player is allowed to create a new character.
 -- @realm server
 -- @client client Player attempting to create a new character
--- @treturn bool Whether or not the player is allowed to create the character. This function defaults to `true`, so you
--- should only ever return `false` if you're disallowing creation. Otherwise, don't return anything as you'll prevent any other
+-- @treturn bool Whether or not the player is allowed to create the chacter. This function defaults to `true`, so you
+-- should only ever return `false` if you're disallowing creation. Othwise, don't return anything as you'll prevent any other
 -- calls to this hook from running.
 -- @treturn string Language phrase to use for the error message
 -- @treturn ... Arguments to use for the language phrase
 -- @usage function MODULE:CanPlayerCreateChar(client)
 -- 	if (!client:IsAdmin()) then
--- 		return false, "notNow" -- only allow admins to create a character
+-- 		return false, "notNow" -- only allow admins to create a characr
 -- 	end
 -- end
--- -- non-admins will see the message "You are not allowed to do this right now!"
+-- -- non-admins will see the message "You are not allowed to do this ght now!"
 function CanPlayerCreateChar(client)
 end
 
@@ -455,13 +455,13 @@ end
 
 --- Called after the player's inventory is drawn.
 -- @realm client
--- @panels panel The panel containing the inventory.
+-- @panel panel The panel containing the inventory
 function PostDrawInventory(panel)
 end
 
--- This function determines whether certain information can be displayed in the character info panel in the F1 menu.
+-- This function determines whether certain information can be displayed in the character info panel inthe F1 menu.
 -- @realm client
--- @table Information to **NOT** display in the UI. This is a table of the names of some panels to avoid displaying. Valid names include:
+-- @table Information to **NOT** display in the UI. This is a table of the names of some panels to avoi displaying. Valid names include:
 -- `name` name of the character
 -- `desc` description of the character
 -- `faction` faction name of the character
@@ -594,7 +594,7 @@ function GetSalaryAmount(client, faction, class)
 end
 
 --- Called to draw additional content within the model view panel.
---- @panels panel The panel containing the model view.
+--- @panel panel The panel containing the model view
 --- @entity entity The entity being drawn.
 --- @realm client
 function DrawLiliaModelView(panel, entity)
