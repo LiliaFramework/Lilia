@@ -1,5 +1,5 @@
 --- Configuration for Persistence Module.
--- @config Persistance
+-- @config_module Persistance
 
 --- This table defines the default settings for the Persistance Module.
 -- @realm shared

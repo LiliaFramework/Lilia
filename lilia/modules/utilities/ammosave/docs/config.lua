@@ -1,5 +1,5 @@
 --- Configuration for AmmoSave Module.
--- @config AmmoSave
+-- @config_module AmmoSave
 
 --- This table defines the default settings for the AmmoSave Module.
 -- @realm shared

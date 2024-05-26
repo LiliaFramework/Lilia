@@ -1,5 +1,5 @@
 --- Configuration for Save Items Module.
--- @config SaveItems
+-- @config_module SaveItems
 
 --- This table defines the default settings for the SaveItems Module.
 -- @realm shared

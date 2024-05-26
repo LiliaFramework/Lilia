@@ -1,5 +1,5 @@
 --- Configuration for ThirdPerson Module.
--- @config ThirdPerson
+-- @config_module ThirdPerson
 
 --- This table defines the default settings for the ThirdPerson Module.
 -- @realm shared

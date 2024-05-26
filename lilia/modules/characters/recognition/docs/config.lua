@@ -1,5 +1,5 @@
 --- Configuration for Recognition Module.
--- @config Recognition
+-- @config_module Recognition
 
 --- This table defines the default settings for the Recognition Module.
 -- @realm shared
