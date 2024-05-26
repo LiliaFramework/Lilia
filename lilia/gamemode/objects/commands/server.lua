@@ -1068,7 +1068,7 @@ lia.command.add("getallwhitelists", {
     syntax = "<string target>",
     privilege = "Get All Whitelists",
     superAdminOnly = true,
-    onRun = function(client, arguments)
+    onRun = function(client)
         client:WhitelistEverything()
         client:notify("Whitelisted to all Factions and Classes")
     end
@@ -1078,7 +1078,7 @@ lia.command.add("getclasswhitelists", {
     syntax = "<string target>",
     privilege = "Get All Whitelists",
     superAdminOnly = true,
-    onRun = function(client, arguments)
+    onRun = function(client)
         client:WhitelistAllClasses()
         client:notify("Whitelisted to all Classes")
     end
@@ -1088,7 +1088,7 @@ lia.command.add("getfactionwhitelists", {
     syntax = "<string target>",
     privilege = "Get All Whitelists",
     superAdminOnly = true,
-    onRun = function(client, arguments)
+    onRun = function(client)
         client:WhitelistAllFactions()
         client:notify("Whitelisted to all Factions")
     end
@@ -1108,7 +1108,7 @@ lia.command.add("setdatanumber", {
         local trace = client:GetEyeTraceNoCursor()
         local hitpos = trace.HitPos + trace.HitNormal * 5
         local items = lia.item.instances
-        for k, v in pairs(items) do
+        for _, v in pairs(items) do
             if v:getEntity() then
                 local distance = v:getEntity():GetPos():Distance(hitpos)
                 if distance <= 32 then
@@ -1134,7 +1134,7 @@ lia.command.add("setdatastring", {
         local trace = client:GetEyeTraceNoCursor()
         local hitpos = trace.HitPos + trace.HitNormal * 5
         local items = lia.item.instances
-        for k, v in pairs(items) do
+        for _, v in pairs(items) do
             if v:getEntity() then
                 local distance = v:getEntity():GetPos():Distance(hitpos)
                 if distance <= 32 then

@@ -35,13 +35,6 @@ lia.command.add("setclass", {
     onRun = function() end,
 })
 
-lia.command.add("factionlist", {
-    adminOnly = false,
-    syntax = "<string text>",
-    onRun = function(client) end,
-    alias = {"jobs"}
-})
-
 lia.command.add("classwhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
