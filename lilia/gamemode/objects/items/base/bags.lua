@@ -1,5 +1,5 @@
 ﻿--- Structure of Bag Item Base.
--- @items Backpack
+-- @structure_items Backpack
 
 --- This table defines the default structure of the bag item base.
 -- @realm shared

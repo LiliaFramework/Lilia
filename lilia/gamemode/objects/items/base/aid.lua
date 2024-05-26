@@ -1,5 +1,5 @@
 --- Structure of Ammunition Item Base.
--- @items Ammunition
+-- @structure_items Ammunition
 
 --- This table defines the default structure of the ammo item base.
 -- @realm shared

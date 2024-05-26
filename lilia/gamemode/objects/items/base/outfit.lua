@@ -1,5 +1,5 @@
 ﻿--- Structure of Outfit Item Base.
--- @items Outfit
+-- @structure_items Outfit
 
 --- This table defines the default structure of the outfit item base.
 -- @realm shared
