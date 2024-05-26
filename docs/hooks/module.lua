@@ -455,7 +455,7 @@ end
 
 --- Called after the player's inventory is drawn.
 -- @realm client
--- @panel panel The panel containing the inventory.
+-- @ui_panels panel The panel containing the inventory.
 function PostDrawInventory(panel)
 end
 
@@ -594,7 +594,7 @@ function GetSalaryAmount(client, faction, class)
 end
 
 --- Called to draw additional content within the model view panel.
---- @panel panel The panel containing the model view.
+--- @ui_panels panel The panel containing the model view.
 --- @entity entity The entity being drawn.
 --- @realm client
 function DrawLiliaModelView(panel, entity)
