@@ -5,3 +5,4 @@ MODULE.PermaRaisedWeapons = {
     ["gmod_tool"] = true,
     ["lia_keys"] = true,
 }
+MODULE.ShouldPrintMessage = true
