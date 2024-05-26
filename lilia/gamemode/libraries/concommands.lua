@@ -38,7 +38,7 @@ if SERVER then
                 v:ConCommand("stopsound")
             end
         else
-            client:Notify("You must be a Super Admin to forcefully stopsound everyone!")
+            client:notify("You must be a Super Admin to forcefully stopsound everyone!")
         end
     end)
 

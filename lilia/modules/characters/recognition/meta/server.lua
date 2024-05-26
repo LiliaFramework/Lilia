@@ -1,5 +1,5 @@
-﻿local charMeta = lia.meta.character
-function charMeta:recognize(character, name)
+﻿local characterMeta = lia.meta.character
+function characterMeta:recognize(character, name)
     local id = character:getID()
     if not isnumber(id) and id.getID then id = id:getID() end
     local recognized = self:getData("rgn", "")

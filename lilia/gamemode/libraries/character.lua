@@ -5,15 +5,15 @@ Character creation and management.
 character data using these functions!
 ]]
 -- @module lia.char
-local charMeta = lia.meta.character or {}
+local characterMeta = lia.meta.character or {}
 lia.char = lia.char or {}
 lia.char.loaded = lia.char.loaded or {}
 lia.char.names = lia.char.names or {}
 lia.char.varHooks = lia.char.varHooks or {}
 lia.char.vars = lia.char.vars or {}
-charMeta.__index = charMeta
-charMeta.id = charMeta.id or 0
-charMeta.vars = charMeta.vars or {}
+characterMeta.__index = characterMeta
+characterMeta.id = characterMeta.id or 0
+characterMeta.vars = characterMeta.vars or {}
 debug.getregistry().Character = lia.meta.character
 if SERVER and #lia.char.names < 1 then
     lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
@@ -73,13 +73,13 @@ function lia.char.registerVar(key, data)
     local upperName = key:sub(1, 1):upper() .. key:sub(2)
     if SERVER and not data.isNotModifiable then
         if data.onSet then
-            charMeta["set" .. upperName] = data.onSet
-            charMeta["Set" .. upperName] = data.onSet
+            characterMeta["set" .. upperName] = data.onSet
+            characterMeta["Set" .. upperName] = data.onSet
         elseif data.noNetworking then
-            charMeta["set" .. upperName] = function(self, value) self.vars[key] = value end
-            charMeta["Set" .. upperName] = function(self, value) self.vars[key] = value end
+            characterMeta["set" .. upperName] = function(self, value) self.vars[key] = value end
+            characterMeta["Set" .. upperName] = function(self, value) self.vars[key] = value end
         elseif data.isLocal then
-            charMeta["set" .. upperName] = function(self, value)
+            characterMeta["set" .. upperName] = function(self, value)
                 local curChar = self:getPlayer() and self:getPlayer():getChar()
                 local sendID = true
                 if curChar and curChar == self then sendID = false end
@@ -89,7 +89,7 @@ function lia.char.registerVar(key, data)
                 hook.Run("OnCharVarChanged", self, key, oldVar, value)
             end
 
-            charMeta["Set" .. upperName] = function(self, value)
+            characterMeta["Set" .. upperName] = function(self, value)
                 local curChar = self:getPlayer() and self:getPlayer():getChar()
                 local sendID = true
                 if curChar and curChar == self then sendID = false end
@@ -99,14 +99,14 @@ function lia.char.registerVar(key, data)
                 hook.Run("OnCharVarChanged", self, key, oldVar, value)
             end
         else
-            charMeta["set" .. upperName] = function(self, value)
+            characterMeta["set" .. upperName] = function(self, value)
                 local oldVar = self.vars[key]
                 self.vars[key] = value
                 netstream.Start(nil, "charSet", key, value, self:getID())
                 hook.Run("OnCharVarChanged", self, key, oldVar, value)
             end
 
-            charMeta["Set" .. upperName] = function(self, value)
+            characterMeta["Set" .. upperName] = function(self, value)
                 local oldVar = self.vars[key]
                 self.vars[key] = value
                 netstream.Start(nil, "charSet", key, value, self:getID())
@@ -116,17 +116,17 @@ function lia.char.registerVar(key, data)
     end
 
     if data.onGet then
-        charMeta["get" .. upperName] = data.onGet
-        charMeta["Get" .. upperName] = data.onGet
+        characterMeta["get" .. upperName] = data.onGet
+        characterMeta["Get" .. upperName] = data.onGet
     else
-        charMeta["get" .. upperName] = function(self, default)
+        characterMeta["get" .. upperName] = function(self, default)
             local value = self.vars[key]
             if value ~= nil then return value end
             if default == nil then return lia.char.vars[key] and lia.char.vars[key].default or nil end
             return default
         end
 
-        charMeta["Get" .. upperName] = function(self, default)
+        characterMeta["Get" .. upperName] = function(self, default)
             local value = self.vars[key]
             if value ~= nil then return value end
             if default == nil then return lia.char.vars[key] and lia.char.vars[key].default or nil end
@@ -134,7 +134,7 @@ function lia.char.registerVar(key, data)
         end
     end
 
-    charMeta.vars[key] = data.default
+    characterMeta.vars[key] = data.default
 end
 
 lia.char.registerVar("name", {
