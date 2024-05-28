@@ -45,7 +45,7 @@ end
 -- @realm server
 -- @client client The player that has just spawned
 -- @usage function FACTION:OnSpawn(client)
--- 	client:ChatNotify("You have spawned!")
+-- 	client:chatNotify("You have spawned!")
 -- end
 function OnSpawn(client)
 end

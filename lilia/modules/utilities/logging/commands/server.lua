@@ -26,9 +26,9 @@ lia.command.add("deletelogs", {
     onRun = function(client)
         lia.db.query("DELETE FROM `lilia_logs` WHERE time > 0", function(result)
             if result then
-                client:ChatNotify("All logs with time greater than 0 have been erased")
+                client:chatNotify("All logs with time greater than 0 have been erased")
             else
-                client:ChatNotify("Failed to erase logs: " .. sql.LastError())
+                client:chatNotify("Failed to erase logs: " .. sql.LastError())
             end
         end)
     end

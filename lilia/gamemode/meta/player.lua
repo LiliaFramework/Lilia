@@ -1038,7 +1038,7 @@ if SERVER then
     -- @string text The message to notify and print.
     function playerMeta:notifyP(text)
         self:notify(text)
-        self:ChatNotify(text)
+        self:chatNotify(text)
     end
 
     --- Sends a message to the player.
@@ -1071,7 +1071,7 @@ else
     --- Displays a notification for this player in the chatbox.
     -- @realm client
     -- @string message Text to display in the notification
-    function playerMeta:ChatNotify(message)
+    function playerMeta:chatNotify(message)
         if self == LocalPlayer() then lia.chat.send(LocalPlayer(), "notice", message) end
     end
 
@@ -1079,7 +1079,7 @@ else
     -- @realm client
     -- @string message ID of the phrase to display to the player
     -- @param ... Arguments to pass to the phrase
-    function playerMeta:ChatNotifyLocalized(message, ...)
+    function playerMeta:chatNotifyLocalized(message, ...)
         if self == LocalPlayer() then
             message = L(message, ...)
             lia.chat.send(LocalPlayer(), "notice", message)

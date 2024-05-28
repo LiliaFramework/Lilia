@@ -52,7 +52,7 @@ if SERVER then
                 end
             end)
         else
-            client:ChatNotify("Nuh-uh")
+            client:chatNotify("Nuh-uh")
         end
     end)
 

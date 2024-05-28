@@ -219,7 +219,7 @@ lia.command.add("classlist", {
     syntax = "<string text>",
     onRun = function(client)
         for _, v in ipairs(lia.class.list) do
-            client:ChatNotify("NAME: " .. v.name .. " ID: " .. v.uniqueID .. " FACTION: " .. team.GetName(v.faction))
+            client:chatNotify("NAME: " .. v.name .. " ID: " .. v.uniqueID .. " FACTION: " .. team.GetName(v.faction))
         end
     end,
     alias = {"classes"}

@@ -50,7 +50,7 @@ lia.command.add("refreshfonts", {
     onRun = function(client)
         RunConsoleCommand("fixchatplz")
         hook.Run("LoadFonts", lia.config.Font)
-        client:ChatNotify("Fonts have been refreshed!")
+        client:chatNotify("Fonts have been refreshed!")
     end
 })
 

@@ -349,7 +349,7 @@ if SERVER then
     -- @realm server
     -- @client target The player to receive the chat message
     -- @tab ... The message or messages to print
-    function lia.util.ChatNotify(target, ...)
+    function lia.util.chatNotify(target, ...)
         netstream.Start(target, "ChatPrint", {...})
     end
 else
