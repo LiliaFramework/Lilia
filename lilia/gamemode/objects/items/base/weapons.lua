@@ -21,8 +21,8 @@ ITEM.class = "weapon_pistol"
 ITEM.width = 2
 ITEM.height = 2
 ITEM.isWeapon = true
-ITEM.weaponCategory = nil
-ITEM.RequiredSkillLevels = nil
+ITEM.weaponCategory = "sidearm"
+ITEM.RequiredSkillLevels = {}
 if CLIENT then
     function ITEM:paintOver(item, w, h)
         if item:getData("equip") then
