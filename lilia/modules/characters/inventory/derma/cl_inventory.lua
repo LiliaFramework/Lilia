@@ -73,7 +73,7 @@ end
 
 function PANEL:Init()
     self:Droppable("inv")
-    self:SetSize(64, 64)
+    self:SetSize(48, 48)
 end
 
 function PANEL:PaintOver(w, h)
