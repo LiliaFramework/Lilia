@@ -826,6 +826,34 @@ function lia.util.getMaterial(materialPath)
     return lia.util.cachedMaterials[materialPath]
 end
 
+function lia.util.getAllFilesInDirectory(directory, extension)
+    local files = {}
+    local function scanDirectory(dir)
+        local fileList, directoryList = file.Find(dir .. "/*", "GAME")
+        for _, fileName in ipairs(fileList) do
+            if string.EndsWith(fileName, extension) then table.insert(files, dir .. "/" .. fileName) end
+        end
+
+        for _, subDir in ipairs(directoryList) do
+            scanDirectory(dir .. "/" .. subDir)
+        end
+    end
+
+    scanDirectory(directory)
+    return files
+end
+
+function lia.util.getAllCitizenModels()
+    local allModels = {}
+    for _, path in ipairs(lia.anim.CitizenModelPaths) do
+        local modelsInPath = lia.util.getAllFilesInDirectory(path, ".mdl")
+        for _, model in ipairs(modelsInPath) do
+            table.insert(allModels, model)
+        end
+    end
+    return allModels
+end
+
 lia.util.FindPlayer = lia.util.findPlayer
 lia.util.EmitQueuedSounds = lia.util.emitQueuedSounds
 lia.util.StringMatches = lia.util.stringMatches
