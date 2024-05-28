@@ -3,6 +3,7 @@ local nextUpdate = 0
 local lastTrace = {}
 local charInfo = {}
 local lastEntity
+local mathApproach = math.Approach
 local vectorMeta = FindMetaTable("Vector")
 local toScreen = vectorMeta.ToScreen
 local DescWidth = CreateClientConVar("lia_hud_descwidth", 0.5, true, false)
@@ -78,7 +79,7 @@ function MODULE:RenderEntities()
             local isValidEntity = IsValid(entity)
             if isValidEntity then
                 local goal = drawing and 255 or 0
-                local alpha = math.Approach(entity.liaAlpha or 0, goal, frameTime * 1000)
+                local alpha = mathApproach(entity.liaAlpha or 0, goal, frameTime * 1000)
                 if lastEntity ~= entity then paintedEntitiesCache[entity] = false end
                 if alpha > 0 then
                     local targetent = entity.getNetVar(entity, "player")

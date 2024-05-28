@@ -1,11 +1,12 @@
-﻿local vignetteAlphaGoal = 0
+﻿local mathApproach = math.Approach
+local vignetteAlphaGoal = 0
 local vignetteAlphaDelta = 0
 local hasVignetteMaterial = lia.util.getMaterial("lilia/gui/vignette.png") ~= "___error"
 function MODULE:DrawVignette()
     if hasVignetteMaterial then
         local frameTime = FrameTime()
         local scrW, scrH = ScrW(), ScrH()
-        vignetteAlphaDelta = math.Approach(vignetteAlphaDelta, vignetteAlphaGoal, frameTime * 30)
+        vignetteAlphaDelta = mathApproach(vignetteAlphaDelta, vignetteAlphaGoal, frameTime * 30)
         surface.SetDrawColor(0, 0, 0, 175 + vignetteAlphaDelta)
         surface.SetMaterial(lia.util.getMaterial("lilia/gui/vignette.png"))
         surface.DrawTexturedRect(0, 0, scrW, scrH)

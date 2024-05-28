@@ -35,6 +35,7 @@ function lia.menu.add(options, position, onRemove)
     })
 end
 
+local mathApproach = math.Approach
 --- Draws all menus currently active on the screen.
 -- @realm client
 function lia.menu.drawAll()
@@ -64,10 +65,10 @@ function lia.menu.drawAll()
         local inRange = position2:DistToSqr(IsValid(v.entity) and v.entity:GetPos() or v.position) <= 9216
         local inside = (mX >= startX and mX <= (startX + width) and mY >= startY and mY <= (startY + height)) and inRange
         if not v.displayed or inside then
-            v.alpha = math.Approach(alpha or 0, 255, frameTime * 25)
+            v.alpha = mathApproach(alpha or 0, 255, frameTime * 25)
             if v.alpha == 255 then v.displayed = true end
         else
-            v.alpha = math.Approach(alpha or 0, 0, inRange and frameTime or (frameTime * 45))
+            v.alpha = mathApproach(alpha or 0, 0, inRange and frameTime or (frameTime * 45))
             if v.alpha == 0 then
                 table.remove(lia.menu.list, k)
                 if v.onRemove then v:onRemove() end

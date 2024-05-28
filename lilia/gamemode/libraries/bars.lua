@@ -78,6 +78,7 @@ function lia.bar.draw(x, y, w, h, value, color)
     surface.DrawTexturedRect(x, y, w, h)
 end
 
+local mathApproach = math.Approach
 --- Draws the action bar, if applicable.
 -- @realm client
 -- @internal
@@ -123,7 +124,7 @@ function lia.bar.drawAll()
         local bar = lia.bar.list[i]
         if bar then
             local realValue = bar.getValue()
-            local value = math.Approach(deltas[i] or 0, realValue, updateValue)
+            local value = mathApproach(deltas[i] or 0, realValue, updateValue)
             deltas[i] = value
             if deltas[i] ~= realValue then bar.lifeTime = curTime + 5 end
             if bar.lifeTime >= curTime or bar.visible or hook.Run("ShouldBarDraw", bar) then

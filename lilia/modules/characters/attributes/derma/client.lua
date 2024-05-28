@@ -1,4 +1,6 @@
 ﻿local MODULE = MODULE
+local mathApproach = math.Approach
+
 local PANEL = {}
 function PANEL:Init()
     self:SetTall(20)
@@ -78,7 +80,7 @@ end
 
 function PANEL:Think()
     if self.pressing and ((self.nextPress or 0) < CurTime()) then self:doChange() end
-    self.deltaValue = math.Approach(self.deltaValue, self.value, FrameTime() * 15)
+    self.deltaValue = mathApproach(self.deltaValue, self.value, FrameTime() * 15)
 end
 
 function PANEL:doChange()
