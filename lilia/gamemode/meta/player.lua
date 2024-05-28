@@ -124,6 +124,22 @@ function playerMeta:isNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP
 end
 
+--- Checks if the player belongs to the specified faction.
+-- @realm shared
+-- @string faction The faction to check against.
+-- @treturn bool Whether the player belongs to the specified faction.
+function playerMeta:isFaction(faction)
+    return self:getChar():getFaction() == faction
+end
+
+--- Checks if the player belongs to the specified class.
+-- @realm shared
+-- @string class The class to check against.
+-- @treturn bool Whether the player belongs to the specified class.
+function playerMeta:isClass(class)
+    return self:getChar():getClass() == class
+end
+
 --- Checks if the player is stuck.
 -- @realm shared
 -- @treturn bool Whether the player is stuck.

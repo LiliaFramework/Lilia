@@ -26,6 +26,22 @@ function characterMeta:__tostring()
     return "character[" .. (self.id or 0) .. "]"
 end
 
+--- Checks if the player belongs to the specified faction.
+-- @realm shared
+-- @string faction The faction to check against.
+-- @treturn bool Whether the player belongs to the specified faction.
+function characterMeta:isFaction(faction)
+    return self:getChar():getFaction() == faction
+end
+
+--- Checks if the player belongs to the specified class.
+-- @realm shared
+-- @string class The class to check against.
+-- @treturn bool Whether the player belongs to the specified class.
+function characterMeta:isClass(class)
+    return self:getChar():getClass() == class
+end
+
 --- Returns true if this character is equal to another character. Internally, this checks character IDs.
 -- @realm shared
 -- @character other Character to compare to
@@ -37,7 +53,6 @@ function characterMeta:__eq(other)
 end
 
 --- Returns this character's database ID. This is guaranteed to be unique.
--- @realm shared
 -- @return number Unique ID of character
 function characterMeta:getID()
     return self.id
