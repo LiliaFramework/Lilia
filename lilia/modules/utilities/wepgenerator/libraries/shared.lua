@@ -5,7 +5,7 @@ end
 function MODULE:RegisterWeapons()
     for _, wep in ipairs(weapons.GetList()) do
         if string.find(wep.ClassName, "_base") or table.HasValue(self.RegisterWeaponsBlackList, wep.ClassName) or not wep.ClassName then
-            continue 
+            continue
         end
 
         local ITEM = lia.item.register(wep.ClassName, "base_weapons", nil, nil, true)

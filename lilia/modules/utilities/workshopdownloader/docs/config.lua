@@ -1,4 +1,4 @@
---- Configuration for Workshop Downloader Module.
+--- Hook Documentation for TEMPTEXT Module.
 -- @configurationmodule WorkshopDownloader
 
 --- This table defines the default settings for the WorkshopDownloader Module.

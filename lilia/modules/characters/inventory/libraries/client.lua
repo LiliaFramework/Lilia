@@ -26,3 +26,15 @@ function MODULE:getItemStacks(inventory)
     end
     return stacks
 end
+
+function GM:PlayerButtonDown(_, button)
+    if not LocalPlayer():getChar() then return end
+    if button == KEY_I and IsFirstTimePredicted() then
+        if IsValid(lia.gui.menu) then
+            lia.gui.menu:remove()
+        else
+            local liaMenu = vgui.Create("liaMenu")
+            liaMenu:setActiveTab("inv")
+        end
+    end
+end

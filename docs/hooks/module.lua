@@ -96,12 +96,6 @@ end
 function ItemShowEntityMenu(entity)
 end
 
---- Called when the third person mode is toggled.
---- @realm client
---- @bool state Indicates whether the third person mode is enabled (`true`) or disabled (`false`).
-function thirdPersonToggled(state)
-end
-
 --- Called when a character trades with a vendor entity.
 -- This function can be used to perform additional actions when a character trades
 -- with a vendor entity.
