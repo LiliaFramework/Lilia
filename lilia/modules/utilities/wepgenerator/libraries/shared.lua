@@ -4,35 +4,25 @@ end
 
 function MODULE:RegisterWeapons()
     for _, wep in ipairs(weapons.GetList()) do
-        if string.find(wep.ClassName, "_base") or table.HasValue(self.RegisterWeaponsBlackList, wep.ClassName) or not wep.ClassName then continue end
+        if string.find(wep.ClassName, "_base") or table.HasValue(self.RegisterWeaponsBlackList, wep.ClassName) or not wep.ClassName then
+            continue 
+        end
+
         local ITEM = lia.item.register(wep.ClassName, "base_weapons", nil, nil, true)
-        ITEM.name = (wep.PrintName or self.WeaponNameOverrides[wep.ClassName]) or wep.ClassName
-        ITEM.desc = "A Weapon"
-        ITEM.model = wep.WorldModel
-        ITEM.class = wep.ClassName
-        ITEM.height = 2
-        ITEM.width = 2
-        ITEM.weaponCategory = nil
-        ITEM.RequiredSkillLevels = nil
-        ITEM.category = "Weapons"
-        if ITEM.name ~= wep.ClassName and self.NotifyWeaponRegister then print("Generated weapon:", ITEM.name) end
+        local override = self.WeaponOverrides[wep.ClassName]
+
+        ITEM.name = override and override.name or wep.PrintName or wep.ClassName
+        ITEM.desc = override and override.desc or "A Weapon"
+        ITEM.model = override and override.model or wep.WorldModel
+        ITEM.class = override and override.class or wep.ClassName
+        ITEM.height = override and override.height or 2
+        ITEM.width = override and override.width or 2
+        ITEM.weaponCategory = override and override.weaponCategory or nil
+        ITEM.RequiredSkillLevels = override and override.RequiredSkillLevels or {}
+        ITEM.category = override and override.category or "Weapons"
+
+        if ITEM.name ~= wep.ClassName and self.NotifyWeaponRegister then
+            print("Generated weapon:", ITEM.name)
+        end
     end
 end
-
-MODULE.WeaponNameOverrides = {
-    [""] = {
-        name ="",
-        desc ="",
-        model ="",
-        class ="",
-        height ="",
-        width ="",
-        category ="",
-
-        weaponCategory ="",
-
-
-
-
-    },
-}
