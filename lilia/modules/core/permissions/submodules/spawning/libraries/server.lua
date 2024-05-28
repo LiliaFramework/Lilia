@@ -101,4 +101,5 @@ function GM:PlayerSpawnedEntity(client, entity, class, group, hasName)
     local entityModel = entity:GetModel() or "Unknown Model"
     lia.log.add(client, "spawned_ent", group, class, hasName, entityName, entityModel)
     entity:SetCreator(client)
+    entity:SetNW2Entity("creator", client)
 end
