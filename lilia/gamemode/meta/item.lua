@@ -93,6 +93,7 @@ function ITEM:call(method, client, entity, ...)
         local results = {self[method](self, ...)}
         self.player = oldPlayer
         self.entity = oldEntity
+        hook.Run("ItemFunctionCalled", self, method, client, entity, results)
         return unpack(results)
     end
 
@@ -433,23 +434,22 @@ if SERVER then
             return false
         end
 
-        local canRun = (isfunction(callback.onCanRun) and not callback.onCanRun(self, data)) or (isfunction(callback.OnCanRun) and not callback.OnCanRun(self, data)) or true
-        if not canRun then
+        if isfunction(callback.onCanRun) then
+            canInteract = callback.onCanRun(self, data)
+        else
+            canInteract = true
+        end
+
+        if not canInteract then
             self.player = oldPlayer
             self.entity = oldEntity
             return false
         end
 
+        hook.Run("PrePlayerInteractItem", client, action, self)
         local result
         if isfunction(self.hooks[action]) then result = self.hooks[action](self, data) end
-        if result == nil then
-            if isfunction(callback.onRun) then
-                result = callback.onRun(self, data)
-            elseif isfunction(callback.OnRun) then
-                result = callback.OnRun(self, data)
-            end
-        end
-
+        if result == nil and isfunction(callback.onRun) then result = callback.onRun(self, data) end
         if self.postHooks[action] then self.postHooks[action](self, result, data) end
         hook.Run("OnPlayerInteractItem", client, action, self, result, data)
         lia.log.add(client, "itemUse", action, item)

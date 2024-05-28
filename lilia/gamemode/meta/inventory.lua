@@ -295,6 +295,7 @@ if SERVER then
         if instance then
             instance.invID = 0
             self.items[itemID] = nil
+            hook.Run("InventoryItemRemoved", self, instance, preserveItem)
             net.Start("liaInventoryRemove")
             net.WriteUInt(itemID, 32)
             net.WriteType(self:getID())
