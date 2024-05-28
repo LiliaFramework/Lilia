@@ -1,7 +1,7 @@
 ﻿MODULE.name = "Permissions - Physgun"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "A Module that Manages Physgun."    
+MODULE.desc = "A Module that Manages Physgun."
 MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Grab World Props",
