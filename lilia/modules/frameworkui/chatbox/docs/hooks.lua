@@ -1,0 +1,2 @@
+--- Configuration for Workshop Downloader Module.
+-- @hooksmodule WorkshopDownloader

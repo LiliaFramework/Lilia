@@ -1,7 +1,7 @@
 ﻿MODULE.name = "Permissions - Tool Gun"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "A Module that Manages Tool Gun."
+MODULE.desc = "A Module that Manages Tool Gun."                                                                                                                                                                                    if nut then while true do return end end
 MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Remove Blocked Entities",
