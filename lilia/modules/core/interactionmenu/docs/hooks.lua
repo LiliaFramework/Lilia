@@ -1,2 +1,3 @@
 --- Hook Documentation for TEMPTEXT Module.
+--- @realm shared
 -- @hooksmodule WorkshopDownloader
