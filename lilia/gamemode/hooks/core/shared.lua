@@ -12,21 +12,10 @@ function GM:InitializedModules()
         lia.anim.setModelClass(model, animtype)
     end
 
-    local citizenPaths = {}
-    for _, path in ipairs(lia.anim.CitizenModelPaths) do
-        citizenPaths[string.lower(path)] = true
-    end
-
-    for _, model in pairs(player_manager.AllValidModels()) do
+    for _, model in ipairs(lia.util.getAllCitizenModels()) do
         local lowerModel = string.lower(model)
-        for path in pairs(citizenPaths) do
-            if string.find(lowerModel, path) == 1 then
-                local class = string.find(lowerModel, "female_") and "citizen_female" or "citizen_male"
-                lia.anim.setModelClass(lowerModel, class)
-                print("Set model class for", lowerModel, "to", class)
-                break
-            end
-        end
+        local class = string.find(lowerModel, "female_") and "citizen_female" or "citizen_male"
+        lia.anim.setModelClass(lowerModel, class)
     end
 
     if CLIENT then
