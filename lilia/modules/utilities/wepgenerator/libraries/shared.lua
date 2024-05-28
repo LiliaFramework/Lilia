@@ -12,7 +12,27 @@ function MODULE:RegisterWeapons()
         ITEM.class = wep.ClassName
         ITEM.height = 2
         ITEM.width = 2
+        ITEM.weaponCategory = nil
+        ITEM.RequiredSkillLevels = nil
         ITEM.category = "Weapons"
         if ITEM.name ~= wep.ClassName and self.NotifyWeaponRegister then print("Generated weapon:", ITEM.name) end
     end
 end
+
+MODULE.WeaponNameOverrides = {
+    [""] = {
+        name ="",
+        desc ="",
+        model ="",
+        class ="",
+        height ="",
+        width ="",
+        category ="",
+
+        weaponCategory ="",
+
+
+
+
+    },
+}
