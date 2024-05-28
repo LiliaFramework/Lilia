@@ -196,7 +196,10 @@ end
 -- @return bool Whether the character has at least the specified amount of money.
 -- @usage local hasEnoughMoney = character:hasMoney(100)
 function characterMeta:hasMoney(amount)
-    if amount < 0 then print("Negative Money Check Received.") end
+    if amount < 0 then
+        print("Negative Money Check Received.")
+        return false
+    end
     return self:getMoney() >= amount
 end
 
