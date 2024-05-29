@@ -1,2 +1,0 @@
---- Hook Documentation for TEMPTEXT Module.
--- @hooksmodule WorkshopDownloader
