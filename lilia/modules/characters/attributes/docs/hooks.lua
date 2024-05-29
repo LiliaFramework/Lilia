@@ -76,7 +76,7 @@ end
 -- This hook is used to determine the initial number of attribute points a player starts with.
 -- @realm client
 -- @client client The player whose starting attribute points are being determined.
--- @context context The context in which the starting attribute points are being determined.
+-- @tab context The context in which the starting attribute points are being determined.
 -- @treturn number The number of starting attribute points.
 function GetStartAttribPoints(client, context)
 end
