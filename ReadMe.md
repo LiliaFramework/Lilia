@@ -10,7 +10,7 @@ Lilia stands as an advanced roleplay gamemode framework for Garry's Mod, meticul
 
 ## Getting Started
 
-- Explore our [Installation Tutorial](https://liliaframework.github.io/manual/info_installation) for comprehensive guidance on setting up Lilia.
+- Explore our [Installation Tutorial](https://liliaframework.github.io/core%20-%20manual/info_installation/) for comprehensive guidance on setting up Lilia.
   
 - Elevate your Lilia experience by installing our essential [Workshop Content](https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255).
   
