@@ -115,16 +115,6 @@ end
 function ShouldClientDrown(client)
 end
 
---- Whether or not the player is allowed to punch with the hands SWEP.
--- @realm shared
--- @client client Player attempting throw a punch
--- @treturn bool Whether or not to allow the player to punch
--- @usage function MODULE:CanPlayerThrowPunch(client)
--- 	return client:GetCharacter():GetAttribute("str", 0) > 0 -- Only allow players with strength to punch.
--- end
-function CanPlayerThrowPunch(client)
-end
-
 --- Called whenever an item entity has spawned in the world. You can access the entity's item table with
 -- `entity:getItemTable()`.
 -- @realm server
@@ -270,13 +260,6 @@ end
 --     return client:IsAdmin() -- Restrict spawning containers to admins.
 -- end
 function CanPlayerSpawnStorage(client, entity, data)
-end
---- Determines if a player can throw a punch with a weapon.
---- @client client The player attempting to throw a punch.
---- @tab trace The trace result.
---- @treturn True if the player can throw a punch, false otherwise.
---- @realm shared
-function CanPlayerThrowPunch(client, trace)
 end
 
 --- Called when a player's model is changed.
