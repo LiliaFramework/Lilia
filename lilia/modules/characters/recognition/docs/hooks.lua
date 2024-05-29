@@ -2,20 +2,21 @@
 -- @hooksmodule Recognition
 
 --- Checks if a character is recognized.
+-- @realm shared
 --- @character character The character to check.
 --- @int id Identifier for the character.
--- @realm shared
 function isCharRecognized(character, id)
 
 end
 --- Checks if a character is fake recognized.
+-- @realm shared
 --- @character character The character to check.
 --- @int id Identifier for the character.
--- @realm shared
 function isCharFakeRecognized(character, id)
 end
 
---- Checks if a fake name exists in the given character name list.\
+--- Checks if a fake name exists in the given character name list.
+--- @realm shared
 --- @string name The name to check.
 --- @tab nameList A list of character names.
 --- @treturn True if the name exists in the list, false otherwise.
@@ -23,15 +24,15 @@ function isFakeNameExistant(name, nameList)
 end
 
 --- Called when a character is recognized.
+-- @realm shared
 --- @client client The client whose character is recognized.
---- @realm shared
 --- @int id Identifier for the recognized character.
 function OnCharRecognized(client, id)
 end
 
 --- Initiates character recognition process.
+-- @realm shared
 --- @int level The recognition level.
---- @realm shared
 --- @string name The name of the character to be recognized.
 function CharRecognize(level, name)
 end
