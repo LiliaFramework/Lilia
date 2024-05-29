@@ -53,6 +53,7 @@ function characterMeta:__eq(other)
 end
 
 --- Returns this character's database ID. This is guaranteed to be unique.
+-- @realm shared
 -- @return number Unique ID of character
 function characterMeta:getID()
     return self.id
