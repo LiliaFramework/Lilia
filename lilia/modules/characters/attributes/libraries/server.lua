@@ -24,6 +24,11 @@
 end
 
 function MODULE:KeyRelease(client, key)
+    if key == IN_ATTACK2 then
+        local wep = client:GetActiveWeapon()
+        if IsValid(wep) and wep.IsHands and wep.ReadyToPickup then wep:Pickup() end
+    end
+
     if self.StaminaSlowdown and key == IN_JUMP and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:getChar() then
         client:consumeStamina(15)
         local stm = client:getLocalVar("stamina", 0)
@@ -31,6 +36,13 @@ function MODULE:KeyRelease(client, key)
             client:setNetVar("brth", true)
             client:ConCommand("-speed")
         end
+    end
+end
+
+function MODULE:KeyPress(client, key)
+    if key == IN_ATTACK2 and IsValid(client.Grabbed) then
+        client:DropObject(client.Grabbed)
+        client.Grabbed = NULL
     end
 end
 

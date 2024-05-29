@@ -1,7 +1,7 @@
 ﻿AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
-function SWEP:Grab()
+function SWEP:Pickup()
     local client = self:GetOwner()
     client:LagCompensation(true)
     local trace = client:GetEyeTraceNoCursor()

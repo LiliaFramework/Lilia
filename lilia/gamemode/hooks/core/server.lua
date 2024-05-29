@@ -168,10 +168,7 @@ function GM:PlayerDeathThink()
 end
 
 function GM:KeyPress(client, key)
-    if key == IN_ATTACK2 and IsValid(client.Grabbed) then
-        client:DropObject(client.Grabbed)
-        client.Grabbed = NULL
-    elseif key == IN_USE then
+    if key == IN_USE then
         local trace = util.TraceLine({
             start = client:GetShootPos(),
             endpos = client:GetShootPos() + client:GetAimVector() * 96,
@@ -203,12 +200,6 @@ function GM:KeyPress(client, key)
     end
 end
 
-function GM:KeyRelease(client, key)
-    if key == IN_ATTACK2 then
-        local wep = client:GetActiveWeapon()
-        if IsValid(wep) and wep.IsHands and wep.ReadyToPickup then wep:Grab() end
-    end
-end
 
 function GM:EntityNetworkedVarChanged(entity, varName, _, newVal)
     if varName == "Model" and entity.SetModel then hook.Run("PlayerModelChanged", entity, newVal) end
