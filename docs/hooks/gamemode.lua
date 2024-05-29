@@ -7,15 +7,6 @@ They can be used for an assorted of reasons, depending on what you are trying to
 ]]
 -- @hooksgeneral Module
 
---- Called after a player sends a chat message.
--- @realm server
--- @client client The player entity who sent the message.
--- @string message The message sent by the player.
--- @string chatType The type of chat message (e.g., "ic" for in-character, "ooc" for out-of-character).
--- @bool anonymous Whether the message was sent anonymously (true) or not (false).
-function PostPlayerSay(client, message, chatType, anonymous)
-end
-
 --- Whether or not a player can unequip an item.
 -- @realm server
 -- @client client Player attempting to unequip an item
