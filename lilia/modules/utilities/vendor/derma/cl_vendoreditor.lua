@@ -47,15 +47,10 @@ function PANEL:Init()
         if value ~= entity:getMoney() then EDITOR.money(value) end
     end
 
-    self.bubble = self:Add("DCheckBoxLabel")
-    self.bubble:SetText(L"vendorNoBubble")
-    self.bubble:Dock(TOP)
-    self.bubble:DockMargin(0, 4, 0, 0)
-    self.bubble:SetValue(entity:getNetVar("noBubble") and 1 or 0)
-    self.bubble.OnChange = function(_, value) EDITOR.bubble(value) end
     self.useMoney = self:Add("DCheckBoxLabel")
     self.useMoney:SetText(L"vendorUseMoney")
     self.useMoney:Dock(TOP)
+    self.useMoney:SetTextColor(Color(255, 255, 255))
     self.useMoney:DockMargin(0, 4, 0, 0)
     self.useMoney.OnChange = function(_, value) EDITOR.useMoney(value) end
     self.sellScale = self:Add("DNumSlider")
@@ -78,17 +73,17 @@ function PANEL:Init()
     self.faction = self:Add("DButton")
     self.faction:SetText(L"vendorFaction")
     self.faction:Dock(TOP)
-    self.faction:SetTextColor(color_black)
+    self.faction:SetTextColor(color_white)
     self.faction:DockMargin(0, 4, 0, 0)
     self.faction.DoClick = function(_) vgui.Create("VendorFactionEditor"):MoveLeftOf(self, 4) end
     local menu
     self.items = self:Add("DListView")
     self.items:Dock(FILL)
     self.items:DockMargin(0, 4, 0, 0)
-    self.items:AddColumn(L"name").Header:SetTextColor(color_black)
-    self.items:AddColumn(L"mode").Header:SetTextColor(color_black)
-    self.items:AddColumn(L"price").Header:SetTextColor(color_black)
-    self.items:AddColumn(L"stock").Header:SetTextColor(color_black)
+    self.items:AddColumn(L"name").Header:SetTextColor(color_white)
+    self.items:AddColumn(L"mode").Header:SetTextColor(color_white)
+    self.items:AddColumn(L"price").Header:SetTextColor(color_white)
+    self.items:AddColumn(L"stock").Header:SetTextColor(color_white)
     self.items:SetMultiSelect(false)
     self.items.OnRowRightClick = function(_, _, line)
         if IsValid(menu) then menu:Remove() end
@@ -190,8 +185,6 @@ function PANEL:onNameDescChanged(_, key, _)
         self.desc:SetText(entity:getDesc())
     elseif key == "model" then
         self.model:SetText(entity:GetModel())
-    elseif key == "bubble" then
-        self.bubble:SetChecked(entity:getNoBubble())
     elseif key == "scale" then
         self:updateSellScale()
     end

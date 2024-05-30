@@ -2,6 +2,7 @@
 function PANEL:Init()
     self.title = self:addLabel("Select a model")
     self.models = self:Add("DIconLayout")
+    self.title:SetTextColor(color_white)
     self.models:Dock(FILL)
     self.models:SetSpaceX(4)
     self.models:SetSpaceY(4)

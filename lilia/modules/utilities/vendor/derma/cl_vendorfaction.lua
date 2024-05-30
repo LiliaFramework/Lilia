@@ -28,7 +28,7 @@ function PANEL:Init()
         panel:DockMargin(0, 0, 0, 4)
         local faction = panel:Add("DCheckBoxLabel")
         faction:Dock(TOP)
-        faction:SetTextColor(color_black)
+        faction:SetTextColor(color_white)
         faction:SetText(L(v.name))
         faction:DockMargin(0, 0, 0, 4)
         faction.factionID = k

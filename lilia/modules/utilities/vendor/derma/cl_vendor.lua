@@ -1,4 +1,5 @@
-﻿local PANEL = {}
+﻿local MODULE = MODULE
+local PANEL = {}
 function PANEL:Init()
     if IsValid(lia.gui.vendor) then
         lia.gui.vendor.noSendExit = true
@@ -45,13 +46,11 @@ function PANEL:Init()
     self.vendor:SetWide(math.max(ScrW() * 0.25, 220))
     self.vendor:SetPos(ScrW() * 0.5 - self.vendor:GetWide() - 64 / 2, 64 + self.leave:GetTall())
     self.vendor:SetTall(ScrH() - self.vendor.y - 64)
-    self.vendor:setName(liaVendorEnt:getNetVar("name"))
-    self.vendor:setMoney(liaVendorEnt:getMoney())
     self.me = self:Add("VendorTrader")
     self.me:SetSize(self.vendor:GetSize())
     self.me:SetPos(ScrW() * 0.5 + 64 / 2, self.vendor.y)
-    self.me:setName(L"you")
-    self.me:setMoney(LocalPlayer():getChar():getMoney())
+    self:DrawPortraits()
+    self:InitializeInfoBoxes()
     self:listenForChanges()
     self:liaListenForInventoryChanges(LocalPlayer():getChar():getInv())
     self.items = {
@@ -60,6 +59,88 @@ function PANEL:Init()
     }
 
     self:initializeItems()
+end
+
+function PANEL:DrawPortraits()
+    self.mdl = self:Add("DModelPanel")
+    self.mdl:SetSize(230, 240)
+    self.mdl:SetPos((self:GetWide() / 2) / 2 - self.mdl:GetWide() / 2 - 250, 23)
+    self.mdl:SetModel(liaVendorEnt:GetModel())
+    self.mdl:SetFOV(20)
+    self.mdl:SetAlpha(0)
+    self.mdl:AlphaTo(255, 0.2)
+    local head = self.mdl.Entity:LookupBone("ValveBiped.Bip01_Head1")
+    if head and head >= 0 then self.mdl:SetLookAt(self.mdl.Entity:GetBonePosition(head)) end
+    self.mdl.LayoutEntity = function(ent)
+        self.mdl.Entity:SetAngles(Angle(0, 45, 0))
+        self.mdl.Entity:ResetSequence(2)
+        for k, v in ipairs(self.mdl.Entity:GetSequenceList()) do
+            if v:lower():find("idle") and v ~= "idlenoise" then return self.mdl.Entity:ResetSequence(k) end
+        end
+
+        self.mdl.Entity:ResetSequence(4)
+    end
+
+    self.vendormdl = self:Add("DModelPanel")
+    self.vendormdl:SetSize(230, 240)
+    self.vendormdl:SetPos((self:GetWide() / 2) / 2 - self.vendormdl:GetWide() / 2 + 1175, 23)
+    self.vendormdl:SetModel(LocalPlayer():GetModel())
+    self.vendormdl:SetFOV(20)
+    self.vendormdl:SetAlpha(0)
+    self.vendormdl:AlphaTo(255, 0.2)
+    local head = self.vendormdl.Entity:LookupBone("ValveBiped.Bip01_Head1")
+    if head and head >= 0 then self.vendormdl:SetLookAt(self.vendormdl.Entity:GetBonePosition(head)) end
+    self.vendormdl.LayoutEntity = function(ent)
+        self.vendormdl.Entity:SetAngles(Angle(0, 45, 0))
+        self.vendormdl.Entity:ResetSequence(2)
+    end
+end
+
+function PANEL:InitializeInfoBoxes()
+    self.playerInfoBox = self:Add("DPanel")
+    self.playerInfoBox:SetSize(self.mdl:GetWide(), 100)
+    self.playerInfoBox:SetPos(self.mdl.x, self.mdl.y + self.mdl:GetTall() + 30)
+    self.playerInfoBox.Paint = function(_, w, h) end
+    self.playerNameEntry = vgui.Create("DTextEntry", self.playerInfoBox)
+    self.playerNameEntry:SetText(liaVendorEnt:getNetVar("name", "Vendor"))
+    self.playerNameEntry:SetWide(200) -- Set a wider width here (e.g., 200 pixels)
+    self.playerNameEntry:SetEnterAllowed(false) -- Prevents user input
+    self:CenterTextEntryHorizontally(self.playerNameEntry, self.playerInfoBox)
+    if liaVendorEnt:getMoney() ~= nil then
+        self.playerMoneyEntry = vgui.Create("DTextEntry", self.playerInfoBox)
+        self.playerMoneyEntry:SetText(tostring(lia.currency.get(liaVendorEnt:getMoney())))
+        self.playerMoneyEntry:SetWide(200) -- Set a wider width here (e.g., 200 pixels)
+        self.playerMoneyEntry:SetEnterAllowed(false) -- Prevents user input
+        self:CenterTextEntryHorizontally(self.playerMoneyEntry, self.playerInfoBox)
+        local nameEntryHeight = self.playerNameEntry:GetTall()
+        self.playerMoneyEntry:SetPos((self.playerInfoBox:GetWide() - self.playerMoneyEntry:GetWide()) / 2, nameEntryHeight + 10)
+    end
+
+    self.vendorInfoBox = self:Add("DPanel")
+    self.vendorInfoBox:SetSize(self.vendormdl:GetWide(), 100)
+    self.vendorInfoBox:SetPos(self.vendormdl.x - 10, self.vendormdl.y + self.vendormdl:GetTall() + 30)
+    self.vendorInfoBox.Paint = function(_, w, h) end
+    self.vendorNameEntry = vgui.Create("DTextEntry", self.vendorInfoBox)
+    self.vendorNameEntry:SetText(LocalPlayer():Nick())
+    self.vendorNameEntry:SetWide(200) -- Set a wider width here (e.g., 200 pixels)
+    self.vendorNameEntry:SetEnterAllowed(false) -- Prevents user input
+    self:CenterTextEntryHorizontally(self.vendorNameEntry, self.vendorInfoBox)
+    self.vendorMoneyEntry = vgui.Create("DTextEntry", self.vendorInfoBox)
+    self.vendorMoneyEntry:SetText(tostring(lia.currency.get(LocalPlayer():getChar():getMoney())))
+    self.vendorMoneyEntry:SetWide(200) -- Set a wider width here (e.g., 200 pixels)
+    self.vendorMoneyEntry:SetEnterAllowed(false) -- Prevents user input
+    self:CenterTextEntryHorizontally(self.vendorMoneyEntry, self.vendorInfoBox)
+    local vendorNameEntryHeight = self.vendorNameEntry:GetTall()
+    self.vendorMoneyEntry:SetPos((self.vendorInfoBox:GetWide() - self.vendorMoneyEntry:GetWide()) / 2, vendorNameEntryHeight + 10)
+end
+
+function PANEL:CenterTextEntryHorizontally(textEntry, parent)
+    local parentWidth = parent:GetWide()
+    local textEntryWidth = textEntry:GetWide()
+    local posX = (parentWidth - textEntryWidth) / 2
+    textEntry:SetPos(posX, 0)
+    textEntry:SetContentAlignment(5)
+    textEntry:SetEditable(false)
 end
 
 function PANEL:buyItemFromVendor(itemType)
@@ -115,7 +196,9 @@ end
 
 function PANEL:onVendorPropEdited(vendor, key)
     if key == "name" then
-        self.vendor:setName(vendor:getName())
+        self.playerNameEntry:SetText(vendor:getName())
+    elseif key == "model" then
+        self.mdl:SetModel(vendor:GetModel())
     elseif key == "scale" then
         for _, panel in pairs(self.items[self.vendor]) do
             if not IsValid(panel) then continue end
@@ -130,7 +213,9 @@ function PANEL:onVendorPropEdited(vendor, key)
 end
 
 function PANEL:onVendorMoneyUpdated(_, money)
-    self.vendor:setMoney(money)
+    if money == nil then self.playerMoneyEntry:SetText(lia.currency.get(MODULE.DefaultVendorMoney)) end
+    money = money or "∞"
+    self.playerMoneyEntry:SetText(lia.currency.get(money))
 end
 
 function PANEL:onVendorPriceUpdated(_, itemType, _)

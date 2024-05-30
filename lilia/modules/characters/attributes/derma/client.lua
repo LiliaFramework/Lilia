@@ -1,6 +1,5 @@
 ﻿local MODULE = MODULE
 local mathApproach = math.Approach
-
 local PANEL = {}
 function PANEL:Init()
     self:SetTall(20)
@@ -110,6 +109,7 @@ end
 
 function PANEL:setText(text)
     self.label:SetText(text)
+    self.label:SetTextColor(color_white)
 end
 
 function PANEL:setReadOnly()
@@ -128,6 +128,8 @@ function PANEL:Init()
     self.title = self:addLabel("attributes")
     self.leftLabel = self:addLabel("points left")
     self.leftLabel:SetFont("liaCharSubTitleFont")
+    self.leftLabel:SetTextColor(color_white)
+    self.title:SetTextColor(color_white)
     self.total = hook.Run("GetStartAttribPoints", LocalPlayer(), self:getContext()) or lia.config.MaxAttributes
     self.attribs = {}
     for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
@@ -201,7 +203,7 @@ function PANEL:Init()
     self.name = self:Add("DLabel")
     self.name:SetFont("liaCharSubTitleFont")
     self.name:SetContentAlignment(4)
-    self.name:SetTextColor(lia.gui.character.WHITE)
+    self.name:SetTextColor(color_white)
     self.name:Dock(FILL)
     self.name:DockMargin(8, 0, 0, 0)
 end

@@ -10,5 +10,4 @@
 -- @field BarsDisabled Disable Bars | **bool**
 -- @field NoDrawCrosshairWeapon Weapons with No Crosshair | **table**
 -- @field AmmoDrawEnabled Enable Ammo Draw | **bool**
--- @field DarkTheme Toggle Dark Theme | **bool**
 -- @field HiddenHUDElements Disabled Sandbox HUD Elements | **table**

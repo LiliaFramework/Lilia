@@ -26,12 +26,3 @@ function MODULE:getItemStacks(inventory)
     end
     return stacks
 end
-
-function MODULE:OnRequestItemTransfer(panel, itemID, invID, x, y)
-    local item = lia.item.instances[itemID]
-    local itemPanel = panel.icons[itemID]
-    if item and itemPanel and item.invID == invID and not panel.occupied[y - 1][x - 1] then
-        local size = itemPanel.size + 2
-        itemPanel:SetPos((x - 1) * size, (y - 1) * size)
-    end
-end

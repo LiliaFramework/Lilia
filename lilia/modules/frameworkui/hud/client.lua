@@ -25,5 +25,5 @@ function MODULE:HUDPaint()
 end
 
 function MODULE:ForceDermaSkin()
-    return self.DarkTheme and "lilia_darktheme" or "lilia"
+    return "lilia"
 end

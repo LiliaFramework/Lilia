@@ -117,5 +117,4 @@ function SKIN:PaintButton(pnl, w, h)
     pnl:SetTextColor(self.TextColor)
 end
 
-derma.DefineSkin("lilia_darktheme", "The base dark themed skin for the Lilia framework.", SKIN)
-derma.RefreshSkins()
+derma.DefineSkin("lilia_legacy", "The legacy dark skin for the Lilia framework.", SKIN)
