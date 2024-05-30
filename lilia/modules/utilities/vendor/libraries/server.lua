@@ -7,7 +7,6 @@
             pos = v:GetPos(),
             angles = v:GetAngles(),
             model = v:GetModel(),
-            bubble = v:getNetVar("noBubble"),
             items = v.items,
             factions = v.factions,
             classes = v.classes,
@@ -27,7 +26,6 @@ function MODULE:LoadData()
         entity:SetAngles(v.angles)
         entity:Spawn()
         entity:SetModel(v.model)
-        entity:setNetVar("noBubble", v.bubble)
         entity:setNetVar("name", v.name)
         entity:setNetVar("desc", v.desc)
         entity:setNetVar("scale", v.scale or 0.5)

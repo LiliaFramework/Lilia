@@ -111,10 +111,6 @@ function ENT:getDesc()
     return self:getNetVar("desc", "")
 end
 
-function ENT:getNoBubble()
-    return self:getNetVar("noBubble") == true
-end
-
 function ENT:setAnim()
     for k, v in ipairs(self:GetSequenceList()) do
         if v:lower():find("idle") and v ~= "idlenoise" then return self:ResetSequence(k) end

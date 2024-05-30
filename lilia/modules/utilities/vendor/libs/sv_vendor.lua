@@ -10,11 +10,6 @@ EDITOR.desc = function(vendor, _)
     vendor:setDesc(desc)
 end
 
-EDITOR.bubble = function(vendor, _)
-    local noBubble = net.ReadBool()
-    vendor:setNoBubble(noBubble)
-end
-
 EDITOR.mode = function(vendor, _)
     local itemType = net.ReadString()
     local mode = net.ReadInt(8)

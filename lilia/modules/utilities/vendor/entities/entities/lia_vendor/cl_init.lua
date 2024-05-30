@@ -21,13 +21,6 @@ end
 
 function ENT:Think()
     if not self.hasSetupVars then self:setupVars() end
-    local noBubble = self:getNetVar("noBubble")
-    if IsValid(self.bubble) and noBubble then
-        self.bubble:Remove()
-    elseif not IsValid(self.bubble) and not noBubble then
-        self:createBubble()
-    end
-
     if (self.nextAnimCheck or 0) < CurTime() then
         self:setAnim()
         self.nextAnimCheck = CurTime() + 60

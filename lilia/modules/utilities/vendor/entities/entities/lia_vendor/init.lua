@@ -133,13 +133,6 @@ function ENT:setDesc(desc)
     net.Send(self.receivers)
 end
 
-function ENT:setNoBubble(noBubble)
-    self:setNetVar("noBubble", noBubble)
-    net.Start("VendorEdit")
-    net.WriteString("bubble")
-    net.Send(self.receivers)
-end
-
 function ENT:setTradeMode(itemType, mode)
     if not ALLOWED_MODES[mode] then mode = nil end
     self.items[itemType] = self.items[itemType] or {}
