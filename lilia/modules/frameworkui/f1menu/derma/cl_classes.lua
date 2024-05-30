@@ -37,6 +37,7 @@ function PANEL:Init()
     self.label:SetExpensiveShadow(1, Color(0, 0, 60))
     self.label:SetContentAlignment(5)
     self.label:SetFont("liaMediumFont")
+    self.label:SetTextColor(color_white)
     assignClick(self.label)
 end
 
