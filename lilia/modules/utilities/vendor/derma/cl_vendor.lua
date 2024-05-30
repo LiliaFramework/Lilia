@@ -71,7 +71,7 @@ function PANEL:DrawPortraits()
     self.mdl:AlphaTo(255, 0.2)
     local head = self.mdl.Entity:LookupBone("ValveBiped.Bip01_Head1")
     if head and head >= 0 then self.mdl:SetLookAt(self.mdl.Entity:GetBonePosition(head)) end
-    self.mdl.LayoutEntity = function(ent)
+    self.mdl.LayoutEntity = function()
         self.mdl.Entity:SetAngles(Angle(0, 45, 0))
         self.mdl.Entity:ResetSequence(2)
         for k, v in ipairs(self.mdl.Entity:GetSequenceList()) do
@@ -90,7 +90,7 @@ function PANEL:DrawPortraits()
     self.vendormdl:AlphaTo(255, 0.2)
     local head = self.vendormdl.Entity:LookupBone("ValveBiped.Bip01_Head1")
     if head and head >= 0 then self.vendormdl:SetLookAt(self.vendormdl.Entity:GetBonePosition(head)) end
-    self.vendormdl.LayoutEntity = function(ent)
+    self.vendormdl.LayoutEntity = function()
         self.vendormdl.Entity:SetAngles(Angle(0, 45, 0))
         self.vendormdl.Entity:ResetSequence(2)
     end
@@ -100,17 +100,17 @@ function PANEL:InitializeInfoBoxes()
     self.playerInfoBox = self:Add("DPanel")
     self.playerInfoBox:SetSize(self.mdl:GetWide(), 100)
     self.playerInfoBox:SetPos(self.mdl.x, self.mdl.y + self.mdl:GetTall() + 30)
-    self.playerInfoBox.Paint = function(_, w, h) end
+    self.playerInfoBox.Paint = function() end
     self.playerNameEntry = vgui.Create("DTextEntry", self.playerInfoBox)
     self.playerNameEntry:SetText(liaVendorEnt:getNetVar("name", "Vendor"))
-    self.playerNameEntry:SetWide(200) -- Set a wider width here (e.g., 200 pixels)
-    self.playerNameEntry:SetEnterAllowed(false) -- Prevents user input
+    self.playerNameEntry:SetWide(200)
+    self.playerNameEntry:SetEnterAllowed(false)
     self:CenterTextEntryHorizontally(self.playerNameEntry, self.playerInfoBox)
     if liaVendorEnt:getMoney() ~= nil then
         self.playerMoneyEntry = vgui.Create("DTextEntry", self.playerInfoBox)
         self.playerMoneyEntry:SetText(tostring(lia.currency.get(liaVendorEnt:getMoney())))
-        self.playerMoneyEntry:SetWide(200) -- Set a wider width here (e.g., 200 pixels)
-        self.playerMoneyEntry:SetEnterAllowed(false) -- Prevents user input
+        self.playerMoneyEntry:SetWide(200)
+        self.playerMoneyEntry:SetEnterAllowed(false)
         self:CenterTextEntryHorizontally(self.playerMoneyEntry, self.playerInfoBox)
         local nameEntryHeight = self.playerNameEntry:GetTall()
         self.playerMoneyEntry:SetPos((self.playerInfoBox:GetWide() - self.playerMoneyEntry:GetWide()) / 2, nameEntryHeight + 10)
@@ -119,16 +119,16 @@ function PANEL:InitializeInfoBoxes()
     self.vendorInfoBox = self:Add("DPanel")
     self.vendorInfoBox:SetSize(self.vendormdl:GetWide(), 100)
     self.vendorInfoBox:SetPos(self.vendormdl.x - 10, self.vendormdl.y + self.vendormdl:GetTall() + 30)
-    self.vendorInfoBox.Paint = function(_, w, h) end
+    self.vendorInfoBox.Paint = function() end
     self.vendorNameEntry = vgui.Create("DTextEntry", self.vendorInfoBox)
     self.vendorNameEntry:SetText(LocalPlayer():Nick())
-    self.vendorNameEntry:SetWide(200) -- Set a wider width here (e.g., 200 pixels)
-    self.vendorNameEntry:SetEnterAllowed(false) -- Prevents user input
+    self.vendorNameEntry:SetWide(200)
+    self.vendorNameEntry:SetEnterAllowed(false)
     self:CenterTextEntryHorizontally(self.vendorNameEntry, self.vendorInfoBox)
     self.vendorMoneyEntry = vgui.Create("DTextEntry", self.vendorInfoBox)
     self.vendorMoneyEntry:SetText(tostring(lia.currency.get(LocalPlayer():getChar():getMoney())))
-    self.vendorMoneyEntry:SetWide(200) -- Set a wider width here (e.g., 200 pixels)
-    self.vendorMoneyEntry:SetEnterAllowed(false) -- Prevents user input
+    self.vendorMoneyEntry:SetWide(200)
+    self.vendorMoneyEntry:SetEnterAllowed(false)
     self:CenterTextEntryHorizontally(self.vendorMoneyEntry, self.vendorInfoBox)
     local vendorNameEntryHeight = self.vendorNameEntry:GetTall()
     self.vendorMoneyEntry:SetPos((self.vendorInfoBox:GetWide() - self.vendorMoneyEntry:GetWide()) / 2, vendorNameEntryHeight + 10)

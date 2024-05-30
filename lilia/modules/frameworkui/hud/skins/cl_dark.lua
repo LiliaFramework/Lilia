@@ -339,7 +339,7 @@ function SKIN:PaintMenu(panel, w, h)
 	end
 end
 
-function SKIN:PaintMenuSpacer(panel, w, h)
+function SKIN:PaintMenuSpacer(_, w, h)
 	self.tex.MenuBG(0, 0, w, h)
 end
 
@@ -348,7 +348,7 @@ function SKIN:PaintMenuOption(panel, w, h)
 	if panel:GetChecked() then self.tex.Menu_Check(5, h / 2 - 7, 15, 15) end
 end
 
-function SKIN:PaintMenuRightArrow(panel, w, h)
+function SKIN:PaintMenuRightArrow(_, w, h)
 	self.tex.Menu.RightArrow(0, 0, w, h)
 end
 
@@ -364,7 +364,7 @@ function SKIN:PaintTab(panel, w, h)
 	self.tex.TabT_Inactive(0, 0, w, h)
 end
 
-function SKIN:PaintActiveTab(panel, w, h)
+function SKIN:PaintActiveTab(_, w, h)
 	self.tex.TabT_Active(0, 0, w, h)
 end
 
@@ -392,7 +392,7 @@ function SKIN:PaintWindowMaximizeButton(panel, w, h)
 	self.tex.Window.Maxi(0, 0, w, h)
 end
 
-function SKIN:PaintVScrollBar(panel, w, h)
+function SKIN:PaintVScrollBar(_, w, h)
 	self.tex.Scroller.TrackV(0, 0, w, h)
 end
 
@@ -450,7 +450,7 @@ function SKIN:PaintComboBox(panel, w, h)
 	self.tex.Input.ComboBox.Normal(0, 0, w, h)
 end
 
-function SKIN:PaintListBox(panel, w, h)
+function SKIN:PaintListBox(_, w, h)
 	self.tex.Input.ListBox.Background(0, 0, w, h)
 end
 function SKIN:PaintNumberUp(panel, w, h)
@@ -467,7 +467,7 @@ function SKIN:PaintNumberDown(panel, w, h)
 	self.tex.Input.UpDown.Down.Normal(0, 0, w, h)
 end
 
-function SKIN:PaintTreeNode(panel, w, h)
+function SKIN:PaintTreeNode(panel, _, h)
 	if not panel.m_bDrawLines then return end
 	surface.SetDrawColor(self.Colours.Tree.Lines)
 	if panel.m_bLastChild then
@@ -479,7 +479,7 @@ function SKIN:PaintTreeNode(panel, w, h)
 	end
 end
 
-function SKIN:PaintTreeNodeButton(panel, w, h)
+function SKIN:PaintTreeNodeButton(panel, _, h)
 	if not panel.m_bSelected then return end
 	local w, _ = panel:GetTextSize()
 	self.tex.Selection(38, 0, w + 6, h)
@@ -496,7 +496,7 @@ function SKIN:PaintSliderKnob(panel, w, h)
 	self.tex.Input.Slider.H.Normal(0, 0, w, h)
 end
 
-local function PaintNotches(x, y, w, h, num)
+local function PaintNotches(x, y, w, _, num)
 	if not num then return end
 	local space = w / num
 	for i = 0, num do
@@ -520,7 +520,7 @@ function SKIN:PaintCollapsibleCategory(panel, w, h)
 	self.tex.CategoryList.Inner(0, 0, w, h)
 end
 
-function SKIN:PaintCategoryList(panel, w, h)
+function SKIN:PaintCategoryList(_, w, h)
 	self.tex.CategoryList.Outer(0, 0, w, h)
 end
 
