@@ -168,7 +168,6 @@ LANGUAGE = {
     vendorNoBuyItems = "Il n'y a pas d'objet à acheter.",
     vendorSettings = "Modifications",
     vendorUseMoney = "Le PNJ peut utiliser de l'argent?",
-    vendorNoBubble = "Cacher la bulle du PNJ ?",
     mode = "Mode",
     price = "Prix",
     stock = "Stock",

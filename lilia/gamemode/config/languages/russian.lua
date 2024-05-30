@@ -169,7 +169,6 @@ LANGUAGE = {
     vendorNoBuyItems = "Здесь нету предметов для покупки.",
     vendorSettings = "Настроики раздатчика",
     vendorUseMoney = "Будет ли раздатчик брать деньги?",
-    vendorNoBubble = "Спрятать облачко раздатчика?",
     mode = "Мод",
     price = "Цена",
     stock = "Запас",

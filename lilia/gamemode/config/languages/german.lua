@@ -169,7 +169,6 @@ LANGUAGE = {
     vendorNoBuyItems = "Es gibt keine Gegenstände zum Kauf.",
     vendorSettings = "Verkäufer-Einstellungen",
     vendorUseMoney = "Soll der Verkäufer Geld verwenden?",
-    vendorNoBubble = "Verkäufer-Bubble ausblenden?",
     mode = "Modus",
     price = "Preis",
     stock = "Lagerbestand",

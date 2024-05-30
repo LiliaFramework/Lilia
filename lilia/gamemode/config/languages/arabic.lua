@@ -168,7 +168,6 @@ LANGUAGE = {
     vendorNoBuyItems = "لا توجد عناصر للشراء.",
     vendorSettings = "إعدادات البائع",
     vendorUseMoney = "هل يجب أن يستخدم البائع المال؟",
-    vendorNoBubble = "إخفاء فقاعة البائع؟",
     mode = "الوضع",
     price = "السعر",
     stock = "المخزون",

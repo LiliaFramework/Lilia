@@ -161,7 +161,6 @@ LANGUAGE = {
     vendorNoBuyItems = "Nie ma przedmiotów do kupienia.",
     vendorSettings = "Ustawienia sprzedawców",
     vendorUseMoney = "Czy sprzedawcy powinni używać pieniędzy?",
-    vendorNoBubble = "Ukryć dymek sprzedawcy?",
     mode = "Tryb",
     price = "Cena",
     stock = "Zasób",
