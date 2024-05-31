@@ -99,6 +99,8 @@ function PANEL:PopulateOptions()
         self.skinSelector:SetMax(target:SkinCount() - 1)
         self.skinSelector:SetValue(target:GetSkin())
         self.skinSelector:SetVisible(true)
+    else
+        self.skinSelector:SetVisible(false)
     end
 
     if target:GetNumBodyGroups() > 1 then
@@ -117,6 +119,7 @@ function PANEL:PopulateOptions()
             panel:SetMax(target:GetBodygroupCount(i) - 1)
             panel:SetDecimals(0)
             panel:SetValue(group)
+            panel.Label:SetTextColor(color_white)
             panel.OnValueChanged = function(_, value) model:SetBodygroup(i, math.Round(value)) end
         end
     else
