@@ -26,6 +26,8 @@ FACTION_MINECRAFTER = FACTION.index
 
 - **FACTION.weapons**: Weapons that players in this faction can use. This can include weapon IDs or references to the weapons available to faction members. **Optional**
 
+- **FACTION.logo**: The logo displayed on the scoreboard for this faction. **Optional**
+
 - **FACTION.pay**: The payment amount associated with the faction. This represents any in-game currency or rewards tied to being a member of this faction. **Optional**
 
 - **FACTION.payTimer**: The timer or schedule for payments. Specify the interval in seconds for payments to occur. For example, if payments are made every 30 minutes, set this value to 1800 (30 minutes \* 60 seconds). **Optional**
