@@ -141,6 +141,7 @@ function lia.faction.jobGenerate(index, name, color, default, models)
     FACTION.isDefault = default
     FACTION.name = name
     FACTION.desc = ""
+    FACTION.logo = ""
     FACTION.color = color
     FACTION.models = models or lia.faction.DefaultModels
     FACTION.uniqueID = name

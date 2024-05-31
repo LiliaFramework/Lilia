@@ -56,13 +56,23 @@ function PANEL:Init()
         end
 
         local header = list:Add("DLabel")
+        local icon_material = lia.faction.indices[v.index].logo
+        local hasLogo = false
+        if icon_material ~= "" then
+            local icon = header:Add("DImage")
+            icon:Dock(RIGHT)
+            icon:SetWide(56)
+            icon:SetMaterial(Material(icon_material))
+            hasLogo = true
+        end
+
         header:Dock(TOP)
         header:SetText(L(v.name))
         header:SetTextInset(3, 0)
-        header:SetFont("liaMediumFont")
+        header:SetFont(hasLogo and "liaBigFont" or "liaMediumFont")
         header:SetTextColor(color_white)
         header:SetExpensiveShadow(1, color_black)
-        header:SetTall(28)
+        header:SetTall(hasLogo and 64 or 28)
         header.Paint = function(_, w, h)
             surface.SetDrawColor(r, g, b, 20)
             surface.DrawRect(0, 0, w, h)
@@ -80,7 +90,7 @@ function PANEL:UpdateStaff()
         if target:isStaffOnDuty() then StaffOnDutyCount = StaffOnDutyCount + 1 end
     end
 
-    self.staff1:SetText("Players Online: " ..player.GetCount() .. " | Staff On Duty: " .. StaffOnDutyCount .. " | Staff Online: " .. StaffCount)
+    self.staff1:SetText("Players Online: " .. player.GetCount() .. " | Staff On Duty: " .. StaffOnDutyCount .. " | Staff Online: " .. StaffCount)
 end
 
 function PANEL:Think()
