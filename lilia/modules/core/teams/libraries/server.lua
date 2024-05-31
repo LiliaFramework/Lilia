@@ -88,11 +88,12 @@ function MODULE:FactionOnLoadout(client)
     end
 
     if faction.armor then client:SetArmor(faction.armor) end
-    if faction.OnSpawn or faction.onSpawn then
-        if faction.onSpawn then print("onSpawn is deprecated. Use OnSpawn for optimization purposes.") end
-        faction:OnSpawn(client)
+    if faction.onSpawn then
+        print("onSpawn is deprecated. Use OnSpawn for optimization purposes.")
+        faction:onSpawn(client)
     end
 
+    if faction.OnSpawn then faction:OnSpawn(client) end
     if faction.weapons then
         if istable(faction.weapons) then
             for _, v in ipairs(faction.weapons) do
@@ -184,11 +185,12 @@ function MODULE:ClassOnLoadout(client)
 
     if class.model then client:SetModel(class.model) end
     if class.armor then client:SetArmor(class.armor) end
-    if class.OnSpawn or class.onSpawn then
-        if class.onSpawn then print("onSpawn is deprecated. Use OnSpawn for optimization purposes.") end
-        class:OnSpawn(client)
+    if class.onSpawn then
+        print("onSpawn is deprecated. Use OnSpawn for optimization purposes.")
+        class:onSpawn(client)
     end
 
+    if class.OnSpawn then class:OnSpawn(client) end
     if class.weapons then
         if istable(class.weapons) then
             for _, v in ipairs(class.weapons) do

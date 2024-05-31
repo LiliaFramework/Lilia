@@ -34,10 +34,12 @@ if SERVER then
         local character = client:getChar()
         if character then
             for k, v in pairs(lia.attribs.list) do
-                if v.OnSetup or v.onSetup then
-                    if v.onSetup then print("onSetup is deprecated. Use OnSetup for optimization purposes.") end
-                    v:OnSetup(client, character:getAttrib(k, 0))
+                if v.onSetup then
+                    print("onSetup is deprecated. Use OnSetup for optimization purposes.")
+                    v:onSetup(client, character:getAttrib(k, 0))
                 end
+
+                if v.OnSetup then v:OnSetup(client, character:getAttrib(k, 0)) end
             end
         end
     end

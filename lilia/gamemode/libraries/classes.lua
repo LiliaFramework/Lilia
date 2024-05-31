@@ -68,7 +68,7 @@ function lia.class.canBe(client, class)
     if client:getChar():getClass() == class then return false, "same class request" end
     if info.limit > 0 and #lia.class.getPlayers(info.index) >= info.limit then return false, "class is full" end
     if hook.Run("CanPlayerJoinClass", client, class, info) == false then return false end
-    return info:OnCanBe(client) or info.isDefault
+    return (info:OnCanBe(client) or info:onCanBe(client)) or info.isDefault
 end
 
 --- Retrieves information about a class.

@@ -1,7 +1,8 @@
 ﻿function MODULE:CheckFactionLimitReached(faction, character, client)
-    if isfunction(faction.OnCheckLimitReached) or isfunction(faction.onCheckLimitReached) then
-        if faction.onCheckLimitReached then print("onCheckLimitReached is deprecated. Use onCheckLimitReached for optimization purposes.") end
-        return faction:OnCheckLimitReached(character, client)
+    if faction.OnCheckLimitReached then return faction:OnCheckLimitReached(character, client) end
+    if faction.onCheckLimitReached then
+        print("onCheckLimitReached is deprecated. Use OnCheckLimitReached for optimization purposes.")
+        return faction:onCheckLimitReached(character, client)
     end
 
     if not isnumber(faction.limit) then return false end
@@ -12,22 +13,24 @@ end
 
 function MODULE:GetDefaultCharName(client, faction)
     local info = lia.faction.indices[faction]
-    if info and (info.GetDefaultName or info.getDefaultName) then
+    if info then
         if info.getDefaultName then
-            print("getDefaultName is deprecated. Use getDefaultName for optimization purposes.")
+            print("getDefaultName is deprecated. Use GetDefaultName for optimization purposes.")
             return info:getDefaultName(client)
         end
-        return info:GetDefaultName(client)
+
+        if info.GetDefaultName then return info:GetDefaultName(client) end
     end
 end
 
 function MODULE:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
-    if info and (info.GetDefaultDesc or info.getDefaultDesc) then
+    if info then
         if info.getDefaultDesc then
-            print("getDefaultDesc is deprecated. Use getDefaultDesc for optimization purposes.")
+            print("getDefaultDesc is deprecated. Use GetDefaultDesc for optimization purposes.")
             return info:getDefaultDesc(client)
         end
-        return info:GetDefaultDesc(client)
+
+        if info.GetDefaultDesc then return info:GetDefaultDesc(client) end
     end
 end
