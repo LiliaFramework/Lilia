@@ -1,8 +1,6 @@
 ﻿function MODULE:InitPostEntity()
     hook.Remove("StartChat", "StartChatIndicator")
     hook.Remove("FinishChat", "EndChatIndicator")
-    hook.Remove("PostPlayerDraw", "DarkRP_ChatIndicator")
-    hook.Remove("CreateClientsideRagdoll", "DarkRP_ChatIndicator")
     hook.Remove("PostDrawEffects", "RenderWidgets")
     hook.Remove("PostDrawEffects", "RenderHalos")
     hook.Remove("OnEntityCreated", "WidgetInit")
