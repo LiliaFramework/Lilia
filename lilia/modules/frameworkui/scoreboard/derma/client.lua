@@ -58,7 +58,7 @@ function PANEL:Init()
         local header = list:Add("DLabel")
         local icon_material = lia.faction.indices[v.index].logo
         local hasLogo = false
-        if icon_material ~= "" then
+        if icon_material and icon_material ~= "" then
             local icon = header:Add("DImage")
             icon:Dock(RIGHT)
             icon:SetWide(56)
