@@ -236,7 +236,7 @@ end
 
 function PANEL:onCharVarChanged(character, key, _, newValue)
     if character ~= LocalPlayer():getChar() then return end
-    if key == "money" then self.me:setMoney(newValue) end
+    if key == "money" then self.vendorMoneyEntry:SetText(tostring(lia.currency.get(newValue))) end
 end
 
 function PANEL:listenForChanges()
