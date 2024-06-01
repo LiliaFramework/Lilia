@@ -5,7 +5,7 @@ MODULE.desc = "Adds SAM Compatibility"
 MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Speak in Admin Chat",
-        MinAccess = "admin",
+        MinAccess = "user",
         Description = "Allows access to Speaking in Admin Chat.",
     },
     {
