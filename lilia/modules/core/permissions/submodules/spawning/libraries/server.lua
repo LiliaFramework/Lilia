@@ -36,8 +36,6 @@ function GM:PlayerSpawnProp(client, model)
         local toolobj = client:GetActiveWeapon():GetToolObject()
         if (client.AdvDupe2 and client.AdvDupe2.Entities) or (client.CurrentDupe and client.CurrentDupe.Entities) or toolobj.Entities then return true end
     end
-
-    print(client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Props", nil), client:getChar():hasFlags("e"), isBlacklistedProp)
     return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Props", nil)) or client:getChar():hasFlags("e")
 end
 

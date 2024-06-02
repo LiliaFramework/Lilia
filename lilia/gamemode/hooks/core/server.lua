@@ -200,7 +200,6 @@ function GM:KeyPress(client, key)
     end
 end
 
-
 function GM:EntityNetworkedVarChanged(entity, varName, _, newVal)
     if varName == "Model" and entity.SetModel then hook.Run("PlayerModelChanged", entity, newVal) end
 end
