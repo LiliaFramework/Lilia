@@ -855,12 +855,19 @@ function lia.util.getMaterial(materialPath)
     return lia.util.cachedMaterials[materialPath]
 end
 
+--- Recursively retrieves all files with a specific extension in a given directory.
+-- @realm shared
+-- @string directory The path of the directory to search in.
+-- @string extension The file extension to filter by.
+-- @treturn table A table containing the paths of all found files with the specified extension.
 function lia.util.getAllFilesInDirectory(directory, extension)
     local files = {}
     local function scanDirectory(dir)
         local fileList, directoryList = file.Find(dir .. "/*", "GAME")
         for _, fileName in ipairs(fileList) do
-            if string.EndsWith(fileName, extension) then table.insert(files, dir .. "/" .. fileName) end
+            if string.EndsWith(fileName, extension) then
+                table.insert(files, dir .. "/" .. fileName)
+            end
         end
 
         for _, subDir in ipairs(directoryList) do
@@ -872,6 +879,9 @@ function lia.util.getAllFilesInDirectory(directory, extension)
     return files
 end
 
+--- Retrieves all citizen models by searching in predefined directories.
+-- @realm shared
+-- @treturn table A table containing the paths of all found citizen models.
 function lia.util.getAllCitizenModels()
     local allModels = {}
     for _, path in ipairs(lia.anim.CitizenModelPaths) do
