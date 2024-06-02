@@ -31,7 +31,7 @@ function OnCharRecognized(client, id)
 end
 
 --- Initiates character recognition process.
--- @realm shared
+-- @realm client
 --- @int level The recognition level.
 --- @string name The name of the character to be recognized.
 function CharRecognize(level, name)
