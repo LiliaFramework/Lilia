@@ -1,12 +1,21 @@
 --- Hook Documentation for F1 Menu Module.
 -- @hooksmodule F1Menu
 
---- Determines whether a specific character information should be displayed.
+-- This function determines whether certain information can be displayed in the character info panel inthe F1 menu.
 -- @realm client
--- @string name The name of the character information being checked.
--- @treturn boolean Whether the character information should be displayed.
-function CanDisplayCharInfo(var)
+-- @table Information to **NOT** display in the UI. This is a table of the names of some panels to avoi displaying. Valid names include:
+-- `name` name of the character
+-- `desc` description of the character
+-- `faction` faction name of the character
+-- `money` current money the character has
+-- `class` name of the character's class if they're in one
+-- Note that schemas/modules can add additional character info panels.
+-- @usage function MODULE:CanDisplayCharInfo(suppress)
+-- 	suppress.faction = true
+-- end
+function CanDisplayCharInfo(suppress)
 end
+
 
 --- Called when the player wants to view their inventory.
 -- @realm client
@@ -20,9 +29,9 @@ end
 function BuildHelpMenu(tabs)
 end
 
---- Called when the menu buttons are being created.
--- @realm client
--- @tab tabs Table containing the menu buttons.
+--- Creates menu buttons for the F1 menu.
+--- @tab tabs A table to store the created buttons.
+--- @realm client
 function CreateMenuButtons(tabs)
 end
 

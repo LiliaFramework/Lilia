@@ -59,13 +59,14 @@ function CanRunItemAction(itemTable, action)
 end
 
 --- Determines whether an item can be transferred between inventories.
--- @realm server
+-- @realm shared
+-- This hook allows custom logic to be implemented to determine if an em can be transferred
+-- from one inventory to another. It can be used to impose restrictionon item transfers.
 -- @param item The item being transferred
--- @param currentInv The inventory from which the item is being transferred
--- @param newInv The inventory to which the item is being transferred
--- @param client The client initiating the transfer
--- @treturn boolean Whether the item can be transferred
-function CanItemBeTransfered(item, currentInv, newInv, client)
+-- @param currentInv The current inventory from which the item is beintransferred
+-- @param oldInv The old inventory to which the item belonged
+-- @treturn boolean|string Whether the item can be transferred, or fal and a reason if not
+function CanItemBeTransfered(item, currentInv, oldInv)
 end
 
 --- Called when an item is dragged out of an inventory.

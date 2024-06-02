@@ -14,16 +14,7 @@ They can be used for an assorted of reasons, depending on what you are trying to
 -- @realm server
 function OnPickupMoney(client, moneyEntity)
 end
---- Determines whether an item can be transferred between inventories.
--- @realm shared
--- This hook allows custom logic to be implemented to determine if an em can be transferred
--- from one inventory to another. It can be used to impose restrictionon item transfers.
--- @param item The item being transferred
--- @param currentInv The current inventory from which the item is beintransferred
--- @param oldInv The old inventory to which the item belonged
--- @treturn boolean|string Whether the item can be transferred, or fal and a reason if not
-function CanItemBeTransfered(item, currentInv, oldInv)
-end
+
 
 --- Determines whether a client should drown.
 -- @realm server
@@ -48,34 +39,6 @@ end
 -- @int width number The new width of the screen.
 -- @int height number The new height of the screen.
 function ScreenResolutionChanged(width, height)
-end
-
---- Determines whether a player should be shown on the scoreboard.
---- @realm client
---- @client client The player entity to be evaluated.
---- @treturn bool True if the player should be shown on the scoreboard, false otherwise.
-function ShouldShowPlayerOnScoreboard(client)
-end
-
--- This function determines whether certain information can be displayed in the character info panel inthe F1 menu.
--- @realm client
--- @table Information to **NOT** display in the UI. This is a table of the names of some panels to avoi displaying. Valid names include:
--- `name` name of the character
--- `desc` description of the character
--- `faction` faction name of the character
--- `money` current money the character has
--- `class` name of the character's class if they're in one
--- Note that schemas/modules can add additional character info panels.
--- @usage function MODULE:CanDisplayCharInfo(suppress)
--- 	suppress.faction = true
--- end
-function CanDisplayCharInfo(suppress)
-end
-
---- Creates menu buttons for the F1 menu.
---- @tab tabs A table to store the created buttons.
---- @realm client
-function CreateMenuButtons(tabs)
 end
 
 --- Called when a player's model is changed.
