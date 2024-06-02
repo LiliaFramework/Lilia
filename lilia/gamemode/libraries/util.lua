@@ -25,6 +25,35 @@ function lia.util.findPlayer(identifier, allowPatterns)
     end
 end
 
+--- Finds items owned by a specified player.
+-- @realm shared
+-- @player client The player whose items are being searched for.
+-- @treturn table A table containing all items owned by the given player.
+function lia.util.findPlayerItems(client)
+    local items = {}
+    for _, item in pairs(ents.GetAll()) do
+        if item:isItem() and item:getOwner() == client then
+            table.insert(items, item)
+        end
+    end
+    return items
+end
+
+--- Finds items of a specific class owned by a specified player.
+-- @realm shared
+-- @player client The player whose items are being searched for.
+-- @string class The class of the items being searched for.
+-- @treturn table A table containing all items of the specified class owned by the given player.
+function lia.util.findPlayerItemsByClass(client, class)
+    local items = {}
+    for _, item in pairs(ents.GetAll()) do
+        if item:isItem() and item:getOwner() == client and item.uniqueID == class then
+            table.insert(items, item)
+        end
+    end
+    return items
+end
+
 --- Emits sounds one after the other from an entity.
 -- @realm shared
 -- @entity entity Entity to play sounds from
