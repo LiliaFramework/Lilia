@@ -5,11 +5,14 @@ file = {
 }
 
 module_file = {
-	Character = "lilia/gamemode/libraries/meta/character.lua",
-	Entity = "lilia/gamemode/libraries/meta/entity.lua",
-	Inventory = "lilia/gamemode/libraries/meta/inventory.lua",
-	Item = "lilia/gamemode/libraries/meta/item.lua",
-	Player = "lilia/gamemode/libraries/meta/player.lua"
+    Character = "lilia/gamemode/libraries/meta/character.lua",
+    Entity = "lilia/gamemode/libraries/meta/entity.lua",
+    Inventory = "lilia/gamemode/libraries/meta/inventory.lua",
+    Item = "lilia/gamemode/libraries/meta/item.lua",
+    Player = {
+        "lilia/gamemode/libraries/meta/player.lua",
+        "lilia/modules/utilities/vendor/meta/shared.lua"
+    }
 }
 
 dir = "docs/html"
