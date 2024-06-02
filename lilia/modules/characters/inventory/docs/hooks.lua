@@ -1,3 +1,6 @@
+--- Hook Documentation for Inventory Module.
+-- @hooksmodule Inventory
+
 --- Determines whether a player is allowed to view their inventory.
 -- @realm client
 -- This hook can be used to implement custom checks to determine if a player is
