@@ -23,7 +23,7 @@ function MODULE:PlayerSay(client, text)
 end
 
 lia.chat.register("asay", {
-    onCanSay = function(client) return CAMI.PlayerHasAccess(client, "Staff Permissions - Speak in Admin Chat", nil) end,
+    onCanSay = function(client) return true end,
     onCanHear = function(_, client) return CAMI.PlayerHasAccess(client, "Staff Permissions - Read Admin Chat", nil) end,
     onChatAdd = function(client, text) if CAMI.PlayerHasAccess(client, "Staff Permissions - Read Admin Chat", nil) then chat.AddText(Color(255, 0, 0), "[Admin] ", speaker, " (" .. speaker:steamName() .. ") ", Color(0, 255, 0), ": " .. text) end end,
     font = "liaChatFont",
