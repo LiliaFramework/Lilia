@@ -27,7 +27,7 @@ end
 
 --- Finds items owned by a specified player.
 -- @realm shared
--- @player client The player whose items are being searched for.
+-- @client client The player whose items are being searched for.
 -- @treturn table A table containing all items owned by the given player.
 function lia.util.findPlayerItems(client)
     local items = {}
@@ -41,7 +41,7 @@ end
 
 --- Finds items of a specific class owned by a specified player.
 -- @realm shared
--- @player client The player whose items are being searched for.
+-- @client client The player whose items are being searched for.
 -- @string class The class of the items being searched for.
 -- @treturn table A table containing all items of the specified class owned by the given player.
 function lia.util.findPlayerItemsByClass(client, class)
