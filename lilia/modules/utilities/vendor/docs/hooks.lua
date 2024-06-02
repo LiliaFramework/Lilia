@@ -1,61 +1,123 @@
 --- Hook Documentation for Vendor Module.
 -- @hooksmodule Vendor
 
---- Whether or not a player can trade with a vendor.
+--- Determines whether a player can access a vendor.
 -- @realm server
--- @client client Player attempting to trade
--- @entity entity Vendor entity
--- @string uniqueID The uniqueID of the item being traded.
--- @bool isSellingToVendor If the client is selling to the vendor
--- @treturn bool Whether or not to allow the client to trade with the vendor
--- @usage function MODULE:CanPlayerTradeWithVendor(client, entity, uniqueID, isSellingToVendor)
--- 	return false -- Disallow trading with vendors outright.
--- end
-function CanPlayerTradeWithVendor(client, entity, uniqueID, isSellingToVendor)
+-- @client client The player attempting to access the vendor.
+-- @entity entity The vendor entity.
+-- @treturn bool Whether the player is allowed to access the vendor.
+function CanPlayerAccessVendor(client, entity)
 end
 
---- Called when a character trades with a vendor entity.
--- This function can be used to perform additional actions when a character trades
--- with a vendor entity.
+--- Called when a player attempts to trade with a vendor.
+-- @realm server
+-- @client client The player attempting to trade.
+-- @entity entity The vendor entity.
+-- @string uniqueID The unique ID of the item being traded.
+-- @bool isSellingToVendor Indicates if the player is selling to the vendor.
+function VendorTradeAttempt(client, entity, uniqueID, isSellingToVendor)
+end
+
+--- Called when a vendor entity is edited.
+-- @realm client
+-- @entity vendor The vendor entity that was edited.
+-- @string key The key that was edited.
+function VendorEdited(vendor, key)
+end
+
+--- Called when a vendor is opened.
+-- @realm client
+-- @entity vendor The vendor entity that was opened.
+function VendorOpened(vendor)
+end
+
+--- Called when a vendor's allowed classes are updated.
+-- @realm client
+-- @entity vendor The vendor entity whose classes were updated.
+-- @string id The ID of the class.
+-- @bool allowed Whether the class is allowed or not.
+function VendorClassUpdated(vendor, id, allowed)
+end
+
+--- Called when a vendor's allowed factions are updated.
+-- @realm client
+-- @entity vendor The vendor entity whose factions were updated.
+-- @string id The ID of the faction.
+-- @bool allowed Whether the faction is allowed or not.
+function VendorFactionUpdated(vendor, id, allowed)
+end
+
+--- Called when a vendor's item maximum stock is updated.
+-- @realm client
+-- @entity vendor The vendor entity.
+-- @string itemType The type of the item.
+-- @int value The new maximum stock value.
+function VendorItemMaxStockUpdated(vendor, itemType, value)
+end
+
+--- Called when a vendor's item stock is updated.
+-- @realm client
+-- @entity vendor The vendor entity.
+-- @string itemType The type of the item.
+-- @int value The new stock value.
+function VendorItemStockUpdated(vendor, itemType, value)
+end
+
+--- Called when a vendor's item mode is updated.
+-- @realm client
+-- @entity vendor The vendor entity.
+-- @string itemType The type of the item.
+-- @int value The new mode value.
+function VendorItemModeUpdated(vendor, itemType, value)
+end
+
+--- Called when a vendor's item price is updated.
+-- @realm client
+-- @entity vendor The vendor entity.
+-- @string itemType The type of the item.
+-- @int value The new price value.
+function VendorItemPriceUpdated(vendor, itemType, value)
+end
+
+--- Called when a vendor's money is updated.
+-- @realm client
+-- @entity vendor The vendor entity.
+-- @int money The new money value.
+-- @int oldMoney The previous money value.
+function VendorMoneyUpdated(vendor, money, oldMoney)
+end
+
+--- Called when the vendor menu is opened.
+-- @realm client
+-- @entity self The vendor entity.
+function OnOpenVendorMenu(self)
+end
+
+--- Gets the price override for an item.
 -- @realm shared
--- @client client The player character trading with the vendor
--- @entity entity The vendor entity being traded with
--- @string uniqueID The unique identifier of the traded item
--- @bool isSellingToVendor Whether the trade involves selling to the vendor
--- @see VendorSellEvent
--- @see VendorBuyEvent
--- @usage function CharacterVendorTraded(client, entity, uniqueID, isSellingToVendor)
---     -- Perform additional actions when a character trades with the vendor
--- end
-function CharacterVendorTraded(client, entity, uniqueID, isSellingToVendor)
+-- @entity self The vendor entity.
+-- @string uniqueID The unique ID of the item.
+-- @int price The original price of the item.
+-- @bool isSellingToVendor Indicates if the player is selling to the vendor.
+-- @treturn int The overridden price.
+function getPriceOverride(self, uniqueID, price, isSellingToVendor)
 end
 
---- Called when a player interacts with a vendor entity.
--- This function adds the player to the vendor's receivers list and notifies the player
--- about accessing the vendor.
--- @client client The player accessing the vendor
--- @entity entity The vendor
--- @usage function PlayerAccessVendor(client, entity)
---     -- Add the player to the vendor's receivers list
---     entity.receivers[#entity.receivers + 1] = client
---
---     -- Notify the player about accessing the vendor
---     if entity.messages[VENDOR_WELCOME] then
---         client:notify(entity:getNetVar("name") .. ": " .. entity.messages[VENDOR_WELCOME])
---     end
--- end
---- @realm shared
---- @treturn bool True if the player can access the vendor.
-function PlayerAccessVendor(client, entity)
-end
-
-
---- Determines whether a player is allowed to access a vendor entity.
--- This hook can be used to implement custom checks to determine if a player is
--- allowed to access a specific vendor entity.
+--- Called when a character trades with a vendor.
 -- @realm server
--- @client client The player attempting to access the vendor
-function CanPlayerAccessVendor(client)
+-- @client client The player character trading with the vendor.
+-- @entity vendor The vendor entity being traded with.
+-- @entity item The item being traded.
+-- @bool isSellingToVendor Indicates if the trade involves selling to the vendor.
+-- @entity character The character entity of the player.
+function OnCharTradeVendor(client, vendor, item, isSellingToVendor, character)
+end
+
+--- Called when a player accesses a vendor.
+-- @realm server
+-- @client activator The player accessing the vendor.
+-- @entity self The vendor entity.
+function PlayerAccessVendor(activator, self)
 end
 
 --- Called when a player sells an item to a vendor.

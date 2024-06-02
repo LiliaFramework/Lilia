@@ -11,7 +11,7 @@ end
 --- Provides options for the player context menu on the scoreboard.
 -- @realm client
 -- @client client The player entity for whom the options are being provided.
--- @table options A table to which new options can be added. Each option should be a table with the format {icon, callback}.
+-- @tab options A table to which new options can be added. Each option should be a table with the format {icon, callback}.
 function ShowPlayerOptions(client, options)
 end
 
