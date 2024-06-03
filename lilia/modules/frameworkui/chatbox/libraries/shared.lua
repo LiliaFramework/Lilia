@@ -24,7 +24,7 @@ lia.chat.register("mefar", {
 })
 
 lia.chat.register("itclose", {
-    onChatAdd = function(_, text) chat.AddText(lia.config.get("chatColor"), "**" .. text) end,
+    onChatAdd = function(_, text) chat.AddText(ChatboxCore.ChatColor, "**" .. text) end,
     onCanHear = ChatboxCore.ChatRange * 0.25,
     prefix = {"/itclose"},
     font = "liaChatFontItalics",
