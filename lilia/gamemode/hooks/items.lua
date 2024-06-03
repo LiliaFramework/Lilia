@@ -24,6 +24,7 @@ if SERVER then
     end
 
     function GM:CanPlayerInteractItem(client, action, item)
+        action = string.lower(action)
         if not client:Alive() then return false, "You can't use items while dead" end
         if client:getLocalVar("ragdoll", false) then return false, "You can't use items while ragdolled." end
         if action == "drop" then
