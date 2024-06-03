@@ -264,7 +264,7 @@ if SERVER then
             end
 
             local client
-            if type(position) == "Player" then
+            if isentity(position) and position:IsPlayer() then
                 client = position
                 position = position:getItemDropPos()
             end

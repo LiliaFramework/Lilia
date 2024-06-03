@@ -32,9 +32,8 @@ end
 function lia.util.findPlayerItems(client)
     local items = {}
     for _, item in pairs(ents.GetAll()) do
-        if item:isItem() and item:getOwner() == client then
-            table.insert(items, item)
-        end
+        if not item:isItem() then continue end
+        if item:GetCreator() == client then table.insert(items, item) end
     end
     return items
 end
@@ -47,9 +46,8 @@ end
 function lia.util.findPlayerItemsByClass(client, class)
     local items = {}
     for _, item in pairs(ents.GetAll()) do
-        if item:isItem() and item:getOwner() == client and item.uniqueID == class then
-            table.insert(items, item)
-        end
+        if not item:isItem() then continue end
+        if item:GetCreator() == client and item:getNetVar("id") == class then table.insert(items, item) end
     end
     return items
 end
@@ -865,9 +863,7 @@ function lia.util.getAllFilesInDirectory(directory, extension)
     local function scanDirectory(dir)
         local fileList, directoryList = file.Find(dir .. "/*", "GAME")
         for _, fileName in ipairs(fileList) do
-            if string.EndsWith(fileName, extension) then
-                table.insert(files, dir .. "/" .. fileName)
-            end
+            if string.EndsWith(fileName, extension) then table.insert(files, dir .. "/" .. fileName) end
         end
 
         for _, subDir in ipairs(directoryList) do
