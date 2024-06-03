@@ -132,3 +132,14 @@ end
 function rgb(r, g, b)
     return Color(r / 255, g / 255, b / 255)
 end
+
+--- Linearly interpolates between two colors.
+-- @int frac A fraction between 0 and 1 representing the interpolation amount.
+-- @tab from The starting color (a table with r, g, b, and a fields).
+-- @tab to The target color (a table with r, g, b, and a fields).
+-- @return Color The resulting interpolated color.
+-- @realm client
+function LerpColor(frac, from, to)
+    local col = Color(Lerp(frac, from.r, to.r), Lerp(frac, from.g, to.g), Lerp(frac, from.b, to.b), Lerp(frac, from.a, to.a))
+    return col
+end
