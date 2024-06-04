@@ -1,6 +1,4 @@
-<p align="center">
-  <strong>Lilia - A Superior Roleplay Gamemode Framework</strong><br>
-</p>
+<h1 align="center">Lilia - Framework </h1>
 
 <p align="center">
   <img src="https://i.imgur.com/yY3wT30.png" alt="Lilia Icon">
