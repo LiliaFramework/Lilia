@@ -68,11 +68,17 @@ To install a roleplay schema for your Lilia framework, follow these steps:
 
 - [MafiaRP Schema](https://github.com/LiliaFramework/MafiaRP)
 
+- [1942RP Schema](https://github.com/LiliaFramework/1942RP)
+
 - [HL2RP Schema](https://github.com/LiliaFramework/HL2RP)
 
 - [MetroRP Schema](https://github.com/LiliaFramework/MetroRP)
 
-- [1942RP Schema](https://github.com/LiliaFramework/1942RP)
+- [SCPRP Schema](https://github.com/LiliaFramework/SCPRP)
+
+- [KaiserReichRP Schema](https://github.com/LiliaFramework/KaiserReichRP)
+
+- [FalloutRP Schema](https://github.com/LiliaFramework/FalloutRP)
 
 - [Public Modules](https://github.com/LiliaFramework/Modules)
 
