@@ -22,7 +22,8 @@ function ldoc.is_kind_classmethod(kind)
 end
 
 function ldoc.repo_reference(item)
-	return repo .. "tree/main" .. item.file.filename:gsub(item.file.base, "/gamemode") .. "#L" .. item.lineno
+    local relativePath = item.file.filename:gsub(item.file.base, "")
+    return repo .. "/tree/main" .. relativePath .. "#L" .. item.lineno
 end
 
 local function moduleDescription(mod)

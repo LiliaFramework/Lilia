@@ -21,6 +21,9 @@
 						<p>This is an internal function! You are able to use it, but you risk unintended side effects if used incorrectly.</p>
 					</div>
 				{% end %}
+				{% if (item.module and item.module.type ~= "hooks") then %}
+					<a class="reference" href="{* ldoc.repo_reference(item) *}">View source &raquo;</a>
+				{% end %}
 				{% if (ldoc.descript(item):len() == 0) then %}
 					<div class="notice warning">
 						<div class="title">Incomplete</div>
