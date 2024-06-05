@@ -1,7 +1,7 @@
 
 {%
 local baseUrl = ldoc.css:gsub("ldoc.css", "")
-local repo = "https://github.com/LiliaFramework/Lilia/tree/main"
+local repo = "https://github.com/LiliaFramework/Lilia/"
 local pageTitle = mod and (ldoc.display_name(mod) .. " - " .. ldoc.title) or ldoc.title
 
 local oldmarkup = ldoc.markup
@@ -22,15 +22,7 @@ function ldoc.is_kind_classmethod(kind)
 end
 
 function ldoc.repo_reference(item)
-    local relativePath = item.file.filename:gsub("\\", "/") -- Replace backslashes with forward slashes if on Windows
-
-    local prefixToStrip = "Lilia/home/runner/work/Lilia/Lilia/lilia/"
-
-    if relativePath:sub(1, #prefixToStrip) == prefixToStrip then
-        relativePath = relativePath:sub(#prefixToStrip + 1)
-    end
-
-    return repo .. "/" .. relativePath .. "#L" .. item.lineno
+	return repo .. "tree/main" .. item.file.filename:gsub(item.file.base, "/gamemode/libraries") .. "#L" .. item.lineno
 end
 
 

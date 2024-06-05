@@ -45,15 +45,11 @@ new_type("structurefactions", "Structures - Factions", true)
 new_type("structureclasses", "Structures - Classes", true)
 new_type("structurecommands", "Structures - Commands", true)
 new_type("structuremodule", "Structures - Module", true)
-
 new_type("configurationmodule", "Config - Module", true)
 new_type("configurationgeneral", "Config - General", true)
-
 new_type("hooksgeneral", "Hooks - General", true)
 new_type("hooksmodule", "Hooks - Module", true)
-
 new_type("panels", "UI - Panels", true)
-
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
 tparam_alias("date", "Date")
