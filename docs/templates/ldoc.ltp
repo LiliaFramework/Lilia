@@ -29,6 +29,7 @@ function ldoc.repo_reference(item)
     if relativePath:sub(1, #prefixToStrip) == prefixToStrip then
         relativePath = relativePath:sub(#prefixToStrip + 1)
     end
+	print(repo .. "/" .. relativePath .. "#L" .. item.lineno)
 
     return repo .. "/" .. relativePath .. "#L" .. item.lineno
 end
