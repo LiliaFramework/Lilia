@@ -21,37 +21,7 @@ function ldoc.is_kind_classmethod(kind)
 	return kind ~= "libraries"
 end
 
-function ldoc.repo_reference(item)
-    print("Original filename:", item.file.filename)
 
-    -- Normalize the file path
-    local relativePath = item.file.filename:gsub("\\", "/") -- Replace backslashes with forward slashes if on Windows
-    print("Normalized path:", relativePath)
-
-    -- Define the prefix to strip
-    local prefixToStrip = "Lilia/home/runner/work/Lilia/Lilia/lilia/"
-    print("Prefix to strip:", prefixToStrip)
-
-    -- Remove the prefix if it exists
-    if relativePath:sub(1, #prefixToStrip) == prefixToStrip then
-        relativePath = relativePath:sub(#prefixToStrip + 1)
-    end
-    print("Stripped path:", relativePath)
-
-    -- Construct the URL with the relative path and line number
-    local finalPath = repo .. relativePath
-    print("Final path:", finalPath)
-
-    -- Ensure no double slashes in the URL
-    finalPath = finalPath:gsub("//", "/")
-    print("Final path without double slashes:", finalPath)
-
-    -- Add line number
-    local finalURL = finalPath .. "#L" .. item.lineno
-    print("Final URL:", finalURL)
-
-    return finalURL
-end
 
 local function moduleDescription(mod)
 	if (mod.type == "manual") then
