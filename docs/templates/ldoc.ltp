@@ -21,14 +21,19 @@ function ldoc.is_kind_classmethod(kind)
 	return kind ~= "libraries"
 end
 
+local repo = "https://github.com/LiliaFramework/Lilia/tree/main"
+
 function ldoc.repo_reference(item)
     local relativePath = item.file.filename:gsub("\\", "/") -- Replace backslashes with forward slashes if on Windows
-    local basePathPattern = item.file.base:gsub("\\", "/"):gsub("([^%w])", "%%%1") -- Escape special characters in base path
-    relativePath = relativePath:gsub(basePathPattern, "")
-    
-    return repo .. "/tree/main" .. relativePath .. "#L" .. item.lineno
-end
 
+    local prefixToStrip = "Lilia/home/runner/work/Lilia/Lilia/lilia/"
+
+    if relativePath:sub(1, #prefixToStrip) == prefixToStrip then
+        relativePath = relativePath:sub(#prefixToStrip + 1)
+    end
+
+    return repo .. "/" .. relativePath .. "#L" .. item.lineno
+end
 
 local function moduleDescription(mod)
 	if (mod.type == "manual") then
