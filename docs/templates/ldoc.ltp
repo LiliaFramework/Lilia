@@ -22,9 +22,13 @@ function ldoc.is_kind_classmethod(kind)
 end
 
 function ldoc.repo_reference(item)
-    local relativePath = item.file.filename:gsub(item.file.base, "")
+    local relativePath = item.file.filename:gsub("\\", "/") -- Replace backslashes with forward slashes if on Windows
+    local basePathPattern = item.file.base:gsub("\\", "/"):gsub("([^%w])", "%%%1") -- Escape special characters in base path
+    relativePath = relativePath:gsub(basePathPattern, "")
+    
     return repo .. "/tree/main" .. relativePath .. "#L" .. item.lineno
 end
+
 
 local function moduleDescription(mod)
 	if (mod.type == "manual") then
