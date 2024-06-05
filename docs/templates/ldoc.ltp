@@ -1,7 +1,7 @@
 
 {%
 local baseUrl = ldoc.css:gsub("ldoc.css", "")
-local repo = "https://github.com/LiliaFramework/Lilia"
+local repo = "https://github.com/LiliaFramework/Lilia/tree/main"
 local pageTitle = mod and (ldoc.display_name(mod) .. " - " .. ldoc.title) or ldoc.title
 
 local oldmarkup = ldoc.markup
@@ -21,8 +21,6 @@ function ldoc.is_kind_classmethod(kind)
 	return kind ~= "libraries"
 end
 
-local repo = "https://github.com/LiliaFramework/Lilia/tree/main"
-
 function ldoc.repo_reference(item)
     local relativePath = item.file.filename:gsub("\\", "/") -- Replace backslashes with forward slashes if on Windows
 
@@ -34,6 +32,7 @@ function ldoc.repo_reference(item)
 
     return repo .. "/" .. relativePath .. "#L" .. item.lineno
 end
+
 
 local function moduleDescription(mod)
 	if (mod.type == "manual") then
