@@ -1,6 +1,6 @@
 {%
 local function isKindExpandable(kind)
-	return true
+	return kind ~= "Information"
 end
 %}
 
