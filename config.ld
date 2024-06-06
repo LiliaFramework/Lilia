@@ -25,8 +25,6 @@ use_markdown_titles = true
 kind_names = {
     module = "Core - Libraries",
     topic = "Information",
-    structures = "Structures",
-    store = "Store"
 }
 
 merge = true
