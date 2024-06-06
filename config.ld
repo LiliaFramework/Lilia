@@ -25,7 +25,7 @@ topics = {
     "docs/structures" 
 }
 use_markdown_titles = true
-kind_names = {module = "Core - Libraries", topic = "Core - Information", structures = "Core - Structures"}
+kind_names = {module = "Core - Libraries", topic = "Core - Information"}
 merge = true
 sort = true
 sort_modules = true
@@ -47,6 +47,7 @@ new_type("configurationgeneral", "Config - General", true)
 new_type("hooksgeneral", "Hooks - General", true)
 new_type("hooksmodule", "Hooks - Module", true)
 new_type("panels", "UI - Panels", true)
+new_type("structures", "Core - Structures", true)
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
 tparam_alias("date", "Date")
