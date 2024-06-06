@@ -1,6 +1,6 @@
 # Store : Contents
 
-The catalog is divided into four categories:
+The catalog is divided into five categories:
 
 - **General Mechanics**: A diverse array of mechanics, ranging from passive to active ones. This category includes various features designed to help run a server and keep it active.
 
@@ -9,6 +9,8 @@ The catalog is divided into four categories:
 - **Management**: Management modules aimed at assisting admins with tasks, including NPC spawns, daily rewards, and other minor management features.
 
 - **HUDs/UIs**: Various user interfaces designed to enhance the visual appeal of your game mode.
+
+- **Compatibility**: Various modules to implement compatibility with non-Lilia native content.
 
 ## General Mechanics:
 
