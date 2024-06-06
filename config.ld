@@ -24,9 +24,6 @@ topics = {"docs/manual", "docs/structures", "docs/store"}
 use_markdown_titles = true
 kind_names = {
     module = "Core - Libraries",
-    topic = "Information",
-    structures = "Structures",
-    store = "Store"
 }
 
 merge = true
@@ -49,8 +46,7 @@ custom_tags = {
     }
 }
 
-new_type("configurationmodule", "Config - Module", true)
-new_type("configurationgeneral", "Config - General", true)
+new_type("configurations", "Config - Module", true)
 new_type("hooksgeneral", "Hooks - General", true)
 new_type("hooksmodule", "Hooks - Module", true)
 new_type("panels", "UI - Panels", true)
