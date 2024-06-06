@@ -1,6 +1,6 @@
 {%
 local function isKindExpandable(kind)
-	return kind ~= "Information"
+	return kind ~= "Config - Module" or kind ~= "Information"
 end
 %}
 
