@@ -1,5 +1,5 @@
 --- Hook Documentation for MainMenu Module.
--- @hooksmodule MainMenu
+-- @hooks MainMenu
 
 
 --- Called when the player wants to view their inventory.

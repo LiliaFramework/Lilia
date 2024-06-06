@@ -1,5 +1,5 @@
 --- Hook Documentation for Scoreboard Module.
--- @hooksmodule Scoreboard
+-- @hooks Scoreboard
 
 --- Determines whether a player should be shown on the scoreboard.
 --- @realm client

@@ -1,5 +1,5 @@
 --- Hook Documentation for Salary Module.
--- @hooksmodule Salary
+-- @hooks Salary
 
 --- Retrieves the salary limit for a player.
 --- @client client The player for whom to retrieve the salary limit.

@@ -1,5 +1,5 @@
 --- Hook Documentation for Attributes Module.
--- @hooksmodule Attributes
+-- @hooks Attributes
 
 --- Called when a character's attribute is updated.
 --- @client client The client associated with the character.
