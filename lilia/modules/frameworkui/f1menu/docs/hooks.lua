@@ -1,5 +1,5 @@
 --- Hook Documentation for F1 Menu Module.
--- @hooks F1Menu
+-- @ahooks F1Menu
 
 -- This function determines whether certain information can be displayed in the character info panel inthe F1 menu.
 -- @realm client

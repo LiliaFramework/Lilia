@@ -1,5 +1,5 @@
 --- Hook Documentation for Recognition Module.
--- @hooks Recognition
+-- @ahooks Recognition
 
 --- Checks if a character is recognized.
 -- @realm shared

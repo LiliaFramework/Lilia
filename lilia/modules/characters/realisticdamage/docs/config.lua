@@ -1,5 +1,5 @@
 --- Configuration for RealisticDamage Module.
--- @configurations RealisticDamage
+-- @aconfigurations RealisticDamage
 
 --- This table defines the default settings for the RealisticDamage Module.
 -- @realm shared

@@ -1,5 +1,5 @@
 --- Hook Documentation for Doors Module.
--- @hooks Doors
+-- @ahooks Doors
 
 --- Called when a player tries to use abilities on the door, such as locking.
 -- @realm shared

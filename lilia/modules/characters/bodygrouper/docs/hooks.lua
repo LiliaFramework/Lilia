@@ -1,5 +1,5 @@
 --- Hook Documentation for Bodygrouper Module.
--- @hooks Bodygrouper
+-- @ahooks Bodygrouper
 
 --- Called when a user leaves a bodygrouper closet.
 -- @realm shared

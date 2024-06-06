@@ -1,5 +1,5 @@
 --- Configuration for Chatbox Module.
--- @configurations Chatbox
+-- @aconfigurations Chatbox
 
 --- This table defines the default settings for the ChatBox Module.
 -- @realm shared

@@ -1,5 +1,5 @@
 --- Hook Documentation for Spawns Module.
--- @hooks Spawns
+-- @ahooks Spawns
 
 
 --- Called after PlayerLoadout is executed.

@@ -1,5 +1,5 @@
 --- Hook Documentation for Inventory Module.
--- @hooks Inventory
+-- @ahooks Inventory
 
 --- Determines whether a player is allowed to view their inventory.
 -- @realm client

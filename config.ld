@@ -51,15 +51,15 @@ custom_display_name_handler = function(item, default_handler)
    if item.type == "function" and item.module then
       if item.module.type == "classmod" then
          return item.module.mod_name .. ":" .. default_handler(item)
-      elseif item.module.type == "hooks" then
+      elseif item.module.type == "ahooks" then
          return item.module.mod_name:upper() .. ":" .. default_handler(item)
       end
    end
    return default_handler(item)
 end
 
-new_type("configurations", "Configurations", true)
-new_type("hooks", "Hooks", true)
+new_type("aconfigurations", "Configurations", true)
+new_type("ahooks", "Hooks", true)
 new_type("structures", "Structures", true)
 new_type("store", "Store", true)
 new_type("alibrary", "Libraries", true)

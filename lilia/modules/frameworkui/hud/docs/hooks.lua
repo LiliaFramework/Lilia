@@ -1,5 +1,5 @@
 --- Hook Documentation for HUD Module.
--- @hooks HUD
+-- @ahooks HUD
 
 --- Whether or not the ammo HUD should be drawn.
 -- @realm client

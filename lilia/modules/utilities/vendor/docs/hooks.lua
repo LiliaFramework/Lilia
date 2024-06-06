@@ -1,5 +1,5 @@
 --- Hook Documentation for Vendor Module.
--- @hooks Vendor
+-- @ahooks Vendor
 
 --- Determines whether a player can access a vendor.
 -- @realm server
