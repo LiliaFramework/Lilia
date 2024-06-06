@@ -1,7 +1,5 @@
 file = {
     "docs/hooks",
-    "docs/store",
-    "docs/structures",
     "lilia",
     exclude = {"lilia/gamemode/libraries/thirdparty"}
 }
@@ -22,24 +20,12 @@ style = "docs/css"
 template = "docs/templates"
 format = "markdown"
 ignore = true
+topics = "docs/manual"
 use_markdown_titles = true
-topics = {
-    "docs/manual",
-    "docs/store",
-    "docs/structures"
-}
-
 kind_names = {
     module = "Libraries",
-    topic = {
-        ["docs/manual"] = "Information",
-        ["docs/store"] = "Store",
-        ["docs/structures"] = "Structures"
-    }
+    topic = "Information"
 }
-
-
-
 
 custom_tags = {
     {
@@ -74,8 +60,6 @@ end
 
 new_type("configurations", "Configurations", true)
 new_type("hooks", "Hooks", true)
-new_type("structures", "Structures", true)
-new_type("store", "Store", true)
 new_type("alibrary", "Libraries", true)
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
