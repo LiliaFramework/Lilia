@@ -14,6 +14,7 @@ end
 
 	<section>
 		{% for kind, mods, type in ldoc.kinds() do %}
+		print(kind)
 			{% if (ldoc.allowed_in_contents(type, mod)) then %}
 				<details class="category" open>
 					<summary>
