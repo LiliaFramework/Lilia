@@ -1,4 +1,4 @@
-# Store : Contents
+# Contents
 
 The catalog is divided into five categories:
 

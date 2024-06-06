@@ -1,4 +1,4 @@
-# Store - Terms of Service Agreement
+# Terms of Service Agreement
 
 This Terms of Service ("Agreement") constitutes a legally binding contract between Leonheart ("Provider," "we," "us," or "our") and the user ("User," "you," or "your"). By accessing or utilizing our non-refundable virtual piece of code ("Product"), you expressly agree to adhere to and be bound by the terms outlined in this Agreement.
 

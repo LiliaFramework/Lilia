@@ -1,4 +1,4 @@
-# Structure - Module
+# Module
 
 ```lua
 MODULE.name = "A Module"
