@@ -6,7 +6,7 @@ object at a time that you can interface with.
 
 See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for all other methods that the `Player` class has.
 ]]
--- @classmod Player
+-- @aclassmod Player
 local playerMeta = FindMetaTable("Player")
 local vectorMeta = FindMetaTable("Vector")
 do
