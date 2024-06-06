@@ -1,6 +1,6 @@
 {%
 local function isKindExpandable(kind)
-	return kind ~= "Manual"
+	return kind == "module" or kind == "hooksmodule" or kind == "hooksgeneral" 
 end
 %}
 

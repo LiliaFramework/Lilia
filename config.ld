@@ -39,7 +39,6 @@ custom_tags = {
 	{"internal", hidden = true}
 }
 
-
 new_type("structureitems", "Structures - Items", true)
 new_type("structurefactions", "Structures - Factions", true)
 new_type("structureclasses", "Structures - Classes", true)
