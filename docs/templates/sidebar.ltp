@@ -1,7 +1,6 @@
 {%
-local expandableCategories = {"Structures", "Store", "Manual", "Configurations"}
 local function isKindExpandable(kind)
-    return expandableCategories[kind] ~= nil
+    return false
 end
 %}
 
