@@ -4,19 +4,19 @@
   <img src="https://i.imgur.com/yY3wT30.png" alt="Lilia Icon">
 </p>
 
-Lilia stands as an advanced roleplay gamemode framework for Garry's Mod, meticulously crafted to provide a stable, feature-rich, and open-source platform. Drawing inspiration from Lillia, a character in League of Legends who resides in people's dreams and aims to fulfill their desires, Lilia similarly aims to help users fulfill their dreams of creating immersive roleplay servers. It's designed to be heavily customizable and easy to create content for, allowing users to focus on bringing their visions to life.
+Welcome to Lilia, an advanced roleplay gamemode framework for Garry's Mod. Inspired by [Lillia](https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lillia_19.jpg), a character from League of Legends, Lilia aims to fulfill your dreams of creating immersive roleplay servers. With a focus on stability, rich features, and open-source flexibility, Lilia provides a platform for users to bring their visions to life easily and effectively.
 
 ## Getting Started
 
-- Explore our [Installation Tutorial](https://liliaframework.github.io/core%20-%20manual/info_installation/) for comprehensive guidance on setting up Lilia.
+- **Installation Tutorial**: Follow our comprehensive [installation tutorial](https://liliaframework.github.io/core%20-%20manual/info_installation/) to set up Lilia effortlessly.
   
-- Elevate your Lilia experience by installing our essential [Workshop Content](https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255).
+- **Workshop Content**: Enhance your Lilia experience by installing our essential [workshop content](https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255).
   
-- Connect with our vibrant community and receive support on our [Discord server](https://discord.gg/6A94jYsfBk).
+- **Community Support**: Join our vibrant community on [Discord](https://discord.gg/6A94jYsfBk) to connect with fellow users and receive support.
 
 ## Documentation
 
-For detailed instructions on using and customizing Lilia for your roleplay server, refer to our comprehensive [Wiki](https://liliaframework.github.io). Feel free to contribute by making pull requests on the wiki.
+Explore our detailed [wiki](https://liliaframework.github.io) for comprehensive instructions on using and customizing Lilia for your roleplay server. We welcome contributions via pull requests to the wiki.
 
 ## Acknowledgements
 
