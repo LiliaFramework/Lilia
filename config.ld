@@ -26,7 +26,6 @@ kind_names = {
     module = "Libraries",
     topic = "Information"
 }
-
 custom_tags = {
     {
         "realm",
