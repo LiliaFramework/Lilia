@@ -1,5 +1,5 @@
 ﻿--- Helper library for reading/writing files to the data folder.
--- @module lia.data
+-- @alibrary lia.data
 file.CreateDir("lilia")
 lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}

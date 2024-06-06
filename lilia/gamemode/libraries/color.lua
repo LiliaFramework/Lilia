@@ -1,5 +1,5 @@
 ﻿--- Helper library for managing colors.
--- @module lia.color
+-- @alibrary lia.color
 lia.color = lia.color or {}
 --- Lightens a color by the specified amount.
 -- @color color The color to lighten.

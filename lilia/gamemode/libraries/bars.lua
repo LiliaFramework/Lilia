@@ -1,5 +1,5 @@
 ﻿--- Helper library for generating bars.
--- @module lia.bar
+-- @alibrary lia.bar
 lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
 lia.bar.list = {}

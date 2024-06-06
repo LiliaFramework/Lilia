@@ -5,7 +5,7 @@ This library contains various configuration options used in the Lilia gamemode. 
 
 These configuration options control various aspects of the gamemode's mechanics, user interface, and gameplay experience.
 ]]
--- @module lia.config
+-- @alibrary lia.config
 local GM = GM or GAMEMODE
 lia.config = lia.config or {}
 --- A list of available commands for use within the game.
