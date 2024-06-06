@@ -1,5 +1,7 @@
 file = {
     "docs/hooks",
+    "docs/store",
+    "docs/structures",
     "lilia",
     exclude = {"lilia/gamemode/libraries/thirdparty"}
 }
@@ -60,6 +62,8 @@ end
 
 new_type("configurations", "Configurations", true)
 new_type("hooks", "Hooks", true)
+new_type("structures", "Structures", true)
+new_type("store", "Store", true)
 new_type("alibrary", "Libraries", true)
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
