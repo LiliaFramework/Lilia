@@ -1,7 +1,6 @@
 {%
 local function isKindExpandable(kind)
-print(kind)
-	return false
+	return kind ~= "Manual" or kind ~= "Configurations"
 end
 %}
 
