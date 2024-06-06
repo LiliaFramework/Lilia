@@ -38,6 +38,7 @@ custom_tags = {
         hidden = true
     }
 }
+
 merge = true
 sort = true
 sort_modules = true
