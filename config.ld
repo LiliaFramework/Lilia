@@ -48,6 +48,7 @@ use_new_templates = true -- new templating system
 pretty_urls = true -- avoid showing .html in urls
 pretty_topic_names = true -- strips extension from manual filenames, this does not check filename collisions
 custom_display_name_handler = function(item, default_handler)
+   print(item.type)
    if item.type == "function" and item.module then
       if item.module.type == "classmod" then
          return item.module.mod_name .. ":" .. default_handler(item)
