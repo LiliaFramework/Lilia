@@ -24,19 +24,20 @@ format = "markdown"
 ignore = true
 use_markdown_titles = true
 topics = {
-    information = "docs/manual",
-    store = "docs/store",
-    structures = "docs/structures"
+    "docs/manual",
+    "docs/store",
+    "docs/structures"
 }
 
 kind_names = {
     module = "Libraries",
     topic = {
-        information = "Information",
-        store = "Store",
-        structures = "Structures"
+        ["docs/manual"] = "Information",
+        ["docs/store"] = "Store",
+        ["docs/structures"] = "Structures"
     }
 }
+
 
 
 
