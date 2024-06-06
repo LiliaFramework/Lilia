@@ -1,5 +1,5 @@
 --- Configuration for Vendors Module.
--- @configurationmodule Vendors
+-- @configurations Vendors
 
 --- This table defines the default settings for the Vendors Module.
 -- @realm shared

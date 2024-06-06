@@ -1,5 +1,5 @@
 --- Hook Documentation for TEMPTEXT Module.
--- @configurationmodule WorkshopDownloader
+-- @configurations WorkshopDownloader
 
 --- This table defines the default settings for the WorkshopDownloader Module.
 -- @realm shared

@@ -1,14 +1,4 @@
-﻿--- Default tables for database tables.
--- @configurationgeneral DatabaseTables
-
---- These tables define the structure of the database tables used in Lilia.
--- @table Configuration
--- @realm server
--- @field MySQLTableCreate SQL query for creating tables in MySQL database | **string**
--- @field SqlLiteTableCreate SQL query for creating tables in SQLite database | **string**
--- @field SqlLiteTableDrop SQL query for dropping tables in SQLite database | **string**
--- @field MySQLTableDrop SQL query for dropping tables in MySQL database | **string**
-MySQLTableCreate = [[
+﻿MySQLTableCreate = [[
     CREATE TABLE IF NOT EXISTS `lia_players` (
         `_steamID` VARCHAR(20) NOT NULL COLLATE 'utf8mb4_general_ci',
         `_steamName` VARCHAR(32) NOT NULL COLLATE 'utf8mb4_general_ci',

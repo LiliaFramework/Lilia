@@ -1,5 +1,5 @@
 --- Configuration for Perfomance Module.
--- @configurationmodule Perfomance
+-- @configurations Perfomance
 
 --- This table defines the default settings for the Perfomance Module.
 -- @realm shared

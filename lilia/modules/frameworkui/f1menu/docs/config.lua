@@ -1,5 +1,5 @@
 --- Configuration for F1Menu Module.
--- @configurationmodule F1Menu
+-- @configurations F1Menu
 
 --- This table defines the default settings for the F1Menu Module.
 -- @realm shared
