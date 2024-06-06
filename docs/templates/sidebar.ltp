@@ -1,5 +1,6 @@
 {%
 local function isKindExpandable(kind)
+	print("KIND " .. kind)
 	return kind ~= "Config - Module" or kind ~= "Information"
 end
 %}
