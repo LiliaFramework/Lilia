@@ -1,21 +1,4 @@
-﻿--- Structure of Bag Item Base.
--- @structureitems Backpack
-
---- This table defines the default structure of the bag item base.
--- @realm shared
--- @table Configuration
--- @field name Name of the item | **string**
--- @field desc Description of the item | **string**
--- @field model Model path of the item | **string**
--- @field width Width of the item | **number**
--- @field height Height of the item | **number**
--- @field invWidth Inventory Width of the bag | **number**
--- @field invHeight Inventory Height of the bag | **number**
--- @field category Category of the item | **string**
--- @field RequiredSkillLevels Required attribute levels for using the item | **table**
--- @field BagSound Sound that plays when opening the bag | **string**
--- @field pacData PAC3 data that gets implemented when equipping the bag | **table**
-ITEM.name = "Bag"
+﻿TEM.name = "Bag"
 ITEM.desc = "A bag to hold more items."
 ITEM.model = "models/props_c17/suitcase001a.mdl"
 ITEM.category = "Storage"

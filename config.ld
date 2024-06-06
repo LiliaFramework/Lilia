@@ -20,9 +20,12 @@ style = "docs/css"
 template = "docs/templates"
 format = "markdown"
 ignore = true
-topics = "docs/manual"
+topics = {
+    "docs/manual",
+    "docs/structures" 
+}
 use_markdown_titles = true
-kind_names = {module = "Core - Libraries", topic = "Core - Manual"}
+kind_names = {module = "Core - Libraries", topic = "Core - Information", structures = "Core - Structures"}
 merge = true
 sort = true
 sort_modules = true
@@ -39,11 +42,6 @@ custom_tags = {
 	{"internal", hidden = true}
 }
 
-new_type("structureitems", "Structures - Items", true)
-new_type("structurefactions", "Structures - Factions", true)
-new_type("structureclasses", "Structures - Classes", true)
-new_type("structurecommands", "Structures - Commands", true)
-new_type("structuremodule", "Structures - Module", true)
 new_type("configurationmodule", "Config - Module", true)
 new_type("configurationgeneral", "Config - General", true)
 new_type("hooksgeneral", "Hooks - General", true)

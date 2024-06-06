@@ -1,18 +1,4 @@
-﻿--- Structure of Book Item Base.
--- @structureitems Books
-
---- This table defines the default structure of the book item base.
--- @realm shared
--- @table Configuration
--- @field name Name of the item | **string**
--- @field desc Description of the item | **string**
--- @field model Model path of the item | **string**
--- @field width Width of the item | **number**
--- @field height Height of the item | **number**
--- @field category Category of the item | **string**
--- @field contents Contents of the book item as HTML | **table**
-
-ITEM.name = "Book Base"
+﻿ITEM.name = "Book Base"
 ITEM.desc = "A book."
 ITEM.category = "Literature"
 ITEM.model = "models/props_lab/bindergraylabel01b.mdl"

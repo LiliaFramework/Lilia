@@ -1,19 +1,4 @@
-﻿--- Structure of Weapon Item Base.
--- @structureitems Weapon
-
---- This table defines the default structure of the weapon item base.
--- @realm shared
--- @table Configuration
--- @field name Name of the item | **string**
--- @field desc Description of the item | **string**
--- @field model Model path of the item | **string**
--- @field width Width of the item | **number**
--- @field height Height of the item | **number**
--- @field category Category of the item | **string**
--- @field RequiredSkillLevels Required attribute levels for using the item | **table**
--- @field class The class of the weapon | **string**
--- @field weaponCategory The weapon category of the item. This prevents you from equipping 2 of the same weapon category types | **string**
-ITEM.name = "Weapon"
+﻿ITEM.name = "Weapon"
 ITEM.desc = "A Weapon."
 ITEM.category = "Weapons"
 ITEM.model = "models/weapons/w_pistol.mdl"

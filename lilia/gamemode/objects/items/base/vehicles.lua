@@ -1,19 +1,4 @@
-﻿--- Structure of Vehicle Item Base.
--- @structureitems Vehicles
-
---- This table defines the default structure of the vehicle item base.
--- @realm shared
--- @table Configuration
--- @field name Name of the item | **string**
--- @field desc Description of the item | **string**
--- @field model Model path of the item | **string**
--- @field width Width of the item | **number**
--- @field height Height of the item | **number**
--- @field category Category of the item | **string**
--- @field vehicleid The vehicle to be spawned | **string**
--- @field shouldRemove Whether or not the item should be removed after the usage | **bool**
--- @field vehicleCooldown The cooldown that the item has before being reusable | **number**
-
+﻿
 ITEM.name = "Entities Base"
 ITEM.model = ""
 ITEM.desc = ""

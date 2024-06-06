@@ -1,20 +1,4 @@
-﻿--- Structure of Simfphys Item Base.
--- @structureitems Simfphys
-
---- This table defines the default structure of the simfphys item base.
--- @realm shared
--- @table Configuration
--- @field name Name of the item | **string**
--- @field desc Description of the item | **string**
--- @field model Model path of the item | **string**
--- @field width Width of the item | **number**
--- @field height Height of the item | **number**
--- @field category Category of the item | **string**
--- @field vehicleid The simfphys vehicle to be spawned | **string**
--- @field shouldRemove Whether or not the item should be removed after the usage | **bool**
--- @field vehicleCooldown The cooldown that the item has before being reusable | **number**
-
-ITEM.name = "Simfphys Vehicle Base"
+﻿ITEM.name = "Simfphys Vehicle Base"
 ITEM.model = ""
 ITEM.desc = ""
 ITEM.category = "Vehicle"

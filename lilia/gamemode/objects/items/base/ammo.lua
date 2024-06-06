@@ -1,19 +1,4 @@
-﻿--- Structure of Ammunition Item Base.
--- @structureitems Ammunition
-
---- This table defines the default structure of the ammo item base.
--- @realm shared
--- @table Configuration
--- @field name Name of the item | **string**
--- @field desc Description of the item | **string**
--- @field model Model path of the item | **string**
--- @field width Width of the item | **number**
--- @field height Height of the item | **number**
--- @field category Category of the item | **string**
--- @field RequiredSkillLevels Required attribute levels for using the item | **table**
--- @field ammo Type of ammunition contained in the item | **string**
-
-local loadAmount = {5, 10, 30, 45, 90, 150, 300}
+﻿local loadAmount = {5, 10, 30, 45, 90, 150, 300}
 ITEM.name = "Ammo Base"
 ITEM.model = "models/Items/BoxSRounds.mdl"
 ITEM.width = 1
