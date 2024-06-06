@@ -25,21 +25,10 @@ ignore = true
 topics = "docs/manual"
 use_markdown_titles = true
 kind_names = {
-    alibrary = "Core - Libraries",
-    topic = "Information",
-    structures = "Structures",
-    store = "Store"
+    module = "Libraries",
+    topic = "Manual"
 }
 
-merge = true
-sort = true
-sort_modules = true
-simple_args_string = true -- we show optionals/defaults outside of the display name
-strip_metamethod_prefix = true -- remove the name of the table when displaying metamethod names
-no_viewed_topic_at_top = true -- don't put the currently viewed topic at the top
-use_new_templates = true -- new templating system
-pretty_urls = true -- avoid showing .html in urls
-pretty_topic_names = true -- strips extension from manual filenames, this does not check filename collisions
 custom_tags = {
     {
         "realm",
@@ -51,12 +40,32 @@ custom_tags = {
     }
 }
 
+merge = true
+sort = true
+sort_modules = true
+simple_args_string = true -- we show optionals/defaults outside of the display name
+strip_metamethod_prefix = true -- remove the name of the table when displaying metamethod names
+no_viewed_topic_at_top = true -- don't put the currently viewed topic at the top
+use_new_templates = true -- new templating system
+pretty_urls = true -- avoid showing .html in urls
+pretty_topic_names = true -- strips extension from manual filenames, this does not check filename collisions
+custom_display_name_handler = function(item, default_handler)
+    if item.type == "function" and item.module then
+        if item.module.type == "classmod" then
+            return item.module.mod_name .. ":" .. default_handler(item)
+        elseif item.module.type == "hooks" then
+            return item.module.mod_name:upper() .. ":" .. default_handler(item)
+        end
+    end
+    return default_handler(item)
+end
+
 new_type("configurations", "Config - Module", true)
 new_type("hooksgeneral", "Hooks - General", true)
 new_type("hooksmodule", "Hooks - Module", true)
-new_type("panels", "UI - Panels", true)
 new_type("structures", "Structures", true)
 new_type("store", "Store", true)
+new_type("alibrary", "Libraries", true)
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
 tparam_alias("date", "Date")
