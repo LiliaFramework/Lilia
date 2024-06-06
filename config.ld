@@ -1,7 +1,5 @@
 file = {
     "docs/hooks",
-    "docs/store",
-    "docs/structures",
     "lilia",
     exclude = {"lilia/gamemode/libraries/thirdparty"}
 }
@@ -22,8 +20,8 @@ style = "docs/css"
 template = "docs/templates"
 format = "markdown"
 ignore = true
-topics = "docs/manual"
 use_markdown_titles = true
+topics = {"docs/manual", "docs/hooks", "docs/store", "docs/structures"}
 kind_names = {
     module = "Libraries",
     topic = "Information"
@@ -60,6 +58,8 @@ custom_display_name_handler = function(item, default_handler)
     return default_handler(item)
 end
 
+new_type("store", "Store", true)
+new_type("structures", "Structures", true)
 new_type("configurations", "Configurations", true)
 new_type("hooks", "Hooks", true)
 new_type("structures", "Structures", true)
