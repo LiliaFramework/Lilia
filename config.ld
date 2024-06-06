@@ -1,15 +1,15 @@
 file = {
-	"docs/hooks",
-	"lilia",
-	exclude = {"lilia/gamemode/libraries/thirdparty"}
+    "docs/hooks",
+    "lilia",
+    exclude = {"lilia/gamemode/libraries/thirdparty"}
 }
 
 module_file = {
-	Character = "lilia/gamemode/libraries/meta/character.lua",
-	Entity = "lilia/gamemode/libraries/meta/entity.lua",
-	Inventory = "lilia/gamemode/libraries/meta/inventory.lua",
-	Item = "lilia/gamemode/libraries/meta/item.lua",
-	Player = "lilia/gamemode/libraries/meta/player.lua"
+    Character = "lilia/gamemode/libraries/meta/character.lua",
+    Entity = "lilia/gamemode/libraries/meta/entity.lua",
+    Inventory = "lilia/gamemode/libraries/meta/inventory.lua",
+    Item = "lilia/gamemode/libraries/meta/item.lua",
+    Player = "lilia/gamemode/libraries/meta/player.lua"
 }
 
 dir = "docs/html"
@@ -23,10 +23,10 @@ ignore = true
 topics = {"docs/manual", "docs/structures", "docs/store"}
 use_markdown_titles = true
 kind_names = {
-	module = "Core - Libraries",
-	topic = "Information",
-	structures = "Structures",
-	store = "Store"
+    module = "Core - Libraries",
+    topic = "Information",
+    structures = "Structures",
+    store = "Store"
 }
 
 merge = true
@@ -39,14 +39,14 @@ use_new_templates = true -- new templating system
 pretty_urls = true -- avoid showing .html in urls
 pretty_topic_names = true -- strips extension from manual filenames, this does not check filename collisions
 custom_tags = {
-	{
-		"realm",
-		hidden = true
-	},
-	{
-		"internal",
-		hidden = true
-	}
+    {
+        "realm",
+        hidden = true
+    },
+    {
+        "internal",
+        hidden = true
+    }
 }
 
 new_type("configurationmodule", "Config - Module", true)
