@@ -1,7 +1,7 @@
 file = {
     "docs/hooks",
     "docs/store",
-    "docs/structure",
+    "docs/structures",
     "lilia",
     exclude = {"lilia/gamemode/libraries/thirdparty"}
 }
