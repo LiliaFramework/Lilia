@@ -52,7 +52,13 @@ custom_display_name_handler = function(item, default_handler)
       if item.module.type == "aclassmod" then
          return item.module.mod_name .. ":" .. default_handler(item)
       elseif item.module.type == "ahooks" then
-         return item.module.mod_name:upper() .. ":" .. default_handler(item)
+         if item.module.mod_name == "Class" then
+            return "CLASS:" .. default_handler(item)
+         elseif item.module.mod_name == "Faction" then
+            return "FACTION:" .. default_handler(item)
+         else
+            return "MODULE:" .. default_handler(item)
+         end
       end
    end
    return default_handler(item)
