@@ -22,8 +22,13 @@ style = "docs/css"
 template = "docs/templates"
 format = "markdown"
 ignore = true
-topics = {"docs/manual", "docs/store", "docs/structures"}
 use_markdown_titles = true
+topics = {
+    information = "docs/manual",
+    store = "docs/store",
+    structures = "docs/structures"
+}
+
 kind_names = {
     module = "Libraries",
     topic = {
@@ -32,6 +37,7 @@ kind_names = {
         structures = "Structures"
     }
 }
+
 
 
 custom_tags = {
