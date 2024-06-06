@@ -23,7 +23,7 @@ ignore = true
 topics = {"docs/manual", "docs/structures", "docs/store"}
 use_markdown_titles = true
 kind_names = {
-    module = "Core - Libraries",
+    
 }
 
 merge = true
