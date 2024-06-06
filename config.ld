@@ -1,5 +1,7 @@
 file = {
     "docs/hooks",
+    "docs/store", 
+    "docs/structures",
     "lilia",
     exclude = {"lilia/gamemode/libraries/thirdparty"}
 }
@@ -21,7 +23,7 @@ template = "docs/templates"
 format = "markdown"
 ignore = true
 use_markdown_titles = true
-topics = {"docs/manual", "docs/store", "docs/structures"}
+topics = {"docs/manual", }
 kind_names = {
     module = "Libraries",
     topic = "Information"
