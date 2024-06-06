@@ -60,9 +60,9 @@ end
 
 new_type("aconfigurations", "Configurations", true)
 new_type("ahooks", "Hooks", true)
+new_type("alibrary", "Libraries", true)
 new_type("structures", "Structures", true)
 new_type("store", "Store", true)
-new_type("alibrary", "Libraries", true)
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
 tparam_alias("date", "Date")
