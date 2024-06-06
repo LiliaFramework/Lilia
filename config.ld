@@ -58,8 +58,6 @@ custom_display_name_handler = function(item, default_handler)
     return default_handler(item)
 end
 
-new_type("store", "Store", true)
-new_type("structures", "Structures", true)
 new_type("configurations", "Configurations", true)
 new_type("hooks", "Hooks", true)
 new_type("structures", "Structures", true)
