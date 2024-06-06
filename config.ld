@@ -20,27 +20,33 @@ style = "docs/css"
 template = "docs/templates"
 format = "markdown"
 ignore = true
-topics = {
-    "docs/manual",
-    "docs/structures",
-    "docs/store" 
-}
+topics = {"docs/manual", "docs/structures", "docs/store"}
 use_markdown_titles = true
-kind_names = {module = "Core - Libraries", topic = "Information"}
+kind_names = {
+	module = "Core - Libraries",
+	topic = "Information",
+	structures = "Structures",
+	store = "Store"
+}
+
 merge = true
 sort = true
 sort_modules = true
-
 simple_args_string = true -- we show optionals/defaults outside of the display name
 strip_metamethod_prefix = true -- remove the name of the table when displaying metamethod names
 no_viewed_topic_at_top = true -- don't put the currently viewed topic at the top
 use_new_templates = true -- new templating system
 pretty_urls = true -- avoid showing .html in urls
 pretty_topic_names = true -- strips extension from manual filenames, this does not check filename collisions
-
 custom_tags = {
-	{"realm", hidden = true},
-	{"internal", hidden = true}
+	{
+		"realm",
+		hidden = true
+	},
+	{
+		"internal",
+		hidden = true
+	}
 }
 
 new_type("configurationmodule", "Config - Module", true)
