@@ -20,7 +20,7 @@ style = "docs/css"
 template = "docs/templates"
 format = "markdown"
 ignore = true
-topics = {"docs/manual", "docs/structures", "docs/store"}
+topics = {"docs/manual",}
 use_markdown_titles = true
 kind_names = {
     
