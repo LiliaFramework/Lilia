@@ -21,8 +21,6 @@ function ldoc.is_kind_classmethod(kind)
 	return kind ~= "libraries"
 end
 
-
-
 local function moduleDescription(mod)
 	if (mod.type == "manual") then
 		return mod.body:gsub(mod.display_name, ""):gsub("#", ""):sub(1, 256) .. "..."
