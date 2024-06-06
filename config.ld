@@ -47,6 +47,7 @@ no_viewed_topic_at_top = true -- don't put the currently viewed topic at the top
 use_new_templates = true -- new templating system
 pretty_urls = true -- avoid showing .html in urls
 pretty_topic_names = true -- strips extension from manual filenames, this does not check filename collisions
+
 custom_display_name_handler = function(item, default_handler)
    if item.type == "function" and item.module then
       if item.module.type == "classmod" then
