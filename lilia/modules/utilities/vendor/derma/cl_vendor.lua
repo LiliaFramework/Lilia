@@ -44,7 +44,7 @@ function PANEL:Init()
         self.editor:SetText("Editor")
         self.editor:SetFont("liaMediumFont")
         self.editor:SetTextColor(Color(255, 255, 255, 210))
-        self.editor.DoClick = function(client) vgui.Create("VendorEditor"):SetZPos(99) end
+        self.editor.DoClick = function() vgui.Create("VendorEditor"):SetZPos(99) end
         self.editor.Paint = function()
             if self.editor:IsDown() then
                 surface.SetDrawColor(Color(40, 40, 40, 240))
@@ -130,7 +130,7 @@ function PANEL:Init()
     self.leaveButton:SetText("Leave")
     self.leaveButton:SetFont("liaMediumFont")
     self.leaveButton:SetTextColor(Color(255, 255, 255, 210))
-    self.leaveButton.DoClick = function(client) lia.gui.vendor:Remove() end
+    self.leaveButton.DoClick = function() lia.gui.vendor:Remove() end
     self.leaveButton.Paint = function()
         if self.leaveButton:IsDown() then
             surface.SetDrawColor(Color(40, 40, 40, 240))
