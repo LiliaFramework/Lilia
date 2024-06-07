@@ -1,4 +1,4 @@
-# Porting From NS
+# Porting From NutScript
 
 If you're considering porting Nutscript Plugins to Lilia Modules, here are some helpful pointers on replaceable variables. It's worth noting that while porting from Nutscript to Lilia is feasible and supported, going the other way around can be complex and may lead to long-term issues, as certain key hooks used in Lilia are not present in Nutscript.
 
