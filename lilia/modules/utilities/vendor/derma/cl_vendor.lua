@@ -1,6 +1,6 @@
-﻿local MODULE = MODULE
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
+    local w, h = ScrW(), ScrH()
     if IsValid(lia.gui.vendor) then
         lia.gui.vendor.noSendExit = true
         lia.gui.vendor:Remove()
@@ -16,41 +16,13 @@ function PANEL:Init()
     self.buttons:Dock(TOP)
     self.buttons:SetPaintBackground(false)
     self.buttons:SetTall(36)
-    self.leave = self.buttons:Add("DButton")
-    self.leave:SetFont("VendorButtonFont")
-    self.leave:SetText(L("leave"):upper())
-    self.leave:SetTextColor(color_white)
-    self.leave:SetContentAlignment(9)
-    self.leave:SetExpensiveShadow(2, color_black)
-    self.leave.DoClick = function() self:Remove() end
-    self.leave:SizeToContents()
-    self.leave:SetPaintBackground(false)
-    self.leave.Paint = function() end
-    self.leave.x = ScrW() * 0.5 - (self.leave:GetWide() * 0.5)
-    if LocalPlayer():CanEditVendor() then
-        self.editor = self.buttons:Add("DButton")
-        self.editor:SetFont("VendorButtonFont")
-        self.editor:SetText(L("editor"):upper())
-        self.editor:SetTextColor(color_white)
-        self.editor:SetContentAlignment(9)
-        self.editor:SetExpensiveShadow(2, color_black)
-        self.editor.DoClick = function() vgui.Create("VendorEditor"):SetZPos(99) end
-        self.editor:SizeToContents()
-        self.editor:SetPaintBackground(false)
-        self.leave.x = self.leave.x + 16 + self.leave:GetWide() * 0.5
-        self.editor.x = ScrW() * 0.5 - 16 - self.editor:GetWide()
-        self.editor.Paint = function() end
-    end
-
     self.vendor = self:Add("VendorTrader")
     self.vendor:SetWide(math.max(ScrW() * 0.25, 220))
-    self.vendor:SetPos(ScrW() * 0.5 - self.vendor:GetWide() - 64 / 2, 64 + self.leave:GetTall())
+    self.vendor:SetPos(ScrW() * 0.5 - self.vendor:GetWide() - 64 / 2, 64 + 44)
     self.vendor:SetTall(ScrH() - self.vendor.y - 64)
     self.me = self:Add("VendorTrader")
     self.me:SetSize(self.vendor:GetSize())
     self.me:SetPos(ScrW() * 0.5 + 64 / 2, self.vendor.y)
-    self:DrawPortraits()
-    self:InitializeInfoBoxes()
     self:listenForChanges()
     self:liaListenForInventoryChanges(LocalPlayer():getChar():getInv())
     self.items = {
@@ -59,79 +31,168 @@ function PANEL:Init()
     }
 
     self:initializeItems()
+    self.left = vgui.Create("DFrame", self)
+    self.left:SetPos(ScrW() * 0.015, ScrH() * 0.35)
+    self.left:SetSize(ScrW() * 0.212, ScrH() * 0.24)
+    self.left:SetTitle("")
+    self.left:ShowCloseButton(false)
+    self.left:SetDraggable(false)
+    if LocalPlayer():CanEditVendor() then
+        self.editor = self.left:Add("DButton")
+        self.editor:SetSize(ScrW() * 0.085, ScrH() * 0.0325)
+        self.editor:SetPos(ScrW() * 0.0115, ScrH() * 0.187)
+        self.editor:SetText("Editor")
+        self.editor:SetFont("liaMediumFont")
+        self.editor:SetTextColor(Color(255, 255, 255, 210))
+        self.editor.DoClick = function(client) vgui.Create("VendorEditor"):SetZPos(99) end
+        self.editor.Paint = function()
+            if self.editor:IsDown() then
+                surface.SetDrawColor(Color(40, 40, 40, 240))
+                surface.DrawRect(0, 0, w, h)
+                surface.SetDrawColor(Color(0, 0, 0, 235))
+                surface.DrawOutlinedRect(0, 0, w, h)
+            elseif self.editor:IsHovered() then
+                surface.SetDrawColor(Color(30, 30, 30, 150))
+                surface.DrawRect(0, 0, w, h)
+                surface.SetDrawColor(Color(0, 0, 0, 235))
+                surface.DrawOutlinedRect(0, 0, w, h)
+            else
+                surface.SetDrawColor(Color(30, 30, 30, 160))
+                surface.DrawRect(0, 0, w, h)
+                surface.SetDrawColor(Color(0, 0, 0, 235))
+                surface.DrawOutlinedRect(0, 0, w, h)
+            end
+        end
+    end
+
+    self.left.Paint = function()
+        local name = liaVendorEnt:getNetVar("name", "Jane Doe")
+        local desc = liaVendorEnt:getNetVar("desc", "")
+        if desc == "" then desc = "A Merchant" end
+        local scale = liaVendorEnt:getNetVar("scale", 0.5)
+        local money = liaVendorEnt:getMoney() ~= nil and liaVendorEnt:getMoney() or "∞"
+        local itemCount = table.Count(self.items[self.vendor])
+        local panelHeight = self.editor and h or 215
+        surface.SetDrawColor(Color(30, 30, 30, 190))
+        surface.DrawRect(0, 0, w, panelHeight)
+        surface.DrawOutlinedRect(0, 0, w, panelHeight)
+        surface.SetDrawColor(0, 0, 14, 150)
+        surface.DrawRect(ScrW() * 0, ScrH() * 0, ScrW() * 0.26, ScrH() * 0.033)
+        surface.SetDrawColor(Color(30, 30, 30, 50))
+        surface.DrawOutlinedRect(ScrW() * 0, ScrH() * 0, ScrW() * 0.26, ScrH() * 0.033)
+        draw.DrawText("Vendor", "liaMediumFont", ScrW() * 0.005, ScrH() * 0.003, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        surface.SetDrawColor(0, 0, 14, 150)
+        surface.DrawRect(ScrW() * 0.0115, ScrH() * 0.0575, ScrW() * 0.085, ScrH() * 0.125)
+        surface.SetDrawColor(Color(0, 0, 0, 255))
+        surface.DrawOutlinedRect(ScrW() * 0.0115, ScrH() * 0.0575, ScrW() * 0.085, ScrH() * 0.125)
+        draw.DrawText(name, "liaSmallFont", ScrW() * 0.1, ScrH() * 0.06, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText("Description:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(desc, "liaSmallFont", ScrW() * 0.2, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText("Money:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(money, "liaSmallFont", ScrW() * 0.2, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText("Sell Scale:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.132, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(math.ceil(scale * 100) .. "%", "liaSmallFont", ScrW() * 0.2, ScrH() * 0.132, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText("Item Count:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(itemCount, "liaSmallFont", ScrW() * 0.2, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+    end
+
+    self.right = vgui.Create("DFrame", self)
+    self.right:SetPos(ScrW() * 0.77, ScrH() * 0.35)
+    self.right:SetSize(ScrW() * 0.212, ScrH() * 0.61)
+    self.right:SetTitle("")
+    self.right:ShowCloseButton(false)
+    self.right:SetDraggable(false)
+    self.right.Paint = function()
+        surface.SetDrawColor(Color(30, 30, 30, 190))
+        surface.DrawRect(0, 0, w, 215)
+        surface.DrawOutlinedRect(0, 0, w, 215)
+        surface.SetDrawColor(0, 0, 14, 150)
+        surface.DrawRect(ScrW() * 0, ScrH() * 0, ScrW() * 0.26, ScrH() * 0.033)
+        surface.DrawOutlinedRect(ScrW() * 0, ScrH() * 0, ScrW() * 0.26, ScrH() * 0.033)
+        surface.SetDrawColor(0, 0, 14, 150)
+        surface.DrawRect(ScrW() * 0.0115, ScrH() * 0.0575, ScrW() * 0.085, ScrH() * 0.125)
+        surface.SetDrawColor(Color(0, 0, 0, 255))
+        draw.DrawText("Character", "liaMediumFont", ScrW() * 0.005, ScrH() * 0.003, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(LocalPlayer():getChar():getName(), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.06, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText("Faction:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(team.GetName(LocalPlayer():Team()), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText("Class:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(LocalPlayer():getChar():getClass() or "None", "liaSmallFont", ScrW() * 0.2, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText("Money:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.132, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(lia.currency.get(LocalPlayer():getChar():getMoney()), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.132, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText("Item Count:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(LocalPlayer():getChar():getInv():getItemCount() .. " " .. (LocalPlayer():getChar():getInv():getItemCount() > 1 and "Items" or "Item"), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+    end
+
+    self.leaveButton = vgui.Create("DButton", self.right)
+    self.leaveButton:SetSize(ScrW() * 0.15, ScrH() * 0.05)
+    self.leaveButton:SetPos(self.right:GetWide() - (ScrW() * 0.17), self.right:GetTall() - (ScrH() * 0.07))
+    self.leaveButton:SetText("Leave")
+    self.leaveButton:SetFont("liaMediumFont")
+    self.leaveButton:SetTextColor(Color(255, 255, 255, 210))
+    self.leaveButton.DoClick = function(client) lia.gui.vendor:Remove() end
+    self.leaveButton.Paint = function()
+        if self.leaveButton:IsDown() then
+            surface.SetDrawColor(Color(40, 40, 40, 240))
+            surface.DrawRect(0, 0, w, h)
+            surface.SetDrawColor(Color(0, 0, 0, 235))
+            surface.DrawOutlinedRect(0, 0, w, h)
+        elseif self.leaveButton:IsHovered() then
+            surface.SetDrawColor(Color(30, 30, 30, 150))
+            surface.DrawRect(0, 0, w, h)
+            surface.SetDrawColor(Color(0, 0, 0, 235))
+            surface.DrawOutlinedRect(0, 0, w, h)
+        else
+            surface.SetDrawColor(Color(30, 30, 30, 160))
+            surface.DrawRect(0, 0, w, h)
+            surface.SetDrawColor(Color(0, 0, 0, 235))
+            surface.DrawOutlinedRect(0, 0, w, h)
+        end
+    end
+
+    self.Think = function()
+        if (self.nextUpdate or 0) < CurTime() then
+            self:InvalidateLayout()
+            self.nextUpdate = CurTime() + 0.4
+        end
+    end
+
+    self:DrawPortraits()
 end
 
 function PANEL:DrawPortraits()
-    self.mdl = self:Add("DModelPanel")
-    self.mdl:SetSize(230, 240)
-    self.mdl:SetPos((self:GetWide() / 2) / 2 - self.mdl:GetWide() / 2 - 250, 23)
-    self.mdl:SetModel(liaVendorEnt:GetModel())
-    self.mdl:SetFOV(20)
-    self.mdl:SetAlpha(0)
-    self.mdl:AlphaTo(255, 0.2)
-    local head = self.mdl.Entity:LookupBone("ValveBiped.Bip01_Head1")
-    if head and head >= 0 then self.mdl:SetLookAt(self.mdl.Entity:GetBonePosition(head)) end
-    self.mdl.LayoutEntity = function()
-        self.mdl.Entity:SetAngles(Angle(0, 45, 0))
-        self.mdl.Entity:ResetSequence(2)
-        for k, v in ipairs(self.mdl.Entity:GetSequenceList()) do
-            if v:lower():find("idle") and v ~= "idlenoise" then return self.mdl.Entity:ResetSequence(k) end
+    self.vendorModel = self:Add("DModelPanel")
+    self.vendorModel:SetSize(160, 170)
+    self.vendorModel:SetPos((self:GetWide() / 2) / 2 - self.vendorModel:GetWide() / 2 - 350, ScrH() * 0.35 + 25)
+    self.vendorModel:SetModel(liaVendorEnt:GetModel())
+    self.vendorModel:SetFOV(20)
+    self.vendorModel:SetAlpha(0)
+    self.vendorModel:AlphaTo(255, 0.2)
+    local vendorhead = self.vendorModel.Entity:LookupBone("ValveBiped.Bip01_Head1")
+    if vendorhead and vendorhead >= 0 then self.vendorModel:SetLookAt(self.vendorModel.Entity:GetBonePosition(vendorhead)) end
+    self.vendorModel.LayoutEntity = function()
+        self.vendorModel.Entity:SetAngles(Angle(0, 45, 0))
+        self.vendorModel.Entity:ResetSequence(2)
+        for k, v in ipairs(self.vendorModel.Entity:GetSequenceList()) do
+            if v:lower():find("idle") and v ~= "idlenoise" then return self.vendorModel.Entity:ResetSequence(k) end
         end
 
-        self.mdl.Entity:ResetSequence(4)
+        self.vendorModel.Entity:ResetSequence(4)
     end
 
-    self.vendormdl = self:Add("DModelPanel")
-    self.vendormdl:SetSize(230, 240)
-    self.vendormdl:SetPos((self:GetWide() / 2) / 2 - self.vendormdl:GetWide() / 2 + 1175, 23)
-    self.vendormdl:SetModel(LocalPlayer():GetModel())
-    self.vendormdl:SetFOV(20)
-    self.vendormdl:SetAlpha(0)
-    self.vendormdl:AlphaTo(255, 0.2)
-    local head = self.vendormdl.Entity:LookupBone("ValveBiped.Bip01_Head1")
-    if head and head >= 0 then self.vendormdl:SetLookAt(self.vendormdl.Entity:GetBonePosition(head)) end
-    self.vendormdl.LayoutEntity = function()
-        self.vendormdl.Entity:SetAngles(Angle(0, 45, 0))
-        self.vendormdl.Entity:ResetSequence(2)
+    self.playerModel = self:Add("DModelPanel")
+    self.playerModel:SetSize(160, 170)
+    self.playerModel:SetPos((self:GetWide() / 2) / 2 - self.playerModel:GetWide() / 2 + 1100, ScrH() * 0.35 + 25)
+    self.playerModel:SetModel(LocalPlayer():GetModel())
+    self.playerModel:SetFOV(20)
+    self.playerModel:SetAlpha(0)
+    self.playerModel:AlphaTo(255, 0.2)
+    local playerhead = self.playerModel.Entity:LookupBone("ValveBiped.Bip01_Head1")
+    if playerhead and playerhead >= 0 then self.playerModel:SetLookAt(self.playerModel.Entity:GetBonePosition(playerhead)) end
+    self.playerModel.LayoutEntity = function()
+        self.playerModel.Entity:SetAngles(Angle(0, 45, 0))
+        self.playerModel.Entity:ResetSequence(2)
     end
-end
-
-function PANEL:InitializeInfoBoxes()
-    self.playerInfoBox = self:Add("DPanel")
-    self.playerInfoBox:SetSize(self.mdl:GetWide(), 100)
-    self.playerInfoBox:SetPos(self.mdl.x, self.mdl.y + self.mdl:GetTall() + 30)
-    self.playerInfoBox.Paint = function() end
-    self.playerNameEntry = vgui.Create("DTextEntry", self.playerInfoBox)
-    self.playerNameEntry:SetText(liaVendorEnt:getNetVar("name", "Vendor"))
-    self.playerNameEntry:SetWide(200)
-    self.playerNameEntry:SetEnterAllowed(false)
-    self:CenterTextEntryHorizontally(self.playerNameEntry, self.playerInfoBox)
-    if liaVendorEnt:getMoney() ~= nil then
-        self.playerMoneyEntry = vgui.Create("DTextEntry", self.playerInfoBox)
-        self.playerMoneyEntry:SetText(tostring(lia.currency.get(liaVendorEnt:getMoney())))
-        self.playerMoneyEntry:SetWide(200)
-        self.playerMoneyEntry:SetEnterAllowed(false)
-        self:CenterTextEntryHorizontally(self.playerMoneyEntry, self.playerInfoBox)
-        local nameEntryHeight = self.playerNameEntry:GetTall()
-        self.playerMoneyEntry:SetPos((self.playerInfoBox:GetWide() - self.playerMoneyEntry:GetWide()) / 2, nameEntryHeight + 10)
-    end
-
-    self.vendorInfoBox = self:Add("DPanel")
-    self.vendorInfoBox:SetSize(self.vendormdl:GetWide(), 100)
-    self.vendorInfoBox:SetPos(self.vendormdl.x - 10, self.vendormdl.y + self.vendormdl:GetTall() + 30)
-    self.vendorInfoBox.Paint = function() end
-    self.vendorNameEntry = vgui.Create("DTextEntry", self.vendorInfoBox)
-    self.vendorNameEntry:SetText(LocalPlayer():Nick())
-    self.vendorNameEntry:SetWide(200)
-    self.vendorNameEntry:SetEnterAllowed(false)
-    self:CenterTextEntryHorizontally(self.vendorNameEntry, self.vendorInfoBox)
-    self.vendorMoneyEntry = vgui.Create("DTextEntry", self.vendorInfoBox)
-    self.vendorMoneyEntry:SetText(tostring(lia.currency.get(LocalPlayer():getChar():getMoney())))
-    self.vendorMoneyEntry:SetWide(200)
-    self.vendorMoneyEntry:SetEnterAllowed(false)
-    self:CenterTextEntryHorizontally(self.vendorMoneyEntry, self.vendorInfoBox)
-    local vendorNameEntryHeight = self.vendorNameEntry:GetTall()
-    self.vendorMoneyEntry:SetPos((self.vendorInfoBox:GetWide() - self.vendorMoneyEntry:GetWide()) / 2, vendorNameEntryHeight + 10)
 end
 
 function PANEL:CenterTextEntryHorizontally(textEntry, parent)
@@ -195,10 +256,8 @@ function PANEL:updateItem(itemType, parent, quantity)
 end
 
 function PANEL:onVendorPropEdited(vendor, key)
-    if key == "name" then
-        self.playerNameEntry:SetText(vendor:getName())
-    elseif key == "model" then
-        self.mdl:SetModel(vendor:GetModel())
+    if key == "model" then
+        self.vendorModel:SetModel(vendor:GetModel())
     elseif key == "scale" then
         for _, panel in pairs(self.items[self.vendor]) do
             if not IsValid(panel) then continue end
@@ -210,12 +269,6 @@ function PANEL:onVendorPropEdited(vendor, key)
             panel:updatePrice()
         end
     end
-end
-
-function PANEL:onVendorMoneyUpdated(_, money)
-    if money == nil then self.playerMoneyEntry:SetText(lia.currency.get(MODULE.DefaultVendorMoney)) end
-    money = money or "∞"
-    self.playerMoneyEntry:SetText(lia.currency.get(money))
 end
 
 function PANEL:onVendorPriceUpdated(_, itemType, _)
@@ -234,14 +287,7 @@ function PANEL:onItemStockUpdated(_, itemType)
     self:updateItem(itemType, self.vendor)
 end
 
-function PANEL:onCharVarChanged(character, key, _, newValue)
-    if character ~= LocalPlayer():getChar() then return end
-    if key == "money" then self.vendorMoneyEntry:SetText(tostring(lia.currency.get(newValue))) end
-end
-
 function PANEL:listenForChanges()
-    hook.Add("VendorMoneyUpdated", self, self.onVendorMoneyUpdated)
-    hook.Add("OnCharVarChanged", self, self.onCharVarChanged)
     hook.Add("VendorItemPriceUpdated", self, self.onVendorPriceUpdated)
     hook.Add("VendorItemStockUpdated", self, self.onItemStockUpdated)
     hook.Add("VendorItemMaxStockUpdated", self, self.onItemStockUpdated)

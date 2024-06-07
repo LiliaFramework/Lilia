@@ -1,5 +1,4 @@
-﻿
-ITEM.name = "Outfit"
+﻿ITEM.name = "Outfit"
 ITEM.desc = "A Outfit Base."
 ITEM.category = "Outfit"
 ITEM.model = "models/props_c17/BriefCase001a.mdl"
