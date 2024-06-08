@@ -64,9 +64,10 @@ custom_display_name_handler = function(item, default_handler)
    return default_handler(item)
 end
 
-new_type("aconfigurations", "Configurations", true)
-new_type("ahooks", "Hooks", true)
 new_type("alibrary", "Libraries", true)
+new_type("ahooks", "Hooks", true)
+new_type("aclassmod", "Meta", true)
+new_type("aconfigurations", "Configurations", true)
 new_type("structures", "Structures", true)
 new_type("store", "Store", true)
 tparam_alias("inventory", "Inventory")
