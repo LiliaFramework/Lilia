@@ -5,31 +5,24 @@ function PANEL:Init()
     self:SetTall(64)
     self:SetPaintBackground(false)
     self.suffix = ""
-    self.icon = self:Add("liaItemIcon")
-    self.icon:SetSize(64, 64)
-    self.icon.PaintBehind = function() end
-    self.icon.OnCursorEntered = function(_) self:OnCursorEntered() end
     self.name = self:Add("DLabel")
-    self.name:SetPos(self.icon:GetWide() + 8, 8)
     self.name:SetTextColor(color_white)
     self.name:SetExpensiveShadow(1, color_black)
     self.name:SetFont("VendorSmallFont")
-    self.name:SizeToContents()
-    self.price = self:Add("DLabel")
-    self.price:SetPos(self.icon:GetWide() + 8, 8 + self.name:GetTall())
-    self.price:SetTextColor(Color(255, 255, 255, 75))
-    self.price:SetExpensiveShadow(1, color_black)
-    self.price:SetFont("VendorLightFont")
-    self.price:SetText(lia.currency.get(0))
-    self.price:SizeToContents()
+    self.name:SetContentAlignment(5)
+    self.name:Dock(FILL)
+    self.name:DockMargin(10, 10, 10, 0)
     self:SetCursor("hand")
     self.isSelling = false
 end
 
+function PANEL:Paint(w, h)
+    surface.SetDrawColor(255, 255, 255, 50)
+    surface.DrawLine(0, h - 1, w, h - 1)
+end
+
 function PANEL:updatePrice()
-    local price = liaVendorEnt:getPrice(self.item.uniqueID, self.isSelling)
-    self.price:SetText(lia.currency.get(price))
-    self.price:SizeToContents()
+    self:updateLabel()
 end
 
 function PANEL:setIsSelling(isSelling)
@@ -92,24 +85,35 @@ function PANEL:setQuantity(quantity)
             self:Remove()
             return
         end
-
-        self.suffix = " (" .. tostring(quantity) .. ")"
+        self.suffix = " (" .. tostring(quantity) .. ") "
     else
         self.suffix = ""
     end
 
-    self.name:SetText(self.item:getName() .. self.suffix)
-    self.name:SizeToContents()
+    self:updateLabel()
 end
 
 function PANEL:setItemType(itemType)
     local item = lia.item.list[itemType]
     assert(item, tostring(itemType) .. " is not a valid item")
     self.item = item
-    self.icon:setItemType(itemType)
-    self.name:SetText(item:getName() .. self.suffix)
+    self:updateLabel()
+end
+
+function PANEL:updateLabel()
+    if not self.item then return end
+    local price = liaVendorEnt:getPrice(self.item.uniqueID, self.isSelling)
+    local priceText
+    if price == 0 then
+        priceText = "Free"
+    else
+        priceText = string.format("%s %s", price, price > 1 and lia.currency.plural or lia.currency.singular)
+    end
+
+    local separator = "▸"
+    self.name:SetText(string.format("%s %s %s", self.suffix .. self.item:getName(), separator, priceText))
     self.name:SizeToContents()
-    self:updatePrice()
+    self:InvalidateLayout()
 end
 
 vgui.Register("VendorItem", PANEL, "DPanel")
