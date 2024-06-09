@@ -24,7 +24,6 @@ use_markdown_titles = true
 topics = {"docs/manual", "docs/store", "docs/structures",}
 kind_names = {
    module = "Libraries",
-   topic = "Information"
 }
 
 custom_tags = {
