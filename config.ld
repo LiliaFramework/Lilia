@@ -64,6 +64,7 @@ custom_display_name_handler = function(item, default_handler)
    return default_handler(item)
 end
 
+new_type("information", "Information", true)
 new_type("alibrary", "Libraries", true)
 new_type("ahooks", "Hooks", true)
 new_type("aclassmod", "Meta", true)
