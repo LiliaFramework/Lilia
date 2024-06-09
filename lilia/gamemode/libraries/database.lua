@@ -1,5 +1,5 @@
 ﻿--- Helper library for managing database.
--- @alibrary lia.db
+-- @library lia.db
 lia.db = lia.db or {}
 lia.db.queryQueue = lia.db.queue or {}
 lia.db.prepared = lia.db.prepared or {}

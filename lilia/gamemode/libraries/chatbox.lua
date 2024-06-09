@@ -7,7 +7,7 @@ will have some type of class: `ic` for regular in-character speech, `me` for act
 chat classes can affect how the message is displayed in each player's chatbox. See `lia.chat.register`.
 to create your own chat classes.
 ]]
--- @alibrary lia.chat
+-- @library lia.chat
 lia.chat = lia.chat or {}
 --- List of all chat classes that have been registered by the framework, where each key is the name of the chat class, and value
 -- is the chat class data. Accessing a chat class's data is useful for when you want to copy some functionality or properties

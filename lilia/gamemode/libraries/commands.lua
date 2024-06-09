@@ -6,7 +6,7 @@ restricted to certain usergroups using a [CAMI](https://github.com/glua/CAMI)-co
 
 If you are looking for the command structure, you can find it [here](https://liliaframework.github.io/manual/structure_command).
 ]]
--- @alibrary lia.command
+-- @library lia.command
 lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
 --- When registering commands with `lia.command.add`, you'll need to pass in a valid command structure. This is simply a table

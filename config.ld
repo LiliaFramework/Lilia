@@ -48,9 +48,9 @@ custom_tags = {
 
 custom_display_name_handler = function(item, default_handler)
    if item.type == "function" and item.module then
-      if item.module.type == "aclassmod" then
+      if item.module.type == "meta" then
          return item.module.mod_name .. ":" .. default_handler(item)
-      elseif item.module.type == "ahooks" then
+      elseif item.module.type == "hooks" then
          if item.module.mod_name == "Class" then
             return "CLASS:" .. default_handler(item)
          elseif item.module.mod_name == "Faction" then
@@ -66,10 +66,10 @@ end
 new_type("factions", "Factions", true)
 new_type("classes", "Classes", true)
 new_type("information", "Information", true)
-new_type("alibrary", "Libraries", true)
-new_type("ahooks", "Hooks", true)
-new_type("aclassmod", "Meta", true)
-new_type("aconfiguration", "Configurations", true)
+new_type("library", "Libraries", true)
+new_type("hooks", "Hooks", true)
+new_type("meta", "Meta", true)
+new_type("configuration", "Configurations", true)
 new_type("structures", "Structures", true)
 new_type("store", "Store", true)
 tparam_alias("inventory", "Inventory")

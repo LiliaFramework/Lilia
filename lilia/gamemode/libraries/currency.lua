@@ -1,5 +1,5 @@
 ﻿--- Helper library for managing currency.
--- @alibrary lia.currency
+-- @library lia.currency
 lia.currency = lia.currency or {}
 lia.currency.symbol = lia.currency.symbol or "$"
 lia.currency.singular = lia.currency.singular or "dollar"

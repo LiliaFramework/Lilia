@@ -1,5 +1,5 @@
 --- Configuration for Simfphys Compatibility Module.
--- @aconfiguration Simfphys
+-- @configuration Simfphys
 
 --- This table defines the default settings for the Simfphys Module.
 -- @realm shared

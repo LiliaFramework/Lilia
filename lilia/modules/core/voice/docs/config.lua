@@ -1,5 +1,5 @@
 --- Configuration for Voice Module.
--- @aconfiguration Voice
+-- @configuration Voice
 
 --- This table defines the default settings for the Voice Module.
 -- @realm shared

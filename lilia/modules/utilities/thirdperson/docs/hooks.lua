@@ -1,5 +1,5 @@
 --- Hook Documentation for Third Person Module.
--- @ahooks ThirdPerson
+-- @hooks ThirdPerson
 
 --- Called when the third person mode is toggled.
 --- @realm client

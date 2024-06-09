@@ -5,7 +5,7 @@ All of Lua's time functions are dependent on the Unix epoch, which means we can'
 library remedies this problem. Time/date is represented by a `date` object that is queried, instead of relying on the seconds
 since the epoch.
 ]]
--- @alibrary lia.date
+-- @library lia.date
 lia.date = lia.date or {}
 --- Generates a formatted date string based on the current system time.
 -- @realm shared

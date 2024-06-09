@@ -5,7 +5,7 @@ These hooks are regular hooks that can be used in your schema with `SCHEMA:HookN
 `MODULE:HookName(args)`, or in your addon with `hook.Add("HookName", function(args) end)`.
 They can be used for an assorted of reasons, depending on what you are trying to achieve.
 ]]
--- @ahooks Module
+-- @hooks Module
 
 --- Called when a player picks up money.
 -- This function is called when a player picks up money from the groun
