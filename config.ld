@@ -63,6 +63,8 @@ custom_display_name_handler = function(item, default_handler)
    return default_handler(item)
 end
 
+new_type("factions", "Factions", true)
+new_type("classes", "Classes", true)
 new_type("information", "Information", true)
 new_type("alibrary", "Libraries", true)
 new_type("ahooks", "Hooks", true)
