@@ -1,5 +1,5 @@
 --- Configuration for HUD Module.
--- @aconfigurations HUD
+-- @aconfiguration HUD
 
 --- This table defines the default settings for the HUD Module.
 -- @realm shared

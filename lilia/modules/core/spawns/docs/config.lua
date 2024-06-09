@@ -1,5 +1,5 @@
 --- Configuration for Spawns Module.
--- @aconfigurations Spawns
+-- @aconfiguration Spawns
 
 --- This table defines the default settings for the Spawns Module.
 -- @realm shared

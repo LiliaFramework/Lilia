@@ -1,5 +1,5 @@
 --- Configuration for MainMenu Module.
--- @aconfigurations MainMenu
+-- @aconfiguration MainMenu
 
 --- This table defines the default settings for the MainMenu Module.
 -- @realm shared
