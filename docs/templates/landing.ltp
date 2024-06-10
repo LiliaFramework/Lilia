@@ -7,7 +7,7 @@
 	<h2>Developers</h2>
 	<p>The sidebar shows the entire contents of the documentation. Libraries, hooks, etc are all searchable with the search box at the top of the sidebar. Migrating from Nutscript? Check out the <a href="{* ldoc.url('manual/info_converting-from-nutscript') *}">porting guide</a> in the manual.</p>
 	<h2>Server owners</h2>
-	<p>If you're looking to get your Lilia server up and running as soon as possible, check out the <a href="{* ldoc.url('manual/info_installation') *}">Installation Tutorial</a> guide in the manual. If you are looking for the feature list, you can find it  <a href="{* ldoc.url('manual/info_features') *}">here</a> .</p>
+	<p>If you're looking to get your Lilia server up and running as soon as possible, check out the <a href="{* ldoc.url('information/installation') *}">Installation Tutorial</a> guide in the manual. If you are looking for the feature list, you can find it  <a href="{* ldoc.url('manual/info_features') *}">here</a> .</p>
 	<h2>Community</h2>
 	<p>Questions? Want to show off your work? Maybe drop a new module release? Come join our community <a href="https://discord.gg/wFeBbzNdCf" target="_blank">Discord server</a>.</p>
 	<h2>Contributing</h2>
