@@ -49,10 +49,11 @@ function GM:PlayerLoadedChar(client, character, lastChar)
         lastChar:setVar("charEnts", nil)
     end
 
-    if IsValid(client.liaRagdoll) then
-        client.liaRagdoll.liaNoReset = true
-        client.liaRagdoll.liaIgnoreDelete = true
-        client.liaRagdoll:Remove()
+    if client:hasRagdoll() then
+        local ragdoll = client:getRagdoll()
+        ragdoll.liaNoReset = true
+        ragdoll.liaIgnoreDelete = true
+        ragdoll:Remove()
     end
 
     character:setData("loginTime", os.time())
@@ -320,10 +321,11 @@ function GM:PlayerDisconnected(client)
         lia.log.add(client, "playerDisconnected")
     end
 
-    if IsValid(client.liaRagdoll) then
-        client.liaRagdoll.liaNoReset = true
-        client.liaRagdoll.liaIgnoreDelete = true
-        client.liaRagdoll:Remove()
+    if client:hasRagdoll() then
+        local ragdoll = client:getRagdoll()
+        ragdoll.liaNoReset = true
+        ragdoll.liaIgnoreDelete = true
+        ragdoll:Remove()
     end
 
     lia.char.cleanUpForPlayer(client)
@@ -358,9 +360,10 @@ end
 function GM:PlayerDeath(client, _, _)
     local character = client:getChar()
     if not character then return end
-    if IsValid(client.liaRagdoll) then
-        client.liaRagdoll.liaIgnoreDelete = true
-        client.liaRagdoll:Remove()
+    if client:hasRagdoll() then
+        local ragdoll = client:getRagdoll()
+        ragdoll.liaIgnoreDelete = true
+        ragdoll:Remove()
         client:setLocalVar("blur", nil)
     end
 end

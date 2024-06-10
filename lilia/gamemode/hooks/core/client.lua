@@ -9,7 +9,7 @@ end
 
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
-    if bind:find("jump") and client.liaRagdoll then
+    if bind:find("jump") and client:hasRagdoll() then
         lia.command.send("chargetup")
     elseif (bind:find("use") or bind:find("attack")) and pressed then
         local menu, callback = lia.menu.getActiveMenu()

@@ -18,8 +18,13 @@ if CLIENT then
 end
 
 ITEM:hook("drop", function(item)
+    local client = item.player
+    if client:hasRagdoll() then
+        client:notify("You cannot do this while ragdolled.")
+        return false
+    end
+
     if item:getData("equip") then
-        local client = item.player
         item:setData("equip", nil)
         client.carryWeapons = client.carryWeapons or {}
         local weapon = client.carryWeapons[item.weaponCategory]
@@ -38,6 +43,11 @@ ITEM.functions.EquipUn = {
     icon = "icon16/cross.png",
     onRun = function(item)
         local client = item.player
+        if client:hasRagdoll() then
+            client:notify("You cannot do this while ragdolled.")
+            return false
+        end
+
         client.carryWeapons = client.carryWeapons or {}
         local weapon = client.carryWeapons[item.weaponCategory]
         if not weapon or not IsValid(weapon) then weapon = client:GetWeapon(item.class) end
@@ -46,6 +56,11 @@ ITEM.functions.EquipUn = {
             client:StripWeapon(item.class)
         else
             print(Format("[Lilia] Weapon %s does not exist!", item.class))
+        end
+
+        if client:hasRagdoll() then
+            client:notify("You cannot do this while ragdolled.")
+            return false
         end
 
         client:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
@@ -64,6 +79,11 @@ ITEM.functions.Equip = {
     icon = "icon16/tick.png",
     onRun = function(item)
         local client = item.player
+        if client:hasRagdoll() then
+            client:notify("You cannot do this while ragdolled.")
+            return false
+        end
+
         local items = client:getChar():getInv():getItems()
         client.carryWeapons = client.carryWeapons or {}
         for _, v in pairs(items) do

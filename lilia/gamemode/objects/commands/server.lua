@@ -782,8 +782,9 @@ lia.command.add("chardesc", {
 lia.command.add("chargetup", {
     adminOnly = false,
     onRun = function(client)
-        local entity = client.liaRagdoll
-        if IsValid(entity) and entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
+        if not client:hasRagdoll() then client:notify("You don't have a ragdoll to get up from!") end
+        local entity = client:getRagdoll()
+        if entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
             entity.liaWakingUp = true
             client:setAction("@gettingUp", 5, function()
                 if not IsValid(entity) then return end
@@ -874,7 +875,7 @@ lia.command.add("fallover", {
         end
 
         client:SetNW2Bool("FallOverCooldown", true)
-        if not IsValid(client.liaRagdoll) then
+        if not client:hasRagdoll() then
             client:setRagdolled(true, time)
             timer.Simple(10, function() client:SetNW2Bool("FallOverCooldown", false) end)
         end

@@ -124,6 +124,21 @@ function playerMeta:isNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP
 end
 
+--- Checks if the player has a valid ragdoll entity.
+-- @realm shared
+-- @treturn bool Whether the player has a valid ragdoll entity.
+function playerMeta:hasRagdoll()
+    return IsValid(self.liaRagdoll)
+end
+
+--- Returns the player's ragdoll entity if valid.
+-- @realm shared
+-- @treturn Entity|nil The player's ragdoll entity if it exists and is valid, otherwise nil.
+function playerMeta:getRagdoll()
+    if not self:hasRagdoll() then return end
+    return self.liaRagdoll
+end
+
 --- Checks if the player belongs to the specified faction.
 -- @realm shared
 -- @string faction The faction to check against.
@@ -532,6 +547,13 @@ if SERVER then
         end
     end
 
+    --- Sets the player's ragdoll entity.
+    -- @realm shared
+    -- @tparam Entity entity The entity to set as the player's ragdoll.
+    function playerMeta:setRagdoll(entity)
+        self.liaRagdoll = entity
+    end
+
     --- Sets an action bar for the player.
     -- @string text The text to display on the action bar.
     -- @int[opt] time The duration for the action bar to display, defaults to 5 seconds. Set to 0 or nil to remove the action bar immediately.
@@ -897,8 +919,10 @@ if SERVER then
     -- @int[opt] getUpGrace The grace period for the player to get up before the ragdoll is removed.
     function playerMeta:setRagdolled(state, time, getUpGrace)
         getUpGrace = getUpGrace or time or 5
+        local hasRagdoll = self:hasRagdoll()
+        local ragdoll = self:getRagdoll()
         if state then
-            if IsValid(self.liaRagdoll) then self.liaRagdoll:Remove() end
+            if hasRagdoll then ragdoll:Remove() end
             local entity = self:createRagdoll()
             entity:setNetVar("player", self)
             entity:CallOnRemove("fixer", function()
@@ -942,7 +966,7 @@ if SERVER then
             end)
 
             self:setLocalVar("blur", 25)
-            self.liaRagdoll = entity
+            self:setRagdoll(entity)
             entity.liaWeapons = {}
             entity.liaAmmo = {}
             entity.liaPlayer = self
@@ -995,7 +1019,7 @@ if SERVER then
 
             self:setLocalVar("ragdoll", entity:EntIndex())
             hook.Run("OnCharFallover", self, entity, true)
-        elseif IsValid(self.liaRagdoll) then
+        elseif hasRagdoll then
             self.liaRagdoll:Remove()
             hook.Run("OnCharFallover", self, nil, false)
         end
