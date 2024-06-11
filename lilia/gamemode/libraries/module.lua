@@ -211,15 +211,3 @@ end
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
---- A list of available MODULE fields.
--- @realm shared
--- @table CommandList
--- @field `MODULE.name` Specifies the name of the module, which is "Core - Permissions" in this case. This variable identifies the module.
--- @field `MODULE.author` Indicates the author of the module. It can be a STEAMID64 or Name. Replace "76561198312513285" with the actual author information.
--- @field `MODULE.discord` Indicates the discord of the module creator, in this case, as shown, is liliaplayer.
--- @field `MODULE.desc` Provides a brief description of the module's purpose. In this case, it states that the module adds skills functionality to the framework.
--- @field `MODULE.CAMIPrivileges` An example CAMI permission that is loaded alongside the module.
--- @field `MODULE.WorkshopContent` Workshop Content to be added.
--- @field `MODULE.enabled` Indicates if the module is active or not. If False, then it won't be.
--- @field `MODULE.Dependencies` Files and corresponding realms to be included.
--- @field `MODULE.identifier` This global variable uniquely identifies the module and allows it to be accessed from outside its scope.
