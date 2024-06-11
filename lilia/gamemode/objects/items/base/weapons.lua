@@ -17,13 +17,13 @@ if CLIENT then
     end
 end
 
-ITEM:postHooks("drop", function(item)
-    local client = item.player
-    if client:HasWeapon(item.class) then
+function ITEM.postHooks:drop()
+    local client = self.player
+    if client:HasWeapon(self.class) then
         client:notify("You have an invalid weapon!")
-        client:StripWeapon(item.class)
+        client:StripWeapon(self.class)
     end
-end)
+end
 
 ITEM:hook("drop", function(item)
     local client = item.player
