@@ -89,7 +89,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     else
         if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then
             _G[MODULE.identifier] = MODULE
-            print("Registering Global " .. MODULE.identifier .. " representing " .. MODULE.name .. " Module!")
         end
 
         lia.module.list[uniqueID] = MODULE
@@ -203,7 +202,6 @@ function lia.module.loadPermissions(Privileges)
 
         if not CAMI.GetPrivilege(privilegeData.Name) then
             CAMI.RegisterPrivilege(privilegeInfo)
-            print("[" .. MODULE.name .. "] Registering Privilege " .. privilegeData.Name)
         end
     end
 end
