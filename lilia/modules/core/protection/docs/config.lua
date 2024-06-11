@@ -19,3 +19,4 @@
 -- @field HackGlobals Lists global variables accessible in the hack menu | **table**
 -- @field BadCVars Lists undesirable console variables | **table**
 -- @field ExploitableNetMessages Lists exploitable Net Messages | **table**
+-- @field ActExploitTimer Specifies the duration (in seconds) a player remains unable to deal damage after using an "act" command | **integer**
