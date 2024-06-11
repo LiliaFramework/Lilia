@@ -24,6 +24,11 @@ ITEM:hook("drop", function(item)
         return false
     end
 
+    if client:GetNW2Bool("WeaponActionWasRun", false) then
+        client:notify("A action on a weapon was run not long ago. Please wait.")
+        return false
+    end
+
     if item:getData("equip") then
         item:setData("equip", nil)
         client.carryWeapons = client.carryWeapons or {}
@@ -48,19 +53,21 @@ ITEM.functions.EquipUn = {
             return false
         end
 
+        if client:GetNW2Bool("WeaponActionWasRun", false) then
+            client:notify("A action on a weapon was run not long ago. Please wait.")
+            return false
+        end
+
         client.carryWeapons = client.carryWeapons or {}
         local weapon = client.carryWeapons[item.weaponCategory]
         if not weapon or not IsValid(weapon) then weapon = client:GetWeapon(item.class) end
         if weapon and weapon:IsValid() then
+            client:SetNW2Bool("WeaponActionWasRun", true)
+            timer.Simple(2, function() client:SetNW2Bool("WeaponActionWasRun", false) end)
             item:setData("ammo", weapon:Clip1())
             client:StripWeapon(item.class)
         else
             print(Format("[Lilia] Weapon %s does not exist!", item.class))
-        end
-
-        if client:hasRagdoll() then
-            client:notify("You cannot do this while ragdolled.")
-            return false
         end
 
         client:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
@@ -84,6 +91,11 @@ ITEM.functions.Equip = {
             return false
         end
 
+        if client:GetNW2Bool("WeaponActionWasRun", true) then
+            client:notify("A action on a weapon was run not long ago. Please wait.")
+            return false
+        end
+
         local items = client:getChar():getInv():getItems()
         client.carryWeapons = client.carryWeapons or {}
         for _, v in pairs(items) do
@@ -93,6 +105,8 @@ ITEM.functions.Equip = {
             end
         end
 
+        client:SetNW2Bool("WeaponActionWasRun", true)
+        timer.Simple(2, function() client:SetNW2Bool("WeaponActionWasRun", false) end)
         if client:HasWeapon(item.class) then client:StripWeapon(item.class) end
         local weapon = client:Give(item.class, false)
         if IsValid(weapon) then
