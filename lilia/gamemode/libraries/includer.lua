@@ -46,7 +46,7 @@ lia.FilesToLoad = {
         realm = "server"
     },
     {
-        path = "lilia/gamemode/libraries/module.lua",
+        path = "lilia/gamemode/libraries/modularity.lua",
         realm = "shared"
     },
     {
