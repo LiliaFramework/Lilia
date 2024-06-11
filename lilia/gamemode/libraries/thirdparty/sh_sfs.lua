@@ -359,9 +359,9 @@ do
         encoders.number(buf, Entity_EntIndex(ent))
     end
 
-    function encoders.Player(buf, ply)
+    function encoders.Player(buf, client)
         write(buf, chars[PLAYER])
-        encoders.number(buf, Player_UserID(ply))
+        encoders.number(buf, Player_UserID(client))
     end
 
     function encoders.Color(buf, col)

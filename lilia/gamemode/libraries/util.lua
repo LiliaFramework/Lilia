@@ -219,8 +219,8 @@ end
 function lia.util.playerInRadius(pos, dist)
     dist = dist * dist
     local t = {}
-    for _, ply in ipairs(player.GetAll()) do
-        if IsValid(ply) and ply:GetPos():DistToSqr(pos) < dist then t[#t + 1] = ply end
+    for _, client in ipairs(player.GetAll()) do
+        if IsValid(client) and client:GetPos():DistToSqr(pos) < dist then t[#t + 1] = client end
     end
     return t
 end

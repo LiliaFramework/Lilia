@@ -102,11 +102,11 @@ hook.Add('PlayerButtonUp', 'Beans::Released', function(pl, btn)
 end)
 
 hook.Add('Think', 'Beans::Hold', function()
-    for ply, held in pairs(Beans.Held) do
+    for client, held in pairs(Beans.Held) do
         for meta, state in pairs(held) do
             if state ~= true and ((state + meta.HoldTime) <= CurTime()) then
                 held[meta] = true
-                meta.Callback(ply)
+                meta.Callback(client)
             end
         end
     end
