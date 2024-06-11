@@ -60,6 +60,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         return
     end
 
+    if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then _G[MODULE.identifier] = {} end
     lia.module.loadPermissions(MODULE.CAMIPrivileges)
     lia.module.loadWorkshop(MODULE.WorkshopContent)
     if not isSingleFile then
@@ -81,12 +82,23 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         if isfunction(v) then hook.Add(k, MODULE, v) end
     end
 
-    if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then _G[MODULE.identifier] = MODULE end
-    lia.module.list[uniqueID] = MODULE
-    _G[variable] = oldModule
-    if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
-    print("[" .. MODULE.name .. "] Finished Loading!")
+    if uniqueID == "schema" then
+        function MODULE:IsValid()
+            return true
+        end
+    else
+        if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then
+            _G[MODULE.identifier] = MODULE
+            print("Registering Global " .. MODULE.identifier .. " representing " .. MODULE.name .. " Module!")
+        end
 
+        lia.module.list[uniqueID] = MODULE
+        print("[" .. MODULE.name .. "] Finished Loading!")
+        lia.module.loadFromDir(path .. "/submodules", "module")
+        _G[variable] = oldModule
+    end
+
+    if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
 end
 
 --- Loads the additional files associated with the module.
@@ -116,7 +128,6 @@ function lia.module.loadExtras(path)
 
     lia.includeEntities(path .. "/entities")
     lia.item.loadFromDir(path .. "/items")
-    lia.module.loadFromDir(path .. "/submodules", "module")
     hook.Run("DoModuleIncludes", path, MODULE)
 end
 
@@ -162,8 +173,8 @@ end
 -- @realm server
 -- @internal
 function lia.module.loadWorkshop(Workshop)
-    if not (Workshop or SERVER) then return end
-
+    if not Workshop then return end
+    if not SERVER then return end
     if istable(Workshop) then
         for _, workshopID in ipairs(Workshop) do
             if isstring(workshopID) and workshopID:match("^%d+$") then
@@ -176,14 +187,13 @@ function lia.module.loadWorkshop(Workshop)
         resource.AddWorkshop(Workshop)
     end
 end
-
 --- Loads permissions.
 -- @param Privileges The privileges to load. This is the MODULE.CAMIPrivileges.
 -- @realm shared
 -- @internal
 function lia.module.loadPermissions(Privileges)
-    if not (Privileges or istable(Privileges)) then return end
-
+    if not Privileges then return end
+    if not istable(Privileges) then return end
     for _, privilegeData in ipairs(Privileges) do
         local privilegeInfo = {
             Name = privilegeData.Name,
