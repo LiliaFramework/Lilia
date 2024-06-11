@@ -1,7 +1,8 @@
-﻿netstream.Hook("adminClearChat", function()
-    if ChatboxCore and IsValid(ChatboxCore.panel) then
-        ChatboxCore.panel:Remove()
-        ChatboxCore:createChat()
+﻿local MODULE = MODULE
+netstream.Hook("adminClearChat", function()
+    if MODULE and IsValid(MODULE.panel) then
+        MODULE.panel:Remove()
+        MODULE:createChat()
     else
         LocalPlayer():ConCommand("fixchatplz")
     end
@@ -14,8 +15,8 @@ netstream.Hook("cMsg", function(client, chatType, text, anonymous)
         if class then
             CHAT_CLASS = class
             class.onChatAdd(client, text, anonymous)
-            if ChatboxCore.CustomChatSound and ChatboxCore.CustomChatSound ~= "" then
-                surface.PlaySound(ChatboxCore.CustomChatSound)
+            if MODULE.CustomChatSound and MODULE.CustomChatSound ~= "" then
+                surface.PlaySound(MODULE.CustomChatSound)
             else
                 chat.PlaySound()
             end

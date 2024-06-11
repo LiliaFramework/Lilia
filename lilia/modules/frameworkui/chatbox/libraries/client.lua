@@ -1,4 +1,5 @@
-﻿chat.liaAddText = chat.liaAddText or chat.AddText
+﻿local MODULE = MODULE
+chat.liaAddText = chat.liaAddText or chat.AddText
 LIA_CVAR_CHATFILTER = CreateClientConVar("lia_chatfilter", "", true, false)
 function MODULE:createChat()
     if IsValid(self.panel) then return end
@@ -23,7 +24,7 @@ end
 
 function chat.AddText(...)
     local show = true
-    if IsValid(ChatboxCore.panel) then show = ChatboxCore.panel:addText(...) end
+    if IsValid(MODULE.panel) then show = MODULE.panel:addText(...) end
     if show then chat.liaAddText(...) end
 end
 
@@ -64,8 +65,8 @@ function MODULE:ChatAddText(text, ...)
 end
 
 concommand.Add("fixchatplz", function()
-    if IsValid(ChatboxCore.panel) then
-        ChatboxCore.panel:Remove()
-        ChatboxCore:createChat()
+    if IsValid(MODULE.panel) then
+        MODULE.panel:Remove()
+        MODULE:createChat()
     end
 end)
