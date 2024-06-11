@@ -1,5 +1,5 @@
 ﻿MODULE.partData = {}
-MODULE.name = "Compatibility - PAC3"
+MODULE.name = "PAC3"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "Adds PAC Compatibility"

@@ -37,7 +37,7 @@ MODULE.Dependencies = {
 
 ## Module Configuration
 
--   **`MODULE.name`:** Specifies the name of the module, which is "Core - Permissions" in this case. This variable identifies the module.
+-   **`MODULE.name`:** Specifies the name of the module, which is "A Module" in this case. This variable identifies the module.
 
 -   **`MODULE.author`:** Indicates the author of the module. It can be a STEAMID64 or Name. Replace "76561198312513285" with the actual author information.
 

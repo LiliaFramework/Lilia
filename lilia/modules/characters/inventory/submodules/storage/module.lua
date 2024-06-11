@@ -1,4 +1,4 @@
-﻿MODULE.name = "Framework Inventory - Storage"
+﻿MODULE.name = "Storage"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "Adds Storage Options for Lilia's Inventory."
