@@ -85,6 +85,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     lia.module.list[uniqueID] = MODULE
     _G[variable] = oldModule
     if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
+    print("Module loaded: " .. MODULE.name)
 end
 
 --- Loads the additional files associated with the module.
