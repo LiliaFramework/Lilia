@@ -10,57 +10,6 @@ lia.module.list = lia.module.list or {}
 lia.module.unloaded = lia.module.unloaded or {}
 lia.module.ModuleFolders = {"dependencies", "config", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim", "concommands"}
 lia.module.ModuleFiles = {"client.lua", "cl_module.lua", "sv_module.lua", "server.lua", "config.lua", "sconfig.lua"}
-lia.module.ModuleConditions = {
-    ["stormfox2"] = {
-        name = "StormFox 2",
-        global = "StormFox2"
-    },
-    ["prone"] = {
-        name = "Prone Mod",
-        global = "prone"
-    },
-    ["streamradios"] = {
-        name = "3D Stream Radios",
-        global = "StreamRadioLib"
-    },
-    ["vjbase"] = {
-        name = "VJ Base",
-        global = "VJ"
-    },
-    ["sam"] = {
-        name = "SAM Admin Mod",
-        global = "sam"
-    },
-    ["ulx"] = {
-        name = "ULX Admin Mod",
-        global = "ulx"
-    },
-    ["serverguard"] = {
-        name = "ServerGuard Admin Mod",
-        global = "serverguard"
-    },
-    ["zmc"] = {
-        name = "Zero's MasterChef",
-        global = "zmc"
-    },
-    ["zpf"] = {
-        name = "Zero's Factory",
-        global = "zpf"
-    },
-    ["sitanywhere"] = {
-        name = "The Sit Anywhere Script",
-        global = "SitAnywhere"
-    },
-    ["simfphys"] = {
-        name = "Simfphys LUA Vehicles Base",
-        global = "simfphys"
-    },
-    ["pac"] = {
-        name = "Player Appearance Customizer 3 (PAC3)",
-        global = "pac"
-    }
-}
-
 --- Loads a module into the system.
 -- This function loads a module into the system, making its functionality available. It sets up the module environment, including defining globals and loading necessary files.
 -- @string uniqueID string The unique identifier of the module.
@@ -155,10 +104,9 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         end
     end
 
-    if lia.module.verifyModuleValidity(uniqueID, MODULE.enabled) then
+    if uniqueID == "schema" or MODULE.enabled ~= false then
         lia.module.EnabledList[tostring(MODULE.name)] = true
     else
-        if lia.module.ModuleConditions[uniqueID] == nil then print(MODULE.name .. " is disabled. Disabling!") end
         lia.module.EnabledList[MODULE.name] = false
         return
     end
@@ -235,27 +183,6 @@ function lia.module.initialize()
     lia.module.loadFromDir(schema .. "/preload", "module")
     lia.module.loadFromDir(schema .. "/modules", "module")
     hook.Run("InitializedModules")
-end
-
---- Checks if a module should load.
--- This function verifies whether a module should be loaded based on its unique ID and conditions.
--- @bool uniqueID The unique identifier of the module.
--- @string isEnabled Is the module enabled?
--- @return boolean Should the module be loaded?
--- @realm shared
--- @internal
-function lia.module.verifyModuleValidity(uniqueID, isEnabled)
-    if uniqueID == "schema" then return true end
-    for ModuleName, conditions in pairs(lia.module.ModuleConditions) do
-        if uniqueID ~= ModuleName then continue end
-        if _G[conditions.global] ~= nil then
-            print(conditions.name .. " found. Activating Compatibility!")
-            return true
-        else
-            return false
-        end
-    end
-    return isEnabled ~= false
 end
 
 --- Loads modules from a directory.
