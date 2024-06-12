@@ -234,6 +234,12 @@ end
 
 function PANEL:initializeItems()
     for itemType in SortedPairs(liaVendorEnt.items) do
+        local item = lia.item.list[itemType]
+        if not item then
+            print("Invalid Item: " .. itemType)
+            continue
+        end
+
         local mode = liaVendorEnt:getTradeMode(itemType)
         if not mode then continue end
         if mode ~= VENDOR_SELLONLY then self:updateItem(itemType, self.me):setIsSelling(true) end
@@ -318,7 +324,8 @@ function PANEL:InventoryItemRemoved(item)
 end
 
 function PANEL:Paint(w, h)
-    lia.util.drawBlur(self, 10)
+    lia.util.drawBlur(self, 0.5)
+
     surface.SetDrawColor(0, 0, 0, 100)
     surface.DrawRect(0, 0, w, h)
 end

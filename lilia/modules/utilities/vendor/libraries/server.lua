@@ -190,6 +190,7 @@ function MODULE:VendorSellEvent(client, vendor, itemType, isSellingToVendor, cha
         item:remove():next(function() client.vendorTransaction = nil end):catch(function() client.vendorTransaction = nil end)
         vendor:addStock(itemType)
         hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
+        client:notify("You sold " .. item:getName() .. " for " .. lia.currency.get(price))
         lia.log.add(client, "vendorSell", itemType, vendor:getNetVar("name"))
     end
 end
@@ -206,6 +207,7 @@ function MODULE:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, char
     character:takeMoney(price)
     vendor:takeStock(itemType)
     character:getInv():add(itemType):next(function(item)
+        client:notify("You bought " .. item:getName() .. " for " .. lia.currency.get(price))
         lia.log.add(client, "vendorBuy", itemType, vendor:getNetVar("name"))
         hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
         client.vendorTransaction = nil
