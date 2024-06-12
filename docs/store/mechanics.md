@@ -115,6 +115,8 @@
 
 - **Attribute Rolling**: Adds attribute rolling with multipliers.
 
+- **Attribute Fog**: Adds a Fog that renders in the distance, based on how much perception you have.
+
 - **Cinematic Text**: Adds cinematic text similar to [this](https://withaterriblefate.files.wordpress.com/2015/01/postman-in-repose.png?w=640).
 
 - **Attribute Based Damage**: Adds a configurable variable that can influence damage (e.g., melee damage influenced by strength).
