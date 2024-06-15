@@ -342,6 +342,10 @@ function GM:PlayerHurt(client, attacker, health, damage)
     lia.log.add(client, "playerHurt", attacker:IsPlayer() and attacker:Name() or attacker:GetClass(), damage, health)
 end
 
+function GM:PlayerNoClip(client, state)
+    return (not client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip Outside Staff Character", nil)) or client:isStaffOnDuty()
+end
+
 function GM:GetPreferredCarryAngles(entity)
     if entity.preferedAngle then return entity.preferedAngle end
     local class = entity:GetClass()
