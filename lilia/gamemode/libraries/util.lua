@@ -20,7 +20,7 @@ end
 function lia.util.findPlayer(identifier, allowPatterns)
     if lia.util.isSteamID(identifier) then return player.GetBySteamID(identifier) end
     if not allowPatterns then identifier = string.PatternSafe(identifier) end
-    for _, v in ipairs(player.GetAll()) do
+    for _, v in player.Iterator() do
         if lia.util.stringMatches(v:Name(), identifier) then return v end
     end
 end
@@ -116,7 +116,7 @@ end
 -- @realm shared
 function lia.util.getAllChar()
     local charTable = {}
-    for _, v in ipairs(player.GetAll()) do
+    for _, v in player.Iterator() do
         if v:getChar() then table.insert(charTable, v:getChar():getID()) end
     end
     return charTable

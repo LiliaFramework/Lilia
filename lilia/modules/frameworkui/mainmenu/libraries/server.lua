@@ -6,7 +6,7 @@
             if lia.char.loaded[v] then lia.char.loaded[v]:sync(client) end
         end
 
-        for _, v in ipairs(player.GetAll()) do
+        for _, v in player.Iterator() do
             if v:getChar() then v:getChar():sync(client) end
         end
 

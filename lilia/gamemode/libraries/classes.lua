@@ -85,7 +85,7 @@ end
 -- @return tab List of players belonging to the class.
 function lia.class.getPlayers(class)
     local players = {}
-    for _, v in ipairs(player.GetAll()) do
+    for _, v in player.Iterator() do
         local character = v:getChar()
         if character and character:getClass() == class then table.insert(players, v) end
     end
@@ -98,7 +98,7 @@ end
 -- @return int The count of players belonging to the class.
 function lia.class.getPlayerCount(class)
     local count = 0
-    for _, v in ipairs(player.GetAll()) do
+    for _, v in player.Iterator() do
         local character = v:getChar()
         if character and character:getClass() == class then count = count + 1 end
     end

@@ -62,7 +62,7 @@ end
 -- @realm shared
 -- @treturn bool True if the entity is locked, false otherwise.
 function entityMeta:isDoorLocked()
-    return self:GetSaveTable().m_bLocked or self.locked or false
+    return sself:GetInternalVariable("m_bLocked") or self.locked or false
 end
 
 --- Gets the view angle between the entity and a specified position.

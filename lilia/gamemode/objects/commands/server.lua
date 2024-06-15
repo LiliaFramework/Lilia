@@ -340,7 +340,7 @@ lia.command.add("charkick", {
         if IsValid(target) then
             local character = target:getChar()
             if character then
-                for _, v in ipairs(player.GetAll()) do
+                for _, v in player.Iterator() do
                     v:notifyLocalized("charKick", client:Name(), target:Name())
                 end
 
@@ -530,7 +530,7 @@ lia.command.add("forcesave", {
     privilege = "Force Save Server",
     onRun = function(client)
         hook.Run("SaveData")
-        for _, v in ipairs(player.GetAll()) do
+        for _, v in player.Iterator() do
             if v:getChar() then v:getChar():save() end
         end
 
