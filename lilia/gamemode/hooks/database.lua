@@ -22,7 +22,7 @@ function GM:SetupDatabase()
     end
 
     if not lia.db.config then
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 165, 0), "[Database]", Color(255, 255, 255),  " MySQL Database not configured. Defaulting to SQLite.\n")
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 165, 0), "[Database]", Color(255, 255, 255), " MySQL Database not configured. Defaulting to SQLite.\n")
         for k, v in pairs(DefaultDatabase) do
             lia.db[k] = v
         end

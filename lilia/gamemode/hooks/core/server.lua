@@ -386,7 +386,7 @@ function GM:OnServerLog(client, logType, ...)
     end
 end
 
-function GM:CanPlayerSeeLog(client, logType)
+function GM:CanPlayerSeeLog()
     return lia.config.AdminConsoleNetworkLogs
 end
 
