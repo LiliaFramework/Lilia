@@ -1,5 +1,6 @@
 ﻿--- Hook Documentation for Spawns Module.
 -- @hooks Spawns
+
 --- Called after PlayerLoadout is executed.
 -- This hook is called after a player's faction loadout has been applied.
 -- @client client The player entity for whom the faction loadout was applied.
