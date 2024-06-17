@@ -106,16 +106,54 @@ lia.log.addType("playerConnected", function(client, ...)
     return string.format("%s[%s] has connected to the server.", client:Name(), steamID or client:SteamID())
 end, "Connection Logs")
 
-lia.log.addType("spawned_ent", function(client, group, class, hasName, entityName, entityModel) return string.format("%s has spawned a %s with class %s and %s: %s", client:Name(), group, class, hasName and "Name" or "Model", hasName and entityName or entityModel) end, "Spawn Logs")
-lia.log.addType("moneyGiven", function(client, targetName, amount) return string.format("%s has given %s %s.", client:Name(), targetName, lia.currency.get(amount)) end, "Character Logs")
-lia.log.addType("moneyGivenTAB", function(client, targetName, amount) return string.format("%s has given %s %s using TAB.", client:Name(), targetName, lia.currency.get(amount)) end, "Character Logs")
-lia.log.addType("playerDisconnected", function(client, ...) return string.format("%s[%s] has disconnected from the server.", client:Name(), client:SteamID()) end, "Connection Logs")
-lia.log.addType("unpersistedEntity", function(client, entity) return string.format("%s has removed persistence from '%s'.", client:Name(), entity) end, "Staff Logs")
-lia.log.addType("persistedEntity", function(client, entity) return string.format("%s has persisted '%s'.", client:Name(), entity) end, "Staff Logs")
-lia.log.addType("observerEnter", function(client, ...) return string.format("%s has entered observer.", client:Name()) end, "Staff Logs")
-lia.log.addType("observerExit", function(client, ...) return string.format("%s has left observer.", client:Name()) end, "Staff Logs")
-lia.log.addType("buydoor", function(client, ...) return string.format("%s purchased the door", client:Name()) end, "Character Logs")
-lia.log.addType("selldoor", function(client, ...) return string.format("%s sold the door", client:Name()) end, "Character Logs")
-lia.log.addType("net", function(client, messageName) return string.format("[Net Log] Player %s (%s) sent net message %s.", client:GetName(), client:SteamID(), messageName) end, "Network Logs")
-lia.log.addType("invalidNet", function(client) return string.format("[Net Log] Player %s (%s) tried to send invalid net message!", client:GetName(), client:SteamID()) end, "Network Logs")
-lia.log.addType("concommand", function(client, cmd, argStr) return string.format("[ConCommand Log] Player %s (%s) ran command %s with arguments: %s.", client:GetName(), client:SteamID(), cmd, argStr) end, "Command Logs")
+lia.log.addType("spawned_ent", function(client, group, class, hasName, entityName, entityModel) 
+    return string.format("%s has spawned a %s with class %s and %s: %s", client:Name(), group, class, hasName and "Name" or "Model", hasName and entityName or entityModel) 
+end, "Spawn Logs")
+
+lia.log.addType("moneyGiven", function(client, targetName, amount) 
+    return string.format("%s has given %s %s.", client:Name(), targetName, lia.currency.get(amount)) 
+end, "Character Logs")
+
+lia.log.addType("moneyGivenTAB", function(client, targetName, amount) 
+    return string.format("%s has given %s %s using TAB.", client:Name(), targetName, lia.currency.get(amount)) 
+end, "Character Logs")
+
+lia.log.addType("playerDisconnected", function(client, ...) 
+    return string.format("%s[%s] has disconnected from the server.", client:Name(), client:SteamID()) 
+end, "Connection Logs")
+
+lia.log.addType("unpersistedEntity", function(client, entity) 
+    return string.format("%s has removed persistence from '%s'.", client:Name(), entity) 
+end, "Staff Logs")
+
+lia.log.addType("persistedEntity", function(client, entity) 
+    return string.format("%s has persisted '%s'.", client:Name(), entity) 
+end, "Staff Logs")
+
+lia.log.addType("observerEnter", function(client, ...) 
+    return string.format("%s has entered observer.", client:Name()) 
+end, "Staff Logs")
+
+lia.log.addType("observerExit", function(client, ...) 
+    return string.format("%s has left observer.", client:Name()) 
+end, "Staff Logs")
+
+lia.log.addType("buydoor", function(client, ...) 
+    return string.format("%s purchased the door", client:Name()) 
+end, "Character Logs")
+
+lia.log.addType("selldoor", function(client, ...) 
+    return string.format("%s sold the door", client:Name()) 
+end, "Character Logs")
+
+lia.log.addType("net", function(client, messageName) 
+    return string.format("[Net Log] Player %s (%s) sent net message %s.", client:GetName(), client:SteamID(), messageName) 
+end, "Network Logs")
+
+lia.log.addType("invalidNet", function(client) 
+    return string.format("[Net Log] Player %s (%s) tried to send invalid net message!", client:GetName(), client:SteamID()) 
+end, "Network Logs")
+
+lia.log.addType("concommand", function(client, cmd, argStr) 
+    return string.format("[ConCommand Log] Player %s (%s) ran command %s with arguments: %s.", client:GetName(), client:SteamID(), cmd, argStr) 
+end, "Command Logs")

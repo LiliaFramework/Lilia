@@ -221,7 +221,7 @@ end
 
 --- Loads a module's submodules if present.
 -- @string uniqueID The unique identifier for the module.
--- @stringpath The path to the module.
+-- @string path The path to the module.
 -- @realm shared
 -- @internal
 function lia.module.OnFinishLoad(uniqueID, path)
