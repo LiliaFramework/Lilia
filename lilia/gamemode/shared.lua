@@ -5,13 +5,24 @@ GM.Website = "https://discord.gg/jjrhyeuzYV"
 ModulesLoaded = false
 MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Bootstrapper] ", color_white, "Starting shared load...\n")
 function GM:Initialize()
-    hook.Run("LoadLiliaFonts", "Arial", "Segoe UI")
-    lia.module.initialize()
+    if SERVER then
+        game.ConsoleCommand("net_maxfilesize 64\n")
+        game.ConsoleCommand("sv_kickerrornum 0\n")
+        game.ConsoleCommand("sv_allowupload 0\n")
+        game.ConsoleCommand("sv_allowdownload 0\n")
+        game.ConsoleCommand("sv_allowcslua 0\n")
+        game.ConsoleCommand("gmod_physiterations 2\n")
+        game.ConsoleCommand("sv_minrate 1048576\n")
+    else
+        hook.Run("LoadLiliaFonts", "Arial", "Segoe UI")
+    end
+
+    lia.module.initialize(true)
 end
 
 function GM:OnReloaded()
     if not ModulesLoaded then
-        lia.module.initialize()
+        lia.module.initialize(false)
         ModulesLoaded = true
     end
 

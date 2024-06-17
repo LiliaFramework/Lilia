@@ -12,13 +12,14 @@ lia.module.ModuleFolders = {"dependencies", "config", "libs", "hooks", "librarie
 lia.module.ModuleFiles = {"client.lua", "cl_module.lua", "sv_module.lua", "server.lua", "config.lua", "sconfig.lua"}
 --- Loads a module into the system.
 -- This function loads a module into the system, making its functionality available. It sets up the module environment, including defining globals and loading necessary files.
--- @string uniqueID string The unique identifier of the module.
--- @string path string The path to the module.
--- @bool isSingleFile boolean Specifies if the module is contained in a single file.
--- @string variable string The variable name to assign the module to.
+-- @string uniqueID The unique identifier of the module.
+-- @string path The path to the module.
+-- @bool isSingleFile Specifies if the module is contained in a single file.
+-- @string variable The variable name to assign the module to.
+-- @bool firstLoad Indicates if this is the first load of the module.
 -- @realm shared
 -- @internal
-function lia.module.load(uniqueID, path, isSingleFile, variable)
+function lia.module.load(uniqueID, path, isSingleFile, variable, firstLoad)
     local lowerVariable = variable:lower()
     local normalpath = path .. "/" .. lowerVariable .. ".lua"
     local extendedpath = path .. "/sh_" .. lowerVariable .. ".lua"
@@ -88,7 +89,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         end
     else
         lia.module.list[uniqueID] = MODULE
-        lia.module.OnFinishLoad(uniqueID, path)
+        lia.module.OnFinishLoad(uniqueID, path, firstLoad)
         _G[variable] = oldModule
     end
 
@@ -122,20 +123,21 @@ end
 
 --- Loads and initializes the modules.
 -- This function loads and initializes modules located under their respective folders.
+-- @bool firstLoad Indicates if this is the first load of the modules.
 -- @realm shared
 -- @internal
-function lia.module.initialize()
+function lia.module.initialize(firstLoad)
     local schema = engine.ActiveGamemode()
-    lia.module.load("schema", schema .. "/schema", false, "schema")
+    lia.module.load("schema", schema .. "/schema", false, "schema", firstLoad)
     hook.Run("InitializedSchema")
-    lia.module.loadFromDir("lilia/modules/core", "module")
-    lia.module.loadFromDir("lilia/modules/frameworkui", "module")
-    lia.module.loadFromDir("lilia/modules/characters", "module")
-    lia.module.loadFromDir("lilia/modules/utilities", "module")
-    lia.module.loadFromDir("lilia/modules/compatibility", "module")
-    lia.module.loadFromDir(schema .. "/preload", "module")
-    lia.module.loadFromDir(schema .. "/modules", "module")
-    lia.module.loadFromDir(schema .. "/overrides", "module")
+    lia.module.loadFromDir("lilia/modules/core", "module", firstLoad)
+    lia.module.loadFromDir("lilia/modules/frameworkui", "module", firstLoad)
+    lia.module.loadFromDir("lilia/modules/characters", "module", firstLoad)
+    lia.module.loadFromDir("lilia/modules/utilities", "module", firstLoad)
+    lia.module.loadFromDir("lilia/modules/compatibility", "module", firstLoad)
+    lia.module.loadFromDir(schema .. "/preload", "module", firstLoad)
+    lia.module.loadFromDir(schema .. "/modules", "module", firstLoad)
+    lia.module.loadFromDir(schema .. "/overrides", "module", firstLoad)
     hook.Run("InitializedModules")
 end
 
@@ -143,17 +145,18 @@ end
 -- This function loads modules from a specified directory into the system.
 -- @string directory The path to the directory containing modules.
 -- @string group The group of the modules (e.g., "schema" or "module").
+-- @bool firstLoad Indicates if this is the first load of the modules.
 -- @realm shared
 -- @internal
-function lia.module.loadFromDir(directory, group)
+function lia.module.loadFromDir(directory, group, firstLoad)
     local location = group == "schema" and "SCHEMA" or "MODULE"
     local files, folders = file.Find(directory .. "/*", "LUA")
     for _, v in ipairs(folders) do
-        lia.module.load(v, directory .. "/" .. v, false, location)
+        lia.module.load(v, directory .. "/" .. v, false, location, firstLoad)
     end
 
     for _, v in ipairs(files) do
-        lia.module.load(string.StripExtension(v), directory .. "/" .. v, true, location)
+        lia.module.load(string.StripExtension(v), directory .. "/" .. v, true, location, firstLoad)
     end
 end
 
@@ -220,19 +223,21 @@ function lia.module.get(identifier)
 end
 
 --- Loads a module's submodules if present.
+-- This function handles the loading of a module's submodules, if they exist.
 -- @string uniqueID The unique identifier for the module.
 -- @string path The path to the module.
+-- @bool firstLoad Indicates if this is the first load of the module.
 -- @realm shared
 -- @internal
-function lia.module.OnFinishLoad(uniqueID, path)
+function lia.module.OnFinishLoad(uniqueID, path, firstLoad)
     local moduleTable = lia.module.list[uniqueID]
     local identifier = moduleTable.identifier
     local name = moduleTable.name
     local files, folders = file.Find(path .. "/submodules/*", "LUA")
     if identifier ~= "" then _G[identifier] = moduleTable end
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(135, 206, 250), "[Module] ", color_white, "Finished Loading '" .. name .. "'\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(135, 206, 250), "[Module] ", color_white, (firstLoad and "Finished Loading '" .. name .. "'\n") or "Finished Reloading '" .. name .. "'\n")
     if #files > 0 or #folders > 0 then
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[SubModule] ", color_white, "Loading Submodules For '" .. name .. "'\n")
-        lia.module.loadFromDir(path .. "/submodules", "module", true)
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[SubModule] ", color_white, (firstLoad and "Finished Loading Submodules For '" .. name .. "'\n") or "Finished Reloading '" .. name .. "'\n")
+        lia.module.loadFromDir(path .. "/submodules", "module", firstLoad)
     end
 end

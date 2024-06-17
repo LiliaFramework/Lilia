@@ -15,7 +15,7 @@ lia.config = lia.config or {}
 -- @field WalkSpeed Controls how fast characters walk | **integer**
 -- @field RunSpeed Controls how fast characters run | **integer**
 -- @field WalkRatio Defines the walk speed ratio when holding the Alt key | **number**.
--- @field AllowExistNames Determines whether duplicated character names are allowed | **bool**ean.
+-- @field AllowExistNames Determines whether duplicated character names are allowed | **bool**.
 -- @field GamemodeName Specifies the name of the gamemode | **string**.
 -- @field Color Sets the theme color used throughout the gamemode | **color**.
 -- @field Font Specifies the core font used for UI elements | **string**.
@@ -23,7 +23,7 @@ lia.config = lia.config or {}
 -- @field MoneyModel Defines the model used for representing money in the game | **string**.
 -- @field MaxCharacters Sets the maximum number of characters per player | **integer**
 -- @field DataSaveInterval Time interval between data saves | **integer**
--- @field CharacterDataSaveInterval Time interval between character data saves.
+-- @field CharacterDataSaveInterval Time interval between character data saves | **integer**
 -- @field MoneyLimit Sets the limit of money a player can have **[0 for infinite] | **integer**
 -- @field invW Defines the width of the default inventory | **integer**
 -- @field invH Defines the height of the default inventory | **integer**
@@ -38,15 +38,16 @@ lia.config = lia.config or {}
 -- @field CurrencySingularName Singular name of the in-game currency | **string**.
 -- @field CurrencyPluralName Plural name of the in-game currency | **string**.
 -- @field SchemaYear Year in the gamemode's schema | **integer**
--- @field AmericanDates Determines whether to use the American date format | **bool**ean.
--- @field AmericanTimeStamp Determines whether to use the American timestamp format | **bool**ean.
+-- @field AmericanDates Determines whether to use the American date format | **bool**.
+-- @field AmericanTimeStamp Determines whether to use the American timestamp format | **bool**.
 -- @field MinDescLen Minimum length required for a character's description | **integer**
+-- @field AdminConsoleNetworkLogs Specifies if the logging system should replicate to admins' consoles | **bool**
 -- @field TimeToEnterVehicle Time **[in seconds]** required to enter a vehicle | **integer**
--- @field CarEntryDelayEnabled Determines if the car entry delay is applicable | **bool**ean.
+-- @field CarEntryDelayEnabled Determines if the car entry delay is applicable | **bool**.
 -- @field Notify Contains notification sound and volume settings | **table**.
--- @field Notify Argument 1 Notification sound file path | **string**.
--- @field Notify Argument 2 Notification volume | **integer**
--- @field Notify Argument 3 Notification pitch | **integer**
+-- @field Notify.Sound Notification sound file path | **string**.
+-- @field Notify.Volume Notification volume | **integer**
+-- @field Notify.Pitch Notification pitch | **integer**
 if not ConfigWasInitialized then
     lia.config = {
         WalkSpeed = 130,
@@ -79,8 +80,8 @@ if not ConfigWasInitialized then
         AmericanDates = true,
         AmericanTimeStamp = true,
         MinDescLen = 16,
-        TimeToEnterVehicle = 1,
         AdminConsoleNetworkLogs = false,
+        TimeToEnterVehicle = 1,
         CarEntryDelayEnabled = true,
         Notify = {"garrysmod/content_downloaded.wav", 50, 250},
     }

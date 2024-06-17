@@ -334,8 +334,8 @@ function GM:PlayerDisconnected(client)
     end
 end
 
-function GM:PlayerAuthed(client, steamID)
-    lia.log.add(client, "playerConnected", client, steamID)
+function GM:PlayerAuthed(client)
+    lia.log.add(client, "playerConnected", client)
 end
 
 function GM:PlayerHurt(client, attacker, health, damage)
