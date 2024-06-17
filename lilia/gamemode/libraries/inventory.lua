@@ -117,8 +117,8 @@ if SERVER then
             instance:onLoaded()
             return instance:loadItems():next(function() return instance end)
         end, function(err)
-            print("Failed to load inventory " .. tostring(id))
-            print(err)
+            LiliaInformation("Failed to load inventory " .. tostring(id))
+            LiliaInformation(err)
         end)
     end
 

@@ -166,9 +166,9 @@ end
 -- @realm shared
 function ITEM:printData()
     self:print(true)
-    print("ITEM DATA:")
+    LiliaInformation("ITEM DATA:")
     for k, v in pairs(self.data) do
-        print(Format("[%s] = %s", k, v))
+        LiliaInformation(Format("[%s] = %s", k, v))
     end
 end
 

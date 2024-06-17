@@ -236,7 +236,7 @@ function PANEL:initializeItems()
     for itemType in SortedPairs(liaVendorEnt.items) do
         local item = lia.item.list[itemType]
         if not item then
-            print("Invalid Item: " .. itemType)
+            LiliaInformation("Invalid Item: " .. itemType)
             continue
         end
 

@@ -46,7 +46,7 @@ function lia.class.loadFromDir(directory)
         end
 
         if not CLASS.OnCanBe then
-            if CLASS.onCanBe then print("onCanBe is deprecated. Use OnCanBe for optimization purposes.") end
+            if CLASS.onCanBe then LiliaDeprecated("onCanBe is deprecated. Use OnCanBe for optimization purposes.") end
             CLASS.OnCanBe = function(_) return true end
         end
 

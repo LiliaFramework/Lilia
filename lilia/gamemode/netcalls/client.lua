@@ -417,6 +417,11 @@ net.Receive("OpenVGUI", function()
     LocalPlayer():OpenUI(panel)
 end)
 
+net.Receive("chatNotifyNet", function()
+    local message = net.ReadString()
+    chat.AddText(Color(175, 200, 255), message)
+end)
+
 net.Receive("OpenPage", function() gui.OpenURL(net.ReadString()) end)
 net.Receive("LiliaPlaySound", function() LocalPlayer():EmitSound(tostring(net.ReadString()), tonumber(net.ReadUInt(7)) or 100) end)
 netstream.Hook("ChatPrint", function(data) chat.AddText(unpack(data)) end)

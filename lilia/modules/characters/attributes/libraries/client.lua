@@ -17,7 +17,7 @@ end
 
 function MODULE:HUDPaintBackground()
     local client = LocalPlayer()
-    if not (self.StaminaBlur or client:getChar()) then return end
+    if not self.StaminaBlur or not client:getChar() then return end
     local character = client:getChar()
     local maxStamina = character:getMaxStamina()
     local Stamina = client:getLocalVar("stamina", maxStamina)

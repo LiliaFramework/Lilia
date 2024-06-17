@@ -25,7 +25,7 @@ local tblRow = vgui.RegisterTable({
 		if vgui.GetControlTable(Name) then
 			self.Inner = self.Container:Add(Name)
 		else
-			print("DProperties: Failed to create panel (" .. Name .. ")")
+			LiliaInformation("DProperties: Failed to create panel (" .. Name .. ")")
 		end
 
 		if not IsValid(self.Inner) then self.Inner = self.Container:Add("DProperty_Generic") end

@@ -22,6 +22,8 @@ function GM:InitializedModules()
         hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
         RunConsoleCommand("spawnmenu_reload")
     end
+
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Bootstrapper] ", color_white, "Finished boot sequence...\n")
 end
 
 function GM:Move(client, moveData)
@@ -68,12 +70,12 @@ function GM:LiliaLoaded()
 end
 
 function GM:GetMaxPlayerCharacter(client)
-    print("GetMaxPlayerCharacter is deprecated. Use GetMaxPlayerChar for optimization purposes.")
+    LiliaDeprecated("GetMaxPlayerCharacter is deprecated. Use GetMaxPlayerChar for optimization purposes.")
     hook.Run("GetMaxPlayerChar", client)
 end
 
 function GM:CanPlayerCreateCharacter(client)
-    print("CanPlayerCreateChar is deprecated. Use CanPlayerCreateChar for optimization purposes.")
+    LiliaDeprecated("CanPlayerCreateChar is deprecated. Use CanPlayerCreateChar for optimization purposes.")
     hook.Run("CanPlayerCreateChar", client)
 end
 

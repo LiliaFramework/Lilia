@@ -62,7 +62,7 @@ function MODULE:SaveData()
     end
 
     self:setData(data)
-    print("Amount of doors saved:", table.Count(data))
+    LiliaInformation("Amount of doors saved: " .. table.Count(data))
 end
 
 function MODULE:callOnDoorChildren(entity, callback)

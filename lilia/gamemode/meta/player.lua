@@ -520,7 +520,9 @@ if SERVER then
     -- @realm server
     -- @string message Text to display in the notification
     function playerMeta:chatNotify(message)
-        lia.chat.send(nil, "notice", message)
+        net.Start("chatNotifyNet")
+        net.WriteString(message)
+        net.Send(self)
     end
 
     --- Displays a notification for this player in the chatbox with the given language phrase.
@@ -529,7 +531,9 @@ if SERVER then
     -- @param ... Arguments to pass to the phrase
     function playerMeta:chatNotifyLocalized(message, ...)
         message = L(message, self, ...)
-        lia.chat.send(nil, "notice", message)
+        net.Start("chatNotifyNet")
+        net.WriteString(message)
+        net.Send(self)
     end
 
     --- Retrieves a value from the player's Lilia data.
@@ -1112,7 +1116,7 @@ else
     -- @realm client
     -- @string message Text to display in the notification
     function playerMeta:chatNotify(message)
-        if self == LocalPlayer() then lia.chat.send(LocalPlayer(), "notice", message) end
+        if self == LocalPlayer() then chat.AddText(Color(175, 200, 255), message) end
     end
 
     --- Displays a notification for this player in the chatbox with the given language phrase.
@@ -1122,7 +1126,7 @@ else
     function playerMeta:chatNotifyLocalized(message, ...)
         if self == LocalPlayer() then
             message = L(message, ...)
-            lia.chat.send(LocalPlayer(), "notice", message)
+            chat.AddText(Color(175, 200, 255), message)
         end
     end
 

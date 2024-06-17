@@ -253,7 +253,7 @@ if SERVER then
                     newEnt:Spawn()
                 end
             else
-                print("Invalid position for entity", entity)
+                LiliaInformation("Invalid position for entity", entity)
             end
         end
     end
@@ -354,14 +354,6 @@ if SERVER then
     -- @string str The message to be logged
     function lia.util.debugLog(str)
         MsgC(Color("sky_blue"), os.date("(%d/%m/%Y - %H:%M:%S)", os.time()), Color("yellow"), " [LOG] ", color_white, str, "\n")
-    end
-
-    --- Logs a debug message to the console.
-    -- @realm server
-    -- @string msg The debug message string
-    -- @tab ... Additional parameters for message formatting
-    function lia.util.debugMessage(msg, ...)
-        MsgC(Color(70, 150, 255), "[CityRP] DEBUG: ", string.format(msg, ...), "\n")
     end
 
     --- Logs a warning message to the console.
@@ -906,7 +898,6 @@ lia.util.SpawnEntities = lia.util.spawnEntities
 lia.util.FindEmptySpace = lia.util.findEmptySpace
 lia.util.SpawnProp = lia.util.spawnProp
 lia.util.DebugLog = lia.util.debugLog
-lia.util.DebugMessage = lia.util.debugMessage
 lia.util.DWarningMessage = lia.util.dWarningMessage
 lia.util.ChatPrint = lia.util.chatPrint
 lia.util.DrawText = lia.util.drawText

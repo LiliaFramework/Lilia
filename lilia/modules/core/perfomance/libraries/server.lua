@@ -93,7 +93,7 @@ function MODULE:ServerSidePlayerInitialSpawn()
             if car:IsVehicle() then car:Remove() end
         end
 
-        print("Cars deleted. Player count reached the limit. Please disable MODULE.PlayerCountCarLimitEnabled if you don't want this. ")
+        LiliaInformation("Cars deleted. Player count reached the limit. Please disable MODULE.PlayerCountCarLimitEnabled if you don't want this. ")
     end
 end
 

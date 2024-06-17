@@ -115,14 +115,6 @@ lia.chat.register("w", {
     prefix = {"/w", "/whisper"}
 })
 
-lia.chat.register("notice", {
-    onCanSay = function(speaker, _) return not IsValid(speaker) end,
-    onCanHear = function(_, _) return true end,
-    onChatAdd = function(_, text) chat.AddText("icon16/comment.png", Color(175, 200, 255), text) end,
-    prefix = {"/notice"},
-    font = "liaMediumFont"
-})
-
 lia.chat.register("y", {
     format = "%s yells \"%s\"",
     onGetColor = function(speaker, text)

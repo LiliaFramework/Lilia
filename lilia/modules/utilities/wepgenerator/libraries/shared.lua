@@ -4,13 +4,9 @@ end
 
 function MODULE:RegisterWeapons()
     for _, wep in ipairs(weapons.GetList()) do
-        if string.find(wep.ClassName, "_base") or table.HasValue(self.RegisterWeaponsBlackList, wep.ClassName) or not wep.ClassName then
-            continue
-        end
-
+        if string.find(wep.ClassName, "_base") or table.HasValue(self.RegisterWeaponsBlackList, wep.ClassName) or not wep.ClassName then continue end
         local ITEM = lia.item.register(wep.ClassName, "base_weapons", nil, nil, true)
         local override = self.WeaponOverrides[wep.ClassName]
-
         ITEM.name = override and override.name or wep.PrintName or wep.ClassName
         ITEM.desc = override and override.desc or "A Weapon"
         ITEM.model = override and override.model or wep.WorldModel
@@ -20,9 +16,6 @@ function MODULE:RegisterWeapons()
         ITEM.weaponCategory = override and override.weaponCategory or nil
         ITEM.RequiredSkillLevels = override and override.RequiredSkillLevels or {}
         ITEM.category = override and override.category or "Weapons"
-
-        if ITEM.name ~= wep.ClassName and self.NotifyWeaponRegister then
-            print("Generated weapon:", ITEM.name)
-        end
+        if ITEM.name ~= wep.ClassName and self.NotifyWeaponRegister then LiliaInformation("Generated weapon: " .. ITEM.name) end
     end
 end

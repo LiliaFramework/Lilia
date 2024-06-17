@@ -51,7 +51,7 @@ function lia.command.add(command, data)
     end
 
     local privilege = "Commands - " .. (isstring(data.privilege) and data.privilege or (userCommand and "Default User Commands" or command))
-    if not CAMI.GetPrivilege(privilege) then
+    if not CAMI.GetPrivilege(privilege) and privilege ~= "Dummy Command" then
         CAMI.RegisterPrivilege({
             Name = privilege,
             MinAccess = superAdminOnly and "superadmin" or (adminOnly and "admin" or "user"),
@@ -262,7 +262,7 @@ if SERVER then
                 if IsValid(client) then
                     client:notifyLocalized("cmdNoExist")
                 else
-                    print("Sorry, that command does not exist.")
+                    LiliaInformation("Sorry, that command does not exist.")
                 end
             end
             return true

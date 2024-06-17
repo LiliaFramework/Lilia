@@ -1,7 +1,7 @@
 ﻿function MODULE:CheckFactionLimitReached(faction, character, client)
     if faction.OnCheckLimitReached then return faction:OnCheckLimitReached(character, client) end
     if faction.onCheckLimitReached then
-        print("onCheckLimitReached is deprecated. Use OnCheckLimitReached for optimization purposes.")
+        LiliaDeprecated("onCheckLimitReached is deprecated. Use OnCheckLimitReached for optimization purposes.")
         return faction:onCheckLimitReached(character, client)
     end
 
@@ -15,7 +15,7 @@ function MODULE:GetDefaultCharName(client, faction)
     local info = lia.faction.indices[faction]
     if info then
         if info.getDefaultName then
-            print("getDefaultName is deprecated. Use GetDefaultName for optimization purposes.")
+            LiliaDeprecated("getDefaultName is deprecated. Use GetDefaultName for optimization purposes.")
             return info:getDefaultName(client)
         end
 
@@ -27,7 +27,7 @@ function MODULE:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
     if info then
         if info.getDefaultDesc then
-            print("getDefaultDesc is deprecated. Use GetDefaultDesc for optimization purposes.")
+            LiliaDeprecated("getDefaultDesc is deprecated. Use GetDefaultDesc for optimization purposes.")
             return info:getDefaultDesc(client)
         end
 

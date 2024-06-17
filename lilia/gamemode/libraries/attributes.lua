@@ -35,7 +35,7 @@ if SERVER then
         if character then
             for k, v in pairs(lia.attribs.list) do
                 if v.onSetup then
-                    print("onSetup is deprecated. Use OnSetup for optimization purposes.")
+                    LiliaDeprecated("onSetup is deprecated. Use OnSetup for optimization purposes.")
                     v:onSetup(client, character:getAttrib(k, 0))
                 end
 

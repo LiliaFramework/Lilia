@@ -9,7 +9,7 @@ concommand.Add("list_entities", function(client)
     local entityCount = {}
     local totalEntities = 0
     if not IsValid(client) or client:IsSuperAdmin() then
-        print("Entities on the server:")
+        LiliaInformation("Entities on the server:")
         for _, entity in pairs(ents.GetAll()) do
             local className = entity:GetClass() or "Unknown"
             local entityName = "Unknown"
@@ -21,13 +21,13 @@ concommand.Add("list_entities", function(client)
 
         for className, entities in pairs(entityCount) do
             for entityName, count in pairs(entities) do
-                print(string.format("Name: %s | Class: %s | Count: %d", entityName, className, count))
+                LiliaInformation(string.format("Name: %s | Class: %s | Count: %d", entityName, className, count))
             end
         end
 
-        print("Total entities on the server: " .. totalEntities)
+        LiliaInformation("Total entities on the server: " .. totalEntities)
     else
-        print("Nuh-uh!")
+        LiliaInformation("Nuh-uh!")
     end
 end)
 
@@ -46,9 +46,9 @@ if SERVER then
         if not IsValid(client) then
             lia.db.query("DELETE FROM `lilia_logs` WHERE time > 0", function(result)
                 if result then
-                    print("Logger - All logs with time greater than 0 have been erased")
+                    LiliaInformation("Logger - All logs with time greater than 0 have been erased")
                 else
-                    print("Logger - Failed : " .. sql.LastError())
+                    LiliaInformation("Logger - Failed : " .. sql.LastError())
                 end
             end)
         else
@@ -72,8 +72,8 @@ if SERVER then
 else
     concommand.Add("dev_GetCameraOrigin", function(client)
         if client:isStaff() then
-            print("origin = (" .. math.ceil(LocalPlayer():GetPos().x) .. ", " .. math.ceil(LocalPlayer():GetPos().y) .. ", " .. math.ceil(LocalPlayer():GetPos().z) .. ")")
-            print("angles = (" .. math.ceil(LocalPlayer():GetAngles().x) .. ", " .. math.ceil(LocalPlayer():GetAngles().y) .. ", " .. math.ceil(LocalPlayer():GetAngles().z) .. ")")
+            LiliaInformation("origin = (" .. math.ceil(LocalPlayer():GetPos().x) .. ", " .. math.ceil(LocalPlayer():GetPos().y) .. ", " .. math.ceil(LocalPlayer():GetPos().z) .. ")")
+            LiliaInformation("angles = (" .. math.ceil(LocalPlayer():GetAngles().x) .. ", " .. math.ceil(LocalPlayer():GetAngles().y) .. ", " .. math.ceil(LocalPlayer():GetAngles().z) .. ")")
         end
     end)
 
@@ -84,8 +84,8 @@ else
     end, nil, "Removes every panel that you have left over (like that errored DFrame filling up your screen)")
 
     concommand.Add("weighpoint_stop", function() hook.Add("HUDPaint", "WeighPoint", function() end) end)
-    concommand.Add("dev_GetEntPos", function(client) if client:isStaff() then print(LocalPlayer():GetEyeTrace().Entity:GetPos().x, LocalPlayer():GetEyeTrace().Entity:GetPos().y, LocalPlayer():GetEyeTrace().Entity:GetPos().z) end end)
-    concommand.Add("dev_GetEntAngles", function(client) if client:isStaff() then print(math.ceil(LocalPlayer():GetEyeTrace().Entity:GetAngles().x) .. ", " .. math.ceil(LocalPlayer():GetEyeTrace().Entity:GetAngles().y) .. ", " .. math.ceil(LocalPlayer():GetEyeTrace().Entity:GetAngles().z)) end end)
-    concommand.Add("dev_GetRoundEntPos", function(client) if client:isStaff() then print(math.ceil(LocalPlayer():GetEyeTrace().Entity:GetPos().x) .. ", " .. math.ceil(LocalPlayer():GetEyeTrace().Entity:GetPos().y) .. ", " .. math.ceil(LocalPlayer():GetEyeTrace().Entity:GetPos().z)) end end)
-    concommand.Add("dev_GetPos", function(client) if client:isStaff() then print(math.ceil(LocalPlayer():GetPos().x) .. ", " .. math.ceil(LocalPlayer():GetPos().y) .. ", " .. math.ceil(LocalPlayer():GetPos().z)) end end)
+    concommand.Add("dev_GetEntPos", function(client) if client:isStaff() then LiliaInformation(LocalPlayer():GetEyeTrace().Entity:GetPos().x, LocalPlayer():GetEyeTrace().Entity:GetPos().y, LocalPlayer():GetEyeTrace().Entity:GetPos().z) end end)
+    concommand.Add("dev_GetEntAngles", function(client) if client:isStaff() then LiliaInformation(math.ceil(LocalPlayer():GetEyeTrace().Entity:GetAngles().x) .. ", " .. math.ceil(LocalPlayer():GetEyeTrace().Entity:GetAngles().y) .. ", " .. math.ceil(LocalPlayer():GetEyeTrace().Entity:GetAngles().z)) end end)
+    concommand.Add("dev_GetRoundEntPos", function(client) if client:isStaff() then LiliaInformation(math.ceil(LocalPlayer():GetEyeTrace().Entity:GetPos().x) .. ", " .. math.ceil(LocalPlayer():GetEyeTrace().Entity:GetPos().y) .. ", " .. math.ceil(LocalPlayer():GetEyeTrace().Entity:GetPos().z)) end end)
+    concommand.Add("dev_GetPos", function(client) if client:isStaff() then LiliaInformation(math.ceil(LocalPlayer():GetPos().x) .. ", " .. math.ceil(LocalPlayer():GetPos().y) .. ", " .. math.ceil(LocalPlayer():GetPos().z)) end end)
 end

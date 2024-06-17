@@ -536,8 +536,8 @@ if SERVER then
                     end
                     return inventories
                 end, function(err)
-                    print("Failed to load inventories for " .. tostring(id))
-                    print(err)
+                    LiliaInformation("Failed to load inventories for " .. tostring(id))
+                    LiliaInformation(err)
                     if IsValid(client) then client:chatNotify("A server error occured while loading your" .. " inventories. Check server log for details.") end
                 end):next(function(inventories)
                     character.vars.inv = inventories
@@ -623,7 +623,7 @@ if SERVER then
         data[key] = val
         local setQ = "UPDATE lia_characters SET _data=" .. sql.SQLStr(util.TableToJSON(data)) .. " WHERE _id=" .. charIDsafe
         if sql.Query(setQ) == false then
-            print("lia.setCharData SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
+            LiliaInformation("lia.setCharData SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
 

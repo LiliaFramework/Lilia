@@ -87,13 +87,8 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
             return true
         end
     else
-        if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then
-            _G[MODULE.identifier] = MODULE
-        end
-
         lia.module.list[uniqueID] = MODULE
-        print("[" .. MODULE.name .. "] Finished Loading!")
-        lia.module.loadFromDir(path .. "/submodules", "module")
+        lia.module.OnFinishLoad(uniqueID, path)
         _G[variable] = oldModule
     end
 
@@ -110,19 +105,14 @@ function lia.module.loadExtras(path)
     lia.faction.loadFromDir(path .. "/factions")
     lia.class.loadFromDir(path .. "/classes")
     lia.attribs.loadFromDir(path .. "/attributes")
-
     for _, fileName in ipairs(lia.module.ModuleFiles) do
         local filePath = path .. "/" .. fileName
-        if file.Exists(filePath, "LUA") then
-            lia.include(filePath)
-        end
+        if file.Exists(filePath, "LUA") then lia.include(filePath) end
     end
 
     for _, folder in ipairs(lia.module.ModuleFolders) do
         local subFolders = path .. "/" .. folder
-        if file.Exists(subFolders, "LUA") then
-            lia.includeDir(subFolders, true, true)
-        end
+        if file.Exists(subFolders, "LUA") then lia.includeDir(subFolders, true, true) end
     end
 
     lia.includeEntities(path .. "/entities")
@@ -179,13 +169,14 @@ function lia.module.loadWorkshop(Workshop)
             if isstring(workshopID) and workshopID:match("^%d+$") then
                 resource.AddWorkshop(workshopID)
             else
-                print("Invalid Workshop ID:", workshopID)
+                LiliaInformation("Invalid Workshop ID: " .. workshopID)
             end
         end
     else
         resource.AddWorkshop(Workshop)
     end
 end
+
 --- Loads permissions.
 -- @param Privileges The privileges to load. This is the MODULE.CAMIPrivileges.
 -- @realm shared
@@ -200,9 +191,7 @@ function lia.module.loadPermissions(Privileges)
             Description = privilegeData.Description or ("Allows access to " .. privilegeData.Name:gsub("^%l", string.upper))
         }
 
-        if not CAMI.GetPrivilege(privilegeData.Name) then
-            CAMI.RegisterPrivilege(privilegeInfo)
-        end
+        if not CAMI.GetPrivilege(privilegeData.Name) then CAMI.RegisterPrivilege(privilegeInfo) end
     end
 end
 
@@ -212,7 +201,6 @@ end
 -- @internal
 function lia.module.loadDependencies(Dependencies)
     if not Dependencies then return end
-
     if istable(Dependencies) then
         for _, dependency in ipairs(Dependencies) do
             lia.include(dependency.File, dependency.Realm)
@@ -229,4 +217,22 @@ end
 -- @realm shared
 function lia.module.get(identifier)
     return lia.module.list[identifier]
+end
+
+--- Loads a module's submodules if present.
+-- @string uniqueID The unique identifier for the module.
+-- @stringpath The path to the module.
+-- @realm shared
+-- @internal
+function lia.module.OnFinishLoad(uniqueID, path)
+    local moduleTable = lia.module.list[uniqueID]
+    local identifier = moduleTable.identifier
+    local name = moduleTable.name
+    local files, folders = file.Find(path .. "/submodules/*", "LUA")
+    if identifier ~= "" then _G[identifier] = moduleTable end
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(135, 206, 250), "[Module] ", color_white, "Finished Loading '" .. name .. "'\n")
+    if #files > 0 or #folders > 0 then
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[SubModule] ", color_white, "Loading Submodules For '" .. name .. "'\n")
+        lia.module.loadFromDir(path .. "/submodules", "module", true)
+    end
 end

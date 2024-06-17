@@ -12,7 +12,7 @@ if SERVER then
         end
 
         if item.onCanBeTransfered then
-            print("onCanBeTransfered is deprecated. Use OnCanBeTransfered for optimization purposes.")
+            LiliaDeprecated("onCanBeTransfered is deprecated. Use OnCanBeTransfered for optimization purposes.")
             local itemHook = item:onCanBeTransfered(curInv, inventory)
             return itemHook ~= false
         end

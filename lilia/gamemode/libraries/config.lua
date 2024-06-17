@@ -80,6 +80,7 @@ if not ConfigWasInitialized then
         AmericanTimeStamp = true,
         MinDescLen = 16,
         TimeToEnterVehicle = 1,
+        AdminConsoleNetworkLogs = false,
         CarEntryDelayEnabled = true,
         Notify = {"garrysmod/content_downloaded.wav", 50, 250},
     }

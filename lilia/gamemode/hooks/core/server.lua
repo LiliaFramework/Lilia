@@ -22,7 +22,7 @@ function GM:CreateDefaultInventory(character)
 end
 
 function GM:CharacterPreSave(character)
-    print("CharacterPreSave is deprecated. Use CharPreSave for optimization purposes.")
+    LiliaDeprecated("CharacterPreSave is deprecated. Use CharPreSave for optimization purposes.")
     hook.Run("CharPreSave", character)
 end
 
@@ -61,17 +61,17 @@ function GM:PlayerLoadedChar(client, character, lastChar)
 end
 
 function GM:CharacterLoaded(id)
-    print("CharacterLoaded is deprecated. Use CharLoaded for optimization purposes.")
+    LiliaDeprecated("CharacterLoaded is deprecated. Use CharLoaded for optimization purposes.")
     hook.Run("CharLoaded", id)
 end
 
 function GM:PreCharacterDelete(id)
-    print("PreCharacterDelete is deprecated. Use PreCharDelete for optimization purposes.")
+    LiliaDeprecated("PreCharacterDelete is deprecated. Use PreCharDelete for optimization purposes.")
     hook.Run("PreCharDelete", id)
 end
 
 function GM:OnCharacterDelete(client, id)
-    print("OnCharacterDelete is deprecated. Use OnCharDelete for optimization purposes.")
+    LiliaDeprecated("OnCharacterDelete is deprecated. Use OnCharDelete for optimization purposes.")
     hook.Run("OnCharDelete", client, id)
 end
 
@@ -342,7 +342,7 @@ function GM:PlayerHurt(client, attacker, health, damage)
     lia.log.add(client, "playerHurt", attacker:IsPlayer() and attacker:Name() or attacker:GetClass(), damage, health)
 end
 
-function GM:PlayerNoClip(client, state)
+function GM:PlayerNoClip(client)
     return (not client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip Outside Staff Character", nil)) or client:isStaffOnDuty()
 end
 
@@ -386,8 +386,12 @@ function GM:OnServerLog(client, logType, ...)
     end
 end
 
+function GM:CanPlayerSeeLog(client, logType)
+    return lia.config.AdminConsoleNetworkLogs
+end
+
 function GM:onCharCreated(client, character, data)
-    print("onCharCreated is deprecated. Use OnCharCreated for optimization purposes.")
+    LiliaDeprecated("onCharCreated is deprecated. Use OnCharCreated for optimization purposes.")
     hook.Run("OnCharCreated", client, character, data)
 end
 
@@ -397,7 +401,7 @@ function GM:OnCharCreated(client, character)
 end
 
 function GM:onTransferred(client)
-    print("onTransferred is deprecated. Use OnTransferred for optimization purposes.")
+    LiliaDeprecated("onTransferred is deprecated. Use OnTransferred for optimization purposes.")
     hook.Run("OnTransferred", client)
 end
 

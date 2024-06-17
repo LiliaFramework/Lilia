@@ -89,7 +89,7 @@ function MODULE:FactionOnLoadout(client)
 
     if faction.armor then client:SetArmor(faction.armor) end
     if faction.onSpawn then
-        print("onSpawn is deprecated. Use OnSpawn for optimization purposes.")
+        LiliaDeprecated("onSpawn is deprecated. Use OnSpawn for optimization purposes.")
         faction:onSpawn(client)
     end
 
@@ -186,7 +186,7 @@ function MODULE:ClassOnLoadout(client)
     if class.model then client:SetModel(class.model) end
     if class.armor then client:SetArmor(class.armor) end
     if class.onSpawn then
-        print("onSpawn is deprecated. Use OnSpawn for optimization purposes.")
+        LiliaDeprecated("onSpawn is deprecated. Use OnSpawn for optimization purposes.")
         class:onSpawn(client)
     end
 
