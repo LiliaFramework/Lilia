@@ -1,4 +1,4 @@
-NAME = "arabic"
+﻿NAME = "arabic"
 LANGUAGE = {
     loading = "جار التحميل",
     dbError = "فشل الاتصال بقاعدة البيانات",

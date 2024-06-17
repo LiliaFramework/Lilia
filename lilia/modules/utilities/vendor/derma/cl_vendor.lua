@@ -325,7 +325,6 @@ end
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 0.5)
-
     surface.SetDrawColor(0, 0, 0, 100)
     surface.DrawRect(0, 0, w, h)
 end

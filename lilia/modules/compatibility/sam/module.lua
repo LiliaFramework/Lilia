@@ -10,4 +10,3 @@ MODULE.CAMIPrivileges = {
         Description = "Allows access to Reading the Admin Chat.",
     }
 }
-

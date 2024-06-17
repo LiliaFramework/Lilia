@@ -1,6 +1,5 @@
---- Configuration for Doors Module.
+﻿--- Configuration for Doors Module.
 -- @configuration Doors
-
 --- This table defines the default settings for the Doors Module.
 -- @realm shared
 -- @table Configuration

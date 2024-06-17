@@ -1,4 +1,4 @@
---- Configuration for Simfphys Compatibility Module.
+﻿--- Configuration for Simfphys Compatibility Module.
 -- @configuration Simfphys
 
 --- This table defines the default settings for the Simfphys Module.

@@ -71,4 +71,4 @@ lia.anim.DefaultTposingFixer = {
 -- These paths are used to determine which models should use citizen animations.
 -- You can override these settings by placing a modified version in your config folder within the schema.
 -- @realm shared
-lia.anim.CitizenModelPaths = {"models/humans/factory","models/betacz/group01", "models/thespireroleplay/humans", "models/suits/humans", "models/humans/group01", "models/humans/group02", "models/humans/group03", "models/humans/group03m",}
+lia.anim.CitizenModelPaths = {"models/humans/factory", "models/betacz/group01", "models/thespireroleplay/humans", "models/suits/humans", "models/humans/group01", "models/humans/group02", "models/humans/group03", "models/humans/group03m",}

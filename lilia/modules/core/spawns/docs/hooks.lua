@@ -1,7 +1,5 @@
---- Hook Documentation for Spawns Module.
+﻿--- Hook Documentation for Spawns Module.
 -- @hooks Spawns
-
-
 --- Called after PlayerLoadout is executed.
 -- This hook is called after a player's faction loadout has been applied.
 -- @client client The player entity for whom the faction loadout was applied.
@@ -68,7 +66,6 @@ end
 function CanPlayerUseChar(client, character)
 end
 
-
 --- Whether or not a player is allowed to create a new character.
 -- @realm server
 -- @client client Player attempting to create a new character
@@ -130,7 +127,6 @@ end
 -- @character currentChar The current character of the player.
 function PostPlayerLoadedChar(client, character, currentChar)
 end
-
 
 --- Called when a character is loaded.
 -- This function is called after a character has been successfully loaded.

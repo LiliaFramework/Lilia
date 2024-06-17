@@ -1,4 +1,4 @@
---- Configuration for Storage Module.
+﻿--- Configuration for Storage Module.
 -- @configuration Storage
 
 --- This table defines the default settings for the Storage Module.

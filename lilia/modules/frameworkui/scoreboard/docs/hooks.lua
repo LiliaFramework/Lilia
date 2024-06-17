@@ -1,6 +1,5 @@
---- Hook Documentation for Scoreboard Module.
+﻿--- Hook Documentation for Scoreboard Module.
 -- @hooks Scoreboard
-
 --- Determines whether a player should be shown on the scoreboard.
 --- @realm client
 --- @client client The player entity to be evaluated.

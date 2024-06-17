@@ -1,6 +1,5 @@
---- Hook Documentation for Doors Module.
+﻿--- Hook Documentation for Doors Module.
 -- @hooks Doors
-
 --- Called when a player tries to use abilities on the door, such as locking.
 -- @realm shared
 -- @client client The client trying something on the door.
@@ -41,7 +40,6 @@ end
 -- @treturn boolean|nil Return false to disallow the use, return true to allow, or return nil to defer to other hooks.
 function PlayerUseDoor(client, entity)
 end
-
 
 --- Called when a player attempts to lock a door.
 -- This hook is used to handle the locking action on a door entity.

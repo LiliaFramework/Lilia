@@ -1,4 +1,4 @@
---- Configuration for SAM Compatibility Module.
+﻿--- Configuration for SAM Compatibility Module.
 -- @configuration SAM
 
 --- This table defines the default settings for the SAM Module.

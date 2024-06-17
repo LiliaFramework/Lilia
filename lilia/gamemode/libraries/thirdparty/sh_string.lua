@@ -1,4 +1,4 @@
-local oStringUpper = string.upper
+﻿local oStringUpper = string.upper
 local SpecialCharacters = {
     ["ä"] = "Ä",
     ["ö"] = "Ö",

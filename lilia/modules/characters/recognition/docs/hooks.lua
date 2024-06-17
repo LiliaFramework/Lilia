@@ -1,13 +1,12 @@
---- Hook Documentation for Recognition Module.
+﻿--- Hook Documentation for Recognition Module.
 -- @hooks Recognition
-
 --- Checks if a character is recognized.
 -- @realm shared
 --- @character character The character to check.
 --- @int id Identifier for the character.
 function isCharRecognized(character, id)
-
 end
+
 --- Checks if a character is fake recognized.
 -- @realm shared
 --- @character character The character to check.

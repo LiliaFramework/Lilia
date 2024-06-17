@@ -1,4 +1,4 @@
---- Configuration for Persistence Module.
+﻿--- Configuration for Persistence Module.
 -- @configuration Persistance
 
 --- This table defines the default settings for the Persistance Module.

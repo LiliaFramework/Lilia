@@ -1,6 +1,5 @@
---- Hook Documentation for MainMenu Module.
+﻿--- Hook Documentation for MainMenu Module.
 -- @hooks MainMenu
-
 
 --- Called when the player wants to view their inventory.
 -- @realm client

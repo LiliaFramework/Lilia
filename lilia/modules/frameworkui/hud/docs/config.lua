@@ -1,4 +1,4 @@
---- Configuration for HUD Module.
+﻿--- Configuration for HUD Module.
 -- @configuration HUD
 
 --- This table defines the default settings for the HUD Module.

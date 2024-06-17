@@ -1,4 +1,4 @@
---- Configuration for Perfomance Module.
+﻿--- Configuration for Perfomance Module.
 -- @configuration Perfomance
 
 --- This table defines the default settings for the Perfomance Module.

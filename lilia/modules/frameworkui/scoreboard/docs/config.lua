@@ -1,4 +1,4 @@
---- Configuration for Scoreboard Module.
+﻿--- Configuration for Scoreboard Module.
 -- @configuration Scoreboard
 
 --- This table defines the default settings for the Scoreboard Module.

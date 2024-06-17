@@ -1,4 +1,4 @@
---- Configuration for ThirdPerson Module.
+﻿--- Configuration for ThirdPerson Module.
 -- @configuration ThirdPerson
 
 --- This table defines the default settings for the ThirdPerson Module.

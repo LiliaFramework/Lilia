@@ -1,4 +1,4 @@
---- Configuration for Permissions Module.
+﻿--- Configuration for Permissions Module.
 -- @configuration Permissions
 
 --- This table defines the default settings for the Permissions Module.

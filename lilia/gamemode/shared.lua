@@ -4,7 +4,6 @@ GM.Author = "Samael"
 GM.Website = "https://discord.gg/jjrhyeuzYV"
 ModulesLoaded = false
 MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Bootstrapper] ", color_white, "Starting shared load...\n")
-
 function GM:Initialize()
     hook.Run("LoadLiliaFonts", "Arial", "Segoe UI")
     lia.module.initialize()
@@ -19,7 +18,6 @@ function GM:OnReloaded()
     lia.faction.formatModelData()
     hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
 end
-
 
 function LiliaPrint(message, color)
     color = color or Color(255, 255, 255)

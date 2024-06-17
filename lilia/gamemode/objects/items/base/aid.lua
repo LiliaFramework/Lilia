@@ -1,4 +1,4 @@
-ITEM.name = "Aid Items"
+﻿ITEM.name = "Aid Items"
 ITEM.desc = "Heals you bruh."
 ITEM.model = "models/weapons/w_package.mdl"
 ITEM.width = 1

@@ -1,4 +1,4 @@
---- Configuration for Bodygrouper Module.
+﻿--- Configuration for Bodygrouper Module.
 -- @configuration Bodygrouper
 
 --- This table defines the default settings for the Bodygrouper Module.

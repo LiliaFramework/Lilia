@@ -1,4 +1,4 @@
---[[
+﻿--[[
 if SERVER then
   Beans:Assign(KEY_H, 'ExampleToggled')
     :Toggle(function(pl, toggled)
@@ -34,7 +34,6 @@ Beans:Assign(KEY_O, 'ExampleShared')
     chat.AddText("CLIENT: I'm gonna die... (client will execute this faster btw)")
   end)
 ]]
-
 Beans = Beans or {}
 Beans.Stored = Beans.Stored or {}
 Beans.Current = Beans.Current or {}

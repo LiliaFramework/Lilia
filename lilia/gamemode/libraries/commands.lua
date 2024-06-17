@@ -146,50 +146,49 @@ function lia.command.extractArgs(text)
 end
 
 if SERVER then
---- Attempts to find a player by an identifier. If unsuccessful, a notice will be displayed to the specified player. The
--- search criteria is derived from `lia.command.findPlayer`.
--- @realm server
--- @param client Player The client to give a notification to if the player could not be found.
--- @param name string Search query
--- @treturn player|nil Player that matches the given search query, or nil if a player could not be found
--- @see lia.util.findPlayer
-function lia.command.findPlayer(client, name)
-    if isstring(name) then
-        if string.find(name, "^STEAM_%d+:%d+:%d+$") then
-            local player = player.GetBySteamID(name)
-            if IsValid(player) then
-                return player
+    --- Attempts to find a player by an identifier. If unsuccessful, a notice will be displayed to the specified player. The
+    -- search criteria is derived from `lia.command.findPlayer`.
+    -- @realm server
+    -- @param client Player The client to give a notification to if the player could not be found.
+    -- @param name string Search query
+    -- @treturn player|nil Player that matches the given search query, or nil if a player could not be found
+    -- @see lia.util.findPlayer
+    function lia.command.findPlayer(client, name)
+        if isstring(name) then
+            if string.find(name, "^STEAM_%d+:%d+:%d+$") then
+                local player = player.GetBySteamID(name)
+                if IsValid(player) then
+                    return player
+                else
+                    client:notifyLocalized("plyNoExist")
+                    return nil
+                end
+            end
+
+            if name == "^" then
+                return client
+            elseif name == "@" then
+                local trace = client:GetEyeTrace().Entity
+                if IsValid(trace) and trace:IsPlayer() then
+                    return trace
+                else
+                    client:notifyLocalized("lookToUseAt")
+                    return nil
+                end
+            end
+
+            local target = lia.util.findPlayer(name) or NULL
+            if IsValid(target) then
+                return target
             else
                 client:notifyLocalized("plyNoExist")
                 return nil
             end
-        end
-
-        if name == "^" then
-            return client
-        elseif name == "@" then
-            local trace = client:GetEyeTrace().Entity
-            if IsValid(trace) and trace:IsPlayer() then
-                return trace
-            else
-                client:notifyLocalized("lookToUseAt")
-                return nil
-            end
-        end
-
-        local target = lia.util.findPlayer(name) or NULL
-        if IsValid(target) then
-            return target
         else
-            client:notifyLocalized("plyNoExist")
+            client:notifyLocalized("mustProvideString")
             return nil
         end
-    else
-        client:notifyLocalized("mustProvideString")
-        return nil
     end
-end
-
 
     --- Attempts to find a faction by an identifier.
     -- @realm server

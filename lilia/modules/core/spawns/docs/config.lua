@@ -1,4 +1,4 @@
---- Configuration for Spawns Module.
+﻿--- Configuration for Spawns Module.
 -- @configuration Spawns
 
 --- This table defines the default settings for the Spawns Module.

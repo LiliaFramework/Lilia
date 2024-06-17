@@ -1,4 +1,4 @@
---- Hook Documentation for Vendor Module.
+﻿--- Hook Documentation for Vendor Module.
 -- @hooks Vendor
 
 --- Determines whether a player can access a vendor.

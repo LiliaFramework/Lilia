@@ -1,4 +1,4 @@
---- Helper library for managing database.
+﻿--- Helper library for managing database.
 -- @library lia.db
 lia.db = lia.db or {}
 lia.db.queryQueue = lia.db.queue or {}
@@ -10,13 +10,13 @@ MYSQLOO_STRING = 1
 MYSQLOO_BOOL = 2
 local modules = {}
 local function ThrowQueryFault(query, fault)
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255),  " * " .. query .. "\n")
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255),  " " .. fault .. "\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " * " .. query .. "\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. fault .. "\n")
 end
 
 local function ThrowConnectionFault(fault)
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255),  " Lilia has failed to connect to the database.\n")
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255),  " " .. fault .. "\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " Lilia has failed to connect to the database.\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. fault .. "\n")
     setNetVar("dbError", fault)
 end
 
@@ -127,9 +127,9 @@ modules.mysqloo = {
     connect = function(callback)
         if not pcall(require, "mysqloo") then return setNetVar("dbError", system.IsWindows() and "Server is missing VC++ redistributables! " or "Server is missing binaries for mysqloo! ") end
         if mysqloo.VERSION ~= "9" or not mysqloo.MINOR_VERSION or tonumber(mysqloo.MINOR_VERSION) < 1 then
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255),  " You are using an outdated mysqloo version.\n")
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255),  " Download the latest mysqloo9 from here.\n")
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255),  " https://github.com/syl0r/MySQLOO/releases.\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " You are using an outdated mysqloo version.\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " Download the latest mysqloo9 from here.\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " https://github.com/syl0r/MySQLOO/releases.\n")
             return
         end
 
@@ -211,8 +211,7 @@ modules.mysqloo = {
 
             prepObj:start()
         else
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255),  " INVALID PREPARED STATEMENT : " .. key .. "\n")
-
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " INVALID PREPARED STATEMENT : " .. key .. "\n")
         end
     end
 }
@@ -254,8 +253,7 @@ end
 function lia.db.wipeTables(callback)
     local function realCallback()
         lia.db.query("SET FOREIGN_KEY_CHECKS = 1;", function()
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255),  " ALL LILIA DATA HAS BEEN WIPED\n")
-
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " ALL LILIA DATA HAS BEEN WIPED\n")
             if isfunction(callback) then callback() end
         end)
     end

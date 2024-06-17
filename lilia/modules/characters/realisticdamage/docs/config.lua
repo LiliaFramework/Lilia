@@ -1,4 +1,4 @@
---- Configuration for RealisticDamage Module.
+﻿--- Configuration for RealisticDamage Module.
 -- @configuration RealisticDamage
 
 --- This table defines the default settings for the RealisticDamage Module.

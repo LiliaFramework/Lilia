@@ -1,4 +1,4 @@
---- Configuration for Voice Module.
+﻿--- Configuration for Voice Module.
 -- @configuration Voice
 
 --- This table defines the default settings for the Voice Module.

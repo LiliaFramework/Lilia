@@ -1,4 +1,4 @@
---- Configuration for Chatbox Module.
+﻿--- Configuration for Chatbox Module.
 -- @configuration Chatbox
 
 --- This table defines the default settings for the ChatBox Module.

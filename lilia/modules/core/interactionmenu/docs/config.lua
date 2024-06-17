@@ -1,4 +1,4 @@
---- Configuration for InteractionMenu Module.
+﻿--- Configuration for InteractionMenu Module.
 -- @configuration InteractionMenu
 
 --- This table defines the default settings for the InteractionMenu Module.

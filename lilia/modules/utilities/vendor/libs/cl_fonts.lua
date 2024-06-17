@@ -10,6 +10,7 @@
         weight = 500,
         size = 22
     })
+
     surface.CreateFont("VendorSmallFont", {
         font = font,
         weight = 500,

@@ -1,4 +1,4 @@
-NAME = "Italian"
+﻿NAME = "Italian"
 LANGUAGE = {
     loading = "Carico",
     dbError = "Connessione del database non riuscita",

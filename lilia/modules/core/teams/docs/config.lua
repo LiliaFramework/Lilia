@@ -1,4 +1,4 @@
---- Configuration for Teams Module.
+﻿--- Configuration for Teams Module.
 -- @configuration Teams
 
 --- This table defines the default settings for the Teams Module.
