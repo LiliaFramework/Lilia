@@ -581,7 +581,7 @@ if SERVER then
         if IsValid(client) then
             removePlayer(client)
         else
-            for _, target in ipairs(player.GetAll()) do
+            for _, target in player.Iterator() do
                 if not table.HasValue(target.liaCharList or {}, id) then continue end
                 table.RemoveByValue(target.liaCharList, id)
                 removePlayer(target)

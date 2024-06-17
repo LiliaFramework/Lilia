@@ -395,7 +395,7 @@ if SERVER then
     -- @treturn table An array containing the recipients for synchronization.
     function Inventory:getRecipients()
         local recipients = {}
-        for _, client in ipairs(player.GetAll()) do
+        for _, client in player.Iterator() do
             if self:canAccess("repl", {
                 client = client
             }) then

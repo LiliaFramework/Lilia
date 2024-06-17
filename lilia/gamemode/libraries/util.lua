@@ -152,7 +152,7 @@ end
 -- @realm shared
 function lia.util.getAdmins()
     local staff = {}
-    for _, client in ipairs(player.GetAll()) do
+    for _, client in player.Iterator() do
         local hasPermission = CAMI.PlayerHasAccess(client, "UserGroups - Staff Group", nil)
         if hasPermission then staff[#staff + 1] = client end
     end
@@ -164,7 +164,7 @@ end
 -- @treturn Player The player object if found, nil otherwise
 -- @realm shared
 function lia.util.findPlayerBySteamID64(SteamID64)
-    for _, client in ipairs(player.GetAll()) do
+    for _, client in player.Iterator() do
         if client:SteamID64() == SteamID64 then return client end
     end
     return nil
@@ -175,7 +175,7 @@ end
 -- @treturn Player The player object if found, nil otherwise
 -- @realm shared
 function lia.util.findPlayerBySteamID(SteamID)
-    for _, client in ipairs(player.GetAll()) do
+    for _, client in player.Iterator() do
         if client:SteamID() == SteamID then return client end
     end
     return nil
@@ -219,7 +219,7 @@ end
 function lia.util.playerInRadius(pos, dist)
     dist = dist * dist
     local t = {}
-    for _, client in ipairs(player.GetAll()) do
+    for _, client in player.Iterator() do
         if IsValid(client) and client:GetPos():DistToSqr(pos) < dist then t[#t + 1] = client end
     end
     return t

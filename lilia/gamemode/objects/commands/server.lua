@@ -688,7 +688,7 @@ lia.command.add("liststaff", {
     adminOnly = false,
     privilege = "List Staff",
     onRun = function(client)
-        for _, target in ipairs(player.GetAll()) do
+        for _, target in player.Iterator() do
             if target:isStaff() then client:chatNotify("Off Duty Staff Meber: " .. target:Name()) end
         end
     end
@@ -698,7 +698,7 @@ lia.command.add("listondutystaff", {
     adminOnly = false,
     privilege = "List Staff",
     onRun = function(client)
-        for _, target in ipairs(player.GetAll()) do
+        for _, target in player.Iterator() do
             if target:isStaffOnDuty() then client:chatNotify("Off Duty Staff Meber: " .. target:Name()) end
         end
     end
@@ -708,7 +708,7 @@ lia.command.add("listvip", {
     adminOnly = false,
     privilege = "List VIPs",
     onRun = function(client)
-        for _, target in ipairs(player.GetAll()) do
+        for _, target in player.Iterator() do
             if target:isVIP() then client:chatNotify("VIP Member: " .. target:Name()) end
         end
     end
@@ -718,7 +718,7 @@ lia.command.add("listusers", {
     adminOnly = false,
     privilege = "List Users",
     onRun = function(client)
-        for _, target in ipairs(player.GetAll()) do
+        for _, target in player.Iterator() do
             if target:isUser() then client:chatNotify("User Member: " .. target:Name()) end
         end
     end
@@ -1051,7 +1051,7 @@ lia.command.add("membercount", {
         local onDutyStaffCount = 0
         local vipCount = 0
         local userCount = 0
-        for _, target in ipairs(player.GetAll()) do
+        for _, target in player.Iterator() do
             if target:isStaff() then staffCount = staffCount + 1 end
             if target:isStaffOnDuty() then onDutyStaffCount = onDutyStaffCount + 1 end
             if target:isVIP() then vipCount = vipCount + 1 end
