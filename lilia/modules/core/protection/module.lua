@@ -4,8 +4,8 @@ MODULE.discord = "@liliaplayer"
 MODULE.desc = "Implements Lilia Protection Modules."
 MODULE.CAMIPrivileges = {
     {
-        Name = "Staff Permissions - Can See Family Sharing Notifications",
+        Name = "Staff Permissions - Can See Alting Notifications",
         MinAccess = "admin",
-        Description = "Allows access to seeing Family Sharing Notifications ."
+        Description = "Allows access to seeing Alting Warnings ."
     },
 }

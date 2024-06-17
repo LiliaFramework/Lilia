@@ -20,7 +20,7 @@ function MODULE:HUDPaint()
     local client = LocalPlayer()
     if client:getChar() and (CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip ESP Outside Staff Character", nil) or client:isStaffOnDuty()) and client:IsNoClipping() and not client:InVehicle() then
         for _, v in ents.Iterator() do
-            if IsValid(v) and (v:isItem() or v:IsPlayer() or v:isProp() or table.HasValue(PermissionCore.NoClipESPEntities, v:GetClass())) and v ~= LocalPlayer() then
+            if IsValid(v) and (v:isItem() or v:IsPlayer() or v:isProp() or table.HasValue(self.NoClipESPEntities, v:GetClass())) and v ~= LocalPlayer() then
                 local vPos = v:GetPos()
                 local clientPos = client:GetPos()
                 if vPos ~= nil and clientPos then
@@ -44,7 +44,7 @@ function MODULE:HUDPaint()
                         lia.util.drawText("Prop Model: " .. name, x, y - size, ColorAlpha(Color(255, 255, 255, 255), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, nil, alpha)
                     end
 
-                    if table.HasValue(PermissionCore.NoClipESPEntities, v:GetClass()) and ESP_Entities:GetBool() then
+                    if table.HasValue(self.NoClipESPEntities, v:GetClass()) and ESP_Entities:GetBool() then
                         surface.SetDrawColor(30, 30, 30, alpha)
                         local name = v:GetClass()
                         lia.util.drawText("Entity Class: " .. name, x, y - size, ColorAlpha(Color(255, 255, 255, 255), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, nil, alpha)

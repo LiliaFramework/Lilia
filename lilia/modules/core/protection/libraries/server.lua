@@ -1,17 +1,13 @@
 ﻿local MODULE = MODULE
+
 MODULE.crun = MODULE.crun or concommand.Run
-function MODULE:ApplyPunishment(client, infraction, kick, ban, time)
-    local bantime = time or 0
-    if kick then client:Kick("Kicked for " .. infraction .. ".") end
-    if ban then client:Ban(bantime, "Banned for " .. infraction .. ".") end
-end
 
 function MODULE:PlayerAuthed(client, steamid)
     local steamID64 = util.SteamIDTo64(steamid)
     local OwnerSteamID64 = client:OwnerSteamID64()
     local SteamName = client:steamName()
     local SteamID = client:SteamID()
-    if self.FamilySharingEnabled and OwnerSteamID64 ~= steamID64 then
+    if self.AltsDisabled and OwnerSteamID64 ~= steamID64 then
         client:Kick("Sorry! We do not allow family-shared accounts in this server!")
         self:NotifyAdmin(SteamName .. " (" .. SteamID .. ") kicked for family sharing.")
     elseif WhitelistCore and table.HasValue(WhitelistCore.BlacklistedSteamID64, OwnerSteamID64) then
@@ -68,7 +64,6 @@ function MODULE:OnEntityCreated(entity)
     end
 end
 
-
 function MODULE:EntityTakeDamage(entity, dmgInfo)
     local inflictor = dmgInfo:GetInflictor()
     local attacker = dmgInfo:GetAttacker()
@@ -114,11 +109,19 @@ end
 function MODULE:PlayerEnteredVehicle(_, entity)
     if entity:GetClass() == "prop_vehicle_prisoner_pod" then entity:RemoveEFlags(EFL_NO_THINK_FUNCTION) end
 end
+
 function MODULE:NotifyAdmin(notification)
-    for _, admin in ipairs(player.GetAll()) do
-        if IsValid(admin) and CAMI.PlayerHasAccess(admin, "Staff Permissions - Can See Family Sharing Notifications", nil) then admin:chatNotify(notification) end
+    for _, admin in player.Iterator() do
+        if IsValid(admin) and CAMI.PlayerHasAccess(admin, "Staff Permissions - Can See Alting Notifications", nil) then admin:chatNotify(notification) end
     end
 end
+
+function MODULE:ApplyPunishment(client, infraction, kick, ban, time)
+    local bantime = time or 0
+    if kick then client:Kick("Kicked for " .. infraction .. ".") end
+    if ban then client:Ban(bantime, "Banned for " .. infraction .. ".") end
+end
+
 function net.Incoming(length, client)
     local i = net.ReadHeader()
     local strName = util.NetworkIDToString(i)
