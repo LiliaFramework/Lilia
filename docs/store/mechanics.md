@@ -160,3 +160,5 @@
 - **Leveling**: Adds a configurable leveling system, currently increasing health but adaptable for other enhancements.
 
 - **Ranking System**: Adds various ranks that show on the scoreboard. These are tied to factions and can include stat changes, custom models, custom weapons, and more.
+
+- **Syringes**: Adds Syringes that can be used to provide effects.
