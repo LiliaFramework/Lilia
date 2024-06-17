@@ -1,7 +1,5 @@
 ﻿local MODULE = MODULE
-
 MODULE.crun = MODULE.crun or concommand.Run
-
 function MODULE:PlayerAuthed(client, steamid)
     local steamID64 = util.SteamIDTo64(steamid)
     local OwnerSteamID64 = client:OwnerSteamID64()
@@ -136,11 +134,7 @@ function net.Incoming(length, client)
         return
     end
 
-    if not MODULE.DefaultNets[strName] then
-        lia.log.add(client, "net", strName)
-        return
-    end
-
+    if not MODULE.DefaultNets[strName] then lia.log.add(client, "net", strName) end
     length = length - 16
     func(length, client)
 end

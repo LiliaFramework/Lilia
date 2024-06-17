@@ -19,7 +19,7 @@ lia.module.ModuleFiles = {"client.lua", "cl_module.lua", "sv_module.lua", "serve
 -- @bool firstLoad Indicates if this is the first load of the module.
 -- @realm shared
 -- @internal
-function lia.module.load(uniqueID, path, isSingleFile, variable, firstLoad)
+function lia.module.load(uniqueID, path, isSingleFile, variable, category, firstLoad)
     local lowerVariable = variable:lower()
     local normalpath = path .. "/" .. lowerVariable .. ".lua"
     local extendedpath = path .. "/sh_" .. lowerVariable .. ".lua"
@@ -89,7 +89,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, firstLoad)
         end
     else
         lia.module.list[uniqueID] = MODULE
-        lia.module.OnFinishLoad(uniqueID, path, firstLoad)
+        lia.module.OnFinishLoad(uniqueID, path, category, firstLoad)
         _G[variable] = oldModule
     end
 
@@ -128,16 +128,16 @@ end
 -- @internal
 function lia.module.initialize(firstLoad)
     local schema = engine.ActiveGamemode()
-    lia.module.load("schema", schema .. "/schema", false, "schema", firstLoad)
+    lia.module.load("schema", schema .. "/schema", false, "schema", "Schema", firstLoad)
     hook.Run("InitializedSchema")
-    lia.module.loadFromDir("lilia/modules/core", "module", firstLoad)
-    lia.module.loadFromDir("lilia/modules/frameworkui", "module", firstLoad)
-    lia.module.loadFromDir("lilia/modules/characters", "module", firstLoad)
-    lia.module.loadFromDir("lilia/modules/utilities", "module", firstLoad)
-    lia.module.loadFromDir("lilia/modules/compatibility", "module", firstLoad)
-    lia.module.loadFromDir(schema .. "/preload", "module", firstLoad)
-    lia.module.loadFromDir(schema .. "/modules", "module", firstLoad)
-    lia.module.loadFromDir(schema .. "/overrides", "module", firstLoad)
+    lia.module.loadFromDir("lilia/modules/core", "module", "Core", firstLoad)
+    lia.module.loadFromDir("lilia/modules/frameworkui", "module", "Visuals", firstLoad)
+    lia.module.loadFromDir("lilia/modules/characters", "module", "Characters", firstLoad)
+    lia.module.loadFromDir("lilia/modules/utilities", "module", "Utilities", firstLoad)
+    lia.module.loadFromDir("lilia/modules/compatibility", "module", "Compatibility", firstLoad)
+    lia.module.loadFromDir(schema .. "/preload", "module", "Schema", firstLoad)
+    lia.module.loadFromDir(schema .. "/modules", "module", "Schema", firstLoad)
+    lia.module.loadFromDir(schema .. "/overrides", "module", "Schema", firstLoad)
     hook.Run("InitializedModules")
 end
 
@@ -148,15 +148,15 @@ end
 -- @bool firstLoad Indicates if this is the first load of the modules.
 -- @realm shared
 -- @internal
-function lia.module.loadFromDir(directory, group, firstLoad)
+function lia.module.loadFromDir(directory, group, category, firstLoad)
     local location = group == "schema" and "SCHEMA" or "MODULE"
     local files, folders = file.Find(directory .. "/*", "LUA")
     for _, v in ipairs(folders) do
-        lia.module.load(v, directory .. "/" .. v, false, location, firstLoad)
+        lia.module.load(v, directory .. "/" .. v, false, location, category, firstLoad)
     end
 
     for _, v in ipairs(files) do
-        lia.module.load(string.StripExtension(v), directory .. "/" .. v, true, location, firstLoad)
+        lia.module.load(string.StripExtension(v), directory .. "/" .. v, true, location, category, firstLoad)
     end
 end
 
@@ -229,15 +229,15 @@ end
 -- @bool firstLoad Indicates if this is the first load of the module.
 -- @realm shared
 -- @internal
-function lia.module.OnFinishLoad(uniqueID, path, firstLoad)
+function lia.module.OnFinishLoad(uniqueID, path, category, firstLoad)
     local moduleTable = lia.module.list[uniqueID]
     local identifier = moduleTable.identifier
     local name = moduleTable.name
     local files, folders = file.Find(path .. "/submodules/*", "LUA")
     if identifier ~= "" then _G[identifier] = moduleTable end
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(135, 206, 250), "[Module] ", color_white, (firstLoad and "Finished Loading '" .. name .. "'\n") or "Finished Reloading '" .. name .. "'\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(135, 206, 250), "[" .. string.FirstToUpper(category) .. " Modules] ", color_white, (firstLoad and "Finished Loading '" .. name .. "'\n") or "Finished Reloading '" .. name .. "'\n")
     if #files > 0 or #folders > 0 then
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[SubModule] ", color_white, (firstLoad and "Finished Loading Submodules For '" .. name .. "'\n") or "Finished Reloading '" .. name .. "'\n")
-        lia.module.loadFromDir(path .. "/submodules", "module", firstLoad)
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. string.FirstToUpper(category) .. " SubModules] ", color_white, (firstLoad and "Finished Loading Submodules For '" .. name .. "'\n") or "Finished Reloading '" .. name .. "'\n")
+        lia.module.loadFromDir(path .. "/submodules", "module", category, firstLoad)
     end
 end
