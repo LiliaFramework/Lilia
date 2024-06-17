@@ -62,7 +62,7 @@ end
 -- @realm shared
 -- @client client The player attempting to use the character
 -- @character character The character being considered for use
--- @treturn boolean Whether the player is allowed to use the character
+-- @treturn bool Whether the player is allowed to use the character
 -- @treturn string|nil If disallowed, a reason for the disallowance; otherwise, nil
 function CanPlayerUseChar(client, character)
 end

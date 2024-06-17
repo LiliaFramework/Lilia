@@ -65,7 +65,7 @@ if SERVER then
     -- If the inventory is not found in storage, it falls back to the default storage.
     -- @realm server
     -- @tparam number id The ID of the inventory to load.
-    -- @tparam[opt=false] boolean noCache If true, forces loading from storage even if cached.
+    -- @tparam[opt=false] bool noCache If true, forces loading from storage even if cached.
     -- @treturn Deferred A deferred object that resolves with the loaded inventory instance or nil if not found.
     function lia.inventory.loadByID(id, noCache)
         local instance = lia.inventory.instances[invID]
@@ -90,7 +90,7 @@ if SERVER then
     --- Loads an inventory instance from the default storage.
     -- @realm server
     -- @tparam number id The ID of the inventory to load.
-    -- @tparam[opt=false] boolean noCache If true, forces loading from storage even if cached.
+    -- @tparam[opt=false] bool noCache If true, forces loading from storage even if cached.
     -- @treturn Deferred A deferred object that resolves with the loaded inventory instance or nil if not found.
     function lia.inventory.loadFromDefaultStorage(id, noCache)
         return deferred.all({lia.db.select(INV_FIELDS, INV_TABLE, "_invID = " .. id, 1), lia.db.select(DATA_FIELDS, DATA_TABLE, "_invID = " .. id)}):next(function(res)

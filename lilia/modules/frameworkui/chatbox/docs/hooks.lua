@@ -43,6 +43,6 @@ end
 -- @param client (Player) The player entity who sent the message.
 -- @param message (string) The message sent by the player.
 -- @param chatType (string) The type of chat message (e.g., "ic" for in-character, "ooc" for out-of-character).
--- @param anonymous (boolean) Whether the message was sent anonymously (true) or not (false).
+-- @param anonymous (bool) Whether the message was sent anonymously (true) or not (false).
 function OnChatReceived(client, message, chatType, anonymous)
 end

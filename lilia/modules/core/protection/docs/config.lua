@@ -20,3 +20,4 @@
 -- @field BadCVars Lists undesirable console variables | **table**
 -- @field ExploitableNetMessages Lists exploitable Net Messages | **table**
 -- @field ActExploitTimer Specifies the duration (in seconds) a player remains unable to deal damage after using an "act" command | **integer**
+-- @field DefaultNets The default net messages that dont get logged | **table**

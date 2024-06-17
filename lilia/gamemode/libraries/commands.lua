@@ -16,8 +16,8 @@ lia.command.list = lia.command.list or {}
 -- @field[type=function] onRun This function is called when the command has passed all the checks and can execute. The
 -- arguments will be the calling player and subsequent argument list.
 --
--- @field[type=boolean,opt=false] adminOnly Provides an additional check to see if the user is an admin before running.
--- @field[type=boolean,opt=false] superAdminOnly Provides an additional check to see if the user is a superadmin before running.
+-- @field[type=bool,opt=false] adminOnly Provides an additional check to see if the user is an admin before running.
+-- @field[type=bool,opt=false] superAdminOnly Provides an additional check to see if the user is a superadmin before running.
 -- @field[type=string,opt=nil] privilege Manually specify a privilege name for this command. It will always be prefixed with
 -- `"Commands - "`. This is used in the case that you want to group commands under the same privilege, or use a privilege that
 -- you've already defined (i.e grouping `/charban` and `/charunban` into the `Commands - Ban Characters` privilege).

@@ -19,6 +19,6 @@ end
 -- @realm client
 -- @client client The player entity being checked.
 -- @string var The variable being checked for override (e.g., "name" or "desc").
--- @treturn boolean True if the variable should be overridden, false otherwise.
+-- @treturn boolthe variable should be overridden, false otherwise.
 function ShouldAllowScoreboardOverride(client, var)
 end

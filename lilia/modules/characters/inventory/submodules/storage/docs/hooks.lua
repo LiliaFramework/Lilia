@@ -17,7 +17,7 @@ end
 -- This hook allows customization of conditions for considering an entity as suitable storage.
 -- @realm shared
 -- @entity entity The entity being checked.
--- @treturn boolean Whether the entity is suitable for use as storage.
+-- @treturn bool Whether the entity is suitable for use as storage.
 function isSuitableForTrunk(entity)
 end
 
@@ -45,7 +45,7 @@ end
 -- @realm server
 -- @entity entity The storage entity.
 -- @entity inventory The inventory associated with the storage entity.
--- @treturn boolean Whether the data should be saved.
+-- @treturn bool Whether the data should be saved.
 function CanSaveData(entity, inventory)
 end
 
@@ -78,7 +78,7 @@ end
 -- @client client The player attempting to transfer the item.
 -- @entity storage The storage entity.
 -- @param item The item being transferred.
--- @treturn boolean Whether the player is allowed to transfer the item.
+-- @treturn bool Whether the player is allowed to transfer the item.
 function StorageCanTransferItem(client, storage, item)
 end
 

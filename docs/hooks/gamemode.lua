@@ -19,7 +19,7 @@ end
 --- Determines whether a client should drown.
 -- @realm server
 -- @client client The player entity.
--- @treturn boolean True if the client should drown, false otherwise.
+-- @treturn bool True if the client should drown, false otherwise.
 function ShouldClientDrown(client)
 end
 
@@ -118,7 +118,7 @@ end
 
 --- Called to determine whether data should be saved before shutting down the server.
 -- This function is called to determine whether data should be saved bore the server shuts down.
--- @treturn boolean True if data should be saved, false otherwise
+-- @treturn bool True if data should be saved, false otherwise
 -- @realm server
 function ShouldDataBeSaved()
 end

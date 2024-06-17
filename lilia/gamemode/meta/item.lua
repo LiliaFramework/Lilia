@@ -288,7 +288,7 @@ if SERVER then
     -- @realm server
     -- @param newInventory The inventory to which the item should be transferred.
     -- @bool bBypass Whether to bypass access checks for transferring the item.
-    -- @treturn boolean Whether the item was successfully transferred or not.
+    -- @treturn bool Whether the item was successfully transferred or not.
     function ITEM:transfer(newInventory, bBypass)
         if not bBypass and not newInventory:canAccess("transfer") then return false end
         local inventory = lia.inventory.instances[self.invID]

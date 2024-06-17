@@ -66,7 +66,7 @@ end
 --- Retrieves items with a specified unique ID from the inventory.
 -- @realm shared
 -- @tparam string uniqueID The unique ID of the items to retrieve.
--- @tparam[opt=false] boolean onlyMain Whether to retrieve only main items.
+-- @tparam[opt=false] bool onlyMain Whether to retrieve only main items.
 -- @treturn table An array containing the items with the specified unique ID.
 function Inventory:getItemsByUniqueID(uniqueID, onlyMain)
     local items = {}
@@ -171,7 +171,7 @@ end
 --- Checks if the inventory contains an item of a specific type.
 -- @realm shared
 -- @tparam string itemType The type of item to check for.
--- @treturn boolean Returns true if the inventory contains an item of the specified type, otherwise false.
+-- @treturn bool Returns true if the inventory contains an item of the specified type, otherwise false.
 function Inventory:hasItem(itemType)
     for _, item in pairs(self:getItems()) do
         if item.uniqueID == itemType then return true end
@@ -201,7 +201,7 @@ end
 --- Checks if two inventories are equal based on their IDs.
 -- @realm shared
 -- @tparam Inventory other The other inventory to compare with.
--- @treturn boolean Returns true if the inventories have the same ID, otherwise false.
+-- @treturn bool Returns true if the inventories have the same ID, otherwise false.
 function Inventory:__eq(other)
     return self:getID() == other:getID()
 end
@@ -356,7 +356,7 @@ if SERVER then
     -- @realm server
     -- @tparam string action The action to check for access.
     -- @tparam[opt] table context Additional context for the access check.
-    -- @treturn boolean|nil Returns true if the action is permitted, false if denied, or nil if not applicable.
+    -- @treturn bool|nil Returns true if the action is permitted, false if denied, or nil if not applicable.
     -- @treturn[opt] string A reason for the access result.
     function Inventory:canAccess(action, context)
         context = context or {}

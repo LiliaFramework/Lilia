@@ -124,7 +124,7 @@ end
 
 --- Checks if a given value is a SteamID.
 -- @string value The value to check
--- @treturn boolean True if the value is a SteamID, false otherwise
+-- @treturn bool True if the value is a SteamID, false otherwise
 -- @realm shared
 function lia.util.isSteamID(value)
     if string.match(value, "STEAM_(%d+):(%d+):(%d+)") then return true end
@@ -186,7 +186,7 @@ end
 -- @vector[opt] mins The minimum size of the collision hull
 -- @vector[opt] maxs The maximum size of the collision hull
 -- @tab[opt] filter Entities to filter out from the collision check
--- @treturn boolean True if the position can fit the collision hull, false otherwise
+-- @treturn bool True if the position can fit the collision hull, false otherwise
 -- @realm shared
 function lia.util.canFit(pos, mins, maxs, filter)
     mins = mins ~= nil and mins or Vector(16, 16, 0)
@@ -203,7 +203,7 @@ end
 
 --- Rolls a chance based on a given probability.
 -- @int chance The probability of success in percentage
--- @treturn boolean True if the chance is successful, false otherwise
+-- @treturn bool True if the chance is successful, false otherwise
 -- @realm shared
 function lia.util.chance(chance)
     local rand = math.random(0, 100)
