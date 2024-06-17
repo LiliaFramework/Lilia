@@ -1,5 +1,6 @@
 ﻿--- Hook Documentation for ChatBox Module.
 -- @hooks ChatBox
+
 --- Called when the text in the chat input box changes.
 -- This hook allows for additional actions or modifications to be made whenever the chat input text changes.
 -- @realm client

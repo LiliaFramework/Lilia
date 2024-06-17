@@ -1,5 +1,6 @@
 ﻿--- Hook Documentation for Bodygrouper Module.
 -- @hooks Bodygrouper
+
 --- Called when a user leaves a bodygrouper closet.
 -- @realm shared
 -- This hook is triggered when a player is removed from a bodygrouper closet.

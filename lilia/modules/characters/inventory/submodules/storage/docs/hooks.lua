@@ -1,5 +1,6 @@
 ﻿--- Hook Documentation for Inventory Module.
 -- @hooks Storage
+
 --- Whether or not a player is allowed to spawn a container entity.
 -- @client client The player attempting to spawn a container.
 -- @entity entity The container entity being spawned.

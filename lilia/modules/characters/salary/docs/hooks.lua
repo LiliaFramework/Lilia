@@ -1,5 +1,6 @@
 ﻿--- Hook Documentation for Salary Module.
 -- @hooks Salary
+
 --- Retrieves the salary limit for a player.
 --- @client client The player for whom to retrieve the salary limit.
 --- @tab faction The faction the player belongs to.

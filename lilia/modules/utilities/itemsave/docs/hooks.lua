@@ -1,5 +1,6 @@
 ﻿--- Hook Documentation for Item Save Module.
 -- @hooks ItemSave
+
 --- Determines if saved items should be deleted on server restart.
 -- This hook is called to check whether saved items should be deleted when the server restarts.
 -- @realm server
