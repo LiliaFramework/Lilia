@@ -1,4 +1,4 @@
-﻿--- Helper library for managing database.
+--- Helper library for managing database.
 -- @library lia.db
 lia.db = lia.db or {}
 lia.db.queryQueue = lia.db.queue or {}
@@ -130,8 +130,6 @@ modules.mysqloo = {
             MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255),  " You are using an outdated mysqloo version.\n")
             MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255),  " Download the latest mysqloo9 from here.\n")
             MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255),  " https://github.com/syl0r/MySQLOO/releases.\n")
- 
-         
             return
         end
 
