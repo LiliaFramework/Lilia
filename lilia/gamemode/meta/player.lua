@@ -944,7 +944,7 @@ if SERVER then
                 if IsValid(self) and not entity.liaIgnoreDelete then
                     if entity.liaWeapons then
                         for _, v in ipairs(entity.liaWeapons) do
-                            self:Give(v)
+                            self:Give(v, true)
                             if entity.liaAmmo then
                                 for k2, v2 in ipairs(entity.liaAmmo) do
                                     if v == v2[1] then self:SetAmmo(v2[2], tostring(k2)) end
