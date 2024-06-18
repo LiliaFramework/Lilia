@@ -31,7 +31,7 @@ function MODULE:DrawEntityInfo(entity, alpha, position)
     end
 
     for i = 1, #entity.liaNameLines do
-        charInfo[#charInfo + 1] = {entity.liaNameLines[i], team.GetColor(entity.Team(entity))}
+        charInfo[#charInfo + 1] = {entity.liaNameLines[i], color_white}
     end
 
     local description = hook.Run("GetDisplayedDescription", entity, true) or character.getDesc(character)
