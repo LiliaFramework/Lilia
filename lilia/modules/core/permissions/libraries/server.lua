@@ -6,7 +6,7 @@ function GAMEMODE:PlayerSpawnNPC(client)
     return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn NPCs", nil)) or client:getChar():hasFlags("n")
 end
 
-function GAMEMODE:PlayerSpawnProp(client, model)
+function GAMEMODE:PlayerSpawnProp(client)
     return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Props", nil)) or client:getChar():hasFlags("e")
 end
 
@@ -47,7 +47,7 @@ function GAMEMODE:CanProperty(client, property, entity)
     return (entity:GetCreator() == client and (property == "remover" or property == "collision")) or (CAMI.PlayerHasAccess(client, "Staff Permissions - Access Property " .. property:gsub("^%l", string.upper), nil) and client:isStaffOnDuty())
 end
 
-function GAMEMODE:PlayerSpawnObject(client, model, pos, ang)
+function GAMEMODE:PlayerSpawnObject(client)
     if not client.NextSpawn then client.NextSpawn = CurTime() end
     if CAMI.PlayerHasAccess(client, "Spawn Permissions - No Spawn Delay", nil) then return true end
     if client.NextSpawn >= CurTime() then
