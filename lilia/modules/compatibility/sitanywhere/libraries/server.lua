@@ -8,7 +8,7 @@
     RunConsoleCommand("sitting_anti_tool_abuse", "1")
 end
 
-function MODULE:CheckValidSit(client, _)
+function MODULE:CheckValidSit(client)
     local entity = client:GetTracedEntity()
     if entity:IsVehicle() or entity:IsPlayer() then return false end
 end

@@ -14,6 +14,9 @@ function GM:Initialize()
         game.ConsoleCommand("gmod_physiterations 2\n")
         game.ConsoleCommand("sv_minrate 1048576\n")
     else
+        timer.Remove("HintSystem_OpeningMenu")
+        timer.Remove("HintSystem_Annoy1")
+        timer.Remove("HintSystem_Annoy2")
         hook.Run("LoadLiliaFonts", "Arial", "Segoe UI")
     end
 
@@ -27,7 +30,12 @@ function GM:OnReloaded()
     end
 
     lia.faction.formatModelData()
-    hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
+    if CLIENT then
+        timer.Remove("HintSystem_OpeningMenu")
+        timer.Remove("HintSystem_Annoy1")
+        timer.Remove("HintSystem_Annoy2")
+        hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
+    end
 end
 
 function LiliaPrint(message, color)

@@ -15,7 +15,7 @@ function MODULE:PlayerDeath(client)
     if deathSound then client:EmitSound(deathSound) end
 end
 
-function MODULE:EntityTakeDamage(client, _)
+function MODULE:EntityTakeDamage(client)
     if not self.PainSoundEnabled or not client:IsPlayer() or client:Health() <= 0 then return end
     local painSound = self:GetPlayerPainSound(client, "hurt", client:isFemale())
     if client:WaterLevel() >= 3 then painSound = self:GetPlayerPainSound(client, "drown", client:isFemale()) end

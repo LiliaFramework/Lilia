@@ -79,7 +79,7 @@ function MODULE:CreateMove(cmd)
     end
 end
 
-function MODULE:InputMouseApply(_, x, y, _)
+function MODULE:InputMouseApply(_, x, y)
     local client = LocalPlayer()
     if not client.camAng then client.camAng = Angle(0, 0, 0) end
     if client:CanOverrideView() and client:GetViewEntity() == client then

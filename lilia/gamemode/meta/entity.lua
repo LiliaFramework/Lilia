@@ -168,6 +168,7 @@ if SERVER then
     -- @tparam Player client The player to assign as the creator of the entity.
     function entityMeta:assignCreator(client)
         self:SetCreator(client)
+        self:SetNW2Entity("creator", client)
     end
 
     --- Sends a networked variable.

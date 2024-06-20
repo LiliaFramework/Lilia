@@ -278,7 +278,7 @@ if SERVER then
                         items[i] = self:add(itemTypeOrItem)
                     end
 
-                    deferred.all(items):next(nil, function(_) hook.Run("OnPlayerLostStackItem", itemTypeOrItem) end)
+                    deferred.all(items):next(nil, function() hook.Run("OnPlayerLostStackItem", itemTypeOrItem) end)
                     item:setQuantity(remainingQuantity - (item.maxQuantity * overStacks))
                     targetInventory:addItem(item, noReplicate)
                     return d:resolve(items)

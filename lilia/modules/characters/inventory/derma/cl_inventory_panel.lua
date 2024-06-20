@@ -59,7 +59,7 @@ function PANEL:onItemPressed(itemIcon, keyCode)
     end
 end
 
-function PANEL:onItemReleased(itemIcon, _)
+function PANEL:onItemReleased(itemIcon)
     local item = itemIcon.itemTable
     if not item then return end
     local x, y = self:LocalCursorPos()
@@ -163,11 +163,11 @@ function PANEL:Center()
     self:SetPos(centerX - (self:GetWide() * 0.5), centerY - (self:GetTall() * 0.5))
 end
 
-function PANEL:InventoryItemAdded(_)
+function PANEL:InventoryItemAdded()
     self:populateItems()
 end
 
-function PANEL:InventoryItemRemoved(_)
+function PANEL:InventoryItemRemoved()
     self:populateItems()
 end
 

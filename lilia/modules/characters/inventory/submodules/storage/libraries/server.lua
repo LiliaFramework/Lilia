@@ -58,7 +58,7 @@ function MODULE:CanPlayerSpawnStorage(client, _, info)
     if not info.invType or not lia.inventory.types[info.invType] then return false end
 end
 
-function MODULE:CanSaveData(_, _)
+function MODULE:CanSaveData()
     return self.SaveData
 end
 
@@ -76,7 +76,7 @@ function MODULE:SaveData()
     self:setData(data)
 end
 
-function MODULE:StorageItemRemoved(_, _)
+function MODULE:StorageItemRemoved()
     self:SaveData()
 end
 
@@ -116,7 +116,7 @@ function MODULE:LoadData()
     self.loadedData = true
 end
 
-function MODULE:CanPlayerInteractItem(_, action, itemObject, _)
+function MODULE:CanPlayerInteractItem(_, action, itemObject)
     local inventory = lia.inventory.instances[itemObject.invID]
     if inventory and inventory.isStorage == true and PROHIBITED_ACTIONS[action] then return false, "forbiddenActionStorage" end
 end

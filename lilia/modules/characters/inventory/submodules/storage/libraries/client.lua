@@ -5,7 +5,7 @@ function MODULE:exitStorage()
     net.SendToServer()
 end
 
-function MODULE:StorageUnlockPrompt(_)
+function MODULE:StorageUnlockPrompt()
     Derma_StringRequest(L("storPassWrite"), L("storPassWrite"), "", function(val)
         net.Start("liaStorageUnlock")
         net.WriteString(val)

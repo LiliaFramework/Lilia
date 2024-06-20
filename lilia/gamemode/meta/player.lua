@@ -1022,6 +1022,11 @@ if SERVER then
             end
 
             self:setLocalVar("ragdoll", entity:EntIndex())
+            if IsValid(entity) then
+                entity:SetCollisionGroup(COLLISION_GROUP_NONE)
+                entity:SetCustomCollisionCheck(false)
+            end
+
             hook.Run("OnCharFallover", self, entity, true)
         elseif hasRagdoll then
             self.liaRagdoll:Remove()

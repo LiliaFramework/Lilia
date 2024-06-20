@@ -1,5 +1,20 @@
-﻿local GM = GM or GAMEMODE
-if SERVER then
+﻿if SERVER then
+    function GM:OnPlayerInteractItem(client, action, item)
+        if isentity(item) then
+            if IsValid(item) then
+                local itemID = item.liaItemID
+                item = lia.item.instances[itemID]
+            else
+                return
+            end
+        elseif isnumber(item) then
+            item = lia.item.instances[item]
+        end
+
+        if not item then return end
+        lia.log.add(client, "itemUse", action, item)
+    end
+
     function GM:CanItemBeTransfered(item, curInv, inventory)
         if item.isBag and curInv ~= inventory and item.getInv and item:getInv() and table.Count(item:getInv():getItems()) > 0 then
             local character = lia.char.loaded[curInv.client]

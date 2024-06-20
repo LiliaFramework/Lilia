@@ -1,5 +1,4 @@
-﻿local GM = GM or GAMEMODE
-local getModelClass = lia.anim.getModelClass
+﻿local getModelClass = lia.anim.getModelClass
 local IsValid = IsValid
 local string = string
 local type = type

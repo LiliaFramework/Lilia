@@ -46,6 +46,14 @@ lia.FilesToLoad = {
         realm = "server"
     },
     {
+        path = "lilia/gamemode/hooks/player.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/hooks/character.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/libraries/modularity.lua",
         realm = "shared"
     },

@@ -1,5 +1,4 @@
 ﻿local lastcheck = CurTime()
-
 function MODULE:CanDeleteChar(_, character)
     if IsValid(character) and character:getMoney() < lia.config.DefaultMoney then return false end
 end

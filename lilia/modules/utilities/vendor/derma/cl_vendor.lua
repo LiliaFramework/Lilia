@@ -291,14 +291,14 @@ function PANEL:onVendorPropEdited(vendor, key)
     end
 end
 
-function PANEL:onVendorPriceUpdated(_, itemType, _)
+function PANEL:onVendorPriceUpdated(_, itemType)
     local panel = self.items[self.vendor][itemType]
     if IsValid(panel) then panel:updatePrice() end
     panel = self.items[self.me][itemType]
     if IsValid(panel) then panel:updatePrice() end
 end
 
-function PANEL:onVendorModeUpdated(_, itemType, _)
+function PANEL:onVendorModeUpdated(_, itemType)
     self:updateItem(itemType, self.vendor)
     self:updateItem(itemType, self.me)
 end
@@ -341,7 +341,7 @@ function PANEL:OnRemove()
     self:liaDeleteInventoryHooks()
 end
 
-function PANEL:OnKeyCodePressed(_)
+function PANEL:OnKeyCodePressed()
     local useKey = input.LookupBinding("+use", true)
     if useKey then self:Remove() end
 end

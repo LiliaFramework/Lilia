@@ -1,6 +1,6 @@
 ﻿local Variables = {"disabled", "name", "price", "noSell", "faction", "factions", "class", "hidden"}
 local DarkRPVariables = {
-    ["DarkRPNonOwnable"] = function(entity, _) entity:setNetVar("noSell", true) end,
+    ["DarkRPNonOwnable"] = function(entity) entity:setNetVar("noSell", true) end,
     ["DarkRPTitle"] = function(entity, val) entity:setNetVar("name", val) end,
     ["DarkRPCanLockpick"] = function(entity, val) entity.noPick = tobool(val) end
 }
@@ -117,7 +117,7 @@ function MODULE:CanPlayerUseDoor(_, door)
     if door:getNetVar("disabled") then return false end
 end
 
-function MODULE:CanPlayerAccessDoor(client, door, _)
+function MODULE:CanPlayerAccessDoor(client, door)
     local factions = door:getNetVar("factions")
     if factions ~= nil then
         local facs = util.JSONToTable(factions)

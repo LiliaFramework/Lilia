@@ -213,7 +213,7 @@ lia.char.registerVar("model", {
                 local icon = layout:Add("SpawnIcon")
                 icon:SetSize(64, 128)
                 icon:InvalidateLayout(true)
-                icon.DoClick = function(_) panel.payload.model = k end
+                icon.DoClick = function() panel.payload.model = k end
                 icon.PaintOver = function(_, w, h)
                     if panel.payload.model == k then
                         local color = lia.config.Color
@@ -391,7 +391,7 @@ lia.char.registerVar("attribs", {
             end
         end
     end,
-    shouldDisplay = function(_) return table.Count(lia.attribs.list) > 0 end
+    shouldDisplay = function() return table.Count(lia.attribs.list) > 0 end
 })
 
 lia.char.registerVar("inv", {

@@ -43,7 +43,7 @@ function PANEL:createCharacterSlots()
         panel:Dock(LEFT)
         panel:DockMargin(0, 0, 8, 8)
         panel:setCharacter(character)
-        panel.onSelected = function(_) self:onCharacterSelected(character) end
+        panel.onSelected = function() self:onCharacterSelected(character) end
     end
 
     totalWide = totalWide - 8
@@ -55,7 +55,7 @@ function PANEL:onCharacterSelected(character)
     if self.choosing then return end
     if character == LocalPlayer():getChar() then return lia.gui.character:fadeOut() end
     self.choosing = true
-    lia.gui.character:setFadeToBlack(true):next(function() return MainMenu:chooseCharacter(character:getID()) end):next(function(_)
+    lia.gui.character:setFadeToBlack(true):next(function() return MainMenu:chooseCharacter(character:getID()) end):next(function()
         self.choosing = false
         if IsValid(lia.gui.character) then
             timer.Simple(0.25, function()

@@ -1,73 +1,52 @@
 ﻿lia.log.types = {
     -- Connection Logs
     ["playerConnected"] = {
-        func = function(client)
-            return string.format("%s[%s] has connected to the server.", client:Name(), client:SteamID())
-        end,
+        func = function(client) return string.format("%s[%s] has connected to the server.", client:Name(), client:SteamID()) end,
         category = "Connection Logs",
         color = Color(255, 255, 255)
     },
     ["playerDisconnected"] = {
-        func = function(client, ...)
-            return string.format("%s[%s] has disconnected from the server.", client:Name(), client:SteamID())
-        end,
+        func = function(client, ...) return string.format("%s[%s] has disconnected from the server.", client:Name(), client:SteamID()) end,
         category = "Connection Logs",
         color = Color(255, 255, 255)
     },
-
     -- Spawn Logs
     ["spawned_prop"] = {
-        func = function(client, model)
-            return string.format("%s has spawned a prop with model: %s", client:Name(), model)
-        end,
+        func = function(client, model) return string.format("%s has spawned a prop with model: %s", client:Name(), model) end,
         category = "Spawn Logs",
         color = Color(52, 152, 219)
     },
     ["spawned_ragdoll"] = {
-        func = function(client, model)
-            return string.format("%s has spawned a ragdoll with model: %s", client:Name(), model)
-        end,
+        func = function(client, model) return string.format("%s has spawned a ragdoll with model: %s", client:Name(), model) end,
         category = "Spawn Logs",
         color = Color(52, 152, 219)
     },
     ["spawned_effect"] = {
-        func = function(client, effect)
-            return string.format("%s has spawned an effect: %s", client:Name(), effect)
-        end,
+        func = function(client, effect) return string.format("%s has spawned an effect: %s", client:Name(), effect) end,
         category = "Spawn Logs",
         color = Color(52, 152, 219)
     },
     ["spawned_vehicle"] = {
-        func = function(client, vehicleName, model)
-            return string.format("%s has spawned a vehicle '%s' with model: %s", client:Name(), vehicleName, model)
-        end,
+        func = function(client, vehicleName, model) return string.format("%s has spawned a vehicle '%s' with model: %s", client:Name(), vehicleName, model) end,
         category = "Spawn Logs",
         color = Color(52, 152, 219)
     },
     ["spawned_npc"] = {
-        func = function(client, npcName, model)
-            return string.format("%s has spawned an NPC '%s' with model: %s", client:Name(), npcName, model)
-        end,
+        func = function(client, npcName, model) return string.format("%s has spawned an NPC '%s' with model: %s", client:Name(), npcName, model) end,
         category = "Spawn Logs",
         color = Color(52, 152, 219)
     },
-
     -- SWEP Logs
     ["swep_giving"] = {
-        func = function(client, target, swep)
-            return string.format("%s has given SWEP '%s' to %s", client:Name(), swep, target:Name())
-        end,
+        func = function(client, target, swep) return string.format("%s has given SWEP '%s' to %s", client:Name(), swep, target:Name()) end,
         category = "SWEP Logs",
         color = Color(52, 152, 219)
     },
     ["swep_spawning"] = {
-        func = function(client, swep)
-            return string.format("%s has spawned SWEP: %s", client:Name(), swep)
-        end,
+        func = function(client, swep) return string.format("%s has spawned SWEP: %s", client:Name(), swep) end,
         category = "SWEP Logs",
         color = Color(52, 152, 219)
     },
-
     -- Chat Logs
     ["chat"] = {
         func = function(client, ...)
@@ -85,7 +64,6 @@
         category = "Chat Logs",
         color = Color(52, 152, 219)
     },
-
     -- Character Management Logs
     ["charCreate"] = {
         func = function(client, ...)
@@ -112,20 +90,15 @@
         color = Color(52, 152, 219)
     },
     ["buydoor"] = {
-        func = function(client, ...)
-            return string.format("%s purchased the door", client:Name())
-        end,
+        func = function(client, ...) return string.format("%s purchased the door", client:Name()) end,
         category = "Character Management Logs",
         color = Color(52, 152, 219)
     },
     ["selldoor"] = {
-        func = function(client, ...)
-            return string.format("%s sold the door", client:Name())
-        end,
+        func = function(client, ...) return string.format("%s sold the door", client:Name()) end,
         category = "Character Management Logs",
         color = Color(52, 152, 219)
     },
-
     -- Vendor Logs
     ["buy"] = {
         func = function(client, ...)
@@ -183,7 +156,6 @@
         category = "Vendor Logs",
         color = Color(52, 152, 219)
     },
-
     -- Item Logs
     ["itemTake"] = {
         func = function(client, ...)
@@ -214,7 +186,6 @@
         category = "Item Logs",
         color = Color(52, 152, 219)
     },
-
     -- Character Logs
     ["money"] = {
         func = function(client, ...)
@@ -226,20 +197,15 @@
         color = Color(52, 152, 219)
     },
     ["moneyGiven"] = {
-        func = function(client, targetName, amount)
-            return string.format("%s has given %s %s.", client:Name(), targetName, lia.currency.get(amount))
-        end,
+        func = function(client, targetName, amount) return string.format("%s has given %s %s.", client:Name(), targetName, lia.currency.get(amount)) end,
         category = "Character Logs",
         color = Color(52, 152, 219)
     },
     ["moneyGivenTAB"] = {
-        func = function(client, targetName, amount)
-            return string.format("%s has given %s %s using TAB.", client:Name(), targetName, lia.currency.get(amount))
-        end,
+        func = function(client, targetName, amount) return string.format("%s has given %s %s using TAB.", client:Name(), targetName, lia.currency.get(amount)) end,
         category = "Character Logs",
         color = Color(52, 152, 219)
     },
-
     -- Damage and Death Logs
     ["playerHurt"] = {
         func = function(client, attacker, damage, health)
@@ -260,49 +226,35 @@
         category = "Death Logs",
         color = Color(52, 152, 219)
     },
-
     -- Staff Logs
     ["unpersistedEntity"] = {
-        func = function(client, entity)
-            return string.format("%s has removed persistence from '%s'.", client:Name(), entity)
-        end,
+        func = function(client, entity) return string.format("%s has removed persistence from '%s'.", client:Name(), entity) end,
         category = "Staff Logs",
         color = Color(52, 152, 219)
     },
     ["persistedEntity"] = {
-        func = function(client, entity)
-            return string.format("%s has persisted '%s'.", client:Name(), entity)
-        end,
+        func = function(client, entity) return string.format("%s has persisted '%s'.", client:Name(), entity) end,
         category = "Staff Logs",
         color = Color(52, 152, 219)
     },
     ["observerEnter"] = {
-        func = function(client, ...)
-            return string.format("%s has entered observer.", client:Name())
-        end,
+        func = function(client, ...) return string.format("%s has entered observer.", client:Name()) end,
         category = "Staff Logs",
         color = Color(52, 152, 219)
     },
     ["observerExit"] = {
-        func = function(client, ...)
-            return string.format("%s has left observer.", client:Name())
-        end,
+        func = function(client, ...) return string.format("%s has left observer.", client:Name()) end,
         category = "Staff Logs",
         color = Color(52, 152, 219)
     },
-
     -- Network Logs
     ["net"] = {
-        func = function(client, messageName)
-            return string.format("[Net Log] Player %s (%s) sent net message %s.", client:GetName(), client:SteamID(), messageName)
-        end,
+        func = function(client, messageName) return string.format("[Net Log] Player %s (%s) sent net message %s.", client:GetName(), client:SteamID(), messageName) end,
         category = "Network Logs",
         color = Color(52, 152, 219)
     },
     ["invalidNet"] = {
-        func = function(client)
-            return string.format("[Net Log] Player %s (%s) tried to send invalid net message!", client:GetName(), client:SteamID())
-        end,
+        func = function(client) return string.format("[Net Log] Player %s (%s) tried to send invalid net message!", client:GetName(), client:SteamID()) end,
         category = "Network Logs",
         color = Color(52, 152, 219)
     },

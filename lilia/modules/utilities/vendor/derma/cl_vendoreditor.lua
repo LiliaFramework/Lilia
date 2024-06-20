@@ -75,7 +75,7 @@ function PANEL:Init()
     self.faction:Dock(TOP)
     self.faction:SetTextColor(color_white)
     self.faction:DockMargin(0, 4, 0, 0)
-    self.faction.DoClick = function(_) vgui.Create("VendorFactionEditor"):MoveLeftOf(self, 4) end
+    self.faction.DoClick = function() vgui.Create("VendorFactionEditor"):MoveLeftOf(self, 4) end
     local menu
     self.items = self:Add("DListView")
     self.items:Dock(FILL)
@@ -177,7 +177,7 @@ function PANEL:updateSellScale()
     self.sellScale:SetValue(liaVendorEnt:getSellScale())
 end
 
-function PANEL:onNameDescChanged(_, key, _)
+function PANEL:onNameDescChanged(_, key)
     local entity = liaVendorEnt
     if key == "name" then
         self.name:SetText(entity:getName())
@@ -196,7 +196,7 @@ function PANEL:onItemModeUpdated(_, itemType, value)
     line:SetColumnText(COLS_MODE, self:getModeText(value))
 end
 
-function PANEL:onItemPriceUpdated(vendor, itemType, _)
+function PANEL:onItemPriceUpdated(vendor, itemType)
     local line = self.lines[itemType]
     if not IsValid(line) then return end
     line:SetColumnText(COLS_PRICE, vendor:getPrice(itemType))

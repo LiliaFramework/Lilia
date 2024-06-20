@@ -1,4 +1,4 @@
-﻿function MODULE:LoadFonts(_, _)
+﻿function MODULE:LoadFonts()
     surface.CreateFont("liaSmallCredits", {
         font = "Roboto",
         size = 20,

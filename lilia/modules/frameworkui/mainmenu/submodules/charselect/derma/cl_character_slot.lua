@@ -51,8 +51,8 @@ function PANEL:Init()
     self.button:SetPaintBackground(false)
     self.button:SetText("")
     self.button.Paint = function() end
-    self.button.OnCursorEntered = function(_) self:OnCursorEntered() end
-    self.button.DoClick = function(_)
+    self.button.OnCursorEntered = function() self:OnCursorEntered() end
+    self.button.DoClick = function()
         lia.gui.character:clickSound()
         if not self.banned then self:onSelected() end
     end
@@ -67,7 +67,7 @@ function PANEL:Init()
         surface.DrawRect(0, 0, w, h)
     end
 
-    self.delete.DoClick = function(_)
+    self.delete.DoClick = function()
         lia.gui.character:clickSound()
         self:confirmDelete()
     end

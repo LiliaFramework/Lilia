@@ -183,7 +183,7 @@ function MODULE:CreateMenuButtons(tabs)
 end
 
 function MODULE:BuildHelpMenu(tabs)
-    tabs["commands"] = function(_, _)
+    tabs["commands"] = function()
         local body = ""
         for k, v in SortedPairs(lia.command.list) do
             if lia.command.hasAccess(LocalPlayer(), k, nil) then body = body .. "<h2>/" .. k .. "</h2><strong>Syntax:</strong> <em>" .. v.syntax .. "</em><br /><br />" end
@@ -191,7 +191,7 @@ function MODULE:BuildHelpMenu(tabs)
         return body
     end
 
-    tabs["flags"] = function(_)
+    tabs["flags"] = function()
         local body = [[<table border="0" cellspacing="8px">]]
         for k, v in SortedPairs(lia.flag.list) do
             local icon
@@ -212,7 +212,7 @@ function MODULE:BuildHelpMenu(tabs)
         return body .. "</table>"
     end
 
-    tabs["modules"] = function(_)
+    tabs["modules"] = function()
         local body = ""
         for _, v in SortedPairsByMemberValue(lia.module.list, "name") do
             if v.MenuNoShow then continue end

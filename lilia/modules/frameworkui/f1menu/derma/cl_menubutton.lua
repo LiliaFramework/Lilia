@@ -44,7 +44,7 @@ function PANEL:OnMousePressed(code)
     if code == MOUSE_LEFT and self.DoClick then self:DoClick(self) end
 end
 
-function PANEL:OnMouseReleased(_)
+function PANEL:OnMouseReleased()
     if self.color then
         self:SetTextColor(self.color)
     else

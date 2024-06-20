@@ -13,7 +13,7 @@ function MODULE:CanPlayerJoinClass(client, class)
     return client:hasClassWhitelist(class)
 end
 
-function MODULE:PlayerLoadedChar(client, character, _)
+function MODULE:PlayerLoadedChar(client, character)
     local data = character:getData("pclass")
     local class = data and lia.class.list[data]
     if class and data then

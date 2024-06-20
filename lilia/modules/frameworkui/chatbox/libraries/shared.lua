@@ -63,7 +63,7 @@ lia.chat.register("announce", {
 
 lia.chat.register("ic", {
     format = "%s says \"%s\"",
-    onGetColor = function(speaker, _)
+    onGetColor = function(speaker)
         if LocalPlayer():GetEyeTrace().Entity == speaker then return MODULE.ChatListenColor end
         return MODULE.ChatColor
     end,
@@ -130,7 +130,7 @@ lia.chat.register("y", {
 })
 
 lia.chat.register("looc", {
-    onCanSay = function(speaker, _)
+    onCanSay = function(speaker)
         local delay = MODULE.LOOCDelay
         if speaker:IsAdmin() and MODULE.LOOCDelayAdmin and delay > 0 and speaker.liaLastLOOC then
             local lastLOOC = CurTime() - speaker.liaLastLOOC
@@ -154,12 +154,12 @@ lia.chat.register("looc", {
 })
 
 lia.chat.register("adminchat", {
-    onGetColor = function(_, _) return Color(0, 196, 255) end,
+    onGetColor = function() return Color(0, 196, 255) end,
     onCanHear = function(_, listener)
         if CAMI.PlayerHasAccess(listener, "Staff Permissions - Admin Chat", nil) then return true end
         return false
     end,
-    onCanSay = function(speaker, _)
+    onCanSay = function(speaker)
         if CAMI.PlayerHasAccess(speaker, "Staff Permissions - Admin Chat", nil) then
             speaker:notify("You aren't an admin. Use '@messagehere' to create a ticket.")
             return false
@@ -191,7 +191,7 @@ lia.chat.register("pm", {
 })
 
 lia.chat.register("eventlocal", {
-    onCanSay = function(speaker, _) return CAMI.PlayerHasAccess(speaker, "Staff Permissions - Local Event Chat", nil) end,
+    onCanSay = function(speaker) return CAMI.PlayerHasAccess(speaker, "Staff Permissions - Local Event Chat", nil) end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
         if speaker:EyePos():Distance(listener:EyePos()) <= MODULE.ChatRange * 6 then return true end
@@ -203,8 +203,8 @@ lia.chat.register("eventlocal", {
 })
 
 lia.chat.register("event", {
-    onCanSay = function(speaker, _) return CAMI.PlayerHasAccess(speaker, "Staff Permissions - Event Chat", nil) end,
-    onCanHear = function(_, _) return true end,
+    onCanSay = function(speaker) return CAMI.PlayerHasAccess(speaker, "Staff Permissions - Event Chat", nil) end,
+    onCanHear = function() return true end,
     onChatAdd = function(_, text) chat.AddText(Color(255, 150, 0), text) end,
     prefix = {"/event"},
     font = "liaMediumFont"

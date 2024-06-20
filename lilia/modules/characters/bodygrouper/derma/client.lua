@@ -52,7 +52,7 @@ function PANEL:Init()
         surface.DrawOutlinedRect(0, 0, w, h, 1)
     end
 
-    self.finish.DoClick = function(_)
+    self.finish.DoClick = function()
         local model = self.model.Entity
         if IsValid(model) then
             local skn = model:GetSkin()

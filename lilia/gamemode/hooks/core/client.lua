@@ -1,10 +1,13 @@
-﻿local GM = GM or GAMEMODE
-function GM:DrawLiliaModelView(_, entity)
+﻿function GM:DrawLiliaModelView(_, entity)
     if IsValid(entity.weapon) then entity.weapon:DrawModel() end
 end
 
 function GM:OnChatReceived()
     if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
+end
+
+function GM:InitializedConfig()
+    hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
 end
 
 function GM:PlayerBindPress(client, bind, pressed)
@@ -45,34 +48,6 @@ function GM:HUDPaintBackground()
     lia.bar.drawAll()
     lia.menu.drawAll()
     self.BaseClass.PaintWorldTips(self.BaseClass)
-end
-
-function GM:CanDisplayCharacterInfo(client, id)
-    LiliaDeprecated("CanDisplayCharacterInfo is deprecated. Use CanDisplayCharInfo for optimization purposes.")
-    hook.Run("CanDisplayCharInfo", client, id)
-end
-
-function GM:KickedFromCharacter(id, isCurrentChar)
-    LiliaDeprecated("KickedFromCharacter is deprecated. Use KickedFromChar for optimization purposes.")
-    hook.Run("KickedFromChar", id, isCurrentChar)
-end
-
-function GM:CharacterListLoaded(newCharList)
-    LiliaDeprecated("CharacterListLoaded is deprecated. Use CharListLoaded for optimization purposes.")
-    hook.Run("CharListLoaded", newCharList)
-end
-
-function GM:CharacterListUpdated(oldCharList, newCharList)
-    LiliaDeprecated("CharacterListUpdated is deprecated. Use CharListUpdated for optimization purposes.")
-    hook.Run("CharListUpdated", oldCharList, newCharList)
-end
-
-function GM:CharListLoaded()
-    timer.Create("liaWaitUntilPlayerValid", 1, 0, function()
-        if not IsValid(LocalPlayer()) then return end
-        timer.Remove("liaWaitUntilPlayerValid")
-        hook.Run("LiliaLoaded")
-    end)
 end
 
 function GM:OnContextMenuOpen()

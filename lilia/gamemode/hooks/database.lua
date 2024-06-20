@@ -1,5 +1,4 @@
-﻿local GM = GM or GAMEMODE
-local DefaultDatabase = {
+﻿local DefaultDatabase = {
     module = "sqlite",
     hostname = "127.0.0.1",
     username = "",
@@ -10,7 +9,6 @@ local DefaultDatabase = {
 
 function GM:RegisterPreparedStatements()
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 165, 0), "[Database]", Color(255, 255, 255), " ADDED 5 PREPARED STATEMENTS.\n")
-
     lia.db.prepare("itemData", "UPDATE lia_items SET _data = ? WHERE _itemID = ?", {MYSQLOO_STRING, MYSQLOO_INTEGER})
     lia.db.prepare("itemx", "UPDATE lia_items SET _x = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
     lia.db.prepare("itemy", "UPDATE lia_items SET _y = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})

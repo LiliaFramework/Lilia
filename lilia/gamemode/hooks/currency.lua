@@ -1,5 +1,4 @@
-﻿local GM = GM or GAMEMODE
-function GM:OnPickupMoney(client, moneyEntity)
+﻿function GM:OnPickupMoney(client, moneyEntity)
     if moneyEntity and moneyEntity:IsValid() then
         local amount = moneyEntity:getAmount()
         client:getChar():giveMoney(amount)

@@ -40,7 +40,7 @@ function PANEL:Init()
     end
 
     self.confirm:SetPos(ScrW() * 0.5 - (self.confirm:GetWide() + SPACING), self.message.y + 64)
-    self.confirm.DoClick = function(_)
+    self.confirm.DoClick = function()
         lia.gui.character:clickSound()
         if isfunction(self.onConfirmCallback) then self.onConfirmCallback() end
         self:Remove()
@@ -57,7 +57,7 @@ function PANEL:Init()
     end
 
     self.cancel:SetPos(ScrW() * 0.5 + SPACING, self.message.y + 64)
-    self.cancel.DoClick = function(_)
+    self.cancel.DoClick = function()
         lia.gui.character:clickSound()
         if isfunction(self.onCancelCallback) then self.onCancelCallback() end
         self:Remove()

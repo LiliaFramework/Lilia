@@ -42,7 +42,7 @@ function MODULE:isSuitableForTrunk(entity)
     if IsValid(entity) and entity:isSimfphysCar() then return true end
 end
 
-function MODULE:CheckValidSit(client, _)
+function MODULE:CheckValidSit(client)
     local entity = client:GetTracedEntity()
     if entity:isSimfphysCar() then return false end
 end

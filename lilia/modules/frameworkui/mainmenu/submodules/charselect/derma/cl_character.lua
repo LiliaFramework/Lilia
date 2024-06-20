@@ -88,7 +88,7 @@ function PANEL:loadBackground()
                 self.background:SetHTML(url)
             end
 
-            self.background.OnDocumentReady = function(_) self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end
+            self.background.OnDocumentReady = function() self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end
             self.bgLoader = self:Add("DPanel")
             self.bgLoader:SetSize(ScrW(), ScrH())
             self.bgLoader:SetZPos(-998)
@@ -138,7 +138,7 @@ function PANEL:addTab(name, callback, justClick)
     local button = self.tabs:Add("liaCharacterTabButton")
     button:setText(L(name):upper())
     if justClick then
-        if isfunction(callback) then button.DoClick = function(_) callback(self) end end
+        if isfunction(callback) then button.DoClick = function() callback(self) end end
         return
     end
 

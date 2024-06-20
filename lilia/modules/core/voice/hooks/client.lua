@@ -22,7 +22,7 @@
     end
 end
 
-function MODULE:LoadFonts(_)
+function MODULE:LoadFonts()
     surface.CreateFont("3DVoiceDebug", {
         font = "Arial",
         size = 14,

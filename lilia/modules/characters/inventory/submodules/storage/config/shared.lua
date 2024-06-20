@@ -76,7 +76,7 @@ MODULE.StorageDefinitions = {
             w = 5,
             h = 3
         },
-        onOpen = function(entity, _)
+        onOpen = function(entity)
             entity:ResetSequence("Close")
             timer.Create("CloseLid" .. entity:EntIndex(), 2, 1, function() if IsValid(entity) then entity:ResetSequence("Open") end end)
         end

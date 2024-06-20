@@ -1,8 +1,6 @@
 ﻿local MODULE = MODULE
-
 util.AddNetworkString("IAmHackingOwO")
 util.AddNetworkString("lia_alting_checkID")
-
 for _, v in pairs(MODULE.KnownExploits) do
     net.Receive(tostring(v), function(_, client)
         client.nextExploitNotify = client.nextExploitNotify or 0

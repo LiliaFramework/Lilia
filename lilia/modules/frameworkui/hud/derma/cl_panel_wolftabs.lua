@@ -82,7 +82,7 @@ function PANEL:ShowTabs()
     end
 end
 
-function PANEL:Paint(_, _)
+function PANEL:Paint()
 end
 
 vgui.Register("WTabs", PANEL, "DPanel")

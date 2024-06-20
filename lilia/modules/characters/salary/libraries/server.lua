@@ -28,7 +28,7 @@
     end
 end
 
-function MODULE:PlayerLoadedChar(client, _, _)
+function MODULE:PlayerLoadedChar(client)
     hook.Run("CreateSalaryTimer", client)
 end
 

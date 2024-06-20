@@ -388,7 +388,7 @@ function CAMI.GetPlayersWithAccess(privilegeName, callback, targetPly, extraInfo
     local allowedPlys = {}
     local allPlys = player.GetAll()
     local countdown = #allPlys
-    local function onResult(client, hasAccess, _)
+    local function onResult(client, hasAccess)
         countdown = countdown - 1
         if hasAccess then table.insert(allowedPlys, client) end
         if countdown == 0 then callback(allowedPlys) end

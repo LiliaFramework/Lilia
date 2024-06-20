@@ -1,4 +1,4 @@
-﻿function MODULE:VendorOpened(_)
+﻿function MODULE:VendorOpened()
     vgui.Create("Vendor")
     hook.Run("OnOpenVendorMenu", self)
 end

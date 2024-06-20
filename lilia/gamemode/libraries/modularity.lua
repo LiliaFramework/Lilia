@@ -36,7 +36,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, category, first
         author = "Anonymous",
         identifier = "",
         enabled = true,
-        IsValid = function(_) return true end
+        IsValid = function() return true end
     }
 
     if uniqueID == "schema" then

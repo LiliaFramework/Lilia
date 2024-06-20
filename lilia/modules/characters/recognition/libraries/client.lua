@@ -39,7 +39,7 @@ function MODULE:ShouldAllowScoreboardOverride(client, var)
     return isRecognitionEnabled and isVarHiddenInScoreboard and isClientNotLocalPlayer and isNotRecognizedAndNotFakeRecognized
 end
 
-function MODULE:OnCharRecognized(_, _)
+function MODULE:OnCharRecognized()
     surface.PlaySound("buttons/button17.wav")
 end
 

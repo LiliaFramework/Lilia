@@ -28,7 +28,7 @@ function MODULE:PlayerLoadedChar(client)
     end)
 end
 
-function MODULE:PlayerDeath(client, _, _)
+function MODULE:PlayerDeath(client)
     if not client:getChar() then return end
     local character = client:getChar()
     local inventory = character:getInv()

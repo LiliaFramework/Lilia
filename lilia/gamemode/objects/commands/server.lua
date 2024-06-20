@@ -1,5 +1,4 @@
-﻿local GM = GM or GAMEMODE
-lia.command.add("charsetspeed", {
+﻿lia.command.add("charsetspeed", {
     adminOnly = true,
     privilege = "Set Character Speed",
     syntax = "<string name> <number speed>",
@@ -429,11 +428,6 @@ lia.command.add("flags", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if not client:IsSuperAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-            return false
-        end
-
         if IsValid(target) and target:getChar() then client:notify("Their character flags are: '" .. target:getChar():getFlags() .. "'") end
     end
 })
@@ -750,17 +744,6 @@ lia.command.add("rolld", {
         msg = "rolled " .. total .. " [" .. dmsg .. "]" .. " on " .. dice .. "d" .. pips .. msg
         lia.chat.send(client, "rolld", msg)
     end
-})
-
-lia.command.add("vieweventlog", {
-    adminOnly = false,
-    onRun = function(client) GM:OpenEventLog(client, false) end
-})
-
-lia.command.add("editeventlog", {
-    adminOnly = true,
-    privilege = "Can Edit Event Log",
-    onRun = function(client) GM:OpenEventLog(client, true) end
 })
 
 lia.command.add("roll", {

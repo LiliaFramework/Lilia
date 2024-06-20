@@ -5,7 +5,7 @@ function PANEL:Init()
     self.close:SetSize(50, 25)
     self.close:SetText("x")
     self.close:SetColor(color_white)
-    function self.close.PerformLayout(this, w, _)
+    function self.close.PerformLayout(this, w)
         this:SetPos(self:GetWide() - w)
     end
 
@@ -17,7 +17,7 @@ function PANEL:Init()
         end
     end
 
-    function self.close.DoClick(_)
+    function self.close.DoClick()
         self:Remove()
     end
 

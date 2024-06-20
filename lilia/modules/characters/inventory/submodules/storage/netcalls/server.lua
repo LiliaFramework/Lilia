@@ -74,7 +74,7 @@ net.Receive("liaStorageTransfer", function(_, client)
         client.storageTransaction = nil
         if IsValid(client) then client:notifyLocalized(err) end
         return fromInv:add(item)
-    end):catch(function(_)
+    end):catch(function()
         client.storageTransaction = nil
         item:spawn(failItemDropPos)
         if IsValid(client) then client:notifyLocalized("itemOnGround") end

@@ -8,7 +8,7 @@ paintFunctions[0] = function(_, w, h)
     surface.DrawRect(0, 0, w, h)
 end
 
-paintFunctions[1] = function(_, _, _) end
+paintFunctions[1] = function() end
 function PANEL:Init()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
     lia.gui.score = self

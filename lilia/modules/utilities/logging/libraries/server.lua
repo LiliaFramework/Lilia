@@ -27,7 +27,15 @@ function MODULE:ReadLogsFromFile(logtype, selectedDate)
     return logs
 end
 
-function MODULE:OnServerLog(_, _, logString, category, color)
+function MODULE:OnServerLog(client, logType, logString, category, color)
+    for _, v in pairs(lia.util.getAdmins()) do
+        if hook.Run("CanPlayerSeeLog", v, logType) ~= false then lia.log.send(v, lia.log.getString(client, logType, logString, category, color)) end
+    end
+
     local LogEvent = self:addCategory(category, color)
     LogEvent(logString)
+end
+
+function MODULE:CanPlayerSeeLog()
+    return lia.config.AdminConsoleNetworkLogs
 end

@@ -11,3 +11,6 @@ MODULE.KnownExploits = {"npctool_relman_up", "cheadle_api", "npctool_spawner_cle
 MODULE.HackCommands = {"loki_menu", "cheadle_api", "gear_printents", "gw_toggle", "gw_pos", "gearmenu", "gb_reload", "gb_toggle", "+gb", "-gb", "gb_menu", "gear2_menu", "ahack_menu", "sasha_menu", "showents", "showhxmenu", "SmegHack_Menu", "sCheat_menu", "lowkey_menu"}
 MODULE.HackGlobals = {"cheadle_api", "bSendPacket", "ValidNetString", "totalExploits", "addExploit", "AutoReload", "CircleStrafe", "toomanysploits", "Sploit", "R8", "ValidateESP", "ValidateAimbot"}
 MODULE.BadCVars = {"lenny", "cheadle_api", "smeg", "wallhack", "nospread", "antiaim", "hvh", "autostrafe", "circlestrafe", "spinbot", "odium", "ragebot", "legitbot", "fakeangles", "anticac", "antiscreenshot", "fakeduck", "lagexploit", "exploits_open", "gmodhack", "cathack"}
+MODULE.DuplicatorBlackList = {"lia_storage", "lia_money"}
+MODULE.CanNotPermaProp = {"lia_vendor", "lia_bodygrouper"}
+MODULE.ButtonList = {"models/maxofs2d/button_01.mdl", "models/maxofs2d/button_02.mdl", "models/maxofs2d/button_03.mdl", "models/maxofs2d/button_04.mdl", "models/maxofs2d/button_05.mdl", "models/maxofs2d/button_06.mdl", "models/maxofs2d/button_slider.mdl"}

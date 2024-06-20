@@ -67,7 +67,7 @@ function PANEL:getItem()
     return self.itemTable
 end
 
-function PANEL:ItemDataChanged(_, _, _)
+function PANEL:ItemDataChanged()
     self:updateTooltip()
 end
 
@@ -91,7 +91,7 @@ function PANEL:PaintBehind(w, h)
     surface.DrawRect(2, 2, w - 4, h - 4)
 end
 
-function PANEL:ExtraPaint(_, _)
+function PANEL:ExtraPaint()
 end
 
 function PANEL:Paint(w, h)
@@ -166,20 +166,20 @@ end
 function PANEL:InventoryInitialized()
 end
 
-function PANEL:InventoryDataChanged(_, _, _)
+function PANEL:InventoryDataChanged()
 end
 
 function PANEL:InventoryDeleted(inventory)
     if self.inventory == inventory then self:Remove() end
 end
 
-function PANEL:InventoryItemAdded(_)
+function PANEL:InventoryItemAdded()
 end
 
-function PANEL:InventoryItemRemoved(_)
+function PANEL:InventoryItemRemoved()
 end
 
-function PANEL:InventoryItemDataChanged(_, _, _, _)
+function PANEL:InventoryItemDataChanged()
 end
 
 function PANEL:OnRemove()

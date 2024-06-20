@@ -5,7 +5,7 @@ function c:Download()
     if self:IsDownloading() or self:IsReady() then return end
     local uid = util.CRC(self.Path)
     self.UID = uid
-    http.Fetch(self.Path, function(body, _, _, _)
+    http.Fetch(self.Path, function(body)
         file.Write("webimage/" .. self.UID .. "." .. self.ext, body)
         self.Downloading = false
         self.Ready = true

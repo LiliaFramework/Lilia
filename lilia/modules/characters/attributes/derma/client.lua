@@ -88,7 +88,7 @@ function PANEL:doChange()
     if self:onChanged(self.pressing) ~= false then self.value = math.Clamp(self.value + self.pressing, 0, self.max) end
 end
 
-function PANEL:onChanged(_)
+function PANEL:onChanged()
 end
 
 function PANEL:getValue()
@@ -230,13 +230,13 @@ function PANEL:addButton(symbol, delta)
     button:SetWide(32)
     button:SetText(symbol)
     button:SetContentAlignment(5)
-    button.OnMousePressed = function(_)
+    button.OnMousePressed = function()
         self.autoDelta = delta
         self.nextAuto = CurTime() + 0.4
         self:delta(delta)
     end
 
-    button.OnMouseReleased = function(_) self.autoDelta = nil end
+    button.OnMouseReleased = function() self.autoDelta = nil end
     button:SetPaintBackground(false)
     return button
 end

@@ -1,5 +1,4 @@
-﻿local GM = GM or GAMEMODE
-function GM:SetupQuickMenu(menu)
+﻿function GM:SetupQuickMenu(menu)
     local current
     for k, _ in SortedPairs(lia.lang.stored) do
         local name = lia.lang.names[k]

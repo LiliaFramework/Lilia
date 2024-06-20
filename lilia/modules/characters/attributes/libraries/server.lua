@@ -63,7 +63,7 @@ function MODULE:PlayerStaminaLost(client)
     end)
 end
 
-function MODULE:PlayerThrowPunch(client, _)
+function MODULE:PlayerThrowPunch(client)
     local entity = client:GetTracedEntity()
     if entity:IsPlayer() and CAMI.PlayerHasAccess(client, "Staff Permissions - One Punch Man", nil) and IsValid(entity) and client:isStaffOnDuty() then
         client:consumeStamina(entity:getChar():getMaxStamina())

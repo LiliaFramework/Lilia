@@ -47,7 +47,7 @@ function MODULE:CharPreSave(character)
     end
 end
 
-function MODULE:PlayerLoadedChar(client, character, _)
+function MODULE:PlayerLoadedChar(client, character)
     timer.Simple(0, function()
         if IsValid(client) then
             local position = character:getData("pos")
