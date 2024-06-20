@@ -144,7 +144,7 @@ function MODULE:PlayerSpawnObject(client)
     end
 end
 
-function MODULE:PlayerSpawnedNPC(client, entity)
+function MODULE:PlayerSpawnedNPC(_, entity)
     if self.NPCsDropWeapons then entity:SetKeyValue("spawnflags", "8192") end
 end
 
@@ -216,7 +216,7 @@ function MODULE:OnPhysgunFreeze(_, physObj, entity, client)
     return true
 end
 
-function MODULE:CanTool(client, _, tool)
+function MODULE:CanTool(client)
     if not client.ToolInterval then client.ToolInterval = CurTime() end
     if CurTime() < client.ToolInterval then
         client:notify("Tool on Cooldown!")
