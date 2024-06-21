@@ -16,6 +16,7 @@ lia.module.ModuleFiles = {"client.lua", "cl_module.lua", "sv_module.lua", "serve
 -- @string path The path to the module.
 -- @bool isSingleFile Specifies if the module is contained in a single file.
 -- @string variable The variable name to assign the module to.
+-- @string category The category of the module.
 -- @bool firstLoad Indicates if this is the first load of the module.
 -- @realm shared
 -- @internal
@@ -145,6 +146,7 @@ end
 -- This function loads modules from a specified directory into the system.
 -- @string directory The path to the directory containing modules.
 -- @string group The group of the modules (e.g., "schema" or "module").
+-- @string category The category of the modules.
 -- @bool firstLoad Indicates if this is the first load of the modules.
 -- @realm shared
 -- @internal
@@ -161,6 +163,7 @@ function lia.module.loadFromDir(directory, group, category, firstLoad)
 end
 
 --- Loads workshop content.
+-- This function loads workshop content for the module.
 -- @param Workshop The workshop content to load. This is the MODULE.WorkshopContent.
 -- @realm server
 -- @internal
@@ -181,6 +184,7 @@ function lia.module.loadWorkshop(Workshop)
 end
 
 --- Loads permissions.
+-- This function loads permissions for the module.
 -- @param Privileges The privileges to load. This is the MODULE.CAMIPrivileges.
 -- @realm shared
 -- @internal
@@ -199,6 +203,7 @@ function lia.module.loadPermissions(Privileges)
 end
 
 --- Loads module dependencies.
+-- This function loads the dependencies for the module.
 -- @param Dependencies The dependencies to load.
 -- @realm shared
 -- @internal
@@ -226,6 +231,7 @@ end
 -- This function handles the loading of a module's submodules, if they exist.
 -- @string uniqueID The unique identifier for the module.
 -- @string path The path to the module.
+-- @string category The category of the module.
 -- @bool firstLoad Indicates if this is the first load of the module.
 -- @realm shared
 -- @internal
