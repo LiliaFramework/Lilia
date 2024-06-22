@@ -2,12 +2,12 @@
     ["playerConnected"] = {
         func = function(client) return string.format("[%s] %s has connected to the server.", client:SteamID(), client:Name()) end,
         category = "Connection Logs",
-        color = Color(255, 255, 255)
+        color = Color(52, 152, 219)
     },
     ["playerDisconnected"] = {
         func = function(client) return string.format("[%s] %s has disconnected from the server.", client:SteamID(), client:Name()) end,
         category = "Connection Logs",
-        color = Color(255, 255, 255)
+        color = Color(52, 152, 219)
     },
     ["spawned_prop"] = {
         func = function(client, model) return string.format("[%s] %s has spawned a prop with model: %s", client:SteamID(), client:Name(), model) end,
