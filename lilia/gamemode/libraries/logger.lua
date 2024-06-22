@@ -88,8 +88,7 @@ if SERVER then
         if not isstring(logString) or not isstring(category) or not IsColor(color) then return end
         hook.Run("OnServerLog", client, logType, logString, category, color)
         Msg("[LOG] ", logString .. "\n")
-        if noSave then return end
-        file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n")
+        if not noSave then file.Append("lilia/logs/" .. os.date("%x"):gsub("/", "-") .. ".txt", "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n") end
     end
 
     --- Sends a log message to a specified client.

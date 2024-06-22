@@ -34,11 +34,7 @@
         category = "Spawn Logs",
         color = Color(52, 152, 219)
     },
-    ["swep_giving"] = {
-        func = function(client, target, swep) return string.format("[%s] %s has given SWEP '%s' to %s", client:SteamID(), client:Name(), swep, target:Name()) end,
-        category = "SWEP Logs",
-        color = Color(52, 152, 219)
-    },
+
     ["swep_spawning"] = {
         func = function(client, swep) return string.format("[%s] %s has spawned SWEP: %s", client:SteamID(), client:Name(), swep) end,
         category = "SWEP Logs",

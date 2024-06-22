@@ -40,7 +40,7 @@ function MODULE:CanPlayerSeeLog()
     return lia.config.AdminConsoleNetworkLogs
 end
 
-function MODULE:OnCharTradeVendor(client, vendor, item, isSellingToVendor, character, itemType, isFailed)
+function MODULE:OnCharTradeVendor(client, vendor, item, isSellingToVendor, _, _, isFailed)
     local vendorName = vendor:getNetVar("name")
     if isFailed then
         lia.log.add(client, "vendorBuyFail", item:getName(), vendorName)
@@ -85,32 +85,32 @@ function MODULE:CharLoaded(id)
     lia.log.add(client, "charLoad", id, character:getName())
 end
 
-function MODULE:PlayerSpawnedProp(client, model, entity)
+function MODULE:PlayerSpawnedProp(client, model)
     lia.log.add(client, "spawned_prop", model)
 end
 
-function MODULE:PlayerSpawnedRagdoll(client, model, entity)
+function MODULE:PlayerSpawnedRagdoll(client, model)
     lia.log.add(client, "spawned_ragdoll", model)
 end
 
-function MODULE:PlayerSpawnedEffect(client, model, entity)
+function MODULE:PlayerSpawnedEffect(client, model)
     lia.log.add(client, "spawned_effect", model)
 end
 
-function MODULE:PlayerSpawnedVehicle(client, vehicle, entity)
+function MODULE:PlayerSpawnedVehicle(client, vehicle)
     lia.log.add(client, "spawned_vehicle", vehicle:GetClass(), vehicle:GetModel())
 end
 
-function MODULE:PlayerSpawnedNPC(client, npc, entity)
+function MODULE:PlayerSpawnedNPC(client, npc)
     lia.log.add(client, "spawned_npc", npc:GetClass(), npc:GetModel())
 end
 
-function MODULE:PlayerGiveSWEP(client, target, swep)
-    lia.log.add(client, "swep_giving", target, swep:GetClass())
+function MODULE:PlayerGiveSWEP(client, swep)
+    lia.log.add(client, "swep_spawning", swep)
 end
 
 function MODULE:PlayerSpawnSWEP(client, swep)
-    lia.log.add(client, "swep_spawning", swep:GetClass())
+    lia.log.add(client, "swep_spawning", swep)
 end
 
 function MODULE:CanTool(client, _, tool)
