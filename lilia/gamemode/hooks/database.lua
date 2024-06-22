@@ -1,4 +1,6 @@
-﻿local DefaultDatabase = {
+﻿local GM = GM or GAMEMODE
+
+local DefaultDatabase = {
     module = "sqlite",
     hostname = "127.0.0.1",
     username = "",

@@ -1,4 +1,6 @@
-﻿function GM:Move(client, moveData)
+﻿local GM = GM or GAMEMODE
+
+function GM:Move(client, moveData)
     local character = client:getChar()
     if not character then return end
     if client:GetMoveType() == MOVETYPE_WALK and moveData:KeyDown(IN_WALK) then

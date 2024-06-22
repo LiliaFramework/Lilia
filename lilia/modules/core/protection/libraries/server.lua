@@ -1,5 +1,4 @@
 ﻿local MODULE = MODULE
-MODULE.crun = MODULE.crun or concommand.Run
 function MODULE:PlayerAuthed(client, steamid)
     local steamID64 = util.SteamIDTo64(steamid)
     local OwnerSteamID64 = client:OwnerSteamID64()
@@ -114,11 +113,11 @@ function MODULE:NotifyAdmin(notification)
     end
 end
 
-function GAMEMODE:OnPhysgunPickup(_, entity)
+function MODULE:OnPhysgunPickup(_, entity)
     if (entity:isProp() or entity:isItem()) and entity:GetCollisionGroup() == COLLISION_GROUP_NONE then entity:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR) end
 end
 
-function GAMEMODE:PhysgunDrop(_, entity)
+function MODULE:PhysgunDrop(_, entity)
     if entity:isProp() and entity:isItem() then timer.Simple(5, function() if IsValid(entity) and entity:GetCollisionGroup() == COLLISION_GROUP_PASSABLE_DOOR then entity:SetCollisionGroup(COLLISION_GROUP_NONE) end end) end
 end
 
@@ -257,7 +256,6 @@ function MODULE:PlayerNoClip(client, state)
             client:SetNoTarget(true)
             client.liaObsData = {client:GetPos(), client:EyeAngles()}
             hook.Run("OnPlayerObserve", client, state)
-            lia.log.add(client, "observerEnter")
         else
             if client.liaObsData then
                 if client:GetInfoNum("lia_obstpback", 0) > 0 then
@@ -278,7 +276,6 @@ function MODULE:PlayerNoClip(client, state)
             client:DrawShadow(true)
             client:SetNoTarget(false)
             hook.Run("OnPlayerObserve", client, state)
-            lia.log.add(client, "observerExit")
         end
     end
 end
@@ -297,11 +294,11 @@ function net.Incoming(length, client)
         return
     end
 
-    if not MODULE.DefaultNets[strName] then lia.log.add(client, "net", strName) end
     length = length - 16
     func(length, client)
 end
 
+MODULE.crun = MODULE.crun or concommand.Run
 function concommand.Run(client, cmd, args, argStr)
     if not IsValid(client) then return MODULE.crun(client, cmd, args, argStr) end
     if not cmd then return MODULE.crun(client, cmd, args, argStr) end

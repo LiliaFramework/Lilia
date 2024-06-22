@@ -189,16 +189,15 @@ function MODULE:VendorSellEvent(client, vendor, itemType, isSellingToVendor, cha
         character:giveMoney(price)
         item:remove():next(function() client.vendorTransaction = nil end):catch(function() client.vendorTransaction = nil end)
         vendor:addStock(itemType)
-        hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
         client:notify("You sold " .. item:getName() .. " for " .. lia.currency.get(price))
-        lia.log.add(client, "vendorSell", itemType, vendor:getNetVar("name"))
+        hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
     end
 end
 
 function MODULE:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
     if not character:getInv():doesFitInventory(itemType) then
         client:notify("You don't have space for this item!")
-        lia.log.add(client, "vendorBuyFail", itemType, vendor:getNetVar("name"))
+        hook.Run("OnCharTradeVendor", client, vendor, nil, isSellingToVendor, character, itemType, true)
         client.vendorTransaction = nil
         return
     end
@@ -208,7 +207,6 @@ function MODULE:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, char
     vendor:takeStock(itemType)
     character:getInv():add(itemType):next(function(item)
         client:notify("You bought " .. item:getName() .. " for " .. lia.currency.get(price))
-        lia.log.add(client, "vendorBuy", itemType, vendor:getNetVar("name"))
         hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
         client.vendorTransaction = nil
     end)

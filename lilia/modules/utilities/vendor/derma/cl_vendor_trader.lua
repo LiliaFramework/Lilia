@@ -5,7 +5,7 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(w, h)
-    surface.SetDrawColor(0, 0, 0, 255)
+    surface.SetDrawColor(0, 0, 0, 125)
     surface.DrawRect(0, 0, w, h)
 end
 

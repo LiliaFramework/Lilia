@@ -1,261 +1,237 @@
 ﻿lia.log.types = {
-    -- Connection Logs
     ["playerConnected"] = {
-        func = function(client) return string.format("%s[%s] has connected to the server.", client:Name(), client:SteamID()) end,
+        func = function(client) return string.format("[%s] %s has connected to the server.", client:SteamID(), client:Name()) end,
         category = "Connection Logs",
         color = Color(255, 255, 255)
     },
     ["playerDisconnected"] = {
-        func = function(client, ...) return string.format("%s[%s] has disconnected from the server.", client:Name(), client:SteamID()) end,
+        func = function(client) return string.format("[%s] %s has disconnected from the server.", client:SteamID(), client:Name()) end,
         category = "Connection Logs",
         color = Color(255, 255, 255)
     },
-    -- Spawn Logs
     ["spawned_prop"] = {
-        func = function(client, model) return string.format("%s has spawned a prop with model: %s", client:Name(), model) end,
+        func = function(client, model) return string.format("[%s] %s has spawned a prop with model: %s", client:SteamID(), client:Name(), model) end,
         category = "Spawn Logs",
         color = Color(52, 152, 219)
     },
     ["spawned_ragdoll"] = {
-        func = function(client, model) return string.format("%s has spawned a ragdoll with model: %s", client:Name(), model) end,
+        func = function(client, model) return string.format("[%s] %s has spawned a ragdoll with model: %s", client:SteamID(), client:Name(), model) end,
         category = "Spawn Logs",
         color = Color(52, 152, 219)
     },
     ["spawned_effect"] = {
-        func = function(client, effect) return string.format("%s has spawned an effect: %s", client:Name(), effect) end,
+        func = function(client, effect) return string.format("[%s] %s has spawned an effect: %s", client:SteamID(), client:Name(), effect) end,
         category = "Spawn Logs",
         color = Color(52, 152, 219)
     },
     ["spawned_vehicle"] = {
-        func = function(client, vehicleName, model) return string.format("%s has spawned a vehicle '%s' with model: %s", client:Name(), vehicleName, model) end,
+        func = function(client, vehicleName, model) return string.format("[%s] %s has spawned a vehicle '%s' with model: %s", client:SteamID(), client:Name(), vehicleName, model) end,
         category = "Spawn Logs",
         color = Color(52, 152, 219)
     },
     ["spawned_npc"] = {
-        func = function(client, npcName, model) return string.format("%s has spawned an NPC '%s' with model: %s", client:Name(), npcName, model) end,
+        func = function(client, npcName, model) return string.format("[%s] %s has spawned an NPC '%s' with model: %s", client:SteamID(), client:Name(), npcName, model) end,
         category = "Spawn Logs",
         color = Color(52, 152, 219)
     },
-    -- SWEP Logs
     ["swep_giving"] = {
-        func = function(client, target, swep) return string.format("%s has given SWEP '%s' to %s", client:Name(), swep, target:Name()) end,
+        func = function(client, target, swep) return string.format("[%s] %s has given SWEP '%s' to %s", client:SteamID(), client:Name(), swep, target:Name()) end,
         category = "SWEP Logs",
         color = Color(52, 152, 219)
     },
     ["swep_spawning"] = {
-        func = function(client, swep) return string.format("%s has spawned SWEP: %s", client:Name(), swep) end,
+        func = function(client, swep) return string.format("[%s] %s has spawned SWEP: %s", client:SteamID(), client:Name(), swep) end,
         category = "SWEP Logs",
         color = Color(52, 152, 219)
     },
-    -- Chat Logs
     ["chat"] = {
-        func = function(client, ...)
-            local arg = {...}
-            return string.format("[%s] %s: %s", arg[1], client:Name(), arg[2])
-        end,
+        func = function(client, chatType, message) return string.format("[%s] [%s] %s: %s", client:SteamID(), chatType, client:Name(), message) end,
+        category = "Chat Logs",
+        color = Color(52, 152, 219)
+    },
+    ["chatOOC"] = {
+        func = function(client, msg) return string.format("[%s] [OOC] %s: %s", client:SteamID(), client:Name(), msg) end,
+        category = "Chat Logs",
+        color = Color(52, 152, 219)
+    },
+    ["chatLOOC"] = {
+        func = function(client, msg) return string.format("[%s] [LOOC] %s: %s", client:SteamID(), client:Name(), msg) end,
         category = "Chat Logs",
         color = Color(52, 152, 219)
     },
     ["command"] = {
-        func = function(client, ...)
-            local arg = {...}
-            return string.format("%s used '%s'", client:Name(), arg[1])
-        end,
+        func = function(client, text) return string.format("[%s] %s used '%s'", client:SteamID(), client:Name(), text) end,
         category = "Chat Logs",
         color = Color(52, 152, 219)
     },
-    -- Character Management Logs
     ["charCreate"] = {
-        func = function(client, ...)
-            local arg = {...}
-            return string.format("%s created the character #%s(%s)", client:steamName(), arg[1]:getID(), arg[1]:getName())
-        end,
+        func = function(client, character) return string.format("[%s] %s created the character #%s(%s)", client:SteamID(), client:steamName(), character:getID(), character:getName()) end,
         category = "Character Management Logs",
         color = Color(52, 152, 219)
     },
     ["charLoad"] = {
-        func = function(client, ...)
-            local arg = {...}
-            return string.format("%s loaded the character #%s(%s)", client:steamName(), arg[1], arg[2])
-        end,
+        func = function(client, id, name) return string.format("[%s] %s loaded the character #%s(%s)", client:SteamID(), client:steamName(), id, name) end,
         category = "Character Management Logs",
         color = Color(52, 152, 219)
     },
     ["charDelete"] = {
-        func = function(client, ...)
-            local arg = {...}
-            return string.format("%s(%s) deleted character (%s)", IsValid(client) and client:steamName() or "COMMAND", IsValid(client) and client:SteamID() or "", arg[1])
-        end,
+        func = function(client, id) return string.format("[%s] %s(%s) deleted character (%s)", IsValid(client) and client:SteamID() or "", IsValid(client) and client:steamName() or "COMMAND", IsValid(client) and client:SteamID() or "", IdleSound()) end,
+        category = "Character Management Logs",
+        color = Color(52, 152, 219)
+    },
+    ["characterSelect"] = {
+        func = function(client, charID, charName) return string.format("[%s] %s selected character %s(%d).", client:SteamID(), client:Name(), charName, charID) end,
         category = "Character Management Logs",
         color = Color(52, 152, 219)
     },
     ["buydoor"] = {
-        func = function(client, ...) return string.format("%s purchased the door", client:Name()) end,
-        category = "Character Management Logs",
+        func = function(client) return string.format("[%s] %s purchased the door", client:SteamID(), client:Name()) end,
+        category = "Door Logs",
         color = Color(52, 152, 219)
     },
     ["selldoor"] = {
-        func = function(client, ...) return string.format("%s sold the door", client:Name()) end,
-        category = "Character Management Logs",
-        color = Color(52, 152, 219)
-    },
-    -- Vendor Logs
-    ["buy"] = {
-        func = function(client, ...)
-            local arg = {...}
-            return string.format("%s purchased '%s' from an NPC", client:Name(), arg[1])
-        end,
-        category = "Vendor Logs",
+        func = function(client) return string.format("[%s] %s sold the door", client:SteamID(), client:Name()) end,
+        category = "Door Logs",
         color = Color(52, 152, 219)
     },
     ["vendorAccess"] = {
-        func = function(client, ...)
-            local data = {...}
-            local vendorName = data[1] or "unknown"
-            return string.format("%s has accessed vendor %s.", client:Name(), vendorName)
-        end,
+        func = function(client, vendorName) return string.format("[%s] %s has accessed vendor %s.", client:SteamID(), client:Name(), vendorName) end,
         category = "Vendor Logs",
         color = Color(52, 152, 219)
     },
     ["vendorExit"] = {
-        func = function(client, ...)
-            local data = {...}
-            local vendorName = data[1] or "unknown"
-            return string.format("%s has exited vendor %s.", client:Name(), vendorName)
-        end,
+        func = function(client, vendorName) return string.format("[%s] %s has exited vendor %s.", client:SteamID(), client:Name(), vendorName) end,
         category = "Vendor Logs",
         color = Color(52, 152, 219)
     },
     ["vendorSell"] = {
-        func = function(client, ...)
-            local data = {...}
-            local vendorName = data[1] or "unknown"
-            local itemName = data[2] or "unknown"
-            return string.format("%s has sold a %s to %s.", client:Name(), itemName, vendorName)
-        end,
+        func = function(client, itemName, vendorName) return string.format("[%s] %s has sold a %s to %s.", client:SteamID(), client:Name(), itemName, vendorName) end,
         category = "Vendor Logs",
         color = Color(52, 152, 219)
     },
     ["vendorBuy"] = {
-        func = function(client, ...)
-            local data = {...}
-            local vendorName = data[1] or "unknown"
-            local itemName = data[2] or "unknown"
-            return string.format("%s has bought a %s from %s.", client:Name(), itemName, vendorName)
-        end,
+        func = function(client, itemName, vendorName) return string.format("[%s] %s has bought a %s from %s.", client:SteamID(), client:Name(), itemName, vendorName) end,
         category = "Vendor Logs",
         color = Color(52, 152, 219)
     },
     ["vendorBuyFail"] = {
-        func = function(client, ...)
-            local data = {...}
-            local vendorName = data[1] or "unknown"
-            local itemName = data[2] or "unknown"
-            return string.format("%s has tried to buy a %s from %s. He had no space!", client:Name(), itemName, vendorName)
-        end,
+        func = function(client, vendorName, itemName) return string.format("[%s] %s has tried to buy a %s from %s. He had no space!", client:SteamID(), client:Name(), itemName, vendorName) end,
         category = "Vendor Logs",
         color = Color(52, 152, 219)
     },
-    -- Item Logs
     ["itemTake"] = {
-        func = function(client, ...)
-            local data = {...}
-            local itemName = data[1] or "unknown"
-            local itemCount = data[2] or 1
-            return string.format("%s has picked up %dx%s.", client:Name(), itemCount, itemName)
-        end,
-        category = "Item Logs",
-        color = Color(52, 152, 219)
-    },
-    ["itemDrop"] = {
-        func = function(client, ...)
-            local data = {...}
-            local itemName = data[1] or "unknown"
-            local itemCount = data[2] or 1
-            return string.format("%s has lost %dx%s.", client:Name(), itemCount, itemName)
-        end,
+        func = function(client, itemName) return string.format("[%s] %s has picked up %s.", client:SteamID(), client:Name(), itemName) end,
         category = "Item Logs",
         color = Color(52, 152, 219)
     },
     ["itemUse"] = {
-        func = function(client, ...)
-            local arg = {...}
-            local item = arg[2]
-            return string.format("%s tried '%s' on item '%s'(#%s)", client:Name(), arg[1], item.name, item.id)
-        end,
+        func = function(client, itemName) return string.format("[%s] %s has used %dx%s.", client:SteamID(), client:Name(), itemName) end,
         category = "Item Logs",
         color = Color(52, 152, 219)
     },
-    -- Character Logs
+    ["itemDrop"] = {
+        func = function(client, itemName) return string.format("[%s] %s has lost %s.", client:SteamID(), client:Name(), itemName) end,
+        category = "Item Logs",
+        color = Color(52, 152, 219)
+    },
+    ["itemInteraction"] = {
+        func = function(client, action, item) return string.format("[%s] %s tried '%s' on item '%s'(#%s)", client:SteamID(), client:Name(), action, item.name, item.id) end,
+        category = "Item Logs",
+        color = Color(52, 152, 219)
+    },
+    ["itemEquip"] = {
+        func = function(client, itemName) return string.format("[%s] %s has equipped %s.", client:SteamID(), client:Name(), itemName) end,
+        category = "Item Logs",
+        color = Color(52, 152, 219)
+    },
+    ["itemUnequip"] = {
+        func = function(client, itemName) return string.format("[%s] %s has unequipped %s.", client:SteamID(), client:Name(), itemName) end,
+        category = "Item Logs",
+        color = Color(52, 152, 219)
+    },
     ["money"] = {
-        func = function(client, ...)
-            local data = {...}
-            local amount = data[1] or 0
-            return string.format("%s's money has changed by %d.", client:Name(), amount)
-        end,
+        func = function(client, amount) return string.format("[%s] %s's money has changed by %d.", client:SteamID(), client:Name(), amount) end,
         category = "Character Logs",
         color = Color(52, 152, 219)
     },
     ["moneyGiven"] = {
-        func = function(client, targetName, amount) return string.format("%s has given %s %s.", client:Name(), targetName, lia.currency.get(amount)) end,
+        func = function(client, targetName, amount) return string.format("[%s] %s has given %s %s.", client:SteamID(), client:Name(), targetName, lia.currency.get(amount)) end,
         category = "Character Logs",
         color = Color(52, 152, 219)
     },
-    ["moneyGivenTAB"] = {
-        func = function(client, targetName, amount) return string.format("%s has given %s %s using TAB.", client:Name(), targetName, lia.currency.get(amount)) end,
-        category = "Character Logs",
-        color = Color(52, 152, 219)
-    },
-    -- Damage and Death Logs
     ["playerHurt"] = {
-        func = function(client, attacker, damage, health)
-            attacker = tostring(attacker)
-            damage = damage or 0
-            health = health or 0
-            return string.format("%s has taken %d damage from %s, leaving them at %d health.", client:Name(), damage, attacker, health)
-        end,
+        func = function(client, attacker, damage, health) return string.format("[%s] %s has taken %d damage from %s, leaving them at %d health.", client:SteamID(), client:Name(), damage, attacker, health) end,
         category = "Damage Logs",
         color = Color(52, 152, 219)
     },
     ["playerDeath"] = {
-        func = function(client, ...)
-            local data = {...}
-            local attacker = data[1] or "unknown"
-            return string.format("%s has killed %s.", attacker, client:Name())
-        end,
+        func = function(client, attacker) return string.format("[%s] %s has killed %s.", client:SteamID(), attacker, client:Name()) end,
         category = "Death Logs",
         color = Color(52, 152, 219)
     },
-    -- Staff Logs
+    ["toolgunUse"] = {
+        func = function(client, tool) return string.format("[%s] %s[%s](%s) used toolgun: %s", client:SteamID(), client:Name(), client:SteamID(), client:CharID(), tool) end,
+        category = "Toolgun Logs",
+        color = Color(52, 152, 219)
+    },
     ["unpersistedEntity"] = {
-        func = function(client, entity) return string.format("%s has removed persistence from '%s'.", client:Name(), entity) end,
+        func = function(client, entity) return string.format("[%s] %s has removed persistence from '%s'.", client:SteamID(), client:Name(), entity) end,
         category = "Staff Logs",
         color = Color(52, 152, 219)
     },
     ["persistedEntity"] = {
-        func = function(client, entity) return string.format("%s has persisted '%s'.", client:Name(), entity) end,
+        func = function(client, entity) return string.format("[%s] %s has persisted '%s'.", client:SteamID(), client:Name(), entity) end,
         category = "Staff Logs",
         color = Color(52, 152, 219)
     },
     ["observerEnter"] = {
-        func = function(client, ...) return string.format("%s has entered observer.", client:Name()) end,
+        func = function(client) return string.format("[%s] %s has entered observer.", client:SteamID(), client:Name()) end,
         category = "Staff Logs",
         color = Color(52, 152, 219)
     },
     ["observerExit"] = {
-        func = function(client, ...) return string.format("%s has left observer.", client:Name()) end,
+        func = function(client) return string.format("[%s] %s has left observer.", client:SteamID(), client:Name()) end,
         category = "Staff Logs",
         color = Color(52, 152, 219)
     },
-    -- Network Logs
-    ["net"] = {
-        func = function(client, messageName) return string.format("[Net Log] Player %s (%s) sent net message %s.", client:GetName(), client:SteamID(), messageName) end,
-        category = "Network Logs",
-        color = Color(52, 152, 219)
-    },
     ["invalidNet"] = {
-        func = function(client) return string.format("[Net Log] Player %s (%s) tried to send invalid net message!", client:GetName(), client:SteamID()) end,
+        func = function(client) return string.format("[%s] [Net Log] Player %s tried to send invalid net message!", client:SteamID(), client:GetName()) end,
         category = "Network Logs",
         color = Color(52, 152, 219)
     },
+    ["charRecognize"] = {
+        func = function(clientID, targetID, name) return string.format("[%s] recognized [%s] as %s", clientID, targetID, name) end,
+        category = "Recognition Logs",
+        color = Color(46, 204, 113)
+    },
+    ["charsetname"] = {
+        func = function(adminClientName, targetName, newName) return string.format("[%s] %s changed %s's name to: %s", adminClientName, targetName, targetName, newName) end,
+        category = "Character Management Logs",
+        color = Color(52, 152, 219)
+    },
+    ["charsetdesc"] = {
+        func = function(adminClientName, targetName, newDescription) return string.format("[%s] %s changed %s's description to: %s", adminClientName, targetName, targetName, newDescription) end,
+        category = "Character Management Logs",
+        color = Color(52, 152, 219)
+    },
+    ["charBan"] = {
+        func = function(adminClientName, targetName) return string.format("[%s] %s banned character %s", adminClientName, targetName, targetName) end,
+        category = "Character Management Logs",
+        color = Color(52, 152, 219)
+    },
+    ["charsetmodel"] = {
+        func = function(adminClientName, targetName, newModel, oldModel) return string.format("[%s] %s changed %s's model from %s to %s", adminClientName, targetName, targetName, oldModel, newModel) end,
+        category = "Character Management Logs",
+        color = Color(52, 152, 219)
+    },
+    ["charsetbodygroup"] = {
+        func = function(adminClientName, targetName, bodyGroupName, newValue, oldValue) return string.format("[%s] %s changed %s's bodygroup %s to %s (was: %s)", adminClientName, targetName, targetName, bodyGroupName, newValue, oldValue) end,
+        category = "Character Management Logs",
+        color = Color(52, 152, 219)
+    },
+    ["charsetskin"] = {
+        func = function(adminClientName, targetName, newSkin, oldSkin) return string.format("[%s] %s changed %s's skin to %s (was: %s)", adminClientName, targetName, targetName, newSkin, oldSkin) end,
+        category = "Character Management Logs",
+        color = Color(52, 152, 219)
+    }
 }

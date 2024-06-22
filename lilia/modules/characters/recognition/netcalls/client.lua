@@ -1,7 +1,7 @@
 ﻿local MODULE = MODULE
 netstream.Hook("rgnDone", function()
     local client = LocalPlayer()
-    hook.Run("OnCharRecognized", client, id)
+    hook.Run("OnCharRecognized", client, client:getChar():getID())
 end)
 
 netstream.Hook("rgnMenu", function()

@@ -1,4 +1,6 @@
-﻿function GM:GetMaxPlayerCharacter(client)
+﻿local GM = GM or GAMEMODE
+
+function GM:GetMaxPlayerCharacter(client)
     LiliaDeprecated("GetMaxPlayerCharacter is deprecated. Use GetMaxPlayerChar for optimization purposes.")
     hook.Run("GetMaxPlayerChar", client)
 end

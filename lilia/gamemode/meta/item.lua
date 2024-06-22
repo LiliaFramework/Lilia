@@ -452,7 +452,7 @@ if SERVER then
         if result == nil and isfunction(callback.onRun) then result = callback.onRun(self, data) end
         if self.postHooks[action] then self.postHooks[action](self, result, data) end
         hook.Run("OnPlayerInteractItem", client, action, self, result, data)
-        lia.log.add(client, "itemUse", action, item)
+        lia.log.add(client, "itemInteraction", action, item)
         if result ~= false and not deferred.isPromise(result) then
             if IsValid(entity) then
                 entity:Remove()

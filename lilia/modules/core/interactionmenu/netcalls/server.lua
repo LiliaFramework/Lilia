@@ -4,7 +4,7 @@
     client:getChar():takeMoney(amount)
     client:notify("You transfered " .. lia.currency.symbol .. amount .. " to " .. hook.Run("GetDisplayedName", target) or target:getChar():getName(), NOT_CORRECT)
     target:notify("You received " .. lia.currency.symbol .. amount .. " from " .. hook.Run("GetDisplayedName", client) or client:getChar():getName(), NOT_CORRECT)
-    lia.log.add("moneyGivenTAB", client, target:Name(), amount)
+    lia.log.add(client, "moneyGiven", target:Name(), amount)
 end)
 
 netstream.Hook("PIMRunOption", function(client, name)

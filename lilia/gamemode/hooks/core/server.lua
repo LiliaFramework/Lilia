@@ -1,9 +1,21 @@
-﻿function GM:PlayerSay(client, message)
+﻿local GM = GM or GAMEMODE
+function GM:PlayerSay(client, message)
     local chatType, message, anonymous = lia.chat.parse(client, message, true)
     if (chatType == "ic") and lia.command.parse(client, message) then return "" end
     if utf8.len(message) <= lia.config.MaxChatLength then
+        local isOOC = chatType == "ooc"
+        local isLOOC = chatType == "looc"
         lia.chat.send(client, chatType, message, anonymous)
-        lia.log.add(client, "chat", chatType and chatType:upper() or "??", message)
+        local logType
+        if isOOC then
+            logType = "chatOOC"
+        elseif isLOOC then
+            logType = "chatLOOC"
+        else
+            logType = "chat"
+        end
+
+        lia.log.add(client, logType, chatType and chatType:upper() or "??", message)
         hook.Run("PostPlayerSay", client, message, chatType, anonymous)
     else
         client:notify("Your message is too long and has not been sent.")

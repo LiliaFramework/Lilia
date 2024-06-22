@@ -1,4 +1,5 @@
-﻿function GM:PostPlayerLoadout(client)
+﻿local GM = GM or GAMEMODE
+function GM:PostPlayerLoadout(client)
     local character = client:getChar()
     if not (IsValid(client) or character) then return end
     client:Give("lia_hands")
@@ -35,7 +36,6 @@ function GM:PlayerDisconnected(client)
 
         hook.Run("OnCharDisconnect", client, character)
         character:save()
-        lia.log.add(client, "playerDisconnected")
     end
 
     if client:hasRagdoll() then
@@ -123,12 +123,4 @@ function GM:SetupBotPlayer(client)
     lia.char.loaded[botID] = character
     character:setup()
     client:Spawn()
-end
-
-function GM:PlayerAuthed(client)
-    lia.log.add(client, "playerConnected", client)
-end
-
-function GM:PlayerHurt(client, attacker, health, damage)
-    lia.log.add(client, "playerHurt", attacker:IsPlayer() and attacker:Name() or attacker:GetClass(), damage, health)
 end

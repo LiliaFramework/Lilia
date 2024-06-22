@@ -1,53 +1,55 @@
-﻿function GAMEMODE:PlayerSpawnEffect(client)
-    return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Effects", nil)) or client:getChar():hasFlags("L")
+﻿local GM = GM or GAMEMODE
+function GM:PlayerSpawnEffect(client)
+    return client:isStaffOnDuty() or CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Effects", nil) or client:getChar():hasFlags("L")
 end
 
-function GAMEMODE:PlayerSpawnNPC(client)
-    return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn NPCs", nil)) or client:getChar():hasFlags("n")
+function GM:PlayerSpawnNPC(client)
+    return client:isStaffOnDuty() or CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn NPCs", nil) or client:getChar():hasFlags("n")
 end
 
-function GAMEMODE:PlayerSpawnProp(client)
-    return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Props", nil)) or client:getChar():hasFlags("e")
+function GM:PlayerSpawnProp(client)
+    return client:isStaffOnDuty() or CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Props", nil) or client:getChar():hasFlags("e")
 end
 
-function GAMEMODE:PlayerSpawnRagdoll(client)
-    return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Ragdolls", nil)) or client:getChar():hasFlags("r")
+function GM:PlayerSpawnRagdoll(client)
+    return client:isStaffOnDuty() or CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Ragdolls", nil) or client:getChar():hasFlags("r")
 end
 
-function GAMEMODE:PlayerSpawnSENT(client)
-    return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn SENTs", nil)) or client:getChar():hasFlags("E")
+function GM:PlayerSpawnSENT(client)
+    print(client:isStaffOnDuty(), CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn SENTs", nil), client:getChar():hasFlags("E"))
+    return client:isStaffOnDuty() or CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn SENTs", nil) or client:getChar():hasFlags("E")
 end
 
-function GAMEMODE:PlayerSpawnSWEP(client)
-    return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn SWEPs", nil)) or client:getChar():hasFlags("z")
+function GM:PlayerSpawnSWEP(client)
+    return client:isStaffOnDuty() or CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn SWEPs", nil) or client:getChar():hasFlags("z")
 end
 
-function GAMEMODE:PlayerSpawnVehicle(client)
-    return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Cars", nil)) or client:getChar():hasFlags("C")
+function GM:PlayerSpawnVehicle(client)
+    return client:isStaffOnDuty() or CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Cars", nil) or client:getChar():hasFlags("C")
 end
 
-function GAMEMODE:PlayerGiveSWEP(client)
-    return (client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn SWEPs", nil)) or client:getChar():hasFlags("W")
+function GM:PlayerGiveSWEP(client)
+    return client:isStaffOnDuty() or CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn SWEPs", nil) or client:getChar():hasFlags("W")
 end
 
-function GAMEMODE:PlayerNoClip(client)
+function GM:PlayerNoClip(client)
     return (not client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip Outside Staff Character", nil)) or client:isStaffOnDuty()
 end
 
-function GAMEMODE:OnPhysgunReload(_, client)
+function GM:OnPhysgunReload(_, client)
     return CAMI.PlayerHasAccess(client, "Staff Permissions - Can Physgun Reload", nil)
 end
 
-function GAMEMODE:CanTool(client, _, tool)
+function GM:CanTool(client, _, tool)
     local privilege = "Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
     return (client:isStaffOnDuty() or client:getChar():hasFlags("t")) and CAMI.PlayerHasAccess(client, privilege, nil)
 end
 
-function GAMEMODE:CanProperty(client, property, entity)
+function GM:CanProperty(client, property, entity)
     return (entity:GetCreator() == client and (property == "remover" or property == "collision")) or (CAMI.PlayerHasAccess(client, "Staff Permissions - Access Property " .. property:gsub("^%l", string.upper), nil) and client:isStaffOnDuty())
 end
 
-function GAMEMODE:PlayerSpawnObject(client)
+function GM:PlayerSpawnObject(client)
     if not client.NextSpawn then client.NextSpawn = CurTime() end
     if CAMI.PlayerHasAccess(client, "Spawn Permissions - No Spawn Delay", nil) then return true end
     if client.NextSpawn >= CurTime() then
@@ -59,7 +61,7 @@ function GAMEMODE:PlayerSpawnObject(client)
     return true
 end
 
-function GAMEMODE:PhysgunPickup(client, entity)
+function GM:PhysgunPickup(client, entity)
     if entity:GetCreator() == client and (entity:isProp() or entity:isItem()) then return true end
     if entity:IsVehicle() then
         return CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup on Vehicles", nil)
@@ -71,30 +73,30 @@ function GAMEMODE:PhysgunPickup(client, entity)
     return false
 end
 
-function GAMEMODE:PlayerSpawnedNPC(client, entity)
+function GM:PlayerSpawnedNPC(client, entity)
     entity:assignCreator(client)
 end
 
-function GAMEMODE:PlayerSpawnedEffect(client, _, entity)
+function GM:PlayerSpawnedEffect(client, _, entity)
     entity:assignCreator(client)
 end
 
-function GAMEMODE:PlayerSpawnedProp(client, _, entity)
+function GM:PlayerSpawnedProp(client, _, entity)
     entity:assignCreator(client)
 end
 
-function GAMEMODE:PlayerSpawnedRagdoll(client, _, entity)
+function GM:PlayerSpawnedRagdoll(client, _, entity)
     entity:assignCreator(client)
 end
 
-function GAMEMODE:PlayerSpawnedSENT(client, entity)
+function GM:PlayerSpawnedSENT(client, entity)
     entity:assignCreator(client)
 end
 
-function GAMEMODE:PlayerSpawnedSWEP(client, entity)
+function GM:PlayerSpawnedSWEP(client, entity)
     entity:assignCreator(client)
 end
 
-function GAMEMODE:PlayerSpawnedVehicle(client, entity)
+function GM:PlayerSpawnedVehicle(client, entity)
     entity:assignCreator(client)
 end

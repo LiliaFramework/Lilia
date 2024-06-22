@@ -19,7 +19,6 @@
 -- @field BadCVars Lists undesirable console variables that should be monitored or blocked | **table**
 -- @field ExploitableNetMessages Lists exploitable Net Messages that should be monitored or blocked | **table**
 -- @field ActExploitTimer Specifies the duration (in seconds) a player remains unable to deal damage after using an "act" command | **integer**
--- @field DefaultNets Lists the default net messages that do not get logged | **table**
 -- @field AltsDisabled Whether or not alting is permitted | **bool**
 -- @field PassableOnFreeze Makes it so that props frozen can be passed through when frozen | **bool**
 -- @field CanNotPermaProp List of entities restricted from perma propping | **table**

@@ -93,7 +93,7 @@ lia.command.add("charban", {
         if IsValid(target) then
             local character = target:getChar()
             if character then
-                client:notifyLocalized("charBan", client:Name(), target:Name())
+                lia.log.add(client, "charBan", target:Name(), client:Name())
                 character:setData("banned", true)
                 character:setData("charBanInfo", {
                     name = client.steamName and client:steamName() or client:Name(),
@@ -103,6 +103,7 @@ lia.command.add("charban", {
 
                 character:save()
                 character:kick()
+                client:notifyLocalized("charBan", client:Name(), target:Name())
             end
         end
     end
@@ -118,6 +119,7 @@ lia.command.add("charsetdesc", {
         if not target:getChar() then return "No character loaded" end
         local arg = table.concat(arguments, " ", 2)
         if not arg:find("%S") then return client:requestString("Change " .. target:Name() .. "'s Description", "Enter new description", function(text) lia.command.run(client, "charsetdesc", {arguments[1], text}) end, target:getChar():getDesc()) end
+        lia.log.add(client, "charsetdesc", target:Name(), arg)
         target:getChar():setDesc(arg)
         return "Successfully changed " .. target:Name() .. "'s description"
     end
@@ -133,6 +135,7 @@ lia.command.add("charsetname", {
         table.remove(arguments, 1)
         local targetName = table.concat(arguments, " ")
         if IsValid(target) and target:getChar() then
+            lia.log.add(client, "charsetname", target:Name(), targetName)
             client:notifyLocalized("cChangeName", client:Name(), target:Name(), targetName)
             target:getChar():setName(targetName:gsub("#", "#?"))
         end
@@ -161,9 +164,12 @@ lia.command.add("charsetmodel", {
         if not arguments[2] then return L("invalidArg", client, 2) end
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and target:getChar() then
+            local oldModel = target:getChar():getModel()
             target:getChar():setModel(arguments[2])
             target:SetupHands()
             client:notifyLocalized("cChangeModel", client:Name(), target:Name(), arguments[2])
+
+            lia.log.add(client, "charsetmodel", client:Name(), target:Name(), arguments[2], oldModel)
         end
     end
 })
@@ -178,12 +184,15 @@ lia.command.add("charsetbodygroup", {
         if IsValid(target) and target:getChar() then
             local index = target:FindBodygroupByName(arguments[2])
             if index > -1 then
+                local oldValue = target:GetBodygroup(index)
                 if value and value < 1 then value = nil end
                 local groups = target:getChar():getData("groups", {})
                 groups[index] = value
                 target:getChar():setData("groups", groups)
                 target:SetBodygroup(index, value or 0)
                 client:notifyLocalized("cChangeGroups", client:Name(), target:Name(), arguments[2], value or 0)
+
+                lia.log.add(client, "charsetbodygroup", client:Name(), target:Name(), arguments[2], value or 0, oldValue)
             else
                 return "@invalidArg", 2
             end
@@ -199,12 +208,16 @@ lia.command.add("charsetskin", {
         local skin = tonumber(arguments[2])
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and target:getChar() then
+            local oldSkin = target:GetSkin()
             target:getChar():setData("skin", skin)
             target:SetSkin(skin or 0)
             client:notifyLocalized("cChangeSkin", client:Name(), target:Name(), skin or 0)
+
+            lia.log.add(client, "charsetskin", client:Name(), target:Name(), skin or 0, oldSkin)
         end
     end
 })
+
 
 lia.command.add("chargetmoney", {
     adminOnly = true,
@@ -802,7 +815,7 @@ lia.command.add("givemoney", {
             target:notify("You were given " .. lia.currency.get(amount) .. " by " .. (hook.Run("isCharRecognized", tCharacter, charID) and client:Name() or "someone you don't recognize"))
             client:notify("You gave " .. lia.currency.get(amount) .. " to " .. (hook.Run("isCharRecognized", character, id) and target:Name() or "someone you don't recognize"))
             client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_GMOD_GESTURE_ITEM_PLACE, true)
-            lia.log.add("moneyGiven", client, target:Name(), amount)
+            lia.log.add(client, "moneyGiven", target:Name(), amount)
         else
             client:notify("You need to be looking at someone!")
         end

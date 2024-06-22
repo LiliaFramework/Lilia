@@ -1,4 +1,5 @@
-﻿if SERVER then
+﻿local GM = GM or GAMEMODE
+if SERVER then
     function GM:OnPlayerInteractItem(client, action, item)
         if isentity(item) then
             if IsValid(item) then
@@ -11,8 +12,19 @@
             item = lia.item.instances[item]
         end
 
+        action = string.lower(action)
         if not item then return end
-        lia.log.add(client, "itemUse", action, item)
+        if action == "drop" then
+            lia.log.add(client, "itemDrop", item.name)
+        elseif action == "take" then
+            lia.log.add(client, "itemTake", item.name)
+        elseif action == "unequip" then
+            lia.log.add(client, "itemUnequip", item.name)
+        elseif action == "equip" then
+            lia.log.add(client, "itemEquip", item.name)
+        else
+            lia.log.add(client, "itemInteraction", action, item)
+        end
     end
 
     function GM:CanItemBeTransfered(item, curInv, inventory)
