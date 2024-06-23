@@ -31,8 +31,8 @@ jobs:
 
       - name: Download gDocs files
         run: |
-          wget https://github.com/VictorienXP/gdocs/releases/download/${{ env.GDOCS_VERSION }}/docs.zip
-          wget https://github.com/VictorienXP/gdocs/releases/download/${{ env.GDOCS_VERSION }}/parser.min.js
+          wget https://github.com/VictorienXP/gdocs/releases/download/0.1.1/docs.zip
+          wget https://github.com/VictorienXP/gdocs/releases/download/0.1.1/parser.min.js
 
       - name: Extract docs
         run: unzip -o docs.zip -d docs
