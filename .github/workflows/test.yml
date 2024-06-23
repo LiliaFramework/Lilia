@@ -1,29 +1,47 @@
+name: CI
+on: [push, pull_request]
+
+permissions:
+  actions: write
+  checks: write
+  contents: write
+  deployments: write
+  id-token: write
+  issues: write
+  discussions: write
+  packages: write
+  pages: write
+  pull-requests: write
+  repository-projects: write
+  security-events: write
+  statuses: write
+
 jobs:
-   build-and-deploy:
-      runs-on: ubuntu-latest
-      env:
-         GDOCS_VERSION: 1.0
-      steps:
-         - uses: actions/checkout@v3
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      GDOCS_VERSION: 1.0
+    steps:
+      - uses: actions/checkout@v3
 
-         - name: Setup deno
-         uses: denoland/setup-deno@v1
-         with:
-            deno-version: v1.x
+      - name: Setup deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
 
-         - name: Download gDocs files
-            run: |
-               wget https://github.com/VictorienXP/gdocs/releases/download/${{ env.GDOCS_VERSION }}/docs.zip
-               wget https://github.com/VictorienXP/gdocs/releases/download/${{ env.GDOCS_VERSION }}/parser.min.js
+      - name: Download gDocs files
+        run: |
+          wget https://github.com/VictorienXP/gdocs/releases/download/${{ env.GDOCS_VERSION }}/docs.zip
+          wget https://github.com/VictorienXP/gdocs/releases/download/${{ env.GDOCS_VERSION }}/parser.min.js
 
-         - name: Extract docs
-            run: unzip -o docs.zip -d docs
+      - name: Extract docs
+        run: unzip -o docs.zip -d docs
 
-         - name: Generate database
-            run: deno run -A parser.min.js -d src -o docs
+      - name: Generate database
+        run: deno run -A parser.min.js -d src -o docs
 
-         - name: Deploy gh-pages
-            uses: peaceiris/actions-gh-pages@v3
-            with:
-               github_token: ${{ secrets.GITHUB_TOKEN }}
-               publish_dir: ./docs
+      - name: Deploy gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
