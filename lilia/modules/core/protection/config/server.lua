@@ -8,3 +8,4 @@ MODULE.RestrictedEnts = {"func_button", "class C_BaseEntity", "func_brush", "fun
 MODULE.RestrictedVehicles = {}
 MODULE.PlayerSpawnVehicleDelay = 30
 MODULE.ToolInterval = 0.5
+MODULE.AntiMapBackdoor = true

@@ -44,21 +44,23 @@ end
 
 function MODULE:OnEntityCreated(entity)
     local class = entity:GetClass():lower():Trim()
-    if class == "lua_run" then
-        function entity:AcceptInput()
-            return true
+    if self.AntiMapBackdoor then
+        if class == "lua_run" then
+            function entity:AcceptInput()
+                return true
+            end
+
+            function entity:RunCode()
+                return true
+            end
+
+            timer.Simple(0, function() entity:Remove() end)
         end
 
-        function entity:RunCode()
-            return true
-        end
-
-        timer.Simple(0, function() entity:Remove() end)
-    elseif class == "point_servercommand" then
-        timer.Simple(0, function() entity:Remove() end)
-    elseif class == "prop_vehicle_prisoner_pod" then
-        entity:AddEFlags(EFL_NO_THINK_FUNCTION)
+        if class == "point_servercommand" then timer.Simple(0, function() entity:Remove() end) end
     end
+
+    if class == "prop_vehicle_prisoner_pod" then entity:AddEFlags(EFL_NO_THINK_FUNCTION) end
 end
 
 function MODULE:EntityTakeDamage(entity, dmgInfo)
