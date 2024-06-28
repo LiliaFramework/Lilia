@@ -55,7 +55,7 @@ function MODULE:OnPlayerObserve(client, state)
     lia.log.add(client, state and "observerEnter" or "observerExit")
 end
 
-function MODULE:PlayerAuthed(client)
+function MODULE:PlayerInitialSpawn(client)
     lia.log.add(client, "playerConnected")
 end
 
@@ -82,7 +82,7 @@ end
 function MODULE:CharLoaded(id)
     local character = lia.char.loaded[id]
     local client = character:getPlayer()
-    lia.log.add(client, "charLoad", id, character:getName())
+    lia.log.add(client, "charLoad", character:getName(), id)
 end
 
 function MODULE:PlayerSpawnedProp(client, model)
