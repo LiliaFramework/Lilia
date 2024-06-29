@@ -42,6 +42,7 @@ if SERVER then
     -- @func func format callback function(client, ...)
     -- @string category Log category
     -- @color[opt] color Log color
+    -- @string PLogs PLogs PLogs compatibility category
     -- @usage function(client, ...) log format callback
     function lia.log.addType(logType, func, category, color, PLogs)
         color = color or Color(52, 152, 219)
