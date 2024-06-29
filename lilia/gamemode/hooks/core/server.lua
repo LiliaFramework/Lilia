@@ -9,13 +9,15 @@ function GM:PlayerSay(client, message)
         local logType
         if isOOC then
             logType = "chatOOC"
+            lia.log.add(client, logType, message)
         elseif isLOOC then
             logType = "chatLOOC"
+            lia.log.add(client, logType, message)
         else
             logType = "chat"
+            lia.log.add(client, logType, chatType and chatType:upper() or "??", message)
         end
 
-        lia.log.add(client, logType, chatType and chatType:upper() or "??", message)
         hook.Run("PostPlayerSay", client, message, chatType, anonymous)
     else
         client:notify("Your message is too long and has not been sent.")
