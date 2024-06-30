@@ -18,7 +18,7 @@
 	--font-style-code: Consolas, monospace;
 
 	--color-accent: rgb(133, 212, 255);
-	--color-accent-dark: rgb(9, 69, 19);
+	--color-accent-dark: rgb(80, 127, 153);
 	--color-white: rgb(255, 255, 255);
 	--color-offwhite: rgb(200, 200, 200);
 	--color-white-accent: rgb(203, 190, 209);
@@ -370,7 +370,7 @@ a.reference {
 }
 
 .notice .title {
-	color: var(--color-white);
+	color: var(--color-black);
 	background-color: var(--color-notice-background);
 
 	padding: var(--padding-tiny);
