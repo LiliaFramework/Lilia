@@ -118,7 +118,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         ITEM.base = baseID
         ITEM.isBase = isBaseItem
         ITEM.category = ITEM.category or "misc"
-        ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or lia.item.DefaultFunctions)
+        ITEM.functions = table.Copy(baseTable.functions or lia.item.DefaultFunctions)
     else
         ITEM = targetTable[uniqueID] or setmetatable({
             hooks = table.Copy(baseTable.hooks or {}),
