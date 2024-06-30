@@ -1,6 +1,7 @@
 ﻿--- Various useful helper functions.
 -- @library lia.util
-lia.util.cachedMaterials = lia.util.cachedMaterials or {}
+
+
 --- Removes the realm prefix from a file name. The returned string will be unchanged if there is no prefix found.
 -- @realm shared
 -- @string name String to strip prefix from
@@ -838,10 +839,12 @@ end
 -- if you aren't locally storing a `Material()` call.
 -- @realm shared
 -- @string materialPath Path to the material
+-- @string[opt] materialParameters
 -- @treturn[1] material The cached material
 -- @treturn[2] nil If the material doesn't exist in the filesystem
-function lia.util.getMaterial(materialPath)
-    lia.util.cachedMaterials[materialPath] = lia.util.cachedMaterials[materialPath] or Material(materialPath)
+function lia.util.getMaterial(materialPath, materialParameters)
+    lia.util.cachedMaterials = lia.util.cachedMaterials or {}
+    lia.util.cachedMaterials[materialPath] = lia.util.cachedMaterials[materialPath] or Material(materialPath, materialParameters)
     return lia.util.cachedMaterials[materialPath]
 end
 
