@@ -170,7 +170,7 @@ lia.char.registerVar("name", {
 
 lia.char.registerVar("desc", {
     field = "_desc",
-    default = "Please Enter Your Description With The Minimum Of " .. lia.config.MinDescLen .. " Characters!",
+    default = "Please enter your description with a minimum of " .. lia.config.MinDescLen .. " characters!",
     index = 2,
     onValidate = function(value, data, client)
         local desc, override = hook.Run("GetDefaultCharDesc", client, data.faction)
@@ -179,9 +179,13 @@ lia.char.registerVar("desc", {
         if not value or #value:gsub("%s", "") < minLength then return false, "descMinLen", minLength end
         return true
     end,
-    onAdjust = function(client, data, _, newData)
+    onAdjust = function(client, data, value, newData)
         local desc, override = hook.Run("GetDefaultCharDesc", client, data.faction)
-        if isstring(desc) and override then newData.desc = desc end
+        if isstring(desc) and override then
+            newData.desc = desc
+        else
+            newData.desc = value
+        end
     end,
 })
 
