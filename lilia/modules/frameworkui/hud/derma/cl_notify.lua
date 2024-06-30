@@ -12,7 +12,7 @@ function PANEL:SetMessage(...)
     for _, v in ipairs({...}) do
         if istable(v) then
             msg = msg .. "<color=" .. v.r .. "," .. v.g .. "," .. v.b .. ">"
-        elseif v:IsPlayer() then
+        elseif type(v) == "Player" then
             local col = team.GetColor(v:Team())
             msg = msg .. "<color=" .. col.r .. "," .. col.g .. "," .. col.b .. ">" .. tostring(v:Name()):gsub("<", "&lt;"):gsub(">", "&gt;") .. "</color>"
         else

@@ -4,7 +4,7 @@
         size = ScreenScale(6),
         weight = 100
     })
-    
+
     surface.CreateFont("liaBigCredits", {
         font = "Segoe UI Light",
         size = ScreenScale(12),
@@ -16,8 +16,7 @@ function MODULE:BuildHelpMenu(tabs)
     tabs["Credits"] = function()
         if helpPanel then
             local credits = helpPanel:Add("liaCreditsList")
-            credits:Dock(TOP)
-            credits:DockMargin(ScrW() * 0.1, 0, ScrW() * 0.1, 0)
+            credits:Dock(FILL)
         end
         return ""
     end

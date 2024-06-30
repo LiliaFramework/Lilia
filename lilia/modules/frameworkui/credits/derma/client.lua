@@ -13,16 +13,13 @@ MODULE.contributorData = MODULE.contributorData or {
 }
 
 local PANEL = {}
-
 AccessorFunc(PANEL, "rowHeight", "RowHeight", FORCE_NUMBER)
-
 DEFINE_BASECLASS("Panel")
-
 function PANEL:Init()
     self.seperator = vgui.Create("Panel", self)
     self.seperator:Dock(TOP)
     self.seperator:SetTall(1)
-    self.seperator.Paint = function(this, width, height)
+    self.seperator.Paint = function(_, width, height)
         surface.SetDrawColor(color_white)
         surface.SetMaterial(lia.util.getMaterial("vgui/gradient-r"))
         surface.DrawTexturedRect(0, 0, width * 0.5, height)
@@ -35,6 +32,7 @@ function PANEL:Init()
     self.sectionLabel:Dock(TOP)
     self.sectionLabel:SetFont("liaBigCredits")
     self.sectionLabel:SetContentAlignment(4)
+    self.sectionLabel:SetTextColor(color_white)
 end
 
 function PANEL:Clear()
@@ -52,7 +50,7 @@ function PANEL:Add(pnl)
     return BaseClass.Add(IsValid(self.currentRow) and self.currentRow or self:newRow(), pnl)
 end
 
-function PANEL:PerformLayout(width, height)
+function PANEL:PerformLayout()
     local tall = 0
     for _, v in ipairs(self:GetChildren()) do
         local _, tM, _, bM = v:GetDockMargin()
@@ -86,22 +84,22 @@ function PANEL:newRow()
 end
 
 vgui.Register("liaCreditsSpecialList", PANEL, "Panel")
-PANEL = {}
+
+local PANEL = {}
 function PANEL:Paint(w, h)
     surface.SetMaterial(lia.util.getMaterial("lilia/lilia.png"))
     surface.SetDrawColor(255, 255, 255, 255)
-    surface.DrawTexturedRect(w * 0.5 - 128, h * 0.5 - 128, 256, 256)
+    surface.DrawTexturedRect(w * 0.5 - 144, h * 0.5 - 144, 288, 288)  -- Made the logo bigger
 end
 
 vgui.Register("CreditsLogo", PANEL, "Panel")
 
-PANEL = {}
-
+local PANEL = {}
 function PANEL:Init()
     if lia.gui.creditsPanel then lia.gui.creditsPanel:Remove() end
     lia.gui.creditsPanel = self
     self.logo = self:Add("CreditsLogo")
-    self.logo:SetTall(180)
+    self.logo:SetSize(864,128)
     self.logo:Dock(TOP)
     self.Label = self:Add("DLabel")
     self.Label:SetFont("liaBigCredits")
@@ -109,6 +107,7 @@ function PANEL:Init()
     self.Label:SetContentAlignment(5)
     self.Label:SizeToContents()
     self.Label:Dock(TOP)
+    self.Label:SetTextColor(color_white)
     self.repoLabel = self:Add("DLabel")
     self.repoLabel:SetFont("liaSmallCredits")
     self.repoLabel:SetText("https://github.com/LiliaFramework")
@@ -117,6 +116,7 @@ function PANEL:Init()
     self.repoLabel:SetContentAlignment(5)
     self.repoLabel:SizeToContents()
     self.repoLabel:Dock(TOP)
+    self.repoLabel:SetTextColor(color_white)
     self.repoLabel.DoClick = function() gui.OpenURL("https://github.com/LiliaFramework") end
     if table.Count(MODULE.LiliaCreator) > 0 then
         self.creatorList = self:Add("liaCreditsSpecialList")
@@ -137,7 +137,7 @@ function PANEL:Init()
     local seperator = self:Add("Panel")
     seperator:Dock(TOP)
     seperator:SetTall(1)
-    seperator.Paint = function(this, width, height)
+    seperator.Paint = function(_, width, height)
         surface.SetDrawColor(color_white)
         surface.SetMaterial(lia.util.getMaterial("vgui/gradient-r"))
         surface.DrawTexturedRect(0, 0, width * 0.5, height)
@@ -152,6 +152,7 @@ function PANEL:Init()
     self.contribLabel:SetContentAlignment(4)
     self.contribLabel:SizeToContents()
     self.contribLabel:Dock(TOP)
+    self.contribLabel:SetTextColor(color_white)
     self.contribList = self:Add("DIconLayout")
     self.contribList:Dock(TOP)
     self.contribList:SetSpaceX(16)
@@ -160,17 +161,17 @@ function PANEL:Init()
         HTTP({
             url = MODULE.CacheUrl .. "/contributors.json",
             method = "GET",
-            success = function(code, body, headers)
+            success = function(_, body)
                 MODULE.contributorData = {}
                 MODULE.fetchedContributors = true
                 local contributors = util.JSONToTable(body)
-                for k, data in ipairs(contributors or {}) do
+                for _, data in ipairs(contributors or {}) do
                     if istable(data) and data.id then table.insert(MODULE.contributorData, data) end
                 end
 
                 if IsValid(self) then self:rebuildContributors() end
             end,
-            failed = function(message) if IsValid(self) then self:rebuildContributors() end end
+            failed = function() if IsValid(self) then self:rebuildContributors() end end
         })
     else
         self:rebuildContributors()
@@ -187,7 +188,7 @@ end
 local drawCircle = function(x, y, r, s)
     local c = MODULE.circleCache
     local cir = {}
-    if c[x] and c[x][y] and c[x][y][r][s] and c[x][y][r][s] then
+    if c[x] and c[x][y] and c[x][y][r] and c[x][y][r][s] then
         cir = c[x][y][r][s]
     else
         table.insert(cir, {
@@ -261,8 +262,8 @@ function PANEL:loadContributor(contributor, bLoadNextChunk)
             end
         end
 
-        container.OnMousePressed = function(this, keyCode) if keyCode == 107 then gui.OpenURL("https://github.com/" .. contributorData.login) end end
-        container.OnMouseWheeled = function(this, delta) self:OnMouseWheeled(delta) end
+        container.OnMousePressed = function(_, keyCode) if keyCode == 107 then gui.OpenURL("https://github.com/" .. contributorData.login) end end
+        container.OnMouseWheeled = function(_, delta) self:OnMouseWheeled(delta) end
         container:SetCursor("hand")
         container:SetTooltip("https://github.com/" .. contributorData.login)
         local avatar = container:Add("Panel")
@@ -279,7 +280,7 @@ function PANEL:loadContributor(contributor, bLoadNextChunk)
         end
 
         if bLoadNextChunk then
-            avatar.OnFinishGettingMaterial = function(this, url)
+            avatar.OnFinishGettingMaterial = function()
                 local toLoad = 7
                 for i = 1, toLoad do
                     if contributor + i > #MODULE.contributorData then return end
@@ -292,7 +293,7 @@ function PANEL:loadContributor(contributor, bLoadNextChunk)
             HTTP({
                 url = MODULE.CacheUrl .. "/" .. contributorData.id,
                 method = "GET",
-                success = function(code, body)
+                success = function(_, body)
                     file.CreateDir(MODULE.MaterialLocation)
                     file.Write(MODULE.MaterialLocation .. "/" .. tostring(contributorData.id) .. ".png", body)
                     MODULE.avatarMaterials[contributor] = Material("data/" .. MODULE.MaterialLocation .. "/" .. tostring(contributorData.id) .. ".png", "mips smooth")
@@ -314,6 +315,9 @@ function PANEL:loadContributor(contributor, bLoadNextChunk)
         name:Dock((isCreator or isMaintainer) and FILL or BOTTOM)
         name:SetFont((isCreator or isMaintainer) and "liaBigCredits" or "liaSmallCredits")
         name:SizeToContents()
+        name:SetTextColor(color_white)
         container:SetSize(isCreator and name:GetWide() + ScreenScale(32) + 8 or isMaintainer and name:GetWide() + ScreenScale(32) + 8 or ScreenScale(32), name:GetTall() + ScreenScale(32) + 8)
     end
 end
+
+vgui.Register("liaCreditsList", PANEL, "Panel")

@@ -37,10 +37,8 @@ function MODULE:OnCharCreated(client, character)
     lia.log.add(client, "charCreate", character)
 end
 
-function MODULE:CharLoaded(id)
-    local character = lia.char.loaded[id]
-    local client = character:getPlayer()
-    lia.log.add(client, "charLoad", character:getName(), id)
+function MODULE:PostPlayerLoadedChar(client, character)
+    lia.log.add(client, "charLoad", character:getName(), character:getID())
 end
 
 function MODULE:PlayerSpawnedProp(client, model)
