@@ -14,7 +14,9 @@ local SpecialCharacters = {
     ["è"] = "È",
     ["ù"] = "Ù",
     ["ç"] = "Ç",
-    ["é"] = "É"
+    ["é"] = "É",
+	["œ"] = "Œ",
+	["æ"] = "Æ"
 }
 
 function string.upper(str)
