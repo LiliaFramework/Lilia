@@ -35,11 +35,10 @@ function PANEL:addTextEntry(contextName)
     return entry
 end
 
-function PANEL:onDispay()
-    local faction = slf:getContext("faction")
-    assert(faction, "action not set before showing name input")
-    local defaultName
-    overrideName = hook.Run("GetDefaultCharName", LocalPlayer(), faction)
+function PANEL:onDisplay()
+    local faction = self:getContext("faction")
+    assert(faction, "Faction not set before showing name input")
+    local defaultName, overrideName = hook.Run("GetDefaultCharName", LocalPlayer(), faction)
     if overrideName then
         self.nameLabel:SetVisible(false)
         self.name:SetVisible(false)
