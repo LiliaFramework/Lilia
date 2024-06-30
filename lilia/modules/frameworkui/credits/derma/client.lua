@@ -84,22 +84,20 @@ function PANEL:newRow()
 end
 
 vgui.Register("liaCreditsSpecialList", PANEL, "Panel")
-
 local PANEL = {}
 function PANEL:Paint(w, h)
     surface.SetMaterial(lia.util.getMaterial("lilia/lilia.png"))
     surface.SetDrawColor(255, 255, 255, 255)
-    surface.DrawTexturedRect(w * 0.5 - 144, h * 0.5 - 144, 288, 288)  -- Made the logo bigger
+    surface.DrawTexturedRect(w * 0.3, h * 0.5 - 144, 160, 160)
 end
 
 vgui.Register("CreditsLogo", PANEL, "Panel")
-
 local PANEL = {}
 function PANEL:Init()
     if lia.gui.creditsPanel then lia.gui.creditsPanel:Remove() end
     lia.gui.creditsPanel = self
     self.logo = self:Add("CreditsLogo")
-    self.logo:SetSize(864,128)
+    self.logo:SetSize(64, 128)
     self.logo:Dock(TOP)
     self.Label = self:Add("DLabel")
     self.Label:SetFont("liaBigCredits")
