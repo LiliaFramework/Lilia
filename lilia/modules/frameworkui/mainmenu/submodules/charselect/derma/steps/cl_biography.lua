@@ -1,4 +1,5 @@
 ﻿local PANEL = {}
+
 function PANEL:Init()
     self.nameLabel = self:addLabel("name")
     self.nameLabel:SetZPos(0)
@@ -30,26 +31,37 @@ function PANEL:addTextEntry(contextName)
         end
     end
 
-    entry:SetUpdateOnType(true)
+    entry:SetUpdateOnype(true)
     return entry
 end
 
-function PANEL:onDisplay()
-    local faction = self:getContext("faction")
-    assert(faction, "faction not set before showing name input")
-    local default, override = hook.Run("GetDefaultCharName", LocalPlayer(), faction)
-    if override then
+function PANEL:onDispay()
+    local faction = slf:getContext("faction")
+    assert(faction, "action not set before showing name input")
+    local defaultName
+    overrideName = hook.Run("GetDefaultCharName", LocalPlayer(), faction)
+    if overrideName then
         self.nameLabel:SetVisible(false)
         self.name:SetVisible(false)
     else
-        if default and not self:getContext("name") then self:setContext("name", default) end
+        if defaultName and not self:getContext("name") then self:setContext("name", defaultName) end
         self.nameLabel:SetVisible(true)
         self.name:SetVisible(true)
         self.name:SetText(self:getContext("name", ""))
     end
 
-    self.desc:SetText(self:getContext("desc", ""))
-    self.name:RequestFocus()
+    local defaultDesc, overrideDesc = hook.Run("GetDefaultCharDesc", LocalPlayer(), faction)
+    if overrideDesc then
+        self.descLabel:SetVisible(false)
+        self.desc:SetVisible(false)
+    else
+        if defaultDesc and not self:getContext("desc") then self:setContext("desc", defaultDesc) end
+        self.descLabel:SetVisible(true)
+        self.desc:SetVisible(true)
+        self.desc:SetText(self:getContext("desc", ""))
+    end
+
+    self.desc:RequestFocus()
 end
 
 function PANEL:validate()

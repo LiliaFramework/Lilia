@@ -3,7 +3,7 @@
     if not character or client:IsNoClipping() then return 0 end
     local walkSpeed = client:GetWalkSpeed()
     local offset = 0
-    if not client:getNetVar("brth", false) and client:KeyDown(IN_SPEED) and client:GetVelocity():LengthSqr() >= walkSpeed * walkSpeed then
+    if not client:getNetVar("brth", false) and (client:KeyDown(IN_SPEED) and client:GetVelocity():LengthSqr() >= (walkSpeed * walkSpeed) and client:OnGround()) then
         offset = -1
         offset = hook.Run("AdjustStaminaOffsetRunning", client, offset) or -1
     else
