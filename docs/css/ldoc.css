@@ -266,7 +266,7 @@ article .wrapper > *:first-child {
 /* header */
 article header {
 	color: rgb(255, 255, 255);
-	background-color: rgb(9, 69, 19);
+	background-color: rgb(80, 127, 153);
 	padding: var(--padding-tiny);
 }
 
@@ -313,7 +313,7 @@ article h2 {
 }
 
 article h3 {
-	color: rgb(9, 69, 19);
+	color: rgb(80, 127, 153);
 	margin-top: var(--padding-tiny);
 	text-transform: uppercase;
 }
@@ -326,13 +326,13 @@ article p a,
 article ul li a,
 article h1 a,
 article h2 a {
-	color: rgb(9, 69, 19);
+	color: rgb(80, 127, 153);
 	font-weight: 600;
 }
 
 article h1.title {
 	color: rgb(255, 255, 255);
-	background-color: rgb(9, 69, 19);
+	background-color: rgb(80, 127, 153);
 	margin-top: var(--padding-small);
 	margin-bottom: 0;
 	padding: var(--padding-tiny);
@@ -344,7 +344,7 @@ article h1.title {
 }
 
 a.reference {
-	color: rgb(9, 69, 19);
+	color: rgb(80, 127, 153);
 	float: right;
 	margin-top: 8px;
 	padding-left: 8px;
@@ -425,7 +425,7 @@ a.reference {
 }
 
 .method h3 {
-	color: rgb(9, 69, 19);
+	color: rgb(80, 127, 153);
 	font-size: var(--font-normal);
 	letter-spacing: 2px;
 	text-transform: uppercase;
@@ -468,7 +468,7 @@ a.reference {
 }
 
 .method ul li a {
-	color: rgb(9, 69, 19);
+	color: rgb(80, 127, 153);
 	font-weight: 600;
 }
 
@@ -483,7 +483,7 @@ a.reference {
 }
 
 .parameter {
-	background-color: rgb(9, 69, 19);
+	background-color: rgb(80, 127, 153);
 }
 
 .type {
