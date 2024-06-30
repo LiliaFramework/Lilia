@@ -1,4 +1,5 @@
 ﻿local GM = GM or GAMEMODE
+
 function GM:PlayerSpawnEffect(client)
     return client:isStaffOnDuty() or CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Effects", nil) or client:getChar():hasFlags("L")
 end
@@ -16,7 +17,6 @@ function GM:PlayerSpawnRagdoll(client)
 end
 
 function GM:PlayerSpawnSENT(client)
-    print(client:isStaffOnDuty(), CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn SENTs", nil), client:getChar():hasFlags("E"))
     return client:isStaffOnDuty() or CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn SENTs", nil) or client:getChar():hasFlags("E")
 end
 
@@ -63,12 +63,15 @@ end
 
 function GM:PhysgunPickup(client, entity)
     if entity:GetCreator() == client and (entity:isProp() or entity:isItem()) then return true end
-    if entity:IsVehicle() then
-        return CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup on Vehicles", nil)
-    elseif entity:IsPlayer() then
-        return not CAMI.PlayerHasAccess(entity, "Staff Permissions - Can't be Grabbed with PhysGun", nil) and CAMI.PlayerHasAccess(client, "Staff Permissions - Can Grab Players", nil)
-    elseif entity:IsWorld() or entity:CreatedByMap() then
-        return CAMI.PlayerHasAccess(client, "Staff Permissions - Can Grab World Props", nil)
+    if CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup", nil) then
+        if entity:IsVehicle() then
+            return CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup on Vehicles", nil)
+        elseif entity:IsPlayer() then
+            return not CAMI.PlayerHasAccess(entity, "Staff Permissions - Can't be Grabbed with PhysGun", nil) and CAMI.PlayerHasAccess(client, "Staff Permissions - Can Grab Players", nil)
+        elseif entity:IsWorld() or entity:CreatedByMap() then
+            return CAMI.PlayerHasAccess(client, "Staff Permissions - Can Grab World Props", nil)
+        end
+        return true
     end
     return false
 end
