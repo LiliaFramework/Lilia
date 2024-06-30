@@ -31,7 +31,7 @@ function PANEL:addTextEntry(contextName)
         end
     end
 
-    entry:SetUpdateOnype(true)
+    entry:SetUpdateOnType(true)
     return entry
 end
 

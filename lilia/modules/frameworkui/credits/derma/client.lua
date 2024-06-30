@@ -88,7 +88,7 @@ local PANEL = {}
 function PANEL:Paint(w, h)
     surface.SetMaterial(lia.util.getMaterial("lilia/lilia.png"))
     surface.SetDrawColor(255, 255, 255, 255)
-    surface.DrawTexturedRect(w * 0.3, h * 0.5 - 144, 160, 160)
+    surface.DrawTexturedRect(w * 0.5 -75, h * 0.5 -55, 160,160)
 end
 
 vgui.Register("CreditsLogo", PANEL, "Panel")
@@ -97,7 +97,7 @@ function PANEL:Init()
     if lia.gui.creditsPanel then lia.gui.creditsPanel:Remove() end
     lia.gui.creditsPanel = self
     self.logo = self:Add("CreditsLogo")
-    self.logo:SetSize(64, 128)
+    self.logo:SetTall(180)
     self.logo:Dock(TOP)
     self.Label = self:Add("DLabel")
     self.Label:SetFont("liaBigCredits")
@@ -186,7 +186,7 @@ end
 local drawCircle = function(x, y, r, s)
     local c = MODULE.circleCache
     local cir = {}
-    if c[x] and c[x][y] and c[x][y][r] and c[x][y][r][s] then
+    if c[x] and c[x][y] and c[x][y][r][s] and c[x][y][r][s] then
         cir = c[x][y][r][s]
     else
         table.insert(cir, {
