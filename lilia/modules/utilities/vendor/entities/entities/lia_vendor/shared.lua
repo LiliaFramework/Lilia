@@ -116,5 +116,5 @@ function ENT:setAnim()
         if v:lower():find("idle") and v ~= "idlenoise" then return self:ResetSequence(k) end
     end
 
-    self:ResetSequence(4)
+    if self:GetSequenceCount() > 1 then self:ResetSequence(4) end
 end

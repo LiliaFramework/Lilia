@@ -199,6 +199,6 @@ LANGUAGE = {
     unequipTip = "Zdejmuje przedmiot.",
     consumables = "Towary konsumpcyjne.",
     plyNotValid = "Nie patrzysz na prawidłowego gracza.",
-    ziptied = "Zostałeś związany.",
+    restricted = "Zostałeś związany.",
     viewProfile = "Obejrzyj profil Steam."
 }
