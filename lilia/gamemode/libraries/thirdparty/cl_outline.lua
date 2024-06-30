@@ -92,21 +92,6 @@ function GetRenderType()
 	
 end
 
-function SetDoubleThickness( thickness )
-
-	local old_thickness = OutlineThickness == 2
-	OutlineThickness = thickness && 2 || 1
-	
-	return old_thickness
-	
-end
-
-function IsDoubleThickness()
-	
-	return OutlineThickness == 2
-	
-end
-
 local function Render()
 	
 	local scene = render.GetRenderTarget()
