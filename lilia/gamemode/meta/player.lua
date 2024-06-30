@@ -495,6 +495,7 @@ if SERVER then
     --- Saves the player's Lilia data to the database.
     -- @realm server
     function playerMeta:saveLiliaData()
+        if (self:IsBot()) then return end
         local name = self:steamName()
         local steamID64 = self:SteamID64()
         local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
