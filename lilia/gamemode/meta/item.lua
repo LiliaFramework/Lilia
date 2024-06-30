@@ -417,7 +417,7 @@ if SERVER then
     -- @tab[opt] data Additional data related to the interaction.
     -- @return bool Whether the interaction was successful.
     function ITEM:interact(action, client, entity, data)
-        assert(type(client) == "Player" and IsValid(client), "Item action cannot be performed without a player")
+        assert(client:IsPlayer() and IsValid(client), "Item action cannot be performed without a player")
         local canInteract, reason = hook.Run("CanPlayerInteractItem", client, action, self, data)
         if canInteract == false then
             if reason then client:notifyLocalized(reason) end

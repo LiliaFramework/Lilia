@@ -82,7 +82,7 @@ function PANEL:Init()
     hook.Run("CreateMenuButtons", tabs)
     self.tabList = {}
     for name, callback in SortedPairs(tabs) do
-        if type(callback) == "string" then
+        if istring(callback) then
             local body = callback
             if body:sub(1, 4) == "http" then
                 callback = function(panel)

@@ -46,7 +46,7 @@ function GM:TranslateActivity(client, act)
                 local act = tree.vehicle[class][1]
                 local fixvec = tree.vehicle[class][2]
                 if fixvec then client:SetLocalPos(Vector(16.5438, -0.1642, -20.5493)) end
-                if type(act) == "string" then
+                if istring(act) then
                     client.CalcSeqOverride = client.LookupSequence(client, act)
                     return
                 else
@@ -54,7 +54,7 @@ function GM:TranslateActivity(client, act)
                 end
             else
                 act = tree.normal[ACT_MP_CROUCH_IDLE][1]
-                if type(act) == "string" then client.CalcSeqOverride = client:LookupSequence(act) end
+                if istring(act) then client.CalcSeqOverride = client:LookupSequence(act) end
                 return
             end
         elseif client.OnGround(client) then
@@ -67,7 +67,7 @@ function GM:TranslateActivity(client, act)
             if tree[subClass] and tree[subClass][act] then
                 local index = (not client.isWepRaised or client:isWepRaised()) and 2 or 1
                 local act2 = tree[subClass][act][index]
-                if type(act2) == "string" then
+                if istring(act2) then
                     client.CalcSeqOverride = client.LookupSequence(client, act2)
                     return
                 end

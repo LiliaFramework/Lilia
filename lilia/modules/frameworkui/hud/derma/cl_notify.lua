@@ -10,9 +10,9 @@ end
 function PANEL:SetMessage(...)
     local msg = "<font=liaMediumFont>"
     for _, v in ipairs({...}) do
-        if type(v) == "table" then
+        if istable(v) then
             msg = msg .. "<color=" .. v.r .. "," .. v.g .. "," .. v.b .. ">"
-        elseif type(v) == "Player" then
+        elseif v:IsPlayer() then
             local col = team.GetColor(v:Team())
             msg = msg .. "<color=" .. col.r .. "," .. col.g .. "," .. col.b .. ">" .. tostring(v:Name()):gsub("<", "&lt;"):gsub(">", "&gt;") .. "</color>"
         else

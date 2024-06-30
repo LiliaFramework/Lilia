@@ -211,12 +211,12 @@ if SERVER then
     -- @string name Search query
     -- @treturn player|nil Player that matches the given search query, or nil if not found
     function lia.command.findPlayerSilent(client, name)
-        local target = type(name) == "string" and lia.util.findPlayer(name) or NULL
-        if type(name) == "string" and name == "@" then
+        local target = istring(name) and lia.util.findPlayer(name) or NULL
+        if istring(name) and name == "@" then
             local lookingAt = client:GetEyeTrace().Entity
             if IsValid(lookingAt) and lookingAt:IsPlayer() then target = lookingAt end
         end
-
+    
         if IsValid(target) then return target end
     end
 
