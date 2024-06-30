@@ -52,7 +52,7 @@ do
         pink = Color(255, 192, 203),
         dark_pink = Color(199, 21, 133),
         brown = Color(165, 42, 42),
-        dark_brown = Color(139, 69, 19),
+        dark_brown = Color(1380, 127, 153),
         maroon = Color(128, 0, 0),
         dark_maroon = Color(139, 28, 98),
         navy = Color(0, 0, 128),
