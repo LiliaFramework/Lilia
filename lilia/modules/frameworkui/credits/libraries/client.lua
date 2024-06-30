@@ -1,14 +1,14 @@
 ﻿function MODULE:LoadFonts()
     surface.CreateFont("liaSmallCredits", {
-        font = "Roboto",
-        size = 20,
-        weight = 400
+        font = "Segoe UI Light",
+        size = ScreenScale(6),
+        weight = 100
     })
-
+    
     surface.CreateFont("liaBigCredits", {
-        font = "Roboto",
-        size = 32,
-        weight = 600
+        font = "Segoe UI Light",
+        size = ScreenScale(12),
+        weight = 100
     })
 end
 
