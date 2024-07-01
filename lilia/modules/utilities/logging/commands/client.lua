@@ -4,7 +4,7 @@
     onRun = function() end
 })
 
-lia.command.add("logger", {
+lia.command.add("logs", {
     adminOnly = true,
     privilege = "View Logs",
     onRun = function() end
