@@ -6,3 +6,7 @@
 --- @bool state Indicates whether the third person mode is enabled (`true`) or disabled (`false`).
 function thirdPersonToggled(state)
 end
+
+--- @realm client
+function ShouldDisableThirdperson(client)
+end
