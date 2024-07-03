@@ -198,7 +198,7 @@
         color = Color(52, 152, 219)
     },
     ["toolgunUse"] = {
-        func = function(client, tool) return string.format("[%s] %s[%s] (%s) used toolgun: %s [CharID: %s]", client:SteamID(), client:Name(), client:SteamID(), client:getChar():getID(), tool, client:getChar():getID()) end,
+        func = function(client, tool) return string.format("[%s] %s used toolgun: %s [CharID: %s]", client:SteamID(), client:Name(), tool, client:getChar():getID()) end,
         category = "Toolgun",
         PLogs = "Toolgun",
         color = Color(52, 152, 219)

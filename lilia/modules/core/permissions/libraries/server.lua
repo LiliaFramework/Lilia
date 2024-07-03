@@ -1,5 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-
 function GM:PlayerSpawnEffect(client)
     return client:isStaffOnDuty() or CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Effects", nil) or client:getChar():hasFlags("L")
 end
@@ -42,7 +41,9 @@ end
 
 function GM:CanTool(client, _, tool)
     local privilege = "Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
-    return (client:isStaffOnDuty() or client:getChar():hasFlags("t")) and CAMI.PlayerHasAccess(client, privilege, nil)
+    if (client:isStaffOnDuty() or client:getChar():hasFlags("t")) and CAMI.PlayerHasAccess(client, privilege, nil) then
+        return true
+    end
 end
 
 function GM:CanProperty(client, property, entity)
