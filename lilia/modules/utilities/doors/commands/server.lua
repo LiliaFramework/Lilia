@@ -3,7 +3,7 @@ lia.command.add("doorsell", {
     adminOnly = false,
     onRun = function(client)
         local entity = client:GetTracedEntity()
-        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
+        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled", false) then
             if client == entity:GetDTEntity(0) then
                 local price = math.Round(entity:getNetVar("price", MODULE.DoorCost) * MODULE.DoorSellRatio)
                 entity:removeDoorAccessData()
@@ -27,7 +27,7 @@ lia.command.add("doorsetlocked", {
     syntax = "<bool locked>",
     onRun = function(client, arguments)
         local entity = client:GetEyeTrace().Entity
-        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
+        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled", false) then
             local locked = tobool(arguments[1] or true)
             if locked then
                 entity:Fire("lock")
@@ -57,7 +57,7 @@ lia.command.add("doorbuy", {
     adminOnly = false,
     onRun = function(client)
         local entity = client:GetTracedEntity()
-        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
+        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled", false) then
             if entity:getNetVar("noSell") or entity:getNetVar("faction") or entity:getNetVar("class") then return client:notifyLocalized("dNotAllowedToOwn") end
             if IsValid(entity:GetDTEntity(0)) then
                 client:notifyLocalized("dOwnedBy", entity:GetDTEntity(0):Name())
@@ -92,7 +92,7 @@ lia.command.add("doorsetunownable", {
     onRun = function(client, arguments)
         local entity = client:GetTracedEntity()
         local name = table.concat(arguments, " ")
-        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
+        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled", false) then
             entity:setNetVar("noSell", true)
             if arguments[1] and name:find("%S") then entity:setNetVar("name", name) end
             MODULE:callOnDoorChildren(entity, function(child)
@@ -115,7 +115,7 @@ lia.command.add("doorsetownable", {
     onRun = function(client, arguments)
         local entity = client:GetEyeTrace().Entity
         local name = table.concat(arguments, " ")
-        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
+        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled", false) then
             entity:setNetVar("noSell", nil)
             if arguments[1] and name:find("%S") then entity:setNetVar("name", name) end
             MODULE:callOnDoorChildren(entity, function(child)
@@ -137,7 +137,7 @@ lia.command.add("dooraddfaction", {
     privilege = "Manage Doors",
     onRun = function(client, arguments)
         local entity = client:GetEyeTrace().Entity
-        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
+        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled", false) then
             local faction
             if arguments[1] then
                 local name = table.concat(arguments, " ")
@@ -184,7 +184,7 @@ lia.command.add("doorremovefaction", {
     privilege = "Manage Doors",
     onRun = function(client, arguments)
         local entity = client:GetEyeTrace().Entity
-        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
+        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled", false) then
             local faction
             if arguments[1] then
                 local name = table.concat(arguments, " ")
@@ -249,7 +249,7 @@ lia.command.add("doorsettitle", {
     privilege = "Manage Doors",
     onRun = function(client, arguments)
         local entity = client:GetTracedEntity()
-        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
+        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled", false) then
             local name = table.concat(arguments, " ")
             if not name:find("%S") then return client:notifyLocalized("invalidArg", 1) end
             if entity:checkDoorAccess(client, DOOR_TENANT) then
@@ -271,7 +271,7 @@ lia.command.add("doorsetparent", {
     privilege = "Manage Doors",
     onRun = function(client)
         local entity = client:GetEyeTrace().Entity
-        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
+        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled", false) then
             client.liaDoorParent = entity
             client:notifyLocalized("dSetParentDoor")
         else
@@ -285,7 +285,7 @@ lia.command.add("doorsetchild", {
     privilege = "Manage Doors",
     onRun = function(client)
         local entity = client:GetEyeTrace().Entity
-        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
+        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled", false) then
             if client.liaDoorParent == entity then return client:notifyLocalized("dCanNotSetAsChild") end
             if IsValid(client.liaDoorParent) then
                 client.liaDoorParent.liaChildren = client.liaDoorParent.liaChildren or {}
@@ -308,7 +308,7 @@ lia.command.add("doorremovechild", {
     privilege = "Manage Doors",
     onRun = function(client)
         local entity = client:GetEyeTrace().Entity
-        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
+        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled", false) then
             if client.liaDoorParent == entity then
                 MODULE:callOnDoorChildren(entity, function(child) child.liaParent = nil end)
                 entity.liaChildren = nil
@@ -333,7 +333,7 @@ lia.command.add("doorsetclass", {
     privilege = "Manage Doors",
     onRun = function(client, arguments)
         local entity = client:GetEyeTrace().Entity
-        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled") then
+        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled", false) then
             local class, classData
             if arguments[1] then
                 local name = table.concat(arguments, " ")

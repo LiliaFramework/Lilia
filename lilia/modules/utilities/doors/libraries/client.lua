@@ -2,6 +2,7 @@
 local toScreen = vectorMeta.ToScreen
 function MODULE:ShouldDrawEntityInfo(entity)
     if entity:isDoor() then return true end
+    if entity:getNetVar("disabled", false) then return end
 end
 
 function MODULE:DrawEntityInfo(entity, alpha)

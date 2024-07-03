@@ -169,7 +169,7 @@ function MODULE:CanTool(client, _, tool)
 
     if tool == "duplicator" and client.CurrentDupe and not self:CheckDuplicationScale(client, client.CurrentDupe.Entities) then return false end
     if tool == "advdupe2" and client.AdvDupe2 and not self:CheckDuplicationScale(client, client.AdvDupe2.Entities) then return false end
-    if tool == "adv_duplicator" and toolobj.Entities and not self:CheckDuplicationScale(client, toolobj.Entities) then return false end
+    if tool == "adv_duplicator" and not isbool(toolobj) and toolobj.Entities and not self:CheckDuplicationScale(client, toolobj.Entities) then return false end
     if tool == "button" and not table.HasValue(self.ButtonList, client:GetInfo("button_model")) then
         client:ConCommand("button_model models/maxofs2d/button_05.mdl")
         client:ConCommand("button_model")
@@ -215,14 +215,6 @@ function MODULE:OnPhysgunFreeze(_, physObj, entity, client)
         entity:SetCollisionGroup(COLLISION_GROUP_NONE)
     end
     return true
-end
-
-function MODULE:CanTool(client)
-    if not client.ToolInterval then client.ToolInterval = CurTime() end
-    if CurTime() < client.ToolInterval then
-        client:notify("Tool on Cooldown!")
-        return false
-    end
 end
 
 function MODULE:PlayerSpawnVehicle(client, _, name)

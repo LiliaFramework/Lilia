@@ -114,7 +114,7 @@ function MODULE:PlayerUse(client, door)
 end
 
 function MODULE:CanPlayerUseDoor(_, door)
-    if door:getNetVar("disabled") then return false end
+    if door:getNetVar("disabled", false) then return false end
 end
 
 function MODULE:CanPlayerAccessDoor(client, door)
