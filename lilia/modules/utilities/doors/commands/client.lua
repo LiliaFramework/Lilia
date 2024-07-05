@@ -45,7 +45,12 @@ lia.command.add("doorremovefaction", {
 
 lia.command.add("doorsetdisabled", {
     adminOnly = true,
-    syntax = "<bool disabled>",
+    privilege = "Manage Doors",
+    onRun = function() end
+})
+
+lia.command.add("doorsetenabled", {
+    adminOnly = true,
     privilege = "Manage Doors",
     onRun = function() end
 })

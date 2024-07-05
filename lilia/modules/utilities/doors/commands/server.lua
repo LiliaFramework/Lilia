@@ -227,18 +227,40 @@ lia.command.add("doorremovefaction", {
 
 lia.command.add("doorsetdisabled", {
     adminOnly = true,
-    syntax = "<bool disabled>",
     privilege = "Manage Doors",
     onRun = function(client, arguments)
         local entity = client:GetEyeTrace().Entity
         if IsValid(entity) and entity:isDoor() then
-            local disabled = tobool(arguments[1] or true)
-            entity:setNetVar("disabled", disabled)
-            MODULE:callOnDoorChildren(entity, function(child) child:setNetVar("disabled", disabled) end)
-            client:notifyLocalized("dSet" .. (disabled and "" or "Not") .. "Disabled")
-            MODULE:SaveData()
+            if entity:getNetVar("disabled", false) then
+                client:ChatPrint("The door is already disabled.")
+            else
+                entity:setNetVar("disabled", true)
+                MODULE:callOnDoorChildren(entity, function(child) child:setNetVar("disabled", true) end)
+                client:ChatPrint("The door has been disabled.")
+                MODULE:SaveData()
+            end
         else
-            client:notifyLocalized("dNotValid")
+            client:ChatPrint("This is not a valid door.")
+        end
+    end
+})
+
+lia.command.add("doorsetenabled", {
+    adminOnly = true,
+    privilege = "Manage Doors",
+    onRun = function(client, arguments)
+        local entity = client:GetEyeTrace().Entity
+        if IsValid(entity) and entity:isDoor() then
+            if not entity:getNetVar("disabled", false) then
+                client:ChatPrint("The door is already enabled.")
+            else
+                entity:setNetVar("disabled", false)
+                MODULE:callOnDoorChildren(entity, function(child) child:setNetVar("disabled", false) end)
+                client:ChatPrint("The door has been enabled.")
+                MODULE:SaveData()
+            end
+        else
+            client:ChatPrint("This is not a valid door.")
         end
     end
 })
