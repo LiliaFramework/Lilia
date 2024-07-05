@@ -178,19 +178,19 @@ function MODULE:KeyUnlock(client, door, time)
     end
 end
 
-function MODULE:ToggleLock(client, door, state)
+function MODULE:ToggleLock(client, door, state, noAction)
     if door:isDoor() then
         local partner = door:getDoorPartner()
         if state then
             if IsValid(partner) then partner:Fire("lock") end
             door:Fire("lock")
             client:EmitSound("doors/door_latch3.wav")
-            lia.chat.send(client, "actions", "locks the door.", false)
+            if not noAction then lia.chat.send(client, "actions", "locks the door.", false) end
         else
             if IsValid(partner) then partner:Fire("unlock") end
             door:Fire("unlock")
             client:EmitSound("doors/door_latch1.wav")
-            lia.chat.send(client, "actions", "unlocks the door.", false)
+            if not noAction then lia.chat.send(client, "actions", "unlocks the door.", false) end
         end
 
         door:SetLocked(state)
@@ -199,12 +199,12 @@ function MODULE:ToggleLock(client, door, state)
             door:Fire("lock")
             if door:isSimfphysCar() then door:Lock() end
             client:EmitSound("doors/door_latch3.wav")
-            lia.chat.send(client, "actions", "locks the vehicle.", false)
+            if not noAction then lia.chat.send(client, "actions", "locks the vehicle.", false) end
         else
             door:Fire("unlock")
             if door:isSimfphysCar() then door:UnLock() end
             client:EmitSound("doors/door_latch1.wav")
-            lia.chat.send(client, "actions", "unlocks the vehicle.", false)
+            if not noAction then lia.chat.send(client, "actions", "unlocks the vehicle.", false) end
         end
 
         door:SetLocked(state)
