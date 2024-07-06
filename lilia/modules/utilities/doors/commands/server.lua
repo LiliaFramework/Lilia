@@ -21,6 +21,31 @@ lia.command.add("doorsell", {
     end
 })
 
+lia.command.add("admindoorsell", {
+    adminOnly = true,
+    privilege = "Manage Doors",
+    onRun = function(client)
+        local entity = client:GetTracedEntity()
+        if IsValid(entity) and entity:isDoor() and not entity:getNetVar("disabled", false) then
+            local owner = entity:GetDTEntity(0)
+            if IsValid(owner) and owner:IsPlayer() then
+                local price = math.Round(entity:getNetVar("price", MODULE.DoorCost) * MODULE.DoorSellRatio)
+                entity:removeDoorAccessData()
+                MODULE:callOnDoorChildren(entity, function(child) child:removeDoorAccessData() end)
+                owner:getChar():giveMoney(price)
+                owner:notifyLocalized("dSold", lia.currency.get(price))
+                client:notify("You have sold the door for " .. lia.currency.get(price) .. " on behalf of " .. owner:GetName())
+                hook.Run("OnPlayerPurchaseDoor", owner, entity, false, MODULE.callOnDoorChildren)
+                lia.log.add(client, "adminselldoor", owner:Name(), price)
+            else
+                client:notifyLocalized("noOwner")
+            end
+        else
+            client:notifyLocalized("dNotValid")
+        end
+    end
+})
+
 lia.command.add("doorsetlocked", {
     adminOnly = true,
     privilege = "Manage Doors",
