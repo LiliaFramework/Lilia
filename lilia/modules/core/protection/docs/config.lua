@@ -30,4 +30,3 @@
 -- @field PlayerSpawnVehicleDelay Delay for spawning a vehicle after the previous one | **integer**
 -- @field ToolInterval ToolGun Usage Cooldown | **integer**
 -- @field ButtonList List of button models to prevent button spamming exploits | **table**
--- @field AntiMapBackdoor Whether or not anti map backdoor is enabled | **bool**
