@@ -228,7 +228,7 @@ lia.command.add("doorremovefaction", {
 lia.command.add("doorsetdisabled", {
     adminOnly = true,
     privilege = "Manage Doors",
-    onRun = function(client, arguments)
+    onRun = function(client)
         local entity = client:GetEyeTrace().Entity
         if IsValid(entity) and entity:isDoor() then
             if entity:getNetVar("disabled", false) then
@@ -248,7 +248,7 @@ lia.command.add("doorsetdisabled", {
 lia.command.add("doorsetenabled", {
     adminOnly = true,
     privilege = "Manage Doors",
-    onRun = function(client, arguments)
+    onRun = function(client)
         local entity = client:GetEyeTrace().Entity
         if IsValid(entity) and entity:isDoor() then
             if not entity:getNetVar("disabled", false) then
