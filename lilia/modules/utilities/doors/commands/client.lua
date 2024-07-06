@@ -6,7 +6,7 @@
 lia.command.add("admindoorsell", {
     adminOnly = true,
     privilege = "Manage Doors",
-    onRun = function(client) end
+    onRun = function() end
 })
 
 lia.command.add("doorsetlocked", {
