@@ -15,8 +15,8 @@ ITEM.functions.Place = {
         local entity = ents.Create(item.entityid)
         entity:SetPos(data.endpos)
         entity:Spawn()
-        cliemt:SetNW2Bool("ItemCooldown_" .. item.uniqueID, true)
-        timer.Create(client:SteamID64() .. "_" .. item.uniqueID .. "_cooldown", item.entityCooldown, 1, function() cliemt:SetNW2Bool("ItemCooldown_" .. item.uniqueID, false) end)
+        client:SetNW2Bool("ItemCooldown_" .. item.uniqueID, true)
+        timer.Create(client:SteamID64() .. "_" .. item.uniqueID .. "_cooldown", item.entityCooldown, 1, function() client:SetNW2Bool("ItemCooldown_" .. item.uniqueID, false) end)
         return item.shouldRemove
     end,
     onCanRun = function(item)

@@ -15,8 +15,8 @@ ITEM.functions.Place = {
         local vehicle = ents.Create(item.vehicleid)
         vehicle:SetPos(data.endpos)
         vehicle:Spawn()
-        cliemt:SetNW2Bool("ItemCooldown_" .. item.uniqueID, true)
-        timer.Create(client:SteamID64() .. "_" .. item.uniqueID .. "_cooldown", item.vehicleCooldown, 1, function() cliemt:SetNW2Bool("ItemCooldown_" .. item.uniqueID, false) end)
+        client:SetNW2Bool("ItemCooldown_" .. item.uniqueID, true)
+        timer.Create(client:SteamID64() .. "_" .. item.uniqueID .. "_cooldown", item.vehicleCooldown, 1, function() client:SetNW2Bool("ItemCooldown_" .. item.uniqueID, false) end)
         return item.shouldRemove
     end,
     onCanRun = function(item)
