@@ -49,7 +49,7 @@ ITEM.functions.use = {
     onRun = function(item, data)
         data = data or 0
         if data > 0 then
-            local num = tointeger(data)
+            local num = tonumber(data)
             item:addQuantity(-num)
             item.player:GiveAmmo(num, item.ammo)
             item.player:EmitSound(item.useSound or "items/ammo_pickup.wav", 110)

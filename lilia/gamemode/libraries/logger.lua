@@ -63,7 +63,7 @@ if SERVER then
     -- @internal
     function lia.log.getString(client, logType, ...)
         local logData = lia.log.types[logType]
-        if isfunction(logData.func) then
+        if logData and isfunction(logData.func) then
             local success, result = pcall(logData.func, client, ...)
             if success then return result, logData.category, logData.color end
         end
