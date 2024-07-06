@@ -215,7 +215,7 @@ function PANEL:setFadeToBlack(fade)
 end
 
 function PANEL:Paint()
-    lia.util.drawBlur(self)
+    if not LocalPlayer():getChar() then lia.util.drawBlur(self) end
 end
 
 function PANEL:hoverSound()

@@ -120,7 +120,7 @@ function PANEL:onHoverChanged(isHovered)
 end
 
 function PANEL:Paint(w, h)
-    lia.util.drawBlur(self)
+    if not LocalPlayer():getChar() then lia.util.drawBlur(self) end
     surface.SetDrawColor(0, 0, 0, 50)
     surface.DrawRect(0, 4, w, h)
     if not self:isCursorWithinBounds() and self.isHovered then self:onHoverChanged(false) end

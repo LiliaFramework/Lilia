@@ -107,7 +107,8 @@ function PANEL:showError(message, ...)
     self.error:DockMargin(0, 0, 0, 8)
     self.error:SetContentAlignment(5)
     self.error.Paint = function(box, w, h)
-        lia.util.drawBlur(box)
+        if not LocalPlayer():getChar() then lia.util.drawBlur(box) end
+
         surface.SetDrawColor(255, 0, 0, 50)
         surface.DrawRect(0, 0, w, h)
     end

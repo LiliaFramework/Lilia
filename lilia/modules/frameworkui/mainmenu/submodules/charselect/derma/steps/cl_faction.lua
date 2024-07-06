@@ -7,7 +7,7 @@ function PANEL:Init()
     self.faction:DockMargin(0, 4, 0, 0)
     self.faction:SetTall(40)
     self.faction.Paint = function(faction, w, h)
-        lia.util.drawBlur(faction)
+        if not LocalPlayer():getChar() then lia.util.drawBlur(faction) end
         surface.SetDrawColor(0, 0, 0, 100)
         surface.DrawRect(0, 0, w, h)
     end
@@ -38,6 +38,7 @@ end
 function PANEL:onFactionSelected(faction)
     if self:getContext("faction") == faction.index then return end
     self.desc:SetText(L(faction.desc or "noDesc"))
+    self.desc:SetTextColor(color_white)
     self:clearContext()
     self:setContext("faction", faction.index)
     self:setContext("model", 1)
