@@ -20,7 +20,16 @@ net.Receive("liaCharChoose", function(_, client)
     end
 
     local currentChar = client:getChar()
-    if currentChar then currentChar:save() end
+    if currentChar then
+        status, result = hook.Run("CanPlayerSwitchChar", client, currentChar, character)
+        if status == false then
+            if result[1] == "@" then result = result:sub(2) end
+            return response(result)
+        end
+
+        currentChar:save()
+    end
+
     hook.Run("PrePlayerLoadedChar", client, character, currentChar)
     character:setup()
     hook.Run("PlayerLoadedChar", client, character, currentChar)
