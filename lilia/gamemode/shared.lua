@@ -12,6 +12,7 @@ function GM:Initialize()
         game.ConsoleCommand("sv_allowdownload 0\n")
         game.ConsoleCommand("sv_allowcslua 0\n")
         game.ConsoleCommand("gmod_physiterations 2\n")
+        game.ConsoleCommand("sbox_noclip 0\n")
         game.ConsoleCommand("sv_minrate 1048576\n")
     else
         timer.Remove("HintSystem_OpeningMenu")
