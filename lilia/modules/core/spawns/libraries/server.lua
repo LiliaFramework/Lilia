@@ -78,7 +78,6 @@ function MODULE:PlayerDeath(client, _, attacker)
 
     character:setData("pos", nil)
     if (not attacker:IsPlayer() and self.LoseWeapononDeathNPC) or (self.LoseWeapononDeathWorld and attacker:IsWorld()) then self:RemoveAllEquippedWeapons(client) end
-    client:SetNW2Int("deathTime", os.time() + lia.config.SpawnTime)
     character:setData("deathPos", client:GetPos())
 end
 

@@ -18,9 +18,6 @@ function MODULE:HUDPaint()
         if self:ShouldDrawAmmo(weapon) then self:DrawAmmo(weapon) end
         if self:ShouldDrawCrosshair() then self:DrawCrosshair() end
         if self:ShouldDrawVignette() then self:DrawVignette() end
-    else
-        surface.SetDrawColor(0, 0, 0, 255)
-        surface.DrawRect(0, 0, ScrW(), ScrH())
     end
 end
 

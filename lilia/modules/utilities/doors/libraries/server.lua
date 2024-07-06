@@ -102,6 +102,7 @@ function MODULE:InitPostEntity()
 end
 
 function MODULE:PlayerUse(client, door)
+    if door:IsVehicle() and door:IsLocked() then return false end
     if door:isDoor() then
         local result = hook.Run("CanPlayerUseDoor", client, door)
         if result == false then
