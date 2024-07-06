@@ -45,6 +45,7 @@ end
 function MODULE:OnEntityCreated(entity)
     local class = entity:GetClass():lower():Trim()
     if class == "lua_run" then
+        print("[Notify] lua_run entity detected and will be removed.")
         function entity:AcceptInput()
             return true
         end
@@ -55,6 +56,7 @@ function MODULE:OnEntityCreated(entity)
 
         timer.Simple(0, function() entity:Remove() end)
     elseif class == "point_servercommand" then
+        print("[Notify] point_servercommand entity detected and will be removed.")
         timer.Simple(0, function() entity:Remove() end)
     elseif class == "prop_vehicle_prisoner_pod" then
         entity:AddEFlags(EFL_NO_THINK_FUNCTION)
