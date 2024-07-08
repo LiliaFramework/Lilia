@@ -9,8 +9,8 @@
 end
 
 function MODULE:CanPlayerJoinClass(client, class)
-    if not lia.class.hasWhitelist then return true end
-    return client:hasClassWhitelist(class)
+   if lia.class.hasWhitelist(class) and not client:hasClassWhitelist(class) then return false end
+    return true
 end
 
 function MODULE:PlayerLoadedChar(client, character)

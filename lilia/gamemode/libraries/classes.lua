@@ -68,7 +68,9 @@ function lia.class.canBe(client, class)
     if client:getChar():getClass() == class then return false, "same class request" end
     if info.limit > 0 and #lia.class.getPlayers(info.index) >= info.limit then return false, "class is full" end
     if hook.Run("CanPlayerJoinClass", client, class, info) == false then return false end
-    return (info:OnCanBe(client) or info:onCanBe(client)) or info.isDefault
+    if info.onCanBe and not info:onCanBe(client) then return false end
+    if info.OnCanBe and not info:OnCanBe(client) then return false end
+    return info.isDefault
 end
 
 --- Retrieves information about a class.
@@ -120,6 +122,8 @@ end
 -- @realm shared
 -- @int class The identifier of the class.
 function lia.class.hasWhitelist(class)
-    local data = lia.faction.indices[class]
-    return data and (not data.isDefault or data.isWhitelisted)
+    local info = lia.class.list[class]
+    if not info then return false end
+    if info.isDefault then return false end
+    return info.isWhitelisted == true
 end

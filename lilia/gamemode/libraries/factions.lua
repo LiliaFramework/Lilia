@@ -205,6 +205,22 @@ function lia.faction.formatModelData()
     end
 end
 
+--- Retrieves the default class of a specified faction.
+-- The default class is determined based on the faction index and the 'isDefault' flag set for each class.
+-- @realm shared
+-- @int factionIndex The index of the faction for which to retrieve the default class.
+-- @return tab|nil Information about the default class if found, nil otherwise.
+function lia.faction.getDefaultClass(id)
+    local defaultClass = nil
+    for _, class in ipairs(lia.class.list) do
+        if class.faction == id and class.isDefault then
+            defaultClass = class
+            break
+        end
+    end
+    return defaultClass
+end
+
 if CLIENT then
     --- Returns true if a faction requires a whitelist.
     -- @realm client

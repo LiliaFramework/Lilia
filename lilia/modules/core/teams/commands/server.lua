@@ -20,6 +20,11 @@
                 if hook.Run("CanCharBeTransfered", target:getChar(), faction, target:Team()) == false then return end
                 target:getChar().vars.faction = faction.uniqueID
                 target:getChar():setFaction(faction.index)
+                local defaultClass = lia.faction.getDefaultClass(faction.index)
+                if defaultClass then
+                    target:getChar():joinClass(defaultClass.index)
+                end
+
                 hook.Run("OnTransferred", target)
                 if faction.onTransfered then faction:onTransfered(target) end
                 client:notify("You have transferred " .. target:Name() .. " to " .. faction.name)
@@ -75,31 +80,30 @@ lia.command.add("beclass", {
         local class = table.concat(arguments, " ")
         local character = client:getChar()
         if IsValid(client) and character then
-            local num = isnumber(tonumber(class)) and tonumber(class) or -1
-            if lia.class.list[num] then
-                local v = lia.class.list[num]
-                if character:joinClass(num) then
-                    client:notifyLocalized("becomeClass", L(v.name, client))
-                    return
-                else
-                    client:notifyLocalized("becomeClassFail", L(v.name, client))
-                    return
-                end
-            else
-                for k, v in ipairs(lia.class.list) do
-                    if lia.util.stringMatches(v.uniqueID, class) or lia.util.stringMatches(L(v.name, client), class) then
-                        if character:joinClass(k) then
+            local num = tonumber(class) or lia.class.retrieveClass(class)
+            if num then
+                local v = lia.class.get(num)
+                if v then
+                    if lia.class.canBe(client, num) then
+                        if character:joinClass(num) then
                             client:notifyLocalized("becomeClass", L(v.name, client))
                             return
                         else
                             client:notifyLocalized("becomeClassFail", L(v.name, client))
                             return
                         end
+                    else
+                        client:notifyLocalized("becomeClassFail", L(v.name, client))
+                        return
                     end
+                else
+                    client:notifyLocalized("invalid", L("class", client))
+                    return
                 end
+            else
+                client:notifyLocalized("invalid", L("class", client))
+                return
             end
-
-            client:notifyLocalized("invalid", L("class", client))
         else
             client:notifyLocalized("illegalAccess")
         end

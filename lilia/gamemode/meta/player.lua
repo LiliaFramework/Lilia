@@ -327,7 +327,7 @@ end
 -- @int class The class to check for whitelisting.
 -- @treturn bool Whether the player has whitelisted access to the specified faction.
 function playerMeta:hasClassWhitelist(class)
-    local char = client:getChar()
+    local char = self:getChar()
     if not char then return false end
     local wl = char:getData("whitelist", {})
     return wl[class] ~= nil
