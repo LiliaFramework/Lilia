@@ -19,7 +19,7 @@ function MODULE:GetDisplayedName(client, chatType)
     local characterID = character:getID()
     if not ourCharacter:doesRecognize(characterID) then
         if ourCharacter:doesFakeRecognize(characterID) and myReg[characterID] then return myReg[characterID] end
-        if chatType and .hookRun("isRecognizedChatType", chatType) then return "[Unknown]" end
+        if chatType and hook.Run("isRecognizedChatType", chatType) then return "[Unknown]" end
         return "Unknown"
     end
 end
