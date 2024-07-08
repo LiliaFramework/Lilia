@@ -116,8 +116,11 @@ function MODULE:PrePlayerDraw(drawnClient)
     local client = LocalPlayer()
     local clientPos = client:GetShootPos()
     local onlinePlayers = player.GetAll()
-    if not drawnClient:IsDormant() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:CanOverrideView() then
+    local isInVehicle = drawnClient:GetVehicle() or (LVS and client:lvsGetVehicle())
+
+    if not drawnClient:IsDormant() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:CanOverrideView() and not isInVehicle then
         local bBoneHit = false
+        
         for i = 0, drawnClient:GetBoneCount() - 1 do
             local bonePos = drawnClient:GetBonePosition(i)
             local traceLine = util.TraceLine({
@@ -131,7 +134,9 @@ function MODULE:PrePlayerDraw(drawnClient)
             if traceLine.HitPos == bonePos then
                 bBoneHit = true
                 break
-            elseif (self.NotSolidMatTypes[traceLine.MatType] or self.NotSolidTextures[traceLine.HitTexture]) or ((IsValid(entity) and (entity:GetClass() == "prop_dynamic" or entity:GetClass() == "prop_physics")) and self.NotSolidModels[entity:GetModel()]) then
+            elseif self.NotSolidMatTypes[traceLine.MatType] or self.NotSolidTextures[traceLine.HitTexture] or
+                  (IsValid(entity) and (entity:GetClass() == "prop_dynamic" or entity:GetClass() == "prop_physics") and 
+                  self.NotSolidModels[entity:GetModel()]) then
                 local traceLine2 = util.TraceLine({
                     start = bonePos,
                     endpos = clientPos,
@@ -152,7 +157,7 @@ function MODULE:PrePlayerDraw(drawnClient)
                 drawnClient.IsHidden = true
             end
             return true
-        elseif drawnClient.IsHidden and bBoneHit then
+        elseif drawnClient.IsHidden then
             drawnClient:DrawShadow(true)
             drawnClient.IsHidden = false
         end
@@ -161,6 +166,7 @@ function MODULE:PrePlayerDraw(drawnClient)
         drawnClient.IsHidden = false
     end
 end
+
 
 function playerMeta:CanOverrideView()
     local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
