@@ -116,7 +116,7 @@ function MODULE:PrePlayerDraw(drawnClient)
     local client = LocalPlayer()
     local clientPos = client:GetShootPos()
     local onlinePlayers = player.GetAll()
-    local isInVehicle = drawnClient:GetVehicle() or (LVS and client:lvsGetVehicle())
+    local isInVehicle = LocalPlayer():GetVehicle() or (LVS and LocalPlayer():lvsGetVehicle())
 
     if not drawnClient:IsDormant() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:CanOverrideView() and not isInVehicle then
         local bBoneHit = false
