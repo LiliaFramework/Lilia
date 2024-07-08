@@ -208,7 +208,7 @@ end
 --- Retrieves the default class of a specified faction.
 -- The default class is determined based on the faction index and the 'isDefault' flag set for each class.
 -- @realm shared
--- @int factionIndex The index of the faction for which to retrieve the default class.
+-- @int id The index of the faction for which to retrieve the default class.
 -- @return tab|nil Information about the default class if found, nil otherwise.
 function lia.faction.getDefaultClass(id)
     local defaultClass = nil
