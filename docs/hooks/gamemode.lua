@@ -138,7 +138,7 @@ end
 --- Whether or not a player is allowed to drop the given `item`.
 -- @realm server
 -- @client client Player attempting to drop an item
--- @number item instance ID of the item being dropped
+-- @int item instance ID of the item being dropped
 -- @treturn bool Whether or not to allow the player to drop the item
 -- @usage function MODULE:CanPlayerDropItem(client, item)
 -- 	return false -- Never allow dropping items.

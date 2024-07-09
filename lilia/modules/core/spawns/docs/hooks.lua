@@ -39,7 +39,7 @@ end
 --- Whether or not a player is allowed to join a class.
 -- @realm shared
 -- @client client Player attempting to join
--- @number class ID of the class
+-- @int class ID of the class
 -- @tab info The class table
 -- @treturn bool Whether or not to allow the player to join the class
 -- @usage function MODULE:CanPlayerJoinClass(client, class, info)

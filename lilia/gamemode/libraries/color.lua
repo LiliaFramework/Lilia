@@ -26,7 +26,7 @@ end
 --- Blends two colors together by a specified ratio.
 -- @color color1 The First Color.
 -- @color color2 The Second Color.
--- @number ratio The blend ratio ( 0.0 to 1.0 ).
+-- @float ratio The blend ratio ( 0.0 to 1.0 ).
 -- @return color The resulting blended color.
 -- @realm client
 function lia.color.Blend(color1, color2, ratio)

@@ -127,7 +127,7 @@ end
 
 --- This function is an example of how to create a custom faction using `lia.faction.jobGenerate`. It is not recommended to use this method directly as it may lead to unexpected behavior. Instead, consider using more appropriate methods provided by the framework, such as faction files.
 -- @realm shared
--- @number index The index of the faction. This should be a unique numerical identifier for the faction.
+-- @int index The index of the faction. This should be a unique numerical identifier for the faction.
 -- @string name The name of the faction.
 -- @tab color The color of the faction.
 -- @bool default Whether the faction is default or not.
@@ -224,7 +224,7 @@ end
 if CLIENT then
     --- Returns true if a faction requires a whitelist.
     -- @realm client
-    -- @number faction Index of the faction
+    -- @int faction Index of the faction
     -- @treturn bool Whether or not the faction requires a whitelist
     function lia.faction.hasWhitelist(faction)
         local data = lia.faction.indices[faction]

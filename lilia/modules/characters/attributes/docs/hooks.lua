@@ -33,7 +33,7 @@ end
 -- This hook can be used to modify the stamina consumption rate while the player is running.
 -- @realm shared
 -- @client client The player who is running.
--- @number offset The current stamina offset.
+-- @float offset The current stamina offset.
 -- @treturn number The modified stamina offset.
 function AdjustStaminaOffsetRunning(client, offset)
 end
@@ -42,7 +42,7 @@ end
 -- This hook can be used to modify the rate at which a player regenerates stamina.
 -- @realm shared
 -- @client client The player whose stamina is regenerating.
--- @number offset The current stamina regeneration offset.
+-- @float offset The current stamina regeneration offset.
 -- @treturn number The modified stamina regeneration offset.
 function AdjustStaminaRegeneration(client, offset)
 end
@@ -51,7 +51,7 @@ end
 -- This hook can be used to apply additional modifications to the stamina offset, whether the player is running or regenerating stamina.
 -- @realm shared
 -- @client client The player whose stamina is being adjusted.
--- @number offset The current stamina offset.
+-- @float offset The current stamina offset.
 -- @treturn number The modified stamina offset.
 function AdjustStaminaOffset(client, offset)
 end

@@ -29,7 +29,7 @@ end
 -- @realm shared
 -- @internal
 -- @tab data Character vars to assign
--- @number id Unique ID of the character
+-- @int id Unique ID of the character
 -- @client client Player that will own the character
 -- @string[opt=client:SteamID64()] steamID SteamID64 of the player that will own the character
 function lia.char.new(data, id, client, steamID)
@@ -481,7 +481,7 @@ if SERVER then
     -- @client client Player to load the characters for
     -- @func[opt=nil] callback Function to call when the characters have been loaded
     -- their characters loaded which will skip the database query and load quicker
-    -- @number[opt=nil] id The ID of a specific character to load instead of all of the player's characters
+    -- @int[opt=nil] id The ID of a specific character to load instead of all of the player's characters
     function lia.char.restore(client, callback, id)
         local steamID64 = client:SteamID64()
         local fields = {"_id"}

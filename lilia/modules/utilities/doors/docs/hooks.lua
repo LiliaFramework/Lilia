@@ -5,7 +5,7 @@
 -- @realm shared
 -- @client client The client trying something on the door.
 -- @entity door The door entity itself.
--- @number access The access level used when called.
+-- @int access The access level used when called.
 -- @treturn bool Whether or not to allow the client access.
 -- @usage function MODULE:CanPlayerAccessDoor(client, door, access)
 --     return true -- Always allow access.
@@ -47,7 +47,7 @@ end
 -- @realm server
 -- @client owner The player attempting to lock the door.
 -- @entity entity The door entity being locked.
--- @number time The time taken to perform the lock action.
+-- @float time The time taken to perform the lock action.
 function KeyLock(owner, entity, time)
 end
 
@@ -56,7 +56,7 @@ end
 -- @realm server
 -- @client owner The player attempting to unlock the door.
 -- @entity entity The door entity being unlocked.
--- @number time The time taken to perform the unlock action.
+-- @float time The time taken to perform the unlock action.
 function KeyUnlock(owner, entity, time)
 end
 

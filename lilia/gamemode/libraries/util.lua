@@ -57,10 +57,10 @@ end
 -- @realm shared
 -- @entity entity Entity to play sounds from
 -- @tab sounds Sound paths to play
--- @number delay[opt=0] How long to wait before starting to play the sounds
--- @number spacing[opt=0.1] How long to wait between playing each sound
--- @number volume[opt=75] The sound level of each sound
--- @number pitch[opt=100] Pitch percentage of each sound
+-- @float delay[opt=0] How long to wait before starting to play the sounds
+-- @float spacing[opt=0.1] How long to wait between playing each sound
+-- @int volume[opt=75] The sound level of each sound
+-- @int pitch[opt=100] Pitch percentage of each sound
 -- @treturn number How long the entire sequence of sounds will take to play
 function lia.util.emitQueuedSounds(entity, sounds, delay, spacing, volume, pitch)
     delay = delay or 0
@@ -376,13 +376,13 @@ else
     --- Draws some text with a shadow.
     -- @realm client
     -- @string text Text to draw
-    -- @number x X-position of the text
-    -- @number y Y-position of the text
+    -- @float x X-position of the text
+    -- @float y Y-position of the text
     -- @color color Color of the text to draw
-    -- @number[opt=TEXT_ALIGN_LEFT] alignX Horizontal alignment of the text, using one of the `TEXT_ALIGN_*` constants
-    -- @number[opt=TEXT_ALIGN_LEFT] alignY Vertical alignment of the text, using one of the `TEXT_ALIGN_*` constants
+    -- @int[opt=TEXT_ALIGN_LEFT] alignX Horizontal alignment of the text, using one of the `TEXT_ALIGN_*` constants
+    -- @int[opt=TEXT_ALIGN_LEFT] alignY Vertical alignment of the text, using one of the `TEXT_ALIGN_*` constants
     -- @string[opt="ixGenericFont"] font Font to use for the text
-    -- @number[opt=color.a * 0.575] alpha Alpha of the shadow
+    -- @int[opt=color.a * 0.575] alpha Alpha of the shadow
     function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
         color = color or color_white
         return draw.TextShadow({
@@ -433,7 +433,7 @@ else
     -- otherwise it will break a word if it's too long.
     -- @realm client
     -- @string text Text to wrap
-    -- @number width Maximum allowed width in pixels
+    -- @int width Maximum allowed width in pixels
     -- @string[opt="liaChatFont"] font Font to use for the text
     function lia.util.wrapText(text, width, font)
         font = font or "liaChatFont"
@@ -730,9 +730,9 @@ else
     --- Blurs the content underneath the given panel. This will fall back to a simple darkened rectangle if the player has
     -- blurring disabled.
     -- @realm client
-    -- @tparam panel panel Panel to draw the blur for
-    -- @number[opt=5] amount Intensity of the blur. This should be kept between 0 and 10 for performance reasons
-    -- @number[opt=0.2] passes Quality of the blur. This should be kept as default
+    -- @panel panel Panel to draw the blur for
+    -- @float[opt=5] amount Intensity of the blur. This should be kept between 0 and 10 for performance reasons
+    -- @float[opt=0.2] passes Quality of the blur. This should be kept as default
     -- @usage function PANEL:Paint(width, height)
     -- 	lia.util.drawBlur(self)
     -- end
@@ -757,12 +757,12 @@ else
     --- Draws a blurred rectangle with the given position and bounds. This shouldn't be used for panels, see `lia.util.drawBlur`
     -- instead.
     -- @realm client
-    -- @number x X-position of the rectangle
-    -- @number y Y-position of the rectangle
-    -- @number w Width of the rectangle
-    -- @number h Height of the rectangle
-    -- @number[opt=5] amount Intensity of the blur. This should be kept between 0 and 10 for performance reasons
-    -- @number[opt=0.2] passes Quality of the blur. This should be kept as default
+    -- @float x X-position of the rectangle
+    -- @float y Y-position of the rectangle
+    -- @float w Width of the rectangle
+    -- @float h Height of the rectangle
+    -- @float[opt=5] amount Intensity of the blur. This should be kept between 0 and 10 for performance reasons
+    -- @float[opt=0.2] passes Quality of the blur. This should be kept as default
     -- @usage hook.Add("HUDPaint", "MyHUDPaint", function()
     -- 	lia.util.drawBlurAt(0, 0, ScrW(), ScrH())
     -- end)

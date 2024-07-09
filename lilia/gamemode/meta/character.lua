@@ -493,7 +493,7 @@ if SERVER then
 
     --- Forces a player off their current character, and prevents them from using the character for the specified amount of time.
     -- @realm server
-    -- @number[opt] time Amount of seconds to ban the character for. If left as `nil`, the character will be banned permanently
+    -- @float[opt] time Amount of seconds to ban the character for. If left as `nil`, the character will be banned permanently
     function characterMeta:ban(time)
         time = tonumber(time)
         if time then time = os.time() + math.max(math.ceil(time), 60) end
