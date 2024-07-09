@@ -23,6 +23,20 @@ function lia.color.Darken(color, amount)
     return HSLToColor(hue, saturation, lightness)
 end
 
+--- Blends two colors together by a specified ratio.
+-- @color color1 The First Color.
+-- @color color2 The Second Color.
+-- @float ratio The blend ratio ( 0.0 to 1.0 ).
+-- @return color The resulting blended color.
+-- @realm client
+function lia.color.Blend(color1, color2, ratio)
+    ratio = math.Clamp(ratio, 0, 1)
+    local r = Lerp(ratio, color1.r, color2.r)
+    local g = Lerp(ratio, color1.g, color2.g)
+    local b = Lerp(ratio, color1.b, color2.b)
+    return Color(r, g, b)
+end
+
 do
     local colors = {
         black = Color(0, 0, 0),
