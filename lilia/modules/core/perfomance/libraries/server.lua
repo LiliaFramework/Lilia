@@ -1,8 +1,6 @@
 ﻿MODULE.NextRestart = 0
 MODULE.NextNotificationTime = 0
 MODULE.IsRestarting = false
-MODULE.TimeRemainingTable = {30, 15, 5, 1, 0}
-MODULE.ServerRestartHour = 5
 function MODULE:InitializedModules()
     self.NextRestart = self:GetInitialRestartTime()
     self.NextNotificationTime = self:GetNextNotificationTimeBreakpoint()
