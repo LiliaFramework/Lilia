@@ -4,4 +4,4 @@ MODULE.tblAlwaysSend = {"player", "func_lod", "gmod_hands", "worldspawn", "playe
 MODULE.RagdollCleaningTimer = 300
 MODULE.SoundsToMute = {"weapons/airboat/airboat_gun_lastshot1.wav", "weapons/airboat/airboat_gun_lastshot2.wav",}
 MODULE.TimeRemainingTable = {30, 15, 5, 1, 0}
-MODULE.ServerRestartHour = 5
+MODULE.ServerRestartHour = 12
