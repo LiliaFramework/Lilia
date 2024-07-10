@@ -177,7 +177,7 @@ function PANEL:updateSellScale()
     self.sellScale:SetValue(liaVendorEnt:getSellScale())
 end
 
-function PANEL:onNameDescChanged(_, key)
+function PANEL:onNameDescChanged(key)
     local entity = liaVendorEnt
     if key == "name" then
         self.name:SetText(entity:getName())
@@ -190,7 +190,7 @@ function PANEL:onNameDescChanged(_, key)
     end
 end
 
-function PANEL:onItemModeUpdated(_, itemType, value)
+function PANEL:onItemModeUpdated(itemType, value)
     local line = self.lines[itemType]
     if not IsValid(line) then return end
     line:SetColumnText(COLS_MODE, self:getModeText(value))

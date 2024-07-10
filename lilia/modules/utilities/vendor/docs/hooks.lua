@@ -1,36 +1,6 @@
 ﻿--- Hook Documentation for Vendor Module.
 -- @hooks Vendor
 
---- Determines whether a player can access a vendor.
--- @realm server
--- @client client The player attempting to access the vendor.
--- @entity entity The vendor entity.
--- @treturn bool Whether the player is allowed to access the vendor.
-function CanPlayerAccessVendor(client, entity)
-end
-
---- Called when a player attempts to trade with a vendor.
--- @realm server
--- @client client The player attempting to trade.
--- @entity entity The vendor entity.
--- @string uniqueID The unique ID of the item being traded.
--- @bool isSellingToVendor Indicates if the player is selling to the vendor.
-function VendorTradeAttempt(client, entity, uniqueID, isSellingToVendor)
-end
-
---- Called when a vendor entity is edited.
--- @realm client
--- @entity vendor The vendor entity that was edited.
--- @string key The key that was edited.
-function VendorEdited(vendor, key)
-end
-
---- Called when a vendor is opened.
--- @realm client
--- @entity vendor The vendor entity that was opened.
-function VendorOpened(vendor)
-end
-
 --- Called when a vendor's allowed classes are updated.
 -- @realm client
 -- @entity vendor The vendor entity whose classes were updated.
@@ -87,6 +57,31 @@ end
 function VendorMoneyUpdated(vendor, money, oldMoney)
 end
 
+
+
+--- Called when vendor synchronization data is received.
+-- @realm client
+-- @entity vendor The vendor entity whose data has been synchronized.
+function VendorSynchronized(vendor)
+end
+
+--- Determines whether a player can access a vendor.
+-- @realm server
+-- @client client The player attempting to access the vendor.
+-- @entity entity The vendor entity.
+-- @treturn bool Whether the player is allowed to access the vendor.
+function CanPlayerAccessVendor(client, entity)
+end
+
+--- Called when a player attempts to trade with a vendor.
+-- @realm server
+-- @client client The player attempting to trade.
+-- @entity entity The vendor entity.
+-- @string uniqueID The unique ID of the item being traded.
+-- @bool isSellingToVendor Indicates if the player is selling to the vendor.
+function VendorTradeAttempt(client, entity, uniqueID, isSellingToVendor)
+end
+
 --- Called when the vendor menu is opened.
 -- @realm client
 -- @entity self The vendor entity.
@@ -121,7 +116,7 @@ function PlayerAccessVendor(activator, self)
 end
 
 --- Called when a player sells an item to a vendor.
--- @realm shared
+-- @realm server
 -- This function handles the event where a player sells an item to a vendor.
 -- @client client The player selling the item
 -- @entity vendor The vendor entity
@@ -141,7 +136,27 @@ end
 -- @bool isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
 -- @character character The character of the player involved in the trade
 -- @int price The price of the item being bought
--- @realm shared
+-- @realm server
 -- @see VendorSellEvent
 function VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
+end
+
+
+--- Called when a player exits from interacting with a vendor.
+-- @realm client
+function VendorExited()
+end
+
+--- Called after a delay when a vendor's data is edited.
+-- @realm client
+-- @entity vendor The vendor entity whose data is being edited.
+-- @string key The key related to the specific data being edited.
+function VendorEdited(vendor, key)
+end
+
+
+--- Called when a vendor is opened.
+-- @realm client
+-- @entity vendor The vendor entity that was opened.
+function VendorOpened(vendor)
 end
