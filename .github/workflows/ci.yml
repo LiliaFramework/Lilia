@@ -34,7 +34,7 @@ jobs:
     - name: Pull gluacheck
       uses: actions/checkout@v2
       with:
-        repository: impulsh/gluacheck
+        repository: LiliaFramework/GluaCheck
         path: luacheck
 
     - name: Build gluacheck
@@ -68,7 +68,7 @@ jobs:
       - name: Pull LDoc
         uses: actions/checkout@v2
         with:
-          repository: bleonheart/LDoc
+          repository: LiliaFramework/LDoc
           path: ldoc
 
       - name: Build LDoc

@@ -72,7 +72,7 @@ new_type("configuration", "Configurations", true)
 new_type("structures", "Structures", true)
 new_type("information", "Information", true)
 new_type("modules", "Modules", true)
-new_type("store", "Store", true
+new_type("store", "Store", true)
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
 tparam_alias("date", "Date")
