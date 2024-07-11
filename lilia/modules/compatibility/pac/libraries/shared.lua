@@ -1,4 +1,5 @@
 ﻿local playerMeta = FindMetaTable("Player")
+
 function MODULE:setupPACDataFromItems()
     for itemType, item in pairs(lia.item.list) do
         if istable(item.pacData) then self.partData[itemType] = item.pacData end
