@@ -121,22 +121,72 @@ if not VENDOR_INVENTORY_MEASURE then
     VENDOR_INVENTORY_MEASURE:onInstanced()
 end
 
-function MODULE:VendorTradeAttempt(client, vendor, itemType, isSellingToVendor)
+function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
     local canAccess, reason = hook.Run("CanPlayerTradeWithVendor", client, vendor, itemType, isSellingToVendor)
     if canAccess == false then
         if isstring(reason) then client:notifyLocalized(reason) end
         return
     end
 
-    local character = client:getChar()
-    local price = vendor:getPrice(itemType, isSellingToVendor)
     if client.vendorTransaction and client.vendorTimeout > RealTime() then return end
     client.vendorTransaction = true
     client.vendorTimeout = RealTime() + .1
+
+    local character = client:getChar()
+    local price = vendor:getPrice(itemType, isSellingToVendor)
+
     if isSellingToVendor then
-        self:VendorSellEvent(client, vendor, itemType, isSellingToVendor, character, price)
+        local inventory = character:getInv()
+        local item = inventory:getFirstItemOfType(itemType)
+        if item then
+            local context = {
+                client = client,
+                item = item,
+                from = inventory,
+                to = VENDOR_INVENTORY_MEASURE
+            }
+
+            local canTransfer, reason = VENDOR_INVENTORY_MEASURE:canAccess("transfer", context)
+            if not canTransfer then
+                client:notifyLocalized(reason or "vendorError")
+                client.vendorTransaction = nil
+                return
+            end
+
+            local canTransferItem, reason = hook.Run("CanItemBeTransfered", item, inventory, VENDOR_INVENTORY_MEASURE, client)
+            if canTransferItem == false then
+                client:notifyLocalized(reason or "vendorError")
+                client.vendorTransaction = nil
+                return
+            end
+
+            vendor:takeMoney(price)
+            character:giveMoney(price)
+            item:remove():next(function()
+                client.vendorTransaction = nil
+            end):catch(function()
+                client.vendorTransaction = nil
+            end)
+            vendor:addStock(itemType)
+            client:notify("You sold " .. item:getName() .. " for " .. lia.currency.get(price))
+            hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
+        end
     else
-        self:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
+        if not character:getInv():doesFitInventory(itemType) then
+            client:notify("You don't have space for this item!")
+            hook.Run("OnCharTradeVendor", client, vendor, nil, isSellingToVendor, character, itemType, true)
+            client.vendorTransaction = nil
+            return
+        end
+
+        vendor:giveMoney(price)
+        character:takeMoney(price)
+        vendor:takeStock(itemType)
+        character:getInv():add(itemType):next(function(item)
+            client:notify("You bought " .. item:getName() .. " for " .. lia.currency.get(price))
+            hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
+            client.vendorTransaction = nil
+        end)
     end
 end
 
@@ -160,54 +210,4 @@ function MODULE:PlayerAccessVendor(client, vendor)
             net.Send(client)
         end
     end
-end
-
-function MODULE:VendorSellEvent(client, vendor, itemType, isSellingToVendor, character, price)
-    local inventory = character:getInv()
-    local item = inventory:getFirstItemOfType(itemType)
-    if item then
-        local context = {
-            client = client,
-            item = item,
-            from = inventory,
-            to = VENDOR_INVENTORY_MEASURE
-        }
-
-        local canTransfer, reason = VENDOR_INVENTORY_MEASURE:canAccess("transfer", context)
-        if not canTransfer then
-            client:notifyLocalized(reason or "vendorError")
-            return
-        end
-
-        local canTransferItem, reason = hook.Run("CanItemBeTransfered", item, inventory, VENDOR_INVENTORY_MEASURE, client)
-        if canTransferItem == false then
-            client:notifyLocalized(reason or "vendorError")
-            return
-        end
-
-        vendor:takeMoney(price)
-        character:giveMoney(price)
-        item:remove():next(function() client.vendorTransaction = nil end):catch(function() client.vendorTransaction = nil end)
-        vendor:addStock(itemType)
-        client:notify("You sold " .. item:getName() .. " for " .. lia.currency.get(price))
-        hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
-    end
-end
-
-function MODULE:VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
-    if not character:getInv():doesFitInventory(itemType) then
-        client:notify("You don't have space for this item!")
-        hook.Run("OnCharTradeVendor", client, vendor, nil, isSellingToVendor, character, itemType, true)
-        client.vendorTransaction = nil
-        return
-    end
-
-    vendor:giveMoney(price)
-    character:takeMoney(price)
-    vendor:takeStock(itemType)
-    character:getInv():add(itemType):next(function(item)
-        client:notify("You bought " .. item:getName() .. " for " .. lia.currency.get(price))
-        hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
-        client.vendorTransaction = nil
-    end)
 end

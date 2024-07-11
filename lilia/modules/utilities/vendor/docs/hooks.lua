@@ -81,34 +81,6 @@ end
 function VendorTradeAttempt(client, entity, uniqueID, isSellingToVendor)
 end
 
---- Called when a player sells an item to a vendor.
--- @realm server
--- @internal
--- This function handles the event where a player sells an item to a vendor.
--- @client client The player selling the item
--- @entity vendor The vendor entity
--- @string itemType The uniqueID of item being sold
--- @bool isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
--- @character character The character of the player selling the item
--- @int price The price at which the item is sold
--- @see VendorBuyEvent
-function VendorSellEvent(client, vendor, itemType, isSellingToVendor, character, price)
-end
-
---- Called when a player successfully buys an item from a vendor.
--- This function is called when a player successfully completes a purchase from a vendor.
--- @client client The player who made the purchase
--- @entity vendor The vendor entity from which the item was bought
--- @string itemType The uniqueID of item being sold
--- @bool isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
--- @character character The character of the player involved in the trade
--- @int price The price of the item being bought
--- @realm server
--- @internal
--- @see VendorSellEvent
-function VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
-end
-
 --- Called when vendor synchronization data is received.
 -- @realm client
 -- @entity vendor The vendor entity whose data has been synchronized.
