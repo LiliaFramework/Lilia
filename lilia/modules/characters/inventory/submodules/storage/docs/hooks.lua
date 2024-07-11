@@ -5,7 +5,7 @@
 -- @client client The player attempting to spawn a container.
 -- @entity entity The container entity being spawned.
 -- @tab data Additional data related to the container being spawned.
--- @treturn Boolean Whether or not to allow the player to spawn the container.
+-- @treturn bool Whether or not to allow the player to spawn the container.
 -- @realm server
 -- @usage function MODULE:CanPlayerSpawnStorage(client, entity, data)
 --     return client:IsAdmin() -- Restrict spawning containers to admins.
@@ -17,7 +17,7 @@ end
 -- This hook allows customization of conditions for considering an entity as suitable storage.
 -- @realm shared
 -- @entity entity The entity being checked.
--- @treturn Boolean Whether the entity is suitable for use as storage.
+-- @treturn bool Whether the entity is suitable for use as storage.
 function isSuitableForTrunk(entity)
 end
 
@@ -36,7 +36,7 @@ end
 -- @client client The player attempting to spawn a container.
 -- @entity entity The container entity being spawned.
 -- @tab data Additional data related to the container being spawned.
--- @treturn Boolean Whether the player is allowed to spawn the container.
+-- @treturn bool Whether the player is allowed to spawn the container.
 function CanPlayerSpawnStorage(client, entity, data)
 end
 
@@ -45,7 +45,7 @@ end
 -- @realm server
 -- @entity entity The storage entity.
 -- @entity inventory The inventory associated with the storage entity.
--- @treturn Boolean Whether the data should be saved.
+-- @treturn bool Whether the data should be saved.
 function CanSaveData(entity, inventory)
 end
 
@@ -78,7 +78,7 @@ end
 -- @client client The player attempting to transfer the item.
 -- @entity storage The storage entity.
 -- @param item The item being transferred.
--- @treturn Boolean Whether the player is allowed to transfer the item.
+-- @treturn bool Whether the player is allowed to transfer the item.
 function StorageCanTransferItem(client, storage, item)
 end
 

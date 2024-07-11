@@ -30,7 +30,7 @@ if SERVER then
     -- where `schema` is the name of the current schema.
     -- @bool[opt=false] ignoreMap Whether or not to ignore the map and delete from the schema folder, rather than
     -- `data/lilia/schema/map`, where `map` is the name of the current map.
-    -- @treturn Boolean Whether or not the deletion has succeeded
+    -- @treturn bool Whether or not the deletion has succeeded
     function lia.data.delete(key, global, ignoreMap)
         local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local path = "lilia/" .. (global and "" or folder .. "/") .. (ignoreMap and "" or game.GetMap() .. "/")

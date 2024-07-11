@@ -59,7 +59,7 @@ end
 -- @realm shared
 -- @client client The player wanting to join the class.
 -- @int class The identifier of the class.
--- @return Boolean Whether the player can join the class.
+-- @return bool Whether the player can join the class.
 -- @return string Reason for the failure, if any.
 function lia.class.canBe(client, class)
     local info = lia.class.list[class]

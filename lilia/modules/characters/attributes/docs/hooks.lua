@@ -68,7 +68,7 @@ end
 -- This hook is used to check if a player is allowed to view their attributes.
 -- @realm client
 -- @client client The player attempting to view attributes.
--- @treturn Boolean True if the player can view attributes, false otherwise.
+-- @treturn bool True if the player can view attributes, false otherwise.
 function CanPlayerViewAttributes(client)
 end
 
@@ -86,7 +86,7 @@ end
 -- @realm shared
 -- @client client The player attempting to pick up the item.
 -- @item item The item being picked up.
--- @treturn Boolean True if the player can pick up the item, false otherwise.
+-- @treturn bool True if the player can pick up the item, false otherwise.
 function PlayerCanPickupItem(client, item)
 end
 

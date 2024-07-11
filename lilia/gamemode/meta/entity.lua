@@ -12,28 +12,28 @@ local entityMeta = FindMetaTable("Entity")
 local ChairCache = {}
 --- Checks if the entity is a physics prop.
 -- @realm shared
--- @treturn Boolean True if the entity is a physics prop, false otherwise.
+-- @treturn bool True if the entity is a physics prop, false otherwise.
 function entityMeta:isProp()
     return self:GetClass() == "prop_physics"
 end
 
 --- Checks if the entity is an item entity.
 -- @realm shared
--- @treturn Boolean True if the entity is an item entity, false otherwise.
+-- @treturn bool True if the entity is an item entity, false otherwise.
 function entityMeta:isItem()
     return self:GetClass() == "lia_item"
 end
 
 --- Checks if the entity is a money entity.
 -- @realm shared
--- @treturn Boolean True if the entity is a money entity, false otherwise.
+-- @treturn bool True if the entity is a money entity, false otherwise.
 function entityMeta:isMoney()
     return self:GetClass() == "lia_money"
 end
 
 --- Checks if the entity is a simfphys car.
 -- @realm shared
--- @treturn Boolean True if the entity is a simfphys car, false otherwise.
+-- @treturn bool True if the entity is a simfphys car, false otherwise.
 function entityMeta:isSimfphysCar()
     return simfphys and (self:GetClass() == "gmod_sent_vehicle_fphysics_base" or self.IsSimfphyscar or self:GetClass() == "gmod_sent_vehicle_fphysics_wheel" or self:GetClass() == "prop_vehicle_prisoner_pod" or self.Base == "gmod_sent_vehicle_fphysics_base" or self.Base == "gmod_sent_vehicle_fphysics_wheel")
 end
@@ -50,7 +50,7 @@ end
 --- Checks if there is an entity near the current entity within a specified radius.
 -- @realm shared
 -- @tparam[opt=96] number radius The radius within which to check for nearby entities.
--- @treturn Boolean True if there is an entity nearby, false otherwise.
+-- @treturn bool True if there is an entity nearby, false otherwise.
 function entityMeta:nearEntity(radius)
     for _, v in ipairs(ents.FindInSphere(self:GetPos(), radius or 96)) do
         if v:GetClass() == self then return true end
@@ -60,7 +60,7 @@ end
 
 --- Checks if the entity is locked (pertaining to doors).
 -- @realm shared
--- @treturn Boolean True if the entity is locked, false otherwise.
+-- @treturn bool True if the entity is locked, false otherwise.
 function entityMeta:isDoorLocked()
     return sself:GetInternalVariable("m_bLocked") or self.locked or false
 end
@@ -79,7 +79,7 @@ end
 -- @realm shared
 -- @tparam Entity entity The entity to check the field of view against.
 -- @tparam[opt=88] number fov The field of view angle in degrees.
--- @treturn Boolean True if the entity is within the field of view, false otherwise.
+-- @treturn bool True if the entity is within the field of view, false otherwise.
 function entityMeta:inFov(entity, fov)
     return self:GetViewAngle(entity:EyePos()) < (fov or 88)
 end
@@ -87,7 +87,7 @@ end
 --- Checks if the entity is inside a room (i.e., not blocked by world geometry) with another target entity.
 -- @realm shared
 -- @tparam Entity target The target entity to check for room visibility.
--- @treturn Boolean True if the entity is in the same room as the target entity, false otherwise.
+-- @treturn bool True if the entity is in the same room as the target entity, false otherwise.
 function entityMeta:isInRoom(target)
     local tracedata = {}
     tracedata.start = self:GetPos()
@@ -99,7 +99,7 @@ end
 --- Checks if the entity is in line of sight of another entity.
 -- @realm shared
 -- @tparam Entity entity The entity to check line of sight against.
--- @treturn Boolean True if the entity is in line of sight, false otherwise.
+-- @treturn bool True if the entity is in line of sight, false otherwise.
 function entityMeta:inTrace(entity)
     return util.TraceLine({
         start = entity:EyePos(),
@@ -112,14 +112,14 @@ end
 -- @tparam Entity entity The entity to check visibility against.
 -- @tparam[opt=512^2] number maxDist The maximum distance squared within which the entity can see the other entity.
 -- @tparam[opt=88] number fov The field of view angle in degrees.
--- @treturn Boolean True if the entity has a clear line of sight to the other entity within the specified distance and field of view angle, false otherwise.
+-- @treturn bool True if the entity has a clear line of sight to the other entity within the specified distance and field of view angle, false otherwise.
 function entityMeta:isScreenVisible(entity, maxDist, fov)
     return self:EyePos():DistToSqr(entity:EyePos()) < (maxDist or 512 * 512) and self:IsLineOfSightClear(entity:EyePos()) and self:InFov(entity, fov)
 end
 
 --- Checks if the entity is a chair.
 -- @realm shared
--- @treturn Boolean True if the entity is a chair, false otherwise.
+-- @treturn bool True if the entity is a chair, false otherwise.
 function entityMeta:isChair()
     return ChairCache[self:GetModel()]
 end
@@ -127,7 +127,7 @@ end
 --- Checks if the entity can see another entity.
 -- @realm shared
 -- @tparam Entity entity The entity to check visibility against.
--- @treturn Boolean True if the entity can see the target entity, false otherwise.
+-- @treturn bool True if the entity can see the target entity, false otherwise.
 function entityMeta:canSeeEntity(entity)
     if not (IsValid(self) and IsValid(entity)) then return false end
     if not (self:IsPlayer() or self:IsNPC()) then return false end
@@ -145,7 +145,7 @@ if SERVER then
     --- Checks if the entity is a door.
     -- @realm server
     -- @internal
-    -- @treturn Boolean True if the entity is a door, false otherwise.
+    -- @treturn bool True if the entity is a door, false otherwise.
     function entityMeta:isDoor()
         local class = self:GetClass():lower()
         local doorPrefixes = {"prop_door", "func_door", "func_door_rotating", "door_",}
@@ -224,7 +224,7 @@ if SERVER then
 else
     --- Checks if the entity is a door.
     -- @realm client
-    -- @treturn Boolean True if the entity is a door, false otherwise.
+    -- @treturn bool True if the entity is a door, false otherwise.
     function entityMeta:isDoor()
         return self:GetClass():find("door")
     end

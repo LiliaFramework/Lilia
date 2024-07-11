@@ -59,6 +59,6 @@ end
 -- This hook is used to check if a specific chat type is recognized within the system.
 -- @realm shared
 -- @string chatType The chat type being checked for recognition.
--- @treturn Boolean True if the chat type is recognized, false otherwise.
+-- @treturn bool True if the chat type is recognized, false otherwise.
 function isRecognizedChatType(chatType)
 end

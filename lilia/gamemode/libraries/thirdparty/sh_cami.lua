@@ -36,7 +36,7 @@ local CAMI_PRIVILEGE = {}
 --- ⚠ **Warning**: This function may not be called by all admin mods
 --- @param actor GPlayer @The player
 --- @param target GPlayer | nil @Optional - the target
---- @return boolean @If they can or not
+--- @return bool @If they can or not
 --- @return string | nil @Optional reason
 function CAMI_PRIVILEGE:HasAccess(actor, target)
 end
@@ -89,7 +89,7 @@ end
 --- the CAMI.OnUsergroupUnregistered hook don't cause an infinite loop
 --- @param usergroupName string @The name of the usergroup.
 --- @param source any @Identifier for your own admin mod. Can be anything.
---- @return boolean @Whether the unregistering succeeded.
+--- @return bool @Whether the unregistering succeeded.
 function CAMI.UnregisterUsergroup(usergroupName, source)
     if not usergroups[usergroupName] then return false end
     local usergroup = usergroups[usergroupName]
@@ -119,7 +119,7 @@ end
 --- * `admin` is an ancestor of `superadmin`, but not `user`
 --- @param usergroupName string @The usergroup to query
 --- @param potentialAncestor string @The ancestor to query
---- @return boolean @Whether usergroupName inherits potentialAncestor.
+--- @return bool @Whether usergroupName inherits potentialAncestor.
 function CAMI.UsergroupInherits(usergroupName, potentialAncestor)
     repeat
         if usergroupName == potentialAncestor then return true end
@@ -165,7 +165,7 @@ end
 ---
 --- ⚠ **Warning**: Call only when the privilege is to be permanently removed.
 --- @param privilegeName string @The name of the privilege.
---- @return boolean @Whether the unregistering succeeded.
+--- @return bool @Whether the unregistering succeeded.
 function CAMI.UnregisterPrivilege(privilegeName)
     if not privileges[privilegeName] then return false end
     local privilege = privileges[privilegeName]
@@ -219,7 +219,7 @@ local defaultAccessHandler = {
 --- @param callback fun(hasAccess: boolean, reason: string|nil) @Callback to receive the answer, or nil for synchronous
 --- @param targetPly GPlayer | nil @Optional - target for if the privilege effects another player (eg kick/ban)
 --- @param extraInfoTbl CAMI_ACCESS_EXTRA_INFO | nil @Table of extra information for the admin mod
---- @return boolean | nil @Synchronous only - if the player has the privilege
+--- @return bool | nil @Synchronous only - if the player has the privilege
 --- @return string | nil @Synchronous only - optional reason from admin mod
 function CAMI.PlayerHasAccess(actorPly, privilegeName, callback, targetPly, extraInfoTbl)
     local hasAccess, reason = nil, nil

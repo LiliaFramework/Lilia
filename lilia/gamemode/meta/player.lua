@@ -59,35 +59,35 @@ end
 
 --- Checks if the player belongs to the "user" user group.
 -- @realm shared
--- @treturn Boolean Whether the player belongs to the "user" user group.
+-- @treturn bool Whether the player belongs to the "user" user group.
 function playerMeta:isUser()
     return self:IsUserGroup("user")
 end
 
 --- Checks if the player is a staff member.
 -- @realm shared
--- @treturn Boolean Whether the player is a staff member.
+-- @treturn bool Whether the player is a staff member.
 function playerMeta:isStaff()
     return CAMI.PlayerHasAccess(self, "UserGroups - Staff Group", nil) or self:IsSuperAdmin()
 end
 
 --- Checks if the player is a VIP.
 -- @realm shared
--- @treturn Boolean Whether the player is a VIP.
+-- @treturn bool Whether the player is a VIP.
 function playerMeta:isVIP()
     return CAMI.PlayerHasAccess(self, "UserGroups - VIP Group", nil)
 end
 
 --- Checks if the staff member is currently on duty (FACTION_STAFF).
 -- @realm shared
--- @treturn Boolean Whether the staff member is currently on duty.
+-- @treturn bool Whether the staff member is currently on duty.
 function playerMeta:isStaffOnDuty()
     return self:Team() == FACTION_STAFF
 end
 
 --- Checks if the player is currently observing.
 -- @realm shared
--- @treturn Boolean Whether the player is currently observing.
+-- @treturn bool Whether the player is currently observing.
 function playerMeta:isObserving()
     if self:GetMoveType() == MOVETYPE_NOCLIP and not self:InVehicle() then
         return true
@@ -98,7 +98,7 @@ end
 
 --- Checks if the player is currently moving.
 -- @realm shared
--- @treturn Boolean Whether the player is currently moving.
+-- @treturn bool Whether the player is currently moving.
 function playerMeta:isMoving()
     if not IsValid(self) or not self:Alive() then return false end
     local keydown = self:KeyDown(IN_FORWARD) or self:KeyDown(IN_BACK) or self:KeyDown(IN_MOVELEFT) or self:KeyDown(IN_MOVERIGHT)
@@ -107,7 +107,7 @@ end
 
 --- Checks if the player is currently outside (in the sky).
 -- @realm shared
--- @treturn Boolean Whether the player is currently outside (in the sky).
+-- @treturn bool Whether the player is currently outside (in the sky).
 function playerMeta:isOutside()
     local trace = util.TraceLine({
         start = self:GetPos(),
@@ -119,14 +119,14 @@ end
 
 --- Checks if the player is currently in noclip mode.
 -- @realm shared
--- @treturn Boolean Whether the player is in noclip mode.
+-- @treturn bool Whether the player is in noclip mode.
 function playerMeta:isNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP
 end
 
 --- Checks if the player has a valid ragdoll entity.
 -- @realm shared
--- @treturn Boolean Whether the player has a valid ragdoll entity.
+-- @treturn bool Whether the player has a valid ragdoll entity.
 function playerMeta:hasRagdoll()
     return IsValid(self.liaRagdoll)
 end
@@ -142,7 +142,7 @@ end
 --- Checks if the player belongs to the specified faction.
 -- @realm shared
 -- @string faction The faction to check against.
--- @treturn Boolean Whether the player belongs to the specified faction.
+-- @treturn bool Whether the player belongs to the specified faction.
 function playerMeta:isFaction(faction)
     return self:getChar():getFaction() == faction
 end
@@ -150,14 +150,14 @@ end
 --- Checks if the player belongs to the specified class.
 -- @realm shared
 -- @string class The class to check against.
--- @treturn Boolean Whether the player belongs to the specified class.
+-- @treturn bool Whether the player belongs to the specified class.
 function playerMeta:isClass(class)
     return self:getChar():getClass() == class
 end
 
 --- Checks if the player is stuck.
 -- @realm shared
--- @treturn Boolean Whether the player is stuck.
+-- @treturn bool Whether the player is stuck.
 function playerMeta:isStuck()
     return util.TraceEntity({
         start = self:GetPos(),
@@ -186,7 +186,7 @@ end
 -- @realm shared
 -- @int radius The radius within which to check for proximity.
 -- @entity entity The entity to check proximity to.
--- @treturn Boolean Whether the player is near the specified entity within the given radius.
+-- @treturn bool Whether the player is near the specified entity within the given radius.
 function playerMeta:isNearPlayer(radius, entity)
     local squaredRadius = radius * radius
     local squaredDistance = self:GetPos():DistToSqr(entity:GetPos())
@@ -271,7 +271,7 @@ end
 --- Checks if the player's character can afford a specified amount of money.
 -- @realm shared
 -- @int amount The amount of money to check.
--- @treturn Boolean Whether the player's character can afford the specified amount of money.
+-- @treturn bool Whether the player's character can afford the specified amount of money.
 function playerMeta:canAfford(amount)
     local character = self:getChar()
     return character and character:hasMoney(amount)
@@ -279,14 +279,14 @@ end
 
 --- Checks if the player is running.
 -- @realm shared
--- @treturn Boolean Whether the player is running.
+-- @treturn bool Whether the player is running.
 function playerMeta:isRunning()
     return vectorMeta.Length2D(self:GetVelocity()) > (self:GetWalkSpeed() + 10)
 end
 
 --- Checks if the player's character is female based on the model.
 -- @realm shared
--- @treturn Boolean Whether the player's character is female.
+-- @treturn bool Whether the player's character is female.
 function playerMeta:isFemale()
     local model = self:GetModel():lower()
     return model:find("female") or model:find("alyx") or model:find("mossman") or lia.anim.getModelClass(model) == "citizen_female"
@@ -311,7 +311,7 @@ end
 --- Checks if the player has whitelisted access to a faction.
 -- @realm shared
 -- @int faction The faction to check for whitelisting.
--- @treturn Boolean Whether the player has whitelisted access to the specified faction.
+-- @treturn bool Whether the player has whitelisted access to the specified faction.
 function playerMeta:hasWhitelist(faction)
     local data = lia.faction.indices[faction]
     if data then
@@ -325,7 +325,7 @@ end
 --- Checks if the player has whitelisted access to a class.
 -- @realm shared
 -- @int class The class to check for whitelisting.
--- @treturn Boolean Whether the player has whitelisted access to the specified faction.
+-- @treturn bool Whether the player has whitelisted access to the specified faction.
 function playerMeta:hasClassWhitelist(class)
     local char = self:getChar()
     if not char then return false end
@@ -414,7 +414,7 @@ end
 -- @realm shared
 -- @string skill The skill to check.
 -- @int level The required skill level.
--- @treturn Boolean Whether the player's skill level meets or exceeds the specified level.
+-- @treturn bool Whether the player's skill level meets or exceeds the specified level.
 function playerMeta:hasSkillLevel(skill, level)
     local currentLevel = self:getChar():getAttrib(skill, 0)
     return currentLevel >= level
@@ -423,7 +423,7 @@ end
 --- Checks if the player meets the required skill levels.
 -- @realm shared
 -- @tab requiredSkillLevels A table containing the required skill levels.
--- @treturn Boolean Whether the player meets all the required skill levels.
+-- @treturn bool Whether the player meets all the required skill levels.
 function playerMeta:meetsRequiredSkills(requiredSkillLevels)
     if not requiredSkillLevels then return true end
     for skill, level in pairs(requiredSkillLevels) do
@@ -648,7 +648,7 @@ if SERVER then
     --- Checks if the player has a specific permanent flag.
     -- @string flag The permanent flag to check.
     -- @realm server
-    -- @treturn Boolean Whether or not the player has the permanent flag.
+    -- @treturn bool Whether or not the player has the permanent flag.
     function playerMeta:hasPermFlag(flag)
         if not flag or #flag ~= 1 then return end
         local curFlags = self:getPermFlags()
@@ -718,7 +718,7 @@ if SERVER then
     --- Checks if the player has a specific flag blacklisted.
     -- @realm server
     -- @string flag The flag to check for in the blacklist.
-    -- @treturn Boolean Whether the player has the specified flag blacklisted.
+    -- @treturn bool Whether the player has the specified flag blacklisted.
     function playerMeta:hasFlagBlacklist(flag)
         local flags = self:getFlagBlacklist()
         for i = 1, #flags do
@@ -730,7 +730,7 @@ if SERVER then
     --- Checks if the player has any of the specified flags blacklisted.
     -- @realm server
     -- @tab flags A table containing the flags to check for in the blacklist.
-    -- @treturn Boolean Whether the player has any of the specified flags blacklisted.
+    -- @treturn bool Whether the player has any of the specified flags blacklisted.
     function playerMeta:hasAnyFlagBlacklist(flags)
         for i = 1, #flags do
             if self:hasFlagBlacklist(flags[i]) then return true end
@@ -1039,7 +1039,7 @@ if SERVER then
     -- @realm server
     -- @int faction The faction ID.
     -- @bool whitelisted Whether the player should be whitelisted for the faction.
-    -- @treturn Boolean Whether the operation was successful.
+    -- @treturn bool Whether the operation was successful.
     function playerMeta:setWhitelisted(faction, whitelisted)
         if not whitelisted then whitelisted = nil end
         local data = lia.faction.indices[faction]

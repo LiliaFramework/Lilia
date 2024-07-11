@@ -4,14 +4,14 @@
 --- Whether or not the ammo HUD should be drawn.
 -- @realm client
 -- @entity weapon Weapon the player currently is holding
--- @treturn Boolean Whether or not to draw the ammo hud
+-- @treturn bool Whether or not to draw the ammo hud
 function ShouldDrawAmmoHUD(weapon)
 end
 
 --- Determines whether a bar should be drawn.
 -- @realm client
 -- @tab bar The bar object.
--- @treturn Boolean True if the bar should be drawn, false otherwise.
+-- @treturn bool True if the bar should be drawn, false otherwise.
 function ShouldBarDraw(bar)
 end
 
@@ -19,7 +19,7 @@ end
 -- @realm client
 -- @client client The player entity.
 -- @string weapon The weapon entity.
--- @treturn Boolean True if the crosshair should be drawn, false otherwise.
+-- @treturn bool True if the crosshair should be drawn, false otherwise.
 function ShouldDrawCrosshair(client, weapon)
 end
 
@@ -31,14 +31,14 @@ end
 
 --- Determines whether bars should be hidden.
 -- @realm client
--- @treturn Boolean True if bars should be hidden, false otherwise.
+-- @treturn bool True if bars should be hidden, false otherwise.
 function ShouldHideBars()
 end
 
 --- Determines whether the ammo display should be drawn for the given weapon.
 -- @realm client
 -- @entity weapon The weapon for which the ammo display is being considered.
--- @treturn Boolean True if the ammo display should be drawn, false otherwise.
+-- @treturn bool True if the ammo display should be drawn, false otherwise.
 function ShouldDrawAmmo(weapon)
 end
 
@@ -53,14 +53,14 @@ end
 -- @entity entity The entity associated with the character.
 -- @character character The character for which information is being considered.
 -- @tab charInfo Additional information about the character.
--- @treturn Boolean True if character information should be drawn, false otherwise.
+-- @treturn bool True if character information should be drawn, false otherwise.
 function ShouldDrawCharInfo(entity, character, charInfo)
 end
 
 --- Determines whether entity information should be drawn for the given entity.
 -- @realm client
 -- @entity entity The entity for which information is being considered.
--- @treturn Boolean True if entity information should be drawn, false otherwise.
+-- @treturn bool True if entity information should be drawn, false otherwise.
 function ShouldDrawEntityInfo(entity)
 end
 
@@ -73,7 +73,7 @@ end
 
 --- Determines whether the crosshair should be drawn.
 -- @realm client
--- @treturn Boolean True if the crosshair should be drawn, false otherwise.
+-- @treturn bool True if the crosshair should be drawn, false otherwise.
 function ShouldDrawCrosshair()
 end
 
@@ -84,7 +84,7 @@ end
 
 --- Determines whether the vignette effect should be drawn.
 -- @realm client
--- @treturn Boolean True if the vignette effect should be drawn, false otherwise.
+-- @treturn bool True if the vignette effect should be drawn, false otherwise.
 function ShouldDrawVignette()
 end
 
@@ -95,7 +95,7 @@ end
 
 --- Determines whether a warning about a branching path should be drawn.
 -- @realm client
--- @treturn Boolean True if the branching path warning should be drawn, false otherwise.
+-- @treturn bool True if the branching path warning should be drawn, false otherwise.
 function ShouldDrawBranchWarning()
 end
 
@@ -106,7 +106,7 @@ end
 
 --- Determines whether the blur effect should be drawn.
 -- @realm client
--- @treturn Boolean True if the blur effect should be drawn, false otherwise.
+-- @treturn bool True if the blur effect should be drawn, false otherwise.
 function ShouldDrawBlur()
 end
 
@@ -117,13 +117,13 @@ end
 
 --- Determines whether bars should be hidden.
 -- @realm client
--- @treturn Boolean True if bars should be hidden, false otherwise.
+-- @treturn bool True if bars should be hidden, false otherwise.
 function ShouldHideBars()
 end
 
 --- Determines whether player information should be drawn.
 -- @realm client
--- @treturn Boolean True if player information should be drawn, false otherwise.
+-- @treturn bool True if player information should be drawn, false otherwise.
 function ShouldDrawPlayerInfo()
 end
 

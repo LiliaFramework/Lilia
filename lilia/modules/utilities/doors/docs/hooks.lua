@@ -6,7 +6,7 @@
 -- @client client The client trying something on the door.
 -- @entity door The door entity itself.
 -- @int access The access level used when called.
--- @treturn Boolean Whether or not to allow the client access.
+-- @treturn bool Whether or not to allow the client access.
 -- @usage function MODULE:CanPlayerAccessDoor(client, door, access)
 --     return true -- Always allow access.
 -- end
@@ -28,7 +28,7 @@ end
 -- @realm server
 -- @client client The player attempting to use the door
 -- @entity entity The door entity being considered for use
--- @treturn Boolean Whether the player is allowed to use the door
+-- @treturn bool Whether the player is allowed to use the door
 function CanPlayerUseDoor(client, entity)
 end
 
@@ -38,7 +38,7 @@ end
 -- @realm server
 -- @client client The player attempting to use the door.
 -- @entity entity The door entity being considered for use.
--- @treturn Boolean|nil Return false to disallow the use, return true to allow, or return nil to defer to other hooks.
+-- @treturn bool|nil Return false to disallow the use, return true to allow, or return nil to defer to other hooks.
 function PlayerUseDoor(client, entity)
 end
 

@@ -32,7 +32,7 @@ end
 --- Returns true if this item is equal to another item. Internally, this checks item IDs.
 -- @realm shared
 -- @item other Item to compare to
--- @treturn Boolean Whether or not this item is equal to the given item
+-- @treturn bool Whether or not this item is equal to the given item
 -- @usage print(lia.item.instances[1] == lia.item.instances[2])
 -- > falsefunction ITEM:__eq(other)
 function ITEM:__eq(other)
@@ -214,7 +214,7 @@ if SERVER then
     -- @realm server
     -- @bool bNoReplication Whether or not the item's removal should not be replicated.
     -- @bool bNoDelete Whether or not the item should not be fully deleted
-    -- @treturn Boolean Whether the item was successfully deleted or not
+    -- @treturn bool Whether the item was successfully deleted or not
     function ITEM:remove()
         local d = deferred.new()
         if IsValid(self.entity) then self.entity:Remove() end
@@ -288,7 +288,7 @@ if SERVER then
     -- @realm server
     -- @param newInventory The inventory to which the item should be transferred.
     -- @bool bBypass Whether to bypass access checks for transferring the item.
-    -- @treturn Boolean Whether the item was successfully transferred or not.
+    -- @treturn bool Whether the item was successfully transferred or not.
     function ITEM:transfer(newInventory, bBypass)
         if not bBypass and not newInventory:canAccess("transfer") then return false end
         local inventory = lia.inventory.instances[self.invID]
@@ -415,7 +415,7 @@ if SERVER then
     -- @client client The player performing the interaction.
     -- @entity entity The entity associated with the interaction, if any.
     -- @tab[opt] data Additional data related to the interaction.
-    -- @return Boolean Whether the interaction was successful.
+    -- @return bool Whether the interaction was successful.
     function ITEM:interact(action, client, entity, data)
         assert(client:IsPlayer() and IsValid(client), "Item action cannot be performed without a player")
         local canInteract, reason = hook.Run("CanPlayerInteractItem", client, action, self, data)

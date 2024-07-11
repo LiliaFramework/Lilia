@@ -9,7 +9,7 @@ valid in class tables that are created in `schema/classes/classname.lua`, and ca
 --- Whether or not a player can switch to this class.
 -- @realm shared
 -- @client client Player who wants to switch to this class
--- @treturn Boolean True if the player is allowed to switch to this class
+-- @treturn bool True if the player is allowed to switch to this class
 -- @usage function CLASS:OnCanBe(client)
 -- 	return client:IsAdmin() or client:getChar():hasFlags("Z") -- Only admins or people with the Z flag are allowed in this class!
 -- end

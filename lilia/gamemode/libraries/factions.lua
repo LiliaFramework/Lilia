@@ -119,7 +119,7 @@ end
 -- @realm shared
 -- @int faction The index of the faction to check.
 -- @tab categoryFactions A table containing faction indices that define the category.
--- @treturn Boolean True if the faction is in the category, false otherwise.
+-- @treturn bool True if the faction is in the category, false otherwise.
 function lia.faction.isFactionCategory(faction, categoryFactions)
     if table.HasValue(categoryFactions, faction) then return true end
     return false
@@ -225,7 +225,7 @@ if CLIENT then
     --- Returns true if a faction requires a whitelist.
     -- @realm client
     -- @int faction Index of the faction
-    -- @treturn Boolean Whether or not the faction requires a whitelist
+    -- @treturn bool Whether or not the faction requires a whitelist
     function lia.faction.hasWhitelist(faction)
         local data = lia.faction.indices[faction]
         if data then

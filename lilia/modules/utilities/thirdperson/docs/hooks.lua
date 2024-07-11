@@ -10,6 +10,6 @@ end
 --- Runs to check if third-person view is allowed.
 -- @realm client
 -- @client client The player client to check.
--- @return boolean True if third-person view should be disabled, false otherwise.
+-- @return bool True if third-person view should be disabled, false otherwise.
 function ShouldDisableThirdperson(client)
 end
