@@ -3,6 +3,7 @@
 
 --- Called when a vendor's allowed classes are updated.
 -- @realm client
+-- @internal
 -- @entity vendor The vendor entity whose classes were updated.
 -- @string id The ID of the class.
 -- @bool allowed Whether the class is allowed or not.
@@ -11,6 +12,7 @@ end
 
 --- Called when a vendor's allowed factions are updated.
 -- @realm client
+-- @internal
 -- @entity vendor The vendor entity whose factions were updated.
 -- @string id The ID of the faction.
 -- @bool allowed Whether the faction is allowed or not.
@@ -19,6 +21,7 @@ end
 
 --- Called when a vendor's item maximum stock is updated.
 -- @realm client
+-- @internal
 -- @entity vendor The vendor entity.
 -- @string itemType The type of the item.
 -- @int value The new maximum stock value.
@@ -27,6 +30,7 @@ end
 
 --- Called when a vendor's item stock is updated.
 -- @realm client
+-- @internal
 -- @entity vendor The vendor entity.
 -- @string itemType The type of the item.
 -- @int value The new stock value.
@@ -35,6 +39,7 @@ end
 
 --- Called when a vendor's item mode is updated.
 -- @realm client
+-- @internal
 -- @entity vendor The vendor entity.
 -- @string itemType The type of the item.
 -- @int value The new mode value.
@@ -43,6 +48,7 @@ end
 
 --- Called when a vendor's item price is updated.
 -- @realm client
+-- @internal
 -- @entity vendor The vendor entity.
 -- @string itemType The type of the item.
 -- @int value The new price value.
@@ -51,13 +57,57 @@ end
 
 --- Called when a vendor's money is updated.
 -- @realm client
+-- @internal
 -- @entity vendor The vendor entity.
 -- @int money The new money value.
 -- @int oldMoney The previous money value.
 function VendorMoneyUpdated(vendor, money, oldMoney)
 end
+--- Called after a delay when a vendor's data is edited.
+-- @realm client
+-- @internal
+-- @entity vendor The vendor entity whose data is being edited.
+-- @string key The key related to the specific data being edited.
+function VendorEdited(vendor, key)
+end
 
+--- Called when a player attempts to trade with a vendor.
+-- @realm server
+-- @internal
+-- @client client The player attempting to trade.
+-- @entity entity The vendor entity.
+-- @string uniqueID The unique ID of the item being traded.
+-- @bool isSellingToVendor Indicates if the player is selling to the vendor.
+function VendorTradeAttempt(client, entity, uniqueID, isSellingToVendor)
+end
 
+--- Called when a player sells an item to a vendor.
+-- @realm server
+-- @internal
+-- This function handles the event where a player sells an item to a vendor.
+-- @client client The player selling the item
+-- @entity vendor The vendor entity
+-- @string itemType The uniqueID of item being sold
+-- @bool isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
+-- @character character The character of the player selling the item
+-- @int price The price at which the item is sold
+-- @see VendorBuyEvent
+function VendorSellEvent(client, vendor, itemType, isSellingToVendor, character, price)
+end
+
+--- Called when a player successfully buys an item from a vendor.
+-- This function is called when a player successfully completes a purchase from a vendor.
+-- @client client The player who made the purchase
+-- @entity vendor The vendor entity from which the item was bought
+-- @string itemType The uniqueID of item being sold
+-- @bool isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
+-- @character character The character of the player involved in the trade
+-- @int price The price of the item being bought
+-- @realm server
+-- @internal
+-- @see VendorSellEvent
+function VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
+end
 
 --- Called when vendor synchronization data is received.
 -- @realm client
@@ -73,20 +123,6 @@ end
 function CanPlayerAccessVendor(client, entity)
 end
 
---- Called when a player attempts to trade with a vendor.
--- @realm server
--- @client client The player attempting to trade.
--- @entity entity The vendor entity.
--- @string uniqueID The unique ID of the item being traded.
--- @bool isSellingToVendor Indicates if the player is selling to the vendor.
-function VendorTradeAttempt(client, entity, uniqueID, isSellingToVendor)
-end
-
---- Called when the vendor menu is opened.
--- @realm client
--- @entity self The vendor entity.
-function OnOpenVendorMenu(self)
-end
 
 --- Gets the price override for an item.
 -- @realm shared
@@ -115,48 +151,19 @@ end
 function PlayerAccessVendor(activator, self)
 end
 
---- Called when a player sells an item to a vendor.
--- @realm server
--- This function handles the event where a player sells an item to a vendor.
--- @client client The player selling the item
--- @entity vendor The vendor entity
--- @string itemType The uniqueID of item being sold
--- @bool isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
--- @character character The character of the player selling the item
--- @int price The price at which the item is sold
--- @see VendorBuyEvent
-function VendorSellEvent(client, vendor, itemType, isSellingToVendor, character, price)
-end
-
---- Called when a player successfully buys an item from a vendor.
--- This function is called when a player successfully completes a purchase from a vendor.
--- @client client The player who made the purchase
--- @entity vendor The vendor entity from which the item was bought
--- @string itemType The uniqueID of item being sold
--- @bool isSellingToVendor Indicates whether the player is selling to the vendor (always false in this context)
--- @character character The character of the player involved in the trade
--- @int price The price of the item being bought
--- @realm server
--- @see VendorSellEvent
-function VendorBuyEvent(client, vendor, itemType, isSellingToVendor, character, price)
-end
-
-
 --- Called when a player exits from interacting with a vendor.
 -- @realm client
 function VendorExited()
 end
 
---- Called after a delay when a vendor's data is edited.
--- @realm client
--- @entity vendor The vendor entity whose data is being edited.
--- @string key The key related to the specific data being edited.
-function VendorEdited(vendor, key)
-end
-
-
 --- Called when a vendor is opened.
 -- @realm client
 -- @entity vendor The vendor entity that was opened.
 function VendorOpened(vendor)
+end
+
+--- Called when the vendor menu is opened.
+-- @realm client
+-- @entity self The vendor entity.
+function OnOpenVendorMenu(self)
 end
