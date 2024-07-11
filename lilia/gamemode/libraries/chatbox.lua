@@ -161,7 +161,7 @@ end
 -- @bool[opt=false] noSend Whether or not to send the chat message after parsing
 -- @treturn string Name of the chat type
 -- @treturn string Message that was parsed
--- @treturn bool Whether or not the speaker should be anonymous
+-- @treturn Boolean Whether or not the speaker should be anonymous
 function lia.chat.parse(client, message, noSend)
     local anonymous = false
     local chatType = "ic"

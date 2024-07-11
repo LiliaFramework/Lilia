@@ -41,7 +41,7 @@ end
 -- @client client Player attempting to join
 -- @int class ID of the class
 -- @tab info The class table
--- @treturn bool Whether or not to allow the player to join the class
+-- @treturn Boolean Whether or not to allow the player to join the class
 -- @usage function MODULE:CanPlayerJoinClass(client, class, info)
 -- 	return client:IsAdmin() -- Restrict joining classes to admins only.
 -- end
@@ -51,7 +51,7 @@ end
 --- Determines if a character has the given flag(s).
 --- @character character The character to check for flags.
 --- @string flags The flag(s) to check access for.
---- @treturn bool Whether or not this character has access to the given flag(s).
+--- @treturn Boolean Whether or not this character has access to the given flag(s).
 --- @realm shared
 function CharHasFlags(character, flags)
 end
@@ -62,7 +62,7 @@ end
 -- @realm shared
 -- @client client The player attempting to use the character
 -- @character character The character being considered for use
--- @treturn bool Whether the player is allowed to use the character
+-- @treturn Boolean Whether the player is allowed to use the character
 -- @treturn string|nil If disallowed, a reason for the disallowance; otherwise, nil
 function CanPlayerUseChar(client, character)
 end
@@ -70,7 +70,7 @@ end
 --- Whether or not a player is allowed to create a new character.
 -- @realm server
 -- @client client Player attempting to create a new character
--- @treturn bool Whether or not the player is allowed to create the chacter. This function defaults to `true`, so you
+-- @treturn Boolean Whether or not the player is allowed to create the chacter. This function defaults to `true`, so you
 -- should only ever return `false` if you're disallowing creation. Othwise, don't return anything as you'll prevent any other
 -- calls to this hook from running.
 -- @treturn string Language phrase to use for the error message

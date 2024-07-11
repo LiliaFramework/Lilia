@@ -4,7 +4,7 @@
 --- Determines if saved items should be deleted on server restart.
 -- This hook is called to check whether saved items should be deleted when the server restarts.
 -- @realm server
--- @treturn bool True if saved items should be deleted, false otherwise.
+-- @treturn Boolean True if saved items should be deleted, false otherwise.
 function ShouldDeleteSavedItems()
 end
 

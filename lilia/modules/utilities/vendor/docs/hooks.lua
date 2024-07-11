@@ -91,7 +91,7 @@ end
 -- @realm server
 -- @client client The player attempting to access the vendor.
 -- @entity entity The vendor entity.
--- @treturn bool Whether the player is allowed to access the vendor.
+-- @treturn Boolean Whether the player is allowed to access the vendor.
 function CanPlayerAccessVendor(client, entity)
 end
 

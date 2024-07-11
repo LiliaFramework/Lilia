@@ -5,7 +5,7 @@
 -- @realm client
 -- This hook can be used to implement custom checks to determine if a player is
 -- allowed to view their inventory.
--- @treturn bool Whether the player is allowed to view their inventory
+-- @treturn Boolean Whether the player is allowed to view their inventory
 function CanPlayerViewInventory()
 end
 
@@ -54,7 +54,7 @@ end
 -- @realm client
 -- @tab itemTable The table representing the item
 -- @string action The action of the action being checked
--- @treturn bool Whether the action can be run on the item
+-- @treturn Boolean Whether the action can be run on the item
 function CanRunItemAction(itemTable, action)
 end
 
@@ -65,7 +65,7 @@ end
 -- @param item The item being transferred
 -- @param currentInv The current inventory from which the item is beintransferred
 -- @param oldInv The old inventory to which the item belonged
--- @treturn bool|string Whether the item can be transferred, or fal and a reason if not
+-- @treturn Boolean|string Whether the item can be transferred, or fal and a reason if not
 function CanItemBeTransfered(item, currentInv, oldInv)
 end
 

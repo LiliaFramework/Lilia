@@ -29,7 +29,7 @@ end
 --- Checks if the player belongs to the specified faction.
 -- @realm shared
 -- @string faction The faction to check against.
--- @treturn bool Whether the player belongs to the specified faction.
+-- @treturn Boolean Whether the player belongs to the specified faction.
 function characterMeta:isFaction(faction)
     return self:getChar():getFaction() == faction
 end
@@ -37,7 +37,7 @@ end
 --- Checks if the player belongs to the specified class.
 -- @realm shared
 -- @string class The class to check against.
--- @treturn bool Whether the player belongs to the specified class.
+-- @treturn Boolean Whether the player belongs to the specified class.
 function characterMeta:isClass(class)
     return self:getChar():getClass() == class
 end
@@ -45,7 +45,7 @@ end
 --- Returns true if this character is equal to another character. Internally, this checks character IDs.
 -- @realm shared
 -- @character other Character to compare to
--- @return bool Whether or not this character is equal to the given character
+-- @return Boolean Whether or not this character is equal to the given character
 -- @usage print(lia.char.loaded[1] == lia.char.loaded[2])
 -- > false
 function characterMeta:__eq(other)
@@ -80,7 +80,7 @@ end
 --- Checks if the player has whitelisted access to a class.
 -- @realm shared
 -- @int class The class to check for whitelisting.
--- @treturn bool Whether the player has whitelisted access to the specified faction.
+-- @treturn Boolean Whether the player has whitelisted access to the specified faction.
 function characterMeta:hasClassWhitelist(class)
     local wl = self:getData("whitelist", {})
     return wl[class] ~= nil
@@ -194,7 +194,7 @@ end
 --- Checks if the character has at least the specified amount of money.
 -- @int amount The amount of money to check for.
 -- @realm shared
--- @return bool Whether the character has at least the specified amount of money.
+-- @return Boolean Whether the character has at least the specified amount of money.
 -- @usage local hasEnoughMoney = character:hasMoney(100)
 function characterMeta:hasMoney(amount)
     if amount < 0 then
@@ -208,7 +208,7 @@ end
 -- @realm shared
 -- @string class The class to join.
 -- @bool[opt=false] isForced Whether to force the character to join the class even if conditions are not met.
--- @return bool Whether the character successfully joined the class.
+-- @return Boolean Whether the character successfully joined the class.
 -- @usage local success = character:joinClass("some_class")
 function characterMeta:joinClass(class, isForced)
     if not class then
@@ -248,7 +248,7 @@ end
 --- Checks if the character belongs to the specified faction.
 -- @realm shared
 -- @int faction Index of the faction to check against.
--- @return bool Whether the character belongs to the specified faction.
+-- @return Boolean Whether the character belongs to the specified faction.
 -- @usage local isInFaction = character:isFaction("some_faction")
 function characterMeta:isFaction(faction)
     return self:getFaction() == faction
@@ -265,7 +265,7 @@ end
 --- Returns `true` if the character has the given flag(s).
 -- @realm shared
 -- @string flags Flag(s) to check access for
--- @treturn bool Whether or not this character has access to the given flag(s)
+-- @treturn Boolean Whether or not this character has access to the given flag(s)
 function characterMeta:hasFlags(flags)
     for i = 1, #flags do
         if self:getFlags():find(flags:sub(i, i), 1, true) then return true end
@@ -520,7 +520,7 @@ if SERVER then
     -- @realm server
     -- @int amount The amount of money to give or take.
     -- @bool[opt=false] takingMoney Whether the operation is to take money from the character.
-    -- @return bool Whether the operation was successful.
+    -- @return Boolean Whether the operation was successful.
     function characterMeta:giveMoney(amount, takingMoney)
         local client = self:getPlayer()
         local currentMoney = self:getMoney()
@@ -556,7 +556,7 @@ if SERVER then
     --- Takes money from the character's wallet.
     -- @realm server
     -- @int amount The amount of money to take.
-    -- @return bool Whether the operation was successful.
+    -- @return Boolean Whether the operation was successful.
     function characterMeta:takeMoney(amount)
         amount = math.abs(amount)
         self:giveMoney(-amount, true)

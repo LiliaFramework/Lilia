@@ -94,7 +94,7 @@ end
 -- @client client to check access for
 -- @string command Name of the command to check access for
 -- @tab[opt] data command data, if not provided, it will be fetched from `lia.command.list`
--- @treturn bool Whether or not the player is allowed to run the command
+-- @treturn Boolean Whether or not the player is allowed to run the command
 function lia.command.hasAccess(client, command, data)
     if data == nil then data = lia.command.list[command] end
     local privilege = data.privilege
@@ -250,7 +250,7 @@ if SERVER then
     -- @string text Input string to search for the command format
     -- @string[opt] realCommand Specific command to check for. If specified, it will only try to run this command
     -- @tab[opt] arguments Array of arguments to pass to the command. If not specified, it will try to extract them from the text
-    -- @return bool Whether or not a command has been found and executed
+    -- @return Boolean Whether or not a command has been found and executed
     -- @usage lia.command.parse(player.GetByID(1), "/roll 10")
     -- @internal
     function lia.command.parse(client, text, realCommand, arguments)

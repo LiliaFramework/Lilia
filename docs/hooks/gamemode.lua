@@ -19,7 +19,7 @@ end
 --- Determines whether a client should drown.
 -- @realm server
 -- @client client The player entity.
--- @treturn bool True if the client should drown, false otherwise.
+-- @treturn Boolean True if the client should drown, false otherwise.
 function ShouldClientDrown(client)
 end
 
@@ -118,7 +118,7 @@ end
 
 --- Called to determine whether data should be saved before shutting down the server.
 -- This function is called to determine whether data should be saved bore the server shuts down.
--- @treturn bool True if data should be saved, false otherwise
+-- @treturn Boolean True if data should be saved, false otherwise
 -- @realm server
 function ShouldDataBeSaved()
 end
@@ -127,7 +127,7 @@ end
 -- @realm server
 -- @client client Player attempting to unequip an item
 -- @tab item Item being unequipped
--- @treturn bool Whether or not to allow the player to unequip the item
+-- @treturn Boolean Whether or not to allow the player to unequip the item
 -- @see CanPlayerEquipItem
 -- @usage function MODULE:CanPlayerUnequipItem(client, item)
 -- 	return false -- Disallow unequipping items.
@@ -139,7 +139,7 @@ end
 -- @realm server
 -- @client client Player attempting to drop an item
 -- @int item instance ID of the item being dropped
--- @treturn bool Whether or not to allow the player to drop the item
+-- @treturn Boolean Whether or not to allow the player to drop the item
 -- @usage function MODULE:CanPlayerDropItem(client, item)
 -- 	return false -- Never allow dropping items.
 -- end
@@ -150,7 +150,7 @@ end
 -- @realm server
 -- @client client Player attempting to take the item
 -- @entity item Entity corresponding to the item
--- @treturn bool Whether or not to allow the player to take the item
+-- @treturn Boolean Whether or not to allow the player to take the item
 -- @usage function MODULE:CanPlayerTakeItem(client, item)
 -- 	return !(client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle()) -- Disallow players in observer taking items.
 -- end
@@ -162,7 +162,7 @@ end
 -- @realm server
 -- @client client Player attempting to equip the item
 -- @tab item Item being equipped
--- @treturn bool Whether or not to allow the player to equip the item
+-- @treturn Boolean Whether or not to allow the player to equip the item
 -- @see CanPlayerUnequipItem
 -- @usage function MODULE:CanPlayerEquipItem(client, item)
 -- 	return client:IsAdmin() -- Restrict equipping items to admins only.
@@ -177,7 +177,7 @@ end
 -- @client client Player attempting interaction
 -- @string action The action being performed
 -- @param item Item's instance ID or item table
--- @treturn bool Whether or not to allow the player to interact with the item
+-- @treturn Boolean Whether or not to allow the player to interact with the item
 -- @usage function MODULE:CanPlayerInteractItem(client, action, item, data)
 -- 	return false -- Disallow interacting with any item.
 -- end

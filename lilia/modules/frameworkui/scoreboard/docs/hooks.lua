@@ -4,7 +4,7 @@
 --- Determines whether a player should be shown on the scoreboard.
 --- @realm client
 --- @client client The player entity to be evaluated.
---- @treturn bool True if the player should be shown on the scoreboard, false otherwise.
+--- @treturn Boolean True if the player should be shown on the scoreboard, false otherwise.
 function ShouldShowPlayerOnScoreboard(client)
 end
 
