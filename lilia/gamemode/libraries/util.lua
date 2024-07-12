@@ -532,6 +532,19 @@ else
         return n * (ScrH() / 480)
     end
 
+    --- Scales a value proportionally based on the screen width.
+    -- @realm client
+    -- @int n The value to scale
+    -- @bool bool If true, scales based on horizontal resolution; if false or nil, scales based on default values
+    -- @return The scaled value
+    function lia.util.screenScaleW(n, bool)
+        if bool then
+            if ScrW() > 1280 then return n end
+            return math.ceil(n / 1920 * ScrW())
+        end
+        return n * (ScrW() / 640)
+    end
+
     timer.Create("liaResolutionMonitor", 1, 0, function()
         local scrW, scrH = ScrW(), ScrH()
         if scrW ~= LAST_WIDTH or scrH ~= LAST_HEIGHT then
