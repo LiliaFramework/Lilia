@@ -51,16 +51,17 @@ function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
 end
 
 function GridInv:doesFitInventory(item)
-    local x, y = self:findFreePosition(item)
-    if x and y then return true end
-    for _, bagItem in pairs(self:getItems(true)) do
-        if bagItem.isBag then
-            local bagInventory = bagItem:getInv()
-            x, y = bagInventory:findFreePosition(item)
-            if x and y then return true end
+    x, y = self:findFreePosition(item)
+    if not x or not y then
+        for _, bagItem in pairs(self:getItems(true)) do
+            if bagItem.isBag == true then
+                self = bagItem:getInv()
+                x, y = self:findFreePosition(item)
+                if x and y then break end
+            end
         end
     end
-    return false
+    return x ~= nil and y ~= nil
 end
 
 function GridInv:doesItemFitAtPos(testItem, x, y)
@@ -143,9 +144,10 @@ if SERVER then
 
     function GridInv:add(itemTypeOrItem, xOrQuantity, yOrData, noReplicate)
         local x, y, data
+        local quantity = 1
         local isStackCommand = isstring(itemTypeOrItem) and isnumber(xOrQuantity)
         if istable(yOrData) then
-            quantity = tonumber(xOrQuantity) or 1
+            quantity = tonumber(quantity)
             data = yOrData
             if quantity > 1 then
                 local items = {}
@@ -170,19 +172,14 @@ if SERVER then
 
         if not item then return d:reject("invalid item type") end
         local targetInventory = self
-        local fits = targetInventory:doesFitInventory(itemTypeOrItem)
-        if not fits then return d:reject("No space available for the item.") end
         if not x or not y then
             x, y = self:findFreePosition(item)
             if not x or not y then
                 for _, bagItem in pairs(self:getItems(true)) do
-                    if bagItem.isBag then
-                        local bagInventory = bagItem:getInv()
-                        x, y = bagInventory:findFreePosition(item)
-                        if x and y then
-                            targetInventory = bagInventory
-                            break
-                        end
+                    if bagItem.isBag == true then
+                        targetInventory = bagItem:getInv()
+                        x, y = targetInventory:findFreePosition(item)
+                        if x and y then break end
                     end
                 end
             end
