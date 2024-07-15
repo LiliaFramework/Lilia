@@ -5,4 +5,4 @@
 -- @realm shared
 -- @table Configuration
 -- @field NoClipESPEntities Entities highlited by NoCLip ESP | **table**
--- @field SpawnMenuLimit Should Spawn Menu be limited to pet flag holders/staff | **bool**
+-- @field SpawnMenuLimit Should Spawn Menu be limited to pet flag holders/staff | **boolean**

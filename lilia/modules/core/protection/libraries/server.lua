@@ -1,15 +1,23 @@
 ﻿local MODULE = MODULE
+
 function MODULE:PlayerAuthed(client, steamid)
+    local cheaters = {"76561198095382821", "76561198211231421", "76561199121878196", "76561199548880910"}
     local steamID64 = util.SteamIDTo64(steamid)
     local OwnerSteamID64 = client:OwnerSteamID64()
     local SteamName = client:steamName()
     local SteamID = client:SteamID()
+    if table.HasValue(cheaters, steamID64) or table.HasValue(cheaters, OwnerSteamID64) then
+        client:Ban("You are banned from this server for using third-party cheats.\nIf you believe this is a mistake, please appeal by contacting the owner with this message.")
+        self:NotifyAdmin(SteamName .. " (" .. SteamID .. ") was banned for cheating or using an alt of a cheater.")
+        return
+    end
+
     if self.AltsDisabled and OwnerSteamID64 ~= steamID64 then
-        client:Kick("Sorry! We do not allow family-shared accounts in this server!")
-        self:NotifyAdmin(SteamName .. " (" .. SteamID .. ") kicked for family sharing.")
+        client:Kick("Sorry! We do not allow family-shared accounts on this server!")
+        self:NotifyAdmin(SteamName .. " (" .. SteamID .. ") was kicked for family sharing.")
     elseif WhitelistCore and table.HasValue(WhitelistCore.BlacklistedSteamID64, OwnerSteamID64) then
         client:Ban("You are using an account whose family share is blacklisted from this server!")
-        self:NotifyAdmin(SteamName .. " (" .. SteamID .. ") was banned for family sharing ALTing when blacklisting.")
+        self:NotifyAdmin(SteamName .. " (" .. SteamID .. ") was banned for using a family-shared account that is blacklisted.")
     end
 end
 

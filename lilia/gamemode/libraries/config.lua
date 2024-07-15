@@ -15,7 +15,7 @@ lia.config = lia.config or {}
 -- @field WalkSpeed Controls how fast characters walk | **integer**
 -- @field RunSpeed Controls how fast characters run | **integer**
 -- @field WalkRatio Defines the walk speed ratio when holding the Alt key | **number**.
--- @field AllowExistNames Determines whether duplicated character names are allowed | **bool**.
+-- @field AllowExistNames Determines whether duplicated character names are allowed | **boolean**.
 -- @field GamemodeName Specifies the name of the gamemode | **string**.
 -- @field Color Sets the theme color used throughout the gamemode | **color**.
 -- @field Font Specifies the core font used for UI elements | **string**.
@@ -38,12 +38,12 @@ lia.config = lia.config or {}
 -- @field CurrencySingularName Singular name of the in-game currency | **string**.
 -- @field CurrencyPluralName Plural name of the in-game currency | **string**.
 -- @field SchemaYear Year in the gamemode's schema | **integer**
--- @field AmericanDates Determines whether to use the American date format | **bool**.
--- @field AmericanTimeStamp Determines whether to use the American timestamp format | **bool**.
+-- @field AmericanDates Determines whether to use the American date format | **boolean**.
+-- @field AmericanTimeStamp Determines whether to use the American timestamp format | **boolean**.
 -- @field MinDescLen Minimum length required for a character's description | **integer**
--- @field AdminConsoleNetworkLogs Specifies if the logging system should replicate to admins' consoles | **bool**
+-- @field AdminConsoleNetworkLogs Specifies if the logging system should replicate to admins' consoles | **boolean**
 -- @field TimeToEnterVehicle Time **[in seconds]** required to enter a vehicle | **integer**
--- @field CarEntryDelayEnabled Determines if the car entry delay is applicable | **bool**.
+-- @field CarEntryDelayEnabled Determines if the car entry delay is applicable | **boolean**.
 -- @field Notify Contains notification sound and volume settings | **table**.
 -- @field Notify.Sound Notification sound file path | **string**.
 -- @field Notify.Volume Notification volume | **integer**

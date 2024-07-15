@@ -4,10 +4,10 @@
 --- This table defines the default settings for the RealisticDamage Module.
 -- @realm shared
 -- @table Configuration
--- @field DrowningEnabled Indicates whether drowning is enabled | **bool**
--- @field DamageScalerEnabled Indicates whether damage scaling is enabled | **bool**
--- @field HurtSoundEnabled Indicates whether hurt sounds are enabled | **bool**
--- @field DeathSoundEnabled Indicates whether death sounds are enabled | **bool**
+-- @field DrowningEnabled Indicates whether drowning is enabled | **boolean**
+-- @field DamageScalerEnabled Indicates whether damage scaling is enabled | **boolean**
+-- @field HurtSoundEnabled Indicates whether hurt sounds are enabled | **boolean**
+-- @field DeathSoundEnabled Indicates whether death sounds are enabled | **boolean**
 -- @field LimbDamage Damage multiplier for limb hits | **number**
 -- @field DamageScale Global damage scale multiplier | **number**
 -- @field HeadShotDamage Damage multiplier for headshots | **number**

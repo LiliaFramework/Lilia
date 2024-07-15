@@ -6,4 +6,4 @@
 -- @table Configuration
 -- @field PermaRaisedWeapons Weapons that are always raised | **table**
 -- @field WeaponToggleDelay Time Between Weapon Toggles | **number**
--- @field ShouldPrintMessage Wether or not weapon raising messages should print in chat | **bool**
+-- @field ShouldPrintMessage Wether or not weapon raising messages should print in chat | **boolean**

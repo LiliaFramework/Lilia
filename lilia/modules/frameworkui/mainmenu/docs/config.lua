@@ -8,6 +8,6 @@
 -- @field Music Set Main Menu Background Music | **string**
 -- @field LogoURL Set Main Menu Logo | **string**
 -- @field BackgroundURL Set Background Image URL (if applicable) | **string**
--- @field BackgroundIsYoutubeVideo Set If Background Screen is a YT video | **bool**
--- @field CharMenuBGInputDisabled Disable Background Input during Main Menu Lookup | **bool**
--- @field CharCreationTransparentBackground Set Transparent Background during Character Creation | **bool**
+-- @field BackgroundIsYoutubeVideo Set If Background Screen is a YT video | **boolean**
+-- @field CharMenuBGInputDisabled Disable Background Input during Main Menu Lookup | **boolean**
+-- @field CharCreationTransparentBackground Set Transparent Background during Character Creation | **boolean**
