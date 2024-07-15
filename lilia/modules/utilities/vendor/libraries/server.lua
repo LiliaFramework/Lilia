@@ -131,10 +131,8 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
     if client.vendorTransaction and client.vendorTimeout > RealTime() then return end
     client.vendorTransaction = true
     client.vendorTimeout = RealTime() + .1
-
     local character = client:getChar()
     local price = vendor:getPrice(itemType, isSellingToVendor)
-
     if isSellingToVendor then
         local inventory = character:getInv()
         local item = inventory:getFirstItemOfType(itemType)
@@ -162,11 +160,7 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
 
             vendor:takeMoney(price)
             character:giveMoney(price)
-            item:remove():next(function()
-                client.vendorTransaction = nil
-            end):catch(function()
-                client.vendorTransaction = nil
-            end)
+            item:remove():next(function() client.vendorTransaction = nil end):catch(function() client.vendorTransaction = nil end)
             vendor:addStock(itemType)
             client:notify("You sold " .. item:getName() .. " for " .. lia.currency.get(price))
             hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)

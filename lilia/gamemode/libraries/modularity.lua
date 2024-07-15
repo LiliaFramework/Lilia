@@ -57,12 +57,15 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, category, first
         lia.include(ModuleCore and normalpath or ExtendedCore and extendedpath, "shared")
     end
 
-    if uniqueID ~= "schema" and MODULE.enabled == false then
-        MODULE = oldModule
-        return
+    if uniqueID ~= "schema" then
+        if MODULE.enabled == false then
+            MODULE = oldModule
+            return
+        end
+
+        if MODULE.identifier and MODULE.identifier ~= "" then _G[MODULE.identifier] = {} end
     end
 
-    if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then _G[MODULE.identifier] = {} end
     lia.module.loadPermissions(MODULE.CAMIPrivileges)
     lia.module.loadWorkshop(MODULE.WorkshopContent)
     if not isSingleFile then
@@ -89,6 +92,11 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, category, first
             return true
         end
     else
+        if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then
+            _G[MODULE.identifier] = MODULE
+            LiliaInformation("Registering Global " .. MODULE.identifier .. " representing " .. MODULE.name .. " Module!")
+        end
+
         lia.module.list[uniqueID] = MODULE
         lia.module.OnFinishLoad(uniqueID, path, category, firstLoad)
         _G[variable] = oldModule
@@ -237,10 +245,8 @@ end
 -- @internal
 function lia.module.OnFinishLoad(uniqueID, path, category, firstLoad)
     local moduleTable = lia.module.list[uniqueID]
-    local identifier = moduleTable.identifier
     local name = moduleTable.name
     local files, folders = file.Find(path .. "/submodules/*", "LUA")
-    if identifier ~= "" then _G[identifier] = moduleTable end
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(135, 206, 250), "[" .. string.FirstToUpper(category) .. " Modules] ", color_white, (firstLoad and "Finished Loading '" .. name .. "'\n") or "Finished Reloading '" .. name .. "'\n")
     if #files > 0 or #folders > 0 then
         MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. string.FirstToUpper(category) .. " SubModules] ", color_white, (firstLoad and "Finished Loading Submodules For '" .. name .. "'\n") or "Finished Reloading '" .. name .. "'\n")

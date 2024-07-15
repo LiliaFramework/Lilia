@@ -78,7 +78,7 @@ end
 -- @entity entity The vendor entity.
 -- @string uniqueID The unique ID of the item being traded.
 -- @bool isSellingToVendor Indicates if the player is selling to the vendor.
-function VendorTradeAttempt(client, entity, uniqueID, isSellingToVendor)
+function VendorTradeEvent(client, entity, uniqueID, isSellingToVendor)
 end
 
 --- Called when vendor synchronization data is received.
