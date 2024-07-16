@@ -8,26 +8,17 @@ function PANEL:Init()
             ThirdPersonVerticalView = GetConVar("tp_vertical"):GetInt(),
             ThirdPersonHorizontalView = GetConVar("tp_horizontal"):GetInt(),
             ThirdPersonViewDistance = GetConVar("tp_distance"):GetInt(),
-            ClassicThirdPerson = GetConVar("tp_classic"):GetInt()
         }
 
         ThirdPerson = GetConVar("tp_enabled")
         ThirdPersonVerticalView = GetConVar("tp_vertical")
         ThirdPersonHorizontalView = GetConVar("tp_horizontal")
         ThirdPersonViewDistance = GetConVar("tp_distance")
-        ClassicThirdPerson = GetConVar("tp_classic")
         if ThirdPerson:GetInt() ~= 1 then
             wasThirdPerson = false
             RunConsoleCommand("tp_enabled", "1")
         else
             wasThirdPerson = true
-        end
-
-        if ClassicThirdPerson:GetInt() == 1 then
-            wasClassic = true
-            RunConsoleCommand("tp_classic", "0")
-        else
-            wasClassic = false
         end
 
         ThirdPersonVerticalView:SetInt(0)
@@ -197,7 +188,6 @@ function PANEL:RestoreConVars()
     RunConsoleCommand("tp_vertical", tostring(self.initialValues.ThirdPersonVerticalView))
     RunConsoleCommand("tp_horizontal", tostring(self.initialValues.ThirdPersonHorizontalView))
     RunConsoleCommand("tp_distance", tostring(self.initialValues.ThirdPersonViewDistance))
-    RunConsoleCommand("tp_classic", tostring(self.initialValues.ClassicThirdPerson))
 end
 
 function PANEL:remove()

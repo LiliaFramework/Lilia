@@ -84,7 +84,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
     if notSameAttackerAsEnt then
         if attackerIsHuman and attacker:GetNW2Bool("IsActing", false) then return true end
         if self.CharacterSwitchCooldown and (not self.SwitchCooldownOnAllEntities and attackerIsHuman) or self.SwitchCooldownOnAllEntities then entity.LastDamaged = CurTime() end
-        if self.CarRagdoll and (IsValid(inflictor) and inflictor:isSimfphysCar()) and not entity:InVehicle() then
+        if self.CarRagdoll and (IsValid(inflictor) and inflictor:isSimfphysCar()) and not entity:GetVehicle() or (LVS and entity:lvsGetVehicle()) then
             dmgInfo:ScaleDamage(0)
             if not entity:hasRagdoll() then entity:setRagdolled(true, 5) end
         end

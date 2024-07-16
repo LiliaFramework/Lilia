@@ -1,5 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-
 function GM:DrawLiliaModelView(_, entity)
     if IsValid(entity.weapon) then entity.weapon:DrawModel() end
 end
@@ -30,7 +29,7 @@ function GM:CalcView(client, origin, angles, fov)
     local view = self.BaseClass:CalcView(client, origin, angles, fov)
     local entity = Entity(client:getLocalVar("ragdoll", 0))
     local ragdoll = client:GetRagdollEntity()
-    if not client:InVehicle() and client:GetViewEntity() == client and (not client:ShouldDrawLocalPlayer() and IsValid(entity) and entity:IsRagdoll()) or (not LocalPlayer():Alive() and IsValid(ragdoll)) then
+    if not (client:GetVehicle() or (LVS and client:lvsGetVehicle())) and client:GetViewEntity() == client and (not client:ShouldDrawLocalPlayer() and IsValid(entity) and entity:IsRagdoll()) or (not LocalPlayer():Alive() and IsValid(ragdoll)) then
         local ent = LocalPlayer():Alive() and entity or ragdoll
         local index = ent:LookupAttachment("eyes")
         if index then
@@ -44,6 +43,7 @@ function GM:CalcView(client, origin, angles, fov)
             return view
         end
     end
+    return view
 end
 
 function GM:HUDPaintBackground()

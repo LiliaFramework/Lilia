@@ -168,7 +168,6 @@ lia.command.add("charsetmodel", {
             target:getChar():setModel(arguments[2])
             target:SetupHands()
             client:notifyLocalized("cChangeModel", client:Name(), target:Name(), arguments[2])
-
             lia.log.add(client, "charsetmodel", client:Name(), target:Name(), arguments[2], oldModel)
         end
     end
@@ -191,7 +190,6 @@ lia.command.add("charsetbodygroup", {
                 target:getChar():setData("groups", groups)
                 target:SetBodygroup(index, value or 0)
                 client:notifyLocalized("cChangeGroups", client:Name(), target:Name(), arguments[2], value or 0)
-
                 lia.log.add(client, "charsetbodygroup", client:Name(), target:Name(), arguments[2], value or 0, oldValue)
             else
                 return "@invalidArg", 2
@@ -212,12 +210,10 @@ lia.command.add("charsetskin", {
             target:getChar():setData("skin", skin)
             target:SetSkin(skin or 0)
             client:notifyLocalized("cChangeSkin", client:Name(), target:Name(), skin or 0)
-
             lia.log.add(client, "charsetskin", client:Name(), target:Name(), skin or 0, oldSkin)
         end
     end
 })
-
 
 lia.command.add("chargetmoney", {
     adminOnly = true,
@@ -854,7 +850,7 @@ lia.command.add("fallover", {
         elseif not client:Alive() then
             client:notify("You cannot use this while dead!")
             return
-        elseif client:InVehicle() then
+        elseif client:GetVehicle() or (LVS and client:lvsGetVehicle()) then
             client:notify("You cannot use this as you are in a vehicle!")
             return
         elseif client:GetMoveType() == MOVETYPE_NOCLIP then

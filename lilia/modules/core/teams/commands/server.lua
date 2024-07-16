@@ -21,10 +21,7 @@
                 target:getChar().vars.faction = faction.uniqueID
                 target:getChar():setFaction(faction.index)
                 local defaultClass = lia.faction.getDefaultClass(faction.index)
-                if defaultClass then
-                    target:getChar():joinClass(defaultClass.index)
-                end
-
+                if defaultClass then target:getChar():joinClass(defaultClass.index) end
                 hook.Run("OnTransferred", target)
                 if faction.onTransfered then faction:onTransfered(target) end
                 client:notify("You have transferred " .. target:Name() .. " to " .. faction.name)
@@ -119,10 +116,12 @@ lia.command.add("setclass", {
         if target and target:getChar() then
             local character = target:getChar()
             local classFound
-            if lia.class.list[name] then classFound = lia.class.list[name] end
+            local className = arguments[2]
+            local faction = character:getFaction()
+            if lia.class.list[className] then classFound = lia.class.list[className] end
             if not classFound then
                 for _, v in ipairs(lia.class.list) do
-                    if lia.util.stringMatches(L(v.name, client), arguments[2]) then
+                    if lia.util.stringMatches(L(v.name, client), className) then
                         classFound = v
                         break
                     end
@@ -130,11 +129,15 @@ lia.command.add("setclass", {
             end
 
             if classFound then
-                character:joinClass(classFound.index, true)
-                target:notify("Your class was set to " .. classFound.name .. (client ~= target and "by " .. client:GetName() or "") .. ".")
-                if client ~= target then client:notify("You set " .. target:GetName() .. "'s class to " .. classFound.name .. ".") end
+                if  classFound.faction == target:Team() then
+                    character:joinClass(classFound.index, true)
+                    target:notify("Your class was set to " .. classFound.name .. (client ~= target and " by " .. client:GetName() or "") .. ".")
+                    if client ~= target then client:notify("You set " .. target:GetName() .. "'s class to " .. classFound.name .. ".") end
+                else
+                    client:notify("The class does not match the target's faction!")
+                end
             else
-                client:notify("Invalid class.")
+                client:notify("Invalid class .")
             end
         end
     end,

@@ -18,7 +18,7 @@ end
 function MODULE:HUDPaint()
     if not ESP_Active:GetBool() then return end
     local client = LocalPlayer()
-    if client:getChar() and (CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip ESP Outside Staff Character", nil) or client:isStaffOnDuty()) and client:IsNoClipping() and not client:InVehicle() then
+    if client:getChar() and (CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip ESP Outside Staff Character", nil) or client:isStaffOnDuty()) and client:IsNoClipping() and not client:GetVehicle() or (LVS and client:lvsGetVehicle()) then
         for _, v in ents.Iterator() do
             if IsValid(v) and (v:isItem() or v:IsPlayer() or v:isProp() or table.HasValue(self.NoClipESPEntities, v:GetClass())) and v ~= LocalPlayer() then
                 local vPos = v:GetPos()
