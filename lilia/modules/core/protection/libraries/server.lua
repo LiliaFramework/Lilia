@@ -1,5 +1,4 @@
 ﻿local MODULE = MODULE
-
 function MODULE:PlayerAuthed(client, steamid)
     local cheaters = {"76561198095382821", "76561198211231421", "76561199121878196", "76561199548880910"}
     local steamID64 = util.SteamIDTo64(steamid)
@@ -84,7 +83,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
     if notSameAttackerAsEnt then
         if attackerIsHuman and attacker:GetNW2Bool("IsActing", false) then return true end
         if self.CharacterSwitchCooldown and (not self.SwitchCooldownOnAllEntities and attackerIsHuman) or self.SwitchCooldownOnAllEntities then entity.LastDamaged = CurTime() end
-        if self.CarRagdoll and (IsValid(inflictor) and inflictor:isSimfphysCar()) and not entity:GetVehicle() or (LVS and entity:lvsGetVehicle()) then
+        if self.CarRagdoll and (IsValid(inflictor) and inflictor:isSimfphysCar()) and not (entity:GetVehicle() or (LVS and entity:lvsGetVehicle())) then
             dmgInfo:ScaleDamage(0)
             if not entity:hasRagdoll() then entity:setRagdolled(true, 5) end
         end
@@ -170,7 +169,7 @@ function MODULE:CanTool(client, _, tool)
             end
         end
 
-        if (tool == "permaall" or tool == "permaprops" or tool == "blacklistandremove") and (string.StartsWith(entClass, "lia_") or table.HasValue(self.CanNotPermaProp, entClass) or entity.IsLeonNPC) then return false end
+        if (tool == "permaall" or tool == "permaprops" or tool == "blacklistandremove") and (string.StartsWith(entClass, "lia_") or table.HasValue(self.CanNotPermaProp, entClass) or entity.IsLeonNPC or entity:CreatedByMap()) then return false end
         if (tool == "adv_duplicator" or tool == "advdupe2" or tool == "duplicator" or tool == "blacklistandremove") and (table.HasValue(self.DuplicatorBlackList, entClass) or entity.NoDuplicate) then return false end
         if tool == "weld" and entClass == "sent_ball" then return false end
     end
