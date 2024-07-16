@@ -57,6 +57,26 @@ function playerMeta:WhitelistEverything()
     self:WhitelistAllClasses()
 end
 
+--- Gets the current vehicle the player is in, if any.
+-- @realm shared
+-- @treturn Entity|nil The current vehicle entity, or nil if the player is not in a vehicle.
+function playerMeta:getCurrentVehicle()
+    local vehicle = self:GetVehicle()
+    if vehicle and IsValid(vehicle) then return vehicle end
+    if LVS then
+        vehicle = self:lvsGetVehicle()
+        if vehicle and IsValid(vehicle) then return vehicle end
+    end
+    return nil
+end
+
+--- Checks if the player is in a valid vehicle.
+-- @realm shared
+-- @treturn bool true if the player is in a valid vehicle, false otherwise.
+function playerMeta:hasValidVehicle()
+    return IsValid(self:getCurrentVehicle())
+end
+
 --- Checks if the player belongs to the "user" user group.
 -- @realm shared
 -- @treturn bool Whether the player belongs to the "user" user group.
@@ -89,7 +109,7 @@ end
 -- @realm shared
 -- @treturn bool Whether the player is currently observing.
 function playerMeta:isObserving()
-    if self:GetMoveType() == MOVETYPE_NOCLIP and not self:GetVehicle() or (LVS and self:lvsGetVehicle()) then
+    if self:GetMoveType() == MOVETYPE_NOCLIP and not self:hasValidVehicle() then
         return true
     else
         return false

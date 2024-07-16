@@ -54,7 +54,6 @@ properties.Add("persist", {
     MenuIcon = "icon16/link.png",
     Filter = function(_, ent, client)
         if ent:IsPlayer() then return false end
-        if ent:CreatedByMap() then return false end
         if MODULE.blacklist[ent:GetClass()] then return false end
         if not gamemode.Call("CanProperty", client, "persist", ent) then return false end
         return not ent:getNetVar("persistent", false)
@@ -80,7 +79,6 @@ properties.Add("persist_end", {
     MenuIcon = "icon16/link_break.png",
     Filter = function(_, ent, client)
         if ent:IsPlayer() then return false end
-        if ent:CreatedByMap() then return false end
         if not gamemode.Call("CanProperty", client, "persist", ent) then return false end
         return ent:getNetVar("persistent", false)
     end,
@@ -92,7 +90,6 @@ properties.Add("persist_end", {
     Receive = function(self, _, client)
         local ent = net.ReadEntity()
         if not IsValid(ent) then return end
-        if ent:CreatedByMap() then return false end
         if not properties.CanBeTargeted(ent, client) then return end
         if not self:Filter(ent, client) then return end
         ent:setNetVar("persistent", false)

@@ -34,7 +34,7 @@ end
 function MODULE:PlayerBindPress(client, bind, pressed)
     local invprev, invnext = isnumber(bind:find("invprev")), isnumber(bind:find("invnext"))
     local weapon = client:GetActiveWeapon()
-    if not (client:GetVehicle() or (LVS and client:lvsGetVehicle())) and (not IsValid(weapon) or weapon:GetClass() ~= "weapon_physgun" or not client:KeyDown(IN_ATTACK)) then
+    if not client:hasValidVehicle() and (not IsValid(weapon) or weapon:GetClass() ~= "weapon_physgun" or not client:KeyDown(IN_ATTACK)) then
         bind = string.lower(bind)
         if WepSelectInvert:GetBool() then invprev, invnext = invnext, invprev end
         if invprev and pressed then

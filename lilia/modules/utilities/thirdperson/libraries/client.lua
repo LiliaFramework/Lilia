@@ -52,7 +52,7 @@ function MODULE:CalcView(client)
         traceData2.start = aimOrigin
         traceData2.endpos = aimOrigin + curAng:Forward() * 65535
         traceData2.filter = client
-        if ClassicThirdPerson:GetBool() or (client.isWepRaised and client:isWepRaised() or (client:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and client:GetVelocity():Length() >= 10)) then client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle()) end
+        if (client.isWepRaised and client:isWepRaised() or (client:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and client:GetVelocity():Length() >= 10)) then client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle()) end
         return view
     end
 end
@@ -107,7 +107,7 @@ function MODULE:PrePlayerDraw(drawnClient)
     local client = LocalPlayer()
     local clientPos = client:GetShootPos()
     local onlinePlayers = player.GetAll()
-    local isInVehicle = LocalPlayer():GetVehicle() or (LVS and LocalPlayer():lvsGetVehicle())
+    local isInVehicle = client:hasValidVehicle()
     if not drawnClient:IsDormant() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:CanOverrideView() and not isInVehicle then
         local bBoneHit = false
         for i = 0, drawnClient:GetBoneCount() - 1 do
@@ -156,8 +156,9 @@ end
 
 function playerMeta:CanOverrideView()
     local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
+    local isInVehicle = self:hasValidVehicle()
     if IsValid(lia.gui.char) then return false end
-    if self:GetVehicle() or (LVS and self:lvsGetVehicle()) then return false end
+    if isInVehicle then return false end
     if not F1MenuCore.F1ThirdPersonEnabled and IsValid(lia.gui.menu) then return false end
     if hook.Run("ShouldDisableThirdperson", self) == true then return false end
     return ThirdPerson:GetBool() and ThirdPersonCore.ThirdPersonEnabled and (IsValid(self) and self:getChar() and not IsValid(ragdoll))

@@ -29,7 +29,7 @@ function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
     if banned and isnumber(banned) and banned > os.time() then return false, "@charBanned" end
     if not client:Alive() then return false, "You are dead!" end
     if client:hasRagdoll() then return false, "You are ragdolled!" end
-    if client:GetVehicle() or (LVS and client:lvsGetVehicle()) then return false, "You cannot switch characters while in a vehicle or sitting!" end
+    if client:hasValidVehicle() then return false, "You cannot switch characters while in a vehicle or sitting!" end
     return true
 end
 

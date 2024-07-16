@@ -850,7 +850,7 @@ lia.command.add("fallover", {
         elseif not client:Alive() then
             client:notify("You cannot use this while dead!")
             return
-        elseif client:GetVehicle() or (LVS and client:lvsGetVehicle()) then
+        elseif client:hasValidVehicle() then
             client:notify("You cannot use this as you are in a vehicle!")
             return
         elseif client:GetMoveType() == MOVETYPE_NOCLIP then
