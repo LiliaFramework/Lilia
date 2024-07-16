@@ -117,7 +117,6 @@ lia.command.add("setclass", {
             local character = target:getChar()
             local classFound
             local className = arguments[2]
-            local faction = character:getFaction()
             if lia.class.list[className] then classFound = lia.class.list[className] end
             if not classFound then
                 for _, v in ipairs(lia.class.list) do

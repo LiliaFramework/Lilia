@@ -922,8 +922,9 @@ if SERVER then
     -- @bool state Whether to set the player to a ragdolled state (`true`) or remove the ragdoll (`false`).
     -- @int[opt] time The duration for which the player remains ragdolled.
     -- @int[opt] getUpGrace The grace period for the player to get up before the ragdoll is removed.
-    function playerMeta:setRagdolled(state, time, getUpGrace)
-        getUpGrace = getUpGrace or time or 5
+    -- @string[opt] getUpMessage The message displayed when the player is getting up.
+    function playerMeta:setRagdolled(state, time, getUpGrace, getUpMessage)
+        getUpMessage = getUpMessage or "@wakingUp"
         local hasRagdoll = self:hasRagdoll()
         local ragdoll = self:getRagdoll()
         if state then
@@ -952,10 +953,6 @@ if SERVER then
                                 end
                             end
                         end
-
-                        for _, v in ipairs(self:GetWeapons()) do
-                            v:SetClip1(0)
-                        end
                     end
 
                     if self:isStuck() then
@@ -979,7 +976,7 @@ if SERVER then
             if time and time > 0 then
                 entity.liaStart = CurTime()
                 entity.liaFinish = entity.liaStart + time
-                self:setAction("@wakingUp", nil, nil, entity.liaStart, entity.liaFinish)
+                self:setAction(getUpMessage, nil, nil, entity.liaStart, entity.liaFinish)
             end
 
             for _, v in ipairs(self:GetWeapons()) do
@@ -1010,7 +1007,7 @@ if SERVER then
                             end
                             return
                         elseif entity.liaPausing then
-                            self:setAction("@wakingUp", time)
+                            self:setAction(getUpMessage, time)
                             entity.liaPausing = false
                         end
 
