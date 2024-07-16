@@ -202,7 +202,6 @@ LANGUAGE = {
     chgName = "Cambiar Nombre",
     chgNameDesc = "Ingresa el nuevo nombre del personaje a continuación.",
     thirdpersonToggle = "Alternar Tercera Persona",
-    thirdpersonClassic = "Usar Tercera Persona Clásica",
     thirdpersonConfig = "Configuración de Tercera Persona",
     equippedBag = "Los ítems equipados no pueden ser movidos entre inventarios.",
     useTip = "Usa el ítem.",

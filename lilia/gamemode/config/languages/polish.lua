@@ -202,7 +202,6 @@ LANGUAGE = {
     chgName = "Zmień imię",
     chgNameDesc = "Wprowadź nowe imię postaci poniżej.",
     thirdpersonToggle = "Przełącz tryb Trzecioosobowy",
-    thirdpersonClassic = "Użyj Klasycznego Widoku Trzecioosobowego",
     thirdpersonConfig = "Konfiguracja Trzecioosobowa",
     equippedBag = "Wyposażone przedmioty nie mogą być przenoszone między inwentarzami.",
     useTip = "Używa przedmiotu.",

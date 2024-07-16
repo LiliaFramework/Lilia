@@ -202,7 +202,6 @@ LANGUAGE = {
     chgName = "Naam Veranderen",
     chgNameDesc = "Voer de nieuwe naam van het personage hieronder in.",
     thirdpersonToggle = "Schakel Thirdperson in/uit",
-    thirdpersonClassic = "Gebruik Klassieke Thirdperson",
     thirdpersonConfig = "Thirdperson Configuratie",
     equippedBag = "Uitgeruste items kunnen niet worden verplaatst tussen inventarissen.",
     useTip = "Gebruik het item.",

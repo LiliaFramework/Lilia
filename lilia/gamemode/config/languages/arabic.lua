@@ -202,7 +202,6 @@ LANGUAGE = {
     chgName = "تغيير الاسم",
     chgNameDesc = "أدخل اسم الشخصية الجديدة أدناه.",
     thirdpersonToggle = "تبديل الشخص الثالث",
-    thirdpersonClassic = "استخدام الشخص الثالث الكلاسيكي",
     thirdpersonConfig = "إعدادات الشخص الثالث",
     equippedBag = "العناصر المجهزة لا يمكن نقلها بين المخازن.",
     useTip = "استخدام العنصر.",

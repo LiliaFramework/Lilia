@@ -202,7 +202,6 @@ LANGUAGE = {
     chgName = "이름 변경",
     chgNameDesc = "아래에 캐릭터의 새 이름을 입력하세요.",
     thirdpersonToggle = "세 번째 시점 전환",
-    thirdpersonClassic = "클래식 세 번째 시점 사용",
     thirdpersonConfig = "세 번째 시점 설정",
     equippedBag = "장착된 항목은 인벤토리 간에 이동할 수 없습니다.",
     useTip = "아이템 사용",

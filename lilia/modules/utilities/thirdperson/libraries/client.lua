@@ -1,7 +1,6 @@
 local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng, diff, fm, sm
 local playerMeta = FindMetaTable("Player")
 local ThirdPerson = CreateClientConVar("tp_enabled", 0, true)
-local ClassicThirdPerson = CreateClientConVar("tp_classic", 0, true)
 local ThirdPersonVerticalView = CreateClientConVar("tp_vertical", 10, true)
 local ThirdPersonHorizontalView = CreateClientConVar("tp_horizontal", 0, true)
 local ThirdPersonViewDistance = CreateClientConVar("tp_distance", 50, true)
@@ -17,14 +16,6 @@ function MODULE:SetupQuickMenu(menu)
 
             hook.Run("thirdPersonToggled", ThirdPerson:GetBool())
         end, ThirdPerson:GetBool())
-
-        menu:addCheck(L"thirdpersonClassic", function(_, state)
-            if state then
-                RunConsoleCommand("tp_classic", "1")
-            else
-                RunConsoleCommand("tp_classic", "0")
-            end
-        end, ClassicThirdPerson:GetBool())
 
         menu:addButton(L"thirdpersonConfig", function()
             if lia.gui.tpconfig and lia.gui.tpconfig:IsVisible() then
@@ -166,6 +157,7 @@ end
 function playerMeta:CanOverrideView()
     local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
     if IsValid(lia.gui.char) then return false end
+    if self:GetVehicle() or (LVS and self:lvsGetVehicle()) then return false end
     if not F1MenuCore.F1ThirdPersonEnabled and IsValid(lia.gui.menu) then return false end
     if hook.Run("ShouldDisableThirdperson", self) == true then return false end
     return ThirdPerson:GetBool() and ThirdPersonCore.ThirdPersonEnabled and (IsValid(self) and self:getChar() and not IsValid(ragdoll))
