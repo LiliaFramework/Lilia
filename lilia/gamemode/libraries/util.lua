@@ -154,7 +154,7 @@ end
 function lia.util.getAdmins()
     local staff = {}
     for _, client in player.Iterator() do
-        local hasPermission = CAMI.PlayerHasAccess(client, "UserGroups - Staff Group", nil)
+        local hasPermission = client:isStaff()
         if hasPermission then staff[#staff + 1] = client end
     end
     return staff
