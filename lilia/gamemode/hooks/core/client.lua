@@ -20,7 +20,7 @@ function GM:PlayerBindPress(client, bind, pressed)
         if menu and lia.menu.onButtonPressed(menu, callback) then return true end
         if bind:find("use") then
             local entity = client:GetTracedEntity()
-            if IsValid(entity) then if entity:isItem() or entity.hasMenu then hook.Run("ItemShowEntityMenu", entity) end end
+            if IsValid(entity) and entity:isItem() or entity.hasMenu then hook.Run("ItemShowEntityMenu", entity) end
         end
     end
 end

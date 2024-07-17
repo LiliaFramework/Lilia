@@ -184,6 +184,7 @@ function PANEL:Init()
     self.music = self:Add("liaCharBGMusic")
     self:loadBackground()
     self:showContent()
+    Derma_Query("Lilia Content is Missing", "You do not have the Lilia content mounted. This may result in certain features missing.\nWould you like to open the Workshop page for the Lilia content?", "Yes", function() gui.OpenURL("http://steamcommunity.com/sharedfiles/filedetails/?id=2959728255") end, "No")
 end
 
 function PANEL:showContent()

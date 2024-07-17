@@ -11,7 +11,6 @@
 end)
 
 netstream.Hook("openBlacklistLog", function(target, blacklists, blacklistLog)
-    local client = LocalPlayer()
     if not client:HasPrivilege("Commands - Manage Permanent Flags") then return end
     local fr = vgui.Create("DFrame")
     fr:SetSize(700, 500)
@@ -221,8 +220,7 @@ net.Receive("liaItemDelete", function()
 end)
 
 netstream.Hook("charSet", function(key, value, id)
-    local client = LocalPlayer()
-    id = id or (client:getChar() and client:getChar().id)
+    id = id or (LocalPlayer():getChar() and LocalPlayer():getChar().id)
     local character = lia.char.loaded[id]
     if character then
         local oldValue = character.vars[key]
@@ -232,8 +230,7 @@ netstream.Hook("charSet", function(key, value, id)
 end)
 
 netstream.Hook("charVar", function(key, value, id)
-    local client = LocalPlayer()
-    id = id or (client:getChar() and client:getChar().id)
+    id = id or (LocalPlayer():getChar() and LocalPlayer():getChar().id)
     local character = lia.char.loaded[id]
     if character then
         local oldVar = character:getVar()[key]
@@ -299,9 +296,8 @@ netstream.Hook("nVar", function(index, key, value)
 end)
 
 netstream.Hook("nLcl", function(key, value)
-    local client = LocalPlayer()
-    lia.net[client:EntIndex()] = lia.net[client:EntIndex()] or {}
-    lia.net[client:EntIndex()][key] = value
+    lia.net[LocalPlayer():EntIndex()] = lia.net[LocalPlayer():EntIndex()] or {}
+    lia.net[LocalPlayer():EntIndex()][key] = value
 end)
 
 netstream.Hook("actBar", function(start, finish, text)
@@ -376,9 +372,8 @@ net.Receive("OpenInformationMenu", function()
 end)
 
 net.Receive("OpenVGUI", function()
-    local client = LocalPlayer()
     local panel = net.ReadString()
-    client:OpenUI(panel)
+    LocalPlayer():OpenUI(panel)
 end)
 
 net.Receive("chatNotifyNet", function()
@@ -387,17 +382,9 @@ net.Receive("chatNotifyNet", function()
 end)
 
 net.Receive("OpenPage", function() gui.OpenURL(net.ReadString()) end)
-net.Receive("LiliaPlaySound", function()
-    local client = LocalPlayer()
-    client:EmitSound(tostring(net.ReadString()), tonumber(net.ReadUInt(7)) or 100)
-end)
-
+net.Receive("LiliaPlaySound", function() LocalPlayer():EmitSound(tostring(net.ReadString()), tonumber(net.ReadUInt(7)) or 100) end)
 netstream.Hook("ChatPrint", function(data) chat.AddText(unpack(data)) end)
-netstream.Hook("charInfo", function(data, id, client)
-    local lp = LocalPlayer()
-    lia.char.loaded[id] = lia.char.new(data, id, client == nil and lp or client)
-end)
-
+netstream.Hook("charInfo", function(data, id, client) lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client) end)
 net.Receive("ReloadLightMaps", function() render.RedownloadAllLightmaps(true) end)
 netstream.Hook("charKick", function(id, isCurrentChar) hook.Run("KickedFromChar", id, isCurrentChar) end)
 net.Receive("SendMessage", function() chat.AddText(Color(255, 255, 255), unpack(net.ReadTable())) end)

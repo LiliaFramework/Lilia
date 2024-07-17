@@ -120,7 +120,7 @@ function PANEL:Think()
 end
 
 function PANEL:addPlayer(ply, parent)
-    local client = client
+    local client = LocalPlayer()
     if not ply:getChar() or not IsValid(parent) then return end
     local slot = parent:Add("DPanel")
     slot:Dock(TOP)

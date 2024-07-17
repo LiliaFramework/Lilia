@@ -176,6 +176,7 @@ function PANEL:Init()
 end
 
 function PANEL:DrawPortraits()
+    local client = LocalPlayer()
     self.vendorModel = self:Add("DModelPanel")
     self.vendorModel:SetSize(C(160, true), C(170))
     self.vendorModel:SetPos((self:GetWide() / 2) / 2 - self.vendorModel:GetWide() / 2 - C(350, true), ScrH() * 0.35 + C(25))
@@ -256,6 +257,7 @@ function PANEL:shouldItemBeVisible(itemType, parent)
 end
 
 function PANEL:updateItem(itemType, parent, quantity)
+    local client = LocalPlayer()
     assert(isstring(itemType), "itemType must be a string")
     if not self.items[parent] then return end
     local panel = self.items[parent][itemType]
