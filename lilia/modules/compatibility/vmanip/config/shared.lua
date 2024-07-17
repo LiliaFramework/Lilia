@@ -1,1 +1,1 @@
-MODULE.VManipTakeBlacklist = {}
+﻿MODULE.VManipTakeBlacklist = {}

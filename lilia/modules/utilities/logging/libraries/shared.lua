@@ -1,4 +1,4 @@
-function MODULE:OnCharDelete(client, id)
+﻿function MODULE:OnCharDelete(client, id)
     if SERVER then lia.log.add(client, "charDelete", id) end
 end
 

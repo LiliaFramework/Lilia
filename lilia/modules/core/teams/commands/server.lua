@@ -128,7 +128,7 @@ lia.command.add("setclass", {
             end
 
             if classFound then
-                if  classFound.faction == target:Team() then
+                if classFound.faction == target:Team() then
                     character:joinClass(classFound.index, true)
                     target:notify("Your class was set to " .. classFound.name .. (client ~= target and " by " .. client:GetName() or "") .. ".")
                     if client ~= target then client:notify("You set " .. target:GetName() .. "'s class to " .. classFound.name .. ".") end

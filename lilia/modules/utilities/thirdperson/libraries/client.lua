@@ -1,4 +1,4 @@
-local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng, diff, fm, sm
+﻿local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng, diff, fm, sm
 local playerMeta = FindMetaTable("Player")
 local ThirdPerson = CreateClientConVar("tp_enabled", 0, true)
 local ThirdPersonVerticalView = CreateClientConVar("tp_vertical", 10, true)
@@ -52,7 +52,7 @@ function MODULE:CalcView(client)
         traceData2.start = aimOrigin
         traceData2.endpos = aimOrigin + curAng:Forward() * 65535
         traceData2.filter = client
-        if (client.isWepRaised and client:isWepRaised() or (client:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and client:GetVelocity():Length() >= 10)) then client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle()) end
+        if client.isWepRaised and client:isWepRaised() or (client:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and client:GetVelocity():Length() >= 10) then client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle()) end
         return view
     end
 end

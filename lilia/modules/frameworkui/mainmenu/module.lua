@@ -42,7 +42,6 @@ else
 
     function MODULE:createCharacter(data)
         local client = LocalPlayer()
-
         assert(istable(data), "data must be a table")
         local d = deferred.new()
         local payload = {}

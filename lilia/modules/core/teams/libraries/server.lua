@@ -9,7 +9,7 @@
 end
 
 function MODULE:CanPlayerJoinClass(client, class)
-   if lia.class.hasWhitelist(class) and not client:hasClassWhitelist(class) then return false end
+    if lia.class.hasWhitelist(class) and not client:hasClassWhitelist(class) then return false end
     return true
 end
 

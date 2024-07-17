@@ -216,6 +216,7 @@ if SERVER then
             local lookingAt = client:GetEyeTrace().Entity
             if IsValid(lookingAt) and lookingAt:IsPlayer() then target = lookingAt end
         end
+
         if IsValid(target) then return target end
     end
 

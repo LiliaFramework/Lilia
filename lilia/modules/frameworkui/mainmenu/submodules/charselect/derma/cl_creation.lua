@@ -110,7 +110,6 @@ function PANEL:showError(message, ...)
     self.error:SetContentAlignment(5)
     self.error.Paint = function(box, w, h)
         if not client:getChar() then lia.util.drawBlur(box) end
-
         surface.SetDrawColor(255, 0, 0, 50)
         surface.DrawRect(0, 0, w, h)
     end

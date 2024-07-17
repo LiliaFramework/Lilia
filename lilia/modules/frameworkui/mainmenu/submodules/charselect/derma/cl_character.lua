@@ -220,15 +220,18 @@ function PANEL:Paint()
     if not client:getChar() then lia.util.drawBlur(self) end
 end
 
-function PANEL:hoverSound()local client = LocalPlayer()
+function PANEL:hoverSound()
+    local client = LocalPlayer()
     client:EmitSound(unpack(MainMenu.CharHover))
 end
 
-function PANEL:clickSound()local client = LocalPlayer()
+function PANEL:clickSound()
+    local client = LocalPlayer()
     client:EmitSound(unpack(MainMenu.CharClick))
 end
 
-function PANEL:warningSound()local client = LocalPlayer()
+function PANEL:warningSound()
+    local client = LocalPlayer()
     client:EmitSound(unpack(MainMenu.CharWarning))
 end
 

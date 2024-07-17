@@ -66,4 +66,7 @@ function MODULE:CreateMenuButtons(tabs)
     end
 end
 
-lia.bar.add(function() local client = LocalPlayer() return client:getLocalVar("stamina", 0) / 100 end, Color(200, 200, 40), nil, "stamina")
+lia.bar.add(function()
+    local client = LocalPlayer()
+    return client:getLocalVar("stamina", 0) / 100
+end, Color(200, 200, 40), nil, "stamina")

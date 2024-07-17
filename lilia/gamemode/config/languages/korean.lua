@@ -1,4 +1,4 @@
-NAME = "Korean"
+﻿NAME = "Korean"
 LANGUAGE = {
     loading = "로딩 중",
     dbError = "데이터베이스 연결 실패",

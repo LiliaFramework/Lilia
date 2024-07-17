@@ -2,7 +2,7 @@
 local PANEL = {}
 local gradient = lia.util.getMaterial("vgui/gradient-u")
 function PANEL:Init()
-    local client = LocalPlayer() 
+    local client = LocalPlayer()
     if MODULE.F1ThirdPersonEnabled then
         self.initialValues = {
             ThirdPerson = GetConVar("tp_enabled"):GetInt(),

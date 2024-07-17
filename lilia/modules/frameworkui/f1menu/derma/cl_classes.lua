@@ -88,9 +88,7 @@ function PANEL:Init()
 end
 
 function PANEL:loadClasses()
-
     local client = LocalPlayer()
-
     self.list:Clear()
     for k, v in ipairs(lia.class.list) do
         local no, why = lia.class.canBe(client, k)

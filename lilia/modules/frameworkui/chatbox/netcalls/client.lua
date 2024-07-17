@@ -1,6 +1,6 @@
 ﻿local MODULE = MODULE
 netstream.Hook("adminClearChat", function()
-    local client = LocalPlayer() 
+    local client = LocalPlayer()
     if MODULE and IsValid(MODULE.panel) then
         MODULE.panel:Remove()
         MODULE:createChat()

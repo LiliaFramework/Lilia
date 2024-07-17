@@ -1,5 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-
 function GM:Move(client, moveData)
     local character = client:getChar()
     if not character then return end

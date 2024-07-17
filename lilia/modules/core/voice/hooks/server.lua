@@ -1,5 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
     local HasCharacter = speaker:getChar()
     if not HasCharacter then return false end

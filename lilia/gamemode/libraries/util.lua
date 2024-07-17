@@ -1,7 +1,6 @@
 ﻿--- Various useful helper functions.
 -- @library lia.util
 
-
 --- Removes the realm prefix from a file name. The returned string will be unchanged if there is no prefix found.
 -- @realm shared
 -- @string name String to strip prefix from

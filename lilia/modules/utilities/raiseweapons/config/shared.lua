@@ -6,6 +6,7 @@ MODULE.PermaRaisedWeapons = {
     ["gmod_tool"] = true,
     ["lia_keys"] = true,
 }
+
 MODULE.PermaRaisedBases = {
     ["tfa_gun_base"] = true,
     ["arccw_base"] = true,

@@ -1147,7 +1147,7 @@ else
     -- @realm client
     -- @string message Text to display in the notification
     function playerMeta:chatNotify(message)
-        local client = LocalPlayer() 
+        local client = LocalPlayer()
         if self == client then chat.AddText(Color(175, 200, 255), message) end
     end
 
@@ -1156,7 +1156,7 @@ else
     -- @string message ID of the phrase to display to the player
     -- @param ... Arguments to pass to the phrase
     function playerMeta:chatNotifyLocalized(message, ...)
-        local client = LocalPlayer() 
+        local client = LocalPlayer()
         if self == client then
             message = L(message, ...)
             chat.AddText(Color(175, 200, 255), message)

@@ -88,7 +88,7 @@ local PANEL = {}
 function PANEL:Paint(w, h)
     surface.SetMaterial(lia.util.getMaterial("lilia/lilia.png"))
     surface.SetDrawColor(255, 255, 255, 255)
-    surface.DrawTexturedRect(w * 0.5 -75, h * 0.5 -55, 160,160)
+    surface.DrawTexturedRect(w * 0.5 - 75, h * 0.5 - 55, 160, 160)
 end
 
 vgui.Register("CreditsLogo", PANEL, "Panel")

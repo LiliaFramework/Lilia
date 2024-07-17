@@ -6,7 +6,6 @@ This library contains various configuration options used in the Lilia gamemode. 
 These configuration options control various aspects of the gamemode's mechanics, user interface, and gameplay experience.
 ]]
 -- @library lia.config
-
 lia.config = lia.config or {}
 --- A list of available commands for use within the game.
 -- Each command is represented by a table with fields defining its functionality.
