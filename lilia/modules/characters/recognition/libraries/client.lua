@@ -3,7 +3,7 @@
 end
 
 function MODULE:GetDisplayedDescription(client, isHUD)
-    local client = LocalPlayer()
+    local lp = LocalPlayer()
     if not IsValid(client) or not IsValid(lp) then return "Unknown" end
     if client:getChar() and client ~= lp and lp:getChar() and not lp:getChar():doesRecognize(client:getChar():getID()) then
         if isHUD then return client:getChar():getDesc() end
@@ -12,7 +12,7 @@ function MODULE:GetDisplayedDescription(client, isHUD)
 end
 
 function MODULE:GetDisplayedName(client, chatType)
-    local client = LocalPlayer()
+    local lp = LocalPlayer()
     if not IsValid(client) or not IsValid(lp) then return "Unknown" end
     local character = client:getChar()
     local ourCharacter = lp:getChar()
