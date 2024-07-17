@@ -13,8 +13,9 @@ function MODULE:HUDPaintBackground()
 end
 
 function MODULE:HUDPaint()
-    if LocalPlayer():Alive() then
-        local weapon = LocalPlayer():GetActiveWeapon()
+    local client = LocalPlayer()
+    if client:Alive() then
+        local weapon = client:GetActiveWeapon()
         if self:ShouldDrawAmmo(weapon) then self:DrawAmmo(weapon) end
         if self:ShouldDrawCrosshair() then self:DrawCrosshair() end
         if self:ShouldDrawVignette() then self:DrawVignette() end

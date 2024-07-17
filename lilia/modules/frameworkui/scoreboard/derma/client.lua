@@ -95,12 +95,13 @@ function PANEL:UpdateStaff()
 end
 
 function PANEL:Think()
+    local client = LocalPlayer()
     if (self.nextUpdate or 0) < CurTime() then
         local visible, amount
         for k, v in ipairs(self.teams) do
             visible, amount = v:IsVisible(), lia.faction.getPlayerCount(k)
             if k == FACTION_STAFF then
-                v:SetVisible(not MODULE.ShowStaff and LocalPlayer():isStaffOnDuty() or amount > 0)
+                v:SetVisible(not MODULE.ShowStaff and client:isStaffOnDuty() or amount > 0)
             else
                 v:SetVisible(visible and amount > 0)
             end
@@ -118,21 +119,22 @@ function PANEL:Think()
     end
 end
 
-function PANEL:addPlayer(client, parent)
-    if not client:getChar() or not IsValid(parent) then return end
+function PANEL:addPlayer(ply, parent)
+    local client = client
+    if not ply:getChar() or not IsValid(parent) then return end
     local slot = parent:Add("DPanel")
     slot:Dock(TOP)
     slot:SetTall(64)
     slot:DockMargin(0, 0, 0, 1)
-    slot.character = client:getChar()
-    client.liaScoreSlot = slot
+    slot.character = ply:getChar()
+    ply.liaScoreSlot = slot
     slot.model = slot:Add("liaSpawnIcon")
-    slot.model:SetModel(client:GetModel(), client:GetSkin())
+    slot.model:SetModel(ply:GetModel(), ply:GetSkin())
     slot.model:SetSize(64, 64)
     slot.model.DoClick = function()
         local menu = DermaMenu()
         local options = {}
-        hook.Run("ShowPlayerOptions", client, options)
+        hook.Run("ShowPlayerOptions", ply, options)
         if table.Count(options) > 0 then
             for k, v in SortedPairs(options) do
                 menu:AddOption(L(k), v[2]):SetImage(v[1])
@@ -143,17 +145,17 @@ function PANEL:addPlayer(client, parent)
         RegisterDermaMenuForClose(menu)
     end
 
-    slot.model:SetTooltip(L("sbOptions", client:Name()))
+    slot.model:SetTooltip(L("sbOptions", ply:Name()))
     timer.Simple(0, function()
         if not IsValid(slot) then return end
         local entity = slot.model.Entity
         if IsValid(entity) then
-            for _, v in ipairs(client:GetBodyGroups()) do
-                entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
+            for _, v in ipairs(ply:GetBodyGroups()) do
+                entity:SetBodygroup(v.id, ply:GetBodygroup(v.id))
             end
 
-            for k, _ in ipairs(client:GetMaterials()) do
-                entity:SetSubMaterial(k - 1, client:GetSubMaterial(k - 1))
+            for k, _ in ipairs(ply:GetMaterials()) do
+                entity:SetSubMaterial(k - 1, ply:GetSubMaterial(k - 1))
             end
         end
     end)
@@ -169,15 +171,15 @@ function PANEL:addPlayer(client, parent)
     slot.ping:SetPos(self:GetWide() - 48, 0)
     slot.ping:SetSize(48, 64)
     slot.ping:SetText("0")
-    slot.ping.Think = function(this) if IsValid(client) then this:SetText(client:Ping()) end end
+    slot.ping.Think = function(this) if IsValid(ply) then this:SetText(ply:Ping()) end end
     slot.ping:SetFont("liaGenericFont")
     slot.ping:SetContentAlignment(6)
     slot.ping:SetTextColor(color_white)
     slot.ping:SetTextInset(16, 0)
     slot.ping:SetExpensiveShadow(1, color_black)
     slot.ping.Think = function(this)
-        if IsValid(client) then
-            local ping = client:Ping()
+        if IsValid(ply) then
+            local ping = ply:Ping()
             local text = this:GetText()
             if text ~= ping then
                 this:SetText(ping)
@@ -195,9 +197,9 @@ function PANEL:addPlayer(client, parent)
     slot.desc:SetTextColor(color_white)
     slot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     slot.desc:SetFont("liaSmallFont")
-    local oldTeam = client:Team()
+    local oldTeam = ply:Team()
     function slot:update()
-        if not IsValid(client) or not client:getChar() or not self.character or self.character ~= client:getChar() or oldTeam ~= client:Team() then
+        if not IsValid(ply) or not ply:getChar() or not self.character or self.character ~= ply:getChar() or oldTeam ~= ply:Team() then
             self:Remove()
             local i = 0
             for _, v in ipairs(parent:GetChildren()) do
@@ -209,14 +211,14 @@ function PANEL:addPlayer(client, parent)
             return
         end
 
-        local overrideName = hook.Run("ShouldAllowScoreboardOverride", client, "name") and hook.Run("GetDisplayedName", client) or client:getChar():getName()
-        local name = overrideName or client:Name()
+        local overrideName = hook.Run("ShouldAllowScoreboardOverride", ply, "name") and hook.Run("GetDisplayedName", ply) or ply:getChar():getName()
+        local name = overrideName or ply:Name()
         name = name:gsub("#", "\226\128\139#")
-        local model = client:GetModel()
-        local skin = client:GetSkin()
-        local desc = hook.Run("ShouldAllowScoreboardOverride", client, "desc") and hook.Run("GetDisplayedDescription", client, false) or client:getChar():getDesc()
+        local model = ply:GetModel()
+        local skin = ply:GetSkin()
+        local desc = hook.Run("ShouldAllowScoreboardOverride", ply, "desc") and hook.Run("GetDisplayedDescription", ply, false) or ply:getChar():getDesc()
         desc = desc:gsub("#", "\226\128\139#")
-        self.model:setHidden(hook.Run("ShouldAllowScoreboardOverride", client, "model"))
+        self.model:setHidden(hook.Run("ShouldAllowScoreboardOverride", ply, "model"))
         if self.lastName ~= name then
             self.name:SetText(name)
             self.lastName = name
@@ -230,9 +232,9 @@ function PANEL:addPlayer(client, parent)
         end
 
         if self.lastModel ~= model or self.lastSkin ~= skin then
-            self.model:SetModel(client:GetModel(), client:GetSkin())
-            if CAMI.PlayerHasAccess(LocalPlayer(), "Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (CAMI.PlayerHasAccess(LocalPlayer(), "Staff Permissions - Can Access Scoreboard Admin Options") and LocalPlayer():isStaffOnDuty()) then
-                self.model:SetTooltip(L("sbOptions", client:Name()))
+            self.model:SetModel(ply:GetModel(), ply:GetSkin())
+            if client:HasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (client:HasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and client:isStaffOnDuty()) then
+                self.model:SetTooltip(L("sbOptions", ply:Name()))
             else
                 self.model:SetTooltip("You do not have access to see this information")
             end
@@ -242,9 +244,9 @@ function PANEL:addPlayer(client, parent)
         end
 
         timer.Simple(0, function()
-            if not IsValid(entity) or not IsValid(client) then return end
-            for _, v in ipairs(client:GetBodyGroups()) do
-                entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
+            if not IsValid(entity) or not IsValid(ply) then return end
+            for _, v in ipairs(ply:GetBodyGroups()) do
+                entity:SetBodygroup(v.id, ply:GetBodygroup(v.id))
             end
         end)
     end

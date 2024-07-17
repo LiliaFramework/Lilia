@@ -41,6 +41,8 @@ else
     end
 
     function MODULE:createCharacter(data)
+        local client = LocalPlayer()
+
         assert(istable(data), "data must be a table")
         local d = deferred.new()
         local payload = {}
@@ -48,7 +50,7 @@ else
             if charVar.noDisplay then continue end
             local value = data[key]
             if isfunction(charVar.onValidate) then
-                local results = {charVar.onValidate(value, data, LocalPlayer())}
+                local results = {charVar.onValidate(value, data, client)}
                 if results[1] == false then return d:reject(L(unpack(results, 2))) end
             end
 

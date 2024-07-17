@@ -3,7 +3,7 @@ util.AddNetworkString("liaDrawLogs")
 util.AddNetworkString("liaRequestLogsClient")
 util.AddNetworkString("liaRequestLogsServer")
 net.Receive("liaRequestLogsServer", function(_, client)
-    if not CAMI.PlayerHasAccess(client, "Commands - View Logs", nil) then
+    if not client:HasPrivilege("Commands - View Logs") then
         client:notify(":|")
         return
     end

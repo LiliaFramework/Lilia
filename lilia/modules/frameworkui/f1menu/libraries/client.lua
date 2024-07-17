@@ -69,9 +69,10 @@ function MODULE:OnCharInfoSetup(infoPanel)
 end
 
 function MODULE:CreateMenuButtons(tabs)
+    local client = LocalPlayer()
     if hook.Run("CanPlayerViewInventory") ~= false then
         tabs["inv"] = function(panel)
-            local inventory = LocalPlayer():getChar():getInv()
+            local inventory = client:getChar():getInv()
             if not inventory then return end
             local mainPanel = inventory:show(panel)
             local sortPanels = {}
@@ -98,7 +99,7 @@ function MODULE:CreateMenuButtons(tabs)
 
     if table.Count(lia.class.list) > 1 then
         for k, _ in ipairs(lia.class.list) do
-            if not lia.class.canBe(LocalPlayer(), k) then
+            if not lia.class.canBe(client, k) then
                 continue
             else
                 tabs["classes"] = function(panel) panel:Add("liaClasses") end
@@ -183,10 +184,11 @@ function MODULE:CreateMenuButtons(tabs)
 end
 
 function MODULE:BuildHelpMenu(tabs)
+    local client = LocalPlayer()
     tabs["commands"] = function()
         local body = ""
         for k, v in SortedPairs(lia.command.list) do
-            if lia.command.hasAccess(LocalPlayer(), k, nil) then body = body .. "<h2>/" .. k .. "</h2><strong>Syntax:</strong> <em>" .. v.syntax .. "</em><br /><br />" end
+            if lia.command.hasAccess(client, k, nil) then body = body .. "<h2>/" .. k .. "</h2><strong>Syntax:</strong> <em>" .. v.syntax .. "</em><br /><br />" end
         end
         return body
     end
@@ -195,7 +197,7 @@ function MODULE:BuildHelpMenu(tabs)
         local body = [[<table border="0" cellspacing="8px">]]
         for k, v in SortedPairs(lia.flag.list) do
             local icon
-            if LocalPlayer():getChar():hasFlags(k) then
+            if client:getChar():hasFlags(k) then
                 icon = [[<img src="asset://garrysmod/materials/icon16/tick.png" />]]
             else
                 icon = [[<img src="asset://garrysmod/materials/icon16/cross.png" />]]

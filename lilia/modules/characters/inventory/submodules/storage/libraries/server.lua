@@ -54,7 +54,7 @@ end
 function MODULE:CanPlayerSpawnStorage(client, _, info)
     if not client then return true end
     if client:GetInfoNum("can_spawn_storage", 1) == 0 then return false end
-    if not CAMI.PlayerHasAccess(client, "Staff Permissions - Can Spawn Storage", nil) then return false end
+    if not client:HasPrivilege("Staff Permissions - Can Spawn Storage") then return false end
     if not info.invType or not lia.inventory.types[info.invType] then return false end
 end
 

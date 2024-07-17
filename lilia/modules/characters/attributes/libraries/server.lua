@@ -65,7 +65,7 @@ end
 
 function MODULE:PlayerThrowPunch(client)
     local entity = client:GetTracedEntity()
-    if entity:IsPlayer() and CAMI.PlayerHasAccess(client, "Staff Permissions - One Punch Man", nil) and IsValid(entity) and client:isStaffOnDuty() then
+    if entity:IsPlayer() and client:HasPrivilege("Staff Permissions - One Punch Man") and IsValid(entity) and client:isStaffOnDuty() then
         client:consumeStamina(entity:getChar():getMaxStamina())
         entity:EmitSound("weapons/crowbar/crowbar_impact" .. math.random(1, 2) .. ".wav", 70)
         client:setRagdolled(true, 10)

@@ -14,6 +14,7 @@ lia.menu.list = lia.menu.list or {}
 -- @return The index of the added menu in the `lia.menu.list` table
 -- @realm client
 function lia.menu.add(options, position, onRemove)
+    local client = LocalPlayer()
     local width = 0
     local entity
     surface.SetFont("liaMediumFont")
@@ -23,10 +24,10 @@ function lia.menu.add(options, position, onRemove)
 
     if isentity(position) then
         entity = position
-        position = entity:WorldToLocal(LocalPlayer():GetEyeTrace().HitPos)
+        position = entity:WorldToLocal(client:GetEyeTrace().HitPos)
     end
     return table.insert(lia.menu.list, {
-        position = position or LocalPlayer():GetEyeTrace().HitPos,
+        position = position or client:GetEyeTrace().HitPos,
         options = options,
         width = width + 8,
         height = table.Count(options) * 28,
@@ -39,9 +40,10 @@ local mathApproach = math.Approach
 --- Draws all menus currently active on the screen.
 -- @realm client
 function lia.menu.drawAll()
+    local client = LocalPlayer()
     local frameTime = FrameTime() * 30
     local mX, mY = ScrW() * 0.5, ScrH() * 0.5
-    local position2 = LocalPlayer():GetPos()
+    local position2 = client:GetPos()
     for k, v in ipairs(lia.menu.list) do
         local position
         local entity = v.entity
@@ -103,8 +105,9 @@ end
 -- @return Index of the active menu in the `lia.menu.list` table, and the chosen option
 -- @realm client
 function lia.menu.getActiveMenu()
+    local client = LocalPlayer()
     local mX, mY = ScrW() * 0.5, ScrH() * 0.5
-    local position2 = LocalPlayer():GetPos()
+    local position2 = client:GetPos()
     for k, v in ipairs(lia.menu.list) do
         local position
         local entity = v.entity

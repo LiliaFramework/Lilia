@@ -3,17 +3,19 @@
 end
 
 function MODULE:GetDisplayedDescription(client, isHUD)
-    if not IsValid(client) or not IsValid(LocalPlayer()) then return "Unknown" end
-    if client:getChar() and client ~= LocalPlayer() and LocalPlayer():getChar() and not LocalPlayer():getChar():doesRecognize(client:getChar():getID()) then
+    local client = LocalPlayer()
+    if not IsValid(client) or not IsValid(lp) then return "Unknown" end
+    if client:getChar() and client ~= lp and lp:getChar() and not lp:getChar():doesRecognize(client:getChar():getID()) then
         if isHUD then return client:getChar():getDesc() end
         return "You do not recognize this person."
     end
 end
 
 function MODULE:GetDisplayedName(client, chatType)
-    if not IsValid(client) or not IsValid(LocalPlayer()) then return "Unknown" end
+    local client = LocalPlayer()
+    if not IsValid(client) or not IsValid(lp) then return "Unknown" end
     local character = client:getChar()
-    local ourCharacter = LocalPlayer():getChar()
+    local ourCharacter = lp:getChar()
     if not character or not ourCharacter then return "Unknown" end
     local myReg = ourCharacter:getRecognizedAs()
     local characterID = character:getID()
@@ -25,14 +27,15 @@ function MODULE:GetDisplayedName(client, chatType)
 end
 
 function MODULE:ShouldAllowScoreboardOverride(client, var)
-    if not IsValid(client) or not IsValid(LocalPlayer()) then return false end
+    local lp = LocalPlayer()
+    if not IsValid(client) or not IsValid(lp) then return false end
     local character = client:getChar()
-    local ourCharacter = LocalPlayer():getChar()
+    local ourCharacter = lp:getChar()
     if not character or not ourCharacter then return false end
     local characterID = character:getID()
     local isRecognitionEnabled = self.RecognitionEnabled
     local isVarHiddenInScoreboard = table.HasValue(self.ScoreboardHiddenVars, var)
-    local isClientNotLocalPlayer = client ~= LocalPlayer()
+    local isClientNotLocalPlayer = client ~= lp
     local isRecognized = ourCharacter:doesRecognize(characterID)
     local isFakeRecognized = ourCharacter:doesFakeRecognize(characterID)
     local isNotRecognizedAndNotFakeRecognized = not (isRecognized or isFakeRecognized)

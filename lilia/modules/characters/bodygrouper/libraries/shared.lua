@@ -2,7 +2,7 @@
     for _, v in pairs(ents.FindByClass("lia_bodygrouper")) do
         if v:GetPos():Distance(client:GetPos()) <= 128 then return true end
     end
-    return CAMI.PlayerHasAccess(client, "Commands - Change Bodygroups", nil)
+    return client:HasPrivilege("Commands - Change Bodygroups")
 end
 
 function MODULE:CanProperty(_, property, entity)

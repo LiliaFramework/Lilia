@@ -1,5 +1,6 @@
 ﻿local PANEL = {}
 function PANEL:Init()
+    local client = LocalPlayer()
     local w, h = ScrW(), ScrH()
     if IsValid(lia.gui.vendor) then
         lia.gui.vendor.noSendExit = true
@@ -24,7 +25,7 @@ function PANEL:Init()
     self.me:SetSize(self.vendor:GetSize())
     self.me:SetPos(ScrW() * 0.5 + 64 / 2, self.vendor.y)
     self:listenForChanges()
-    self:liaListenForInventoryChanges(LocalPlayer():getChar():getInv())
+    self:liaListenForInventoryChanges(client:getChar():getInv())
     self.items = {
         [self.vendor] = {},
         [self.me] = {}
@@ -51,7 +52,7 @@ function PANEL:Init()
     self.left:SetTitle("")
     self.left:ShowCloseButton(false)
     self.left:SetDraggable(false)
-    if LocalPlayer():CanEditVendor() then
+    if client:CanEditVendor() then
         self.editor = self.left:Add("DButton")
         self.editor:SetSize(ScrW() * 0.085, ScrH() * 0.0325)
         self.editor:SetPos(ScrW() * 0.0115, ScrH() * 0.187)
@@ -127,15 +128,15 @@ function PANEL:Init()
         surface.DrawRect(ScrW() * 0.0115, ScrH() * 0.0575, ScrW() * 0.085, ScrH() * 0.125)
         surface.SetDrawColor(Color(0, 0, 0, 255))
         draw.DrawText("Character", "liaMediumFont", ScrW() * 0.005, ScrH() * 0.003, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(LocalPlayer():getChar():getName(), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.06, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(client:getChar():getName(), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.06, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
         draw.DrawText("Faction:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(team.GetName(LocalPlayer():Team()), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText(team.GetName(client:Team()), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
         draw.DrawText("Class:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(LocalPlayer():getChar():getClass() or "None", "liaSmallFont", ScrW() * 0.2, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText(client:getChar():getClass() or "None", "liaSmallFont", ScrW() * 0.2, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
         draw.DrawText("Money:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.132, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(lia.currency.get(LocalPlayer():getChar():getMoney()), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.132, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText(lia.currency.get(client:getChar():getMoney()), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.132, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
         draw.DrawText("Item Count:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(LocalPlayer():getChar():getInv():getItemCount() .. " " .. (LocalPlayer():getChar():getInv():getItemCount() > 1 and "Items" or "Item"), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText(client:getChar():getInv():getItemCount() .. " " .. (client:getChar():getInv():getItemCount() > 1 and "Items" or "Item"), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
     end
 
     self.leaveButton = vgui.Create("DButton", self.right)
@@ -197,7 +198,7 @@ function PANEL:DrawPortraits()
     self.playerModel = self:Add("DModelPanel")
     self.playerModel:SetSize(C(160, true), C(170))
     self.playerModel:SetPos((self:GetWide() / 2) / 2 - self.playerModel:GetWide() / 2 + C(1100, true), ScrH() * 0.35 + C(25))
-    self.playerModel:SetModel(LocalPlayer():GetModel())
+    self.playerModel:SetModel(client:GetModel())
     self.playerModel:SetFOV(20)
     self.playerModel:SetAlpha(0)
     self.playerModel:AlphaTo(255, 0.2)
@@ -270,7 +271,7 @@ function PANEL:updateItem(itemType, parent, quantity)
         self.items[parent][itemType] = panel
     end
 
-    if not isnumber(quantity) then quantity = parent == self.me and LocalPlayer():getChar():getInv():getItemCount(itemType) or liaVendorEnt:getStock(itemType) end
+    if not isnumber(quantity) then quantity = parent == self.me and client:getChar():getInv():getItemCount(itemType) or liaVendorEnt:getStock(itemType) end
     panel:setQuantity(quantity)
     return panel
 end

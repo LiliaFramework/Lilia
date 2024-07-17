@@ -125,8 +125,9 @@ else
     end
 
     function GM:CharListLoaded()
+        local client = LocalPlayer()
         timer.Create("liaWaitUntilPlayerValid", 1, 0, function()
-            if not IsValid(LocalPlayer()) then return end
+            if not IsValid(client) then return end
             timer.Remove("liaWaitUntilPlayerValid")
             hook.Run("LiliaLoaded")
         end)

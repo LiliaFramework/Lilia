@@ -117,8 +117,8 @@ function MODULE:PlayerEnteredVehicle(_, entity)
 end
 
 function MODULE:NotifyAdmin(notification)
-    for _, admin in player.Iterator() do
-        if IsValid(admin) and CAMI.PlayerHasAccess(admin, "Staff Permissions - Can See Alting Notifications", nil) then admin:chatNotify(notification) end
+    for _, client in player.Iterator() do
+        if IsValid(client) and client:HasPrivilege("Staff Permissions - Can See Alting Notifications") then client:chatNotify(notification) end
     end
 end
 
@@ -138,7 +138,7 @@ end
 
 function MODULE:PlayerSpawnProp(client, model)
     local isBlacklistedProp = table.HasValue(self.BlackListedProps, model)
-    if isBlacklistedProp and not CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Blacklisted Props", nil) then return false end
+    if isBlacklistedProp and not client:HasPrivilege("Spawn Permissions - Can Spawn Blacklisted Props") then return false end
     if IsValid(client:GetActiveWeapon()) and client:GetActiveWeapon():GetClass() == "gmod_tool" then
         local toolobj = client:GetActiveWeapon():GetToolObject()
         if not isbool(toolobj) and (client.AdvDupe2 and client.AdvDupe2.Entities) or (client.CurrentDupe and client.CurrentDupe.Entities) or toolobj.Entities then return true end
@@ -163,9 +163,9 @@ function MODULE:CanTool(client, _, tool)
         local entClass = entity:GetClass()
         if tool == "remover" then
             if table.HasValue(self.RemoverBlockedEntities, entClass) then
-                return CAMI.PlayerHasAccess(client, "Staff Permissions - Can Remove Blocked Entities", nil)
+                return client:HasPrivilege("Staff Permissions - Can Remove Blocked Entities")
             elseif entity:IsWorld() then
-                return CAMI.PlayerHasAccess(client, "Staff Permissions - Can Remove World Entities", nil)
+                return client:HasPrivilege("Staff Permissions - Can Remove World Entities")
             end
         end
 
@@ -190,12 +190,12 @@ function MODULE:CanProperty(client, property, entity)
         return false
     end
 
-    if entity:IsWorld() and IsValid(entity) then return CAMI.PlayerHasAccess(client, "Staff Permissions - Can Property World Entities", nil) end
-    if table.HasValue(self.RemoverBlockedEntities, entity:GetClass()) or table.HasValue(self.RestrictedEnts, entity:GetClass()) then return CAMI.PlayerHasAccess(client, "Staff Permissions - Use Entity Properties on Blocked Entities", nil) end
+    if entity:IsWorld() and IsValid(entity) then return client:HasPrivilege("Staff Permissions - Can Property World Entities") end
+    if table.HasValue(self.RemoverBlockedEntities, entity:GetClass()) or table.HasValue(self.RestrictedEnts, entity:GetClass()) then return client:HasPrivilege("Staff Permissions - Use Entity Properties on Blocked Entities") end
 end
 
 function MODULE:PhysgunPickup(client, entity)
-    if (CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup", nil) or client:isStaffOnDuty()) and table.HasValue(self.RestrictedEnts, entity:GetClass()) then return CAMI.PlayerHasAccess(client, "Staff Permissions - Physgun Pickup on Restricted Entities", nil) end
+    if (client:HasPrivilege("Staff Permissions - Physgun Pickup") or client:isStaffOnDuty()) and table.HasValue(self.RestrictedEnts, entity:GetClass()) then return client:HasPrivilege("Staff Permissions - Physgun Pickup on Restricted Entities") end
 end
 
 function MODULE:OnPhysgunFreeze(_, physObj, entity, client)
@@ -226,12 +226,12 @@ end
 
 function MODULE:PlayerSpawnVehicle(client, _, name)
     local delay = self.PlayerSpawnVehicleDelay
-    if table.HasValue(self.RestrictedVehicles, name) and not CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Restricted Cars", nil) then
+    if table.HasValue(self.RestrictedVehicles, name) and not client:HasPrivilege("Spawn Permissions - Can Spawn Restricted Cars") then
         client:notify("You can't spawn this vehicle since it's restricted!")
         return false
     end
 
-    if not CAMI.PlayerHasAccess(client, "Spawn Permissions - No Car Spawn Delay", nil) then client.NextVehicleSpawn = SysTime() + delay end
+    if not client:HasPrivilege("Spawn Permissions - No Car Spawn Delay") then client.NextVehicleSpawn = SysTime() + delay end
 end
 
 function MODULE:CheckDuplicationScale(client, entities)
@@ -248,7 +248,7 @@ function MODULE:CheckDuplicationScale(client, entities)
 end
 
 function MODULE:PlayerNoClip(client, state)
-    if (not client:isStaffOnDuty() and CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip Outside Staff Character", nil)) or client:isStaffOnDuty() then
+    if (not client:isStaffOnDuty() and client:HasPrivilege("Staff Permissions - No Clip Outside Staff Character")) or client:isStaffOnDuty() then
         if state then
             client:SetNoDraw(true)
             client:SetNotSolid(true)

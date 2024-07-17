@@ -3,10 +3,11 @@
 end
 
 function MODULE:DrawAmmo(weapon)
+    local client = LocalPlayer()
     if not IsValid(weapon) then return end
     local clip = weapon:Clip1()
-    local count = LocalPlayer():GetAmmoCount(weapon:GetPrimaryAmmoType())
-    local secondary = LocalPlayer():GetAmmoCount(weapon:GetSecondaryAmmoType())
+    local count = client:GetAmmoCount(weapon:GetPrimaryAmmoType())
+    local secondary = client:GetAmmoCount(weapon:GetSecondaryAmmoType())
     local x, y = ScrW() - 80, ScrH() - 80
     if secondary > 0 then
         lia.util.drawBlurAt(x, y, 64, 64)

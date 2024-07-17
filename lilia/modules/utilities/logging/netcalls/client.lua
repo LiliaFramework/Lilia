@@ -1,6 +1,6 @@
 ﻿net.Receive("liaDrawLogs", function()
     local client = LocalPlayer()
-    if not CAMI.PlayerHasAccess(client, "Commands - View Logs", nil) then
+    if not client:HasPrivilege("Commands - View Logs") then
         client:notify(":|")
         return
     end
@@ -23,7 +23,7 @@ end)
 
 net.Receive("liaRequestLogsClient", function()
     local client = LocalPlayer()
-    if not CAMI.PlayerHasAccess(client, "Commands - View Logs", nil) then
+    if not client:HasPrivilege("Commands - View Logs") then
         client:notify(":|")
         return
     end
@@ -31,7 +31,7 @@ net.Receive("liaRequestLogsClient", function()
     local logFiles = net.ReadTable()
     local logType = net.ReadString()
     if table.Count(logFiles) <= 0 then
-        LocalPlayer():chatNotify("No logs of this type!")
+        client:chatNotify("No logs of this type!")
         return
     end
 

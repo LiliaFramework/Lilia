@@ -71,7 +71,8 @@ function PANEL:OnMousePressed()
 end
 
 function PANEL:Paint(w, h)
-    if not LocalPlayer():getChar() then lia.util.drawBlur(self) end
+    local client = LocalPlayer()
+    if not client:getChar() then lia.util.drawBlur(self) end
     surface.SetDrawColor(0, 0, 0, 150)
     surface.DrawRect(0, 0, w, h)
 end

@@ -49,9 +49,10 @@ function PANEL:addLabel(contextName)
 end
 
 function PANEL:onDisplay()
+    local client = LocalPlayer()
     local faction = self:getContext("faction")
     assert(faction, "Faction not set before showing name input")
-    local defaultName, overrideName = hook.Run("GetDefaultCharName", LocalPlayer(), faction)
+    local defaultName, overrideName = hook.Run("GetDefaultCharName", client, faction)
     if overrideName then
         self.nameLabel:SetVisible(false)
         self.name:SetVisible(false)
@@ -62,7 +63,7 @@ function PANEL:onDisplay()
         self.name:SetText(self:getContext("name", ""))
     end
 
-    local defaultDesc, overrideDesc = hook.Run("GetDefaultCharDesc", LocalPlayer(), faction)
+    local defaultDesc, overrideDesc = hook.Run("GetDefaultCharDesc", client, faction)
     if overrideDesc then
         self.descLabel:SetVisible(false)
         self.desc:SetVisible(false)
@@ -86,7 +87,8 @@ function PANEL:validate()
 end
 
 function PANEL:paintTextEntry(w, h)
-    if not LocalPlayer():getChar() then lia.util.drawBlur(self) end
+    local client = LocalPlayer()
+    if not client:getChar() then lia.util.drawBlur(self) end
     surface.SetDrawColor(0, 0, 0, 100)
     surface.DrawRect(0, 0, w, h)
     self:DrawTextEntryText(color_white, Color(255, 255, 255, 50), Color(255, 255, 255, 50))

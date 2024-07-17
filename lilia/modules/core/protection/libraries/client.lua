@@ -32,12 +32,13 @@ function MODULE:Think()
 end
 
 function MODULE:InitPostEntity()
+    local client = LocalPlayer() 
     if self.AltsDisabled and file.Exists("default_spawnicon.png", "DATA") then
         local text = file.Read("default_spawnicon.png", "DATA")
         net.Start("lia_alting_checkID")
         net.WriteString(text)
         net.SendToServer()
     else
-        file.Write("default_spawnicon.png", LocalPlayer():SteamID())
+        file.Write("default_spawnicon.png", client:SteamID())
     end
 end

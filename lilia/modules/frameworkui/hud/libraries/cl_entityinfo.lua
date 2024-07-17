@@ -103,6 +103,7 @@ function MODULE:RenderEntities()
 end
 
 function MODULE:ShouldDrawEntityInfo(entity)
+    local client = LocalPlayer()
     if IsValid(entity) then
         if entity:IsPlayer() and entity:getChar() then
             if entity:IsNoClipping() then return false end
@@ -110,7 +111,7 @@ function MODULE:ShouldDrawEntityInfo(entity)
             return true
         end
 
-        if IsValid(entity:getNetVar("player")) then return entity == LocalPlayer() and not LocalPlayer():ShouldDrawLocalPlayer() end
+        if IsValid(entity:getNetVar("player")) then return entity == client and not client:ShouldDrawclient end
         if entity.DrawEntityInfo then return true end
         if entity.onShouldDrawEntityInfo then return entity:onShouldDrawEntityInfo() end
         return true

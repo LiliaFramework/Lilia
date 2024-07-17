@@ -125,12 +125,13 @@ end
 vgui.Register("liaAttribBar", PANEL, "DPanel")
 PANEL = {}
 function PANEL:Init()
+    local client = LocalPlayer()
     self.title = self:addLabel("attributes")
     self.leftLabel = self:addLabel("points left")
     self.leftLabel:SetFont("liaCharSubTitleFont")
     self.leftLabel:SetTextColor(color_white)
     self.title:SetTextColor(color_white)
-    self.total = hook.Run("GetStartAttribPoints", LocalPlayer(), self:getContext()) or lia.config.MaxAttributes
+    self.total = hook.Run("GetStartAttribPoints", client, self:getContext()) or lia.config.MaxAttributes
     self.attribs = {}
     for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
         if v.noStartBonus then continue end
@@ -216,11 +217,12 @@ function PANEL:setAttribute(key, attribute)
 end
 
 function PANEL:delta(delta)
+    local client = LocalPlayer()
     if IsValid(self.parent) then
         local oldPoints = self.points
         self.points = self.parent:onPointChange(self.key, delta)
         self:updateQuantity()
-        if oldPoints ~= self.points then LocalPlayer():EmitSound(unpack(MODULE.CharAttrib)) end
+        if oldPoints ~= self.points then client:EmitSound(unpack(MODULE.CharAttrib)) end
     end
 end
 

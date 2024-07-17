@@ -20,11 +20,12 @@ function PANEL:Init()
 end
 
 function PANEL:setDoor(door, access, door2)
+    local client = LocalPlayer()
     door.liaPanel = self
     self.accessData = access
     self.door = door
     for _, v in player.Iterator() do
-        if v ~= LocalPlayer() and v:getChar() then self.access:AddLine(v:Name():gsub("#", "\226\128\139#"), L(ACCESS_LABELS[access[v] or 0])).player = v end
+        if v ~= client and v:getChar() then self.access:AddLine(v:Name():gsub("#", "\226\128\139#"), L(ACCESS_LABELS[access[v] or 0])).player = v end
     end
 
     if self:checkAccess(DOOR_OWNER) then
@@ -55,8 +56,9 @@ function PANEL:setDoor(door, access, door2)
 end
 
 function PANEL:checkAccess(access)
+    local client = LocalPlayer()
     access = access or DOOR_GUEST
-    if (self.accessData[LocalPlayer()] or 0) >= access then return true end
+    if (self.accessData[client] or 0) >= access then return true end
     return false
 end
 

@@ -55,13 +55,14 @@ function PANEL:setNumber(number)
 end
 
 function PANEL:setClass(data)
+    local client = LocalPlayer()
     if data.model then
         local model = data.model
         if istable(model):lower() then model = table.Random(model) end
         self.icon:SetModel(model)
     else
-        local character = LocalPlayer():getChar()
-        local model = LocalPlayer():GetModel()
+        local character = client:getChar()
+        local model = client:GetModel()
         if character then model = character:getModel() end
         self.icon:SetModel(model)
     end
@@ -87,9 +88,12 @@ function PANEL:Init()
 end
 
 function PANEL:loadClasses()
+
+    local client = LocalPlayer()
+
     self.list:Clear()
     for k, v in ipairs(lia.class.list) do
-        local no, why = lia.class.canBe(LocalPlayer(), k)
+        local no, why = lia.class.canBe(client, k)
         local itsFull = "class is full" == why
         if no or itsFull then
             local panel = vgui.Create("liaClassPanel", self.list)

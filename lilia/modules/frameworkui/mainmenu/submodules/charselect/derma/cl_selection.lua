@@ -52,8 +52,9 @@ function PANEL:createCharacterSlots()
 end
 
 function PANEL:onCharacterSelected(character)
+    local client = LocalPlayer()
     if self.choosing then return end
-    if character == LocalPlayer():getChar() then return lia.gui.character:fadeOut() end
+    if character == client:getChar() then return lia.gui.character:fadeOut() end
     self.choosing = true
     lia.gui.character:setFadeToBlack(true):next(function() return MainMenu:chooseCharacter(character:getID()) end):next(function()
         self.choosing = false

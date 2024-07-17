@@ -13,7 +13,7 @@ end
 
 function MODULE:isAllowedToUsePAC(client)
     local character = client:getChar()
-    return character and (CAMI.PlayerHasAccess(client, "Staff Permissions - Can Use PAC3", nil) or character:hasFlags("P"))
+    return character and (client:HasPrivilege("Staff Permissions - Can Use PAC3") or character:hasFlags("P"))
 end
 
 function MODULE:CanWearParts(client)

@@ -64,7 +64,8 @@ lia.chat.register("announce", {
 lia.chat.register("ic", {
     format = "%s says \"%s\"",
     onGetColor = function(speaker)
-        if LocalPlayer():GetEyeTrace().Entity == speaker then return MODULE.ChatListenColor end
+        local client = LocalPlayer()
+        if client:GetEyeTrace().Entity == speaker then return MODULE.ChatListenColor end
         return MODULE.ChatColor
     end,
     onCanHear = function(speaker, listener)
@@ -156,11 +157,11 @@ lia.chat.register("looc", {
 lia.chat.register("adminchat", {
     onGetColor = function() return Color(0, 196, 255) end,
     onCanHear = function(_, listener)
-        if CAMI.PlayerHasAccess(listener, "Staff Permissions - Admin Chat", nil) then return true end
+        if listener:HasPrivilege("Staff Permissions - Admin Chat") then return true end
         return false
     end,
     onCanSay = function(speaker)
-        if CAMI.PlayerHasAccess(speaker, "Staff Permissions - Admin Chat", nil) then
+        if speaker:HasPrivilege("Staff Permissions - Admin Chat") then
             speaker:notify("You aren't an admin. Use '@messagehere' to create a ticket.")
             return false
         end
@@ -191,7 +192,7 @@ lia.chat.register("pm", {
 })
 
 lia.chat.register("eventlocal", {
-    onCanSay = function(speaker) return CAMI.PlayerHasAccess(speaker, "Staff Permissions - Local Event Chat", nil) end,
+    onCanSay = function(speaker) return speaker:HasPrivilege("Staff Permissions - Local Event Chat") end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
         if speaker:EyePos():Distance(listener:EyePos()) <= MODULE.ChatRange * 6 then return true end
@@ -203,7 +204,7 @@ lia.chat.register("eventlocal", {
 })
 
 lia.chat.register("event", {
-    onCanSay = function(speaker) return CAMI.PlayerHasAccess(speaker, "Staff Permissions - Event Chat", nil) end,
+    onCanSay = function(speaker) return speaker:HasPrivilege("Staff Permissions - Event Chat") end,
     onCanHear = function() return true end,
     onChatAdd = function(_, text) chat.AddText(Color(255, 150, 0), text) end,
     prefix = {"/event"},
@@ -255,7 +256,7 @@ lia.chat.register("ooc", {
 
         local customDelay = hook.Run("getOOCDelay", speaker)
         local oocDelay = customDelay or MODULE.OOCDelay
-        if not CAMI.PlayerHasAccess(speaker, "Staff Permissions - No OOC Cooldown") and oocDelay > 0 and speaker.liaLastOOC then
+        if not speaker:HasPrivilege("Staff Permissions - No OOC Cooldown") and oocDelay > 0 and speaker.liaLastOOC then
             local lastOOC = CurTime() - speaker.liaLastOOC
             if lastOOC <= oocDelay then
                 speaker:notifyLocalized("oocDelay", oocDelay - math.ceil(lastOOC))

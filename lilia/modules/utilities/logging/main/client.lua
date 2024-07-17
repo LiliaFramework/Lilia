@@ -72,7 +72,7 @@ end)
 
 net.Receive("OpenLogger", function()
     local client = LocalPlayer()
-    if not CAMI.PlayerHasAccess(client, "Commands - View Logs", nil) then return end
+    if not client:HasPrivilege("Commands - View Logs") then return end
     local panel = vgui.Create("DFrame")
     panel:DockPadding(0, 0, 0, 0)
     panel:SetSize(ScrW() / 1.96, ScrH() / 1.7)

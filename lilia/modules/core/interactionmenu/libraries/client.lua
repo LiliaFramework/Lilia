@@ -1,12 +1,14 @@
 ﻿PIM_Frame = nil
 function MODULE:ScoreboardShow()
-    if LocalPlayer():getChar() and self:CheckPossibilities() then
+    local client = LocalPlayer()
+    if client:getChar() and self:CheckPossibilities() then
         self:OpenPIM()
         return true
     end
 end
 
 function MODULE:OpenPIM()
+    local client = LocalPlayer()
     if IsValid(PIM_Frame) then PIM_Frame:Close() end
     local frame = vgui.Create("DFrame")
     frame:SetSize(300, 120)
@@ -47,9 +49,9 @@ function MODULE:OpenPIM()
     frame.list = frame.scroll:Add("DIconLayout")
     frame.list:SetSize(frame.scroll:GetSize())
     local visibleOptionsCount = 0
-    local traceEnt = LocalPlayer():GetEyeTrace().Entity
+    local traceEnt = client:GetEyeTrace().Entity
     for name, opt in pairs(self.options) do
-        if opt.shouldShow(LocalPlayer(), traceEnt) and traceEnt:IsPlayer() and self:CheckDistance(LocalPlayer(), traceEnt) then
+        if opt.shouldShow(client, traceEnt) and traceEnt:IsPlayer() and self:CheckDistance(client, traceEnt) then
             visibleOptionsCount = visibleOptionsCount + 1
             local p = frame.list:Add("DButton")
             p:SetText(name)
@@ -66,7 +68,7 @@ function MODULE:OpenPIM()
 
             function p:DoClick()
                 frame:AlphaTo(0, 0.05, 0, function() if frame and IsValid(frame) then frame:Close() end end)
-                opt.onRun(LocalPlayer(), traceEnt)
+                opt.onRun(client, traceEnt)
                 if opt.runServer then netstream.Start("PIMRunOption", name) end
             end
         end

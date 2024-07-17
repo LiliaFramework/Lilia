@@ -4,9 +4,10 @@ function MODULE:AddOption(name, data)
 end
 
 function MODULE:CheckPossibilities()
+    local client = LocalPlayer()
     for _, v in pairs(self.options) do
-        if not LocalPlayer():GetEyeTrace().Entity:IsPlayer() then return end
-        if v.shouldShow(LocalPlayer(), LocalPlayer():GetEyeTrace().Entity) then return true end
+        if not client:GetEyeTrace().Entity:IsPlayer() then return end
+        if v.shouldShow(client, client:GetEyeTrace().Entity) then return true end
     end
     return false
 end

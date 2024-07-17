@@ -18,7 +18,7 @@ end
 function MODULE:HUDPaint()
     if not ESP_Active:GetBool() then return end
     local client = LocalPlayer()
-    if client:getChar() and (CAMI.PlayerHasAccess(client, "Staff Permissions - No Clip ESP Outside Staff Character", nil) or client:isStaffOnDuty()) and client:IsNoClipping() and not client:hasValidVehicle() then
+    if client:getChar() and (client:HasPrivilege("Staff Permissions - No Clip ESP Outside Staff Character") or client:isStaffOnDuty()) and client:IsNoClipping() and not client:hasValidVehicle() then
         for _, v in ents.Iterator() do
             if IsValid(v) and (v:isItem() or v:IsPlayer() or v:isProp() or table.HasValue(self.NoClipESPEntities, v:GetClass())) and v ~= LocalPlayer() then
                 local vPos = v:GetPos()
@@ -63,5 +63,5 @@ end
 
 function MODULE:SpawnMenuOpen()
     local client = LocalPlayer()
-    if self.SpawnMenuLimit then return client:getChar():hasFlags("pet") or client:isStaffOnDuty() or CAMI.PlayerHasAccess(client, "Spawn Permissions - Can Spawn Props", nil) end
+    if self.SpawnMenuLimit then return client:getChar():hasFlags("pet") or client:isStaffOnDuty() or client:HasPrivilege("Spawn Permissions - Can Spawn Props") end
 end

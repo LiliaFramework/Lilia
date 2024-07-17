@@ -5,19 +5,20 @@ PANEL.HOVERED = Color(255, 255, 255, 50)
 PANEL.ANIM_SPEED = 0.1
 PANEL.FADE_SPEED = 0.5
 function PANEL:createTabs()
+    local client = LocalPlayer()
     local load, create
     if lia.characters and #lia.characters > 0 then load = self:addTab("continue", self.createCharacterSelection) end
-    if hook.Run("CanPlayerCreateChar", LocalPlayer()) ~= false then create = self:addTab("create", self.createCharacterCreation) end
+    if hook.Run("CanPlayerCreateChar", client) ~= false then create = self:addTab("create", self.createCharacterCreation) end
     if IsValid(load) then
         load:setSelected()
     elseif IsValid(create) then
         create:setSelected()
     end
 
-    if LocalPlayer():getChar() then
-        self:addTab("return", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end, true)
+    if client:getChar() then
+        self:addTab("return", function() if IsValid(self) and client:getChar() then self:fadeOut() end end, true)
     else
-        self:addTab("leave", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() LocalPlayer():ConCommand("disconnect") end) end, true)
+        self:addTab("leave", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() client:ConCommand("disconnect") end) end, true)
     end
 
     local totalWidth = 0
@@ -215,19 +216,20 @@ function PANEL:setFadeToBlack(fade)
 end
 
 function PANEL:Paint()
-    if not LocalPlayer():getChar() then lia.util.drawBlur(self) end
+    local client = LocalPlayer()
+    if not client:getChar() then lia.util.drawBlur(self) end
 end
 
-function PANEL:hoverSound()
-    LocalPlayer():EmitSound(unpack(MainMenu.CharHover))
+function PANEL:hoverSound()local client = LocalPlayer()
+    client:EmitSound(unpack(MainMenu.CharHover))
 end
 
-function PANEL:clickSound()
-    LocalPlayer():EmitSound(unpack(MainMenu.CharClick))
+function PANEL:clickSound()local client = LocalPlayer()
+    client:EmitSound(unpack(MainMenu.CharClick))
 end
 
-function PANEL:warningSound()
-    LocalPlayer():EmitSound(unpack(MainMenu.CharWarning))
+function PANEL:warningSound()local client = LocalPlayer()
+    client:EmitSound(unpack(MainMenu.CharWarning))
 end
 
 vgui.Register("liaCharacter", PANEL, "EditablePanel")

@@ -48,6 +48,7 @@ function PANEL:updateModel()
 end
 
 function PANEL:canCreateCharacter()
+    local client = LocalPlayer()
     local validFactions = {}
     for _, v in pairs(lia.faction.teams) do
         if lia.faction.hasWhitelist(v.index) then validFactions[#validFactions + 1] = v.index end
@@ -55,7 +56,7 @@ function PANEL:canCreateCharacter()
 
     if #validFactions == 0 then return false, "You are unable to join any factions" end
     self.validFactions = validFactions
-    local maxChars = hook.Run("GetMaxPlayerChar", LocalPlayer()) or lia.config.MaxCharacters
+    local maxChars = hook.Run("GetMaxPlayerChar", client) or lia.config.MaxCharacters
     if lia.characters and #lia.characters >= maxChars then return false, "You have reached the maximum number of characters" end
     local canCreate, reason = hook.Run("ShouldMenuButtonShow", "create")
     if canCreate == false then return false, reason end
@@ -94,6 +95,7 @@ function PANEL:onFinish()
 end
 
 function PANEL:showError(message, ...)
+    local client = LocalPlayer()
     if IsValid(self.error) then self.error:Remove() end
     if not message or message == "" then return end
     message = L(message, ...)
@@ -107,7 +109,7 @@ function PANEL:showError(message, ...)
     self.error:DockMargin(0, 0, 0, 8)
     self.error:SetContentAlignment(5)
     self.error.Paint = function(box, w, h)
-        if not LocalPlayer():getChar() then lia.util.drawBlur(box) end
+        if not client:getChar() then lia.util.drawBlur(box) end
 
         surface.SetDrawColor(255, 0, 0, 50)
         surface.DrawRect(0, 0, w, h)

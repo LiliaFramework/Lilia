@@ -102,7 +102,7 @@ function lia.command.hasAccess(client, command, data)
     local adminOnly = data.adminOnly
     local acessLevels = superAdminOnly and "superadmin" or (adminOnly and "admin" or "user")
     if not privilege then privilege = acessLevels == "user" and "Default User Commands" or command end
-    local hasAccess, _ = CAMI.PlayerHasAccess(client, "Commands - " .. privilege, nil)
+    local hasAccess, _ = client:HasPrivilege("Commands - " .. privilege)
     return hasAccess
 end
 

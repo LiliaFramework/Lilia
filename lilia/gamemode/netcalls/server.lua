@@ -60,7 +60,7 @@ net.Receive("liaTransferItem", function(_, client)
 end)
 
 netstream.Hook("unflagblacklistRequest", function(client, target, bid)
-    if not (CAMI.PlayerHasAccess(client, "Commands - Manage Permanent Flags", nil) or client:IsSuperAdmin()) then return end
+    if not (client:HasPrivilege("Commands - Manage Permanent Flags") or client:IsSuperAdmin()) then return end
     if not IsValid(target) then
         client:notify("That target is no longer online")
         return

@@ -32,12 +32,12 @@ function MODULE:networkCategories(client)
 end
 
 net.Receive("SyncCategories", function(_, client)
-    if not CAMI.PlayerHasAccess(client, "Commands - View Logs", nil) then return end
+    if not client:HasPrivilege("Commands - View Logs") then return end
     MODULE:networkCategories(client)
 end)
 
 net.Receive("SyncLogs", function(_, client)
-    if not CAMI.PlayerHasAccess(client, "Commands - View Logs", nil) then return end
+    if not client:HasPrivilege("Commands - View Logs") then return end
     local page = net.ReadUInt(MODULE.maxPagesInBits)
     local category_name = net.ReadString()
     local escaped_category_name = SQLStr(category_name)

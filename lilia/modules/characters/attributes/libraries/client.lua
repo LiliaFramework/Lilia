@@ -29,13 +29,14 @@ function MODULE:HUDPaintBackground()
 end
 
 function MODULE:CreateMenuButtons(tabs)
+    local client = LocalPlayer()
     if table.Count(lia.attribs.list) > 0 and hook.Run("CanPlayerViewAttributes") ~= false then
         tabs["Attributes"] = function(panel)
             panel.attribs = panel:Add("DScrollPanel")
             panel.attribs:Dock(FILL)
             panel.attribs:DockMargin(0, 10, 0, 0)
             if not IsValid(panel.attribs) then return end
-            local character = LocalPlayer():getChar()
+            local character = client:getChar()
             local boost = character:getBoosts()
             for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
                 local attribBoost = 0
@@ -65,4 +66,4 @@ function MODULE:CreateMenuButtons(tabs)
     end
 end
 
-lia.bar.add(function() return LocalPlayer():getLocalVar("stamina", 0) / 100 end, Color(200, 200, 40), nil, "stamina")
+lia.bar.add(function() local client = LocalPlayer() return client:getLocalVar("stamina", 0) / 100 end, Color(200, 200, 40), nil, "stamina")

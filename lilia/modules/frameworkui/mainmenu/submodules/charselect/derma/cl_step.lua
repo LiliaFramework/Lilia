@@ -18,9 +18,10 @@ function PANEL:previous()
 end
 
 function PANEL:validateCharVar(name)
+    local client = LocalPlayer()
     local charVar = lia.char.vars[name]
     assert(charVar, "invalid character variable " .. tostring(name))
-    if isfunction(charVar.onValidate) then return charVar.onValidate(self:getContext(name), self:getContext(), LocalPlayer()) end
+    if isfunction(charVar.onValidate) then return charVar.onValidate(self:getContext(name), self:getContext(), client) end
     return true
 end
 

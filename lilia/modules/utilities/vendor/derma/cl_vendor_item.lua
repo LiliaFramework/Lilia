@@ -58,7 +58,8 @@ function PANEL:setIsSelling(isSelling)
 end
 
 local function clickEffects()
-    LocalPlayer():EmitSound(unpack(MODULE.VendorClick))
+    local client = LocalPlayer()
+    client:EmitSound(unpack(MODULE.VendorClick))
 end
 
 function PANEL:sellItemToVendor()

@@ -72,8 +72,8 @@ if SERVER then
 else
     concommand.Add("dev_GetCameraOrigin", function(client)
         if client:isStaff() then
-            LiliaInformation("origin = (" .. math.ceil(LocalPlayer():GetPos().x) .. ", " .. math.ceil(LocalPlayer():GetPos().y) .. ", " .. math.ceil(LocalPlayer():GetPos().z) .. ")")
-            LiliaInformation("angles = (" .. math.ceil(LocalPlayer():GetAngles().x) .. ", " .. math.ceil(LocalPlayer():GetAngles().y) .. ", " .. math.ceil(LocalPlayer():GetAngles().z) .. ")")
+            LiliaInformation("origin = (" .. math.ceil(client:GetPos().x) .. ", " .. math.ceil(client:GetPos().y) .. ", " .. math.ceil(client:GetPos().z) .. ")")
+            LiliaInformation("angles = (" .. math.ceil(client:GetAngles().x) .. ", " .. math.ceil(client:GetAngles().y) .. ", " .. math.ceil(client:GetAngles().z) .. ")")
         end
     end)
 
@@ -84,8 +84,8 @@ else
     end, nil, "Removes every panel that you have left over (like that errored DFrame filling up your screen)")
 
     concommand.Add("weighpoint_stop", function() hook.Add("HUDPaint", "WeighPoint", function() end) end)
-    concommand.Add("dev_GetEntPos", function(client) if client:isStaff() then LiliaInformation(LocalPlayer():GetEyeTrace().Entity:GetPos().x, LocalPlayer():GetEyeTrace().Entity:GetPos().y, LocalPlayer():GetEyeTrace().Entity:GetPos().z) end end)
-    concommand.Add("dev_GetEntAngles", function(client) if client:isStaff() then LiliaInformation(math.ceil(LocalPlayer():GetEyeTrace().Entity:GetAngles().x) .. ", " .. math.ceil(LocalPlayer():GetEyeTrace().Entity:GetAngles().y) .. ", " .. math.ceil(LocalPlayer():GetEyeTrace().Entity:GetAngles().z)) end end)
-    concommand.Add("dev_GetRoundEntPos", function(client) if client:isStaff() then LiliaInformation(math.ceil(LocalPlayer():GetEyeTrace().Entity:GetPos().x) .. ", " .. math.ceil(LocalPlayer():GetEyeTrace().Entity:GetPos().y) .. ", " .. math.ceil(LocalPlayer():GetEyeTrace().Entity:GetPos().z)) end end)
-    concommand.Add("dev_GetPos", function(client) if client:isStaff() then LiliaInformation(math.ceil(LocalPlayer():GetPos().x) .. ", " .. math.ceil(LocalPlayer():GetPos().y) .. ", " .. math.ceil(LocalPlayer():GetPos().z)) end end)
+    concommand.Add("dev_GetEntPos", function(client) if client:isStaff() then LiliaInformation(client:GetEyeTrace().Entity:GetPos().x, client:GetEyeTrace().Entity:GetPos().y, client:GetEyeTrace().Entity:GetPos().z) end end)
+    concommand.Add("dev_GetEntAngles", function(client) if client:isStaff() then LiliaInformation(math.ceil(client:GetEyeTrace().Entity:GetAngles().x) .. ", " .. math.ceil(client:GetEyeTrace().Entity:GetAngles().y) .. ", " .. math.ceil(client:GetEyeTrace().Entity:GetAngles().z)) end end)
+    concommand.Add("dev_GetRoundEntPos", function(client) if client:isStaff() then LiliaInformation(math.ceil(client:GetEyeTrace().Entity:GetPos().x) .. ", " .. math.ceil(client:GetEyeTrace().Entity:GetPos().y) .. ", " .. math.ceil(client:GetEyeTrace().Entity:GetPos().z)) end end)
+    concommand.Add("dev_GetPos", function(client) if client:isStaff() then LiliaInformation(math.ceil(client:GetPos().x) .. ", " .. math.ceil(client:GetPos().y) .. ", " .. math.ceil(client:GetPos().z)) end end)
 end

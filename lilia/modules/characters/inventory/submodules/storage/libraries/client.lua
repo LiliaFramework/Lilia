@@ -14,7 +14,8 @@ function MODULE:StorageUnlockPrompt()
 end
 
 function MODULE:SetupQuickMenu(menu)
-    if CAMI.PlayerHasAccess(client, "Staff Permissions - Can Spawn Storage", nil) then
+    local client = LocalPlayer()
+    if client:HasPrivilege("Staff Permissions - Can Spawn Storage") then
         menu:addCheck("Spawn Storage Props as Storages", function(_, state)
             if state then
                 RunConsoleCommand("can_spawn_storage", "1")
@@ -28,8 +29,9 @@ function MODULE:SetupQuickMenu(menu)
 end
 
 function MODULE:StorageOpen(storage, isCar)
+    local client = LocalPlayer()
     if isCar then
-        local localInv = LocalPlayer():getChar() and LocalPlayer():getChar():getInv()
+        local localInv = client:getChar() and client:getChar():getInv()
         if not localInv then return MODULE:exitStorage() end
         local localInvPanel = localInv:show()
         local storageInvPanel = storage:show()
@@ -60,7 +62,7 @@ function MODULE:StorageOpen(storage, isCar)
         storageInvPanel.OnRemove = exitStorageOnRemove
     else
         if not IsValid(storage) then return end
-        local localInv = LocalPlayer():getChar() and LocalPlayer():getChar():getInv()
+        local localInv = client:getChar() and client:getChar():getInv()
         local storageInv = storage:getInv()
         if not localInv or not storageInv then return MODULE:exitStorage() end
         local localInvPanel = localInv:show()

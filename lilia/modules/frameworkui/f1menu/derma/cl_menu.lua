@@ -2,6 +2,7 @@
 local PANEL = {}
 local gradient = lia.util.getMaterial("vgui/gradient-u")
 function PANEL:Init()
+    local client = LocalPlayer() 
     if MODULE.F1ThirdPersonEnabled then
         self.initialValues = {
             ThirdPerson = GetConVar("tp_enabled"):GetInt(),
@@ -33,17 +34,17 @@ function PANEL:Init()
         self.model:SetFOV(50)
         self.model.enableHook = true
         self.model.copyLocalSequence = true
-        self.model:SetModel(LocalPlayer():GetModel())
-        self.model.Entity:SetSkin(LocalPlayer():GetSkin())
-        for _, v in ipairs(LocalPlayer():GetBodyGroups()) do
-            self.model.Entity:SetBodygroup(v.id, LocalPlayer():GetBodygroup(v.id))
+        self.model:SetModel(client:GetModel())
+        self.model.Entity:SetSkin(client:GetSkin())
+        for _, v in ipairs(client:GetBodyGroups()) do
+            self.model.Entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
         end
 
         local ent = self.model.Entity
         if ent and IsValid(ent) then
-            local mats = LocalPlayer():GetMaterials()
+            local mats = client:GetMaterials()
             for k, _ in pairs(mats) do
-                ent:SetSubMaterial(k - 1, LocalPlayer():GetSubMaterial(k - 1))
+                ent:SetSubMaterial(k - 1, client:GetSubMaterial(k - 1))
             end
         end
     end

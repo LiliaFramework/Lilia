@@ -5,9 +5,10 @@ MODULE.deathTime = MODULE.deathTime or 0
 local LIFE_TIME = 4
 local DEATH_TIME = 5
 function MODULE:OnSlotChanged()
+    local client = LocalPlayer()
     self.lifeTime = CurTime() + LIFE_TIME
     self.deathTime = CurTime() + DEATH_TIME
-    for k, v in SortedPairs(LocalPlayer():GetWeapons()) do
+    for k, v in SortedPairs(client:GetWeapons()) do
         if k == self.lastSlot then
             if v.Instructions and string.find(v.Instructions, "%S") then
                 self.markup = markup.Parse("<font=liaItemBoldFont>" .. v.Instructions .. "</font>")
@@ -51,7 +52,7 @@ function MODULE:PlayerBindPress(client, bind, pressed)
             if CurTime() < self.deathTime then
                 self.lifeTime = 0
                 self.deathTime = 0
-                for k, v in SortedPairs(LocalPlayer():GetWeapons()) do
+                for k, v in SortedPairs(client:GetWeapons()) do
                     if k == self.lastSlot then
                         RunConsoleCommand("lia_selectwep", v:GetClass())
                         return true
@@ -59,7 +60,7 @@ function MODULE:PlayerBindPress(client, bind, pressed)
                 end
             end
         elseif string.find(bind, "slot") then
-            self.lastSlot = math.Clamp(tonumber(string.match(bind, "slot(%d)")) or 1, 1, #LocalPlayer():GetWeapons())
+            self.lastSlot = math.Clamp(tonumber(string.match(bind, "slot(%d)")) or 1, 1, #client:GetWeapons())
             self.lifeTime = CurTime() + LIFE_TIME
             self.deathTime = CurTime() + DEATH_TIME
             return true
@@ -68,9 +69,10 @@ function MODULE:PlayerBindPress(client, bind, pressed)
 end
 
 function MODULE:HUDPaint()
-    if not LocalPlayer():getChar() then return end
+    local client = LocalPlayer()
+    if not client:getChar() then return end
     local x = ScrW() * 0.55
-    for k, v in SortedPairs(LocalPlayer():GetWeapons()) do
+    for k, v in SortedPairs(client:GetWeapons()) do
         local y = (ScrH() * 0.4) + (k * 24)
         local color = Color(255, 255, 255, 255)
         if k == self.lastSlot then
