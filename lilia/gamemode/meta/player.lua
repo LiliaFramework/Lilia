@@ -57,6 +57,14 @@ function playerMeta:WhitelistEverything()
     self:WhitelistAllClasses()
 end
 
+--- Checks if the player has a specified CAMI privilege.
+-- @realm shared
+-- @param privilegeName string The name of the privilege to check.
+-- @treturn boolean True if the player has the privilege, false otherwise.
+function playerMeta:HasPrivilege(privilegeName)
+    return CAMI.PlayerHasAccess(self, privilegeName, nil)
+end
+
 --- Gets the current vehicle the player is in, if any.
 -- @realm shared
 -- @treturn Entity|nil The current vehicle entity, or nil if the player is not in a vehicle.
@@ -88,14 +96,14 @@ end
 -- @realm shared
 -- @treturn bool Whether the player is a staff member.
 function playerMeta:isStaff()
-    return CAMI.PlayerHasAccess(self, "UserGroups - Staff Group", nil) or self:IsSuperAdmin()
+    return self:HasPrivilege("UserGroups - Staff Group")
 end
 
 --- Checks if the player is a VIP.
 -- @realm shared
 -- @treturn bool Whether the player is a VIP.
 function playerMeta:isVIP()
-    return CAMI.PlayerHasAccess(self, "UserGroups - VIP Group", nil)
+    return self:HasPrivilege("UserGroups - VIP Group")
 end
 
 --- Checks if the staff member is currently on duty (FACTION_STAFF).
