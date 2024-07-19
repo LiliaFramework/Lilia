@@ -15,7 +15,7 @@ function PANEL:Init()
     self.descLabel:SetZPos(2)
 
     self.desc = self:addTextEntry("desc")
-    self.desc:SetTall(96) -- Adjust the height as needed
+    self.desc:SetTall(self.name:GetTall() * 3) -- Put this back to its original scalable size.
     self.desc:SetTextColor(color_white)
     self.desc:SetMultiline(true)
     self.desc:SetZPos(3)
