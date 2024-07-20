@@ -261,7 +261,6 @@ function PANEL:loadContributor(contributor, bLoadNextChunk)
         end
 
         container.OnMousePressed = function(_, keyCode) if keyCode == 107 then gui.OpenURL("https://github.com/" .. contributorData.login) end end
-        container.OnMouseWheeled = function(_, delta) self:OnMouseWheeled(delta) end
         container:SetCursor("hand")
         container:SetTooltip("https://github.com/" .. contributorData.login)
         local avatar = container:Add("Panel")

@@ -63,36 +63,7 @@ function PANEL:DoLamar()
     end
 
     local r = 1
-    wait(r, function()
-        surface.PlaySound("npc/headcrab/pain1.wav")
-        local x = 0
-        x = x + 1
-        wait(x, function() surface.PlaySound("vo/k_lab/kl_comeout.wav") end)
-        x = x + 2.3
-        wait(x, function() surface.PlaySound("npc/headcrab/alert1.wav") end)
-        x = x + 2
-        wait(x, function() surface.PlaySound("vo/k_lab/kl_lamarr.wav") end)
-        x = x + 2.6
-        wait(x, function() surface.PlaySound("npc/headcrab/pain3.wav") end)
-        x = x + 2
-        wait(x, function() surface.PlaySound("vo/k_lab/kl_nocareful.wav") end)
-        x = x + 2.1
-        wait(x, doAnim)
-        x = x + 1.6
-        wait(x, function() surface.PlaySound("npc/headcrab/attack2.wav") end)
-        x = x + 0.6
-        wait(x, function()
-            surface.PlaySound("vehicles/v8/vehicle_impact_heavy1.wav")
-            surface.PlaySound("ambient/energy/zap6.wav")
-            timer.Simple(0.3, function() surface.PlaySound("ambient/energy/zap7.wav") end)
-        end)
-
-        wait(x + 2.5, doPostText)
-        x = x + 3
-        wait(x, function() surface.PlaySound("ambient/energy/spark1.wav") end)
-        x = x + 1.2
-        wait(x, function() surface.PlaySound("ambient/energy/spark3.wav") end)
-    end)
+    wait(r, function() wait(2.5, doPostText) end)
 end
 
 function PANEL:Think()
