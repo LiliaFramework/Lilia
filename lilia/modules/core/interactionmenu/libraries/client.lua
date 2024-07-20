@@ -49,7 +49,7 @@ function MODULE:OpenPIM()
     frame.list = frame.scroll:Add("DIconLayout")
     frame.list:SetSize(frame.scroll:GetSize())
     local visibleOptionsCount = 0
-    local traceEnt = client:GetEyeTrace().Entity
+    local traceEnt = client:getTracedEntity()
     for name, opt in pairs(self.options) do
         if opt.shouldShow(client, traceEnt) and traceEnt:IsPlayer() and self:CheckDistance(client, traceEnt) then
             visibleOptionsCount = visibleOptionsCount + 1

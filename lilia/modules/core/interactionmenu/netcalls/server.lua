@@ -6,3 +6,8 @@
     target:notify("You received " .. lia.currency.symbol .. amount .. " from " .. clientName, NOT_CORRECT)
     lia.log.add(client, "moneyGiven", target:Name(), amount)
 end)
+
+netstream.Hook("PIMRunOption", function(ply, name)
+    local opt = PIM.options[name]
+    if opt.runServer then opt.onRun(ply, ply:GetEyeTrace().Entity) end
+end)
