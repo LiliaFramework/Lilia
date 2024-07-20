@@ -61,6 +61,12 @@ if SERVER then
         end
 
         character:setData("loginTime", os.time())
+        if lia.config.ServerWorkshop ~= "" and not client:getLiliaData("workshopRequested") then
+            net.Start("RequestServerContent")
+            net.Send(client)
+            client:setLiliaData("workshopRequested", true)
+        end
+
         hook.Run("PlayerLoadout", client)
     end
 
@@ -125,7 +131,8 @@ else
 
     function GM:CharListLoaded()
         timer.Create("liaWaitUntilPlayerValid", 1, 0, function()
-            if not IsValid(LocalPlayer()) then return end
+            local client = LocalPlayer()
+            if not IsValid(client) then return end
             timer.Remove("liaWaitUntilPlayerValid")
             hook.Run("LiliaLoaded")
         end)
