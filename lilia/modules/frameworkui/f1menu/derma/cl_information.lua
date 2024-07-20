@@ -13,15 +13,19 @@ function PANEL:Init()
     local shadowColor = Color(30, 30, 30, 150)
     self:SetSize(panelWidth, panelHeight)
     if F1MenuCore.InfoMenuLocation == "TopLeft" then
-        self:SetPos(10, 10)
+        self:SetPos(75, 75)
     elseif F1MenuCore.InfoMenuLocation == "TopRight" then
-        self:SetPos(ScrW() - panelWidth - 10, 10)
+        self:SetPos(ScrW() - panelWidth - 75, 75)
     elseif F1MenuCore.InfoMenuLocation == "BottomRight" then
         self:SetPos(ScrW() - panelWidth - 10, 800)
+    elseif F1MenuCore.InfoMenuLocation == "BottomLeft" then
+        self:SetPos(75, 800)
     elseif F1MenuCore.InfoMenuLocation == "BottomCenter" then
         self:SetPos((ScrW() - panelWidth) / 2, 800)
+    elseif F1MenuCore.InfoMenuLocation == "AbsoluteCenter" then
+        self:SetPos((ScrW() - panelWidth) / 2, ScrH() / 2-25)
     else
-        self:SetPos(ScrW() - panelWidth - 10, 10)
+        self:SetPos(ScrW() - panelWidth - 75, 75)
     end
 
     self.info = vgui.Create("DFrame", self)

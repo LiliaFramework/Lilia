@@ -21,12 +21,7 @@ function PANEL:createTabs()
         self:addTab("leave", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() client:ConCommand("disconnect") end) end, true)
     end
 
-    local totalWidth = 0
-    for _, v in ipairs(self.tabs:GetChildren()) do
-        totalWidth = totalWidth + v:GetWide()
-    end
-
-    self.tabs:DockMargin(self.tabs:GetWide() + totalWidth * 1.5, 25, 0, 0)
+    self.tabs:DockMargin(ScrW() / 2 - C(250), 25, 0, 0)
 end
 
 function PANEL:createTitle()
@@ -67,10 +62,10 @@ function PANEL:CreateBG()
         </body>
         </html>
     ]])
-    self.background:SetAllowLua(true) -- Enable running Lua scripts in the DHTML panel
+    self.background:SetAllowLua(true)
     if MainMenu.CharMenuBGInputDisabled then
-        self.background:SetMouseInputEnabled(false) -- Disable mouse input
-        self.background:SetKeyboardInputEnabled(false) -- Disable keyboard input
+        self.background:SetMouseInputEnabled(false)
+        self.background:SetKeyboardInputEnabled(false)
     end
 end
 
@@ -184,7 +179,6 @@ function PANEL:Init()
     self.music = self:Add("liaCharBGMusic")
     self:loadBackground()
     self:showContent()
-    Derma_Query("Lilia Content is Missing", "You do not have the Lilia content mounted. This may result in certain features missing.\nWould you like to open the Workshop page for the Lilia content?", "Yes", function() gui.OpenURL("http://steamcommunity.com/sharedfiles/filedetails/?id=2959728255") end, "No")
 end
 
 function PANEL:showContent()
