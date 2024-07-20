@@ -8,3 +8,4 @@
 -- @field sbHeight Scoreboard Height | **number**
 -- @field sbWidth Scoreboard Width | **number**
 -- @field ShowStaff Should Staff Show In Scoreboard | **boolean**
+-- @field DisplayServerName Should Server Name Show In Scoreboard | **boolean**

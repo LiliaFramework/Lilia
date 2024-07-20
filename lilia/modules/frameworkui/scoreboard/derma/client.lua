@@ -13,17 +13,19 @@ function PANEL:Init()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
     lia.gui.score = self
     self:SetSize(ScrW() * MODULE.sbWidth, ScrH() * MODULE.sbHeight)
-    self.staff1 = self:Add("DLabel")
-    self.staff1:SetText("Staff Online: 0")
-    self.staff1:SetFont("liaMediumFont")
-    self.staff1:SetContentAlignment(5)
-    self.staff1:SetTextColor(color_white)
-    self.staff1:SetExpensiveShadow(1, color_black)
-    self.staff1:Dock(BOTTOM)
-    self.staff1:SizeToContentsY()
-    self.staff1.Paint = function(_, w, h)
-        surface.SetDrawColor(0, 0, 0, 150)
-        surface.DrawRect(0, 0, w, h)
+    if MODULE.DisplayServerName then
+        self.serverName = self:Add("DLabel")
+        self.serverName:SetText(GetHostName())
+        self.serverName:SetFont("liaMediumFont")
+        self.serverName:SetContentAlignment(5)
+        self.serverName:SetTextColor(color_white)
+        self.serverName:SetExpensiveShadow(1, color_black)
+        self.serverName:Dock(TOP)
+        self.serverName:SizeToContentsY()
+        self.serverName.Paint = function(_, w, h)
+            surface.SetDrawColor(0, 0, 0, 150)
+            surface.DrawRect(0, 0, w, h)
+        end
     end
 
     self.scroll = self:Add("DScrollPanel")
@@ -37,7 +39,6 @@ function PANEL:Init()
     self.i = {}
     self:Center()
     for k, v in ipairs(lia.faction.indices) do
-        if table.HasValue(MODULE.HiddenFactions, k) then continue end
         local color = team.GetColor(k)
         local r, g, b = color.r, color.g, color.b
         local list = self.layout:Add("DListLayout")
@@ -72,6 +73,7 @@ function PANEL:Init()
         header:SetTextInset(3, 0)
         header:SetFont(hasLogo and "liaBigFont" or "liaMediumFont")
         header:SetTextColor(color_white)
+        header:SetContentAlignment(5)
         header:SetExpensiveShadow(1, color_black)
         header:SetTall(hasLogo and 64 or 28)
         header.Paint = function(_, w, h)
@@ -80,6 +82,19 @@ function PANEL:Init()
         end
 
         self.teams[k] = list
+    end
+
+    self.staff1 = self:Add("DLabel")
+    self.staff1:SetText("Staff Online: 0")
+    self.staff1:SetFont("liaMediumFont")
+    self.staff1:SetContentAlignment(5)
+    self.staff1:SetTextColor(color_white)
+    self.staff1:SetExpensiveShadow(1, color_black)
+    self.staff1:Dock(BOTTOM)
+    self.staff1:SizeToContentsY()
+    self.staff1.Paint = function(_, w, h)
+        surface.SetDrawColor(0, 0, 0, 150)
+        surface.DrawRect(0, 0, w, h)
     end
 end
 

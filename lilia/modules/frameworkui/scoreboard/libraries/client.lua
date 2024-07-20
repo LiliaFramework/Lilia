@@ -17,6 +17,11 @@ function MODULE:OnReloaded()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
 end
 
+function MODULE:ShouldShowPlayerOnScoreboard(client)
+    local team = client:Team()
+    if table.HasValue(self.HiddenFactions, team) then return false end
+end
+
 function MODULE:ShowPlayerOptions(target, options)
     local client = LocalPlayer()
     if client:HasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (client:HasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and client:isStaffOnDuty()) and IsValid(target) then
