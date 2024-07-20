@@ -33,24 +33,6 @@ function PANEL:DoLamar()
         table.insert(waits, {SysTime() + s, function() if IsValid(self) then f() end end})
     end
 
-    local function doAnim()
-        self.lamar = vgui.Create("liaModelPanel", self)
-        self.lamar:Dock(FILL)
-        self.lamar:SetFOV(90)
-        self.lamar:SetModel("models/lamarr.mdl")
-        self.lamar:SetAnimated(true)
-        function self.lamar:LayoutEntity(entity)
-            entity:FrameAdvance()
-            return
-        end
-
-        local badcarb = self.lamar:GetEntity():LookupSequence("lamarr_crow")
-        self.lamar:GetEntity():ResetSequence(badcarb)
-        local pos = Vector(120, 50, 50)
-        self.lamar:SetCamPos(pos)
-        self.lamar:SetLookAt(pos + Vector(-10, -70, -10))
-    end
-
     local function doPostText()
         self.backsoon = vgui.Create("DLabel", self)
         self.backsoon:SetText("We'll be back soon!")
