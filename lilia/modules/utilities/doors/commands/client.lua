@@ -55,6 +55,18 @@ lia.command.add("doorsetdisabled", {
     onRun = function() end
 })
 
+lia.command.add("disablealldoors", {
+    adminOnly = true,
+    privilege = "Manage Doors",
+    onRun = function() end
+})
+
+lia.command.add("enablealldoors", {
+    adminOnly = true,
+    privilege = "Manage Doors",
+    onRun = function() end
+})
+
 lia.command.add("doorsetenabled", {
     adminOnly = true,
     privilege = "Manage Doors",
