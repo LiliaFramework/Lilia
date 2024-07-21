@@ -19,6 +19,21 @@ function MODULE:copyParentDoor(child)
     end
 end
 
+function MODULE:PostLoadData()
+    if self.DoorsAlwaysDisabled then
+        local count = 0
+        for _, door in ents.Iterator() do
+            if IsValid(door) and door:isDoor() then
+                door:setNetVar("disabled", true)
+                self:callOnDoorChildren(door, function(child) child:setNetVar("disabled", true) end)
+                count = count + 1
+            end
+        end
+
+        LiliaInformation(count .. " doors have been disabled as per DoorsAlwaysDisabled setting.")
+    end
+end
+
 function MODULE:LoadData()
     local data = self:getData()
     if not data then return end
