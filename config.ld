@@ -35,16 +35,15 @@ kind_names = {
    module = "Libraries",
 }
 custom_tags = {
-   {
-      "realm",
-      hidden = true
-   },
-   {
-      "internal",
-      hidden = true
-   }
+    {
+        "realm",
+        hidden = true
+    },
+    {
+        "internal",
+        hidden = true
+    }
 }
-
 
 custom_display_name_handler = function(item, default_handler)
     if item.type == "function" and item.module then
