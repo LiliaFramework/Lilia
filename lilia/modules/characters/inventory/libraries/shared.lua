@@ -1,4 +1,4 @@
-﻿local GridInv = lia.Inventory:extend("GridInv")
+﻿local inventoryMeta = lia.Inventory:extend("Inventory")
 lia.meta.item.width = 1
 lia.meta.item.height = 1
 local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
@@ -22,25 +22,25 @@ local function CanNotAddItemIfNoSpace(inventory, action, context)
     return true
 end
 
-function GridInv:getWidth()
+function inventoryMeta:getWidth()
     return self:getData("w", lia.config.invW)
 end
 
-function GridInv:getHeight()
+function inventoryMeta:getHeight()
     return self:getData("h", lia.config.invH)
 end
 
-function GridInv:getSize()
+function inventoryMeta:getSize()
     return self:getWidth(), self:getHeight()
 end
 
-function GridInv:canItemFitInInventory(item, x, y)
+function inventoryMeta:canItemFitInInventory(item, x, y)
     local invW, invH = self:getSize()
     local itemW, itemH = (item.width or 1) - 1, (item.height or 1) - 1
     return x >= 1 and y >= 1 and (x + itemW) <= invW and (y + itemH) <= invH
 end
 
-function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
+function inventoryMeta:doesItemOverlapWithOther(testItem, x, y, item)
     local testX2, testY2 = x + (testItem.width or 1), y + (testItem.height or 1)
     local itemX, itemY = item:getData("x"), item:getData("y")
     if not itemX or not itemY then return false end
@@ -50,7 +50,7 @@ function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
     return true
 end
 
-function GridInv:doesFitInventory(item)
+function inventoryMeta:doesFitInventory(item)
     local x, y = self:findFreePosition(item)
     if x and y then return true end
     for _, bagItem in pairs(self:getItems(true)) do
@@ -63,7 +63,7 @@ function GridInv:doesFitInventory(item)
     return false
 end
 
-function GridInv:doesItemFitAtPos(testItem, x, y)
+function inventoryMeta:doesItemFitAtPos(testItem, x, y)
     if not self:canItemFitInInventory(testItem, x, y) then return false end
     for _, item in pairs(self.items) do
         if self:doesItemOverlapWithOther(testItem, x, y, item) then return false, item end
@@ -79,7 +79,7 @@ function GridInv:doesItemFitAtPos(testItem, x, y)
     return true
 end
 
-function GridInv:findFreePosition(item)
+function inventoryMeta:findFreePosition(item)
     local width, height = self:getSize()
     for x = 1, width do
         for y = 1, height do
@@ -88,14 +88,14 @@ function GridInv:findFreePosition(item)
     end
 end
 
-function GridInv:configure()
+function inventoryMeta:configure()
     if SERVER then
         self:addAccessRule(CanNotAddItemIfNoSpace)
         self:addAccessRule(CanAccessInventoryIfCharacterIsOwner)
     end
 end
 
-function GridInv:getItems(noRecurse)
+function inventoryMeta:getItems(noRecurse)
     local items = self.items
     if noRecurse then return items end
     local allItems = {}
@@ -107,18 +107,18 @@ function GridInv:getItems(noRecurse)
 end
 
 if SERVER then
-    function GridInv:setSize(w, h)
+    function inventoryMeta:setSize(w, h)
         self:setData("w", w)
         self:setData("h", h)
     end
 
-    function GridInv:wipeItems()
+    function inventoryMeta:wipeItems()
         for _, item in pairs(self:getItems()) do
             item:remove()
         end
     end
 
-    function GridInv:setOwner(owner, fullUpdate)
+    function inventoryMeta:setOwner(owner, fullUpdate)
         if type(owner) == "Player" and owner:getChar() then
             owner = owner:getChar():getID()
         elseif not isnumber(owner) then
@@ -141,7 +141,7 @@ if SERVER then
         self.owner = owner
     end
 
-    function GridInv:add(itemTypeOrItem, xOrQuantity, yOrData, noReplicate)
+    function inventoryMeta:add(itemTypeOrItem, xOrQuantity, yOrData, noReplicate)
         local x, y, data
         local isStackCommand = isstring(itemTypeOrItem) and isnumber(xOrQuantity)
         if istable(yOrData) then
@@ -293,7 +293,7 @@ if SERVER then
         return d
     end
 
-    function GridInv:remove(itemTypeOrID, quantity)
+    function inventoryMeta:remove(itemTypeOrID, quantity)
         quantity = quantity or 1
         assert(isnumber(quantity), "quantity must be a number")
         local d = deferred.new()
@@ -311,7 +311,7 @@ if SERVER then
         return d
     end
 else
-    function GridInv:requestTransfer(itemID, destinationID, x, y)
+    function inventoryMeta:requestTransfer(itemID, destinationID, x, y)
         local inventory = lia.inventory.instances[destinationID]
         if not inventory then return end
         local item = inventory.items[itemID]
@@ -326,4 +326,4 @@ else
     end
 end
 
-GridInv:register("grid")
+inventoryMeta:register("grid")
