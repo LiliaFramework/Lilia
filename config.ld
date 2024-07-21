@@ -31,6 +31,7 @@ no_viewed_topic_at_top = true -- don't put the currently viewed topic at the top
 use_new_templates = true -- new templating system
 pretty_urls = true -- avoid showing .html in urls
 pretty_topic_names = true -- strips extension from manual filenames, this does not check filename collisions
+
 kind_names = {
    module = "Libraries",
 }
