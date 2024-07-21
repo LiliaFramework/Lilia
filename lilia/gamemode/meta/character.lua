@@ -197,6 +197,7 @@ end
 -- @return bool Whether the character has at least the specified amount of money.
 -- @usage local hasEnoughMoney = character:hasMoney(100)
 function characterMeta:hasMoney(amount)
+    amount = tonumber(amount) or 0
     if amount < 0 then
         LiliaInformation("Negative Money Check Received.")
         return false
