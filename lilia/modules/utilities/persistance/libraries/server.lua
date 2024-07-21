@@ -1,7 +1,7 @@
 ﻿function MODULE:SaveData()
     local data = {}
     for _, v in ents.Iterator() do
-        if v.IsLeonNPC or v.IsPersistent then
+        if self:IsPersistent() then
             data[#data + 1] = {
                 class = v:GetClass(),
                 pos = v:GetPos(),
@@ -29,7 +29,6 @@ function MODULE:LoadData()
         if v.material then ent:SetMaterial(v.material) end
         ent:Spawn()
         ent:Activate()
-
         if v.bodygroups then
             for id, num in pairs(v.bodygroups) do
                 ent:SetBodygroup(id, num)
