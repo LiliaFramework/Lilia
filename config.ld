@@ -47,20 +47,30 @@ custom_tags = {
 
 
 custom_display_name_handler = function(item, default_handler)
-   if item.type == "function" and item.module then
-      if item.module.type == "meta" then
-         return item.module.mod_name .. ":" .. default_handler(item)
-      elseif item.module.type == "hooks" then
-         if item.module.mod_name == "Class" then
-            return "CLASS:" .. default_handler(item)
-         elseif item.module.mod_name == "Faction" then
-            return "FACTION:" .. default_handler(item)
-         else
+    if item.type == "function" and item.module then
+        if item.module.type == "meta" or item.module.type == "modmeta" then
+            if item.module.mod_name == "Character" then
+                return "characterMeta:" .. default_handler(item)
+            elseif item.module.mod_name == "Entity" then
+                return "entityMeta:" .. default_handler(item)
+            elseif item.module.mod_name == "Item" then
+                return "itemMeta:" .. default_handler(item)
+            elseif item.module.mod_name == "Player" then
+                return "playerMeta:" .. default_handler(item)
+            elseif item.module.mod_name == "Inventory" then
+                return "inventoryMeta:" .. default_handler(item)
+            end
+            return "meta:" .. default_handler(item)
+        elseif item.module.type == "hooks" then
+            if item.module.mod_name == "Class" then
+                return "CLASS:" .. default_handler(item)
+            elseif item.module.mod_name == "Faction" then
+                return "FACTION:" .. default_handler(item)
+            end
             return "MODULE:" .. default_handler(item)
-         end
-      end
-   end
-   return default_handler(item)
+        end
+    end
+    return default_handler(item)
 end
 
 new_type("factions", "Factions", true)
