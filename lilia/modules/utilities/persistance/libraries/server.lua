@@ -1,16 +1,12 @@
 ﻿function MODULE:SaveData()
     local data = {}
     for _, v in ents.Iterator() do
-        if v:IsPersistent() then
+        if v:IsLiliaPersistent() then
             data[#data + 1] = {
-                class = v:GetClass(),
                 pos = v:GetPos(),
-                angles = v:GetAngles(),
+                class = v:GetClass(),
                 model = v:GetModel(),
-                skin = v:GetSkin(),
-                color = v:GetColor(),
-                material = v:GetMaterial(),
-                bodygroups = v:GetBodyGroups(),
+                angles = v:GetAngles(),
             }
         end
     end
@@ -25,17 +21,8 @@ function MODULE:LoadData()
             if v.pos then ent:SetPos(v.pos) end
             if v.angles then ent:SetAngles(v.angles) end
             if v.model then ent:SetModel(v.model) end
-            if v.skin then ent:SetSkin(v.skin) end
-            if v.color then ent:SetColor(v.color) end
-            if v.material then ent:SetMaterial(v.material) end
             ent:Spawn()
             ent:Activate()
-            if v.bodygroups then
-                for _, data in ipairs(v.bodygroups) do
-                    local id, num = data.id, data.num
-                    ent:SetBodygroup(id, num)
-                end
-            end
         end
     end
 end

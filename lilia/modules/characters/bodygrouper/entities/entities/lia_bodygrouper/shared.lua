@@ -3,6 +3,7 @@ ENT.PrintName = "Bodygroup Closet"
 ENT.Category = "Lilia"
 ENT.Spawnable = true
 ENT.AdminOnly = true
+ENT.IsPersistent = true
 function ENT:HasUser(user)
     self.users = self.users or {}
     return self.users[user] == true
