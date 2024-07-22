@@ -553,17 +553,6 @@ if SERVER then
         end
         return true
     end
-
-    --- Takes money from the character's wallet.
-    -- @realm server
-    -- @int amount The amount of money to take.
-    -- @return bool Whether the operation was successful.
-    function characterMeta:takeMoney(amount)
-        amount = math.abs(amount)
-        self:giveMoney(-amount, true)
-        lia.log.add(client, "money", -amount)
-        return true
-    end
 end
 
 characterMeta.GetBoost = characterMeta.getBoost
@@ -583,5 +572,4 @@ characterMeta.RemoveBoost = characterMeta.removeBoost
 characterMeta.Save = characterMeta.save
 characterMeta.Sync = characterMeta.sync
 characterMeta.GiveMoney = characterMeta.giveMoney
-characterMeta.TakeMoney = characterMeta.takeMoney
 lia.meta.character = characterMeta
