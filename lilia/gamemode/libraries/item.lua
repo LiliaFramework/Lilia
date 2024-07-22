@@ -53,7 +53,7 @@ lia.item.DefaultFunctions = {
     },
 }
 
-local inventoryMeta = FindMetaTable("Inventory")
+local GridInv = FindMetaTable("GridInv")
 --- Retrieves an item table.
 -- @realm shared
 -- @string identifier Unique ID of the item
@@ -206,8 +206,8 @@ end
 -- @int h The height of the inventory.
 -- @realm shared
 function lia.item.registerInv(invType, w, h)
-    assert(inventoryMeta, "Inventory not found")
-    local inventory = inventoryMeta:extend("Inventory" .. invType)
+    assert(GridInv, "GridInv not found")
+    local inventory = GridInv:extend("GridInv" .. invType)
     inventory.invType = invType
     function inventory:getWidth()
         return w
@@ -258,8 +258,8 @@ end
 -- @return tab The new inventory instance.
 -- @realm shared
 function lia.item.createInv(w, h, id)
-    assert(inventoryMeta, "Inventory not found")
-    local instance = inventoryMeta:new()
+    assert(GridInv, "GridInv not found")
+    local instance = GridInv:new()
     instance.id = id
     instance.data = {
         w = w,
