@@ -30,7 +30,7 @@ lia.command.add("charsetskin", {
             -- Notify the client about the skin change
             client:notifyLocalized("cChangeSkin", client:Name(), target:Name(), skin or 0)
         end
-    }
+    end
 })
 
 ```
