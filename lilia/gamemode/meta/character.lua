@@ -246,15 +246,6 @@ function characterMeta:kickClass()
     hook.Run("OnPlayerJoinClass", client, goClass)
 end
 
---- Checks if the character belongs to the specified faction.
--- @realm shared
--- @int faction Index of the faction to check against.
--- @return bool Whether the character belongs to the specified faction.
--- @usage local isInFaction = character:isFaction("some_faction")
-function characterMeta:isFaction(faction)
-    return self:getFaction() == faction
-end
-
 --- Returns all of the flags this character has.
 -- @realm shared
 -- @treturn string Flags this character has represented as one string. You can access individual flags by iterating through
