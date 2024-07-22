@@ -249,6 +249,26 @@ lia.command.add("charsetmoney", {
     end
 })
 
+lia.command.add("charaddmoney", {
+    superAdminOnly = true,
+    syntax = "<string target> <number amount>",
+    privilege = "Change Money",
+    onRun = function(client, arguments)
+        local amount = tonumber(arguments[2])
+        if not amount or not isnumber(amount) then return "@invalidArg", 2 end
+        local target = lia.command.findPlayer(client, arguments[1])
+        if IsValid(target) then
+            local character = target:getChar()
+            if character then
+                amount = math.Round(amount)
+                local currentMoney = character:getMoney()
+                character:setMoney(currentMoney + amount)
+                client:notify("You added " .. lia.currency.get(amount) .. " to " .. target:Name() .. "'s money. Total: " .. lia.currency.get(currentMoney + amount))
+            end
+        end
+    end
+})
+
 lia.command.add("clearinv", {
     superAdminOnly = true,
     syntax = "<string name>",

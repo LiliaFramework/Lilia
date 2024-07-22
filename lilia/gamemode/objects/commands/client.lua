@@ -102,6 +102,13 @@ lia.command.add("charsetmoney", {
     onRun = function() end
 })
 
+lia.command.add("charaddmoney", {
+    superAdminOnly = true,
+    syntax = "<string target> <number amount>",
+    privilege = "Change Money",
+    onRun = function() end
+})
+
 lia.command.add("clearinv", {
     superAdminOnly = true,
     syntax = "<string name>",
