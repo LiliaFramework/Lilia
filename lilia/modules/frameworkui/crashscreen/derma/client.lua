@@ -37,6 +37,7 @@ function PANEL:DoLamar()
         self.backsoon = vgui.Create("DLabel", self)
         self.backsoon:SetText("We'll be back soon!")
         self.backsoon:SetFont("liaTitleFont")
+        self.backsoon:SetTextColor(color_white)
         self.backsoon:SizeToContents()
         self.backsoon:Center()
         self.backsoon:SetAlpha(0)
@@ -71,7 +72,7 @@ function PANEL:PaintOver()
     end
 
     if self.ServerIsOff then
-        draw.DrawText("The server has gone offline. Try reconnecting in a few minutes.", "liaBigFont", w / 2, 130, color_white, TEXT_ALIGN_CENTER)
+        draw.DrawText("The server has gone offline or is experience major lags. If it doesn't resume working shortly, reconnect!", "liaBigFont", w / 2, 130, color_white, TEXT_ALIGN_CENTER)
     else
         draw.DrawText("You've lost connection to the server. Try reconnecting in a few minutes.", "liaBigFont", w / 2, 130, color_white, TEXT_ALIGN_CENTER)
         draw.DrawText("Check your router or internet connection.", "liaBigFont", w / 2, h + 160, color_white, TEXT_ALIGN_CENTER)

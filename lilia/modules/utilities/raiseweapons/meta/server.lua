@@ -2,8 +2,8 @@
 local playerMeta = FindMetaTable("Player")
 function playerMeta:setWepRaised(state, notification)
     self:setNetVar("raised", state)
-    local weapon = self:GetActiveWeapon()
-    if IsValid(weapon) then
+    if IsValid(self:GetActiveWeapon()) then
+        local weapon = self:GetActiveWeapon()
         weapon:SetNextPrimaryFire(CurTime() + 1)
         weapon:SetNextSecondaryFire(CurTime() + 1)
         local weaponClass = weapon:GetClass()
