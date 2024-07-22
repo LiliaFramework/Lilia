@@ -30,16 +30,6 @@ end
 function OnCreateStoragePanel(localInvPanel, storageInvPanel, storage)
 end
 
---- Determines whether a player is allowed to spawn a container entity.
--- This hook allows customization of permissions for players to spawn containers.
--- @realm server
--- @client client The player attempting to spawn a container.
--- @entity entity The container entity being spawned.
--- @tab data Additional data related to the container being spawned.
--- @treturn bool Whether the player is allowed to spawn the container.
-function CanPlayerSpawnStorage(client, entity, data)
-end
-
 --- Determines whether data associated with a storage entity should be saved.
 -- This hook allows customization of conditions for saving data associated with a storage entity.
 -- @realm server
