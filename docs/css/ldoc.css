@@ -139,7 +139,7 @@ main {
 
 /* sidebar */
 nav {
-	color: var(--color-offwhite);
+	color: var(--color-black);
 	background-color: var(--color-background-dark);
 
 	position: fixed;
@@ -391,7 +391,7 @@ a.reference {
 .method {
 	display: flex;
 	flex-flow: column;
-	background-color: rgb(230, 230, 230);
+	background-color: rgb(33,33,33);
 	padding: var(--padding-tiny);
 	margin-top: var(--padding-small);
 }
