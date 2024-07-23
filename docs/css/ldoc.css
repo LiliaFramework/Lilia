@@ -58,7 +58,7 @@ ul li {
 /* landing */
 .landing {
 	background-color: var(--color-accent);
-	color: var(--color-white);
+	color: var(--color-background-light);
 
 	padding: 128px 0 128px 0;
 }
