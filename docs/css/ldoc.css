@@ -19,9 +19,9 @@
 
 	--color-accent: rgb(53, 133, 66);
 	--color-accent-dark: rgb(9, 69, 19);
-	--color-background-dark: rgb(255, 255, 255);
+	--color-white: rgb(255, 255, 255);
 	--color-offwhite: rgb(200, 200, 200);
-	--color-background-dark-accent: rgb(203, 190, 209);
+	--color-white-accent: rgb(203, 190, 209);
 	--color-black: rgb(0, 0, 0);
 	--color-lightgrey: rgb(15, 15, 15);
 	--color-background-light: rgb(240, 240, 240);
@@ -58,7 +58,7 @@ ul li {
 /* landing */
 .landing {
 	background-color: var(--color-accent);
-	color: var(--color-background-dark);
+	color: var(--color-white);
 
 	padding: 128px 0 128px 0;
 }
@@ -139,7 +139,7 @@ main {
 
 /* sidebar */
 nav {
-	color: var(--color-background-dark);
+	color: var(--color-offwhite);
 	background-color: var(--color-background-dark);
 
 	position: fixed;
@@ -152,7 +152,7 @@ nav {
 
 /* sidebar header */
 nav header {
-	color: var(--color-background-dark);
+	color: var(--color-white);
 	background-color: var(--color-accent);
 
 	padding: var(--padding-small);
@@ -168,7 +168,7 @@ nav header h1 {
 
 #search {
 	background-color: var(--color-accent-dark);
-	color: var(--color-background-dark);
+	color: var(--color-white);
 
 	border: none;
 	font-size: var(--font-normal);
@@ -179,7 +179,7 @@ nav header h1 {
 }
 
 #search::placeholder {
-	color: var(--color-background-dark-accent);
+	color: var(--color-white-accent);
 }
 
 #search::-webkit-search-cancel-button {
@@ -285,7 +285,7 @@ article header h2 {
 }
 
 article header.module a {
-	color: black !important;
+	color: white !important;
 	text-decoration: underline;
 }
 
@@ -370,7 +370,7 @@ a.reference {
 }
 
 .notice .title {
-	color: var(--color-background-dark);
+	color: var(--color-white);
 	background-color: var(--color-notice-background);
 
 	padding: var(--padding-tiny);
