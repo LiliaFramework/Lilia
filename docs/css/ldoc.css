@@ -19,11 +19,11 @@
 
 	--color-accent: rgb(53, 133, 66);
 	--color-accent-dark: rgb(9, 69, 19);
-	--color-white: rgb(0,0,0);
+	--color-white: rgb(255, 255, 255);
 	--color-offwhite: rgb(200, 200, 200);
 	--color-white-accent: rgb(203, 190, 209);
 	--color-black: rgb(0, 0, 0);
-	--color-lightgrey: rgb(160, 160, 160);
+	--color-lightgrey: rgb(15, 15, 15);
 	--color-background-light: rgb(240, 240, 240);
 	--color-background-dark: rgb(33, 33, 33);
 }
@@ -35,7 +35,7 @@
 }
 
 body {
-	background-color: var(--color-background-light);
+	background-color: var(--color-background-dark);
 	font-family: var(--font-style-normal);
 
 	display: flex;
