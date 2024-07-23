@@ -139,7 +139,7 @@ main {
 
 /* sidebar */
 nav {
-	color: var(--color-background-dark);
+	color: var(--color-offwhite);
 	background-color: var(--color-background-dark);
 
 	position: fixed;
