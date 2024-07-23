@@ -96,7 +96,7 @@ code {
 }
 
 pre {
-	background-color: rgb(33, 33, 33, 0.1);
+	background-color: rgb(255, 255, 255, 0.1);
 	margin-top: var(--padding-small);
 	padding: var(--padding-tiny);
 	overflow: auto;
