@@ -285,7 +285,7 @@ article header h2 {
 }
 
 article header.module a {
-	color: white !important;
+	color: black !important;
 	text-decoration: underline;
 }
 
