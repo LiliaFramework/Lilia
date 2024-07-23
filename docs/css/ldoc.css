@@ -416,7 +416,7 @@ a.reference {
 .method header h1 {
 	font-family: "Source Code Pro", monospace;
 	padding-bottom: var(--padding-tiny);
-	border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 	font-size: 20px;
 }
 
