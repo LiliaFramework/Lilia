@@ -14,27 +14,27 @@ permissions:
   pull-requests: write
   repository-projects: write
   security-events: write
-  : write
+  statuses: write
 
-jo
-  
-  n: ubuntu-latest
+jobs:
+  linter:
+    runs-on: ubuntu-latest
 
-  
-  : actions/checkout@v2
-  :
-  th: lilia
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: lilia
 
-  : leafo/gh-actions-lua@v8.0.0
-  :
-  aVersion: "5.2"
+    - uses: leafo/gh-actions-lua@v8.0.0
+      with:
+        luaVersion: "5.2"
 
-  : leafo/gh-actions-luarocks@v4.0.0
+    - uses: leafo/gh-actions-luarocks@v4.0.0
 
-  : Pull gluacheck
-  : actions/checkout@v2
-  :
-  pository: LiliaFramework/GluaCheck
+    - name: Pull gluacheck
+      uses: actions/checkout@v2
+      with:
+        repository: LiliaFramework/GluaCheck
         path: luacheck
 
     - name: Build gluacheck
