@@ -391,13 +391,13 @@ a.reference {
 .method {
 	display: flex;
 	flex-flow: column;
-	background-color: rgb(192,192,192);
+	background-color: rgb(55,55,55);
 	padding: var(--padding-tiny);
 	margin-top: var(--padding-small);
 }
 
 .method header {
-	color: rgb(192,192,192);
+	color: rgb(55,55,55);
 	background-color: inherit;
 	padding: 0;
 	order: -1;
