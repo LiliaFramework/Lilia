@@ -58,7 +58,7 @@ ul li {
 /* landing */
 .landing {
 	background-color: var(--color-accent);
-	color: var(--color-background-light);
+	color: var(--color-white);
 
 	padding: 128px 0 128px 0;
 }
@@ -152,7 +152,7 @@ nav {
 
 /* sidebar header */
 nav header {
-	color: var(--color-white);
+	color: var(--background-dark);
 	background-color: var(--color-accent);
 
 	padding: var(--padding-small);
@@ -168,7 +168,7 @@ nav header h1 {
 
 #search {
 	background-color: var(--color-accent-dark);
-	color: var(--color-white);
+	color: var(--background-darkbackground-dark);
 
 	border: none;
 	font-size: var(--font-normal);
@@ -370,7 +370,7 @@ a.reference {
 }
 
 .notice .title {
-	color: var(--color-white);
+	color: var(--background-dark);
 	background-color: var(--color-notice-background);
 
 	padding: var(--padding-tiny);
