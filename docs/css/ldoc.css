@@ -391,7 +391,7 @@ a.reference {
 .method {
 	display: flex;
 	flex-flow: column;
-	background-color: rgb(33,33,33);
+	background-color: rgb(255,255,255);
 	padding: var(--padding-tiny);
 	margin-top: var(--padding-small);
 }
