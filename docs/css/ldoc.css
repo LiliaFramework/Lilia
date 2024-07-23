@@ -139,7 +139,7 @@ main {
 
 /* sidebar */
 nav {
-	color: var(--color-offwhite);
+	color: var(--color-background-dark);
 	background-color: var(--color-background-dark);
 
 	position: fixed;
@@ -152,7 +152,7 @@ nav {
 
 /* sidebar header */
 nav header {
-	color: var(--background-dark);
+	color: var(--color-white);
 	background-color: var(--color-accent);
 
 	padding: var(--padding-small);
@@ -168,7 +168,7 @@ nav header h1 {
 
 #search {
 	background-color: var(--color-accent-dark);
-	color: var(--background-darkbackground-dark);
+	color: var(--color-white);
 
 	border: none;
 	font-size: var(--font-normal);
@@ -370,7 +370,7 @@ a.reference {
 }
 
 .notice .title {
-	color: var(--background-dark);
+	color: var(--color-white);
 	background-color: var(--color-notice-background);
 
 	padding: var(--padding-tiny);
