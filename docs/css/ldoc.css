@@ -135,6 +135,7 @@ main {
 
 	width: var(--content-width);
 	margin: auto;
+	color: var(--color-offwhite);
 }
 
 /* sidebar */
@@ -397,7 +398,7 @@ a.reference {
 }
 
 .method header {
-	color: rgb(55,55,55);
+	color: rgb(255,255,255);
 	background-color: inherit;
 	padding: 0;
 	order: -1;
@@ -425,7 +426,7 @@ a.reference {
 }
 
 .method h3 {
-	color: var(--color-accent-dark);
+	color: rgb(255,255,255);
 	font-size: var(--font-normal);
 	letter-spacing: 2px;
 	text-transform: uppercase;
@@ -487,7 +488,7 @@ a.reference {
 }
 
 .type {
-	background-color: rgb(31, 141, 155);
+	background-color: var(--color-accent);
 }
 
 a.type {

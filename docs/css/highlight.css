@@ -6,19 +6,19 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 
 .hljs {
   display: block;
-  color: #333;
+  color: #ffffff;
 }
 
 .hljs-comment,
 .hljs-quote {
-  color: #535346;
+  color: #ffffff;
   font-style: italic;
 }
 
 .hljs-keyword,
 .hljs-selector-tag,
 .hljs-subst {
-  color: #673ab7;
+  color: #ffffff;
   font-weight: bold;
 }
 
