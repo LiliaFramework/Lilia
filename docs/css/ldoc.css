@@ -17,8 +17,8 @@
 	--font-style-normal: Segoe UI, Helvetica, Arial, sans-serif;
 	--font-style-code: Consolas, monospace;
 
-	--color-accent: rgb(133, 212, 250);
-	--color-accent-dark: rgb(104, 184, 221);
+	--color-accent: rgb(103,58,183);
+	--color-accent-dark: rgb(62, 31, 117);
 	--color-white: rgb(255, 255, 255);
 	--color-offwhite: rgb(200, 200, 200);
 	--color-white-accent: rgb(203, 190, 209);
@@ -208,11 +208,11 @@ pre::-webkit-scrollbar-track {
 }
 
 nav section::-webkit-scrollbar-thumb {
-	background-color: var(--color-lightgrey);
+	background-color: var(--color-white);
 }
 
 pre::-webkit-scrollbar-thumb {
-	background-color: var(--color-lightgrey);
+	background-color: var(--color-white);
 }
 
 /* sidebar contents category */
@@ -265,8 +265,8 @@ article .wrapper > *:first-child {
 
 /* header */
 article header {
-	color: rgb(255, 255, 255);
-	background-color: rgb(104, 184, 221);
+	color: var(--color-white);
+	background-color: var(--color-accent-dark);
 	padding: var(--padding-tiny);
 }
 
@@ -313,7 +313,7 @@ article h2 {
 }
 
 article h3 {
-	color: rgb(104, 184, 221);
+	color: var(--color-accent-dark);
 	margin-top: var(--padding-tiny);
 	text-transform: uppercase;
 }
@@ -326,13 +326,13 @@ article p a,
 article ul li a,
 article h1 a,
 article h2 a {
-	color: rgb(104, 184, 221);
+	color: var(--color-accent-dark);
 	font-weight: 600;
 }
 
 article h1.title {
-	color: rgb(255, 255, 255);
-	background-color: rgb(104, 184, 221);
+	color: var(--color-white);
+	background-color: var(--color-accent-dark);
 	margin-top: var(--padding-small);
 	margin-bottom: 0;
 	padding: var(--padding-tiny);
@@ -344,7 +344,7 @@ article h1.title {
 }
 
 a.reference {
-	color: rgb(104, 184, 221);
+	color: var(--color-accent-dark);
 	float: right;
 	margin-top: 8px;
 	padding-left: 8px;
@@ -425,7 +425,7 @@ a.reference {
 }
 
 .method h3 {
-	color: rgb(104, 184, 221);
+	color: var(--color-accent-dark);
 	font-size: var(--font-normal);
 	letter-spacing: 2px;
 	text-transform: uppercase;
@@ -468,14 +468,14 @@ a.reference {
 }
 
 .method ul li a {
-	color: rgb(104, 184, 221);
+	color: var(--color-accent-dark);
 	font-weight: 600;
 }
 
 /* we have to manually specify these instead of making a shared class since you cannot customize the parameter class in ldoc */
 .parameter, .type, .default {
 	display: inline-block;
-	color: rgb(255, 255, 255) !important;
+	color: var(--color-white) !important;
 
 	padding: 4px;
 	font-size: 14px;
@@ -483,7 +483,7 @@ a.reference {
 }
 
 .parameter {
-	background-color: rgb(104, 184, 221);
+	background-color: var(--color-accent-dark);
 }
 
 .type {
