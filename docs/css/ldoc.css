@@ -265,13 +265,13 @@ article .wrapper > *:first-child {
 
 /* header */
 article header {
-	color: rgb(255, 255, 255);
+	color: rgb(0, 0, 0);
 	background-color: rgb(9, 69, 19);
 	padding: var(--padding-tiny);
 }
 
 article header h1 {
-	border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.25);
 	padding-bottom: 8px;
 	font-family: var(--font-style-code);
 	margin: 0;
@@ -331,7 +331,7 @@ article h2 a {
 }
 
 article h1.title {
-	color: rgb(255, 255, 255);
+	color: rgb(0, 0, 0);
 	background-color: rgb(9, 69, 19);
 	margin-top: var(--padding-small);
 	margin-bottom: 0;
@@ -475,7 +475,7 @@ a.reference {
 /* we have to manually specify these instead of making a shared class since you cannot customize the parameter class in ldoc */
 .parameter, .type, .default {
 	display: inline-block;
-	color: rgb(255, 255, 255) !important;
+	color: rgb(0, 0, 0) !important;
 
 	padding: 4px;
 	font-size: 14px;
