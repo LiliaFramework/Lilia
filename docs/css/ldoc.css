@@ -58,7 +58,7 @@ ul li {
 /* landing */
 .landing {
 	background-color: var(--color-accent);
-	color: var(--color-white);
+	color: var(--color-black);
 
 	padding: 128px 0 128px 0;
 }
@@ -152,7 +152,7 @@ nav {
 
 /* sidebar header */
 nav header {
-	color: var(--color-white);
+	color: var(--color-black);
 	background-color: var(--color-accent);
 
 	padding: var(--padding-small);
@@ -168,7 +168,7 @@ nav header h1 {
 
 #search {
 	background-color: var(--color-accent-dark);
-	color: var(--color-white);
+	color: var(--color-black);
 
 	border: none;
 	font-size: var(--font-normal);
@@ -179,7 +179,7 @@ nav header h1 {
 }
 
 #search::placeholder {
-	color: var(--color-white-accent);
+	color: var(--color-black-accent);
 }
 
 #search::-webkit-search-cancel-button {
@@ -370,7 +370,7 @@ a.reference {
 }
 
 .notice .title {
-	color: var(--color-white);
+	color: var(--color-black);
 	background-color: var(--color-notice-background);
 
 	padding: var(--padding-tiny);
