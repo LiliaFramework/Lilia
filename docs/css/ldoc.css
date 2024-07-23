@@ -17,8 +17,8 @@
 	--font-style-normal: Segoe UI, Helvetica, Arial, sans-serif;
 	--font-style-code: Consolas, monospace;
 
-	--color-accent: rgb(53, 133, 66);
-	--color-accent-dark: rgb(9, 69, 19);
+	--color-accent: rgb(133, 212, 250);
+	--color-accent-dark: rgb(104, 184, 221);
 	--color-white: rgb(255, 255, 255);
 	--color-offwhite: rgb(200, 200, 200);
 	--color-white-accent: rgb(203, 190, 209);
@@ -266,7 +266,7 @@ article .wrapper > *:first-child {
 /* header */
 article header {
 	color: rgb(255, 255, 255);
-	background-color: rgb(9, 69, 19);
+	background-color: rgb(104, 184, 221);
 	padding: var(--padding-tiny);
 }
 
@@ -313,7 +313,7 @@ article h2 {
 }
 
 article h3 {
-	color: rgb(9, 69, 19);
+	color: rgb(104, 184, 221);
 	margin-top: var(--padding-tiny);
 	text-transform: uppercase;
 }
@@ -326,13 +326,13 @@ article p a,
 article ul li a,
 article h1 a,
 article h2 a {
-	color: rgb(9, 69, 19);
+	color: rgb(104, 184, 221);
 	font-weight: 600;
 }
 
 article h1.title {
 	color: rgb(255, 255, 255);
-	background-color: rgb(9, 69, 19);
+	background-color: rgb(104, 184, 221);
 	margin-top: var(--padding-small);
 	margin-bottom: 0;
 	padding: var(--padding-tiny);
@@ -344,7 +344,7 @@ article h1.title {
 }
 
 a.reference {
-	color: rgb(9, 69, 19);
+	color: rgb(104, 184, 221);
 	float: right;
 	margin-top: 8px;
 	padding-left: 8px;
@@ -409,7 +409,7 @@ a.reference {
 }
 
 .method header .anchor:target h1 {
-	background-color: rgba(53, 133, 66, 0.2);
+	background-color: rgba(133, 212, 250, 0.2);
 	background-clip: content-box;
 }
 
@@ -425,7 +425,7 @@ a.reference {
 }
 
 .method h3 {
-	color: rgb(9, 69, 19);
+	color: rgb(104, 184, 221);
 	font-size: var(--font-normal);
 	letter-spacing: 2px;
 	text-transform: uppercase;
@@ -468,7 +468,7 @@ a.reference {
 }
 
 .method ul li a {
-	color: rgb(9, 69, 19);
+	color: rgb(104, 184, 221);
 	font-weight: 600;
 }
 
@@ -483,7 +483,7 @@ a.reference {
 }
 
 .parameter {
-	background-color: rgb(9, 69, 19);
+	background-color: rgb(104, 184, 221);
 }
 
 .type {
@@ -504,7 +504,7 @@ a.type {
 }
 
 .or {
-	color: rgba(53, 133, 66, 0.5);
+	color: rgba(133, 212, 250, 0.5);
 	background-color: inherit;
 
 	width: calc(100% - 32px);
@@ -513,7 +513,7 @@ a.type {
 
 	text-align: center;
 	font-weight: 600;
-	border-bottom: 1px solid rgba(53, 133, 66, 0.5);
+	border-bottom: 1px solid rgba(133, 212, 250, 0.5);
 }
 
 .or span {
