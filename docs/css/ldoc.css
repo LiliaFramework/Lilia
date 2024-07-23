@@ -397,7 +397,7 @@ a.reference {
 }
 
 .method header {
-	color: rgb(33,33,33);
+	color: rgb(211, 211, 211);
 	background-color: inherit;
 	padding: 0;
 	order: -1;
