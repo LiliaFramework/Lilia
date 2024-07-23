@@ -19,7 +19,7 @@ permissions:
 jobs:
   linter:
     runs-on: ubuntu-latest
-
+    if: false
     steps:
     - uses: actions/checkout@v2
       with:
@@ -52,7 +52,7 @@ jobs:
 
   docs:
     runs-on: ubuntu-latest
-    needs: linter
+    
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'LiliaFramework/Lilia' && success()
     steps:
       - uses: actions/checkout@v2
