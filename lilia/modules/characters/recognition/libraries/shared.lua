@@ -7,7 +7,7 @@
     if character.id == id then return true end
     local faction = lia.faction.indices[other:getFaction()]
     if faction and faction.isGloballyRecognized then return true end
-    if self.FactionAutoRecognize and (character:getFaction() == other:getFaction() and (self.MemberToMemberAutoRecognition[character:getFaction()] and self.MemberToMemberAutoRecognition[other:getFaction()])) then return true end
+    if character:getFaction() == other:getFaction() and faction.MemberToMemberAutoRecognition then return true end
     if client:isStaffOnDuty() or otherclient:isStaffOnDuty() then return true end
     if recognized ~= "" and recognized:find("," .. id .. ",") then return true end
     return false

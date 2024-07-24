@@ -18,8 +18,8 @@ function MODULE:OnReloaded()
 end
 
 function MODULE:ShouldShowPlayerOnScoreboard(client)
-    local team = client:Team()
-    if table.HasValue(self.HiddenFactions, team) then return false end
+    local faction = lia.faction.indices[client:Team()]
+    if faction and faction.ScoreboardHidden then return false end
 end
 
 function MODULE:ShowPlayerOptions(target, options)
