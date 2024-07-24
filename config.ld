@@ -52,7 +52,7 @@ custom_tags = {
 }
 
 custom_display_name_handler = function(item, default_handler)
-         PrintTable(item)
+         print(item)
          print(default_handler)
 
     if item.type == "function" and item.module then
