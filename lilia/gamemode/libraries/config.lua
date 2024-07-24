@@ -55,7 +55,7 @@ if not ConfigWasInitialized then
         WalkRatio = 0.5,
         AllowExistNames = true,
         GamemodeName = "A Lilia Gamemode",
-        Color = Color(133, 212, 250),
+        Color = Color(103, 58, 183),
         Font = "Arial",
         GenericFont = "Segoe UI",
         MoneyModel = "models/props_lab/box01a.mdl",
