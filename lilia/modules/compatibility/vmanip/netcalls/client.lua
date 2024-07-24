@@ -1,5 +1,6 @@
-﻿local MODULE = MODULE
-net.Receive("PlayPickupAnimation", function()
+﻿net.Receive("PlayPickupAnimation", function()
     local itemID = net.ReadString()
-    if itemID and VManip.PlayAnim and not table.HasValue(MODULE.VManipTakeBlacklist, itemID) then VManip:PlayAnim("interactslower") end
+    local item = lia.item.list[itemID]
+    local isDisabled = item.VManipDisabled
+    if item and VManip.PlayAnim and not isDisabled then VManip:PlayAnim("interactslower") end
 end)

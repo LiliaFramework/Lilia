@@ -1,6 +1,7 @@
 ﻿util.AddNetworkString("PlayPickupAnimation")
 function MODULE:OnPlayerInteractItem(client, action, item)
-    if action == "take" and not table.HasValue(self.VManipTakeBlacklist, itemID) then
+    local isDisabled = item.VManipDisabled
+    if action == "take" and not isDisabled then
         net.Start("PlayPickupAnimation")
         net.WriteString(item.uniqueID)
         net.Send(client)

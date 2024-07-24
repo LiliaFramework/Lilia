@@ -83,3 +83,9 @@
 - Addon URL: [VJBase](https://steamcommunity.com/workshop/filedetails/?id=131759821)
 
 - Compatibility Added: Made the server enable certain settings by default, improving performance, and removed some harmful hooks.
+
+## VManip
+
+- Addon URL: [VManip](https://steamcommunity.com/workshop/filedetails/?id=2155366756)
+
+- Compatibility Added: Allows for item pickups to have VManip Animations.
