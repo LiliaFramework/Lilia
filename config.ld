@@ -52,9 +52,8 @@ custom_tags = {
 }
 
 custom_display_name_handler = function(item, default_handler)
-         print(item)
-         print(default_handler)
-
+    print(item)
+    print(default_handler)
     if item.type == "function" and item.module then
         if item.module.type == "meta" or item.module.type == "modmeta" then
             if item.module.group == "Character" then
