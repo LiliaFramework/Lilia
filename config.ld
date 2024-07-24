@@ -1,15 +1,15 @@
 file = {
-   "docs/hooks",
-   "lilia",
-   exclude = {"lilia/gamemode/libraries/thirdparty"}
+    "docs/hooks",
+    "lilia",
+    exclude = {"lilia/gamemode/libraries/thirdparty"}
 }
 
 module_file = {
-   Character = "lilia/gamemode/libraries/meta/character.lua",
-   Entity = "lilia/gamemode/libraries/meta/entity.lua",
-   Inventory = "lilia/gamemode/libraries/meta/inventory.lua",
-   Item = "lilia/gamemode/libraries/meta/item.lua",
-   Player = "lilia/gamemode/libraries/meta/player.lua"
+    Character = "lilia/gamemode/libraries/meta/character.lua",
+    Entity = "lilia/gamemode/libraries/meta/entity.lua",
+    Inventory = "lilia/gamemode/libraries/meta/inventory.lua",
+    Item = "lilia/gamemode/libraries/meta/item.lua",
+    Player = "lilia/gamemode/libraries/meta/player.lua"
 }
 
 dir = "docs/html"
@@ -31,9 +31,8 @@ no_viewed_topic_at_top = true -- don't put the currently viewed topic at the top
 use_new_templates = true -- new templating system
 pretty_urls = true -- avoid showing .html in urls
 pretty_topic_names = true -- strips extension from manual filenames, this does not check filename collisions
-
 kind_names = {
-   module = "Libraries",
+    module = "Libraries",
 }
 
 custom_tags = {
@@ -79,7 +78,6 @@ new_type("factions", "Factions", true)
 new_type("classes", "Classes", true)
 new_type("library", "Libraries", true)
 new_type("hooks", "Hooks", true)
-new_type("meta", "Meta", true)
 new_type("character", "Character", true)
 new_type("entity", "Entity", true)
 new_type("item", "Item", true)
