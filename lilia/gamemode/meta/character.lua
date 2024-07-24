@@ -11,7 +11,7 @@ part, you'll want to keep all information stored on the character since it will 
 player switches to another character. An easy way to do this is to use `lia.char.registerVar` to easily create accessor functions
 for variables that automatically save to the character object.
 ]]
--- @character Core
+-- @character Core Meta
 local characterMeta = lia.meta.character or {}
 characterMeta.__index = characterMeta
 characterMeta.id = characterMeta.id or 0
