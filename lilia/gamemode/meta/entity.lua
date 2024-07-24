@@ -6,7 +6,7 @@ between Lilia's own classes, and to reduce boilerplate code.
 
 See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Entity) for all other methods that the `Player` class has.
 ]]
--- @meta_entity Entity
+-- @metaentity Entity
 local playerMeta = FindMetaTable("Player")
 local entityMeta = FindMetaTable("Entity")
 local ChairCache = {}

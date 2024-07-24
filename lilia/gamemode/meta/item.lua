@@ -8,7 +8,7 @@ For an item to have an actual presence, they need to be instanced (usually by sp
 properties, while instances are a clone of these properties that can have their own unique data (e.g an ID card will have the
 same name but different numerical IDs). You can think of items as the class, while instances are objects of the `Item` class.
 ]]
--- @meta_item Item
+-- @metaitem Item
 local ITEM = lia.meta.item or {}
 debug.getregistry().Item = lia.meta.item
 ITEM.__index = ITEM
