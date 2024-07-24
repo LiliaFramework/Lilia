@@ -17,6 +17,7 @@
 	--font-style-normal: Segoe UI, Helvetica, Arial, sans-serif;
 	--font-style-code: Consolas, monospace;
 
+	--color-accent-hyperlinks: rgb(152, 99, 243);
 	--color-accent: rgb(103,58,183);
 	--color-accent-dark: rgb(62, 31, 117);
 	--color-white: rgb(255, 255, 255);
@@ -327,7 +328,7 @@ article p a,
 article ul li a,
 article h1 a,
 article h2 a {
-	color: var(--color-accent-dark);
+	color: var(--color-accent-hyperlinks);
 	font-weight: 600;
 }
 
