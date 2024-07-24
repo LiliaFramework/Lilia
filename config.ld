@@ -52,31 +52,24 @@ custom_tags = {
 }
 
 custom_display_name_handler = function(item, default_handler)
-    for k, v in pairs(item) do
-        print(k, v)
-    end
-
     if item.type == "function" and item.module then
-        if item.module.type == "meta" or item.module.type == "modmeta" then
-            if item.module.group == "Character" then
-                return "characterMeta:" .. default_handler(item)
-            elseif item.module.group == "Entity" then
-                return "entityMeta:" .. default_handler(item)
-            elseif item.module.group == "Item" then
-                return "itemMeta:" .. default_handler(item)
-            elseif item.module.group == "Player" then
-                return "playerMeta:" .. default_handler(item)
-            elseif item.module.group == "Inventory" then
-                return "inventoryMeta:" .. default_handler(item)
-            end
-            return "meta:" .. default_handler(item)
-        elseif item.module.type == "hooks" then
+        if item.module.type == "hooks" then
             if item.module.mod_name == "Class" then
                 return "CLASS:" .. default_handler(item)
             elseif item.module.mod_name == "Faction" then
                 return "FACTION:" .. default_handler(item)
             end
             return "MODULE:" .. default_handler(item)
+        elseif item.module.type == "character" then
+            return "characterMeta:" .. default_handler(item)
+        elseif item.module.type == "entity" then
+            return "entityMeta:" .. default_handler(item)
+        elseif item.module.type == "item" then
+            return "itemMeta:" .. default_handler(item)
+        elseif item.module.type == "player" then
+            return "playerMeta:" .. default_handler(item)
+        elseif item.module.type == "inventory" then
+            return "inventoryMeta:" .. default_handler(item)
         end
     end
     return default_handler(item)
@@ -87,7 +80,11 @@ new_type("classes", "Classes", true)
 new_type("library", "Libraries", true)
 new_type("hooks", "Hooks", true)
 new_type("meta", "Meta", true)
-new_type("modmeta", "Module Meta", true)
+new_type("character", "Character", true)
+new_type("entity", "Entity", true)
+new_type("item", "Item", true)
+new_type("player", "Player", true)
+new_type("inventory", "Inventry", true)
 new_type("configuration", "Configurations", true)
 new_type("structures", "Structures", true)
 new_type("information", "Information", true)

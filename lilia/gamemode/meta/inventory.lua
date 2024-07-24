@@ -16,7 +16,7 @@ You may be looking for the following common functions:
 
 `hasItem` Which checks if the inventory has an item.
 ]]
--- @meta Inventory
+-- @inventory Core
 local Inventory = lia.Inventory or {}
 Inventory.__index = Inventory
 lia.Inventory = Inventory
