@@ -43,12 +43,7 @@ custom_tags = {
 }
 
 custom_display_name_handler = function(item, default_handler)
-    for k, v in pairs(item) do
-    if k == "kind" then
-        print(k, v)
-        end
-    end
-
+print(item.module.kind)
     if item.type == "function" and item.module then
         if item.module.type == "hooks" then
             if item.module.mod_name == "Class" then
@@ -57,15 +52,15 @@ custom_display_name_handler = function(item, default_handler)
                 return "FACTION:" .. default_handler(item)
             end
             return "MODULE:" .. default_handler(item)
-        elseif item.module.mod_name == "character" then
+        elseif item.module.kind == "character meta" then
             return "characterMeta:" .. default_handler(item)
-        elseif item.module.mod_name == "entity" then
+        elseif item.module.kind == "entity meta" then
             return "entityMeta:" .. default_handler(item)
-        elseif item.module.mod_name == "item" then
+        elseif item.module.kind == "item meta" then
             return "itemMeta:" .. default_handler(item)
-        elseif item.module.mod_name == "player" then
+        elseif item.module.kind == "player meta" then
             return "playerMeta:" .. default_handler(item)
-        elseif item.module.mod_name == "inventory" then
+        elseif item.module.kind == "inventory meta" then
             return "inventoryMeta:" .. default_handler(item)
         end
     end
