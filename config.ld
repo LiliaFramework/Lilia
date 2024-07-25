@@ -44,6 +44,7 @@ custom_tags = {
 
 custom_display_name_handler = function(item, default_handler)
     if item.type == "function" and item.module then
+        print(print(item.module.kind))
         if item.module.type == "hooks" then
             if item.module.mod_name == "Class" then
                 return "CLASS:" .. default_handler(item)
