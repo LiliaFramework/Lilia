@@ -30,3 +30,4 @@
 -- @field PlayerSpawnVehicleDelay Delay for spawning a vehicle after the previous one | **integer**
 -- @field ToolInterval ToolGun Usage Cooldown | **integer**
 -- @field ButtonList List of button models to prevent button spamming exploits | **table**
+-- @field DisableLuaRun Weather or not Lilia should prevent lua_run hooks on maps | **boolean**
