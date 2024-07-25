@@ -43,9 +43,12 @@ custom_tags = {
 }
 
 custom_display_name_handler = function(item, default_handler)
-for k,v in pairs(item) do
-print(k,v)
-end
+    for k, v in pairs(item) do
+    if k == "kind" then
+        print(k, v)
+        end
+    end
+
     if item.type == "function" and item.module then
         if item.module.type == "hooks" then
             if item.module.mod_name == "Class" then
