@@ -4,14 +4,6 @@ file = {
     exclude = {"lilia/gamemode/libraries/thirdparty"}
 }
 
-module_file = {
-    Character = "lilia/gamemode/libraries/meta/character.lua",
-    Entity = "lilia/gamemode/libraries/meta/entity.lua",
-    Inventory = "lilia/gamemode/libraries/meta/inventory.lua",
-    Item = "lilia/gamemode/libraries/meta/item.lua",
-    Player = "lilia/gamemode/libraries/meta/player.lua"
-}
-
 dir = "docs/html"
 project = "Lilia"
 title = "Lilia Documentation"
@@ -21,7 +13,7 @@ template = "docs/templates"
 format = "markdown"
 ignore = true
 use_markdown_titles = true
-topics = {"docs/information", "docs/store", "docs/structures",}
+topics = {"docs/information", "docs/store", "docs/structures", "docs/contents",}
 merge = true
 sort = true
 sort_modules = true
