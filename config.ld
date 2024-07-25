@@ -43,7 +43,7 @@ custom_tags = {
 }
 
 custom_display_name_handler = function(item, default_handler)
-for k,v in pairs(item)
+for k,v in pairs(item) do
 print(k,v)
 end
     if item.type == "function" and item.module then
