@@ -18,15 +18,24 @@
 	<h2>Wikis</h2>
 	<p>Explore the various schemas available for Lilia:</p>
 	<ul>
-		<li><a href="https://github.com/LiliaFramework/Lilia" target="_blank">Framework</a></li>
+				<li><a href="https://github.com/LiliaFramework/Lilia" target="_blank">Framework</a></li>
+
 		<li><a href="https://github.com/LiliaFramework/Skeleton" target="_blank">Skeleton Schema</a></li>
+
 		<li><a href="https://github.com/LiliaFramework/MafiaRP" target="_blank">MafiaRP Schema</a></li>
+
 		<li><a href="https://github.com/LiliaFramework/1942RP" target="_blank">1942RP Schema</a></li>
+
 		<li><a href="https://github.com/LiliaFramework/HL2RP" target="_blank">HL2RP Schema</a></li>
+
 		<li><a href="https://github.com/LiliaFramework/MetroRP" target="_blank">MetroRP Schema</a></li>
+
 		<li><a href="https://github.com/LiliaFramework/SCPRP" target="_blank">SCPRP Schema</a></li>
+
 		<li><a href="https://github.com/LiliaFramework/KaiserReichRP" target="_blank">KaiserReichRP Schema</a></li>
+
 		<li><a href="https://github.com/LiliaFramework/FalloutRP" target="_blank">FalloutRP Schema</a></li>
+		
 		<li><a href="https://github.com/LiliaFramework/Modules" target="_blank">Public Modules</a></li>
 	</ul>
 </div>
