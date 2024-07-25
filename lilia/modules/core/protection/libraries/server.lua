@@ -51,7 +51,7 @@ end
 
 function MODULE:OnEntityCreated(entity)
     local class = entity:GetClass():lower():Trim()
-    if class == "lua_run" and self.DisableLuaRun then
+    if class == "lua_run" and not self.DisableLuaRun then
         print("[Notify] lua_run entity detected and will be removed.")
         function entity:AcceptInput()
             return true
