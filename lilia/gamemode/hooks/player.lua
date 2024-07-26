@@ -128,7 +128,7 @@ function GM:SetupBotPlayer(client)
     }, botID, client, client:SteamID64())
 
     local defaultClass = lia.faction.getDefaultClass(faction.index)
-    if defaultClass then target:getChar():joinClass(defaultClass.index) end
+    if defaultClass then character:joinClass(defaultClass.index) end
     character.isBot = true
     character.vars.inv = {}
     inventory.id = "bot" .. character:getID()
