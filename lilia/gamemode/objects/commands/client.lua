@@ -32,13 +32,6 @@ lia.command.add("charsetjump", {
     onRun = function() end
 })
 
-lia.command.add("charaddmoney", {
-    privilege = "Add Money",
-    superAdminOnly = true,
-    syntax = "<string target> <number amount>",
-    onRun = function() end
-})
-
 lia.command.add("charban", {
     superAdminOnly = true,
     syntax = "<string name>",
@@ -106,7 +99,8 @@ lia.command.add("charaddmoney", {
     superAdminOnly = true,
     syntax = "<string target> <number amount>",
     privilege = "Change Money",
-    onRun = function() end
+    onRun = function() end,
+    alias = {"chargivemoney"}
 })
 
 lia.command.add("clearinv", {
@@ -465,5 +459,10 @@ lia.command.add("listbodygroups", {
     syntax = "<string target>",
     privilege = "List Bodygroups",
     adminOnly = true,
+    onRun = function() end
+})
+
+lia.command.add("entityName", {
+    adminOnly = false,
     onRun = function() end
 })

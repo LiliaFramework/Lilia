@@ -65,25 +65,6 @@ lia.command.add("charsetjump", {
     end
 })
 
-lia.command.add("charaddmoney", {
-    privilege = "Add Money",
-    superAdminOnly = true,
-    syntax = "<string target> <number amount>",
-    onRun = function(client, arguments)
-        local amount = tonumber(arguments[2])
-        if not amount or not isnumber(amount) or amount < 0 then return "@invalidArg", 2 end
-        local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then
-            local character = target:getChar()
-            if character and amount then
-                amount = math.Round(amount)
-                character:giveMoney(amount)
-                client:notify("You added " .. lia.currency.get(amount) .. " to " .. target:Name() .. " wallet's")
-            end
-        end
-    end
-})
-
 lia.command.add("charban", {
     superAdminOnly = true,
     syntax = "<string name>",
@@ -266,7 +247,8 @@ lia.command.add("charaddmoney", {
                 client:notify("You added " .. lia.currency.get(amount) .. " to " .. target:Name() .. "'s money. Total: " .. lia.currency.get(currentMoney + amount))
             end
         end
-    end
+    end,
+    alias = {"chargivemoney"}
 })
 
 lia.command.add("clearinv", {
@@ -1187,5 +1169,31 @@ lia.command.add("listbodygroups", {
                 if target:GetBodygroupCount(i) > 1 then client:chatNotify(i .. " = " .. target:GetBodygroupName(i) .. "(0-" .. (target:GetBodygroupCount(i) - 1) .. ")") end
             end
         end
+    end
+})
+
+lia.command.add("entityName", {
+    adminOnly = false,
+    onRun = function(client)
+        local entity = client:GetEyeTrace().Entity
+        if not IsValid(entity) then
+            client:chatNotify("Invalid Entity!")
+            return
+        end
+
+        local entityClass = entity:GetClass()
+        if entityClass == "worldspawn" then
+            client:chatNotify("Invalid Entity!")
+            return
+        end
+
+        if entity:IsPlayer() then
+            client:chatNotify("You can't use this on humans!")
+            return
+        end
+
+        local entityName = entity:GetName()
+        client:chatNotify("Entity Name: " .. entityName)
+        client:chatNotify("Entity Class: " .. entityClass)
     end
 })
