@@ -64,6 +64,49 @@ function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
 
+--- Retrieves an item instance by its ID and determines its location.
+-- @int itemID The ID of the item instance.
+-- @return tab The item instance along with its location.
+-- @realm shared
+function lia.item.getItemByID(itemID)
+    assert(isnumber(itemID), "itemID must be a number")
+    local item = lia.item.instances[itemID]
+    if not item then return nil, "Item not found" end
+    local location = "unknown"
+    if item.invID then
+        local inventory = lia.item.getInv(item.invID)
+        if inventory then location = "inventory" end
+    elseif item.entity and IsValid(item.entity) then
+        location = "world"
+    end
+    return {
+        item = item,
+        location = location
+    }
+end
+
+--- Retrieves an instanced item by its ID.
+-- @int itemID The ID of the item instance.
+-- @return tab The item instance.
+-- @realm shared
+function lia.item.getInstancedItemByID(itemID)
+    assert(isnumber(itemID), "itemID must be a number")
+    local item = lia.item.instances[itemID]
+    if not item then return nil, "Item not found" end
+    return item
+end
+
+--- Retrieves an item's data by its ID.
+-- @int itemID The ID of the item instance.
+-- @return tab The item's data.
+-- @realm shared
+function lia.item.getItemDataByID(itemID)
+    assert(isnumber(itemID), "itemID must be a number")
+    local item = lia.item.instances[itemID]
+    if not item then return nil, "Item not found" end
+    return item.data
+end
+
 --- Loads an item from a Lua file.
 -- @string path The path to the Lua file.
 -- @string baseID The base ID of the item.
@@ -271,6 +314,24 @@ function lia.item.createInv(w, h, id)
 end
 
 if SERVER then
+    --- Sets the data of an item by its ID.
+    -- @int itemID The ID of the item instance.
+    -- @string key The data key to set.
+    -- @any value The value to set for the data key.
+    -- @tab receivers Optional table of receivers for network updates.
+    -- @bool noSave Optional flag to skip database saving.
+    -- @bool noCheckEntity Optional flag to skip entity checks.
+    -- @return boolean Success status.
+    -- @realm server
+    function lia.item.setItemDataByID(itemID, key, value, receivers, noSave, noCheckEntity)
+        assert(isnumber(itemID), "itemID must be a number")
+        assert(isstring(key), "key must be a string")
+        local item = lia.item.instances[itemID]
+        if not item then return false, "Item not found" end
+        item:setData(key, value, receivers, noSave, noCheckEntity)
+        return true
+    end
+
     --- Instantiates an item and adds it to an inventory.
     -- @int index- The inventory index or unique ID.
     -- @param uniqueID - The unique ID of the item or item data.
