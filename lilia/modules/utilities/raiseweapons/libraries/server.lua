@@ -2,7 +2,7 @@
     if self.WepAlwaysRaised then return end
     if IsValid(client) and IsValid(newWeapon) then
         local weaponClass = newWeapon:GetClass()
-        if weaponClass ~= "lia_hands" and weaponClass ~= "lia_keys" then timer.Simple(1, function() client:setWepRaised(true, false) end) end
+        if weaponClass ~= "lia_hands" and weaponClass ~= "lia_keys" then timer.Simple(1, function() if IsValid(client) then client:setWepRaised(true, false) end end) end
     end
 end
 
