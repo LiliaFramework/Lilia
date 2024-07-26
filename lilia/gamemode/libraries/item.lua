@@ -317,7 +317,7 @@ if SERVER then
     --- Sets the data of an item by its ID.
     -- @int itemID The ID of the item instance.
     -- @string key The data key to set.
-    -- @any value The value to set for the data key.
+    -- @param value The value to set for the data key.
     -- @tab receivers Optional table of receivers for network updates.
     -- @bool noSave Optional flag to skip database saving.
     -- @bool noCheckEntity Optional flag to skip entity checks.
@@ -334,7 +334,7 @@ if SERVER then
 
     --- Instantiates an item and adds it to an inventory.
     -- @int index- The inventory index or unique ID.
-    -- @param uniqueID - The unique ID of the item or item data.
+    -- @string uniqueID - The unique ID of the item or item data.
     -- @tab itemData The item data.
     -- @int x The x-coordinate.
     -- @int y The y-coordinate.
