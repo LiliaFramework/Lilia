@@ -51,6 +51,7 @@ end
 
 function MODULE:OnEntityCreated(entity)
     local class = entity:GetClass():lower():Trim()
+    entity:SetCustomCollisionCheck(true)
     if class == "lua_run" and not self.DisableLuaRun then
         print("[Notify] lua_run entity detected and will be removed.")
         function entity:AcceptInput()
@@ -109,7 +110,11 @@ function MODULE:OnPlayerHitGround(client)
 end
 
 function MODULE:ShouldCollide(ent1, ent2)
+    local dangerousCollisions = (ent1:GetClass() == "lia_money" or ent2:GetClass() == "lia_money") or (ent1:GetClass() == "lia_item" or ent2:GetClass() == "lia_item") or (ent1:GetClass() == "prop_physics" or ent2:GetClass() == "prop_physics")
+    local isElevator = ent1:GetClass() == "func_tanktrain" or ent2:GetClass() == "func_tanktrain"
+    if dangerousCollisions and isElevator then return false end
     if table.HasValue(self.BlockedCollideEntities, ent1:GetClass()) and table.HasValue(self.BlockedCollideEntities, ent2:GetClass()) then return false end
+    return true
 end
 
 function MODULE:PlayerEnteredVehicle(_, entity)
