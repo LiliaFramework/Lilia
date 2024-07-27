@@ -245,23 +245,10 @@ lia.char.registerVar("model", {
     onValidate = function(_, data)
         local faction = lia.faction.indices[data.faction]
         if faction then
-            if not data.model then
-                return false, "needModel"
-            else
-                local modelFound = false
-                for _, model in ipairs(faction.models) do
-                    if model == data.model then
-                        modelFound = true
-                        break
-                    end
-                end
-
-                if not modelFound then return false, "needModel" end
-            end
+            if not data.model or not faction.models[data.model] then return false, "needModel" end
         else
             return false, "needModel"
         end
-        return true
     end,
     onAdjust = function(_, data, value, newData)
         local faction = lia.faction.indices[data.faction]
