@@ -90,3 +90,11 @@ if not ConfigWasInitialized then
     hook.Run("InitializedConfig")
     ConfigWasInitialized = true
 end
+
+--- Retrieves a value from the configuration table.
+-- @string key The configuration key to retrieve.
+-- @param default The default value to return if the key is not found.
+-- @return The value of the configuration key or the default value if the key is not found.
+function lia.config.get(key, default)
+    return lia.config[key] ~= nil and lia.config[key] or default
+end
