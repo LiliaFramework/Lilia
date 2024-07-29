@@ -285,7 +285,7 @@ else
     -- @realm client
     -- @string command Unique ID of the command
     -- @tab ... Arguments to pass to the command
-    -- @usage lia.command.send("roll", 10)
+    -- @usage lia.command.send("roll")
     function lia.command.send(command, ...)
         netstream.Start("cmd", command, {...})
     end
