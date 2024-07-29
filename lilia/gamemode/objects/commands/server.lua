@@ -759,7 +759,11 @@ lia.command.add("rolld", {
 
 lia.command.add("roll", {
     adminOnly = false,
-    onRun = function(client) lia.chat.send(client, "roll", math.random(0, 100)) end
+    onRun = function(client)
+        local rollValue = math.random(0, 100)
+        lia.chat.send(client, "roll", rollValue)
+        lia.log.add(client, "roll", rollValue)
+    end
 })
 
 lia.command.add("chardesc", {

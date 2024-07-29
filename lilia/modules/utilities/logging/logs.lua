@@ -203,18 +203,7 @@
         PLogs = "Toolgun",
         color = Color(52, 152, 219)
     },
-    ["unpersistedEntity"] = {
-        func = function(client, entity) return string.format("[%s] %s has removed persistence from '%s'. [CharID: %s]", client:SteamID(), client:Name(), entity, client:getChar():getID()) end,
-        category = "Staff Actions",
-        PLogs = "Staff",
-        color = Color(52, 152, 219)
-    },
-    ["persistedEntity"] = {
-        func = function(client, entity) return string.format("[%s] %s has persisted '%s'. [CharID: %s]", client:SteamID(), client:Name(), entity, client:getChar():getID()) end,
-        category = "Staff Actions",
-        PLogs = "Staff",
-        color = Color(52, 152, 219)
-    },
+
     ["observerEnter"] = {
         func = function(client) return string.format("[%s] %s has entered observer. [CharID: %s]", client:SteamID(), client:Name(), client:getChar():getID()) end,
         category = "Staff Actions",
@@ -275,4 +264,16 @@
         PLogs = "Character",
         color = Color(52, 152, 219)
     },
+    ["moneyPickedUp"] = {
+        func = function(client, amount) return string.format("[%s] %s has picked up %s %s [CharID: %s].", client:SteamID(), client:Name(), lia.currency.get(amount), amount > 1 and lia.currency.plural or lia.currency.singular, client:getChar():getID()) end,
+        category = "Money",
+        PLogs = "Money",
+        color = Color(52, 152, 219)
+    },
+    ["roll"] = {
+        func = function(client, value) return string.format("%s rolled %d out of 100 [CharID: %s].", client:Name(), value,) end,
+        category = "Roll",
+        PLogs = "Roll",
+        color = Color(52, 152, 219)
+    }
 }

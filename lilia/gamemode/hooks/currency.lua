@@ -4,5 +4,6 @@ function GM:OnPickupMoney(client, moneyEntity)
         local amount = moneyEntity:getAmount()
         client:getChar():giveMoney(amount)
         client:notifyLocalized("moneyTaken", lia.currency.get(amount))
+        lia.log.add(client, "moneyPickedUp", amount)
     end
 end
