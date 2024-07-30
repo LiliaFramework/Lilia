@@ -11,7 +11,7 @@ if SERVER then
         elseif isnumber(item) then
             item = lia.item.instances[item]
         end
-    
+
         action = string.lower(action)
         if not item then return end
         local name = item.name
