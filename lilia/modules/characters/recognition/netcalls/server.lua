@@ -3,7 +3,7 @@
     if target:getChar():recognize(client:getChar(), name) then
         netstream.Start(client, "rgnDone")
         hook.Run("OnCharRecognized", client, client:getChar())
-        lia.log.add(client, "charRecognize", client:getChar():getID(), target:getChar():getID(), name)
+        lia.log.add(client, "charRecognize", target:getChar():getID(), name)
         client:notifyLocalized("recognized")
     else
         client:notifyLocalized("already_recognized")
@@ -35,7 +35,7 @@ netstream.Hook("rgn", function(client, level, name)
 
         if i > 0 then
             for _, v in ipairs(targets) do
-                lia.log.add(client, "charRecognize", client:getChar():getID(), v:getChar():getID(), name)
+                lia.log.add(client, "charRecognize", v:getChar():getID(), name)
             end
 
             netstream.Start(client, "rgnDone")
