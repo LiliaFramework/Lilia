@@ -14,10 +14,6 @@ if SERVER then
         end
     end
 
-    function MODULE:OnPlayerObserve(client, state)
-        lia.log.add(client, state and "observerEnter" or "observerExit")
-    end
-
     function MODULE:PlayerInitialSpawn(client)
         lia.log.add(client, "playerConnected")
     end
