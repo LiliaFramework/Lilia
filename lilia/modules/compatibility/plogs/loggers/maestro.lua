@@ -2,7 +2,7 @@ plogs.Register("Maestro", false)
 
 local function concat(t)
     local s = ""
-    for k, v in pairs(t) do
+    for _, v in pairs(t) do
         if not istable(v) then
             s = s .. tostring(v)
         else
