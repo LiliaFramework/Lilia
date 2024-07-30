@@ -14,6 +14,7 @@ lia.class.list = lia.class.list or {}
 -- @realm shared
 -- @string directory The directory path from which to load class Lua files.
 function lia.class.loadFromDir(directory)
+    -- Load all Lua files in the current directory
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local index = #lia.class.list + 1
         local halt
@@ -53,7 +54,14 @@ function lia.class.loadFromDir(directory)
         lia.class.list[index] = CLASS
         CLASS = nil
     end
+    
+    for _, folder in ipairs(file.Find(directory .. "/*", "LUA")) do
+        if folder ~= "." and folder ~= ".." and file.IsDir(directory .. "/" .. folder, "LUA") then
+            lia.class.loadFromDir(directory .. "/" .. folder)
+        end
+    end
 end
+
 
 --- Checks if a player can join a particular class.
 -- @realm shared
