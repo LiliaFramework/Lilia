@@ -11,7 +11,7 @@ plogs.Register("Kills/Deaths", true, Color(52, 152, 219))
 plogs.Register("Toolgun", true, Color(52, 152, 219))
 plogs.Register("Staff", true, Color(52, 152, 219))
 plogs.Register("Network", true, Color(52, 152, 219))
-plogs.AddHook("OnServerLog", function(client, logType, logString, category, color)
+plogs.AddHook("OnServerLog", function(client, logType, logString)
     if not plogs.data[logType] then plogs.data[logType] = {} end
     if not IsValid(client) then
         print("Invalid client entity")
