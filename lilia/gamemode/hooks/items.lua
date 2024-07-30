@@ -11,17 +11,20 @@ if SERVER then
         elseif isnumber(item) then
             item = lia.item.instances[item]
         end
-
+    
         action = string.lower(action)
         if not item then return end
-        if action == "drop" then
-            lia.log.add(client, "itemDrop", item.name)
+        local name = item.name
+        if action == "use" then
+            lia.log.add(client, "itemUse", name)
+        elseif action == "drop" then
+            lia.log.add(client, "itemDrop", name)
         elseif action == "take" then
-            lia.log.add(client, "itemTake", item.name)
+            lia.log.add(client, "itemTake", name)
         elseif action == "unequip" then
-            lia.log.add(client, "itemUnequip", item.name)
+            lia.log.add(client, "itemUnequip", name)
         elseif action == "equip" then
-            lia.log.add(client, "itemEquip", item.name)
+            lia.log.add(client, "itemEquip", name)
         else
             lia.log.add(client, "itemInteraction", action, item)
         end
