@@ -53,7 +53,7 @@ function lia.class.loadFromDir(directory)
         lia.class.list[index] = CLASS
         CLASS = nil
     end
-    
+
     for _, folder in ipairs(file.Find(directory .. "/*", "LUA")) do
         if folder ~= "." and folder ~= ".." and file.IsDir(directory .. "/" .. folder, "LUA") then
             lia.class.loadFromDir(directory .. "/" .. folder)
