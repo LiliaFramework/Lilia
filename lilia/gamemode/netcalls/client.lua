@@ -26,7 +26,7 @@ net.Receive("RequestServerContent", function()
     buttonYes:SetSize(100, 30)
     buttonYes:SetPos(60, 130)
     buttonYes.DoClick = function()
-        gui.OpenURL("http://steamcommunity.com/sharedfiles/filedetails/?id=" .. lia.config.ServerWorkshop)
+        gui.OpenURL("http://steamcommunity.com/sharedfiles/filedetails/?id=" .. lia.config.ServerWorkshopID)
         frame:Close()
     end
 

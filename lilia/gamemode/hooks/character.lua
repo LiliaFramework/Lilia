@@ -61,7 +61,7 @@ if SERVER then
         end
 
         character:setData("loginTime", os.time())
-        if lia.config.ServerWorkshop ~= "" and not client:getLiliaData("workshopRequested") then
+        if lia.config.ServerWorkshopID ~= "" and not client:getLiliaData("workshopRequested") then
             net.Start("RequestServerContent")
             net.Send(client)
             client:setLiliaData("workshopRequested", true)
