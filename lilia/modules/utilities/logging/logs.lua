@@ -203,7 +203,6 @@
         PLogs = "Toolgun",
         color = Color(52, 152, 219)
     },
-
     ["observerEnter"] = {
         func = function(client) return string.format("[%s] %s has entered observer. [CharID: %s]", client:SteamID(), client:Name(), client:getChar():getID()) end,
         category = "Staff Actions",
@@ -271,7 +270,7 @@
         color = Color(52, 152, 219)
     },
     ["roll"] = {
-        func = function(client, value) return string.format("%s rolled %d out of 100 [CharID: %s].", client:Name(), value,) end,
+        func = function(client, value) return string.format("%s rolled %d out of 100 [CharID: %s].", client:Name(), value, client:getChar():getID()) end,
         category = "Roll",
         PLogs = "Roll",
         color = Color(52, 152, 219)
