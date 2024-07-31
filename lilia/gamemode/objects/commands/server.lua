@@ -1201,3 +1201,33 @@ lia.command.add("entityName", {
         client:chatNotify("Entity Class: " .. entityClass)
     end
 })
+
+lia.command.add("checkinventory", {
+    adminOnly = true,
+    privilege = "Check Inventories",
+    syntax = "<string target>",
+    onRun = function(client, arguments)
+        local function ItemCanEnterForEveryone(_, action, _)
+            if action == "transfer" then return true end
+        end
+
+        local function CanReplicateItemsForEveryone(_, action, _)
+            if action == "repl" then return true end
+        end
+
+        local target = lia.command.findPlayer(client, arguments[1])
+        local isTargDiff = target ~= client
+        if IsValid(target) and target:getChar() and isTargDiff then
+            local inventory = target:getChar():getInv()
+            inventory:addAccessRule(ItemCanEnterForEveryone, 1)
+            inventory:addAccessRule(CanReplicateItemsForEveryone, 1)
+            inventory:sync(client)
+            net.Start("OpenInvMenu")
+            net.WriteEntity(target)
+            net.WriteType(inventory:getID())
+            net.Send(client)
+        elseif not isTargDiff then
+            client:notifyLocalized("This isn't meant for checking your own inventory.")
+        end
+    end
+})

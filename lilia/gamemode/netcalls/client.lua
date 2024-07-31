@@ -385,6 +385,23 @@ net.Receive("StringRequest", function()
     end)
 end)
 
+net.Receive("OpenInvMenu", function()
+    if not LocalPlayer():HasPrivilege("Commands - Check Inventories") then return end
+    local target = net.ReadEntity()
+    local index = net.ReadType()
+    local targetInv = lia.inventory.instances[index]
+    local myInv = LocalPlayer():getChar():getInv()
+    local inventoryDerma = targetInv:show()
+    inventoryDerma:SetTitle(target:getChar():getName() .. "'s Inventory")
+    inventoryDerma:MakePopup()
+    inventoryDerma:ShowCloseButton(true)
+    local myInventoryDerma = myInv:show()
+    myInventoryDerma:MakePopup()
+    myInventoryDerma:ShowCloseButton(true)
+    myInventoryDerma:SetParent(inventoryDerma)
+    myInventoryDerma:MoveLeftOf(inventoryDerma, 4)
+end)
+
 net.Receive("OpenInformationMenu", function()
     local frame = vgui.Create("DFrame")
     frame:SetTitle("Classname viewer")
