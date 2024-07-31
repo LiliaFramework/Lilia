@@ -43,8 +43,13 @@ lia.item.DefaultFunctions = {
                 if not IsValid(client) then return end
                 d:resolve()
             end):catch(function(err)
+                if err == "noFit" then
+                    client:notify("This item can't fit in your inventory. (" .. item.width .. "x" .. item.height .. ")")
+                else
+                    client:notifyLocalized(err)
+                end
+
                 client.itemTakeTransaction = nil
-                client:notifyLocalized(err)
                 d:reject()
             end)
             return d
