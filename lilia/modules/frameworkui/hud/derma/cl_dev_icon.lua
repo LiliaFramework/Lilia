@@ -403,7 +403,8 @@ function PANEL:OnRemove()
 end
 
 vgui.Register("iconEditor", PANEL, "DFrame")
+
 concommand.Add("lia_dev_icon", function()
     local client = LocalPlayer()
-    if client:IsAdmin() then vgui.Create("iconEditor") end
+    if client:isStaff() then vgui.Create("iconEditor") end
 end)

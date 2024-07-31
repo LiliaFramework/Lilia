@@ -337,7 +337,7 @@ lia.command.add("doorsettitle", {
             if not name:find("%S") then return client:notifyLocalized("invalidArg", 1) end
             if door:checkDoorAccess(client, DOOR_TENANT) then
                 door:setNetVar("title", name)
-            elseif client:IsAdmin() then
+            elseif client:isStaff() then
                 door:setNetVar("name", name)
                 MODULE:callOnDoorChildren(door, function(child) child:setNetVar("name", name) end)
             else

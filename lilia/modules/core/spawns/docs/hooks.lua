@@ -43,7 +43,7 @@ end
 -- @tab info The class table
 -- @treturn bool Whether or not to allow the player to join the class
 -- @usage function MODULE:CanPlayerJoinClass(client, class, info)
--- 	return client:IsAdmin() -- Restrict joining classes to admins only.
+-- 	return client:isStaff() -- Restrict joining classes to staff only.
 -- end
 function CanPlayerJoinClass(client, class, info)
 end
@@ -76,8 +76,8 @@ end
 -- @treturn string Language phrase to use for the error message
 -- @treturn ... Arguments to use for the language phrase
 -- @usage function MODULE:CanPlayerCreateChar(client)
--- 	if (!client:IsAdmin()) then
--- 		return false, "notNow" -- only allow admins to create a characr
+-- 	if (!client:isStaff()) then
+-- 		return false, "notNow" -- only allow staff to create a character
 -- 	end
 -- end
 -- -- non-admins will see the message "You are not allowed to do this ght now!"

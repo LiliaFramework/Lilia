@@ -165,7 +165,7 @@ end
 -- @treturn bool Whether or not to allow the player to equip the item
 -- @see CanPlayerUnequipItem
 -- @usage function MODULE:CanPlayerEquipItem(client, item)
--- 	return client:IsAdmin() -- Restrict equipping items to admins only.
+-- 	return client:isStaff() -- Restrict equipping items to staff only.
 -- end
 function CanPlayerEquipItem(client, item)
 end

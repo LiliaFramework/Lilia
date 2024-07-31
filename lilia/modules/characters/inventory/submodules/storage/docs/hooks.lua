@@ -8,7 +8,7 @@
 -- @treturn bool Whether or not to allow the player to spawn the container.
 -- @realm server
 -- @usage function MODULE:CanPlayerSpawnStorage(client, entity, data)
---     return client:IsAdmin() -- Restrict spawning containers to admins.
+--     return client:isStaff() -- Restrict spawning containers to staff.
 -- end
 function CanPlayerSpawnStorage(client, entity, data)
 end
