@@ -6,8 +6,8 @@ end
 function MODULE:CheckPossibilities()
     local client = LocalPlayer()
     for _, v in pairs(self.options) do
-        if not client:GetEyeTrace().Entity:IsPlayer() then return end
-        if v.shouldShow(client, client:GetEyeTrace().Entity) then return true end
+        if not client:GetTracedEntity():IsPlayer() then return end
+        if v.shouldShow(client, client:GetTracedEntity()) then return true end
     end
     return false
 end

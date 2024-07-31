@@ -1179,7 +1179,7 @@ lia.command.add("listbodygroups", {
 lia.command.add("entityName", {
     adminOnly = false,
     onRun = function(client)
-        local entity = client:GetEyeTrace().Entity
+        local entity = client:GetTracedEntity()
         if not IsValid(entity) then
             client:chatNotify("Invalid Entity!")
             return

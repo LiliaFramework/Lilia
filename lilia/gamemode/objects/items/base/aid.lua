@@ -22,7 +22,7 @@ ITEM.functions.target = {
     onRun = function(item)
         local client = item.player
         if IsValid(client) then
-            local target = client:GetEyeTrace().Entity
+            local target = client:GetTracedEntity()
             if IsValid(target) and target:IsPlayer() and target:Alive() then
                 local newHealth = math.min(target:Health() + item.health, target:GetMaxHealth())
                 target:SetHealth(newHealth)
@@ -33,7 +33,7 @@ ITEM.functions.target = {
     end,
     onCanRun = function(item)
         local client = item.player
-        local target = client:GetEyeTrace().Entity
+        local target = client:GetTracedEntity()
         return not IsValid(item.entity) and IsValid(target)
     end
 }

@@ -27,7 +27,7 @@ lia.command.add("storagelock", {
 lia.command.add("trunk", {
     adminOnly = false,
     onRun = function(client)
-        local entity = client:GetEyeTrace().Entity
+        local entity = client:GetTracedEntity()
         local maxDistance = MODULE.TrunkOpenDistance
         local openTime = MODULE.TrunkOpenTime
         local clientPos = client:GetPos():Distance(entity:GetPos())

@@ -7,7 +7,7 @@
     lia.log.add(client, "moneyGiven", target:Name(), amount)
 end)
 
-netstream.Hook("PIMRunOption", function(ply, name)
+netstream.Hook("PIMRunOption", function(client, name)
     local opt = PIM.options[name]
-    if opt.runServer then opt.onRun(ply, ply:GetEyeTrace().Entity) end
+    if opt.runServer then opt.onRun(client, client:GetTracedEntity()) end
 end)

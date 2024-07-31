@@ -84,8 +84,8 @@ else
     end, nil, "Removes every panel that you have left over (like that errored DFrame filling up your screen)")
 
     concommand.Add("weighpoint_stop", function() hook.Add("HUDPaint", "WeighPoint", function() end) end)
-    concommand.Add("dev_GetEntPos", function(client) if client:isStaff() then LiliaInformation(client:GetEyeTrace().Entity:GetPos().x, client:GetEyeTrace().Entity:GetPos().y, client:GetEyeTrace().Entity:GetPos().z) end end)
-    concommand.Add("dev_GetEntAngles", function(client) if client:isStaff() then LiliaInformation(math.ceil(client:GetEyeTrace().Entity:GetAngles().x) .. ", " .. math.ceil(client:GetEyeTrace().Entity:GetAngles().y) .. ", " .. math.ceil(client:GetEyeTrace().Entity:GetAngles().z)) end end)
-    concommand.Add("dev_GetRoundEntPos", function(client) if client:isStaff() then LiliaInformation(math.ceil(client:GetEyeTrace().Entity:GetPos().x) .. ", " .. math.ceil(client:GetEyeTrace().Entity:GetPos().y) .. ", " .. math.ceil(client:GetEyeTrace().Entity:GetPos().z)) end end)
+    concommand.Add("dev_GetEntPos", function(client) if client:isStaff() then LiliaInformation(client:GetTracedEntity():GetPos().x, client:GetTracedEntity():GetPos().y, client:GetTracedEntity():GetPos().z) end end)
+    concommand.Add("dev_GetEntAngles", function(client) if client:isStaff() then LiliaInformation(math.ceil(client:GetTracedEntity():GetAngles().x) .. ", " .. math.ceil(client:GetTracedEntity():GetAngles().y) .. ", " .. math.ceil(client:GetTracedEntity():GetAngles().z)) end end)
+    concommand.Add("dev_GetRoundEntPos", function(client) if client:isStaff() then LiliaInformation(math.ceil(client:GetTracedEntity():GetPos().x) .. ", " .. math.ceil(client:GetTracedEntity():GetPos().y) .. ", " .. math.ceil(client:GetTracedEntity():GetPos().z)) end end)
     concommand.Add("dev_GetPos", function(client) if client:isStaff() then LiliaInformation(math.ceil(client:GetPos().x) .. ", " .. math.ceil(client:GetPos().y) .. ", " .. math.ceil(client:GetPos().z)) end end)
 end

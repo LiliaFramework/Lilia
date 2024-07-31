@@ -168,7 +168,7 @@ if SERVER then
             if name == "^" then
                 return client
             elseif name == "@" then
-                local trace = client:GetEyeTrace().Entity
+                local trace = client:GetTracedEntity()
                 if IsValid(trace) and trace:IsPlayer() then
                     return trace
                 else
@@ -213,7 +213,7 @@ if SERVER then
     function lia.command.findPlayerSilent(client, name)
         local target = isstring(name) and lia.util.findPlayer(name) or NULL
         if isstring(name) and name == "@" then
-            local lookingAt = client:GetEyeTrace().Entity
+            local lookingAt = client:GetTracedEntity()
             if IsValid(lookingAt) and lookingAt:IsPlayer() then target = lookingAt end
         end
 
