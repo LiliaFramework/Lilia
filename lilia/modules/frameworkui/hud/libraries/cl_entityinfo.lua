@@ -118,3 +118,8 @@ function MODULE:ShouldDrawEntityInfo(entity)
     end
     return false
 end
+
+function MODULE:DrawCharInfo(client, _, info)
+    local injText, injColor = hook.Run("GetInjuredText", client)
+    if injText then info[#info + 1] = {L(injText), injColor} end
+end
