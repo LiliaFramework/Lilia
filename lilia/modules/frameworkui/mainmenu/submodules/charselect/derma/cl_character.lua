@@ -21,7 +21,7 @@ function PANEL:createTabs()
         self:addTab("leave", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() client:ConCommand("disconnect") end) end, true)
     end
 
-    self.tabs:DockMargin(ScrW() / 2 - C(250), 25, 0, 0)
+    self.tabs:DockMargin(ScrW() / 2 - SS(250), 25, 0, 0)
 end
 
 function PANEL:createTitle()

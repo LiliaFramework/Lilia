@@ -1,4 +1,5 @@
 ﻿local MODULE = MODULE
+
 lia.chat.register("meclose", {
     format = "**%s %s",
     onCanHear = MODULE.ChatRange * 0.25,
@@ -65,7 +66,7 @@ lia.chat.register("ic", {
     format = "%s says \"%s\"",
     onGetColor = function(speaker)
         local client = LocalPlayer()
-        if client:GetEyeTrace().Entity == speaker then return MODULE.ChatListenColor end
+        if client:GetTracedEntity() == speaker then return MODULE.ChatListenColor end
         return MODULE.ChatColor
     end,
     onCanHear = function(speaker, listener)
@@ -133,9 +134,9 @@ lia.chat.register("y", {
 lia.chat.register("looc", {
     onCanSay = function(speaker)
         local delay = MODULE.LOOCDelay
-        if speaker:IsAdmin() and MODULE.LOOCDelayAdmin and delay > 0 and speaker.liaLastLOOC then
+        if speaker:isStaff() and MODULE.LOOCDelayAdmin and delay > 0 and speaker.liaLastLOOC then
             local lastLOOC = CurTime() - speaker.liaLastLOOC
-            if lastLOOC <= delay and (not speaker:IsAdmin() or speaker:IsAdmin() and MODULE.LOOCDelayAdmin) then
+            if lastLOOC <= delay and (not speaker:isStaff() or speaker:isStaff() and MODULE.LOOCDelayAdmin) then
                 speaker:notifyLocalized("loocDelay", delay - math.ceil(lastLOOC))
                 return false
             end
@@ -271,4 +272,73 @@ lia.chat.register("ooc", {
     prefix = {"//", "/ooc"},
     noSpaceAfter = true,
     filter = "ooc"
+})
+
+lia.chat.register("s", {
+    format = "%s screams \"%s\"",
+    onChatAdd = function(speaker, text, anonymous)
+        local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or (IsValid(speaker) and speaker:Name() or "Console")
+        chat.AddText(Color(200, 20, 20), speako .. " screams \"" .. text .. "\"")
+    end,
+    onCanHear = MODULE.ChatRange * 4,
+    prefix = {"/s", "/scream"}
+})
+
+lia.chat.register("me's", {
+    format = "**%s's %s",
+    onCanHear = MODULE.ChatRange,
+    onChatAdd = function(speaker, text, anonymous)
+        local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or (IsValid(speaker) and speaker:Name() or "Console")
+        local texCol = MODULE.ChatColor
+        if LocalPlayer():GetTracedEntity() == speaker then texCol = MODULE.ChatListenColor end
+        texCol = Color(texCol.r, texCol.g, texCol.b)
+        local nameCol = Color(texCol.r + 30, texCol.g + 30, texCol.b + 30)
+        if LocalPlayer() == speaker then
+            local tempCol = MODULE.ChatListenColor
+            texCol = Color(tempCol.r + 20, tempCol.b + 20, tempCol.g + 20)
+            nameCol = Color(tempCol.r + 40, tempCol.b + 60, tempCol.g + 40)
+        end
+
+        chat.AddText(nameCol, "**" .. speako .. "'s", texCol, " " .. text)
+    end,
+    prefix = {"/me's", "/action's"},
+    font = "liaChatFontItalics",
+    filter = "actions",
+    deadCanChat = true
+})
+
+lia.chat.register("mefarfar", {
+    format = "**%s %s",
+    onChatAdd = function(speaker, text, anonymous)
+        local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or (IsValid(speaker) and speaker:Name() or "Console")
+        local texCol = MODULE.ChatColor
+        if LocalPlayer():GetTracedEntity() == speaker then texCol = MODULE.ChatListenColor end
+        texCol = Color(texCol.r + 45, texCol.g + 45, texCol.b + 45)
+        local nameCol = Color(texCol.r + 30, texCol.g + 30, texCol.b + 30)
+        if LocalPlayer() == speaker then
+            local tempCol = MODULE.ChatListenColor
+            texCol = Color(tempCol.r + 65, tempCol.b + 65, tempCol.g + 65)
+            nameCol = Color(tempCol.r + 40, tempCol.b + 60, tempCol.g + 40)
+        end
+
+        chat.AddText(nameCol, "**" .. speako, texCol, " " .. text)
+    end,
+    onCanHear = MODULE.ChatRange * 4,
+    prefix = {"/mefarfar", "/actionyy", "/meyy"},
+    font = "liaChatFontItalics",
+    filter = "actions",
+    deadCanChat = true
+})
+
+lia.chat.register("help", {
+    onCanSay = function(speaker, text) return true end,
+    onCanHear = function(speaker, listener)
+        if listener:isStaff() or listener == speaker then
+            return true
+        else
+            return false
+        end
+    end,
+    onChatAdd = function(speaker, text) chat.AddText(Color(200, 50, 50), "[HELP] " .. speaker:GetName(), color_white, ": " .. text) end,
+    prefix = {"/report"}
 })
