@@ -1,12 +1,12 @@
 ﻿function SS(value, isWidth)
-    local screenWidth, screenHeight = ScrW(), ScrH()
-    local widthRatio = screenWidth / 1920
-    local heightRatio = screenHeight / 1080
-    return isWidth and (value * widthRatio) or (value * heightRatio)
+	local screenWidth, screenHeight = ScrW(), ScrH()
+	local widthRatio = screenWidth / 1920
+	local heightRatio = screenHeight / 1080
+	return isWidth and (value * widthRatio) or (value * heightRatio)
 end
 
 function sW(width)
-	if (width) then
+	if width then
 		return width * (ScrW() / 1920)
 	else
 		return 1920
@@ -14,7 +14,7 @@ function sW(width)
 end
 
 function sH(height)
-	if (height) then
+	if height then
 		return height * (ScrH() / 1080)
 	else
 		return 1080
@@ -22,5 +22,5 @@ function sH(height)
 end
 
 function C(value, isWidth)
-    return SS(value, isWidth)
+	return SS(value, isWidth)
 end

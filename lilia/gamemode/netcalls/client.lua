@@ -38,30 +38,37 @@ net.Receive("RequestServerContent", function()
 end)
 
 net.Receive("RequestLiliaContent", function()
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle("Lilia Content is Missing")
-    frame:SetSize(400, 200)
-    frame:Center()
-    frame:MakePopup()
-    local label = vgui.Create("DLabel", frame)
-    label:SetTextColor(color_white)
-    label:SetText("You do not have the Lilia content mounted.\n\nThis may result in certain features missing.\n\nWould you like to open the Workshop page for the Lilia content?")
-    label:SizeToContents()
-    label:SetPos(20, 40)
-    local buttonYes = vgui.Create("DButton", frame)
-    buttonYes:SetText("Yes")
-    buttonYes:SetSize(100, 30)
-    buttonYes:SetPos(60, 130)
-    buttonYes.DoClick = function()
-        gui.OpenURL("http://steamcommunity.com/sharedfiles/filedetails/?id=2959728255")
-        frame:Close()
+    local isMounted = false
+    for _, v in ipairs(engine.GetAddons()) do
+        if v.wsid == "2959728255" and v.mounted then isMounted = true end
     end
 
-    local buttonNo = vgui.Create("DButton", frame)
-    buttonNo:SetText("No")
-    buttonNo:SetSize(100, 30)
-    buttonNo:SetPos(240, 130)
-    buttonNo.DoClick = function() frame:Close() end
+    if not isMounted then
+        local frame = vgui.Create("DFrame")
+        frame:SetTitle("Lilia Content is Missing")
+        frame:SetSize(400, 200)
+        frame:Center()
+        frame:MakePopup()
+        local label = vgui.Create("DLabel", frame)
+        label:SetTextColor(color_white)
+        label:SetText("You do not have the Lilia content mounted.\n\nThis may result in certain features missing.\n\nWould you like to open the Workshop page for the Lilia content?")
+        label:SizeToContents()
+        label:SetPos(20, 40)
+        local buttonYes = vgui.Create("DButton", frame)
+        buttonYes:SetText("Yes")
+        buttonYes:SetSize(100, 30)
+        buttonYes:SetPos(60, 130)
+        buttonYes.DoClick = function()
+            gui.OpenURL("http://steamcommunity.com/sharedfiles/filedetails/?id=2959728255")
+            frame:Close()
+        end
+
+        local buttonNo = vgui.Create("DButton", frame)
+        buttonNo:SetText("No")
+        buttonNo:SetSize(100, 30)
+        buttonNo:SetPos(240, 130)
+        buttonNo.DoClick = function() frame:Close() end
+    end
 end)
 
 netstream.Hook("openBlacklistLog", function(target, blacklists, blacklistLog)

@@ -74,15 +74,8 @@ function GM:PlayerInitialSpawn(client)
 end
 
 function GM:PostPlayerInitialSpawn(client)
-    local isMounted = false
-    for _, v in ipairs(engine.GetAddons()) do
-        if v.wsid == "2959728255" and v.mounted then isMounted = true end
-    end
-
-    if not isMounted then
-        net.Start("RequestLiliaContent")
-        net.Send(client)
-    end
+    net.Start("RequestLiliaContent")
+    net.Send(client)
 end
 
 function GM:PlayerLoadout(client)
