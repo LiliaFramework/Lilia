@@ -5,7 +5,7 @@ function GM:GetMaxPlayerCharacter(client)
 end
 
 function GM:CanPlayerCreateCharacter(client)
-    LiliaDeprecated("CanPlayerCreateChar is deprecated. Use CanPlayerCreateChar for optimization purposes.")
+    LiliaDeprecated("CanPlayerCreateCharacter is deprecated. Use CanPlayerCreateChar for optimization purposes.")
     hook.Run("CanPlayerCreateChar", client)
 end
 
