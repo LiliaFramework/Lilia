@@ -331,7 +331,7 @@ lia.chat.register("mefarfar", {
 })
 
 lia.chat.register("help", {
-    onCanSay = function(speaker, text) return true end,
+    onCanSay = function() return true end,
     onCanHear = function(speaker, listener)
         if listener:isStaff() or listener == speaker then
             return true
