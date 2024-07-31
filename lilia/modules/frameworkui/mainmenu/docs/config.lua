@@ -6,7 +6,6 @@
 -- @table Configuration
 -- @field MusicVolume Set Music Volume on Main Menu | **number**
 -- @field Music Set Main Menu Background Music | **string**
--- @field LogoURL Set Main Menu Logo | **string**
 -- @field BackgroundURL Set Background Image URL (if applicable) | **string**
 -- @field BackgroundIsYoutubeVideo Set If Background Screen is a YT video | **boolean**
 -- @field CharMenuBGInputDisabled Disable Background Input during Main Menu Lookup | **boolean**

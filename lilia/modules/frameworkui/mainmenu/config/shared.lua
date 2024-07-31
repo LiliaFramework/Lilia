@@ -1,6 +1,5 @@
 ﻿MODULE.MusicVolume = 0.25
 MODULE.Music = ""
-MODULE.LogoURL = ""
 MODULE.BackgroundURL = ""
 MODULE.BackgroundIsYoutubeVideo = false
 MODULE.CharMenuBGInputDisabled = true

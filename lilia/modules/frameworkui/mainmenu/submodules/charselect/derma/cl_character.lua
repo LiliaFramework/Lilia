@@ -1,115 +1,114 @@
 ﻿local PANEL = {}
-PANEL.WHITE = Color(255, 255, 255, 150)
-PANEL.SELECTED = Color(255, 255, 255, 230)
-PANEL.HOVERED = Color(255, 255, 255, 50)
-PANEL.ANIM_SPEED = 0.1
-PANEL.FADE_SPEED = 0.5
+local WHITE = Color(255, 255, 255, 200)
+local SELECTED = Color(255, 255, 255, 150)
+PANEL.WHITE = WHITE
+PANEL.SELECTED = SELECTED
+PANEL.HOVERED = Color(255, 255, 255, 255)
+PANEL.ANIM_SPEED = 0.2
+PANEL.FADE_SPEED = 2
 function PANEL:createTabs()
-    local client = LocalPlayer()
     local load, create
     if lia.characters and #lia.characters > 0 then load = self:addTab("continue", self.createCharacterSelection) end
-    if hook.Run("CanPlayerCreateChar", client) ~= false then create = self:addTab("create", self.createCharacterCreation) end
-    if IsValid(load) then
-        load:setSelected()
-    elseif IsValid(create) then
-        create:setSelected()
+    if hook.Run("CanPlayerCreateChar", LocalPlayer()) ~= false then create = self:addTab("create", self.createCharacterCreation) end
+    if LocalPlayer():getChar() then
+        self:addTab("return", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end, true)
+        return
     end
 
-    if client:getChar() then
-        self:addTab("return", function() if IsValid(self) and client:getChar() then self:fadeOut() end end, true)
-    else
-        self:addTab("leave", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() client:ConCommand("disconnect") end) end, true)
-    end
+    self:addTab("leave", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() LocalPlayer():ConCommand("disconnect") end) end, true)
+end
 
-    self.tabs:DockMargin(ScrW() / 2 - SS(250), 25, 0, 0)
+function PANEL:CreateIcon(parent, iconURL, iconIMG, posX, posY)
+    if iconURL and iconURL:find("%S") and iconIMG and iconIMG:find("%S") then
+        local icon = parent:Add("DHTML")
+        icon:SetPos(posX, posY)
+        icon:SetSize(86, 86)
+        local imgTag
+        if iconIMG:match("^https?://") then
+            imgTag = '<img src="' .. iconIMG .. '" width="86" height="86" />'
+        else
+            imgTag = '<img src="asset/path/' .. iconIMG .. '" width="86" height="86" />'
+        end
+
+        icon:SetHTML([[
+            <html>
+                <body style="margin: 0; padding: 0; overflow: hidden;">
+                    ]] .. imgTag .. [[
+                </body>
+            </html>
+        ]])
+        local button = icon:Add("DButton")
+        button:Dock(FILL)
+        button.DoClick = function(this) gui.OpenURL(iconURL) end
+        button:SetAlpha(0)
+        icon:SetAlpha(0)
+        icon:AlphaTo(255, parent.ANIM_SPEED, 0)
+        return icon
+    end
 end
 
 function PANEL:createTitle()
-    self.pnl = self:Add("DPanel")
-    self.pnl:Dock(TOP)
-    self.title = self.pnl:Add("DLabel")
-    self.title:Dock(LEFT)
-    self.title:InvalidateParent(true)
-    self.title.Paint = function() end
-    self.title:SetTextColor(lia.gui.character.WHITE)
+    self.title = self:Add("DLabel")
+    self.title:Dock(TOP)
+    self.title:DockMargin(64, 48, 0, 0)
+    self.title:SetContentAlignment(1)
+    self.title:SetTall(96)
     self.title:SetFont("liaCharTitleFont")
-    self.title:SetMultiline(false)
-    self.title:SetWrap(false)
-    self.title:SetText(SCHEMA.name)
-    self.title:SizeToContents()
-    self.pnl:SizeToChildren(false, true)
-end
-
-function PANEL:CreateBG()
-    self.background = self:Add("DHTML")
-    self.background:SetSize(ScrW(), ScrH())
-    self.background:SetHTML([[
-        <html>
-        <head>
-            <style>
-                body, html {
-                    margin: 0;
-                    padding: 0;
-                    width: 100%;
-                    height: 100%;
-                    overflow: hidden;
-                    pointer-events: none; /* Disable mouse events */
-                }
-            </style>
-        </head>
-        <body>
-            <iframe src="]] .. "https://www.youtube.com/embed/" .. MainMenu.BackgroundURL .. "?autoplay=1&controls=0&loop=1&mute=0" .. [[" frameborder="0" allowfullscreen style="width: 100%; height: 100%; pointer-events: none;"></iframe>
-        </body>
-        </html>
-    ]])
-    self.background:SetAllowLua(true)
-    if MainMenu.CharMenuBGInputDisabled then
-        self.background:SetMouseInputEnabled(false)
-        self.background:SetKeyboardInputEnabled(false)
+    self.title:SetText("")
+    self.title:SetTextColor(WHITE)
+    local centerlogo = SCHEMA.Logo
+    if centerlogo and centerlogo:find("%S") then
+        local logoWidth, logoHeight = 300, 300
+        self.schemaLogo = self:Add("DHTML")
+        self.schemaLogo:SetSize(logoWidth, logoHeight)
+        self.schemaLogo:SetPos((ScrW() - logoWidth) / 2, sH(100))
+        self.schemaLogo:SetZPos(-197)
+        self.schemaLogo:OpenURL(centerlogo)
+        self.schemaLogo:SetAlpha(255)
     end
+
+    self.icon = self:CreateIcon(self, "https://github.com/LiliaFramework/Lilia", "https://raw.githubusercontent.com/LiliaFramework/Lilia/main/lilia/logo.png", ScrW() - 96, 8)
+    self.desc = self:Add("DLabel")
+    self.desc:Dock(TOP)
+    self.desc:DockMargin(64, 0, 0, 0)
+    self.desc:SetTall(32)
+    self.desc:SetContentAlignment(7)
+    self.desc:SetText(L(SCHEMA and SCHEMA.desc or ""):upper())
+    self.desc:SetFont("liaCharDescFont")
+    self.desc:SetTextColor(WHITE)
 end
 
 function PANEL:loadBackground()
     local url = MainMenu.BackgroundURL
-    local logo = MainMenu.LogoURL
-    if url ~= "" then
-        if MainMenu.BackgroundIsYoutubeVideo then
-            self:CreateBG()
-        elseif url:find("%S") then
-            self.background = self:Add("DHTML")
-            self.background:SetSize(ScrW(), ScrH())
-            if url:find("http") then
-                self.background:OpenURL(url)
-            else
-                self.background:SetHTML(url)
-            end
-
-            self.background.OnDocumentReady = function() self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end
-            self.bgLoader = self:Add("DPanel")
-            self.bgLoader:SetSize(ScrW(), ScrH())
-            self.bgLoader:SetZPos(-998)
-            self.bgLoader.Paint = function(_, w, h)
-                surface.SetDrawColor(20, 20, 20)
-                surface.DrawRect(0, 0, w, h)
-            end
+    if url and url:find("%S") then
+        self.background = self:Add("DHTML")
+        self.background:SetSize(ScrW(), ScrH())
+        if url:find("http") then
+            self.background:OpenURL(url)
+        else
+            self.background:SetHTML(url)
         end
 
+        self.background.OnDocumentReady = function(background) self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end
         self.background:MoveToBack()
         self.background:SetZPos(-999)
         if MainMenu.CharMenuBGInputDisabled then
             self.background:SetMouseInputEnabled(false)
             self.background:SetKeyboardInputEnabled(false)
         end
-    end
 
-    if logo ~= "" then
-        self.logoPanel = self:Add("DHTML")
-        self.logoPanel:SetSize(128, 128)
-        self.logoPanel:SetPos(ScrW() - 128, 0)
-        self.logoPanel:SetHTML(string.format("<img src='%s' width='100%%' height='100%%'>", logo))
+        self.background:SetAlpha(200)
+        self.bgLoader = self:Add("DPanel")
+        self.bgLoader:SetSize(ScrW(), ScrH())
+        self.bgLoader:SetZPos(-998)
+        self.bgLoader.Paint = function(loader, w, h)
+            surface.SetDrawColor(20, 20, 20)
+            surface.DrawRect(0, 0, w, h)
+        end
     end
 end
 
+local gradient = lia.util.getMaterial("vgui/gradient-u")
 function PANEL:paintBackground(w, h)
     if IsValid(self.background) then return end
     if self.blank then
@@ -117,24 +116,19 @@ function PANEL:paintBackground(w, h)
         surface.DrawRect(0, 0, w, h)
     end
 
-    if not self.startTime then self.startTime = CurTime() end
-    local r, g, b = lia.config.Color:Unpack()
-    local curTime = (self.startTime - CurTime()) / 4
-    local alpha = 200 * ((math.sin(curTime - 1.8719) + math.sin(curTime - 1.8719 / 2)) / 4 + 0.44)
-    surface.SetDrawColor(r, g, b, alpha)
-    surface.DrawRect(0, 0, w, h)
-    surface.SetDrawColor(0, 0, 0, 255)
-    surface.SetMaterial(lia.util.getMaterial("vgui/gradient-d"))
-    surface.DrawTexturedRect(0, 0, w, h)
-    surface.SetMaterial(lia.util.getMaterial("vgui/gradient-l"))
-    surface.DrawTexturedRect(0, 0, w, h)
+    surface.SetMaterial(gradient)
+    surface.SetDrawColor(0, 0, 0, 250)
+    surface.DrawTexturedRect(0, 0, w, h * 1.5)
 end
 
 function PANEL:addTab(name, callback, justClick)
     local button = self.tabs:Add("liaCharacterTabButton")
     button:setText(L(name):upper())
+    button:SetTall(36)
+    button:Dock(TOP)
+    button:DockMargin(0, 24, 0, 0)
     if justClick then
-        if isfunction(callback) then button.DoClick = function() callback(self) end end
+        if isfunction(callback) then button.DoClick = function(button) callback(self) end end
         return
     end
 
@@ -147,12 +141,19 @@ function PANEL:createCharacterSelection()
     self.content:Clear()
     self.content:InvalidateLayout(true)
     self.content:Add("liaCharacterSelection")
+    self:moveTabs()
 end
 
 function PANEL:createCharacterCreation()
+    if MainMenu.BackgroundURL then
+        if IsValid(self.background) then self.background:Remove() end
+        if IsValid(self.schemaLogo) then self.schemaLogo:Remove() end
+    end
+
     self.content:Clear()
     self.content:InvalidateLayout(true)
     self.content:Add("liaCharacterCreation")
+    self:moveTabs()
 end
 
 function PANEL:fadeOut()
@@ -166,16 +167,17 @@ function PANEL:Init()
     self:Dock(FILL)
     self:MakePopup()
     self:SetAlpha(0)
-    self:AlphaTo(255, self.ANIM_SPEED * 2)
+    self:AlphaTo(255, 2)
+    self:createTitle()
     self.tabs = self:Add("DPanel")
-    self.tabs:Dock(TOP)
-    self.tabs:DockMargin(64, 32, 64, 0)
-    self.tabs:SetTall(48)
+    self.tabs:SetSize(ScrW() * 0.1, ScrH() * 0.25)
+    self.tabs:SetPos(ScrW() * 0.45, ScrH() * 0.65)
     self.tabs:SetPaintBackground(false)
     self.content = self:Add("DPanel")
     self.content:Dock(FILL)
-    self.content:DockMargin(64, 0, 64, 64)
+    self.content:DockMargin(64, 0, 64, 0)
     self.content:SetPaintBackground(false)
+    self.content:SetZPos(-100)
     self.music = self:Add("liaCharBGMusic")
     self:loadBackground()
     self:showContent()
@@ -185,6 +187,10 @@ function PANEL:showContent()
     self.tabs:Clear()
     self.content:Clear()
     self:createTabs()
+end
+
+function PANEL:moveTabs()
+    if IsValid(self.tabs) then self.tabs:SetPos(ScrW() * 0.85, ScrH() * 0.15) end
 end
 
 function PANEL:setFadeToBlack(fade)
@@ -210,9 +216,9 @@ function PANEL:setFadeToBlack(fade)
     return d
 end
 
-function PANEL:Paint()
-    local client = LocalPlayer()
-    if not client:getChar() then lia.util.drawBlur(self) end
+function PANEL:Paint(w, h)
+    lia.util.drawBlur(self)
+    self:paintBackground(w, h)
 end
 
 function PANEL:hoverSound()
