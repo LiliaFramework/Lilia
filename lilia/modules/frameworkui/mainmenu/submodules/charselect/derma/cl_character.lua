@@ -7,9 +7,8 @@ PANEL.HOVERED = Color(255, 255, 255, 255)
 PANEL.ANIM_SPEED = 0.2
 PANEL.FADE_SPEED = 2
 function PANEL:createTabs()
-    local load, create
-    if lia.characters and #lia.characters > 0 then load = self:addTab("continue", self.createCharacterSelection) end
-    if hook.Run("CanPlayerCreateChar", LocalPlayer()) ~= false then create = self:addTab("create", self.createCharacterCreation) end
+    if lia.characters and #lia.characters > 0 then self:addTab("continue", self.createCharacterSelection) end
+    if hook.Run("CanPlayerCreateChar", LocalPlayer()) ~= false then self:addTab("create", self.createCharacterCreation) end
     if LocalPlayer():getChar() then
         self:addTab("return", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end, true)
         return
@@ -39,7 +38,7 @@ function PANEL:CreateIcon(parent, iconURL, iconIMG, posX, posY)
         ]])
         local button = icon:Add("DButton")
         button:Dock(FILL)
-        button.DoClick = function(this) gui.OpenURL(iconURL) end
+        button.DoClick = function() gui.OpenURL(iconURL) end
         button:SetAlpha(0)
         icon:SetAlpha(0)
         icon:AlphaTo(255, parent.ANIM_SPEED, 0)
@@ -89,7 +88,7 @@ function PANEL:loadBackground()
             self.background:SetHTML(url)
         end
 
-        self.background.OnDocumentReady = function(background) self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end
+        self.background.OnDocumentReady = function() self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end
         self.background:MoveToBack()
         self.background:SetZPos(-999)
         if MainMenu.CharMenuBGInputDisabled then
@@ -101,7 +100,7 @@ function PANEL:loadBackground()
         self.bgLoader = self:Add("DPanel")
         self.bgLoader:SetSize(ScrW(), ScrH())
         self.bgLoader:SetZPos(-998)
-        self.bgLoader.Paint = function(loader, w, h)
+        self.bgLoader.Paint = function(_, w, h)
             surface.SetDrawColor(20, 20, 20)
             surface.DrawRect(0, 0, w, h)
         end
@@ -128,7 +127,7 @@ function PANEL:addTab(name, callback, justClick)
     button:Dock(TOP)
     button:DockMargin(0, 24, 0, 0)
     if justClick then
-        if isfunction(callback) then button.DoClick = function(button) callback(self) end end
+        if isfunction(callback) then button.DoClick = function() callback(self) end end
         return
     end
 
