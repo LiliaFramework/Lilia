@@ -13,6 +13,5 @@ function MODULE:HUDPaint()
     local yPos = ScrH() / 2
     surface.SetDrawColor(0, 0, 0, 255)
     surface.DrawRect(0, 0, ScrW(), ScrH())
-
     draw.DrawText(self.RespawnMessage, "liaHugeFont", xPos, yPos, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
 end
