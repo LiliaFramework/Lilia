@@ -76,7 +76,6 @@ function PANEL:Init()
     self.faction:SetTextColor(color_white)
     self.faction:DockMargin(0, 4, 0, 0)
     self.faction.DoClick = function() vgui.Create("VendorFactionEditor"):MoveLeftOf(self, 4) end
-    local menu
     self.items = self:Add("DListView")
     self.items:Dock(FILL)
     self.items:DockMargin(0, 4, 0, 0)
@@ -85,54 +84,15 @@ function PANEL:Init()
     self.items:AddColumn(L"price").Header:SetTextColor(color_white)
     self.items:AddColumn(L"stock").Header:SetTextColor(color_white)
     self.items:SetMultiSelect(false)
-    self.items.OnRowRightClick = function(_, _, line)
-        if IsValid(menu) then menu:Remove() end
-        local uniqueID = line.item
-        local itemTable = lia.item.list[uniqueID]
-        menu = DermaMenu()
-        local mode, panel = menu:AddSubMenu(L"mode")
-        panel:SetImage("icon16/key.png")
-        mode:AddOption(L"none", function() EDITOR.mode(uniqueID, nil) end):SetImage("icon16/cog_error.png")
-        mode:AddOption(L"vendorBoth", function() EDITOR.mode(uniqueID, VENDOR_SELLANDBUY) end):SetImage("icon16/cog.png")
-        mode:AddOption(L"vendorBuy", function() EDITOR.mode(uniqueID, VENDOR_BUYONLY) end):SetImage("icon16/cog_delete.png")
-        mode:AddOption(L"vendorSell", function() EDITOR.mode(uniqueID, VENDOR_SELLONLY) end):SetImage("icon16/cog_add.png")
-        menu:AddOption(L"price", function()
-            Derma_StringRequest(itemTable:getName(), L"vendorPriceReq", entity:getPrice(uniqueID), function(text)
-                text = tonumber(text)
-                EDITOR.price(uniqueID, text)
-            end)
-        end):SetImage("icon16/coins.png")
-
-        local stock, panel = menu:AddSubMenu(L"stock")
-        panel:SetImage("icon16/table.png")
-        stock:AddOption(L"disable", function() EDITOR.stockDisable(uniqueID) end):SetImage("icon16/table_delete.png")
-        stock:AddOption(L"edit", function()
-            local _, max = entity:getStock(uniqueID)
-            Derma_StringRequest(itemTable:getName(), L"vendorStockReq", max or 1, function(text)
-                text = math.max(math.Round(tonumber(text) or 1), 1)
-                EDITOR.stockMax(uniqueID, text)
-            end)
-        end):SetImage("icon16/table_edit.png")
-
-        stock:AddOption(L"vendorEditCurStock", function()
-            Derma_StringRequest(itemTable:getName(), L"vendorStockCurReq", entity:getStock(uniqueID) or 0, function(text)
-                text = math.Round(tonumber(text) or 0)
-                EDITOR.stock(uniqueID, text)
-            end)
-        end):SetImage("icon16/table_edit.png")
-
-        menu:Open()
-    end
-
+    self.items.OnRowRightClick = function(_, _, line) self:OnRowRightClick(line) end
+    self.searchBar = self:Add("DTextEntry")
+    self.searchBar:Dock(TOP)
+    self.searchBar:DockMargin(0, 4, 0, 0)
+    self.searchBar:SetUpdateOnType(true)
+    self.searchBar:SetPlaceholderText("Search...")
+    self.searchBar.OnValueChange = function(this, value) self:ReloadItemList(value) end
     self.lines = {}
-    for k, v in SortedPairsByMemberValue(lia.item.list, "name") do
-        local mode = entity.items[k] and entity.items[k][VENDOR_MODE]
-        local current, max = entity:getStock(k)
-        local panel = self.items:AddLine(v:getName(), self:getModeText(mode), entity:getPrice(k), max and current .. "/" .. max or "-")
-        panel.item = k
-        self.lines[k] = panel
-    end
-
+    self:ReloadItemList()
     self:listenForUpdates()
     self:updateMoney()
     self:updateSellScale()
@@ -216,6 +176,60 @@ function PANEL:listenForUpdates()
     hook.Add("VendorItemPriceUpdated", self, self.onItemPriceUpdated)
     hook.Add("VendorItemStockUpdated", self, self.onItemStockUpdated)
     hook.Add("VendorItemMaxStockUpdated", self, self.onItemStockUpdated)
+end
+
+function PANEL:OnRowRightClick(line)
+    if IsValid(menu) then menu:Remove() end
+    local uniqueID = line.item
+    local itemTable = lia.item.list[uniqueID]
+    menu = DermaMenu()
+    local mode, panel = menu:AddSubMenu(L"mode")
+    panel:SetImage("icon16/key.png")
+    mode:AddOption(L"none", function() EDITOR.mode(uniqueID, nil) end):SetImage("icon16/cog_error.png")
+    mode:AddOption(L"vendorBoth", function() EDITOR.mode(uniqueID, VENDOR_SELLANDBUY) end):SetImage("icon16/cog.png")
+    mode:AddOption(L"vendorBuy", function() EDITOR.mode(uniqueID, VENDOR_BUYONLY) end):SetImage("icon16/cog_delete.png")
+    mode:AddOption(L"vendorSell", function() EDITOR.mode(uniqueID, VENDOR_SELLONLY) end):SetImage("icon16/cog_add.png")
+    menu:AddOption(L"price", function()
+        Derma_StringRequest(itemTable:getName(), L"vendorPriceReq", entity:getPrice(uniqueID), function(text)
+            text = tonumber(text)
+            EDITOR.price(uniqueID, text)
+        end)
+    end):SetImage("icon16/coins.png")
+
+    local stock, panel = menu:AddSubMenu(L"stock")
+    panel:SetImage("icon16/table.png")
+    stock:AddOption(L"disable", function() EDITOR.stockDisable(uniqueID) end):SetImage("icon16/table_delete.png")
+    stock:AddOption(L"edit", function()
+        local _, max = entity:getStock(uniqueID)
+        Derma_StringRequest(itemTable:getName(), L"vendorStockReq", max or 1, function(text)
+            text = math.max(math.Round(tonumber(text) or 1), 1)
+            EDITOR.stockMax(uniqueID, text)
+        end)
+    end):SetImage("icon16/table_edit.png")
+
+    stock:AddOption(L"vendorEditCurStock", function()
+        Derma_StringRequest(itemTable:getName(), L"vendorStockCurReq", entity:getStock(uniqueID) or 0, function(text)
+            text = math.Round(tonumber(text) or 0)
+            EDITOR.stock(uniqueID, text)
+        end)
+    end):SetImage("icon16/table_edit.png")
+
+    menu:Open()
+end
+
+function PANEL:ReloadItemList(filter)
+    local entity = liaVendorEnt
+    self.lines = {}
+    self.items:Clear()
+    for k, v in SortedPairsByMemberValue(lia.item.list, "name") do
+        local itemName = v.getName and v:getName() or L(v.name)
+        if filter and not itemName:lower():find(filter:lower(), 1, true) then continue end
+        local mode = entity.items[k] and entity.items[k][VENDOR_MODE]
+        local current, max = entity:getStock(k)
+        local panel = self.items:AddLine(itemName, self:getModeText(mode), entity:getPrice(k), max and current .. "/" .. max or "-")
+        panel.item = k
+        self.lines[k] = panel
+    end
 end
 
 vgui.Register("VendorEditor", PANEL, "DFrame")
