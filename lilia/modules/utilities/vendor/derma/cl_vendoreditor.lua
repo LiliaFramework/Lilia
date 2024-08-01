@@ -179,6 +179,7 @@ function PANEL:listenForUpdates()
 end
 
 function PANEL:OnRowRightClick(line)
+    local entity = liaVendorEnt
     if IsValid(menu) then menu:Remove() end
     local uniqueID = line.item
     local itemTable = lia.item.list[uniqueID]
