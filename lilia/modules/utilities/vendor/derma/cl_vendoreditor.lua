@@ -90,7 +90,7 @@ function PANEL:Init()
     self.searchBar:DockMargin(0, 4, 0, 0)
     self.searchBar:SetUpdateOnType(true)
     self.searchBar:SetPlaceholderText("Search...")
-    self.searchBar.OnValueChange = function(this, value) self:ReloadItemList(value) end
+    self.searchBar.OnValueChange = function(_, value) self:ReloadItemList(value) end
     self.lines = {}
     self:ReloadItemList()
     self:listenForUpdates()
