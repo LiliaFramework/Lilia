@@ -123,6 +123,7 @@ jobs:
       pull-requests: write
     env:
       CACHE_BRANCH: credits-cache
+      BLOCKLIST: '[]'
     steps:
       - uses: actions/checkout@v3
         with:
