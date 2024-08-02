@@ -16,6 +16,10 @@ permissions:
   security-events: write
   statuses: write
 
+env:
+  CACHE_BRANCH: credits-cache
+  BLOCKLIST: '[65916846]'
+
 jobs:
   linter:
     runs-on: ubuntu-latest
@@ -115,107 +119,6 @@ jobs:
           git merge ${ORIGINAL_REPO_NAME}/gh-pages --allow-unrelated-histories gh-pages
           git push origin gh-pages 
 
-  build-cache:
-    runs-on: ubuntu-latest
-    needs: [linter, docs, sync]
-    permissions:
-      contents: write
-      pull-requests: write
-    env:
-      CACHE_BRANCH: credits-cache
-      BLOCKLIST: '[]'
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ env.CACHE_BRANCH }}
-          fetch-depth: 0
-
-      - uses: actions/github-script@v6
-        id: getContributors
-        with:
-          script: |
-            const { data: contributors } = await github.rest.repos.listContributors({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              per_page: 50,
-            });
-            return JSON.stringify(contributors);
-
-      - uses: actions/github-script@v6
-        id: getNames
-        with:
-          github-token: ${{ secrets.LiliaGitSecret }}
-          script: |
-            const contributors = JSON.parse('${{ steps.getContributors.outputs.result }}');
-            let query = "query { search(first:50, query: \"";
-            for (const contributor of contributors) {
-              if (contributor.login) {
-                query += "user:" + contributor.login + " ";
-              }
-            }
-            query += "\", type: USER) { nodes { ... on User { name id } } } }";
-            const result = await github.graphql(query);
-            return JSON.stringify(result.search.nodes);
-
-      - uses: actions/github-script@v6
-        id: buildData
-        with:
-          script: |
-            const fs = require("fs");
-            const util = require("util");
-            const writeFileAsync = util.promisify(fs.writeFile);
-            const fetch = require("node-fetch");
-
-            const blocklist = JSON.parse('${{ env.BLOCKLIST }}');
-            const contributors = JSON.parse('${{ steps.getContributors.outputs.result }}');
-            const names = JSON.parse('${{ steps.getNames.outputs.result }}');
-
-            const blockedUsers = blocklist.reduce((acc, user) => {
-              acc[user] = true;
-              return acc;
-            }, {});
-
-            const namedUsers = names.reduce((acc, user) => {
-              acc[user.id] = user.name;
-              return acc;
-            }, {});
-
-            const contributorMetadata = [];
-            for (const contributor of contributors) {
-              if (!blockedUsers[contributor.id]) {
-                contributorMetadata.push({
-                  id: contributor.id,
-                  name: namedUsers[contributor.id] || contributor.login,
-                  login: contributor.login,
-                });
-
-                const avatarResponse = await fetch("https://avatars.githubusercontent.com/u/" + contributor.id, {
-                  method: "GET",
-                  headers: {
-                    'Accept': 'image/avif,image/webp,*/*'
-                  },
-                });
-                const avatarBuffer = await avatarResponse.buffer();
-                await writeFileAsync(`./${contributor.id}`, avatarBuffer);
-              }
-            }
-
-            await writeFileAsync("./contributors.json", JSON.stringify(contributorMetadata));
-
-      - name: Commit files
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add .
-          git commit --allow-empty -a -m "Rebuild credits-cache"
-
-      - name: Push changes
-        uses: ad-m/github-push-action@v0.8.0
-        with:
-          github_token: ${{ secrets.LiliaGitSecret }}
-          branch: ${{ env.CACHE_BRANCH }}
-          force: true
-
   release:
     runs-on: ubuntu-latest
     needs: linter
@@ -287,3 +190,98 @@ jobs:
           asset_path: release/lilia.zip
           asset_name: lilia.zip
           asset_content_type: application/zip
+
+  build-cache:
+    runs-on: ubuntu-latest
+    needs: [linter, docs, sync]
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ env.CACHE_BRANCH }}
+          fetch-depth: 0
+
+      - uses: actions/github-script@v6
+        id: getContributors
+        with:
+          script: |
+            const { data: contributors } = await github.rest.repos.listContributors({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 50,
+            });
+            return JSON.stringify(contributors);
+
+      - uses: actions/github-script@v6
+        id: getNames
+        with:
+          github-token: ${{ secrets.LiliaGitSecret }}
+          script: |
+            const contributors = JSON.parse('${{ steps.getContributors.outputs.result }}');
+            let query = `query {
+              search(first:50, query: "user:${contributors.map(c => c.login).join(' ')}", type: USER) {
+                nodes {
+                  ... on User {
+                    name
+                    id
+                  }
+                }
+              }
+            }`;
+            const result = await github.graphql(query);
+            return JSON.stringify(result.search.nodes);
+
+      - uses: actions/github-script@v6
+        id: buildData
+        with:
+          script: |
+            const fs = require("fs");
+            const util = require("util");
+            const writeFileAsync = util.promisify(fs.writeFile);
+            const fetch = require("node-fetch");
+
+            const blocklist = JSON.parse(process.env.BLOCKLIST);
+            const contributors = JSON.parse('${{ steps.getContributors.outputs.result }}');
+            const names = JSON.parse('${{ steps.getNames.outputs.result }}');
+
+            let blockedUsers = {};
+            blocklist.forEach(id => blockedUsers[id] = true);
+
+            let namedUsers = {};
+            names.forEach(user => namedUsers[user.id] = user.name);
+
+            let contributorMetadata = [];
+            for (const contributor of contributors) {
+              if (!blockedUsers[contributor.id]) {
+                contributorMetadata.push({
+                  id: contributor.id,
+                  name: namedUsers[contributor.node_id] || contributor.login,
+                  login: contributor.login,
+                });
+
+                const avatarData = await fetch(`https://avatars.githubusercontent.com/u/${contributor.id}`, {
+                  method: "GET",
+                  headers: { 'Accept': 'image/avif,image/webp,*/*' },
+                });
+                const buffer = await avatarData.buffer();
+                await writeFileAsync(`./${contributor.id}`, buffer);
+              }
+            }
+
+            await writeFileAsync("./contributors.json", JSON.stringify(contributorMetadata));
+
+      - name: Commit files
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit --allow-empty -a -m "Rebuild credits-cache" || echo "No changes to commit"
+          
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.LiliaGitSecret }}
+          branch: ${{ env.CACHE_BRANCH }}
+          force: true
