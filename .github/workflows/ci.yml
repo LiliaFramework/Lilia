@@ -123,7 +123,6 @@ jobs:
       pull-requests: write
     env:
       CACHE_BRANCH: credits-cache
-      BLOCKLIST: '[65916846]'  # Make sure this is valid JSON
     steps:
       - uses: actions/checkout@v3
         with:
