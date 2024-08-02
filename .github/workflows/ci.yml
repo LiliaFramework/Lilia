@@ -194,95 +194,109 @@ jobs:
 
   build-cache:
     runs-on: ubuntu-latest
-    needs: [linter, docs, sync, release]
     permissions:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ env.CACHE_BRANCH }}
-          fetch-depth: 0
-
-      - uses: actions/github-script@v6
-        id: getContributors
-        with:
-          script: |
-            const { data: contributors } = await github.rest.repos.listContributors({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              per_page: 50,
-            });
-            return JSON.stringify(contributors);
-
-      - uses: actions/github-script@v6
-        id: getNames
-        with:
-          github-token: ${{ secrets.LiliaGitSecret }}
-          script: |
-            const contributors = JSON.parse('${{ steps.getContributors.outputs.result }}');
-            let query = `query {
-              search(first:50, query: "user:${contributors.map(c => c.login).join(' ')}", type: USER) {
-                nodes {
-                  ... on User {
-                    name
-                    id
-                  }
-                }
+    - uses: actions/checkout@v4.1.5
+      with:
+        token: ${{ secrets.PAT_TOV_NS }}
+        ref: ${{ env.CACHE_BRANCH }}
+        fetch-depth: 0
+    - uses: actions/github-script@v7.0.1
+      id: getContributors
+      with:
+        script: |
+          const { data: contributors } = await github.rest.repos.listContributors({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            per_page: 50,
+          })
+          return contributors
+    - uses: actions/github-script@v7.0.1
+      id: getNames
+      env:
+          getContributors: ${{ steps.getContributors.outputs.result }}
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+            const contributors = JSON.parse(process.env.getContributors)
+            var query = "query{search(first:50query:\""
+            for (i = 0; i < contributors.length; i++) {
+              const contributor = contributors[i]
+              if (contributor.login) {
+                query += "user:" + contributor.login + " "
               }
-            }`;
-            const result = await github.graphql(query);
-            return JSON.stringify(result.search.nodes);
+            }
+            query += "\"type:USER){nodes{... on User {name id}}}}"
+            const { search: result } = await github.graphql(query)
+            return result.nodes
+    - uses: actions/github-script@v7.0.1
+      id: buildData
+      env:
+          getContributors: ${{ steps.getContributors.outputs.result }}
+          getNames: ${{ steps.getNames.outputs.result }}
+      with:
+        script: |
+            const fs = require("fs")
+            const util = require("util")
+            const writeFileAsync = util.promisify(fs.writeFile)
 
-      - uses: actions/github-script@v6
-        id: buildData
-        with:
-          script: |
-            const fs = require("fs");
-            const util = require("util");
-            const writeFileAsync = util.promisify(fs.writeFile);
-            const fetch = require("node-fetch");
+            const blocklist = JSON.parse(process.env.BLOCKLIST)
+            const maintainers = JSON.parse(process.env.MAINTAINERS)
+            const contributors = JSON.parse(process.env.getContributors)
+            const names = JSON.parse(process.env.getNames)
 
-            const blocklist = JSON.parse(process.env.BLOCKLIST);
-            const contributors = JSON.parse('${{ steps.getContributors.outputs.result }}');
-            const names = JSON.parse('${{ steps.getNames.outputs.result }}');
+            var blockedUsers = {}
+            for (i = 0; i < blocklist.length; i++) {
+              blockedUsers[blocklist[i]] = true
+            }
 
-            let blockedUsers = {};
-            blocklist.forEach(id => blockedUsers[id] = true);
+            var maintainerUsers = {}
+            for (i = 0; i < maintainers.length; i++) {
+              maintainerUsers[maintainers[i]] = true
+            }
 
-            let namedUsers = {};
-            names.forEach(user => namedUsers[user.id] = user.name);
+            var namedUsers = {}
+            for (i = 0; i < names.length; i++) {
+              namedUsers[names[i].id] = names[i].name
+            }
 
-            let contributorMetadata = [];
-            for (const contributor of contributors) {
+            var contributorMetadata = []
+            for (i = 0; i < contributors.length; i++) {
+              const contributor = contributors[i]
+
               if (!blockedUsers[contributor.id]) {
                 contributorMetadata.push({
                   id: contributor.id,
-                  name: namedUsers[contributor.node_id] || contributor.login,
+                  name: namedUsers[contributor.node_id] ? namedUsers[contributor.node_id] : contributor.login,
                   login: contributor.login,
-                });
+                  maintainer: maintainerUsers[contributor.id] ? true : null
+                })
 
-                const avatarData = await fetch(`https://avatars.githubusercontent.com/u/${contributor.id}`, {
+                const avatarData = await fetch("https://avatars.githubusercontent.com/u/" + contributor.id, {
                   method: "GET",
-                  headers: { 'Accept': 'image/avif,image/webp,*/*' },
-                });
-                const buffer = await avatarData.buffer();
-                await writeFileAsync(`./${contributor.id}`, buffer);
+                  headers: {
+                    'Accept': 'image/avif,image/webp,*/*'
+                  },
+                })
+                const blob = await avatarData.blob()
+                const arrayBuffer = await blob.arrayBuffer();
+                const buffer = Buffer.from(arrayBuffer);
+                await writeFileAsync("./" + contributor.id, buffer)
               }
             }
 
-            await writeFileAsync("./contributors.json", JSON.stringify(contributorMetadata));
-
-      - name: Commit files
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add .
-          git commit --allow-empty -a -m "Rebuild credits-cache" || echo "No changes to commit"
-          
-      - name: Push changes
-        uses: ad-m/github-push-action@v0.8.0
-        with:
-          github_token: ${{ secrets.LiliaGitSecret }}
-          branch: ${{ env.CACHE_BRANCH }}
-          force: true
+            await writeFileAsync("./contributors.json", JSON.stringify(contributorMetadata))
+    - name: Commit files
+      run: |
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add .
+        git commit --allow-empty -a -m "Rebuild credits-cache"
+    - name: Push changes
+      uses: ad-m/github-push-action@v0.8.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ env.CACHE_BRANCH }}
+        force: true
