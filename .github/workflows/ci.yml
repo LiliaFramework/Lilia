@@ -194,13 +194,13 @@ jobs:
 
   build-cache:
     runs-on: ubuntu-latest
+    needs: [linter, docs, sync]
     permissions:
       contents: write
       pull-requests: write
     steps:
     - uses: actions/checkout@v4.1.5
       with:
-        token: ${{ secrets.PAT_TOV_NS }}
         ref: ${{ env.CACHE_BRANCH }}
         fetch-depth: 0
     - uses: actions/github-script@v7.0.1
@@ -218,7 +218,7 @@ jobs:
       env:
           getContributors: ${{ steps.getContributors.outputs.result }}
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ secrets.LiliaGitSecret }}
         script: |
             const contributors = JSON.parse(process.env.getContributors)
             var query = "query{search(first:50query:\""
@@ -243,18 +243,12 @@ jobs:
             const writeFileAsync = util.promisify(fs.writeFile)
 
             const blocklist = JSON.parse(process.env.BLOCKLIST)
-            const maintainers = JSON.parse(process.env.MAINTAINERS)
             const contributors = JSON.parse(process.env.getContributors)
             const names = JSON.parse(process.env.getNames)
 
             var blockedUsers = {}
             for (i = 0; i < blocklist.length; i++) {
               blockedUsers[blocklist[i]] = true
-            }
-
-            var maintainerUsers = {}
-            for (i = 0; i < maintainers.length; i++) {
-              maintainerUsers[maintainers[i]] = true
             }
 
             var namedUsers = {}
@@ -271,7 +265,6 @@ jobs:
                   id: contributor.id,
                   name: namedUsers[contributor.node_id] ? namedUsers[contributor.node_id] : contributor.login,
                   login: contributor.login,
-                  maintainer: maintainerUsers[contributor.id] ? true : null
                 })
 
                 const avatarData = await fetch("https://avatars.githubusercontent.com/u/" + contributor.id, {
@@ -297,6 +290,6 @@ jobs:
     - name: Push changes
       uses: ad-m/github-push-action@v0.8.0
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.LiliaGitSecret }}
         branch: ${{ env.CACHE_BRANCH }}
         force: true
