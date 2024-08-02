@@ -117,7 +117,7 @@ jobs:
 
   build-cache:
     runs-on: ubuntu-latest
-    needs: [linter, docs, sync, release]
+    needs: [linter, docs, sync]
     permissions:
       contents: write
       pull-requests: write
@@ -138,69 +138,69 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               per_page: 50,
-            })
-            return contributors
+            });
+            return JSON.stringify(contributors);
 
       - uses: actions/github-script@v6
         id: getNames
         with:
           github-token: ${{ secrets.LiliaGitSecret }}
           script: |
-            const contributors = JSON.parse(process.env.getContributors)
-            let query = "query{search(first:50,query:\""
+            const contributors = JSON.parse('${{ steps.getContributors.outputs.result }}');
+            let query = "query { search(first:50, query: \"";
             for (const contributor of contributors) {
               if (contributor.login) {
-                query += "user:" + contributor.login + " "
+                query += "user:" + contributor.login + " ";
               }
             }
-            query += "\"type:USER){nodes{... on User {name id}}}}"
-            const result = await github.graphql(query)
-            return result.search.nodes
+            query += "\", type: USER) { nodes { ... on User { name id } } } }";
+            const result = await github.graphql(query);
+            return JSON.stringify(result.search.nodes);
 
       - uses: actions/github-script@v6
         id: buildData
         with:
           script: |
-            const fs = require("fs")
-            const util = require("util")
-            const writeFileAsync = util.promisify(fs.writeFile)
-            const fetch = require("node-fetch")
+            const fs = require("fs");
+            const util = require("util");
+            const writeFileAsync = util.promisify(fs.writeFile);
+            const fetch = require("node-fetch");
 
-            const blocklist = JSON.parse(process.env.BLOCKLIST)
-            const contributors = JSON.parse(process.env.getContributors)
-            const names = JSON.parse(process.env.getNames)
+            const blocklist = JSON.parse('${{ env.BLOCKLIST }}');
+            const contributors = JSON.parse('${{ steps.getContributors.outputs.result }}');
+            const names = JSON.parse('${{ steps.getNames.outputs.result }}');
 
             const blockedUsers = blocklist.reduce((acc, user) => {
-              acc[user] = true
-              return acc
-            }, {})
+              acc[user] = true;
+              return acc;
+            }, {});
 
             const namedUsers = names.reduce((acc, user) => {
-              acc[user.id] = user.name
-              return acc
-            }, {})
+              acc[user.id] = user.name;
+              return acc;
+            }, {});
 
-            const contributorMetadata = []
+            const contributorMetadata = [];
             for (const contributor of contributors) {
               if (!blockedUsers[contributor.id]) {
                 contributorMetadata.push({
                   id: contributor.id,
                   name: namedUsers[contributor.id] || contributor.login,
                   login: contributor.login,
-                })
+                });
 
                 const avatarResponse = await fetch("https://avatars.githubusercontent.com/u/" + contributor.id, {
                   method: "GET",
                   headers: {
                     'Accept': 'image/avif,image/webp,*/*'
                   },
-                })
-                const avatarBuffer = await avatarResponse.buffer()
-                await writeFileAsync(`./${contributor.id}`, avatarBuffer)
+                });
+                const avatarBuffer = await avatarResponse.buffer();
+                await writeFileAsync(`./${contributor.id}`, avatarBuffer);
               }
             }
 
-            await writeFileAsync("./contributors.json", JSON.stringify(contributorMetadata))
+            await writeFileAsync("./contributors.json", JSON.stringify(contributorMetadata));
 
       - name: Commit files
         run: |
@@ -229,17 +229,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Check if there are any releases
-          releases=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-          "https://api.github.com/repos/${{ github.repository }}/releases")
+          releases=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases")
           
           if [ "$(echo $releases | jq '. | length')" -gt 0 ]; then
-            # Delete each release
             echo "Deleting releases..."
             for release_id in $(echo $releases | jq -r '.[].id'); do
               echo "Deleting release $release_id"
-              curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
-              "https://api.github.com/repos/${{ github.repository }}/releases/$release_id"
+              curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases/$release_id"
             done
           else
             echo "No releases to delete."
@@ -249,17 +245,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Check if there are any tags
-          tags=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-          "https://api.github.com/repos/${{ github.repository }}/git/refs/tags")
+          tags=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/git/refs/tags")
           
           if [ "$(echo $tags | jq '. | length')" -gt 0 ]; then
-            # Delete each tag
             echo "Deleting tags..."
             for tag_ref in $(echo $tags | jq -r '.[].ref'); do
               echo "Deleting tag $tag_ref"
-              curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
-              "https://api.github.com/repos/${{ github.repository }}/git/refs/$tag_ref"
+              curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/git/refs/$tag_ref"
             done
           else
             echo "No tags to delete."
