@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           path: lilia
 
@@ -32,7 +32,7 @@ jobs:
       - uses: leafo/gh-actions-luarocks@v4.0.0
 
       - name: Pull gluacheck
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: LiliaFramework/GluaCheck
           path: luacheck
@@ -55,7 +55,7 @@ jobs:
     needs: linter
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'LiliaFramework/Lilia' && success()
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           path: lilia
 
@@ -66,7 +66,7 @@ jobs:
       - uses: leafo/gh-actions-luarocks@v4.0.0
 
       - name: Pull LDoc
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: LiliaFramework/LDoc
           path: ldoc
@@ -98,7 +98,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'LiliaFramework/Lilia' && success()
     steps:
       - name: Checkout source repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Push to destination repository
         env:
@@ -110,9 +110,9 @@ jobs:
           git config --global user.name "Github Actions"
           git clone https://${ORG_NAME}:${GITHUB_TOKEN}@github.com/${ORG_NAME}/LiliaFramework.github.io.git liliagit
           cd liliagit
-          git remote add ${{ env.ORIGINAL_REPO_NAME }} https://${ORG_NAME}:${GITHUB_TOKEN}@github.com/${ORG_NAME}/${{ env.ORIGINAL_REPO_NAME }}.git
+          git remote add ${ORIGINAL_REPO_NAME} https://${ORG_NAME}:${GITHUB_TOKEN}@github.com/${ORG_NAME}/${{ env.ORIGINAL_REPO_NAME }}.git
           git remote update
-          git merge ${{ env.ORIGINAL_REPO_NAME }}/gh-pages --allow-unrelated-histories gh-pages
+          git merge ${ORIGINAL_REPO_NAME}/gh-pages --allow-unrelated-histories gh-pages
           git push origin gh-pages 
 
   build-cache:
@@ -140,8 +140,6 @@ jobs:
 
       - uses: actions/github-script@v6
         id: getNames
-        env:
-          getContributors: ${{ steps.getContributors.outputs.result }}
         with:
           github-token: ${{ secrets.LiliaGitSecret }}
           script: |
@@ -153,14 +151,11 @@ jobs:
               }
             }
             query += "\"type:USER){nodes{... on User {name id}}}}"
-            const { search: result } = await github.graphql(query)
-            return result.nodes
+            const result = await github.graphql(query)
+            return result.search.nodes
 
       - uses: actions/github-script@v6
         id: buildData
-        env:
-          getContributors: ${{ steps.getContributors.outputs.result }}
-          getNames: ${{ steps.getNames.outputs.result }}
         with:
           script: |
             const fs = require("fs")
@@ -223,35 +218,49 @@ jobs:
     needs: linter
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: lilia
 
-      - name: Delete Old Releases and Tags
+      - name: Check and Delete Old Releases
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Get all releases
+          # Check if there are any releases
           releases=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-          "https://api.github.com/repos/${{ github.repository }}/releases" | jq -r '.[].id')
+          "https://api.github.com/repos/${{ github.repository }}/releases")
           
-          # Delete each release
-          for release in $releases; do
-            echo "Deleting release $release"
-            curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
-            "https://api.github.com/repos/${{ github.repository }}/releases/$release"
-          done
-          
-          # Get all tags
+          if [ "$(echo $releases | jq '. | length')" -gt 0 ]; then
+            # Delete each release
+            echo "Deleting releases..."
+            for release_id in $(echo $releases | jq -r '.[].id'); do
+              echo "Deleting release $release_id"
+              curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
+              "https://api.github.com/repos/${{ github.repository }}/releases/$release_id"
+            done
+          else
+            echo "No releases to delete."
+          fi
+
+      - name: Check and Delete Old Tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Check if there are any tags
           tags=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-          "https://api.github.com/repos/${{ github.repository }}/git/refs/tags" | jq -r '.[].ref')
+          "https://api.github.com/repos/${{ github.repository }}/git/refs/tags")
           
-          # Delete each tag
-          for tag in $tags; do
-            echo "Deleting tag $tag"
-            curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
-            "https://api.github.com/repos/${{ github.repository }}/git/$tag"
-          done
+          if [ "$(echo $tags | jq '. | length')" -gt 0 ]; then
+            # Delete each tag
+            echo "Deleting tags..."
+            for tag_ref in $(echo $tags | jq -r '.[].ref'); do
+              echo "Deleting tag $tag_ref"
+              curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
+              "https://api.github.com/repos/${{ github.repository }}/git/refs/$tag_ref"
+            done
+          else
+            echo "No tags to delete."
+          fi
 
       - name: Compress lilia folder
         run: |
