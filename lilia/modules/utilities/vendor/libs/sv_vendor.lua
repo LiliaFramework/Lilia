@@ -22,7 +22,7 @@ EDITOR.price = function(vendor)
     vendor:setItemPrice(itemType, price)
 end
 
-EDITOR.flag = function(vendor, client)
+EDITOR.flag = function(vendor)
     local flag = net.ReadString()
     vendor:setNetVar("flag", flag)
 end

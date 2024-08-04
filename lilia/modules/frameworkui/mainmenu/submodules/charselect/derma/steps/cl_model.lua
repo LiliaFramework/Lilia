@@ -104,7 +104,7 @@ function PANEL:updateSliders()
             slidePanel:SetSize(ScrW() * 0.15, ScrH() * 0.25)
             if MainMenu.CanSelectBodygroups then
                 local groups = {}
-                for k, v in pairs(entity:GetBodyGroups()) do
+                for _, v in pairs(entity:GetBodyGroups()) do
                     if v.id == 0 then continue end
                     createSlider(slidePanel, "  " .. string.gsub(v.name, "^.", string.upper), 0, v.num, groups[v.id] or 0, function(value)
                         groups[v.id] = value
@@ -114,7 +114,6 @@ function PANEL:updateSliders()
                 end
             end
 
-            -- Create slider for skin selection if applicable
             if MainMenu.CanSelectSkins and entity:SkinCount() > 1 then
                 createSlider(slidePanel, "  Skin", 0, entity:SkinCount() - 1, 0, function(value)
                     PANEL:setContext("skin", value)

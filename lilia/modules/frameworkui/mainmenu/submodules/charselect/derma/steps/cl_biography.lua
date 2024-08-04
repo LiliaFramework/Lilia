@@ -42,7 +42,7 @@ function PANEL:addTextEntry(contextName)
     entry:DockMargin(0, 4, 0, 16)
     entry.OnValueChange = function(_, value) self:setContext(contextName, string.Trim(value)) end
     entry.contextName = contextName
-    entry.OnKeyCodeTyped = function(name, keyCode)
+    entry.OnKeyCodeTyped = function(_, keyCode)
         if keyCode == KEY_TAB then
             entry:onTabPressed()
             return true
