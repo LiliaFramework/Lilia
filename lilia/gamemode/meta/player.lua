@@ -566,6 +566,7 @@ if SERVER then
         net.WriteString(subTitle)
         net.WriteTable(options)
         net.Send(self)
+        self.dropdownCallback = callback
     end
 
     --- Displays a notification for this player in the chatbox with the given language phrase.
