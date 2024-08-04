@@ -10,18 +10,7 @@
     lia.util.notifyLocalized(message, unpack(args))
 end)
 
-net.Receive("DropdownResponse", function()
-    local time = net.ReadUInt(32)
-    local selectedOption = net.ReadString()
-    local callback = pendingDropdownRequests[time]
-    if callback then
-        callback(selectedOption)
-        pendingDropdownRequests[time] = nil
-    end
-end)
-
 net.Receive("DropdownRequest", function()
-    local time = net.ReadUInt(32)
     local title = net.ReadString()
     local subTitle = net.ReadString()
     local options = net.ReadTable()
@@ -38,9 +27,8 @@ net.Receive("DropdownRequest", function()
         dropdown:AddChoice(option)
     end
 
-    dropdown.OnSelect = function(panel, index, value)
+    dropdown.OnSelect = function(_, _, value)
         net.Start("DropdownResponse")
-        net.WriteUInt(time, 32)
         net.WriteString(value)
         net.SendToServer()
         frame:Close()

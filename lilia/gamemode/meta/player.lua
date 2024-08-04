@@ -554,7 +554,6 @@ if SERVER then
         net.Send(self)
     end
 
-    local pendingDropdownRequests = {}
     --- Requests a dropdown selection from the player.
     -- @realm shared
     -- @string title The title of the request.
@@ -562,10 +561,7 @@ if SERVER then
     -- @table options The table of options to choose from.
     -- @func callback The function to call upon receiving the selected option.
     function playerMeta:RequestDropdown(title, subTitle, options, callback)
-        local time = math.floor(os.time())
-        pendingDropdownRequests[time] = callback
         net.Start("DropdownRequest")
-        net.WriteUInt(time, 32)
         net.WriteString(title)
         net.WriteString(subTitle)
         net.WriteTable(options)

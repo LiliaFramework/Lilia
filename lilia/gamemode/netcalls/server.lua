@@ -34,6 +34,11 @@ net.Receive("StringRequest", function(_, client)
     end
 end)
 
+net.Receive("DropdownResponse", function()
+    local selectedOption = net.ReadString()
+    if callback then callback(selectedOption) end
+end)
+
 netstream.Hook("lia_eventLogSave", function(_, eventLog)
     local path = "lilia/" .. SCHEMA.folder .. "/eventlog.txt"
     file.Write(path, eventLog)
