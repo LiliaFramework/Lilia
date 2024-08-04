@@ -8,35 +8,28 @@ util.AddNetworkString("liaInventoryAdd")
 util.AddNetworkString("liaInventoryRemove")
 util.AddNetworkString("liaNotify")
 util.AddNetworkString("liaNotifyL")
-util.AddNetworkString("liaStringReq")
+util.AddNetworkString("DropdownRequest")
+util.AddNetworkString("StringRequest")
+util.AddNetworkString("OptionsRequest")
 util.AddNetworkString("OpenInvMenu")
 util.AddNetworkString("liaTransferItem")
 util.AddNetworkString("SendMessage")
 util.AddNetworkString("SendPrintTable")
 util.AddNetworkString("SendPrint")
-util.AddNetworkString("StringRequest")
 util.AddNetworkString("ReloadLightMaps")
 util.AddNetworkString("OpenInformationMenu")
 util.AddNetworkString("chatNotifyNet")
 util.AddNetworkString("FlagList")
 util.AddNetworkString("OpenVGUI")
 util.AddNetworkString("OpenPage")
-util.AddNetworkString("DropdownRequest")
-util.AddNetworkString("DropdownResponse")
 util.AddNetworkString("RequestLiliaContent")
 util.AddNetworkString("RequestServerContent")
-net.Receive("StringRequest", function(_, client)
-    local time = net.ReadUInt(32)
-    local text = net.ReadString()
-    if client.StrReqs and client.StrReqs[time] then
-        client.StrReqs[time](text)
-        client.StrReqs[time] = nil
-    end
-end)
-
-net.Receive("DropdownResponse", function(_, client)
+net.Receive("DropdownRequest", function(_, client)
     local selectedOption = net.ReadString()
-    if client.dropdownCallback then client.dropdownCallback(selectedOption) end
+    if client.dropdownCallback then
+        client.dropdownCallback(selectedOption)
+        client.dropdownCallback = nil
+    end
 end)
 
 netstream.Hook("lia_eventLogSave", function(_, eventLog)
@@ -52,12 +45,20 @@ netstream.Hook("liaCharKickSelf", function(client)
     end
 end)
 
-net.Receive("liaStringReq", function(_, client)
+net.Receive("StringRequest", function(_, client)
     local id = net.ReadUInt(32)
     local value = net.ReadString()
     if client.liaStrReqs and client.liaStrReqs[id] then
         client.liaStrReqs[id](value)
         client.liaStrReqs[id] = nil
+    end
+end)
+
+net.Receive("OptionsRequest", function(_, client)
+    local selectedOptions = net.ReadTable()
+    if client.optionsCallback then
+        client.optionsCallback(selectedOptions)
+        client.optionsCallback = nil
     end
 end)
 

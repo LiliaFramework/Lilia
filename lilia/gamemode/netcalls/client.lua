@@ -28,13 +28,75 @@ net.Receive("DropdownRequest", function()
     end
 
     dropdown.OnSelect = function(_, _, value)
-        net.Start("DropdownResponse")
+        net.Start("DropdownRequest")
         net.WriteString(value)
         net.SendToServer()
         frame:Close()
     end
 end)
 
+net.Receive("OptionsRequest", function()
+    local title = net.ReadString()
+    local subTitle = net.ReadString()
+    local options = net.ReadTable()
+    local limit = net.ReadUInt(32)
+
+    local frame = vgui.Create("DFrame")
+    frame:SetTitle(title)
+    frame:SetSize(400, 300)
+    frame:Center()
+    frame:MakePopup()
+
+    local label = vgui.Create("DLabel", frame)
+    label:SetText(subTitle)
+    label:SetPos(10, 30)
+    label:SizeToContents()
+
+    local list = vgui.Create("DPanelList", frame)
+    list:SetPos(10, 50)
+    list:SetSize(380, 200)
+    list:EnableVerticalScrollbar(true)
+    list:SetSpacing(5)
+
+    local selected = {}
+    local checkboxes = {}
+
+    for _, option in ipairs(options) do
+        local checkbox = vgui.Create("DCheckBoxLabel")
+        checkbox:SetText(option)
+        checkbox:SetValue(false)
+        checkbox:SizeToContents()
+        checkbox.OnChange = function(self, value)
+            if value then
+                if #selected < limit then
+                    table.insert(selected, option)
+                else
+                    self:SetValue(false)
+                end
+            else
+                for i, v in ipairs(selected) do
+                    if v == option then
+                        table.remove(selected, i)
+                        break
+                    end
+                end
+            end
+        end
+        list:AddItem(checkbox)
+        table.insert(checkboxes, checkbox)
+    end
+
+    local button = vgui.Create("DButton", frame)
+    button:SetText("Submit")
+    button:SetPos(10, 260)
+    button:SetSize(380, 30)
+    button.DoClick = function()
+        net.Start("OptionsRequest")
+        net.WriteTable(selected)
+        net.SendToServer()
+        frame:Close()
+    end
+end)
 net.Receive("RequestServerContent", function()
     local frame = vgui.Create("DFrame")
     frame:SetTitle("Server Content is Missing")
@@ -160,15 +222,15 @@ netstream.Hook("openBlacklistLog", function(target, blacklists, blacklistLog)
     end
 end)
 
-net.Receive("liaStringReq", function()
+net.Receive("StringRequest", function()
     local id = net.ReadUInt(32)
     local title = net.ReadString()
     local subTitle = net.ReadString()
     local default = net.ReadString()
     if title:sub(1, 1) == "@" then title = L(title:sub(2)) end
     if subTitle:sub(1, 1) == "@" then subTitle = L(subTitle:sub(2)) end
-    Derma_StringRequest(title, subTitle, default, function(text)
-        net.Start("liaStringReq")
+    Derma_StringRequestuest(title, subTitle, default, function(text)
+        net.Start("StringRequest")
         net.WriteUInt(id, 32)
         net.WriteString(text)
         net.SendToServer()
@@ -396,20 +458,6 @@ netstream.Hook("actBar", function(start, finish, text)
         lia.bar.actionEnd = finish
         lia.bar.actionText = text:upper()
     end
-end)
-
-net.Receive("StringRequest", function()
-    local time = net.ReadUInt(32)
-    local title, subTitle = net.ReadString(), net.ReadString()
-    local default = net.ReadString()
-    if title:sub(1, 1) == "@" then title = L(title:sub(2)) end
-    if subTitle:sub(1, 1) == "@" then subTitle = L(subTitle:sub(2)) end
-    Derma_StringRequest(title, subTitle, default or "", function(text)
-        net.Start("StringRequest")
-        net.WriteUInt(time, 32)
-        net.WriteString(text)
-        net.SendToServer()
-    end)
 end)
 
 net.Receive("OpenInvMenu", function()
