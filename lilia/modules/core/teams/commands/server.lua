@@ -222,11 +222,40 @@ lia.command.add("classunwhitelist", {
 
 lia.command.add("classlist", {
     adminOnly = false,
-    syntax = "<string text>",
     onRun = function(client)
-        for _, v in ipairs(lia.class.list) do
-            client:chatNotify("NAME: " .. v.name .. " ID: " .. v.uniqueID .. " FACTION: " .. team.GetName(v.faction))
+        local classes = {}
+        for _, class in pairs(lia.class.list) do
+            table.insert(classes, {
+                name = class.name,
+                desc = class.desc,
+                faction = lia.faction.get(class.faction).name,
+                isDefault = class.isDefault
+            })
         end
+
+        net.Start("classlist")
+        net.WriteTable(classes)
+        net.Send(client)
     end,
     alias = {"classes"}
+})
+
+lia.command.add("factionlist", {
+    adminOnly = false,
+    onRun = function(client)
+        local factions = {}
+        for _, faction in pairs(lia.faction.indices) do
+            table.insert(factions, {
+                name = faction.name,
+                desc = faction.desc,
+                color = faction.color,
+                isDefault = faction.isDefault
+            })
+
+            net.Start("factionlist")
+            net.WriteTable(factions)
+            net.Send(client)
+        end
+    end,
+    alias = {"factions"}
 })

@@ -51,7 +51,12 @@ lia.command.add("classunwhitelist", {
 
 lia.command.add("classlist", {
     adminOnly = false,
-    syntax = "<string text>",
     onRun = function() end,
     alias = {"classes"}
+})
+
+lia.command.add("factionlist", {
+    adminOnly = false,
+    onRun = function() end,
+    alias = {"factions"}
 })
