@@ -466,3 +466,10 @@ lia.command.add("entityName", {
     adminOnly = false,
     onRun = function() end
 })
+
+lia.command.add("steamid", {
+    adminOnly = true,
+    syntax = "<string name>",
+    privilege = "Check SteamIDs",
+    onRun = function() end
+})

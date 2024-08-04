@@ -11,6 +11,7 @@
             factions = v.factions,
             classes = v.classes,
             money = v.money,
+            flag = v:getNetVar("flag"),
             scale = v:getNetVar("scale")
         }
     end
@@ -28,6 +29,7 @@ function MODULE:LoadData()
         entity:SetModel(v.model)
         entity:setNetVar("name", v.name)
         entity:setNetVar("desc", v.desc)
+        entity:setNetVar("flag", v.flag)
         entity:setNetVar("scale", v.scale or 0.5)
         entity.items = v.items or {}
         entity.factions = v.factions or {}
@@ -37,10 +39,12 @@ function MODULE:LoadData()
 end
 
 function MODULE:CanPlayerAccessVendor(client, vendor)
-    if client:CanEditVendor() then return true end
     local character = client:getChar()
+    local flag = vendor:getNetVar("flag")
+    if client:CanEditVendor() then return true end
     if vendor:isClassAllowed(character:getClass()) then return true end
     if vendor:isFactionAllowed(client:Team()) then return true end
+    if flag and (string.len(flag) == 1) and client:getChar():hasFlags(flag) then return true end
 end
 
 function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)

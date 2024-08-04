@@ -1,8 +1,8 @@
 ﻿local PANEL = {}
 function PANEL:Init()
     self.title = self:addLabel("Select a model")
-    self.models = self:Add("DIconLayout")
     self.title:SetTextColor(color_white)
+    self.models = self:Add("DIconLayout")
     self.models:Dock(FILL)
     self.models:SetSpaceX(4)
     self.models:SetSpaceY(4)
@@ -10,6 +10,7 @@ function PANEL:Init()
     self.models:SetStretchWidth(true)
     self.models:SetStretchHeight(true)
     self.models:StretchToParent(0, 0, 0, 0)
+    self.slidePanel = {}
 end
 
 function PANEL:onDisplay()
@@ -32,24 +33,11 @@ function PANEL:onDisplay()
             icon.model = v
             icon.skin = 0
             icon.bodyGroups = {}
-        elseif istable(v) then
-            local groups = ""
-            for i = 0, 9 do
-                groups = groups .. (v[3][i] or 0)
-            end
-
-            if #groups < 9 then
-                for _ = 1, 9 - #groups do
-                    groups = groups .. "0"
-                end
-            elseif #groups > 9 then
-                groups = groups:sub(1, 9)
-            end
-
-            icon:SetModel(v[1], v[2] or 0, groups)
+        else
+            icon:SetModel(v[1], v[2] or 0, v[3])
             icon.model = v[1]
             icon.skin = v[2] or 0
-            icon.bodyGroups = groups
+            icon.bodyGroups = v[3]
         end
 
         icon.index = k
@@ -78,6 +66,7 @@ function PANEL:onModelSelected(icon, noSound)
     self:setContext("model", icon.index or 1)
     if not noSound then lia.gui.character:clickSound() end
     self:updateModelPanel()
+    self:updateSliders()
 end
 
 function PANEL:shouldSkip()
@@ -85,8 +74,78 @@ function PANEL:shouldSkip()
     return faction and #faction.models == 1 or false
 end
 
+local function createSlider(parent, text, min, max, value, onValueChanged)
+    local slider = vgui.Create("DNumSlider", parent)
+    slider:Dock(TOP)
+    slider:DockMargin(5, 0, 5, 5)
+    slider:SetText(text)
+    slider:SetMin(min)
+    slider:SetMax(max)
+    slider:SetValue(value)
+    slider:SetDecimals(0)
+    slider.Label:SetTextColor(color_white)
+    function slider:OnValueChanged(newValue)
+        onValueChanged(math.Round(newValue))
+    end
+    return slider
+end
+
+function PANEL:updateSliders()
+    if lia.gui.charCreate.model then
+        if self.slidePanel.used then
+            self.slidePanel.used = nil
+            self.slidePanel:Remove()
+        end
+
+        local entity = lia.gui.charCreate.model:GetEntity()
+        if entity then
+            local slidePanel = lia.gui.charCreate:Add("DPanel")
+            slidePanel:SetPos(ScrW() * 0.05, ScrH() * 0.2)
+            slidePanel:SetSize(ScrW() * 0.15, ScrH() * 0.25)
+            if MainMenu.CanSelectBodygroups then
+                local groups = {}
+                for k, v in pairs(entity:GetBodyGroups()) do
+                    if v.id == 0 then continue end
+                    createSlider(slidePanel, "  " .. string.gsub(v.name, "^.", string.upper), 0, v.num, groups[v.id] or 0, function(value)
+                        groups[v.id] = value
+                        PANEL:setContext("groups", groups)
+                        PANEL:onGroups()
+                    end)
+                end
+            end
+
+            -- Create slider for skin selection if applicable
+            if MainMenu.CanSelectSkins and entity:SkinCount() > 1 then
+                createSlider(slidePanel, "  Skin", 0, entity:SkinCount() - 1, 0, function(value)
+                    PANEL:setContext("skin", value)
+                    PANEL:onGroups()
+                end)
+            end
+
+            slidePanel:InvalidateLayout(true)
+            slidePanel:SizeToChildren(false, true)
+            self.slidePanel = slidePanel
+            self.slidePanel.used = true
+        end
+    end
+end
+
+function PANEL:onGroups()
+    self:updateModelPanel()
+end
+
 function PANEL:onSkip()
     self:setContext("model", 1)
+end
+
+function PANEL:Think()
+    if self.slidePanel and self.slidePanel.GetAlpha then
+        if self:GetAlpha() < 100 then
+            self.slidePanel:SetAlpha(0)
+        else
+            self.slidePanel:SetAlpha(255)
+        end
+    end
 end
 
 vgui.Register("liaCharacterModel", PANEL, "liaCharacterCreateStep")

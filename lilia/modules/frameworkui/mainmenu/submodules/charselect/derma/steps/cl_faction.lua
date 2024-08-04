@@ -1,9 +1,8 @@
 ﻿local PANEL = {}
 function PANEL:Init()
-    local client = LocalPlayer()
     self.title = self:addLabel("Select a faction")
     self.faction = self:Add("DComboBox")
-    self.faction:SetFont("liaCharButtonFont")
+    self.faction:SetFont("liaMenuButtonFont")
     self.faction:Dock(TOP)
     self.faction:DockMargin(0, 4, 0, 0)
     self.faction:SetTall(40)
@@ -13,8 +12,8 @@ function PANEL:Init()
         surface.DrawRect(0, 0, w, h)
     end
 
-    self.faction:SetTextColor(MainMenu.ColorText)
-    self.faction.OnSelect = function(_, _, _, id) self:onFactionSelected(lia.faction.teams[id]) end
+    self.faction:SetTextColor(color_white)
+    self.faction.OnSelect = function(faction, index, value, id) self:onFactionSelected(lia.faction.teams[id]) end
     self.desc = self:addLabel("desc")
     self.desc:DockMargin(0, 8, 0, 0)
     self.desc:SetFont("liaCharSubTitleFont")
@@ -39,7 +38,6 @@ end
 function PANEL:onFactionSelected(faction)
     if self:getContext("faction") == faction.index then return end
     self.desc:SetText(L(faction.desc or "noDesc"))
-    self.desc:SetTextColor(color_white)
     self:clearContext()
     self:setContext("faction", faction.index)
     self:setContext("model", 1)

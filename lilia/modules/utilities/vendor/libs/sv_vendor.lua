@@ -22,6 +22,11 @@ EDITOR.price = function(vendor)
     vendor:setItemPrice(itemType, price)
 end
 
+EDITOR.flag = function(vendor, client)
+    local flag = net.ReadString()
+    vendor:setNetVar("flag", flag)
+end
+
 EDITOR.stockDisable = function(vendor)
     local itemType = net.ReadString()
     vendor:setMaxStock(itemType, nil)

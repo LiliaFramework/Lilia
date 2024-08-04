@@ -251,7 +251,7 @@ function PANEL:addPlayer(ply, parent)
             if client:HasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (client:HasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and client:isStaffOnDuty()) then
                 self.model:SetTooltip(L("sbOptions", ply:Name()))
             else
-                self.model:SetTooltip("You do not have access to see this information")
+                self.model:SetTooltip()
             end
 
             self.lastModel = model

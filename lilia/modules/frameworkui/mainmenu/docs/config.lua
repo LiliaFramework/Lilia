@@ -6,7 +6,7 @@
 -- @table Configuration
 -- @field MusicVolume Set Music Volume on Main Menu | **number**
 -- @field Music Set Main Menu Background Music | **string**
--- @field BackgroundURL Set Background Image URL (if applicable) | **string**
--- @field BackgroundIsYoutubeVideo Set If Background Screen is a YT video | **boolean**
+-- @field BackgroundURL Set Background Image | **string**
 -- @field CharMenuBGInputDisabled Disable Background Input during Main Menu Lookup | **boolean**
--- @field CharCreationTransparentBackground Set Transparent Background during Character Creation | **boolean**
+-- @field CanSelectBodygroups Enable or disable selection of bodygroups in the character menu | **boolean**
+-- @field CanSelectSkins Enable or disable selection of skins in the character menu | **boolean**
