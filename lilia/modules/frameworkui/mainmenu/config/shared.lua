@@ -1,11 +1,9 @@
 ﻿MODULE.MusicVolume = 0.25
 MODULE.Music = ""
 MODULE.BackgroundURL = ""
-MODULE.BackgroundIsYoutubeVideo = false
 MODULE.CharMenuBGInputDisabled = true
-MODULE.CharCreationTransparentBackground = true
-MODULE.ColorText = Color(255, 255, 255)
-MODULE.ColorBackground = lia.config.Color
+MODULE.CanSelectBodygroups = true
+MODULE.CanSelectSkins = true
 MODULE.CharHover = {"buttons/button15.wav", 35, 250}
 MODULE.CharClick = {"buttons/button14.wav", 35, 255}
 MODULE.CharWarning = {"friends/friend_join.wav", 40, 255}

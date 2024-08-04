@@ -2,7 +2,7 @@
 function PANEL:Init()
     self:Dock(LEFT)
     self:DockMargin(0, 0, 32, 0)
-    self:SetContentAlignment(4)
+    self:SetContentAlignment(5)
 end
 
 function PANEL:setText(name)
@@ -34,10 +34,8 @@ function PANEL:setSelected(isSelected)
 end
 
 function PANEL:Paint(w, h)
-    if self.isSelected or self:IsHovered() then
-        surface.SetDrawColor(self.isSelected and lia.gui.character.WHITE or lia.gui.character.HOVERED)
-        surface.DrawRect(0, h - 4, w, 4)
-    end
+    surface.SetDrawColor(Color(0, 0, 0, 50))
+    surface.DrawRect(0, 0, w, h)
 end
 
 vgui.Register("liaCharacterTabButton", PANEL, "liaCharButton")

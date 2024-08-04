@@ -53,28 +53,20 @@ function PANEL:createTitle()
     self.title:SetContentAlignment(1)
     self.title:SetTall(96)
     self.title:SetFont("liaCharTitleFont")
-    self.title:SetText("")
+    self.title:SetText(SCHEMA and SCHEMA.name)
     self.title:SetTextColor(WHITE)
     local centerlogo = SCHEMA.Logo
     if centerlogo and centerlogo:find("%S") then
         local logoWidth, logoHeight = 300, 300
         self.schemaLogo = self:Add("DHTML")
         self.schemaLogo:SetSize(logoWidth, logoHeight)
-        self.schemaLogo:SetPos((ScrW() - logoWidth) / 2, sH(100))
+        self.schemaLogo:SetPos((ScrW() - logoWidth) / 2, sH(200))
         self.schemaLogo:SetZPos(-197)
         self.schemaLogo:OpenURL(centerlogo)
         self.schemaLogo:SetAlpha(255)
     end
 
     self.icon = self:CreateIcon(self, "https://github.com/LiliaFramework/Lilia", "https://raw.githubusercontent.com/LiliaFramework/Lilia/main/lilia/logo.png", ScrW() - 96, 8)
-    self.desc = self:Add("DLabel")
-    self.desc:Dock(TOP)
-    self.desc:DockMargin(64, 0, 0, 0)
-    self.desc:SetTall(32)
-    self.desc:SetContentAlignment(7)
-    self.desc:SetText(L(SCHEMA and SCHEMA.desc or ""):upper())
-    self.desc:SetFont("liaCharDescFont")
-    self.desc:SetTextColor(WHITE)
 end
 
 function PANEL:loadBackground()

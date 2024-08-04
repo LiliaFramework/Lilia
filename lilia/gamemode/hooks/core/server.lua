@@ -152,3 +152,10 @@ end
 function GM:CanDrive(client)
     if not client:IsSuperAdmin() then return false end
 end
+
+function GM:Think()
+    if (self.NextDBRefresh or 0) < CurTime() then
+        lia.db.query("SELECT 1 + 1", onSuccess)
+        self.NextDBRefresh = CurTime() + 10
+    end
+end

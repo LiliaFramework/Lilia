@@ -10,6 +10,43 @@
     lia.util.notifyLocalized(message, unpack(args))
 end)
 
+net.Receive("DropdownResponse", function()
+    local time = net.ReadUInt(32)
+    local selectedOption = net.ReadString()
+    local callback = pendingDropdownRequests[time]
+    if callback then
+        callback(selectedOption)
+        pendingDropdownRequests[time] = nil
+    end
+end)
+
+net.Receive("DropdownRequest", function()
+    local time = net.ReadUInt(32)
+    local title = net.ReadString()
+    local subTitle = net.ReadString()
+    local options = net.ReadTable()
+    local frame = vgui.Create("DFrame")
+    frame:SetTitle(title)
+    frame:SetSize(300, 150)
+    frame:Center()
+    frame:MakePopup()
+    local dropdown = vgui.Create("DComboBox", frame)
+    dropdown:SetPos(10, 40)
+    dropdown:SetSize(280, 20)
+    dropdown:SetValue(subTitle)
+    for _, option in ipairs(options) do
+        dropdown:AddChoice(option)
+    end
+
+    dropdown.OnSelect = function(panel, index, value)
+        net.Start("DropdownResponse")
+        net.WriteUInt(time, 32)
+        net.WriteString(value)
+        net.SendToServer()
+        frame:Close()
+    end
+end)
+
 net.Receive("RequestServerContent", function()
     local frame = vgui.Create("DFrame")
     frame:SetTitle("Server Content is Missing")
@@ -459,6 +496,7 @@ net.Receive("chatNotifyNet", function()
     chat.AddText(Color(175, 200, 255), message)
 end)
 
+netstream.Hook("idReq", function(text) SetClipboardText(text) end)
 net.Receive("OpenPage", function() gui.OpenURL(net.ReadString()) end)
 net.Receive("LiliaPlaySound", function() LocalPlayer():EmitSound(tostring(net.ReadString()), tonumber(net.ReadUInt(7)) or 100) end)
 netstream.Hook("ChatPrint", function(data) chat.AddText(unpack(data)) end)

@@ -47,6 +47,17 @@ function PANEL:Init()
         if value ~= entity:getMoney() then EDITOR.money(value) end
     end
 
+    self.flag.OnEnter = function(this)
+        local value = this:GetText()
+        if value:match("^%a$") then
+            EDITOR.flag(value)
+        else
+            local correctedValue = value:sub(1, 1):match("^%a$") and value:sub(1, 1) or "F"
+            this:SetText(correctedValue)
+            EDITOR.flag(correctedValue)
+        end
+    end
+
     self.useMoney = self:Add("DCheckBoxLabel")
     self.useMoney:SetText(L"vendorUseMoney")
     self.useMoney:Dock(TOP)

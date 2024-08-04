@@ -4,13 +4,6 @@ function PANEL:configureSteps()
     self:addStep(vgui.Create("liaCharacterModel"))
     self:addStep(vgui.Create("liaCharacterBiography"))
     hook.Run("ConfigureCharacterCreationSteps", self)
-    local stepKeys = table.GetKeys(self.steps)
-    table.sort(stepKeys, function(a, b) return a < b end)
-    local stepsCopy = table.Copy(self.steps)
-    self.steps = {}
-    for newKey, oldKey in pairs(stepKeys) do
-        self.steps[newKey] = stepsCopy[oldKey]
-    end
 end
 
 function PANEL:updateModel()
@@ -48,15 +41,14 @@ function PANEL:updateModel()
 end
 
 function PANEL:canCreateCharacter()
-    local client = LocalPlayer()
     local validFactions = {}
-    for _, v in pairs(lia.faction.teams) do
+    for k, v in pairs(lia.faction.teams) do
         if lia.faction.hasWhitelist(v.index) then validFactions[#validFactions + 1] = v.index end
     end
 
     if #validFactions == 0 then return false, "You are unable to join any factions" end
     self.validFactions = validFactions
-    local maxChars = hook.Run("GetMaxPlayerChar", client) or lia.config.MaxCharacters
+    local maxChars = hook.Run("GetMaxPlayerChar", LocalPlayer()) or lia.config.MaxCharacters
     if lia.characters and #lia.characters >= maxChars then return false, "You have reached the maximum number of characters" end
     local canCreate, reason = hook.Run("ShouldMenuButtonShow", "create")
     if canCreate == false then return false, reason end
@@ -95,13 +87,12 @@ function PANEL:onFinish()
 end
 
 function PANEL:showError(message, ...)
-    local client = LocalPlayer()
     if IsValid(self.error) then self.error:Remove() end
     if not message or message == "" then return end
     message = L(message, ...)
     assert(IsValid(self.content), "no step is available")
     self.error = self.content:Add("DLabel")
-    self.error:SetFont("liaCharSubTitleFont")
+    self.error:SetFont("liaMenuButtonFont")
     self.error:SetText(message)
     self.error:SetTextColor(color_white)
     self.error:Dock(TOP)
@@ -109,7 +100,7 @@ function PANEL:showError(message, ...)
     self.error:DockMargin(0, 0, 0, 8)
     self.error:SetContentAlignment(5)
     self.error.Paint = function(box, w, h)
-        if not client:getChar() then lia.util.drawBlur(box) end
+        lia.util.drawBlur(box)
         surface.SetDrawColor(255, 0, 0, 50)
         surface.DrawRect(0, 0, w, h)
     end
@@ -139,7 +130,7 @@ function PANEL:addStep(step, priority)
     assert(IsValid(step), "Invalid panel for step")
     assert(step.isCharCreateStep, "Panel must inherit liaCharacterCreateStep")
     if isnumber(priority) then
-        table.insert(self.steps, priority, step)
+        table.insert(self.steps, math.min(priority, #self.steps + 1), step)
     else
         self.steps[#self.steps + 1] = step
     end
@@ -254,19 +245,23 @@ end
 
 function PANEL:Init()
     self:Dock(FILL)
-    self:InvalidateParent(true)
     local canCreate, reason = self:canCreateCharacter()
     if not canCreate then return self:showMessage(reason) end
     lia.gui.charCreate = self
+    local sideMargin = 0
+    if ScrW() > 1280 then
+        sideMargin = ScrW() * 0.15
+    elseif ScrW() > 720 then
+        sideMargin = ScrW() * 0.075
+    end
+
     self.content = self:Add("DPanel")
     self.content:Dock(FILL)
-    self.content:InvalidateParent(true)
-    self.content:DockPadding(0, 18, 0, 0)
+    self.content:DockMargin(sideMargin, 64, sideMargin, 0)
     self.content:SetPaintBackground(false)
     self.model = self.content:Add("liaModelPanel")
-    self.model:SetWide(0)
+    self.model:SetWide(ScrW() * 0.25)
     self.model:Dock(LEFT)
-    self.model:InvalidateParent(true)
     self.model:SetModel("models/error.mdl")
     self.model.oldSetModel = self.model.SetModel
     self.model.SetModel = function(model, ...)
@@ -282,17 +277,17 @@ function PANEL:Init()
     self.prev:SetText(L("back"):upper())
     self.prev:Dock(LEFT)
     self.prev:SetWide(96)
-    self.prev.DoClick = function() self:previousStep() end
+    self.prev.DoClick = function(prev) self:previousStep() end
     self.prev:SetAlpha(0)
     self.next = self.buttons:Add("liaCharButton")
     self.next:SetText(L("next"):upper())
     self.next:Dock(RIGHT)
     self.next:SetWide(96)
-    self.next.DoClick = function() self:nextStep() end
+    self.next.DoClick = function(next) self:nextStep() end
     self.cancel = self.buttons:Add("liaCharButton")
     self.cancel:SetText(L("cancel"):upper())
     self.cancel:SizeToContentsX()
-    self.cancel.DoClick = function() self:reset() end
+    self.cancel.DoClick = function(cancel) self:reset() end
     self.cancel.x = (ScrW() - self.cancel:GetWide()) * 0.5 - 64
     self.cancel.y = (self.buttons:GetTall() - self.cancel:GetTall()) * 0.5
     self.steps = {}

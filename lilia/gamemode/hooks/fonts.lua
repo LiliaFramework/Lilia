@@ -55,7 +55,7 @@ function GM:LoadLiliaFonts(font, genericFont)
 
     surface.CreateFont("liaMenuButtonFont", {
         font = font,
-        size = ScreenScale(14) * scale,
+        size = ScreenScale(14),
         extended = true,
         weight = 1000
     })

@@ -177,37 +177,51 @@ end
 
 function PANEL:DrawPortraits()
     local client = LocalPlayer()
+    local function SafeSetModel(panel, model)
+        if util.IsValidModel(model) then
+            panel:SetModel(model)
+        else
+            panel:SetModel("")
+        end
+    end
+
     self.vendorModel = self:Add("DModelPanel")
     self.vendorModel:SetSize(SS(160, true), SS(170))
     self.vendorModel:SetPos((self:GetWide() / 2) / 2 - self.vendorModel:GetWide() / 2 - SS(350, true), ScrH() * 0.35 + SS(25))
-    self.vendorModel:SetModel(liaVendorEnt:GetModel())
+    local vendorModelPath = liaVendorEnt and liaVendorEnt.GetModel and liaVendorEnt:GetModel() or ""
+    SafeSetModel(self.vendorModel, vendorModelPath)
     self.vendorModel:SetFOV(20)
     self.vendorModel:SetAlpha(0)
     self.vendorModel:AlphaTo(255, 0.2)
-    local vendorhead = self.vendorModel.Entity:LookupBone("ValveBiped.Bip01_Head1")
-    if vendorhead and vendorhead >= 0 then self.vendorModel:SetLookAt(self.vendorModel.Entity:GetBonePosition(vendorhead)) end
     self.vendorModel.LayoutEntity = function()
-        self.vendorModel.Entity:SetAngles(Angle(0, 45, 0))
-        self.vendorModel.Entity:ResetSequence(2)
-        for k, v in ipairs(self.vendorModel.Entity:GetSequenceList()) do
-            if v:lower():find("idle") and v ~= "idlenoise" then return self.vendorModel.Entity:ResetSequence(k) end
-        end
+        if self.vendorModel.Entity then
+            local vendorhead = self.vendorModel.Entity:LookupBone("ValveBiped.Bip01_Head1")
+            if vendorhead and vendorhead >= 0 then self.vendorModel:SetLookAt(self.vendorModel.Entity:GetBonePosition(vendorhead)) end
+            self.vendorModel.Entity:SetAngles(Angle(0, 45, 0))
+            self.vendorModel.Entity:ResetSequence(2)
+            for k, v in ipairs(self.vendorModel.Entity:GetSequenceList()) do
+                if v:lower():find("idle") and v ~= "idlenoise" then return self.vendorModel.Entity:ResetSequence(k) end
+            end
 
-        self.vendorModel.Entity:ResetSequence(4)
+            self.vendorModel.Entity:ResetSequence(4)
+        end
     end
 
     self.playerModel = self:Add("DModelPanel")
     self.playerModel:SetSize(SS(160, true), SS(170))
     self.playerModel:SetPos((self:GetWide() / 2) / 2 - self.playerModel:GetWide() / 2 + SS(1100, true), ScrH() * 0.35 + SS(25))
-    self.playerModel:SetModel(client:GetModel())
+    local playerModelPath = client:GetModel()
+    SafeSetModel(self.playerModel, playerModelPath)
     self.playerModel:SetFOV(20)
     self.playerModel:SetAlpha(0)
     self.playerModel:AlphaTo(255, 0.2)
-    local playerhead = self.playerModel.Entity:LookupBone("ValveBiped.Bip01_Head1")
-    if playerhead and playerhead >= 0 then self.playerModel:SetLookAt(self.playerModel.Entity:GetBonePosition(playerhead)) end
     self.playerModel.LayoutEntity = function()
-        self.playerModel.Entity:SetAngles(Angle(0, 45, 0))
-        self.playerModel.Entity:ResetSequence(2)
+        if self.playerModel.Entity then
+            local playerhead = self.playerModel.Entity:LookupBone("ValveBiped.Bip01_Head1")
+            if playerhead and playerhead >= 0 then self.playerModel:SetLookAt(self.playerModel.Entity:GetBonePosition(playerhead)) end
+            self.playerModel.Entity:SetAngles(Angle(0, 45, 0))
+            self.playerModel.Entity:ResetSequence(2)
+        end
     end
 end
 

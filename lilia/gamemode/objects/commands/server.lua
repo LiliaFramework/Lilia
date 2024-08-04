@@ -1231,3 +1231,17 @@ lia.command.add("checkinventory", {
         end
     end
 })
+
+lia.command.add("steamid", {
+    adminOnly = true,
+    syntax = "<string name>",
+    privilege = "Check SteamIDs",
+    onRun = function(client, arguments)
+        local target = lia.command.findPlayer(client, arguments[1])
+        if IsValid(target) and target:getChar() then
+            local steamID = target:SteamID()
+            client:notify("Steam ID: " .. steamID .. " copied to clipboard.")
+            netstream.Start(client, "idReq", steamID)
+        end
+    end
+})
