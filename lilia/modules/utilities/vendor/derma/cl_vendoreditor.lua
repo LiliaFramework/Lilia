@@ -47,6 +47,10 @@ function PANEL:Init()
         if value ~= entity:getMoney() then EDITOR.money(value) end
     end
 
+    self.flag = self:Add("DTextEntry")
+    self.flag:Dock(TOP)
+    self.flag:DockMargin(0, 4, 0, 0)
+    self.flag:SetText(entity:getNetVar("flag") or "Flag")
     self.flag.OnEnter = function(this)
         local value = this:GetText()
         if value:match("^%a$") then
