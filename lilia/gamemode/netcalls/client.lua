@@ -398,11 +398,6 @@ netstream.Hook("actBar", function(start, finish, text)
     end
 end)
 
-net.Receive("announcement_client", function()
-    local message = net.ReadString()
-    chat.AddText(Color(255, 56, 252), "[Admin Announcement]: ", Color(255, 255, 255), message)
-end)
-
 net.Receive("StringRequest", function()
     local time = net.ReadUInt(32)
     local title, subTitle = net.ReadString(), net.ReadString()

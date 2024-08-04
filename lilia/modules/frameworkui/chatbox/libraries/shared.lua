@@ -53,15 +53,6 @@ lia.chat.register("coinflip", {
     deadCanChat = false
 })
 
-lia.chat.register("announce", {
-    format = "%s announces \"%s\"",
-    onCanHear = MODULE.ChatRange * 4,
-    prefix = {"/announce", "/announcement"},
-    color = Color(255, 150, 0),
-    font = "liaChatFontBold",
-    deadCanChat = false
-})
-
 lia.chat.register("ic", {
     format = "%s says \"%s\"",
     onGetColor = function(speaker)
