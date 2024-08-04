@@ -473,3 +473,9 @@ lia.command.add("steamid", {
     privilege = "Check SteamIDs",
     onRun = function() end
 })
+
+lia.command.add("flaglist", {
+    adminOnly = false,
+    onRun = function() end,
+    alias = {"flags"}
+})

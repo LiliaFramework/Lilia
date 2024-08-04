@@ -474,6 +474,22 @@ net.Receive("OpenInformationMenu", function()
     itemsList:Dock(FILL)
 end)
 
+net.Receive("FlagList", function()
+    local flags = net.ReadTable()
+    local frame = vgui.Create("DFrame")
+    frame:SetTitle("Flags List")
+    frame:SetSize(400, 300)
+    frame:Center()
+    frame:MakePopup()
+    local flagList = vgui.Create("DListView", frame)
+    flagList:Dock(FILL)
+    flagList:AddColumn("Flag")
+    flagList:AddColumn("Description")
+    for _, flag in pairs(flags) do
+        flagList:AddLine(flag.flag, flag.desc)
+    end
+end)
+
 net.Receive("OpenVGUI", function()
     local panel = net.ReadString()
     LocalPlayer():OpenUI(panel)

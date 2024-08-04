@@ -1245,3 +1245,21 @@ lia.command.add("steamid", {
         end
     end
 })
+
+lia.command.add("flaglist", {
+    adminOnly = false,
+    onRun = function(client)
+        local flags = {}
+        for flag, data in pairs(lia.flag.list) do
+            table.insert(flags, {
+                flag = flag,
+                desc = data.desc
+            })
+        end
+
+        net.Start("FlagList")
+        net.WriteTable(flags)
+        net.Send(client)
+    end,
+    alias = {"flags"}
+})
