@@ -560,7 +560,7 @@ if SERVER then
     -- @string subTitle The subtitle of the request.
     -- @table options The table of options to choose from.
     -- @func callback The function to call upon receiving the selected option.
-    function playerMeta:RequestDropdown(title, subTitle, options, callback)
+    function playerMeta:RequestDropdown(title, subTitle, options)
         net.Start("DropdownRequest")
         net.WriteString(title)
         net.WriteString(subTitle)
