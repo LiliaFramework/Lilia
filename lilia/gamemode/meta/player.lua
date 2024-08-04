@@ -558,7 +558,7 @@ if SERVER then
     -- @realm shared
     -- @string title The title of the request.
     -- @string subTitle The subtitle of the request.
-    -- @table options The table of options to choose from.
+    -- @tab options The table of options to choose from.
     -- @func callback The function to call upon receiving the selected option.
     function playerMeta:RequestDropdown(title, subTitle, options, callback)
         net.Start("DropdownRequest")
