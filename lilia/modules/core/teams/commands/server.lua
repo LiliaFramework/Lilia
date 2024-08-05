@@ -222,15 +222,43 @@ lia.command.add("classunwhitelist", {
 
 lia.command.add("classlist", {
     adminOnly = false,
-    onRun = function(client)
+    onRun = function(client, arguments)
+        local factionID = arguments[1]
         local classes = {}
-        for _, class in pairs(lia.class.list) do
+        local function addClass(class)
             table.insert(classes, {
                 name = class.name,
                 desc = class.desc,
                 faction = lia.faction.get(class.faction).name,
                 isDefault = class.isDefault
             })
+        end
+
+        if factionID then
+            local faction = lia.faction.teams[factionID]
+            if not faction then
+                for _, v in pairs(lia.faction.indices) do
+                    if lia.util.stringMatches(L(v.name, client), factionID) then
+                        faction = v
+                        break
+                    end
+                end
+            end
+
+            if not faction then
+                client:notify("Faction not found. Using Default Method.")
+                for _, class in pairs(lia.class.list) do
+                    addClass(class)
+                end
+            else
+                for _, class in pairs(lia.class.list) do
+                    if faction.uniqueID == lia.faction.get(class.faction).uniqueID then addClass(class) end
+                end
+            end
+        else
+            for _, class in pairs(lia.class.list) do
+                addClass(class)
+            end
         end
 
         net.Start("classlist")
@@ -244,18 +272,22 @@ lia.command.add("factionlist", {
     adminOnly = false,
     onRun = function(client)
         local factions = {}
-        for _, faction in pairs(lia.faction.indices) do
+        local function addFaction(faction)
             table.insert(factions, {
                 name = faction.name,
                 desc = faction.desc,
                 color = faction.color,
                 isDefault = faction.isDefault
             })
-
-            net.Start("factionlist")
-            net.WriteTable(factions)
-            net.Send(client)
         end
+
+        for _, faction in pairs(lia.faction.indices) do
+            addFaction(faction)
+        end
+
+        net.Start("factionlist")
+        net.WriteTable(factions)
+        net.Send(client)
     end,
     alias = {"factions"}
 })

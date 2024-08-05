@@ -42,6 +42,17 @@ net.Receive("factionlist", function()
     factionList:AddColumn("Description")
     factionList:AddColumn("Color")
     factionList:AddColumn("Default")
+    function factionList:OnRowRightClick(lineID, line)
+        local menu = DermaMenu()
+        menu:AddOption("View Classes", function()
+            local faction = factions[lineID]
+            LocalPlayer():ConCommand("say /classlist " .. faction.name)
+            frame:Remove()
+        end):SetIcon("icon16/user.png")
+
+        menu:Open()
+    end
+
     for _, faction in pairs(factions) do
         factionList:AddLine(faction.name, faction.desc, string.format("RGB(%d, %d, %d)", faction.color.r, faction.color.g, faction.color.b), faction.isDefault and "Yes" or "No")
     end
