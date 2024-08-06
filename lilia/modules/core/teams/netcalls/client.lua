@@ -42,7 +42,7 @@ net.Receive("factionlist", function()
     factionList:AddColumn("Description")
     factionList:AddColumn("Color")
     factionList:AddColumn("Default")
-    function factionList:OnRowRightClick(lineID, line)
+    function factionList:OnRowRightClick(lineID)
         local menu = DermaMenu()
         menu:AddOption("View Classes", function()
             local faction = factions[lineID]
