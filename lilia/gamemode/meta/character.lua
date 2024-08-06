@@ -219,9 +219,14 @@ function characterMeta:joinClass(class, isForced)
 
     local oldClass = self:getClass()
     local client = self:getPlayer()
+    local hadOldClass = oldClass and oldClass ~= -1
     if isForced or lia.class.canBe(client, class) then
         self:setClass(class)
-        hook.Run("OnPlayerJoinClass", client, class, oldClass)
+        if hadOldClass then
+            hook.Run("OnPlayerSwitchClass", client, class, oldClass)
+        else
+            hook.Run("OnPlayerJoinClass", client, class, oldClass)
+        end
         return true
     else
         return false
