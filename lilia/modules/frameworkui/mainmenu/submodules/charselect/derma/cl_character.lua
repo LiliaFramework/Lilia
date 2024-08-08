@@ -71,7 +71,7 @@ function PANEL:createTitle()
         ]]
         self.schemaLogo:SetHTML(htmlContent)
         self.schemaLogo:SetAlpha(255)
-        self.schemaLogo.Paint = function(self, w, h)
+        self.schemaLogo.Paint = function(_, w, h)
             surface.SetDrawColor(255, 255, 255, 0)
             surface.DrawRect(0, 0, w, h)
         end
