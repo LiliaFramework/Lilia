@@ -57,13 +57,24 @@ function PANEL:createTitle()
     self.title:SetTextColor(WHITE)
     local centerlogo = SCHEMA.Logo
     if centerlogo and centerlogo:find("%S") then
-        local logoWidth, logoHeight = 300, 300
+        local logoWidth, logoHeight = 512, 512
         self.schemaLogo = self:Add("DHTML")
         self.schemaLogo:SetSize(logoWidth, logoHeight)
-        self.schemaLogo:SetPos((ScrW() - logoWidth) / 2, sH(200))
+        self.schemaLogo:SetPos((ScrW() - logoWidth) / 2, sH(150))
         self.schemaLogo:SetZPos(-197)
-        self.schemaLogo:OpenURL(centerlogo)
+        local htmlContent = [[
+            <html>
+                <body style="margin: 0; background-color: transparent;">
+                    <img src="]] .. centerlogo .. [[" width="]] .. logoWidth .. [[" height="]] .. logoHeight .. [[" />
+                </body>
+            </html>
+        ]]
+        self.schemaLogo:SetHTML(htmlContent)
         self.schemaLogo:SetAlpha(255)
+        self.schemaLogo.Paint = function(self, w, h)
+            surface.SetDrawColor(255, 255, 255, 0)
+            surface.DrawRect(0, 0, w, h)
+        end
     end
 
     self.icon = self:CreateIcon(self, "https://github.com/LiliaFramework/Lilia", "https://raw.githubusercontent.com/LiliaFramework/Lilia/main/lilia/logo.png", ScrW() - 96, 8)
