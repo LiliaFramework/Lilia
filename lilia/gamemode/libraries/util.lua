@@ -225,6 +225,34 @@ function lia.util.playerInRadius(pos, dist)
     return t
 end
 
+-- Returns a string that has the named arguments in the format string replaced with the given arguments.
+-- @realm shared
+-- @string format Format string
+-- @tparam tab|... Arguments to pass to the formatted string. If passed a table, it will use that table as the lookup table for
+-- the named arguments. If passed multiple arguments, it will replace the arguments in the string in order.
+-- @usage print(lia.util.formatStringNamed("Hi, my name is {name}.", {name = "Bobby"}))
+-- > Hi, my name is Bobby.
+-- @usage print(lia.util.formatStringNamed("Hi, my name is {name}.", "Bobby"))
+-- > Hi, my name is Bobby.
+function lia.util.formatStringNamed(format, ...)
+    local arguments = {...}
+    local bArray = false
+    local input
+    if istable(arguments[1]) then
+        input = arguments[1]
+    else
+        input = arguments
+        bArray = true
+    end
+
+    local i = 0
+    local result = format:gsub("{(%w-)}", function(word)
+        i = i + 1
+        return tostring((bArray and input[i] or input[word]) or word)
+    end)
+    return result
+end
+
 if SERVER then
     --- Notifies a player or all players with a message.
     -- @realm server
