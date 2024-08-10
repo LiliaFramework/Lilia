@@ -168,5 +168,3 @@ concommand.Add("tp_toggle", function()
     ThirdPerson:SetInt(ThirdPerson:GetInt() == 0 and 1 or 0)
     hook.Run("thirdPersonToggled", ThirdPerson:GetBool())
 end)
-
-net.Receive("Reset3rdPersonStatus", function() RunConsoleCommand("tp_enabled", "0") end)
