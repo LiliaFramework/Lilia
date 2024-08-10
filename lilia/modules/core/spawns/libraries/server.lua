@@ -79,6 +79,7 @@ function MODULE:PlayerDeath(client, _, attacker)
     character:setData("pos", nil)
     if (not attacker:IsPlayer() and self.LoseWeapononDeathNPC) or (self.LoseWeapononDeathWorld and attacker:IsWorld()) then self:RemoveAllEquippedWeapons(client) end
     character:setData("deathPos", client:GetPos())
+    client:SetDeathTimer()
 end
 
 function MODULE:RemoveAllEquippedWeapons(client)
