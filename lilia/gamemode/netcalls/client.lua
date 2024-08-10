@@ -229,7 +229,7 @@ net.Receive("StringRequest", function()
     local default = net.ReadString()
     if title:sub(1, 1) == "@" then title = L(title:sub(2)) end
     if subTitle:sub(1, 1) == "@" then subTitle = L(subTitle:sub(2)) end
-    Derma_StringRequestuest(title, subTitle, default, function(text)
+    Derma_StringRequest(title, subTitle, default, function(text)
         net.Start("StringRequest")
         net.WriteUInt(id, 32)
         net.WriteString(text)
