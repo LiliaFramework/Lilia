@@ -1,3 +1,4 @@
+--- The Player Meta for the Attributes Module.
 -- @playermeta Attributes
 local playerMeta = FindMetaTable("Player")
 --- Restores stamina for the player.

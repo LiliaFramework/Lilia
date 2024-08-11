@@ -1,6 +1,6 @@
-﻿-- @playermeta Vendor
+﻿--- The Player Meta for the Vendor Module.
+-- @playermeta Vendor
 local playerMeta = FindMetaTable("Player")
-
 --- Determines if the player can edit a vendor.
 -- This function checks whether the player has the necessary privilege to edit vendors.
 -- @realm shared

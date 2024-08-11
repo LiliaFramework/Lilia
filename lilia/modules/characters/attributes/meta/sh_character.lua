@@ -1,5 +1,6 @@
-﻿local MODULE = MODULE
+﻿--- The Character Meta for the Attributes Module.
 -- @charactermeta Attributes
+local MODULE = MODULE
 local characterMeta = lia.meta.character
 --- Retrieves the maximum stamina for a character.
 -- This function determines the maximum stamina a character can have, either from a hook or a default value.

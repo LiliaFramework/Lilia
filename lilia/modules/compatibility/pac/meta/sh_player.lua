@@ -1,4 +1,5 @@
-﻿-- @playermeta PAC3
+﻿--- The Character Meta for the PAC Module.
+-- @playermeta PAC
 local playerMeta = FindMetaTable("Entity")
 --- Retrieves the PAC3 parts associated with the player.
 -- This function returns a table of PAC3 parts that are currently associated with the player.

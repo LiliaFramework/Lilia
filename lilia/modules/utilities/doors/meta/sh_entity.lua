@@ -1,4 +1,5 @@
-﻿-- @entitymeta Doors
+﻿--- The Entity Meta for the Doors Module.
+-- @entitymeta Doors
 local entityMeta = FindMetaTable("Entity")
 --- Checks if a player has access to a door.
 -- This function checks if a player has the required access level to interact with a door.

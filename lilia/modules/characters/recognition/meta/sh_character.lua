@@ -1,4 +1,6 @@
-﻿-- @charactermeta Recognition
+﻿
+--- The Character Meta for the Recognition Module.
+-- @charactermeta Recognition
 local characterMeta = lia.meta.character
 --- Checks if this character recognizes another character.
 -- This function determines if the character recognizes another character by checking if they are recognized via a specific ID.
