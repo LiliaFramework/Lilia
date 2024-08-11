@@ -1,10 +1,6 @@
-﻿--[[--
-Representation of Physical inventory.
-
-Inventories represent the physical storage of items within the gamemodes. Lilia extends the functionality of inventories to interface
-with Lilia's own classes, reducing the amount of boilerplate code needed for inventory management.
-]]
--- @inventorymeta Framework
+﻿
+--- The Inventory Meta for the Grid Inventory Module.
+-- @inventorymeta Inventory
 local GridInv = lia.Inventory:extend("GridInv")
 local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
     if inventory.virtual then return action == "transfer" end
