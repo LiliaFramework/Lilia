@@ -8,6 +8,11 @@
 end)
 
 netstream.Hook("PIMRunOption", function(client, name)
-    local opt = PIM.options[name]
+    local opt = PIM.Options[name]
     if opt.runServer then opt.onRun(client, client:GetTracedEntity()) end
+end)
+
+netstream.Hook("PIMRunLocalOption", function(client, name)
+    local opt = PIM.SelfOptions[name]
+    if opt.runServer then opt.onRun(client) end
 end)

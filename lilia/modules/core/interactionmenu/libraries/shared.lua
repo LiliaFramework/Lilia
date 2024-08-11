@@ -1,11 +1,19 @@
-﻿MODULE.options = MODULE.options or {}
+﻿MODULE.Options = MODULE.Options or {}
+MODULE.SelfOptions = MODULE.SelfOptions or {}
+
 function MODULE:AddOption(name, data)
-    self.options[name] = data
+    self.Options[name] = data
+    LiliaInformation("Added PIM Interaction " .. name)
+end
+
+function MODULE:AddLocalOption(name, data)
+    self.SelfOptions[name] = data
+    LiliaInformation("Added Local PIM Interaction " .. name)
 end
 
 function MODULE:CheckPossibilities()
     local client = LocalPlayer()
-    for _, v in pairs(self.options) do
+    for _, v in pairs(self.Options) do
         if not client:GetTracedEntity():IsPlayer() then return end
         if v.shouldShow(client, client:GetTracedEntity()) then return true end
     end
@@ -13,7 +21,8 @@ function MODULE:CheckPossibilities()
 end
 
 function MODULE:InitializedModules()
-    hook.Run("AddPIMOption", self.options)
+    hook.Run("AddPIMOption", self.Options)
+    hook.Run("AddLocalPIMOption", self.SelfOptions)
 end
 
 function MODULE:CheckDistance(client, entity)
