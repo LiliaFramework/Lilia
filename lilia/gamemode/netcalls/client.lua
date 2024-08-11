@@ -158,7 +158,7 @@ net.Receive("RequestLiliaContent", function()
     end
 end)
 
-netstream.Hook("openBlacklistLog", function(target, blacklists, blacklistLog)
+netstream.Hook("openBlacklistLog", function(client, target, blacklists, blacklistLog)
     if not client:HasPrivilege("Commands - Manage Permanent Flags") then return end
     local fr = vgui.Create("DFrame")
     fr:SetSize(700, 500)
@@ -457,6 +457,29 @@ netstream.Hook("actBar", function(start, finish, text)
         lia.bar.actionStart = start
         lia.bar.actionEnd = finish
         lia.bar.actionText = text:upper()
+    end
+end)
+
+net.Receive("ModuleList", function()
+    local modules = net.ReadTable()
+
+    local frame = vgui.Create("DFrame")
+    frame:SetTitle("Modules List")
+    frame:SetSize(900, 500)
+    frame:Center()
+    frame:MakePopup()
+
+    local moduleList = vgui.Create("DListView", frame)
+    moduleList:Dock(FILL)
+    moduleList:AddColumn("Unique ID"):SetFixedWidth(150)
+    moduleList:AddColumn("Name"):SetFixedWidth(150)
+    moduleList:AddColumn("Description")
+    moduleList:AddColumn("Author"):SetFixedWidth(100)
+    moduleList:AddColumn("Discord"):SetFixedWidth(150)
+    moduleList:AddColumn("Version"):SetFixedWidth(80)
+
+    for _, module in pairs(modules) do
+        moduleList:AddLine(module.uniqueID, module.name, module.desc, module.author, module.discord, module.version)
     end
 end)
 

@@ -1000,7 +1000,7 @@ lia.command.add("flagblacklists", {
         if IsValid(target) and target:getChar() then
             local blacklists = target:getFlagBlacklist() or ""
             local blacklistLog = target:getLiliaData("flagblacklistlog", {})
-            netstream.Start(client, "openBlacklistLog", target, blacklists, blacklistLog)
+            netstream.Start(client, "openBlacklistLog", client, target, blacklists, blacklistLog)
         end
     end
 })
@@ -1248,4 +1248,27 @@ lia.command.add("flaglist", {
         net.Send(client)
     end,
     alias = {"flags"}
+})
+
+lia.command.add("modulelist", {
+    adminOnly = false,
+    onRun = function(client)
+        local modules = {}
+
+        for uniqueID, module in pairs(lia.module.list) do
+            table.insert(modules, {
+                uniqueID = uniqueID,
+                name = module.name or "Unknown",
+                desc = module.desc or "No description available",
+                author = module.author or "Anonymous",
+                discord = module.discord or "N/A",
+                version = module.version or "N/A"
+            })
+        end
+
+        net.Start("ModuleList")
+        net.WriteTable(modules)
+        net.Send(client)
+    end,
+    alias = {"modules"},
 })

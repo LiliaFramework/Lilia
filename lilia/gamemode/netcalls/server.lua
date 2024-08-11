@@ -24,6 +24,7 @@ util.AddNetworkString("OpenVGUI")
 util.AddNetworkString("OpenPage")
 util.AddNetworkString("RequestLiliaContent")
 util.AddNetworkString("RequestServerContent")
+util.AddNetworkString("ModuleList")
 net.Receive("DropdownRequest", function(_, client)
     local selectedOption = net.ReadString()
     if client.dropdownCallback then

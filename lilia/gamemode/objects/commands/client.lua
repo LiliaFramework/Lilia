@@ -472,3 +472,9 @@ lia.command.add("flaglist", {
     onRun = function() end,
     alias = {"flags"}
 })
+
+lia.command.add("modulelist", {
+    adminOnly = false,
+    onRun = function() end,
+    alias = {"modules"},
+})
