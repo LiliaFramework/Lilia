@@ -1,6 +1,6 @@
-﻿--- The Player Meta for the Raise Weapons Module.
+﻿local MODULE = MODULE
+--- The Player Meta for the Raise Weapons Module.
 -- @playermeta RaiseWeapons
-local MODULE = MODULE
 local playerMeta = FindMetaTable("Player")
 --- Checks if the player's weapon is raised.
 -- This function determines whether the player's currently active weapon is raised based on various conditions.
