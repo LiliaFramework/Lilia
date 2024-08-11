@@ -1,5 +1,4 @@
 ﻿local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng, diff, fm, sm
-local playerMeta = FindMetaTable("Player")
 local ThirdPerson = CreateClientConVar("tp_enabled", 0, true)
 local ThirdPersonVerticalView = CreateClientConVar("tp_vertical", 10, true)
 local ThirdPersonHorizontalView = CreateClientConVar("tp_horizontal", 0, true)
@@ -152,16 +151,6 @@ function MODULE:PrePlayerDraw(drawnClient)
         drawnClient:DrawShadow(true)
         drawnClient.IsHidden = false
     end
-end
-
-function playerMeta:CanOverrideView()
-    local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
-    local isInVehicle = self:hasValidVehicle()
-    if IsValid(lia.gui.char) then return false end
-    if isInVehicle then return false end
-    if not F1MenuCore.F1ThirdPersonEnabled and IsValid(lia.gui.menu) then return false end
-    if hook.Run("ShouldDisableThirdperson", self) == true then return false end
-    return ThirdPerson:GetBool() and ThirdPersonCore.ThirdPersonEnabled and (IsValid(self) and self:getChar() and not IsValid(ragdoll))
 end
 
 concommand.Add("tp_toggle", function()
