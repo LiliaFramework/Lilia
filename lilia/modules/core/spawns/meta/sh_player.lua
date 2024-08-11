@@ -7,7 +7,8 @@ local playerMeta = FindMetaTable("Player")
 -- @realm shared
 -- @treturn boolean True if the death timer is active, false otherwise.
 function playerMeta:HasDeathTimer()
-    return self:GetNWInt("deathTime", os.time()) > os.time()
+    local deathTimer = self:getNetVar("deathTime")
+    return deathTimer and deathTimer > os.time()
 end
 
 if SERVER then
@@ -16,6 +17,6 @@ if SERVER then
     -- If stamina is depleted, it may trigger a breathless state.
     -- @realm server
     function playerMeta:SetDeathTimer()
-        self:SetNWInt("deathTime", os.time() + lia.config.SpawnTime)
+        self:setNetVar("deathTime", os.time() + lia.config.SpawnTime)
     end
 end

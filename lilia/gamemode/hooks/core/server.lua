@@ -142,7 +142,7 @@ function GM:AllowPlayerPickup()
 end
 
 function GM:PlayerDeathThink()
-    return true
+    return false
 end
 
 function GM:PlayerShouldTakeDamage(client)

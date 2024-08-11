@@ -15,6 +15,8 @@ function GM:PlayerDeath(client)
         ragdoll:Remove()
         client:setLocalVar("blur", nil)
     end
+
+    client:SetDeathTimer()
 end
 
 function GM:PlayerSpawn(client)
