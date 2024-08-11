@@ -2,4 +2,5 @@
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "Adds Simfphys Compatibility"
-MODULE.enabled = simfphys ~= nil and LVS ~= nil
+MODULE.enabled = simfphys ~= nil
+MODULE.version = "Stock"

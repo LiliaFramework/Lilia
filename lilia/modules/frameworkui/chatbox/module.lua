@@ -3,6 +3,7 @@ MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "Adds a Chatbox"
 MODULE.identifier = "ChatboxCore"
+MODULE.version = "Stock"
 MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - No OOC Cooldown",

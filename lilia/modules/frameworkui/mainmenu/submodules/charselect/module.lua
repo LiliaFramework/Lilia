@@ -2,6 +2,7 @@
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "Adds the derma for the characters options."
+MODULE.version = "Stock"
 lia.includeDir(MODULE.path .. "/derma/steps", true)
 if CLIENT then
     function MODULE:LiliaLoaded()
