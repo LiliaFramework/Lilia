@@ -19,4 +19,4 @@
 -- @field FemaleDeathSounds Sounds played when a female character dies | **table**
 -- @field FemaleHurtSounds Sounds played when a female character is hurt | **table**
 -- @field DrownSounds Sounds played when a character is drowning | **table**
--- @field InjuriesTable Defines the text referring to condition that appears when looking at someone | **table**
+-- @field InjuriesTable Defines the text referring to condition that appears when analyzing someone's health | **table**

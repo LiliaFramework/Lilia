@@ -44,3 +44,15 @@ MODULE:AddOption("Give Money", {
         end
     end
 })
+
+MODULE:AddLocalOption("Check Injury Status", {
+    shouldShow = function(client) return client:getChar() and (client:Alive() or client:HasDeathTimer()) end,
+    onRun = function(client)
+        local injury, _ = hook.Run("GetInjuredText", client, true)
+        if injury then
+            lia.chat.send(client, "actions", "checks their condition and feels they are in a " .. injury, false)
+            client:ChatPrint("I feel like I am in " .. injury)
+        end
+    end,
+    runServer = false
+})

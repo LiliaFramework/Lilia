@@ -18,7 +18,7 @@ function MODULE:GetFallDamage(_, speed)
     return math.max(0, (speed - 580) * (100 / 444))
 end
 
-function MODULE:GetInjuredText(client)
+function MODULE:GetInjuredText(client, meIsUsed)
     local health = client:Health()
     local severities = {}
     for k, _ in pairs(self.InjuriesTable) do
@@ -29,7 +29,9 @@ function MODULE:GetInjuredText(client)
     for _, k in ipairs(severities) do
         local v = self.InjuriesTable[k]
         local severity = k
-        local injury, color = unpack(v)
-        if (health / client:GetMaxHealth()) < severity then return injury, color end
+        local injury, alternative, color = unpack(v)
+        if (health / client:GetMaxHealth()) < severity then
+            return meIsUsed and alternative or injury, color
+        end
     end
 end
