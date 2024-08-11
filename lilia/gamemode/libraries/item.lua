@@ -58,6 +58,8 @@ lia.item.DefaultFunctions = {
     },
 }
 
+lia.meta.item.width = 1
+lia.meta.item.height = 1
 local GridInv = FindMetaTable("GridInv")
 --- Retrieves an item table.
 -- @realm shared

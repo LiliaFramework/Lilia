@@ -1,6 +1,11 @@
-﻿local GridInv = lia.Inventory:extend("GridInv")
-lia.meta.item.width = 1
-lia.meta.item.height = 1
+﻿--[[--
+Representation of Physical inventory.
+
+Inventories represent the physical storage of items within the gamemodes. Lilia extends the functionality of inventories to interface
+with Lilia's own classes, reducing the amount of boilerplate code needed for inventory management.
+]]
+-- @inventorymeta Framework
+local GridInv = lia.Inventory:extend("GridInv")
 local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
     if inventory.virtual then return action == "transfer" end
     local ownerID = inventory:getData("char")
@@ -21,25 +26,47 @@ local function CanNotAddItemIfNoSpace(inventory, action, context)
     end
     return true
 end
-
+--- Retrieves the width of the inventory grid.
+-- @realm shared
+-- @treturn integer The width of the inventory grid.
 function GridInv:getWidth()
     return self:getData("w", lia.config.invW)
 end
 
+--- Retrieves the height of the inventory grid.
+-- @realm shared
+-- @treturn integer The height of the inventory grid.
 function GridInv:getHeight()
     return self:getData("h", lia.config.invH)
 end
 
+--- Retrieves the size (width and height) of the inventory grid.
+-- @realm shared
+-- @treturn integer The width of the inventory grid.
+-- @treturn integer The height of the inventory grid.
 function GridInv:getSize()
     return self:getWidth(), self:getHeight()
 end
 
+--- Checks if an item can fit in the inventory at a given position.
+-- @realm shared
+-- @param item The item to check.
+-- @int x The X position in the inventory grid.
+-- @int y The Y position in the inventory grid.
+-- @treturn boolean Whether the item can fit in the inventory.
 function GridInv:canItemFitInInventory(item, x, y)
     local invW, invH = self:getSize()
     local itemW, itemH = (item.width or 1) - 1, (item.height or 1) - 1
     return x >= 1 and y >= 1 and (x + itemW) <= invW and (y + itemH) <= invH
 end
 
+--- Checks if an item overlaps with another item in the inventory.
+-- @realm shared
+-- @param testItem The item to test for overlap.
+-- @int x The X position of the test item in the inventory grid.
+-- @int y The Y position of the test item in the inventory grid.
+-- @param item The item to check against.
+-- @treturn boolean Whether the test item overlaps with the given item.
 function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
     local testX2, testY2 = x + (testItem.width or 1), y + (testItem.height or 1)
     local itemX, itemY = item:getData("x"), item:getData("y")
@@ -50,6 +77,10 @@ function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
     return true
 end
 
+--- Checks if an item can fit in the inventory, including within bags.
+-- @realm shared
+-- @param item The item to check.
+-- @treturn boolean Whether the item can fit in the inventory.
 function GridInv:doesFitInventory(item)
     local x, y = self:findFreePosition(item)
     if x and y then return true end
@@ -63,6 +94,13 @@ function GridInv:doesFitInventory(item)
     return false
 end
 
+--- Checks if an item fits at a specific position in the inventory.
+-- @realm shared
+-- @param testItem The item to check.
+-- @int x The X position in the inventory grid.
+-- @int y The Y position in the inventory grid.
+-- @treturn boolean Whether the item fits at the given position.
+-- @treturn item The item it overlaps with, if any.
 function GridInv:doesItemFitAtPos(testItem, x, y)
     if not self:canItemFitInInventory(testItem, x, y) then return false end
     for _, item in pairs(self.items) do
@@ -79,6 +117,11 @@ function GridInv:doesItemFitAtPos(testItem, x, y)
     return true
 end
 
+--- Finds a free position in the inventory where an item can fit.
+-- @realm shared
+-- @param item The item to find a position for.
+-- @treturn int The X position in the inventory grid.
+-- @treturn int The Y position in the inventory grid.
 function GridInv:findFreePosition(item)
     local width, height = self:getSize()
     for x = 1, width do
@@ -88,6 +131,8 @@ function GridInv:findFreePosition(item)
     end
 end
 
+--- Configures the inventory with specific access rules.
+-- @realm shared
 function GridInv:configure()
     if SERVER then
         self:addAccessRule(CanNotAddItemIfNoSpace)
@@ -95,6 +140,10 @@ function GridInv:configure()
     end
 end
 
+--- Retrieves all items in the inventory.
+-- @realm shared
+-- @bool[opt=false] noRecurse Whether to include items inside bags (nested inventories).
+-- @treturn table A table of all items in the inventory.
 function GridInv:getItems(noRecurse)
     local items = self.items
     if noRecurse then return items end
@@ -106,17 +155,31 @@ function GridInv:getItems(noRecurse)
     return allItems
 end
 
+
 if SERVER then
+
+    --- Sets the size of the inventory grid.
+    -- @realm server
+    -- @int w The width of the grid.
+    -- @int h The height of the grid.
     function GridInv:setSize(w, h)
         self:setData("w", w)
         self:setData("h", h)
     end
 
+    --- Removes all items from the inventory.
+    -- @realm server
     function GridInv:wipeItems()
         for _, item in pairs(self:getItems()) do
             item:remove()
         end
     end
+
+    --- Sets the owner of the inventory.
+    -- If the owner is a player, it sets the inventory's owner to the player's character ID.
+    -- @realm server
+    -- @param owner The new owner of the inventory (Player or number).
+    -- @bool[opt=false] fullUpdate Whether to sync the inventory to the client.
 
     function GridInv:setOwner(owner, fullUpdate)
         if type(owner) == "Player" and owner:getChar() then
@@ -141,6 +204,14 @@ if SERVER then
         self.owner = owner
     end
 
+    --- Adds an item to the inventory.
+    -- Handles both adding a single item or stacking multiple items if applicable.
+    -- @realm server
+    -- @param itemTypeOrItem The type of the item or the item object to add.
+    -- @param xOrQuantity The X position in the grid or the quantity of items to add.
+    -- @param yOrData The Y position in the grid or additional data for the item.
+    -- @bool[opt=false] noReplicate If true, the addition will not be replicated to clients.
+    -- @treturn deferred A deferred object that resolves when the item is added.
     function GridInv:add(itemTypeOrItem, xOrQuantity, yOrData, noReplicate)
         local x, y, data
         local isStackCommand = isstring(itemTypeOrItem) and isnumber(xOrQuantity)
@@ -293,6 +364,11 @@ if SERVER then
         return d
     end
 
+    --- Removes an item or a quantity of items from the inventory.
+    -- @realm server
+    -- @param itemTypeOrID The type of the item or its ID to remove.
+    -- @int[opt=1] quantity The quantity of items to remove.
+    -- @treturn deferred A deferred object that resolves when the item is removed.
     function GridInv:remove(itemTypeOrID, quantity)
         quantity = quantity or 1
         assert(isnumber(quantity), "quantity must be a number")
@@ -311,6 +387,13 @@ if SERVER then
         return d
     end
 else
+
+   --- Requests a transfer of an item to another inventory.
+    -- @realm client
+    -- @int itemID The ID of the item to transfer.
+    -- @int destinationID The ID of the destination inventory.
+    -- @int x The X position in the destination grid.
+    -- @int y The Y position in the destination grid.
     function GridInv:requestTransfer(itemID, destinationID, x, y)
         local inventory = lia.inventory.instances[destinationID]
         if not inventory then return end
