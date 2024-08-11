@@ -1,4 +1,4 @@
--- @playermeta Attributes
+-- @playermeta Attributes2
 local playerMeta = FindMetaTable("Player")
 --- Restores stamina for the player.
 -- This function restores a certain amount of stamina to the player, clamping the value between 0 and the character's maximum stamina. If stamina is restored above a certain threshold, it may trigger the removal of a breathless state.
