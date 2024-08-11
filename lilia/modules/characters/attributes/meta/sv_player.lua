@@ -1,7 +1,7 @@
--- @playermeta Attributes2
+-- @playermeta Attributes
 local playerMeta = FindMetaTable("Player")
 --- Restores stamina for the player.
--- This function restores a certain amount of stamina to the player, clamping the value between 0 and the character's maximum stamina. If stamina is restored above a certain threshold, it may trigger the removal of a breathless state.
+-- This function restores a certain amount of stamina to the player, clamping the value between 0 and the character's maximum stamina. If stamina is restored above a certain threshold, it will trigger the removal of a breathless state.
 -- @realm server
 -- @int amount The amount of stamina to restore.
 function playerMeta:restoreStamina(amount)
@@ -16,8 +16,7 @@ function playerMeta:restoreStamina(amount)
 end
 
 --- Consumes stamina from the player.
--- This function decreases the player's stamina by a specified amount, clamping the value between 0 and the character's maximum stamina.
--- If stamina is depleted, it may trigger a breathless state.
+-- This function decreases the player's stamina by a specified amount, clamping the value between 0 and the character's maximum stamina. If stamina is depleted, it may trigger a breathless state.
 -- @realm server
 -- @int amount The amount of stamina to consume.
 function playerMeta:consumeStamina(amount)
