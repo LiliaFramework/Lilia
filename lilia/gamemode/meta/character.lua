@@ -521,15 +521,15 @@ if SERVER then
     function characterMeta:giveMoney(amount, takingMoney)
         local client = self:getPlayer()
         local currentMoney = self:getMoney()
-        local totalMoney = currentMoney + amount
         local maxMoneyLimit = lia.config.MoneyLimit or 0
-        local remainingMoney = totalMoney - maxMoneyLimit
-        local negativeTotalMoney = currentMoney + amount
-        if hook.Run("WalletLimit", client) ~= nil then maxMoneyLimit = hook.Run("WalletLimit", client) end
+        local limitOverride = hook.Run("WalletLimit", client)
+        if limitOverride then maxMoneyLimit = limitOverride end
+        local totalMoney = currentMoney + amount
         if not takingMoney then
             if maxMoneyLimit > 0 then
                 if totalMoney > maxMoneyLimit then
-                    client:notify("You can't carry more than " .. maxMoneyLimit .. " " .. lia.currency.plural .. " dropping remaining " .. remainingMoney .. " " .. lia.currency.plural .. " on the ground!")
+                    local remainingMoney = totalMoney - maxMoneyLimit
+                    client:notify("You can't carry more than " .. maxMoneyLimit .. " " .. lia.currency.plural .. ". Dropping remaining " .. remainingMoney .. " " .. lia.currency.plural .. " on the ground!")
                     self:setMoney(maxMoneyLimit)
                     local money = lia.currency.spawn(client:getItemDropPos(), remainingMoney)
                     money.client = client
@@ -540,12 +540,12 @@ if SERVER then
                     lia.log.add(client, "money", amount)
                 end
             else
-                lia.log.add(client, "money", amount)
                 self:setMoney(totalMoney)
+                lia.log.add(client, "money", amount)
             end
         else
+            self:setMoney(totalMoney)
             lia.log.add(client, "money", amount)
-            self:setMoney(negativeTotalMoney)
         end
         return true
     end

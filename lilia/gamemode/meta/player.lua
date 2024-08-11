@@ -263,20 +263,21 @@ function playerMeta:addMoney(amount)
     if not character then return end
     local currentMoney = character:getMoney()
     local maxMoneyLimit = lia.config.MoneyLimit or 0
-    if hook.Run("WalletLimit", self) ~= nil then maxMoneyLimit = hook.Run("WalletLimit", self) end
+    local limitOverride = hook.Run("WalletLimit", self)
+    if limitOverride then maxMoneyLimit = limitOverride end
     if maxMoneyLimit > 0 then
         local totalMoney = currentMoney + amount
         if totalMoney > maxMoneyLimit then
-            local remainingMoney = totalMoney - maxMoneyLimit
-            character:giveMoney(maxMoneyLimit)
-            local money = lia.currency.spawn(self:getItemDropPos(), remainingMoney)
+            local excessMoney = totalMoney - maxMoneyLimit
+            character:giveMoney(maxMoneyLimit - currentMoney, false)
+            local money = lia.currency.spawn(self:getItemDropPos(), excessMoney)
             money.client = self
             money.charID = character:getID()
         else
-            character:giveMoney(amount)
+            character:giveMoney(amount, false)
         end
     else
-        character:giveMoney(amount)
+        character:giveMoney(amount, false)
     end
 end
 
@@ -469,7 +470,6 @@ function playerMeta:getEyeEnt(distance)
     local e = self:GetEyeTrace().Entity
     return e:GetPos():Distance(self:GetPos()) <= distance and e or nil
 end
-
 
 if SERVER then
     --- Loads Lilia data for the player from the database.
@@ -822,7 +822,8 @@ if SERVER then
         end
         return entity
     end
-  --- Requests multiple options selection from the player.
+
+    --- Requests multiple options selection from the player.
     -- @realm shared
     -- @string title The title of the request.
     -- @string subTitle The subtitle of the request.
@@ -924,7 +925,6 @@ if SERVER then
     function playerMeta:notifyLocalized(message, ...)
         lia.util.notifyLocalized(message, self, ...)
     end
-
 
     --- Creates a ragdoll entity for the player.
     -- @realm server
