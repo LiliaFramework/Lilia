@@ -3,12 +3,12 @@ MODULE.SelfOptions = MODULE.SelfOptions or {}
 
 function MODULE:AddOption(name, data)
     self.Options[name] = data
-    LiliaInformation("Added PIM Interaction " .. name)
+    LiliaInformation("[PIM] Added PIM Interaction " .. name)
 end
 
 function MODULE:AddLocalOption(name, data)
     self.SelfOptions[name] = data
-    LiliaInformation("Added Local PIM Interaction " .. name)
+    LiliaInformation("[Local PIM] Added Local PIM Interaction " .. name)
 end
 
 function MODULE:CheckPossibilities()
