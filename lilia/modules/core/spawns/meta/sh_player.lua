@@ -1,22 +1,21 @@
 --- The Player Meta for the Spawns Module.
 -- @playermeta Spawns
 local playerMeta = FindMetaTable("Player")
---- Checks if the player has an active death timer.
--- This function restores a certain amount of stamina to the player, clamping the value between 0 and the character's maximum stamina.
--- If stamina is restored above a certain threshold, it may trigger the removal of a breathless state.
+--- Checks if the player is still within the spawn timer period after death.
+-- This function checks if the current time is less than the death time, indicating that the spawn timer is still active.
 -- @realm shared
--- @treturn boolean True if the death timer is active, false otherwise.
-function playerMeta:HasDeathTimer()
+-- @treturn boolean True if the death timer is active and within the spawn time, false otherwise.
+function playerMeta:IsOnDeathTimer()
     local deathTimer = self:getNetVar("deathTime")
-    return deathTimer and deathTimer > os.time()
+    return deathTimer and deathTimer > CurTime()
 end
 
 if SERVER then
-    --- Sets the player's death timer.
-    -- This function decreases the player's stamina by a specified amount, clamping the value between 0 and the character's maximum stamina.
-    -- If stamina is depleted, it may trigger a breathless state.
+    --- Sets the player's death timer to the current time plus the configured spawn time.
+    -- This function records the time of death for the player, setting the death timer to expire after the spawn time.
     -- @realm server
     function playerMeta:SetDeathTimer()
-        self:setNetVar("deathTime", os.time() + lia.config.SpawnTime)
+        -- Set the death timer to the current time plus the configured spawn time
+        self:setNetVar("deathTime", CurTime() + lia.config.SpawnTime)
     end
 end

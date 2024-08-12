@@ -141,8 +141,9 @@ function GM:AllowPlayerPickup()
     return false
 end
 
-function GM:PlayerDeathThink()
-    return false
+function GM:PlayerDeathThink(client)
+    if client:getChar() and not client:IsOnDeathTimer() then client:Spawn() end
+    return true
 end
 
 function GM:PlayerShouldTakeDamage(client)

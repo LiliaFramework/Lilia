@@ -8,4 +8,5 @@ MODULE.InjuriesTable = {
     [0.4] = {"Serious Injury", "in a serious state", Color(231, 76, 60)},
     [0.6] = {"Moderate Injury", "in a moderate state", Color(255, 152, 0)},
     [0.8] = {"Minor Injury", "in a minor state", Color(255, 193, 7)},
+    [1.0] = {"Healthy", "in perfect health", Color(46, 204, 113)}
 }

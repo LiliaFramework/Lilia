@@ -30,8 +30,6 @@ function MODULE:GetInjuredText(client, meIsUsed)
         local v = self.InjuriesTable[k]
         local severity = k
         local injury, alternative, color = unpack(v)
-        if (health / client:GetMaxHealth()) < severity then
-            return meIsUsed and alternative or injury, color
-        end
+        if (health / client:GetMaxHealth()) <= severity then return meIsUsed and alternative or injury, color end
     end
 end
