@@ -51,7 +51,7 @@ function lia.util.findPlayerItemsByClass(client, class)
     return items
 end
 
---- Finds all entities of a specific class owned by a specified player. 
+--- Finds all entities of a specific class owned by a specified player.
 --- If no class is specified, finds all entities owned by the player.
 -- @realm shared
 -- @param Player client The player whose entities are being searched for.
