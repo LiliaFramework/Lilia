@@ -121,5 +121,5 @@ end
 
 function MODULE:DrawCharInfo(client, _, info)
     local injText, injColor = hook.Run("GetInjuredText", client, false)
-    if injText then info[#info + 1] = {L(injText), injColor} end
+    if injText and injText ~= "Healthy" then info[#info + 1] = {L(injText), injColor} end
 end

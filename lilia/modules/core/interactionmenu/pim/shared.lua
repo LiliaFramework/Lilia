@@ -48,8 +48,8 @@ MODULE:AddOption("Give Money", {
 MODULE:AddLocalOption("Check Injury Status", {
     shouldShow = function(client) return client:getChar() and client:Alive() end,
     onRun = function(client)
-        local injury, _ = hook.Run("GetInjuredText", client, true)
-        if injury then client:chatNotify("I feel like I am in " .. injury) end
+        local injText, _ = hook.Run("GetInjuredText", client, true)
+        if injText  then client:chatNotify("I feel like I am in " .. injText) end
     end,
     runServer = false
 })
