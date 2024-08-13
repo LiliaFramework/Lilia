@@ -5,6 +5,7 @@ ENT.Category = "Lilia"
 ENT.Spawnable = false
 ENT.RenderGroup = RENDERGROUP_BOTH
 ENT.DrawEntityInfo = true
+ENT.isItem = true
 function ENT:getItemID()
     return self:getNetVar("instanceID")
 end

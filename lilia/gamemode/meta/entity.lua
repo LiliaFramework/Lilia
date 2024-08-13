@@ -21,14 +21,14 @@ end
 -- @realm shared
 -- @treturn bool True if the entity is an item entity, false otherwise.
 function entityMeta:isItem()
-    return self:GetClass() == "lia_item"
+    return self:GetClass() == "lia_item" or self.isItem
 end
 
 --- Checks if the entity is a money entity.
 -- @realm shared
 -- @treturn bool True if the entity is a money entity, false otherwise.
 function entityMeta:isMoney()
-    return self:GetClass() == "lia_money"
+    return self:GetClass() == "lia_money" or self.isMoney
 end
 
 --- Checks if the entity is a simfphys car.

@@ -563,7 +563,7 @@ end)
 
 net.Receive("chatNotifyNet", function()
     local message = net.ReadString()
-    chat.AddText(Color(175, 200, 255), message)
+    chat.AddText(Color(255, 215, 0), message)
 end)
 
 netstream.Hook("idReq", function(text) SetClipboardText(text) end)

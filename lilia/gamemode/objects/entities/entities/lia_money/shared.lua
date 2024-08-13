@@ -3,6 +3,7 @@ ENT.PrintName = "Money"
 ENT.Category = "Lilia"
 ENT.Spawnable = false
 ENT.DrawEntityInfo = true
+ENT.isMoney = true
 function ENT:setAmount(amount)
     self:setNetVar("amount", amount)
 end

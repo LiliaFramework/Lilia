@@ -73,7 +73,7 @@ function MODULE:HUDPaint()
     if not client:getChar() then return end
     local x = ScrW() * 0.55
     for k, v in SortedPairs(client:GetWeapons()) do
-        local y = (ScrH() * 0.4) + (k * 24)
+        local y = (ScrH() * 0.4) + (k * 32)
         local color = Color(255, 255, 255, 255)
         if k == self.lastSlot then
             local schemaColor = lia.config.Color
@@ -83,7 +83,7 @@ function MODULE:HUDPaint()
         end
 
         color.a = math.Clamp(255 - math.TimeFraction(self.lifeTime, self.deathTime, CurTime()) * 255, 0, 255)
-        lia.util.drawText(string.upper(v:GetPrintName()), x, y, color, 0, 0, "liaItemBoldFont")
+        lia.util.drawText(string.upper(v:GetPrintName()), x, y, color, 0, 0, "liaWeaponSelectorFont")
         if k == self.lastSlot and self.markup then
             surface.SetDrawColor(30, 30, 30, color.a * 0.95)
             surface.DrawRect(x + 118, ScrH() * 0.4 - 4, self.markup:GetWidth() + 20, self.markup:GetHeight() + 18)
@@ -93,12 +93,6 @@ function MODULE:HUDPaint()
 end
 
 function MODULE:LoadFonts(_, genericFont)
-    surface.CreateFont("Monofonto24", {
-        font = "Monofonto",
-        size = 24,
-        weight = 500
-    })
-
     surface.CreateFont("liaWeaponSelectorFont", {
         font = genericFont,
         size = 36,

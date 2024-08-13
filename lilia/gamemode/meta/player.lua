@@ -1163,7 +1163,7 @@ else
     -- @string message Text to display in the notification
     function playerMeta:chatNotify(message)
         local client = LocalPlayer()
-        if self == client then chat.AddText(Color(175, 200, 255), message) end
+        if self == client then chat.AddText(Color(255, 215, 0), message) end
     end
 
     --- Displays a notification for this player in the chatbox with the given language phrase.
@@ -1174,7 +1174,7 @@ else
         local client = LocalPlayer()
         if self == client then
             message = L(message, ...)
-            chat.AddText(Color(175, 200, 255), message)
+            chat.AddText(Color(255, 215, 0), message)
         end
     end
 

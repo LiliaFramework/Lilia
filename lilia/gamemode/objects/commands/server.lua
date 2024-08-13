@@ -1017,11 +1017,33 @@ lia.command.add("dropmoney", {
         local amount = tonumber(arguments[1])
         if not amount or not isnumber(amount) or amount < 1 then return "@invalidArg", 1 end
         amount = math.Round(amount)
-        if not client:getChar():hasMoney(amount) then return end
+        if not client:getChar():hasMoney(amount) then
+            client:notify("You lack the funds for this!")
+            return
+        end
+
+        local moneyCount = 0
+        for k, v in pairs(lia.util.findPlayerEntities(client)) do
+            print(v)
+            if not v:IsPlayer() and v:isMoney() and v.client == client then moneyCount = moneyCount + 1 end
+        end
+
+        print("money count " .. moneyCount)
+        if moneyCount >= 3 then
+            local admins = lia.util.getAdmins()
+            for _, admin in ipairs(admins) do
+                admin:chatNotify("Player " .. client:Nick() .. " attempted to drop more than 3 pieces of money. They might be exploiting!")
+            end
+
+            client:notify("You can't drop more than 3 pieces of money at a time.")
+            return
+        end
+
         client:getChar():takeMoney(amount)
         local money = lia.currency.spawn(client:getItemDropPos(), amount)
         money.client = client
         money.charID = client:getChar():getID()
+        money.isMoney = true
         client:SetNW2Bool("DropMoneyCooldown", true)
         client:SetNW2Float("DropMoneyCooldownEnd", CurTime() + 5)
         timer.Simple(5, function() if IsValid(client) then client:SetNW2Bool("DropMoneyCooldown", false) end end)
@@ -1254,7 +1276,6 @@ lia.command.add("modulelist", {
     adminOnly = false,
     onRun = function(client)
         local modules = {}
-
         for uniqueID, module in pairs(lia.module.list) do
             table.insert(modules, {
                 uniqueID = uniqueID,
