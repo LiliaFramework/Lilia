@@ -194,7 +194,7 @@ function MODULE:KeyUnlock(client, door, time)
     end
 end
 
-function MODULE:ToggleLock(client, door, state, noAction)
+function MODULE:ToggleLock(client, door, state)
     if door:isDoor() then
         local partner = door:getDoorPartner()
         if state then
