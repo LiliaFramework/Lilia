@@ -1,10 +1,10 @@
-﻿function MODULE:HUDPaint()
-    local ceil = math.ceil
-    local clmp = math.Clamp
+﻿local ceil = math.ceil
+local clmp = math.Clamp
+local ft = FrameTime()
+local w, h = ScrW(), ScrH()
+local aprg, aprg2 = 0, 0
+function MODULE:HUDPaint()
     local client = LocalPlayer()
-    local ft = FrameTime()
-    local w, h = ScrW(), ScrH()
-    local aprg, aprg2 = 0, 0
     if client:getChar() then
         if client:Alive() then
             if aprg ~= 0 then

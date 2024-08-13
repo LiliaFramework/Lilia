@@ -143,7 +143,7 @@ end
 
 function GM:PlayerDeathThink(client)
     if client:getChar() and not client:IsOnDeathTimer() then client:Spawn() end
-    return true
+    return false
 end
 
 function GM:PlayerShouldTakeDamage(client)
