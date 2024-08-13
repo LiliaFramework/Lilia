@@ -1023,12 +1023,10 @@ lia.command.add("dropmoney", {
         end
 
         local moneyCount = 0
-        for k, v in pairs(lia.util.findPlayerEntities(client)) do
-            print(v)
+        for _, v in pairs(lia.util.findPlayerEntities(client)) do
             if not v:IsPlayer() and v:isMoney() and v.client == client then moneyCount = moneyCount + 1 end
         end
 
-        print("money count " .. moneyCount)
         if moneyCount >= 3 then
             local admins = lia.util.getAdmins()
             for _, admin in ipairs(admins) do
