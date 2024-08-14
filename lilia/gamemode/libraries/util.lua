@@ -1,5 +1,6 @@
 ﻿--- Various useful helper functions.
 -- @library lia.util
+
 --- Removes the realm prefix from a file name. The returned string will be unchanged if there is no prefix found.
 -- @realm shared
 -- @string name String to strip prefix from
@@ -531,8 +532,8 @@ if SERVER then
 
     --- Sends a sound to a specific player.
     -- @realm server
+    -- @client client The player to receive the sound
     -- @string sound The sound file to send
-    -- @player client The player to receive the sound
     function lia.util.SendSound(client, sound)
         net.Start("SendSound")
         net.WriteString(sound)
@@ -694,8 +695,8 @@ else
     -- @color colortext The color of the text
     -- @color colorshadow The color of the shadow
     -- @int dist The distance of the shadow from the text
-    -- @enum xalign Horizontal alignment of the text (e.g., TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, TEXT_ALIGN_RIGHT)
-    -- @enum yalign Vertical alignment of the text (e.g., TEXT_ALIGN_TOP, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+    -- @param xalign Horizontal alignment of the text (e.g., TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, TEXT_ALIGN_RIGHT)
+    -- @param yalign Vertical alignment of the text (e.g., TEXT_ALIGN_TOP, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
     function lia.util.ShadowText(text, font, x, y, colortext, colorshadow, dist, xalign, yalign)
         surface.SetFont(font)
         local _, h = surface.GetTextSize(text)
@@ -716,7 +717,7 @@ else
     -- @int x The x-coordinate to draw the text at
     -- @int y The y-coordinate to draw the text at
     -- @color colour The color of the text
-    -- @enum xalign Horizontal alignment of the text (e.g., TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, TEXT_ALIGN_RIGHT)
+    -- @param xalign Horizontal alignment of the text (e.g., TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, TEXT_ALIGN_RIGHT)
     -- @int outlinewidth The width of the outline
     -- @color outlinecolour The color of the outline
     function lia.util.DrawTextOutlined(text, font, x, y, colour, xalign, outlinewidth, outlinecolour)
