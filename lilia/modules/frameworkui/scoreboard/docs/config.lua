@@ -8,3 +8,4 @@
 -- @field sbWidth Scoreboard Width | **number**
 -- @field ShowStaff Should Staff Show In Scoreboard | **boolean**
 -- @field DisplayServerName Should Server Name Show In Scoreboard | **boolean**
+-- @field DisplayMemberCount Should Faction Member Count Be Displayed | **boolean**

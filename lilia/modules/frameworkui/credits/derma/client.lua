@@ -84,7 +84,7 @@ function PANEL:newRow()
 end
 
 vgui.Register("liaCreditsSpecialList", PANEL, "Panel")
-local PANEL = {}
+PANEL = {}
 function PANEL:Paint(w, h)
     surface.SetMaterial(lia.util.getMaterial("lilia/lilia.png"))
     surface.SetDrawColor(255, 255, 255, 255)
@@ -92,7 +92,7 @@ function PANEL:Paint(w, h)
 end
 
 vgui.Register("CreditsLogo", PANEL, "Panel")
-local PANEL = {}
+PANEL = {}
 function PANEL:Init()
     if lia.gui.creditsPanel then lia.gui.creditsPanel:Remove() end
     lia.gui.creditsPanel = self

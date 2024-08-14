@@ -218,6 +218,7 @@ function MODULE:BuildHelpMenu(tabs)
         local body = ""
         for _, v in SortedPairsByMemberValue(lia.module.list, "name") do
             if v.MenuNoShow then continue end
+            local version = v.version or "1.0"
             body = (body .. [[
                 <p>
                     <span style="font-size: 22;"><b>%s</b><br /></span>
@@ -225,8 +226,8 @@ function MODULE:BuildHelpMenu(tabs)
                     <b>%s</b>: %s<br />
                     <b>%s</b>: %s<br />
                     <b>%s</b>: %s<br />
-                ]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", "Discord", v.discord or "Unknown", L"author", ((not isstring(v.author) and lia.module.namecache[v.author]) or v.author) or "Unknown")
-            if v.version then body = body .. "<br /><b>" .. L"version" .. "</b>: " .. v.version end
+                    <b>%s</b>: %s<br />
+                ]]):format(v.name or "Unknown", L"desc", v.desc or L"noDesc", "Discord", v.discord or "Unknown", L"author", ((not isstring(v.author) and lia.module.namecache[v.author]) or v.author) or "Unknown", L"version", version)
             body = body .. "</span></p>"
         end
         return body

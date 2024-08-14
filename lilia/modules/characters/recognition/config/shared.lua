@@ -1,4 +1,4 @@
 ﻿MODULE.RecognitionEnabled = true
-MODULE.FakeNamesEnabled = false
+MODULE.FakeNamesEnabled = true
 MODULE.ScoreboardHiddenVars = {"name", "model", "desc"}
 MODULE.ChatIsRecognized = {"ic", "y", "w", "me"}

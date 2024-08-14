@@ -57,25 +57,38 @@ function PANEL:Init()
             end
         end
 
-        local header = list:Add("DLabel")
+        local header = list:Add("DPanel")
+        header:Dock(TOP)
+        header:SetTall(28)
+        header:SetPaintBackground(false)
+        local factionContainer = header:Add("DPanel")
+        factionContainer:Dock(FILL)
+        factionContainer:SetPaintBackground(false)
+        local factionName = factionContainer:Add("DLabel")
+        factionName:Dock(FILL)
+        factionName:SetTextInset(3, 0)
+        factionName:SetFont("liaMediumFont")
+        factionName:SetTextColor(color_white)
+        factionName:SetContentAlignment(5)
+        factionName:SetExpensiveShadow(1, color_black)
+        if MODULE.DisplayMemberCount then
+            local memberCount = lia.faction.getPlayerCount(k)
+            local memberText = memberCount > 1 and " Members" or " Member"
+            factionName:SetText(L(v.name) .. " - " .. memberCount .. memberText)
+        else
+            factionName:SetText(L(v.name))
+        end
+
         local icon_material = lia.faction.indices[v.index].logo
-        local hasLogo = false
         if icon_material and icon_material ~= "" then
-            local icon = header:Add("DImage")
+            local icon = factionContainer:Add("DImage")
             icon:Dock(RIGHT)
             icon:SetWide(56)
             icon:SetMaterial(Material(icon_material))
-            hasLogo = true
+            factionName:SetFont("liaBigFont")
+            header:SetTall(64)
         end
 
-        header:Dock(TOP)
-        header:SetText(L(v.name))
-        header:SetTextInset(3, 0)
-        header:SetFont(hasLogo and "liaBigFont" or "liaMediumFont")
-        header:SetTextColor(color_white)
-        header:SetContentAlignment(5)
-        header:SetExpensiveShadow(1, color_black)
-        header:SetTall(hasLogo and 64 or 28)
         header.Paint = function(_, w, h)
             surface.SetDrawColor(r, g, b, 20)
             surface.DrawRect(0, 0, w, h)
