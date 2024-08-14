@@ -11,7 +11,377 @@ function lia.util.stripRealmPrefix(name)
     local prefix = name:sub(1, 3)
     return (prefix == "sh_" or prefix == "sv_" or prefix == "cl_") and name:sub(4) or name
 end
+    --- Notifies all players with a given message.
+    -- @realm server
+    -- @string msg The message to send to all players
 
+	function lia.util.notifyAll(msg)
+		for k, v in pairs(player.GetAll()) do
+			v:notify(msg)
+		end
+	end
+	
+	
+		--- Draws text with a shadow effect.
+		-- @realm client
+		-- @string text The text to draw
+		-- @string font The font to use
+		-- @int x The x-coordinate to draw the text at
+		-- @int y The y-coordinate to draw the text at
+		-- @color colortext The color of the text
+		-- @color colorshadow The color of the shadow
+		-- @int dist The distance of the shadow from the text
+		-- @enum xalign Horizontal alignment of the text (e.g., TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, TEXT_ALIGN_RIGHT)
+		-- @enum yalign Vertical alignment of the text (e.g., TEXT_ALIGN_TOP, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+	
+	function lia.util.ShadowText(text, font, x, y, colortext, colorshadow, dist, xalign, yalign)
+		surface.SetFont(font)
+		local _, h = surface.GetTextSize(text)
+	
+		if (yalign == TEXT_ALIGN_CENTER) then
+			y = y - h / 2
+		elseif (yalign == TEXT_ALIGN_BOTTOM) then
+			y = y - h
+		end
+	
+		draw.DrawText(text, font, x + dist, y + dist, colorshadow, xalign)
+		draw.DrawText(text, font, x, y, colortext, xalign)
+	end
+	
+	
+		--- Draws text with an outline.
+		-- @realm client
+		-- @string text The text to draw
+		-- @string font The font to use
+		-- @int x The x-coordinate to draw the text at
+		-- @int y The y-coordinate to draw the text at
+		-- @color colour The color of the text
+		-- @enum xalign Horizontal alignment of the text (e.g., TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, TEXT_ALIGN_RIGHT)
+		-- @int outlinewidth The width of the outline
+		-- @color outlinecolour The color of the outline
+	
+	function lia.util.DrawTextOutlined(text, font, x, y, colour, xalign, outlinewidth, outlinecolour)
+		local steps = (outlinewidth * 2) / 3
+		if steps < 1 then steps = 1 end
+	
+		for _x = -outlinewidth, outlinewidth, steps do
+			for _y = -outlinewidth, outlinewidth, steps do
+				draw.DrawText(text, font, x + _x, y + _y, outlinecolour, xalign)
+			end
+		end
+	
+		return draw.DrawText(text, font, x, y, colour, xalign)
+	end
+	
+	
+		--- Draws a tip box with text.
+		-- @realm client
+		-- @int x The x-coordinate of the top-left corner
+		-- @int y The y-coordinate of the top-left corner
+		-- @int w The width of the tip box
+		-- @int h The height of the tip box
+		-- @string text The text to display inside the tip box
+		-- @string font The font to use
+		-- @color textCol The color of the text
+		-- @color outlineCol The color of the outline
+	
+	function lia.util.DrawTip(x, y, w, h, text, font, textCol, outlineCol)
+		draw.NoTexture()
+	
+		local rectH = 0.85
+		local triW = 0.1
+	
+		local verts = {
+			{x = x, y = y},
+			{x = x + w, y = y},
+			{x = x + w, y = y + (h * rectH)},
+			{x = x + (w / 2) + (w * triW), y = y + (h * rectH)},
+			{x = x + (w / 2), y = y + h},
+			{x = x + (w / 2) - (w * triW), y = y + (h * rectH)},
+			{x = x, y = y + (h * rectH)}
+		}
+	
+		-- Define the color for the tip box outline
+		surface.SetDrawColor(outlineCol)
+		surface.DrawPoly(verts)
+	
+		-- Draw the text inside the tip box
+		draw.SimpleText(text, font, x + (w / 2), y + (h / 2), textCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+	end
+	
+	
+    --- Adds an animated dot to a text string.
+    -- @realm client
+    -- @string text The base text to which dots will be added
+    -- @number[opt] interval The interval in seconds at which dots change (default is 0.5)
+
+    function lia.util.DotDotDot(text, interval)
+        interval = interval or 0.5
+        local Dots = {
+            "",
+            ".",
+            "..",
+            "..."
+        }
+    
+        -- Initialize or update the dot animation timer
+        if CurTime() >= (lia.util.NextDot or CurTime()) then
+            lia.util.NextDot = CurTime() + interval
+            lia.util.dot = (lia.util.dot or 1) + 1
+            if lia.util.dot > #Dots then lia.util.dot = 1 end
+        end
+    
+        return text .. Dots[lia.util.dot]
+    end
+    
+		--- Sums all numerical values in a table.
+		-- @realm client
+		-- @tab tbl The table containing numerical values to sum
+		-- @return number The sum of all numerical values
+	
+	function lia.util.TableSum(tbl)
+		local sum = 0
+	
+		for k, v in pairs(tbl) do
+			if isnumber(v) then
+				sum = sum + v
+			elseif istable(v) then
+				sum = sum + lia.util.TableSum(v)
+			end
+		end
+	
+		return sum
+	end
+	
+	
+		--- Returns a color that cycles through the hues of the HSV color spectrum.
+		-- @realm client
+		-- @number frequency The speed at which the color cycles through hues
+		-- @return color The color object with the current hue
+	
+	function lia.util.Rainbow(frequency)
+		return HSVToColor(CurTime() * frequency % 360, 1, 1)
+	end
+	
+	
+		--- Returns a color that smoothly transitions between two given colors.
+		-- @realm client
+		-- @color col1 The first color
+		-- @color col2 The second color
+		-- @number freq The frequency of the color transition
+		-- @return color The color resulting from the transition
+	
+	function lia.util.ColorCycle(col1, col2, freq)
+		freq = freq or 1
+	
+		local difference = Color(col1.r - col2.r, col1.g - col2.g, col1.b - col2.b)
+	
+		local time = CurTime()
+	
+		local rgb = {r = 0, g = 0, b = 0}
+	
+		for k,v in pairs(rgb) do
+			if col1[k] > col2[k] then
+				rgb[k] = col2[k]
+			else
+				rgb[k] = col1[k]
+			end
+		end
+	
+		return Color(rgb.r + math.abs(math.sin(time * freq) * difference.r), rgb.g + math.abs(math.sin(time * freq + 2) * difference.g), rgb.b + math.abs(math.sin(time * freq + 4) * difference.b))
+	end
+	
+	
+		--- Finds all players within a box defined by minimum and maximum coordinates.
+		-- @realm client
+		-- @vector mins The minimum corner of the box
+		-- @vector maxs The maximum corner of the box
+		-- @return table A list of players within the box
+	
+	function lia.util.FindPlayersInBox(mins, maxs)
+		local entsList = ents.FindInBox(mins, maxs)
+		local plyList = {}
+	
+		for k, v in pairs(entsList) do
+			if IsValid(v) and v:IsPlayer() then
+				plyList[#plyList + 1] = v
+			end
+		end
+	
+		return plyList
+	end
+	
+	
+		--- Finds all players within a sphere defined by an origin point and radius.
+		-- @realm client
+		-- @vector origin The center point of the sphere
+		-- @number radius The radius of the sphere
+		-- @return table A list of players within the sphere
+	
+	function lia.util.FindPlayersInSphere(origin, radius)
+		local plys = {}
+		local r2 = radius ^ 2
+	
+		for i, client in ipairs(player.GetAll()) do
+			if client:GetPos():DistToSqr(origin) <= r2 then
+				plys[#plys + 1] = client
+			end
+		end
+	
+		return plys
+	end
+	
+	
+		--- Capitalizes the first character of a string.
+		-- @realm client
+		-- @string str The string to capitalize
+		-- @return string The input string with the first character capitalized
+	
+	function lia.util.UpperFirstChar(str)
+		return str:sub(1, 1):upper() .. str:sub(2)
+	end
+	
+	
+		--- Formats a number with commas for thousands separation.
+		-- @realm client
+		-- @number amount The number to format
+		-- @return string The formatted number with commas
+	
+	function lia.util.CommaNumber(amount)
+		local formatted = amount
+	
+		while true do
+			local k
+			formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
+			if k == 0 then break end
+		end
+	
+		return formatted
+	end
+	
+	
+		--- Sends a sound to a specific player.
+		-- @realm server
+		-- @string sound The sound file to send
+		-- @player client The player to receive the sound
+	
+	function lia.util.SendSound(client,sound)
+		net.Start("SendSound")
+			net.WriteString(sound)
+		net.Send(client)
+	end
+	
+	
+		--- Converts units to inches.
+		-- @realm client
+		-- @number units The units to convert
+		-- @return number The equivalent measurement in inches
+	
+	function lia.util.UnitsToInches(units)
+		return units * 0.75
+	end
+	
+	
+		--- Converts units to centimeters.
+		-- @realm client
+		-- @number units The units to convert
+		-- @return number The equivalent measurement in centimeters
+	
+	function lia.util.UnitsToCentimeters(units)
+		return lia.util.UnitsToInches(units) * 2.54
+	end
+	
+	
+		--- Converts units to meters.
+		-- @realm client
+		-- @number units The units to convert
+		-- @return number The equivalent measurement in meters
+	
+	function lia.util.UnitsToMeters(units)
+		return lia.util.UnitsToInches(units) * 0.0254
+	end
+	
+	
+		--- Converts a color to a hexadecimal string.
+		-- @realm client
+		-- @color color The color to convert
+		-- @return string The hexadecimal color code
+	
+	function lia.util.ColorToHex(color)
+		return "0x" .. bit.tohex(color.r, 2) .. bit.tohex(color.g, 2) .. bit.tohex(color.b, 2)
+	end
+	
+	
+		--- Gets the color associated with a player's team or class.
+		-- @realm client
+		-- @client client The player whose color to retrieve
+		-- @return color The color associated with the player's team or class
+	
+	function lia.util.GetTeamColor(client)
+		local char = client:getChar()
+	
+		if not char then return team.GetColor(client:Team()) end
+	
+		local classIndex = char:getClass()
+	
+		if not classIndex then return team.GetColor(client:Team()) end
+	
+		local classTbl = nut.class.list[classIndex]
+	
+		if not classTbl then return team.GetColor(client:Team()) end
+	
+		return classTbl.Color or team.GetColor(client:Team())
+	end
+	
+	
+		--- Converts minimum and maximum coordinates to a list of vertices.
+		-- @realm client
+		-- @vector min The minimum coordinates
+		-- @vector max The maximum coordinates
+		-- @return table A list of vertices defining the box
+	
+	function lia.util.MinMaxToVertices(min, max)
+		return {
+			Vector(min.x, min.y, min.z),
+			Vector(min.x, min.y, max.z),
+			Vector(min.x, max.y, min.z),
+			Vector(min.x, max.y, max.z),
+			Vector(max.x, min.y, min.z),
+			Vector(max.x, min.y, max.z),
+			Vector(max.x, max.y, min.z),
+			Vector(max.x, max.y, max.z)
+		}
+	end
+	
+	
+		--- Measures the average execution time of a function.
+		-- @realm client
+		-- @func func The function to test
+		-- @int n The number of iterations
+		-- @return number The average time in seconds it took to execute the function
+	
+	function lia.util.SpeedTest(func, n)
+		local start = SysTime()
+		for i = 1, n do
+			func()
+		end
+		return (SysTime() - start) / n
+	end
+	
+	
+		--- Creates a lookup table from a list of values.
+		-- @realm client
+		-- @tab tbl The list of values to create a lookup table from
+		-- @return table A lookup table where the keys are the values from the input list
+	
+	function lia.util.Lookupify(tbl)
+		local lookup = {}
+		for _, v in pairs(tbl) do
+			lookup[v] = true
+		end
+		return lookup
+	end
+	
 --- Attempts to find a player by matching their name or Steam ID.
 -- @realm shared
 -- @string identifier Search query
@@ -267,6 +637,38 @@ function lia.util.formatStringNamed(format, ...)
     return result
 end
 
+-- Serializes a vector to a JSON string.
+-- @realm server
+-- @vector vector The vector to serialize (a table with x, y, and z values)
+-- @return string The JSON string representing the vector
+function lia.util.SerializeVector(vector)
+    return util.TableToJSON({vector.x, vector.y, vector.z})
+end
+
+-- Deserializes a JSON string back into a vector.
+-- @realm server
+-- @string data The JSON string to deserialize
+-- @return Vector The vector object created from the JSON data
+function lia.util.DeserializeVector(data)
+    return Vector(unpack(util.JSONToTable(data)))
+end
+
+-- Serializes an angle to a JSON string.
+-- @realm server
+-- @angle ang The angle to serialize (a table with p, y, and r values)
+-- @return string The JSON string representing the angle
+function lia.util.SerializeAngle(ang)
+    return util.TableToJSON({ang.p, ang.y, ang.r})
+end
+
+-- Deserializes a JSON string back into an angle.
+-- @realm server
+-- @string data The JSON string to deserialize
+-- @return Angle The angle object created from the JSON data
+function lia.util.DeserializeAngle(data)
+    return Angle(unpack(util.JSONToTable(data)))
+end
+
 if SERVER then
     --- Notifies a player or all players with a message.
     -- @realm server
@@ -414,6 +816,14 @@ if SERVER then
         netstream.Start(target, "ChatPrint", {...})
     end
 else
+    --- Downloads a material from a URL and saves it to a specified path if it doesn't already exist.
+    -- @realm client
+    -- @string url The URL to download the material from
+    -- @string path The path to save the material to
+    function lia.util.DownloadMaterial(url, path)
+        if not file.Exists(path, "DATA") then http.Fetch(url, function(result) if result then file.Write(path, result) end end) end
+    end
+
     --- Draws some text with a shadow.
     -- @realm client
     -- @string text Text to draw

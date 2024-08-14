@@ -26,22 +26,6 @@ function characterMeta:__tostring()
     return "character[" .. (self.id or 0) .. "]"
 end
 
---- Checks if the player belongs to the specified faction.
--- @realm shared
--- @string faction The faction to check against.
--- @treturn bool Whether the player belongs to the specified faction.
-function characterMeta:isFaction(faction)
-    return self:getChar():getFaction() == faction
-end
-
---- Checks if the player belongs to the specified class.
--- @realm shared
--- @string class The class to check against.
--- @treturn bool Whether the player belongs to the specified class.
-function characterMeta:isClass(class)
-    return self:getChar():getClass() == class
-end
-
 --- Returns true if this character is equal to another character. Internally, this checks character IDs.
 -- @realm shared
 -- @character other Character to compare to
@@ -57,90 +41,6 @@ end
 -- @return number Unique ID of character
 function characterMeta:getID()
     return self.id
-end
-
---- Retrieves the boost value for a specific attribute.
--- @realm shared
--- @int attribID The ID of the attribute for which to retrieve the boost.
--- @return number|nil The boost value for the specified attribute, or nil if no boost is found.
--- @usage local boostValue = character:getBoost("some_attribute_id")
-function characterMeta:getBoost(attribID)
-    local boosts = self:getBoosts()
-    return boosts[attribID]
-end
-
---- Retrieves all boosts applied to the character's attributes.
--- @realm shared
--- @return table A table containing all boosts applied to the character's attributes.
--- @usage local boostsTable = character:getBoosts()
-function characterMeta:getBoosts()
-    return self:getVar("boosts", {})
-end
-
---- Checks if the player has whitelisted access to a class.
--- @realm shared
--- @int class The class to check for whitelisting.
--- @treturn bool Whether the player has whitelisted access to the specified faction.
-function characterMeta:hasClassWhitelist(class)
-    local wl = self:getData("whitelist", {})
-    return wl[class] ~= nil
-end
-
---- Whitelists the character for a specific class.
--- @realm shared
--- @int class The class to whitelist the character for.
-function characterMeta:classWhitelist(class)
-    local wl = self:getData("whitelist", {})
-    wl[class] = true
-    self:setData("whitelist", wl)
-end
-
---- Removes the whitelist for a specific class from the character.
--- @realm shared
--- @int class The class to remove the whitelist status for.
-function characterMeta:classUnWhitelist(class)
-    local wl = self:getData("whitelist", {})
-    wl[class] = false
-    self:setData("whitelist", wl)
-end
-
---- Retrieves the character's equipped weapon and its corresponding item from the inventory.
--- @realm shared
--- @return Entity|false The equipped weapon entity, or false if no weapon is equipped.
--- @return Item|false The corresponding item from the character's inventory, or false if no corresponding item is found.
--- @usage local weapon, item = character:getItemWeapon()
-function characterMeta:getItemWeapon()
-    local client = self:getPlayer()
-    local inv = self:getInv()
-    local items = inv:getItems()
-    local weapon = client:GetActiveWeapon()
-    if not IsValid(weapon) then return false end
-    for _, v in pairs(items) do
-        if v.class then
-            if v.class == weapon:GetClass() and v:getData("equip", false) then
-                return weapon, v
-            else
-                return false
-            end
-        end
-    end
-end
-
---- Retrieves the value of a character attribute, including applied boosts.
--- @realm shared
--- @string key The key of the attribute to retrieve.
--- @int[opt=0] default The default value to return if the attribute is not found.
--- @return number The value of the specified attribute, including applied boosts.
--- @usage local attributeValue = character:getAttrib("some_attribute_key")
-function characterMeta:getAttrib(key, default)
-    local att = self:getAttribs()[key] or default or 0
-    local boosts = self:getBoosts()[key]
-    if boosts then
-        for _, v in pairs(boosts) do
-            att = att + v
-        end
-    end
-    return att
 end
 
 --- Returns the player that owns this character.
@@ -168,29 +68,6 @@ function characterMeta:getPlayer()
     end
 end
 
---- Whitelists all classes for the character.
--- @realm shared
-function characterMeta:WhitelistAllClasses()
-    for class, _ in pairs(lia.class.list) do
-        if lia.class.hasWhitelist(class) then self:classWhitelist(class) end
-    end
-end
-
---- Whitelists all factions for the character.
--- @realm shared
-function characterMeta:WhitelistAllFactions()
-    for faction, _ in pairs(lia.faction.indices) do
-        self:setWhitelisted(faction, true)
-    end
-end
-
---- Whitelists everything (all classes and factions) for the character.
--- @realm shared
-function characterMeta:WhitelistEverything()
-    self:WhitelistAllFactions()
-    self:WhitelistAllClasses()
-end
-
 --- Checks if the character has at least the specified amount of money.
 -- @int amount The amount of money to check for.
 -- @realm shared
@@ -203,52 +80,6 @@ function characterMeta:hasMoney(amount)
         return false
     end
     return self:getMoney() >= amount
-end
-
---- Sets the character's class to the specified class.
--- @realm shared
--- @string class The class to join.
--- @bool[opt=false] isForced Whether to force the character to join the class even if conditions are not met.
--- @return bool Whether the character successfully joined the class.
--- @usage local success = character:joinClass("some_class")
-function characterMeta:joinClass(class, isForced)
-    if not class then
-        self:kickClass()
-        return
-    end
-
-    local oldClass = self:getClass()
-    local client = self:getPlayer()
-    local hadOldClass = oldClass and oldClass ~= -1
-    if isForced or lia.class.canBe(client, class) then
-        self:setClass(class)
-        if hadOldClass then
-            hook.Run("OnPlayerSwitchClass", client, class, oldClass)
-        else
-            hook.Run("OnPlayerJoinClass", client, class, oldClass)
-        end
-        return true
-    else
-        return false
-    end
-end
-
---- Kicks the character from their current class and joins them to the default class of their faction.
--- @realm shared
--- @usage character:kickClass()
-function characterMeta:kickClass()
-    local client = self:getPlayer()
-    if not client then return end
-    local goClass
-    for k, v in pairs(lia.class.list) do
-        if v.faction == client:Team() and v.isDefault then
-            goClass = k
-            break
-        end
-    end
-
-    self:joinClass(goClass)
-    hook.Run("OnPlayerJoinClass", client, goClass)
 end
 
 --- Returns all of the flags this character has.
@@ -268,6 +99,28 @@ function characterMeta:hasFlags(flags)
         if self:getFlags():find(flags:sub(i, i), 1, true) then return true end
     end
     return hook.Run("CharHasFlags", self, flags) or false
+end
+
+--- Retrieves the character's equipped weapon and its corresponding item from the inventory.
+-- @realm shared
+-- @return Entity|false The equipped weapon entity, or false if no weapon is equipped.
+-- @return Item|false The corresponding item from the character's inventory, or false if no corresponding item is found.
+-- @usage local weapon, item = character:getItemWeapon()
+function characterMeta:getItemWeapon()
+    local client = self:getPlayer()
+    local inv = self:getInv()
+    local items = inv:getItems()
+    local weapon = client:GetActiveWeapon()
+    if not IsValid(weapon) then return false end
+    for _, v in pairs(items) do
+        if v.class then
+            if v.class == weapon:GetClass() and v:getData("equip", false) then
+                return weapon, v
+            else
+                return false
+            end
+        end
+    end
 end
 
 if SERVER then
@@ -316,73 +169,6 @@ if SERVER then
         end
 
         if newFlags ~= oldFlags then self:setFlags(newFlags) end
-    end
-
-    --- Updates the value of a character attribute by adding a specified value to it.
-    -- @string key The key of the attribute to update.
-    -- @int value The value to add to the attribute.
-    -- @realm server
-    -- @usage character:updateAttrib("some_attribute_key", 10)
-    function characterMeta:updateAttrib(key, value)
-        local client = self:getPlayer()
-        local attribute = lia.attribs.list[key]
-        if attribute then
-            local attrib = self:getAttribs()
-            attrib[key] = math.min((attrib[key] or 0) + value, attribute.maxValue or lia.config.MaxAttributes)
-            if IsValid(client) then
-                netstream.Start(client, "attrib", self:getID(), key, attrib[key])
-                if attribute.setup then attribute.setup(attrib[key]) end
-            end
-        end
-
-        hook.Run("OnCharAttribUpdated", client, self, key, value)
-    end
-
-    --- Sets the value of a character attribute.
-    -- @string key The key of the attribute to set.
-    -- @int value The value to set for the attribute.
-    -- @realm server
-    -- @usage character:setAttrib("some_attribute_key", 10)
-    function characterMeta:setAttrib(key, value)
-        local client = self:getPlayer()
-        local attribute = lia.attribs.list[key]
-        if attribute then
-            local attrib = self:getAttribs()
-            attrib[key] = value
-            if IsValid(client) then
-                netstream.Start(client, "attrib", self:getID(), key, attrib[key])
-                if attribute.setup then attribute.setup(attrib[key]) end
-            end
-        end
-
-        hook.Run("OnCharAttribUpdated", client, self, key, value)
-    end
-
-    --- Adds a boost to the character's attributes.
-    -- @realm server
-    -- @string boostID The ID of the boost to add.
-    -- @string attribID The ID of the attribute to which the boost should be added.
-    -- @int boostAmount The amount of boost to add to the attribute.
-    -- @usage character:removeBoost("some_boost_id", "some_attribute_id", 10)
-    function characterMeta:addBoost(boostID, attribID, boostAmount)
-        local boosts = self:getVar("boosts", {})
-        boosts[attribID] = boosts[attribID] or {}
-        boosts[attribID][boostID] = boostAmount
-        hook.Run("OnCharAttribBoosted", self:getPlayer(), self, attribID, boostID, boostAmount)
-        return self:setVar("boosts", boosts, nil, self:getPlayer())
-    end
-
-    --- Removes a boost from the character's attributes.
-    -- @realm server
-    -- @string boostID The ID of the boost to remove.
-    -- @string attribID The ID of the attribute from which the boost should be removed.
-    -- @usage character:removeBoost("some_boost_id", "some_attribute_id")
-    function characterMeta:removeBoost(boostID, attribID)
-        local boosts = self:getVar("boosts", {})
-        boosts[attribID] = boosts[attribID] or {}
-        boosts[attribID][boostID] = nil
-        hook.Run("OnCharAttribBoosted", self:getPlayer(), self, attribID, boostID, true)
-        return self:setVar("boosts", boosts, nil, self:getPlayer())
     end
 
     --- Saves this character's info to the database.
@@ -562,22 +348,10 @@ if SERVER then
     end
 end
 
-characterMeta.GetBoost = characterMeta.getBoost
-characterMeta.HasClassWhitelist = characterMeta.hasClassWhitelist
-characterMeta.ClassWhitelist = characterMeta.classWhitelist
-characterMeta.ClassUnWhitelist = characterMeta.classUnWhitelist
-characterMeta.GetBoosts = characterMeta.getBoosts
-characterMeta.GetAttribute = characterMeta.getAttrib
-characterMeta.GetPlayer = characterMeta.getPlayer
-characterMeta.HasMoney = characterMeta.hasMoney
-characterMeta.JoinClass = characterMeta.joinClass
-characterMeta.KickClass = characterMeta.kickClass
-characterMeta.UpdateAttrib = characterMeta.updateAttrib
-characterMeta.SetAttribute = characterMeta.setAttrib
-characterMeta.AddBoost = characterMeta.addBoost
-characterMeta.RemoveBoost = characterMeta.removeBoost
 characterMeta.Save = characterMeta.save
 characterMeta.Sync = characterMeta.sync
+characterMeta.HasMoney = characterMeta.hasMoney
+characterMeta.GetPlayer = characterMeta.getPlayer
 characterMeta.GiveMoney = characterMeta.giveMoney
 characterMeta.TakeMoney = characterMeta.takeMoney
 lia.meta.character = characterMeta

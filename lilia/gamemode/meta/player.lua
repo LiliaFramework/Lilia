@@ -34,29 +34,6 @@ do
     playerMeta.GetName = playerMeta.Name
 end
 
---- Whitelists all classes for the player.
--- @realm shared
-function playerMeta:WhitelistAllClasses()
-    for class, _ in pairs(lia.class.list) do
-        if lia.class.hasWhitelist(class) then self:classWhitelist(class) end
-    end
-end
-
---- Whitelists all factions for the player.
--- @realm shared
-function playerMeta:WhitelistAllFactions()
-    for faction, _ in pairs(lia.faction.indices) do
-        self:setWhitelisted(faction, true)
-    end
-end
-
---- Whitelists everything (all classes and factions) for the player.
--- @realm shared
-function playerMeta:WhitelistEverything()
-    self:WhitelistAllFactions()
-    self:WhitelistAllClasses()
-end
-
 --- Checks if the player has a specified CAMI privilege.
 -- @realm shared
 -- @param privilegeName string The name of the privilege to check.
@@ -83,34 +60,6 @@ end
 -- @treturn bool true if the player is in a valid vehicle, false otherwise.
 function playerMeta:hasValidVehicle()
     return IsValid(self:getCurrentVehicle())
-end
-
---- Checks if the player belongs to the "user" user group.
--- @realm shared
--- @treturn bool Whether the player belongs to the "user" user group.
-function playerMeta:isUser()
-    return self:IsUserGroup("user")
-end
-
---- Checks if the player is a staff member.
--- @realm shared
--- @treturn bool Whether the player is a staff member.
-function playerMeta:isStaff()
-    return self:HasPrivilege("UserGroups - Staff Group")
-end
-
---- Checks if the player is a VIP.
--- @realm shared
--- @treturn bool Whether the player is a VIP.
-function playerMeta:isVIP()
-    return self:HasPrivilege("UserGroups - VIP Group")
-end
-
---- Checks if the staff member is currently on duty (FACTION_STAFF).
--- @realm shared
--- @treturn bool Whether the staff member is currently on duty.
-function playerMeta:isStaffOnDuty()
-    return self:Team() == FACTION_STAFF
 end
 
 --- Checks if the player is currently observing.
@@ -165,22 +114,6 @@ end
 function playerMeta:getRagdoll()
     if not self:hasRagdoll() then return end
     return self.liaRagdoll
-end
-
---- Checks if the player belongs to the specified faction.
--- @realm shared
--- @string faction The faction to check against.
--- @treturn bool Whether the player belongs to the specified faction.
-function playerMeta:isFaction(faction)
-    return self:getChar():getFaction() == faction
-end
-
---- Checks if the player belongs to the specified class.
--- @realm shared
--- @string class The class to check against.
--- @treturn bool Whether the player belongs to the specified class.
-function playerMeta:isClass(class)
-    return self:getChar():getClass() == class
 end
 
 --- Checks if the player is stuck.
@@ -337,49 +270,6 @@ function playerMeta:getItemDropPos()
     return trace.HitPos
 end
 
---- Checks if the player has whitelisted access to a faction.
--- @realm shared
--- @int faction The faction to check for whitelisting.
--- @treturn bool Whether the player has whitelisted access to the specified faction.
-function playerMeta:hasWhitelist(faction)
-    local data = lia.faction.indices[faction]
-    if data then
-        if data.isDefault then return true end
-        local liaData = self:getLiliaData("whitelists", {})
-        return liaData[SCHEMA.folder] and liaData[SCHEMA.folder][data.uniqueID] == true or false
-    end
-    return false
-end
-
---- Checks if the player has whitelisted access to a class.
--- @realm shared
--- @int class The class to check for whitelisting.
--- @treturn bool Whether the player has whitelisted access to the specified faction.
-function playerMeta:hasClassWhitelist(class)
-    local char = self:getChar()
-    if not char then return false end
-    local wl = char:getData("whitelist", {})
-    return wl[class] ~= nil
-end
-
---- Whitelists the player for a specific class.
--- @realm shared
--- @int class The class to whitelist the player for.
-function playerMeta:classWhitelist(class)
-    local wl = self:getChar():getData("whitelist", {})
-    wl[class] = true
-    self:getChar():setData("whitelist", wl)
-end
-
---- Removes the whitelist status for a specific class from the player.
--- @realm shared
--- @int class The class to remove the whitelist status for.
-function playerMeta:classUnWhitelist(class)
-    local wl = self:getChar():getData("whitelist", {})
-    wl[class] = false
-    self:getChar():setData("whitelist", wl)
-end
-
 --- Retrieves the items of the player's character inventory.
 -- @realm shared
 -- @treturn table|nil A table containing the items in the player's character inventory, or nil if not found.
@@ -389,14 +279,6 @@ function playerMeta:getItems()
         local inv = character:getInv()
         if inv then return inv:getItems() end
     end
-end
-
---- Retrieves the class of the player's character.
--- @realm shared
--- @treturn string|nil The class of the player's character, or nil if not found.
-function playerMeta:getClass()
-    local character = self:getChar()
-    if character then return character:getClass() end
 end
 
 --- Retrieves the entity traced by the player's aim.
@@ -423,42 +305,6 @@ function playerMeta:getTrace()
     data.maxs = Vector(4, 4, 4)
     local trace = util.TraceHull(data)
     return trace
-end
-
---- Retrieves the data of the player's character class.
--- @realm shared
--- @treturn table|nil A table containing the data of the player's character class, or nil if not found.
-function playerMeta:getClassData()
-    local character = self:getChar()
-    if character then
-        local class = character:getClass()
-        if class then
-            local classData = lia.class.list[class]
-            return classData
-        end
-    end
-end
-
---- Checks if the player has a skill level equal to or greater than the specified level.
--- @realm shared
--- @string skill The skill to check.
--- @int level The required skill level.
--- @treturn bool Whether the player's skill level meets or exceeds the specified level.
-function playerMeta:hasSkillLevel(skill, level)
-    local currentLevel = self:getChar():getAttrib(skill, 0)
-    return currentLevel >= level
-end
-
---- Checks if the player meets the required skill levels.
--- @realm shared
--- @tab requiredSkillLevels A table containing the required skill levels.
--- @treturn bool Whether the player meets all the required skill levels.
-function playerMeta:meetsRequiredSkills(requiredSkillLevels)
-    if not requiredSkillLevels then return true end
-    for skill, level in pairs(requiredSkillLevels) do
-        if not self:hasSkillLevel(skill, level) then return false end
-    end
-    return true
 end
 
 --- Retrieves the entity within the player's line of sight.
@@ -1075,25 +921,6 @@ if SERVER then
         end
     end
 
-    --- Sets whether the player is whitelisted for a faction.
-    -- @realm server
-    -- @int faction The faction ID.
-    -- @bool whitelisted Whether the player should be whitelisted for the faction.
-    -- @treturn bool Whether the operation was successful.
-    function playerMeta:setWhitelisted(faction, whitelisted)
-        if not whitelisted then whitelisted = nil end
-        local data = lia.faction.indices[faction]
-        if data then
-            local whitelists = self:getLiliaData("whitelists", {})
-            whitelists[SCHEMA.folder] = whitelists[SCHEMA.folder] or {}
-            whitelists[SCHEMA.folder][data.uniqueID] = whitelisted and true or nil
-            self:setLiliaData("whitelists", whitelists)
-            self:saveLiliaData()
-            return true
-        end
-        return false
-    end
-
     --- Synchronizes networked variables with the player.
     -- @internal
     -- @realm server
@@ -1235,12 +1062,9 @@ else
     end
 end
 
-playerMeta.IsUser = playerMeta.isUser
-playerMeta.IsStaff = playerMeta.isStaff
-playerMeta.IsVIP = playerMeta.isVIP
+playerMeta.GetItemDropPos = playerMeta.getItemDropPos
 playerMeta.ChatNotify = playerMeta.chatNotify
 playerMeta.ChatNotifyLocalized = playerMeta.chatNotifyLocalized
-playerMeta.IsStaffOnDuty = playerMeta.isStaffOnDuty
 playerMeta.IsObserving = playerMeta.isObserving
 playerMeta.IsOutside = playerMeta.isOutside
 playerMeta.IsNoClipping = playerMeta.isNoClipping
@@ -1255,16 +1079,8 @@ playerMeta.GetMoney = playerMeta.getMoney
 playerMeta.CanAfford = playerMeta.canAfford
 playerMeta.IsRunning = playerMeta.isRunning
 playerMeta.IsFemale = playerMeta.isFemale
-playerMeta.GetItemDropPos = playerMeta.getItemDropPos
-playerMeta.HasWhitelist = playerMeta.hasWhitelist
-playerMeta.HasClassWhitelist = playerMeta.hasClassWhitelist
-playerMeta.ClassWhitelist = playerMeta.classWhitelist
-playerMeta.ClassUnWhitelist = playerMeta.classUnWhitelist
 playerMeta.GetTracedEntity = playerMeta.getTracedEntity
 playerMeta.GetTrace = playerMeta.getTrace
-playerMeta.GetClassData = playerMeta.getClassData
-playerMeta.HasSkillLevel = playerMeta.hasSkillLevel
-playerMeta.MeetsRequiredSkills = playerMeta.meetsRequiredSkills
 playerMeta.GetEyeEnt = playerMeta.getEyeEnt
 playerMeta.SetAction = playerMeta.setAction
 playerMeta.StopAction = playerMeta.stopAction
@@ -1286,7 +1102,6 @@ playerMeta.DoStaredAction = playerMeta.doStaredAction
 playerMeta.Notify = playerMeta.notify
 playerMeta.NotifyLocalized = playerMeta.notifyLocalized
 playerMeta.SetRagdolled = playerMeta.setRagdolled
-playerMeta.SetWhitelisted = playerMeta.setWhitelisted
 playerMeta.SyncVars = playerMeta.syncVars
 playerMeta.NotifyP = playerMeta.notifyP
 playerMeta.SendMessage = playerMeta.sendMessage

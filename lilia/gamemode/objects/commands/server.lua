@@ -1291,3 +1291,41 @@ lia.command.add("modulelist", {
     end,
     alias = {"modules"},
 })
+
+lia.command.add("disallowitemtaking", {
+    adminOnly = true,
+    privilege = "Toggle Item Status",
+    onRun = function(client)
+        local entity = client:GetTracedEntity()
+        if IsValid(entity) and entity:isItem() then
+            local item = lia.item.instances[entity.nutItemID]
+            if item then
+                item:setData("cannotTake", true)
+                client:notify("You have disallowed taking this item.")
+            else
+                client:notify("Item data not found.")
+            end
+        else
+            client:notify("You are not looking at a valid item.")
+        end
+    end
+})
+
+lia.command.add("allowitemtaking", {
+    adminOnly = true,
+    privilege = "Toggle Item Status",
+    onRun = function(client)
+        local entity = client:GetTracedEntity()
+        if IsValid(entity) and entity:isItem() then
+            local item = lia.item.instances[entity.nutItemID]
+            if item then
+                item:setData("cannotTake", nil)
+                client:notify("You have allowed taking this item.")
+            else
+                client:notify("Item data not found.")
+            end
+        else
+            client:notify("You are not looking at a valid item.")
+        end
+    end
+})

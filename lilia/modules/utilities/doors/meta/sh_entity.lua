@@ -25,8 +25,14 @@ function entityMeta:IsLocked()
     return self.isLocked
 end
 
+    --- Checks if the entity is locked (pertaining to doors).
+-- @realm shared
+-- @treturn bool True if the entity is locked, false otherwise.
+function entityMeta:isDoorLocked()
+    return sself:GetInternalVariable("m_bLocked") or self.locked or false
+end
 if SERVER then
-    --- Removes all door access data.
+        --- Removes all door access data.
     -- This function clears all access data associated with the door and updates the clients.
     -- @realm server
     function entityMeta:removeDoorAccessData()
@@ -47,4 +53,53 @@ if SERVER then
     function entityMeta:SetLocked(state)
         self.isLocked = state
     end
-end
+
+    --- Checks if the entity is a door.
+        -- @realm server
+        -- @internal
+        -- @treturn bool True if the entity is a door, false otherwise.
+        function entityMeta:isDoor()
+            local class = self:GetClass():lower()
+            local doorPrefixes = {"prop_door", "func_door", "func_door_rotating", "door_",}
+            for _, prefix in ipairs(doorPrefixes) do
+                if class:find(prefix) then return true end
+            end
+            return false
+        end
+    
+            --- Retrieves the partner entity of the door.
+        -- @realm server
+        -- @treturn Entity The partner entity of the door, if any.
+        function entityMeta:getDoorPartner()
+            return self.liaPartner
+        end
+    
+    else
+        --- Checks if the entity is a door.
+        -- @realm client
+        -- @treturn bool True if the entity is a door, false otherwise.
+        function entityMeta:isDoor()
+            return self:GetClass():find("door")
+        end
+    
+    
+    
+    
+        --- Retrieves the partner door entity associated with this entity.
+        -- @realm client
+        -- @treturn Entity The partner door entity, if any.
+        function entityMeta:getDoorPartner()
+            local owner = self:GetOwner() or self.liaDoorOwner
+            if IsValid(owner) and owner:isDoor() then return owner end
+            for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
+                if v:GetOwner() == self then
+                    self.liaDoorOwner = v
+                    return v
+                end
+            end
+        end
+    end
+entityMeta.IsLocked = entityMeta.isLocked
+entityMeta.IsDoor = entityMeta.isDoor
+entityMeta.GetDoorPartner = entityMeta.getDoorPartner
+entityMeta.IsDoorLocked = entityMeta.isDoorLocked

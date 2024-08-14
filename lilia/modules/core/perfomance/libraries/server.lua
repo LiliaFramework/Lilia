@@ -144,8 +144,8 @@ function MODULE:OnEntityCreated()
     local amount = #allEntities
 
     if amount >= self.ItemLimit then
-        for _, ply in player.Iterator() do
-            ply:ChatPrint("Warning: The number of dropped items and money has reached the threshold. All dropped items and money will be removed in "..self.CleanupDelay.. " seconds.")
+        for _, client in player.Iterator() do
+            client:ChatPrint("Warning: The number of dropped items and money has reached the threshold. All dropped items and money will be removed in "..self.CleanupDelay.. " seconds.")
         end
         
         timer.Simple(self.CleanupDelay, function()

@@ -478,3 +478,15 @@ lia.command.add("modulelist", {
     onRun = function() end,
     alias = {"modules"},
 })
+
+lia.command.add("disallowitemtaking", {
+    adminOnly = true,
+    privilege = "Toggle Item Status",
+    onRun = function() end
+})
+
+lia.command.add("allowitemtaking", {
+    adminOnly = true,
+    privilege = "Toggle Item Status",
+    onRun = function() end
+})

@@ -58,13 +58,6 @@ function entityMeta:nearEntity(radius)
     return false
 end
 
---- Checks if the entity is locked (pertaining to doors).
--- @realm shared
--- @treturn bool True if the entity is locked, false otherwise.
-function entityMeta:isDoorLocked()
-    return sself:GetInternalVariable("m_bLocked") or self.locked or false
-end
-
 --- Gets the view angle between the entity and a specified position.
 -- @realm shared
 -- @tparam Vector pos The position to calculate the view angle towards.
@@ -142,27 +135,6 @@ for _, v in pairs(list.Get("Vehicles")) do
 end
 
 if SERVER then
-    --- Checks if the entity is a door.
-    -- @realm server
-    -- @internal
-    -- @treturn bool True if the entity is a door, false otherwise.
-    function entityMeta:isDoor()
-        local class = self:GetClass():lower()
-        local doorPrefixes = {"prop_door", "func_door", "func_door_rotating", "door_",}
-        for _, prefix in ipairs(doorPrefixes) do
-            if class:find(prefix) then return true end
-        end
-        return false
-    end
-
-    --- Retrieves the partner entity of the door.
-    -- @realm server
-    -- @treturn Entity The partner entity of the door, if any.
-    function entityMeta:getDoorPartner()
-        return self.liaPartner
-    end
-
-    entityMeta.GetDoorPartner = entityMeta.getDoorPartner
     --- Assigns a creator to the entity.
     -- @realm server
     -- @tparam Player client The player to assign as the creator of the entity.
@@ -222,29 +194,6 @@ if SERVER then
     playerMeta.getLocalVar = entityMeta.getNetVar
     entityMeta.GetNetVar = entityMeta.getNetVar
 else
-    --- Checks if the entity is a door.
-    -- @realm client
-    -- @treturn bool True if the entity is a door, false otherwise.
-    function entityMeta:isDoor()
-        return self:GetClass():find("door")
-    end
-
-    entityMeta.IsDoor = entityMeta.isDoor
-    --- Retrieves the partner door entity associated with this entity.
-    -- @realm client
-    -- @treturn Entity The partner door entity, if any.
-    function entityMeta:getDoorPartner()
-        local owner = self:GetOwner() or self.liaDoorOwner
-        if IsValid(owner) and owner:isDoor() then return owner end
-        for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
-            if v:GetOwner() == self then
-                self.liaDoorOwner = v
-                return v
-            end
-        end
-    end
-
-    entityMeta.GetDoorPartner = entityMeta.getDoorPartner
     --- Retrieves the value of a networked variable associated with the entity.
     -- @realm client
     -- @string key The identifier of the networked variable.
@@ -265,7 +214,6 @@ entityMeta.IsItem = entityMeta.isItem
 entityMeta.IsMoney = entityMeta.isMoney
 entityMeta.GetEntItemDropPos = entityMeta.getEntItemDropPos
 entityMeta.NearEntity = entityMeta.nearEntity
-entityMeta.IsDoorLocked = entityMeta.isDoorLocked
 entityMeta.GetViewAngle = entityMeta.getViewAngle
 entityMeta.InFov = entityMeta.inFov
 entityMeta.IsInRoom = entityMeta.isInRoom

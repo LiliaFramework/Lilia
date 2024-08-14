@@ -139,7 +139,7 @@ if SERVER then
             return false
         elseif IsValid(item.entity) then
             local character = client:getChar()
-            if item.entity.SteamID64 == client:SteamID() and item.entity.liaCharID ~= character:getID() then
+            if item:getData("cannotTake") or (item.entity.SteamID64 == client:SteamID() and item.entity.liaCharID ~= character:getID()) then
                 client:notifyLocalized("playerCharBelonging")
                 return false
             end
