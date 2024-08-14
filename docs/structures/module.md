@@ -7,6 +7,8 @@ MODULE.author = "76561198312513285"
 
 MODULE.discord = "@liliaplayer"
 
+MODULE.version = "Stock"
+
 MODULE.desc = "This is a Example Module."
 
 MODULE.WorkshopContent = {"2959728255"}
