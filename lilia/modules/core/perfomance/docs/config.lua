@@ -9,3 +9,5 @@
 -- @field tblAlwaysSend Entities that transmit States | **table**
 -- @field RagdollCleaningTimer Time between Ragdolling Cleanups | **integer**
 -- @field SoundsToMute What sounds should be muted | **table**
+-- @field ItemLimit Maximum number of items and money entities on the map allowed before triggering cleanup | **integer**
+-- @field CleanupDelay Time in seconds before removing items and money after reaching the threshold | **integer**
