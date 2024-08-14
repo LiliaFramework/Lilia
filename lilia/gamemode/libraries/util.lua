@@ -69,7 +69,7 @@ end
 function lia.util.FindPlayersInBox(mins, maxs)
     local entsList = ents.FindInBox(mins, maxs)
     local plyList = {}
-    for k, v in pairs(entsList) do
+    for _, v in pairs(entsList) do
         if IsValid(v) and v:IsPlayer() then plyList[#plyList + 1] = v end
     end
     return plyList
@@ -83,7 +83,7 @@ end
 function lia.util.FindPlayersInSphere(origin, radius)
     local plys = {}
     local r2 = radius ^ 2
-    for i, client in ipairs(player.GetAll()) do
+    for _, client in ipairs(player.GetAll()) do
         if client:GetPos():DistToSqr(origin) <= r2 then plys[#plys + 1] = client end
     end
     return plys
@@ -165,7 +165,7 @@ end
 -- @return number The average time in seconds it took to execute the function
 function lia.util.SpeedTest(func, n)
     local start = SysTime()
-    for i = 1, n do
+    for _ = 1, n do
         func()
     end
     return (SysTime() - start) / n
