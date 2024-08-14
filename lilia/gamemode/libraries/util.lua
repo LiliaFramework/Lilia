@@ -11,135 +11,13 @@ function lia.util.stripRealmPrefix(name)
     return (prefix == "sh_" or prefix == "sv_" or prefix == "cl_") and name:sub(4) or name
 end
 
---- Notifies all players with a given message.
--- @realm server
--- @string msg The message to send to all players
-function lia.util.notifyAll(msg)
-    for k, v in pairs(player.GetAll()) do
-        v:notify(msg)
-    end
-end
-
---- Draws text with a shadow effect.
--- @realm client
--- @string text The text to draw
--- @string font The font to use
--- @int x The x-coordinate to draw the text at
--- @int y The y-coordinate to draw the text at
--- @color colortext The color of the text
--- @color colorshadow The color of the shadow
--- @int dist The distance of the shadow from the text
--- @enum xalign Horizontal alignment of the text (e.g., TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, TEXT_ALIGN_RIGHT)
--- @enum yalign Vertical alignment of the text (e.g., TEXT_ALIGN_TOP, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
-function lia.util.ShadowText(text, font, x, y, colortext, colorshadow, dist, xalign, yalign)
-    surface.SetFont(font)
-    local _, h = surface.GetTextSize(text)
-    if yalign == TEXT_ALIGN_CENTER then
-        y = y - h / 2
-    elseif yalign == TEXT_ALIGN_BOTTOM then
-        y = y - h
-    end
-
-    draw.DrawText(text, font, x + dist, y + dist, colorshadow, xalign)
-    draw.DrawText(text, font, x, y, colortext, xalign)
-end
-
---- Draws text with an outline.
--- @realm client
--- @string text The text to draw
--- @string font The font to use
--- @int x The x-coordinate to draw the text at
--- @int y The y-coordinate to draw the text at
--- @color colour The color of the text
--- @enum xalign Horizontal alignment of the text (e.g., TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, TEXT_ALIGN_RIGHT)
--- @int outlinewidth The width of the outline
--- @color outlinecolour The color of the outline
-function lia.util.DrawTextOutlined(text, font, x, y, colour, xalign, outlinewidth, outlinecolour)
-    local steps = (outlinewidth * 2) / 3
-    if steps < 1 then steps = 1 end
-    for _x = -outlinewidth, outlinewidth, steps do
-        for _y = -outlinewidth, outlinewidth, steps do
-            draw.DrawText(text, font, x + _x, y + _y, outlinecolour, xalign)
-        end
-    end
-    return draw.DrawText(text, font, x, y, colour, xalign)
-end
-
---- Draws a tip box with text.
--- @realm client
--- @int x The x-coordinate of the top-left corner
--- @int y The y-coordinate of the top-left corner
--- @int w The width of the tip box
--- @int h The height of the tip box
--- @string text The text to display inside the tip box
--- @string font The font to use
--- @color textCol The color of the text
--- @color outlineCol The color of the outline
-function lia.util.DrawTip(x, y, w, h, text, font, textCol, outlineCol)
-    draw.NoTexture()
-    local rectH = 0.85
-    local triW = 0.1
-    local verts = {
-        {
-            x = x,
-            y = y
-        },
-        {
-            x = x + w,
-            y = y
-        },
-        {
-            x = x + w,
-            y = y + (h * rectH)
-        },
-        {
-            x = x + (w / 2) + (w * triW),
-            y = y + (h * rectH)
-        },
-        {
-            x = x + (w / 2),
-            y = y + h
-        },
-        {
-            x = x + (w / 2) - (w * triW),
-            y = y + (h * rectH)
-        },
-        {
-            x = x,
-            y = y + (h * rectH)
-        }
-    }
-
-    -- Define the color for the tip box outline
-    surface.SetDrawColor(outlineCol)
-    surface.DrawPoly(verts)
-    -- Draw the text inside the tip box
-    draw.SimpleText(text, font, x + (w / 2), y + (h / 2), textCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-end
-
---- Adds an animated dot to a text string.
--- @realm client
--- @string text The base text to which dots will be added
--- @number[opt] interval The interval in seconds at which dots change (default is 0.5)
-function lia.util.DotDotDot(text, interval)
-    interval = interval or 0.5
-    local Dots = {"", ".", "..", "..."}
-    -- Initialize or update the dot animation timer
-    if CurTime() >= (lia.util.NextDot or CurTime()) then
-        lia.util.NextDot = CurTime() + interval
-        lia.util.dot = (lia.util.dot or 1) + 1
-        if lia.util.dot > #Dots then lia.util.dot = 1 end
-    end
-    return text .. Dots[lia.util.dot]
-end
-
 --- Sums all numerical values in a table.
 -- @realm client
 -- @tab tbl The table containing numerical values to sum
 -- @return number The sum of all numerical values
 function lia.util.TableSum(tbl)
     local sum = 0
-    for k, v in pairs(tbl) do
+    for _, v in pairs(tbl) do
         if isnumber(v) then
             sum = sum + v
         elseif istable(v) then
@@ -173,7 +51,7 @@ function lia.util.ColorCycle(col1, col2, freq)
         b = 0
     }
 
-    for k, v in pairs(rgb) do
+    for k, _ in pairs(rgb) do
         if col1[k] > col2[k] then
             rgb[k] = col2[k]
         else
@@ -211,14 +89,6 @@ function lia.util.FindPlayersInSphere(origin, radius)
     return plys
 end
 
---- Capitalizes the first character of a string.
--- @realm client
--- @string str The string to capitalize
--- @return string The input string with the first character capitalized
-function lia.util.UpperFirstChar(str)
-    return str:sub(1, 1):upper() .. str:sub(2)
-end
-
 --- Formats a number with commas for thousands separation.
 -- @realm client
 -- @number amount The number to format
@@ -227,20 +97,10 @@ function lia.util.CommaNumber(amount)
     local formatted = amount
     while true do
         local k
-        formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
+        formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", "%1,%2")
         if k == 0 then break end
     end
     return formatted
-end
-
---- Sends a sound to a specific player.
--- @realm server
--- @string sound The sound file to send
--- @player client The player to receive the sound
-function lia.util.SendSound(client, sound)
-    net.Start("SendSound")
-    net.WriteString(sound)
-    net.Send(client)
 end
 
 --- Converts units to inches.
@@ -284,7 +144,7 @@ function lia.util.GetTeamColor(client)
     if not char then return team.GetColor(client:Team()) end
     local classIndex = char:getClass()
     if not classIndex then return team.GetColor(client:Team()) end
-    local classTbl = nut.class.list[classIndex]
+    local classTbl = lia.class.list[classIndex]
     if not classTbl then return team.GetColor(client:Team()) end
     return classTbl.Color or team.GetColor(client:Team())
 end
@@ -610,7 +470,75 @@ function lia.util.DeserializeAngle(data)
     return Angle(unpack(util.JSONToTable(data)))
 end
 
+--- Returns a cached copy of the given material, or creates and caches one if it doesn't exist. This is a quick helper function.
+-- if you aren't locally storing a `Material()` call.
+-- @realm shared
+-- @string materialPath Path to the material
+-- @string[opt] materialParameters
+-- @treturn[1] material The cached material
+-- @treturn[2] nil If the material doesn't exist in the filesystem
+function lia.util.getMaterial(materialPath, materialParameters)
+    lia.util.cachedMaterials = lia.util.cachedMaterials or {}
+    lia.util.cachedMaterials[materialPath] = lia.util.cachedMaterials[materialPath] or Material(materialPath, materialParameters)
+    return lia.util.cachedMaterials[materialPath]
+end
+
+--- Recursively retrieves all files with a specific extension in a given directory.
+-- @realm shared
+-- @string directory The path of the directory to search in.
+-- @string extension The file extension to filter by.
+-- @treturn table A table containing the paths of all found files with the specified extension.
+function lia.util.getAllFilesInDirectory(directory, extension)
+    local files = {}
+    local function scanDirectory(dir)
+        local fileList, directoryList = file.Find(dir .. "/*", "GAME")
+        for _, fileName in ipairs(fileList) do
+            if string.EndsWith(fileName, extension) then table.insert(files, dir .. "/" .. fileName) end
+        end
+
+        for _, subDir in ipairs(directoryList) do
+            scanDirectory(dir .. "/" .. subDir)
+        end
+    end
+
+    scanDirectory(directory)
+    return files
+end
+
+--- Retrieves all citizen models by searching in predefined directories.
+-- @realm shared
+-- @treturn table A table containing the paths of all found citizen models.
+function lia.util.getAllCitizenModels()
+    local allModels = {}
+    for _, path in ipairs(lia.anim.CitizenModelPaths) do
+        local modelsInPath = lia.util.getAllFilesInDirectory(path, ".mdl")
+        for _, model in ipairs(modelsInPath) do
+            table.insert(allModels, model)
+        end
+    end
+    return allModels
+end
+
 if SERVER then
+    --- Notifies all players with a given message.
+    -- @realm server
+    -- @string msg The message to send to all players
+    function lia.util.notifyAll(msg)
+        for _, v in pairs(player.GetAll()) do
+            v:notify(msg)
+        end
+    end
+
+    --- Sends a sound to a specific player.
+    -- @realm server
+    -- @string sound The sound file to send
+    -- @player client The player to receive the sound
+    function lia.util.SendSound(client, sound)
+        net.Start("SendSound")
+        net.WriteString(sound)
+        net.Send(client)
+    end
+
     --- Notifies a player or all players with a message.
     -- @realm server
     -- @string message The message to be notified
@@ -757,6 +685,117 @@ if SERVER then
         netstream.Start(target, "ChatPrint", {...})
     end
 else
+    --- Draws text with a shadow effect.
+    -- @realm client
+    -- @string text The text to draw
+    -- @string font The font to use
+    -- @int x The x-coordinate to draw the text at
+    -- @int y The y-coordinate to draw the text at
+    -- @color colortext The color of the text
+    -- @color colorshadow The color of the shadow
+    -- @int dist The distance of the shadow from the text
+    -- @enum xalign Horizontal alignment of the text (e.g., TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, TEXT_ALIGN_RIGHT)
+    -- @enum yalign Vertical alignment of the text (e.g., TEXT_ALIGN_TOP, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+    function lia.util.ShadowText(text, font, x, y, colortext, colorshadow, dist, xalign, yalign)
+        surface.SetFont(font)
+        local _, h = surface.GetTextSize(text)
+        if yalign == TEXT_ALIGN_CENTER then
+            y = y - h / 2
+        elseif yalign == TEXT_ALIGN_BOTTOM then
+            y = y - h
+        end
+
+        draw.DrawText(text, font, x + dist, y + dist, colorshadow, xalign)
+        draw.DrawText(text, font, x, y, colortext, xalign)
+    end
+
+    --- Draws text with an outline.
+    -- @realm client
+    -- @string text The text to draw
+    -- @string font The font to use
+    -- @int x The x-coordinate to draw the text at
+    -- @int y The y-coordinate to draw the text at
+    -- @color colour The color of the text
+    -- @enum xalign Horizontal alignment of the text (e.g., TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, TEXT_ALIGN_RIGHT)
+    -- @int outlinewidth The width of the outline
+    -- @color outlinecolour The color of the outline
+    function lia.util.DrawTextOutlined(text, font, x, y, colour, xalign, outlinewidth, outlinecolour)
+        local steps = (outlinewidth * 2) / 3
+        if steps < 1 then steps = 1 end
+        for _x = -outlinewidth, outlinewidth, steps do
+            for _y = -outlinewidth, outlinewidth, steps do
+                draw.DrawText(text, font, x + _x, y + _y, outlinecolour, xalign)
+            end
+        end
+        return draw.DrawText(text, font, x, y, colour, xalign)
+    end
+
+    --- Draws a tip box with text.
+    -- @realm client
+    -- @int x The x-coordinate of the top-left corner
+    -- @int y The y-coordinate of the top-left corner
+    -- @int w The width of the tip box
+    -- @int h The height of the tip box
+    -- @string text The text to display inside the tip box
+    -- @string font The font to use
+    -- @color textCol The color of the text
+    -- @color outlineCol The color of the outline
+    function lia.util.DrawTip(x, y, w, h, text, font, textCol, outlineCol)
+        draw.NoTexture()
+        local rectH = 0.85
+        local triW = 0.1
+        local verts = {
+            {
+                x = x,
+                y = y
+            },
+            {
+                x = x + w,
+                y = y
+            },
+            {
+                x = x + w,
+                y = y + (h * rectH)
+            },
+            {
+                x = x + (w / 2) + (w * triW),
+                y = y + (h * rectH)
+            },
+            {
+                x = x + (w / 2),
+                y = y + h
+            },
+            {
+                x = x + (w / 2) - (w * triW),
+                y = y + (h * rectH)
+            },
+            {
+                x = x,
+                y = y + (h * rectH)
+            }
+        }
+
+        surface.SetDrawColor(outlineCol)
+        surface.DrawPoly(verts)
+        draw.SimpleText(text, font, x + (w / 2), y + (h / 2), textCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    --- Adds an animated dot to a text string.
+    -- @realm client
+    -- @string text The base text to which dots will be added
+    -- @number[opt] interval The interval in seconds at which dots change (default is 0.5)
+    function lia.util.DotDotDot(text, interval)
+        interval = interval or 0.5
+        local Dots = {"", ".", "..", "..."}
+        -- Initialize or update the dot animation timer
+        if CurTime() >= (lia.util.NextDot or CurTime()) then
+            lia.util.NextDot = CurTime() + interval
+            lia.util.dot = (lia.util.dot or 1) + 1
+            if lia.util.dot > #Dots then lia.util.dot = 1 end
+        end
+        return text .. Dots[lia.util.dot]
+    end
+
     --- Downloads a material from a URL and saves it to a specified path if it doesn't already exist.
     -- @realm client
     -- @string url The URL to download the material from
@@ -1238,55 +1277,6 @@ else
     end
 
     cvars.AddChangeCallback("lia_cheapblur", function(_, _, new) useCheapBlur = (tonumber(new) or 0) > 0 end)
-end
-
---- Returns a cached copy of the given material, or creates and caches one if it doesn't exist. This is a quick helper function.
--- if you aren't locally storing a `Material()` call.
--- @realm shared
--- @string materialPath Path to the material
--- @string[opt] materialParameters
--- @treturn[1] material The cached material
--- @treturn[2] nil If the material doesn't exist in the filesystem
-function lia.util.getMaterial(materialPath, materialParameters)
-    lia.util.cachedMaterials = lia.util.cachedMaterials or {}
-    lia.util.cachedMaterials[materialPath] = lia.util.cachedMaterials[materialPath] or Material(materialPath, materialParameters)
-    return lia.util.cachedMaterials[materialPath]
-end
-
---- Recursively retrieves all files with a specific extension in a given directory.
--- @realm shared
--- @string directory The path of the directory to search in.
--- @string extension The file extension to filter by.
--- @treturn table A table containing the paths of all found files with the specified extension.
-function lia.util.getAllFilesInDirectory(directory, extension)
-    local files = {}
-    local function scanDirectory(dir)
-        local fileList, directoryList = file.Find(dir .. "/*", "GAME")
-        for _, fileName in ipairs(fileList) do
-            if string.EndsWith(fileName, extension) then table.insert(files, dir .. "/" .. fileName) end
-        end
-
-        for _, subDir in ipairs(directoryList) do
-            scanDirectory(dir .. "/" .. subDir)
-        end
-    end
-
-    scanDirectory(directory)
-    return files
-end
-
---- Retrieves all citizen models by searching in predefined directories.
--- @realm shared
--- @treturn table A table containing the paths of all found citizen models.
-function lia.util.getAllCitizenModels()
-    local allModels = {}
-    for _, path in ipairs(lia.anim.CitizenModelPaths) do
-        local modelsInPath = lia.util.getAllFilesInDirectory(path, ".mdl")
-        for _, model in ipairs(modelsInPath) do
-            table.insert(allModels, model)
-        end
-    end
-    return allModels
 end
 
 lia.util.FindPlayer = lia.util.findPlayer
