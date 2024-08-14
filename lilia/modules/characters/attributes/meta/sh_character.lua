@@ -55,28 +55,6 @@ function characterMeta:getBoosts()
     return self:getVar("boosts", {})
 end
 
---- Checks if the player has a skill level equal to or greater than the specified level.
--- @realm shared
--- @string skill The skill to check.
--- @int level The required skill level.
--- @treturn bool Whether the player's skill level meets or exceeds the specified level.
-function playerMeta:hasSkillLevel(skill, level)
-    local currentLevel = self:getChar():getAttrib(skill, 0)
-    return currentLevel >= level
-end
-
---- Checks if the player meets the required skill levels.
--- @realm shared
--- @tab requiredSkillLevels A table containing the required skill levels.
--- @treturn bool Whether the player meets all the required skill levels.
-function playerMeta:meetsRequiredSkills(requiredSkillLevels)
-    if not requiredSkillLevels then return true end
-    for skill, level in pairs(requiredSkillLevels) do
-        if not self:hasSkillLevel(skill, level) then return false end
-    end
-    return true
-end
-
 if SERVER then
     --- Updates the value of a character attribute by adding a specified value to it.
     -- @string key The key of the attribute to update.
@@ -154,5 +132,3 @@ end
 characterMeta.GetBoost = characterMeta.getBoost
 characterMeta.GetBoosts = characterMeta.getBoosts
 characterMeta.GetAttribute = characterMeta.getAttrib
-playerMeta.HasSkillLevel = playerMeta.hasSkillLevel
-playerMeta.MeetsRequiredSkills = playerMeta.meetsRequiredSkills
