@@ -1,4 +1,4 @@
-﻿
+﻿local MODULE = MODULE
 --- The Player Meta for the Third Person Module.
 -- @playermeta ThirdPerson
 local playerMeta = FindMetaTable("Player")
@@ -168,7 +168,7 @@ function playerMeta:CanOverrideView()
     if isInVehicle then return false end
     if not F1MenuCore.F1ThirdPersonEnabled and IsValid(lia.gui.menu) then return false end
     if hook.Run("ShouldDisableThirdperson", self) == true then return false end
-    return ThirdPerson:GetBool() and ThirdPersonCore.ThirdPersonEnabled and (IsValid(self) and self:getChar() and not IsValid(ragdoll))
+    return ThirdPerson:GetBool() and MODULE.ThirdPersonEnabled and (IsValid(self) and self:getChar() and not IsValid(ragdoll))
 end
 
 concommand.Add("tp_toggle", function()

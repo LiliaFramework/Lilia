@@ -32,6 +32,12 @@ concommand.Add("list_entities", function(client)
 end)
 
 if SERVER then
+    concommand.Add("kickbots", function()
+        for _, bot in ipairs(player.GetBots()) do
+            bot:Kick("All bots kicked")
+        end
+    end)
+
     concommand.Add("stopsoundall", function(client)
         if client:IsSuperAdmin() then
             for _, v in pairs(player.GetAll()) do
