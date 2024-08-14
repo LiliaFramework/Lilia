@@ -1,6 +1,5 @@
 ﻿--- Various useful helper functions.
 -- @library lia.util
-
 --- Removes the realm prefix from a file name. The returned string will be unchanged if there is no prefix found.
 -- @realm shared
 -- @string name String to strip prefix from
@@ -55,8 +54,8 @@ end
 --- Finds all entities of a specific class owned by a specified player.
 --- If no class is specified, finds all entities owned by the player.
 -- @realm shared
--- @param client The player whose entities are being searched for.
--- @param[opt] string class The class of the entities being searched for. If not provided, all entities owned by the player are returned.
+-- @client client The player whose entities are being searched for.
+-- @param[opt] class The class of the entities being searched for. If not provided, all entities owned by the player are returned.
 -- @treturn table A table containing all entities of the specified class (or all entities if no class is specified) owned by the given player.
 function lia.util.findPlayerEntities(client, class)
     local items = {}
