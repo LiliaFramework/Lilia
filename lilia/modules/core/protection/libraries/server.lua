@@ -110,10 +110,14 @@ function MODULE:OnPlayerHitGround(client)
 end
 
 function MODULE:ShouldCollide(ent1, ent2)
-    local dangerousCollisions = (ent1:GetClass() == "lia_money" or ent2:GetClass() == "lia_money") or (ent1:GetClass() == "lia_item" or ent2:GetClass() == "lia_item") or (ent1:GetClass() == "prop_physics" or ent2:GetClass() == "prop_physics")
-    local isElevator = ent1:GetClass() == "func_tanktrain" or ent2:GetClass() == "func_tanktrain"
-    if dangerousCollisions and isElevator then return false end
-    if table.HasValue(self.BlockedCollideEntities, ent1:GetClass()) and table.HasValue(self.BlockedCollideEntities, ent2:GetClass()) then return false end
+    local class1 = ent1:GetClass()
+    local class2 = ent2:GetClass()
+    local isMoneyOrItem = (class1 == "lia_money" or class2 == "lia_money") or (class1 == "lia_item" or class2 == "lia_item")
+    local isPhysicsProp = class1 == "prop_physics" or class2 == "prop_physics"
+    local isElevator = class1 == "func_tanktrain" or class2 == "func_tanktrain"
+    local collidingPlayers = ent1:IsPlayer() or ent2:IsPlayer()
+    if collidingPlayers and ((isMoneyOrItem or isPhysicsProp) and isElevator) then return false end
+    if table.HasValue(self.BlockedCollideEntities, class1) and table.HasValue(self.BlockedCollideEntities, class2) then return false end
     return true
 end
 

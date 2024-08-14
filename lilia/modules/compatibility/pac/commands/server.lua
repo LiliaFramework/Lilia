@@ -17,13 +17,13 @@
 
 lia.command.add("pacenable", {
     adminonly = false,
-    onRun = function(client) client:SendLua([[RunConsoleCommand("pac_enable", "1")]]) end
+    onRun = function(client) client:ConCommand("pac_enable 1") end
 })
 
 lia.command.add("pacdisable", {
     adminonly = false,
     onRun = function(client)
-        client:SendLua([[RunConsoleCommand("pac_enable", "0")]])
+        client:ConCommand("pac_enable 0")
         client:SendLua([[chat.AddText("PAC has been disabled to boost performance. If you would like to re-enable it type /pacenable in chat.")]])
     end
 })
