@@ -1,5 +1,5 @@
 ﻿--- The Character Meta for the Teams Module.
--- @playermeta Teams
+-- @charactermeta Teams
 local characterMeta = lia.meta.character or {}
 --- Checks if the player has whitelisted access to a class.
 -- @realm shared
