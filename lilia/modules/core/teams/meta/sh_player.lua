@@ -1,6 +1,4 @@
-
-
---- Checks if the player belongs to the specified faction.
+﻿--- Checks if the player belongs to the specified faction.
 -- @realm shared
 -- @string faction The faction to check against.
 -- @treturn bool Whether the player belongs to the specified faction.
@@ -30,7 +28,6 @@ function playerMeta:hasWhitelist(faction)
     return false
 end
 
-
 --- Retrieves the class of the player's character.
 -- @realm shared
 -- @treturn string|nil The class of the player's character, or nil if not found.
@@ -50,7 +47,6 @@ function playerMeta:hasClassWhitelist(class)
     return wl[class] ~= nil
 end
 
-
 --- Retrieves the data of the player's character class.
 -- @realm shared
 -- @treturn table|nil A table containing the data of the player's character class, or nil if not found.
@@ -65,46 +61,47 @@ function playerMeta:getClassData()
     end
 end
 
-
-    if SERVER then
-        --- Whitelists all classes for the player.
--- @realm shared
-function playerMeta:WhitelistAllClasses()
-    for class, _ in pairs(lia.class.list) do
-        if lia.class.hasWhitelist(class) then self:classWhitelist(class) end
+if SERVER then
+    --- Whitelists all classes for the player.
+    -- @realm shared
+    function playerMeta:WhitelistAllClasses()
+        for class, _ in pairs(lia.class.list) do
+            if lia.class.hasWhitelist(class) then self:classWhitelist(class) end
+        end
     end
-end
 
---- Whitelists all factions for the player.
--- @realm shared
-function playerMeta:WhitelistAllFactions()
-    for faction, _ in pairs(lia.faction.indices) do
-        self:setWhitelisted(faction, true)
+    --- Whitelists all factions for the player.
+    -- @realm shared
+    function playerMeta:WhitelistAllFactions()
+        for faction, _ in pairs(lia.faction.indices) do
+            self:setWhitelisted(faction, true)
+        end
     end
-end
 
---- Whitelists everything (all classes and factions) for the player.
--- @realm shared
-function playerMeta:WhitelistEverything()
-    self:WhitelistAllFactions()
-    self:WhitelistAllClasses()
-end
---- Whitelists the player for a specific class.
--- @realm shared
--- @int class The class to whitelist the player for.
-function playerMeta:classWhitelist(class)
-    local wl = self:getChar():getData("whitelist", {})
-    wl[class] = true
-    self:getChar():setData("whitelist", wl)
-end
---- Removes the whitelist status for a specific class from the player.
--- @realm shared
--- @int class The class to remove the whitelist status for.
-function playerMeta:classUnWhitelist(class)
-    local wl = self:getChar():getData("whitelist", {})
-    wl[class] = false
-    self:getChar():setData("whitelist", wl)
-end
+    --- Whitelists everything (all classes and factions) for the player.
+    -- @realm shared
+    function playerMeta:WhitelistEverything()
+        self:WhitelistAllFactions()
+        self:WhitelistAllClasses()
+    end
+
+    --- Whitelists the player for a specific class.
+    -- @realm shared
+    -- @int class The class to whitelist the player for.
+    function playerMeta:classWhitelist(class)
+        local wl = self:getChar():getData("whitelist", {})
+        wl[class] = true
+        self:getChar():setData("whitelist", wl)
+    end
+
+    --- Removes the whitelist status for a specific class from the player.
+    -- @realm shared
+    -- @int class The class to remove the whitelist status for.
+    function playerMeta:classUnWhitelist(class)
+        local wl = self:getChar():getData("whitelist", {})
+        wl[class] = false
+        self:getChar():setData("whitelist", wl)
+    end
 
     --- Sets whether the player is whitelisted for a faction.
     -- @realm server
@@ -125,13 +122,11 @@ end
         return false
     end
 
-        playerMeta.SetWhitelisted = playerMeta.setWhitelisted
-playerMeta.ClassWhitelist = playerMeta.classWhitelist
-playerMeta.ClassUnWhitelist = playerMeta.classUnWhitelist
+    playerMeta.SetWhitelisted = playerMeta.setWhitelisted
+    playerMeta.ClassWhitelist = playerMeta.classWhitelist
+    playerMeta.ClassUnWhitelist = playerMeta.classUnWhitelist
+end
 
-    end
-
-    
 playerMeta.GetClassData = playerMeta.getClassData
 playerMeta.HasWhitelist = playerMeta.hasWhitelist
 playerMeta.HasClassWhitelist = playerMeta.hasClassWhitelist

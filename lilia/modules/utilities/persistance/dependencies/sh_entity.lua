@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 --- The Entity Meta for the Persistence Module.
 -- @entitymeta Persistence
 local entityMeta = FindMetaTable("Entity")

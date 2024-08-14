@@ -40,27 +40,22 @@ net.Receive("OptionsRequest", function()
     local subTitle = net.ReadString()
     local options = net.ReadTable()
     local limit = net.ReadUInt(32)
-
     local frame = vgui.Create("DFrame")
     frame:SetTitle(title)
     frame:SetSize(400, 300)
     frame:Center()
     frame:MakePopup()
-
     local label = vgui.Create("DLabel", frame)
     label:SetText(subTitle)
     label:SetPos(10, 30)
     label:SizeToContents()
-
     local list = vgui.Create("DPanelList", frame)
     list:SetPos(10, 50)
     list:SetSize(380, 200)
     list:EnableVerticalScrollbar(true)
     list:SetSpacing(5)
-
     local selected = {}
     local checkboxes = {}
-
     for _, option in ipairs(options) do
         local checkbox = vgui.Create("DCheckBoxLabel")
         checkbox:SetText(option)
@@ -82,6 +77,7 @@ net.Receive("OptionsRequest", function()
                 end
             end
         end
+
         list:AddItem(checkbox)
         table.insert(checkboxes, checkbox)
     end
@@ -97,6 +93,7 @@ net.Receive("OptionsRequest", function()
         frame:Close()
     end
 end)
+
 net.Receive("RequestServerContent", function()
     local frame = vgui.Create("DFrame")
     frame:SetTitle("Server Content is Missing")
@@ -462,13 +459,11 @@ end)
 
 net.Receive("ModuleList", function()
     local modules = net.ReadTable()
-
     local frame = vgui.Create("DFrame")
     frame:SetTitle("Modules List")
     frame:SetSize(900, 500)
     frame:Center()
     frame:MakePopup()
-
     local moduleList = vgui.Create("DListView", frame)
     moduleList:Dock(FILL)
     moduleList:AddColumn("Unique ID"):SetFixedWidth(150)
@@ -477,7 +472,6 @@ net.Receive("ModuleList", function()
     moduleList:AddColumn("Author"):SetFixedWidth(100)
     moduleList:AddColumn("Discord"):SetFixedWidth(150)
     moduleList:AddColumn("Version"):SetFixedWidth(80)
-
     for _, module in pairs(modules) do
         moduleList:AddLine(module.uniqueID, module.name, module.desc, module.author, module.discord, module.version)
     end
@@ -566,10 +560,7 @@ net.Receive("chatNotifyNet", function()
     chat.AddText(Color(255, 215, 0), message)
 end)
 
-net.Receive("SendSound", function()
-    surface.PlaySound(net.ReadString())
-end)
-
+net.Receive("SendSound", function() surface.PlaySound(net.ReadString()) end)
 netstream.Hook("idReq", function(text) SetClipboardText(text) end)
 net.Receive("OpenPage", function() gui.OpenURL(net.ReadString()) end)
 net.Receive("LiliaPlaySound", function() LocalPlayer():EmitSound(tostring(net.ReadString()), tonumber(net.ReadUInt(7)) or 100) end)

@@ -23,7 +23,7 @@ function PANEL:Init()
     elseif F1MenuCore.InfoMenuLocation == "BottomCenter" then
         self:SetPos((ScrW() - panelWidth) / 2, 800)
     elseif F1MenuCore.InfoMenuLocation == "AbsoluteCenter" then
-        self:SetPos((ScrW() - panelWidth) / 2, ScrH() / 2-25)
+        self:SetPos((ScrW() - panelWidth) / 2, ScrH() / 2 - 25)
     else
         self:SetPos(ScrW() - panelWidth - 75, 75)
     end

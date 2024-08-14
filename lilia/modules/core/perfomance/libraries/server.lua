@@ -142,32 +142,24 @@ function MODULE:OnEntityCreated()
     local money = ents.FindByClass("lia_money")
     local allEntities = table.Add(items, money)
     local amount = #allEntities
-
     if amount >= self.ItemLimit then
         for _, client in player.Iterator() do
-            client:ChatPrint("Warning: The number of dropped items and money has reached the threshold. All dropped items and money will be removed in "..self.CleanupDelay.. " seconds.")
+            client:ChatPrint("Warning: The number of dropped items and money has reached the threshold. All dropped items and money will be removed in " .. self.CleanupDelay .. " seconds.")
         end
-        
-        timer.Simple(self.CleanupDelay, function()
-            self:CleanupAllEntities()
-        end)
+
+        timer.Simple(self.CleanupDelay, function() self:CleanupAllEntities() end)
     end
 end
 
 function MODULE:CleanupAllEntities()
     local items = ents.FindByClass("lia_item")
     local money = ents.FindByClass("lia_money")
-
     for _, item in ipairs(items) do
-        if IsValid(item) then
-            item:Remove()
-        end
+        if IsValid(item) then item:Remove() end
     end
 
     for _, mon in ipairs(money) do
-        if IsValid(mon) then
-            mon:Remove()
-        end
+        if IsValid(mon) then mon:Remove() end
     end
 
     LiliaInformation("Performed cleanup, all drooped items and money have been removed.")

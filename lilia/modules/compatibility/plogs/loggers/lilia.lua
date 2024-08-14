@@ -1,4 +1,4 @@
-plogs.Register("Connections", true, Color(52, 152, 219))
+﻿plogs.Register("Connections", true, Color(52, 152, 219))
 plogs.Register("Spawn", true, Color(52, 152, 219))
 plogs.Register("Chat", true, Color(52, 152, 219))
 plogs.Register("Character", true, Color(52, 152, 219))

@@ -63,6 +63,7 @@ end
 -- @int oldMoney The previous money value.
 function VendorMoneyUpdated(vendor, money, oldMoney)
 end
+
 --- Called after a delay when a vendor's data is edited.
 -- @realm client
 -- @internal
@@ -94,7 +95,6 @@ end
 -- @treturn bool Whether the player is allowed to access the vendor.
 function CanPlayerAccessVendor(client, entity)
 end
-
 
 --- Gets the price override for an item.
 -- @realm shared

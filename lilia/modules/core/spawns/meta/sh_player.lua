@@ -1,4 +1,4 @@
---- The Player Meta for the Spawns Module.
+﻿--- The Player Meta for the Spawns Module.
 -- @playermeta Spawns
 local playerMeta = FindMetaTable("Player")
 --- Checks if the player is still within the spawn timer period after death.

@@ -1,5 +1,4 @@
 ﻿local MODULE = MODULE
-
 lia.chat.register("meclose", {
     format = "**%s %s",
     onCanHear = MODULE.ChatRange * 0.25,

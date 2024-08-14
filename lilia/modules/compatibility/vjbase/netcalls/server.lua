@@ -1,4 +1,4 @@
-timer.Simple(10, function()
+﻿timer.Simple(10, function()
     net.Receive("VJSay", function(_, client)
         client:chatNotify("This is an exploitable net message. You can't use it!")
         lia.log.add(client, "unprotectedVJNetCall")

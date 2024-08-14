@@ -1,4 +1,4 @@
-MODULE.name = "PLogs2"
+﻿MODULE.name = "PLogs2"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
 MODULE.version = "Stock"

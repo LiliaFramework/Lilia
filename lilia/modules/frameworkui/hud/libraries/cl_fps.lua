@@ -1,5 +1,4 @@
-local FPSDraw = CreateClientConVar("fps_draw_enabled", 0, true)
-
+﻿local FPSDraw = CreateClientConVar("fps_draw_enabled", 0, true)
 function MODULE:ShouldDrawFPS()
     return FPSDraw:GetInt() == 1
 end

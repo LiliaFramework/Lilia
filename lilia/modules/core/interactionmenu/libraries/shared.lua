@@ -1,6 +1,5 @@
 ﻿MODULE.Options = MODULE.Options or {}
 MODULE.SelfOptions = MODULE.SelfOptions or {}
-
 function MODULE:AddOption(name, data)
     self.Options[name] = data
     LiliaInformation("[PIM] Added PIM Interaction " .. name)

@@ -76,12 +76,13 @@ function playerMeta:meetsRequiredSkills(requiredSkillLevels)
     end
     return true
 end
+
 if SERVER then
---- Updates the value of a character attribute by adding a specified value to it.
--- @string key The key of the attribute to update.
--- @int value The value to add to the attribute.
--- @realm server
--- @usage character:updateAttrib("some_attribute_key", 10)
+    --- Updates the value of a character attribute by adding a specified value to it.
+    -- @string key The key of the attribute to update.
+    -- @int value The value to add to the attribute.
+    -- @realm server
+    -- @usage character:updateAttrib("some_attribute_key", 10)
     function characterMeta:updateAttrib(key, value)
         local client = self:getPlayer()
         local attribute = lia.attribs.list[key]
@@ -97,11 +98,11 @@ if SERVER then
         hook.Run("OnCharAttribUpdated", client, self, key, value)
     end
 
---- Sets the value of a character attribute.
--- @string key The key of the attribute to set.
--- @int value The value to set for the attribute.
--- @realm server
--- @usage character:setAttrib("some_attribute_key", 10)
+    --- Sets the value of a character attribute.
+    -- @string key The key of the attribute to set.
+    -- @int value The value to set for the attribute.
+    -- @realm server
+    -- @usage character:setAttrib("some_attribute_key", 10)
     function characterMeta:setAttrib(key, value)
         local client = self:getPlayer()
         local attribute = lia.attribs.list[key]
@@ -117,12 +118,12 @@ if SERVER then
         hook.Run("OnCharAttribUpdated", client, self, key, value)
     end
 
---- Adds a boost to the character's attributes.
--- @realm server
--- @string boostID The ID of the boost to add.
--- @string attribID The ID of the attribute to which the boost should be added.
--- @int boostAmount The amount of boost to add to the attribute.
--- @usage character:removeBoost("some_boost_id", "some_attribute_id", 10)
+    --- Adds a boost to the character's attributes.
+    -- @realm server
+    -- @string boostID The ID of the boost to add.
+    -- @string attribID The ID of the attribute to which the boost should be added.
+    -- @int boostAmount The amount of boost to add to the attribute.
+    -- @usage character:removeBoost("some_boost_id", "some_attribute_id", 10)
     function characterMeta:addBoost(boostID, attribID, boostAmount)
         local boosts = self:getVar("boosts", {})
         boosts[attribID] = boosts[attribID] or {}
@@ -131,11 +132,11 @@ if SERVER then
         return self:setVar("boosts", boosts, nil, self:getPlayer())
     end
 
---- Removes a boost from the character's attributes.
--- @realm server
--- @string boostID The ID of the boost to remove.
--- @string attribID The ID of the attribute from which the boost should be removed.
--- @usage character:removeBoost("some_boost_id", "some_attribute_id")
+    --- Removes a boost from the character's attributes.
+    -- @realm server
+    -- @string boostID The ID of the boost to remove.
+    -- @string attribID The ID of the attribute from which the boost should be removed.
+    -- @usage character:removeBoost("some_boost_id", "some_attribute_id")
     function characterMeta:removeBoost(boostID, attribID)
         local boosts = self:getVar("boosts", {})
         boosts[attribID] = boosts[attribID] or {}
@@ -143,12 +144,13 @@ if SERVER then
         hook.Run("OnCharAttribBoosted", self:getPlayer(), self, attribID, boostID, true)
         return self:setVar("boosts", boosts, nil, self:getPlayer())
     end
+
     characterMeta.RemoveBoost = characterMeta.removeBoost
     characterMeta.UpdateAttrib = characterMeta.updateAttrib
     characterMeta.SetAttribute = characterMeta.setAttrib
     characterMeta.AddBoost = characterMeta.addBoost
-
 end
+
 characterMeta.GetBoost = characterMeta.getBoost
 characterMeta.GetBoosts = characterMeta.getBoosts
 characterMeta.GetAttribute = characterMeta.getAttrib

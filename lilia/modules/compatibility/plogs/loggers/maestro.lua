@@ -1,5 +1,4 @@
-plogs.Register("Maestro", false)
-
+﻿plogs.Register("Maestro", false)
 local function concat(t)
     local s = ""
     for _, v in pairs(t) do

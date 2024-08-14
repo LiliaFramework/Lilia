@@ -1,6 +1,4 @@
 ﻿function MODULE:LoadFonts()
-
-   
     surface.CreateFont("WB_Small", {
         font = "Product Sans",
         size = 17
@@ -58,8 +56,8 @@
 
     surface.CreateFont("FPSFont", {
         font = "mailart rubberstamp",
-		size = 27,
-		weight = 500,
-		antialias = true,
+        size = 27,
+        weight = 500,
+        antialias = true,
     })
 end

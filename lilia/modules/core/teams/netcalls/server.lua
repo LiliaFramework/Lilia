@@ -1,2 +1,2 @@
-util.AddNetworkString("classlist")
+﻿util.AddNetworkString("classlist")
 util.AddNetworkString("factionlist")

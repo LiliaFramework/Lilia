@@ -1,4 +1,4 @@
---- Checks if the player belongs to the "user" user group.
+﻿--- Checks if the player belongs to the "user" user group.
 -- @realm shared
 -- @treturn bool Whether the player belongs to the "user" user group.
 function playerMeta:isUser()

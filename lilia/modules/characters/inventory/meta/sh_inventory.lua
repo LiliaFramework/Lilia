@@ -1,5 +1,4 @@
-﻿
---- The Inventory Meta for the Grid Inventory Module.
+﻿--- The Inventory Meta for the Grid Inventory Module.
 -- @inventorymeta Inventory
 local GridInv = lia.Inventory:extend("GridInv")
 local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
@@ -22,6 +21,7 @@ local function CanNotAddItemIfNoSpace(inventory, action, context)
     end
     return true
 end
+
 --- Retrieves the width of the inventory grid.
 -- @realm shared
 -- @treturn integer The width of the inventory grid.
@@ -151,9 +151,7 @@ function GridInv:getItems(noRecurse)
     return allItems
 end
 
-
 if SERVER then
-
     --- Sets the size of the inventory grid.
     -- @realm server
     -- @int w The width of the grid.
@@ -176,7 +174,6 @@ if SERVER then
     -- @realm server
     -- @param owner The new owner of the inventory (Player or number).
     -- @bool[opt=false] fullUpdate Whether to sync the inventory to the client.
-
     function GridInv:setOwner(owner, fullUpdate)
         if type(owner) == "Player" and owner:getChar() then
             owner = owner:getChar():getID()
@@ -383,8 +380,7 @@ if SERVER then
         return d
     end
 else
-
-   --- Requests a transfer of an item to another inventory.
+    --- Requests a transfer of an item to another inventory.
     -- @realm client
     -- @int itemID The ID of the item to transfer.
     -- @int destinationID The ID of the destination inventory.

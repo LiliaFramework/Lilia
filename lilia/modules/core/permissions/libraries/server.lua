@@ -1,5 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-
 function GM:PlayerSpawnEffect(client)
     return client:IsSuperAdmin() or client:isStaffOnDuty() or client:HasPrivilege("Spawn Permissions - Can Spawn Effects") or client:getChar():hasFlags("L")
 end

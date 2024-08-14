@@ -34,7 +34,7 @@ end)
 cvars.AddChangeCallback("sbox_persist", function(_, old, new)
     timer.Create("sbox_persist_change_timer", 1, 1, function()
         hook.Run("PersistenceSave", old)
-        game.CleanUpMap( false, nil, function() end )
+        game.CleanUpMap(false, nil, function() end)
         if new == "" then return end
         hook.Run("PersistenceLoad", new)
     end)

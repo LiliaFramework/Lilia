@@ -1,4 +1,4 @@
-function MODULE:InitializedModules()
+﻿function MODULE:InitializedModules()
     lia.includeDir(self.path .. "/loggers", false, true, "shared")
     hook.Remove("Initialize", "plogs.Loghooks.Initialize")
 end
