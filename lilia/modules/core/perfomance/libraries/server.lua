@@ -126,7 +126,7 @@ function MODULE:EntityRemoved(entity)
     end
 end
 
-function MODULE:InitiaOnEntityCreatedlize()
+function MODULE:Initialize()
     hook.Remove("OnEntityCreated", "WidgetInit")
     hook.Remove("Think", "DOFThink")
     hook.Remove("Think", "CheckSchedules")
