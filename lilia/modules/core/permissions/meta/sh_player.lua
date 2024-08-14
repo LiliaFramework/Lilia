@@ -1,4 +1,7 @@
-﻿--- Checks if the player belongs to the "user" user group.
+﻿--- The Player Meta for the Permissions Module.
+-- @playermeta Permissions
+local playerMeta = FindMetaTable("Player")
+--- Checks if the player belongs to the "user" user group.
 -- @realm shared
 -- @treturn bool Whether the player belongs to the "user" user group.
 function playerMeta:isUser()

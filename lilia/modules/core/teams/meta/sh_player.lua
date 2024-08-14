@@ -1,4 +1,7 @@
-﻿--- Checks if the player belongs to the specified faction.
+﻿--- The Player Meta for the Teams Module.
+-- @playermeta Teams
+local playerMeta = FindMetaTable("Player")
+--- Checks if the player belongs to the specified faction.
 -- @realm shared
 -- @string faction The faction to check against.
 -- @treturn bool Whether the player belongs to the specified faction.

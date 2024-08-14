@@ -1,4 +1,7 @@
-﻿--- Checks if the player has whitelisted access to a class.
+﻿--- The Character Meta for the Teams Module.
+-- @playermeta Teams
+local characterMeta = lia.meta.character or {}
+--- Checks if the player has whitelisted access to a class.
 -- @realm shared
 -- @int class The class to check for whitelisting.
 -- @treturn bool Whether the player has whitelisted access to the specified faction.

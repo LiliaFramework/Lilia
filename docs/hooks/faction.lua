@@ -8,7 +8,6 @@ regular gamemode hooks.
 ]]
 -- @hooks Faction
 
-
 --- Called when the default name for a character needs to be retrieved (i.e., upon initial creation).
 -- @realm shared
 -- @client client The client for whom the default name is being retrieved

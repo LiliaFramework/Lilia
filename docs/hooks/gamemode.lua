@@ -7,7 +7,6 @@ They can be used for an assorted of reasons, depending on what you are trying to
 ]]
 -- @hooks Module
 
-
 --- Called when a player picks up money.
 -- This function is called when a player picks up money from the groun
 -- @client client The player who picked up the money
