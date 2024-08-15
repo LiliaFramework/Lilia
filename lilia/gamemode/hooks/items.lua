@@ -123,7 +123,7 @@ if SERVER then
         if client.equipDelay ~= nil then
             client:notify("You need to wait before equipping something again!")
             return false
-        elseif inventory and (inventory.isBag or inventory.isBank) then
+        elseif inventory and (inventory.isBag or inventory.isExternalInventory) then
             client:notifyLocalized("forbiddenActionStorage")
             return false
         end
@@ -134,7 +134,7 @@ if SERVER then
         if client.takeDelay ~= nil then
             client:notify("You need to wait before picking something up again!")
             return false
-        elseif inventory and (inventory.isBag or inventory.isBank) then
+        elseif inventory and (inventory.isBag or inventory.isExternalInventory) then
             client:notifyLocalized("forbiddenActionStorage")
             return false
         elseif IsValid(item.entity) then
@@ -159,7 +159,7 @@ if SERVER then
                     return false
                 end
             end
-        elseif inventory and (inventory.isBag or inventory.isBank) then
+        elseif inventory and (inventory.isBag or inventory.isExternalInventory) then
             client:notifyLocalized("forbiddenActionStorage")
             return false
         end
