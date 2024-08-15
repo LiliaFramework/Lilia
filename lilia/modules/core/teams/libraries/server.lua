@@ -1,6 +1,4 @@
 ﻿function MODULE:OnPlayerJoinClass(client, class, oldClass)
-    local character = client:getChar()
-    if character and self.PermaClass then character:setData("pclass", class) end
     local info = lia.class.list[class]
     local info2 = lia.class.list[oldClass]
     if info.OnSet then info:OnSet(client) end
@@ -16,17 +14,18 @@ end
 function MODULE:PlayerLoadedChar(client, character)
     local data = character:getData("pclass")
     local class = data and lia.class.list[data]
-    if class and data then
-        local oldClass = character:getClass()
-        if client:Team() == class.faction then
-            timer.Simple(.3, function()
-                character:setClass(class.index)
-                hook.Run("OnPlayerJoinClass", client, class.index, oldClass)
-            end)
-        end
-    end
-
     if character then
+        if class and data then
+            local oldClass = character:getClass()
+            if client:Team() == class.faction then
+                timer.Simple(.3, function()
+                    character:setClass(class.index)
+                    hook.Run("OnPlayerJoinClass", client, class.index, oldClass)
+                    return
+                end)
+            end
+        end
+
         for _, v in pairs(lia.class.list) do
             if (v.faction == client:Team()) and v.isDefault then
                 character:setClass(v.index)
@@ -131,8 +130,7 @@ end
 
 function MODULE:ClassOnLoadout(client)
     local character = client:getChar()
-    local data = character:getData("pclass")
-    local class = data and lia.class.list[data]
+    local class = lia.class.list[character:getClass()]
     if not class then return end
     if class.None then return end
     if class.scale then
@@ -203,8 +201,9 @@ function MODULE:ClassOnLoadout(client)
 end
 
 function MODULE:ClassPostLoadout(client)
-    local class = data and lia.class.list[data]
-    if class and data and class.bodyGroups and istable(class.bodyGroups) then
+    local character = client:getChar()
+    local class = lia.class.list[character:getClass()]
+    if class and class.bodyGroups and istable(class.bodyGroups) then
         local groups = {}
         for k, value in pairs(class.bodyGroups) do
             local index = client:FindBodygroupByName(k)

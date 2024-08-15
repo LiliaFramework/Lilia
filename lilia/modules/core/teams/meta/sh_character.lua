@@ -1,5 +1,6 @@
 ﻿--- The Character Meta for the Teams Module.
 -- @charactermeta Teams
+local MODULE = MODULE
 local characterMeta = lia.meta.character or {}
 --- Checks if the player has whitelisted access to a class.
 -- @realm shared
@@ -85,6 +86,7 @@ if SERVER then
         local hadOldClass = oldClass and oldClass ~= -1
         if isForced or lia.class.canBe(client, class) then
             self:setClass(class)
+            if MODULE.PermaClass then self:setData("pclass", class) end
             if hadOldClass then
                 hook.Run("OnPlayerSwitchClass", client, class, oldClass)
             else

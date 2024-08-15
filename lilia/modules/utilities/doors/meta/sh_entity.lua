@@ -21,7 +21,7 @@ end
 -- This function checks whether the door entity is currently locked.
 -- @realm shared
 -- @treturn boolean True if the door is locked, false otherwise.
-function entityMeta:IsLocked()
+function entityMeta:isLocked()
     return self.isLocked
 end
 
