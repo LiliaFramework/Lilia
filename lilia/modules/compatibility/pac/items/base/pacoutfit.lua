@@ -46,7 +46,7 @@ ITEM.functions.Equip = {
         local client = item.player
         local char = client:getChar()
         local items = char:getInv():getItems()
-        for k, v in pairs(items) do
+        for _, v in pairs(items) do
             if v.id ~= item.id and v.pacData and v.outfitCategory == item.outfitCategory and v:getData("equip") then
                 client:notify("You're already equipping this kind of outfit")
                 return false
@@ -65,7 +65,7 @@ ITEM.functions.Equip = {
     onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip") ~= true end
 }
 
-function ITEM:onCanBeTransfered(oldInventory, newInventory)
+function ITEM:onCanBeTransfered(_, newInventory)
     if newInventory and self:getData("equip") then return false end
     return true
 end

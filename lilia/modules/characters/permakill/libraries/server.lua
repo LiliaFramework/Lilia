@@ -4,6 +4,7 @@
     if hook.Run("PlayerShouldPermaKill", client, inflictor, attacker) == true then character:ban() end
 end
 
-function MODULE:PlayerShouldPermaKill(client, inflictor, attacker)
+function MODULE:PlayerShouldPermaKill(client)
+    local character = client:getChar()
     return character:getData("PermaKillFlagged", false)
 end
