@@ -98,6 +98,7 @@ function PANEL:Init()
     self.items:AddColumn(L"mode").Header:SetTextColor(color_white)
     self.items:AddColumn(L"price").Header:SetTextColor(color_white)
     self.items:AddColumn(L"stock").Header:SetTextColor(color_white)
+    self.items:AddColumn(L"category").Header:SetTextColor(color_white)
     self.items:SetMultiSelect(false)
     self.items.OnRowRightClick = function(_, _, line) self:OnRowRightClick(line) end
     self.searchBar = self:Add("DTextEntry")
@@ -242,7 +243,8 @@ function PANEL:ReloadItemList(filter)
         if filter and not itemName:lower():find(filter:lower(), 1, true) then continue end
         local mode = entity.items[k] and entity.items[k][VENDOR_MODE]
         local current, max = entity:getStock(k)
-        local panel = self.items:AddLine(itemName, self:getModeText(mode), entity:getPrice(k), max and current .. "/" .. max or "-")
+        local category = v.category or "None"
+        local panel = self.items:AddLine(itemName, self:getModeText(mode), entity:getPrice(k), max and current .. "/" .. max or "-", category)
         panel.item = k
         self.lines[k] = panel
     end
