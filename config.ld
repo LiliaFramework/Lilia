@@ -61,8 +61,8 @@ custom_display_name_handler = function(item, default_handler)
             return "playerMeta:" .. default_handler(item)
         elseif item.module.kind == "inventory meta" then
             return "inventoryMeta:" .. default_handler(item)
-        elseif item.module.kind == "tool meta" then
-            return "toolGunMeta:" .. default_handler(item)
+           elseif item.module.kind == "tool meta" then
+            return "ToolGunMeta:" .. default_handler(item)
         end
     end
     return default_handler(item)
@@ -77,6 +77,7 @@ new_type("entitymeta", "Entity Meta", true)
 new_type("itemmeta", "Item Meta", true)
 new_type("playermeta", "Player Meta", true)
 new_type("inventorymeta", "Inventory Meta", true)
+new_type("toolmeta", "Tool Meta", true)
 new_type("configuration", "Configurations", true)
 new_type("structures", "Structures", true)
 new_type("information", "Information", true)
