@@ -1,33 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-
-local function getAllFilesInDirectory(directory, extension)
-    local files = {}
-    local function scanDirectory(dir)
-        local fileList, directoryList = file.Find(dir .. "/*", "GAME")
-        for _, fileName in ipairs(fileList) do
-            if string.EndsWith(fileName, extension) then table.insert(files, dir .. "/" .. fileName) end
-        end
-
-        for _, subDir in ipairs(directoryList) do
-            scanDirectory(dir .. "/" .. subDir)
-        end
-    end
-
-    scanDirectory(directory)
-    return files
-end
-
-local function getAllCitizenModels()
-    local allModels = {}
-    for _, path in ipairs(lia.anim.CitizenModelPaths) do
-        local modelsInPath = getAllFilesInDirectory(path, ".mdl")
-        for _, model in ipairs(modelsInPath) do
-            table.insert(allModels, model)
-        end
-    end
-    return allModels
-end
-
 function GM:Move(client, moveData)
     local character = client:getChar()
     if not character then return end
@@ -90,7 +61,7 @@ function GM:InitializedModules()
         lia.anim.setModelClass(model, animtype)
     end
 
-    for _, model in ipairs(getAllCitizenModels()) do
+    for _, model in ipairs(lia.util.getAllCitizenModels()) do
         local lowerModel = string.lower(model)
         local class = string.find(lowerModel, "female_") and "citizen_female" or "citizen_male"
         lia.anim.setModelClass(lowerModel, class)

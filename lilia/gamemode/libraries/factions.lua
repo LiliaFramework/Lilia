@@ -221,20 +221,6 @@ function lia.faction.getDefaultClass(id)
     return defaultClass
 end
 
---- Gets the color associated with a player's team or class.
--- @realm client
--- @client client The player whose color to retrieve
--- @return color The color associated with the player's team or class
-function lia.faction.GetTeamColor(client)
-    local char = client:getChar()
-    if not char then return team.GetColor(client:Team()) end
-    local classIndex = char:getClass()
-    if not classIndex then return team.GetColor(client:Team()) end
-    local classTbl = lia.class.list[classIndex]
-    if not classTbl then return team.GetColor(client:Team()) end
-    return classTbl.Color or team.GetColor(client:Team())
-end
-
 if CLIENT then
     --- Returns true if a faction requires a whitelist.
     -- @realm client

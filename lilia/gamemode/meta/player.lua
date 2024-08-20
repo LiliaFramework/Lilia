@@ -599,8 +599,8 @@ if SERVER then
     -- @realm client
     -- @string sound The sound to play.
     -- @int[opt] pitch The pitch of the sound.
-    function playerMeta:SendSound(sound, pitch)
-        net.Start("SendSound")
+    function playerMeta:playSound(sound, pitch)
+        net.Start("LiliaPlaySound")
         net.WriteString(tostring(sound))
         net.WriteUInt(tonumber(pitch) or 100, 7)
         net.Send(self)
@@ -629,7 +629,7 @@ if SERVER then
     -- @realm shared
     -- @treturn number The total playtime of the player.
     function playerMeta:getPlayTime()
-        local diff = os.time(lia.date.dateToNumber(self.lastJoin)) - os.time(lia.date.dateToNumber(self.firstJoin))
+        local diff = os.time(lia.util.dateToNumber(self.lastJoin)) - os.time(lia.util.dateToNumber(self.firstJoin))
         return diff + (RealTime() - (self.liaJoinTime or RealTime()))
     end
 
@@ -1009,7 +1009,7 @@ else
     -- @realm client
     -- @treturn number The total playtime of the player.
     function playerMeta:getPlayTime()
-        local diff = os.time(lia.date.dateToNumber(lia.lastJoin)) - os.time(lia.date.dateToNumber(lia.firstJoin))
+        local diff = os.time(lia.util.dateToNumber(lia.lastJoin)) - os.time(lia.util.dateToNumber(lia.firstJoin))
         return diff + (RealTime() - lia.joinTime or 0)
     end
 
