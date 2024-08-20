@@ -37,7 +37,6 @@ end
 --- Creates client and server convars for the tool.
 -- This method generates convars (console variables) based on the tool's mode. Client convars are created on the client-side, while server convars are created on the server-side.
 -- @realm shared
--- @see CreateClientConVar, CreateConVar
 function ToolGunMeta:CreateConVars()
     local mode = self:GetMode()
     if CLIENT then
