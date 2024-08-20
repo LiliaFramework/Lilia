@@ -91,28 +91,91 @@ function OrganizeNotices(alternate)
         end
     end
 end
+if SERVER then 
 
-function lia.util.notify(message)
-    local notice = vgui.Create("liaNotify")
-    local i = table.insert(lia.notices, notice)
-    notice:SetMessage(message)
-    notice:SetPos(ScrW(), ScrH() - (i - 1) * (notice:GetTall() + 4) + 4)
-    notice:MoveToFront()
-    OrganizeNotices(false)
-    timer.Simple(10, function()
-        if IsValid(notice) then
-            notice:AlphaTo(0, 1, 0, function()
-                notice:Remove()
-                for v, k in pairs(lia.notices) do
-                    if k == notice then table.remove(lia.notices, v) end
-                end
-
-                OrganizeNotices(false)
-            end)
+    --- Notifies all players with a given message.
+    -- @realm server
+    -- @string msg The message to send to all players
+    function lia.util.notifyAll(msg)
+        for _, v in pairs(player.GetAll()) do
+            v:notify(msg)
         end
-    end)
+    end
+        --- Notifies a player or all players with a message.
+    -- @realm server
+    -- @string message The message to be notified
+    -- @client recipient The player to receive the notification
+    function lia.util.notify(message, recipient)
+        net.Start("liaNotify")
+        net.WriteString(message)
+        if recipient == nil then
+            net.Broadcast()
+        else
+            net.Send(recipient)
+        end
+    end
 
-    MsgN(message)
+    --- Notifies a player or all players with a localized message.
+    -- @realm server
+    -- @string message The localized message to be notified
+    -- @client recipient The player to receive the notification
+    -- @param ... Additional parameters for message formatting
+    function lia.util.notifyLocalized(message, recipient, ...)
+        local args = {...}
+        if recipient ~= nil and not istable(recipient) and type(recipient) ~= "Player" then
+            table.insert(args, 1, recipient)
+            recipient = nil
+        end
+
+        net.Start("liaNotifyL")
+        net.WriteString(message)
+        net.WriteUInt(#args, 8)
+        for i = 1, #args do
+            net.WriteString(tostring(args[i]))
+        end
+
+        if recipient == nil then
+            net.Broadcast()
+        else
+            net.Send(recipient)
+        end
+    end
+    
+    else
+
+    --- Displays a notification message in the chat.
+    -- @string message The message to display
+    -- @realm client
+    function lia.util.notify(message)
+        local notice = vgui.Create("liaNotify")
+        local i = table.insert(lia.notices, notice)
+        notice:SetMessage(message)
+        notice:SetPos(ScrW(), ScrH() - (i - 1) * (notice:GetTall() + 4) + 4)
+        notice:MoveToFront()
+        OrganizeNotices(false)
+        timer.Simple(10, function()
+            if IsValid(notice) then
+                notice:AlphaTo(0, 1, 0, function()
+                    notice:Remove()
+                    for v, k in pairs(lia.notices) do
+                        if k == notice then table.remove(lia.notices, v) end
+                    end
+    
+                    OrganizeNotices(false)
+                end)
+            end
+        end)
+    
+        MsgN(message)
+    end
+
+    --- Displays a localized notification message in the chat.
+    -- @realm client
+    -- @string message The message to display (localized)
+    -- @param ... Additional parameters for string formatting
+    function lia.util.notifyLocalized(message, ...)
+        lia.util.notify(L(message, ...))
+    end
 end
 
 function notification.AddLegacy(text)

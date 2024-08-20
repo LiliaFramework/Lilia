@@ -58,10 +58,6 @@ lia.FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/libraries/chatbox.lua",
-        realm = "shared"
-    },
-    {
         path = "lilia/gamemode/libraries/commands.lua",
         realm = "shared"
     },
@@ -99,18 +95,6 @@ lia.FilesToLoad = {
     },
     {
         path = "lilia/gamemode/libraries/networking.lua",
-        realm = "shared"
-    },
-    {
-        path = "lilia/gamemode/libraries/attributes.lua",
-        realm = "shared"
-    },
-    {
-        path = "lilia/gamemode/libraries/factions.lua",
-        realm = "shared"
-    },
-    {
-        path = "lilia/gamemode/libraries/classes.lua",
         realm = "shared"
     },
     {
@@ -163,10 +147,6 @@ lia.FilesToLoad = {
     },
     {
         path = "lilia/gamemode/libraries/notice.lua",
-        realm = "client"
-    },
-    {
-        path = "lilia/gamemode/libraries/bars.lua",
         realm = "client"
     },
     {
