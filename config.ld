@@ -61,6 +61,8 @@ custom_display_name_handler = function(item, default_handler)
             return "playerMeta:" .. default_handler(item)
         elseif item.module.kind == "inventory meta" then
             return "inventoryMeta:" .. default_handler(item)
+        elseif item.module.kind == "tool meta" then
+            return "toolGunMeta:" .. default_handler(item)
         end
     end
     return default_handler(item)

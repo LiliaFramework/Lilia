@@ -436,6 +436,17 @@ function lia.char.getCharData(charID, key)
     return data
 end
 
+--- Retrieves the SteamIDs of all connected players.
+-- @treturn table Table containing SteamIDs of all connected players
+-- @realm shared
+function lia.char.getAll()
+    local charTable = {}
+    for _, v in player.Iterator() do
+        if v:getChar() then table.insert(charTable, v:getChar():getID()) end
+    end
+    return charTable
+end
+
 if SERVER then
     --- Creates a character object with its assigned properties and saves it to the database.
     -- @realm server

@@ -129,4 +129,4 @@ else
     end
 end
 
-lia.lang.loadFromDir("lilia/gamemode/config/languages")
+lia.lang.loadFromDir("lilia/gamemode/languages")

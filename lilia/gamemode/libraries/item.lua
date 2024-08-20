@@ -489,4 +489,4 @@ if SERVER then
     end
 end
 
-lia.item.loadFromDir("lilia/gamemode/objects/items")
+lia.item.loadFromDir("lilia/gamemode/items")

@@ -1,5 +1,5 @@
 ﻿--[[
-	BLACK TEA ICON LIBRARY FOR Nutscript 1.1 // Edits by Samael
+	BLACK TEA ICON LIBRARY FOR Nutscript 1.1 // Edits by Samael for Lilia
 
 	The MIT License (MIT)
 

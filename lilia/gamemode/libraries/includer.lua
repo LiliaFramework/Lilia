@@ -58,19 +58,15 @@ lia.FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/libraries/chatbox.lua",
-        realm = "shared"
-    },
-    {
         path = "lilia/gamemode/libraries/commands.lua",
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/objects/commands/client.lua",
+        path = "lilia/gamemode/commands/client.lua",
         realm = "client"
     },
     {
-        path = "lilia/gamemode/objects/commands/server.lua",
+        path = "lilia/gamemode/commands/server.lua",
         realm = "server"
     },
     {
@@ -102,20 +98,12 @@ lia.FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/libraries/attributes.lua",
-        realm = "shared"
-    },
-    {
-        path = "lilia/gamemode/libraries/factions.lua",
-        realm = "shared"
-    },
-    {
-        path = "lilia/gamemode/libraries/classes.lua",
-        realm = "shared"
-    },
-    {
         path = "lilia/gamemode/libraries/currency.lua",
         realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/libraries/ease.lua",
+        realm = "client"
     },
     {
         path = "lilia/gamemode/hooks/currency.lua",
@@ -159,10 +147,6 @@ lia.FilesToLoad = {
     },
     {
         path = "lilia/gamemode/libraries/notice.lua",
-        realm = "client"
-    },
-    {
-        path = "lilia/gamemode/libraries/bars.lua",
         realm = "client"
     },
     {
@@ -258,41 +242,57 @@ lia.util.includeDir = lia.includeDir
 -- @string path The directory containing the Lua files to be included.
 -- @realm shared
 function lia.includeEntities(path)
+    local LoadedTools
     local files, folders
     local function IncludeFiles(path2, clientOnly)
-        if (SERVER and file.Exists(path2 .. "init.lua", "LUA")) or (CLIENT and file.Exists(path2 .. "cl_init.lua", "LUA")) then
-            lia.include(path2 .. "init.lua", clientOnly and "client" or "server")
+        if SERVER and not clientOnly then
+            if file.Exists(path2 .. "init.lua", "LUA") then
+                lia.include(path2 .. "init.lua", "server")
+            elseif file.Exists(path2 .. "shared.lua", "LUA") then
+                lia.include(path2 .. "shared.lua", "shared")
+            end
+
             if file.Exists(path2 .. "cl_init.lua", "LUA") then lia.include(path2 .. "cl_init.lua", "client") end
-            return true
+        elseif file.Exists(path2 .. "cl_init.lua", "LUA") then
+            lia.include(path2 .. "cl_init.lua", "client")
         elseif file.Exists(path2 .. "shared.lua", "LUA") then
             lia.include(path2 .. "shared.lua", "shared")
-            return true
         end
-        return false
     end
 
-    local function HandleEntityInclusion(folder, variable, register, default, clientOnly)
+    local function HandleEntityInclusion(folder, variable, register, default, clientOnly, create, complete)
         files, folders = file.Find(path .. "/" .. folder .. "/*", "LUA")
         default = default or {}
         for _, v in ipairs(folders) do
             local path2 = path .. "/" .. folder .. "/" .. v .. "/"
+            v = string.stripRealmPrefix(v)
             _G[variable] = table.Copy(default)
-            _G[variable].ClassName = v
-            if IncludeFiles(path2, clientOnly) then
-                if clientOnly then
-                    if CLIENT then register(_G[variable], v) end
-                else
-                    register(_G[variable], v)
-                end
+            if not isfunction(create) then
+                _G[variable].ClassName = v
+            else
+                create(v)
             end
 
+            IncludeFiles(path2, clientOnly)
+            if clientOnly then
+                if CLIENT then register(_G[variable], v) end
+            else
+                register(_G[variable], v)
+            end
+
+            if isfunction(complete) then complete(_G[variable]) end
             _G[variable] = nil
         end
 
         for _, v in ipairs(files) do
-            local niceName = string.StripExtension(v)
+            local niceName = string.stripRealmPrefix(string.StripExtension(v))
             _G[variable] = table.Copy(default)
-            _G[variable].ClassName = niceName
+            if not isfunction(create) then
+                _G[variable].ClassName = niceName
+            else
+                create(niceName)
+            end
+
             lia.include(path .. "/" .. folder .. "/" .. v, clientOnly and "client" or "shared")
             if clientOnly then
                 if CLIENT then register(_G[variable], niceName) end
@@ -300,8 +300,21 @@ function lia.includeEntities(path)
                 register(_G[variable], niceName)
             end
 
+            if isfunction(complete) then complete(_G[variable]) end
             _G[variable] = nil
         end
+    end
+
+    local function RegisterTool(tool, className)
+        local gmodTool = weapons.GetStored("gmod_tool")
+        className = string.stripRealmPrefix(className)
+        if gmodTool then
+            gmodTool.Tool[className] = tool
+        else
+            ErrorNoHalt(string.format("attempted to register tool '%s' with invalid gmod_tool weapon", className))
+        end
+
+        LoadedTools = true
     end
 
     HandleEntityInclusion("entities", "ENT", scripted_ents.Register, {
@@ -316,11 +329,19 @@ function lia.includeEntities(path)
         Base = "weapon_base"
     })
 
+    HandleEntityInclusion("tools", "TOOL", RegisterTool, {}, false, function(className)
+        className = string.stripRealmPrefix(className)
+        TOOL = setmetatable({}, TOOL)
+        TOOL.Mode = className
+        TOOL:CreateConVars()
+    end)
+
     HandleEntityInclusion("effects", "EFFECT", effects and effects.Register, nil, true)
+    if CLIENT and LoadedTools then RunConsoleCommand("spawnmenu_reload") end
 end
 
 lia.util.loadEntities = lia.includeEntities
-lia.includeEntities("lilia/gamemode/objects/entities")
+lia.includeEntities("lilia/gamemode/entities")
 for _, filepath in ipairs(lia.FilesToLoad) do
     if filepath.realm == "server" then
         lia.include(filepath.path, "server")

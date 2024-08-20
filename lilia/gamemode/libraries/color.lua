@@ -37,6 +37,57 @@ function lia.color.Blend(color1, color2, ratio)
     return Color(r, g, b)
 end
 
+--- Returns a color that cycles through the hues of the HSV color spectrum.
+-- @realm client
+-- @number frequency The speed at which the color cycles through hues
+-- @return color The color object with the current hue
+function lia.color.Rainbow(frequency)
+    return HSVToColor(CurTime() * frequency % 360, 1, 1)
+end
+
+--- Converts a color to a hexadecimal string.
+-- @realm client
+-- @color color The color to convert
+-- @return string The hexadecimal color code
+function lia.color.ColorToHex(color)
+    return "0x" .. bit.tohex(color.r, 2) .. bit.tohex(color.g, 2) .. bit.tohex(color.b, 2)
+end
+
+--- Returns a color that smoothly transitions between two given colors.
+-- @realm client
+-- @color col1 The first color
+-- @color col2 The second color
+-- @number freq The frequency of the color transition
+-- @return color The color resulting from the transition
+function lia.color.ColorCycle(col1, col2, freq)
+    freq = freq or 1
+    local difference = Color(col1.r - col2.r, col1.g - col2.g, col1.b - col2.b)
+    local time = CurTime()
+    local rgb = {
+        r = 0,
+        g = 0,
+        b = 0
+    }
+
+    for k, _ in pairs(rgb) do
+        if col1[k] > col2[k] then
+            rgb[k] = col2[k]
+        else
+            rgb[k] = col1[k]
+        end
+    end
+    return Color(rgb.r + math.abs(math.sin(time * freq) * difference.r), rgb.g + math.abs(math.sin(time * freq + 2) * difference.g), rgb.b + math.abs(math.sin(time * freq + 4) * difference.b))
+end
+
+--- Converts a color object to a string representation.
+-- @realm client
+-- @color color The color object to convert
+-- @return A string representation of the color in the format "r,g,b,a"
+function lia.util.colorToText(color)
+    if not IsColor(color) then return end
+    return (color.r or 255) .. "," .. (color.g or 255) .. "," .. (color.b or 255) .. "," .. (color.a or 255)
+end
+
 do
     local colors = {
         black = Color(0, 0, 0),

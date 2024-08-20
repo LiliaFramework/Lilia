@@ -560,10 +560,17 @@ net.Receive("chatNotifyNet", function()
     chat.AddText(Color(255, 215, 0), message)
 end)
 
-net.Receive("SendSound", function() surface.PlaySound(net.ReadString()) end)
+net.Receive("SendSound", function()
+    local sound = net.ReadString()
+    local shouldEmit = net.ReadBool()
+    if shouldEmit then
+        LocalPlayer():EmitSound(sound, 100)
+    else
+        surface.PlaySound(sound)
+    end
+end)
 netstream.Hook("idReq", function(text) SetClipboardText(text) end)
 net.Receive("OpenPage", function() gui.OpenURL(net.ReadString()) end)
-net.Receive("LiliaPlaySound", function() LocalPlayer():EmitSound(tostring(net.ReadString()), tonumber(net.ReadUInt(7)) or 100) end)
 netstream.Hook("ChatPrint", function(data) chat.AddText(unpack(data)) end)
 netstream.Hook("charInfo", function(data, id, client) lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client) end)
 net.Receive("ReloadLightMaps", function() render.RedownloadAllLightmaps(true) end)
