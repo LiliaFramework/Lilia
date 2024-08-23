@@ -14,12 +14,13 @@ end
 
 function MODULE:HUDPaint()
     local client = LocalPlayer()
-    if client:Alive() then
+    if client:Alive() and client:getChar() then
         local weapon = client:GetActiveWeapon()
         if self:ShouldDrawAmmo(weapon) then self:DrawAmmo(weapon) end
         if self:ShouldDrawCrosshair() then self:DrawCrosshair() end
         if self:ShouldDrawFPS() then self:DrawFPS() end
         if self:ShouldDrawVignette() then self:DrawVignette() end
+        if self:ShouldDrawWatermark() then self:DrawWatermark() end
     end
 end
 
