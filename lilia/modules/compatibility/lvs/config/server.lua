@@ -1,0 +1,1 @@
+﻿MODULE.DamageInCars = true

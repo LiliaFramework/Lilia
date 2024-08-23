@@ -35,7 +35,9 @@ end
 -- @realm shared
 -- @treturn bool True if the entity is a simfphys car, false otherwise.
 function entityMeta:isSimfphysCar()
-    return simfphys and (self:GetClass() == "gmod_sent_vehicle_fphysics_base" or self.IsSimfphyscar or self:GetClass() == "gmod_sent_vehicle_fphysics_wheel" or self:GetClass() == "prop_vehicle_prisoner_pod" or self.Base == "gmod_sent_vehicle_fphysics_base" or self.Base == "gmod_sent_vehicle_fphysics_wheel")
+    if not self then return false end
+    local class = self:GetClass()
+    return class == "lvs_base" or class == "gmod_sent_vehicle_fphysics_base" or self.IsSimfphyscar or self.LVS or class == "gmod_sent_vehicle_fphysics_wheel" or class == "prop_vehicle_prisoner_pod" or self.Base == "gmod_sent_vehicle_fphysics_base" or self.Base == "gmod_sent_vehicle_fphysics_wheel"
 end
 
 --- Retrieves the drop position for an item associated with the entity.
