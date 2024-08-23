@@ -1,4 +1,4 @@
-﻿local Variables = {"disabled", "name", "price", "noSell", "faction", "factions", "class", "hidden"}
+﻿local Variables = {"disabled", "name", "price", "noSell", "faction", "factions", "class", "hidden", "locked"}
 local DarkRPVariables = {
     ["DarkRPNonOwnable"] = function(entity) entity:setNetVar("noSell", true) end,
     ["DarkRPTitle"] = function(entity, val) entity:setNetVar("name", val) end,
@@ -117,7 +117,7 @@ function MODULE:InitPostEntity()
 end
 
 function MODULE:PlayerUse(client, door)
-    if door:IsVehicle() and door:IsLocked() then return false end
+    if door:IsVehicle() and door:isLocked() then return false end
     if door:isDoor() then
         local result = hook.Run("CanPlayerUseDoor", client, door)
         if result == false then
@@ -181,20 +181,23 @@ function MODULE:PlayerDisconnected(client)
 end
 
 function MODULE:KeyLock(client, door, time)
-    if not door:IsLocked() and IsValid(door) and client:GetPos():Distance(door:GetPos()) <= 256 and ((door:isDoor() and door:checkDoorAccess(client)) or (door:GetCreator() == client or client:isStaffOnDuty() and door:IsVehicle())) then
+    local distance = client:GetPos():Distance(door:GetPos())
+    if not door:isLocked() and IsValid(door) and distance <= 256 and (door:isDoor() and door:checkDoorAccess(client) or door:GetCreator() == client or client:isStaffOnDuty() and (door:IsVehicle() or door:isSimfphysCar())) then
         client:setAction("@locking", time, function() end)
         client:doStaredAction(door, function() self:ToggleLock(client, door, true) end, time, function() client:stopAction() end)
     end
 end
 
 function MODULE:KeyUnlock(client, door, time)
-    if door:IsLocked() and IsValid(door) and client:GetPos():Distance(door:GetPos()) <= 256 and ((door:isDoor() and door:checkDoorAccess(client)) or (door:GetCreator() == client or client:isStaffOnDuty() and door:IsVehicle())) then
+    local distance = client:GetPos():Distance(door:GetPos())
+    if door:isLocked() and IsValid(door) and distance <= 256 and (door:isDoor() and door:checkDoorAccess(client) or door:GetCreator() == client or client:isStaffOnDuty() and (door:IsVehicle() or door:isSimfphysCar())) then
         client:setAction("@unlocking", time, function() end)
         client:doStaredAction(door, function() self:ToggleLock(client, door, false) end, time, function() client:stopAction() end)
     end
 end
 
 function MODULE:ToggleLock(client, door, state)
+    if not IsValid(door) then return end
     if door:isDoor() then
         local partner = door:getDoorPartner()
         if state then
@@ -208,14 +211,12 @@ function MODULE:ToggleLock(client, door, state)
         end
 
         door:SetLocked(state)
-    elseif (door:GetCreator() == client or client:IsSuperAdmin() or client:isStaffOnDuty()) and door:IsVehicle() then
+    elseif (door:GetCreator() == client or client:IsSuperAdmin() or client:isStaffOnDuty()) and (door:IsVehicle() or door:isSimfphysCar()) then
         if state then
             door:Fire("lock")
-            if door:isSimfphysCar() then door:Lock() end
             client:EmitSound("doors/door_latch3.wav")
         else
             door:Fire("unlock")
-            if door:isSimfphysCar() then door:UnLock() end
             client:EmitSound("doors/door_latch1.wav")
         end
 

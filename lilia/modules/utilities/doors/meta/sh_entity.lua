@@ -22,7 +22,7 @@ end
 -- @realm shared
 -- @treturn boolean True if the door is locked, false otherwise.
 function entityMeta:isLocked()
-    return self.isLocked
+    return self:getNetVar("locked", false)
 end
 
 --- Checks if the entity is locked (pertaining to doors).
@@ -52,7 +52,7 @@ if SERVER then
     -- @realm server
     -- @bool state The new locked state of the door (true for locked, false for unlocked).
     function entityMeta:SetLocked(state)
-        self.isLocked = state
+        self:setNetVar("locked", state)
     end
 
     --- Checks if the entity is a door.
