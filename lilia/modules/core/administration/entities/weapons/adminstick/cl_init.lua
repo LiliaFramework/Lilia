@@ -1,7 +1,7 @@
 function SWEP:PrimaryAttack()
     local target = IsValid(LocalPlayer().AdminStickTarget) and LocalPlayer().AdminStickTarget or LocalPlayer():GetEyeTrace().Entity
     if IsValid(target) and not target:IsPlayer() then if target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end end
-    if IsValid(target) and target:IsPlayer() then AdminStick:OpenAdminStickUI(false, target) end
+    if IsValid(target) and target:IsPlayer() then AdminStick:OpenAdminStickUI(target) end
 end
 
 function SWEP:SecondaryAttack()
