@@ -71,6 +71,31 @@ function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
     data.index = data.index or table.Count(lia.char.vars)
     local upperName = key:sub(1, 1):upper() .. key:sub(2)
+    if data.fieldType then
+        local fieldDefinition
+        if data.fieldType == "string" then
+            fieldDefinition = data.field .. " VARCHAR(" .. (data.length or "255") .. ")"
+        elseif data.fieldType == "integer" then
+            fieldDefinition = data.field .. " INT"
+        elseif data.fieldType == "float" then
+            fieldDefinition = data.field .. " FLOAT"
+        elseif data.fieldType == "boolean" then
+            fieldDefinition = data.field .. " TINYINT(1)"
+        elseif data.fieldType == "datetime" then
+            fieldDefinition = data.field .. " DATETIME"
+        elseif data.fieldType == "text" then
+            fieldDefinition = data.field .. " TEXT"
+        end
+
+        if fieldDefinition then
+            if data.default ~= nil then fieldDefinition = fieldDefinition .. " DEFAULT '" .. tostring(data.default) .. "'" end
+            local success, err = lia.db.query("ALTER TABLE lia_characters ADD COLUMN " .. fieldDefinition)
+            if success then
+                print("Adding column " .. data.field.. " to the database!")
+            end
+        end
+    end
+
     if SERVER and not data.isNotModifiable then
         if data.onSet then
             characterMeta["set" .. upperName] = data.onSet
@@ -607,7 +632,7 @@ if SERVER then
                 removePlayer(target)
             end
         end
-    
+
         hook.Run("PreCharDelete", id)
         for index, charID in pairs(client.liaCharList) do
             if charID == id then
@@ -615,7 +640,7 @@ if SERVER then
                 break
             end
         end
-    
+
         lia.char.loaded[id] = nil
         lia.db.query("DELETE FROM lia_characters WHERE _id = " .. id)
         lia.db.query("SELECT _invID FROM lia_inventories WHERE _charID = " .. id, function(data)
@@ -625,7 +650,7 @@ if SERVER then
                 end
             end
         end)
-    
+
         hook.Run("OnCharDelete", client, id)
     end
 
@@ -646,7 +671,7 @@ if SERVER then
             LiliaInformation("lia.char.setCharData SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
-    
+
         if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setData(key, val) end
         return true
     end
@@ -664,7 +689,7 @@ if SERVER then
             print("lia.char.setCharName SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
-    
+
         if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setName(name) end
         return true
     end
@@ -683,22 +708,22 @@ if SERVER then
             print("lia.char.setCharModel SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
-    
+
         local groups = {}
-        for k, v in pairs(bg or {}) do
+        for _, v in pairs(bg or {}) do
             groups[v.id] = v.value
         end
-    
+
         lia.setCharData(charID, "groups", groups)
         if lia.char.loaded[charIDsafe] then
             lia.char.loaded[charIDsafe]:setModel(model)
             local ply = lia.char.loaded[charIDsafe]:getPlayer()
             if IsValid(ply) and ply:getChar() == lia.char.loaded[charIDsafe] then
-                for k, v in pairs(bg or {}) do
+                for _, v in pairs(bg or {}) do
                     ply:SetBodygroup(v.id, v.value)
                     print(v.id, v.value, ply)
                 end
-    
+
                 ply:SetupHands()
             end
         end
