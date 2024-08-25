@@ -92,9 +92,9 @@ function lia.char.registerVar(key, data)
 
         if fieldDefinition then
             if data.default ~= nil then fieldDefinition = fieldDefinition .. " DEFAULT '" .. tostring(data.default) .. "'" end
-            local success, err = lia.db.query("ALTER TABLE lia_characters ADD COLUMN " .. fieldDefinition)
+            local success, _ = lia.db.query("ALTER TABLE lia_characters ADD COLUMN " .. fieldDefinition)
             if success then
-                print("Adding column " .. data.field.. " to the database!")
+                print("Adding column " .. data.field .. " to the database!")
             end
         end
     end
@@ -635,7 +635,7 @@ if SERVER then
                 removePlayer(target)
             end
         end
-    
+
         hook.Run("PreCharDelete", id)
         for index, charID in pairs(client.liaCharList) do
             if charID == id then
@@ -643,7 +643,7 @@ if SERVER then
                 break
             end
         end
-    
+
         lia.char.loaded[id] = nil
         lia.db.query("DELETE FROM lia_characters WHERE _id = " .. id)
         lia.db.query("SELECT _invID FROM lia_inventories WHERE _charID = " .. id, function(data)
@@ -653,7 +653,7 @@ if SERVER then
                 end
             end
         end)
-    
+
         hook.Run("OnCharDelete", client, id)
     end
 
@@ -674,7 +674,7 @@ if SERVER then
             LiliaInformation("lia.char.setCharData SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
-    
+
         if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setData(key, val) end
         return true
     end
@@ -692,7 +692,7 @@ if SERVER then
             print("lia.char.setCharName SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
-    
+
         if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setName(name) end
         return true
     end
@@ -711,22 +711,22 @@ if SERVER then
             print("lia.char.setCharModel SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
-    
+
         local groups = {}
-        for k, v in pairs(bg or {}) do
+        for _, v in pairs(bg or {}) do
             groups[v.id] = v.value
         end
-    
-        lia.setCharData(charID, "groups", groups)
+
+    	lia.setCharData(charID, "groups", groups)
         if lia.char.loaded[charIDsafe] then
             lia.char.loaded[charIDsafe]:setModel(model)
             local ply = lia.char.loaded[charIDsafe]:getPlayer()
             if IsValid(ply) and ply:getChar() == lia.char.loaded[charIDsafe] then
-                for k, v in pairs(bg or {}) do
+                for _, v in pairs(bg or {}) do
                     ply:SetBodygroup(v.id, v.value)
                     print(v.id, v.value, ply)
                 end
-    
+
                 ply:SetupHands()
             end
         end
