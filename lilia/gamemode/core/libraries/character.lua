@@ -382,7 +382,7 @@ lia.char.registerVar("attribs", {
         if value ~= nil then
             if istable(value) then
                 local count = 0
-                for k, v in pairs(value) do
+                for _, v in pairs(value) do
                     local max = lia.attribs.list[k] and lia.attribs.list[k].startingMax or nil
                     if max and max < v then return false, lia.attribs.list[k].name .. " too high" end
                     count = count + v
@@ -445,15 +445,10 @@ end
 -- @realm shared
 function lia.char.getCharDataRaw(charID, key)
     local charIDsafe = tonumber(charID)
-    if (!charIDsafe) then return end
-    
+    if not charIDsafe then return end
     local findData = sql.Query("SELECT * FROM lia_characters WHERE _id=" .. charIDsafe)
-    if (!findData || !findData[1]) then return false end
-
-    if key then
-        return findData[1][key]
-    end
-
+    if not findData or not findData[1] then return false end
+    if key then return findData[1][key] end
     return findData[1]
 end
 
@@ -612,7 +607,7 @@ if SERVER then
                 removePlayer(target)
             end
         end
-
+    
         hook.Run("PreCharDelete", id)
         for index, charID in pairs(client.liaCharList) do
             if charID == id then
@@ -620,7 +615,7 @@ if SERVER then
                 break
             end
         end
-
+    
         lia.char.loaded[id] = nil
         lia.db.query("DELETE FROM lia_characters WHERE _id = " .. id)
         lia.db.query("SELECT _invID FROM lia_inventories WHERE _charID = " .. id, function(data)
@@ -630,7 +625,7 @@ if SERVER then
                 end
             end
         end)
-
+    
         hook.Run("OnCharDelete", client, id)
     end
 
@@ -651,7 +646,7 @@ if SERVER then
             LiliaInformation("lia.char.setCharData SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
-
+    
         if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setData(key, val) end
         return true
     end
