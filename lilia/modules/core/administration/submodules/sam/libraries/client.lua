@@ -1,5 +1,4 @@
 local data = {}
-net.Receive("TicketSync", function(len, ply) data = net.ReadTable() end)
 local cols = {
     header = Color(54, 58, 64),
     body = Color(72, 77, 84),
@@ -238,3 +237,5 @@ lia.command.add("ticket", {
     adminOnly = false,
     onRun = function() end
 })
+
+net.Receive("TicketSync", function() data = net.ReadTable() end)

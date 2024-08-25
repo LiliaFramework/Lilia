@@ -41,7 +41,7 @@ function OpenPlayerModelUI(target)
     frame:MakePopup()
 end
 
-local function OpenReasonUI(target, cmd, time)
+local function OpenReasonUI(target, cmd)
     AdminStick.IsOpen = true
     local frame = vgui.Create("DFrame")
     frame:SetTitle("Reason for " .. cmd)
@@ -87,7 +87,6 @@ local function OpenReasonUI(target, cmd, time)
 end
 
 function AdminStick:OpenAdminStickUI(isright, target)
-    isright = isright or false
     AdminStick.IsOpen = true
     AdminStick.AdminMenu = DermaMenu()
     local AdminMenu = AdminStick.AdminMenu
@@ -174,10 +173,10 @@ function AdminStick:OpenAdminStickUI(isright, target)
         end
 
         local characterInfo = AdminMenu:AddSubMenu("Character")
-        for i, fac in pairs(lia.faction.teams) do
+        for _, fac in pairs(lia.faction.teams) do
             if fac.index == target:getChar():getFaction() then
                 local faction = characterInfo:AddSubMenu("Set Faction (" .. fac.name .. ")")
-                for i, v in pairs(lia.faction.teams) do
+                for _, v in pairs(lia.faction.teams) do
                     faction:AddOption(v.name, function()
                         LocalPlayer():ConCommand('say /plytransfer "' .. target:SteamID() .. '" "' .. v.name .. '"')
                         AdminStick.IsOpen = false

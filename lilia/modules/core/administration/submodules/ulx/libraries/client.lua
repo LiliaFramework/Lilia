@@ -9,7 +9,6 @@ local cols = {
     accepted = Color(50, 168, 84, 255),
 }
 
-net.Receive("TicketSync", function(len, ply) data = net.ReadTable() end)
 local function charWrap(text, remainingWidth, maxWidth)
     local totalWidth = 0
     text = text:gsub(".", function(char)
@@ -238,3 +237,5 @@ function MODULE:LoadFonts()
         size = 22,
     })
 end
+
+net.Receive("TicketSync", function() data = net.ReadTable() end)

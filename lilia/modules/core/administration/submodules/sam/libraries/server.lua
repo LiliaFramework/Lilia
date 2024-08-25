@@ -58,7 +58,7 @@ function MODULE:PlayerSpawnRagdoll(client)
     end
 end
 
-net.Receive("TicketSync", function(len, ply)
+net.Receive("TicketSync", function()
     MODULE.Active = net.ReadTable()
     net.Start("TicketSync")
     net.WriteTable(MODULE.Active)
@@ -83,5 +83,5 @@ end
 
 lia.command.add("ticket", {
     adminOnly = false,
-    onRun = function(client, arguments) client:requestString("Enter Ticket Details", "Please provide a brief description for your ticket.", function(text) MODULE:NewTicket(client, text) end) end
+    onRun = function(client) client:requestString("Enter Ticket Details", "Please provide a brief description for your ticket.", function(text) MODULE:NewTicket(client, text) end) end
 })

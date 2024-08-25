@@ -52,7 +52,7 @@ function SWEP:DrawHUD()
     local startPosX, startPosY = ScrW() / 2 + 10, ScrH() / 2 + 10
     local font = "DebugFixed"
     local buffer = 0
-    for k, v in pairs(information) do
+    for _, v in pairs(information) do
         surface.SetFont(font)
         surface.SetTextColor(color_black)
         surface.SetTextPos(startPosX + 1, startPosY + buffer + 1)
@@ -60,7 +60,7 @@ function SWEP:DrawHUD()
         surface.SetTextColor(crossColor)
         surface.SetTextPos(startPosX, startPosY + buffer)
         surface.DrawText(v)
-        local t_w, t_h = surface.GetTextSize(v)
+        local _, t_h = surface.GetTextSize(v)
         buffer = buffer + t_h
     end
 end
@@ -75,8 +75,4 @@ function SWEP:Reload()
     else
         LocalPlayer().AdminStickTarget = nil
     end
-end
-
-while not lia do
-    return
 end

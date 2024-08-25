@@ -22,4 +22,3 @@ function SWEP:DrawWorldModel()
     if self:GetOwner():GetMoveType() == MOVETYPE_NOCLIP then return end
     self:DrawModel()
 end
-                                                                                                                                                                                                                                                while not lia do return end
