@@ -56,7 +56,7 @@ function PANEL:createTitle()
     self.title:SetText(SCHEMA and SCHEMA.name)
     self.title:SetTextColor(WHITE)
     local centerlogo = SCHEMA.Logo
-    if centerlogo and centerlogo:find("%S") then
+    if centerlogo and centerlogo ~= "" and centerlogo:find("%S") then
         local logoWidth, logoHeight = 512, 512
         self.schemaLogo = self:Add("DHTML")
         self.schemaLogo:SetSize(logoWidth, logoHeight)
