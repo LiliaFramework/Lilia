@@ -26,8 +26,7 @@
 
 - **Help NPC**: Adds an NPC with information about the server.
 
-- **Banker**: Adds three NPCs:
-
+### **Banker**: 
   - **Paycheck Retriever**: Where you get your salary.
   - **Bank Manager**: Where you create your account.
   - **Bank Teller**: Where you manage your bank accounts.

@@ -18,10 +18,6 @@
 
 - **Languages**: Allows players to learn and speak different languages. Comprehension is limited to known languages.
 
-- **Warrants**: Implements a system for issuing and displaying warrants on players.
-
-- **Tying**: Adds handcuffs to restrain players.
-
 - **Tying - Dragging**: Expands the tying mechanic to include dragging restrained players.
 
 - **Tying - Extras**: Introduces additional options for tying, including blindfolding and gagging, along with various quality-of-life improvements.
@@ -43,6 +39,8 @@
 - **Phone**: Adds mobile phones for direct messaging, simulating SMS communication.
 
 - **Telephone**: Adds payphones for making calls to other players.
+
+- **Cellphone**: Adds mobile phones that make calls and send messages to other players.
 
 - **Radio**: Introduces radios with configurable frequencies for communication via text or voice.
 
@@ -107,6 +105,7 @@
 - **Animal Butchering**: Adds a system for butchering animals and looting their carcasses.
 
 - **Keycards**: Implements a keycard system for opening doors.
+
 - **Clearance Levels**: Adds clearance levels to certain doors.
 
 - **Sanity**: Adds a sanity system that implements hallucinations.
@@ -125,6 +124,8 @@
 
 - **Anims**: Adds the following animations: Attention, Timed Salute, At Ease, Cross Arms, Salute, Surrender.
 
+- **Animation Wheel**: Adds a wheel that allows you to play some whitelisted animations.
+
 - **Squads**: Adds a squad system, similar to a party system from an RPG.
 
 - **Bonemerge System**: Adds a bonemerge system that allows different clothes to be worn on different parts of the body.
@@ -132,8 +133,6 @@
 - **Reputation System**: All NPCs attached to a faction are neutral unless the player displays allegiance to an enemy by wearing their clothes or personally becoming their enemy.
 
 - **Karma System**: Adds a system that assigns a Karma Level based on your actions.
-
-- **Party Tiers**: Adds Party Tiers to be displayed on a character.
 
 - **Medals**: Adds medals that display above your head.
 
@@ -162,3 +161,11 @@
 - **Ranking System**: Adds various ranks that show on the scoreboard. These are tied to factions and can include stat changes, custom models, custom weapons, and more.
 
 - **Syringes**: Adds Syringes that can be used to provide effects.
+
+- **Social Credit System**: A ranking system that rewards players with points based on their playtime, completing tasks, or receiving points as rewards from admins. Accumulated points can be used to unlock in-game rewards, enhancing player engagement and providing incentives for positive behavior and participation.
+
+- **Prop Based Construction:** A construction system inspired by Rust, where players use items to build structures instead of relying on a traditional spawn menu. Items can be placed directly on the ground, creating a more immersive and interactive building experience.
+
+- **Scenarios:** This feature introduces various configurable scenarios that are automatically activated when the server starts. Each scenario alters gameplay in unique ways, providing fresh and dynamic experiences every time the server is launched, keeping gameplay exciting and unpredictable.
+
+- **Farming:** Introduces farmable items that players can plant and grow over time. These items yield various farm products when harvested, adding an agricultural element to the game where players can cultivate resources-
