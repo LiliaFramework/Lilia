@@ -35,6 +35,6 @@ function MODULE:ShowPlayerOptions(target, options)
         options["Change Name"] = {"icon16/user.png", function() client:ConCommand("say /charsetname " .. target:SteamID()) end}
         options["Change Description"] = {"icon16/user.png", function() client:ConCommand("say /charsetdesc " .. target:SteamID()) end}
         options["Change Model"] = {"icon16/user.png", function() OpenPlayerModelUI(target) end}
-        options["Check Flags"] = {"icon16/user.png", function() client:ConCommand("say /flags " .. target:SteamID()) end}
+        options["Check Flags"] = {"icon16/user.png", function() client:ConCommand("say /flaglist " .. target:SteamID()) end}
     end
 end

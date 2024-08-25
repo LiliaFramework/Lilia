@@ -1,6 +1,5 @@
 ﻿local vectorMeta = FindMetaTable("Vector")
 local toScreen = vectorMeta.ToScreen
-include("shared.lua")
 function ENT:createBubble()
     self.bubble = ClientsideModel("models/extras/info_speech.mdl", RENDERGROUP_OPAQUE)
     self.bubble:SetPos(self:GetPos() + Vector(0, 0, 84))

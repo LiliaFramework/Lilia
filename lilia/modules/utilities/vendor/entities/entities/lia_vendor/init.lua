@@ -1,7 +1,4 @@
 ﻿local MODULE = MODULE
-include("shared.lua")
-AddCSLuaFile("cl_init.lua")
-AddCSLuaFile("shared.lua")
 function ENT:SpawnFunction(client, trace)
     local angles = (trace.HitPos - client:GetPos()):Angle()
     angles.r = 0

@@ -1,7 +1,7 @@
 file = {
     "docs/hooks",
     "lilia",
-    exclude = {"lilia/gamemode/libraries/thirdparty"}
+    exclude = {"lilia/gamemode/core/libraries/thirdparty"}
 }
 
 dir = "docs/html"

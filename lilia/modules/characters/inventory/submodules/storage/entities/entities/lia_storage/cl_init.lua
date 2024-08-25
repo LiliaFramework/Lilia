@@ -1,6 +1,5 @@
 ﻿local vectorMeta = FindMetaTable("Vector")
 local toScreen = vectorMeta.ToScreen
-include("shared.lua")
 function ENT:onDrawEntityInfo(alpha)
     local locked = self.getNetVar(self, "locked", false)
     local position = toScreen(self.LocalToWorld(self, self.OBBCenter(self)))

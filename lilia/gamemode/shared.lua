@@ -56,4 +56,9 @@ function LiliaInformation(message)
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 0, 255), message .. "\n")
 end
 
+function stripRealmPrefix(name)
+    local prefix = name:sub(1, 3)
+    return (prefix == "sh_" or prefix == "sv_" or prefix == "cl_") and name:sub(4) or name
+end
+
 if game.IsDedicated() then concommand.Remove("gm_save") end

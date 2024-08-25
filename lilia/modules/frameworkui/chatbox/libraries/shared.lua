@@ -202,32 +202,6 @@ lia.chat.register("event", {
     font = "liaMediumFont"
 })
 
-lia.chat.register("rolld", {
-    format = "%s has %s.",
-    color = Color(155, 111, 176),
-    filter = "actions",
-    font = "liaChatFontItalics",
-    onCanHear = function(speaker, listener)
-        if speaker == listener then return true end
-        if speaker:EyePos():Distance(listener:EyePos()) <= MODULE.ChatRange then return true end
-        return false
-    end,
-    deadCanChat = true
-})
-
-lia.chat.register("flip", {
-    format = "%s flipped a coin and it landed on %s.",
-    color = Color(155, 111, 176),
-    filter = "actions",
-    font = "liaChatFontItalics",
-    onCanHear = function(speaker, listener)
-        if speaker == listener then return true end
-        if speaker:EyePos():Distance(listener:EyePos()) <= MODULE.ChatRange then return true end
-        return false
-    end,
-    deadCanChat = true
-})
-
 lia.chat.register("ooc", {
     onCanSay = function(speaker, text)
         if GetGlobalBool("oocblocked", false) then
