@@ -73,7 +73,6 @@ lia.FilesToLoad = {
         path = "lilia/gamemode/core/libraries/languages.lua",
         realm = "shared"
     },
-
     {
         path = "lilia/gamemode/core/libraries/networking.lua",
         realm = "shared"
@@ -227,12 +226,8 @@ function lia.includeEntities(path)
     local LoadedTools
     local files, folders
     local function IncludeFiles(path2)
-        if file.Exists(path2 .. "init.lua", "LUA") then
-            lia.include(path2 .. "init.lua", "server")
-        elseif file.Exists(path2 .. "shared.lua", "LUA") then
-            lia.include(path2 .. "shared.lua", "shared")
-        end
-
+        if file.Exists(path2 .. "init.lua", "LUA") then lia.include(path2 .. "init.lua", "server") end
+        if file.Exists(path2 .. "shared.lua", "LUA") then lia.include(path2 .. "shared.lua", "shared") end
         if file.Exists(path2 .. "cl_init.lua", "LUA") then lia.include(path2 .. "cl_init.lua", "client") end
     end
 
