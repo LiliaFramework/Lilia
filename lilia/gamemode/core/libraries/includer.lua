@@ -42,14 +42,6 @@ lia.FilesToLoad = {
         realm = "server"
     },
     {
-        path = "lilia/gamemode/core/hooks/player.lua",
-        realm = "shared"
-    },
-    {
-        path = "lilia/gamemode/core/hooks/character.lua",
-        realm = "shared"
-    },
-    {
         path = "lilia/gamemode/core/libraries/modularity.lua",
         realm = "shared"
     },
@@ -81,10 +73,7 @@ lia.FilesToLoad = {
         path = "lilia/gamemode/core/libraries/languages.lua",
         realm = "shared"
     },
-    {
-        path = "lilia/gamemode/core/hooks/languages.lua",
-        realm = "client"
-    },
+
     {
         path = "lilia/gamemode/core/libraries/networking.lua",
         realm = "shared"
@@ -106,19 +95,11 @@ lia.FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/hooks/currency.lua",
-        realm = "server"
-    },
-    {
         path = "lilia/gamemode/core/libraries/date.lua",
         realm = "shared"
     },
     {
         path = "lilia/gamemode/core/meta/inventory.lua",
-        realm = "shared"
-    },
-    {
-        path = "lilia/gamemode/core/hooks/items.lua",
         realm = "shared"
     },
     {
@@ -152,10 +133,6 @@ lia.FilesToLoad = {
     {
         path = "lilia/gamemode/core/libraries/bars.lua",
         realm = "client"
-    },
-    {
-        path = "lilia/gamemode/core/hooks/animations.lua",
-        realm = "shared"
     },
     {
         path = "lilia/gamemode/core/netcalls/client.lua",

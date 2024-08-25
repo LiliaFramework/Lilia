@@ -1,12 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-local DefaultDatabase = {
-    module = "sqlite",
-    hostname = "127.0.0.1",
-    username = "",
-    password = "",
-    database = "",
-    port = 3306,
-}
 
 function GM:RegisterPreparedStatements()
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 165, 0), "[Database]", Color(255, 255, 255), " ADDED 5 PREPARED STATEMENTS.\n")
@@ -32,7 +24,14 @@ function GM:SetupDatabase()
 
     if not lia.db.config then
         MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 165, 0), "[Database]", Color(255, 255, 255), " MySQL Database not configured. Defaulting to SQLite.\n")
-        for k, v in pairs(DefaultDatabase) do
+        for k, v in pairs( {
+            module = "sqlite",
+            hostname = "127.0.0.1",
+            username = "",
+            password = "",
+            database = "",
+            port = 3306,
+        }) do
             lia.db[k] = v
         end
     end
