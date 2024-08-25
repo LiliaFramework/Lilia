@@ -711,13 +711,13 @@ if SERVER then
             print("lia.char.setCharModel SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
-    
+
         local groups = {}
         for _, v in pairs(bg or {}) do
             groups[v.id] = v.value
         end
-    
-        lia.setCharData(charID, "groups", groups)
+
+        lia.char.setCharData(charID, "groups", groups)
         if lia.char.loaded[charIDsafe] then
             lia.char.loaded[charIDsafe]:setModel(model)
             local ply = lia.char.loaded[charIDsafe]:getPlayer()
@@ -726,7 +726,6 @@ if SERVER then
                     ply:SetBodygroup(v.id, v.value)
                     print(v.id, v.value, ply)
                 end
-    
                 ply:SetupHands()
             end
         end
