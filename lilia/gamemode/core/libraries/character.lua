@@ -700,7 +700,7 @@ if SERVER then
     --- Sets the model and bodygroups for a character in the database and in memory.
     -- @int charID The ID of the character to set the model for.
     -- @string model The model path to set for the character.
-    -- @table bg (Optional) A table containing bodygroup IDs and values.
+    -- @tab bg A table containing bodygroup IDs and values.
     -- @return boolean True if the model and bodygroups were successfully set, false otherwise.
     -- @realm server
     function lia.char.setCharModel(charID, model, bg)
