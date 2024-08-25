@@ -249,7 +249,7 @@ lia.util.includeDir = lia.includeDir
 function lia.includeEntities(path)
     local LoadedTools
     local files, folders
-    local function IncludeFiles(path2, clientOnly)
+    local function IncludeFiles(path2)
         if file.Exists(path2 .. "init.lua", "LUA") then
             lia.include(path2 .. "init.lua", "server")
         elseif file.Exists(path2 .. "shared.lua", "LUA") then
