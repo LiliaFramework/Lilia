@@ -9,6 +9,23 @@ local cols = {
     accepted = Color(50, 168, 84, 255),
 }
 
+function MODULE:LoadFonts()
+    surface.CreateFont("Roboto.20", {
+        font = "Roboto",
+        size = 20,
+    })
+
+    surface.CreateFont("Roboto.15", {
+        font = "Roboto",
+        size = 15,
+    })
+
+    surface.CreateFont("Roboto.22", {
+        font = "Roboto",
+        size = 22,
+    })
+end
+
 local function charWrap(text, remainingWidth, maxWidth)
     local totalWidth = 0
     text = text:gsub(".", function(char)
@@ -149,6 +166,9 @@ net.Receive("NetTicket", function()
                 frame:MoveTo(-(frame:GetWide() + frame:GetX()), frame:GetY(), 0.5, 0, -1, function()
                     frame:Remove()
                     data[id] = nil
+                    net.Start("UpdateTicketStatus")
+                    net.WriteBool(false)
+                    net.SendToServer()
                     net.Start("TicketSync")
                     net.WriteTable(data)
                     net.SendToServer()
@@ -162,6 +182,9 @@ net.Receive("NetTicket", function()
             frame.accepted = true
             accept_but:SetText("Close")
             LocalPlayer():ChatPrint("You have accepted " .. ply:Nick() .. "'s ticket.")
+            net.Start("UpdateTicketStatus")
+            net.WriteBool(true)
+            net.SendToServer()
             net.Start("TicketSync")
             net.WriteTable(data)
             net.SendToServer()
@@ -182,6 +205,9 @@ net.Receive("NetTicket", function()
                 frame.accepted = false
                 ignore_but:SetText("Ignore")
                 LocalPlayer():ChatPrint("You are no longer taking " .. ply:Nick() .. "'s ticket.")
+                net.Start("UpdateTicketStatus")
+                net.WriteBool(false)
+                net.SendToServer()
                 net.Start("TicketSync")
                 net.WriteTable(data)
                 net.SendToServer()
@@ -220,22 +246,5 @@ lia.command.add("ticket", {
     adminOnly = false,
     onRun = function() end
 })
-
-function MODULE:LoadFonts()
-    surface.CreateFont("Roboto.20", {
-        font = "Roboto",
-        size = 20,
-    })
-
-    surface.CreateFont("Roboto.15", {
-        font = "Roboto",
-        size = 15,
-    })
-
-    surface.CreateFont("Roboto.22", {
-        font = "Roboto",
-        size = 22,
-    })
-end
 
 net.Receive("TicketSync", function() data = net.ReadTable() end)
