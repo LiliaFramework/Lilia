@@ -86,7 +86,7 @@ local function OpenReasonUI(target, cmd)
     frame:MakePopup()
 end
 
-function AdminStick:OpenAdminStickUI(isright, target)
+function AdminStick:OpenAdminStickUI(target)
     AdminStick.IsOpen = true
     AdminStick.AdminMenu = DermaMenu()
     local AdminMenu = AdminStick.AdminMenu
