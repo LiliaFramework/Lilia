@@ -436,6 +436,27 @@ function lia.char.getCharData(charID, key)
     return data
 end
 
+--- Loads raw data for a character from the database.
+-- @int charID The ID of the character to load data for.
+-- @string[opt] key The specific key to retrieve from the character's data.
+-- @return table|string|boolean If key is provided, returns the value associated with that key in the character's data. 
+-- If key is not provided, returns the entire data table for the character. 
+-- Returns false if the character data could not be found.
+-- @realm shared
+function lia.char.getCharDataRaw(charID, key)
+    local charIDsafe = tonumber(charID)
+    if (!charIDsafe) then return end
+    
+    local findData = sql.Query("SELECT * FROM lia_characters WHERE _id=" .. charIDsafe)
+    if (!findData || !findData[1]) then return false end
+
+    if key then
+        return findData[1][key]
+    end
+
+    return findData[1]
+end
+
 if SERVER then
     --- Creates a character object with its assigned properties and saves it to the database.
     -- @realm server
@@ -627,11 +648,65 @@ if SERVER then
         data[key] = val
         local setQ = "UPDATE lia_characters SET _data=" .. sql.SQLStr(util.TableToJSON(data)) .. " WHERE _id=" .. charIDsafe
         if sql.Query(setQ) == false then
-            LiliaInformation("lia.setCharData SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
+            LiliaInformation("lia.char.setCharData SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
 
         if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setData(key, val) end
+        return true
+    end
+
+    ---- Sets the name for a character in the database and in memory.
+    -- @int charID The ID of the character to set the name for.
+    -- @string name The new name to set for the character.
+    -- @return boolean True if the name was successfully set, false otherwise.
+    -- @realm server
+    function lia.char.setCharName(charID, name)
+        local charIDsafe = tonumber(charID)
+        if not name or not charID then return end
+        local setQ = "UPDATE lia_characters SET _name=" .. sql.SQLStr(name) .. " WHERE _id=" .. charIDsafe
+        if sql.Query(setQ) == false then
+            print("lia.char.setCharName SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
+            return false
+        end
+    
+        if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setName(name) end
+        return true
+    end
+
+    --- Sets the model and bodygroups for a character in the database and in memory.
+    -- @int charID The ID of the character to set the model for.
+    -- @string model The model path to set for the character.
+    -- @table bg (Optional) A table containing bodygroup IDs and values.
+    -- @return boolean True if the model and bodygroups were successfully set, false otherwise.
+    -- @realm server
+    function lia.char.setCharModel(charID, model, bg)
+        local charIDsafe = tonumber(charID)
+        if not model or not charID then return end
+        local setQ = "UPDATE lia_characters SET _model=" .. sql.SQLStr(model) .. " WHERE _id=" .. charIDsafe
+        if sql.Query(setQ) == false then
+            print("lia.char.setCharModel SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
+            return false
+        end
+    
+        local groups = {}
+        for k, v in pairs(bg or {}) do
+            groups[v.id] = v.value
+        end
+    
+        lia.setCharData(charID, "groups", groups)
+        if lia.char.loaded[charIDsafe] then
+            lia.char.loaded[charIDsafe]:setModel(model)
+            local ply = lia.char.loaded[charIDsafe]:getPlayer()
+            if IsValid(ply) and ply:getChar() == lia.char.loaded[charIDsafe] then
+                for k, v in pairs(bg or {}) do
+                    ply:SetBodygroup(v.id, v.value)
+                    print(v.id, v.value, ply)
+                end
+    
+                ply:SetupHands()
+            end
+        end
         return true
     end
 end
