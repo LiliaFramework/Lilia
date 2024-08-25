@@ -467,8 +467,8 @@ end
 --- Loads raw data for a character from the database.
 -- @int charID The ID of the character to load data for.
 -- @string[opt] key The specific key to retrieve from the character's data.
--- @return table|string|boolean If key is provided, returns the value associated with that key in the character's data. 
--- If key is not provided, returns the entire data table for the character. 
+-- @return table|string|boolean If key is provided, returns the value associated with that key in the character's data.
+-- If key is not provided, returns the entire data table for the character.
 -- Returns false if the character data could not be found.
 -- @realm shared
 function lia.char.getCharDataRaw(charID, key)
@@ -711,13 +711,13 @@ if SERVER then
             print("lia.char.setCharModel SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
-
+    
         local groups = {}
         for _, v in pairs(bg or {}) do
             groups[v.id] = v.value
         end
-
-    	lia.setCharData(charID, "groups", groups)
+    
+        lia.setCharData(charID, "groups", groups)
         if lia.char.loaded[charIDsafe] then
             lia.char.loaded[charIDsafe]:setModel(model)
             local ply = lia.char.loaded[charIDsafe]:getPlayer()
@@ -726,7 +726,7 @@ if SERVER then
                     ply:SetBodygroup(v.id, v.value)
                     print(v.id, v.value, ply)
                 end
-
+    
                 ply:SetupHands()
             end
         end
