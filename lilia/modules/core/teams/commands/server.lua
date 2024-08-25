@@ -291,3 +291,33 @@ lia.command.add("factionlist", {
     end,
     alias = {"factions"}
 })
+
+lia.command.add("getallwhitelists", {
+    syntax = "<string target>",
+    privilege = "Get All Whitelists",
+    superAdminOnly = true,
+    onRun = function(client)
+        client:WhitelistEverything()
+        client:notify("Whitelisted to all Factions and Classes")
+    end
+})
+
+lia.command.add("getclasswhitelists", {
+    syntax = "<string target>",
+    privilege = "Get All Whitelists",
+    superAdminOnly = true,
+    onRun = function(client)
+        client:WhitelistAllClasses()
+        client:notify("Whitelisted to all Classes")
+    end
+})
+
+lia.command.add("getfactionwhitelists", {
+    syntax = "<string target>",
+    privilege = "Get All Whitelists",
+    superAdminOnly = true,
+    onRun = function(client)
+        client:WhitelistAllFactions()
+        client:notify("Whitelisted to all Factions")
+    end
+})

@@ -60,3 +60,24 @@ lia.command.add("factionlist", {
     onRun = function() end,
     alias = {"factions"}
 })
+
+lia.command.add("getallwhitelists", {
+    syntax = "<string target>",
+    privilege = "Get All Whitelists",
+    superAdminOnly = true,
+    onRun = function() end
+})
+
+lia.command.add("getclasswhitelists", {
+    syntax = "<string target>",
+    privilege = "Get All Whitelists",
+    superAdminOnly = true,
+    onRun = function() end
+})
+
+lia.command.add("getfactionwhitelists", {
+    syntax = "<string target>",
+    privilege = "Get All Whitelists",
+    superAdminOnly = true,
+    onRun = function() end
+})
