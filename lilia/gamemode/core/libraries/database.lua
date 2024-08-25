@@ -430,7 +430,7 @@ function lia.db.loadTables()
                 PRIMARY KEY (`id`)
             );
         ]])
-        
+
         local i = 1
         local function doNextQuery()
             if i > #queries then return done() end
