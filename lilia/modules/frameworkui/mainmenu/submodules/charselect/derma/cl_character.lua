@@ -8,7 +8,7 @@ PANEL.ANIM_SPEED = 0.2
 PANEL.FADE_SPEED = 2
 function PANEL:createTabs()
     if lia.characters and #lia.characters > 0 then self:addTab("continue", self.createCharacterSelection) end
-    if hook.Run("CanPlayerCreateChar", LocalPlayer()) ~= false then self:addTab("create", self.createCharacterCreation) end
+    if hook.Run("CanPlayerCreateChar", LocalPlayer()) ~= false then self:addTab("load, self.createCharacterCreation) end
     if LocalPlayer():getChar() then
         self:addTab("return", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end, true)
         return
@@ -163,7 +163,6 @@ function PANEL:fadeOut()
 end
 
 function PANEL:Init()
-    if IsValid(lia.gui.loading) then lia.gui.loading:Remove() end
     if IsValid(lia.gui.character) then lia.gui.character:Remove() end
     lia.gui.character = self
     self:Dock(FILL)
