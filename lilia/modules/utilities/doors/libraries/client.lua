@@ -10,7 +10,7 @@ function MODULE:DrawEntityInfo(entity, alpha)
         local position = toScreen(entity.LocalToWorld(entity, entity.OBBCenter(entity)))
         local x, y = position.x, position.y
         local owner = entity.GetDTEntity(entity, 0)
-        local name = entity.getNetVar(entity, "title", entity.getNetVar(entity, "name", IsValid(owner) and L"dTitleOwned" or L"dTitle"))
+        local name = entity.getNetVar(entity, "title", entity.getNetVar(entity, "name", IsValid(owner) and L"DoorTitleOwned" or L"DoorTitle"))
         local factions = entity.getNetVar(entity, "factions")
         lia.util.drawText(name, x, y, ColorAlpha(color_white, alpha), 1, 1)
         if IsValid(owner) then
@@ -24,7 +24,7 @@ function MODULE:DrawEntityInfo(entity, alpha)
                 count = count + 1
             end
         else
-            lia.util.drawText(entity.getNetVar(entity, "noSell") and L"dIsNotOwnable" or L"dIsOwnable", x, y + 16, ColorAlpha(color_white, alpha), 1, 1)
+            lia.util.drawText(entity.getNetVar(entity, "noSell") and L"DoorIsNotOwnable" or L"DoorIsOwnable", x, y + 16, ColorAlpha(color_white, alpha), 1, 1)
         end
     end
 end

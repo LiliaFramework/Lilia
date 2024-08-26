@@ -1,7 +1,7 @@
 ﻿local PANEL = {}
 function PANEL:Init()
     self:SetSize(280, 240)
-    self:SetTitle(L"doorSettings")
+    self:SetTitle(L"DoorSettings")
     self:Center()
     self:MakePopup()
     self.access = self:Add("DListView")
@@ -47,7 +47,7 @@ function PANEL:setDoor(door, access, door2)
         self.name.Think = function(this)
             if not this:IsEditing() then
                 local entity = IsValid(door2) and door2 or door
-                self.name:SetText(entity:getNetVar("title", L"dTitleOwned"))
+                self.name:SetText(entity:getNetVar("title", L"DoorTitleOwned"))
             end
         end
 

@@ -6,13 +6,25 @@ end)
 
 netstream.Hook("rgnMenu", function()
     local menu = DermaMenu()
-    menu:AddOption("Allow those in a whispering range to recognize you.", function() MODULE:CharRecognize(2) end)
-    menu:AddOption("Allow those in a talking range to recognize you.", function() MODULE:CharRecognize(3) end)
-    menu:AddOption("Allow those in a yelling range to recognize you.", function() MODULE:CharRecognize(4) end)
+    menu:AddOption(L"recogMenuOptionWhisper", function() MODULE:CharRecognize(2) end)
+    menu:AddOption(L"recogMenuOptionTalk", function() MODULE:CharRecognize(3) end)
+    menu:AddOption(L"recogMenuOptionYell", function() MODULE:CharRecognize(4) end)
     if MODULE.FakeNamesEnabled then
-        menu:AddOption("Allow those in whispering range to recognize you by a fake name.", function() Derma_StringRequest("Allow those in whispering range to recognize you by a fake name.", "Enter a fake name to display to other players in range.", default or "", function(text) if text then MODULE:CharRecognize(2, text) end end) end)
-        menu:AddOption("Allow those in talking range to recognize you by a fake name.", function() Derma_StringRequest("Allow those in talking range to recognize you by a fake name.", "Enter a fake name to display to other players in range.", default or "", function(text) if text then MODULE:CharRecognize(3, text) end end) end)
-        menu:AddOption("Allow those in yelling range to recognize you by a fake name.", function() Derma_StringRequest("Allow those in yelling range to recognize you by a fake name.", "Enter a fake name to display to other players in range.", default or "", function(text) if text then MODULE:CharRecognize(4, text) end end) end)
+        menu:AddOption(L"recogMenuOptionFakeWhisper", function() 
+            Derma_StringRequest(L"recogMenuOptionFakeWhisper", L"recogFakeNamePrompt", default or "", function(text) 
+                if text then MODULE:CharRecognize(2, text) end 
+            end) 
+        end)
+        menu:AddOption(L"recogMenuOptionFakeTalk", function() 
+            Derma_StringRequest(L"recogMenuOptionFakeTalk", L"recogFakeNamePrompt", default or "", function(text) 
+                if text then MODULE:CharRecognize(3, text) end 
+            end) 
+        end)
+        menu:AddOption(L"recogMenuOptionFakeYell", function() 
+            Derma_StringRequest(L"recogMenuOptionFakeYell", L"recogFakeNamePrompt", default or "", function(text) 
+                if text then MODULE:CharRecognize(4, text) end 
+            end) 
+        end)
     end
 
     menu:Open()
