@@ -240,6 +240,39 @@ function GM:InitializedModules()
     if CLIENT then
         hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
         RunConsoleCommand("spawnmenu_reload")
+    else
+        for key, data in pairs(lia.char.vars) do
+            if data.fieldType then
+                local fieldDefinition
+                if data.fieldType == "string" then
+                    fieldDefinition = data.field .. " VARCHAR(" .. (data.length or "255") .. ")"
+                elseif data.fieldType == "integer" then
+                    fieldDefinition = data.field .. " INT"
+                elseif data.fieldType == "float" then
+                    fieldDefinition = data.field .. " FLOAT"
+                elseif data.fieldType == "boolean" then
+                    fieldDefinition = data.field .. " TINYINT(1)"
+                elseif data.fieldType == "datetime" then
+                    fieldDefinition = data.field .. " DATETIME"
+                elseif data.fieldType == "text" then
+                    fieldDefinition = data.field .. " TEXT"
+                end
+
+                if fieldDefinition then
+                    if data.default ~= nil then fieldDefinition = fieldDefinition .. " DEFAULT '" .. tostring(data.default) .. "'" end
+                    lia.db.query("SELECT " .. data.field .. " FROM lia_characters", function(result, err)
+                        if not result then
+                            local success, _ = lia.db.query("ALTER TABLE lia_characters ADD COLUMN " .. fieldDefinition)
+                            if success then
+                                LiliaPrint("Adding column " .. data.field .. " to the database!")
+                            else
+                                LiliaPrint("Failed to add column " .. data.field .. " due to a query error.")
+                            end
+                        end
+                    end)
+                end
+            end
+        end
     end
 
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Bootstrapper] ", color_white, "Finished boot sequence...\n")
