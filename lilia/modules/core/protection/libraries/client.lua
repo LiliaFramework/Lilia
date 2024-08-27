@@ -3,28 +3,23 @@ function MODULE:CanDeleteChar(_, character)
     if IsValid(character) and character:getMoney() < lia.config.DefaultMoney then return false end
 end
 
+local function SendToServer()
+    net.Start("IAmHackingOwO")
+    net.SendToServer()
+end
+
 function MODULE:Think()
-    if CurTime() - lastcheck > 60 then
-        local commands, _ = concommand.GetTable()
-        for _, cmd in pairs(self.HackCommands) do
-            if commands[cmd] ~= nil then
-                net.Start("IAmHackingOwO")
-                net.SendToServer()
-            end
+    if CurTime() - lastcheck > 2 then
+        for _, command in ipairs(self.HackCommands) do
+            if concommand.GetTable()[command] then SendToServer() end
         end
 
-        for _, cvarName in ipairs(self.BadCVars) do
-            if GetConVar_Internal(cvarName) ~= nil then
-                net.Start("IAmHackingOwO")
-                net.SendToServer()
-            end
+        for _, cvar in ipairs(self.BadCVars) do
+            if ConVarExists(cvar) then SendToServer() end
         end
 
-        for _, name in ipairs(self.HackGlobals) do
-            if _G[name] ~= nil then
-                net.Start("IAmHackingOwO")
-                net.SendToServer()
-            end
+        for _, globalName in ipairs(self.HackGlobals) do
+            if _G[globalName] ~= nil then SendToServer() end
         end
 
         lastcheck = CurTime()
