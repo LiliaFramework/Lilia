@@ -1,5 +1,8 @@
 ﻿NAME = "english"
 LANGUAGE = {
+    accept = "Accept",
+    deny = "Deny",
+    needAimPlayer = "You need to be aiming at a player...",
     commandCooldown = "This command is on cooldown!",
     commandCooldownTimed = "This command is on cooldown! Time remaining: %d seconds.",
     dbError = "Database connection failed",

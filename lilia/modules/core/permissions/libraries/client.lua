@@ -2,11 +2,11 @@
 local halfSx, halfSy = sx * 0.5, sy * 0.5
 local marginx, marginy = sy * 0.1, sy * 0.1
 local scrPos, x, y, teamColor, distance, factor, size, alpha
-local ESP_Active = CreateClientConVar("esp", 0, true)
-local ESP_Players = CreateClientConVar("esp_players", 0, true)
-local ESP_Items = CreateClientConVar("esp_items", 0, true)
-local ESP_Props = CreateClientConVar("esp_prop", 0, true)
-local ESP_Entities = CreateClientConVar("esp_entities", 0, true)
+local ESP_Active = CreateClientConVar("lilia_esp", 0, true)
+local ESP_Players = CreateClientConVar("lilia_esp_players", 0, true)
+local ESP_Items = CreateClientConVar("lilia_esp_items", 0, true)
+local ESP_Props = CreateClientConVar("lilia_esp_prop", 0, true)
+local ESP_Entities = CreateClientConVar("lilia_esp_entities", 0, true)
 function MODULE:SetupQuickMenu(menu)
     menu:addCheck("ESP", function(_, state) ESP_Active:SetBool(state) end, ESP_Active:GetBool())
     menu:addCheck("ESP Players", function(_, state) ESP_Players:SetBool(state) end, ESP_Players:GetBool())

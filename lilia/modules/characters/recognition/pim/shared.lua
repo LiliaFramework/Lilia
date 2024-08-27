@@ -1,5 +1,5 @@
 ﻿local MODULE = MODULE
-PIM:AddOption(L"recognize", {
+PIM:AddOption("Recognize", {
     runServer = false,
     shouldShow = function(client, target)
         local ourChar = client:getChar()
@@ -9,7 +9,7 @@ PIM:AddOption(L"recognize", {
     onRun = function(_, target) if CLIENT then netstream.Start("rgnDirect", target) end end
 })
 
-PIM:AddOption(L"recognizeWithFakeName", {
+PIM:AddOption("Recognize With Fake Name", {
     runServer = false,
     shouldShow = function(client, target)
         local ourChar = client:getChar()
