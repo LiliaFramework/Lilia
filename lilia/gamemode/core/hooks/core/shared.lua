@@ -241,7 +241,7 @@ function GM:InitializedModules()
         hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
         RunConsoleCommand("spawnmenu_reload")
     else
-        for key, data in pairs(lia.char.vars) do
+        for _, data in pairs(lia.char.vars) do
             if data.fieldType then
                 local fieldDefinition
                 if data.fieldType == "string" then
@@ -260,7 +260,7 @@ function GM:InitializedModules()
 
                 if fieldDefinition then
                     if data.default ~= nil then fieldDefinition = fieldDefinition .. " DEFAULT '" .. tostring(data.default) .. "'" end
-                    lia.db.query("SELECT " .. data.field .. " FROM lia_characters", function(result, err)
+                    lia.db.query("SELECT " .. data.field .. " FROM lia_characters", function(result)
                         if not result then
                             local success, _ = lia.db.query("ALTER TABLE lia_characters ADD COLUMN " .. fieldDefinition)
                             if success then
