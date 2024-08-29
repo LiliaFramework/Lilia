@@ -1,14 +1,13 @@
-﻿AdminStick = AdminStick or {}
-AdminStick.IsOpen = false
+﻿AdminStickIsOpen = false
 function OpenPlayerModelUI(target)
-    AdminStick.IsOpen = true
+    AdminStickIsOpen = true
     local frame = vgui.Create("DFrame")
     frame:SetTitle("Change Playermodel")
     frame:SetSize(450, 300)
     frame:Center()
     function frame:OnClose()
         frame:Remove()
-        AdminStick.IsOpen = false
+        AdminStickIsOpen = false
     end
 
     local scroll = vgui.Create("DScrollPanel", frame)
@@ -25,7 +24,7 @@ function OpenPlayerModelUI(target)
         local txt = edit:GetValue()
         RunConsoleCommand("say", "/charsetmodel " .. target:SteamID() .. " " .. txt)
         frame:Remove()
-        AdminStick.IsOpen = false
+        AdminStickIsOpen = false
     end
 
     for name, model in SortedPairs(player_manager.AllValidModels()) do
@@ -42,14 +41,14 @@ function OpenPlayerModelUI(target)
 end
 
 local function OpenReasonUI(target, cmd)
-    AdminStick.IsOpen = true
+    AdminStickIsOpen = true
     local frame = vgui.Create("DFrame")
     frame:SetTitle("Reason for " .. cmd)
     frame:SetSize(300, 150)
     frame:Center()
     function frame:OnClose()
         frame:Remove()
-        AdminStick.IsOpen = false
+        AdminStickIsOpen = false
     end
 
     local edit = vgui.Create("DTextEntry", frame)
@@ -80,42 +79,41 @@ local function OpenReasonUI(target, cmd)
         end
 
         frame:Remove()
-        AdminStick.IsOpen = false
+        AdminStickIsOpen = false
     end
 
     frame:MakePopup()
 end
 
-function AdminStick:OpenAdminStickUI(target)
-    AdminStick.IsOpen = true
-    AdminStick.AdminMenu = DermaMenu()
-    local AdminMenu = AdminStick.AdminMenu
+function MODULE:OpenAdminStickUI(target)
+    AdminStickIsOpen = true
+    local AdminMenu = DermaMenu()
     if target:IsPlayer() then
         local name = AdminMenu:AddOption("Name: " .. target:Name() .. " (left click to copy)", function()
             LocalPlayer():ChatPrint("Copied " .. target:Name() .. " to Clipboard!")
             SetClipboardText(target:Name())
-            AdminStick.IsOpen = false
+            AdminStickIsOpen = false
         end)
 
         name:SetIcon("icon16/information.png")
         local charid = AdminMenu:AddOption("CharID: " .. target:getChar():getID() .. " (left click to copy)", function()
             LocalPlayer():ChatPrint("Copied CharID: " .. target:getChar():getID() .. " to Clipboard!")
             SetClipboardText(target:getChar():getID())
-            AdminStick.IsOpen = false
+            AdminStickIsOpen = false
         end)
 
         charid:SetIcon("icon16/information.png")
         local steamid = AdminMenu:AddOption("SteamID: " .. target:SteamID() .. " (left click to copy)", function()
             LocalPlayer():ChatPrint("Copied " .. target:SteamID() .. " to Clipboard!")
             SetClipboardText(target:SteamID())
-            AdminStick.IsOpen = false
+            AdminStickIsOpen = false
         end)
 
         steamid:SetIcon("icon16/information.png")
         local steamid64 = AdminMenu:AddOption("SteamID64: " .. target:SteamID64() .. " (left click to copy)", function()
             LocalPlayer():ChatPrint("Copied " .. target:SteamID64() .. " to Clipboard!")
             SetClipboardText(target:SteamID64())
-            AdminStick.IsOpen = false
+            AdminStickIsOpen = false
         end)
 
         steamid64:SetIcon("icon16/information.png")
@@ -124,7 +122,7 @@ function AdminStick:OpenAdminStickUI(target)
             if target:IsFrozen() then
                 local unfreeze = playerInfo:AddOption("Unfreeze", function()
                     RunConsoleCommand("sam", "unfreeze", target:SteamID())
-                    AdminStick.IsOpen = false
+                    AdminStickIsOpen = false
                 end)
 
                 unfreeze:SetIcon("icon16/disconnect.png")
@@ -136,7 +134,7 @@ function AdminStick:OpenAdminStickUI(target)
                     end
 
                     RunConsoleCommand("sam", "freeze", target:SteamID())
-                    AdminStick.IsOpen = false
+                    AdminStickIsOpen = false
                 end)
 
                 freeze:SetIcon("icon16/connect.png")
@@ -148,25 +146,25 @@ function AdminStick:OpenAdminStickUI(target)
             kick:SetIcon("icon16/delete.png")
             local gag = playerInfo:AddOption("Gag", function()
                 RunConsoleCommand("sam", "gag", target:SteamID())
-                AdminStick.IsOpen = false
+                AdminStickIsOpen = false
             end)
 
             gag:SetIcon("icon16/sound_mute.png")
             local ungag = playerInfo:AddOption("Ungag", function()
                 RunConsoleCommand("sam", "ungag", target:SteamID())
-                AdminStick.IsOpen = false
+                AdminStickIsOpen = false
             end)
 
             ungag:SetIcon("icon16/sound_low.png")
             local mute = playerInfo:AddOption("Mute", function()
                 RunConsoleCommand("sam", "mute", target:SteamID())
-                AdminStick.IsOpen = false
+                AdminStickIsOpen = false
             end)
 
             mute:SetIcon("icon16/sound_delete.png")
             local unmute = playerInfo:AddOption("Unmute", function()
                 RunConsoleCommand("sam", "unmute", target:SteamID())
-                AdminStick.IsOpen = false
+                AdminStickIsOpen = false
             end)
 
             unmute:SetIcon("icon16/sound_add.png")
@@ -179,7 +177,7 @@ function AdminStick:OpenAdminStickUI(target)
                 for _, v in pairs(lia.faction.teams) do
                     faction:AddOption(v.name, function()
                         LocalPlayer():ConCommand('say /plytransfer "' .. target:SteamID() .. '" "' .. v.name .. '"')
-                        AdminStick.IsOpen = false
+                        AdminStickIsOpen = false
                     end)
                 end
             end
@@ -190,7 +188,7 @@ function AdminStick:OpenAdminStickUI(target)
             if class.faction == target:getChar():getFaction() then
                 local classOption = setClass:AddOption(class.name, function()
                     LocalPlayer():ConCommand('say /setclass "' .. target:SteamID() .. '" "' .. class.name .. '"')
-                    AdminStick.IsOpen = false
+                    AdminStickIsOpen = false
                 end)
 
                 classOption:SetIcon("icon16/user.png")
@@ -199,13 +197,13 @@ function AdminStick:OpenAdminStickUI(target)
 
         local desc = characterInfo:AddOption("Change Name", function()
             RunConsoleCommand("say", "/charsetname " .. target:SteamID())
-            AdminStick.IsOpen = false
+            AdminStickIsOpen = false
         end)
 
         desc:SetIcon("icon16/user_gray.png")
         local desc4 = characterInfo:AddOption("Change Description", function()
             RunConsoleCommand("say", "/charsetdesc " .. target:SteamID())
-            AdminStick.IsOpen = false
+            AdminStickIsOpen = false
         end)
 
         desc4:SetIcon("icon16/user_green.png")
@@ -213,7 +211,7 @@ function AdminStick:OpenAdminStickUI(target)
         desc3:SetIcon("icon16/user_suit.png")
         local charkick = characterInfo:AddOption("Kick From Character", function()
             LocalPlayer():ConCommand('say /charkick "' .. target:SteamID() .. '"')
-            AdminStick.IsOpen = false
+            AdminStickIsOpen = false
         end)
 
         charkick:SetIcon("icon16/lightning_delete.png")
@@ -226,7 +224,7 @@ function AdminStick:OpenAdminStickUI(target)
                 end
 
                 RunConsoleCommand("sam", "goto", target:SteamID())
-                AdminStick.IsOpen = false
+                AdminStickIsOpen = false
             end)
 
             gotoo:SetIcon("icon16/arrow_right.png")
@@ -237,13 +235,13 @@ function AdminStick:OpenAdminStickUI(target)
                 end
 
                 RunConsoleCommand("sam", "bring", target:SteamID())
-                AdminStick.IsOpen = false
+                AdminStickIsOpen = false
             end)
 
             bring:SetIcon("icon16/arrow_down.png")
             local returnf = teleport:AddOption("Return", function()
                 RunConsoleCommand("sam", "return", target:SteamID())
-                AdminStick.IsOpen = false
+                AdminStickIsOpen = false
             end)
 
             returnf:SetIcon("icon16/arrow_redo.png")
@@ -255,7 +253,7 @@ function AdminStick:OpenAdminStickUI(target)
             if not target:getChar():hasFlags(flag) then
                 local giveFlag = giveFlagsSubMenu:AddOption("Give Flag " .. flag, function()
                     LocalPlayer():ConCommand('say /giveflag "' .. target:SteamID() .. '" "' .. flag .. '"')
-                    AdminStick.IsOpen = false
+                    AdminStickIsOpen = false
                 end)
 
                 giveFlag:SetIcon("icon16/flag_blue.png")
@@ -267,7 +265,7 @@ function AdminStick:OpenAdminStickUI(target)
             if target:getChar():hasFlags(flag) then
                 local takeFlag = takeFlagsSubMenu:AddOption("Take Flag " .. flag, function()
                     LocalPlayer():ConCommand('say /takeflag "' .. target:SteamID() .. '" "' .. flag .. '"')
-                    AdminStick.IsOpen = false
+                    AdminStickIsOpen = false
                 end)
 
                 takeFlag:SetIcon("icon16/flag_red.png")
@@ -276,20 +274,21 @@ function AdminStick:OpenAdminStickUI(target)
 
         local listflags = flags:AddOption("List Flags", function()
             LocalPlayer():ConCommand('say /flaglist "' .. target:SteamID() .. '"')
-            AdminStick.IsOpen = false
+            AdminStickIsOpen = false
         end)
 
         listflags:SetIcon("icon16/find.png")
         local blacklist = flags:AddOption("Give/Take PET Flags", function()
             LocalPlayer():ConCommand('say /flagpet "' .. target:SteamID() .. '"')
-            AdminStick.IsOpen = false
+            AdminStickIsOpen = false
         end)
 
         blacklist:SetIcon("icon16/cross.png")
     end
 
+    hook.Run("AdminStickMenuAdd", AdminMenu, target)
     function AdminMenu:OnClose()
-        AdminStick.IsOpen = false
+        AdminStickIsOpen = false
     end
 
     AdminMenu:Open()

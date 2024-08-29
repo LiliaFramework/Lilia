@@ -1,13 +1,14 @@
+local MODULE = MODULE
 function SWEP:PrimaryAttack()
     local target = IsValid(LocalPlayer().AdminStickTarget) and LocalPlayer().AdminStickTarget or LocalPlayer():GetEyeTrace().Entity
-    if IsValid(target) and not target:IsPlayer() then if target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end end
-    if IsValid(target) and target:IsPlayer() then AdminStick:OpenAdminStickUI(target) end
+    if IsValid(target) and not target:IsPlayer() and target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end
+    if IsValid(target) and target:IsPlayer() then MODULE:OpenAdminStickUI(target) end
 end
 
 function SWEP:SecondaryAttack()
     if not IsFirstTimePredicted() then return end
     local target = IsValid(LocalPlayer().AdminStickTarget) and LocalPlayer().AdminStickTarget or LocalPlayer():GetEyeTrace().Entity
-    if IsValid(target) and not target:IsPlayer() then if target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end end
+    if IsValid(target) and not target:IsPlayer() and target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end
     if IsValid(target) and target:IsPlayer() and target ~= LocalPlayer() then
         local cmd = target:IsFrozen() and "sam unfreeze" or "sam freeze"
         LocalPlayer():ConCommand(cmd .. " " .. target:SteamID())
@@ -22,7 +23,7 @@ function SWEP:DrawHUD()
     local crossColor = Color(255, 0, 0)
     local information = {}
     if IsValid(target) then
-        if not target:IsPlayer() then if target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end end
+        if not target:IsPlayer() and target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end
         if target:IsPlayer() then
             crossColor = Color(0, 255, 0)
             information = {IsValid(LocalPlayer().AdminStickTarget) and "Player (Selected with Reload)" or "Player", "Nickname: " .. target:Nick(), "Steam Name: " .. (target.SteamName and target:SteamName() or target:Name()), "Steam ID: " .. target:SteamID(), "Health: " .. target:Health(), "Armor: " .. target:Armor(), "Usergroup: " .. target:GetUserGroup()}
@@ -69,7 +70,7 @@ function SWEP:Reload()
     if self.NextReload and self.NextReload > SysTime() then return end
     self.NextReload = SysTime() + 0.5
     local lookingAt = LocalPlayer():KeyDown(IN_SPEED) and LocalPlayer() or LocalPlayer():GetEyeTrace().Entity
-    if IsValid(lookingAt) and not lookingAt:IsPlayer() then if lookingAt:IsVehicle() and IsValid(lookingAt:GetDriver()) then lookingAt = lookingAt:GetDriver() end end
+    if IsValid(lookingAt) and not lookingAt:IsPlayer() and lookingAt:IsVehicle() and IsValid(lookingAt:GetDriver()) then lookingAt = lookingAt:GetDriver() end
     if IsValid(lookingAt) and lookingAt:IsPlayer() then
         LocalPlayer().AdminStickTarget = lookingAt
     else
