@@ -41,10 +41,7 @@ end
 function MODULE:CharPreSave(character)
     local client = character:getPlayer()
     local InVehicle = client:hasValidVehicle()
-    if IsValid(client) and InVehicle then
-        if not client:Alive() then return end
-        character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()})
-    end
+    if IsValid(client) and not InVehicle and client:Alive() then character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()}) end
 end
 
 function MODULE:PlayerLoadedChar(client, character)
