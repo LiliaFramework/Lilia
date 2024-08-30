@@ -43,7 +43,6 @@ lia.config = lia.config or {}
 -- @field AdminConsoleNetworkLogs Specifies if the logging system should replicate to admins' consoles | **boolean**
 -- @field TimeToEnterVehicle Time **[in seconds]** required to enter a vehicle | **integer**
 -- @field CarEntryDelayEnabled Determines if the car entry delay is applicable | **boolean**.
--- @field ServerWorkshopID Determines the workshop collection for the server. This will enable a prompt asking you to download the collection. | **string**.
 -- @field Notify Contains notification sound and volume settings | **table**.
 -- @field Notify.Sound Notification sound file path | **string**.
 -- @field Notify.Volume Notification volume | **integer**
@@ -83,7 +82,6 @@ if not ConfigWasInitialized then
         AdminConsoleNetworkLogs = false,
         TimeToEnterVehicle = 1,
         CarEntryDelayEnabled = true,
-        ServerWorkshopID = "",
         Notify = {"garrysmod/content_downloaded.wav", 50, 250},
     }
 

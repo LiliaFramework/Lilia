@@ -1,5 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-
 function GM:onCharCreated(client, character, data)
     LiliaDeprecated("onCharCreated is deprecated. Use OnCharCreated for optimization purposes.")
     hook.Run("OnCharCreated", client, character, data)
@@ -46,12 +45,6 @@ function GM:PlayerLoadedChar(client, character, lastChar)
     end
 
     character:setData("loginTime", os.time())
-    if lia.config.ServerWorkshopID ~= "" and not client:getLiliaData("workshopRequested") then
-        net.Start("RequestServerContent")
-        net.Send(client)
-        client:setLiliaData("workshopRequested", true)
-    end
-
     hook.Run("PlayerLoadout", client)
 end
 
@@ -93,6 +86,7 @@ function GM:PrePlayerLoadedChar(client)
     client:ExitVehicle()
     client:Freeze(false)
 end
+
 function GM:OnPickupMoney(client, moneyEntity)
     if moneyEntity and moneyEntity:IsValid() then
         local amount = moneyEntity:getAmount()
@@ -241,7 +235,7 @@ function GM:CanPlayerTakeItem(client, item)
         return false
     elseif IsValid(item.entity) then
         local character = client:getChar()
-        if (item.entity.SteamID64 == client:SteamID() and item.entity.liaCharID ~= character:getID()) then
+        if item.entity.SteamID64 == client:SteamID() and item.entity.liaCharID ~= character:getID() then
             client:notifyLocalized("playerCharBelonging")
             return false
         end
@@ -369,7 +363,6 @@ function GM:GetGameDescription()
     return (lia.config.GamemodeName == "A Lilia Gamemode" and istable(SCHEMA)) and tostring(SCHEMA.name) or lia.config.GamemodeName
 end
 
-
 function GM:PlayerShouldTakeDamage(client)
     return client:getChar() ~= nil
 end
@@ -457,11 +450,6 @@ function GM:PlayerInitialSpawn(client)
     end)
 
     hook.Run("PostPlayerInitialSpawn", client)
-end
-
-function GM:PostPlayerInitialSpawn(client)
-    net.Start("RequestLiliaContent")
-    net.Send(client)
 end
 
 function GM:PlayerLoadout(client)
