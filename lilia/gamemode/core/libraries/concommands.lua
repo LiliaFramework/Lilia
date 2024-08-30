@@ -12,17 +12,12 @@ concommand.Add("list_entities", function(client)
         LiliaInformation("Entities on the server:")
         for _, entity in pairs(ents.GetAll()) do
             local className = entity:GetClass() or "Unknown"
-            local entityName = "Unknown"
-            if entity.GetName then entityName = entity:GetName() end
-            entityCount[className] = entityCount[className] or {}
-            entityCount[className][entityName] = (entityCount[className][entityName] or 0) + 1
+            entityCount[className] = (entityCount[className] or 0) + 1
             totalEntities = totalEntities + 1
         end
 
-        for className, entities in pairs(entityCount) do
-            for entityName, count in pairs(entities) do
-                LiliaInformation(string.format("Name: %s | Class: %s | Count: %d", entityName, className, count))
-            end
+        for className, count in pairs(entityCount) do
+            LiliaInformation(string.format("Class: %s | Count: %d", className, count))
         end
 
         LiliaInformation("Total entities on the server: " .. totalEntities)
