@@ -42,7 +42,7 @@ end
 
 function GM:CanTool(client, _, tool)
     local privilege = "Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
-    if table.HasValue(MODULE.DisallowedTools, tool) then return false end
+    if table.HasValue(MODULE.DisallowedTools, tool) and not client:IsSuperAdmin() then return false end
     if client:IsSuperAdmin() or ((client:isStaffOnDuty() or client:getChar():hasFlags("t")) and client:HasPrivilege(privilege)) then return true end
 end
 
