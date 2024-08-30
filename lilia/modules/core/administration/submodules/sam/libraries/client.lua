@@ -68,10 +68,10 @@ local function textWrap(text, font, maxWidth)
 end
 
 net.Receive("NetTicket", function()
-    if LocalPlayer():isStaffOnDuty() or LocalPlayer():IsSuperAdmin() then
-        local ply = net.ReadEntity()
-        local content = net.ReadString()
-        local id = net.ReadInt(8)
+    local ply = net.ReadEntity()
+    local content = net.ReadString()
+    local id = net.ReadInt(8)
+    if LocalPlayer():isStaffOnDuty() or LocalPlayer():IsSuperAdmin() and IsValid(ply) then
         local width, height = ScrW(), ScrH()
         local frame_width, frame_height = width * 0.2, height * 0.15
         local frame = vgui.Create("DFrame")
