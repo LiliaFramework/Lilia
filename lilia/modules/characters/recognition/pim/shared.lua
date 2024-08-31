@@ -22,38 +22,38 @@ PIM:AddOption("Recognize With Fake Name", {
     end
 })
 
-MODULE:AddLocalOption("Allow Recognition by Recognize in Whisper Range", {
+PIM:AddLocalOption("Allow Recognition by Recognize in Whisper Range", {
     shouldShow = function(client) return client:getChar() and client:Alive() end,
-    onRun = function() MODULE:CharRecognize(2) end,
+    onRun = function(client) MODULE:CharRecognize(2) end,
     runServer = false
 })
 
-MODULE:AddLocalOption("Allow Recognition by Recognize in Talk Range", {
+PIM:AddLocalOption("Allow Recognition by Recognize in Talk Range", {
     shouldShow = function(client) return client:getChar() and client:Alive() end,
-    onRun = function() MODULE:CharRecognize(3) end,
+    onRun = function(client) MODULE:CharRecognize(3) end,
     runServer = false
 })
 
-MODULE:AddLocalOption("Allow Recognition by Recognize in Yell Range", {
+PIM:AddLocalOption("Allow Recognition by Recognize in Yell Range", {
     shouldShow = function(client) return client:getChar() and client:Alive() end,
-    onRun = function() MODULE:CharRecognize(4) end,
+    onRun = function(client) MODULE:CharRecognize(4) end,
     runServer = false
 })
 
-MODULE:AddLocalOption("Allow Recognition by Fake Name in Whisper Range", {
+PIM:AddLocalOption("Allow Recognition by Fake Name in Whisper Range", {
     shouldShow = function(client) return client:getChar() and client:Alive() end,
-    onRun = function() if CLIENT then Derma_StringRequest(recogMenuOptionFakeWhisper, recogFakeNamePrompt, default or "", function(text) if text then MODULE:CharRecognize(2, text) end end) end end,
+    onRun = function(client) if CLIENT then Derma_StringRequest(recogMenuOptionFakeWhisper, recogFakeNamePrompt, default or "", function(text) if text then MODULE:CharRecognize(2, text) end end) end end,
     runServer = false
 })
 
-MODULE:AddLocalOption("Allow Recognition by Fake Name in Talk Range", {
+PIM:AddLocalOption("Allow Recognition by Fake Name in Talk Range", {
     shouldShow = function(client) return client:getChar() and client:Alive() end,
-    onRun = function() if CLIENT then Derma_StringRequest(recogMenuOptionFakeTalk, recogFakeNamePrompt, default or "", function(text) if text then MODULE:CharRecognize(3, text) end end) end end,
+    onRun = function(client) if CLIENT then Derma_StringRequest(recogMenuOptionFakeTalk, recogFakeNamePrompt, default or "", function(text) if text then MODULE:CharRecognize(3, text) end end) end end,
     runServer = false
 })
 
-MODULE:AddLocalOption("Allow Recognition by Fake Name in Yell Range", {
+PIM:AddLocalOption("Allow Recognition by Fake Name in Yell Range", {
     shouldShow = function(client) return client:getChar() and client:Alive() end,
-    onRun = function() if CLIENT then Derma_StringRequest(recogMenuOptionFakeYell, recogFakeNamePrompt, default or "", function(text) if text then MODULE:CharRecognize(4, text) end end) end end,
+    onRun = function(client) if CLIENT then Derma_StringRequest(recogMenuOptionFakeYell, recogFakeNamePrompt, default or "", function(text) if text then MODULE:CharRecognize(4, text) end end) end end,
     runServer = false
 })
