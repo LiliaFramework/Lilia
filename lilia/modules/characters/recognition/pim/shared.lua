@@ -1,4 +1,23 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
+
+PIM:AddLocalOption("Recognize in Whisper Range", {
+    shouldShow = function(client) return client:getChar() and client:Alive() end,
+    onRun = function() MODULE:CharRecognize(2) end,
+    runServer = false
+})
+
+PIM:AddLocalOption("Recognize in Talk Range", {
+    shouldShow = function(client) return client:getChar() and client:Alive() end,
+    onRun = function() MODULE:CharRecognize(3) end,
+    runServer = false
+})
+
+PIM:AddLocalOption("Recognize in Yell Range", {
+    shouldShow = function(client) return client:getChar() and client:Alive() end,
+    onRun = function() MODULE:CharRecognize(4) end,
+    runServer = false
+})
+
 PIM:AddOption("Recognize", {
     runServer = false,
     shouldShow = function(client, target)
@@ -20,22 +39,4 @@ PIM:AddOption("Recognize With Fake Name", {
         local tarChar = target:getChar()
         if CLIENT then Derma_StringRequest(L"recogMenuOptionFakeWhisper", L"recogFakeNamePrompt", tarChar:getName(), function(text) if text then netstream.Start("rgnDirect", target, text) end end) end
     end
-})
-
-PIM:AddLocalOption("Recognize in Whisper Range", {
-    shouldShow = function(client) return client:getChar() and client:Alive() end,
-    onRun = function(client) MODULE:CharRecognize(2) end,
-    runServer = false
-})
-
-PIM:AddLocalOption("Recognize in Talk Range", {
-    shouldShow = function(client) return client:getChar() and client:Alive() end,
-    onRun = function(client) MODULE:CharRecognize(3) end,
-    runServer = false
-})
-
-PIM:AddLocalOption("Recognize in Yell Range", {
-    shouldShow = function(client) return client:getChar() and client:Alive() end,
-    onRun = function(client) MODULE:CharRecognize(4) end,
-    runServer = false
 })
