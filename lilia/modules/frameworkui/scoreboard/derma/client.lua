@@ -225,6 +225,23 @@ function PANEL:addPlayer(client, parent)
     slot.desc:SetTextColor(color_white)
     slot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     slot.desc:SetFont("liaSmallFont")
+    local class = lia.class.list[client:getChar():getClass()]
+    local logoHeight = 64
+    local logoWidth = 64
+    local logoX = self:GetWide() - 48 - logoWidth
+    local logoY = 0
+    if class and class.logo then
+        local logo = class.logo
+        slot.logo = slot:Add("DPanel")
+        slot.logo:SetSize(logoWidth, logoHeight)
+        slot.logo:SetPos(logoX, logoY)
+        slot.logo.Paint = function(this, w, h)
+            surface.SetDrawColor(255, 255, 255, 255)
+            surface.SetMaterial(Material(logo))
+            surface.DrawTexturedRect(0, 0, w, h)
+        end
+    end
+
     local oldTeam = client:Team()
     function slot:update()
         if not IsValid(client) or not client:getChar() or not self.character or self.character ~= client:getChar() or oldTeam ~= client:Team() then
