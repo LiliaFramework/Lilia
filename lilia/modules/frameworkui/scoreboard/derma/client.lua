@@ -230,7 +230,8 @@ function PANEL:addPlayer(client, parent)
     local logoWidth = 64
     local logoX = self:GetWide() - 48 - logoWidth
     local logoY = 0
-    if class and class.logo then
+    local shouldOverride = hook.Run("ShouldAllowScoreboardOverride", client, "classlogo")
+    if shouldOverride and class and class.logo then
         local logo = class.logo
         slot.logo = slot:Add("DPanel")
         slot.logo:SetSize(logoWidth, logoHeight)
