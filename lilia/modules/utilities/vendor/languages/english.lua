@@ -1,7 +1,5 @@
 NAME = "english"
 LANGUAGE = {
-    sell = "Sell",
-    free = "Free",
     vendorSellScale = "Sell price scale",
     vendorNoTrade = "You are not able to trade with this vendor.",
     vendorNoMoney = "This vendor can not afford that item.",
@@ -14,7 +12,6 @@ LANGUAGE = {
     vendorNoBuyItems = "There are no items to purchase.",
     vendorSettings = "Vendor Settings",
     vendorUseMoney = "Vendor should use money?",
-    mode = "Mode",
     price = "Price",
     stock = "Stock",
     none = "None",
@@ -24,5 +21,5 @@ LANGUAGE = {
     maxStock = "Max Stock",
     vendorFaction = "Faction Editor",
     vendorBye = "Come again soon!",
-    buy = "Purchase",
+    mode = "Mode",
 }
