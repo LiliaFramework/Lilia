@@ -58,31 +58,27 @@ function lia.lang.AddTable(name, tbl)
 end
 
 if SERVER then
-    local playerMeta = FindMetaTable("Player")
-    local ClientGetInfo = playerMeta.GetInfo
-    --- Retrieves a localized string based on the specified key and client's language setting.
+    --- Retrieves a localized string based on the specified key and the default language setting.
     -- @string key The key corresponding to the desired localized string.
-    -- @client client The client for whom the localized string is intended.
     -- @tab ... Additional parameters to format the localized string.
     -- @return The formatted localized string.
     -- @realm server
-    function L(key, client, ...)
+    function L(key, ...)
         local languages = lia.lang.stored
-        local langKey = ClientGetInfo(client, "lia_language")
+        local langKey = lia.config.Language
         local info = languages[langKey] or languages.english
         return string.format(info and info[key] or key, ...)
     end
 
-    --- Retrieves a localized string based on the specified key and client's language setting.
+    --- Retrieves a localized string based on the specified key and the default language setting.
     -- Similar to L(), but returns nil if the key is not found in the language table.
     -- @string key The key corresponding to the desired localized string.
-    -- @client client The client for whom the localized string is intended.
     -- @tab ... Additional parameters to format the localized string.
     -- @return The formatted localized string, or nil if the key is not found.
     -- @realm server
-    function L2(key, client, ...)
+    function L2(key, ...)
         local languages = lia.lang.stored
-        local langKey = ClientGetInfo(client, "lia_language")
+        local langKey = lia.config.Language
         local info = languages[langKey] or languages.english
         if info and info[key] then return string.format(info[key], ...) end
     end
@@ -95,36 +91,33 @@ if SERVER then
     -- @realm server
     function L3(key, langKey, ...)
         local languages = lia.lang.stored
-        if langKey then
-            local info = languages[langKey] or languages.english
-            return string.format(info and info[key] or key, ...)
-        else
-            return key
-        end
+        langKey = langKey or lia.config.Language
+        local info = languages[langKey] or languages.english
+        return string.format(info and info[key] or key, ...)
     end
 else
-    LIA_CVAR_LANG = CreateClientConVar("lia_language", "english", true, true)
-    --- Creates a client-side ConVar to store the language setting and retrieves a localized string based on it.
+    --- Retrieves a localized string based on the specified key and the default language setting.
     -- @string key The key corresponding to the desired localized string.
     -- @tab ... Additional parameters to format the localized string.
     -- @return The formatted localized string.
     -- @realm client
     function L(key, ...)
         local languages = lia.lang.stored
-        local langKey = LIA_CVAR_LANG:GetString()
+        local langKey = lia.config.Language
         local info = languages[langKey] or languages.english
         return string.format(info and info[key] or key, ...)
     end
 
-    --- Retrieves a localized string based on the specified key and client's language setting.
+    --- Retrieves a localized string based on the specified key and the default language setting.
     -- Similar to L(), but returns nil if the key is not found in the language table.
     -- @string key The key corresponding to the desired localized string.
     -- @tab ... Additional parameters to format the localized string.
     -- @return The formatted localized string, or nil if the key is not found.
     -- @realm client
     function L2(key, ...)
-        local langKey = LIA_CVAR_LANG:GetString()
-        local info = lia.lang.stored[langKey]
+        local languages = lia.lang.stored
+        local langKey = lia.config.Language
+        local info = languages[langKey]
         if info and info[key] then return string.format(info[key], ...) end
     end
 end
