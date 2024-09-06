@@ -47,7 +47,7 @@ if SERVER then
     -- @client client The client to receive the notification.
     -- @string message The message to be sent.
     function DarkRP.notify(client, _, _, message)
-        player:notify(message)
+        client:notify(message)
     end
 else
     --- Wraps text to fit within a specified width, breaking lines where necessary.
