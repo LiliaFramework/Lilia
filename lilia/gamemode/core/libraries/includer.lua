@@ -134,6 +134,10 @@ lia.FilesToLoad = {
         realm = "client"
     },
     {
+        path = "lilia/gamemode/core/libraries/darkrp.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/netcalls/client.lua",
         realm = "client"
     },

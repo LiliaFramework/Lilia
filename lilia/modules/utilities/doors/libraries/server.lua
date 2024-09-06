@@ -210,7 +210,7 @@ function MODULE:ToggleLock(client, door, state)
             client:EmitSound("doors/door_latch1.wav")
         end
 
-        door:SetLocked(state)
+        door:setLocked(state)
     elseif (door:GetCreator() == client or client:IsSuperAdmin() or client:isStaffOnDuty()) and (door:IsVehicle() or door:isSimfphysCar()) then
         if state then
             door:Fire("lock")
@@ -220,6 +220,6 @@ function MODULE:ToggleLock(client, door, state)
             client:EmitSound("doors/door_latch1.wav")
         end
 
-        door:SetLocked(state)
+        door:setLocked(state)
     end
 end

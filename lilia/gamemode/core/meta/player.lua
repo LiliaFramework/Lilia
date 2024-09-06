@@ -188,7 +188,21 @@ function playerMeta:getItemWeapon()
     end
 end
 
+--- Checks if the player's character can afford a specified amount of money.
+-- This function uses Lilia methods to determine if the player can afford the specified amount.
+-- It is designed to be compatible with the DarkRP `canAfford` method.
+-- @realm shared
+-- @int amount The amount of money to check.
+-- @treturn bool Whether the player's character can afford the specified amount of money.
+function playerMeta:canAfford(amount)
+    local character = self:getChar()
+    return character and character:hasMoney(amount)
+end
+
 --- Adds money to the player's character.
+-- This function uses Lilia methods to add the specified amount of money to the player.
+-- It is designed to be compatible with the DarkRP `addMoney` method.
+-- If the total amount exceeds the configured money limit, the excess is spawned as an item in the world.
 -- @realm shared
 -- @int amount The amount of money to add.
 function playerMeta:addMoney(amount)
@@ -228,15 +242,6 @@ end
 function playerMeta:getMoney()
     local character = self:getChar()
     return character and character:getMoney() or 0
-end
-
---- Checks if the player's character can afford a specified amount of money.
--- @realm shared
--- @int amount The amount of money to check.
--- @treturn bool Whether the player's character can afford the specified amount of money.
-function playerMeta:canAfford(amount)
-    local character = self:getChar()
-    return character and character:hasMoney(amount)
 end
 
 --- Checks if the player is running.
@@ -928,10 +933,8 @@ playerMeta.DistanceFromEnt = playerMeta.distanceFromEnt
 playerMeta.IsNearPlayer = playerMeta.isNearPlayer
 playerMeta.EntitiesNearPlayer = playerMeta.entitiesNearPlayer
 playerMeta.GetItemWeapon = playerMeta.getItemWeapon
-playerMeta.AddMoney = playerMeta.addMoney
 playerMeta.TakeMoney = playerMeta.takeMoney
 playerMeta.GetMoney = playerMeta.getMoney
-playerMeta.CanAfford = playerMeta.canAfford
 playerMeta.IsRunning = playerMeta.isRunning
 playerMeta.IsFemale = playerMeta.isFemale
 playerMeta.GetTracedEntity = playerMeta.getTracedEntity

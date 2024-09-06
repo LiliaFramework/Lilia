@@ -17,6 +17,41 @@ function entityMeta:checkDoorAccess(client, access)
     return false
 end
 
+--- Sets the owner of the entity.
+-- This function assigns ownership of the entity to the specified player. It is intended for compatibility with DarkRP's vehicle ownership system.
+-- @realm shared
+-- @param client The player who will become the owner of the entity.
+function entityMeta:keysOwn(client)
+    if self:IsVehicle() then
+        self:CPPISetOwner(client)
+        self:setNetVar("owner", client:getChar():getID())
+        self.ownerID = client:getChar():getID()
+        self:setNetVar("ownerName", client:getChar():getName())
+    end
+end
+
+--- Locks the entity.
+-- This function locks the entity if it is a vehicle. It is intended for compatibility with DarkRP's vehicle locking system.
+-- @realm shared
+function entityMeta:keysLock()
+    if self:IsVehicle() then self:Fire("lock") end
+end
+
+--- Unlocks the entity.
+-- This function unlocks the entity if it is a vehicle. It is intended for compatibility with DarkRP's vehicle unlocking system.
+-- @realm shared
+function entityMeta:keysUnLock()
+    if self:IsVehicle() then self:Fire("unlock") end
+end
+
+--- Retrieves the owner of the entity.
+-- This function returns the player who owns the entity if it is a vehicle. It is intended for compatibility with DarkRP's vehicle ownership system.
+-- @realm shared
+-- @treturn Player|nil The player who owns the entity, or nil if no owner is set.
+function entityMeta:getDoorOwner()
+    if self:IsVehicle() and self.CPPIGetOwner then return self:CPPIGetOwner() end
+end
+
 --- Checks if the door is locked.
 -- This function checks whether the door entity is currently locked.
 -- @realm shared
@@ -51,7 +86,7 @@ if SERVER then
     -- This function sets whether the door is locked or not.
     -- @realm server
     -- @bool state The new locked state of the door (true for locked, false for unlocked).
-    function entityMeta:SetLocked(state)
+    function entityMeta:setLocked(state)
         self:setNetVar("locked", state)
     end
 
