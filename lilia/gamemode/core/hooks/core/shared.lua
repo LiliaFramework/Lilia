@@ -323,3 +323,8 @@ function GM:InitializedModules()
 
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Bootstrapper] ", color_white, "Finished boot sequence...\n")
 end
+
+function widgets.PlayerTick()
+end
+
+hook.Remove("PlayerTick", "TickWidgets")

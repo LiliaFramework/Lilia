@@ -106,13 +106,6 @@ function MODULE:PropBreak(_, entity)
     if entity:IsValid() and entity:GetPhysicsObject():IsValid() then constraint.RemoveAll(entity) end
 end
 
-function MODULE:PreGamemodeLoaded()
-    function widgets.PlayerTick()
-    end
-
-    hook.Remove("PlayerTick", "TickWidgets")
-end
-
 function MODULE:EntityRemoved(entity)
     if entity:IsRagdoll() and not entity:getNetVar("player", nil) and self.RagdollCleaningTimer > 0 then
         timer.Simple(self.RagdollCleaningTimer, function()
