@@ -8,6 +8,7 @@ if SERVER then
     -- @vector position The position to check.
     -- @tab entitiesToIgnore A table of entities to ignore during the check.
     -- @return bool Whether the position is considered empty.
+    -- @realm server
     function lia.darkrp.isEmpty(position, entitiesToIgnore)
         entitiesToIgnore = entitiesToIgnore or {}
         local contents = util.PointContents(position)
@@ -31,6 +32,7 @@ if SERVER then
     -- @int searchStep The step size for the search.
     -- @vector checkArea A vector defining the area around the position to check.
     -- @return Vector The found empty position, or the original position if none are found.
+    -- @realm server
     function lia.darkrp.findEmptyPos(startPos, entitiesToIgnore, maxDistance, searchStep, checkArea)
         if lia.darkrp.isEmpty(startPos, entitiesToIgnore) and lia.darkrp.isEmpty(startPos + checkArea, entitiesToIgnore) then return startPos end
         for distance = searchStep, maxDistance, searchStep do
@@ -46,8 +48,11 @@ if SERVER then
 
     --- Sends a notification message to a client.
     -- This function sends a notification message to a specified client using the notify method.
-    -- @client client The client to receive the notification.
-    -- @string message The message to be sent.
+    -- @param client The client to receive the notification.
+    -- @param _ Unused argument.
+    -- @param _ Unused argument.
+    -- @param message The message to be sent.
+    -- @realm server
     function lia.darkrp.notify(client, _, _, message)
         client:notify(message)
     end
@@ -59,6 +64,7 @@ else
     -- @string fontName The font to be used for measuring text width.
     -- @int maxLineWidth The maximum width in pixels for each line of text.
     -- @return string The wrapped text with line breaks inserted.
+    -- @realm client
     function lia.darkrp.textWrap(text, fontName, maxLineWidth)
         local function wrapCharacters(text, remainingWidth, maxWidth)
             local accumulatedWidth = 0
@@ -111,6 +117,7 @@ end
 -- This function formats the specified amount of money according to the currency system.
 -- @float amount The amount of money to be formatted.
 -- @return string The formatted money string.
+-- @realm shared
 function lia.darkrp.formatMoney(amount)
     return lia.currency.get(amount)
 end
