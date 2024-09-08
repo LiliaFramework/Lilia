@@ -1,7 +1,7 @@
 ﻿--[[
 Helper library for easing animations.
-Provides various easing functions (in, out, in-out, elastic, bounce, etc.)
-to smooth transitions and animations over time. These functions calculate
+Provides various easing functions (in, out, in-out, elastic, bounce, etc.).
+to smooth transitions and animations over time. These functions calculate.
 values based on elapsed time, total duration, starting values, and the desired change.
 ]]
 -- @library lia.ease
