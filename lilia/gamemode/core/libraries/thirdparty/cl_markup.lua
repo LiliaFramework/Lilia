@@ -1,16 +1,9 @@
 ﻿module("lia.markup", package.seeall)
---[[---------------------------------------------------------
-    Name: Constants used for text alignment.
-          These must be the same values as in the draw module.
------------------------------------------------------------]]
 TEXT_ALIGN_LEFT = 0
 TEXT_ALIGN_CENTER = 1
 TEXT_ALIGN_RIGHT = 2
 TEXT_ALIGN_TOP = 3
 TEXT_ALIGN_BOTTOM = 4
---[[---------------------------------------------------------
-    Name: Temporary information used when building text frames.
------------------------------------------------------------]]
 local colour_stack = {
     {
         r = 255,
@@ -23,7 +16,6 @@ local colour_stack = {
 local font_stack = {"DermaDefault"}
 local blocks = {}
 local colourmap = {
-    -- it's all black and white
     ["black"] = {
         r = 0,
         g = 0,
@@ -36,7 +28,6 @@ local colourmap = {
         b = 255,
         a = 255
     },
-    -- it's greys
     ["dkgrey"] = {
         r = 64,
         g = 64,
@@ -73,7 +64,6 @@ local colourmap = {
         b = 192,
         a = 255
     },
-    -- normal colours
     ["red"] = {
         r = 255,
         g = 0,
@@ -116,7 +106,6 @@ local colourmap = {
         b = 255,
         a = 255
     },
-    -- dark variations
     ["dkred"] = {
         r = 128,
         g = 0,
@@ -159,7 +148,6 @@ local colourmap = {
         b = 128,
         a = 255
     },
-    -- light variations
     ["ltred"] = {
         r = 255,
         g = 128,
@@ -204,21 +192,11 @@ local colourmap = {
     },
 }
 
---[[---------------------------------------------------------
-    Name: colourMatch(c)
-    Desc: Match a colour name to an rgb value.
-   Usage: ** INTERNAL ** Do not use!
------------------------------------------------------------]]
 local function colourMatch(c)
     c = string.lower(c)
     return colourmap[c]
 end
 
---[[---------------------------------------------------------
-    Name: ExtractParams(p1,p2,p3)
-    Desc: This function is used to extract the tag information.
-   Usage: ** INTERNAL ** Do not use!
------------------------------------------------------------]]
 local function ExtractParams(p1, p2, p3)
     if string.utf8sub(p1, 1, 1) == "/" then
         local tag = string.utf8sub(p1, 2)
@@ -264,12 +242,6 @@ local function ExtractParams(p1, p2, p3)
     end
 end
 
---[[---------------------------------------------------------
-    Name: CheckTextOrTag(p)
-    Desc: This function places data in the "blocks" table
-          depending of if p is a tag, or some text
-   Usage: ** INTERNAL ** Do not use!
------------------------------------------------------------]]
 local function CheckTextOrTag(p)
     if p == "" then return end
     if p == nil then return end
@@ -284,11 +256,6 @@ local function CheckTextOrTag(p)
     end
 end
 
---[[---------------------------------------------------------
-    Name: ProcessMatches(p1,p2,p3)
-    Desc: CheckTextOrTag for 3 parameters. Called by string.gsub
-   Usage: ** INTERNAL ** Do not use!
------------------------------------------------------------]]
 local function ProcessMatches(p1, p2, p3)
     if p1 then CheckTextOrTag(p1) end
     if p2 then CheckTextOrTag(p2) end
@@ -296,12 +263,6 @@ local function ProcessMatches(p1, p2, p3)
 end
 
 local MarkupObject = {}
---[[---------------------------------------------------------
-    Name: MarkupObject:Create()
-    Desc: Called by Parse. Creates a new table, and setups the 
-          metatable.
-   Usage: ** INTERNAL ** Do not use!
------------------------------------------------------------]]
 function MarkupObject:create()
     local o = {}
     setmetatable(o, self)
@@ -309,38 +270,18 @@ function MarkupObject:create()
     return o
 end
 
---[[---------------------------------------------------------
-    Name: MarkupObject:GetWidth()
-    Desc: Returns the width of a markup block
-   Usage: ml:GetWidth()
------------------------------------------------------------]]
 function MarkupObject:getWidth()
     return self.totalWidth
 end
 
---[[---------------------------------------------------------
-    Name: MarkupObject:GetHeight()
-    Desc: Returns the height of a markup block
-   Usage: ml:GetHeight()
------------------------------------------------------------]]
 function MarkupObject:getHeight()
     return self.totalHeight
 end
 
---[[---------------------------------------------------------
------------------------------------------------------------]]
 function MarkupObject:size()
     return self.totalWidth, self.totalHeight
 end
 
---[[---------------------------------------------------------
-    Name: MarkupObject:Draw(xOffset, yOffset, halign, valign, alphaoverride)
-    Desc: Draw the markup text to the screen as position
-          xOffset, yOffset. Halign and Valign can be used
-          to align the text. Alphaoverride can be used to override
-          the alpha value of the text-colour.
-   Usage: MarkupObject:Draw(100, 100)
------------------------------------------------------------]]
 function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
     for i = 1, #self.blocks do
         local blk = self.blocks[i]
@@ -387,17 +328,6 @@ function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
     end
 end
 
---[[---------------------------------------------------------
-    Name: Parse(ml, maxwidth)
-    Desc: Parses the pseudo-html markup language, and creates a 
-          MarkupObject, which can be used to the draw the 
-          text to the screen. Valid tags are: font and colour.
-          \n and \t are also available to move to the next line,
-          or insert a tab character.
-          Maxwidth can be used to make the text wrap to a specific
-          width.
-   Usage: markup.Parse("<font=Default>changed font</font>\n<colour=255,0,255,255>changed colour</colour>")
------------------------------------------------------------]]
 function parse(ml, maxwidth)
     colour_stack = {
         {
@@ -486,61 +416,55 @@ function parse(ml, maxwidth)
                 else
                     local x, y = surface.GetTextSize(ch)
                     if x == nil then return end
-                    if maxwidth and maxwidth > x then
-                        if xOffset + xSize + x >= maxwidth then
-                            -- need to: find the previous space in the curString
-                            --          if we can't find one, take off the last character
-                            --          and add a -. add the character to ch
-                            --          and insert as a new block, incrementing the y etc
-                            local lastSpacePos = string.utf8len(curString)
-                            for k = 1, string.utf8len(curString) do
-                                local chspace = string.utf8sub(curString, k, k)
-                                if chspace == " " then lastSpacePos = k end
-                            end
-
-                            if lastSpacePos == string.utf8len(curString) then
-                                ch = string.utf8sub(curString, lastSpacePos, lastSpacePos) .. ch
-                                j = lastSpacePos
-                                curString = string.utf8sub(curString, 1, lastSpacePos - 1)
-                            else
-                                ch = string.utf8sub(curString, lastSpacePos + 1) .. ch
-                                j = lastSpacePos + 1
-                                curString = string.utf8sub(curString, 1, lastSpacePos)
-                            end
-
-                            local m = 1
-                            local chLen = string.utf8len(ch)
-                            while m <= chLen and string.utf8sub(ch, m, m) == " " do
-                                m = m + 1
-                            end
-
-                            ch = string.utf8sub(ch, m)
-                            local x1, y1 = surface.GetTextSize(curString)
-                            if y1 > thisMaxY then
-                                thisMaxY = y1
-                                ymaxes[yOffset] = thisMaxY
-                                lineHeight = y1
-                            end
-
-                            local new_block = {}
-                            new_block.text = curString
-                            new_block.font = block.font
-                            new_block.colour = block.colour
-                            new_block.thisY = thisY
-                            new_block.thisX = x1
-                            new_block.offset = {}
-                            new_block.offset.x = xOffset
-                            new_block.offset.y = yOffset
-                            table.insert(new_block_list, new_block)
-                            if xOffset + x1 > xMax then xMax = xOffset + x1 end
-                            xOffset = 0
-                            xSize = 0
-                            x, y = surface.GetTextSize(ch)
-                            yOffset = yOffset + thisMaxY
-                            thisY = 0
-                            curString = ""
-                            thisMaxY = 0
+                    if maxwidth and maxwidth > x and xOffset + xSize + x >= maxwidth then
+                        local lastSpacePos = string.utf8len(curString)
+                        for k = 1, string.utf8len(curString) do
+                            local chspace = string.utf8sub(curString, k, k)
+                            if chspace == " " then lastSpacePos = k end
                         end
+
+                        if lastSpacePos == string.utf8len(curString) then
+                            ch = string.utf8sub(curString, lastSpacePos, lastSpacePos) .. ch
+                            j = lastSpacePos
+                            curString = string.utf8sub(curString, 1, lastSpacePos - 1)
+                        else
+                            ch = string.utf8sub(curString, lastSpacePos + 1) .. ch
+                            j = lastSpacePos + 1
+                            curString = string.utf8sub(curString, 1, lastSpacePos)
+                        end
+
+                        local m = 1
+                        local chLen = string.utf8len(ch)
+                        while m <= chLen and string.utf8sub(ch, m, m) == " " do
+                            m = m + 1
+                        end
+
+                        ch = string.utf8sub(ch, m)
+                        local x1, y1 = surface.GetTextSize(curString)
+                        if y1 > thisMaxY then
+                            thisMaxY = y1
+                            ymaxes[yOffset] = thisMaxY
+                            lineHeight = y1
+                        end
+
+                        local new_block = {}
+                        new_block.text = curString
+                        new_block.font = block.font
+                        new_block.colour = block.colour
+                        new_block.thisY = thisY
+                        new_block.thisX = x1
+                        new_block.offset = {}
+                        new_block.offset.x = xOffset
+                        new_block.offset.y = yOffset
+                        table.insert(new_block_list, new_block)
+                        if xOffset + x1 > xMax then xMax = xOffset + x1 end
+                        xOffset = 0
+                        xSize = 0
+                        x, y = surface.GetTextSize(ch)
+                        yOffset = yOffset + thisMaxY
+                        thisY = 0
+                        curString = ""
+                        thisMaxY = 0
                     end
 
                     curString = curString .. ch

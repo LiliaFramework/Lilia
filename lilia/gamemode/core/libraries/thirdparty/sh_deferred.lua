@@ -48,7 +48,6 @@ function Promise:reject(reason)
 end
 
 function Promise:next(onResolve, onReject)
-    -- Ignore an argument if it is not a function.
     if not isfunction(onResolve) then onResolve = nil end
     if not isfunction(onReject) then onReject = nil end
     local promise = Promise:new()
@@ -84,18 +83,14 @@ function Promise:catch(onReject)
 end
 
 function Promise:_handle(value)
-    -- Do not allow promises to resolve to themselves.
     if value == self then return self:reject("cannot resolve to self") end
-    -- Adopt state if value is a promise.
     if istable(value) and value.next then
         if value.state then
-            -- Adopt the rejection handler ID.
             if not DEBUG_IGNOREUNHANDLED then
                 UNHANDLED_PROMISES[value.rejectionHandlerID] = nil
                 value.rejectionHandlerID = self.rejectionHandlerID
             end
 
-            -- Handle resolving to a promise.
             self.state = value.state
             if value.state == PENDING then
                 self.value = value.value
@@ -115,7 +110,6 @@ function Promise:_handle(value)
             end
             return
         elseif isfunction(value.next) then
-            -- Handle resolving to a thenable.
             self.state = PENDING
             self.value = nil
             local first = true
@@ -139,7 +133,6 @@ function Promise:_handle(value)
         end
     end
 
-    -- If value is not special, just resolve normally.
     local handler, onResolve, onReject, promise
     local isRejected = self.state == REJECTED
     for i = 1, #self.handlers do
@@ -193,7 +186,6 @@ end
 
 function deferred.new()
     local promise = Promise:new()
-    -- Bookkeeping for unhandled promises.
     if not DEBUG_IGNOREUNHANDLED then
         promise.rejectionHandlerID = REJECTION_HANDLER_ID
         UNHANDLED_PROMISES[REJECTION_HANDLER_ID] = true
@@ -289,13 +281,9 @@ function deferred.filter(promises, filter)
 end
 
 function deferred.each(promises, fn)
-    return deferred.fold(promises, function(_, value, i, length)
-        -- Ignore return value.
-        fn(value, i, length)
-    end, nil):next(function() return nil end)
+    return deferred.fold(promises, function(_, value, i, length) fn(value, i, length) end, nil):next(function() return nil end)
 end
 
--- Clear the return value.
 function deferred.some(promises, count)
     assert(istable(promises), "promises must be a table")
     assert(isnumber(count) and count >= 0 and math.floor(count) == count, "count must be a non-negative integer")
