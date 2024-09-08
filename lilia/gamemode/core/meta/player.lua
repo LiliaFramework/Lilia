@@ -101,6 +101,17 @@ function playerMeta:isNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP
 end
 
+--- Retrieves the player's DarkRP money.
+-- This is used as compatibility for DarkRP Vars.
+-- @realm shared
+-- @tparam string var The DarkRP variable to fetch (only "money" is allowed).
+-- @treturn number|nil The player's money if the variable is valid, or nil if not.
+function playerMeta:getDarkRPVar(var)
+    local char = self:getChar()
+    if var ~= "money" then self:ChatPrint("Invalid variable requested! Only 'money' can be fetched. Please refer to our Discord for help.") end
+    if char and char.getMoney then return char:getMoney() end
+end
+
 --- Checks if the player has a valid ragdoll entity.
 -- @realm shared
 -- @treturn bool Whether the player has a valid ragdoll entity.
@@ -489,7 +500,7 @@ if SERVER then
     -- @realm shared
     -- @treturn number The total playtime of the player.
     function playerMeta:getPlayTime()
-        local diff = os.time(lia.util.dateToNumber(self.lastJoin)) - os.time(lia.util.dateToNumber(self.firstJoin))
+        local diff = os.time(lia.date.toNumber(self.lastJoin)) - os.time(lia.date.toNumber(self.firstJoin))
         return diff + (RealTime() - (self.liaJoinTime or RealTime()))
     end
 
@@ -869,7 +880,7 @@ else
     -- @realm client
     -- @treturn number The total playtime of the player.
     function playerMeta:getPlayTime()
-        local diff = os.time(lia.util.dateToNumber(lia.lastJoin)) - os.time(lia.util.dateToNumber(lia.firstJoin))
+        local diff = os.time(lia.date.toNumber(lia.lastJoin)) - os.time(lia.date.toNumber(lia.firstJoin))
         return diff + (RealTime() - lia.joinTime or 0)
     end
 
