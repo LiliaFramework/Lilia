@@ -1,7 +1,4 @@
-﻿--[[
-Helper library for easing animations.
-Provides various easing functions to smooth transitions and animations over time.
-]]
+﻿--- Helper library for easing animations.
 -- @library lia.ease
 lia.ease = lia.ease or {}
 local pow = math.pow
