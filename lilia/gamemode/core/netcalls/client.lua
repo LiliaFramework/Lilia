@@ -1,13 +1,13 @@
 ﻿net.Receive("liaNotifyL", function()
     local message = net.ReadString()
     local length = net.ReadUInt(8)
-    if length == 0 then return lia.util.notifyLocalized(message) end
+    if length == 0 then return lia.notices.notifyLocalized(message) end
     local args = {}
     for i = 1, length do
         args[i] = net.ReadString()
     end
 
-    lia.util.notifyLocalized(message, unpack(args))
+    lia.notices.notifyLocalized(message, unpack(args))
 end)
 
 net.Receive("DropdownRequest", function()
@@ -112,7 +112,7 @@ end)
 
 net.Receive("liaNotify", function()
     local message = net.ReadString()
-    lia.util.notify(message)
+    lia.notices.notify(message)
 end)
 
 net.Receive("liaInventoryData", function()
@@ -466,4 +466,4 @@ netstream.Hook("gVar", function(key, value) lia.net.globals[key] = value end)
 net.Receive("SendPrint", function() print(unpack(net.ReadTable())) end)
 net.Receive("SendPrintTable", function() PrintTable(net.ReadTable()) end)
 netstream.Hook("nDel", function(index) lia.net[index] = nil end)
-netstream.Hook("notifyQuery", lia.util.notifQuery)
+netstream.Hook("notifyQuery", lia.notices.notifQuery)

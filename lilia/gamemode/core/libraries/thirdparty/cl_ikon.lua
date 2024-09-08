@@ -1,47 +1,7 @@
-﻿--[[
-	BLACK TEA ICON LIBRARY FOR Nutscript 1.1 // Edits by Samael
-
-	The MIT License (MIT)
-
-	Copyright (c) 2017, Kyu Yeon Lee(Black Tea Za rebel1324)
-
-	Permission is hereby granted, free of charge, to any person obtaining a copy of
-	this software and associated documentation files (the "Software"), to deal in
-	the Software without restriction, including without limitation the rights to
-	use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-	the Software, and to permit persons to whom the Software is furnished to do so, subject
-	to the following conditions:
-
-	The above copyright notice and thispermission notice shall be included in all copies
-	or substantial portions of the Software.
-
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-	INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-	PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
-	FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-	ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-	DEALINGS IN THE SOFTWARE.
-
-	TL;DR: https://tldrlegal.com/license/mit-license
-	OK -
-			Commercial Use
-			Modify
-			Distribute
-			Sublicense
-			Private Use
-
-	NOT OK -
-			Hold Liable
-
-	MUST -
-			Include Copyright
-			Include License
-]]
-ikon = ikon or {}
+﻿ikon = ikon or {}
 ikon.dev = false
 ikon.maxSize = 8
 local schemaName = schemaName or (SCHEMA and SCHEMA.folder)
-local List = {}
 function ikon:init()
     if self.dev then
         hook.Add("HUDPaint", "ikon_dev2", ikon.showResult)
@@ -49,10 +9,6 @@ function ikon:init()
         hook.Remove("HUDPaint", "ikon_dev2")
     end
 
-    --[[
-		Being good at gmod is knowing all of stinky hacks
-										- Black Tea (2017)
-	]]
     OLD_HALOADD = OLD_HALOADD or halo.Add
     function halo.Add(...)
         if ikon.rendering ~= true then OLD_HALOADD(...) end
@@ -73,9 +29,6 @@ hook.Add("InitializedSchema", "updatePath", function()
     ikon:init()
 end)
 
---[[
-	IKON Library Essential Material/Texture Declare
-]]
 local TEXTURE_FLAGS_CLAMP_S = 0x0004
 local TEXTURE_FLAGS_CLAMP_T = 0x0008
 ikon.max = ikon.maxSize * 64
@@ -86,18 +39,12 @@ local mat_outline = CreateMaterial("IconRenderedTemp", "UnlitGeneric", {
     ["$translucent"] = 1
 })
 
---[[
-	Developer hook.
-	returns nothing.
-]]
--- Okay, sovietUnion wasn't pretty good name for the variation.
 local lightPositions = {
     BOX_TOP = Color(255, 255, 255),
     BOX_FRONT = Color(255, 255, 255),
 }
 
 function ikon:renderHook()
-    -- Go Away, GMOD Halo.
     if halo.RenderedEntity() == ikon.renderEntity then return end
     local w, h = ikon.curWidth * 64, ikon.curHeight * 64
     local x, y = 0, 0
@@ -118,7 +65,6 @@ function ikon:renderHook()
         tab = PositionSpawnIcon(ikon.renderEntity, ikon.renderEntity:GetPos(), true)
     end
 
-    -- Taking MDave's Tip
     xpcall(function()
         render.SetWriteDepthToDestAlpha(false)
         render.SuppressEngineLighting(true)
@@ -137,15 +83,12 @@ function ikon:renderHook()
         if tab.outline then
             render.SetStencilEnable(true)
             render.ClearStencil()
-            render.SetStencilWriteMask(137) -- yeah random number to avoid confliction
+            render.SetStencilWriteMask(137)
             render.SetStencilCompareFunction(STENCILCOMPARISONFUNCTION_ALWAYS)
             render.SetStencilPassOperation(STENCILOPERATION_REPLACE)
             render.SetStencilFailOperation(STENCILOPERATION_REPLACE)
         end
 
-        --[[
-			Add more effects on the Models!
-		]]
         if tab.drawHook then tab.drawHook(ikon.renderEntity, w, h) end
         cam.Start3D(tab.origin, tab.angles, tab.fov, 0, 0, w, h)
         if tab.entAng then
@@ -170,7 +113,7 @@ function ikon:renderHook()
             cam.Start3D(tab.origin, tab.angles, tab.fov, 0, 0, w, h)
             render.SetBlend(0)
             ikon.renderEntity:DrawModel()
-            render.SetStencilWriteMask(138) -- could you please?
+            render.SetStencilWriteMask(138)
             render.SetStencilTestMask(1)
             render.SetStencilReferenceValue(1)
             render.SetStencilCompareFunction(STENCILCOMPARISONFUNCTION_EQUAL)
@@ -185,10 +128,6 @@ function ikon:renderHook()
             render.PopRenderTarget()
             render.SetBlend(1)
             render.SetStencilCompareFunction(STENCILCOMPARISONFUNCTION_NOTEQUAL)
-            --[[
-				Thanks for Noiwex
-				NxServ.eu
-			]]
             cam.Start2D()
             surface.SetMaterial(mat_outline)
             surface.DrawTexturedRectUV(-2, 0, w, h, 0, 0, w / ikon.max, h / ikon.max)
@@ -204,7 +143,6 @@ function ikon:renderHook()
     end, function(rrer) print(rrer) end)
 end
 
-local testName = "renderedMeme"
 function ikon:showResult()
     local x, y = ScrW() / 2, ScrH() / 2
     local w, h = ikon.curWidth * 64, ikon.curHeight * 64
@@ -214,10 +152,6 @@ function ikon:showResult()
     surface.DrawTexturedRect(x, 0, w, h)
 end
 
---[[
-	Renders the Icon with given arguments.
-	returns nothing
-]]
 ikon.requestList = ikon.requestList or {}
 IKON_BUSY = 1
 IKON_PROCESSING = 0
@@ -233,11 +167,9 @@ function ikon:renderIcon(name, w, h, mdl, camInfo, updateCache)
     if camInfo then ikon.info = camInfo end
     local w, h = ikon.curWidth * 64, ikon.curHeight * 64
     local sw, sh = ScrW(), ScrH()
-    if ikon.renderModel then
-        if not IsValid(ikon.renderEntity) then
-            ikon.renderEntity = ClientsideModel(ikon.renderModel, RENDERGROUP_BOTH)
-            ikon.renderEntity:SetNoDraw(true)
-        end
+    if ikon.renderModel and not IsValid(ikon.renderEntity) then
+        ikon.renderEntity = ClientsideModel(ikon.renderModel, RENDERGROUP_BOTH)
+        ikon.renderEntity:SetNoDraw(true)
     end
 
     ikon.renderEntity:SetModel(ikon.renderModel)
@@ -272,26 +204,17 @@ function ikon:renderIcon(name, w, h, mdl, camInfo, updateCache)
     return true
 end
 
---[[
-	Gets rendered icon with given unique name.
-	returns IMaterial
-]]
 ikon.cache = ikon.cache or {}
 function ikon:getIcon(name)
-    if ikon.cache[name] then -- yeah return cache
-        return ikon.cache[name]
-    end
-
+    if ikon.cache[name] then return ikon.cache[name] end
     if file.Exists("Icon/" .. schemaName .. "/" .. name .. ".png", "DATA") then
-        ikon.cache[name] = Material("../data/nsIcon/" .. schemaName .. "/" .. name .. ".png")
-        -- yeah return cache
+        ikon.cache[name] = Material("../data/liliaicons/" .. schemaName .. "/" .. name .. ".png")
         return ikon.cache[name]
     else
         return false
     end
 end
 
--- retryd
 concommand.Add("lia_flushicon", function()
     ikon.cache = {}
     local caf = "Icon/" .. schemaName .. "/*.png"

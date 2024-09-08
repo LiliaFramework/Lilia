@@ -13,7 +13,7 @@ function SWEP:SecondaryAttack()
         local cmd = target:IsFrozen() and "sam unfreeze" or "sam freeze"
         LocalPlayer():ConCommand(cmd .. " " .. target:SteamID())
     else
-        lia.util.notify("You cannot freeze this!")
+        lia.notices.notify("You cannot freeze this!")
     end
 end
 

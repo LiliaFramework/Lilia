@@ -632,7 +632,7 @@ if SERVER then
     -- @realm shared
     -- @string message The message to notify the player.
     function playerMeta:notify(message)
-        lia.util.notify(message, self)
+        lia.notices.notify(message, self)
     end
 
     --- Notifies the player with a localized message.
@@ -640,7 +640,7 @@ if SERVER then
     -- @string message The key of the localized message to notify the player.
     -- @tab ... Additional arguments to format the localized message.
     function playerMeta:notifyLocalized(message, ...)
-        lia.util.notifyLocalized(message, self, ...)
+        lia.notices.notifyLocalized(message, self, ...)
     end
 
     --- Creates a ragdoll entity for the player.

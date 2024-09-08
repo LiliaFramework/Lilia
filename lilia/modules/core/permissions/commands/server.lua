@@ -428,7 +428,7 @@ lia.command.add("charunban", {
                 else
                     return "@charNotBanned"
                 end
-                return lia.util.notifyLocalized("charUnBan", nil, client:Name(), v:getName())
+                return lia.notices.notifyLocalized("charUnBan", nil, client:Name(), v:getName())
             end
         end
 
@@ -444,7 +444,7 @@ lia.command.add("charunban", {
                     _data = data
                 }, nil, nil, "_id = " .. charID)
 
-                lia.util.notifyLocalized("charUnBan", nil, client:Name(), lia.char.loaded[charID]:getName())
+                lia.notices.notifyLocalized("charUnBan", nil, client:Name(), lia.char.loaded[charID]:getName())
             end
         end)
     end

@@ -129,7 +129,7 @@ function MODULE:OpenAdminStickUI(target)
             else
                 local freeze = playerInfo:AddOption("Freeze", function()
                     if LocalPlayer() == target then
-                        lia.util.notify("You can't freeze yourself!")
+                        lia.notices.notify("You can't freeze yourself!")
                         return false
                     end
 
@@ -219,7 +219,7 @@ function MODULE:OpenAdminStickUI(target)
         if sam then
             local gotoo = teleport:AddOption("Goto", function()
                 if LocalPlayer() == target then
-                    lia.util.notify("You can't goto yourself!")
+                    lia.notices.notify("You can't goto yourself!")
                     return false
                 end
 
@@ -230,7 +230,7 @@ function MODULE:OpenAdminStickUI(target)
             gotoo:SetIcon("icon16/arrow_right.png")
             local bring = teleport:AddOption("Bring", function()
                 if LocalPlayer() == target then
-                    lia.util.notify("You can't bring yourself!")
+                    lia.notices.notify("You can't bring yourself!")
                     return false
                 end
 

@@ -1,6 +1,6 @@
 --- Various useful table related functions.
 -- @library lia.table
-
+lia.table = lia.table or {}
 --- Sums all numerical values in a table.
 -- @realm shared
 -- @tab tbl The table containing numerical values to sum
@@ -28,3 +28,6 @@ function lia.table.Lookupify(tbl)
     end
     return lookup
 end
+
+table.Lookupify = lia.table.Lookupify
+table.Sum = lia.table.Sum

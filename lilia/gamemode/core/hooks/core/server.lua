@@ -132,7 +132,7 @@ function GM:CanItemBeTransfered(item, curInv, inventory)
         if SERVER and character and character:getPlayer() then
             character:getPlayer():notify("You can't transfer a backpack that has items inside of it.")
         elseif CLIENT then
-            lia.util.notify("You can't transfer a backpack that has items inside of it.")
+            lia.notices.notify("You can't transfer a backpack that has items inside of it.")
         end
         return false
     end

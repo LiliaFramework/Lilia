@@ -2,7 +2,8 @@
 lia = lia or {
     util = {},
     gui = {},
-    meta = {}
+    meta = {},
+    notices = {},
 }
 
 MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Bootstrapper] ", color_white, "Starting client load...\n")

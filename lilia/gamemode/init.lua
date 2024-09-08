@@ -1,7 +1,8 @@
 ﻿DeriveGamemode("sandbox")
 lia = lia or {
     util = {},
-    meta = {}
+    meta = {},
+    notices = {}
 }
 
 if engine.ActiveGamemode() == "lilia" then MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "No schema loaded. Please place the schema in your gamemodes folder, then set it as your gamemode.\n\n") end

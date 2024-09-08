@@ -210,15 +210,6 @@ function lia.util.getMaterial(materialPath, materialParameters)
 end
 
 if SERVER then
-    --- Notifies all players with a given message.
-    -- @realm server
-    -- @string msg The message to send to all players
-    function lia.util.notifyAll(msg)
-        for _, v in pairs(player.GetAll()) do
-            v:notify(msg)
-        end
-    end
-
     --- Sends a sound to a specific player.
     -- @realm server
     -- @client client The player to receive the sound
@@ -229,48 +220,6 @@ if SERVER then
         net.Send(client)
     end
 
-    --- Notifies a player or all players with a message.
-    -- @realm server
-    -- @string message The message to be notified
-    -- @client recipient The player to receive the notification
-    function lia.util.notify(message, recipient)
-        net.Start("liaNotify")
-        net.WriteString(message)
-        if recipient == nil then
-            net.Broadcast()
-        else
-            net.Send(recipient)
-        end
-    end
-
-    lia.util.Notify = lia.util.notify
-    --- Notifies a player or all players with a localized message.
-    -- @realm server
-    -- @string message The localized message to be notified
-    -- @client recipient The player to receive the notification
-    -- @param ... Additional parameters for message formatting
-    function lia.util.notifyLocalized(message, recipient, ...)
-        local args = {...}
-        if recipient ~= nil and not istable(recipient) and type(recipient) ~= "Player" then
-            table.insert(args, 1, recipient)
-            recipient = nil
-        end
-
-        net.Start("liaNotifyL")
-        net.WriteString(message)
-        net.WriteUInt(#args, 8)
-        for i = 1, #args do
-            net.WriteString(tostring(args[i]))
-        end
-
-        if recipient == nil then
-            net.Broadcast()
-        else
-            net.Send(recipient)
-        end
-    end
-
-    lia.util.NotifyLocalized = lia.util.notifyLocalized
     --- Finds empty spaces around an entity where another entity can be placed.
     -- @realm server
     -- @client entity The client to find empty spaces around
@@ -404,22 +353,6 @@ else
         draw.SimpleText(text, font, x + (w / 2), y + (h / 2), textCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
-    --- Adds an animated dot to a text string.
-    -- @realm client
-    -- @string text The base text to which dots will be added
-    -- @number[opt] interval The interval in seconds at which dots change (default is 0.5)
-    function lia.util.DotDotDot(text, interval)
-        interval = interval or 0.5
-        local Dots = {"", ".", "..", "..."}
-        -- Initialize or update the dot animation timer
-        if CurTime() >= (lia.util.NextDot or CurTime()) then
-            lia.util.NextDot = CurTime() + interval
-            lia.util.dot = (lia.util.dot or 1) + 1
-            if lia.util.dot > #Dots then lia.util.dot = 1 end
-        end
-        return text .. Dots[lia.util.dot]
-    end
-
     --- Draws some text with a shadow.
     -- @realm client
     -- @string text Text to draw
@@ -510,154 +443,6 @@ else
         return lines, maxW
     end
 
-    --- Displays a notification message in the chat.
-    -- @string message The message to display
-    -- @realm client
-    function lia.util.notify(message)
-        chat.AddText(message)
-    end
-
-    lia.util.Notify = lia.util.notify
-    --- Displays a localized notification message in the chat.
-    -- @realm client
-    -- @string message The message to display (localized)
-    -- @param ... Additional parameters for string formatting
-    function lia.util.notifyLocalized(message, ...)
-        lia.util.notify(L(message, ...))
-    end
-
-    lia.util.NotifyLocalized = lia.util.notifyLocalized
-    --- Scales a value proportionally based on the screen width.
-    -- @realm client
-    -- @int n The value to scale
-    -- @bool bool If true, scales based on horizontal resolution; if false or nil, scales based on default values
-    -- @return The scaled value
-    function lia.util.screenScaleW(n, bool)
-        if bool then
-            if ScrW() > 1280 then return n end
-            return math.ceil(n / 1920 * ScrW())
-        end
-        return n * (ScrW() / 640)
-    end
-
-    timer.Create("liaResolutionMonitor", 1, 0, function()
-        local scrW, scrH = ScrW(), ScrH()
-        if scrW ~= LAST_WIDTH or scrH ~= LAST_HEIGHT then
-            hook.Run("ScreenResolutionChanged", LAST_WIDTH, LAST_HEIGHT)
-            LAST_WIDTH = scrW
-            LAST_HEIGHT = scrH
-        end
-    end)
-
-    --- Displays a query notification panel with options.
-    -- @realm client
-    -- @string question The question or prompt to display
-    -- @string option1 The text for the first option
-    -- @string option2 The text for the second option
-    -- @bool manualDismiss If true, the panel requires manual dismissal
-    -- @int notifType The type of notification
-    -- @func callback The function to call when an option is selected, with the option index and the notice panel as arguments
-    -- @return The created notification panel
-    function lia.util.notifQuery(question, option1, option2, manualDismiss, notifType, callback)
-        if not callback or not isfunction(callback) then Error("A callback function must be specified") end
-        if not question or not isstring(question) then Error("A question string must be specified") end
-        if not option1 then option1 = "Yes" end
-        if not option2 then option2 = "No" end
-        if not manualDismiss then manualDismiss = false end
-        local notice = CreateNoticePanel(10, manualDismiss)
-        local i = table.insert(lia.noticess, notice)
-        notice.isQuery = true
-        notice.text:SetText(question)
-        notice:SetPos(0, (i - 1) * (notice:GetTall() + 4) + 4)
-        notice:SetTall(36 * 2.3)
-        notice:CalcWidth(120)
-        notice:CenterHorizontal()
-        notice.notifType = notifType or 7
-        if manualDismiss then notice.start = nil end
-        notice.opt1 = notice:Add("DButton")
-        notice.opt1:SetAlpha(0)
-        notice.opt2 = notice:Add("DButton")
-        notice.opt2:SetAlpha(0)
-        notice.oh = notice:GetTall()
-        OrganizeNotices(false)
-        notice:SetTall(0)
-        notice:SizeTo(notice:GetWide(), 36 * 2.3, 0.2, 0, -1, function()
-            notice.text:SetPos(0, 0)
-            local function styleOpt(o)
-                o.color = Color(0, 0, 0, 30)
-                AccessorFunc(o, "color", "Color")
-                function o:Paint(w, h)
-                    if self.left then
-                        draw.RoundedBoxEx(4, 0, 0, w + 2, h, self.color, false, false, true, false)
-                    else
-                        draw.RoundedBoxEx(4, 0, 0, w + 2, h, self.color, false, false, false, true)
-                    end
-                end
-            end
-
-            if notice.opt1 and IsValid(notice.opt1) then
-                notice.opt1:SetAlpha(255)
-                notice.opt1:SetSize(notice:GetWide() / 2, 25)
-                notice.opt1:SetText(option1 .. " (F8)")
-                notice.opt1:SetPos(0, notice:GetTall() - notice.opt1:GetTall())
-                notice.opt1:CenterHorizontal(0.25)
-                notice.opt1:SetAlpha(0)
-                notice.opt1:AlphaTo(255, 0.2)
-                notice.opt1:SetTextColor(color_white)
-                notice.opt1.left = true
-                styleOpt(notice.opt1)
-                function notice.opt1:keyThink()
-                    if input.IsKeyDown(KEY_F8) and (CurTime() - notice.lastKey) >= 0.5 then
-                        self:ColorTo(Color(24, 215, 37), 0.2, 0)
-                        notice.respondToKeys = false
-                        callback(1, notice)
-                        timer.Simple(1, function() if notice and IsValid(notice) then RemoveNotices(notice) end end)
-                        notice.lastKey = CurTime()
-                    end
-                end
-            end
-
-            if notice.opt2 and IsValid(notice.opt2) then
-                notice.opt2:SetAlpha(255)
-                notice.opt2:SetSize(notice:GetWide() / 2, 25)
-                notice.opt2:SetText(option2 .. " (F9)")
-                notice.opt2:SetPos(0, notice:GetTall() - notice.opt2:GetTall())
-                notice.opt2:CenterHorizontal(0.75)
-                notice.opt2:SetAlpha(0)
-                notice.opt2:AlphaTo(255, 0.2)
-                notice.opt2:SetTextColor(color_white)
-                styleOpt(notice.opt2)
-                function notice.opt2:keyThink()
-                    if input.IsKeyDown(KEY_F9) and (CurTime() - notice.lastKey) >= 0.5 then
-                        self:ColorTo(Color(24, 215, 37), 0.2, 0)
-                        notice.respondToKeys = false
-                        callback(2, notice)
-                        timer.Simple(1, function() if notice and IsValid(notice) then RemoveNotices(notice) end end)
-                        notice.lastKey = CurTime()
-                    end
-                end
-            end
-
-            notice.lastKey = CurTime()
-            notice.respondToKeys = true
-            function notice:Think()
-                if not self.respondToKeys then return end
-                local queries = {}
-                for _, v in pairs(lia.noticess) do
-                    if v.isQuery then queries[#queries + 1] = v end
-                end
-
-                for k, v in pairs(queries) do
-                    if v == self and k > 1 then return end
-                end
-
-                if self.opt1 and IsValid(self.opt1) then self.opt1:keyThink() end
-                if self.opt2 and IsValid(self.opt2) then self.opt2:keyThink() end
-            end
-        end)
-        return notice
-    end
-
     local useCheapBlur = CreateClientConVar("lia_cheapblur", 0, true):GetBool()
     --- Blurs the content underneath the given panel. This will fall back to a simple darkened rectangle if the player has
     -- blurring disabled.
@@ -719,43 +504,22 @@ else
     end
 
     cvars.AddChangeCallback("lia_cheapblur", function(_, _, new) useCheapBlur = (tonumber(new) or 0) > 0 end)
-end
-
-function SS(value, isWidth)
-    local screenWidth, screenHeight = ScrW(), ScrH()
-    local widthRatio = screenWidth / 1920
-    local heightRatio = screenHeight / 1080
-    return isWidth and (value * widthRatio) or (value * heightRatio)
-end
-
-function sW(width)
-    if width then
-        return width * (ScrW() / 1920)
-    else
-        return 1920
-    end
-end
-
-function sH(height)
-    if height then
-        return height * (ScrH() / 1080)
-    else
-        return 1080
-    end
-end
-
-function C(value, isWidth)
-    return SS(value, isWidth)
+    timer.Create("liaResolutionMonitor", 1, 0, function()
+        local scrW, scrH = ScrW(), ScrH()
+        if scrW ~= LAST_WIDTH or scrH ~= LAST_HEIGHT then
+            hook.Run("ScreenResolutionChanged", LAST_WIDTH, LAST_HEIGHT)
+            LAST_WIDTH = scrW
+            LAST_HEIGHT = scrH
+        end
+    end)
 end
 
 lia.util.FindPlayer = lia.util.findPlayer
 lia.util.StringMatches = lia.util.stringMatches
-lia.util.GridVector = lia.util.gridVector
 lia.util.GetAdmins = lia.util.getAdmins
 lia.util.FindPlayerBySteamID64 = lia.util.findPlayerBySteamID64
 lia.util.FindPlayerBySteamID = lia.util.findPlayerBySteamID
 lia.util.CanFit = lia.util.canFit
-lia.util.Chance = lia.util.chance
 lia.util.PlayerInRadius = lia.util.playerInRadius
 lia.util.FindEmptySpace = lia.util.findEmptySpace
 lia.util.DrawText = lia.util.drawText

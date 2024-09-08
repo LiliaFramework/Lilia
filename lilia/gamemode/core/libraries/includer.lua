@@ -18,6 +18,10 @@ lia.FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/libraries/notice.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/meta/character.lua",
         realm = "shared"
     },
@@ -126,16 +130,20 @@ lia.FilesToLoad = {
         realm = "client"
     },
     {
-        path = "lilia/gamemode/core/libraries/notice.lua",
-        realm = "client"
-    },
-    {
         path = "lilia/gamemode/core/libraries/bars.lua",
         realm = "client"
     },
     {
         path = "lilia/gamemode/core/libraries/darkrp.lua",
         realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/core/netcalls/client.lua",
+        realm = "client"
+    },
+    {
+        path = "lilia/gamemode/core/netcalls/server.lua",
+        realm = "server"
     },
     {
         path = "lilia/gamemode/core/libraries/ease.lua",
@@ -154,12 +162,8 @@ lia.FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/netcalls/client.lua",
+        path = "lilia/gamemode/core/libraries/sizing.lua",
         realm = "client"
-    },
-    {
-        path = "lilia/gamemode/core/netcalls/server.lua",
-        realm = "server"
     },
 }
 
