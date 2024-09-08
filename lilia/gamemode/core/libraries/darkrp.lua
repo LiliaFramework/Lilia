@@ -1,3 +1,5 @@
+--- A library of DarkRP compatibility functions.
+-- @library lia.darkrp
 DarkRP = DarkRP or {}
 RPExtraTeams = RPExtraTeams or {}
 if SERVER then
@@ -6,7 +8,7 @@ if SERVER then
     -- @vector position The position to check.
     -- @tab entitiesToIgnore A table of entities to ignore during the check.
     -- @return bool Whether the position is considered empty.
-    function DarkRP.isEmpty(position, entitiesToIgnore)
+    function lia.darkrp.isEmpty(position, entitiesToIgnore)
         entitiesToIgnore = entitiesToIgnore or {}
         local contents = util.PointContents(position)
         local isClear = contents ~= CONTENTS_SOLID and contents ~= CONTENTS_MOVEABLE and contents ~= CONTENTS_LADDER and contents ~= CONTENTS_PLAYERCLIP and contents ~= CONTENTS_MONSTERCLIP
@@ -29,14 +31,14 @@ if SERVER then
     -- @int searchStep The step size for the search.
     -- @vector checkArea A vector defining the area around the position to check.
     -- @return Vector The found empty position, or the original position if none are found.
-    function DarkRP.findEmptyPos(startPos, entitiesToIgnore, maxDistance, searchStep, checkArea)
-        if DarkRP.isEmpty(startPos, entitiesToIgnore) and DarkRP.isEmpty(startPos + checkArea, entitiesToIgnore) then return startPos end
+    function lia.darkrp.findEmptyPos(startPos, entitiesToIgnore, maxDistance, searchStep, checkArea)
+        if lia.darkrp.isEmpty(startPos, entitiesToIgnore) and lia.darkrp.isEmpty(startPos + checkArea, entitiesToIgnore) then return startPos end
         for distance = searchStep, maxDistance, searchStep do
             for direction = -1, 1, 2 do
                 local offset = distance * direction
-                if DarkRP.isEmpty(startPos + Vector(offset, 0, 0), entitiesToIgnore) and DarkRP.isEmpty(startPos + Vector(offset, 0, 0) + checkArea, entitiesToIgnore) then return startPos + Vector(offset, 0, 0) end
-                if DarkRP.isEmpty(startPos + Vector(0, offset, 0), entitiesToIgnore) and DarkRP.isEmpty(startPos + Vector(0, offset, 0) + checkArea, entitiesToIgnore) then return startPos + Vector(0, offset, 0) end
-                if DarkRP.isEmpty(startPos + Vector(0, 0, offset), entitiesToIgnore) and DarkRP.isEmpty(startPos + Vector(0, 0, offset) + checkArea, entitiesToIgnore) then return startPos + Vector(0, 0, offset) end
+                if lia.darkrp.isEmpty(startPos + Vector(offset, 0, 0), entitiesToIgnore) and lia.darkrp.isEmpty(startPos + Vector(offset, 0, 0) + checkArea, entitiesToIgnore) then return startPos + Vector(offset, 0, 0) end
+                if lia.darkrp.isEmpty(startPos + Vector(0, offset, 0), entitiesToIgnore) and lia.darkrp.isEmpty(startPos + Vector(0, offset, 0) + checkArea, entitiesToIgnore) then return startPos + Vector(0, offset, 0) end
+                if lia.darkrp.isEmpty(startPos + Vector(0, 0, offset), entitiesToIgnore) and lia.darkrp.isEmpty(startPos + Vector(0, 0, offset) + checkArea, entitiesToIgnore) then return startPos + Vector(0, 0, offset) end
             end
         end
         return startPos
@@ -46,7 +48,7 @@ if SERVER then
     -- This function sends a notification message to a specified client using the notify method.
     -- @client client The client to receive the notification.
     -- @string message The message to be sent.
-    function DarkRP.notify(client, _, _, message)
+    function lia.darkrp.notify(client, _, _, message)
         client:notify(message)
     end
 else
@@ -57,7 +59,7 @@ else
     -- @string fontName The font to be used for measuring text width.
     -- @int maxLineWidth The maximum width in pixels for each line of text.
     -- @return string The wrapped text with line breaks inserted.
-    function DarkRP.textWrap(text, fontName, maxLineWidth)
+    function lia.darkrp.textWrap(text, fontName, maxLineWidth)
         local function wrapCharacters(text, remainingWidth, maxWidth)
             local accumulatedWidth = 0
             text = text:gsub(".", function(char)
@@ -109,6 +111,12 @@ end
 -- This function formats the specified amount of money according to the currency system.
 -- @float amount The amount of money to be formatted.
 -- @return string The formatted money string.
-function DarkRP.formatMoney(amount)
+function lia.darkrp.formatMoney(amount)
     return lia.currency.get(amount)
 end
+
+DarkRP.formatMoney = lia.darkrp.formatMoney
+DarkRP.isEmpty = lia.darkrp.isEmpty
+DarkRP.findEmptyPos = lia.darkrp.findEmptyPos
+DarkRP.notify = lia.darkrp.notify
+DarkRP.textWrap = lia.darkrp.textWrap
