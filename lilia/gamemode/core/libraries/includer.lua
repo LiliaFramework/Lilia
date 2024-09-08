@@ -138,6 +138,22 @@ lia.FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/libraries/ease.lua",
+        realm = "client"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/string.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/table.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/math.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/netcalls/client.lua",
         realm = "client"
     },

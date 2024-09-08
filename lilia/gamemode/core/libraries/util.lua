@@ -1,67 +1,6 @@
 ﻿--- Various useful helper functions.
 -- @library lia.util
 
---- Removes the realm prefix from a file name. The returned string will be unchanged if there is no prefix found.
--- @realm shared
--- @string name String to strip prefix from
--- @treturn string String stripped of prefix
--- @usage print(lia.util.stripRealmPrefix("sv_init.lua"))
--- > init.lua
-function lia.util.stripRealmPrefix(name)
-    local prefix = name:sub(1, 3)
-    return (prefix == "sh_" or prefix == "sv_" or prefix == "cl_") and name:sub(4) or name
-end
-
---- Sums all numerical values in a table.
--- @realm client
--- @tab tbl The table containing numerical values to sum
--- @return number The sum of all numerical values
-function lia.util.TableSum(tbl)
-    local sum = 0
-    for _, v in pairs(tbl) do
-        if isnumber(v) then
-            sum = sum + v
-        elseif istable(v) then
-            sum = sum + lia.util.TableSum(v)
-        end
-    end
-    return sum
-end
-
---- Returns a color that cycles through the hues of the HSV color spectrum.
--- @realm client
--- @number frequency The speed at which the color cycles through hues
--- @return color The color object with the current hue
-function lia.util.Rainbow(frequency)
-    return HSVToColor(CurTime() * frequency % 360, 1, 1)
-end
-
---- Returns a color that smoothly transitions between two given colors.
--- @realm client
--- @color col1 The first color
--- @color col2 The second color
--- @number freq The frequency of the color transition
--- @return color The color resulting from the transition
-function lia.util.ColorCycle(col1, col2, freq)
-    freq = freq or 1
-    local difference = Color(col1.r - col2.r, col1.g - col2.g, col1.b - col2.b)
-    local time = CurTime()
-    local rgb = {
-        r = 0,
-        g = 0,
-        b = 0
-    }
-
-    for k, _ in pairs(rgb) do
-        if col1[k] > col2[k] then
-            rgb[k] = col2[k]
-        else
-            rgb[k] = col1[k]
-        end
-    end
-    return Color(rgb.r + math.abs(math.sin(time * freq) * difference.r), rgb.g + math.abs(math.sin(time * freq + 2) * difference.g), rgb.b + math.abs(math.sin(time * freq + 4) * difference.b))
-end
-
 --- Finds all players within a box defined by minimum and maximum coordinates.
 -- @realm client
 -- @vector mins The minimum corner of the box
@@ -90,107 +29,13 @@ function lia.util.FindPlayersInSphere(origin, radius)
     return plys
 end
 
---- Formats a number with commas for thousands separation.
--- @realm client
--- @number amount The number to format
--- @return string The formatted number with commas
-function lia.util.CommaNumber(amount)
-    local formatted = amount
-    while true do
-        local k
-        formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", "%1,%2")
-        if k == 0 then break end
-    end
-    return formatted
-end
-
---- Converts units to inches.
--- @realm client
--- @number units The units to convert
--- @return number The equivalent measurement in inches
-function lia.util.UnitsToInches(units)
-    return units * 0.75
-end
-
---- Converts units to centimeters.
--- @realm client
--- @number units The units to convert
--- @return number The equivalent measurement in centimeters
-function lia.util.UnitsToCentimeters(units)
-    return lia.util.UnitsToInches(units) * 2.54
-end
-
---- Converts units to meters.
--- @realm client
--- @number units The units to convert
--- @return number The equivalent measurement in meters
-function lia.util.UnitsToMeters(units)
-    return lia.util.UnitsToInches(units) * 0.0254
-end
-
---- Converts a color to a hexadecimal string.
--- @realm client
--- @color color The color to convert
--- @return string The hexadecimal color code
-function lia.util.ColorToHex(color)
-    return "0x" .. bit.tohex(color.r, 2) .. bit.tohex(color.g, 2) .. bit.tohex(color.b, 2)
-end
-
---- Gets the color associated with a player's team or class.
--- @realm client
--- @client client The player whose color to retrieve
--- @return color The color associated with the player's team or class
-function lia.util.GetTeamColor(client)
-    local char = client:getChar()
-    if not char then return team.GetColor(client:Team()) end
-    local classIndex = char:getClass()
-    if not classIndex then return team.GetColor(client:Team()) end
-    local classTbl = lia.class.list[classIndex]
-    if not classTbl then return team.GetColor(client:Team()) end
-    return classTbl.Color or team.GetColor(client:Team())
-end
-
---- Converts minimum and maximum coordinates to a list of vertices.
--- @realm client
--- @vector min The minimum coordinates
--- @vector max The maximum coordinates
--- @return table A list of vertices defining the box
-function lia.util.MinMaxToVertices(min, max)
-    return {Vector(min.x, min.y, min.z), Vector(min.x, min.y, max.z), Vector(min.x, max.y, min.z), Vector(min.x, max.y, max.z), Vector(max.x, min.y, min.z), Vector(max.x, min.y, max.z), Vector(max.x, max.y, min.z), Vector(max.x, max.y, max.z)}
-end
-
---- Measures the average execution time of a function.
--- @realm client
--- @func func The function to test
--- @int n The number of iterations
--- @return number The average time in seconds it took to execute the function
-function lia.util.SpeedTest(func, n)
-    local start = SysTime()
-    for _ = 1, n do
-        func()
-    end
-    return (SysTime() - start) / n
-end
-
---- Creates a lookup table from a list of values.
--- @realm client
--- @tab tbl The list of values to create a lookup table from
--- @return table A lookup table where the keys are the values from the input list
-function lia.util.Lookupify(tbl)
-    local lookup = {}
-    for _, v in pairs(tbl) do
-        lookup[v] = true
-    end
-    return lookup
-end
-
 --- Attempts to find a player by matching their name or Steam ID.
 -- @realm shared
 -- @string identifier Search query
 -- @bool[opt=false] allowPatterns Whether or not to accept Lua patterns in `identifier`
 -- @treturn player Player that matches the given search query - this will be `nil` if a player could not be found
 function lia.util.findPlayer(identifier, allowPatterns)
-    if lia.util.isSteamID(identifier) then return player.GetBySteamID(identifier) end
+    if string.match(identifier, "STEAM_(%d+):(%d+):(%d+)") then return player.GetBySteamID(identifier) end
     if not allowPatterns then identifier = string.PatternSafe(identifier) end
     for _, v in player.Iterator() do
         if lia.util.stringMatches(v:Name(), identifier) then return v end
@@ -238,33 +83,6 @@ function lia.util.findPlayerEntities(client, class)
     return items
 end
 
---- Emits sounds one after the other from an entity.
--- @realm shared
--- @entity entity Entity to play sounds from
--- @tab sounds Sound paths to play
--- @float delay[opt=0] How long to wait before starting to play the sounds
--- @float spacing[opt=0.1] How long to wait between playing each sound
--- @int volume[opt=75] The sound level of each sound
--- @int pitch[opt=100] Pitch percentage of each sound
--- @treturn number How long the entire sequence of sounds will take to play
-function lia.util.emitQueuedSounds(entity, sounds, delay, spacing, volume, pitch)
-    delay = delay or 0
-    spacing = spacing or 0.1
-    for _, v in ipairs(sounds) do
-        local postSet, preSet = 0, 0
-        if istable(v) then
-            postSet, preSet = v[2] or 0, v[3] or 0
-            v = v[1]
-        end
-
-        local length = SoundDuration(SoundDuration("npc/metropolice/pain1.wav") > 0 and "" or "../../hl2/sound/" .. v)
-        delay = delay + preSet
-        timer.Simple(delay, function() if IsValid(entity) then entity:EmitSound(v, volume, pitch) end end)
-        delay = delay + length + postSet + spacing
-    end
-    return delay
-end
-
 --- Checks to see if two strings are equivalent using a fuzzy manner. Both strings will be lowered, and will return `true` if
 -- the strings are identical, or if `b` is a substring of `a`.
 -- @realm shared
@@ -280,57 +98,6 @@ function lia.util.stringMatches(a, b)
         if a2:find(b2) then return true end
     end
     return false
-end
-
---- Rounds a vector to the nearest multiple of a given grid size.
--- @realm shared
--- @vector vec Vector to be rounded
--- @int gridSize Grid size to round to
--- @treturn Vector The rounded vector
-function lia.util.gridVector(vec, gridSize)
-    if gridSize <= 0 then gridSize = 1 end
-    for i = 1, 3 do
-        vec[i] = vec[i] / gridSize
-        vec[i] = math.Round(vec[i])
-        vec[i] = vec[i] * gridSize
-    end
-    return vec
-end
-
---- Retrieves the SteamIDs of all connected players.
--- @treturn table Table containing SteamIDs of all connected players
--- @realm shared
-function lia.util.getAllChar()
-    local charTable = {}
-    for _, v in player.Iterator() do
-        if v:getChar() then table.insert(charTable, v:getChar():getID()) end
-    end
-    return charTable
-end
-
---- Checks if a given value is a SteamID.
--- @string value The value to check
--- @treturn bool True if the value is a SteamID, false otherwise
--- @realm shared
-function lia.util.isSteamID(value)
-    if string.match(value, "STEAM_(%d+):(%d+):(%d+)") then return true end
-    return false
-end
-
---- Converts a date string to a table containing date and time components.
--- @string str The date string in the format "YYYY-MM-DD HH:MM:SS"
--- @treturn table Table containing date and time components
--- @realm shared
-function lia.util.dateToNumber(str)
-    str = str or os.date("%Y-%m-%d %H:%M:%S", os.time())
-    return {
-        year = tonumber(str:sub(1, 4)),
-        month = tonumber(str:sub(6, 7)),
-        day = tonumber(str:sub(9, 10)),
-        hour = tonumber(str:sub(12, 13)),
-        min = tonumber(str:sub(15, 16)),
-        sec = tonumber(str:sub(18, 19)),
-    }
 end
 
 --- Retrieves all online players with administrative permissions.
@@ -387,16 +154,6 @@ function lia.util.canFit(pos, mins, maxs, filter)
     return not tr.Hit
 end
 
---- Rolls a chance based on a given probability.
--- @int chance The probability of success in percentage
--- @treturn bool True if the chance is successful, false otherwise
--- @realm shared
-function lia.util.chance(chance)
-    local rand = math.random(0, 100)
-    if rand <= chance then return true end
-    return false
-end
-
 --- Retrieves all players within a certain radius from a given position.
 -- @vector pos The center position
 -- @int dist The maximum distance from the center
@@ -439,38 +196,6 @@ function lia.util.formatStringNamed(format, ...)
     return result
 end
 
--- Serializes a vector to a JSON string.
--- @realm server
--- @vector vector The vector to serialize (a table with x, y, and z values)
--- @return string The JSON string representing the vector
-function lia.util.SerializeVector(vector)
-    return util.TableToJSON({vector.x, vector.y, vector.z})
-end
-
--- Deserializes a JSON string back into a vector.
--- @realm server
--- @string data The JSON string to deserialize
--- @return Vector The vector object created from the JSON data
-function lia.util.DeserializeVector(data)
-    return Vector(unpack(util.JSONToTable(data)))
-end
-
--- Serializes an angle to a JSON string.
--- @realm server
--- @angle ang The angle to serialize (a table with p, y, and r values)
--- @return string The JSON string representing the angle
-function lia.util.SerializeAngle(ang)
-    return util.TableToJSON({ang.p, ang.y, ang.r})
-end
-
--- Deserializes a JSON string back into an angle.
--- @realm server
--- @string data The JSON string to deserialize
--- @return Angle The angle object created from the JSON data
-function lia.util.DeserializeAngle(data)
-    return Angle(unpack(util.JSONToTable(data)))
-end
-
 --- Returns a cached copy of the given material, or creates and caches one if it doesn't exist. This is a quick helper function.
 -- if you aren't locally storing a `Material()` call.
 -- @realm shared
@@ -482,42 +207,6 @@ function lia.util.getMaterial(materialPath, materialParameters)
     lia.util.cachedMaterials = lia.util.cachedMaterials or {}
     lia.util.cachedMaterials[materialPath] = lia.util.cachedMaterials[materialPath] or Material(materialPath, materialParameters)
     return lia.util.cachedMaterials[materialPath]
-end
-
---- Recursively retrieves all files with a specific extension in a given directory.
--- @realm shared
--- @string directory The path of the directory to search in.
--- @string extension The file extension to filter by.
--- @treturn table A table containing the paths of all found files with the specified extension.
-function lia.util.getAllFilesInDirectory(directory, extension)
-    local files = {}
-    local function scanDirectory(dir)
-        local fileList, directoryList = file.Find(dir .. "/*", "GAME")
-        for _, fileName in ipairs(fileList) do
-            if string.EndsWith(fileName, extension) then table.insert(files, dir .. "/" .. fileName) end
-        end
-
-        for _, subDir in ipairs(directoryList) do
-            scanDirectory(dir .. "/" .. subDir)
-        end
-    end
-
-    scanDirectory(directory)
-    return files
-end
-
---- Retrieves all citizen models by searching in predefined directories.
--- @realm shared
--- @treturn table A table containing the paths of all found citizen models.
-function lia.util.getAllCitizenModels()
-    local allModels = {}
-    for _, path in ipairs(lia.anim.CitizenModelPaths) do
-        local modelsInPath = lia.util.getAllFilesInDirectory(path, ".mdl")
-        for _, model in ipairs(modelsInPath) do
-            table.insert(allModels, model)
-        end
-    end
-    return allModels
 end
 
 if SERVER then
@@ -555,23 +244,6 @@ if SERVER then
     end
 
     lia.util.Notify = lia.util.notify
-    --- Spawns entities from a table of entity-position pairs.
-    -- @realm server
-    -- @tab entityTable Table containing entity-position pairs
-    function lia.util.spawnEntities(entityTable)
-        for entity, position in pairs(entityTable) do
-            if isvector(position) then
-                local newEnt = ents.Create(entity)
-                if IsValid(newEnt) then
-                    newEnt:SetPos(position)
-                    newEnt:Spawn()
-                end
-            else
-                LiliaInformation("Invalid position for entity", entity)
-            end
-        end
-    end
-
     --- Notifies a player or all players with a localized message.
     -- @realm server
     -- @string message The localized message to be notified
@@ -635,55 +307,6 @@ if SERVER then
 
         table.sort(output, function(a, b) return a:Distance(position) < b:Distance(position) end)
         return output
-    end
-
-    --- Spawns a prop at a given position with optional parameters.
-    -- @realm server
-    -- @string model Model of the prop to spawn
-    -- @vector position Position to spawn the prop
-    -- @param[opt] force Force to apply to the prop
-    -- @int[opt] lifetime Lifetime of the prop in seconds
-    -- @angle[opt] angles Angles of the prop
-    -- @param[opt] collision Collision group of the prop
-    -- @return The spawned prop entity
-    function lia.util.spawnProp(model, position, force, lifetime, angles, collision)
-        local entity = ents.Create("prop_physics")
-        entity:SetModel(model)
-        entity:Spawn()
-        entity:SetCollisionGroup(collision or COLLISION_GROUP_WEAPON)
-        entity:SetAngles(angles or angle_zero)
-        if type(position) == "Player" then position = position:GetItemDropPos(entity) end
-        entity:SetPos(position)
-        if force then
-            local phys = entity:GetPhysicsObject()
-            if IsValid(phys) then phys:ApplyForceCenter(force) end
-        end
-
-        if (lifetime or 0) > 0 then timer.Simple(lifetime, function() if IsValid(entity) then entity:Remove() end end) end
-        return entity
-    end
-
-    --- Logs a message with a timestamp to the console.
-    -- @realm server
-    -- @string str The message to be logged
-    function lia.util.debugLog(str)
-        MsgC(Color("sky_blue"), os.date("(%d/%m/%Y - %H:%M:%S)", os.time()), Color("yellow"), " [LOG] ", color_white, str, "\n")
-    end
-
-    --- Logs a warning message to the console.
-    -- @realm server
-    -- @string message The warning message string
-    -- @tab ... Additional parameters for message formatting
-    function lia.util.dWarningMessage(message, ...)
-        MsgC(Color(255, 100, 0), string.format(message, ...), "\n")
-    end
-
-    --- Prints a message to a player's chat.
-    -- @realm server
-    -- @client target The player to receive the chat message
-    -- @tab ... The message or messages to print
-    function lia.util.chatNotify(target, ...)
-        netstream.Start(target, "ChatPrint", {...})
     end
 else
     --- Draws text with a shadow effect.
@@ -797,14 +420,6 @@ else
         return text .. Dots[lia.util.dot]
     end
 
-    --- Downloads a material from a URL and saves it to a specified path if it doesn't already exist.
-    -- @realm client
-    -- @string url The URL to download the material from
-    -- @string path The path to save the material to
-    function lia.util.DownloadMaterial(url, path)
-        if not file.Exists(path, "DATA") then http.Fetch(url, function(result) if result then file.Write(path, result) end end) end
-    end
-
     --- Draws some text with a shadow.
     -- @realm client
     -- @string text Text to draw
@@ -912,58 +527,6 @@ else
     end
 
     lia.util.NotifyLocalized = lia.util.notifyLocalized
-    --- Converts a color object to a string representation.
-    -- @realm client
-    -- @color color The color object to convert
-    -- @return A string representation of the color in the format "r,g,b,a"
-    function lia.util.colorToText(color)
-        if not IsColor(color) then return end
-        return (color.r or 255) .. "," .. (color.g or 255) .. "," .. (color.b or 255) .. "," .. (color.a or 255)
-    end
-
-    --- Displays a caption message on the screen for a specified duration.
-    -- @realm client
-    -- @string text The caption text to display
-    -- @int[opt] duration The duration (in seconds) for which to display the caption
-    function lia.util.endCaption(text, duration)
-        RunConsoleCommand("closecaption", "1")
-        gui.AddCaption(text, duration or string.len(text) * 0.1)
-    end
-
-    --- Displays a caption message on the screen for a specified duration.
-    -- @realm client
-    -- @string text The caption text to display
-    -- @int[opt] duration The duration (in seconds) for which to display the caption
-    function lia.util.startCaption(text, duration)
-        RunConsoleCommand("closecaption", "1")
-        gui.AddCaption(text, duration or string.len(text) * 0.1)
-    end
-
-    --- Determines the color indicating the health status of a player.
-    -- @realm client
-    -- @client client The player for which to determine the color
-    -- @return The color representing the player's health status
-    function lia.util.getInjuredColor(client)
-        local health_color = color_white
-        if not IsValid(client) then return health_color end
-        local health, healthMax = client:Health(), client:GetMaxHealth()
-        if (health / healthMax) < .95 then health_color = lia.color.LerpHSV(nil, nil, healthMax, health, 0) end
-        return health_color
-    end
-
-    --- Scales a value proportionally based on the screen height.
-    -- @realm client
-    -- @int n The value to scale
-    -- @bool bool If true, scales based on vertical resolution; if false or nil, scales based on default values
-    -- @return The scaled value
-    function lia.util.screenScaleH(n, bool)
-        if bool then
-            if ScrH() > 720 then return n end
-            return math.ceil(n / 1080 * ScrH())
-        end
-        return n * (ScrH() / 480)
-    end
-
     --- Scales a value proportionally based on the screen width.
     -- @realm client
     -- @int n The value to scale
@@ -985,82 +548,6 @@ else
             LAST_HEIGHT = scrH
         end
     end)
-
-    --- Displays a numeric input request dialog.
-    -- @realm client
-    -- @string strTitle The title of the dialog window
-    -- @string strText The text to display in the dialog
-    -- @string strDefaultText The default text to display in the input field
-    -- @func fnEnter The function to call when the Enter key is pressed, with the input value as its argument
-    -- @func[opt] fnCancel The function to call when the dialog is canceled or closed, with the input value as its argument
-    -- @string[opt] strButtonText The text to display on the confirmation button
-    -- @string[opt] strButtonCancelText The text to display on the cancel button
-    -- @return The created DFrame window
-    function Derma_NumericRequest(strTitle, strText, strDefaultText, fnEnter, fnCancel, strButtonText, strButtonCancelText)
-        local Window = vgui.Create("DFrame")
-        Window:SetTitle(strTitle or "Message Title (First Parameter)")
-        Window:SetDraggable(false)
-        Window:ShowCloseButton(false)
-        Window:SetBackgroundBlur(true)
-        Window:SetDrawOnTop(true)
-        local InnerPanel = vgui.Create("DPanel", Window)
-        InnerPanel:SetPaintBackground(false)
-        local Text = vgui.Create("DLabel", InnerPanel)
-        Text:SetText(strText or "Message Text (Second Parameter)")
-        Text:SizeToContents()
-        Text:SetContentAlignment(5)
-        Text:SetTextColor(color_white)
-        local TextEntry = vgui.Create("DTextEntry", InnerPanel)
-        TextEntry:SetValue(strDefaultText or "")
-        TextEntry.OnEnter = function()
-            Window:Close()
-            fnEnter(TextEntry:GetValue())
-        end
-
-        TextEntry:SetNumeric(true)
-        local ButtonPanel = vgui.Create("DPanel", Window)
-        ButtonPanel:SetTall(30)
-        ButtonPanel:SetPaintBackground(false)
-        local Button = vgui.Create("DButton", ButtonPanel)
-        Button:SetText(strButtonText or "OK")
-        Button:SizeToContents()
-        Button:SetTall(20)
-        Button:SetWide(Button:GetWide() + 20)
-        Button:SetPos(5, 5)
-        Button.DoClick = function()
-            Window:Close()
-            fnEnter(TextEntry:GetValue())
-        end
-
-        local ButtonCancel = vgui.Create("DButton", ButtonPanel)
-        ButtonCancel:SetText(strButtonCancelText or L"derma_request_cancel")
-        ButtonCancel:SizeToContents()
-        ButtonCancel:SetTall(20)
-        ButtonCancel:SetWide(Button:GetWide() + 20)
-        ButtonCancel:SetPos(5, 5)
-        ButtonCancel.DoClick = function()
-            Window:Close()
-            if fnCancel then fnCancel(TextEntry:GetValue()) end
-        end
-
-        ButtonCancel:MoveRightOf(Button, 5)
-        ButtonPanel:SetWide(Button:GetWide() + 5 + ButtonCancel:GetWide() + 10)
-        local w, h = Text:GetSize()
-        w = math.max(w, 400)
-        Window:SetSize(w + 50, h + 25 + 75 + 10)
-        Window:Center()
-        InnerPanel:StretchToParent(5, 25, 5, 45)
-        Text:StretchToParent(5, 5, 5, 35)
-        TextEntry:StretchToParent(5, nil, 5, nil)
-        TextEntry:AlignBottom(5)
-        TextEntry:RequestFocus()
-        TextEntry:SelectAllText(true)
-        ButtonPanel:CenterHorizontal()
-        ButtonPanel:AlignBottom(8)
-        Window:MakePopup()
-        Window:DoModal()
-        return Window
-    end
 
     --- Displays a query notification panel with options.
     -- @realm client
@@ -1231,85 +718,50 @@ else
         end
     end
 
-    file.CreateDir("lilia/images")
-    lia.util.LoadedImages = lia.util.LoadedImages or {
-        [0] = Material("icon16/cross.png")
-    }
-
-    --- Fetches an image from either local data or a remote server and provides it to a callback function.
-    -- @realm client
-    -- @string id The unique identifier or filename of the image
-    -- @func callback The function to call with the loaded image material as its argument, or false if the image could not be loaded
-    -- @string[opt] pngParameters parameters for loading PNG images (default is "noclamp smooth")
-    -- @string[opt] imageProvider URL for the remote image provider (default is "https://i.imgur.com/")
-    function lia.util.fetchImage(id, callback, pngParameters, imageProvider)
-        local loadedImage = lia.util.LoadedImages[id]
-        if loadedImage then
-            if callback then callback(loadedImage) end
-            return
-        end
-
-        if file.Exists("lilia/images/" .. id .. ".png", "DATA") then
-            local mat = Material("data/lilia/images/" .. id .. ".png", pngParameters or "noclamp smooth")
-            if mat then
-                lia.util.LoadedImages[id] = mat
-                if callback then callback(mat) end
-            elseif callback then
-                callback(false)
-            end
-        else
-            http.Fetch((imageProvider or "https://i.imgur.com/") .. id .. ".png", function(body, _, _, code)
-                if code ~= 200 then
-                    callback(false)
-                    return
-                end
-
-                if not body or body == "" then
-                    callback(false)
-                    return
-                end
-
-                file.Write("lilia/images/" .. id .. ".png", body)
-                local mat = Material("data/lilia/images/" .. id .. ".png", "noclamp smooth")
-                lia.util.LoadedImages[id] = mat
-                if callback then callback(mat) end
-            end, function() if callback then callback(false) end end)
-        end
-    end
-
     cvars.AddChangeCallback("lia_cheapblur", function(_, _, new) useCheapBlur = (tonumber(new) or 0) > 0 end)
 end
 
+function SS(value, isWidth)
+    local screenWidth, screenHeight = ScrW(), ScrH()
+    local widthRatio = screenWidth / 1920
+    local heightRatio = screenHeight / 1080
+    return isWidth and (value * widthRatio) or (value * heightRatio)
+end
+
+function sW(width)
+    if width then
+        return width * (ScrW() / 1920)
+    else
+        return 1920
+    end
+end
+
+function sH(height)
+    if height then
+        return height * (ScrH() / 1080)
+    else
+        return 1080
+    end
+end
+
+function C(value, isWidth)
+    return SS(value, isWidth)
+end
+
 lia.util.FindPlayer = lia.util.findPlayer
-lia.util.EmitQueuedSounds = lia.util.emitQueuedSounds
 lia.util.StringMatches = lia.util.stringMatches
 lia.util.GridVector = lia.util.gridVector
-lia.util.GetAllChar = lia.util.getAllChar
-lia.util.IsSteamID = lia.util.isSteamID
-lia.util.DateToNumber = lia.util.dateToNumber
 lia.util.GetAdmins = lia.util.getAdmins
 lia.util.FindPlayerBySteamID64 = lia.util.findPlayerBySteamID64
 lia.util.FindPlayerBySteamID = lia.util.findPlayerBySteamID
 lia.util.CanFit = lia.util.canFit
 lia.util.Chance = lia.util.chance
 lia.util.PlayerInRadius = lia.util.playerInRadius
-lia.util.SpawnEntities = lia.util.spawnEntities
 lia.util.FindEmptySpace = lia.util.findEmptySpace
-lia.util.SpawnProp = lia.util.spawnProp
-lia.util.DebugLog = lia.util.debugLog
-lia.util.DWarningMessage = lia.util.dWarningMessage
-lia.util.ChatPrint = lia.util.chatPrint
 lia.util.DrawText = lia.util.drawText
 lia.util.DrawTexture = lia.util.drawTexture
 lia.util.SkinFunc = lia.util.skinFunc
 lia.util.WrapText = lia.util.wrapText
-lia.util.ColorToText = lia.util.colorToText
-lia.util.EndCaption = lia.util.endCaption
-lia.util.StartCaption = lia.util.startCaption
-lia.util.GetInjuredColor = lia.util.getInjuredColor
-lia.util.ScreenScaleH = lia.util.screenScaleH
-lia.util.NotifQuery = lia.util.notifQuery
 lia.util.DrawBlur = lia.util.drawBlur
 lia.util.DrawBlurAt = lia.util.drawBlurAt
-lia.util.FetchImage = lia.util.fetchImage
 lia.util.GetMaterial = lia.util.getMaterial
