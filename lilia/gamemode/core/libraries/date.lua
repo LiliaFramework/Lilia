@@ -224,3 +224,19 @@ function lia.date.GetPreFormattedDateInGame(StartingMessage, timeToFormat, inclu
     end
     return output
 end
+
+--- Converts a date string to a table containing date and time components.
+-- @string str The date string in the format "YYYY-MM-DD HH:MM:SS"
+-- @treturn table Table containing date and time components
+-- @realm shared
+function lia.date.toNumber(str)
+    str = str or os.date("%Y-%m-%d %H:%M:%S", os.time())
+    return {
+        year = tonumber(str:sub(1, 4)),
+        month = tonumber(str:sub(6, 7)),
+        day = tonumber(str:sub(9, 10)),
+        hour = tonumber(str:sub(12, 13)),
+        min = tonumber(str:sub(15, 16)),
+        sec = tonumber(str:sub(18, 19)),
+    }
+end
