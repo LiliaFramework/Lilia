@@ -226,12 +226,58 @@ function GM:InitPostEntity()
     end
 end
 
+function GM:GetMaxPlayerCharacter(client)
+    LiliaDeprecated("GetMaxPlayerCharacter is deprecated. Use GetMaxPlayerChar for optimization purposes.")
+    hook.Run("GetMaxPlayerChar", client)
+end
+
+function GM:CanPlayerCreateCharacter(client)
+    LiliaDeprecated("CanPlayerCreateCharacter is deprecated. Use CanPlayerCreateChar for optimization purposes.")
+    hook.Run("CanPlayerCreateChar", client)
+end
+
+function GM:OnCharVarChanged(character, varName, oldVar, newVar)
+    if lia.char.varHooks[varName] then
+        for _, v in pairs(lia.char.varHooks[varName]) do
+            v(character, oldVar, newVar)
+        end
+    end
+end
+
+local function getAllFilesInDirectory(directory, extension)
+    local files = {}
+    local function scanDirectory(dir)
+        local fileList, directoryList = file.Find(dir .. "/*", "GAME")
+        for _, fileName in ipairs(fileList) do
+            if string.EndsWith(fileName, extension) then table.insert(files, dir .. "/" .. fileName) end
+        end
+
+        for _, subDir in ipairs(directoryList) do
+            scanDirectory(dir .. "/" .. subDir)
+        end
+    end
+
+    scanDirectory(directory)
+    return files
+end
+
+local function getAllCitizenModels()
+    local allModels = {}
+    for _, path in ipairs(lia.anim.CitizenModelPaths) do
+        local modelsInPath = getAllFilesInDirectory(path, ".mdl")
+        for _, model in ipairs(modelsInPath) do
+            table.insert(allModels, model)
+        end
+    end
+    return allModels
+end
+
 function GM:InitializedModules()
     for model, animtype in pairs(lia.anim.DefaultTposingFixer) do
         lia.anim.setModelClass(model, animtype)
     end
 
-    for _, model in ipairs(lia.util.getAllCitizenModels()) do
+    for _, model in ipairs(getAllCitizenModels()) do
         local lowerModel = string.lower(model)
         local class = string.find(lowerModel, "female_") and "citizen_female" or "citizen_male"
         lia.anim.setModelClass(lowerModel, class)
@@ -276,22 +322,4 @@ function GM:InitializedModules()
     end
 
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Bootstrapper] ", color_white, "Finished boot sequence...\n")
-end
-
-function GM:GetMaxPlayerCharacter(client)
-    LiliaDeprecated("GetMaxPlayerCharacter is deprecated. Use GetMaxPlayerChar for optimization purposes.")
-    hook.Run("GetMaxPlayerChar", client)
-end
-
-function GM:CanPlayerCreateCharacter(client)
-    LiliaDeprecated("CanPlayerCreateCharacter is deprecated. Use CanPlayerCreateChar for optimization purposes.")
-    hook.Run("CanPlayerCreateChar", client)
-end
-
-function GM:OnCharVarChanged(character, varName, oldVar, newVar)
-    if lia.char.varHooks[varName] then
-        for _, v in pairs(lia.char.varHooks[varName]) do
-            v(character, oldVar, newVar)
-        end
-    end
 end
