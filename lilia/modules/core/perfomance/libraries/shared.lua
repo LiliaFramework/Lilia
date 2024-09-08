@@ -1,5 +1,7 @@
 ﻿local MODULE = MODULE
+
 MODULE.tblPlayers = MODULE.tblPlayers or {}
+
 function MODULE:PlayerInitialSpawn(client)
     self:RegisterPlayer(client)
     if SERVER then self:ServerSidePlayerInitialSpawn(client) end

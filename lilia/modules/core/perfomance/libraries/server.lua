@@ -119,17 +119,6 @@ function MODULE:EntityRemoved(entity)
     end
 end
 
-function MODULE:Initialize()
-    hook.Remove("OnEntityCreated", "WidgetInit")
-    hook.Remove("Think", "DOFThink")
-    hook.Remove("Think", "CheckSchedules")
-    hook.Remove("PlayerTick", "TickWidgets")
-    hook.Remove("PlayerInitialSpawn", "PlayerAuthSpawn")
-    hook.Remove("LoadGModSave", "LoadGModSave")
-    timer.Remove("CheckHookTimes")
-    timer.Remove("HostnameThink")
-end
-
 function MODULE:OnEntityCreated()
     local items = ents.FindByClass("lia_item")
     local money = ents.FindByClass("lia_money")
@@ -157,3 +146,12 @@ function MODULE:CleanupAllEntities()
 
     LiliaInformation("Performed cleanup, all drooped items and money have been removed.")
 end
+
+hook.Remove("OnEntityCreated", "WidgetInit")
+hook.Remove("Think", "DOFThink")
+hook.Remove("Think", "CheckSchedules")
+hook.Remove("PlayerTick", "TickWidgets")
+hook.Remove("PlayerInitialSpawn", "PlayerAuthSpawn")
+hook.Remove("LoadGModSave", "LoadGModSave")
+timer.Remove("CheckHookTimes")
+timer.Remove("HostnameThink")
