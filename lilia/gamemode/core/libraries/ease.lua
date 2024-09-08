@@ -13,8 +13,6 @@ local easeIn, easeOut, easeInOut, easeOutIn
 local easeInBack, easeOutBack, easeInOutBack, easeOutInBack
 local easeInElastic, easeOutElastic, easeInOutElastic, easeOutInElastic
 local easeInBounce, easeOutBounce, easeInOutBounce, easeOutInBounce
-
-
 --- Eases in the value over time using an easing function.
 -- @float t Time elapsed.
 -- @float tMax The duration of the animation.
