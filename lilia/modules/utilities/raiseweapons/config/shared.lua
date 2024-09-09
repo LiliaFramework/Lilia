@@ -4,7 +4,6 @@ MODULE.ShouldPrintMessage = false
 MODULE.PermaRaisedWeapons = {
     ["weapon_physgun"] = true,
     ["gmod_tool"] = true,
-    ["lia_keys"] = true,
 }
 
 MODULE.PermaRaisedBases = {

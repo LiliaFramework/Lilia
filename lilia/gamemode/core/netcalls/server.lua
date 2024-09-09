@@ -33,11 +33,6 @@ net.Receive("DropdownRequest", function(_, client)
     end
 end)
 
-netstream.Hook("lia_eventLogSave", function(_, eventLog)
-    local path = "lilia/" .. SCHEMA.folder .. "/eventlog.txt"
-    file.Write(path, eventLog)
-end)
-
 netstream.Hook("liaCharKickSelf", function(client)
     local character = client:getChar()
     if character then
