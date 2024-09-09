@@ -4,9 +4,10 @@
 local playerMeta = FindMetaTable("Player")
 local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng, diff, fm, sm
 local ThirdPerson = CreateClientConVar("tp_enabled", 0, true)
+local ClassicThirdPerson = CreateClientConVar("tp_classic", "0", true)
 local ThirdPersonVerticalView = CreateClientConVar("tp_vertical", 10, true)
-local ThirdPersonHorizontalView = CreateClientConVar("tp_horizontal", 0, true)
 local ThirdPersonViewDistance = CreateClientConVar("tp_distance", 50, true)
+local ThirdPersonHorizontalView = CreateClientConVar("tp_horizontal", 0, true)
 crouchFactor = 0
 function MODULE:SetupQuickMenu(menu)
     if self.ThirdPersonEnabled then
@@ -19,6 +20,14 @@ function MODULE:SetupQuickMenu(menu)
 
             hook.Run("thirdPersonToggled", ThirdPerson:GetBool())
         end, ThirdPerson:GetBool())
+
+        menu:addCheck(L"thirdpersonClassic", function(panel, state)
+            if state then
+                RunConsoleCommand("tp_classic", "1")
+            else
+                RunConsoleCommand("tp_classic", "0")
+            end
+        end, ClassicThirdPerson:GetBool())
 
         menu:addButton(L"thirdpersonConfig", function()
             if lia.gui.tpconfig and lia.gui.tpconfig:IsVisible() then
@@ -55,7 +64,7 @@ function MODULE:CalcView(client)
         traceData2.start = aimOrigin
         traceData2.endpos = aimOrigin + curAng:Forward() * 65535
         traceData2.filter = client
-        if client.isWepRaised and client:isWepRaised() or (client:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and client:GetVelocity():Length() >= 10) then client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle()) end
+        if ClassicThirdPerson:GetBool() or (client.isWepRaised and client:isWepRaised() or (client:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and client:GetVelocity():Length() >= 10)) then client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle()) end
         return view
     end
 end
