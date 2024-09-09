@@ -3,6 +3,14 @@ util.AddNetworkString("liaCharCreate")
 util.AddNetworkString("liaCharDelete")
 util.AddNetworkString("liaCharList")
 util.AddNetworkString("liaCharMenu")
+netstream.Hook("liaCharKickSelf", function(client)
+    local character = client:getChar()
+    if character then
+        if not client:Alive() then character:setData("pos", nil) end
+        character:kick()
+    end
+end)
+
 net.Receive("liaCharChoose", function(_, client)
     local function response(message)
         net.Start("liaCharChoose")
