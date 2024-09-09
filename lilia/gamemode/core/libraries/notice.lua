@@ -144,7 +144,7 @@ if SERVER then
     lia.util.notify = lia.notices.notify
     lia.util.notifyLocalized = lia.notices.notifyLocalized
 else
-    function lia.notices.notify(message)
+    function lia.notices.notify(message, shouldChatPrint)
         local notice = vgui.Create("liaNotify")
         local i = table.insert(lia.notices, notice)
         notice:SetMessage(message)
@@ -164,7 +164,7 @@ else
             end
         end)
 
-        chat.AddText(message)
+        if shouldChatPrint then chat.AddText(message) end
         MsgN(message)
     end
 
