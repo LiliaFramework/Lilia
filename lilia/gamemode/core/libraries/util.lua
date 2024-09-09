@@ -210,16 +210,6 @@ function lia.util.getMaterial(materialPath, materialParameters)
 end
 
 if SERVER then
-    --- Sends a sound to a specific player.
-    -- @realm server
-    -- @client client The player to receive the sound
-    -- @string sound The sound file to send
-    function lia.util.SendSound(client, sound)
-        net.Start("SendSound")
-        net.WriteString(sound)
-        net.Send(client)
-    end
-
     --- Finds empty spaces around an entity where another entity can be placed.
     -- @realm server
     -- @client entity The client to find empty spaces around
