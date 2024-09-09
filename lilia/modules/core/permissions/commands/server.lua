@@ -499,7 +499,7 @@ lia.command.add("freezeallprops", {
             end
 
             client:notify("You have frozen all of " .. target:Name() .. "'s Entities.")
-            client:SendMessage("Frozen " .. count .. " Entities belonging to " .. target:Name())
+            client:ChatPrint("Frozen " .. count .. " Entities belonging to " .. target:Name())
         end
     end
 })
@@ -845,10 +845,7 @@ lia.command.add("flaglist", {
             end
         end
 
-        net.Start("FlagList")
-        net.WriteString(targetName)
-        net.WriteTable(flags)
-        net.Send(client)
+        lia.util.CreateTableUI(client, "Flag List", {"Flag", "Description"}, flags)
     end,
     alias = {"flags"}
 })
@@ -857,8 +854,18 @@ lia.command.add("itemlist", {
     adminOnly = true,
     privilege = "List Items",
     onRun = function(client)
-        net.Start("ItemList")
-        net.Send(client)
+        local items = {}
+        for _, item in pairs(lia.item.list) do
+            table.insert(items, {
+                uniqueID = item.uniqueID or "N/A",
+                name = item.name or "N/A",
+                desc = item.desc or "N/A",
+                category = item.category or "Misc",
+                price = item.price or "0"
+            })
+        end
+
+        lia.util.CreateTableUI(client, "Item List", {"Unique ID", "Name", "Description", "Category", "Price"}, items)
     end
 })
 
@@ -877,11 +884,9 @@ lia.command.add("modulelist", {
             })
         end
 
-        net.Start("ModuleList")
-        net.WriteTable(modules)
-        net.Send(client)
+        lia.util.CreateTableUI(client, "Modules List", {"Unique ID", "Name", "Description", "Author", "Discord", "Version"}, modules)
     end,
-    alias = {"modules"},
+    alias = {"modules"}
 })
 
 lia.command.add("listents", {
@@ -899,9 +904,7 @@ lia.command.add("listents", {
             })
         end
 
-        net.Start("EntityList")
-        net.WriteTable(entityList)
-        net.Send(client)
+        lia.util.CreateTableUI(client, "Entity List", {"Class", "Creator", "Position", "Model", "Health"}, entityList)
     end
 })
 
@@ -924,9 +927,7 @@ lia.command.add("liststaff", {
         end
 
         if #staffList > 0 then
-            net.Start("PlayerList")
-            net.WriteTable(staffList)
-            net.Send(client)
+            lia.util.CreateTableUI(client, "Staff List", {"Name", "Class", "Faction", "Character ID", "Usergroup"}, staffList)
         else
             client:notify("No valid players found!")
         end
@@ -952,9 +953,7 @@ lia.command.add("listondutystaff", {
         end
 
         if #onDutyStaffList > 0 then
-            net.Start("PlayerList")
-            net.WriteTable(onDutyStaffList)
-            net.Send(client)
+            lia.util.CreateTableUI(client, "On Duty Staff List", {"Name", "Class", "Faction", "Character ID", "Usergroup"}, onDutyStaffList)
         else
             client:notify("No valid players found!")
         end
@@ -980,9 +979,7 @@ lia.command.add("listvip", {
         end
 
         if #vipList > 0 then
-            net.Start("PlayerList")
-            net.WriteTable(vipList)
-            net.Send(client)
+            lia.util.CreateTableUI(client, "VIP List", {"Name", "Class", "Faction", "Character ID", "Usergroup"}, vipList)
         else
             client:notify("No valid players found!")
         end
@@ -1008,9 +1005,7 @@ lia.command.add("listusers", {
         end
 
         if #userList > 0 then
-            net.Start("PlayerList")
-            net.WriteTable(userList)
-            net.Send(client)
+            lia.util.CreateTableUI(client, "User List", {"Name", "Class", "Faction", "Character ID", "Usergroup"}, userList)
         else
             client:notify("No valid players found!")
         end

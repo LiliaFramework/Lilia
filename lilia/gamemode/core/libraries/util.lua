@@ -18,7 +18,7 @@ end
 --- Finds all players within a sphere defined by an origin point and radius.
 -- @realm client
 -- @vector origin The center point of the sphere
--- @number radius The radius of the sphere
+-- @int radius The radius of the sphere
 -- @return table A list of players within the sphere
 function lia.util.FindPlayersInSphere(origin, radius)
     local plys = {}
@@ -210,6 +210,35 @@ function lia.util.getMaterial(materialPath, materialParameters)
 end
 
 if SERVER then
+    --- Sends a request to the client to display a table UI.
+    -- @realm server
+    -- @player client The player to whom the UI should be sent.
+    -- @string title The title of the table UI.
+    -- @tab columns A table defining the columns in the table. Each entry should be a table with fields `name` and `width`.
+    -- @tab data A table containing rows of data. Each row is a table of values corresponding to the column fields.
+    -- @int[opt] frameWidth The width of the frame. Default is 900.
+    -- @int[opt] frameHeight The height of the frame. Default is 600.
+    -- @usage
+    -- local columns = {
+    --     {name = "ID", field = "id", width = 50},
+    --     {name = "Name", field = "name", width = 150},
+    -- }
+    -- local data = {
+    --     {id = 1, name = "Player1"},
+    --     {id = 2, name = "Player2"}
+    -- }
+    -- lia.util.CreateTableUI(player, "Player List", columns, data)
+    function lia.util.CreateTableUI(client, title, columns, data, frameWidth, frameHeight)
+        if not IsValid(client) or not client:IsPlayer() then return end
+        net.Start("CreateTableUI")
+        net.WriteString(title or "Table List")
+        net.WriteTable(columns)
+        net.WriteTable(data)
+        net.WriteUInt(frameWidth or 900, 16)
+        net.WriteUInt(frameHeight or 600, 16)
+        net.Send(client)
+    end
+
     --- Finds empty spaces around an entity where another entity can be placed.
     -- @realm server
     -- @client entity The client to find empty spaces around
@@ -490,6 +519,48 @@ else
                 render.UpdateScreenEffectTexture()
                 surface.DrawTexturedRectUV(x, y, w, h, x2, y2, w2, h2)
             end
+        end
+    end
+
+    --- Displays a table UI on the client.
+    -- @realm client
+    -- @string title The title of the table UI.
+    -- @tab columns A table defining the columns in the table. Each entry should be a table with fields `name` and `width`.
+    -- @tab data A table containing rows of data. Each row is a table of values corresponding to the column fields.
+    -- @int[opt] frameWidth The width of the frame. Default is 900.
+    -- @int[opt] frameHeight The height of the frame. Default is 600.
+    -- @usage
+    -- local columns = {
+    --     {name = "ID", field = "id", width = 50},
+    --     {name = "Name", field = "name", width = 150},
+    -- }
+    -- local data = {
+    --     {id = 1, name = "Player1"},
+    --     {id = 2, name = "Player2"}
+    -- }
+    -- lia.util.CreateTableUI("Player List", columns, data)
+    function lia.util.CreateTableUI(title, columns, data, frameWidth, frameHeight)
+        local frame = vgui.Create("DFrame")
+        frame:SetTitle(title or "Table List")
+        frame:SetSize(frameWidth or 900, frameHeight or 600)
+        frame:Center()
+        frame:MakePopup()
+        local listView = vgui.Create("DListView", frame)
+        listView:Dock(FILL)
+        for _, colInfo in ipairs(columns) do
+            local columnName = colInfo.name or "N/A"
+            local columnWidth = colInfo.width or 100
+            listView:AddColumn(columnName):SetFixedWidth(columnWidth)
+        end
+
+        for _, row in ipairs(data) do
+            local lineData = {}
+            for _, colInfo in ipairs(columns) do
+                local fieldName = colInfo.field or "N/A"
+                table.insert(lineData, row[fieldName] or "N/A")
+            end
+
+            listView:AddLine(unpack(lineData))
         end
     end
 
