@@ -8,39 +8,17 @@ util.AddNetworkString("liaInventoryAdd")
 util.AddNetworkString("liaInventoryRemove")
 util.AddNetworkString("liaNotify")
 util.AddNetworkString("liaNotifyL")
+util.AddNetworkString("OpenInvMenu")
+util.AddNetworkString("liaTransferItem")
+util.AddNetworkString("chatNotifyNet")
+util.AddNetworkString("OpenVGUI")
+util.AddNetworkString("OpenPage")
+util.AddNetworkString("PlaySound")
+util.AddNetworkString("CreateTableUI")
+util.AddNetworkString("BinaryQuestionRequest")
 util.AddNetworkString("DropdownRequest")
 util.AddNetworkString("StringRequest")
 util.AddNetworkString("OptionsRequest")
-util.AddNetworkString("OpenInvMenu")
-util.AddNetworkString("liaTransferItem")
-util.AddNetworkString("SendMessage")
-util.AddNetworkString("SendPrintTable")
-util.AddNetworkString("SendPrint")
-util.AddNetworkString("chatNotifyNet")
-util.AddNetworkString("FlagList")
-util.AddNetworkString("OpenVGUI")
-util.AddNetworkString("OpenPage")
-util.AddNetworkString("ModuleList")
-util.AddNetworkString("ItemList")
-util.AddNetworkString("PlayerList")
-util.AddNetworkString("SendSound")
-util.AddNetworkString("EntityList")
-net.Receive("DropdownRequest", function(_, client)
-    local selectedOption = net.ReadString()
-    if client.dropdownCallback then
-        client.dropdownCallback(selectedOption)
-        client.dropdownCallback = nil
-    end
-end)
-
-netstream.Hook("liaCharKickSelf", function(client)
-    local character = client:getChar()
-    if character then
-        if not client:Alive() then character:setData("pos", nil) end
-        character:kick()
-    end
-end)
-
 net.Receive("StringRequest", function(_, client)
     local id = net.ReadUInt(32)
     local value = net.ReadString()
@@ -50,11 +28,28 @@ net.Receive("StringRequest", function(_, client)
     end
 end)
 
+net.Receive("DropdownRequest", function(_, client)
+    local selectedOption = net.ReadString()
+    if client.dropdownCallback then
+        client.dropdownCallback(selectedOption)
+        client.dropdownCallback = nil
+    end
+end)
+
 net.Receive("OptionsRequest", function(_, client)
     local selectedOptions = net.ReadTable()
     if client.optionsCallback then
         client.optionsCallback(selectedOptions)
         client.optionsCallback = nil
+    end
+end)
+
+net.Receive("BinaryQuestionRequest", function(len, ply)
+    local choice = net.ReadUInt(1)
+    if ply.binaryQuestionCallback then
+        local callback = ply.binaryQuestionCallback
+        callback(choice)
+        ply.binaryQuestionCallback = nil
     end
 end)
 

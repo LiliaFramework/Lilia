@@ -10,106 +10,6 @@
     lia.notices.notifyLocalized(message, unpack(args))
 end)
 
-net.Receive("DropdownRequest", function()
-    local title = net.ReadString()
-    local subTitle = net.ReadString()
-    local options = net.ReadTable()
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle(title)
-    frame:SetSize(300, 150)
-    frame:Center()
-    frame:MakePopup()
-    local dropdown = vgui.Create("DComboBox", frame)
-    dropdown:SetPos(10, 40)
-    dropdown:SetSize(280, 20)
-    dropdown:SetValue(subTitle)
-    for _, option in ipairs(options) do
-        dropdown:AddChoice(option)
-    end
-
-    dropdown.OnSelect = function(_, _, value)
-        net.Start("DropdownRequest")
-        net.WriteString(value)
-        net.SendToServer()
-        frame:Close()
-    end
-end)
-
-net.Receive("OptionsRequest", function()
-    local title = net.ReadString()
-    local subTitle = net.ReadString()
-    local options = net.ReadTable()
-    local limit = net.ReadUInt(32)
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle(title)
-    frame:SetSize(400, 300)
-    frame:Center()
-    frame:MakePopup()
-    local label = vgui.Create("DLabel", frame)
-    label:SetText(subTitle)
-    label:SetPos(10, 30)
-    label:SizeToContents()
-    local list = vgui.Create("DPanelList", frame)
-    list:SetPos(10, 50)
-    list:SetSize(380, 200)
-    list:EnableVerticalScrollbar(true)
-    list:SetSpacing(5)
-    local selected = {}
-    local checkboxes = {}
-    for _, option in ipairs(options) do
-        local checkbox = vgui.Create("DCheckBoxLabel")
-        checkbox:SetText(option)
-        checkbox:SetValue(false)
-        checkbox:SizeToContents()
-        checkbox.OnChange = function(self, value)
-            if value then
-                if #selected < limit then
-                    table.insert(selected, option)
-                else
-                    self:SetValue(false)
-                end
-            else
-                for i, v in ipairs(selected) do
-                    if v == option then
-                        table.remove(selected, i)
-                        break
-                    end
-                end
-            end
-        end
-
-        list:AddItem(checkbox)
-        table.insert(checkboxes, checkbox)
-    end
-
-    local button = vgui.Create("DButton", frame)
-    button:SetText("Submit")
-    button:SetPos(10, 260)
-    button:SetSize(380, 30)
-    button.DoClick = function()
-        net.Start("OptionsRequest")
-        net.WriteTable(selected)
-        net.SendToServer()
-        frame:Close()
-    end
-end)
-
-
-net.Receive("StringRequest", function()
-    local id = net.ReadUInt(32)
-    local title = net.ReadString()
-    local subTitle = net.ReadString()
-    local default = net.ReadString()
-    if title:sub(1, 1) == "@" then title = L(title:sub(2)) end
-    if subTitle:sub(1, 1) == "@" then subTitle = L(subTitle:sub(2)) end
-    Derma_StringRequest(title, subTitle, default, function(text)
-        net.Start("StringRequest")
-        net.WriteUInt(id, 32)
-        net.WriteString(text)
-        net.SendToServer()
-    end)
-end)
-
 net.Receive("liaNotify", function()
     local message = net.ReadString()
     lia.notices.notify(message)
@@ -333,84 +233,6 @@ netstream.Hook("actBar", function(start, finish, text)
     end
 end)
 
-net.Receive("ItemList", function()
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle("Items List")
-    frame:SetSize(800, 600)
-    frame:Center()
-    frame:MakePopup()
-    local itemsPanel = vgui.Create("DPanel", frame)
-    itemsPanel:Dock(FILL)
-    local itemsList = vgui.Create("DListView", itemsPanel)
-    itemsList:Dock(FILL)
-    itemsList:AddColumn("Unique ID"):SetFixedWidth(150)
-    itemsList:AddColumn("Print Name")
-    itemsList:AddColumn("Description")
-    itemsList:AddColumn("Category")
-    itemsList:AddColumn("Price")
-    for _, item in pairs(lia.item.list) do
-        itemsList:AddLine(item.uniqueID or "N/A", item.name or "N/A", item.desc or "N/A", item.category or "Misc", item.price or "0")
-    end
-end)
-
-net.Receive("EntityList", function()
-    local entities = net.ReadTable()
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle("Entity List")
-    frame:SetSize(900, 600)
-    frame:Center()
-    frame:MakePopup()
-    local entityList = vgui.Create("DListView", frame)
-    entityList:Dock(FILL)
-    entityList:AddColumn("Class"):SetFixedWidth(150)
-    entityList:AddColumn("Creator"):SetFixedWidth(200)
-    entityList:AddColumn("Position")
-    entityList:AddColumn("Model"):SetFixedWidth(200)
-    entityList:AddColumn("Health"):SetFixedWidth(100)
-    for _, ent in pairs(entities) do
-        entityList:AddLine(ent.class or "N/A", ent.creator or "N/A", ent.position or "N/A", ent.model or "N/A", ent.health or "N/A")
-    end
-end)
-
-net.Receive("PlayerList", function()
-    local players = net.ReadTable()
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle("Player List")
-    frame:SetSize(900, 600)
-    frame:Center()
-    frame:MakePopup()
-    local playerList = vgui.Create("DListView", frame)
-    playerList:Dock(FILL)
-    playerList:AddColumn("Name"):SetFixedWidth(200)
-    playerList:AddColumn("Class"):SetFixedWidth(150)
-    playerList:AddColumn("Faction"):SetFixedWidth(150)
-    playerList:AddColumn("Character ID"):SetFixedWidth(100)
-    playerList:AddColumn("Usergroup"):SetFixedWidth(150)
-    for _, player in pairs(players) do
-        playerList:AddLine(player.name or "N/A", player.class or "N/A", player.faction or "N/A", player.characterID or "N/A", player.usergroup or "N/A")
-    end
-end)
-
-net.Receive("ModuleList", function()
-    local modules = net.ReadTable()
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle("Modules List")
-    frame:SetSize(900, 500)
-    frame:Center()
-    frame:MakePopup()
-    local moduleList = vgui.Create("DListView", frame)
-    moduleList:Dock(FILL)
-    moduleList:AddColumn("Unique ID"):SetFixedWidth(150)
-    moduleList:AddColumn("Name"):SetFixedWidth(150)
-    moduleList:AddColumn("Description")
-    moduleList:AddColumn("Author"):SetFixedWidth(100)
-    moduleList:AddColumn("Discord"):SetFixedWidth(150)
-    moduleList:AddColumn("Version"):SetFixedWidth(80)
-    for _, module in pairs(modules) do
-        moduleList:AddLine(module.uniqueID, module.name, module.desc, module.author, module.discord, module.version)
-    end
-end)
-
 net.Receive("OpenInvMenu", function()
     if not LocalPlayer():HasPrivilege("Commands - Check Inventories") then return end
     local target = net.ReadEntity()
@@ -428,21 +250,13 @@ net.Receive("OpenInvMenu", function()
     myInventoryDerma:MoveLeftOf(inventoryDerma, 4)
 end)
 
-net.Receive("FlagList", function()
-    local targetName = net.ReadString()
-    local flags = net.ReadTable()
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle(targetName ~= "" and targetName .. " Flags" or "Flag List")
-    frame:SetSize(400, 300)
-    frame:Center()
-    frame:MakePopup()
-    local flagList = vgui.Create("DListView", frame)
-    flagList:Dock(FILL)
-    flagList:AddColumn("Flag")
-    flagList:AddColumn("Description")
-    for _, flag in pairs(flags) do
-        flagList:AddLine(flag.flag, flag.desc)
-    end
+net.Receive("CreateTableUI", function()
+    local title = net.ReadString()
+    local columns = net.ReadTable()
+    local data = net.ReadTable()
+    local frameWidth = net.ReadUInt(16)
+    local frameHeight = net.ReadUInt(16)
+    lia.util.CreateTableUI(title, columns, data, frameWidth, frameHeight)
 end)
 
 net.Receive("OpenVGUI", function()
@@ -455,15 +269,212 @@ net.Receive("chatNotifyNet", function()
     chat.AddText(Color(255, 215, 0), message)
 end)
 
-net.Receive("SendSound", function() surface.PlaySound(net.ReadString()) end)
+net.Receive("OptionsRequest", function()
+    local title = net.ReadString()
+    local subTitle = net.ReadString()
+    local options = net.ReadTable()
+    local limit = net.ReadUInt(32)
+    local frame = vgui.Create("DFrame")
+    frame:SetTitle(title)
+    frame:SetSize(400, 300)
+    frame:Center()
+    frame:MakePopup()
+    local label = vgui.Create("DLabel", frame)
+    label:SetText(subTitle)
+    label:SetPos(10, 30)
+    label:SizeToContents()
+    local list = vgui.Create("DPanelList", frame)
+    list:SetPos(10, 50)
+    list:SetSize(380, 200)
+    list:EnableVerticalScrollbar(true)
+    list:SetSpacing(5)
+    local selected = {}
+    local checkboxes = {}
+    for _, option in ipairs(options) do
+        local checkbox = vgui.Create("DCheckBoxLabel")
+        checkbox:SetText(option)
+        checkbox:SetValue(false)
+        checkbox:SizeToContents()
+        checkbox.OnChange = function(self, value)
+            if value then
+                if #selected < limit then
+                    table.insert(selected, option)
+                else
+                    self:SetValue(false)
+                end
+            else
+                for i, v in ipairs(selected) do
+                    if v == option then
+                        table.remove(selected, i)
+                        break
+                    end
+                end
+            end
+        end
+
+        list:AddItem(checkbox)
+        table.insert(checkboxes, checkbox)
+    end
+
+    local button = vgui.Create("DButton", frame)
+    button:SetText("Submit")
+    button:SetPos(10, 260)
+    button:SetSize(380, 30)
+    button.DoClick = function()
+        net.Start("OptionsRequest")
+        net.WriteTable(selected)
+        net.SendToServer()
+        frame:Close()
+    end
+end)
+
+net.Receive("DropdownRequest", function()
+    local title = net.ReadString()
+    local subTitle = net.ReadString()
+    local options = net.ReadTable()
+    local frame = vgui.Create("DFrame")
+    frame:SetTitle(title)
+    frame:SetSize(300, 150)
+    frame:Center()
+    frame:MakePopup()
+    local dropdown = vgui.Create("DComboBox", frame)
+    dropdown:SetPos(10, 40)
+    dropdown:SetSize(280, 20)
+    dropdown:SetValue(subTitle)
+    for _, option in ipairs(options) do
+        dropdown:AddChoice(option)
+    end
+
+    dropdown.OnSelect = function(_, _, value)
+        net.Start("DropdownRequest")
+        net.WriteString(value)
+        net.SendToServer()
+        frame:Close()
+    end
+end)
+
+net.Receive("StringRequest", function()
+    local id = net.ReadUInt(32)
+    local title = net.ReadString()
+    local subTitle = net.ReadString()
+    local default = net.ReadString()
+    if title:sub(1, 1) == "@" then title = L(title:sub(2)) end
+    if subTitle:sub(1, 1) == "@" then subTitle = L(subTitle:sub(2)) end
+    Derma_StringRequest(title, subTitle, default, function(text)
+        net.Start("StringRequest")
+        net.WriteUInt(id, 32)
+        net.WriteString(text)
+        net.SendToServer()
+    end)
+end)
+
+net.Receive("BinaryQuestionRequest", function()
+    local question = net.ReadString()
+    local option1 = net.ReadString()
+    local option2 = net.ReadString()
+    local manualDismiss = net.ReadBool()
+    if not option1 then option1 = "Yes" end
+    if not option2 then option2 = "No" end
+    if not manualDismiss then manualDismiss = false end
+    local notice = CreateNoticePanel(10, manualDismiss)
+    local i = table.insert(lia.notices, notice)
+    notice.isQuery = true
+    notice.text:SetText(question)
+    notice:SetPos(0, (i - 1) * (notice:GetTall() + 4) + 4)
+    notice:SetTall(36 * 2.3)
+    notice:CalcWidth(120)
+    notice:CenterHorizontal()
+    if manualDismiss then notice.start = nil end
+    notice.opt1 = notice:Add("DButton")
+    notice.opt1:SetAlpha(0)
+    notice.opt2 = notice:Add("DButton")
+    notice.opt2:SetAlpha(0)
+    notice.oh = notice:GetTall()
+    OrganizeNotices(false)
+    notice:SetTall(0)
+    notice:SizeTo(notice:GetWide(), 36 * 2.3, 0.2, 0, -1, function()
+        notice.text:SetPos(0, 0)
+        local function styleOpt(o)
+            o.color = Color(0, 0, 0, 30)
+            AccessorFunc(o, "color", "Color")
+            function o:Paint(w, h)
+                if self.left then
+                    draw.RoundedBoxEx(4, 0, 0, w + 2, h, self.color, false, false, true, false)
+                else
+                    draw.RoundedBoxEx(4, 0, 0, w + 2, h, self.color, false, false, false, true)
+                end
+            end
+        end
+
+        if notice.opt1 and IsValid(notice.opt1) then
+            notice.opt1:SetAlpha(255)
+            notice.opt1:SetSize(notice:GetWide() / 2, 25)
+            notice.opt1:SetText(option1 .. " (F8)")
+            notice.opt1:SetPos(0, notice:GetTall() - notice.opt1:GetTall())
+            notice.opt1:CenterHorizontal(0.25)
+            notice.opt1:SetAlpha(0)
+            notice.opt1:AlphaTo(255, 0.2)
+            notice.opt1:SetTextColor(color_white)
+            notice.opt1.left = true
+            styleOpt(notice.opt1)
+            function notice.opt1:keyThink()
+                if input.IsKeyDown(KEY_F8) and (CurTime() - notice.lastKey) >= 0.5 then
+                    self:ColorTo(Color(24, 215, 37), 0.2, 0)
+                    notice.respondToKeys = false
+                    net.Start("BinaryQuestionRequest")
+                    net.WriteUInt(0, 1)
+                    net.SendToServer()
+                    timer.Simple(1, function() if notice and IsValid(notice) then RemoveNotices(notice) end end)
+                    notice.lastKey = CurTime()
+                end
+            end
+        end
+
+        if notice.opt2 and IsValid(notice.opt2) then
+            notice.opt2:SetAlpha(255)
+            notice.opt2:SetSize(notice:GetWide() / 2, 25)
+            notice.opt2:SetText(option2 .. " (F9)")
+            notice.opt2:SetPos(0, notice:GetTall() - notice.opt2:GetTall())
+            notice.opt2:CenterHorizontal(0.75)
+            notice.opt2:SetAlpha(0)
+            notice.opt2:AlphaTo(255, 0.2)
+            notice.opt2:SetTextColor(color_white)
+            styleOpt(notice.opt2)
+            function notice.opt2:keyThink()
+                if input.IsKeyDown(KEY_F9) and (CurTime() - notice.lastKey) >= 0.5 then
+                    self:ColorTo(Color(24, 215, 37), 0.2, 0)
+                    notice.respondToKeys = false
+                    net.Start("BinaryQuestionRequest")
+                    net.WriteUInt(1, 1)
+                    net.SendToServer()
+                    timer.Simple(1, function() if notice and IsValid(notice) then RemoveNotices(notice) end end)
+                    notice.lastKey = CurTime()
+                end
+            end
+        end
+
+        notice.lastKey = CurTime()
+        notice.respondToKeys = true
+        function notice:Think()
+            if not self.respondToKeys then return end
+            local queries = {}
+            for _, v in pairs(lia.notices) do
+                if v.isQuery then queries[#queries + 1] = v end
+            end
+
+            for k, v in pairs(queries) do
+                if v == self and k > 1 then return end
+            end
+
+            if self.opt1 and IsValid(self.opt1) then self.opt1:keyThink() end
+            if self.opt2 and IsValid(self.opt2) then self.opt2:keyThink() end
+        end
+    end)
+end)
+
 net.Receive("OpenPage", function() gui.OpenURL(net.ReadString()) end)
-net.Receive("LiliaPlaySound", function() LocalPlayer():EmitSound(tostring(net.ReadString()), tonumber(net.ReadUInt(7)) or 100) end)
 netstream.Hook("ChatPrint", function(data) chat.AddText(unpack(data)) end)
 netstream.Hook("charInfo", function(data, id, client) lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client) end)
 netstream.Hook("charKick", function(id, isCurrentChar) hook.Run("KickedFromChar", id, isCurrentChar) end)
-net.Receive("SendMessage", function() chat.AddText(Color(255, 255, 255), unpack(net.ReadTable())) end)
 netstream.Hook("gVar", function(key, value) lia.net.globals[key] = value end)
-net.Receive("SendPrint", function() print(unpack(net.ReadTable())) end)
-net.Receive("SendPrintTable", function() PrintTable(net.ReadTable()) end)
 netstream.Hook("nDel", function(index) lia.net[index] = nil end)
-netstream.Hook("notifyQuery", lia.notices.notifQuery)

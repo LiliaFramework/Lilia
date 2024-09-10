@@ -426,7 +426,7 @@ if SERVER then
     end
 
     --- Sets the player's ragdoll entity.
-    -- @realm shared
+    -- @realm server
     -- @tparam Entity entity The entity to set as the player's ragdoll.
     function playerMeta:setRagdoll(entity)
         self.liaRagdoll = entity
@@ -467,18 +467,27 @@ if SERVER then
     end
 
     --- Plays a sound for the player.
-    -- @realm client
+    -- @realm server
     -- @string sound The sound to play.
-    -- @int[opt] pitch The pitch of the sound.
-    function playerMeta:playSound(sound, pitch)
-        net.Start("LiliaPlaySound")
-        net.WriteString(tostring(sound))
-        net.WriteUInt(tonumber(pitch) or 100, 7)
-        net.Send(self)
+    -- @int[opt] volume The volume of the sound (default 75).
+    -- @int[opt] pitch The pitch of the sound (default 100).
+    -- @bool[opt] shouldEmit Whether to emit sound server-side or send it to the client.
+    function playerMeta:PlaySound(sound, volume, pitch, shouldEmit)
+        volume = volume or 75
+        pitch = pitch or 100
+        if shouldEmit then
+            self:EmitSound(sound, volume, pitch)
+        else
+            net.Start("PlaySound")
+            net.WriteString(sound)
+            net.WriteUInt(volume, 8)
+            net.WriteUInt(pitch, 8)
+            net.Send(self)
+        end
     end
 
     --- Opens a VGUI panel for the player.
-    -- @realm client
+    -- @realm server
     -- @param panel The name of the VGUI panel to open.
     function playerMeta:openUI(panel)
         net.Start("OpenVGUI")
@@ -488,7 +497,7 @@ if SERVER then
 
     playerMeta.OpenUI = playerMeta.openUI
     --- Opens a web page for the player.
-    -- @realm client
+    -- @realm server
     -- @string url The URL of the web page to open.
     function playerMeta:openPage(url)
         net.Start("OpenPage")
@@ -496,8 +505,83 @@ if SERVER then
         net.Send(self)
     end
 
-    --- Retrieves the player's total playtime.
+    --- Requests a dropdown selection from the player.
     -- @realm shared
+    -- @string title The title of the request.
+    -- @string subTitle The subtitle of the request.
+    -- @tab options The table of options to choose from.
+    -- @func callback The function to call upon receiving the selected option.
+    function playerMeta:requestDropdown(title, subTitle, options, callback)
+        net.Start("DropdownRequest")
+        net.WriteString(title)
+        net.WriteString(subTitle)
+        net.WriteTable(options)
+        net.Send(self)
+        self.dropdownCallback = callback
+    end
+
+    --- Requests multiple options selection from the player.
+    -- @realm server
+    -- @string title The title of the request.
+    -- @string subTitle The subtitle of the request.
+    -- @tab options The table of options to choose from.
+    -- @number limit The maximum number of selectable options.
+    -- @func callback The function to call upon receiving the selected options.
+    function playerMeta:requestOptions(title, subTitle, options, limit, callback)
+        net.Start("OptionsRequest")
+        net.WriteString(title)
+        net.WriteString(subTitle)
+        net.WriteTable(options)
+        net.WriteUInt(limit, 32)
+        net.Send(self)
+        self.optionsCallback = callback
+    end
+
+    --- Requests a string input from the player.
+    -- @realm shared
+    -- @string title The title of the string input dialog.
+    -- @string subTitle The subtitle or description of the string input dialog.
+    -- @func callback The function to call with the entered string.
+    -- @param[opt] default The default value for the string input.
+    -- @treturn Promise A promise object resolving with the entered string.
+    function playerMeta:requestString(title, subTitle, callback, default)
+        local d
+        if not isfunction(callback) and default == nil then
+            default = callback
+            d = deferred.new()
+            callback = function(value) d:resolve(value) end
+        end
+
+        self.liaStrReqs = self.liaStrReqs or {}
+        local id = table.insert(self.liaStrReqs, callback)
+        net.Start("StringRequest")
+        net.WriteUInt(id, 32)
+        net.WriteString(title)
+        net.WriteString(subTitle)
+        net.WriteString(default or "")
+        net.Send(self)
+        return d
+    end
+
+    --- Requests a binary choice from the player.
+    -- @realm server
+    -- @string question The question to present to the player.
+    -- @string option1 The text for the first option.
+    -- @string option2 The text for the second option.
+    -- @bool manualDismiss Whether the notice should be manually dismissed.
+    -- @func callback The function to call with the choice (0 or 1) when the player selects an option.
+    function playerMeta:binaryQuestion(question, option1, option2, manualDismiss, callback)
+        net.Start("BinaryQuestionRequest")
+        net.WriteString(question)
+        net.WriteString(option1)
+        net.WriteString(option2)
+        net.WriteBool(manualDismiss)
+        net.Send(self)
+        self.binaryQuestionCallback = callback
+    end
+
+    --- Retrieves the player's total playtime.
+    -- @realm server
     -- @treturn number The total playtime of the player.
     function playerMeta:getPlayTime()
         local diff = os.time(lia.date.toNumber(self.lastJoin)) - os.time(lia.date.toNumber(self.firstJoin))
@@ -540,64 +624,6 @@ if SERVER then
         return entity
     end
 
-    --- Requests multiple options selection from the player.
-    -- @realm shared
-    -- @string title The title of the request.
-    -- @string subTitle The subtitle of the request.
-    -- @tab options The table of options to choose from.
-    -- @number limit The maximum number of selectable options.
-    -- @func callback The function to call upon receiving the selected options.
-    function playerMeta:requestOptions(title, subTitle, options, limit, callback)
-        net.Start("OptionsRequest")
-        net.WriteString(title)
-        net.WriteString(subTitle)
-        net.WriteTable(options)
-        net.WriteUInt(limit, 32)
-        net.Send(self)
-        self.optionsCallback = callback
-    end
-
-    --- Requests a dropdown selection from the player.
-    -- @realm shared
-    -- @string title The title of the request.
-    -- @string subTitle The subtitle of the request.
-    -- @tab options The table of options to choose from.
-    -- @func callback The function to call upon receiving the selected option.
-    function playerMeta:requestDropdown(title, subTitle, options, callback)
-        net.Start("DropdownRequest")
-        net.WriteString(title)
-        net.WriteString(subTitle)
-        net.WriteTable(options)
-        net.Send(self)
-        self.dropdownCallback = callback
-    end
-
-    --- Requests a string input from the player.
-    -- @realm shared
-    -- @string title The title of the string input dialog.
-    -- @string subTitle The subtitle or description of the string input dialog.
-    -- @func callback The function to call with the entered string.
-    -- @param[opt] default The default value for the string input.
-    -- @treturn Promise A promise object resolving with the entered string.
-    function playerMeta:requestString(title, subTitle, callback, default)
-        local d
-        if not isfunction(callback) and default == nil then
-            default = callback
-            d = deferred.new()
-            callback = function(value) d:resolve(value) end
-        end
-
-        self.liaStrReqs = self.liaStrReqs or {}
-        local id = table.insert(self.liaStrReqs, callback)
-        net.Start("StringRequest")
-        net.WriteUInt(id, 32)
-        net.WriteString(title)
-        net.WriteString(subTitle)
-        net.WriteString(default or "")
-        net.Send(self)
-        return d
-    end
-
     --- Performs a stared action towards an entity for a certain duration.
     -- @realm server
     -- @entity entity The entity towards which the player performs the stared action.
@@ -629,14 +655,14 @@ if SERVER then
     end
 
     --- Notifies the player with a message.
-    -- @realm shared
+    -- @realm server
     -- @string message The message to notify the player.
     function playerMeta:notify(message)
         lia.notices.notify(message, self)
     end
 
     --- Notifies the player with a localized message.
-    -- @realm shared
+    -- @realm server
     -- @string message The key of the localized message to notify the player.
     -- @tab ... Additional arguments to format the localized message.
     function playerMeta:notifyLocalized(message, ...)
@@ -828,33 +854,6 @@ if SERVER then
         self:notify(text)
         self:chatNotify(text)
     end
-
-    --- Sends a message to the player.
-    -- @realm server
-    -- @tab ... The message(s) to send.
-    function playerMeta:sendMessage(...)
-        net.Start("SendMessage")
-        net.WriteTable({...} or {})
-        net.Send(self)
-    end
-
-    --- Sends a message to the player to be printed.
-    -- @realm server
-    -- @tab ... The message(s) to print.
-    function playerMeta:sendPrint(...)
-        net.Start("SendPrint")
-        net.WriteTable({...} or {})
-        net.Send(self)
-    end
-
-    --- Sends a table to the player to be printed.
-    -- @realm server
-    -- @tab ... The table(s) to print.
-    function playerMeta:sendPrintTable(...)
-        net.Start("SendPrintTable")
-        net.WriteTable({...} or {})
-        net.Send(self)
-    end
 else
     --- Displays a notification for this player in the chatbox.
     -- @realm client
@@ -962,7 +961,4 @@ playerMeta.NotifyLocalized = playerMeta.notifyLocalized
 playerMeta.SetRagdolled = playerMeta.setRagdolled
 playerMeta.SyncVars = playerMeta.syncVars
 playerMeta.NotifyP = playerMeta.notifyP
-playerMeta.SendMessage = playerMeta.sendMessage
-playerMeta.SendPrint = playerMeta.sendPrint
-playerMeta.SendPrintTable = playerMeta.sendPrintTable
 playerMeta.SetWeighPoint = playerMeta.setWeighPoint
