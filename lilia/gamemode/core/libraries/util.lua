@@ -212,7 +212,7 @@ end
 if SERVER then
     --- Sends a request to the client to display a table UI.
     -- @realm server
-    -- @player client The player to whom the UI should be sent.
+    -- @client client The player to whom the UI should be sent.
     -- @string title The title of the table UI.
     -- @tab columns A table defining the columns in the table. Each entry should be a table with fields `name` and `width`.
     -- @tab data A table containing rows of data. Each row is a table of values corresponding to the column fields.
