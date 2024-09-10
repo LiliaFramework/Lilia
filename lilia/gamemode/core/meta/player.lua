@@ -394,7 +394,7 @@ if SERVER then
     -- @realm server
     -- @string message Text to display in the notification
     function playerMeta:chatNotify(message)
-        net.Start("chatNotifyNet")
+        net.Start("chatNotify")
         net.WriteString(message)
         net.Send(self)
     end
@@ -405,7 +405,7 @@ if SERVER then
     -- @param ... Arguments to pass to the phrase
     function playerMeta:chatNotifyLocalized(message, ...)
         message = L(message, self, ...)
-        net.Start("chatNotifyNet")
+        net.Start("chatNotify")
         net.WriteString(message)
         net.Send(self)
     end
