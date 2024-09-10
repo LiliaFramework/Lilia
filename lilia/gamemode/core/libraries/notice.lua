@@ -74,18 +74,22 @@ function OrganizeNotices(alternate)
     local lastHeight = ScrH() - 100
     if alternate then
         for k, v in ipairs(lia.notices) do
-            local topMargin = 0
-            for k2, v2 in pairs(lia.notices) do
-                if k < k2 then topMargin = topMargin + v2:GetTall() + 5 end
-            end
+            if IsValid(v) then
+                local topMargin = 0
+                for k2, v2 in ipairs(lia.notices) do
+                    if IsValid(v2) then if k < k2 then topMargin = topMargin + v2:GetTall() + 5 end end
+                end
 
-            v:MoveTo(v:GetX(), topMargin + 5, 0.15, 0, 5)
+                v:MoveTo(v:GetX(), topMargin + 5, 0.15, 0, 5)
+            end
         end
     else
         for k, v in ipairs(lia.notices) do
-            local height = lastHeight - v:GetTall() - 10
-            v:MoveTo(scrW - v:GetWide(), height, 0.15, (k / #lia.notices) * 0.25, nil)
-            lastHeight = height
+            if IsValid(v) then
+                local height = lastHeight - v:GetTall() - 10
+                v:MoveTo(scrW - v:GetWide(), height, 0.15, (k / #lia.notices) * 0.25, nil)
+                lastHeight = height
+            end
         end
     end
 end

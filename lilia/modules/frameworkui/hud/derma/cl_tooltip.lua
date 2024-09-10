@@ -1,4 +1,5 @@
 ﻿local PANEL = {}
+
 function PANEL:Init()
     self:SetDrawOnTop(true)
     self.DeleteContentsOnClose = false
