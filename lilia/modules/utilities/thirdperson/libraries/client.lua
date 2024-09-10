@@ -21,7 +21,7 @@ function MODULE:SetupQuickMenu(menu)
             hook.Run("thirdPersonToggled", ThirdPerson:GetBool())
         end, ThirdPerson:GetBool())
 
-        menu:addCheck(L"thirdpersonClassic", function(panel, state)
+        menu:addCheck(L"thirdpersonClassic", function(_, state)
             if state then
                 RunConsoleCommand("tp_classic", "1")
             else

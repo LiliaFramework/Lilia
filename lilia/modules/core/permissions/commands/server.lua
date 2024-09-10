@@ -821,7 +821,6 @@ lia.command.add("flaglist", {
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local flags = {}
-        local targetName = "All Players"
         if IsValid(target) then
             local character = target:getChar()
             if character then
@@ -833,8 +832,6 @@ lia.command.add("flaglist", {
                         })
                     end
                 end
-
-                targetName = target:Nick()
             end
         else
             for flag, data in pairs(lia.flag.list) do
