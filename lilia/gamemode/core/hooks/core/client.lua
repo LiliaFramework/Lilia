@@ -1,5 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-
 function GM:CanDisplayCharacterInfo(client, id)
     LiliaDeprecated("CanDisplayCharacterInfo is deprecated. Use CanDisplayCharInfo for optimization purposes.")
     hook.Run("CanDisplayCharInfo", client, id)
@@ -19,7 +18,6 @@ function GM:CharacterListUpdated(oldCharList, newCharList)
     LiliaDeprecated("CharacterListUpdated is deprecated. Use CharListUpdated for optimization purposes.")
     hook.Run("CharListUpdated", oldCharList, newCharList)
 end
-
 
 function GM:DrawLiliaModelView(_, entity)
     if IsValid(entity.weapon) then entity.weapon:DrawModel() end
@@ -106,6 +104,21 @@ function GM:LoadLiliaFonts(font, genericFont)
         font = "Roboto",
         size = 14,
         weight = 400
+    })
+
+    surface.CreateFont("Roboto.20", {
+        font = "Roboto",
+        size = 20,
+    })
+
+    surface.CreateFont("Roboto.15", {
+        font = "Roboto",
+        size = 15,
+    })
+
+    surface.CreateFont("Roboto.22", {
+        font = "Roboto",
+        size = 22,
     })
 
     surface.CreateFont("DarkSkinRegular", {
