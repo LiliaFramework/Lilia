@@ -67,7 +67,6 @@ function MODULE:PlayerDeath(client, _, attacker)
         if self.LoseWeapononDeathHuman then self:RemoveAllEquippedWeapons(client) end
         if self.DeathPopupEnabled then
             net.Start("death_client")
-            net.WriteString(attacker:Name())
             net.WriteFloat(attacker:getChar():getID())
             net.Send(client)
         end
