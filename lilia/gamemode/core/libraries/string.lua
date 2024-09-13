@@ -71,3 +71,48 @@ function lia.string.CommaNumber(amount)
     end
     return formatted
 end
+
+--- Converts a digit to its English word representation.
+-- @int digit The digit to convert.
+-- @return string The word representation of the digit, or "invalid" if not a digit.
+function lia.string.DigitToString(digit)
+    local digitToString = {
+        ["0"] = "zero",
+        ["1"] = "one",
+        ["2"] = "two",
+        ["3"] = "three",
+        ["4"] = "four",
+        ["5"] = "five",
+        ["6"] = "six",
+        ["7"] = "seven",
+        ["8"] = "eight",
+        ["9"] = "nine"
+    }
+    return digitToString[tostring(digit)] or "invalid"
+end
+
+--- Removes non-printable ASCII characters from a string.
+-- @string str The string to clean.
+-- @return string The cleaned string.
+function lia.string.Clean(str)
+    return string.gsub(str, "[^\32-\127]", "")
+end
+
+--- Randomly introduces gibberish characters into a string based on probability.
+-- @string str The string to modify.
+-- @int prob The probability (1-100) of introducing gibberish.
+-- @return string The modified string with possible gibberish.
+function lia.string.Gibberish(str, prob)
+    local ret = ""
+    for _, v in pairs(string.Explode("", str)) do
+        if math.random(1, 100) < prob then
+            v = ""
+            for i = 1, math.random(0, 2) do
+                ret = ret .. table.Random({"#", "@", "&", "%", "$", "/", "<", ">", ";", "*", "*", "*", "*", "*", "*", "*", "*"})
+            end
+        end
+
+        ret = ret .. v
+    end
+    return ret
+end

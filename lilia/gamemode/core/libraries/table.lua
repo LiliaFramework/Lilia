@@ -29,5 +29,67 @@ function lia.table.Lookupify(tbl)
     return lookup
 end
 
+--- Converts a table into an associative table where the original values are keys.
+-- @tab tab The table to convert.
+-- @return table The associative table.
+function lia.table.MakeAssociative(tab)
+    local ret = {}
+    for _, v in pairs(tab) do
+        ret[v] = true
+    end
+    return ret
+end
+
+--- Returns a table of unique values from the input table.
+-- @tab tab The table to process.
+-- @return table The table of unique values.
+function lia.table.Unique(tab)
+    return table.GetKeys(table.MakeAssociative(tab))
+end
+
+--- Creates a deep copy of a table.
+-- @tab tab table The table to copy.
+-- @return table A deep copy of the table.
+function lia.table.FullCopy(tab)
+    local res = {}
+    for k, v in pairs(tab) do
+        if type(v) == "table" then
+            res[k] = table.FullCopy(v)
+        elseif type(v) == "Vector" then
+            res[k] = Vector(v.x, v.y, v.z)
+        elseif type(v) == "Angle" then
+            res[k] = Angle(v.p, v.y, v.r)
+        else
+            res[k] = v
+        end
+    end
+    return res
+end
+
+--- Filters a table based on a callback function.
+-- @tab tab The table to filter.
+-- @func callback The function to call for each element; if it returns true, the element is kept.
+-- @return table The filtered table.
+function lia.table.Filter(tab, callback)
+    local pointer = 1
+    for i = 1, #tab do
+        if callback(i, tab[i]) then
+            if i ~= pointer then
+                tab[pointer] = tab[i]
+                tab[i] = nil
+            end
+
+            pointer = pointer + 1
+        else
+            tab[i] = nil
+        end
+    end
+    return tab
+end
+
+table.MakeAssociative = lia.table.MakeAssociative
+table.Unique = lia.table.Unique
+table.FullCopy = lia.table.FullCopy
+table.Filter = lia.table.Filter
 table.Lookupify = lia.table.Lookupify
 table.Sum = lia.table.Sum
