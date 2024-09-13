@@ -16,4 +16,8 @@ local function RegisterPrivileges()
     end
 end
 
+function MODULE:PostPlayerLoadout(client)
+    if client:HasPrivilege("Staff Permissions - Use Admin Stick") or client:isStaffOnDuty() then client:Give("adminstick") end
+end
+
 hook.Add("serverguard.RanksLoaded", "serverguard.RanksLoaded", RegisterPrivileges)

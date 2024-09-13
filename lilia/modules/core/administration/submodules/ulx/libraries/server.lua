@@ -47,6 +47,10 @@ net.Receive("UpdateTicketStatus", function(_, client)
     end
 end)
 
+function MODULE:PostPlayerLoadout(client)
+    if client:HasPrivilege("Staff Permissions - Use Admin Stick") or client:isStaffOnDuty() then client:Give("adminstick") end
+end
+
 function MODULE:InitializedModules()
     MsgC(Color(255, 0, 0), "WE DO NOT RECOMMEND THE USE OF ULX AS IT MAY CREATE PERFOMANCE ISSUES!" .. "\n")
 end

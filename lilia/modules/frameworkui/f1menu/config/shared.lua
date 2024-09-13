@@ -1,10 +1,7 @@
 ﻿MODULE.F1ThirdPersonEnabled = false
-MODULE.F1DisplayModel = false
-MODULE.F1DisplayAttributes = false
 MODULE.RulesEnabled = false
 MODULE.TutorialEnabled = false
 MODULE.FAQEnabled = false
-MODULE.InfoMenuLocation = "TopRight" -- Possible Choices: TopLeft, TopRight, BottomRight, BottomLeft, BottomCenter, AbsoluteCenter | Default is TopRight
 MODULE.F1MenuLaunchUnanchor = "buttons/lightswitch2.wav"
 MODULE.MenuButtonRollover = "ui/buttonrollover.wav"
 MODULE.SoundMenuButtonPressed = "ui/buttonclickrelease.wav"

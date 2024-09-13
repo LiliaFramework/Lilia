@@ -10,3 +10,4 @@
 -- @field CharMenuBGInputDisabled Disable Background Input during Main Menu Lookup | **boolean**
 -- @field CanSelectBodygroups Enable or disable selection of bodygroups in the character menu | **boolean**
 -- @field CanSelectSkins Enable or disable selection of skins in the character menu | **boolean**
+-- @field KickOnEnteringMainMenu Set Music Volume on Main Menu | **boolean**

@@ -15,6 +15,20 @@ function MODULE:Think()
     if offset ~= 0 then predictedStamina = math.Clamp(predictedStamina + offset, 0, maxStamina) end
 end
 
+function MODULE:CanPlayerViewAttributes()
+    if self.F1DisplayAttributes then return false end
+end
+
+function MODULE:LoadCharInformation()
+    if hook.Run("CanPlayerViewAttributes") == false then
+        hook.Run("AddSection", "Attributes", Color(0, 0, 0), 2)
+        for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
+            local maximum = v.maxValue or lia.config.MaxAttributes
+            hook.Run("AddBarField", "Attributes", v.name, v.name, function() return 0 end, function() return maximum end, function() return LocalPlayer():getChar():getAttrib(k, 0) end)
+        end
+    end
+end
+
 function MODULE:HUDPaintBackground()
     local client = LocalPlayer()
     if not self.StaminaBlur or not client:getChar() then return end

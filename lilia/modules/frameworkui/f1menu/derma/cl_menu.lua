@@ -3,6 +3,8 @@ local PANEL = {}
 local gradient = lia.util.getMaterial("vgui/gradient-u")
 function PANEL:Init()
     local client = LocalPlayer()
+    self.rotationAngle = 45
+    self.rotationSpeed = 0.5
     if MODULE.F1ThirdPersonEnabled then
         self.initialValues = {
             ThirdPerson = GetConVar("tp_enabled"):GetInt(),
@@ -27,25 +29,37 @@ function PANEL:Init()
         ThirdPersonViewDistance:SetInt(100)
     end
 
-    if MODULE.F1DisplayModel then
-        self.model = self:Add("liaModelPanel")
-        self.model:SetWide(ScrW() * 0.25)
-        self.model:Dock(RIGHT)
-        self.model:SetFOV(50)
-        self.model.enableHook = true
-        self.model.copyLocalSequence = true
-        self.model:SetModel(client:GetModel())
-        self.model.Entity:SetSkin(client:GetSkin())
-        for _, v in ipairs(client:GetBodyGroups()) do
-            self.model.Entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
+    self.model = self:Add("liaModelPanel")
+    self.model:SetWide(ScrW() * 0.25)
+    self.model:SetFOV(50)
+    self.model:SetTall(ScrH() - 50)
+    self.model:SetPos(ScrW() - self.model:GetWide() - 150, 0)
+    self.model:SetModel(client:GetModel())
+    self.model.Entity:SetSkin(client:GetSkin())
+    for k, v in ipairs(client:GetBodyGroups()) do
+        self.model.Entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
+    end
+
+    local ent = self.model.Entity
+    if ent and IsValid(ent) then
+        local mats = client:GetMaterials()
+        for k, v in pairs(mats) do
+            ent:SetSubMaterial(k - 1, client:GetSubMaterial(k - 1))
+        end
+    end
+
+    self.model.Think = function(this)
+        local rotateLeft = input.IsKeyDown(KEY_A)
+        local rotateRight = input.IsKeyDown(KEY_D)
+        if rotateLeft then
+            self.rotationAngle = self.rotationAngle - self.rotationSpeed
+        elseif rotateRight then
+            self.rotationAngle = self.rotationAngle + self.rotationSpeed
         end
 
-        local ent = self.model.Entity
-        if ent and IsValid(ent) then
-            local mats = client:GetMaterials()
-            for k, _ in pairs(mats) do
-                ent:SetSubMaterial(k - 1, client:GetSubMaterial(k - 1))
-            end
+        if IsValid(self.model) and IsValid(self.model.Entity) then
+            local Angles = Angle(0, self.rotationAngle, 0)
+            self.model.Entity:SetAngles(Angles)
         end
     end
 

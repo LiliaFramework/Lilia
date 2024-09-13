@@ -1,1 +1,0 @@
-﻿MODULE.KickOnEnteringMainMenu = true

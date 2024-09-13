@@ -8,6 +8,54 @@
         </div>
     </div>
 ]]
+function MODULE:LoadCharInformation()
+    hook.Run("AddSection", "General Info", Color(0, 0, 0), 1)
+    hook.Run("AddTextField", "General Info", "name", "Name", function() return LocalPlayer():getChar():getName() end)
+    hook.Run("AddTextField", "General Info", "desc", "Description", function() return LocalPlayer():getChar():getDesc() end)
+    hook.Run("AddTextField", "General Info", "money", "Money", function() return LocalPlayer():getMoney() end)
+end
+
+function MODULE:AddSection(sectionName, color, priority)
+    hook.Run("F1OnAddSection", sectionName, color, priority)
+    self.CharacterInformations[sectionName] = {
+        fields = {},
+        color = color or Color(255, 255, 255),
+        priority = priority or 999
+    }
+end
+
+function MODULE:AddTextField(sectionName, fieldName, labelText, valueFunc)
+    hook.Run("F1OnAddTextField", sectionName, fieldName, labelText, valueFunc)
+    local section = self.CharacterInformations[sectionName]
+    if section then
+        table.insert(section.fields, {
+            type = "text",
+            name = fieldName,
+            label = labelText,
+            value = valueFunc or function() return "" end
+        })
+    else
+        print("Section not found: " .. sectionName)
+    end
+end
+
+function MODULE:AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
+    hook.Run("F1OnAddBarField", sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
+    local section = self.CharacterInformations[sectionName]
+    if section then
+        table.insert(section.fields, {
+            type = "bar",
+            name = fieldName,
+            label = labelText,
+            min = minFunc or function() return 0 end,
+            max = maxFunc or function() return 100 end,
+            value = valueFunc or function() return 0 end
+        })
+    else
+        print("Section not found: " .. sectionName)
+    end
+end
+
 function MODULE:PlayerBindPress(client, bind, pressed)
     if bind:lower():find("gm_showhelp") and pressed then
         if IsValid(lia.gui.menu) then
@@ -19,53 +67,12 @@ function MODULE:PlayerBindPress(client, bind, pressed)
     end
 end
 
-function MODULE:CanPlayerViewAttributes()
-    if self.F1DisplayAttributes then return false end
-end
-
 function MODULE:CanDisplayCharInfo(name)
     local client = LocalPlayer()
     local character = client:getChar()
     local class = lia.class.list[character:getClass()]
     if name == "class" and not class then return false end
     return true
-end
-
-function MODULE:OnCharInfoSetup(infoPanel)
-    if not IsValid(infoPanel) then return end
-    local mdl = infoPanel
-    local entity = mdl.Entity
-    local client = LocalPlayer()
-    if not IsValid(client) or not client:Alive() then return end
-    local weapon = client:GetActiveWeapon()
-    if not IsValid(weapon) then return end
-    local weapModel = ClientsideModel(weapon:GetModel(), RENDERGROUP_BOTH)
-    if not IsValid(weapModel) then return end
-    weapModel:SetParent(entity)
-    weapModel:AddEffects(EF_BONEMERGE)
-    weapModel:SetSkin(weapon:GetSkin())
-    weapModel:SetColor(weapon:GetColor())
-    weapModel:SetNoDraw(true)
-    if not IsValid(entity) then return end
-    entity.weapon = weapModel
-    local act = ACT_MP_STAND_IDLE
-    local model = entity:GetModel():lower()
-    local class = lia.anim.getModelClass(model)
-    local tree = lia.anim[class]
-    if not tree then return end
-    local subClass = weapon.HoldType or weapon:GetHoldType()
-    subClass = lia.anim.HoldTypeTranslator[subClass] or subClass
-    if tree[subClass] and tree[subClass][act] then
-        local branch = tree[subClass][act]
-        local act2 = istable(branch) and branch[1] or branch
-        if isstring(act2) then
-            act2 = entity:LookupSequence(act2)
-        else
-            act2 = entity:SelectWeightedSequence(act2)
-        end
-
-        entity:ResetSequence(act2)
-    end
 end
 
 function MODULE:CreateMenuButtons(tabs)
