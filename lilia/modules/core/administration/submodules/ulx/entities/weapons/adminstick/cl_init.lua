@@ -1,4 +1,5 @@
 local MODULE = MODULE
+
 function SWEP:PrimaryAttack()
     local target = IsValid(LocalPlayer().AdminStickTarget) and LocalPlayer().AdminStickTarget or LocalPlayer():GetEyeTrace().Entity
     if IsValid(target) and not target:IsPlayer() and target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end
@@ -51,10 +52,9 @@ function SWEP:DrawHUD()
     surface.DrawRect(x - length / 2, y - thickness / 2, length, thickness)
     surface.DrawRect(x - thickness / 2, y - length / 2, thickness, length)
     local startPosX, startPosY = ScrW() / 2 + 10, ScrH() / 2 + 10
-    local font = "DebugFixed"
     local buffer = 0
     for _, v in pairs(information) do
-        surface.SetFont(font)
+        surface.SetFont("DebugFixed")
         surface.SetTextColor(color_black)
         surface.SetTextPos(startPosX + 1, startPosY + buffer + 1)
         surface.DrawText(v)

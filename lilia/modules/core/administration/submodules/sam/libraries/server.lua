@@ -1,14 +1,5 @@
 ﻿local MODULE = MODULE
-util.AddNetworkString("NetTicket")
-util.AddNetworkString("TicketSync")
-util.AddNetworkString("UpdateTicketStatus")
 local playerMeta = FindMetaTable("Player")
-MODULE.Active = {}
-function MODULE:InitializedModules()
-    sam.config.set("Restrictions.Tool", false)
-    sam.config.set("Restrictions.Spawning", false)
-end
-
 function MODULE:PlayerInitialSpawn(client)
     local StaffRank = self.DefaultStaff[client:SteamID64()]
     if StaffRank then
@@ -58,50 +49,6 @@ function MODULE:PlayerSpawnRagdoll(client)
         return false
     end
 end
-
-net.Receive("TicketSync", function()
-    MODULE.Active = net.ReadTable()
-    net.Start("TicketSync")
-    net.WriteTable(MODULE.Active)
-    net.Broadcast()
-end)
-
-function MODULE:NewTicket(ply, msg)
-    net.Start("NetTicket")
-    net.WriteEntity(ply)
-    net.WriteString(msg)
-    net.WriteInt(#MODULE.Active + 1, 8)
-    net.Broadcast()
-    MODULE.Active[ply] = {
-        active = true,
-        claimer = nil
-    }
-
-    net.Start("TicketSync")
-    net.WriteTable(MODULE.Active)
-    net.Broadcast()
-end
-
-lia.command.add("ticket", {
-    adminOnly = false,
-    onRun = function(client)
-        client:requestString("Enter Ticket Details", "Please provide a brief description for your ticket.", function(text)
-            MODULE:NewTicket(client, text)
-            lia.log.add(client, "ticketOpen")
-        end)
-    end
-})
-
-net.Receive("UpdateTicketStatus", function(_, client)
-    local ticketState = net.ReadBool()
-    if ticketState then
-        hook.Run("OnTicketTaken", client)
-        lia.log.add(client, "ticketTook")
-    else
-        hook.Run("OnTicketClosed", client)
-        lia.log.add(client, "ticketClosed")
-    end
-end)
 
 function MODULE:PostPlayerLoadout(client)
     if client:HasPrivilege("Staff Permissions - Use Admin Stick") or client:isStaffOnDuty() then client:Give("adminstick") end

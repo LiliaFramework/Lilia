@@ -17,17 +17,41 @@ end
 
 function MODULE:PlayerSay(client, text)
     if text:sub(1, 1) == "@" then
-        lia.command.run(client, "asay", {text:sub(2)})
+
         return ""
     end
 end
 
-lia.chat.register("asay", {
-    onCanSay = function() return true end,
-    onCanHear = function(_, speaker) return speaker:HasPrivilege("Staff Permissions - Read Admin Chat") end,
-    onChatAdd = function(speaker, text) if speaker:HasPrivilege("Staff Permissions - Read Admin Chat") then chat.AddText(Color(255, 0, 0), "[Admin] ", speaker, " (" .. speaker:steamName() .. ") ", Color(0, 255, 0), ": " .. text) end end,
-    font = "liaChatFont",
-    filter = "admin"
-})
+sam.command.new("blind"):SetPermission("blind", "superadmin"):AddArg("player"):Help("Blinds the Players"):OnExecute(function(ply, targets)
+    for i = 1, #targets do
+        local target = targets[i]
+        net.Start("sam_blind")
+        net.WriteBool(true)
+        net.Send(target)
+    end
+
+    if not sam.is_command_silent then
+        ply:sam_send_message("{A} Blinded {T}", {
+            A = ply,
+            T = targets
+        })
+    end
+end):End()
+
+sam.command.new("unblind"):SetPermission("blind", "superadmin"):AddArg("player"):Help("Unblinds the Players"):OnExecute(function(ply, targets)
+    for i = 1, #targets do
+        local target = targets[i]
+        net.Start("sam_blind")
+        net.WriteBool(false)
+        net.Send(target)
+    end
+
+    if not sam.is_command_silent then
+        ply:sam_send_message("{A} Un-Blinded {T}", {
+            A = ply,
+            T = targets
+        })
+    end
+end):End()
 
 hook.Remove("PlayerSay", "SAM.Chat.Asay")
