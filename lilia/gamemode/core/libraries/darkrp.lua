@@ -1,7 +1,7 @@
-DarkRP = DarkRP or {}
-RPExtraTeams = RPExtraTeams or {}
 --- A library of DarkRP compatibility functions.
 -- @library lia.darkrp
+DarkRP = DarkRP or {}
+RPExtraTeams = RPExtraTeams or {}
 lia.darkrp = lia.darkrp or {}
 if SERVER then
     --- Checks if a position is empty, considering certain entity types and ignoring specified entities.
