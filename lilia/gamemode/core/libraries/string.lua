@@ -107,7 +107,7 @@ function lia.string.Gibberish(str, prob)
     for _, v in pairs(string.Explode("", str)) do
         if math.random(1, 100) < prob then
             v = ""
-            for i = 1, math.random(0, 2) do
+            for _ = 1, math.random(0, 2) do
                 ret = ret .. table.Random({"#", "@", "&", "%", "$", "/", "<", ">", ";", "*", "*", "*", "*", "*", "*", "*", "*"})
             end
         end

@@ -5,7 +5,7 @@ util.AddNetworkString("TicketSystem")
 util.AddNetworkString("TicketSystemClaim")
 util.AddNetworkString("TicketSystemClose")
 util.AddNetworkString("TicketClientNotify")
-net.Receive("ViewClaims", function(len, client)
+net.Receive("ViewClaims", function(_, client)
     local sid = net.ReadString()
     net.Start("ViewClaims")
     net.WriteTable(util.JSONToTable(file.Read("caseclaims.txt", "DATA")))
@@ -13,10 +13,10 @@ net.Receive("ViewClaims", function(len, client)
     net.Send(client)
 end)
 
-net.Receive("TicketSystemClaim", function(len, client)
+net.Receive("TicketSystemClaim", function(_, client)
     local requester = net.ReadEntity()
     if MODULE:HasAccess(client) and not requester.CaseClaimed then
-        for k, v in pairs(player.GetAll()) do
+        for _, v in pairs(player.GetAll()) do
             if MODULE:HasAccess(v) then
                 net.Start("TicketSystemClaim")
                 net.WriteEntity(client)
@@ -30,11 +30,11 @@ net.Receive("TicketSystemClaim", function(len, client)
     end
 end)
 
-net.Receive("TicketSystemClose", function(len, client)
+net.Receive("TicketSystemClose", function(_, client)
     local requester = net.ReadEntity()
     if not requester or not requester:IsValid() or requester.CaseClaimed ~= client then return end
     if timer.Exists("ticketsystem-" .. requester:SteamID64()) then timer.Remove("ticketsystem-" .. requester:SteamID64()) end
-    for k, v in pairs(player.GetAll()) do
+    for _, v in pairs(player.GetAll()) do
         if MODULE:HasAccess(v) then
             net.Start("TicketSystemClose")
             net.WriteEntity(requester)

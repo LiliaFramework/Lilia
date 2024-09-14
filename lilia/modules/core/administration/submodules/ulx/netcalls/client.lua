@@ -1,18 +1,18 @@
 local MODULE = MODULE
-net.Receive("ViewClaims", function(len)
+net.Receive("ViewClaims", function()
     local tbl = net.ReadTable()
     local steamid = net.ReadString()
     if steamid and steamid ~= "" and steamid ~= " " then
         local v = tbl[steamid]
         print(v.name .. " - " .. v.claims .. " - last claim " .. string.NiceTime(os.time() - v.lastclaim) .. " ago")
     else
-        for k, v in pairs(tbl) do
+        for _, v in pairs(tbl) do
             print(v.name .. " - " .. v.claims)
         end
     end
 end)
 
-net.Receive("TicketSystem", function(len)
+net.Receive("TicketSystem", function()
     local pl = net.ReadEntity()
     local msg = net.ReadString()
     local claimed = net.ReadEntity()
@@ -34,10 +34,10 @@ net.Receive("TicketSystem", function(len)
     end
 end)
 
-net.Receive("TicketSystemClaim", function(len)
+net.Receive("TicketSystemClaim", function()
     local pl = net.ReadEntity()
     local requester = net.ReadEntity()
-    for k, v in pairs(TicketFrames) do
+    for _, v in pairs(TicketFrames) do
         if v.idiot == requester then
             if cvars.Bool("cl_ticketsystem_closeclaimed") and pl ~= LocalPlayer() then
                 v:Remove()
@@ -71,10 +71,10 @@ net.Receive("TicketSystemClaim", function(len)
     end
 end)
 
-net.Receive("TicketSystemClose", function(len)
+net.Receive("TicketSystemClose", function()
     local requester = net.ReadEntity()
     if not requester:IsValid() or not requester:IsPlayer() then return end
-    for k, v in pairs(TicketFrames) do
+    for _, v in pairs(TicketFrames) do
         if v.idiot == requester then v:Remove() end
     end
 

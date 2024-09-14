@@ -1,7 +1,5 @@
 ﻿local MODULE = MODULE
-
 local playerMeta = FindMetaTable("Player")
-
 function MODULE:PlayerInitialSpawn(client)
     local StaffRank = self.DefaultStaff[client:SteamID64()]
     if StaffRank then
@@ -60,7 +58,7 @@ function MODULE:PostPlayerLoadout(client)
     if client:HasPrivilege("Staff Permissions - Use Admin Stick") or client:isStaffOnDuty() then client:Give("adminstick") end
 end
 
-function MODULE:TicketSystemClaim(admin, requester)
+function MODULE:TicketSystemClaim(admin)
     local caseclaims = util.JSONToTable(file.Read("caseclaims.txt", "DATA"))
     caseclaims[admin:SteamID()] = caseclaims[admin:SteamID()] or {
         name = admin:Nick(),
@@ -89,7 +87,7 @@ function MODULE:PlayerSay(client, text)
 end
 
 function MODULE:PlayerDisconnected(client)
-    for k, v in pairs(player.GetAll()) do
+    for _, v in pairs(player.GetAll()) do
         if self:HasAccess(client) then
             net.Start("TicketSystemClose")
             net.WriteEntity(client)
@@ -120,7 +118,7 @@ function MODULE:SendPopup(noob, message)
             end
         end
     else
-        for k, v in pairs(player.GetAll()) do
+        for _, v in pairs(player.GetAll()) do
             if self:HasAccess(v) then
                 net.Start("TicketSystem")
                 net.WriteEntity(noob)
