@@ -92,7 +92,7 @@ hook.Remove("PlayerSay", "ULXMeCheck")
 lia.command.add("viewclaims", {
     description = "View the claims for all admins.",
     adminOnly = true,
-    onRun = function(client, arguments)
+    onRun = function(client)
         if not file.Exists("caseclaims.txt", "DATA") then
             client:ChatPrint("No claims have been recorded yet.")
             return

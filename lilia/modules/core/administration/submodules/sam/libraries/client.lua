@@ -421,7 +421,8 @@ function MODULE:TicketFrame(requester, message, claimed)
     createButton("Freeze", mat_link, 20 * 3, function() RunConsoleCommand("sam", "freeze", requester:SteamID()) end)
     createButton("Bring", mat_arrow, 20 * 4, function() RunConsoleCommand("sam", "bring", requester:SteamID()) end)
     local shouldClose = false
-    local claimButton = createButton("Claim case", mat_case, 20 * 5, function()
+    local claimButton
+    claimButton = createButton("Claim case", mat_case, 20 * 5, function()
         if not shouldClose then
             if frm.lblTitle:GetText():lower():find("claimed") then
                 chat.AddText(Color(255, 150, 0), "[ERROR] Case has already been claimed")
