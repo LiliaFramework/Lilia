@@ -447,3 +447,8 @@ end
 
 CreateClientConVar("cl_ticketsystem_closeclaimed", 0, true, false)
 CreateClientConVar("cl_ticketsystem_dutymode", 0, true, false)
+lia.command.add("viewclaims", {
+    description = "View the claims for all admins.",
+    adminOnly = true,
+    onRun = function() end
+})

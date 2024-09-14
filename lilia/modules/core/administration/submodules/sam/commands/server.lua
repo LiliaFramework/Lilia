@@ -8,6 +8,51 @@
     end
 })
 
+lia.command.add("viewclaims", {
+    description = "View the claims for all admins.",
+    adminOnly = true,
+    onRun = function(client, arguments)
+        if not file.Exists("caseclaims.txt", "DATA") then
+            client:ChatPrint("No claims have been recorded yet.")
+            return
+        end
+
+        local caseclaims = util.JSONToTable(file.Read("caseclaims.txt", "DATA"))
+        local claimsData = {}
+        for steamID, claim in pairs(caseclaims) do
+            table.insert(claimsData, {
+                steamID = steamID,
+                name = claim.name,
+                claims = claim.claims,
+                lastclaim = os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim)
+            })
+        end
+
+        lia.util.CreateTableUI(client, "Admin Claims", {
+            {
+                name = "SteamID",
+                field = "steamID",
+                width = 200
+            },
+            {
+                name = "Admin Name",
+                field = "name",
+                width = 150
+            },
+            {
+                name = "Total Claims",
+                field = "claims",
+                width = 100
+            },
+            {
+                name = "Last Claim Date",
+                field = "lastclaim",
+                width = 200
+            }
+        }, claimsData)
+    end
+})
+
 lia.command.add("playtime", {
     adminOnly = false,
     onRun = function(client)
