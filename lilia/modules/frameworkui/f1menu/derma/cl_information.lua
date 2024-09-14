@@ -17,7 +17,7 @@ function PANEL:Init()
     self.info.Paint = function() end
     self.infoBox = self.info:Add("DPanel")
     self.infoBox:Dock(FILL)
-    self.infoBox.Paint = function(_, w, h) end
+    self.infoBox.Paint = function() end
     hook.Run("LoadCharInformation")
     self:GenerateSections()
 end
@@ -80,7 +80,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(name, labelText, dockMargin
     self[name]:SetTextColor(textColor)
     if isDesc then
         self[name]:SetEditable(true)
-        self[name].OnEnter = function(this, w, h) lia.command.send("chardesc", this:GetText():gsub("\226\128\139#", "#")) end
+        self[name].OnEnter = function(this) lia.command.send("chardesc", this:GetText():gsub("\226\128\139#", "#")) end
     end
 
     if valueFunc then self[name]:SetText(valueFunc()) end
@@ -129,7 +129,7 @@ function PANEL:AddSpacer(height)
     spacer:Dock(TOP)
     spacer:SetTall(height)
     spacer:DockMargin(8, 0, 8, 0)
-    spacer.Paint = function(_, w, h) end
+    spacer.Paint = function() end
 end
 
 function PANEL:CreateSection(title, color)
@@ -153,7 +153,7 @@ function PANEL:Refresh()
 end
 
 function PANEL:setup()
-    for sectionName, fields in pairs(MODULE.CharacterInformations) do
+    for _, fields in pairs(MODULE.CharacterInformations) do
         if isfunction(fields.fields) then fields.fields = fields.fields() end
         for _, field in ipairs(fields.fields) do
             if field.type == "text" and self[field.name] then

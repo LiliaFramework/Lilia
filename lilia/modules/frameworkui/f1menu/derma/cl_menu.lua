@@ -36,19 +36,19 @@ function PANEL:Init()
     self.model:SetPos(ScrW() - self.model:GetWide() - 150, 0)
     self.model:SetModel(client:GetModel())
     self.model.Entity:SetSkin(client:GetSkin())
-    for k, v in ipairs(client:GetBodyGroups()) do
+    for _, v in ipairs(client:GetBodyGroups()) do
         self.model.Entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
     end
 
     local ent = self.model.Entity
     if ent and IsValid(ent) then
         local mats = client:GetMaterials()
-        for k, v in pairs(mats) do
+        for k, _ in pairs(mats) do
             ent:SetSubMaterial(k - 1, client:GetSubMaterial(k - 1))
         end
     end
 
-    self.model.Think = function(this)
+    self.model.Think = function()
         local rotateLeft = input.IsKeyDown(KEY_A)
         local rotateRight = input.IsKeyDown(KEY_D)
         if rotateLeft then

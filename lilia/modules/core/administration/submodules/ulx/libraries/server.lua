@@ -8,7 +8,7 @@ function MODULE:InitializedModules()
     MsgC(Color(255, 0, 0), "WE DO NOT RECOMMEND THE USE OF ULX AS IT MAY CREATE PERFOMANCE ISSUES!" .. "\n")
 end
 
-function MODULE:TicketSystemClaim(admin, requester)
+function MODULE:TicketSystemClaim(admin)
     local caseclaims = util.JSONToTable(file.Read("caseclaims.txt", "DATA"))
     caseclaims[admin:SteamID()] = caseclaims[admin:SteamID()] or {
         name = admin:Nick(),
@@ -37,7 +37,7 @@ function MODULE:PlayerSay(client, text)
 end
 
 function MODULE:PlayerDisconnected(client)
-    for k, v in pairs(player.GetAll()) do
+    for _, v in pairs(player.GetAll()) do
         if self:HasAccess(client) then
             net.Start("TicketSystemClose")
             net.WriteEntity(client)
@@ -68,7 +68,7 @@ function MODULE:SendPopup(noob, message)
             end
         end
     else
-        for k, v in pairs(player.GetAll()) do
+        for _, v in pairs(player.GetAll()) do
             if self:HasAccess(v) then
                 net.Start("TicketSystem")
                 net.WriteEntity(noob)

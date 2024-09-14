@@ -78,7 +78,7 @@
         color = Color(52, 152, 219)
     },
     ["charLoad"] = {
-        func = function(client, name, id) return string.format("[%s] %s loaded character %s [CharID: %s]", client:SteamID(), client:Name(), name, character:getID()) end,
+        func = function(client, name) return string.format("[%s] %s loaded character %s [CharID: %s]", client:SteamID(), client:Name(), name, character:getID()) end,
         category = "Character",
         PLogs = "Character",
         color = Color(52, 152, 219)

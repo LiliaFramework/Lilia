@@ -303,7 +303,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     local mat_eye = Material("icon16/eye.png")
     local mat_case = Material("icon16/briefcase.png")
     if not requester:IsValid() or not requester:IsPlayer() then return end
-    for k, v in pairs(TicketFrames) do
+    for _, v in pairs(TicketFrames) do
         if v.idiot == requester then
             local txt = v:GetChildren()[5]
             txt:AppendText("\n" .. message)
@@ -412,7 +412,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     closeButton:SetColor(Color(255, 255, 255))
     closeButton:SetPos(w - 18, 2)
     closeButton:SetSize(16, 16)
-    function closeButton:Paint(w, h)
+    function closeButton:Paint()
     end
 
     closeButton.DoClick = function() frm:Close() end
