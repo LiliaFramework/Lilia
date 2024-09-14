@@ -1,7 +1,7 @@
-AdminStickIsOpen = false
 local MODULE = MODULE
 MODULE.xpos = MODULE.xpos or 20
 MODULE.ypos = MODULE.ypos or 20
+AdminStickIsOpen = false
 function OpenPlayerModelUI(target)
     AdminStickIsOpen = true
     local frame = vgui.Create("DFrame")
@@ -324,13 +324,21 @@ function MODULE:OpenAdminStickUI(target)
     AdminMenu:Open()
 end
 
+function MODULE:LoadFonts()
+    surface.CreateFont("ticketsystem", {
+        font = "Railway",
+        size = 15,
+        weight = 400
+    })
+end
+
 function MODULE:TicketFrame(requester, message, claimed)
     if not TicketFrames then TicketFrames = {} end
     local mat_lightning = Material("icon16/lightning_go.png")
     local mat_arrow = Material("icon16/arrow_left.png")
     local mat_link = Material("icon16/link.png")
     local mat_case = Material("icon16/briefcase.png")
-    if not requester:IsValid() or not requester:IsPlayer() then return end
+    if not IsValid(requester) or not requester:IsPlayer() then return end
     for _, v in pairs(TicketFrames) do
         if v.idiot == requester then
             local txt = v:GetChildren()[5]
@@ -343,10 +351,12 @@ function MODULE:TicketFrame(requester, message, claimed)
         end
     end
 
+    local xpos = self.xpos
+    local ypos = self.ypos
     local w, h = 300, 120
     local frm = vgui.Create("DFrame")
     frm:SetSize(w, h)
-    frm:SetPos(self.xpos, self.ypos)
+    frm:SetPos(xpos, ypos)
     frm.idiot = requester
     function frm:Paint(w, h)
         draw.RoundedBox(0, 0, 0, w, h, Color(10, 10, 10, 230))
@@ -355,7 +365,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     frm.lblTitle:SetColor(Color(255, 255, 255))
     frm.lblTitle:SetFont("ticketsystem")
     frm.lblTitle:SetContentAlignment(7)
-    if claimed and claimed:IsValid() and claimed:IsPlayer() then
+    if claimed and IsValid(claimed) and claimed:IsPlayer() then
         frm:SetTitle(requester:Nick() .. " - Claimed by " .. claimed:Nick())
         if claimed == LocalPlayer() then
             function frm:Paint(w, h)
@@ -376,7 +386,6 @@ function MODULE:TicketFrame(requester, message, claimed)
     msg:SetPos(10, 30)
     msg:SetSize(190, h - 35)
     msg:SetContentAlignment(7)
-    msg:InsertColorChange(255, 255, 255, 255)
     msg:SetVerticalScrollbarEnabled(false)
     function msg:PerformLayout()
         self:SetFontInternal("DermaDefault")
@@ -385,7 +394,6 @@ function MODULE:TicketFrame(requester, message, claimed)
     msg:AppendText(message)
     local function createButton(text, material, position, clickFunc)
         local btn = vgui.Create("DButton", frm)
-        if not btn then print("Error: Failed to create button.") end
         btn:SetPos(215, position)
         btn:SetSize(83, 18)
         btn:SetText("          " .. text)
@@ -413,8 +421,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     createButton("Freeze", mat_link, 20 * 3, function() RunConsoleCommand("sam", "freeze", requester:SteamID()) end)
     createButton("Bring", mat_arrow, 20 * 4, function() RunConsoleCommand("sam", "bring", requester:SteamID()) end)
     local shouldClose = false
-    local claimButton
-    claimButton = createButton("Claim case", mat_case, 20 * 5, function()
+    local claimButton = createButton("Claim case", mat_case, 20 * 5, function()
         if not shouldClose then
             if frm.lblTitle:GetText():lower():find("claimed") then
                 chat.AddText(Color(255, 150, 0), "[ERROR] Case has already been claimed")
@@ -433,7 +440,6 @@ function MODULE:TicketFrame(requester, message, claimed)
         end
     end)
 
-    if not claimButton then print("Error: claimButton is nil.") end
     local closeButton = vgui.Create("DButton", frm)
     closeButton:SetText("×")
     closeButton:SetTooltip("Close")
@@ -445,29 +451,21 @@ function MODULE:TicketFrame(requester, message, claimed)
 
     closeButton.DoClick = function() frm:Close() end
     frm:ShowCloseButton(false)
-    frm:SetPos(self.xpos, self.ypos + (130 * #TicketFrames))
-    frm:MoveTo(self.xpos, self.ypos + (130 * #TicketFrames), 0.2, 0, 1, function() surface.PlaySound("garrysmod/balloon_pop_cute.wav") end)
+    frm:SetPos(xpos, ypos + (130 * #TicketFrames))
+    frm:MoveTo(xpos, ypos + (130 * #TicketFrames), 0.2, 0, 1, function() surface.PlaySound("garrysmod/balloon_pop_cute.wav") end)
     function frm:OnRemove()
         if TicketFrames then
             table.RemoveByValue(TicketFrames, frm)
             for k, v in ipairs(TicketFrames) do
-                v:MoveTo(self.xpos, self.ypos + (130 * (k - 1)), 0.1, 0, 1, function() end)
+                v:MoveTo(xpos, ypos + (130 * (k - 1)), 0.1, 0, 1, function() end)
             end
         end
 
-        if requester and requester:IsValid() and requester:IsPlayer() and timer.Exists("ticketsystem-" .. requester:SteamID64()) then timer.Remove("ticketsystem-" .. requester:SteamID64()) end
+        if IsValid(requester) and timer.Exists("ticketsystem-" .. requester:SteamID64()) then timer.Remove("ticketsystem-" .. requester:SteamID64()) end
     end
 
     table.insert(TicketFrames, frm)
     timer.Create("ticketsystem-" .. requester:SteamID64(), self.Autoclose, 1, function() if frm:IsValid() then frm:Remove() end end)
-end
-
-function MODULE:LoadFonts()
-    surface.CreateFont("ticketsystem", {
-        font = "Railway",
-        size = 15,
-        weight = 400
-    })
 end
 
 CreateClientConVar("cl_ticketsystem_closeclaimed", 0, true, false)

@@ -76,9 +76,9 @@ local function OpenReasonUI(target, cmd)
         local txt = edit:GetValue()
         if cmd == "banid" then
             local time = timeedit:GetValue() * 60 * 24
-            RunConsoleCommand("sam", cmd, target:SteamID(), time, txt)
+            RunConsoleCommand("ulx", cmd, target:SteamID(), time, txt)
         else
-            RunConsoleCommand("sam", cmd, target:SteamID(), txt)
+            RunConsoleCommand("ulx", cmd, target:SteamID(), txt)
         end
 
         frame:Remove()
@@ -124,7 +124,7 @@ function MODULE:OpenAdminStickUI(target)
         if sam then
             if target:IsFrozen() then
                 local unfreeze = playerInfo:AddOption("Unfreeze", function()
-                    RunConsoleCommand("sam", "unfreeze", target:SteamID())
+                    RunConsoleCommand("ulx", "unfreeze", target:SteamID())
                     AdminStickIsOpen = false
                 end)
 
@@ -136,7 +136,7 @@ function MODULE:OpenAdminStickUI(target)
                         return false
                     end
 
-                    RunConsoleCommand("sam", "freeze", target:SteamID())
+                    RunConsoleCommand("ulx", "freeze", target:SteamID())
                     AdminStickIsOpen = false
                 end)
 
@@ -148,25 +148,25 @@ function MODULE:OpenAdminStickUI(target)
             local kick = playerInfo:AddOption("Kick", function() OpenReasonUI(target, "kick", 0) end)
             kick:SetIcon("icon16/delete.png")
             local gag = playerInfo:AddOption("Gag", function()
-                RunConsoleCommand("sam", "gag", target:SteamID())
+                RunConsoleCommand("ulx", "gag", target:SteamID())
                 AdminStickIsOpen = false
             end)
 
             gag:SetIcon("icon16/sound_mute.png")
             local ungag = playerInfo:AddOption("Ungag", function()
-                RunConsoleCommand("sam", "ungag", target:SteamID())
+                RunConsoleCommand("ulx", "ungag", target:SteamID())
                 AdminStickIsOpen = false
             end)
 
             ungag:SetIcon("icon16/sound_low.png")
             local mute = playerInfo:AddOption("Mute", function()
-                RunConsoleCommand("sam", "mute", target:SteamID())
+                RunConsoleCommand("ulx", "mute", target:SteamID())
                 AdminStickIsOpen = false
             end)
 
             mute:SetIcon("icon16/sound_delete.png")
             local unmute = playerInfo:AddOption("Unmute", function()
-                RunConsoleCommand("sam", "unmute", target:SteamID())
+                RunConsoleCommand("ulx", "unmute", target:SteamID())
                 AdminStickIsOpen = false
             end)
 
@@ -226,7 +226,7 @@ function MODULE:OpenAdminStickUI(target)
                     return false
                 end
 
-                RunConsoleCommand("sam", "goto", target:SteamID())
+                RunConsoleCommand("ulx", "goto", target:SteamID())
                 AdminStickIsOpen = false
             end)
 
@@ -237,13 +237,13 @@ function MODULE:OpenAdminStickUI(target)
                     return false
                 end
 
-                RunConsoleCommand("sam", "bring", target:SteamID())
+                RunConsoleCommand("ulx", "bring", target:SteamID())
                 AdminStickIsOpen = false
             end)
 
             bring:SetIcon("icon16/arrow_down.png")
             local returnf = teleport:AddOption("Return", function()
-                RunConsoleCommand("sam", "return", target:SteamID())
+                RunConsoleCommand("ulx", "return", target:SteamID())
                 AdminStickIsOpen = false
             end)
 
@@ -321,7 +321,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     local w, h = 300, 120
     local frm = vgui.Create("DFrame")
     frm:SetSize(w, h)
-    frm:SetPos(self.xpos, self.ypos)
+    frm:SetPos(self.xpos, self.ypos + (#TicketFrames * 130))
     frm.idiot = requester
     function frm:Paint(w, h)
         draw.RoundedBox(0, 0, 0, w, h, Color(10, 10, 10, 230))
@@ -350,8 +350,6 @@ function MODULE:TicketFrame(requester, message, claimed)
     local msg = vgui.Create("RichText", frm)
     msg:SetPos(10, 30)
     msg:SetSize(190, h - 35)
-    msg:SetContentAlignment(7)
-    msg:InsertColorChange(255, 255, 255, 255)
     msg:SetVerticalScrollbarEnabled(false)
     function msg:PerformLayout()
         self:SetFontInternal("DermaDefault")
@@ -360,7 +358,6 @@ function MODULE:TicketFrame(requester, message, claimed)
     msg:AppendText(message)
     local function createButton(text, material, position, clickFunc)
         local btn = vgui.Create("DButton", frm)
-        if not btn then print("Error: Failed to create button.") end
         btn:SetPos(215, position)
         btn:SetSize(83, 18)
         btn:SetText("          " .. text)
@@ -383,10 +380,10 @@ function MODULE:TicketFrame(requester, message, claimed)
         return btn
     end
 
-    createButton("Goto", mat_lightning, 20 * 1, function() end)
-    createButton("Return", mat_arrow, 20 * 2, function() end)
-    createButton("Freeze", mat_link, 20 * 3, function() end)
-    createButton("Spectate", mat_eye, 20 * 4, function() end)
+    createButton("Goto", mat_lightning, 20 * 1, function() RunConsoleCommand("ulx", "goto", requester:SteamID()) end)
+    createButton("Return", mat_arrow, 20 * 2, function() RunConsoleCommand("ulx", "return", requester:SteamID()) end)
+    createButton("Freeze", mat_link, 20 * 3, function() RunConsoleCommand("ulx", "freeze", requester:SteamID()) end)
+    createButton("Spectate", mat_eye, 20 * 4, function() RunConsoleCommand("ulx", "spectate", requester:SteamID()) end)
     local shouldClose = false
     local claimButton
     claimButton = createButton("Claim case", mat_case, 20 * 5, function()
@@ -408,29 +405,21 @@ function MODULE:TicketFrame(requester, message, claimed)
         end
     end)
 
-    if not claimButton then print("Error: claimButton is nil.") end
     local closeButton = vgui.Create("DButton", frm)
     closeButton:SetText("×")
     closeButton:SetTooltip("Close")
     closeButton:SetColor(Color(255, 255, 255))
     closeButton:SetPos(w - 18, 2)
     closeButton:SetSize(16, 16)
-    function closeButton:Paint()
-    end
-
     closeButton.DoClick = function() frm:Close() end
     frm:ShowCloseButton(false)
-    frm:SetPos(self.xpos, self.ypos + (130 * #TicketFrames))
-    frm:MoveTo(self.xpos, self.ypos + (130 * #TicketFrames), 0.2, 0, 1, function() surface.PlaySound("garrysmod/balloon_pop_cute.wav") end)
     function frm:OnRemove()
-        if TicketFrames then
-            table.RemoveByValue(TicketFrames, frm)
-            for k, v in ipairs(TicketFrames) do
-                v:MoveTo(self.xpos, self.ypos + (130 * (k - 1)), 0.1, 0, 1, function() end)
-            end
+        table.RemoveByValue(TicketFrames, frm)
+        for k, v in ipairs(TicketFrames) do
+            v:MoveTo(MODULE.xpos, MODULE.ypos + (130 * (k - 1)), 0.1, 0, 1)
         end
 
-        if requester and requester:IsValid() and requester:IsPlayer() and timer.Exists("ticketsystem-" .. requester:SteamID64()) then timer.Remove("ticketsystem-" .. requester:SteamID64()) end
+        if timer.Exists("ticketsystem-" .. requester:SteamID64()) then timer.Remove("ticketsystem-" .. requester:SteamID64()) end
     end
 
     table.insert(TicketFrames, frm)
