@@ -1,4 +1,7 @@
 AdminStickIsOpen = false
+local MODULE = MODULE
+MODULE.xpos = MODULE.xpos or 20
+MODULE.ypos = MODULE.ypos or 20
 function OpenPlayerModelUI(target)
     AdminStickIsOpen = true
     local frame = vgui.Create("DFrame")
