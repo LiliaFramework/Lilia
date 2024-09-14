@@ -720,14 +720,14 @@ if SERVER then
         lia.char.setCharData(charID, "groups", groups)
         if lia.char.loaded[charIDsafe] then
             lia.char.loaded[charIDsafe]:setModel(model)
-            local ply = lia.char.loaded[charIDsafe]:getPlayer()
-            if IsValid(ply) and ply:getChar() == lia.char.loaded[charIDsafe] then
+            local client = lia.char.loaded[charIDsafe]:getPlayer()
+            if IsValid(client) and client:getChar() == lia.char.loaded[charIDsafe] then
                 for _, v in pairs(bg or {}) do
-                    ply:SetBodygroup(v.id, v.value)
-                    print(v.id, v.value, ply)
+                    client:SetBodygroup(v.id, v.value)
+                    print(v.id, v.value, client)
                 end
 
-                ply:SetupHands()
+                client:SetupHands()
             end
         end
         return true

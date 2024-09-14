@@ -26,11 +26,34 @@ lia.command.add("playtime", {
     end
 })
 
-lia.command.add("asay", {
-    adminOnly = false,
-    syntax = "<string message>",
-    onRun = function(client, arguments)
-        local text = table.concat(arguments, " ")
-        if text:find("%S") then lia.chat.send(client, "asay", text) end
+sam.command.new("blind"):SetPermission("blind", "superadmin"):AddArg("player"):Help("Blinds the Players"):OnExecute(function(client, targets)
+    for i = 1, #targets do
+        local target = targets[i]
+        net.Start("sam_blind")
+        net.WriteBool(true)
+        net.Send(target)
     end
-})
+
+    if not sam.is_command_silent then
+        client:sam_send_message("{A} Blinded {T}", {
+            A = client,
+            T = targets
+        })
+    end
+end):End()
+
+sam.command.new("unblind"):SetPermission("blind", "superadmin"):AddArg("player"):Help("Unblinds the Players"):OnExecute(function(client, targets)
+    for i = 1, #targets do
+        local target = targets[i]
+        net.Start("sam_blind")
+        net.WriteBool(false)
+        net.Send(target)
+    end
+
+    if not sam.is_command_silent then
+        client:sam_send_message("{A} Un-Blinded {T}", {
+            A = client,
+            T = targets
+        })
+    end
+end):End()

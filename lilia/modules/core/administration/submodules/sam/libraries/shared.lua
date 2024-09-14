@@ -15,43 +15,8 @@ function sam.player.send_message(client, msg, tbl)
     end
 end
 
-function MODULE:PlayerSay(client, text)
-    if text:sub(1, 1) == "@" then
-
-        return ""
-    end
+function MODULE:HasAccess(client)
+    return client:HasPrivilege("Staff Permissions - Always See Tickets") or client:isStaffOnDuty()
 end
-
-sam.command.new("blind"):SetPermission("blind", "superadmin"):AddArg("player"):Help("Blinds the Players"):OnExecute(function(ply, targets)
-    for i = 1, #targets do
-        local target = targets[i]
-        net.Start("sam_blind")
-        net.WriteBool(true)
-        net.Send(target)
-    end
-
-    if not sam.is_command_silent then
-        ply:sam_send_message("{A} Blinded {T}", {
-            A = ply,
-            T = targets
-        })
-    end
-end):End()
-
-sam.command.new("unblind"):SetPermission("blind", "superadmin"):AddArg("player"):Help("Unblinds the Players"):OnExecute(function(ply, targets)
-    for i = 1, #targets do
-        local target = targets[i]
-        net.Start("sam_blind")
-        net.WriteBool(false)
-        net.Send(target)
-    end
-
-    if not sam.is_command_silent then
-        ply:sam_send_message("{A} Un-Blinded {T}", {
-            A = ply,
-            T = targets
-        })
-    end
-end):End()
 
 hook.Remove("PlayerSay", "SAM.Chat.Asay")

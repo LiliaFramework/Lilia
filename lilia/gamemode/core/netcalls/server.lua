@@ -44,12 +44,12 @@ net.Receive("OptionsRequest", function(_, client)
     end
 end)
 
-net.Receive("BinaryQuestionRequest", function(_, ply)
+net.Receive("BinaryQuestionRequest", function(_, client)
     local choice = net.ReadUInt(1)
-    if ply.binaryQuestionCallback then
-        local callback = ply.binaryQuestionCallback
+    if client.binaryQuestionCallback then
+        local callback = client.binaryQuestionCallback
         callback(choice)
-        ply.binaryQuestionCallback = nil
+        client.binaryQuestionCallback = nil
     end
 end)
 

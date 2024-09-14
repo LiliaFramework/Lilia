@@ -1,4 +1,5 @@
-﻿MODULE.name = "SAM"
+﻿if CLIENT then TicketFrames = {} end
+MODULE.name = "SAM"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
 MODULE.version = "Stock"

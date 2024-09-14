@@ -8,5 +8,10 @@ MODULE.CAMIPrivileges = {
         Name = "Staff Permissions - Use Admin Stick",
         MinAccess = "admin",
         Description = "Allows access to Using Admin Stick.",
+    },
+    {
+        Name = "Staff Permissions - Always See Tickets",
+        MinAccess = "superadmin",
+        Description = "Allows access to Always Seeing Tickets.",
     }
 }
