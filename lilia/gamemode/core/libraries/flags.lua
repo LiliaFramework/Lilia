@@ -9,7 +9,7 @@ prop spawning to characters that rather have a bussiness).
 
 Flags are a single alphanumeric character that can be checked on the server. Serverside callbacks can be used to provide
 functionality whenever the flag is added or removed. For example:
-	lia.flag.add("z", "Access to some cool stuff.", function(client, bGiven)
+	lia.flag.add("z", "Some cool stuff.", function(client, bGiven)
 		print("z flag given:", bGiven)
 	end)
 
@@ -56,14 +56,14 @@ if SERVER then
     end
 end
 
-lia.flag.add("C", "Access to spawn vehicles.")
-lia.flag.add("z", "Access to spawn SWEPS.")
-lia.flag.add("E", "Access to spawn SENTs.")
-lia.flag.add("L", "Access to spawn Effects.")
-lia.flag.add("r", "Access to spawn ragdolls.")
-lia.flag.add("e", "Access to spawn props.")
-lia.flag.add("n", "Access to spawn NPCs.")
-lia.flag.add("p", "Access to the physgun.", function(client, isGiven)
+lia.flag.add("C", "Spawn vehicles.")
+lia.flag.add("z", "Spawn SWEPS.")
+lia.flag.add("E", "Spawn SENTs.")
+lia.flag.add("L", "Spawn Effects.")
+lia.flag.add("r", "Spawn ragdolls.")
+lia.flag.add("e", "Spawn props.")
+lia.flag.add("n", "Spawn NPCs.")
+lia.flag.add("p", "Physgun.", function(client, isGiven)
     if isGiven then
         client:Give("weapon_physgun")
         client:SelectWeapon("weapon_physgun")
@@ -72,7 +72,7 @@ lia.flag.add("p", "Access to the physgun.", function(client, isGiven)
     end
 end)
 
-lia.flag.add("t", "Access to the toolgun", function(client, isGiven)
+lia.flag.add("t", "Toolgun", function(client, isGiven)
     if isGiven then
         client:Give("gmod_tool")
         client:SelectWeapon("gmod_tool")

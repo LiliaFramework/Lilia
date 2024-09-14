@@ -842,7 +842,16 @@ lia.command.add("flaglist", {
             end
         end
 
-        lia.util.CreateTableUI(client, "Flag List", {"Flag", "Description"}, flags)
+        lia.util.CreateTableUI(client, "Flag List", {
+            {
+                name = "Flag",
+                field = "flag"
+            },
+            {
+                name = "Description",
+                field = "desc"
+            }
+        }, flags)
     end,
     alias = {"flags"}
 })
@@ -862,7 +871,28 @@ lia.command.add("itemlist", {
             })
         end
 
-        lia.util.CreateTableUI(client, "Item List", {"Unique ID", "Name", "Description", "Category", "Price"}, items)
+        lia.util.CreateTableUI(client, "Item List", {
+            {
+                name = "Unique ID",
+                field = "uniqueID"
+            },
+            {
+                name = "Name",
+                field = "name"
+            },
+            {
+                name = "Description",
+                field = "desc"
+            },
+            {
+                name = "Category",
+                field = "category"
+            },
+            {
+                name = "Price",
+                field = "price"
+            }
+        }, items)
     end
 })
 
@@ -870,18 +900,43 @@ lia.command.add("modulelist", {
     adminOnly = false,
     onRun = function(client)
         local modules = {}
-        for uniqueID, module in pairs(lia.module.list) do
+        for uniqueID, mod in pairs(lia.module.list) do
             table.insert(modules, {
                 uniqueID = uniqueID,
-                name = module.name or "Unknown",
-                desc = module.desc or "No description available",
-                author = module.author or "Anonymous",
-                discord = module.discord or "N/A",
-                version = module.version or "N/A"
+                name = mod.name or "Unknown",
+                desc = mod.desc or "No description available",
+                author = mod.author or "Anonymous",
+                discord = mod.discord or "N/A",
+                version = mod.version or "N/A"
             })
         end
 
-        lia.util.CreateTableUI(client, "Modules List", {"Unique ID", "Name", "Description", "Author", "Discord", "Version"}, modules)
+        lia.util.CreateTableUI(client, "Modules List", {
+            {
+                name = "Unique ID",
+                field = "uniqueID"
+            },
+            {
+                name = "Name",
+                field = "name"
+            },
+            {
+                name = "Description",
+                field = "desc"
+            },
+            {
+                name = "Author",
+                field = "author"
+            },
+            {
+                name = "Discord",
+                field = "discord"
+            },
+            {
+                name = "Version",
+                field = "version"
+            }
+        }, modules)
     end,
     alias = {"modules"}
 })
@@ -901,7 +956,28 @@ lia.command.add("listents", {
             })
         end
 
-        lia.util.CreateTableUI(client, "Entity List", {"Class", "Creator", "Position", "Model", "Health"}, entityList)
+        lia.util.CreateTableUI(client, "Entity List", {
+            {
+                name = "Class",
+                field = "class"
+            },
+            {
+                name = "Creator",
+                field = "creator"
+            },
+            {
+                name = "Position",
+                field = "position"
+            },
+            {
+                name = "Model",
+                field = "model"
+            },
+            {
+                name = "Health",
+                field = "health"
+            }
+        }, entityList)
     end
 })
 
@@ -924,7 +1000,28 @@ lia.command.add("liststaff", {
         end
 
         if #staffList > 0 then
-            lia.util.CreateTableUI(client, "Staff List", {"Name", "Class", "Faction", "Character ID", "Usergroup"}, staffList)
+            lia.util.CreateTableUI(client, "Staff List", {
+                {
+                    name = "Name",
+                    field = "name"
+                },
+                {
+                    name = "Class",
+                    field = "class"
+                },
+                {
+                    name = "Faction",
+                    field = "faction"
+                },
+                {
+                    name = "Character ID",
+                    field = "characterID"
+                },
+                {
+                    name = "Usergroup",
+                    field = "usergroup"
+                }
+            }, staffList)
         else
             client:notify("No valid players found!")
         end
@@ -950,7 +1047,28 @@ lia.command.add("listondutystaff", {
         end
 
         if #onDutyStaffList > 0 then
-            lia.util.CreateTableUI(client, "On Duty Staff List", {"Name", "Class", "Faction", "Character ID", "Usergroup"}, onDutyStaffList)
+            lia.util.CreateTableUI(client, "On Duty Staff List", {
+                {
+                    name = "Name",
+                    field = "name"
+                },
+                {
+                    name = "Class",
+                    field = "class"
+                },
+                {
+                    name = "Faction",
+                    field = "faction"
+                },
+                {
+                    name = "Character ID",
+                    field = "characterID"
+                },
+                {
+                    name = "Usergroup",
+                    field = "usergroup"
+                }
+            }, onDutyStaffList)
         else
             client:notify("No valid players found!")
         end
@@ -976,7 +1094,28 @@ lia.command.add("listvip", {
         end
 
         if #vipList > 0 then
-            lia.util.CreateTableUI(client, "VIP List", {"Name", "Class", "Faction", "Character ID", "Usergroup"}, vipList)
+            lia.util.CreateTableUI(client, "VIP List", {
+                {
+                    name = "Name",
+                    field = "name"
+                },
+                {
+                    name = "Class",
+                    field = "class"
+                },
+                {
+                    name = "Faction",
+                    field = "faction"
+                },
+                {
+                    name = "Character ID",
+                    field = "characterID"
+                },
+                {
+                    name = "Usergroup",
+                    field = "usergroup"
+                }
+            }, vipList)
         else
             client:notify("No valid players found!")
         end
@@ -1002,7 +1141,28 @@ lia.command.add("listusers", {
         end
 
         if #userList > 0 then
-            lia.util.CreateTableUI(client, "User List", {"Name", "Class", "Faction", "Character ID", "Usergroup"}, userList)
+            lia.util.CreateTableUI(client, "User List", {
+                {
+                    name = "Name",
+                    field = "name"
+                },
+                {
+                    name = "Class",
+                    field = "class"
+                },
+                {
+                    name = "Faction",
+                    field = "faction"
+                },
+                {
+                    name = "Character ID",
+                    field = "characterID"
+                },
+                {
+                    name = "Usergroup",
+                    field = "usergroup"
+                }
+            }, userList)
         else
             client:notify("No valid players found!")
         end

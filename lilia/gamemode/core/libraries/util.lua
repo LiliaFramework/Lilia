@@ -1,6 +1,5 @@
 ﻿--- Various useful helper functions.
 -- @library lia.util
-
 --- Finds all players within a box defined by minimum and maximum coordinates.
 -- @realm client
 -- @vector mins The minimum corner of the box
@@ -214,8 +213,8 @@ if SERVER then
     -- @realm server
     -- @client client The player to whom the UI should be sent.
     -- @string title The title of the table UI.
-    -- @tab columns A table defining the columns in the table. Each entry should be a table with fields `name` and `width`.
-    -- @tab data A table containing rows of data. Each row is a table of values corresponding to the column fields.
+    -- @tab columns A table defining the columns in the table. Each entry should be a table with fields `name`, `field`, and `width`. The `name` is the column header, `field` is the key used to retrieve the value from the row data, and `width` is the width of the column in pixels.
+    -- @tab data A table containing rows of data. Each row is a table with keys corresponding to the `field` values defined in the `columns` table. Each key should have a value to be displayed in the respective column.
     -- @int[opt] frameWidth The width of the frame. Default is 900.
     -- @int[opt] frameHeight The height of the frame. Default is 600.
     -- @usage
@@ -634,8 +633,8 @@ else
     --- Displays a table UI on the client.
     -- @realm client
     -- @string title The title of the table UI.
-    -- @tab columns A table defining the columns in the table. Each entry should be a table with fields `name` and `width`.
-    -- @tab data A table containing rows of data. Each row is a table of values corresponding to the column fields.
+    -- @tab columns A table defining the columns in the table. Each entry should be a table with fields `name` and `width`. The `name` is the column header, and `width` is the width of the column in pixels.
+    -- @tab data A table containing rows of data. Each row is a table with keys corresponding to the `field` values defined in the `columns` table. Each key should have a value to be displayed in the respective column.
     -- @int[opt] frameWidth The width of the frame. Default is 900.
     -- @int[opt] frameHeight The height of the frame. Default is 600.
     -- @usage

@@ -6,7 +6,6 @@ MODULE.desc = "Adds the derma for the characters options."
 lia.includeDir(MODULE.path .. "/derma/steps", true)
 if CLIENT then
     function MODULE:LiliaLoaded()
-        print("LOADED")
         vgui.Create("liaCharacter")
     end
 
