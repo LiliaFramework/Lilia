@@ -75,6 +75,7 @@ end
 --- Converts a digit to its English word representation.
 -- @int digit The digit to convert.
 -- @return string The word representation of the digit, or "invalid" if not a digit.
+-- @realm shared
 function lia.string.DigitToString(digit)
     local digitToString = {
         ["0"] = "zero",
@@ -94,6 +95,7 @@ end
 --- Removes non-printable ASCII characters from a string.
 -- @string str The string to clean.
 -- @return string The cleaned string.
+-- @realm shared
 function lia.string.Clean(str)
     return string.gsub(str, "[^\32-\127]", "")
 end
@@ -102,6 +104,7 @@ end
 -- @string str The string to modify.
 -- @int prob The probability (1-100) of introducing gibberish.
 -- @return string The modified string with possible gibberish.
+-- @realm shared
 function lia.string.Gibberish(str, prob)
     local ret = ""
     for _, v in pairs(string.Explode("", str)) do

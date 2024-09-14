@@ -32,6 +32,7 @@ end
 --- Converts a table into an associative table where the original values are keys.
 -- @tab tab The table to convert.
 -- @return table The associative table.
+-- @realm shared
 function lia.table.MakeAssociative(tab)
     local ret = {}
     for _, v in pairs(tab) do
@@ -43,6 +44,7 @@ end
 --- Returns a table of unique values from the input table.
 -- @tab tab The table to process.
 -- @return table The table of unique values.
+-- @realm shared
 function lia.table.Unique(tab)
     return table.GetKeys(table.MakeAssociative(tab))
 end
@@ -50,14 +52,15 @@ end
 --- Creates a deep copy of a table.
 -- @tab tab table The table to copy.
 -- @return table A deep copy of the table.
+-- @realm shared
 function lia.table.FullCopy(tab)
     local res = {}
     for k, v in pairs(tab) do
-        if type(v) == "table" then
+        if istable(v) then
             res[k] = table.FullCopy(v)
-        elseif type(v) == "Vector" then
+        elseif isvector(v) then
             res[k] = Vector(v.x, v.y, v.z)
-        elseif type(v) == "Angle" then
+        elseif isangle(v) then
             res[k] = Angle(v.p, v.y, v.r)
         else
             res[k] = v
@@ -70,6 +73,7 @@ end
 -- @tab tab The table to filter.
 -- @func callback The function to call for each element; if it returns true, the element is kept.
 -- @return table The filtered table.
+-- @realm shared
 function lia.table.Filter(tab, callback)
     local pointer = 1
     for i = 1, #tab do
