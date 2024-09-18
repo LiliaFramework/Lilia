@@ -11,16 +11,24 @@
     return team.NumPlayers(faction.index) >= maxPlayers
 end
 
-function MODULE:GetDefaultCharName(client, faction)
+function MODULE:GetDefaultCharName(client, faction, data)
     local info = lia.faction.indices[faction]
+    if info and isfunction(info.nameTemplate) then
+        local name, override = info:nameTemplate(client)
+        if override then return name, true end
+    end
+
+    local prefix = info and (isfunction(info.prefix) and info.prefix(client) or info.prefix) or ""
+    if not prefix or prefix == "" then return data, false end
+    local nameWithPrefix = string.Trim(prefix .. " " .. data)
     if info then
+        if info.GetDefaultName then return info:GetDefaultName(client) end
         if info.getDefaultName then
             LiliaDeprecated("getDefaultName is deprecated. Use GetDefaultName for optimization purposes.")
             return info:getDefaultName(client)
         end
-
-        if info.GetDefaultName then return info:GetDefaultName(client) end
     end
+    return nameWithPrefix, false
 end
 
 function MODULE:GetDefaultCharDesc(client, faction)
