@@ -6,7 +6,10 @@ local playerMeta = FindMetaTable("Player")
 -- @string faction The faction to check against.
 -- @treturn bool Whether the player belongs to the specified faction.
 function playerMeta:isFaction(faction)
-    return self:getChar():getFaction() == faction
+    local character = self:getChar()
+    if not character then return end
+    local pFaction = self:getChar():getFaction()
+    return pFaction and pFaction == faction
 end
 
 --- Checks if the player belongs to the specified class.
@@ -14,7 +17,10 @@ end
 -- @string class The class to check against.
 -- @treturn bool Whether the player belongs to the specified class.
 function playerMeta:isClass(class)
-    return self:getChar():getClass() == class
+    local character = self:getChar()
+    if not character then return end
+    local pClass = character:getClass()
+    return pClass and pClass == class
 end
 
 --- Checks if the player has whitelisted access to a faction.
