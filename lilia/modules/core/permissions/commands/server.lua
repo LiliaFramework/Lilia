@@ -64,6 +64,7 @@ lia.command.add("chargetup", {
     onRun = function(client)
         if not client:hasRagdoll() then client:notify("You don't have a ragdoll to get up from!") end
         local entity = client:getRagdoll()
+        if not IsValid(entity) then return end
         if entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
             entity.liaWakingUp = true
             client:setAction("@gettingUp", 5, function()
