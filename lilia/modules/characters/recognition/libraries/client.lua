@@ -28,6 +28,7 @@ end
 
 function MODULE:ShouldAllowScoreboardOverride(client, var)
     local lp = LocalPlayer()
+    if client == LocalPlayer() then return false end
     if not IsValid(client) or not IsValid(lp) then return false end
     local character = client:getChar()
     local ourCharacter = lp:getChar()
