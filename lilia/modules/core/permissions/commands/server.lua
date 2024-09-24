@@ -1169,3 +1169,49 @@ lia.command.add("listusers", {
         end
     end
 })
+
+lia.command.add("globalbotsay", {
+    superAdminOnly = true,
+    syntax = "<string message>",
+    privilege = "Bot Say",
+    onRun = function(client, arguments)
+        local message = table.concat(arguments, " ")
+        if message == "" then
+            client:notify("You must specify a message.")
+            return
+        end
+
+        for _, bot in ipairs(player.GetAll()) do
+            if bot:IsBot() then bot:Say(message) end
+        end
+    end
+})
+
+lia.command.add("botsay", {
+    superAdminOnly = true,
+    syntax = "<string botName> <string message>",
+    privilege = "Bot Say",
+    onRun = function(client, arguments)
+        if #arguments < 2 then
+            client:notify("You must specify a bot and a message.")
+            return
+        end
+
+        local botName = arguments[1]
+        local message = table.concat(arguments, " ", 2)
+        local targetBot
+        for _, bot in ipairs(player.GetAll()) do
+            if bot:IsBot() and string.find(string.lower(bot:Nick()), string.lower(botName)) then
+                targetBot = bot
+                break
+            end
+        end
+
+        if not targetBot then
+            client:notify("No bot found with the name: " .. botName)
+            return
+        end
+
+        targetBot:Say(message)
+    end
+})

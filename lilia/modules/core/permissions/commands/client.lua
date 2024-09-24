@@ -323,8 +323,16 @@ lia.command.add("listvip", {
     onRun = function() end
 })
 
-lia.command.add("listusers", {
-    adminOnly = true,
-    privilege = "List Players",
+lia.command.add("globalbotsay", {
+    superAdminOnly = true,
+    syntax = "<string message>",
+    privilege = "Bot Say",
+    onRun = function() end
+})
+
+lia.command.add("botsay", {
+    superAdminOnly = true,
+    syntax = "<string botName> <string message>",
+    privilege = "Bot Say",
     onRun = function() end
 })
