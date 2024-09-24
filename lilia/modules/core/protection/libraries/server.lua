@@ -244,6 +244,7 @@ function MODULE:PlayerSpawnVehicle(client, _, name)
 end
 
 function MODULE:CheckDuplicationScale(client, entities)
+    entities = entities or {}
     for _, v in pairs(entities) do
         if v.ModelScale and v.ModelScale > 10 then
             client:notify("A model within this duplication exceeds the size limit!")
