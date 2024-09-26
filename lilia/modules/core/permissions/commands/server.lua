@@ -69,6 +69,7 @@ lia.command.add("chargetup", {
             entity.liaWakingUp = true
             client:setAction("@gettingUp", 5, function()
                 if not IsValid(entity) then return end
+                hook.Run("OnCharGetup", client, entity)
                 entity:Remove()
             end)
         end
