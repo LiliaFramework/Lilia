@@ -455,6 +455,26 @@ function lia.char.getCharDataRaw(charID, key)
     return findData[1]
 end
 
+--- Retrieves the client associated with a character by their character ID.
+-- @realm shared
+-- @tparam number ID The ID of the character to find the associated client
+-- @treturn player|nil The client associated with the character, or `nil` if no client is found
+-- @usage
+-- local client = lia.char.GetByID(123)
+-- if IsValid(client) then
+--     print(client:Nick() .. " is the player associated with the character ID.")
+-- else
+--     print("No client found for that character ID.")
+-- end
+function lia.char.GetByID(ID)
+    ID = tonumber(ID)
+    for client, character in lia.char.getAll() do
+        if not character then continue end
+        if character:getID() == ID then return client end
+    end
+    return nil
+end
+
 --- Retrieves the SteamIDs of all connected players.
 -- @treturn table Table containing SteamIDs of all connected players
 -- @realm shared
