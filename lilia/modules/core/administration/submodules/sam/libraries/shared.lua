@@ -1,4 +1,11 @@
 ﻿local MODULE = MODULE
+
+function MODULE:CanReadNotifications(client)
+    if not self.DisplayStaffCommands then return false end
+    if not self.AdminOnlyNotification then return true end
+    return client:HasPrivilege("Staff Permissions - Can See SAM Notifications") or client:isStaffOnDuty()
+end
+
 function sam.player.send_message(client, msg, tbl)
     if SERVER then
         if sam.isconsole(client) then
@@ -11,7 +18,7 @@ function sam.player.send_message(client, msg, tbl)
         local prefix_result = sam.format_message(sam.config.get("ChatPrefix", ""))
         local prefix_n = #prefix_result
         local result = sam.format_message(msg, tbl, prefix_result, prefix_n)
-        if MODULE.DisplayStaffCommands then chat.AddText(unpack(result, 1, result.__cnt)) end
+        if MODULE:CanReadNotifications(client) then chat.AddText(unpack(result, 1, result.__cnt)) end
     end
 end
 

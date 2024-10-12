@@ -10,5 +10,10 @@ MODULE.CAMIPrivileges = {
         Name = "Staff Permissions - Read Admin Chat",
         MinAccess = "admin",
         Description = "Allows access to Reading the Admin Chat.",
+    },
+    {
+        Name = "Staff Permissions - Can See SAM Notifications Outside Staff Character",
+        MinAccess = "superadmin",
+        Description = "Allows access to Seeing SAM Notifications Outside Staff Character.",
     }
 }
