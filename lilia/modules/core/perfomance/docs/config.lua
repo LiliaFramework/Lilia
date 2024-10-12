@@ -1,7 +1,7 @@
-﻿--- Configuration for Perfomance Module.
--- @configuration Perfomance
+﻿--- Configuration for Performance Module.
+-- @configuration Performance
 
---- This table defines the default settings for the Perfomance Module.
+--- This table defines the default settings for the Performance Module.
 -- @realm shared
 -- @table Configuration
 -- @field PlayerCountCarLimitEnabled Should Car Wipe be enabled? | **boolean**

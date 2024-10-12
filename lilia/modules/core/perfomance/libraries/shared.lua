@@ -72,7 +72,7 @@ function MODULE:BeginExpand(client)
     local data = self:GetPlayerData(client)
     if not data then return end
     data.Expanding = true
-    local timerID = "PerfomanceTicks:" .. client:EntIndex()
+    local timerID = "Performanceicks:" .. client:EntIndex()
     local currentRange = 0
     timer.Create(timerID, 1, 0, function()
         if not IsValid(client) then
