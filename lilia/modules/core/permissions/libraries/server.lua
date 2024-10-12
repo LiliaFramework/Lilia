@@ -111,8 +111,8 @@ function GM:PlayerSpawnedVehicle(client, entity)
 end
 
 concommand.Add("kickbots", function()
-    for _, bot in ipairs(player.GetBots()) do
-        bot:Kick("All bots kicked")
+    for _, bot in player.Iterator() do
+        if bot:IsBot() then bot:Kick("All bots kicked") end
     end
 end)
 

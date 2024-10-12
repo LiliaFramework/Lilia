@@ -1182,7 +1182,7 @@ lia.command.add("globalbotsay", {
             return
         end
 
-        for _, bot in ipairs(player.GetAll()) do
+        for _, bot in player.Iterator() do
             if bot:IsBot() then bot:Say(message) end
         end
     end
@@ -1201,7 +1201,7 @@ lia.command.add("botsay", {
         local botName = arguments[1]
         local message = table.concat(arguments, " ", 2)
         local targetBot
-        for _, bot in ipairs(player.GetAll()) do
+        for _, bot in player.Iterator() do
             if bot:IsBot() and string.find(string.lower(bot:Nick()), string.lower(botName)) then
                 targetBot = bot
                 break
@@ -1214,5 +1214,16 @@ lia.command.add("botsay", {
         end
 
         targetBot:Say(message)
+    end
+})
+
+lia.command.add("forcesay", {
+    superAdminOnly = true,
+    syntax = "<string botName> <string message>",
+    privilege = "Force Say",
+    onRun = function(client, arguments)
+        local target = lia.command.findPlayer(client, arguments[1])
+        local message = table.concat(arguments, " ", 2)
+        target:Say(message)
     end
 })

@@ -23,7 +23,7 @@ end
 function lia.util.FindPlayersInSphere(origin, radius)
     local plys = {}
     local r2 = radius ^ 2
-    for _, client in ipairs(player.GetAll()) do
+    for _, client in player.Iterator() do
         if client:GetPos():DistToSqr(origin) <= r2 then plys[#plys + 1] = client end
     end
     return plys

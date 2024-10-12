@@ -53,7 +53,7 @@ end
 -- @realm shared
 -- @tparam[opt=96] number radius The radius within which to check for nearby entities.
 -- @treturn bool True if there is an entity nearby, false otherwise.
-function entityMeta:nearEntity(radius)
+function entityMeta:isNearEntity(radius)
     for _, v in ipairs(ents.FindInSphere(self:GetPos(), radius or 96)) do
         if v:GetClass() == self then return true end
     end

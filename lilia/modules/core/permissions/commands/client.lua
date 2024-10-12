@@ -336,3 +336,10 @@ lia.command.add("botsay", {
     privilege = "Bot Say",
     onRun = function() end
 })
+
+lia.command.add("forcesay", {
+    superAdminOnly = true,
+    syntax = "<string botName> <string message>",
+    privilege = "Force Say",
+    onRun = function() end
+})
