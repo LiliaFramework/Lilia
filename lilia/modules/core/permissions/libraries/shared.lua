@@ -34,6 +34,33 @@
     end
 end
 
+concommand.Add("lia", function(client, _, arguments)
+    local command = arguments[1]
+    table.remove(arguments, 1)
+    lia.command.parse(client, nil, command or "", arguments)
+end)
+
+concommand.Add("list_entities", function(client)
+    local entityCount = {}
+    local totalEntities = 0
+    if not IsValid(client) or client:IsSuperAdmin() then
+        LiliaInformation("Entities on the server:")
+        for _, entity in pairs(ents.GetAll()) do
+            local className = entity:GetClass() or "Unknown"
+            entityCount[className] = (entityCount[className] or 0) + 1
+            totalEntities = totalEntities + 1
+        end
+
+        for className, count in pairs(entityCount) do
+            LiliaInformation(string.format("Class: %s | Count: %d", className, count))
+        end
+
+        LiliaInformation("Total entities on the server: " .. totalEntities)
+    else
+        LiliaInformation("Nuh-uh!")
+    end
+end)
+
 lia.flag.add("p", "Access to the physgun.", function(client, isGiven)
     if isGiven then
         client:Give("weapon_physgun")

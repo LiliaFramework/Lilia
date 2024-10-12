@@ -95,6 +95,3 @@ MODULE.Dependencies = {
 -   derma
 
 -   pim
-
--   concommands
-

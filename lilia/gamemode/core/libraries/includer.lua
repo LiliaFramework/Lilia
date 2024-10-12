@@ -118,10 +118,6 @@ lia.FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/libraries/concommands.lua",
-        realm = "shared"
-    },
-    {
         path = "lilia/gamemode/core/libraries/color.lua",
         realm = "client"
     },

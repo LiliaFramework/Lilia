@@ -8,7 +8,7 @@ lia.module = lia.module or {}
 lia.module.EnabledList = {}
 lia.module.list = lia.module.list or {}
 lia.module.unloaded = lia.module.unloaded or {}
-lia.module.ModuleFolders = {"config", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim", "concommands"}
+lia.module.ModuleFolders = {"config", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim",}
 lia.module.ModuleFiles = {"client.lua", "cl_module.lua", "sv_module.lua", "server.lua", "config.lua", "sconfig.lua"}
 --- Loads a module into the system.
 -- This function loads a module into the system, making its functionality available. It sets up the module environment, including defining globals and loading necessary files.

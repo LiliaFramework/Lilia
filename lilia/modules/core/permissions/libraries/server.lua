@@ -1,5 +1,6 @@
-﻿local MODULE = MODULE
-local GM = GM or GAMEMODE
+﻿local GM = GM or GAMEMODE
+local resetCalled = 0
+local MODULE = MODULE
 function GM:PlayerSpawnEffect(client)
     return client:IsSuperAdmin() or client:isStaffOnDuty() or client:HasPrivilege("Spawn Permissions - Can Spawn Effects") or client:getChar():hasFlags("L")
 end
@@ -108,3 +109,47 @@ end
 function GM:PlayerSpawnedVehicle(client, entity)
     entity:assignCreator(client)
 end
+
+concommand.Add("kickbots", function()
+    for _, bot in ipairs(player.GetBots()) do
+        bot:Kick("All bots kicked")
+    end
+end)
+
+concommand.Add("stopsoundall", function(client)
+    if client:IsSuperAdmin() then
+        for _, v in pairs(player.GetAll()) do
+            v:ConCommand("stopsound")
+        end
+    else
+        client:notify("You must be a Super Admin to forcefully stopsound everyone!")
+    end
+end)
+
+concommand.Add("logger_delete_logs", function(client)
+    if not IsValid(client) then
+        lia.db.query("DELETE FROM `lilia_logs` WHERE time > 0", function(result)
+            if result then
+                LiliaInformation("Logger - All logs with time greater than 0 have been erased")
+            else
+                LiliaInformation("Logger - Failed : " .. sql.LastError())
+            end
+        end)
+    else
+        client:chatNotify("Nuh-uh")
+    end
+end)
+
+concommand.Add("lia_recreatedb", function(client)
+    if not IsValid(client) then
+        if resetCalled < RealTime() then
+            resetCalled = RealTime() + 3
+            MsgC(Color(255, 0, 0), "[Lilia] TO CONFIRM DATABASE RESET, RUN 'lia_recreatedb' AGAIN in 3 SECONDS.\n")
+        else
+            resetCalled = 0
+            MsgC(Color(255, 0, 0), "[Lilia] DATABASE WIPE IN PROGRESS.\n")
+            hook.Run("OnWipeTables")
+            lia.db.wipeTables(lia.db.loadTables)
+        end
+    end
+end)
