@@ -73,6 +73,12 @@ lia.command.add("doorsetenabled", {
     onRun = function() end
 })
 
+nut.command.add("doorsethidden", {
+    adminOnly = true,
+    syntax = "<bool hidden>",
+    onRun = function() end
+})
+
 lia.command.add("doorsettitle", {
     adminOnly = true,
     syntax = "<string title>",
