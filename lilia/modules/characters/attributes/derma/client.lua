@@ -166,9 +166,10 @@ function PANEL:addAttribute(key, attribute)
 end
 
 function PANEL:onPointChange(key, delta)
+    local client = LocalPlayer()
     if not key then return 0 end
     local attribs = self:getContext("attribs", {})
-    local startingMax = lia.attribs.list[key].startingMax or nil
+    local startingMax = hook.Run("GetAttributeStartingMax", client, key) or nil
     local quantity = attribs[key] or 0
     local newQuantity = quantity + delta
     local newPointsLeft = self.left - delta
@@ -210,8 +211,9 @@ function PANEL:Init()
 end
 
 function PANEL:setAttribute(key, attribute)
+    local client = LocalPlayer()
     self.key = key
-    local startingMax = lia.attribs.list[key].startingMax or nil
+    local startingMax = hook.Run("GetAttributeStartingMax", client, key) or nil
     self.name:SetText(L(attribute.name))
     self:SetTooltip(L(attribute.desc or "noDesc") .. (startingMax and " Max: " .. startingMax or ""))
 end

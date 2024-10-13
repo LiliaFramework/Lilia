@@ -386,12 +386,12 @@ lia.char.registerVar("attribs", {
             if istable(value) then
                 local count = 0
                 for k, v in pairs(value) do
-                    local max = hook.Run("GetAttributeStartingMax", client, k) or lia.config.MaxAttributes
+                    local max = hook.Run("GetAttributeStartingMax", client, k)
                     if max and v > max then return false, lia.attribs.list[k].name .. " too high" end
                     count = count + v
                 end
 
-                local points = hook.Run("GetMaxStartingAttributePoints", client, count) or lia.config.MaxStartingAttributes
+                local points = hook.Run("GetMaxStartingAttributePoints", client, count)
                 if count > points then return false, "unknownError" end
             else
                 return false, "unknownError"

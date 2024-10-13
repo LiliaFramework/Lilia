@@ -324,21 +324,21 @@ function GM:InitializedModules()
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Bootstrapper] ", color_white, "Finished boot sequence...\n")
 end
 
-function GM:GetAttributeMax(client, attribute)
+function GM:GetAttributeMax(_, attribute)
     local attribTable = lia.attribs.list[attribute]
     if not attribTable then return lia.config.MaxAttributes end
     if istable(attribTable) and isnumber(attribTable.maxValue) then return attribTable.maxValue end
     return lia.config.MaxAttributePoints
 end
 
-function GM:GetAttributeStartingMax(client, attribute)
+function GM:GetAttributeStartingMax(_, attribute)
     local attribTable = lia.attribs.list[attribute]
     if not attribTable then return lia.config.MaxStartingAttributes end
     if istable(attribTable) and isnumber(attribTable.startingMax) then return attribTable.startingMax end
     return lia.config.MaxStartingAttributes
 end
 
-function GM:GetMaxStartingAttributePoints(client, count)
+function GM:GetMaxStartingAttributePoints()
     return lia.config.StartingAttributePoints
 end
 
