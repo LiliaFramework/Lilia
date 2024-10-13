@@ -23,7 +23,7 @@ function MODULE:LoadCharInformation()
     if hook.Run("CanPlayerViewAttributes") == false then
         hook.Run("AddSection", "Attributes", Color(0, 0, 0), 2)
         for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
-            local maximum = v.maxValue or lia.config.MaxAttributes
+            local maximum = hook.Run("GetAttributeMax", k)
             hook.Run("AddBarField", "Attributes", v.name, v.name, function() return 0 end, function() return maximum end, function() return LocalPlayer():getChar():getAttrib(k, 0) end)
         end
     end
@@ -70,7 +70,7 @@ function MODULE:CreateMenuButtons(tabs)
                     bar:setValue(attribValue)
                 end
 
-                local maximum = v.maxValue or lia.config.MaxAttributes
+                local maximum = hook.Run("GetAttributeMax", k)
                 bar:setMax(maximum)
                 bar:setReadOnly()
                 bar:setText(Format("%s [%.1f/%.1f] (%.1f", L(v.name), attribValue, maximum, attribValue / maximum * 100) .. "%)")

@@ -19,7 +19,6 @@ function lia.attribs.loadFromDir(directory)
         lia.include(directory .. "/" .. v, "shared")
         ATTRIBUTE.name = ATTRIBUTE.name or "Unknown"
         ATTRIBUTE.desc = ATTRIBUTE.desc or "No description availalble."
-        ATTRIBUTE.maxValue = ATTRIBUTE.maxValue or lia.config.MaxAttributes
         lia.attribs.list[niceName] = ATTRIBUTE
         ATTRIBUTE = nil
     end

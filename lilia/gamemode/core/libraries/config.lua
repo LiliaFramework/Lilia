@@ -49,7 +49,8 @@ lia.config = lia.config or {}
 -- @field Notify Contains notification sound and volume settings | **table**
 -- @field Notify.Sound Notification sound file path | **string**
 -- @field Notify.Volume Notification volume | **integer**
--- @field Notify.Pitch Notification pitch | **integer**if not ConfigWasInitialized then
+-- @field Notify.Pitch Notification pitch | **integer**
+if not ConfigWasInitialized then
     lia.config = {
         WalkSpeed = 130,
         RunSpeed = 235,
@@ -71,7 +72,9 @@ lia.config = lia.config or {}
         MaxChatLength = 256,
         CurrencySymbol = "$",
         SpawnTime = 5,
-        MaxAttributes = 30,
+        MaxAttributePoints = 30,
+        MaxStartingAttributes = 0,
+        StartingAttributePoints = 30,
         EquipDelay = 2,
         UnequipDelay = 2,
         DropDelay = 2,

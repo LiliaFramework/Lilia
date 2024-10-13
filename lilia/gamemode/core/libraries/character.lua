@@ -266,13 +266,13 @@ lia.char.registerVar("model", {
                 local groups = {}
                 if isstring(model[3]) then
                     local i = 0
-                    for value in model[3]:gmatch("%d") do
-                        groups[i] = tonumber(value)
+                    for digit in model[3]:gmatch("%d") do
+                        groups[i] = tonumber(digit)
                         i = i + 1
                     end
                 elseif istable(model[3]) then
-                    for _, v in pairs(model[3]) do
-                        groups[tonumber(k)] = tonumber(v)
+                    for groupIndex, groupValue in pairs(model[3]) do
+                        groups[tonumber(groupIndex)] = tonumber(groupValue)
                     end
                 end
 
@@ -385,13 +385,13 @@ lia.char.registerVar("attribs", {
         if value ~= nil then
             if istable(value) then
                 local count = 0
-                for _, v in pairs(value) do
-                    local max = lia.attribs.list[k] and lia.attribs.list[k].startingMax or nil
-                    if max and max < v then return false, lia.attribs.list[k].name .. " too high" end
+                for k, v in pairs(value) do
+                    local max = hook.Run("GetAttributeStartingMax", client, k) or lia.config.MaxAttributes
+                    if max and v > max then return false, lia.attribs.list[k].name .. " too high" end
                     count = count + v
                 end
 
-                local points = hook.Run("GetStartAttribPoints", client, count) or lia.config.MaxAttributes
+                local points = hook.Run("GetMaxStartingAttributePoints", client, count) or lia.config.MaxStartingAttributes
                 if count > points then return false, "unknownError" end
             else
                 return false, "unknownError"
