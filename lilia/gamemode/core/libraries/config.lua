@@ -31,7 +31,9 @@ lia.config = lia.config or {}
 -- @field MaxChatLength Sets the maximum length of chat messages | **integer**
 -- @field CurrencySymbol Specifies the currency symbol used in the game | **string**
 -- @field SpawnTime Time to respawn after death | **integer**
--- @field MaxAttributes Maximum number of attributes a character can have | **integer**
+-- @field MaxAttributePoints Maximum number of points that can be allocated across an attribute | **integer**
+-- @field MaxStartingAttributes Maximum value of each attribute at character creation | **integer**
+-- @field StartingAttributePoints Total number of points available for starting attribute allocation | **integer**
 -- @field EquipDelay Time delay between equipping items | **integer**
 -- @field DropDelay Time delay between dropping items | **integer**
 -- @field TakeDelay Time delay between taking items | **integer**
@@ -47,8 +49,7 @@ lia.config = lia.config or {}
 -- @field Notify Contains notification sound and volume settings | **table**
 -- @field Notify.Sound Notification sound file path | **string**
 -- @field Notify.Volume Notification volume | **integer**
--- @field Notify.Pitch Notification pitch | **integer**
-if not ConfigWasInitialized then
+-- @field Notify.Pitch Notification pitch | **integer**if not ConfigWasInitialized then
     lia.config = {
         WalkSpeed = 130,
         RunSpeed = 235,

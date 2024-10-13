@@ -326,8 +326,9 @@ lia.command.add("doorsetenabled", {
     end
 })
 
-nut.command.add("doorsethidden", {
+lia.command.add("doorsethidden", {
     adminOnly = true,
+    privilege = "Manage Doors",
     syntax = "<bool hidden>",
     onRun = function(client, arguments)
         local entity = client:GetEyeTrace().Entity
