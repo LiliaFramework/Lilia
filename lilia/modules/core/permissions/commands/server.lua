@@ -1227,3 +1227,20 @@ lia.command.add("forcesay", {
         target:Say(message)
     end
 })
+
+lia.command.add("pm", {
+    syntax = "<string target> <string message>",
+    onRun = function(client, arguments)
+        local message = table.concat(arguments, " ", 2)
+        local target = lia.command.findPlayer(client, arguments[1])
+        if IsValid(target) then
+            local voiceMail = target:getLiliaData("vm")
+            if voiceMail and voiceMail:find("%S") then return target:Name() .. ": " .. voiceMail end
+            if (client.liaNextPM or 0) < CurTime() then
+                lia.chat.send(client, "pm", message, false, {client, target})
+                client.liaNextPM = CurTime() + 0.5
+                target.liaLastPM = client
+            end
+        end
+    end
+})

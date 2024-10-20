@@ -343,3 +343,8 @@ lia.command.add("forcesay", {
     privilege = "Force Say",
     onRun = function() end
 })
+
+lia.command.add("pm", {
+    syntax = "<string target> <string message>",
+    onRun = function() end
+})
