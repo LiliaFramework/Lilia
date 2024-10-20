@@ -131,7 +131,7 @@ function PANEL:Init()
     self.leftLabel:SetFont("liaCharSubTitleFont")
     self.leftLabel:SetTextColor(color_white)
     self.title:SetTextColor(color_white)
-    self.total = hook.Run("GetStartAttribPoints", client, self:getContext()) or lia.config.MaxAttributes
+    self.total = hook.Run("GetStartAttribPoints", client, self:getContext()) or lia.config.MaxAttributePoints
     self.attribs = {}
     for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
         if v.noStartBonus then continue end

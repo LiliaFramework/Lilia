@@ -326,7 +326,7 @@ end
 
 function GM:GetAttributeMax(_, attribute)
     local attribTable = lia.attribs.list[attribute]
-    if not attribTable then return lia.config.MaxAttributes end
+    if not attribTable then return lia.config.MaxAttributePoints end
     if istable(attribTable) and isnumber(attribTable.maxValue) then return attribTable.maxValue end
     return lia.config.MaxAttributePoints
 end
