@@ -1,20 +1,16 @@
-# General Mechanics:
+# General Mechanics
 
 - **Representative Voting**: Implements a voting system analogous to the American [House of Representatives](https://en.wikipedia.org/wiki/United_States_House_of_Representatives), enabling representative voting processes within the game.
 
 - **Legislative Voting**: Introduces a legislative system for lawmaking. Players can propose laws with three voting options: Aye, Nay, and Abstain. The results are tallied at the end of the election.
 
-- **Presidential Voting**: Facilitates presidential elections based on popular vote count.
+- **Presidential Voting**: Facilitates presidential elections based on the popular vote count.
 
 - **Food**: Adds mechanics for hunger and thirst, incorporating customizable effects. Thirst impedes stamina regeneration, while starvation depletes health.
 
-- **Radiation**: Functions similarly to the radiation mechanics in Fallout 4/76, reducing health and replacing it with radiation levels.
+- **Radiation**: Functions similarly to the radiation mechanics in Fallout 4/76, reducing health and increasing radiation levels.
 
-- **Fallout Drugs**: Introduces various buffs and debuffs that mimic the effects of drugs found in the Fallout series.
-
-- **Mafia Drugs**: Adds drug bricks requiring processing, with processed drugs providing specific effects.
-
-- **EFT Injuries**: Incorporates injuries such as broken legs and bleeding, alongside limb health management.
+- **Drugs**: Adds drug bricks that require processing, with processed drugs providing various buffs and debuffs.
 
 - **Languages**: Allows players to learn and speak different languages. Comprehension is limited to known languages.
 
@@ -24,13 +20,13 @@
 
 - **Looting**: Enables looting across the map, with items categorized by rarity and probability.
 
-- **Wiretaps**: Adds wiretap devices for eavesdropping on conversations, featuring both a receiver and a listener component.
+- **Wiretaps**: Adds wiretap devices for eavesdropping on conversations, featuring both receiver and listener components.
 
 - **Crafting**: Introduces an in-depth crafting system requiring multiple crafting tables and blueprints.
 
 - **Bank Robbery**: Adds a bank safe that can be robbed, with configurable settings such as minimum police presence and incremental money accumulation.
 
-- **In-depth Armors**: Allows for comprehensive customization of armor, affecting player model, movement speed, jump height, fall damage immunity, resistance percentages, radiation immunity, footstep sounds, and visual overlays.
+- **In-depth Armors**: Allows for comprehensive customization of armor, affecting player models, movement speed, jump height, fall damage immunity, resistance percentages, radiation immunity, footstep sounds, and visual overlays.
 
 - **Marketplace**: Establishes a global marketplace for player transactions.
 
@@ -40,7 +36,7 @@
 
 - **Telephone**: Adds payphones for making calls to other players.
 
-- **Cellphone**: Adds mobile phones that make calls and send messages to other players.
+- **Cellphone**: Adds mobile phones that allow players to make calls and send messages to others.
 
 - **Radio**: Introduces radios with configurable frequencies for communication via text or voice.
 
@@ -114,21 +110,19 @@
 
 - **Attribute Rolling**: Adds attribute rolling with multipliers.
 
-- **Attribute Fog**: Adds a Fog that renders in the distance, based on how much perception you have.
+- **Attribute Fog**: Adds fog that renders in the distance based on how much perception you have.
 
-- **Cinematic Text**: Adds cinematic text similar to [this](https://withaterriblefate.files.wordpress.com/2015/01/postman-in-repose.png?w=640).
+- **Cinematic Text**: Adds cinematic text similar to [this example](https://withaterriblefate.files.wordpress.com/2015/01/postman-in-repose.png?w=640).
 
-- **Attribute Based Damage**: Adds a configurable variable that can influence damage (e.g., melee damage influenced by strength).
+- **Attribute-Based Damage**: Adds a configurable variable that can influence damage (e.g., melee damage influenced by strength).
 
 - **Durability**: Adds a durability variable to weapons.
 
-- **Anims**: Adds the following animations: Attention, Timed Salute, At Ease, Cross Arms, Salute, Surrender.
+- **Animations**: Adds the following animations: Attention, Timed Salute, At Ease, Cross Arms, Salute, Surrender.
 
 - **Animation Wheel**: Adds a wheel that allows you to play some whitelisted animations.
 
 - **Squads**: Adds a squad system, similar to a party system from an RPG.
-
-- **Bonemerge System**: Adds a bonemerge system that allows different clothes to be worn on different parts of the body.
 
 - **Reputation System**: All NPCs attached to a faction are neutral unless the player displays allegiance to an enemy by wearing their clothes or personally becoming their enemy.
 
@@ -146,8 +140,6 @@
 
 - **Transformative Items**: Adds items that can transform you into certain creatures.
 
-- **Organizations**: Adds a group creation system, similar to guilds.
-
 - **Clothing Status**: Adds a system where clothing gets dirty over time and requires maintenance.
 
 - **Raiding System**: Adds a raiding and ambushing system designed for faction confrontations.
@@ -160,12 +152,32 @@
 
 - **Ranking System**: Adds various ranks that show on the scoreboard. These are tied to factions and can include stat changes, custom models, custom weapons, and more.
 
-- **Syringes**: Adds Syringes that can be used to provide effects.
+- **Syringes**: Adds syringes that can be used to provide effects, sucha as better reload speed, more speed, more armor, more health, healing, more jump height.
 
 - **Social Credit System**: A ranking system that rewards players with points based on their playtime, completing tasks, or receiving points as rewards from admins. Accumulated points can be used to unlock in-game rewards, enhancing player engagement and providing incentives for positive behavior and participation.
 
-- **Prop Based Construction:** A construction system inspired by Rust, where players use items to build structures instead of relying on a traditional spawn menu. Items can be placed directly on the ground, creating a more immersive and interactive building experience.
+- **Prop-Based Construction**: A construction system inspired by Rust, where players use items to build structures instead of relying on a traditional spawn menu. Items can be placed directly on the ground, creating a more immersive and interactive building experience.
 
-- **Scenarios:** This feature introduces various configurable scenarios that are automatically activated when the server starts. Each scenario alters gameplay in unique ways, providing fresh and dynamic experiences every time the server is launched, keeping gameplay exciting and unpredictable.
+- **Syringes**: Adds syringes that can be used to provide various effects, such as improved reload speed, increased movement speed, enhanced armor, higher health, healing, and greater jump height.
 
-- **Farming:** Introduces farmable items that players can plant and grow over time. These items yield various farm products when harvested, adding an agricultural element to the game where players can cultivate resources-
+- **Farming**: Introduces farmable items that players can plant and grow over time. These items yield various farm products when harvested, adding an agricultural element to the game where players can cultivate resources.
+
+- **Advanced Injuries**: Incorporates several injuries, including PTSD, which creates visual effects; bleeding, which causes damage over time; broken arms, which slow down reloading; broken legs, which reduce movement speed; and concussions, which make your vision blurry.
+
+- **Bonemerge System**: Adds a bonemerge system that allows different clothes to be worn on different parts of the body. This comes with two main presets: Fallout and Mafia.
+
+- **Guilds**: Adds a group creation system, which has a built-in ranking system with custom permissions within the guild, item bank, money bank, and logs.
+
+- **Housing**: Adds a housing system that can be managed by a faction or admins. This system allows for the predefined properties, alongside the assigned doors, as well as rent.
+
+- **Camera**: Adds cameras that act as CCTV, allowing a player to remotely see through their view.
+
+- **Law Board**: Adds a Law Board that, when interacted with, displays a webpage with the rules.
+
+- **DEFCON**: Implements a DEFCON (Defense Condition) system that adjusts server security levels based on in-game events.
+
+- **Trading**: Introduces a trading mechanic that allows players to securely trade items and currency through an intuitive interface.
+
+- **Cutscenes**: Adds simple Call of Duty-inspired cutscenes where you can submit three text entries explaining the missions.
+
+- **Car Options**: Adds car options, such as kicking players from cars, locking the car from inside, and more.
