@@ -2,15 +2,15 @@
 
 The catalog is divided into five categories:
 
-- **[General Mechanics](https://liliaframework.github.io/store/mechanics/)**: A diverse array of mechanics, ranging from passive to active. This category includes various features designed to help run a server and keep it active.
+- **[General Mechanics](https://github.com/LiliaFramework/Lilia/blob/main/docs/store/index.md#general-mechanics)**: A diverse array of mechanics, ranging from passive to active. This category includes various features designed to help run a server and keep it active.
 
-- **[Talkable NPCs](https://liliaframework.github.io/store/npcs/)**: Submodules tied to a framework of talkable NPCs, offering alternative dialogues and optional voice line outputs.
+- **[Talkable NPCs](https://github.com/LiliaFramework/Lilia/blob/main/docs/store/index.md#talkable-npcs)**: Submodules tied to a framework of talkable NPCs, offering alternative dialogues and optional voice line outputs.
 
-- **[Management](https://liliaframework.github.io/store/management/)**: Management modules aimed at assisting admins with tasks, including NPC spawns, daily rewards, and other minor management features.
+- **[Management](https://github.com/LiliaFramework/Lilia/blob/main/docs/store/index.md#management)**: Management modules aimed at assisting admins with tasks, including NPC spawns, daily rewards, and other minor management features.
 
-- **[HUDs/UIs](https://liliaframework.github.io/store/ui/)**: Various user interfaces designed to enhance the visual appeal of your game mode.
+- **[HUDs/UIs](https://github.com/LiliaFramework/Lilia/blob/main/docs/store/index.md#hudsuis)**: Various user interfaces designed to enhance the visual appeal of your game mode.
 
-- **[Compatibility](https://liliaframework.github.io/store/compatibility/)**: Various modules that implement compatibility with non-Lilia native content.
+- **[Compatibility](https://github.com/LiliaFramework/Lilia/blob/main/docs/store/index.md#compatibility)**: Various modules that implement compatibility with non-Lilia native content.
 
 # General Mechanics
 
