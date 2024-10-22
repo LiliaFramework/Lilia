@@ -24,9 +24,9 @@
 
 - **ARC9 Base**: Adds compatibility with [ARC9 Base](https://steamcommunity.com/workshop/filedetails/?id=2910505837).
 
-- **ArcCW**: Adds compatibility with [ArcCW](https://steamcommunity.com/sharedfiles/filedetails/?id=2131057232).
+- **ArcCW**: Adds compatibility with [ArcCW Base](https://steamcommunity.com/sharedfiles/filedetails/?id=2131057232).
 
-- **TFA**: Adds compatibility with [TFA](https://steamcommunity.com/sharedfiles/filedetails/?id=2840031720).
+- **TFA**: Adds compatibility with [TFA Base] (https://steamcommunity.com/sharedfiles/filedetails/?id=2840031720).
 
 - **JmodEFT**: Adds compatibility with [JMOD EFT](https://steamcommunity.com/sharedfiles/filedetails/?id=2804625575).
 
@@ -47,3 +47,7 @@
 - **Magic Mushroom Factory**: Adds compatibility with [Magic Mushroom Factory](https://www.gmodstore.com/market/view/magic-mushroom-factory-drug-script-and-darkrp-job).
 
 - **Stock Market**: Adds compatibility with [Stock Market Addon | Control Your Economy](https://www.gmodstore.com/market/view/stock-market-addon-pointshop-support-control-your-economy).
+
+- **LSCS - Lightsaber**: Adds compatibility with [[LSCS] - Lightsaber - Force Powers](https://steamcommunity.com/sharedfiles/filedetails/?id=2837856621).
+
+- **Simple Mining System**: Adds compatibility with [Simple Mining System](https://www.gmodstore.com/market/view/simple-mining-system).
