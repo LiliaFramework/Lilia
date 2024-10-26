@@ -1,4 +1,6 @@
-﻿DeriveGamemode("sandbox")
+resource.AddWorkshop("2959728255")
+resource.AddFile("lilia/gui/vignette.png")
+DeriveGamemode("sandbox")
 lia = lia or {
     util = {},
     meta = {},
