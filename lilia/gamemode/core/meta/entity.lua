@@ -65,8 +65,7 @@ function entityMeta:isSimfphysCar()
     if not IsValid(self) then return false end
     local base = self.Base
     local class = self:GetClass()
-
-    return table.HasValue(validClasses, class) or self.IsSimfphyscar or self.LVS or table.HasValue(validClasses, base) 
+    return table.HasValue(validClasses, class) or self.IsSimfphyscar or self.LVS or table.HasValue(validClasses, base)
 end
 
 --- Retrieves the drop position for an item associated with the entity.
