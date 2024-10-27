@@ -59,7 +59,7 @@ end
 
 --- Obtains the player object that currently owns this character.
 -- @realm shared
--- @treturn Player|nil The player who owns this character, or `nil` if no valid player is found.
+-- @treturn The player who owns this character, or `nil` if no valid player is found.
 -- @usage
 -- ```lua
 -- local owner = character:getPlayer()
@@ -235,7 +235,7 @@ if SERVER then
 
     --- Persists the character's current state and data to the database.
     -- @realm server
-    -- @func Function|nil callback An optional callback function to execute after the save operation completes successfully.
+    -- @func callback An optional callback function to execute after the save operation completes successfully.
     -- @usage
     -- ```lua
     -- character:save(function()
@@ -264,7 +264,7 @@ if SERVER then
     -- - If `receiver` is the owner of the character, full character data is sent.
     -- - If `receiver` is not the owner, only limited data is sent to prevent unauthorized access.
     -- @realm server
-    -- @client Player|nil receiver The specific player to send the character data to. If `nil`, data is sent to all players.
+    -- @client receiver The specific player to send the character data to. If `nil`, data is sent to all players.
     -- @internal
     function characterMeta:sync(receiver)
         if receiver == nil then
@@ -297,7 +297,7 @@ if SERVER then
     --- Configures the character's appearance and synchronizes this information with the owning player.
     -- This includes setting the player's model, faction, body groups, and skin. Optionally, it can prevent networking to other clients.
     -- @realm server
-    -- @bool |nil noNetworking Optional. If set to `true`, the character's information will not be synchronized with other players.
+    -- @bool noNetworking Optional. If set to `true`, the character's information will not be synchronized with other players.
     -- @internal
     -- @usage
     -- ```lua
@@ -358,7 +358,7 @@ if SERVER then
     --- Bans the character, preventing it from being used for a specified duration or permanently if no duration is provided.
     -- This action also forces the player out of the character.
     -- @realm server
-    -- @float|nil time The duration of the ban in seconds. If omitted or `nil`, the ban is permanent.
+    -- @float time The duration of the ban in seconds. If omitted or `nil`, the ban is permanent.
     -- @usage
     -- ```lua
     -- character:ban(3600) -- Bans the character for 1 hour
@@ -400,7 +400,7 @@ if SERVER then
     -- When adding money, it respects the maximum money limit and handles overflow by dropping excess money on the ground.
     -- @realm server
     -- @float amount The amount of money to modify. Positive to add, negative to subtract.
-    -- @bool |nil takingMoney Optional. If `true`, the operation is treated as taking money; otherwise, adding money.
+    -- @bool takingMoney Optional. If `true`, the operation is treated as taking money; otherwise, adding money.
     -- @treturn Boolean Always returns `true` to indicate the operation was processed.
     -- @usage
     -- ```lua
