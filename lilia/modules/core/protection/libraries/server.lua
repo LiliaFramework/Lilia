@@ -1,11 +1,24 @@
 ﻿local MODULE = MODULE
+function MODULE:PlayerButtonDown(client, button)
+    if button == KEY_INSERT then
+        client.InsertPressCounts = (client.InsertPressCounts or 0) + 1
+        if client.InsertPressCounts == MODULE.insertThreshold then
+            client.InsertPressCounts = 0
+            for _, admin in ipairs(player.GetAll()) do
+                if admin:isStaffOnDuty() or admin:isStaff() then admin:ChatPrint("[Alert] Player " .. client:Nick() .. " has pressed the Insert key " .. MODULE.insertThreshold .. " times in this session. This is often a sign of cheating. Beware of such fact!") end
+            end
+
+            print("[Server Alert] " .. client:Nick() .. " has reached the Insert key press threshold.")
+        end
+    end
+end
+
 function MODULE:PlayerAuthed(client, steamid)
-    local cheaters = {"76561198095382821", "76561198211231421", "76561199121878196", "76561199548880910"}
     local steamID64 = util.SteamIDTo64(steamid)
     local OwnerSteamID64 = client:OwnerSteamID64()
     local SteamName = client:steamName()
     local SteamID = client:SteamID()
-    if table.HasValue(cheaters, steamID64) or table.HasValue(cheaters, OwnerSteamID64) then
+    if table.HasValue(self.KnownCheaters, steamID64) or table.HasValue(self.KnownCheaters, OwnerSteamID64) then
         client:Ban("You are banned from this server for using third-party cheats.\nIf you believe this is a mistake, please appeal by contacting the owner with this message.")
         self:NotifyAdmin(SteamName .. " (" .. SteamID .. ") was banned for cheating or using an alt of a cheater.")
         return
