@@ -65,7 +65,8 @@ function entityMeta:isSimfphysCar()
     if not IsValid(self) then return false end
     local base = self.Base
     local class = self:GetClass()
-    return table.HasValue(validClasses, class) or self.IsSimfphyscar or self.LVS or table.HasValue(validClasses, base)
+
+    return table.HasValue(validClasses, class) or self.IsSimfphyscar or self.LVS or table.HasValue(validClasses, base) 
 end
 
 --- Retrieves the drop position for an item associated with the entity.
@@ -104,7 +105,7 @@ end
 --- Gets the view angle between the entity and a specified position.
 -- @realm shared
 -- @vector pos The position to calculate the view angle towards.
--- @treturn Float The view angle in degrees.
+-- @treturn The view angle in degrees.
 -- @usage
 -- ```lua
 -- local angle = entity:getViewAngle(targetPos)
@@ -118,8 +119,8 @@ end
 
 --- Checks if the entity is within the field of view of another entity.
 -- @realm shared
--- @entity The entity to check the field of view against.
--- @flot Float fov The field of view angle in degrees.
+-- @entity entity to check the field of view against.
+-- @float fov The field of view angle in degrees.
 -- @treturn Boolean True if the entity is within the field of view, false otherwise.
 -- @usage
 -- ```lua
@@ -287,7 +288,7 @@ if SERVER then
     entityMeta.SetNetVar = entityMeta.setNetVar
     --- Retrieves a networked variable. If it is not set, it'll return the default that you've specified.
     -- @realm server
-    -- @string String key Identifier of the networked variable
+    -- @string key Identifier of the networked variable
     -- @tparam any default Default value to return if the networked variable is not set
     -- @treturn any The value associated with the key, or the default that was given if it doesn't exist
     -- @usage
