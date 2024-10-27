@@ -178,7 +178,6 @@ if SERVER then
     -- **Note:** This method overwrites all existing flags and does not append to them.
     -- @realm server
     -- @string flags A string containing one or more flags to assign to the character.
-    -- @see characterMeta:giveFlags
     -- @usage
     -- ```lua
     -- character:setFlags("petr")
@@ -196,7 +195,6 @@ if SERVER then
     -- character:giveFlags("pet")
     -- -- Adds 'p', 'e', and 't' flags to the character
     -- ```
-    -- @see characterMeta:hasFlags
     function characterMeta:giveFlags(flags)
         local addedFlags = ""
         for i = 1, #flags do
