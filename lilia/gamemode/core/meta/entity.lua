@@ -14,13 +14,11 @@ local ChairCache = {}
 -- @realm shared
 -- @treturn Boolean True if the entity is a physics prop, false otherwise.
 -- @usage
--- ```lua
 -- if entity:isProp() then
 --     print("Entity is a physics prop.")
 -- else
 --     print("Entity is not a physics prop.")
 -- end
--- ```
 function entityMeta:isProp()
     return self:GetClass() == "prop_physics"
 end
@@ -29,11 +27,9 @@ end
 -- @realm shared
 -- @treturn Boolean True if the entity is an item entity, false otherwise.
 -- @usage
--- ```lua
 -- if entity:isItem() then
 --     print("Entity is an item.")
 -- end
--- ```
 function entityMeta:isItem()
     return self:GetClass() == "lia_item"
 end
@@ -42,11 +38,9 @@ end
 -- @realm shared
 -- @treturn Boolean True if the entity is a money entity, false otherwise.
 -- @usage
--- ```lua
 -- if entity:isMoney() then
 --     print("Entity is money.")
 -- end
--- ```
 function entityMeta:isMoney()
     return self:GetClass() == "lia_money"
 end
@@ -55,11 +49,9 @@ end
 -- @realm shared
 -- @treturn Boolean True if the entity is a simfphys car, false otherwise.
 -- @usage
--- ```lua
 -- if entity:isSimfphysCar() then
 --     print("Entity is a simfphys car.")
 -- end
--- ```
 function entityMeta:isSimfphysCar()
     local validClasses = {"lvs_base", "gmod_sent_vehicle_fphysics_base", "gmod_sent_vehicle_fphysics_wheel", "prop_vehicle_prisoner_pod",}
     if not IsValid(self) then return false end
@@ -72,10 +64,8 @@ end
 -- @realm shared
 -- @treturn Vector The drop position for the item.
 -- @usage
--- ```lua
 -- local dropPos = entity:getEntItemDropPos()
 -- print("Item drop position:", dropPos)
--- ```
 function entityMeta:getEntItemDropPos()
     if not IsValid(self) then return false end
     local offset = Vector(-50, 0, 0)
@@ -87,13 +77,11 @@ end
 -- @float radius The radius within which to check for nearby entities.
 -- @treturn Boolean True if there is an entity nearby, false otherwise.
 -- @usage
--- ```lua
 -- if entity:isNearEntity(150) then
 --     print("There is an entity nearby.")
 -- else
 --     print("No entities within the specified radius.")
 -- end
--- ```
 function entityMeta:isNearEntity(radius)
     for _, v in ipairs(ents.FindInSphere(self:GetPos(), radius or 96)) do
         if v:GetClass() == self:GetClass() then return true end
@@ -106,10 +94,8 @@ end
 -- @vector pos The position to calculate the view angle towards.
 -- @treturn The view angle in degrees.
 -- @usage
--- ```lua
 -- local angle = entity:getViewAngle(targetPos)
 -- print("View angle:", angle)
--- ```
 function entityMeta:getViewAngle(pos)
     local diff = pos - self:EyePos()
     diff:Normalize()
@@ -122,11 +108,9 @@ end
 -- @float fov The field of view angle in degrees.
 -- @treturn Boolean True if the entity is within the field of view, false otherwise.
 -- @usage
--- ```lua
 -- if entity:inFov(playerEntity, 90) then
 --     print("Entity is within the player's field of view.")
 -- end
--- ```
 function entityMeta:inFov(entity, fov)
     return self:getViewAngle(entity:EyePos()) < (fov or 88)
 end
@@ -136,13 +120,11 @@ end
 -- @entity target The target entity to check for room visibility.
 -- @treturn Boolean True if the entity is in the same room as the target entity, false otherwise.
 -- @usage
--- ```lua
 -- if entity:isInRoom(targetEntity) then
 --     print("Entities are in the same room.")
 -- else
 --     print("Entities are not in the same room.")
 -- end
--- ```
 function entityMeta:isInRoom(target)
     local tracedata = {}
     tracedata.start = self:GetPos()
@@ -156,13 +138,11 @@ end
 -- @entity entity The entity to check line of sight against.
 -- @treturn Boolean True if the entity is in line of sight, false otherwise.
 -- @usage
--- ```lua
 -- if entity:inTrace(targetEntity) then
 --     print("Entity is in line of sight of the target.")
 -- else
 --     print("Entity is not in line of sight of the target.")
 -- end
--- ```
 function entityMeta:inTrace(entity)
     return util.TraceLine({
         start = entity:EyePos(),
@@ -177,11 +157,9 @@ end
 -- @float Float fov The field of view angle in degrees.
 -- @treturn Boolean True if the entity has a clear line of sight to the other entity within the specified distance and field of view angle, false otherwise.
 -- @usage
--- ```lua
 -- if entity:isScreenVisible(targetEntity, 300000, 90) then
 --     print("Entity is visible on the screen.")
 -- end
--- ```
 function entityMeta:isScreenVisible(entity, maxDist, fov)
     return self:EyePos():DistToSqr(entity:EyePos()) < (maxDist or 512 * 512) and self:IsLineOfSightClear(entity:EyePos()) and self:inFov(entity, fov)
 end
@@ -190,11 +168,9 @@ end
 -- @realm shared
 -- @treturn Boolean True if the entity is a chair, false otherwise.
 -- @usage
--- ```lua
 -- if entity:isChair() then
 --     print("Entity is a chair.")
 -- end
--- ```
 function entityMeta:isChair()
     return ChairCache[self:GetModel()]
 end
@@ -204,13 +180,11 @@ end
 -- @entity entity The entity to check visibility against.
 -- @treturn Boolean True if the entity can see the target entity, false otherwise.
 -- @usage
--- ```lua
 -- if entity:canSeeEntity(targetEntity) then
 --     print("Entity can see the target entity.")
 -- else
 --     print("Entity cannot see the target entity.")
 -- end
--- ```
 function entityMeta:canSeeEntity(entity)
     if not (IsValid(self) and IsValid(entity)) then return false end
     if not (self:IsPlayer() or self:IsNPC()) then return false end
@@ -230,9 +204,7 @@ if SERVER then
     -- @realm server
     -- @client client The player to assign as the creator of the entity.
     -- @usage
-    -- ```lua
     -- entity:assignCreator(player)
-    -- ```
     function entityMeta:assignCreator(client)
         self:SetCreator(client)
         self:SetNW2Entity("creator", client)
@@ -244,9 +216,7 @@ if SERVER then
     -- @string key Identifier of the networked variable
     -- @client receiver The players to send the networked variable to
     -- @usage
-    -- ```lua
     -- entity:sendNetVar("health", player)
-    -- ```
     function entityMeta:sendNetVar(key, receiver)
         netstream.Start(receiver, "nVar", self:EntIndex(), key, lia.net[self] and lia.net[self][key])
     end
@@ -257,9 +227,7 @@ if SERVER then
     -- @internal
     -- @client receiver The players to clear the networked variable for
     -- @usage
-    -- ```lua
     -- entity:clearNetVars(player)
-    -- ```
     function entityMeta:clearNetVars(receiver)
         lia.net[self] = nil
         netstream.Start(receiver, "nDel", self:EntIndex())
@@ -273,9 +241,7 @@ if SERVER then
     -- @client receiver The players to send the networked variable to
     -- @treturn void
     -- @usage
-    -- ```lua
     -- entity:setNetVar("example", "Hello World!", player)
-    -- ```
     -- @see getNetVar
     function entityMeta:setNetVar(key, value, receiver)
         if checkBadType(key, value) then return end
@@ -291,10 +257,8 @@ if SERVER then
     -- @tparam any default Default value to return if the networked variable is not set
     -- @treturn any The value associated with the key, or the default that was given if it doesn't exist
     -- @usage
-    -- ```lua
     -- local example = entity:getNetVar("example", "Default Value")
     -- print(example) -- Output: "Hello World!" or "Default Value"
-    -- ```
     -- @see setNetVar
     function entityMeta:getNetVar(key, default)
         if lia.net[self] and lia.net[self][key] ~= nil then return lia.net[self][key] end
@@ -310,10 +274,8 @@ else
     -- @tparam any default The default value to return if the networked variable does not exist.
     -- @treturn any The value of the networked variable, or the default value if it doesn't exist.
     -- @usage
-    -- ```lua
     -- local example = entity:getNetVar("example", "Default Value")
     -- print(example) -- Output: "Hello World!" or "Default Value"
-    -- ```
     function entityMeta:getNetVar(key, default)
         local index = self:EntIndex()
         if lia.net[index] and lia.net[index][key] ~= nil then return lia.net[index][key] end

@@ -29,10 +29,8 @@ Inventory.id = -1
 -- @tparam any[opt] default The default value to return if the key does not exist.
 -- @treturn any The value associated with the key, or the default value if the key does not exist.
 -- @usage
--- ```lua
 -- local health = inventory:getData("health", 100)
 -- print("Health:", health)
--- ```
 function Inventory:getData(key, default)
     local value = self.data[key]
     if value == nil then return default end
@@ -44,9 +42,7 @@ end
 -- @string className The name of the subclass.
 -- @treturn  A subclass of the Inventory class.
 -- @usage
--- ```lua
 -- local Inventory = Inventory:extend("GridInv")
--- ```
 function Inventory:extend(className)
     local base = debug.getregistry()[className] or {}
     table.Empty(base)
@@ -60,11 +56,9 @@ end
 -- @realm shared
 -- This function is meant to be overridden in subclasses to define specific configurations.
 -- @usage
--- ```lua
 -- function Inventory:configure()
 --     -- Custom configuration
 -- end
--- ```
 function Inventory:configure()
 end
 
@@ -74,11 +68,9 @@ end
 -- @func onChange The function to call when the data associated with the key changes.
 -- @treturn void
 -- @usage
--- ```lua
 -- inventory:addDataProxy("health", function(old, new)
 --     print("Health changed from", old, "to", new)
 -- end)
--- ```
 function Inventory:addDataProxy(key, onChange)
     local dataConfig = self.config.data[key] or {}
     dataConfig.proxies[#dataConfig.proxies + 1] = onChange
@@ -91,12 +83,10 @@ end
 -- @bool onlyMain Whether to retrieve only main items.
 -- @treturn Table An array containing the items with the specified unique ID.
 -- @usage
--- ```lua
 -- local weapons = inventory:getItemsByUniqueID("weapon_rifle")
 -- for _, weapon in ipairs(weapons) do
 --     print("Weapon ID:", weapon:getID())
 -- end
--- ```
 function Inventory:getItemsByUniqueID(uniqueID, onlyMain)
     local items = {}
     for _, v in pairs(self:getItems(onlyMain)) do
@@ -111,10 +101,8 @@ end
 -- @raise If the argument `typeID` is not a string.
 -- @tsee lia.inventory.newType
 -- @tusage
--- ```lua
 -- inventory:register("grid")
 -- -- This sets the inventory's type to 'grid'
--- ```
 function Inventory:register(typeID)
     assert(isstring(typeID), "Expected argument #1 of " .. self.className .. ".register to be a string")
     self.typeID = typeID
@@ -138,9 +126,7 @@ end
 -- @realm shared
 -- @treturn Table A new instance of the Inventory class.
 -- @usage
--- ```lua
 -- local newInventory = Inventory:new()
--- ```
 function Inventory:new()
     return lia.inventory.new(self.typeID)
 end
@@ -149,10 +135,8 @@ end
 -- @realm shared
 -- @treturn String A string representation of the inventory, including its class name and ID.
 -- @usage
--- ```lua
 -- print(tostring(inventory))
 -- -- Output: "Inventory[123]"
--- ```
 function Inventory:__tostring()
     return self.className .. "[" .. tostring(self.id) .. "]"
 end
@@ -161,10 +145,8 @@ end
 -- @realm shared
 -- @treturn Table The type of the inventory.
 -- @usage
--- ```lua
 -- local typeInfo = inventory:getType()
 -- print("Inventory Type:", typeInfo.typeID)
--- ```
 function Inventory:getType()
     return lia.inventory.types[self.typeID]
 end
@@ -176,11 +158,9 @@ end
 -- @tparam any newValue The new value of the data.
 -- @treturn void
 -- @usage
--- ```lua
 -- function Inventory:onDataChanged(key, oldValue, newValue)
 --     print(key, "changed from", oldValue, "to", newValue)
 -- end
--- ```
 function Inventory:onDataChanged(key, oldValue, newValue)
     local keyData = self.config.data[key]
     if keyData and keyData.proxies then
@@ -194,12 +174,10 @@ end
 -- @realm shared
 -- @treturn Table An array containing all items in the inventory.
 -- @usage
--- ```lua
 -- local items = inventory:getItems()
 -- for _, item in ipairs(items) do
 --     print("Item ID:", item:getID())
 -- end
--- ```
 function Inventory:getItems()
     return self.items
 end
@@ -209,12 +187,10 @@ end
 -- @string itemType The type of items to retrieve.
 -- @treturn Table An array containing items of the specified type.
 -- @usage
--- ```lua
 -- local healthPacks = inventory:getItemsOfType("health_pack")
 -- for _, pack in ipairs(healthPacks) do
 --     print("Health Pack ID:", pack:getID())
 -- end
--- ```
 function Inventory:getItemsOfType(itemType)
     local items = {}
     for _, item in pairs(self:getItems()) do
@@ -228,12 +204,10 @@ end
 -- @string itemType The type of item to retrieve.
 -- @treturn Table|nil The first item of the specified type, or nil if not found.
 -- @usage
--- ```lua
 -- local firstHealthPack = inventory:getFirstItemOfType("health_pack")
 -- if firstHealthPack then
 --     print("First Health Pack ID:", firstHealthPack:getID())
 -- end
--- ```
 function Inventory:getFirstItemOfType(itemType)
     for _, item in pairs(self:getItems()) do
         if item.uniqueID == itemType then return item end
@@ -245,13 +219,11 @@ end
 -- @string itemType The type of item to check for.
 -- @treturn Boolean Returns true if the inventory contains an item of the specified type, otherwise false.
 -- @usage
--- ```lua
 -- if inventory:hasItem("health_pack") then
 --     print("Inventory contains a health pack.")
 -- else
 --     print("No health packs in inventory.")
 -- end
--- ```
 function Inventory:hasItem(itemType)
     for _, item in pairs(self:getItems()) do
         if item.uniqueID == itemType then return true end
@@ -264,13 +236,11 @@ end
 -- @tparam[opt=nil] String itemType The type of item to count. If nil, counts all items.
 -- @treturn Float The total count of items in the inventory, optionally filtered by item type.
 -- @usage
--- ```lua
 -- local totalItems = inventory:getItemCount()
 -- print("Total Items:", totalItems)
 -- 
 -- local healthPackCount = inventory:getItemCount("health_pack")
 -- print("Health Packs:", healthPackCount)
--- ```
 function Inventory:getItemCount(itemType)
     local count = 0
     for _, item in pairs(self:getItems()) do
@@ -283,10 +253,8 @@ end
 -- @realm shared
 -- @treturn Integer The ID of the inventory.
 -- @usage
--- ```lua
 -- local invID = inventory:getID()
 -- print("Inventory ID:", invID)
--- ```
 function Inventory:getID()
     return self.id
 end
@@ -296,13 +264,11 @@ end
 -- @tparam Inventory other The other inventory to compare with.
 -- @treturn Boolean Returns true if the inventories have the same ID, otherwise false.
 -- @usage
--- ```lua
 -- if inventory1 == inventory2 then
 --     print("Both inventories are the same.")
 -- else
 --     print("Inventories are different.")
 -- end
--- ```
 function Inventory:__eq(other)
     return self:getID() == other:getID()
 end
@@ -314,10 +280,8 @@ if SERVER then
     -- @bool noReplicate Set to true to prevent OnItemAdded from being called on the added item.
     -- @treturn Inventory Returns the inventory itself.
     -- @usage
-    -- ```lua
     -- local weapon = lia.item.new("weapon_rifle")
     -- inventory:addItem(weapon)
-    -- ```
     function Inventory:addItem(item, noReplicate)
         self.items[item:getID()] = item
         item.invID = self:getID()
@@ -338,9 +302,7 @@ if SERVER then
     -- @item item The item to add to the inventory.
     -- @treturn Inventory Returns the inventory itself.
     -- @usage
-    -- ```lua
     -- inventory:add(weapon)
-    -- ```
     function Inventory:add(item)
         return self:addItem(item)
     end
@@ -351,9 +313,7 @@ if SERVER then
     -- @item item The item being added.
     -- @treturn void
     -- @usage
-    -- ```lua
     -- inventory:syncItemAdded(weapon)
-    -- ```
     function Inventory:syncItemAdded(item)
         assert(istable(item) and item.getID, "cannot sync non-item")
         assert(self.items[item:getID()], "Item " .. item:getID() .. " does not belong to " .. self.id)
@@ -370,12 +330,10 @@ if SERVER then
     -- @tab initialData Initial data for the inventory.
     -- @treturn Deferred A deferred promise.
     -- @usage
-    -- ```lua
     -- local promise = inventory:initializeStorage({char = 1, item1 = "value1"})
     -- promise:next(function(invID)
     --     print("Inventory initialized with ID:", invID)
     -- end)
-    -- ```
     function Inventory:initializeStorage(initialData)
         local d = deferred.new()
         local charID = initialData.char
@@ -411,11 +369,9 @@ if SERVER then
     -- @bool preserveItem Whether to preserve the item's data in the database.
     -- @treturn Deferred A deferred promise.
     -- @usage
-    -- ```lua
     -- inventory:removeItem(12345, true):next(function()
     --     print("Item removed while preserving data.")
     -- end)
-    -- ```
     function Inventory:removeItem(itemID, preserveItem)
         assert(isnumber(itemID), "itemID must be a number for remove")
         local d = deferred.new()
@@ -447,11 +403,9 @@ if SERVER then
     -- @int itemID The ID of the item to remove.
     -- @treturn Deferred A deferred promise.
     -- @usage
-    -- ```lua
     -- inventory:remove(12345):next(function()
     --     print("Item removed.")
     -- end)
-    -- ```
     function Inventory:remove(itemID)
         return self:removeItem(itemID)
     end
@@ -463,9 +417,7 @@ if SERVER then
     -- @tparam any value The value to set for the key.
     -- @treturn Inventory Returns the inventory itself.
     -- @usage
-    -- ```lua
     -- inventory:setData("owner", player)
-    -- ```
     function Inventory:setData(key, value)
         local oldValue = self.data[key]
         self.data[key] = value
@@ -499,14 +451,12 @@ if SERVER then
     -- @treturn Boolean|nil Returns true if the action is permitted, false if denied, or nil if not applicable.
     -- @treturn String[opt] A reason for the access result.
     -- @usage
-    -- ```lua
     -- local canAccess, reason = inventory:canAccess("remove_item", {client = player})
     -- if canAccess then
     --     print("Access granted.")
     -- else
     --     print("Access denied:", reason)
     -- end
-    -- ```
     function Inventory:canAccess(action, context)
         context = context or {}
         local result, reason
@@ -522,13 +472,11 @@ if SERVER then
     -- @int[opt] priority The priority of the access rule.
     -- @treturn Inventory Returns the inventory itself.
     -- @usage
-    -- ```lua
     -- inventory:addAccessRule(function(inv, action, context)
     --     if action == "remove_item" and context.client:IsAdmin() then
     --         return true
     --     end
     -- end, 10)
-    -- ```
     function Inventory:addAccessRule(rule, priority)
         if isnumber(priority) then
             table.insert(self.config.accessRules, priority, rule)
@@ -543,9 +491,7 @@ if SERVER then
     -- @func rule The access rule function to remove.
     -- @treturn Inventory Returns the inventory itself.
     -- @usage
-    -- ```lua
     -- inventory:removeAccessRule(existingRuleFunction)
-    -- ```
     function Inventory:removeAccessRule(rule)
         table.RemoveByValue(self.config.accessRules, rule)
         return self
@@ -555,12 +501,10 @@ if SERVER then
     -- @realm server
     -- @treturn Table An array containing the recipients for synchronization.
     -- @usage
-    -- ```lua
     -- local recipients = inventory:getRecipients()
     -- for _, client in ipairs(recipients) do
     --     print("Syncing with client:", client:Nick())
     -- end
-    -- ```
     function Inventory:getRecipients()
         local recipients = {}
         for _, client in player.Iterator() do
@@ -577,9 +521,7 @@ if SERVER then
     -- @realm server
     -- @treturn void
     -- @usage
-    -- ```lua
     -- inventory:onInstanced()
-    -- ```
     function Inventory:onInstanced()
     end
 
@@ -587,11 +529,9 @@ if SERVER then
     -- @realm server
     -- @treturn void
     -- @usage
-    -- ```lua
     -- function Inventory:onLoaded()
     --     print("Inventory loaded.")
     -- end
-    -- ```
     function Inventory:onLoaded()
         -- Function implementation
     end
@@ -600,11 +540,9 @@ if SERVER then
     -- @realm server
     -- @treturn Deferred A deferred promise.
     -- @usage
-    -- ```lua
     -- inventory:loadItems():next(function(items)
     --     print("Items loaded:", #items)
     -- end)
-    -- ```
     function Inventory:loadItems()
         local ITEM_TABLE = "items"
         local ITEM_FIELDS = {"_itemID", "_uniqueID", "_data", "_x", "_y", "_quantity"}
@@ -639,11 +577,9 @@ if SERVER then
     -- @realm server
     -- @treturn void
     -- @usage
-    -- ```lua
     -- function Inventory:onItemsLoaded(items)
     --     print("Loaded", #items, "items into the inventory.")
     -- end
-    -- ```
     function Inventory:onItemsLoaded()
     end
 
@@ -652,9 +588,7 @@ if SERVER then
     -- @tab initialData Initial data for the inventory instance.
     -- @treturn Table The newly instantiated inventory instance.
     -- @usage
-    -- ```lua
     -- local instance = inventory:instance({char = 1, item1 = "value1"})
-    -- ```
     function Inventory:instance(initialData)
         return lia.inventory.instance(self.typeID, initialData)
     end
@@ -665,9 +599,7 @@ if SERVER then
     -- @tab recipients The recipients to synchronize with.
     -- @treturn void
     -- @usage
-    -- ```lua
     -- inventory:syncData("health", {client = player})
-    -- ```
     function Inventory:syncData(key, recipients)
         if self.config.data[key] and self.config.data[key].noReplication then return end
         net.Start("liaInventoryData")
@@ -682,9 +614,7 @@ if SERVER then
     -- @tab recipients The recipients to synchronize with.
     -- @treturn void
     -- @usage
-    -- ```lua
     -- inventory:sync()
-    -- ```
     function Inventory:sync(recipients)
         net.Start("liaInventoryInit")
         net.WriteType(self.id)
@@ -717,9 +647,7 @@ if SERVER then
     -- @realm server
     -- @treturn void
     -- @usage
-    -- ```lua
     -- inventory:delete()
-    -- ```
     function Inventory:delete()
         lia.inventory.deleteByID(self.id)
     end
@@ -728,9 +656,7 @@ if SERVER then
     -- @realm server
     -- @treturn void
     -- @usage
-    -- ```lua
     -- inventory:destroy()
-    -- ```
     function Inventory:destroy()
         for _, item in pairs(self:getItems()) do
             item:destroy()
@@ -747,9 +673,7 @@ else
     -- @tparam[opt] any parent The parent element to which the inventory UI will be displayed.
     -- @treturn any The result of the `lia.inventory.show` function.
     -- @usage
-    -- ```lua
     -- inventory:show(panel)
-    -- ```
     function Inventory:show(parent)
         return lia.inventory.show(self, parent)
     end

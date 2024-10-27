@@ -21,10 +21,8 @@ debug.getregistry().Character = lia.meta.character
 -- @realm shared
 -- @treturn String A string in the format "character[ID]", where ID is the character's unique identifier.
 -- @usage
--- ```lua
 -- print(lia.char.loaded[1])
 -- -- Output: "character[1]"
--- ```
 function characterMeta:__tostring()
     return "character[" .. (self.id or 0) .. "]"
 end
@@ -34,12 +32,10 @@ end
 -- @character other The other character to compare against.
 -- @treturn Boolean `true` if both characters have the same ID; otherwise, `false`.
 -- @usage
--- ```lua
 -- local char1 = lia.char.loaded[1]
 -- local char2 = lia.char.loaded[2]
 -- print(char1 == char2)
 -- -- Output: false
--- ```
 function characterMeta:__eq(other)
     return self:getID() == other:getID()
 end
@@ -48,11 +44,9 @@ end
 -- @realm shared
 -- @treturn Integer The unique identifier of the character.
 -- @usage
--- ```lua
 -- local charID = character:getID()
 -- print(charID)
 -- -- Output: 1
--- ```
 function characterMeta:getID()
     return self.id
 end
@@ -61,12 +55,10 @@ end
 -- @realm shared
 -- @treturn The player who owns this character, or `nil` if no valid player is found.
 -- @usage
--- ```lua
 -- local owner = character:getPlayer()
 -- if owner then
 --     print("Character is owned by:", owner:Nick())
 -- end
--- ```
 function characterMeta:getPlayer()
     if IsValid(self.player) then
         return self.player
@@ -94,14 +86,12 @@ end
 -- @float amount The minimum amount of currency to check for. Must be a non-negative number.
 -- @treturn Boolean `true` if the character's current money is equal to or exceeds the specified amount; otherwise, `false`.
 -- @usage
--- ```lua
 -- local hasEnoughMoney = character:hasMoney(100)
 -- if hasEnoughMoney then
 --     print("Character has sufficient funds.")
 -- else
 --     print("Character lacks sufficient funds.")
 -- end
--- ```
 function characterMeta:hasMoney(amount)
     amount = tonumber(amount) or 0
     if amount < 0 then
@@ -115,13 +105,11 @@ end
 -- @realm shared
 -- @treturn String A concatenated string of all flags the character possesses. Each character in the string represents an individual flag.
 -- @usage
--- ```lua
 -- local flags = character:getFlags()
 -- for i = 1, #flags do
 --     local flag = flags:sub(i, i)
 --     print("Flag:", flag)
 -- end
--- ```
 function characterMeta:getFlags()
     return self:getData("f", "")
 end
@@ -131,11 +119,9 @@ end
 -- @string flags A string containing one or more flags to check.
 -- @treturn Boolean `true` if the character has at least one of the specified flags; otherwise, `false`.
 -- @usage
--- ```lua
 -- if character:hasFlags("admin") then
 --     print("Character has admin privileges.")
 -- end
--- ```
 function characterMeta:hasFlags(flags)
     for i = 1, #flags do
         if self:getFlags():find(flags:sub(i, i), 1, true) then return true end
@@ -148,14 +134,12 @@ end
 -- @treturn Entity|false The equipped weapon entity if a weapon is equipped; otherwise, `false`.
 -- @treturn Item|false The corresponding item from the character's inventory if found; otherwise, `false`.
 -- @usage
--- ```lua
 -- local weapon, item = character:getItemWeapon()
 -- if weapon then
 --     print("Equipped weapon:", weapon:GetClass())
 -- else
 --     print("No weapon equipped.")
 -- end
--- ```
 function characterMeta:getItemWeapon()
     local client = self:getPlayer()
     local inv = self:getInv()
@@ -179,10 +163,8 @@ if SERVER then
     -- @realm server
     -- @string flags A string containing one or more flags to assign to the character.
     -- @usage
-    -- ```lua
     -- character:setFlags("petr")
     -- -- This sets the character's flags to 'p', 'e', 't', 'r'
-    -- ```
     function characterMeta:setFlags(flags)
         self:setData("f", flags)
     end
@@ -191,10 +173,8 @@ if SERVER then
     -- @realm server
     -- @string flags A string containing one or more flags to add.
     -- @usage
-    -- ```lua
     -- character:giveFlags("pet")
     -- -- Adds 'p', 'e', and 't' flags to the character
-    -- ```
     function characterMeta:giveFlags(flags)
         local addedFlags = ""
         for i = 1, #flags do
@@ -213,11 +193,9 @@ if SERVER then
     -- @realm server
     -- @string flags A string containing one or more flags to remove.
     -- @usage
-    -- ```lua
     -- -- For a character with "pet" flags
     -- character:takeFlags("p")
     -- -- The character now only has 'e' and 't' flags
-    -- ```
     function characterMeta:takeFlags(flags)
         local oldFlags = self:getFlags()
         local newFlags = oldFlags
@@ -235,11 +213,9 @@ if SERVER then
     -- @realm server
     -- @func callback An optional callback function to execute after the save operation completes successfully.
     -- @usage
-    -- ```lua
     -- character:save(function()
     --     print("Character saved successfully!")
     -- end)
-    -- ```
     function characterMeta:save(callback)
         if self.isBot then return end
         local data = {}
@@ -298,9 +274,7 @@ if SERVER then
     -- @bool noNetworking Optional. If set to `true`, the character's information will not be synchronized with other players.
     -- @internal
     -- @usage
-    -- ```lua
     -- character:setup()
-    -- ```
     function characterMeta:setup(noNetworking)
         local client = self:getPlayer()
         if IsValid(client) then
@@ -335,9 +309,7 @@ if SERVER then
     -- This is typically used when a character is banned or deleted.
     -- @realm server
     -- @usage
-    -- ```lua
     -- character:kick()
-    -- ```
     function characterMeta:kick()
         local client = self:getPlayer()
         client:KillSilent()
@@ -358,10 +330,8 @@ if SERVER then
     -- @realm server
     -- @float time The duration of the ban in seconds. If omitted or `nil`, the ban is permanent.
     -- @usage
-    -- ```lua
     -- character:ban(3600) -- Bans the character for 1 hour
     -- character:ban() -- Permanently bans the character
-    -- ```
     function characterMeta:ban(time)
         time = tonumber(time)
         if time then time = os.time() + math.max(math.ceil(time), 60) end
@@ -374,9 +344,7 @@ if SERVER then
     --- Removes the character from the database and memory, effectively deleting it permanently.
     -- @realm server
     -- @usage
-    -- ```lua
     -- character:delete()
-    -- ```
     function characterMeta:delete()
         lia.char.delete(self:getID(), self:getPlayer())
     end
@@ -385,9 +353,7 @@ if SERVER then
     -- This does not delete the character from the database.
     -- @realm server
     -- @usage
-    -- ```lua
     -- character:destroy()
-    -- ```
     function characterMeta:destroy()
         local id = self:getID()
         lia.char.loaded[id] = nil
@@ -401,10 +367,8 @@ if SERVER then
     -- @bool takingMoney Optional. If `true`, the operation is treated as taking money; otherwise, adding money.
     -- @treturn Boolean Always returns `true` to indicate the operation was processed.
     -- @usage
-    -- ```lua
     -- character:giveMoney(500) -- Adds 500 to the character's wallet
     -- character:giveMoney(-200, true) -- Takes 200 from the character's wallet
-    -- ```
     function characterMeta:giveMoney(amount, takingMoney)
         local client = self:getPlayer()
         local currentMoney = self:getMoney()
@@ -443,9 +407,7 @@ if SERVER then
     -- @float amount The amount of money to remove. Must be a positive number.
     -- @treturn Boolean Always returns `true` to indicate the operation was processed.
     -- @usage
-    -- ```lua
     -- character:takeMoney(100) -- Removes 100 from the character's wallet
-    -- ```
     function characterMeta:takeMoney(amount)
         amount = math.abs(amount)
         self:giveMoney(-amount, true)
