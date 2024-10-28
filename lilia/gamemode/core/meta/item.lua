@@ -5,7 +5,7 @@ Items are objects that are contained inside of an `Inventory`, or as standalone 
 usually have functionality that provides more gameplay aspects to the schema.
 
 For an item to have an actual presence, they need to be instanced (usually by spawning them). Items describe the
-properties, while instances are a clone of these properties that can have their own unique data (e.g an ID card will have the
+properties, while instances are a clone of these properties that can have their own unique data (e.g., an ID card will have the
 same name but different numerical IDs). You can think of items as the class, while instances are objects of the `Item` class.
 ]]
 -- @itemmeta Framework
@@ -23,7 +23,10 @@ ITEM.maxQuantity = 1
 ITEM.canSplit = true
 --- Returns the quantity of the item.
 -- @realm shared
--- @treturn number The quantity of the item
+-- @treturn Integer The quantity of the item.
+-- @usage
+-- local qty = item:getQuantity()
+-- print("Quantity:", qty)
 function ITEM:getQuantity()
     if self.id == 0 then return self.maxQuantity end
     return self.quantity
@@ -31,47 +34,64 @@ end
 
 --- Returns true if this item is equal to another item. Internally, this checks item IDs.
 -- @realm shared
--- @item other Item to compare to
--- @treturn bool Whether or not this item is equal to the given item
--- @usage print(lia.item.instances[1] == lia.item.instances[2])
--- > falsefunction ITEM:__eq(other)
+-- @tparam Item other The item to compare to.
+-- @treturn Boolean Whether or not this item is equal to the given item.
+-- @usage
+-- if lia.item.instances[1] == lia.item.instances[2] then
+--     print("Items are equal.")
+-- else
+--     print("Items are not equal.")
+-- end
 function ITEM:__eq(other)
     return self:getID() == other:getID()
 end
 
 --- Returns a string representation of this item.
 -- @realm shared
--- @treturn string String representation
--- @usage print(lia.item.instances[1])
--- > "item[1]"
+-- @treturn String String representation.
+-- @usage
+-- print(tostring(lia.item.instances[1]))
+-- -- Output: "item[uniqueID][1]"
 function ITEM:__tostring()
     return "item[" .. self.uniqueID .. "][" .. self.id .. "]"
 end
 
 --- Returns this item's database ID. This is guaranteed to be unique.
 -- @realm shared
--- @treturn number Unique ID of item
+-- @treturn Integer Unique ID of item.
+-- @usage
+-- local itemID = item:getID()
+-- print("Item ID:", itemID)
 function ITEM:getID()
     return self.id
 end
 
 --- Returns the model of the item.
 -- @realm shared
--- @treturn string The model of the item
+-- @treturn String The model of the item.
+-- @usage
+-- local model = item:getModel()
+-- print("Model:", model)
 function ITEM:getModel()
     return self.model
 end
 
 --- Returns the skin of the item.
 -- @realm shared
--- @treturn number The skin of the item
+-- @treturn Integer The skin of the item.
+-- @usage
+-- local skin = item:getSkin()
+-- print("Skin:", skin)
 function ITEM:getSkin()
     return self.skin
 end
 
 --- Returns the price of the item.
 -- @realm shared
--- @treturn string The price of the item
+-- @treturn Float The price of the item.
+-- @usage
+-- local price = item:getPrice()
+-- print("Price:", price)
 function ITEM:getPrice()
     local price = self.price
     if self.calcPrice then price = self:calcPrice(self.price) end
@@ -80,11 +100,13 @@ end
 
 --- Calls one of the item's methods.
 -- @realm shared
--- @string method The method to be called
--- @client client The client to pass when calling the method, if applicable
--- @entity entity The eneity to pass when calling the method, if applicable
--- @tab ... Arguments to pass to the method
--- @return The values returned by the method
+-- @string method The method to be called.
+-- @client client The player to pass when calling the method, if applicable.
+-- @entity entity The entity to pass when calling the method, if applicable.
+-- @tab ... Arguments to pass to the method.
+-- @treturn any The values returned by the method.
+-- @usage
+-- item:call("use", player, entity, arg1, arg2)
 function ITEM:call(method, client, entity, ...)
     local oldPlayer, oldEntity = self.player, self.entity
     self.player = client or self.player
@@ -103,7 +125,14 @@ end
 
 --- Returns the player that owns this item.
 -- @realm shared
--- @treturn player Player owning this item
+-- @treturn Player Player owning this item.
+-- @usage
+-- local owner = item:getOwner()
+-- if owner then
+--     print("Item is owned by:", owner:Nick())
+-- else
+--     print("Item has no owner.")
+-- end
 function ITEM:getOwner()
     local inventory = lia.inventory.instances[self.invID]
     if inventory and SERVER then return inventory:getRecipients()[1] end
@@ -116,9 +145,12 @@ end
 
 --- Returns the value stored on a key within the item's data.
 -- @realm shared
--- @string key The key in which the value is stored
--- @param[opt] default The value to return in case there is no value stored in the key
--- @return The value stored within the key
+-- @string key The key in which the value is stored.
+-- @tparam any[opt] default The value to return in case there is no value stored in the key.
+-- @treturn any The value stored within the key.
+-- @usage
+-- local health = item:getData("health", 100)
+-- print("Item Health:", health)
 function ITEM:getData(key, default)
     self.data = self.data or {}
     if key == true then return self.data end
@@ -134,26 +166,47 @@ end
 
 --- Changes the function called on specific events for the item.
 -- @realm shared
--- @string name The name of the hook
--- @func func The function to call once the event occurs
+-- @string name The name of the hook.
+-- @func func The function to call once the event occurs.
+-- @treturn void
+-- @usage
+-- item:hook("onUse", function(item)
+--     print("Item was used.")
+-- end)
 function ITEM:hook(name, func)
     if name then self.hooks[name] = func end
 end
 
 --- Changes the function called after hooks for specific events for the item.
 -- @realm shared
--- @string name The name of the hook
--- @func func The function to call after the original hook was called
+-- @string name The name of the hook.
+-- @func func The function to call after the original hook was called.
+-- @treturn void
+-- @usage
+-- item:postHook("onUse", function(item, result)
+--     print("Item use post-processing.")
+-- end)
 function ITEM:postHook(name, func)
     if name then self.postHooks[name] = func end
 end
 
+--- Gets called when the item is registered.
+-- @realm shared
+-- @treturn void
+-- @usage
+-- function ITEM:onRegistered()
+--     print("Item has been registered.")
+-- end
 function ITEM:onRegistered()
 end
 
 --- A utility function which prints the item's details.
 -- @realm shared
--- @bool[opt=false] detail Whether additional detail should be printed or not(Owner, X position, Y position)
+-- @bool detail Whether additional detail should be printed or not (Owner, X position, Y position).
+-- @treturn void
+-- @usage
+-- item:print()
+-- item:print(true)
 function ITEM:print(detail)
     if detail == true then
         print(Format("%s[%s]: >> [%s](%s,%s)", self.uniqueID, self.id, self.owner, self.gridX, self.gridY))
@@ -164,6 +217,9 @@ end
 
 --- A utility function printing the item's stored data.
 -- @realm shared
+-- @treturn void
+-- @usage
+-- item:printData()
 function ITEM:printData()
     self:print(true)
     LiliaInformation("ITEM DATA:")
@@ -175,7 +231,10 @@ end
 if SERVER then
     --- Returns the name of the item.
     -- @realm server
-    -- @treturn string The name of the item
+    -- @treturn String The name of the item.
+    -- @usage
+    -- local name = item:getName()
+    -- print("Item Name:", name)
     function ITEM:getName()
         return self.name
     end
@@ -183,7 +242,10 @@ if SERVER then
     ITEM.GetName = ITEM.getName
     --- Returns the description of the item.
     -- @realm server
-    -- @treturn string The description of the item
+    -- @treturn String The description of the item.
+    -- @usage
+    -- local desc = item:getDesc()
+    -- print("Description:", desc)
     function ITEM:getDesc()
         return self.desc
     end
@@ -191,8 +253,12 @@ if SERVER then
     ITEM.GetDescription = ITEM.getDesc
     --- Removes the item from its current inventory.
     -- @realm server
-    -- @bool[opt] preserveItem If true, the item is not fully deleted from the database.
-    -- @return (deferred) A deferred object representing the asynchronous operation of removing the item.
+    -- @bool preserveItem If true, the item is not fully deleted from the database.
+    -- @treturn Deferred A deferred object representing the asynchronous operation of removing the item.
+    -- @usage
+    -- item:removeFromInventory(true):next(function()
+    --     print("Item removed while preserving data.")
+    -- end)
     function ITEM:removeFromInventory(preserveItem)
         local inventory = lia.inventory.instances[self.invID]
         self.invID = 0
@@ -204,7 +270,11 @@ if SERVER then
 
     --- Deletes the item from the database and performs cleanup.
     -- @realm server
-    -- @return (deferred) A deferred object representing the asynchronous operation of deleting the item from the database.
+    -- @treturn Deferred A deferred object representing the asynchronous operation of deleting the item from the database.
+    -- @usage
+    -- item:delete():next(function()
+    --     print("Item deleted from database.")
+    -- end)
     function ITEM:delete()
         self:destroy()
         return lia.db.delete("items", "_itemID = " .. self:getID()):next(function() self:onRemoved() end)
@@ -213,9 +283,13 @@ if SERVER then
     --- Removes the item.
     -- @realm server
     -- @bool bNoReplication Whether or not the item's removal should not be replicated.
-    -- @bool bNoDelete Whether or not the item should not be fully deleted
-    -- @treturn bool Whether the item was successfully deleted or not
-    function ITEM:remove()
+    -- @bool bNoDelete Whether or not the item should not be fully deleted.
+    -- @treturn Deferred A deferred object representing the asynchronous operation of removing the item.
+    -- @usage
+    -- item:remove():next(function()
+    --     print("Item removed.")
+    -- end)
+    function ITEM:remove(bNoReplication, bNoDelete)
         local d = deferred.new()
         if IsValid(self.entity) then self.entity:Remove() end
         self:removeFromInventory():next(function()
@@ -227,6 +301,9 @@ if SERVER then
 
     --- Destroys the item instance, removing it from the game world and notifying all clients.
     -- @realm server
+    -- @treturn void
+    -- @usage
+    -- item:destroy()
     function ITEM:destroy()
         net.Start("liaItemDelete")
         net.WriteUInt(self:getID(), 32)
@@ -237,12 +314,22 @@ if SERVER then
 
     --- Gets called upon destroying an item.
     -- @realm server
+    -- @treturn void
+    -- @usage
+    -- function ITEM:onDisposed()
+    --     print("Item has been disposed.")
+    -- end
     function ITEM:onDisposed()
     end
 
     --- Returns the item's entity.
     -- @realm server
-    -- @treturn entity The entity of the item
+    -- @treturn Entity The entity of the item.
+    -- @usage
+    -- local entity = item:getEntity()
+    -- if entity then
+    --     print("Item entity exists.")
+    -- end
     function ITEM:getEntity()
         local id = self:getID()
         for _, v in ipairs(ents.FindByClass("lia_item")) do
@@ -250,11 +337,13 @@ if SERVER then
         end
     end
 
-    --- Spawn an item entity based off the item table.
+    --- Spawns an item entity based off the item table.
     -- @realm server
-    -- @vector position The position in which the item's entity will be spawned
-    -- @angle angles The angles at which the item's entity will spawn
-    -- @treturn entity The spawned entity
+    -- @vector position The position in which the item's entity will be spawned.
+    -- @angle angles The angles at which the item's entity will spawn.
+    -- @treturn Entity The spawned entity.
+    -- @usage
+    -- local spawnedEntity = item:spawn(Vector(0, 0, 0), Angle(0, 90, 0))
     function ITEM:spawn(position, angles)
         local instance = lia.item.instances[self.id]
         if instance then
@@ -286,9 +375,16 @@ if SERVER then
 
     --- Transfers the item to another inventory.
     -- @realm server
-    -- @param newInventory The inventory to which the item should be transferred.
+    -- @tab newInventory The inventory to which the item should be transferred.
     -- @bool bBypass Whether to bypass access checks for transferring the item.
-    -- @treturn bool Whether the item was successfully transferred or not.
+    -- @treturn Boolean Whether the item was successfully transferred or not.
+    -- @usage
+    -- local success = item:transfer(targetInventory, true)
+    -- if success then
+    --     print("Item transferred successfully.")
+    -- else
+    --     print("Item transfer failed.")
+    -- end
     function ITEM:transfer(newInventory, bBypass)
         if not bBypass and not newInventory:canAccess("transfer") then return false end
         local inventory = lia.inventory.instances[self.invID]
@@ -298,27 +394,51 @@ if SERVER then
 
     --- Gets called upon creating (instancing) an item.
     -- @realm server
+    -- @treturn void
+    -- @usage
+    -- function ITEM:onInstanced()
+    --     print("Item has been instanced.")
+    -- end
     function ITEM:onInstanced()
     end
 
     --- Gets called upon syncing an item.
     -- @realm server
+    -- @treturn void
+    -- @usage
+    -- function ITEM:onSync(recipient)
+    --     print("Item has been synced with recipient:", recipient:Nick())
+    -- end
     function ITEM:onSync()
     end
 
     --- Gets called upon removing an item.
     -- @realm server
+    -- @treturn void
+    -- @usage
+    -- function ITEM:onRemoved()
+    --     print("Item has been removed.")
+    -- end
     function ITEM:onRemoved()
     end
 
     --- Gets called upon restoring an item.
     -- @realm server
+    -- @treturn void
+    -- @usage
+    -- function ITEM:onRestored()
+    --     print("Item has been restored.")
+    -- end
     function ITEM:onRestored()
     end
 
     --- Synchronizes the item data with the specified recipient or broadcasts it to all clients if no recipient is specified.
-    -- @client recipient The player to whom the item data should be synchronized. If set to nil, the data is broadcasted to all clients.
     -- @realm server
+    -- @client[opt] recipient The player to whom the item data should be synchronized. If set to nil, the data is broadcasted to all clients.
+    -- @treturn void
+    -- @usage
+    -- item:sync(player)
+    -- item:sync()
     function ITEM:sync(recipient)
         net.Start("liaItemInstance")
         net.WriteUInt(self:getID(), 32)
@@ -337,51 +457,47 @@ if SERVER then
 
     --- Sets a key within the item's data.
     -- @realm server
-    -- @string key The key to store the value within
-    -- @param[opt=nil] value The value to store within the key
-    -- @tab[opt=nil] receivers The players to replicate the data on
-    -- @bool[opt=false] noSave Whether to disable saving the data on the database or not
-    -- @bool[opt=false] noCheckEntity Whether to disable setting the data on the entity, if applicable
+    -- @string key The key to store the value within.
+    -- @tparam any[opt=nil] value The value to set for the key.
+    -- @tab[opt=nil] receivers The players to replicate the data on.
+    -- @bool noSave Whether to disable saving the data in the database or not.
+    -- @bool noCheckEntity Whether to disable setting the data on the entity, if applicable.
+    -- @treturn void
+    -- @usage
+    -- item:setData("health", 100, {player1, player2}, false, false)
     function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
         self.data = self.data or {}
         self.data[key] = value
-        if not noCheckEntity then
-            local entity = self:getEntity()
-            if IsValid(entity) then entity:setNetVar("data", self.data) end
-        end
-
-        if receivers or self:getOwner() then netstream.Start(receivers or self:getOwner(), "invData", self:getID(), key, value) end
-        if noSave or not lia.db then return end
-        if key == "x" or key == "y" then
-            value = tonumber(value)
-            if MYSQLOO_PREPARED then
-                lia.db.preparedCall("item" .. key, nil, value, self:getID())
-            else
-                lia.db.updateTable({
-                    ["_" .. key] = value
-                }, nil, "items", "_itemID = " .. self:getID())
-            end
-            return
-        end
-
-        local x, y = self.data.x, self.data.y
-        self.data.x, self.data.y = nil, nil
-        if MYSQLOO_PREPARED then
-            lia.db.preparedCall("itemData", nil, self.data, self:getID())
-        else
+        if key == "char" then
             lia.db.updateTable({
-                _data = self.data
-            }, nil, "items", "_itemID = " .. self:getID())
+                _charID = value
+            }, nil, "inventories", "_invID = " .. self:getID())
+        elseif not (self.config.data[key] and self.config.data[key].notPersistent) then
+            if value == nil then
+                lia.db.delete("invdata", "_invID = " .. self.id .. " AND _key = '" .. lia.db.escape(key) .. "'")
+            else
+                lia.db.upsert({
+                    _invID = self.id,
+                    _key = key,
+                    _value = {value}
+                }, "invdata")
+            end
         end
 
-        self.data.x, self.data.y = x, y
+        self:syncData(key, receivers)
+        self:onDataChanged(key, self.data[key], value)
+        return self
     end
 
+    Inventory.SetData = Inventory.setData
     --- Adds a specified quantity to the item's current quantity.
     -- @realm server
     -- @int quantity The quantity to add.
-    -- @tab[opt] receivers Players who should receive updates about the quantity change.
-    -- @bool[opt] noCheckEntity If true, entity checks will be skipped.
+    -- @tab receivers Players who should receive updates about the quantity change.
+    -- @bool noCheckEntity If true, entity checks will be skipped.
+    -- @treturn void
+    -- @usage
+    -- item:addQuantity(5, {player1, player2}, false)
     function ITEM:addQuantity(quantity, receivers, noCheckEntity)
         self:setQuantity(self:getQuantity() + quantity, receivers, noCheckEntity)
     end
@@ -389,8 +505,11 @@ if SERVER then
     --- Sets the quantity of the item to the specified value.
     -- @realm server
     -- @int quantity The new quantity value.
-    -- @tab[opt] receivers Players who should receive updates about the quantity change.
-    -- @bool[opt] noCheckEntity If true, entity checks will be skipped.
+    -- @tab receivers Players who should receive updates about the quantity change.
+    -- @bool noCheckEntity If true, entity checks will be skipped.
+    -- @treturn void
+    -- @usage
+    -- item:setQuantity(10, {player1}, true)
     function ITEM:setQuantity(quantity, receivers, noCheckEntity)
         self.quantity = quantity
         if not noCheckEntity then
@@ -409,13 +528,20 @@ if SERVER then
         end
     end
 
+    Inventory.SetQuantity = Inventory.setQuantity
     --- Performs an interaction action with the item.
     -- @realm server
     -- @string action The interaction action to perform.
     -- @client client The player performing the interaction.
     -- @entity entity The entity associated with the interaction, if any.
-    -- @tab[opt] data Additional data related to the interaction.
-    -- @return bool Whether the interaction was successful.
+    -- @tab data Additional data related to the interaction.
+    -- @treturn Boolean Whether the interaction was successful.
+    -- @usage
+    -- if item:interact("use", player, entity, data) then
+    --     print("Interaction successful.")
+    -- else
+    --     print("Interaction failed.")
+    -- end
     function ITEM:interact(action, client, entity, data)
         assert(client:IsPlayer() and IsValid(client), "Item action cannot be performed without a player")
         local canInteract, reason = hook.Run("CanPlayerInteractItem", client, action, self, data)
@@ -452,7 +578,7 @@ if SERVER then
         if result == nil and isfunction(callback.onRun) then result = callback.onRun(self, data) end
         if self.postHooks[action] then self.postHooks[action](self, result, data) end
         hook.Run("OnPlayerInteractItem", client, action, self, result, data)
-        lia.log.add(client, "itemInteraction", action, item)
+        lia.log.add(client, "itemInteraction", action, self)
         if result ~= false and not deferred.isPromise(result) then
             if IsValid(entity) then
                 entity:Remove()
@@ -468,7 +594,10 @@ if SERVER then
 else
     --- Returns the name of the item.
     -- @realm client
-    -- @return string The name of the item
+    -- @treturn String The name of the item.
+    -- @usage
+    -- local name = item:getName()
+    -- print("Item Name:", name)
     function ITEM:getName()
         return L(self.name)
     end
@@ -476,7 +605,10 @@ else
     ITEM.GetName = ITEM.getName
     --- Returns the description of the item.
     -- @realm client
-    -- @return string The description of the item
+    -- @treturn String The description of the item.
+    -- @usage
+    -- local desc = item:getDesc()
+    -- print("Item Description:", desc)
     function ITEM:getDesc()
         return L(self.desc)
     end
@@ -484,27 +616,11 @@ else
     ITEM.GetDescription = ITEM.getDesc
 end
 
-ITEM.GetQuantity = ITEM.getQuantity
-ITEM.GetPrice = ITEM.getPrice
+ITEM.GetItems = ITEM.getItems
+ITEM.GetItemsOfType = ITEM.getItemsOfType
+ITEM.GetFirstItemOfType = ITEM.getFirstItemOfType
+ITEM.HasItem = ITEM.hasItem
+ITEM.GetItemCount = ITEM.getItemCount
+ITEM.GetID = ITEM.getID
 ITEM.GetData = ITEM.getData
-ITEM.Hook = ITEM.hook
-ITEM.PostHook = ITEM.postHook
-ITEM.OnRegistered = ITEM.onRegistered
-ITEM.Print = ITEM.print
-ITEM.PrintData = ITEM.printData
-ITEM.Print = ITEM.Print
-ITEM.PrintData = ITEM.PrintData
-ITEM.RemoveFromInventory = ITEM.removeFromInventory
-ITEM.Delete = ITEM.delete
-ITEM.OnDisposed = ITEM.onDisposed
-ITEM.Transfer = ITEM.transfer
-ITEM.OnInstanced = ITEM.onInstanced
-ITEM.OnSync = ITEM.onSync
-ITEM.OnRemoved = ITEM.onRemoved
-ITEM.OnRestored = ITEM.onRestored
-ITEM.Sync = ITEM.sync
-ITEM.SetData = ITEM.setData
-ITEM.AddQuantity = ITEM.addQuantity
-ITEM.SetQuantity = ITEM.setQuantity
-ITEM.Interact = ITEM.interact
-lia.meta.item = ITEM
+ITEM.Show = ITEM.show
