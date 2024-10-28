@@ -154,7 +154,7 @@ end
 -- @realm shared
 -- @entity entity The entity to check visibility against.
 -- @float maxDist The maximum distance squared within which the entity can see the other entity.
--- @float Float fov The field of view angle in degrees.
+-- @float fov The field of view angle in degrees.
 -- @treturn Boolean True if the entity has a clear line of sight to the other entity within the specified distance and field of view angle, false otherwise.
 -- @usage
 -- if entity:isScreenVisible(targetEntity, 300000, 90) then
