@@ -80,7 +80,7 @@ end
 -- 		return false, "notNow" -- only allow staff to create a character
 -- 	end
 -- end
--- -- non-admins will see the message "You are not allowed to do this ght now!"
+-- non-admins will see the message "You are not allowed to do this ght now!"
 function CanPlayerCreateChar(client)
 end
 

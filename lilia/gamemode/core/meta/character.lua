@@ -22,7 +22,7 @@ debug.getregistry().Character = lia.meta.character
 -- @treturn String A string in the format "character[ID]", where ID is the character's unique identifier.
 -- @usage
 -- print(lia.char.loaded[1])
--- -- Output: "character[1]"
+-- Output: "character[1]"
 function characterMeta:__tostring()
     return "character[" .. (self.id or 0) .. "]"
 end
@@ -35,7 +35,7 @@ end
 -- local char1 = lia.char.loaded[1]
 -- local char2 = lia.char.loaded[2]
 -- print(char1 == char2)
--- -- Output: false
+-- Output: false
 function characterMeta:__eq(other)
     return self:getID() == other:getID()
 end
@@ -46,7 +46,7 @@ end
 -- @usage
 -- local charID = character:getID()
 -- print(charID)
--- -- Output: 1
+-- Output: 1
 function characterMeta:getID()
     return self.id
 end
@@ -164,7 +164,7 @@ if SERVER then
     -- @string flags A string containing one or more flags to assign to the character.
     -- @usage
     -- character:setFlags("petr")
-    -- -- This sets the character's flags to 'p', 'e', 't', 'r'
+    -- This sets the character's flags to 'p', 'e', 't', 'r'
     function characterMeta:setFlags(flags)
         self:setData("f", flags)
     end
@@ -174,7 +174,7 @@ if SERVER then
     -- @string flags A string containing one or more flags to add.
     -- @usage
     -- character:giveFlags("pet")
-    -- -- Adds 'p', 'e', and 't' flags to the character
+    -- Adds 'p', 'e', and 't' flags to the character
     function characterMeta:giveFlags(flags)
         local addedFlags = ""
         for i = 1, #flags do
@@ -193,9 +193,9 @@ if SERVER then
     -- @realm server
     -- @string flags A string containing one or more flags to remove.
     -- @usage
-    -- -- For a character with "pet" flags
+    -- For a character with "pet" flags
     -- character:takeFlags("p")
-    -- -- The character now only has 'e' and 't' flags
+    -- The character now only has 'e' and 't' flags
     function characterMeta:takeFlags(flags)
         local oldFlags = self:getFlags()
         local newFlags = oldFlags

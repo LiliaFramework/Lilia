@@ -51,7 +51,7 @@ end
 -- @treturn String String representation.
 -- @usage
 -- print(tostring(lia.item.instances[1]))
--- -- Output: "item[uniqueID][1]"
+-- Output: "item[uniqueID][1]"
 function ITEM:__tostring()
     return "item[" .. self.uniqueID .. "][" .. self.id .. "]"
 end

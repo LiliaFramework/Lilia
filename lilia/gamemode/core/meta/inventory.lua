@@ -102,7 +102,7 @@ end
 -- @see lia.inventory.newType
 -- @usage
 -- inventory:register("grid")
--- -- This sets the inventory's type to 'grid'
+-- This sets the inventory's type to 'grid'
 function Inventory:register(typeID)
     assert(isstring(typeID), "Expected argument #1 of " .. self.className .. ".register to be a string")
     self.typeID = typeID
@@ -136,7 +136,7 @@ end
 -- @treturn String A string representation of the inventory, including its class name and ID.
 -- @usage
 -- print(tostring(inventory))
--- -- Output: "Inventory[123]"
+-- Output: "Inventory[123]"
 function Inventory:__tostring()
     return self.className .. "[" .. tostring(self.id) .. "]"
 end
