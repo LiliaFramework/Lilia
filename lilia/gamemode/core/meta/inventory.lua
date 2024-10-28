@@ -238,7 +238,6 @@ end
 -- @usage
 -- local totalItems = inventory:getItemCount()
 -- print("Total Items:", totalItems)
--- 
 -- local healthPackCount = inventory:getItemCount("health_pack")
 -- print("Health Packs:", healthPackCount)
 function Inventory:getItemCount(itemType)
