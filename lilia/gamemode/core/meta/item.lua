@@ -289,7 +289,7 @@ if SERVER then
     -- item:remove():next(function()
     --     print("Item removed.")
     -- end)
-    function ITEM:remove(bNoReplication, bNoDelete)
+    function ITEM:remove()
         local d = deferred.new()
         if IsValid(self.entity) then self.entity:Remove() end
         self:removeFromInventory():next(function()
@@ -460,12 +460,10 @@ if SERVER then
     -- @string key The key to store the value within.
     -- @tparam any[opt=nil] value The value to set for the key.
     -- @tab[opt=nil] receivers The players to replicate the data on.
-    -- @bool noSave Whether to disable saving the data in the database or not.
-    -- @bool noCheckEntity Whether to disable setting the data on the entity, if applicable.
     -- @treturn void
     -- @usage
     -- item:setData("health", 100, {player1, player2}, false, false)
-    function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
+    function ITEM:setData(key, value, receivers)
         self.data = self.data or {}
         self.data[key] = value
         if key == "char" then
