@@ -752,7 +752,6 @@ if SERVER then
     -- player:requestString("Enter Name", "Please enter your name:", function(name)
     --     print("Player entered:", name)
     -- end)
-    -- 
     -- -- Using promise
     -- local promise = player:requestString("Enter Name", "Please enter your name:", "DefaultName")
     -- if promise then
