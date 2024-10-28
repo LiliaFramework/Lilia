@@ -858,6 +858,21 @@ if SERVER then
         self:chatNotify(message)
     end
 
+    --- Notifies the player with a message.
+    -- @realm server
+    -- @string message The message to notify the player.
+    function playerMeta:notify(message)
+        lia.notices.notify(message, self)
+    end
+
+    --- Notifies the player with a localized message.
+    -- @realm server
+    -- @string message The key of the localized message to notify the player.
+    -- @tab ... Additional arguments to format the localized message.
+    function playerMeta:notifyLocalized(message, ...)
+        lia.notices.notifyLocalized(message, self, ...)
+    end
+
     --- Sets a waypoint for the player.
     -- @realm server
     -- @string name The name of the waypoint.

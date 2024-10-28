@@ -50,6 +50,7 @@ function PANEL:GenerateSections()
 end
 
 function PANEL:CreateTextEntryWithBackgroundAndLabel(name, labelText, dockMarginBot, valueFunc)
+    local isDesc = string.lower(name) == "desc"
     local textFont = "liaSmallFont"
     local textFontSize = 20
     local textColor = color_white
@@ -77,8 +78,14 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(name, labelText, dockMargin
     self[name]:SetTall(textFontSize)
     self[name]:Dock(FILL)
     self[name]:SetTextColor(textColor)
-    self[name]:SetEditable(true)
+    self[name]:SetEditable(isDesc)
     if valueFunc then self[name]:SetText(valueFunc()) end
+    self[name].OnEnter = function(entry)
+        if isDesc then
+            local text = entry:GetText()
+            lia.command.send("chardesc", text)
+        end
+    end
 end
 
 function PANEL:CreateFillableBarWithBackgroundAndLabel(name, labelText, minFunc, maxFunc, dockMarginTop, valueFunc)
