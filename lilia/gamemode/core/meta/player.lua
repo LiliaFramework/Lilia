@@ -514,10 +514,9 @@ if SERVER then
     -- @treturn void
     -- @usage
     -- ```lua
-    -- -- Example 1: Setting a key-value pair with networking
+    -- Example 1: Setting a key-value pair with networking
     -- player:setLiliaData("score", 1500)
-    -- 
-    -- -- Example 2: Setting a key-value pair without networking
+    -- Example 2: Setting a key-value pair without networking
     -- player:setLiliaData("health", 100, true)
     -- ```
     function playerMeta:setLiliaData(key, value, noNetworking)
@@ -712,7 +711,7 @@ if SERVER then
     -- player:requestString("Enter Name", "Please enter your name:", function(name)
     --     print("Player entered:", name)
     -- end)
-    -- -- Using promise
+    -- Using promise
     -- local promise = player:requestString("Enter Name", "Please enter your name:", "DefaultName")
     -- if promise then
     --     promise:next(function(name)
