@@ -28,6 +28,17 @@ function lia.string.upper(str)
     return oStringUpper(str)
 end
 
+--- Safely quotes a string by escaping backslashes and double quotes, then wrapping the entire string in double quotes.
+-- @realm shared
+-- @param str string The string to quote.
+-- @return string The quoted and escaped string.
+-- @note This function handles UTF-8 text characters.
+function lia.string.quote(str)
+    local escapedStr = string.gsub(str, "\\", "\\\\")
+    escapedStr = string.gsub(escapedStr, '"', '\\"')
+    return '"' .. escapedStr .. '"'
+end
+
 --- Reverses the characters in a string, including special characters.
 -- @realm shared
 -- @string str The string to reverse.
