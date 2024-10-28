@@ -168,7 +168,6 @@ end
 -- @realm shared
 -- @string name The name of the hook.
 -- @func func The function to call once the event occurs.
--- @treturn void
 -- @usage
 -- item:hook("onUse", function(item)
 --     print("Item was used.")
@@ -181,7 +180,6 @@ end
 -- @realm shared
 -- @string name The name of the hook.
 -- @func func The function to call after the original hook was called.
--- @treturn void
 -- @usage
 -- item:postHook("onUse", function(item, result)
 --     print("Item use post-processing.")
@@ -192,7 +190,6 @@ end
 
 --- Gets called when the item is registered.
 -- @realm shared
--- @treturn void
 -- @usage
 -- function ITEM:onRegistered()
 --     print("Item has been registered.")
@@ -203,7 +200,6 @@ end
 --- A utility function which prints the item's details.
 -- @realm shared
 -- @bool detail Whether additional detail should be printed or not (Owner, X position, Y position).
--- @treturn void
 -- @usage
 -- item:print()
 -- item:print(true)
@@ -217,7 +213,6 @@ end
 
 --- A utility function printing the item's stored data.
 -- @realm shared
--- @treturn void
 -- @usage
 -- item:printData()
 function ITEM:printData()
@@ -301,7 +296,6 @@ if SERVER then
 
     --- Destroys the item instance, removing it from the game world and notifying all clients.
     -- @realm server
-    -- @treturn void
     -- @usage
     -- item:destroy()
     function ITEM:destroy()
@@ -314,7 +308,6 @@ if SERVER then
 
     --- Gets called upon destroying an item.
     -- @realm server
-    -- @treturn void
     -- @usage
     -- function ITEM:onDisposed()
     --     print("Item has been disposed.")
@@ -394,7 +387,6 @@ if SERVER then
 
     --- Gets called upon creating (instancing) an item.
     -- @realm server
-    -- @treturn void
     -- @usage
     -- function ITEM:onInstanced()
     --     print("Item has been instanced.")
@@ -404,7 +396,6 @@ if SERVER then
 
     --- Gets called upon syncing an item.
     -- @realm server
-    -- @treturn void
     -- @usage
     -- function ITEM:onSync(recipient)
     --     print("Item has been synced with recipient:", recipient:Nick())
@@ -414,7 +405,6 @@ if SERVER then
 
     --- Gets called upon removing an item.
     -- @realm server
-    -- @treturn void
     -- @usage
     -- function ITEM:onRemoved()
     --     print("Item has been removed.")
@@ -424,7 +414,6 @@ if SERVER then
 
     --- Gets called upon restoring an item.
     -- @realm server
-    -- @treturn void
     -- @usage
     -- function ITEM:onRestored()
     --     print("Item has been restored.")
@@ -435,7 +424,6 @@ if SERVER then
     --- Synchronizes the item data with the specified recipient or broadcasts it to all clients if no recipient is specified.
     -- @realm server
     -- @client[opt] recipient The player to whom the item data should be synchronized. If set to nil, the data is broadcasted to all clients.
-    -- @treturn void
     -- @usage
     -- item:sync(player)
     -- item:sync()
@@ -460,7 +448,6 @@ if SERVER then
     -- @string key The key to store the value within.
     -- @tparam any[opt=nil] value The value to set for the key.
     -- @tab[opt=nil] receivers The players to replicate the data on.
-    -- @treturn void
     -- @usage
     -- item:setData("health", 100, {player1, player2}, false, false)
     function ITEM:setData(key, value, receivers)
@@ -493,7 +480,6 @@ if SERVER then
     -- @int quantity The quantity to add.
     -- @tab receivers Players who should receive updates about the quantity change.
     -- @bool noCheckEntity If true, entity checks will be skipped.
-    -- @treturn void
     -- @usage
     -- item:addQuantity(5, {player1, player2}, false)
     function ITEM:addQuantity(quantity, receivers, noCheckEntity)
@@ -505,7 +491,6 @@ if SERVER then
     -- @int quantity The new quantity value.
     -- @tab receivers Players who should receive updates about the quantity change.
     -- @bool noCheckEntity If true, entity checks will be skipped.
-    -- @treturn void
     -- @usage
     -- item:setQuantity(10, {player1}, true)
     function ITEM:setQuantity(quantity, receivers, noCheckEntity)

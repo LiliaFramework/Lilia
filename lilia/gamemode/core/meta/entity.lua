@@ -239,7 +239,6 @@ if SERVER then
     -- @string key Identifier of the networked variable
     -- @tparam any value New value to assign to the networked variable
     -- @client receiver The players to send the networked variable to
-    -- @treturn void
     -- @usage
     -- entity:setNetVar("example", "Hello World!", player)
     -- @see getNetVar

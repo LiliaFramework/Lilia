@@ -66,7 +66,6 @@ end
 -- @realm shared
 -- @tparam any key The key for the data proxy.
 -- @func onChange The function to call when the data associated with the key changes.
--- @treturn void
 -- @usage
 -- inventory:addDataProxy("health", function(old, new)
 --     print("Health changed from", old, "to", new)
@@ -156,7 +155,6 @@ end
 -- @tparam any key The key whose data has changed.
 -- @tparam any oldValue The old value of the data.
 -- @tparam any newValue The new value of the data.
--- @treturn void
 -- @usage
 -- function Inventory:onDataChanged(key, oldValue, newValue)
 --     print(key, "changed from", oldValue, "to", newValue)
@@ -310,7 +308,6 @@ if SERVER then
     --- Synchronizes the addition of an item with clients.
     -- @realm server
     -- @item item The item being added.
-    -- @treturn void
     -- @usage
     -- inventory:syncItemAdded(weapon)
     function Inventory:syncItemAdded(item)
@@ -518,7 +515,6 @@ if SERVER then
 
     --- Initializes an instance of the inventory.
     -- @realm server
-    -- @treturn void
     -- @usage
     -- inventory:onInstanced()
     function Inventory:onInstanced()
@@ -526,7 +522,6 @@ if SERVER then
 
     --- Callback function called when the inventory is loaded.
     -- @realm server
-    -- @treturn void
     -- @usage
     -- function Inventory:onLoaded()
     --     print("Inventory loaded.")
@@ -574,7 +569,6 @@ if SERVER then
 
     --- Callback function called when items are loaded into the inventory.
     -- @realm server
-    -- @treturn void
     -- @usage
     -- function Inventory:onItemsLoaded(items)
     --     print("Loaded", #items, "items into the inventory.")
@@ -596,7 +590,6 @@ if SERVER then
     -- @realm server
     -- @tparam any key The key whose data has changed.
     -- @tab recipients The recipients to synchronize with.
-    -- @treturn void
     -- @usage
     -- inventory:syncData("health", {client = player})
     function Inventory:syncData(key, recipients)
@@ -611,7 +604,6 @@ if SERVER then
     --- Synchronizes the inventory with clients.
     -- @realm server
     -- @tab recipients The recipients to synchronize with.
-    -- @treturn void
     -- @usage
     -- inventory:sync()
     function Inventory:sync(recipients)
@@ -644,7 +636,6 @@ if SERVER then
 
     --- Deletes the inventory.
     -- @realm server
-    -- @treturn void
     -- @usage
     -- inventory:delete()
     function Inventory:delete()
@@ -653,7 +644,6 @@ if SERVER then
 
     --- Destroys the inventory and its associated items.
     -- @realm server
-    -- @treturn void
     -- @usage
     -- inventory:destroy()
     function Inventory:destroy()

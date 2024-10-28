@@ -296,9 +296,6 @@ end
 -- If the total amount exceeds the configured money limit, the excess is spawned as an item in the world.
 -- @realm shared
 -- @int amount The amount of money to add.
--- @tab receivers Players who should receive updates about the quantity change.
--- @bool noCheckEntity If true, entity checks will be skipped.
--- @treturn void
 -- @usage
 -- player:addMoney(1000, {player}, false)
 function playerMeta:addMoney(amount)
@@ -327,7 +324,6 @@ end
 --- Takes money from the player's character.
 -- @realm shared
 -- @int amount The amount of money to take.
--- @treturn void
 -- @usage
 -- player:takeMoney(200)
 function playerMeta:takeMoney(amount)
@@ -461,7 +457,6 @@ if SERVER then
     --- Loads Lilia data for the player from the database.
     -- @realm server
     -- @func callback Function to call after the data is loaded, passing the loaded data as an argument.
-    -- @treturn void
     -- @usage
     -- player:loadLiliaData(function(data)
     --     print("Data loaded:", data)
@@ -496,7 +491,6 @@ if SERVER then
 
     --- Saves the player's Lilia data to the database.
     -- @realm server
-    -- @treturn void
     -- @usage
     -- player:saveLiliaData()
     function playerMeta:saveLiliaData()
@@ -518,7 +512,6 @@ if SERVER then
     -- @tab[opt=nil] receivers The players to replicate the data on.
     -- @bool noSave Whether to disable saving the data in the database or not.
     -- @bool noCheckEntity Whether to disable setting the data on the entity, if applicable.
-    -- @treturn void
     -- @usage
     -- player:setLiliaData("score", 1500, {player1, player2}, false, false)
     function playerMeta:setLiliaData(key, value, receivers, noSave, noCheckEntity)
@@ -559,7 +552,6 @@ if SERVER then
     --- Notifies the player with a message.
     -- @realm server
     -- @string message The message to notify the player.
-    -- @treturn void
     -- @usage
     -- player:chatNotify("Welcome to the server!")
     function playerMeta:chatNotify(message)
@@ -572,7 +564,6 @@ if SERVER then
     -- @realm server
     -- @string message ID of the phrase to display to the player.
     -- @tparam ... any Arguments to pass to the phrase.
-    -- @treturn void
     -- @usage
     -- player:chatNotifyLocalized("welcome_message", player:Nick())
     function playerMeta:chatNotifyLocalized(message, ...)
@@ -603,7 +594,6 @@ if SERVER then
     --- Sets the player's ragdoll entity.
     -- @realm server
     -- @entity entity The entity to set as the player's ragdoll.
-    -- @treturn void
     -- @usage
     -- local ragdoll = player:createServerRagdoll()
     -- player:setRagdoll(ragdoll)
@@ -618,7 +608,6 @@ if SERVER then
     -- @func callback Function to execute when the action bar timer expires.
     -- @int[opt] startTime The start time of the action bar, defaults to the current time.
     -- @int[opt] finishTime The finish time of the action bar, defaults to startTime + time.
-    -- @treturn void
     -- @usage
     -- player:setAction("Processing...", 10, function(p) print("Action completed for", p:Nick()) end)
     function playerMeta:setAction(text, time, callback, startTime, finishTime)
@@ -643,7 +632,6 @@ if SERVER then
     --- Stops the action bar for the player.
     -- Removes the action bar currently being displayed.
     -- @realm server
-    -- @treturn void
     -- @usage
     -- player:stopAction()
     function playerMeta:stopAction()
@@ -657,7 +645,6 @@ if SERVER then
     -- @int[opt=75] volume The volume of the sound.
     -- @int[opt=100] pitch The pitch of the sound.
     -- @bool shouldEmit Whether to emit sound server-side or send it to the client.
-    -- @treturn void
     -- @usage
     -- player:PlaySound("ambient/alarms/warningbell1.wav", 100, 100, false)
     function playerMeta:PlaySound(sound, volume, pitch, shouldEmit)
@@ -677,7 +664,6 @@ if SERVER then
     --- Opens a VGUI panel for the player.
     -- @realm server
     -- @string panel The name of the VGUI panel to open.
-    -- @treturn void
     -- @usage
     -- player:openUI("InventoryPanel")
     function playerMeta:openUI(panel)
@@ -690,7 +676,6 @@ if SERVER then
     --- Opens a web page for the player.
     -- @realm server
     -- @string url The URL of the web page to open.
-    -- @treturn void
     -- @usage
     -- player:openPage("https://example.com")
     function playerMeta:openPage(url)
@@ -705,7 +690,6 @@ if SERVER then
     -- @string subTitle The subtitle of the request.
     -- @tab options The table of options to choose from.
     -- @func callback The function to call upon receiving the selected option.
-    -- @treturn void
     -- @usage
     -- player:requestDropdown("Choose Option", "Select one of the following:", {"Option1", "Option2"}, function(selected)
     --     print("Player selected:", selected)
@@ -726,7 +710,6 @@ if SERVER then
     -- @tab options The table of options to choose from.
     -- @int limit The maximum number of selectable options.
     -- @func callback The function to call upon receiving the selected options.
-    -- @treturn void
     -- @usage
     -- player:requestOptions("Select Items", "Choose up to 3 items:", {"Item1", "Item2", "Item3"}, 3, function(selected)
     --     print("Player selected:", table.concat(selected, ", "))
@@ -785,7 +768,6 @@ if SERVER then
     -- @string option2 The text for the second option.
     -- @bool manualDismiss Whether the notice should be manually dismissed.
     -- @func callback The function to call with the choice (0 or 1) when the player selects an option.
-    -- @treturn void
     -- @usage
     -- player:binaryQuestion("Confirm Action", "Are you sure you want to proceed?", "Yes", "No", false, function(choice)
     --     if choice == 1 then
@@ -860,7 +842,6 @@ if SERVER then
     -- @int[opt=5] time The duration of the stared action in seconds.
     -- @func onCancel The function to call if the stared action is canceled.
     -- @int[opt=96] distance The maximum distance for the stared action.
-    -- @treturn void
     -- @usage
     -- player:doStaredAction(targetEntity, function()
     --     print("Stared action completed.")
@@ -893,7 +874,6 @@ if SERVER then
     --- Notifies the player with a message and prints the message to their chat.
     -- @realm server
     -- @string message The message to notify and print.
-    -- @treturn void
     -- @usage
     -- player:notifyP("You have received a new item!")
     function playerMeta:notifyP(message)
@@ -906,7 +886,6 @@ if SERVER then
     -- @string name The name of the waypoint.
     -- @tparam Vector vector The position vector of the waypoint.
     -- @func onReach Function to call when the player reaches the waypoint.
-    -- @treturn void
     -- @usage
     -- player:setWeighPoint("Spawn Point", Vector(100, 200, 300), function(p)
     --     print("Player reached the waypoint.")
@@ -984,7 +963,6 @@ if SERVER then
     -- @int[opt=0] time The duration for which the player remains ragdolled.
     -- @int[opt=0] getUpGrace The grace period for the player to get up before the ragdoll is removed.
     -- @string[opt="@wakingUp"] getUpMessage The message displayed when the player is getting up.
-    -- @treturn void
     -- @usage
     -- player:setRagdolled(true, 10, 5, "@gettingUp")
     function playerMeta:setRagdolled(state, time, getUpGrace, getUpMessage)
@@ -1098,7 +1076,6 @@ if SERVER then
 
     --- Synchronizes networked variables with the player.
     -- @realm server
-    -- @treturn void
     -- @usage
     -- player:syncVars()
     function playerMeta:syncVars()
@@ -1119,7 +1096,6 @@ if SERVER then
     -- @realm server
     -- @string key The key of the variable.
     -- @tparam any value The value of the variable.
-    -- @treturn void
     -- @usage
     -- player:setLocalVar("health", 100)
     function playerMeta:setLocalVar(key, value)
@@ -1133,7 +1109,6 @@ if SERVER then
     --- Notifies the player with a message and prints the message to their chat.
     -- @realm server
     -- @string text The message to notify and print.
-    -- @treturn void
     -- @usage
     -- player:notifyP("You have received a new item!")
     function playerMeta:notifyP(text)
@@ -1144,7 +1119,6 @@ else
     --- Displays a notification for this player in the chatbox.
     -- @realm client
     -- @string message Text to display in the notification.
-    -- @treturn void
     -- @usage
     -- player:chatNotify("Welcome to the server!")
     function playerMeta:chatNotify(message)
@@ -1156,7 +1130,6 @@ else
     -- @realm client
     -- @string message ID of the phrase to display to the player.
     -- @tparam ... any Arguments to pass to the phrase.
-    -- @treturn void
     -- @usage
     -- player:chatNotifyLocalized("welcome_message", player:Nick())
     function playerMeta:chatNotifyLocalized(message, ...)
@@ -1195,7 +1168,6 @@ else
     -- @string name The name of the waypoint.
     -- @vector vector The position vector of the waypoint.
     -- @func onReach Function to call when the player reaches the waypoint.
-    -- @treturn void
     -- @usage
     -- player:setWeighPoint("Spawn Point", Vector(100, 200, 300), function(p)
     --     print("Player reached the waypoint.")

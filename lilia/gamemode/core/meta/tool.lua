@@ -39,7 +39,6 @@ end
 --- Creates client and server convars for the tool.
 -- This method generates convars (console variables) based on the tool's mode. Client convars are created on the client-side, while server convars are created on the server-side.
 -- @realm shared
--- @treturn void
 -- @usage
 -- tool:CreateConVars()
 function ToolGunMeta:CreateConVars()
@@ -127,7 +126,6 @@ end
 --- Placeholder for initializing the tool.
 -- This method is intended to be overridden if initialization logic is needed when the tool is created.
 -- @realm shared
--- @treturn void
 -- @usage
 -- function ToolGunMeta:Init()
 --     -- Custom initialization logic here
@@ -208,7 +206,6 @@ end
 --- Handles the reload action with the tool.
 -- This method clears the objects that the tool is currently manipulating when the player reloads with the tool.
 -- @realm shared
--- @treturn void
 -- @usage
 -- function ToolGunMeta:Reload()
 --     self:ClearObjects()
@@ -220,7 +217,6 @@ end
 --- Deploys the tool.
 -- This method is called when the player equips the tool. It releases any ghost entities associated with the tool.
 -- @realm shared
--- @treturn void
 -- @usage
 -- function ToolGunMeta:Deploy()
 --     self:ReleaseGhostEntity()
@@ -233,7 +229,6 @@ end
 --- Holsters the tool.
 -- This method is called when the player unequips the tool. It releases any ghost entities associated with the tool.
 -- @realm shared
--- @treturn void
 -- @usage
 -- function ToolGunMeta:Holster()
 --     self:ReleaseGhostEntity()
@@ -246,7 +241,6 @@ end
 --- Handles the tool's "think" logic.
 -- This method is called periodically to perform updates. By default, it releases any ghost entities associated with the tool.
 -- @realm shared
--- @treturn void
 -- @usage
 -- function ToolGunMeta:Think()
 --     self:ReleaseGhostEntity()
@@ -258,7 +252,6 @@ end
 --- Checks the validity of objects the tool is manipulating.
 -- This method iterates over the tool's objects and clears them if they are no longer valid, such as if the entity is no longer part of the world or is invalid.
 -- @realm shared
--- @treturn void
 -- @usage
 -- tool:CheckObjects()
 function ToolGunMeta:CheckObjects()
@@ -270,7 +263,6 @@ end
 --- Clears all objects the tool is manipulating.
 -- This method removes all objects from the tool's `Objects` table, effectively resetting the tool's state.
 -- @realm shared
--- @treturn void
 -- @usage
 -- tool:ClearObjects()
 function ToolGunMeta:ClearObjects()
@@ -280,7 +272,6 @@ end
 --- Releases any ghost entities associated with the tool.
 -- This method removes any ghost entities the tool may be holding, ensuring that no visual artifacts remain when the tool is not actively manipulating objects.
 -- @realm shared
--- @treturn void
 -- @usage
 -- tool:ReleaseGhostEntity()
 function ToolGunMeta:ReleaseGhostEntity()
@@ -293,7 +284,6 @@ end
 --- Placeholder for handling tool-specific logic.
 -- This method is intended to be overridden to implement custom logic that should be executed periodically or under specific conditions.
 -- @realm shared
--- @treturn void
 -- @usage
 -- function ToolGunMeta:CustomLogic()
 --     -- Custom periodic logic here
