@@ -22,7 +22,7 @@ do
     --     print("Character Name:", char:getName())
     -- end
     function playerMeta:getChar()
-        return lia.char.loaded[self:getNetVar("char")]
+        return lia.char.loaded[self.getNetVar(self, "char")]
     end
 
     --- Returns this player's current name.
@@ -32,8 +32,8 @@ do
     -- @usage
     -- print("Player Name:", player:Name())
     function playerMeta:Name()
-        local character = self:getChar()
-        return character and character:getName() or self.steamName()
+        local character = self.getChar(self)
+        return character and character.getName(character) or self.steamName(self)
     end
 
     playerMeta.GetCharacter = playerMeta.getChar
@@ -506,47 +506,24 @@ if SERVER then
     end
 
     --- Sets a key-value pair in the player's Lilia data.
+    -- This method updates the player's `liaData` table with the specified key and value. Optionally, it can suppress the networking of the data update.
     -- @realm server
-    -- @string key The key for the data.
-    -- @tparam any[opt=nil] value The value to set.
-    -- @tab[opt=nil] receivers The players to replicate the data on.
-    -- @bool noSave Whether to disable saving the data in the database or not.
-    -- @bool noCheckEntity Whether to disable setting the data on the entity, if applicable.
+    -- @tparam String key The key for the data.
+    -- @tparam any[opt=nil] value The value to set for the specified key. Defaults to `nil` if not provided.
+    -- @tparam Boolean[opt=false] noNetworking If set to `true`, the data update will not be sent to clients. Defaults to `false`.
+    -- @treturn void
     -- @usage
-    -- player:setLiliaData("score", 1500, {player1, player2}, false, false)
-    function playerMeta:setLiliaData(key, value, receivers, noSave, noCheckEntity)
+    -- ```lua
+    -- -- Example 1: Setting a key-value pair with networking
+    -- player:setLiliaData("score", 1500)
+    -- 
+    -- -- Example 2: Setting a key-value pair without networking
+    -- player:setLiliaData("health", 100, true)
+    -- ```
+    function playerMeta:setLiliaData(key, value, noNetworking)
         self.liaData = self.liaData or {}
         self.liaData[key] = value
-        if not noCheckEntity then
-            local entity = self:getEntity()
-            if IsValid(entity) then entity:setNetVar("data", self.liaData) end
-        end
-
-        if receivers or self:getOwner() then netstream.Start(receivers or self:getOwner(), "invData", self:getID(), key, value) end
-        if noSave or not lia.db then return end
-        if key == "x" or key == "y" then
-            value = tonumber(value)
-            if MYSQLOO_PREPARED then
-                lia.db.preparedCall("item" .. key, nil, value, self:getID())
-            else
-                lia.db.updateTable({
-                    ["_" .. key] = value
-                }, nil, "items", "_itemID = " .. self:getID())
-            end
-            return
-        end
-
-        local x, y = self.data.x, self.data.y
-        self.data.x, self.data.y = nil, nil
-        if MYSQLOO_PREPARED then
-            lia.db.preparedCall("itemData", nil, self.data, self:getID())
-        else
-            lia.db.updateTable({
-                _data = self.data
-            }, nil, "items", "_itemID = " .. self:getID())
-        end
-
-        self.data.x, self.data.y = x, y
+        if not noNetworking then netstream.Start(self, "liaData", key, value) end
     end
 
     --- Notifies the player with a message.
