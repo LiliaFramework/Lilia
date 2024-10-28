@@ -99,8 +99,8 @@ end
 -- @realm shared
 -- @string typeID The type ID to register the inventory with.
 -- @raise If the argument `typeID` is not a string.
--- @tsee lia.inventory.newType
--- @tusage
+-- @see lia.inventory.newType
+-- @usage
 -- inventory:register("grid")
 -- -- This sets the inventory's type to 'grid'
 function Inventory:register(typeID)
@@ -234,7 +234,7 @@ end
 --- Retrieves the total count of items in the inventory, optionally filtered by item type.
 -- @realm shared
 -- @tparam[opt=nil] String itemType The type of item to count. If nil, counts all items.
--- @treturn Float The total count of items in the inventory, optionally filtered by item type.
+-- @treturn The total count of items in the inventory, optionally filtered by item type.
 -- @usage
 -- local totalItems = inventory:getItemCount()
 -- print("Total Items:", totalItems)
