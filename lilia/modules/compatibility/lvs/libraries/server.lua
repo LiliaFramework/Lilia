@@ -33,7 +33,7 @@
 end)
 
 function MODULE:EntityTakeDamage(seat, dmgInfo)
-    if self.DamageInCars and seat:isSimfphysCar() then
+    if self.DamageInCars and seat:isSimfphysCar() and seat.GetDriver then
         local client = seat:GetDriver()
         if IsValid(client) then
             local hitPos = dmgInfo:GetDamagePosition()
