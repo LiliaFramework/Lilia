@@ -474,7 +474,7 @@ if SERVER then
         return self
     end
 
-    Inventory.SetData = Inventory.setData
+    ITEM.SetData = ITEM.setData
     --- Adds a specified quantity to the item's current quantity.
     -- @realm server
     -- @int quantity The quantity to add.
@@ -511,7 +511,7 @@ if SERVER then
         end
     end
 
-    Inventory.SetQuantity = Inventory.setQuantity
+    ITEM.SetQuantity = ITEM.setQuantity
     --- Performs an interaction action with the item.
     -- @realm server
     -- @string action The interaction action to perform.
@@ -607,3 +607,4 @@ ITEM.GetItemCount = ITEM.getItemCount
 ITEM.GetID = ITEM.getID
 ITEM.GetData = ITEM.getData
 ITEM.Show = ITEM.show
+lia.meta.item = ITEM

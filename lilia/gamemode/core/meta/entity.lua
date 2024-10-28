@@ -194,7 +194,6 @@ function entityMeta:canSeeEntity(entity)
     return true
 end
 
--- Populate ChairCache with models categorized as "Chairs"
 for _, v in pairs(list.Get("Vehicles")) do
     if v.Category == "Chairs" then ChairCache[v.Model] = true end
 end
