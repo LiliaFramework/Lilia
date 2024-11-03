@@ -2,4 +2,4 @@ ITEM.name = "Crossbow Bolts"
 ITEM.model = "models/Items/CrossbowRounds.mdl"
 ITEM.ammo = "XBowRounds"
 ITEM.ammoAmount = 5
-ITEM.description = "A Bundle of %s Crossbow Bolts"
+ITEM.desc = "A Bundle of %s Crossbow Bolts"

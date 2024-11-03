@@ -380,7 +380,7 @@ else
     -- @color color Color of the text to draw
     -- @int[opt=TEXT_ALIGN_LEFT] alignX Horizontal alignment of the text, using one of the `TEXT_ALIGN_*` constants
     -- @int[opt=TEXT_ALIGN_LEFT] alignY Vertical alignment of the text, using one of the `TEXT_ALIGN_*` constants
-    -- @string[opt="ixGenericFont"] font Font to use for the text
+    -- @string[opt="liaGenericFont"] font Font to use for the text
     -- @int[opt=color.a * 0.575] alpha Alpha of the shadow
     function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
         color = color or color_white
