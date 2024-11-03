@@ -1,59 +1,66 @@
 ﻿local MODULE = MODULE
 local PANEL = {}
 function PANEL:Init()
+    self:SetSize(600, 200)
     self:Dock(TOP)
-    self:SetTall(150)
     self:SetPaintBackground(false)
-    self.suffix = ""
-    self.icon = self:Add("liaItemIcon")
-    self.icon:SetSize(96, 96)
-    self.icon:Dock(LEFT)
-    self.icon.Paint = function() end
-    self.name = self:Add("DLabel")
-    self.name:SetTextColor(color_white)
-    self.name:SetExpensiveShadow(1, color_black)
-    self.name:SetFont("VendorSmallFont")
-    self.name:SetContentAlignment(5)
-    self.name:Dock(TOP)
-    self.name:DockMargin(10, 20, 10, 0)
-    self.description = self:Add("DLabel")
-    self.description:SetTextColor(color_white)
-    self.description:SetExpensiveShadow(1, color_black)
-    self.description:SetFont("VendorTinyFont")
-    self.description:SetContentAlignment(5)
-    self.description:Dock(TOP)
-    self.description:DockMargin(10, 10, 10, 0)
-    self.price = self:Add("DLabel")
-    self.price:SetTextColor(color_white)
-    self.price:SetExpensiveShadow(1, color_black)
-    self.price:SetFont("VendorTinyFont")
-    self.price:SetContentAlignment(5)
-    self.price:Dock(TOP)
-    self.price:DockMargin(10, 5, 10, 10)
     self:SetCursor("hand")
-    self.isSelling = false
-    self.action = self:Add("DButton")
-    self.action:Dock(TOP)
-    self.action:SetSize(475, 30)
-    self.action:SetFont("VendorSmallFont")
-    self.action:SetTextColor(color_white)
-    self.action:SetContentAlignment(5)
-    self.action.Paint = function(_, w, h)
-        surface.SetDrawColor(255, 255, 255, 20)
-        surface.DrawLine(0, 0, 0, h)
-        surface.DrawLine(0, 0, w, 0)
-        surface.DrawLine(w - 1, 0, w - 1, h)
-        surface.DrawLine(0, h - 1, w, h - 1)
+    self.background = self:Add("DPanel")
+    self.background:Dock(FILL)
+    self.background.Paint = function(panel, w, h)
+        surface.SetDrawColor(40, 40, 40, 220)
+        surface.DrawRect(0, 0, w, h)
+        surface.SetDrawColor(255, 255, 255, 50)
+        surface.DrawOutlinedRect(0, 0, w, h)
     end
-end
 
-function PANEL:updatePrice()
-    self:updateLabel()
+    self.iconFrame = self.background:Add("DPanel")
+    self.iconFrame:SetSize(96, 96)
+    self.iconFrame:Dock(LEFT)
+    self.iconFrame:DockMargin(10, 10, 10, 10)
+    self.iconFrame.Paint = function(panel, w, h)
+        surface.SetDrawColor(255, 255, 255, 80)
+        surface.DrawOutlinedRect(0, 0, w, h)
+    end
+
+    self.icon = self.iconFrame:Add("liaItemIcon")
+    self.icon:SetSize(96, 96)
+    self.icon:Dock(FILL)
+    self.icon.Paint = function() end
+    self.textContainer = self.background:Add("DPanel")
+    self.textContainer:Dock(FILL)
+    self.textContainer:DockMargin(0, 10, 10, 10)
+    self.textContainer:SetPaintBackground(false)
+    self.name = self.textContainer:Add("DLabel")
+    self.name:SetFont("VendorItemNameFont")
+    self.name:SetExpensiveShadow(1, color_black)
+    self.name:Dock(TOP)
+    self.name:SetContentAlignment(5)
+    self.description = self.textContainer:Add("DLabel")
+    self.description:SetFont("VendorItemDescFont")
+    self.description:SetTextColor(Color(200, 200, 200))
+    self.description:Dock(TOP)
+    self.description:DockMargin(0, 5, 0, 0)
+    self.description:SetWrap(true)
+    self.description:SetContentAlignment(7)
+    self.description:SetAutoStretchVertical(true)
+    self.spacer = self.textContainer:Add("DPanel")
+    self.spacer:Dock(FILL)
+    self.spacer:SetPaintBackground(false)
+    self.action = self.textContainer:Add("DButton")
+    self.action:SetHeight(30)
+    self.action:Dock(BOTTOM)
+    self.action:DockMargin(0, 5, 0, 0)
+    self.action:SetFont("VendorActionButtonFont")
+    self.action:SetTextColor(color_white)
+    self.action.Paint = function(_, w, h) self:PaintButton(self.action, w, h) end
+    self.isSelling = false
+    self.suffix = ""
 end
 
 function PANEL:setIsSelling(isSelling)
     self.isSelling = isSelling
-    self:updatePrice()
+    self:updateLabel()
     self:updateAction()
 end
 
@@ -80,12 +87,42 @@ function PANEL:buyItemFromVendor()
     end
 end
 
+function PANEL:PaintButton(btn, width, height)
+    if btn:IsDown() then
+        surface.SetDrawColor(Color(40, 40, 40, 240))
+    elseif btn:IsHovered() then
+        surface.SetDrawColor(Color(30, 30, 30, 150))
+    else
+        surface.SetDrawColor(Color(30, 30, 30, 160))
+    end
+
+    surface.DrawRect(0, 0, width, height)
+    surface.SetDrawColor(Color(0, 0, 0, 235))
+    surface.DrawOutlinedRect(0, 0, width, height)
+end
+
 function PANEL:updateAction()
     if not self.action or not self.item then return end
-    self.action:SetText(L(self.isSelling and "sell" or "buy"):upper())
-    self.action:SetFont("VendorSmallFont")
-    self.action.DoClick = self.isSelling and function() self:sellItemToVendor() end or function() self:buyItemFromVendor() end
-    self.action.item = self.item
+    local price = liaVendorEnt:getPrice(self.item.uniqueID, self.isSelling)
+    local typeOfTransaction = self.isSelling and "Sell" or "Buy"
+    local priceSuffix
+    if price == 0 then
+        priceSuffix = "Free"
+    elseif price > 1 then
+        priceSuffix = string.format("%s %s", price, lia.currency.plural)
+    else
+        priceSuffix = string.format("%s %s", price, lia.currency.singular)
+    end
+
+    local actionText = string.format("%s (%s)", typeOfTransaction, priceSuffix)
+    self.action:SetText(actionText)
+    self.action.DoClick = function()
+        if self.isSelling then
+            self:sellItemToVendor()
+        else
+            self:buyItemFromVendor()
+        end
+    end
 end
 
 function PANEL:setQuantity(quantity)
@@ -111,28 +148,29 @@ function PANEL:setItemType(itemType)
     self.icon:SetModel(item.model, item.skin or 0)
     self:updateLabel()
     self:updateAction()
+    local rarity = item.rarity or "Common"
+    local nameColor = MODULE.RarityColors[rarity] or color_white
+    self.name:SetTextColor(nameColor)
 end
 
 function PANEL:updateLabel()
     if not self.item then return end
+    local nameText = (self.suffix ~= "" and self.suffix or "") .. self.item:getName()
+    self.name:SetText(nameText)
+    self.description:SetText(self.item:getDesc() or "")
     local price = liaVendorEnt:getPrice(self.item.uniqueID, self.isSelling)
-    local priceText
+    local typeOfTransaction = self.isSelling and "Sell" or "Buy"
+    local priceSuffix
     if price == 0 then
-        priceText = "Free"
+        priceSuffix = "Free"
+    elseif price > 1 then
+        priceSuffix = string.format("%s %s", price, lia.currency.plural)
     else
-        priceText = string.format("%s %s", price, price > 1 and lia.currency.plural or lia.currency.singular)
+        priceSuffix = string.format("%s %s", price, lia.currency.singular)
     end
 
-    self.name:SetText(string.format("%s", self.suffix .. self.item:getName()))
-    self.description:SetText(self.item:getDesc())
-    self.price:SetText(priceText)
-    self.name:SizeToContents()
-    self.description:SizeToContents()
-    self.price:SizeToContents()
-    local priceX, _ = self.price:GetPos()
-    local panelHeight = self:GetTall()
-    self.action:SetPos(priceX, panelHeight - 40)
-    self:InvalidateLayout()
+    local actionText = string.format("%s (%s)", typeOfTransaction, priceSuffix)
+    self.action:SetText(actionText)
 end
 
 vgui.Register("VendorItem", PANEL, "DPanel")
