@@ -28,4 +28,34 @@
         weight = 200,
         size = 22
     })
+
+    surface.CreateFont("VendorItemNameFont", {
+        font = "Trajan Pro",
+        size = 24,
+        weight = 700,
+    })
+
+    surface.CreateFont("VendorItemDescFont", {
+        font = "Times New Roman",
+        size = 18,
+        weight = 500,
+    })
+
+    surface.CreateFont("VendorItemStatsFont", {
+        font = "Consolas",
+        size = 16,
+        weight = 500,
+    })
+
+    surface.CreateFont("VendorItemPriceFont", {
+        font = "Arial",
+        size = 20,
+        weight = 600,
+    })
+
+    surface.CreateFont("VendorActionButtonFont", {
+        font = "Verdana",
+        size = 18,
+        weight = 600,
+    })
 end
