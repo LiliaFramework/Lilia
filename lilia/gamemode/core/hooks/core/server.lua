@@ -385,6 +385,20 @@ function GM:PostPlayerLoadout(client)
     client:SetupHands()
 end
 
+function GM:DoPlayerDeath(client, attacker, damageinfo)
+    client:AddDeaths(1)
+    if hook.Run("ShouldSpawnClientRagdoll", client) ~= false then client:CreateRagdoll() end
+    if IsValid(attacker) and attacker:IsPlayer() then
+        if client == attacker then
+            attacker:AddFrags(-1)
+        else
+            attacker:AddFrags(1)
+        end
+    end
+
+    client:SetDSP(31)
+end
+
 function GM:PlayerDeath(client)
     local character = client:getChar()
     if not character then return end
@@ -401,6 +415,7 @@ function GM:PlayerSpawn(client)
     client:UnLock()
     client:SetNotSolid(false)
     client:stopAction()
+    client:SetDSP(1)
     hook.Run("PlayerLoadout", client)
 end
 
