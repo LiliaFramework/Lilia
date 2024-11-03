@@ -9,21 +9,19 @@ function PANEL:Init()
         if not IsValid(entity) then return end
         local sequence = entity:SelectWeightedSequence(ACT_IDLE)
         if sequence <= 0 then sequence = entity:LookupSequence("idle_unarmed") end
-        entity:SetIK(false)
         if sequence > 0 then
             entity:ResetSequence(sequence)
-            return
-        end
+        else
+            for _, seqName in ipairs(entity:GetSequenceList()) do
+                local seqNameLower = seqName:lower()
+                if seqNameLower == "idlenoise" then continue end
+                if not (seqNameLower:find("idle") or seqNameLower:find("fly")) then continue end
+                entity:ResetSequence(seqName)
+                return
+            end
 
-        for _, seqName in ipairs(entity:GetSequenceList()) do
-            local seqNameLower = seqName:lower()
-            if seqNameLower == "idlenoise" then continue end
-            if not (seqNameLower:find("idle") or seqNameLower:find("fly")) then continue end
-            entity:ResetSequence(seqName)
-            return
+            entity:ResetSequence(4)
         end
-
-        entity:ResetSequence(4)
     end
 end
 
