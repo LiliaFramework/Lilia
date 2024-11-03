@@ -270,8 +270,8 @@ net.Receive("chatNotify", function()
 end)
 
 net.Receive("OptionsRequest", function()
-    local title = net.ReadString()
-    local subTitle = net.ReadString()
+    local title = L(net.ReadString())
+    local subTitle = L(net.ReadString())
     local options = net.ReadTable()
     local limit = net.ReadUInt(32)
     local frame = vgui.Create("DFrame")
@@ -292,8 +292,9 @@ net.Receive("OptionsRequest", function()
     local selected = {}
     local checkboxes = {}
     for _, option in ipairs(options) do
+        local localizedOption = L(option)
         local checkbox = vgui.Create("DCheckBoxLabel")
-        checkbox:SetText(option)
+        checkbox:SetText(localizedOption)
         checkbox:SetValue(false)
         checkbox:SizeToContents()
         checkbox:SetTextColor(Color(255, 255, 255))
@@ -319,7 +320,7 @@ net.Receive("OptionsRequest", function()
     end
 
     local button = vgui.Create("DButton", frame)
-    button:SetText("Submit")
+    button:SetText(L("submit"))
     button:SetPos(10, 260)
     button:SetSize(380, 30)
     button.DoClick = function()
@@ -331,8 +332,8 @@ net.Receive("OptionsRequest", function()
 end)
 
 net.Receive("DropdownRequest", function()
-    local title = net.ReadString()
-    local subTitle = net.ReadString()
+    local title = L(net.ReadString())
+    local subTitle = L(net.ReadString())
     local options = net.ReadTable()
     local frame = vgui.Create("DFrame")
     frame:SetTitle(title)
@@ -344,7 +345,7 @@ net.Receive("DropdownRequest", function()
     dropdown:SetSize(280, 20)
     dropdown:SetValue(subTitle)
     for _, option in ipairs(options) do
-        dropdown:AddChoice(option)
+        dropdown:AddChoice(L(option))
     end
 
     dropdown.OnSelect = function(_, _, value)
@@ -371,13 +372,10 @@ net.Receive("StringRequest", function()
 end)
 
 net.Receive("BinaryQuestionRequest", function()
-    local question = net.ReadString()
-    local option1 = net.ReadString()
-    local option2 = net.ReadString()
+    local question = L(net.ReadString())
+    local option1 = L(net.ReadString(), "Yes")
+    local option2 = L(net.ReadString(), "No")
     local manualDismiss = net.ReadBool()
-    if not option1 then option1 = "Yes" end
-    if not option2 then option2 = "No" end
-    if not manualDismiss then manualDismiss = false end
     local notice = CreateNoticePanel(10, manualDismiss)
     local i = table.insert(lia.notices, notice)
     notice.isQuery = true
@@ -459,15 +457,6 @@ net.Receive("BinaryQuestionRequest", function()
         notice.respondToKeys = true
         function notice:Think()
             if not self.respondToKeys then return end
-            local queries = {}
-            for _, v in pairs(lia.notices) do
-                if v.isQuery then queries[#queries + 1] = v end
-            end
-
-            for k, v in pairs(queries) do
-                if v == self and k > 1 then return end
-            end
-
             if self.opt1 and IsValid(self.opt1) then self.opt1:keyThink() end
             if self.opt2 and IsValid(self.opt2) then self.opt2:keyThink() end
         end
