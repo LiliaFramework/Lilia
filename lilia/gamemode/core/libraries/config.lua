@@ -73,7 +73,7 @@ if not ConfigWasInitialized then
         CurrencySymbol = "$",
         SpawnTime = 5,
         MaxAttributePoints = 30,
-        MaxStartingAttributes = 0,
+        MaxStartingAttributes = 30,
         StartingAttributePoints = 30,
         EquipDelay = 2,
         UnequipDelay = 2,
