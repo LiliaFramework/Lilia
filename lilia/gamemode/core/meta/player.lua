@@ -745,8 +745,8 @@ if SERVER then
     -- @bool manualDismiss Whether the notice should be manually dismissed.
     -- @func callback The function to call with the choice (0 or 1) when the player selects an option.
     -- @usage
-    -- player:binaryQuestion("Confirm Action", "Are you sure you want to proceed?", "Yes", "No", false, function(choice)
-    --     if choice == 1 then
+    -- player:binaryQuestion("Confirm Action", "Yes", "No", false, function(choice)
+    --     if choice == 0 then
     --         print("Player chose Yes.")
     --     else
     --         print("Player chose No.")
