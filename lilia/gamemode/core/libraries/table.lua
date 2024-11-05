@@ -11,7 +11,7 @@ function lia.table.Sum(tbl)
         if isnumber(v) then
             sum = sum + v
         elseif istable(v) then
-            sum = sum + table.Sum(v)
+            sum = sum + lia.table.Sum(v)
         end
     end
     return sum
@@ -57,7 +57,7 @@ function lia.table.FullCopy(tab)
     local res = {}
     for k, v in pairs(tab) do
         if istable(v) then
-            res[k] = table.FullCopy(v)
+            res[k] = lia.table.FullCopy(v)
         elseif isvector(v) then
             res[k] = Vector(v.x, v.y, v.z)
         elseif isangle(v) then
@@ -69,31 +69,45 @@ function lia.table.FullCopy(tab)
     return res
 end
 
---- Filters a table based on a callback function.
--- @tab tab The table to filter.
--- @func callback The function to call for each element; if it returns true, the element is kept.
--- @return table The filtered table.
+--- Filters a table in-place based on a callback function.
+-- Modifies the original table by removing elements for which the callback returns false.
+-- @tab tab The table to filter in-place.
+-- @func func The function to call for each element; if it returns true, the element is kept.
+-- @return table The modified (filtered) table.
 -- @realm shared
-function lia.table.Filter(tab, callback)
-    local pointer = 1
+function lia.table.Filter(tab, func)
+    local c = 1
     for i = 1, #tab do
-        if callback(i, tab[i]) then
-            if i ~= pointer then
-                tab[pointer] = tab[i]
-                tab[i] = nil
-            end
-
-            pointer = pointer + 1
-        else
-            tab[i] = nil
+        if func(tab[i]) then
+            tab[c] = tab[i]
+            c = c + 1
         end
+    end
+
+    for i = c, #tab do
+        tab[i] = nil
     end
     return tab
 end
 
-table.MakeAssociative = lia.table.MakeAssociative
-table.Unique = lia.table.Unique
-table.FullCopy = lia.table.FullCopy
-table.Filter = lia.table.Filter
-table.Lookupify = lia.table.Lookupify
+--- Creates a copy of the table with elements that pass the callback function.
+-- Does not modify the original table; returns a new table containing only elements for which the callback returns true.
+-- @tab tab The table to filter.
+-- @func func The function to call for each element; if it returns true, the element is added to the result.
+-- @return table A new table containing the filtered elements.
+-- @realm shared
+function lia.table.FilterCopy(tab, func)
+    local ret = {}
+    for i = 1, #tab do
+        if func(tab[i]) then ret[#ret + 1] = tab[i] end
+    end
+    return ret
+end
+
 table.Sum = lia.table.Sum
+table.Unique = lia.table.Unique
+table.Filter = lia.table.Filter
+table.FullCopy = lia.table.FullCopy
+table.Lookupify = lia.table.Lookupify
+table.FilterCopy = lia.table.FilterCopy
+table.MakeAssociative = lia.table.MakeAssociative
