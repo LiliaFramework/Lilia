@@ -19,19 +19,8 @@ function PANEL:Init()
     self.buttons:SetTall(36)
     self.categoryList = self:Add("DScrollPanel")
     self.categoryList:SetSize(w * 0.15, h * 0.4)
-    self.categoryList:SetPos(w * 0.015, h * 0.6)
     self.categoryList:SetVisible(false)
-    local catListW, catListY = self.categoryList:GetPos()
-    self.categoryPanel = self:Add("DPanel")
-    self.categoryPanel:SetSize(w * 0.15, h * 0.4)
-    self.categoryPanel:SetPos(catListW + 75, catListY - 25)
-    self.categoryPanel:SetVisible(false)
-    self.categoryPanel.Paint = function(panel, w, h)
-        surface.SetDrawColor(30, 30, 30, 200)
-        surface.DrawRect(0, 0, w, h)
-        draw.SimpleText("Categories", "liaBigFont", w / 2, 20, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
-
+    self.categoryList:SetZPos(1)
     self.vendor = self:Add("VendorTrader")
     self.vendor:SetSize(math.max(ScrW() * 0.25, 220), ScrH() - self.vendor.y)
     self.vendor:SetPos(ScrW() * 0.5 - self.vendor:GetWide() - 64 / 2, 64 + 44)
@@ -171,11 +160,9 @@ function PANEL:Init()
         self.categoryToggle.DoClick = function(button)
             if self.categoryList:IsVisible() then
                 self.categoryList:SetVisible(false)
-                self.categoryPanel:SetVisible(false)
                 button:SetText("Show Categories")
             else
                 self.categoryList:SetVisible(true)
-                self.categoryPanel:SetVisible(true)
                 button:SetText("Hide Categories")
             end
         end
@@ -191,11 +178,9 @@ function PANEL:Init()
         self.categoryToggle.DoClick = function(button)
             if self.categoryList:IsVisible() then
                 self.categoryList:SetVisible(false)
-                self.categoryPanel:SetVisible(false)
                 button:SetText("Show Categories")
             else
                 self.categoryList:SetVisible(true)
-                self.categoryPanel:SetVisible(true)
                 button:SetText("Hide Categories")
             end
         end
@@ -203,12 +188,8 @@ function PANEL:Init()
         self.categoryToggle.Paint = function(btn, w, h) self:PaintButton(btn, w, h) end
     end
 
+    self.categoryToggle:SetVisible(#self:GetItemCategoryList() > 0)
     self:DrawPortraits()
-    local vendorPanelW, _ = self.vendor:GetPos()
-    self.categoryList:SetPos(vendorPanelW / 4, h * 0.6)
-    self.categoryList:SetSize(self.vendor:GetWide() / 1.8, h * 0.4)
-    self.categoryPanel:SetZPos(0)
-    self.categoryList:SetZPos(1)
 end
 
 function PANEL:DrawPortraits()
@@ -365,26 +346,50 @@ function PANEL:onItemStockUpdated(_, itemType)
     self:updateItem(itemType, self.vendor)
 end
 
-function PANEL:createCategoryList()
+function PANEL:GetItemCategoryList()
     local categories = {}
     for itemType, _ in pairs(liaVendorEnt.items) do
         local item = lia.item.list[itemType]
         if item and item.category then categories[item.category] = true end
     end
+    return categories
+end
 
+function PANEL:createCategoryList()
+    local categories = self:GetItemCategoryList()
+    if table.IsEmpty(categories) then return end
     local sortedCategories = {}
     for category, _ in pairs(categories) do
         table.insert(sortedCategories, category)
     end
 
     table.sort(sortedCategories)
+    local buttonHeight = 40
+    local buttonMargin = 5
+    local totalButtons = #sortedCategories + 1
+    local totalHeight = 0
+    for i = 1, totalButtons do
+        if i == 1 then
+            totalHeight = totalHeight + buttonHeight + 25
+        else
+            totalHeight = totalHeight + buttonHeight + buttonMargin
+        end
+    end
+
+    local maxHeight = ScrH() * 0.9
+    if totalHeight > maxHeight then totalHeight = maxHeight end
+    self.categoryList:SetTall(totalHeight)
+    local xPos = self.categoryList:GetWide() - (ScrW() * 0.11)
+    local yPos = ScrH() - totalHeight - (ScrH() * 0.05)
+    if yPos < 0 then yPos = 0 end
+    self.categoryList:SetPos(xPos, yPos)
     local allButton = self.categoryList:Add("DButton")
     allButton:Dock(TOP)
     allButton:DockMargin(5, 25, 5, 0)
     allButton:SetText("Show All")
     allButton:SetFont("liaBigFont")
     allButton:SetTextColor(Color(255, 255, 255))
-    allButton:SetTall(40)
+    allButton:SetTall(buttonHeight)
     allButton.Paint = function(panel, w, h) self:PaintButton(panel, w, h) end
     allButton.DoClick = function()
         self.currentCategory = nil
@@ -394,19 +399,17 @@ function PANEL:createCategoryList()
     for _, category in ipairs(sortedCategories) do
         local categoryButton = self.categoryList:Add("DButton")
         categoryButton:Dock(TOP)
-        categoryButton:DockMargin(5, 5, 5, 0)
+        categoryButton:DockMargin(5, buttonMargin, 5, 0)
         categoryButton:SetText(string.FirstToUpper(category))
         categoryButton:SetFont("liaBigFont")
         categoryButton:SetTextColor(Color(255, 255, 255))
-        categoryButton:SetTall(40)
+        categoryButton:SetTall(buttonHeight)
         categoryButton.Paint = function(panel, w, h) self:PaintButton(panel, w, h) end
         categoryButton.DoClick = function()
             self.currentCategory = category
             self:filterItemsByCategory()
         end
     end
-
-    self.categoryPanel:SetSize(ScrW() * 0.15, (#sortedCategories + 1) * 65)
 end
 
 function PANEL:PaintButton(btn, width, height)
