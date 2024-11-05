@@ -385,7 +385,7 @@ function GM:PostPlayerLoadout(client)
     client:SetupHands()
 end
 
-function GM:DoPlayerDeath(client, attacker, damageinfo)
+function GM:DoPlayerDeath(client, attacker)
     client:AddDeaths(1)
     if hook.Run("ShouldSpawnClientRagdoll", client) ~= false then client:CreateRagdoll() end
     if IsValid(attacker) and attacker:IsPlayer() then
