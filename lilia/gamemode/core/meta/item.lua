@@ -443,35 +443,50 @@ if SERVER then
         self:onSync(recipient)
     end
 
-    --- Sets a key within the item's data.
+    --- Sets a key-value pair within the item's data table.
+    -- This function updates the item's data and optionally synchronizes it with the entity's network variables
+    -- and sends the updated data to specified receivers or the item's owner.
     -- @realm server
-    -- @string key The key to store the value within.
-    -- @tparam any[opt=nil] value The value to set for the key.
-    -- @tab[opt=nil] receivers The players to replicate the data on.
+    -- @string key The key to store the value under.
+    -- @tparam any[opt=nil] value The value to set for the key. If nil, the key is effectively removed.
+    -- @tab[opt=nil] receivers A table of players to whom the data should be sent. Defaults to the item's owner.
+    -- @bool[opt=false] noSave If true, prevents saving the data to the database.
+    -- @bool[opt=false] noCheckEntity If true, skips updating the network variable for the item's entity.
     -- @usage
     -- item:setData("health", 100, {player1, player2}, false, false)
-    function ITEM:setData(key, value, receivers)
+    function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
         self.data = self.data or {}
         self.data[key] = value
-        if key == "char" then
-            lia.db.updateTable({
-                _charID = value
-            }, nil, "inventories", "_invID = " .. self:getID())
-        elseif not (self.config.data[key] and self.config.data[key].notPersistent) then
-            if value == nil then
-                lia.db.delete("invdata", "_invID = " .. self.id .. " AND _key = '" .. lia.db.escape(key) .. "'")
-            else
-                lia.db.upsert({
-                    _invID = self.id,
-                    _key = key,
-                    _value = {value}
-                }, "invdata")
-            end
+        if not noCheckEntity then
+            local entity = self:getEntity()
+            if IsValid(entity) then entity:setNetVar("data", self.data) end
         end
 
-        self:syncData(key, receivers)
-        self:onDataChanged(key, self.data[key], value)
-        return self
+        if receivers or self:getOwner() then netstream.Start(receivers or self:getOwner(), "invData", self:getID(), key, value) end
+        if noSave or not lia.db then return end
+        if key == "x" or key == "y" then
+            value = tonumber(value)
+            if MYSQLOO_PREPARED then
+                lia.db.preparedCall("item" .. key, nil, value, self:getID())
+            else
+                lia.db.updateTable({
+                    ["_" .. key] = value
+                }, nil, "items", "_itemID = " .. self:getID())
+            end
+            return
+        end
+
+        local x, y = self.data.x, self.data.y
+        self.data.x, self.data.y = nil, nil
+        if MYSQLOO_PREPARED then
+            lia.db.preparedCall("itemData", nil, self.data, self:getID())
+        else
+            lia.db.updateTable({
+                _data = self.data
+            }, nil, "items", "_itemID = " .. self:getID())
+        end
+
+        self.data.x, self.data.y = x, y
     end
 
     ITEM.SetData = ITEM.setData
