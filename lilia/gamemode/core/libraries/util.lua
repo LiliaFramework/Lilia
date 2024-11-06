@@ -254,8 +254,8 @@ if SERVER then
         height = height or 36
         tolerance = tolerance or 5
         local position = entity:GetPos()
-        local mins = Vector(-spacing * 0.5, -acing * 0.5, 0)
-        local maxs = Vector(spacing * 0.5, sping * 0.5, height)
+        local mins = Vector(-spacing * 0.5, -spacing * 0.5, 0)
+        local maxs = Vector(spacing * 0.5, spacing * 0.5, height)
         local output = {}
         for x = -size, size do
             for y = -size, size do
