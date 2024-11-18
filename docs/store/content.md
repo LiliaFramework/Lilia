@@ -40,6 +40,10 @@ The catalog is divided into five categories:
 
 - **Bank Robbery**: Adds a bank safe that can be robbed, with configurable settings such as minimum police presence and incremental money accumulation.
 
+- **Rideable Mounts**: Adds a variety of rideable pets that players can mount.
+
+- **Pets**: Introduces pets with needs, such as hunger, boredom, thirst, and health. Pets can also get sick overtime.
+
 - **In-depth Armors**: Allows for comprehensive customization of armor, affecting player models, movement speed, jump height, fall damage immunity, resistance percentages, radiation immunity, footstep sounds, and visual overlays.
 
 - **Marketplace**: Establishes a global marketplace for player transactions.
