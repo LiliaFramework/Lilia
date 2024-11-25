@@ -188,7 +188,6 @@ function PANEL:Init()
         self.categoryToggle.Paint = function(btn, w, h) self:PaintButton(btn, w, h) end
     end
 
-    self.categoryToggle:SetVisible(#self:GetItemCategoryList() > 0)
     self:DrawPortraits()
 end
 
@@ -348,7 +347,7 @@ end
 
 function PANEL:GetItemCategoryList()
     local categories = {}
-    for itemType, _ in pairs(liaVendorEnt.items) do
+    for itemType in SortedPairs(liaVendorEnt.items) do
         local item = lia.item.list[itemType]
         if item and item.category then categories[item.category] = true end
     end

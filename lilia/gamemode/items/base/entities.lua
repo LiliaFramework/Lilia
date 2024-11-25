@@ -15,6 +15,12 @@ ITEM.functions.Place = {
         local entity = ents.Create(item.entityid)
         entity:SetPos(data.endpos)
         entity:Spawn()
+        local physObj = entity:GetPhysicsObject()
+        if IsValid(physObj) then
+            physObj:EnableMotion(true)
+            physObj:Wake()
+        end
+
         client:SetNW2Bool("ItemCooldown_" .. item.uniqueID, true)
         timer.Create(client:SteamID64() .. "_" .. item.uniqueID .. "_cooldown", item.entityCooldown, 1, function() client:SetNW2Bool("ItemCooldown_" .. item.uniqueID, false) end)
         return item.shouldRemove
