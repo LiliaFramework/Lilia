@@ -39,6 +39,19 @@ function ENT:setItem(itemID)
     self:SetSkin(itemTable.skin or 0)
     self:SetMaterial(itemTable.material or "")
     self:SetColor(itemTable.color or color_white)
+    if itemTable.bodygroups and istable(itemTable.bodygroups) then
+        for k, v in pairs(itemTable.bodygroups) do
+            local bodygroupID
+            if isnumber(k) then
+                bodygroupID = k
+            elseif isstring(k) then
+                bodygroupID = self:FindBodygroupByName(k)
+            end
+
+            if bodygroupID and bodygroupID >= 0 then self:SetBodygroup(bodygroupID, v) end
+        end
+    end
+
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
     self:setNetVar("id", itemTable.uniqueID)
