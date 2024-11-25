@@ -180,6 +180,17 @@ function playerMeta:CanOverrideView()
     return ThirdPerson:GetBool() and MODULE.ThirdPersonEnabled and (IsValid(self) and self:getChar() and not IsValid(ragdoll))
 end
 
+--- Checks if the player is currently using third-person view.
+-- This function verifies if third-person mode is active for the player.
+-- @realm client
+-- @treturn boolean True if the player is in third-person view, false otherwise.
+function playerMeta:IsInThirdPerson()
+    local thirdPersonEnabled = MODULE.ThirdPersonEnabled
+    local tpEnabledConVar = GetConVar("tp_enabled")
+    local tpEnabled = tpEnabledConVar:GetBool()
+    return tpEnabled and thirdPersonEnabled
+end
+
 concommand.Add("tp_toggle", function()
     ThirdPerson:SetInt(ThirdPerson:GetInt() == 0 and 1 or 0)
     hook.Run("thirdPersonToggled", ThirdPerson:GetBool())
