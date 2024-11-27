@@ -121,58 +121,55 @@ function MODULE:OpenAdminStickUI(target)
 
         steamid64:SetIcon("icon16/information.png")
         local playerInfo = AdminMenu:AddSubMenu("Administration")
-        if sam then
-            if target:IsFrozen() then
-                local unfreeze = playerInfo:AddOption("Unfreeze", function()
-                    RunConsoleCommand("ulx", "unfreeze", target:SteamID())
-                    AdminStickIsOpen = false
-                end)
-
-                unfreeze:SetIcon("icon16/disconnect.png")
-            else
-                local freeze = playerInfo:AddOption("Freeze", function()
-                    if LocalPlayer() == target then
-                        lia.notices.notify("You can't freeze yourself!")
-                        return false
-                    end
-
-                    RunConsoleCommand("ulx", "freeze", target:SteamID())
-                    AdminStickIsOpen = false
-                end)
-
-                freeze:SetIcon("icon16/connect.png")
-            end
-
-            local ban = playerInfo:AddOption("Ban", function() OpenReasonUI(target, "banid", 0) end)
-            ban:SetIcon("icon16/cancel.png")
-            local kick = playerInfo:AddOption("Kick", function() OpenReasonUI(target, "kick", 0) end)
-            kick:SetIcon("icon16/delete.png")
-            local gag = playerInfo:AddOption("Gag", function()
-                RunConsoleCommand("ulx", "gag", target:SteamID())
+        if target:IsFrozen() then
+            local unfreeze = playerInfo:AddOption("Unfreeze", function()
+                RunConsoleCommand("ulx", "unfreeze", target:SteamID())
                 AdminStickIsOpen = false
             end)
 
-            gag:SetIcon("icon16/sound_mute.png")
-            local ungag = playerInfo:AddOption("Ungag", function()
-                RunConsoleCommand("ulx", "ungag", target:SteamID())
+            unfreeze:SetIcon("icon16/disconnect.png")
+        else
+            local freeze = playerInfo:AddOption("Freeze", function()
+                if LocalPlayer() == target then
+                    lia.notices.notify("You can't freeze yourself!")
+                    return false
+                end
+
+                RunConsoleCommand("ulx", "freeze", target:SteamID())
                 AdminStickIsOpen = false
             end)
 
-            ungag:SetIcon("icon16/sound_low.png")
-            local mute = playerInfo:AddOption("Mute", function()
-                RunConsoleCommand("ulx", "mute", target:SteamID())
-                AdminStickIsOpen = false
-            end)
-
-            mute:SetIcon("icon16/sound_delete.png")
-            local unmute = playerInfo:AddOption("Unmute", function()
-                RunConsoleCommand("ulx", "unmute", target:SteamID())
-                AdminStickIsOpen = false
-            end)
-
-            unmute:SetIcon("icon16/sound_add.png")
+            freeze:SetIcon("icon16/connect.png")
         end
 
+        local ban = playerInfo:AddOption("Ban", function() OpenReasonUI(target, "banid", 0) end)
+        ban:SetIcon("icon16/cancel.png")
+        local kick = playerInfo:AddOption("Kick", function() OpenReasonUI(target, "kick", 0) end)
+        kick:SetIcon("icon16/delete.png")
+        local gag = playerInfo:AddOption("Gag", function()
+            RunConsoleCommand("ulx", "gag", target:SteamID())
+            AdminStickIsOpen = false
+        end)
+
+        gag:SetIcon("icon16/sound_mute.png")
+        local ungag = playerInfo:AddOption("Ungag", function()
+            RunConsoleCommand("ulx", "ungag", target:SteamID())
+            AdminStickIsOpen = false
+        end)
+
+        ungag:SetIcon("icon16/sound_low.png")
+        local mute = playerInfo:AddOption("Mute", function()
+            RunConsoleCommand("ulx", "mute", target:SteamID())
+            AdminStickIsOpen = false
+        end)
+
+        mute:SetIcon("icon16/sound_delete.png")
+        local unmute = playerInfo:AddOption("Unmute", function()
+            RunConsoleCommand("ulx", "unmute", target:SteamID())
+            AdminStickIsOpen = false
+        end)
+
+        unmute:SetIcon("icon16/sound_add.png")
         local characterInfo = AdminMenu:AddSubMenu("Character")
         for _, fac in pairs(lia.faction.teams) do
             if fac.index == target:getChar():getFaction() then
@@ -186,15 +183,17 @@ function MODULE:OpenAdminStickUI(target)
             end
         end
 
-        local setClass = characterInfo:AddSubMenu("Set Class")
-        for _, class in ipairs(lia.class.list) do
-            if class.faction == target:getChar():getFaction() then
-                local classOption = setClass:AddOption(class.name, function()
-                    LocalPlayer():ConCommand('say /setclass "' .. target:SteamID() .. '" "' .. class.name .. '"')
-                    AdminStickIsOpen = false
-                end)
+        if #lia.class.list > 1 then
+            local setClass = characterInfo:AddSubMenu("Set Class")
+            for _, class in ipairs(lia.class.list) do
+                if class.faction == target:getChar():getFaction() then
+                    local classOption = setClass:AddOption(class.name, function()
+                        LocalPlayer():ConCommand('say /setclass "' .. target:SteamID() .. '" "' .. class.name .. '"')
+                        AdminStickIsOpen = false
+                    end)
 
-                classOption:SetIcon("icon16/user.png")
+                    classOption:SetIcon("icon16/user.png")
+                end
             end
         end
 

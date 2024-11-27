@@ -142,72 +142,72 @@ function MODULE:OpenAdminStickUI(target)
             end)
 
             freeze:SetIcon("icon16/lock.png")
-            local ban = playerInfo:AddOption("Ban", function() OpenReasonUI(target, "banid", 0) end)
-            ban:SetIcon("icon16/exclamation.png")
-            local kick = playerInfo:AddOption("Kick", function() OpenReasonUI(target, "kick", 0) end)
-            kick:SetIcon("icon16/door.png")
-            local gag = playerInfo:AddOption("Gag", function()
-                RunConsoleCommand("sam", "gag", target:SteamID())
-                AdminStickIsOpen = false
-            end)
-
-            gag:SetIcon("icon16/sound_mute.png")
-            local ungag = playerInfo:AddOption("Ungag", function()
-                RunConsoleCommand("sam", "ungag", target:SteamID())
-                AdminStickIsOpen = false
-            end)
-
-            ungag:SetIcon("icon16/sound_low.png")
-            local mute = playerInfo:AddOption("Mute", function()
-                RunConsoleCommand("sam", "mute", target:SteamID())
-                AdminStickIsOpen = false
-            end)
-
-            mute:SetIcon("icon16/sound_delete.png")
-            local unmute = playerInfo:AddOption("Unmute", function()
-                RunConsoleCommand("sam", "unmute", target:SteamID())
-                AdminStickIsOpen = false
-            end)
-
-            unmute:SetIcon("icon16/sound_add.png")
-            local slay = playerInfo:AddOption("Slay", function()
-                RunConsoleCommand("sam", "slay", target:SteamID())
-                AdminStickIsOpen = false
-            end)
-
-            slay:SetIcon("icon16/bomb.png")
-            local respawn = playerInfo:AddOption("Respawn", function()
-                RunConsoleCommand("sam", "respawn", target:SteamID())
-                AdminStickIsOpen = false
-            end)
-
-            respawn:SetIcon("icon16/arrow_refresh.png")
-            local jail = playerInfo:AddOption("Jail", function()
-                RunConsoleCommand("sam", "jail", target:SteamID())
-                AdminStickIsOpen = false
-            end)
-
-            jail:SetIcon("icon16/lock.png")
-            local ignite = playerInfo:AddOption("Ignite", function()
-                RunConsoleCommand("sam", "ignite", target:SteamID())
-                AdminStickIsOpen = false
-            end)
-
-            ignite:SetIcon("icon16/fire.png")
-            local blind = playerInfo:AddOption("Blind", function()
-                RunConsoleCommand("sam", "blind", target:SteamID())
-                AdminStickIsOpen = false
-            end)
-
-            blind:SetIcon("icon16/eye.png")
-            local unblind = playerInfo:AddOption("Unblind", function()
-                RunConsoleCommand("sam", "unblind", target:SteamID())
-                AdminStickIsOpen = false
-            end)
-
-            unblind:SetIcon("icon16/eye.png")
         end
 
+        local ban = playerInfo:AddOption("Ban", function() OpenReasonUI(target, "banid", 0) end)
+        ban:SetIcon("icon16/exclamation.png")
+        local kick = playerInfo:AddOption("Kick", function() OpenReasonUI(target, "kick", 0) end)
+        kick:SetIcon("icon16/door.png")
+        local gag = playerInfo:AddOption("Gag", function()
+            RunConsoleCommand("sam", "gag", target:SteamID())
+            AdminStickIsOpen = false
+        end)
+
+        gag:SetIcon("icon16/sound_mute.png")
+        local ungag = playerInfo:AddOption("Ungag", function()
+            RunConsoleCommand("sam", "ungag", target:SteamID())
+            AdminStickIsOpen = false
+        end)
+
+        ungag:SetIcon("icon16/sound_low.png")
+        local mute = playerInfo:AddOption("Mute", function()
+            RunConsoleCommand("sam", "mute", target:SteamID())
+            AdminStickIsOpen = false
+        end)
+
+        mute:SetIcon("icon16/sound_delete.png")
+        local unmute = playerInfo:AddOption("Unmute", function()
+            RunConsoleCommand("sam", "unmute", target:SteamID())
+            AdminStickIsOpen = false
+        end)
+
+        unmute:SetIcon("icon16/sound_add.png")
+        local slay = playerInfo:AddOption("Slay", function()
+            RunConsoleCommand("sam", "slay", target:SteamID())
+            AdminStickIsOpen = false
+        end)
+
+        slay:SetIcon("icon16/bomb.png")
+        local respawn = playerInfo:AddOption("Respawn", function()
+            RunConsoleCommand("sam", "respawn", target:SteamID())
+            AdminStickIsOpen = false
+        end)
+
+        respawn:SetIcon("icon16/arrow_refresh.png")
+        local jail = playerInfo:AddOption("Jail", function()
+            RunConsoleCommand("sam", "jail", target:SteamID())
+            AdminStickIsOpen = false
+        end)
+
+        jail:SetIcon("icon16/lock.png")
+        local ignite = playerInfo:AddOption("Ignite", function()
+            RunConsoleCommand("sam", "ignite", target:SteamID())
+            AdminStickIsOpen = false
+        end)
+
+        ignite:SetIcon("icon16/fire.png")
+        local blind = playerInfo:AddOption("Blind", function()
+            RunConsoleCommand("sam", "blind", target:SteamID())
+            AdminStickIsOpen = false
+        end)
+
+        blind:SetIcon("icon16/eye.png")
+        local unblind = playerInfo:AddOption("Unblind", function()
+            RunConsoleCommand("sam", "unblind", target:SteamID())
+            AdminStickIsOpen = false
+        end)
+
+        unblind:SetIcon("icon16/eye.png")
         local characterInfo = AdminMenu:AddSubMenu("Character")
         for _, fac in pairs(lia.faction.teams) do
             if fac.index == target:getChar():getFaction() then
@@ -221,15 +221,17 @@ function MODULE:OpenAdminStickUI(target)
             end
         end
 
-        local setClass = characterInfo:AddSubMenu("Set Class")
-        for _, class in ipairs(lia.class.list) do
-            if class.faction == target:getChar():getFaction() then
-                local classOption = setClass:AddOption(class.name, function()
-                    LocalPlayer():ConCommand('say /setclass "' .. target:SteamID() .. '" "' .. class.name .. '"')
-                    AdminStickIsOpen = false
-                end)
+        if #lia.class.list > 1 then
+            local setClass = characterInfo:AddSubMenu("Set Class")
+            for _, class in ipairs(lia.class.list) do
+                if class.faction == target:getChar():getFaction() then
+                    local classOption = setClass:AddOption(class.name, function()
+                        LocalPlayer():ConCommand('say /setclass "' .. target:SteamID() .. '" "' .. class.name .. '"')
+                        AdminStickIsOpen = false
+                    end)
 
-                classOption:SetIcon("icon16/user.png")
+                    classOption:SetIcon("icon16/user.png")
+                end
             end
         end
 
