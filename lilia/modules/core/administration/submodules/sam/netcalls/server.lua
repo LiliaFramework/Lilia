@@ -32,7 +32,7 @@ end)
 
 net.Receive("TicketSystemClose", function(_, client)
     local requester = net.ReadEntity()
-    if not requester or not requester:IsValid() or requester.CaseClaimed ~= client then return end
+    if not requester or not IsValid(requester) or requester.CaseClaimed ~= client then return end
     if timer.Exists("ticketsystem-" .. requester:SteamID64()) then timer.Remove("ticketsystem-" .. requester:SteamID64()) end
     for _, v in pairs(player.GetAll()) do
         if MODULE:HasAccess(v) then

@@ -49,7 +49,7 @@ end
 function MODULE:SendPopup(noob, message)
     if self.CaseUpdateOnly then
         if noob.CaseClaimed then
-            if noob.CaseClaimed:IsValid() and noob.CaseClaimed:IsPlayer() then
+            if IsValid(noob.CaseClaimed) and noob.CaseClaimed:IsPlayer() then
                 net.Start("TicketSystem")
                 net.WriteEntity(noob)
                 net.WriteString(message)
@@ -79,9 +79,9 @@ function MODULE:SendPopup(noob, message)
         end
     end
 
-    if noob:IsValid() and noob:IsPlayer() then
+    if IsValid(noob) and noob:IsPlayer() then
         timer.Remove("ticketsystem-" .. noob:SteamID64())
-        timer.Create("ticketsystem-" .. noob:SteamID64(), self.Autoclose, 1, function() if noob:IsValid() and noob:IsPlayer() then noob.CaseClaimed = nil end end)
+        timer.Create("ticketsystem-" .. noob:SteamID64(), self.Autoclose, 1, function() if IsValid(noob) and noob:IsPlayer() then noob.CaseClaimed = nil end end)
     end
 end
 

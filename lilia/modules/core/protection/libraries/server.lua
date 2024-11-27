@@ -48,7 +48,7 @@ function MODULE:PlayerLeaveVehicle(_, entity)
     if entity:GetClass() == "prop_vehicle_prisoner_pod" then
         local sName = "PodFix_" .. entity:EntIndex()
         hook.Add("Think", sName, function()
-            if entity:IsValid() then
+            if IsValid(entity) then
                 if entity:GetInternalVariable("m_bEnterAnimOn") then
                     hook.Remove("Think", sName)
                 elseif not entity:GetInternalVariable("m_bExitAnimOn") then
@@ -114,7 +114,7 @@ end
 function MODULE:OnPlayerDropWeapon(_, _, entity)
     local physObject = entity:GetPhysicsObject()
     if physObject then physObject:EnableMotion() end
-    timer.Simple(self.TimeUntilDroppedSWEPRemoved, function() if entity and entity:IsValid() then entity:Remove() end end)
+    timer.Simple(self.TimeUntilDroppedSWEPRemoved, function() if entity and IsValid(entity) then entity:Remove() end end)
 end
 
 function MODULE:OnPlayerHitGround(client)

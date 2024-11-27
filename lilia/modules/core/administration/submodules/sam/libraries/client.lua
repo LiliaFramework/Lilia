@@ -345,7 +345,7 @@ function MODULE:TicketFrame(requester, message, claimed)
             txt:AppendText("\n" .. message)
             txt:GotoTextEnd()
             timer.Remove("ticketsystem-" .. requester:SteamID64())
-            timer.Create("ticketsystem-" .. requester:SteamID64(), self.Autoclose, 1, function() if v:IsValid() then v:Remove() end end)
+            timer.Create("ticketsystem-" .. requester:SteamID64(), self.Autoclose, 1, function() if IsValid(v) then v:Remove() end end)
             surface.PlaySound("ui/hint.wav")
             return
         end
@@ -466,7 +466,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     end
 
     table.insert(TicketFrames, frm)
-    timer.Create("ticketsystem-" .. requester:SteamID64(), self.Autoclose, 1, function() if frm:IsValid() then frm:Remove() end end)
+    timer.Create("ticketsystem-" .. requester:SteamID64(), self.Autoclose, 1, function() if IsValid(frm) then frm:Remove() end end)
 end
 
 CreateClientConVar("cl_ticketsystem_closeclaimed", 0, true, false)

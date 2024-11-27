@@ -88,9 +88,8 @@ function GM:PrePlayerLoadedChar(client)
 end
 
 function GM:OnPickupMoney(client, moneyEntity)
-    if moneyEntity and moneyEntity:IsValid() then
+    if moneyEntity and IsValid(moneyEntity) then
         local amount = moneyEntity:getAmount()
-        client:getChar():giveMoney(amount)
         client:notifyLocalized("moneyTaken", lia.currency.get(amount))
         lia.log.add(client, "moneyPickedUp", amount)
     end

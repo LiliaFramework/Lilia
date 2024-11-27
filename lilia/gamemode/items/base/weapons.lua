@@ -59,7 +59,7 @@ ITEM.functions.EquipUn = {
         client.carryWeapons = client.carryWeapons or {}
         local weapon = client.carryWeapons[item.weaponCategory]
         if not weapon or not IsValid(weapon) then weapon = client:GetWeapon(item.class) end
-        if weapon and weapon:IsValid() then
+        if weapon and IsValid(weapon) then
             item:setData("ammo", weapon:Clip1())
             client:StripWeapon(item.class)
         else

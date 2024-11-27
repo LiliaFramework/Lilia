@@ -256,7 +256,7 @@ end
 -- tool:CheckObjects()
 function ToolGunMeta:CheckObjects()
     for _, v in pairs(self.Objects) do
-        if not v.Ent:IsWorld() and not v.Ent:IsValid() then self:ClearObjects() end
+        if not v.Ent:IsWorld() and not IsValid(v.Ent) then self:ClearObjects() end
     end
 end
 

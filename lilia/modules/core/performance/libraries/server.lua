@@ -103,7 +103,7 @@ function MODULE:PlayerSpawnVehicle(client)
 end
 
 function MODULE:PropBreak(_, entity)
-    if entity:IsValid() and entity:GetPhysicsObject():IsValid() then constraint.RemoveAll(entity) end
+    if IsValid(entity) and IsValid(entity:GetPhysicsObject()) then constraint.RemoveAll(entity) end
 end
 
 function MODULE:EntityRemoved(entity)

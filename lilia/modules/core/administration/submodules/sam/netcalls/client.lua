@@ -73,7 +73,7 @@ end)
 
 net.Receive("TicketSystemClose", function()
     local requester = net.ReadEntity()
-    if not requester:IsValid() or not requester:IsPlayer() then return end
+    if not IsValid(requester) or not requester:IsPlayer() then return end
     for _, v in pairs(TicketFrames) do
         if v.idiot == requester then v:Remove() end
     end

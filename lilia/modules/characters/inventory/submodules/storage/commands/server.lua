@@ -5,7 +5,7 @@ lia.command.add("storagelock", {
     syntax = "[string password]",
     onRun = function(client, arguments)
         local entity = client:GetTracedEntity()
-        if entity and entity:IsValid() then
+        if entity and IsValid(entity) then
             local password = table.concat(arguments, " ")
             if password ~= "" then
                 entity:setNetVar("locked", true)

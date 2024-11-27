@@ -305,14 +305,14 @@ function MODULE:TicketFrame(requester, message, claimed)
     local mat_link = Material("icon16/link.png")
     local mat_eye = Material("icon16/eye.png")
     local mat_case = Material("icon16/briefcase.png")
-    if not requester:IsValid() or not requester:IsPlayer() then return end
+    if not IsValid(requester) or not requester:IsPlayer() then return end
     for _, v in pairs(TicketFrames) do
         if v.idiot == requester then
             local txt = v:GetChildren()[5]
             txt:AppendText("\n" .. message)
             txt:GotoTextEnd()
             timer.Remove("ticketsystem-" .. requester:SteamID64())
-            timer.Create("ticketsystem-" .. requester:SteamID64(), self.Autoclose, 1, function() if v:IsValid() then v:Remove() end end)
+            timer.Create("ticketsystem-" .. requester:SteamID64(), self.Autoclose, 1, function() if IsValid(v) then v:Remove() end end)
             surface.PlaySound("ui/hint.wav")
             return
         end
@@ -330,7 +330,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     frm.lblTitle:SetColor(Color(255, 255, 255))
     frm.lblTitle:SetFont("ticketsystem")
     frm.lblTitle:SetContentAlignment(7)
-    if claimed and claimed:IsValid() and claimed:IsPlayer() then
+    if claimed and IsValid(claimed) and claimed:IsPlayer() then
         frm:SetTitle(requester:Nick() .. " - Claimed by " .. claimed:Nick())
         if claimed == LocalPlayer() then
             function frm:Paint(w, h)
@@ -423,7 +423,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     end
 
     table.insert(TicketFrames, frm)
-    timer.Create("ticketsystem-" .. requester:SteamID64(), self.Autoclose, 1, function() if frm:IsValid() then frm:Remove() end end)
+    timer.Create("ticketsystem-" .. requester:SteamID64(), self.Autoclose, 1, function() if IsValid(frm) then frm:Remove() end end)
 end
 
 function MODULE:LoadFonts()
