@@ -1178,7 +1178,7 @@ else
 
         concommand.Add("weighpoint_stop", function()
             hook.Remove("HUDPaint", "WeighPoint")
-            if IsValid(onReach) then onReach() end
+            if onReach then onReach() end
         end)
     end
 
