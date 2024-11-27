@@ -1,5 +1,6 @@
-﻿function ENT:Initialize()
-    self:SetModel(self.Model)
+﻿local MODULE = MODULE
+function ENT:Initialize()
+    self:SetModel(MODULE.BodyGrouperModel)
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:SetUseType(SIMPLE_USE)

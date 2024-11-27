@@ -4,7 +4,6 @@ ENT.Category = "Lilia"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 ENT.IsPersistent = true
-ENT.Model = "models/props_c17/FurnitureDresser001a.mdl"
 function ENT:HasUser(user)
     self.users = self.users or {}
     return self.users[user] == true
