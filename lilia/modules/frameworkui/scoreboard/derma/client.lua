@@ -318,11 +318,20 @@ function PANEL:OnRemove()
 end
 
 function PANEL:Paint(w, h)
-    lia.util.drawBlur(self, 10)
-    surface.SetDrawColor(30, 30, 30, 100)
-    surface.DrawRect(0, 0, w, h)
-    surface.SetDrawColor(0, 0, 0, 150)
-    surface.DrawOutlinedRect(0, 0, w, h)
+    local backgroundColor = MODULE.UseSolidBackground and (MODULE.BackgroundColor or Color(50, 50, 50, 255)) or Color(30, 30, 30, 100)
+    local borderColor = Color(0, 0, 0, MODULE.UseSolidBackground and 200 or 150)
+    if MODULE.UseSolidBackground then
+        surface.SetDrawColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
+        surface.DrawRect(0, 0, w, h)
+        surface.SetDrawColor(borderColor.r, borderColor.g, borderColor.b, borderColor.a)
+        surface.DrawOutlinedRect(0, 0, w, h)
+    else
+        lia.util.drawBlur(self, 10)
+        surface.SetDrawColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
+        surface.DrawRect(0, 0, w, h)
+        surface.SetDrawColor(borderColor.r, borderColor.g, borderColor.b, borderColor.a)
+        surface.DrawOutlinedRect(0, 0, w, h)
+    end
 end
 
 vgui.Register("liaScoreboard", PANEL, "EditablePanel")
