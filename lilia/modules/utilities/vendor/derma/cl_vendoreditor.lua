@@ -115,7 +115,7 @@ function PANEL:Init()
 end
 
 function PANEL:getModeText(mode)
-    return L(VENDOR_TEXT[mode] or "none")
+    return mode and L(VENDOR_TEXT[mode]) or L("none")
 end
 
 function PANEL:OnRemove()
@@ -166,7 +166,7 @@ function PANEL:onNameDescChanged(key)
     end
 end
 
-function PANEL:onItemModeUpdated(itemType, value)
+function PANEL:onItemModeUpdated(_, itemType, value)
     local line = self.lines[itemType]
     if not IsValid(line) then return end
     line:SetColumnText(COLS_MODE, self:getModeText(value))
