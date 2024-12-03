@@ -868,7 +868,7 @@ lia.command.add("itemlist", {
                 uniqueID = item.uniqueID or "N/A",
                 name = item.name or "N/A",
                 desc = item.desc or "N/A",
-                category = item.category or "Misc",
+                category = item.category or "Miscellaneous",
                 price = item.price or "0"
             })
         end
