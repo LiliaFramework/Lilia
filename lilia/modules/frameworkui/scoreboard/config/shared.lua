@@ -4,4 +4,4 @@ MODULE.ShowStaff = true
 MODULE.DisplayServerName = false
 MODULE.DisplayMemberCount = true
 MODULE.UseSolidBackground = false
-MODULE.BackgroundColor = Color(255, 100, 100, 255) 
+MODULE.BackgroundColor = Color(255, 100, 100, 255)
