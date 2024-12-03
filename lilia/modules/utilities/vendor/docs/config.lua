@@ -1,4 +1,4 @@
-﻿--- Configuration for Vendors Module.
+﻿--- Configuration for the Vendors Module.
 -- @configuration Vendors
 
 --- This table defines the default settings for the Vendors Module.

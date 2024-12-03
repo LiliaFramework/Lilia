@@ -1,4 +1,4 @@
-﻿--- Configuration for Recognition Module.
+﻿--- Configuration for the Recognition Module.
 -- @configuration Recognition
 
 --- This table defines the default settings for the Recognition Module.

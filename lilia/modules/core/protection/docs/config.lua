@@ -1,4 +1,4 @@
-﻿--- Configuration for Protection Module.
+﻿--- Configuration for the Protection Module.
 -- @configuration Protection
 
 --- This table defines the default settings for the Protection Module.

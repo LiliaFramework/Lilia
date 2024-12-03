@@ -1,4 +1,4 @@
-﻿--- Configuration for Permakill Module.
+﻿--- Configuration for the Permakill Module.
 -- @configuration Permakill
 
 --- This table defines the default settings for the Permakill Module.

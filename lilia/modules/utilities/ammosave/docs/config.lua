@@ -1,4 +1,4 @@
-﻿--- Configuration for AmmoSave Module.
+﻿--- Configuration for the AmmoSave Module.
 -- @configuration AmmoSave
 
 --- This table defines the default settings for the AmmoSave Module.

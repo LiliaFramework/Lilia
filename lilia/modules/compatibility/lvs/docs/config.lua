@@ -1,4 +1,4 @@
-﻿--- Configuration for LVS Compatibility Module.
+﻿--- Configuration for the LVS Compatibility Module.
 -- @configuration LVS
 
 --- This table defines the default settings for the LVS Module.

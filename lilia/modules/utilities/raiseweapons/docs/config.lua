@@ -1,4 +1,4 @@
-﻿--- Configuration for Raised Weapons Module.
+﻿--- Configuration for the Raised Weapons Module.
 -- @configuration RaisedWeapons
 
 --- This table defines the default settings for the RaisedWeapons Module.

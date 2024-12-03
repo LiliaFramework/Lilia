@@ -1,4 +1,4 @@
-﻿--- Configuration for Attributes Module.
+﻿--- Configuration for the Attributes Module.
 -- @configuration Attributes
 
 --- This table defines the default settings for the Attributes Module.

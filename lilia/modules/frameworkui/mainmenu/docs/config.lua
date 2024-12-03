@@ -1,4 +1,4 @@
-﻿--- Configuration for MainMenu Module.
+﻿--- Configuration for the MainMenu Module.
 -- @configuration MainMenu
 
 --- This table defines the default settings for the MainMenu Module.

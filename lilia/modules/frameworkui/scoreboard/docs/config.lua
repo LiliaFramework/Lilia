@@ -1,4 +1,4 @@
-﻿--- Configuration for Scoreboard Module.
+﻿--- Configuration for the Scoreboard Module.
 -- @configuration Scoreboard
 
 --- This table defines the default settings for the Scoreboard Module.
@@ -9,3 +9,5 @@
 -- @field ShowStaff Should Staff Show In Scoreboard | **boolean**
 -- @field DisplayServerName Should Server Name Show In Scoreboard | **boolean**
 -- @field DisplayMemberCount Should Faction Member Count Be Displayed | **boolean**
+-- @field BackgroundColor Should Faction Member Count Be Displayed | **boolean**
+-- @field BackgroundColor Should Faction Member Count Be Displayed | **boolean**

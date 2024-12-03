@@ -1,4 +1,4 @@
-﻿--- Configuration for Salary Module.
+﻿--- Configuration for the Salary Module.
 -- @configuration Salary
 
 --- This table defines the default settings for the Salary Module.

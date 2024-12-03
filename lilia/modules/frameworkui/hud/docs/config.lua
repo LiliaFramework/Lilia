@@ -1,13 +1,15 @@
-﻿--- Configuration for HUD Module.
+﻿--- Configuration for the HUD Module.
 -- @configuration HUD
 
---- This table defines the default settings for the HUD Module.
+--- This table defines the default settings for the HUD module.
 -- @realm shared
 -- @table Configuration
--- @field Vignette Enable Vignette Effect | **boolean**
--- @field BranchWarning Activate Branch Warning | **boolean**
--- @field CrosshairEnabled Enable Crosshair | **boolean**
--- @field BarsDisabled Disable Bars | **boolean**
--- @field NoDrawCrosshairWeapon Weapons with No Crosshair | **table**
--- @field AmmoDrawEnabled Enable Ammo Draw | **boolean**
--- @field HiddenHUDElements Disabled Sandbox HUD Elements | **table**
+-- @field Vignette Enables the vignette effect | **boolean**
+-- @field BranchWarning Activates branch warnings | **boolean**
+-- @field CrosshairEnabled Enables the crosshair | **boolean**
+-- @field BarsDisabled Disables bars | **boolean**
+-- @field NoDrawCrosshairWeapon Weapons without a crosshair | **table**
+-- @field AmmoDrawEnabled Enables ammo display | **boolean**
+-- @field HiddenHUDElements Disables sandbox HUD elements | **table**
+-- @field WatermarkLogo The path to the watermark image (PNG) | **string**
+-- @field GamemodeVersion The version of the gamemode | **string**

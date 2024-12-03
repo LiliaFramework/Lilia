@@ -1,4 +1,4 @@
-﻿--- Configuration for Save Items Module.
+﻿--- Configuration for the Save Items Module.
 -- @configuration SaveItems
 
 --- This table defines the default settings for the SaveItems Module.

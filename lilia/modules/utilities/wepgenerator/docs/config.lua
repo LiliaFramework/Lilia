@@ -1,4 +1,4 @@
-﻿--- Configuration for Easy Weapons Module.
+﻿--- Configuration for the Easy Weapons Module.
 -- @configuration EasyWeapons
 
 --- This table defines the default settings for the EasyWeapons Module.

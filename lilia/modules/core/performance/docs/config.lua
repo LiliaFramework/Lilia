@@ -1,4 +1,4 @@
-﻿--- Configuration for Performance Module.
+﻿--- Configuration for the Performance Module.
 -- @configuration Performance
 
 --- This table defines the default settings for the Performance Module.
