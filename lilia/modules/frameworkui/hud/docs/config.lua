@@ -1,7 +1,7 @@
 ﻿--- Configuration for the HUD Module.
 -- @configuration HUD
 
---- This table defines the default settings for the HUD module.
+--- This table defines the default settings for the HUD Module.
 -- @realm shared
 -- @table Configuration
 -- @field Vignette Enables the vignette effect | **boolean**
