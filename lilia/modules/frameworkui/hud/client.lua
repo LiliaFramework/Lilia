@@ -12,6 +12,11 @@ function MODULE:HUDPaintBackground()
     self:RenderEntities()
 end
 
+function MODULE:SetupQuickMenu(menu)
+    self:SetupQuickMenuDesc(menu)
+    self:SetupQuickMenuFPS(menu)
+end
+
 function MODULE:HUDPaint()
     local client = LocalPlayer()
     if client:Alive() and client:getChar() then
