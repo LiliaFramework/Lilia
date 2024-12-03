@@ -12,6 +12,20 @@ lia.command.add("viewclaims", {
     description = "View the claims for all admins.",
     adminOnly = true,
     onRun = function(client)
+        function TimeSince(lastClaimTime)
+            local currentTime = os.time()
+            local elapsedTime = currentTime - lastClaimTime
+            if elapsedTime < 60 then
+                return elapsedTime .. " seconds"
+            elseif elapsedTime < 3600 then
+                return math.floor(elapsedTime / 60) .. " minutes"
+            elseif elapsedTime < 86400 then
+                return math.floor(elapsedTime / 3600) .. " hours"
+            else
+                return math.floor(elapsedTime / 86400) .. " days"
+            end
+        end
+
         if not file.Exists("caseclaims.txt", "DATA") then
             client:ChatPrint("No claims have been recorded yet.")
             return
@@ -24,7 +38,8 @@ lia.command.add("viewclaims", {
                 steamID = steamID,
                 name = claim.name,
                 claims = claim.claims,
-                lastclaim = os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim)
+                lastclaim = os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim),
+                timeSinceLastClaim = TimeSince(claim.lastclaim)
             })
         end
 
@@ -44,6 +59,10 @@ lia.command.add("viewclaims", {
             {
                 name = "Last Claim Date",
                 field = "lastclaim",
+            },
+            {
+                name = "Time Since Last Claim",
+                field = "timeSinceLastClaim",
             }
         }, claimsData)
     end
