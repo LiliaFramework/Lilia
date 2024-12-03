@@ -113,22 +113,18 @@ lia.command.add("viewclaims", {
             {
                 name = "SteamID",
                 field = "steamID",
-                width = 200
             },
             {
                 name = "Admin Name",
                 field = "name",
-                width = 150
             },
             {
                 name = "Total Claims",
                 field = "claims",
-                width = 100
             },
             {
                 name = "Last Claim Date",
                 field = "lastclaim",
-                width = 200
             }
         }, claimsData)
     end
