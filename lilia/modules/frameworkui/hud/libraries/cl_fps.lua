@@ -3,7 +3,7 @@ function MODULE:ShouldDrawFPS()
     return FPSDraw:GetInt() == 1
 end
 
-function MODULE:SetupQuickMenuFPS(menu)
+function MODULE:SetupQuickMenu(menu)
     menu:addCheck("Toggle FPS Draw", function(_, state)
         if state then
             RunConsoleCommand("fps_draw_enabled", "1")

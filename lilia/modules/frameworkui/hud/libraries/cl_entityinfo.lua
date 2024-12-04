@@ -53,11 +53,6 @@ function MODULE:DrawEntityInfo(entity, alpha, position)
     end
 end
 
-function MODULE:SetupQuickMenuDesc(menu)
-    menu:addSlider("HUD Desc Width Modifier", function(_, value) DescWidth:SetFloat(value) end, DescWidth:GetFloat(), 0.1, 1, 2)
-    menu:addSpacer()
-end
-
 function MODULE:RenderEntities()
     local client = LocalPlayer()
     if client.getChar(client) then
