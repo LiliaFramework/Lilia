@@ -13,7 +13,7 @@ lia.command.add("spawnadd", {
             info = lia.faction.indices[name:lower()]
             if not info then
                 for _, v in ipairs(lia.faction.indices) do
-                    if lia.util.stringMatches(v.uniqueID, name) or lia.util.stringMatches(L(v.name, client), name) then
+                    if lia.util.stringMatches(v.uniqueID, name) or lia.util.stringMatches(L(v.name), name) then
                         faction = v.uniqueID
                         info = v
                         break
@@ -25,7 +25,7 @@ lia.command.add("spawnadd", {
                 if class and class ~= "" then
                     local found = false
                     for _, v in ipairs(lia.class.list) do
-                        if v.faction == info.index and (v.uniqueID:lower() == class:lower() or lia.util.stringMatches(L(v.name, client), class)) then
+                        if v.faction == info.index and (v.uniqueID:lower() == class:lower() or lia.util.stringMatches(L(v.name), class)) then
                             class = v.uniqueID
                             info2 = v
                             found = true
@@ -33,7 +33,7 @@ lia.command.add("spawnadd", {
                         end
                     end
 
-                    if not found then return L("invalidClass", client) end
+                    if not found then return L("invalidClass") end
                 else
                     class = ""
                 end
@@ -42,14 +42,14 @@ lia.command.add("spawnadd", {
                 MODULE.spawns[faction][class] = MODULE.spawns[faction][class] or {}
                 table.insert(MODULE.spawns[faction][class], client:GetPos())
                 MODULE:SaveData()
-                local name = L(info.name, client)
-                if info2 then name = name .. " (" .. L(info2.name, client) .. ")" end
-                return L("spawnAdded", client, name)
+                local name = L(info.name)
+                if info2 then name = name .. " (" .. L(info2.name) .. ")" end
+                return L("spawnAdded", name)
             else
-                return L("invalidFaction", client)
+                return L("invalidFaction")
             end
         else
-            return L("invalidArg", client, 1)
+            return L("invalidArg", 1)
         end
     end
 })
@@ -87,7 +87,7 @@ lia.command.add("spawnremove", {
         end
 
         if i > 0 then MODULE:SaveData() end
-        return L("spawnDeleted", client, i)
+        return L("spawnDeleted", i)
     end
 })
 

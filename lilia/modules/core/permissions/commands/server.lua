@@ -83,7 +83,7 @@ lia.command.add("givemoney", {
         local number = tonumber(arguments[1])
         number = number or 0
         local amount = math.floor(number)
-        if not amount or not isnumber(amount) or amount <= 0 then return L("invalidArg", client, 1) end
+        if not amount or not isnumber(amount) or amount <= 0 then return L("invalidArg", 1) end
         local data = {}
         data.start = client:GetShootPos()
         data.endpos = data.start + client:GetAimVector() * 96
@@ -629,7 +629,7 @@ lia.command.add("charsetmodel", {
     syntax = "<string name> <string model>",
     privilege = "Manage Character Informations",
     onRun = function(client, arguments)
-        if not arguments[2] then return L("invalidArg", client, 2) end
+        if not arguments[2] then return L("invalidArg", 2) end
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and target:getChar() then
             local oldModel = target:getChar():getModel()
@@ -646,7 +646,7 @@ lia.command.add("chargiveitem", {
     syntax = "<string name> <string item>",
     privilege = "Manage Items",
     onRun = function(client, arguments)
-        if not arguments[2] then return L("invalidArg", client, 2) end
+        if not arguments[2] then return L("invalidArg", 2) end
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and target:getChar() then
             local uniqueID = arguments[2]:lower()

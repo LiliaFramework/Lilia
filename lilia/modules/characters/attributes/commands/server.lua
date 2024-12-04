@@ -4,10 +4,10 @@
     privilege = "Manage Attributes",
     onRun = function(client, arguments)
         local attribName = arguments[2]
-        if not attribName then return L("invalidArg", client, 2) end
+        if not attribName then return L("invalidArg", 2) end
         local attribNumber = arguments[3]
         attribNumber = tonumber(attribNumber)
-        if not attribNumber or not isnumber(attribNumber) then return L("invalidArg", client, 3) end
+        if not attribNumber or not isnumber(attribNumber) then return L("invalidArg", 3) end
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
             local character = target:getChar()
@@ -30,10 +30,10 @@ lia.command.add("charaddattrib", {
     privilege = "Manage Attributes",
     onRun = function(client, arguments)
         local attribName = arguments[2]
-        if not attribName then return L("invalidArg", client, 2) end
+        if not attribName then return L("invalidArg", 2) end
         local attribNumber = arguments[3]
         attribNumber = tonumber(attribNumber)
-        if not attribNumber or not isnumber(attribNumber) then return L("invalidArg", client, 3) end
+        if not attribNumber or not isnumber(attribNumber) then return L("invalidArg", 3) end
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
             local character = target:getChar()

@@ -9,7 +9,7 @@
             local faction = lia.faction.teams[name]
             if not faction then
                 for _, v in pairs(lia.faction.indices) do
-                    if lia.util.stringMatches(L(v.name, client), name) then
+                    if lia.util.stringMatches(L(v.name), name) then
                         faction = v
                         break
                     end
@@ -83,22 +83,22 @@ lia.command.add("beclass", {
                 if v then
                     if lia.class.canBe(client, num) then
                         if character:joinClass(num) then
-                            client:notifyLocalized("becomeClass", L(v.name, client))
+                            client:notifyLocalized("becomeClass", L(v.name))
                             return
                         else
-                            client:notifyLocalized("becomeClassFail", L(v.name, client))
+                            client:notifyLocalized("becomeClassFail", L(v.name))
                             return
                         end
                     else
-                        client:notifyLocalized("becomeClassFail", L(v.name, client))
+                        client:notifyLocalized("becomeClassFail", L(v.name))
                         return
                     end
                 else
-                    client:notifyLocalized("invalid", L("class", client))
+                    client:notifyLocalized("invalid", L("class"))
                     return
                 end
             else
-                client:notifyLocalized("invalid", L("class", client))
+                client:notifyLocalized("invalid", L("class"))
                 return
             end
         else
@@ -120,7 +120,7 @@ lia.command.add("setclass", {
             if lia.class.list[className] then classFound = lia.class.list[className] end
             if not classFound then
                 for _, v in ipairs(lia.class.list) do
-                    if lia.util.stringMatches(L(v.name, client), className) then
+                    if lia.util.stringMatches(L(v.name), className) then
                         classFound = v
                         break
                     end
@@ -155,7 +155,7 @@ lia.command.add("classwhitelist", {
 
         local class = lia.class.retrieveClass(table.concat(arguments, " ", 2))
         if not class or not isnumber(class) then
-            client:notifyLocalized("invalid", L("class", client))
+            client:notifyLocalized("invalid", L("class"))
             return
         end
 
@@ -194,7 +194,7 @@ lia.command.add("classunwhitelist", {
 
         local class = lia.class.retrieveClass(table.concat(arguments, " ", 2))
         if not class then
-            client:notifyLocalized("invalid", L("class", client))
+            client:notifyLocalized("invalid", L("class"))
             return
         end
 
@@ -238,7 +238,7 @@ lia.command.add("classlist", {
             local faction = lia.faction.teams[factionID]
             if not faction then
                 for _, v in pairs(lia.faction.indices) do
-                    if lia.util.stringMatches(L(v.name, client), factionID) then
+                    if lia.util.stringMatches(L(v.name), factionID) then
                         faction = v
                         break
                     end
