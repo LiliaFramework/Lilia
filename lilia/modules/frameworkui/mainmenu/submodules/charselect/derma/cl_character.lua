@@ -62,7 +62,6 @@ function PANEL:createTitle()
     self.title:SetFont("liaCharTitleFont")
     self.title:SetText(SCHEMA and SCHEMA.name)
     self.title:SetTextColor(WHITE)
-
     local centerlogo = MainMenu.CenterLogo and MainMenu.CenterLogo:find("%S")
     if centerlogo then
         local logoWidth, logoHeight = 512, 512
@@ -86,10 +85,8 @@ function PANEL:createTitle()
     end
 
     local iconWidth = 86
-    self:CreateIcon(self, "https://github.com/LiliaFramework/Lilia", "https://raw.githubusercontent.com/LiliaFramework/Lilia/main/lilia/logo.png", ScrW() - 2 * iconWidth - 16, 8)
-    if MainMenu.ButtonURL ~= "" and MainMenu.ButtonLogo ~= "" then
-        self:CreateIcon(self, MainMenu.ButtonURL, MainMenu.ButtonLogo, ScrW() - iconWidth - 8, 8)
-    end
+    self:CreateIcon(self, "https://github.com/LiliaFramework/Lilia", "https://raw.githubusercontent.com/LiliaFramework/Lilia/main/lilia/logo.png", ScrW() - iconWidth - 16, 8)
+    if MainMenu.ButtonURL ~= "" and MainMenu.ButtonLogo ~= "" then self:CreateIcon(self, MainMenu.ButtonURL, MainMenu.ButtonLogo, 16, ScrH() - iconWidth - 16) end
 end
 
 function PANEL:loadBackground()
