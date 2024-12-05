@@ -34,8 +34,6 @@ function MODULE:AddTextField(sectionName, fieldName, labelText, valueFunc)
             label = labelText,
             value = valueFunc or function() return "" end
         })
-    else
-        print("Section not found: " .. sectionName)
     end
 end
 
@@ -51,8 +49,6 @@ function MODULE:AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc,
             max = maxFunc or function() return 100 end,
             value = valueFunc or function() return 0 end
         })
-    else
-        print("Section not found: " .. sectionName)
     end
 end
 

@@ -16,7 +16,7 @@ function MODULE:Think()
 end
 
 function MODULE:CanPlayerViewAttributes()
-    if self.F1DisplayAttributes then return false end
+    if self.F1DisplayAttributes and table.Count(lia.attribs.list) <= 5 then return false end
 end
 
 function MODULE:LoadCharInformation()
