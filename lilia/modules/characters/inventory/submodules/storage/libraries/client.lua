@@ -24,7 +24,6 @@ function MODULE:SetupQuickMenu(menu)
             end
         end, CanSpawnStorage:GetBool())
 
-        menu:addSpacer()
     end
 end
 

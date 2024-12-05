@@ -15,8 +15,7 @@ function MODULE:CalcViewModelView(weapon, _, _, _, _, eyeAngles)
 end
 
 function MODULE:SetupQuickMenu(menu)
-    menu:addSpacer()
-    menu:addCheck(L"altLower", function(_, state)
+   menu:addCheck(L"altLower", function(_, state)
         if state then
             RunConsoleCommand("lia_usealtlower", "1")
         else

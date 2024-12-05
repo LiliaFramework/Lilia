@@ -10,6 +10,7 @@ local ThirdPersonViewDistance = CreateClientConVar("tp_distance", 50, true)
 local ThirdPersonHorizontalView = CreateClientConVar("tp_horizontal", 0, true)
 crouchFactor = 0
 function MODULE:SetupQuickMenu(menu)
+    menu:addCategory("Third Person")
     if self.ThirdPersonEnabled then
         menu:addCheck(L"thirdpersonToggle", function(_, state)
             if state then
@@ -29,16 +30,9 @@ function MODULE:SetupQuickMenu(menu)
             end
         end, ClassicThirdPerson:GetBool())
 
-        menu:addButton(L"thirdpersonConfig", function()
-            if lia.gui.tpconfig and lia.gui.tpconfig:IsVisible() then
-                lia.gui.tpconfig:Close()
-                lia.gui.tpconfig = nil
-            end
-
-            lia.gui.tpconfig = vgui.Create("ThirdPersonConfig")
-        end)
-
-        menu:addSpacer()
+        menu:addSlider("Height", function(_, value) RunConsoleCommand("tp_vertical", tostring(value)) end, GetConVar("tp_vertical"):GetFloat(), 0, MODULE.MaxValues.height, 0)
+        menu:addSlider("Horizontal", function(_, value) RunConsoleCommand("tp_horizontal", tostring(value)) end, GetConVar("tp_horizontal"):GetFloat(), -MODULE.MaxValues.horizontal, MODULE.MaxValues.horizontal, 0)
+        menu:addSlider("Distance", function(_, value) RunConsoleCommand("tp_distance", tostring(value)) end, GetConVar("tp_distance"):GetFloat(), 0, MODULE.MaxValues.distance, 0)
     end
 end
 

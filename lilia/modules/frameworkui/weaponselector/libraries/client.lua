@@ -28,8 +28,6 @@ function MODULE:SetupQuickMenu(menu)
             RunConsoleCommand("wepselect_invert", "0")
         end
     end, WepSelectInvert:GetBool())
-
-    menu:addSpacer()
 end
 
 function MODULE:PlayerBindPress(client, bind, pressed)
