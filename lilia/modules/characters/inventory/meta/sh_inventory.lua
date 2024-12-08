@@ -56,23 +56,6 @@ function GridInv:canItemFitInInventory(item, x, y)
     return x >= 1 and y >= 1 and (x + itemW) <= invW and (y + itemH) <= invH
 end
 
---- Checks if an item can fit within the inventory based on its size.
--- Verifies whether the item's width and height are within the bounds of the inventory dimensions.
--- @realm shared
--- @param table item The item to check. The table must include `width` and `height` properties representing the item's dimensions.
--- @treturn boolean `true` if the item fits within the inventory dimensions, `false` otherwise.
--- @usage
--- local canFit = inventory:canAdd(item) -- Example usage: checks if `item` fits in the inventory.
-function GridInv:canAdd(item)
-    assert(istable(item), "item must be a table")
-    assert(isnumber(item.width) and item.width >= 1, "item.width must be a positive number")
-    assert(isnumber(item.height) and item.height >= 1, "item.height must be a positive number")
-    local invW, invH = self:getSize()
-    local itemW, itemH = item.width, item.height
-    if itemH <= invW and itemW <= invH then return true end
-    return false
-end
-
 --- Checks if an item overlaps with another item in the inventory.
 -- @realm shared
 -- @param testItem The item to test for overlap.
@@ -226,7 +209,7 @@ if SERVER then
         local x, y, data
         local isStackCommand = isstring(itemTypeOrItem) and isnumber(xOrQuantity)
         if istable(yOrData) then
-            local quantity = tonumber(xOrQuantity) or 1
+            quantity = tonumber(xOrQuantity) or 1
             data = yOrData
             if quantity > 1 then
                 local items = {}
@@ -251,7 +234,7 @@ if SERVER then
 
         if not item then return d:reject("invalid item type") end
         local targetInventory = self
-        local fits = targetInventory:canAdd(itemTypeOrItem)
+        local fits = targetInventory:doesFitInventory(itemTypeOrItem)
         if not fits then return d:reject("No space available for the item.") end
         if not x or not y then
             x, y = self:findFreePosition(item)
