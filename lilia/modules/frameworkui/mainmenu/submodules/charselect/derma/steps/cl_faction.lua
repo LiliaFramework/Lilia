@@ -13,7 +13,6 @@ function PANEL:Init()
         surface.DrawRect(0, 0, w, h)
     end
 
-    self.faction:SetTextColor(color_white)
     self.faction.OnSelect = function(_, _, _, id) self:onFactionSelected(lia.faction.teams[id]) end
     self.desc = self:addLabel("desc")
     self.desc:DockMargin(0, 8, 0, 0)
@@ -39,6 +38,9 @@ end
 function PANEL:onFactionSelected(faction)
     if self:getContext("faction") == faction.index then return end
     self.desc:SetText(L(faction.desc or "noDesc"))
+    self.title:SetTextColor(color_white)
+    self.faction:SetTextColor(color_white)
+    self.desc:SetTextColor(color_white)
     self:clearContext()
     self:setContext("faction", faction.index)
     self:setContext("model", 1)
