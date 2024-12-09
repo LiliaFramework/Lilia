@@ -43,6 +43,7 @@ end
 
 function PANEL:onClick()
     lia.command.send("beclass", self.class)
+    timer.Simple(0.1, function() if IsValid(lia.gui.classes) then lia.gui.classes:loadClasses() end end)
 end
 
 function PANEL:setNumber(number)
@@ -90,6 +91,7 @@ end
 function PANEL:loadClasses()
     local client = LocalPlayer()
     self.list:Clear()
+    self.classPanels = {}
     for k, v in ipairs(lia.class.list) do
         local no, why = lia.class.canBe(client, k)
         local itsFull = "class is full" == why

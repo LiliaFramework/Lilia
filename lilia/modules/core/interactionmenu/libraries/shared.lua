@@ -2,12 +2,12 @@
 MODULE.SelfOptions = MODULE.SelfOptions or {}
 function MODULE:AddOption(name, data)
     self.Options[name] = data
-    LiliaInformation("[PIM] Added PIM Interaction " .. name)
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(135, 206, 250), "[Player Interaction Menu] ", color_white, (firstLoad and "Finished Loading '" .. name .. "'\n") or "Finished Reloading '" .. name .. "'\n")
 end
 
 function MODULE:AddLocalOption(name, data)
     self.SelfOptions[name] = data
-    LiliaInformation("[Local PIM] Added Local PIM Interaction " .. name)
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(135, 206, 250), "[Action Menu] ", color_white, (firstLoad and "Finished Loading '" .. name .. "'\n") or "Finished Reloading '" .. name .. "'\n")
 end
 
 function MODULE:CheckPossibilities()
