@@ -76,14 +76,6 @@ function PANEL:Init()
     self.panel:Center()
     self.panel:SetPos(self.panel.x, self.panel.y + 72)
     self.panel:SetAlpha(0)
-    self.title = self:Add("DLabel")
-    self.title:SetPos(self.panel.x, self.panel.y - 80)
-    self.title:SetTextColor(color_white)
-    self.title:SetExpensiveShadow(1, Color(0, 0, 0, 150))
-    self.title:SetFont("liaTitleFont")
-    self.title:SetText("")
-    self.title:SetAlpha(0)
-    self.title:SetSize(self.panel:GetWide(), 72)
     local tabs = {}
     hook.Run("CreateMenuButtons", tabs)
     self.tabList = {}
@@ -174,10 +166,6 @@ function PANEL:addTab(name, callback, uniqueID)
     tab.DoClick = function(this)
         if IsValid(lia.gui.info) then lia.gui.info:Remove() end
         self.panel:Clear()
-        self.title:SetText(this:GetText())
-        self.title:SizeToContentsY()
-        self.title:AlphaTo(255, 0.5)
-        self.title:MoveAbove(self.panel, 8)
         self.panel:AlphaTo(255, 0.5, 0.1)
         self.activeTab = this
         lastMenuTab = uniqueID
