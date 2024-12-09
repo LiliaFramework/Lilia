@@ -7,6 +7,7 @@ function PANEL:Init()
     self.faction:DockMargin(0, 4, 0, 0)
     self.faction:SetTall(40)
     self.faction.Paint = function(faction, w, h)
+        local client = LocalPlayer()
         if not client:getChar() then lia.util.drawBlur(faction) end
         surface.SetDrawColor(0, 0, 0, 100)
         surface.DrawRect(0, 0, w, h)

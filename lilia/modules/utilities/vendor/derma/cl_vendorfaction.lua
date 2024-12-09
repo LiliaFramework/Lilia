@@ -40,6 +40,7 @@ function PANEL:Init()
                 class:Dock(TOP)
                 class:DockMargin(16, 0, 0, 4)
                 class:SetText(L(v2.name))
+                class:SetTextColor(color_white)
                 class.classID = k2
                 class.factionID = faction.factionID
                 class.OnChange = onClassStateChanged
