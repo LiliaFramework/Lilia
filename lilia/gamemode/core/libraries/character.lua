@@ -376,31 +376,6 @@ lia.char.registerVar("var", {
     end
 })
 
-lia.char.registerVar("attribs", {
-    field = "_attribs",
-    default = {},
-    isLocal = true,
-    index = 4,
-    onValidate = function(value, _, client)
-        if value ~= nil then
-            if istable(value) then
-                local count = 0
-                for k, v in pairs(value) do
-                    local max = hook.Run("GetAttributeStartingMax", client, k)
-                    if max and v > max then return false, lia.attribs.list[k].name .. " too high" end
-                    count = count + v
-                end
-
-                local points = hook.Run("GetMaxStartingAttributePoints", client, count)
-                if count > points then return false, "unknownError" end
-            else
-                return false, "unknownError"
-            end
-        end
-    end,
-    shouldDisplay = function() return table.Count(lia.attribs.list) > 0 end
-})
-
 lia.char.registerVar("inv", {
     noNetworking = true,
     noDisplay = true,
