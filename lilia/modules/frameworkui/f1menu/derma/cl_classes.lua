@@ -3,11 +3,11 @@ local PANEL = {}
 function PANEL:Init()
     lia.gui.classes = self
     self:SetSize(self:GetParent():GetSize())
-    self.sidebar = self:Add("DPanel")
+    self.sidebar = self:Add("DScrollPanel")
     self.sidebar:Dock(LEFT)
     self.sidebar:SetWide(200)
-    self.sidebar.Paint = function() end
     self.sidebar:DockMargin(20, 20, 0, 20)
+    self.sidebar.Paint = function() end
     self.mainContent = self:Add("DScrollPanel")
     self.mainContent:Dock(FILL)
     self.mainContent:DockMargin(10, 10, 10, 10)
@@ -69,6 +69,7 @@ function PANEL:loadClasses()
 end
 
 function PANEL:populateClassDetails(classData, canBe)
+    local client = LocalPlayer()
     self.mainContent:Clear()
     local detailsPanel = self.mainContent:Add("DPanel")
     detailsPanel:SetTall(800)
@@ -87,40 +88,38 @@ function PANEL:populateClassDetails(classData, canBe)
         logo.Think = function() logo:SetPos(detailsPanel:GetWide() - logo:GetWide() - 10, 10) end
     end
 
-    if classData.model then
-        local modelPanel = detailsPanel:Add("liaModelPanel")
-        modelPanel:SetSize(300, 600)
-        modelPanel:SetFOV(35)
-        modelPanel:SetModel(classData.model)
-        modelPanel:SetPos(150, 10)
-        modelPanel.rotationAngle = 45
-        modelPanel.rotationSpeed = 0.5
-        modelPanel.Entity:SetSkin(classData.skin or 0)
-        for _, v in ipairs(classData.bodyGroups or {}) do
-            modelPanel.Entity:SetBodygroup(v.id, v.value or 0)
+    local modelPanel = detailsPanel:Add("liaModelPanel")
+    modelPanel:SetSize(300, 600)
+    modelPanel:SetFOV(35)
+    modelPanel:SetModel(classData.model or client:GetModel())
+    modelPanel:SetPos(150, 10)
+    modelPanel.rotationAngle = 45
+    modelPanel.rotationSpeed = 0.5
+    modelPanel.Entity:SetSkin(classData.skin or 0)
+    for _, v in ipairs(classData.bodyGroups or {}) do
+        modelPanel.Entity:SetBodygroup(v.id, v.value or 0)
+    end
+
+    local ent = modelPanel.Entity
+    if ent and IsValid(ent) then
+        local mats = classData.subMaterials or {}
+        for k, v in pairs(mats) do
+            ent:SetSubMaterial(k - 1, v)
         end
+    end
 
-        local ent = modelPanel.Entity
-        if ent and IsValid(ent) then
-            local mats = classData.subMaterials or {}
-            for k, v in pairs(mats) do
-                ent:SetSubMaterial(k - 1, v)
+    modelPanel.Think = function()
+        if IsValid(modelPanel) and IsValid(modelPanel.Entity) then
+            modelPanel:SetPos(detailsPanel:GetWide() - modelPanel:GetWide() - 10, 100)
+            local rotateLeft = input.IsKeyDown(KEY_A)
+            local rotateRight = input.IsKeyDown(KEY_D)
+            if rotateLeft then
+                modelPanel.rotationAngle = (modelPanel.rotationAngle or 0) - 0.5
+            elseif rotateRight then
+                modelPanel.rotationAngle = (modelPanel.rotationAngle or 0) + 0.5
             end
-        end
 
-        modelPanel.Think = function()
-            if IsValid(modelPanel) and IsValid(modelPanel.Entity) then
-                modelPanel:SetPos(detailsPanel:GetWide() - modelPanel:GetWide() - 10, 100)
-                local rotateLeft = input.IsKeyDown(KEY_A)
-                local rotateRight = input.IsKeyDown(KEY_D)
-                if rotateLeft then
-                    modelPanel.rotationAngle = (modelPanel.rotationAngle or 0) - 0.5
-                elseif rotateRight then
-                    modelPanel.rotationAngle = (modelPanel.rotationAngle or 0) + 0.5
-                end
-
-                modelPanel.Entity:SetAngles(Angle(0, modelPanel.rotationAngle or 0, 0))
-            end
+            modelPanel.Entity:SetAngles(Angle(0, modelPanel.rotationAngle or 0, 0))
         end
     end
 
@@ -136,25 +135,25 @@ function PANEL:populateClassDetails(classData, canBe)
         return label
     end
 
-    addDetail("Name: " .. (classData.name or "N/A"))
+    addDetail("Name: " .. (classData.name or "Unnamed"))
     addDetail("Description: " .. (classData.desc or "No description available."))
     addDetail("Faction: " .. (team.GetName(classData.faction) or "None"))
     addDetail("Is Default: " .. (classData.isDefault and "Yes" or "No"))
-    addDetail("Base Health: " .. tostring(classData.health or "N/A"))
-    addDetail("Base Armor: " .. tostring(classData.armor or "N/A"))
+    addDetail("Base Health: " .. tostring(classData.health or client:GetMaxHealth()))
+    addDetail("Base Armor: " .. tostring(classData.armor or client:GetMaxArmor()))
     local weapons = classData.weapons or {}
     local weaponsText = "Weapons: "
     if istable(weapons) and #weapons > 0 then
         weaponsText = weaponsText .. table.concat(weapons, ", ")
     else
-        weaponsText = weaponsText .. "N/A"
+        weaponsText = weaponsText .. "None"
     end
 
     addDetail(weaponsText)
-    addDetail("Model Scale: " .. tostring(classData.scale or "N/A"))
+    addDetail("Model Scale: " .. tostring(classData.scale or "1"))
     local runSpeedText = "Run Speed: "
     if classData.runSpeedMultiplier then
-        runSpeedText = runSpeedText .. tostring(math.Round(lia.config.RunSpeed * classData.runSpeedMultiplier))
+        runSpeedText = runSpeedText .. tostring(math.Round(lia.config.RunSpeed * (classData.runSpeed or 1)))
     elseif classData.runSpeed then
         runSpeedText = runSpeedText .. tostring(classData.runSpeed)
     else
@@ -164,7 +163,7 @@ function PANEL:populateClassDetails(classData, canBe)
     addDetail(runSpeedText)
     local walkSpeedText = "Walk Speed: "
     if classData.walkSpeedMultiplier then
-        walkSpeedText = walkSpeedText .. tostring(math.Round(lia.config.WalkSpeed * classData.walkSpeedMultiplier))
+        walkSpeedText = walkSpeedText .. tostring(math.Round(lia.config.WalkSpeed * (classData.walkSpeed or 1)))
     elseif classData.walkSpeed then
         walkSpeedText = walkSpeedText .. tostring(classData.walkSpeed)
     else
@@ -174,17 +173,17 @@ function PANEL:populateClassDetails(classData, canBe)
     addDetail(walkSpeedText)
     local jumpPowerText = "Jump Power: "
     if classData.jumpPowerMultiplier then
-        jumpPowerText = jumpPowerText .. tostring(math.Round(lia.config.JumpPower * classData.jumpPowerMultiplier))
+        jumpPowerText = jumpPowerText .. tostring(math.Round(client:GetJumpPower() * (classData.jumpPower or 1)))
     elseif classData.jumpPower then
         jumpPowerText = jumpPowerText .. tostring(classData.jumpPower)
     else
-        jumpPowerText = jumpPowerText .. tostring(lia.config.JumpPower)
+        jumpPowerText = jumpPowerText .. tostring(client:GetJumpPower())
     end
 
     addDetail(jumpPowerText)
     local bloodColorMap = {
         [-1] = "No blood",
-        [0] = "Normal red blood",
+        [0] = "Red blood",
         [1] = "Yellow blood",
         [2] = "Green-red blood",
         [3] = "Sparks",
@@ -193,7 +192,7 @@ function PANEL:populateClassDetails(classData, canBe)
         [6] = "Antlion worker bright green blood"
     }
 
-    local bloodColorText = bloodColorMap[classData.bloodcolor] or "N/A"
+    local bloodColorText = bloodColorMap[classData.bloodcolor] or "Red blood"
     addDetail("Blood Color: " .. bloodColorText)
     if canBe then
         local joinButton = detailsPanel:Add("DButton")
@@ -201,9 +200,8 @@ function PANEL:populateClassDetails(classData, canBe)
         joinButton:SetTall(40)
         joinButton:SetTextColor(color_white)
         joinButton:SetFont("liaMediumFont")
-        joinButton:Dock(BOTTOM) -- Ensures the button is at the bottom of the panel
+        joinButton:Dock(BOTTOM)
         joinButton:DockMargin(10, 10, 10, 10)
-        -- Paint the button like the tabs
         joinButton.Paint = function(btn, w, h)
             if btn:IsHovered() then
                 surface.SetDrawColor(MODULE.MenuColors.hover)
@@ -216,7 +214,15 @@ function PANEL:populateClassDetails(classData, canBe)
             surface.DrawOutlinedRect(0, 0, w, h)
         end
 
-        joinButton.DoClick = function() lia.command.send("beclass", classData.index) end
+        joinButton.DoClick = function()
+            lia.command.send("beclass", classData.index)
+            timer.Simple(0.1, function()
+                if IsValid(self) then
+                    self:loadClasses()
+                    self.mainContent:Clear()
+                end
+            end)
+        end
     end
 end
 
