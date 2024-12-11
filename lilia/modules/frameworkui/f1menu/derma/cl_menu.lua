@@ -133,7 +133,7 @@ function PANEL:Think()
     end
 end
 
-function PANEL:Paint(w, h)
+function PANEL:Paint()
 end
 
 vgui.Register("liaMenu", PANEL, "EditablePanel")

@@ -22,7 +22,7 @@ function PANEL:loadClasses()
     self.sidebar:Clear()
     self.tabList = {}
     local sortedClasses = {}
-    for classIndex, classData in pairs(lia.class.list) do
+    for _, classData in pairs(lia.class.list) do
         table.insert(sortedClasses, classData)
     end
 
