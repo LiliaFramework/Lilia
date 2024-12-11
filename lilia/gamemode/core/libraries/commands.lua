@@ -97,8 +97,7 @@ end
 -- @string command The name of the command to check access for.
 -- @tab[opt] data table command data. If not provided, the function retrieves the data from `lia.command.list`.
 -- @treturn bool Whether or not the player has access to the command.
--- @treturn string The privilege associated with the command.
--- 
+-- @treturn string The privilege associated with the command.S
 -- @usage
 -- local canUse, privilege = lia.command.hasAccess(player, "ban")
 -- if canUse then
