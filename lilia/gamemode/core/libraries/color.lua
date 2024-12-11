@@ -1,6 +1,22 @@
 ﻿--- Helper library for managing colors.
 -- @library lia.color
 lia.color = lia.color or {}
+--- Adjusts the components of a color by the specified offsets.
+-- @realm client
+-- @color color The color to adjust (expects a table with r, g, b, and optionally a values).
+-- @float rOffset The offset to apply to the red component.
+-- @float gOffset The offset to apply to the green component.
+-- @float bOffset The offset to apply to the blue component.
+-- @float[opt=0] aOffset The offset to apply to the alpha component (defaults to 0 if not provided).
+-- @return table The adjusted color as a new color table.
+function lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
+    local r = math.Clamp(color.r + rOffset, 0, 255)
+    local g = math.Clamp(color.g + gOffset, 0, 255)
+    local b = math.Clamp(color.b + bOffset, 0, 255)
+    local a = math.Clamp(color.a + (aOffset or 0), 0, 255)
+    return Color(r, g, b, a)
+end
+
 --- Converts a color to a hexadecimal string.
 -- @realm client
 -- @color color The color to convert
