@@ -462,7 +462,6 @@ else
         return lines, maxW
     end
 
-    local useCheapBlur = CreateClientConVar("lia_cheapblur", 0, true):GetBool()
     --- Blurs the content underneath the given panel. This will fall back to a simple darkened rectangle if the player has
     -- blurring disabled.
     -- @realm client
@@ -474,19 +473,14 @@ else
     -- end
     function lia.util.drawBlur(panel, amount, passes)
         amount = amount or 5
-        if useCheapBlur then
-            surface.SetDrawColor(50, 50, 50, amount * 20)
-            surface.DrawRect(0, 0, panel:GetWide(), panel:GetTall())
-        else
-            surface.SetMaterial(lia.util.getMaterial("pp/blurscreen"))
-            surface.SetDrawColor(255, 255, 255)
-            local x, y = panel:LocalToScreen(0, 0)
-            for i = -(passes or 0.2), 1, 0.2 do
-                lia.util.getMaterial("pp/blurscreen"):SetFloat("$blur", i * amount)
-                lia.util.getMaterial("pp/blurscreen"):Recompute()
-                render.UpdateScreenEffectTexture()
-                surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
-            end
+        surface.SetMaterial(lia.util.getMaterial("pp/blurscreen"))
+        surface.SetDrawColor(255, 255, 255)
+        local x, y = panel:LocalToScreen(0, 0)
+        for i = -(passes or 0.2), 1, 0.2 do
+            lia.util.getMaterial("pp/blurscreen"):SetFloat("$blur", i * amount)
+            lia.util.getMaterial("pp/blurscreen"):Recompute()
+            render.UpdateScreenEffectTexture()
+            surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
         end
     end
 
@@ -504,21 +498,16 @@ else
     -- end)
     function lia.util.drawBlurAt(x, y, w, h, amount, passes)
         amount = amount or 5
-        if useCheapBlur then
-            surface.SetDrawColor(30, 30, 30, amount * 20)
-            surface.DrawRect(x, y, w, h)
-        else
-            surface.SetMaterial(lia.util.getMaterial("pp/blurscreen"))
-            surface.SetDrawColor(255, 255, 255)
-            local scrW, scrH = ScrW(), ScrH()
-            local x2, y2 = x / scrW, y / scrH
-            local w2, h2 = (x + w) / scrW, (y + h) / scrH
-            for i = -(passes or 0.2), 1, 0.2 do
-                lia.util.getMaterial("pp/blurscreen"):SetFloat("$blur", i * amount)
-                lia.util.getMaterial("pp/blurscreen"):Recompute()
-                render.UpdateScreenEffectTexture()
-                surface.DrawTexturedRectUV(x, y, w, h, x2, y2, w2, h2)
-            end
+        surface.SetMaterial(lia.util.getMaterial("pp/blurscreen"))
+        surface.SetDrawColor(255, 255, 255)
+        local scrW, scrH = ScrW(), ScrH()
+        local x2, y2 = x / scrW, y / scrH
+        local w2, h2 = (x + w) / scrW, (y + h) / scrH
+        for i = -(passes or 0.2), 1, 0.2 do
+            lia.util.getMaterial("pp/blurscreen"):SetFloat("$blur", i * amount)
+            lia.util.getMaterial("pp/blurscreen"):Recompute()
+            render.UpdateScreenEffectTexture()
+            surface.DrawTexturedRectUV(x, y, w, h, x2, y2, w2, h2)
         end
     end
 
@@ -685,7 +674,6 @@ else
         end
     end
 
-    cvars.AddChangeCallback("lia_cheapblur", function(_, _, new) useCheapBlur = (tonumber(new) or 0) > 0 end)
     timer.Create("liaResolutionMonitor", 1, 0, function()
         local scrW, scrH = ScrW(), ScrH()
         if scrW ~= LAST_WIDTH or scrH ~= LAST_HEIGHT then
