@@ -3,15 +3,18 @@ local ESP_Players = CreateClientConVar("lilia_esp_players", 0, true)
 local ESP_Items = CreateClientConVar("lilia_esp_items", 0, true)
 local ESP_Props = CreateClientConVar("lilia_esp_prop", 0, true)
 local ESP_Entities = CreateClientConVar("lilia_esp_entities", 0, true)
+function MODULE:SetupQuickMenuCategories(panel)
+    panel:addCategory("ESP")
+end
+
 function MODULE:SetupQuickMenu(menu)
-    menu:addCategory("ESP")
     local client = LocalPlayer()
     if client:getChar() and (client:HasPrivilege("Staff Permissions - No Clip ESP Outside Staff Character") or client:isStaffOnDuty()) then
-        menu:addCheck("Toggle ESP", function(_, state) ESP_Active:SetBool(state) end, ESP_Active:GetBool())
-        menu:addCheck("ESP Players", function(_, state) ESP_Players:SetBool(state) end, ESP_Players:GetBool())
-        menu:addCheck("ESP Items", function(_, state) ESP_Items:SetBool(state) end, ESP_Items:GetBool())
-        menu:addCheck("ESP Props", function(_, state) ESP_Props:SetBool(state) end, ESP_Props:GetBool())
-        menu:addCheck("ESP Entities", function(_, state) ESP_Entities:SetBool(state) end, ESP_Entities:GetBool())
+        menu:addCheck("Toggle ESP", function(_, state) ESP_Active:SetBool(state) end, ESP_Active:GetBool(), "ESP")
+        menu:addCheck("ESP Players", function(_, state) ESP_Players:SetBool(state) end, ESP_Players:GetBool(), "ESP")
+        menu:addCheck("ESP Items", function(_, state) ESP_Items:SetBool(state) end, ESP_Items:GetBool(), "ESP")
+        menu:addCheck("ESP Props", function(_, state) ESP_Props:SetBool(state) end, ESP_Props:GetBool(), "ESP")
+        menu:addCheck("ESP Entities", function(_, state) ESP_Entities:SetBool(state) end, ESP_Entities:GetBool(), "ESP")
     end
 end
 

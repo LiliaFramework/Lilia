@@ -16,17 +16,7 @@ function MODULE:Think()
 end
 
 function MODULE:CanPlayerViewAttributes()
-    if self.F1DisplayAttributes and table.Count(lia.attribs.list) <= 5 then return false end
-end
-
-function MODULE:LoadCharInformation()
-    if hook.Run("CanPlayerViewAttributes") == false then
-        hook.Run("AddSection", "Attributes", Color(0, 0, 0), 2)
-        for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
-            local maximum = hook.Run("GetAttributeMax", LocalPlayer(), k)
-            hook.Run("AddBarField", "Attributes", v.name, v.name, function() return 0 end, function() return maximum end, function() return LocalPlayer():getChar():getAttrib(k, 0) end)
-        end
-    end
+    return table.Count(lia.attribs.list) > 0
 end
 
 function MODULE:HUDPaintBackground()
@@ -43,38 +33,29 @@ function MODULE:HUDPaintBackground()
 end
 
 function MODULE:CreateMenuButtons(tabs)
-    local client = LocalPlayer()
-    if table.Count(lia.attribs.list) > 0 and hook.Run("CanPlayerViewAttributes") ~= false then
+    if hook.Run("CanPlayerViewAttributes") ~= false then
         tabs["Attributes"] = function(panel)
-            panel.attribs = panel:Add("DScrollPanel")
-            panel.attribs:Dock(FILL)
-            panel.attribs:DockMargin(0, 10, 0, 0)
-            if not IsValid(panel.attribs) then return end
-            local character = client:getChar()
-            local boost = character:getBoosts()
-            for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
-                local attribBoost = 0
-                if boost[k] then
-                    for _, bValue in pairs(boost[k]) do
-                        attribBoost = attribBoost + bValue
-                    end
-                end
-
-                local bar = panel.attribs:Add("liaAttribBar")
-                bar:Dock(TOP)
-                bar:DockMargin(0, 0, 0, 3)
-                local attribValue = character:getAttrib(k, 0)
-                if attribBoost then
-                    bar:setValue(attribValue - attribBoost or 0)
-                else
-                    bar:setValue(attribValue)
-                end
-
-                local maximum = hook.Run("GetAttributeMax", LocalPlayer(), k)
-                bar:setMax(maximum)
-                bar:setReadOnly()
-                bar:setText(Format("%s [%.1f/%.1f] (%.1f", L(v.name), attribValue, maximum, attribValue / maximum * 100) .. "%)")
-                if attribBoost then bar:setBoost(attribBoost) end
+            local baseWidth, baseHeight = sW(800), sH(600)
+            local listWidth, listHeight = baseWidth * 0.9, baseHeight * 0.8
+            local listX, listY = (ScrW() - listWidth) / 2, (ScrH() - listHeight) / 2
+            local title = panel:Add("DLabel")
+            title:SetText("Character Attributes")
+            title:SetFont("Trebuchet24")
+            title:SizeToContents()
+            title:SetPos(listX + listWidth / 2 - title:GetWide() / 2, listY - sH(40))
+            panel.attributesListView = panel:Add("DListView")
+            panel.attributesListView:SetMultiSelect(false)
+            panel.attributesListView:AddColumn("Attribute"):SetFixedWidth(listWidth * 0.3)
+            panel.attributesListView:AddColumn("Value"):SetFixedWidth(listWidth * 0.2)
+            panel.attributesListView:AddColumn("Max"):SetFixedWidth(listWidth * 0.2)
+            panel.attributesListView:AddColumn("Progress (%)"):SetFixedWidth(listWidth * 0.3)
+            panel.attributesListView:SetSize(listWidth, listHeight)
+            panel.attributesListView:SetPos(listX, listY)
+            for attrKey, attrData in SortedPairsByMemberValue(lia.attribs.list, "name") do
+                local currentValue = LocalPlayer():getChar() and LocalPlayer():getChar():getAttrib(attrKey, 0) or 0
+                local maxValue = hook.Run("GetAttributeMax", LocalPlayer(), attrKey) or 100
+                local progress = math.Round((currentValue / maxValue) * 100, 1)
+                panel.attributesListView:AddLine(attrData.name, currentValue, maxValue, progress .. "%")
             end
         end
     end

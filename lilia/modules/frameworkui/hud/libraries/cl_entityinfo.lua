@@ -54,7 +54,7 @@ function MODULE:DrawEntityInfo(entity, alpha, position)
 end
 
 function MODULE:SetupQuickMenuDesc(menu)
-    menu:addSlider("Desc Width Modifier", function(_, value) DescWidth:SetFloat(value) end, DescWidth:GetFloat(), 0.1, 1, 2)
+    menu:addSlider("Desc Width Modifier", function(_, value) DescWidth:SetFloat(value) end, DescWidth:GetFloat(), 0.1, 1, 2, "HUD")
 end
 
 function MODULE:RenderEntities()

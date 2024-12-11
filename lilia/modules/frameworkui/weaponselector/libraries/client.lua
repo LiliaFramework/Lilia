@@ -27,7 +27,7 @@ function MODULE:SetupQuickMenu(menu)
         else
             RunConsoleCommand("wepselect_invert", "0")
         end
-    end, WepSelectInvert:GetBool())
+    end, WepSelectInvert:GetBool(), "Miscellaneous")
 end
 
 function MODULE:PlayerBindPress(client, bind, pressed)

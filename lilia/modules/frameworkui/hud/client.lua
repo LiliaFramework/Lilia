@@ -12,6 +12,10 @@ function MODULE:HUDPaintBackground()
     self:RenderEntities()
 end
 
+function MODULE:SetupQuickMenuCategories(panel)
+    panel:addCategory("HUD")
+end
+
 function MODULE:SetupQuickMenu(menu)
     self:SetupQuickMenuDesc(menu)
     self:SetupQuickMenuFPS(menu)

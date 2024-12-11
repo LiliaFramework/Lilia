@@ -1,81 +1,84 @@
 ﻿local MODULE = MODULE
 local PANEL = {}
-local gradient = lia.util.getMaterial("vgui/gradient-u")
-function PANEL:Init()
-    local client = LocalPlayer()
-    self.rotationAngle = 45
-    self.rotationSpeed = 0.5
-    if MODULE.F1ThirdPersonEnabled then
-        self.initialValues = {
-            ThirdPerson = GetConVar("tp_enabled"):GetInt(),
-            ThirdPersonVerticalView = GetConVar("tp_vertical"):GetInt(),
-            ThirdPersonHorizontalView = GetConVar("tp_horizontal"):GetInt(),
-            ThirdPersonViewDistance = GetConVar("tp_distance"):GetInt(),
-        }
-
-        ThirdPerson = GetConVar("tp_enabled")
-        ThirdPersonVerticalView = GetConVar("tp_vertical")
-        ThirdPersonHorizontalView = GetConVar("tp_horizontal")
-        ThirdPersonViewDistance = GetConVar("tp_distance")
-        if ThirdPerson:GetInt() ~= 1 then
-            wasThirdPerson = false
-            RunConsoleCommand("tp_enabled", "1")
+function PANEL:addTab(name, callback, uniqueID)
+    name = L(name)
+    local tab = self.tabs:Add("DButton")
+    tab:SetText(name)
+    tab:SetTextColor(MODULE.MenuColors.text)
+    tab:SetFont("F1Font")
+    tab:SetExpensiveShadow(1, Color(0, 0, 0, 100))
+    tab:SetContentAlignment(5)
+    tab:SetTall(50)
+    tab:Dock(TOP)
+    tab:DockMargin(0, 0, 10, 10)
+    tab.Paint = function(tabBtn, w, h)
+        if self.activeTab == tabBtn then
+            surface.SetDrawColor(MODULE.MenuColors.accent)
+            surface.DrawRect(0, 0, w, h)
+        elseif tabBtn:IsHovered() then
+            surface.SetDrawColor(MODULE.MenuColors.hover)
+            surface.DrawRect(0, 0, w, h)
         else
-            wasThirdPerson = true
+            surface.SetDrawColor(MODULE.MenuColors.sidebar)
+            surface.DrawRect(0, 0, w, h)
         end
 
-        ThirdPersonVerticalView:SetInt(0)
-        ThirdPersonHorizontalView:SetInt(0)
-        ThirdPersonViewDistance:SetInt(100)
+        surface.SetDrawColor(MODULE.MenuColors.border)
+        surface.DrawOutlinedRect(0, 0, w, h)
     end
 
-    self.model = self:Add("liaModelPanel")
-    self.model:SetWide(ScrW() * 0.25)
-    self.model:SetFOV(50)
-    self.model:SetTall(ScrH() - 50)
-    self.model:SetPos(ScrW() - self.model:GetWide() - 150, 0)
-    self.model:SetModel(client:GetModel())
-    self.model.Entity:SetSkin(client:GetSkin())
-    for _, v in ipairs(client:GetBodyGroups()) do
-        self.model.Entity:SetBodygroup(v.id, client:GetBodygroup(v.id))
+    tab.DoClick = function(this)
+        if IsValid(lia.gui.info) then lia.gui.info:Remove() end
+        self.panel:Clear()
+        self.panel:AlphaTo(255, 0.5, 0.1)
+        self.activeTab = this
+        lastMenuTab = uniqueID
+        if callback then callback(self.panel, this) end
+        surface.PlaySound(MODULE.TabClickingSound or "buttons/button14.wav")
     end
 
-    local ent = self.model.Entity
-    if ent and IsValid(ent) then
-        local mats = client:GetMaterials()
-        for k, _ in pairs(mats) do
-            ent:SetSubMaterial(k - 1, client:GetSubMaterial(k - 1))
-        end
+    self.tabList[name] = tab
+    return tab
+end
+
+function PANEL:setActiveTab(key)
+    if IsValid(self.tabList[key]) then self.tabList[key]:DoClick() end
+end
+
+function PANEL:remove()
+    CloseDermaMenus()
+    if not self.closing then
+        self:AlphaTo(0, 0.25, 0, function() self:Remove() end)
+        self.closing = true
     end
+end
 
-    self.model.Think = function()
-        local rotateLeft = input.IsKeyDown(KEY_A)
-        local rotateRight = input.IsKeyDown(KEY_D)
-        if rotateLeft then
-            self.rotationAngle = self.rotationAngle - self.rotationSpeed
-        elseif rotateRight then
-            self.rotationAngle = self.rotationAngle + self.rotationSpeed
-        end
-
-        if IsValid(self.model) and IsValid(self.model.Entity) then
-            local Angles = Angle(0, self.rotationAngle, 0)
-            self.model.Entity:SetAngles(Angles)
-        end
-    end
-
+function PANEL:Init()
     lia.gui.menu = self
     self:SetSize(ScrW(), ScrH())
     self:SetAlpha(0)
     self:AlphaTo(255, 0.25, 0)
     self:SetPopupStayAtBack(true)
-    self.tabs = self:Add("DHorizontalScroller")
-    self.tabs:SetWide(0)
-    self.tabs:SetTall(86)
+    self.sidebar = self:Add("DPanel")
+    self.sidebar:SetSize(200, ScrH())
+    self.sidebar:Dock(RIGHT)
+    self.sidebar.Paint = function(self, w, h) end
+    self.scroll = self.sidebar:Add("DScrollPanel")
+    self.scroll:Dock(FILL)
+    self.scroll:SetPadding(10)
+    self.scroll:SetPaintBackground(false)
+    self.tabs = self.scroll:Add("DListLayout")
+    self.tabs:Dock(FILL)
+    local spacerHeight = 20
+    local spacer = self.tabs:Add("DPanel")
+    spacer:Dock(TOP)
+    spacer:SetTall(spacerHeight)
+    spacer.Paint = function(self, w, h) end
+    self.tabs.Paint = function(self, w, h) end
     self.panel = self:Add("EditablePanel")
-    self.panel:SetSize(ScrW() * 0.6, ScrH() * 0.65)
-    self.panel:Center()
-    self.panel:SetPos(self.panel.x, self.panel.y + 72)
+    self.panel:Dock(FILL)
     self.panel:SetAlpha(0)
+    self.panel.Paint = function(self, w, h) end
     local tabs = {}
     hook.Run("CreateMenuButtons", tabs)
     self.tabList = {}
@@ -101,17 +104,14 @@ function PANEL:Init()
         self.tabList[name] = tab
     end
 
-    self.noAnchor = CurTime() + .4
+    self.noAnchor = CurTime() + 0.4
     self.anchorMode = true
     self:MakePopup()
-    self.info = vgui.Create("liaCharInfo", self)
-    self.info:setup()
-    self.info:SetAlpha(0)
-    self.info:AlphaTo(255, 0.5)
+    self:setActiveTab("Status")
 end
 
 function PANEL:OnKeyCodePressed(key)
-    self.noAnchor = CurTime() + .5
+    self.noAnchor = CurTime() + 0.5
     if key == KEY_F1 then self:remove() end
 end
 
@@ -122,7 +122,7 @@ end
 
 function PANEL:Think()
     local key = input.IsKeyDown(KEY_F1)
-    if key and (self.noAnchor or CurTime() + .4) < CurTime() and self.anchorMode == true then
+    if key and (self.noAnchor or CurTime() + 0.4) < CurTime() and self.anchorMode then
         self.anchorMode = false
         surface.PlaySound("buttons/lightswitch2.wav")
     end
@@ -134,76 +134,7 @@ function PANEL:Think()
 end
 
 function PANEL:Paint(w, h)
-    surface.SetDrawColor(0, 0, 0)
-    surface.SetMaterial(gradient)
-    surface.DrawTexturedRect(0, 0, w, h)
-end
-
-function PANEL:addTab(name, callback, uniqueID)
-    name = L(name)
-    local function paintTab(tab, w, h)
-        if self.activeTab == tab then
-            surface.SetDrawColor(ColorAlpha(lia.config.Color, 200))
-            surface.DrawRect(0, h - 8, w, 8)
-        elseif tab.Hovered then
-            surface.SetDrawColor(0, 0, 0, 50)
-            surface.DrawRect(0, h - 8, w, 8)
-        end
-    end
-
-    surface.SetFont("liaMenuButtonLightFont")
-    local w = surface.GetTextSize(name)
-    local tab = self.tabs:Add("DButton")
-    tab:SetSize(0, self.tabs:GetTall())
-    tab:SetText(name)
-    tab:SetPos(self.tabs:GetWide(), 0)
-    tab:SetTextColor(Color(250, 250, 250))
-    tab:SetFont("liaMenuButtonLightFont")
-    tab:SetExpensiveShadow(1, Color(0, 0, 0, 150))
-    tab:SizeToContentsX()
-    tab:SetWide(w + 32)
-    tab.Paint = paintTab
-    tab.DoClick = function(this)
-        if IsValid(lia.gui.info) then lia.gui.info:Remove() end
-        self.panel:Clear()
-        self.panel:AlphaTo(255, 0.5, 0.1)
-        self.activeTab = this
-        lastMenuTab = uniqueID
-        if callback then callback(self.panel, this) end
-    end
-
-    self.tabs:AddPanel(tab)
-    self.tabs:SetWide(math.min(self.tabs:GetWide() + tab:GetWide(), ScrW()))
-    self.tabs:SetPos((ScrW() * 0.5) - (self.tabs:GetWide() * 0.5), 0)
-    return tab
-end
-
-function PANEL:setActiveTab(key)
-    if IsValid(self.tabList[key]) then self.tabList[key]:DoClick() end
-end
-
-function PANEL:OnRemove()
-    if MODULE.F1ThirdPersonEnabled then self:RestoreConVars() end
-end
-
-function PANEL:RestoreConVars()
-    RunConsoleCommand("tp_enabled", tostring(self.initialValues.ThirdPerson))
-    RunConsoleCommand("tp_vertical", tostring(self.initialValues.ThirdPersonVerticalView))
-    RunConsoleCommand("tp_horizontal", tostring(self.initialValues.ThirdPersonHorizontalView))
-    RunConsoleCommand("tp_distance", tostring(self.initialValues.ThirdPersonViewDistance))
-end
-
-function PANEL:remove()
-    CloseDermaMenus()
-    if not self.closing then
-        self:AlphaTo(0, 0.25, 0, function()
-            if MODULE.F1ThirdPersonEnabled then self:RestoreConVars() end
-            self:Remove()
-        end)
-
-        self.closing = true
-    end
 end
 
 vgui.Register("liaMenu", PANEL, "EditablePanel")
-if IsValid(lia.gui.menu) then vgui.Create("liaMenu") end
+if not IsValid(lia.gui.menu) then vgui.Create("liaMenu") end

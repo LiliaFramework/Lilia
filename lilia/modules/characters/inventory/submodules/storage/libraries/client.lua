@@ -22,8 +22,7 @@ function MODULE:SetupQuickMenu(menu)
             else
                 RunConsoleCommand("can_spawn_storage", "0")
             end
-        end, CanSpawnStorage:GetBool())
-
+        end, CanSpawnStorage:GetBool(), "Miscellaneous")
     end
 end
 

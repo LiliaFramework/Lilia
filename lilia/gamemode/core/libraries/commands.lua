@@ -62,7 +62,8 @@ function lia.command.add(command, data)
     local onRun = data.onRun
     data._onRun = data.onRun
     data.onRun = function(client, arguments)
-        if lia.command.hasAccess(client, command, data) then
+        local hasAccess, _ = lia.command.hasAccess(client, command, data)
+        if hasAccess then
             return onRun(client, arguments)
         else
             return "@noPerm"
@@ -88,13 +89,23 @@ function lia.command.add(command, data)
     end
 end
 
---- Returns true if a player is allowed to run a certain command.
+--- Checks if a player has access to execute a specific command.
+-- This function determines whether a player is authorized to run a given command based on privileges, admin-only or super-admin-only restrictions, and any custom hooks.
 -- @realm shared
 -- @internal
--- @client client to check access for
--- @string command Name of the command to check access for
--- @tab[opt] data command data, if not provided, it will be fetched from `lia.command.list`
--- @treturn bool Whether or not the player is allowed to run the command
+-- @client client The player to check access for.
+-- @string command The name of the command to check access for.
+-- @tab[opt] data table command data. If not provided, the function retrieves the data from `lia.command.list`.
+-- @treturn bool Whether or not the player has access to the command.
+-- @treturn string The privilege associated with the command.
+-- 
+-- @usage
+-- local canUse, privilege = lia.command.hasAccess(player, "ban")
+-- if canUse then
+--     print("Player can run the command:", privilege)
+-- else
+--     print("Player does not have access to the command:", privilege)
+-- end
 function lia.command.hasAccess(client, command, data)
     if data == nil then data = lia.command.list[command] end
     local privilege = data.privilege
@@ -103,7 +114,7 @@ function lia.command.hasAccess(client, command, data)
     local acessLevels = superAdminOnly and "superadmin" or (adminOnly and "admin" or "user")
     if not privilege then privilege = acessLevels == "user" and "Default User Commands" or command end
     local hasAccess, _ = client:HasPrivilege("Commands - " .. privilege)
-    return hasAccess and hook.Run("CanPlayerUseCommand", client, command) ~= false
+    return hasAccess and hook.Run("CanPlayerUseCommand", client, command) ~= false, privilege
 end
 
 --- Returns a table of arguments from a given string.

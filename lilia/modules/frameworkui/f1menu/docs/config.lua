@@ -4,7 +4,6 @@
 --- This table defines the default settings for the F1Menu Module.
 -- @realm shared
 -- @table Configuration
--- @field F1ThirdPersonEnabled Set Music Volume on Main Menu | **boolean**
 -- @field RulesEnabled Set Music Volume on Main Menu | **boolean**
 -- @field TutorialEnabled Set Music Volume on Main Menu | **boolean**
 -- @field FAQEnabled Set Music Volume on Main Menu | **boolean**

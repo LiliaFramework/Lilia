@@ -10,7 +10,7 @@ function MODULE:SetupQuickMenuFPS(menu)
         else
             RunConsoleCommand("fps_draw_enabled", "0")
         end
-    end, FPSDraw:GetBool())
+    end, FPSDraw:GetBool(), "HUD")
 end
 
 function MODULE:DrawFPS()

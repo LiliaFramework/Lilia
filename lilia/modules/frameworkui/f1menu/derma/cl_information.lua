@@ -7,7 +7,7 @@ function PANEL:Init()
     local panelWidth = ScrW() * 0.35
     local panelHeight = ScrH() * 0.8
     self:SetSize(panelWidth, panelHeight)
-    self:SetPos(50, 90)
+    self:SetPos(50, 50)
     self.Paint = function() end
     self.info = vgui.Create("DFrame", self)
     self.info:SetTitle("")

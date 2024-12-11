@@ -15,11 +15,11 @@ function MODULE:CalcViewModelView(weapon, _, _, _, _, eyeAngles)
 end
 
 function MODULE:SetupQuickMenu(menu)
-   menu:addCheck(L"altLower", function(_, state)
+    menu:addCheck(L"altLower", function(_, state)
         if state then
             RunConsoleCommand("lia_usealtlower", "1")
         else
             RunConsoleCommand("lia_usealtlower", "0")
         end
-    end, LIA_CVAR_LOWER2:GetBool())
+    end, LIA_CVAR_LOWER2:GetBool(), "Miscellaneous")
 end

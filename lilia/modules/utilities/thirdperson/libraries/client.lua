@@ -9,8 +9,11 @@ local ThirdPersonVerticalView = CreateClientConVar("tp_vertical", 10, true)
 local ThirdPersonViewDistance = CreateClientConVar("tp_distance", 50, true)
 local ThirdPersonHorizontalView = CreateClientConVar("tp_horizontal", 0, true)
 crouchFactor = 0
+function MODULE:SetupQuickMenuCategories(panel)
+    panel:addCategory("Third Person")
+end
+
 function MODULE:SetupQuickMenu(menu)
-    menu:addCategory("Third Person")
     if self.ThirdPersonEnabled then
         menu:addCheck(L"thirdpersonToggle", function(_, state)
             if state then
@@ -20,7 +23,7 @@ function MODULE:SetupQuickMenu(menu)
             end
 
             hook.Run("thirdPersonToggled", ThirdPerson:GetBool())
-        end, ThirdPerson:GetBool())
+        end, ThirdPerson:GetBool(), "Third Person")
 
         menu:addCheck(L"thirdpersonClassic", function(_, state)
             if state then
@@ -28,11 +31,11 @@ function MODULE:SetupQuickMenu(menu)
             else
                 RunConsoleCommand("tp_classic", "0")
             end
-        end, ClassicThirdPerson:GetBool())
+        end, ClassicThirdPerson:GetBool(), "Third Person")
 
-        menu:addSlider("Height", function(_, value) RunConsoleCommand("tp_vertical", tostring(value)) end, GetConVar("tp_vertical"):GetFloat(), 0, MODULE.MaxValues.height, 0)
-        menu:addSlider("Horizontal", function(_, value) RunConsoleCommand("tp_horizontal", tostring(value)) end, GetConVar("tp_horizontal"):GetFloat(), -MODULE.MaxValues.horizontal, MODULE.MaxValues.horizontal, 0)
-        menu:addSlider("Distance", function(_, value) RunConsoleCommand("tp_distance", tostring(value)) end, GetConVar("tp_distance"):GetFloat(), 0, MODULE.MaxValues.distance, 0)
+        menu:addSlider("Height", function(_, value) RunConsoleCommand("tp_vertical", tostring(value)) end, GetConVar("tp_vertical"):GetFloat(), 0, MODULE.MaxValues.height, 0, "Third Person")
+        menu:addSlider("Horizontal", function(_, value) RunConsoleCommand("tp_horizontal", tostring(value)) end, GetConVar("tp_horizontal"):GetFloat(), -MODULE.MaxValues.horizontal, MODULE.MaxValues.horizontal, 0, "Third Person")
+        menu:addSlider("Distance", function(_, value) RunConsoleCommand("tp_distance", tostring(value)) end, GetConVar("tp_distance"):GetFloat(), 0, MODULE.MaxValues.distance, 0, "Third Person")
     end
 end
 
@@ -169,7 +172,6 @@ function playerMeta:CanOverrideView()
     local isInVehicle = self:hasValidVehicle()
     if IsValid(lia.gui.char) then return false end
     if isInVehicle then return false end
-    if not F1MenuCore.F1ThirdPersonEnabled and IsValid(lia.gui.menu) then return false end
     if hook.Run("ShouldDisableThirdperson", self) == true then return false end
     return ThirdPerson:GetBool() and MODULE.ThirdPersonEnabled and (IsValid(self) and self:getChar() and not IsValid(ragdoll))
 end
