@@ -17,8 +17,8 @@ end
 --- Called to add text to the chat.
 -- This hook allows for customization of the text being added to the chat. It can be used to modify or format the text before it is displayed.
 -- @realm client
--- @param text The initial text markup string.
--- @param ... Additional arguments containing the text elements to be added to the chat.
+-- @string text The initial text markup string.
+-- @argGroup ... Additional arguments containing the text elements to be added to the chat.
 -- @treturn string The modified text markup string to be displayed in the chat.
 function ChatAddText(text, ...)
 end
@@ -40,9 +40,9 @@ end
 
 --- Called after a player sends a chat message.
 -- @realm server
--- @param client (Player) The player entity who sent the message.
--- @param message (string) The message sent by the player.
--- @param chatType (string) The type of chat message (e.g., "ic" for in-character, "ooc" for out-of-character).
--- @param anonymous (bool) Whether the message was sent anonymously (true) or not (false).
+-- @client client The player entity who sent the message.
+-- @string message The message sent by the player.
+-- @string chatType The type of chat message (e.g., "ic" for in-character, "ooc" for out-of-character).
+-- @bool anonymous Whether the message was sent anonymously (true) or not (false).
 function OnChatReceived(client, message, chatType, anonymous)
 end

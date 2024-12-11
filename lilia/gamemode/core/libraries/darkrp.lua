@@ -49,10 +49,10 @@ if SERVER then
 
     --- Sends a notification message to a client.
     -- This function sends a notification message to a specified client using the notify method.
-    -- @param client The client to receive the notification.
-    -- @param _ Unused argument.
-    -- @param _ Unused argument.
-    -- @param message The message to be sent.
+    -- @client client The client to receive the notification.
+    -- @unused _ Unused argument. This argument was only necessary on DarkRP.
+    -- @unused _ Unused argument. This argument was only necessary on DarkRP.
+    -- @string message The message to be sent.
     -- @realm server
     function lia.darkrp.notify(client, _, _, message)
         client:notify(message)

@@ -193,7 +193,7 @@ end
 
 --- Loads permissions.
 -- This function loads permissions for the module.
--- @param Privileges The privileges to load. This is the MODULE.CAMIPrivileges.
+-- @tab Privileges The privileges to load. This is the MODULE.CAMIPrivileges.
 -- @realm shared
 -- @internal
 function lia.module.loadPermissions(Privileges)
@@ -212,7 +212,7 @@ end
 
 --- Loads module dependencies.
 -- This function loads the dependencies for the module.
--- @param Dependencies The dependencies to load.
+-- @tab Dependencies The dependencies to load.
 -- @realm shared
 -- @internal
 function lia.module.loadDependencies(Dependencies)

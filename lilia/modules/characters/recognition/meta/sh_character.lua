@@ -25,7 +25,7 @@ if SERVER then
     --- Recognizes another character.
     -- This function allows the character to recognize another character, optionally under a specified fake name.
     -- @realm server
-    -- @param character The character to be recognized.
+    -- @char character The character to be recognized.
     -- @string name Optional. The fake name under which the character is recognized. If nil, recognizes the character by their actual ID.
     -- @treturn boolean True if the recognition was successful.
     function characterMeta:recognize(character, name)

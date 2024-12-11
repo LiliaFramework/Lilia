@@ -1,6 +1,5 @@
 ﻿--- Various useful helper functions.
 -- @library lia.util
-
 --- Finds all players within a box defined by minimum and maximum coordinates.
 -- @realm client
 -- @vector mins The minimum corner of the box
@@ -73,7 +72,7 @@ end
 --- If no class is specified, finds all entities owned by the player.
 -- @realm shared
 -- @client client The player whose entities are being searched for.
--- @param[opt] class The class of the entities being searched for. If not provided, all entities owned by the player are returned.
+-- @string[opt] class The class of the entities being searched for. If not provided, all entities owned by the player are returned.
 -- @treturn table A table containing all entities of the specified class (or all entities if no class is specified) owned by the given player.
 function lia.util.findPlayerEntities(client, class)
     local items = {}
@@ -411,7 +410,7 @@ else
     --- Calls a named skin function with optional arguments on a panel.
     -- @realm client
     -- @string name Name of the skin function to call
-    -- @param[opt] panel Panel to apply the skin function to
+    -- @panel[opt] panel Panel to apply the skin function to
     -- @param[opt] a Argument 1
     -- @param[opt] b Argument 2
     -- @param[opt] c Argument 3
@@ -699,3 +698,915 @@ lia.util.WrapText = lia.util.wrapText
 lia.util.DrawBlur = lia.util.drawBlur
 lia.util.DrawBlurAt = lia.util.drawBlurAt
 lia.util.GetMaterial = lia.util.getMaterial
+lia.config.stored = lia.config.stored or {}
+function lia.config.add(key, value, desc, callback, data, noNetworking, schemaOnly)
+    assert(isstring(key), "expected config key to be string, got " .. type(key))
+    local oldConfig = lia.config.stored[key]
+    local savedValue
+    if oldConfig then
+        savedValue = oldConfig.value
+    else
+        savedValue = value
+    end
+
+    lia.config.stored[key] = {
+        data = data,
+        value = savedValue,
+        default = value,
+        desc = desc,
+        noNetworking = noNetworking,
+        global = not schemaOnly,
+        callback = callback
+    }
+end
+
+function lia.config.setDefault(key, value)
+    local config = lia.config.stored[key]
+    if config then config.default = value end
+end
+
+function lia.config.forceSet(key, value, noSave)
+    local config = lia.config.stored[key]
+    if config then config.value = value end
+    if noSave then lia.config.save() end
+end
+
+function lia.config.set(key, value)
+    local config = lia.config.stored[key]
+    if config then
+        local oldValue = value
+        config.value = value
+        if SERVER then
+            if not config.noNetworking then netstream.Start(nil, "cfgSet", key, value) end
+            if config.callback then config.callback(oldValue, value) end
+            lia.config.save()
+        end
+    end
+end
+
+function lia.config.get(key, default)
+    local config = lia.config.stored[key]
+    if config then
+        if config.value ~= nil then
+            if istable(config.value) and config.value.r and config.value.g and config.value.b then config.value = Color(config.value.r, config.value.g, config.value.b) end
+            return config.value
+        elseif config.default ~= nil then
+            return config.default
+        end
+    end
+    return default
+end
+
+function lia.config.load()
+    if SERVER then
+        local globals = lia.data.get("config", nil, true, true)
+        local data = lia.data.get("config", nil, false, true)
+        if globals then
+            for k, v in pairs(globals) do
+                lia.config.stored[k] = lia.config.stored[k] or {}
+                lia.config.stored[k].value = v
+            end
+        end
+
+        if data then
+            for k, v in pairs(data) do
+                lia.config.stored[k] = lia.config.stored[k] or {}
+                lia.config.stored[k].value = v
+            end
+        end
+    end
+
+    hook.Run("InitializedConfig")
+end
+
+if SERVER then
+    function lia.config.getChangedValues()
+        local data = {}
+        for k, v in pairs(lia.config.stored) do
+            if v.default ~= v.value then data[k] = v.value end
+        end
+        return data
+    end
+
+    function lia.config.send(client)
+        netstream.Start(client, "cfgList", lia.config.getChangedValues())
+    end
+
+    function lia.config.save()
+        local globals = {}
+        local data = {}
+        for k, v in pairs(lia.config.getChangedValues()) do
+            if lia.config.stored[k].global then
+                globals[k] = v
+            else
+                data[k] = v
+            end
+        end
+
+        lia.data.set("config", globals, true, true)
+        lia.data.set("config", data, false, true)
+    end
+
+    netstream.Hook("cfgSet", function(client, key, value)
+        if client:IsSuperAdmin() and type(lia.config.stored[key].default) == type(value) and hook.Run("CanPlayerModifyConfig", client, key) ~= false then
+            lia.config.set(key, value)
+            if istable(value) then
+                local value2 = "["
+                local count = table.Count(value)
+                local i = 1
+                for _, v in SortedPairs(value) do
+                    value2 = value2 .. v .. (i == count and "]" or ", ")
+                    i = i + 1
+                end
+
+                value = value2
+            end
+
+            lia.util.notifyLocalized("cfgSet", nil, client:Name(), key, tostring(value))
+        end
+    end)
+else
+    netstream.Hook("cfgList", function(data)
+        for k, v in pairs(data) do
+            if lia.config.stored[k] then lia.config.stored[k].value = v end
+        end
+
+        hook.Run("InitializedConfig", data)
+    end)
+
+    netstream.Hook("cfgSet", function(key, value)
+        local config = lia.config.stored[key]
+        if config then
+            if config.callback then config.callback(config.value, value) end
+            config.value = value
+            local properties = lia.gui.properties
+            if IsValid(properties) then
+                local row = properties:GetCategory(L(config.data and config.data.category or "misc")):GetRow(key)
+                if IsValid(row) then
+                    if istable(value) and value.r and value.g and value.b then value = Vector(value.r / 255, value.g / 255, value.b / 255) end
+                    row:SetValue(value)
+                end
+            end
+        end
+    end)
+end
+
+if CLIENT then
+    hook.Add("CreateMenuButtons", "liaConfig", function(tabs)
+        if IsValid(LocalPlayer()) and not LocalPlayer():IsSuperAdmin() or hook.Run("CanPlayerUseConfig", LocalPlayer()) == false then return end
+        tabs["config"] = function(panel)
+            local scroll = panel:Add("DScrollPanel")
+            scroll:Dock(FILL)
+            hook.Run("CreateConfigPanel", panel)
+            local properties = scroll:Add("DProperties")
+            properties:SetSize(panel:GetSize())
+            lia.gui.properties = properties
+            local buffer = {}
+            for k, v in pairs(lia.config.stored) do
+                local index = v.data and v.data.category or "misc"
+                buffer[index] = buffer[index] or {}
+                buffer[index][k] = v
+            end
+
+            for category, configs in SortedPairs(buffer) do
+                category = L(category)
+                for k, v in SortedPairs(configs) do
+                    local form = v.data and v.data.form
+                    local value = lia.config.stored[k].default
+                    if form then
+                        if form == "Int" then
+                            value = math.Round(lia.config.get(k) or value)
+                        elseif form == "Float" then
+                            value = tonumber(lia.config.get(k)) or value
+                        elseif form == "Boolean" then
+                            value = tobool(lia.config.get(k)) or value
+                        else
+                            value = lia.config.get(k) or value
+                        end
+                    else
+                        local formType = type(value)
+                        if formType == "number" then
+                            form = "Int"
+                            value = tonumber(lia.config.get(k)) or value
+                        elseif formType == "boolean" then
+                            form = "Boolean"
+                            value = tobool(lia.config.get(k))
+                        else
+                            form = "Generic"
+                            value = lia.config.get(k) or value
+                        end
+                    end
+
+                    if form == "Combo" then
+                        v.data.data = v.data.data or {}
+                        v.data.data.text = value
+                        v.data.data.values = {}
+                        for niceName, optionData in pairs(v.data.options) do
+                            niceName = tonumber(niceName) and optionData or niceName
+                            v.data.data.values[tonumber(niceName) and optionData or niceName] = optionData
+                            if optionData == value then v.data.data.text = niceName end
+                        end
+                    end
+
+                    if form == "Generic" and istable(value) and value.r and value.g and value.b then
+                        value = Vector(value.r / 255, value.g / 255, value.b / 255)
+                        form = "VectorColor"
+                    end
+
+                    local delay = 1
+                    if (form == "Boolean") or (form == "Combo") then delay = 0 end
+                    local row = properties:CreateRow(category, tostring(k))
+                    row:Setup(form, v.data and v.data.data or {})
+                    row:SetValue(value)
+                    row:SetTooltip(v.desc)
+                    row.DataChanged = function(this, newValue)
+                        debug.Trace()
+                        timer.Create("liaCfgSend" .. k, delay, 1, function()
+                            if not IsValid(row) then return end
+                            if form == "VectorColor" then
+                                local vector = Vector(newValue)
+                                newValue = Color(math.floor(vector.x * 255), math.floor(vector.y * 255), math.floor(vector.z * 255))
+                            elseif form == "Int" or form == "Float" then
+                                newValue = tonumber(newValue)
+                                if form == "Int" then newValue = math.Round(newValue) end
+                            elseif form == "Boolean" then
+                                newValue = tobool(newValue)
+                            end
+
+                            netstream.Start("cfgSet", k, newValue)
+                        end)
+                    end
+
+                    if form == "Combo" then row.SetValue = function() end end
+                end
+            end
+        end
+    end)
+end
+
+lia.config.language = "english"
+lia.config.itemFormat = "<font=liaGenericFont>%s</font>\n<font=liaSmallFont>%s</font>"
+lia.config.add("maxChars", 5, "The maximum number of characters a player can have.", nil, {
+    data = {
+        min = 1,
+        max = 50
+    },
+    category = "characters"
+})
+
+lia.config.add("color", Color(75, 119, 190), "The main color theme for the framework.", function() if CLIENT then hook.Run("liaUpdateColors") end end, {
+    category = "appearance"
+})
+
+lia.config.add("colorAutoTheme", "dark", "Whether secondary and background colours generated from the main color should be dark or light themed.\nGenerated colors will be estimates and not guaranteed to look good.\nDisable to enable manual tuning", function() if CLIENT then hook.Run("liaUpdateColors") end end, {
+    form = "Combo",
+    category = "appearance",
+    options = {"dark", "light", "disabled"}
+})
+
+lia.config.add("colorSecondary", Color(55, 87, 140), "The secondary color for the framework, used for accents.", function() if CLIENT then hook.Run("liaUpdateColors") end end, {
+    category = "appearance"
+})
+
+lia.config.add("colorBackground", Color(25, 40, 64), "The background color for the framework, used in derma backgrounds", function() if CLIENT then hook.Run("liaUpdateColors") end end, {
+    category = "appearance"
+})
+
+lia.config.add("colorText", color_white, "The main text color for the framework.", function() if CLIENT then hook.Run("liaUpdateColors") end end, {
+    category = "appearance"
+})
+
+lia.config.add("font", "Arial", "The font used to display titles.", function(oldValue, newValue) if CLIENT then hook.Run("LoadLiliaFonts", newValue, lia.config.get("genericFont"), lia.config.get("configFont")) end end, {
+    category = "appearance"
+})
+
+lia.config.add("genericFont", "Segoe UI", "The font used to display generic texts.", function(oldValue, newValue) if CLIENT then hook.Run("LoadLiliaFonts", lia.config.get("font"), newValue, lia.config.get("configFont")) end end, {
+    category = "appearance"
+})
+
+lia.config.add("configFont", "Segoe UI", "The font used to display config and admin menu texts.", function(oldValue, newValue) if CLIENT then hook.Run("LoadLiliaFonts", lia.config.get("font"), lia.config.get("genericFont"), newValue) end end, {
+    category = "appearance"
+})
+
+lia.config.add("fontScale", 1.0, "The scale for the font.", function(oldValue, newValue) if CLIENT then hook.Run("LoadLiliaFonts", lia.config.get("font"), lia.config.get("genericFont"), lia.config.get("configFont")) end end, {
+    form = "Float",
+    data = {
+        min = 0.1,
+        max = 2.0
+    },
+    category = "appearance"
+})
+
+lia.config.add("chatRange", 280, "The maximum distance a person's IC chat message goes to.", nil, {
+    form = "Float",
+    data = {
+        min = 10,
+        max = 5000
+    },
+    category = "chat"
+})
+
+lia.config.add("chatColor", Color(255, 239, 150), "The default color for IC chat.", nil, {
+    category = "chat"
+})
+
+lia.config.add("chatListenColor", Color(168, 240, 170), "The color for IC chat if you are looking at the speaker.", nil, {
+    category = "chat"
+})
+
+lia.config.add("oocDelay", 10, "The delay before a player can use OOC chat again in seconds.", nil, {
+    data = {
+        min = 0,
+        max = 10000
+    },
+    category = "chat"
+})
+
+lia.config.add("oocLimit", 0, "Character limit per OOC message. 0 means no limit", nil, {
+    data = {
+        min = 0,
+        max = 1000
+    },
+    category = "chat"
+})
+
+lia.config.add("oocDelayAdmin", false, "Whether or not OOC chat delay is enabled for admins.", nil, {
+    category = "chat"
+})
+
+lia.config.add("allowGlobalOOC", true, "Whether or not Global OOC is enabled.", nil, {
+    category = "chat"
+})
+
+lia.config.add("loocDelay", 0, "The delay before a player can use LOOC chat again in seconds.", nil, {
+    data = {
+        min = 0,
+        max = 10000
+    },
+    category = "chat"
+})
+
+lia.config.add("loocDelayAdmin", false, "Whether or not LOOC chat delay is enabled for admins.", nil, {
+    category = "chat"
+})
+
+lia.config.add("chatShowTime", false, "Whether or not to show timestamps in front of chat messages.", nil, {
+    category = "chat"
+})
+
+lia.config.add("spawnTime", 5, "The time it takes to respawn.", nil, {
+    data = {
+        min = 0,
+        max = 10000
+    },
+    category = "characters"
+})
+
+lia.config.add("invW", 6, "How many slots in a row there is in a default inventory.", nil, {
+    data = {
+        min = 0,
+        max = 20
+    },
+    category = "characters"
+})
+
+lia.config.add("invH", 4, "How many slots in a column there is in a default inventory.", nil, {
+    data = {
+        min = 0,
+        max = 20
+    },
+    category = "characters"
+})
+
+lia.config.add("minDescLen", 16, "The minimum number of characters in a description.", nil, {
+    data = {
+        min = 0,
+        max = 300
+    },
+    category = "characters"
+})
+
+lia.config.add("saveInterval", 300, "How often characters save in seconds.", nil, {
+    data = {
+        min = 60,
+        max = 3600
+    },
+    category = "characters"
+})
+
+lia.config.add("walkSpeed", 130, "How fast a player normally walks.", function(oldValue, newValue)
+    for k, v in ipairs(player.GetAll()) do
+        v:SetWalkSpeed(newValue)
+    end
+end, {
+    data = {
+        min = 75,
+        max = 500
+    },
+    category = "characters"
+})
+
+lia.config.add("runSpeed", 235, "How fast a player normally runs.", function(oldValue, newValue)
+    for k, v in ipairs(player.GetAll()) do
+        v:SetRunSpeed(newValue)
+    end
+end, {
+    data = {
+        min = 75,
+        max = 500
+    },
+    category = "characters"
+})
+
+lia.config.add("walkRatio", 0.5, "How fast one goes when holding ALT.", nil, {
+    form = "Float",
+    data = {
+        min = 0,
+        max = 1
+    },
+    category = "characters"
+})
+
+lia.config.add("punchStamina", 10, "How much stamina punches use up.", nil, {
+    data = {
+        min = 0,
+        max = 100
+    },
+    category = "characters"
+})
+
+lia.config.add("defMoney", 0, "The amount of money that players start with.", nil, {
+    category = "characters",
+    data = {
+        min = 0,
+        max = 10000
+    }
+})
+
+lia.config.add("allowExistNames", true, "Whether or not players can use an already existing name upon character creation.", nil, {
+    category = "characters"
+})
+
+lia.config.add("allowVoice", false, "Whether or not voice chat is allowed.", nil, {
+    category = "server"
+})
+
+lia.config.add("voiceDistance", 600.0, "How far can the voice be heard.", function(oldValue, newValue) lia.config.squaredVoiceDistance = newValue * newValue end, {
+    form = "Float",
+    category = "server",
+    data = {
+        min = 0,
+        max = 5000
+    }
+})
+
+lia.config.add("contentURL", "http://liascript.net/", "Your server's collection pack.", nil, {
+    category = "server"
+})
+
+lia.config.add("moneyModel", "models/props_lab/box01a.mdl", "The model for money entities.", nil, {
+    category = "server"
+})
+
+lia.config.add("salaryInterval", 300, "How often a player gets paid in seconds.", nil, {
+    data = {
+        min = 1,
+        max = 3600
+    },
+    category = "characters"
+})
+
+local dist = lia.config.get("voiceDistance")
+lia.config.squaredVoiceDistance = dist * dist
+if CLIENT then
+    local gradientD = lia.util.getMaterial("vgui/gradient-d")
+    local gradientR = lia.util.getMaterial("vgui/gradient-r")
+    local gradientL = lia.util.getMaterial("vgui/gradient-l")
+    local populateConfig = {
+        server = function(panel)
+            local buffer = {}
+            for k, v in pairs(lia.config.stored) do
+                local index = v.data and v.data.category or "misc"
+                buffer[index] = buffer[index] or {}
+                buffer[index][k] = v
+            end
+
+            panel.data = buffer
+        end,
+        client = function(panel) end,
+    }
+
+    local serverIcon, clientIcon, check, uncheck
+    hook.Add("EasyIconsLoaded", "liaConfigIcons", function()
+        serverIcon = getIcon("icon-equalizer")
+        clientIcon = getIcon("icon-child")
+        check = getIcon("icon-ok-squared")
+        uncheck = getIcon("icon-check-empty")
+    end)
+
+    local PANEL = {}
+    function PANEL:Init()
+        self:SetSize(100, 0)
+        self:DockMargin(0, 0, 0, 0)
+        self:Dock(LEFT)
+        self:InvalidateLayout(true)
+        local parent = self:GetParent()
+        print(parent, lia.gui.config, lia.gui.config == parent)
+        print(parent.populateConfigs)
+        self:createConfigButton(serverIcon, "Server", function()
+            local config = parent.configListPanel
+            populateConfig.server(config)
+            config:InvalidateChildren(true)
+            config:populateConfigs()
+        end)
+
+        self:createConfigButton(clientIcon, "Client", function()
+            local config = parent.configListPanel
+            populateConfig.client(config)
+            config:InvalidateChildren(true)
+            config:populateConfigs()
+        end)
+    end
+
+    function PANEL:createConfigButton(icon, name, func)
+        local button = self:Add("DButton")
+        button:Dock(TOP)
+        button:DockMargin(0, 0, 0, 0)
+        button:SetSize(self:GetWide(), 30)
+        button:SetText("")
+        local icon_label = button:Add("DLabel")
+        icon_label:Dock(LEFT)
+        icon_label:DockMargin(0, 0, 0, 0)
+        icon_label:SetSize(30, 30)
+        icon_label:SetText("")
+        icon_label.Paint = function(_, w, h) lia.util.drawText(icon, w * 0.5, h * 0.5, color_white, 1, 1, "liaIconsSmallNew") end
+        local text_label = button:Add("DLabel")
+        text_label:SetText(name)
+        text_label:SetContentAlignment(5)
+        text_label:SetFont("liaMediumConfigFont")
+        text_label:Dock(FILL)
+        text_label:DockMargin(0, 0, 0, 0)
+        button.DoClick = function()
+            self:GetParent():ClearConfigs()
+            func()
+        end
+        return button
+    end
+
+    function PANEL:Paint()
+    end
+
+    vgui.Register("liaConfigSelectPanel", PANEL, "DPanel")
+    PANEL = {}
+    function PANEL:Init()
+        self:Dock(FILL)
+        self:InvalidateParent(true)
+        hook.Run("CreateConfigPanel", self)
+        self.filter = self:Add("DTextEntry")
+        self.filter:Dock(TOP)
+        self.filter:DockMargin(0, 0, 0, 0)
+        self.filter:SetSize(self:GetWide(), 30)
+        self.filter:SetPlaceholderText("Filter configs")
+        self.filter:SetUpdateOnType(true)
+        self.filter.OnChange = function() self:filterConfigs(self.filter:GetValue()) end
+        self.scroll = self:Add("DScrollPanel")
+        self.scroll:Dock(FILL)
+        self.scroll.Paint = function() end
+        populateConfig.server(self)
+        self:InvalidateChildren(true)
+        self:populateConfigs()
+    end
+
+    local paintFunc = function(panel, w, h)
+        local r, g, b = lia.config.get("color"):Unpack()
+        surface.SetDrawColor(r, g, b, 255)
+        surface.SetMaterial(gradientR)
+        surface.DrawTexturedRect(0, 0, w / 2, h)
+        surface.SetMaterial(gradientL)
+        surface.DrawTexturedRect(w / 2, 0, w / 2, h)
+    end
+
+    local mathRound, mathFloor = math.Round, math.floor
+    local labelSpacing = 0.25
+    local configElement = {
+        Int = function(name, config, parent)
+            local panel = vgui.Create("DNumSlider")
+            panel:SetSize(parent:GetWide(), 30)
+            panel:InvalidateChildren(true)
+            panel:SetMin(config.data.data and config.data.data.min or 0)
+            panel:SetMax(config.data.data and config.data.data.max or 1)
+            panel:SetDecimals(0)
+            panel:SetValue(config.value)
+            panel:SetText(name)
+            panel.TextArea:SetFont("liaConfigFont")
+            panel.Label:SetFont("liaConfigFont")
+            panel.Label:SetTextInset(10, 0)
+            panel.OnValueChanged = function(_, newValue) timer.Create("liaConfigChange" .. name, 1, 1, function() netstream.Start("cfgSet", name, mathFloor(newValue)) end) end
+            panel.Paint = function(this, w, h) paintFunc(this, w, h) end
+            panel.PerformLayout = function(this) this.Label:SetWide(parent:GetWide() * labelSpacing) end
+            local oldMousePressed = panel.Scratch.OnMousePressed
+            panel.Scratch.OnMousePressed = function(this, code) if code ~= MOUSE_RIGHT then oldMousePressed(this, code) end end
+            return panel
+        end,
+        Float = function(name, config, parent)
+            local panel = vgui.Create("DNumSlider")
+            panel:SetSize(parent:GetWide(), 30)
+            panel:InvalidateChildren(true)
+            panel:SetMin(config.data.data and config.data.data.min or 0)
+            panel:SetMax(config.data.data and config.data.data.max or 1)
+            panel:SetDecimals(2)
+            panel:SetValue(config.value)
+            panel:SetText(name)
+            panel.TextArea:SetFont("liaConfigFont")
+            panel.Label:SetFont("liaConfigFont")
+            panel.Label:SetTextInset(10, 0)
+            panel.OnValueChanged = function(_, newValue) timer.Create("liaConfigChange" .. name, 1, 1, function() netstream.Start("cfgSet", name, mathRound(newValue, 2)) end) end
+            panel.Paint = function(this, w, h) paintFunc(this, w, h) end
+            panel.PerformLayout = function(this) this.Label:SetWide(parent:GetWide() * labelSpacing) end
+            local oldMousePressed = panel.Scratch.OnMousePressed
+            panel.Scratch.OnMousePressed = function(this, code) if code ~= MOUSE_RIGHT then oldMousePressed(this, code) end end
+            return panel
+        end,
+        Generic = function(name, config, parent)
+            local panel = vgui.Create("DPanel")
+            panel:SetSize(parent:GetWide(), 30)
+            panel:SetTall(30)
+            local label = panel:Add("DLabel")
+            label:Dock(LEFT)
+            label:DockMargin(0, 0, 0, 0)
+            label:SetWide(panel:GetWide() * labelSpacing)
+            label:SetText(name)
+            label:SetFont("liaConfigFont")
+            label:SetContentAlignment(4)
+            label:SetTextInset(10, 0)
+            local entry = panel:Add("DTextEntry")
+            entry:Dock(FILL)
+            entry:DockMargin(0, 0, 0, 0)
+            entry:SetText(tostring(config.value))
+            entry.OnValueChange = function(_, newValue) netstream.Start("cfgSet", name, newValue) end
+            entry.OnLoseFocus = function(this) timer.Simple(0, function() this:SetText(tostring(config.value)) end) end
+            panel.SetValue = function(this, value) entry:SetText(tostring(value)) end
+            panel.Paint = function(this, w, h) paintFunc(this, w, h) end
+            return panel
+        end,
+        Boolean = function(name, config, parent)
+            local panel = vgui.Create("DPanel")
+            panel:SetSize(parent:GetWide(), 30)
+            panel:SetTall(30)
+            local button = panel:Add("DButton")
+            button:Dock(FILL)
+            button:DockMargin(0, 0, 0, 0)
+            button:SetText("")
+            button.Paint = function(_, w, h) lia.util.drawText(config.value and check or uncheck, w * 0.5, h * 0.5, color_white, 1, 1, "liaIconsSmallNew") end
+            button.DoClick = function() netstream.Start("cfgSet", name, not config.value) end
+            local label = button:Add("DLabel")
+            label:Dock(LEFT)
+            label:DockMargin(0, 0, 0, 0)
+            label:SetWide(parent:GetWide())
+            label:SetText(name)
+            label:SetFont("liaConfigFont")
+            label:SetContentAlignment(4)
+            label:SetTextInset(10, 0)
+            panel.Paint = function(this, w, h) paintFunc(this, w, h) end
+            return panel
+        end,
+        Color = function(name, config, parent)
+            local panel = vgui.Create("DPanel")
+            panel:SetSize(parent:GetWide(), 30)
+            panel:SetTall(30)
+            local button = panel:Add("DButton")
+            button:Dock(FILL)
+            button:DockMargin(0, 0, 0, 0)
+            button:SetText("")
+            button.Paint = function(_, w, h)
+                draw.RoundedBox(4, w / 2 - 9, h / 2 - 9, 18, 18, config.value)
+                lia.util.drawText(config.value.r .. " " .. config.value.g .. " " .. config.value.b, w / 2 + 18, h / 2, lia.config.get("colorText"), 0, 1, "liaConfigFont")
+            end
+
+            button.DoClick = function(this)
+                local pickerFrame = this:Add("DFrame")
+                pickerFrame:SetSize(ScrW() * 0.15, ScrH() * 0.2)
+                pickerFrame:SetPos(gui.MouseX(), gui.MouseY())
+                pickerFrame:MakePopup()
+                if IsValid(button.picker) then button.picker:Remove() end
+                button.picker = pickerFrame
+                local Mixer = pickerFrame:Add("DColorMixer")
+                Mixer:Dock(FILL)
+                Mixer:SetPalette(true)
+                Mixer:SetAlphaBar(true)
+                Mixer:SetWangs(true)
+                Mixer:SetColor(config.value)
+                pickerFrame.curColor = config.value
+                local confirm = pickerFrame:Add("DButton")
+                confirm:Dock(BOTTOM)
+                confirm:DockMargin(0, 0, 0, 0)
+                confirm:SetText("Apply")
+                confirm:SetTextColor(pickerFrame.curColor)
+                confirm.DoClick = function()
+                    netstream.Start("cfgSet", name, pickerFrame.curColor)
+                    pickerFrame:Remove()
+                end
+
+                Mixer.ValueChanged = function(_, value)
+                    pickerFrame.curColor = value
+                    confirm:SetTextColor(value)
+                end
+            end
+
+            local label = button:Add("DLabel")
+            label:Dock(LEFT)
+            label:SetWide(parent:GetWide())
+            label:SetText(name)
+            label:SetFont("liaConfigFont")
+            label:SetContentAlignment(4)
+            label:SetTextInset(10, 0)
+            panel.Paint = function(this, w, h) paintFunc(this, w, h) end
+            return panel
+        end,
+        Combo = function(name, config, parent)
+            local panel = vgui.Create("DPanel")
+            panel:SetSize(parent:GetWide(), 30)
+            panel:SetTall(30)
+            local label = panel:Add("DLabel")
+            label:Dock(LEFT)
+            label:DockMargin(0, 0, 0, 0)
+            label:SetWide(panel:GetWide() * labelSpacing)
+            label:SetText(name)
+            label:SetFont("liaConfigFont")
+            label:SetContentAlignment(4)
+            label:SetTextInset(10, 0)
+            local combo = panel:Add("DComboBox")
+            combo:Dock(FILL)
+            combo:DockMargin(0, 0, 0, 0)
+            combo:SetSortItems(false)
+            combo:SetValue(tostring(config.value))
+            combo.OnSelect = function(_, index, value) netstream.Start("cfgSet", name, value) end
+            for _, v in ipairs(config.data.options) do
+                combo:AddChoice(v)
+            end
+
+            panel.Paint = function(this, w, h) paintFunc(this, w, h) end
+            panel.SetValue = function(this, value) combo:SetValue(tostring(value)) end
+            return panel
+        end,
+    }
+
+    local function typeConvert(value)
+        local t = type(value)
+        if t == "boolean" then
+            return "Boolean"
+        elseif t == "number" then
+            if math.floor(value) == value then
+                return "Int"
+            else
+                return "Float"
+            end
+        elseif t == "table" and value.r and value.g and value.b then
+            return "Color"
+        end
+        return "Generic"
+    end
+
+    function PANEL:populateConfigs()
+        local sorted = {}
+        self.entries = {}
+        self.categories = {}
+        if not self.data then return end
+        for k in pairs(self.data) do
+            table.insert(sorted, k)
+        end
+
+        table.sort(sorted, function(a, b) return a:lower() < b:lower() end)
+        self:InvalidateLayout(true)
+        for _, category in ipairs(sorted) do
+            local panel = self.scroll:Add("DPanel")
+            panel:Dock(TOP)
+            panel:DockMargin(0, 1, 0, 4)
+            panel:DockPadding(0, 0, 0, 10)
+            panel:SetSize(self:GetWide(), 30)
+            panel:SetPaintBackground(false)
+            panel.category = category
+            local label = panel:Add("DLabel")
+            label:Dock(TOP)
+            label:DockMargin(1, 1, 1, 4)
+            label:SetSize(self:GetWide(), 30)
+            label:SetFont("liaMediumConfigFont")
+            label:SetContentAlignment(5)
+            label:SetText(category:gsub("^%l", string.upper))
+            for name, config in SortedPairs(self.data[category]) do
+                local form = config.data and config.data.form
+                local value = config.default
+                if not form then form = typeConvert(value) end
+                local entry = panel:Add(configElement[form or "Generic"](name, config, panel))
+                entry:Dock(TOP)
+                entry:DockMargin(0, 1, 5, 2)
+                entry:SetTooltip(config.desc)
+                entry.shown = true
+                entry.name = name
+                entry.config = config
+                table.insert(self.entries, entry)
+            end
+
+            panel:SizeToChildren(false, true)
+            table.insert(self.categories, panel)
+        end
+    end
+
+    local function requestReset(panel)
+        if panel.name and panel.config then
+            Derma_Query("Reset " .. panel.name .. " to default? (" .. tostring(panel.config.default) .. ")", "Reset Config", "Yes", function()
+                netstream.Start("cfgSet", panel.name, panel.config.default or nil)
+                if panel.SetValue then panel:SetValue(panel.config.default) end
+            end, "No")
+        end
+
+        if panel:GetParent() then requestReset(panel:GetParent()) end
+    end
+
+    hook.Add("VGUIMousePressed", "liaConfigReset", function(panel, code) if code == MOUSE_RIGHT then requestReset(panel) end end)
+    local animTime = 0.3
+    function PANEL:filterConfigs(filter)
+        filter = filter:lower()
+        for _, entry in ipairs(self.entries) do
+            if not (entry.wide and entry.tall) then entry.wide, entry.tall = entry:GetSize() end
+            local text = entry.name:lower()
+            local category = entry.config.data.category:lower()
+            local description = entry.config.desc:lower()
+            if filter == "" or string.find(text, filter) or string.find(category, filter) or string.find(description, filter) then
+                if not entry.shown then
+                    entry:SetVisible(true)
+                    entry.shown = true
+                    entry:SizeTo(entry.wide, entry.tall, animTime, 0, -1, function() end)
+                end
+            else
+                if entry.shown then
+                    entry:SizeTo(entry.wide, 0, animTime, 0, -1, function()
+                        entry:SetVisible(false)
+                        entry.shown = false
+                    end)
+                end
+            end
+        end
+    end
+
+    function PANEL:Think()
+        for _, category in ipairs(self.categories) do
+            local shown = false
+            for _, entry in ipairs(self.entries) do
+                if entry.shown and entry.config.data.category:lower() == category.category:lower() then
+                    shown = true
+                    break
+                end
+            end
+
+            if shown then
+                category:SetVisible(true)
+                category:SizeToChildren(false, true)
+            else
+                category:SetVisible(false)
+                category:SetTall(0)
+            end
+        end
+
+        self.scroll:InvalidateLayout(true)
+        self.scroll:SizeToChildren(false, true)
+    end
+
+    function PANEL:Paint()
+    end
+
+    vgui.Register("liaConfigListPanel", PANEL, "DPanel")
+    PANEL = {}
+    function PANEL:Init()
+        if lia.gui.config then lia.gui.config:Remove() end
+        lia.gui.config = self
+        self:InvalidateLayout(true)
+    end
+
+    function PANEL:ClearConfigs()
+        if self.scroll then self.scroll:Clear() end
+    end
+
+    function PANEL:AddElements()
+        self.configListPanel = self:Add("liaConfigListPanel")
+    end
+
+    local sin = math.sin
+    function PANEL:Paint(w, h)
+        local colorR, colorG, colorB = lia.config.get("color"):Unpack()
+        local backgroundR, backgroundG, backgroundB = lia.config.get("colorBackground"):Unpack()
+        lia.util.drawBlur(self, 10)
+        if not self.startTime then self.startTime = CurTime() end
+        local curTime = (self.startTime - CurTime()) / 4
+        local alpha = 200 * ((sin(curTime - 1.8719) + sin(curTime - 1.8719 / 2)) / 4 + 0.44)
+        surface.SetDrawColor(colorR, colorG, colorB, alpha)
+        surface.DrawRect(0, 0, w, h)
+        surface.SetDrawColor(backgroundR, backgroundG, backgroundB, 255)
+        surface.SetMaterial(gradientD)
+        surface.DrawTexturedRect(0, 0, w, h)
+        surface.SetMaterial(gradientR)
+        surface.DrawTexturedRect(0, 0, w, h)
+    end
+
+    vgui.Register("liaConfigPanel", PANEL, "DPanel")
+end

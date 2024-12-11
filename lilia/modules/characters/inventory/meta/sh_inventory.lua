@@ -46,7 +46,7 @@ end
 
 --- Checks if an item can fit in the inventory at a given position.
 -- @realm shared
--- @param item The item to check.
+-- @item item The item to check.
 -- @int x The X position in the inventory grid.
 -- @int y The Y position in the inventory grid.
 -- @treturn boolean Whether the item can fit in the inventory.
@@ -59,7 +59,7 @@ end
 --- Checks if an item can fit within the inventory based on its size.
 -- Verifies whether the item's width and height are within the bounds of the inventory dimensions.
 -- @realm shared
--- @param table item The item to check. The table must include `width` and `height` properties representing the item's dimensions.
+-- @tab item The item to check. The table must include `width` and `height` properties representing the item's dimensions.
 -- @treturn boolean `true` if the item fits within the inventory dimensions, `false` otherwise.
 -- @usage
 -- local canFit = inventory:canAdd(item) -- Example usage: checks if `item` fits in the inventory.
@@ -75,10 +75,10 @@ end
 
 --- Checks if an item overlaps with another item in the inventory.
 -- @realm shared
--- @param testItem The item to test for overlap.
+-- @item testItem The item to test for overlap.
 -- @int x The X position of the test item in the inventory grid.
 -- @int y The Y position of the test item in the inventory grid.
--- @param item The item to check against.
+-- @item item The item to check against.
 -- @treturn boolean Whether the test item overlaps with the given item.
 function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
     local testX2, testY2 = x + (testItem.width or 1), y + (testItem.height or 1)
@@ -92,7 +92,7 @@ end
 
 --- Checks if an item can fit in the inventory, including within bags.
 -- @realm shared
--- @param item The item to check.
+-- @item item The item to check.
 -- @treturn boolean Whether the item can fit in the inventory.
 function GridInv:doesFitInventory(item)
     local x, y = self:findFreePosition(item)
@@ -109,7 +109,7 @@ end
 
 --- Checks if an item fits at a specific position in the inventory.
 -- @realm shared
--- @param testItem The item to check.
+-- @item testItem The item to check.
 -- @int x The X position in the inventory grid.
 -- @int y The Y position in the inventory grid.
 -- @treturn boolean Whether the item fits at the given position.
@@ -132,7 +132,7 @@ end
 
 --- Finds a free position in the inventory where an item can fit.
 -- @realm shared
--- @param item The item to find a position for.
+-- @item item The item to find a position for.
 -- @treturn int The X position in the inventory grid.
 -- @treturn int The Y position in the inventory grid.
 function GridInv:findFreePosition(item)
@@ -217,9 +217,9 @@ if SERVER then
     --- Adds an item to the inventory.
     -- Handles both adding a single item or stacking multiple items if applicable.
     -- @realm server
-    -- @param itemTypeOrItem The type of the item or the item object to add.
-    -- @param xOrQuantity The X position in the grid or the quantity of items to add.
-    -- @param yOrData The Y position in the grid or additional data for the item.
+    -- @item itemTypeOrItem The type of the item or the item object to add.
+    -- @int xOrQuantity The X position in the grid or the quantity of items to add.
+    -- @int yOrData The Y position in the grid or additional data for the item.
     -- @bool[opt=false] noReplicate If true, the addition will not be replicated to clients.
     -- @treturn deferred A deferred object that resolves when the item is added.
     function GridInv:add(itemTypeOrItem, xOrQuantity, yOrData, noReplicate)

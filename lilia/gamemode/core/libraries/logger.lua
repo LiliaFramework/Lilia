@@ -57,7 +57,7 @@ if SERVER then
     --- Retrieves a formatted log string based on the specified log type and additional arguments.
     -- @client client The client for which the log is generated
     -- @string logType The type of log to generate
-    -- @param ... Additional arguments to be passed to the log generation function
+    -- @argGroup ... Additional arguments to be passed to the log generation function
     -- @return The formatted log string, its category, and color
     -- @realm server
     -- @internal
@@ -84,7 +84,7 @@ if SERVER then
     -- @realm server
     -- @client client Player who instigated the log
     -- @string logType Log category
-    -- @param ... Arguments to pass to the log
+    -- @argGroup ... Arguments to pass to the log
     function lia.log.add(client, logType, ...)
         local logString, category, color = lia.log.getString(client, logType, ...)
         if not isstring(logString) or not isstring(category) or not IsColor(color) then return end

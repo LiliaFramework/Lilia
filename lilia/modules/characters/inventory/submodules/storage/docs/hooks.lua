@@ -67,7 +67,7 @@ end
 -- @realm server
 -- @client client The player attempting to transfer the item.
 -- @entity storage The storage entity.
--- @param item The item being transferred.
+-- @item item The item being transferred.
 -- @treturn bool Whether the player is allowed to transfer the item.
 function StorageCanTransferItem(client, storage, item)
 end

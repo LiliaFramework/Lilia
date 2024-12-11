@@ -122,7 +122,7 @@ if SERVER then
     -- @realm server
     -- @string message The localized message to be notified
     -- @client recipient The player to receive the notification
-    -- @param ... Additional parameters for message formatting
+    -- @argGroup ... Additional parameters for message formatting
     function lia.notices.notifyLocalized(message, recipient, ...)
         local args = {...}
         if recipient ~= nil and not istable(recipient) and type(recipient) ~= "Player" then
@@ -175,7 +175,7 @@ else
     --- Displays a localized notification message in the chat.
     -- @realm client
     -- @string message The message to display (localized)
-    -- @param ... Additional parameters for string formatting
+    -- @argGroup ... Additional parameters for string formatting
     function lia.notices.notifyLocalized(message, ...)
         lia.notices.notify(L(message, ...))
     end

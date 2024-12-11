@@ -30,7 +30,7 @@ end
 
 --- Safely quotes a string by escaping backslashes and double quotes, then wrapping the entire string in double quotes.
 -- @realm shared
--- @param str string The string to quote.
+-- @string str The string to quote.
 -- @return string The quoted and escaped string.
 -- @note This function handles UTF-8 text characters.
 function lia.string.quote(str)

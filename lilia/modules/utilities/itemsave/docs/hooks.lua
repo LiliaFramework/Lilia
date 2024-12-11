@@ -12,6 +12,6 @@ end
 -- This hook is called after the saved items have been successfully loaded from the database.
 -- It can be used to perform additional actions with the loaded items.
 -- @realm server
--- @param loadedItems A table containing the loaded item entities.
+-- @tab loadedItems A table containing the loaded item entities.
 function OnSavedItemLoaded(loadedItems)
 end

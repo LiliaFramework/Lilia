@@ -149,8 +149,8 @@ if SERVER then
     --- Attempts to find a player by an identifier. If unsuccessful, a notice will be displayed to the specified player. The
     -- search criteria is derived from `lia.command.findPlayer`.
     -- @realm server
-    -- @param client Player The client to give a notification to if the player could not be found.
-    -- @param name string Search query
+    -- @client client Player The client to give a notification to if the player could not be found.
+    -- @string name Search query
     -- @treturn player|nil Player that matches the given search query, or nil if a player could not be found
     -- @see lia.util.findPlayer
     function lia.command.findPlayer(client, name)

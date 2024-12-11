@@ -66,8 +66,8 @@ end
 
 --- Draws information about the given entity.
 -- @realm client
--- @param entity The entity for which information is being drawn.
--- @param alpha The alpha value to use for drawing the entity information.
+-- @entity entity The entity for which information is being drawn.
+-- @float alpha The alpha value to use for drawing the entity information.
 function DrawEntityInfo(entity, alpha)
 end
 

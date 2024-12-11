@@ -20,7 +20,7 @@ end
 --- Sets the owner of the entity.
 -- This function assigns ownership of the entity to the specified player. It is intended for compatibility with DarkRP's vehicle ownership system.
 -- @realm shared
--- @param client The player who will become the owner of the entity.
+-- @client client The player who will become the owner of the entity.
 function entityMeta:keysOwn(client)
     if self:IsVehicle() then
         self:CPPISetOwner(client)

@@ -62,9 +62,9 @@ end
 -- @realm shared
 -- This hook allows custom logic to be implemented to determine if an em can be transferred
 -- from one inventory to another. It can be used to impose restrictionon item transfers.
--- @param item The item being transferred
--- @param currentInv The current inventory from which the item is beintransferred
--- @param oldInv The old inventory to which the item belonged
+-- @item item The item being transferred
+-- @inventory currentInv The current inventory from which the item is beintransferred
+-- @inventory oldInv The old inventory to which the item belonged
 -- @treturn bool|string Whether the item can be transferred, or fal and a reason if not
 function CanItemBeTransfered(item, currentInv, oldInv)
 end
@@ -72,7 +72,7 @@ end
 --- Called when an item is dragged out of an inventory.
 -- @realm server
 -- @client client The client dragging the item
--- @param item The item being dragged
+-- @item item The item being dragged
 function ItemDraggedOutOfInventory(client, item)
 end
 
