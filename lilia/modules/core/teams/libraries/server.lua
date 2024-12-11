@@ -69,7 +69,7 @@ function MODULE:FactionOnLoadout(client)
 
     if faction.jumpPower then
         if faction.jumpPowerMultiplier then
-            client:SetJumpPower(math.Round(160 * faction.jumpPower))
+            client:SetJumpPower(math.Round(client:GetJumpPower() * faction.jumpPower))
         else
             client:SetJumpPower(faction.jumpPower)
         end
@@ -164,7 +164,7 @@ function MODULE:ClassOnLoadout(client)
 
     if class.jumpPower then
         if class.jumpPowerMultiplier then
-            client:SetJumpPower(math.Round(160 * class.jumpPower))
+            client:SetJumpPower(math.Round(client:GetJumpPower() * class.jumpPower))
         else
             client:SetJumpPower(class.jumpPower)
         end
