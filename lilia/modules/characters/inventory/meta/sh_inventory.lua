@@ -59,11 +59,12 @@ end
 --- Checks if an item can fit within the inventory based on its size.
 -- Verifies whether the item's width and height are within the bounds of the inventory dimensions.
 -- @realm shared
--- @tab item The item to check. The table must include `width` and `height` properties representing the item's dimensions.
+-- @param item The item to check. This can be a string or the item object itself.
 -- @treturn boolean `true` if the item fits within the inventory dimensions, `false` otherwise.
 -- @usage
 -- local canFit = inventory:canAdd(item) -- Example usage: checks if `item` fits in the inventory.
 function GridInv:canAdd(item)
+    if isstring(item) then item = lia.item.list[item] end
     assert(istable(item), "item must be a table")
     assert(isnumber(item.width) and item.width >= 1, "item.width must be a positive number")
     assert(isnumber(item.height) and item.height >= 1, "item.height must be a positive number")
