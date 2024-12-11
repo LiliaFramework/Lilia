@@ -23,7 +23,7 @@ function PANEL:loadClasses()
     self.tabList = {}
     local sortedClasses = {}
     for _, classData in pairs(lia.class.list) do
-        table.insert(sortedClasses, classData)
+        if classData.faction == client:Team() then table.insert(sortedClasses, classData) end
     end
 
     table.sort(sortedClasses, function(a, b) return a.name < b.name end)

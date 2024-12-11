@@ -132,10 +132,10 @@ function MODULE:CreateMenuButtons(tabs)
         end
     end
 
-    if table.Count(lia.class.list) > 1 then
+    if table.Count(lia.class.list) > 0 then
         local hasClass = false
-        for k, _ in ipairs(lia.class.list) do
-            if lia.class.canBe(client, k) then hasClass = true end
+        for _, classData in pairs(lia.class.list) do
+            if classData.faction == client:Team() then hasClass = true end
         end
 
         if hasClass then tabs["classes"] = function(panel) panel:Add("liaClasses") end end
