@@ -56,12 +56,14 @@ function ITEM:removeOutfit(client)
     end
 
     if isnumber(self.armor) then client:SetArmor(math.max(client:Armor() - self.armor, 0)) end
+    self:getOwner():SetupHands()
     self:call("onTakeOff", client)
 end
 
 function ITEM:wearOutfit(client, isForLoadout)
     if isnumber(self.armor) then client:SetArmor(client:Armor() + self.armor) end
     if self.pacData and client.addPart then client:addPart(self.uniqueID) end
+    self:getOwner():SetupHands()
     self:call("onWear", client, nil, isForLoadout)
 end
 
