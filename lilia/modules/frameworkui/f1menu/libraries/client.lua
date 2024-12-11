@@ -146,10 +146,10 @@ function MODULE:CreateMenuButtons(tabs)
         sidebar:Dock(LEFT)
         sidebar:SetWide(200)
         sidebar:DockMargin(20, 20, 0, 20)
-        sidebar.Paint = function(this, w, h) end
+        sidebar.Paint = function() end
         local mainContent = panel:Add("DPanel")
         mainContent:Dock(FILL)
-        mainContent.Paint = function(this) end
+        mainContent.Paint = function() end
         local html = mainContent:Add("DHTML")
         html:Dock(FILL)
         local helpTabs = {}

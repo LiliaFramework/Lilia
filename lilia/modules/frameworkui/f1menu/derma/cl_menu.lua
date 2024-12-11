@@ -62,7 +62,7 @@ function PANEL:Init()
     self.sidebar = self:Add("DPanel")
     self.sidebar:SetSize(200, ScrH())
     self.sidebar:Dock(RIGHT)
-    self.sidebar.Paint = function(self, w, h) end
+    self.sidebar.Paint = function() end
     self.scroll = self.sidebar:Add("DScrollPanel")
     self.scroll:Dock(FILL)
     self.scroll:SetPadding(10)
@@ -73,12 +73,12 @@ function PANEL:Init()
     local spacer = self.tabs:Add("DPanel")
     spacer:Dock(TOP)
     spacer:SetTall(spacerHeight)
-    spacer.Paint = function(self, w, h) end
-    self.tabs.Paint = function(self, w, h) end
+    spacer.Paint = function() end
+    self.tabs.Paint = function() end
     self.panel = self:Add("EditablePanel")
     self.panel:Dock(FILL)
     self.panel:SetAlpha(0)
-    self.panel.Paint = function(self, w, h) end
+    self.panel.Paint = function() end
     local tabs = {}
     hook.Run("CreateMenuButtons", tabs)
     self.tabList = {}
