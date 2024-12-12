@@ -1,10 +1,11 @@
 ﻿local MODULE = MODULE
 local PANEL = {}
 function PANEL:addTab(name, callback, uniqueID)
+    local MenuColors = lia.color.ReturnMainAdjustedColors()
     name = L(name)
     local tab = self.tabs:Add("DButton")
     tab:SetText(name)
-    tab:SetTextColor(MODULE.MenuColors.text)
+    tab:SetTextColor(MenuColors.text)
     tab:SetFont("liaMediumFont")
     tab:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     tab:SetContentAlignment(5)
@@ -13,17 +14,17 @@ function PANEL:addTab(name, callback, uniqueID)
     tab:DockMargin(0, 0, 10, 10)
     tab.Paint = function(tabBtn, w, h)
         if self.activeTab == tabBtn then
-            surface.SetDrawColor(MODULE.MenuColors.accent)
+            surface.SetDrawColor(MenuColors.accent)
             surface.DrawRect(0, 0, w, h)
         elseif tabBtn:IsHovered() then
-            surface.SetDrawColor(MODULE.MenuColors.hover)
+            surface.SetDrawColor(MenuColors.hover)
             surface.DrawRect(0, 0, w, h)
         else
-            surface.SetDrawColor(MODULE.MenuColors.sidebar)
+            surface.SetDrawColor(MenuColors.sidebar)
             surface.DrawRect(0, 0, w, h)
         end
 
-        surface.SetDrawColor(MODULE.MenuColors.border)
+        surface.SetDrawColor(MenuColors.border)
         surface.DrawOutlinedRect(0, 0, w, h)
     end
 
@@ -137,3 +138,4 @@ function PANEL:Paint()
 end
 
 vgui.Register("liaMenu", PANEL, "EditablePanel")
+if not IsValid(lia.gui.menu) then vgui.Create("liaMenu") end

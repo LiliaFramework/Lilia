@@ -62,6 +62,8 @@ function MODULE:CanDisplayCharInfo(name)
 end
 
 function MODULE:CreateMenuButtons(tabs)
+    local MenuColors = lia.color.ReturnMainAdjustedColors()
+
     local client = LocalPlayer()
     tabs["Status"] = function(panel)
         panel.rotationAngle = 45
@@ -161,7 +163,7 @@ function MODULE:CreateMenuButtons(tabs)
             local callback = v
             local button = sidebar:Add("DButton")
             button:SetText(tabName)
-            button:SetTextColor(self.MenuColors.text)
+            button:SetTextColor(MenuColors.text)
             button:SetFont("liaMediumFont")
             button:SetExpensiveShadow(1, Color(0, 0, 0, 100))
             button:SetContentAlignment(5)
@@ -169,18 +171,19 @@ function MODULE:CreateMenuButtons(tabs)
             button:Dock(TOP)
             button:DockMargin(0, 0, 10, 10)
             button.Paint = function(btn, w, h)
+                local MenuColors = lia.color.ReturnMainAdjustedColors()
                 if panel.activeTab == btn then
-                    surface.SetDrawColor(self.MenuColors.accent)
+                    surface.SetDrawColor(MenuColors.accent)
                     surface.DrawRect(0, 0, w, h)
                 elseif btn:IsHovered() then
-                    surface.SetDrawColor(self.MenuColors.hover)
+                    surface.SetDrawColor(MenuColors.hover)
                     surface.DrawRect(0, 0, w, h)
                 else
-                    surface.SetDrawColor(self.MenuColors.sidebar)
+                    surface.SetDrawColor(MenuColors.sidebar)
                     surface.DrawRect(0, 0, w, h)
                 end
 
-                surface.SetDrawColor(self.MenuColors.border)
+                surface.SetDrawColor(MenuColors.border)
                 surface.DrawOutlinedRect(0, 0, w, h)
             end
 

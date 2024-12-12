@@ -41,16 +41,19 @@ function PANEL:loadClasses()
         button:DockMargin(0, 0, 10, 20)
         button.isAvailable = canBe
         button.Paint = function(btn, w, h)
-            if self.activeTab == btn then
-                surface.SetDrawColor(MODULE.MenuColors.accent)
+            local MenuColors = lia.color.ReturnMainAdjustedColors()
+            if panel.activeTab == btn then
+                surface.SetDrawColor(MenuColors.accent)
+                surface.DrawRect(0, 0, w, h)
             elseif btn:IsHovered() then
-                surface.SetDrawColor(btn.isAvailable and MODULE.MenuColors.hover or Color(100, 100, 100))
+                surface.SetDrawColor(MenuColors.hover)
+                surface.DrawRect(0, 0, w, h)
             else
-                surface.SetDrawColor(btn.isAvailable and MODULE.MenuColors.sidebar or Color(80, 80, 80))
+                surface.SetDrawColor(MenuColors.sidebar)
+                surface.DrawRect(0, 0, w, h)
             end
 
-            surface.DrawRect(0, 0, w, h)
-            surface.SetDrawColor(MODULE.MenuColors.border)
+            surface.SetDrawColor(MenuColors.border)
             surface.DrawOutlinedRect(0, 0, w, h)
         end
 
@@ -69,6 +72,8 @@ function PANEL:loadClasses()
 end
 
 function PANEL:populateClassDetails(classData, canBe)
+    local MenuColors = lia.color.ReturnMainAdjustedColors()
+
     local client = LocalPlayer()
     self.mainContent:Clear()
     local detailsPanel = self.mainContent:Add("DPanel")
@@ -204,13 +209,13 @@ function PANEL:populateClassDetails(classData, canBe)
         joinButton:DockMargin(10, 10, 10, 10)
         joinButton.Paint = function(btn, w, h)
             if btn:IsHovered() then
-                surface.SetDrawColor(MODULE.MenuColors.hover)
+                surface.SetDrawColor(MenuColors.hover)
             else
-                surface.SetDrawColor(MODULE.MenuColors.sidebar)
+                surface.SetDrawColor(MenuColors.sidebar)
             end
 
             surface.DrawRect(0, 0, w, h)
-            surface.SetDrawColor(MODULE.MenuColors.border)
+            surface.SetDrawColor(MenuColors.border)
             surface.DrawOutlinedRect(0, 0, w, h)
         end
 
