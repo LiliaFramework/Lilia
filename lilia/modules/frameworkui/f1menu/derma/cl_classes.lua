@@ -1,5 +1,4 @@
-﻿local MODULE = MODULE
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     lia.gui.classes = self
     self:SetSize(self:GetParent():GetSize())
