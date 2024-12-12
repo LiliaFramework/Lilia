@@ -179,6 +179,48 @@ do
     end
 end
 
+--- Converts RGB values to a Color object.
+-- @int r The red component (0-255).
+-- @int g The green component (0-255).
+-- @int b The blue component (0-255).
+-- @return color The resulting color.
+-- @realm client
+function lia.color.rgb(r, g, b)
+    return Color(r / 255, g / 255, b / 255)
+end
+
+--- Linearly interpolates between two colors.
+-- @int frac A fraction between 0 and 1 representing the interpolation amount.
+-- @tab from The starting color (a table with r, g, b, and a fields).
+-- @tab to The target color (a table with r, g, b, and a fields).
+-- @return Color The resulting interpolated color.
+-- @realm client
+function lia.color.LerpColor(frac, from, to)
+    local col = Color(Lerp(frac, from.r, to.r), Lerp(frac, from.g, to.g), Lerp(frac, from.b, to.b), Lerp(frac, from.a, to.a))
+    return col
+end
+
+--- Returns a table of adjusted colors based on a base color.
+-- This function calculates a set of colors for use in a UI, including
+-- background, sidebar, accent, text, hover, border, and highlight colors.
+-- These colors are derived by adjusting the provided base color using
+-- various offsets.
+-- @return table A table containing the adjusted colors with the following keys:
+-- @realm client
+function lia.color.ReturnMainAdjustedColors()
+    return {
+        background = lia.color.Adjust(lia.config.Color, -20, -10, -50, 255),
+        sidebar = lia.color.Adjust(lia.config.Color, -30, -15, -60, 200),
+        accent = lia.config.Color,
+        text = Color(245, 245, 220, 255),
+        hover = lia.color.Adjust(lia.config.Color, -40, -25, -70, 220),
+        border = Color(255, 255, 255),
+        highlight = Color(255, 255, 255, 30),
+    }
+end
+
+
+
 do
     local function normalize(min, max, val)
         local delta = max - min
@@ -202,25 +244,4 @@ do
         local linear = Lerp(normalize(minValue, maxValue, currentValue), hsv_start, hsv_end)
         return HSVToColor(linear, 1, 1)
     end
-end
-
---- Converts RGB values to a Color object.
--- @int r The red component (0-255).
--- @int g The green component (0-255).
--- @int b The blue component (0-255).
--- @return color The resulting color.
--- @realm client
-function rgb(r, g, b)
-    return Color(r / 255, g / 255, b / 255)
-end
-
---- Linearly interpolates between two colors.
--- @int frac A fraction between 0 and 1 representing the interpolation amount.
--- @tab from The starting color (a table with r, g, b, and a fields).
--- @tab to The target color (a table with r, g, b, and a fields).
--- @return Color The resulting interpolated color.
--- @realm client
-function LerpColor(frac, from, to)
-    local col = Color(Lerp(frac, from.r, to.r), Lerp(frac, from.g, to.g), Lerp(frac, from.b, to.b), Lerp(frac, from.a, to.a))
-    return col
 end
