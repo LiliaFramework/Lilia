@@ -22,8 +22,8 @@ lia.command.list = lia.command.list or {}
 -- `"Commands - "`. This is used in the case that you want to group commands under the same privilege, or use a privilege that
 -- you've already defined (i.e grouping `/charban` and `/charunban` into the `Commands - Ban Characters` privilege).
 -- @field[type=function,opt=nil] onCheckAccess This callback checks whether or not the player is allowed to run the command.
--- This callback should NOT** be used in conjunction with `adminOnly` or `superAdminOnly`, as populating those
--- fields create a custom a `OnCheckAccess` callback for you internally. This is used in cases where you want more fine-grained
+-- This callback should NOT be used in conjunction with `adminOnly` or `superAdminOnly`, as populating those
+-- fields create a custom `onCheckAccess` callback for you internally. This is used in cases where you want more fine-grained
 -- access control for your command.
 -- Consider this example command:
 -- 	lia.command.add("slap", {
@@ -42,27 +42,32 @@ function lia.command.add(command, data)
     data.syntax = data.syntax or "[none]"
     local superAdminOnly = data.superAdminOnly
     local adminOnly = data.adminOnly
-    local acessLevels = superAdminOnly and "superadmin" or (adminOnly and "admin" or "user")
-    local userCommand = acessLevels == "user"
-    if not data.onRun then return ErrorNoHalt("Command '" .. command .. "' does not have a callback, not adding!\n") end
-    if data.group then
-        ErrorNoHalt("Command '" .. data.name .. "' tried to use the deprecated field 'group'!\n")
+    if not data.onRun then
+        ErrorNoHalt("Command '" .. command .. "' does not have a callback, not adding!\n")
         return
     end
 
-    local privilege = "Commands - " .. (isstring(data.privilege) and data.privilege or (userCommand and "Default User Commands" or command))
-    if not CAMI.GetPrivilege(privilege) and privilege ~= "Dummy Command" then
-        CAMI.RegisterPrivilege({
-            Name = privilege,
-            MinAccess = superAdminOnly and "superadmin" or (adminOnly and "admin" or "user"),
-            Description = data.description
-        })
+    if data.group then
+        ErrorNoHalt("Command '" .. (data.name or command) .. "' tried to use the deprecated field 'group'!\n")
+        return
+    end
+
+    if superAdminOnly or adminOnly then
+        local privilegeName = "Commands - " .. (isstring(data.privilege) and data.privilege or command)
+        if not CAMI.GetPrivilege(privilegeName) then
+            CAMI.RegisterPrivilege({
+                Name = privilegeName,
+                MinAccess = superAdminOnly and "superadmin" or "admin",
+                Description = data.description
+            })
+        end
     end
 
     local onRun = data.onRun
     data._onRun = data.onRun
     data.onRun = function(client, arguments)
-        local hasAccess, _ = lia.command.hasAccess(client, command, data)
+        local hasAccess = false
+        hasAccess, _ = lia.command.hasAccess(client, command, data)
         if hasAccess then
             return onRun(client, arguments)
         else
@@ -90,14 +95,14 @@ function lia.command.add(command, data)
 end
 
 --- Checks if a player has access to execute a specific command.
--- This function determines whether a player is authorized to run a given command based on privileges, admin-only or super-admin-only restrictions, and any custom hooks.
+-- This function determines whether a player is authorized to run a given command based on privileges, admin-only or superadmin-only restrictions, and any custom hooks.
 -- @realm shared
 -- @internal
--- @client client The player to check access for.
+-- @player client The player to check access for.
 -- @string command The name of the command to check access for.
--- @tab[opt] data table command data. If not provided, the function retrieves the data from `lia.command.list`.
+-- @tab[opt] data The command data. If not provided, the function retrieves the data from `lia.command.list`.
 -- @treturn bool Whether or not the player has access to the command.
--- @treturn string The privilege associated with the command.S
+-- @treturn string The privilege associated with the command.
 -- @usage
 -- local canUse, privilege = lia.command.hasAccess(player, "ban")
 -- if canUse then
@@ -106,14 +111,20 @@ end
 --     print("Player does not have access to the command:", privilege)
 -- end
 function lia.command.hasAccess(client, command, data)
-    if data == nil then data = lia.command.list[command] end
+    if not data then data = lia.command.list[command] end
     local privilege = data.privilege
     local superAdminOnly = data.superAdminOnly
     local adminOnly = data.adminOnly
-    local acessLevels = superAdminOnly and "superadmin" or (adminOnly and "admin" or "user")
-    if not privilege then privilege = acessLevels == "user" and "Default User Commands" or command end
-    local hasAccess, _ = client:HasPrivilege("Commands - " .. privilege)
-    return hasAccess and hook.Run("CanPlayerUseCommand", client, command) ~= false, privilege
+    local accessLevels = superAdminOnly and "superadmin" or (adminOnly and "admin" or "user")
+    if not privilege then privilege = (accessLevels == "user") and "Global" or command end
+    local hasAccess = true
+    if accessLevels ~= "user" then
+        local privilegeName = "Commands - " .. privilege
+        hasAccess = client:HasPrivilege(privilegeName)
+    end
+
+    if hook.Run("CanPlayerUseCommand", client, command) == false then hasAccess = false end
+    return hasAccess, privilege
 end
 
 --- Returns a table of arguments from a given string.

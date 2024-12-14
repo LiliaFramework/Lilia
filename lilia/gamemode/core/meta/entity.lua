@@ -198,14 +198,19 @@ for _, v in pairs(list.Get("Vehicles")) do
     if v.Category == "Chairs" then ChairCache[v.Model] = true end
 end
 
+function entityMeta:GetCreator()
+    local creator = self:GetNW2Entity("creator")
+    if IsValid(creator) then return creator end
+    return nil
+end
+
 if SERVER then
     --- Assigns a creator to the entity.
     -- @realm server
     -- @client client The player to assign as the creator of the entity.
     -- @usage
-    -- entity:assignCreator(player)
-    function entityMeta:assignCreator(client)
-        self:SetCreator(client)
+    -- entity:SetCreator(player)
+    function entityMeta:SetCreator(client)
         self:SetNW2Entity("creator", client)
     end
 
@@ -296,4 +301,3 @@ entityMeta.InTrace = entityMeta.inTrace
 entityMeta.IsScreenVisible = entityMeta.isScreenVisible
 entityMeta.IsChair = entityMeta.isChair
 entityMeta.CanSeeEntity = entityMeta.canSeeEntity
-entityMeta.AssignCreator = entityMeta.assignCreator

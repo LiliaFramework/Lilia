@@ -19,7 +19,6 @@ lia.chat = lia.chat or {}
 lia.chat.classes = lia.char.classes or {}
 local DUMMY_COMMAND = {
     syntax = "<string text>",
-    privilege = "Dummy Command",
     onRun = function() end
 }
 

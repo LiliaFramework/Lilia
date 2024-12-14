@@ -1,5 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-
 function GM:RegisterPreparedStatements()
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 165, 0), "[Database]", Color(255, 255, 255), " ADDED 5 PREPARED STATEMENTS.\n")
     lia.db.prepare("itemData", "UPDATE lia_items SET _data = ? WHERE _itemID = ?", {MYSQLOO_STRING, MYSQLOO_INTEGER})
@@ -10,7 +9,7 @@ function GM:RegisterPreparedStatements()
 end
 
 function GM:SetupDatabase()
-    local databasePath = engine.ActiveGamemode() .. "/database.json"
+    local databasePath = engine.ActiveGamemode() .. "/schema/.json"
     local databaseOverrideExists = file.Exists(databasePath, "DATA")
     if databaseOverrideExists then
         local databaseConfig = file.Read(databasePath, "DATA")
@@ -24,7 +23,7 @@ function GM:SetupDatabase()
 
     if not lia.db.config then
         MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 165, 0), "[Database]", Color(255, 255, 255), " MySQL Database not configured. Defaulting to SQLite.\n")
-        for k, v in pairs( {
+        for k, v in pairs({
             module = "sqlite",
             hostname = "127.0.0.1",
             username = "",
@@ -35,6 +34,10 @@ function GM:SetupDatabase()
             lia.db[k] = v
         end
     end
+end
+
+function GM:DatabaseConnected()
+    LogBootstrap("Database", "Lilia has connected to the database. We are using " .. lia.db.module .. "!", Color(0, 255, 0))
 end
 
 function GM:OnMySQLOOConnected()
