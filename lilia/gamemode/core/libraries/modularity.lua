@@ -92,11 +92,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, category, first
             return true
         end
     else
-        if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then
-            _G[MODULE.identifier] = MODULE
-            LiliaInformation("Registering Global " .. MODULE.identifier .. " representing " .. MODULE.name .. " Module!")
-        end
-
+        if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then _G[MODULE.identifier] = MODULE end
         lia.module.list[uniqueID] = MODULE
         lia.module.OnFinishLoad(path, category, firstLoad)
         _G[variable] = oldModule
