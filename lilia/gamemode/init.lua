@@ -1,3 +1,4 @@
+BootingTime = SysTime()
 DeriveGamemode("sandbox")
 resource.AddWorkshop("2959728255")
 resource.AddFile("lilia/gui/vignette.png")

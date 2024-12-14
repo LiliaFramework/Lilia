@@ -321,7 +321,10 @@ function GM:InitializedModules()
         end
     end
 
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Bootstrapper] ", color_white, "Finished boot sequence...\n")
+    local bootstrapEndTime = SysTime()
+    local timeTaken = bootstrapEndTime - BootingTime
+    LogBootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
+    LogBootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
 end
 
 function GM:GetAttributeMax(_, attribute)

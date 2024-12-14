@@ -98,7 +98,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, category, first
         end
 
         lia.module.list[uniqueID] = MODULE
-        lia.module.OnFinishLoad(uniqueID, path, category, firstLoad)
+        lia.module.OnFinishLoad(path, category, firstLoad)
         _G[variable] = oldModule
     end
 
@@ -237,19 +237,12 @@ end
 
 --- Loads a module's submodules if present.
 -- This function handles the loading of a module's submodules, if they exist.
--- @string uniqueID The unique identifier for the module.
 -- @string path The path to the module.
 -- @string category The category of the module.
 -- @bool firstLoad Indicates if this is the first load of the module.
 -- @realm shared
 -- @internal
-function lia.module.OnFinishLoad(uniqueID, path, category, firstLoad)
-    local moduleTable = lia.module.list[uniqueID]
-    local name = moduleTable.name
+function lia.module.OnFinishLoad(path, category, firstLoad)
     local files, folders = file.Find(path .. "/submodules/*", "LUA")
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(135, 206, 250), "[" .. string.FirstToUpper(category) .. " Modules] ", color_white, (firstLoad and "Finished Loading '" .. name .. "'\n") or "Finished Reloading '" .. name .. "'\n")
-    if #files > 0 or #folders > 0 then
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. string.FirstToUpper(category) .. " SubModules] ", color_white, (firstLoad and "Finished Loading Submodules For '" .. name .. "'\n") or "Finished Reloading '" .. name .. "'\n")
-        lia.module.loadFromDir(path .. "/submodules", "module", category, firstLoad)
-    end
+    if #files > 0 or #folders > 0 then lia.module.loadFromDir(path .. "/submodules", "module", category, firstLoad) end
 end
