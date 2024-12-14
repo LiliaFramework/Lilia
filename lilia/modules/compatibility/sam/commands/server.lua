@@ -9,6 +9,7 @@
 })
 
 lia.command.add("viewclaims", {
+    privilege = "View Claims",
     description = "View the claims for all admins.",
     adminOnly = true,
     onRun = function(client)
@@ -82,6 +83,34 @@ lia.command.add("playtime", {
             client:chatNotify(string.format("Your playtime: %d hours, %d minutes, %d seconds", hours, minutes, seconds))
         else
             client:notify("Could not retrieve your playtime. Please try again or contact an admin if the issue persists.")
+        end
+    end
+})
+
+lia.command.add("plygetplaytime", {
+    adminOnly = true,
+    syntax = "<string target>",
+    privilege = "View Playtime",
+    onRun = function(client, arguments)
+        local targetName = arguments[1]
+        if not targetName then
+            client:notify("You must specify a player name.")
+            return
+        end
+
+        local target = lia.command.findPlayer(client, targetName)
+        local steamID = target:SteamID()
+        local query = "SELECT play_time FROM sam_players WHERE steamid = " .. SQLStr(steamID) .. ";"
+        local result = sql.QueryRow(query)
+        if result then
+            local playTimeInSeconds = tonumber(result.play_time) or 0
+            local hours = math.floor(playTimeInSeconds / 3600)
+            local minutes = math.floor((playTimeInSeconds % 3600) / 60)
+            local seconds = playTimeInSeconds % 60
+            local message = string.format("Playtime for %s: %d hours, %d minutes, %d seconds", steamID, hours, minutes, seconds)
+            client:chatNotify(message)
+        else
+            client:notify("Could not retrieve playtime for the specified target.")
         end
     end
 })

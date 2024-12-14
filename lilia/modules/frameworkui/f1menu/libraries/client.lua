@@ -63,7 +63,6 @@ end
 
 function MODULE:CreateMenuButtons(tabs)
     local MenuColors = lia.color.ReturnMainAdjustedColors()
-
     local client = LocalPlayer()
     tabs["Status"] = function(panel)
         panel.rotationAngle = 45
@@ -134,15 +133,6 @@ function MODULE:CreateMenuButtons(tabs)
         end
     end
 
-    if table.Count(lia.class.list) > 0 then
-        local hasClass = false
-        for _, classData in pairs(lia.class.list) do
-            if classData.faction == client:Team() then hasClass = true end
-        end
-
-        if hasClass then tabs["classes"] = function(panel) panel:Add("liaClasses") end end
-    end
-
     tabs["help"] = function(panel)
         local sidebar = panel:Add("DPanel")
         sidebar:Dock(LEFT)
@@ -205,6 +195,8 @@ function MODULE:CreateMenuButtons(tabs)
             panel.tabList[tabName] = button
         end
     end
+
+    if #lia.faction.getClasses(LocalPlayer():getChar():getFaction()) > 1 then tabs["classes"] = function(panel) panel:Add("liaClasses") end end
 end
 
 function MODULE:BuildHelpMenu(tabs)

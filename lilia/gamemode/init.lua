@@ -1,42 +1,50 @@
+DeriveGamemode("sandbox")
 resource.AddWorkshop("2959728255")
 resource.AddFile("lilia/gui/vignette.png")
-DeriveGamemode("sandbox")
 lia = lia or {
     util = {},
     meta = {},
     notices = {}
 }
 
-if engine.ActiveGamemode() == "lilia" then MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "No schema loaded. Please place the schema in your gamemodes folder, then set it as your gamemode.\n\n") end
-AddCSLuaFile("lilia/gamemode/core/libraries/config.lua")
-include("lilia/gamemode/core/libraries/config.lua")
-include("lilia/gamemode/shared.lua")
-include("lilia/gamemode/core/libraries/database.lua")
-include("lilia/gamemode/core/hooks/database.lua")
-include("lilia/gamemode/core/libraries/includer.lua")
-include("lilia/gamemode/core/libraries/data.lua")
-include("lilia/gamemode/core/hooks/data.lua")
-AddCSLuaFile("lilia/gamemode/core/libraries/includer.lua")
-AddCSLuaFile("lilia/gamemode/core/libraries/data.lua")
-AddCSLuaFile("lilia/gamemode/shared.lua")
-MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Bootstrapper] ", color_white, "Starting boot sequence...\n")
-MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Bootstrapper] ", color_white, "Starting server load...\n")
-timer.Simple(0, function()
+local function AddLiliaFiles()
+    local files = {"lilia/gamemode/core/libraries/config.lua", "lilia/gamemode/core/libraries/includer.lua", "lilia/gamemode/core/libraries/data.lua", "lilia/gamemode/shared.lua"}
+    for _, file in ipairs(files) do
+        AddCSLuaFile(file)
+    end
+end
+
+local function IncludeLiliaFiles()
+    local files = {"lilia/gamemode/core/libraries/config.lua", "lilia/gamemode/shared.lua", "lilia/gamemode/core/libraries/database.lua", "lilia/gamemode/core/hooks/database.lua", "lilia/gamemode/core/libraries/includer.lua", "lilia/gamemode/core/libraries/data.lua", "lilia/gamemode/core/hooks/data.lua"}
+    for _, file in ipairs(files) do
+        include(file)
+    end
+end
+
+local function SetupDatabase()
     hook.Run("SetupDatabase")
     lia.db.connect(function()
         lia.db.loadTables()
         lia.log.loadTables()
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " Lilia has connected to the database.\n")
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " Database Type: " .. lia.db.module .. ".\n")
         hook.Run("DatabaseConnected")
     end)
-end)
+end
 
-cvars.AddChangeCallback("sbox_persist", function(_, old, new)
-    timer.Create("sbox_persist_change_timer", 1, 1, function()
-        hook.Run("PersistenceSave", old)
-        game.CleanUpMap(false, nil, function() end)
-        if new == "" then return end
-        hook.Run("PersistenceLoad", new)
-    end)
-end, "sbox_persist_load")
+local function SetupPersistence()
+    cvars.AddChangeCallback("sbox_persist", function(_, old, new)
+        timer.Create("sbox_persist_change_timer", 1, 1, function()
+            hook.Run("PersistenceSave", old)
+            game.CleanUpMap(false, nil, function() end)
+            if new ~= "" then hook.Run("PersistenceLoad", new) end
+        end)
+    end, "sbox_persist_load")
+end
+
+local function BootstrapLilia()
+    AddLiliaFiles()
+    IncludeLiliaFiles()
+    timer.Simple(0, SetupDatabase)
+    SetupPersistence()
+end
+
+BootstrapLilia()

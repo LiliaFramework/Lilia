@@ -2,41 +2,52 @@
 GM.Name = "Lilia"
 GM.Author = "Samael"
 GM.Website = "https://discord.gg/jjrhyeuzYV"
-ModulesLoaded = false
-MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Bootstrapper] ", color_white, "Starting shared load...\n")
+local modulesLoaded = false
+local function ExecuteServerCommands(commands)
+    for _, cmd in ipairs(commands) do
+        game.ConsoleCommand(cmd .. "\n")
+    end
+end
+
+local function RemoveHintTimers()
+    local hintTimers = {"HintSystem_OpeningMenu", "HintSystem_Annoy1", "HintSystem_Annoy2"}
+    for _, timerName in ipairs(hintTimers) do
+        if timer.Exists(timerName) then timer.Remove(timerName) end
+    end
+end
+
+function LogBootstrap(section, message, color)
+    color = color or color_white
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. section .. "] ", color, message .. "\n")
+end
+
 function GM:Initialize()
+    if engine.ActiveGamemode() == "lilia" then LogBootstrap("Error", "No schema loaded. Please place the schema in your gamemodes folder, then set it as your gamemode.", Color(255, 0, 0)) end
     if SERVER then
-        game.ConsoleCommand("net_maxfilesize 64\n")
-        game.ConsoleCommand("sv_kickerrornum 0\n")
-        game.ConsoleCommand("sv_allowupload 0\n")
-        game.ConsoleCommand("sv_allowdownload 0\n")
-        game.ConsoleCommand("sv_allowcslua 0\n")
-        game.ConsoleCommand("gmod_physiterations 2\n")
-        game.ConsoleCommand("sbox_noclip 0\n")
-        game.ConsoleCommand("sv_minrate 1048576\n")
+        LogBootstrap("Bootstrapper", "Starting boot sequence...")
+        ExecuteServerCommands({"net_maxfilesize 64", "sv_kickerrornum 0", "sv_allowupload 0", "sv_allowdownload 0", "sv_allowcslua 0", "gmod_physiterations 2", "sbox_noclip 0", "sv_minrate 1048576"})
     else
-        timer.Remove("HintSystem_OpeningMenu")
-        timer.Remove("HintSystem_Annoy1")
-        timer.Remove("HintSystem_Annoy2")
         hook.Run("LoadLiliaFonts", "Arial", "Segoe UI")
     end
 
+    RemoveHintTimers()
     lia.module.initialize(true)
 end
 
 function GM:OnReloaded()
-    if not ModulesLoaded then
+    if not modulesLoaded then
         lia.module.initialize(false)
-        ModulesLoaded = true
+        modulesLoaded = true
     end
 
     lia.faction.formatModelData()
-    if CLIENT then
-        timer.Remove("HintSystem_OpeningMenu")
-        timer.Remove("HintSystem_Annoy1")
-        timer.Remove("HintSystem_Annoy2")
+    if SERVER then
+        LogBootstrap("Bootstrapper", "Starting reload sequence...")
+    else
         hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
     end
+
+    RemoveHintTimers()
 end
 
 function LiliaPrint(message, color)

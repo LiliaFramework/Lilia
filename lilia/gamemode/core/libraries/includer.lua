@@ -158,6 +158,10 @@ lia.FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/libraries/time.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/libraries/sizing.lua",
         realm = "client"
     },

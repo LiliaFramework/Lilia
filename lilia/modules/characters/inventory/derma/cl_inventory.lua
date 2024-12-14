@@ -34,24 +34,7 @@ function PANEL:setItemType(itemTypeOrID)
     self.itemTable = item
     self:SetModel(item:getModel(), item:getSkin())
     self:updateTooltip()
-    if item.exRender then
-        self.Icon:SetVisible(false)
-        self.ExtraPaint = function(self, x, y)
-            local paintFunc = item.paintIcon
-            if paintFunc and isfunction(paintFunc) then
-                paintFunc(item, self)
-            else
-                local exIcon = ikon:getIcon(item.uniqueID)
-                if exIcon then
-                    surface.SetMaterial(exIcon)
-                    surface.SetDrawColor(color_white)
-                    surface.DrawTexturedRect(0, 0, x, y)
-                else
-                    ikon:renderIcon(item.uniqueID, item.width, item.height, item.model, item.iconCam)
-                end
-            end
-        end
-    elseif item.icon then
+    if item.icon then
         self.Icon:SetVisible(false)
         self.ExtraPaint = function(self, w, h) drawIcon(item.icon, self, w, h) end
     else

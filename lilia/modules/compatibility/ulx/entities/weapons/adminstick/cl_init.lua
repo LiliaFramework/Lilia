@@ -1,21 +1,24 @@
 local MODULE = MODULE
-
 function SWEP:PrimaryAttack()
-    local target = IsValid(LocalPlayer().AdminStickTarget) and LocalPlayer().AdminStickTarget or LocalPlayer():GetEyeTrace().Entity
-    if IsValid(target) and not target:IsPlayer() and target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end
-    if IsValid(target) and target:IsPlayer() then MODULE:OpenAdminStickUI(target) end
+    local target = self:GetTarget()
+    if IsValid(target) then MODULE:OpenAdminStickUI(target) end
 end
 
 function SWEP:SecondaryAttack()
     if not IsFirstTimePredicted() then return end
-    local target = IsValid(LocalPlayer().AdminStickTarget) and LocalPlayer().AdminStickTarget or LocalPlayer():GetEyeTrace().Entity
-    if IsValid(target) and not target:IsPlayer() and target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end
+    local target = self:GetTarget()
     if IsValid(target) and target:IsPlayer() and target ~= LocalPlayer() then
         local cmd = target:IsFrozen() and "sam unfreeze" or "sam freeze"
         LocalPlayer():ConCommand(cmd .. " " .. target:SteamID())
     else
         lia.notices.notify("You cannot freeze this!")
     end
+end
+
+function SWEP:GetTarget()
+    local localPlayer = LocalPlayer()
+    local target = IsValid(localPlayer.AdminStickTarget) and localPlayer.AdminStickTarget or localPlayer:GetEyeTrace().Entity
+    return target
 end
 
 function SWEP:DrawHUD()
@@ -37,11 +40,11 @@ function SWEP:DrawHUD()
             end
         elseif target:IsWorld() then
             if not LocalPlayer().NextRequestInfo or SysTime() >= LocalPlayer().NextRequestInfo then LocalPlayer().NextRequestInfo = SysTime() + 1 end
-            information = {"Entity", "Class: " .. target:GetClass(), "Model: " .. target:GetModel(), "Position: " .. tostring(target:GetPos()), "Angles: " .. tostring(target:GetAngles()), "Owner: " .. tostring(target:GetNWString("Creator_Nick", "NULL")), "EntityID: " .. target:EntIndex()}
+            information = {"Entity", "Class: " .. target:GetClass(), "Model: " .. target:GetModel(), "Position: " .. tostring(target:GetPos()), "Angles: " .. tostring(target:GetAngles()), "Owner: " .. tostring(IsValid(target:GetCreator()) and target:GetCreator():Nick() or "Unknown"), "EntityID: " .. target:EntIndex()}
             crossColor = Color(255, 255, 0)
         else
             if not LocalPlayer().NextRequestInfo or SysTime() >= LocalPlayer().NextRequestInfo then LocalPlayer().NextRequestInfo = SysTime() + 1 end
-            information = {"Entity", "Class: " .. target:GetClass(), "Model: " .. target:GetModel(), "Position: " .. tostring(target:GetPos()), "Angles: " .. tostring(target:GetAngles()), "Owner: " .. tostring(target:GetNWString("Creator_Nick", "NULL")), "EntityID: " .. target:EntIndex()}
+            information = {"Entity", "Class: " .. target:GetClass(), "Model: " .. target:GetModel(), "Position: " .. tostring(target:GetPos()), "Angles: " .. tostring(target:GetAngles()), "Owner: " .. tostring(IsValid(target:GetCreator()) and target:GetCreator():Nick() or "Unowned"), "EntityID: " .. target:EntIndex()}
             crossColor = Color(255, 255, 0)
         end
     end

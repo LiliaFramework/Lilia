@@ -41,7 +41,7 @@ function PANEL:loadClasses()
         button.isAvailable = canBe
         button.Paint = function(btn, w, h)
             local MenuColors = lia.color.ReturnMainAdjustedColors()
-            if panel.activeTab == btn then
+            if self.activeTab == btn then
                 surface.SetDrawColor(MenuColors.accent)
                 surface.DrawRect(0, 0, w, h)
             elseif btn:IsHovered() then

@@ -138,4 +138,3 @@ function PANEL:Paint()
 end
 
 vgui.Register("liaMenu", PANEL, "EditablePanel")
-if not IsValid(lia.gui.menu) then vgui.Create("liaMenu") end

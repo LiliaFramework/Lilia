@@ -14,3 +14,10 @@ lia.command.add("playtime", {
     adminOnly = false,
     onRun = function() end
 })
+
+lia.command.add("plygetplaytime", {
+    adminOnly = true,
+    syntax = "<string target>",
+    privilege = "View Playtime",
+    onRun = function() end
+})

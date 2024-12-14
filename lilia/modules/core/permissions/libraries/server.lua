@@ -83,31 +83,31 @@ function GM:PhysgunPickup(client, entity)
 end
 
 function GM:PlayerSpawnedNPC(client, entity)
-    entity:assignCreator(client)
+    entity:SetCreator(client)
 end
 
 function GM:PlayerSpawnedEffect(client, _, entity)
-    entity:assignCreator(client)
+    entity:SetCreator(client)
 end
 
 function GM:PlayerSpawnedProp(client, _, entity)
-    entity:assignCreator(client)
+    entity:SetCreator(client)
 end
 
 function GM:PlayerSpawnedRagdoll(client, _, entity)
-    entity:assignCreator(client)
+    entity:SetCreator(client)
 end
 
 function GM:PlayerSpawnedSENT(client, entity)
-    entity:assignCreator(client)
+    entity:SetCreator(client)
 end
 
 function GM:PlayerSpawnedSWEP(client, entity)
-    entity:assignCreator(client)
+    entity:SetCreator(client)
 end
 
 function GM:PlayerSpawnedVehicle(client, entity)
-    entity:assignCreator(client)
+    entity:SetCreator(client)
 end
 
 concommand.Add("kickbots", function()
