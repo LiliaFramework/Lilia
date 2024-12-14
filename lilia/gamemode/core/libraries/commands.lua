@@ -117,7 +117,7 @@ function lia.command.hasAccess(client, command, data)
     local adminOnly = data.adminOnly
     local accessLevels = superAdminOnly and "superadmin" or (adminOnly and "admin" or "user")
     if not privilege then privilege = (accessLevels == "user") and "Global" or command end
-    local hasAccess = true
+    local hasAccess
     if accessLevels ~= "user" then
         local privilegeName = "Commands - " .. privilege
         hasAccess = client:HasPrivilege(privilegeName)

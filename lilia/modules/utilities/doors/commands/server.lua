@@ -49,7 +49,7 @@ lia.command.add("admindoorsell", {
 lia.command.add("doortogglelock", {
     adminOnly = true,
     privilege = "Manage Doors",
-    onRun = function(client, arguments)
+    onRun = function(client)
         local door = client:GetTracedEntity()
         if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
             local currentLockState = door:GetInternalVariable("m_bLocked")
@@ -114,7 +114,7 @@ lia.command.add("doortoggleownable", {
     adminOnly = true,
     syntax = "[string name]",
     privilege = "Manage Doors",
-    onRun = function(client, arguments)
+    onRun = function(client)
         local door = client:GetTracedEntity()
         if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
             local isUnownable = door:getNetVar("noSell", false)
