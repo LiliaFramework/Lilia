@@ -194,6 +194,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     ITEM:onRegistered()
     local itemType = ITEM.uniqueID
     targetTable[itemType] = ITEM
+    hook.Run("OnItemRegistered", ITEM)
     ITEM = nil
     return targetTable[itemType]
 end
