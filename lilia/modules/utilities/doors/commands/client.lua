@@ -9,10 +9,9 @@ lia.command.add("admindoorsell", {
     onRun = function() end
 })
 
-lia.command.add("doorsetlocked", {
+lia.command.add("doortogglelock", {
     adminOnly = true,
     privilege = "Manage Doors",
-    syntax = "<bool locked>",
     onRun = function() end
 })
 
@@ -21,14 +20,7 @@ lia.command.add("doorbuy", {
     onRun = function() end
 })
 
-lia.command.add("doorsetunownable", {
-    adminOnly = true,
-    syntax = "[string name]",
-    privilege = "Manage Doors",
-    onRun = function() end
-})
-
-lia.command.add("doorsetownable", {
+lia.command.add("doortoggleownable", {
     adminOnly = true,
     syntax = "[string name]",
     privilege = "Manage Doors",
@@ -49,7 +41,30 @@ lia.command.add("doorremovefaction", {
     onRun = function() end
 })
 
+lia.command.add("doorinfo", {
+    adminOnly = false,
+    onRun = function() end
+})
+
 lia.command.add("doorsetdisabled", {
+    adminOnly = true,
+    privilege = "Manage Doors",
+    onRun = function() end
+})
+
+lia.command.add("doorforcelock", {
+    adminOnly = true,
+    privilege = "Manage Doors",
+    onRun = function() end
+})
+
+lia.command.add("doorforceunlock", {
+    adminOnly = true,
+    privilege = "Manage Doors",
+    onRun = function() end
+})
+
+lia.command.add("doorresetdata", {
     adminOnly = true,
     privilege = "Manage Doors",
     onRun = function() end

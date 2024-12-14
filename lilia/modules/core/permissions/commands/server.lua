@@ -188,7 +188,7 @@ lia.command.add("dropmoney", {
     end
 })
 
-lia.command.add("entityName", {
+lia.command.add("entityInfo", {
     adminOnly = false,
     onRun = function(client)
         local entity = client:GetTracedEntity()
@@ -209,8 +209,12 @@ lia.command.add("entityName", {
         end
 
         local entityName = entity:GetName()
-        client:chatNotify("Entity Name: " .. entityName)
+        local entityID = entity:EntIndex()
+        local creator = entity:GetCreator()
+        client:chatNotify("Entity Name: " .. (entityName ~= "" and entityName or "Unnamed"))
         client:chatNotify("Entity Class: " .. entityClass)
+        client:chatNotify("Entity ID: " .. entityID)
+        client:chatNotify("Entity Creator: " .. (IsValid(creator) and creator:Nick() or "Unknown"))
     end
 })
 
@@ -240,27 +244,6 @@ lia.command.add("checkinventory", {
             net.Send(client)
         elseif not isTargDiff then
             client:notifyLocalized("This isn't meant for checking your own inventory.")
-        end
-    end
-})
-
-lia.command.add("flagpet", {
-    adminOnly = true,
-    syntax = "[character name]",
-    privilege = "Manage Flags",
-    onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
-        if not client:IsAdmin() then
-            client:notify("Your rank is not high enough to use this command.")
-            return false
-        end
-
-        if target:getChar():hasFlags("pet") then
-            target:getChar():takeFlags("pet")
-            client:notify("Taken pet Flags!")
-        else
-            target:getChar():giveFlags("pet")
-            client:notify("Given pet Flags!")
         end
     end
 })
@@ -541,8 +524,17 @@ lia.command.add("checkallmoney", {
     end
 })
 
+lia.command.add("checkflags", {
+    adminOnly = true,
+    privilege = "Get Character Info",
+    onRun = function(client, arguments)
+        local target = lia.command.findPlayer(client, arguments[1])
+        client:chatNotify(target:Name() .. " — " .. target:getChar():getFlags())
+    end
+})
+
 lia.command.add("findallflags", {
-    adminOnly = false,
+    adminOnly = true,
     privilege = "Get Character Info",
     onRun = function(client)
         for _, v in pairs(player.GetHumans()) do
@@ -588,21 +580,6 @@ lia.command.add("chargetmodel", {
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and target:getChar() then
             client:notify(target:GetModel())
-        else
-            client:notify("Invalid Target")
-        end
-    end
-})
-
-lia.command.add("chargetmoney", {
-    adminOnly = true,
-    syntax = "<string name>",
-    privilege = "Get Character Info",
-    onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) and target:getChar() then
-            local character = target:getChar()
-            client:notify(character:getMoney())
         else
             client:notify("Invalid Target")
         end

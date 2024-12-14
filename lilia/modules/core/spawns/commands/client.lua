@@ -5,13 +5,6 @@
     onRun = function() end
 })
 
-lia.command.add("respawn", {
-    privilege = "Forcelly Respawn",
-    adminOnly = true,
-    syntax = "<string target>",
-    onRun = function() end
-})
-
 lia.command.add("spawnremove", {
     privilege = "Manage Spawns",
     adminOnly = true,

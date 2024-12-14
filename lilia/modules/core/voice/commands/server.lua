@@ -1,34 +1,32 @@
-﻿lia.command.add("charvoiceunban", {
+﻿lia.command.add("charvoicetoggle", {
     adminOnly = true,
-    privilege = "Voice Unban Character",
+    privilege = "Toggle Voice Ban Character",
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target == client then
-            client:notify("You cannot run mute commands on yourself.")
+            client:notify("You cannot toggle mute on yourself.")
             return false
         end
 
-        if IsValid(target) and target:getChar():getData("VoiceBan", false) then target:getChar():SetData("VoiceBan", false) end
-        client:notify("You have unmuted a player.")
-        target:notify("You've been unmuted by the admin.")
-    end
-})
-
-lia.command.add("charvoiceban", {
-    adminOnly = true,
-    privilege = "Voice ban Character",
-    syntax = "<string name>",
-    onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
-        if target == client then
-            client:notify("You cannot run mute commands on yourself.")
-            return false
+        if IsValid(target) then
+            local char = target:getChar()
+            if char then
+                local isBanned = char:getData("VoiceBan", false)
+                char:setData("VoiceBan", not isBanned)
+                if isBanned then
+                    client:notify("You have unmuted " .. target:Name() .. ".")
+                    target:notify("You have been unmuted by an admin.")
+                else
+                    client:notify("You have muted " .. target:Name() .. ".")
+                    target:notify("You have been muted by an admin.")
+                end
+            else
+                client:notify("The target does not have a valid character.")
+            end
+        else
+            client:notify("Invalid target.")
         end
-
-        if IsValid(target) and not target:getData("VoiceBan", false) then target:SetData("VoiceBan", true) end
-        client:notify("You have muted a player.")
-        target:notify("You've been muted by the admin.")
     end
 })
 

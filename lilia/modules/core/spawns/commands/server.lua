@@ -54,19 +54,6 @@ lia.command.add("spawnadd", {
     end
 })
 
-lia.command.add("respawn", {
-    privilege = "Forcelly Respawn",
-    adminOnly = true,
-    syntax = "<string target>",
-    onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then
-            MODULE:PostPlayerLoadout(target)
-            client:notify("You teleported " .. target:Name() .. " back to their faction spawn point.")
-        end
-    end
-})
-
 lia.command.add("spawnremove", {
     privilege = "Manage Spawns",
     adminOnly = true,

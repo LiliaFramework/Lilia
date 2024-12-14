@@ -1,13 +1,6 @@
-﻿lia.command.add("charvoiceunban", {
+﻿lia.command.add("charvoicetoggle", {
     adminOnly = true,
-    privilege = "Voice Unban Character",
-    syntax = "<string name>",
-    onRun = function() end
-})
-
-lia.command.add("charvoiceban", {
-    adminOnly = true,
-    privilege = "Voice ban Character",
+    privilege = "Toggle Voice Ban Character",
     syntax = "<string name>",
     onRun = function() end
 })

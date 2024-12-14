@@ -169,6 +169,12 @@ lia.command.add("checkallmoney", {
     onRun = function() end
 })
 
+lia.command.add("checkflags", {
+    adminOnly = true,
+    privilege = "Get Character Info",
+    onRun = function() end
+})
+
 lia.command.add("findallflags", {
     adminOnly = false,
     privilege = "Get Character Info",
@@ -190,13 +196,6 @@ lia.command.add("listbodygroups", {
 })
 
 lia.command.add("chargetmodel", {
-    adminOnly = true,
-    syntax = "<string name>",
-    privilege = "Get Character Info",
-    onRun = function() end
-})
-
-lia.command.add("chargetmoney", {
     adminOnly = true,
     syntax = "<string name>",
     privilege = "Get Character Info",
