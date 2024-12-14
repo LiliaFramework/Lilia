@@ -66,8 +66,7 @@ function lia.command.add(command, data)
     local onRun = data.onRun
     data._onRun = data.onRun
     data.onRun = function(client, arguments)
-        local hasAccess = false
-        hasAccess, _ = lia.command.hasAccess(client, command, data)
+        local hasAccess, _ = lia.command.hasAccess(client, command, data)
         if hasAccess then
             return onRun(client, arguments)
         else
@@ -117,7 +116,7 @@ function lia.command.hasAccess(client, command, data)
     local adminOnly = data.adminOnly
     local accessLevels = superAdminOnly and "superadmin" or (adminOnly and "admin" or "user")
     if not privilege then privilege = (accessLevels == "user") and "Global" or command end
-    local hasAccess
+    local hasAccess = true
     if accessLevels ~= "user" then
         local privilegeName = "Commands - " .. privilege
         hasAccess = client:HasPrivilege(privilegeName)
