@@ -10,7 +10,7 @@ lia.item.list = lia.item.list or {}
 lia.item.instances = lia.item.instances or {}
 lia.item.inventories = lia.inventory.instances or {}
 lia.item.inventoryTypes = lia.item.inventoryTypes or {}
-lia.item.DefaultFunctions = {
+local DefaultFunctions = {
     drop = {
         tip = "dropTip",
         icon = "icon16/world.png",
@@ -168,7 +168,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         ITEM.base = baseID
         ITEM.isBase = isBaseItem
         ITEM.category = ITEM.category or "Miscellaneous"
-        ITEM.functions = table.Copy(baseTable.functions or lia.item.DefaultFunctions)
+        ITEM.functions = table.Copy(baseTable.functions or DefaultFunctions)
     else
         ITEM = targetTable[uniqueID] or setmetatable({
             hooks = table.Copy(baseTable.hooks or {}),
@@ -187,7 +187,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         ITEM.base = baseID
         ITEM.isBase = isBaseItem
         ITEM.category = ITEM.category or "Miscellaneous"
-        ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or lia.item.DefaultFunctions)
+        ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or DefaultFunctions)
     end
 
     if not luaGenerated and path then lia.include(path, "shared") end

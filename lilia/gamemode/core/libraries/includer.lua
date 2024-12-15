@@ -14,6 +14,10 @@ lia.RealmIdentifiers = {
 
 lia.FilesToLoad = {
     {
+        path = "lilia/gamemode/core/libraries/languages.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/libraries/util.lua",
         realm = "shared"
     },
@@ -78,10 +82,6 @@ lia.FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/libraries/languages.lua",
-        realm = "shared"
-    },
-    {
         path = "lilia/gamemode/core/libraries/networking.lua",
         realm = "shared"
     },
@@ -102,7 +102,7 @@ lia.FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/libraries/date.lua",
+        path = "lilia/gamemode/core/libraries/time.lua",
         realm = "shared"
     },
     {
@@ -118,20 +118,12 @@ lia.FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/libraries/logger.lua",
-        realm = "shared"
-    },
-    {
         path = "lilia/gamemode/core/libraries/menu.lua",
         realm = "client"
     },
     {
         path = "lilia/gamemode/core/libraries/bars.lua",
         realm = "client"
-    },
-    {
-        path = "lilia/gamemode/core/libraries/darkrp.lua",
-        realm = "shared"
     },
     {
         path = "lilia/gamemode/core/netcalls/client.lua",
@@ -155,10 +147,6 @@ lia.FilesToLoad = {
     },
     {
         path = "lilia/gamemode/core/libraries/math.lua",
-        realm = "shared"
-    },
-    {
-        path = "lilia/gamemode/core/libraries/time.lua",
         realm = "shared"
     },
     {

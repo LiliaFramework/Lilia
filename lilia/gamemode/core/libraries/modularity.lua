@@ -8,10 +8,75 @@ lia.module = lia.module or {}
 lia.module.EnabledList = {}
 lia.module.list = lia.module.list or {}
 lia.module.unloaded = lia.module.unloaded or {}
-lia.module.ModuleFolders = {"config", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim",}
-lia.module.ModuleFiles = {"client.lua", "cl_module.lua", "sv_module.lua", "server.lua", "config.lua", "sconfig.lua"}
+local ModuleFolders = {"config", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim"}
+local ModuleFiles = {"client.lua", "cl_module.lua", "sv_module.lua", "server.lua", "config.lua", "sconfig.lua"}
+local function loadWorkshopContent(Workshop)
+    if SERVER and Workshop then
+        if istable(Workshop) then
+            for _, workshopID in ipairs(Workshop) do
+                if isstring(workshopID) and workshopID:match("^%d+$") then
+                    resource.AddWorkshop(workshopID)
+                else
+                    LiliaInformation("Invalid Workshop ID: " .. tostring(workshopID))
+                end
+            end
+        else
+            resource.AddWorkshop(Workshop)
+        end
+    end
+end
+
+local function loadPermissions(Privileges)
+    if not Privileges or not istable(Privileges) then return end
+    for _, privilegeData in ipairs(Privileges) do
+        local privilegeName = privilegeData.Name
+        if not CAMI.GetPrivilege(privilegeName) then
+            CAMI.RegisterPrivilege({
+                Name = privilegeName,
+                MinAccess = privilegeData.MinAccess or "admin",
+                Description = privilegeData.Description or ("Allows access to " .. privilegeName:gsub("^%l", string.upper))
+            })
+        end
+    end
+end
+
+local function loadDependencies(Dependencies)
+    if not Dependencies then return end
+    if istable(Dependencies) then
+        for _, dep in ipairs(Dependencies) do
+            lia.include(dep.File, dep.Realm)
+        end
+    else
+        lia.include(Dependencies)
+    end
+end
+
+local function loadExtras(path)
+    lia.lang.loadFromDir(path .. "/languages")
+    lia.faction.loadFromDir(path .. "/factions")
+    lia.class.loadFromDir(path .. "/classes")
+    lia.attribs.loadFromDir(path .. "/attributes")
+    for _, fileName in ipairs(ModuleFiles) do
+        local filePath = path .. "/" .. fileName
+        if file.Exists(filePath, "LUA") then lia.include(filePath) end
+    end
+
+    for _, folder in ipairs(ModuleFolders) do
+        local subPath = path .. "/" .. folder
+        if file.Exists(subPath, "LUA") then lia.includeDir(subPath, true, true) end
+    end
+
+    lia.includeEntities(path .. "/entities")
+    lia.item.loadFromDir(path .. "/items")
+    hook.Run("DoModuleIncludes", path, MODULE)
+end
+
+local function loadSubmodules(path, firstLoad)
+    local files, folders = file.Find(path .. "/submodules/*", "LUA")
+    if #files > 0 or #folders > 0 then lia.module.loadFromDir(path .. "/submodules", "module", firstLoad) end
+end
+
 --- Loads a module into the system.
--- This function loads a module into the system, making its functionality available. It sets up the module environment, including defining globals and loading necessary files.
 -- @string uniqueID The unique identifier of the module.
 -- @string path The path to the module.
 -- @bool isSingleFile Specifies if the module is contained in a single file.
@@ -22,10 +87,10 @@ lia.module.ModuleFiles = {"client.lua", "cl_module.lua", "sv_module.lua", "serve
 -- @internal
 function lia.module.load(uniqueID, path, isSingleFile, variable, category, firstLoad)
     local lowerVariable = variable:lower()
-    local normalpath = path .. "/" .. lowerVariable .. ".lua"
-    local extendedpath = path .. "/sh_" .. lowerVariable .. ".lua"
-    local ModuleCore = file.Exists(normalpath, "LUA")
-    local ExtendedCore = file.Exists(extendedpath, "LUA")
+    local normalPath = path .. "/" .. lowerVariable .. ".lua"
+    local extendedPath = path .. "/sh_" .. lowerVariable .. ".lua"
+    local ModuleCore = file.Exists(normalPath, "LUA")
+    local ExtendedCore = file.Exists(extendedPath, "LUA")
     if not isSingleFile and not ModuleCore and not ExtendedCore then return end
     local oldModule = MODULE
     MODULE = {
@@ -54,23 +119,20 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, category, first
     if isSingleFile then
         lia.include(path, "shared")
     else
-        lia.include(ModuleCore and normalpath or ExtendedCore and extendedpath, "shared")
+        lia.include(ModuleCore and normalPath or extendedPath, "shared")
     end
 
-    if uniqueID ~= "schema" then
-        if MODULE.enabled == false then
-            MODULE = oldModule
-            return
-        end
-
-        if MODULE.identifier and MODULE.identifier ~= "" then _G[MODULE.identifier] = {} end
+    if uniqueID ~= "schema" and MODULE.enabled == false then
+        MODULE = oldModule
+        return
     end
 
-    lia.module.loadPermissions(MODULE.CAMIPrivileges)
-    lia.module.loadWorkshop(MODULE.WorkshopContent)
+    if uniqueID ~= "schema" and MODULE.identifier and MODULE.identifier ~= "" then _G[MODULE.identifier] = {} end
+    loadPermissions(MODULE.CAMIPrivileges)
+    loadWorkshopContent(MODULE.WorkshopContent)
     if not isSingleFile then
-        lia.module.loadDependencies(MODULE.Dependencies)
-        lia.module.loadExtras(path)
+        loadDependencies(MODULE.Dependencies)
+        loadExtras(path)
     end
 
     MODULE.loading = false
@@ -94,40 +156,23 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, category, first
     else
         if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then _G[MODULE.identifier] = MODULE end
         lia.module.list[uniqueID] = MODULE
-        lia.module.OnFinishLoad(path, category, firstLoad)
+        lia.module.OnFinishLoad(path, firstLoad)
         _G[variable] = oldModule
     end
 
     if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
 end
 
---- Loads the additional files associated with the module.
--- This function loads extra files tied to the module, such as language files, factions, classes, and attributes.
--- @string path The path to the module directory.
+--- Called after a module finishes loading to load submodules.
+-- @string path The path to the module.
+-- @bool firstLoad Indicates if this is the first load of the module.
 -- @realm shared
 -- @internal
-function lia.module.loadExtras(path)
-    lia.lang.loadFromDir(path .. "/languages")
-    lia.faction.loadFromDir(path .. "/factions")
-    lia.class.loadFromDir(path .. "/classes")
-    lia.attribs.loadFromDir(path .. "/attributes")
-    for _, fileName in ipairs(lia.module.ModuleFiles) do
-        local filePath = path .. "/" .. fileName
-        if file.Exists(filePath, "LUA") then lia.include(filePath) end
-    end
-
-    for _, folder in ipairs(lia.module.ModuleFolders) do
-        local subFolders = path .. "/" .. folder
-        if file.Exists(subFolders, "LUA") then lia.includeDir(subFolders, true, true) end
-    end
-
-    lia.includeEntities(path .. "/entities")
-    lia.item.loadFromDir(path .. "/items")
-    hook.Run("DoModuleIncludes", path, MODULE)
+function lia.module.OnFinishLoad(path, firstLoad)
+    loadSubmodules(path, firstLoad)
 end
 
---- Loads and initializes the modules.
--- This function loads and initializes modules located under their respective folders.
+--- Loads and initializes all modules.
 -- @bool firstLoad Indicates if this is the first load of the modules.
 -- @realm shared
 -- @internal
@@ -135,110 +180,40 @@ function lia.module.initialize(firstLoad)
     local schema = engine.ActiveGamemode()
     lia.module.load("schema", schema .. "/schema", false, "schema", "Schema", firstLoad)
     hook.Run("InitializedSchema")
-    lia.module.loadFromDir("lilia/modules/core", "module", "Core", firstLoad)
-    lia.module.loadFromDir("lilia/modules/frameworkui", "module", "Visuals", firstLoad)
-    lia.module.loadFromDir("lilia/modules/characters", "module", "Characters", firstLoad)
-    lia.module.loadFromDir("lilia/modules/utilities", "module", "Utilities", firstLoad)
-    lia.module.loadFromDir("lilia/modules/compatibility", "module", "Compatibility", firstLoad)
-    lia.module.loadFromDir(schema .. "/preload", "module", "Schema", firstLoad)
-    lia.module.loadFromDir(schema .. "/modules", "module", "Schema", firstLoad)
-    lia.module.loadFromDir(schema .. "/overrides", "module", "Schema", firstLoad)
+    lia.module.loadFromDir("lilia/modules/core", "module", firstLoad)
+    lia.module.loadFromDir("lilia/modules/frameworkui", "module", firstLoad)
+    lia.module.loadFromDir("lilia/modules/characters", "module", firstLoad)
+    lia.module.loadFromDir("lilia/modules/utilities", "module", firstLoad)
+    lia.module.loadFromDir("lilia/modules/compatibility", "module", firstLoad)
+    lia.module.loadFromDir(schema .. "/preload", "module", firstLoad)
+    lia.module.loadFromDir(schema .. "/modules", "module", firstLoad)
+    lia.module.loadFromDir(schema .. "/overrides", "module", firstLoad)
     hook.Run("InitializedModules")
 end
 
 --- Loads modules from a directory.
--- This function loads modules from a specified directory into the system.
 -- @string directory The path to the directory containing modules.
 -- @string group The group of the modules (e.g., "schema" or "module").
--- @string category The category of the modules.
 -- @bool firstLoad Indicates if this is the first load of the modules.
 -- @realm shared
 -- @internal
-function lia.module.loadFromDir(directory, group, category, firstLoad)
-    local location = group == "schema" and "SCHEMA" or "MODULE"
+function lia.module.loadFromDir(directory, group, firstLoad)
+    local locationVar = (group == "schema") and "SCHEMA" or "MODULE"
     local files, folders = file.Find(directory .. "/*", "LUA")
-    for _, v in ipairs(folders) do
-        lia.module.load(v, directory .. "/" .. v, false, location, category, firstLoad)
+    for _, folderName in ipairs(folders) do
+        lia.module.load(folderName, directory .. "/" .. folderName, false, locationVar, group, firstLoad)
     end
 
-    for _, v in ipairs(files) do
-        lia.module.load(string.StripExtension(v), directory .. "/" .. v, true, location, category, firstLoad)
-    end
-end
-
---- Loads workshop content.
--- This function loads workshop content for the module.
--- @param Workshop The workshop content to load. This is the MODULE.WorkshopContent.
--- @realm server
--- @internal
-function lia.module.loadWorkshop(Workshop)
-    if not Workshop then return end
-    if not SERVER then return end
-    if istable(Workshop) then
-        for _, workshopID in ipairs(Workshop) do
-            if isstring(workshopID) and workshopID:match("^%d+$") then
-                resource.AddWorkshop(workshopID)
-            else
-                LiliaInformation("Invalid Workshop ID: " .. workshopID)
-            end
-        end
-    else
-        resource.AddWorkshop(Workshop)
+    for _, fileName in ipairs(files) do
+        local uniqueID = string.StripExtension(fileName)
+        lia.module.load(uniqueID, directory .. "/" .. fileName, true, locationVar, group, firstLoad)
     end
 end
 
---- Loads permissions.
--- This function loads permissions for the module.
--- @tab Privileges The privileges to load. This is the MODULE.CAMIPrivileges.
--- @realm shared
--- @internal
-function lia.module.loadPermissions(Privileges)
-    if not Privileges then return end
-    if not istable(Privileges) then return end
-    for _, privilegeData in ipairs(Privileges) do
-        local privilegeInfo = {
-            Name = privilegeData.Name,
-            MinAccess = privilegeData.MinAccess or "admin",
-            Description = privilegeData.Description or ("Allows access to " .. privilegeData.Name:gsub("^%l", string.upper))
-        }
-
-        if not CAMI.GetPrivilege(privilegeData.Name) then CAMI.RegisterPrivilege(privilegeInfo) end
-    end
-end
-
---- Loads module dependencies.
--- This function loads the dependencies for the module.
--- @tab Dependencies The dependencies to load.
--- @realm shared
--- @internal
-function lia.module.loadDependencies(Dependencies)
-    if not Dependencies then return end
-    if istable(Dependencies) then
-        for _, dependency in ipairs(Dependencies) do
-            lia.include(dependency.File, dependency.Realm)
-        end
-    else
-        lia.include(Dependencies)
-    end
-end
-
---- Retrieves a module.
--- This function retrieves a module table based on its identifier.
+--- Retrieves a module by its identifier.
 -- @string identifier The identifier of the module.
 -- @return table The module object.
 -- @realm shared
 function lia.module.get(identifier)
     return lia.module.list[identifier]
-end
-
---- Loads a module's submodules if present.
--- This function handles the loading of a module's submodules, if they exist.
--- @string path The path to the module.
--- @string category The category of the module.
--- @bool firstLoad Indicates if this is the first load of the module.
--- @realm shared
--- @internal
-function lia.module.OnFinishLoad(path, category, firstLoad)
-    local files, folders = file.Find(path .. "/submodules/*", "LUA")
-    if #files > 0 or #folders > 0 then lia.module.loadFromDir(path .. "/submodules", "module", category, firstLoad) end
 end
