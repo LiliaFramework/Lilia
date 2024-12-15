@@ -19,7 +19,7 @@ function ITEM:paintOver(item)
 end
 
 ITEM.functions.use = {
-    name = "Load",
+    name = "load",
     tip = "useTip",
     icon = "icon16/add.png",
     isMulti = true,

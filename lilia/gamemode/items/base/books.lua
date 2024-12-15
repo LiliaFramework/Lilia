@@ -4,6 +4,7 @@ ITEM.category = "Literature"
 ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
 ITEM.contents = ""
 ITEM.functions.Read = {
+    name = "read",
     onClick = function(item)
         local frame = vgui.Create("DFrame")
         frame:SetSize(540, 680)

@@ -57,69 +57,16 @@ function lia.lang.AddTable(name, tbl)
     lia.lang.stored[name] = table.Merge(lia.lang.stored[name] or {}, tbl)
 end
 
-if SERVER then
-    --- Retrieves a localized string based on the specified key and the default language setting.
-    -- @string key The key corresponding to the desired localized string.
-    -- @tab ... Additional parameters to format the localized string.
-    -- @return The formatted localized string.
-    -- @realm server
-    function L(key, ...)
-        local languages = lia.lang.stored
-        local langKey = lia.config.Language
-        local info = languages[langKey] or languages.english
-        return string.format(info and info[key] or key, ...)
-    end
-
-    --- Retrieves a localized string based on the specified key and the default language setting.
-    -- Similar to L(), but returns nil if the key is not found in the language table.
-    -- @string key The key corresponding to the desired localized string.
-    -- @tab ... Additional parameters to format the localized string.
-    -- @return The formatted localized string, or nil if the key is not found.
-    -- @realm server
-    function L2(key, ...)
-        local languages = lia.lang.stored
-        local langKey = lia.config.Language
-        local info = languages[langKey] or languages.english
-        if info and info[key] then return string.format(info[key], ...) end
-    end
-
-    --- Retrieves a localized string based on the specified key and language key.
-    -- @string key The key corresponding to the desired localized string.
-    -- @string langKey The language key to use for localization.
-    -- @tab ... Additional parameters to format the localized string.
-    -- @return The formatted localized string, or the key if not found.
-    -- @realm server
-    function L3(key, langKey, ...)
-        local languages = lia.lang.stored
-        langKey = langKey or lia.config.Language
-        local info = languages[langKey] or languages.english
-        return string.format(info and info[key] or key, ...)
-    end
-else
-    --- Retrieves a localized string based on the specified key and the default language setting.
-    -- @string key The key corresponding to the desired localized string.
-    -- @tab ... Additional parameters to format the localized string.
-    -- @return The formatted localized string.
-    -- @realm client
-    function L(key, ...)
-        local languages = lia.lang.stored
-        local langKey = lia.config.Language
-        local info = languages[langKey] or languages.english
-        return string.format(info and info[key] or key, ...)
-    end
-
-    --- Retrieves a localized string based on the specified key and the default language setting.
-    -- Similar to L(), but returns nil if the key is not found in the language table.
-    -- @string key The key corresponding to the desired localized string.
-    -- @tab ... Additional parameters to format the localized string.
-    -- @return The formatted localized string, or nil if the key is not found.
-    -- @realm client
-    function L2(key, ...)
-        local languages = lia.lang.stored
-        local langKey = lia.config.Language
-        local info = languages[langKey]
-        if info and info[key] then return string.format(info[key], ...) end
-    end
+--- Retrieves a localized string based on the specified key and the default language setting.
+-- @string key The key corresponding to the desired localized string.
+-- @tab ... Additional parameters to format the localized string.
+-- @return The formatted localized string.
+-- @realm shared
+function L(key, ...)
+    local languages = lia.lang.stored
+    local langKey = lia.config.Language
+    local info = languages[langKey] or languages.english
+    return string.format(info and info[key] or key, ...)
 end
 
 lia.lang.loadFromDir("lilia/gamemode/languages")

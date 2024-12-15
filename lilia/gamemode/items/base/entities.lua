@@ -3,9 +3,8 @@ ITEM.model = ""
 ITEM.desc = ""
 ITEM.category = "Entities"
 ITEM.entityid = ""
-ITEM.shouldRemove = true
-ITEM.entityCooldown = 0
 ITEM.functions.Place = {
+    name = L("placeDownEntity"),
     onRun = function(item)
         local client = item.player
         local data = {}
@@ -20,13 +19,7 @@ ITEM.functions.Place = {
             physObj:EnableMotion(true)
             physObj:Wake()
         end
-
-        client:SetNW2Bool("ItemCooldown_" .. item.uniqueID, true)
-        timer.Create(client:SteamID64() .. "_" .. item.uniqueID .. "_cooldown", item.entityCooldown, 1, function() client:SetNW2Bool("ItemCooldown_" .. item.uniqueID, false) end)
-        return item.shouldRemove
+        return true
     end,
-    onCanRun = function(item)
-        local client = item.player
-        return not IsValid(item.entity) and not client:GetNW2Bool("ItemCooldown_" .. item.uniqueID, false)
-    end
+    onCanRun = function(item) return not IsValid(item.entity) end
 }

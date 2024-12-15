@@ -18,14 +18,14 @@ if CLIENT then
 end
 
 ITEM.functions.Equip = {
-    name = "Equip",
+    name = "equip",
     icon = "icon16/tick.png",
     onRun = function(item)
         local client = item.player
         local items = client:getChar():getInv():getItems()
         for _, v in pairs(items) do
             if v.id ~= item.id and v.isBag and v:getData("equip") then
-                client:notifyLocalized("There's already a bag equipped!")
+                client:notifyLocalized(bagAlreadyEquipped)
                 return false
             end
         end
@@ -38,7 +38,7 @@ ITEM.functions.Equip = {
 }
 
 ITEM.functions.Unequip = {
-    name = "Unequip",
+    name = "unequip",
     icon = "icon16/cross.png",
     onRun = function(item)
         local client = item.player
@@ -50,6 +50,7 @@ ITEM.functions.Unequip = {
 }
 
 ITEM.functions.View = {
+    name = "view",
     icon = "icon16/briefcase.png",
     onClick = function(item)
         local inventory = item:getInv()
@@ -63,14 +64,10 @@ ITEM.functions.View = {
                 panel:ShowCloseButton(true)
                 panel:SetTitle(item:getName())
             end
-        else
-            local itemID = item:getID()
-            local index = item:getData("id", "nil")
-            ErrorNoHalt("Invalid inventory " .. index .. " for bag item " .. itemID .. "\n")
         end
         return false
     end,
-    onCanRun = function(item) if not IsValid(item.entity) and item:getInv() then return item:getData("equip", false) == true end end
+    onCanRun = function(item) if not IsValid(item.entity) and item:getInv() then return item:getData("equip", false) end end
 }
 
 function ITEM:onInstanced()

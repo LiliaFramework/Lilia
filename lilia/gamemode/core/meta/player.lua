@@ -133,26 +133,6 @@ function playerMeta:isNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP
 end
 
---- Retrieves the player's DarkRP money.
--- This is used as compatibility for DarkRP Vars.
--- @realm shared
--- @string var The DarkRP variable to fetch (only "money" is allowed).
--- @treturn Integer|nil The player's money if the variable is valid, or nil if not.
--- @usage
--- local money = player:getDarkRPVar("money")
--- if money then
---     print("Player Money:", money)
--- end
-function playerMeta:getDarkRPVar(var)
-    local char = self:getChar()
-    if var ~= "money" then
-        self:ChatPrint("Invalid variable requested! Only 'money' can be fetched. Please refer to our Discord for help.")
-        return nil
-    end
-
-    if char and char.getMoney then return char:getMoney() end
-end
-
 --- Checks if the player has a valid ragdoll entity.
 -- @realm shared
 -- @treturn Boolean Whether the player has a valid ragdoll entity.
@@ -271,75 +251,6 @@ function playerMeta:getItemWeapon()
             end
         end
     end
-end
-
---- Checks if the player's character can afford a specified amount of money.
--- This function uses Lilia methods to determine if the player can afford the specified amount.
--- It is designed to be compatible with the DarkRP `canAfford` method.
--- @realm shared
--- @int amount The amount of money to check.
--- @treturn Boolean Whether the player's character can afford the specified amount of money.
--- @usage
--- if player:canAfford(500) then
---     print("Player can afford the item.")
--- else
---     print("Player cannot afford the item.")
--- end
-function playerMeta:canAfford(amount)
-    local character = self:getChar()
-    return character and character:hasMoney(amount)
-end
-
---- Adds money to the player's character.
--- This function uses Lilia methods to add the specified amount of money to the player.
--- It is designed to be compatible with the DarkRP `addMoney` method.
--- If the total amount exceeds the configured money limit, the excess is spawned as an item in the world.
--- @realm shared
--- @int amount The amount of money to add.
--- @usage
--- player:addMoney(1000, {player}, false)
-function playerMeta:addMoney(amount)
-    local character = self:getChar()
-    if not character then return end
-    local currentMoney = character:getMoney()
-    local maxMoneyLimit = lia.config.MoneyLimit or 0
-    local limitOverride = hook.Run("WalletLimit", self)
-    if limitOverride then maxMoneyLimit = limitOverride end
-    if maxMoneyLimit > 0 then
-        local totalMoney = currentMoney + amount
-        if totalMoney > maxMoneyLimit then
-            local excessMoney = totalMoney - maxMoneyLimit
-            character:giveMoney(maxMoneyLimit - currentMoney, false)
-            local money = lia.currency.spawn(self:getItemDropPos(), excessMoney)
-            money.client = self
-            money.charID = character:getID()
-        else
-            character:giveMoney(amount, false)
-        end
-    else
-        character:giveMoney(amount, false)
-    end
-end
-
---- Takes money from the player's character.
--- @realm shared
--- @int amount The amount of money to take.
--- @usage
--- player:takeMoney(200)
-function playerMeta:takeMoney(amount)
-    local character = self:getChar()
-    if character then character:giveMoney(-amount) end
-end
-
---- Retrieves the amount of money owned by the player's character.
--- @realm shared
--- @treturn Integer The amount of money owned by the player's character.
--- @usage
--- local money = player:getMoney()
--- print("Player Money:", money)
-function playerMeta:getMoney()
-    local character = self:getChar()
-    return character and character:getMoney() or 0
 end
 
 --- Checks if the player is running.
@@ -769,7 +680,7 @@ if SERVER then
     -- local playTime = player:getPlayTime()
     -- print("Playtime:", playTime, "seconds")
     function playerMeta:getPlayTime()
-        local diff = os.time(lia.date.toNumber(self.lastJoin)) - os.time(lia.date.toNumber(self.firstJoin))
+        local diff = os.time(lia.time.toNumber(self.lastJoin)) - os.time(lia.time.toNumber(self.firstJoin))
         return diff + (RealTime() - (self.liaJoinTime or RealTime()))
     end
 
@@ -872,34 +783,6 @@ if SERVER then
         lia.notices.notifyLocalized(message, self, ...)
     end
 
-    --- Sets a waypoint for the player.
-    -- @realm server
-    -- @string name The name of the waypoint.
-    -- @tparam Vector vector The position vector of the waypoint.
-    -- @func onReach Function to call when the player reaches the waypoint.
-    -- @usage
-    -- player:setWeighPoint("Spawn Point", Vector(100, 200, 300), function(p)
-    --     print("Player reached the waypoint.")
-    -- end)
-    function playerMeta:setWeighPoint(name, vector, onReach)
-        hook.Add("HUDPaint", "WeighPoint", function()
-            local dist = self:GetPos():Distance(vector)
-            local spos = vector:ToScreen()
-            local howclose = math.Round(math.floor(dist) / 40)
-            if not spos then return end
-            render.SuppressEngineLighting(true)
-            surface.SetFont("WB_Large")
-            draw.DrawText(name .. "\n" .. howclose .. " Meters\n", "CenterPrintText", spos.x, spos.y, Color(123, 57, 209), TEXT_ALIGN_CENTER)
-            render.SuppressEngineLighting(false)
-            if howclose <= 3 then RunConsoleCommand("weighpoint_stop") end
-        end)
-
-        concommand.Add("weighpoint_stop", function()
-            hook.Remove("HUDPaint", "WeighPoint")
-            if IsValid(onReach) then onReach() end
-        end)
-    end
-
     --- Retrieves the player's total playtime.
     -- @realm client
     -- @treturn Float The total playtime of the player.
@@ -907,7 +790,7 @@ if SERVER then
     -- local playTime = player:getPlayTime()
     -- print("Playtime:", playTime, "seconds")
     function playerMeta:getPlayTime()
-        local diff = os.time(lia.date.toNumber(lia.lastJoin)) - os.time(lia.date.toNumber(lia.firstJoin))
+        local diff = os.time(lia.time.toNumber(lia.lastJoin)) - os.time(lia.time.toNumber(lia.firstJoin))
         return diff + (RealTime() - (lia.joinTime or 0))
     end
 
@@ -1138,7 +1021,7 @@ else
     -- local playTime = player:getPlayTime()
     -- print("Playtime:", playTime, "seconds")
     function playerMeta:getPlayTime()
-        local diff = os.time(lia.date.toNumber(lia.lastJoin)) - os.time(lia.date.toNumber(lia.firstJoin))
+        local diff = os.time(lia.time.toNumber(lia.lastJoin)) - os.time(lia.time.toNumber(lia.firstJoin))
         return diff + (RealTime() - (lia.joinTime or 0))
     end
 
@@ -1178,7 +1061,7 @@ else
 
         concommand.Add("weighpoint_stop", function()
             hook.Remove("HUDPaint", "WeighPoint")
-            if onReach then onReach() end
+            if onReach and isfunction(onReach) then onReach() end
         end)
     end
 
@@ -1211,8 +1094,6 @@ playerMeta.DistanceFromEnt = playerMeta.distanceFromEnt
 playerMeta.IsNearPlayer = playerMeta.isNearPlayer
 playerMeta.EntitiesNearPlayer = playerMeta.entitiesNearPlayer
 playerMeta.GetItemWeapon = playerMeta.getItemWeapon
-playerMeta.TakeMoney = playerMeta.takeMoney
-playerMeta.GetMoney = playerMeta.getMoney
 playerMeta.IsRunning = playerMeta.isRunning
 playerMeta.IsFemale = playerMeta.isFemale
 playerMeta.GetTracedEntity = playerMeta.getTracedEntity

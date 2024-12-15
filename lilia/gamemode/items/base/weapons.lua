@@ -8,19 +8,10 @@ ITEM.height = 2
 ITEM.isWeapon = true
 ITEM.weaponCategory = "sidearm"
 ITEM.RequiredSkillLevels = {}
-if CLIENT then
-    function ITEM:paintOver(item, w, h)
-        if item:getData("equip") then
-            surface.SetDrawColor(110, 255, 110, 100)
-            surface.DrawRect(w - 14, h - 14, 8, 8)
-        end
-    end
-end
-
 function ITEM.postHooks:drop()
     local client = self.player
     if client:HasWeapon(self.class) then
-        client:notify("You have an invalid weapon!")
+        client:notifyLocalized("invalidWeapon")
         client:StripWeapon(self.class)
     end
 end
@@ -28,7 +19,7 @@ end
 ITEM:hook("drop", function(item)
     local client = item.player
     if client:hasRagdoll() then
-        client:notify("You cannot do this while ragdolled.")
+        client:notifyLocalized("noRagdollAction")
         return false
     end
 
@@ -52,7 +43,7 @@ ITEM.functions.EquipUn = {
     onRun = function(item)
         local client = item.player
         if client:hasRagdoll() then
-            client:notify("You cannot do this while ragdolled.")
+            client:notifyLocalized("noRagdollAction")
             return false
         end
 
@@ -63,7 +54,7 @@ ITEM.functions.EquipUn = {
             item:setData("ammo", weapon:Clip1())
             client:StripWeapon(item.class)
         else
-            print(Format("[Lilia] Weapon %s does not exist!", item.class))
+            print(L("weaponDoesNotExist", item.class))
         end
 
         client:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
@@ -82,7 +73,7 @@ ITEM.functions.Equip = {
     onRun = function(item)
         local client = item.player
         if client:hasRagdoll() then
-            client:notify("You cannot do this while ragdolled.")
+            client:notifyLocalized("noRagdollAction")
             return false
         end
 
@@ -107,7 +98,7 @@ ITEM.functions.Equip = {
             weapon:SetClip1(item:getData("ammo", 0))
             if item.onEquipWeapon then item:onEquipWeapon(client, weapon) end
         else
-            print(Format("[Lilia] Weapon %s does not exist!", item.class))
+            print(L("weaponDoesNotExist", item.class))
         end
         return false
     end,
@@ -129,7 +120,7 @@ function ITEM:onLoadout()
             client.carryWeapons[self.weaponCategory] = weapon
             weapon:SetClip1(self:getData("ammo", 0))
         else
-            print(Format("[Lilia] Weapon %s does not exist!", self.class))
+            print(L("weaponDoesNotExist", self.class))
         end
     end
 end
@@ -138,4 +129,13 @@ function ITEM:onSave()
     local client = self.player
     local weapon = client:GetWeapon(self.class)
     if IsValid(weapon) then self:setData("ammo", weapon:Clip1()) end
+end
+
+if CLIENT then
+    function ITEM:paintOver(item, w, h)
+        if item:getData("equip") then
+            surface.SetDrawColor(110, 255, 110, 100)
+            surface.DrawRect(w - 14, h - 14, 8, 8)
+        end
+    end
 end

@@ -5,7 +5,7 @@ ITEM.width = 1
 ITEM.height = 1
 ITEM.health = 0
 ITEM.functions.use = {
-    name = "Use",
+    name = L"use",
     sound = "items/medshot4.wav",
     onRun = function(item)
         local client = item.player
@@ -17,7 +17,7 @@ ITEM.functions.use = {
 }
 
 ITEM.functions.target = {
-    name = "Target",
+    name = L"useOnTarget",
     sound = "items/medshot4.wav",
     onRun = function(item)
         local client = item.player
@@ -27,7 +27,7 @@ ITEM.functions.target = {
                 local newHealth = math.min(target:Health() + item.health, target:GetMaxHealth())
                 target:SetHealth(newHealth)
             else
-                client:notify("Target not valid! You must be looking at a living player!")
+                client:notifyLocalized("invalidTarget")
             end
         end
     end,
