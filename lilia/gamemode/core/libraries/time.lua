@@ -1,6 +1,240 @@
 --- Various useful helper functions.
 -- @library lia.time
 lia.time = {}
+--- Generates a formatted date string based on the current system time.
+-- @realm shared
+-- @string[opt] StartingMessage A message to prepend to the formatted date.
+-- @bool[opt] includeWeekDay Whether to include the day of the week in the formatted date.
+-- @bool[opt] includeDay Whether to include the day of the month in the formatted date.
+-- @bool[opt] includeMonth Whether to include the month in the formatted date.
+-- @bool[opt] includeYear Whether to include the year in the formatted date.
+-- @bool[opt] includeTime Whether to include the time in the formatted date.
+-- @return string The formatted date string.
+function lia.time.GetFormattedDate(StartingMessage, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
+    local currentTime = os.date("*t")
+    if StartingMessage then
+        output = StartingMessage
+    else
+        output = ""
+    end
+
+    if includeWeekDay then
+        local daysOfWeek = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}
+        output = output .. " " .. daysOfWeek[currentTime.wday] .. ", "
+    end
+
+    local day, month, year
+    if lia.config.AmericanDates then
+        month, day, year = currentTime.month, currentTime.day, currentTime.year
+    else
+        day, month, year = currentTime.day, currentTime.month, currentTime.year
+    end
+
+    if includeDay then output = output .. " " .. day end
+    if includeMonth then
+        local months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
+        output = output .. " " .. months[month]
+    end
+
+    if includeYear then output = output .. ", " .. year end
+    local hourFormat = lia.config.AmericanTimeStamp and 12 or 24
+    local ampm = ""
+    local hour = currentTime.hour
+    if includeTime then
+        if hourFormat == 12 then
+            if currentTime.hour >= 12 then
+                ampm = " PM"
+                if currentTime.hour > 12 then hour = currentTime.hour - 12 end
+            else
+                ampm = " AM"
+            end
+        end
+
+        output = output .. string.format(" %02d:%02d:%02d%s", hour, currentTime.min, currentTime.sec, ampm)
+    end
+    return output
+end
+
+--- Generates a formatted date string based on the current system time for in-game usage.
+-- @realm shared
+-- @string[opt] StartingMessage A message to prepend to the formatted date.
+-- @bool[opt] includeWeekDay Whether to include the day of the week in the formatted date.
+-- @bool[opt] includeDay Whether to include the day of the month in the formatted date.
+-- @bool[opt] includeMonth Whether to include the month in the formatted date.
+-- @bool[opt] includeYear Whether to include the year in the formatted date.
+-- @bool[opt] includeTime Whether to include the time in the formatted date.
+-- @return string The formatted date string.
+function lia.time.GetFormattedDateInGame(StartingMessage, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
+    local currentTime = os.date("*t")
+    if StartingMessage then
+        output = StartingMessage
+    else
+        output = ""
+    end
+
+    if includeWeekDay then
+        local daysOfWeek = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}
+        output = output .. " " .. daysOfWeek[currentTime.wday] .. ", "
+    end
+
+    local day, month, year
+    if lia.config.AmericanDates then
+        month, day, year = currentTime.month, currentTime.day, lia.config.SchemaYear or currentTime.year
+    else
+        day, month, year = currentTime.day, currentTime.month, lia.config.SchemaYear or currentTime.year
+    end
+
+    if includeDay then output = output .. " " .. day end
+    if includeMonth then
+        local months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
+        output = output .. " " .. months[month]
+    end
+
+    if includeYear then output = output .. ", " .. year end
+    local hourFormat = lia.config.AmericanTimeStamp and 12 or 24
+    local ampm = ""
+    local hour = currentTime.hour
+    if includeTime then
+        if hourFormat == 12 then
+            if currentTime.hour >= 12 then
+                ampm = " PM"
+                if currentTime.hour > 12 then hour = currentTime.hour - 12 end
+            else
+                ampm = " AM"
+            end
+        end
+
+        output = output .. string.format(" %02d:%02d:%02d%s", hour, currentTime.min, currentTime.sec, ampm)
+    end
+    return output
+end
+
+--- Generates a pre-formatted date string based on the provided time.
+-- @realm shared
+-- @string[opt] StartingMessage A message to prepend to the formatted date.
+-- @tab timeToFormat The time to format.
+-- @bool[opt] includeWeekDay Whether to include the day of the week in the formatted date.
+-- @bool[opt] includeDay Whether to include the day of the month in the formatted date.
+-- @bool[opt] includeMonth Whether to include the month in the formatted date.
+-- @bool[opt] includeYear Whether to include the year in the formatted date.
+-- @bool[opt] includeTime Whether to include the time in the formatted date.
+-- @return string The formatted date string.
+function lia.time.GetPreFormattedDate(StartingMessage, timeToFormat, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
+    local currentTime = tostring(timeToFormat)
+    if StartingMessage then
+        output = StartingMessage
+    else
+        output = ""
+    end
+
+    if includeWeekDay then
+        local daysOfWeek = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}
+        output = output .. " " .. daysOfWeek[currentTime.wday] .. ", "
+    end
+
+    local day, month, year
+    if lia.config.AmericanDates then
+        month, day, year = currentTime.month, currentTime.day, currentTime.year
+    else
+        day, month, year = currentTime.day, currentTime.month, currentTime.year
+    end
+
+    if includeDay then output = output .. " " .. day end
+    if includeMonth then
+        local months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
+        output = output .. " " .. months[month]
+    end
+
+    if includeYear then output = output .. ", " .. year end
+    local hourFormat = lia.config.AmericanTimeStamp and 12 or 24
+    local ampm = ""
+    local hour = currentTime.hour
+    if includeTime then
+        if hourFormat == 12 then
+            if currentTime.hour >= 12 then
+                ampm = " PM"
+                if currentTime.hour > 12 then hour = currentTime.hour - 12 end
+            else
+                ampm = " AM"
+            end
+        end
+
+        output = output .. string.format(" %02d:%02d:%02d%s", hour, currentTime.min, currentTime.sec, ampm)
+    end
+    return output
+end
+
+--- Generates a pre-formatted date string based on the provided time for in-game usage.
+-- @realm shared
+-- @string[opt] StartingMessage A message to prepend to the formatted date.
+-- @tab timeToFormat The time to format.
+-- @bool[opt] includeWeekDay Whether to include the day of the week in the formatted date.
+-- @bool[opt] includeDay Whether to include the day of the month in the formatted date.
+-- @bool[opt] includeMonth Whether to include the month in the formatted date.
+-- @bool[opt] includeYear Whether to include the year in the formatted date.
+-- @bool[opt] includeTime Whether to include the time in the formatted date.
+-- @return string The formatted date string.
+function lia.time.GetPreFormattedDateInGame(StartingMessage, timeToFormat, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
+    local currentTime = tostring(timeToFormat)
+    if StartingMessage then
+        output = StartingMessage
+    else
+        output = ""
+    end
+
+    if includeWeekDay then
+        local daysOfWeek = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}
+        output = output .. " " .. daysOfWeek[currentTime.wday] .. ", "
+    end
+
+    local day, month, year
+    if lia.config.AmericanDates then
+        month, day, year = currentTime.month, currentTime.day, lia.config.SchemaYear or currentTime.year
+    else
+        day, month, year = currentTime.day, currentTime.month, lia.config.SchemaYear or currentTime.year
+    end
+
+    if includeDay then output = output .. " " .. day end
+    if includeMonth then
+        local months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
+        output = output .. " " .. months[month]
+    end
+
+    if includeYear then output = output .. ", " .. year end
+    local hourFormat = lia.config.AmericanTimeStamp and 12 or 24
+    local ampm = ""
+    local hour = currentTime.hour
+    if includeTime then
+        if hourFormat == 12 then
+            if currentTime.hour >= 12 then
+                ampm = " PM"
+                if currentTime.hour > 12 then hour = currentTime.hour - 12 end
+            else
+                ampm = " AM"
+            end
+        end
+
+        output = output .. string.format(" %02d:%02d:%02d%s", hour, currentTime.min, currentTime.sec, ampm)
+    end
+    return output
+end
+
+--- Converts a date string to a table containing date and time components.
+-- @string str The date string in the format "YYYY-MM-DD HH:MM:SS"
+-- @treturn table Table containing date and time components
+-- @realm shared
+function lia.time.toNumber(str)
+    str = str or os.date("%Y-%m-%d %H:%M:%S", os.time())
+    return {
+        year = tonumber(str:sub(1, 4)),
+        month = tonumber(str:sub(6, 7)),
+        day = tonumber(str:sub(9, 10)),
+        hour = tonumber(str:sub(12, 13)),
+        min = tonumber(str:sub(15, 16)),
+        sec = tonumber(str:sub(18, 19)),
+    }
+end
+
 --- Returns the amount of time passed since the given time.
 -- Expected format of `strTime`: "HH:MM:SS - DD/MM/YYYY"
 -- @string strTime A time string in the specified format.
