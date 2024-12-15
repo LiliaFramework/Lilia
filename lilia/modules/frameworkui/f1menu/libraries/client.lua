@@ -201,53 +201,117 @@ end
 
 function MODULE:BuildHelpMenu(tabs)
     local client = LocalPlayer()
+    local function createListPanel(parent, columns)
+        local panel = vgui.Create("DPanel", parent)
+        panel:SetSize(sW(1360), sH(768))
+        panel:SetPos(sW(50), sH(150))
+        panel.Paint = function(_, w, h)
+            surface.SetDrawColor(30, 30, 30, 150)
+            surface.DrawRect(0, 0, w, h)
+        end
+
+        local scroll = panel:Add("DScrollPanel")
+        scroll:Dock(FILL)
+        scroll:DockMargin(5, 5, 5, 5)
+        local header = scroll:Add("DPanel")
+        header:SetTall(30)
+        header:Dock(TOP)
+        header.Paint = function(_, w, h)
+            surface.SetDrawColor(50, 50, 50, 200)
+            surface.DrawRect(0, 0, w, h)
+            surface.SetDrawColor(100, 100, 100, 255)
+            surface.DrawOutlinedRect(0, 0, w, h)
+        end
+
+        header.Columns = {}
+        for i, colName in ipairs(columns) do
+            local lbl = header:Add("DLabel")
+            lbl:SetText(colName)
+            lbl:SetTextColor(Color(255, 255, 255))
+            lbl:SetFont("liaMediumFont")
+            lbl:SetContentAlignment(5)
+            table.insert(header.Columns, lbl)
+        end
+
+        function header:PerformLayout(w, h)
+            local colCount = #self.Columns
+            if colCount > 0 then
+                local colWidth = w / colCount
+                local xPos = 0
+                for _, lbl in ipairs(self.Columns) do
+                    lbl:SetPos(xPos, 0)
+                    lbl:SetSize(colWidth, h)
+                    xPos = xPos + colWidth
+                end
+            end
+        end
+
+        local function addRow(data)
+            local row = scroll:Add("DPanel")
+            row:SetTall(25)
+            row:Dock(TOP)
+            row:DockMargin(0, 0, 0, 2)
+            row.Paint = function(_, w, h)
+                surface.SetDrawColor(0, 0, 0, 100)
+                surface.DrawRect(0, 0, w, h)
+                surface.SetDrawColor(80, 80, 80, 200)
+                surface.DrawOutlinedRect(0, 0, w, h)
+            end
+
+            row.Columns = {}
+            for i, value in ipairs(data) do
+                local lbl = row:Add("DLabel")
+                lbl:SetText(value or "")
+                lbl:SetTextColor(Color(255, 255, 255))
+                lbl:SetFont("liaMediumFont")
+                lbl:SetContentAlignment(5)
+                table.insert(row.Columns, lbl)
+            end
+
+            function row:PerformLayout(w, h)
+                local colCount = #self.Columns
+                if colCount > 0 then
+                    local colWidth = w / colCount
+                    local xPos = 0
+                    for _, lbl in ipairs(self.Columns) do
+                        lbl:SetPos(xPos, 0)
+                        lbl:SetSize(colWidth, h)
+                        xPos = xPos + colWidth
+                    end
+                end
+            end
+        end
+        return panel, addRow
+    end
+
     if hook.Run("CanPlayerViewCommands") ~= false then
         tabs["Commands"] = function(parent)
-            local listView = vgui.Create("DListView", parent)
-            listView:SetMultiSelect(false)
-            listView:AddColumn("Command")
-            listView:AddColumn("Syntax")
-            listView:AddColumn("Privilege")
-            listView:SetSize(sW(1360), sH(768))
-            listView:SetPos(sW(50), sH(150))
+            local panel, addRow = createListPanel(parent, {"Command", "Syntax", "Privilege"})
             for cmdName, cmdData in SortedPairs(lia.command.list) do
                 local hasAccess, privilege = lia.command.hasAccess(LocalPlayer(), cmdName, cmdData)
-                if hasAccess then listView:AddLine("/" .. cmdName, cmdData.syntax, privilege) end
+                if hasAccess then addRow({"/" .. cmdName, cmdData.syntax or "", privilege or "None"}) end
             end
+            return panel
         end
     end
 
     tabs["flags"] = function(parent)
-        local listView = vgui.Create("DListView", parent)
-        listView:SetMultiSelect(false)
-        listView:AddColumn("Status")
-        listView:AddColumn("Flag")
-        listView:AddColumn("Description")
-        listView:SetSize(sW(1360), sH(768))
-        listView:SetPos(sW(50), sH(150))
+        local panel, addRow = createListPanel(parent, {"Status", "Flag", "Description"})
         for flagName, flagData in SortedPairs(lia.flag.list) do
             local status = client:getChar():hasFlags(flagName) and "✓" or "✗"
-            listView:AddLine(status, flagName, flagData.desc)
+            addRow({status, flagName, flagData.desc or ""})
         end
-        return listView
+        return panel
     end
 
     tabs["modules"] = function(parent)
-        local listView = vgui.Create("DListView", parent)
-        listView:SetMultiSelect(false)
-        listView:AddColumn("Module")
-        listView:AddColumn("Description")
-        listView:AddColumn("Discord")
-        listView:AddColumn("Author")
-        listView:AddColumn("Version")
-        listView:SetSize(sW(1360), sH(768))
-        listView:SetPos(sW(50), sH(150))
+        local panel, addRow = createListPanel(parent, {"Module", "Description", "Discord", "Author", "Version"})
         for _, module in SortedPairsByMemberValue(lia.module.list, "name") do
             if module.MenuNoShow then continue end
             local version = module.version or "1.0"
             local author = (not isstring(module.author) and lia.module.namecache[module.author]) or module.author or "Unknown"
-            listView:AddLine(module.name or "Unknown", module.desc or "No Description", module.discord or "Unknown", author, version)
+            addRow({module.name or "Unknown", module.desc or "No Description", module.discord or "Unknown", author, version})
         end
-        return listView
+        return panel
     end
 end
