@@ -97,7 +97,7 @@ end
 -- This function determines whether a player is authorized to run a given command based on privileges, admin-only or superadmin-only restrictions, and any custom hooks.
 -- @realm shared
 -- @internal
--- @player client The player to check access for.
+-- @client client The player to check access for.
 -- @string command The name of the command to check access for.
 -- @tab[opt] data The command data. If not provided, the function retrieves the data from `lia.command.list`.
 -- @treturn bool Whether or not the player has access to the command.
