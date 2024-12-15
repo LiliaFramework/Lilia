@@ -287,6 +287,9 @@ function GM:InitializedModules()
         hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
         RunConsoleCommand("spawnmenu_reload")
     else
+        local bootstrapEndTime = SysTime()
+        local timeTaken = bootstrapEndTime - BootingTime
+        LogBootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
         for _, data in pairs(lia.char.vars) do
             if data.fieldType then
                 local fieldDefinition
@@ -320,11 +323,6 @@ function GM:InitializedModules()
             end
         end
     end
-
-    local bootstrapEndTime = SysTime()
-    local timeTaken = bootstrapEndTime - BootingTime
-    LogBootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
-    LogBootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
 end
 
 function GM:GetAttributeMax(_, attribute)
