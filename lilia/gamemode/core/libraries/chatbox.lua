@@ -27,7 +27,7 @@ local DUMMY_COMMAND = {
 -- @return string The formatted timestamp string, including date and time if configured to show.
 -- @realm shared
 function lia.chat.timestamp(ooc)
-    return lia.config.ChatShowTime and (ooc and " " or "") .. "(" .. lia.date.GetFormattedDate(nil, false, false, false, false, true) .. ")" .. (ooc and "" or " ") or ""
+    return lia.config.ChatShowTime and (ooc and " " or "") .. "(" .. lia.time.GetFormattedDate(nil, false, false, false, false, true) .. ")" .. (ooc and "" or " ") or ""
 end
 
 -- note we can't use commas in the "color" field's default value since the metadata is separated by commas which will break the
@@ -133,7 +133,7 @@ function lia.chat.register(chatType, data)
             local name = anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, chatType) or (IsValid(speaker) and speaker:Name() or "Console")
             if data.onGetColor then color = data.onGetColor(speaker, text) end
             local timestamp = lia.chat.timestamp(false)
-            local translated = L2(chatType .. "Format", name, text)
+            local translated = L(chatType .. "Format", name, text) or nil
             chat.AddText(timestamp, color, translated or string.format(data.format, name, text))
         end
     end

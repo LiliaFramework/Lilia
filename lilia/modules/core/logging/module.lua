@@ -10,6 +10,9 @@ MODULE.maxPagesInBits = 16
 MODULE.maxCategoriesInBits = 7
 MODULE.Dependencies = {
     {
+        File = MODULE.path .. "/main/shared.lua",
+    },
+    {
         File = MODULE.path .. "/main/client.lua",
     },
     {
