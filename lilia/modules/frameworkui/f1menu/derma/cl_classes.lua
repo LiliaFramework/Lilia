@@ -72,7 +72,6 @@ end
 
 function PANEL:populateClassDetails(classData, canBe)
     local MenuColors = lia.color.ReturnMainAdjustedColors()
-
     local client = LocalPlayer()
     self.mainContent:Clear()
     local detailsPanel = self.mainContent:Add("DPanel")
@@ -80,8 +79,10 @@ function PANEL:populateClassDetails(classData, canBe)
     detailsPanel:Dock(TOP)
     detailsPanel:DockMargin(10, 10, 10, 10)
     detailsPanel.Paint = function(_, w, h)
-        surface.SetDrawColor(30, 30, 30, 200)
+        surface.SetDrawColor(0, 0, 0, 100)
         surface.DrawRect(0, 0, w, h)
+        surface.SetDrawColor(120, 120, 120, 255)
+        surface.DrawOutlinedRect(0, 0, w, h)
     end
 
     if classData.logo then
