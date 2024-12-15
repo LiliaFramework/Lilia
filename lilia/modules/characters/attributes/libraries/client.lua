@@ -43,19 +43,58 @@ function MODULE:CreateMenuButtons(tabs)
             title:SetFont("Trebuchet24")
             title:SizeToContents()
             title:SetPos(listX + listWidth / 2 - title:GetWide() / 2, listY - sH(40))
-            panel.attributesListView = panel:Add("DListView")
-            panel.attributesListView:SetMultiSelect(false)
-            panel.attributesListView:AddColumn("Attribute"):SetFixedWidth(listWidth * 0.3)
-            panel.attributesListView:AddColumn("Value"):SetFixedWidth(listWidth * 0.2)
-            panel.attributesListView:AddColumn("Max"):SetFixedWidth(listWidth * 0.2)
-            panel.attributesListView:AddColumn("Progress (%)"):SetFixedWidth(listWidth * 0.3)
-            panel.attributesListView:SetSize(listWidth, listHeight)
-            panel.attributesListView:SetPos(listX, listY)
+            local scroll = panel:Add("DScrollPanel")
+            scroll:SetSize(listWidth, listHeight)
+            scroll:SetPos(listX, listY)
+            local function addAttributeLine(attrName, currentValue, maxValue, progress)
+                local lineHeight = 50
+                local linePanel = scroll:Add("DPanel")
+                linePanel:SetTall(lineHeight)
+                linePanel:Dock(TOP)
+                linePanel:DockMargin(0, 0, 0, 10)
+                linePanel.Paint = function(_, w, h)
+                    surface.SetDrawColor(40, 40, 40, 200)
+                    surface.DrawRect(0, 0, w, h)
+                    surface.SetDrawColor(80, 80, 80, 255)
+                    surface.DrawOutlinedRect(0, 0, w, h)
+                end
+
+                local nameLabel = linePanel:Add("DLabel")
+                nameLabel:SetText(attrName)
+                nameLabel:SetFont("liaMediumFont")
+                nameLabel:SetTextColor(Color(255, 255, 255))
+                nameLabel:SizeToContents()
+                nameLabel:SetPos(10, lineHeight / 2 - nameLabel:GetTall() / 2)
+                local barWidth = listWidth * 0.6
+                local barX = 150
+                local barY = (lineHeight / 2) - 12
+                local progressBar = linePanel:Add("DPanel")
+                progressBar:SetPos(barX, barY)
+                progressBar:SetSize(barWidth, 24)
+                progressBar.Paint = function(_, w, h)
+                    surface.SetDrawColor(20, 20, 20, 180)
+                    surface.DrawRect(0, 0, w, h)
+                    local fillWidth = math.Clamp(w * (progress / 100), 0, w)
+                    surface.SetDrawColor(0, 255, 0, 250)
+                    surface.DrawRect(0, 0, fillWidth, h)
+                    surface.SetDrawColor(100, 100, 100, 200)
+                    surface.DrawOutlinedRect(0, 0, w, h)
+                end
+
+                local valueText = string.format("%d / %d (%d%%)", currentValue, maxValue, progress)
+                local valueLabel = linePanel:Add("DLabel")
+                valueLabel:SetText(valueText)
+                valueLabel:SetFont("liaMediumFont")
+                valueLabel:SetTextColor(Color(255, 255, 255))
+                valueLabel:SizeToContents()
+                valueLabel:SetPos(barX + barWidth + 10, lineHeight / 2 - valueLabel:GetTall() / 2)
+            end
+
             for attrKey, attrData in SortedPairsByMemberValue(lia.attribs.list, "name") do
                 local currentValue = LocalPlayer():getChar() and LocalPlayer():getChar():getAttrib(attrKey, 0) or 0
                 local maxValue = hook.Run("GetAttributeMax", LocalPlayer(), attrKey) or 100
                 local progress = math.Round((currentValue / maxValue) * 100, 1)
-                panel.attributesListView:AddLine(attrData.name, currentValue, maxValue, progress .. "%")
+                addAttributeLine(attrData.name, currentValue, maxValue, progress)
             end
         end
     end
