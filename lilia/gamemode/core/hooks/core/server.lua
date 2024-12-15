@@ -249,7 +249,7 @@ function GM:CanPlayerDropItem(client, item)
     elseif item.isBag and item:getInv() then
         local items = item:getInv():getItems()
         for _, otheritem in pairs(items) do
-            if not otheritem.ignoreEquipCheck and otheritem:getData("equip") == true then
+            if not otheritem.ignoreEquipCheck and otheritem:getData("equip", false) then
                 client:notifyLocalized("cantDropBagHasEquipped")
                 return false
             end

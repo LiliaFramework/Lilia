@@ -526,7 +526,7 @@ function MODULE:OpenAdminStickUI(target)
                 end):SetIcon("icon16/door.png")
             end
 
-            if target:getNetVar("noSell") == true then
+            if target:getNetVar("noSell", false) then
                 AdminMenu:AddOption("Make Door Ownable", function()
                     LocalPlayer():ConCommand('say /doorsetownable')
                     AdminStickIsOpen = false

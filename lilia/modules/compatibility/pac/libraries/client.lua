@@ -83,7 +83,7 @@ function MODULE:OnPlayerObserve(client, state)
         local character = client:getChar()
         local inventory = character:getInv()
         for _, v in pairs(inventory:getItems()) do
-            if v:getData("equip") == true and v.pacData then client:addPart(v.uniqueID, v) end
+            if v:getData("equip", false) and v.pacData then client:addPart(v.uniqueID, v) end
         end
     end
 end

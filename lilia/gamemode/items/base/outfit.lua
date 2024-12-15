@@ -75,7 +75,7 @@ ITEM.functions.EquipUn = {
         item:removeOutfit(item.player)
         return false
     end,
-    onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip") == true end
+    onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip", false) end
 }
 
 ITEM.functions.Equip = {
@@ -166,12 +166,6 @@ end
 
 function ITEM:onRemoved()
     if (IsValid(receiver) and receiver:IsPlayer()) and self:getData("equip") then self:removeOutfit(receiver) end
-end
-
-function ITEM:onWear()
-end
-
-function ITEM:onTakeOff()
 end
 
 ITEM:hook("drop", function(item) if item:getData("equip") then item:removeOutfit(item.player) end end)
