@@ -239,6 +239,7 @@ end
 -- Expected format of `strTime`: "HH:MM:SS - DD/MM/YYYY"
 -- @string strTime A time string in the specified format.
 -- @treturn string A human-readable string indicating years, months, days, hours, minutes, and seconds passed.
+-- @realm shared
 function lia.time.TimeSince(strTime)
     local pattern = "(%d+):(%d+):(%d+)%s*%-%s*(%d+)/(%d+)/(%d+)"
     local hour, minute, second, day, month, year = strTime:match(pattern)
@@ -274,6 +275,7 @@ end
 -- Expected format of `strTime`: "HH:MM:SS - DD/MM/YYYY"
 -- @string strTime A time string in the specified format.
 -- @treturn string A human-readable string indicating years, months, days, hours, minutes, and seconds remaining.
+-- @realm shared
 function lia.time.TimeUntil(strTime)
     local pattern = "(%d+):(%d+):(%d+)%s*%-%s*(%d+)/(%d+)/(%d+)"
     local hour, minute, second, day, month, year = strTime:match(pattern)
@@ -307,6 +309,7 @@ end
 
 --- Returns the current local time in "HH:MM:SS - DD/MM/YYYY" format.
 -- @treturn string The current local time string.
+-- @realm shared
 function lia.time.CurrentLocalTime()
     local now = os.time()
     local t = os.date("*t", now)
@@ -319,6 +322,7 @@ end
 -- @treturn number Hours
 -- @treturn number Minutes
 -- @treturn number Seconds
+-- @realm shared
 function lia.time.SecondsToDHMS(seconds)
     local days = math.floor(seconds / 86400)
     seconds = seconds % 86400
@@ -334,6 +338,7 @@ end
 -- @int minute The minute component.
 -- @int second The second component.
 -- @treturn number The total number of seconds.
+-- @realm shared
 function lia.time.HMSToSeconds(hour, minute, second)
     return hour * 3600 + minute * 60 + second
 end
@@ -341,6 +346,7 @@ end
 --- Formats a UNIX timestamp into "HH:MM:SS - DD/MM/YYYY".
 -- @int timestamp A UNIX timestamp.
 -- @treturn string The formatted time string.
+-- @realm shared
 function lia.time.FormatTimestamp(timestamp)
     local t = os.date("*t", timestamp)
     return string.format("%02d:%02d:%02d - %02d/%02d/%04d", t.hour, t.min, t.sec, t.day, t.month, t.year)
@@ -355,6 +361,7 @@ end
 -- @treturn[1] number minute The parsed minute
 -- @treturn[1] number second The parsed second
 -- @treturn[2] nil If parsing fails
+-- @realm shared
 function lia.time.ParseTime(strTime)
     local pattern = "(%d+):(%d+):(%d+)%s*%-%s*(%d+)/(%d+)/(%d+)"
     local hour, minute, second, d, m, y = strTime:match(pattern)
@@ -374,6 +381,7 @@ end
 -- @string strTime1 A time string "HH:MM:SS - DD/MM/YYYY"
 -- @string strTime2 A time string "HH:MM:SS - DD/MM/YYYY"
 -- @treturn number|nil The number of days between the two dates, or a string error message.
+-- @realm shared
 function lia.time.DaysBetween(strTime1, strTime2)
     local y1, mo1, d1 = lia.time.ParseTime(strTime1)
     local y2, mo2, d2 = lia.time.ParseTime(strTime2)
@@ -403,6 +411,7 @@ end
 --- Returns the name of the weekday for the given date/time.
 -- @string strTime A time string "HH:MM:SS - DD/MM/YYYY"
 -- @treturn string The weekday name, or "Invalid date" if invalid.
+-- @realm shared
 function lia.time.WeekdayName(strTime)
     local y, mo, d, h, mi, s = lia.time.ParseTime(strTime)
     if not y then return "Invalid date" end
@@ -420,6 +429,7 @@ end
 --- Calculates the time difference in days between the given date and the current date.
 -- @string strTime A time string in the format "HH:MM:SS - DD/MM/YYYY".
 -- @treturn number|nil The difference in days between the given date and the current date, or nil if the input is invalid.
+-- @realm shared
 function lia.time.TimeDifference(strTime)
     local pattern = "(%d+):(%d+):(%d+)%s*-%s*(%d+)/(%d+)/(%d+)"
     local hour, minute, second, day, month, year = strTime:match(pattern)
