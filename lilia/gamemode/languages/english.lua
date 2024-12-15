@@ -1,5 +1,6 @@
 ﻿NAME = "english"
 LANGUAGE = {
+    modules = "Modules",
     --[[ User Interface & General Terms ]]
     notSpecified = "Not specified",
     notConfig = "This isn't configured",
