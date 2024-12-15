@@ -1,4 +1,4 @@
-﻿--[[--
+--[[--
 Core library that manages module loading behaviors.
 
 If you are looking for the module structure, you can find it [here](https://liliaframework.github.io/manual/structure_module).
@@ -81,11 +81,10 @@ end
 -- @string path The path to the module.
 -- @bool isSingleFile Specifies if the module is contained in a single file.
 -- @string variable The variable name to assign the module to.
--- @string category The category of the module.
 -- @bool firstLoad Indicates if this is the first load of the module.
 -- @realm shared
 -- @internal
-function lia.module.load(uniqueID, path, isSingleFile, variable, category, firstLoad)
+function lia.module.load(uniqueID, path, isSingleFile, variable, firstLoad)
     local lowerVariable = variable:lower()
     local normalPath = path .. "/" .. lowerVariable .. ".lua"
     local extendedPath = path .. "/sh_" .. lowerVariable .. ".lua"
@@ -178,7 +177,7 @@ end
 -- @internal
 function lia.module.initialize(firstLoad)
     local schema = engine.ActiveGamemode()
-    lia.module.load("schema", schema .. "/schema", false, "schema", "Schema", firstLoad)
+    lia.module.load("schema", schema .. "/schema", false, "schema", firstLoad)
     hook.Run("InitializedSchema")
     lia.module.loadFromDir("lilia/modules/core", "module", firstLoad)
     lia.module.loadFromDir("lilia/modules/frameworkui", "module", firstLoad)
