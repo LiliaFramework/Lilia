@@ -224,7 +224,7 @@ function MODULE:BuildHelpMenu(tabs)
         end
 
         header.Columns = {}
-        for i, colName in ipairs(columns) do
+        for _, colName in ipairs(columns) do
             local lbl = header:Add("DLabel")
             lbl:SetText(colName)
             lbl:SetTextColor(Color(255, 255, 255))
@@ -259,7 +259,7 @@ function MODULE:BuildHelpMenu(tabs)
             end
 
             row.Columns = {}
-            for i, value in ipairs(data) do
+            for _, value in ipairs(data) do
                 local lbl = row:Add("DLabel")
                 lbl:SetText(value or "")
                 lbl:SetTextColor(Color(255, 255, 255))
