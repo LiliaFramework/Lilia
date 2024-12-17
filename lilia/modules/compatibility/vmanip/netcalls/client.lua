@@ -1,4 +1,5 @@
 ﻿net.Receive("PlayPickupAnimation", function()
+    if not VManip then return end
     local itemID = net.ReadString()
     local item = lia.item.list[itemID]
     local isDisabled = item.VManipDisabled
