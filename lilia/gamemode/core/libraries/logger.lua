@@ -43,7 +43,6 @@ if SERVER then
 
     --- Adds a raw log string to the log system and optionally notifies admins.
     -- @string logString The raw log string to add
-    -- @string[opt] flag The flag associated with the log
     -- @realm server
     function lia.log.addRaw(logString)
         Msg("[LOG] ", logString .. "\n")
@@ -51,7 +50,7 @@ if SERVER then
         local logDir = "lilia/logs" .. logType
         if not file.Exists(logDir, "DATA") then file.CreateDir(logDir) end
         local logFilePath = logDir .. "/" .. os.date("%x"):gsub("/", "-") .. ".txt"
-        lia.log.send(lia.util.getAdmins(), logString, flag)
+        lia.log.send(lia.util.getAdmins(), logString)
         file.Append(logFilePath, "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n")
     end
 
@@ -78,11 +77,10 @@ if SERVER then
     --- Sends a log message to a specified client.
     -- @client client The client to whom the log message will be sent.
     -- @string logString The log message to be sent.
-    -- @string[opt] flag A flag associated with the log message.
     -- @realm server
     -- @internal
-    function lia.log.send(client, logString, flag)
-        netstream.Start(client, "liaLogStream", logString, flag)
+    function lia.log.send(client, logString)
+        netstream.Start(client, "liaLogStream", logString)
     end
 else
     netstream.Hook("liaLogStream", function(logString) LiliaInformation(logString) end)
