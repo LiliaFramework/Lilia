@@ -500,7 +500,7 @@
         color = Color(241, 196, 15)
     },
     ["List Flags"] = {
-        func = function(client,) return string.format("%s listed flags", client:Name()) end,
+        func = function(client) return string.format("%s listed flags", client:Name()) end,
         category = "Management",
         color = Color(46, 204, 113)
     },
