@@ -29,7 +29,7 @@ function MODULE:ReadLogsFromFile(logtype, selectedDate)
     return logs
 end
 
-function MODULE:OnServerLog(client, logType, logString, category, color)
+function MODULE:OnServerLog(_, logType, logString)
     for _, admin in pairs(lia.util.getAdmins()) do
         if hook.Run("CanPlayerSeeLog", admin, logType) ~= false then lia.log.send(admin, logString) end
     end

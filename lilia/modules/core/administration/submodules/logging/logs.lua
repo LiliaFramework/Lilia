@@ -235,11 +235,11 @@
         color = Color(255, 0, 0)
     },
     ["Ragdolled"] = {
-        func = function(client, player, state)
+        func = function(client, state)
             if state then
-                return player:Nick() .. " has been ragdolled."
+                return client:Nick() .. " has been ragdolled."
             else
-                return player:Nick() .. " has stood up."
+                return client:Nick() .. " has stood up."
             end
         end,
         category = "Combat",
@@ -430,7 +430,7 @@
         color = Color(192, 57, 43)
     },
     ["Check All Money"] = {
-        func = function(client, data) return string.format("%s checked all players' money", client:Name()) end,
+        func = function(client) return string.format("%s checked all players' money", client:Name()) end,
         category = "Financial & Vendor",
         color = Color(241, 196, 15)
     },
@@ -440,7 +440,7 @@
         color = Color(46, 204, 113)
     },
     ["Find All Flags"] = {
-        func = function(client, data) return string.format("%s listed all on-duty staff's flags", client:Name()) end,
+        func = function(client) return string.format("%s listed all on-duty staff's flags", client:Name()) end,
         category = "Management",
         color = Color(46, 204, 113)
     },
@@ -500,7 +500,7 @@
         color = Color(241, 196, 15)
     },
     ["List Flags"] = {
-        func = function(client, data) return string.format("%s listed flags", client:Name()) end,
+        func = function(client,) return string.format("%s listed flags", client:Name()) end,
         category = "Management",
         color = Color(46, 204, 113)
     },
@@ -510,32 +510,32 @@
         color = Color(52, 152, 219)
     },
     ["List Modules"] = {
-        func = function(client, data) return string.format("%s listed all modules", client:Name()) end,
+        func = function(client) return string.format("%s listed all modules", client:Name()) end,
         category = "Management",
         color = Color(52, 152, 219)
     },
     ["List Entities"] = {
-        func = function(client, data) return string.format("%s listed all entities", client:Name()) end,
+        func = function(client) return string.format("%s listed all entities", client:Name()) end,
         category = "Management",
         color = Color(46, 204, 113)
     },
     ["List Staff"] = {
-        func = function(client, data) return string.format("%s listed all staff members", client:Name()) end,
+        func = function(client) return string.format("%s listed all staff members", client:Name()) end,
         category = "Management",
         color = Color(155, 89, 182)
     },
     ["List On Duty Staff"] = {
-        func = function(client, data) return string.format("%s listed all on-duty staff members", client:Name()) end,
+        func = function(client) return string.format("%s listed all on-duty staff members", client:Name()) end,
         category = "Management",
         color = Color(155, 89, 182)
     },
     ["List VIPs"] = {
-        func = function(client, data) return string.format("%s listed all VIPs", client:Name()) end,
+        func = function(client) return string.format("%s listed all VIPs", client:Name()) end,
         category = "Management",
         color = Color(155, 89, 182)
     },
     ["List Users"] = {
-        func = function(client, data) return string.format("%s listed all users", client:Name()) end,
+        func = function(client) return string.format("%s listed all users", client:Name()) end,
         category = "Management",
         color = Color(155, 89, 182)
     },

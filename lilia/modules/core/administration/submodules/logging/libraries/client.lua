@@ -21,12 +21,12 @@ net.Receive("send_logs", function()
     logList:AddColumn("Timestamp"):SetFixedWidth(150)
     logList:AddColumn("Message")
     local treeNodes = {}
-    for category, logs in pairs(categorizedLogs) do
+    for category, _ in pairs(categorizedLogs) do
         local node = logTree:AddNode(category)
         treeNodes[category] = node
     end
 
-    logTree.OnNodeSelected = function(self, node)
+    logTree.OnNodeSelected = function(_, node)
         logList:Clear()
         local selectedCategory = node:GetText()
         local logs = categorizedLogs[selectedCategory]
