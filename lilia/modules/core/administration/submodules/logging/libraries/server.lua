@@ -1,6 +1,8 @@
-﻿function MODULE:ReadLogFiles(logtype)
+﻿local MODULE = MODULE
+util.AddNetworkString("send_logs")
+function MODULE:ReadLogFiles(logtype)
     local logs = {}
-    local logFilePath = "lilia/" .. logtype .. "/*.txt"
+    local logFilePath = "lilia/logs" .. logtype .. "/*.txt"
     local logFiles = file.Find(logFilePath, "DATA")
     for _, fileName in ipairs(logFiles) do
         local strippedName = string.StripExtension(fileName)
@@ -11,11 +13,11 @@ end
 
 function MODULE:ReadLogsFromFile(logtype, selectedDate)
     local logs = {}
-    local logFilePath = "lilia/" .. logtype .. "/" .. selectedDate:gsub("/", "-") .. ".txt"
+    local logFilePath = "lilia/logs" .. logtype .. "/" .. selectedDate:gsub("/", "-") .. ".txt"
     if file.Exists(logFilePath, "DATA") then
         local logFileContent = file.Read(logFilePath, "DATA")
         for line in logFileContent:gmatch("[^\r\n]+") do
-            local timestamp, message = line:match("%[([^%]]+)%]%s*(.+)")
+            local timestamp, message = line:match("^%[([^%]]+)%]%s*(.+)")
             if timestamp and message then
                 table.insert(logs, {
                     timestamp = timestamp,
@@ -28,12 +30,9 @@ function MODULE:ReadLogsFromFile(logtype, selectedDate)
 end
 
 function MODULE:OnServerLog(client, logType, logString, category, color)
-    for _, v in pairs(lia.util.getAdmins()) do
-        if hook.Run("CanPlayerSeeLog", v, logType) ~= false then lia.log.send(v, lia.log.getString(client, logType, logString, category, color)) end
+    for _, admin in pairs(lia.util.getAdmins()) do
+        if hook.Run("CanPlayerSeeLog", admin, logType) ~= false then lia.log.send(admin, logString) end
     end
-
-    local LogEvent = self:addCategory(category, color)
-    LogEvent(logString)
 end
 
 function MODULE:CanPlayerSeeLog()

@@ -1,11 +1,20 @@
 ﻿lia.command.add("playglobalsound", {
     superAdminOnly = true,
     privilege = "Play Sounds",
-    onRun = function(_, arguments)
+    onRun = function(client, arguments)
         local sound = arguments[1]
+        if not sound or sound == "" then
+            client:notify("You must specify a sound to play.")
+            return
+        end
+
         for _, v in pairs(player.GetAll()) do
             v:PlaySound(sound)
         end
+
+        lia.log.add(client, "Play Global Sound", {
+            sound = sound
+        })
     end
 })
 
@@ -16,7 +25,16 @@ lia.command.add("playsound", {
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local sound = arguments[2]
+        if not target or not sound or sound == "" then
+            client:notify("Invalid target or sound.")
+            return
+        end
+
         target:PlaySound(sound)
+        lia.log.add(client, "Play Sound", {
+            target = target:Name(),
+            sound = sound
+        })
     end
 })
 
@@ -30,6 +48,9 @@ lia.command.add("return", {
             if oldPos then
                 client:SetPos(oldPos)
                 character:setData("deathPos", nil)
+                lia.log.add(client, "Return Player", {
+                    target = client:Name()
+                })
             else
                 client:notify("No death position saved.")
             end
@@ -44,7 +65,9 @@ lia.command.add("roll", {
     onRun = function(client)
         local rollValue = math.random(0, 100)
         lia.chat.send(client, "roll", rollValue)
-        lia.log.add(client, "roll", rollValue)
+        lia.log.add(client, "Roll", {
+            rollValue = rollValue
+        })
     end
 })
 
@@ -52,9 +75,15 @@ lia.command.add("chardesc", {
     adminOnly = false,
     syntax = "<string desc>",
     onRun = function(client, arguments)
-        arguments = table.concat(arguments, " ")
-        if not arguments:find("%S") then return client:requestString("Change Description", "Change Your Description", function(text) lia.command.run(client, "chardesc", {text}) end, client:getChar():getDesc()) end
-        client:getChar():setDesc(arguments)
+        local desc = table.concat(arguments, " ")
+        if not desc:find("%S") then return client:requestString("Change Description", "Change Your Description", function(text) lia.command.run(client, "chardesc", {text}) end, client:getChar():getDesc()) end
+        local character = client:getChar()
+        lia.log.add(client, "Change Description", {
+            target = client:Name(),
+            desc = desc
+        })
+
+        character:setDesc(desc)
         return "@descChanged"
     end
 })
@@ -62,7 +91,11 @@ lia.command.add("chardesc", {
 lia.command.add("chargetup", {
     adminOnly = false,
     onRun = function(client)
-        if not client:hasRagdoll() then client:notify("You don't have a ragdoll to get up from!") end
+        if not client:hasRagdoll() then
+            client:notify("You don't have a ragdoll to get up from!")
+            return
+        end
+
         local entity = client:getRagdoll()
         if not IsValid(entity) then return end
         if entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
@@ -71,6 +104,9 @@ lia.command.add("chargetup", {
                 if not IsValid(entity) then return end
                 hook.Run("OnCharGetup", client, entity)
                 entity:Remove()
+                lia.log.add(client, "Change Up", {
+                    target = client:Name()
+                })
             end)
         end
     end
@@ -78,30 +114,35 @@ lia.command.add("chargetup", {
 
 lia.command.add("givemoney", {
     adminOnly = false,
-    syntax = "<number amount>",
+    syntax = "<string name> <number amount>",
+    privilege = "Give Money",
     onRun = function(client, arguments)
-        local number = tonumber(arguments[1])
-        number = number or 0
-        local amount = math.floor(number)
-        if not amount or not isnumber(amount) or amount <= 0 then return L("invalidArg", 1) end
-        local data = {}
-        data.start = client:GetShootPos()
-        data.endpos = data.start + client:GetAimVector() * 96
-        data.filter = client
-        local target = util.TraceLine(data).Entity
-        if IsValid(target) and target:IsPlayer() and target:getChar() then
-            amount = math.Round(amount)
-            if not client:getChar():hasMoney(amount) then return end
-            target:getChar():giveMoney(amount)
-            client:getChar():takeMoney(amount)
+        local amount = tonumber(arguments[2])
+        if not amount or not isnumber(amount) or amount <= 0 then
+            client:notify("Invalid amount.")
+            return
+        end
+
+        local target = lia.command.findPlayer(client, arguments[1])
+        if IsValid(target) and target:getChar() then
+            if not client:getChar():hasMoney(amount) then
+                client:notify("You don't have enough money.")
+                return
+            end
+
+            target:getChar():giveMoney(math.floor(amount))
+            client:getChar():takeMoney(math.floor(amount))
             local character = client:getChar()
             local id = target:getChar():getID()
             local tCharacter = target:getChar()
-            local charID = client:getChar():getID()
-            target:notify("You were given " .. lia.currency.get(amount) .. " by " .. (hook.Run("isCharRecognized", tCharacter, charID) and client:Name() or "someone you don't recognize"))
-            client:notify("You gave " .. lia.currency.get(amount) .. " to " .. (hook.Run("isCharRecognized", character, id) and target:Name() or "someone you don't recognize"))
+            local charID = character:getID()
+            target:notify("You were given " .. lia.currency.get(math.floor(amount)) .. " by " .. (hook.Run("isCharRecognized", tCharacter, charID) and client:Name() or "someone you don't recognize"))
+            client:notify("You gave " .. lia.currency.get(math.floor(amount)) .. " to " .. (hook.Run("isCharRecognized", character, id) and target:Name() or "someone you don't recognize"))
             client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_GMOD_GESTURE_ITEM_PLACE, true)
-            lia.log.add(client, "moneyGiven", target:Name(), amount)
+            lia.log.add(client, "Give Money", {
+                target = target:Name(),
+                amount = math.floor(amount)
+            })
         else
             client:notify("You need to be looking at someone!")
         end
@@ -140,12 +181,17 @@ lia.command.add("fallover", {
         client:SetNW2Bool("FallOverCooldown", true)
         if not client:hasRagdoll() then
             client:setRagdolled(true, time)
-            timer.Simple(10, function() client:SetNW2Bool("FallOverCooldown", false) end)
+            timer.Simple(10, function() if IsValid(client) then client:SetNW2Bool("FallOverCooldown", false) end end)
+            lia.log.add(client, "Fall Over", {
+                target = client:Name(),
+                time = time or 5
+            })
         end
     end
 })
 
 lia.command.add("dropmoney", {
+    adminOnly = false,
     syntax = "<number amount>",
     onRun = function(client, arguments)
         if client:GetNW2Bool("DropMoneyCooldown", false) then
@@ -155,7 +201,11 @@ lia.command.add("dropmoney", {
         end
 
         local amount = tonumber(arguments[1])
-        if not amount or not isnumber(amount) or amount < 1 then return "@invalidArg", 1 end
+        if not amount or not isnumber(amount) or amount < 1 then
+            client:notify("@invalidArg")
+            return
+        end
+
         amount = math.Round(amount)
         if not client:getChar():hasMoney(amount) then
             client:notify("You lack the funds for this!")
@@ -185,6 +235,10 @@ lia.command.add("dropmoney", {
         client:SetNW2Bool("DropMoneyCooldown", true)
         client:SetNW2Float("DropMoneyCooldownEnd", CurTime() + 5)
         timer.Simple(5, function() if IsValid(client) then client:SetNW2Bool("DropMoneyCooldown", false) end end)
+        lia.log.add(client, "Drop Money", {
+            target = client:Name(),
+            amount = amount
+        })
     end
 })
 
@@ -211,6 +265,12 @@ lia.command.add("entityInfo", {
         local entityName = entity:GetName()
         local entityID = entity:EntIndex()
         local creator = entity:GetCreator()
+        lia.log.add(client, "Entity Info", {
+            entity = entityClass,
+            id = entityID,
+            creator = IsValid(creator) and creator:Nick() or "Unknown"
+        })
+
         client:chatNotify("Entity Name: " .. (entityName ~= "" and entityName or "Unnamed"))
         client:chatNotify("Entity Class: " .. entityClass)
         client:chatNotify("Entity ID: " .. entityID)
@@ -223,25 +283,20 @@ lia.command.add("checkinventory", {
     privilege = "Check Inventories",
     syntax = "<string target>",
     onRun = function(client, arguments)
-        local function ItemCanEnterForEveryone(_, action, _)
-            if action == "transfer" then return true end
-        end
-
-        local function CanReplicateItemsForEveryone(_, action, _)
-            if action == "repl" then return true end
-        end
-
         local target = lia.command.findPlayer(client, arguments[1])
         local isTargDiff = target ~= client
         if IsValid(target) and target:getChar() and isTargDiff then
             local inventory = target:getChar():getInv()
-            inventory:addAccessRule(ItemCanEnterForEveryone, 1)
-            inventory:addAccessRule(CanReplicateItemsForEveryone, 1)
+            inventory:addAccessRule(function(_, action, _) return action == "transfer" end, 1)
+            inventory:addAccessRule(function(_, action, _) return action == "repl" end, 1)
             inventory:sync(client)
             net.Start("OpenInvMenu")
             net.WriteEntity(target)
             net.WriteType(inventory:getID())
             net.Send(client)
+            lia.log.add(client, "Check Inventory", {
+                target = target:Name()
+            })
         elseif not isTargDiff then
             client:notifyLocalized("This isn't meant for checking your own inventory.")
         end
@@ -259,13 +314,25 @@ lia.command.add("flaggive", {
             if not flags then
                 local available = ""
                 for k in SortedPairs(lia.flag.list) do
-                    if not target:getChar():hasFlags(k) then available = available .. k end
+                    if not target:getChar():hasFlags(k) then available = available .. k .. " " end
+                end
+
+                available = available:Trim()
+                if available == "" then
+                    client:notify("No available flags to give.")
+                    return
                 end
                 return client:requestString("@flagGiveTitle", "@flagGiveDesc", function(text) lia.command.run(client, "flaggive", {target:Name(), text}) end, available)
             end
 
             target:getChar():giveFlags(flags)
             client:notifyLocalized("flagGive", client:Name(), target:Name(), flags)
+            lia.log.add(client, "Give Flag", {
+                target = target:Name(),
+                flag = flags
+            })
+        else
+            client:notify("Invalid Target!")
         end
     end,
     alias = {"giveflag"}
@@ -288,20 +355,36 @@ lia.command.add("flaggiveall", {
         end
 
         client:notify("You gave this player all flags!")
+        lia.log.add(client, "Give All Flags", {
+            target = target:Name()
+        })
     end
 })
 
 lia.command.add("flagpet", {
     adminOnly = true,
+    syntax = "<string name>",
     privilege = "Manage Flags",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if target:getChar():hasFlags("pet") then
-            target:getChar():takeFlags("pet")
-            client:notify("Taken pet Flags!")
+        if IsValid(target) and target:getChar() then
+            if target:getChar():hasFlags("pet") then
+                target:getChar():takeFlags("pet")
+                client:notify("Taken pet Flags!")
+                lia.log.add(client, "Toggle Pet Flag", {
+                    target = target:Name(),
+                    newState = false
+                })
+            else
+                target:getChar():giveFlags("pet")
+                client:notify("Given pet Flags!")
+                lia.log.add(client, "Toggle Pet Flag", {
+                    target = target:Name(),
+                    newState = true
+                })
+            end
         else
-            target:getChar():giveFlags("pet")
-            client:notify("Given pet Flags!")
+            client:notify("Invalid Target!")
         end
     end
 })
@@ -322,7 +405,10 @@ lia.command.add("flagtakeall", {
             if character:hasFlags(k) then target:getChar():takeFlags(k) end
         end
 
-        client:notify("You took this players flags!")
+        client:notify("You took this player's flags!")
+        lia.log.add(client, "Take All Flags", {
+            target = target:Name()
+        })
     end
 })
 
@@ -334,9 +420,19 @@ lia.command.add("flagtake", {
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and target:getChar() then
             local flags = arguments[2]
-            if not flags then return client:requestString("@flagTakeTitle", "@flagTakeDesc", function(text) lia.command.run(client, "flagtake", {target:Name(), text}) end, target:getChar():getFlags()) end
+            if not flags then
+                local currentFlags = target:getChar():getFlags()
+                return client:requestString("@flagTakeTitle", "@flagTakeDesc", function(text) lia.command.run(client, "flagtake", {target:Name(), text}) end, table.concat(currentFlags, ", "))
+            end
+
             target:getChar():takeFlags(flags)
             client:notifyLocalized("flagTake", client:Name(), flags, target:Name())
+            lia.log.add(client, "Take Flag", {
+                target = target:Name(),
+                flag = flags
+            })
+        else
+            client:notify("Invalid Target!")
         end
     end,
     alias = {"takeflag"}
@@ -349,6 +445,10 @@ lia.command.add("bringlostitems", {
         for _, v in pairs(ents.FindInSphere(client:GetPos(), 500)) do
             if v:isItem() then v:SetPos(client:GetPos()) end
         end
+
+        lia.log.add(client, "Bring Lost Items", {
+            count = #ents.FindInSphere(client:GetPos(), 500)
+        })
     end
 })
 
@@ -363,6 +463,9 @@ lia.command.add("cleanitems", {
         end
 
         client:notify(count .. " items have been cleaned up from the map.")
+        lia.log.add(client, "Clean Items", {
+            count = count
+        })
     end
 })
 
@@ -379,6 +482,9 @@ lia.command.add("cleanprops", {
         end
 
         client:notify(count .. " props have been cleaned up from the map.")
+        lia.log.add(client, "Clean Props", {
+            count = count
+        })
     end
 })
 
@@ -395,6 +501,9 @@ lia.command.add("cleannpcs", {
         end
 
         client:notify(count .. " NPCs have been cleaned up from the map.")
+        lia.log.add(client, "Clean NPCs", {
+            count = count
+        })
     end
 })
 
@@ -408,12 +517,15 @@ lia.command.add("charunban", {
         for _, v in pairs(lia.char.loaded) do
             if lia.util.stringMatches(v:getName(), name) then
                 if v:getData("banned") then
-                    v:setData("banned")
-                    v:setData("permakilled")
+                    v:setData("banned", nil)
+                    v:setData("permakilled", nil)
+                    lia.log.add(client, "Unban Character", {
+                        target = v:getName()
+                    })
+                    return lia.notices.notifyLocalized("charUnBan", nil, client:Name(), v:getName())
                 else
                     return "@charNotBanned"
                 end
-                return lia.notices.notifyLocalized("charUnBan", nil, client:Name(), v:getName())
             end
         end
 
@@ -421,15 +533,23 @@ lia.command.add("charunban", {
         lia.db.query("SELECT _id, _name, _data FROM lia_characters WHERE _name LIKE \"%" .. lia.db.escape(name) .. "%\" LIMIT 1", function(data)
             if data and data[1] then
                 local charID = tonumber(data[1]._id)
-                local data = util.JSONToTable(data[1]._data or "[]")
+                local charData = util.JSONToTable(data[1]._data or "[]")
                 client.liaNextSearch = 0
-                if not data.banned then return client:notifyLocalized("charNotBanned") end
-                data.banned = nil
+                if not charData.banned then
+                    client:notifyLocalized("charNotBanned")
+                    return
+                end
+
+                charData.banned = nil
                 lia.db.updateTable({
-                    _data = data
+                    _data = util.TableToJSON(charData)
                 }, nil, nil, "_id = " .. charID)
 
-                lia.notices.notifyLocalized("charUnBan", nil, client:Name(), lia.char.loaded[charID]:getName())
+                lia.log.add(client, "Unban Character", {
+                    target = data[1]._name
+                })
+
+                lia.notices.notifyLocalized("charUnBan", nil, client:Name(), data[1]._name)
             end
         end)
     end
@@ -444,6 +564,11 @@ lia.command.add("clearinv", {
         if IsValid(target) and target:getChar() then
             target:getChar():getInv():wipeItems()
             client:notifyLocalized("resetInv", target:getChar():getName())
+            lia.log.add(client, "Clear Inventory", {
+                target = target:Name()
+            })
+        else
+            client:notify("Invalid Target!")
         end
     end
 })
@@ -462,7 +587,14 @@ lia.command.add("charkick", {
                 end
 
                 character:kick()
+                lia.log.add(client, "Kick Character", {
+                    target = target:Name()
+                })
+            else
+                client:notify("Target does not have an active character.")
             end
+        else
+            client:notify("Invalid Target!")
         end
     end
 })
@@ -485,6 +617,12 @@ lia.command.add("freezeallprops", {
 
             client:notify("You have frozen all of " .. target:Name() .. "'s Entities.")
             client:ChatPrint("Frozen " .. count .. " Entities belonging to " .. target:Name())
+            lia.log.add(client, "Freeze All Props", {
+                target = target:Name(),
+                count = count
+            })
+        else
+            client:notify("Invalid Target!")
         end
     end
 })
@@ -498,7 +636,10 @@ lia.command.add("charban", {
         if IsValid(target) then
             local character = target:getChar()
             if character then
-                lia.log.add(client, "charBan", target:Name())
+                lia.log.add(client, "Ban Character", {
+                    target = target:Name()
+                })
+
                 character:setData("banned", true)
                 character:setData("charBanInfo", {
                     name = client.steamName and client:steamName() or client:Name(),
@@ -509,7 +650,11 @@ lia.command.add("charban", {
                 character:save()
                 character:kick()
                 client:notifyLocalized("charBan", client:Name(), target:Name())
+            else
+                client:notify("Target does not have an active character.")
             end
+        else
+            client:notify("Invalid Target!")
         end
     end
 })
@@ -519,7 +664,13 @@ lia.command.add("checkallmoney", {
     privilege = "Get Character Info",
     onRun = function(client)
         for _, v in pairs(player.GetAll()) do
-            if v:getChar() then client:chatNotify(v:Name() .. " has " .. v:getChar():getMoney()) end
+            if v:getChar() then
+                client:chatNotify(v:Name() .. " has " .. lia.currency.get(v:getChar():getMoney()) .. "s")
+                lia.log.add(client, "Check All Money", {
+                    target = v:Name(),
+                    amount = v:getChar():getMoney()
+                })
+            end
         end
     end
 })
@@ -527,9 +678,18 @@ lia.command.add("checkallmoney", {
 lia.command.add("checkflags", {
     adminOnly = true,
     privilege = "Get Character Info",
+    syntax = "<string target>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        client:chatNotify(target:Name() .. " — " .. target:getChar():getFlags())
+        if IsValid(target) and target:getChar() then
+            local flags = target:getChar():getFlags()
+            client:chatNotify(target:Name() .. " — " .. table.concat(flags, ", "))
+            lia.log.add(client, "Check Flags", {
+                target = target:Name()
+            })
+        else
+            client:notify("Invalid Target!")
+        end
     end
 })
 
@@ -537,20 +697,69 @@ lia.command.add("findallflags", {
     adminOnly = true,
     privilege = "Get Character Info",
     onRun = function(client)
-        for _, v in pairs(player.GetHumans()) do
-            client:chatNotify(v:Name() .. " — " .. v:getChar():getFlags())
+        local onDutyStaffList = {}
+        for _, target in player.Iterator() do
+            if target:isStaffOnDuty() then
+                local char = target:getChar()
+                table.insert(onDutyStaffList, {
+                    name = target:Nick(),
+                    class = char:getClass() and lia.class.list[char:getClass()].name or "N/A",
+                    faction = char:getFaction(),
+                    characterID = char:getID(),
+                    usergroup = target:GetUserGroup(),
+                    flags = table.concat(char:getFlags(), ", ")
+                })
+            end
+        end
+
+        if #onDutyStaffList > 0 then
+            lia.util.CreateTableUI(client, "On Duty Staff Flags", {
+                {
+                    name = "Name",
+                    field = "name"
+                },
+                {
+                    name = "Class",
+                    field = "class"
+                },
+                {
+                    name = "Faction",
+                    field = "faction"
+                },
+                {
+                    name = "Character ID",
+                    field = "characterID"
+                },
+                {
+                    name = "Usergroup",
+                    field = "usergroup"
+                },
+                {
+                    name = "Flags",
+                    field = "flags"
+                }
+            }, onDutyStaffList)
+
+            lia.log.add(client, "Find All Flags", {})
+        else
+            client:notify("No on-duty staff members found!")
         end
     end
 })
 
 lia.command.add("checkmoney", {
-    syntax = "<string target>",
-    privilege = "Get Character Info",
     adminOnly = true,
+    privilege = "Get Character Info",
+    syntax = "<string target>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if target then
-            client:chatNotify(target:GetName() .. " has: " .. target:getChar():getMoney() .. lia.currency.plural .. " (s)")
+        if target and target:getChar() then
+            local money = target:getChar():getMoney()
+            client:chatNotify(target:GetName() .. " has: " .. lia.currency.get(money) .. "s")
+            lia.log.add(client, "Check Money", {
+                target = target:Name(),
+                amount = money
+            })
         else
             client:chatNotify("Invalid Target")
         end
@@ -558,16 +767,47 @@ lia.command.add("checkmoney", {
 })
 
 lia.command.add("listbodygroups", {
-    syntax = "<string target>",
-    privilege = "Get Character Info",
     adminOnly = true,
+    privilege = "Get Character Info",
+    syntax = "<string target>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target then
-            client:chatNotify("Available bodygroups for \"" .. target:GetModel() .. "\":")
+            local bodygroups = {}
             for i = 0, target:GetNumBodyGroups() - 1 do
-                if target:GetBodygroupCount(i) > 1 then client:chatNotify(i .. " = " .. target:GetBodygroupName(i) .. "(0-" .. (target:GetBodygroupCount(i) - 1) .. ")") end
+                if target:GetBodygroupCount(i) > 1 then
+                    table.insert(bodygroups, {
+                        group = i,
+                        name = target:GetBodygroupName(i),
+                        range = "0-" .. (target:GetBodygroupCount(i) - 1)
+                    })
+                end
             end
+
+            if #bodygroups > 0 then
+                lia.util.CreateTableUI(client, "Bodygroups for " .. target:Nick(), {
+                    {
+                        name = "Group ID",
+                        field = "group"
+                    },
+                    {
+                        name = "Name",
+                        field = "name"
+                    },
+                    {
+                        name = "Range",
+                        field = "range"
+                    }
+                }, bodygroups)
+
+                lia.log.add(client, "List Bodygroups", {
+                    target = target:Name()
+                })
+            else
+                client:notify("No bodygroups available for this model.")
+            end
+        else
+            client:notify("Invalid Target!")
         end
     end
 })
@@ -579,41 +819,15 @@ lia.command.add("chargetmodel", {
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and target:getChar() then
-            client:notify(target:GetModel())
+            local model = target:GetModel()
+            client:notify(model)
+            lia.log.add(client, "Change Model", {
+                target = target:Name(),
+                oldModel = target:GetModel(),
+                newModel = model
+            })
         else
             client:notify("Invalid Target")
-        end
-    end
-})
-
-lia.command.add("charsetspeed", {
-    adminOnly = true,
-    privilege = "Manage Character Stats",
-    syntax = "<string name> <number speed>",
-    onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
-        local speed = tonumber(arguments[2]) or lia.config.WalkSpeed
-        if IsValid(target) and target:getChar() then
-            target:SetRunSpeed(speed)
-        else
-            client:notify("Invalid Target")
-        end
-    end
-})
-
-lia.command.add("charsetmodel", {
-    adminOnly = true,
-    syntax = "<string name> <string model>",
-    privilege = "Manage Character Informations",
-    onRun = function(client, arguments)
-        if not arguments[2] then return L("invalidArg", 2) end
-        local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) and target:getChar() then
-            local oldModel = target:getChar():getModel()
-            target:getChar():setModel(arguments[2])
-            target:SetupHands()
-            client:notifyLocalized("cChangeModel", client:Name(), target:Name(), arguments[2])
-            lia.log.add(client, "charsetmodel", target:Name(), arguments[2], oldModel)
         end
     end
 })
@@ -623,7 +837,11 @@ lia.command.add("chargiveitem", {
     syntax = "<string name> <string item>",
     privilege = "Manage Items",
     onRun = function(client, arguments)
-        if not arguments[2] then return L("invalidArg", 2) end
+        if not arguments[2] then
+            client:notify("You must specify an item to give.")
+            return
+        end
+
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and target:getChar() then
             local uniqueID = arguments[2]:lower()
@@ -641,10 +859,16 @@ lia.command.add("chargiveitem", {
             if succ then
                 target:notifyLocalized("itemCreated")
                 if target ~= client then client:notifyLocalized("itemCreated") end
+                lia.log.add(client, "Give Item", {
+                    target = target:Name(),
+                    item = uniqueID
+                })
             else
                 target:notify(tostring(succ))
                 target:notify(tostring(err))
             end
+        else
+            client:notify("Invalid Target!")
         end
     end
 })
@@ -655,12 +879,23 @@ lia.command.add("charsetdesc", {
     privilege = "Manage Character Informations",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if not IsValid(target) then return end
-        if not target:getChar() then return "No character loaded" end
-        local arg = table.concat(arguments, " ", 2)
-        if not arg:find("%S") then return client:requestString("Change " .. target:Name() .. "'s Description", "Enter new description", function(text) lia.command.run(client, "charsetdesc", {arguments[1], text}) end, target:getChar():getDesc()) end
-        lia.log.add(client, "charsetdesc", target:Name(), arg)
-        target:getChar():setDesc(arg)
+        if not IsValid(target) then
+            client:notify("Invalid Target!")
+            return
+        end
+
+        if not target:getChar() then
+            client:notify("Target does not have an active character.")
+            return
+        end
+
+        local desc = table.concat(arguments, " ", 2)
+        if not desc:find("%S") then return client:requestString("Change " .. target:Name() .. "'s Description", "Enter new description", function(text) lia.command.run(client, "charsetdesc", {arguments[1], text}) end, target:getChar():getDesc()) end
+        target:getChar():setDesc(desc)
+        lia.log.add(client, "Change Description", {
+            target = target:Name(),
+            desc = desc
+        })
         return "Successfully changed " .. target:Name() .. "'s description"
     end
 })
@@ -671,26 +906,42 @@ lia.command.add("charsetname", {
     privilege = "Manage Character Informations",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) and not arguments[2] then return client:requestString("@chgName", "@chgNameDesc", function(text) lia.command.run(client, "charsetname", {target:Name(), text}) end, target:Name()) end
-        table.remove(arguments, 1)
-        local targetName = table.concat(arguments, " ")
-        if IsValid(target) and target:getChar() then
-            lia.log.add(client, "charsetname", target:Name(), targetName)
-            client:notifyLocalized("cChangeName", client:Name(), target:Name(), targetName)
-            target:getChar():setName(targetName:gsub("#", "#?"))
+        if not IsValid(target) then
+            client:notify("Invalid Target!")
+            return
         end
+
+        if not arguments[2] then return client:requestString("@chgName", "@chgNameDesc", function(text) lia.command.run(client, "charsetname", {target:Name(), text}) end, target:Name()) end
+        local newName = table.concat(arguments, " ", 2)
+        local oldName = target:getChar():getName()
+        target:getChar():setName(newName:gsub("#", "#?"))
+        lia.log.add(client, "Change Name", {
+            target = target:Name(),
+            newName = newName,
+            oldName = oldName
+        })
+
+        client:notifyLocalized("cChangeName", client:Name(), target:Name(), newName)
     end
 })
 
 lia.command.add("charsetscale", {
     adminOnly = true,
-    privilege = "Manage Character Stats",
     syntax = "<string name> <number value>",
+    privilege = "Manage Character Stats",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local scale = tonumber(arguments[2]) or 1
         if IsValid(target) and target:getChar() then
+            local oldScale = target:GetModelScale()
             target:SetModelScale(scale, 0)
+            lia.log.add(client, "Change Scale", {
+                target = target:Name(),
+                scale = scale,
+                oldScale = oldScale
+            })
+
+            client:notify("You changed " .. target:Name() .. "'s model scale to " .. scale)
         else
             client:notify("Invalid Target")
         end
@@ -699,13 +950,21 @@ lia.command.add("charsetscale", {
 
 lia.command.add("charsetjump", {
     adminOnly = true,
-    privilege = "Manage Character Stats",
     syntax = "<string name> <number power>",
+    privilege = "Manage Character Stats",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local power = tonumber(arguments[2]) or 200
         if IsValid(target) and target:getChar() then
+            local oldJump = target:GetJumpPower()
             target:SetJumpPower(power)
+            lia.log.add(client, "Change Jump Power", {
+                target = target:Name(),
+                jumpPower = power,
+                oldJump = oldJump
+            })
+
+            client:notify("You changed " .. target:Name() .. "'s jump power to " .. power)
         else
             client:notify("Invalid Target")
         end
@@ -714,13 +973,15 @@ lia.command.add("charsetjump", {
 
 lia.command.add("charsetbodygroup", {
     adminOnly = true,
-    privilege = "Manage Bodygroups",
     syntax = "<string name> <string bodyGroup> [number value]",
+    privilege = "Manage Bodygroups",
     onRun = function(client, arguments)
+        local name = arguments[1]
+        local bodyGroup = arguments[2]
         local value = tonumber(arguments[3])
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.command.findPlayer(client, name)
         if IsValid(target) and target:getChar() then
-            local index = target:FindBodygroupByName(arguments[2])
+            local index = target:FindBodygroupByName(bodyGroup)
             if index > -1 then
                 local oldValue = target:GetBodygroup(index)
                 if value and value < 1 then value = nil end
@@ -728,11 +989,19 @@ lia.command.add("charsetbodygroup", {
                 groups[index] = value
                 target:getChar():setData("groups", groups)
                 target:SetBodygroup(index, value or 0)
-                client:notifyLocalized("cChangeGroups", client:Name(), target:Name(), arguments[2], value or 0)
-                lia.log.add(client, "charsetbodygroup", target:Name(), arguments[2], value or 0, oldValue)
+                lia.log.add(client, "Change Bodygroup", {
+                    target = target:Name(),
+                    bodyGroup = bodyGroup,
+                    newValue = value or 0,
+                    oldValue = oldValue
+                })
+
+                client:notifyLocalized("cChangeGroups", client:Name(), target:Name(), bodyGroup, value or 0)
             else
-                return "@invalidArg", 2
+                client:notify("@invalidArg")
             end
+        else
+            client:notify("Invalid Target")
         end
     end
 })
@@ -742,14 +1011,22 @@ lia.command.add("charsetskin", {
     syntax = "<string name> [number skin]",
     privilege = "Manage Character Stats",
     onRun = function(client, arguments)
+        local name = arguments[1]
         local skin = tonumber(arguments[2])
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.command.findPlayer(client, name)
         if IsValid(target) and target:getChar() then
             local oldSkin = target:GetSkin()
             target:getChar():setData("skin", skin)
             target:SetSkin(skin or 0)
+            lia.log.add(client, "Change Skin", {
+                target = target:Name(),
+                newSkin = skin or 0,
+                oldSkin = oldSkin
+            })
+
             client:notifyLocalized("cChangeSkin", client:Name(), target:Name(), skin or 0)
-            lia.log.add(client, "charsetskin", target:Name(), skin or 0, oldSkin)
+        else
+            client:notify("Invalid Target")
         end
     end
 })
@@ -759,16 +1036,23 @@ lia.command.add("charsetmoney", {
     syntax = "<string target> <number amount>",
     privilege = "Manage Characters",
     onRun = function(client, arguments)
-        local amount = tonumber(arguments[2])
-        if not amount or not isnumber(amount) or amount < 0 then return "@invalidArg", 2 end
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then
-            local character = target:getChar()
-            if character and amount then
-                amount = math.Round(amount)
-                character:setMoney(amount)
-                client:notify("You set " .. target:Name() .. "'s money to " .. lia.currency.get(amount))
-            end
+        local amount = tonumber(arguments[2])
+        if not amount or not isnumber(amount) or amount < 0 then
+            client:notify("@invalidArg")
+            return
+        end
+
+        if IsValid(target) and target:getChar() then
+            target:getChar():setMoney(math.floor(amount))
+            lia.log.add(client, "Set Money", {
+                target = target:Name(),
+                amount = math.floor(amount)
+            })
+
+            client:notify("You set " .. target:Name() .. "'s money to " .. lia.currency.get(math.floor(amount)))
+        else
+            client:notify("Invalid Target")
         end
     end
 })
@@ -778,17 +1062,26 @@ lia.command.add("charaddmoney", {
     syntax = "<string target> <number amount>",
     privilege = "Manage Characters",
     onRun = function(client, arguments)
-        local amount = tonumber(arguments[2])
-        if not amount or not isnumber(amount) then return "@invalidArg", 2 end
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then
-            local character = target:getChar()
-            if character then
-                amount = math.Round(amount)
-                local currentMoney = character:getMoney()
-                character:setMoney(currentMoney + amount)
-                client:notify("You added " .. lia.currency.get(amount) .. " to " .. target:Name() .. "'s money. Total: " .. lia.currency.get(currentMoney + amount))
-            end
+        local amount = tonumber(arguments[2])
+        if not amount or not isnumber(amount) then
+            client:notify("@invalidArg")
+            return
+        end
+
+        if IsValid(target) and target:getChar() then
+            amount = math.Round(amount)
+            local currentMoney = target:getChar():getMoney()
+            target:getChar():setMoney(currentMoney + amount)
+            lia.log.add(client, "Add Money", {
+                target = target:Name(),
+                amount = amount,
+                total = currentMoney + amount
+            })
+
+            client:notify("You added " .. lia.currency.get(amount) .. " to " .. target:Name() .. "'s money. Total: " .. lia.currency.get(currentMoney + amount))
+        else
+            client:notify("Invalid Target")
         end
     end,
     alias = {"chargivemoney"}
@@ -811,6 +1104,10 @@ lia.command.add("flaglist", {
                         })
                     end
                 end
+
+                lia.log.add(client, "List Flags", {
+                    target = target:Name()
+                })
             end
         else
             for flag, data in pairs(lia.flag.list) do
@@ -819,6 +1116,8 @@ lia.command.add("flaglist", {
                     desc = data.desc
                 })
             end
+
+            lia.log.add(client, "List Flags", {})
         end
 
         lia.util.CreateTableUI(client, "Flag List", {
@@ -850,6 +1149,7 @@ lia.command.add("itemlist", {
             })
         end
 
+        lia.log.add(client, "List Items", {})
         lia.util.CreateTableUI(client, "Item List", {
             {
                 name = "Unique ID",
@@ -877,6 +1177,7 @@ lia.command.add("itemlist", {
 
 lia.command.add("modulelist", {
     adminOnly = false,
+    privilege = "List Players",
     onRun = function(client)
         local modules = {}
         for uniqueID, mod in pairs(lia.module.list) do
@@ -890,6 +1191,7 @@ lia.command.add("modulelist", {
             })
         end
 
+        lia.log.add(client, "List Modules", {})
         lia.util.CreateTableUI(client, "Modules List", {
             {
                 name = "Unique ID",
@@ -921,6 +1223,8 @@ lia.command.add("modulelist", {
 })
 
 lia.command.add("listents", {
+    adminOnly = true,
+    privilege = "List Entities",
     syntax = "<No Input>",
     onRun = function(client)
         local entityList = {}
@@ -935,6 +1239,7 @@ lia.command.add("listents", {
             })
         end
 
+        lia.log.add(client, "List Entities", {})
         lia.util.CreateTableUI(client, "Entity List", {
             {
                 name = "Class",
@@ -979,6 +1284,7 @@ lia.command.add("liststaff", {
         end
 
         if #staffList > 0 then
+            lia.log.add(client, "List Staff", {})
             lia.util.CreateTableUI(client, "Staff List", {
                 {
                     name = "Name",
@@ -1026,6 +1332,7 @@ lia.command.add("listondutystaff", {
         end
 
         if #onDutyStaffList > 0 then
+            lia.log.add(client, "List On Duty Staff", {})
             lia.util.CreateTableUI(client, "On Duty Staff List", {
                 {
                     name = "Name",
@@ -1049,7 +1356,7 @@ lia.command.add("listondutystaff", {
                 }
             }, onDutyStaffList)
         else
-            client:notify("No valid players found!")
+            client:notify("No on-duty staff members found!")
         end
     end
 })
@@ -1073,6 +1380,7 @@ lia.command.add("listvip", {
         end
 
         if #vipList > 0 then
+            lia.log.add(client, "List VIPs", {})
             lia.util.CreateTableUI(client, "VIP List", {
                 {
                     name = "Name",
@@ -1120,6 +1428,7 @@ lia.command.add("listusers", {
         end
 
         if #userList > 0 then
+            lia.log.add(client, "List Users", {})
             lia.util.CreateTableUI(client, "User List", {
                 {
                     name = "Name",
@@ -1162,6 +1471,10 @@ lia.command.add("globalbotsay", {
         for _, bot in player.Iterator() do
             if bot:IsBot() then bot:Say(message) end
         end
+
+        lia.log.add(client, "Play Global Bot Say", {
+            message = message
+        })
     end
 })
 
@@ -1191,6 +1504,10 @@ lia.command.add("botsay", {
         end
 
         targetBot:Say(message)
+        lia.log.add(client, "Bot Say", {
+            botName = botName,
+            message = message
+        })
     end
 })
 
@@ -1201,23 +1518,40 @@ lia.command.add("forcesay", {
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local message = table.concat(arguments, " ", 2)
+        if not IsValid(target) or not target:IsBot() then
+            client:notify("Invalid bot target!")
+            return
+        end
+
+        if message == "" then
+            client:notify("You must specify a message.")
+            return
+        end
+
         target:Say(message)
+        lia.log.add(client, "Force Say", {
+            target = target:Name(),
+            message = message
+        })
     end
 })
 
 lia.command.add("pm", {
     syntax = "<string target> <string message>",
     onRun = function(client, arguments)
+        local targetName = arguments[1]
         local message = table.concat(arguments, " ", 2)
-        local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then
-            local voiceMail = target:getLiliaData("vm")
-            if voiceMail and voiceMail:find("%S") then return target:Name() .. ": " .. voiceMail end
-            if (client.liaNextPM or 0) < CurTime() then
-                lia.chat.send(client, "pm", message, false, {client, target})
-                client.liaNextPM = CurTime() + 0.5
-                target.liaLastPM = client
-            end
+        local target = lia.command.findPlayer(client, targetName)
+        if not target then
+            client:notify("Invalid Target!")
+            return
         end
+
+        if not message:find("%S") then
+            client:notify("You must specify a message.")
+            return
+        end
+
+        lia.chat.send(client, "pm", message, false, {client, target})
     end
 })

@@ -4,52 +4,50 @@ lia.command.add("spawnadd", {
     adminOnly = true,
     syntax = "<string faction> [string class]",
     onRun = function(client, arguments)
-        local faction
-        local name = arguments[1]
-        local class = table.concat(arguments, " ", 2)
-        local info
-        local info2
-        if name then
-            info = lia.faction.indices[name:lower()]
-            if not info then
-                for _, v in ipairs(lia.faction.indices) do
-                    if lia.util.stringMatches(v.uniqueID, name) or lia.util.stringMatches(L(v.name), name) then
-                        faction = v.uniqueID
-                        info = v
+        local factionName = arguments[1]
+        local className = table.concat(arguments, " ", 2)
+        if not factionName then return L("invalidArg", 1) end
+        local factionInfo = lia.faction.indices[factionName:lower()]
+        if not factionInfo then
+            for _, v in ipairs(lia.faction.indices) do
+                if lia.util.stringMatches(v.uniqueID, factionName) or lia.util.stringMatches(L(v.name), factionName) then
+                    factionInfo = v
+                    break
+                end
+            end
+        end
+
+        if factionInfo then
+            if className and className ~= "" then
+                local found = false
+                for _, v in ipairs(lia.class.list) do
+                    if v.faction == factionInfo.index and (v.uniqueID:lower() == className:lower() or lia.util.stringMatches(L(v.name), className)) then
+                        className = v.uniqueID
+                        found = true
                         break
                     end
                 end
-            end
 
-            if info then
-                if class and class ~= "" then
-                    local found = false
-                    for _, v in ipairs(lia.class.list) do
-                        if v.faction == info.index and (v.uniqueID:lower() == class:lower() or lia.util.stringMatches(L(v.name), class)) then
-                            class = v.uniqueID
-                            info2 = v
-                            found = true
-                            break
-                        end
-                    end
-
-                    if not found then return L("invalidClass") end
-                else
-                    class = ""
-                end
-
-                MODULE.spawns[faction] = MODULE.spawns[faction] or {}
-                MODULE.spawns[faction][class] = MODULE.spawns[faction][class] or {}
-                table.insert(MODULE.spawns[faction][class], client:GetPos())
-                MODULE:SaveData()
-                local name = L(info.name)
-                if info2 then name = name .. " (" .. L(info2.name) .. ")" end
-                return L("spawnAdded", name)
+                if not found then return L("invalidClass") end
             else
-                return L("invalidFaction")
+                className = nil
             end
+
+            MODULE.spawns[factionInfo.uniqueID] = MODULE.spawns[factionInfo.uniqueID] or {}
+            MODULE.spawns[factionInfo.uniqueID][className] = MODULE.spawns[factionInfo.uniqueID][className] or {}
+            table.insert(MODULE.spawns[factionInfo.uniqueID][className], client:GetPos())
+            MODULE:SaveData()
+            lia.log.add(client, "Add Spawn", {
+                faction = factionInfo.uniqueID,
+                class = className,
+                position = client:GetPos()
+            })
+
+            local factionDisplay = L(factionInfo.name)
+            if className then factionDisplay = factionDisplay .. " (" .. L(lia.class.list[className].name) .. ")" end
+            return L("spawnAdded", factionDisplay)
         else
-            return L("invalidArg", 1)
+            return L("invalidFaction")
         end
     end
 })
@@ -61,52 +59,69 @@ lia.command.add("spawnremove", {
     onRun = function(client, arguments)
         local position = client:GetPos()
         local radius = tonumber(arguments[1]) or 120
-        local i = 0
-        for _, v in pairs(MODULE.spawns) do
-            for _, v2 in pairs(v) do
-                for k3, v3 in pairs(v2) do
-                    if v3:Distance(position) <= radius then
-                        v2[k3] = nil
-                        i = i + 1
+        local removedCount = 0
+        for faction, classes in pairs(MODULE.spawns) do
+            for class, spawns in pairs(classes) do
+                for index, spawnPos in ipairs(spawns) do
+                    if spawnPos:Distance(position) <= radius then
+                        table.remove(MODULE.spawns[faction][class], index)
+                        removedCount = removedCount + 1
                     end
                 end
             end
         end
 
-        if i > 0 then MODULE:SaveData() end
-        return L("spawnDeleted", i)
+        if removedCount > 0 then MODULE:SaveData() end
+        lia.log.add(client, "Remove Spawn", {
+            count = removedCount,
+            radius = radius,
+            position = position
+        })
+        return L("spawnDeleted", removedCount)
     end
 })
 
 lia.command.add("returnitems", {
     superAdminOnly = true,
-    syntax = "<string name>",
     privilege = "Return Items",
+    syntax = "<string name>",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local targetPlayer = lia.command.findPlayer(client, arguments[1])
+        if not targetPlayer or not IsValid(targetPlayer) then
+            client:notify("Target player not found.")
+            return
+        end
+
         if MODULE.LoseWeapononDeathHuman or MODULE.LoseWeapononDeathNPC then
-            if IsValid(target) then
-                if not target.LostItems then
-                    client:notify("The target hasn't died recently or they had their items returned already!")
+            if IsValid(targetPlayer) then
+                if not targetPlayer.LostItems then
+                    client:notify("The target hasn't died recently or they have already had their items returned!")
                     return
                 end
 
-                if table.IsEmpty(target.LostItems) then
+                if table.IsEmpty(targetPlayer.LostItems) then
                     client:notify("Cannot return any items; the player hasn't lost any!")
                     return
                 end
 
-                local character = target:getChar()
+                local character = targetPlayer:getChar()
                 if not character then return end
                 local inv = character:getInv()
                 if not inv then return end
-                for _, v in pairs(target.LostItems) do
-                    inv:add(v)
+                local returnedItems = {}
+                for _, item in pairs(targetPlayer.LostItems) do
+                    inv:add(item)
+                    table.insert(returnedItems, item.uniqueID)
                 end
 
-                target.LostItems = nil
-                target:notify("Your items have been returned.")
+                targetPlayer.LostItems = nil
+                targetPlayer:notify("Your items have been returned.")
                 client:notify("Returned the items.")
+                lia.log.add(client, "Return Items", {
+                    target = targetPlayer:Name(),
+                    targetSteamID = targetPlayer:SteamID(),
+                    items = returnedItems
+                })
             end
         else
             client:notify("Weapon on Death not Enabled!")

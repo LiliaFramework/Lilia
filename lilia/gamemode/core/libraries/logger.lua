@@ -62,12 +62,17 @@ if SERVER then
     -- @argGroup ... Arguments to pass to the log
     function lia.log.add(client, logType, ...)
         local logString, category, color = lia.log.getString(client, logType, ...)
-        if not isstring(logString) or not isstring(category) or not IsColor(color) then return end
+        if not isstring(category) then
+            category = "Uncategorized"
+            color = Color(128, 128, 128)
+        end
+
+        if not isstring(logString) or not IsColor(color) then return end
         hook.Run("OnServerLog", client, logType, logString, category, color)
-        local logDir = "lilia/logs" .. logType
+        local logDir = "lilia/logs/" .. category
         if not file.Exists(logDir, "DATA") then file.CreateDir(logDir) end
-        local logFilePath = logDir .. "/" .. os.date("%x"):gsub("/", "-") .. ".txt"
-        file.Append(logFilePath, "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n")
+        local logFilePath = logDir .. "/" .. os.date("%Y-%m-%d") .. ".txt"
+        file.Append(logFilePath, "[" .. os.date("%H:%M:%S") .. "]\t" .. logString .. "\r\n")
     end
 
     --- Sends a log message to a specified client.

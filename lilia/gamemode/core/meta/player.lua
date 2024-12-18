@@ -533,8 +533,8 @@ if SERVER then
     -- @int[opt=100] pitch The pitch of the sound.
     -- @bool shouldEmit Whether to emit sound server-side or send it to the client.
     -- @usage
-    -- player:PlaySound("ambient/alarms/warningbell1.wav", 100, 100, false)
-    function playerMeta:PlaySound(sound, volume, pitch, shouldEmit)
+    -- player:playSound("ambient/alarms/warningbell1.wav", 100, 100, false)
+    function playerMeta:playSound(sound, volume, pitch, shouldEmit)
         volume = volume or 75
         pitch = pitch or 100
         if shouldEmit then
@@ -941,10 +941,11 @@ if SERVER then
                 entity:SetCustomCollisionCheck(false)
             end
 
-            hook.Run("OnCharFallover", self, entity, true)
+            lia.log.add(self, "Ragdolled", self, true)
         elseif hasRagdoll then
             self.liaRagdoll:Remove()
             hook.Run("OnCharFallover", self, nil, false)
+            lia.log.add(self, "Ragdolled", Ragdolled, false)
         end
     end
 
@@ -1101,7 +1102,7 @@ playerMeta.GetTrace = playerMeta.getTrace
 playerMeta.GetEyeEnt = playerMeta.getEyeEnt
 playerMeta.SetAction = playerMeta.setAction
 playerMeta.StopAction = playerMeta.stopAction
-playerMeta.PlaySound = playerMeta.PlaySound
+playerMeta.PlaySound = playerMeta.playSound
 playerMeta.OpenPage = playerMeta.openPage
 playerMeta.CreateServerRagdoll = playerMeta.createServerRagdoll
 playerMeta.DoStaredAction = playerMeta.doStaredAction

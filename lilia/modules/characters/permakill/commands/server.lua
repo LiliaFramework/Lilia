@@ -1,17 +1,35 @@
-﻿lia.command.add("pktoggle", {
+﻿
+lia.command.add("pktoggle", {
     adminOnly = true,
-    privilege = "Toogle Permakill",
+    privilege = "Toggle Permakill",
     syntax = "<string target>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        local tcharacter = target:getChar()
-        if tcharacter:getData("PermaKillFlagged", false) then
-            tcharacter:setData("PermaKillFlagged", false)
-            client:notify("You have toggled this character's PK State to False.")
-        else
-            tcharacter:setData("PermaKillFlagged", true)
-            client:notify("You have toggled this character's PK State to True. He will be PK'ed the next time he dies!")
+        if not IsValid(target) then
+            client:notifyLocalized("invalid", "Player")
+            return
         end
+
+        local character = target:getChar()
+        if not character then
+            client:notifyLocalized("invalid", "Character")
+            return
+        end
+
+        local currentState = character:getData("PermaKillFlagged", false)
+        local newState = not currentState
+        character:setData("PermaKillFlagged", newState)
+        if newState then
+            client:notifyLocalized("pktoggle_true")
+        else
+            client:notifyLocalized("pktoggle_false")
+        end
+
+        lia.log.add(client, "Toggle PK Flag", {
+            target = target:Name(),
+            targetSteamID = target:SteamID(),
+            newPKState = newState
+        })
     end
 })
 
@@ -21,13 +39,18 @@ lia.command.add("charPK", {
     syntax = "<string target>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if target and target:getChar() then
-            local tcharacter = target:getChar()
-            tcharacter:ban()
-            client:notify("You have permanently killed " .. target:Name() .. "'s character.")
-            target:notify("Your character has been permanently killed by " .. client:Name() .. ".")
-        else
-            client:notify("Target player not found or they do not have an active character.")
+        if not IsValid(target) or not target:getChar() then
+            client:notifyLocalized("charPK_target_not_found")
+            return
         end
+
+        local character = target:getChar()
+        character:ban()
+        client:notifyLocalized("charPK_success_admin", target:Name())
+        target:notifyLocalized("charPK_success_target", client:Name())
+        lia.log.add(client, "Force Permakill", {
+            target = target:Name(),
+            targetSteamID = target:SteamID()
+        })
     end
 })

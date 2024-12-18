@@ -6,6 +6,7 @@ LANGUAGE = {
     invalidWeapon = "Invalid Weapon",
     notConfig = "This isn't configured",
     free = "Free",
+    mustProvideString = "Must Provide String",
     buy = "Purchase",
     next = "Next",
     use = "Use",

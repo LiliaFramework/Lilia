@@ -11,19 +11,28 @@
         end)
 
         timer.Simple(1.0, function() if IsValid(client) then client:ConCommand("pac_restart") end end)
-        timer.Simple(1.5, function() if IsValid(client) then client:chatNotify("PAC has been successfully restarted. You might need to run this command twice!") end end)
+        timer.Simple(1.5, function() if IsValid(client) then client:notifyLocalized("fixpac_success") end end)
     end
 })
 
+-- pacenable Command
 lia.command.add("pacenable", {
     adminonly = false,
-    onRun = function(client) client:ConCommand("pac_enable 1") end
+    onRun = function(client)
+        client:ConCommand("pac_enable 1")
+        client:notifyLocalized("pacenable_success")
+    end
 })
 
+-- pacdisable Command
 lia.command.add("pacdisable", {
     adminonly = false,
     onRun = function(client)
         client:ConCommand("pac_enable 0")
-        client:SendLua([[chat.AddText("PAC has been disabled to boost performance. If you would like to re-enable it type /pacenable in chat.")]])
+        if client.chatNotify then
+            client:chatNotify(L("pacdisable_message"))
+        else
+            client:notifyLocalized("pacdisable_message")
+        end
     end
 })
