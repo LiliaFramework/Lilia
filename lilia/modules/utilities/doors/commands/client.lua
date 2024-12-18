@@ -88,10 +88,9 @@ lia.command.add("doorsetenabled", {
     onRun = function() end
 })
 
-lia.command.add("doorsethidden", {
+lia.command.add("doortogglehidden", {
     adminOnly = true,
     privilege = "Manage Doors",
-    syntax = "<bool hidden>",
     onRun = function() end
 })
 

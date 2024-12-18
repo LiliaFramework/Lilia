@@ -400,20 +400,20 @@ lia.command.add("doorsetenabled", {
     end
 })
 
-lia.command.add("doorsethidden", {
+lia.command.add("doortogglehidden", {
     adminOnly = true,
     privilege = "Manage Doors",
-    syntax = "<bool hidden>",
     onRun = function(client, arguments)
         local entity = client:GetEyeTrace().Entity
         if IsValid(entity) and entity:isDoor() then
-            local hidden = tobool(arguments[1] or true)
-            entity:setNetVar("hidden", hidden)
-            MODULE:callOnDoorChildren(entity, function(child) child:setNetVar("hidden", hidden) end)
-            client:notifyLocalized("dSet" .. (hidden and "" or "Not") .. "Hidden")
+            local currentState = entity:getNetVar("hidden", false)
+            local newState = not currentState
+            entity:setNetVar("hidden", newState)
+            MODULE:callOnDoorChildren(entity, function(child) child:setNetVar("hidden", newState) end)
+            client:notifyLocalized(newState and "DoorSetHidden" or "DoorSetNotHidden")
             MODULE:SaveData()
         else
-            client:notifyLocalized("dNotValid")
+            client:notifyLocalized("DoorNotValid")
         end
     end
 })
@@ -546,5 +546,8 @@ lia.command.add("doorsetclass", {
 lia.command.add("savedoors", {
     adminOnly = true,
     privilege = "Manage Doors",
-    onRun = function() MODULE:SaveData() end
+    onRun = function(client)
+        MODULE:SaveData()
+        client:notify("Saved Doors!")
+    end
 })
