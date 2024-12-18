@@ -11,7 +11,7 @@ function PANEL:Init()
     local source = MainMenu.Music
     if not source:find("%S") then return end
     if source:find("http") then
-        sound.PlayURL(source, "noplay", function(music, errorID, fault)
+        sound.PlayURL(source, "noplay", function(music)
             if music then
                 music:SetVolume(MainMenu.MusicVolume)
                 lia.menuMusic = music
@@ -19,7 +19,7 @@ function PANEL:Init()
             end
         end)
     else
-        sound.PlayFile("sound/" .. source, "noplay", function(music, errorID, fault)
+        sound.PlayFile("sound/" .. source, "noplay", function(music)
             if music then
                 music:SetVolume(MainMenu.MusicVolume)
                 lia.menuMusic = music

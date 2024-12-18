@@ -62,7 +62,6 @@ function LiliaPrint(message)
     LiliaLog("print", message)
 end
 
-local originalPrint = print
 function print(...)
     for _, msg in ipairs({...}) do
         LiliaPrint(tostring(msg))

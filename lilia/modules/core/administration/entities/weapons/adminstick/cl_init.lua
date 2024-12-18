@@ -1,12 +1,12 @@
 local MODULE = MODULE
 function SWEP:PrimaryAttack()
-    local target = self:GetTarget(false)
+    local target = self:GetTarget()
     if IsValid(target) then MODULE:OpenAdminStickUI(target) end
 end
 
 function SWEP:SecondaryAttack()
     if not IsFirstTimePredicted() then return end
-    local target = self:GetTarget(false)
+    local target = self:GetTarget()
     if IsValid(target) and target:IsPlayer() and target ~= LocalPlayer() then
         local cmd = target:IsFrozen() and (sam and "sam unfreeze" or ulx and "ulx unfreeze") or (sam and "sam freeze" or ulx and "ulx freeze")
         LocalPlayer():ConCommand(cmd .. " " .. target:SteamID())
@@ -15,7 +15,7 @@ function SWEP:SecondaryAttack()
     end
 end
 
-function SWEP:GetTarget(isSelf)
+function SWEP:GetTarget()
     local localPlayer = LocalPlayer()
     local target = IsValid(localPlayer.AdminStickTarget) and localPlayer.AdminStickTarget or localPlayer:GetEyeTrace().Entity
     return target

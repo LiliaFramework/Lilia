@@ -403,7 +403,7 @@ lia.command.add("doorsetenabled", {
 lia.command.add("doortogglehidden", {
     adminOnly = true,
     privilege = "Manage Doors",
-    onRun = function(client, arguments)
+    onRun = function(client)
         local entity = client:GetEyeTrace().Entity
         if IsValid(entity) and entity:isDoor() then
             local currentState = entity:getNetVar("hidden", false)
