@@ -941,11 +941,11 @@ if SERVER then
                 entity:SetCustomCollisionCheck(false)
             end
 
-            lia.log.add(self, "Ragdolled", self, true)
+            lia.log.add(self, "Ragdolled",  true)
         elseif hasRagdoll then
             self.liaRagdoll:Remove()
             hook.Run("OnCharFallover", self, nil, false)
-            lia.log.add(self, "Ragdolled", Ragdolled, false)
+            lia.log.add(self, "Ragdolled", false)
         end
     end
 
