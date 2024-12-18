@@ -18,12 +18,6 @@
 
 - Compatibility Added: Implemented an auto administrator setter and fixed prop limits to work with SAM.
 
-## Serverguard
-
-- Addon URL: [Serverguard](https://www.gmodstore.com/market/view/serverguard)
-
-- Compatibility Added: Allowed CAMI (permissions system) to work with Lilia and Serverguard.
-
 ## Advanced Dupe 2
 
 - Addon URL: [Advanced Dupe 2](https://steamcommunity.com/sharedfiles/filedetails/?id=773402917)

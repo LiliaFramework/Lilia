@@ -50,7 +50,7 @@ lia.command.add("dropmoney", {
     onRun = function() end
 })
 
-lia.command.add("entityName", {
+lia.command.add("entityInfo", {
     adminOnly = false,
     onRun = function() end
 })

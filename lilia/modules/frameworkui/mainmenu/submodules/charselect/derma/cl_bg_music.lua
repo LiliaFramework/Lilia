@@ -16,9 +16,6 @@ function PANEL:Init()
                 music:SetVolume(MainMenu.MusicVolume)
                 lia.menuMusic = music
                 lia.menuMusic:Play()
-            else
-                MsgC(Color(255, 50, 50), errorID .. " ")
-                MsgC(color_white, fault .. "\n")
             end
         end)
     else
@@ -27,9 +24,6 @@ function PANEL:Init()
                 music:SetVolume(MainMenu.MusicVolume)
                 lia.menuMusic = music
                 lia.menuMusic:Play()
-            else
-                MsgC(Color(255, 50, 50), errorID .. " ")
-                MsgC(color_white, fault .. "\n")
             end
         end)
     end
