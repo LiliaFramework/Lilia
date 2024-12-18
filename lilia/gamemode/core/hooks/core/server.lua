@@ -1,19 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-function GM:onCharCreated(client, character, data)
-    LiliaDeprecated("onCharCreated is deprecated. Use OnCharCreated for optimization purposes.")
-    hook.Run("OnCharCreated", client, character, data)
-end
-
-function GM:onTransferred(client)
-    LiliaDeprecated("onTransferred is deprecated. Use OnTransferred for optimization purposes.")
-    hook.Run("OnTransferred", client)
-end
-
-function GM:CharacterPreSave(character)
-    LiliaDeprecated("CharacterPreSave is deprecated. Use CharPreSave for optimization purposes.")
-    hook.Run("CharPreSave", character)
-end
-
 function GM:CharPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
@@ -46,21 +31,6 @@ function GM:PlayerLoadedChar(client, character, lastChar)
 
     character:setData("loginTime", os.time())
     hook.Run("PlayerLoadout", client)
-end
-
-function GM:CharacterLoaded(id)
-    LiliaDeprecated("CharacterLoaded is deprecated. Use CharLoaded for optimization purposes.")
-    hook.Run("CharLoaded", id)
-end
-
-function GM:PreCharacterDelete(id)
-    LiliaDeprecated("PreCharacterDelete is deprecated. Use PreCharDelete for optimization purposes.")
-    hook.Run("PreCharDelete", id)
-end
-
-function GM:OnCharacterDelete(client, id)
-    LiliaDeprecated("OnCharacterDelete is deprecated. Use OnCharDelete for optimization purposes.")
-    hook.Run("OnCharDelete", client, id)
 end
 
 function GM:CharLoaded(id)
@@ -338,18 +308,6 @@ function GM:EntityNetworkedVarChanged(entity, varName, _, newVal)
     if varName == "Model" and entity.SetModel then hook.Run("PlayerModelChanged", entity, newVal) end
 end
 
-function GM:GetPreferredCarryAngles(entity)
-    if entity.preferedAngle then return entity.preferedAngle end
-    local class = entity:GetClass()
-    if class == "lia_item" then
-        local itemTable = entity:getItemTable()
-        if itemTable then
-            local preferedAngle = itemTable.preferedAngle
-            if preferedAngle then return preferedAngle end
-        end
-    end
-end
-
 function GM:InitializedSchema()
     local persistString = GetConVar("sbox_persist"):GetString()
     if persistString == "" or string.StartWith(persistString, "lia_") then
@@ -360,21 +318,6 @@ end
 
 function GM:GetGameDescription()
     return (lia.config.GamemodeName == "A Lilia Gamemode" and istable(SCHEMA)) and tostring(SCHEMA.name) or lia.config.GamemodeName
-end
-
-function GM:PlayerShouldTakeDamage(client)
-    return client:getChar() ~= nil
-end
-
-function GM:CanDrive(client)
-    if not client:IsSuperAdmin() then return false end
-end
-
-function GM:Think()
-    if (self.NextDBRefresh or 0) < CurTime() then
-        lia.db.query("SELECT 1 + 1", onSuccess)
-        self.NextDBRefresh = CurTime() + 10
-    end
 end
 
 function GM:PostPlayerLoadout(client)
@@ -520,6 +463,36 @@ function GM:SetupBotPlayer(client)
     client:Spawn()
 end
 
+function GM:CharacterLoaded(id)
+    LiliaDeprecated("CharacterLoaded is deprecated. Use CharLoaded for optimization purposes.")
+    hook.Run("CharLoaded", id)
+end
+
+function GM:PreCharacterDelete(id)
+    LiliaDeprecated("PreCharacterDelete is deprecated. Use PreCharDelete for optimization purposes.")
+    hook.Run("PreCharDelete", id)
+end
+
+function GM:OnCharacterDelete(client, id)
+    LiliaDeprecated("OnCharacterDelete is deprecated. Use OnCharDelete for optimization purposes.")
+    hook.Run("OnCharDelete", client, id)
+end
+
+function GM:onCharCreated(client, character, data)
+    LiliaDeprecated("onCharCreated is deprecated. Use OnCharCreated for optimization purposes.")
+    hook.Run("OnCharCreated", client, character, data)
+end
+
+function GM:onTransferred(client)
+    LiliaDeprecated("onTransferred is deprecated. Use OnTransferred for optimization purposes.")
+    hook.Run("OnTransferred", client)
+end
+
+function GM:CharacterPreSave(character)
+    LiliaDeprecated("CharacterPreSave is deprecated. Use CharPreSave for optimization purposes.")
+    hook.Run("CharPreSave", character)
+end
+
 function GM:PlayerSpray()
     return true
 end
@@ -534,6 +507,14 @@ end
 
 function GM:AllowPlayerPickup()
     return false
+end
+
+function GM:PlayerShouldTakeDamage(client)
+    return client:getChar() ~= nil
+end
+
+function GM:CanDrive(client)
+    if not client:IsSuperAdmin() then return false end
 end
 
 function GM:PlayerDeathThink(client)

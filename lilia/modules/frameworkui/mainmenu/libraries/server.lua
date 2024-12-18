@@ -32,7 +32,3 @@ function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
     if client:hasValidVehicle() then return false, "You cannot switch characters while in a vehicle or sitting!" end
     return true
 end
-
-function MODULE:PlayerLoadedChar(client)
-    client:Spawn()
-end

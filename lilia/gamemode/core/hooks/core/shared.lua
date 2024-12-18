@@ -235,16 +235,6 @@ function GM:InitPostEntity()
     end
 end
 
-function GM:GetMaxPlayerCharacter(client)
-    LiliaDeprecated("GetMaxPlayerCharacter is deprecated. Use GetMaxPlayerChar for optimization purposes.")
-    hook.Run("GetMaxPlayerChar", client)
-end
-
-function GM:CanPlayerCreateCharacter(client)
-    LiliaDeprecated("CanPlayerCreateCharacter is deprecated. Use CanPlayerCreateChar for optimization purposes.")
-    hook.Run("CanPlayerCreateChar", client)
-end
-
 function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
         for _, v in pairs(lia.char.varHooks[varName]) do
@@ -350,6 +340,16 @@ end
 
 function GM:GetMaxStartingAttributePoints()
     return lia.config.StartingAttributePoints
+end
+
+function GM:GetMaxPlayerCharacter(client)
+    LiliaDeprecated("GetMaxPlayerCharacter is deprecated. Use GetMaxPlayerChar for optimization purposes.")
+    hook.Run("GetMaxPlayerChar", client)
+end
+
+function GM:CanPlayerCreateCharacter(client)
+    LiliaDeprecated("CanPlayerCreateCharacter is deprecated. Use CanPlayerCreateChar for optimization purposes.")
+    hook.Run("CanPlayerCreateChar", client)
 end
 
 function widgets.PlayerTick()

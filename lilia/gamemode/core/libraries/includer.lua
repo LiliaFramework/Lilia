@@ -54,6 +54,10 @@ lia.FilesToLoad = {
         realm = "client"
     },
     {
+        path = "lilia/gamemode/core/libraries/logger.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/libraries/modularity.lua",
         realm = "shared"
     },
