@@ -3,6 +3,7 @@ LANGUAGE = {
     modules = "Modules",
     --[[ User Interface & General Terms ]]
     notSpecified = "Not specified",
+    invalidWeapon = "Invalid Weapon",
     notConfig = "This isn't configured",
     free = "Free",
     buy = "Purchase",

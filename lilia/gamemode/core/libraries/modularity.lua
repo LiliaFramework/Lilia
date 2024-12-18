@@ -155,7 +155,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, firstLoad)
         end
     else
         if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then _G[MODULE.identifier] = MODULE end
-        if isCompatibility then LogBootstrap("Compatibility", "Loaded " .. MODULE.name) end
         lia.module.list[uniqueID] = MODULE
         lia.module.OnFinishLoad(path, firstLoad)
         _G[variable] = oldModule
@@ -185,7 +184,7 @@ function lia.module.initialize(firstLoad)
     lia.module.loadFromDir("lilia/modules/frameworkui", "module", firstLoad)
     lia.module.loadFromDir("lilia/modules/characters", "module", firstLoad)
     lia.module.loadFromDir("lilia/modules/utilities", "module", firstLoad)
-    lia.module.loadFromDir("lilia/modules/compatibility", "module", firstLoad, true)
+    lia.module.loadFromDir("lilia/modules/compatibility", "module", firstLoad)
     lia.module.loadFromDir(schema .. "/preload", "module", firstLoad)
     lia.module.loadFromDir(schema .. "/modules", "module", firstLoad)
     lia.module.loadFromDir(schema .. "/overrides", "module", firstLoad)
@@ -198,16 +197,16 @@ end
 -- @bool firstLoad Indicates if this is the first load of the modules.
 -- @realm shared
 -- @internal
-function lia.module.loadFromDir(directory, group, firstLoad, isCompatibility)
+function lia.module.loadFromDir(directory, group, firstLoad)
     local locationVar = (group == "schema") and "SCHEMA" or "MODULE"
     local files, folders = file.Find(directory .. "/*", "LUA")
     for _, folderName in ipairs(folders) do
-        lia.module.load(folderName, directory .. "/" .. folderName, false, locationVar, firstLoad, isCompatibility)
+        lia.module.load(folderName, directory .. "/" .. folderName, false, locationVar, firstLoad)
     end
 
     for _, fileName in ipairs(files) do
         local uniqueID = string.StripExtension(fileName)
-        lia.module.load(uniqueID, directory .. "/" .. fileName, true, locationVar, firstLoad, isCompatibility)
+        lia.module.load(uniqueID, directory .. "/" .. fileName, true, locationVar, firstLoad)
     end
 end
 

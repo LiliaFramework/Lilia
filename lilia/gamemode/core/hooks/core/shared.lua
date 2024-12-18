@@ -8,6 +8,15 @@ local normalizeAngle = math.NormalizeAngle
 local oldCalcSeqOverride
 local PLAYER_HOLDTYPE_TRANSLATOR = lia.anim.PlayerHoldTypeTranslator
 local HOLDTYPE_TRANSLATOR = lia.anim.HoldTypeTranslator
+local ChairCache = {}
+for _, v in pairs(list.Get("Vehicles")) do
+    if v.Category == "Chairs" then ChairCache[v.Model] = true end
+end
+
+local function isChair(entity)
+    return ChairCache[entity:GetModel()]
+end
+
 function GM:TranslateActivity(client, act)
     local model = string.lower(client.GetModel(client))
     local class = getModelClass(model) or "player"
@@ -40,7 +49,7 @@ function GM:TranslateActivity(client, act)
         local subClass = "normal"
         if client.InVehicle(client) then
             local vehicle = client.GetVehicle(client)
-            local class = vehicle:isChair() and "chair" or vehicle:GetClass()
+            local class = isChair(vehicle) and "chair" or vehicle:GetClass()
             if tree.vehicle and tree.vehicle[class] then
                 local act = tree.vehicle[class][1]
                 local fixvec = tree.vehicle[class][2]
@@ -289,7 +298,7 @@ function GM:InitializedModules()
     else
         local bootstrapEndTime = SysTime()
         local timeTaken = bootstrapEndTime - BootingTime
-        LogBootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
+        LiliaBootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
         for _, data in pairs(lia.char.vars) do
             if data.fieldType then
                 local fieldDefinition
@@ -313,9 +322,9 @@ function GM:InitializedModules()
                         if not result then
                             local success, _ = lia.db.query("ALTER TABLE lia_characters ADD COLUMN " .. fieldDefinition)
                             if success then
-                                LiliaPrint("Adding column " .. data.field .. " to the database!")
+                                LiliaInformation("Adding column " .. data.field .. " to the database!")
                             else
-                                LiliaPrint("Failed to add column " .. data.field .. " due to a query error.")
+                                LiliaInformation("Failed to add column " .. data.field .. " due to a query error.")
                             end
                         end
                     end)

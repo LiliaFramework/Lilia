@@ -133,8 +133,7 @@ function lia.chat.register(chatType, data)
             local name = anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, chatType) or (IsValid(speaker) and speaker:Name() or "Console")
             if data.onGetColor then color = data.onGetColor(speaker, text) end
             local timestamp = lia.chat.timestamp(false)
-            local translated = L(chatType .. "Format", name, text) or nil
-            chat.AddText(timestamp, color, translated or string.format(data.format, name, text))
+            chat.AddText(timestamp, color, string.format(data.format, name, text))
         end
     end
 

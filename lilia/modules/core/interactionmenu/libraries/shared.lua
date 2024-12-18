@@ -1,13 +1,21 @@
 ﻿MODULE.Options = MODULE.Options or {}
 MODULE.SelfOptions = MODULE.SelfOptions or {}
+local function AddOption(name)
+    LiliaBootstrap("Player Interaction Menu", "Added P2P Action: " .. name)
+end
+
+local function AddLocalOption(name)
+    LiliaBootstrap("Action Menu", "Added Personal Action: " .. name)
+end
+
 function MODULE:AddOption(name, data)
     self.Options[name] = data
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(135, 206, 250), "[Player Interaction Menu] ", color_white, "Finished Loading '" .. name .. "'\n")
+    AddLocalOption(name)
 end
 
 function MODULE:AddLocalOption(name, data)
     self.SelfOptions[name] = data
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(135, 206, 250), "[Action Menu] ", color_white, "Finished Loading '" .. name .. "'\n")
+    AddOption(name)
 end
 
 function MODULE:CheckPossibilities()

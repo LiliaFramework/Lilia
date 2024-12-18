@@ -281,14 +281,4 @@ function ToolGunMeta:ReleaseGhostEntity()
     end
 end
 
---- Placeholder for handling tool-specific logic.
--- This method is intended to be overridden to implement custom logic that should be executed periodically or under specific conditions.
--- @realm shared
--- @usage
--- function ToolGunMeta:CustomLogic()
---     -- Custom periodic logic here
--- end
-function ToolGunMeta:CustomLogic()
-end
-
 lia.meta.tool = ToolGunMeta
