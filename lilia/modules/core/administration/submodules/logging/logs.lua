@@ -505,7 +505,7 @@
         color = Color(46, 204, 113)
     },
     ["List Items"] = {
-        func = function(client, data) return string.format("%s listed all items", client:Name()) end,
+        func = function(client) return string.format("%s listed all items", client:Name()) end,
         category = "Item & Inventory",
         color = Color(52, 152, 219)
     },
