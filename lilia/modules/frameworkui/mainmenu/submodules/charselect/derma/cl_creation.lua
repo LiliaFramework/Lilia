@@ -111,7 +111,7 @@ function PANEL:showError(message, ...)
     self.error:SetTall(32)
     self.error:DockMargin(0, 0, 0, 8)
     self.error:SetContentAlignment(5)
-    self.error.Paint = function(box, w, h) lia.util.drawBlur(box) end
+    self.error.Paint = function(box) lia.util.drawBlur(box) end
     self.error:SetAlpha(0)
     self.error:AlphaTo(255, self.ANIM_SPEED)
     lia.gui.character:warningSound()
@@ -218,7 +218,6 @@ function PANEL:onStepChanged(oldStep, newStep)
     local nextStepText = L(shouldFinish and "finish" or "next"):upper()
     local shouldSwitchNextText = nextStepText ~= self.next:GetText()
     self.prev:AlphaTo(255, ANIM_SPEED)
-
     if shouldSwitchNextText then
         self.next:AlphaTo(0, ANIM_SPEED, 0, function()
             self.next:SizeToContentsX(ANIM_SPEED)
@@ -305,48 +304,39 @@ function PANEL:Init()
     self.buttons:Dock(BOTTOM)
     self.buttons:SetTall(60)
     self.buttons:SetPaintBackground(false)
-
-    -- Calculate equal width for all three buttons
     local buttonWidth = ScrW() / 3
-
     self.prev = self.buttons:Add("DButton")
     self.prev:SetText("")
     self.prev:Dock(LEFT)
     self.prev:SetWide(buttonWidth)
-    self.prev.Paint = function(btn, w, h)
+    self.prev.Paint = function(_, w, h)
         surface.SetDrawColor(Color(0, 0, 0, 255))
         surface.DrawRect(0, 0, w, h)
         draw.SimpleText(L("back"):upper(), "liaMediumFont", w / 2, h / 2, COLORS.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
-    self.prev.DoClick = function()
-        self:previousStep()
-    end
 
+    self.prev.DoClick = function() self:previousStep() end
     self.cancel = self.buttons:Add("DButton")
     self.cancel:SetText("")
     self.cancel:Dock(LEFT)
     self.cancel:SetWide(buttonWidth)
-    self.cancel.Paint = function(btn, w, h)
+    self.cancel.Paint = function(_, w, h)
         surface.SetDrawColor(0, 0, 0, 255)
         surface.DrawRect(0, 0, w, h)
         draw.SimpleText(L("cancel"):upper(), "liaMediumFont", w / 2, h / 2, COLORS.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
-    self.cancel.DoClick = function()
-        self:reset()
-    end
 
+    self.cancel.DoClick = function() self:reset() end
     self.next = self.buttons:Add("DButton")
     self.next:SetText("")
-    self.next:Dock(FILL) -- Automatically fills remaining space
-    self.next.Paint = function(btn, w, h)
+    self.next:Dock(FILL)
+    self.next.Paint = function(_, w, h)
         surface.SetDrawColor(0, 0, 0, 255)
         surface.DrawRect(0, 0, w, h)
         draw.SimpleText(L("next"):upper(), "liaMediumFont", w / 2, h / 2, COLORS.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
-    self.next.DoClick = function()
-        self:nextStep()
-    end
 
+    self.next.DoClick = function() self:nextStep() end
     self:configureSteps()
     if #self.steps == 0 then return self:showError("No character creation steps have been set up") end
     self:nextStep()
