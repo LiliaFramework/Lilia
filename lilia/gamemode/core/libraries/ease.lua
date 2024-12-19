@@ -19,6 +19,18 @@ function lia.ease.easeIn(t, tMax, start, delta)
     return start + (delta * easeIn(t / tMax))
 end
 
+--- Eases in and out a value over time using a circular easing function.
+-- @float t The current time elapsed, normalized between 0 and 1.
+-- @return number The eased value.
+-- @realm client
+function lia.ease.InOutCirc(t)
+    if t < 0.5 then
+        return (1 - math.sqrt(1 - (2 * t) ^ 2)) / 2
+    else
+        return (math.sqrt(1 - (-2 * t + 2) ^ 2) + 1) / 2
+    end
+end
+
 --- Eases out the value over time using an easing function.
 -- @float t Time elapsed.
 -- @float tMax The duration of the animation.

@@ -259,6 +259,13 @@ function GM:LoadLiliaFonts(font, genericFont)
         weight = 800,
     })
 
+    surface.CreateFont("liaMiniFont", {
+        font = genericFont,
+        size = math.max(ScreenScale(5), 14) * scale,
+        extended = true,
+        weight = 400
+    })
+
     surface.CreateFont("liaSmallFont", {
         font = genericFont,
         size = math.max(ScreenScale(6), 17) * scale,

@@ -266,7 +266,12 @@ end)
 
 net.Receive("chatNotify", function()
     local message = net.ReadString()
-    chat.AddText(Color(255, 215, 0), message)
+    chat.AddText(Color(0, 200, 255), "[NOTIFICATION]: ", Color(255, 255, 255), message)
+end)
+
+net.Receive("chatError", function()
+    local message = net.ReadString()
+    chat.AddText(Color(255, 0, 0), "[ERROR]: ", Color(255, 255, 255), message)
 end)
 
 net.Receive("OptionsRequest", function()

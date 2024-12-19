@@ -454,9 +454,33 @@ if SERVER then
     -- @usage
     -- player:chatNotifyLocalized("welcome_message", player:Nick())
     function playerMeta:chatNotifyLocalized(message, ...)
-        message = L(message, self, ...)
+        local localizedMessage = L(message, self, ...)
         net.Start("chatNotify")
+        net.WriteString(localizedMessage)
+        net.Send(self)
+    end
+
+    --- Notifies the player with an error message.
+    -- @realm server
+    -- @string message The message to notify the player.
+    -- @usage
+    -- player:chatError("An error occurred!")
+    function playerMeta:chatError(message)
+        net.Start("chatError")
         net.WriteString(message)
+        net.Send(self)
+    end
+
+    --- Notifies the player with a localized error message.
+    -- @realm server
+    -- @string message ID of the phrase to display to the player.
+    -- @tparam ... any Arguments to pass to the phrase.
+    -- @usage
+    -- player:chatErrorLocalized("error_message", player:Nick())
+    function playerMeta:chatErrorLocalized(message, ...)
+        local localizedMessage = L(message, self, ...)
+        net.Start("chatError")
+        net.WriteString(localizedMessage)
         net.Send(self)
     end
 
@@ -758,16 +782,6 @@ if SERVER then
         end)
     end
 
-    --- Notifies the player with a message and prints the message to their chat.
-    -- @realm server
-    -- @string message The message to notify and print.
-    -- @usage
-    -- player:notifyP("You have received a new item!")
-    function playerMeta:notifyP(message)
-        self:notify(message)
-        self:chatNotify(message)
-    end
-
     --- Notifies the player with a message.
     -- @realm server
     -- @string message The message to notify the player.
@@ -941,7 +955,7 @@ if SERVER then
                 entity:SetCustomCollisionCheck(false)
             end
 
-            lia.log.add(self, "Ragdolled",  true)
+            lia.log.add(self, "Ragdolled", true)
         elseif hasRagdoll then
             self.liaRagdoll:Remove()
             hook.Run("OnCharFallover", self, nil, false)
@@ -981,15 +995,6 @@ if SERVER then
     end
 
     playerMeta.SetLocalVar = playerMeta.setLocalVar
-    --- Notifies the player with a message and prints the message to their chat.
-    -- @realm server
-    -- @string text The message to notify and print.
-    -- @usage
-    -- player:notifyP("You have received a new item!")
-    function playerMeta:notifyP(text)
-        self:notify(text)
-        self:chatNotify(text)
-    end
 else
     --- Displays a notification for this player in the chatbox.
     -- @realm client
@@ -997,8 +1002,16 @@ else
     -- @usage
     -- player:chatNotify("Welcome to the server!")
     function playerMeta:chatNotify(message)
-        local client = LocalPlayer()
-        if self == client then chat.AddText(Color(255, 215, 0), message) end
+        chat.AddText(Color(0, 200, 255), "[NOTIFICATION]: ", Color(255, 255, 255), message)
+    end
+
+    --- Displays an error notification in the chatbox.
+    -- @realm client
+    -- @string message Text to display in the chat.
+    -- @usage
+    -- player:chatError("An error occurred.")
+    function playerMeta:chatError(message)
+        chat.AddText(Color(255, 0, 0), "[ERROR]: ", Color(255, 255, 255), message)
     end
 
     --- Displays a notification for the player in the chatbox with the given language phrase.
