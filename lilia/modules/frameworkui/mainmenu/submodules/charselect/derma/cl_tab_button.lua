@@ -1,12 +1,15 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
-    self:Dock(LEFT)
-    self:DockMargin(0, 0, 32, 0)
+    self:Dock(TOP)
+    self:DockMargin(0, 0, 0, 12)
     self:SetContentAlignment(5)
+    self:SetTextColor(lia.gui.character.GOLD)
+    self:SetTall(80)
 end
 
 function PANEL:setText(name)
     self:SetText(L(name):upper())
+    self:SetFont("liaBigFont")
     self:InvalidateLayout(true)
     self:SizeToContentsX()
 end
@@ -15,27 +18,17 @@ function PANEL:onSelected(callback)
     self.callback = callback
 end
 
-function PANEL:setSelected(isSelected)
-    if isSelected == nil then isSelected = true end
-    if isSelected and self.isSelected then return end
-    local menu = lia.gui.character
-    if isSelected and IsValid(menu) then
-        if IsValid(menu.lastTab) then
-            menu.lastTab:SetTextColor(lia.gui.character.WHITE)
-            menu.lastTab.isSelected = false
-        end
-
-        menu.lastTab = self
+function PANEL:Paint(w, h)
+    if self:IsHovered() then
+        surface.SetDrawColor(lia.gui.character.SELECTED)
+    else
+        surface.SetDrawColor(Color(20, 15, 10, 80))
     end
 
-    self:SetTextColor(isSelected and lia.gui.character.SELECTED or lia.gui.character.WHITE)
-    self.isSelected = isSelected
-    if isfunction(self.callback) then self:callback() end
-end
-
-function PANEL:Paint(w, h)
-    surface.SetDrawColor(Color(0, 0, 0, 50))
     surface.DrawRect(0, 0, w, h)
+    surface.SetDrawColor(0, 0, 0, 255)
+    surface.DrawOutlinedRect(0, 0, w, h)
+    surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
 end
 
-vgui.Register("liaCharacterTabButton", PANEL, "liaCharButton")
+vgui.Register("liaCharacterTabButton", PANEL, "DButton")

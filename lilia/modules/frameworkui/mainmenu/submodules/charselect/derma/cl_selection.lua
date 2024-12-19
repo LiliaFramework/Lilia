@@ -1,9 +1,6 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     self:Dock(FILL)
-    self:DockMargin(0, 64, 0, 0)
-    self:InvalidateParent(true)
-    self:InvalidateLayout(true)
     self.panels = {}
     self.scroll = self:Add("liaHorizontalScroll")
     self.scroll:Dock(FILL)
@@ -33,22 +30,27 @@ end
 
 function PANEL:createCharacterSlots()
     self.scroll:Clear()
-    if #lia.characters == 0 then return lia.gui.character:showContent() end
-    local totalWide = 0
+    if #lia.characters == 0 then
+        local noCharMsg = self.scroll:Add("DLabel")
+        noCharMsg:Dock(TOP)
+        noCharMsg:DockMargin(0, 0, 0, 0)
+        noCharMsg:SetText("No characters found. Please create a new character.")
+        noCharMsg:SetFont("liaMediumFont")
+        noCharMsg:SetTextColor(self.WHITE)
+        noCharMsg:SetContentAlignment(5)
+        noCharMsg:SizeToContents()
+        return
+    end
+
     for _, id in ipairs(lia.characters) do
         local character = lia.char.loaded[id]
         if not character then continue end
         local panel = self.scroll:Add("liaCharacterSlot")
-        totalWide = totalWide + panel:GetWide() + 8
         panel:Dock(LEFT)
         panel:DockMargin(0, 0, 8, 8)
         panel:setCharacter(character)
         panel.onSelected = function() self:onCharacterSelected(character) end
     end
-
-    totalWide = totalWide - 8
-    self.scroll:SetWide(self:GetWide())
-    self.scroll:DockMargin(math.max(0, self.scroll:GetWide() * 0.5 - totalWide * 0.5), 0, 0, 0)
 end
 
 function PANEL:onCharacterSelected(character)

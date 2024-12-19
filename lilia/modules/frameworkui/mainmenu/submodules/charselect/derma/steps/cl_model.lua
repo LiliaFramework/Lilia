@@ -1,7 +1,5 @@
 ﻿local PANEL = {}
 function PANEL:Init()
-    self.title = self:addLabel("Select a model")
-    self.title:SetTextColor(color_white)
     self.models = self:Add("DIconLayout")
     self.models:Dock(FILL)
     self.models:SetSpaceX(4)
@@ -100,8 +98,10 @@ function PANEL:updateSliders()
         local entity = lia.gui.charCreate.model:GetEntity()
         if entity then
             local slidePanel = lia.gui.charCreate:Add("DPanel")
-            slidePanel:SetPos(ScrW() * 0.05, ScrH() * 0.2)
-            slidePanel:SetSize(ScrW() * 0.15, ScrH() * 0.25)
+            slidePanel:SetPos(ScrW() - ScrW() * 0.45 - 20, ScrH() * 0.05)
+            slidePanel:SetSize(ScrW() * 0.2, ScrH() * 0.3)
+            slidePanel:SetPaintBackground(true)
+            slidePanel:SetBackgroundColor(Color(0, 0, 0, 200))
             if MainMenu.CanSelectBodygroups then
                 local groups = {}
                 for _, v in pairs(entity:GetBodyGroups()) do

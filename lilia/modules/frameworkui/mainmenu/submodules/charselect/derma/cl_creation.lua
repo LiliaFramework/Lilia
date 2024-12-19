@@ -1,4 +1,16 @@
 ﻿local PANEL = {}
+local COLORS = {
+    background = Color(0, 0, 0, 100),
+    border = Color(120, 120, 120, 255),
+    button = Color(70, 130, 180, 255),
+    buttonHovered = Color(100, 160, 210, 255),
+    buttonActive = Color(50, 110, 160, 255),
+    text = Color(255, 255, 255, 255),
+    success = Color(60, 179, 113, 200),
+}
+
+PANEL.ANIM_SPEED = 0.3
+PANEL.FADE_SPEED = 1.5
 function PANEL:configureSteps()
     self:addStep(vgui.Create("liaCharacterFaction"))
     self:addStep(vgui.Create("liaCharacterModel"))
@@ -99,14 +111,9 @@ function PANEL:showError(message, ...)
     self.error:SetTall(32)
     self.error:DockMargin(0, 0, 0, 8)
     self.error:SetContentAlignment(5)
-    self.error.Paint = function(box, w, h)
-        lia.util.drawBlur(box)
-        surface.SetDrawColor(255, 0, 0, 50)
-        surface.DrawRect(0, 0, w, h)
-    end
-
+    self.error.Paint = function(box, w, h) lia.util.drawBlur(box) end
     self.error:SetAlpha(0)
-    self.error:AlphaTo(255, lia.gui.character.ANIM_SPEED)
+    self.error:AlphaTo(255, self.ANIM_SPEED)
     lia.gui.character:warningSound()
 end
 
@@ -117,12 +124,17 @@ function PANEL:showMessage(message, ...)
     end
 
     message = L(message, ...):upper()
-    if IsValid(self.message) then self.message:SetText(message) end
-    self.message = self:Add("DLabel")
-    self.message:SetFont("liaCharButtonFont")
-    self.message:SetTextColor(lia.gui.character.WHITE)
-    self.message:Dock(FILL)
-    self.message:SetContentAlignment(5)
+    if IsValid(self.message) then
+        self.message:SetText(message)
+    else
+        self.message = self:Add("DLabel")
+        self.message:SetFont("liaCharButtonFont")
+        self.message:SetTextColor(COLORS.text)
+        self.message:Dock(TOP)
+        self.message:SetContentAlignment(5)
+        self.message:SetTall(32)
+    end
+
     self.message:SetText(message)
 end
 
@@ -135,7 +147,7 @@ function PANEL:addStep(step, priority)
         self.steps[#self.steps + 1] = step
     end
 
-    step:SetParent(self.content)
+    step:SetParent(self.stepsContainer)
 end
 
 function PANEL:nextStep()
@@ -194,46 +206,36 @@ end
 function PANEL:getPreviousStep()
     local step = self.curStep - 1
     while IsValid(self.steps[step]) do
-        if not self.steps[step]:shouldSkip() then
-            hasPrevStep = true
-            break
-        end
-
+        if not self.steps[step]:shouldSkip() then return self.steps[step] end
         step = step - 1
     end
-    return self.steps[step]
+    return nil
 end
 
 function PANEL:onStepChanged(oldStep, newStep)
-    local ANIM_SPEED = lia.gui.character.ANIM_SPEED
-    local shouldFinish = self.curStep == #self.steps
+    local ANIM_SPEED = self.ANIM_SPEED
+    local shouldFinish = self.curStep > #self.steps
     local nextStepText = L(shouldFinish and "finish" or "next"):upper()
     local shouldSwitchNextText = nextStepText ~= self.next:GetText()
-    if IsValid(self:getPreviousStep()) then
-        self.prev:AlphaTo(255, ANIM_SPEED)
-    else
-        self.prev:AlphaTo(0, ANIM_SPEED)
+    self.prev:AlphaTo(255, ANIM_SPEED)
+
+    if shouldSwitchNextText then
+        self.next:AlphaTo(0, ANIM_SPEED, 0, function()
+            self.next:SizeToContentsX(ANIM_SPEED)
+            self.next:AlphaTo(255, ANIM_SPEED)
+        end)
     end
 
-    if shouldSwitchNextText then self.next:AlphaTo(0, ANIM_SPEED) end
     local function showNewStep()
         newStep:SetAlpha(0)
         newStep:SetVisible(true)
         newStep:onDisplay()
         newStep:InvalidateChildren(true)
         newStep:AlphaTo(255, ANIM_SPEED)
-        if shouldSwitchNextText then
-            self.next:SetAlpha(0)
-            self.next:SetText(nextStepText)
-            self.next:SizeToContentsX()
-        end
-
-        self.next:AlphaTo(255, ANIM_SPEED)
     end
 
     if IsValid(oldStep) then
         oldStep:AlphaTo(0, ANIM_SPEED, 0, function()
-            self:showError()
             oldStep:SetVisible(false)
             oldStep:onHide()
             showNewStep()
@@ -243,25 +245,30 @@ function PANEL:onStepChanged(oldStep, newStep)
     end
 end
 
+function PANEL:Paint(w, h)
+    surface.SetDrawColor(COLORS.background)
+    surface.DrawRect(0, 0, w, h)
+    surface.SetDrawColor(COLORS.border)
+    surface.DrawOutlinedRect(0, 0, w, h)
+end
+
 function PANEL:Init()
     self:Dock(FILL)
+    self.rotationAngle = 45
+    self.rotationSpeed = 0.5
     local canCreate, reason = self:canCreateCharacter()
     if not canCreate then return self:showMessage(reason) end
     lia.gui.charCreate = self
-    local sideMargin = 0
-    if ScrW() > 1280 then
-        sideMargin = ScrW() * 0.15
-    elseif ScrW() > 720 then
-        sideMargin = ScrW() * 0.075
-    end
-
+    self.steps = {}
+    self.curStep = 0
+    self.context = {}
     self.content = self:Add("DPanel")
     self.content:Dock(FILL)
-    self.content:DockMargin(sideMargin, 64, sideMargin, 0)
+    self.content:DockMargin(50, 50, 50, 100)
     self.content:SetPaintBackground(false)
     self.model = self.content:Add("liaModelPanel")
     self.model:SetWide(ScrW() * 0.25)
-    self.model:Dock(LEFT)
+    self.model:Dock(RIGHT)
     self.model:SetModel("models/error.mdl")
     self.model.oldSetModel = self.model.SetModel
     self.model.SetModel = function(model, ...)
@@ -269,30 +276,77 @@ function PANEL:Init()
         model:fitFOV()
     end
 
+    self.model.Think = function()
+        local rotateLeft = input.IsKeyDown(KEY_A)
+        local rotateRight = input.IsKeyDown(KEY_D)
+        if rotateLeft then
+            self.rotationAngle = self.rotationAngle - self.rotationSpeed
+        elseif rotateRight then
+            self.rotationAngle = self.rotationAngle + self.rotationSpeed
+        end
+
+        if IsValid(self.model) and IsValid(self.model.Entity) then
+            local Angles = Angle(0, self.rotationAngle, 0)
+            self.model.Entity:SetAngles(Angles)
+        end
+    end
+
+    self.model.PaintOver = function(_, w, h)
+        local leftRotateKey = "A"
+        local rightRotateKey = "D"
+        local str = string.format("[%s] Rotate Left | [%s] Rotate Right", leftRotateKey, rightRotateKey)
+        lia.util.drawText(str, w / 2, h - 16, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+    end
+
+    self.stepsContainer = self.content:Add("DPanel")
+    self.stepsContainer:Dock(FILL)
+    self.stepsContainer:SetPaintBackground(false)
     self.buttons = self:Add("DPanel")
     self.buttons:Dock(BOTTOM)
-    self.buttons:SetTall(48)
+    self.buttons:SetTall(60)
     self.buttons:SetPaintBackground(false)
-    self.prev = self.buttons:Add("liaCharButton")
-    self.prev:SetText(L("back"):upper())
+
+    -- Calculate equal width for all three buttons
+    local buttonWidth = ScrW() / 3
+
+    self.prev = self.buttons:Add("DButton")
+    self.prev:SetText("")
     self.prev:Dock(LEFT)
-    self.prev:SetWide(96)
-    self.prev.DoClick = function() self:previousStep() end
-    self.prev:SetAlpha(0)
-    self.next = self.buttons:Add("liaCharButton")
-    self.next:SetText(L("next"):upper())
-    self.next:Dock(RIGHT)
-    self.next:SetWide(96)
-    self.next.DoClick = function() self:nextStep() end
-    self.cancel = self.buttons:Add("liaCharButton")
-    self.cancel:SetText(L("cancel"):upper())
-    self.cancel:SizeToContentsX()
-    self.cancel.DoClick = function() self:reset() end
-    self.cancel.x = (ScrW() - self.cancel:GetWide()) * 0.5 - 64
-    self.cancel.y = (self.buttons:GetTall() - self.cancel:GetTall()) * 0.5
-    self.steps = {}
-    self.curStep = 0
-    self.context = {}
+    self.prev:SetWide(buttonWidth)
+    self.prev.Paint = function(btn, w, h)
+        surface.SetDrawColor(Color(0, 0, 0, 255))
+        surface.DrawRect(0, 0, w, h)
+        draw.SimpleText(L("back"):upper(), "liaMediumFont", w / 2, h / 2, COLORS.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+    self.prev.DoClick = function()
+        self:previousStep()
+    end
+
+    self.cancel = self.buttons:Add("DButton")
+    self.cancel:SetText("")
+    self.cancel:Dock(LEFT)
+    self.cancel:SetWide(buttonWidth)
+    self.cancel.Paint = function(btn, w, h)
+        surface.SetDrawColor(0, 0, 0, 255)
+        surface.DrawRect(0, 0, w, h)
+        draw.SimpleText(L("cancel"):upper(), "liaMediumFont", w / 2, h / 2, COLORS.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+    self.cancel.DoClick = function()
+        self:reset()
+    end
+
+    self.next = self.buttons:Add("DButton")
+    self.next:SetText("")
+    self.next:Dock(FILL) -- Automatically fills remaining space
+    self.next.Paint = function(btn, w, h)
+        surface.SetDrawColor(0, 0, 0, 255)
+        surface.DrawRect(0, 0, w, h)
+        draw.SimpleText(L("next"):upper(), "liaMediumFont", w / 2, h / 2, COLORS.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+    self.next.DoClick = function()
+        self:nextStep()
+    end
+
     self:configureSteps()
     if #self.steps == 0 then return self:showError("No character creation steps have been set up") end
     self:nextStep()

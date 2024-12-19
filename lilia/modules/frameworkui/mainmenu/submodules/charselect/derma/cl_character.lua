@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 local WHITE = Color(255, 255, 255, 200)
 local SELECTED = Color(255, 255, 255, 150)
 PANEL.WHITE = WHITE
@@ -14,14 +14,14 @@ function PANEL:removeLogo()
 end
 
 function PANEL:createTabs()
-    if lia.characters and #lia.characters > 0 then self:addTab("continue", self.createCharacterSelection) end
-    if hook.Run("CanPlayerCreateChar", LocalPlayer()) ~= false then self:addTab("create", self.createCharacterCreation) end
+    self:CreateButton("continue", "Continue your character", function() self:createCharacterSelection() end)
+    self:CreateButton("create", "Create a new character", function() self:createCharacterCreation() end)
     if not MainMenu.KickOnEnteringMainMenu and LocalPlayer():getChar() then
-        self:addTab("return", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end, true)
+        self:CreateButton("return", "Return to character", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end)
         return
     end
 
-    self:addTab("leave", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() LocalPlayer():ConCommand("disconnect") end) end, true)
+    self:CreateButton("leave", "Disconnect from server", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() LocalPlayer():ConCommand("disconnect") end) end)
 end
 
 function PANEL:CreateIcon(parent, iconURL, iconIMG, posX, posY)
@@ -48,20 +48,92 @@ function PANEL:CreateIcon(parent, iconURL, iconIMG, posX, posY)
         button.DoClick = function() gui.OpenURL(iconURL) end
         button:SetAlpha(0)
         icon:SetAlpha(0)
-        icon:AlphaTo(255, parent.ANIM_SPEED, 0)
+        icon:AlphaTo(255, self.ANIM_SPEED, 0)
         return icon
+    end
+end
+
+function PANEL:CreateButton(text, description, callback)
+    local btn = self.tabs:Add('DButton')
+    btn:SetText('')
+    btn:Dock(TOP)
+    btn:DockMargin(5, 5, 5, 10)
+    btn.initialTall = ScrH() * 0.1 / 2
+    btn.initialWidth = 2
+    btn.tall = btn.initialTall
+    btn.width = btn.initialWidth
+    btn.text_color = color_white
+    btn.icon_rot = 0
+    btn.text = text
+    btn:SetTall(btn.tall)
+    btn.selected = false
+    btn.description = description or 'No description'
+    btn.fillProgress = 0
+    btn.Paint = function(me, w, h)
+        local isSelected = self.selectedButton == me
+        local isHovered = me:IsHovered()
+        local targetProgress = (isSelected or isHovered) and 1 or 0
+        me.fillProgress = Lerp(0.2, me.fillProgress, targetProgress)
+        local fillWidth = w * me.fillProgress
+        surface.SetDrawColor(me.text_color)
+        surface.DrawRect((w - fillWidth) / 2, 0, fillWidth, h)
+        if isSelected or isHovered then
+            me.tall = Lerp(0.2, me.tall, ScrH() * 0.064)
+            me.width = Lerp(0.2, me.width, w + 1)
+            me.text_color = lia.color.LerpColor(0.2, me.text_color, color_black)
+            self.selectedDescription:SetText(me.description)
+        else
+            me.tall = Lerp(0.2, me.tall, me.initialTall)
+            me.width = Lerp(0.2, me.width, me.initialWidth)
+            me.text_color = lia.color.LerpColor(0.2, me.text_color, color_white)
+        end
+
+        surface.SetDrawColor(0, 0, 0, 166)
+        surface.DrawRect(0, 0, w, h)
+        surface.SetDrawColor(255, 255, 255)
+        surface.DrawRect(0, 0, me.width, h)
+        me:SetTall(me.tall)
+        draw.Text({
+            text = me.text:upper(),
+            font = 'liaMediumFont',
+            pos = {w / 2, h / 2},
+            xalign = TEXT_ALIGN_CENTER,
+            yalign = TEXT_ALIGN_CENTER,
+            color = me.text_color
+        })
+    end
+
+    btn.DoClick = function(me)
+        self:clickSound()
+        if self.selectedButton and self.selectedButton ~= me and self.selectedButton.selected then self.selectedButton.selected = false end
+        self.selectedButton = me
+        if IsValid(self.selectedDescription) then
+            self.selectedDescription:SetText(me.description)
+        else
+            print("Error: selectedDescription is invalid or not initialized.")
+        end
+
+        if callback and isfunction(callback) then callback() end
     end
 end
 
 function PANEL:createTitle()
     self.title = self:Add("DLabel")
     self.title:Dock(TOP)
-    self.title:DockMargin(64, 48, 0, 0)
-    self.title:SetContentAlignment(1)
+    self.title:DockMargin(0, 20, 0, 20)
+    self.title:SetContentAlignment(5)
     self.title:SetTall(96)
     self.title:SetFont("liaCharTitleFont")
     self.title:SetText(SCHEMA and SCHEMA.name)
     self.title:SetTextColor(WHITE)
+    self.selectedDescription = self:Add("DLabel")
+    self.selectedDescription:Dock(BOTTOM)
+    self.selectedDescription:DockMargin(64, 0, 64, 16)
+    self.selectedDescription:SetContentAlignment(5)
+    self.selectedDescription:SetTall(24)
+    self.selectedDescription:SetFont("liaMediumFont")
+    self.selectedDescription:SetTextColor(WHITE)
+    self.selectedDescription:SetText('')
     local centerlogo = MainMenu.CenterLogo and MainMenu.CenterLogo:find("%S")
     if centerlogo then
         local logoWidth, logoHeight = 512, 512
@@ -132,48 +204,12 @@ function PANEL:paintBackground(w, h)
     surface.DrawTexturedRect(0, 0, w, h * 1.5)
 end
 
-function PANEL:addTab(name, callback, justClick)
-    local button = self.tabs:Add("liaCharacterTabButton")
-    button:setText(L(name):upper())
-    button:SetTall(36)
-    button:Dock(TOP)
-    button:DockMargin(0, 24, 0, 0)
-    if justClick then
-        if isfunction(callback) then button.DoClick = function() callback(self) end end
-        return
-    end
-
-    button.DoClick = function(button) button:setSelected(true) end
-    if isfunction(callback) then button:onSelected(function() callback(self) end) end
-    return button
-end
-
-function PANEL:createCharacterSelection()
-    self:removeLogo()
-    self.content:Clear()
-    self.content:InvalidateLayout(true)
-    self.content:Add("liaCharacterSelection")
-    self:moveTabs()
-end
-
-function PANEL:createCharacterCreation()
-    if MainMenu.BackgroundURL then
-        if IsValid(self.background) then self.background:Remove() end
-        if IsValid(self.schemaLogo) then self.schemaLogo:Remove() end
-    end
-
-    self:removeLogo()
-    self.content:Clear()
-    self.content:InvalidateLayout(true)
-    self.content:Add("liaCharacterCreation")
-    self:moveTabs()
-end
-
 function PANEL:fadeOut()
     self:AlphaTo(0, self.ANIM_SPEED, 0, function() self:Remove() end)
 end
 
 function PANEL:Init()
+    self.mainMenu = true
     if IsValid(lia.gui.character) then lia.gui.character:Remove() end
     lia.gui.character = self
     self:Dock(FILL)
@@ -182,12 +218,13 @@ function PANEL:Init()
     self:AlphaTo(255, 2)
     self:createTitle()
     self.tabs = self:Add("DPanel")
-    self.tabs:SetSize(ScrW() * 0.1, ScrH() * 0.25)
-    self.tabs:SetPos(ScrW() * 0.45, ScrH() * 0.65)
+    self.tabs:Dock(LEFT)
+    self.tabs:SetWide(ScrW() * 0.2)
+    self.tabs:DockMargin(10, 10, 10, 10)
     self.tabs:SetPaintBackground(false)
     self.content = self:Add("DPanel")
     self.content:Dock(FILL)
-    self.content:DockMargin(64, 0, 64, 0)
+    self.content:DockMargin(10, 10, 10, 10)
     self.content:SetPaintBackground(false)
     self.content:SetZPos(-100)
     self.music = self:Add("liaCharBGMusic")
@@ -202,22 +239,21 @@ function PANEL:showContent()
 end
 
 function PANEL:moveTabs()
-    if IsValid(self.tabs) then self.tabs:SetPos(ScrW() * 0.85, ScrH() * 0.15) end
 end
 
 function PANEL:setFadeToBlack(fade)
     local d = deferred.new()
     if fade then
         if IsValid(self.fade) then self.fade:Remove() end
-        local fade = vgui.Create("DPanel")
-        fade:SetSize(ScrW(), ScrH())
-        fade:SetSkin("Default")
-        fade:SetBackgroundColor(color_black)
-        fade:SetAlpha(0)
-        fade:AlphaTo(255, self.FADE_SPEED, 0, function() d:resolve() end)
-        fade:SetZPos(999)
-        fade:MakePopup()
-        self.fade = fade
+        local fadePanel = vgui.Create("DPanel")
+        fadePanel:SetSize(ScrW(), ScrH())
+        fadePanel:SetSkin("Default")
+        fadePanel:SetBackgroundColor(color_black)
+        fadePanel:SetAlpha(0)
+        fadePanel:AlphaTo(255, self.FADE_SPEED, 0, function() d:resolve() end)
+        fadePanel:SetZPos(999)
+        fadePanel:MakePopup()
+        self.fade = fadePanel
     elseif IsValid(self.fade) then
         local fadePanel = self.fade
         fadePanel:AlphaTo(0, self.FADE_SPEED, 0, function()
@@ -226,6 +262,26 @@ function PANEL:setFadeToBlack(fade)
         end)
     end
     return d
+end
+
+function PANEL:createCharacterSelection()
+    self:removeLogo()
+    self.content:Clear()
+    self.content:InvalidateLayout(true)
+    local charSelect = self.content:Add("liaCharacterSelection")
+    charSelect:Dock(FILL)
+end
+
+function PANEL:createCharacterCreation()
+    if MainMenu.BackgroundURL then
+        if IsValid(self.background) then self.background:Remove() end
+        if IsValid(self.schemaLogo) then self.schemaLogo:Remove() end
+    end
+
+    self:removeLogo()
+    self.content:Clear()
+    self.content:InvalidateLayout(true)
+    self.content:Add("liaCharacterCreation")
 end
 
 function PANEL:Paint(w, h)

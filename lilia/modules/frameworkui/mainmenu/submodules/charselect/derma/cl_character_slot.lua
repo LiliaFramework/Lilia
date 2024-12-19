@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:isCursorWithinBounds()
     local x, y = self:LocalCursorPos()
     return x >= 0 and x <= self:GetWide() and y >= 0 and y < self:GetTall()
