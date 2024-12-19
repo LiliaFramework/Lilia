@@ -35,48 +35,63 @@ end
 function MODULE:CreateMenuButtons(tabs)
     if hook.Run("CanPlayerViewAttributes") ~= false then
         tabs["Attributes"] = function(panel)
-            local baseWidth, baseHeight = sW(800), sH(600)
-            local listWidth, listHeight = baseWidth * 0.9, baseHeight * 0.8
+            local baseWidth, baseHeight = sW(700), sH(500)
+            local listWidth, listHeight = baseWidth * 0.85, baseHeight * 0.75
             local listX, listY = (ScrW() - listWidth) / 2, (ScrH() - listHeight) / 2
+            local background = panel:Add("DPanel")
+            background:SetSize(listWidth, listHeight + sH(30))
+            background:SetPos(listX, listY - sH(30))
+            background.Paint = function(_, w, h)
+                draw.RoundedBox(8, 0, 0, w, h, Color(30, 30, 30, 240))
+                surface.SetDrawColor(60, 60, 60, 255)
+                surface.DrawOutlinedRect(0, 0, w, h)
+            end
+
             local title = panel:Add("DLabel")
             title:SetText("Character Attributes")
-            title:SetFont("Trebuchet24")
+            title:SetFont("liaSmallFont")
+            title:SetTextColor(color_white)
             title:SizeToContents()
-            title:SetPos(listX + listWidth / 2 - title:GetWide() / 2, listY - sH(40))
+            title:SetPos(listX + listWidth / 2 - title:GetWide() / 2, listY - sH(60))
+
             local scroll = panel:Add("DScrollPanel")
-            scroll:SetSize(listWidth, listHeight)
-            scroll:SetPos(listX, listY)
+            scroll:SetSize(listWidth * 0.96, listHeight)
+            scroll:SetPos(listX + listWidth * 0.02, listY)
+            scroll:GetVBar():SetWide(6)
+            scroll:GetVBar().Paint = function() end
+            scroll:GetVBar().btnUp.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, 200)) end
+            scroll:GetVBar().btnDown.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, 200)) end
+            scroll:GetVBar().btnGrip.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(80, 80, 80, 200)) end
+
             local function addAttributeLine(attrName, currentValue, maxValue, progress)
-                local lineHeight = 50
+                local lineHeight = 40
                 local linePanel = scroll:Add("DPanel")
                 linePanel:SetTall(lineHeight)
                 linePanel:Dock(TOP)
-                linePanel:DockMargin(0, 0, 0, 10)
+                linePanel:DockMargin(0, 0, 0, 8)
                 linePanel.Paint = function(_, w, h)
-                    surface.SetDrawColor(40, 40, 40, 200)
-                    surface.DrawRect(0, 0, w, h)
+                    draw.RoundedBox(6, 0, 0, w, h, Color(40, 40, 40, 200))
                     surface.SetDrawColor(80, 80, 80, 255)
                     surface.DrawOutlinedRect(0, 0, w, h)
                 end
 
                 local nameLabel = linePanel:Add("DLabel")
                 nameLabel:SetText(attrName)
-                nameLabel:SetFont("liaMediumFont")
+                nameLabel:SetFont("liaMiniFont")
                 nameLabel:SetTextColor(Color(255, 255, 255))
                 nameLabel:SizeToContents()
-                nameLabel:SetPos(10, lineHeight / 2 - nameLabel:GetTall() / 2)
-                local barWidth = listWidth * 0.6
+                nameLabel:SetPos(10, (lineHeight - nameLabel:GetTall()) / 2)
+
+                local barWidth = listWidth * 0.4
                 local barX = 150
-                local barY = (lineHeight / 2) - 12
+                local barY = (lineHeight - 20) / 2
                 local progressBar = linePanel:Add("DPanel")
                 progressBar:SetPos(barX, barY)
-                progressBar:SetSize(barWidth, 24)
+                progressBar:SetSize(barWidth, 20)
                 progressBar.Paint = function(_, w, h)
-                    surface.SetDrawColor(20, 20, 20, 180)
-                    surface.DrawRect(0, 0, w, h)
+                    draw.RoundedBox(10, 0, 0, w, h, Color(20, 20, 20, 180))
                     local fillWidth = math.Clamp(w * (progress / 100), 0, w)
-                    surface.SetDrawColor(0, 255, 0, 250)
-                    surface.DrawRect(0, 0, fillWidth, h)
+                    draw.RoundedBox(10, 0, 0, fillWidth, h, Color(0, 200, 0, 250))
                     surface.SetDrawColor(100, 100, 100, 200)
                     surface.DrawOutlinedRect(0, 0, w, h)
                 end
@@ -84,10 +99,10 @@ function MODULE:CreateMenuButtons(tabs)
                 local valueText = string.format("%d / %d (%d%%)", currentValue, maxValue, progress)
                 local valueLabel = linePanel:Add("DLabel")
                 valueLabel:SetText(valueText)
-                valueLabel:SetFont("liaMediumFont")
+                valueLabel:SetFont("liaMiniFont")
                 valueLabel:SetTextColor(Color(255, 255, 255))
                 valueLabel:SizeToContents()
-                valueLabel:SetPos(barX + barWidth + 10, lineHeight / 2 - valueLabel:GetTall() / 2)
+                valueLabel:SetPos(barX + barWidth + 10, (lineHeight - valueLabel:GetTall()) / 2)
             end
 
             for attrKey, attrData in SortedPairsByMemberValue(lia.attribs.list, "name") do
