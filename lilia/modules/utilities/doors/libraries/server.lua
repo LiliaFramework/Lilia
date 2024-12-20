@@ -185,6 +185,7 @@ function MODULE:KeyLock(client, door, time)
     if not door:isLocked() and IsValid(door) and distance <= 256 and (door:isDoor() and door:checkDoorAccess(client) or door:GetCreator() == client or client:isStaffOnDuty() and (door:IsVehicle() or door:isSimfphysCar())) then
         client:setAction("@locking", time, function() end)
         client:doStaredAction(door, function() self:ToggleLock(client, door, true) end, time, function() client:stopAction() end)
+        lia.log.add(client, "lockDoor", door)
     end
 end
 
@@ -193,6 +194,7 @@ function MODULE:KeyUnlock(client, door, time)
     if door:isLocked() and IsValid(door) and distance <= 256 and (door:isDoor() and door:checkDoorAccess(client) or door:GetCreator() == client or client:isStaffOnDuty() and (door:IsVehicle() or door:isSimfphysCar())) then
         client:setAction("@unlocking", time, function() end)
         client:doStaredAction(door, function() self:ToggleLock(client, door, false) end, time, function() client:stopAction() end)
+        lia.log.add(client, "unlockDoor", door)
     end
 end
 
@@ -222,4 +224,25 @@ function MODULE:ToggleLock(client, door, state)
 
         door:setLocked(state)
     end
+
+    lia.log.add(client, "toggleLock", door, state and "locked" or "unlocked")
 end
+
+lia.log.addType("doorSetClass", function(client, door, className) return string.format("[%s] %s set class '%s' to %s.", client:SteamID(), client:Name(), className, door:GetClass()) end, "Doors", Color(52, 152, 219))
+lia.log.addType("doorRemoveClass", function(client, door) return string.format("[%s] %s removed class from %s.", client:SteamID(), client:Name(), door:GetClass()) end, "Doors", Color(255, 0, 0))
+lia.log.addType("doorSaveData", function(client) return string.format("[%s] %s saved all door data.", client:SteamID(), client:Name()) end, "Doors", Color(0, 255, 0))
+lia.log.addType("doorToggleOwnable", function(client, door, state) return string.format("[%s] %s toggled the ownable state of %s to %s.", client:SteamID(), client:Name(), door:GetClass(), state and "unownable" or "ownable") end, "Doors", Color(52, 152, 219))
+lia.log.addType("doorSetFaction", function(client, door, factionName) return string.format("[%s] %s assigned faction '%s' to %s.", client:SteamID(), client:Name(), factionName, door:GetClass()) end, "Doors", Color(52, 152, 219))
+lia.log.addType("doorRemoveFaction", function(client, door, factionName) return string.format("[%s] %s removed faction '%s' from %s.", client:SteamID(), client:Name(), factionName, door:GetClass()) end, "Doors", Color(52, 152, 219))
+lia.log.addType("doorSetHidden", function(client, door, state) return string.format("[%s] %s set %s to %s.", client:SteamID(), client:Name(), door:GetClass(), state and "hidden" or "visible") end, "Doors", Color(52, 152, 219))
+lia.log.addType("doorSetTitle", function(client, door, title) return string.format("[%s] %s set title '%s' to %s.", client:SteamID(), client:Name(), title, door:GetClass()) end, "Doors", Color(52, 152, 219))
+lia.log.addType("doorResetData", function(client, door) return string.format("[%s] %s reset all data on %s.", client:SteamID(), client:Name(), door:GetClass()) end, "Doors", Color(255, 0, 0))
+lia.log.addType("doorSetParent", function(client, door) return string.format("[%s] %s set %s as the parent door.", client:SteamID(), client:Name(), door:GetClass()) end, "Doors", Color(52, 152, 219))
+lia.log.addType("doorAddChild", function(client, parentDoor, childDoor) return string.format("[%s] %s added %s as a child to %s.", client:SteamID(), client:Name(), childDoor:GetClass(), parentDoor:GetClass()) end, "Doors", Color(52, 152, 219))
+lia.log.addType("doorRemoveChild", function(client, parentDoor, childDoor) return string.format("[%s] %s removed %s as a child from %s.", client:SteamID(), client:Name(), childDoor:GetClass(), parentDoor:GetClass()) end, "Doors", Color(52, 152, 219))
+lia.log.addType("doorForceLock", function(client, door) return string.format("[%s] %s forcibly locked %s.", client:SteamID(), client:Name(), door:GetClass()) end, "Doors", Color(255, 0, 0))
+lia.log.addType("doorForceUnlock", function(client, door) return string.format("[%s] %s forcibly unlocked %s.", client:SteamID(), client:Name(), door:GetClass()) end, "Doors", Color(255, 0, 0))
+lia.log.addType("doorDisable", function(client, door) return string.format("[%s] %s disabled %s.", client:SteamID(), client:Name(), door:GetClass()) end, "Doors", Color(255, 0, 0))
+lia.log.addType("doorEnable", function(client, door) return string.format("[%s] %s enabled %s.", client:SteamID(), client:Name(), door:GetClass()) end, "Doors", Color(0, 255, 0))
+lia.log.addType("doorDisableAll", function(client, count) return string.format("[%s] %s disabled all doors (%d total).", client:SteamID(), client:Name(), count) end, "Doors", Color(255, 0, 0))
+lia.log.addType("doorEnableAll", function(client, count) return string.format("[%s] %s enabled all doors (%d total).", client:SteamID(), client:Name(), count) end, "Doors", Color(0, 255, 0))

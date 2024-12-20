@@ -1,12 +1,63 @@
 ﻿lia.log.types = {
+    ["toolgunUse"] = {
+        func = function(client, tool) return string.format("[%s] %s used toolgun: %s [CharID: %s]", client:SteamID(), client:Name(), tool, client:getChar():getID()) end,
+        category = "Toolgun",
+        color = Color(52, 152, 219)
+    },
     ["playerConnected"] = {
         func = function(client) return string.format("[%s] %s has connected to the server.", client:SteamID(), client:Name()) end,
-        category = "Connection",
+        category = "Connections",
         color = Color(52, 152, 219)
     },
     ["playerDisconnected"] = {
         func = function(client) return string.format("[%s] %s has disconnected from the server.", client:SteamID(), client:Name()) end,
-        category = "Connection",
+        category = "Connections",
+        color = Color(52, 152, 219)
+    },
+    ["invalidNet"] = {
+        func = function(client) return string.format("[%s] %s sent invalid net message! [CharID: %s]", client:SteamID(), client:Name(), client:getChar():getID()) end,
+        category = "Networking",
+        color = Color(52, 152, 219)
+    },
+    -- [[ Recognition ]] --
+    ["charRecognize"] = {
+        func = function(client, id, name) return string.format("[%s] %s recognized [%s] as %s [CharID: %s]", client:SteamID(), client:Name(), id, name, client:getChar():getID()) end,
+        category = "Recognition",
+        color = Color(46, 204, 113)
+    },
+    ["charCreate"] = {
+        func = function(client, character) return string.format("[%s] %s created character %s [CharID: %s]", client:SteamID(), client:Name(), character:getName(), character:getID()) end,
+        category = "Character",
+        color = Color(52, 152, 219)
+    },
+    ["charLoad"] = {
+        func = function(client, name) return string.format("[%s] %s loaded character %s [CharID: %s]", client:SteamID(), client:Name(), name, character:getID()) end,
+        category = "Character",
+        color = Color(52, 152, 219)
+    },
+    ["charDelete"] = {
+        func = function(client, id) return string.format("[%s] %s deleted character %s [CharID: %s]", IsValid(client) and client:SteamID() or "CONSOLE", IsValid(client) and client:Name() or "CONSOLE", id, IsValid(client) and client:getChar():getID() or "Unknown") end,
+        category = "Character",
+        color = Color(52, 152, 219)
+    },
+    ["chat"] = {
+        func = function(client, chatType, message) return string.format("[%s] [%s] %s: %s [CharID: %s]", client:SteamID(), chatType, client:Name(), message, client:getChar():getID()) end,
+        category = "Chat",
+        color = Color(52, 152, 219)
+    },
+    ["chatOOC"] = {
+        func = function(client, msg) return string.format("[%s] [OOC] %s: %s [CharID: %s]", client:SteamID(), client:Name(), msg, client:getChar():getID()) end,
+        category = "Chat",
+        color = Color(52, 152, 219)
+    },
+    ["chatLOOC"] = {
+        func = function(client, msg) return string.format("[%s] [LOOC] %s: %s [CharID: %s]", client:SteamID(), client:Name(), msg, client:getChar():getID()) end,
+        category = "Chat",
+        color = Color(52, 152, 219)
+    },
+    ["command"] = {
+        func = function(client, text) return string.format("[%s] %s used '%s' [CharID: %s]", client:SteamID(), client:Name(), text, client:getChar():getID()) end,
+        category = "Chat",
         color = Color(52, 152, 219)
     },
     ["spawned_prop"] = {
@@ -39,76 +90,6 @@
         category = "SWEP",
         color = Color(52, 152, 219)
     },
-    ["chat"] = {
-        func = function(client, chatType, message) return string.format("[%s] [%s] %s: %s [CharID: %s]", client:SteamID(), chatType, client:Name(), message, client:getChar():getID()) end,
-        category = "Chat",
-        color = Color(52, 152, 219)
-    },
-    ["chatOOC"] = {
-        func = function(client, msg) return string.format("[%s] [OOC] %s: %s [CharID: %s]", client:SteamID(), client:Name(), msg, client:getChar():getID()) end,
-        category = "Chat",
-        color = Color(52, 152, 219)
-    },
-    ["chatLOOC"] = {
-        func = function(client, msg) return string.format("[%s] [LOOC] %s: %s [CharID: %s]", client:SteamID(), client:Name(), msg, client:getChar():getID()) end,
-        category = "Chat",
-        color = Color(52, 152, 219)
-    },
-    ["command"] = {
-        func = function(client, text) return string.format("[%s] %s used '%s' [CharID: %s]", client:SteamID(), client:Name(), text, client:getChar():getID()) end,
-        category = "Chat",
-        color = Color(52, 152, 219)
-    },
-    ["charCreate"] = {
-        func = function(client, character) return string.format("[%s] %s created character %s [CharID: %s]", client:SteamID(), client:Name(), character:getName(), character:getID()) end,
-        category = "Character",
-        color = Color(52, 152, 219)
-    },
-    ["charLoad"] = {
-        func = function(client, name) return string.format("[%s] %s loaded character %s [CharID: %s]", client:SteamID(), client:Name(), name, character:getID()) end,
-        category = "Character",
-        color = Color(52, 152, 219)
-    },
-    ["charDelete"] = {
-        func = function(client, id) return string.format("[%s] %s deleted character %s [CharID: %s]", IsValid(client) and client:SteamID() or "CONSOLE", IsValid(client) and client:Name() or "CONSOLE", id, IsValid(client) and client:getChar():getID() or "Unknown") end,
-        category = "Character",
-        color = Color(52, 152, 219)
-    },
-    ["buydoor"] = {
-        func = function(client, price) return string.format("[%s] %s purchased the door for %d [CharID: %s]", client:SteamID(), client:Name(), price, client:getChar():getID()) end,
-        category = "Door",
-        color = Color(52, 152, 219)
-    },
-    ["selldoor"] = {
-        func = function(client, price) return string.format("[%s] %s sold the door for %d [CharID: %s]", client:SteamID(), client:Name(), price, client:getChar():getID()) end,
-        category = "Door",
-        color = Color(52, 152, 219)
-    },
-    ["vendorAccess"] = {
-        func = function(client, vendor) return string.format("[%s] %s accessed vendor %s [CharID: %s]", client:SteamID(), client:Name(), vendor, client:getChar():getID()) end,
-        category = "Vendor",
-        color = Color(52, 152, 219)
-    },
-    ["vendorExit"] = {
-        func = function(client, vendor) return string.format("[%s] %s exited vendor %s [CharID: %s]", client:SteamID(), client:Name(), vendor, client:getChar():getID()) end,
-        category = "Vendor",
-        color = Color(52, 152, 219)
-    },
-    ["vendorSell"] = {
-        func = function(client, item, vendor) return string.format("[%s] %s sold a %s to %s [CharID: %s]", client:SteamID(), client:Name(), item, vendor, client:getChar():getID()) end,
-        category = "Vendor",
-        color = Color(52, 152, 219)
-    },
-    ["vendorBuy"] = {
-        func = function(client, item, vendor) return string.format("[%s] %s bought a %s from %s [CharID: %s]", client:SteamID(), client:Name(), item, vendor, client:getChar():getID()) end,
-        category = "Vendor",
-        color = Color(52, 152, 219)
-    },
-    ["vendorBuyFail"] = {
-        func = function(client, vendor, item) return string.format("[%s] %s tried to buy a %s from %s but it failed. He likely had no space! [CharID: %s]", client:SteamID(), client:Name(), item, vendor, client:getChar():getID()) end,
-        category = "Vendor",
-        color = Color(52, 152, 219)
-    },
     ["itemTake"] = {
         func = function(client, item) return string.format("[%s] %s picked up %s [CharID: %s]", client:SteamID(), client:Name(), item, client:getChar():getID()) end,
         category = "Item",
@@ -139,6 +120,7 @@
         category = "Item",
         color = Color(52, 152, 219)
     },
+    -- [[ Money ]] --
     ["money"] = {
         func = function(client, amount) return string.format("[%s] %s's money changed by %d [CharID: %s]", client:SteamID(), client:Name(), amount, client:getChar():getID()) end,
         category = "Character",
@@ -149,6 +131,11 @@
         category = "Character",
         color = Color(52, 152, 219)
     },
+    ["moneyPickedUp"] = {
+        func = function(client, amount) return string.format("[%s] %s picked up %s %s [CharID: %s]", client:SteamID(), client:Name(), lia.currency.get(amount), amount > 1 and lia.currency.plural or lia.currency.singular, client:getChar():getID()) end,
+        category = "Money",
+        color = Color(52, 152, 219)
+    },
     ["playerHurt"] = {
         func = function(client, attacker, damage, health) return string.format("[%s] %s took %d damage from %s, leaving them at %d health [CharID: %s]", client:SteamID(), client:Name(), damage, attacker, health, client:getChar():getID()) end,
         category = "Damage",
@@ -157,26 +144,6 @@
     ["playerDeath"] = {
         func = function(client, attacker) return string.format("[%s] %s was killed by %s [CharID: %s]", client:SteamID(), client:Name(), attacker, client:getChar():getID()) end,
         category = "Death",
-        color = Color(52, 152, 219)
-    },
-    ["toolgunUse"] = {
-        func = function(client, tool) return string.format("[%s] %s used toolgun: %s [CharID: %s]", client:SteamID(), client:Name(), tool, client:getChar():getID()) end,
-        category = "Toolgun",
-        color = Color(52, 152, 219)
-    },
-    ["invalidNet"] = {
-        func = function(client) return string.format("[%s] %s sent invalid net message! [CharID: %s]", client:SteamID(), client:Name(), client:getChar():getID()) end,
-        category = "Networking",
-        color = Color(52, 152, 219)
-    },
-    ["charRecognize"] = {
-        func = function(client, id, name) return string.format("[%s] %s recognized [%s] as %s [CharID: %s]", client:SteamID(), client:Name(), id, name, client:getChar():getID()) end,
-        category = "Recognition",
-        color = Color(46, 204, 113)
-    },
-    ["moneyPickedUp"] = {
-        func = function(client, amount) return string.format("[%s] %s picked up %s %s [CharID: %s]", client:SteamID(), client:Name(), lia.currency.get(amount), amount > 1 and lia.currency.plural or lia.currency.singular, client:getChar():getID()) end,
-        category = "Money",
         color = Color(52, 152, 219)
     },
 }
