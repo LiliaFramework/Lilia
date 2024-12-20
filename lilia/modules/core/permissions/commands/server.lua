@@ -710,6 +710,38 @@ lia.command.add("chargetmodel", {
     end
 })
 
+lia.command.add("charsetspeed", {
+    adminOnly = true,
+    privilege = "Manage Character Stats",
+    syntax = "<string name> <number speed>",
+    onRun = function(client, arguments)
+        local target = lia.command.findPlayer(client, arguments[1])
+        local speed = tonumber(arguments[2]) or lia.config.WalkSpeed
+        if IsValid(target) and target:getChar() then
+            target:SetRunSpeed(speed)
+        else
+            client:notify("Invalid Target")
+        end
+    end
+})
+
+lia.command.add("charsetmodel", {
+    adminOnly = true,
+    syntax = "<string name> <string model>",
+    privilege = "Manage Character Informations",
+    onRun = function(client, arguments)
+        if not arguments[2] then return L("invalidArg", 2) end
+        local target = lia.command.findPlayer(client, arguments[1])
+        if IsValid(target) and target:getChar() then
+            local oldModel = target:getChar():getModel()
+            target:getChar():setModel(arguments[2])
+            target:SetupHands()
+            client:notifyLocalized("cChangeModel", client:Name(), target:Name(), arguments[2])
+            lia.log.add(client, "charsetmodel", target:Name(), arguments[2], oldModel)
+        end
+    end
+})
+
 lia.command.add("chargiveitem", {
     superAdminOnly = true,
     syntax = "<string name> <string item>",
