@@ -815,7 +815,6 @@ lia.command.add("charsetname", {
 
         if not arguments[2] then return client:requestString("@chgName", "@chgNameDesc", function(text) lia.command.run(client, "charsetname", {target:Name(), text}) end, target:Name()) end
         local newName = table.concat(arguments, " ", 2)
-        local oldName = target:getChar():getName()
         target:getChar():setName(newName:gsub("#", "#?"))
         client:notifyLocalized("cChangeName", client:Name(), target:Name(), newName)
     end
@@ -829,7 +828,6 @@ lia.command.add("charsetscale", {
         local target = lia.command.findPlayer(client, arguments[1])
         local scale = tonumber(arguments[2]) or 1
         if IsValid(target) and target:getChar() then
-            local oldScale = target:GetModelScale()
             target:SetModelScale(scale, 0)
             client:notify("You changed " .. target:Name() .. "'s model scale to " .. scale)
         else
@@ -846,7 +844,6 @@ lia.command.add("charsetjump", {
         local target = lia.command.findPlayer(client, arguments[1])
         local power = tonumber(arguments[2]) or 200
         if IsValid(target) and target:getChar() then
-            local oldJump = target:GetJumpPower()
             target:SetJumpPower(power)
             client:notify("You changed " .. target:Name() .. "'s jump power to " .. power)
         else
@@ -867,7 +864,6 @@ lia.command.add("charsetbodygroup", {
         if IsValid(target) and target:getChar() then
             local index = target:FindBodygroupByName(bodyGroup)
             if index > -1 then
-                local oldValue = target:GetBodygroup(index)
                 if value and value < 1 then value = nil end
                 local groups = target:getChar():getData("groups", {})
                 groups[index] = value
@@ -892,7 +888,6 @@ lia.command.add("charsetskin", {
         local skin = tonumber(arguments[2])
         local target = lia.command.findPlayer(client, name)
         if IsValid(target) and target:getChar() then
-            local oldSkin = target:GetSkin()
             target:getChar():setData("skin", skin)
             target:SetSkin(skin or 0)
             client:notifyLocalized("cChangeSkin", client:Name(), target:Name(), skin or 0)
