@@ -64,7 +64,7 @@ function MODULE:PlayerDeath(client, _, attacker)
     local character = client:getChar()
     if not character then return end
     if attacker:IsPlayer() then
-        if self.LoseWeapononDeathHuman then self:RemoveAllEquippedWeapons(client) end
+        if self.LoseWeapononDeathHuman then self:RemovedDropOnDeathItems(client) end
         if self.DeathPopupEnabled then
             net.Start("death_client")
             net.WriteFloat(attacker:getChar():getID())
@@ -74,30 +74,34 @@ function MODULE:PlayerDeath(client, _, attacker)
 
     client:SetDeathTimer()
     character:setData("pos", nil)
-    if (not attacker:IsPlayer() and self.LoseWeapononDeathNPC) or (self.LoseWeapononDeathWorld and attacker:IsWorld()) then self:RemoveAllEquippedWeapons(client) end
+    if (not attacker:IsPlayer() and self.LoseWeapononDeathNPC) or (self.LoseWeapononDeathWorld and attacker:IsWorld()) then self:RemovedDropOnDeathItems(client) end
     character:setData("deathPos", client:GetPos())
 end
 
-function MODULE:RemoveAllEquippedWeapons(client)
+function MODULE:RemovedDropOnDeathItems(client)
     local character = client:getChar()
+    if not character then return end
     local inventory = character:getInv()
+    if not inventory then return end
     local items = inventory:getItems()
+    if not items or #items == 0 then return end
     client.carryWeapons = {}
     client.LostItems = {}
-    for _, v in pairs(items) do
-        if (v.isWeapon or v.isCW) and v:getData("equip") then
+    for _, item in ipairs(items) do
+        if (item.isWeapon and item.DropOnDeath and item:getData("equip", false)) or (not item.isWeapon and item.DropOnDeath) then
             table.insert(client.LostItems, {
-                name = v.name,
-                id = v.id
+                name = item.name,
+                id = item.id
             })
 
-            v:remove()
+            item:remove()
         end
     end
 
-    if #client.LostItems > 0 then
-        local amount = #client.LostItems > 1 and #client.LostItems .. " items" or "an item"
-        client:notify("Because you died, you have lost " .. amount .. ".")
+    local lostCount = #client.LostItems
+    if lostCount > 0 then
+        local itemLabel = lostCount > 1 and "items" or "an item"
+        client:notify("Because you died, you have lost " .. lostCount .. " " .. itemLabel .. ".")
     end
 end
 

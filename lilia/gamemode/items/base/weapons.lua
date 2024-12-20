@@ -8,6 +8,7 @@ ITEM.height = 2
 ITEM.isWeapon = true
 ITEM.weaponCategory = "sidearm"
 ITEM.RequiredSkillLevels = {}
+ITEM.DropOnDeath = true
 function ITEM.postHooks:drop()
     local client = self.player
     if client:HasWeapon(self.class) then
