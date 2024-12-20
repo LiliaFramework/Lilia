@@ -4,17 +4,4 @@ MODULE.discord = "@liliaplayer"
 MODULE.version = "Stock"
 MODULE.desc = "Adds VJBase Compatibility"
 MODULE.enabled = VJ ~= nil
-MODULE.VJBaseConsoleCommands = {
-    ["vj_npc_processtime"] = "1",
-    ["vj_npc_corpsefade"] = "1",
-    ["vj_npc_corpsefadetime"] = "5",
-    ["vj_npc_nogib"] = "1",
-    ["vj_npc_nosnpcchat"] = "1",
-    ["vj_npc_slowplayer"] = "1",
-    ["vj_npc_noproppush"] = "1",
-    ["vj_npc_nothrowgrenade"] = "1",
-    ["vj_npc_fadegibstime"] = "5",
-    ["vj_npc_knowenemylocation"] = "1",
-    ["vj_npc_dropweapon"] = "0",
-    ["vj_npc_plypickupdropwep"] = "0",
-}
+MODULE.ExploitableNets = {"VJSay", "vj_fireplace_turnon1", "vj_npcmover_sv_create", "vj_npcmover_sv_startmove", "vj_npcmover_removesingle", "vj_npcmover_removeall", "vj_npcspawner_sv_create", "vj_npcrelationship_sr_leftclick", "vj_testentity_runtextsd", "vj_fireplace_turnon2"}
