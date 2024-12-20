@@ -55,9 +55,9 @@ if SERVER then
 
         if not isstring(logString) or not IsColor(color) then return end
         hook.Run("OnServerLog", client, logType, logString, category, color)
-        local logDir = "lilia/logs/" .. category
+        local logDir = "lilia/logs"
         if not file.Exists(logDir, "DATA") then file.CreateDir(logDir) end
-        local logFilePath = logDir .. "/" .. os.date("%Y-%m-%d") .. ".txt"
+        local logFilePath = logDir .. "/" .. category .. ".txt"
         file.Append(logFilePath, "[" .. os.date("%H:%M:%S") .. "]\t" .. logString .. "\r\n")
     end
 
