@@ -1,5 +1,5 @@
 MODULE.TimeUntilDroppedSWEPRemoved = 15
-MODULE.NPCsDropWeapons = true
+MODULE.NPCsDropWeapons = false
 MODULE.CharacterSwitchCooldownTimer = 5
 MODULE.CharacterSwitchCooldown = true
 MODULE.OnDamageCharacterSwitchCooldownTimer = 15

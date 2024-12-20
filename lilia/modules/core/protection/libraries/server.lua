@@ -175,7 +175,7 @@ function MODULE:PlayerSpawnObject(client)
 end
 
 function MODULE:PlayerSpawnedNPC(_, entity)
-    if self.NPCsDropWeapons then entity:SetKeyValue("spawnflags", "8192") end
+    if not self.NPCsDropWeapons then entity:SetKeyValue("spawnflags", "8192") end
 end
 
 function MODULE:CanTool(client, _, tool)
