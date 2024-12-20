@@ -41,19 +41,6 @@ if SERVER then
         end
     end
 
-    --- Adds a raw log string to the log system and optionally notifies admins.
-    -- @string logString The raw log string to add
-    -- @realm server
-    function lia.log.addRaw(logString)
-        Msg("[LOG] ", logString .. "\n")
-        local logType = "Raw"
-        local logDir = "lilia/logs" .. logType
-        if not file.Exists(logDir, "DATA") then file.CreateDir(logDir) end
-        local logFilePath = logDir .. "/" .. os.date("%x"):gsub("/", "-") .. ".txt"
-        lia.log.send(lia.util.getAdmins(), logString)
-        file.Append(logFilePath, "[" .. os.date("%X") .. "]\t" .. logString .. "\r\n")
-    end
-
     --- Add a log message.
     -- @realm server
     -- @client client Player who instigated the log

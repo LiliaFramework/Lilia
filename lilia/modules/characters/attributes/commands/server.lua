@@ -16,13 +16,6 @@
                     if lia.util.stringMatches(L(v.name, client), attribName) or lia.util.stringMatches(k, attribName) then
                         character:setAttrib(k, math.abs(attribNumber))
                         client:notifyLocalized("attribSet", target:Name(), L(v.name, client), math.abs(attribNumber))
-                        lia.log.add(client, "Set Attribute", {
-                            target = target:Name(),
-                            targetSteamID = target:SteamID(),
-                            attribute = k,
-                            attributeName = L(v.name, client),
-                            level = math.abs(attribNumber)
-                        })
                         return
                     end
                 end
@@ -49,13 +42,6 @@ lia.command.add("charaddattrib", {
                     if lia.util.stringMatches(L(v.name, client), attribName) or lia.util.stringMatches(k, attribName) then
                         character:updateAttrib(k, math.abs(attribNumber))
                         client:notifyLocalized("attribUpdate", target:Name(), L(v.name, client), math.abs(attribNumber))
-                        lia.log.add(client, "Add Attribute", {
-                            target = target:Name(),
-                            targetSteamID = target:SteamID(),
-                            attribute = k,
-                            attributeName = L(v.name, client),
-                            addedLevel = math.abs(attribNumber)
-                        })
                         return
                     end
                 end

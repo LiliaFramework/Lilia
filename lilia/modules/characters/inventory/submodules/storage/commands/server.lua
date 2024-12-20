@@ -11,19 +11,10 @@ lia.command.add("storagelock", {
                 entity:setNetVar("locked", true)
                 entity.password = password
                 client:notifyLocalized("storPass", password)
-                lia.log.add(client, "Lock Storage", {
-                    target = entity:GetName() or entity:GetClass(),
-                    targetSteamID = entity:SteamID() or "N/A",
-                    password = password
-                })
             else
                 entity:setNetVar("locked", nil)
                 entity.password = nil
                 client:notifyLocalized("storPassRmv")
-                lia.log.add(client, "Unlock Storage", {
-                    target = entity:GetName() or entity:GetClass(),
-                    targetSteamID = entity:SteamID() or "N/A"
-                })
             end
 
             MODULE:SaveData()
@@ -64,10 +55,6 @@ lia.command.add("trunk", {
             net.WriteEntity(entity)
             net.Send(client)
             entity:EmitSound("items/ammocrate_open.wav")
-            lia.log.add(client, "Open Trunk", {
-                target = entity:GetName() or entity:GetClass(),
-                targetSteamID = entity:SteamID() or "N/A"
-            })
         end)
     end,
 })

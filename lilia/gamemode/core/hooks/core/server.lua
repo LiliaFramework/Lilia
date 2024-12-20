@@ -65,36 +65,6 @@ function GM:OnPickupMoney(client, moneyEntity)
     end
 end
 
-function GM:OnPlayerInteractItem(client, action, item)
-    if isentity(item) then
-        if IsValid(item) then
-            local itemID = item.liaItemID
-            item = lia.item.instances[itemID]
-        else
-            return
-        end
-    elseif isnumber(item) then
-        item = lia.item.instances[item]
-    end
-
-    action = string.lower(action)
-    if not item then return end
-    local name = item.name
-    if action == "use" then
-        lia.log.add(client, "itemUse", name)
-    elseif action == "drop" then
-        lia.log.add(client, "itemDrop", name)
-    elseif action == "take" then
-        lia.log.add(client, "itemTake", name)
-    elseif action == "unequip" then
-        lia.log.add(client, "itemUnequip", name)
-    elseif action == "equip" then
-        lia.log.add(client, "itemEquip", name)
-    else
-        lia.log.add(client, "itemInteraction", action, item)
-    end
-end
-
 function GM:CanItemBeTransfered(item, curInv, inventory)
     if item.isBag and curInv ~= inventory and item.getInv and item:getInv() and table.Count(item:getInv():getItems()) > 0 then
         local character = lia.char.loaded[curInv.client]
@@ -231,28 +201,27 @@ function GM:CanPlayerDropItem(client, item)
 end
 
 function GM:PlayerSay(client, message)
-    local chatType, message, anonymous = lia.chat.parse(client, message, true)
-    if (chatType == "ic") and lia.command.parse(client, message) then return "" end
-    if utf8.len(message) <= lia.config.MaxChatLength then
-        local isOOC = chatType == "ooc"
-        local isLOOC = chatType == "looc"
-        lia.chat.send(client, chatType, message, anonymous)
-        local logType
-        if isOOC then
-            logType = "chatOOC"
-            lia.log.add(client, logType, message)
-        elseif isLOOC then
-            logType = "chatLOOC"
-            lia.log.add(client, logType, message)
-        else
-            logType = "chat"
-            lia.log.add(client, logType, chatType and chatType:upper() or "??", message)
-        end
+    local logTypeMap = {
+        ooc = "chatOOC",
+        looc = "chatLOOC"
+    }
 
-        hook.Run("PostPlayerSay", client, message, chatType, anonymous)
-    else
+    local chatType, message, anonymous = lia.chat.parse(client, message, true)
+    if chatType == "ic" and lia.command.parse(client, message) then return "" end
+    if utf8.len(message) > lia.config.MaxChatLength then
         client:notify("Your message is too long and has not been sent.")
+        return ""
     end
+
+    local logType = logTypeMap[chatType] or "chat"
+    lia.chat.send(client, chatType, message, anonymous)
+    if logType == "chat" then
+        lia.log.add(client, logType, chatType and chatType:upper() or "??", message)
+    else
+        lia.log.add(client, logType, message)
+    end
+
+    hook.Run("PostPlayerSay", client, message, chatType, anonymous)
     return ""
 end
 

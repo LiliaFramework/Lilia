@@ -1,5 +1,4 @@
-﻿
-lia.command.add("pktoggle", {
+﻿lia.command.add("pktoggle", {
     adminOnly = true,
     privilege = "Toggle Permakill",
     syntax = "<string target>",
@@ -24,12 +23,6 @@ lia.command.add("pktoggle", {
         else
             client:notifyLocalized("pktoggle_false")
         end
-
-        lia.log.add(client, "Toggle PK Flag", {
-            target = target:Name(),
-            targetSteamID = target:SteamID(),
-            newPKState = newState
-        })
     end
 })
 
@@ -48,9 +41,5 @@ lia.command.add("charPK", {
         character:ban()
         client:notifyLocalized("charPK_success_admin", target:Name())
         target:notifyLocalized("charPK_success_target", client:Name())
-        lia.log.add(client, "Force Permakill", {
-            target = target:Name(),
-            targetSteamID = target:SteamID()
-        })
     end
 })

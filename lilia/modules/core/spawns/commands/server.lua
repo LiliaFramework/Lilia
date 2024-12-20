@@ -37,12 +37,6 @@ lia.command.add("spawnadd", {
             MODULE.spawns[factionInfo.uniqueID][className] = MODULE.spawns[factionInfo.uniqueID][className] or {}
             table.insert(MODULE.spawns[factionInfo.uniqueID][className], client:GetPos())
             MODULE:SaveData()
-            lia.log.add(client, "Add Spawn", {
-                faction = factionInfo.uniqueID,
-                class = className,
-                position = client:GetPos()
-            })
-
             local factionDisplay = L(factionInfo.name)
             if className then factionDisplay = factionDisplay .. " (" .. L(lia.class.list[className].name) .. ")" end
             return L("spawnAdded", factionDisplay)
@@ -72,11 +66,6 @@ lia.command.add("spawnremove", {
         end
 
         if removedCount > 0 then MODULE:SaveData() end
-        lia.log.add(client, "Remove Spawn", {
-            count = removedCount,
-            radius = radius,
-            position = position
-        })
         return L("spawnDeleted", removedCount)
     end
 })
@@ -117,11 +106,6 @@ lia.command.add("returnitems", {
                 targetPlayer.LostItems = nil
                 targetPlayer:notify("Your items have been returned.")
                 client:notify("Returned the items.")
-                lia.log.add(client, "Return Items", {
-                    target = targetPlayer:Name(),
-                    targetSteamID = targetPlayer:SteamID(),
-                    items = returnedItems
-                })
             end
         else
             client:notify("Weapon on Death not Enabled!")
