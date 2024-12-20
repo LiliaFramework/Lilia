@@ -20,7 +20,6 @@
         category = "Character",
         color = Color(52, 152, 219)
     },
-    
     -- Damage
     ["playerHurt"] = {
         func = function(client, attacker, damage, health) return string.format("[%s] %s took %d damage from %s, leaving them at %d health [CharID: %s]", client:SteamID(), client:Name(), damage, attacker, health, client:getChar():getID()) end,
@@ -32,7 +31,6 @@
         category = "Death",
         color = Color(52, 152, 219)
     },
-    
     -- Spawns
     ["spawned_prop"] = {
         func = function(client, model) return string.format("[%s] %s has spawned a prop with model: %s [CharID: %s]", client:SteamID(), client:Name(), model, client:getChar():getID()) end,
@@ -64,7 +62,6 @@
         category = "SWEP",
         color = Color(52, 152, 219)
     },
-
     -- Chat
     ["chat"] = {
         func = function(client, chatType, message) return string.format("[%s] [%s] %s: %s [CharID: %s]", client:SteamID(), chatType, client:Name(), message, client:getChar():getID()) end,
@@ -86,7 +83,6 @@
         category = "Chat",
         color = Color(52, 152, 219)
     },
-
     -- Money
     ["money"] = {
         func = function(client, amount) return string.format("[%s] %s's money changed by %d [CharID: %s]", client:SteamID(), client:Name(), amount, client:getChar():getID()) end,
@@ -103,7 +99,6 @@
         category = "Money",
         color = Color(52, 152, 219)
     },
-
     -- Items
     ["itemTake"] = {
         func = function(client, item) return string.format("[%s] %s picked up %s [CharID: %s]", client:SteamID(), client:Name(), item, client:getChar():getID()) end,
@@ -135,14 +130,12 @@
         category = "Item",
         color = Color(52, 152, 219)
     },
-
     -- Protection
     ["invalidNet"] = {
         func = function(client) return string.format("[%s] %s sent invalid net message! [CharID: %s]", client:SteamID(), client:Name(), client:getChar():getID()) end,
         category = "Protection",
         color = Color(52, 152, 219)
     },
-
     -- Miscellaneous
     ["toolgunUse"] = {
         func = function(client, tool) return string.format("[%s] %s used toolgun: %s [CharID: %s]", client:SteamID(), client:Name(), tool, client:getChar():getID()) end,
