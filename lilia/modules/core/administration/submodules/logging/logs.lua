@@ -16,10 +16,9 @@
     },
     ["invalidNet"] = {
         func = function(client) return string.format("[%s] %s sent invalid net message! [CharID: %s]", client:SteamID(), client:Name(), client:getChar():getID()) end,
-        category = "Networking",
+        category = "Protection",
         color = Color(52, 152, 219)
     },
-    -- [[ Recognition ]] --
     ["charRecognize"] = {
         func = function(client, id, name) return string.format("[%s] %s recognized [%s] as %s [CharID: %s]", client:SteamID(), client:Name(), id, name, client:getChar():getID()) end,
         category = "Recognition",
@@ -120,7 +119,6 @@
         category = "Item",
         color = Color(52, 152, 219)
     },
-    -- [[ Money ]] --
     ["money"] = {
         func = function(client, amount) return string.format("[%s] %s's money changed by %d [CharID: %s]", client:SteamID(), client:Name(), amount, client:getChar():getID()) end,
         category = "Character",
