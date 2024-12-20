@@ -10,12 +10,12 @@ end
 
 function MODULE:AddOption(name, data)
     self.Options[name] = data
-    AddLocalOption(name)
+    AddOption(name)
 end
 
 function MODULE:AddLocalOption(name, data)
     self.SelfOptions[name] = data
-    AddOption(name)
+    AddLocalOption(name)
 end
 
 function MODULE:CheckPossibilities()

@@ -36,7 +36,7 @@ function PANEL:createCharacterSlots()
         noCharMsg:DockMargin(0, 0, 0, 0)
         noCharMsg:SetText("No characters found. Please create a new character.")
         noCharMsg:SetFont("liaMediumFont")
-        noCharMsg:SetTextColor(self.WHITE)
+        noCharMsg:SetTextColor(color_white)
         noCharMsg:SetContentAlignment(5)
         noCharMsg:SizeToContents()
         return
