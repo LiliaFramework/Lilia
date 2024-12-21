@@ -1,5 +1,4 @@
-﻿local loadAmount = {5, 10, 30, 45, 90, 150, 300}
-ITEM.name = "Ammo Base"
+﻿ITEM.name = "Ammo Base"
 ITEM.model = "models/Items/BoxSRounds.mdl"
 ITEM.width = 1
 ITEM.height = 1
@@ -9,15 +8,6 @@ ITEM.ammo = "pistol"
 ITEM.desc = "A Box that contains %s of Pistol Ammo"
 ITEM.category = "Ammunition"
 ITEM.RequiredSkillLevels = nil
-function ITEM:getDesc()
-    return Format(self.ammoDesc or self.desc, self:getQuantity())
-end
-
-function ITEM:paintOver(item)
-    local quantity = item:getQuantity()
-    lia.util.drawText(quantity, 8, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "liaChatFont")
-end
-
 ITEM.functions.use = {
     name = "load",
     tip = "useTip",
@@ -30,7 +20,7 @@ ITEM.functions.use = {
             data = 0,
         })
 
-        for _, amount in pairs(loadAmount) do
+        for _, amount in pairs({5, 10, 30, 45, 90, 150, 300}) do
             if amount <= item:getQuantity() then
                 table.insert(options, {
                     name = L("ammoLoadAmount", amount),
@@ -61,3 +51,12 @@ ITEM.functions.use = {
         return item:getQuantity() <= 0
     end,
 }
+
+function ITEM:getDesc()
+    return Format(self.ammoDesc or self.desc, self:getQuantity())
+end
+
+function ITEM:paintOver(item)
+    local quantity = item:getQuantity()
+    lia.util.drawText(quantity, 8, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "liaChatFont")
+end

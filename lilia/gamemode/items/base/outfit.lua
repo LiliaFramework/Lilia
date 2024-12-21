@@ -68,7 +68,7 @@ function ITEM:wearOutfit(client, isForLoadout)
 end
 
 ITEM.functions.EquipUn = {
-    name = "Unequip",
+    name = "unequip",
     tip = "equipTip",
     icon = "icon16/cross.png",
     onRun = function(item)
@@ -79,7 +79,7 @@ ITEM.functions.EquipUn = {
 }
 
 ITEM.functions.Equip = {
-    name = "Equip",
+    name = "equip",
     tip = "equipTip",
     icon = "icon16/tick.png",
     onRun = function(item)
