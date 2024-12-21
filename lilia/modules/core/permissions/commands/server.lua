@@ -579,7 +579,11 @@ lia.command.add("checkflags", {
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and target:getChar() then
             local flags = target:getChar():getFlags()
-            client:chatNotify(target:Name() .. " — " .. table.concat(flags, ", "))
+            if flags and #flags > 0 then
+                client:chatNotify(target:Name() .. " — " .. table.concat(flags, ", "))
+            else
+                client:chatNotify(target:Name() .. " has no flags.")
+            end
         else
             client:notify("Invalid Target!")
         end
