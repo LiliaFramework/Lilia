@@ -53,7 +53,7 @@ function GM:TranslateActivity(client, act)
             if tree.vehicle and tree.vehicle[class] then
                 local act = tree.vehicle[class][1]
                 local fixvec = tree.vehicle[class][2]
-                if fixvec then client:SetLocalPos(Vector(16.5438, -0.1642, -20.5493)) end
+                if isvector(fixvec) then client:SetLocalPos(Vector(16.5438, -0.1642, -20.5493)) end
                 if isstring(act) then
                     client.CalcSeqOverride = client.LookupSequence(client, act)
                     return
