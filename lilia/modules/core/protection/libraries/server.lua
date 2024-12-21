@@ -4,7 +4,7 @@ function MODULE:PlayerButtonDown(client, button)
         client.InsertPressCounts = (client.InsertPressCounts or 0) + 1
         if client.InsertPressCounts == MODULE.insertThreshold then
             client.InsertPressCounts = 0
-            for _, admin in ipairs(player.GetAll()) do
+            for _, admin in player.Iterator() do
                 if admin:isStaffOnDuty() or admin:isStaff() then admin:ChatPrint("[Alert] Player " .. client:Nick() .. " has pressed the Insert key " .. MODULE.insertThreshold .. " times in this session. This is often a sign of cheating. Beware of such fact!") end
             end
 

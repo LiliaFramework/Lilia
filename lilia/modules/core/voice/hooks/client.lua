@@ -1,5 +1,7 @@
 ﻿function MODULE:PlayerButtonDown(client, button)
     if button == KEY_F2 and IsFirstTimePredicted() then
+        local trace = client:GetEyeTrace()
+        if IsValid(trace.Entity) and trace.Entity:isDoor() then return end
         local menu = DermaMenu()
         menu:AddOption("Change voice mode to Whispering range.", function()
             netstream.Start("ChangeSpeakMode", "Whispering")
