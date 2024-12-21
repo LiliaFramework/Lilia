@@ -278,20 +278,20 @@ function MODULE:OpenAdminStickUI(target)
 
             unblind:SetIcon("icon16/eye.png")
             local freezeAllProps = moderationMenu:AddOption("Freeze All Props", function()
-                LocalPlayer():ConCommand("say /freezeallprops " .. target:Name())
+                LocalPlayer():ConCommand("say /freezeallprops " .. target:SteamID())
                 AdminStickIsOpen = false
             end)
 
             freezeAllProps:SetIcon("icon16/anchor.png")
             local charBan = moderationMenu:AddOption("Char Ban", function()
-                LocalPlayer():ConCommand("say /charban " .. target:Name())
+                LocalPlayer():ConCommand("say /charban " .. target:SteamID())
                 AdminStickIsOpen = false
             end)
 
             charBan:SetIcon("icon16/user_gray.png")
             local forceSay = moderationMenu:AddOption("Force Say", function()
                 Derma_StringRequest("Force Say", "Enter the message for the player to say:", "", function(msg)
-                    LocalPlayer():ConCommand("say /forcesay " .. target:Name() .. " " .. msg)
+                    LocalPlayer():ConCommand("say /forcesay " .. target:SteamID() .. " " .. msg)
                     AdminStickIsOpen = false
                 end)
             end)
@@ -348,26 +348,26 @@ function MODULE:OpenAdminStickUI(target)
             charkick:SetIcon("icon16/lightning_delete.png")
             local inventoryMenu = characterMenu:AddSubMenu("Inventory & Economy")
             local returnItems = inventoryMenu:AddOption("Return Lost Items", function()
-                LocalPlayer():ConCommand("say /returnitems " .. target:Name())
+                LocalPlayer():ConCommand("say /returnitems " .. target:SteamID())
                 AdminStickIsOpen = false
             end)
 
             returnItems:SetIcon("icon16/box.png")
             local clearInv = inventoryMenu:AddOption("Clear Inventory", function()
-                LocalPlayer():ConCommand("say /clearinv " .. target:Name())
+                LocalPlayer():ConCommand("say /clearinv " .. target:SteamID())
                 AdminStickIsOpen = false
             end)
 
             clearInv:SetIcon("icon16/bin.png")
             local checkMoney = inventoryMenu:AddOption("Check Money", function()
-                LocalPlayer():ConCommand("say /checkmoney " .. target:Name())
+                LocalPlayer():ConCommand("say /checkmoney " .. target:SteamID())
                 AdminStickIsOpen = false
             end)
 
             checkMoney:SetIcon("icon16/money.png")
             local setMoney = inventoryMenu:AddOption("Set Money", function()
                 Derma_StringRequest("Set Money", "Enter amount of money:", "", function(amount)
-                    LocalPlayer():ConCommand("say /charsetmoney " .. target:Name() .. " " .. amount)
+                    LocalPlayer():ConCommand("say /charsetmoney " .. target:SteamID() .. " " .. amount)
                     AdminStickIsOpen = false
                 end)
             end)
@@ -375,7 +375,7 @@ function MODULE:OpenAdminStickUI(target)
             setMoney:SetIcon("icon16/money.png")
             local addMoney = inventoryMenu:AddOption("Add Money", function()
                 Derma_StringRequest("Add Money", "Enter amount of money to add:", "", function(amount)
-                    LocalPlayer():ConCommand("say /charaddmoney " .. target:Name() .. " " .. amount)
+                    LocalPlayer():ConCommand("say /charaddmoney " .. target:SteamID() .. " " .. amount)
                     AdminStickIsOpen = false
                 end)
             end)
@@ -383,13 +383,13 @@ function MODULE:OpenAdminStickUI(target)
             addMoney:SetIcon("icon16/money_add.png")
             local appearanceMenu = characterMenu:AddSubMenu("Appearance")
             local listBodyGroups = appearanceMenu:AddOption("List Bodygroups", function()
-                LocalPlayer():ConCommand("say /listbodygroups " .. target:Name())
+                LocalPlayer():ConCommand("say /listbodygroups " .. target:SteamID())
                 AdminStickIsOpen = false
             end)
 
             listBodyGroups:SetIcon("icon16/user_suit.png")
             local getModel = appearanceMenu:AddOption("Get Model", function()
-                LocalPlayer():ConCommand("say /chargetmodel " .. target:Name())
+                LocalPlayer():ConCommand("say /chargetmodel " .. target:SteamID())
                 AdminStickIsOpen = false
             end)
 
@@ -398,7 +398,7 @@ function MODULE:OpenAdminStickUI(target)
                 Derma_StringRequest("Set Bodygroup", "Enter bodygroup name and value (e.g., head 1):", "", function(input)
                     local bName, bValue = input:match("([^%s]+)%s+(%d+)")
                     if bName and bValue then
-                        LocalPlayer():ConCommand("say /charsetbodygroup " .. target:Name() .. " " .. bName .. " " .. bValue)
+                        LocalPlayer():ConCommand("say /charsetbodygroup " .. target:SteamID() .. " " .. bName .. " " .. bValue)
                     else
                         LocalPlayer():ChatPrint("Invalid format. Use: <bodyGroupName> <value>")
                     end
@@ -410,7 +410,7 @@ function MODULE:OpenAdminStickUI(target)
             setBodyGroup:SetIcon("icon16/user_suit.png")
             local setSkin = appearanceMenu:AddOption("Set Skin", function()
                 Derma_StringRequest("Set Skin", "Enter skin index:", "", function(skin)
-                    LocalPlayer():ConCommand("say /charsetskin " .. target:Name() .. " " .. skin)
+                    LocalPlayer():ConCommand("say /charsetskin " .. target:SteamID() .. " " .. skin)
                     AdminStickIsOpen = false
                 end)
             end)
@@ -419,7 +419,7 @@ function MODULE:OpenAdminStickUI(target)
             local attributesMenu = characterMenu:AddSubMenu("Attributes & Stats")
             local setSpeed = attributesMenu:AddOption("Set Speed", function()
                 Derma_StringRequest("Set Speed", "Enter new speed:", "", function(speed)
-                    LocalPlayer():ConCommand("say /charsetspeed " .. target:Name() .. " " .. speed)
+                    LocalPlayer():ConCommand("say /charsetspeed " .. target:SteamID() .. " " .. speed)
                     AdminStickIsOpen = false
                 end)
             end)
@@ -427,7 +427,7 @@ function MODULE:OpenAdminStickUI(target)
             setSpeed:SetIcon("icon16/flag_blue.png")
             local setDesc = attributesMenu:AddOption("Set Description", function()
                 Derma_StringRequest("Set Description", "Enter new description:", "", function(desc)
-                    LocalPlayer():ConCommand("say /charsetdesc " .. target:Name() .. " " .. desc)
+                    LocalPlayer():ConCommand("say /charsetdesc " .. target:SteamID() .. " " .. desc)
                     AdminStickIsOpen = false
                 end)
             end)
@@ -435,7 +435,7 @@ function MODULE:OpenAdminStickUI(target)
             setDesc:SetIcon("icon16/comment_edit.png")
             local setName = attributesMenu:AddOption("Set Name", function()
                 Derma_StringRequest("Set Name", "Enter new character name:", "", function(newName)
-                    LocalPlayer():ConCommand("say /charsetname " .. target:Name() .. " " .. newName)
+                    LocalPlayer():ConCommand("say /charsetname " .. target:SteamID() .. " " .. newName)
                     AdminStickIsOpen = false
                 end)
             end)
@@ -443,7 +443,7 @@ function MODULE:OpenAdminStickUI(target)
             setName:SetIcon("icon16/user_edit.png")
             local setScale = attributesMenu:AddOption("Set Scale", function()
                 Derma_StringRequest("Set Scale", "Enter scale value (e.g., 1):", "", function(scale)
-                    LocalPlayer():ConCommand("say /charsetscale " .. target:Name() .. " " .. scale)
+                    LocalPlayer():ConCommand("say /charsetscale " .. target:SteamID() .. " " .. scale)
                     AdminStickIsOpen = false
                 end)
             end)
@@ -451,7 +451,7 @@ function MODULE:OpenAdminStickUI(target)
             setScale:SetIcon("icon16/arrow_in.png")
             local setJump = attributesMenu:AddOption("Set Jump Power", function()
                 Derma_StringRequest("Set Jump Power", "Enter jump power:", "", function(power)
-                    LocalPlayer():ConCommand("say /charsetjump " .. target:Name() .. " " .. power)
+                    LocalPlayer():ConCommand("say /charsetjump " .. target:SteamID() .. " " .. power)
                     AdminStickIsOpen = false
                 end)
             end)
@@ -461,7 +461,7 @@ function MODULE:OpenAdminStickUI(target)
                 Derma_StringRequest("Set Attribute", "Enter attribute name and level (e.g. strength 10):", "", function(input)
                     local attribName, attribLevel = input:match("([^%s]+)%s+(%d+)")
                     if attribName and attribLevel then
-                        LocalPlayer():ConCommand("say /charsetattrib " .. target:Name() .. " " .. attribName .. " " .. attribLevel)
+                        LocalPlayer():ConCommand("say /charsetattrib " .. target:SteamID() .. " " .. attribName .. " " .. attribLevel)
                     else
                         LocalPlayer():ChatPrint("Invalid format. Use: <attribname> <level>")
                     end
@@ -475,7 +475,7 @@ function MODULE:OpenAdminStickUI(target)
                 Derma_StringRequest("Add Attribute", "Enter attribute name and amount (e.g. strength 5):", "", function(input)
                     local attribName, attribAmt = input:match("([^%s]+)%s+(%d+)")
                     if attribName and attribAmt then
-                        LocalPlayer():ConCommand("say /charaddattrib " .. target:Name() .. " " .. attribName .. " " .. attribAmt)
+                        LocalPlayer():ConCommand("say /charaddattrib " .. target:SteamID() .. " " .. attribName .. " " .. attribAmt)
                     else
                         LocalPlayer():ChatPrint("Invalid format. Use: <attribname> <amount>")
                     end
@@ -487,13 +487,13 @@ function MODULE:OpenAdminStickUI(target)
             addAttrib:SetIcon("icon16/chart_bar_add.png")
             local pkMenu = characterMenu:AddSubMenu("PK Management")
             local pkToggle = pkMenu:AddOption("Toggle PK", function()
-                LocalPlayer():ConCommand("say /pktoggle " .. target:Name())
+                LocalPlayer():ConCommand("say /pktoggle " .. target:SteamID())
                 AdminStickIsOpen = false
             end)
 
             pkToggle:SetIcon("icon16/user_red.png")
             local forcePK = pkMenu:AddOption("Force PK", function()
-                LocalPlayer():ConCommand("say /charPK " .. target:Name())
+                LocalPlayer():ConCommand("say /charPK " .. target:SteamID())
                 AdminStickIsOpen = false
             end)
 
