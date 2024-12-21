@@ -457,7 +457,6 @@ function lia.anim.getModelClass(model)
     model = string.lower(model)
     local class = translations[model] or "player"
     if class ~= "player" then return class end
-    lia.anim.setModelClass(model, class)
     return class
 end
 
