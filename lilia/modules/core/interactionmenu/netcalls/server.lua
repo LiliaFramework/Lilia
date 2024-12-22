@@ -1,9 +1,14 @@
 ﻿netstream.Hook("PIMRunOption", function(client, name)
     local opt = PIM.Options[name]
     if opt then
+        local tracedEntity = client:GetTracedEntity()
         if opt.runServer then
-            opt.onRun(client, client:GetTracedEntity())
-            lia.log.add(client, "P2PAction", "Executed P2P Action '%s' on entity '%s'.", name, tostring(client:GetTracedEntity()))
+            if IsValid(tracedEntity) then
+                opt.onRun(client, tracedEntity)
+                lia.log.add(client, "P2PAction", "Executed P2P Action '%s' on entity '%s'.", name, tostring(tracedEntity))
+            else
+                lia.log.add(client, "P2PAction", "Attempted to execute P2P Action '%s', but no valid entity was targeted.", name)
+            end
         end
     else
         lia.log.add(client, "P2PAction", "Attempted to run non-existent P2P Action '%s'.", name)
