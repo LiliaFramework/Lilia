@@ -100,7 +100,6 @@ if SERVER then
 
     --- Kicks the character from their current class and joins them to the default class of their faction.
     -- @realm shared
-    -- @usage character:kickClass()
     function characterMeta:kickClass()
         local client = self:getPlayer()
         if not client then return end
@@ -110,6 +109,11 @@ if SERVER then
                 goClass = k
                 break
             end
+        end
+
+        if not goClass then
+            ErrorNoHaltWithStack("[Lilia] No default class set for faction '" .. team.GetName(client:Team()) .. "'")
+            return
         end
 
         self:joinClass(goClass)
