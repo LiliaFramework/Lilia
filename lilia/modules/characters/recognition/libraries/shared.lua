@@ -2,12 +2,16 @@
     local client = character:getPlayer()
     local recognized = character:getData("rgn", "")
     local other = lia.char.loaded[id]
-    local otherclient = other:getPlayer()
+    local otherclient = other and other:getPlayer()
     if not IsValid(otherclient) then return false end
     if character.id == id then return true end
-    local faction = lia.faction.indices[other:getFaction()]
-    if faction and faction.isGloballyRecognized then return true end
-    if character:getFaction() == other:getFaction() and faction.MemberToMemberAutoRecognition then return true end
+    local otherFactionID = other and other:getFaction()
+    local faction = otherFactionID and lia.faction.indices[otherFactionID]
+    if faction then
+        if faction.isGloballyRecognized then return true end
+        if character:getFaction() == otherFactionID and faction.MemberToMemberAutoRecognition then return true end
+    end
+
     if client:isStaffOnDuty() or otherclient:isStaffOnDuty() then return true end
     if recognized ~= "" and recognized:find("," .. id .. ",") then return true end
     return false
