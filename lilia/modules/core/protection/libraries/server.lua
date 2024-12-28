@@ -1,11 +1,12 @@
 ﻿local MODULE = MODULE
+local insertThreshold = 5
 function MODULE:PlayerButtonDown(client, button)
     if button == KEY_INSERT then
         client.InsertPressCounts = (client.InsertPressCounts or 0) + 1
-        if client.InsertPressCounts == MODULE.insertThreshold then
+        if client.InsertPressCounts == insertThreshold then
             client.InsertPressCounts = 0
             for _, admin in player.Iterator() do
-                if admin:isStaffOnDuty() or admin:isStaff() then admin:ChatPrint("[Alert] Player " .. client:Nick() .. " has pressed the Insert key " .. MODULE.insertThreshold .. " times in this session. This is often a sign of cheating. Beware of such fact!") end
+                if admin:isStaffOnDuty() or admin:isStaff() then admin:ChatPrint("[Alert] Player " .. client:Nick() .. " has pressed the Insert key " .. insertThreshold .. " times in this session. This is often a sign of cheating. Beware of such fact!") end
             end
 
             print("[Server Alert] " .. client:Nick() .. " has reached the Insert key press threshold.")
@@ -14,11 +15,12 @@ function MODULE:PlayerButtonDown(client, button)
 end
 
 function MODULE:PlayerAuthed(client, steamid)
+    local KnownCheaters = {"76561198095382821", "76561198211231421", "76561199121878196", "76561199548880910", "76561198218940592", "76561198095156121", "76561198177279277", "76561198281775968"}
     local steamID64 = util.SteamIDTo64(steamid)
     local OwnerSteamID64 = client:OwnerSteamID64()
     local SteamName = client:steamName()
     local SteamID = client:SteamID()
-    if table.HasValue(self.KnownCheaters, steamID64) or table.HasValue(self.KnownCheaters, OwnerSteamID64) then
+    if table.HasValue(KnownCheaters, steamID64) or table.HasValue(KnownCheaters, OwnerSteamID64) then
         client:Ban("You are banned from this server for using third-party cheats.\nIf you believe this is a mistake, please appeal by contacting the owner with this message.")
         self:NotifyAdmin(SteamName .. " (" .. SteamID .. ") was banned for cheating or using an alt of a cheater.")
         return
@@ -199,11 +201,6 @@ function MODULE:CanTool(client, _, tool)
     if tool == "duplicator" and client.CurrentDupe and not self:CheckDuplicationScale(client, client.CurrentDupe.Entities) then return false end
     if tool == "advdupe2" and client.AdvDupe2 and not self:CheckDuplicationScale(client, client.AdvDupe2.Entities) then return false end
     if tool == "adv_duplicator" and not isbool(toolobj) and toolobj.Entities and not self:CheckDuplicationScale(client, toolobj.Entities) then return false end
-    if tool == "button" and not table.HasValue(self.ButtonList, client:GetInfo("button_model")) then
-        client:ConCommand("button_model models/maxofs2d/button_05.mdl")
-        client:ConCommand("button_model")
-        return false
-    end
 end
 
 function MODULE:CanProperty(client, property, entity)
@@ -324,11 +321,12 @@ end
 
 MODULE.crun = MODULE.crun or concommand.Run
 function concommand.Run(client, cmd, args, argStr)
+    local ActExploitTimer = 5
     if not IsValid(client) then return MODULE.crun(client, cmd, args, argStr) end
     if not cmd then return MODULE.crun(client, cmd, args, argStr) end
     if cmd == "act" then
         client:SetNW2Bool("IsActing", true)
-        timer.Create("ActingExploit_" .. client:SteamID(), MODULE.ActExploitTimer, 1, function() client:SetNW2Bool("IsActing", false) end)
+        timer.Create("ActingExploit_" .. client:SteamID(), ActExploitTimer, 1, function() client:SetNW2Bool("IsActing", false) end)
     end
     return MODULE.crun(client, cmd, args, argStr)
 end

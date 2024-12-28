@@ -1,32 +1,34 @@
 ﻿function MODULE:isRecognizedChatType(chatType)
-    return table.HasValue(self.ChatIsRecognized, chatType)
+    local ChatIsRecognized = {"ic", "y", "w", "me"}
+    return table.HasValue(ChatIsRecognized, chatType)
 end
 
 function MODULE:GetDisplayedDescription(client, isHUD)
     local lp = LocalPlayer()
-    if not IsValid(client) or not IsValid(lp) then return L"unknown" end
+    if not IsValid(client) or not IsValid(lp) then return L("unknown") end
     if client:getChar() and client ~= lp and lp:getChar() and not lp:getChar():doesRecognize(client:getChar():getID()) then
         if isHUD then return client:getChar():getDesc() end
-        return L"noRecog"
+        return L("noRecog")
     end
 end
 
 function MODULE:GetDisplayedName(client, chatType)
     local lp = LocalPlayer()
-    if not IsValid(client) or not IsValid(lp) then return L"unknown" end
+    if not IsValid(client) or not IsValid(lp) then return L("unknown") end
     local character = client:getChar()
     local ourCharacter = lp:getChar()
-    if not character or not ourCharacter then return L"unknown" end
+    if not character or not ourCharacter then return L("unknown") end
     local myReg = ourCharacter:getRecognizedAs()
     local characterID = character:getID()
     if not ourCharacter:doesRecognize(characterID) then
         if ourCharacter:doesFakeRecognize(characterID) and myReg[characterID] then return myReg[characterID] end
-        if chatType and hook.Run("isRecognizedChatType", chatType) then return "[" .. L"unknown" .. "]" end
-        return L"unknown"
+        if chatType and hook.Run("isRecognizedChatType", chatType) then return "[" .. L("unknown") .. "]" end
+        return L("unknown")
     end
 end
 
 function MODULE:ShouldAllowScoreboardOverride(client, var)
+    local ScoreboardHiddenVars = {"name", "model", "desc", "classlogo"}
     local lp = LocalPlayer()
     if client == LocalPlayer() then return false end
     if not IsValid(client) or not IsValid(lp) then return false end
@@ -35,7 +37,7 @@ function MODULE:ShouldAllowScoreboardOverride(client, var)
     if not character or not ourCharacter then return false end
     local characterID = character:getID()
     local isRecognitionEnabled = self.RecognitionEnabled
-    local isVarHiddenInScoreboard = table.HasValue(self.ScoreboardHiddenVars, var)
+    local isVarHiddenInScoreboard = table.HasValue(ScoreboardHiddenVars, var)
     local isClientNotLocalPlayer = client ~= lp
     local isRecognized = ourCharacter:doesRecognize(characterID)
     local isFakeRecognized = ourCharacter:doesFakeRecognize(characterID)

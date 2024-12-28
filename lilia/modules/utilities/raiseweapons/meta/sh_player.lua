@@ -1,4 +1,16 @@
 ﻿local MODULE = MODULE
+local ShouldPrintMessage = false
+local PermaRaisedWeapons = {
+    ["weapon_physgun"] = true,
+    ["gmod_tool"] = true,
+}
+
+local PermaRaisedBases = {
+    ["tfa_gun_base"] = true,
+    ["arccw_base"] = true,
+    ["cw_base"] = true,
+}
+
 --- The Player Meta for the Raise Weapons Module.
 -- @playermeta RaiseWeapons
 local playerMeta = FindMetaTable("Player")
@@ -13,7 +25,7 @@ function playerMeta:isWepRaised()
     if IsValid(weapon) then
         local weaponClass = weapon:GetClass()
         local weaponBase = weapon.Base
-        if MODULE.PermaRaisedWeapons[weaponClass] or MODULE.PermaRaisedBases[weaponBase] or weapon.IsAlwaysRaised or weapon.AlwaysRaised then
+        if PermaRaisedWeapons[weaponClass] or PermaRaisedBases[weaponBase] or weapon.IsAlwaysRaised or weapon.AlwaysRaised then
             return true
         elseif weapon.IsAlwaysLowered or weapon.NeverRaised then
             return false
@@ -47,7 +59,7 @@ if SERVER then
     -- This function toggles the weapon's raised state and triggers corresponding events.
     -- @realm server
     function playerMeta:toggleWepRaised()
-        timer.Simple(1, function() self:setWepRaised(not self:isWepRaised(), MODULE.ShouldPrintMessage) end)
+        timer.Simple(1, function() self:setWepRaised(not self:isWepRaised(), ShouldPrintMessage) end)
         local weapon = self:GetActiveWeapon()
         if IsValid(weapon) then
             if self:isWepRaised() and weapon.OnRaised then

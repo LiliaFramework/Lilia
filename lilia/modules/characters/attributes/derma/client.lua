@@ -1,4 +1,4 @@
-﻿local MODULE = MODULE
+﻿local CharAttrib = {"buttons/button16.wav", 30, 255}
 local mathApproach = math.Approach
 local PANEL = {}
 function PANEL:Init()
@@ -224,7 +224,7 @@ function PANEL:delta(delta)
         local oldPoints = self.points
         self.points = self.parent:onPointChange(self.key, delta)
         self:updateQuantity()
-        if oldPoints ~= self.points then client:EmitSound(unpack(MODULE.CharAttrib)) end
+        if oldPoints ~= self.points then client:EmitSound(unpack(CharAttrib)) end
     end
 end
 

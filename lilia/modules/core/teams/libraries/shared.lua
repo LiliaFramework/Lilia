@@ -1,10 +1,6 @@
 ﻿function MODULE:CheckFactionLimitReached(faction, character, client)
     if faction.OnCheckLimitReached then return faction:OnCheckLimitReached(character, client) end
-    if faction.onCheckLimitReached then
-        LiliaDeprecated("onCheckLimitReached is deprecated. Use OnCheckLimitReached for optimization purposes.")
-        return faction:onCheckLimitReached(character, client)
-    end
-
+    if faction.onCheckLimitReached then LiliaDeprecated("onCheckLimitReached is deprecated. Use OnCheckLimitReached for optimization purposes.", function() return faction:onCheckLimitReached(character, client) end) end
     if not isnumber(faction.limit) then return false end
     local maxPlayers = faction.limit
     if faction.limit < 1 then maxPlayers = math.Round(player.GetCount() * faction.limit) end
@@ -23,10 +19,7 @@ function MODULE:GetDefaultCharName(client, faction, data)
     local nameWithPrefix = string.Trim(prefix .. " " .. data)
     if info then
         if info.GetDefaultName then return info:GetDefaultName(client) end
-        if info.getDefaultName then
-            LiliaDeprecated("getDefaultName is deprecated. Use GetDefaultName for optimization purposes.")
-            return info:getDefaultName(client)
-        end
+        if info.getDefaultName then LiliaDeprecated("getDefaultName is deprecated. Use GetDefaultName for optimization purposes.", function() return info:getDefaultName(client) end) end
     end
     return nameWithPrefix, false
 end
@@ -34,12 +27,8 @@ end
 function MODULE:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
     if info then
-        if info.getDefaultDesc then
-            LiliaDeprecated("getDefaultDesc is deprecated. Use GetDefaultDesc for optimization purposes.")
-            return info:getDefaultDesc(client)
-        end
-
         if info.GetDefaultDesc then return info:GetDefaultDesc(client) end
+        if info.getDefaultDesc then LiliaDeprecated("getDefaultDesc is deprecated. Use GetDefaultDesc for optimization purposes.", function() return info:getDefaultDesc(client) end) end
     end
 end
 

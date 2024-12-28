@@ -3,7 +3,8 @@
 end
 
 function MODULE:HUDShouldDraw(element)
-    if table.HasValue(self.HiddenHUDElements, element) then return false end
+    local HiddenHUDElements = {"CHUDAutoAim", "CHudHealth", "CHudCrosshair", "CHudVoiceStatus", "CHudBattery", "CHudAmmo", "CHudSecondaryAmmo", "CHudHistoryResource",}
+    if table.HasValue(HiddenHUDElements, element) then return false end
 end
 
 function MODULE:HUDPaintBackground()

@@ -1,6 +1,6 @@
 local MODULE = MODULE
-MODULE.xpos = MODULE.xpos or 20
-MODULE.ypos = MODULE.ypos or 20
+local xpos = xpos or 20
+local ypos = ypos or 20
 AdminStickIsOpen = false
 function OpenPlayerModelUI(target)
     AdminStickIsOpen = true
@@ -743,8 +743,6 @@ function MODULE:TicketFrame(requester, message, claimed)
         end
     end
 
-    local xpos = self.xpos
-    local ypos = self.ypos
     local w, h = 300, 120
     local frm = vgui.Create("DFrame")
     frm:SetSize(w, h)

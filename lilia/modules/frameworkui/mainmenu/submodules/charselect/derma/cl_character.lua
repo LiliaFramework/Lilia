@@ -1,8 +1,10 @@
 local PANEL = {}
+local CharHover = {"buttons/button15.wav", 35, 250}
+local CharClick = {"buttons/button14.wav", 35, 255}
+local CharWarning = {"friends/friend_join.wav", 40, 255}
 local WHITE = Color(255, 255, 255, 200)
-local SELECTED = Color(255, 255, 255, 150)
-PANEL.WHITE = WHITE
-PANEL.SELECTED = SELECTED
+PANEL.WHITE = Color(255, 255, 255, 200)
+PANEL.SELECTED = Color(255, 255, 255, 150)
 PANEL.HOVERED = Color(255, 255, 255, 255)
 PANEL.ANIM_SPEED = 0.2
 PANEL.FADE_SPEED = 2
@@ -291,17 +293,17 @@ end
 
 function PANEL:hoverSound()
     local client = LocalPlayer()
-    client:EmitSound(unpack(MainMenu.CharHover))
+    client:EmitSound(unpack(CharHover))
 end
 
 function PANEL:clickSound()
     local client = LocalPlayer()
-    client:EmitSound(unpack(MainMenu.CharClick))
+    client:EmitSound(unpack(CharClick))
 end
 
 function PANEL:warningSound()
     local client = LocalPlayer()
-    client:EmitSound(unpack(MainMenu.CharWarning))
+    client:EmitSound(unpack(CharWarning))
 end
 
 vgui.Register("liaCharacter", PANEL, "EditablePanel")

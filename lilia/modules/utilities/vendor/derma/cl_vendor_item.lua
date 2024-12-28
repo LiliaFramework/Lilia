@@ -1,4 +1,12 @@
-﻿local MODULE = MODULE
+﻿local RarityColors = {
+    ["Common"] = Color(255, 255, 255),
+    ["Uncommon"] = Color(30, 255, 0),
+    ["Rare"] = Color(0, 112, 221),
+    ["Epic"] = Color(163, 53, 238),
+    ["Legendary"] = Color(255, 128, 0),
+}
+
+local VendorClick = {"buttons/button15.wav", 30, 250}
 local PANEL = {}
 function PANEL:Init()
     self:SetSize(600, 200)
@@ -66,7 +74,7 @@ end
 
 local function clickEffects()
     local client = LocalPlayer()
-    client:EmitSound(unpack(MODULE.VendorClick))
+    client:EmitSound(unpack(VendorClick))
 end
 
 function PANEL:sellItemToVendor()
@@ -149,7 +157,7 @@ function PANEL:setItemType(itemType)
     self:updateLabel()
     self:updateAction()
     local rarity = item.rarity or "Common"
-    local nameColor = MODULE.RarityColors[rarity] or color_white
+    local nameColor = RarityColors[rarity] or color_white
     self.name:SetTextColor(nameColor)
 end
 

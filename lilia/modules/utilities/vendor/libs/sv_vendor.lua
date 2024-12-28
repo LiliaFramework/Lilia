@@ -1,4 +1,4 @@
-﻿local MODULE = MODULE
+﻿local DefaultVendorMoney = 500
 local EDITOR = {}
 EDITOR.name = function(vendor)
     local name = net.ReadString()
@@ -64,7 +64,7 @@ end
 EDITOR.useMoney = function(vendor)
     local useMoney = net.ReadBool()
     if useMoney then
-        vendor:setMoney(MODULE.DefaultVendorMoney)
+        vendor:setMoney(DefaultVendorMoney)
     else
         vendor:setMoney(nil)
     end

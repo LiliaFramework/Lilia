@@ -1,25 +1,4 @@
-﻿util.AddNetworkString("liaCharacterInvList")
-util.AddNetworkString("liaItemDelete")
-util.AddNetworkString("liaItemInstance")
-util.AddNetworkString("liaInventoryInit")
-util.AddNetworkString("liaInventoryData")
-util.AddNetworkString("liaInventoryDelete")
-util.AddNetworkString("liaInventoryAdd")
-util.AddNetworkString("liaInventoryRemove")
-util.AddNetworkString("liaNotify")
-util.AddNetworkString("liaNotifyL")
-util.AddNetworkString("OpenInvMenu")
-util.AddNetworkString("liaTransferItem")
-util.AddNetworkString("chatNotify")
-util.AddNetworkString("chatError")
-util.AddNetworkString("OpenVGUI")
-util.AddNetworkString("OpenPage")
-util.AddNetworkString("PlaySound")
-util.AddNetworkString("CreateTableUI")
-util.AddNetworkString("BinaryQuestionRequest")
-util.AddNetworkString("DropdownRequest")
-util.AddNetworkString("StringRequest")
-util.AddNetworkString("OptionsRequest")
+﻿local networkStrings = {"liaCharacterInvList", "liaItemDelete", "liaItemInstance", "liaInventoryInit", "liaInventoryData", "liaInventoryDelete", "liaInventoryAdd", "liaInventoryRemove", "liaNotify", "liaNotifyL", "OpenInvMenu", "liaTransferItem", "chatNotify", "chatError", "OpenVGUI", "OpenPage", "PlaySound", "CreateTableUI", "BinaryQuestionRequest", "DropdownRequest", "StringRequest", "OptionsRequest"}
 net.Receive("StringRequest", function(_, client)
     local id = net.ReadUInt(32)
     local value = net.ReadString()
@@ -100,5 +79,9 @@ netstream.Hook("cmd", function(client, command, arguments)
         client.liaNextCmd = CurTime() + 0.2
     end
 end)
+
+for _, netString in ipairs(networkStrings) do
+    util.AddNetworkString(netString)
+end
 
 netstream.Hook("liaCharFetchNames", function(client) netstream.Start(client, "liaCharFetchNames", lia.char.names) end)

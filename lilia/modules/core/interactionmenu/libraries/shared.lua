@@ -1,5 +1,7 @@
 ﻿MODULE.Options = MODULE.Options or {}
 MODULE.SelfOptions = MODULE.SelfOptions or {}
+local MaxInteractionDistance = 250 * 250
+
 local function AddOption(name)
     LiliaBootstrap("Player Interaction Menu", "Added P2P Action: " .. name)
 end
@@ -33,5 +35,5 @@ function MODULE:InitializedModules()
 end
 
 function MODULE:CheckDistance(client, entity)
-    return entity:GetPos():DistToSqr(client:GetPos()) < self.MaxInteractionDistance
+    return entity:GetPos():DistToSqr(client:GetPos()) < MaxInteractionDistance
 end

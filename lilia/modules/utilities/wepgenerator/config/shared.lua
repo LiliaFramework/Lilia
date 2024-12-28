@@ -1,6 +1,4 @@
-﻿MODULE.AutomaticWeaponRegister = true
-MODULE.NotifyWeaponRegister = false
-MODULE.WeaponOverrides = {
+﻿MODULE.WeaponOverrides = {
     ["weapon_pistol"] = {
         name = "Custom Pistol",
         desc = "A custom description for the pistol.",

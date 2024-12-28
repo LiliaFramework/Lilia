@@ -1,9 +1,5 @@
 local MODULE = MODULE
-util.AddNetworkString("ViewClaims")
-util.AddNetworkString("TicketSystem")
-util.AddNetworkString("TicketSystemClaim")
-util.AddNetworkString("TicketSystemClose")
-util.AddNetworkString("TicketClientNotify")
+local ticketNetworkStrings = {"ViewClaims", "TicketSystem", "TicketSystemClaim", "TicketSystemClose", "TicketClientNotify"}
 net.Receive("ViewClaims", function(_, client)
     local sid = net.ReadString()
     net.Start("ViewClaims")
@@ -43,3 +39,7 @@ net.Receive("TicketSystemClose", function(_, client)
 
     requester.CaseClaimed = nil
 end)
+
+for _, netString in ipairs(ticketNetworkStrings) do
+    util.AddNetworkString(netString)
+end

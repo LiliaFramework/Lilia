@@ -1,4 +1,4 @@
-﻿util.AddNetworkString("liaPACSync")
-util.AddNetworkString("liaPACPartAdd")
-util.AddNetworkString("liaPACPartRemove")
-util.AddNetworkString("liaPACPartReset")
+﻿local pacNetworkStrings = {"liaPACSync", "liaPACPartAdd", "liaPACPartRemove", "liaPACPartReset"}
+for _, netString in ipairs(pacNetworkStrings) do
+    util.AddNetworkString(netString)
+end

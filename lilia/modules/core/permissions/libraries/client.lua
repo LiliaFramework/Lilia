@@ -3,6 +3,14 @@ local ESP_Players = CreateClientConVar("lilia_esp_players", 0, true)
 local ESP_Items = CreateClientConVar("lilia_esp_items", 0, true)
 local ESP_Props = CreateClientConVar("lilia_esp_prop", 0, true)
 local ESP_Entities = CreateClientConVar("lilia_esp_entities", 0, true)
+local NoClipESPEntities = {"lia_bodygrouper", "lia_vendor",}
+local ESPColors = {
+    ["Items"] = Color(0, 255, 0),
+    ["Entities"] = Color(255, 255, 0),
+    ["Players"] = Color(0, 0, 255),
+    ["Props"] = Color(255, 0, 0),
+}
+
 function MODULE:SetupQuickMenuCategories(panel)
     panel:addCategory("ESP")
 end
@@ -33,8 +41,7 @@ function MODULE:HUDPaint()
         local isItem = ent:isItem() and ESP_Items:GetBool()
         local isPlayer = ent:IsPlayer() and ESP_Players:GetBool()
         local isProp = ent:isProp() and ESP_Props:GetBool()
-        local isSpecialEntity = table.HasValue(self.NoClipESPEntities or {}, ent:GetClass()) and ESP_Entities:GetBool()
-        -- Skip if none of the conditions match
+        local isSpecialEntity = table.HasValue(NoClipESPEntities or {}, ent:GetClass()) and ESP_Entities:GetBool()
         if not (isItem or isPlayer or isProp or isSpecialEntity) then continue end
         local vPos = ent:GetPos()
         local clientPos = client:GetPos()
@@ -50,13 +57,13 @@ function MODULE:HUDPaint()
         local alpha = math.Clamp(255 * factor, 120, 255)
         local colorToUse = Color(255, 255, 255, alpha)
         if isPlayer then
-            colorToUse = ColorAlpha(self.ESPColors["Players"] or Color(0, 0, 0), alpha)
+            colorToUse = ColorAlpha(ESPColors["Players"] or Color(0, 0, 0), alpha)
         elseif isProp then
-            colorToUse = ColorAlpha(self.ESPColors["Props"] or Color(0, 0, 0), alpha)
+            colorToUse = ColorAlpha(ESPColors["Props"] or Color(0, 0, 0), alpha)
         elseif isSpecialEntity then
-            colorToUse = ColorAlpha(self.ESPColors["Entities"] or Color(0, 0, 0), alpha)
+            colorToUse = ColorAlpha(ESPColors["Entities"] or Color(0, 0, 0), alpha)
         elseif isItem then
-            colorToUse = ColorAlpha(self.ESPColors["Items"] or Color(0, 0, 0), alpha)
+            colorToUse = ColorAlpha(ESPColors["Items"] or Color(0, 0, 0), alpha)
         end
 
         surface.SetDrawColor(colorToUse.r, colorToUse.g, colorToUse.b, colorToUse.a)

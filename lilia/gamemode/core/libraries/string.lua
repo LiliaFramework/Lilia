@@ -28,6 +28,21 @@ function lia.string.upper(str)
     return oStringUpper(str)
 end
 
+--- Generates a random string of a given length using uppercase, lowercase letters, and numbers.
+-- @realm shared
+-- @number length The length of the random string to generate. Defaults to 16 if not provided.
+-- @return string The generated random string.
+function lia.string.GenerateRandom(length)
+    length = length or 16
+    local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    local randomString = {}
+    for i = 1, length do
+        local rand = math.random(1, #chars)
+        table.insert(randomString, chars:sub(rand, rand))
+    end
+    return table.concat(randomString)
+end
+
 --- Safely quotes a string by escaping backslashes and double quotes, then wrapping the entire string in double quotes.
 -- @realm shared
 -- @string str The string to quote.

@@ -1,17 +1,4 @@
 ﻿local MODULE = MODULE
-function MODULE:PlayerInitialSpawn(client)
-    local StaffRank = self.DefaultStaff[client:SteamID64()]
-    if StaffRank then
-        if sam then
-            RunConsoleCommand("sam", "setrank", client:SteamID(), StaffRank)
-        elseif ulx then
-            RunConsoleCommand("ulx", "adduser", client:SteamID(), StaffRank)
-        end
-
-        print(client:Name() .. " has been set as rank: " .. StaffRank)
-    end
-end
-
 function MODULE:InitializedModules()
     if not file.Exists("caseclaims.txt", "DATA") then file.Write("caseclaims.txt", "[]") end
 end
@@ -63,35 +50,13 @@ function MODULE:PlayerDisconnected(client)
 end
 
 function MODULE:SendPopup(noob, message)
-    if self.CaseUpdateOnly then
-        if noob.CaseClaimed then
-            if IsValid(noob.CaseClaimed) and noob.CaseClaimed:IsPlayer() then
-                net.Start("TicketSystem")
-                net.WriteEntity(noob)
-                net.WriteString(message)
-                net.WriteEntity(noob.CaseClaimed)
-                net.Send(noob.CaseClaimed)
-            end
-        else
-            for _, v in pairs(player.GetAll()) do
-                if self:HasAccess(v) then
-                    net.Start("TicketSystem")
-                    net.WriteEntity(noob)
-                    net.WriteString(message)
-                    net.WriteEntity(noob.CaseClaimed)
-                    net.Send(v)
-                end
-            end
-        end
-    else
-        for _, v in pairs(player.GetAll()) do
-            if self:HasAccess(v) then
-                net.Start("TicketSystem")
-                net.WriteEntity(noob)
-                net.WriteString(message)
-                net.WriteEntity(noob.CaseClaimed)
-                net.Send(v)
-            end
+    for _, v in pairs(player.GetAll()) do
+        if self:HasAccess(v) then
+            net.Start("TicketSystem")
+            net.WriteEntity(noob)
+            net.WriteString(message)
+            net.WriteEntity(noob.CaseClaimed)
+            net.Send(v)
         end
     end
 

@@ -138,7 +138,7 @@ function PANEL:Init()
     self:Center()
     self:ShowCloseButton(false)
     self:SetDraggable(true)
-    self:SetTitle(L"inv")
+    self:SetTitle(L("inv"))
 end
 
 function PANEL:setInventory(inventory)

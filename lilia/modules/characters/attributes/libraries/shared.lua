@@ -31,8 +31,7 @@
 end
 
 function MODULE:CharacterMaxStamina(character)
-    LiliaDeprecated("CharacterMaxStamina is deprecated. Use CharMaxStamina for optimization purposes.")
-    hook.Run("CharMaxStamina", character)
+    LiliaDeprecated("CharacterMaxStamina is deprecated. Use CharMaxStamina for optimization purposes.", function() hook.Run("CharMaxStamina", character) end)
 end
 
 function MODULE:StartCommand(client, cmd)

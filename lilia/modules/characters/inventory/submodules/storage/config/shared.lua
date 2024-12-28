@@ -1,9 +1,5 @@
 ﻿MODULE.Vehicles = MODULE.Vehicles or {}
 MODULE.SaveStorage = true
-MODULE.PasswordDelay = 1
-MODULE.StorageOpenTime = 0.7
-MODULE.TrunkOpenTime = 0.7
-MODULE.TrunkOpenDistance = 110
 MODULE.StorageDefinitions = {
     ["models/props_junk/wood_crate001a.mdl"] = {
         name = "Wood Crate",

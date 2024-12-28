@@ -1,4 +1,5 @@
-﻿function MODULE:InitializedModules()
+﻿local DefaultUserTools = {"adv_duplicator", "duplicator", "advdupe2", "remover",}
+function MODULE:InitializedModules()
     if properties.List then
         for name, _ in pairs(properties.List) do
             if (name == "persist") or (name == "drive") or (name == "bonemanipulate") then continue end
@@ -23,7 +24,7 @@
                 if not CAMI.GetPrivilege(privilege) then
                     local privilegeInfo = {
                         Name = privilege,
-                        MinAccess = table.HasValue(self.DefaultUserTools, string.lower(tool)) and "user" or "admin",
+                        MinAccess = table.HasValue(DefaultUserTools, string.lower(tool)) and "user" or "admin",
                         Description = "Allows access to " .. tool:gsub("^%l", string.upper)
                     }
 

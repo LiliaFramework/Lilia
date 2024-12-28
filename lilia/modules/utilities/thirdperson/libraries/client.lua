@@ -1,4 +1,34 @@
 ﻿local MODULE = MODULE
+local MAT_GLASS2 = 45
+local MaxValues = {
+    height = 30,
+    horizontal = 30,
+    distance = 100
+}
+
+local NotSolidTextures = {
+    ["TOOLS/TOOLSNODRAW"] = true,
+    ["METAL/METALBAR001C"] = true,
+    ["METAL/METALGATE001A"] = true,
+    ["METAL/METALGATE004A"] = true,
+    ["METAL/METALGRATE011A"] = true,
+    ["METAL/METALGRATE016A"] = true,
+    ["METAL/METALCOMBINEGRATE001A"] = true,
+    ["maps/rp_city3/glass/combinepodglass001a_12539_462_-284"] = true
+}
+
+local NotSolidModels = {
+    ["models/props_wasteland/exterior_fence002c.mdl"] = true,
+    ["models/props_wasteland/exterior_fence002b.mdl"] = true,
+    ["models/props_wasteland/exterior_fence003a.mdl"] = true,
+    ["models/props_wasteland/exterior_fence001b.mdl"] = true
+}
+
+local NotSolidMatTypes = {
+    [MAT_GLASS] = true,
+    [MAT_GLASS2] = true
+}
+
 --- The Player Meta for the Third Person Module.
 -- @playermeta ThirdPerson
 local playerMeta = FindMetaTable("Player")
@@ -15,7 +45,7 @@ end
 
 function MODULE:SetupQuickMenu(menu)
     if self.ThirdPersonEnabled then
-        menu:addCheck(L"thirdpersonToggle", function(_, state)
+        menu:addCheck(L("thirdpersonToggle"), function(_, state)
             if state then
                 RunConsoleCommand("tp_enabled", "1")
             else
@@ -25,7 +55,7 @@ function MODULE:SetupQuickMenu(menu)
             hook.Run("thirdPersonToggled", ThirdPerson:GetBool())
         end, ThirdPerson:GetBool(), "Third Person")
 
-        menu:addCheck(L"thirdpersonClassic", function(_, state)
+        menu:addCheck(L("thirdpersonClassic"), function(_, state)
             if state then
                 RunConsoleCommand("tp_classic", "1")
             else
@@ -33,9 +63,9 @@ function MODULE:SetupQuickMenu(menu)
             end
         end, ClassicThirdPerson:GetBool(), "Third Person")
 
-        menu:addSlider("Height", function(_, value) RunConsoleCommand("tp_vertical", tostring(value)) end, GetConVar("tp_vertical"):GetFloat(), 0, MODULE.MaxValues.height, 0, "Third Person")
-        menu:addSlider("Horizontal", function(_, value) RunConsoleCommand("tp_horizontal", tostring(value)) end, GetConVar("tp_horizontal"):GetFloat(), -MODULE.MaxValues.horizontal, MODULE.MaxValues.horizontal, 0, "Third Person")
-        menu:addSlider("Distance", function(_, value) RunConsoleCommand("tp_distance", tostring(value)) end, GetConVar("tp_distance"):GetFloat(), 0, MODULE.MaxValues.distance, 0, "Third Person")
+        menu:addSlider("Height", function(_, value) RunConsoleCommand("tp_vertical", tostring(value)) end, GetConVar("tp_vertical"):GetFloat(), 0, MaxValues.height, 0, "Third Person")
+        menu:addSlider("Horizontal", function(_, value) RunConsoleCommand("tp_horizontal", tostring(value)) end, GetConVar("tp_horizontal"):GetFloat(), -MaxValues.horizontal, MaxValues.horizontal, 0, "Third Person")
+        menu:addSlider("Distance", function(_, value) RunConsoleCommand("tp_distance", tostring(value)) end, GetConVar("tp_distance"):GetFloat(), 0, MaxValues.distance, 0, "Third Person")
     end
 end
 
@@ -51,8 +81,8 @@ function MODULE:CalcView(client)
         curAng = client.camAng or Angle(0, 0, 0)
         view = {}
         traceData = {}
-        traceData.start = client:GetPos() + client:GetViewOffset() + curAng:Up() * math.Clamp(ThirdPersonVerticalView:GetInt(), 0, self.MaxValues.height) + curAng:Right() * math.Clamp(ThirdPersonHorizontalView:GetInt(), -self.MaxValues.horizontal, self.MaxValues.horizontal) - client:GetViewOffsetDucked() * .5 * crouchFactor
-        traceData.endpos = traceData.start - curAng:Forward() * math.Clamp(ThirdPersonViewDistance:GetInt(), 0, self.MaxValues.distance)
+        traceData.start = client:GetPos() + client:GetViewOffset() + curAng:Up() * math.Clamp(ThirdPersonVerticalView:GetInt(), 0, MaxValues.height) + curAng:Right() * math.Clamp(ThirdPersonHorizontalView:GetInt(), -MaxValues.horizontal, MaxValues.horizontal) - client:GetViewOffsetDucked() * .5 * crouchFactor
+        traceData.endpos = traceData.start - curAng:Forward() * math.Clamp(ThirdPersonViewDistance:GetInt(), 0, MaxValues.distance)
         traceData.filter = client
         view.origin = util.TraceLine(traceData).HitPos
         aimOrigin = view.origin
@@ -132,7 +162,7 @@ function MODULE:PrePlayerDraw(drawnClient)
             if traceLine.HitPos == bonePos then
                 bBoneHit = true
                 break
-            elseif self.NotSolidMatTypes[traceLine.MatType] or self.NotSolidTextures[traceLine.HitTexture] or (IsValid(entity) and (entity:GetClass() == "prop_dynamic" or entity:GetClass() == "prop_physics") and self.NotSolidModels[entity:GetModel()]) then
+            elseif NotSolidMatTypes[traceLine.MatType] or NotSolidTextures[traceLine.HitTexture] or (IsValid(entity) and (entity:GetClass() == "prop_dynamic" or entity:GetClass() == "prop_physics") and NotSolidModels[entity:GetModel()]) then
                 local traceLine2 = util.TraceLine({
                     start = bonePos,
                     endpos = clientPos,

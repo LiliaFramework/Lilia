@@ -1,5 +1,8 @@
-﻿function MODULE:InitializedModules()
-    if self.AutomaticWeaponRegister then self:RegisterWeapons() end
+﻿local AutomaticWeaponRegister = true
+local NotifyWeaponRegister = false
+
+function MODULE:InitializedModules()
+    if AutomaticWeaponRegister then self:RegisterWeapons() end
 end
 
 function MODULE:RegisterWeapons()
@@ -16,6 +19,6 @@ function MODULE:RegisterWeapons()
         ITEM.weaponCategory = override and override.weaponCategory or nil
         ITEM.RequiredSkillLevels = override and override.RequiredSkillLevels or {}
         ITEM.category = override and override.category or "Weapons"
-        if ITEM.name ~= wep.ClassName and self.NotifyWeaponRegister then LiliaInformation("Generated weapon: " .. ITEM.name) end
+        if ITEM.name ~= wep.ClassName and NotifyWeaponRegister then LiliaInformation("Generated weapon: " .. ITEM.name) end
     end
 end

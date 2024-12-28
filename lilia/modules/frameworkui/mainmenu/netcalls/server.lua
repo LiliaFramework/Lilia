@@ -1,8 +1,4 @@
-﻿util.AddNetworkString("liaCharChoose")
-util.AddNetworkString("liaCharCreate")
-util.AddNetworkString("liaCharDelete")
-util.AddNetworkString("liaCharList")
-util.AddNetworkString("liaCharMenu")
+﻿local liaNetworkStrings = {"liaCharChoose", "liaCharCreate", "liaCharDelete", "liaCharList", "liaCharMenu"}
 netstream.Hook("liaCharKickSelf", function(client)
     local character = client:getChar()
     if character then
@@ -108,3 +104,7 @@ net.Receive("liaCharDelete", function(_, client)
         timer.Simple(.5, function() MainMenu:syncCharList(client) end)
     end
 end)
+
+for _, netString in ipairs(liaNetworkStrings) do
+    util.AddNetworkString(netString)
+end

@@ -1,7 +1,6 @@
 ﻿local MODULE = MODULE
-
-MODULE.tblPlayers = MODULE.tblPlayers or {}
-
+local TablePlayers = TablePlayers or {}
+local tblAlwaysSend = {"player", "func_lod", "gmod_hands", "worldspawn", "player_manager", "gmod_gamerules", "bodyque", "network", "soundent", "prop_door_rotating", "phys_slideconstraint", "phys_bone_follower", "class C_BaseEntity", "func_physbox", "logic_auto", "env_tonemap_controller", "shadow_control", "env_sun", "lua_run", "func_useableladder", "info_ladder_dismount", "func_illusionary", "env_fog_controller", "prop_vehicle_jeep"}
 function MODULE:PlayerInitialSpawn(client)
     self:RegisterPlayer(client)
     if SERVER then self:ServerSidePlayerInitialSpawn(client) end
@@ -12,15 +11,15 @@ function MODULE:EntityRemoved(entity)
 end
 
 function MODULE:GetPlayerData(client)
-    return self.tblPlayers[client:EntIndex()]
+    return TablePlayers[client:EntIndex()]
 end
 
 function MODULE:RemovePlayer(client)
-    self.tblPlayers[client:EntIndex()] = nil
+    TablePlayers[client:EntIndex()] = nil
 end
 
 function MODULE:RegisterPlayer(client)
-    self.tblPlayers[client:EntIndex()] = {
+    TablePlayers[client:EntIndex()] = {
         Player = client,
         Expanding = false,
         Expanded = false,
@@ -35,7 +34,7 @@ function MODULE:PlayerUpdateTransmitStates(client, intRange)
     local entities = ents.GetAll()
     if intRange then
         for _, v in pairs(entities) do
-            if table.HasValue(self.tblAlwaysSend, v:GetClass()) then
+            if table.HasValue(tblAlwaysSend, v:GetClass()) then
                 v:SetPreventTransmit(client, false)
                 continue
             end
@@ -53,7 +52,7 @@ function MODULE:PlayerUpdateTransmitStates(client, intRange)
         end
     else
         for _, v in pairs(entities) do
-            if table.HasValue(self.tblAlwaysSend, v:GetClass()) then
+            if table.HasValue(tblAlwaysSend, v:GetClass()) then
                 v:SetPreventTransmit(client, false)
                 continue
             end
@@ -91,10 +90,10 @@ function MODULE:BeginExpand(client)
 end
 
 function MODULE:PlayerExpandedUpdate()
-    for k, data in pairs(self.tblPlayers) do
+    for k, data in pairs(TablePlayers) do
         if not data or not data.Expanded then continue end
         if not IsValid(data.Player) then
-            self.tblPlayers[k] = nil
+            TablePlayers[k] = nil
             continue
         end
 

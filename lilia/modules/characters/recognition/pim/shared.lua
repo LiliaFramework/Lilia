@@ -37,6 +37,6 @@ PIM:AddOption("Recognize With Fake Name", {
     end,
     onRun = function(_, target)
         local tarChar = target:getChar()
-        if CLIENT then Derma_StringRequest(L"recogMenuOptionFakeWhisper", L"recogFakeNamePrompt", tarChar:getName(), function(text) if text then netstream.Start("rgnDirect", target, text) end end) end
+        if CLIENT then Derma_StringRequest(L("recogMenuOptionFakeWhisper"), L("recogFakeNamePrompt"), tarChar:getName(), function(text) if text then netstream.Start("rgnDirect", target, text) end end) end
     end
 })

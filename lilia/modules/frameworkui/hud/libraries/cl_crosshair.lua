@@ -1,4 +1,5 @@
-﻿function MODULE:ShouldDrawCrosshair()
+﻿local NoDrawCrosshairWeapon = {"weapon_crowbar", "weapon_stunstick", "weapon_bugbait"}
+function MODULE:ShouldDrawCrosshair()
     local client = LocalPlayer()
     local entity = Entity(client:getLocalVar("ragdoll", 0))
     local wep = client:GetActiveWeapon()
@@ -6,7 +7,7 @@
     if IsValid(wep) then
         local className = wep:GetClass()
         if className == "gmod_tool" or string.find(className, "lia_") or string.find(className, "detector_") then return true end
-        if not self.NoDrawCrosshairWeapon[wep:GetClass()] and self.CrosshairEnabled and IsValid(client) and client:Alive() and client:getChar() and not IsValid(entity) and wep and not (g_ContextMenu:IsVisible() or IsValid(lia.gui.character) and lia.gui.character:IsVisible()) then return true end
+        if not NoDrawCrosshairWeapon[wep:GetClass()] and self.CrosshairEnabled and IsValid(client) and client:Alive() and client:getChar() and not IsValid(entity) and wep and not (g_ContextMenu:IsVisible() or IsValid(lia.gui.character) and lia.gui.character:IsVisible()) then return true end
     end
 end
 

@@ -80,5 +80,5 @@ function ENT:Use(activator)
         self:openInv(activator)
     end
 
-    activator.liaNextOpen = CurTime() + MODULE.StorageOpenTime * 1.5
+    activator.liaNextOpen = CurTime() + 0.7 * 1.5
 end
