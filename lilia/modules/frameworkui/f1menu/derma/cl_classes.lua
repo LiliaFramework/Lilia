@@ -34,29 +34,31 @@ function PANEL:loadClasses()
 end
 
 function PANEL:createClassButton(classData, canBe)
+    local MenuColors = lia.color.ReturnMainAdjustedColors()
     local button = self.sidebar:Add("DButton")
     button:SetText(classData.name)
-    button:SetTextColor(color_white)
+    button:SetTextColor(MenuColors.text)
     button:SetFont("liaMediumFont")
     button:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     button:SetContentAlignment(5)
     button:SetTall(50)
     button:Dock(TOP)
     button:DockMargin(0, 0, 10, 20)
-    button.isAvailable = canBe
+    button.text_color = MenuColors.text
     button.Paint = function(btn, w, h)
-        local MenuColors = lia.color.ReturnMainAdjustedColors()
-        if self.activeTab == btn then
-            surface.SetDrawColor(MenuColors.accent)
-        elseif btn:IsHovered() then
-            surface.SetDrawColor(MenuColors.hover)
-        else
-            surface.SetDrawColor(MenuColors.sidebar)
+        local hovered = btn:IsHovered()
+        if hovered then
+            local underlineWidth = w * 0.4
+            local underlineX = (w - underlineWidth) * 0.5
+            local underlineY = h - 4
+            surface.SetDrawColor(255, 255, 255, 80)
+            surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
         end
 
-        surface.DrawRect(0, 0, w, h)
-        surface.SetDrawColor(MenuColors.border)
-        surface.DrawOutlinedRect(0, 0, w, h)
+        if self.activeTab == btn then
+            surface.SetDrawColor(color_white)
+            surface.DrawOutlinedRect(0, 0, w, h)
+        end
     end
 
     button.DoClick = function()
@@ -196,26 +198,32 @@ end
 
 function PANEL:addJoinButton(detailsPanel, classData)
     local MenuColors = lia.color.ReturnMainAdjustedColors()
-    local joinButton = detailsPanel:Add("DButton")
-    joinButton:SetText("Join Class")
-    joinButton:SetTall(40)
-    joinButton:SetTextColor(color_white)
-    joinButton:SetFont("liaMediumFont")
-    joinButton:Dock(BOTTOM)
-    joinButton:DockMargin(10, 10, 10, 10)
-    joinButton.Paint = function(btn, w, h)
-        if btn:IsHovered() then
-            surface.SetDrawColor(MenuColors.hover)
-        else
-            surface.SetDrawColor(MenuColors.sidebar)
+    local button = detailsPanel:Add("DButton")
+    button:SetText("Join Class")
+    button:SetTall(40)
+    button:SetTextColor(MenuColors.text)
+    button:SetFont("liaMediumFont")
+    button:SetExpensiveShadow(1, Color(0, 0, 0, 100))
+    button:SetContentAlignment(5)
+    button:Dock(BOTTOM)
+    button:DockMargin(10, 10, 10, 10)
+    button.text_color = MenuColors.text
+    button.Paint = function(btn, w, h)
+        local hovered = btn:IsHovered()
+        if hovered then
+            local underlineWidth = w * 0.4
+            local underlineX = (w - underlineWidth) * 0.5
+            local underlineY = h - 4
+            surface.SetDrawColor(255, 255, 255, 80)
+            surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
         end
 
-        surface.DrawRect(0, 0, w, h)
+        -- Draw the border
         surface.SetDrawColor(MenuColors.border)
         surface.DrawOutlinedRect(0, 0, w, h)
     end
 
-    joinButton.DoClick = function()
+    button.DoClick = function()
         lia.command.send("beclass", classData.index)
         timer.Simple(0.1, function()
             if IsValid(self) then

@@ -1,7 +1,7 @@
 ﻿--- Top-level library containing all Lilia libraries. A large majority of the framework is split into respective libraries that
 -- reside within `lia`.
 -- @library lia
-lia.RealmIdentifiers = {
+local RealmIdentifiers = {
     client = "client",
     server = "server",
     shared = "shared",
@@ -9,10 +9,10 @@ lia.RealmIdentifiers = {
     module = "shared",
     schema = "shared",
     permissions = "shared",
-    sconfig = "server",
+    commands = "shared",
 }
 
-lia.FilesToLoad = {
+FilesToLoad = {
     {
         path = "lilia/gamemode/core/libraries/languages.lua",
         realm = "shared"
@@ -169,7 +169,7 @@ lia.FilesToLoad = {
 function lia.include(fileName, state)
     if not fileName then error("[Lilia] No file name specified for inclusion.") end
     local matchResult = string.match(fileName, "/([^/]+)%.lua$")
-    local fileRealm = matchResult and lia.RealmIdentifiers[matchResult] or "NULL"
+    local fileRealm = matchResult and RealmIdentifiers[matchResult] or "NULL"
     if (state == "server" or fileRealm == "server" or fileName:find("sv_")) and SERVER then
         return include(fileName)
     elseif state == "shared" or fileRealm == "shared" or fileName:find("sh_") then
@@ -329,12 +329,6 @@ end
 
 lia.util.loadEntities = lia.includeEntities
 lia.includeEntities("lilia/gamemode/entities")
-for _, filepath in ipairs(lia.FilesToLoad) do
-    if filepath.realm == "server" then
-        lia.include(filepath.path, "server")
-    elseif filepath.realm == "client" then
-        lia.include(filepath.path, "client")
-    elseif filepath.realm == "shared" then
-        lia.include(filepath.path, "shared")
-    end
+for _, file in ipairs(FilesToLoad) do
+    lia.include(file.path, file.realm)
 end

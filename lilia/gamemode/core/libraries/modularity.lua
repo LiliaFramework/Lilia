@@ -7,9 +7,8 @@ If you are looking for the module structure, you can find it [here](https://lili
 lia.module = lia.module or {}
 lia.module.EnabledList = {}
 lia.module.list = lia.module.list or {}
-lia.module.unloaded = lia.module.unloaded or {}
 local ModuleFolders = {"config", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim"}
-local ModuleFiles = {"client.lua", "cl_module.lua", "sv_module.lua", "server.lua", "config.lua", "sconfig.lua"}
+local ModuleFiles = {"client.lua", "server.lua", "config.lua", "commands.lua"}
 local function loadWorkshopContent(Workshop)
     if SERVER and Workshop then
         if istable(Workshop) then

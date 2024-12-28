@@ -16,14 +16,13 @@ function PANEL:removeLogo()
 end
 
 function PANEL:createTabs()
-    self:CreateButton("continue", "Continue your character", function() self:createCharacterSelection() end)
-    self:CreateButton("create", "Create a new character", function() self:createCharacterCreation() end)
-    if not MainMenu.KickOnEnteringMainMenu and LocalPlayer():getChar() then
-        self:CreateButton("return", "Return to character", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end)
-        return
+    if lia.characters and #lia.characters > 0 then self:CreateButton("continue", "Continue your character", function() self:createCharacterSelection() end) end
+    if hook.Run("CanPlayerCreateChar", LocalPlayer()) ~= false then self:CreateButton("create", "Create a new character", function() self:createCharacterCreation() end) end
+    if LocalPlayer():getChar() then
+        if not MainMenu.KickOnEnteringMainMenu then self:CreateButton("return", "Return to character", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end) end
+    else
+        self:CreateButton("leave", "Disconnect from server", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() LocalPlayer():ConCommand("disconnect") end) end)
     end
-
-    self:CreateButton("leave", "Disconnect from server", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() LocalPlayer():ConCommand("disconnect") end) end)
 end
 
 function PANEL:CreateIcon(parent, iconURL, iconIMG, posX, posY)
@@ -56,8 +55,8 @@ function PANEL:CreateIcon(parent, iconURL, iconIMG, posX, posY)
 end
 
 function PANEL:CreateButton(text, description, callback)
-    local btn = self.tabs:Add('DButton')
-    btn:SetText('')
+    local btn = self.tabs:Add("DButton")
+    btn:SetText("")
     btn:Dock(TOP)
     btn:DockMargin(5, 5, 5, 10)
     btn.initialTall = ScrH() * 0.1 / 2
@@ -65,56 +64,29 @@ function PANEL:CreateButton(text, description, callback)
     btn.tall = btn.initialTall
     btn.width = btn.initialWidth
     btn.text_color = color_white
-    btn.icon_rot = 0
     btn.text = text
-    btn:SetTall(btn.tall)
+    btn.description = description or "No description"
     btn.selected = false
-    btn.description = description or 'No description'
     btn.fillProgress = 0
+    btn:SetTall(btn.tall)
     btn.Paint = function(me, w, h)
-        local isSelected = self.selectedButton == me
-        local isHovered = me:IsHovered()
-        local targetProgress = (isSelected or isHovered) and 1 or 0
-        me.fillProgress = Lerp(0.2, me.fillProgress, targetProgress)
-        local fillWidth = w * me.fillProgress
-        surface.SetDrawColor(me.text_color)
-        surface.DrawRect((w - fillWidth) / 2, 0, fillWidth, h)
-        if isSelected or isHovered then
-            me.tall = Lerp(0.2, me.tall, ScrH() * 0.064)
-            me.width = Lerp(0.2, me.width, w + 1)
-            me.text_color = lia.color.LerpColor(0.2, me.text_color, color_black)
-            self.selectedDescription:SetText(me.description)
-        else
-            me.tall = Lerp(0.2, me.tall, me.initialTall)
-            me.width = Lerp(0.2, me.width, me.initialWidth)
-            me.text_color = lia.color.LerpColor(0.2, me.text_color, color_white)
+        local hovered = me:IsHovered()
+        me.text_color = lia.color.LerpColor(0.2, me.text_color, hovered and Color(200, 200, 200) or color_white)
+        draw.SimpleText(me.text:upper(), "liaMediumFont", w * 0.5, h * 0.5, me.text_color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        if hovered then
+            local underlineWidth = w * 0.4
+            local underlineX = (w - underlineWidth) * 0.5
+            local underlineY = h - 4
+            surface.SetDrawColor(255, 255, 255, 80)
+            surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
         end
-
-        surface.SetDrawColor(0, 0, 0, 166)
-        surface.DrawRect(0, 0, w, h)
-        surface.SetDrawColor(255, 255, 255)
-        surface.DrawRect(0, 0, me.width, h)
-        me:SetTall(me.tall)
-        draw.Text({
-            text = me.text:upper(),
-            font = 'liaMediumFont',
-            pos = {w / 2, h / 2},
-            xalign = TEXT_ALIGN_CENTER,
-            yalign = TEXT_ALIGN_CENTER,
-            color = me.text_color
-        })
     end
 
     btn.DoClick = function(me)
         self:clickSound()
         if self.selectedButton and self.selectedButton ~= me and self.selectedButton.selected then self.selectedButton.selected = false end
         self.selectedButton = me
-        if IsValid(self.selectedDescription) then
-            self.selectedDescription:SetText(me.description)
-        else
-            print("Error: selectedDescription is invalid or not initialized.")
-        end
-
+        if IsValid(self.selectedDescription) then self.selectedDescription:SetText(me.description) end
         if callback and isfunction(callback) then callback() end
     end
 end
@@ -135,7 +107,7 @@ function PANEL:createTitle()
     self.selectedDescription:SetTall(24)
     self.selectedDescription:SetFont("liaMediumFont")
     self.selectedDescription:SetTextColor(WHITE)
-    self.selectedDescription:SetText('')
+    self.selectedDescription:SetText("")
     local centerlogo = MainMenu.CenterLogo and MainMenu.CenterLogo:find("%S")
     if centerlogo then
         local logoWidth, logoHeight = 512, 512

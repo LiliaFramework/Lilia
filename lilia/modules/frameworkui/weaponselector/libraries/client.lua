@@ -1,4 +1,9 @@
-﻿local NewWeaponSelecter = NewWeaponSelecter or {
+﻿-- Define lia.config.color with a default value
+lia = lia or {}
+lia.config = lia.config or {}
+lia.config.color = lia.config.color or Color(155, 20, 121, 100) -- Replace with your desired color
+
+local NewWeaponSelecter = NewWeaponSelecter or {
     index = 1,
     deltaIndex = 1,
     infoAlpha = 0,
@@ -8,10 +13,10 @@
     weapons = {}
 }
 
-local HighLightColor = Color(155, 20, 121, 100)
 local UnhighLightColor = Color(100, 100, 100, 100)
 local isEnabled = true
 local fontName = "NewWeaponSelectFont"
+
 local function OnIndexChanged(weapon)
     NewWeaponSelecter.alpha = 1
     NewWeaponSelecter.fadeTime = CurTime() + 5
@@ -25,9 +30,11 @@ end
 function MODULE:HUDPaint()
     if not LocalPlayer():getChar() then return end
     if not isEnabled then return end
+
     local frameTime = FrameTime()
     NewWeaponSelecter.alphaDelta = Lerp(frameTime * 10, NewWeaponSelecter.alphaDelta, NewWeaponSelecter.alpha)
     local fraction = NewWeaponSelecter.alphaDelta
+
     if fraction > 0.01 then
         local x, y = 100, ScrH() * 0.4
         local spacing = ScrH() / 380
@@ -35,14 +42,30 @@ function MODULE:HUDPaint()
         local shiftX = ScrW() * 0.02
         NewWeaponSelecter.deltaIndex = Lerp(frameTime * 12, NewWeaponSelecter.deltaIndex, NewWeaponSelecter.index)
         local index = NewWeaponSelecter.deltaIndex
-        if not NewWeaponSelecter.weapons[NewWeaponSelecter.index] then NewWeaponSelecter.index = #NewWeaponSelecter.weapons end
+
+        if not NewWeaponSelecter.weapons[NewWeaponSelecter.index] then
+            NewWeaponSelecter.index = #NewWeaponSelecter.weapons
+        end
+
         for i = 1, #NewWeaponSelecter.weapons do
             local theta = (i - index) * 0.1
-            local color2 = i == NewWeaponSelecter.index and HighLightColor or UnhighLightColor
+            -- Use lia.config.color with a fallback
+            local selectedColor = lia.config and lia.config.color or Color(155, 20, 121, 100)
+            local color2 = i == NewWeaponSelecter.index and selectedColor or UnhighLightColor
             color2.a = (color2.a - math.abs(theta * 3) * color2.a) * fraction
+
             local color3 = ColorAlpha(Color(255, 255, 255, 255), (255 - math.abs(theta * 3) * 255) * fraction)
+            -- Optionally, change text color for the selected weapon with a fallback
+            if i == NewWeaponSelecter.index then
+                if not lia.config or not lia.config.color then
+                    print("Error: lia.config.color is nil")
+                end
+                color3 = lia.config and lia.config.color and ColorAlpha(lia.config.color, (255 - math.abs(theta * 3) * 255) * fraction) or ColorAlpha(Color(155, 20, 121, 100), (255 - math.abs(theta * 3) * 255) * fraction)
+            end
+
             local ebatTextKruto = i == NewWeaponSelecter.index and 10 + math.sin(CurTime() * 4) * 5 or 10
             local lastY = 0
+
             if NewWeaponSelecter.markup and (i < NewWeaponSelecter.index or i == 1) then
                 if NewWeaponSelecter.index ~= 1 then
                     local _, h = NewWeaponSelecter.markup:Size()
@@ -63,6 +86,7 @@ function MODULE:HUDPaint()
             matrix:Translate(Vector(shiftX + x + math.cos(theta * spacing + math.pi) * radius + radius, y + lastY + math.sin(theta * spacing + math.pi) * radius - ty / 2, 1))
             matrix:Scale(Vector(1, 1, 0) * scale)
             cam.PushModelMatrix(matrix)
+
             draw.TextShadow({
                 text = weaponName,
                 font = fontName,
@@ -81,7 +105,9 @@ function MODULE:HUDPaint()
             cam.PopModelMatrix()
         end
 
-        if NewWeaponSelecter.fadeTime < CurTime() and NewWeaponSelecter.alpha > 0 then NewWeaponSelecter.alpha = 0 end
+        if NewWeaponSelecter.fadeTime < CurTime() and NewWeaponSelecter.alpha > 0 then
+            NewWeaponSelecter.alpha = 0
+        end
     elseif #NewWeaponSelecter.weapons > 0 then
         NewWeaponSelecter.weapons = {}
     end
@@ -94,8 +120,10 @@ end
 function MODULE:PlayerBindPress(ply, bind, pressed)
     if not ply:getChar() then return end
     if not isEnabled then return end
+
     bind = bind:lower()
     if not pressed or (not bind:find("invprev") and not bind:find("invnext") and not bind:find("slot") and not bind:find("attack")) then return end
+
     local currentWeapon = ply:GetActiveWeapon()
     if IsValid(currentWeapon) and (currentWeapon:GetClass() == "weapon_physgun" and ply:KeyDown(IN_ATTACK)) then return end
     if IsValid(currentWeapon) and currentWeapon:GetClass() == "gmod_tool" then
@@ -111,12 +139,16 @@ function MODULE:PlayerBindPress(ply, bind, pressed)
     if bind:find("invprev") then
         local oldIndex = NewWeaponSelecter.index
         NewWeaponSelecter.index = math.min(NewWeaponSelecter.index + 1, #NewWeaponSelecter.weapons)
-        if NewWeaponSelecter.alpha == 0 or oldIndex ~= NewWeaponSelecter.index then OnIndexChanged(NewWeaponSelecter.weapons[NewWeaponSelecter.index]) end
+        if NewWeaponSelecter.alpha == 0 or oldIndex ~= NewWeaponSelecter.index then
+            OnIndexChanged(NewWeaponSelecter.weapons[NewWeaponSelecter.index])
+        end
         return true
     elseif bind:find("invnext") then
         local oldIndex = NewWeaponSelecter.index
         NewWeaponSelecter.index = math.max(NewWeaponSelecter.index - 1, 1)
-        if NewWeaponSelecter.alpha == 0 or oldIndex ~= NewWeaponSelecter.index then OnIndexChanged(NewWeaponSelecter.weapons[NewWeaponSelecter.index]) end
+        if NewWeaponSelecter.alpha == 0 or oldIndex ~= NewWeaponSelecter.index then
+            OnIndexChanged(NewWeaponSelecter.weapons[NewWeaponSelecter.index])
+        end
         return true
     elseif bind:find("slot") then
         NewWeaponSelecter.index = math.Clamp(tonumber(bind:match("slot(%d)")) or 1, 1, #NewWeaponSelecter.weapons)
@@ -135,7 +167,9 @@ end
 
 function MODULE:Think()
     local ply = LocalPlayer()
-    if not IsValid(ply) or not ply:Alive() then NewWeaponSelecter.alpha = 0 end
+    if not IsValid(ply) or not ply:Alive() then
+        NewWeaponSelecter.alpha = 0
+    end
 end
 
 function MODULE:LoadFonts()

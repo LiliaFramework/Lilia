@@ -1,4 +1,5 @@
-﻿function MODULE:LoadCharInformation()
+﻿local TabClickingSound = "buttons/button14.wav"
+function MODULE:LoadCharInformation()
     hook.Run("AddSection", "General Info", Color(0, 0, 0), 1)
     hook.Run("AddTextField", "General Info", "name", "Name", function() return LocalPlayer():getChar():getName() end)
     hook.Run("AddTextField", "General Info", "desc", "Description", function() return LocalPlayer():getChar():getDesc() end)
@@ -134,6 +135,7 @@ function MODULE:CreateMenuButtons(tabs)
     end
 
     tabs["help"] = function(panel)
+        local MenuColors = lia.color.ReturnMainAdjustedColors()
         local sidebar = panel:Add("DPanel")
         sidebar:Dock(LEFT)
         sidebar:SetWide(200)
@@ -160,36 +162,31 @@ function MODULE:CreateMenuButtons(tabs)
             button:SetTall(50)
             button:Dock(TOP)
             button:DockMargin(0, 0, 10, 10)
+            button.text_color = MenuColors.text
             button.Paint = function(btn, w, h)
-                local MenuColors = lia.color.ReturnMainAdjustedColors()
-                if panel.activeTab == btn then
-                    surface.SetDrawColor(MenuColors.accent)
-                    surface.DrawRect(0, 0, w, h)
-                elseif btn:IsHovered() then
-                    surface.SetDrawColor(MenuColors.hover)
-                    surface.DrawRect(0, 0, w, h)
-                else
-                    surface.SetDrawColor(MenuColors.sidebar)
-                    surface.DrawRect(0, 0, w, h)
+                local hovered = btn:IsHovered()
+                if hovered then
+                    local underlineWidth = w * 0.4
+                    local underlineX = (w - underlineWidth) * 0.5
+                    local underlineY = h - 4
+                    surface.SetDrawColor(255, 255, 255, 80)
+                    surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
                 end
 
-                surface.SetDrawColor(MenuColors.border)
-                surface.DrawOutlinedRect(0, 0, w, h)
+                if panel.activeTab == btn then
+                    surface.SetDrawColor(color_white)
+                    surface.DrawOutlinedRect(0, 0, w, h)
+                end
             end
 
             button.DoClick = function()
-                panel.activeTab = btn
-                for _, btn in pairs(panel.tabList) do
-                    btn.active = false
-                end
-
-                panel.tabList[tabName].active = true
+                panel.activeTab = button
                 mainContent:Clear()
                 local tabPanel = mainContent:Add("DPanel")
                 tabPanel:Dock(FILL)
                 tabPanel.Paint = function() end
                 callback(tabPanel, sidebar)
-                surface.PlaySound(self.TabClickingSound or "buttons/button14.wav")
+                surface.PlaySound(TabClickingSound or "buttons/button14.wav")
             end
 
             panel.tabList[tabName] = button

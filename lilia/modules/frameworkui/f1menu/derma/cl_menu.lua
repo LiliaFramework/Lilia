@@ -1,5 +1,6 @@
-﻿local MODULE = MODULE
+﻿local TabClickingSound = "buttons/button14.wav"
 local PANEL = {}
+
 function PANEL:addTab(name, callback, uniqueID)
     local MenuColors = lia.color.ReturnMainAdjustedColors()
     name = L(name)
@@ -12,20 +13,21 @@ function PANEL:addTab(name, callback, uniqueID)
     tab:SetTall(50)
     tab:Dock(TOP)
     tab:DockMargin(0, 0, 10, 10)
-    tab.Paint = function(tabBtn, w, h)
-        if self.activeTab == tabBtn then
-            surface.SetDrawColor(MenuColors.accent)
-            surface.DrawRect(0, 0, w, h)
-        elseif tabBtn:IsHovered() then
-            surface.SetDrawColor(MenuColors.hover)
-            surface.DrawRect(0, 0, w, h)
-        else
-            surface.SetDrawColor(MenuColors.sidebar)
-            surface.DrawRect(0, 0, w, h)
+    tab.text_color = MenuColors.text
+    tab.Paint = function(me, w, h)
+        local hovered = me:IsHovered()
+        if hovered then
+            local underlineWidth = w * 0.4
+            local underlineX = (w - underlineWidth) * 0.5
+            local underlineY = h - 4
+            surface.SetDrawColor(255, 255, 255, 80)
+            surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
         end
 
-        surface.SetDrawColor(MenuColors.border)
-        surface.DrawOutlinedRect(0, 0, w, h)
+        if self.activeTab == me then
+            surface.SetDrawColor(color_white)
+            surface.DrawOutlinedRect(0, 0, w, h)
+        end
     end
 
     tab.DoClick = function(this)
@@ -35,7 +37,7 @@ function PANEL:addTab(name, callback, uniqueID)
         self.activeTab = this
         lastMenuTab = uniqueID
         if callback then callback(self.panel, this) end
-        surface.PlaySound(MODULE.TabClickingSound or "buttons/button14.wav")
+        surface.PlaySound(TabClickingSound or "buttons/button14.wav")
     end
 
     self.tabList[name] = tab
@@ -130,7 +132,9 @@ function PANEL:Think()
 
     if not self.anchorMode then
         if IsValid(self.info) then return end
-        if not key then self:remove() end
+        if not key then
+            self:remove()
+        end
     end
 end
 

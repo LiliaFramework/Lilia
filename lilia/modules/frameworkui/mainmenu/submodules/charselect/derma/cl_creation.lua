@@ -1,12 +1,9 @@
 ﻿local PANEL = {}
 local COLORS = {
     background = Color(0, 0, 0, 100),
-    border = Color(120, 120, 120, 255),
-    button = Color(70, 130, 180, 255),
-    buttonHovered = Color(100, 160, 210, 255),
-    buttonActive = Color(50, 110, 160, 255),
-    text = Color(255, 255, 255, 255),
-    success = Color(60, 179, 113, 200),
+    border = Color(255, 255, 255, 10),
+    text = Color(255, 255, 255),
+    errorBg = Color(180, 0, 0, 80),
 }
 
 PANEL.ANIM_SPEED = 0.3
@@ -19,51 +16,51 @@ function PANEL:configureSteps()
 end
 
 function PANEL:updateModel()
-    local faction = lia.faction.indices[self.context.faction]
-    assert(faction, "invalid faction when updating model")
-    local modelInfo = faction.models[self.context.model or 1]
-    assert(modelInfo, "faction " .. faction.name .. " has no models!")
-    local model, skin, groups
-    if istable(modelInfo) then
-        model, skin, groups = unpack(modelInfo)
+    local f = lia.faction.indices[self.context.faction]
+    if not f then return end
+    local m = f.models[self.context.model or 1]
+    if not m then return end
+    local mdl, sk, gr
+    if istable(m) then
+        mdl, sk, gr = unpack(m)
     else
-        model, skin, groups = modelInfo, 0, {}
+        mdl, sk, gr = m, 0, {}
     end
 
-    self.model:SetModel(model)
-    local entity = self.model:GetEntity()
-    if not IsValid(entity) then return end
-    entity:SetSkin(skin)
-    if istable(groups) then
-        for group, value in pairs(groups) do
-            entity:SetBodygroup(group, value)
+    self.model:SetModel(mdl)
+    local e = self.model:GetEntity()
+    if not IsValid(e) then return end
+    e:SetSkin(sk)
+    if istable(gr) then
+        for g, v in pairs(gr) do
+            e:SetBodygroup(g, v)
         end
-    elseif isstring(groups) then
-        entity:SetBodyGroups(groups)
+    elseif isstring(gr) then
+        e:SetBodyGroups(gr)
     end
 
-    if self.context.skin then entity:SetSkin(self.context.skin) end
+    if self.context.skin then e:SetSkin(self.context.skin) end
     if self.context.groups then
-        for group, value in pairs(self.context.groups or {}) do
-            entity:SetBodygroup(group, value)
+        for g, v in pairs(self.context.groups) do
+            e:SetBodygroup(g, v)
         end
     end
 
-    if faction.material then entity:SetMaterial(faction.material) end
+    if f.material then e:SetMaterial(f.material) end
 end
 
 function PANEL:canCreateCharacter()
-    local validFactions = {}
+    local t = {}
     for _, v in pairs(lia.faction.teams) do
-        if lia.faction.hasWhitelist(v.index) then validFactions[#validFactions + 1] = v.index end
+        if lia.faction.hasWhitelist(v.index) then t[#t + 1] = v.index end
     end
 
-    if #validFactions == 0 then return false, "You are unable to join any factions" end
-    self.validFactions = validFactions
-    local maxChars = hook.Run("GetMaxPlayerChar", LocalPlayer()) or lia.config.MaxCharacters
-    if lia.characters and #lia.characters >= maxChars then return false, "You have reached the maximum number of characters" end
-    local canCreate, reason = hook.Run("ShouldMenuButtonShow", "create")
-    if canCreate == false then return false, reason end
+    if #t == 0 then return false, "You are unable to join any factions" end
+    self.validFactions = t
+    local mx = hook.Run("GetMaxPlayerChar", LocalPlayer()) or lia.config.MaxCharacters
+    if lia.characters and #lia.characters >= mx then return false, "You have reached the maximum number of characters" end
+    local c, r = hook.Run("ShouldMenuButtonShow", "create")
+    if c == false then return false, r end
     return true
 end
 
@@ -98,104 +95,108 @@ function PANEL:onFinish()
     end)
 end
 
-function PANEL:showError(message, ...)
+function PANEL:showError(m, ...)
     if IsValid(self.error) then self.error:Remove() end
-    if not message or message == "" then return end
-    message = L(message, ...)
-    assert(IsValid(self.content), "no step is available")
+    if not m or m == "" then return end
+    local s = L(m, ...)
+    if not IsValid(self.content) then return end
     self.error = self.content:Add("DLabel")
-    self.error:SetFont("liaMenuButtonFont")
-    self.error:SetText(message)
-    self.error:SetTextColor(color_white)
+    self.error:SetFont("liaMediumFont")
+    self.error:SetText(s)
+    self.error:SetTextColor(COLORS.text)
     self.error:Dock(TOP)
     self.error:SetTall(32)
     self.error:DockMargin(0, 0, 0, 8)
     self.error:SetContentAlignment(5)
-    self.error.Paint = function(box) lia.util.drawBlur(box) end
+    self.error.Paint = function(bx, w, h)
+        lia.util.drawBlur(bx, 2, 2)
+        draw.RoundedBox(4, 0, 0, w, h, COLORS.errorBg)
+    end
+
     self.error:SetAlpha(0)
     self.error:AlphaTo(255, self.ANIM_SPEED)
     lia.gui.character:warningSound()
 end
 
-function PANEL:showMessage(message, ...)
-    if not message or message == "" then
+function PANEL:showMessage(m, ...)
+    if not m or m == "" then
         if IsValid(self.message) then self.message:Remove() end
         return
     end
 
-    message = L(message, ...):upper()
+    local s = L(m, ...):upper()
     if IsValid(self.message) then
-        self.message:SetText(message)
+        self.message:SetText(s)
     else
         self.message = self:Add("DLabel")
-        self.message:SetFont("liaCharButtonFont")
+        self.message:SetFont("liaMediumFont")
         self.message:SetTextColor(COLORS.text)
         self.message:Dock(TOP)
         self.message:SetContentAlignment(5)
         self.message:SetTall(32)
     end
 
-    self.message:SetText(message)
+    self.message:SetText(s)
 end
 
-function PANEL:addStep(step, priority)
-    assert(IsValid(step), "Invalid panel for step")
-    assert(step.isCharCreateStep, "Panel must inherit liaCharacterCreateStep")
-    if isnumber(priority) then
-        table.insert(self.steps, math.min(priority, #self.steps + 1), step)
+function PANEL:addStep(st, pr)
+    if not IsValid(st) then return end
+    if not st.isCharCreateStep then return end
+    if isnumber(pr) then
+        table.insert(self.steps, math.min(pr, #self.steps + 1), st)
     else
-        self.steps[#self.steps + 1] = step
+        self.steps[#self.steps + 1] = st
     end
 
-    step:SetParent(self.stepsContainer)
+    st:SetParent(self.stepsContainer)
 end
 
 function PANEL:nextStep()
-    local lastStep = self.curStep
-    local curStep = self.steps[lastStep]
-    if IsValid(curStep) then
-        local res = {curStep:validate()}
-        if res[1] == false then return self:showError(unpack(res, 2)) end
+    local o = self.curStep
+    local c = self.steps[o]
+    if IsValid(c) then
+        local r = {c:validate()}
+        if r[1] == false then return self:showError(unpack(r, 2)) end
     end
 
     self:showError()
     self.curStep = self.curStep + 1
-    local nextStep = self.steps[self.curStep]
-    while IsValid(nextStep) and nextStep:shouldSkip() do
+    local n = self.steps[self.curStep]
+    while IsValid(n) and n:shouldSkip() do
         self.curStep = self.curStep + 1
-        nextStep:onSkip()
-        nextStep = self.steps[self.curStep]
+        n:onSkip()
+        n = self.steps[self.curStep]
     end
 
-    if not IsValid(nextStep) then
-        self.curStep = lastStep
+    if not IsValid(n) then
+        self.curStep = o
         return self:onFinish()
     end
 
-    self:onStepChanged(curStep, nextStep)
+    self:onStepChanged(c, n)
 end
 
 function PANEL:previousStep()
-    local curStep = self.steps[self.curStep]
-    local newStep = self.curStep - 1
-    local prevStep = self.steps[newStep]
-    while IsValid(prevStep) and prevStep:shouldSkip() do
-        prevStep:onSkip()
-        newStep = newStep - 1
-        prevStep = self.steps[newStep]
+    local c = self.steps[self.curStep]
+    local i = self.curStep - 1
+    local p = self.steps[i]
+    while IsValid(p) and p:shouldSkip() do
+        p:onSkip()
+        i = i - 1
+        p = self.steps[i]
     end
 
-    if not IsValid(prevStep) then return end
-    self.curStep = newStep
-    self:onStepChanged(curStep, prevStep)
+    if not IsValid(p) then return end
+    self.curStep = i
+    self:onStepChanged(c, p)
 end
 
 function PANEL:reset()
     self.context = {}
-    local curStep = self.steps[self.curStep]
-    if IsValid(curStep) then
-        curStep:SetVisible(false)
-        curStep:onHide()
+    local c = self.steps[self.curStep]
+    if IsValid(c) then
+        c:SetVisible(false)
+        c:onHide()
     end
 
     self.curStep = 0
@@ -204,48 +205,38 @@ function PANEL:reset()
 end
 
 function PANEL:getPreviousStep()
-    local step = self.curStep - 1
-    while IsValid(self.steps[step]) do
-        if not self.steps[step]:shouldSkip() then return self.steps[step] end
-        step = step - 1
+    local s = self.curStep - 1
+    while IsValid(self.steps[s]) do
+        if not self.steps[s]:shouldSkip() then return self.steps[s] end
+        s = s - 1
     end
-    return nil
 end
 
-function PANEL:onStepChanged(oldStep, newStep)
-    local ANIM_SPEED = self.ANIM_SPEED
-    local shouldFinish = self.curStep > #self.steps
-    local nextStepText = L(shouldFinish and "finish" or "next"):upper()
-    local shouldSwitchNextText = nextStepText ~= self.next:GetText()
-    self.prev:AlphaTo(255, ANIM_SPEED)
-    if shouldSwitchNextText then
-        self.next:AlphaTo(0, ANIM_SPEED, 0, function()
-            self.next:SizeToContentsX(ANIM_SPEED)
-            self.next:AlphaTo(255, ANIM_SPEED)
-        end)
-    end
-
-    local function showNewStep()
-        newStep:SetAlpha(0)
-        newStep:SetVisible(true)
-        newStep:onDisplay()
-        newStep:InvalidateChildren(true)
-        newStep:AlphaTo(255, ANIM_SPEED)
-    end
-
-    if IsValid(oldStep) then
-        oldStep:AlphaTo(0, ANIM_SPEED, 0, function()
-            oldStep:SetVisible(false)
-            oldStep:onHide()
-            showNewStep()
-        end)
+function PANEL:onStepChanged(o, n)
+    local x = self.ANIM_SPEED
+    if self.curStep > 1 then
+        self.prev:AlphaTo(255, x)
     else
-        showNewStep()
+        self.prev:AlphaTo(100, x)
+    end
+
+    self.next:SetText("")
+    n:SetAlpha(0)
+    n:SetVisible(true)
+    n:onDisplay()
+    n:InvalidateChildren(true)
+    n:AlphaTo(255, x)
+    if IsValid(o) then
+        o:AlphaTo(0, x, 0, function()
+            o:SetVisible(false)
+            o:onHide()
+        end)
     end
 end
 
 function PANEL:Paint(w, h)
-    surface.SetDrawColor(COLORS.background)
+    lia.util.drawBlur(self, 3, 6)
+    surface.SetDrawColor(0, 0, 0, 160)
     surface.DrawRect(0, 0, w, h)
     surface.SetDrawColor(COLORS.border)
     surface.DrawOutlinedRect(0, 0, w, h)
@@ -270,31 +261,9 @@ function PANEL:Init()
     self.model:Dock(RIGHT)
     self.model:SetModel("models/error.mdl")
     self.model.oldSetModel = self.model.SetModel
-    self.model.SetModel = function(model, ...)
-        model:oldSetModel(...)
-        model:fitFOV()
-    end
-
-    self.model.Think = function()
-        local rotateLeft = input.IsKeyDown(KEY_A)
-        local rotateRight = input.IsKeyDown(KEY_D)
-        if rotateLeft then
-            self.rotationAngle = self.rotationAngle - self.rotationSpeed
-        elseif rotateRight then
-            self.rotationAngle = self.rotationAngle + self.rotationSpeed
-        end
-
-        if IsValid(self.model) and IsValid(self.model.Entity) then
-            local Angles = Angle(0, self.rotationAngle, 0)
-            self.model.Entity:SetAngles(Angles)
-        end
-    end
-
-    self.model.PaintOver = function(_, w, h)
-        local leftRotateKey = "A"
-        local rightRotateKey = "D"
-        local str = string.format("[%s] Rotate Left | [%s] Rotate Right", leftRotateKey, rightRotateKey)
-        lia.util.drawText(str, w / 2, h - 16, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+    self.model.SetModel = function(mdlpnl, ...)
+        mdlpnl:oldSetModel(...)
+        mdlpnl:fitFOV()
     end
 
     self.stepsContainer = self.content:Add("DPanel")
@@ -303,37 +272,61 @@ function PANEL:Init()
     self.buttons = self:Add("DPanel")
     self.buttons:Dock(BOTTOM)
     self.buttons:SetTall(60)
-    self.buttons:SetPaintBackground(false)
-    local buttonWidth = ScrW() / 3
+    self.buttons:DockMargin(16, 0, 16, 16)
+    self.buttons.Paint = function(_, w, h) draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 80)) end
     self.prev = self.buttons:Add("DButton")
-    self.prev:SetText("")
     self.prev:Dock(LEFT)
-    self.prev:SetWide(buttonWidth)
-    self.prev.Paint = function(_, w, h)
-        surface.SetDrawColor(Color(0, 0, 0, 255))
-        surface.DrawRect(0, 0, w, h)
+    self.prev:SetText("")
+    self.prev:SetWide(ScrW() / 3 - 12)
+    self.prev:DockMargin(4, 4, 4, 4)
+    self.prev:SetAlpha(100)
+    self.prev.Paint = function(btn, w, h)
+        local hovered = btn:IsHovered()
         draw.SimpleText(L("back"):upper(), "liaMediumFont", w / 2, h / 2, COLORS.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        if hovered then
+            local uw = w * 0.4
+            local ux = (w - uw) * 0.5
+            local uy = h - 4
+            surface.SetDrawColor(255, 255, 255, 80)
+            surface.DrawRect(ux, uy, uw, 2)
+        end
     end
 
     self.prev.DoClick = function() self:previousStep() end
     self.cancel = self.buttons:Add("DButton")
-    self.cancel:SetText("")
     self.cancel:Dock(LEFT)
-    self.cancel:SetWide(buttonWidth)
-    self.cancel.Paint = function(_, w, h)
-        surface.SetDrawColor(0, 0, 0, 255)
-        surface.DrawRect(0, 0, w, h)
+    self.cancel:SetText("")
+    self.cancel:SetWide(ScrW() / 3 - 12)
+    self.cancel:DockMargin(4, 4, 4, 4)
+    self.cancel.Paint = function(btn, w, h)
+        local hovered = btn:IsHovered()
         draw.SimpleText(L("cancel"):upper(), "liaMediumFont", w / 2, h / 2, COLORS.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        if hovered then
+            local uw = w * 0.4
+            local ux = (w - uw) * 0.5
+            local uy = h - 4
+            surface.SetDrawColor(255, 255, 255, 80)
+            surface.DrawRect(ux, uy, uw, 2)
+        end
     end
 
     self.cancel.DoClick = function() self:reset() end
     self.next = self.buttons:Add("DButton")
-    self.next:SetText("")
     self.next:Dock(FILL)
-    self.next.Paint = function(_, w, h)
-        surface.SetDrawColor(0, 0, 0, 255)
-        surface.DrawRect(0, 0, w, h)
-        draw.SimpleText(L("next"):upper(), "liaMediumFont", w / 2, h / 2, COLORS.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    self.next:SetText("")
+    self.next:DockMargin(4, 4, 4, 4)
+    self.next.Paint = function(btn, w, h)
+        local hovered = btn:IsHovered()
+        local isFinished = self.curStep >= #self.steps
+        local text = L(isFinished and "finish" or "next"):upper()
+        draw.SimpleText(text, "liaMediumFont", w / 2, h / 2, COLORS.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        if hovered then
+            local uw = w * 0.4
+            local ux = (w - uw) * 0.5
+            local uy = h - 4
+            surface.SetDrawColor(255, 255, 255, 80)
+            surface.DrawRect(ux, uy, uw, 2)
+        end
     end
 
     self.next.DoClick = function() self:nextStep() end
