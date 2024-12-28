@@ -15,7 +15,6 @@
     end
 })
 
--- pacenable Command
 lia.command.add("pacenable", {
     adminonly = false,
     onRun = function(client)
@@ -24,7 +23,6 @@ lia.command.add("pacenable", {
     end
 })
 
--- pacdisable Command
 lia.command.add("pacdisable", {
     adminonly = false,
     onRun = function(client)
