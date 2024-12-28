@@ -301,6 +301,12 @@ function MODULE:PlayerNoClip(client, state)
     end
 end
 
+function MODULE:PlayerSpawn(client)
+    if not client:getChar() then return end
+    net.Start("VerifyCheats")
+    net.Send(client)
+end
+
 function net.Incoming(length, client)
     local i = net.ReadHeader()
     local strName = util.NetworkIDToString(i)
