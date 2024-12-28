@@ -22,7 +22,8 @@ local function OnIndexChanged(weapon)
 end
 
 function MODULE:HUDPaint()
-    if not LocalPlayer():getChar() then return end
+    local ply = LocalPlayer()
+    if not ply:getChar() then return end
     if not isEnabled then return end
     local frameTime = FrameTime()
     NewWeaponSelecter.alphaDelta = Lerp(frameTime * 10, NewWeaponSelecter.alphaDelta, NewWeaponSelecter.alpha)
@@ -34,17 +35,21 @@ function MODULE:HUDPaint()
         local shiftX = ScrW() * 0.02
         NewWeaponSelecter.deltaIndex = Lerp(frameTime * 12, NewWeaponSelecter.deltaIndex, NewWeaponSelecter.index)
         local index = NewWeaponSelecter.deltaIndex
-        if not NewWeaponSelecter.weapons[NewWeaponSelecter.index] then NewWeaponSelecter.index = #NewWeaponSelecter.weapons end
+        if not NewWeaponSelecter.weapons[NewWeaponSelecter.index] then NewWeaponSelecter.index = math.max(#NewWeaponSelecter.weapons, 1) end
         for i = 1, #NewWeaponSelecter.weapons do
+            local weapon = NewWeaponSelecter.weapons[i]
+            if not IsValid(weapon) then
+                table.remove(NewWeaponSelecter.weapons, i)
+                i = i - 1
+                continue
+            end
+
             local theta = (i - index) * 0.1
             local selectedColor = lia.config and lia.config.Color or Color(155, 20, 121, 100)
             local color2 = i == NewWeaponSelecter.index and selectedColor or UnhighLightColor
             color2.a = (color2.a - math.abs(theta * 3) * color2.a) * fraction
             local color3 = ColorAlpha(Color(255, 255, 255, 255), (255 - math.abs(theta * 3) * 255) * fraction)
-            if i == NewWeaponSelecter.index then
-                color3 = lia.config and lia.config.Color and ColorAlpha(lia.config.Color, (255 - math.abs(theta * 3) * 255) * fraction) or ColorAlpha(Color(155, 20, 121, 100), (255 - math.abs(theta * 3) * 255) * fraction)
-            end
-
+            if i == NewWeaponSelecter.index then color3 = lia.config and lia.config.Color and ColorAlpha(lia.config.Color, (255 - math.abs(theta * 3) * 255) * fraction) or ColorAlpha(Color(155, 20, 121, 100), (255 - math.abs(theta * 3) * 255) * fraction) end
             local ebatTextKruto = i == NewWeaponSelecter.index and 10 + math.sin(CurTime() * 4) * 5 or 10
             local lastY = 0
             if NewWeaponSelecter.markup and (i < NewWeaponSelecter.index or i == 1) then
@@ -60,7 +65,7 @@ function MODULE:HUDPaint()
             end
 
             surface.SetFont(fontName)
-            local weaponName = NewWeaponSelecter.weapons[i]:GetPrintName():upper()
+            local weaponName = weapon:GetPrintName():upper()
             local _, ty = surface.GetTextSize(weaponName)
             local scale = 1 - math.abs(theta * 2)
             local matrix = Matrix()
@@ -109,9 +114,10 @@ function MODULE:PlayerBindPress(ply, bind, pressed)
 
     NewWeaponSelecter.weapons = {}
     for _, v in pairs(ply:GetWeapons()) do
-        table.insert(NewWeaponSelecter.weapons, v)
+        if IsValid(v) then table.insert(NewWeaponSelecter.weapons, v) end
     end
 
+    NewWeaponSelecter.index = math.Clamp(NewWeaponSelecter.index, 1, #NewWeaponSelecter.weapons)
     if bind:find("invprev") then
         local oldIndex = NewWeaponSelecter.index
         NewWeaponSelecter.index = math.min(NewWeaponSelecter.index + 1, #NewWeaponSelecter.weapons)
@@ -123,13 +129,13 @@ function MODULE:PlayerBindPress(ply, bind, pressed)
         if NewWeaponSelecter.alpha == 0 or oldIndex ~= NewWeaponSelecter.index then OnIndexChanged(NewWeaponSelecter.weapons[NewWeaponSelecter.index]) end
         return true
     elseif bind:find("slot") then
-        NewWeaponSelecter.index = math.Clamp(tonumber(bind:match("slot(%d)")) or 1, 1, #NewWeaponSelecter.weapons)
+        local slotNumber = tonumber(bind:match("slot(%d)")) or 1
+        NewWeaponSelecter.index = math.Clamp(slotNumber, 1, #NewWeaponSelecter.weapons)
         OnIndexChanged(NewWeaponSelecter.weapons[NewWeaponSelecter.index])
         return true
     elseif bind:find("attack") and NewWeaponSelecter.alpha > 0 then
         local weapon = NewWeaponSelecter.weapons[NewWeaponSelecter.index]
         if IsValid(weapon) then
-            LocalPlayer():EmitSound("HL2Player.Use")
             input.SelectWeapon(weapon)
             NewWeaponSelecter.alpha = 0
         end
