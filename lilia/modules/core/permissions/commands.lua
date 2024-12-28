@@ -298,12 +298,12 @@ lia.command.add("flaggiveall", {
     privilege = "Manage Flags",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        local character = target:getChar()
-        if not character or not target then
+        if not IsValid(target) then
             client:notify("Invalid Target!")
             return
         end
 
+        local character = target:getChar()
         for k, _ in SortedPairs(lia.flag.list) do
             if not character:hasFlags(k) then target:getChar():giveFlags(k) end
         end
