@@ -258,7 +258,7 @@ if SERVER then
         local output = {}
         for x = -size, size do
             for y = -size, size do
-                local origin = position + Vecr(x * spacing, y * spacing, 0)
+                local origin = position + Vector(x * spacing, y * spacing, 0)
                 local data = {}
                 data.start = origin + mins + Vector(0, 0, tolerance)
                 data.endpos = origin + maxs
