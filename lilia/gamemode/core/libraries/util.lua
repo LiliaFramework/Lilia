@@ -1,5 +1,6 @@
 ﻿--- Various useful helper functions.
 -- @library lia.util
+
 --- Finds all players within a box defined by minimum and maximum coordinates.
 -- @realm client
 -- @vector mins The minimum corner of the box
