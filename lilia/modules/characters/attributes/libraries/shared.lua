@@ -1,6 +1,6 @@
 ﻿function MODULE:CalcStaminaChange(client)
     local character = client:getChar()
-    if not character or client:IsNoClipping() then return 0 end
+    if not character or client:isNoClipping() then return 0 end
     local walkSpeed = client:GetWalkSpeed()
     local offset = 0
     if not client:getNetVar("brth", false) and (client:KeyDown(IN_SPEED) and client:GetVelocity():LengthSqr() >= (walkSpeed * walkSpeed) and client:OnGround()) then
@@ -35,7 +35,7 @@ function MODULE:CharacterMaxStamina(character)
 end
 
 function MODULE:StartCommand(client, cmd)
-    if self.StaminaSlowdown and (not client:IsNoClipping() and client:getNetVar("brth", false) and cmd:KeyDown(IN_JUMP)) then cmd:RemoveKey(IN_JUMP) end
+    if self.StaminaSlowdown and (not client:isNoClipping() and client:getNetVar("brth", false) and cmd:KeyDown(IN_JUMP)) then cmd:RemoveKey(IN_JUMP) end
 end
 
 function MODULE:SetupMove(client, cMoveData)

@@ -119,7 +119,7 @@ function lia.command.hasAccess(client, command, data)
     local hasAccess = true
     if accessLevels ~= "user" then
         local privilegeName = "Commands - " .. privilege
-        hasAccess = client:HasPrivilege(privilegeName)
+        hasAccess = client:hasPrivilege(privilegeName)
     end
 
     if hook.Run("CanPlayerUseCommand", client, command) == false then hasAccess = false end
@@ -188,7 +188,7 @@ if SERVER then
             if name == "^" then
                 return client
             elseif name == "@" then
-                local trace = client:GetTracedEntity()
+                local trace = client:getTracedEntity()
                 if IsValid(trace) and trace:IsPlayer() then
                     return trace
                 else
@@ -233,7 +233,7 @@ if SERVER then
     function lia.command.findPlayerSilent(client, name)
         local target = isstring(name) and lia.util.findPlayer(name) or NULL
         if isstring(name) and name == "@" then
-            local lookingAt = client:GetTracedEntity()
+            local lookingAt = client:getTracedEntity()
             if IsValid(lookingAt) and lookingAt:IsPlayer() then target = lookingAt end
         end
 

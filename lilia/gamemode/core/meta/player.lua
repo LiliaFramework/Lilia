@@ -46,10 +46,10 @@ end
 -- @string privilegeName The name of the privilege to check.
 -- @treturn Boolean True if the player has the privilege, false otherwise.
 -- @usage
--- if player:HasPrivilege("admin") then
+-- if player:hasPrivilege("admin") then
 --     print("Player is an admin.")
 -- end
-function playerMeta:HasPrivilege(privilegeName)
+function playerMeta:hasPrivilege(privilegeName)
     return CAMI.PlayerHasAccess(self, privilegeName, nil)
 end
 
@@ -80,46 +80,6 @@ end
 -- end
 function playerMeta:hasValidVehicle()
     return IsValid(self:getCurrentVehicle())
-end
-
---- Checks if the player is currently observing.
--- @realm shared
--- @treturn Boolean Whether the player is currently observing.
--- @usage
--- if player:isObserving() then
---     print("Player is observing.")
--- end
-function playerMeta:isObserving()
-    return self:GetMoveType() == MOVETYPE_NOCLIP and not self:hasValidVehicle()
-end
-
---- Checks if the player is currently moving.
--- @realm shared
--- @treturn Boolean Whether the player is currently moving.
--- @usage
--- if player:isMoving() then
---     print("Player is moving.")
--- end
-function playerMeta:isMoving()
-    if not IsValid(self) or not self:Alive() then return false end
-    local keydown = self:KeyDown(IN_FORWARD) or self:KeyDown(IN_BACK) or self:KeyDown(IN_MOVELEFT) or self:KeyDown(IN_MOVERIGHT)
-    return keydown and self:OnGround()
-end
-
---- Checks if the player is currently outside (in the sky).
--- @realm shared
--- @treturn Boolean Whether the player is currently outside (in the sky).
--- @usage
--- if player:isOutside() then
---     print("Player is outside.")
--- end
-function playerMeta:isOutside()
-    local trace = util.TraceLine({
-        start = self:GetPos(),
-        endpos = self:GetPos() + self:GetUp() * 9999999999,
-        filter = self
-    })
-    return trace.HitSky
 end
 
 --- Checks if the player is currently in noclip mode.
@@ -170,28 +130,6 @@ function playerMeta:isStuck()
         endpos = self:GetPos(),
         filter = self
     }, self).StartSolid
-end
-
---- Calculates the squared distance from the player to the specified entity.
--- @realm shared
--- @entity entity The entity to calculate the distance to.
--- @treturn Float The squared distance from the player to the entity.
--- @usage
--- local sqDist = player:squaredDistanceFromEnt(entity)
--- print("Squared Distance:", sqDist)
-function playerMeta:squaredDistanceFromEnt(entity)
-    return self:GetPos():DistToSqr(entity:GetPos())
-end
-
---- Calculates the distance from the player to the specified entity.
--- @realm shared
--- @entity entity The entity to calculate the distance to.
--- @treturn Float The distance from the player to the entity.
--- @usage
--- local dist = player:distanceFromEnt(entity)
--- print("Distance:", dist)
-function playerMeta:distanceFromEnt(entity)
-    return self:GetPos():Distance(entity:GetPos())
 end
 
 --- Checks if the player is near another entity within a specified radius.
@@ -273,7 +211,7 @@ end
 -- end
 function playerMeta:isFemale()
     local model = self:GetModel():lower()
-    return model:find("female") or model:find("alyx") or model:find("mossman") or lia.anim.getModelClass(model) == "citizen_female"
+    return model:find("female") or model:find("alyx") or model:find("mossman")
 end
 
 --- Calculates the position to drop an item from the player's inventory.
@@ -583,7 +521,6 @@ if SERVER then
         net.Send(self)
     end
 
-    playerMeta.OpenUI = playerMeta.openUI
     --- Opens a web page for the player.
     -- @realm server
     -- @string url The URL of the web page to open.
@@ -708,7 +645,6 @@ if SERVER then
         return diff + (RealTime() - (self.liaJoinTime or RealTime()))
     end
 
-    playerMeta.GetPlayTime = playerMeta.getPlayTime
     --- Creates a ragdoll entity for the player on the server.
     -- @realm server
     -- @bool dontSetPlayer Determines whether to associate the player with the ragdoll.
@@ -808,7 +744,6 @@ if SERVER then
         return diff + (RealTime() - (lia.joinTime or 0))
     end
 
-    playerMeta.GetPlayTime = playerMeta.getPlayTime
     --- Creates a ragdoll entity for the player.
     -- @realm server
     -- @bool freeze Whether to freeze the ragdoll initially.
@@ -1036,18 +971,7 @@ else
         return diff + (RealTime() - (lia.joinTime or 0))
     end
 
-    playerMeta.GetPlayTime = playerMeta.getPlayTime
-    --- Opens a UI panel for the player.
-    -- @realm client
-    -- @string panel The panel type to create.
-    -- @treturn Panel The created UI panel.
-    -- @usage
-    -- local inventoryPanel = player:openUI("InventoryPanel")
-    function playerMeta:openUI(panel)
-        return vgui.Create(panel)
-    end
 
-    playerMeta.OpenUI = playerMeta.openUI
     --- Sets a waypoint for the player.
     -- @realm client
     -- @string name The name of the waypoint.
@@ -1093,32 +1017,3 @@ else
         end
     end
 end
-
-playerMeta.GetItemDropPos = playerMeta.getItemDropPos
-playerMeta.ChatNotify = playerMeta.chatNotify
-playerMeta.ChatNotifyLocalized = playerMeta.chatNotifyLocalized
-playerMeta.IsObserving = playerMeta.isObserving
-playerMeta.IsOutside = playerMeta.isOutside
-playerMeta.IsNoClipping = playerMeta.isNoClipping
-playerMeta.SquaredDistanceFromEnt = playerMeta.squaredDistanceFromEnt
-playerMeta.DistanceFromEnt = playerMeta.distanceFromEnt
-playerMeta.IsNearPlayer = playerMeta.isNearPlayer
-playerMeta.EntitiesNearPlayer = playerMeta.entitiesNearPlayer
-playerMeta.GetItemWeapon = playerMeta.getItemWeapon
-playerMeta.IsRunning = playerMeta.isRunning
-playerMeta.IsFemale = playerMeta.isFemale
-playerMeta.GetTracedEntity = playerMeta.getTracedEntity
-playerMeta.GetTrace = playerMeta.getTrace
-playerMeta.GetEyeEnt = playerMeta.getEyeEnt
-playerMeta.SetAction = playerMeta.setAction
-playerMeta.StopAction = playerMeta.stopAction
-playerMeta.PlaySound = playerMeta.playSound
-playerMeta.OpenPage = playerMeta.openPage
-playerMeta.CreateServerRagdoll = playerMeta.createServerRagdoll
-playerMeta.DoStaredAction = playerMeta.doStaredAction
-playerMeta.Notify = playerMeta.notify
-playerMeta.NotifyLocalized = playerMeta.notifyLocalized
-playerMeta.SetRagdolled = playerMeta.setRagdolled
-playerMeta.SyncVars = playerMeta.syncVars
-playerMeta.NotifyP = playerMeta.notifyP
-playerMeta.SetWeighPoint = playerMeta.setWeighPoint

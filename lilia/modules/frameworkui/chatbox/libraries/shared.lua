@@ -56,7 +56,7 @@ lia.chat.register("ic", {
     format = "%s says \"%s\"",
     onGetColor = function(speaker)
         local client = LocalPlayer()
-        if client:GetTracedEntity() == speaker then return MODULE.ChatListenColor end
+        if client:getTracedEntity() == speaker then return MODULE.ChatListenColor end
         return MODULE.ChatColor
     end,
     onCanHear = function(speaker, listener)
@@ -148,11 +148,11 @@ lia.chat.register("looc", {
 lia.chat.register("adminchat", {
     onGetColor = function() return Color(0, 196, 255) end,
     onCanHear = function(_, listener)
-        if listener:HasPrivilege("Staff Permissions - Admin Chat") then return true end
+        if listener:hasPrivilege("Staff Permissions - Admin Chat") then return true end
         return false
     end,
     onCanSay = function(speaker)
-        if speaker:HasPrivilege("Staff Permissions - Admin Chat") then
+        if speaker:hasPrivilege("Staff Permissions - Admin Chat") then
             speaker:notify("You aren't an admin. Use '@messagehere' to create a ticket.")
             return false
         end
@@ -183,7 +183,7 @@ lia.chat.register("pm", {
 })
 
 lia.chat.register("eventlocal", {
-    onCanSay = function(speaker) return speaker:HasPrivilege("Staff Permissions - Local Event Chat") end,
+    onCanSay = function(speaker) return speaker:hasPrivilege("Staff Permissions - Local Event Chat") end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
         if speaker:EyePos():Distance(listener:EyePos()) <= MODULE.ChatRange * 6 then return true end
@@ -195,7 +195,7 @@ lia.chat.register("eventlocal", {
 })
 
 lia.chat.register("event", {
-    onCanSay = function(speaker) return speaker:HasPrivilege("Staff Permissions - Event Chat") end,
+    onCanSay = function(speaker) return speaker:hasPrivilege("Staff Permissions - Event Chat") end,
     onCanHear = function() return true end,
     onChatAdd = function(_, text) chat.AddText(Color(255, 150, 0), text) end,
     prefix = {"/event"},
@@ -221,7 +221,7 @@ lia.chat.register("ooc", {
 
         local customDelay = hook.Run("getOOCDelay", speaker)
         local oocDelay = customDelay or MODULE.OOCDelay
-        if not speaker:HasPrivilege("Staff Permissions - No OOC Cooldown") and oocDelay > 0 and speaker.liaLastOOC then
+        if not speaker:hasPrivilege("Staff Permissions - No OOC Cooldown") and oocDelay > 0 and speaker.liaLastOOC then
             local lastOOC = CurTime() - speaker.liaLastOOC
             if lastOOC <= oocDelay then
                 speaker:notifyLocalized("oocDelay", oocDelay - math.ceil(lastOOC))
@@ -254,7 +254,7 @@ lia.chat.register("me's", {
     onChatAdd = function(speaker, text, anonymous)
         local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or (IsValid(speaker) and speaker:Name() or "Console")
         local texCol = MODULE.ChatColor
-        if LocalPlayer():GetTracedEntity() == speaker then texCol = MODULE.ChatListenColor end
+        if LocalPlayer():getTracedEntity() == speaker then texCol = MODULE.ChatListenColor end
         texCol = Color(texCol.r, texCol.g, texCol.b)
         local nameCol = Color(texCol.r + 30, texCol.g + 30, texCol.b + 30)
         if LocalPlayer() == speaker then
@@ -276,7 +276,7 @@ lia.chat.register("mefarfar", {
     onChatAdd = function(speaker, text, anonymous)
         local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or (IsValid(speaker) and speaker:Name() or "Console")
         local texCol = MODULE.ChatColor
-        if LocalPlayer():GetTracedEntity() == speaker then texCol = MODULE.ChatListenColor end
+        if LocalPlayer():getTracedEntity() == speaker then texCol = MODULE.ChatListenColor end
         texCol = Color(texCol.r + 45, texCol.g + 45, texCol.b + 45)
         local nameCol = Color(texCol.r + 30, texCol.g + 30, texCol.b + 30)
         if LocalPlayer() == speaker then

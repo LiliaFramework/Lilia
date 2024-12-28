@@ -23,8 +23,8 @@ end
 function MODULE:CheckPossibilities()
     local client = LocalPlayer()
     for _, v in pairs(self.Options) do
-        if not client:GetTracedEntity():IsPlayer() then return end
-        if v.shouldShow(client, client:GetTracedEntity()) then return true end
+        if not client:getTracedEntity():IsPlayer() then return end
+        if v.shouldShow(client, client:getTracedEntity()) then return true end
     end
     return false
 end

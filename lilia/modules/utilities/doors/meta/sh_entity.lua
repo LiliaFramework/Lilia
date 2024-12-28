@@ -131,8 +131,3 @@ else
         end
     end
 end
-
-entityMeta.IsLocked = entityMeta.isLocked
-entityMeta.IsDoor = entityMeta.isDoor
-entityMeta.GetDoorPartner = entityMeta.getDoorPartner
-entityMeta.IsDoorLocked = entityMeta.isDoorLocked

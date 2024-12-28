@@ -64,8 +64,8 @@ function MODULE:PlayerStaminaLost(client)
 end
 
 function MODULE:PlayerThrowPunch(client)
-    local entity = client:GetTracedEntity()
-    if entity:IsPlayer() and client:HasPrivilege("Staff Permissions - One Punch Man") and IsValid(entity) and client:isStaffOnDuty() then
+    local entity = client:getTracedEntity()
+    if entity:IsPlayer() and client:hasPrivilege("Staff Permissions - One Punch Man") and IsValid(entity) and client:isStaffOnDuty() then
         client:consumeStamina(entity:getChar():getMaxStamina())
         entity:EmitSound("weapons/crowbar/crowbar_impact" .. math.random(1, 2) .. ".wav", 70)
         client:setRagdolled(true, 10)

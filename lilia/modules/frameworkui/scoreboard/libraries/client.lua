@@ -24,7 +24,7 @@ end
 
 function MODULE:ShowPlayerOptions(target, options)
     local client = LocalPlayer()
-    if client:HasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (client:HasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and client:isStaffOnDuty()) and IsValid(target) then
+    if client:hasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (client:hasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and client:isStaffOnDuty()) and IsValid(target) then
         options["Player Profile"] = {"icon16/user.png", function() target:ShowProfile() end}
         options["Player Steam ID"] = {"icon16/user.png", function() SetClipboardText(target:SteamID()) end}
         options["Move To Player"] = {"icon16/user.png", function() client:ConCommand("say !goto " .. target:SteamID()) end}

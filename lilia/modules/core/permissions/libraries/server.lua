@@ -1,62 +1,62 @@
 ﻿local GM = GM or GAMEMODE
 local resetCalled = 0
 function GM:PlayerSpawnEffect(client)
-    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:HasPrivilege("Spawn Permissions - Can Spawn Effects") or client:getChar():hasFlags("L")
+    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Effects") or client:getChar():hasFlags("L")
 end
 
 function GM:PlayerSpawnNPC(client)
-    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:HasPrivilege("Spawn Permissions - Can Spawn NPCs") or client:getChar():hasFlags("n")
+    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn NPCs") or client:getChar():hasFlags("n")
 end
 
 function GM:PlayerSpawnProp(client)
-    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:HasPrivilege("Spawn Permissions - Can Spawn Props") or client:getChar():hasFlags("e")
+    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Props") or client:getChar():hasFlags("e")
 end
 
 function GM:PlayerSpawnRagdoll(client)
-    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:HasPrivilege("Spawn Permissions - Can Spawn Ragdolls") or client:getChar():hasFlags("r")
+    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Ragdolls") or client:getChar():hasFlags("r")
 end
 
 function GM:PlayerSpawnSENT(client)
-    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:HasPrivilege("Spawn Permissions - Can Spawn SENTs") or client:getChar():hasFlags("E")
+    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn SENTs") or client:getChar():hasFlags("E")
 end
 
 function GM:PlayerSpawnSWEP(client)
-    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:HasPrivilege("Spawn Permissions - Can Spawn SWEPs") or client:getChar():hasFlags("z")
+    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn SWEPs") or client:getChar():hasFlags("z")
 end
 
 function GM:PlayerSpawnVehicle(client)
-    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:HasPrivilege("Spawn Permissions - Can Spawn Cars") or client:getChar():hasFlags("C")
+    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Cars") or client:getChar():hasFlags("C")
 end
 
 function GM:PlayerGiveSWEP(client)
-    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:HasPrivilege("Spawn Permissions - Can Spawn SWEPs") or client:getChar():hasFlags("W")
+    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn SWEPs") or client:getChar():hasFlags("W")
 end
 
 function GM:PlayerNoClip(client)
-    return (not client:isStaffOnDuty() and client:HasPrivilege("Staff Permissions - No Clip Outside Staff Character")) or client:IsSuperAdmin() or client:isStaffOnDuty()
+    return (not client:isStaffOnDuty() and client:hasPrivilege("Staff Permissions - No Clip Outside Staff Character")) or client:IsSuperAdmin() or client:isStaffOnDuty()
 end
 
 function GM:OnPhysgunReload(_, client)
-    return client:IsSuperAdmin() or client:HasPrivilege("Staff Permissions - Can Physgun Reload")
+    return client:IsSuperAdmin() or client:hasPrivilege("Staff Permissions - Can Physgun Reload")
 end
 
 function GM:CanTool(client, _, tool)
     local DisallowedTools = {"rope", "light", "lamp", "dynamite", "physprop", "faceposer", "stacker",}
     local privilege = "Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
     if table.HasValue(DisallowedTools, tool) and not client:IsSuperAdmin() then return false end
-    if client:IsSuperAdmin() or ((client:isStaffOnDuty() or client:getChar():hasFlags("t")) and client:HasPrivilege(privilege)) then return true end
+    if client:IsSuperAdmin() or ((client:isStaffOnDuty() or client:getChar():hasFlags("t")) and client:hasPrivilege(privilege)) then return true end
 end
 
 function GM:CanProperty(client, property, entity)
     if entity:GetCreator() == client and (property == "remover" or property == "collision") then return true end
-    if client:IsSuperAdmin() or client:HasPrivilege("Staff Permissions - Access Property " .. property:gsub("^%l", string.upper)) and client:isStaffOnDuty() then return true end
+    if client:IsSuperAdmin() or client:hasPrivilege("Staff Permissions - Access Property " .. property:gsub("^%l", string.upper)) and client:isStaffOnDuty() then return true end
     return false
 end
 
 function GM:PlayerSpawnObject(client)
     if client:IsSuperAdmin() then return true end
     if not client.NextSpawn then client.NextSpawn = CurTime() end
-    if client:HasPrivilege("Spawn Permissions - No Spawn Delay") then return true end
+    if client:hasPrivilege("Spawn Permissions - No Spawn Delay") then return true end
     if client.NextSpawn >= CurTime() then
         client:notify("You can't spawn props that fast!")
         return false
@@ -69,13 +69,13 @@ end
 function GM:PhysgunPickup(client, entity)
     if client:IsSuperAdmin() then return true end
     if entity:GetCreator() == client and (entity:isProp() or entity:isItem()) then return true end
-    if client:HasPrivilege("Staff Permissions - Physgun Pickup") then
+    if client:hasPrivilege("Staff Permissions - Physgun Pickup") then
         if entity:IsVehicle() then
-            return client:HasPrivilege("Staff Permissions - Physgun Pickup on Vehicles")
+            return client:hasPrivilege("Staff Permissions - Physgun Pickup on Vehicles")
         elseif entity:IsPlayer() then
-            return not entity:HasPrivilege("Staff Permissions - Can't be Grabbed with PhysGun") and client:HasPrivilege("Staff Permissions - Can Grab Players")
+            return not entity:hasPrivilege("Staff Permissions - Can't be Grabbed with PhysGun") and client:hasPrivilege("Staff Permissions - Can Grab Players")
         elseif entity:IsWorld() or entity:CreatedByMap() then
-            return client:HasPrivilege("Staff Permissions - Can Grab World Props")
+            return client:hasPrivilege("Staff Permissions - Can Grab World Props")
         end
         return true
     end

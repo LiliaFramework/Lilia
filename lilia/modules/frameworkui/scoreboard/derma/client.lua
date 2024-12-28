@@ -279,7 +279,7 @@ function PANEL:addPlayer(client, parent)
 
         if self.lastModel ~= model or self.lastSkin ~= skin then
             self.model:SetModel(client:GetModel(), client:GetSkin())
-            if lp:HasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (lp:HasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and lp:isStaffOnDuty()) then
+            if lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and lp:isStaffOnDuty()) then
                 self.model:SetTooltip(L("sbOptions", client:Name()))
             else
                 self.model:SetTooltip()

@@ -1,5 +1,5 @@
-﻿MODULE.AltCheckSeed = lia.string.GenerateRandom()
-MODULE.HackingCheckSeed = lia.string.GenerateRandom()
+﻿MODULE.AltCheckSeed = MODULE.AltCheckSeed or lia.string.generateRandom()
+MODULE.HackingCheckSeed = MODULE.HackingCheckSeed or lia.string.generateRandom()
 MODULE.name = "Protection"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"

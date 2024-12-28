@@ -23,7 +23,7 @@ function ENT:Use(activator)
     end
 
     if hook.Run("CanPickupMoney", activator, self) ~= false then
-        client:getChar():giveMoney(self:getAmount())
+        activator:getChar():giveMoney(self:getAmount())
         hook.Run("OnPickupMoney", activator, self)
         self:Remove()
     end

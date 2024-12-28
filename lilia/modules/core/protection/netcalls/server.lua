@@ -3,7 +3,7 @@ local MODULE = MODULE
 util.AddNetworkString(MODULE.AltCheckSeed)
 util.AddNetworkString(MODULE.HackingCheckSeed)
 for _, v in pairs(KnownExploits) do
-    local exploitMessage = lia.string.GenerateRandom()
+    local exploitMessage = lia.string.generateRandom()
     util.AddNetworkString(exploitMessage)
     net.Receive(exploitMessage, function(_, client)
         client.nextExploitNotify = client.nextExploitNotify or 0

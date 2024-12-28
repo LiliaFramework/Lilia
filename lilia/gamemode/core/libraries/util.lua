@@ -1,6 +1,5 @@
 ﻿--- Various useful helper functions.
 -- @library lia.util
-
 --- Finds all players within a box defined by minimum and maximum coordinates.
 -- @realm client
 -- @vector mins The minimum corner of the box
@@ -674,19 +673,3 @@ else
         end
     end
 end
-
-lia.util.FindPlayer = lia.util.findPlayer
-lia.util.StringMatches = lia.util.stringMatches
-lia.util.GetAdmins = lia.util.getAdmins
-lia.util.FindPlayerBySteamID64 = lia.util.findPlayerBySteamID64
-lia.util.FindPlayerBySteamID = lia.util.findPlayerBySteamID
-lia.util.CanFit = lia.util.canFit
-lia.util.PlayerInRadius = lia.util.playerInRadius
-lia.util.FindEmptySpace = lia.util.findEmptySpace
-lia.util.DrawText = lia.util.drawText
-lia.util.DrawTexture = lia.util.drawTexture
-lia.util.SkinFunc = lia.util.skinFunc
-lia.util.WrapText = lia.util.wrapText
-lia.util.DrawBlur = lia.util.drawBlur
-lia.util.DrawBlurAt = lia.util.drawBlurAt
-lia.util.GetMaterial = lia.util.getMaterial

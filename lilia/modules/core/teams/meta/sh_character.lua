@@ -119,10 +119,4 @@ if SERVER then
         self:joinClass(goClass)
         hook.Run("OnPlayerJoinClass", client, goClass)
     end
-
-    characterMeta.JoinClass = characterMeta.joinClass
-    characterMeta.KickClass = characterMeta.kickClass
-    characterMeta.HasClassWhitelist = characterMeta.hasClassWhitelist
-    characterMeta.ClassWhitelist = characterMeta.classWhitelist
-    characterMeta.ClassUnWhitelist = characterMeta.classUnWhitelist
 end

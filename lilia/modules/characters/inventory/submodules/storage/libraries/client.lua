@@ -15,7 +15,7 @@ end
 
 function MODULE:SetupQuickMenu(menu)
     local client = LocalPlayer()
-    if client:HasPrivilege("Staff Permissions - Can Spawn Storage") then
+    if client:hasPrivilege("Staff Permissions - Can Spawn Storage") then
         menu:addCheck("Spawn Storage Props as Storages", function(_, state)
             if state then
                 RunConsoleCommand("can_spawn_storage", "1")

@@ -5,4 +5,3 @@
 -- @realm shared
 -- @table Configuration
 -- @field IsVoiceEnabled Wheter or not voice chat is enabled | **boolean**
--- @field TalkRanges Voice hearing ranges per talking mode | **table**

@@ -1,7 +1,7 @@
 ﻿netstream.Hook("PIMRunOption", function(client, name)
     local opt = PIM.Options[name]
     if opt then
-        local tracedEntity = client:GetTracedEntity()
+        local tracedEntity = client:getTracedEntity()
         if opt.runServer then
             if IsValid(tracedEntity) then
                 opt.onRun(client, tracedEntity)

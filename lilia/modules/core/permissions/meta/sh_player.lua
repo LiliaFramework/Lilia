@@ -12,14 +12,14 @@ end
 -- @realm shared
 -- @treturn bool Whether the player is a staff member.
 function playerMeta:isStaff()
-    return self:HasPrivilege("UserGroups - Staff Group")
+    return self:hasPrivilege("UserGroups - Staff Group")
 end
 
 --- Checks if the player is a VIP.
 -- @realm shared
 -- @treturn bool Whether the player is a VIP.
 function playerMeta:isVIP()
-    return self:HasPrivilege("UserGroups - VIP Group")
+    return self:hasPrivilege("UserGroups - VIP Group")
 end
 
 --- Checks if the staff member is currently on duty (FACTION_STAFF).
@@ -28,8 +28,3 @@ end
 function playerMeta:isStaffOnDuty()
     return self:Team() == FACTION_STAFF
 end
-
-playerMeta.IsUser = playerMeta.isUser
-playerMeta.IsStaff = playerMeta.isStaff
-playerMeta.IsVIP = playerMeta.isVIP
-playerMeta.IsStaffOnDuty = playerMeta.isStaffOnDuty

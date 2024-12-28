@@ -234,7 +234,7 @@ netstream.Hook("actBar", function(start, finish, text)
 end)
 
 net.Receive("OpenInvMenu", function()
-    if not LocalPlayer():HasPrivilege("Commands - Check Inventories") then return end
+    if not LocalPlayer():hasPrivilege("Commands - Check Inventories") then return end
     local target = net.ReadEntity()
     local index = net.ReadType()
     local targetInv = lia.inventory.instances[index]
@@ -261,7 +261,7 @@ end)
 
 net.Receive("OpenVGUI", function()
     local panel = net.ReadString()
-    LocalPlayer():OpenUI(panel)
+    LocalPlayer():openUI(panel)
 end)
 
 net.Receive("chatNotify", function()

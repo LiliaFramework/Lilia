@@ -22,7 +22,6 @@ function entityMeta:isProp()
     return self:GetClass() == "prop_physics"
 end
 
-entityMeta.IsProp = entityMeta.isProp
 --- Checks if the entity is an item entity.
 -- @realm shared
 -- @treturn Boolean True if the entity is an item entity, false otherwise.
@@ -34,7 +33,6 @@ function entityMeta:isItem()
     return self:GetClass() == "lia_item"
 end
 
-entityMeta.IsItem = entityMeta.isItem
 --- Checks if the entity is a money entity.
 -- @realm shared
 -- @treturn Boolean True if the entity is a money entity, false otherwise.
@@ -46,7 +44,6 @@ function entityMeta:isMoney()
     return self:GetClass() == "lia_money"
 end
 
-entityMeta.IsMoney = entityMeta.isMoney
 --- Checks if the entity is a simfphys car.
 -- @realm shared
 -- @treturn Boolean True if the entity is a simfphys car, false otherwise.
@@ -62,7 +59,6 @@ function entityMeta:isSimfphysCar()
     return table.HasValue(validClasses, class) or self.IsSimfphyscar or self.LVS or table.HasValue(validClasses, base)
 end
 
-entityMeta.IsSimfphysCar = entityMeta.isSimfphysCar
 --- Retrieves the drop position for an item associated with the entity.
 -- @realm shared
 -- @treturn Vector The drop position for the item.
@@ -75,7 +71,6 @@ function entityMeta:getEntItemDropPos()
     return self:GetPos() + offset
 end
 
-entityMeta.GetEntItemDropPos = entityMeta.getEntItemDropPos
 --- Checks if there is an entity near the current entity within a specified radius.
 -- @realm shared
 -- @float radius The radius within which to check for nearby entities.
@@ -93,7 +88,6 @@ function entityMeta:isNearEntity(radius)
     return false
 end
 
-entityMeta.IsNearEntity = entityMeta.isNearEntity
 function entityMeta:GetCreator()
     local creator = self:GetNW2Entity("creator")
     if IsValid(creator) then return creator end
@@ -121,7 +115,6 @@ if SERVER then
         netstream.Start(receiver, "nVar", self:EntIndex(), key, lia.net[self] and lia.net[self][key])
     end
 
-    entityMeta.SendNetVar = entityMeta.sendNetVar
     --- Clears all of the networked variables.
     -- @realm server
     -- @internal
@@ -133,7 +126,6 @@ if SERVER then
         netstream.Start(receiver, "nDel", self:EntIndex())
     end
 
-    entityMeta.ClearNetVars = entityMeta.clearNetVars
     --- Sets the value of a networked variable.
     -- @realm server
     -- @string key Identifier of the networked variable
@@ -149,7 +141,6 @@ if SERVER then
         self:sendNetVar(key, receiver)
     end
 
-    entityMeta.SetNetVar = entityMeta.setNetVar
     --- Retrieves a networked variable. If it is not set, it'll return the default that you've specified.
     -- @realm server
     -- @string key Identifier of the networked variable
@@ -165,7 +156,6 @@ if SERVER then
     end
 
     playerMeta.getLocalVar = entityMeta.getNetVar
-    entityMeta.GetNetVar = entityMeta.getNetVar
 else
     --- Retrieves the value of a networked variable associated with the entity.
     -- @realm client
@@ -182,5 +172,4 @@ else
     end
 
     playerMeta.getLocalVar = entityMeta.getNetVar
-    entityMeta.GetNetVar = entityMeta.getNetVar
 end

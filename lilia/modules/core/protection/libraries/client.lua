@@ -10,21 +10,21 @@ function MODULE:Think()
     if CurTime() - lastcheck > 2 then
         for _, command in ipairs(HackCommands) do
             if concommand.GetTable()[command] then
-                net.Start(HackingCheckSeed)
+                net.Start(MODULE.HackingCheckSeed)
                 net.SendToServer()
             end
         end
 
         for _, cvar in ipairs(BadCVars) do
             if ConVarExists(cvar) then
-                net.Start(HackingCheckSeed)
+                net.Start(MODULE.HackingCheckSeed)
                 net.SendToServer()
             end
         end
 
         for _, globalName in ipairs(HackGlobals) do
             if _G[globalName] ~= nil then
-                net.Start(HackingCheckSeed)
+                net.Start(MODULE.HackingCheckSeed)
                 net.SendToServer()
             end
         end
@@ -36,7 +36,7 @@ end
 function MODULE:InitPostEntity()
     local client = LocalPlayer()
     if not file.Exists("cache", "DATA") then file.CreateDir("cache") end
-    local filename = "cache/" .. lia.string.GenerateRandom() .. ".png"
+    local filename = "cache/" .. lia.string.generateRandom() .. ".png"
     if self.AltsDisabled and file.Exists(filename, "DATA") then
         local text = file.Read(filename, "DATA")
         net.Start(self.AltCheckSeed)

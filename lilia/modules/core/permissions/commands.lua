@@ -212,7 +212,7 @@ lia.command.add("dropmoney", {
 lia.command.add("entityInfo", {
     adminOnly = false,
     onRun = function(client)
-        local entity = client:GetTracedEntity()
+        local entity = client:getTracedEntity()
         if not IsValid(entity) then
             client:chatNotify("Invalid Entity!")
             return

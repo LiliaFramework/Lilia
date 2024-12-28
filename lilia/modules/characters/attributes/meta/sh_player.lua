@@ -53,6 +53,3 @@ if SERVER then
         end
     end
 end
-
-playerMeta.HasSkillLevel = playerMeta.hasSkillLevel
-playerMeta.MeetsRequiredSkills = playerMeta.meetsRequiredSkills

@@ -17,7 +17,7 @@ end
 
 function MODULE:SetupQuickMenu(menu)
     local client = LocalPlayer()
-    if client:getChar() and (client:HasPrivilege("Staff Permissions - No Clip ESP Outside Staff Character") or client:isStaffOnDuty()) then
+    if client:getChar() and (client:hasPrivilege("Staff Permissions - No Clip ESP Outside Staff Character") or client:isStaffOnDuty()) then
         menu:addCheck("Toggle ESP", function(_, state) ESP_Active:SetBool(state) end, ESP_Active:GetBool(), "ESP")
         menu:addCheck("ESP Players", function(_, state) ESP_Players:SetBool(state) end, ESP_Players:GetBool(), "ESP")
         menu:addCheck("ESP Items", function(_, state) ESP_Items:SetBool(state) end, ESP_Items:GetBool(), "ESP")
@@ -30,10 +30,10 @@ function MODULE:HUDPaint()
     if not ESP_Active:GetBool() then return end
     local client = LocalPlayer()
     if not client:getChar() then return end
-    local hasPrivilege = client:HasPrivilege("Staff Permissions - No Clip ESP Outside Staff Character")
+    local hasPrivilege = client:hasPrivilege("Staff Permissions - No Clip ESP Outside Staff Character")
     local isStaffOnDuty = client:isStaffOnDuty()
     if not (hasPrivilege or isStaffOnDuty) then return end
-    if not client:IsNoClipping() or client:hasValidVehicle() then return end
+    if not client:isNoClipping() or client:hasValidVehicle() then return end
     local sx, sy = ScrW(), ScrH()
     local marginx, marginy = sx * 0.1, sy * 0.1
     for _, ent in ipairs(ents.GetAll()) do
@@ -95,7 +95,7 @@ end
 
 function MODULE:SpawnMenuOpen()
     local client = LocalPlayer()
-    if self.SpawnMenuLimit then return client:getChar():hasFlags("pet") or client:isStaffOnDuty() or client:HasPrivilege("Spawn Permissions - Can Spawn Props") end
+    if self.SpawnMenuLimit then return client:getChar():hasFlags("pet") or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Props") end
 end
 
 concommand.Add("dev_GetCameraOrigin", function(client)
@@ -112,7 +112,7 @@ concommand.Add("vgui_cleanup", function()
 end, nil, "Removes every panel that you have left over (like that errored DFrame filling up your screen)")
 
 concommand.Add("weighpoint_stop", function() hook.Add("HUDPaint", "WeighPoint", function() end) end)
-concommand.Add("dev_GetEntPos", function(client) if client:isStaff() then LiliaInformation(client:GetTracedEntity():GetPos().x, client:GetTracedEntity():GetPos().y, client:GetTracedEntity():GetPos().z) end end)
-concommand.Add("dev_GetEntAngles", function(client) if client:isStaff() then LiliaInformation(math.ceil(client:GetTracedEntity():GetAngles().x) .. ", " .. math.ceil(client:GetTracedEntity():GetAngles().y) .. ", " .. math.ceil(client:GetTracedEntity():GetAngles().z)) end end)
-concommand.Add("dev_GetRoundEntPos", function(client) if client:isStaff() then LiliaInformation(math.ceil(client:GetTracedEntity():GetPos().x) .. ", " .. math.ceil(client:GetTracedEntity():GetPos().y) .. ", " .. math.ceil(client:GetTracedEntity():GetPos().z)) end end)
+concommand.Add("dev_GetEntPos", function(client) if client:isStaff() then LiliaInformation(client:getTracedEntity():GetPos().x, client:getTracedEntity():GetPos().y, client:getTracedEntity():GetPos().z) end end)
+concommand.Add("dev_GetEntAngles", function(client) if client:isStaff() then LiliaInformation(math.ceil(client:getTracedEntity():GetAngles().x) .. ", " .. math.ceil(client:getTracedEntity():GetAngles().y) .. ", " .. math.ceil(client:getTracedEntity():GetAngles().z)) end end)
+concommand.Add("dev_GetRoundEntPos", function(client) if client:isStaff() then LiliaInformation(math.ceil(client:getTracedEntity():GetPos().x) .. ", " .. math.ceil(client:getTracedEntity():GetPos().y) .. ", " .. math.ceil(client:getTracedEntity():GetPos().z)) end end)
 concommand.Add("dev_GetPos", function(client) if client:isStaff() then LiliaInformation(math.ceil(client:GetPos().x) .. ", " .. math.ceil(client:GetPos().y) .. ", " .. math.ceil(client:GetPos().z)) end end)

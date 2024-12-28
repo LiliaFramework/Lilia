@@ -135,12 +135,4 @@ if SERVER then
         end
         return false
     end
-
-    playerMeta.SetWhitelisted = playerMeta.setWhitelisted
-    playerMeta.ClassWhitelist = playerMeta.classWhitelist
-    playerMeta.ClassUnWhitelist = playerMeta.classUnWhitelist
 end
-
-playerMeta.GetClassData = playerMeta.getClassData
-playerMeta.HasWhitelist = playerMeta.hasWhitelist
-playerMeta.HasClassWhitelist = playerMeta.hasClassWhitelist

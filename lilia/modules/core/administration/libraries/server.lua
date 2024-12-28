@@ -4,7 +4,7 @@ function MODULE:InitializedModules()
 end
 
 function MODULE:PostPlayerLoadout(client)
-    if client:HasPrivilege("Staff Permissions - Use Admin Stick") or client:isStaffOnDuty() then client:Give("adminstick") end
+    if client:hasPrivilege("Staff Permissions - Use Admin Stick") or client:isStaffOnDuty() then client:Give("adminstick") end
 end
 
 function MODULE:TicketSystemClaim(admin)
@@ -36,7 +36,7 @@ function MODULE:PlayerSay(client, text)
 end
 
 function MODULE:HasAccess(client)
-    return client:HasPrivilege("Staff Permissions - Always See Tickets") or client:isStaffOnDuty()
+    return client:hasPrivilege("Staff Permissions - Always See Tickets") or client:isStaffOnDuty()
 end
 
 function MODULE:PlayerDisconnected(client)

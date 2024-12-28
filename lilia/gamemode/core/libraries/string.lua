@@ -32,7 +32,7 @@ end
 -- @realm shared
 -- @number length The length of the random string to generate. Defaults to 16 if not provided.
 -- @return string The generated random string.
-function lia.string.GenerateRandom(length)
+function lia.string.generateRandom(length)
     length = length or 16
     local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
     local randomString = {}

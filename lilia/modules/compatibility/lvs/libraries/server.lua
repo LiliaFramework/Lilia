@@ -56,7 +56,7 @@ function MODULE:isSuitableForTrunk(vehicle)
 end
 
 function MODULE:CheckValidSit(client)
-    local vehicle = client:GetTracedEntity()
+    local vehicle = client:getTracedEntity()
     if vehicle:isSimfphysCar() then return false end
 end
 

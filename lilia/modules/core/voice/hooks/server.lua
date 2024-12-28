@@ -1,17 +1,7 @@
 ﻿local GM = GM or GAMEMODE
+local MODULE = MODULE
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
-    local HasCharacter = speaker:getChar()
-    if not HasCharacter then return false end
-    local IsVoiceEnabled = VoiceCore.IsVoiceEnabled and GetGlobalBool("EnabledVoice", true)
-    local IsVoiceBanned = speaker:getChar():getData("VoiceBan", false)
-    local VoiceType = speaker:getNetVar("VoiceType", "Talking")
-    local VoiceRadius = VoiceCore.TalkRanges[VoiceType]
-    local VoiceRadiusSquared = VoiceRadius * VoiceRadius
-    if IsVoiceBanned then return false end
-    if IsVoiceEnabled and (listener ~= speaker) and speaker:GetPos():DistToSqr(listener:GetPos()) <= VoiceRadiusSquared then return true, true end
-    return false, false
-end
-
-function MODULE:PostPlayerLoadout(client)
-    client:setNetVar("VoiceType", "Talking")
+    local char = speaker:getChar()
+    local canHear = char and not char:getData("VoiceBan", false) and MODULE.IsVoiceEnabled and GetGlobalBool("EnabledVoice", true) and listener ~= speaker
+    return canHear and true or false, canHear and true or false
 end

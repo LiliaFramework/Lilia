@@ -105,7 +105,7 @@ function MODULE:ShouldDrawEntityInfo(entity)
     local client = LocalPlayer()
     if IsValid(entity) then
         if entity:IsPlayer() and entity:getChar() then
-            if entity:IsNoClipping() then return false end
+            if entity:isNoClipping() then return false end
             if entity:GetNoDraw() then return false end
             return true
         end

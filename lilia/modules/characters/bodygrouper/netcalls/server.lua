@@ -13,7 +13,7 @@ net.Receive("BodygrouperMenu", function(_, client)
     local closetuser = false
     if not IsValid(target) then return end
     if target ~= client then
-        if not client:HasPrivilege("Commands - Change Bodygroups") then
+        if not client:hasPrivilege("Commands - Change Bodygroups") then
             client:notifyLocalized("noAccess")
             return
         end

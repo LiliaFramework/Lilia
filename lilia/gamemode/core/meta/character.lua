@@ -402,10 +402,4 @@ if SERVER then
     end
 end
 
-characterMeta.Save = characterMeta.save
-characterMeta.Sync = characterMeta.sync
-characterMeta.HasMoney = characterMeta.hasMoney
-characterMeta.GetPlayer = characterMeta.getPlayer
-characterMeta.GiveMoney = characterMeta.giveMoney
-characterMeta.TakeMoney = characterMeta.takeMoney
 lia.meta.character = characterMeta

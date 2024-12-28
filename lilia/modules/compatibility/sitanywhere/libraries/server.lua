@@ -9,6 +9,6 @@
 end
 
 function MODULE:CheckValidSit(client)
-    local entity = client:GetTracedEntity()
+    local entity = client:getTracedEntity()
     if entity:IsVehicle() or entity:IsPlayer() then return false end
 end

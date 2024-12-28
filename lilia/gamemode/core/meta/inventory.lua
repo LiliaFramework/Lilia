@@ -293,7 +293,6 @@ if SERVER then
         return self
     end
 
-    Inventory.AddItem = Inventory.addItem
     --- Alias for `addItem` function.
     -- @realm server
     -- @item item The item to add to the inventory.
@@ -304,7 +303,6 @@ if SERVER then
         return self:addItem(item)
     end
 
-    Inventory.Add = Inventory.add
     --- Synchronizes the addition of an item with clients.
     -- @realm server
     -- @item item The item being added.
@@ -393,7 +391,6 @@ if SERVER then
         return d
     end
 
-    Inventory.RemoveItem = Inventory.removeItem
     --- Alias for `removeItem` function.
     -- @realm server
     -- @int itemID The ID of the item to remove.
@@ -406,7 +403,6 @@ if SERVER then
         return self:removeItem(itemID)
     end
 
-    Inventory.Remove = Inventory.remove
     --- Sets data associated with a key in the inventory.
     -- @realm server
     -- @tparam any key The key to associate the data with.
@@ -439,7 +435,6 @@ if SERVER then
         return self
     end
 
-    Inventory.SetData = Inventory.setData
     --- Checks if a certain action is permitted for the inventory.
     -- @realm server
     -- @string action The action to check for access.
@@ -666,16 +661,4 @@ else
     function Inventory:show(parent)
         return lia.inventory.show(self, parent)
     end
-
-    Inventory.Show = Inventory.show
 end
-
-Inventory.GetItems = Inventory.getItems
-Inventory.GetItems = Inventory.getItems
-Inventory.GetItemsOfType = Inventory.getItemsOfType
-Inventory.GetFirstItemOfType = Inventory.getFirstItemOfType
-Inventory.HasItem = Inventory.hasItem
-Inventory.GetItemCount = Inventory.getItemCount
-Inventory.GetID = Inventory.getID
-Inventory.GetData = Inventory.getData
-Inventory.Show = Inventory.show

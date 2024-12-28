@@ -29,8 +29,15 @@ if SERVER then
     -- @string name The fake name under which the character is recognized. If nil, recognizes the character by their actual ID.
     -- @treturn boolean True if the recognition was successful.
     function characterMeta:recognize(character, name)
-        local id = character:getID()
-        if not isnumber(id) and id.getID then id = id:getID() end
+        local id
+        if isnumber(character) then
+            id = character
+        elseif character and character.getID then
+            id = character:getID()
+        else
+            error("Invalid 'character' argument: must be a character object or an ID number.")
+        end
+
         local recognized = self:getData("rgn", "")
         local nameList = self:getRecognizedAs()
         if name ~= nil then

@@ -4,7 +4,7 @@ lia.command.add("storagelock", {
     adminOnly = true,
     syntax = "[string password]",
     onRun = function(client, arguments)
-        local entity = client:GetTracedEntity()
+        local entity = client:getTracedEntity()
         if entity and IsValid(entity) then
             local password = table.concat(arguments, " ")
             if password ~= "" then
@@ -27,7 +27,7 @@ lia.command.add("storagelock", {
 lia.command.add("trunk", {
     adminOnly = false,
     onRun = function(client)
-        local entity = client:GetTracedEntity()
+        local entity = client:getTracedEntity()
         local maxDistance = 110
         local openTime = 0.7
         local clientPos = client:GetPos():Distance(entity:GetPos())

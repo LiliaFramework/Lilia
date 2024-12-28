@@ -159,7 +159,7 @@ function MODULE:PostPlayerLoadout(client)
 end
 
 function MODULE:ShowTeam(client)
-    local entity = client:GetTracedEntity()
+    local entity = client:getTracedEntity()
     if IsValid(entity) and entity:isDoor() and not entity:getNetVar("faction") and not entity:getNetVar("class") then
         if entity:checkDoorAccess(client, DOOR_TENANT) then
             local door = entity

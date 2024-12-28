@@ -6,6 +6,6 @@ local playerMeta = FindMetaTable("Player")
 -- @realm shared
 -- @treturn boolean true if the player has the privilege to edit vendors, false otherwise.
 function playerMeta:CanEditVendor()
-    if self:HasPrivilege("Staff Permissions - Can Edit Vendors") then return true end
+    if self:hasPrivilege("Staff Permissions - Can Edit Vendors") then return true end
     return false
 end

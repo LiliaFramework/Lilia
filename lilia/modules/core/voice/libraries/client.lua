@@ -22,7 +22,30 @@ end
 
 function PANEL:Setup(client)
     self.client = client
-    self.name = hook.Run("ShouldAllowScoreboardOverride", client, "name") and hook.Run("GetDisplayedName", client) or client:getChar():getName()
+    self.name = "Unknown"
+    local shouldOverride = hook.Run("ShouldAllowScoreboardOverride", client, "name")
+    if shouldOverride then
+        local displayedName = hook.Run("GetDisplayedName", client)
+        if displayedName and isstring(displayedName) then
+            self.name = displayedName
+        else
+            self.name = client:Nick() or "Unknown"
+        end
+    else
+        local char = client:getChar()
+        if char and char.getName then
+            local charName = char:getName()
+            if charName and isstring(charName) then
+                self.name = charName
+            else
+                self.name = client:Nick() or "Unknown"
+            end
+        else
+            self.name = client:Nick() or "Unknown"
+        end
+    end
+
+    print("VoicePanel Setup: Setting name to '" .. tostring(self.name) .. "' for client " .. tostring(client))
     self.LabelName:SetText(self.name)
     self:InvalidateLayout()
 end

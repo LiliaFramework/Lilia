@@ -234,7 +234,6 @@ if SERVER then
         return self.name
     end
 
-    ITEM.GetName = ITEM.getName
     --- Returns the description of the item.
     -- @realm server
     -- @treturn String The description of the item.
@@ -245,7 +244,6 @@ if SERVER then
         return self.desc
     end
 
-    ITEM.GetDescription = ITEM.getDesc
     --- Removes the item from its current inventory.
     -- @realm server
     -- @bool preserveItem If true, the item is not fully deleted from the database.
@@ -489,7 +487,6 @@ if SERVER then
         self.data.x, self.data.y = x, y
     end
 
-    ITEM.SetData = ITEM.setData
     --- Adds a specified quantity to the item's current quantity.
     -- @realm server
     -- @int quantity The quantity to add.
@@ -526,7 +523,6 @@ if SERVER then
         end
     end
 
-    ITEM.SetQuantity = ITEM.setQuantity
     --- Performs an interaction action with the item.
     -- @realm server
     -- @string action The interaction action to perform.
@@ -599,7 +595,6 @@ else
         return L(self.name)
     end
 
-    ITEM.GetName = ITEM.getName
     --- Returns the description of the item.
     -- @realm client
     -- @treturn String The description of the item.
@@ -609,16 +604,6 @@ else
     function ITEM:getDesc()
         return L(self.desc)
     end
-
-    ITEM.GetDescription = ITEM.getDesc
 end
 
-ITEM.GetItems = ITEM.getItems
-ITEM.GetItemsOfType = ITEM.getItemsOfType
-ITEM.GetFirstItemOfType = ITEM.getFirstItemOfType
-ITEM.HasItem = ITEM.hasItem
-ITEM.GetItemCount = ITEM.getItemCount
-ITEM.GetID = ITEM.getID
-ITEM.GetData = ITEM.getData
-ITEM.Show = ITEM.show
 lia.meta.item = ITEM

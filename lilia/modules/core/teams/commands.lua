@@ -175,7 +175,7 @@ lia.command.add("classwhitelist", {
             return false
         end
 
-        target:ClassWhitelist(class)
+        target:classWhitelist(class)
         client:notify("Whitelisted properly.")
         target:notify(string.format("Class '%s' have been assigned to your current character.", classTable.name))
     end
@@ -214,7 +214,7 @@ lia.command.add("classunwhitelist", {
             return false
         end
 
-        target:ClassUnWhitelist(class)
+        target:classUnWhitelist(class)
         client:notify("Unwhitelisted properly.")
         target:notify(string.format("Class '%s' have been unassigned from your current character.", classTable.name))
     end
