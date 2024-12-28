@@ -36,7 +36,7 @@ function MODULE:HUDPaint()
         NewWeaponSelecter.deltaIndex = Lerp(frameTime * 12, NewWeaponSelecter.deltaIndex, NewWeaponSelecter.index)
         local index = NewWeaponSelecter.deltaIndex
         if not NewWeaponSelecter.weapons[NewWeaponSelecter.index] then NewWeaponSelecter.index = math.max(#NewWeaponSelecter.weapons, 1) end
-        for i = 1, #NewWeaponSelecter.weapons do
+        for __ = 1, #NewWeaponSelecter.weapons do
             local weapon = NewWeaponSelecter.weapons[i]
             if not IsValid(weapon) then
                 table.remove(NewWeaponSelecter.weapons, i)

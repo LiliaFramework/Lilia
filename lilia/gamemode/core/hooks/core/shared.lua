@@ -1,10 +1,5 @@
 ﻿local GM = GM or GAMEMODE
 local string = string
-local ChairCache = {}
-for _, v in pairs(list.Get("Vehicles")) do
-    if v.Category == "Chairs" then ChairCache[v.Model] = true end
-end
-
 function GM:Move(client, moveData)
     local character = client:getChar()
     if not character then return end
