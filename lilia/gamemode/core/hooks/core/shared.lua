@@ -343,13 +343,11 @@ function GM:GetMaxStartingAttributePoints()
 end
 
 function GM:GetMaxPlayerCharacter(client)
-    LiliaDeprecated("GetMaxPlayerCharacter is deprecated. Use GetMaxPlayerChar for optimization purposes.")
-    hook.Run("GetMaxPlayerChar", client)
+    LiliaDeprecated("GetMaxPlayerCharacter", function() hook.Run("GetMaxPlayerChar", client) end)
 end
 
 function GM:CanPlayerCreateCharacter(client)
-    LiliaDeprecated("CanPlayerCreateCharacter is deprecated. Use CanPlayerCreateChar for optimization purposes.")
-    hook.Run("CanPlayerCreateChar", client)
+    LiliaDeprecated("CanPlayerCreateCharacter", function() hook.Run("CanPlayerCreateChar", client) end)
 end
 
 function widgets.PlayerTick()

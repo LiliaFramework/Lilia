@@ -488,23 +488,19 @@ function GM:CharListLoaded()
 end
 
 function GM:CanDisplayCharacterInfo(client, id)
-    LiliaDeprecated("CanDisplayCharacterInfo is deprecated. Use CanDisplayCharInfo for optimization purposes.")
-    hook.Run("CanDisplayCharInfo", client, id)
+    LiliaDeprecated("CanDisplayCharacterInfo", function() hook.Run("CanDisplayCharInfo", client, id) end)
 end
 
 function GM:KickedFromCharacter(id, isCurrentChar)
-    LiliaDeprecated("KickedFromCharacter is deprecated. Use KickedFromChar for optimization purposes.")
-    hook.Run("KickedFromChar", id, isCurrentChar)
+    LiliaDeprecated("KickedFromCharacter", function() hook.Run("KickedFromChar", id, isCurrentChar) end)
 end
 
 function GM:CharacterListLoaded(newCharList)
-    LiliaDeprecated("CharacterListLoaded is deprecated. Use CharListLoaded for optimization purposes.")
-    hook.Run("CharListLoaded", newCharList)
+    LiliaDeprecated("CharacterListLoaded", function() hook.Run("CharListLoaded", newCharList) end)
 end
 
 function GM:CharacterListUpdated(oldCharList, newCharList)
-    LiliaDeprecated("CharacterListUpdated is deprecated. Use CharListUpdated for optimization purposes.")
-    hook.Run("CharListUpdated", oldCharList, newCharList)
+    LiliaDeprecated("CharacterListUpdated", function() hook.Run("CharListUpdated", oldCharList, newCharList) end)
 end
 
 function GM:HUDDrawTargetID()

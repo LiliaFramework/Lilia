@@ -46,7 +46,6 @@ function lia.class.loadFromDir(directory)
         end
 
         if not CLASS.OnCanBe then
-            if CLASS.onCanBe then LiliaDeprecated("onCanBe is deprecated. Use OnCanBe for optimization purposes.") end
             CLASS.OnCanBe = function() return true end
         end
 
@@ -68,7 +67,6 @@ function lia.class.canBe(client, class)
     if client:getChar():getClass() == class then return false, "same class request" end
     if info.limit > 0 and #lia.class.getPlayers(info.index) >= info.limit then return false, "class is full" end
     if hook.Run("CanPlayerJoinClass", client, class, info) == false then return false end
-    if info.onCanBe and not info:onCanBe(client) then return false end
     if info.OnCanBe and not info:OnCanBe(client) then return false end
     return info.isDefault
 end

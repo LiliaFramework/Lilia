@@ -433,33 +433,27 @@ function GM:SetupBotPlayer(client)
 end
 
 function GM:CharacterLoaded(id)
-    LiliaDeprecated("CharacterLoaded is deprecated. Use CharLoaded for optimization purposes.")
-    hook.Run("CharLoaded", id)
+    LiliaDeprecated("CharacterLoaded", function() hook.Run("CharLoaded", id) end)
 end
 
 function GM:PreCharacterDelete(id)
-    LiliaDeprecated("PreCharacterDelete is deprecated. Use PreCharDelete for optimization purposes.")
-    hook.Run("PreCharDelete", id)
+    LiliaDeprecated("PreCharacterDelete", function() hook.Run("PreCharDelete", id) end)
 end
 
 function GM:OnCharacterDelete(client, id)
-    LiliaDeprecated("OnCharacterDelete is deprecated. Use OnCharDelete for optimization purposes.")
-    hook.Run("OnCharDelete", client, id)
+    LiliaDeprecated("OnCharacterDelete", function() hook.Run("OnCharDelete", client, id) end)
 end
 
 function GM:onCharCreated(client, character, data)
-    LiliaDeprecated("onCharCreated is deprecated. Use OnCharCreated for optimization purposes.")
-    hook.Run("OnCharCreated", client, character, data)
+    LiliaDeprecated("onCharCreated", function() hook.Run("OnCharCreated", client, character, data) end)
 end
 
 function GM:onTransferred(client)
-    LiliaDeprecated("onTransferred is deprecated. Use OnTransferred for optimization purposes.")
-    hook.Run("OnTransferred", client)
+    LiliaDeprecated("onTransferred", function() hook.Run("OnTransferred", client) end)
 end
 
 function GM:CharacterPreSave(character)
-    LiliaDeprecated("CharacterPreSave is deprecated. Use CharPreSave for optimization purposes.")
-    hook.Run("CharPreSave", character)
+    LiliaDeprecated("CharacterPreSave", function() hook.Run("CharPreSave", character) end)
 end
 
 function GM:PlayerSpray()

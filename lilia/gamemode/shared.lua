@@ -42,8 +42,10 @@ function LiliaError(message)
     LiliaLog("error", message)
 end
 
-function LiliaDeprecated(message)
+function LiliaDeprecated(methodName, callback)
+    local message = string.format("%s is deprecated. Please use the new methods for optimization purposes.", methodName)
     LiliaLog("deprecated", message)
+    if callback and isfunction(callback) then callback() end
 end
 
 function LiliaInformation(message)
