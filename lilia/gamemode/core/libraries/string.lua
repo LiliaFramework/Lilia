@@ -36,7 +36,7 @@ function lia.string.GenerateRandom(length)
     length = length or 16
     local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
     local randomString = {}
-    for i = 1, length do
+    for _ = 1, length do
         local rand = math.random(1, #chars)
         table.insert(randomString, chars:sub(rand, rand))
     end

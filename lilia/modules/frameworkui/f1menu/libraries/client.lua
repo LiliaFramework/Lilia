@@ -63,7 +63,6 @@ function MODULE:CanDisplayCharInfo(name)
 end
 
 function MODULE:CreateMenuButtons(tabs)
-    local MenuColors = lia.color.ReturnMainAdjustedColors()
     local client = LocalPlayer()
     tabs["Status"] = function(panel)
         panel.rotationAngle = 45

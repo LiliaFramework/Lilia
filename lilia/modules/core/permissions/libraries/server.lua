@@ -1,6 +1,5 @@
 ﻿local GM = GM or GAMEMODE
 local resetCalled = 0
-local MODULE = MODULE
 function GM:PlayerSpawnEffect(client)
     return client:IsSuperAdmin() or client:isStaffOnDuty() or client:HasPrivilege("Spawn Permissions - Can Spawn Effects") or client:getChar():hasFlags("L")
 end

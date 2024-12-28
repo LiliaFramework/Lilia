@@ -1,5 +1,4 @@
-﻿local MODULE = MODULE
-local storageNetworkStrings = {"liaStorageOpen", "liaStorageExit", "liaStorageUnlock", "liaStorageTransfer"}
+﻿local storageNetworkStrings = {"liaStorageOpen", "liaStorageExit", "liaStorageUnlock", "liaStorageTransfer"}
 net.Receive("liaStorageExit", function(_, client)
     local storage = client.liaStorageEntity
     if IsValid(storage) then storage.receivers[client] = nil end
