@@ -34,10 +34,6 @@ FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/libraries/animations.lua",
-        realm = "shared"
-    },
-    {
         path = "lilia/gamemode/core/hooks/core/shared.lua",
         realm = "shared"
     },
