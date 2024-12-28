@@ -81,7 +81,7 @@ lia.command.add("returnitems", {
             return
         end
 
-        if MODULE.LoseWeapononDeathHuman or MODULE.LoseWeapononDeathNPC then
+        if MODULE.LoseDropItemsonDeathHuman or MODULE.LoseDropItemsonDeathNPC then
             if IsValid(targetPlayer) then
                 if not targetPlayer.LostItems then
                     client:notify("The target hasn't died recently or they have already had their items returned!")

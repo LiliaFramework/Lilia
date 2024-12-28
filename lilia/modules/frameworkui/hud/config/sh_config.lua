@@ -1,4 +1,12 @@
-﻿MODULE.colors = {}
+﻿MODULE.Vignette = true
+MODULE.BranchWarning = true
+MODULE.CrosshairEnabled = false
+MODULE.BarsDisabled = false
+MODULE.AmmoDrawEnabled = true
+MODULE.WatermarkEnabled = false
+MODULE.WatermarkLogo = ""
+MODULE.GamemodeVersion = ""
+MODULE.colors = {}
 MODULE.colors.accentColor = Color(225, 75, 75)
 MODULE.colors.darkL1 = Color(25, 25, 25)
 MODULE.colors.darkL2 = Color(30, 30, 30)

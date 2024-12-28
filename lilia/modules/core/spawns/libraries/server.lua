@@ -64,7 +64,7 @@ function MODULE:PlayerDeath(client, _, attacker)
     local character = client:getChar()
     if not character then return end
     if attacker:IsPlayer() then
-        if self.LoseWeapononDeathHuman then self:RemovedDropOnDeathItems(client) end
+        if self.LoseDropItemsonDeathHuman then self:RemovedDropOnDeathItems(client) end
         if self.DeathPopupEnabled then
             net.Start("death_client")
             net.WriteFloat(attacker:getChar():getID())
@@ -74,7 +74,7 @@ function MODULE:PlayerDeath(client, _, attacker)
 
     client:SetDeathTimer()
     character:setData("pos", nil)
-    if (not attacker:IsPlayer() and self.LoseWeapononDeathNPC) or (self.LoseWeapononDeathWorld and attacker:IsWorld()) then self:RemovedDropOnDeathItems(client) end
+    if (not attacker:IsPlayer() and self.LoseDropItemsonDeathNPC) or (self.LoseDropItemsonDeathWorld and attacker:IsWorld()) then self:RemovedDropOnDeathItems(client) end
     character:setData("deathPos", client:GetPos())
 end
 
