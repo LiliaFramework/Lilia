@@ -141,7 +141,7 @@ function PANEL:Think()
             if IsValid(v) then v:update() end
         end
 
-        if (system.GetCountry() == "FR" and input.IsKeyDown(KEY_Z)) or (system.GetCountry() ~= "FR" and input.IsKeyDown(KEY_W)) then self:Init() end
+        if (system.GetCountry() == "FR" and input.IsKeyDown(KEY_W)) or (system.GetCountry() ~= "FR" and input.IsKeyDown(KEY_Z)) then self:Init() end
         self.nextUpdate = CurTime() + 0.1
         self:UpdateStaff()
     end
