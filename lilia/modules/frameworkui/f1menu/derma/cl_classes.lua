@@ -91,7 +91,7 @@ function PANEL:populateClassDetails(classData, canBe)
 
     self:createModelPanel(detailsPanel, classData)
     self:addClassDetails(detailsPanel, classData)
-    if canBe then self:addJoinButton(detailsPanel, classData) end
+    self:addJoinButton(detailsPanel, classData, canBe)
 end
 
 function PANEL:createModelPanel(parent, classData)
@@ -194,12 +194,17 @@ function PANEL:addClassDetails(detailsPanel, classData)
 
     local bloodColorText = bloodColorMap[classData.bloodcolor] or "Red blood"
     addDetail("Blood Color: " .. bloodColorText)
+    if classData.requirements then
+        addDetail("Requirements: " .. table.concat(classData.requirements, ", "))
+    else
+        addDetail("Requirements: Not specified")
+    end
 end
 
-function PANEL:addJoinButton(detailsPanel, classData)
+function PANEL:addJoinButton(detailsPanel, classData, canBe)
     local MenuColors = lia.color.ReturnMainAdjustedColors()
     local button = detailsPanel:Add("DButton")
-    button:SetText("Join Class")
+    button:SetText(canBe and "Join Class" or "Requirements not met")
     button:SetTall(40)
     button:SetTextColor(MenuColors.text)
     button:SetFont("liaMediumFont")
@@ -208,9 +213,10 @@ function PANEL:addJoinButton(detailsPanel, classData)
     button:Dock(BOTTOM)
     button:DockMargin(10, 10, 10, 10)
     button.text_color = MenuColors.text
+    button:SetDisabled(not canBe)
     button.Paint = function(btn, w, h)
         local hovered = btn:IsHovered()
-        if hovered then
+        if hovered and canBe then
             local underlineWidth = w * 0.4
             local underlineX = (w - underlineWidth) * 0.5
             local underlineY = h - 4
@@ -218,19 +224,20 @@ function PANEL:addJoinButton(detailsPanel, classData)
             surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
         end
 
-        -- Draw the border
         surface.SetDrawColor(MenuColors.border)
         surface.DrawOutlinedRect(0, 0, w, h)
     end
 
     button.DoClick = function()
-        lia.command.send("beclass", classData.index)
-        timer.Simple(0.1, function()
-            if IsValid(self) then
-                self:loadClasses()
-                self.mainContent:Clear()
-            end
-        end)
+        if canBe then
+            lia.command.send("beclass", classData.index)
+            timer.Simple(0.1, function()
+                if IsValid(self) then
+                    self:loadClasses()
+                    self.mainContent:Clear()
+                end
+            end)
+        end
     end
 end
 
