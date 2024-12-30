@@ -20,12 +20,13 @@
                 if hook.Run("CanCharBeTransfered", target:getChar(), faction, target:Team()) == false then return end
                 target:getChar().vars.faction = faction.uniqueID
                 target:getChar():setFaction(faction.index)
+                target:getChar():kickClass()
                 local defaultClass = lia.faction.getDefaultClass(faction.index)
                 if defaultClass then target:getChar():joinClass(defaultClass.index) end
                 hook.Run("OnTransferred", target)
                 if faction.onTransfered then faction:onTransfered(target) end
                 client:notify("You have transferred " .. target:Name() .. " to " .. faction.name)
-                target:notify("You have been transferred to " .. faction.name .. " by " .. client:Name())
+                if client ~= target then target:notify("You have been transferred to " .. faction.name .. " by " .. client:Name()) end
             else
                 return "@invalidFaction"
             end
