@@ -2,7 +2,6 @@ local MODULE = MODULE
 lia.command.add("logs", {
     privilege = "See Logs",
     adminOnly = true,
-    syntax = "<string faction> [string class]",
     onRun = function(client)
         local categorizedLogs = {}
         for _, logData in pairs(lia.log.types) do

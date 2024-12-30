@@ -39,7 +39,7 @@ lia.command.list = lia.command.list or {}
 -- @tab data Data describing the command
 -- @see CommandStructure
 function lia.command.add(command, data)
-    data.syntax = data.syntax or "[none]"
+    data.syntax = data.syntax or "[None]"
     local superAdminOnly = data.superAdminOnly
     local adminOnly = data.adminOnly
     if not data.onRun then

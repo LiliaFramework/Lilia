@@ -3,7 +3,7 @@ MODULE.OOCBans = MODULE.OOCBans or {}
 lia.command.add("banooc", {
     adminOnly = true,
     privilege = "Ban OOC",
-    syntax = "<string target>",
+    syntax = "[string charname]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target then
@@ -18,7 +18,7 @@ lia.command.add("banooc", {
 lia.command.add("unbanooc", {
     adminOnly = true,
     privilege = "Unban OOC",
-    syntax = "<string target>",
+    syntax = "[string charname]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target then
@@ -31,7 +31,7 @@ lia.command.add("unbanooc", {
 lia.command.add("blockooc", {
     superAdminOnly = true,
     privilege = "Block OOC",
-    syntax = "<string target>",
+    syntax = "[string charname]",
     onRun = function(client)
         if GetGlobalBool("oocblocked", false) then
             SetGlobalBool("oocblocked", false)
@@ -46,7 +46,6 @@ lia.command.add("blockooc", {
 lia.command.add("refreshfonts", {
     superAdminOnly = true,
     privilege = "Refresh Fonts",
-    syntax = "<No Input>",
     onRun = function(client)
         RunConsoleCommand("fixchatplz")
         hook.Run("LoadFonts", lia.config.Font)

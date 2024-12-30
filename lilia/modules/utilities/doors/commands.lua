@@ -417,7 +417,7 @@ lia.command.add("doortogglehidden", {
 
 lia.command.add("doorsettitle", {
     adminOnly = true,
-    syntax = "<string title>",
+    syntax = "[string title]",
     privilege = "Manage Doors",
     onRun = function(client, arguments)
         local door = client:getTracedEntity()

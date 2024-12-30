@@ -1,7 +1,7 @@
 ﻿lia.command.add("pktoggle", {
     adminOnly = true,
     privilege = "Toggle Permakill",
-    syntax = "<string target>",
+    syntax = "[string charname]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if not IsValid(target) then
@@ -29,7 +29,7 @@
 lia.command.add("charPK", {
     superAdminOnly = true,
     privilege = "Force Permakill",
-    syntax = "<string target>",
+    syntax = "[string charname]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if not IsValid(target) or not target:getChar() then

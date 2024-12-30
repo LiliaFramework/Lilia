@@ -1,6 +1,6 @@
 ﻿lia.command.add("plytransfer", {
     adminOnly = true,
-    syntax = "<string name> <string faction>",
+    syntax = "[string name] [string faction]",
     privilege = "Manage Transfers",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -37,7 +37,7 @@
 lia.command.add("plywhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
-    syntax = "<string name> <string faction>",
+    syntax = "[string name] [string faction]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
@@ -55,7 +55,7 @@ lia.command.add("plywhitelist", {
 lia.command.add("plyunwhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
-    syntax = "<string name> <string faction>",
+    syntax = "[string name] [string faction]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
@@ -72,7 +72,7 @@ lia.command.add("plyunwhitelist", {
 
 lia.command.add("beclass", {
     adminOnly = false,
-    syntax = "<string class>",
+    syntax = "[string class]",
     onRun = function(client, arguments)
         local class = table.concat(arguments, " ")
         local character = client:getChar()
@@ -110,7 +110,7 @@ lia.command.add("beclass", {
 lia.command.add("setclass", {
     adminOnly = true,
     privilege = "Manage Classes",
-    syntax = "<string target> <string class>",
+    syntax = "[string charname] [string class]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target and target:getChar() then
@@ -145,7 +145,7 @@ lia.command.add("setclass", {
 lia.command.add("classwhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
-    syntax = "<string name> <string class>",
+    syntax = "[string name] [string class]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if not IsValid(target) or not target:getChar() then
@@ -184,7 +184,7 @@ lia.command.add("classwhitelist", {
 lia.command.add("classunwhitelist", {
     adminOnly = true,
     privilege = "Manage Classes",
-    syntax = "<string name> <string class>",
+    syntax = "[string name] [string class]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if not IsValid(target) or not target:getChar() then

@@ -3,7 +3,7 @@
 lia.command.add("charvoicetoggle", {
     adminOnly = true,
     privilege = "Toggle Voice Ban Character",
-    syntax = "<string name>",
+    syntax = "[string name]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target == client then
@@ -35,7 +35,7 @@ lia.command.add("charvoicetoggle", {
 lia.command.add("voicetoggle", {
     superAdminOnly = true,
     privilege = "Voice ban Character",
-    syntax = "<string name>",
+    syntax = "[string name]",
     onRun = function(client)
         local voiceEnabled = GetGlobalBool("EnabledVoice", true)
         if voiceEnabled then

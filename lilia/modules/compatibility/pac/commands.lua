@@ -1,6 +1,5 @@
 ﻿lia.command.add("fixpac", {
     adminonly = false,
-    syntax = "<No Input>",
     onRun = function(client)
         timer.Simple(0, function() if IsValid(client) then client:ConCommand("pac_clear_parts") end end)
         timer.Simple(0.5, function()

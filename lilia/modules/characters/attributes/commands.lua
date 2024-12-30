@@ -1,13 +1,12 @@
 ﻿lia.command.add("charsetattrib", {
     superAdminOnly = true,
-    syntax = "<string charname> <string attribname> <number level>",
+    syntax = "[string charname] [string attribname] [number level]",
     privilege = "Manage Attributes",
     onRun = function(client, arguments)
         local attribName = arguments[2]
         if not attribName then return L("invalidArg", 2) end
-        local attribNumber = arguments[3]
-        attribNumber = tonumber(attribNumber)
-        if not attribNumber or not isnumber(attribNumber) then return L("invalidArg", 3) end
+        local attribNumber = tonumber(arguments[3])
+        if not attribNumber or type(attribNumber) ~= "number" then return L("invalidArg", 3) end
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
             local character = target:getChar()
@@ -26,14 +25,13 @@
 
 lia.command.add("charaddattrib", {
     superAdminOnly = true,
-    syntax = "<string charname> <string attribname> <number level>",
+    syntax = "[string charname] [string attribname] [number level]",
     privilege = "Manage Attributes",
     onRun = function(client, arguments)
         local attribName = arguments[2]
         if not attribName then return L("invalidArg", 2) end
-        local attribNumber = arguments[3]
-        attribNumber = tonumber(attribNumber)
-        if not attribNumber or not isnumber(attribNumber) then return L("invalidArg", 3) end
+        local attribNumber = tonumber(arguments[3])
+        if not attribNumber or type(attribNumber) ~= "number" then return L("invalidArg", 3) end
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
             local character = target:getChar()

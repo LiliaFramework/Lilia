@@ -17,7 +17,7 @@
 lia.command.add("playsound", {
     superAdminOnly = true,
     privilege = "Play Sounds",
-    syntax = "<string name> <string sound>",
+    syntax = "[string name] <string sound>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local sound = arguments[2]
@@ -59,7 +59,7 @@ lia.command.add("roll", {
 
 lia.command.add("chardesc", {
     adminOnly = false,
-    syntax = "<string desc>",
+    syntax = "[string desc]",
     onRun = function(client, arguments)
         local desc = table.concat(arguments, " ")
         if not desc:find("%S") then return client:requestString("Change Description", "Change Your Description", function(text) lia.command.run(client, "chardesc", {text}) end, client:getChar():getDesc()) end
@@ -92,7 +92,7 @@ lia.command.add("chargetup", {
 
 lia.command.add("givemoney", {
     adminOnly = false,
-    syntax = "<string name> <number amount>",
+    syntax = "[string name] <number amount>",
     privilege = "Give Money",
     onRun = function(client, arguments)
         local amount = tonumber(arguments[2])
@@ -163,7 +163,7 @@ lia.command.add("fallover", {
 
 lia.command.add("dropmoney", {
     adminOnly = false,
-    syntax = "<number amount>",
+    syntax = "[number amount]",
     onRun = function(client, arguments)
         if client:GetNW2Bool("DropMoneyCooldown", false) then
             local remainingTime = math.ceil(client:GetNW2Float("DropMoneyCooldownEnd", 0) - CurTime())
@@ -242,7 +242,7 @@ lia.command.add("entityInfo", {
 lia.command.add("checkinventory", {
     adminOnly = true,
     privilege = "Check Inventories",
-    syntax = "<string target>",
+    syntax = "[string charname]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local isTargDiff = target ~= client
@@ -263,7 +263,7 @@ lia.command.add("checkinventory", {
 
 lia.command.add("flaggive", {
     adminOnly = true,
-    syntax = "<string name> [string flags]",
+    syntax = "[string name] [string flags]",
     privilege = "Manage Flags",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -294,7 +294,7 @@ lia.command.add("flaggive", {
 
 lia.command.add("flaggiveall", {
     adminOnly = true,
-    syntax = "<string name> [string flags]",
+    syntax = "[string name] [string flags]",
     privilege = "Manage Flags",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -314,7 +314,7 @@ lia.command.add("flaggiveall", {
 
 lia.command.add("flagpet", {
     adminOnly = true,
-    syntax = "<string name>",
+    syntax = "[string name]",
     privilege = "Manage Flags",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -334,7 +334,7 @@ lia.command.add("flagpet", {
 
 lia.command.add("flagtakeall", {
     adminOnly = true,
-    syntax = "<string name> [string flags]",
+    syntax = "[string name] [string flags]",
     privilege = "Manage Flags",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -354,7 +354,7 @@ lia.command.add("flagtakeall", {
 
 lia.command.add("flagtake", {
     adminOnly = true,
-    syntax = "<string name> [string flags]",
+    syntax = "[string name] [string flags]",
     privilege = "Manage Flags",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -431,7 +431,7 @@ lia.command.add("cleannpcs", {
 })
 
 lia.command.add("charunban", {
-    syntax = "<string name>",
+    syntax = "[string name]",
     superAdminOnly = true,
     privilege = "Manage Characters",
     onRun = function(client, arguments)
@@ -473,7 +473,7 @@ lia.command.add("charunban", {
 
 lia.command.add("clearinv", {
     superAdminOnly = true,
-    syntax = "<string name>",
+    syntax = "[string name]",
     privilege = "Manage Characters",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -488,7 +488,7 @@ lia.command.add("clearinv", {
 
 lia.command.add("charkick", {
     adminOnly = true,
-    syntax = "<string name>",
+    syntax = "[string name]",
     privilege = "Kick Characters",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -535,7 +535,7 @@ lia.command.add("freezeallprops", {
 
 lia.command.add("charban", {
     superAdminOnly = true,
-    syntax = "<string name>",
+    syntax = "[string name]",
     privilege = "Manage Characters",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -574,7 +574,7 @@ lia.command.add("checkallmoney", {
 lia.command.add("checkflags", {
     adminOnly = true,
     privilege = "Get Character Info",
-    syntax = "<string target>",
+    syntax = "[string charname]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and target:getChar() then
@@ -645,7 +645,7 @@ lia.command.add("findallflags", {
 lia.command.add("checkmoney", {
     adminOnly = true,
     privilege = "Get Character Info",
-    syntax = "<string target>",
+    syntax = "[string charname]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target and target:getChar() then
@@ -660,7 +660,7 @@ lia.command.add("checkmoney", {
 lia.command.add("listbodygroups", {
     adminOnly = true,
     privilege = "Get Character Info",
-    syntax = "<string target>",
+    syntax = "[string charname]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target then
@@ -701,7 +701,7 @@ lia.command.add("listbodygroups", {
 
 lia.command.add("chargetmodel", {
     adminOnly = true,
-    syntax = "<string name>",
+    syntax = "[string name]",
     privilege = "Get Character Info",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -717,7 +717,7 @@ lia.command.add("chargetmodel", {
 lia.command.add("charsetspeed", {
     adminOnly = true,
     privilege = "Manage Character Stats",
-    syntax = "<string name> <number speed>",
+    syntax = "[string name] <number speed>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local speed = tonumber(arguments[2]) or lia.config.WalkSpeed
@@ -731,7 +731,7 @@ lia.command.add("charsetspeed", {
 
 lia.command.add("charsetmodel", {
     adminOnly = true,
-    syntax = "<string name> <string model>",
+    syntax = "[string name] <string model>",
     privilege = "Manage Character Informations",
     onRun = function(client, arguments)
         if not arguments[2] then return L("invalidArg", 2) end
@@ -748,7 +748,7 @@ lia.command.add("charsetmodel", {
 
 lia.command.add("chargiveitem", {
     superAdminOnly = true,
-    syntax = "<string name> <string item>",
+    syntax = "[string name] <string item>",
     privilege = "Manage Items",
     onRun = function(client, arguments)
         if not arguments[2] then
@@ -785,7 +785,7 @@ lia.command.add("chargiveitem", {
 
 lia.command.add("charsetdesc", {
     adminOnly = true,
-    syntax = "<string name> <string desc>",
+    syntax = "[string name] [string desc]",
     privilege = "Manage Character Informations",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -808,7 +808,7 @@ lia.command.add("charsetdesc", {
 
 lia.command.add("charsetname", {
     adminOnly = true,
-    syntax = "<string name> [string newName]",
+    syntax = "[string name] [string newName]",
     privilege = "Manage Character Informations",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -826,7 +826,7 @@ lia.command.add("charsetname", {
 
 lia.command.add("charsetscale", {
     adminOnly = true,
-    syntax = "<string name> <number value>",
+    syntax = "[string name] <number value>",
     privilege = "Manage Character Stats",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -842,7 +842,7 @@ lia.command.add("charsetscale", {
 
 lia.command.add("charsetjump", {
     adminOnly = true,
-    syntax = "<string name> <number power>",
+    syntax = "[string name] <number power>",
     privilege = "Manage Character Stats",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -858,7 +858,7 @@ lia.command.add("charsetjump", {
 
 lia.command.add("charsetbodygroup", {
     adminOnly = true,
-    syntax = "<string name> <string bodyGroup> [number value]",
+    syntax = "[string name] <string bodyGroup> [number value]",
     privilege = "Manage Bodygroups",
     onRun = function(client, arguments)
         local name = arguments[1]
@@ -885,7 +885,7 @@ lia.command.add("charsetbodygroup", {
 
 lia.command.add("charsetskin", {
     adminOnly = true,
-    syntax = "<string name> [number skin]",
+    syntax = "[string name] [number skin]",
     privilege = "Manage Character Stats",
     onRun = function(client, arguments)
         local name = arguments[1]
@@ -903,7 +903,7 @@ lia.command.add("charsetskin", {
 
 lia.command.add("charsetmoney", {
     superAdminOnly = true,
-    syntax = "<string target> <number amount>",
+    syntax = "[string charname] <number amount>",
     privilege = "Manage Characters",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -924,7 +924,7 @@ lia.command.add("charsetmoney", {
 
 lia.command.add("charaddmoney", {
     superAdminOnly = true,
-    syntax = "<string target> <number amount>",
+    syntax = "[string charname] <number amount>",
     privilege = "Manage Characters",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -1076,7 +1076,7 @@ lia.command.add("modulelist", {
 lia.command.add("listents", {
     adminOnly = true,
     privilege = "List Entities",
-    syntax = "<No Input>",
+    
     onRun = function(client)
         local entityList = {}
         for _, v in pairs(ents.GetAll()) do
@@ -1371,7 +1371,7 @@ lia.command.add("forcesay", {
 })
 
 lia.command.add("pm", {
-    syntax = "<string target> <string message>",
+    syntax = "[string charname] <string message>",
     onRun = function(client, arguments)
         local targetName = arguments[1]
         local message = table.concat(arguments, " ", 2)

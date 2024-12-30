@@ -18,7 +18,6 @@ lia.chat = lia.chat or {}
 -- > "%s says \"%s\""
 lia.chat.classes = lia.char.classes or {}
 local DUMMY_COMMAND = {
-    syntax = "<string text>",
     onRun = function() end
 }
 

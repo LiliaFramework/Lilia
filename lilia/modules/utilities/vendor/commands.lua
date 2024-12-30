@@ -3,14 +3,16 @@ lia.command.add("restockvendor", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
     onRun = function(client)
-        local target = client:GetEyeTrace().Entity
+        local target = client:getTracedEntity()
         if IsValid(target) and target:GetClass() == "lia_vendor" then
             for id, itemData in pairs(target.items) do
                 if itemData[2] and itemData[4] then target.items[id][2] = itemData[4] end
             end
-            return "The vendor has been restocked."
+
+            client:notifyLocalized("VendorRestocked")
+            lia.log.add(client, "restockvendor", target)
         else
-            return "You are not looking at a valid vendor."
+            client:notifyLocalized("NotLookingAtValidVendor")
         end
     end
 })
@@ -18,51 +20,70 @@ lia.command.add("restockvendor", {
 lia.command.add("restockallvendors", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
-    onRun = function()
-        for _, v in ipairs(ents.FindByClass("lia_vendor")) do
-            for id, _ in pairs(v.items) do
-                if v.items[id][2] and v.items[id][4] then v.items[id][2] = v.items[id][4] end
+    onRun = function(client)
+        local count = 0
+        for _, vendor in ipairs(ents.FindByClass("lia_vendor")) do
+            for id, itemData in pairs(vendor.items) do
+                if itemData[2] and itemData[4] then vendor.items[id][2] = itemData[4] end
             end
+
+            count = count + 1
+            lia.log.add(client, "restockvendor", vendor)
         end
-        return "Restocked all vendors."
+
+        client:notifyLocalized("AllVendorsRestocked", count)
+        lia.log.add(client, "restockallvendors", count)
     end
 })
 
 lia.command.add("resetallvendormoney", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
-    syntax = "<int amount>",
-    onRun = function(_, arguments)
-        for _, v in ipairs(ents.FindByClass("lia_vendor")) do
-            if v.money then v.money = tonumber(arguments[1]) or 0 end
+    syntax = "[number amount]",
+    onRun = function(client, arguments)
+        local amount = tonumber(arguments[1])
+        if not amount or amount < 0 then return client:notifyLocalized("InvalidAmount") end
+        local count = 0
+        for _, vendor in ipairs(ents.FindByClass("lia_vendor")) do
+            if vendor.money ~= nil then
+                vendor.money = amount
+                count = count + 1
+                lia.log.add(client, "resetvendormoney", vendor, amount)
+            end
         end
-        return "Reset the money of all vendors to " .. (arguments[1] or 0)
+
+        client:notifyLocalized("AllVendorsMoneyReset", amount, count)
     end
 })
 
 lia.command.add("restockvendormoney", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
-    syntax = "<int amount>",
+    syntax = "[number amount]",
     onRun = function(client, arguments)
-        local target = client:GetEyeTrace().Entity
+        local target = client:getTracedEntity()
         local amount = tonumber(arguments[1])
-        if not amount or amount < 0 then return "Invalid amount. Please provide a non-negative number." end
+        if not amount or amount < 0 then return client:notifyLocalized("InvalidAmount") end
         if IsValid(target) and target:GetClass() == "lia_vendor" then
-            if target.money then
+            if target.money ~= nil then
                 target.money = amount
-                return "The vendor's money has been restocked to " .. amount .. "."
+                client:notifyLocalized("VendorMoneyRestocked", amount)
+                lia.log.add(client, "restockvendormoney", target, amount)
             else
-                return "This vendor does not have a money variable."
+                client:notifyLocalized("VendorNoMoneyVariable")
             end
         else
-            return "You are not looking at a valid vendor."
+            client:notifyLocalized("NotLookingAtValidVendor")
         end
     end
 })
 
 lia.command.add("savevendors", {
-    superAdminOnly = true,
     privilege = "Manage Vendors",
-    onRun = function() MODULE:SaveData() end
+    superAdminOnly = true,
+    onRun = function(client)
+        MODULE:SaveData()
+        client:notifyLocalized("VendorsDataSaved")
+        lia.log.add(client, "savevendors")
+    end
 })

@@ -2,7 +2,7 @@
 lia.command.add("spawnadd", {
     privilege = "Manage Spawns",
     adminOnly = true,
-    syntax = "<string faction> [string class]",
+    syntax = "[string faction] [string class]",
     onRun = function(client, arguments)
         local factionName = arguments[1]
         local className = table.concat(arguments, " ", 2)
@@ -73,7 +73,7 @@ lia.command.add("spawnremove", {
 lia.command.add("returnitems", {
     superAdminOnly = true,
     privilege = "Return Items",
-    syntax = "<string name>",
+    syntax = "[string name]",
     onRun = function(client, arguments)
         local targetPlayer = lia.command.findPlayer(client, arguments[1])
         if not targetPlayer or not IsValid(targetPlayer) then
