@@ -1076,7 +1076,6 @@ lia.command.add("modulelist", {
 lia.command.add("listents", {
     adminOnly = true,
     privilege = "List Entities",
-    
     onRun = function(client)
         local entityList = {}
         for _, v in pairs(ents.GetAll()) do

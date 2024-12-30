@@ -210,7 +210,7 @@ end
 function PANEL:CenterName()
     self.name:SizeToContents()
     local panelWidth, _ = self:GetSize()
-    local labelWidth, labelHeight = self.name:GetSize()
+    local labelWidth, _ = self.name:GetSize()
     local marginLeft = math.max((panelWidth - labelWidth) / 2, 0)
     local marginRight = math.max((panelWidth - labelWidth) / 2, 0)
     self.name:DockMargin(marginLeft, 16, marginRight, 0)
