@@ -67,7 +67,8 @@ function MODULE:PlayerDeath(client, _, attacker)
         if self.LoseDropItemsonDeathHuman then self:RemovedDropOnDeathItems(client) end
         if self.DeathPopupEnabled then
             net.Start("death_client")
-            net.WriteFloat(attacker:getChar():getID())
+            net.WriteString(tostring(attacker:getChar():getID()))
+            net.WriteString(tostring(attacker:SteamID()))
             net.Send(client)
         end
     end
