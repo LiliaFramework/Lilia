@@ -662,7 +662,7 @@ if SERVER then
         end
 
         entity:Spawn()
-        if not dontSetPlayer then entity:SetNetVar("player", self) end
+        if not dontSetPlayer then entity:setNetVar("player", self) end
         entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
         entity:Activate()
         hook.Run("OnCreatePlayerServerRagdoll", self)

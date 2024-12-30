@@ -33,9 +33,10 @@ function MODULE:HUDPaintBackground()
 end
 
 function MODULE:CreateMenuButtons(tabs)
+    local client = LocalPlayer()
     if hook.Run("CanPlayerViewAttributes") ~= false then
         tabs["Attributes"] = function(panel)
-            local baseWidth, baseHeight = sW(700), sH(500)
+            local baseWidth, baseHeight = sW(1200), sH(900)
             local listWidth, listHeight = baseWidth * 0.85, baseHeight * 0.75
             local listX, listY = (ScrW() - listWidth) / 2, (ScrH() - listHeight) / 2
             local background = panel:Add("DPanel")
@@ -47,13 +48,6 @@ function MODULE:CreateMenuButtons(tabs)
                 surface.DrawOutlinedRect(0, 0, w, h)
             end
 
-            local title = panel:Add("DLabel")
-            title:SetText("Character Attributes")
-            title:SetFont("liaSmallFont")
-            title:SetTextColor(color_white)
-            title:SizeToContents()
-            title:SetPos(listX + listWidth / 2 - title:GetWide() / 2, listY - sH(60))
-
             local scroll = panel:Add("DScrollPanel")
             scroll:SetSize(listWidth * 0.96, listHeight)
             scroll:SetPos(listX + listWidth * 0.02, listY)
@@ -62,7 +56,6 @@ function MODULE:CreateMenuButtons(tabs)
             scroll:GetVBar().btnUp.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, 200)) end
             scroll:GetVBar().btnDown.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, 200)) end
             scroll:GetVBar().btnGrip.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(80, 80, 80, 200)) end
-
             local function addAttributeLine(attrName, currentValue, maxValue, progress)
                 local lineHeight = 40
                 local linePanel = scroll:Add("DPanel")
@@ -81,7 +74,6 @@ function MODULE:CreateMenuButtons(tabs)
                 nameLabel:SetTextColor(Color(255, 255, 255))
                 nameLabel:SizeToContents()
                 nameLabel:SetPos(10, (lineHeight - nameLabel:GetTall()) / 2)
-
                 local barWidth = listWidth * 0.4
                 local barX = 150
                 local barY = (lineHeight - 20) / 2
@@ -105,12 +97,17 @@ function MODULE:CreateMenuButtons(tabs)
                 valueLabel:SetPos(barX + barWidth + 10, (lineHeight - valueLabel:GetTall()) / 2)
             end
 
-            for attrKey, attrData in SortedPairsByMemberValue(lia.attribs.list, "name") do
-                local currentValue = LocalPlayer():getChar() and LocalPlayer():getChar():getAttrib(attrKey, 0) or 0
-                local maxValue = hook.Run("GetAttributeMax", LocalPlayer(), attrKey) or 100
-                local progress = math.Round((currentValue / maxValue) * 100, 1)
-                addAttributeLine(attrData.name, currentValue, maxValue, progress)
+            local function updateAttributes()
+                scroll:Clear()
+                for attrKey, attrData in SortedPairsByMemberValue(lia.attribs.list, "name") do
+                    local currentValue = client:getChar():getAttrib(attrKey, 0) or 0
+                    local maxValue = hook.Run("GetAttributeMax", client, attrKey) or 100
+                    local progress = math.Round((currentValue / maxValue) * 100, 1)
+                    addAttributeLine(attrData.name, currentValue, maxValue, progress)
+                end
             end
+
+            updateAttributes()
         end
     end
 end
