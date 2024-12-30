@@ -73,6 +73,20 @@ sam.command.new("unblind"):SetPermission("blind", "superadmin"):AddArg("player")
     end
 end):End()
 
+local function TimeSince(lastClaimTime)
+    local currentTime = os.time()
+    local elapsedTime = currentTime - lastClaimTime
+    if elapsedTime < 60 then
+        return elapsedTime .. " seconds"
+    elseif elapsedTime < 3600 then
+        return math.floor(elapsedTime / 60) .. " minutes"
+    elseif elapsedTime < 86400 then
+        return math.floor(elapsedTime / 3600) .. " hours"
+    else
+        return math.floor(elapsedTime / 86400) .. " days"
+    end
+end
+
 lia.command.add("cleardecals", {
     adminOnly = true,
     privilege = "Clear Decals",
@@ -88,20 +102,6 @@ lia.command.add("viewclaims", {
     description = "View the claims for all admins.",
     adminOnly = true,
     onRun = function(client)
-        function TimeSince(lastClaimTime)
-            local currentTime = os.time()
-            local elapsedTime = currentTime - lastClaimTime
-            if elapsedTime < 60 then
-                return elapsedTime .. " seconds"
-            elseif elapsedTime < 3600 then
-                return math.floor(elapsedTime / 60) .. " minutes"
-            elseif elapsedTime < 86400 then
-                return math.floor(elapsedTime / 3600) .. " hours"
-            else
-                return math.floor(elapsedTime / 86400) .. " days"
-            end
-        end
-
         if not file.Exists("caseclaims.txt", "DATA") then
             client:ChatPrint("No claims have been recorded yet.")
             return
@@ -162,9 +162,121 @@ lia.command.add("playtime", {
     end
 })
 
+lia.command.add("viewclaims", {
+    privilege = "View Claims",
+    description = "View the claims for all admins.",
+    adminOnly = true,
+    onRun = function(client)
+        if not file.Exists("caseclaims.txt", "DATA") then
+            client:ChatPrint("No claims have been recorded yet.")
+            return
+        end
+
+        local caseclaimsContent = file.Read("caseclaims.txt", "DATA")
+        local caseclaims = util.JSONToTable(caseclaimsContent) or {}
+        if next(caseclaims) == nil then
+            client:ChatPrint("No claims data available.")
+            return
+        end
+
+        client:ChatPrint("=== Admin Claims ===")
+        for steamID, claim in pairs(caseclaims) do
+            local message = string.format("SteamID: %s\nAdmin Name: %s\nTotal Claims: %d\nLast Claim Date: %s\nTime Since Last Claim: %s\n-------------------------", steamID, claim.name, claim.claims, os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim), TimeSince(claim.lastclaim))
+            client:ChatPrint(message)
+        end
+    end
+})
+
+lia.command.add("playtime", {
+    adminOnly = false,
+    privilege = "View Own Playtime",
+    onRun = function(client)
+        local steamID = client:SteamID()
+        local query = "SELECT play_time FROM sam_players WHERE steamid = " .. SQLStr(steamID) .. ";"
+        local result = sql.QueryRow(query)
+        if result then
+            local playTimeInSeconds = tonumber(result.play_time) or 0
+            local hours = math.floor(playTimeInSeconds / 3600)
+            local minutes = math.floor((playTimeInSeconds % 3600) / 60)
+            local seconds = playTimeInSeconds % 60
+            client:ChatPrint(string.format("Your playtime: %d hours, %d minutes, %d seconds", hours, minutes, seconds))
+        else
+            client:ChatPrint("Could not retrieve your playtime. Please try again or contact an admin if the issue persists.")
+        end
+    end
+})
+
 lia.command.add("plygetplaytime", {
     adminOnly = true,
-    syntax = "<string target>",
+    syntax = "[string charname]",
+    privilege = "View Playtime",
+    onRun = function(client, arguments)
+        local targetName = arguments[1]
+        if not targetName then
+            client:ChatPrint("You must specify a player name.")
+            return
+        end
+
+        local target = lia.command.findPlayer(client, targetName)
+        if not IsValid(target) then
+            client:ChatPrint("Player not found.")
+            return
+        end
+
+        local steamID = target:SteamID()
+        local query = "SELECT play_time FROM sam_players WHERE steamid = " .. SQLStr(steamID) .. ";"
+        local result = sql.QueryRow(query)
+        if result then
+            local playTimeInSeconds = tonumber(result.play_time) or 0
+            local hours = math.floor(playTimeInSeconds / 3600)
+            local minutes = math.floor((playTimeInSeconds % 3600) / 60)
+            local seconds = playTimeInSeconds % 60
+            client:ChatPrint(string.format("Playtime for %s: %d hours, %d minutes, %d seconds", target:Nick(), hours, minutes, seconds))
+        else
+            client:ChatPrint("Could not retrieve playtime for the specified target.")
+        end
+    end
+})
+
+lia.command.add("plyviewclaims", {
+    adminOnly = true,
+    syntax = "[string charname]",
+    privilege = "View Claims",
+    onRun = function(client, arguments)
+        local targetName = arguments[1]
+        if not targetName then
+            client:ChatPrint("You must specify a player name.")
+            return
+        end
+
+        local target = lia.command.findPlayer(client, targetName)
+        if not IsValid(target) then
+            client:ChatPrint("Player not found.")
+            return
+        end
+
+        local steamID = target:SteamID()
+        if not file.Exists("caseclaims.txt", "DATA") then
+            client:ChatPrint("No claims have been recorded yet.")
+            return
+        end
+
+        local caseclaimsContent = file.Read("caseclaims.txt", "DATA")
+        local caseclaims = util.JSONToTable(caseclaimsContent) or {}
+        local claim = caseclaims[steamID]
+        if not claim then
+            client:ChatPrint("No claims found for the specified player.")
+            return
+        end
+
+        local message = string.format("=== Claims for %s ===\nSteamID: %s\nAdmin Name: %s\nTotal Claims: %d\nLast Claim Date: %s\nTime Since Last Claim: %s", target:Nick(), steamID, claim.name, claim.claims, os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim), TimeSince(claim.lastclaim))
+        client:ChatPrint(message)
+    end
+})
+
+lia.command.add("plygetplaytime", {
+    adminOnly = true,
+    syntax = "[string charname]",
     privilege = "View Playtime",
     onRun = function(client, arguments)
         local targetName = arguments[1]

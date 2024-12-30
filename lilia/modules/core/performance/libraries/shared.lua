@@ -186,7 +186,7 @@ function MODULE:Initialize()
     ExecuteCommands(SERVER)
 end
 
-function GM:OnReloaded()
+function MODULE:OnReloaded()
     RemoveHintTimers()
     RemoveHooks(SERVER)
     ExecuteCommands(SERVER)
