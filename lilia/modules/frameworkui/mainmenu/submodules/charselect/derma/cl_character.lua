@@ -72,7 +72,7 @@ function PANEL:CreateButton(text, description, callback)
     btn.Paint = function(me, w, h)
         local hovered = me:IsHovered()
         me.text_color = lia.color.LerpColor(0.2, me.text_color, hovered and Color(200, 200, 200) or color_white)
-        draw.SimpleText(me.text:upper(), "liaMediumFont", w * 0.5, h * 0.5, me.text_color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(me.text:upper(), "liaBigFont", w * 0.5, h * 0.5, me.text_color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         if hovered then
             local underlineWidth = w * 0.4
             local underlineX = (w - underlineWidth) * 0.5

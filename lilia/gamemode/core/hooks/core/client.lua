@@ -80,6 +80,30 @@ end
 function GM:LoadLiliaFonts(font, genericFont)
     local oldFont, oldGenericFont = font, genericFont
     local scale = math.Round(1, 2)
+    surface.CreateFont("liaCharLargeFont", {
+        font = genericFont,
+        size = 36 * scale,
+        extended = true,
+        weight = 700,
+        antialias = true
+    })
+
+    surface.CreateFont("liaCharSmallFont", {
+        font = genericFont,
+        size = 20 * scale,
+        extended = true,
+        weight = 500,
+        antialias = true
+    })
+
+    surface.CreateFont("liaCharSubTitleFont", {
+        font = genericFont,
+        size = 16 * scale,
+        extended = true,
+        weight = 500,
+        antialias = true
+    })
+
     surface.CreateFont("DarkSkinSmall", {
         font = "Roboto",
         size = 14,

@@ -1,4 +1,5 @@
 local PANEL = {}
+
 function PANEL:isCursorWithinBounds()
     local x, y = self:LocalCursorPos()
     return x >= 0 and x <= self:GetWide() and y >= 0 and y < self:GetTall()
@@ -11,12 +12,18 @@ function PANEL:confirmDelete()
         return
     end
 
-    vgui.Create("liaCharacterConfirm"):setMessage(L("Deleting a character cannot be undone.")):onConfirm(function() MainMenu:deleteCharacter(id) end)
+    vgui.Create("liaCharacterConfirm")
+        :setMessage(L("Deleting a character cannot be undone."))
+        :onConfirm(function() MainMenu:deleteCharacter(id) end)
 end
 
 function PANEL:Init()
-    self:SetWide(240)
+    self.originalWidth = 240
+    self.originalHeight = 200
+    self:SetSize(self.originalWidth, self.originalHeight)
     self:SetPaintBackground(false)
+    self.hoverCooldown = false
+
     self.faction = self:Add("DPanel")
     self.faction:Dock(TOP)
     self.faction:SetTall(4)
@@ -28,12 +35,32 @@ function PANEL:Init()
     end
 
     self.name = self:Add("DLabel")
-    self.name:Dock(TOP)
-    self.name:DockMargin(0, 16, 0, 0)
-    self.name:SetContentAlignment(5)
-    self.name:SetFont("liaCharSmallButtonFont")
+    self.name:SetFont("liaCharLargeFont")
     self.name:SetTextColor(lia.gui.character.WHITE)
-    self.name:SizeToContentsY()
+    self.name:SetWrap(true)
+    self.name:SetAutoStretchVertical(true)
+    self.name:Dock(TOP)
+
+    self.factionLabel = self:Add("DLabel")
+    self.factionLabel:Dock(TOP)
+    self.factionLabel:DockMargin(150, 4, 0, 0)
+    self.factionLabel:SetFont("liaCharSmallFont")
+    self.factionLabel:SetTextColor(lia.gui.character.WHITE)
+    self.factionLabel:SetWrap(true)
+    self.factionLabel:SetAutoStretchVertical(true)
+    self.factionLabel:SetVisible(false)
+    self.factionLabel:SizeToContentsY()
+
+    self.classLabel = self:Add("DLabel")
+    self.classLabel:Dock(TOP)
+    self.classLabel:DockMargin(150, 4, 0, 0)
+    self.classLabel:SetFont("liaCharSmallFont")
+    self.classLabel:SetTextColor(lia.gui.character.WHITE)
+    self.classLabel:SetWrap(true)
+    self.classLabel:SetAutoStretchVertical(true)
+    self.classLabel:SetVisible(false)
+    self.classLabel:SizeToContentsY()
+
     self.model = self:Add("liaModelPanel")
     self.model:Dock(FILL)
     self.model:SetFOV(37)
@@ -47,7 +74,7 @@ function PANEL:Init()
     end
 
     self.button = self:Add("DButton")
-    self.button:SetSize(240, ScrH())
+    self.button:Dock(FILL)
     self.button:SetPaintBackground(false)
     self.button:SetText("")
     self.button.Paint = function() end
@@ -61,7 +88,9 @@ function PANEL:Init()
     self.delete:SetTall(30)
     self.delete:SetFont("liaCharSubTitleFont")
     self.delete:SetText("✕ " .. L("delete"):upper())
+    self.delete:Dock(BOTTOM)
     self.delete:SetWide(self:GetWide())
+    self.delete:DockMargin(0, 10, 0, 10)
     self.delete.Paint = function(_, w, h)
         surface.SetDrawColor(255, 0, 0, 50)
         surface.DrawRect(0, 0, w, h)
@@ -72,16 +101,17 @@ function PANEL:Init()
         self:confirmDelete()
     end
 
-    self.delete.y = ScrH()
-    self.delete.showY = self.delete.y - self.delete:GetTall()
+    self:CenterName()
 end
 
 function PANEL:onSelected()
 end
 
 function PANEL:setCharacter(character)
+    if not character then return end
     self.character = character
     self.name:SetText(character:getName():gsub("#", "\226\128\139#"):upper())
+    self.name:SizeToContentsY()
     self.model:SetModel(character:getModel())
     self.faction:SetBackgroundColor(team.GetColor(character:getFaction()))
     self:setBanned(character:getData("banned"))
@@ -97,6 +127,24 @@ function PANEL:setCharacter(character)
         local scale = math.max((960 / ScrH()) * 0.5, 0.5)
         self.model:SetLookAt(entity:GetPos() + Vector(0, 0, height * scale))
     end
+
+    if self.factionLabel then
+        self.factionLabel:SetText("Faction: " .. (team.GetName(character:getFaction()) or "None"))
+    end
+    self.factionLabel:SizeToContentsY()
+
+    if self.classLabel then
+        if character:getClass() and lia.class.list[character:getClass()] then
+            local className = lia.class.list[character:getClass()].name
+            self.classLabel:SetText("Class: " .. className)
+        else
+            self.classLabel:SetText("")
+        end
+
+        self.classLabel:SizeToContentsY()
+    end
+
+    self:CenterName()
 end
 
 function PANEL:setBanned(banned)
@@ -107,27 +155,70 @@ function PANEL:onHoverChanged(isHovered)
     local ANIM_SPEED = lia.gui.character.ANIM_SPEED
     if self.isHovered == isHovered then return end
     self.isHovered = isHovered
-    local tall = self:GetTall()
     if isHovered then
-        self.delete.y = tall
-        self.delete:MoveTo(0, tall - self.delete:GetTall(), ANIM_SPEED)
+        self:SizeTo(self.originalWidth * 2, self.originalHeight * 2, ANIM_SPEED)
         lia.gui.character:hoverSound()
+        if self.factionLabel and self.classLabel then
+            self.factionLabel:SetVisible(true)
+            self.classLabel:SetVisible(true)
+        end
     else
-        self.delete:MoveTo(0, tall, ANIM_SPEED)
+        self:SizeTo(self.originalWidth, self.originalHeight, ANIM_SPEED)
+        if self.factionLabel and self.classLabel then
+            self.factionLabel:SetVisible(false)
+            self.classLabel:SetVisible(false)
+        end
     end
 
     self.faction:AlphaTo(isHovered and 250 or 100, ANIM_SPEED)
+    self:CenterName()
 end
 
 function PANEL:Paint(w, h)
     if not LocalPlayer():getChar() then lia.util.drawBlur(self) end
     surface.SetDrawColor(0, 0, 0, 50)
     surface.DrawRect(0, 4, w, h)
-    if not self:isCursorWithinBounds() and self.isHovered then self:onHoverChanged(false) end
+    if not self:isCursorWithinBounds() and self.isHovered then
+        self:onHoverChanged(false)
+    end
 end
 
 function PANEL:OnCursorEntered()
-    self:onHoverChanged(true)
+    if not self.hoverCooldown then
+        self.hoverCooldown = true
+        self:onHoverChanged(true)
+        timer.Simple(1, function()
+            if IsValid(self) then
+                self.hoverCooldown = false
+            end
+        end)
+    end
+end
+
+function PANEL:OnCursorExited()
+    if not self.hoverCooldown then
+        self.hoverCooldown = true
+        self:onHoverChanged(false)
+        timer.Simple(1, function()
+            if IsValid(self) then
+                self.hoverCooldown = false
+            end
+        end)
+    end
+end
+
+function PANEL:CenterName()
+    self.name:SizeToContents()
+    local panelWidth, _ = self:GetSize()
+    local labelWidth, labelHeight = self.name:GetSize()
+    local marginLeft = math.max((panelWidth - labelWidth) / 2, 0)
+    local marginRight = math.max((panelWidth - labelWidth) / 2, 0)
+    self.name:DockMargin(marginLeft, 16, marginRight, 0)
+end
+
+function PANEL:PerformLayout()
+    DPanel.PerformLayout(self)
+    self:CenterName()
 end
 
 vgui.Register("liaCharacterSlot", PANEL, "DPanel")
