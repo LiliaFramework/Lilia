@@ -1,4 +1,5 @@
 ﻿local GM = GM or GAMEMODE
+
 function GM:DrawLiliaModelView(_, entity)
     if IsValid(entity.weapon) then entity.weapon:DrawModel() end
 end
@@ -509,36 +510,4 @@ function GM:CharListLoaded()
         timer.Remove("liaWaitUntilPlayerValid")
         hook.Run("LiliaLoaded")
     end)
-end
-
-function GM:CanDisplayCharacterInfo(client, id)
-    LiliaDeprecated("CanDisplayCharacterInfo", function() hook.Run("CanDisplayCharInfo", client, id) end)
-end
-
-function GM:KickedFromCharacter(id, isCurrentChar)
-    LiliaDeprecated("KickedFromCharacter", function() hook.Run("KickedFromChar", id, isCurrentChar) end)
-end
-
-function GM:CharacterListLoaded(newCharList)
-    LiliaDeprecated("CharacterListLoaded", function() hook.Run("CharListLoaded", newCharList) end)
-end
-
-function GM:CharacterListUpdated(oldCharList, newCharList)
-    LiliaDeprecated("CharacterListUpdated", function() hook.Run("CharListUpdated", oldCharList, newCharList) end)
-end
-
-function GM:HUDDrawTargetID()
-    return false
-end
-
-function GM:HUDDrawPickupHistory()
-    return false
-end
-
-function GM:HUDAmmoPickedUp()
-    return false
-end
-
-function GM:DrawDeathNotice()
-    return false
 end

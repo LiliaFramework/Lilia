@@ -1,9 +1,47 @@
 ﻿local GM = GM or GAMEMODE
+function GM:InitializedModules()
+    local bootstrapEndTime = SysTime()
+    local timeTaken = bootstrapEndTime - BootingTime
+    LiliaBootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
+    for _, data in pairs(lia.char.vars) do
+        if data.fieldType then
+            local fieldDefinition
+            if data.fieldType == "string" then
+                fieldDefinition = data.field .. " VARCHAR(" .. (data.length or "255") .. ")"
+            elseif data.fieldType == "integer" then
+                fieldDefinition = data.field .. " INT"
+            elseif data.fieldType == "float" then
+                fieldDefinition = data.field .. " FLOAT"
+            elseif data.fieldType == "boolean" then
+                fieldDefinition = data.field .. " TINYINT(1)"
+            elseif data.fieldType == "datetime" then
+                fieldDefinition = data.field .. " DATETIME"
+            elseif data.fieldType == "text" then
+                fieldDefinition = data.field .. " TEXT"
+            end
+
+            if fieldDefinition then
+                if data.default ~= nil then fieldDefinition = fieldDefinition .. " DEFAULT '" .. tostring(data.default) .. "'" end
+                lia.db.query("SELECT " .. data.field .. " FROM lia_characters", function(result)
+                    if not result then
+                        local success, _ = lia.db.query("ALTER TABLE lia_characters ADD COLUMN " .. fieldDefinition)
+                        if success then
+                            LiliaInformation("Adding column " .. data.field .. " to the database!")
+                        else
+                            LiliaInformation("Failed to add column " .. data.field .. " due to a query error.")
+                        end
+                    end
+                end)
+            end
+        end
+    end
+end
+
 function GM:CharPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
     for _, v in pairs(character:getInv():getItems()) do
-        if v.onSave then v:call("onSave", client) end
+        if v.OnSave then v:call("OnSave", client) end
     end
 end
 
@@ -13,15 +51,7 @@ function GM:PlayerLoadedChar(client, character, lastChar)
         _lastJoinTime = timeStamp
     }, nil, "characters", "_id = " .. character:getID())
 
-    if lastChar then
-        local charEnts = lastChar:getVar("charEnts") or {}
-        for _, v in ipairs(charEnts) do
-            if v and IsValid(v) then v:Remove() end
-        end
-
-        lastChar:setVar("charEnts", nil)
-    end
-
+    if lastChar then end
     if client:hasRagdoll() then
         local ragdoll = client:getRagdoll()
         ragdoll.liaNoReset = true
@@ -74,12 +104,6 @@ function GM:CanItemBeTransfered(item, curInv, inventory)
             lia.notices.notify("You can't transfer a backpack that has items inside of it.")
         end
         return false
-    end
-
-    if item.onCanBeTransfered then
-        LiliaDeprecated("onCanBeTransfered is deprecated. Use OnCanBeTransfered for optimization purposes.")
-        local itemHook = item:onCanBeTransfered(curInv, inventory)
-        return itemHook ~= false
     end
 
     if item.OnCanBeTransfered then
@@ -334,11 +358,6 @@ function GM:PlayerDisconnected(client)
     client:saveLiliaData()
     local character = client:getChar()
     if character then
-        local charEnts = character:getVar("charEnts") or {}
-        for _, v in ipairs(charEnts) do
-            if v and IsValid(v) then v:Remove() end
-        end
-
         hook.Run("OnCharDisconnect", client, character)
         character:save()
     end
@@ -430,46 +449,6 @@ function GM:SetupBotPlayer(client)
     lia.char.loaded[botID] = character
     character:setup()
     client:Spawn()
-end
-
-function GM:CharacterLoaded(id)
-    LiliaDeprecated("CharacterLoaded", function() hook.Run("CharLoaded", id) end)
-end
-
-function GM:PreCharacterDelete(id)
-    LiliaDeprecated("PreCharacterDelete", function() hook.Run("PreCharDelete", id) end)
-end
-
-function GM:OnCharacterDelete(client, id)
-    LiliaDeprecated("OnCharacterDelete", function() hook.Run("OnCharDelete", client, id) end)
-end
-
-function GM:onCharCreated(client, character, data)
-    LiliaDeprecated("onCharCreated", function() hook.Run("OnCharCreated", client, character, data) end)
-end
-
-function GM:onTransferred(client)
-    LiliaDeprecated("onTransferred", function() hook.Run("OnTransferred", client) end)
-end
-
-function GM:CharacterPreSave(character)
-    LiliaDeprecated("CharacterPreSave", function() hook.Run("CharPreSave", character) end)
-end
-
-function GM:PlayerSpray()
-    return true
-end
-
-function GM:PlayerDeathSound()
-    return true
-end
-
-function GM:CanPlayerSuicide()
-    return false
-end
-
-function GM:AllowPlayerPickup()
-    return false
 end
 
 function GM:PlayerShouldTakeDamage(client)
