@@ -16,7 +16,7 @@ local function AddLiliaFiles()
 end
 
 local function IncludeLiliaFiles()
-    local files = {"lilia/gamemode/core/libraries/config.lua", "lilia/gamemode/shared.lua", "lilia/gamemode/core/libraries/database.lua", "lilia/gamemode/core/hooks/database.lua", "lilia/gamemode/core/libraries/includer.lua", "lilia/gamemode/core/libraries/data.lua", "lilia/gamemode/core/hooks/data.lua"}
+    local files = {"lilia/gamemode/core/libraries/config.lua", "lilia/gamemode/shared.lua", "lilia/gamemode/core/libraries/database.lua", "lilia/gamemode/core/libraries/includer.lua", "lilia/gamemode/core/libraries/data.lua",}
     for _, file in ipairs(files) do
         include(file)
     end
@@ -42,8 +42,8 @@ local function SetupPersistence()
 end
 
 local function BootstrapLilia()
-    AddLiliaFiles()
     IncludeLiliaFiles()
+    AddLiliaFiles()
     timer.Simple(0, SetupDatabase)
     SetupPersistence()
 end

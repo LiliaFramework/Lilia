@@ -34,15 +34,7 @@ if SERVER then
         local character = client:getChar()
         if character then
             for k, v in pairs(lia.attribs.list) do
-                if v.onSetup then
-                    LiliaDeprecated("onSetup", function()
-                        v:onSetup(client, character:getAttrib(k, 0))
-                    end)
-                end
-
-                if v.OnSetup then
-                    v:OnSetup(client, character:getAttrib(k, 0))
-                end
+                if v.OnSetup then v:OnSetup(client, character:getAttrib(k, 0)) end
             end
         end
     end

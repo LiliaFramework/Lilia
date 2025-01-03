@@ -34,15 +34,15 @@ FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/hooks/core/shared.lua",
+        path = "lilia/gamemode/core/hooks/shared.lua",
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/hooks/core/client.lua",
+        path = "lilia/gamemode/core/hooks/client.lua",
         realm = "client"
     },
     {
-        path = "lilia/gamemode/core/hooks/core/server.lua",
+        path = "lilia/gamemode/core/hooks/server.lua",
         realm = "server"
     },
     {

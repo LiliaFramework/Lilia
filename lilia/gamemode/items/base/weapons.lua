@@ -126,7 +126,7 @@ function ITEM:onLoadout()
     end
 end
 
-function ITEM:onSave()
+function ITEM:OnSave()
     local client = self.player
     local weapon = client:GetWeapon(self.class)
     if IsValid(weapon) then self:setData("ammo", weapon:Clip1()) end

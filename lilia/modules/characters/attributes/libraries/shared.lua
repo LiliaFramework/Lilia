@@ -30,10 +30,6 @@
     end
 end
 
-function MODULE:CharacterMaxStamina(character)
-    LiliaDeprecated("CharacterMaxStamina is deprecated. Use CharMaxStamina for optimization purposes.", function() hook.Run("CharMaxStamina", character) end)
-end
-
 function MODULE:StartCommand(client, cmd)
     if self.StaminaSlowdown and (not client:isNoClipping() and client:getNetVar("brth", false) and cmd:KeyDown(IN_JUMP)) then cmd:RemoveKey(IN_JUMP) end
 end
@@ -45,6 +41,24 @@ function MODULE:SetupMove(client, cMoveData)
     elseif client:WaterLevel() > 1 then
         cMoveData:SetMaxClientSpeed(client:GetRunSpeed() * 0.775)
     end
+end
+
+function MODULE:GetAttributeMax(_, attribute)
+    local attribTable = lia.attribs.list[attribute]
+    if not attribTable then return lia.config.MaxAttributePoints end
+    if istable(attribTable) and isnumber(attribTable.maxValue) then return attribTable.maxValue end
+    return lia.config.MaxAttributePoints
+end
+
+function MODULE:GetAttributeStartingMax(_, attribute)
+    local attribTable = lia.attribs.list[attribute]
+    if not attribTable then return lia.config.MaxStartingAttributes end
+    if istable(attribTable) and isnumber(attribTable.startingMax) then return attribTable.startingMax end
+    return lia.config.MaxStartingAttributes
+end
+
+function MODULE:GetMaxStartingAttributePoints()
+    return lia.config.StartingAttributePoints
 end
 
 lia.char.registerVar("attribs", {

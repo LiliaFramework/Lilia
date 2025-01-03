@@ -7,7 +7,7 @@ lia = lia or {
 }
 
 local function BootstrapLilia()
-    local files = {"lilia/gamemode/core/libraries/config.lua", "lilia/gamemode/shared.lua", "lilia/gamemode/core/libraries/includer.lua", "lilia/gamemode/core/libraries/data.lua"}
+    local files = {"lilia/gamemode/core/libraries/config.lua", "lilia/gamemode/shared.lua", "lilia/gamemode/core/libraries/includer.lua",}
     for _, file in ipairs(files) do
         if file then include(file) end
     end
