@@ -70,7 +70,6 @@ function PANEL:Paint()
     local col = self.pnlTypes[self.type].col
     local mat = self.material
     local size = self:GetTall() * .6
-    local marg = 3
     draw.RoundedBox(4, 0, 0, self:GetWide(), self:GetTall(), col)
     if mat then
         surface.SetDrawColor(color_white)
