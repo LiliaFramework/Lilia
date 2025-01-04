@@ -202,9 +202,18 @@ function PANEL:addClassDetails(detailsPanel, classData)
 end
 
 function PANEL:addJoinButton(detailsPanel, classData, canBe)
+    local client = LocalPlayer()
     local MenuColors = lia.color.ReturnMainAdjustedColors()
+    local isCurrentClass = client:getChar() and client:getChar():getClass() == classData.index
     local button = detailsPanel:Add("DButton")
-    button:SetText(canBe and "Join Class" or "Requirements not met")
+    if isCurrentClass then
+        button:SetText("You are already in this class")
+    elseif canBe then
+        button:SetText("Join Class")
+    else
+        button:SetText("Requirements not met")
+    end
+
     button:SetTall(40)
     button:SetTextColor(MenuColors.text)
     button:SetFont("liaMediumFont")
@@ -213,10 +222,10 @@ function PANEL:addJoinButton(detailsPanel, classData, canBe)
     button:Dock(BOTTOM)
     button:DockMargin(10, 10, 10, 10)
     button.text_color = MenuColors.text
-    button:SetDisabled(not canBe)
+    button:SetDisabled(isCurrentClass or not canBe)
     button.Paint = function(btn, w, h)
         local hovered = btn:IsHovered()
-        if hovered and canBe then
+        if hovered and not btn:GetDisabled() then
             local underlineWidth = w * 0.4
             local underlineX = (w - underlineWidth) * 0.5
             local underlineY = h - 4
@@ -229,7 +238,7 @@ function PANEL:addJoinButton(detailsPanel, classData, canBe)
     end
 
     button.DoClick = function()
-        if canBe then
+        if canBe and not isCurrentClass then
             lia.command.send("beclass", classData.index)
             timer.Simple(0.1, function()
                 if IsValid(self) then
