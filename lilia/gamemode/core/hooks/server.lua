@@ -51,7 +51,6 @@ function GM:PlayerLoadedChar(client, character, lastChar)
         _lastJoinTime = timeStamp
     }, nil, "characters", "_id = " .. character:getID())
 
-    if lastChar then end
     if client:hasRagdoll() then
         local ragdoll = client:getRagdoll()
         ragdoll.liaNoReset = true
