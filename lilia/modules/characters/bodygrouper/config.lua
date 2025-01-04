@@ -1,1 +1,0 @@
-﻿MODULE.BodyGrouperModel = "models/props_c17/FurnitureDresser001a.mdl"

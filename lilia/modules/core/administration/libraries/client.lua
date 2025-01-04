@@ -889,3 +889,21 @@ end
 
 CreateClientConVar("cl_ticketsystem_closeclaimed", 0, true, false)
 CreateClientConVar("cl_ticketsystem_dutymode", 0, true, false)
+net.Receive("AdminModeSwapCharacter", function()
+    local id = net.ReadInt(32)
+    assert(isnumber(id), "id must be a number")
+    local d = deferred.new()
+    net.Receive("liaCharChoose", function()
+        local message = net.ReadString()
+        if message == "" then
+            d:resolve()
+            hook.Run("CharLoaded", lia.char.loaded[id])
+        else
+            d:reject(message)
+        end
+    end)
+
+    net.Start("liaCharChoose")
+    net.WriteUInt(id, 32)
+    net.SendToServer()
+end)

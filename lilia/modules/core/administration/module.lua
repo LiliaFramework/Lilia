@@ -17,7 +17,7 @@ MODULE.CAMIPrivileges = {
     }
 }
 
-if sam then
+if sam ~= nil then
     MODULE.Dependencies = {
         {
             File = MODULE.path .. "/sam/shared.lua",
