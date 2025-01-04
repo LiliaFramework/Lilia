@@ -2,10 +2,9 @@
 lia.command.add("spawnadd", {
     privilege = "Manage Spawns",
     adminOnly = true,
-    syntax = "[string faction] [string class]",
+    syntax = "[string faction]",
     onRun = function(client, arguments)
         local factionName = arguments[1]
-        local className = table.concat(arguments, " ", 2)
         if not factionName then return L("invalidArg", 1) end
         local factionInfo = lia.faction.indices[factionName:lower()]
         if not factionInfo then
@@ -18,27 +17,10 @@ lia.command.add("spawnadd", {
         end
 
         if factionInfo then
-            if className and className ~= "" then
-                local found = false
-                for _, v in ipairs(lia.class.list) do
-                    if v.faction == factionInfo.index and (v.uniqueID:lower() == className:lower() or lia.util.stringMatches(L(v.name), className)) then
-                        className = v.uniqueID
-                        found = true
-                        break
-                    end
-                end
-
-                if not found then return L("invalidClass") end
-            else
-                className = nil
-            end
-
             MODULE.spawns[factionInfo.uniqueID] = MODULE.spawns[factionInfo.uniqueID] or {}
-            MODULE.spawns[factionInfo.uniqueID][className] = MODULE.spawns[factionInfo.uniqueID][className] or {}
-            table.insert(MODULE.spawns[factionInfo.uniqueID][className], client:GetPos())
+            table.insert(MODULE.spawns[factionInfo.uniqueID], client:GetPos())
             MODULE:SaveData()
             local factionDisplay = L(factionInfo.name)
-            if className then factionDisplay = factionDisplay .. " (" .. L(lia.class.list[className].name) .. ")" end
             return L("spawnAdded", factionDisplay)
         else
             return L("invalidFaction")
@@ -46,7 +28,7 @@ lia.command.add("spawnadd", {
     end
 })
 
-lia.command.add("spawnremove", {
+lia.command.add("spawnremoveinradius", {
     privilege = "Manage Spawns",
     adminOnly = true,
     syntax = "[number radius]",
@@ -54,19 +36,49 @@ lia.command.add("spawnremove", {
         local position = client:GetPos()
         local radius = tonumber(arguments[1]) or 120
         local removedCount = 0
-        for faction, classes in pairs(MODULE.spawns) do
-            for class, spawns in pairs(classes) do
-                for index, spawnPos in ipairs(spawns) do
-                    if spawnPos:Distance(position) <= radius then
-                        table.remove(MODULE.spawns[faction][class], index)
-                        removedCount = removedCount + 1
-                    end
+        for faction, spawns in pairs(MODULE.spawns) do
+            for index = #spawns, 1, -1 do
+                if spawns[index]:Distance(position) <= radius then
+                    table.remove(MODULE.spawns[faction], index)
+                    removedCount = removedCount + 1
                 end
             end
         end
 
         if removedCount > 0 then MODULE:SaveData() end
         return L("spawnDeleted", removedCount)
+    end
+})
+
+lia.command.add("spawnremovebyname", {
+    privilege = "Manage Spawns",
+    adminOnly = true,
+    syntax = "[string faction]",
+    onRun = function(client, arguments)
+        local factionName = arguments[1]
+        if not factionName then return L("invalidArg", 1) end
+        local factionInfo = lia.faction.indices[factionName:lower()]
+        if not factionInfo then
+            for _, v in ipairs(lia.faction.indices) do
+                if lia.util.stringMatches(v.uniqueID, factionName) or lia.util.stringMatches(L(v.name), factionName) then
+                    factionInfo = v
+                    break
+                end
+            end
+        end
+
+        if factionInfo then
+            if MODULE.spawns[factionInfo.uniqueID] then
+                local removedCount = #MODULE.spawns[factionInfo.uniqueID]
+                MODULE.spawns[factionInfo.uniqueID] = nil
+                MODULE:SaveData()
+                return L("spawnDeletedByName", L(factionInfo.name), removedCount)
+            else
+                return L("noSpawnsForFaction")
+            end
+        else
+            return L("invalidFaction")
+        end
     end
 })
 

@@ -1,5 +1,5 @@
 ﻿local MODULE = MODULE
-MODULE.spawns = MODULE.spawns or {}
+
 function MODULE:LoadData()
     self.spawns = self:getData() or {}
 end
@@ -9,31 +9,22 @@ function MODULE:SaveData()
 end
 
 function MODULE:PostPlayerLoadout(client)
+    if not IsValid(client) then return end
     local character = client:getChar()
-    if IsValid(client) or character and self.spawns and table.Count(self.spawns) > 0 then
-        local class = character:getClass()
-        local points
-        local className = ""
-        for k, v in ipairs(lia.faction.indices) do
-            if k == client:Team() then
-                points = self.spawns[v.uniqueID] or {}
-                break
-            end
+    if not character or not self.spawns or next(self.spawns) == nil then return end
+    local factionInfo
+    for _, v in ipairs(lia.faction.indices) do
+        if v.index == client:Team() then
+            factionInfo = v
+            break
         end
+    end
 
-        if points then
-            for _, v in ipairs(lia.class.list) do
-                if class == v.index then
-                    className = v.uniqueID
-                    break
-                end
-            end
-
-            points = points[className] or points[""]
-            if points and table.Count(points) > 0 then
-                local position = table.Random(points)
-                client:SetPos(position)
-            end
+    if factionInfo then
+        local spawns = self.spawns[factionInfo.uniqueID] or {}
+        if #spawns > 0 then
+            local spawnPosition = table.Random(spawns)
+            client:SetPos(spawnPosition)
         end
     end
 end
