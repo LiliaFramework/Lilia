@@ -45,7 +45,7 @@ function GM:CharPreSave(character)
     end
 end
 
-function GM:PlayerLoadedChar(client, character, lastChar)
+function GM:PlayerLoadedChar(client, character)
     local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
     lia.db.updateTable({
         _lastJoinTime = timeStamp
