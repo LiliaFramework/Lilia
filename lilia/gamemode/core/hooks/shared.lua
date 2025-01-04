@@ -155,6 +155,11 @@ local function registerFunctions(scope)
         },
         shared = {
             {
+                name = "CharacterMaxStamina",
+                args = {"character"},
+                replacement = "CharMaxStamina"
+            },
+            {
                 name = "GetMaxPlayerCharacter",
                 args = {"client"},
                 replacement = "GetMaxPlayerChar"
