@@ -54,6 +54,7 @@ function GM:InitPostEntity()
     else
         lia.joinTime = RealTime() - 0.9716
         if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
+        hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
     end
 end
 
