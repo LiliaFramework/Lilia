@@ -256,7 +256,7 @@ LANGUAGE = {
     vendorFaction = "Faction Editor",
     vendorBye = "Come again soon!",
     mode = "Mode",
-    -- THIRDPERSON 
+    -- THIRDPERSON
     thirdpersonToggle = "Toggle Thirdperson",
     thirdpersonClassic = "Use Classic Thirdperson",
     thirdpersonConfig = "Thirdperson Configuration",
@@ -277,7 +277,6 @@ LANGUAGE = {
     recogMenuOptionFakeYell = "Allow those in yelling range to recognize you by a fake name.",
     recogFakeNamePrompt = "Enter a fake name to display to other players in range.",
     --PERMAKILL
-    invalid = "Invalid %s.",
     pktoggle_true = "You have toggled this character's PK State to True. They will be PK'ed the next time they die!",
     pktoggle_false = "You have toggled this character's PK State to False.",
     charPK_target_not_found = "Target player not found or they do not have an active character.",
