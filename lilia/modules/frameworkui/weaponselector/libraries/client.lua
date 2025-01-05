@@ -40,7 +40,7 @@ function MODULE:HUDPaint()
             local weapon = NewWeaponSelecter.weapons[i]
             if not IsValid(weapon) then
                 table.remove(NewWeaponSelecter.weapons, i)
-               continue
+                continue
             end
 
             local theta = (i - index) * 0.1

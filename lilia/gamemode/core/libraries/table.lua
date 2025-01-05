@@ -1,4 +1,4 @@
---- Various useful table related functions.
+﻿--- Various useful table related functions.
 -- @library lia.table
 lia.table = lia.table or {}
 --- Sums all numerical values in a table.

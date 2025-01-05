@@ -1,6 +1,4 @@
-
-
-local PANEL = {}
+﻿local PANEL = {}
 PANEL.pnlTypes = {
     [1] = {
         -- NOT ALLOWED

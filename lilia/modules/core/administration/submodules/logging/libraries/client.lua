@@ -1,4 +1,4 @@
-net.Receive("send_logs", function()
+﻿net.Receive("send_logs", function()
     local categorizedLogs = net.ReadTable()
     if not categorizedLogs then
         chat.AddText(Color(255, 0, 0), "No logs available.")

@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 function SWEP:PrimaryAttack()
     local target = self:GetTarget()
     if IsValid(target) then MODULE:OpenAdminStickUI(target) end

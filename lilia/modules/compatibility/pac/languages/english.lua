@@ -1,4 +1,4 @@
-NAME = "english"
+﻿NAME = "english"
 LANGUAGE = {
     invalid = "Invalid %s.",
     fixpac_success = "PAC has been successfully restarted. You might need to run this command twice!",

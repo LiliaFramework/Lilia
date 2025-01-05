@@ -971,7 +971,6 @@ else
         return diff + (RealTime() - (lia.joinTime or 0))
     end
 
-
     --- Sets a waypoint for the player.
     -- @realm client
     -- @string name The name of the waypoint.

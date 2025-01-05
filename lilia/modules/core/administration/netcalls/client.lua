@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 net.Receive("ViewClaims", function()
     local tbl = net.ReadTable()
     local steamid = net.ReadString()

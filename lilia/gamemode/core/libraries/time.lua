@@ -1,4 +1,4 @@
---- Various useful helper functions.
+﻿--- Various useful helper functions.
 -- @library lia.time
 lia.time = {}
 --- Generates a formatted date string based on the current system time.

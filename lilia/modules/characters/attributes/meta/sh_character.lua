@@ -122,13 +122,4 @@ if SERVER then
         hook.Run("OnCharAttribBoosted", self:getPlayer(), self, attribID, boostID, true)
         return self:setVar("boosts", boosts, nil, self:getPlayer())
     end
-
-    characterMeta.RemoveBoost = characterMeta.removeBoost
-    characterMeta.UpdateAttrib = characterMeta.updateAttrib
-    characterMeta.SetAttribute = characterMeta.setAttrib
-    characterMeta.AddBoost = characterMeta.addBoost
 end
-
-characterMeta.GetBoost = characterMeta.getBoost
-characterMeta.GetBoosts = characterMeta.getBoosts
-characterMeta.GetAttribute = characterMeta.getAttrib

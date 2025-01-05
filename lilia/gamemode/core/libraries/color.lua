@@ -219,8 +219,6 @@ function lia.color.ReturnMainAdjustedColors()
     }
 end
 
-
-
 do
     local function normalize(min, max, val)
         local delta = max - min

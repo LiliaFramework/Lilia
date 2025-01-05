@@ -1,4 +1,4 @@
---- A library of DarkRP compatibility functions.
+﻿--- A library of DarkRP compatibility functions.
 -- @playermeta DarkRP
 local playerMeta = FindMetaTable("Player")
 --- Retrieves the player's DarkRP money.

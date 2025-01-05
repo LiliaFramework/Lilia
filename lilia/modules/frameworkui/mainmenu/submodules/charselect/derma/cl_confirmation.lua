@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 local function PaintBackground(panel, w, h)
     if panel.blank then
         surface.SetDrawColor(30, 30, 30, 150)

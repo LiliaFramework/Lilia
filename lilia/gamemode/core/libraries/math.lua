@@ -1,4 +1,4 @@
---- Various useful mathematical functions.
+﻿--- Various useful mathematical functions.
 -- @library lia.math
 lia.math = lia.math or {}
 --- Converts units to inches.

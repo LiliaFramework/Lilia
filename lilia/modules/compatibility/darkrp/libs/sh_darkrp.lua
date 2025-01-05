@@ -1,4 +1,4 @@
---- A library of DarkRP compatibility functions.
+﻿--- A library of DarkRP compatibility functions.
 -- @library lia.darkrp
 DarkRP = DarkRP or {}
 RPExtraTeams = RPExtraTeams or {}

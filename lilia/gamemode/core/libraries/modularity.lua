@@ -1,4 +1,4 @@
---[[--
+﻿--[[--
 Core library that manages module loading behaviors.
 
 If you are looking for the module structure, you can find it [here](https://liliaframework.github.io/manual/structure_module).

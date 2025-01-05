@@ -1,4 +1,4 @@
-function MODULE:LoadCharInformation()
+﻿function MODULE:LoadCharInformation()
     local client = LocalPlayer()
     local character = client:getChar()
     local class = lia.class.list[character:getClass()]

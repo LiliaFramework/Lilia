@@ -1,6 +1,5 @@
 ﻿local AutomaticWeaponRegister = true
 local NotifyWeaponRegister = false
-
 function MODULE:InitializedModules()
     if AutomaticWeaponRegister then self:RegisterWeapons() end
 end

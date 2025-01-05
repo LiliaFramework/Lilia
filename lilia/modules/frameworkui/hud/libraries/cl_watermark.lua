@@ -1,4 +1,4 @@
-function MODULE:DrawWatermark()
+﻿function MODULE:DrawWatermark()
     if not self:ShouldDrawWatermark() then return end
     local w, h = 64, 64
     local watermarkLogo = Material(self.WatermarkLogo, "smooth")

@@ -1,4 +1,4 @@
-local playerMeta = FindMetaTable("Player")
+﻿local playerMeta = FindMetaTable("Player")
 function MODULE:PlayerSpawnProp(client)
     if not playerMeta.GetLimit then return end
     local limit = client:GetLimit("props")

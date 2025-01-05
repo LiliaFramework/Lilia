@@ -1,4 +1,4 @@
-local serverCommands = {
+﻿local serverCommands = {
     -- Disables the voice chat indicator, so players won't see a speaker icon next to player names when they use voice chat
     "mp_show_voice_icons 0",
     -- Sets the maximum file size (in MB) that can be sent over the network, helping to prevent excessively large files from being shared

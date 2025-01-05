@@ -1,4 +1,4 @@
---[[--
+﻿--[[--
 A custom tool class based on the Base GMOD Toolgun, designed for integration with Lilia's framework.
 
 The `ToolGun` class extends the functionality of the base GMOD toolgun, enabling seamless integration with Lilia's files and configuration. This custom tool class provides a flexible framework for creating and managing interactive tools within Garry's Mod, specifically tailored to work with Lilia's environment and system.

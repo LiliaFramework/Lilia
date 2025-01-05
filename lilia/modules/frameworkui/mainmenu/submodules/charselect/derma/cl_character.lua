@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 local CharHover = {"buttons/button15.wav", 35, 250}
 local CharClick = {"buttons/button14.wav", 35, 255}
 local CharWarning = {"friends/friend_join.wav", 40, 255}

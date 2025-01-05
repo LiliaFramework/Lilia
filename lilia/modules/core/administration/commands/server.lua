@@ -1,4 +1,4 @@
-lia.command.add("adminmode", {
+﻿lia.command.add("adminmode", {
     syntax = "<string charName>",
     onRun = function(client)
         if not IsValid(client) then return end

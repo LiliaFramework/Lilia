@@ -1,5 +1,4 @@
 ﻿local MODULE = MODULE
-
 function MODULE:InitializedModules()
     if not file.Exists("caseclaims.txt", "DATA") then file.Write("caseclaims.txt", "[]") end
 end

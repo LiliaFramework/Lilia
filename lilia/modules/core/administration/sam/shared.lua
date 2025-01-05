@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 function MODULE:CanReadNotifications(client)
     if not self.DisplayStaffCommands then return false end
     if not self.AdminOnlyNotification then return true end

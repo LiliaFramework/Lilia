@@ -1,5 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-
 function GM:DrawLiliaModelView(_, entity)
     if IsValid(entity.weapon) then entity.weapon:DrawModel() end
 end

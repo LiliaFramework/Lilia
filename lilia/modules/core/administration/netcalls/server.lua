@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 local NetworkStrings = {"AdminModeSwapCharacter", "ViewClaims", "TicketSystem", "TicketSystemClaim", "TicketSystemClose", "TicketClientNotify"}
 net.Receive("ViewClaims", function(_, client)
     local sid = net.ReadString()

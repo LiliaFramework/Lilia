@@ -1,4 +1,4 @@
-ITEM.name = "PAC Outfit"
+﻿ITEM.name = "PAC Outfit"
 ITEM.desc = "A PAC Outfit Base."
 ITEM.category = "Outfit"
 ITEM.model = "models/Gibs/HGIBS.mdl"
