@@ -30,7 +30,6 @@ local function LiliaLog(messageType, message, section, color)
             prefix = Color(83, 143, 239),
             message = Color(255, 255, 255)
         }
-        
     }
 
     local logType = colors[messageType] or colors.print
