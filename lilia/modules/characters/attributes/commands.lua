@@ -6,7 +6,7 @@
         local attribName = arguments[2]
         if not attribName then return L("invalidArg", 2) end
         local attribNumber = tonumber(arguments[3])
-        if not attribNumber or type(attribNumber) ~= "number" then return L("invalidArg", 3) end
+        if not attribNumber or not isnumber(attribNumber) then return L("invalidArg", 3) end
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
             local character = target:getChar()
@@ -31,7 +31,7 @@ lia.command.add("charaddattrib", {
         local attribName = arguments[2]
         if not attribName then return L("invalidArg", 2) end
         local attribNumber = tonumber(arguments[3])
-        if not attribNumber or type(attribNumber) ~= "number" then return L("invalidArg", 3) end
+        if not attribNumber or not isnumber(attribNumber) then return L("invalidArg", 3) end
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
             local character = target:getChar()
