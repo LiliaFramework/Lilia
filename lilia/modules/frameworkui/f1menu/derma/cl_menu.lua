@@ -1,6 +1,4 @@
-﻿local TabClickingSound = "buttons/button14.wav"
-local PANEL = {}
-
+﻿local PANEL = {}
 function PANEL:addTab(name, callback, uniqueID)
     local MenuColors = lia.color.ReturnMainAdjustedColors()
     name = L(name)
@@ -37,7 +35,6 @@ function PANEL:addTab(name, callback, uniqueID)
         self.activeTab = this
         lastMenuTab = uniqueID
         if callback then callback(self.panel, this) end
-        surface.PlaySound(TabClickingSound or "buttons/button14.wav")
     end
 
     self.tabList[name] = tab
@@ -132,9 +129,7 @@ function PANEL:Think()
 
     if not self.anchorMode then
         if IsValid(self.info) then return end
-        if not key then
-            self:remove()
-        end
+        if not key then self:remove() end
     end
 end
 
