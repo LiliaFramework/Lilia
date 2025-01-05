@@ -19,8 +19,7 @@ permissions:
 jobs:
   linter:
     runs-on: ubuntu-latest
-    with:
-      config: "https://raw.githubusercontent.com/LiliaFramework/Lilia/refs/heads/main/config.json"
+
     steps:
       - uses: actions/checkout@v3
         with:
