@@ -36,10 +36,8 @@ jobs:
 
       - name: Lint with GLuaLint
         run: |
-          ls
           cd lilia
-          ls
-          glualint . --pretty-print-files
+          glualint --pretty-print lilia
 
   sync:
     runs-on: ubuntu-latest
