@@ -1,6 +1,5 @@
 ﻿--- Hook Documentation for HUD Module.
 -- @hooks HUD
-
 --- Whether or not the ammo HUD should be drawn.
 -- @realm client
 -- @entity weapon Weapon the player currently is holding

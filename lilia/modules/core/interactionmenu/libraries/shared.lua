@@ -28,20 +28,6 @@ function MODULE:CheckPossibilities()
     return false
 end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function MODULE:InitializedModules()
     hook.Run("AddPIMOption", self.Options)
     hook.Run("AddLocalPIMOption", self.SelfOptions)

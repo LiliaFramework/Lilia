@@ -1,6 +1,5 @@
 ﻿--- Configuration for the Scoreboard Module.
 -- @configuration Scoreboard
-
 --- This table defines the default settings for the Scoreboard Module.
 -- @realm shared
 -- @table Configuration
