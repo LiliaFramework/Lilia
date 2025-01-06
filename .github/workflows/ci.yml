@@ -39,7 +39,7 @@ jobs:
           cd lilia
           glualint . --pretty-print-files
 
-      - name: Check for Changes
+      - name: Check for Changes and Push
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
