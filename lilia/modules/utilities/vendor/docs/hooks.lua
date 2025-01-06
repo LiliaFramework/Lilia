@@ -1,6 +1,5 @@
 ﻿--- Hook Documentation for Vendor Module.
 -- @hooks Vendor
-
 --- Called when a vendor's allowed classes are updated.
 -- @realm client
 -- @internal

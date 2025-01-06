@@ -1,6 +1,5 @@
 ﻿--- Configuration for the Administration Module.
 -- @configuration SAM
-
 --- This table defines the default settings for the Administration.
 -- @realm shared
 -- @table Configuration

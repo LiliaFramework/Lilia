@@ -1,6 +1,5 @@
 ﻿--- Hook Documentation for F1 Menu Module.
 -- @hooks F1Menu
-
 -- This function determines whether certain information can be displayed in the character info panel inthe F1 menu.
 -- @realm client
 -- @table Information to **NOT** display in the UI. This is a table of the names of some panels to avoi displaying. Valid names include:

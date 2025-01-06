@@ -1,6 +1,5 @@
 ﻿--- Configuration for the Storage Module.
 -- @configuration Storage
-
 --- This table defines the default settings for the Storage Module.
 -- @realm shared
 -- @table Configuration
