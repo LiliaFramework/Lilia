@@ -35,6 +35,7 @@ jobs:
       - name: Lint with GLuaLint
         working-directory: lilia
         run: |
+          ls
           glualint . --pretty-print-files
           
       - name: Check for Changes
