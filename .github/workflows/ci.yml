@@ -33,7 +33,6 @@ jobs:
           sudo mv glualint /usr/local/bin
 
       - name: Lint with GLuaLint
-        working-directory: lilia
         run: |
           ls
           glualint . --pretty-print-files
