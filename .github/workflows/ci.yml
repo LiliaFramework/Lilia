@@ -1,4 +1,5 @@
 name: CI
+
 on: [push, pull_request]
 
 permissions:
@@ -17,9 +18,9 @@ permissions:
   statuses: write
 
 jobs:
+  # First job to lint the code with GluaCheck
   linter:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -60,3 +61,23 @@ jobs:
       contents: write
     with:
       pretty_print: true
+
+  push_pretty_print:
+    runs-on: ubuntu-latest
+    needs: glualint
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Commit and Push Pretty-Printed Changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+            git commit -m "Apply GLuaFixer pretty print"
+            git push
+          else
+            echo "No changes to commit"
