@@ -12,7 +12,7 @@ Welcome to Lilia, an advanced roleplay gamemode framework for Garry's Mod. Inspi
   
 - **Workshop Content**: Enhance your Lilia experience by installing our essential [workshop content](https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255).
   
-- **Community Support**: Join our vibrant community on [Discord](https://discord.gg/6A94jYsfBk) to connect with fellow users and receive support.
+- **Community Support**: Join our vibrant community on [Discord](https://discord.gg/esCRH5ckbQ) to connect with fellow users and receive support.
 
 ## Documentation
 
