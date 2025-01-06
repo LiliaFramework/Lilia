@@ -39,10 +39,12 @@ jobs:
           cd lilia
           glualint . --pretty-print-files
 
-      - name: Check for Changes and Push
+      - name: Push Changes with GITHUB_TOKEN
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           if [ -n "$(git status --porcelain)" ]; then
             git add .
             git commit -m "Apply GLuaFixer pretty print"
