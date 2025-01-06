@@ -60,12 +60,3 @@ jobs:
       contents: write
     with:
       pretty_print: true
-
-    steps:
-      - name: Push Pretty Print Changes
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add .
-          git commit -m "Apply GLuaFixer pretty print"
-          git push
