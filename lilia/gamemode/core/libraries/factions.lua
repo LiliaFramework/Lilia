@@ -7,7 +7,7 @@ If you are looking for the faction structure, you can find it [here](https://lil
 lia.faction = lia.faction or {}
 lia.faction.indices = lia.faction.indices or {}
 lia.faction.teams = lia.faction.teams or {}
-lia.faction.DefaultModels = {"models/humans/group01/male_01.mdl", "models/humans/group01/male_02.mdl", "models/humans/group01/male_04.mdl", "models/humans/group01/male_05.mdl", "models/humans/group01/male_06.mdl", "models/humans/group01/male_07.mdl", "models/humans/group01/male_08.mdl", "models/humans/group01/male_09.mdl", "models/humans/group02/male_01.mdl", "models/humans/group02/male_03.mdl", "models/humans/group02/male_05.mdl", "models/humans/group02/male_07.mdl", "models/humans/group02/male_09.mdl", "models/humans/group01/female_01.mdl", "models/humans/group01/female_02.mdl", "models/humans/group01/female_03.mdl", "models/humans/group01/female_06.mdl", "models/humans/group01/female_07.mdl", "models/humans/group02/female_01.mdl", "models/humans/group02/female_03.mdl", "models/humans/group02/female_06.mdl", "models/humans/group01/female_04.mdl"}
+local DefaultModels = {"models/player/barney.mdl", "models/player/alyx.mdl", "models/player/breen.mdl", "models/player/p2_chell.mdl"}
 --- Loads factions from a directory.
 -- @realm shared
 -- @string directory The path to the factions files.
@@ -43,7 +43,7 @@ function lia.faction.loadFromDir(directory)
         end
 
         team.SetUp(FACTION.index, FACTION.name or "Unknown", FACTION.color or Color(125, 125, 125))
-        FACTION.models = FACTION.models or lia.faction.DefaultModels
+        FACTION.models = FACTION.models or DefaultModels
         FACTION.uniqueID = FACTION.uniqueID or niceName
         for _, modelData in pairs(FACTION.models) do
             if isstring(modelData) then
@@ -134,7 +134,7 @@ end
 -- @tab models The models associated with the faction.
 -- @usage
 -- 	lia.faction.jobGenerate(9, "Custom Faction", Color(255, 0, 0), false, {"models/player/custom_model.mdl", "models/player/custom_accessory.mdl"})
--- 	lia.faction.jobGenerate(10, "Another Custom Faction", Color(255, 255, 0), false, lia.faction.DefaultModels)
+-- 	lia.faction.jobGenerate(10, "Another Custom Faction", Color(255, 255, 0), false, DefaultModels)
 function lia.faction.jobGenerate(index, name, color, default, models)
     local FACTION = {}
     FACTION.index = index
@@ -142,7 +142,7 @@ function lia.faction.jobGenerate(index, name, color, default, models)
     FACTION.name = name
     FACTION.desc = ""
     FACTION.color = color
-    FACTION.models = models or lia.faction.DefaultModels
+    FACTION.models = models or DefaultModels
     FACTION.uniqueID = name
     for _, v in pairs(FACTION.models) do
         if isstring(v) then
