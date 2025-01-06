@@ -38,7 +38,7 @@ jobs:
           cd lilia
           ls
           cd lilia
-          glualint . --pretty-print-files
+          glualint lilia --pretty-print-files
           
       - name: Check for Changes
         run: |
