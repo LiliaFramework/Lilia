@@ -665,7 +665,7 @@ if SERVER then
         if not data then return false end
         data[key] = val
         local setQ = "UPDATE lia_characters SET _data=" .. sql.SQLStr(util.TableToJSON(data)) .. " WHERE _id=" .. charIDsafe
-        if sql.Query(setQ) == false then
+        if not sql.Query(setQ) then
             LiliaInformation("lia.char.setCharData SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
@@ -683,7 +683,7 @@ if SERVER then
         local charIDsafe = tonumber(charID)
         if not name or not charID then return end
         local setQ = "UPDATE lia_characters SET _name=" .. sql.SQLStr(name) .. " WHERE _id=" .. charIDsafe
-        if sql.Query(setQ) == false then
+        if not sql.Query(setQ) then
             print("lia.char.setCharName SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
@@ -702,7 +702,7 @@ if SERVER then
         local charIDsafe = tonumber(charID)
         if not model or not charID then return end
         local setQ = "UPDATE lia_characters SET _model=" .. sql.SQLStr(model) .. " WHERE _id=" .. charIDsafe
-        if sql.Query(setQ) == false then
+        if not sql.Query(setQ) then
             print("lia.char.setCharModel SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end

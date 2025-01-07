@@ -92,11 +92,11 @@ function ENT:isClassAllowed(classID)
     if not class then return false end
     local faction = lia.faction.indices[class.faction]
     if faction and self:isFactionAllowed(faction.index) then return true end
-    return self.classes[classID] == true
+    return self.classes[classID]
 end
 
 function ENT:isFactionAllowed(factionID)
-    return self.factions[factionID] == true
+    return self.factions[factionID]
 end
 
 function ENT:getSellScale()

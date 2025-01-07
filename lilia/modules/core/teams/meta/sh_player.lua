@@ -37,7 +37,7 @@ function playerMeta:hasWhitelist(faction)
         end
 
         local liaData = self:getLiliaData("whitelists", {})
-        return liaData[SCHEMA.folder] and liaData[SCHEMA.folder][data.uniqueID] == true or false
+        return liaData[SCHEMA.folder] and liaData[SCHEMA.folder][data.uniqueID] or false
     end
     return false
 end

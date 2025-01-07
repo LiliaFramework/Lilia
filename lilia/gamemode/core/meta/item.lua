@@ -12,8 +12,8 @@ same name but different numerical IDs). You can think of items as the class, whi
 local ITEM = lia.meta.item or {}
 debug.getregistry().Item = lia.meta.item
 ITEM.__index = ITEM
-ITEM.name = "INVALID ITEM"
-ITEM.desc = (ITEM.desc or ITEM.description) or "[[INVALID ITEM]]"
+ITEM.name = "INVALID NAME"
+ITEM.desc = ITEM.desc or "[[INVALID DESCRIPTION]]"
 ITEM.id = ITEM.id or 0
 ITEM.uniqueID = "undefined"
 ITEM.isItem = true
@@ -153,7 +153,6 @@ end
 -- print("Item Health:", health)
 function ITEM:getData(key, default)
     self.data = self.data or {}
-    if key == true then return self.data end
     local value = self.data[key]
     if value ~= nil then return value end
     if IsValid(self.entity) then
@@ -162,6 +161,26 @@ function ITEM:getData(key, default)
         if value ~= nil then return value end
     end
     return default
+end
+
+--- Returns all data associated with the item.
+-- Combines the item's stored data and any networked data from its entity.
+-- @realm shared
+-- @treturn table A table containing all item data.
+-- @usage
+-- local fullData = item:getFullData()
+-- Print all data for debugging
+-- PrintTable(fullData)
+function ITEM:getAllData()
+    self.data = self.data or {}
+    local fullData = table.Copy(self.data)
+    if IsValid(self.entity) then
+        local entityData = self.entity:getNetVar("data", {})
+        for key, value in pairs(entityData) do
+            fullData[key] = value
+        end
+    end
+    return fullData
 end
 
 --- Changes the function called on specific events for the item.
@@ -204,7 +223,7 @@ end
 -- item:print()
 -- item:print(true)
 function ITEM:print(detail)
-    if detail == true then
+    if detail then
         print(Format("%s[%s]: >> [%s](%s,%s)", self.uniqueID, self.id, self.owner, self.gridX, self.gridY))
     else
         print(Format("%s[%s]", self.uniqueID, self.id))

@@ -33,8 +33,7 @@ function ENT:setItem(itemID)
     local itemTable = lia.item.instances[itemID]
     if not itemTable then return self:Remove() end
     itemTable:sync()
-    local model = itemTable.onGetDropModel and itemTable:onGetDropModel(self) or itemTable:getModel() or itemTable.model
-    if itemTable.worldModel then model = itemTable.worldModel == true and "models/props_junk/cardboard_box004a.mdl" or itemTable.worldModel end
+    local model = hook.Run("getItemDropModel", itemTable, self) or itemTable:getModel() or itemTable.model
     self:SetModel(model)
     self:SetSkin(itemTable.skin or 0)
     self:SetMaterial(itemTable.material or "")
@@ -70,7 +69,7 @@ function ENT:setItem(itemID)
         physObj:Wake()
     end
 
-    if itemTable.onEntityCreated then itemTable:onEntityCreated(self) end
+    hook.Run("OnItemCreated", itemTable, self)
 end
 
 function ENT:breakEffects()

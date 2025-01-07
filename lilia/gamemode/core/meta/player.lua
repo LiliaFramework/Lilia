@@ -199,7 +199,7 @@ end
 --     print("Player is running.")
 -- end
 function playerMeta:isRunning()
-    return vectorMeta.Length2D(self:GetVelocity()) > (self:GetWalkSpeed() + 10)
+    return vectorMeta.Length2D(self:GetVelocity()) > self:GetWalkSpeed() + 10
 end
 
 --- Checks if the player's character is female based on the model.
@@ -431,13 +431,25 @@ if SERVER then
     -- local level = player:getLiliaData("level", 1)
     -- print("Player Level:", level)
     function playerMeta:getLiliaData(key, default)
-        if key == true then return self.liaData end
         local data = self.liaData and self.liaData[key]
         if data == nil then
             return default
         else
             return data
         end
+    end
+
+    --- Retrieves the full Lilia data table for the player.
+    -- Ensures the data table is valid and returns it.
+    -- @realm server
+    -- @treturn table The entire Lilia data table for the player.
+    -- @usage
+    -- local fullData = player:getAllLiliaData()
+    -- Print all data for debugging
+    -- PrintTable(fullData)
+    function playerMeta:getAllLiliaData()
+        self.liaData = self.liaData or {}
+        return self.liaData
     end
 
     --- Sets the player's ragdoll entity.
@@ -467,7 +479,7 @@ if SERVER then
 
         time = time or 5
         startTime = startTime or CurTime()
-        finishTime = finishTime or (startTime + time)
+        finishTime = finishTime or startTime + time
         if text == false then
             timer.Remove("liaAct" .. self:SteamID64())
             netstream.Start(self, "actBar")
@@ -642,7 +654,7 @@ if SERVER then
     -- print("Playtime:", playTime, "seconds")
     function playerMeta:getPlayTime()
         local diff = os.time(lia.time.toNumber(self.lastJoin)) - os.time(lia.time.toNumber(self.firstJoin))
-        return diff + (RealTime() - (self.liaJoinTime or RealTime()))
+        return diff + RealTime() - (self.liaJoinTime or RealTime())
     end
 
     --- Creates a ragdoll entity for the player on the server.
@@ -741,7 +753,7 @@ if SERVER then
     -- print("Playtime:", playTime, "seconds")
     function playerMeta:getPlayTime()
         local diff = os.time(lia.time.toNumber(lia.lastJoin)) - os.time(lia.time.toNumber(lia.firstJoin))
-        return diff + (RealTime() - (lia.joinTime or 0))
+        return diff + RealTime() - (lia.joinTime or 0)
     end
 
     --- Creates a ragdoll entity for the player.
@@ -968,7 +980,7 @@ else
     -- print("Playtime:", playTime, "seconds")
     function playerMeta:getPlayTime()
         local diff = os.time(lia.time.toNumber(lia.lastJoin)) - os.time(lia.time.toNumber(lia.firstJoin))
-        return diff + (RealTime() - (lia.joinTime or 0))
+        return diff + RealTime() - (lia.joinTime or 0)
     end
 
     --- Sets a waypoint for the player.
@@ -1014,5 +1026,18 @@ else
         else
             return data
         end
+    end
+
+    --- Retrieves the full local Lilia data table.
+    -- Ensures the data table is valid and returns it.
+    -- @realm client
+    -- @treturn table The entire local Lilia data table.
+    -- @usage
+    -- local fullData = player:getAllLiliaData()
+    -- Print all data for debugging
+    -- PrintTable(fullData)
+    function playerMeta:getAllLiliaData()
+        lia.localData = lia.localData or {}
+        return lia.localData
     end
 end

@@ -81,7 +81,7 @@ function ENT:setFactionAllowed(factionID, isAllowed)
 
     net.Start("VendorAllowFaction")
     net.WriteUInt(factionID, 8)
-    net.WriteBool(self.factions[factionID] == true)
+    net.WriteBool(self.factions[factionID])
     net.Send(self.receivers)
     for _, client in ipairs(self.receivers) do
         if not hook.Run("CanPlayerAccessVendor", client, self) then self:removeReceiver(client) end
@@ -97,7 +97,7 @@ function ENT:setClassAllowed(classID, isAllowed)
 
     net.Start("VendorAllowClass")
     net.WriteUInt(classID, 8)
-    net.WriteBool(self.classes[classID] == true)
+    net.WriteBool(self.classes[classID])
     net.Send(self.receivers)
 end
 

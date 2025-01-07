@@ -28,7 +28,7 @@ function lia.class.loadFromDir(directory)
             if class.uniqueID == niceName then halt = true end
         end
 
-        if halt == true then continue end
+        if halt then continue end
         CLASS = {
             index = index,
             uniqueID = niceName
@@ -120,5 +120,5 @@ function lia.class.hasWhitelist(class)
     local info = lia.class.list[class]
     if not info then return false end
     if info.isDefault then return false end
-    return info.isWhitelisted == true
+    return info.isWhitelisted
 end

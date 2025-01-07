@@ -20,7 +20,7 @@ end
 function b:Flash(text, color, time, noAdjust, callback)
     noAdjust = noAdjust or false
     time = time or 1
-    if self.flashing and self.flashing == true then return end
+    if self.flashing then return end
     local ogText = self:GetText()
     local ogPaint = self.Paint
     local ogSizeW, ogSizeH = self:GetSize()

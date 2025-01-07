@@ -73,7 +73,7 @@ function characterMeta:getPlayer()
     else
         for _, v in player.Iterator() do
             local character = v:getChar()
-            if character and (character:getID() == self:getID()) then
+            if character and character:getID() == self:getID() then
                 self.player = v
                 return v
             end

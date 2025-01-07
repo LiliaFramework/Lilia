@@ -134,7 +134,7 @@ end
 -- @return Whether the object is an item.
 -- @realm shared
 function lia.item.isItem(object)
-    return istable(object) and object.isItem == true
+    return istable(object) and object.isItem
 end
 
 --- Registers a new item.
