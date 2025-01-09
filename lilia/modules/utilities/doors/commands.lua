@@ -1,5 +1,4 @@
 ﻿local MODULE = MODULE
-
 lia.command.add("doorsell", {
     adminOnly = false,
     onRun = function(client)
@@ -66,6 +65,7 @@ lia.command.add("doortogglelock", {
                 client:notify(L("DoorToggleLocked", "unlocked"))
                 lia.log.add(client, "toggleLock", door, "unlocked")
             end
+
             local partner = door:getDoorPartner()
             if IsValid(partner) then
                 if toggleState then
@@ -90,12 +90,14 @@ lia.command.add("doorbuy", {
                 client:notify(L("DoorOwnedBy", door:GetDTEntity(0):Name()))
                 return false
             end
+
             local price = door:getNetVar("price", 0)
             if client:getChar():hasMoney(price) then
                 door:SetDTEntity(0, client)
                 door.liaAccess = {
                     [client] = DOOR_OWNER
                 }
+
                 MODULE:callOnDoorChildren(door, function(child) child:SetDTEntity(0, client) end)
                 client:getChar():takeMoney(price)
                 client:notify(L("DoorPurchased", lia.currency.get(price)))
@@ -148,6 +150,7 @@ lia.command.add("dooraddfaction", {
                     end
                 end
             end
+
             if faction then
                 door.liaFactionID = faction.uniqueID
                 local facs = door:getNetVar("factions", "[]")
@@ -162,6 +165,7 @@ lia.command.add("dooraddfaction", {
                     local json = util.TableToJSON(facs)
                     door:setNetVar("factions", json)
                 end)
+
                 lia.log.add(client, "doorSetFaction", door, faction.name)
                 client:notify(L("DoorSetFaction", L(faction.name, client)))
             elseif arguments[1] then
@@ -172,6 +176,7 @@ lia.command.add("dooraddfaction", {
                 lia.log.add(client, "doorRemoveFaction", door, "all")
                 client:notify(L("DoorRemoveFaction"))
             end
+
             MODULE:SaveData()
         end
     end
@@ -194,6 +199,7 @@ lia.command.add("doorremovefaction", {
                     end
                 end
             end
+
             if faction then
                 door.liaFactionID = nil
                 local facs = door:getNetVar("factions", "[]")
@@ -208,6 +214,7 @@ lia.command.add("doorremovefaction", {
                     local json = util.TableToJSON(facs)
                     door:setNetVar("factions", json)
                 end)
+
                 lia.log.add(client, "doorRemoveFaction", door, faction.name)
                 client:notify(L("DoorRemoveFaction", L(faction.name, client)))
             elseif arguments[1] then
@@ -218,6 +225,7 @@ lia.command.add("doorremovefaction", {
                 lia.log.add(client, "doorRemoveFaction", door, "all")
                 client:notify(L("DoorRemoveFaction"))
             end
+
             MODULE:SaveData()
         end
     end
@@ -248,6 +256,7 @@ lia.command.add("doorresetdata", {
                 child:setNetVar("price", 0)
                 child:setNetVar("locked", false)
             end)
+
             client:notify(L("DoorResetData"))
             MODULE:SaveData()
         else
@@ -286,6 +295,7 @@ lia.command.add("doortogglealldoors", {
                 break
             end
         end
+
         local count = 0
         for _, door in ents.Iterator() do
             if IsValid(door) and door:isDoor() and door:getNetVar("disabled", false) ~= toggleToDisable then
@@ -295,9 +305,11 @@ lia.command.add("doortogglealldoors", {
                     child:setNetVar("disabled", toggleToDisable and true or nil)
                     lia.log.add(client, toggleToDisable and "doorDisable" or "doorEnable", child)
                 end)
+
                 count = count + 1
             end
         end
+
         client:notify(L(toggleToDisable and "DoorDisableAll" or "DoorEnableAll", count))
         lia.log.add(client, toggleToDisable and "doorDisableAll" or "doorEnableAll", count)
         MODULE:SaveData()
@@ -318,6 +330,7 @@ lia.command.add("doortogglehidden", {
                 child:setNetVar("hidden", newState)
                 lia.log.add(client, "doorSetHidden", child, newState)
             end)
+
             client:notify(newState and L("DoorSetHidden") or L("DoorSetNotHidden"))
             MODULE:SaveData()
         else
@@ -421,10 +434,12 @@ lia.command.add("doorremovechild", {
                     lia.log.add(client, "doorRemoveChild", door, child)
                     child.liaParent = nil
                 end)
+
                 door.liaChildren = nil
                 client:notify(L("DoorRemoveChildren"))
                 return
             end
+
             if IsValid(door.liaParent) and door.liaParent.liaChildren then
                 door.liaParent.liaChildren[door:MapCreationID()] = nil
                 lia.log.add(client, "doorRemoveChild", door.liaParent, door)
@@ -455,6 +470,7 @@ lia.command.add("doorsetclass", {
                     end
                 end
             end
+
             if class then
                 door.liaClassID = class
                 door:setNetVar("class", class)
@@ -462,6 +478,7 @@ lia.command.add("doorsetclass", {
                     door.liaClassID = class
                     door:setNetVar("class", class)
                 end)
+
                 lia.log.add(client, "doorSetClass", door, classData.name)
                 client:notify(L("DoorSetClass", L(classData.name, client)))
             elseif arguments[1] then
@@ -472,6 +489,7 @@ lia.command.add("doorsetclass", {
                 lia.log.add(client, "doorRemoveClass", door)
                 client:notify(L("DoorRemoveClass"))
             end
+
             MODULE:SaveData()
         end
     end,
