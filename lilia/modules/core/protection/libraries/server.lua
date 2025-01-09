@@ -142,7 +142,7 @@ end
 
 function MODULE:NotifyAdmin(notification)
     for _, client in player.Iterator() do
-        if IsValid(client) and client:hasPrivilege("Staff Permissions - Can See Alting Notifications") then client:chatNotify(notification) end
+        if IsValid(client) and client:hasPrivilege("Staff Permissions - Can See Alting Notifications") then client:ChatPrint(notification) end
     end
 end
 

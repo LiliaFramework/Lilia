@@ -136,7 +136,7 @@ concommand.Add("logger_delete_logs", function(client)
             end
         end)
     else
-        client:chatNotify("Nuh-uh")
+        client:ChatPrint("Nuh-uh")
     end
 end)
 

@@ -60,16 +60,6 @@ function LiliaBootstrap(section, message)
     LiliaLog("bootstrap", message, section)
 end
 
-function LiliaPrint(message)
-    LiliaLog("print", message)
-end
-
-function print(...)
-    for _, msg in ipairs({...}) do
-        LiliaPrint(tostring(msg))
-    end
-end
-
 function stripRealmPrefix(name)
     local prefix = name:sub(1, 3)
     return (prefix == "sh_" or prefix == "sv_" or prefix == "cl_") and name:sub(4) or name

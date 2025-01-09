@@ -23,6 +23,6 @@ net.Receive("ChangeSpeakMode", function(_, client)
     if MODULE.TalkRanges[mode] then
         client:setNetVar("VoiceType", mode)
     else
-        client:chatNotify("Invalid voice mode selected.")
+        client:ChatPrint("Invalid voice mode selected.")
     end
 end)

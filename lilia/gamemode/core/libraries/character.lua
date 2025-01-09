@@ -581,7 +581,7 @@ if SERVER then
                 end, function(err)
                     LiliaInformation("Failed to load inventories for " .. tostring(id))
                     LiliaInformation(err)
-                    if IsValid(client) then client:chatNotify("A server error occured while loading your" .. " inventories. Check server log for details.") end
+                    if IsValid(client) then client:ChatPrint("A server error occured while loading your" .. " inventories. Check server log for details.") end
                 end):next(function(inventories)
                     character.vars.inv = inventories
                     lia.char.loaded[id] = character

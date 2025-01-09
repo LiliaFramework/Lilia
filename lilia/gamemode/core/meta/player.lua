@@ -1011,6 +1011,62 @@ else
         end)
     end
 
+    --- Sets a waypoint for the player with an optional logo.
+    -- @realm client
+    -- @string name The name of the waypoint.
+    -- @vector vector The position vector of the waypoint.
+    -- @string [optional] logo The path to the logo image to display at the waypoint.
+    -- @func onReach Function to call when the player reaches the waypoint.
+    -- @usage
+    -- player:setWeighPointWithLogo("Checkpoint", Vector(150, 250, 350), "materials/waypoints/checkpoint_logo.png", function(p)
+    --     print("Player reached the checkpoint.")
+    -- end)
+    function playerMeta:setWaypointWithLogo(name, vector, logo, onReach)
+        if not isstring(name) or not isvector(vector) then return end
+        local logoMaterial
+        if logo and isstring(logo) then
+            logoMaterial = Material(logo, "smooth mips noclamp")
+            if not logoMaterial or logoMaterial:IsError() then
+                logoMaterial = nil -- Clear invalid logo material
+            end
+        end
+
+        if not logoMaterial then
+            print("[ERROR] No valid logo provided or failed to load logo material.")
+            return
+        end
+
+        local waypointID = "Waypoint_WithLogo_" .. tostring(self:SteamID64()) .. "_" .. tostring(math.random(100000, 999999))
+        hook.Add("HUDPaint", waypointID, function()
+            if not IsValid(self) then
+                hook.Remove("HUDPaint", waypointID)
+                return
+            end
+
+            local dist = self:GetPos():Distance(vector)
+            local spos = vector:ToScreen()
+            local howClose = math.Round(dist / 40)
+            if spos.visible then
+                if logoMaterial then
+                    local logoSize = 32
+                    surface.SetDrawColor(255, 255, 255, 255)
+                    surface.SetMaterial(logoMaterial)
+                    surface.DrawTexturedRect(spos.x - logoSize / 2, spos.y - logoSize / 2 - 40, logoSize, logoSize)
+                end
+
+                draw.DrawText(name .. "\n" .. howClose .. " Meters", "WB_Large", spos.x, spos.y - 10, Color(123, 57, 209), TEXT_ALIGN_CENTER)
+            end
+
+            if howClose <= 3 then RunConsoleCommand("waypoint_withlogo_stop_" .. waypointID) end
+        end)
+
+        concommand.Add("waypoint_withlogo_stop_" .. waypointID, function()
+            hook.Remove("HUDPaint", waypointID)
+            concommand.Remove("waypoint_withlogo_stop_" .. waypointID)
+            if onReach and isfunction(onReach) then onReach(self) end
+        end)
+    end
+
     --- Retrieves a value from the local Lilia data.
     -- @realm client
     -- @string key The key for the data.

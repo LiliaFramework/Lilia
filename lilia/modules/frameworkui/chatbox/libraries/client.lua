@@ -10,6 +10,10 @@ function MODULE:InitPostEntity()
     self:createChat()
 end
 
+function MODULE:OnReloaded()
+    RunConsoleCommand("fixchatplz")
+end
+
 function MODULE:PlayerBindPress(_, bind, pressed)
     bind = bind:lower()
     if bind:find("messagemode") and pressed then

@@ -35,16 +35,16 @@ function PANEL:Init()
                 local i = 0
                 local color = lia.config.Color
                 for k, v in SortedPairs(lia.command.list) do
+                    local canUse, _ = lia.command.hasAccess(LocalPlayer(), k)
                     local k2 = "/" .. k
-                    local k = k:lower()
-                    if k2:lower():match(command) then
+                    if k2:lower():match(command) and canUse then
                         local x = lia.util.drawText((v.realCommand and "/" .. v.realCommand or k2) .. "  ", 4, i * 20, color)
                         if k == command and v.syntax then
                             local i2 = 0
                             for argument in v.syntax:gmatch("([%[<][%w_]+[%s][%w_]+[%]>])") do
                                 i2 = i2 + 1
                                 local color = Color(200, 200, 200, 100)
-                                if i2 == (#arguments - 1) then color = color_white end
+                                if i2 == #arguments - 1 then color = color_white end
                                 x = x + lia.util.drawText(argument .. "  ", x, i * 20, color)
                             end
                         end

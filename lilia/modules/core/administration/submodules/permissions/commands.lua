@@ -191,7 +191,7 @@ lia.command.add("dropmoney", {
         if moneyCount >= 3 then
             local admins = lia.util.getAdmins()
             for _, admin in ipairs(admins) do
-                admin:chatNotify("Player " .. client:Nick() .. " attempted to drop more than 3 pieces of money. They might be exploiting!")
+                admin:ChatPrint("Player " .. client:Nick() .. " attempted to drop more than 3 pieces of money. They might be exploiting!")
             end
 
             client:notify("You can't drop more than 3 pieces of money at a time.")
@@ -206,36 +206,6 @@ lia.command.add("dropmoney", {
         client:SetNW2Bool("DropMoneyCooldown", true)
         client:SetNW2Float("DropMoneyCooldownEnd", CurTime() + 5)
         timer.Simple(5, function() if IsValid(client) then client:SetNW2Bool("DropMoneyCooldown", false) end end)
-    end
-})
-
-lia.command.add("entityInfo", {
-    adminOnly = false,
-    onRun = function(client)
-        local entity = client:getTracedEntity()
-        if not IsValid(entity) then
-            client:chatNotify("Invalid Entity!")
-            return
-        end
-
-        local entityClass = entity:GetClass()
-        if entityClass == "worldspawn" then
-            client:chatNotify("Invalid Entity!")
-            return
-        end
-
-        if entity:IsPlayer() then
-            client:chatNotify("You can't use this on humans!")
-            return
-        end
-
-        local entityName = entity:GetName()
-        local entityID = entity:EntIndex()
-        local creator = entity:GetCreator()
-        client:chatNotify("Entity Name: " .. (entityName ~= "" and entityName or "Unnamed"))
-        client:chatNotify("Entity Class: " .. entityClass)
-        client:chatNotify("Entity ID: " .. entityID)
-        client:chatNotify("Entity Creator: " .. (IsValid(creator) and creator:Nick() or "Unknown"))
     end
 })
 
@@ -566,7 +536,7 @@ lia.command.add("checkallmoney", {
     privilege = "Get Character Info",
     onRun = function(client)
         for _, v in pairs(player.GetAll()) do
-            if v:getChar() then client:chatNotify(v:Name() .. " has " .. lia.currency.get(v:getChar():getMoney()) .. "s") end
+            if v:getChar() then client:ChatPrint(v:Name() .. " has " .. lia.currency.get(v:getChar():getMoney()) .. "s") end
         end
     end
 })
@@ -580,9 +550,9 @@ lia.command.add("checkflags", {
         if IsValid(target) and target:getChar() then
             local flags = target:getChar():getFlags()
             if flags and #flags > 0 then
-                client:chatNotify(target:Name() .. " — " .. table.concat(flags, ", "))
+                client:ChatPrint(target:Name() .. " — " .. table.concat(flags, ", "))
             else
-                client:chatNotify(target:Name() .. " has no flags.")
+                client:ChatPrint(target:Name() .. " has no flags.")
             end
         else
             client:notify("Invalid Target!")
@@ -650,9 +620,9 @@ lia.command.add("checkmoney", {
         local target = lia.command.findPlayer(client, arguments[1])
         if target and target:getChar() then
             local money = target:getChar():getMoney()
-            client:chatNotify(target:GetName() .. " has: " .. lia.currency.get(money) .. "s")
+            client:ChatPrint(target:GetName() .. " has: " .. lia.currency.get(money) .. "s")
         else
-            client:chatNotify("Invalid Target")
+            client:ChatPrint("Invalid Target")
         end
     end
 })
@@ -670,7 +640,7 @@ lia.command.add("listbodygroups", {
                     table.insert(bodygroups, {
                         group = i,
                         name = target:GetBodygroupName(i),
-                        range = "0-" .. (target:GetBodygroupCount(i) - 1)
+                        range = "0-" .. target:GetBodygroupCount(i) - 1
                     })
                 end
             end

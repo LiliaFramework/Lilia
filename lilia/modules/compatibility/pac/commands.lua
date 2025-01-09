@@ -26,10 +26,6 @@ lia.command.add("pacdisable", {
     adminonly = false,
     onRun = function(client)
         client:ConCommand("pac_enable 0")
-        if client.chatNotify then
-            client:chatNotify(L("pacdisable_message"))
-        else
-            client:notifyLocalized("pacdisable_message")
-        end
+        client:notifyLocalized("pacdisable_message")
     end
 })
