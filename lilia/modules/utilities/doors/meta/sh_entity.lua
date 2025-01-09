@@ -95,6 +95,7 @@ if SERVER then
     -- @internal
     -- @treturn bool True if the entity is a door, false otherwise.
     function entityMeta:isDoor()
+        if not IsValid(self) then return end
         local class = self:GetClass():lower()
         local doorPrefixes = {"prop_door", "func_door", "func_door_rotating", "door_",}
         for _, prefix in ipairs(doorPrefixes) do
