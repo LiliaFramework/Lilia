@@ -613,13 +613,13 @@ function GM:RegisterPreparedStatements()
 end
 
 function GM:SetupDatabase()
-    local databasePath = "schema/database.lua"
-    local databaseOverrideExists = file.Exists(databasePath, "DATA")
+    local databasePath = engine.ActiveGamemode() .. "/schema/database.lua"
+    local databaseOverrideExists = file.Exists(databasePath, "LUA")
     if databaseOverrideExists then
-        local databaseConfig = file.Read(databasePath, "DATA")
+        local databaseConfig = include(databasePath)
         if databaseConfig then
             lia.db.config = databaseConfig
-            for k, v in pairs(util.JSONToTable(lia.db.config)) do
+            for k, v in pairs(databaseConfig) do
                 lia.db[k] = v
             end
         end
