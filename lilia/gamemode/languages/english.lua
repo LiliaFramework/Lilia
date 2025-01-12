@@ -295,4 +295,7 @@ LANGUAGE = {
     notLookingAtVehicle = "You're not looking at any vehicle!",
     tooFarToOpenTrunk = "You're too far to open the trunk!",
     openingTrunk = "Opening...",
+
+    invertWepSelectScroll = "Invert direction of weapon selection scroll",
+
 }

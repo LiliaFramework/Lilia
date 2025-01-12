@@ -1,156 +1,167 @@
-﻿local NewWeaponSelecter = NewWeaponSelecter or {
-    index = 1,
-    deltaIndex = 1,
-    infoAlpha = 0,
-    alpha = 0,
-    alphaDelta = 0,
-    fadeTime = 0,
-    weapons = {}
-}
-
-local UnhighLightColor = Color(100, 100, 100, 100)
-local isEnabled = true
-local fontName = "NewWeaponSelectFont"
-local function OnIndexChanged(weapon)
-    NewWeaponSelecter.alpha = 1
-    NewWeaponSelecter.fadeTime = CurTime() + 5
-    NewWeaponSelecter.markup = nil
-    if IsValid(weapon) then
-        local source, pitch = hook.Run("WeaponCycleSound")
-        LocalPlayer():EmitSound(source or "common/talk.wav", 50, pitch or 180)
+﻿local pi = math.pi
+MODULE.index = MODULE.index or 1
+MODULE.deltaIndex = MODULE.deltaIndex or MODULE.index
+MODULE.infoAlpha = MODULE.infoAlpha or 0
+MODULE.alpha = MODULE.alpha or 0
+MODULE.alphaDelta = MODULE.alphaDelta or MODULE.alpha
+MODULE.fadeTime = MODULE.fadeTime or 0
+local IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs = IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs
+local RunConsoleCommand, LocalPlayer, math, color_white, surface = RunConsoleCommand, LocalPlayer, math, color_white, surface
+local CVAR_WEPSELECT_INVERT = CreateClientConVar("wepselect_invert", 0, true)
+function MODULE:getWeaponFromIndex(i)
+    local index = 1
+    for k, v in pairs(LocalPlayer():GetWeapons()) do
+        if index == i then return v end
+        index = index + 1
     end
+    return NULL
 end
 
 function MODULE:HUDPaint()
-    local ply = LocalPlayer()
-    if not ply:getChar() then return end
-    if not isEnabled then return end
     local frameTime = FrameTime()
-    NewWeaponSelecter.alphaDelta = Lerp(frameTime * 10, NewWeaponSelecter.alphaDelta, NewWeaponSelecter.alpha)
-    local fraction = NewWeaponSelecter.alphaDelta
-    if fraction > 0.01 then
-        local x, y = 100, ScrH() * 0.4
-        local spacing = ScrH() / 380
-        local radius = 240 * NewWeaponSelecter.alphaDelta
-        local shiftX = ScrW() * 0.02
-        NewWeaponSelecter.deltaIndex = Lerp(frameTime * 12, NewWeaponSelecter.deltaIndex, NewWeaponSelecter.index)
-        local index = NewWeaponSelecter.deltaIndex
-        if not NewWeaponSelecter.weapons[NewWeaponSelecter.index] then NewWeaponSelecter.index = math.max(#NewWeaponSelecter.weapons, 1) end
-        for i = 1, #NewWeaponSelecter.weapons do
-            local weapon = NewWeaponSelecter.weapons[i]
-            if not IsValid(weapon) then
-                table.remove(NewWeaponSelecter.weapons, i)
-                continue
+    local fraction = self.alphaDelta
+    if fraction <= 0.01 and self.alpha == 0 then
+        self.alphaDelta = 0
+        return
+    else
+        self.alphaDelta = Lerp(frameTime * 10, self.alphaDelta, self.alpha)
+    end
+
+    local shiftX = ScrW() * .02
+    local client = LocalPlayer()
+    local weapons = client:GetWeapons()
+    local x, y = ScrW() * 0.05, ScrH() * 0.5
+    local spacing = math.pi * 0.85
+    local radius = 240 * self.alphaDelta
+    self.deltaIndex = Lerp(frameTime * 12, self.deltaIndex, self.index)
+    local index = self.deltaIndex
+    local realIndex = 1
+    for _, v in pairs(weapons) do
+        local theta = (realIndex - index) * 0.1
+        local color = ColorAlpha(realIndex == self.index and lia.config.Color or color_white, (255 - math.abs(theta * 3) * 255) * fraction)
+        local lastY = 0
+        if self.markup and (realIndex == 1 or realIndex < self.index) then
+            local w, h = self.markup:Size()
+            lastY = h * fraction
+            if realIndex == self.index - 1 or realIndex == 1 then
+                self.infoAlpha = Lerp(frameTime * 5, self.infoAlpha, 255)
+                self.markup:Draw(x + 6 + shiftX, y + 30, 0, 0, self.infoAlpha * fraction)
             end
 
-            local theta = (i - index) * 0.1
-            local selectedColor = lia.config and lia.config.Color or Color(155, 20, 121, 100)
-            local color2 = i == NewWeaponSelecter.index and selectedColor or UnhighLightColor
-            color2.a = (color2.a - math.abs(theta * 3) * color2.a) * fraction
-            local color3 = ColorAlpha(Color(255, 255, 255, 255), (255 - math.abs(theta * 3) * 255) * fraction)
-            if i == NewWeaponSelecter.index then color3 = lia.config and lia.config.Color and ColorAlpha(lia.config.Color, (255 - math.abs(theta * 3) * 255) * fraction) or ColorAlpha(Color(155, 20, 121, 100), (255 - math.abs(theta * 3) * 255) * fraction) end
-            local ebatTextKruto = i == NewWeaponSelecter.index and 10 + math.sin(CurTime() * 4) * 5 or 10
-            local lastY = 0
-            if NewWeaponSelecter.markup and (i < NewWeaponSelecter.index or i == 1) then
-                if NewWeaponSelecter.index ~= 1 then
-                    local _, h = NewWeaponSelecter.markup:Size()
-                    lastY = h * fraction
-                end
-
-                if i == 1 or i == NewWeaponSelecter.index - 1 then
-                    NewWeaponSelecter.infoAlpha = Lerp(frameTime * 3, NewWeaponSelecter.infoAlpha, 255)
-                    NewWeaponSelecter.markup:Draw(x + 6 + shiftX, y + 30, 0, 0, NewWeaponSelecter.infoAlpha * fraction)
-                end
-            end
-
-            surface.SetFont(fontName)
-            local weaponName = weapon:GetPrintName():upper()
-            local _, ty = surface.GetTextSize(weaponName)
-            local scale = 1 - math.abs(theta * 2)
-            local matrix = Matrix()
-            matrix:Translate(Vector(shiftX + x + math.cos(theta * spacing + math.pi) * radius + radius, y + lastY + math.sin(theta * spacing + math.pi) * radius - ty / 2, 1))
-            matrix:Scale(Vector(1, 1, 0) * scale)
-            cam.PushModelMatrix(matrix)
-            draw.TextShadow({
-                text = weaponName,
-                font = fontName,
-                pos = {ebatTextKruto, ty / 2 - 1},
-                color = color3,
-                xalign = 0,
-                yalign = 1
-            }, 1, color3.a * 0.575)
-
-            if i > NewWeaponSelecter.index - 4 and i < NewWeaponSelecter.index + 4 then
-                surface.SetTexture(surface.GetTextureID("vgui/gradient-l"))
-                surface.SetDrawColor(color2)
-                surface.DrawTexturedRect(0, 0, 400, ScreenScale(16))
-            end
-
-            cam.PopModelMatrix()
+            if self.index == 1 then lastY = 0 end
         end
 
-        if NewWeaponSelecter.fadeTime < CurTime() and NewWeaponSelecter.alpha > 0 then NewWeaponSelecter.alpha = 0 end
-    elseif #NewWeaponSelecter.weapons > 0 then
-        NewWeaponSelecter.weapons = {}
+        surface.SetFont("liaSubTitleFont")
+        local name = hook.Run("GetWeaponName", v) or v:GetPrintName():upper()
+        local tx, ty = surface.GetTextSize(name)
+        local scale = 1 - math.abs(theta * 2)
+        local matrix = Matrix()
+        matrix:Translate(Vector(shiftX + x + math.cos(theta * spacing + pi) * radius + radius, y + lastY + math.sin(theta * spacing + pi) * radius - ty / 2, 1))
+        matrix:Scale(Vector(1, 1, 0) * scale)
+        cam.PushModelMatrix(matrix)
+        lia.util.drawText(name, 2, ty / 2, color, 0, 1, "liaSubTitleFont")
+        cam.PopModelMatrix()
+        realIndex = realIndex + 1
+    end
+
+    if self.fadeTime < CurTime() and self.alpha > 0 then self.alpha = 0 end
+end
+
+function MODULE:onIndexChanged()
+    self.alpha = 1
+    self.fadeTime = CurTime() + 5
+    local client = LocalPlayer()
+    local weapon
+    local index = 1
+    for k, v in pairs(client:GetWeapons()) do
+        if index == self.index then
+            weapon = v
+            break
+        end
+
+        index = index + 1
+    end
+
+    self.markup = nil
+    self.infoAlpha = 0
+    if IsValid(weapon) then
+        local text = ""
+        for k, v in ipairs({"Author", "Contact", "Purpose", "Instructions"}) do
+            if weapon[v] and weapon[v]:find("%S") then
+                local color = lia.config.Color
+                text = text .. "<font=liaItemBoldFont><color=" .. color.r .. "," .. color.g .. "," .. color.b .. ">" .. L(v) .. "</font></color>\n" .. weapon[v] .. "\n"
+            end
+        end
+
+        if text ~= "" then self.markup = markup.Parse("<font=liaItemDescFont>" .. text, ScrW() * 0.3) end
+        local source, pitch = hook.Run("WeaponCycleSound") or "common/talk.wav"
+        client:EmitSound(source or "common/talk.wav", 45, pitch or 180)
     end
 end
 
-function MODULE:HUDShouldDraw(name)
-    if name == "CHudWeaponSelection" then return false end
+function MODULE:SetupQuickMenu(menu)
+    menu:addCategory(self.name)
+    menu:addCheck(L"invertWepSelectScroll", function(panel, state)
+        if state then
+            RunConsoleCommand("wepselect_invert", "1")
+        else
+            RunConsoleCommand("wepselect_invert", "0")
+        end
+    end, CVAR_WEPSELECT_INVERT:GetBool())
+
+    menu:addSpacer()
 end
 
-function MODULE:PlayerBindPress(ply, bind, pressed)
-    if not ply:getChar() then return end
-    if not isEnabled then return end
+function MODULE:PlayerBindPress(client, bind, pressed)
+    local weapon = client:GetActiveWeapon()
+    local lPly = LocalPlayer()
+    if client:InVehicle() then return end
+    if IsValid(weapon) and weapon:GetClass() == "weapon_physgun" and client:KeyDown(IN_ATTACK) then return end
+    if hook.Run("CanPlayerChooseWeapon") == false then return end
+    if not pressed then return end
     bind = bind:lower()
-    if not pressed or (not bind:find("invprev") and not bind:find("invnext") and not bind:find("slot") and not bind:find("attack")) then return end
-    local currentWeapon = ply:GetActiveWeapon()
-    if IsValid(currentWeapon) and (currentWeapon:GetClass() == "weapon_physgun" and ply:KeyDown(IN_ATTACK)) then return end
-    if IsValid(currentWeapon) and currentWeapon:GetClass() == "gmod_tool" then
-        local tool = ply:GetTool()
-        if tool and tool.Scroll ~= nil then return end
-    end
-
-    NewWeaponSelecter.weapons = {}
-    for _, v in pairs(ply:GetWeapons()) do
-        if IsValid(v) then table.insert(NewWeaponSelecter.weapons, v) end
-    end
-
-    NewWeaponSelecter.index = math.Clamp(NewWeaponSelecter.index, 1, #NewWeaponSelecter.weapons)
-    if bind:find("invprev") then
-        local oldIndex = NewWeaponSelecter.index
-        NewWeaponSelecter.index = math.min(NewWeaponSelecter.index + 1, #NewWeaponSelecter.weapons)
-        if NewWeaponSelecter.alpha == 0 or oldIndex ~= NewWeaponSelecter.index then OnIndexChanged(NewWeaponSelecter.weapons[NewWeaponSelecter.index]) end
+    local total = table.Count(client:GetWeapons())
+    local invprev, invnext = isnumber(bind:find("invprev")), isnumber(bind:find("invnext"))
+    if CVAR_WEPSELECT_INVERT:GetBool() then invprev, invnext = invnext, invprev end
+    if invprev then
+        self.index = self.index - 1
+        if self.index < 1 then self.index = total end
+        self:onIndexChanged()
         return true
-    elseif bind:find("invnext") then
-        local oldIndex = NewWeaponSelecter.index
-        NewWeaponSelecter.index = math.max(NewWeaponSelecter.index - 1, 1)
-        if NewWeaponSelecter.alpha == 0 or oldIndex ~= NewWeaponSelecter.index then OnIndexChanged(NewWeaponSelecter.weapons[NewWeaponSelecter.index]) end
+    elseif invnext then
+        self.index = self.index + 1
+        if self.index > total then self.index = 1 end
+        self:onIndexChanged()
         return true
     elseif bind:find("slot") then
-        local slotNumber = tonumber(bind:match("slot(%d)")) or 1
-        NewWeaponSelecter.index = math.Clamp(slotNumber, 1, #NewWeaponSelecter.weapons)
-        OnIndexChanged(NewWeaponSelecter.weapons[NewWeaponSelecter.index])
+        self.index = math.Clamp(tonumber(bind:match("slot(%d)")) or 1, 1, total)
+        self:onIndexChanged()
         return true
-    elseif bind:find("attack") and NewWeaponSelecter.alpha > 0 then
-        local weapon = NewWeaponSelecter.weapons[NewWeaponSelecter.index]
-        if IsValid(weapon) then
-            input.SelectWeapon(weapon)
-            NewWeaponSelecter.alpha = 0
+    elseif bind:find("attack") and self.alpha > 0 then
+        local weapon = self:getWeaponFromIndex(self.index)
+        if not IsValid(weapon) then
+            self.alpha = 0
+            self.infoAlpha = 0
+            return
         end
+
+        local source, pitch = hook.Run("WeaponSelectSound", weapon) or "common/talk.wav"
+        lPly:EmitSound(source, 45, pitch or 200)
+        lPly:SelectWeapon(weapon:GetClass())
+        self.alpha = 0
+        self.infoAlpha = 0
         return true
     end
 end
 
-function MODULE:Think()
-    local ply = LocalPlayer()
-    if not IsValid(ply) or not ply:Alive() then NewWeaponSelecter.alpha = 0 end
+local meta = FindMetaTable("Player")
+function meta:SelectWeapon(class)
+    if not self:HasWeapon(class) then return end
+    self.doWeaponSwitch = self:GetWeapon(class)
 end
 
-function MODULE:LoadFonts()
-    surface.CreateFont("NewWeaponSelectFont", {
-        font = "Roboto Th",
-        size = ScreenScale(16),
-        weight = 500
-    })
+function MODULE:StartCommand(client, cmd)
+    if not IsValid(client.doWeaponSwitch) then return end
+    cmd:SelectWeapon(client.doWeaponSwitch)
+    if client:GetActiveWeapon() == client.doWeaponSwitch then client.doWeaponSwitch = nil end
 end
