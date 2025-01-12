@@ -7,14 +7,17 @@ lia.command.add("logs", {
         for _, logData in pairs(lia.log.types) do
             local category = logData.category
             if not categorizedLogs[category] then categorizedLogs[category] = {} end
-            local logs = MODULE:ReadLogFiles(category)
+            local logs = MODULE:ReadLogFiles(category, 200)
             for _, log in ipairs(logs) do
                 table.insert(categorizedLogs[category], log)
             end
         end
 
+        local jsonData = util.TableToJSON(categorizedLogs)
+        local compressedData = util.Compress(jsonData)
         net.Start("send_logs")
-        net.WriteTable(categorizedLogs)
+        net.WriteUInt(#compressedData, 32)
+        net.WriteData(compressedData, #compressedData)
         net.Send(client)
     end
 })
