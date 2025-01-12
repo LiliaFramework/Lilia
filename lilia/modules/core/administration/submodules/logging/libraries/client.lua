@@ -1,7 +1,20 @@
-﻿net.Receive("send_logs", function()
-    local categorizedLogs = net.ReadTable()
+﻿-- The code below runs on the client to receive and display the logs.
+net.Receive("send_logs", function()
+    -- Read how many bytes of compressed data there are.
+    local length = net.ReadUInt(32)
+    -- Read the compressed data itself.
+    local compressedData = net.ReadData(length)
+    -- Decompress.
+    local jsonData = util.Decompress(compressedData)
+    if not jsonData then
+        chat.AddText(Color(255, 0, 0), "Failed to decompress log data.")
+        return
+    end
+
+    -- Convert JSON -> Lua table.
+    local categorizedLogs = util.JSONToTable(jsonData)
     if not categorizedLogs then
-        chat.AddText(Color(255, 0, 0), "No logs available.")
+        chat.AddText(Color(255, 0, 0), "Failed to parse log data.")
         return
     end
 
@@ -37,6 +50,7 @@
         end
     end
 
+    -- Automatically select the first category, if it exists.
     local firstCategory = next(categorizedLogs)
     if firstCategory then
         local firstNode = treeNodes[firstCategory]
