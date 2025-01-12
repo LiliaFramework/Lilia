@@ -30,7 +30,7 @@ lia.command.add("playsound", {
     end
 })
 
-lia.command.add("return", {
+lia.command.add("returntodeathpos", {
     adminOnly = true,
     privilege = "Return Players",
     onRun = function(client)
