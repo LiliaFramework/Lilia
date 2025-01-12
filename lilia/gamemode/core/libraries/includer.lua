@@ -46,6 +46,10 @@ FilesToLoad = {
         realm = "server"
     },
     {
+        path = "lilia/gamemode/core/libraries/skin.lua",
+        realm = "client"
+    },
+    {
         path = "lilia/gamemode/core/libraries/color.lua",
         realm = "client"
     },

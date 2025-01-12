@@ -29,7 +29,7 @@ function GM:CalcView(client, origin, angles, fov)
     local view = self.BaseClass:CalcView(client, origin, angles, fov)
     local entity = Entity(client:getLocalVar("ragdoll", 0))
     local ragdoll = client:GetRagdollEntity()
-    if not client:hasValidVehicle() and client:GetViewEntity() == client and (not client:ShouldDrawLocalPlayer() and IsValid(entity) and entity:IsRagdoll()) or (not LocalPlayer():Alive() and IsValid(ragdoll)) then
+    if not client:hasValidVehicle() and client:GetViewEntity() == client and not client:ShouldDrawLocalPlayer() and IsValid(entity) and entity:IsRagdoll() or not LocalPlayer():Alive() and IsValid(ragdoll) then
         local ent = LocalPlayer():Alive() and entity or ragdoll
         local index = ent:LookupAttachment("eyes")
         if index then
@@ -63,7 +63,7 @@ function GM:ItemShowEntityMenu(entity)
     if input.IsShiftDown() then callback("take") end
     for k, v in SortedPairs(itemTable.functions) do
         if k == "combine" then continue end
-        if (hook.Run("CanRunItemAction", itemTable, k) == false or isfunction(v.onCanRun)) and (not v.onCanRun(itemTable)) then continue end
+        if (hook.Run("CanRunItemAction", itemTable, k) == false or isfunction(v.onCanRun)) and not v.onCanRun(itemTable) then continue end
         options[L(v.name or k)] = function()
             local send = true
             if v.onClick then send = v.onClick(itemTable) end
@@ -445,35 +445,35 @@ function GM:LoadLiliaFonts(font, genericFont)
     surface.CreateFont("liaCharTitleFont", {
         font = font,
         weight = 200,
-        size = 70 * (ScrH() / 900) + 10,
+        size = 70 * ScrH() / 900 + 10,
         additive = true
     })
 
     surface.CreateFont("liaCharDescFont", {
         font = font,
         weight = 200,
-        size = 24 * (ScrH() / 900) + 10,
+        size = 24 * ScrH() / 900 + 10,
         additive = true
     })
 
     surface.CreateFont("liaCharSubTitleFont", {
         font = font,
         weight = 200,
-        size = 12 * (ScrH() / 900) + 10,
+        size = 12 * ScrH() / 900 + 10,
         additive = true
     })
 
     surface.CreateFont("liaCharButtonFont", {
         font = font,
         weight = 200,
-        size = 24 * (ScrH() / 900) + 10,
+        size = 24 * ScrH() / 900 + 10,
         additive = true
     })
 
     surface.CreateFont("liaCharSmallButtonFont", {
         font = font,
         weight = 200,
-        size = 22 * (ScrH() / 900) + 10,
+        size = 22 * ScrH() / 900 + 10,
         additive = true
     })
 
@@ -509,4 +509,8 @@ function GM:CharListLoaded()
         timer.Remove("liaWaitUntilPlayerValid")
         hook.Run("LiliaLoaded")
     end)
+end
+
+function GM:ForceDermaSkin()
+    return "lilia"
 end

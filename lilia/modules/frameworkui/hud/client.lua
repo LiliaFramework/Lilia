@@ -34,10 +34,6 @@ function MODULE:HUDPaint()
     end
 end
 
-function MODULE:ForceDermaSkin()
-    return "lilia"
-end
-
 function String_Request(name, onRun, onCancel, okBtnText)
     if not okBtnText or okBtnText == "" or okBtnText == " " then okBtnText = "Ok" end
     local bb = vgui.Create("DPanel")
