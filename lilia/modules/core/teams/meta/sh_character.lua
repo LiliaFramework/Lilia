@@ -111,11 +111,7 @@ if SERVER then
             end
         end
 
-        if not goClass then
-            ErrorNoHaltWithStack("[Lilia] No default class set for faction '" .. team.GetName(client:Team()) .. "'")
-            return
-        end
-
+        if not goClass then return end
         self:joinClass(goClass)
         hook.Run("OnPlayerJoinClass", client, goClass)
     end
