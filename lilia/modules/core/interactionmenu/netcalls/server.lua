@@ -17,15 +17,5 @@ end)
 
 netstream.Hook("PIMRunLocalOption", function(client, name)
     local opt = PIM.SelfOptions[name]
-    if opt then
-        if opt.runServer then
-            opt.onRun(client)
-            lia.log.add(client, "PersonalAction", "Executed Personal Action '%s'.", name)
-        end
-    else
-        lia.log.add(client, "PersonalAction", "Attempted to run non-existent Personal Action '%s'.", name)
-    end
+    if opt and opt.runServer then opt.onRun(client) end
 end)
-
-lia.log.addType("P2PAction", function(client, name, entity) return string.format("[%s] %s ran a P2P Action '%s' on entity '%s'.", client:SteamID(), client:Name(), name, entity) end, "P2P Actions", Color(255, 165, 0))
-lia.log.addType("PersonalAction", function(client, name) return string.format("[%s] %s ran a Personal Action '%s'.", client:SteamID(), client:Name(), name) end, "Personal Actions", Color(255, 140, 0))
