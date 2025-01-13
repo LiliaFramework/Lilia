@@ -33,6 +33,11 @@ lia.flag.list = lia.flag.list or {}
 -- @string desc Description of the flag
 -- @func callback Function to call when the flag is given or taken from a player
 function lia.flag.add(flag, desc, callback)
+    if lia.flag.list[flag] then
+        LiliaInformation("[WARNING] Duplicate flag detected: '" .. flag .. "' with the description " .. desc .. ". The flag was not added.")
+        return
+    end
+
     lia.flag.list[flag] = {
         desc = desc,
         callback = callback
