@@ -295,7 +295,6 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS lia_inventories;
     DROP TABLE IF EXISTS lia_items;
     DROP TABLE IF EXISTS lia_invdata;
-    DROP TABLE IF EXISTS lilia_logs;
 ]], realCallback)
     end
 end
@@ -359,13 +358,6 @@ function lia.db.loadTables()
                 FOREIGN KEY(_invID) REFERENCES lia_inventories(_invID),
                 PRIMARY KEY (_invID, _key)
             );
-
-            CREATE TABLE IF NOT EXISTS lilia_logs (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                category TEXT NOT NULL,
-                log TEXT NOT NULL,
-                time INTEGER NOT NULL
-            );
         ]], done)
     else
         local queries = string.Explode(";", [[
@@ -420,14 +412,6 @@ function lia.db.loadTables()
                 `_value` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
                 FOREIGN KEY (`_invID`) REFERENCES lia_inventories(_invID) ON DELETE CASCADE,
                 PRIMARY KEY (`_invID`, `_key`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lilia_logs` (
-                `id` INT(12) NOT NULL AUTO_INCREMENT,
-                `category` TEXT NOT NULL,
-                `log` TEXT NOT NULL,
-                `time` INT(12) NOT NULL,
-                PRIMARY KEY (`id`)
             );
         ]])
         local i = 1
@@ -529,7 +513,7 @@ end
 -- @func[opt] condition The condition to apply to the update operation.
 -- @realm server
 function lia.db.updateTable(value, callback, dbTable, condition)
-    local query = "UPDATE " .. ("lia_" .. (dbTable or "characters")) .. " SET " .. genUpdateList(value) .. (condition and " WHERE " .. condition or "")
+    local query = "UPDATE " .. "lia_" .. (dbTable or "characters") .. " SET " .. genUpdateList(value) .. (condition and " WHERE " .. condition or "")
     lia.db.query(query, callback)
 end
 
