@@ -1,7 +1,11 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 lia.command.add("restockvendor", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
+    AdminStick = {
+        Name = "Restock Vendor",
+        TargetClass = "lia_vendor"
+    },
     onRun = function(client)
         local target = client:getTracedEntity()
         if IsValid(target) and target:GetClass() == "lia_vendor" then
@@ -60,6 +64,10 @@ lia.command.add("restockvendormoney", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
     syntax = "[number amount]",
+    AdminStick = {
+        Name = "Restock Vendor's Money",
+        TargetClass = "lia_vendor",
+    },
     onRun = function(client, arguments)
         local target = client:getTracedEntity()
         local amount = tonumber(arguments[1])
@@ -81,6 +89,10 @@ lia.command.add("restockvendormoney", {
 lia.command.add("savevendors", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
+    AdminStick = {
+        Name = "Save Vendors",
+        TargetClass = "lia_vendor"
+    },
     onRun = function(client)
         MODULE:SaveData()
         client:notifyLocalized("VendorsDataSaved")

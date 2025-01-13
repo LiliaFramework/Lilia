@@ -2,6 +2,21 @@
     superAdminOnly = true,
     syntax = "[string charname] [string attribname] [number level]",
     privilege = "Manage Attributes",
+    AdminStick = {
+        Name = "Set Attributes",
+        Category = "Character Management",
+        SubCategory = "Attributes",
+        ExtraFields = {
+            ["attribute"] = function()
+                local attributes = {}
+                for k, v in pairs(lia.attribs.list) do
+                    table.insert(attributes, v.name)
+                end
+                return attributes, "combo"
+            end,
+            ["value"] = "text",
+        }
+    },
     onRun = function(client, arguments)
         local attribName = arguments[2]
         if not attribName then return L("invalidArg", 2) end
@@ -25,6 +40,21 @@
 
 lia.command.add("charaddattrib", {
     superAdminOnly = true,
+    AdminStick = {
+        Name = "Add Attributes",
+        Category = "Character Management",
+        SubCategory = "Attributes",
+        ExtraFields = {
+            ["attribute"] = function()
+                local attributes = {}
+                for k, v in pairs(lia.attribs.list) do
+                    table.insert(attributes, k)
+                end
+                return attributes, "combo"
+            end,
+            ["value"] = "text",
+        }
+    },
     syntax = "[string charname] [string attribname] [number level]",
     privilege = "Manage Attributes",
     onRun = function(client, arguments)
