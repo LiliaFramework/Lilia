@@ -7,5 +7,5 @@ local entityMeta = FindMetaTable("Entity")
 -- @realm shared
 -- @treturn boolean True if the entity is persistent, false otherwise.
 function entityMeta:IsLiliaPersistent()
-    return self.IsLeonNPC or self.IsPersistent or table.HasValue(MODULE.PersistingEntities, self:GetClass())
+    return self.IsLeonNPC or self.IsPersistent or MODULE.PersistingEntities[self:GetClass()]
 end

@@ -33,7 +33,7 @@ function GM:PlayerGiveSWEP(client)
 end
 
 function GM:PlayerNoClip(client)
-    return (not client:isStaffOnDuty() and client:hasPrivilege("Staff Permissions - No Clip Outside Staff Character")) or client:IsSuperAdmin() or client:isStaffOnDuty()
+    return not client:isStaffOnDuty() and client:hasPrivilege("Staff Permissions - No Clip Outside Staff Character") or client:IsSuperAdmin() or client:isStaffOnDuty()
 end
 
 function GM:OnPhysgunReload(_, client)
@@ -41,10 +41,20 @@ function GM:OnPhysgunReload(_, client)
 end
 
 function GM:CanTool(client, _, tool)
-    local DisallowedTools = {"rope", "light", "lamp", "dynamite", "physprop", "faceposer", "stacker",}
+    local DisallowedTools = {
+        rope = true,
+        light = true,
+        lamp = true,
+        dynamite = true,
+        physprop = true,
+        faceposer = true,
+        stacker = true,
+    }
+
     local privilege = "Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
-    if table.HasValue(DisallowedTools, tool) and not client:IsSuperAdmin() then return false end
-    if client:IsSuperAdmin() or ((client:isStaffOnDuty() or client:getChar():hasFlags("t")) and client:hasPrivilege(privilege)) then return true end
+    if DisallowedTools[tool] and not client:IsSuperAdmin() then return false end
+    if client:IsSuperAdmin() or (client:isStaffOnDuty() or client:getChar():hasFlags("t")) and client:hasPrivilege(privilege) then return true end
+    return false
 end
 
 function GM:CanProperty(client, property, entity)
@@ -123,20 +133,6 @@ concommand.Add("stopsoundall", function(client)
         end
     else
         client:notify("You must be a Super Admin to forcefully stopsound everyone!")
-    end
-end)
-
-concommand.Add("logger_delete_logs", function(client)
-    if not IsValid(client) then
-        lia.db.query("DELETE FROM `lilia_logs` WHERE time > 0", function(result)
-            if result then
-                LiliaInformation("Logger - All logs with time greater than 0 have been erased")
-            else
-                LiliaInformation("Logger - Failed : " .. sql.LastError())
-            end
-        end)
-    else
-        client:ChatPrint("Nuh-uh")
     end
 end)
 

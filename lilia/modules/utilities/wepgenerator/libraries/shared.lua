@@ -6,18 +6,19 @@ end
 
 function MODULE:RegisterWeapons()
     for _, wep in ipairs(weapons.GetList()) do
-        if string.find(wep.ClassName, "_base") or table.HasValue(self.RegisterWeaponsBlackList, wep.ClassName) or not wep.ClassName then continue end
-        local ITEM = lia.item.register(wep.ClassName, "base_weapons", nil, nil, true)
-        local override = self.WeaponOverrides[wep.ClassName]
-        ITEM.name = override and override.name or wep.PrintName or wep.ClassName
-        ITEM.desc = override and override.desc or "A Weapon"
-        ITEM.model = override and override.model or wep.WorldModel
-        ITEM.class = override and override.class or wep.ClassName
-        ITEM.height = override and override.height or 2
-        ITEM.width = override and override.width or 2
-        ITEM.weaponCategory = override and override.weaponCategory or nil
-        ITEM.RequiredSkillLevels = override and override.RequiredSkillLevels or {}
-        ITEM.category = override and override.category or "Weapons"
-        if ITEM.name ~= wep.ClassName and NotifyWeaponRegister then LiliaInformation("Generated weapon: " .. ITEM.name) end
+        local className = wep.ClassName
+        if not className or className:find("_base") or self.RegisterWeaponsBlackList[className] then continue end
+        local override = self.WeaponOverrides and self.WeaponOverrides[className] or {}
+        local ITEM = lia.item.register(className, "base_weapons", nil, nil, true)
+        ITEM.name = override.name or wep.PrintName or className
+        ITEM.desc = override.desc or "A Weapon"
+        ITEM.model = override.model or wep.WorldModel or "models/props_c17/oildrum001.mdl"
+        ITEM.class = override.class or className
+        ITEM.height = override.height or 2
+        ITEM.width = override.width or 2
+        ITEM.weaponCategory = override.weaponCategory
+        ITEM.RequiredSkillLevels = override.RequiredSkillLevels or {}
+        ITEM.category = override.category or "Weapons"
+        if ITEM.name ~= className and NotifyWeaponRegister then LiliaInformation("Generated weapon: " .. ITEM.name) end
     end
 end

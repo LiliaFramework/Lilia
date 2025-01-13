@@ -22,10 +22,6 @@ function MODULE:PlayerBindPress(_, bind, pressed)
     end
 end
 
-function MODULE:HUDShouldDraw(element)
-    if element == "CHudChat" then return false end
-end
-
 function chat.AddText(...)
     local show = true
     if IsValid(MODULE.panel) then show = MODULE.panel:addText(...) end

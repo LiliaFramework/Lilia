@@ -12,4 +12,13 @@
     },
 }
 
-MODULE.RegisterWeaponsBlackList = {"sf2_tool", "weapon_fists", "weapon_medkit", "gmod_camera", "gmod_tool", "lightning_gun", "lia_hands", "lia_keys",}
+MODULE.RegisterWeaponsBlackList = {
+    sf2_tool = true,
+    weapon_fists = true,
+    weapon_medkit = true,
+    gmod_camera = true,
+    gmod_tool = true,
+    lightning_gun = true,
+    lia_hands = true,
+    lia_keys = true,
+}

@@ -1,4 +1,15 @@
-﻿local Variables = {"disabled", "name", "price", "noSell", "faction", "factions", "class", "hidden", "locked"}
+﻿local Variables = {
+    ["disabled"] = true,
+    ["name"] = true,
+    ["price"] = true,
+    ["noSell"] = true,
+    ["faction"] = true,
+    ["factions"] = true,
+    ["class"] = true,
+    ["hidden"] = true,
+    ["locked"] = true,
+}
+
 local DarkRPVariables = {
     ["DarkRPNonOwnable"] = function(entity) entity:setNetVar("noSell", true) end,
     ["DarkRPTitle"] = function(entity, val) entity:setNetVar("name", val) end,
@@ -12,9 +23,9 @@ end
 function MODULE:copyParentDoor(child)
     local parent = child.liaParent
     if IsValid(parent) then
-        for _, v in ipairs(Variables) do
-            local value = parent:getNetVar(v)
-            if child:getNetVar(v) ~= value then child:setNetVar(v, value) end
+        for var in pairs(Variables) do
+            local parentValue = parent:getNetVar(var)
+            if child:getNetVar(var) ~= parentValue then child:setNetVar(var, parentValue) end
         end
     end
 end
@@ -58,22 +69,21 @@ end
 function MODULE:SaveData()
     local data = {}
     local doors = {}
-    for _, v in ents.Iterator() do
-        if v:isDoor() then doors[v:MapCreationID()] = v end
+    for _, ent in ipairs(ents.GetAll()) do
+        if ent:isDoor() then doors[ent:MapCreationID()] = ent end
     end
 
-    local doorData
-    for k, v in pairs(doors) do
-        doorData = {}
-        for _, v2 in ipairs(Variables) do
-            local value = v:getNetVar(v2)
-            if value then doorData[v2] = v:getNetVar(v2) end
+    for id, door in pairs(doors) do
+        local doorData = {}
+        for var in pairs(Variables) do
+            local value = door:getNetVar(var)
+            if value then doorData[var] = value end
         end
 
-        if v.liaChildren then doorData.children = v.liaChildren end
-        if v.liaClassID then doorData.class = v.liaClassID end
-        if v.liaFactionID then doorData.faction = v.liaFactionID end
-        if table.Count(doorData) > 0 then data[k] = doorData end
+        if door.liaChildren then doorData.children = door.liaChildren end
+        if door.liaClassID then doorData.class = door.liaClassID end
+        if door.liaFactionID then doorData.faction = door.liaFactionID end
+        if next(doorData) then data[id] = doorData end
     end
 
     self:setData(data)

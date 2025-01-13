@@ -5,15 +5,45 @@ MODULE.CharacterSwitchCooldown = true
 MODULE.OnDamageCharacterSwitchCooldownTimer = 15
 MODULE.OnDamageCharacterSwitchCooldown = true
 MODULE.CarRagdoll = true
-MODULE.BlockedCollideEntities = {"lia_item", "lia_money"}
+MODULE.BlockedCollideEntities = {
+    ["lia_item"] = true,
+    ["lia_money"] = true,
+}
+
 MODULE.SwitchCooldownOnAllEntities = true
-MODULE.DuplicatorBlackList = {"lia_storage", "lia_money"}
-MODULE.CanNotPermaProp = {"lia_vendor", "lia_bodygrouper"}
+MODULE.DuplicatorBlackList = {
+    ["lia_storage"] = true,
+    ["lia_money"] = true,
+}
+
+MODULE.CanNotPermaProp = {
+    ["lia_vendor"] = true,
+    ["lia_bodygrouper"] = true,
+}
+
 MODULE.AltsDisabled = false
 MODULE.PassableOnFreeze = false
-MODULE.RemoverBlockedEntities = {"lia_bodygroupcloset", "lia_vendor",}
+MODULE.RemoverBlockedEntities = {
+    ["lia_bodygroupcloset"] = true,
+    ["lia_vendor"] = true,
+}
+
+MODULE.RestrictedEnts = {
+    ["func_button"] = true,
+    ["class C_BaseEntity"] = true,
+    ["func_brush"] = true,
+    ["func_tracktrain"] = true,
+    ["func_door"] = true,
+    ["func_door_rotating"] = true,
+    ["prop_static"] = true,
+    ["prop_physics_override"] = true,
+    ["prop_dynamic"] = true,
+    ["func_movelinear"] = true,
+    ["prop_door_rotating"] = true,
+    ["lia_vendor"] = true,
+}
+
 MODULE.BlackListedProps = {}
-MODULE.RestrictedEnts = {"func_button", "class C_BaseEntity", "func_brush", "func_tracktrain", "func_door", "func_door_rotating", "prop_static", "prop_physics_override", "prop_dynamic", "func_movelinear", "prop_door_rotating", "lia_vendor"}
 MODULE.RestrictedVehicles = {}
 MODULE.PlayerSpawnVehicleDelay = 30
 MODULE.DisableLuaRun = true

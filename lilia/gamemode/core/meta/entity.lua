@@ -52,11 +52,13 @@ end
 --     print("Entity is a simfphys car.")
 -- end
 function entityMeta:isSimfphysCar()
-    local validClasses = {"lvs_base", "gmod_sent_vehicle_fphysics_base", "gmod_sent_vehicle_fphysics_wheel", "prop_vehicle_prisoner_pod"}
-    if not IsValid(self) then return false end
-    local base = self.Base
-    local class = self:GetClass()
-    return table.HasValue(validClasses, class) or self.IsSimfphyscar or self.LVS or table.HasValue(validClasses, base)
+    local validClasses = {
+        ["lvs_base"] = true,
+        ["gmod_sent_vehicle_fphysics_base"] = true,
+        ["gmod_sent_vehicle_fphysics_wheel"] = true,
+        ["prop_vehicle_prisoner_pod"] = true,
+    }
+    return IsValid(self) and validClasses[self:GetClass()] or self.IsSimfphyscar or self.LVS or validClasses[self.Base]
 end
 
 --- Retrieves the drop position for an item associated with the entity.
