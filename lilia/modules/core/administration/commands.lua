@@ -1,4 +1,4 @@
-lia.command.add("adminmode", {
+﻿lia.command.add("adminmode", {
     onRun = function(client)
         if not IsValid(client) then return end
         local steamID = client:SteamID64()

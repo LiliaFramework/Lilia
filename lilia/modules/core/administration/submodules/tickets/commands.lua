@@ -1,4 +1,4 @@
-lia.command.add("plyviewclaims", {
+﻿lia.command.add("plyviewclaims", {
     adminOnly = true,
     syntax = "[string charname]",
     privilege = "View Claims",

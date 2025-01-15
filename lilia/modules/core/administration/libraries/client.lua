@@ -1,4 +1,4 @@
-net.Receive("AdminModeSwapCharacter", function()
+﻿net.Receive("AdminModeSwapCharacter", function()
     local id = net.ReadInt(32)
     assert(isnumber(id), "id must be a number")
     local d = deferred.new()

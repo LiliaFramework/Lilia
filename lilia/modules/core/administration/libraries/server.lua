@@ -1,4 +1,4 @@
-util.AddNetworkString("AdminModeSwapCharacter")
+﻿util.AddNetworkString("AdminModeSwapCharacter")
 util.AddNetworkString("RequestRemoveWarning")
 net.Receive("RequestRemoveWarning", function(_, client)
     if not client:hasPrivilege("Staff Permissions - Can Remove Warnrs") then return end

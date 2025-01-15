@@ -1,5 +1,4 @@
 ﻿local NetworkStrings = {"ViewClaims", "TicketSystem", "TicketSystemClaim", "TicketSystemClose", "TicketClientNotify"}
-
 net.Receive("ViewClaims", function(_, client)
     local sid = net.ReadString()
     net.Start("ViewClaims")
