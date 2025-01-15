@@ -5,11 +5,14 @@
     local otherclient = other and other:getPlayer()
     if not IsValid(otherclient) then return false end
     if character.id == id then return true end
+    local factionID = character:getFaction()
+    local faction = factionID and lia.faction.indices[factionID]
+    if faction and faction.RecognizesGlobally then return true end
     local otherFactionID = other and other:getFaction()
-    local faction = otherFactionID and lia.faction.indices[otherFactionID]
-    if faction then
-        if faction.isGloballyRecognized then return true end
-        if character:getFaction() == otherFactionID and faction.MemberToMemberAutoRecognition then return true end
+    local otherFaction = otherFactionID and lia.faction.indices[otherFactionID]
+    if otherFaction then
+        if otherFaction.isGloballyRecognized then return true end
+        if factionID == otherFactionID and otherFaction.MemberToMemberAutoRecognition then return true end
     end
 
     if client:isStaffOnDuty() or otherclient:isStaffOnDuty() then return true end
