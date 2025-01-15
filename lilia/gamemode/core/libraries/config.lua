@@ -57,7 +57,7 @@ if not ConfigWasInitialized then
         WalkRatio = 0.5,
         AllowExistNames = true,
         GamemodeName = "A Lilia Gamemode",
-        Color = Color(103, 58, 183),
+        Color = Color(37, 116, 108),
         Font = "Arial",
         Language = "english",
         GenericFont = "Segoe UI",
