@@ -69,7 +69,7 @@ end
 function MODULE:SaveData()
     local data = {}
     local doors = {}
-    for _, ent in ipairs(ents.GetAll()) do
+    for _, ent in ents.Iterator() do
         if ent:isDoor() then doors[ent:MapCreationID()] = ent end
     end
 

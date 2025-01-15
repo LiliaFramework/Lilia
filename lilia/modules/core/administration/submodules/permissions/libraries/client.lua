@@ -40,7 +40,7 @@ function MODULE:HUDPaint()
     local sx, sy = ScrW(), ScrH()
     local marginx, marginy = sx * 0.1, sy * 0.1
     local maxDistanceSq = 4096
-    for _, ent in ipairs(ents.GetAll()) do
+    for _, ent in ents.Iterator() do
         if not IsValid(ent) or ent == client then continue end
         local entityType, label
         if ent:IsPlayer() and ESP_Players:GetBool() then

@@ -53,40 +53,6 @@ end
 
 function MODULE:PopulateAdminStick(AdminMenu, target)
     if IsValid(target) and target:isDoor() then
-        AdminMenu:AddOption("Toggle Door Hidden", function()
-            LocalPlayer():ConCommand("say /doortogglehidden")
-            AdminStickIsOpen = false
-        end):SetIcon("icon16/eye.png")
-
-        AdminMenu:AddOption("Toggle Door Ownable", function()
-            LocalPlayer():ConCommand("say /doortoggleownable")
-            AdminStickIsOpen = false
-        end):SetIcon("icon16/house.png")
-
-        AdminMenu:AddOption("Set Door Title", function()
-            Derma_StringRequest("Set Door Title", "Enter the title for this door:", "", function(text)
-                if text and text ~= "" then LocalPlayer():ConCommand('say /doorsettitle "' .. text .. '"') end
-                AdminStickIsOpen = false
-            end)
-        end):SetIcon("icon16/tag.png")
-
-        AdminMenu:AddOption("Toggle Door Enabled", function()
-            LocalPlayer():ConCommand("say /doortoggleenabled")
-            AdminStickIsOpen = false
-        end):SetIcon("icon16/accept.png")
-
-        AdminMenu:AddOption("Toggle Lock Door", function()
-            LocalPlayer():ConCommand("say /doortogglelock")
-            AdminStickIsOpen = false
-        end):SetIcon("icon16/lock.png")
-
-        AdminMenu:AddOption("Set Door Price", function()
-            Derma_StringRequest("Set Door Price", "Enter the price for this door:", "", function(text)
-                if text and tonumber(text) then LocalPlayer():ConCommand("say /doorsetprice " .. tonumber(text)) end
-                AdminStickIsOpen = false
-            end)
-        end):SetIcon("icon16/money.png")
-
         local factionsAssignedRaw = target:getNetVar("factions", "[]")
         local factionsAssigned = util.JSONToTable(factionsAssignedRaw) or {}
         local addFactionMenu = AdminMenu:AddSubMenu("Add Faction to Door")
@@ -115,41 +81,19 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
             AdminMenu:AddOption("No factions assigned to this door"):SetEnabled(false)
         end
 
-        AdminMenu:AddOption("View Door Info", function()
-            LocalPlayer():ConCommand("say /doorinfo")
-            AdminStickIsOpen = false
-        end):SetIcon("icon16/information.png")
-
-        AdminMenu:AddOption("Reset Door Data", function()
-            LocalPlayer():ConCommand("say /doorresetdata")
-            AdminStickIsOpen = false
-        end):SetIcon("icon16/arrow_refresh.png")
-
-        AdminMenu:AddOption("Set Door Parent", function()
-            LocalPlayer():ConCommand("say /doorsetparent")
-            AdminStickIsOpen = false
-        end):SetIcon("icon16/link.png")
-
-        AdminMenu:AddOption("Set Door Child", function()
-            LocalPlayer():ConCommand("say /doorsetchild")
-            AdminStickIsOpen = false
-        end):SetIcon("icon16/link_add.png")
-
-        AdminMenu:AddOption("Remove Child Link", function()
-            LocalPlayer():ConCommand("say /doorremovechild")
-            AdminStickIsOpen = false
-        end):SetIcon("icon16/link_break.png")
-
-        AdminMenu:AddOption("Set Door Class", function()
-            Derma_StringRequest("Set Door Class", "Enter a class name:", "", function(text)
-                if text and text ~= "" then LocalPlayer():ConCommand('say /doorsetclass "' .. text .. '"') end
+        local setClassMenu = AdminMenu:AddSubMenu("Set Door Class")
+        for classID, classData in pairs(lia.class.list) do
+            setClassMenu:AddOption(classData.name, function()
+                LocalPlayer():ConCommand('doorsetclass "' .. classID .. '"')
                 AdminStickIsOpen = false
             end)
-        end):SetIcon("icon16/user_suit.png")
+        end
 
-        AdminMenu:AddOption("Save Doors", function()
-            LocalPlayer():ConCommand("say /savedoors")
-            AdminStickIsOpen = false
-        end):SetIcon("icon16/disk.png")
+        if target:getNetVar("class") then
+            setClassMenu:AddOption("Remove Class", function()
+                LocalPlayer():ConCommand('doorsetclass ""')
+                AdminStickIsOpen = false
+            end)
+        end
     end
 end

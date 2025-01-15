@@ -53,27 +53,28 @@ function MODULE:CanPlayerAccessVendor(client, vendor)
     if client:CanEditVendor() then return true end
     if vendor:isClassAllowed(character:getClass()) then return true end
     if vendor:isFactionAllowed(client:Team()) then return true end
-    if flag and (string.len(flag) == 1) and client:getChar():hasFlags(flag) then return true end
+    if flag and string.len(flag) == 1 and client:getChar():hasFlags(flag) then return true end
 end
 
 function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)
     local item = lia.item.list[itemType]
+    if not item then return false, L("invalidItem") end
     local SteamIDWhitelist = item.SteamIDWhitelist
     local FactionWhitelist = item.FactionWhitelist
     local UserGroupWhitelist = item.UsergroupWhitelist
     local VIPOnly = item.VIPWhitelist
-    local CanBuy = true
     local hasWhitelist = false
-    local errorMessage
-    if not vendor.items[itemType] then return false end
+    local isWhitelisted = false
+    local errorMessage = nil
+    if not vendor.items[itemType] then return false, L("vendorDoesNotHaveItem") end
     local state = vendor:getTradeMode(itemType)
-    if isSellingToVendor and state == VENDOR_SELLONLY then return false end
-    if not isSellingToVendor and state == VENDOR_BUYONLY then return false end
-    if isSellingToVendor and not client:getChar():getInv():hasItem(itemType) then
-        return false
-    elseif not isSellingToVendor then
+    if isSellingToVendor and state == VENDOR_SELLONLY then return false, L("vendorSellOnly") end
+    if not isSellingToVendor and state == VENDOR_BUYONLY then return false, L("vendorBuyOnly") end
+    if isSellingToVendor then
+        if not client:getChar():getInv():hasItem(itemType) then return false, L("playerDoesNotHaveItem") end
+    else
         local stock = vendor:getStock(itemType)
-        if stock and stock <= 0 then return false, "vendorNoStock" end
+        if stock and stock <= 0 then return false, L("vendorNoStock") end
     end
 
     local price = vendor:getPrice(itemType, isSellingToVendor)
@@ -84,43 +85,29 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
         money = client:getChar():getMoney()
     end
 
-    if money and money < price then return false, isSellingToVendor and "vendorNoMoney" or "canNotAfford" end
-    if SteamIDWhitelist and not hasWhitelist then
-        if not table.HasValue(SteamIDWhitelist, client:SteamID()) or client:SteamID() ~= SteamIDWhitelist then
-            CanBuy = false
-            errorMessage = "You are not whitelisted to buy this item!"
-        else
-            hasWhitelist = true
+    if not money or money < price then return false, isSellingToVendor and L("vendorNoMoney") or L("canNotAfford") end
+    if SteamIDWhitelist or FactionWhitelist or UserGroupWhitelist or VIPOnly then
+        hasWhitelist = true
+        if SteamIDWhitelist and table.HasValue(SteamIDWhitelist, client:SteamID()) then isWhitelisted = true end
+        if FactionWhitelist and table.HasValue(FactionWhitelist, client:Team()) then isWhitelisted = true end
+        if UserGroupWhitelist and table.HasValue(UserGroupWhitelist, client:GetUserGroup()) then isWhitelisted = true end
+        if VIPOnly and client:isVIP() then isWhitelisted = true end
+        if hasWhitelist and not isWhitelisted then
+            if SteamIDWhitelist then
+                errorMessage = L("vendorSteamIDWhitelist")
+            elseif FactionWhitelist then
+                errorMessage = L("vendorFactionWhitelist")
+            elseif UserGroupWhitelist then
+                errorMessage = L("vendorUserGroupWhitelist")
+            elseif VIPOnly then
+                errorMessage = L("vendorVIPOnly")
+            else
+                errorMessage = L("vendorNotWhitelisted")
+            end
+            return false, errorMessage
         end
     end
-
-    if FactionWhitelist and not hasWhitelist then
-        if not table.HasValue(FactionWhitelist, client:Team()) or client:Team() ~= FactionWhitelist then
-            CanBuy = false
-            errorMessage = "Your faction is not whitelisted to buy this item!"
-        else
-            hasWhitelist = true
-        end
-    end
-
-    if UserGroupWhitelist and not hasWhitelist then
-        if not table.HasValue(UserGroupWhitelist, client:GetUserGroup()) or client:IsUserGroup(UserGroupWhitelist) then
-            CanBuy = false
-            errorMessage = "Your usergroup is not whitelisted to buy this item!"
-        else
-            hasWhitelist = true
-        end
-    end
-
-    if VIPOnly and not hasWhitelist then
-        if not client:isVIP() then
-            CanBuy = false
-            errorMessage = "This item is meant for VIPs!"
-        else
-            hasWhitelist = true
-        end
-    end
-    return CanBuy, errorMessage, hasWhitelist
+    return true, nil, isWhitelisted
 end
 
 if not VENDOR_INVENTORY_MEASURE then
@@ -143,7 +130,7 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
 
     if client.vendorTransaction and client.vendorTimeout > RealTime() then return end
     client.vendorTransaction = true
-    client.vendorTimeout = RealTime() + .1
+    client.vendorTimeout = RealTime() + 0.1
     local character = client:getChar()
     local price = vendor:getPrice(itemType, isSellingToVendor)
     if isSellingToVendor then
@@ -157,16 +144,16 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
                 to = VENDOR_INVENTORY_MEASURE
             }
 
-            local canTransfer, reason = VENDOR_INVENTORY_MEASURE:canAccess("transfer", context)
+            local canTransfer, transferReason = VENDOR_INVENTORY_MEASURE:canAccess("transfer", context)
             if not canTransfer then
-                client:notifyLocalized(reason or "vendorError")
+                client:notifyLocalized(transferReason or L("vendorError"))
                 client.vendorTransaction = nil
                 return
             end
 
-            local canTransferItem, reason = hook.Run("CanItemBeTransfered", item, inventory, VENDOR_INVENTORY_MEASURE, client)
+            local canTransferItem, itemTransferReason = hook.Run("CanItemBeTransfered", item, inventory, VENDOR_INVENTORY_MEASURE, client)
             if canTransferItem == false then
-                client:notifyLocalized(reason or "vendorError")
+                client:notifyLocalized(itemTransferReason or L("vendorError"))
                 client.vendorTransaction = nil
                 return
             end
@@ -175,12 +162,12 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
             character:giveMoney(price)
             item:remove():next(function() client.vendorTransaction = nil end):catch(function() client.vendorTransaction = nil end)
             vendor:addStock(itemType)
-            client:notify("You sold " .. item:getName() .. " for " .. lia.currency.get(price))
+            client:notify(L("youSoldItem", item:getName(), lia.currency.get(price)))
             hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
         end
     else
         if not character:getInv():doesFitInventory(itemType) then
-            client:notify("You don't have space for this item!")
+            client:notifyLocalized(L("vendorNoInventorySpace"))
             hook.Run("OnCharTradeVendor", client, vendor, nil, isSellingToVendor, character, itemType, true)
             client.vendorTransaction = nil
             return
@@ -190,7 +177,7 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
         character:takeMoney(price)
         vendor:takeStock(itemType)
         character:getInv():add(itemType):next(function(item)
-            client:notify("You bought " .. item:getName() .. " for " .. lia.currency.get(price))
+            client:notify(L("youBoughtItem", item:getName(), lia.currency.get(price)))
             hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
             client.vendorTransaction = nil
         end)

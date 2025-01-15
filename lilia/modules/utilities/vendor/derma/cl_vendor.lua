@@ -37,14 +37,14 @@ function PANEL:Init()
 
     self.currentCategory = nil
     self.meText = vgui.Create("DLabel", self)
-    self.meText:SetText("Your Items")
+    self.meText:SetText(L("yourItems"))
     self.meText:SetFont("liaBigFont")
     self.meText:SetTextColor(color_white)
     self.meText:SetContentAlignment(5)
     self.meText:SizeToContents()
     self.meText:SetPos(self.me.x + self.me:GetWide() / 2 - self.meText:GetWide() / 2, self.me.y - self.meText:GetTall() - 10)
     self.vendorText = vgui.Create("DLabel", self)
-    self.vendorText:SetText("Vendor Items")
+    self.vendorText:SetText(L("vendorItems"))
     self.vendorText:SetFont("liaBigFont")
     self.vendorText:SetTextColor(color_white)
     self.vendorText:SetContentAlignment(5)
@@ -61,7 +61,7 @@ function PANEL:Init()
     self.left.Paint = function()
         local name = liaVendorEnt:getNetVar("name", "Jane Doe")
         local desc = liaVendorEnt:getNetVar("desc", "")
-        if desc == "" then desc = "A Merchant" end
+        if desc == "" then desc = L("vendorNoDescription") end
         local scale = liaVendorEnt:getNetVar("scale", 0.5)
         local money = liaVendorEnt:getMoney() ~= nil and liaVendorEnt:getMoney() or "∞"
         local itemCount = table.Count(self.items[self.vendor])
@@ -73,20 +73,20 @@ function PANEL:Init()
         surface.DrawRect(ScrW() * 0, ScrH() * 0, ScrW() * 0.26, ScrH() * 0.033)
         surface.SetDrawColor(Color(30, 30, 30, 50))
         surface.DrawOutlinedRect(ScrW() * 0, ScrH() * 0, ScrW() * 0.26, ScrH() * 0.033)
-        draw.DrawText("Vendor", "liaMediumFont", ScrW() * 0.005, ScrH() * 0.003, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(L("vendor"), "liaMediumFont", ScrW() * 0.005, ScrH() * 0.003, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
         surface.SetDrawColor(0, 0, 14, 150)
         surface.DrawRect(ScrW() * 0.0115, ScrH() * 0.0575, ScrW() * 0.085, ScrH() * 0.125)
         surface.SetDrawColor(Color(0, 0, 0, 255))
         surface.DrawOutlinedRect(ScrW() * 0.0115, ScrH() * 0.0575, ScrW() * 0.085, ScrH() * 0.125)
         draw.DrawText(name, "liaSmallFont", ScrW() * 0.1, ScrH() * 0.06, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText("Description:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(L("vendorDescription"), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
         draw.DrawText(desc, "liaSmallFont", ScrW() * 0.2, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
-        draw.DrawText("Money:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(L("money"), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
         draw.DrawText(money, "liaSmallFont", ScrW() * 0.2, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
-        draw.DrawText("Sell Scale:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.132, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(L("vendorSellScale"), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.132, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
         draw.DrawText(math.ceil(scale * 100) .. "%", "liaSmallFont", ScrW() * 0.2, ScrH() * 0.132, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
-        draw.DrawText("Item Count:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(itemCount, "liaSmallFont", ScrW() * 0.2, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText(L("itemCount"), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(itemCount .. " " .. (tonumber(itemCount) > 1 and "Items" or "Item"), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
     end
 
     self.right = vgui.Create("DFrame", self)
@@ -102,25 +102,22 @@ function PANEL:Init()
         surface.SetDrawColor(0, 0, 14, 150)
         surface.DrawRect(ScrW() * 0, ScrH() * 0, ScrW() * 0.26, ScrH() * 0.033)
         surface.DrawOutlinedRect(ScrW() * 0, ScrH() * 0, ScrW() * 0.26, ScrH() * 0.033)
-        surface.SetDrawColor(0, 0, 14, 150)
-        surface.DrawRect(ScrW() * 0.0115, ScrH() * 0.0575, ScrW() * 0.085, ScrH() * 0.125)
-        surface.SetDrawColor(Color(0, 0, 0, 255))
-        draw.DrawText("Character", "liaMediumFont", ScrW() * 0.005, ScrH() * 0.003, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(L("character"), "liaMediumFont", ScrW() * 0.005, ScrH() * 0.003, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
         draw.DrawText(client:getChar():getName(), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.06, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText("Faction:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(L("faction"), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
         draw.DrawText(team.GetName(client:Team()), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
-        draw.DrawText("Class:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(client:getChar():getClass() or "None", "liaSmallFont", ScrW() * 0.2, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
-        draw.DrawText("Money:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.132, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(L("class"), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(lia.class.list[client:getChar():getClass()] and lia.class.list[client:getChar():getClass()].name or "None", "liaSmallFont", ScrW() * 0.2, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText(L("money"), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.132, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
         draw.DrawText(lia.currency.get(client:getChar():getMoney()), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.132, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
-        draw.DrawText("Item Count:", "liaSmallFont", ScrW() * 0.1, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(client:getChar():getInv():getItemCount() .. " " .. (client:getChar():getInv():getItemCount() > 1 and "Items" or "Item"), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText(L("itemCount"), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(client:getChar():getInv():getItemCount() .. " " .. (tonumber(client:getChar():getInv():getItemCount()) > 1 and "Items" or "Item"), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
     end
 
     self.leaveButton = vgui.Create("DButton", self.right)
     self.leaveButton:SetSize(ScrW() * 0.15, ScrH() * 0.05)
-    self.leaveButton:SetPos(self.right:GetWide() - (ScrW() * 0.17), self.right:GetTall() - (ScrH() * 0.07))
-    self.leaveButton:SetText("Leave")
+    self.leaveButton:SetPos(self.right:GetWide() - ScrW() * 0.17, self.right:GetTall() - ScrH() * 0.07)
+    self.leaveButton:SetText(L("leave"))
     self.leaveButton:SetFont("liaMediumFont")
     self.leaveButton:SetTextColor(Color(255, 255, 255, 210))
     self.leaveButton.DoClick = function() lia.gui.vendor:Remove() end
@@ -134,8 +131,8 @@ function PANEL:Init()
 
     self.leaveButton = vgui.Create("DButton", self.right)
     self.leaveButton:SetSize(w * 0.15, h * 0.05)
-    self.leaveButton:SetPos(self.right:GetWide() - (w * 0.17), self.right:GetTall() - (h * 0.07))
-    self.leaveButton:SetText("Leave")
+    self.leaveButton:SetPos(self.right:GetWide() - w * 0.17, self.right:GetTall() - h * 0.07)
+    self.leaveButton:SetText(L("leave"))
     self.leaveButton:SetFont("liaMediumFont")
     self.leaveButton:SetTextColor(Color(255, 255, 255, 210))
     self.leaveButton.DoClick = function() lia.gui.vendor:Remove() end
@@ -146,7 +143,7 @@ function PANEL:Init()
         self.editor = self.right:Add("DButton")
         self.editor:SetSize(leaveW, leaveH)
         self.editor:SetPos(leaveX, leaveY - leaveH - 5)
-        self.editor:SetText("Editor")
+        self.editor:SetText(L("editorButton"))
         self.editor:SetFont("liaMediumFont")
         self.editor:SetTextColor(Color(255, 255, 255, 210))
         self.editor.DoClick = function() vgui.Create("VendorEditor"):SetZPos(99) end
@@ -154,16 +151,16 @@ function PANEL:Init()
         self.categoryToggle = self.right:Add("DButton")
         self.categoryToggle:SetSize(leaveW, leaveH)
         self.categoryToggle:SetPos(leaveX, leaveY - 2 * leaveH - 10)
-        self.categoryToggle:SetText("Show Categories")
+        self.categoryToggle:SetText(L("showCategories"))
         self.categoryToggle:SetFont("liaMediumFont")
         self.categoryToggle:SetTextColor(Color(255, 255, 255, 210))
         self.categoryToggle.DoClick = function(button)
             if self.categoryList:IsVisible() then
                 self.categoryList:SetVisible(false)
-                button:SetText("Show Categories")
+                button:SetText(L("showCategories"))
             else
                 self.categoryList:SetVisible(true)
-                button:SetText("Hide Categories")
+                button:SetText(L("hideCategories"))
             end
         end
 
@@ -172,16 +169,16 @@ function PANEL:Init()
         self.categoryToggle = self.right:Add("DButton")
         self.categoryToggle:SetSize(leaveW, leaveH)
         self.categoryToggle:SetPos(leaveX, leaveY - leaveH - 5)
-        self.categoryToggle:SetText("Hide Categories")
+        self.categoryToggle:SetText(L("hideCategories"))
         self.categoryToggle:SetFont("liaMediumFont")
         self.categoryToggle:SetTextColor(Color(255, 255, 255, 210))
         self.categoryToggle.DoClick = function(button)
             if self.categoryList:IsVisible() then
                 self.categoryList:SetVisible(false)
-                button:SetText("Show Categories")
+                button:SetText(L("showCategories"))
             else
                 self.categoryList:SetVisible(true)
-                button:SetText("Hide Categories")
+                button:SetText(L("hideCategories"))
             end
         end
 
@@ -279,8 +276,8 @@ function PANEL:initializeItems()
 
         local mode = liaVendorEnt:getTradeMode(itemType)
         if not mode then continue end
-        if mode ~= VENDOR_SELLONLY then self:updateItem(itemType, self.me):setIsSelling(true) end
-        if mode ~= VENDOR_BUYONLY then self:updateItem(itemType, self.vendor) end
+        if mode ~= VENDOR_SELLONLY then self:updateItem(itemType, self.vendor) end
+        if mode ~= VENDOR_BUYONLY then self:updateItem(itemType, self.me):setIsSelling(true) end
     end
 end
 
@@ -378,14 +375,14 @@ function PANEL:createCategoryList()
     local maxHeight = ScrH() * 0.9
     if totalHeight > maxHeight then totalHeight = maxHeight end
     self.categoryList:SetTall(totalHeight)
-    local xPos = self.categoryList:GetWide() - (ScrW() * 0.11)
-    local yPos = ScrH() - totalHeight - (ScrH() * 0.05)
+    local xPos = self.categoryList:GetWide() - ScrW() * 0.11
+    local yPos = ScrH() - totalHeight - ScrH() * 0.05
     if yPos < 0 then yPos = 0 end
     self.categoryList:SetPos(xPos, yPos)
     local allButton = self.categoryList:Add("DButton")
     allButton:Dock(TOP)
     allButton:DockMargin(5, 25, 5, 0)
-    allButton:SetText("Show All")
+    allButton:SetText(L("vendorShowAll"))
     allButton:SetFont("liaBigFont")
     allButton:SetTextColor(Color(255, 255, 255))
     allButton:SetTall(buttonHeight)

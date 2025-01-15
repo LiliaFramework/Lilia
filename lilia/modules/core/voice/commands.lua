@@ -3,6 +3,12 @@ lia.command.add("charvoicetoggle", {
     adminOnly = true,
     privilege = "Toggle Voice Ban Character",
     syntax = "[string name]",
+    AdminStick = {
+        Name = "Toggle Voice",
+        Category = "Moderation Tools",
+        SubCategory = "Miscellaneous",
+        Icon = "icon16/sound_mute.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target == client then

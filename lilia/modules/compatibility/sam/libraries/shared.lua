@@ -22,5 +22,3 @@ function sam.player.send_message(client, msg, tbl)
         end
     end
 end
-
-hook.Remove("PlayerSay", "SAM.Chat.Asay")

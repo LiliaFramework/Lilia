@@ -82,7 +82,7 @@ function MODULE:CreateMenuButtons(tabs)
                 progressBar:SetSize(barWidth, 20)
                 progressBar.Paint = function(_, w, h)
                     draw.RoundedBox(10, 0, 0, w, h, Color(20, 20, 20, 180))
-                    local fillWidth = math.Clamp(w * (progress / 100), 0, w)
+                    local fillWidth = math.Clamp(w * progress / 100, 0, w)
                     draw.RoundedBox(10, 0, 0, fillWidth, h, Color(0, 200, 0, 250))
                     surface.SetDrawColor(100, 100, 100, 200)
                     surface.DrawOutlinedRect(0, 0, w, h)
@@ -102,7 +102,7 @@ function MODULE:CreateMenuButtons(tabs)
                 for attrKey, attrData in SortedPairsByMemberValue(lia.attribs.list, "name") do
                     local currentValue = client:getChar():getAttrib(attrKey, 0) or 0
                     local maxValue = hook.Run("GetAttributeMax", client, attrKey) or 100
-                    local progress = math.Round((currentValue / maxValue) * 100, 1)
+                    local progress = math.Round(currentValue / maxValue * 100, 1)
                     addAttributeLine(attrData.name, currentValue, maxValue, progress)
                 end
             end

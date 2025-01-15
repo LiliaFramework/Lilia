@@ -141,7 +141,7 @@ net.Receive("liaItemDelete", function()
 end)
 
 netstream.Hook("charSet", function(key, value, id)
-    id = id or (LocalPlayer():getChar() and LocalPlayer():getChar().id)
+    id = id or LocalPlayer():getChar() and LocalPlayer():getChar().id
     local character = lia.char.loaded[id]
     if character then
         local oldValue = character.vars[key]
@@ -151,7 +151,7 @@ netstream.Hook("charSet", function(key, value, id)
 end)
 
 netstream.Hook("charVar", function(key, value, id)
-    id = id or (LocalPlayer():getChar() and LocalPlayer():getChar().id)
+    id = id or LocalPlayer():getChar() and LocalPlayer():getChar().id
     local character = lia.char.loaded[id]
     if character then
         local oldVar = character:getVar()[key]
@@ -251,12 +251,11 @@ net.Receive("OpenInvMenu", function()
 end)
 
 net.Receive("CreateTableUI", function()
-    local title = net.ReadString()
-    local columns = net.ReadTable()
-    local data = net.ReadTable()
-    local frameWidth = net.ReadUInt(16)
-    local frameHeight = net.ReadUInt(16)
-    lia.util.CreateTableUI(title, columns, data, frameWidth, frameHeight)
+    local dataSize = net.ReadUInt(32)
+    local compressedData = net.ReadData(dataSize)
+    local jsonData = util.Decompress(compressedData)
+    local data = util.JSONToTable(jsonData)
+    lia.util.CreateTableUI(data.title, data.columns, data.data, data.options, data.characterID)
 end)
 
 net.Receive("OpenVGUI", function()
@@ -423,7 +422,7 @@ net.Receive("BinaryQuestionRequest", function()
             notice.opt1.left = true
             styleOpt(notice.opt1)
             function notice.opt1:keyThink()
-                if input.IsKeyDown(KEY_F8) and (CurTime() - notice.lastKey) >= 0.5 then
+                if input.IsKeyDown(KEY_F8) and CurTime() - notice.lastKey >= 0.5 then
                     self:ColorTo(Color(24, 215, 37), 0.2, 0)
                     notice.respondToKeys = false
                     net.Start("BinaryQuestionRequest")
@@ -446,7 +445,7 @@ net.Receive("BinaryQuestionRequest", function()
             notice.opt2:SetTextColor(color_white)
             styleOpt(notice.opt2)
             function notice.opt2:keyThink()
-                if input.IsKeyDown(KEY_F9) and (CurTime() - notice.lastKey) >= 0.5 then
+                if input.IsKeyDown(KEY_F9) and CurTime() - notice.lastKey >= 0.5 then
                     self:ColorTo(Color(24, 215, 37), 0.2, 0)
                     notice.respondToKeys = false
                     net.Start("BinaryQuestionRequest")

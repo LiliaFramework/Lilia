@@ -1,9 +1,8 @@
-local MODULE = MODULE
 lia.command.add("restockvendor", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
     AdminStick = {
-        Name = "Restock Vendor",
+        Name = "Restock Selected Vendor",
         TargetClass = "lia_vendor"
     },
     onRun = function(client)
@@ -44,6 +43,13 @@ lia.command.add("resetallvendormoney", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
     syntax = "[number amount]",
+    AdminStick = {
+        Name = "Reset Money for All Vendors",
+        TargetClass = "lia_vendor",
+        ExtraFields = {
+            ["Amount"] = "text",
+        }
+    },
     onRun = function(client, arguments)
         local amount = tonumber(arguments[1])
         if not amount or amount < 0 then return client:notifyLocalized("InvalidAmount") end
@@ -56,7 +62,8 @@ lia.command.add("resetallvendormoney", {
             end
         end
 
-        client:notifyLocalized("AllVendorsMoneyReset", amount, count)
+        client:notifyLocalized("AllVendorsMoneyReset", lia.currency.get(amount), count)
+        lia.log.add(client, "resetallvendormoney", amount, count)
     end
 })
 
@@ -65,8 +72,11 @@ lia.command.add("restockvendormoney", {
     superAdminOnly = true,
     syntax = "[number amount]",
     AdminStick = {
-        Name = "Restock Vendor's Money",
+        Name = "Restock Money for Selected Vendor",
         TargetClass = "lia_vendor",
+        ExtraFields = {
+            ["Amount"] = "text",
+        }
     },
     onRun = function(client, arguments)
         local target = client:getTracedEntity()
@@ -75,7 +85,7 @@ lia.command.add("restockvendormoney", {
         if IsValid(target) and target:GetClass() == "lia_vendor" then
             if target.money ~= nil then
                 target.money = amount
-                client:notifyLocalized("VendorMoneyRestocked", amount)
+                client:notifyLocalized("VendorMoneyRestocked", lia.currency.get(amount))
                 lia.log.add(client, "restockvendormoney", target, amount)
             else
                 client:notifyLocalized("VendorNoMoneyVariable")
@@ -89,10 +99,6 @@ lia.command.add("restockvendormoney", {
 lia.command.add("savevendors", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
-    AdminStick = {
-        Name = "Save Vendors",
-        TargetClass = "lia_vendor"
-    },
     onRun = function(client)
         MODULE:SaveData()
         client:notifyLocalized("VendorsDataSaved")

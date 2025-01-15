@@ -63,9 +63,10 @@ function MODULE:PlayerDeath(client, _, attacker)
         end
     end
 
-    client:SetDeathTimer()
+    client:SetNW2Bool("IsDeadRestricted", true)
+    client:SetDSP(30, false)
     character:setData("pos", nil)
-    if (not attacker:IsPlayer() and self.LoseDropItemsonDeathNPC) or (self.LoseDropItemsonDeathWorld and attacker:IsWorld()) then self:RemovedDropOnDeathItems(client) end
+    if not attacker:IsPlayer() and self.LoseDropItemsonDeathNPC or self.LoseDropItemsonDeathWorld and attacker:IsWorld() then self:RemovedDropOnDeathItems(client) end
     character:setData("deathPos", client:GetPos())
 end
 
@@ -79,7 +80,7 @@ function MODULE:RemovedDropOnDeathItems(client)
     client.carryWeapons = {}
     client.LostItems = {}
     for _, item in ipairs(items) do
-        if (item.isWeapon and item.DropOnDeath and item:getData("equip", false)) or (not item.isWeapon and item.DropOnDeath) then
+        if item.isWeapon and item.DropOnDeath and item:getData("equip", false) or not item.isWeapon and item.DropOnDeath then
             table.insert(client.LostItems, {
                 name = item.name,
                 id = item.id
@@ -106,4 +107,7 @@ function MODULE:PlayerSpawn(client)
     else
         client:GodDisable()
     end
+
+    client:SetNW2Bool("IsDeadRestricted", false)
+    client:SetDSP(0, false)
 end

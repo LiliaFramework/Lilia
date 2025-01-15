@@ -77,7 +77,7 @@ end
 function lia.util.findPlayerEntities(client, class)
     local items = {}
     for _, entity in pairs(ents.GetAll()) do
-        if (not class or entity:GetClass() == class) and (entity:GetCreator() == client or (entity.client and (entity.client == client))) then table.insert(items, entity) end
+        if (not class or entity:GetClass() == class) and (entity:GetCreator() == client or entity.client and entity.client == client) then table.insert(items, entity) end
     end
     return items
 end
@@ -190,7 +190,7 @@ function lia.util.formatStringNamed(format, ...)
     local i = 0
     local result = format:gsub("{(%w-)}", function(word)
         i = i + 1
-        return tostring((bArray and input[i] or input[word]) or word)
+        return tostring(bArray and input[i] or input[word] or word)
     end)
     return result
 end
@@ -213,28 +213,22 @@ if SERVER then
     -- @realm server
     -- @client client The player to whom the UI should be sent.
     -- @string title The title of the table UI.
-    -- @tab columns A table defining the columns in the table. Each entry should be a table with fields `name`, `field`, and `width`. The `name` is the column header, `field` is the key used to retrieve the value from the row data, and `width` is the width of the column in pixels.
-    -- @tab data A table containing rows of data. Each row is a table with keys corresponding to the `field` values defined in the `columns` table. Each key should have a value to be displayed in the respective column.
-    -- @int[opt] frameWidth The width of the frame. Default is 900.
-    -- @int[opt] frameHeight The height of the frame. Default is 600.
-    -- @usage
-    -- local columns = {
-    --     {name = "ID", field = "id", width = 50},
-    --     {name = "Name", field = "name", width = 150},
-    -- }
-    -- local data = {
-    --     {id = 1, name = "Player1"},
-    --     {id = 2, name = "Player2"}
-    -- }
-    -- lia.util.CreateTableUI(player, "Player List", columns, data)
-    function lia.util.CreateTableUI(client, title, columns, data, frameWidth, frameHeight)
+    -- @tab columns A table defining the columns in the table.
+    -- @tab data A table containing rows of data.
+    function lia.util.CreateTableUI(client, title, columns, data, options, characterID)
         if not IsValid(client) or not client:IsPlayer() then return end
+        local tableData = util.Compress(util.TableToJSON({
+            title = title or "Table List",
+            columns = columns,
+            data = data,
+            options = options or {},
+            characterID = characterID
+        }))
+
+        if not tableData then return end
         net.Start("CreateTableUI")
-        net.WriteString(title or "Table List")
-        net.WriteTable(columns)
-        net.WriteTable(data)
-        net.WriteUInt(frameWidth or 900, 16)
-        net.WriteUInt(frameHeight or 600, 16)
+        net.WriteUInt(#tableData, 32)
+        net.WriteData(tableData, #tableData)
         net.Send(client)
     end
 
@@ -346,29 +340,29 @@ else
             },
             {
                 x = x + w,
-                y = y + (h * rectH)
+                y = y + h * rectH
             },
             {
-                x = x + (w / 2) + (w * triW),
-                y = y + (h * rectH)
+                x = x + w / 2 + w * triW,
+                y = y + h * rectH
             },
             {
-                x = x + (w / 2),
+                x = x + w / 2,
                 y = y + h
             },
             {
-                x = x + (w / 2) - (w * triW),
-                y = y + (h * rectH)
+                x = x + w / 2 - w * triW,
+                y = y + h * rectH
             },
             {
                 x = x,
-                y = y + (h * rectH)
+                y = y + h * rectH
             }
         }
 
         surface.SetDrawColor(outlineCol)
         surface.DrawPoly(verts)
-        draw.SimpleText(text, font, x + (w / 2), y + (h / 2), textCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(text, font, x + w / 2, y + h / 2, textCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     --- Draws some text with a shadow.
@@ -390,7 +384,7 @@ else
             color = color,
             xalign = alignX or 0,
             yalign = alignY or 0
-        }, 1, alpha or (color.a * 0.575))
+        }, 1, alpha or color.a * 0.575)
     end
 
     --- Draws a textured rectangle with a specified material and color.
@@ -420,7 +414,7 @@ else
     -- @param[opt] g Argument 7
     -- @return The result of the skin function call
     function lia.util.skinFunc(name, panel, a, b, c, d, e, f, g)
-        local skin = (ispanel(panel) and IsValid(panel)) and panel:GetSkin() or derma.GetDefaultSkin()
+        local skin = ispanel(panel) and IsValid(panel) and panel:GetSkin() or derma.GetDefaultSkin()
         if not skin then return end
         local func = skin[name]
         if not func then return end
@@ -568,7 +562,7 @@ else
                 notice.opt1.left = true
                 styleOpt(notice.opt1)
                 function notice.opt1:keyThink()
-                    if input.IsKeyDown(KEY_F8) and (CurTime() - notice.lastKey) >= 0.5 then
+                    if input.IsKeyDown(KEY_F8) and CurTime() - notice.lastKey >= 0.5 then
                         self:ColorTo(Color(24, 215, 37), 0.2, 0)
                         notice.respondToKeys = false
                         callback(1, notice)
@@ -589,7 +583,7 @@ else
                 notice.opt2:SetTextColor(color_white)
                 styleOpt(notice.opt2)
                 function notice.opt2:keyThink()
-                    if input.IsKeyDown(KEY_F9) and (CurTime() - notice.lastKey) >= 0.5 then
+                    if input.IsKeyDown(KEY_F9) and CurTime() - notice.lastKey >= 0.5 then
                         self:ColorTo(Color(24, 215, 37), 0.2, 0)
                         notice.respondToKeys = false
                         callback(2, notice)
@@ -619,27 +613,10 @@ else
         return notice
     end
 
-    --- Displays a table UI on the client.
-    -- @realm client
-    -- @string title The title of the table UI.
-    -- @tab columns A table defining the columns in the table. Each entry should be a table with fields `name` and `width`. The `name` is the column header, and `width` is the width of the column in pixels.
-    -- @tab data A table containing rows of data. Each row is a table with keys corresponding to the `field` values defined in the `columns` table. Each key should have a value to be displayed in the respective column.
-    -- @int[opt] frameWidth The width of the frame. Default is 900.
-    -- @int[opt] frameHeight The height of the frame. Default is 600.
-    -- @usage
-    -- local columns = {
-    --     {name = "ID", field = "id", width = 50},
-    --     {name = "Name", field = "name", width = 150},
-    -- }
-    -- local data = {
-    --     {id = 1, name = "Player1"},
-    --     {id = 2, name = "Player2"}
-    -- }
-    -- lia.util.CreateTableUI("Player List", columns, data)
-    function lia.util.CreateTableUI(title, columns, data, frameWidth, frameHeight)
+    function lia.util.CreateTableUI(title, columns, data, options, charID)
         local frame = vgui.Create("DFrame")
         frame:SetTitle(title or "Table List")
-        frame:SetSize(frameWidth or 900, frameHeight or 600)
+        frame:SetSize(900, 600)
         frame:Center()
         frame:MakePopup()
         local listView = vgui.Create("DListView", frame)
@@ -654,7 +631,7 @@ else
             end
         end
 
-        local availableWidth = frame:GetWide() - totalFixedWidth - 20
+        local availableWidth = frame:GetWide() - totalFixedWidth
         local dynamicWidth = dynamicColumns > 0 and math.max(availableWidth / dynamicColumns, 50) or 0
         for _, colInfo in ipairs(columns) do
             local columnName = colInfo.name or "N/A"
@@ -669,7 +646,113 @@ else
                 table.insert(lineData, row[fieldName] or "N/A")
             end
 
-            listView:AddLine(unpack(lineData))
+            local line = listView:AddLine(unpack(lineData))
+            line.rowData = row
+        end
+
+        listView.OnRowRightClick = function(_, _, line)
+            if not IsValid(line) or not line.rowData then return end
+            local rowData = line.rowData
+            local menu = DermaMenu()
+            for _, option in ipairs(options or {}) do
+                menu:AddOption(option.name, function()
+                    if not option.net then return end
+                    if option.ExtraFields then
+                        local inputPanel = vgui.Create("DFrame")
+                        inputPanel:SetTitle(option.name .. " Options")
+                        inputPanel:SetSize(300, 300 + #table.GetKeys(option.ExtraFields) * 35)
+                        inputPanel:Center()
+                        inputPanel:MakePopup()
+                        local form = vgui.Create("DForm", inputPanel)
+                        form:Dock(FILL)
+                        form:SetName("")
+                        form.Paint = function() end
+                        local inputs = {}
+                        for fName, fType in pairs(option.ExtraFields) do
+                            local label = vgui.Create("DLabel", form)
+                            label:SetText(fName)
+                            label:Dock(TOP)
+                            label:DockMargin(5, 10, 5, 0)
+                            form:AddItem(label)
+                            if isstring(fType) and fType == "text" then
+                                local entry = vgui.Create("DTextEntry", form)
+                                entry:Dock(TOP)
+                                entry:DockMargin(5, 5, 5, 0)
+                                entry:SetPlaceholderText("Type " .. fName)
+                                form:AddItem(entry)
+                                inputs[fName] = {
+                                    panel = entry,
+                                    ftype = "text"
+                                }
+                            elseif isstring(fType) and fType == "combo" then
+                                local combo = vgui.Create("DComboBox", form)
+                                combo:Dock(TOP)
+                                combo:DockMargin(5, 5, 5, 0)
+                                combo:SetValue("Select " .. fName)
+                                form:AddItem(combo)
+                                inputs[fName] = {
+                                    panel = combo,
+                                    ftype = "combo"
+                                }
+                            elseif istable(fType) then
+                                local combo = vgui.Create("DComboBox", form)
+                                combo:Dock(TOP)
+                                combo:DockMargin(5, 5, 5, 0)
+                                combo:SetValue("Select " .. fName)
+                                for _, choice in ipairs(fType) do
+                                    combo:AddChoice(choice)
+                                end
+
+                                form:AddItem(combo)
+                                inputs[fName] = {
+                                    panel = combo,
+                                    ftype = "combo"
+                                }
+                            end
+                        end
+
+                        local submitButton = vgui.Create("DButton", form)
+                        submitButton:SetText("Submit")
+                        submitButton:Dock(TOP)
+                        submitButton:DockMargin(5, 10, 5, 0)
+                        form:AddItem(submitButton)
+                        submitButton.DoClick = function()
+                            local values = {}
+                            for fName, info in pairs(inputs) do
+                                if not IsValid(info.panel) then continue end
+                                if info.ftype == "text" then
+                                    values[fName] = info.panel:GetValue() or ""
+                                elseif info.ftype == "combo" then
+                                    values[fName] = info.panel:GetSelected() or ""
+                                end
+                            end
+
+                            net.Start(option.net)
+                            net.WriteInt(charID, 32)
+                            net.WriteTable(rowData)
+                            for fName, fVal in pairs(values) do
+                                if isnumber(fVal) then
+                                    net.WriteInt(fVal, 32)
+                                else
+                                    net.WriteString(fVal)
+                                end
+                            end
+
+                            net.SendToServer()
+                            inputPanel:Close()
+                            frame:Remove()
+                        end
+                    else
+                        net.Start(option.net)
+                        net.WriteInt(charID, 32)
+                        net.WriteTable(rowData)
+                        net.SendToServer()
+                        frame:Remove()
+                    end
+                end)
+            end
+
+            menu:Open()
         end
     end
 end

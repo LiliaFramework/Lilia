@@ -213,6 +213,12 @@ lia.command.add("checkinventory", {
     adminOnly = true,
     privilege = "Check Inventories",
     syntax = "[string charname]",
+    AdminStick = {
+        Name = "Check Inventory",
+        Category = "Character Management",
+        SubCategory = "Items",
+        Icon = "icon16/box.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local isTargDiff = target ~= client
@@ -259,13 +265,19 @@ lia.command.add("flaggive", {
             client:notify("Invalid Target!")
         end
     end,
-    alias = {"giveflag"}
+    alias = {"giveflag", "chargiveflag"}
 })
 
 lia.command.add("flaggiveall", {
     adminOnly = true,
     syntax = "[string name] [string flags]",
     privilege = "Manage Flags",
+    AdminStick = {
+        Name = "Give All Flags",
+        Category = "Flags Management",
+        SubCategory = "Manage All",
+        Icon = "icon16/flag_blue.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if not IsValid(target) then
@@ -282,34 +294,20 @@ lia.command.add("flaggiveall", {
     end
 })
 
-lia.command.add("flagpet", {
-    adminOnly = true,
-    syntax = "[string name]",
-    privilege = "Manage Flags",
-    onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) and target:getChar() then
-            if target:getChar():hasFlags("pet") then
-                target:getChar():takeFlags("pet")
-                client:notify("Taken pet Flags!")
-            else
-                target:getChar():giveFlags("pet")
-                client:notify("Given pet Flags!")
-            end
-        else
-            client:notify("Invalid Target!")
-        end
-    end
-})
-
 lia.command.add("flagtakeall", {
     adminOnly = true,
     syntax = "[string name] [string flags]",
     privilege = "Manage Flags",
+    AdminStick = {
+        Name = "Take All Flags",
+        Category = "Flags Management",
+        SubCategory = "Manage All",
+        Icon = "icon16/flag_green.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        local character = target:getChar()
-        if not character or not target then
+        local character = target and target:getChar()
+        if not character then
             client:notify("Invalid Target!")
             return
         end
@@ -404,6 +402,12 @@ lia.command.add("charunban", {
     syntax = "[string name]",
     superAdminOnly = true,
     privilege = "Manage Characters",
+    AdminStick = {
+        Name = "Unban Character",
+        Category = "Character Management",
+        SubCategory = "Bans",
+        Icon = "icon16/user_add.png"
+    },
     onRun = function(client, arguments)
         if (client.liaNextSearch or 0) >= CurTime() then return L("charSearching", client) end
         local name = table.concat(arguments, " ")
@@ -445,6 +449,12 @@ lia.command.add("clearinv", {
     superAdminOnly = true,
     syntax = "[string name]",
     privilege = "Manage Characters",
+    AdminStick = {
+        Name = "Clear Inventory",
+        Category = "Character Management",
+        SubCategory = "Items",
+        Icon = "icon16/bin.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and target:getChar() then
@@ -460,6 +470,12 @@ lia.command.add("charkick", {
     adminOnly = true,
     syntax = "[string name]",
     privilege = "Kick Characters",
+    AdminStick = {
+        Name = "Kick Character",
+        Category = "Character Management",
+        SubCategory = "Bans",
+        Icon = "icon16/user_delete.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
@@ -507,6 +523,12 @@ lia.command.add("charban", {
     superAdminOnly = true,
     syntax = "[string name]",
     privilege = "Manage Characters",
+    AdminStick = {
+        Name = "Ban Character",
+        Category = "Character Management",
+        SubCategory = "Bans",
+        Icon = "icon16/user_red.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) then
@@ -545,6 +567,12 @@ lia.command.add("checkflags", {
     adminOnly = true,
     privilege = "Get Character Info",
     syntax = "[string charname]",
+    AdminStick = {
+        Name = "Get Character Flags",
+        Category = "Player Informations",
+        SubCategory = "Get Informations",
+        Icon = "icon16/flag_yellow.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and target:getChar() then
@@ -616,6 +644,12 @@ lia.command.add("checkmoney", {
     adminOnly = true,
     privilege = "Get Character Info",
     syntax = "[string charname]",
+    AdminStick = {
+        Name = "Check Money",
+        Category = "Character Management",
+        SubCategory = "Money",
+        Icon = "icon16/money.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target and target:getChar() then
@@ -673,11 +707,113 @@ lia.command.add("chargetmodel", {
     adminOnly = true,
     syntax = "[string name]",
     privilege = "Get Character Info",
+    AdminStick = {
+        Name = "Get Character Model",
+        Category = "Player Informations",
+        SubCategory = "Get Informations",
+        Icon = "icon16/user_gray.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if IsValid(target) and target:getChar() then
             local model = target:GetModel()
-            client:notify(model)
+            client:notify("Character Model: " .. model)
+        else
+            client:notify("Invalid Target")
+        end
+    end
+})
+
+lia.command.add("chargetname", {
+    adminOnly = true,
+    syntax = "[string name]",
+    privilege = "Get Character Info",
+    AdminStick = {
+        Name = "Get Character Name",
+        Category = "Player Informations",
+        SubCategory = "Get Informations",
+        Icon = "icon16/user.png"
+    },
+    onRun = function(client, arguments)
+        local target = lia.command.findPlayer(client, arguments[1])
+        if IsValid(target) and target:getChar() then
+            local name = target:getChar():getName()
+            client:notify("Character Name: " .. name)
+        else
+            client:notify("Invalid Target")
+        end
+    end
+})
+
+lia.command.add("chargethealth", {
+    adminOnly = true,
+    syntax = "[string name]",
+    privilege = "Get Character Info",
+    AdminStick = {
+        Name = "Get Character Health",
+        Category = "Player Informations",
+        SubCategory = "Get Informations",
+        Icon = "icon16/heart.png"
+    },
+    onRun = function(client, arguments)
+        local target = lia.command.findPlayer(client, arguments[1])
+        if IsValid(target) and target:getChar() then
+            local health = target:Health()
+            client:notify("Character Health: " .. health)
+        else
+            client:notify("Invalid Target")
+        end
+    end
+})
+
+lia.command.add("chargetmoney", {
+    adminOnly = true,
+    syntax = "[string name]",
+    privilege = "Get Character Info",
+    AdminStick = {
+        Name = "Get Character Money",
+        Category = "Player Informations",
+        SubCategory = "Get Informations",
+        Icon = "icon16/money.png"
+    },
+    onRun = function(client, arguments)
+        local target = lia.command.findPlayer(client, arguments[1])
+        if IsValid(target) and target:getChar() then
+            local money = target:getChar():getMoney()
+            client:notify("Character Money: " .. lia.currency.get(money))
+        else
+            client:notify("Invalid Target")
+        end
+    end
+})
+
+lia.command.add("chargetinventory", {
+    adminOnly = true,
+    syntax = "[string name]",
+    privilege = "Get Character Info",
+    AdminStick = {
+        Name = "Get Character Inventory",
+        Category = "Player Informations",
+        SubCategory = "Get Informations",
+        Icon = "icon16/box.png"
+    },
+    onRun = function(client, arguments)
+        local target = lia.command.findPlayer(client, arguments[1])
+        if IsValid(target) and target:getChar() then
+            local inventory = target:getChar():getInv()
+            local count = 0
+            local items = ""
+            for _, item in pairs(inventory:getItems()) do
+                count = count + 1
+                items = items .. item.name .. ", "
+            end
+
+            if count > 0 then
+                items = string.sub(items, 1, -3)
+                client:ChatPrint("Character Inventory: " .. items)
+            else
+                client:notify("Character Inventory is empty.")
+            end
         else
             client:notify("Invalid Target")
         end
@@ -688,6 +824,12 @@ lia.command.add("charsetspeed", {
     adminOnly = true,
     privilege = "Manage Character Stats",
     syntax = "[string name] <number speed>",
+    AdminStick = {
+        Name = "Set Character Speed",
+        Category = "Player Informations",
+        SubCategory = "Set Informations",
+        Icon = "icon16/lightning.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local speed = tonumber(arguments[2]) or lia.config.WalkSpeed
@@ -703,6 +845,12 @@ lia.command.add("charsetmodel", {
     adminOnly = true,
     syntax = "[string name] <string model>",
     privilege = "Manage Character Informations",
+    AdminStick = {
+        Name = "Set Character Model",
+        Category = "Player Informations",
+        SubCategory = "Set Informations",
+        Icon = "icon16/user_gray.png"
+    },
     onRun = function(client, arguments)
         if not arguments[2] then return L("invalidArg", 2) end
         local target = lia.command.findPlayer(client, arguments[1])
@@ -720,6 +868,12 @@ lia.command.add("chargiveitem", {
     superAdminOnly = true,
     syntax = "[string name] <string item>",
     privilege = "Manage Items",
+    AdminStick = {
+        Name = "Give Item",
+        Category = "Character Management",
+        SubCategory = "Items",
+        Icon = "icon16/user_gray.png"
+    },
     onRun = function(client, arguments)
         if not arguments[2] then
             client:notify("You must specify an item to give.")
@@ -757,6 +911,12 @@ lia.command.add("charsetdesc", {
     adminOnly = true,
     syntax = "[string name] [string desc]",
     privilege = "Manage Character Informations",
+    AdminStick = {
+        Name = "Set Character Description",
+        Category = "Player Informations",
+        SubCategory = "Set Informations",
+        Icon = "icon16/user_comment.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if not IsValid(target) then
@@ -780,6 +940,12 @@ lia.command.add("charsetname", {
     adminOnly = true,
     syntax = "[string name] [string newName]",
     privilege = "Manage Character Informations",
+    AdminStick = {
+        Name = "Set Character Name",
+        Category = "Player Informations",
+        SubCategory = "Set Informations",
+        Icon = "icon16/user_edit.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if not IsValid(target) then
@@ -798,6 +964,12 @@ lia.command.add("charsetscale", {
     adminOnly = true,
     syntax = "[string name] <number value>",
     privilege = "Manage Character Stats",
+    AdminStick = {
+        Name = "Set Character Scale",
+        Category = "Player Informations",
+        SubCategory = "Set Informations",
+        Icon = "icon16/arrow_out.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local scale = tonumber(arguments[2]) or 1
@@ -814,6 +986,12 @@ lia.command.add("charsetjump", {
     adminOnly = true,
     syntax = "[string name] <number power>",
     privilege = "Manage Character Stats",
+    AdminStick = {
+        Name = "Set Character Jump Height",
+        Category = "Player Informations",
+        SubCategory = "Set Informations",
+        Icon = "icon16/arrow_up.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local power = tonumber(arguments[2]) or 200
@@ -830,6 +1008,12 @@ lia.command.add("charsetbodygroup", {
     adminOnly = true,
     syntax = "[string name] <string bodyGroup> [number value]",
     privilege = "Manage Bodygroups",
+    AdminStick = {
+        Name = "Set Character Bodygroup",
+        Category = "Player Informations",
+        SubCategory = "Set Informations",
+        Icon = "icon16/user_gray.png"
+    },
     onRun = function(client, arguments)
         local name = arguments[1]
         local bodyGroup = arguments[2]
@@ -857,6 +1041,12 @@ lia.command.add("charsetskin", {
     adminOnly = true,
     syntax = "[string name] [number skin]",
     privilege = "Manage Character Stats",
+    AdminStick = {
+        Name = "Set Character Skin",
+        Category = "Player Informations",
+        SubCategory = "Set Informations",
+        Icon = "icon16/user_gray.png"
+    },
     onRun = function(client, arguments)
         local name = arguments[1]
         local skin = tonumber(arguments[2])
@@ -1050,12 +1240,13 @@ lia.command.add("listents", {
         local entityList = {}
         for _, v in pairs(ents.GetAll()) do
             local creator = v:GetCreator()
+            local model = v:GetModel()
+            if not model or not isstring(model) or not model:find("%.mdl$") then continue end
             table.insert(entityList, {
                 class = v:GetClass(),
                 creator = IsValid(creator) and creator:Nick() or "N/A",
-                position = tostring(v:GetPos()),
-                model = v:GetModel() or "N/A",
-                health = v:Health() or "N/A"
+                model = model,
+                health = v:Health() or "∞"
             })
         end
 
@@ -1067,10 +1258,6 @@ lia.command.add("listents", {
             {
                 name = "Creator",
                 field = "creator"
-            },
-            {
-                name = "Position",
-                field = "position"
             },
             {
                 name = "Model",
@@ -1322,6 +1509,22 @@ lia.command.add("forcesay", {
     superAdminOnly = true,
     syntax = "<string botName> <string message>",
     privilege = "Force Say",
+    AdminStick = {
+        Name = "Force Say",
+        Category = "Moderation Tools",
+        SubCategory = "Force Say",
+        Icon = "icon16/comments.png",
+        ExtraFields = {
+            ["attribute"] = function()
+                local attributes = {}
+                for k, v in pairs(lia.attribs.list) do
+                    table.insert(attributes, v.name)
+                end
+                return attributes, "combo"
+            end,
+            ["value"] = "text",
+        }
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local message = table.concat(arguments, " ", 2)

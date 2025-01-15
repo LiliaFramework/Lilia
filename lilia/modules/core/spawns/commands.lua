@@ -86,6 +86,12 @@ lia.command.add("returnitems", {
     superAdminOnly = true,
     privilege = "Return Items",
     syntax = "[string name]",
+    AdminStick = {
+        Name = "Return Items",
+        Category = "Character Management",
+        SubCategory = "Items",
+        Icon = "icon16/arrow_refresh.png"
+    },
     onRun = function(client, arguments)
         local targetPlayer = lia.command.findPlayer(client, arguments[1])
         if not targetPlayer or not IsValid(targetPlayer) then

@@ -141,7 +141,7 @@ function PANEL:Think()
             if IsValid(v) then v:update() end
         end
 
-        if (system.GetCountry() == "FR" and input.IsKeyDown(KEY_W)) or (system.GetCountry() ~= "FR" and input.IsKeyDown(KEY_Z)) then self:Init() end
+        if system.GetCountry() == "FR" and input.IsKeyDown(KEY_W) or system.GetCountry() ~= "FR" and input.IsKeyDown(KEY_Z) then self:Init() end
         self.nextUpdate = CurTime() + 0.1
         self:UpdateStaff()
     end
@@ -163,10 +163,8 @@ function PANEL:addPlayer(client, parent)
         local menu = DermaMenu()
         local options = {}
         hook.Run("ShowPlayerOptions", client, options)
-        if table.Count(options) > 0 then
-            for k, v in SortedPairs(options) do
-                menu:AddOption(L(k), v[2]):SetImage(v[1])
-            end
+        for _, option in ipairs(options) do
+            menu:AddOption(L(option.name), option.func):SetImage(option.image)
         end
 
         menu:Open()
@@ -212,7 +210,7 @@ function PANEL:addPlayer(client, parent)
             if text ~= ping then
                 this:SetText(ping)
                 this:SizeToContentsX()
-                this:SetPos(self:GetWide() - (24 + (string.len(this:GetText()) * 4)))
+                this:SetPos(self:GetWide() - (24 + string.len(this:GetText()) * 4))
             end
         end
     end
@@ -279,7 +277,7 @@ function PANEL:addPlayer(client, parent)
 
         if self.lastModel ~= model or self.lastSkin ~= skin then
             self.model:SetModel(client:GetModel(), client:GetSkin())
-            if lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and lp:isStaffOnDuty()) then
+            if lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and lp:isStaffOnDuty() then
                 self.model:SetTooltip(L("sbOptions", client:Name()))
             else
                 self.model:SetTooltip()

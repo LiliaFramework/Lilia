@@ -104,6 +104,8 @@ local serverHooks = {
 }
 
 local clientHooks = {
+    -- Removes the Damage Effect
+    {"HUDPaint", "DamageEffect"},
     -- Removes the chat icon when a player starts typing in chat
     {"StartChat", "StartChatIndicator"},
     -- Removes the chat icon after the player finishes typing

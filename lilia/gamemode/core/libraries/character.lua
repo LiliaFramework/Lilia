@@ -77,22 +77,10 @@ function lia.char.registerVar(key, data)
     if SERVER and not data.isNotModifiable then
         if data.onSet then
             characterMeta["set" .. upperName] = data.onSet
-            characterMeta["Set" .. upperName] = data.onSet
         elseif data.noNetworking then
             characterMeta["set" .. upperName] = function(self, value) self.vars[key] = value end
-            characterMeta["Set" .. upperName] = function(self, value) self.vars[key] = value end
         elseif data.isLocal then
             characterMeta["set" .. upperName] = function(self, value)
-                local curChar = self:getPlayer() and self:getPlayer():getChar()
-                local sendID = true
-                if curChar and curChar == self then sendID = false end
-                local oldVar = self.vars[key]
-                self.vars[key] = value
-                netstream.Start(self.player, "charSet", key, value, sendID and self:getID() or nil)
-                hook.Run("OnCharVarChanged", self, key, oldVar, value)
-            end
-
-            characterMeta["Set" .. upperName] = function(self, value)
                 local curChar = self:getPlayer() and self:getPlayer():getChar()
                 local sendID = true
                 if curChar and curChar == self then sendID = false end
@@ -108,28 +96,13 @@ function lia.char.registerVar(key, data)
                 netstream.Start(nil, "charSet", key, value, self:getID())
                 hook.Run("OnCharVarChanged", self, key, oldVar, value)
             end
-
-            characterMeta["Set" .. upperName] = function(self, value)
-                local oldVar = self.vars[key]
-                self.vars[key] = value
-                netstream.Start(nil, "charSet", key, value, self:getID())
-                hook.Run("OnCharVarChanged", self, key, oldVar, value)
-            end
         end
     end
 
     if data.onGet then
         characterMeta["get" .. upperName] = data.onGet
-        characterMeta["Get" .. upperName] = data.onGet
     else
         characterMeta["get" .. upperName] = function(self, default)
-            local value = self.vars[key]
-            if value ~= nil then return value end
-            if default == nil then return lia.char.vars[key] and lia.char.vars[key].default or nil end
-            return default
-        end
-
-        characterMeta["Get" .. upperName] = function(self, default)
             local value = self.vars[key]
             if value ~= nil then return value end
             if default == nil then return lia.char.vars[key] and lia.char.vars[key].default or nil end
@@ -435,19 +408,35 @@ end
 -- @tparam number ID The ID of the character to find the associated client
 -- @treturn player|nil The client associated with the character, or `nil` if no client is found
 -- @usage
--- local client = lia.char.GetByID(123)
+-- local client = lia.char.getByID(123)
 -- if IsValid(client) then
 --     print(client:Nick() .. " is the player associated with the character ID.")
 -- else
 --     print("No client found for that character ID.")
 -- end
-function lia.char.GetByID(ID)
+function lia.char.getByID(ID)
     ID = tonumber(ID)
-    for client, character in lia.char.getAll() do
-        if not character then continue end
-        if character:getID() == ID then return client end
+    for client, character in pairs(lia.char.getAll()) do
+        if character and character:getID() == ID then return client end
     end
-    return nil
+end
+
+--- Retrieves the character associated with a player's SteamID or SteamID64.
+-- @realm shared
+-- @tparam string steamID The SteamID or SteamID64 of the player to find the associated character
+-- @treturn table|nil The character associated with the SteamID, or `nil` if no character is found
+-- @usage
+-- local character = lia.char.getBySteamID("STEAM_0:1:12345678")
+-- if character then
+--     print("Character found: " .. character:getName())
+-- else
+--     print("No character found for the given SteamID.")
+-- end
+function lia.char.getBySteamID(steamID)
+    if not isstring(steamID) or steamID == "" then return end
+    for _, client in player.Iterator() do
+        if (client:SteamID() == steamID or client:SteamID64() == steamID) and client:getChar() then return client:getChar() end
+    end
 end
 
 --- Retrieves the SteamIDs of all connected players.
@@ -455,8 +444,8 @@ end
 -- @realm shared
 function lia.char.getAll()
     local charTable = {}
-    for _, v in player.Iterator() do
-        if v:getChar() then table.insert(charTable, v:getChar():getID()) end
+    for _, client in pairs(player.GetAll()) do
+        if client:getChar() then charTable[client] = client:getChar() end
     end
     return charTable
 end
@@ -719,7 +708,6 @@ if SERVER then
             if IsValid(client) and client:getChar() == lia.char.loaded[charIDsafe] then
                 for _, v in pairs(bg or {}) do
                     client:SetBodygroup(v.id, v.value)
-                    print(v.id, v.value, client)
                 end
 
                 client:SetupHands()

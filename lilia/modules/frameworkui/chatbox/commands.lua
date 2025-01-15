@@ -4,6 +4,12 @@ lia.command.add("banooc", {
     adminOnly = true,
     privilege = "Ban OOC",
     syntax = "[string charname]",
+    AdminStick = {
+        Name = "Ban OOC",
+        Category = "Moderation Tools",
+        SubCategory = "OOC",
+        Icon = "icon16/sound_mute.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target then
@@ -19,11 +25,19 @@ lia.command.add("unbanooc", {
     adminOnly = true,
     privilege = "Unban OOC",
     syntax = "[string charname]",
+    AdminStick = {
+        Name = "Unban OOC",
+        Category = "Moderation Tools",
+        SubCategory = "OOC",
+        Icon = "icon16/sound.png"
+    },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target then
             MODULE.OOCBans[target:SteamID()] = nil
             client:notify(target:Name() .. " has been unbanned from OOC.")
+        else
+            client:notify("Invalid target.")
         end
     end
 })

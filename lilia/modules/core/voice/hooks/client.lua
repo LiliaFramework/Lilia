@@ -8,6 +8,10 @@
     })
 end
 
+function MODULE:PlayerStartVoice(client)
+    if client:GetNWBool("IsDeadRestricted", false) then return false end
+end
+
 local PANEL = {}
 local VoicePanels = {}
 function PANEL:Init()
@@ -55,7 +59,6 @@ function PANEL:Setup(client)
         end
     end
 
-    print("VoicePanel Setup: Setting name to '" .. tostring(self.name) .. "' for client " .. tostring(client))
     self.LabelName:SetText(self.name)
     self:InvalidateLayout()
 end
@@ -84,7 +87,7 @@ function PANEL:FadeOut(anim, delta)
         return
     end
 
-    self:SetAlpha(255 - (255 * (delta * 2)))
+    self:SetAlpha(255 - 255 * delta * 2)
 end
 
 vgui.Register("VoicePanel", PANEL, "DPanel")

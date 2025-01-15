@@ -309,7 +309,7 @@ function GM:InitializedSchema()
 end
 
 function GM:GetGameDescription()
-    return (lia.config.GamemodeName == "A Lilia Gamemode" and istable(SCHEMA)) and tostring(SCHEMA.name) or lia.config.GamemodeName
+    return lia.config.GamemodeName == "A Lilia Gamemode" and istable(SCHEMA) and tostring(SCHEMA.name) or lia.config.GamemodeName
 end
 
 function GM:PostPlayerLoadout(client)
@@ -459,6 +459,6 @@ function GM:CanDrive(client)
 end
 
 function GM:PlayerDeathThink(client)
-    if client:getChar() and not client:IsOnDeathTimer() then client:Spawn() end
+    if client:getChar() and not client:GetNW2Bool("IsDeadRestricted", false) then client:Spawn() end
     return false
 end
