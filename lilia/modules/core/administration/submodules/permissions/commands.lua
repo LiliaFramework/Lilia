@@ -217,7 +217,7 @@ lia.command.add("checkinventory", {
         Name = "Check Inventory",
         Category = "Character Management",
         SubCategory = "Items",
-        Icon = "icon16/box.png"
+        Icon = "icon16/box.png",
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -276,7 +276,7 @@ lia.command.add("flaggiveall", {
         Name = "Give All Flags",
         Category = "Flags Management",
         SubCategory = "Manage All",
-        Icon = "icon16/flag_blue.png"
+        Icon = "icon16/flag_blue.png",
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -302,7 +302,7 @@ lia.command.add("flagtakeall", {
         Name = "Take All Flags",
         Category = "Flags Management",
         SubCategory = "Manage All",
-        Icon = "icon16/flag_green.png"
+        Icon = "icon16/flag_green.png",
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -406,7 +406,7 @@ lia.command.add("charunban", {
         Name = "Unban Character",
         Category = "Character Management",
         SubCategory = "Bans",
-        Icon = "icon16/user_add.png"
+        Icon = "icon16/user_add.png",
     },
     onRun = function(client, arguments)
         if (client.liaNextSearch or 0) >= CurTime() then return L("charSearching", client) end
@@ -453,7 +453,7 @@ lia.command.add("clearinv", {
         Name = "Clear Inventory",
         Category = "Character Management",
         SubCategory = "Items",
-        Icon = "icon16/bin.png"
+        Icon = "icon16/bin.png",
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -474,7 +474,7 @@ lia.command.add("charkick", {
         Name = "Kick Character",
         Category = "Character Management",
         SubCategory = "Bans",
-        Icon = "icon16/user_delete.png"
+        Icon = "icon16/user_delete.png",
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -527,7 +527,7 @@ lia.command.add("charban", {
         Name = "Ban Character",
         Category = "Character Management",
         SubCategory = "Bans",
-        Icon = "icon16/user_red.png"
+        Icon = "icon16/user_red.png",
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -571,7 +571,7 @@ lia.command.add("checkflags", {
         Name = "Get Character Flags",
         Category = "Player Informations",
         SubCategory = "Get Informations",
-        Icon = "icon16/flag_yellow.png"
+        Icon = "icon16/flag_yellow.png",
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -648,7 +648,7 @@ lia.command.add("checkmoney", {
         Name = "Check Money",
         Category = "Character Management",
         SubCategory = "Money",
-        Icon = "icon16/money.png"
+        Icon = "icon16/money.png",
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -711,7 +711,7 @@ lia.command.add("chargetmodel", {
         Name = "Get Character Model",
         Category = "Player Informations",
         SubCategory = "Get Informations",
-        Icon = "icon16/user_gray.png"
+        Icon = "icon16/user_gray.png",
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -732,7 +732,7 @@ lia.command.add("chargetname", {
         Name = "Get Character Name",
         Category = "Player Informations",
         SubCategory = "Get Informations",
-        Icon = "icon16/user.png"
+        Icon = "icon16/user.png",
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -753,7 +753,7 @@ lia.command.add("chargethealth", {
         Name = "Get Character Health",
         Category = "Player Informations",
         SubCategory = "Get Informations",
-        Icon = "icon16/heart.png"
+        Icon = "icon16/heart.png",
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -774,7 +774,7 @@ lia.command.add("chargetmoney", {
         Name = "Get Character Money",
         Category = "Player Informations",
         SubCategory = "Get Informations",
-        Icon = "icon16/money.png"
+        Icon = "icon16/money.png",
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -795,7 +795,7 @@ lia.command.add("chargetinventory", {
         Name = "Get Character Inventory",
         Category = "Player Informations",
         SubCategory = "Get Informations",
-        Icon = "icon16/box.png"
+        Icon = "icon16/box.png",
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -828,7 +828,10 @@ lia.command.add("charsetspeed", {
         Name = "Set Character Speed",
         Category = "Player Informations",
         SubCategory = "Set Informations",
-        Icon = "icon16/lightning.png"
+        Icon = "icon16/lightning.png",
+        ExtraFields = {
+            ["speed"] = "number"
+        }
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -849,7 +852,10 @@ lia.command.add("charsetmodel", {
         Name = "Set Character Model",
         Category = "Player Informations",
         SubCategory = "Set Informations",
-        Icon = "icon16/user_gray.png"
+        Icon = "icon16/user_gray.png",
+        ExtraFields = {
+            ["model"] = "text"
+        }
     },
     onRun = function(client, arguments)
         if not arguments[2] then return L("invalidArg", 2) end
@@ -872,7 +878,10 @@ lia.command.add("chargiveitem", {
         Name = "Give Item",
         Category = "Character Management",
         SubCategory = "Items",
-        Icon = "icon16/user_gray.png"
+        Icon = "icon16/user_gray.png",
+        ExtraFields = {
+            ["item"] = "text"
+        }
     },
     onRun = function(client, arguments)
         if not arguments[2] then
@@ -915,7 +924,10 @@ lia.command.add("charsetdesc", {
         Name = "Set Character Description",
         Category = "Player Informations",
         SubCategory = "Set Informations",
-        Icon = "icon16/user_comment.png"
+        Icon = "icon16/user_comment.png",
+        ExtraFields = {
+            ["desc"] = "text"
+        }
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -944,7 +956,10 @@ lia.command.add("charsetname", {
         Name = "Set Character Name",
         Category = "Player Informations",
         SubCategory = "Set Informations",
-        Icon = "icon16/user_edit.png"
+        Icon = "icon16/user_edit.png",
+        ExtraFields = {
+            ["newName"] = "text"
+        }
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -968,7 +983,10 @@ lia.command.add("charsetscale", {
         Name = "Set Character Scale",
         Category = "Player Informations",
         SubCategory = "Set Informations",
-        Icon = "icon16/arrow_out.png"
+        Icon = "icon16/arrow_out.png",
+        ExtraFields = {
+            ["value"] = "number"
+        }
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -990,7 +1008,10 @@ lia.command.add("charsetjump", {
         Name = "Set Character Jump Height",
         Category = "Player Informations",
         SubCategory = "Set Informations",
-        Icon = "icon16/arrow_up.png"
+        Icon = "icon16/arrow_up.png",
+        ExtraFields = {
+            ["power"] = "number"
+        }
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
@@ -1012,7 +1033,11 @@ lia.command.add("charsetbodygroup", {
         Name = "Set Character Bodygroup",
         Category = "Player Informations",
         SubCategory = "Set Informations",
-        Icon = "icon16/user_gray.png"
+        Icon = "icon16/user_gray.png",
+        ExtraFields = {
+            ["bodyGroup"] = "text",
+            ["value"] = "number"
+        }
     },
     onRun = function(client, arguments)
         local name = arguments[1]
@@ -1045,7 +1070,10 @@ lia.command.add("charsetskin", {
         Name = "Set Character Skin",
         Category = "Player Informations",
         SubCategory = "Set Informations",
-        Icon = "icon16/user_gray.png"
+        Icon = "icon16/user_gray.png",
+        ExtraFields = {
+            ["skin"] = "number"
+        }
     },
     onRun = function(client, arguments)
         local name = arguments[1]
@@ -1515,14 +1543,7 @@ lia.command.add("forcesay", {
         SubCategory = "Force Say",
         Icon = "icon16/comments.png",
         ExtraFields = {
-            ["attribute"] = function()
-                local attributes = {}
-                for k, v in pairs(lia.attribs.list) do
-                    table.insert(attributes, v.name)
-                end
-                return attributes, "combo"
-            end,
-            ["value"] = "text",
+            ["message"] = "text"
         }
     },
     onRun = function(client, arguments)
