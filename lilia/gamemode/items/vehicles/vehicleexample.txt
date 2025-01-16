@@ -1,5 +1,0 @@
-ITEM.name = "A Vehicle"
-ITEM.desc = "An Vehicle"
-ITEM.model = "models/props_c17/BriefCase001a.mdl"
-ITEM.category = "Vehicles"
-ITEM.vehicleid = "VehicleID"
