@@ -241,34 +241,34 @@ end
 -- @treturn string A human-readable string indicating years, months, days, hours, minutes, and seconds passed.
 -- @realm shared
 function lia.time.TimeSince(strTime)
-    local pattern = "(%d+):(%d+):(%d+)%s*%-%s*(%d+)/(%d+)/(%d+)"
-    local hour, minute, second, day, month, year = strTime:match(pattern)
-    if not (hour and minute and second and day and month and year) then return "Invalid time format. Expected 'HH:MM:SS - DD/MM/YYYY'." end
-    hour, minute, second, day, month, year = tonumber(hour), tonumber(minute), tonumber(second), tonumber(day), tonumber(month), tonumber(year)
-    if hour < 0 or hour > 23 or minute < 0 or minute > 59 or second < 0 or second > 59 or day < 1 or day > 31 or month < 1 or month > 12 or year < 1970 then return "Invalid time values." end
-    local inputTimestamp = os.time({
-        year = year,
-        month = month,
-        day = day,
-        hour = hour,
-        min = minute,
-        sec = second
-    })
+    local timestamp
+    if isnumber(strTime) then
+        timestamp = strTime
+    elseif isstring(strTime) then
+        local year, month, day = lia.time.ParseTime(strTime)
+        if not (year and month and day) then return "Invalid date" end
+        timestamp = os.time({
+            year = year,
+            month = month,
+            day = day,
+            hour = 0,
+            min = 0,
+            sec = 0
+        })
+    else
+        return "Invalid input"
+    end
 
-    local currentTimestamp = os.time()
-    if inputTimestamp >= currentTimestamp then return "The specified time is in the future." end
-    local diffSeconds = currentTimestamp - inputTimestamp
-    local years = math.floor(diffSeconds / (365.25 * 24 * 3600))
-    diffSeconds = diffSeconds % (365.25 * 24 * 3600)
-    local months = math.floor(diffSeconds / (30.44 * 24 * 3600))
-    diffSeconds = diffSeconds % (30.44 * 24 * 3600)
-    local days = math.floor(diffSeconds / (24 * 3600))
-    diffSeconds = diffSeconds % (24 * 3600)
-    local hours = math.floor(diffSeconds / 3600)
-    diffSeconds = diffSeconds % 3600
-    local minutes = math.floor(diffSeconds / 60)
-    local seconds = diffSeconds % 60
-    return string.format("%d years, %d months, %d days, %d hours, %d minutes, %d seconds", years, months, days, hours, minutes, seconds)
+    local diff = os.time() - timestamp
+    if diff < 60 then
+        return diff .. " seconds ago"
+    elseif diff < 3600 then
+        return math.floor(diff / 60) .. " minutes ago"
+    elseif diff < 86400 then
+        return math.floor(diff / 3600) .. " hours ago"
+    else
+        return math.floor(diff / 86400) .. " days ago"
+    end
 end
 
 --- Returns the amount of time until the given time.
