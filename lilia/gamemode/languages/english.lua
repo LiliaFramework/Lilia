@@ -232,6 +232,7 @@ LANGUAGE = {
     vendorNoSellItems = "There are no items to sell.",
     vendorNoBuyItems = "There are no items to purchase.",
     vendorSettings = "Vendor Settings",
+    tradeRestrictedFlag = "You do not have the required permissions to trade this item.",
     vendorUseMoney = "Vendor should use money?",
     price = "Price",
     stock = "Stock",

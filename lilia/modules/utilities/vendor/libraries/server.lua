@@ -63,6 +63,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     local FactionWhitelist = item.FactionWhitelist
     local UserGroupWhitelist = item.UsergroupWhitelist
     local VIPOnly = item.VIPWhitelist
+    local flag = item.flag
     local hasWhitelist = false
     local isWhitelisted = false
     local errorMessage = nil
@@ -107,6 +108,8 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
             return false, errorMessage
         end
     end
+
+    if flag and not client:getChar():hasFlags(flag) then return false, L("tradeRestrictedFlag") end
     return true, nil, isWhitelisted
 end
 
