@@ -64,6 +64,7 @@ function MODULE:PlayerDeath(client, _, attacker)
     end
 
     client:SetNW2Bool("IsDeadRestricted", true)
+    timer.Simple(lia.config.SpawnTime, function() client:SetNW2Bool("IsDeadRestricted", false) end)
     client:SetDSP(30, false)
     character:setData("pos", nil)
     if not attacker:IsPlayer() and self.LoseDropItemsonDeathNPC or self.LoseDropItemsonDeathWorld and attacker:IsWorld() then self:RemovedDropOnDeathItems(client) end
