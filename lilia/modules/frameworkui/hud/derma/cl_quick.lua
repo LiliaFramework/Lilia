@@ -58,7 +58,6 @@ function PANEL:Init()
     self.scroll:SetPos(0, 36)
     self.scroll:SetSize(self:GetWide(), ScrH() * 0.5)
     self:MoveTo(self.x, 30, 0.05)
-    hook.Run("SetupQuickMenuCategories", self)
     hook.Run("SetupQuickMenu", self)
 end
 

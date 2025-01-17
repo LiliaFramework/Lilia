@@ -372,6 +372,37 @@ lia.char.registerVar("inv", {
     end
 })
 
+lia.char.registerVar("attribs", {
+    field = "_attribs",
+    default = {},
+    isLocal = true,
+    index = 4,
+    onValidate = function(value, _, client)
+        if value ~= nil then
+            if istable(value) then
+                local count = 0
+                for k, v in pairs(value) do
+                    local max = hook.Run("GetAttributeStartingMax", client, k)
+                    if max and v > max then return false, lia.attribs.list[k].name .. " too high" end
+                    count = count + v
+                end
+
+                local points = hook.Run("GetMaxStartingAttributePoints", client, count)
+                if count > points then return false, "unknownError" end
+            else
+                return false, "unknownError"
+            end
+        end
+    end,
+    shouldDisplay = function() return table.Count(lia.attribs.list) > 0 end
+})
+
+lia.char.registerVar("RecognizedAs", {
+    field = "recognized_as",
+    default = {},
+    noDisplay = true
+})
+
 --- Loads data for a character from the database.
 -- @int charID The ID of the character to load data for.
 -- @string[opt] key key to retrieve a specific value from the character's data.

@@ -33,9 +33,3 @@ function MODULE:isFakeNameExistant(name, nameList)
     end
     return false
 end
-
-lia.char.registerVar("RecognizedAs", {
-    field = "recognized_as",
-    default = {},
-    noDisplay = true
-})

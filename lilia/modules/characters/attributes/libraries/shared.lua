@@ -3,7 +3,7 @@
     if not character or client:isNoClipping() then return 0 end
     local walkSpeed = client:GetWalkSpeed()
     local offset = 0
-    if not client:getNetVar("brth", false) and (client:KeyDown(IN_SPEED) and client:GetVelocity():LengthSqr() >= (walkSpeed * walkSpeed) and client:OnGround()) then
+    if not client:getNetVar("brth", false) and client:KeyDown(IN_SPEED) and client:GetVelocity():LengthSqr() >= walkSpeed * walkSpeed and client:OnGround() then
         offset = -1
         offset = hook.Run("AdjustStaminaOffsetRunning", client, offset) or -1
     else
@@ -22,7 +22,7 @@
             if value == 0 and not client:getNetVar("brth", false) then
                 client:setNetVar("brth", true)
                 hook.Run("PlayerStaminaLost", client)
-            elseif value >= (maxStamina * 0.5) and client:getNetVar("brth", false) then
+            elseif value >= maxStamina * 0.5 and client:getNetVar("brth", false) then
                 client:setNetVar("brth", nil)
                 hook.Run("PlayerStaminaGained", client)
             end
@@ -31,7 +31,7 @@
 end
 
 function MODULE:StartCommand(client, cmd)
-    if self.StaminaSlowdown and (not client:isNoClipping() and client:getNetVar("brth", false) and cmd:KeyDown(IN_JUMP)) then cmd:RemoveKey(IN_JUMP) end
+    if self.StaminaSlowdown and not client:isNoClipping() and client:getNetVar("brth", false) and cmd:KeyDown(IN_JUMP) then cmd:RemoveKey(IN_JUMP) end
 end
 
 function MODULE:SetupMove(client, cMoveData)
@@ -60,28 +60,3 @@ end
 function MODULE:GetMaxStartingAttributePoints()
     return lia.config.StartingAttributePoints
 end
-
-lia.char.registerVar("attribs", {
-    field = "_attribs",
-    default = {},
-    isLocal = true,
-    index = 4,
-    onValidate = function(value, _, client)
-        if value ~= nil then
-            if istable(value) then
-                local count = 0
-                for k, v in pairs(value) do
-                    local max = hook.Run("GetAttributeStartingMax", client, k)
-                    if max and v > max then return false, lia.attribs.list[k].name .. " too high" end
-                    count = count + v
-                end
-
-                local points = hook.Run("GetMaxStartingAttributePoints", client, count)
-                if count > points then return false, "unknownError" end
-            else
-                return false, "unknownError"
-            end
-        end
-    end,
-    shouldDisplay = function() return table.Count(lia.attribs.list) > 0 end
-})

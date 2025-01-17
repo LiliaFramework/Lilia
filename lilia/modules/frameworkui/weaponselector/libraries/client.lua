@@ -107,7 +107,7 @@ function MODULE:SetupQuickMenu(menu)
         else
             RunConsoleCommand("wepselect_invert", "0")
         end
-    end, CVAR_WEPSELECT_INVERT:GetBool())
+    end, CVAR_WEPSELECT_INVERT:GetBool(), "Miscellaneous")
 
     menu:addSpacer()
 end
