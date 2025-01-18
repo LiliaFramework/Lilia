@@ -23,7 +23,7 @@ debug.getregistry().Character = lia.meta.character
 -- @usage
 -- print(lia.char.loaded[1])
 -- Output: "character[1]"
-function characterMeta:__tostring()
+function characterMeta:tostring()
     return "character[" .. (self.id or 0) .. "]"
 end
 
@@ -36,7 +36,7 @@ end
 -- local char2 = lia.char.loaded[2]
 -- print(char1 == char2)
 -- Output: false
-function characterMeta:__eq(other)
+function characterMeta:eq(other)
     return self:getID() == other:getID()
 end
 

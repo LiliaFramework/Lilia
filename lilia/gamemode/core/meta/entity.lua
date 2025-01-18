@@ -93,7 +93,6 @@ end
 function entityMeta:GetCreator()
     local creator = self:GetNW2Entity("creator")
     if IsValid(creator) then return creator end
-    return nil
 end
 
 if SERVER then

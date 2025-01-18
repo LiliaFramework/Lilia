@@ -136,7 +136,7 @@ end
 -- @usage
 -- print(tostring(inventory))
 -- Output: "Inventory[123]"
-function Inventory:__tostring()
+function Inventory:tostring()
     return self.className .. "[" .. tostring(self.id) .. "]"
 end
 
@@ -266,7 +266,7 @@ end
 -- else
 --     print("Inventories are different.")
 -- end
-function Inventory:__eq(other)
+function Inventory:eq(other)
     return self:getID() == other:getID()
 end
 

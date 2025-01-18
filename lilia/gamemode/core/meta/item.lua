@@ -42,7 +42,7 @@ end
 -- else
 --     print("Items are not equal.")
 -- end
-function ITEM:__eq(other)
+function ITEM:eq(other)
     return self:getID() == other:getID()
 end
 
@@ -52,7 +52,7 @@ end
 -- @usage
 -- print(tostring(lia.item.instances[1]))
 -- Output: "item[uniqueID][1]"
-function ITEM:__tostring()
+function ITEM:tostring()
     return "item[" .. self.uniqueID .. "][" .. self.id .. "]"
 end
 

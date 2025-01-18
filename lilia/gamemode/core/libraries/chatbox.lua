@@ -56,20 +56,20 @@ end
 -- 	-- message can be heard by any player 1000 units away from the speaking player
 -- 	onCanHear = 1000
 -- OR
--- 	onCanHear = function(self, speaker, listener)
+-- 	onCanHear = function(speaker, listener)
 -- 		-- the speaking player will be heard by everyone
 -- 		return true
 -- 	end
 -- @field[type=function,opt] onCanSay Function to run to check whether or not a player can send a message with this chat class.
 -- By default, it will return `false` if the player is dead and `deadCanChat` is `false`. Overriding this function will prevent
 -- `deadCanChat` from working, and you must implement this functionality manually.
--- 	onCanSay = function(self, speaker, text)
+-- 	onCanSay = function(speaker, text)
 -- 		-- the speaker will never be able to send a message with this chat class
 -- 		return false
 -- 	end
 -- @field[type=function,opt] onGetColor Function to run to set the color of a message with this chat class. You should generally
 -- stick to using `color`, but this is useful for when you want the color of the message to change with some criteria.
--- 	onGetColor = function(self, speaker, text)
+-- 	onGetColor = function(speaker, text)
 -- 		-- each message with this chat class will be colored a random shade of red
 -- 		return Color(math.random(120, 200), 0, 0)
 -- 	end
@@ -81,7 +81,7 @@ end
 -- manually. In general, you should avoid overriding this function where possible. The `data` argument in the function is
 -- whatever is passed into the same `data` argument in `lia.chat.send`.
 --
--- 	onChatAdd = function(self, speaker, text, bAnonymous, data)
+-- 	onChatAdd = function(speaker, text, bAnonymous, data)
 -- 		-- adds white text in the form of "Player Name: Message contents"
 -- 		chat.AddText(color_white, speaker:GetName(), ": ", text)
 -- 	end
