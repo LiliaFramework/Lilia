@@ -8,8 +8,8 @@ MODULE.discord = "@liliaplayer"
 MODULE.version = "Stock"
 MODULE.desc = "Adds Doors that can be bought"
 ACCESS_LABELS = {
-    [DOOR_OWNER] = "owner",
-    [DOOR_TENANT] = "tenant",
-    [DOOR_GUEST] = "guest",
-    [DOOR_NONE] = "none",
+  [DOOR_OWNER] = "owner",
+  [DOOR_TENANT] = "tenant",
+  [DOOR_GUEST] = "guest",
+  [DOOR_NONE] = "none",
 }

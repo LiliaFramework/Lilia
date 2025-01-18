@@ -1,63 +1,63 @@
 ﻿hook.Add("LVS.OnPlayerCannotDrive", "Lilia_LVSOnCantDrive", function(client, vehicle)
-    if vehicle:isLocked() then
-        client:notify("This vehicle is locked!")
-        return
-    end
+  if vehicle:isLocked() then
+    client:notify("This vehicle is locked!")
+    return
+  end
 
-    if vehicle.IsBeingEntered then
-        client:notify("Someone is entering this car!")
-        return
-    end
+  if vehicle.IsBeingEntered then
+    client:notify("Someone is entering this car!")
+    return
+  end
 
-    if lia.config.CarEntryDelayEnabled and vehicle:isSimfphysCar() and lia.config.TimeToEnterVehicle > 0 then
-        vehicle.IsBeingEntered = true
-        client:setAction("Entering Vehicle...", lia.config.TimeToEnterVehicle)
-        client:doStaredAction(vehicle, function()
-            vehicle.IsBeingEntered = false
-            if not IsValid(vehicle:GetDriver()) then
-                local DriverSeat = vehicle:GetDriverSeat()
-                client:EnterVehicle(DriverSeat)
-            else
-                vehicle:SetPassenger(client)
-            end
-        end, lia.config.TimeToEnterVehicle, function()
-            if IsValid(vehicle) then
-                vehicle.IsBeingEntered = false
-                client:stopAction()
-            end
+  if lia.config.CarEntryDelayEnabled and vehicle:isSimfphysCar() and lia.config.TimeToEnterVehicle > 0 then
+    vehicle.IsBeingEntered = true
+    client:setAction("Entering Vehicle...", lia.config.TimeToEnterVehicle)
+    client:doStaredAction(vehicle, function()
+      vehicle.IsBeingEntered = false
+      if not IsValid(vehicle:GetDriver()) then
+        local DriverSeat = vehicle:GetDriverSeat()
+        client:EnterVehicle(DriverSeat)
+      else
+        vehicle:SetPassenger(client)
+      end
+    end, lia.config.TimeToEnterVehicle, function()
+      if IsValid(vehicle) then
+        vehicle.IsBeingEntered = false
+        client:stopAction()
+      end
 
-            if IsValid(client) then client:stopAction() end
-        end)
-    end
-    return true
+      if IsValid(client) then client:stopAction() end
+    end)
+  end
+  return true
 end)
 
 function MODULE:EntityTakeDamage(seat, dmgInfo)
-    if self.DamageInCars and seat:isSimfphysCar() and seat.GetDriver then
-        local client = seat:GetDriver()
-        if IsValid(client) then
-            local hitPos = dmgInfo:GetDamagePosition()
-            local clientPos = client:GetPos()
-            local thresholdDistance = 53
-            if hitPos:Distance(clientPos) <= thresholdDistance then
-                local newHealth = client:Health() - (dmgInfo:GetDamage() * 0.3)
-                if newHealth > 0 then
-                    client:SetHealth(newHealth)
-                else
-                    client:Kill()
-                end
-            end
+  if self.DamageInCars and seat:isSimfphysCar() and seat.GetDriver then
+    local client = seat:GetDriver()
+    if IsValid(client) then
+      local hitPos = dmgInfo:GetDamagePosition()
+      local clientPos = client:GetPos()
+      local thresholdDistance = 53
+      if hitPos:Distance(clientPos) <= thresholdDistance then
+        local newHealth = client:Health() - dmgInfo:GetDamage() * 0.3
+        if newHealth > 0 then
+          client:SetHealth(newHealth)
+        else
+          client:Kill()
         end
+      end
     end
+  end
 end
 
 function MODULE:isSuitableForTrunk(vehicle)
-    if IsValid(vehicle) and vehicle:isSimfphysCar() then return true end
+  if IsValid(vehicle) and vehicle:isSimfphysCar() then return true end
 end
 
 function MODULE:CheckValidSit(client)
-    local vehicle = client:getTracedEntity()
-    if vehicle:isSimfphysCar() then return false end
+  local vehicle = client:getTracedEntity()
+  if vehicle:isSimfphysCar() then return false end
 end
 
 hook.Add("LVS.CanPlayerDrive", "Lilia_LVSCantDrive", function() return false end)

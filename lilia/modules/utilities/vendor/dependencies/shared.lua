@@ -9,7 +9,7 @@ VENDOR_SELLANDBUY = 1
 VENDOR_SELLONLY = 2
 VENDOR_BUYONLY = 3
 VENDOR_TEXT = {
-    [VENDOR_SELLANDBUY] = "vendorBoth",
-    [VENDOR_BUYONLY] = "vendorBuy",
-    [VENDOR_SELLONLY] = "vendorSell",
+  [VENDOR_SELLANDBUY] = "vendorBoth",
+  [VENDOR_BUYONLY] = "vendorBuy",
+  [VENDOR_SELLONLY] = "vendorSell",
 }

@@ -1,5 +1,4 @@
-﻿
--- @library lia.config
+﻿-- @library lia.config
 lia.config = lia.config or {}
 --- A list of available configuration options for use within the game.
 -- Each option is represented by a field with a specific data type and functionality.
@@ -45,48 +44,48 @@ lia.config = lia.config or {}
 -- @field Notify.Volume Notification volume | **integer**
 -- @field Notify.Pitch Notification pitch | **integer**
 if not ConfigWasInitialized then
-    lia.config = {
-        WalkSpeed = 130,
-        RunSpeed = 235,
-        WalkRatio = 0.5,
-        AllowExistNames = true,
-        GamemodeName = "A Lilia Gamemode",
-        Color = Color(37, 116, 108),
-        Font = "Arial",
-        Language = "english",
-        GenericFont = "Segoe UI",
-        MoneyModel = "models/props_lab/box01a.mdl",
-        MaxCharacters = 5,
-        DataSaveInterval = 600,
-        CharacterDataSaveInterval = 300,
-        MoneyLimit = 0,
-        invW = 6,
-        invH = 4,
-        DefaultMoney = 0,
-        MaxChatLength = 256,
-        CurrencySymbol = "$",
-        SpawnTime = 5,
-        MaxAttributePoints = 30,
-        MaxStartingAttributes = 30,
-        StartingAttributePoints = 30,
-        EquipDelay = 2,
-        UnequipDelay = 2,
-        DropDelay = 2,
-        TakeDelay = 0,
-        CurrencySingularName = "Dollar",
-        CurrencyPluralName = "Dollars",
-        SchemaYear = 2023,
-        AmericanDates = true,
-        AmericanTimeStamp = true,
-        MinDescLen = 16,
-        AdminConsoleNetworkLogs = false,
-        TimeToEnterVehicle = 1,
-        CarEntryDelayEnabled = true,
-        Notify = {"garrysmod/content_downloaded.wav", 50, 250},
-    }
+  lia.config = {
+    WalkSpeed = 130,
+    RunSpeed = 235,
+    WalkRatio = 0.5,
+    AllowExistNames = true,
+    GamemodeName = "A Lilia Gamemode",
+    Color = Color(37, 116, 108),
+    Font = "Arial",
+    Language = "english",
+    GenericFont = "Segoe UI",
+    MoneyModel = "models/props_lab/box01a.mdl",
+    MaxCharacters = 5,
+    DataSaveInterval = 600,
+    CharacterDataSaveInterval = 300,
+    MoneyLimit = 0,
+    invW = 6,
+    invH = 4,
+    DefaultMoney = 0,
+    MaxChatLength = 256,
+    CurrencySymbol = "$",
+    SpawnTime = 5,
+    MaxAttributePoints = 30,
+    MaxStartingAttributes = 30,
+    StartingAttributePoints = 30,
+    EquipDelay = 2,
+    UnequipDelay = 2,
+    DropDelay = 2,
+    TakeDelay = 0,
+    CurrencySingularName = "Dollar",
+    CurrencyPluralName = "Dollars",
+    SchemaYear = 2023,
+    AmericanDates = true,
+    AmericanTimeStamp = true,
+    MinDescLen = 16,
+    AdminConsoleNetworkLogs = false,
+    TimeToEnterVehicle = 1,
+    CarEntryDelayEnabled = true,
+    Notify = {"garrysmod/content_downloaded.wav", 50, 250},
+  }
 
-    hook.Run("InitializedConfig")
-    ConfigWasInitialized = true
+  hook.Run("InitializedConfig")
+  ConfigWasInitialized = true
 end
 
 --- Retrieves a value from the configuration table.
@@ -95,5 +94,5 @@ end
 -- @return The value of the configuration key or the default value if the key is not found.
 -- @realm shared
 function lia.config.get(key, default)
-    return lia.config[key] ~= nil and lia.config[key] or default
+  return lia.config[key] ~= nil and lia.config[key] or default
 end

@@ -7,15 +7,15 @@ ENT.RenderGroup = RENDERGROUP_BOTH
 ENT.DrawEntityInfo = true
 ENT.isItem = true
 function ENT:getItemID()
-    return self:getNetVar("instanceID")
+  return self:getNetVar("instanceID")
 end
 
 function ENT:getItemTable()
-    return lia.item.instances[self:getItemID()]
+  return lia.item.instances[self:getItemID()]
 end
 
 function ENT:getData(key, default)
-    local data = self:getNetVar("data", {})
-    if data[key] == nil then return default end
-    return data[key]
+  local data = self:getNetVar("data", {})
+  if data[key] == nil then return default end
+  return data[key]
 end

@@ -6,9 +6,9 @@ MODULE.version = "Stock"
 MODULE.desc = "Adds PAC Compatibility"
 MODULE.enabled = pac ~= nil
 MODULE.CAMIPrivileges = {
-    {
-        Name = "Staff Permissions - Can Use PAC3",
-        MinAccess = "superadmin",
-        Description = "Allows access to Spawning Menu Items.",
-    }
+  {
+    Name = "Staff Permissions - Can Use PAC3",
+    MinAccess = "superadmin",
+    Description = "Allows access to Spawning Menu Items.",
+  }
 }

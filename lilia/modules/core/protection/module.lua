@@ -6,9 +6,9 @@ MODULE.discord = "@liliaplayer"
 MODULE.version = "Stock"
 MODULE.desc = "Implements Lilia Protection Modules."
 MODULE.CAMIPrivileges = {
-    {
-        Name = "Staff Permissions - Can See Alting Notifications",
-        MinAccess = "admin",
-        Description = "Allows access to seeing Alting Warnings ."
-    },
+  {
+    Name = "Staff Permissions - Can See Alting Notifications",
+    MinAccess = "admin",
+    Description = "Allows access to seeing Alting Warnings ."
+  },
 }
