@@ -60,11 +60,6 @@ function LiliaBootstrap(section, message)
     LiliaLog("bootstrap", message, section)
 end
 
-function stripRealmPrefix(name)
-    local prefix = name:sub(1, 3)
-    return (prefix == "sh_" or prefix == "sv_" or prefix == "cl_") and name:sub(4) or name
-end
-
 function GM:Initialize()
     if engine.ActiveGamemode() == "lilia" then LiliaError("No schema loaded. Please place the schema in your gamemodes folder, then set it as your gamemode.") end
     if SERVER then

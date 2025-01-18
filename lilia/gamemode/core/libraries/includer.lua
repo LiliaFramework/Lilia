@@ -159,6 +159,11 @@ FilesToLoad = {
     },
 }
 
+local function stripRealmPrefix(name)
+    local prefix = name:sub(1, 3)
+    return (prefix == "sh_" or prefix == "sv_" or prefix == "cl_") and name:sub(4) or name
+end
+
 --- Loads a Lua file into the server, client, or shared realm.
 -- This function includes a Lua file into the server, client, or shared realm depending on the specified state.
 -- This function has an legacy alias *lia.util.include* that can be used instead of lia.include.
