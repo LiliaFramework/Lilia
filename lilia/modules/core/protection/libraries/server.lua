@@ -209,7 +209,7 @@ function MODULE:CanTool(client, _, tool)
       end
     end
 
-    if (tool == "permaall" or tool == "permaprops" or tool == "blacklistandremove") and (string.StartsWith(entClass, "lia_") or self.CanNotPermaProp[entClass] or entity:IsLiliaPersistent() or entity:CreatedByMap()) then return false end
+    if (tool == "permaall" or tool == "permaprops" or tool == "blacklistandremove") and (string.StartsWith(entClass, "lia_") or self.CanNotPermaProp[entClass] or entity:isLiliaPersistent() or entity:CreatedByMap()) then return false end
     if (tool == "adv_duplicator" or tool == "advdupe2" or tool == "duplicator" or tool == "blacklistandremove") and (self.DuplicatorBlackList[entClass] or entity.NoDuplicate) then return false end
     if tool == "weld" and entClass == "sent_ball" then return false end
   end

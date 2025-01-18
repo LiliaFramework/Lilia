@@ -43,6 +43,18 @@ function GM:CharPreSave(character)
   for _, v in pairs(character:getInv():getItems()) do
     if v.OnSave then v:call("OnSave", client) end
   end
+
+  if IsValid(client) then
+    local ammoTable = {}
+    for _, ammoType in pairs(game.GetAmmoTypes()) do
+      if ammoType then
+        local ammoCount = client:GetAmmoCount(ammoType)
+        if isnumber(ammoCount) and ammoCount > 0 then ammoTable[ammoType] = ammoCount end
+      end
+    end
+
+    character:setData("ammo", ammoTable)
+  end
 end
 
 function GM:PlayerLoadedChar(client, character)
@@ -60,6 +72,16 @@ function GM:PlayerLoadedChar(client, character)
 
   character:setData("loginTime", os.time())
   hook.Run("PlayerLoadout", client)
+  local ammoTable = character:getData("ammo", {})
+  if table.IsEmpty(ammoTable) then return end
+  timer.Simple(0.25, function()
+    if not IsValid(ammoTable) then return end
+    for ammoType, ammoCount in pairs(ammoTable) do
+      if IsValid(ammoCount) or IsValid(ammoCount) then client:GiveAmmo(ammoCount, ammoType, true) end
+    end
+
+    character:setData("ammo", nil)
+  end)
 end
 
 function GM:CharLoaded(id)
@@ -342,6 +364,14 @@ function GM:PlayerDeath(client)
     ragdoll:Remove()
     client:setLocalVar("blur", nil)
   end
+
+  local inventory = character:getInv()
+  if inventory then
+    local items = inventory:getItems()
+    for _, v in pairs(items) do
+      if v.isWeapon and v:getData("equip") then v:setData("ammo", nil) end
+    end
+  end
 end
 
 function GM:PlayerSpawn(client)
@@ -464,39 +494,91 @@ function GM:PlayerDeathThink(client)
 end
 
 function GM:SaveData()
-  local data = {}
-  for _, v in ents.Iterator() do
-    if v.IsLeonNPC or v.IsPersistent then
-      data[#data + 1] = {
-        pos = v:GetPos(),
-        class = v:GetClass(),
-        model = v:GetModel(),
-        angles = v:GetAngles(),
+  local data = {
+    entities = {},
+    items = {}
+  }
+
+  for _, ent in ents.Iterator() do
+    if ent:isLiliaPersistent() then
+      data.entities[#data.entities + 1] = {
+        pos = ent:GetPos(),
+        class = ent:GetClass(),
+        model = ent:GetModel(),
+        angles = ent:GetAngles(),
       }
     end
   end
 
-  lia.data.set("persistance", data, true)
-end
-
-local function IsEntityNearby(pos, class)
-  for _, ent in ipairs(ents.FindByClass(class)) do
-    if ent:GetPos():Distance(pos) <= 50 then return true end
+  for _, item in ipairs(ents.FindByClass("lia_item")) do
+    if item.liaItemID and not item.temp then data.items[#data.items + 1] = {item.liaItemID, item:GetPos()} end
   end
-  return false
+
+  lia.data.set("persistance", data.entities, true)
+  lia.data.set("itemsave", data.items, true)
 end
 
 function GM:LoadData()
-  local data = lia.data.get("persistance", {}, true)
-  for _, v in pairs(data or {}) do
-    if not IsEntityNearby(v.pos, v.class) then
-      local ent = ents.Create(v.class)
-      if IsValid(ent) then
-        if v.pos then ent:SetPos(v.pos) end
-        if v.angles then ent:SetAngles(v.angles) end
-        if v.model then ent:SetModel(v.model) end
-        ent:Spawn()
-        ent:Activate()
+  local function IsEntityNearby(pos, class)
+    for _, ent in ipairs(ents.FindByClass(class)) do
+      if ent:GetPos():Distance(pos) <= 50 then return true end
+    end
+    return false
+  end
+
+  local entities = lia.data.get("persistance", {}, true)
+  for _, ent in ipairs(entities or {}) do
+    if not IsEntityNearby(ent.pos, ent.class) then
+      local createdEnt = ents.Create(ent.class)
+      if IsValid(createdEnt) then
+        if ent.pos then createdEnt:SetPos(ent.pos) end
+        if ent.angles then createdEnt:SetAngles(ent.angles) end
+        if ent.model then createdEnt:SetModel(ent.model) end
+        createdEnt:Spawn()
+        createdEnt:Activate()
+      end
+    else
+      LiliaError(string.format("Entity creation aborted: An entity of class '%s' is already nearby at position (%.2f, %.2f, %.2f).", ent.class, ent.pos.x, ent.pos.y, ent.pos.z))
+    end
+  end
+
+  local items = lia.data.get("itemsave", {}, true)
+  if items then
+    local idRange = {}
+    local positions = {}
+    for _, item in ipairs(items) do
+      idRange[#idRange + 1] = item[1]
+      positions[item[1]] = item[2]
+    end
+
+    if #idRange > 0 then
+      local range = "(" .. table.concat(idRange, ", ") .. ")"
+      if hook.Run("ShouldDeleteSavedItems") == true then
+        lia.db.query("DELETE FROM lia_items WHERE _itemID IN " .. range)
+        LiliaInformation("Server Deleted Server Items (does not include Logical Items)")
+      else
+        lia.db.query("SELECT _itemID, _uniqueID, _data FROM lia_items WHERE _itemID IN " .. range, function(data)
+          if data then
+            local loadedItems = {}
+            for _, item in ipairs(data) do
+              local itemID = tonumber(item._itemID)
+              local itemData = util.JSONToTable(item._data or "[]")
+              local uniqueID = item._uniqueID
+              local itemTable = lia.item.list[uniqueID]
+              local position = positions[itemID]
+              if itemTable and itemID then
+                local itemCreated = lia.item.new(uniqueID, itemID)
+                itemCreated.data = itemData or {}
+                itemCreated:spawn(position).liaItemID = itemID
+                itemCreated:onRestored()
+                itemCreated.invID = 0
+                table.insert(loadedItems, itemCreated)
+              end
+            end
+
+            hook.Run("OnSavedItemLoaded", loadedItems)
+          end
+        end)
       end
     end
   end

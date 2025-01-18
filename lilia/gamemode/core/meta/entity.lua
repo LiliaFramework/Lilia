@@ -22,6 +22,10 @@ function entityMeta:isSimfphysCar()
   return IsValid(self) and validClasses[self:GetClass()] or self.IsSimfphyscar or self.LVS or validClasses[self.Base]
 end
 
+function entityMeta:isLiliaPersistent()
+  return self.IsLeonNPC or self.IsPersistent
+end
+
 function entityMeta:getEntItemDropPos()
   if not IsValid(self) then return false end
   local offset = Vector(-50, 0, 0)
