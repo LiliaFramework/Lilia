@@ -117,7 +117,7 @@ function MODULE:PlayerBindPress(client, bind, pressed)
     local lPly = LocalPlayer()
     if client:InVehicle() then return end
     if IsValid(weapon) and weapon:GetClass() == "weapon_physgun" and client:KeyDown(IN_ATTACK) then return end
-    if hook.Run("CanPlayerChooseWeapon") == false then return end
+    if hook.Run("CanPlayerChooseWeapon", weapon) == false then return end
     if not pressed then return end
     bind = bind:lower()
     local total = table.Count(client:GetWeapons())
