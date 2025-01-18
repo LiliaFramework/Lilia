@@ -1,13 +1,4 @@
-﻿--[[
-	NetStream - 2.0.0
-
-	Alexander Grist-Hucker
-	http://www.revotech.org
-
-	Credits to:
-		thelastpenguin for pON.
-		https://github.com/thelastpenguin/gLUA-Library/tree/master/pON
---]]
+﻿
 local type, error, pcall, pairs, _player = type, error, pcall, pairs, player
 if not pon then include("sh_pon.lua") end
 AddCSLuaFile()

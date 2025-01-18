@@ -1,25 +1,4 @@
-﻿--[[--
-Multi-language phrase support.
-
-Lilia has support for multiple languages, and you can easily leverage this system for use in your own schema, plugins, etc.
-Languages will be loaded from the schema and any plugins in `languages/sh_languagename.lua`, where `languagename` is the id of a
-language (`english` for English, `french` for French, etc). The structure of a language file is a table of phrases with the key
-as its phrase ID and the value as its translation for that language. An example
-LANGUAGE = {
-    welcomeMessage = "Welcome to the game!",
-    gameOver = "Game over! You won the game!",
-    victory = "%s achieved victory!",
-}
-
-The phrases defined in these language files can be used with the `L` global function:
-	print(L("welcomeMessage"))
-	> "Welcome to the game!"
-
-All phrases are formatted with `string.format`, so if you wish to add some info in a phrase you can use standard Lua string
-formatting arguments:
-	print(L("victory", "Nicholas"))
-	> Nicholas achieved victory!
-]]
+﻿
 -- @library lia.lang
 lia.lang = lia.lang or {}
 lia.lang.names = lia.lang.names or {}

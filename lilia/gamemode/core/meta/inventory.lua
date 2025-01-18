@@ -1,21 +1,4 @@
-﻿--[[--
-Holds items within a grid layout.
-
-Inventories are an object that contains `Item`s in a grid layout. Every `Character` will have exactly one inventory attached to
-it, which is the only inventory that is allowed to hold bags - any item that has its own inventory (i.e., a suitcase). Inventories
-can be owned by a character, or it can be individually interacted with as a standalone object. For example, the container plugin
-attaches inventories to props, allowing for items to be stored outside of any character inventories and remain "in the world".
-
-You may be looking for the following common functions:
-
-`add` Which adds an item to the inventory.
-
-`getItems` Which gets all of the items inside the inventory.
-
-`getID` Which gets the inventory's ID.
-
-`hasItem` Which checks if the inventory has an item.
-]]
+﻿
 -- @inventorymeta Framework
 local Inventory = lia.Inventory or {}
 Inventory.__index = Inventory

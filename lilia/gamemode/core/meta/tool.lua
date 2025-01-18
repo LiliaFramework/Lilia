@@ -1,15 +1,4 @@
-﻿--[[--
-A custom tool class based on the Base GMOD Toolgun, designed for integration with Lilia's framework.
-
-The `ToolGun` class extends the functionality of the base GMOD toolgun, enabling seamless integration with Lilia's files and configuration. This custom tool class provides a flexible framework for creating and managing interactive tools within Garry's Mod, specifically tailored to work with Lilia's environment and system.
-
-The `ToolGun` class is designed to work in conjunction with Lilia's file system and configuration setup. It allows for the implementation of toolguns that can be dynamically loaded and configured based on Lilia's files, offering a robust solution for extending tool functionalities in a modular way.
-
-### Customization and Flexibility:
-The `ToolGun` class provides a foundation for creating custom tools that integrate smoothly with Lilia's system. Developers can extend and modify the class to fit specific needs, leveraging Lilia's configuration files to dictate tool behavior and appearance. This approach ensures that tools can be easily adapted and updated in line with Lilia's framework, providing a consistent and maintainable tool environment.
-
-By integrating with Lilia's files, the `ToolGun` class enables developers to build sophisticated tools that are fully compatible with Lilia's system, enhancing the overall gameplay experience and tool management within Garry's Mod.
-]]
+﻿
 -- @toolmeta Framework
 local ToolGunMeta = lia.meta.tool or {}
 --- Creates a new tool object.

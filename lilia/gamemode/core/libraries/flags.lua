@@ -1,29 +1,4 @@
-﻿--[[--
-Grants abilities to characters.
-
-Flags are a simple way of adding/removing certain abilities to players on a per-character basis. Lilia comes with a few flags
-by default, for example to restrict spawning of props, usage of the physgun, etc. All flags will be listed in the
-`Flags` section of the `Help` menu. Flags are usually used when server validation is required to allow a player to do something
-on their character. However, it's usually preferable to use in-character methods over flags when possible (i.e restricting
-prop spawning to characters that rather have a bussiness).
-
-Flags are a single alphanumeric character that can be checked on the server. Serverside callbacks can be used to provide
-functionality whenever the flag is added or removed. For example:
-	lia.flag.add("z", "Some cool stuff.", function(client, bGiven)
-		print("z flag given:", bGiven)
-	end)
-
-	Entity(1):getChar():giveFlags("z")
-	> z flag given: true
-
-	Entity(1):getChar():takeFlags("z")
-	> z flag given: false
-
-	print(Entity(1):getChar():hasFlags("z"))
-	> false
-
-Check out `Character:giveFlags` and `Character:takeFlags` for additional info.
-]]
+﻿
 -- @library lia.flag
 lia.flag = lia.flag or {}
 lia.flag.list = lia.flag.list or {}

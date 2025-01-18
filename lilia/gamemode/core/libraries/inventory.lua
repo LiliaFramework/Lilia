@@ -1,6 +1,4 @@
-﻿--[[--
-Inventory manipulation and helper functions.
-]]
+﻿
 -- @library lia.inventory
 lia.inventory = lia.inventory or {}
 lia.inventory.types = lia.inventory.types or {}

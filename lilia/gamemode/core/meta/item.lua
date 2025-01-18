@@ -1,13 +1,4 @@
-﻿--[[--
-Interactable entities that can be held in inventories.
-
-Items are objects that are contained inside of an `Inventory`, or as standalone entities if they are dropped in the world. They
-usually have functionality that provides more gameplay aspects to the schema.
-
-For an item to have an actual presence, they need to be instanced (usually by spawning them). Items describe the
-properties, while instances are a clone of these properties that can have their own unique data (e.g., an ID card will have the
-same name but different numerical IDs). You can think of items as the class, while instances are objects of the `Item` class.
-]]
+﻿
 -- @itemmeta Framework
 local ITEM = lia.meta.item or {}
 debug.getregistry().Item = lia.meta.item

@@ -1,10 +1,4 @@
-﻿--[[--
-Configuration options for Lilia.
-
-This library contains various configuration options used in the Lilia gamemode. Each option in the **lia.config** table serves a specific purpose and defines various aspects of the gamemode's functionality.
-
-These configuration options control various aspects of the gamemode's mechanics, user interface, and gameplay experience.
-]]
+﻿
 -- @library lia.config
 lia.config = lia.config or {}
 --- A list of available configuration options for use within the game.

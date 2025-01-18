@@ -1,8 +1,4 @@
-﻿--[[--
-Item manipulation and helper functions.
-
-If you are looking for the item structure, you can find it in the [wiki](https://liliaframework.github.io/) under items.
-]]
+﻿
 -- @library lia.item
 lia.item = lia.item or {}
 lia.item.base = lia.item.base or {}

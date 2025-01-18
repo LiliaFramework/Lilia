@@ -1,12 +1,4 @@
-﻿--[[--
-Chat manipulation and helper functions.
-
-Chat messages are a core part of the framework - it's takes up a good chunk of the gameplay, and is also used to interact with
-the framework. Chat messages can have types or "classes" that describe how the message should be interpreted. All chat messages
-will have some type of class: `ic` for regular in-character speech, `me` for actions, `ooc` for out-of-character, etc. These
-chat classes can affect how the message is displayed in each player's chatbox. See `lia.chat.register`.
-to create your own chat classes.
-]]
+﻿
 -- @library lia.chat
 lia.chat = lia.chat or {}
 --- List of all chat classes that have been registered by the framework, where each key is the name of the chat class, and value

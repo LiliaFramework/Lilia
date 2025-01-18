@@ -1,11 +1,4 @@
-﻿--[[--
-Registration, parsing, and handling of commands.
-
-Commands can be ran through the chat with slash commands or they can be executed through the console. Commands can be manually
-restricted to certain usergroups using a [CAMI](https://github.com/glua/CAMI)-compliant admin mod.
-
-If you are looking for the command structure, you can find it [here](https://liliaframework.github.io/manual/structure_command).
-]]
+﻿
 -- @library lia.command
 lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
