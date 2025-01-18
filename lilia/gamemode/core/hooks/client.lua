@@ -498,9 +498,6 @@ function GM:OnContextMenuClose()
   if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
 end
 
-function GM:SetupQuickMenuCategories(panel)
-  panel:addCategory("Miscellaneous")
-end
 
 function GM:CharListLoaded()
   timer.Create("liaWaitUntilPlayerValid", 1, 0, function()

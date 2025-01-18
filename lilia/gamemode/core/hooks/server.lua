@@ -369,7 +369,7 @@ function GM:PlayerDisconnected(client)
   end
 
   lia.char.cleanUpForPlayer(client)
-  for _, entity in pairs(ents.GetAll()) do
+  for _, entity in ents.Iterator() do
     if entity:GetCreator() == client and not string.StartsWith(entity:GetClass(), "lia_") then entity:Remove() end
   end
 end
@@ -476,7 +476,7 @@ function GM:SaveData()
     end
   end
 
-  self:setData(data)
+  lia.data.set("persistance", data, true)
 end
 
 local function IsEntityNearby(pos, class)
@@ -487,7 +487,8 @@ local function IsEntityNearby(pos, class)
 end
 
 function GM:LoadData()
-  for _, v in pairs(self:getData() or {}) do
+  local data = lia.data.get("persistance", {}, true)
+  for _, v in pairs(data or {}) do
     if not IsEntityNearby(v.pos, v.class) then
       local ent = ents.Create(v.class)
       if IsValid(ent) then

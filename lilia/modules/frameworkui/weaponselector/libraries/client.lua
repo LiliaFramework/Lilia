@@ -101,7 +101,7 @@ end
 
 function MODULE:SetupQuickMenu(menu)
   menu:addCategory(self.name)
-  menu:addCheck(L"invertWepSelectScroll", function(panel, state)
+  menu:addCheck(L("invertWepSelectScroll"), function(panel, state)
     if state then
       RunConsoleCommand("wepselect_invert", "1")
     else

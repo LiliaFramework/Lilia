@@ -37,10 +37,6 @@ local ThirdPersonVerticalView = CreateClientConVar("tp_vertical", 10, true)
 local ThirdPersonViewDistance = CreateClientConVar("tp_distance", 50, true)
 local ThirdPersonHorizontalView = CreateClientConVar("tp_horizontal", 0, true)
 crouchFactor = 0
-function MODULE:SetupQuickMenuCategories(panel)
-  panel:addCategory("Third Person")
-end
-
 function MODULE:SetupQuickMenu(menu)
   if self.ThirdPersonEnabled then
     menu:addCheck(L("thirdpersonToggle"), function(_, state)

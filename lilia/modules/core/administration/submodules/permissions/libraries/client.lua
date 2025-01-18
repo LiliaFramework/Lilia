@@ -15,10 +15,6 @@ local ESP_DrawnEntities = {
   lia_vendor = true,
 }
 
-function MODULE:SetupQuickMenuCategories(panel)
-  panel:addCategory("ESP")
-end
-
 function MODULE:SetupQuickMenu(menu)
   local client = LocalPlayer()
   if client:getChar() and (client:hasPrivilege("Staff Permissions - No Clip ESP Outside Staff Character") or client:isStaffOnDuty()) then
