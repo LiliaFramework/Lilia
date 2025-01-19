@@ -1,5 +1,4 @@
 name: CI
-
 on: [push, pull_request]
 
 permissions:
@@ -20,34 +19,31 @@ permissions:
 jobs:
   linter:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Lilia Repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           path: lilia
 
-      - name: Setup Lua Environment
-        uses: leafo/gh-actions-lua@v8.0.0
+      - uses: leafo/gh-actions-lua@v8.0.0
         with:
           luaVersion: "5.2"
 
-      - name: Install LuaRocks
-        uses: leafo/gh-actions-luarocks@v4.0.0
+      - uses: leafo/gh-actions-luarocks@v4.0.0
 
-      - name: Pull GLuaCheck
+      - name: Pull gluacheck
         uses: actions/checkout@v3
         with:
           repository: LiliaFramework/GluaCheck
           path: luacheck
 
-      - name: Build GLuaCheck
+      - name: Build gluacheck
         working-directory: luacheck
         run: luarocks make
 
-      - name: Run GLuaCheck Linter
+      - name: Lint
         working-directory: lilia
         run: |
-          cd lilia
           luacheck . --no-redefined \
             --no-global --no-self \
             --no-max-line-length --no-max-code-line-length \
