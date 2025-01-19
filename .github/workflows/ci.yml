@@ -47,10 +47,8 @@ jobs:
       - name: Run GLuaCheck Linter
         working-directory: lilia
         run: |
-          ls
           cd lilia
-          ls
-          luacheck lilia --no-redefined \
+          luacheck . --no-redefined \
             --no-global --no-self \
             --no-max-line-length --no-max-code-line-length \
             --no-max-string-line-length --no-max-comment-line-length \
