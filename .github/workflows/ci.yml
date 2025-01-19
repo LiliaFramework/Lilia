@@ -86,7 +86,7 @@ jobs:
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git add .
-            git commit -m "Applied Pretty Print Formatting"
+            git commit -m "Pretty Printed"
             git push https://${{ secrets.LiliaGitSecret }}@github.com/${{ github.repository }}.git main
           else
             echo "No changes to commit"
