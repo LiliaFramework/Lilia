@@ -1,4 +1,1 @@
-exclude_files = {
-    "gamemode/core/libraries/thirdparty/**/*.lua",
-    "lilia.txt",
-}
+exclude_files = {"gamemode/core/libraries/thirdparty/**/*.lua", "lilia.txt", "gamemode/core/libraries/thirdparty/sh_cami.lua", "gamemode/core/libraries/thirdparty/sh_deferred.lua", "gamemode/core/libraries/thirdparty/sh_netstream2.lua", "gamemode/core/libraries/thirdparty/sh_pon.lua", "gamemode/core/libraries/thirdparty/sh_sfs.lua", "gamemode/core/libraries/thirdparty/sh_utf8.lua", "gamemode/core/libraries/thirdparty/cl_markup.lua",}
