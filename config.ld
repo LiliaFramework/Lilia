@@ -1,3 +1,3 @@
 file = {
-    exclude = {"lilia/gamemode/core/libraries/thirdparty"}
+    exclude = {"gamemode/core/libraries/thirdparty"}
 }
