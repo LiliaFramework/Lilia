@@ -80,7 +80,7 @@ end
 net.Receive("ChangeAttribute", function(_, client)
   if not client:hasPrivilege("Commands - Manage Attributes") then return end
   local charID = net.ReadInt(32)
-  local rowData = net.ReadTable()
+  local _ = net.ReadTable()
   local attribKey = net.ReadString()
   local amountStr = net.ReadString()
   local mode = net.ReadString()

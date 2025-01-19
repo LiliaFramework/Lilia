@@ -441,7 +441,7 @@ local function IncludeFlagManagement(target, AdminMenu, submenus)
 end
 
 local function AddCommandToMenu(AdminMenu, commandData, commandKey, target, commandName, submenus)
-  local canUse, privilege = lia.command.hasAccess(LocalPlayer(), commandKey, commandData)
+  local canUse, _ = lia.command.hasAccess(LocalPlayer(), commandKey, commandData)
   if not canUse then return end
   local category = commandData.AdminStick.Category
   local subCategory = commandData.AdminStick.SubCategory

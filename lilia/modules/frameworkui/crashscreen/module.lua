@@ -1,5 +1,0 @@
-﻿MODULE.name = "Crash Screen"
-MODULE.author = "Samael & Vingard"
-MODULE.discord = "@liliaplayer"
-MODULE.version = "Stock"
-MODULE.desc = "Adds a Crash Screen"

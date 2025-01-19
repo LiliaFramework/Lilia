@@ -541,7 +541,7 @@ else
               net.Start(option.net)
               net.WriteInt(charID, 32)
               net.WriteTable(rowData)
-              for fName, fVal in pairs(values) do
+              for _, fVal in pairs(values) do
                 if isnumber(fVal) then
                   net.WriteInt(fVal, 32)
                 else

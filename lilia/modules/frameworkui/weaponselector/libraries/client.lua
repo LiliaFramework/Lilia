@@ -8,9 +8,9 @@ MODULE.fadeTime = MODULE.fadeTime or 0
 local IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs = IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs
 local RunConsoleCommand, LocalPlayer, math, color_white, surface = RunConsoleCommand, LocalPlayer, math, color_white, surface
 local CVAR_WEPSELECT_INVERT = CreateClientConVar("wepselect_invert", 0, true)
-function MODULE:getWeaponFromIndex(i)
+local function getWeaponFromIndex(i)
   local index = 1
-  for k, v in pairs(LocalPlayer():GetWeapons()) do
+  for _, v in pairs(LocalPlayer():GetWeapons()) do
     if index == i then return v end
     index = index + 1
   end
@@ -41,7 +41,7 @@ function MODULE:HUDPaint()
     local color = ColorAlpha(realIndex == self.index and lia.config.Color or color_white, (255 - math.abs(theta * 3) * 255) * fraction)
     local lastY = 0
     if self.markup and (realIndex == 1 or realIndex < self.index) then
-      local w, h = self.markup:Size()
+      local _, h = self.markup:Size()
       lastY = h * fraction
       if realIndex == self.index - 1 or realIndex == 1 then
         self.infoAlpha = Lerp(frameTime * 5, self.infoAlpha, 255)
@@ -53,7 +53,7 @@ function MODULE:HUDPaint()
 
     surface.SetFont("liaSubTitleFont")
     local name = hook.Run("GetWeaponName", v) or v:GetPrintName():upper()
-    local tx, ty = surface.GetTextSize(name)
+    local _, ty = surface.GetTextSize(name)
     local scale = 1 - math.abs(theta * 2)
     local matrix = Matrix()
     matrix:Translate(Vector(shiftX + x + math.cos(theta * spacing + pi) * radius + radius, y + lastY + math.sin(theta * spacing + pi) * radius - ty / 2, 1))
@@ -73,7 +73,7 @@ function MODULE:onIndexChanged()
   local client = LocalPlayer()
   local weapon
   local index = 1
-  for k, v in pairs(client:GetWeapons()) do
+  for _, v in pairs(client:GetWeapons()) do
     if index == self.index then
       weapon = v
       break
@@ -86,7 +86,7 @@ function MODULE:onIndexChanged()
   self.infoAlpha = 0
   if IsValid(weapon) then
     local text = ""
-    for k, v in ipairs({"Author", "Contact", "Purpose", "Instructions"}) do
+    for _, v in ipairs({"Author", "Contact", "Purpose", "Instructions"}) do
       if weapon[v] and weapon[v]:find("%S") then
         local color = lia.config.Color
         text = text .. "<font=liaItemBoldFont><color=" .. color.r .. "," .. color.g .. "," .. color.b .. ">" .. L(v) .. "</font></color>\n" .. weapon[v] .. "\n"
@@ -94,14 +94,16 @@ function MODULE:onIndexChanged()
     end
 
     if text ~= "" then self.markup = markup.Parse("<font=liaItemDescFont>" .. text, ScrW() * 0.3) end
-    local source, pitch = hook.Run("WeaponCycleSound") or "common/talk.wav"
-    client:EmitSound(source or "common/talk.wav", 45, pitch or 180)
+    local source, pitch = hook.Run("WeaponCycleSound")
+    source = source or "common/talk.wav"
+    pitch = pitch or 180
+    client:EmitSound(source, 45, pitch)
   end
 end
 
 function MODULE:SetupQuickMenu(menu)
   menu:addCategory(self.name)
-  menu:addCheck(L("invertWepSelectScroll"), function(panel, state)
+  menu:addCheck(L("invertWepSelectScroll"), function(_, state)
     if state then
       RunConsoleCommand("wepselect_invert", "1")
     else
@@ -138,15 +140,16 @@ function MODULE:PlayerBindPress(client, bind, pressed)
     self:onIndexChanged()
     return true
   elseif bind:find("attack") and self.alpha > 0 then
-    local weapon = self:getWeaponFromIndex(self.index)
+    local weapon = getWeaponFromIndex(self.index)
     if not IsValid(weapon) then
       self.alpha = 0
       self.infoAlpha = 0
       return
     end
 
-    local source, pitch = hook.Run("WeaponSelectSound", weapon) or "common/talk.wav"
-    lPly:EmitSound(source, 45, pitch or 200)
+    local source, pitch = hook.Run("WeaponSelectSound")
+    source = source or "common/talk.wav"
+    pitch = pitch or 180
     lPly:SelectWeapon(weapon:GetClass())
     self.alpha = 0
     self.infoAlpha = 0

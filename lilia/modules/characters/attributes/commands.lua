@@ -10,7 +10,7 @@
     ExtraFields = {
       ["attribute"] = function()
         local attributes = {}
-        for k, v in pairs(lia.attribs.list) do
+        for _, v in pairs(lia.attribs.list) do
           table.insert(attributes, v.name)
         end
         return attributes, "combo"
@@ -106,7 +106,7 @@ lia.command.add("charaddattrib", {
     ExtraFields = {
       ["attribute"] = function()
         local attributes = {}
-        for k, v in pairs(lia.attribs.list) do
+        for _, v in pairs(lia.attribs.list) do
           table.insert(attributes, k)
         end
         return attributes, "combo"

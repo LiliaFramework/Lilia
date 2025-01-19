@@ -880,7 +880,13 @@ lia.command.add("chargiveitem", {
     SubCategory = "Items",
     Icon = "icon16/user_gray.png",
     ExtraFields = {
-      ["item"] = "text"
+      ["item"] = function()
+        local items = {}
+        for _, v in pairs(lia.item.list) do
+          table.insert(items, v.uniqueID)
+        end
+        return items, "combo"
+      end,
     }
   },
   onRun = function(client, arguments)
@@ -913,7 +919,8 @@ lia.command.add("chargiveitem", {
     else
       client:notify("Invalid Target!")
     end
-  end
+  end,
+  alias = {"giveitem"}
 })
 
 lia.command.add("charsetdesc", {
