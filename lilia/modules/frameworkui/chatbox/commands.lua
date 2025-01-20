@@ -60,15 +60,15 @@ lia.command.add("blockooc", {
 lia.command.add("refreshfonts", {
   superAdminOnly = true,
   privilege = "Refresh Fonts",
-  onRun = function(client)
-    RunConsoleCommand("fixchatplz")
-    hook.Run("LoadFonts", lia.config.Font)
-    client:ChatPrint("Fonts have been refreshed!")
-  end
+  onRun = function(client) client:ConCommand("refreshfonts") end
 })
 
 lia.command.add("clearchat", {
   adminOnly = true,
   privilege = "Clear Chat",
-  onRun = function() netstream.Start(player.GetAll(), "adminClearChat") end
+  onRun = function()
+    for _, client in player.Iterator() do
+      client:ConCommand("fixchatplz")
+    end
+  end
 })
