@@ -96,7 +96,7 @@ end
 
 if SERVER then
   function lia.notices.notifyAll(msg)
-    for _, v in pairs(player.GetAll()) do
+    for _, v in player.Iterator() do
       v:notify(msg)
     end
   end

@@ -412,7 +412,7 @@ end
 
 function lia.char.getAll()
   local charTable = {}
-  for _, client in pairs(player.GetAll()) do
+  for _, client in player.Iterator() do
     if client:getChar() then charTable[client] = client:getChar() end
   end
   return charTable

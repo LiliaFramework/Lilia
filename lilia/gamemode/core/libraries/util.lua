@@ -26,28 +26,26 @@ end
 
 function lia.util.findPlayerItems(client)
   local items = {}
-  for _, item in pairs(ents.GetAll()) do
-    if not item:isItem() then continue end
-    if item:GetCreator() == client then table.insert(items, item) end
+  for _, item in ents.Iterator() do
+    if IsValid(item) and item:isItem() and item:GetCreator() == client then table.insert(items, item) end
   end
   return items
 end
 
 function lia.util.findPlayerItemsByClass(client, class)
   local items = {}
-  for _, item in pairs(ents.GetAll()) do
-    if not item:isItem() then continue end
-    if item:GetCreator() == client and item:getNetVar("id") == class then table.insert(items, item) end
+  for _, item in ents.Iterator() do
+    if IsValid(item) and item:isItem() and item:GetCreator() == client and item:getNetVar("id") == class then table.insert(items, item) end
   end
   return items
 end
 
 function lia.util.findPlayerEntities(client, class)
-  local items = {}
-  for _, entity in pairs(ents.GetAll()) do
-    if (not class or entity:GetClass() == class) and (entity:GetCreator() == client or entity.client and entity.client == client) then table.insert(items, entity) end
+  local entities = {}
+  for _, entity in ents.Iterator() do
+    if IsValid(entity) and (not class or entity:GetClass() == class) and (entity:GetCreator() == client or (entity.client and entity.client == client)) then table.insert(entities, entity) end
   end
-  return items
+  return entities
 end
 
 function lia.util.stringMatches(a, b)
@@ -425,9 +423,11 @@ else
   end
 
   function lia.util.CreateTableUI(title, columns, data, options, charID)
+    local screenW, screenH = ScrW(), ScrH()
+    local frameWidth, frameHeight = screenW * 0.8, screenH * 0.8
     local frame = vgui.Create("DFrame")
     frame:SetTitle(title or "Table List")
-    frame:SetSize(900, 600)
+    frame:SetSize(frameWidth, frameHeight)
     frame:Center()
     frame:MakePopup()
     local listView = vgui.Create("DListView", frame)

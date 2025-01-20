@@ -8,7 +8,7 @@
       return
     end
 
-    for _, v in pairs(player.GetAll()) do
+    for _, v in player.Iterator() do
       v:PlaySound(sound)
     end
   end
@@ -371,7 +371,7 @@ lia.command.add("cleanprops", {
   privilege = "Clean Entities",
   onRun = function(client)
     local count = 0
-    for _, v in pairs(ents.GetAll()) do
+    for _, v in ents.Iterator() do
       if v:isProp() then
         count = count + 1
         v:Remove()
@@ -387,7 +387,7 @@ lia.command.add("cleannpcs", {
   privilege = "Clean Entities",
   onRun = function(client)
     local count = 0
-    for _, v in pairs(ents.GetAll()) do
+    for _, v in ents.Iterator() do
       if IsValid(v) and v:IsNPC() then
         count = count + 1
         v:Remove()
@@ -557,7 +557,7 @@ lia.command.add("checkallmoney", {
   superAdminOnly = true,
   privilege = "Get Character Info",
   onRun = function(client)
-    for _, v in pairs(player.GetAll()) do
+    for _, v in player.Iterator() do
       if v:getChar() then client:ChatPrint(v:Name() .. " has " .. lia.currency.get(v:getChar():getMoney()) .. "s") end
     end
   end
@@ -1273,7 +1273,7 @@ lia.command.add("listents", {
   privilege = "List Entities",
   onRun = function(client)
     local entityList = {}
-    for _, v in pairs(ents.GetAll()) do
+    for _, v in ents.Iterator() do
       local creator = v:GetCreator()
       local model = v:GetModel()
       if not model or not isstring(model) or not model:find("%.mdl$") then continue end
