@@ -1,99 +1,100 @@
 ﻿local pi = math.pi
-MODULE.index = MODULE.index or 1
-MODULE.deltaIndex = MODULE.deltaIndex or MODULE.index
-MODULE.infoAlpha = MODULE.infoAlpha or 0
-MODULE.alpha = MODULE.alpha or 0
-MODULE.alphaDelta = MODULE.alphaDelta or MODULE.alpha
-MODULE.fadeTime = MODULE.fadeTime or 0
-local IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs = IsValid, tonumber, FrameTime, Lerp, ScrW, ScrH, CurTime, ipairs
-local RunConsoleCommand, LocalPlayer, math, color_white, surface = RunConsoleCommand, LocalPlayer, math, color_white, surface
+local index = MODULE.index or 1
+local deltaIndex = MODULE.deltaIndex or index
+local infoAlpha = MODULE.infoAlpha or 0
+local alpha = MODULE.alpha or 0
+local alphaDelta = MODULE.alphaDelta or alpha
+local fadeTime = MODULE.fadeTime or 0
+local IsValid = IsValid
+local tonumber = tonumber
+local FrameTime = FrameTime
+local Lerp = Lerp
+local ScrW, ScrH = ScrW, ScrH
+local CurTime = CurTime
+local ipairs = ipairs
+local RunConsoleCommand = RunConsoleCommand
+local LocalPlayer = LocalPlayer
+local math = math
+local color_white = color_white
+local surface = surface
+local IN_ATTACK = IN_ATTACK
 local CVAR_WEPSELECT_INVERT = CreateClientConVar("wepselect_invert", 0, true)
-local function getWeaponFromIndex(i)
-  local index = 1
-  for _, v in pairs(LocalPlayer():GetWeapons()) do
-    if index == i then return v end
-    index = index + 1
-  end
-  return NULL
+local function getWeaponFromIndex(i, weapons)
+  return weapons[i] or NULL
 end
 
 function MODULE:HUDPaint()
   local frameTime = FrameTime()
-  local fraction = self.alphaDelta
-  if fraction <= 0.01 and self.alpha == 0 then
-    self.alphaDelta = 0
+  local fraction = alphaDelta
+  if fraction <= 0.01 and alpha == 0 then
+    alphaDelta = 0
     return
   else
-    self.alphaDelta = Lerp(frameTime * 10, self.alphaDelta, self.alpha)
+    alphaDelta = Lerp(frameTime * 10, alphaDelta, alpha)
   end
 
-  local shiftX = ScrW() * .02
+  local shiftX = ScrW() * 0.02
   local client = LocalPlayer()
   local weapons = client:GetWeapons()
+  local totalWeapons = #weapons
   local x, y = ScrW() * 0.05, ScrH() * 0.5
-  local spacing = math.pi * 0.85
-  local radius = 240 * self.alphaDelta
-  self.deltaIndex = Lerp(frameTime * 12, self.deltaIndex, self.index)
-  local index = self.deltaIndex
-  local realIndex = 1
-  for _, v in pairs(weapons) do
-    local theta = (realIndex - index) * 0.1
-    local color = ColorAlpha(realIndex == self.index and lia.config.Color or color_white, (255 - math.abs(theta * 3) * 255) * fraction)
+  local spacing = pi * 0.85
+  local radius = 240 * alphaDelta
+  deltaIndex = Lerp(frameTime * 12, deltaIndex, index)
+  local currentIndex = deltaIndex
+  for realIndex, weapon in ipairs(weapons) do
+    local theta = (realIndex - currentIndex) * 0.1
+    local isActive = realIndex == index
+    local col = ColorAlpha(isActive and lia.config.Color or color_white, (255 - math.abs(theta * 3) * 255) * fraction)
     local lastY = 0
-    if self.markup and (realIndex == 1 or realIndex < self.index) then
-      local _, h = self.markup:Size()
+    if MODULE.markup and (realIndex == 1 or realIndex < index) then
+      local _, h = MODULE.markup:Size()
       lastY = h * fraction
-      if realIndex == self.index - 1 or realIndex == 1 then
-        self.infoAlpha = Lerp(frameTime * 5, self.infoAlpha, 255)
-        self.markup:Draw(x + 6 + shiftX, y + 30, 0, 0, self.infoAlpha * fraction)
+      if realIndex == index - 1 or realIndex == 1 then
+        infoAlpha = Lerp(frameTime * 5, infoAlpha, 255)
+        MODULE.markup:Draw(x + 6 + shiftX, y + 30, 0, 0, infoAlpha * fraction)
       end
 
-      if self.index == 1 then lastY = 0 end
+      if index == 1 then lastY = 0 end
     end
 
     surface.SetFont("liaSubTitleFont")
-    local name = hook.Run("GetWeaponName", v) or v:GetPrintName():upper()
+    local name = hook.Run("GetWeaponName", weapon) or weapon:GetPrintName():upper()
     local _, ty = surface.GetTextSize(name)
-    local scale = 1 - math.abs(theta * 2)
+    local scale = math.max(1 - math.abs(theta * 2), 0)
     local matrix = Matrix()
     matrix:Translate(Vector(shiftX + x + math.cos(theta * spacing + pi) * radius + radius, y + lastY + math.sin(theta * spacing + pi) * radius - ty / 2, 1))
-    matrix:Scale(Vector(1, 1, 0) * scale)
+    matrix:Scale(Vector(scale, scale, 1))
     cam.PushModelMatrix(matrix)
-    lia.util.drawText(name, 2, ty / 2, color, 0, 1, "liaSubTitleFont")
+    lia.util.drawText(name, 2, ty / 2, col, 0, 1, "liaSubTitleFont")
     cam.PopModelMatrix()
-    realIndex = realIndex + 1
   end
 
-  if self.fadeTime < CurTime() and self.alpha > 0 then self.alpha = 0 end
+  if fadeTime < CurTime() and alpha > 0 then alpha = 0 end
 end
 
 function MODULE:onIndexChanged()
-  self.alpha = 1
-  self.fadeTime = CurTime() + 5
+  alpha = 1
+  fadeTime = CurTime() + 5
   local client = LocalPlayer()
-  local weapon
-  local index = 1
-  for _, v in pairs(client:GetWeapons()) do
-    if index == self.index then
-      weapon = v
-      break
-    end
-
-    index = index + 1
-  end
-
-  self.markup = nil
-  self.infoAlpha = 0
+  local weapons = client:GetWeapons()
+  local weapon = getWeaponFromIndex(index, weapons)
+  MODULE.markup = nil
+  infoAlpha = 0
   if IsValid(weapon) then
-    local text = ""
-    for _, v in ipairs({"Author", "Contact", "Purpose", "Instructions"}) do
-      if weapon[v] and weapon[v]:find("%S") then
+    local textParts = {}
+    for _, key in ipairs({"Author", "Contact", "Purpose", "Instructions"}) do
+      if weapon[key] and weapon[key]:find("%S") then
         local color = lia.config.Color
-        text = text .. "<font=liaItemBoldFont><color=" .. color.r .. "," .. color.g .. "," .. color.b .. ">" .. L(v) .. "</font></color>\n" .. weapon[v] .. "\n"
+        table.insert(textParts, string.format("<font=liaItemBoldFont><color=%d,%d,%d>%s</font></color>\n%s\n", color.r, color.g, color.b, L(key), weapon[key]))
       end
     end
 
-    if text ~= "" then self.markup = markup.Parse("<font=liaItemDescFont>" .. text, ScrW() * 0.3) end
+    if #textParts > 0 then
+      local text = table.concat(textParts)
+      MODULE.markup = markup.Parse("<font=liaItemDescFont>" .. text, ScrW() * 0.3)
+    end
+
     local source, pitch = hook.Run("WeaponCycleSound")
     source = source or "common/talk.wav"
     pitch = pitch or 180
@@ -101,58 +102,48 @@ function MODULE:onIndexChanged()
   end
 end
 
-function MODULE:SetupQuickMenu(menu)
-  menu:addCategory(self.name)
-  menu:addCheck(L("invertWepSelectScroll"), function(_, state)
-    if state then
-      RunConsoleCommand("wepselect_invert", "1")
-    else
-      RunConsoleCommand("wepselect_invert", "0")
-    end
-  end, CVAR_WEPSELECT_INVERT:GetBool(), "Miscellaneous")
-
-  menu:addSpacer()
-end
-
 function MODULE:PlayerBindPress(client, bind, pressed)
-  local weapon = client:GetActiveWeapon()
-  local lPly = LocalPlayer()
+  if not pressed then return end
   if client:InVehicle() then return end
+  local weapon = client:GetActiveWeapon()
   if IsValid(weapon) and weapon:GetClass() == "weapon_physgun" and client:KeyDown(IN_ATTACK) then return end
   if hook.Run("CanPlayerChooseWeapon", weapon) == false then return end
-  if not pressed then return end
   bind = bind:lower()
-  local total = table.Count(client:GetWeapons())
-  local invprev, invnext = isnumber(bind:find("invprev")), isnumber(bind:find("invnext"))
-  if CVAR_WEPSELECT_INVERT:GetBool() then invprev, invnext = invnext, invprev end
-  if invprev then
-    self.index = self.index - 1
-    if self.index < 1 then self.index = total end
-    self:onIndexChanged()
-    return true
-  elseif invnext then
-    self.index = self.index + 1
-    if self.index > total then self.index = 1 end
+  local weapons = client:GetWeapons()
+  local total = #weapons
+  local isInvPrev = bind:find("invprev") ~= nil
+  local isInvNext = bind:find("invnext") ~= nil
+  if CVAR_WEPSELECT_INVERT:GetBool() then isInvPrev, isInvNext = isInvNext, isInvPrev end
+  if isInvPrev or isInvNext then
+    if isInvPrev then
+      index = index - 1
+      if index < 1 then index = total end
+    else
+      index = index + 1
+      if index > total then index = 1 end
+    end
+
     self:onIndexChanged()
     return true
   elseif bind:find("slot") then
-    self.index = math.Clamp(tonumber(bind:match("slot(%d)")) or 1, 1, total)
+    local slot = tonumber(bind:match("slot(%d)"))
+    index = math.Clamp(slot or 1, 1, total)
     self:onIndexChanged()
     return true
-  elseif bind:find("attack") and self.alpha > 0 then
-    local weapon = getWeaponFromIndex(self.index)
+  elseif bind:find("attack") and alpha > 0 then
+    local weapon = getWeaponFromIndex(index, weapons)
     if not IsValid(weapon) then
-      self.alpha = 0
-      self.infoAlpha = 0
+      alpha = 0
+      infoAlpha = 0
       return
     end
 
     local source, pitch = hook.Run("WeaponSelectSound")
     source = source or "common/talk.wav"
     pitch = pitch or 180
-    lPly:SelectWeapon(weapon:GetClass())
-    self.alpha = 0
-    self.infoAlpha = 0
+    client:SelectWeapon(weapon:GetClass())
+    alpha = 0
+    infoAlpha = 0
     return true
   end
 end
