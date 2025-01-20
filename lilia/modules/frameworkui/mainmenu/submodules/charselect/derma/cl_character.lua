@@ -58,7 +58,7 @@ function PANEL:CreateButton(text, description, callback)
   local btn = self.tabs:Add("DButton")
   btn:SetText("")
   btn:Dock(TOP)
-  btn:DockMargin(5, 5, 5, 10)
+  btn:DockMargin(5, 5, 5, 20)
   btn.initialTall = ScrH() * 0.1 / 2
   btn.initialWidth = 2
   btn.tall = btn.initialTall
@@ -194,7 +194,7 @@ function PANEL:Init()
   self.tabs = self:Add("DPanel")
   self.tabs:Dock(LEFT)
   self.tabs:SetWide(ScrW() * 0.2)
-  self.tabs:DockMargin(10, 10, 10, 10)
+  self.tabs:DockMargin(10, 20, 10, 10)
   self.tabs:SetPaintBackground(false)
   self.content = self:Add("DPanel")
   self.content:Dock(FILL)
