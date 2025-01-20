@@ -1,22 +1,16 @@
-﻿function MODULE:InitializedModules()
-  if not file.Exists("caseclaims.txt", "DATA") then file.Write("caseclaims.txt", "[]") end
-end
-
-function MODULE:TicketSystemClaim(admin)
-  local caseclaims = util.JSONToTable(file.Read("caseclaims.txt", "DATA"))
+﻿function MODULE:TicketSystemClaim(admin, requester)
+  local caseclaims = lia.data.get("caseclaims", {}, true)
   caseclaims[admin:SteamID()] = caseclaims[admin:SteamID()] or {
     name = admin:Nick(),
     claims = 0,
-    lastclaim = os.time()
+    lastclaim = os.time(),
+    claimedFor = {}
   }
 
-  caseclaims[admin:SteamID()] = {
-    name = admin:Nick(),
-    claims = caseclaims[admin:SteamID()].claims + 1,
-    lastclaim = os.time()
-  }
-
-  file.Write("caseclaims.txt", util.TableToJSON(caseclaims))
+  caseclaims[admin:SteamID()].claims = caseclaims[admin:SteamID()].claims + 1
+  caseclaims[admin:SteamID()].lastclaim = os.time()
+  caseclaims[admin:SteamID()].claimedFor[requester:SteamID()] = requester:Nick()
+  lia.data.set("caseclaims", caseclaims, true)
 end
 
 function MODULE:PlayerSay(client, text)
@@ -31,7 +25,7 @@ function MODULE:PlayerSay(client, text)
 end
 
 function MODULE:PlayerDisconnected(client)
-  for _, v in pairs(player.GetAll()) do
+  for _, v in player.Iterator() do
     if v:hasPrivilege("Staff Permissions - Always See Tickets") or v:isStaffOnDuty() then
       net.Start("TicketSystemClose")
       net.WriteEntity(client)
@@ -41,8 +35,8 @@ function MODULE:PlayerDisconnected(client)
 end
 
 function MODULE:SendPopup(noob, message)
-  for _, v in pairs(player.GetAll()) do
-    if v:hasPrivilege("Staff Permissions - Always See Tickets") or v:hasPrivilege("Staff Permissions - Always See Tickets") or v:isStaffOnDuty() then
+  for _, v in player.Iterator() do
+    if v:hasPrivilege("Staff Permissions - Always See Tickets") or v:isStaffOnDuty() then
       net.Start("TicketSystem")
       net.WriteEntity(noob)
       net.WriteString(message)

@@ -1,5 +1,7 @@
 ﻿local xpos = xpos or 20
 local ypos = ypos or 20
+local xpos = xpos or 20
+local ypos = ypos or 20
 function MODULE:TicketFrame(requester, message, claimed)
   if not TicketFrames then TicketFrames = {} end
   local mat_lightning = Material("icon16/lightning_go.png")
@@ -58,34 +60,38 @@ function MODULE:TicketFrame(requester, message, claimed)
   end
 
   msg:AppendText(message)
-  local function createButton(text, material, position, clickFunc)
+  local function createButton(text, material, position, clickFunc, disabled)
     local btn = vgui.Create("DButton", frm)
     btn:SetPos(215, position)
     btn:SetSize(83, 18)
     btn:SetText("          " .. text)
     btn:SetColor(Color(255, 255, 255))
     btn:SetContentAlignment(4)
-    btn.DoClick = clickFunc
+    btn.Disabled = disabled
+    btn.DoClick = function() if not btn.Disabled then clickFunc() end end
     btn.Paint = function(self, w, h)
       if self.Depressed or self.m_bSelected then
         draw.RoundedBox(1, 0, 0, w, h, Color(255, 50, 50, 255))
-      elseif self.Hovered then
+      elseif self.Hovered and not self.Disabled then
         draw.RoundedBox(1, 0, 0, w, h, Color(205, 30, 30, 255))
       else
-        draw.RoundedBox(1, 0, 0, w, h, Color(80, 80, 80, 255))
+        draw.RoundedBox(1, 0, 0, w, h, self.Disabled and Color(100, 100, 100, 255) or Color(80, 80, 80, 255))
       end
 
       surface.SetDrawColor(Color(255, 255, 255))
       surface.SetMaterial(material)
       surface.DrawTexturedRect(5, 1, 16, 16)
     end
+
+    if disabled then btn:SetTooltip("You cannot perform this action on your own ticket.") end
     return btn
   end
 
-  createButton("Goto", mat_lightning, 20 * 1, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "goto", sam and requester:SteamID() or requester:SteamID()) end)
-  createButton("Return", mat_arrow, 20 * 2, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "return", sam and requester:SteamID() or requester:SteamID()) end)
-  createButton("Freeze", mat_link, 20 * 3, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "freeze", sam and requester:SteamID() or requester:SteamID()) end)
-  createButton("Bring", mat_arrow, 20 * 4, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "bring", sam and requester:SteamID() or requester:SteamID()) end)
+  local isLocalPlayer = requester == LocalPlayer()
+  createButton("Goto", mat_lightning, 20 * 1, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "goto", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
+  createButton("Return", mat_arrow, 20 * 2, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "return", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
+  createButton("Freeze", mat_link, 20 * 3, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "freeze", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
+  createButton("Bring", mat_arrow, 20 * 4, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "bring", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
   local shouldClose = false
   local claimButton
   claimButton = createButton("Claim case", mat_case, 20 * 5, function()
@@ -105,7 +111,7 @@ function MODULE:TicketFrame(requester, message, claimed)
       net.WriteEntity(requester)
       net.SendToServer()
     end
-  end)
+  end, isLocalPlayer)
 
   local closeButton = vgui.Create("DButton", frm)
   closeButton:SetText("×")

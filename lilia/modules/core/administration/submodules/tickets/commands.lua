@@ -22,20 +22,23 @@
     end
 
     local steamID = target:SteamID()
-    if not file.Exists("caseclaims.txt", "DATA") then
-      client:ChatPrint("No claims have been recorded yet.")
-      return
-    end
-
-    local caseclaimsContent = file.Read("caseclaims.txt", "DATA")
-    local caseclaims = util.JSONToTable(caseclaimsContent) or {}
+    local caseclaims = lia.data.get("caseclaims", {}, true)
     local claim = caseclaims[steamID]
     if not claim then
       client:ChatPrint("No claims found for the specified player.")
       return
     end
 
-    local message = string.format("=== Claims for %s ===\nSteamID: %s\nAdmin Name: %s\nTotal Claims: %d\nLast Claim Date: %s\nTime Since Last Claim: %s", target:Nick(), steamID, claim.name, claim.claims, os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim), lia.time.TimeSince(claim.lastclaim))
+    local claimedForList = ""
+    if next(claim.claimedFor) then
+      for sid, name in pairs(claim.claimedFor) do
+        claimedForList = claimedForList .. string.format("- %s (%s)\n", name, sid)
+      end
+    else
+      claimedForList = "None"
+    end
+
+    local message = string.format("=== Claims for %s ===\nSteamID: %s\nAdmin Name: %s\nTotal Claims: %d\nLast Claim Date: %s\nTime Since Last Claim: %s\nClaimed For:\n%s", target:Nick(), steamID, claim.name, claim.claims, os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim), lia.time.TimeSince(claim.lastclaim), claimedForList)
     client:ChatPrint(message)
   end
 })
@@ -45,20 +48,32 @@ lia.command.add("viewallclaims", {
   description = "View the claims for all admins.",
   adminOnly = true,
   onRun = function(client)
-    if not file.Exists("caseclaims.txt", "DATA") then
+    local caseclaims = lia.data.get("caseclaims", {}, true)
+    if not next(caseclaims) then
       client:ChatPrint("No claims have been recorded yet.")
       return
     end
 
-    local caseclaims = util.JSONToTable(file.Read("caseclaims.txt", "DATA"))
     local claimsData = {}
     for steamID, claim in pairs(caseclaims) do
+      local claimedFor = ""
+      if next(claim.claimedFor) then
+        for sid, name in pairs(claim.claimedFor) do
+          claimedFor = claimedFor .. string.format("%s (%s), ", name, sid)
+        end
+
+        claimedFor = string.sub(claimedFor, 1, -3)
+      else
+        claimedFor = "None"
+      end
+
       table.insert(claimsData, {
         steamID = steamID,
         name = claim.name,
         claims = claim.claims,
         lastclaim = os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim),
-        timeSinceLastClaim = lia.time.TimeSince(claim.lastclaim)
+        timeSinceLastClaim = lia.time.TimeSince(claim.lastclaim),
+        claimedFor = claimedFor
       })
     end
 
@@ -82,6 +97,10 @@ lia.command.add("viewallclaims", {
       {
         name = "Time Since Last Claim",
         field = "timeSinceLastClaim",
+      },
+      {
+        name = "Claimed For",
+        field = "claimedFor",
       }
     }, claimsData)
   end
@@ -92,21 +111,24 @@ lia.command.add("viewclaims", {
   description = "View the claims for all admins.",
   adminOnly = true,
   onRun = function(client)
-    if not file.Exists("caseclaims.txt", "DATA") then
-      client:ChatPrint("No claims have been recorded yet.")
-      return
-    end
-
-    local caseclaimsContent = file.Read("caseclaims.txt", "DATA")
-    local caseclaims = util.JSONToTable(caseclaimsContent) or {}
-    if next(caseclaims) == nil then
+    local caseclaims = lia.data.get("caseclaims", {}, true)
+    if not next(caseclaims) then
       client:ChatPrint("No claims data available.")
       return
     end
 
     client:ChatPrint("=== Admin Claims ===")
     for steamID, claim in pairs(caseclaims) do
-      local message = string.format("SteamID: %s\nAdmin Name: %s\nTotal Claims: %d\nLast Claim Date: %s\nTime Since Last Claim: %s\n-------------------------", steamID, claim.name, claim.claims, os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim), lia.time.TimeSince(claim.lastclaim))
+      local claimedForList = ""
+      if next(claim.claimedFor) then
+        for sid, name in pairs(claim.claimedFor) do
+          claimedForList = claimedForList .. string.format("- %s (%s)\n", name, sid)
+        end
+      else
+        claimedForList = "None"
+      end
+
+      local message = string.format("SteamID: %s\nAdmin Name: %s\nTotal Claims: %d\nLast Claim Date: %s\nTime Since Last Claim: %s\nClaimed For:\n%s\n-------------------------", steamID, claim.name, claim.claims, os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim), lia.time.TimeSince(claim.lastclaim), claimedForList)
       client:ChatPrint(message)
     end
   end
