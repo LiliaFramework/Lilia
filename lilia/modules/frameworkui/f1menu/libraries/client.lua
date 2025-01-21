@@ -1,5 +1,4 @@
-﻿local TabClickingSound = "buttons/button14.wav"
-function MODULE:LoadCharInformation()
+﻿function MODULE:LoadCharInformation()
   hook.Run("AddSection", "General Info", Color(0, 0, 0), 1)
   hook.Run("AddTextField", "General Info", "name", "Name", function() return LocalPlayer():getChar():getName() end)
   hook.Run("AddTextField", "General Info", "desc", "Description", function() return LocalPlayer():getChar():getDesc() end)
