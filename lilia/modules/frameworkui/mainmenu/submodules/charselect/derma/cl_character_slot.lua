@@ -218,3 +218,4 @@ function PANEL:PerformLayout()
 end
 
 vgui.Register("liaCharacterSlot", PANEL, "DPanel")
+hook.Add("ResetCharacterPanel", "liaResetCharacterPanel", function() if IsValid(lia.gui.character) then lia.gui.character:showContent() end end)
