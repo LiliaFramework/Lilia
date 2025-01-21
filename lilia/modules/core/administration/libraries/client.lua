@@ -1,172 +1,172 @@
 ﻿function MODULE:ShowPlayerOptions(target, options)
-  local client = LocalPlayer()
-  if (client:hasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or client:hasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and client:isStaffOnDuty()) and IsValid(target) then
-    local orderedOptions = {
-      {
-        name = "Name: " .. target:Name() .. " (copy)",
-        image = "icon16/page_copy.png",
-        func = function()
-          client:ChatPrint("Copied " .. target:Name() .. " to Clipboard!")
-          SetClipboardText(target:Name())
-        end
-      },
-      {
-        name = "CharID: " .. (target:getChar() and target:getChar():getID() or "N/A") .. " (copy)",
-        image = "icon16/page_copy.png",
-        func = function()
-          if target:getChar() then
-            client:ChatPrint("Copied CharID: " .. target:getChar():getID() .. " to Clipboard!")
-            SetClipboardText(target:getChar():getID())
-          end
-        end
-      },
-      {
-        name = "SteamID: " .. target:SteamID() .. " (copy)",
-        image = "icon16/page_copy.png",
-        func = function()
-          client:ChatPrint("Copied SteamID: " .. target:SteamID() .. " to Clipboard!")
-          SetClipboardText(target:SteamID())
-        end
-      },
-      {
-        name = "SteamID64: " .. target:SteamID64() .. " (copy)",
-        image = "icon16/page_copy.png",
-        func = function()
-          client:ChatPrint("Copied SteamID64: " .. target:SteamID64() .. " to Clipboard!")
-          SetClipboardText(target:SteamID64())
-        end
-      },
-      {
-        name = "Blind",
-        image = "icon16/eye.png",
-        func = function() RunConsoleCommand("say", "!blind " .. target:SteamID()) end
-      },
-      {
-        name = "Freeze",
-        image = "icon16/lock.png",
-        func = function() RunConsoleCommand("say", "!freeze " .. target:SteamID()) end
-      },
-      {
-        name = "Gag",
-        image = "icon16/sound_mute.png",
-        func = function() RunConsoleCommand("say", "!gag " .. target:SteamID()) end
-      },
-      {
-        name = "Ignite",
-        image = "icon16/fire.png",
-        func = function() RunConsoleCommand("say", "!ignite " .. target:SteamID()) end
-      },
-      {
-        name = "Jail",
-        image = "icon16/lock.png",
-        func = function() RunConsoleCommand("say", "!jail " .. target:SteamID()) end
-      },
-      {
-        name = "Mute",
-        image = "icon16/sound_delete.png",
-        func = function() RunConsoleCommand("say", "!mute " .. target:SteamID()) end
-      },
-      {
-        name = "Slay",
-        image = "icon16/bomb.png",
-        func = function() RunConsoleCommand("say", "!slay " .. target:SteamID()) end
-      },
-      {
-        name = "Unblind",
-        image = "icon16/eye.png",
-        func = function() RunConsoleCommand("say", "!unblind " .. target:SteamID()) end
-      },
-      {
-        name = "Ungag",
-        image = "icon16/sound_low.png",
-        func = function() RunConsoleCommand("say", "!ungag " .. target:SteamID()) end
-      },
-      {
-        name = "Unfreeze",
-        image = "icon16/accept.png",
-        func = function() RunConsoleCommand("say", "!unfreeze " .. target:SteamID()) end
-      },
-      {
-        name = "Unmute",
-        image = "icon16/sound_add.png",
-        func = function() RunConsoleCommand("say", "!unmute " .. target:SteamID()) end
-      },
-      {
-        name = "Bring",
-        image = "icon16/arrow_down.png",
-        func = function() RunConsoleCommand("say", "!bring " .. target:SteamID()) end
-      },
-      {
-        name = "Goto",
-        image = "icon16/arrow_right.png",
-        func = function() RunConsoleCommand("say", "!goto " .. target:SteamID()) end
-      },
-      {
-        name = "Respawn",
-        image = "icon16/arrow_refresh.png",
-        func = function() RunConsoleCommand("say", "!respawn " .. target:SteamID()) end
-      },
-      {
-        name = "Return",
-        image = "icon16/arrow_redo.png",
-        func = function() RunConsoleCommand("say", "!return " .. target:SteamID()) end
-      }
-    }
+	local client = LocalPlayer()
+	if (client:hasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or client:hasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and client:isStaffOnDuty()) and IsValid(target) then
+		local orderedOptions = {
+			{
+				name = "Name: " .. target:Name() .. " (copy)",
+				image = "icon16/page_copy.png",
+				func = function()
+					client:ChatPrint("Copied " .. target:Name() .. " to Clipboard!")
+					SetClipboardText(target:Name())
+				end
+			},
+			{
+				name = "CharID: " .. (target:getChar() and target:getChar():getID() or "N/A") .. " (copy)",
+				image = "icon16/page_copy.png",
+				func = function()
+					if target:getChar() then
+						client:ChatPrint("Copied CharID: " .. target:getChar():getID() .. " to Clipboard!")
+						SetClipboardText(target:getChar():getID())
+					end
+				end
+			},
+			{
+				name = "SteamID: " .. target:SteamID() .. " (copy)",
+				image = "icon16/page_copy.png",
+				func = function()
+					client:ChatPrint("Copied SteamID: " .. target:SteamID() .. " to Clipboard!")
+					SetClipboardText(target:SteamID())
+				end
+			},
+			{
+				name = "SteamID64: " .. target:SteamID64() .. " (copy)",
+				image = "icon16/page_copy.png",
+				func = function()
+					client:ChatPrint("Copied SteamID64: " .. target:SteamID64() .. " to Clipboard!")
+					SetClipboardText(target:SteamID64())
+				end
+			},
+			{
+				name = "Blind",
+				image = "icon16/eye.png",
+				func = function() RunConsoleCommand("say", "!blind " .. target:SteamID()) end
+			},
+			{
+				name = "Freeze",
+				image = "icon16/lock.png",
+				func = function() RunConsoleCommand("say", "!freeze " .. target:SteamID()) end
+			},
+			{
+				name = "Gag",
+				image = "icon16/sound_mute.png",
+				func = function() RunConsoleCommand("say", "!gag " .. target:SteamID()) end
+			},
+			{
+				name = "Ignite",
+				image = "icon16/fire.png",
+				func = function() RunConsoleCommand("say", "!ignite " .. target:SteamID()) end
+			},
+			{
+				name = "Jail",
+				image = "icon16/lock.png",
+				func = function() RunConsoleCommand("say", "!jail " .. target:SteamID()) end
+			},
+			{
+				name = "Mute",
+				image = "icon16/sound_delete.png",
+				func = function() RunConsoleCommand("say", "!mute " .. target:SteamID()) end
+			},
+			{
+				name = "Slay",
+				image = "icon16/bomb.png",
+				func = function() RunConsoleCommand("say", "!slay " .. target:SteamID()) end
+			},
+			{
+				name = "Unblind",
+				image = "icon16/eye.png",
+				func = function() RunConsoleCommand("say", "!unblind " .. target:SteamID()) end
+			},
+			{
+				name = "Ungag",
+				image = "icon16/sound_low.png",
+				func = function() RunConsoleCommand("say", "!ungag " .. target:SteamID()) end
+			},
+			{
+				name = "Unfreeze",
+				image = "icon16/accept.png",
+				func = function() RunConsoleCommand("say", "!unfreeze " .. target:SteamID()) end
+			},
+			{
+				name = "Unmute",
+				image = "icon16/sound_add.png",
+				func = function() RunConsoleCommand("say", "!unmute " .. target:SteamID()) end
+			},
+			{
+				name = "Bring",
+				image = "icon16/arrow_down.png",
+				func = function() RunConsoleCommand("say", "!bring " .. target:SteamID()) end
+			},
+			{
+				name = "Goto",
+				image = "icon16/arrow_right.png",
+				func = function() RunConsoleCommand("say", "!goto " .. target:SteamID()) end
+			},
+			{
+				name = "Respawn",
+				image = "icon16/arrow_refresh.png",
+				func = function() RunConsoleCommand("say", "!respawn " .. target:SteamID()) end
+			},
+			{
+				name = "Return",
+				image = "icon16/arrow_redo.png",
+				func = function() RunConsoleCommand("say", "!return " .. target:SteamID()) end
+			}
+		}
 
-    for _, option in ipairs(orderedOptions) do
-      table.insert(options, option)
-    end
-  end
+		for _, option in ipairs(orderedOptions) do
+			table.insert(options, option)
+		end
+	end
 end
 
 function MODULE:LoadFonts(font)
-  surface.CreateFont("ConfigFont", {
-    font = font,
-    size = 26,
-    weight = 500,
-    extended = true,
-    antialias = true
-  })
+	surface.CreateFont("ConfigFont", {
+		font = font,
+		size = 26,
+		weight = 500,
+		extended = true,
+		antialias = true
+	})
 
-  surface.CreateFont("MediumConfigFont", {
-    font = font,
-    size = 30,
-    weight = 1000,
-    extended = true,
-    antialias = true
-  })
+	surface.CreateFont("MediumConfigFont", {
+		font = font,
+		size = 30,
+		weight = 1000,
+		extended = true,
+		antialias = true
+	})
 
-  surface.CreateFont("SmallConfigFont", {
-    font = font,
-    size = math.max(ScreenScale(8), 20),
-    weight = 500,
-    extended = true,
-    antialias = true
-  })
+	surface.CreateFont("SmallConfigFont", {
+		font = font,
+		size = math.max(ScreenScale(8), 20),
+		weight = 500,
+		extended = true,
+		antialias = true
+	})
 
-  surface.CreateFont("ConfigFontBold", {
-    font = font,
-    size = 26,
-    weight = 1000,
-    extended = true,
-    antialias = true
-  })
+	surface.CreateFont("ConfigFontBold", {
+		font = font,
+		size = 26,
+		weight = 1000,
+		extended = true,
+		antialias = true
+	})
 
-  surface.CreateFont("ConfigFontLarge", {
-    font = font,
-    size = 36,
-    weight = 700,
-    extended = true,
-    antialias = true
-  })
+	surface.CreateFont("ConfigFontLarge", {
+		font = font,
+		size = 36,
+		weight = 700,
+		extended = true,
+		antialias = true
+	})
 
-  surface.CreateFont("DescriptionFontLarge", {
-    font = font,
-    size = 24,
-    weight = 500,
-    extended = true,
-    antialias = true
-  })
+	surface.CreateFont("DescriptionFontLarge", {
+		font = font,
+		size = 24,
+		weight = 500,
+		extended = true,
+		antialias = true
+	})
 end
 
 local ConfigFormatting = {
@@ -206,11 +206,8 @@ local ConfigFormatting = {
 			slider.Label:SetWide(100)
 			slider.TextArea:SetWide(50)
 		end
-		slider.OnValueChanged = function(_, newValue)
-			timer.Create("ConfigChange" .. name, 1, 1, function()
-				lia.option.set(key, math.floor(newValue))
-			end)
-		end
+
+		slider.OnValueChanged = function(_, newValue) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.floor(newValue)) end) end
 		return container
 	end,
 	Float = function(key, name, config, parent)
@@ -249,11 +246,8 @@ local ConfigFormatting = {
 			slider.Label:SetWide(100)
 			slider.TextArea:SetWide(50)
 		end
-		slider.OnValueChanged = function(_, newValue)
-			timer.Create("ConfigChange" .. name, 1, 1, function()
-				netstream.Start("cfgSet", key, name, math.floor(newValue))
-			end)
-		end
+
+		slider.OnValueChanged = function(_, newValue) timer.Create("ConfigChange" .. name, 1, 1, function() netstream.Start("cfgSet", key, name, math.floor(newValue)) end) end
 		return container
 	end,
 	Generic = function(key, name, config, parent)
@@ -290,9 +284,7 @@ local ConfigFormatting = {
 		entry:SetTextColor(Color(255, 255, 255))
 		entry.OnEnter = function(self)
 			local newValue = self:GetText()
-			timer.Create("ConfigChange" .. name, 1, 1, function()
-				netstream.Start("cfgSet", key, name, newValue)
-			end)
+			timer.Create("ConfigChange" .. name, 1, 1, function() netstream.Start("cfgSet", key, name, newValue) end)
 		end
 		return container
 	end,
@@ -332,11 +324,8 @@ local ConfigFormatting = {
 			local icon = lia.option.get(key, config.value) and check or uncheck
 			lia.util.drawText(icon, w / 2, h / 2 - 10, color_white, 1, 1, "liaIconsHugeNew")
 		end
-		button.DoClick = function()
-			timer.Create("ConfigChange" .. name, 1, 1, function()
-				netstream.Start("cfgSet", key, name, not lia.option.get(key, config.value))
-			end)
-		end
+
+		button.DoClick = function() timer.Create("ConfigChange" .. name, 1, 1, function() netstream.Start("cfgSet", key, name, not lia.option.get(key, config.value)) end) end
 		return container
 	end,
 	Color = function(key, name, config, parent)
@@ -372,6 +361,7 @@ local ConfigFormatting = {
 			surface.SetDrawColor(lia.option.get(key, config.value))
 			surface.DrawRect(w - 925, h / 2 - 27, 500, 54)
 		end
+
 		button.DoClick = function(this)
 			local pickerFrame = this:Add("DFrame")
 			pickerFrame:SetSize(ScrW() * 0.15, ScrH() * 0.2)
@@ -391,11 +381,10 @@ local ConfigFormatting = {
 			confirm:SetText("Apply")
 			confirm:SetTextColor(color_white)
 			confirm.DoClick = function()
-				timer.Create("ConfigChange" .. name, 1, 1, function()
-					netstream.Start("cfgSet", key, name, pickerFrame.curColor)
-				end)
+				timer.Create("ConfigChange" .. name, 1, 1, function() netstream.Start("cfgSet", key, name, pickerFrame.curColor) end)
 				pickerFrame:Remove()
 			end
+
 			Mixer.ValueChanged = function(_, value) pickerFrame.curColor = value end
 		end
 		return container
@@ -432,12 +421,9 @@ local ConfigFormatting = {
 		for _, option in ipairs(lia.config.get(key .. "_options", config.data.options)) do
 			comboBox:AddChoice(option)
 		end
+
 		comboBox:SetValue(tostring(lia.option.get(key, config.value)))
-		comboBox.OnSelect = function(_, _, value)
-			timer.Create("ConfigChange" .. name, 1, 1, function()
-				netstream.Start("cfgSet", key, name, value)
-			end)
-		end
+		comboBox.OnSelect = function(_, _, value) timer.Create("ConfigChange" .. name, 1, 1, function() netstream.Start("cfgSet", key, name, value) end) end
 		return container
 	end
 }
@@ -479,11 +465,8 @@ local OptionFormatting = {
 			slider.Label:SetWide(100)
 			slider.TextArea:SetWide(50)
 		end
-		slider.OnValueChanged = function(_, newValue)
-			timer.Create("ConfigChange" .. name, 1, 1, function()
-				lia.option.set(key, math.floor(newValue))
-			end)
-		end
+
+		slider.OnValueChanged = function(_, newValue) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.floor(newValue)) end) end
 		return container
 	end,
 	Float = function(key, name, config, parent)
@@ -522,11 +505,8 @@ local OptionFormatting = {
 			slider.Label:SetWide(100)
 			slider.TextArea:SetWide(50)
 		end
-		slider.OnValueChanged = function(_, newValue)
-			timer.Create("ConfigChange" .. name, 1, 1, function()
-				lia.option.set(key, math.Round(newValue, 2))
-			end)
-		end
+
+		slider.OnValueChanged = function(_, newValue) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.Round(newValue, 2)) end) end
 		return container
 	end,
 	Generic = function(key, name, config, parent)
@@ -603,9 +583,8 @@ local OptionFormatting = {
 			local icon = lia.option.get(key, config.value) and check or uncheck
 			lia.util.drawText(icon, w / 2, h / 2 - 10, color_white, 1, 1, "liaIconsHugeNew")
 		end
-		button.DoClick = function()
-			lia.option.set(key, not lia.option.get(key, config.value))
-		end
+
+		button.DoClick = function() lia.option.set(key, not lia.option.get(key, config.value)) end
 		return container
 	end,
 	Color = function(key, name, config, parent)
@@ -641,6 +620,7 @@ local OptionFormatting = {
 			surface.SetDrawColor(lia.option.get(key, config.value))
 			surface.DrawRect(w - 925, h / 2 - 27, 500, 54)
 		end
+
 		button.DoClick = function(this)
 			local pickerFrame = this:Add("DFrame")
 			pickerFrame:SetSize(ScrW() * 0.15, ScrH() * 0.2)
@@ -660,11 +640,10 @@ local OptionFormatting = {
 			confirm:SetText("Apply")
 			confirm:SetTextColor(color_white)
 			confirm.DoClick = function()
-				timer.Create("ConfigChange" .. name, 1, 1, function()
-					lia.option.set(key, pickerFrame.curColor)
-				end)
+				timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, pickerFrame.curColor) end)
 				pickerFrame:Remove()
 			end
+
 			Mixer.ValueChanged = function(_, value) pickerFrame.curColor = value end
 		end
 		return container
@@ -701,6 +680,7 @@ local OptionFormatting = {
 		for _, item in ipairs(lia.option.get(key, config.value) or {}) do
 			listView:AddLine(tostring(item))
 		end
+
 		local addButton = panel:Add("DButton")
 		addButton:Dock(BOTTOM)
 		addButton:SetTall(30)
@@ -715,6 +695,7 @@ local OptionFormatting = {
 				end
 			end)
 		end
+
 		local removeButton = panel:Add("DButton")
 		removeButton:Dock(BOTTOM)
 		removeButton:SetTall(30)
@@ -735,199 +716,199 @@ local OptionFormatting = {
 }
 
 function MODULE:CreateMenuButtons(tabs)
-  tabs["Config"] = function(panel)
-    panel.sidebar = panel:Add("DScrollPanel")
-    panel.sidebar:Dock(LEFT)
-    panel.sidebar:SetWide(250)
-    panel.sidebar:DockMargin(20, 20, 10, 20)
-    panel.scroll = panel:Add("DScrollPanel")
-    panel.scroll:Dock(FILL)
-    panel.scroll:DockMargin(10, 10, 10, 10)
-    panel.scroll.Paint = function(_, w, h) end
-    panel.categories = {}
-    panel.activeTab = nil
-    local function addCategory(text)
-      if panel.categories[text] then return panel.categories[text].label end
-      local categoryLabel = panel.sidebar:Add("DButton")
-      categoryLabel:SetText(text)
-      categoryLabel:SetTall(40)
-      categoryLabel:Dock(TOP)
-      categoryLabel:DockMargin(0, 10, 0, 10)
-      categoryLabel:SetFont("liaMediumFont")
-      categoryLabel:SetTextColor(color_white)
-      categoryLabel.Paint = function(self, w, h)
-        if self:IsHovered() then
-          local underlineWidth = w * 0.4
-          local underlineX = (w - underlineWidth) * 0.5
-          local underlineY = h - 4
-          surface.SetDrawColor(255, 255, 255, 80)
-          surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
-        end
+	tabs["Configuration"] = function(panel)
+		panel.sidebar = panel:Add("DScrollPanel")
+		panel.sidebar:Dock(LEFT)
+		panel.sidebar:SetWide(250)
+		panel.sidebar:DockMargin(20, 20, 10, 20)
+		panel.scroll = panel:Add("DScrollPanel")
+		panel.scroll:Dock(FILL)
+		panel.scroll:DockMargin(10, 10, 10, 10)
+		panel.scroll.Paint = function(_, w, h) end
+		panel.categories = {}
+		panel.activeTab = nil
+		local function addCategory(text)
+			if panel.categories[text] then return panel.categories[text].label end
+			local categoryLabel = panel.sidebar:Add("DButton")
+			categoryLabel:SetText(text)
+			categoryLabel:SetTall(40)
+			categoryLabel:Dock(TOP)
+			categoryLabel:DockMargin(0, 10, 0, 10)
+			categoryLabel:SetFont("liaMediumFont")
+			categoryLabel:SetTextColor(color_white)
+			categoryLabel.Paint = function(self, w, h)
+				if self:IsHovered() then
+					local underlineWidth = w * 0.4
+					local underlineX = (w - underlineWidth) * 0.5
+					local underlineY = h - 4
+					surface.SetDrawColor(255, 255, 255, 80)
+					surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
+				end
 
-        if panel.activeTab == self then
-          surface.SetDrawColor(color_white)
-          surface.DrawOutlinedRect(0, 0, w, h)
-        end
-      end
+				if panel.activeTab == self then
+					surface.SetDrawColor(color_white)
+					surface.DrawOutlinedRect(0, 0, w, h)
+				end
+			end
 
-      categoryLabel.DoClick = function(button)
-        for _, cat in pairs(panel.categories) do
-          for _, btn in ipairs(cat.buttons) do
-            btn:SetVisible(false)
-          end
-        end
+			categoryLabel.DoClick = function(button)
+				for _, cat in pairs(panel.categories) do
+					for _, btn in ipairs(cat.buttons) do
+						btn:SetVisible(false)
+					end
+				end
 
-        for _, btn in ipairs(panel.categories[text].buttons) do
-          btn:SetVisible(true)
-        end
+				for _, btn in ipairs(panel.categories[text].buttons) do
+					btn:SetVisible(true)
+				end
 
-        panel.activeTab = button
-      end
+				panel.activeTab = button
+			end
 
-      panel.categories[text] = {
-        label = categoryLabel,
-        buttons = {}
-      }
-      return categoryLabel
-    end
+			panel.categories[text] = {
+				label = categoryLabel,
+				buttons = {}
+			}
+			return categoryLabel
+		end
 
-    local function addElement(elementType, key, name, config, category)
-      category = category or "Miscellaneous"
-      local cat = panel.categories[category]
-      if not cat then
-        cat = {
-          label = addCategory(category),
-          buttons = {}
-        }
+		local function addElement(elementType, key, name, config, category)
+			category = category or "Miscellaneous"
+			local cat = panel.categories[category]
+			if not cat then
+				cat = {
+					label = addCategory(category),
+					buttons = {}
+				}
 
-        panel.categories[category] = cat
-      end
+				panel.categories[category] = cat
+			end
 
-      local panelElement = ConfigFormatting[elementType](key, name, config, panel.scroll)
-      panelElement:SetParent(panel.scroll)
-      panelElement:Dock(TOP)
-      panelElement:DockMargin(20, 10, 20, 10)
-      panelElement:SetVisible(false)
-      panelElement.Paint = function(self, w, h)
-        draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
-        surface.SetDrawColor(255, 255, 255)
-        surface.DrawOutlinedRect(0, 0, w, h)
-      end
+			local panelElement = ConfigFormatting[elementType](key, name, config, panel.scroll)
+			panelElement:SetParent(panel.scroll)
+			panelElement:Dock(TOP)
+			panelElement:DockMargin(20, 10, 20, 10)
+			panelElement:SetVisible(false)
+			panelElement.Paint = function(self, w, h)
+				draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
+				surface.SetDrawColor(255, 255, 255)
+				surface.DrawOutlinedRect(0, 0, w, h)
+			end
 
-      table.insert(cat.buttons, panelElement)
-    end
+			table.insert(cat.buttons, panelElement)
+		end
 
-    for key, option in pairs(lia.config.stored) do
-      local elementType = option.data and option.data.type or "Generic"
-      addElement(elementType, key, option.name, option, option.category)
-    end
+		for key, option in pairs(lia.config.stored) do
+			local elementType = option.data and option.data.type or "Generic"
+			addElement(elementType, key, option.name, option, option.category)
+		end
 
-    local firstCategory = next(panel.categories)
-    if firstCategory then
-      for _, btn in ipairs(panel.categories[firstCategory].buttons) do
-        btn:SetVisible(true)
-      end
+		local firstCategory = next(panel.categories)
+		if firstCategory then
+			for _, btn in ipairs(panel.categories[firstCategory].buttons) do
+				btn:SetVisible(true)
+			end
 
-      panel.activeTab = panel.categories[firstCategory].label
-    end
+			panel.activeTab = panel.categories[firstCategory].label
+		end
 
-    panel.scroll:InvalidateLayout(true)
-  end
+		panel.scroll:InvalidateLayout(true)
+	end
 
-  tabs["Options"] = function(panel)
-    panel.sidebar = panel:Add("DScrollPanel")
-    panel.sidebar:Dock(LEFT)
-    panel.sidebar:SetWide(250)
-    panel.sidebar:DockMargin(20, 20, 10, 20)
-    panel.scroll = panel:Add("DScrollPanel")
-    panel.scroll:Dock(FILL)
-    panel.scroll:DockMargin(10, 10, 10, 10)
-    panel.scroll.Paint = function(_, w, h) end
-    panel.categories = {}
-    panel.activeTab = nil
-    local function addCategory(text)
-      if panel.categories[text] then return panel.categories[text].label end
-      local categoryLabel = panel.sidebar:Add("DButton")
-      categoryLabel:SetText(text)
-      categoryLabel:SetTall(40)
-      categoryLabel:Dock(TOP)
-      categoryLabel:DockMargin(0, 10, 0, 10)
-      categoryLabel:SetFont("liaMediumFont")
-      categoryLabel:SetTextColor(color_white)
-      categoryLabel.Paint = function(self, w, h)
-        if self:IsHovered() then
-          local underlineWidth = w * 0.4
-          local underlineX = (w - underlineWidth) * 0.5
-          local underlineY = h - 4
-          surface.SetDrawColor(255, 255, 255, 80)
-          surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
-        end
+	tabs["Settings"] = function(panel)
+		panel.sidebar = panel:Add("DScrollPanel")
+		panel.sidebar:Dock(LEFT)
+		panel.sidebar:SetWide(250)
+		panel.sidebar:DockMargin(20, 20, 10, 20)
+		panel.scroll = panel:Add("DScrollPanel")
+		panel.scroll:Dock(FILL)
+		panel.scroll:DockMargin(10, 10, 10, 10)
+		panel.scroll.Paint = function(_, w, h) end
+		panel.categories = {}
+		panel.activeTab = nil
+		local function addCategory(text)
+			if panel.categories[text] then return panel.categories[text].label end
+			local categoryLabel = panel.sidebar:Add("DButton")
+			categoryLabel:SetText(text)
+			categoryLabel:SetTall(40)
+			categoryLabel:Dock(TOP)
+			categoryLabel:DockMargin(0, 10, 0, 10)
+			categoryLabel:SetFont("liaMediumFont")
+			categoryLabel:SetTextColor(color_white)
+			categoryLabel.Paint = function(self, w, h)
+				if self:IsHovered() then
+					local underlineWidth = w * 0.4
+					local underlineX = (w - underlineWidth) * 0.5
+					local underlineY = h - 4
+					surface.SetDrawColor(255, 255, 255, 80)
+					surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
+				end
 
-        if panel.activeTab == self then
-          surface.SetDrawColor(color_white)
-          surface.DrawOutlinedRect(0, 0, w, h)
-        end
-      end
+				if panel.activeTab == self then
+					surface.SetDrawColor(color_white)
+					surface.DrawOutlinedRect(0, 0, w, h)
+				end
+			end
 
-      categoryLabel.DoClick = function(button)
-        for _, cat in pairs(panel.categories) do
-          for _, btn in ipairs(cat.buttons) do
-            btn:SetVisible(false)
-          end
-        end
+			categoryLabel.DoClick = function(button)
+				for _, cat in pairs(panel.categories) do
+					for _, btn in ipairs(cat.buttons) do
+						btn:SetVisible(false)
+					end
+				end
 
-        for _, btn in ipairs(panel.categories[text].buttons) do
-          btn:SetVisible(true)
-        end
+				for _, btn in ipairs(panel.categories[text].buttons) do
+					btn:SetVisible(true)
+				end
 
-        panel.activeTab = button
-      end
+				panel.activeTab = button
+			end
 
-      panel.categories[text] = {
-        label = categoryLabel,
-        buttons = {}
-      }
-      return categoryLabel
-    end
+			panel.categories[text] = {
+				label = categoryLabel,
+				buttons = {}
+			}
+			return categoryLabel
+		end
 
-    local function addElement(elementType, key, name, option, category)
-      category = category or "Miscellaneous"
-      local cat = panel.categories[category]
-      if not cat then
-        cat = {
-          label = addCategory(category),
-          buttons = {}
-        }
+		local function addElement(elementType, key, name, option, category)
+			category = category or "Miscellaneous"
+			local cat = panel.categories[category]
+			if not cat then
+				cat = {
+					label = addCategory(category),
+					buttons = {}
+				}
 
-        panel.categories[category] = cat
-      end
+				panel.categories[category] = cat
+			end
 
-      local panelElement = OptionFormatting[elementType](key, name, option, panel.scroll)
-      panelElement:SetParent(panel.scroll)
-      panelElement:Dock(TOP)
-      panelElement:DockMargin(20, 10, 20, 10)
-      panelElement:SetVisible(false)
-      panelElement.Paint = function(self, w, h)
-        draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
-        surface.SetDrawColor(255, 255, 255)
-        surface.DrawOutlinedRect(0, 0, w, h)
-      end
+			local panelElement = OptionFormatting[elementType](key, name, option, panel.scroll)
+			panelElement:SetParent(panel.scroll)
+			panelElement:Dock(TOP)
+			panelElement:DockMargin(20, 10, 20, 10)
+			panelElement:SetVisible(false)
+			panelElement.Paint = function(self, w, h)
+				draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
+				surface.SetDrawColor(255, 255, 255)
+				surface.DrawOutlinedRect(0, 0, w, h)
+			end
 
-      table.insert(cat.buttons, panelElement)
-    end
+			table.insert(cat.buttons, panelElement)
+		end
 
-    for key, option in pairs(lia.option.stored) do
-      local elementType = option.type
-      addElement(elementType, key, option.name, option, option.data and option.data.category)
-    end
+		for key, option in pairs(lia.option.stored) do
+			local elementType = option.type
+			addElement(elementType, key, option.name, option, option.data and option.data.category)
+		end
 
-    local firstCategory = next(panel.categories)
-    if firstCategory then
-      for _, btn in ipairs(panel.categories[firstCategory].buttons) do
-        btn:SetVisible(true)
-      end
-    end
+		local firstCategory = next(panel.categories)
+		if firstCategory then
+			for _, btn in ipairs(panel.categories[firstCategory].buttons) do
+				btn:SetVisible(true)
+			end
+		end
 
-    panel.scroll:InvalidateLayout(true)
-  end
+		panel.scroll:InvalidateLayout(true)
+	end
 end
