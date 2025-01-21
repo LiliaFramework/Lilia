@@ -185,7 +185,6 @@ function MODULE:CreateMenuButtons(tabs)
         tabPanel:Dock(FILL)
         tabPanel.Paint = function() end
         callback(tabPanel, sidebar)
-        surface.PlaySound(TabClickingSound or "buttons/button14.wav")
       end
 
       panel.tabList[tabName] = button
