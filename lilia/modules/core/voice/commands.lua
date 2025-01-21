@@ -1,5 +1,4 @@
-﻿local MODULE = MODULE
-lia.command.add("charvoicetoggle", {
+﻿lia.command.add("charvoicetoggle", {
   adminOnly = true,
   privilege = "Toggle Voice Ban Character",
   syntax = "[string name]",

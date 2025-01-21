@@ -85,10 +85,9 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
 
   if not money or money < price then return false, isSellingToVendor and L("vendorNoMoney") or L("canNotAfford") end
   if SteamIDWhitelist or FactionWhitelist or UserGroupWhitelist or VIPOnly then
-    local hasWhitelist = false
+    local hasWhitelist = true
     local isWhitelisted = false
-    local errorMessage = nil
-    hasWhitelist = true
+    local errorMessage
     if SteamIDWhitelist and table.HasValue(SteamIDWhitelist, client:SteamID()) then isWhitelisted = true end
     if FactionWhitelist and table.HasValue(FactionWhitelist, client:Team()) then isWhitelisted = true end
     if UserGroupWhitelist and table.HasValue(UserGroupWhitelist, client:GetUserGroup()) then isWhitelisted = true end

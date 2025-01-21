@@ -1,5 +1,4 @@
-﻿local MODULE = MODULE
-SWEP.Author = "Samael"
+﻿SWEP.Author = "Samael"
 SWEP.Instructions = "Primary Fire: Lock\nSecondary Fire: Unlock"
 SWEP.Purpose = "Locking and Unlocking Stuff."
 SWEP.Drop = false

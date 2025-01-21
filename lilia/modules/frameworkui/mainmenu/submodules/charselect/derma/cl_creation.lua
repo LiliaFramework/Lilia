@@ -1,5 +1,4 @@
-﻿-- Main Character Creation Panel
-local PANEL = {}
+﻿local PANEL = {}
 local COLORS = {
   background = Color(0, 0, 0, 100),
   border = Color(255, 255, 255, 10),

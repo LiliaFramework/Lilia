@@ -138,6 +138,7 @@ function MODULE:PlayerBindPress(client, bind, pressed)
     local source, pitch = hook.Run("WeaponSelectSound")
     source = source or "common/talk.wav"
     pitch = pitch or 180
+    client:EmitSound(source, 75, pitch)
     client:SelectWeapon(weapon:GetClass())
     alpha = 0
     infoAlpha = 0

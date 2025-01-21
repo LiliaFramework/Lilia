@@ -1,5 +1,4 @@
-﻿local MODULE = MODULE
-local characterMeta = lia.meta.character or {}
+﻿local characterMeta = lia.meta.character or {}
 function characterMeta:hasClassWhitelist(class)
   local wl = self:getData("whitelist", {})
   return wl[class] ~= nil

@@ -136,7 +136,7 @@ lia.command.add("doortoggleownable", {
     Name = "Toggle Door Ownable",
     TargetClass = "Door",
   },
-  onRun = function(client, arguments)
+  onRun = function(client)
     local door = client:getTracedEntity()
     if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
       local isUnownable = door:getNetVar("noSell", false)

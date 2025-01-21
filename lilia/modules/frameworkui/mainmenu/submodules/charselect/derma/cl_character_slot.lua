@@ -44,7 +44,7 @@ function PANEL:Init()
   self.factionLabel:SetWrap(true)
   self.factionLabel:SetAutoStretchVertical(true)
   self.factionLabel:SetVisible(false)
-  self.factionLabel:SetContentAlignment(5) -- Center the text
+  self.factionLabel:SetContentAlignment(5) 
   self.factionLabel:SizeToContentsY()
   self.classLabel = self:Add("DLabel")
   self.classLabel:Dock(TOP)
@@ -54,7 +54,7 @@ function PANEL:Init()
   self.classLabel:SetWrap(true)
   self.classLabel:SetAutoStretchVertical(true)
   self.classLabel:SetVisible(false)
-  self.classLabel:SetContentAlignment(5) -- Center the text
+  self.classLabel:SetContentAlignment(5) 
   self.classLabel:SizeToContentsY()
   self.model = self:Add("liaModelPanel")
   self.model:Dock(FILL)
@@ -68,7 +68,7 @@ function PANEL:Init()
     end
   end
 
-  -- Button overlay for handling hover and click events
+  
   self.button = self:Add("DButton")
   self.button:Dock(FILL)
   self.button:SetPaintBackground(false)

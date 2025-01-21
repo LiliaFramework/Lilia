@@ -175,7 +175,7 @@ local ConfigFormatting = {
 		container:SetTall(220)
 		container:Dock(TOP)
 		container:DockMargin(0, 60, 0, 10)
-		container.Paint = function(self, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+		container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
 		local panel = container:Add("DPanel")
 		panel:Dock(FILL)
 		panel.Paint = nil
@@ -215,7 +215,7 @@ local ConfigFormatting = {
 		container:SetTall(220)
 		container:Dock(TOP)
 		container:DockMargin(0, 60, 0, 10)
-		container.Paint = function(self, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+		container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
 		local panel = container:Add("DPanel")
 		panel:Dock(FILL)
 		panel.Paint = nil
@@ -255,7 +255,7 @@ local ConfigFormatting = {
 		container:SetTall(220)
 		container:Dock(TOP)
 		container:DockMargin(0, 60, 0, 10)
-		container.Paint = function(self, w, h) end
+		container.Paint = function() end
 		local panel = container:Add("DPanel")
 		panel:Dock(FILL)
 		panel.Paint = nil
@@ -282,8 +282,8 @@ local ConfigFormatting = {
 		entry:SetText(tostring(lia.option.get(key, config.value)))
 		entry:SetFont("ConfigFontLarge")
 		entry:SetTextColor(Color(255, 255, 255))
-		entry.OnEnter = function(self)
-			local newValue = self:GetText()
+		entry.OnEnter = function(btn)
+			local newValue = btn:GetText()
 			timer.Create("ConfigChange" .. name, 1, 1, function() netstream.Start("cfgSet", key, name, newValue) end)
 		end
 		return container
@@ -293,7 +293,7 @@ local ConfigFormatting = {
 		container:SetTall(220)
 		container:Dock(TOP)
 		container:DockMargin(0, 60, 0, 10)
-		container.Paint = function(self, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+		container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
 		local panel = container:Add("DPanel")
 		panel:Dock(FILL)
 		panel.Paint = nil
@@ -318,7 +318,7 @@ local ConfigFormatting = {
 		button:SetTall(100)
 		button:DockMargin(100, 10, 100, 0)
 		button:SetText("")
-		button.Paint = function(self, w, h)
+		button.Paint = function(_, w, h)
 			local check = getIcon("0xe880", true)
 			local uncheck = getIcon("0xf096", true)
 			local icon = lia.option.get(key, config.value) and check or uncheck
@@ -333,7 +333,7 @@ local ConfigFormatting = {
 		container:SetTall(220)
 		container:Dock(TOP)
 		container:DockMargin(0, 60, 0, 10)
-		container.Paint = function(self, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+		container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
 		local panel = container:Add("DPanel")
 		panel:Dock(FILL)
 		panel.Paint = nil
@@ -357,7 +357,7 @@ local ConfigFormatting = {
 		button:Dock(FILL)
 		button:DockMargin(10, 0, 10, 0)
 		button:SetText("")
-		button.Paint = function(self, w, h)
+		button.Paint = function(_, w, h)
 			surface.SetDrawColor(lia.option.get(key, config.value))
 			surface.DrawRect(w - 925, h / 2 - 27, 500, 54)
 		end
@@ -394,7 +394,7 @@ local ConfigFormatting = {
 		container:SetTall(220)
 		container:Dock(TOP)
 		container:DockMargin(0, 60, 0, 10)
-		container.Paint = function(self, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+		container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
 		local panel = container:Add("DPanel")
 		panel:Dock(FILL)
 		panel.Paint = nil
@@ -434,7 +434,7 @@ local OptionFormatting = {
 		container:SetTall(220)
 		container:Dock(TOP)
 		container:DockMargin(0, 60, 0, 10)
-		container.Paint = function(self, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+		container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
 		local panel = container:Add("DPanel")
 		panel:Dock(FILL)
 		panel.Paint = nil
@@ -474,7 +474,7 @@ local OptionFormatting = {
 		container:SetTall(220)
 		container:Dock(TOP)
 		container:DockMargin(0, 60, 0, 10)
-		container.Paint = function(self, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+		container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
 		local panel = container:Add("DPanel")
 		panel:Dock(FILL)
 		panel.Paint = nil
@@ -514,7 +514,7 @@ local OptionFormatting = {
 		container:SetTall(220)
 		container:Dock(TOP)
 		container:DockMargin(0, 60, 0, 10)
-		container.Paint = function(self, w, h) end
+		container.Paint = function() end
 		local panel = container:Add("DPanel")
 		panel:Dock(FILL)
 		panel.Paint = nil
@@ -541,8 +541,8 @@ local OptionFormatting = {
 		entry:SetText(tostring(lia.option.get(key, config.value)))
 		entry:SetFont("ConfigFontLarge")
 		entry:SetTextColor(Color(255, 255, 255))
-		entry.OnEnter = function(self)
-			local newValue = self:GetText()
+		entry.OnEnter = function(btn)
+			local newValue = btn:GetText()
 			lia.option.set(key, newValue)
 		end
 		return container
@@ -552,7 +552,7 @@ local OptionFormatting = {
 		container:SetTall(220)
 		container:Dock(TOP)
 		container:DockMargin(0, 60, 0, 10)
-		container.Paint = function(self, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+		container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
 		local panel = container:Add("DPanel")
 		panel:Dock(FILL)
 		panel.Paint = nil
@@ -577,7 +577,7 @@ local OptionFormatting = {
 		button:SetTall(100)
 		button:DockMargin(100, 10, 100, 0)
 		button:SetText("")
-		button.Paint = function(self, w, h)
+		button.Paint = function(_, w, h)
 			local check = getIcon("0xe880", true)
 			local uncheck = getIcon("0xf096", true)
 			local icon = lia.option.get(key, config.value) and check or uncheck
@@ -592,7 +592,7 @@ local OptionFormatting = {
 		container:SetTall(220)
 		container:Dock(TOP)
 		container:DockMargin(0, 60, 0, 10)
-		container.Paint = function(self, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+		container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
 		local panel = container:Add("DPanel")
 		panel:Dock(FILL)
 		panel.Paint = nil
@@ -616,7 +616,7 @@ local OptionFormatting = {
 		button:Dock(FILL)
 		button:DockMargin(10, 0, 10, 0)
 		button:SetText("")
-		button.Paint = function(self, w, h)
+		button.Paint = function(_, w, h)
 			surface.SetDrawColor(lia.option.get(key, config.value))
 			surface.DrawRect(w - 925, h / 2 - 27, 500, 54)
 		end
@@ -653,7 +653,7 @@ local OptionFormatting = {
 		container:SetTall(300)
 		container:Dock(TOP)
 		container:DockMargin(0, 60, 0, 10)
-		container.Paint = function(self, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+		container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
 		local panel = container:Add("DPanel")
 		panel:Dock(FILL)
 		panel.Paint = nil
@@ -724,7 +724,7 @@ function MODULE:CreateMenuButtons(tabs)
 		panel.scroll = panel:Add("DScrollPanel")
 		panel.scroll:Dock(FILL)
 		panel.scroll:DockMargin(10, 10, 10, 10)
-		panel.scroll.Paint = function(_, w, h) end
+		panel.scroll.Paint = function() end
 		panel.categories = {}
 		panel.activeTab = nil
 		local function addCategory(text)
@@ -736,8 +736,8 @@ function MODULE:CreateMenuButtons(tabs)
 			categoryLabel:DockMargin(0, 10, 0, 10)
 			categoryLabel:SetFont("liaMediumFont")
 			categoryLabel:SetTextColor(color_white)
-			categoryLabel.Paint = function(self, w, h)
-				if self:IsHovered() then
+			categoryLabel.Paint = function(btn, w, h)
+				if btn:IsHovered() then
 					local underlineWidth = w * 0.4
 					local underlineX = (w - underlineWidth) * 0.5
 					local underlineY = h - 4
@@ -745,7 +745,7 @@ function MODULE:CreateMenuButtons(tabs)
 					surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
 				end
 
-				if panel.activeTab == self then
+				if panel.activeTab == btn then
 					surface.SetDrawColor(color_white)
 					surface.DrawOutlinedRect(0, 0, w, h)
 				end
@@ -789,7 +789,7 @@ function MODULE:CreateMenuButtons(tabs)
 			panelElement:Dock(TOP)
 			panelElement:DockMargin(20, 10, 20, 10)
 			panelElement:SetVisible(false)
-			panelElement.Paint = function(self, w, h)
+			panelElement.Paint = function(_, w, h)
 				draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
 				surface.SetDrawColor(255, 255, 255)
 				surface.DrawOutlinedRect(0, 0, w, h)
@@ -823,7 +823,7 @@ function MODULE:CreateMenuButtons(tabs)
 		panel.scroll = panel:Add("DScrollPanel")
 		panel.scroll:Dock(FILL)
 		panel.scroll:DockMargin(10, 10, 10, 10)
-		panel.scroll.Paint = function(_, w, h) end
+		panel.scroll.Paint = function() end
 		panel.categories = {}
 		panel.activeTab = nil
 		local function addCategory(text)
@@ -835,8 +835,8 @@ function MODULE:CreateMenuButtons(tabs)
 			categoryLabel:DockMargin(0, 10, 0, 10)
 			categoryLabel:SetFont("liaMediumFont")
 			categoryLabel:SetTextColor(color_white)
-			categoryLabel.Paint = function(self, w, h)
-				if self:IsHovered() then
+			categoryLabel.Paint = function(btn, w, h)
+				if btn:IsHovered() then
 					local underlineWidth = w * 0.4
 					local underlineX = (w - underlineWidth) * 0.5
 					local underlineY = h - 4
@@ -844,7 +844,7 @@ function MODULE:CreateMenuButtons(tabs)
 					surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
 				end
 
-				if panel.activeTab == self then
+				if panel.activeTab == btn then
 					surface.SetDrawColor(color_white)
 					surface.DrawOutlinedRect(0, 0, w, h)
 				end
@@ -888,7 +888,7 @@ function MODULE:CreateMenuButtons(tabs)
 			panelElement:Dock(TOP)
 			panelElement:DockMargin(20, 10, 20, 10)
 			panelElement:SetVisible(false)
-			panelElement.Paint = function(self, w, h)
+			panelElement.Paint = function(_, w, h)
 				draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
 				surface.SetDrawColor(255, 255, 255)
 				surface.DrawOutlinedRect(0, 0, w, h)
