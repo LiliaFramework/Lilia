@@ -23,7 +23,6 @@ lia.config.add("ChatRange", "Chat Range", 280, nil, {
     max = 10000
 })
 
-
 lia.config.add("OOCLimit", "OOC Character Limit", 150, nil, {
     desc = "Limit of characters on OOC",
     category = "Chat",
@@ -50,7 +49,6 @@ lia.config.add("OOCDelay", "OOC Delay", 10, nil, {
     min = 0,
     max = 60
 })
-
 
 lia.config.add("LOOCDelay", "LOOC Delay", 6, nil, {
     desc = "Set LOOC Text Delay",

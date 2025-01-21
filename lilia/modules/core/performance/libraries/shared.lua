@@ -3,57 +3,57 @@ local clientCommands = {"mp_show_voice_icons 0", "gmod_mcore_test 1", "mem_max_h
 local serverHooks = {{"OnEntityCreated", "WidgetInit"}, {"Think", "DOFThink"}, {"Think", "CheckSchedules"}, {"PlayerTick", "TickWidgets"}, {"PlayerInitialSpawn", "PlayerAuthSpawn"}, {"LoadGModSave", "LoadGModSave"},}
 local clientHooks = {{"HUDPaint", "DamageEffect"}, {"StartChat", "StartChatIndicator"}, {"FinishChat", "EndChatIndicator"}, {"PostDrawEffects", "RenderWidgets"}, {"PostDrawEffects", "RenderHalos"}, {"OnEntityCreated", "WidgetInit"}, {"GUIMousePressed", "SuperDOFMouseDown"}, {"GUIMouseReleased", "SuperDOFMouseUp"}, {"PreventScreenClicks", "SuperDOFPreventClicks"}, {"Think", "DOFThink"}, {"Think", "CheckSchedules"}, {"NeedsDepthPass", "NeedsDepthPass_Bokeh"}, {"RenderScene", "RenderSuperDoF"}, {"RenderScene", "RenderStereoscopy"}, {"PreRender", "PreRenderFrameBlend"}, {"PostRender", "RenderFrameBlend"}, {"RenderScreenspaceEffects", "RenderBokeh"},}
 local function ExecuteCommands(IsServer)
-  if IsServer then
-    for _, cmd in ipairs(serverCommands) do
-      game.ConsoleCommand(cmd .. "\n")
-    end
-  else
-    for _, cmd in ipairs(clientCommands) do
-      local command, args = cmd:match("^(%S+)%s+(.*)$")
-      if command then
-        if args then
-          local argList = {}
-          for arg in string.gmatch(args, "%S+") do
-            table.insert(argList, arg)
-          end
-
-          RunConsoleCommand(command, unpack(argList))
-        else
-          RunConsoleCommand(command)
+    if IsServer then
+        for _, cmd in ipairs(serverCommands) do
+            game.ConsoleCommand(cmd .. "\n")
         end
-      end
+    else
+        for _, cmd in ipairs(clientCommands) do
+            local command, args = cmd:match("^(%S+)%s+(.*)$")
+            if command then
+                if args then
+                    local argList = {}
+                    for arg in string.gmatch(args, "%S+") do
+                        table.insert(argList, arg)
+                    end
+
+                    RunConsoleCommand(command, unpack(argList))
+                else
+                    RunConsoleCommand(command)
+                end
+            end
+        end
     end
-  end
 end
 
 local function RemoveHooks(IsServer)
-  if IsServer then
-    for _, hookData in ipairs(serverHooks) do
-      hook.Remove(hookData[1], hookData[2])
+    if IsServer then
+        for _, hookData in ipairs(serverHooks) do
+            hook.Remove(hookData[1], hookData[2])
+        end
+    else
+        for _, hookData in ipairs(clientHooks) do
+            hook.Remove(hookData[1], hookData[2])
+        end
     end
-  else
-    for _, hookData in ipairs(clientHooks) do
-      hook.Remove(hookData[1], hookData[2])
-    end
-  end
 end
 
 local function RemoveHintTimers()
-  local hintTimers = {"HintSystem_OpeningMenu", "HintSystem_Annoy1", "HintSystem_Annoy2"}
-  for _, timerName in ipairs(hintTimers) do
-    if timer.Exists(timerName) then timer.Remove(timerName) end
-  end
+    local hintTimers = {"HintSystem_OpeningMenu", "HintSystem_Annoy1", "HintSystem_Annoy2"}
+    for _, timerName in ipairs(hintTimers) do
+        if timer.Exists(timerName) then timer.Remove(timerName) end
+    end
 end
 
 function MODULE:Initialize()
-  RemoveHintTimers()
-  ExecuteCommands(SERVER)
+    RemoveHintTimers()
+    ExecuteCommands(SERVER)
 end
 
 function MODULE:OnReloaded()
-  RemoveHintTimers()
-  RemoveHooks(SERVER)
-  ExecuteCommands(SERVER)
+    RemoveHintTimers()
+    RemoveHooks(SERVER)
+    ExecuteCommands(SERVER)
 end
 
 function widgets.PlayerTick()

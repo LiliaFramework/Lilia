@@ -4,9 +4,9 @@ MODULE.discord = "@liliaplayer"
 MODULE.version = "Stock"
 MODULE.desc = "Adds NPC vendors that can sell things."
 MODULE.CAMIPrivileges = {
-  {
-    Name = "Staff Permissions - Can Edit Vendors",
-    MinAccess = "admin",
-    Description = "Allows access to edit vendors.",
-  },
+    {
+        Name = "Staff Permissions - Can Edit Vendors",
+        MinAccess = "admin",
+        Description = "Allows access to edit vendors.",
+    },
 }

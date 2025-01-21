@@ -1,4 +1,4 @@
-ICON_FONT = nil
+﻿ICON_FONT = nil
 local function ScrapPage()
     local d = deferred.new()
     http.Fetch('https://liliaframework.github.io/liaIcons', function(resp)

@@ -1,4 +1,4 @@
-function MODULE:CanPlayerUseConfig(client)
+﻿function MODULE:CanPlayerUseConfig(client)
     return client:hasPrivilege("Staff Permissions - Access Configuration Menu")
 end
 

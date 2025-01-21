@@ -1,4 +1,4 @@
-netstream.Hook("cfgList", function(data)
+﻿netstream.Hook("cfgList", function(data)
     for k, v in pairs(data) do
         if lia.config.stored[k] then lia.config.stored[k].value = v end
     end
