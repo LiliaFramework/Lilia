@@ -102,7 +102,7 @@ function PANEL:updateSliders()
       slidePanel:SetSize(ScrW() * 0.2, ScrH() * 0.3)
       slidePanel:SetPaintBackground(true)
       slidePanel:SetBackgroundColor(Color(0, 0, 0, 200))
-      if MainMenu.CanSelectBodygroups then
+      if CanSelectBodygroups then
         local groups = {}
         for _, v in pairs(entity:GetBodyGroups()) do
           if v.id == 0 then continue end
@@ -114,7 +114,7 @@ function PANEL:updateSliders()
         end
       end
 
-      if MainMenu.CanSelectSkins and entity:SkinCount() > 1 then
+      if lia.config.get("CanSelectSkins", true) and entity:SkinCount() > 1 then
         createSlider(slidePanel, "  Skin", 0, entity:SkinCount() - 1, 0, function(value)
           PANEL:setContext("skin", value)
           PANEL:onGroups()

@@ -11,6 +11,10 @@
 
 FilesToLoad = {
   {
+    path = "lilia/gamemode/core/libraries/option.lua",
+    realm = "client"
+  },
+  {
     path = "lilia/gamemode/core/libraries/languages.lua",
     realm = "shared"
   },
@@ -152,6 +156,10 @@ FilesToLoad = {
   },
   {
     path = "lilia/gamemode/core/libraries/sizing.lua",
+    realm = "client"
+  },
+  {
+    path = "lilia/gamemode/core/libraries/easyicons.lua",
     realm = "client"
   },
 }

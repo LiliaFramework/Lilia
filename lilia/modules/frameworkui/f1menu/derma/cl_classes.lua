@@ -194,11 +194,7 @@ function PANEL:addClassDetails(detailsPanel, classData)
 
   local bloodColorText = bloodColorMap[classData.bloodcolor] or "Red blood"
   addDetail("Blood Color: " .. bloodColorText)
-  if classData.requirements then
-    addDetail("Requirements: " .. table.concat(classData.requirements, ", "))
-  else
-    addDetail("Requirements: Not specified")
-  end
+  if classData.requirements then addDetail("Requirements: " .. table.concat(classData.requirements, ", ")) end
 end
 
 function PANEL:addJoinButton(detailsPanel, classData, canBe)

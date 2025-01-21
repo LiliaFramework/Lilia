@@ -1,12 +1,12 @@
 ﻿local MODULE = MODULE
 local characterMeta = lia.meta.character
 function characterMeta:getMaxStamina()
-  local maxStamina = hook.Run("CharMaxStamina", self) or MODULE.DefaultStamina
+  local maxStamina = hook.Run("CharMaxStamina", self) or lia.config.get("DefaultStamina", 100)
   return maxStamina
 end
 
 function characterMeta:getStamina()
-  local stamina = self:getPlayer():getLocalVar("stamina", 100) or MODULE.DefaultStamina
+  local stamina = self:getPlayer():getLocalVar("stamina", 100) or lia.config.get("DefaultStamina", 100)
   return stamina
 end
 

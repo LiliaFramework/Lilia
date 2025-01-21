@@ -38,7 +38,7 @@ function MODULE:ShouldAllowScoreboardOverride(client, var)
   local character = client:getChar()
   local ourCharacter = LocalPlayer():getChar()
   if not character or not ourCharacter then return false end
-  local isRecognitionEnabled = self.RecognitionEnabled
+  local isRecognitionEnabled = lia.config.get("RecognitionEnabled", false)
   local isVarHiddenInScoreboard = var == "name" or var == "model" or var == "desc" or var == "classlogo"
   local isNotRecognized = not (ourCharacter:doesRecognize(character:getID()) or ourCharacter:doesFakeRecognize(character:getID()))
   return isRecognitionEnabled and isVarHiddenInScoreboard and isNotRecognized

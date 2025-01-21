@@ -1,5 +1,4 @@
-﻿local MODULE = MODULE
-local PANEL = {}
+﻿local PANEL = {}
 local StaffCount = 0
 local StaffOnDutyCount = 0
 local paintFunctions = {}
@@ -12,8 +11,8 @@ paintFunctions[1] = function() end
 function PANEL:Init()
   if IsValid(lia.gui.score) then lia.gui.score:Remove() end
   lia.gui.score = self
-  self:SetSize(ScrW() * MODULE.sbWidth, ScrH() * MODULE.sbHeight)
-  if MODULE.DisplayServerName then
+  self:SetSize(ScrW() * lia.config.get("sbWidth", 0.35), ScrH() * lia.config.get("sbHeight", 0.65))
+  if lia.config.get("DisplayServerName", false) then
     self.serverName = self:Add("DLabel")
     self.serverName:SetText(GetHostName())
     self.serverName:SetFont("liaMediumFont")
@@ -71,7 +70,7 @@ function PANEL:Init()
     factionName:SetTextColor(color_white)
     factionName:SetContentAlignment(5)
     factionName:SetExpensiveShadow(1, color_black)
-    if MODULE.DisplayMemberCount then
+    if lia.config.get("DisplayMemberCount", true) then
       local memberCount = lia.faction.getPlayerCount(k)
       local memberText = memberCount > 1 and " Members" or " Member"
       factionName:SetText(L(v.name) .. " - " .. memberCount .. memberText)
@@ -110,12 +109,13 @@ function PANEL:Init()
     surface.DrawRect(0, 0, w, h)
   end
 end
+
 function PANEL:UpdateStaff()
   StaffCount = 0
   StaffOnDutyCount = 0
   for _, target in player.Iterator() do
-      if target:isStaff() then StaffCount = StaffCount + 1 end
-      if target:isStaffOnDuty() then StaffOnDutyCount = StaffOnDutyCount + 1 end
+    if target:isStaff() then StaffCount = StaffCount + 1 end
+    if target:isStaffOnDuty() then StaffOnDutyCount = StaffOnDutyCount + 1 end
   end
 
   self.staff1:SetText("Players Online: " .. player.GetCount() .. " | Staff On Duty: " .. StaffOnDutyCount .. " | Staff Online: " .. StaffCount)
@@ -128,7 +128,7 @@ function PANEL:Think()
     for k, v in ipairs(self.teams) do
       visible, amount = v:IsVisible(), lia.faction.getPlayerCount(k)
       if k == FACTION_STAFF then
-        v:SetVisible(not MODULE.ShowStaff and lp:isStaffOnDuty() or amount > 0)
+        v:SetVisible(not lia.config.get("ShowStaff", true) and lp:isStaffOnDuty() or amount > 0)
       else
         v:SetVisible(visible and amount > 0)
       end
@@ -315,9 +315,9 @@ function PANEL:OnRemove()
 end
 
 function PANEL:Paint(w, h)
-  local backgroundColor = MODULE.UseSolidBackground and (MODULE.BackgroundColor or Color(50, 50, 50, 255)) or Color(30, 30, 30, 100)
-  local borderColor = Color(0, 0, 0, MODULE.UseSolidBackground and 200 or 150)
-  if MODULE.UseSolidBackground then
+  local backgroundColor = lia.config.get("UseSolidBackground", false) and (lia.config.get("ScoreboardBackgroundColor", Color(255, 100, 100, 255)) or Color(50, 50, 50, 255)) or Color(30, 30, 30, 100)
+  local borderColor = Color(0, 0, 0, lia.config.get("UseSolidBackground", false) and 200 or 150)
+  if lia.config.get("UseSolidBackground", false) then
     surface.SetDrawColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
     surface.DrawRect(0, 0, w, h)
     surface.SetDrawColor(borderColor.r, borderColor.g, borderColor.b, borderColor.a)

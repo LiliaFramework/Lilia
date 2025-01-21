@@ -1,11 +1,8 @@
 ﻿local MODULE = MODULE
 local MAT_GLASS2 = 45
-local MaxValues = {
-  height = 30,
-  horizontal = 30,
-  distance = 100
-}
-
+local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng, diff, fm, sm
+local playerMeta = FindMetaTable("Player")
+crouchFactor = 0
 local NotSolidTextures = {
   ["TOOLS/TOOLSNODRAW"] = true,
   ["METAL/METALBAR001C"] = true,
@@ -29,54 +26,23 @@ local NotSolidMatTypes = {
   [MAT_GLASS2] = true
 }
 
-local playerMeta = FindMetaTable("Player")
-local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng, diff, fm, sm
-local ThirdPerson = CreateClientConVar("tp_enabled", 0, true)
-local ClassicThirdPerson = CreateClientConVar("tp_classic", "0", true)
-local ThirdPersonVerticalView = CreateClientConVar("tp_vertical", 10, true)
-local ThirdPersonViewDistance = CreateClientConVar("tp_distance", 50, true)
-local ThirdPersonHorizontalView = CreateClientConVar("tp_horizontal", 0, true)
-crouchFactor = 0
-function MODULE:SetupQuickMenu(menu)
-  if self.ThirdPersonEnabled then
-    menu:addCheck(L("thirdpersonToggle"), function(_, state)
-      if state then
-        RunConsoleCommand("tp_enabled", "1")
-      else
-        RunConsoleCommand("tp_enabled", "0")
-      end
-
-      hook.Run("thirdPersonToggled", ThirdPerson:GetBool())
-    end, ThirdPerson:GetBool(), "Third Person")
-
-    menu:addCheck(L("thirdpersonClassic"), function(_, state)
-      if state then
-        RunConsoleCommand("tp_classic", "1")
-      else
-        RunConsoleCommand("tp_classic", "0")
-      end
-    end, ClassicThirdPerson:GetBool(), "Third Person")
-
-    menu:addSlider("Height", function(_, value) RunConsoleCommand("tp_vertical", tostring(value)) end, GetConVar("tp_vertical"):GetFloat(), 0, MaxValues.height, 0, "Third Person")
-    menu:addSlider("Horizontal", function(_, value) RunConsoleCommand("tp_horizontal", tostring(value)) end, GetConVar("tp_horizontal"):GetFloat(), -MaxValues.horizontal, MaxValues.horizontal, 0, "Third Person")
-    menu:addSlider("Distance", function(_, value) RunConsoleCommand("tp_distance", tostring(value)) end, GetConVar("tp_distance"):GetFloat(), 0, MaxValues.distance, 0, "Third Person")
-  end
-end
-
 function MODULE:CalcView(client)
   ft = FrameTime()
   if client:CanOverrideView() and client:GetViewEntity() == client then
-    if client:OnGround() and client:KeyDown(IN_DUCK) or client:Crouching() then
+    if (client:OnGround() and client:KeyDown(IN_DUCK)) or client:Crouching() then
       crouchFactor = Lerp(ft * 5, crouchFactor, 1)
     else
       crouchFactor = Lerp(ft * 5, crouchFactor, 0)
     end
 
+    local heightMax = lia.config.get("MaxThirdPersonHeight", 30)
+    local horizontalMax = lia.config.get("MaxThirdPersonHorizontal", 30)
+    local distanceMax = lia.config.get("MaxThirdPersonDistance", 100)
     curAng = client.camAng or Angle(0, 0, 0)
     view = {}
     traceData = {}
-    traceData.start = client:GetPos() + client:GetViewOffset() + curAng:Up() * math.Clamp(ThirdPersonVerticalView:GetInt(), 0, MaxValues.height) + curAng:Right() * math.Clamp(ThirdPersonHorizontalView:GetInt(), -MaxValues.horizontal, MaxValues.horizontal) - client:GetViewOffsetDucked() * .5 * crouchFactor
-    traceData.endpos = traceData.start - curAng:Forward() * math.Clamp(ThirdPersonViewDistance:GetInt(), 0, MaxValues.distance)
+    traceData.start = client:GetPos() + client:GetViewOffset() + curAng:Up() * math.Clamp(lia.option.get("thirdPersonHeight", 10.0), 0, heightMax) + curAng:Right() * math.Clamp(lia.option.get("thirdPersonHorizontal", 10.0), -horizontalMax, horizontalMax) - client:GetViewOffsetDucked() * 0.5 * crouchFactor
+    traceData.endpos = traceData.start - curAng:Forward() * math.Clamp(lia.option.get("thirdPersonDistance", 100.0), 0, distanceMax)
     traceData.filter = client
     view.origin = util.TraceLine(traceData).HitPos
     aimOrigin = view.origin
@@ -85,7 +51,7 @@ function MODULE:CalcView(client)
     traceData2.start = aimOrigin
     traceData2.endpos = aimOrigin + curAng:Forward() * 65535
     traceData2.filter = client
-    if ClassicThirdPerson:GetBool() or client.isWepRaised and client:isWepRaised() or client:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and client:GetVelocity():Length() >= 10 then client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle()) end
+    if lia.option.get("thirdPersonClassicMode", false) or (client.isWepRaised and client:isWepRaised()) or (client:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and client:GetVelocity():Length() >= 10) then client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle()) end
     return view
   end
 end
@@ -115,9 +81,9 @@ end
 
 function MODULE:PlayerButtonDown(_, button)
   if button == KEY_F4 and IsFirstTimePredicted() then
-    local ThirdPersonIsEnabled = ThirdPerson:GetInt() == 1
-    ThirdPerson:SetInt(ThirdPersonIsEnabled and 0 or 1)
-    hook.Run("thirdPersonToggled", ThirdPerson:GetBool())
+    local currentState = lia.option.get("thirdPersonEnabled", false)
+    lia.option.set("thirdPersonEnabled", not currentState)
+    hook.Run("thirdPersonToggled", not currentState)
   end
 end
 
@@ -128,7 +94,7 @@ end
 
 function MODULE:EntityEmitSound(data)
   local steps = {".stepleft", ".stepright"}
-  local ThirdPersonIsEnabled = ThirdPerson:GetInt() == 1
+  local ThirdPersonIsEnabled = lia.option.get("thirdPersonEnabled", false)
   if ThirdPersonIsEnabled then
     if not IsValid(data.Entity) and not data.Entity:IsPlayer() then return end
     local sName = data.OriginalSoundName
@@ -139,7 +105,6 @@ end
 function MODULE:PrePlayerDraw(drawnClient)
   local client = LocalPlayer()
   local clientPos = client:GetShootPos()
-  local onlinePlayers = player.GetAll()
   local isInVehicle = client:hasValidVehicle()
   if not drawnClient:IsDormant() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:CanOverrideView() and not isInVehicle then
     local bBoneHit = false
@@ -148,7 +113,13 @@ function MODULE:PrePlayerDraw(drawnClient)
       local traceLine = util.TraceLine({
         start = clientPos,
         endpos = bonePos,
-        filter = onlinePlayers,
+        filter = function(ent)
+          if ent == client then return false end
+          for _, ply in player.Iterator() do
+            if ent == ply then return true end
+          end
+          return false
+        end,
         mask = MASK_SHOT_HULL
       })
 
@@ -156,11 +127,17 @@ function MODULE:PrePlayerDraw(drawnClient)
       if traceLine.HitPos == bonePos then
         bBoneHit = true
         break
-      elseif NotSolidMatTypes[traceLine.MatType] or NotSolidTextures[traceLine.HitTexture] or IsValid(entity) and (entity:GetClass() == "prop_dynamic" or entity:GetClass() == "prop_physics") and NotSolidModels[entity:GetModel()] then
+      elseif NotSolidMatTypes[traceLine.MatType] or NotSolidTextures[traceLine.HitTexture] or (IsValid(entity) and (entity:GetClass() == "prop_dynamic" or entity:GetClass() == "prop_physics") and NotSolidModels[entity:GetModel()]) then
         local traceLine2 = util.TraceLine({
           start = bonePos,
           endpos = clientPos,
-          filter = onlinePlayers,
+          filter = function(ent)
+            if ent == client then return false end
+            for _, ply in player.Iterator() do
+              if ent == ply then return true end
+            end
+            return false
+          end,
           mask = MASK_SHOT_HULL
         })
 
@@ -193,17 +170,18 @@ function playerMeta:CanOverrideView()
   if IsValid(lia.gui.char) then return false end
   if isInVehicle then return false end
   if hook.Run("ShouldDisableThirdperson", self) == true then return false end
-  return ThirdPerson:GetBool() and MODULE.ThirdPersonEnabled and IsValid(self) and self:getChar() and not IsValid(ragdoll)
+  return lia.option.get("thirdPersonEnabled", false) and lia.config.get("ThirdPersonEnabled", true) and IsValid(self) and self:getChar() and not IsValid(ragdoll)
 end
 
 function playerMeta:IsInThirdPerson()
-  local thirdPersonEnabled = MODULE.ThirdPersonEnabled
-  local tpEnabledConVar = GetConVar("tp_enabled")
-  local tpEnabled = tpEnabledConVar:GetBool()
+  local thirdPersonEnabled = lia.config.get("ThirdPersonEnabled", true)
+  local tpEnabled = lia.option.get("thirdPersonEnabled", false)
   return tpEnabled and thirdPersonEnabled
 end
 
 concommand.Add("tp_toggle", function()
-  ThirdPerson:SetInt(ThirdPerson:GetInt() == 0 and 1 or 0)
-  hook.Run("thirdPersonToggled", ThirdPerson:GetBool())
+  local currentState = lia.option.get("thirdPersonEnabled", false)
+  lia.option.set("thirdPersonEnabled", not currentState)
+  print(tostring(not currentState))
+  hook.Run("thirdPersonToggled", not currentState)
 end)

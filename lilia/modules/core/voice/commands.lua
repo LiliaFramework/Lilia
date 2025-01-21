@@ -46,7 +46,7 @@ lia.command.add("voicetoggle", {
     if voiceEnabled then
       client:notify("You have disabled voice!")
     else
-      if MODULE.IsVoiceEnabled then
+      if lia.config.get("IsVoiceEnabled", true) then
         client:notify("You have re-enabled voice!")
       else
         client:notify("Voice isn't activated in config!")

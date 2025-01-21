@@ -5,7 +5,7 @@ local DUMMY_COMMAND = {
 }
 
 function lia.chat.timestamp(ooc)
-  return lia.config.ChatShowTime and (ooc and " " or "") .. "(" .. lia.time.GetFormattedDate(nil, false, false, false, false, true) .. ")" .. (ooc and "" or " ") or ""
+  return lia.option.ChatShowTime and (ooc and " " or "") .. "(" .. lia.time.GetFormattedDate(nil, false, false, false, false, true) .. ")" .. (ooc and "" or " ") or ""
 end
 
 function lia.chat.register(chatType, data)

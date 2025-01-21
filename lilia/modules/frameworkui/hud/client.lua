@@ -1,5 +1,5 @@
 ﻿function MODULE:ShouldHideBars()
-  if self.BarsDisabled then return false end
+  if lia.config.get("BarsDisabled", false) then return false end
 end
 
 function MODULE:HUDShouldDraw(element)
@@ -18,14 +18,9 @@ function MODULE:HUDShouldDraw(element)
 end
 
 function MODULE:HUDPaintBackground()
-  if self:ShouldDrawBranchWarning() then self:DrawBranchWarning() end
+  if BRANCH ~= "x86-64" then draw.SimpleText("We recommend the use of the x86-64 Garry's Mod Branch for this server, consider swapping as soon as possible.", "liaSmallFont", ScrW() * .5, ScrH() * .97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
   if self:ShouldDrawBlur() then self:DrawBlur() end
   self:RenderEntities()
-end
-
-function MODULE:SetupQuickMenu(menu)
-  self:SetupQuickMenuDesc(menu)
-  self:SetupQuickMenuFPS(menu)
 end
 
 function MODULE:HUDPaint()
@@ -34,8 +29,8 @@ function MODULE:HUDPaint()
     local weapon = client:GetActiveWeapon()
     if self:ShouldDrawAmmo(weapon) then self:DrawAmmo(weapon) end
     if self:ShouldDrawCrosshair() then self:DrawCrosshair() end
-    if self:ShouldDrawFPS() then self:DrawFPS() end
-    if self:ShouldDrawVignette() then self:DrawVignette() end
+    if lia.option.get("fpsDraw", false) then self:DrawFPS() end
+    if lia.config.get("Vignette", true) then self:DrawVignette() end
     if self:ShouldDrawWatermark() then self:DrawWatermark() end
   end
 end

@@ -342,23 +342,30 @@ function GM:LoadLiliaFonts(font, genericFont)
   })
 
   surface.CreateFont("liaIconsSmallNew", {
-    font = "liaicons",
+    font = "nsicons",
     size = 22,
     extended = true,
     weight = 500
   })
 
   surface.CreateFont("liaIconsMediumNew", {
-    font = "liaicons",
+    font = "nsicons",
     extended = true,
     size = 28,
     weight = 500
   })
 
   surface.CreateFont("liaIconsBigNew", {
-    font = "liaicons",
+    font = "nsicons",
     extended = true,
     size = 48,
+    weight = 500
+  })
+
+  surface.CreateFont("liaIconsHugeNew", {
+    font = "nsicons",
+    extended = true,
+    size = 78,
     weight = 500
   })
 
@@ -497,7 +504,6 @@ function GM:OnContextMenuClose()
   lia.bar.drawAction()
   if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
 end
-
 
 function GM:CharListLoaded()
   timer.Create("liaWaitUntilPlayerValid", 1, 0, function()

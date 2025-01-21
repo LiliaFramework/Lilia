@@ -54,7 +54,7 @@ if SERVER then
     local hadOldClass = oldClass and oldClass ~= -1
     if isForced or lia.class.canBe(client, class) then
       self:setClass(class)
-      if MODULE.PermaClass then self:setData("pclass", class) end
+      if lia.config.get("PermaClass", true) then self:setData("pclass", class) end
       if hadOldClass then
         hook.Run("OnPlayerSwitchClass", client, class, oldClass)
       else

@@ -1,19 +1,4 @@
-﻿local FPSDraw = CreateClientConVar("fps_draw_enabled", 0, true)
-function MODULE:ShouldDrawFPS()
-  return FPSDraw:GetInt() == 1
-end
-
-function MODULE:SetupQuickMenuFPS(menu)
-  menu:addCheck("Toggle FPS Draw", function(_, state)
-    if state then
-      RunConsoleCommand("fps_draw_enabled", "1")
-    else
-      RunConsoleCommand("fps_draw_enabled", "0")
-    end
-  end, FPSDraw:GetBool(), "HUD")
-end
-
-function MODULE:DrawFPS()
+﻿function MODULE:DrawFPS()
   local curFPS = math.Round(1 / FrameTime())
   local minFPS = self.minFPS or 60
   local maxFPS = self.maxFPS or 100

@@ -66,8 +66,10 @@ function GM:Initialize()
     LiliaBootstrap("Bootstrapper", "Starting boot sequence...")
   else
     hook.Run("LoadLiliaFonts", "Arial", "Segoe UI")
+    lia.option.load()
   end
 
+  lia.config.load()
   lia.module.initialize(true)
 end
 
@@ -77,11 +79,13 @@ function GM:OnReloaded()
     modulesLoaded = true
   end
 
+  lia.config.load()
   lia.faction.formatModelData()
   if SERVER then
     LiliaBootstrap("Bootstrapper", "Starting reload sequence...")
   else
     hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
+    lia.option.load()
   end
 end
 

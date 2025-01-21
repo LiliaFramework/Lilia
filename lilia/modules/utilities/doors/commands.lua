@@ -9,7 +9,7 @@ lia.command.add("doorsell", {
     local door = client:getTracedEntity()
     if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
       if client == door:GetDTEntity(0) then
-        local price = math.Round(door:getNetVar("price", 0) * MODULE.DoorSellRatio)
+        local price = math.Round(door:getNetVar("price", 0) * lia.config.get("DoorSellRatio", 0.5))
         door:removeDoorAccessData()
         MODULE:callOnDoorChildren(door, function(child) child:removeDoorAccessData() end)
         client:getChar():giveMoney(price)
@@ -37,7 +37,7 @@ lia.command.add("admindoorsell", {
     if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
       local owner = door:GetDTEntity(0)
       if IsValid(owner) and owner:IsPlayer() then
-        local price = math.Round(door:getNetVar("price", 0) * MODULE.DoorSellRatio)
+        local price = math.Round(door:getNetVar("price", 0) * lia.config.get("DoorSellRatio", 0.5))
         door:removeDoorAccessData()
         MODULE:callOnDoorChildren(door, function(child) child:removeDoorAccessData() end)
         owner:getChar():giveMoney(price)

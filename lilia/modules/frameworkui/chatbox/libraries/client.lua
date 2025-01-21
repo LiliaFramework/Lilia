@@ -31,8 +31,8 @@ end
 function MODULE:ChatText(_, _, text, messageType)
   if messageType == "none" and IsValid(self.panel) then
     self.panel:addText(text)
-    if self.CustomChatSound and self.CustomChatSound ~= "" then
-      surface.PlaySound(self.CustomChatSound)
+    if lia.config.get("CustomChatSound", "") and lia.config.get("CustomChatSound", "") ~= "" then
+      surface.PlaySound(lia.config.get("CustomChatSound", ""))
     else
       chat.PlaySound()
     end
@@ -40,7 +40,7 @@ function MODULE:ChatText(_, _, text, messageType)
 end
 
 function MODULE:ChatAddText(text, ...)
-  if self.ChatSizeDiff then
+  if lia.config.get("ChatSizeDiff", false) then
     local chatText = {...}
     local chatMode = #chatText <= 4 and chatText[2] or chatText[3]
     if not chatMode or istable(chatMode) then

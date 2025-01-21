@@ -39,12 +39,12 @@ lia.command.add("setsitroom", {
   privilege = "Manage SitRooms",
   onRun = function(client)
     local pos = client:GetPos()
-    local dir = string.format("data/lilia/%s/%s", engine.ActiveGamemode(), game.GetMap())
-    local filePath = string.format("%s/sitroom.txt", dir)
-    if not file.Exists(dir, "DATA") then file.CreateDir(dir) end
-    file.Write(filePath, tostring(pos))
-    client:notify("Sitroom location has been set.")
-    lia.log.add(client, "sitRoomSet", tostring(pos), "Set the sitroom location")
+    local mapName = game.GetMap()
+    local sitrooms = lia.data.get("sitrooms", {}, true, true)
+    sitrooms[mapName] = pos
+    lia.data.set("sitrooms", sitrooms, true, true)
+    client:notify("Sitroom location for this map has been set.")
+    lia.log.add(client, "sitRoomSet", string.format("Map: %s | Position: %s", mapName, tostring(pos)), "Set the sitroom location for the current map")
   end
 })
 
@@ -65,110 +65,16 @@ lia.command.add("sendtositroom", {
       return
     end
 
-    local filePath = string.format("data/lilia/%s/%s/sitroom.txt", engine.ActiveGamemode(), game.GetMap())
-    if not file.Exists(filePath, "DATA") then
-      client:notify("Sitroom location has not been set.")
-      return
-    end
-
-    local data = file.Read(filePath, "DATA")
-    if not data then
-      client:notify("Failed to read sitroom location.")
-      return
-    end
-
-    local pos = util.StringToType(data, "Vector")
+    local mapName = game.GetMap()
+    local sitrooms = lia.data.get("sitrooms", {}, true, true)
+    local pos = sitrooms[mapName]
     if pos then
       target:SetPos(pos)
       client:notify(string.format("%s has been teleported to the sitroom.", target:Nick()))
-      lia.log.add(client, "sendToSitRoom", target:Nick(), "Teleported to the sitroom")
+      target:notify("You have been teleported to the sitroom.")
+      lia.log.add(client, "sendToSitRoom", string.format("Map: %s | Target: %s | Position: %s", mapName, target:Nick(), tostring(pos)), "Teleported player to the sitroom for the current map")
     else
-      client:notify("Invalid sitroom data.")
+      client:notify("Sitroom location for this map has not been set.")
     end
-  end
-})
-
-lia.command.add("warn", {
-  adminOnly = true,
-  privilege = "Issue Warnings",
-  syntax = "<string target> <string reason>",
-  AdminStick = {
-    Name = "Warn Player",
-    Category = "Moderation Tools",
-    SubCategory = "Warnings",
-    Icon = "icon16/error.png"
-  },
-  onRun = function(client, arguments)
-    local targetName = arguments[1]
-    local reason = table.concat(arguments, " ", 2)
-    if not targetName or not reason then return "Usage: warn <player> <reason>" end
-    local target = lia.command.findPlayer(client, arguments[1])
-    if not IsValid(target) then return "Player not found." end
-    local warning = {
-      timestamp = os.date("%Y-%m-%d %H:%M:%S"),
-      reason = reason,
-      admin = client:Nick() .. " (" .. client:SteamID() .. ")"
-    }
-
-    local warns = target:getLiliaData("warns") or {}
-    table.insert(warns, warning)
-    target:setLiliaData("warns", warns)
-    target:notify("You have been warned by " .. warning.admin .. " for: " .. reason)
-    client:notify("Warning issued to " .. target:Nick())
-    lia.log.add(client, "warningIssued", target, reason)
-  end
-})
-
-lia.command.add("viewwarns", {
-  adminOnly = true,
-  privilege = "View Player Warnings",
-  syntax = "<string target>",
-  AdminStick = {
-    Name = "View Player Warnings",
-    Category = "Moderation Tools",
-    SubCategory = "Warnings",
-    Icon = "icon16/eye.png"
-  },
-  onRun = function(client, arguments)
-    local target = lia.command.findPlayer(client, arguments[1])
-    local warns = target:getLiliaData("warns") or {}
-    if table.Count(warns) == 0 then
-      client:notify(target:Nick() .. " has no warnings.")
-      return
-    end
-
-    local warningList = {}
-    for index, warn in ipairs(warns) do
-      table.insert(warningList, {
-        index = index,
-        timestamp = warn.timestamp or "N/A",
-        reason = warn.reason or "N/A",
-        admin = warn.admin or "N/A",
-      })
-    end
-
-    lia.util.CreateTableUI(client, target:Nick() .. "'s Warnings", {
-      {
-        name = "ID",
-        field = "index"
-      },
-      {
-        name = "Timestamp",
-        field = "timestamp"
-      },
-      {
-        name = "Reason",
-        field = "reason"
-      },
-      {
-        name = "Admin",
-        field = "admin"
-      },
-    }, warningList, {
-      {
-        name = "Remove Warning",
-        net = "RequestRemoveWarning"
-      }
-    }, target:getChar():getID())
   end
 })

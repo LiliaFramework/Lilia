@@ -32,7 +32,7 @@ PIM:AddOption("Recognize With Fake Name", {
   shouldShow = function(client, target)
     local ourChar = client:getChar()
     local tarCharID = target:getChar():getID()
-    return not hook.Run("isCharRecognized", ourChar, tarCharID) and MODULE.FakeNamesEnabled
+    return not hook.Run("isCharRecognized", ourChar, tarCharID) and lia.config.get("FakeNamesEnabled", false)
   end,
   onRun = function(_, target)
     local tarChar = target:getChar()

@@ -1,5 +1,4 @@
 ﻿MODULE.Vehicles = MODULE.Vehicles or {}
-MODULE.SaveStorage = true
 MODULE.StorageDefinitions = {
   ["models/props_junk/wood_crate001a.mdl"] = {
     name = "Wood Crate",

@@ -1,5 +1,5 @@
 ﻿function MODULE:ShouldDrawAmmo(weapon)
-  if IsValid(weapon) and weapon.DrawAmmo ~= false and self.AmmoDrawEnabled then return true end
+  if IsValid(weapon) and weapon.DrawAmmo ~= false and lia.config.get("AmmoDrawEnabled", false) then return true end
 end
 
 function MODULE:DrawAmmo(weapon)

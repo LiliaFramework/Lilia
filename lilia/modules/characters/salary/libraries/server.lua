@@ -5,10 +5,10 @@
   local faction = lia.faction.indices[character:getFaction()]
   local class = lia.class.list[character:getClass()]
   local PayAmount = hook.Run("GetSalaryAmount", client, faction, class) or class and class.pay or faction and faction.pay or 0
-  local SalaryLimit = hook.Run("GetSalaryLimit", client, faction, class) or class and class.payLimit or faction and faction.payLimit or self.SalaryThreshold
+  local SalaryLimit = hook.Run("GetSalaryLimit", client, faction, class) or class and class.payLimit or faction and faction.payLimit or lia.config.get("SalaryThreshold", 0)
   local SalaryAllowed = hook.Run("CanPlayerEarnSalary", client, faction, class)
   local timerFunc = timer.Exists(timerID) and timer.Adjust or timer.Create
-  local delay = class and class.payTimer or faction and faction.payTimer or self.SalaryInterval
+  local delay = class and class.payTimer or faction and faction.payTimer or lia.config.get("SalaryInterval", 3600)
   if SalaryAllowed and PayAmount > 0 then
     timerFunc(timerID, delay, 0, function()
       if not IsValid(client) or client:getChar() ~= character then

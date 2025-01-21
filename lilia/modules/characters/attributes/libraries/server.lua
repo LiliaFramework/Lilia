@@ -29,7 +29,7 @@ function MODULE:KeyRelease(client, key)
     if IsValid(wep) and wep.IsHands and wep.ReadyToPickup then wep:Pickup() end
   end
 
-  if self.StaminaSlowdown and key == IN_JUMP and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:getChar() then
+  if lia.config.get("StaminaSlowdown", true) and key == IN_JUMP and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:getChar() then
     client:consumeStamina(15)
     local stm = client:getLocalVar("stamina", 0)
     if stm == 0 then
@@ -56,7 +56,7 @@ function MODULE:PlayerStaminaLost(client)
   client:EmitSound("player/breathe1.wav", 35, 100)
   client.isBreathing = true
   timer.Create("liaStamBreathCheck" .. client:SteamID(), 1, 0, function()
-    if client:getLocalVar("stamina", 0) < self.StaminaBreathingThreshold then return end
+    if client:getLocalVar("stamina", 0) < lia.config.get("StaminaBreathingThreshold", 50) then return end
     client:StopSound("player/breathe1.wav")
     client.isBreathing = nil
     timer.Remove("liaStamBreathCheck" .. client:SteamID())

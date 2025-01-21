@@ -9,7 +9,7 @@
     return
   end
 
-  if lia.config.CarEntryDelayEnabled and vehicle:isSimfphysCar() and lia.config.TimeToEnterVehicle > 0 then
+  if vehicle:isSimfphysCar() and lia.config.TimeToEnterVehicle > 0 then
     vehicle.IsBeingEntered = true
     client:setAction("Entering Vehicle...", lia.config.TimeToEnterVehicle)
     client:doStaredAction(vehicle, function()
@@ -33,7 +33,7 @@
 end)
 
 function MODULE:EntityTakeDamage(seat, dmgInfo)
-  if self.DamageInCars and seat:isSimfphysCar() and seat.GetDriver then
+  if lia.config.get("DamageInCars", false) and seat:isSimfphysCar() and seat.GetDriver then
     local client = seat:GetDriver()
     if IsValid(client) then
       local hitPos = dmgInfo:GetDamagePosition()

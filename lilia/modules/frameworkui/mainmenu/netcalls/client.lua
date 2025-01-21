@@ -12,4 +12,6 @@
   else
     hook.Run("CharListLoaded", newCharList)
   end
+
+  hook.Run("ResetCharacterPanel")
 end)

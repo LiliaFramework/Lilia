@@ -1,4 +1,5 @@
-﻿local PANEL = {}
+﻿-- Main Character Creation Panel
+local PANEL = {}
 local COLORS = {
   background = Color(0, 0, 0, 100),
   border = Color(255, 255, 255, 10),
@@ -257,8 +258,8 @@ function PANEL:Init()
   self.content:DockMargin(50, 50, 50, 100)
   self.content:SetPaintBackground(false)
   self.model = self.content:Add("liaModelPanel")
-  self.model:SetWide(ScrW() * 0.25)
   self.model:Dock(RIGHT)
+  self.model:SetWide(ScrW() * 0.25)
   self.model:SetModel("models/error.mdl")
   self.model.oldSetModel = self.model.SetModel
   self.model.SetModel = function(mdlpnl, ...)
@@ -277,7 +278,7 @@ function PANEL:Init()
   self.prev = self.buttons:Add("DButton")
   self.prev:Dock(LEFT)
   self.prev:SetText("")
-  self.prev:SetWide(ScrW() / 3 - 12)
+  self.prev:SetWide(math.max(100, ScrW() * 0.2))
   self.prev:DockMargin(4, 4, 4, 4)
   self.prev:SetAlpha(100)
   self.prev.Paint = function(btn, w, h)
@@ -296,7 +297,7 @@ function PANEL:Init()
   self.cancel = self.buttons:Add("DButton")
   self.cancel:Dock(LEFT)
   self.cancel:SetText("")
-  self.cancel:SetWide(ScrW() / 3 - 12)
+  self.cancel:SetWide(math.max(100, ScrW() * 0.2))
   self.cancel:DockMargin(4, 4, 4, 4)
   self.cancel.Paint = function(btn, w, h)
     local hovered = btn:IsHovered()

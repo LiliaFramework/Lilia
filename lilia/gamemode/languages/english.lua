@@ -18,6 +18,7 @@ LANGUAGE = {
   exit = "Exit",
   accept = "Accept",
   deny = "Deny",
+  cfgSet = "%s has set \"%s\" to %s.",
   no = "No",
   yes = "Yes",
   create = "Create",

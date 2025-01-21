@@ -1,5 +1,4 @@
 ﻿local MODULE = MODULE
-CanSpawnStorage = CreateClientConVar("can_spawn_storage", 1, true, true)
 function MODULE:exitStorage()
   net.Start("liaStorageExit")
   net.SendToServer()
@@ -11,19 +10,6 @@ function MODULE:StorageUnlockPrompt()
     net.WriteString(val)
     net.SendToServer()
   end)
-end
-
-function MODULE:SetupQuickMenu(menu)
-  local client = LocalPlayer()
-  if client:hasPrivilege("Staff Permissions - Can Spawn Storage") then
-    menu:addCheck("Spawn Storage Props as Storages", function(_, state)
-      if state then
-        RunConsoleCommand("can_spawn_storage", "1")
-      else
-        RunConsoleCommand("can_spawn_storage", "0")
-      end
-    end, CanSpawnStorage:GetBool(), "Miscellaneous")
-  end
 end
 
 function MODULE:StorageOpen(storage, isCar)

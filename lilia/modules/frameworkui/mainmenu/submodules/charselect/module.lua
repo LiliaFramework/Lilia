@@ -16,7 +16,7 @@ if CLIENT then
   function MODULE:CreateMenuButtons(tabs)
     tabs["characters"] = function()
       if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end
-      if MainMenu.KickOnEnteringMainMenu then netstream.Start("liaCharKickSelf") end
+      if lia.config.get("KickOnEnteringMainMenu", false) then netstream.Start("liaCharKickSelf") end
       vgui.Create("liaCharacter")
     end
   end

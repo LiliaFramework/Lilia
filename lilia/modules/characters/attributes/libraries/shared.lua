@@ -31,11 +31,11 @@
 end
 
 function MODULE:StartCommand(client, cmd)
-  if self.StaminaSlowdown and not client:isNoClipping() and client:getNetVar("brth", false) and cmd:KeyDown(IN_JUMP) then cmd:RemoveKey(IN_JUMP) end
+  if lia.config.get("StaminaSlowdown", true) and not client:isNoClipping() and client:getNetVar("brth", false) and cmd:KeyDown(IN_JUMP) then cmd:RemoveKey(IN_JUMP) end
 end
 
 function MODULE:SetupMove(client, cMoveData)
-  if not self.StaminaSlowdown then return end
+  if not lia.config.get("StaminaSlowdown", true) then return end
   if client:getNetVar("brth", false) then
     cMoveData:SetMaxClientSpeed(client:GetWalkSpeed())
   elseif client:WaterLevel() > 1 then

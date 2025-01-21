@@ -26,7 +26,7 @@ function MODULE:GetDefaultCharDesc(client, faction)
 end
 
 function MODULE:DrawCharInfo(client, _, info)
-  if not self.ClassDisplay then return end
+  if not lia.config.get("ClassDisplay", true) then return end
   local charClass = client:getClassData()
   if charClass then
     local classColor = charClass.color or Color(255, 255, 255)

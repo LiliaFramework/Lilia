@@ -37,7 +37,7 @@ function PANEL:Init()
       self.scroll:SizeTo(400, ScrH() * 0.5, 0.15)
       self.expanded = false
     else
-      self:MoveTo(ScrW() - 600, 30, 0.15, nil, nil, function()
+      self:MoveTo(ScrW() - 1000, 30, 0.15, nil, nil, function()
         local height = 0
         for _, category in pairs(self.categories) do
           for _, btn in ipairs(category.buttons) do
@@ -46,8 +46,8 @@ function PANEL:Init()
         end
 
         height = math.min(height, ScrH() * 0.5)
-        self:SizeTo(600, height + 36, 0.15)
-        self.scroll:SizeTo(600, height, 0.15)
+        self:SizeTo(1000, height + 36, 0.15)
+        self.scroll:SizeTo(1000, height, 0.15)
       end)
 
       self.expanded = true
@@ -58,6 +58,17 @@ function PANEL:Init()
   self.scroll:SetPos(0, 36)
   self.scroll:SetSize(self:GetWide(), ScrH() * 0.5)
   self:MoveTo(self.x, 30, 0.05)
+  for key, option in pairs(lia.option.stored) do
+    local category = option.data.category or "Miscellaneous"
+    if option.type == "Float" or option.type == "Int" then
+      self:addSlider(option.name or option.desc or key, function(_, value) lia.option.set(key, value) end, option.value, option.data.min or 0, option.data.max or 100, option.data.decimals or 0, category)
+    elseif option.type == "Boolean" then
+      self:addCheck(option.name or option.desc or key, function(_, checked) lia.option.set(key, checked) end, option.value, category)
+    else
+      self:addButton(option.name or option.desc or key, function() print("Option:", key, "Value:", option.value) end, category)
+    end
+  end
+
   hook.Run("SetupQuickMenu", self)
 end
 

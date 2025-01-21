@@ -13,10 +13,6 @@ function MODULE:DrawVignette()
   end
 end
 
-function MODULE:ShouldDrawVignette()
-  if hasVignetteMaterial then return self.Vignette end
-end
-
 timer.Create("liaVignetteChecker", 1, 0, function()
   local client = LocalPlayer()
   if IsValid(client) then

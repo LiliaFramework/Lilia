@@ -1,5 +1,4 @@
-﻿local DefaultVendorMoney = 500
-local EDITOR = {}
+﻿local EDITOR = {}
 EDITOR.name = function(vendor)
   local name = net.ReadString()
   vendor:setName(name)
@@ -64,7 +63,7 @@ end
 EDITOR.useMoney = function(vendor)
   local useMoney = net.ReadBool()
   if useMoney then
-    vendor:setMoney(DefaultVendorMoney)
+    vendor:setMoney(lia.config.get("DefaultVendorMoney", 500))
   else
     vendor:setMoney(nil)
   end

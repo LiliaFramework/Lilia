@@ -1,15 +1,40 @@
 ﻿local MODULE = MODULE
-local insertThreshold = 5
-function MODULE:PlayerButtonDown(client, button)
-  if button == KEY_INSERT then
-    client.InsertPressCounts = (client.InsertPressCounts or 0) + 1
-    if client.InsertPressCounts == insertThreshold then
-      client.InsertPressCounts = 0
-      for _, admin in player.Iterator() do
-        if admin:isStaffOnDuty() or admin:isStaff() then admin:ChatPrint("[Alert] Player " .. client:Nick() .. " has pressed the Insert key " .. insertThreshold .. " times in this session. This is often a sign of cheating. Beware of such fact!") end
-      end
 
-      print("[Server Alert] " .. client:Nick() .. " has reached the Insert key press threshold.")
+function MODULE:CanPlayerSwitchChar(client, character)
+  if not client:isStaffOnDuty() then
+    local damageCooldown = lia.config.get("OnDamageCharacterSwitchCooldownTimer", 15)
+    local switchCooldown = lia.config.get("CharacterSwitchCooldownTimer", 5)
+    if damageCooldown > 0 and client.LastDamaged and client.LastDamaged > CurTime() - damageCooldown then return false, "You took damage too recently to switch characters!" end
+    local loginTime = character:getData("loginTime", 0)
+    if switchCooldown > 0 and loginTime + switchCooldown > os.time() then return false, "You are on cooldown!" end
+  end
+  return true
+end
+
+function MODULE:EntityTakeDamage(entity, dmgInfo)
+  local inflictor = dmgInfo:GetInflictor()
+  local attacker = dmgInfo:GetAttacker()
+  local isValidClient = IsValid(entity) and entity:IsPlayer()
+  local attackerIsHuman = IsValid(attacker) and attacker:IsPlayer()
+  local notSameEntity = attacker ~= entity
+  local isFallDamage = dmgInfo:IsFallDamage()
+  local inflictorIsProp = IsValid(inflictor) and inflictor:isProp()
+  if not isValidClient or isFallDamage then return end
+  if inflictorIsProp then
+    dmgInfo:SetDamage(0)
+    return
+  end
+
+  if notSameEntity then
+    if attackerIsHuman and attacker:GetNW2Bool("IsActing", false) then return true end
+    if lia.config.get("OnDamageCharacterSwitchCooldownTimer", 15) > 0 then
+      local applyCooldown = lia.config.get("SwitchCooldownOnAllEntities", false) or attackerIsHuman
+      if applyCooldown then entity.LastDamaged = CurTime() end
+    end
+
+    if lia.config.get("CarRagdoll", true) and IsValid(inflictor) and inflictor:isSimfphysCar() and not (entity:GetVehicle() or (LVS and entity:lvsGetVehicle())) then
+      dmgInfo:ScaleDamage(0)
+      if not entity:hasRagdoll() then entity:setRagdolled(true, 5) end
     end
   end
 end
@@ -36,7 +61,7 @@ function MODULE:PlayerAuthed(client, steamid)
     return
   end
 
-  if self.AltsDisabled and ownerSteamID64 ~= steamID64 then
+  if lia.config.get("AltsDisabled", false) and ownerSteamID64 ~= steamID64 then
     client:Kick("Sorry! We do not allow family-shared accounts on this server!")
     self:NotifyAdmin(string.format("%s (%s) was kicked for family sharing.", steamName, steamID))
   elseif WhitelistCore and WhitelistCore.BlacklistedSteamID64[ownerSteamID64] then
@@ -77,7 +102,7 @@ end
 function MODULE:OnEntityCreated(entity)
   local class = entity:GetClass():lower():Trim()
   entity:SetCustomCollisionCheck(true)
-  if class == "lua_run" and not self.DisableLuaRun then
+  if class == "lua_run" and not lia.config.get("DisableLuaRun", true) then
     print("[Notify] lua_run entity detected and will be removed.")
     function entity:AcceptInput()
       return true
@@ -96,37 +121,10 @@ function MODULE:OnEntityCreated(entity)
   end
 end
 
-function MODULE:EntityTakeDamage(entity, dmgInfo)
-  local inflictor = dmgInfo:GetInflictor()
-  local attacker = dmgInfo:GetAttacker()
-  local validClient = IsValid(entity) and entity:IsPlayer()
-  local attackerIsHuman = attacker:IsPlayer()
-  local notSameAttackerAsEnt = attacker ~= entity
-  local isFallDamage = dmgInfo:IsFallDamage()
-  local infIsProp = inflictor and IsValid(inflictor) and inflictor:isProp()
-  if not IsValid(attacker) and validClient or isFallDamage then return end
-  if infIsProp then dmgInfo:SetDamage(0) end
-  if notSameAttackerAsEnt then
-    if attackerIsHuman and attacker:GetNW2Bool("IsActing", false) then return true end
-    if self.CharacterSwitchCooldown and not self.SwitchCooldownOnAllEntities and attackerIsHuman or self.SwitchCooldownOnAllEntities then entity.LastDamaged = CurTime() end
-    if self.CarRagdoll and IsValid(inflictor) and inflictor:isSimfphysCar() and not (entity:GetVehicle() or LVS and entity:lvsGetVehicle()) then
-      dmgInfo:ScaleDamage(0)
-      if not entity:hasRagdoll() then entity:setRagdolled(true, 5) end
-    end
-  end
-end
-
-function MODULE:CanPlayerSwitchChar(client, character)
-  if not client:isStaffOnDuty() then
-    if self.OnDamageCharacterSwitchCooldown and client.LastDamaged and client.LastDamaged > CurTime() - self.OnDamageCharacterSwitchCooldownTimer then return false, "You took damage too recently to switch characters!" end
-    if self.CharacterSwitchCooldown and character:getData("loginTime", 0) + self.CharacterSwitchCooldownTimer > os.time() then return false, "You are on cooldown!" end
-  end
-end
-
 function MODULE:OnPlayerDropWeapon(_, _, entity)
   local physObject = entity:GetPhysicsObject()
   if physObject then physObject:EnableMotion() end
-  timer.Simple(self.TimeUntilDroppedSWEPRemoved, function() if entity and IsValid(entity) then entity:Remove() end end)
+  timer.Simple(lia.config.get("TimeUntilDroppedSWEPRemoved", 15), function() if entity and IsValid(entity) then entity:Remove() end end)
 end
 
 function MODULE:OnPlayerHitGround(client)
@@ -192,7 +190,7 @@ function MODULE:PlayerSpawnObject(client)
 end
 
 function MODULE:PlayerSpawnedNPC(_, entity)
-  if not self.NPCsDropWeapons then entity:SetKeyValue("spawnflags", "8192") end
+  if not lia.config.get("NPCsDropWeapons", false) then entity:SetKeyValue("spawnflags", "8192") end
 end
 
 function MODULE:CanTool(client, _, tool)
@@ -259,7 +257,7 @@ function MODULE:OnPhysgunFreeze(_, physObj, entity, client)
     client:SuppressHint("PhysgunFreeze")
   end
 
-  if self.PassableOnFreeze then
+  if lia.config.get("PassableOnFreeze", false) then
     entity:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
   else
     entity:SetCollisionGroup(COLLISION_GROUP_NONE)
@@ -273,7 +271,7 @@ function MODULE:PlayerSpawnVehicle(client, _, name)
     return false
   end
 
-  if not client:hasPrivilege("Spawn Permissions - No Car Spawn Delay") then client.NextVehicleSpawn = SysTime() + self.PlayerSpawnVehicleDelay end
+  if not client:hasPrivilege("Spawn Permissions - No Car Spawn Delay") then client.NextVehicleSpawn = SysTime() + lia.config.get("PlayerSpawnVehicleDelay", 30) end
 end
 
 function MODULE:CheckDuplicationScale(client, entities)

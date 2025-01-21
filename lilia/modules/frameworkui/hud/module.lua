@@ -67,4 +67,16 @@ if CLIENT then
       antialias = true,
     })
   end
+
+  lia.option.add("fpsDraw", "FPS Draw", "Enable FPS display on the HUD", false, nil, {
+    category = "HUD",
+    IsQuick = true
+  })
+
+  lia.option.add("descriptionWidth", "Description Width", "Adjust the description width on the HUD", 0.5, nil, {
+    category = "HUD",
+    min = 0.1,
+    max = 1,
+    decimals = 2
+  })
 end

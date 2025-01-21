@@ -6,7 +6,6 @@ local lastEntity
 local mathApproach = math.Approach
 local vectorMeta = FindMetaTable("Vector")
 local toScreen = vectorMeta.ToScreen
-local DescWidth = CreateClientConVar("lia_hud_descwidth", 0.5, true, false)
 function MODULE:DrawEntityInfo(entity, alpha, position)
   if not entity.IsPlayer(entity) then return end
   if hook.Run("ShouldDrawPlayerInfo", entity) == false then return end
@@ -15,8 +14,8 @@ function MODULE:DrawEntityInfo(entity, alpha, position)
   position = position or toScreen(entity.GetPos(entity) + (entity.Crouching(entity) and Vector(0, 0, 48) or Vector(0, 0, 80)))
   local x, y = position.x, position.y
   charInfo = {}
-  if entity.widthCache ~= DescWidth:GetFloat() then
-    entity.widthCache = DescWidth:GetFloat()
+  if entity.widthCache ~= lia.config.get("descriptionWidth", 0.5) then
+    entity.widthCache = lia.config.get("descriptionWidth", 0.5)
     entity.liaNameCache = nil
     entity.liaDescCache = nil
   end
@@ -51,10 +50,6 @@ function MODULE:DrawEntityInfo(entity, alpha, position)
     _, ty = lia.util.drawText(info[1]:gsub("#", "\226\128\139#"), x, y, ColorAlpha(info[2] or color_white, alpha), 1, 1, "liaSmallFont")
     y = y + ty
   end
-end
-
-function MODULE:SetupQuickMenuDesc(menu)
-  menu:addSlider("Desc Width Modifier", function(_, value) DescWidth:SetFloat(value) end, DescWidth:GetFloat(), 0.1, 1, 2, "HUD")
 end
 
 function MODULE:RenderEntities()

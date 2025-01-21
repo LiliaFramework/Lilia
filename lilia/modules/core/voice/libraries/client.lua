@@ -92,7 +92,7 @@ end
 
 vgui.Register("VoicePanel", PANEL, "DPanel")
 function MODULE:PlayerStartVoice(client)
-  if not IsValid(g_VoicePanelList) or not self.IsVoiceEnabled then return end
+  if not IsValid(g_VoicePanelList) or not lia.config.get("IsVoiceEnabled", true) then return end
   hook.Run("PlayerEndVoice", client)
   if IsValid(VoicePanels[client]) then
     if VoicePanels[client].fadeAnim then

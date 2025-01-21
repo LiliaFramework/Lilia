@@ -19,7 +19,7 @@ function PANEL:createTabs()
   if lia.characters and #lia.characters > 0 then self:CreateButton("continue", "Continue your character", function() self:createCharacterSelection() end) end
   if hook.Run("CanPlayerCreateChar", LocalPlayer()) ~= false then self:CreateButton("create", "Create a new character", function() self:createCharacterCreation() end) end
   if LocalPlayer():getChar() then
-    if not MainMenu.KickOnEnteringMainMenu then self:CreateButton("return", "Return to character", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end) end
+    if not lia.config.get("KickOnEnteringMainMenu", false) then self:CreateButton("return", "Return to character", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end) end
   else
     self:CreateButton("leave", "Disconnect from server", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() LocalPlayer():ConCommand("disconnect") end) end)
   end
@@ -108,7 +108,7 @@ function PANEL:createTitle()
   self.selectedDescription:SetFont("liaMediumFont")
   self.selectedDescription:SetTextColor(WHITE)
   self.selectedDescription:SetText("")
-  local centerlogo = MainMenu.CenterLogo and MainMenu.CenterLogo:find("%S")
+  local centerlogo = lia.config.get("CenterLogo", ""):find("%S")
   if centerlogo then
     local logoWidth, logoHeight = 512, 512
     self.schemaLogo = self:Add("DHTML")
@@ -118,7 +118,7 @@ function PANEL:createTitle()
     local htmlContent = [[
             <html>
                 <body style="margin: 0; background-color: transparent;">
-                    <img src="]] .. MainMenu.CenterLogo .. [[" width="]] .. logoWidth .. [[" height="]] .. logoHeight .. [[" />
+                    <img src="]] .. lia.config.get("CenterLogo", "") .. [[" width="]] .. logoWidth .. [[" height="]] .. logoHeight .. [[" />
                 </body>
             </html>
         ]]
@@ -132,11 +132,11 @@ function PANEL:createTitle()
 
   local iconWidth = 86
   self:CreateIcon(self, "https://github.com/LiliaFramework/Lilia", "https://raw.githubusercontent.com/LiliaFramework/Lilia/main/lilia/logo.png", ScrW() - iconWidth - 16, 8)
-  if MainMenu.ButtonURL ~= "" and MainMenu.ButtonLogo ~= "" then self:CreateIcon(self, MainMenu.ButtonURL, MainMenu.ButtonLogo, 16, ScrH() - iconWidth - 16) end
+  if lia.config.get("ButtonURL", "") ~= "" and lia.config.get("ButtonLogo", "") ~= "" then self:CreateIcon(self, lia.config.get("ButtonURL", ""), lia.config.get("ButtonLogo", ""), 16, ScrH() - iconWidth - 16) end
 end
 
 function PANEL:loadBackground()
-  local url = MainMenu.BackgroundURL
+  local url = lia.config.get("BackgroundURL", "")
   if url and url:find("%S") then
     self.background = self:Add("DHTML")
     self.background:SetSize(ScrW(), ScrH())
@@ -149,7 +149,7 @@ function PANEL:loadBackground()
     self.background.OnDocumentReady = function() self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end
     self.background:MoveToBack()
     self.background:SetZPos(-999)
-    if MainMenu.CharMenuBGInputDisabled then
+    if lia.config.get("CharMenuBGInputDisabled", true) then
       self.background:SetMouseInputEnabled(false)
       self.background:SetKeyboardInputEnabled(false)
     end
@@ -183,7 +183,6 @@ function PANEL:fadeOut()
 end
 
 function PANEL:Init()
-  self.mainMenu = true
   if IsValid(lia.gui.character) then lia.gui.character:Remove() end
   lia.gui.character = self
   self:Dock(FILL)
@@ -247,7 +246,7 @@ function PANEL:createCharacterSelection()
 end
 
 function PANEL:createCharacterCreation()
-  if MainMenu.BackgroundURL then
+  if lia.config.get("BackgroundURL", "") then
     if IsValid(self.background) then self.background:Remove() end
     if IsValid(self.schemaLogo) then self.schemaLogo:Remove() end
   end

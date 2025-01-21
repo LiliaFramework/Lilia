@@ -54,8 +54,8 @@ function MODULE:PlayerDeath(client, _, attacker)
   local character = client:getChar()
   if not character then return end
   if attacker:IsPlayer() then
-    if self.LoseDropItemsonDeathHuman then self:RemovedDropOnDeathItems(client) end
-    if self.DeathPopupEnabled then
+    if lia.config.get("LoseDropItemsonDeathHuman", false) then self:RemovedDropOnDeathItems(client) end
+    if lia.config.get("DeathPopupEnabled", true) then
       net.Start("death_client")
       net.WriteString(tostring(attacker:getChar():getID()))
       net.WriteString(tostring(attacker:SteamID()))
@@ -67,7 +67,7 @@ function MODULE:PlayerDeath(client, _, attacker)
   timer.Simple(lia.config.SpawnTime, function() client:SetNW2Bool("IsDeadRestricted", false) end)
   client:SetDSP(30, false)
   character:setData("pos", nil)
-  if not attacker:IsPlayer() and self.LoseDropItemsonDeathNPC or self.LoseDropItemsonDeathWorld and attacker:IsWorld() then self:RemovedDropOnDeathItems(client) end
+  if not attacker:IsPlayer() and lia.config.get("LoseDropItemsonDeathNPC", false) or lia.config.get("LoseDropItemsonDeathWorld", false) and attacker:IsWorld() then self:RemovedDropOnDeathItems(client) end
   character:setData("deathPos", client:GetPos())
 end
 
@@ -100,7 +100,7 @@ end
 
 function MODULE:PlayerSpawn(client)
   if client:getChar() and client:isStaffOnDuty() then
-    if self.StaffHasGodMode then
+    if lia.config.get("StaffHasGodMode", true) then
       client:GodEnable()
     else
       client:GodDisable()

@@ -12,13 +12,11 @@ local Lerp = Lerp
 local ScrW, ScrH = ScrW, ScrH
 local CurTime = CurTime
 local ipairs = ipairs
-local RunConsoleCommand = RunConsoleCommand
 local LocalPlayer = LocalPlayer
 local math = math
 local color_white = color_white
 local surface = surface
 local IN_ATTACK = IN_ATTACK
-local CVAR_WEPSELECT_INVERT = CreateClientConVar("wepselect_invert", 0, true)
 local function getWeaponFromIndex(i, weapons)
   return weapons[i] or NULL
 end
@@ -36,7 +34,6 @@ function MODULE:HUDPaint()
   local shiftX = ScrW() * 0.02
   local client = LocalPlayer()
   local weapons = client:GetWeapons()
-  local totalWeapons = #weapons
   local x, y = ScrW() * 0.05, ScrH() * 0.5
   local spacing = pi * 0.85
   local radius = 240 * alphaDelta
@@ -47,12 +44,12 @@ function MODULE:HUDPaint()
     local isActive = realIndex == index
     local col = ColorAlpha(isActive and lia.config.Color or color_white, (255 - math.abs(theta * 3) * 255) * fraction)
     local lastY = 0
-    if MODULE.markup and (realIndex == 1 or realIndex < index) then
-      local _, h = MODULE.markup:Size()
+    if self.markup and (realIndex == 1 or realIndex < index) then
+      local _, h = self.markup:Size()
       lastY = h * fraction
       if realIndex == index - 1 or realIndex == 1 then
         infoAlpha = Lerp(frameTime * 5, infoAlpha, 255)
-        MODULE.markup:Draw(x + 6 + shiftX, y + 30, 0, 0, infoAlpha * fraction)
+        self.markup:Draw(x + 6 + shiftX, y + 30, 0, 0, infoAlpha * fraction)
       end
 
       if index == 1 then lastY = 0 end
@@ -79,7 +76,7 @@ function MODULE:onIndexChanged()
   local client = LocalPlayer()
   local weapons = client:GetWeapons()
   local weapon = getWeaponFromIndex(index, weapons)
-  MODULE.markup = nil
+  self.markup = nil
   infoAlpha = 0
   if IsValid(weapon) then
     local textParts = {}
@@ -92,7 +89,7 @@ function MODULE:onIndexChanged()
 
     if #textParts > 0 then
       local text = table.concat(textParts)
-      MODULE.markup = markup.Parse("<font=liaItemDescFont>" .. text, ScrW() * 0.3)
+      self.markup = markup.Parse("<font=liaItemDescFont>" .. text, ScrW() * 0.3)
     end
 
     local source, pitch = hook.Run("WeaponCycleSound")
@@ -113,7 +110,7 @@ function MODULE:PlayerBindPress(client, bind, pressed)
   local total = #weapons
   local isInvPrev = bind:find("invprev") ~= nil
   local isInvNext = bind:find("invnext") ~= nil
-  if CVAR_WEPSELECT_INVERT:GetBool() then isInvPrev, isInvNext = isInvNext, isInvPrev end
+  if lia.option.get("invertWeaponScroll", false) then isInvPrev, isInvNext = isInvNext, isInvPrev end
   if isInvPrev or isInvNext then
     if isInvPrev then
       index = index - 1

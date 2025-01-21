@@ -410,6 +410,7 @@ function GM:PlayerInitialSpawn(client)
     return
   end
 
+  lia.config.send(client)
   client.liaJoinTime = RealTime()
   client:loadLiliaData(function(data)
     if not IsValid(client) then return end

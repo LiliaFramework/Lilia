@@ -48,7 +48,7 @@ function SWEP:Initialize()
 end
 
 function SWEP:PrimaryAttack()
-  local time = MODULE.DoorLockTime or 0.5
+  local time = lia.config.get("DoorLockTime", 0.5)
   local time2 = math.max(time, 1)
   local owner = self:GetOwner()
   local data = {}
@@ -64,7 +64,7 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-  local time = MODULE.DoorLockTime
+  local time = lia.config.get("DoorLockTime", 0.5)
   local time2 = math.max(time, 1)
   local owner = self:GetOwner()
   local data = {}

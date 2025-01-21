@@ -1,35 +1,18 @@
-﻿local ESP_Active = CreateClientConVar("lilia_esp", 0, true)
-local ESP_Players = CreateClientConVar("lilia_esp_players", 0, true)
-local ESP_Items = CreateClientConVar("lilia_esp_items", 0, true)
-local ESP_Props = CreateClientConVar("lilia_esp_prop", 0, true)
-local ESP_Entities = CreateClientConVar("lilia_esp_entities", 0, true)
-local ESP_Colors = {
-  Items = Color(0, 255, 0),
-  Entities = Color(255, 255, 0),
-  Players = Color(0, 0, 255),
-  Props = Color(255, 0, 0),
-}
-
+﻿local ESP_Active = lia.option.get("espActive")
+local ESP_Players = lia.option.get("espPlayers")
+local ESP_Items = lia.option.get("espItems")
+local ESP_Props = lia.option.get("espProps")
+local ESP_Entities = lia.option.get("espEntities")
 local ESP_DrawnEntities = {
   lia_bodygrouper = true,
   lia_vendor = true,
 }
 
-function MODULE:SetupQuickMenu(menu)
-  local client = LocalPlayer()
-  if client:getChar() and (client:hasPrivilege("Staff Permissions - No Clip ESP Outside Staff Character") or client:isStaffOnDuty()) then
-    menu:addCheck("Toggle ESP", function(_, state) ESP_Active:SetBool(state) end, ESP_Active:GetBool(), "ESP")
-    menu:addCheck("ESP Players", function(_, state) ESP_Players:SetBool(state) end, ESP_Players:GetBool(), "ESP")
-    menu:addCheck("ESP Items", function(_, state) ESP_Items:SetBool(state) end, ESP_Items:GetBool(), "ESP")
-    menu:addCheck("ESP Props", function(_, state) ESP_Props:SetBool(state) end, ESP_Props:GetBool(), "ESP")
-    menu:addCheck("ESP Entities", function(_, state) ESP_Entities:SetBool(state) end, ESP_Entities:GetBool(), "ESP")
-  end
-end
-
 function MODULE:HUDPaint()
-  if not ESP_Active:GetBool() then return end
+  if not ESP_Active then return end
   local client = LocalPlayer()
-  if not client:getChar() or not client:isNoClipping() or client:hasValidVehicle() then return end
+  if not client:getChar() or not client:IsValid() or not client:IsPlayer() then return end
+  if not client:isNoClipping() and not client:hasValidVehicle() then return end
   local hasPrivilege = client:hasPrivilege("Staff Permissions - No Clip ESP Outside Staff Character")
   local isStaffOnDuty = client:isStaffOnDuty()
   if not (hasPrivilege or isStaffOnDuty) then return end
@@ -39,16 +22,16 @@ function MODULE:HUDPaint()
   for _, ent in ents.Iterator() do
     if not IsValid(ent) or ent == client then continue end
     local entityType, label
-    if ent:IsPlayer() and ESP_Players:GetBool() then
+    if ent:IsPlayer() and ESP_Players then
       entityType, label = "Players", ent:Name():gsub("#", "\226\128\139#")
-    elseif ent:isItem() and ESP_Items:GetBool() then
+    elseif ent.isItem and ent:isItem() and ESP_Items then
       entityType = "Items"
       local itemTable = ent.getItemTable and ent:getItemTable()
-      label = "Item: " .. (itemTable and itemTable.name or "invalid")
-    elseif ent:isProp() and ESP_Props:GetBool() then
+      label = "Item: " .. (itemTable and itemTable.name or "Invalid")
+    elseif ent.isProp and ent:isProp() and ESP_Props then
       entityType = "Props"
       label = "Prop Model: " .. (ent:GetModel() or "Unknown")
-    elseif ESP_DrawnEntities[ent:GetClass()] and ESP_Entities:GetBool() then
+    elseif ESP_DrawnEntities[ent:GetClass()] and ESP_Entities then
       entityType = "Entities"
       label = "Entity Class: " .. (ent:GetClass() or "Unknown")
     end
@@ -62,7 +45,7 @@ function MODULE:HUDPaint()
     local factor = 1 - math.Clamp(distanceSq / maxDistanceSq, 0, 1)
     local size = math.max(20, 48 * factor)
     local alpha = math.Clamp(255 * factor, 120, 255)
-    local colorToUse = ColorAlpha(ESP_Colors[entityType] or Color(255, 255, 255), alpha)
+    local colorToUse = ColorAlpha(lia.config.get("esp" .. entityType .. "Color") or Color(255, 255, 255), alpha)
     local x = math.Clamp(scrPos.x, marginx, sx - marginx)
     local y = math.Clamp(scrPos.y, marginy, sy - marginy)
     surface.SetDrawColor(colorToUse.r, colorToUse.g, colorToUse.b, colorToUse.a)
@@ -73,7 +56,7 @@ end
 
 function MODULE:SpawnMenuOpen()
   local client = LocalPlayer()
-  if self.SpawnMenuLimit then return client:getChar():hasFlags("pet") or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Props") end
+  if lia.config.get("SpawnMenuLimit", false) then return client:getChar():hasFlags("pet") or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Props") end
 end
 
 concommand.Add("dev_GetCameraOrigin", function(client)
