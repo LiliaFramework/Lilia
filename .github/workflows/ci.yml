@@ -46,7 +46,6 @@ jobs:
       - name: Run Luacheck Linting
         working-directory: lilia
         run: |
-          ls
           luacheck . \
             --no-redefined \
             --no-global --no-self \
@@ -91,3 +90,4 @@ jobs:
             git push https://${{ secrets.LiliaGitSecret }}@github.com/${{ github.repository }}.git main
           else
             echo "No changes to commit"
+          fi
