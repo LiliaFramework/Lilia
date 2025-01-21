@@ -46,6 +46,7 @@ jobs:
       - name: Run Luacheck Linting
         working-directory: lilia
         run: |
+          ls
           luacheck . \
             --no-redefined \
             --no-global --no-self \
