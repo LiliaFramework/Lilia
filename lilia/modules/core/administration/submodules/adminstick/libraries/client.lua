@@ -561,6 +561,7 @@ function MODULE:OpenAdminStickUI(target)
     end
   end
 
+  hook.Run("PopulateAdminStick", AdminMenu, target)
   function AdminMenu:OnClose()
     AdminStickIsOpen = false
   end
