@@ -465,6 +465,11 @@ else
             if not IsValid(line) or not line.rowData then return end
             local rowData = line.rowData
             local menu = DermaMenu()
+            menu:AddOption("Copy Row", function()
+                local serializedData = util.TableToJSON(rowData, true)
+                SetClipboardText(serializedData)
+            end)
+
             for _, option in ipairs(options or {}) do
                 menu:AddOption(option.name, function()
                     if not option.net then return end
