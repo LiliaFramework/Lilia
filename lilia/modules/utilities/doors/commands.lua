@@ -481,7 +481,7 @@ lia.command.add("doorremovefaction", {
             if arguments[1] then
                 local name = table.concat(arguments, " ")
                 for k, v in pairs(lia.faction.teams) do
-                    if lia.util.stringMatches(k, name) or lia.util.stringMatches(L(v.name, client), name) then
+                    if lia.util.stringMatches(k, name) or lia.util.stringMatches(L(v.name), name) then
                         faction = v
                         break
                     end
@@ -530,7 +530,7 @@ lia.command.add("doorsetclass", {
             if arguments[1] then
                 local name = table.concat(arguments, " ")
                 for k, v in pairs(lia.class.list) do
-                    if lia.util.stringMatches(v.name, name) or lia.util.stringMatches(L(v.name, client), name) then
+                    if lia.util.stringMatches(v.name, name) or lia.util.stringMatches(L(v.name), name) then
                         class, classData = k, v
                         break
                     end

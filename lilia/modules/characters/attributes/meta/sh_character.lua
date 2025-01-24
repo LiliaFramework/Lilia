@@ -33,16 +33,15 @@ if SERVER then
     function characterMeta:updateAttrib(key, value)
         local client = self:getPlayer()
         local attribute = lia.attribs.list[key]
-        if attribute then
-            local attrib = self:getAttribs()
-            attrib[key] = math.min((attrib[key] or 0) + value, hook.Run("GetAttributeMax", client, key))
-            if IsValid(client) then
-                netstream.Start(client, "attrib", self:getID(), key, attrib[key])
-                if attribute.setup then attribute.setup(attrib[key]) end
-            end
+        if not attribute then return end
+        local attrib = self:getAttribs()
+        local currentLevel = attrib[key] or 0
+        local maxLevel = hook.Run("GetAttributeMax", client, key) or math.huge
+        attrib[key] = math.min(currentLevel + value, maxLevel)
+        if IsValid(client) then
+            netstream.Start(client, "attrib", self:getID(), key, attrib[key])
+            if attribute.setup then attribute.setup(attrib[key]) end
         end
-
-        hook.Run("OnCharAttribUpdated", client, self, key, value)
     end
 
     function characterMeta:setAttrib(key, value)

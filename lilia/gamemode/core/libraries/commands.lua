@@ -142,7 +142,7 @@ if SERVER then
     function lia.command.findFaction(client, name)
         if lia.faction.teams[name] then return lia.faction.teams[name] end
         for _, v in ipairs(lia.faction.indices) do
-            if lia.util.stringMatches(L(v.name, client), name) then return v end
+            if lia.util.stringMatches(L(v.name), name) then return v end
         end
 
         client:notifyLocalized("invalidFaction")

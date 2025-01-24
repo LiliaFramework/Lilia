@@ -6,7 +6,10 @@
         Name = "Warn Player",
         Category = "Moderation Tools",
         SubCategory = "Warnings",
-        Icon = "icon16/error.png"
+        Icon = "icon16/error.png",
+        ExtraFields = {
+            ["Warning"] = "text"
+        }
     },
     onRun = function(client, arguments)
         local targetName = arguments[1]

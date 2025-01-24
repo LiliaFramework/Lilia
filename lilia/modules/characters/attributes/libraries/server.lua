@@ -86,7 +86,7 @@ net.Receive("ChangeAttribute", function(_, client)
     local mode = net.ReadString()
     if not attribKey or not lia.attribs.list[attribKey] then
         for k, v in pairs(lia.attribs.list) do
-            if lia.util.stringMatches(L(v.name, client), attribKey) or lia.util.stringMatches(k, attribKey) then
+            if lia.util.stringMatches(L(v.name), attribKey) or lia.util.stringMatches(k, attribKey) then
                 attribKey = k
                 break
             end

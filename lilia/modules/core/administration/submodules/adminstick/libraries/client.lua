@@ -18,6 +18,16 @@ local function GetOrCreateSubMenu(parentMenu, name, submenusTable)
     return submenusTable[name]
 end
 
+local function GetIdentifier(target)
+    if target:IsBot() then
+        return target:Name()
+    elseif target:IsPlayer() then
+        return target:SteamID()
+    else
+        return ""
+    end
+end
+
 local function HandleExtraFields(commandKey, commandData, target, commandName)
     local frame = vgui.Create("DFrame")
     frame:SetTitle(commandName)
@@ -79,8 +89,9 @@ local function HandleExtraFields(commandKey, commandData, target, commandName)
             table.insert(args, value)
         end
 
+        local identifier = GetIdentifier(target)
         local commandStr = "/" .. commandKey
-        if target:IsPlayer() then table.insert(args, 1, "\"" .. target:SteamID() .. "\"") end
+        if identifier ~= "" then table.insert(args, 1, identifier) end
         for _, arg in ipairs(args) do
             commandStr = commandStr .. " " .. arg
         end
@@ -123,7 +134,8 @@ local function OpenPlayerModelUI(target)
     button:Dock(TOP)
     function button:DoClick()
         local txt = edit:GetValue()
-        RunConsoleCommand("say", "/charsetmodel \"" .. target:SteamID() .. "\" " .. txt)
+        local identifier = GetIdentifier(target)
+        if identifier ~= "" then RunConsoleCommand("say", "/charsetmodel " .. identifier .. " " .. txt) end
         frame:Remove()
         AdminStickIsOpen = false
     end
@@ -181,15 +193,18 @@ local function OpenReasonUI(target, cmd)
     button:SetText("Change")
     function button:DoClick()
         local txt = edit:GetValue()
+        local identifier = GetIdentifier(target)
         if cmd == "banid" then
-            if timeedit then
-                local length = timeedit:GetValue() * 60 * 24
-                RunConsoleCommand("say", "!banid \"" .. target:SteamID() .. "\" " .. length .. " " .. txt)
-            else
-                RunConsoleCommand("say", "!banid \"" .. target:SteamID() .. "\" " .. txt)
+            if identifier ~= "" then
+                if timeedit then
+                    local length = timeedit:GetValue() * 60 * 24
+                    RunConsoleCommand("say", "!banid " .. identifier .. " " .. length .. " " .. txt)
+                else
+                    RunConsoleCommand("say", "!banid " .. identifier .. " " .. txt)
+                end
             end
         elseif cmd == "kick" then
-            RunConsoleCommand("say", "!kick \"" .. target:SteamID() .. "\" " .. txt)
+            if identifier ~= "" then RunConsoleCommand("say", "!kick " .. identifier .. " " .. txt) end
         end
 
         frame:Remove()
@@ -217,22 +232,22 @@ local function IncludeAdminMenu(target, AdminMenu, submenus)
     local teleportationOptions = {
         {
             name = "Bring",
-            cmd = "!bring \"" .. target:SteamID() .. "\"",
+            cmd = "!bring " .. GetIdentifier(target),
             icon = "icon16/arrow_down.png"
         },
         {
             name = "Goto",
-            cmd = "!goto \"" .. target:SteamID() .. "\"",
+            cmd = "!goto " .. GetIdentifier(target),
             icon = "icon16/arrow_right.png"
         },
         {
             name = "Return",
-            cmd = "!return \"" .. target:SteamID() .. "\"",
+            cmd = "!return " .. GetIdentifier(target),
             icon = "icon16/arrow_redo.png"
         },
         {
             name = "Respawn",
-            cmd = "!respawn \"" .. target:SteamID() .. "\"",
+            cmd = "!respawn " .. GetIdentifier(target),
             icon = "icon16/arrow_refresh.png"
         }
     }
@@ -241,64 +256,64 @@ local function IncludeAdminMenu(target, AdminMenu, submenus)
         {
             action = {
                 name = "Blind",
-                cmd = "!blind \"" .. target:SteamID() .. "\"",
+                cmd = "!blind " .. GetIdentifier(target),
                 icon = "icon16/eye.png"
             },
             inverse = {
                 name = "Unblind",
-                cmd = "!unblind \"" .. target:SteamID() .. "\"",
+                cmd = "!unblind " .. GetIdentifier(target),
                 icon = "icon16/eye.png"
             }
         },
         {
             action = {
                 name = "Freeze",
-                cmd = "!freeze \"" .. target:SteamID() .. "\"",
+                cmd = "!freeze " .. GetIdentifier(target),
                 icon = "icon16/lock.png"
             },
             inverse = {
                 name = "Unfreeze",
-                cmd = "!unfreeze \"" .. target:SteamID() .. "\"",
+                cmd = "!unfreeze " .. GetIdentifier(target),
                 icon = "icon16/accept.png"
             }
         },
         {
             action = {
                 name = "Gag",
-                cmd = "!gag \"" .. target:SteamID() .. "\"",
+                cmd = "!gag " .. GetIdentifier(target),
                 icon = "icon16/sound_mute.png"
             },
             inverse = {
                 name = "Ungag",
-                cmd = "!ungag \"" .. target:SteamID() .. "\"",
+                cmd = "!ungag " .. GetIdentifier(target),
                 icon = "icon16/sound_low.png"
             }
         },
         {
             action = {
                 name = "Mute",
-                cmd = "!mute \"" .. target:SteamID() .. "\"",
+                cmd = "!mute " .. GetIdentifier(target),
                 icon = "icon16/sound_delete.png"
             },
             inverse = {
                 name = "Unmute",
-                cmd = "!unmute \"" .. target:SteamID() .. "\"",
+                cmd = "!unmute " .. GetIdentifier(target),
                 icon = "icon16/sound_add.png"
             }
         },
         {
             name = "Ignite",
-            cmd = "!ignite \"" .. target:SteamID() .. "\"",
+            cmd = "!ignite " .. GetIdentifier(target),
             icon = "icon16/fire.png"
         },
         {
             name = "Jail",
-            cmd = "!jail \"" .. target:SteamID() .. "\"",
+            cmd = "!jail " .. GetIdentifier(target),
             icon = "icon16/lock.png"
         },
         {
             name = "Slay",
-            cmd = "!slay \"" .. target:SteamID() .. "\"",
+            cmd = "!slay " .. GetIdentifier(target),
             icon = "icon16/bomb.png"
         }
     }
@@ -344,7 +359,7 @@ local function IncludeCharacterManagement(target, AdminMenu, submenus)
                     for _, v in pairs(lia.faction.teams) do
                         table.insert(factionOptions, {
                             name = v.name,
-                            cmd = 'say /plytransfer "' .. target:SteamID() .. '" "' .. v.name .. '"'
+                            cmd = 'say /plytransfer ' .. GetIdentifier(target) .. ' ' .. v.name
                         })
                     end
 
@@ -369,7 +384,7 @@ local function IncludeCharacterManagement(target, AdminMenu, submenus)
                 for _, class in ipairs(classes) do
                     table.insert(classOptions, {
                         name = class.name,
-                        cmd = 'say /setclass "' .. target:SteamID() .. '" "' .. class.name .. '"'
+                        cmd = 'say /setclass ' .. GetIdentifier(target) .. ' ' .. class.name
                     })
                 end
 
@@ -409,7 +424,7 @@ local function IncludeFlagManagement(target, AdminMenu, submenus)
         if not target:getChar():hasFlags(flag) then
             table.insert(giveFlags, {
                 name = "Give Flag " .. flag,
-                cmd = 'say /giveflag "' .. target:SteamID() .. '" "' .. flag .. '"',
+                cmd = 'say /giveflag ' .. GetIdentifier(target) .. ' ' .. flag,
                 icon = "icon16/flag_blue.png"
             })
         end
@@ -417,7 +432,7 @@ local function IncludeFlagManagement(target, AdminMenu, submenus)
         if target:getChar():hasFlags(flag) then
             table.insert(takeFlags, {
                 name = "Take Flag " .. flag,
-                cmd = 'say /takeflag "' .. target:SteamID() .. '" "' .. flag .. '"',
+                cmd = 'say /takeflag ' .. GetIdentifier(target) .. ' ' .. flag,
                 icon = "icon16/flag_red.png"
             })
         end
@@ -453,9 +468,12 @@ local function AddCommandToMenu(AdminMenu, commandData, commandKey, target, comm
         if commandData.AdminStick.ExtraFields and table.Count(commandData.AdminStick.ExtraFields) > 0 then
             HandleExtraFields(commandKey, commandData, target, commandName)
         else
-            local cmd = "/" .. commandKey
-            if target:IsPlayer() then cmd = cmd .. " \"" .. target:SteamID() .. "\"" end
-            LocalPlayer():ConCommand("say " .. cmd)
+            local identifier = GetIdentifier(target)
+            if identifier ~= "" then
+                local cmd = "/" .. commandKey .. " " .. identifier
+                LocalPlayer():ConCommand("say " .. cmd)
+            end
+
             AdminStickIsOpen = false
         end
     end)

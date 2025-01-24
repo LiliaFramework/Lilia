@@ -201,13 +201,17 @@ local ConfigFormatting = {
         slider:SetMin(lia.config.get(key .. "_min", config.data and config.data.min or 0))
         slider:SetMax(lia.config.get(key .. "_max", config.data and config.data.max or 1))
         slider:SetDecimals(0)
-        slider:SetValue(lia.option.get(key, config.value))
+        slider:SetValue(lia.config.get(key, config.value))
+        slider:SetText("")
         slider.PerformLayout = function()
-            slider.Label:SetWide(100)
+            slider.Label:SetWide(0)
             slider.TextArea:SetWide(50)
         end
 
-        slider.OnValueChanged = function(_, newValue) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.floor(newValue)) end) end
+        slider.OnValueChanged = function(_, newValue)
+            local timerName = "ConfigChange_" .. key .. "_" .. os.time()
+            timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, math.floor(newValue)) end)
+        end
         return container
     end,
     Float = function(key, name, config, parent)
@@ -241,13 +245,17 @@ local ConfigFormatting = {
         slider:SetMin(lia.config.get(key .. "_min", config.data and config.data.min or 0))
         slider:SetMax(lia.config.get(key .. "_max", config.data and config.data.max or 1))
         slider:SetDecimals(2)
-        slider:SetValue(lia.option.get(key, config.value))
+        slider:SetValue(lia.config.get(key, config.value))
+        slider:SetText("")
         slider.PerformLayout = function()
-            slider.Label:SetWide(100)
+            slider.Label:SetWide(0)
             slider.TextArea:SetWide(50)
         end
 
-        slider.OnValueChanged = function(_, newValue) timer.Create("ConfigChange" .. name, 1, 1, function() netstream.Start("cfgSet", key, name, math.floor(newValue)) end) end
+        slider.OnValueChanged = function(_, newValue)
+            local timerName = "ConfigChange_" .. key .. "_" .. os.time()
+            timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, tonumber(newValue)) end)
+        end
         return container
     end,
     Generic = function(key, name, config, parent)
@@ -279,12 +287,18 @@ local ConfigFormatting = {
         entry:Dock(TOP)
         entry:SetTall(60)
         entry:DockMargin(300, 10, 300, 0)
-        entry:SetText(tostring(lia.option.get(key, config.value)))
+        entry:SetText(tostring(lia.config.get(key, config.value)))
         entry:SetFont("ConfigFontLarge")
         entry:SetTextColor(Color(255, 255, 255))
-        entry.OnEnter = function(btn)
-            local newValue = btn:GetText()
-            timer.Create("ConfigChange" .. name, 1, 1, function() netstream.Start("cfgSet", key, name, newValue) end)
+        entry.Paint = function(self, w, h)
+            draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, 200))
+            self:DrawTextEntryText(Color(255, 255, 255), Color(255, 255, 255), Color(255, 255, 255))
+        end
+
+        entry.OnEnter = function()
+            local newValue = entry:GetText()
+            local timerName = "ConfigChange_" .. key .. "_" .. os.time()
+            timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, newValue) end)
         end
         return container
     end,
@@ -318,14 +332,21 @@ local ConfigFormatting = {
         button:SetTall(100)
         button:DockMargin(100, 10, 100, 0)
         button:SetText("")
+        button:SetCursor("hand")
+        local checkIcon = "✓"
+        local uncheckIcon = "✗"
         button.Paint = function(_, w, h)
-            local check = getIcon("0xe880", true)
-            local uncheck = getIcon("0xf096", true)
-            local icon = lia.option.get(key, config.value) and check or uncheck
-            lia.util.drawText(icon, w / 2, h / 2 - 10, color_white, 1, 1, "liaIconsHugeNew")
+            local isChecked = lia.config.get(key, config.value)
+            surface.SetDrawColor(isChecked and Color(0, 150, 0) or Color(150, 0, 0))
+            surface.DrawRect(w / 4, -25, w / 2, h)
+            draw.SimpleText(isChecked and checkIcon or uncheckIcon, "liaIconsHugeNew", w / 2, h / 2 - 15, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
 
-        button.DoClick = function() timer.Create("ConfigChange" .. name, 1, 1, function() netstream.Start("cfgSet", key, name, not lia.option.get(key, config.value)) end) end
+        button.DoClick = function()
+            local newValue = not lia.config.get(key, config.value)
+            local timerName = "ConfigChange_" .. key .. "_" .. os.time()
+            timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, newValue) end)
+        end
         return container
     end,
     Color = function(key, name, config, parent)
@@ -357,35 +378,44 @@ local ConfigFormatting = {
         button:Dock(FILL)
         button:DockMargin(10, 0, 10, 0)
         button:SetText("")
+        button:SetCursor("hand")
         button.Paint = function(_, w, h)
-            surface.SetDrawColor(lia.option.get(key, config.value))
-            surface.DrawRect(w - 925, h / 2 - 27, 500, 54)
+            local colorValue = lia.config.get(key, config.value)
+            surface.SetDrawColor(colorValue)
+            surface.DrawRect(10, h / 2 - 15, w - 20, 30)
+            draw.RoundedBox(2, 10, h / 2 - 15, w - 20, 30, Color(255, 255, 255, 50))
         end
 
-        button.DoClick = function(this)
-            local pickerFrame = this:Add("DFrame")
-            pickerFrame:SetSize(ScrW() * 0.15, ScrH() * 0.2)
-            pickerFrame:SetPos(gui.MouseX(), gui.MouseY())
-            pickerFrame:MakePopup()
+        button.DoClick = function()
             if IsValid(button.picker) then button.picker:Remove() end
-            button.picker = pickerFrame
-            local Mixer = pickerFrame:Add("DColorMixer")
-            Mixer:Dock(FILL)
-            Mixer:SetPalette(true)
-            Mixer:SetAlphaBar(true)
-            Mixer:SetWangs(true)
-            Mixer:SetColor(lia.option.get(key, config.value))
-            pickerFrame.curColor = lia.option.get(key, config.value)
+            local pickerFrame = vgui.Create("DFrame")
+            pickerFrame:SetSize(300, 400)
+            pickerFrame:SetTitle("Choose Color")
+            pickerFrame:Center()
+            pickerFrame:MakePopup()
+            local colorMixer = pickerFrame:Add("DColorMixer")
+            colorMixer:Dock(FILL)
+            colorMixer:SetPalette(true)
+            colorMixer:SetAlphaBar(true)
+            colorMixer:SetWangs(true)
+            colorMixer:SetColor(lia.config.get(key, config.value))
             local confirm = pickerFrame:Add("DButton")
             confirm:Dock(BOTTOM)
+            confirm:SetTall(40)
             confirm:SetText("Apply")
             confirm:SetTextColor(color_white)
+            confirm:SetFont("ConfigFontLarge")
+            confirm:SetBackgroundColor(Color(0, 150, 0))
+            confirm:DockMargin(10, 10, 10, 10)
             confirm.DoClick = function()
-                timer.Create("ConfigChange" .. name, 1, 1, function() netstream.Start("cfgSet", key, name, pickerFrame.curColor) end)
+                local newColor = colorMixer:GetColor()
+                local timerName = "ConfigChange_" .. key .. "_" .. os.time()
+                timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, newColor) end)
                 pickerFrame:Remove()
             end
 
-            Mixer.ValueChanged = function(_, value) pickerFrame.curColor = value end
+            colorMixer.ValueChanged = function(_, value) pickerFrame.curColor = value end
+            button.picker = pickerFrame
         end
         return container
     end,
@@ -418,12 +448,23 @@ local ConfigFormatting = {
         comboBox:Dock(TOP)
         comboBox:SetTall(60)
         comboBox:DockMargin(300, 10, 300, 0)
-        for _, option in ipairs(lia.config.get(key .. "_options", config.data.options)) do
+        comboBox:SetValue(tostring(lia.config.get(key, config.value)))
+        comboBox:SetFont("ConfigFontLarge")
+        comboBox:SetTextColor(Color(255, 255, 255))
+        comboBox.Paint = function(self, w, h)
+            draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, 200))
+            self:DrawTextEntryText(Color(255, 255, 255), Color(255, 255, 255), Color(255, 255, 255))
+        end
+
+        local options = lia.config.get(key .. "_options", config.data and config.data.options or {})
+        for _, option in ipairs(options) do
             comboBox:AddChoice(option)
         end
 
-        comboBox:SetValue(tostring(lia.option.get(key, config.value)))
-        comboBox.OnSelect = function(_, _, value) timer.Create("ConfigChange" .. name, 1, 1, function() netstream.Start("cfgSet", key, name, value) end) end
+        comboBox.OnSelect = function(_, _, value)
+            local timerName = "ConfigChange_" .. key .. "_" .. os.time()
+            timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, value) end)
+        end
         return container
     end
 }
