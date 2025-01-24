@@ -466,8 +466,14 @@ else
             local rowData = line.rowData
             local menu = DermaMenu()
             menu:AddOption("Copy Row", function()
-                local serializedData = util.TableToJSON(rowData, true)
-                SetClipboardText(serializedData)
+                local rowString = ""
+                for key, value in pairs(rowData) do
+                    value = tostring(value or "N/A")
+                    rowString = rowString .. key:gsub("^%l", string.upper) .. " " .. value .. " | "
+                end
+
+                rowString = rowString:sub(1, -4)
+                SetClipboardText(rowString)
             end)
 
             for _, option in ipairs(options or {}) do
