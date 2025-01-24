@@ -892,7 +892,7 @@ lia.command.add("chargiveitem", {
         if IsValid(target) and target:getChar() then
             local name = arguments[2]
             local uniqueID
-            for k, v in SortedPairs(lia.item.list) do
+            for _, v in SortedPairs(lia.item.list) do
                 if lia.util.stringMatches(v.name, name) then
                     uniqueID = v.uniqueID
                     break

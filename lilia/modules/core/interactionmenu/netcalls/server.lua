@@ -1,4 +1,4 @@
-﻿net.Receive("TransferMoneyFromP2P", function(len, sender)
+﻿net.Receive("TransferMoneyFromP2P", function(_, sender)
     local amount = net.ReadUInt(32)
     local target = net.ReadEntity()
     if not IsValid(sender) or not sender:getChar() then return end
