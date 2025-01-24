@@ -1,7 +1,7 @@
 ﻿lia.config.add("SalaryInterval", "Salary Interval", 300, nil, {
     desc = "Interval in seconds between salary payouts.",
     category = "Money",
-    type = "Int",
+    type = "Float",
     min = 60,
     max = 3600
 })

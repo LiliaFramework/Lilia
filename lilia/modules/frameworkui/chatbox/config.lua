@@ -45,7 +45,7 @@ lia.config.add("ChatListenColor", "Chat Listen Color", {
 lia.config.add("OOCDelay", "OOC Delay", 10, nil, {
     desc = "Set OOC Text Delay",
     category = "Chat",
-    type = "Int",
+    type = "Float",
     min = 0,
     max = 60
 })
@@ -53,7 +53,7 @@ lia.config.add("OOCDelay", "OOC Delay", 10, nil, {
 lia.config.add("LOOCDelay", "LOOC Delay", 6, nil, {
     desc = "Set LOOC Text Delay",
     category = "Chat",
-    type = "Int",
+    type = "Float",
     min = 0,
     max = 60
 })

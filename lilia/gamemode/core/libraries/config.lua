@@ -317,7 +317,7 @@ lia.config.add("SpawnTime", "Respawn Time", 5, nil, {
     noNetworking = false,
     schemaOnly = false,
     isGlobal = true,
-    type = "Int",
+    type = "Float",
     min = 1,
     max = 60
 })
@@ -328,7 +328,7 @@ lia.config.add("TimeToEnterVehicle", "Vehicle Entry Time", 1, nil, {
     noNetworking = false,
     schemaOnly = false,
     isGlobal = true,
-    type = "Int",
+    type = "Float",
     min = 0.5,
     max = 10
 })
@@ -380,7 +380,7 @@ lia.config.add("GamemodeName", "Gamemode Name", "A Lilia Gamemode", nil, {
     type = "Generic"
 })
 
-lia.config.add("SchemaYear", "Schema Year", 2023, nil, {
+lia.config.add("SchemaYear", "Schema Year", 2025, nil, {
     desc = "Year of the gamemode's schema.",
     category = "Server",
     noNetworking = false,

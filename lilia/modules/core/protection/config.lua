@@ -7,7 +7,7 @@
 lia.config.add("OnDamageCharacterSwitchCooldownTimer", "Switch cooldown after damage", 15, nil, {
     desc = "Cooldown duration (in seconds) after taking damage to switch characters.",
     category = "Character",
-    type = "Int",
+    type = "Float",
     min = 0,
     max = 120
 })
@@ -15,7 +15,7 @@ lia.config.add("OnDamageCharacterSwitchCooldownTimer", "Switch cooldown after da
 lia.config.add("CharacterSwitchCooldownTimer", "Character switch cooldown timer", 5, nil, {
     desc = "Cooldown duration (in seconds) for switching characters.",
     category = "Character",
-    type = "Int",
+    type = "Float",
     min = 0,
     max = 120
 })
@@ -35,7 +35,7 @@ lia.config.add("NPCsDropWeapons", "NPCs Drop Weapons on Death", false, nil, {
 lia.config.add("TimeUntilDroppedSWEPRemoved", "Time Until Dropped SWEP Removed", 15, nil, {
     desc = "Specifies the duration (in seconds) until a dropped SWEP is removed",
     category = "Protection",
-    type = "Int",
+    type = "Float",
     min = 0,
     max = 300
 })
@@ -43,7 +43,7 @@ lia.config.add("TimeUntilDroppedSWEPRemoved", "Time Until Dropped SWEP Removed",
 lia.config.add("ActExploitTimer", "Act Exploit Timer", 0, nil, {
     desc = "Specifies the duration (in seconds) a player remains unable to deal damage after using an 'act' command",
     category = "Protection",
-    type = "Int",
+    type = "Float",
     min = 0,
     max = 60
 })
@@ -63,7 +63,7 @@ lia.config.add("PassableOnFreeze", "Passable on Freeze", false, nil, {
 lia.config.add("PlayerSpawnVehicleDelay", "Player Spawn Vehicle Delay", 30, nil, {
     desc = "Delay for spawning a vehicle after the previous one",
     category = "Protection",
-    type = "Int",
+    type = "Float",
     min = 0,
     max = 300
 })
@@ -71,7 +71,7 @@ lia.config.add("PlayerSpawnVehicleDelay", "Player Spawn Vehicle Delay", 30, nil,
 lia.config.add("ToolInterval", "Tool Gun Usage Cooldown", 0, nil, {
     desc = "Tool Gun Usage Cooldown",
     category = "Protection",
-    type = "Int",
+    type = "Float",
     min = 0,
     max = 60
 })
@@ -88,7 +88,7 @@ lia.config.add("EquipDelay", "Equip Delay", 1, nil, {
     noNetworking = false,
     schemaOnly = false,
     isGlobal = true,
-    type = "Int",
+    type = "Float",
     min = 0,
     max = 10
 })
@@ -99,7 +99,7 @@ lia.config.add("UnequipDelay", "Unequip Delay", 1, nil, {
     noNetworking = false,
     schemaOnly = false,
     isGlobal = true,
-    type = "Int",
+    type = "Float",
     min = 0,
     max = 10
 })
@@ -110,7 +110,7 @@ lia.config.add("DropDelay", "Drop Delay", 1, nil, {
     noNetworking = false,
     schemaOnly = false,
     isGlobal = true,
-    type = "Int",
+    type = "Float",
     min = 0,
     max = 10
 })
@@ -121,7 +121,7 @@ lia.config.add("TakeDelay", "Take Delay", 0, nil, {
     noNetworking = false,
     schemaOnly = false,
     isGlobal = true,
-    type = "Int",
+    type = "Float",
     min = 0,
     max = 10
 })
