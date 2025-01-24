@@ -405,8 +405,19 @@ local ConfigFormatting = {
             confirm:SetText("Apply")
             confirm:SetTextColor(color_white)
             confirm:SetFont("ConfigFontLarge")
-            confirm:SetBackgroundColor(Color(0, 150, 0))
             confirm:DockMargin(10, 10, 10, 10)
+            confirm.Paint = function(self, w, h)
+                surface.SetDrawColor(Color(0, 150, 0))
+                surface.DrawRect(0, 0, w, h)
+                if self:IsHovered() then
+                    surface.SetDrawColor(Color(0, 180, 0))
+                    surface.DrawRect(0, 0, w, h)
+                end
+
+                surface.SetDrawColor(Color(255, 255, 255))
+                surface.DrawOutlinedRect(0, 0, w, h)
+            end
+
             confirm.DoClick = function()
                 local newColor = colorMixer:GetColor()
                 local timerName = "ConfigChange_" .. key .. "_" .. os.time()
