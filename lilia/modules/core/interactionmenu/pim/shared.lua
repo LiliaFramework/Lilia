@@ -16,18 +16,21 @@ MODULE:AddOption("Give Money", {
         frame.te:RequestFocus()
         function frame.te:OnEnter()
             local val = tonumber(frame.te:GetText())
-            if val <= 0 then
+            if not val or val <= 0 then
                 client:notify("You need to insert a value bigger than 0.", NOT_ERROR)
                 return
             end
 
-            if math.modf(val) > 0 then val = math.ceil(val) end
+            val = math.ceil(val)
             if not client:getChar():hasMoney(val) then
                 client:notify("You don't have enough money", NOT_ERROR)
                 return
             end
 
-            netstream.Start("transferMoneyFromP2P", val, target, hook.Run("GetDisplayedName", target) or target:getChar():getName(), hook.Run("GetDisplayedName", client) or client:getChar():getName())
+            net.Start("TransferMoneyFromP2P")
+            net.WriteUInt(val, 32)
+            net.WriteEntity(target)
+            net.SendToServer()
             frame:Close()
         end
 
