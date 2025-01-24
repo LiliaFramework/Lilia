@@ -11,7 +11,6 @@ local NotSolidTextures = {
     ["METAL/METALGRATE011A"] = true,
     ["METAL/METALGRATE016A"] = true,
     ["METAL/METALCOMBINEGRATE001A"] = true,
-    ["maps/rp_city3/glass/combinepodglass001a_12539_462_-284"] = true
 }
 
 local NotSolidModels = {
@@ -104,22 +103,49 @@ end
 
 function MODULE:PrePlayerDraw(drawnClient)
     local client = LocalPlayer()
+    if drawnClient == client then return end
     local clientPos = client:GetShootPos()
-    local isInVehicle = client:hasValidVehicle()
-    if not drawnClient:IsDormant() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:CanOverrideView() and not isInVehicle then
+    local onlinePlayers = player.GetAll()
+    local MaxViewDistance = lia.config.get("MaxViewDistance", 5000)
+    local MaxFOV = lia.config.get("MaxFOV", 90)
+    local drawnClientPos = drawnClient:GetShootPos()
+    local distance = clientPos:Distance(drawnClientPos)
+    local isStaff = client:Team() == FACTION_STAFF
+    if isStaff then
+        if drawnClient.IsHidden then
+            drawnClient:DrawShadow(true)
+            drawnClient.IsHidden = false
+        end
+        return
+    end
+
+    if distance > MaxViewDistance then
+        if not drawnClient.IsHidden then
+            drawnClient:DrawShadow(false)
+            drawnClient.IsHidden = true
+        end
+        return true
+    end
+
+    local toDrawnClient = (drawnClientPos - clientPos):GetNormalized()
+    local clientForward = client:EyeAngles():Forward()
+    local angleDifference = math.deg(math.acos(clientForward:Dot(toDrawnClient)))
+    if angleDifference > (MaxFOV / 2) then
+        if not drawnClient.IsHidden then
+            drawnClient:DrawShadow(false)
+            drawnClient.IsHidden = true
+        end
+        return true
+    end
+
+    if not drawnClient:IsDormant() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:CanOverrideView() and not client:hasValidVehicle() then
         local bBoneHit = false
         for i = 0, drawnClient:GetBoneCount() - 1 do
             local bonePos = drawnClient:GetBonePosition(i)
             local traceLine = util.TraceLine({
                 start = clientPos,
                 endpos = bonePos,
-                filter = function(ent)
-                    if ent == client then return false end
-                    for _, ply in player.Iterator() do
-                        if ent == ply then return true end
-                    end
-                    return false
-                end,
+                filter = onlinePlayers,
                 mask = MASK_SHOT_HULL
             })
 
@@ -131,13 +157,7 @@ function MODULE:PrePlayerDraw(drawnClient)
                 local traceLine2 = util.TraceLine({
                     start = bonePos,
                     endpos = clientPos,
-                    filter = function(ent)
-                        if ent == client then return false end
-                        for _, ply in player.Iterator() do
-                            if ent == ply then return true end
-                        end
-                        return false
-                    end,
+                    filter = onlinePlayers,
                     mask = MASK_SHOT_HULL
                 })
 
