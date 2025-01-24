@@ -17,7 +17,7 @@
     end
 
     self:setData(data)
-    LiliaInformation("Amount of vendors saved: " .. table.Count(data))
+    LiliaInformation("vendorAmountSaved", table.Count(data))
 end
 
 function MODULE:LoadData()
@@ -58,7 +58,7 @@ end
 
 function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)
     local item = lia.item.list[itemType]
-    if not item then return false, L("invalidItem") end
+    if not item then return false, L("vendorInvalidItem") end
     local SteamIDWhitelist = item.SteamIDWhitelist
     local FactionWhitelist = item.FactionWhitelist
     local UserGroupWhitelist = item.UsergroupWhitelist
@@ -69,7 +69,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     if isSellingToVendor and state == VENDOR_SELLONLY then return false, L("vendorSellOnly") end
     if not isSellingToVendor and state == VENDOR_BUYONLY then return false, L("vendorBuyOnly") end
     if isSellingToVendor then
-        if not client:getChar():getInv():hasItem(itemType) then return false, L("playerDoesNotHaveItem") end
+        if not client:getChar():getInv():hasItem(itemType) then return false, L("vendorPlayerDoesNotHaveItem") end
     else
         local stock = vendor:getStock(itemType)
         if stock and stock <= 0 then return false, L("vendorNoStock") end
@@ -83,7 +83,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
         money = client:getChar():getMoney()
     end
 
-    if not money or money < price then return false, isSellingToVendor and L("vendorNoMoney") or L("canNotAfford") end
+    if not money or money < price then return false, isSellingToVendor and L("vendorNoMoney") or L("vendorCanNotAfford") end
     if SteamIDWhitelist or FactionWhitelist or UserGroupWhitelist or VIPOnly then
         local hasWhitelist = true
         local isWhitelisted = false
@@ -108,7 +108,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
         end
     end
 
-    if flag and not client:getChar():hasFlags(flag) then return false, L("tradeRestrictedFlag") end
+    if flag and not client:getChar():hasFlags(flag) then return false, L("vendorTradeRestrictedFlag") end
     return true, nil, isWhitelisted
 end
 
@@ -164,12 +164,12 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
             character:giveMoney(price)
             item:remove():next(function() client.vendorTransaction = nil end):catch(function() client.vendorTransaction = nil end)
             vendor:addStock(itemType)
-            client:notify(L("youSoldItem", item:getName(), lia.currency.get(price)))
+            client:notify(L("vendorYouSoldItem", item:getName(), lia.currency.get(price)))
             hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
         end
     else
         if not character:getInv():doesFitInventory(itemType) then
-            client:notifyLocalized(L("vendorNoInventorySpace"))
+            client:notifyLocalized("vendorNoInventorySpace")
             hook.Run("OnCharTradeVendor", client, vendor, nil, isSellingToVendor, character, itemType, true)
             client.vendorTransaction = nil
             return
@@ -179,7 +179,7 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
         character:takeMoney(price)
         vendor:takeStock(itemType)
         character:getInv():add(itemType):next(function(item)
-            client:notify(L("youBoughtItem", item:getName(), lia.currency.get(price)))
+            client:notify(L("vendorYouBoughtItem", item:getName(), lia.currency.get(price)))
             hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
             client.vendorTransaction = nil
         end)

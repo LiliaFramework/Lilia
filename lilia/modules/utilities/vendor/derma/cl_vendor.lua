@@ -151,16 +151,16 @@ function PANEL:Init()
         self.categoryToggle = self.right:Add("DButton")
         self.categoryToggle:SetSize(leaveW, leaveH)
         self.categoryToggle:SetPos(leaveX, leaveY - 2 * leaveH - 10)
-        self.categoryToggle:SetText(L("showCategories"))
+        self.categoryToggle:SetText(L("vendorShowCategories"))
         self.categoryToggle:SetFont("liaMediumFont")
         self.categoryToggle:SetTextColor(Color(255, 255, 255, 210))
         self.categoryToggle.DoClick = function(button)
             if self.categoryList:IsVisible() then
                 self.categoryList:SetVisible(false)
-                button:SetText(L("showCategories"))
+                button:SetText(L("vendorShowCategories"))
             else
                 self.categoryList:SetVisible(true)
-                button:SetText(L("hideCategories"))
+                button:SetText(L("vendorHideCategories"))
             end
         end
 
@@ -169,7 +169,7 @@ function PANEL:Init()
         self.categoryToggle = self.right:Add("DButton")
         self.categoryToggle:SetSize(leaveW, leaveH)
         self.categoryToggle:SetPos(leaveX, leaveY - leaveH - 5)
-        self.categoryToggle:SetText(L("hideCategories"))
+        self.categoryToggle:SetText(L("vendorHideCategories"))
         self.categoryToggle:SetFont("liaMediumFont")
         self.categoryToggle:SetTextColor(Color(255, 255, 255, 210))
         self.categoryToggle.DoClick = function(button)
@@ -178,7 +178,7 @@ function PANEL:Init()
                 button:SetText(L("showCategories"))
             else
                 self.categoryList:SetVisible(true)
-                button:SetText(L("hideCategories"))
+                button:SetText(L("vendorHideCategories"))
             end
         end
 

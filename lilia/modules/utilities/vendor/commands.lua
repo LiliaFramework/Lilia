@@ -12,10 +12,10 @@
                 if itemData[2] and itemData[4] then target.items[id][2] = itemData[4] end
             end
 
-            client:notifyLocalized("VendorRestocked")
+            client:notifyLocalized("vendorRestocked")
             lia.log.add(client, "restockvendor", target)
         else
-            client:notifyLocalized("NotLookingAtValidVendor")
+            client:notifyLocalized("vendorNotLookingAtValidVendor")
         end
     end
 })
@@ -34,7 +34,7 @@ lia.command.add("restockallvendors", {
             lia.log.add(client, "restockvendor", vendor)
         end
 
-        client:notifyLocalized("AllVendorsRestocked", count)
+        client:notifyLocalized("vendorAllVendorsRestocked", count)
         lia.log.add(client, "restockallvendors", count)
     end
 })
@@ -52,7 +52,7 @@ lia.command.add("resetallvendormoney", {
     },
     onRun = function(client, arguments)
         local amount = tonumber(arguments[1])
-        if not amount or amount < 0 then return client:notifyLocalized("InvalidAmount") end
+        if not amount or amount < 0 then return client:notifyLocalized("vendorInvalidAmount") end
         local count = 0
         for _, vendor in ipairs(ents.FindByClass("lia_vendor")) do
             if vendor.money ~= nil then
@@ -62,7 +62,7 @@ lia.command.add("resetallvendormoney", {
             end
         end
 
-        client:notifyLocalized("AllVendorsMoneyReset", lia.currency.get(amount), count)
+        client:notifyLocalized("vendorAllVendorsMoneyReset", lia.currency.get(amount), count)
         lia.log.add(client, "resetallvendormoney", amount, count)
     end
 })
@@ -81,17 +81,17 @@ lia.command.add("restockvendormoney", {
     onRun = function(client, arguments)
         local target = client:getTracedEntity()
         local amount = tonumber(arguments[1])
-        if not amount or amount < 0 then return client:notifyLocalized("InvalidAmount") end
+        if not amount or amount < 0 then return client:notifyLocalized("vendorInvalidAmount") end
         if IsValid(target) and target:GetClass() == "lia_vendor" then
             if target.money ~= nil then
                 target.money = amount
-                client:notifyLocalized("VendorMoneyRestocked", lia.currency.get(amount))
+                client:notifyLocalized("vendorMoneyRestocked", lia.currency.get(amount))
                 lia.log.add(client, "restockvendormoney", target, amount)
             else
-                client:notifyLocalized("VendorNoMoneyVariable")
+                client:notifyLocalized("vendorNoMoneyVariable")
             end
         else
-            client:notifyLocalized("NotLookingAtValidVendor")
+            client:notifyLocalized("vendorNotLookingAtValidVendor")
         end
     end
 })
@@ -101,7 +101,7 @@ lia.command.add("savevendors", {
     superAdminOnly = true,
     onRun = function(client)
         MODULE:SaveData()
-        client:notifyLocalized("VendorsDataSaved")
+        client:notifyLocalized("vendorDataSaved")
         lia.log.add(client, "savevendors")
     end
 })
