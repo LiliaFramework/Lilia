@@ -35,3 +35,20 @@ function L(key, ...)
 end
 
 lia.lang.loadFromDir("lilia/gamemode/languages")
+
+local langs = {}
+for key, _ in pairs(lia.lang.stored) do
+    local displayName = key:sub(1, 1):upper() .. key:sub(2)
+    table.insert(langs, displayName)
+end
+
+table.sort(langs)
+lia.config.add("Language", "Language", "English", nil, {
+    desc = "Determines the language setting for the game.",
+    category = "Server",
+    noNetworking = false,
+    schemaOnly = false,
+    isGlobal = true,
+    type = "Table",
+    options = langs
+})

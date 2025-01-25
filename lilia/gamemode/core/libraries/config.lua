@@ -391,16 +391,6 @@ lia.config.add("SchemaYear", "Schema Year", 2025, nil, {
     max = 999999
 })
 
-lia.config.add("Language", "Language", "English", nil, {
-    desc = "Determines the language setting for the game.",
-    category = "Server",
-    noNetworking = false,
-    schemaOnly = false,
-    isGlobal = true,
-    type = "Table",
-    options = {"English", "Spanish", "French", "German"}
-})
-
 lia.config.add("AmericanDates", "American Dates", true, nil, {
     desc = "Determines whether to use the American date format.",
     category = "Server",
