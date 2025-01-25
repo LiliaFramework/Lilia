@@ -35,7 +35,6 @@ function L(key, ...)
 end
 
 lia.lang.loadFromDir("lilia/gamemode/languages")
-
 local langs = {}
 for key, _ in pairs(lia.lang.stored) do
     local displayName = key:sub(1, 1):upper() .. key:sub(2)
