@@ -30,14 +30,6 @@ lia.config.add("MaxViewDistance", "Maximum View Distance", 5000, nil, {
     max = 5000,
 })
 
-lia.config.add("MaxFOV", "Maximum Field of View", 90, nil, {
-    desc = "The maximum field of view (in degrees) for rendering players.",
-    category = "Quality of Life",
-    type = "Int",
-    min = 0,
-    max = 90,
-})
-
 if CLIENT then
     lia.option.add("thirdPersonEnabled", "Third Person Enabled", "Toggle third-person view.", false, function(_, newValue) hook.Run("thirdPersonToggled", newValue) end, {
         category = "Third Person",

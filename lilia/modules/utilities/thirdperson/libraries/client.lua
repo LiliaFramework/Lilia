@@ -107,7 +107,6 @@ function MODULE:PrePlayerDraw(drawnClient)
     local clientPos = client:GetShootPos()
     local onlinePlayers = player.GetAll()
     local MaxViewDistance = lia.config.get("MaxViewDistance", 5000)
-    local MaxFOV = lia.config.get("MaxFOV", 90)
     local drawnClientPos = drawnClient:GetShootPos()
     local distance = clientPos:Distance(drawnClientPos)
     local isStaff = client:Team() == FACTION_STAFF
@@ -130,7 +129,7 @@ function MODULE:PrePlayerDraw(drawnClient)
     local toDrawnClient = (drawnClientPos - clientPos):GetNormalized()
     local clientForward = client:EyeAngles():Forward()
     local angleDifference = math.deg(math.acos(clientForward:Dot(toDrawnClient)))
-    if angleDifference > (MaxFOV / 2) then
+    if angleDifference > (180 / 2) then
         if not drawnClient.IsHidden then
             drawnClient:DrawShadow(false)
             drawnClient.IsHidden = true
