@@ -1,7 +1,7 @@
 ﻿local MODULE = MODULE
 util.AddNetworkString("send_logs")
 function MODULE:ReadLogFiles(category, maxLines)
-    maxLines = maxLines or 200
+    maxLines = maxLines or 1000
     local logs = {}
     local logFilePath = "lilia/logs/" .. category .. ".txt"
     if file.Exists(logFilePath, "DATA") then
