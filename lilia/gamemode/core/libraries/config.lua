@@ -418,7 +418,7 @@ lia.config.add("AdminConsoleNetworkLogs", "Admin Console Network Logs", false, n
     type = "Boolean"
 })
 
-lia.config.add("ThemeColor", "Theme Color", {
+lia.config.add("Color", "Theme Color", {
     r = 37,
     g = 116,
     b = 108
