@@ -767,103 +767,105 @@ local OptionFormatting = {
 }
 
 function MODULE:CreateMenuButtons(tabs)
-    tabs["Configuration"] = function(panel)
-        panel.sidebar = panel:Add("DScrollPanel")
-        panel.sidebar:Dock(LEFT)
-        panel.sidebar:SetWide(250)
-        panel.sidebar:DockMargin(20, 20, 10, 20)
-        panel.scroll = panel:Add("DScrollPanel")
-        panel.scroll:Dock(FILL)
-        panel.scroll:DockMargin(10, 10, 10, 10)
-        panel.scroll.Paint = function() end
-        panel.categories = {}
-        panel.activeTab = nil
-        local function addCategory(text)
-            if panel.categories[text] then return panel.categories[text].label end
-            local categoryLabel = panel.sidebar:Add("DButton")
-            categoryLabel:SetText(text)
-            categoryLabel:SetTall(40)
-            categoryLabel:Dock(TOP)
-            categoryLabel:DockMargin(0, 10, 0, 10)
-            categoryLabel:SetFont("liaMediumFont")
-            categoryLabel:SetTextColor(color_white)
-            categoryLabel.Paint = function(btn, w, h)
-                if btn:IsHovered() then
-                    local underlineWidth = w * 0.4
-                    local underlineX = (w - underlineWidth) * 0.5
-                    local underlineY = h - 4
-                    surface.SetDrawColor(255, 255, 255, 80)
-                    surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
-                end
+    if LocalPlayer():hasPrivilege("Staff Permissions - Access Configuration Menu") then
+        tabs["Configuration"] = function(panel)
+            panel.sidebar = panel:Add("DScrollPanel")
+            panel.sidebar:Dock(LEFT)
+            panel.sidebar:SetWide(250)
+            panel.sidebar:DockMargin(20, 20, 10, 20)
+            panel.scroll = panel:Add("DScrollPanel")
+            panel.scroll:Dock(FILL)
+            panel.scroll:DockMargin(10, 10, 10, 10)
+            panel.scroll.Paint = function() end
+            panel.categories = {}
+            panel.activeTab = nil
+            local function addCategory(text)
+                if panel.categories[text] then return panel.categories[text].label end
+                local categoryLabel = panel.sidebar:Add("DButton")
+                categoryLabel:SetText(text)
+                categoryLabel:SetTall(40)
+                categoryLabel:Dock(TOP)
+                categoryLabel:DockMargin(0, 10, 0, 10)
+                categoryLabel:SetFont("liaMediumFont")
+                categoryLabel:SetTextColor(color_white)
+                categoryLabel.Paint = function(btn, w, h)
+                    if btn:IsHovered() then
+                        local underlineWidth = w * 0.4
+                        local underlineX = (w - underlineWidth) * 0.5
+                        local underlineY = h - 4
+                        surface.SetDrawColor(255, 255, 255, 80)
+                        surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
+                    end
 
-                if panel.activeTab == btn then
-                    surface.SetDrawColor(color_white)
-                    surface.DrawOutlinedRect(0, 0, w, h)
-                end
-            end
-
-            categoryLabel.DoClick = function(button)
-                for _, cat in pairs(panel.categories) do
-                    for _, btn in ipairs(cat.buttons) do
-                        btn:SetVisible(false)
+                    if panel.activeTab == btn then
+                        surface.SetDrawColor(color_white)
+                        surface.DrawOutlinedRect(0, 0, w, h)
                     end
                 end
 
-                for _, btn in ipairs(panel.categories[text].buttons) do
+                categoryLabel.DoClick = function(button)
+                    for _, cat in pairs(panel.categories) do
+                        for _, btn in ipairs(cat.buttons) do
+                            btn:SetVisible(false)
+                        end
+                    end
+
+                    for _, btn in ipairs(panel.categories[text].buttons) do
+                        btn:SetVisible(true)
+                    end
+
+                    panel.activeTab = button
+                end
+
+                panel.categories[text] = {
+                    label = categoryLabel,
+                    buttons = {}
+                }
+                return categoryLabel
+            end
+
+            local function addElement(elementType, key, name, config, category)
+                category = category or "Miscellaneous"
+                local cat = panel.categories[category]
+                if not cat then
+                    cat = {
+                        label = addCategory(category),
+                        buttons = {}
+                    }
+
+                    panel.categories[category] = cat
+                end
+
+                local panelElement = ConfigFormatting[elementType](key, name, config, panel.scroll)
+                panelElement:SetParent(panel.scroll)
+                panelElement:Dock(TOP)
+                panelElement:DockMargin(20, 10, 20, 10)
+                panelElement:SetVisible(false)
+                panelElement.Paint = function(_, w, h)
+                    draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
+                    surface.SetDrawColor(255, 255, 255)
+                    surface.DrawOutlinedRect(0, 0, w, h)
+                end
+
+                table.insert(cat.buttons, panelElement)
+            end
+
+            for key, option in pairs(lia.config.stored) do
+                local elementType = option.data and option.data.type or "Generic"
+                addElement(elementType, key, option.name, option, option.category)
+            end
+
+            local firstCategory = next(panel.categories)
+            if firstCategory then
+                for _, btn in ipairs(panel.categories[firstCategory].buttons) do
                     btn:SetVisible(true)
                 end
 
-                panel.activeTab = button
+                panel.activeTab = panel.categories[firstCategory].label
             end
 
-            panel.categories[text] = {
-                label = categoryLabel,
-                buttons = {}
-            }
-            return categoryLabel
+            panel.scroll:InvalidateLayout(true)
         end
-
-        local function addElement(elementType, key, name, config, category)
-            category = category or "Miscellaneous"
-            local cat = panel.categories[category]
-            if not cat then
-                cat = {
-                    label = addCategory(category),
-                    buttons = {}
-                }
-
-                panel.categories[category] = cat
-            end
-
-            local panelElement = ConfigFormatting[elementType](key, name, config, panel.scroll)
-            panelElement:SetParent(panel.scroll)
-            panelElement:Dock(TOP)
-            panelElement:DockMargin(20, 10, 20, 10)
-            panelElement:SetVisible(false)
-            panelElement.Paint = function(_, w, h)
-                draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
-                surface.SetDrawColor(255, 255, 255)
-                surface.DrawOutlinedRect(0, 0, w, h)
-            end
-
-            table.insert(cat.buttons, panelElement)
-        end
-
-        for key, option in pairs(lia.config.stored) do
-            local elementType = option.data and option.data.type or "Generic"
-            addElement(elementType, key, option.name, option, option.category)
-        end
-
-        local firstCategory = next(panel.categories)
-        if firstCategory then
-            for _, btn in ipairs(panel.categories[firstCategory].buttons) do
-                btn:SetVisible(true)
-            end
-
-            panel.activeTab = panel.categories[firstCategory].label
-        end
-
-        panel.scroll:InvalidateLayout(true)
     end
 
     tabs["Settings"] = function(panel)

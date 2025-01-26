@@ -106,10 +106,44 @@ function CAMI.PlayerHasAccess(actorPly, privilegeName, callback, targetPly, extr
     hook.Call("CAMI.PlayerHasAccess", defaultAccessHandler, actorPly, privilegeName, callback_, targetPly, extraInfoTbl)
     if callback ~= nil then return end
     if hasAccess == nil then
-        local err = [[The function CAMI.PlayerHasAccess was used to find out
-        whether Player %s has privilege "%s", but an admin mod did not give an
-        immediate answer!]]
-        error(string.format(err, actorPly:IsPlayer() and actorPly:Nick() or tostring(actorPly), privilegeName))
+        local priv = privileges[privilegeName]
+        if priv then
+            if priv.MinAccess == "user" then
+                hasAccess = true
+                reason = "Defaulted to 'user' permissions."
+            elseif priv.MinAccess == "admin" then
+                hasAccess = false
+                reason = "Insufficient permissions. Defaulted to 'user' permissions."
+            elseif priv.MinAccess == "superadmin" then
+                hasAccess = false
+                reason = "Insufficient permissions. Defaulted to 'user' permissions."
+            else
+                hasAccess = false
+                reason = "Undefined privilege level. Defaulted to 'user' permissions."
+            end
+        else
+            if extraInfoTbl then
+                if not extraInfoTbl.Fallback then
+                    hasAccess = actorPly:IsAdmin()
+                    reason = "No fallback specified. Defaulted to 'user' permissions."
+                elseif extraInfoTbl.Fallback == "user" then
+                    hasAccess = true
+                    reason = "Fallback to 'user' permissions."
+                elseif extraInfoTbl.Fallback == "admin" then
+                    hasAccess = actorPly:IsAdmin()
+                    reason = "Fallback to 'admin' permissions."
+                elseif extraInfoTbl.Fallback == "superadmin" then
+                    hasAccess = actorPly:IsSuperAdmin()
+                    reason = "Fallback to 'superadmin' permissions."
+                else
+                    hasAccess = false
+                    reason = "Invalid fallback specified. Defaulted to 'user' permissions."
+                end
+            else
+                hasAccess = true
+                reason = "No privilege found. Defaulted to 'user' permissions."
+            end
+        end
     end
     return hasAccess, reason
 end
