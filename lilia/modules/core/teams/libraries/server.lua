@@ -3,6 +3,7 @@
     local info2 = lia.class.list[oldClass]
     if info.OnSet then info:OnSet(client) end
     if info2 and info2.OnLeave then info2:OnLeave(client) end
+    if oldClass ~= class and info.OnTransferred then info:OnTransferred(client, oldClass) end
     netstream.Start(nil, "classUpdate", client)
 end
 
