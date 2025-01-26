@@ -35,24 +35,3 @@
         end
     end
 })
-
-lia.command.add("voicetoggle", {
-    superAdminOnly = true,
-    privilege = "Voice ban Character",
-    syntax = "[string name]",
-    onRun = function(client)
-        local voiceEnabled = GetGlobalBool("EnabledVoice", true)
-        if voiceEnabled then
-            client:notify("You have disabled voice!")
-        else
-            if lia.config.get("IsVoiceEnabled", true) then
-                client:notify("You have re-enabled voice!")
-            else
-                client:notify("Voice isn't activated in config!")
-                return
-            end
-        end
-
-        SetGlobalBool("EnabledVoice", not voiceEnabled)
-    end
-})
