@@ -333,13 +333,12 @@ local ConfigFormatting = {
         button:DockMargin(100, 10, 100, 0)
         button:SetText("")
         button:SetCursor("hand")
-        local checkIcon = "✓"
-        local uncheckIcon = "✗"
         button.Paint = function(_, w, h)
             local isChecked = lia.config.get(key, config.value)
-            surface.SetDrawColor(isChecked and Color(0, 150, 0) or Color(150, 0, 0))
-            surface.DrawRect(w / 4, -25, w / 2, h)
-            draw.SimpleText(isChecked and checkIcon or uncheckIcon, "liaIconsHugeNew", w / 2, h / 2 - 15, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            local check = getIcon("0xe880", true)
+            local uncheck = getIcon("0xf096", true)
+            local icon = isChecked and check or uncheck
+            lia.util.drawText(icon, w / 2, h / 2 - 10, color_white, 1, 1, "liaIconsHugeNew")
         end
 
         button.DoClick = function()
