@@ -9,20 +9,6 @@ function PANEL:Init()
     self.name.onTabPressed = function() self.desc:RequestFocus() end
     self.name:SetZPos(1)
     self.name:SetTextColor(color_white)
-    if RandomNameGenerator then
-        self.rando = self:Add("DButton")
-        self.rando:Dock(TOP)
-        self.rando:SetTall(36)
-        self.rando:SetText("Randomize Name")
-        self.rando:SetFont("liaMenuButtonFont")
-        self.rando:DockMargin(0, 4, 0, 16)
-        self.rando.DoClick = function()
-            local randName = RandomNameGenerator:generateName()
-            self.name:SetText(randName)
-            self:setContext("name", randName)
-        end
-    end
-
     self.descLabel = self:addLabel("description")
     self.descLabel:SetZPos(2)
     self.descLabel:SetTextColor(color_white)
