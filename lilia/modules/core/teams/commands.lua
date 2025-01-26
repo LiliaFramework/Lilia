@@ -24,7 +24,7 @@
                 local defaultClass = lia.faction.getDefaultClass(faction.index)
                 if defaultClass then target:getChar():joinClass(defaultClass.index) end
                 hook.Run("OnTransferred", target)
-                if faction.OnTransfered then faction:OnTransfered(target) end
+                if faction.OnTransferred then faction:OnTransferred(target) end
                 client:notify("You have transferred " .. target:Name() .. " to " .. faction.name)
                 if client ~= target then target:notify("You have been transferred to " .. faction.name .. " by " .. client:Name()) end
             else
