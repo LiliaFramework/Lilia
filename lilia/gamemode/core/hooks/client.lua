@@ -496,7 +496,6 @@ end
 function GM:OnContextMenuOpen()
     self.BaseClass:OnContextMenuOpen()
     lia.bar.drawAction()
-    vgui.Create("liaQuick")
 end
 
 function GM:OnContextMenuClose()
