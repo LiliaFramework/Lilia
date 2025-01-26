@@ -35,6 +35,16 @@ function GM:InitializedModules()
             end
         end
     end
+
+    if lia.config.get("AutoDownloadWorkshop", false) then
+        local addons = engine.GetAddons()
+        for _, addon in ipairs(addons) do
+            if addon.wsid and addon.mounted then
+                resource.AddWorkshop(addon.wsid)
+                print("[Workshop] Added Workshop addon: " .. addon.title .. " (WSID: " .. addon.wsid .. ")")
+            end
+        end
+    end
 end
 
 function GM:CharPreSave(character)

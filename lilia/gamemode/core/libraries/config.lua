@@ -430,3 +430,12 @@ lia.config.add("Color", "Theme Color", {
     isGlobal = true,
     type = "Color"
 })
+
+lia.config.add("AutoDownloadWorkshop", "Auto Download Workshop Content", true, nil, {
+    desc = "Determines whether Workshop content is automatically downloaded by the server and clients.",
+    category = "Server",
+    noNetworking = false,
+    schemaOnly = false,
+    isGlobal = false,
+    type = "Boolean"
+})
