@@ -26,6 +26,7 @@
                 hook.Run("OnTransferred", target)
                 if faction.OnTransferred then faction:OnTransferred(target) end
                 client:notify("You have transferred " .. target:Name() .. " to " .. faction.name)
+                hook.Run("PlayerLoadout", target)
                 if client ~= target then target:notify("You have been transferred to " .. faction.name .. " by " .. client:Name()) end
             else
                 return "@invalidFaction"
@@ -133,6 +134,7 @@ lia.command.add("setclass", {
                     character:joinClass(classFound.index, true)
                     target:notify("Your class was set to " .. classFound.name .. (client ~= target and " by " .. client:GetName() or "") .. ".")
                     if client ~= target then client:notify("You set " .. target:GetName() .. "'s class to " .. classFound.name .. ".") end
+                    hook.Run("PlayerLoadout", target)
                 else
                     client:notify("The class does not match the target's faction!")
                 end
