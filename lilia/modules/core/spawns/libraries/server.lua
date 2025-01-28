@@ -54,7 +54,7 @@ function MODULE:PlayerDeath(client, _, attacker)
     local character = client:getChar()
     if not character then return end
     if attacker:IsPlayer() then
-        if lia.config.get("LoseDropItemsonDeathHuman", false) then self:RemovedDropOnDeathItems(client) end
+        if lia.config.get("LoseItemsonDeathHuman", false) then self:RemovedDropOnDeathItems(client) end
         if lia.config.get("DeathPopupEnabled", true) then
             net.Start("death_client")
             net.WriteString(tostring(attacker:getChar():getID()))
@@ -67,7 +67,7 @@ function MODULE:PlayerDeath(client, _, attacker)
     timer.Simple(lia.config.SpawnTime, function() client:SetNW2Bool("IsDeadRestricted", false) end)
     client:SetDSP(30, false)
     character:setData("pos", nil)
-    if not attacker:IsPlayer() and lia.config.get("LoseDropItemsonDeathNPC", false) or lia.config.get("LoseDropItemsonDeathWorld", false) and attacker:IsWorld() then self:RemovedDropOnDeathItems(client) end
+    if not attacker:IsPlayer() and lia.config.get("LoseItemsonDeathNPC", false) or lia.config.get("LoseItemsonDeathWorld", false) and attacker:IsWorld() then self:RemovedDropOnDeathItems(client) end
     character:setData("deathPos", client:GetPos())
 end
 
@@ -77,10 +77,9 @@ function MODULE:RemovedDropOnDeathItems(client)
     local inventory = character:getInv()
     if not inventory then return end
     local items = inventory:getItems()
-    if not items or #items == 0 then return end
     client.carryWeapons = {}
     client.LostItems = {}
-    for _, item in ipairs(items) do
+    for _, item in pairs(items) do
         if item.isWeapon and item.DropOnDeath and item:getData("equip", false) or not item.isWeapon and item.DropOnDeath then
             table.insert(client.LostItems, {
                 name = item.name,

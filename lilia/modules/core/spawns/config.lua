@@ -1,17 +1,17 @@
-﻿lia.config.add("LoseDropItemsonDeathNPC", "Lose Items on NPC Death", false, nil, {
-    desc = "Determine if weapons are lost on death by NPCs",
+﻿lia.config.add("LoseItemsonDeathNPC", "Lose Items on NPC Death", false, nil, {
+    desc = "Determine if items marked for loss are lost on death by NPCs",
     category = "Death",
     type = "Boolean"
 })
 
-lia.config.add("LoseDropItemsonDeathHuman", "Lose Items on Human Death", false, nil, {
-    desc = "Determine if weapons are lost on death by Humans",
+lia.config.add("LoseItemsonDeathHuman", "Lose Items on Human Death", false, nil, {
+    desc = "Determine if items marked for loss are lost on death by Humans",
     category = "Death",
     type = "Boolean"
 })
 
-lia.config.add("LoseDropItemsonDeathWorld", "Lose Items on World Death", false, nil, {
-    desc = "Determine if weapons are lost on death by World",
+lia.config.add("LoseItemsonDeathWorld", "Lose Items on World Death", false, nil, {
+    desc = "Determine if items marked for loss are lost on death by World",
     category = "Death",
     type = "Boolean"
 })
