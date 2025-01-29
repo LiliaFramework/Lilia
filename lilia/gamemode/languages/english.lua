@@ -1,4 +1,4 @@
-NAME = "english"
+﻿NAME = "english"
 LANGUAGE = {
     modules = "Modules",
     notSpecified = "Not specified",

@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     local client = LocalPlayer()
     local w, h = ScrW(), ScrH()
@@ -105,9 +105,7 @@ function PANEL:Init()
         draw.DrawText(L("character"), "liaMediumFont", ScrW() * 0.005, ScrH() * 0.003, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
         draw.DrawText(client:getChar():getName(), "liaMediumFont", ScrW() * 0.061, ScrH() * 0.003, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
         local factionName = team.GetName(client:Team())
-        if #factionName > 25 then
-            factionName = string.sub(factionName, 1, 25) .. "..."
-        end
+        if #factionName > 25 then factionName = string.sub(factionName, 1, 25) .. "..." end
         draw.DrawText(L("faction"), "liaSmallFont", ScrW() * 0.085, ScrH() * 0.05, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
         draw.DrawText(factionName, "liaSmallFont", ScrW() * 0.201, ScrH() * 0.05, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
         local charClass = client:getChar():getClass()
@@ -119,9 +117,9 @@ function PANEL:Init()
             draw.DrawText(L("itemCount"), "liaSmallFont", ScrW() * 0.085, ScrH() * 0.11, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
             draw.DrawText(client:getChar():getInv():getItemCount() .. " " .. (tonumber(client:getChar():getInv():getItemCount()) > 1 and "Items" or "Item"), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.11, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
         else
-            draw.DrawText(L("money"), "liaSmallFont", ScrW() * 0.085, ScrH() * 0.07 , Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-            draw.DrawText(lia.currency.get(client:getChar():getMoney()), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.07 , Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
-            draw.DrawText(L("itemCount"), "liaSmallFont", ScrW() * 0.085, ScrH() * 0.09 , Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+            draw.DrawText(L("money"), "liaSmallFont", ScrW() * 0.085, ScrH() * 0.07, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+            draw.DrawText(lia.currency.get(client:getChar():getMoney()), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.07, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+            draw.DrawText(L("itemCount"), "liaSmallFont", ScrW() * 0.085, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
             draw.DrawText(client:getChar():getInv():getItemCount() .. " " .. (tonumber(client:getChar():getInv():getItemCount()) > 1 and "Items" or "Item"), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
         end
     end
