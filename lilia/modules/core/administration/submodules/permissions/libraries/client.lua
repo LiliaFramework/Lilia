@@ -1,37 +1,30 @@
-﻿local ESP_Active = lia.option.get("espActive")
-local ESP_Players = lia.option.get("espPlayers")
-local ESP_Items = lia.option.get("espItems")
-local ESP_Props = lia.option.get("espProps")
-local ESP_Entities = lia.option.get("espEntities")
-local ESP_DrawnEntities = {
+﻿local ESP_DrawnEntities = {
     lia_bodygrouper = true,
     lia_vendor = true,
 }
 
 function MODULE:HUDPaint()
-    if not ESP_Active then return end
+    if not lia.option.get("espActive") then return end
     local client = LocalPlayer()
     if not client:getChar() or not client:IsValid() or not client:IsPlayer() then return end
     if not client:isNoClipping() and not client:hasValidVehicle() then return end
-    local hasPrivilege = client:hasPrivilege("Staff Permissions - No Clip ESP Outside Staff Character")
-    local isStaffOnDuty = client:isStaffOnDuty()
-    if not (hasPrivilege or isStaffOnDuty) then return end
+    if not (client:hasPrivilege("Staff Permissions - No Clip ESP Outside Staff Character") or client:isStaffOnDuty()) then return end
     local sx, sy = ScrW(), ScrH()
     local marginx, marginy = sx * 0.1, sy * 0.1
     local maxDistanceSq = 4096
     for _, ent in ents.Iterator() do
         if not IsValid(ent) or ent == client then continue end
         local entityType, label
-        if ent:IsPlayer() and ESP_Players then
+        if ent:IsPlayer() and lia.option.get("espPlayers") then
             entityType, label = "Players", ent:Name():gsub("#", "\226\128\139#")
-        elseif ent.isItem and ent:isItem() and ESP_Items then
+        elseif ent.isItem and ent:isItem() and lia.option.get("espItems") then
             entityType = "Items"
             local itemTable = ent.getItemTable and ent:getItemTable()
             label = "Item: " .. (itemTable and itemTable.name or "Invalid")
-        elseif ent.isProp and ent:isProp() and ESP_Props then
+        elseif ent.isProp and ent:isProp() and lia.option.get("espProps") then
             entityType = "Props"
             label = "Prop Model: " .. (ent:GetModel() or "Unknown")
-        elseif ESP_DrawnEntities[ent:GetClass()] and ESP_Entities then
+        elseif ESP_DrawnEntities[ent:GetClass()] and lia.option.get("espEntities") then
             entityType = "Entities"
             label = "Entity Class: " .. (ent:GetClass() or "Unknown")
         end
@@ -46,8 +39,7 @@ function MODULE:HUDPaint()
         local size = math.max(20, 48 * factor)
         local alpha = math.Clamp(255 * factor, 120, 255)
         local colorToUse = ColorAlpha(lia.config.get("esp" .. entityType .. "Color") or Color(255, 255, 255), alpha)
-        local x = math.Clamp(scrPos.x, marginx, sx - marginx)
-        local y = math.Clamp(scrPos.y, marginy, sy - marginy)
+        local x, y = math.Clamp(scrPos.x, marginx, sx - marginx), math.Clamp(scrPos.y, marginy, sy - marginy)
         surface.SetDrawColor(colorToUse.r, colorToUse.g, colorToUse.b, colorToUse.a)
         surface.DrawRect(x - size / 2, y - size / 2, size, size)
         draw.SimpleTextOutlined(label, "liaMediumFont", x, y - size, ColorAlpha(colorToUse, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 200))
