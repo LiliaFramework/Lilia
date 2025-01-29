@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     local client = LocalPlayer()
     local w, h = ScrW(), ScrH()
@@ -90,7 +90,7 @@ function PANEL:Init()
     end
 
     self.right = vgui.Create("DFrame", self)
-    self.right:SetPos(ScrW() * 0.77, ScrH() * 0.35)
+    self.right:SetPos(ScrW() * 0.78, ScrH() * 0.35)
     self.right:SetSize(ScrW() * 0.212, ScrH() * 0.61)
     self.right:SetTitle("")
     self.right:ShowCloseButton(false)
@@ -103,15 +103,27 @@ function PANEL:Init()
         surface.DrawRect(ScrW() * 0, ScrH() * 0, ScrW() * 0.26, ScrH() * 0.033)
         surface.DrawOutlinedRect(ScrW() * 0, ScrH() * 0, ScrW() * 0.26, ScrH() * 0.033)
         draw.DrawText(L("character"), "liaMediumFont", ScrW() * 0.005, ScrH() * 0.003, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(client:getChar():getName(), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.06, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(L("faction"), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(team.GetName(client:Team()), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
-        draw.DrawText(L("class"), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(lia.class.list[client:getChar():getClass()] and lia.class.list[client:getChar():getClass()].name or "None", "liaSmallFont", ScrW() * 0.2, ScrH() * 0.111, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
-        draw.DrawText(L("money"), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.132, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(lia.currency.get(client:getChar():getMoney()), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.132, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
-        draw.DrawText(L("itemCount"), "liaSmallFont", ScrW() * 0.1, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(client:getChar():getInv():getItemCount() .. " " .. (tonumber(client:getChar():getInv():getItemCount()) > 1 and "Items" or "Item"), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.153, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText(client:getChar():getName(), "liaMediumFont", ScrW() * 0.061, ScrH() * 0.003, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        local factionName = team.GetName(client:Team())
+        if #factionName > 25 then
+            factionName = string.sub(factionName, 1, 25) .. "..."
+        end
+        draw.DrawText(L("faction"), "liaSmallFont", ScrW() * 0.085, ScrH() * 0.05, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+        draw.DrawText(factionName, "liaSmallFont", ScrW() * 0.201, ScrH() * 0.05, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        local charClass = client:getChar():getClass()
+        if lia.class.list[charClass] then
+            draw.DrawText(L("class"), "liaSmallFont", ScrW() * 0.085, ScrH() * 0.07, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+            draw.DrawText(lia.class.list[charClass].name, "liaSmallFont", ScrW() * 0.2, ScrH() * 0.07, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+            draw.DrawText(L("money"), "liaSmallFont", ScrW() * 0.085, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+            draw.DrawText(lia.currency.get(client:getChar():getMoney()), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+            draw.DrawText(L("itemCount"), "liaSmallFont", ScrW() * 0.085, ScrH() * 0.11, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+            draw.DrawText(client:getChar():getInv():getItemCount() .. " " .. (tonumber(client:getChar():getInv():getItemCount()) > 1 and "Items" or "Item"), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.11, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        else
+            draw.DrawText(L("money"), "liaSmallFont", ScrW() * 0.085, ScrH() * 0.07 , Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+            draw.DrawText(lia.currency.get(client:getChar():getMoney()), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.07 , Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+            draw.DrawText(L("itemCount"), "liaSmallFont", ScrW() * 0.085, ScrH() * 0.09 , Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
+            draw.DrawText(client:getChar():getInv():getItemCount() .. " " .. (tonumber(client:getChar():getInv():getItemCount()) > 1 and "Items" or "Item"), "liaSmallFont", ScrW() * 0.2, ScrH() * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        end
     end
 
     self.leaveButton = vgui.Create("DButton", self.right)
@@ -222,7 +234,7 @@ function PANEL:DrawPortraits()
 
     self.playerModel = self:Add("DModelPanel")
     self.playerModel:SetSize(SS(160, true), SS(170))
-    self.playerModel:SetPos((self:GetWide() / 2) / 2 - self.playerModel:GetWide() / 2 + SS(1100, true), ScrH() * 0.35 + SS(25))
+    self.playerModel:SetPos((self:GetWide() / 2) / 2 - self.playerModel:GetWide() / 2 + SS(1100, true), ScrH() * 0.36 + SS(25))
     local playerModelPath = client:GetModel()
     SafeSetModel(self.playerModel, playerModelPath)
     self.playerModel:SetFOV(20)
