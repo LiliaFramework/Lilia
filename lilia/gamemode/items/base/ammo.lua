@@ -2,12 +2,9 @@
 ITEM.model = "models/Items/BoxSRounds.mdl"
 ITEM.width = 1
 ITEM.height = 1
-ITEM.isStackable = true
-ITEM.maxQuantity = 45
 ITEM.ammo = "pistol"
 ITEM.desc = "A Box that contains %s of Pistol Ammo"
 ITEM.category = "Ammunition"
-ITEM.RequiredSkillLevels = nil
 ITEM.functions.use = {
     name = "load",
     tip = "useTip",

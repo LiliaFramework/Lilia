@@ -21,7 +21,6 @@ function lia.option.add(key, name, desc, default, callback, data)
         default = default,
         callback = callback,
         type = optionType,
-        IsQuick = data.IsQuick or false
     }
 end
 
@@ -48,9 +47,11 @@ function lia.option.get(key, default)
 end
 
 function lia.option.save()
-    file.CreateDir("lilia/options")
+    local dirPath = "lilia/options/" .. engine.ActiveGamemode()
+    file.CreateDir(dirPath)
     local ipWithoutPort = string.Explode(":", game.GetIPAddress())[1]
-    local saveLocation = "lilia/options/" .. ipWithoutPort:gsub("%.", "_") .. ".txt"
+    local formattedIP = ipWithoutPort:gsub("%.", "_")
+    local saveLocation = dirPath .. "/" .. formattedIP .. ".txt"
     local data = {}
     for k, v in pairs(lia.option.stored) do
         if v and v.value ~= nil then data[k] = v.value end
@@ -61,10 +62,12 @@ function lia.option.save()
 end
 
 function lia.option.load()
-    file.CreateDir("lilia/options")
+    local dirPath = "lilia/options/" .. engine.ActiveGamemode()
+    file.CreateDir(dirPath)
     local ipWithoutPort = string.Explode(":", game.GetIPAddress())[1]
-    local saveLocation = "lilia/options/" .. ipWithoutPort:gsub("%.", "_") .. ".txt"
-    local data = file.Read(saveLocation, "DATA")
+    local formattedIP = ipWithoutPort:gsub("%.", "_")
+    local loadLocation = dirPath .. "/" .. formattedIP .. ".txt"
+    local data = file.Read(loadLocation, "DATA")
     if data then
         local savedOptions = util.JSONToTable(data)
         for k, v in pairs(savedOptions) do

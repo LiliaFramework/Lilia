@@ -5,7 +5,6 @@ ITEM.category = "Storage"
 ITEM.isBag = true
 ITEM.invWidth = 2
 ITEM.invHeight = 2
-ITEM.RequiredSkillLevels = nil
 ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
 ITEM.pacData = {}
 if CLIENT then
