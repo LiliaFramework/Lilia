@@ -3,7 +3,6 @@
     for _, v in ipairs(ents.FindByClass("lia_vendor")) do
         data[#data + 1] = {
             name = v:getNetVar("name"),
-            desc = v:getNetVar("desc"),
             pos = v:GetPos(),
             angles = v:GetAngles(),
             model = v:GetModel(),
@@ -28,7 +27,6 @@ function MODULE:LoadData()
         entity:Spawn()
         entity:SetModel(v.model)
         entity:setNetVar("name", v.name)
-        entity:setNetVar("desc", v.desc)
         entity:setNetVar("flag", v.flag)
         entity:setNetVar("scale", v.scale or 0.5)
         entity.items = v.items or {}
@@ -83,7 +81,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
         money = client:getChar():getMoney()
     end
 
-    if not money or money < price then return false, isSellingToVendor and L("vendorNoMoney") or L("vendorCanNotAfford") end
+    if money and money < price then return false, isSellingToVendor and L("vendorNoMoney") or L("vendorCanNotAfford") end
     if SteamIDWhitelist or FactionWhitelist or UserGroupWhitelist or VIPOnly then
         local hasWhitelist = true
         local isWhitelisted = false
