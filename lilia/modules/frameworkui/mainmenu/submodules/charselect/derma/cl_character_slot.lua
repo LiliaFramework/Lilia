@@ -31,7 +31,7 @@ function PANEL:Init()
     end
 
     self.name = self:Add("DLabel")
-    self.name:SetFont("liaCharLargeFont")
+    self.name:SetFont("liaCharMediumFont")
     self.name:SetTextColor(lia.gui.character.WHITE)
     self.name:SetWrap(true)
     self.name:SetAutoStretchVertical(true)
