@@ -88,6 +88,14 @@ function GM:LoadLiliaFonts(font, genericFont)
         antialias = true
     })
 
+    surface.CreateFont("liaCharMediumFont", {
+        font = genericFont,
+        size = 28 * scale,
+        extended = true,
+        weight = 600,
+        antialias = true
+    })
+
     surface.CreateFont("liaCharSmallFont", {
         font = genericFont,
         size = 20 * scale,

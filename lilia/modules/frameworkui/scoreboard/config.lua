@@ -25,13 +25,7 @@ lia.config.add("DisplayServerName", "Display Server Name in Scoreboard", false, 
     category = "Scoreboard",
     type = "Boolean"
 })
-
-lia.config.add("DisplayMemberCount", "Display Member Count", true, nil, {
-    desc = "Should Faction Member Count Be Displayed",
-    category = "Scoreboard",
-    type = "Boolean"
-})
-
+        
 lia.config.add("UseSolidBackground", "Use Solid Background in Scoreboard", false, nil, {
     desc = "Use a solid background for the scoreboard",
     category = "Scoreboard",
