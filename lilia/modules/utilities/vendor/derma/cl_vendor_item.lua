@@ -110,17 +110,16 @@ end
 function PANEL:updateAction()
     if not self.action or not self.item then return end
     local price = liaVendorEnt:getPrice(self.item.uniqueID, self.isSelling)
-    local typeOfTransaction = self.isSelling and "Sell" or "Buy"
     local priceSuffix
     if price == 0 then
-        priceSuffix = "Free"
+        priceSuffix = L("vendorFree")
     elseif price > 1 then
         priceSuffix = string.format("%s %s", price, lia.currency.plural)
     else
         priceSuffix = string.format("%s %s", price, lia.currency.singular)
     end
 
-    local actionText = string.format("%s (%s)", typeOfTransaction, priceSuffix)
+    local actionText = self.isSelling and L("vendorSellAction", priceSuffix) or L("vendorBuyAction", priceSuffix)
     self.action:SetText(actionText)
     self.action.DoClick = function()
         if self.isSelling then
@@ -169,19 +168,18 @@ function PANEL:updateLabel()
     if not self.item then return end
     local nameText = (self.suffix ~= "" and self.suffix or "") .. self.item:getName()
     self.name:SetText(nameText)
-    self.description:SetText(self.item:getDesc() or "")
+    self.description:SetText(self.item:getDesc() or L("vendorNoDescription"))
     local price = liaVendorEnt:getPrice(self.item.uniqueID, self.isSelling)
-    local typeOfTransaction = self.isSelling and "Sell" or "Buy"
     local priceSuffix
     if price == 0 then
-        priceSuffix = "Free"
+        priceSuffix = L("vendorFree")
     elseif price > 1 then
         priceSuffix = string.format("%s %s", price, lia.currency.plural)
     else
         priceSuffix = string.format("%s %s", price, lia.currency.singular)
     end
 
-    local actionText = string.format("%s (%s)", typeOfTransaction, priceSuffix)
+    local actionText = self.isSelling and L("vendorSellAction", priceSuffix) or L("vendorBuyAction", priceSuffix)
     self.action:SetText(actionText)
 end
 

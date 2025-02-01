@@ -8,7 +8,7 @@ function GM:OnChatReceived()
 end
 
 function GM:InitializedConfig()
-    hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
+    hook.Run("LoadLiliaFonts", lia.config.get("Font"), lia.config.get("GenericFont"))
 end
 
 function GM:PlayerBindPress(client, bind, pressed)

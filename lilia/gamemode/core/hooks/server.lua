@@ -100,7 +100,7 @@ function GM:CharLoaded(id)
         local client = character:getPlayer()
         if IsValid(client) then
             local uniqueID = "liaSaveChar" .. client:SteamID()
-            timer.Create(uniqueID, lia.config.CharacterDataSaveInterval, 0, function()
+            timer.Create(uniqueID, lia.config.get("CharacterDataSaveInterval"), 0, function()
                 if IsValid(client) and client:getChar() then
                     client:getChar():save()
                 else
@@ -151,7 +151,7 @@ function GM:CanPlayerInteractItem(client, action, item)
         if hook.Run("CanPlayerDropItem", client, item) ~= false then
             if not client.dropDelay then
                 client.dropDelay = true
-                timer.Create("DropDelay." .. client:SteamID64(), lia.config.DropDelay, 1, function() if IsValid(client) then client.dropDelay = nil end end)
+                timer.Create("DropDelay." .. client:SteamID64(), lia.config.get("DropDelay"), 1, function() if IsValid(client) then client.dropDelay = nil end end)
                 return true
             else
                 client:notify("You need to wait before dropping something again!")
@@ -166,7 +166,7 @@ function GM:CanPlayerInteractItem(client, action, item)
         if hook.Run("CanPlayerTakeItem", client, item) ~= false then
             if not client.takeDelay then
                 client.takeDelay = true
-                timer.Create("TakeDelay." .. client:SteamID64(), lia.config.TakeDelay, 1, function() if IsValid(client) then client.takeDelay = nil end end)
+                timer.Create("TakeDelay." .. client:SteamID64(), lia.config.get("TakeDelay"), 1, function() if IsValid(client) then client.takeDelay = nil end end)
                 return true
             else
                 client:notify("You need to wait before picking something up again!")
@@ -181,7 +181,7 @@ function GM:CanPlayerInteractItem(client, action, item)
         if hook.Run("CanPlayerEquipItem", client, item) ~= false then
             if not client.equipDelay then
                 client.equipDelay = true
-                timer.Create("EquipDelay." .. client:SteamID64(), lia.config.EquipDelay, 1, function() if IsValid(client) then client.equipDelay = nil end end)
+                timer.Create("EquipDelay." .. client:SteamID64(), lia.config.get("EquipDelay"), 1, function() if IsValid(client) then client.equipDelay = nil end end)
                 return true
             else
                 client:notify("You need to wait before equipping something again!")
@@ -196,7 +196,7 @@ function GM:CanPlayerInteractItem(client, action, item)
         if hook.Run("CanPlayerUnequipItem", client, item) ~= false then
             if not client.unequipDelay then
                 client.unequipDelay = true
-                timer.Create("UnequipDelay." .. client:SteamID64(), lia.config.UnequipDelay, 1, function() if IsValid(client) then client.unequipDelay = nil end end)
+                timer.Create("UnequipDelay." .. client:SteamID64(), lia.config.get("UnequipDelay"), 1, function() if IsValid(client) then client.unequipDelay = nil end end)
                 return true
             else
                 client:notify("You need to wait before unequipping something again!")
@@ -263,7 +263,7 @@ function GM:PlayerSay(client, message)
 
     local chatType, message, anonymous = lia.chat.parse(client, message, true)
     if chatType == "ic" and lia.command.parse(client, message) then return "" end
-    if utf8.len(message) > lia.config.MaxChatLength then
+    if utf8.len(message) > lia.config.get("MaxChatLength") then
         client:notify("Your message is too long and has not been sent.")
         return ""
     end
@@ -341,7 +341,7 @@ function GM:InitializedSchema()
 end
 
 function GM:GetGameDescription()
-    return lia.config.GamemodeName == "A Lilia Gamemode" and istable(SCHEMA) and tostring(SCHEMA.name) or lia.config.GamemodeName
+    return istable(SCHEMA) and tostring(SCHEMA.name) or "A Lilia Gamemode"
 end
 
 function GM:PostPlayerLoadout(client)
@@ -455,8 +455,8 @@ function GM:PlayerLoadout(client)
     client:StripWeapons()
     client:setLocalVar("blur", nil)
     client:SetModel(character:getModel())
-    client:SetWalkSpeed(lia.config.WalkSpeed)
-    client:SetRunSpeed(lia.config.RunSpeed)
+    client:SetWalkSpeed(lia.config.get("WalkSpeed"))
+    client:SetRunSpeed(lia.config.get("RunSpeed"))
     client:SetJumpPower(160)
     hook.Run("FactionOnLoadout", client)
     hook.Run("ClassOnLoadout", client)

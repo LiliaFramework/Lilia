@@ -21,11 +21,11 @@ local function CanNotAddItemIfNoSpace(inventory, action, context)
 end
 
 function GridInv:getWidth()
-    return self:getData("w", lia.config.invW)
+    return self:getData("w", lia.config.get("invW"))
 end
 
 function GridInv:getHeight()
-    return self:getData("h", lia.config.invH)
+    return self:getData("h", lia.config.get("invH"))
 end
 
 function GridInv:getSize()

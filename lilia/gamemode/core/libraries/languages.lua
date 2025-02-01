@@ -29,7 +29,7 @@ end
 
 function L(key, ...)
     local languages = lia.lang.stored
-    local langKey = lia.config.Language
+    local langKey = lia.config.get("Language")
     local info = languages[langKey] or languages.english
     return string.format(info and info[key] or key, ...)
 end
@@ -47,7 +47,7 @@ lia.config.add("Language", "Language", "English", nil, {
     category = "Server",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
+    
     type = "Table",
     options = langs
 })

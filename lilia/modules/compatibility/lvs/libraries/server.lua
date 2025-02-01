@@ -1,17 +1,17 @@
 ﻿hook.Add("LVS.OnPlayerCannotDrive", "Lilia_LVSOnCantDrive", function(client, vehicle)
     if vehicle:isLocked() then
-        client:notify("This vehicle is locked!")
+        client:notify(L("vehicleLocked"))
         return
     end
 
     if vehicle.IsBeingEntered then
-        client:notify("Someone is entering this car!")
+        client:notify(L("someoneEnteringCar"))
         return
     end
 
-    if vehicle:isSimfphysCar() and lia.config.TimeToEnterVehicle > 0 then
+    if vehicle:isSimfphysCar() and lia.config.get("TimeToEnterVehicle") > 0 then
         vehicle.IsBeingEntered = true
-        client:setAction("Entering Vehicle...", lia.config.TimeToEnterVehicle)
+        client:setAction(L("enteringVehicleAction"), lia.config.get("TimeToEnterVehicle"))
         client:doStaredAction(vehicle, function()
             vehicle.IsBeingEntered = false
             if not IsValid(vehicle:GetDriver()) then
@@ -20,7 +20,7 @@
             else
                 vehicle:SetPassenger(client)
             end
-        end, lia.config.TimeToEnterVehicle, function()
+        end, lia.config.get("TimeToEnterVehicle"), function()
             if IsValid(vehicle) then
                 vehicle.IsBeingEntered = false
                 client:stopAction()

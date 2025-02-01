@@ -18,29 +18,19 @@ function lia.config.add(key, name, value, callback, data)
         desc = desc,
         category = category or "General",
         noNetworking = data.noNetworking or false,
-        global = not (data.schemaOnly or false),
         callback = callback
     }
-
-    if data.isGlobal then lia.config[key] = lia.config.get(key, value) end
 end
 
 function lia.config.setDefault(key, value)
     local config = lia.config.stored[key]
-    if config then
-        config.default = value
-        if config.global then lia.config[key] = lia.config.get(key, value) end
-    end
+    if config then config.default = value end
 end
 
 function lia.config.forceSet(key, value, noSave)
     local config = lia.config.stored[key]
-    if config then
-        config.value = value
-        if config.global then lia.config[key] = value end
-    end
-
-    if noSave then lia.config.save() end
+    if config then config.value = value end
+    if not noSave then lia.config.save() end
 end
 
 function lia.config.set(key, value)
@@ -48,7 +38,6 @@ function lia.config.set(key, value)
     if config then
         local oldValue = config.value
         config.value = value
-        if config.global then lia.config[key] = value end
         if SERVER then
             if not config.noNetworking then netstream.Start(nil, "cfgSet", key, value) end
             if config.callback then config.callback(oldValue, value) end
@@ -72,25 +61,13 @@ end
 
 function lia.config.load()
     if SERVER then
-        local globals = lia.data.get("config", nil, true, true)
         local data = lia.data.get("config", nil, false, true)
-        if globals then
-            for k, v in pairs(globals) do
-                lia.config.stored[k] = lia.config.stored[k] or {}
-                lia.config.stored[k].value = v
-            end
-        end
-
         if data then
             for k, v in pairs(data) do
                 lia.config.stored[k] = lia.config.stored[k] or {}
                 lia.config.stored[k].value = v
             end
         end
-    end
-
-    for k, config in pairs(lia.config.stored) do
-        if config.global then lia.config[k] = lia.config.get(k, config.default) end
     end
 
     hook.Run("InitializedConfig")
@@ -110,17 +87,11 @@ if SERVER then
     end
 
     function lia.config.save()
-        local globals = {}
         local data = {}
         for k, v in pairs(lia.config.getChangedValues()) do
-            if lia.config.stored[k].global then
-                globals[k] = v
-            else
-                data[k] = v
-            end
+            data[k] = v
         end
 
-        lia.data.set("config", globals, true, true)
         lia.data.set("config", data, false, true)
     end
 end
@@ -130,7 +101,6 @@ lia.config.add("MoneyModel", "Money Model", "models/props_lab/box01a.mdl", nil, 
     category = "Money",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Generic"
 })
 
@@ -139,18 +109,9 @@ lia.config.add("MoneyLimit", "Money Limit", 0, nil, {
     category = "Money",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 0,
     max = 1000000
-})
-
-lia.config.add("DefaultVendorMoney", "Default Vendor Money", 500, nil, {
-    desc = "Sets the default amount of money a vendor starts with.",
-    category = "Money",
-    type = "Int",
-    min = 0,
-    max = 100000
 })
 
 lia.config.add("CurrencySymbol", "Currency Symbol", "$", nil, {
@@ -158,7 +119,6 @@ lia.config.add("CurrencySymbol", "Currency Symbol", "$", nil, {
     category = "Money",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Generic"
 })
 
@@ -167,7 +127,6 @@ lia.config.add("CurrencySingularName", "Currency Singular Name", "Dollar", nil, 
     category = "Money",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Generic"
 })
 
@@ -176,7 +135,6 @@ lia.config.add("CurrencyPluralName", "Currency Plural Name", "Dollars", nil, {
     category = "Money",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Generic"
 })
 
@@ -185,7 +143,6 @@ lia.config.add("invW", "Inventory Width", 6, nil, {
     category = "Character",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 1,
     max = 20
@@ -196,7 +153,6 @@ lia.config.add("invH", "Inventory Height", 4, nil, {
     category = "Character",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 1,
     max = 20
@@ -207,7 +163,6 @@ lia.config.add("WalkSpeed", "Walk Speed", 130, nil, {
     category = "Character",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 50,
     max = 300
@@ -218,7 +173,6 @@ lia.config.add("RunSpeed", "Run Speed", 235, nil, {
     category = "Character",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 100,
     max = 500
@@ -229,7 +183,6 @@ lia.config.add("WalkRatio", "Walk Ratio", 0.5, nil, {
     category = "Character",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Float",
     min = 0.1,
     max = 1.0,
@@ -241,7 +194,6 @@ lia.config.add("AllowExistNames", "Allow Duplicate Names", true, nil, {
     category = "Character",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Boolean"
 })
 
@@ -250,7 +202,6 @@ lia.config.add("MaxCharacters", "Max Characters", 5, nil, {
     category = "Character",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 1,
     max = 10
@@ -261,7 +212,6 @@ lia.config.add("MinDescLen", "Minimum Description Length", 16, nil, {
     category = "Character",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 10,
     max = 500
@@ -272,7 +222,6 @@ lia.config.add("SaveInterval", "Save Interval", 300, nil, {
     category = "Character",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 60,
     max = 3600
@@ -283,7 +232,6 @@ lia.config.add("DefMoney", "Default Money", 0, nil, {
     category = "Character",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 0,
     max = 10000
@@ -294,7 +242,6 @@ lia.config.add("DataSaveInterval", "Data Save Interval", 600, nil, {
     category = "Data",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 60,
     max = 3600
@@ -305,7 +252,6 @@ lia.config.add("CharacterDataSaveInterval", "Character Data Save Interval", 300,
     category = "Data",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 60,
     max = 3600
@@ -316,7 +262,6 @@ lia.config.add("SpawnTime", "Respawn Time", 5, nil, {
     category = "Death",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Float",
     min = 1,
     max = 60
@@ -327,7 +272,6 @@ lia.config.add("TimeToEnterVehicle", "Vehicle Entry Time", 1, nil, {
     category = "Quality of Life",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Float",
     min = 0.5,
     max = 10
@@ -338,7 +282,6 @@ lia.config.add("CarEntryDelayEnabled", "Car Entry Delay Enabled", true, nil, {
     category = "Timers",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Boolean"
 })
 
@@ -347,7 +290,6 @@ lia.config.add("Font", "Font", "Arial", nil, {
     category = "Visuals",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Generic"
 })
 
@@ -356,7 +298,6 @@ lia.config.add("GenericFont", "Generic Font", "Segoe UI", nil, {
     category = "Visuals",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Generic"
 })
 
@@ -365,19 +306,9 @@ lia.config.add("MaxChatLength", "Max Chat Length", 256, nil, {
     category = "Visuals",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 50,
     max = 1024
-})
-
-lia.config.add("GamemodeName", "Gamemode Name", "A Lilia Gamemode", nil, {
-    desc = "The gamemode that the server is running.",
-    category = "Server",
-    noNetworking = false,
-    schemaOnly = false,
-    isGlobal = true,
-    type = "Generic"
 })
 
 lia.config.add("SchemaYear", "Schema Year", 2025, nil, {
@@ -385,7 +316,6 @@ lia.config.add("SchemaYear", "Schema Year", 2025, nil, {
     category = "Server",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 0,
     max = 999999
@@ -396,7 +326,6 @@ lia.config.add("AmericanDates", "American Dates", true, nil, {
     category = "Server",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Boolean"
 })
 
@@ -405,7 +334,6 @@ lia.config.add("AmericanTimeStamp", "American Timestamp", true, nil, {
     category = "Server",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Boolean"
 })
 
@@ -414,7 +342,6 @@ lia.config.add("AdminConsoleNetworkLogs", "Admin Console Network Logs", false, n
     category = "Staff",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Boolean"
 })
 
@@ -427,7 +354,6 @@ lia.config.add("Color", "Theme Color", {
     category = "Visuals",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Color"
 })
 
@@ -436,6 +362,5 @@ lia.config.add("AutoDownloadWorkshop", "Auto Download Workshop Content", true, n
     category = "Server",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = false,
     type = "Boolean"
 })

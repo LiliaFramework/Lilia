@@ -40,7 +40,7 @@ local function RegisterWeapons()
         ITEM.weaponCategory = override.weaponCategory
         ITEM.RequiredSkillLevels = override.RequiredSkillLevels or {}
         ITEM.category = override.category or "Weapons"
-        if ITEM.name ~= className and NotifyWeaponRegister then LiliaInformation("Generated weapon: " .. ITEM.name) end
+        if ITEM.name ~= className and NotifyWeaponRegister then LiliaInformation(L("generatedWeapon", ITEM.name)) end
     end
 end
 

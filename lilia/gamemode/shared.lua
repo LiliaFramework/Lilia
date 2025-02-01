@@ -84,7 +84,7 @@ function GM:OnReloaded()
     if SERVER then
         LiliaBootstrap("Bootstrapper", "Starting reload sequence...")
     else
-        hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
+        hook.Run("LoadLiliaFonts", lia.config.get("Font"), lia.config.get("GenericFont"))
         lia.option.load()
     end
 end

@@ -1,13 +1,7 @@
 ﻿lia.currency = lia.currency or {}
-lia.currency.symbol = lia.currency.symbol or "$"
-lia.currency.singular = lia.currency.singular or "dollar"
-lia.currency.plural = lia.currency.plural or "dollars"
-function lia.currency.set(symbol, singular, plural)
-    lia.currency.symbol = symbol
-    lia.currency.singular = singular
-    lia.currency.plural = plural
-end
-
+lia.currency.symbol = lia.config.get("CurrencySymbol") or "$"
+lia.currency.singular = lia.config.get("CurrencySingularName") or "dollar"
+lia.currency.plural = lia.config.get("CurrencyPluralName") or "dollars"
 function lia.currency.get(amount)
     return lia.currency.symbol .. (amount == 1 and "1 " .. lia.currency.singular or amount .. " " .. lia.currency.plural)
 end
@@ -29,5 +23,3 @@ if SERVER then
         end
     end
 end
-
-timer.Simple(1, function() lia.currency.set(lia.config.CurrencySymbol, lia.config.CurrencySingularName, lia.config.CurrencyPluralName) end)

@@ -1,5 +1,6 @@
 ﻿local MODULE = MODULE
-function MODULE:CanReadNotifications(client)
+
+local function CanReadNotifications(client)
     if not lia.config.get("DisplayStaffCommands") then return false end
     if not lia.config.get("AdminOnlyNotification") then return true end
     return client:hasPrivilege("Staff Permissions - Can See SAM Notifications") or client:isStaffOnDuty()
@@ -14,7 +15,7 @@ function sam.player.send_message(client, msg, tbl)
             return sam.netstream.Start(client, "send_message", msg, tbl)
         end
     else
-        if client and MODULE:CanReadNotifications(client) then
+        if client and CanReadNotifications(client) then
             local prefix_result = sam.format_message(sam.config.get("ChatPrefix", ""))
             local prefix_n = #prefix_result
             local result = sam.format_message(msg, tbl, prefix_result, prefix_n)
@@ -26,14 +27,14 @@ end
 hook.Add("SAM.CanRunCommand", "Check4Staff", function(client, _, _, cmd)
     if lia.config.get("SAMEnforceStaff", false) then
         if cmd.permission and not client:HasPermission(cmd.permission) then
-            client:notify("You lack the required permissions to execute this command.")
+            client:notify(L("staffPermissionDenied"))
             return false
         end
 
         if CAMI.PlayerHasAccess(client, "Staff Permissions - Can Bypass Staff Faction SAM Command whitelist", nil) or client:Team() == FACTION_STAFF then
             return true
         else
-            client:notify("You do not have permission to run this command. This command is restricted to staff members.")
+            client:notify(L("staffRestrictedCommand"))
             return false
         end
     end

@@ -6,7 +6,7 @@ function GM:Move(client, moveData)
     if client:GetMoveType() == MOVETYPE_WALK and moveData:KeyDown(IN_WALK) then
         local mf, ms = 0, 0
         local speed = client:GetWalkSpeed()
-        local ratio = lia.config.WalkRatio
+        local ratio = lia.config.get("WalkRatio")
         if moveData:KeyDown(IN_FORWARD) then
             mf = ratio
         elseif moveData:KeyDown(IN_BACK) then
@@ -54,7 +54,7 @@ function GM:InitPostEntity()
     else
         lia.joinTime = RealTime() - 0.9716
         if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
-        hook.Run("LoadLiliaFonts", lia.config.Font, lia.config.GenericFont)
+        hook.Run("LoadLiliaFonts", lia.config.get("Font"), lia.config.get("GenericFont"))
     end
 end
 

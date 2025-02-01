@@ -1555,7 +1555,7 @@ local BadCVars = {
 }
 
 function MODULE:CanDeleteChar(_, character)
-    if IsValid(character) and character:getMoney() < lia.config.DefaultMoney then return false end
+    if IsValid(character) and character:getMoney() < lia.config.get("DefaultMoney") then return false end
 end
 
 local function VerifyCheats()

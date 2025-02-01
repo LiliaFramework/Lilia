@@ -2,10 +2,12 @@
     superAdminOnly = true,
     privilege = "Clean Radios",
     onRun = function(client)
+        local count = 0
         for _, entity in pairs(ents.FindByClass("sent_streamradio")) do
             entity:Remove()
+            count = count + 1
         end
 
-        client:notify("Cleanup done")
+        client:notify(L("cleaningFinished", "3D Stream Radios", count))
     end
 })

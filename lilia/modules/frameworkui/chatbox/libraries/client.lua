@@ -72,6 +72,6 @@ concommand.Add("fixchatplz", function()
 end)
 
 concommand.Add("refreshfonts", function()
-    hook.Run("LoadFonts", lia.config.Font)
+    hook.Run("LoadFonts", lia.config.get("Font"))
     LocalPlayer():ChatPrint("Fonts have been refreshed!")
 end)

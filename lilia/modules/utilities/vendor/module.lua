@@ -10,3 +10,11 @@ MODULE.CAMIPrivileges = {
         Description = "Allows access to edit vendors.",
     },
 }
+
+lia.config.add("DefaultVendorMoney", L("defaultVendorMoney"), 500, nil, {
+    desc = L("defaultVendorMoneyDesc"),
+    category = L("vendorCategory"),
+    type = "Int",
+    min = 0,
+    max = 100000
+})

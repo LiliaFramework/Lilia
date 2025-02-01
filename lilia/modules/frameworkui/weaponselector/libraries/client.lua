@@ -42,7 +42,7 @@ function MODULE:HUDPaint()
     for realIndex, weapon in ipairs(weapons) do
         local theta = (realIndex - currentIndex) * 0.1
         local isActive = realIndex == index
-        local col = ColorAlpha(isActive and lia.config.Color or color_white, (255 - math.abs(theta * 3) * 255) * fraction)
+        local col = ColorAlpha(isActive and lia.config.get("Color") or color_white, (255 - math.abs(theta * 3) * 255) * fraction)
         local lastY = 0
         if self.markup and (realIndex == 1 or realIndex < index) then
             local _, h = self.markup:Size()
@@ -82,7 +82,7 @@ function MODULE:onIndexChanged()
         local textParts = {}
         for _, key in ipairs({"Author", "Contact", "Purpose", "Instructions"}) do
             if weapon[key] and weapon[key]:find("%S") then
-                local color = lia.config.Color
+                local color = lia.config.get("Color")
                 table.insert(textParts, string.format("<font=liaItemBoldFont><color=%d,%d,%d>%s</font></color>\n%s\n", color.r, color.g, color.b, L(key), weapon[key]))
             end
         end

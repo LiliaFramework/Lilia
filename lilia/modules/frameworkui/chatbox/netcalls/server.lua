@@ -1,5 +1,5 @@
 ﻿netstream.Hook("msg", function(client, text)
-    local charlimit = lia.config.MaxChatLength
+    local charlimit = lia.config.get("MaxChatLength")
     if charlimit > 0 then
         if (client.liaNextChat or 0) < CurTime() and text:find("%S") then
             hook.Run("PlayerSay", client, text)

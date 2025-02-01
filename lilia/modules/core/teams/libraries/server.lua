@@ -59,7 +59,7 @@ function MODULE:FactionOnLoadout(client)
 
     if faction.runSpeed then
         if faction.runSpeedMultiplier then
-            client:SetRunSpeed(math.Round(lia.config.RunSpeed * faction.runSpeed))
+            client:SetRunSpeed(math.Round(lia.config.get("RunSpeed") * faction.runSpeed))
         else
             client:SetRunSpeed(faction.runSpeed)
         end
@@ -67,7 +67,7 @@ function MODULE:FactionOnLoadout(client)
 
     if faction.walkSpeed then
         if faction.walkSpeedMultiplier then
-            client:SetWalkSpeed(math.Round(lia.config.WalkSpeed * faction.walkSpeed))
+            client:SetWalkSpeed(math.Round(lia.config.get("WalkSpeed") * faction.walkSpeed))
         else
             client:SetWalkSpeed(faction.walkSpeed)
         end
@@ -149,7 +149,7 @@ function MODULE:ClassOnLoadout(client)
 
     if class.runSpeed then
         if class.runSpeedMultiplier then
-            client:SetRunSpeed(math.Round(lia.config.RunSpeed * class.runSpeed))
+            client:SetRunSpeed(math.Round(lia.config.get("RunSpeed") * class.runSpeed))
         else
             client:SetRunSpeed(class.runSpeed)
         end
@@ -157,7 +157,7 @@ function MODULE:ClassOnLoadout(client)
 
     if class.walkSpeed then
         if class.walkSpeedMultiplier then
-            client:SetWalkSpeed(math.Round(lia.config.WalkSpeed * class.walkSpeed))
+            client:SetWalkSpeed(math.Round(lia.config.get("WalkSpeed") * class.walkSpeed))
         else
             client:SetWalkSpeed(class.walkSpeed)
         end

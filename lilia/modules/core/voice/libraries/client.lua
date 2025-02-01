@@ -1,14 +1,4 @@
-﻿function MODULE:LoadFonts()
-    surface.CreateFont("3DVoiceDebug", {
-        font = "Arial",
-        size = 14,
-        antialias = true,
-        weight = 700,
-        underline = true,
-    })
-end
-
-function MODULE:PlayerStartVoice(client)
+﻿function MODULE:PlayerStartVoice(client)
     if client:GetNWBool("IsDeadRestricted", false) then return false end
 end
 

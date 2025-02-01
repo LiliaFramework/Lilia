@@ -157,7 +157,7 @@ function PANEL:addClassDetails(detailsPanel, classData)
 
     addDetail(weaponsText)
     addDetail("Model Scale: " .. tostring(classData.scale or "1"))
-    local runSpeed = lia.config.RunSpeed
+    local runSpeed = lia.config.get("RunSpeed")
     if classData.runSpeedMultiplier then
         runSpeed = math.Round(runSpeed * (classData.runSpeed or 1))
     elseif classData.runSpeed then
@@ -165,7 +165,7 @@ function PANEL:addClassDetails(detailsPanel, classData)
     end
 
     addDetail("Run Speed: " .. tostring(runSpeed))
-    local walkSpeed = lia.config.WalkSpeed
+    local walkSpeed = lia.config.get("WalkSpeed")
     if classData.walkSpeedMultiplier then
         walkSpeed = math.Round(walkSpeed * (classData.walkSpeed or 1))
     elseif classData.walkSpeed then

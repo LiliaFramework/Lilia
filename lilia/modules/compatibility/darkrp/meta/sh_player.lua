@@ -1,12 +1,8 @@
 ﻿local playerMeta = FindMetaTable("Player")
 function playerMeta:getDarkRPVar(var)
     local char = self:getChar()
-    if var ~= "money" then
-        self:ChatPrint("Invalid variable requested! Only 'money' can be fetched. Please refer to our Discord for help.")
-        return nil
-    end
-
-    if char and char.getMoney then return char:getMoney() end
+    if var ~= "money" then self:ChatPrint("Invalid variable requested! Only 'money' can be fetched. Please refer to our Discord for help.") end
+    return char:getMoney()
 end
 
 function playerMeta:getMoney()
@@ -25,7 +21,7 @@ if SERVER then
         if not character then return false end
         local client = self
         local currentMoney = character:getMoney()
-        local maxMoneyLimit = lia.config.MoneyLimit or 0
+        local maxMoneyLimit = lia.config.get("MoneyLimit") or 0
         local totalMoney = currentMoney + amount
         if maxMoneyLimit > 0 and isnumber(maxMoneyLimit) and totalMoney > maxMoneyLimit then
             local excessMoney = totalMoney - maxMoneyLimit

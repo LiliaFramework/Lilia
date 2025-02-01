@@ -362,7 +362,7 @@ lia.command.add("cleanitems", {
             v:Remove()
         end
 
-        client:notify(count .. " items have been cleaned up from the map.")
+        client:notifyLocalized("cleaningFinished", "Items", count)
     end
 })
 
@@ -378,7 +378,7 @@ lia.command.add("cleanprops", {
             end
         end
 
-        client:notify(count .. " props have been cleaned up from the map.")
+        client:notifyLocalized("cleaningFinished", "Props", count)
     end
 })
 
@@ -394,7 +394,7 @@ lia.command.add("cleannpcs", {
             end
         end
 
-        client:notify(count .. " NPCs have been cleaned up from the map.")
+        client:notifyLocalized("cleaningFinished", "NPCs", count)
     end
 })
 
@@ -829,7 +829,7 @@ lia.command.add("charsetspeed", {
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        local speed = tonumber(arguments[2]) or lia.config.WalkSpeed
+        local speed = tonumber(arguments[2]) or lia.config.get("WalkSpeed")
         if IsValid(target) and target:getChar() then
             target:SetRunSpeed(speed)
         else

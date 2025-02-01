@@ -20,9 +20,9 @@ lia.command.add("playtime", {
             local hours = math.floor(playTimeInSeconds / 3600)
             local minutes = math.floor((playTimeInSeconds % 3600) / 60)
             local seconds = playTimeInSeconds % 60
-            client:ChatPrint(string.format("Your playtime: %d hours, %d minutes, %d seconds", hours, minutes, seconds))
+            client:ChatPrint(L("playtimeYour", hours, minutes, seconds))
         else
-            client:ChatPrint("Could not retrieve your playtime. Please try again or contact an admin if the issue persists.")
+            client:ChatPrint(L("playtimeError"))
         end
     end
 })
@@ -32,21 +32,21 @@ lia.command.add("plygetplaytime", {
     syntax = "[string charname]",
     privilege = "View Playtime",
     AdminStick = {
-        Name = "Get Play Time",
-        Category = "Moderation Tools",
-        SubCategory = "Miscellaneous",
+        Name = L("adminStickGetPlayTimeName"),
+        Category = L("adminStickCategory"),
+        SubCategory = L("adminStickSubCategory"),
         Icon = "icon16/time.png"
     },
     onRun = function(client, arguments)
         local targetName = arguments[1]
         if not targetName then
-            client:notify("You must specify a player name.")
+            client:notify(L("specifyPlayer"))
             return
         end
 
         local target = lia.command.findPlayer(client, targetName)
         if not IsValid(target) then
-            client:notify("Player not found.")
+            client:notify(L("playerNotFound"))
             return
         end
 
@@ -58,10 +58,9 @@ lia.command.add("plygetplaytime", {
             local hours = math.floor(playTimeInSeconds / 3600)
             local minutes = math.floor((playTimeInSeconds % 3600) / 60)
             local seconds = playTimeInSeconds % 60
-            local message = string.format("Playtime for %s: %d hours, %d minutes, %d seconds", target:Nick(), hours, minutes, seconds)
-            client:ChatPrint(message)
+            client:ChatPrint(L("playtimeFor", target:Nick(), hours, minutes, seconds))
         else
-            client:notify("Could not retrieve playtime for the specified target.")
+            client:notify(L("playtimeTargetError"))
         end
     end
 })

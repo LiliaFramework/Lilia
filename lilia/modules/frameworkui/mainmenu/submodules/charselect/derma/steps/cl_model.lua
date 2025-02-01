@@ -51,7 +51,7 @@ end
 
 function PANEL:paintIcon(icon, w, h)
     if self:getContext("model") ~= icon.index then return end
-    local color = lia.config.Color
+    local color = lia.config.get("Color")
     surface.SetDrawColor(color.r, color.g, color.b, 200)
     local i2
     for i = 1, 3 do

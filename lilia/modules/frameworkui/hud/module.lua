@@ -4,64 +4,64 @@ MODULE.discord = "@liliaplayer"
 MODULE.version = "Stock"
 MODULE.desc = "Implements Lilia HUD Elements."
 if CLIENT then
-    function MODULE:LoadFonts()
+    function MODULE:LoadFonts(font)
         surface.CreateFont("WB_Small", {
-            font = "Product Sans",
+            font = font,
             size = 17
         })
 
         surface.CreateFont("WB_Medium", {
-            font = "Product Sans",
+            font = font,
             size = 20
         })
 
         surface.CreateFont("WB_Large", {
-            font = "Product Sans",
+            font = font,
             size = 24,
             weight = 800
         })
 
         surface.CreateFont("WB_XLarge", {
-            font = "Product Sans",
+            font = font,
             size = 35,
             weight = 800
         })
 
         surface.CreateFont("WB_Enormous", {
-            font = "Product Sans",
+            font = font,
             size = 54
         })
 
         surface.CreateFont("wolficon_enormous", {
-            font = "wolficonfont",
+            font = font,
             size = 50,
             weight = 400,
             antialias = true
         })
 
         surface.CreateFont("wolficon_big", {
-            font = "wolficonfont",
+            font = font,
             size = 34,
             weight = 400,
             antialias = true
         })
 
         surface.CreateFont("wolficon_normal", {
-            font = "wolficonfont",
+            font = font,
             size = 25,
             weight = 400,
             antialias = true
         })
 
         surface.CreateFont("wolficon_small", {
-            font = "wolficonfont",
+            font = font,
             size = 18,
             weight = 400,
             antialias = true
         })
 
         surface.CreateFont("FPSFont", {
-            font = "mailart rubberstamp",
+            font = font,
             size = 27,
             weight = 500,
             antialias = true,

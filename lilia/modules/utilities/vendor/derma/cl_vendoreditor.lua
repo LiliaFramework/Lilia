@@ -25,8 +25,8 @@ function PANEL:Init()
     self.model:DockMargin(0, 4, 0, 0)
     self.model:SetText(entity:GetModel())
     self.model.OnEnter = function(this)
-        local model = this:GetText():lower()
-        if entity:GetModel():lower() ~= model then EDITOR.model(model) end
+        local modelText = this:GetText():lower()
+        if entity:GetModel():lower() ~= modelText then EDITOR.model(modelText) end
     end
 
     self.money = self:Add("DTextEntry")
@@ -44,7 +44,7 @@ function PANEL:Init()
     self.flag = self:Add("DTextEntry")
     self.flag:Dock(TOP)
     self.flag:DockMargin(0, 4, 0, 0)
-    self.flag:SetText(entity:getNetVar("flag") or "Flag")
+    self.flag:SetText(entity:getNetVar("flag") or L("flag"))
     self.flag.OnEnter = function(this)
         local value = this:GetText()
         if value:match("^%a$") then
@@ -99,7 +99,7 @@ function PANEL:Init()
     self.searchBar:Dock(TOP)
     self.searchBar:DockMargin(0, 4, 0, 0)
     self.searchBar:SetUpdateOnType(true)
-    self.searchBar:SetPlaceholderText("Search...")
+    self.searchBar:SetPlaceholderText(L("search"))
     self.searchBar.OnValueChange = function(_, value) self:ReloadItemList(value) end
     self.lines = {}
     self:ReloadItemList()
@@ -109,7 +109,7 @@ function PANEL:Init()
 end
 
 function PANEL:getModeText(mode)
-    return mode and L(VENDOR_TEXT[mode]) or L("none")
+    return mode and L(VENDOR_TEXT[mode]) or L("vendorNone")
 end
 
 function PANEL:OnRemove()
@@ -235,7 +235,7 @@ function PANEL:ReloadItemList(filter)
         if filter and not itemName:lower():find(filter:lower(), 1, true) then continue end
         local mode = entity.items[k] and entity.items[k][VENDOR_MODE]
         local current, max = entity:getStock(k)
-        local category = v.category or "None"
+        local category = v.category or L("None")
         local panel = self.items:AddLine(itemName, self:getModeText(mode), entity:getPrice(k), max and current .. "/" .. max or "-", category)
         panel.item = k
         self.lines[k] = panel

@@ -37,7 +37,7 @@ function MODULE:LoadData()
 end
 
 function MODULE:OnCharTradeVendor(client, vendor, item, isSellingToVendor, _, _, isFailed)
-    local vendorName = vendor:getNetVar("name")
+    local vendorName = vendor:getNetVar("name") or "Unknown"
     if not isSellingToVendor then
         lia.log.add(client, "vendorBuy", item:getName(), vendorName, isFailed)
     else
@@ -206,14 +206,31 @@ function MODULE:PlayerAccessVendor(client, vendor)
     end
 end
 
-lia.log.addType("vendorAccess", function(client, vendor) return string.format("[%s] %s accessed vendor %s [CharID: %s]", client:SteamID(), client:Name(), vendor, client:getChar():getID()) end, "Vendors", Color(52, 152, 219))
-lia.log.addType("vendorExit", function(client, vendor) return string.format("[%s] %s exited vendor %s [CharID: %s]", client:SteamID(), client:Name(), vendor, client:getChar():getID()) end, "Vendors", Color(52, 152, 219))
-lia.log.addType("vendorSell", function(client, item, vendor) return string.format("[%s] %s sold a %s to %s [CharID: %s]", client:SteamID(), client:Name(), item, vendor, client:getChar():getID()) end, "Vendors", Color(52, 152, 219))
-lia.log.addType("vendorEdit", function(client, vendor, key) return string.format("[%s] %s edited vendor %s with key %s [CharID: %s]", client:SteamID(), client:Name(), vendor:getNetVar("name") or "Unknown", key, client:getChar():getID()) end, "Vendors", Color(52, 152, 219))
+lia.log.addType("vendorAccess", function(client, vendor)
+    local vendorName = vendor:getNetVar("name") or "Unknown"
+    return string.format(L("vendorLogAccess"), client:SteamID(), client:Name(), vendorName, client:getChar():getID())
+end, "Vendors", Color(52, 152, 219))
+
+lia.log.addType("vendorExit", function(client, vendor)
+    local vendorName = vendor:getNetVar("name") or "Unknown"
+    return string.format(L("vendorLogExit"), client:SteamID(), client:Name(), vendorName, client:getChar():getID())
+end, "Vendors", Color(52, 152, 219))
+
+lia.log.addType("vendorSell", function(client, item, vendor)
+    local vendorName = vendor:getNetVar("name") or "Unknown"
+    return string.format(L("vendorLogSell"), client:SteamID(), client:Name(), item, vendorName, client:getChar():getID())
+end, "Vendors", Color(52, 152, 219))
+
+lia.log.addType("vendorEdit", function(client, vendor, key)
+    local vendorName = vendor:getNetVar("name") or "Unknown"
+    return string.format(L("vendorLogEdit"), client:SteamID(), client:Name(), vendorName, key, client:getChar():getID())
+end, "Vendors", Color(52, 152, 219))
+
 lia.log.addType("vendorBuy", function(client, item, vendor, isFailed)
+    local vendorName = vendor:getNetVar("name") or "Unknown"
     if isFailed then
-        return string.format("[%s] %s tried to buy a %s from %s but it failed. They likely had no space! [CharID: %s]", client:SteamID(), client:Name(), item, vendor, client:getChar():getID())
+        return string.format(L("vendorLogBuyFail"), client:SteamID(), client:Name(), item, vendorName, client:getChar():getID())
     else
-        return string.format("[%s] %s bought a %s from %s [CharID: %s]", client:SteamID(), client:Name(), item, vendor, client:getChar():getID())
+        return string.format(L("vendorLogBuySuccess"), client:SteamID(), client:Name(), item, vendorName, client:getChar():getID())
     end
 end, "Vendors", Color(52, 152, 219))

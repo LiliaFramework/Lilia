@@ -14,7 +14,7 @@ function PANEL:Paint(w, h)
     surface.DrawRect(0, 0, w, h)
     if self.start then
         local w2 = math.TimeFraction(self.start, self.endTime, CurTime()) * w
-        surface.SetDrawColor(lia.config.Color)
+        surface.SetDrawColor(lia.config.get("Color"))
         surface.DrawRect(w2, 0, w - w2, h)
     end
 
@@ -51,7 +51,7 @@ function PANEL:Paint(w, h)
     surface.DrawRect(0, 0, w, h)
     if self.start then
         local w2 = math.TimeFraction(self.start, self.endTime, CurTime()) * w
-        surface.SetDrawColor(lia.config.Color)
+        surface.SetDrawColor(lia.config.get("Color"))
         surface.DrawRect(w2, 0, w - w2, h)
     end
 
@@ -90,17 +90,17 @@ function PANEL:SetMessage(...)
 end
 
 local gradient = Material("vgui/gradient-r")
-local darkCol = lia.config.Color
+local darkCol = lia.config.get("Color")
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self)
-    surface.SetDrawColor(ColorAlpha(lia.config.Color, 5))
+    surface.SetDrawColor(ColorAlpha(lia.config.get("Color"), 5))
     surface.DrawRect(0, 0, w, h)
     surface.SetDrawColor(darkCol)
     surface.SetMaterial(gradient)
     surface.DrawTexturedRect(0, 0, w, h)
     self.message:Draw(10, 10, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     local w2 = math.TimeFraction(self.startTime, self.endTime, CurTime()) * w
-    surface.SetDrawColor(lia.config.Color)
+    surface.SetDrawColor(lia.config.get("Color"))
     surface.DrawRect(w2, h - 2, w - w2, 2)
 end
 

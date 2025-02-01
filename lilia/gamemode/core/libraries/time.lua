@@ -13,7 +13,7 @@ function lia.time.GetFormattedDate(StartingMessage, includeWeekDay, includeDay, 
     end
 
     local day, month, year
-    if lia.config.AmericanDates then
+    if lia.config.get("AmericanDates") then
         month, day, year = currentTime.month, currentTime.day, currentTime.year
     else
         day, month, year = currentTime.day, currentTime.month, currentTime.year
@@ -26,7 +26,7 @@ function lia.time.GetFormattedDate(StartingMessage, includeWeekDay, includeDay, 
     end
 
     if includeYear then output = output .. ", " .. year end
-    local hourFormat = lia.config.AmericanTimeStamp and 12 or 24
+    local hourFormat = lia.config.get("AmericanTimeStamp") and 12 or 24
     local ampm = ""
     local hour = currentTime.hour
     if includeTime then
@@ -58,10 +58,10 @@ function lia.time.GetFormattedDateInGame(StartingMessage, includeWeekDay, includ
     end
 
     local day, month, year
-    if lia.config.AmericanDates then
-        month, day, year = currentTime.month, currentTime.day, lia.config.SchemaYear or currentTime.year
+    if lia.config.get("AmericanDates") then
+        month, day, year = currentTime.month, currentTime.day, lia.config.get("SchemaYear") or currentTime.year
     else
-        day, month, year = currentTime.day, currentTime.month, lia.config.SchemaYear or currentTime.year
+        day, month, year = currentTime.day, currentTime.month, lia.config.get("SchemaYear") or currentTime.year
     end
 
     if includeDay then output = output .. " " .. day end
@@ -71,7 +71,7 @@ function lia.time.GetFormattedDateInGame(StartingMessage, includeWeekDay, includ
     end
 
     if includeYear then output = output .. ", " .. year end
-    local hourFormat = lia.config.AmericanTimeStamp and 12 or 24
+    local hourFormat = lia.config.get("AmericanTimeStamp") and 12 or 24
     local ampm = ""
     local hour = currentTime.hour
     if includeTime then
@@ -103,7 +103,7 @@ function lia.time.GetPreFormattedDate(StartingMessage, timeToFormat, includeWeek
     end
 
     local day, month, year
-    if lia.config.AmericanDates then
+    if lia.config.get("AmericanDates") then
         month, day, year = currentTime.month, currentTime.day, currentTime.year
     else
         day, month, year = currentTime.day, currentTime.month, currentTime.year
@@ -116,7 +116,7 @@ function lia.time.GetPreFormattedDate(StartingMessage, timeToFormat, includeWeek
     end
 
     if includeYear then output = output .. ", " .. year end
-    local hourFormat = lia.config.AmericanTimeStamp and 12 or 24
+    local hourFormat = lia.config.get("AmericanTimeStamp") and 12 or 24
     local ampm = ""
     local hour = currentTime.hour
     if includeTime then
@@ -148,10 +148,10 @@ function lia.time.GetPreFormattedDateInGame(StartingMessage, timeToFormat, inclu
     end
 
     local day, month, year
-    if lia.config.AmericanDates then
-        month, day, year = currentTime.month, currentTime.day, lia.config.SchemaYear or currentTime.year
+    if lia.config.get("AmericanDates") then
+        month, day, year = currentTime.month, currentTime.day, lia.config.get("SchemaYear") or currentTime.year
     else
-        day, month, year = currentTime.day, currentTime.month, lia.config.SchemaYear or currentTime.year
+        day, month, year = currentTime.day, currentTime.month, lia.config.get("SchemaYear") or currentTime.year
     end
 
     if includeDay then output = output .. " " .. day end
@@ -161,7 +161,7 @@ function lia.time.GetPreFormattedDateInGame(StartingMessage, timeToFormat, inclu
     end
 
     if includeYear then output = output .. ", " .. year end
-    local hourFormat = lia.config.AmericanTimeStamp and 12 or 24
+    local hourFormat = lia.config.get("AmericanTimeStamp") and 12 or 24
     local ampm = ""
     local hour = currentTime.hour
     if includeTime then

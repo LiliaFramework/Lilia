@@ -62,7 +62,7 @@ lia.command.add("resetallvendormoney", {
             end
         end
 
-        client:notifyLocalized("vendorAllVendorsMoneyReset", lia.currency.get(amount), count)
+        client:notifyLocalized("vendorAllMoneyReset", lia.currency.get(amount), count)
         lia.log.add(client, "resetallvendormoney", amount, count)
     end
 })

@@ -1,44 +1,44 @@
-﻿lia.config.add("sbWidth", "Scoreboard Width", 0.35, nil, {
-    desc = "Scoreboard Width",
-    category = "Scoreboard",
+﻿lia.config.add("sbWidth", L("sbWidth"), 0.35, nil, {
+    desc = L("sbWidthDesc"),
+    category = L("scoreboardCategory"),
     type = "Float",
     min = 0.1,
     max = 1.0
 })
 
-lia.config.add("sbHeight", "Scoreboard Height", 0.65, nil, {
-    desc = "Scoreboard Height",
-    category = "Scoreboard",
+lia.config.add("sbHeight", L("sbHeight"), 0.65, nil, {
+    desc = L("sbHeightDesc"),
+    category = L("scoreboardCategory"),
     type = "Float",
     min = 0.1,
     max = 1.0
 })
 
-lia.config.add("ShowStaff", "Show Staff in Scoreboard", true, nil, {
-    desc = "Should Staff Show In Scoreboard",
-    category = "Scoreboard",
+lia.config.add("ShowStaff", L("showStaff"), true, nil, {
+    desc = L("showStaffDesc"),
+    category = L("scoreboardCategory"),
     type = "Boolean"
 })
 
-lia.config.add("DisplayServerName", "Display Server Name in Scoreboard", false, nil, {
-    desc = "Should Server Name Show In Scoreboard",
-    category = "Scoreboard",
+lia.config.add("DisplayServerName", L("displayServerName"), false, nil, {
+    desc = L("displayServerNameDesc"),
+    category = L("scoreboardCategory"),
     type = "Boolean"
 })
 
-lia.config.add("UseSolidBackground", "Use Solid Background in Scoreboard", false, nil, {
-    desc = "Use a solid background for the scoreboard",
-    category = "Scoreboard",
+lia.config.add("UseSolidBackground", L("useSolidBackground"), false, nil, {
+    desc = L("useSolidBackgroundDesc"),
+    category = L("scoreboardCategory"),
     type = "Boolean"
 })
 
-lia.config.add("ScoreboardBackgroundColor", "Scoreboard Background Color", {
+lia.config.add("ScoreboardBackgroundColor", L("scoreboardBackgroundColor"), {
     r = 255,
     g = 100,
     b = 100,
     a = 255
 }, nil, {
-    desc = "Sets the background color of the scoreboard. This only applies if 'UseSolidBackground' is enabled.",
-    category = "Scoreboard",
+    desc = L("scoreboardBackgroundColorDesc"),
+    category = L("scoreboardCategory"),
     type = "Color"
 })

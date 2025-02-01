@@ -214,7 +214,7 @@ if SERVER then
         local client = self:getPlayer()
         if not IsValid(client) then return false end
         local currentMoney = self:getMoney()
-        local maxMoneyLimit = lia.config.MoneyLimit or 0
+        local maxMoneyLimit = lia.config.get("MoneyLimit") or 0
         local totalMoney = currentMoney + amount
         if maxMoneyLimit > 0 and isnumber(maxMoneyLimit) and totalMoney > maxMoneyLimit then
             local excessMoney = totalMoney - maxMoneyLimit

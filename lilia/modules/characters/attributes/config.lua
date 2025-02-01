@@ -39,7 +39,6 @@ lia.config.add("MaxAttributePoints", "Max Attribute Points", 30, nil, {
     category = "Attributes",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 1,
     max = 100
@@ -50,7 +49,6 @@ lia.config.add("MaxStartingAttributes", "Max Starting Attributes", 30, nil, {
     category = "Attributes",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 1,
     max = 100
@@ -61,7 +59,6 @@ lia.config.add("StartingAttributePoints", "Starting Attribute Points", 30, nil, 
     category = "Attributes",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 1,
     max = 100
@@ -72,7 +69,6 @@ lia.config.add("PunchStamina", "Punch Stamina", 10, nil, {
     category = "Attributes",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Int",
     min = 0,
     max = 100

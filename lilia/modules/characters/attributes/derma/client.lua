@@ -54,7 +54,7 @@ function PANEL:Init()
         local boostedValue = self.boostValue or 0
         local barWidth = w * value
         if value > 0 then
-            local color = lia.config.Color
+            local color = lia.config.get("Color")
             surface.SetDrawColor(color)
             surface.DrawRect(0, 0, barWidth, h)
         end
@@ -131,7 +131,7 @@ function PANEL:Init()
     self.leftLabel:SetFont("liaCharSubTitleFont")
     self.leftLabel:SetTextColor(color_white)
     self.title:SetTextColor(color_white)
-    self.total = hook.Run("GetMaxStartingAttributePoints", client, self:getContext()) or lia.config.MaxAttributePoints
+    self.total = hook.Run("GetMaxStartingAttributePoints", client, self:getContext()) or lia.config.get("MaxAttributePoints")
     self.attribs = {}
     for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
         if v.noStartBonus then continue end

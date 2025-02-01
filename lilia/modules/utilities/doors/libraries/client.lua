@@ -1,34 +1,33 @@
 ﻿function MODULE:DrawEntityInfo(entity, alpha)
     if entity:isDoor() and not entity:getNetVar("hidden", false) then
         if entity:getNetVar("disabled", false) then
-            local position = entity:LocalToWorld(entity:OBBCenter()):ToScreen()
-            local x, y = position.x, position.y
-            lia.util.drawText(L("DoorDisabled"), x, y, ColorAlpha(color_white, alpha), 1, 1)
+            local pos = entity:LocalToWorld(entity:OBBCenter()):ToScreen()
+            lia.util.drawText(L("doorDisabled"), pos.x, pos.y, ColorAlpha(color_white, alpha), 1, 1)
             return
         end
 
-        local position = entity:LocalToWorld(entity:OBBCenter()):ToScreen()
-        local x, y = position.x, position.y
+        local pos = entity:LocalToWorld(entity:OBBCenter()):ToScreen()
+        local x, y = pos.x, pos.y
         local owner = entity:GetDTEntity(0)
-        local name = entity:getNetVar("title", entity:getNetVar("name", IsValid(owner) and L("DoorTitleOwned") or not entity:getNetVar("class") and not entity:getNetVar("factions") and L("DoorTitle") or ""))
+        local name = entity:getNetVar("title", entity:getNetVar("name", IsValid(owner) and L("doorTitleOwned") or not entity:getNetVar("class") and not entity:getNetVar("factions") and L("doorTitle") or ""))
         local factions = entity:getNetVar("factions", "[]")
         local class = entity:getNetVar("class")
         local price = entity:getNetVar("price", 0)
         lia.util.drawText(name, x, y, ColorAlpha(color_white, alpha), 1, 1)
         y = y + 20
-        lia.util.drawText(L("DoorPrice", lia.currency.get(price)), x, y, ColorAlpha(color_white, alpha), 1, 1)
+        lia.util.drawText(L("doorPrice", lia.currency.get(price)), x, y, ColorAlpha(color_white, alpha), 1, 1)
         y = y + 20
         local classData
         if class and lia.class.list[class] then classData = lia.class.list[class] end
         if IsValid(owner) then
-            lia.util.drawText(L("DoorOwnedBy", owner:Name()), x, y, ColorAlpha(color_white, alpha), 1, 1)
+            lia.util.drawText(L("doorOwnedBy", owner:Name()), x, y, ColorAlpha(color_white, alpha), 1, 1)
             y = y + 20
         end
 
         if factions and factions ~= "[]" then
             local facs = util.JSONToTable(factions)
             if facs then
-                lia.util.drawText("Factions:", x, y, ColorAlpha(color_white, alpha), 1, 1)
+                lia.util.drawText(L("doorFactions"), x, y, ColorAlpha(color_white, alpha), 1, 1)
                 y = y + 20
                 for id, _ in pairs(facs) do
                     local info = lia.faction.indices[id]
@@ -41,13 +40,13 @@
         end
 
         if class and classData then
-            lia.util.drawText("Classes:", x, y, ColorAlpha(color_white, alpha), 1, 1)
+            lia.util.drawText(L("doorClasses"), x, y, ColorAlpha(color_white, alpha), 1, 1)
             y = y + 20
             lia.util.drawText(classData.name, x, y, classData.color or color_white, 1, 1)
             y = y + 20
         end
 
-        if not IsValid(owner) and factions == "[]" and not class then lia.util.drawText(entity:getNetVar("noSell") and L("DoorIsNotOwnable") or L("DoorIsOwnable"), x, y, ColorAlpha(color_white, alpha), 1, 1) end
+        if not IsValid(owner) and factions == "[]" and not class then lia.util.drawText(entity:getNetVar("noSell") and L("doorIsNotOwnable") or L("doorIsOwnable"), x, y, ColorAlpha(color_white, alpha), 1, 1) end
     end
 end
 
@@ -55,7 +54,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
     if IsValid(target) and target:isDoor() then
         local factionsAssignedRaw = target:getNetVar("factions", "[]")
         local factionsAssigned = util.JSONToTable(factionsAssignedRaw) or {}
-        local addFactionMenu = AdminMenu:AddSubMenu("Add Faction to Door")
+        local addFactionMenu = AdminMenu:AddSubMenu(L("doorAddFaction"))
         for _, faction in pairs(lia.faction.teams) do
             if not factionsAssigned[faction.index] then
                 addFactionMenu:AddOption(faction.name, function()
@@ -66,7 +65,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
         end
 
         if table.Count(factionsAssigned) > 0 then
-            local removeFactionMenu = AdminMenu:AddSubMenu("Remove Faction from Door")
+            local removeFactionMenu = AdminMenu:AddSubMenu(L("doorRemoveFactionAdmin"))
             for id, _ in pairs(factionsAssigned) do
                 for _, faction in pairs(lia.faction.teams) do
                     if faction.index == id then
@@ -78,10 +77,10 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
                 end
             end
         else
-            AdminMenu:AddOption("No factions assigned to this door"):SetEnabled(false)
+            AdminMenu:AddOption(L("doorNoFactions")):SetEnabled(false)
         end
 
-        local setClassMenu = AdminMenu:AddSubMenu("Set Door Class")
+        local setClassMenu = AdminMenu:AddSubMenu(L("doorSetDoorClass"))
         for classID, classData in pairs(lia.class.list) do
             setClassMenu:AddOption(classData.name, function()
                 LocalPlayer():ConCommand('doorsetclass "' .. classID .. '"')
@@ -90,7 +89,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
         end
 
         if target:getNetVar("class") then
-            setClassMenu:AddOption("Remove Class", function()
+            setClassMenu:AddOption(L("doorRemoveDoorClass"), function()
                 LocalPlayer():ConCommand('doorsetclass ""')
                 AdminStickIsOpen = false
             end)

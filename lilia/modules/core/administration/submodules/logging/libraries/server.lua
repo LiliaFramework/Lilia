@@ -32,7 +32,7 @@ function MODULE:OnServerLog(_, logType, logString)
 end
 
 function MODULE:CanPlayerSeeLog()
-    return lia.config.AdminConsoleNetworkLogs
+    return lia.config.get("AdminConsoleNetworkLogs")
 end
 
 function MODULE:OnCharDelete(client, id)

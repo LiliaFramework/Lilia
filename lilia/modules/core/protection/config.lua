@@ -87,7 +87,6 @@ lia.config.add("EquipDelay", "Equip Delay", 1, nil, {
     category = "Protection",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Float",
     min = 0,
     max = 10
@@ -98,7 +97,6 @@ lia.config.add("UnequipDelay", "Unequip Delay", 1, nil, {
     category = "Protection",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Float",
     min = 0,
     max = 10
@@ -109,7 +107,6 @@ lia.config.add("DropDelay", "Drop Delay", 1, nil, {
     category = "Protection",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Float",
     min = 0,
     max = 10
@@ -120,7 +117,6 @@ lia.config.add("TakeDelay", "Take Delay", 0, nil, {
     category = "Protection",
     noNetworking = false,
     schemaOnly = false,
-    isGlobal = true,
     type = "Float",
     min = 0,
     max = 10

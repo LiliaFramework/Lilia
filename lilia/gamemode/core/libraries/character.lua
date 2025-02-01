@@ -95,13 +95,13 @@ lia.char.registerVar("name", {
         local name, override = hook.Run("GetDefaultCharName", client, data.faction, data)
         if isstring(name) and override then return true end
         if not isstring(value) or not value:find("%S") then return false, "invalid", "name" end
-        local allowExistNames = lia.config.AllowExistNames
+        local allowExistNames = lia.config.get("AllowExistNames")
         if CLIENT and #lia.char.names < 1 and not allowExistNames then
             netstream.Start("liaCharFetchNames")
             netstream.Hook("liaCharFetchNames", function(data) lia.char.names = data end)
         end
 
-        if not lia.config.AllowExistNames then
+        if not lia.config.get("AllowExistNames") then
             for _, v in pairs(lia.char.names) do
                 if v == value then return false, "A character with this name already exists." end
             end
@@ -120,11 +120,11 @@ lia.char.registerVar("name", {
 
 lia.char.registerVar("desc", {
     field = "_desc",
-    default = "Please enter your description with a minimum of " .. lia.config.MinDescLen .. " characters!",
+    default = "Please enter your description with a minimum of " .. lia.config.get("MinDescLen") .. " characters!",
     index = 2,
     onValidate = function(value, data, client)
         local desc, override = hook.Run("GetDefaultCharDesc", client, data.faction)
-        local minLength = lia.config.MinDescLen
+        local minLength = lia.config.get("MinDescLen")
         if isstring(desc) and override then return true end
         if not value or #value:gsub("%s", "") < minLength then return false, "descMinLen", minLength end
         return true
@@ -170,7 +170,7 @@ lia.char.registerVar("model", {
                 icon.DoClick = function() panel.payload.model = k end
                 icon.PaintOver = function(_, w, h)
                     if panel.payload.model == k then
-                        local color = lia.config.Color
+                        local color = lia.config.get("Color")
                         surface.SetDrawColor(color.r, color.g, color.b, 200)
                         for i = 1, 3 do
                             local i2 = i * 2
@@ -431,7 +431,7 @@ end
 if SERVER then
     function lia.char.create(data, callback)
         local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
-        data.money = data.money or lia.config.DefaultMoney
+        data.money = data.money or lia.config.get("DefaultMoney")
         lia.db.insertTable({
             _name = data.name or "",
             _desc = data.desc or "",

@@ -111,9 +111,8 @@ function PANEL:Init()
     end
 
     self.staff1 = self:Add("DLabel")
-    self.staff1:SetText("Staff Online: 0")
-    -- Make the player count bigger like the server name
-    self.staff1:SetFont("liaBigFont")
+    self.staff1:SetText(L("playersOnline", 0) .. " | " .. L("staffOnDuty", 0) .. " | " .. L("staffOnline", 0))
+    self.staff1:SetFont("liaMediumFont")
     self.staff1:SetContentAlignment(5)
     self.staff1:SetTextColor(color_white)
     self.staff1:SetExpensiveShadow(1, color_black)
@@ -133,7 +132,7 @@ function PANEL:UpdateStaff()
         if target:isStaffOnDuty() then StaffOnDutyCount = StaffOnDutyCount + 1 end
     end
 
-    self.staff1:SetText("Players Online: " .. player.GetCount() .. " | Staff On Duty: " .. StaffOnDutyCount .. " | Staff Online: " .. StaffCount)
+    self.staff1:SetText(L("playersOnline", player.GetCount()) .. " | " .. L("staffOnDuty", StaffOnDutyCount) .. " | " .. L("staffOnline", StaffCount))
 end
 
 function PANEL:Think()
