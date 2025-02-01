@@ -4,11 +4,6 @@ EDITOR.name = function(vendor)
     vendor:setName(name)
 end
 
-EDITOR.desc = function(vendor)
-    local desc = net.ReadString()
-    vendor:setDesc(desc)
-end
-
 EDITOR.mode = function(vendor)
     local itemType = net.ReadString()
     local mode = net.ReadInt(8)

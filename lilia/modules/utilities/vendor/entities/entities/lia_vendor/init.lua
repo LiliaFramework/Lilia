@@ -123,13 +123,6 @@ function ENT:setName(name)
     net.Send(self.receivers)
 end
 
-function ENT:setDesc(desc)
-    self:setNetVar("desc", desc)
-    net.Start("VendorEdit")
-    net.WriteString("desc")
-    net.Send(self.receivers)
-end
-
 function ENT:setTradeMode(itemType, mode)
     if not ALLOWED_MODES[mode] then mode = nil end
     self.items[itemType] = self.items[itemType] or {}

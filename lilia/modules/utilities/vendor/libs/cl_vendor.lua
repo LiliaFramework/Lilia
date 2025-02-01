@@ -60,6 +60,5 @@ addEditor("model", function(model) net.WriteString(model) end)
 addEditor("useMoney", function(useMoney) net.WriteBool(useMoney) end)
 addEditor("scale", function(scale) net.WriteFloat(scale) end)
 addEditor("name", function(name) net.WriteString(name) end)
-addEditor("desc", function(desc) net.WriteString(desc) end)
 addEditor("bubble", function(show) net.WriteBool(show) end)
 return EDITOR

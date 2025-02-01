@@ -9,7 +9,6 @@ ENT.DrawEntityInfo = true
 function ENT:setupVars()
     if SERVER then
         self:setNetVar("name", "John Doe")
-        self:setNetVar("desc", "")
         self.receivers = {}
     end
 
@@ -105,10 +104,6 @@ end
 
 function ENT:getName()
     return self:getNetVar("name", "")
-end
-
-function ENT:getDesc()
-    return self:getNetVar("desc", "")
 end
 
 function ENT:setAnim()

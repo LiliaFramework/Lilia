@@ -19,12 +19,6 @@ function PANEL:Init()
     self.name:SetTooltip(L("name"))
     self.name:SetText(entity:getName())
     self.name.OnEnter = function(this) if entity:getNetVar("name") ~= this:GetText() then EDITOR.name(this:GetText()) end end
-    self.desc = self:Add("DTextEntry")
-    self.desc:Dock(TOP)
-    self.desc:SetTooltip(L("desc"))
-    self.desc:DockMargin(0, 4, 0, 0)
-    self.desc:SetText(entity:getDesc())
-    self.desc.OnEnter = function(this) if entity:getNetVar("desc") ~= this:GetText() then EDITOR.desc(this:GetText()) end end
     self.model = self:Add("DTextEntry")
     self.model:Dock(TOP)
     self.model:SetTooltip(L("model"))
@@ -157,8 +151,6 @@ function PANEL:onNameDescChanged(key)
     local entity = liaVendorEnt
     if key == "name" then
         self.name:SetText(entity:getName())
-    elseif key == "desc" then
-        self.desc:SetText(entity:getDesc())
     elseif key == "model" then
         self.model:SetText(entity:GetModel())
     elseif key == "scale" then
