@@ -22,3 +22,19 @@ function sam.player.send_message(client, msg, tbl)
         end
     end
 end
+
+hook.Add("SAM.CanRunCommand", "Check4Staff", function(client, _, _, cmd)
+    if lia.config.get("SAMEnforceStaff", false) then
+        if cmd.permission and not client:HasPermission(cmd.permission) then
+            client:notify("You lack the required permissions to execute this command.")
+            return false
+        end
+
+        if CAMI.PlayerHasAccess(client, "Staff Permissions - Can Bypass Staff Faction SAM Command whitelist", nil) or client:Team() == FACTION_STAFF then
+            return true
+        else
+            client:notify("You do not have permission to run this command. This command is restricted to staff members.")
+            return false
+        end
+    end
+end)

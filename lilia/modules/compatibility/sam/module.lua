@@ -10,4 +10,9 @@ MODULE.CAMIPrivileges = {
         MinAccess = "superadmin",
         Description = "Allows access to Seeing SAM Notifications Outside Staff Character.",
     },
+    {
+        Name = "Staff Permissions - Can Bypass Staff Faction SAM Command whitelist",
+        MinAccess = "superadmin",
+        Description = "Allows staff to bypass the SAM command whitelist for the Staff Faction.",
+    },
 }

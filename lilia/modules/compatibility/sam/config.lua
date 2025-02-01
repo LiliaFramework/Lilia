@@ -9,3 +9,12 @@ lia.config.add("AdminOnlyNotification", "Admin Only Notifications", true, nil, {
     category = "Staff",
     type = "Boolean"
 })
+
+lia.config.add("SAMEnforceStaff", "Enforce Staff Rank To SAM", true, nil, {
+    desc = "Determines whether staff enforcement for SAM commands is enabled.",
+    category = "Protection",
+    noNetworking = false,
+    schemaOnly = false,
+    isGlobal = false,
+    type = "Boolean"
+})
