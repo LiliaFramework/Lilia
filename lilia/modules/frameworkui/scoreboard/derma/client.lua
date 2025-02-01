@@ -161,7 +161,6 @@ function PANEL:Think()
 end
 
 function PANEL:addPlayer(client, parent)
-    local lp = LocalPlayer()
     if not client:getChar() or not IsValid(parent) then return end
     local slot = parent:Add("DPanel")
     slot:Dock(TOP)
@@ -171,7 +170,7 @@ function PANEL:addPlayer(client, parent)
     client.liaScoreSlot = slot
     local rowHeight = slot:GetTall()
     local modelSize = rowHeight * 0.9
-    slot.Paint = function(s, w, h) end
+    slot.Paint = function() end
     slot.model = vgui.Create("liaSpawnIcon", slot)
     slot.model:SetPos(4, (rowHeight - modelSize) * 0.5)
     slot.model:SetSize(modelSize, modelSize)
