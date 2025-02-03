@@ -7,7 +7,7 @@ function lia.lang.loadFromDir(directory)
         if v:sub(1, 3) == "sh_" then
             niceName = v:sub(4, -5):lower()
         else
-            niceName = v:sub(1, -5)
+            niceName = v:sub(1, -5):lower()
         end
 
         lia.include(directory .. "/" .. v, "shared")
@@ -24,13 +24,17 @@ function lia.lang.loadFromDir(directory)
 end
 
 function lia.lang.AddTable(name, tbl)
-    lia.lang.stored[name] = table.Merge(lia.lang.stored[name] or {}, tbl)
+    local lowerName = name:lower()
+    lia.lang.stored[lowerName] = lia.lang.stored[lowerName] or {}
+    for k, v in pairs(tbl) do
+        lia.lang.stored[lowerName][k] = v
+    end
 end
 
 function L(key, ...)
     local languages = lia.lang.stored
-    local langKey = lia.config.get("Language")
-    local info = languages[langKey] or languages.english
+    local langKey = lia.config.get("Language", "english"):lower()
+    local info = languages[langKey]
     return string.format(info and info[key] or key, ...)
 end
 
@@ -47,7 +51,6 @@ lia.config.add("Language", "Language", "English", nil, {
     category = "Server",
     noNetworking = false,
     schemaOnly = false,
-    
     type = "Table",
     options = langs
 })

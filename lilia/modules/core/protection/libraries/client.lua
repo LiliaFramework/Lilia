@@ -1554,17 +1554,35 @@ local BadCVars = {
     ["cathack"] = true,
 }
 
+local suspiciousFunctions = {
+    ["hook.Call"] = true,
+    ["net.Receive"] = true,
+    ["render.Capture"] = true,
+    ["RunConsoleCommand"] = true
+}
+
 function MODULE:CanDeleteChar(_, character)
     if IsValid(character) and character:getMoney() < lia.config.get("DefaultMoney") then return false end
 end
 
 local function VerifyCheats()
+    for func in pairs(suspiciousFunctions) do
+        if _G[func] then
+            local info = debug.getinfo(_G[func], "S")
+            if info and info.what ~= "C" then
+                net.Start(MODULE.HackingCheckSeed)
+                net.SendToServer()
+                return
+            end
+        end
+    end
+
     local hackCommands = concommand.GetTable()
     for command in pairs(HackCommands) do
         if hackCommands[command] then
             net.Start(MODULE.HackingCheckSeed)
             net.SendToServer()
-            break
+            return
         end
     end
 
@@ -1572,7 +1590,7 @@ local function VerifyCheats()
         if ConVarExists(cvar) then
             net.Start(MODULE.HackingCheckSeed)
             net.SendToServer()
-            break
+            return
         end
     end
 
@@ -1580,7 +1598,7 @@ local function VerifyCheats()
         if _G[globalName] then
             net.Start(MODULE.HackingCheckSeed)
             net.SendToServer()
-            break
+            return
         end
     end
 end

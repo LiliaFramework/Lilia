@@ -19,14 +19,14 @@ end
 
 function MODULE:CanPlayerUseChar(_, character)
     local banned = character:getData("banned")
-    if banned and isnumber(banned) and banned > os.time() then return false, "@charBanned" end
+    if banned and isnumber(banned) and banned > os.time() then return false, "charBanned" end
     return true
 end
 
 function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
     local banned = character:getData("banned")
     if character:getID() == newCharacter:getID() then return false, "You are already using this character!" end
-    if banned and isnumber(banned) and banned > os.time() then return false, "@charBanned" end
+    if banned and isnumber(banned) and banned > os.time() then return false, "charBanned" end
     if not client:Alive() then return false, "You are dead!" end
     if client:hasRagdoll() then return false, "You are ragdolled!" end
     if client:hasValidVehicle() then return false, "You cannot switch characters while in a vehicle or sitting!" end

@@ -58,7 +58,7 @@ end
 EDITOR.useMoney = function(vendor)
     local useMoney = net.ReadBool()
     if useMoney then
-        vendor:setMoney(lia.config.get("DefaultVendorMoney", 500))
+        vendor:setMoney(lia.config.get("vendorDefaultMoney", 500))
     else
         vendor:setMoney(nil)
     end

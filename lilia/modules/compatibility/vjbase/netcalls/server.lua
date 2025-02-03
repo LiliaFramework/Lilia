@@ -11,4 +11,4 @@ for _, netName in ipairs(ExploitableNets) do
     net.Receive(netName, function(_, client) ExploitableNet(client, netName) end)
 end
 
-lia.log.addType("unprotectedVJNetCall", function(client, netMessage) return L("unprotectedVJNetCallLog", client:SteamID(), client:Name(), netMessage) end, L("logCategoryVJNet"), Color(0, 255, 0), L("logTypeUnprotectedVJNetCall"))
+lia.log.addType("unprotectedVJNetCall", function(client, netMessage) return L("unprotectedVJNetCallLog", client:SteamID(), client:Name(), netMessage) end, L("logCategoryVJNet"), L("logTypeUnprotectedVJNetCall"))

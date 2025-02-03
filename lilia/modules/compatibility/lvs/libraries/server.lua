@@ -1,35 +1,37 @@
 ﻿hook.Add("LVS.OnPlayerCannotDrive", "Lilia_LVSOnCantDrive", function(client, vehicle)
-    if vehicle:isLocked() then
-        client:notify(L("vehicleLocked"))
-        return
-    end
+    if IsValid(vehicle) and vehicle:IsVehicle() then
+        if vehicle.isLocked and vehicle:isLocked() then
+            client:notify(L("vehicleLocked"))
+            return
+        end
 
-    if vehicle.IsBeingEntered then
-        client:notify(L("someoneEnteringCar"))
-        return
-    end
+        if vehicle.IsBeingEntered then
+            client:notify(L("someoneEnteringCar"))
+            return
+        end
 
-    if vehicle:isSimfphysCar() and lia.config.get("TimeToEnterVehicle") > 0 then
-        vehicle.IsBeingEntered = true
-        client:setAction(L("enteringVehicleAction"), lia.config.get("TimeToEnterVehicle"))
-        client:doStaredAction(vehicle, function()
-            vehicle.IsBeingEntered = false
-            if not IsValid(vehicle:GetDriver()) then
-                local DriverSeat = vehicle:GetDriverSeat()
-                client:EnterVehicle(DriverSeat)
-            else
-                vehicle:SetPassenger(client)
-            end
-        end, lia.config.get("TimeToEnterVehicle"), function()
-            if IsValid(vehicle) then
+        if vehicle:isSimfphysCar() and lia.config.get("TimeToEnterVehicle") > 0 then
+            vehicle.IsBeingEntered = true
+            client:setAction(L("enteringVehicleAction"), lia.config.get("TimeToEnterVehicle"))
+            client:doStaredAction(vehicle, function()
                 vehicle.IsBeingEntered = false
-                client:stopAction()
-            end
+                if not IsValid(vehicle:GetDriver()) then
+                    local DriverSeat = vehicle:GetDriverSeat()
+                    client:EnterVehicle(DriverSeat)
+                else
+                    vehicle:SetPassenger(client)
+                end
+            end, lia.config.get("TimeToEnterVehicle"), function()
+                if IsValid(vehicle) then
+                    vehicle.IsBeingEntered = false
+                    client:stopAction()
+                end
 
-            if IsValid(client) then client:stopAction() end
-        end)
+                if IsValid(client) then client:stopAction() end
+            end)
+        end
+        return true
     end
-    return true
 end)
 
 function MODULE:EntityTakeDamage(seat, dmgInfo)

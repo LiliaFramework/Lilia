@@ -22,5 +22,4 @@ end)
 lia.log.addType("configChange", {
     func = function(name, oldValue, value) return string.format("Changed config '%s' from '%s' to '%s'.", name, tostring(oldValue), tostring(value)) end,
     category = "Admin Actions",
-    color = Color(0, 128, 255)
 })

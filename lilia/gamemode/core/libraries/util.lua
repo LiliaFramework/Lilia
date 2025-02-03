@@ -534,7 +534,7 @@ else
                         end
 
                         local submitButton = vgui.Create("DButton", form)
-                        submitButton:SetText("Submit")
+                        submitButton:SetText("submit")
                         submitButton:Dock(TOP)
                         submitButton:DockMargin(5, 10, 5, 0)
                         form:AddItem(submitButton)

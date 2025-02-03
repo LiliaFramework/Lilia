@@ -35,5 +35,5 @@ net.Receive("RequestRemoveWarning", function(_, client)
     lia.log.add(client, "warningRemoved", targetClient, warning)
 end)
 
-lia.log.addType("warningIssued", function(client, target, reason) return string.format("[%s] %s issued a warning to %s for: %s.", os.date("%Y-%m-%d %H:%M:%S"), client:SteamID(), target:SteamID(), reason) end, "Warnings", Color(255, 165, 0))
-lia.log.addType("warningRemoved", function(client, target, warning) return string.format("[%s] %s removed a warning from %s. Reason was: %s.", os.date("%Y-%m-%d %H:%M:%S"), client:SteamID(), target:SteamID(), warning.reason) end, "Warnings", Color(255, 0, 0))
+lia.log.addType("warningIssued", function(client, target, reason) return string.format("[%s] %s issued a warning to %s for: %s.", os.date("%Y-%m-%d %H:%M:%S"), client:SteamID(), target:SteamID(), reason) end, "Warnings")
+lia.log.addType("warningRemoved", function(client, target, warning) return string.format("[%s] %s removed a warning from %s. Reason was: %s.", os.date("%Y-%m-%d %H:%M:%S"), client:SteamID(), target:SteamID(), warning.reason) end, "Warnings")

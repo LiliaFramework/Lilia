@@ -148,7 +148,7 @@ function PANEL:addClassDetails(detailsPanel, classData)
     addDetail("Base Health: " .. tostring(classData.health or client:GetMaxHealth()))
     addDetail("Base Armor: " .. tostring(classData.armor or client:GetMaxArmor()))
     local weapons = classData.weapons or {}
-    local weaponsText = "Weapons: "
+    local weaponsText = L("weapons") .. ": "
     if istable(weapons) and #weapons > 0 then
         weaponsText = weaponsText .. table.concat(weapons, ", ")
     else

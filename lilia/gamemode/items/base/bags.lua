@@ -24,7 +24,7 @@ ITEM.functions.Equip = {
         local items = client:getChar():getInv():getItems()
         for _, v in pairs(items) do
             if v.id ~= item.id and v.isBag and v:getData("equip") then
-                client:notifyLocalized(bagAlreadyEquipped)
+                client:notifyLocalized("bagAlreadyEquipped")
                 return false
             end
         end

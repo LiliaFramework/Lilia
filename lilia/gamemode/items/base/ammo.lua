@@ -1,9 +1,8 @@
 ﻿ITEM.name = "Ammo Base"
-ITEM.model = "models/Items/BoxSRounds.mdl"
+ITEM.model = "models/props_c17/SuitCase001a.mdl"
 ITEM.width = 1
 ITEM.height = 1
 ITEM.ammo = "pistol"
-ITEM.desc = "A Box that contains %s of Pistol Ammo"
 ITEM.category = "Ammunition"
 ITEM.functions.use = {
     name = "load",
@@ -50,7 +49,7 @@ ITEM.functions.use = {
 }
 
 function ITEM:getDesc()
-    return Format(self.ammoDesc or self.desc, self:getQuantity())
+    return L("ammoDesc", self:getQuantity())
 end
 
 function ITEM:paintOver(item)

@@ -33,8 +33,8 @@ lia.command.add("plygetplaytime", {
     privilege = "View Playtime",
     AdminStick = {
         Name = L("adminStickGetPlayTimeName"),
-        Category = L("adminStickCategory"),
-        SubCategory = L("adminStickSubCategory"),
+        Category = L("Moderation Tools"),
+        SubCategory = L("misc"),
         Icon = "icon16/time.png"
     },
     onRun = function(client, arguments)

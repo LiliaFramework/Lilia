@@ -53,9 +53,9 @@ lia.command.add("sendtositroom", {
     syntax = "[string charname]",
     privilege = "Manage SitRooms",
     AdminStick = {
-        Name = "Send To Sit Room",
-        Category = "Moderation Tools",
-        SubCategory = "Miscellaneous",
+        Name = L("sendToSitRoom"),
+        Category = L("Moderation Tools"),
+        SubCategory = L("misc"),
         Icon = "icon16/arrow_down.png"
     },
     onRun = function(client, arguments)

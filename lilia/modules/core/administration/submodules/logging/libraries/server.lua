@@ -1,12 +1,14 @@
 ﻿local MODULE = MODULE
 util.AddNetworkString("send_logs")
-function MODULE:ReadLogFiles(category, maxLines)
-    maxLines = maxLines or 1000
+function MODULE:ReadLogFiles(category)
+    local maxDays = lia.config.get("LogRetentionDays", 7)
+    local maxLines = lia.config.get("MaxLogLines", 1000)
     local logs = {}
-    local logFilePath = "lilia/logs/" .. category .. ".txt"
+    local logFilePath = "lilia/logs/" .. engine.ActiveGamemode() .. "/" .. category .. ".txt"
     if file.Exists(logFilePath, "DATA") then
         local logFileContent = file.Read(logFilePath, "DATA")
         local lines = {}
+        local cutoffDate = os.time() - (maxDays * 86400)
         for line in logFileContent:gmatch("[^\r\n]+") do
             table.insert(lines, line)
         end
@@ -15,10 +17,21 @@ function MODULE:ReadLogFiles(category, maxLines)
         for i = startIndex, #lines do
             local timestamp, message = lines[i]:match("^%[([^%]]+)%]%s*(.+)")
             if timestamp and message then
-                table.insert(logs, {
-                    timestamp = timestamp,
-                    message = message
+                local logTime = os.time({
+                    year = tonumber(timestamp:sub(1, 4)),
+                    month = tonumber(timestamp:sub(6, 7)),
+                    day = tonumber(timestamp:sub(9, 10)),
+                    hour = tonumber(timestamp:sub(12, 13)),
+                    min = tonumber(timestamp:sub(15, 16)),
+                    sec = tonumber(timestamp:sub(18, 19))
                 })
+
+                if logTime and logTime >= cutoffDate then
+                    table.insert(logs, {
+                        timestamp = timestamp,
+                        message = message
+                    })
+                end
             end
         end
     end

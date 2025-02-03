@@ -11,12 +11,12 @@
 
 FilesToLoad = {
     {
-        path = "lilia/gamemode/core/libraries/option.lua",
-        realm = "client"
-    },
-    {
         path = "lilia/gamemode/core/libraries/languages.lua",
         realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/option.lua",
+        realm = "client"
     },
     {
         path = "lilia/gamemode/core/libraries/util.lua",

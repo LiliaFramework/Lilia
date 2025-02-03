@@ -5,6 +5,6 @@ MODULE.version = "Stock"
 MODULE.desc = "Adds a Weapon Selector UI"
 if CLIENT then
     lia.option.add("invertWeaponScroll", L("invertWeaponScroll"), L("invertWeaponScrollDesc"), false, nil, {
-        category = L("wepSelectorCategory")
+        category = L("weaponSelector")
     })
 end

@@ -7,7 +7,6 @@ ITEM.height = 1
 ITEM.outfitCategory = "model"
 ITEM.pacData = {}
 ITEM.isOutfit = true
-ITEM.RequiredSkillLevels = nil
 if CLIENT then
     function ITEM:paintOver(item, w, h)
         if item:getData("equip") then

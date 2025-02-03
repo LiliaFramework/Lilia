@@ -7,7 +7,7 @@ lia.command.add("logs", {
         for _, logData in pairs(lia.log.types) do
             local category = logData.category
             if not categorizedLogs[category] then categorizedLogs[category] = {} end
-            local logs = MODULE:ReadLogFiles(category, 1000)
+            local logs = MODULE:ReadLogFiles(category)
             for _, log in ipairs(logs) do
                 table.insert(categorizedLogs[category], log)
             end

@@ -11,8 +11,8 @@ MODULE.CAMIPrivileges = {
     },
 }
 
-lia.config.add("DefaultVendorMoney", L("defaultVendorMoney"), 500, nil, {
-    desc = L("defaultVendorMoneyDesc"),
+lia.config.add("vendorDefaultMoney", L("vendorDefaultMoney"), 500, nil, {
+    desc = L("vendorMoneyDesc"),
     category = L("vendorCategory"),
     type = "Int",
     min = 0,

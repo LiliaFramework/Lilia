@@ -61,6 +61,7 @@ function MODULE:TicketFrame(requester, message, claimed)
 
     msg:AppendText(message)
     local function createButton(text, material, position, clickFunc, disabled)
+        text = L(text)
         local btn = vgui.Create("DButton", frm)
         btn:SetPos(215, position)
         btn:SetSize(83, 18)
@@ -88,10 +89,10 @@ function MODULE:TicketFrame(requester, message, claimed)
     end
 
     local isLocalPlayer = requester == LocalPlayer()
-    createButton("Goto", mat_lightning, 20 * 1, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "goto", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
-    createButton("Return", mat_arrow, 20 * 2, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "return", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
-    createButton("Freeze", mat_link, 20 * 3, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "freeze", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
-    createButton("Bring", mat_arrow, 20 * 4, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "bring", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
+    createButton("goto", mat_lightning, 20 * 1, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "goto", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
+    createButton("return", mat_arrow, 20 * 2, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "return", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
+    createButton("freeze", mat_link, 20 * 3, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "freeze", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
+    createButton("bring", mat_arrow, 20 * 4, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "bring", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
     local shouldClose = false
     local claimButton
     claimButton = createButton("Claim case", mat_case, 20 * 5, function()

@@ -81,12 +81,12 @@
     },
     ["money"] = {
         func = function(client, amount) return string.format("[%s] %s's money changed by %d [CharID: %s]", client:SteamID(), client:Name(), amount, client:getChar():getID()) end,
-        category = "Character",
+        category = "Money",
         color = Color(52, 152, 219)
     },
     ["moneyGiven"] = {
         func = function(client, name, amount) return string.format("[%s] %s gave %s %s [CharID: %s]", client:SteamID(), client:Name(), name, lia.currency.get(amount), client:getChar():getID()) end,
-        category = "Character",
+        category = "Money",
         color = Color(52, 152, 219)
     },
     ["moneyPickedUp"] = {

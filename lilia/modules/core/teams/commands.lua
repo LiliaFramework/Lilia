@@ -29,7 +29,7 @@
                 hook.Run("PlayerLoadout", target)
                 if client ~= target then target:notify("You have been transferred to " .. faction.name .. " by " .. client:Name()) end
             else
-                return "@invalidFaction"
+                return "invalidFaction"
             end
         end
     end,
