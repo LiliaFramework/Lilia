@@ -1,4 +1,4 @@
-lia.config.add("LogRetentionDays", "Log Retention Period", 7, nil, {
+﻿lia.config.add("LogRetentionDays", "Log Retention Period", 7, nil, {
     desc = "Determines how many days of logs should be read",
     category = "Logging",
     type = "Int",

@@ -1,5 +1,4 @@
 ﻿local DiscordLoggingWebhook = ""
-
 function MODULE:ReadLogFiles(category)
     local maxDays = lia.config.get("LogRetentionDays", 7)
     local maxLines = lia.config.get("MaxLogLines", 1000)
