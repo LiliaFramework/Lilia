@@ -102,7 +102,7 @@ function PANEL:updateSliders()
             slidePanel:SetSize(ScrW() * 0.2, ScrH() * 0.3)
             slidePanel:SetPaintBackground(true)
             slidePanel:SetBackgroundColor(Color(0, 0, 0, 200))
-            if CanSelectBodygroups then
+            if lia.config.get("CanSelectBodygroups", true) then
                 local groups = {}
                 for _, v in pairs(entity:GetBodyGroups()) do
                     if v.id == 0 then continue end
