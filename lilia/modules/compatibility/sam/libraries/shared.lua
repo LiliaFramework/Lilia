@@ -1,6 +1,4 @@
-﻿local MODULE = MODULE
-
-local function CanReadNotifications(client)
+﻿local function CanReadNotifications(client)
     if not lia.config.get("DisplayStaffCommands") then return false end
     if not lia.config.get("AdminOnlyNotification") then return true end
     return client:hasPrivilege("Staff Permissions - Can See SAM Notifications") or client:isStaffOnDuty()
