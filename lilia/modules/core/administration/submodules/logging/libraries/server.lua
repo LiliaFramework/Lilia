@@ -38,10 +38,25 @@ function MODULE:ReadLogFiles(category)
     return logs
 end
 
+local function SyncLogsToDiscord(text)
+    HTTP({
+        url = MODULE.DiscordLoggingWebhook,
+        method = "POST",
+        parameters = {
+            content = text,
+            username = "[LOG]"
+        },
+        success = function(code, body, headers) end,
+        failed = function(reason) Msg(reason) end
+    })
+end
+
 function MODULE:OnServerLog(_, logType, logString)
     for _, admin in pairs(lia.util.getAdmins()) do
         if hook.Run("CanPlayerSeeLog", admin, logType) ~= false then lia.log.send(admin, logString) end
     end
+
+    if self.DiscordLoggingWebhook and self.DiscordLoggingWebhook ~= "" then SyncLogsToDiscord(logString) end
 end
 
 function MODULE:CanPlayerSeeLog()
