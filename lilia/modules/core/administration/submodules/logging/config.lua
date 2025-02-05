@@ -13,5 +13,3 @@ lia.config.add("MaxLogLines", "Maximum Log Lines", 1000, nil, {
     min = 500,
     max = 1000000,
 })
-
-MODULE.DiscordLoggingWebhook = ""

@@ -1,5 +1,5 @@
-﻿local MODULE = MODULE
-util.AddNetworkString("send_logs")
+﻿local DiscordLoggingWebhook = ""
+
 function MODULE:ReadLogFiles(category)
     local maxDays = lia.config.get("LogRetentionDays", 7)
     local maxLines = lia.config.get("MaxLogLines", 1000)
@@ -43,9 +43,9 @@ function MODULE:OnServerLog(_, logType, logString)
         if hook.Run("CanPlayerSeeLog", admin, logType) ~= false then lia.log.send(admin, logString) end
     end
 
-    if self.DiscordLoggingWebhook and self.DiscordLoggingWebhook:match("^https://discord%.com/api/webhooks/") then
+    if DiscordLoggingWebhook and DiscordLoggingWebhook:match("^https://discord.com/api/webhooks/") then
         HTTP({
-            url = self.DiscordLoggingWebhook,
+            url = DiscordLoggingWebhook,
             method = "POST",
             headers = {
                 ["Content-Type"] = "application/json"
@@ -153,3 +153,5 @@ end
 function MODULE:CanTool(client, _, tool)
     lia.log.add(client, "toolgunUse", tool)
 end
+
+util.AddNetworkString("send_logs")
