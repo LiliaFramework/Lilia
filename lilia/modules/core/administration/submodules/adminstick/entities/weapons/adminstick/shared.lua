@@ -18,7 +18,7 @@ SWEP.Secondary.Ammo = ""
 SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = false
 function SWEP:DrawWorldModel()
-    if self:GetOwner():GetMoveType() == MOVETYPE_NOCLIP then return end
+    if self:GetOwner():isNoClipping() then return end
     self:DrawModel()
 end
 

@@ -57,7 +57,7 @@ end
 
 function MODULE:CreateMove(cmd)
     local client = LocalPlayer()
-    if client:CanOverrideView() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:GetViewEntity() == client then
+    if client:CanOverrideView() and not client:isNoClipping() and client:GetViewEntity() == client then
         fm = cmd:GetForwardMove()
         sm = cmd:GetSideMove()
         diff = (client:EyeAngles() - (client.camAng or Angle(0, 0, 0)))[2] or 0
@@ -138,7 +138,7 @@ function MODULE:PrePlayerDraw(drawnClient)
         return true
     end
 
-    if not drawnClient:IsDormant() and client:GetMoveType() ~= MOVETYPE_NOCLIP and client:CanOverrideView() and not client:hasValidVehicle() then
+    if not drawnClient:IsDormant() and not client:isNoClipping() and client:CanOverrideView() and not client:hasValidVehicle() then
         local bBoneHit = false
         for i = 0, drawnClient:GetBoneCount() - 1 do
             local bonePos = drawnClient:GetBonePosition(i)

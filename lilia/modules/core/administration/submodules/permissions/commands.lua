@@ -140,7 +140,7 @@ lia.command.add("fallover", {
         elseif client:hasValidVehicle() then
             client:notifyLocalized("cmdVehicle")
             return
-        elseif client:GetMoveType() == MOVETYPE_NOCLIP then
+        elseif client:isNoClipping() then
             client:notifyLocalized("cmdNoclip")
             return
         end

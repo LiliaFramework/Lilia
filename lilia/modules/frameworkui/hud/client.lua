@@ -9,7 +9,7 @@ function MODULE:HUDPaintBackground()
 end
 
 function MODULE:ShouldDrawPlayerInfo(client)
-    if entity:GetMoveType(client) == MOVETYPE_NOCLIP then return false end
+    if client:isNoClipping() then return false end
 end
 
 function MODULE:HUDPaint()
