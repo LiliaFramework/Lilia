@@ -1,11 +1,11 @@
-﻿lia.config.add("PermaClass", L("permanentClasses"), true, nil, {
-    desc = L("permanentClassesDesc"),
-    category = L("character"),
+﻿lia.config.add("PermaClass", "Permanent Classes", true, nil, {
+    desc = "Whether or not classes are saved in characters",
+    category = "Character",
     type = "Boolean"
 })
 
-lia.config.add("ClassDisplay", L("displayClasses"), true, nil, {
-    desc = L("displayClassesDesc"),
-    category = L("character"),
+lia.config.add("ClassDisplay", "Display Classes on Characters", true, nil, {
+    desc = "Whether or not classes are displayed on characters",
+    category = "Character",
     type = "Boolean"
 })

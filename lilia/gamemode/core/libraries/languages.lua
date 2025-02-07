@@ -31,13 +31,6 @@ function lia.lang.AddTable(name, tbl)
     end
 end
 
-function L(key, ...)
-    local languages = lia.lang.stored
-    local langKey = lia.config.get("Language", "english"):lower()
-    local info = languages[langKey]
-    return string.format(info and info[key] or key, ...)
-end
-
 lia.lang.loadFromDir("lilia/gamemode/languages")
 local langs = {}
 for key, _ in pairs(lia.lang.stored) do
@@ -45,7 +38,15 @@ for key, _ in pairs(lia.lang.stored) do
     table.insert(langs, displayName)
 end
 
+function L(key, ...)
+    local languages = lia.lang.stored or {}
+    local langKey = lia.config.get("Language", "english"):lower()
+    local info = languages[langKey]
+    return string.format(info and info[key] or key, ...)
+end
+
 table.sort(langs)
+
 lia.config.add("Language", "Language", "English", nil, {
     desc = "Determines the language setting for the game.",
     category = "Server",
@@ -54,3 +55,5 @@ lia.config.add("Language", "Language", "English", nil, {
     type = "Table",
     options = langs
 })
+
+hook.Run("OnLocalizationLoaded")

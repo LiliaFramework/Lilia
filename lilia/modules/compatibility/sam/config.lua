@@ -1,18 +1,18 @@
-﻿lia.config.add("DisplayStaffCommands", L("DisplayStaffCommands"), true, nil, {
-    desc = L("DisplayStaffCommandsDesc"),
-    category = L("StaffCategory"),
+﻿lia.config.add("DisplayStaffCommands", "Display Staff Commands", true, nil, {
+    desc = "Controls whether notifications and commands for staff are displayed.",
+    category = "Staff",
     type = "Boolean"
 })
 
-lia.config.add("AdminOnlyNotification", L("AdminOnlyNotification"), true, nil, {
-    desc = L("AdminOnlyNotificationDesc"),
-    category = L("StaffCategory"),
+lia.config.add("AdminOnlyNotification", "Admin Only Notifications", true, nil, {
+    desc = "Restricts certain notifications to admins with specific permissions or those on duty.",
+    category = "Staff",
     type = "Boolean"
 })
 
-lia.config.add("SAMEnforceStaff", L("SAMEnforceStaff"), true, nil, {
-    desc = L("SAMEnforceStaffDesc"),
-    category = L("StaffCategory"),
+lia.config.add("SAMEnforceStaff", "Enforce Staff Rank To SAM", true, nil, {
+    desc = "Determines whether staff enforcement for SAM commands is enabled",
+    category = "StaffCategory",
     noNetworking = false,
     schemaOnly = false,
     type = "Boolean"

@@ -95,13 +95,13 @@ lia.char.registerVar("name", {
         local name, override = hook.Run("GetDefaultCharName", client, data.faction, data)
         if isstring(name) and override then return true end
         if not isstring(value) or not value:find("%S") then return false, "invalid", "name" end
-        local allowExistNames = lia.config.get("AllowExistNames")
+        local allowExistNames = lia.config.get("AllowExistNames", true)
         if CLIENT and #lia.char.names < 1 and not allowExistNames then
             netstream.Start("liaCharFetchNames")
             netstream.Hook("liaCharFetchNames", function(data) lia.char.names = data end)
         end
 
-        if not lia.config.get("AllowExistNames") then
+        if not lia.config.get("AllowExistNames", true) then
             for _, v in pairs(lia.char.names) do
                 if v == value then return false, "A character with this name already exists." end
             end
@@ -120,11 +120,11 @@ lia.char.registerVar("name", {
 
 lia.char.registerVar("desc", {
     field = "_desc",
-    default = "Please enter your description with a minimum of " .. lia.config.get("MinDescLen") .. " characters!",
+    default = "Please enter your description with a minimum of " .. lia.config.get("MinDescLen", 16) .. " characters!",
     index = 2,
     onValidate = function(value, data, client)
         local desc, override = hook.Run("GetDefaultCharDesc", client, data.faction)
-        local minLength = lia.config.get("MinDescLen")
+        local minLength = lia.config.get("MinDescLen", 16)
         if isstring(desc) and override then return true end
         if not value or #value:gsub("%s", "") < minLength then return false, "descMinLen", minLength end
         return true
