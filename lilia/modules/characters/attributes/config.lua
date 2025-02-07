@@ -1,42 +1,42 @@
-﻿lia.config.add("StaminaBlur", "Stamina Blur Enabled", false, nil, {
-    desc = "Is Stamina Blur Enabled?",
-    category = "Attributes",
+﻿lia.config.add("StaminaBlur", L("staminaBlur"), false, nil, {
+    desc = L("staminaBlurDesc"),
+    category = L("attributes"),
     type = "Boolean"
 })
 
-lia.config.add("StaminaSlowdown", "Stamina Slowdown Enabled", true, nil, {
-    desc = "Is Stamina Slowdown Enabled?",
-    category = "Attributes",
+lia.config.add("StaminaSlowdown", L("staminaSlowdown"), true, nil, {
+    desc = L("staminaSlowdownDesc"),
+    category = L("attributes"),
     type = "Boolean"
 })
 
-lia.config.add("DefaultStamina", "Default Stamina Value", 100, nil, {
-    desc = "Sets Default Stamina Value",
-    category = "Attributes",
+lia.config.add("DefaultStamina", L("defaultStamina"), 100, nil, {
+    desc = L("defaultStaminaDesc"),
+    category = L("attributes"),
     type = "Int",
     min = 0,
     max = 1000
 })
 
-lia.config.add("StaminaBlurThreshold", "Stamina Blur Threshold", 25, nil, {
-    desc = "Sets Stamina Threshold for Blur to Show",
-    category = "Attributes",
+lia.config.add("StaminaBlurThreshold", L("staminaBlurThreshold"), 25, nil, {
+    desc = L("staminaBlurThresholdDesc"),
+    category = L("attributes"),
     type = "Int",
     min = 0,
     max = 100
 })
 
-lia.config.add("StaminaBreathingThreshold", "Stamina Breathing Threshold", 50, nil, {
-    desc = "Sets Stamina Threshold for Breathing to Happen",
-    category = "Attributes",
+lia.config.add("StaminaBreathingThreshold", L("staminaBreathingThreshold"), 50, nil, {
+    desc = L("staminaBreathingThresholdDesc"),
+    category = L("attributes"),
     type = "Int",
     min = 0,
     max = 100
 })
 
-lia.config.add("MaxAttributePoints", "Max Attribute Points", 30, nil, {
-    desc = "Maximum number of points that can be allocated across an attribute.",
-    category = "Attributes",
+lia.config.add("MaxAttributePoints", L("maxAttributePoints"), 30, nil, {
+    desc = L("maxAttributePointsDesc"),
+    category = L("attributes"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -44,9 +44,9 @@ lia.config.add("MaxAttributePoints", "Max Attribute Points", 30, nil, {
     max = 100
 })
 
-lia.config.add("MaxStartingAttributes", "Max Starting Attributes", 30, nil, {
-    desc = "Maximum value of each attribute at character creation.",
-    category = "Attributes",
+lia.config.add("MaxStartingAttributes", L("maxStartingAttributes"), 30, nil, {
+    desc = L("maxStartingAttributesDesc"),
+    category = L("attributes"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -54,9 +54,9 @@ lia.config.add("MaxStartingAttributes", "Max Starting Attributes", 30, nil, {
     max = 100
 })
 
-lia.config.add("StartingAttributePoints", "Starting Attribute Points", 30, nil, {
-    desc = "Total number of points available for starting attribute allocation.",
-    category = "Attributes",
+lia.config.add("StartingAttributePoints", L("startingAttributePoints"), 30, nil, {
+    desc = L("startingAttributePointsDesc"),
+    category = L("attributes"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -64,9 +64,9 @@ lia.config.add("StartingAttributePoints", "Starting Attribute Points", 30, nil, 
     max = 100
 })
 
-lia.config.add("PunchStamina", "Punch Stamina", 10, nil, {
-    desc = "Stamina usage for punches.",
-    category = "Attributes",
+lia.config.add("PunchStamina", L("punchStamina"), 10, nil, {
+    desc = L("punchStaminaDesc"),
+    category = L("attributes"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",

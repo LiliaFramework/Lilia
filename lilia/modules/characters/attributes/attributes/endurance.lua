@@ -1,2 +1,2 @@
-﻿ATTRIBUTE.name = "Endurance"
-ATTRIBUTE.desc = "Endurance Skill."
+﻿ATTRIBUTE.name = L("Endurance")
+ATTRIBUTE.desc = L("EnduranceDesc")

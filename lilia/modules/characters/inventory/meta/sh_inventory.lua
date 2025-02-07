@@ -10,7 +10,7 @@ local function CanNotAddItemIfNoSpace(inventory, action, context)
     if action ~= "add" then return end
     if inventory.virtual then return true end
     local x, y = context.x, context.y
-    if not x or not y then return false, "noFit" end
+    if not x or not y then return false, L("noFit") end
     local doesFit, item = inventory:doesItemFitAtPos(context.item, x, y)
     if not doesFit then
         return false, {

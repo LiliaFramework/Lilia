@@ -4,8 +4,8 @@
     ["Yelling"] = 600,
 }
 
-lia.config.add("IsVoiceEnabled", "Voice Chat Enabled", true, nil, {
-    desc = "Whether or not voice chat is enabled",
-    category = "Voice",
+lia.config.add("IsVoiceEnabled", L("voiceChatEnabled"), true, nil, {
+    desc = L("voiceChatEnabledDesc"),
+    category = L("voice"),
     type = "Boolean"
 })

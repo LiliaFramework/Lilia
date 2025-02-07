@@ -1,11 +1,11 @@
-﻿lia.config.add("RecognitionEnabled", "Character Recognition Enabled", true, nil, {
-    desc = "Whether or not character recognition is enabled?",
+﻿lia.config.add("RecognitionEnabled", L("RecognitionEnabled"), true, nil, {
+    desc = L("RecognitionEnabledDesc"),
     category = "Recognition",
     type = "Boolean"
 })
 
-lia.config.add("FakeNamesEnabled", "Fake Names Enabled", false, nil, {
-    desc = "Are fake names enabled?",
+lia.config.add("FakeNamesEnabled", L("FakeNamesEnabled"), false, nil, {
+    desc = L("FakeNamesEnabledDesc"),
     category = "Recognition",
     type = "Boolean"
 })

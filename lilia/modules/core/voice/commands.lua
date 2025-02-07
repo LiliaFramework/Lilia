@@ -3,15 +3,15 @@
     privilege = "Toggle Voice Ban Character",
     syntax = "[string name]",
     AdminStick = {
-        Name = "Toggle Voice",
-        Category = "Moderation Tools",
-        SubCategory = "Miscellaneous",
+        Name = L("toggleVoice"),
+        Category = L("moderationTools"),
+        SubCategory = L("miscellaneous"),
         Icon = "icon16/sound_mute.png"
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if target == client then
-            client:notify("You cannot toggle mute on yourself.")
+            client:notify(L("cannotMuteSelf"))
             return false
         end
 
@@ -21,17 +21,17 @@
                 local isBanned = char:getData("VoiceBan", false)
                 char:setData("VoiceBan", not isBanned)
                 if isBanned then
-                    client:notify("You have unmuted " .. target:Name() .. ".")
-                    target:notify("You have been unmuted by an admin.")
+                    client:notify(L("voiceUnmuted", target:Name()))
+                    target:notify(L("voiceUnmutedByAdmin"))
                 else
-                    client:notify("You have muted " .. target:Name() .. ".")
-                    target:notify("You have been muted by an admin.")
+                    client:notify(L("voiceMuted", target:Name()))
+                    target:notify(L("voiceMutedByAdmin"))
                 end
             else
-                client:notify("The target does not have a valid character.")
+                client:notify(L("noValidCharacter"))
             end
         else
-            client:notify("Invalid target.")
+            client:notify(L("invalidTarget"))
         end
     end
 })

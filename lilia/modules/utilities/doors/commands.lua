@@ -13,14 +13,14 @@ lia.command.add("doorsell", {
                 door:removeDoorAccessData()
                 MODULE:callOnDoorChildren(door, function(child) child:removeDoorAccessData() end)
                 client:getChar():giveMoney(price)
-                client:notify(L("doorSold", lia.currency.get(price)))
+                client:notifyLocalized("doorSold", lia.currency.get(price))
                 hook.Run("OnPlayerPurchaseDoor", client, door, false, MODULE.callOnDoorChildren)
                 lia.log.add(client, "doorsell", price)
             else
-                client:notify(L("doorNotOwner"))
+                client:notifyLocalized("doorNotOwner")
             end
         else
-            client:notify(L("doorNotValid"))
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -41,15 +41,15 @@ lia.command.add("admindoorsell", {
                 door:removeDoorAccessData()
                 MODULE:callOnDoorChildren(door, function(child) child:removeDoorAccessData() end)
                 owner:getChar():giveMoney(price)
-                owner:notify(L("doorSold", lia.currency.get(price)))
-                client:notify(L("doorSold", lia.currency.get(price)))
+                owner:notifyLocalized("doorSold", lia.currency.get(price))
+                client:notifyLocalized("doorSold", lia.currency.get(price))
                 hook.Run("OnPlayerPurchaseDoor", owner, door, false, MODULE.callOnDoorChildren)
                 lia.log.add(client, "admindoorsell", owner:Name(), price)
             else
-                client:notify(L("doorNotOwner"))
+                client:notifyLocalized("doorNotOwner")
             end
         else
-            client:notify(L("doorNotValid"))
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -69,12 +69,12 @@ lia.command.add("doortogglelock", {
             if toggleState then
                 door:Fire("lock")
                 door:EmitSound("doors/door_latch3.wav")
-                client:notify(L("doorToggleLocked", "locked"))
+                client:notifyLocalized("doorToggleLocked", "locked")
                 lia.log.add(client, "toggleLock", door, "locked")
             else
                 door:Fire("unlock")
                 door:EmitSound("doors/door_latch1.wav")
-                client:notify(L("doorToggleLocked", "unlocked"))
+                client:notifyLocalized("doorToggleLocked", "unlocked")
                 lia.log.add(client, "toggleLock", door, "unlocked")
             end
 
@@ -87,7 +87,7 @@ lia.command.add("doortogglelock", {
                 end
             end
         else
-            client:notify(L("doorNotValid"))
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -101,9 +101,9 @@ lia.command.add("doorbuy", {
     onRun = function(client)
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            if door:getNetVar("noSell") or door:getNetVar("faction") or door:getNetVar("class") then return client:notify(L("doorNotAllowedToOwn")) end
+            if door:getNetVar("noSell") or door:getNetVar("faction") or door:getNetVar("class") then return client:notifyLocalized("doorNotAllowedToOwn") end
             if IsValid(door:GetDTEntity(0)) then
-                client:notify(L("doorOwnedBy", door:GetDTEntity(0):Name()))
+                client:notifyLocalized("doorOwnedBy", door:GetDTEntity(0):Name())
                 return false
             end
 
@@ -116,14 +116,14 @@ lia.command.add("doorbuy", {
 
                 MODULE:callOnDoorChildren(door, function(child) child:SetDTEntity(0, client) end)
                 client:getChar():takeMoney(price)
-                client:notify(L("doorPurchased", lia.currency.get(price)))
+                client:notifyLocalized("doorPurchased", lia.currency.get(price))
                 hook.Run("OnPlayerPurchaseDoor", client, door, true, MODULE.callOnDoorChildren)
                 lia.log.add(client, "buydoor", price)
             else
-                client:notify(L("doorCanNotAfford"))
+                client:notifyLocalized("doorCanNotAfford")
             end
         else
-            client:notify(L("doorNotValid"))
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -134,7 +134,7 @@ lia.command.add("doortoggleownable", {
     privilege = "Manage Doors",
     AdminStick = {
         Name = "Toggle Door Ownable",
-        TargetClass = "Door",
+        TargetClass = "Door"
     },
     onRun = function(client)
         local door = client:getTracedEntity()
@@ -147,7 +147,7 @@ lia.command.add("doortoggleownable", {
             client:notify(newState and L("doorMadeUnownable") or L("doorMadeOwnable"))
             MODULE:SaveData()
         else
-            client:notify(L("doorNotValid"))
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -182,10 +182,10 @@ lia.command.add("doorresetdata", {
                 child:setNetVar("locked", false)
             end)
 
-            client:notify(L("doorResetData"))
+            client:notifyLocalized("doorResetData")
             MODULE:SaveData()
         else
-            client:notify(L("doorNotValid"))
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -208,7 +208,7 @@ lia.command.add("doortoggleenabled", {
             client:notify(newState and L("doorSetDisabled") or L("doorSetNotDisabled"))
             MODULE:SaveData()
         else
-            client:notify(L("doorNotValid"))
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -235,7 +235,7 @@ lia.command.add("doortogglehidden", {
             client:notify(newState and L("doorSetHidden") or L("doorSetNotHidden"))
             MODULE:SaveData()
         else
-            client:notify(L("doorNotValid"))
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -254,15 +254,15 @@ lia.command.add("doorsetprice", {
     onRun = function(client, arguments)
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            if not arguments[1] or not tonumber(arguments[1]) then return client:notify(L("invalidClass")) end
+            if not arguments[1] or not tonumber(arguments[1]) then return client:notifyLocalized("invalidClass") end
             local price = math.Clamp(math.floor(tonumber(arguments[1])), 0, 1000000)
             door:setNetVar("price", price)
             MODULE:callOnDoorChildren(door, function(child) child:setNetVar("price", price) end)
             lia.log.add(client, "doorSetPrice", door, price)
-            client:notify(L("doorPrice", lia.currency.get(price)))
+            client:notifyLocalized("doorPrice", lia.currency.get(price))
             MODULE:SaveData()
         else
-            client:notify(L("doorNotValid"))
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -282,7 +282,7 @@ lia.command.add("doorsettitle", {
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
             local name = table.concat(arguments, " ")
-            if not name:find("%S") then return client:notify(L("invalidClass")) end
+            if not name:find("%S") then return client:notifyLocalized("invalidClass") end
             if door:checkDoorAccess(client, DOOR_TENANT) then
                 door:setNetVar("title", name)
                 lia.log.add(client, "doorSetTitle", door, name)
@@ -291,10 +291,10 @@ lia.command.add("doorsettitle", {
                 MODULE:callOnDoorChildren(door, function(child) child:setNetVar("name", name) end)
                 lia.log.add(client, "doorSetTitle", door, name)
             else
-                client:notify(L("doorNotOwner"))
+                client:notifyLocalized("doorNotOwner")
             end
         else
-            client:notify(L("doorNotValid"))
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -311,9 +311,9 @@ lia.command.add("doorsetparent", {
         if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
             client.liaDoorParent = door
             lia.log.add(client, "doorSetParent", door)
-            client:notify(L("doorSetParentDoor"))
+            client:notifyLocalized("doorSetParentDoor")
         else
-            client:notify(L("doorNotValid"))
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -329,20 +329,20 @@ lia.command.add("doorsetchild", {
     onRun = function(client)
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            if client.liaDoorParent == door then return client:notify(L("doorCanNotSetAsChild")) end
+            if client.liaDoorParent == door then return client:notifyLocalized("doorCanNotSetAsChild") end
             if IsValid(client.liaDoorParent) then
                 client.liaDoorParent.liaChildren = client.liaDoorParent.liaChildren or {}
                 client.liaDoorParent.liaChildren[door:MapCreationID()] = true
                 door.liaParent = client.liaDoorParent
                 lia.log.add(client, "doorAddChild", client.liaDoorParent, door)
-                client:notify(L("doorAddChildDoor"))
+                client:notifyLocalized("doorAddChildDoor")
                 MODULE:SaveData()
                 MODULE:copyParentDoor(door)
             else
-                client:notify(L("doorNoParentDoor"))
+                client:notifyLocalized("doorNoParentDoor")
             end
         else
-            client:notify(L("doorNotValid"))
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -364,7 +364,7 @@ lia.command.add("doorremovechild", {
                 end)
 
                 door.liaChildren = nil
-                client:notify(L("doorRemoveChildren"))
+                client:notifyLocalized("doorRemoveChildren")
                 return
             end
 
@@ -372,11 +372,11 @@ lia.command.add("doorremovechild", {
                 door.liaParent.liaChildren[door:MapCreationID()] = nil
                 lia.log.add(client, "doorRemoveChild", door.liaParent, door)
                 door.liaParent = nil
-                client:notify(L("doorRemoveChildDoor"))
+                client:notifyLocalized("doorRemoveChildDoor")
                 MODULE:SaveData()
             end
         else
-            client:notify(L("doorNotValid"))
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -416,7 +416,7 @@ lia.command.add("doorinfo", {
             local locked = door:getNetVar("locked", false)
             client:ChatPrint("disabled: " .. tostring(disabled) .. "\n" .. "name: " .. tostring(name) .. "\n" .. "price: " .. lia.currency.get(price) .. "\n" .. "noSell: " .. tostring(noSell) .. "\n" .. "faction: " .. tostring(faction) .. "\n" .. "factions: " .. tostring(factions) .. "\n" .. "class: " .. tostring(class) .. "\n" .. "hidden: " .. tostring(hidden) .. "\n" .. "locked: " .. tostring(locked))
         else
-            client:notify(L("doorNotValid"))
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -455,14 +455,14 @@ lia.command.add("dooraddfaction", {
                 end)
 
                 lia.log.add(client, "doorSetFaction", door, faction.name)
-                client:notify(L("doorSetFaction", faction.name))
+                client:notifyLocalized("doorSetFaction", faction.name)
             elseif arguments[1] then
-                client:notify(L("invalidFaction"))
+                client:notifyLocalized("invalidFaction")
             else
                 door:setNetVar("factions", "[]")
                 MODULE:callOnDoorChildren(door, function() door:setNetVar("factions", "[]") end)
                 lia.log.add(client, "doorRemoveFaction", door, "all")
-                client:notify(L("doorRemoveFaction"))
+                client:notifyLocalized("doorRemoveFaction")
             end
 
             MODULE:SaveData()
@@ -504,14 +504,14 @@ lia.command.add("doorremovefaction", {
                 end)
 
                 lia.log.add(client, "doorRemoveFaction", door, faction.name)
-                client:notify(L("doorRemoveFaction", faction.name))
+                client:notifyLocalized("doorRemoveFaction", faction.name)
             elseif arguments[1] then
-                client:notify(L("invalidFaction"))
+                client:notifyLocalized("invalidFaction")
             else
                 door:setNetVar("factions", "[]")
                 MODULE:callOnDoorChildren(door, function() door:setNetVar("factions", "[]") end)
                 lia.log.add(client, "doorRemoveFaction", door, "all")
-                client:notify(L("doorRemoveFaction"))
+                client:notifyLocalized("doorRemoveFaction")
             end
 
             MODULE:SaveData()
@@ -530,7 +530,7 @@ lia.command.add("doorsetclass", {
             if arguments[1] then
                 local name = table.concat(arguments, " ")
                 for k, v in pairs(lia.class.list) do
-                    if lia.util.stringMatches(v.name, name) or lia.util.stringMatches(v.name, name) then
+                    if lia.util.stringMatches(v.name, name) then
                         class, classData = k, v
                         break
                     end
@@ -546,14 +546,14 @@ lia.command.add("doorsetclass", {
                 end)
 
                 lia.log.add(client, "doorSetClass", door, classData.name)
-                client:notify(L("doorSetClass", classData.name))
+                client:notifyLocalized("doorSetClass", classData.name)
             elseif arguments[1] then
-                client:notify(L("invalidClass"))
+                client:notifyLocalized("invalidClass")
             else
                 door:setNetVar("class", nil)
                 MODULE:callOnDoorChildren(door, function() door:setNetVar("class", nil) end)
                 lia.log.add(client, "doorRemoveClass", door)
-                client:notify(L("doorRemoveClass"))
+                client:notifyLocalized("doorRemoveClass")
             end
 
             MODULE:SaveData()
@@ -588,7 +588,7 @@ lia.command.add("togglealldoors", {
             end
         end
 
-        client:notify(L(toggleToDisable and "doorDisableAll" or "doorEnableAll", count))
+        client:notifyLocalized(toggleToDisable and "doorDisableAll" or "doorEnableAll", count)
         lia.log.add(client, toggleToDisable and "doorDisableAll" or "doorEnableAll", count)
         MODULE:SaveData()
     end

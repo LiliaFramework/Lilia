@@ -30,7 +30,7 @@ function MODULE:DrawCharInfo(client, _, info)
     local charClass = client:getClassData()
     if charClass then
         local classColor = charClass.color or Color(255, 255, 255)
-        local className = charClass.name or "Undefined"
+        local className = L(charClass.name) or L("undefinedClass")
         info[#info + 1] = {className, classColor}
     end
 end

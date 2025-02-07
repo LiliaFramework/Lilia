@@ -46,7 +46,7 @@ end
 
 if SERVER then
     function entityMeta:SetCreator(client)
-        self:SetNW2Entity("creator", client)
+        self:setNetVar("creator", client)
     end
 
     function entityMeta:sendNetVar(key, receiver)

@@ -16,7 +16,7 @@
     end
 
     self:setData(data)
-    LiliaInformation("vendorAmountSaved", table.Count(data))
+    LiliaInformation("Vendors saved: " .. table.Count(data))
 end
 
 function MODULE:LoadData()
@@ -162,7 +162,7 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
             character:giveMoney(price)
             item:remove():next(function() client.vendorTransaction = nil end):catch(function() client.vendorTransaction = nil end)
             vendor:addStock(itemType)
-            client:notify(L("vendorYouSoldItem", item:getName(), lia.currency.get(price)))
+            client:notifyLocalized("vendorYouSoldItem", item:getName(), lia.currency.get(price))
             hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
         end
     else
@@ -177,7 +177,7 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
         character:takeMoney(price)
         vendor:takeStock(itemType)
         character:getInv():add(itemType):next(function(item)
-            client:notify(L("vendorYouBoughtItem", item:getName(), lia.currency.get(price)))
+            client:notifyLocalized(L("vendorYouBoughtItem", item:getName(), lia.currency.get(price)))
             hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
             client.vendorTransaction = nil
         end)

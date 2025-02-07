@@ -500,7 +500,6 @@ function GM:CanDrive(client)
 end
 
 function GM:PlayerDeathThink(client)
-    if client:getChar() and not client:GetNW2Bool("IsDeadRestricted", false) then client:Spawn() end
     return false
 end
 

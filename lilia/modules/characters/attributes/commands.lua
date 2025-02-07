@@ -3,15 +3,15 @@
     syntax = "[string charname] [string attribname] [number level]",
     privilege = "Manage Attributes",
     AdminStick = {
-        Name = "Set Attributes",
-        Category = "Character Management",
-        SubCategory = "Attributes",
+        Name = L("setAttributes"),
+        Category = L("characterManagement"),
+        SubCategory = L("attributes"),
         Icon = "icon16/wrench.png",
         ExtraFields = {
             ["attribute"] = function()
                 local attributes = {}
                 for _, v in pairs(lia.attribs.list) do
-                    table.insert(attributes, v.name)
+                    table.insert(attributes, L(v.name))
                 end
                 return attributes, "combo"
             end,
@@ -42,14 +42,14 @@ lia.command.add("checkattributes", {
     syntax = "[string charname]",
     privilege = "Manage Attributes",
     AdminStick = {
-        Name = "Check Attributes",
-        Category = "Character Management",
-        SubCategory = "Attributes",
+        Name = L("checkAttributes"),
+        Category = L("characterManagement"),
+        SubCategory = L("attributes"),
         Icon = "icon16/zoom.png"
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if not IsValid(target) then return client:notify("Target player not found.") end
+        if not IsValid(target) then return client:notify(L("targetNotFound")) end
         local attributesData = {}
         for attrKey, attrData in SortedPairsByMemberValue(lia.attribs.list, "name") do
             local currentValue = target:getChar():getAttrib(attrKey, 0) or 0
@@ -57,36 +57,36 @@ lia.command.add("checkattributes", {
             local progress = math.Round(currentValue / maxValue * 100, 1)
             table.insert(attributesData, {
                 charID = attrData.name,
-                name = attrData.name,
+                name = L(attrData.name),
                 current = currentValue,
                 max = maxValue,
                 progress = progress .. "%"
             })
         end
 
-        lia.util.CreateTableUI(client, "Character Attributes", {
+        lia.util.CreateTableUI(client, L("characterAttributes"), {
             {
-                name = "Attribute Name",
+                name = L("attributeName"),
                 field = "name"
             },
             {
-                name = "Current Value",
+                name = L("currentValue"),
                 field = "current"
             },
             {
-                name = "Max Value",
+                name = L("maxValue"),
                 field = "max"
             },
             {
-                name = "Progress",
+                name = L("progress"),
                 field = "progress"
             }
         }, attributesData, {
             {
-                name = "Change Attribute",
+                name = L("changeAttribute"),
                 ExtraFields = {
                     ["Amount"] = "text",
-                    ["Mode"] = {"Add", "Set"}
+                    ["Mode"] = {L("add"), L("set")}
                 },
                 net = "ChangeAttribute"
             }
@@ -97,15 +97,15 @@ lia.command.add("checkattributes", {
 lia.command.add("charaddattrib", {
     superAdminOnly = true,
     AdminStick = {
-        Name = "Add Attributes",
-        Category = "Character Management",
-        SubCategory = "Attributes",
+        Name = L("addAttributes"),
+        Category = L("characterManagement"),
+        SubCategory = L("attributes"),
         Icon = "icon16/add.png",
         ExtraFields = {
             ["attribute"] = function()
                 local attributes = {}
                 for _, v in pairs(lia.attribs.list) do
-                    table.insert(attributes, v.name)
+                    table.insert(attributes, L(v.name))
                 end
                 return attributes, "combo"
             end,

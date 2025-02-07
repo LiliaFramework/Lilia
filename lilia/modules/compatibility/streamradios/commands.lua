@@ -8,6 +8,6 @@
             count = count + 1
         end
 
-        client:notify(L("cleaningFinished", "3D Stream Radios", count))
+        client:notifyLocalized("cleaningFinished", "3D Stream Radios", count)
     end
 })

@@ -17,7 +17,7 @@ end
 local function CanNotTransferBagIntoBag(_, action, context)
     if action ~= "transfer" then return end
     local item, toInventory = context.item, context.to
-    if toInventory and toInventory:getData("item") and item.isBag then return false, "A bag cannot be placed into another bag" end
+    if toInventory and toInventory:getData("item") and item.isBag then return false, L("bagIntoBagError") end
 end
 
 local function CanNotTransferBagIfNestedItemCanNotBe(_, action, context)
@@ -28,7 +28,7 @@ local function CanNotTransferBagIfNestedItemCanNotBe(_, action, context)
     if not bagInventory then return end
     for _, item in pairs(bagInventory:getItems()) do
         local canTransferItem, reason = hook.Run("CanItemBeTransfered", item, bagInventory, bagInventory, context.client)
-        if canTransferItem == false then return false, reason or "An item in the bag cannot be transfered" end
+        if canTransferItem == false then return false, reason or L("nestedItemTransferError") end
     end
 end
 
@@ -55,7 +55,7 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
     if not oldInventory or not oldInventory.items[itemID] then return end
     local status, reason = hook.Run("CanItemBeTransfered", item, oldInventory, inventory, client)
     if status == false then
-        client:notify(reason or "You can't do that right now.")
+        client:notify(reason or L("notNow"))
         return
     end
 

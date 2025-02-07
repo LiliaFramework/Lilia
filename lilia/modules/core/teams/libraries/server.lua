@@ -5,7 +5,7 @@
         if info.OnSet then info:OnSet(client) end
         if oldClass ~= class and info.OnTransferred then info:OnTransferred(client, oldClass) end
     else
-        print("[Error] Invalid class '" .. tostring(class) .. "' provided for client.")
+        print(L("invalidClassError", tostring(class)))
     end
 
     if info2 and info2.OnLeave then info2:OnLeave(client) end
@@ -124,7 +124,7 @@ end
 function MODULE:CanCharBeTransfered(character, faction)
     if faction.oneCharOnly then
         for _, otherCharacter in next, lia.char.loaded do
-            if otherCharacter.steamID == character.steamID and faction.index == otherCharacter:getFaction() then return false, "This player already has another character in this faction!" end
+            if otherCharacter.steamID == character.steamID and faction.index == otherCharacter:getFaction() then return false, L("charAlreadyInFaction") end
         end
     end
 end
@@ -214,10 +214,10 @@ end
 
 function MODULE:CanPlayerUseChar(client, character)
     local faction = lia.faction.indices[character:getFaction()]
-    if faction and hook.Run("CheckFactionLimitReached", faction, character, client) then return false, "@limitFaction" end
+    if faction and hook.Run("CheckFactionLimitReached", faction, character, client) then return false, L("limitFaction") end
 end
 
 function MODULE:CanPlayerSwitchChar(client, _, newCharacter)
     local faction = lia.faction.indices[newCharacter:getFaction()]
-    if self:CheckFactionLimitReached(faction, newCharacter, client) then return false, "@limitFaction" end
+    if self:CheckFactionLimitReached(faction, newCharacter, client) then return false, L("limitFaction") end
 end

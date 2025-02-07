@@ -25,11 +25,11 @@
                 if defaultClass then target:getChar():joinClass(defaultClass.index) end
                 hook.Run("OnTransferred", target)
                 if faction.OnTransferred then faction:OnTransferred(target) end
-                client:notify("You have transferred " .. target:Name() .. " to " .. faction.name)
+                client:notify(L("transferSuccess", target:Name(), L(faction.name, client)))
                 hook.Run("PlayerLoadout", target)
-                if client ~= target then target:notify("You have been transferred to " .. faction.name .. " by " .. client:Name()) end
+                if client ~= target then target:notify(L("transferNotification", L(faction.name, target), client:Name())) end
             else
-                return "invalidFaction"
+                return L("invalidFaction")
             end
         end
     end,
@@ -96,11 +96,11 @@ lia.command.add("beclass", {
                         return
                     end
                 else
-                    client:notifyLocalized("invalid", L("class"))
+                    client:notifyLocalized("invalidClass")
                     return
                 end
             else
-                client:notifyLocalized("invalid", L("class"))
+                client:notifyLocalized("invalidClass")
                 return
             end
         else
@@ -119,8 +119,9 @@ lia.command.add("setclass", {
             local character = target:getChar()
             local classFound
             local className = arguments[2]
-            if lia.class.list[className] then classFound = lia.class.list[className] end
-            if not classFound then
+            if lia.class.list[className] then
+                classFound = lia.class.list[className]
+            else
                 for _, v in ipairs(lia.class.list) do
                     if lia.util.stringMatches(L(v.name), className) then
                         classFound = v
@@ -132,14 +133,14 @@ lia.command.add("setclass", {
             if classFound then
                 if classFound.faction == target:Team() then
                     character:joinClass(classFound.index, true)
-                    target:notify("Your class was set to " .. classFound.name .. (client ~= target and " by " .. client:GetName() or "") .. ".")
-                    if client ~= target then client:notify("You set " .. target:GetName() .. "'s class to " .. classFound.name .. ".") end
+                    target:notifyLocalized("classSet", L(classFound.name), client ~= target and client:GetName() or nil)
+                    if client ~= target then client:notifyLocalized("classSetOther", target:GetName(), L(classFound.name)) end
                     hook.Run("PlayerLoadout", target)
                 else
-                    client:notify("The class does not match the target's faction!")
+                    client:notifyLocalized("classFactionMismatch")
                 end
             else
-                client:notify("Invalid class .")
+                client:notifyLocalized("invalidClass")
             end
         end
     end,
@@ -158,29 +159,29 @@ lia.command.add("classwhitelist", {
 
         local class = lia.class.retrieveClass(table.concat(arguments, " ", 2))
         if not class or not isnumber(class) then
-            client:notifyLocalized("invalid", L("class"))
+            client:notifyLocalized("invalidClass")
             return
         end
 
         if not lia.class.hasWhitelist(class) then
-            client:notify("This faction doesn't require a whitelist!.")
+            client:notifyLocalized("noWhitelistNeeded")
             return false
         end
 
         local classTable = lia.class.list[class]
         if target:Team() ~= classTable.faction then
-            client:notify("Couldn't be whitelisted outside of the faction.")
+            client:notifyLocalized("whitelistFactionMismatch")
             return false
         end
 
-        if not target:hasClassWhitelist(class) then
-            client:notify("Already whitelisted.")
+        if target:hasClassWhitelist(class) then
+            client:notifyLocalized("alreadyWhitelisted")
             return false
         end
 
         target:classWhitelist(class)
-        client:notify("Whitelisted properly.")
-        target:notify(string.format("Class '%s' have been assigned to your current character.", classTable.name))
+        client:notifyLocalized("whitelistedSuccess")
+        target:notifyLocalized("classAssigned", L(classTable.name))
     end
 })
 
@@ -197,29 +198,29 @@ lia.command.add("classunwhitelist", {
 
         local class = lia.class.retrieveClass(table.concat(arguments, " ", 2))
         if not class then
-            client:notifyLocalized("invalid", L("class"))
+            client:notifyLocalized("invalidClass")
             return
         end
 
         if not lia.class.hasWhitelist(class) then
-            client:notify("This faction doesn't require a whitelist!.")
+            client:notifyLocalized("noWhitelistNeeded")
             return false
         end
 
         local classTable = lia.class.list[class]
         if target:Team() ~= classTable.faction then
-            client:notify("Couldn't be whitelisted outside of the faction.")
+            client:notifyLocalized("whitelistFactionMismatch")
             return false
         end
 
         if not target:hasClassWhitelist(class) then
-            client:notify("Not whitelisted.")
+            client:notifyLocalized("notWhitelisted")
             return false
         end
 
         target:classUnWhitelist(class)
-        client:notify("Unwhitelisted properly.")
-        target:notify(string.format("Class '%s' have been unassigned from your current character.", classTable.name))
+        client:notifyLocalized("unwhitelistedSuccess")
+        target:notifyLocalized("classUnassigned", L(classTable.name))
     end
 })
 
@@ -230,9 +231,9 @@ lia.command.add("classlist", {
         local classes = {}
         local function addClass(class)
             table.insert(classes, {
-                name = class.name,
-                desc = class.desc,
-                faction = lia.faction.get(class.faction).name,
+                name = L(class.name),
+                desc = L(class.desc),
+                faction = L(lia.faction.get(class.faction).name),
                 isDefault = class.isDefault
             })
         end
@@ -249,7 +250,7 @@ lia.command.add("classlist", {
             end
 
             if not faction then
-                client:notify("Faction not found. Using Default Method.")
+                client:notifyLocalized("factionNotFound")
                 for _, class in pairs(lia.class.list) do
                     addClass(class)
                 end

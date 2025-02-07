@@ -16,8 +16,6 @@ if SERVER then
             id = character
         elseif character and character.getID then
             id = character:getID()
-        else
-            error("Invalid 'character' argument: must be a character object or an ID number.")
         end
 
         local recognized = self:getData("rgn", "")

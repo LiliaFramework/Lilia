@@ -16,7 +16,7 @@ function lia.config.add(key, name, value, callback, data)
         value = savedValue,
         default = value,
         desc = desc,
-        category = category or "General",
+        category = category or L("character"),
         noNetworking = data.noNetworking or false,
         callback = callback
     }
@@ -96,17 +96,17 @@ if SERVER then
     end
 end
 
-lia.config.add("MoneyModel", "Money Model", "models/props_lab/box01a.mdl", nil, {
-    desc = "Defines the model used for representing money in the game.",
-    category = "Money",
+lia.config.add("MoneyModel", L("money_model"), "models/props_lab/box01a.mdl", nil, {
+    desc = L("money_model_desc"),
+    category = L("money_category"),
     noNetworking = false,
     schemaOnly = false,
     type = "Generic"
 })
 
-lia.config.add("MoneyLimit", "Money Limit", 0, nil, {
-    desc = "Sets the limit of money a player can have [0 for infinite].",
-    category = "Money",
+lia.config.add("MoneyLimit", L("money_limit"), 0, nil, {
+    desc = L("money_limit_desc"),
+    category = L("money_category"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -114,33 +114,33 @@ lia.config.add("MoneyLimit", "Money Limit", 0, nil, {
     max = 1000000
 })
 
-lia.config.add("CurrencySymbol", "Currency Symbol", "$", nil, {
-    desc = "Specifies the currency symbol used in the game.",
-    category = "Money",
+lia.config.add("CurrencySymbol", L("currency_symbol"), "$", nil, {
+    desc = L("currency_symbol_desc"),
+    category = L("money_category"),
     noNetworking = false,
     schemaOnly = false,
     type = "Generic"
 })
 
-lia.config.add("CurrencySingularName", "Currency Singular Name", "Dollar", nil, {
-    desc = "Singular name of the in-game currency.",
-    category = "Money",
+lia.config.add("CurrencySingularName", L("currency_singular_name"), "Dollar", nil, {
+    desc = L("currency_singular_name_desc"),
+    category = L("money_category"),
     noNetworking = false,
     schemaOnly = false,
     type = "Generic"
 })
 
-lia.config.add("CurrencyPluralName", "Currency Plural Name", "Dollars", nil, {
-    desc = "Plural name of the in-game currency.",
-    category = "Money",
+lia.config.add("CurrencyPluralName", L("currency_plural_name"), "Dollars", nil, {
+    desc = L("currency_plural_name_desc"),
+    category = L("money_category"),
     noNetworking = false,
     schemaOnly = false,
     type = "Generic"
 })
 
-lia.config.add("invW", "Inventory Width", 6, nil, {
-    desc = "Defines the width of the default inventory.",
-    category = "Character",
+lia.config.add("invW", L("inventory_width"), 6, nil, {
+    desc = L("inventory_width_desc"),
+    category = L("character"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -148,9 +148,9 @@ lia.config.add("invW", "Inventory Width", 6, nil, {
     max = 20
 })
 
-lia.config.add("invH", "Inventory Height", 4, nil, {
-    desc = "Defines the height of the default inventory.",
-    category = "Character",
+lia.config.add("invH", L("inventory_height"), 4, nil, {
+    desc = L("inventory_height_desc"),
+    category = L("character"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -158,9 +158,13 @@ lia.config.add("invH", "Inventory Height", 4, nil, {
     max = 20
 })
 
-lia.config.add("WalkSpeed", "Walk Speed", 130, nil, {
-    desc = "Controls how fast characters walk.",
-    category = "Character",
+lia.config.add("WalkSpeed", L("walkSpeed"), 130, function(newValue)
+    for _, client in ipairs(player.GetAll()) do
+        if IsValid(client) then client:SetWalkSpeed(newValue) end
+    end
+end, {
+    desc = L("walkSpeedDesc"),
+    category = L("character"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -168,9 +172,13 @@ lia.config.add("WalkSpeed", "Walk Speed", 130, nil, {
     max = 300
 })
 
-lia.config.add("RunSpeed", "Run Speed", 235, nil, {
-    desc = "Controls how fast characters run.",
-    category = "Character",
+lia.config.add("RunSpeed", L("runSpeed"), 235, function(newValue)
+    for _, client in ipairs(player.GetAll()) do
+        if IsValid(client) then client:SetRunSpeed(newValue) end
+    end
+end, {
+    desc = L("runSpeedDesc"),
+    category = L("character"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -178,9 +186,9 @@ lia.config.add("RunSpeed", "Run Speed", 235, nil, {
     max = 500
 })
 
-lia.config.add("WalkRatio", "Walk Ratio", 0.5, nil, {
-    desc = "Defines the walk speed ratio when holding the Alt key.",
-    category = "Character",
+lia.config.add("WalkRatio", L("walk_ratio"), 0.5, nil, {
+    desc = L("walk_ratio_desc"),
+    category = L("character"),
     noNetworking = false,
     schemaOnly = false,
     type = "Float",
@@ -189,17 +197,17 @@ lia.config.add("WalkRatio", "Walk Ratio", 0.5, nil, {
     decimals = 2
 })
 
-lia.config.add("AllowExistNames", "Allow Duplicate Names", true, nil, {
-    desc = "Determines whether duplicate character names are allowed.",
-    category = "Character",
+lia.config.add("AllowExistNames", L("allow_duplicate_names"), true, nil, {
+    desc = L("allow_duplicate_names_desc"),
+    category = L("character"),
     noNetworking = false,
     schemaOnly = false,
     type = "Boolean"
 })
 
-lia.config.add("MaxCharacters", "Max Characters", 5, nil, {
-    desc = "Sets the maximum number of characters a player can have.",
-    category = "Character",
+lia.config.add("MaxCharacters", L("max_characters"), 5, nil, {
+    desc = L("max_characters_desc"),
+    category = L("character"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -207,9 +215,9 @@ lia.config.add("MaxCharacters", "Max Characters", 5, nil, {
     max = 10
 })
 
-lia.config.add("MinDescLen", "Minimum Description Length", 16, nil, {
-    desc = "Minimum length required for a character's description.",
-    category = "Character",
+lia.config.add("MinDescLen", L("min_desc_length"), 16, nil, {
+    desc = L("min_desc_length_desc"),
+    category = L("character"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -217,9 +225,9 @@ lia.config.add("MinDescLen", "Minimum Description Length", 16, nil, {
     max = 500
 })
 
-lia.config.add("SaveInterval", "Save Interval", 300, nil, {
-    desc = "Interval for character saves in seconds.",
-    category = "Character",
+lia.config.add("SaveInterval", L("save_interval"), 300, nil, {
+    desc = L("save_interval_desc"),
+    category = L("character"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -227,9 +235,9 @@ lia.config.add("SaveInterval", "Save Interval", 300, nil, {
     max = 3600
 })
 
-lia.config.add("DefMoney", "Default Money", 0, nil, {
-    desc = "Specifies the default amount of money a player starts with.",
-    category = "Character",
+lia.config.add("DefMoney", L("default_money"), 0, nil, {
+    desc = L("default_money_desc"),
+    category = L("character"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -237,9 +245,9 @@ lia.config.add("DefMoney", "Default Money", 0, nil, {
     max = 10000
 })
 
-lia.config.add("DataSaveInterval", "Data Save Interval", 600, nil, {
-    desc = "Time interval between data saves.",
-    category = "Data",
+lia.config.add("DataSaveInterval", L("data_save_interval"), 600, nil, {
+    desc = L("data_save_interval_desc"),
+    category = L("data"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -247,9 +255,9 @@ lia.config.add("DataSaveInterval", "Data Save Interval", 600, nil, {
     max = 3600
 })
 
-lia.config.add("CharacterDataSaveInterval", "Character Data Save Interval", 300, nil, {
-    desc = "Time interval between character data saves.",
-    category = "Data",
+lia.config.add("CharacterDataSaveInterval", L("character_data_save_interval"), 300, nil, {
+    desc = L("character_data_save_interval_desc"),
+    category = L("data"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -257,9 +265,9 @@ lia.config.add("CharacterDataSaveInterval", "Character Data Save Interval", 300,
     max = 3600
 })
 
-lia.config.add("SpawnTime", "Respawn Time", 5, nil, {
-    desc = "Time to respawn after death.",
-    category = "Death",
+lia.config.add("SpawnTime", L("spawn_time"), 5, nil, {
+    desc = L("spawn_time_desc"),
+    category = L("death"),
     noNetworking = false,
     schemaOnly = false,
     type = "Float",
@@ -267,43 +275,25 @@ lia.config.add("SpawnTime", "Respawn Time", 5, nil, {
     max = 60
 })
 
-lia.config.add("TimeToEnterVehicle", "Vehicle Entry Time", 1, nil, {
-    desc = "Time [in seconds] required to enter a vehicle.",
-    category = "Quality of Life",
-    noNetworking = false,
-    schemaOnly = false,
-    type = "Float",
-    min = 0.5,
-    max = 10
-})
-
-lia.config.add("CarEntryDelayEnabled", "Car Entry Delay Enabled", true, nil, {
-    desc = "Determines if the car entry delay is applicable.",
-    category = "Timers",
-    noNetworking = false,
-    schemaOnly = false,
-    type = "Boolean"
-})
-
-lia.config.add("Font", "Font", "Arial", nil, {
-    desc = "Specifies the core font used for UI elements.",
-    category = "Visuals",
+lia.config.add("Font", L("font"), "Arial", function(newValue) hook.Run("LoadFonts", newValue) end, {
+    desc = L("fontDesc"),
+    category = L("visuals"),
     noNetworking = false,
     schemaOnly = false,
     type = "Generic"
 })
 
-lia.config.add("GenericFont", "Generic Font", "Segoe UI", nil, {
-    desc = "Specifies the secondary font used for UI elements.",
-    category = "Visuals",
+lia.config.add("GenericFont", L("generic_font"), "Segoe UI", nil, {
+    desc = L("generic_font_desc"),
+    category = L("visuals"),
     noNetworking = false,
     schemaOnly = false,
     type = "Generic"
 })
 
-lia.config.add("MaxChatLength", "Max Chat Length", 256, nil, {
-    desc = "Sets the maximum length of chat messages.",
-    category = "Visuals",
+lia.config.add("MaxChatLength", L("max_chat_length"), 256, nil, {
+    desc = L("max_chat_length_desc"),
+    category = L("visuals"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -311,9 +301,9 @@ lia.config.add("MaxChatLength", "Max Chat Length", 256, nil, {
     max = 1024
 })
 
-lia.config.add("SchemaYear", "Schema Year", 2025, nil, {
-    desc = "Year of the gamemode's schema.",
-    category = "Server",
+lia.config.add("SchemaYear", L("schema_year"), 2025, nil, {
+    desc = L("schema_year_desc"),
+    category = L("server"),
     noNetworking = false,
     schemaOnly = false,
     type = "Int",
@@ -321,45 +311,45 @@ lia.config.add("SchemaYear", "Schema Year", 2025, nil, {
     max = 999999
 })
 
-lia.config.add("AmericanDates", "American Dates", true, nil, {
-    desc = "Determines whether to use the American date format.",
-    category = "Server",
+lia.config.add("AmericanDates", L("american_dates"), true, nil, {
+    desc = L("american_dates_desc"),
+    category = L("server"),
     noNetworking = false,
     schemaOnly = false,
     type = "Boolean"
 })
 
-lia.config.add("AmericanTimeStamp", "American Timestamp", true, nil, {
-    desc = "Determines whether to use the American timestamp format.",
-    category = "Server",
+lia.config.add("AmericanTimeStamp", L("american_timestamp"), true, nil, {
+    desc = L("american_timestamp_desc"),
+    category = L("server"),
     noNetworking = false,
     schemaOnly = false,
     type = "Boolean"
 })
 
-lia.config.add("AdminConsoleNetworkLogs", "Admin Console Network Logs", false, nil, {
-    desc = "Specifies if the logging system should replicate to admins' consoles.",
-    category = "Staff",
+lia.config.add("AdminConsoleNetworkLogs", L("admin_console_network_logs"), false, nil, {
+    desc = L("admin_console_network_logs_desc"),
+    category = L("staff"),
     noNetworking = false,
     schemaOnly = false,
     type = "Boolean"
 })
 
-lia.config.add("Color", "Theme Color", {
+lia.config.add("Color", L("theme_color"), {
     r = 37,
     g = 116,
     b = 108
 }, nil, {
-    desc = "Sets the theme color used throughout the gamemode.",
-    category = "Visuals",
+    desc = L("theme_color_desc"),
+    category = L("visuals"),
     noNetworking = false,
     schemaOnly = false,
     type = "Color"
 })
 
-lia.config.add("AutoDownloadWorkshop", "Auto Download Workshop Content", true, nil, {
-    desc = "Determines whether Workshop content is automatically downloaded by the server and clients.",
-    category = "Server",
+lia.config.add("AutoDownloadWorkshop", L("auto_download_workshop"), true, nil, {
+    desc = L("auto_download_workshop_desc"),
+    category = L("server"),
     noNetworking = false,
     schemaOnly = false,
     type = "Boolean"

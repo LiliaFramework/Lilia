@@ -1,5 +1,4 @@
-﻿local DiscordLoggingWebhook = ""
-function MODULE:ReadLogFiles(category)
+﻿function MODULE:ReadLogFiles(category)
     local maxDays = lia.config.get("LogRetentionDays", 7)
     local maxLines = lia.config.get("MaxLogLines", 1000)
     local logs = {}
@@ -40,22 +39,6 @@ end
 function MODULE:OnServerLog(_, logType, logString)
     for _, admin in pairs(lia.util.getAdmins()) do
         if hook.Run("CanPlayerSeeLog", admin, logType) ~= false then lia.log.send(admin, logString) end
-    end
-
-    if DiscordLoggingWebhook and DiscordLoggingWebhook:match("^https://discord.com/api/webhooks/") then
-        HTTP({
-            url = DiscordLoggingWebhook,
-            method = "POST",
-            headers = {
-                ["Content-Type"] = "application/json"
-            },
-            body = util.TableToJSON({
-                content = logString,
-                username = "Lilia Logger"
-            }),
-        })
-    else
-        Msg("[Discord Log] Invalid or missing webhook URL.\n")
     end
 end
 

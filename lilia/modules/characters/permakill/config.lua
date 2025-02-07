@@ -1,5 +1,5 @@
-﻿lia.config.add("PKWorld", "PK World Deaths Count", false, nil, {
-    desc = "When marked for Perma Kill, does world deaths count as perma killing?",
+﻿lia.config.add("PKWorld", L("PKWorldTitle"), false, nil, {
+    desc = L("PKWorldDesc"),
     category = "Character",
     type = "Boolean"
 })

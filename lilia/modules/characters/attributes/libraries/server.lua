@@ -94,55 +94,55 @@ net.Receive("ChangeAttribute", function(_, client)
     end
 
     if not attribKey or not lia.attribs.list[attribKey] then
-        client:notify("Invalid attribute key.")
+        client:notify(L("invalidAttributeKey"))
         return
     end
 
     local attribValue = tonumber(amountStr)
     if not attribValue then
-        client:notify("Invalid amount specified.")
+        client:notify(L("invalidAmount"))
         return
     end
 
     local targetClient = lia.char.getByID(charID)
     if not IsValid(targetClient) then
-        client:notify("Character not found.")
+        client:notify(L("characterNotFound"))
         return
     end
 
     local targetChar = targetClient:getChar()
     if not targetChar then
-        client:notify("Character not found.")
+        client:notify(L("characterNotFound"))
         return
     end
 
     if mode == "Set" then
         if attribValue < 0 then
-            client:notify("Attribute value must be non-negative.")
+            client:notify(L("attribNonNegative"))
             return
         end
 
         targetChar:setAttrib(attribKey, attribValue)
-        client:notifyLocalized("attribSet", targetChar:getPlayer():Name(), lia.attribs.list[attribKey].name, attribValue)
-        targetChar:getPlayer():notify("Your attribute '" .. lia.attribs.list[attribKey].name .. "' has been set to " .. attribValue .. " by " .. client:Nick())
+        client:notifyLocalized("attribSet", targetChar:getPlayer():Name(), L(lia.attribs.list[attribKey].name), attribValue)
+        targetChar:getPlayer():notify(L("yourAttributeSet"):format(L(lia.attribs.list[attribKey].name), attribValue, client:Nick()))
     elseif mode == "Add" then
         if attribValue <= 0 then
-            client:notify("Attribute value to add must be positive.")
+            client:notify(L("attribPositive"))
             return
         end
 
         local current = targetChar:getAttrib(attribKey, 0) or 0
         local newValue = current + attribValue
         if not isnumber(newValue) or newValue < 0 then
-            client:notify("Error: Invalid attribute value calculated.")
+            client:notify(L("attribCalculationError"))
             return
         end
 
         targetChar:updateAttrib(attribKey, newValue)
-        client:notifyLocalized("attribUpdate", targetChar:getPlayer():Name(), lia.attribs.list[attribKey].name, attribValue)
-        targetChar:getPlayer():notify("Your attribute '" .. lia.attribs.list[attribKey].name .. "' has been increased by " .. attribValue .. " by " .. client:Nick())
+        client:notifyLocalized("attribUpdate", targetChar:getPlayer():Name(), L(lia.attribs.list[attribKey].name), attribValue)
+        targetChar:getPlayer():notify(L("yourAttributeIncreased"):format(L(lia.attribs.list[attribKey].name), attribValue, client:Nick()))
     else
-        client:notify("Invalid mode selected.")
+        client:notify(L("invalidMode"))
     end
 end)
 

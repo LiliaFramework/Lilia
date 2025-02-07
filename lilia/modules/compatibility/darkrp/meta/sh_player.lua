@@ -1,7 +1,7 @@
 ﻿local playerMeta = FindMetaTable("Player")
 function playerMeta:getDarkRPVar(var)
+    if var ~= "money" then return end
     local char = self:getChar()
-    if var ~= "money" then self:ChatPrint("Invalid variable requested! Only 'money' can be fetched. Please refer to our Discord for help.") end
     return char:getMoney()
 end
 

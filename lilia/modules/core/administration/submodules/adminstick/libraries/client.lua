@@ -102,7 +102,7 @@ local function HandleExtraFields(commandKey, commandData, target, commandName)
     end
 
     local cancelBtn = vgui.Create("DButton", frame)
-    cancelBtn:SetText(L("Cancel"))
+    cancelBtn:SetText(L("cancel"))
     cancelBtn:SetPos(250, frame:GetTall() - 70)
     cancelBtn:SetSize(150, 50)
     cancelBtn:SetFont("DermaDefaultBold")
@@ -165,7 +165,7 @@ end
 local function OpenReasonUI(target, cmd)
     AdminStickIsOpen = true
     local frame = vgui.Create("DFrame")
-    frame:SetTitle(string.format(L("Reason for %s"), cmd))
+    frame:SetTitle(L("reasonFor", cmd))
     frame:SetSize(300, 150)
     frame:Center()
     function frame:OnClose()
@@ -176,12 +176,12 @@ local function OpenReasonUI(target, cmd)
     local edit = vgui.Create("DTextEntry", frame)
     edit:Dock(FILL)
     edit:SetMultiline(true)
-    edit:SetPlaceholderText(L("Reason"))
+    edit:SetPlaceholderText(L("eason"))
     local timeedit
     if cmd == "banid" then
         local time = vgui.Create("DNumSlider", frame)
         time:Dock(TOP)
-        time:SetText(L("Length (days)"))
+        time:SetText(L("lengthInDays"))
         time:SetMin(0)
         time:SetMax(365)
         time:SetDecimals(0)

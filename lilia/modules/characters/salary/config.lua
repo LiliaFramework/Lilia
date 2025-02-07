@@ -1,13 +1,13 @@
-﻿lia.config.add("SalaryInterval", "Salary Interval", 300, nil, {
-    desc = "Interval in seconds between salary payouts.",
+﻿lia.config.add("SalaryInterval", L("SalaryInterval"), 300, nil, {
+    desc = L("SalaryIntervalDesc"),
     category = "Money",
     type = "Float",
     min = 60,
     max = 3600
 })
 
-lia.config.add("SalaryThreshold", "Salary Threshold", 0, nil, {
-    desc = "Money threshold above which salaries will not be given.",
+lia.config.add("SalaryThreshold", L("SalaryThreshold"), 0, nil, {
+    desc = L("SalaryThresholdDesc"),
     category = "Money",
     type = "Int",
     min = 0,

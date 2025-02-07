@@ -40,13 +40,13 @@ lia.command.add("plygetplaytime", {
     onRun = function(client, arguments)
         local targetName = arguments[1]
         if not targetName then
-            client:notify(L("specifyPlayer"))
+            client:notifyLocalized("specifyPlayer")
             return
         end
 
         local target = lia.command.findPlayer(client, targetName)
         if not IsValid(target) then
-            client:notify(L("playerNotFound"))
+            client:notifyLocalized("playerNotFound")
             return
         end
 
@@ -60,7 +60,7 @@ lia.command.add("plygetplaytime", {
             local seconds = playTimeInSeconds % 60
             client:ChatPrint(L("playtimeFor", target:Nick(), hours, minutes, seconds))
         else
-            client:notify(L("playtimeTargetError"))
+            client:notifyLocalized("playtimeTargetError")
         end
     end
 })

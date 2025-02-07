@@ -152,10 +152,10 @@ lia.command.add("fallover", {
             time = math.Clamp(time, 1, 60)
         end
 
-        client:SetNW2Bool("FallOverCooldown", true)
+        client:setNetVar("FallOverCooldown", true)
         if not client:hasRagdoll() then
             client:setRagdolled(true, time)
-            timer.Simple(10, function() if IsValid(client) then client:SetNW2Bool("FallOverCooldown", false) end end)
+            timer.Simple(10, function() if IsValid(client) then client:setNetVar("FallOverCooldown", false) end end)
         end
     end
 })
@@ -192,7 +192,7 @@ lia.command.add("dropmoney", {
                 admin:ChatPrint(L("exploitDropWarning", client:Nick()))
             end
 
-            client:notifyLocalized("moneyLimit")
+            client:notifyLocalized("noMoreThan3Money")
             return
         end
 
@@ -201,9 +201,9 @@ lia.command.add("dropmoney", {
         moneyEnt.client = client
         moneyEnt.charID = client:getChar():getID()
         moneyEnt.isMoney = true
-        client:SetNW2Bool("DropMoneyCooldown", true)
-        client:SetNW2Float("DropMoneyCooldownEnd", CurTime() + 5)
-        timer.Simple(5, function() if IsValid(client) then client:SetNW2Bool("DropMoneyCooldown", false) end end)
+        client:setNetVar("DropMoneyCooldown", true)
+        client:setNetVar("DropMoneyCooldownEnd", CurTime() + 5)
+        timer.Simple(5, function() if IsValid(client) then client:setNetVar("DropMoneyCooldown", false) end end)
     end
 })
 

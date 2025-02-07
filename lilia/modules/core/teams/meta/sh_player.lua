@@ -17,11 +17,7 @@ function playerMeta:hasWhitelist(faction)
     local data = lia.faction.indices[faction]
     if data then
         if data.isDefault then return true end
-        if not data.uniqueID then
-            print("[ERROR] UniqueID is missing for faction '" .. tostring(faction) .. "'. Please contact a developer.")
-            return false
-        end
-
+        if not data.uniqueID then return false end
         local liaData = self:getLiliaData("whitelists", {})
         return liaData[SCHEMA.folder] and liaData[SCHEMA.folder][data.uniqueID] or false
     end

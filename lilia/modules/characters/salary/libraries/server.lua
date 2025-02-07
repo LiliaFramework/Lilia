@@ -17,7 +17,7 @@
             end
 
             if SalaryLimit > 0 and SalaryLimit > character:getMoney() + PayAmount then
-                client:notify("You reached the limit of your salary! You can't get more money!")
+                client:notifyLocalized("SalaryLimitReached")
                 character:setMoney(SalaryLimit)
                 return
             end

@@ -63,11 +63,12 @@ function MODULE:PlayerDeath(client, _, attacker)
         end
     end
 
-    client:SetNW2Bool("IsDeadRestricted", true)
-    timer.Simple(lia.config.get("SpawnTime"), function() client:SetNW2Bool("IsDeadRestricted", false) end)
+    client:setNetVar("IsDeadRestricted", true)
+    client:setNetVar("lastDeathTime", os.time())
+    timer.Simple(lia.config.get("SpawnTime"), function() if IsValid(client) then client:SetNW2Bool("IsDeadRestricted", false) end end)
     client:SetDSP(30, false)
     character:setData("pos", nil)
-    if not attacker:IsPlayer() and lia.config.get("LoseItemsonDeathNPC", false) or lia.config.get("LoseItemsonDeathWorld", false) and attacker:IsWorld() then self:RemovedDropOnDeathItems(client) end
+    if (not attacker:IsPlayer() and lia.config.get("LoseItemsonDeathNPC", false)) or (lia.config.get("LoseItemsonDeathWorld", false) and attacker:IsWorld()) then self:RemovedDropOnDeathItems(client) end
     character:setData("deathPos", client:GetPos())
 end
 
@@ -91,10 +92,7 @@ function MODULE:RemovedDropOnDeathItems(client)
     end
 
     local lostCount = #client.LostItems
-    if lostCount > 0 then
-        local itemLabel = lostCount > 1 and "items" or "an item"
-        client:notify("Because you died, you have lost " .. lostCount .. " " .. itemLabel .. ".")
-    end
+    if lostCount > 0 then client:notifyLocalized("itemsLostOnDeath", lostCount) end
 end
 
 function MODULE:PlayerSpawn(client)

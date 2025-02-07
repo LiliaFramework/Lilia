@@ -303,7 +303,7 @@ function PANEL:addPlayer(client, parent)
             self.model:SetModel(model, skin)
             local lp = LocalPlayer()
             if lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and lp:isStaffOnDuty()) then
-                self.model:SetTooltip(L("sbOptions", client:Name()))
+                self.model:SetTooltip(L("sbOptions", client:steamName()))
             else
                 self.model:SetTooltip()
             end

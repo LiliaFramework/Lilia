@@ -8,7 +8,7 @@
                 net.Start("AdminModeSwapCharacter")
                 net.WriteInt(oldCharID, 32)
                 net.Send(client)
-                client:SetNW2Int("OldCharID", nil)
+                client:setNetVar("OldCharID", nil)
                 lia.log.add(client, "adminMode", oldCharID, "Switched back to their IC character")
             else
                 client:ChatPrint("No previous character to swap to.")
@@ -19,7 +19,7 @@
                     local id = tonumber(row._id)
                     local faction = row._faction
                     if faction == "staff" then
-                        client:SetNW2Int("OldCharID", client:getChar():getID())
+                        client:setNetVar("OldCharID", client:getChar():getID())
                         net.Start("AdminModeSwapCharacter")
                         net.WriteInt(id, 32)
                         net.Send(client)
