@@ -524,3 +524,48 @@ end
 function GM:ForceDermaSkin()
     return "lilia"
 end
+
+function GM:HUDShouldDraw(element)
+    local HiddenHUDElements = {
+        CHUDAutoAim = true,
+        CHudHealth = true,
+        CHudCrosshair = true,
+        CHudBattery = true,
+        CHudAmmo = true,
+        CHudSecondaryAmmo = true,
+        CHudHistoryResource = true,
+        CHudChat = true,
+        CHudDamageIndicator = true,
+        CHudVoiceStatus = true,
+    }
+    return not HiddenHUDElements[element]
+end
+
+function GM:PlayerStartVoice(client)
+    if not IsValid(g_VoicePanelList) then return end
+    if lia and lia.config and not lia.config.get("IsVoiceEnabled", true) then return end
+    if client:GetNWBool("IsDeadRestricted", false) then return false end
+    hook.Run("PlayerEndVoice", client)
+    if IsValid(VoicePanels[client]) then
+        if VoicePanels[client].fadeAnim then
+            VoicePanels[client].fadeAnim:Stop()
+            VoicePanels[client].fadeAnim = nil
+        end
+
+        VoicePanels[client]:SetAlpha(255)
+        return
+    end
+
+    if not IsValid(client) then return end
+    local pnl = g_VoicePanelList:Add("VoicePanel")
+    pnl:Setup(client)
+    VoicePanels[client] = pnl
+end
+
+function GM:PlayerEndVoice(client)
+    if IsValid(VoicePanels[client]) then
+        if VoicePanels[client].fadeAnim then return end
+        VoicePanels[client].fadeAnim = Derma_Anim("FadeOut", VoicePanels[client], VoicePanels[client].FadeOut)
+        VoicePanels[client].fadeAnim:Start(2)
+    end
+end
