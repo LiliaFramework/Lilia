@@ -3,46 +3,38 @@ function GM:InitializedModules()
     local bootstrapEndTime = SysTime()
     local timeTaken = bootstrapEndTime - BootingTime
     LiliaBootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
-    for _, data in pairs(lia.char.vars) do
-        if data.fieldType then
-            local fieldDefinition
-            if data.fieldType == "string" then
-                fieldDefinition = data.field .. " VARCHAR(" .. (data.length or "255") .. ")"
-            elseif data.fieldType == "integer" then
-                fieldDefinition = data.field .. " INT"
-            elseif data.fieldType == "float" then
-                fieldDefinition = data.field .. " FLOAT"
-            elseif data.fieldType == "boolean" then
-                fieldDefinition = data.field .. " TINYINT(1)"
-            elseif data.fieldType == "datetime" then
-                fieldDefinition = data.field .. " DATETIME"
-            elseif data.fieldType == "text" then
-                fieldDefinition = data.field .. " TEXT"
-            end
+    local typeMap = {
+        string = function(data) return data.field .. " VARCHAR(" .. (data.length or 255) .. ")" end,
+        integer = function(data) return data.field .. " INT" end,
+        float = function(data) return data.field .. " FLOAT" end,
+        boolean = function(data) return data.field .. " TINYINT(1)" end,
+        datetime = function(data) return data.field .. " DATETIME" end,
+        text = function(data) return data.field .. " TEXT" end
+    }
 
-            if fieldDefinition then
-                if data.default ~= nil then fieldDefinition = fieldDefinition .. " DEFAULT '" .. tostring(data.default) .. "'" end
-                lia.db.query("SELECT " .. data.field .. " FROM lia_characters", function(result)
-                    if not result then
-                        local success, _ = lia.db.query("ALTER TABLE lia_characters ADD COLUMN " .. fieldDefinition)
-                        if success then
-                            LiliaInformation("Adding column " .. data.field .. " to the database!")
-                        else
-                            LiliaInformation("Failed to add column " .. data.field .. " due to a query error.")
-                        end
-                    end
-                end)
-            end
+    for _, data in pairs(lia.char.vars) do
+        if data.fieldType and typeMap[data.fieldType] then
+            local fieldDefinition = typeMap[data.fieldType](data)
+            if data.default ~= nil then fieldDefinition = fieldDefinition .. " DEFAULT '" .. tostring(data.default) .. "'" end
+            lia.db.query("SELECT " .. data.field .. " FROM lia_characters", function(result)
+                if not result then
+                    local success = lia.db.query("ALTER TABLE lia_characters ADD COLUMN " .. fieldDefinition)
+                    LiliaInformation(success and "Adding column " .. data.field .. " to the database!" or "Failed to add column " .. data.field .. " due to a query error.")
+                end
+            end)
         end
     end
 
-    if lia.config.get("AutoDownloadWorkshop", false) then
-        local addons = engine.GetAddons()
-        for _, addon in ipairs(addons) do
-            if addon.wsid and addon.mounted then
+    local addons = engine.GetAddons()
+    local autoDownload = lia.config.get("AutoDownloadWorkshop", false)
+    for _, addon in ipairs(addons) do
+        if addon.wsid and addon.mounted then
+            if autoDownload then
                 resource.AddWorkshop(addon.wsid)
                 print("[Workshop] Added Workshop addon: " .. addon.title .. " (WSID: " .. addon.wsid .. ")")
             end
+
+            if addon.wsid == "1907060869" then print("WARNING: 'Srlion's Hook Library' (WSID: 1907060869) is known to cause issues and is not necessary for addons like SAM.") end
         end
     end
 end
@@ -496,7 +488,7 @@ function GM:PlayerShouldTakeDamage(client)
 end
 
 function GM:CanDrive(client)
-    if not client:IsSuperAdmin() then return false end
+    return false
 end
 
 function GM:PlayerDeathThink(client)
