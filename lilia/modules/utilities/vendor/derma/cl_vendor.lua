@@ -114,26 +114,33 @@ function PANEL:Init()
         end
     end
 
-    self.leaveButton = vgui.Create("DButton", self.right)
-    self.leaveButton:SetSize(w * 0.15, h * 0.05)
-    self.leaveButton:SetPos(self.right:GetWide() - w * 0.17, self.right:GetTall() - h * 0.07)
-    self.leaveButton:SetText(L("leave"))
-    self.leaveButton:SetFont("liaMediumFont")
-    self.leaveButton:SetTextColor(Color(255, 255, 255, 210))
-    self.leaveButton.DoClick = function() lia.gui.vendor:Remove() end
-    self.leaveButton.Paint = function(_, w, h) self:PaintButton(self.leaveButton, w, h) end
+    local btnWidth = w * 0.15
+    local btnHeight = h * 0.05
+    local btnGap = 5
     if client:CanEditVendor() then
-        self.editor = self.right:Add("DButton")
-        self.editor:SetSize(self.leaveButton:GetSize())
-        self.editor:SetPos(self.leaveButton:GetPos())
+        local buttonY = self.right:GetY() + self.right:GetTall() - btnHeight - (w * 0.02)
+        self.editor = self:Add("DButton")
+        self.editor:SetSize(btnWidth, btnHeight)
+        self.editor:SetPos(self.left:GetWide() - btnWidth - (w * 0.02), buttonY)
         self.editor:SetText(L("vendorEditorButton"))
         self.editor:SetFont("liaMediumFont")
         self.editor:SetTextColor(Color(255, 255, 255, 210))
         self.editor.DoClick = function() vgui.Create("VendorEditor"):SetZPos(99) end
-        self.editor.Paint = function(btn, w, h) self:PaintButton(btn, w, h) end
+        self.editor.Paint = function(btn, width, height) self:PaintButton(btn, width, height) end
+    end
+
+    self.leaveButton = self.right:Add("DButton")
+    self.leaveButton:SetSize(btnWidth, btnHeight)
+    self.leaveButton:SetPos(self.right:GetWide() - btnWidth - (w * 0.02), self.right:GetTall() - btnHeight - (w * 0.02))
+    self.leaveButton:SetText(L("leave"))
+    self.leaveButton:SetFont("liaMediumFont")
+    self.leaveButton:SetTextColor(Color(255, 255, 255, 210))
+    self.leaveButton.DoClick = function() lia.gui.vendor:Remove() end
+    self.leaveButton.Paint = function(btn, width, height) self:PaintButton(btn, width, height) end
+    if self.categoryList:GetCanvas():ChildCount() > 0 then
         self.categoryToggle = self.right:Add("DButton")
-        self.categoryToggle:SetSize(self.leaveButton:GetSize())
-        self.categoryToggle:SetPos(self.leaveButton.x, self.leaveButton.y - self.leaveButton:GetTall() - 5)
+        self.categoryToggle:SetSize(btnWidth, btnHeight)
+        self.categoryToggle:SetPos(self.leaveButton.x, self.leaveButton.y - btnHeight - btnGap)
         self.categoryToggle:SetText(L("vendorHideCategories"))
         self.categoryToggle:SetFont("liaMediumFont")
         self.categoryToggle:SetTextColor(Color(255, 255, 255, 210))
@@ -147,25 +154,7 @@ function PANEL:Init()
             end
         end
 
-        self.categoryToggle.Paint = function(btn, w, h) self:PaintButton(btn, w, h) end
-    else
-        self.categoryToggle = self.right:Add("DButton")
-        self.categoryToggle:SetSize(self.leaveButton:GetSize())
-        self.categoryToggle:SetPos(self.leaveButton:GetPos())
-        self.categoryToggle:SetText(L("vendorHideCategories"))
-        self.categoryToggle:SetFont("liaMediumFont")
-        self.categoryToggle:SetTextColor(Color(255, 255, 255, 210))
-        self.categoryToggle.DoClick = function(button)
-            if self.categoryList:IsVisible() then
-                self.categoryList:SetVisible(false)
-                button:SetText(L("vendorShowCategories"))
-            else
-                self.categoryList:SetVisible(true)
-                button:SetText(L("vendorHideCategories"))
-            end
-        end
-
-        self.categoryToggle.Paint = function(btn, w, h) self:PaintButton(btn, w, h) end
+        self.categoryToggle.Paint = function(btn, width, height) self:PaintButton(btn, width, height) end
     end
 
     self:DrawPortraits()
@@ -259,8 +248,8 @@ function PANEL:initializeItems()
 
         local mode = liaVendorEnt:getTradeMode(itemType)
         if not mode then continue end
-        if mode ~= VENDOR_SELLONLY then self:updateItem(itemType, self.vendor) end
-        if mode ~= VENDOR_BUYONLY then
+        if mode ~= VENDOR_BUYONLY then self:updateItem(itemType, self.vendor) end
+        if mode ~= VENDOR_SELLONLY then
             local panel = self:updateItem(itemType, self.me)
             if panel then panel:setIsSelling(true) end
         end
@@ -418,8 +407,8 @@ function PANEL:filterItemsByCategory()
         local item = lia.item.list[itemType]
         if item and (self.currentCategory == nil or item.category == self.currentCategory) then
             local mode = liaVendorEnt:getTradeMode(itemType)
-            if mode ~= VENDOR_SELLONLY then self:updateItem(itemType, self.vendor) end
-            if mode ~= VENDOR_BUYONLY then
+            if mode ~= VENDOR_BUYONLY then self:updateItem(itemType, self.vendor) end
+            if mode ~= VENDOR_SELLONLY then
                 local panel = self:updateItem(itemType, self.me)
                 if panel then panel:setIsSelling(true) end
             end
