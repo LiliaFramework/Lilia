@@ -110,7 +110,7 @@ function MODULE:PrePlayerDraw(drawnClient)
     local MaxViewDistance = lia.config.get("MaxViewDistance", 5000)
     local drawnClientPos = drawnClient:GetShootPos()
     local distance = clientPos:Distance(drawnClientPos)
-    local isStaff = client:Team() == FACTION_STAFF
+    local isStaff = client:isStaffOnDuty()
     if isStaff then
         if drawnClient.IsHidden then
             drawnClient:DrawShadow(true)

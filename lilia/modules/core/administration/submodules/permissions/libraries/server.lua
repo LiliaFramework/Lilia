@@ -25,19 +25,19 @@ function GM:PlayerSpawnSWEP(client)
 end
 
 function GM:PlayerSpawnVehicle(client)
-    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Cars") or client:getChar():hasFlags("C")
+    return client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Cars") or client:getChar():hasFlags("C")
 end
 
 function GM:PlayerGiveSWEP(client)
-    return client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn SWEPs") or client:getChar():hasFlags("W")
+    return client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn SWEPs") or client:getChar():hasFlags("W")
 end
 
 function GM:PlayerNoClip(client)
-    return not client:isStaffOnDuty() and client:hasPrivilege("Staff Permissions - No Clip Outside Staff Character") or client:IsSuperAdmin() or client:isStaffOnDuty()
+    return not client:isStaffOnDuty() and client:hasPrivilege("Staff Permissions - No Clip Outside Staff Character") or client:isStaffOnDuty()
 end
 
 function GM:OnPhysgunReload(_, client)
-    return client:IsSuperAdmin() or client:hasPrivilege("Staff Permissions - Can Physgun Reload")
+    return client:hasPrivilege("Staff Permissions - Can Physgun Reload")
 end
 
 function GM:CanTool(client, _, tool)
@@ -136,16 +136,20 @@ concommand.Add("stopsoundall", function(client)
     end
 end)
 
-concommand.Add("lia_recreatedb", function(client)
-    if not IsValid(client) then
+local function handleDatabaseWipe(commandName)
+    concommand.Add(commandName, function(client)
+        if IsValid(client) then return end
         if resetCalled < RealTime() then
             resetCalled = RealTime() + 3
-            MsgC(Color(255, 0, 0), "[Lilia] TO CONFIRM DATABASE RESET, RUN 'lia_recreatedb' AGAIN in 3 SECONDS.\n")
+            MsgC(Color(255, 0, 0), "[Lilia] TO CONFIRM DATABASE RESET, RUN '" .. commandName .. "' AGAIN in 3 SECONDS.\n")
         else
             resetCalled = 0
             MsgC(Color(255, 0, 0), "[Lilia] DATABASE WIPE IN PROGRESS.\n")
             hook.Run("OnWipeTables")
             lia.db.wipeTables(lia.db.loadTables)
         end
-    end
-end)
+    end)
+end
+
+handleDatabaseWipe("lia_recreatedb")
+handleDatabaseWipe("lia_wipedb")

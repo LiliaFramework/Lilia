@@ -29,7 +29,7 @@ hook.Add("SAM.CanRunCommand", "Check4Staff", function(client, _, _, cmd)
             return false
         end
 
-        if CAMI.PlayerHasAccess(client, "Staff Permissions - Can Bypass Staff Faction SAM Command whitelist", nil) or client:Team() == FACTION_STAFF then
+        if CAMI.PlayerHasAccess(client, "Staff Permissions - Can Bypass Staff Faction SAM Command whitelist", nil) or client:isStaffOnDuty() then
             return true
         else
             client:notifyLocalized("staffRestrictedCommand")

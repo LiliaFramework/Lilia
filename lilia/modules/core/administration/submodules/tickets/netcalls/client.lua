@@ -16,7 +16,7 @@ net.Receive("TicketSystem", function()
     local pl = net.ReadEntity()
     local msg = net.ReadString()
     local claimed = net.ReadEntity()
-    if LocalPlayer():Team() == FACTION_STAFF or LocalPlayer():IsSuperAdmin() then MODULE:TicketFrame(pl, msg, claimed) end
+    if LocalPlayer():isStaffOnDuty() or LocalPlayer():IsSuperAdmin() then MODULE:TicketFrame(pl, msg, claimed) end
 end)
 
 net.Receive("TicketSystemClaim", function()

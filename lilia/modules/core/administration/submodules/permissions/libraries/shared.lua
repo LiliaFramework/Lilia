@@ -40,7 +40,7 @@ end
 concommand.Add("list_entities", function(client)
     local entityCount = {}
     local totalEntities = 0
-    if not IsValid(client) or client:IsSuperAdmin() then
+    if not IsValid(client) then
         LiliaInformation("Entities on the server:")
         for _, entity in ents.Iterator() do
             local className = entity:GetClass() or "Unknown"
@@ -53,8 +53,6 @@ concommand.Add("list_entities", function(client)
         end
 
         LiliaInformation("Total entities on the server: " .. totalEntities)
-    else
-        LiliaInformation("Nuh-uh!")
     end
 end)
 

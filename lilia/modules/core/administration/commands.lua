@@ -2,7 +2,7 @@
     onRun = function(client)
         if not IsValid(client) then return end
         local steamID = client:SteamID64()
-        if client:Team() == FACTION_STAFF then
+        if client:isStaffOnDuty() then
             local oldCharID = client:GetNW2Int("OldCharID", 0)
             if oldCharID > 0 then
                 net.Start("AdminModeSwapCharacter")

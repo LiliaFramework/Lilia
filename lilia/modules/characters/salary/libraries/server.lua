@@ -39,7 +39,7 @@ function MODULE:OnReloaded()
 end
 
 function MODULE:CanPlayerEarnSalary(client)
-    if client:Team() == FACTION_STAFF or client.HasWarning then return false end
+    if client:isStaffOnDuty() or client.HasWarning then return false end
     return true
 end
 
