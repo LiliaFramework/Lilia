@@ -642,7 +642,7 @@ lia.command.add("listbodygroups", {
             end
 
             if #bodygroups > 0 then
-                local title = string.format(L("uiBodygroupsFor"), target:Nick())
+                local title = L("uiBodygroupsFor")
                 lia.util.CreateTableUI(client, title, {
                     {
                         name = L("groupID"),
@@ -799,7 +799,7 @@ lia.command.add("charsetdesc", {
         local desc = table.concat(arguments, " ", 2)
         if not desc:find("%S") then return client:requestString("Change " .. target:Name() .. "'s Description", L("enterNewDesc"), function(text) lia.command.run(client, "charsetdesc", {arguments[1], text}) end, target:getChar():getDesc()) end
         target:getChar():setDesc(desc)
-        return L("descChangedTarget", client, target:Name())
+        return L("descChangedTarget", client:Name(), target:Name())
     end
 })
 

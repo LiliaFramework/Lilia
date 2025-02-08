@@ -55,7 +55,7 @@ function PANEL:Init()
     self.content:Center()
     self.content.Paint = function(panel, w, h) PaintBackground(panel, w, h) end
     self.title = self.content:Add("DLabel")
-    self.title:SetText(L("ARE YOU SURE?"))
+    self.title:SetText(L("areYouSure"))
     self.title:SetFont("liaCharButtonFont")
     self.title:SetTextColor(color_white)
     self.title:SizeToContents()

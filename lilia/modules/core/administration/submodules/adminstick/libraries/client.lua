@@ -19,6 +19,7 @@ local function GetOrCreateSubMenu(parentMenu, name, submenusTable)
 end
 
 local function GetIdentifier(target)
+    if not IsValid(target) then return "" end
     if target:IsBot() then
         return target:Name()
     elseif target:IsPlayer() then
@@ -494,7 +495,7 @@ function MODULE:OpenAdminStickUI(target)
                     name = "CharID: " .. (target:getChar() and target:getChar():getID() or "N/A") .. " (copy)",
                     cmd = function()
                         if target:getChar() then
-                            local msg = string.format(L("Copied CharID: %s to Clipboard!"), target:getChar():getID())
+                            local msg = L("copiedCharID", target:getChar():getID())
                             LocalPlayer():ChatPrint(msg)
                             SetClipboardText(target:getChar():getID())
                         end
@@ -506,7 +507,7 @@ function MODULE:OpenAdminStickUI(target)
                 {
                     name = "Name: " .. target:Name() .. " (copy)",
                     cmd = function()
-                        local msg = string.format(L("Copied %s to Clipboard!"), target:Name())
+                        local msg = L("copiedToClipboard", target:Name(), "Name")
                         LocalPlayer():ChatPrint(msg)
                         SetClipboardText(target:Name())
                         AdminStickIsOpen = false
@@ -516,7 +517,7 @@ function MODULE:OpenAdminStickUI(target)
                 {
                     name = "SteamID: " .. target:SteamID() .. " (copy)",
                     cmd = function()
-                        local msg = string.format(L("Copied %s to Clipboard!"), target:SteamID())
+                        local msg = L("copiedToClipboard", target:Name(), "SteamID")
                         LocalPlayer():ChatPrint(msg)
                         SetClipboardText(target:SteamID())
                         AdminStickIsOpen = false
@@ -526,7 +527,7 @@ function MODULE:OpenAdminStickUI(target)
                 {
                     name = "SteamID64: " .. target:SteamID64() .. " (copy)",
                     cmd = function()
-                        local msg = string.format(L("Copied %s to Clipboard!"), target:SteamID64())
+                        local msg = L("copiedToClipboard", target:Name(), "SteamID64")
                         LocalPlayer():ChatPrint(msg)
                         SetClipboardText(target:SteamID64())
                         AdminStickIsOpen = false
