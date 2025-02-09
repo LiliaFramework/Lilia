@@ -44,7 +44,7 @@ function PANEL:Think()
     if self.fadeAnim then self.fadeAnim:Run() end
 end
 
-function PANEL:FadeOut(anim, delta, data)
+function PANEL:FadeOut(anim, delta)
     if anim.Finished then
         if IsValid(VoicePanels[self.client]) then
             VoicePanels[self.client]:Remove()

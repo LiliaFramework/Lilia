@@ -487,11 +487,11 @@ function GM:PlayerShouldTakeDamage(client)
     return client:getChar() ~= nil
 end
 
-function GM:CanDrive(client)
+function GM:CanDrive()
     return false
 end
 
-function GM:PlayerDeathThink(client)
+function GM:PlayerDeathThink()
     return false
 end
 
