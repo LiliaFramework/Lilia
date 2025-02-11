@@ -1,0 +1,136 @@
+local function textWrap(text, font, maxWidth)
+    local totalWidth = 0
+    surface.SetFont(font)
+    local spaceWidth = surface.GetTextSize(' ')
+    text = text:gsub("(%s?[%S]+)", function(word)
+        local char = string.sub(word, 1, 1)
+        if char == "\n" or char == "\t" then totalWidth = 0 end
+        local wordlen = surface.GetTextSize(word)
+        totalWidth = totalWidth + wordlen
+        if wordlen >= maxWidth then
+            local splitWord, splitPoint = charWrap(word, maxWidth - (totalWidth - wordlen), maxWidth)
+            totalWidth = splitPoint
+            return splitWord
+        elseif totalWidth < maxWidth then
+            return word
+        end
+
+        if char == ' ' then
+            totalWidth = wordlen - spaceWidth
+            return '\n' .. string.sub(word, 2)
+        end
+
+        totalWidth = wordlen
+        return '\n' .. word
+    end)
+    return text
+end
+
+spawnmenu.AddContentType("inventoryitem", function(container, data)
+    local icon = vgui.Create("ContentIcon", container)
+    icon:SetContentType("inventoryitem")
+    icon:SetSpawnName(data.id)
+    icon:SetName(data.name)
+    local itemData = lia.item.list[data.id]
+    local matName = string.Replace(itemData.model, ".mdl", "")
+    icon.Image:SetMaterial(Material("spawnicons/" .. matName .. ".png"))
+    icon:SetColor(Color(205, 92, 92, 255))
+    local desc = textWrap(itemData.desc, "DermaDefault", 560)
+    icon:SetTooltip(desc)
+    icon.DoClick = function()
+        net.Start("lia_spawnItem")
+        net.WriteString(data.id)
+        net.SendToServer()
+        surface.PlaySound("outlands-rp/ui/ui_return.wav")
+    end
+
+    icon.OpenMenu = function()
+        local menu = DermaMenu()
+        menu:AddOption("#spawnmenu.menu.copy", function() SetClipboardText(icon:GetSpawnName()) end):SetIcon("icon16/page_copy.png")
+        menu:AddOption("Give to character...", function()
+            local popup = vgui.Create("DFrame")
+            popup:SetTitle("Spawn " .. data.id)
+            popup:SetSize(300, 100)
+            popup:Center()
+            popup:MakePopup()
+            popup:MoveToFront()
+            local lbl = vgui.Create("DLabel", popup)
+            lbl:Dock(TOP)
+            lbl:SetText("Give to:")
+            local dropdown = vgui.Create("DComboBox", popup)
+            dropdown:Dock(TOP)
+            for _, v in pairs(lia.char.loaded) do
+                local chosen = v == LocalPlayer():getChar()
+                dropdown:AddChoice(v:getPlayer():GetName() .. "  [" .. v:getPlayer():steamName() .. "]", v:getPlayer():GetName(), chosen)
+            end
+
+            local give = vgui.Create("DButton", popup)
+            give:Dock(BOTTOM)
+            give:SetText("Spawn item")
+            function give:DoClick()
+                local _, target = dropdown:GetSelected()
+                net.Start("lia_spawnItem")
+                net.WriteString(data.id)
+                net.WriteString(target or "")
+                net.SendToServer()
+            end
+        end)
+
+        menu:Open()
+    end
+
+    if IsValid(container) then container:Add(icon) end
+    return icon
+end)
+
+function MODULE:PopulateInventoryItems(pnlContent, tree, node)
+    local allItems = lia.item.list
+    local categorized = {
+        Unsorted = {}
+    }
+
+    for uniqueID, itemData in pairs(allItems) do
+        print(itemData.name)
+        if itemData.category then
+            categorized[itemData.category] = categorized[itemData.category] or {}
+            table.insert(categorized[itemData.category], {
+                id = uniqueID,
+                name = itemData.name
+            })
+        else
+            table.insert(categorized.Unsorted, {
+                id = uniqueID,
+                name = itemData.name
+            })
+        end
+    end
+
+    for category, itemList in SortedPairs(categorized) do
+        if category ~= "Unsorted" or (#itemList > 0) then
+            local node = tree:AddNode(category, "icon16/picture.png")
+            node.DoPopulate = function(self)
+                if self.PropPanel then return end
+                self.PropPanel = vgui.Create("ContentContainer", pnlContent)
+                self.PropPanel:SetVisible(false)
+                self.PropPanel:SetTriggerSpawnlistChange(false)
+                for k, itemListData in SortedPairsByMemberValue(itemList, "name") do
+                    spawnmenu.CreateContentIcon("inventoryitem", self.PropPanel, {
+                        name = itemListData.name,
+                        id = itemListData.id
+                    })
+                end
+            end
+
+            node.DoClick = function(self)
+                self:DoPopulate()
+                pnlContent:SwitchPanel(self.PropPanel)
+            end
+        end
+    end
+end
+
+spawnmenu.AddCreationTab("Inventory Items", function(panel)
+    local ctrl = vgui.Create("SpawnmenuContentPanel")
+    ctrl:CallPopulateHook("PopulateInventoryItems")
+    return ctrl
+end, "icon16/briefcase.png")
