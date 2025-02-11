@@ -137,7 +137,7 @@ spawnmenu.AddCreationTab("Inventory Items", function()
     if not LocalPlayer():hasPrivilege("Staff Permissions - Can Use Item Spawner") then
         local pnl = vgui.Create("DPanel")
         pnl:Dock(FILL)
-        pnl.Paint = function(self, w, h) draw.SimpleText("You dont have permission to use this.", "DermaDefault", w / 2, h / 2, Color(255, 0, 0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+        pnl.Paint = function(_, w, h) draw.SimpleText("You dont have permission to use this.", "DermaDefault", w / 2, h / 2, Color(255, 0, 0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
         return pnl
     else
         local ctrl = vgui.Create("SpawnmenuContentPanel")
