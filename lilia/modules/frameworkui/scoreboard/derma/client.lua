@@ -63,13 +63,13 @@ function PANEL:Init()
         list:Dock(TOP)
         list:SetTall(ScrH() * 0.08)
         list.Think = function(this)
-            for _, ply in ipairs(lia.faction.getPlayers(k)) do
-                if hook.Run("ShouldShowPlayerOnScoreboard", ply) == false then continue end
-                if not IsValid(ply.liaScoreSlot) or ply.liaScoreSlot:GetParent() ~= this then
-                    if IsValid(ply.liaScoreSlot) then
-                        ply.liaScoreSlot:SetParent(this)
+            for _, client in ipairs(lia.faction.getPlayers(k)) do
+                if hook.Run("ShouldShowPlayerOnScoreboard", client) == false then continue end
+                if not IsValid(client.liaScoreSlot) or client.liaScoreSlot:GetParent() ~= this then
+                    if IsValid(client.liaScoreSlot) then
+                        client.liaScoreSlot:SetParent(this)
                     else
-                        self:addPlayer(ply, this)
+                        self:addPlayer(client, this)
                     end
                 end
             end
