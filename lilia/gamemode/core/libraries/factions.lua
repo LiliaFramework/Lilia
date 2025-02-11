@@ -112,47 +112,84 @@ function lia.faction.jobGenerate(index, name, color, default, models)
     return FACTION
 end
 
+local function formatModelDataEntry(name, faction, modelIndex, modelData, category)
+    local newGroups
+    if istable(modelData) and modelData[3] then
+        local groups = {}
+        if istable(modelData[3]) then
+            local dummy
+            if SERVER then
+                dummy = ents.Create("prop_physics")
+                dummy:SetModel(modelData[1])
+            else
+                dummy = ClientsideModel(modelData[1])
+            end
+
+            local groupData = dummy:GetBodyGroups()
+            for _, group in ipairs(groupData) do
+                if group.id > 0 then
+                    if modelData[3][group.id] then
+                        groups[group.id] = modelData[3][group.id]
+                    elseif modelData[3][group.name] then
+                        groups[group.id] = modelData[3][group.name]
+                    end
+                end
+            end
+
+            dummy:Remove()
+            newGroups = groups
+        elseif isstring(modelData[3]) then
+            newGroups = string.Explode("", modelData[3])
+        end
+    end
+
+    if newGroups then
+        if category then
+            lia.faction.teams[name].models[category][modelIndex][3] = newGroups
+            lia.faction.indices[faction.index].models[category][modelIndex][3] = newGroups
+        else
+            lia.faction.teams[name].models[modelIndex][3] = newGroups
+            lia.faction.indices[faction.index].models[modelIndex][3] = newGroups
+        end
+    end
+end
+
 function lia.faction.formatModelData()
     for name, faction in pairs(lia.faction.teams) do
         if faction.models then
             for modelIndex, modelData in pairs(faction.models) do
-                local newGroups
-                if istable(modelData) and modelData[3] then
-                    local groups = {}
-                    if istable(modelData[3]) then
-                        local dummy
-                        if SERVER then
-                            dummy = ents.Create("prop_physics")
-                            dummy:SetModel(modelData[1])
-                        else
-                            dummy = ClientsideModel(modelData[1])
-                        end
-
-                        local groupData = dummy:GetBodyGroups()
-                        for _, group in ipairs(groupData) do
-                            if group.id > 0 then
-                                if modelData[3][group.id] then
-                                    groups[group.id] = modelData[3][group.id]
-                                elseif modelData[3][group.name] then
-                                    groups[group.id] = modelData[3][group.name]
-                                end
-                            end
-                        end
-
-                        dummy:Remove()
-                        newGroups = groups
-                    elseif isstring(modelData[3]) then
-                        newGroups = string.Explode("", modelData[3])
+                if isstring(modelIndex) then
+                    for subIndex, subData in pairs(modelData) do
+                        formatModelDataEntry(name, faction, subIndex, subData, modelIndex)
                     end
-                end
-
-                if newGroups then
-                    lia.faction.teams[name].models[modelIndex][3] = newGroups
-                    lia.faction.indices[faction.index].models[modelIndex][3] = newGroups
+                else
+                    formatModelDataEntry(name, faction, modelIndex, modelData)
                 end
             end
         end
     end
+end
+
+function lia.faction.getCategories(teamName)
+    local categories = {}
+    local faction = lia.faction.teams[teamName]
+    if faction and faction.models then
+        for key, _ in pairs(faction.models) do
+            if isstring(key) then table.insert(categories, key) end
+        end
+    end
+    return categories
+end
+
+function lia.faction.getModelsFromCategory(teamName, category)
+    local models = {}
+    local faction = lia.faction.teams[teamName]
+    if faction and faction.models and faction.models[category] then
+        for index, model in pairs(faction.models[category]) do
+            models[index] = model
+        end
+    end
+    return models
 end
 
 function lia.faction.getDefaultClass(id)
