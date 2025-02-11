@@ -85,26 +85,26 @@ function PANEL:Init()
         local icon_material = fac.logo
         local iconWidth = ScrH() * 0.08
         local icon
-        if icon_material and icon_material ~= "" then
-            icon = factionContainer:Add("DImage")
-            icon:Dock(RIGHT)
-            icon:SetWide(iconWidth)
-            icon:SetMaterial(Material(icon_material))
-        end
-
         local factionName = factionContainer:Add("DLabel")
         factionName:Dock(FILL)
         factionName:SetFont("liaBigFont")
         factionName:SetTextColor(color_white)
         factionName:SetExpensiveShadow(1, color_black)
         factionName:SetText(L(fac.name))
+        factionName:DockMargin(0, 0, (icon_material and icon_material ~= "" and iconWidth) or 0, 0)
         factionName:SetContentAlignment(5)
-        factionName:DockMargin((icon_material and icon_material ~= "" and string.len(L(fac.name)) * 5) or 0, 0, 0, 0)
         header.Paint = function(_, w, h)
             surface.SetDrawColor(r, g, b, 30)
             surface.DrawRect(0, 0, w, h)
             surface.SetDrawColor(r, g, b, 140)
             surface.DrawOutlinedRect(0, 0, w, h)
+        end
+
+        if icon_material and icon_material ~= "" then
+            icon = factionContainer:Add("DImage")
+            icon:Dock(LEFT)
+            icon:SetWide(iconWidth)
+            icon:SetMaterial(Material(icon_material))
         end
 
         self.teams[k] = list
@@ -153,13 +153,14 @@ function PANEL:Think()
             if IsValid(slot) then slot:update() end
         end
 
-        if system.GetCountry() == "FR" and input.IsKeyDown(KEY_W) or system.GetCountry() ~= "FR" and input.IsKeyDown(KEY_Z) then self:Init() end
+        if (system.GetCountry() == "FR" and input.IsKeyDown(KEY_W)) or (system.GetCountry() ~= "FR" and input.IsKeyDown(KEY_Z)) then self:Init() end
         self.nextUpdate = CurTime() + 0.1
         self:UpdateStaff()
     end
 end
 
 function PANEL:addPlayer(client, parent)
+    local lp = LocalPlayer()
     if not client:getChar() or not IsValid(parent) then return end
     local slot = parent:Add("DPanel")
     slot:Dock(TOP)
@@ -186,7 +187,10 @@ function PANEL:addPlayer(client, parent)
         RegisterDermaMenuForClose(menu)
     end
 
-    slot.model:SetTooltip(L("sbOptions", client:Name()))
+    local tooltipText = L("sbPing", client:Ping())
+    if lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and lp:isStaffOnDuty()) then tooltipText = tooltipText .. "\n" .. L("sbOptions", client:steamName()) end
+    slot.model:SetTooltip(tooltipText)
+    slot.model.OnCursorEntered = function(self) self:SetTooltip(tooltipText) end
     timer.Simple(0, function()
         if not IsValid(slot) then return end
         local entity = slot.model.Entity
@@ -202,60 +206,44 @@ function PANEL:addPlayer(client, parent)
     end)
 
     slot.name = vgui.Create("DLabel", slot)
-    slot.name:SetPos(modelSize + 10, 2)
-    slot.name:SetSize(200, 20)
     slot.name:SetFont("liaMediumFont")
     slot.name:SetTextColor(color_white)
     slot.name:SetExpensiveShadow(1, color_black)
     slot.name:SetText("")
     slot.desc = vgui.Create("DLabel", slot)
-    slot.desc:SetPos(modelSize + 10, 24)
     slot.desc:SetAutoStretchVertical(true)
-    slot.desc:SetWrap(false)
+    slot.desc:SetWrap(true)
     slot.desc:SetContentAlignment(7)
     slot.desc:SetTextColor(color_white)
     slot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     slot.desc:SetFont("liaSmallFont")
-    slot.ping = vgui.Create("DLabel", slot)
-    slot.ping:SetWide(60)
-    slot.ping:SetTall(rowHeight)
-    slot.ping:SetPos(self:GetWide() - slot.ping:GetWide() - 4, 0)
-    slot.ping:SetFont("liaMediumFont")
-    slot.ping:SetContentAlignment(6)
-    slot.ping:SetTextColor(color_white)
-    slot.ping:SetTextInset(16, 0)
-    slot.ping:SetExpensiveShadow(1, color_black)
-    slot.ping:SetText("0")
-    slot.ping.Think = function(lbl)
-        if IsValid(client) then
-            local ping = client:Ping()
-            if lbl:GetText() ~= ping then lbl:SetText(ping) end
-        end
-    end
-
     local class = lia.class.list[client:getChar():getClass()]
     if class and class.logo and not hook.Run("ShouldAllowScoreboardOverride", client, "classlogo") then
         local logoSize = rowHeight * 0.9
         slot.logo = vgui.Create("DPanel", slot)
-        slot.logo:SetSize(logoSize, logoSize)
-        local xPos = slot.ping.x - logoSize + 50
-        slot.logo:SetPos(xPos, (rowHeight - logoSize) * 0.5)
-        slot.logo.Paint = function(_, w, h)
+        slot.logo:Dock(RIGHT)
+        slot.logo:SetWide(logoSize)
+        slot.logo:DockMargin(4, 0, 4, 0)
+        slot.logo.Paint = function(self, w, h)
+            local offsetY = (h - logoSize) * 0.5
             surface.SetDrawColor(255, 255, 255, 255)
             surface.SetMaterial(Material(class.logo))
-            surface.DrawTexturedRect(0, 0, w, h)
+            surface.DrawTexturedRect(0, offsetY, logoSize, logoSize)
         end
     end
 
-    local oldTeam = client:Team()
     function slot:PerformLayout()
-        local rightEdge = self.ping.x - 4
-        if IsValid(self.logo) then rightEdge = self.logo.x - 4 end
-        self.desc:SetWide(rightEdge - (modelSize + 10))
+        local logoWidth = 0
+        if IsValid(self.logo) then logoWidth = self.logo:GetWide() + 4 end
+        local availableWidth = self:GetWide() - (modelSize + 10) - logoWidth - 10
+        self.name:SetPos(modelSize + 10, 2)
+        self.name:SetWide(availableWidth)
+        self.desc:SetPos(modelSize + 10, 24)
+        self.desc:SetWide(availableWidth)
     end
 
     function slot:update()
-        if not IsValid(client) or not client:getChar() or not self.character or self.character ~= client:getChar() or oldTeam ~= client:Team() then
+        if not IsValid(client) or not client:getChar() or not self.character or self.character ~= client:getChar() or client:Team() ~= client:Team() then
             self:Remove()
             local i = 0
             for _, child in ipairs(parent:GetChildren()) do
@@ -276,8 +264,9 @@ function PANEL:addPlayer(client, parent)
         local nameStr = (overrideName or client:Name()):gsub("#", "\226\128\139#")
         local overrideDesc = hook.Run("ShouldAllowScoreboardOverride", client, "desc") and hook.Run("GetDisplayedDescription", client, false) or client:getChar():getDesc()
         local descStr = (overrideDesc or ""):gsub("#", "\226\128\139#")
-        if string.len(descStr) > 250 then
-            local subStr = string.sub(descStr, 1, 250)
+        local maxChars = lia.config.get("maxDescChars", 255)
+        if string.len(descStr) > maxChars then
+            local subStr = string.sub(descStr, 1, maxChars)
             local lastSpace = subStr:match(".*()%s+")
             if lastSpace then subStr = subStr:sub(1, lastSpace - 1) end
             descStr = subStr .. " (...)"
@@ -301,13 +290,6 @@ function PANEL:addPlayer(client, parent)
 
         if self.lastModel ~= model or self.lastSkin ~= skin then
             self.model:SetModel(model, skin)
-            local lp = LocalPlayer()
-            if lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and lp:isStaffOnDuty()) then
-                self.model:SetTooltip(L("sbOptions", client:steamName()))
-            else
-                self.model:SetTooltip()
-            end
-
             self.lastModel = model
             self.lastSkin = skin
         end
@@ -320,6 +302,8 @@ function PANEL:addPlayer(client, parent)
                 end
             end
         end)
+
+        self:PerformLayout()
     end
 
     self.slots[#self.slots + 1] = slot
