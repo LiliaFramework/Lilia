@@ -1,4 +1,4 @@
-local function textWrap(text, font, maxWidth)
+﻿local function textWrap(text, font, maxWidth)
     local totalWidth = 0
     surface.SetFont(font)
     local spaceWidth = surface.GetTextSize(' ')
