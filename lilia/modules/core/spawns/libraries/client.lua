@@ -16,7 +16,7 @@ function MODULE:HUDPaint()
             if aprg ~= 0 then
                 aprg2 = clmp(aprg2 - ft * (1 / respawnTime * 2), 0, 1)
                 if aprg2 == 0 then aprg = clmp(aprg - ft * (1 / respawnTime), 0, 1) end
-                hideRespawnKey = true -- Hide the respawn key once the player respawns
+                hideRespawnKey = true
             end
         else
             if aprg2 ~= 1 then

@@ -13,4 +13,8 @@ local function BootstrapLilia()
     end
 end
 
+function is64Bits()
+    return BRANCH == "x86-64"
+end
+
 BootstrapLilia()

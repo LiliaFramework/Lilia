@@ -228,7 +228,6 @@ end
 lia.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
 lia.util.includeDir = lia.includeDir
 function lia.includeEntities(path)
-    local LoadedTools
     local files, folders
     local function IncludeFiles(path2)
         if file.Exists(path2 .. "init.lua", "LUA") then lia.include(path2 .. "init.lua", "server") end
@@ -289,8 +288,6 @@ function lia.includeEntities(path)
         else
             ErrorNoHalt(string.format("Attempted to register tool '%s' with invalid gmod_tool weapon", className))
         end
-
-        LoadedTools = true
     end
 
     HandleEntityInclusion("entities", "ENT", scripted_ents.Register, {
@@ -313,7 +310,6 @@ function lia.includeEntities(path)
     end)
 
     HandleEntityInclusion("effects", "EFFECT", effects and effects.Register, nil, true)
-    if CLIENT and LoadedTools then RunConsoleCommand("spawnmenu_reload") end
 end
 
 lia.util.loadEntities = lia.includeEntities
