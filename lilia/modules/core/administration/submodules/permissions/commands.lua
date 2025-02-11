@@ -8,8 +8,8 @@
             return
         end
 
-        for _, v in ipairs(player.GetAll()) do
-            v:PlaySound(sound)
+        for _, target in player.Iterator() do
+            target:PlaySound(sound)
         end
     end
 })
@@ -373,10 +373,10 @@ lia.command.add("cleanprops", {
     privilege = "Clean Entities",
     onRun = function(client)
         local count = 0
-        for _, v in ipairs(ents.GetAll()) do
-            if v:isProp() then
+        for _, entity in ents.Iterator() do
+            if IsValid(entity) and entity:isProp() then
                 count = count + 1
-                v:Remove()
+                entity:Remove()
             end
         end
 
@@ -389,10 +389,10 @@ lia.command.add("cleannpcs", {
     privilege = "Clean Entities",
     onRun = function(client)
         local count = 0
-        for _, v in ipairs(ents.GetAll()) do
-            if IsValid(v) and v:IsNPC() then
+        for _, entity in ents.Iterator() do
+            if IsValid(entity) and entity:IsNPC() then
                 count = count + 1
-                v:Remove()
+                entity:Remove()
             end
         end
 
@@ -477,8 +477,8 @@ lia.command.add("charkick", {
         if IsValid(target) then
             local character = target:getChar()
             if character then
-                for _, v in ipairs(player.GetAll()) do
-                    v:notifyLocalized("charKick", client:Name(), target:Name())
+                for _, ply in player.Iterator() do
+                    ply:notifyLocalized("charKick", client:Name(), target:Name())
                 end
 
                 character:kick()
@@ -555,7 +555,7 @@ lia.command.add("findallflags", {
     privilege = "Get Character Info",
     onRun = function(client)
         local onDutyStaffList = {}
-        for _, target in ipairs(player.GetAll()) do
+        for _, target in player.Iterator() do
             if target:isStaffOnDuty() then
                 local char = target:getChar()
                 table.insert(onDutyStaffList, {
@@ -1108,15 +1108,15 @@ lia.command.add("listents", {
     privilege = "List Entities",
     onRun = function(client)
         local entityList = {}
-        for _, v in ipairs(ents.GetAll()) do
-            local creator = v:GetCreator()
-            local model = v:GetModel()
+        for _, entity in ents.Iterator() do
+            local creator = entity:GetCreator()
+            local model = entity:GetModel()
             if not model or not isstring(model) or not model:find("%.mdl$") then continue end
             table.insert(entityList, {
-                class = v:GetClass(),
+                class = entity:GetClass(),
                 creator = IsValid(creator) and creator:Nick() or "N/A",
                 model = model,
-                health = v:Health() or "∞"
+                health = entity:Health() or "∞"
             })
         end
 
@@ -1146,7 +1146,7 @@ lia.command.add("liststaff", {
     privilege = "List Players",
     onRun = function(client)
         local staffList = {}
-        for _, target in ipairs(player.GetAll()) do
+        for _, target in player.Iterator() do
             if target:isStaff() then
                 local char = target:getChar()
                 table.insert(staffList, {
@@ -1193,7 +1193,7 @@ lia.command.add("listondutystaff", {
     privilege = "List Players",
     onRun = function(client)
         local onDutyStaffList = {}
-        for _, target in ipairs(player.GetAll()) do
+        for _, target in player.Iterator() do
             if target:isStaffOnDuty() then
                 local char = target:getChar()
                 table.insert(onDutyStaffList, {
@@ -1240,7 +1240,7 @@ lia.command.add("listvip", {
     privilege = "List Players",
     onRun = function(client)
         local vipList = {}
-        for _, target in ipairs(player.GetAll()) do
+        for _, target in player.Iterator() do
             if target:isVIP() then
                 local char = target:getChar()
                 table.insert(vipList, {
@@ -1287,7 +1287,7 @@ lia.command.add("listusers", {
     privilege = "List Players",
     onRun = function(client)
         local userList = {}
-        for _, target in ipairs(player.GetAll()) do
+        for _, target in player.Iterator() do
             if target:isUser() then
                 local char = target:getChar()
                 table.insert(userList, {
@@ -1340,7 +1340,7 @@ lia.command.add("globalbotsay", {
             return
         end
 
-        for _, bot in ipairs(player.GetAll()) do
+        for _, bot in player.Iterator() do
             if bot:IsBot() then bot:Say(message) end
         end
     end
@@ -1359,7 +1359,7 @@ lia.command.add("botsay", {
         local botName = arguments[1]
         local message = table.concat(arguments, " ", 2)
         local targetBot
-        for _, bot in ipairs(player.GetAll()) do
+        for _, bot in player.Iterator() do
             if bot:IsBot() and string.find(string.lower(bot:Nick()), string.lower(botName)) then
                 targetBot = bot
                 break
@@ -1449,9 +1449,9 @@ lia.command.add("checkallmoney", {
     superAdminOnly = true,
     privilege = "Get Character Info",
     onRun = function(client)
-        for _, v in ipairs(player.GetAll()) do
-            local char = v:getChar()
-            if char then client:ChatPrint(client:ChatPrint(L("playerMoney", v:GetName(), lia.currency.get(char:getMoney())))) end
+        for _, target in player.Iterator() do
+            local char = target:getChar()
+            if char then client:ChatPrint(client:ChatPrint(L("playerMoney", target:GetName(), lia.currency.get(char:getMoney())))) end
         end
     end
 })
