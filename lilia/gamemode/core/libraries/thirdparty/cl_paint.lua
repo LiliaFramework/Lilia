@@ -1,4 +1,4 @@
-do
+﻿do
     if not is64Bits() then
         local vec = Vector()
         local vecSetUnpacked = vec.SetUnpacked
