@@ -1,4 +1,4 @@
-local function fixupProp(client, ent, hitpos, mins, maxs)
+local function fixupProp(client, ent, _, mins, maxs)
     local entPos = ent:GetPos()
     local endposD = ent:LocalToWorld(mins)
     local tr_down = util.TraceLine({
@@ -43,7 +43,7 @@ local function SpawnItem(client, itemName, target)
         })
 
         if not tr.Hit then return end
-        lia.item.spawn(itemName, tr.HitPos, function(item, ent)
+        lia.item.spawn(itemName, tr.HitPos, function(_, ent)
             if IsValid(ent) then
                 TryFixPropPosition(client, ent, tr.HitPos)
                 undo.Create("item")

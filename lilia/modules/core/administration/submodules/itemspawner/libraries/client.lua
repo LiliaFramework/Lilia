@@ -83,7 +83,7 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
     return icon
 end)
 
-function MODULE:PopulateInventoryItems(pnlContent, tree, node)
+function MODULE:PopulateInventoryItems(pnlContent, tree)
     local allItems = lia.item.list
     local categorized = {
         Unsorted = {}
@@ -113,7 +113,7 @@ function MODULE:PopulateInventoryItems(pnlContent, tree, node)
                 self.PropPanel = vgui.Create("ContentContainer", pnlContent)
                 self.PropPanel:SetVisible(false)
                 self.PropPanel:SetTriggerSpawnlistChange(false)
-                for k, itemListData in SortedPairsByMemberValue(itemList, "name") do
+                for _, itemListData in SortedPairsByMemberValue(itemList, "name") do
                     spawnmenu.CreateContentIcon("inventoryitem", self.PropPanel, {
                         name = itemListData.name,
                         id = itemListData.id
@@ -129,7 +129,7 @@ function MODULE:PopulateInventoryItems(pnlContent, tree, node)
     end
 end
 
-spawnmenu.AddCreationTab("Inventory Items", function(panel)
+spawnmenu.AddCreationTab("Inventory Items", function()
     local ctrl = vgui.Create("SpawnmenuContentPanel")
     ctrl:CallPopulateHook("PopulateInventoryItems")
     return ctrl

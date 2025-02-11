@@ -190,7 +190,7 @@ function PANEL:addPlayer(client, parent)
     local tooltipText = L("sbPing", client:Ping())
     if lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and lp:isStaffOnDuty()) then tooltipText = tooltipText .. "\n" .. L("sbOptions", client:steamName()) end
     slot.model:SetTooltip(tooltipText)
-    slot.model.OnCursorEntered = function(self) self:SetTooltip(tooltipText) end
+    slot.model.OnCursorEntered = function(btn) btn:SetTooltip(tooltipText) end
     timer.Simple(0, function()
         if not IsValid(slot) then return end
         local entity = slot.model.Entity
@@ -224,7 +224,7 @@ function PANEL:addPlayer(client, parent)
         slot.logo:Dock(RIGHT)
         slot.logo:SetWide(logoSize)
         slot.logo:DockMargin(4, 0, 4, 0)
-        slot.logo.Paint = function(self, w, h)
+        slot.logo.Paint = function(_, _, h)
             local offsetY = (h - logoSize) * 0.5
             surface.SetDrawColor(255, 255, 255, 255)
             surface.SetMaterial(Material(class.logo))
