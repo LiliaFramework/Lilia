@@ -8,7 +8,7 @@ MODULE.enabled = pac ~= nil
 MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Use PAC3",
-        MinAccess = "superadmin",
-        Description = "Allows access to Spawning Menu Items.",
+        MinAccess = "admin",
+        Description = "Allows access to PAC3.",
     }
 }
