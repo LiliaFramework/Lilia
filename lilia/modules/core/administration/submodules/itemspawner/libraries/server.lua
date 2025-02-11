@@ -27,10 +27,9 @@ end
 
 local function SpawnItem(client, itemName, target)
     if not IsValid(client) or not itemName then return end
-    CAMI.PlayerHasAccess(client, "Can Use Item Spawner", function(hasAccess)
-        if not hasAccess then return end
+    if client:hasPrivilege("Staff Permissions - Can Use Item Spawner") then
         if target then
-            client:ConCommand("say chargiveitem " .. target .. " " .. itemName)
+            client:ConCommand("say /chargiveitem " .. target .. " " .. itemName)
             return
         end
 
@@ -52,7 +51,7 @@ local function SpawnItem(client, itemName, target)
                 undo.Finish("Item (" .. itemName .. ")")
             end
         end, angle_zero, {})
-    end)
+    end
 end
 
 net.Receive("lia_spawnItem", function(_, client)
