@@ -965,11 +965,3 @@ function MODULE:CreateMenuButtons(tabs)
         panel.scroll:InvalidateLayout(true)
     end
 end
-
-local function ReloadSpawnMenu()
-    local client = LocalPlayer()
-    if IsValid(client) then RunConsoleCommand("spawnmenu_reload") end
-end
-
-hook.Add("OnReloaded", "ReloadSpawnMenu", ReloadSpawnMenu)
-hook.Add("InitPostEntity", "ReloadSpawnMenu", ReloadSpawnMenu)
