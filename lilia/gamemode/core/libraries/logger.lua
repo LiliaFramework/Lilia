@@ -14,23 +14,22 @@ if SERVER then
 
     function lia.log.getString(client, logType, ...)
         local logData = lia.log.types[logType]
-        if logData and isfunction(logData.func) then
+        if not logData then return end
+        if isfunction(logData.func) then
             local success, result = pcall(logData.func, client, ...)
-            if success then return result, logData.category, logData.color end
+            if success then return result, logData.category end
         end
     end
 
     function lia.log.add(client, logType, ...)
-        local logString, category, color = lia.log.getString(client, logType, ...)
-        if not isstring(category) then
-            category = "Uncategorized"
-            color = Color(128, 128, 128)
-        end
-
-        if not isstring(logString) or not IsColor(color) then return end
-        hook.Run("OnServerLog", client, logType, logString, category, color)
-        if not file.Exists("lilia/logs/" .. engine.ActiveGamemode(), "DATA") then file.CreateDir("lilia/logs/" .. engine.ActiveGamemode()) end
-        local logFilePath = "lilia/logs/" .. engine.ActiveGamemode() .. "/" .. category .. ".txt"
+        local logString, category = lia.log.getString(client, logType, ...)
+        if not isstring(category) then category = "Uncategorized" end
+        if not isstring(logString) then return end
+        hook.Run("OnServerLog", client, logType, logString, category)
+        local logsDir = "lilia/logs/" .. engine.ActiveGamemode()
+        if not file.Exists(logsDir, "DATA") then file.CreateDir(logsDir) end
+        local filenameCategory = string.lower(string.gsub(category, "%s+", "_"))
+        local logFilePath = logsDir .. "/" .. filenameCategory .. ".txt"
         file.Append(logFilePath, "[" .. os.date("%Y-%m-%d %H:%M:%S") .. "]\t" .. logString .. "\r\n")
     end
 
@@ -38,5 +37,5 @@ if SERVER then
         netstream.Start(client, "liaLogStream", logString)
     end
 else
-    netstream.Hook("liaLogStream", function(logString) LiliaInformation(logString) end)
+    netstream.Hook("liaLogStream", function(logString) LiliaInformation("[LOG] " .. logString) end)
 end

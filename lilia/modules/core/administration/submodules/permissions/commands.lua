@@ -1075,7 +1075,7 @@ lia.command.add("modulelist", {
 
         lia.util.CreateTableUI(client, L("uiModulesList"), {
             {
-                name = L("uiColumnUniqueID") or "Unique ID",
+                name = L("uiColumnUniqueID"),
                 field = "uniqueID"
             },
             {

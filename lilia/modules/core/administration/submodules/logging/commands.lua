@@ -5,7 +5,7 @@ lia.command.add("logs", {
     onRun = function(client)
         local categorizedLogs = {}
         for _, logData in pairs(lia.log.types) do
-            local category = logData.category
+            local category = logData.category or "Uncategorized"
             if not categorizedLogs[category] then categorizedLogs[category] = {} end
             local logs = MODULE:ReadLogFiles(category)
             for _, log in ipairs(logs) do

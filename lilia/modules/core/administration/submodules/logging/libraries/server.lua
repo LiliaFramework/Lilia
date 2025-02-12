@@ -2,7 +2,8 @@
     local maxDays = lia.config.get("LogRetentionDays", 7)
     local maxLines = lia.config.get("MaxLogLines", 1000)
     local logs = {}
-    local logFilePath = "lilia/logs/" .. engine.ActiveGamemode() .. "/" .. category .. ".txt"
+    local filenameCategory = string.lower(string.gsub(category, "%s+", "_"))
+    local logFilePath = "lilia/logs/" .. engine.ActiveGamemode() .. "/" .. filenameCategory .. ".txt"
     if file.Exists(logFilePath, "DATA") then
         local logFileContent = file.Read(logFilePath, "DATA")
         local lines = {}
@@ -42,8 +43,8 @@ function MODULE:OnServerLog(_, logType, logString)
     end
 end
 
-function MODULE:CanPlayerSeeLog()
-    return lia.config.get("AdminConsoleNetworkLogs")
+function MODULE:CanPlayerSeeLog(client)
+    return lia.config.get("AdminConsoleNetworkLogs", true) and client:hasPrivilege("Staff Permissions - Can See Logs")
 end
 
 function MODULE:OnCharDelete(client, id)

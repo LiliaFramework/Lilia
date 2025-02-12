@@ -3,6 +3,14 @@ MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
 MODULE.version = "Stock"
 MODULE.desc = "Adds a Module that implements a action logger"
+MODULE.CAMIPrivileges = {
+    {
+        Name = "Staff Permissions - Can See Logs",
+        MinAccess = "superadmin",
+        Description = "Allows access to Seeing Logs In Console.",
+    }
+}
+
 MODULE.Dependencies = {
     {
         File = MODULE.path .. "/logs.lua",

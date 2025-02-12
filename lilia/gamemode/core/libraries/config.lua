@@ -337,8 +337,8 @@ lia.config.add("AmericanTimeStamp", "American Timestamp", true, nil, {
     type = "Boolean"
 })
 
-lia.config.add("AdminConsoleNetworkLogs", "Admin Console Network Logs", false, nil, {
-    desc = "Specifies if the logging system should replicate to admins' consoles.",
+lia.config.add("AdminConsoleNetworkLogs", "Admin Console Network Logs", true, nil, {
+    desc = "Specifies if the logging system should replicate to super admins' consoles.",
     category = "Staff",
     noNetworking = false,
     schemaOnly = false,
