@@ -28,8 +28,9 @@ end
 local function SpawnItem(client, itemName, target)
     if not IsValid(client) or not itemName then return end
     if client:hasPrivilege("Staff Permissions - Can Use Item Spawner") then
-        if target then
+        if target and target ~= "" then
             client:ConCommand("say /chargiveitem " .. target .. " " .. itemName)
+            lia.log.add(client, "chargiveItem", itemName, target, "Chargive item command executed")
             return
         end
 
@@ -48,7 +49,9 @@ local function SpawnItem(client, itemName, target)
                 undo.Create("item")
                 undo.SetPlayer(client)
                 undo.AddEntity(ent)
-                undo.Finish("Item (" .. itemName .. ")")
+                local displayName = (lia.item.list and lia.item.list[itemName] and lia.item.list[itemName].name) or itemName
+                undo.Finish("Item (" .. displayName .. ")")
+                lia.log.add(client, "spawnItem", displayName, "Item spawned using item spawner")
             end
         end, angle_zero, {})
     end

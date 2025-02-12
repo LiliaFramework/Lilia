@@ -20,7 +20,7 @@ local function LiliaLog(messageType, message, section, color)
         },
         information = {
             prefix = Color(83, 143, 239),
-            message = Color(0, 0, 255)
+            message = Color(83, 143, 239)
         },
         event = {
             prefix = Color(83, 143, 239),

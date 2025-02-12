@@ -127,7 +127,7 @@ PANEL = {}
 function PANEL:Init()
     local client = LocalPlayer()
     self.title = self:addLabel("attributes")
-    self.leftLabel = self:addLabel("points left")
+    self.leftLabel = self:addLabel(L("pointsLeft"))
     self.leftLabel:SetFont("liaCharSubTitleFont")
     self.leftLabel:SetTextColor(color_white)
     self.title:SetTextColor(color_white)
@@ -140,7 +140,7 @@ function PANEL:Init()
 end
 
 function PANEL:updatePointsLeft()
-    self.leftLabel:SetText(L("points left"):upper() .. ": " .. self.left)
+    self.leftLabel:SetText(L("pointsLeft"):upper() .. ": " .. self.left)
 end
 
 function PANEL:onDisplay()

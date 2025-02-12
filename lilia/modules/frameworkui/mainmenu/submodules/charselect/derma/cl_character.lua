@@ -21,7 +21,7 @@ function PANEL:createTabs()
     if LocalPlayer():getChar() then
         if not lia.config.get("KickOnEnteringMainMenu", false) then self:CreateButton("return", "Return to character", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end) end
     else
-        self:CreateButton("leave", "Disconnect from server", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() LocalPlayer():ConCommand("disconnect") end) end)
+        self:CreateButton("leave", "Disconnect from server", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("youWillBeDisconnected"):upper()):onConfirm(function() LocalPlayer():ConCommand("disconnect") end) end)
     end
 end
 

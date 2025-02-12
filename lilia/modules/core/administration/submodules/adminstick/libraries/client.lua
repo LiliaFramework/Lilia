@@ -115,7 +115,7 @@ end
 local function OpenPlayerModelUI(target)
     AdminStickIsOpen = true
     local frame = vgui.Create("DFrame")
-    frame:SetTitle(L("Change Playermodel"))
+    frame:SetTitle(L("changePlayerModel"))
     frame:SetSize(450, 300)
     frame:Center()
     function frame:OnClose()
@@ -177,7 +177,7 @@ local function OpenReasonUI(target, cmd)
     local edit = vgui.Create("DTextEntry", frame)
     edit:Dock(FILL)
     edit:SetMultiline(true)
-    edit:SetPlaceholderText(L("eason"))
+    edit:SetPlaceholderText(L("reason"))
     local timeedit
     if cmd == "banid" then
         local time = vgui.Create("DNumSlider", frame)

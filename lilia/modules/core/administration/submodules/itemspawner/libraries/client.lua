@@ -1,4 +1,5 @@
 ﻿local function textWrap(text, font, maxWidth)
+    text = text or ""
     local totalWidth = 0
     surface.SetFont(font)
     local spaceWidth = surface.GetTextSize(' ')
@@ -34,10 +35,11 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
         icon:SetSpawnName(data.id)
         icon:SetName(data.name)
         local itemData = lia.item.list[data.id]
-        local matName = string.Replace(itemData.model, ".mdl", "")
+        local modelStr = itemData.model or "default.mdl"
+        local matName = string.Replace(modelStr, ".mdl", "")
         icon.Image:SetMaterial(Material("spawnicons/" .. matName .. ".png"))
         icon:SetColor(Color(205, 92, 92, 255))
-        local desc = textWrap(itemData.desc, "DermaDefault", 560)
+        local desc = textWrap(itemData.desc or "", "DermaDefault", 560)
         icon:SetTooltip(desc)
         icon.DoClick = function()
             net.Start("lia_spawnItem")

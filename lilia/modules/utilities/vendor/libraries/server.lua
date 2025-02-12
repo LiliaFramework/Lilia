@@ -177,7 +177,7 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
         character:takeMoney(price)
         vendor:takeStock(itemType)
         character:getInv():add(itemType):next(function(item)
-            client:notifyLocalized(L("vendorYouBoughtItem", item:getName(), lia.currency.get(price)))
+            client:notifyLocalized("vendorYouBoughtItem", item:getName(), lia.currency.get(price))
             hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
             client.vendorTransaction = nil
         end)
@@ -205,32 +205,3 @@ function MODULE:PlayerAccessVendor(client, vendor)
         end
     end
 end
-
-lia.log.addType("vendorAccess", function(client, vendor)
-    local vendorName = vendor:getNetVar("name") or "Unknown"
-    return L("vendorLogAccess", client:SteamID(), client:Name(), vendorName, client:getChar():getID())
-end, "Vendors")
-
-lia.log.addType("vendorExit", function(client, vendor)
-    local vendorName = vendor:getNetVar("name") or "Unknown"
-    return L("vendorLogExit", client:SteamID(), client:Name(), vendorName, client:getChar():getID())
-end, "Vendors")
-
-lia.log.addType("vendorSell", function(client, item, vendor)
-    local vendorName = vendor:getNetVar("name") or "Unknown"
-    return L("vendorLogSell", client:SteamID(), client:Name(), item, vendorName, client:getChar():getID())
-end, "Vendors")
-
-lia.log.addType("vendorEdit", function(client, vendor, key)
-    local vendorName = vendor:getNetVar("name") or "Unknown"
-    return L("vendorLogEdit", client:SteamID(), client:Name(), vendorName, key, client:getChar():getID())
-end, "Vendors")
-
-lia.log.addType("vendorBuy", function(client, item, vendor, isFailed)
-    local vendorName = vendor:getNetVar("name") or "Unknown"
-    if isFailed then
-        return L("vendorLogBuyFail", client:SteamID(), client:Name(), item, vendorName, client:getChar():getID())
-    else
-        return L("vendorLogBuySuccess", client:SteamID(), client:Name(), item, vendorName, client:getChar():getID())
-    end
-end, "Vendors")
