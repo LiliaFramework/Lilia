@@ -124,5 +124,5 @@ function lia.keybind.add(key, desc, callback, releaseCallback)
     end
 end
 
-hook.Add("PlayerButtonDown", "liaKeybindPress", function(ply, button) if lia.keybind.stored[button] and lia.keybind.stored[button].callback then lia.keybind.stored[button].callback() end end)
-hook.Add("PlayerButtonUp", "liaKeybindRelease", function(ply, button) if lia.keybind.stored[button] and lia.keybind.stored[button].release then lia.keybind.stored[button].release() end end)
+hook.Add("PlayerButtonDown", "liaKeybindPress", function(ply, button) if lia.keybind.stored[button] and lia.keybind.stored[button].callback then lia.keybind.stored[button].callback(ply) end end)
+hook.Add("PlayerButtonUp", "liaKeybindRelease", function(ply, button) if lia.keybind.stored[button] and lia.keybind.stored[button].release then lia.keybind.stored[button].release(ply) end end)
