@@ -23,6 +23,10 @@ FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/libraries/keybind.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/libraries/notice.lua",
         realm = "shared"
     },
