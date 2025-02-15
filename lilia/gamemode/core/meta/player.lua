@@ -586,16 +586,23 @@ else
         return diff + RealTime() - (lia.joinTime or 0)
     end
 
-    function playerMeta:setWeighPoint(name, vector, onReach)
+    function playerMeta:setWaypoint(name, vector, onReach)
         hook.Add("HUDPaint", "WeighPoint", function()
+            if not IsValid(self) then
+                hook.Remove("HUDPaint", "WeighPoint")
+                return
+            end
+
             local dist = self:GetPos():Distance(vector)
             local spos = vector:ToScreen()
-            local howclose = math.Round(math.floor(dist) / 40)
-            if not spos then return end
-            render.SuppressEngineLighting(true)
-            surface.SetFont("WB_Large")
-            draw.DrawText(name .. "\n" .. howclose .. " Meters\n", "CenterPrintText", spos.x, spos.y, Color(123, 57, 209), TEXT_ALIGN_CENTER)
-            render.SuppressEngineLighting(false)
+            local howclose = math.Round(dist / 40)
+            if spos.visible then
+                render.SuppressEngineLighting(true)
+                surface.SetFont("WB_Large")
+                draw.DrawText(name .. "\n" .. howclose .. " Meters\n", "WB_Larges", spos.x, spos.y, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+                render.SuppressEngineLighting(false)
+            end
+
             if howclose <= 3 then RunConsoleCommand("weighpoint_stop") end
         end)
 
@@ -603,6 +610,10 @@ else
             hook.Remove("HUDPaint", "WeighPoint")
             if onReach and isfunction(onReach) then onReach() end
         end)
+    end
+
+    function playerMeta:setWeighPoint(name, vector, onReach)
+        self:setWaypoint(name, vector, onReach)
     end
 
     function playerMeta:setWaypointWithLogo(name, vector, logo, onReach)
@@ -613,11 +624,7 @@ else
             if not logoMaterial or logoMaterial:IsError() then logoMaterial = nil end
         end
 
-        if not logoMaterial then
-            print("[ERROR] No valid logo provided or failed to load logo material.")
-            return
-        end
-
+        if not logoMaterial then return end
         local waypointID = "Waypoint_WithLogo_" .. tostring(self:SteamID64()) .. "_" .. tostring(math.random(100000, 999999))
         hook.Add("HUDPaint", waypointID, function()
             if not IsValid(self) then
@@ -636,7 +643,7 @@ else
                     surface.DrawTexturedRect(spos.x - logoSize / 2, spos.y - logoSize / 2 - 40, logoSize, logoSize)
                 end
 
-                draw.DrawText(name .. "\n" .. howClose .. " Meters", "WB_Large", spos.x, spos.y - 10, Color(123, 57, 209), TEXT_ALIGN_CENTER)
+                draw.DrawText(name .. "\n" .. howClose .. " Meters", "WB_Large", spos.x, spos.y - 10, Color(255, 255, 255), TEXT_ALIGN_CENTER)
             end
 
             if howClose <= 3 then RunConsoleCommand("waypoint_withlogo_stop_" .. waypointID) end
