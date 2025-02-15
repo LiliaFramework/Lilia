@@ -82,7 +82,6 @@ function MODULE:PlayerButtonDown(_, button)
     if button == KEY_F4 and IsFirstTimePredicted() then
         local currentState = lia.option.get("thirdPersonEnabled", false)
         lia.option.set("thirdPersonEnabled", not currentState)
-        print(L("thirdpersonToggle") .. " - " .. tostring(not currentState))
         hook.Run("thirdPersonToggled", not currentState)
     end
 end
