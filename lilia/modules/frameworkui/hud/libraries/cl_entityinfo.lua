@@ -6,6 +6,13 @@ local lastEntity
 local mathApproach = math.Approach
 local vectorMeta = FindMetaTable("Vector")
 local toScreen = vectorMeta.ToScreen
+local healthPercent = {
+    [0.75] = {"Minor injuries", Color(0, 255, 0)},
+    [0.50] = {"Moderate injuries", Color(255, 255, 0)},
+    [0.25] = {"Severe injuries", Color(255, 140, 0)},
+    [0.10] = {"Critical condition", Color(255, 0, 0)}
+}
+
 function MODULE:DrawEntityInfo(entity, alpha, position)
     if not entity.IsPlayer(entity) then return end
     if hook.Run("ShouldDrawPlayerInfo", entity) == false then return end
@@ -113,7 +120,23 @@ function MODULE:ShouldDrawEntityInfo(entity)
     return false
 end
 
+function MODULE:GetInjuredText(client)
+    local health = client:Health()
+    local maxHealth = client:GetMaxHealth() or 100
+    local percentage = health / maxHealth
+    local result = nil
+    local thresholds = {0.10, 0.25, 0.50, 0.75}
+    table.sort(thresholds, function(a, b) return a > b end)
+    for _, threshold in ipairs(thresholds) do
+        if percentage <= threshold then
+            result = healthPercent[threshold]
+            break
+        end
+    end
+    return result
+end
+
 function MODULE:DrawCharInfo(client, _, info)
-    local injText, injColor = hook.Run("GetInjuredText", client, false)
-    if injText and injText ~= "Healthy" then info[#info + 1] = {L(injText), injColor} end
+    local injText, injColor = hook.Run("GetInjuredText", client)
+    if injText then info[#info + 1] = {L(injText), injColor} end
 end
