@@ -105,3 +105,46 @@ function PANEL:Paint(w, h)
 end
 
 vgui.Register("liaNotify", PANEL, "DPanel")
+
+PANEL = {}
+
+function PANEL:Init()
+    self.type = 1
+    self.text = self:Add("DLabel")
+    self.text:SetFont("liaNoticeFont")
+    self.text:SetContentAlignment(5)
+    self.text:SetTextColor(color_white)
+    self.text:SizeToContents()
+    self.text:Dock(FILL)
+    self.text:DockMargin(2, 2, 2, 2)
+    self.text:SetExpensiveShadow(1, Color(25, 25, 25, 120))
+    self:SetTall(28)
+end
+
+function PANEL:setType(value)
+    self.type = value
+    return
+end
+
+function PANEL:setText(value)
+    self.text:SetText(value)
+end
+
+function PANEL:setFont(value)
+    self.text:SetFont(value)
+end
+
+function PANEL:Paint()
+    self.material = lia.util.getMaterial(lia.notices.Types[self.type].icon)
+    local col = lia.notices.Types[self.type].col
+    local mat = self.material
+    local size = self:GetTall() * .6
+    draw.RoundedBox(4, 0, 0, self:GetWide(), self:GetTall(), col)
+    if mat then
+        surface.SetDrawColor(color_white)
+        surface.SetMaterial(mat)
+        surface.DrawTexturedRect(size / 2, self:GetTall() / 2 - size / 2 + 1, size, size)
+    end
+end
+
+vgui.Register("liaNoticeBar", PANEL, "DPanel")

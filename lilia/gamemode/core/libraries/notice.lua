@@ -8,29 +8,30 @@
         icon = "icon16/cross.png"
     },
     [3] = {
-        col = Color(255, 100, 100),
-        icon = "icon16/cancel.png"
+        col = Color(255, 165, 0),
+        icon = "icon16/error.png"
     },
     [4] = {
-        col = Color(100, 185, 255),
-        icon = "icon16/book.png"
-    },
-    [5] = {
         col = Color(64, 185, 85),
         icon = "icon16/accept.png"
     },
-    [7] = {
+    [5] = {
         col = Color(100, 185, 255),
         icon = "icon16/information.png"
+    },
+    [6] = {
+        col = Color(255, 223, 0),
+        icon = "icon16/lightbulb.png"
     }
 }
 
 function RemoveNotices(notice)
+    if not IsValid(notice) then return end
     for k, v in ipairs(lia.notices) do
         if v == notice then
-            notice:SizeTo(notice:GetWide(), 0, 0.2, 0, -1, function() notice:Remove() end)
+            if IsValid(notice) then notice:SizeTo(notice:GetWide(), 0, 0.2, 0, -1, function() if IsValid(notice) then notice:Remove() end end) end
             table.remove(lia.notices, k)
-            OrganizeNotices(true)
+            timer.Simple(0.25, OrganizeNotices)
             break
         end
     end
@@ -43,7 +44,7 @@ function CreateNoticePanel(length, notimer)
     notice.endTime = CurTime() + length
     notice.oh = notice:GetTall()
     function notice:Paint(w, h)
-        local t = lia.notices.Types[7]
+        local t = lia.notices.Types[5]
         local mat
         if self.notifType ~= nil and not isstring(self.notifType) and self.notifType > 0 then
             t = lia.notices.Types[self.notifType]
@@ -69,27 +70,50 @@ function CreateNoticePanel(length, notimer)
     return notice
 end
 
-function OrganizeNotices(alternate)
-    local scrW = ScrW()
-    local lastHeight = ScrH() - 100
-    if alternate then
-        for k, v in ipairs(lia.notices) do
-            if IsValid(v) then
-                local topMargin = 0
-                for k2, v2 in ipairs(lia.notices) do
-                    if IsValid(v2) then if k < k2 then topMargin = topMargin + v2:GetTall() + 5 end end
-                end
+local function DisplayNotice(message, notifType, manualDismiss)
+    manualDismiss = manualDismiss or false
+    notifType = notifType or 5
+    local notice = CreateNoticePanel(10, manualDismiss)
+    notice.notifType = notifType
+    table.insert(lia.notices, notice)
+    notice.text:SetText(message)
+    notice:SetTall(36 * 2.3)
+    notice:CalcWidth(120)
+    if manualDismiss then notice.start = nil end
+    notice.oh = notice:GetTall()
+    notice:SetTall(0)
+    local targetX = ScrW() / 2 - notice:GetWide() / 2
+    local targetY = 4
+    notice:SetPos(targetX, targetY)
+    notice:SizeTo(notice:GetWide(), 36 * 2.3, 0.2, 0, -1, function() notice.text:SetPos(0, 0) end)
+    if not manualDismiss then timer.Simple(5, function() if IsValid(notice) then RemoveNotices(notice) end end) end
+    timer.Simple(0.05, OrganizeNotices)
+end
 
-                v:MoveTo(v:GetX(), topMargin + 5, 0.15, 0, 5)
-            end
-        end
-    else
-        for k, v in ipairs(lia.notices) do
-            if IsValid(v) then
-                local height = lastHeight - v:GetTall() - 10
-                v:MoveTo(scrW - v:GetWide(), height, 0.15, k / #lia.notices * 0.25, nil)
-                lastHeight = height
-            end
+function OrganizeNotices()
+    local scrW = ScrW()
+    local baseY = 10
+    local validNotices = {}
+    for i, notice in ipairs(lia.notices) do
+        if IsValid(notice) then table.insert(validNotices, notice) end
+    end
+
+    while #validNotices > 6 do
+        local old = table.remove(validNotices, 1)
+        if IsValid(old) then old:Remove() end
+    end
+
+    local leftCount = (#validNotices > 3) and (#validNotices - 3) or 0
+    for i, notice in ipairs(validNotices) do
+        if i <= leftCount then
+            local x = 10
+            local y = baseY + (i - 1) * (notice.oh + 5)
+            notice:MoveTo(x, y, 0.15)
+        else
+            local rightIndex = i - leftCount
+            local x = scrW - notice:GetWide() - 10
+            local y = baseY + (rightIndex - 1) * (notice.oh + 5)
+            notice:MoveTo(x, y, 0.15)
         end
     end
 end
@@ -101,9 +125,10 @@ if SERVER then
         end
     end
 
-    function lia.notices.notify(message, recipient)
+    function lia.notices.notify(message, notifType, recipient)
         net.Start("liaNotify")
         net.WriteString(message)
+        net.WriteUInt(notifType or 5, 3)
         if recipient == nil then
             net.Broadcast()
         else
@@ -136,27 +161,8 @@ if SERVER then
     lia.util.notify = lia.notices.notify
     lia.util.notifyLocalized = lia.notices.notifyLocalized
 else
-    function lia.notices.notify(message, shouldChatPrint)
-        local notice = vgui.Create("liaNotify")
-        local i = table.insert(lia.notices, notice)
-        notice:SetMessage(message)
-        notice:SetPos(ScrW(), ScrH() - (i - 1) * (notice:GetTall() + 4) + 4)
-        notice:MoveToFront()
-        OrganizeNotices(false)
-        timer.Simple(10, function()
-            if IsValid(notice) then
-                notice:AlphaTo(0, 1, 0, function()
-                    notice:Remove()
-                    for v, k in pairs(lia.notices) do
-                        if k == notice then table.remove(lia.notices, v) end
-                    end
-
-                    OrganizeNotices(false)
-                end)
-            end
-        end)
-
-        if shouldChatPrint then chat.AddText(message) end
+    function lia.notices.notify(message, notifType)
+        DisplayNotice(message, notifType, false)
         MsgN(message)
     end
 

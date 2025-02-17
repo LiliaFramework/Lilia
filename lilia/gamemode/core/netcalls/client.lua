@@ -12,7 +12,8 @@ end)
 
 net.Receive("liaNotify", function()
     local message = net.ReadString()
-    lia.notices.notify(message)
+    local notifType = net.ReadUInt(3)
+    lia.notices.notify(message, notifType)
 end)
 
 net.Receive("liaInventoryData", function()
