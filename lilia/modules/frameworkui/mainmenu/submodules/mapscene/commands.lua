@@ -1,4 +1,4 @@
-lia.command.add("mapsceneadd", {
+﻿lia.command.add("mapsceneadd", {
     adminOnly = true,
     privilege = "Manage Map Scenes",
     syntax = "[bool]",

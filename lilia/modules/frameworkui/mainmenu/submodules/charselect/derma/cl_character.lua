@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 local WHITE = Color(255, 255, 255, 150)
 local CharHover = {"buttons/button15.wav", 35, 250}
 local CharClick = {"buttons/button14.wav", 35, 255}

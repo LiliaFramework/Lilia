@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 MODULE.scenes = MODULE.scenes or {}
 MODULE.ordered = MODULE.ordered or {}
 local x3, y3 = 0, 0
