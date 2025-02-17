@@ -1,4 +1,5 @@
-﻿net.Receive("TransferMoneyFromP2P", function(_, sender)
+﻿local MODULE = MODULE
+net.Receive("TransferMoneyFromP2P", function(_, sender)
     local amount = net.ReadUInt(32)
     local target = net.ReadEntity()
     if not IsValid(sender) or not sender:getChar() then return end
@@ -13,12 +14,12 @@
 end)
 
 netstream.Hook("PIMRunOption", function(client, name)
-    local opt = PIM.Options[name]
+    local opt = MODULE.Options[name]
     local tracedEntity = client:getTracedEntity()
     if opt and opt.runServer and IsValid(tracedEntity) then opt.onRun(client, tracedEntity) end
 end)
 
 netstream.Hook("PIMRunLocalOption", function(client, name)
-    local opt = PIM.SelfOptions[name]
+    local opt = MODULE.SelfOptions[name]
     if opt and opt.runServer then opt.onRun(client) end
 end)

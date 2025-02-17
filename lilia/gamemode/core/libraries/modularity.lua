@@ -139,8 +139,8 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, firstLoad)
             return true
         end
     else
-        if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then _G[MODULE.identifier] = MODULE end
         lia.module.list[uniqueID] = MODULE
+        if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then _G[MODULE.identifier] = lia.module.list[uniqueID] end
         lia.module.OnFinishLoad(path, firstLoad)
         _G[variable] = oldModule
     end

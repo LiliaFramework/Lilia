@@ -587,25 +587,6 @@ end
 
 do
     local paint = _G.paint
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
     local roundedBoxes = {}
     do
         local meshBegin = mesh.Begin

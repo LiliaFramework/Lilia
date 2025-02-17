@@ -45,3 +45,37 @@ lia.flag.add("t", "Toolgun", function(client, isGiven)
         client:StripWeapon("gmod_tool")
     end
 end)
+
+hook.Add("CreateMenuButtons", "FlagsMenuButtons", function(tabs)
+    local function createListPanel(parent, columns)
+        local panel = parent:Add("DPanel")
+        panel:SetSize(parent:GetWide(), parent:GetTall())
+        panel:Dock(FILL)
+        local list = panel:Add("DListView")
+        list:Dock(FILL)
+        list:SetMultiSelect(false)
+        for _, colName in ipairs(columns) do
+            list:AddColumn(colName)
+        end
+
+        local function addRow(data)
+            list:AddLine(unpack(data))
+        end
+        return panel, addRow
+    end
+
+    tabs["Flags"] = function(panel)
+        local f = vgui.Create("DFrame", panel)
+        f:SetSize(ScrW() * 0.6, ScrH() * 0.7)
+        f:Center()
+        f:SetTitle("Flags")
+        f:MakePopup()
+        local panelList, addRow = createListPanel(f, {"Status", "Flag", "Description"})
+        f:Add(panelList)
+        for flagName, flagData in SortedPairs(lia.flag.list, function(a, b) return tostring(a) < tostring(b) end) do
+            if isnumber(flagName) then continue end
+            local hasFlag = LocalPlayer():getChar():hasFlags(flagName) and "✓" or "✗"
+            addRow({hasFlag, flagName, flagData.desc or ""})
+        end
+    end
+end)

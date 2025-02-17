@@ -130,17 +130,17 @@ function SKIN:PaintListView(panel, w, h)
 end
 
 function SKIN:PaintListViewLine(panel, w, h)
-    surface.SetDrawColor((panel:IsHovered() or panel:IsLineSelected()) and lia.config.get("color", Color(255, 255, 255)) or Color(0, 0, 0, 0))
+    surface.SetDrawColor((panel:IsHovered() or panel:IsLineSelected()) and lia.config.get("Color", Color(255, 255, 255)) or Color(0, 0, 0, 0))
     surface.DrawRect(0, 0, w, h)
 end
 
 function SKIN:PaintScrollBarGrip(panel, w, h)
-    surface.SetDrawColor(lia.config.get("color", Color(255, 255, 255)))
+    surface.SetDrawColor(lia.config.get("Color", Color(255, 255, 255)))
     surface.DrawRect(0, 0, w, h)
 end
 
 function SKIN:PaintButtonUp(panel, w, h)
-    surface.SetDrawColor(lia.config.get("color", Color(255, 255, 255)))
+    surface.SetDrawColor(lia.config.get("Color", Color(255, 255, 255)))
     surface.DrawRect(0, 0, w, h)
     surface.SetTextColor(255, 255, 255, 255)
     surface.SetFont("marlett")
@@ -149,7 +149,7 @@ function SKIN:PaintButtonUp(panel, w, h)
 end
 
 function SKIN:PaintButtonDown(panel, w, h)
-    surface.SetDrawColor(lia.config.get("color", Color(255, 255, 255)))
+    surface.SetDrawColor(lia.config.get("Color", Color(255, 255, 255)))
     surface.DrawRect(0, 0, w, h)
     surface.SetTextColor(255, 255, 255, 255)
     surface.SetFont("marlett")

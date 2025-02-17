@@ -1,18 +1,6 @@
-﻿SELF_PIM_FRAME = nil
+﻿local MODULE = MODULE
+SELF_PIM_FRAME = nil
 PIM_Frame = nil
-function MODULE:PlayerButtonDown(client, button)
-    if not client:getChar() then return end
-    if button == KEY_G and IsFirstTimePredicted() then self:OpenLocalPIM() end
-end
-
-function MODULE:ScoreboardShow()
-    local client = LocalPlayer()
-    if client:getChar() and self:CheckPossibilities() then
-        self:OpenPIM()
-        return true
-    end
-end
-
 function MODULE:OpenPIM()
     if IsValid(SELF_PIM_FRAME) then
         SELF_PIM_FRAME:Close()
@@ -40,7 +28,8 @@ function MODULE:OpenPIM()
     end
 
     function frame:Think()
-        if not input.IsKeyDown(KEY_TAB) then self:Close() end
+        local interactionKey = lia.keybind.get("Interaction Menu", KEY_TAB)
+        if not input.IsKeyDown(interactionKey) then self:Close() end
     end
 
     timer.Remove("PIM_Frame_Timer")
@@ -123,7 +112,8 @@ function MODULE:OpenLocalPIM()
     end
 
     function frame:Think()
-        if not input.IsKeyDown(KEY_G) then self:Close() end
+        local personalKey = lia.keybind.get("Personal Actions", KEY_G)
+        if not input.IsKeyDown(personalKey) then self:Close() end
     end
 
     timer.Remove("PIM_Frame_Timer")
@@ -177,3 +167,11 @@ function MODULE:OpenLocalPIM()
     frame:CenterVertical()
     SELF_PIM_FRAME = frame
 end
+
+-- the new for  Personal Actions is printing as 16 and not opening the panel. Fix this
+lia.keybind.add(KEY_TAB, "Interaction Menu", function(p)
+    local client = LocalPlayer()
+    if client:getChar() and MODULE:CheckPossibilities() then MODULE:OpenPIM() end
+end)
+
+lia.keybind.add(KEY_G, "Personal Actions", function() MODULE:OpenLocalPIM() end)

@@ -208,3 +208,37 @@ else
         netstream.Start("cmd", command, {...})
     end
 end
+
+hook.Add("CreateMenuButtons", "CommandsMenuButtons", function(tabs)
+    local function createListPanel(parent, columns)
+        local panel = parent:Add("DPanel")
+        panel:SetSize(parent:GetWide(), parent:GetTall())
+        panel:Dock(FILL)
+        local list = panel:Add("DListView")
+        list:Dock(FILL)
+        list:SetMultiSelect(false)
+        for _, colName in ipairs(columns) do
+            list:AddColumn(colName)
+        end
+
+        local function addRow(data)
+            list:AddLine(unpack(data))
+        end
+        return panel, addRow
+    end
+
+    tabs["Commands"] = function(panel)
+        local f = vgui.Create("DFrame", panel)
+        f:SetSize(ScrW() * 0.6, ScrH() * 0.7)
+        f:Center()
+        f:SetTitle("Commands")
+        f:MakePopup()
+        local panelList, addRow = createListPanel(f, {"Command", "Syntax", "Privilege"})
+        f:Add(panelList)
+        for cmdName, cmdData in SortedPairs(lia.command.list, function(a, b) return tostring(a) < tostring(b) end) do
+            if isnumber(cmdName) then continue end
+            local hasAccess, privilege = lia.command.hasAccess(LocalPlayer(), cmdName, cmdData)
+            if hasAccess then addRow({"/" .. cmdName, cmdData.syntax or "", privilege or "None"}) end
+        end
+    end
+end)

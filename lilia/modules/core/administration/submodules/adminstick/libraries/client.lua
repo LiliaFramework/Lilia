@@ -44,7 +44,7 @@ local function HandleExtraFields(commandKey, commandData, target, commandName)
         label:SetSize(150, 30)
         label:SetFont("DermaDefaultBold")
         label:SetText(L(field))
-        if type(fieldType) == "function" then
+        if isfunction(fieldType) then
             local options, typeField = fieldType()
             if typeField == "combo" then
                 local comboBox = vgui.Create("DComboBox", frame)
@@ -80,7 +80,7 @@ local function HandleExtraFields(commandKey, commandData, target, commandName)
         local args = {}
         for field, fieldType in pairs(commandData.AdminStick.ExtraFields) do
             local value
-            if type(fieldType) == "function" then
+            if isfunction(fieldType) then
                 local selected = inputs[field]:GetSelected()
                 value = selected
             elseif fieldType == "text" then

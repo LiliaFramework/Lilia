@@ -84,3 +84,5 @@ function lia.class.hasWhitelist(class)
     if info.isDefault then return false end
     return info.isWhitelisted
 end
+
+hook.Add("CreateMenuButtons", "ClassesMenuButtons", function(tabs) if #lia.faction.getClasses(LocalPlayer():getChar():getFaction()) > 1 then tabs["classes"] = function(panel) panel:Add("liaClasses") end end end)

@@ -15,15 +15,15 @@ FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/libraries/keybind.lua",
+        realm = "client"
+    },
+    {
         path = "lilia/gamemode/core/libraries/option.lua",
         realm = "client"
     },
     {
         path = "lilia/gamemode/core/libraries/util.lua",
-        realm = "shared"
-    },
-    {
-        path = "lilia/gamemode/core/libraries/keybind.lua",
         realm = "shared"
     },
     {

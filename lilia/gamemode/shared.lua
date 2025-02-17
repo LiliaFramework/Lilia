@@ -67,6 +67,7 @@ function GM:Initialize()
     else
         hook.Run("LoadLiliaFonts", "Arial", "Segoe UI")
         lia.option.load()
+        lia.keybind.load()
     end
 
     lia.config.load()
@@ -86,6 +87,7 @@ function GM:OnReloaded()
     else
         hook.Run("LoadLiliaFonts", lia.config.get("Font"), lia.config.get("GenericFont"))
         lia.option.load()
+        lia.keybind.load()
     end
 end
 

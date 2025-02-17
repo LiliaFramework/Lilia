@@ -436,7 +436,7 @@ if SERVER then
     end
 
     function playerMeta:setRagdolled(state, time, getUpGrace, getUpMessage)
-        getUpMessage = getUpMessage or "wakingUp"
+        getUpMessage = getUpMessage or L("wakingUp")
         local hasRagdoll = self:hasRagdoll()
         local ragdoll = self:getRagdoll()
         if state then

@@ -364,3 +364,428 @@ lia.config.add("AutoDownloadWorkshop", "Auto Download Workshop Content", true, n
     schemaOnly = false,
     type = "Boolean"
 })
+
+lia.config.add("CharMenuBGInputDisabled", "Character Menu BG Input Disabled", true, nil, {
+    desc = "Whether background input is disabled durinag character menu use",
+    category = "Main Menu",
+    type = "Boolean"
+})
+
+lia.config.add("AllowKeybindEditing", "Allow Keybind Editing", true, nil, {
+    desc = "Whether keybind editing is allowed",
+    category = "Server",
+    type = "Boolean"
+})
+
+hook.Add("CreateMenuButtons", "ConfigMenuButtons", function(tabs)
+    local ConfigFormatting = {
+        Int = function(key, name, config, parent)
+            local container = vgui.Create("DPanel", parent)
+            container:SetTall(220)
+            container:Dock(TOP)
+            container:DockMargin(0, 60, 0, 10)
+            container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+            local panel = container:Add("DPanel")
+            panel:Dock(FILL)
+            panel.Paint = nil
+            local label = panel:Add("DLabel")
+            label:Dock(TOP)
+            label:SetTall(45)
+            label:SetText(name)
+            label:SetFont("ConfigFontLarge")
+            label:SetContentAlignment(5)
+            label:SetTextColor(Color(255, 255, 255))
+            label:DockMargin(0, 20, 0, 0)
+            local description = panel:Add("DLabel")
+            description:Dock(TOP)
+            description:SetTall(35)
+            description:SetText(config.desc or "")
+            description:SetFont("DescriptionFontLarge")
+            description:SetContentAlignment(5)
+            description:SetTextColor(Color(200, 200, 200))
+            description:DockMargin(0, 10, 0, 0)
+            local slider = panel:Add("DNumSlider")
+            slider:Dock(FILL)
+            slider:DockMargin(10, 0, 10, 0)
+            slider:SetMin(lia.config.get(key .. "_min", config.data and config.data.min or 0))
+            slider:SetMax(lia.config.get(key .. "_max", config.data and config.data.max or 1))
+            slider:SetDecimals(0)
+            slider:SetValue(lia.config.get(key, config.value))
+            slider:SetText("")
+            slider.PerformLayout = function()
+                slider.Label:SetWide(0)
+                slider.TextArea:SetWide(50)
+            end
+
+            slider.OnValueChanged = function(_, newValue)
+                local timerName = "ConfigChange_" .. key .. "_" .. os.time()
+                timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, math.floor(newValue)) end)
+            end
+            return container
+        end,
+        Float = function(key, name, config, parent)
+            local container = vgui.Create("DPanel", parent)
+            container:SetTall(220)
+            container:Dock(TOP)
+            container:DockMargin(0, 60, 0, 10)
+            container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+            local panel = container:Add("DPanel")
+            panel:Dock(FILL)
+            panel.Paint = nil
+            local label = panel:Add("DLabel")
+            label:Dock(TOP)
+            label:SetTall(45)
+            label:SetText(name)
+            label:SetFont("ConfigFontLarge")
+            label:SetContentAlignment(5)
+            label:SetTextColor(Color(255, 255, 255))
+            label:DockMargin(0, 20, 0, 0)
+            local description = panel:Add("DLabel")
+            description:Dock(TOP)
+            description:SetTall(35)
+            description:SetText(config.desc or "")
+            description:SetFont("DescriptionFontLarge")
+            description:SetContentAlignment(5)
+            description:SetTextColor(Color(200, 200, 200))
+            description:DockMargin(0, 10, 0, 0)
+            local slider = panel:Add("DNumSlider")
+            slider:Dock(FILL)
+            slider:DockMargin(10, 0, 10, 0)
+            slider:SetMin(lia.config.get(key .. "_min", config.data and config.data.min or 0))
+            slider:SetMax(lia.config.get(key .. "_max", config.data and config.data.max or 1))
+            slider:SetDecimals(2)
+            slider:SetValue(lia.config.get(key, config.value))
+            slider:SetText("")
+            slider.PerformLayout = function()
+                slider.Label:SetWide(0)
+                slider.TextArea:SetWide(50)
+            end
+
+            slider.OnValueChanged = function(_, newValue)
+                local timerName = "ConfigChange_" .. key .. "_" .. os.time()
+                timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, tonumber(newValue)) end)
+            end
+            return container
+        end,
+        Generic = function(key, name, config, parent)
+            local container = vgui.Create("DPanel", parent)
+            container:SetTall(220)
+            container:Dock(TOP)
+            container:DockMargin(0, 60, 0, 10)
+            container.Paint = function() end
+            local panel = container:Add("DPanel")
+            panel:Dock(FILL)
+            panel.Paint = nil
+            local label = panel:Add("DLabel")
+            label:Dock(TOP)
+            label:SetTall(45)
+            label:SetText(name)
+            label:SetFont("ConfigFontLarge")
+            label:SetContentAlignment(5)
+            label:SetTextColor(Color(255, 255, 255))
+            label:DockMargin(0, 20, 0, 0)
+            local description = panel:Add("DLabel")
+            description:Dock(TOP)
+            description:SetTall(35)
+            description:SetText(config.desc or "")
+            description:SetFont("DescriptionFontLarge")
+            description:SetContentAlignment(5)
+            description:SetTextColor(Color(200, 200, 200))
+            description:DockMargin(0, 10, 0, 0)
+            local entry = panel:Add("DTextEntry")
+            entry:Dock(TOP)
+            entry:SetTall(60)
+            entry:DockMargin(300, 10, 300, 0)
+            entry:SetText(tostring(lia.config.get(key, config.value)))
+            entry:SetFont("ConfigFontLarge")
+            entry:SetTextColor(Color(255, 255, 255))
+            entry.Paint = function(self, w, h)
+                draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, 200))
+                self:DrawTextEntryText(Color(255, 255, 255), Color(255, 255, 255), Color(255, 255, 255))
+            end
+
+            entry.OnEnter = function()
+                local newValue = entry:GetText()
+                local timerName = "ConfigChange_" .. key .. "_" .. os.time()
+                timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, newValue) end)
+            end
+            return container
+        end,
+        Boolean = function(key, name, config, parent)
+            local container = vgui.Create("DPanel", parent)
+            container:SetTall(220)
+            container:Dock(TOP)
+            container:DockMargin(0, 60, 0, 10)
+            container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+            local panel = container:Add("DPanel")
+            panel:Dock(FILL)
+            panel.Paint = nil
+            local label = panel:Add("DLabel")
+            label:Dock(TOP)
+            label:SetTall(45)
+            label:SetText(name)
+            label:SetFont("ConfigFontLarge")
+            label:SetContentAlignment(5)
+            label:SetTextColor(Color(255, 255, 255))
+            label:DockMargin(0, 20, 0, 0)
+            local description = panel:Add("DLabel")
+            description:Dock(TOP)
+            description:SetTall(35)
+            description:SetText(config.desc or "")
+            description:SetFont("DescriptionFontLarge")
+            description:SetContentAlignment(5)
+            description:SetTextColor(Color(200, 200, 200))
+            description:DockMargin(0, 10, 0, 0)
+            local button = panel:Add("DButton")
+            button:Dock(TOP)
+            button:SetTall(100)
+            button:DockMargin(100, 10, 100, 0)
+            button:SetText("")
+            button:SetCursor("hand")
+            button.Paint = function(_, w, h)
+                local isChecked = lia.config.get(key, config.value)
+                local check = getIcon("0xe880", true)
+                local uncheck = getIcon("0xf096", true)
+                local icon = isChecked and check or uncheck
+                lia.util.drawText(icon, w / 2, h / 2 - 10, color_white, 1, 1, "liaIconsHugeNew")
+            end
+
+            button.DoClick = function()
+                local newValue = not lia.config.get(key, config.value)
+                local timerName = "ConfigChange_" .. key .. "_" .. os.time()
+                timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, newValue) end)
+            end
+            return container
+        end,
+        Color = function(key, name, config, parent)
+            local container = vgui.Create("DPanel", parent)
+            container:SetTall(220)
+            container:Dock(TOP)
+            container:DockMargin(0, 60, 0, 10)
+            container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+            local panel = container:Add("DPanel")
+            panel:Dock(FILL)
+            panel.Paint = nil
+            local label = panel:Add("DLabel")
+            label:Dock(TOP)
+            label:SetTall(45)
+            label:SetText(name)
+            label:SetFont("ConfigFontLarge")
+            label:SetContentAlignment(5)
+            label:SetTextColor(Color(255, 255, 255))
+            label:DockMargin(0, 20, 0, 0)
+            local description = panel:Add("DLabel")
+            description:Dock(TOP)
+            description:SetTall(35)
+            description:SetText(config.desc or "")
+            description:SetFont("DescriptionFontLarge")
+            description:SetContentAlignment(5)
+            description:SetTextColor(Color(200, 200, 200))
+            description:DockMargin(0, 10, 0, 0)
+            local button = panel:Add("DButton")
+            button:Dock(FILL)
+            button:DockMargin(10, 0, 10, 0)
+            button:SetText("")
+            button:SetCursor("hand")
+            button.Paint = function(_, w, h)
+                local colorValue = lia.config.get(key, config.value)
+                surface.SetDrawColor(colorValue)
+                surface.DrawRect(10, h / 2 - 15, w - 20, 30)
+                draw.RoundedBox(2, 10, h / 2 - 15, w - 20, 30, Color(255, 255, 255, 50))
+            end
+
+            button.DoClick = function()
+                if IsValid(button.picker) then button.picker:Remove() end
+                local pickerFrame = vgui.Create("DFrame")
+                pickerFrame:SetSize(300, 400)
+                pickerFrame:SetTitle("Choose Color")
+                pickerFrame:Center()
+                pickerFrame:MakePopup()
+                local colorMixer = pickerFrame:Add("DColorMixer")
+                colorMixer:Dock(FILL)
+                colorMixer:SetPalette(true)
+                colorMixer:SetAlphaBar(true)
+                colorMixer:SetWangs(true)
+                colorMixer:SetColor(lia.config.get(key, config.value))
+                local confirm = pickerFrame:Add("DButton")
+                confirm:Dock(BOTTOM)
+                confirm:SetTall(40)
+                confirm:SetText("Apply")
+                confirm:SetTextColor(color_white)
+                confirm:SetFont("ConfigFontLarge")
+                confirm:DockMargin(10, 10, 10, 10)
+                confirm.Paint = function(self, w, h)
+                    surface.SetDrawColor(Color(0, 150, 0))
+                    surface.DrawRect(0, 0, w, h)
+                    if self:IsHovered() then
+                        surface.SetDrawColor(Color(0, 180, 0))
+                        surface.DrawRect(0, 0, w, h)
+                    end
+
+                    surface.SetDrawColor(Color(255, 255, 255))
+                    surface.DrawOutlinedRect(0, 0, w, h)
+                end
+
+                confirm.DoClick = function()
+                    local newColor = colorMixer:GetColor()
+                    local timerName = "ConfigChange_" .. key .. "_" .. os.time()
+                    timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, newColor) end)
+                    pickerFrame:Remove()
+                end
+
+                colorMixer.ValueChanged = function(_, value) pickerFrame.curColor = value end
+                button.picker = pickerFrame
+            end
+            return container
+        end,
+        Table = function(key, name, config, parent)
+            local container = vgui.Create("DPanel", parent)
+            container:SetTall(220)
+            container:Dock(TOP)
+            container:DockMargin(0, 60, 0, 10)
+            container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+            local panel = container:Add("DPanel")
+            panel:Dock(FILL)
+            panel.Paint = nil
+            local label = panel:Add("DLabel")
+            label:Dock(TOP)
+            label:SetTall(45)
+            label:SetText(name)
+            label:SetFont("ConfigFontLarge")
+            label:SetContentAlignment(5)
+            label:SetTextColor(Color(255, 255, 255))
+            label:DockMargin(0, 20, 0, 0)
+            local description = panel:Add("DLabel")
+            description:Dock(TOP)
+            description:SetTall(35)
+            description:SetText(config.desc or "")
+            description:SetFont("DescriptionFontLarge")
+            description:SetContentAlignment(5)
+            description:SetTextColor(Color(200, 200, 200))
+            description:DockMargin(0, 10, 0, 0)
+            local comboBox = panel:Add("DComboBox")
+            comboBox:Dock(TOP)
+            comboBox:SetTall(60)
+            comboBox:DockMargin(300, 10, 300, 0)
+            comboBox:SetValue(tostring(lia.config.get(key, config.value)))
+            comboBox:SetFont("ConfigFontLarge")
+            comboBox:SetTextColor(Color(255, 255, 255))
+            comboBox.Paint = function(self, w, h)
+                draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, 200))
+                self:DrawTextEntryText(Color(255, 255, 255), Color(255, 255, 255), Color(255, 255, 255))
+            end
+
+            local options = lia.config.get(key .. "_options", config.data and config.data.options or {})
+            for _, option in ipairs(options) do
+                comboBox:AddChoice(option)
+            end
+
+            comboBox.OnSelect = function(_, _, value)
+                local timerName = "ConfigChange_" .. key .. "_" .. os.time()
+                timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, value) end)
+            end
+            return container
+        end
+    }
+
+    if LocalPlayer():hasPrivilege("Staff Permissions - Access Configuration Menu") then
+        tabs["Configuration"] = function(panel)
+            panel.sidebar = panel:Add("DScrollPanel")
+            panel.sidebar:Dock(LEFT)
+            panel.sidebar:SetWide(250)
+            panel.sidebar:DockMargin(20, 20, 10, 20)
+            panel.scroll = panel:Add("DScrollPanel")
+            panel.scroll:Dock(FILL)
+            panel.scroll:DockMargin(10, 10, 10, 10)
+            panel.scroll.Paint = function() end
+            panel.categories = {}
+            panel.activeTab = nil
+            local function addCategory(text)
+                if panel.categories[text] then return panel.categories[text].label end
+                local categoryLabel = panel.sidebar:Add("DButton")
+                categoryLabel:SetText(text)
+                categoryLabel:SetTall(40)
+                categoryLabel:Dock(TOP)
+                categoryLabel:DockMargin(0, 10, 0, 10)
+                categoryLabel:SetFont("liaMediumFont")
+                categoryLabel:SetTextColor(color_white)
+                categoryLabel.Paint = function(btn, w, h)
+                    if btn:IsHovered() then
+                        local underlineWidth = w * 0.4
+                        local underlineX = (w - underlineWidth) * 0.5
+                        local underlineY = h - 4
+                        surface.SetDrawColor(255, 255, 255, 80)
+                        surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
+                    end
+
+                    if panel.activeTab == btn then
+                        surface.SetDrawColor(color_white)
+                        surface.DrawOutlinedRect(0, 0, w, h)
+                    end
+                end
+
+                categoryLabel.DoClick = function(button)
+                    for _, cat in pairs(panel.categories) do
+                        for _, btn in ipairs(cat.buttons) do
+                            btn:SetVisible(false)
+                        end
+                    end
+
+                    for _, btn in ipairs(panel.categories[text].buttons) do
+                        btn:SetVisible(true)
+                    end
+
+                    panel.activeTab = button
+                end
+
+                panel.categories[text] = {
+                    label = categoryLabel,
+                    buttons = {}
+                }
+                return categoryLabel
+            end
+
+            local function addElement(elementType, key, name, config, category)
+                category = category or "Miscellaneous"
+                local cat = panel.categories[category]
+                if not cat then
+                    cat = {
+                        label = addCategory(category),
+                        buttons = {}
+                    }
+
+                    panel.categories[category] = cat
+                end
+
+                local panelElement = ConfigFormatting[elementType](key, name, config, panel.scroll)
+                panelElement:SetParent(panel.scroll)
+                panelElement:Dock(TOP)
+                panelElement:DockMargin(20, 10, 20, 10)
+                panelElement:SetVisible(false)
+                panelElement.Paint = function(_, w, h)
+                    draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
+                    surface.SetDrawColor(255, 255, 255)
+                    surface.DrawOutlinedRect(0, 0, w, h)
+                end
+
+                table.insert(cat.buttons, panelElement)
+            end
+
+            for key, option in pairs(lia.config.stored) do
+                local elementType = option.data and option.data.type or "Generic"
+                addElement(elementType, key, option.name, option, option.category)
+            end
+
+            local firstCategory = next(panel.categories)
+            if firstCategory then
+                for _, btn in ipairs(panel.categories[firstCategory].buttons) do
+                    btn:SetVisible(true)
+                end
+
+                panel.activeTab = panel.categories[firstCategory].label
+            end
+
+            panel.scroll:InvalidateLayout(true)
+        end
+    end
+end)
