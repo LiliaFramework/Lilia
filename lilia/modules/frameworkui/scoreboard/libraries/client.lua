@@ -6,11 +6,12 @@ end
 
 function MODULE:ScoreboardShow()
     local client = LocalPlayer()
-    if client:getChar() and PIM and not PIM:CheckPossibilities() then
+    if client:getChar() and (PIM and not PIM:CheckPossibilities()) then
         vgui.Create("liaScoreboard")
         gui.EnableScreenClicker(true)
         return true
     end
+    return true
 end
 
 function MODULE:OnReloaded()

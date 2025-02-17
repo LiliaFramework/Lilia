@@ -24,38 +24,20 @@ lia.config.add("CenterLogo", "Center Logo", "", nil, {
     type = "Generic"
 })
 
-lia.config.add("ButtonLogo", "Button Logo", "", nil, {
-    desc = "The file path or URL for the logo displayed on the button",
+lia.config.add("DiscordURL", "The Discord of the Server", "https://discord.gg/esCRH5ckbQ", nil, {
+    desc = "The URL for the Discord server",
     category = "Main Menu",
     type = "Generic"
 })
 
-lia.config.add("ButtonURL", "Button URL", "", nil, {
-    desc = "The URL opened when the button with ButtonLogo is clicked",
+lia.config.add("Workshop", "The Steam Workshop of the Server", "https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255", nil, {
+    desc = "The URL for the Steam Workshop page",
     category = "Main Menu",
     type = "Generic"
 })
 
 lia.config.add("CharMenuBGInputDisabled", "Character Menu BG Input Disabled", true, nil, {
     desc = "Whether background input is disabled during character menu use",
-    category = "Main Menu",
-    type = "Boolean"
-})
-
-lia.config.add("KickOnEnteringMainMenu", "Kick on Entering Main Menu", false, nil, {
-    desc = "Whether players are kicked upon entering the main menu",
-    category = "Main Menu",
-    type = "Boolean"
-})
-
-lia.config.add("CanSelectBodygroups", "Can Select Bodygroups", true, nil, {
-    desc = "Whether players can select bodygroups in the character menu",
-    category = "Main Menu",
-    type = "Boolean"
-})
-
-lia.config.add("CanSelectSkins", "Can Select Skins", true, nil, {
-    desc = "Whether players can select skins in the character menu",
     category = "Main Menu",
     type = "Boolean"
 })

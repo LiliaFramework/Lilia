@@ -1,142 +1,187 @@
-﻿local PANEL = {}
+local PANEL = {}
+local WHITE = Color(255, 255, 255, 150)
 local CharHover = {"buttons/button15.wav", 35, 250}
 local CharClick = {"buttons/button14.wav", 35, 255}
 local CharWarning = {"friends/friend_join.wav", 40, 255}
-local WHITE = Color(255, 255, 255, 200)
-PANEL.WHITE = Color(255, 255, 255, 200)
-PANEL.SELECTED = Color(255, 255, 255, 150)
-PANEL.HOVERED = Color(255, 255, 255, 255)
-PANEL.ANIM_SPEED = 0.2
-PANEL.FADE_SPEED = 2
-function PANEL:removeLogo()
-    if IsValid(self.schemaLogo) then
-        self.schemaLogo:Remove()
-        self.schemaLogo = nil
-    end
-end
-
-function PANEL:createTabs()
-    if lia.characters and #lia.characters > 0 then self:CreateButton("continue", "Continue your character", function() self:createCharacterSelection() end) end
-    if hook.Run("CanPlayerCreateChar", LocalPlayer()) ~= false then self:CreateButton("create", "Create a new character", function() self:createCharacterCreation() end) end
-    if LocalPlayer():getChar() then
-        if not lia.config.get("KickOnEnteringMainMenu", false) then self:CreateButton("return", "Return to character", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end) end
-    else
-        self:CreateButton("leave", "Disconnect from server", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("youWillBeDisconnected"):upper()):onConfirm(function() LocalPlayer():ConCommand("disconnect") end) end)
-    end
-end
-
-function PANEL:CreateIcon(parent, iconURL, iconIMG, posX, posY)
-    if iconURL and iconURL:find("%S") and iconIMG and iconIMG:find("%S") then
-        local icon = parent:Add("DHTML")
-        icon:SetPos(posX, posY)
-        icon:SetSize(86, 86)
-        local imgTag
-        if iconIMG:match("^https?://") then
-            imgTag = '<img src="' .. iconIMG .. '" width="86" height="86" />'
+PANEL.ANIM_SPEED = 0.1
+PANEL.FADE_SPEED = 0.5
+local function animateButton(button, w, h, text)
+    local animWidth = 0
+    local animDuration = 0.3
+    local startTime = nil
+    button.Paint = function(self, w, h)
+        surface.SetDrawColor(0, 0, 0, 255)
+        surface.DrawOutlinedRect(0, 0, w, h, 2)
+        surface.SetDrawColor(0, 0, 0, 150)
+        surface.DrawRect(1, 1, w - 2, h - 2)
+        draw.SimpleText(text, "DermaLarge", w / 2, h / 2, WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        if self:IsHovered() then
+            if not startTime then startTime = CurTime() end
+            local timeElapsed = CurTime() - startTime
+            animWidth = math.min(w, (timeElapsed / animDuration) * w) / 2
+            surface.SetDrawColor(76, 146, 172, 255)
+            surface.DrawLine(w / 2 - animWidth, h - 1, w / 2 + animWidth, h - 1)
         else
-            imgTag = '<img src="asset/path/' .. iconIMG .. '" width="86" height="86" />'
+            startTime = nil
+            animWidth = 0
         end
-
-        icon:SetHTML([[
-            <html>
-                <body style="margin: 0; padding: 0; overflow: hidden;">
-                    ]] .. imgTag .. [[
-                </body>
-            </html>
-        ]])
-        local button = icon:Add("DButton")
-        button:Dock(FILL)
-        button.DoClick = function() gui.OpenURL(iconURL) end
-        button:SetAlpha(0)
-        icon:SetAlpha(0)
-        icon:AlphaTo(255, self.ANIM_SPEED, 0)
-        return icon
     end
 end
 
-function PANEL:CreateButton(text, description, callback)
-    local btn = self.tabs:Add("DButton")
-    btn:SetText("")
-    btn:Dock(TOP)
-    btn:DockMargin(5, 5, 5, 20)
-    btn.initialTall = ScrH() * 0.1 / 2
-    btn.initialWidth = 2
-    btn.tall = btn.initialTall
-    btn.width = btn.initialWidth
-    btn.text_color = color_white
-    btn.text = text
-    btn.description = description or "No description"
-    btn.selected = false
-    btn.fillProgress = 0
-    btn:SetTall(btn.tall)
-    btn.Paint = function(me, w, h)
-        local hovered = me:IsHovered()
-        me.text_color = lia.color.LerpColor(0.2, me.text_color, hovered and Color(200, 200, 200) or color_white)
-        draw.SimpleText(me.text:upper(), "liaBigFont", w * 0.5, h * 0.5, me.text_color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        if hovered then
-            local underlineWidth = w * 0.4
-            local underlineX = (w - underlineWidth) * 0.5
-            local underlineY = h - 4
-            surface.SetDrawColor(255, 255, 255, 80)
-            surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
+function PANEL:createStartButton()
+    local screenWidth, screenHeight = ScrW(), ScrH()
+    local btnWidth = screenWidth * 0.2
+    local btnHeight = screenHeight * 0.04
+    local buttonSpacing = screenHeight * 0.01
+    local logoWidth = screenWidth * 0.13
+    local logoHeight = screenWidth * 0.13
+    local logoPath = lia.config.get("CenterLogo")
+    local discordURL = lia.config.get("DiscordURL")
+    local workshopURL = lia.config.get("Workshop")
+    local buttonConfigs = {}
+    table.insert(buttonConfigs, {
+        id = "play",
+        text = "PLAY",
+        doClick = function()
+            if self.buttons then
+                for _, btn in pairs(self.buttons) do
+                    if IsValid(btn) then btn:Remove() end
+                end
+            end
+
+            if self.logo and IsValid(self.logo) then self.logo:Remove() end
+            self:clickSound()
+            self:showContent()
         end
+    })
+
+    if discordURL and discordURL ~= "" then
+        table.insert(buttonConfigs, {
+            id = "discord",
+            text = "DISCORD",
+            doClick = function()
+                self:clickSound()
+                gui.OpenURL(discordURL)
+            end
+        })
     end
 
-    btn.DoClick = function(me)
-        self:clickSound()
-        if self.selectedButton and self.selectedButton ~= me and self.selectedButton.selected then self.selectedButton.selected = false end
-        self.selectedButton = me
-        if IsValid(self.selectedDescription) then self.selectedDescription:SetText(me.description) end
-        if callback and isfunction(callback) then callback() end
+    if workshopURL and workshopURL ~= "" then
+        table.insert(buttonConfigs, {
+            id = "workshop",
+            text = "STEAM WORKSHOP",
+            doClick = function()
+                self:clickSound()
+                gui.OpenURL(workshopURL)
+            end
+        })
+    end
+
+    table.insert(buttonConfigs, {
+        id = "disconnect",
+        text = "DISCONNECT",
+        doClick = function()
+            self:clickSound()
+            RunConsoleCommand("disconnect")
+        end
+    })
+
+    local numButtons = #buttonConfigs
+    local totalHeight = numButtons * btnHeight + (numButtons - 1) * buttonSpacing
+    local startY = screenHeight / 2 - totalHeight / 2
+    self.buttons = {}
+    for i, config in ipairs(buttonConfigs) do
+        local btn = self:Add("DButton")
+        btn:SetSize(btnWidth, btnHeight)
+        local posY = startY + (i - 1) * (btnHeight + buttonSpacing)
+        btn:SetPos(screenWidth / 2 - btnWidth / 2, posY)
+        btn:SetText("")
+        animateButton(btn, btnWidth, btnHeight, config.text)
+        btn.DoClick = config.doClick
+        btn.OnCursorEntered = function() surface.PlaySound("ui/hover.wav") end
+        self.buttons[config.id] = btn
+    end
+
+    if logoPath and logoPath ~= "" then
+        if string.sub(logoPath, 1, 8) == "https://" then
+            http.Fetch(logoPath, function(body)
+                local fileName = "temp_logo.png"
+                file.Write(fileName, body)
+                self.logo = self:Add("DImage")
+                self.logo:SetImage("data/" .. fileName)
+                self.logo:SetSize(logoWidth, logoHeight)
+                self.logo:CenterHorizontal()
+                self.logo:SetPos(screenWidth / 2 - logoWidth / 2, startY - logoHeight - buttonSpacing)
+            end, function(err) print("Failed to fetch logo: ", err) end)
+        else
+            self.logo = self:Add("DImage")
+            self.logo:SetImage(logoPath)
+            self.logo:SetSize(logoWidth, logoHeight)
+            self.logo:CenterHorizontal()
+            self.logo:SetPos(screenWidth / 2 - logoWidth / 2, startY - logoHeight - buttonSpacing)
+        end
+    end
+end
+
+function PANEL:playSound(url)
+    if lia.menuSound then
+        lia.menuSound:Stop()
+        lia.menuSound = nil
+    end
+
+    timer.Remove("liaSoundFader")
+    local source = url
+    if source:find("%S") then
+        local function callback(sound, errorID, fault)
+            if sound then
+                sound:SetVolume(2)
+                lia.menuSound = sound
+                lia.menuSound:Play()
+            else
+                MsgC(Color(255, 50, 50), errorID .. " ")
+                MsgC(color_white, fault .. "\n")
+            end
+        end
+
+        if source:find("http") then
+            sound.PlayURL(source, "noplay", callback)
+        else
+            sound.PlayFile("sound/" .. source, "noplay", callback)
+        end
+    end
+end
+
+function PANEL:fadeMusic()
+    if lia.menuSound then
+        local fraction = 1
+        local start, finish = RealTime(), RealTime() + 10
+        timer.Create("liaMusicFader", 0.1, 0, function()
+            if lia.menuSound then
+                fraction = 1 - math.TimeFraction(start, finish, RealTime())
+                lia.menuSound:SetVolume(fraction * 0.5)
+                if fraction <= 0 then
+                    lia.menuSound:Stop()
+                    lia.menuSound = nil
+                    timer.Remove("liaMusicFader")
+                end
+            else
+                timer.Remove("liaMusicFader")
+            end
+        end)
     end
 end
 
 function PANEL:createTitle()
-    self.title = self:Add("DLabel")
-    self.title:Dock(TOP)
-    self.title:DockMargin(0, 20, 0, 20)
-    self.title:SetContentAlignment(5)
-    self.title:SetTall(96)
-    self.title:SetFont("liaCharTitleFont")
-    self.title:SetText(SCHEMA and SCHEMA.name)
-    self.title:SetTextColor(WHITE)
-    self.selectedDescription = self:Add("DLabel")
-    self.selectedDescription:Dock(BOTTOM)
-    self.selectedDescription:DockMargin(64, 0, 64, 16)
-    self.selectedDescription:SetContentAlignment(5)
-    self.selectedDescription:SetTall(24)
-    self.selectedDescription:SetFont("liaMediumFont")
-    self.selectedDescription:SetTextColor(WHITE)
-    self.selectedDescription:SetText("")
-    local centerlogo = lia.config.get("CenterLogo", ""):find("%S")
-    if centerlogo then
-        local logoWidth, logoHeight = 512, 512
-        self.schemaLogo = self:Add("DHTML")
-        self.schemaLogo:SetSize(logoWidth, logoHeight)
-        self.schemaLogo:SetPos((ScrW() - logoWidth) / 2, sH(150))
-        self.schemaLogo:SetZPos(-197)
-        local htmlContent = [[
-            <html>
-                <body style="margin: 0; background-color: transparent;">
-                    <img src="]] .. lia.config.get("CenterLogo", "") .. [[" width="]] .. logoWidth .. [[" height="]] .. logoHeight .. [[" />
-                </body>
-            </html>
-        ]]
-        self.schemaLogo:SetHTML(htmlContent)
-        self.schemaLogo:SetAlpha(255)
-        self.schemaLogo.Paint = function(_, w, h)
-            surface.SetDrawColor(255, 255, 255, 0)
-            surface.DrawRect(0, 0, w, h)
-        end
+    if self.tabs then
+        local topMargin = 32
+        self.tabs:DockMargin(64, topMargin, 64, 0)
     end
-
-    local iconWidth = 86
-    self:CreateIcon(self, "https://github.com/LiliaFramework/Lilia", "https://raw.githubusercontent.com/LiliaFramework/Lilia/main/lilia/logo.png", ScrW() - iconWidth - 16, 8)
-    if lia.config.get("ButtonURL", "") ~= "" and lia.config.get("ButtonLogo", "") ~= "" then self:CreateIcon(self, lia.config.get("ButtonURL", ""), lia.config.get("ButtonLogo", ""), 16, ScrH() - iconWidth - 16) end
 end
 
 function PANEL:loadBackground()
-    local url = lia.config.get("BackgroundURL", "")
+    local mapScene = lia.module.list.mapscene
+    if not mapScene or table.Count(mapScene.scenes) == 0 then self.blank = true end
+    local url = lia.config.get("BackgroundURL")
     if url and url:find("%S") then
         self.background = self:Add("DHTML")
         self.background:SetSize(ScrW(), ScrH())
@@ -146,36 +191,83 @@ function PANEL:loadBackground()
             self.background:SetHTML(url)
         end
 
-        self.background.OnDocumentReady = function() self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end
+        self.background.OnDocumentReady = function(background) self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end
         self.background:MoveToBack()
         self.background:SetZPos(-999)
-        if lia.config.get("CharMenuBGInputDisabled", true) then
+        if lia.config.get("CharMenuBGInputDisabled") then
             self.background:SetMouseInputEnabled(false)
             self.background:SetKeyboardInputEnabled(false)
         end
 
-        self.background:SetAlpha(200)
         self.bgLoader = self:Add("DPanel")
         self.bgLoader:SetSize(ScrW(), ScrH())
         self.bgLoader:SetZPos(-998)
-        self.bgLoader.Paint = function(_, w, h)
-            surface.SetDrawColor(20, 20, 20)
+        self.bgLoader.Paint = function(loader, w, h)
+            surface.SetDrawColor(5, 5, 5)
             surface.DrawRect(0, 0, w, h)
         end
     end
 end
 
-local gradient = lia.util.getMaterial("vgui/gradient-u")
 function PANEL:paintBackground(w, h)
     if IsValid(self.background) then return end
     if self.blank then
-        surface.SetDrawColor(30, 30, 30)
+        surface.SetDrawColor(42, 42, 42, 179)
         surface.DrawRect(0, 0, w, h)
     end
+end
 
-    surface.SetMaterial(gradient)
-    surface.SetDrawColor(0, 0, 0, 250)
-    surface.DrawTexturedRect(0, 0, w, h * 1.5)
+function PANEL:addTab(name, callback, justClick)
+    local button = self.tabs:Add("liaCharacterTabButton")
+    button:setText(L(name):upper())
+    if justClick then
+        if isfunction(callback) then button.DoClick = function(button) callback(self) end end
+        return
+    end
+
+    button.DoClick = function(button) button:setSelected(true) end
+    if isfunction(callback) then button:onSelected(function() callback(self) end) end
+    return button
+end
+
+function PANEL:createTabs()
+    local load, create
+    if lia.characters and #lia.characters > 0 then load = self:addTab("main menu", self.createCharacterSelection) end
+    if hook.Run("CanPlayerCreateCharacter", LocalPlayer()) ~= false then create = self:addTab("new character", self.createCharacterCreation) end
+    if IsValid(load) then
+        load:setSelected()
+    elseif IsValid(create) then
+        create:setSelected()
+    end
+
+    if LocalPlayer():getChar() then
+        self:addTab("return", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end, true)
+    else
+        self:addTab("leave", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() LocalPlayer():ConCommand("disconnect") end) end, true)
+    end
+
+    local totalWidth = -32
+    for _, v in ipairs(self.tabs:GetChildren()) do
+        totalWidth = totalWidth + v:GetWide()
+    end
+
+    self.tabs:Dock(BOTTOM)
+    self.tabs:DockMargin(0, 0, 0, 10)
+    self.tabs:DockMargin(self.tabs:GetWide() * 0.5 - totalWidth * 0.5, 0, 0, 10)
+    self:Dock(FILL)
+    self:DockMargin(0, 0, 0, 0)
+end
+
+function PANEL:createCharacterSelection()
+    self.content:Clear()
+    self.content:InvalidateLayout(true)
+    self.content:Add("liaCharacterSelection")
+end
+
+function PANEL:createCharacterCreation()
+    self.content:Clear()
+    self.content:InvalidateLayout(true)
+    self.content:Add("liaCharacterCreation")
 end
 
 function PANEL:fadeOut()
@@ -183,26 +275,31 @@ function PANEL:fadeOut()
 end
 
 function PANEL:Init()
+    if IsValid(lia.gui.loading) then lia.gui.loading:Remove() end
     if IsValid(lia.gui.character) then lia.gui.character:Remove() end
     lia.gui.character = self
+    self.color = ColorAlpha(color_white, 150)
+    self.colorSelected = color_white
+    self.colorHovered = ColorAlpha(color_white, 50)
     self:Dock(FILL)
     self:MakePopup()
     self:SetAlpha(0)
-    self:AlphaTo(255, 2)
-    self:createTitle()
+    self:AlphaTo(255, self.ANIM_SPEED * 2)
     self.tabs = self:Add("DPanel")
-    self.tabs:Dock(LEFT)
-    self.tabs:SetWide(ScrW() * 0.2)
-    self.tabs:DockMargin(10, 20, 10, 10)
+    self.tabs:Dock(TOP)
+    self.tabs:DockMargin(64, 32, 64, 0)
+    self.tabs:SetTall(48)
     self.tabs:SetPaintBackground(false)
+    self:createTitle()
     self.content = self:Add("DPanel")
     self.content:Dock(FILL)
-    self.content:DockMargin(10, 10, 10, 10)
+    self.content:DockMargin(64, 0, 64, 64)
     self.content:SetPaintBackground(false)
-    self.content:SetZPos(-100)
     self.music = self:Add("liaCharBGMusic")
     self:loadBackground()
-    self:showContent()
+    self:InvalidateParent(true)
+    self:InvalidateChildren(true)
+    self:createStartButton()
 end
 
 function PANEL:showContent()
@@ -211,22 +308,19 @@ function PANEL:showContent()
     self:createTabs()
 end
 
-function PANEL:moveTabs()
-end
-
 function PANEL:setFadeToBlack(fade)
     local d = deferred.new()
     if fade then
         if IsValid(self.fade) then self.fade:Remove() end
-        local fadePanel = vgui.Create("DPanel")
-        fadePanel:SetSize(ScrW(), ScrH())
-        fadePanel:SetSkin("Default")
-        fadePanel:SetBackgroundColor(color_black)
-        fadePanel:SetAlpha(0)
-        fadePanel:AlphaTo(255, self.FADE_SPEED, 0, function() d:resolve() end)
-        fadePanel:SetZPos(999)
-        fadePanel:MakePopup()
-        self.fade = fadePanel
+        local fade = vgui.Create("DPanel")
+        fade:SetSize(ScrW(), ScrH())
+        fade:SetSkin("Default")
+        fade:SetBackgroundColor(color_black)
+        fade:SetAlpha(0)
+        fade:AlphaTo(255, self.FADE_SPEED, 0, function() d:resolve() end)
+        fade:SetZPos(999)
+        fade:MakePopup()
+        self.fade = fade
     elseif IsValid(self.fade) then
         local fadePanel = self.fade
         fadePanel:AlphaTo(0, self.FADE_SPEED, 0, function()
@@ -235,26 +329,6 @@ function PANEL:setFadeToBlack(fade)
         end)
     end
     return d
-end
-
-function PANEL:createCharacterSelection()
-    self:removeLogo()
-    self.content:Clear()
-    self.content:InvalidateLayout(true)
-    local charSelect = self.content:Add("liaCharacterSelection")
-    charSelect:Dock(FILL)
-end
-
-function PANEL:createCharacterCreation()
-    if lia.config.get("BackgroundURL", "") then
-        if IsValid(self.background) then self.background:Remove() end
-        if IsValid(self.schemaLogo) then self.schemaLogo:Remove() end
-    end
-
-    self:removeLogo()
-    self.content:Clear()
-    self.content:InvalidateLayout(true)
-    self.content:Add("liaCharacterCreation")
 end
 
 function PANEL:Paint(w, h)

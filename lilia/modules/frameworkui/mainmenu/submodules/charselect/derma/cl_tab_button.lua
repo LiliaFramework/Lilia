@@ -1,34 +1,54 @@
-﻿local PANEL = {}
+local PANEL = {}
+local gradientR = lia.util.getMaterial("vgui/gradient-r")
+local gradientL = lia.util.getMaterial("vgui/gradient-l")
 function PANEL:Init()
-    self:Dock(TOP)
-    self:DockMargin(0, 0, 0, 12)
-    self:SetContentAlignment(5)
-    self:SetTextColor(lia.gui.character.GOLD)
-    self:SetTall(80)
+	self:Dock(LEFT)
+	self:DockMargin(0, 0, 32, 0)
+	self:SetContentAlignment(4)
 end
 
 function PANEL:setText(name)
-    self:SetText(L(name):upper())
-    self:SetFont("liaBigFont")
-    self:InvalidateLayout(true)
-    self:SizeToContentsX()
+	self:SetText(L(name):upper())
+	self:InvalidateLayout(true)
+	self:SizeToContentsX()
 end
 
 function PANEL:onSelected(callback)
-    self.callback = callback
+	self.callback = callback
+end
+
+function PANEL:setSelected(isSelected)
+	if isSelected == nil then isSelected = true end
+	if isSelected and self.isSelected then return end
+	local menu = lia.gui.character
+	if isSelected and IsValid(menu) then
+		if IsValid(menu.lastTab) then
+			menu.lastTab:SetTextColor(lia.gui.character.color)
+			menu.lastTab.isSelected = false
+		end
+
+		menu.lastTab = self
+	end
+
+	self:SetTextColor(isSelected and lia.gui.character.colorSelected or lia.gui.character.color)
+	self.isSelected = isSelected
+	if isfunction(self.callback) then self:callback() end
 end
 
 function PANEL:Paint(w, h)
-    if self:IsHovered() then
-        surface.SetDrawColor(lia.gui.character.SELECTED)
-    else
-        surface.SetDrawColor(Color(20, 15, 10, 80))
-    end
+	if self.isSelected or self:IsHovered() then
+		local r, g, b = lia.config.get("Color"):Unpack()
+		if self.isSelected then
+			surface.SetDrawColor(r, g, b, 200)
+		else
+			surface.SetDrawColor(r, g, b, 100)
+		end
 
-    surface.DrawRect(0, 0, w, h)
-    surface.SetDrawColor(0, 0, 0, 255)
-    surface.DrawOutlinedRect(0, 0, w, h)
-    surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
+		surface.SetMaterial(gradientR)
+		surface.DrawTexturedRect(0, h - 4, w / 2, 4)
+		surface.SetMaterial(gradientL)
+		surface.DrawTexturedRect(w / 2, h - 4, w / 2, 4)
+	end
 end
 
-vgui.Register("liaCharacterTabButton", PANEL, "DButton")
+vgui.Register("liaCharacterTabButton", PANEL, "liaCharButton")

@@ -1,84 +1,155 @@
-﻿local PANEL = {}
+local PANEL = {}
 local HIGHLIGHT = Color(255, 255, 255, 50)
 function PANEL:Init()
-    self.nameLabel = self:addLabel("name")
-    self.nameLabel:SetZPos(0)
-    self.nameLabel:SetTextColor(color_white)
+    self:SetTall(600)
+    self:SetWide(400)
+    local function label(text)
+        local lbl = self:Add("DLabel")
+        lbl:SetFont("liaMediumFont")
+        lbl:SetText(L(text):upper())
+        lbl:SizeToContents()
+        lbl:Dock(TOP)
+        lbl:DockMargin(0, 0, 0, 4)
+        return lbl
+    end
+
+    local function subLabel(text)
+        local subLbl = self:Add("DLabel")
+        subLbl:SetFont("liaSmallFont")
+        subLbl:SetText(text)
+        subLbl:SizeToContents()
+        subLbl:Dock(TOP)
+        subLbl:DockMargin(0, 0, 0, 4)
+        subLbl:SetTextColor(Color(150, 150, 150))
+        return subLbl
+    end
+
+    self.nameLabel = label("Name")
+    subLabel("Enter your full name.")
     self.name = self:addTextEntry("name")
-    self.name:SetTall(48)
-    self.name.onTabPressed = function() self.desc:RequestFocus() end
-    self.name:SetZPos(1)
-    self.name:SetTextColor(color_white)
-    self.descLabel = self:addLabel("description")
-    self.descLabel:SetZPos(2)
-    self.descLabel:SetTextColor(color_white)
+    self.name:SetTall(32)
+    self.descLabel = label("Description")
+    subLabel("Enter your character description.")
     self.desc = self:addTextEntry("desc")
-    self.desc:SetTall(self.name:GetTall() * 3)
-    self.desc.onTabPressed = function() self.name:RequestFocus() end
-    self.desc:SetMultiline(true)
-    self.desc:SetZPos(3)
-    self.desc:SetTextColor(color_white)
+    self.desc:SetTall(32)
+    self.modelLabel = label("Model")
+    subLabel("Please select a model.")
+    local faction = lia.faction.indices[self:getContext("faction")]
+    if not faction then return end
+    local function paintIcon(icon, w, h)
+        self:paintIcon(icon, w, h)
+    end
+
+    self.models = self:Add("DIconLayout")
+    self.models:Dock(TOP)
+    self.models:SetSpaceX(5)
+    self.models:SetSpaceY(0)
+    self.models:DockMargin(0, 4, 0, 4)
+    self.models:SetSize(self:GetWide(), 50)
+    local iconWidth = 50
+    local iconSpacing = 5
+    local totalWidth = (#faction.models * (iconWidth + iconSpacing)) - iconSpacing
+    self.models:SetWide(totalWidth)
+    for k, v in SortedPairs(faction.models) do
+        local icon = self.models:Add("SpawnIcon")
+        icon:SetSize(64, 128)
+        icon:InvalidateLayout(true)
+        icon.DoClick = function(icon) self:onModelSelected(icon) end
+        icon.PaintOver = paintIcon
+        if isstring(v) then
+            icon:SetModel(v)
+            icon.model = v
+            icon.skin = 0
+            icon.bodyGroups = {}
+        elseif istable(v) then
+            local groups = ""
+            for i = 0, 9 do
+                groups = groups .. (v[3][i] or 0)
+            end
+
+            if #groups < 9 then
+                for i = 1, 9 - #groups do
+                    groups = groups .. "0"
+                end
+            elseif #groups > 9 then
+                groups = groups:sub(1, 9)
+            end
+
+            icon:SetModel(v[1], v[2] or 0, groups)
+            icon.model = v[1]
+            icon.skin = v[2] or 0
+            icon.bodyGroups = groups
+        end
+
+        icon.index = k
+        if self:getContext("model") == k then self:onModelSelected(icon, true) end
+    end
 end
 
 function PANEL:addTextEntry(contextName)
     local entry = self:Add("DTextEntry")
     entry:Dock(TOP)
-    entry:SetFont("liaMenuButtonFont")
+    entry:SetFont("liaMediumFont")
+    entry:SetTall(32)
     entry.Paint = self.paintTextEntry
-    entry:DockMargin(0, 4, 0, 16)
-    entry.OnValueChange = function(_, value) self:setContext(contextName, string.Trim(value)) end
-    entry.contextName = contextName
-    entry.OnKeyCodeTyped = function(_, keyCode)
-        if keyCode == KEY_TAB then
-            entry:onTabPressed()
-            return true
-        end
-    end
-
+    entry:DockMargin(0, 4, 0, 8)
     entry:SetUpdateOnType(true)
+    entry.contextName = contextName
+    entry.OnValueChange = function(_, value) self:setContext(contextName, string.Trim(value)) end
+    local savedValue = self:getContext(contextName)
+    if savedValue then entry:SetValue(savedValue) end
     return entry
 end
 
-function PANEL:onDisplay()
-    local client = LocalPlayer()
-    local faction = self:getContext("faction")
-    assert(faction, "Faction not set before showing name input")
-    local defaultName, overrideName = hook.Run("GetDefaultCharName", client, faction)
-    if overrideName then
-        self.nameLabel:SetVisible(false)
-        self.name:SetVisible(false)
-    else
-        if defaultName and not self:getContext("name") then self:setContext("name", defaultName) end
-        self.nameLabel:SetVisible(true)
-        self.name:SetVisible(true)
-        self.name:SetText(self:getContext("name", ""))
+function PANEL:paintIcon(icon, w, h)
+    if self:getContext("model") ~= icon.index then return end
+    local col = lia.config.get("Color", color_white)
+    surface.SetDrawColor(col.r, col.g, col.b, 200)
+    for i = 1, 3 do
+        local i2 = i * 2
+        surface.DrawOutlinedRect(i, i, w - i2, h - i2)
     end
+end
 
-    local defaultDesc, overrideDesc = hook.Run("GetDefaultCharDesc", client, faction)
-    if overrideDesc then
-        self.descLabel:SetVisible(false)
-        self.desc:SetVisible(false)
-    else
-        if defaultDesc and not self:getContext("desc") then self:setContext("desc", defaultDesc) end
-        self.descLabel:SetVisible(true)
-        self.desc:SetVisible(true)
-        self.desc:SetText(self:getContext("desc", ""))
-    end
+function PANEL:onModelSelected(icon, noSound)
+    self:setContext("model", icon.index or 1)
+    if not noSound then lia.gui.character:clickSound() end
+    self:updateModelPanel()
+end
 
-    self.name:SetTextColor(color_white)
-    self.desc:RequestFocus()
+function PANEL:shouldSkip()
+    local faction = lia.faction.indices[self:getContext("faction")]
+    return faction and #faction.models == 1 or false
+end
+
+function PANEL:onSkip()
+    self:setContext("model", 1)
 end
 
 function PANEL:validate()
-    if self.name:IsVisible() then
-        local res = {self:validateCharVar("name")}
-        if res[1] == false then return unpack(res) end
+    local fields = {
+        {
+            field = self.name,
+            name = "Name",
+            isTextEntry = true
+        },
+        {
+            field = self.desc,
+            name = "Description",
+            isTextEntry = true
+        }
+    }
+
+    for _, fieldInfo in ipairs(fields) do
+        local field = fieldInfo.field
+        local fieldName = fieldInfo.name
+        local value = field and string.Trim(field:GetValue() or "")
+        if not value or value == "" then return false, "The field '" .. fieldName .. "' is required and cannot be empty." end
     end
-    return self:validateCharVar("desc")
+    return true
 end
 
 function PANEL:paintTextEntry(w, h)
-    lia.util.drawBlur(self)
     surface.SetDrawColor(0, 0, 0, 100)
     surface.DrawRect(0, 0, w, h)
     self:DrawTextEntryText(color_white, HIGHLIGHT, HIGHLIGHT)
