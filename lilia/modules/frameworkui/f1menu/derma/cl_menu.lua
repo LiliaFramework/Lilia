@@ -81,8 +81,15 @@ function PANEL:Init()
     self.panel.Paint = function() end
     local tabs = {}
     hook.Run("CreateMenuButtons", tabs)
+    local tabNames = {}
+    for name, _ in pairs(tabs) do
+        table.insert(tabNames, name)
+    end
+
+    table.sort(tabNames, function(a, b) return string.len(L(a)) < string.len(L(b)) end)
     self.tabList = {}
-    for name, callback in SortedPairs(tabs) do
+    for _, name in ipairs(tabNames) do
+        local callback = tabs[name]
         if isstring(callback) then
             local body = callback
             if body:sub(1, 4) == "http" then
