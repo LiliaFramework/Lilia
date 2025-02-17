@@ -115,16 +115,16 @@ function SKIN:PaintTextEntry(panel, w, h)
     panel:DrawTextEntryText(Color(255, 255, 255), panel:GetHighlightColor(), panel:GetCursorColor())
 end
 
-function SKIN:PaintWindowCloseButton(panel, w, h)
+function SKIN:PaintWindowCloseButton()
 end
 
-function SKIN:PaintWindowMinimizeButton(panel, w, h)
+function SKIN:PaintWindowMinimizeButton()
 end
 
-function SKIN:PaintWindowMaximizeButton(panel, w, h)
+function SKIN:PaintWindowMaximizeButton()
 end
 
-function SKIN:PaintListView(panel, w, h)
+function SKIN:PaintListView(_, w, h)
     surface.SetDrawColor(20, 20, 20, 100)
     surface.DrawRect(0, 0, w, h)
 end
@@ -134,12 +134,12 @@ function SKIN:PaintListViewLine(panel, w, h)
     surface.DrawRect(0, 0, w, h)
 end
 
-function SKIN:PaintScrollBarGrip(panel, w, h)
+function SKIN:PaintScrollBarGrip(_, w, h)
     surface.SetDrawColor(lia.config.get("Color", Color(255, 255, 255)))
     surface.DrawRect(0, 0, w, h)
 end
 
-function SKIN:PaintButtonUp(panel, w, h)
+function SKIN:PaintButtonUp(_, w, h)
     surface.SetDrawColor(lia.config.get("Color", Color(255, 255, 255)))
     surface.DrawRect(0, 0, w, h)
     surface.SetTextColor(255, 255, 255, 255)
@@ -148,7 +148,7 @@ function SKIN:PaintButtonUp(panel, w, h)
     surface.DrawText("5")
 end
 
-function SKIN:PaintButtonDown(panel, w, h)
+function SKIN:PaintButtonDown(_, w, h)
     surface.SetDrawColor(lia.config.get("Color", Color(255, 255, 255)))
     surface.DrawRect(0, 0, w, h)
     surface.SetTextColor(255, 255, 255, 255)
@@ -157,12 +157,12 @@ function SKIN:PaintButtonDown(panel, w, h)
     surface.DrawText("6")
 end
 
-function SKIN:PaintVScrollBar(panel, w, h)
+function SKIN:PaintVScrollBar(_, w, h)
     surface.SetDrawColor(20, 20, 20, 200)
     surface.DrawRect(0, 0, w, h)
 end
 
-function SKIN:PaintMenu(panel, w, h)
+function SKIN:PaintMenu(_, w, h)
     local odd = true
     for i = 0, h, 22 do
         if odd then
@@ -193,5 +193,5 @@ function SKIN:PaintMenuOption(panel, w, h)
     if panel:GetChecked() then skin.tex.Menu_Check(5, h / 2 - 7, 15, 15) end
 end
 
-derma.DefineSkin("lilia", "The base skin for the NutScript framework.", SKIN)
+derma.DefineSkin("lilia", "The base skin for the Lilia framework.", SKIN)
 derma.RefreshSkins()

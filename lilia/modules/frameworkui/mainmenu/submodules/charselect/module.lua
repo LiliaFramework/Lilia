@@ -49,12 +49,12 @@ if CLIENT then
 		vgui.Create("liaCharacter")
 	end
 
-	function MODULE:KickedFromCharacter(id, isCurrentChar)
+	function MODULE:KickedFromCharacter(_, isCurrentChar)
 		if isCurrentChar then vgui.Create("liaCharacter") end
 	end
 
 	function MODULE:CreateMenuButtons(tabs)
-		tabs["characters"] = function(panel)
+		tabs["characters"] = function()
 			if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end
 			vgui.Create("liaCharacter")
 		end

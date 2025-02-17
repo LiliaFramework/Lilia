@@ -47,7 +47,7 @@ function PANEL:Init()
 		end
 	end
 
-	self.model.OnMousePressed = function(panel, mc) self:OnMousePressed(mc) end
+	self.model.OnMousePressed = function(_, mc) self:OnMousePressed(mc) end
 	self.delete = self:Add("DButton")
 	self.delete:SetTall(30)
 	self.delete:SetFont("liaCharSubTitleFont")
@@ -144,7 +144,7 @@ function PANEL:OnMousePressed(mc)
 	end
 end
 
-function PANEL:Paint(w, h)
+function PANEL:Paint()
 	lia.util.drawBlur(self)
 end
 

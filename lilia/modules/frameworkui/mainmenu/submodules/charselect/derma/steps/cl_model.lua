@@ -38,7 +38,7 @@ function PANEL:onDisplay()
 			end
 
 			if #groups < 9 then
-				for i = 1, 9 - #groups do
+				for _ = 1, 9 - #groups do
 					groups = groups .. "0"
 				end
 			elseif #groups > 9 then

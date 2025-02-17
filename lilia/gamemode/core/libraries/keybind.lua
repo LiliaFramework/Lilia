@@ -157,7 +157,7 @@ function lia.keybind.load()
             if lia.keybind.stored[k] then lia.keybind.stored[k].value = v end
         end
     else
-        for k, v in pairs(lia.keybind.stored) do
+        for _, v in pairs(lia.keybind.stored) do
             if istable(v) and v.default then v.value = v.default end
         end
 
@@ -243,7 +243,7 @@ hook.Add("CreateMenuButtons", "KeybindMenuButtons", function(tabs)
                         combo:AddChoice(c.txt, c.keycode)
                     end
 
-                    combo.OnSelect = function(_, _, text, newKeyCode)
+                    combo.OnSelect = function(_, _, _, newKeyCode)
                         if not newKeyCode then return end
                         for tk, tv in pairs(taken) do
                             if tk == newKeyCode and tv ~= action then

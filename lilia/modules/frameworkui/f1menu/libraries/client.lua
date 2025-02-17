@@ -106,7 +106,7 @@ function MODULE:CreateMenuButtons(tabs)
     end
 end
 
-lia.keybind.add(KEY_I, "Open Inventory", function(p)
+lia.keybind.add(KEY_I, "Open Inventory", function()
     local f1Menu = vgui.Create("liaMenu")
     f1Menu:setActiveTab("inv")
 end)

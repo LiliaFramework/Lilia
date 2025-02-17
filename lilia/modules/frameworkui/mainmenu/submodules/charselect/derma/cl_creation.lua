@@ -46,7 +46,7 @@ end
 
 function PANEL:canCreateCharacter()
 	local validFactions = {}
-	for k, v in pairs(lia.faction.teams) do
+	for _, v in pairs(lia.faction.teams) do
 		if lia.faction.hasWhitelist(v.index) then validFactions[#validFactions + 1] = v.index end
 	end
 
@@ -132,7 +132,7 @@ end
 
 function PANEL:addStep(step, priority)
 	assert(IsValid(step), "Invalid panel for step")
-	assert(step.isCharCreateStep, "Panel must inherit nutCharacterCreateStep")
+	assert(step.isCharCreateStep, "Panel must inherit liaCharacterCreateStep")
 	if isnumber(priority) then
 		table.insert(self.steps, priority, step)
 	else
@@ -281,17 +281,17 @@ function PANEL:Init()
 	self.prev:SetText(L("back"):upper())
 	self.prev:Dock(LEFT)
 	self.prev:SizeToContents()
-	self.prev.DoClick = function(prev) self:previousStep() end
+	self.prev.DoClick = function() self:previousStep() end
 	self.prev:SetAlpha(0)
 	self.next = self.buttons:Add("liaCharButton")
 	self.next:SetText(L("next"):upper())
 	self.next:Dock(RIGHT)
 	self.next:SizeToContents()
-	self.next.DoClick = function(next) self:nextStep() end
+	self.next.DoClick = function() self:nextStep() end
 	self.cancel = self.buttons:Add("liaCharButton")
 	self.cancel:SetText(L("cancel"):upper())
 	self.cancel:SizeToContentsX()
-	self.cancel.DoClick = function(cancel) self:reset() end
+	self.cancel.DoClick = function() self:reset() end
 	self.cancel.x = (ScrW() - self.cancel:GetWide()) * 0.5 - 64
 	self.cancel.y = (self.buttons:GetTall() - self.cancel:GetTall()) * 0.5
 	self.steps = {}

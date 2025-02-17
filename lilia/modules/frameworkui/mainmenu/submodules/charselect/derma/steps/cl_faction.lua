@@ -13,7 +13,7 @@ function PANEL:Init()
 	end
 
 	self.faction:SetTextColor(color_white)
-	self.faction.OnSelect = function(faction, index, value, id) self:onFactionSelected(lia.faction.teams[id]) end
+	self.faction.OnSelect = function(_, _,_, id) self:onFactionSelected(lia.faction.teams[id]) end
 	self.desc = self:addLabel("desc")
 	self.desc:DockMargin(0, 8, 0, 0)
 	self.desc:SetFont("liaCharSubTitleFont")

@@ -9,7 +9,7 @@ function PANEL:Init()
 	self.content = self:Add("DPanel")
 	self.content:SetSize(ScrW(), 256)
 	self.content:CenterVertical()
-	self.content.Paint = function(content, w, h)
+	self.content.Paint = function(_, w, h)
 		surface.SetDrawColor(0, 0, 0, 200)
 		surface.DrawRect(0, 0, w, h)
 	end
@@ -44,7 +44,7 @@ function PANEL:Init()
 	end
 
 	self.confirm:SetPos(ScrW() * 0.5 - (self.confirm:GetWide() + SPACING), self.message.y + 64)
-	self.confirm.DoClick = function(cancel)
+	self.confirm.DoClick = function()
 		lia.gui.character:clickSound()
 		if isfunction(self.onConfirmCallback) then self.onConfirmCallback() end
 		self:Remove()
@@ -61,7 +61,7 @@ function PANEL:Init()
 	end
 
 	self.cancel:SetPos(ScrW() * 0.5 + SPACING, self.message.y + 64)
-	self.cancel.DoClick = function(cancel)
+	self.cancel.DoClick = function()
 		lia.gui.character:clickSound()
 		if isfunction(self.onCancelCallback) then self.onCancelCallback() end
 		self:Remove()

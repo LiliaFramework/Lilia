@@ -10,7 +10,7 @@ function PANEL:Init()
 	local scrollBar = self.scroll:GetHBar()
 	scrollBar:SetTall(8)
 	scrollBar:SetHideButtons(true)
-	scrollBar.Paint = function(scroll, w, h)
+	scrollBar.Paint = function(_, w, h)
 		surface.SetDrawColor(255, 255, 255, 10)
 		surface.DrawRect(0, 0, w, h)
 	end
@@ -45,7 +45,7 @@ function PANEL:createCharacterSlots()
 		local slotPanel = parentPanel:Add("liaCharacterSlot")
 		slotPanel:Dock(LEFT)
 		slotPanel:setCharacter(character)
-		slotPanel.onSelected = function(panel) self:onCharacterSelected(character) end
+		slotPanel.onSelected = function() self:onCharacterSelected(character) end
 		parentPanel:SetWide(slotPanel:GetWide())
 		totalWide = totalWide + parentPanel:GetWide() + 8
 	end
@@ -59,7 +59,7 @@ function PANEL:onCharacterSelected(character)
 	if self.choosing then return end
 	if character == LocalPlayer():getChar() then return lia.gui.character:fadeOut() end
 	self.choosing = true
-	lia.gui.character:setFadeToBlack(true):next(function() return MainMenu:chooseCharacter(character:getID()) end):next(function(err)
+	lia.gui.character:setFadeToBlack(true):next(function() return MainMenu:chooseCharacter(character:getID()) end):next(function()
 		self.choosing = false
 		if IsValid(lia.gui.character) then
 			timer.Simple(0.25, function()

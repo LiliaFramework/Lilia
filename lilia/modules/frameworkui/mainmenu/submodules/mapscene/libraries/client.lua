@@ -5,7 +5,7 @@ local x3, y3 = 0, 0
 local realOrigin = Vector(0, 0, 0)
 local realAngles = Angle(0, 0, 0)
 local view = {}
-function MODULE:CalcView(client, origin, angles, fov)
+function MODULE:CalcView()
     local scenes = self.scenes
     if IsValid(lia.gui.char) and table.Count(scenes) > 0 then
         local key = self.index
@@ -43,7 +43,7 @@ function MODULE:CalcView(client, origin, angles, fov)
                     if self.orderedIndex > #self.ordered then self.orderedIndex = 1 end
                 else
                     local keys = {}
-                    for k, v in pairs(scenes) do
+                    for k, _ in pairs(scenes) do
                         if isvector(k) then keys[#keys + 1] = k end
                     end
 
@@ -66,6 +66,6 @@ function MODULE:CalcView(client, origin, angles, fov)
     end
 end
 
-function MODULE:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
+function MODULE:CalcViewModelView()
     if IsValid(lia.gui.char) then return Vector(0, 0, -100000), Angle(0, 0, 0) end
 end

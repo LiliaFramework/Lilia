@@ -5,7 +5,7 @@ local CharClick = {"buttons/button14.wav", 35, 255}
 local CharWarning = {"friends/friend_join.wav", 40, 255}
 PANEL.ANIM_SPEED = 0.1
 PANEL.FADE_SPEED = 0.5
-local function animateButton(button, w, h, text)
+local function animateButton(button, _, _, text)
     local animWidth = 0
     local animDuration = 0.3
     local startTime = nil
@@ -191,7 +191,7 @@ function PANEL:loadBackground()
             self.background:SetHTML(url)
         end
 
-        self.background.OnDocumentReady = function(background) self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end
+        self.background.OnDocumentReady = function() self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end
         self.background:MoveToBack()
         self.background:SetZPos(-999)
         if lia.config.get("CharMenuBGInputDisabled") then
@@ -202,7 +202,7 @@ function PANEL:loadBackground()
         self.bgLoader = self:Add("DPanel")
         self.bgLoader:SetSize(ScrW(), ScrH())
         self.bgLoader:SetZPos(-998)
-        self.bgLoader.Paint = function(loader, w, h)
+        self.bgLoader.Paint = function(_, w, h)
             surface.SetDrawColor(5, 5, 5)
             surface.DrawRect(0, 0, w, h)
         end
@@ -221,7 +221,7 @@ function PANEL:addTab(name, callback, justClick)
     local button = self.tabs:Add("liaCharacterTabButton")
     button:setText(L(name):upper())
     if justClick then
-        if isfunction(callback) then button.DoClick = function(button) callback(self) end end
+        if isfunction(callback) then button.DoClick = function() callback(self) end end
         return
     end
 
