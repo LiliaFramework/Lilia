@@ -168,7 +168,6 @@ function MODULE:OpenLocalPIM()
     SELF_PIM_FRAME = frame
 end
 
--- the new for  Personal Actions is printing as 16 and not opening the panel. Fix this
 lia.keybind.add(KEY_TAB, "Interaction Menu", function()
     local client = LocalPlayer()
     if client:getChar() and MODULE:CheckPossibilities() then MODULE:OpenPIM() end

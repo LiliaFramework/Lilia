@@ -226,7 +226,6 @@ hook.Add("CreateMenuButtons", "KeybindMenuButtons", function(tabs)
                     combo:Dock(LEFT)
                     combo:SetWide(120)
                     combo:SetValue(input.GetKeyName(currentKey) or "NONE")
-                    -- Build and sort the list of key choices alphabetically.
                     local choices = {}
                     for name, code in pairs(KeybindKeys) do
                         if not taken[code] or code == currentKey then

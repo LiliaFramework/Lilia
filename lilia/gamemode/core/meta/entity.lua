@@ -40,7 +40,7 @@ function entityMeta:isNearEntity(radius)
 end
 
 function entityMeta:GetCreator()
-    local creator = self:GetNW2Entity("creator")
+    local creator = self:getNetVar("creator")
     if IsValid(creator) then return creator end
 end
 
