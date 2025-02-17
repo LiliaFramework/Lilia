@@ -1,4 +1,5 @@
 ﻿local MODULE = MODULE
+
 PIM:AddLocalOption(L("recognizeInWhisperRange"), {
     shouldShow = function(client) return client:getChar() and client:Alive() end,
     onRun = function() MODULE:CharRecognize(2) end,

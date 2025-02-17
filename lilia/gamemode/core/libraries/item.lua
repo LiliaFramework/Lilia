@@ -54,7 +54,6 @@ local DefaultFunctions = {
 
 lia.meta.item.width = 1
 lia.meta.item.height = 1
-local GridInv = FindMetaTable("GridInv")
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
@@ -102,6 +101,10 @@ end
 
 function lia.item.isItem(object)
     return istable(object) and object.isItem
+end
+
+function lia.item.getInv(id)
+    return lia.item.inventories[id] or nil
 end
 
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
@@ -203,7 +206,7 @@ function lia.item.new(uniqueID, id)
 end
 
 function lia.item.registerInv(invType, w, h)
-    assert(GridInv, "GridInv not found")
+    local GridInv = FindMetaTable("GridInv")
     local inventory = GridInv:extend("GridInv" .. invType)
     inventory.invType = invType
     function inventory:getWidth()
@@ -240,6 +243,7 @@ function lia.item.getInv(invID)
 end
 
 function lia.item.createInv(w, h, id)
+    local GridInv = FindMetaTable("GridInv")
     assert(GridInv, "GridInv not found")
     local instance = GridInv:new()
     instance.id = id

@@ -381,20 +381,18 @@ net.Receive("BinaryQuestionRequest", function()
     local option2 = L(net.ReadString(), "No")
     local manualDismiss = net.ReadBool()
     local notice = CreateNoticePanel(10, manualDismiss)
-    local i = table.insert(lia.notices, notice)
+    table.insert(lia.notices, notice)
     notice.isQuery = true
     notice.text:SetText(question)
-    notice:SetPos(0, (i - 1) * (notice:GetTall() + 4) + 4)
+    notice:SetPos(ScrW() / 2 - notice:GetWide() / 2, 4)
     notice:SetTall(36 * 2.3)
     notice:CalcWidth(120)
-    notice:CenterHorizontal()
     if manualDismiss then notice.start = nil end
     notice.opt1 = notice:Add("DButton")
     notice.opt1:SetAlpha(0)
     notice.opt2 = notice:Add("DButton")
     notice.opt2:SetAlpha(0)
     notice.oh = notice:GetTall()
-    OrganizeNotices(false)
     notice:SetTall(0)
     notice:SizeTo(notice:GetWide(), 36 * 2.3, 0.2, 0, -1, function()
         notice.text:SetPos(0, 0)
@@ -460,6 +458,7 @@ net.Receive("BinaryQuestionRequest", function()
         notice.lastKey = CurTime()
         notice.respondToKeys = true
         function notice:Think()
+            self:SetPos(ScrW() / 2 - self:GetWide() / 2, 4)
             if not self.respondToKeys then return end
             if self.opt1 and IsValid(self.opt1) then self.opt1:keyThink() end
             if self.opt2 and IsValid(self.opt2) then self.opt2:keyThink() end

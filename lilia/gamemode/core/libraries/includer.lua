@@ -7,6 +7,7 @@
     schema = "shared",
     permissions = "shared",
     commands = "shared",
+    pim = "shared",
 }
 
 FilesToLoad = {
@@ -83,6 +84,14 @@ FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/meta/inventory.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/core/meta/gridinv.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/meta/item.lua",
         realm = "shared"
     },
@@ -112,10 +121,6 @@ FilesToLoad = {
     },
     {
         path = "lilia/gamemode/core/libraries/time.lua",
-        realm = "shared"
-    },
-    {
-        path = "lilia/gamemode/core/meta/inventory.lua",
         realm = "shared"
     },
     {

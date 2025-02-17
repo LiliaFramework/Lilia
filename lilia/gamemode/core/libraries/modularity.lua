@@ -2,7 +2,7 @@
 lia.module.EnabledList = {}
 lia.module.list = lia.module.list or {}
 local ModuleFolders = {"config", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim"}
-local ModuleFiles = {"client.lua", "server.lua", "config.lua", "commands.lua"}
+local ModuleFiles = {"pim.lua", "client.lua", "server.lua", "config.lua", "commands.lua"}
 local function loadWorkshopContent(Workshop)
     if SERVER and Workshop then
         if istable(Workshop) then

@@ -233,7 +233,7 @@ end
 function PANEL:createTabs()
     local load, create
     if lia.characters and #lia.characters > 0 then load = self:addTab("main menu", self.createCharacterSelection) end
-    if hook.Run("CanPlayerCreateCharacter", LocalPlayer()) ~= false then create = self:addTab("new character", self.createCharacterCreation) end
+    if hook.Run("CanPlayerCreateChar", LocalPlayer()) ~= false then create = self:addTab("new character", self.createCharacterCreation) end
     if IsValid(load) then
         load:setSelected()
     elseif IsValid(create) then
