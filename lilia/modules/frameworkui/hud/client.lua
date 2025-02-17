@@ -295,8 +295,11 @@ function MODULE:GetInjuredText(c)
 end
 
 function MODULE:DrawCharInfo(c, _, info)
-    local t, col = hook.Run("GetInjuredText", c)
-    if t then info[#info + 1] = {L(t), col} end
+    local injuredText = hook.Run("GetInjuredText", c)
+    if injuredText then
+        local text, col = injuredText[1], injuredText[2]
+        if text and col then info[#info + 1] = {L(text), col} end
+    end
 end
 
 function MODULE:DrawFPS()
