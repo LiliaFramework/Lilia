@@ -8,5 +8,8 @@ function MODULE:EntityEmitSound(tab)
         ["weapons/airboat/airboat_gun_lastshot2.wav"] = true
     }
 
-    if sounds[tab.SoundName] then return false end
+    if IsValid(tab.Entity) and tab.Entity:IsPlayer() then
+        local wep = tab.Entity:GetActiveWeapon()
+        if IsValid(wep) and wep:GetClass() == "gmod_tool" and sounds[tab.SoundName] then return false end
+    end
 end
