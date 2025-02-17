@@ -117,7 +117,7 @@ function PANEL:setCharacter(character)
 		self.classLogo = self:Add("DImage")
 		self.classLogo:SetImage(classData.logo)
 		self.classLogo:SetSize(128, 128)
-		local baseY = 0
+		local baseY
 		if IsValid(self.factionLogo) then
 			baseY = self.factionLogo:GetY() + self.factionLogo:GetTall() + 8
 		else
@@ -180,7 +180,7 @@ function PANEL:PerformLayout()
 	end
 
 	if IsValid(self.classLogo) then
-		local baseY = 0
+		local baseY
 		if IsValid(self.factionLogo) then
 			baseY = self.factionLogo:GetY() + self.factionLogo:GetTall() + 8
 		else
