@@ -1,4 +1,9 @@
 ﻿local PANEL = {}
+local function getHovCol(col)
+    if not col then return end
+    return Color(col.r + 10, col.g + 10, col.b + 10, col.a)
+end
+
 function PANEL:Init()
     self.tabs = {}
     self.btnTextCol = color_black
