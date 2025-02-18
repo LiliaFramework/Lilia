@@ -345,7 +345,7 @@ end
 
 function GM:DoPlayerDeath(client, attacker)
     client:AddDeaths(1)
-    if hook.Run("ShouldSpawnClientRagdoll", client) ~= false then client:CreateRagdoll() end
+    if hook.Run("ShouldSpawnClientRagdoll", client) ~= false then client:createRagdoll(false, true) end
     if IsValid(attacker) and attacker:IsPlayer() then
         if client == attacker then
             attacker:AddFrags(-1)

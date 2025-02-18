@@ -338,37 +338,6 @@ if SERVER then
         return diff + RealTime() - (self.liaJoinTime or RealTime())
     end
 
-    function playerMeta:createServerRagdoll(dontSetPlayer)
-        local entity = ents.Create("prop_ragdoll")
-        entity:SetPos(self:GetPos())
-        entity:SetAngles(self:EyeAngles())
-        entity:SetModel(self:GetModel())
-        entity:SetSkin(self:GetSkin())
-        for _, v in ipairs(self:GetBodyGroups()) do
-            entity:SetBodygroup(v.id, self:GetBodygroup(v.id))
-        end
-
-        entity:Spawn()
-        if not dontSetPlayer then entity:setNetVar("player", self) end
-        entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-        entity:Activate()
-        hook.Run("OnCreatePlayerServerRagdoll", self)
-        local velocity = self:GetVelocity()
-        for i = 0, entity:GetPhysicsObjectCount() - 1 do
-            local physObj = entity:GetPhysicsObjectNum(i)
-            if IsValid(physObj) then
-                physObj:SetVelocity(velocity)
-                local index = entity:TranslatePhysBoneToBone(i)
-                if index then
-                    local position, angles = self:GetBonePosition(index)
-                    physObj:SetPos(position)
-                    physObj:SetAngles(angles)
-                end
-            end
-        end
-        return entity
-    end
-
     function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
         local uniqueID = "liaStare" .. self:SteamID64()
         local data = {}
@@ -429,7 +398,7 @@ if SERVER then
         return diff + RealTime() - (lia.joinTime or 0)
     end
 
-    function playerMeta:createRagdoll(freeze)
+    function playerMeta:createRagdoll(freeze, isDead)
         local entity = ents.Create("prop_ragdoll")
         entity:SetPos(self:GetPos())
         entity:SetAngles(self:EyeAngles())
@@ -438,6 +407,7 @@ if SERVER then
         entity:Spawn()
         entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
         entity:Activate()
+        hook.Run("OnCreatePlayerRagdoll", self, entity, isDead)
         local velocity = self:GetVelocity()
         for i = 0, entity:GetPhysicsObjectCount() - 1 do
             local physObj = entity:GetPhysicsObjectNum(i)
