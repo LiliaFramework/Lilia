@@ -60,6 +60,16 @@ function LiliaBootstrap(section, message)
     LiliaLog("bootstrap", message, section)
 end
 
+local function RemoveHintTimers()
+    local hintTimers = {"HintSystem_OpeningMenu", "HintSystem_Annoy1", "HintSystem_Annoy2"}
+    for _, timerName in ipairs(hintTimers) do
+        if timer.Exists(timerName) then
+            timer.Remove(timerName)
+        else
+        end
+    end
+end
+
 function GM:Initialize()
     if engine.ActiveGamemode() == "lilia" then LiliaError("No schema loaded. Please place the schema in your gamemodes folder, then set it as your gamemode.") end
     if SERVER then
@@ -72,6 +82,7 @@ function GM:Initialize()
 
     lia.config.load()
     lia.module.initialize(true)
+    RemoveHintTimers()
 end
 
 function GM:OnReloaded()
@@ -89,6 +100,8 @@ function GM:OnReloaded()
         lia.option.load()
         lia.keybind.load()
     end
+
+    RemoveHintTimers()
 end
 
 if game.IsDedicated() then concommand.Remove("gm_save") end

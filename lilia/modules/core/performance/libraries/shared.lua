@@ -38,20 +38,11 @@ local function RemoveHooks(IsServer)
     end
 end
 
-local function RemoveHintTimers()
-    local hintTimers = {"HintSystem_OpeningMenu", "HintSystem_Annoy1", "HintSystem_Annoy2"}
-    for _, timerName in ipairs(hintTimers) do
-        if timer.Exists(timerName) then timer.Remove(timerName) end
-    end
-end
-
-function MODULE:Initialize()
-    RemoveHintTimers()
+function GM:Initialize()
     ExecuteCommands(SERVER)
 end
 
 function MODULE:OnReloaded()
-    RemoveHintTimers()
     RemoveHooks(SERVER)
     ExecuteCommands(SERVER)
 end

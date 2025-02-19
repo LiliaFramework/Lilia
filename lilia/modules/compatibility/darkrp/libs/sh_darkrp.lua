@@ -95,7 +95,7 @@ function lia.darkrp.createEntity(name, data)
     ITEM.category = data.category or "Entities"
     ITEM.entityid = data.ent or ""
     ITEM.price = data.price or 0
-    return ITEM
+    LiliaInformation("Generated DarkRP entity as item " .. name)
 end
 
 DarkRP.createEntity = lia.darkrp.createEntity
@@ -104,3 +104,4 @@ DarkRP.isEmpty = lia.darkrp.isEmpty
 DarkRP.findEmptyPos = lia.darkrp.findEmptyPos
 DarkRP.notify = lia.darkrp.notify
 DarkRP.textWrap = lia.darkrp.textWrap
+hook.Run("loadCustomDarkRPItems")
