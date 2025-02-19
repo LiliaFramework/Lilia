@@ -86,6 +86,19 @@ function lia.darkrp.formatMoney(amount)
     return lia.currency.get(amount)
 end
 
+function lia.darkrp.createEntity(name, data)
+    local cmd = data.cmd or string.lower(name)
+    local ITEM = lia.item.register(cmd, "base_entities", nil, nil, true)
+    ITEM.name = name
+    ITEM.model = data.model or ""
+    ITEM.desc = data.desc or ""
+    ITEM.category = data.category or "Entities"
+    ITEM.entityid = data.ent or ""
+    ITEM.price = data.price or 0
+    return ITEM
+end
+
+DarkRP.createEntity = lia.darkrp.createEntity
 DarkRP.formatMoney = lia.darkrp.formatMoney
 DarkRP.isEmpty = lia.darkrp.isEmpty
 DarkRP.findEmptyPos = lia.darkrp.findEmptyPos
