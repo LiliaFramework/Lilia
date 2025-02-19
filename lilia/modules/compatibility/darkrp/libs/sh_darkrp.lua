@@ -108,4 +108,3 @@ DarkRP.isEmpty = lia.darkrp.isEmpty
 DarkRP.findEmptyPos = lia.darkrp.findEmptyPos
 DarkRP.notify = lia.darkrp.notify
 DarkRP.textWrap = lia.darkrp.textWrap
-hook.Run("loadCustomDarkRPItems")
