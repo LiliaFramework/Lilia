@@ -98,6 +98,10 @@ function lia.darkrp.createEntity(name, data)
     LiliaInformation("Generated DarkRP entity as item " .. name)
 end
 
+function lia.darkrp.createCategory()
+end
+
+DarkRP.createCategory = lia.darkrp.createCategory
 DarkRP.createEntity = lia.darkrp.createEntity
 DarkRP.formatMoney = lia.darkrp.formatMoney
 DarkRP.isEmpty = lia.darkrp.isEmpty
