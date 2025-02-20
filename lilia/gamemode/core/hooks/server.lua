@@ -65,13 +65,7 @@ function GM:PlayerLoadedChar(client, character)
         _lastJoinTime = timeStamp
     }, nil, "characters", "_id = " .. character:getID())
 
-    if client:hasRagdoll() then
-        local ragdoll = client:getRagdoll()
-        ragdoll.liaNoReset = true
-        ragdoll.liaIgnoreDelete = true
-        ragdoll:Remove()
-    end
-
+    client:removeRagdoll()
     character:setData("loginTime", os.time())
     hook.Run("PlayerLoadout", client)
     local ammoTable = character:getData("ammo", {})
@@ -360,13 +354,7 @@ end
 function GM:PlayerDeath(client)
     local character = client:getChar()
     if not character then return end
-    if client:hasRagdoll() then
-        local ragdoll = client:getRagdoll()
-        ragdoll.liaIgnoreDelete = true
-        ragdoll:Remove()
-        client:setLocalVar("blur", nil)
-    end
-
+    client:removeRagdoll()
     local inventory = character:getInv()
     if inventory then
         local items = inventory:getItems()
@@ -382,6 +370,7 @@ function GM:PlayerSpawn(client)
     client:SetNotSolid(false)
     client:stopAction()
     client:SetDSP(1)
+    client:removeRagdoll()
     hook.Run("PlayerLoadout", client)
 end
 
@@ -393,13 +382,7 @@ function GM:PlayerDisconnected(client)
         character:save()
     end
 
-    if client:hasRagdoll() then
-        local ragdoll = client:getRagdoll()
-        ragdoll.liaNoReset = true
-        ragdoll.liaIgnoreDelete = true
-        ragdoll:Remove()
-    end
-
+    client:removeRagdoll()
     lia.char.cleanUpForPlayer(client)
     for _, entity in ents.Iterator() do
         if entity:GetCreator() == client and not string.StartsWith(entity:GetClass(), "lia_") then entity:Remove() end

@@ -43,6 +43,14 @@ function playerMeta:hasRagdoll()
     return IsValid(self.liaRagdoll)
 end
 
+function playerMeta:removeRagdoll()
+    if not self:hasRagdoll() then return end
+    local ragdoll = self:getRagdoll()
+    ragdoll.liaIgnoreDelete = true
+    ragdoll:Remove()
+    self:setLocalVar("blur", nil)
+end
+
 function playerMeta:getRagdoll()
     if not self:hasRagdoll() then return end
     return self.liaRagdoll
