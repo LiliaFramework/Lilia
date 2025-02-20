@@ -38,7 +38,7 @@ local function RemoveHooks(IsServer)
     end
 end
 
-function GM:Initialize()
+function MODULE:Initialize()
     ExecuteCommands(SERVER)
 end
 

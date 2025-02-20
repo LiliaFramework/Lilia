@@ -64,8 +64,13 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
                 local dropdown = vgui.Create("DComboBox", popup)
                 dropdown:Dock(TOP)
                 for _, v in pairs(lia.char.loaded) do
-                    local chosen = v == LocalPlayer():getChar()
-                    dropdown:AddChoice(v:getPlayer():GetName() .. "  [" .. v:getPlayer():steamName() .. "]", v:getPlayer():GetName(), chosen)
+                    if v and v:getPlayer() then
+                        local player = v:getPlayer()
+                        local chosen = v == LocalPlayer():getChar()
+                        local name = player:GetName() or "Unknown"
+                        local steamName = player:steamName() or "Unknown"
+                        dropdown:AddChoice(name .. "  [" .. steamName .. "]", name, chosen)
+                    end
                 end
 
                 local give = vgui.Create("DButton", popup)
