@@ -1,5 +1,6 @@
 ﻿lia.chat = lia.chat or {}
 lia.chat.classes = lia.char.classes or {}
+lia.chat.aliases = lia.chat.aliases or {}
 local DUMMY_COMMAND = {
     onRun = function() end
 }
@@ -57,6 +58,15 @@ function lia.chat.register(chatType, data)
 
     data.filter = data.filter or "ic"
     lia.chat.classes[chatType] = data
+    if data.alias then
+        if istable(data.alias) then
+            for _, alias in ipairs(data.alias) do
+                lia.chat.aliases[alias:lower()] = chatType
+            end
+        else
+            lia.chat.aliases[tostring(data.alias):lower()] = chatType
+        end
+    end
 end
 
 function lia.chat.parse(client, message, noSend)
@@ -75,7 +85,7 @@ function lia.chat.parse(client, message, noSend)
                 end
             end
         elseif isstring(v.prefix) then
-            isChosen = message:sub(1, #v.prefix + (noSpaceAfter and 1 or 0)):lower() == v.prefix .. (noSpaceAfter and "" or " "):lower()
+            isChosen = message:sub(1, #v.prefix + (noSpaceAfter and 0 or 1)):lower() == v.prefix .. (noSpaceAfter and "" or " "):lower()
             chosenPrefix = v.prefix .. (v.noSpaceAfter and "" or " ")
         end
 
@@ -84,6 +94,18 @@ function lia.chat.parse(client, message, noSend)
             message = message:sub(#chosenPrefix + 1)
             if lia.chat.classes[k].noSpaceAfter and message:sub(1, 1):match("%s") then message = message:sub(2) end
             break
+        end
+    end
+
+    if chatType == "ic" then
+        local firstWord = message:match("^(%S+)")
+        if firstWord then
+            local aliasType = lia.chat.aliases[firstWord:lower()]
+            if aliasType then
+                chatType = aliasType
+                message = message:sub(#firstWord + 1)
+                if message:sub(1, 1):match("%s") then message = message:sub(2) end
+            end
         end
     end
 
