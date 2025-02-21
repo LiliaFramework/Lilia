@@ -73,13 +73,15 @@ function GM:Initialize()
         LiliaBootstrap("Bootstrapper", "Starting boot sequence...")
     else
         hook.Run("LoadLiliaFonts", "Arial", "Segoe UI")
-        lia.option.load()
-        lia.keybind.load()
     end
 
     lia.config.load()
     lia.module.initialize(true)
-    RemoveHintTimers()
+    if CLIENT then
+        lia.option.load()
+        lia.keybind.load()
+        RemoveHintTimers()
+    end
 end
 
 function GM:OnReloaded()
@@ -94,11 +96,13 @@ function GM:OnReloaded()
         LiliaBootstrap("Bootstrapper", "Starting reload sequence...")
     else
         hook.Run("LoadLiliaFonts", lia.config.get("Font"), lia.config.get("GenericFont"))
-        lia.option.load()
-        lia.keybind.load()
     end
 
-    RemoveHintTimers()
+    if CLIENT then
+        lia.option.load()
+        lia.keybind.load()
+        RemoveHintTimers()
+    end
 end
 
 if game.IsDedicated() then concommand.Remove("gm_save") end

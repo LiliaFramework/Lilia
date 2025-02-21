@@ -385,7 +385,7 @@ local function IncludeCharacterManagement(target, AdminMenu, submenus)
                 for _, class in ipairs(classes) do
                     table.insert(classOptions, {
                         name = class.name,
-                        cmd = 'say /setclass ' .. GetIdentifier(target) .. ' ' .. class.name
+                        cmd = 'say /setclass ' .. GetIdentifier(target) .. ' ' .. class.uniqueID
                     })
                 end
 

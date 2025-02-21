@@ -105,7 +105,9 @@ function PANEL:Paint(w, h)
 end
 
 vgui.Register("liaNotify", PANEL, "DPanel")
+
 PANEL = {}
+
 function PANEL:Init()
     self.type = 1
     self.text = self:Add("DLabel")
