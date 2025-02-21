@@ -38,7 +38,7 @@ local DefaultFunctions = {
                 d:resolve()
             end):catch(function(err)
                 if err == "noFit" then
-                    client:notify("This item can't fit in your inventory. (" .. item.width .. "x" .. item.height .. ")")
+                    client:notifyCriticalError("This item can't fit in your inventory. (" .. item.width .. "x" .. item.height .. ")")
                 else
                     client:notifyLocalized(err)
                 end

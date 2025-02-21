@@ -63,10 +63,7 @@ end
 local function RemoveHintTimers()
     local hintTimers = {"HintSystem_OpeningMenu", "HintSystem_Annoy1", "HintSystem_Annoy2"}
     for _, timerName in ipairs(hintTimers) do
-        if timer.Exists(timerName) then
-            timer.Remove(timerName)
-        else
-        end
+        if timer.Exists(timerName) then timer.Remove(timerName) end
     end
 end
 

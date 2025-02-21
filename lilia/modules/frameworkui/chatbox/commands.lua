@@ -16,7 +16,7 @@ lia.command.add("banooc", {
             MODULE.OOCBans[target:SteamID()] = true
             client:notify(target:Name() .. " has been banned from OOC.")
         else
-            client:notify("Invalid target.")
+            client:notifyWarning("Invalid target.")
         end
     end
 })
@@ -37,7 +37,7 @@ lia.command.add("unbanooc", {
             MODULE.OOCBans[target:SteamID()] = nil
             client:notify(target:Name() .. " has been unbanned from OOC.")
         else
-            client:notify("Invalid target.")
+            client:notifyWarning("Invalid target.")
         end
     end
 })

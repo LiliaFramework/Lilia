@@ -61,7 +61,7 @@ lia.command.add("sendtositroom", {
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         if not IsValid(target) then
-            client:notify("Player not found.")
+            client:notifyWarning("Player not found.")
             return
         end
 
@@ -74,7 +74,7 @@ lia.command.add("sendtositroom", {
             target:notify("You have been teleported to the sitroom.")
             lia.log.add(client, "sendToSitRoom", string.format("Map: %s | Target: %s | Position: %s", mapName, target:Nick(), tostring(pos)), "Teleported player to the sitroom for the current map")
         else
-            client:notify("Sitroom location for this map has not been set.")
+            client:notifyWarning("Sitroom location for this map has not been set.")
         end
     end
 })

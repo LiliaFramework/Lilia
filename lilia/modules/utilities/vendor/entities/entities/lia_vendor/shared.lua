@@ -48,6 +48,10 @@ function ENT:getMoney()
     return self.money
 end
 
+function ENT:getWelcomeMessage()
+    return self:getNetVar("welcomeMessage", L("vendorWelcomeMessage"))
+end
+
 function ENT:hasMoney(amount)
     local money = self:getMoney()
     if not money then return true end

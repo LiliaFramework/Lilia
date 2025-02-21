@@ -266,7 +266,7 @@ end
 
 function MODULE:PlayerSpawnVehicle(client, _, name)
     if self.RestrictedVehicles[name] and not client:hasPrivilege("Spawn Permissions - Can Spawn Restricted Cars") then
-        client:notify("You can't spawn this vehicle since it's restricted!")
+        client:notifyWarning("You can't spawn this vehicle since it's restricted!")
         return false
     end
 
@@ -277,7 +277,7 @@ function MODULE:CheckDuplicationScale(client, entities)
     entities = entities or {}
     for _, v in pairs(entities) do
         if v.ModelScale and v.ModelScale > 10 then
-            client:notify("A model within this duplication exceeds the size limit!")
+            client:notifyWarning("A model within this duplication exceeds the size limit!")
             print("[Server Warning] Potential server crash using dupes attempt by player: " .. client:Name() .. " (" .. client:SteamID() .. ")")
             return false
         end

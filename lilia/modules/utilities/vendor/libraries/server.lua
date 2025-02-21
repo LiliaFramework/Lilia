@@ -11,7 +11,8 @@
             classes = v.classes,
             money = v.money,
             flag = v:getNetVar("flag"),
-            scale = v:getNetVar("scale")
+            scale = v:getNetVar("scale"),
+            welcomeMessage = v:getNetVar("welcomeMessage"),
         }
     end
 
@@ -29,6 +30,7 @@ function MODULE:LoadData()
         entity:setNetVar("name", v.name)
         entity:setNetVar("flag", v.flag)
         entity:setNetVar("scale", v.scale or 0.5)
+        entity:setNetVar("welcomeMessage", v.welcomeMessage)
         entity.items = v.items or {}
         entity.factions = v.factions or {}
         entity.classes = v.classes or {}

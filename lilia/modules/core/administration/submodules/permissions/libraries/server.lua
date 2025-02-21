@@ -68,7 +68,7 @@ function GM:PlayerSpawnObject(client)
     if not client.NextSpawn then client.NextSpawn = CurTime() end
     if client:hasPrivilege("Spawn Permissions - No Spawn Delay") then return true end
     if client.NextSpawn >= CurTime() then
-        client:notify("You can't spawn props that fast!")
+        client:notifyWarning("You can't spawn props that fast!")
         return false
     end
 
@@ -132,7 +132,7 @@ concommand.Add("stopsoundall", function(client)
             v:ConCommand("stopsound")
         end
     else
-        client:notify("You must be a Super Admin to forcefully stopsound everyone!")
+        client:notifyWarning("You must be a Super Admin to forcefully stopsound everyone!")
     end
 end)
 

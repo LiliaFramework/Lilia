@@ -26,6 +26,11 @@ EDITOR.stockDisable = function(vendor)
     vendor:setMaxStock(itemType, nil)
 end
 
+EDITOR.welcome = function(vendor)
+    local message = net.ReadString()
+    vendor:setWelcomeMessage(message)
+end
+
 EDITOR.stockMax = function(vendor)
     local itemType = net.ReadString()
     local value = net.ReadUInt(32)

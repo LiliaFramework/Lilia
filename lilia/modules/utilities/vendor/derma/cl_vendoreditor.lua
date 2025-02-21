@@ -29,18 +29,6 @@ function PANEL:Init()
         if entity:GetModel():lower() ~= modelText then EDITOR.model(modelText) end
     end
 
-    self.money = self:Add("DTextEntry")
-    self.money:Dock(TOP)
-    self.money:SetTooltip(lia.currency.plural)
-    self.money:DockMargin(0, 4, 0, 0)
-    self.money:SetNumeric(true)
-    self.money.OnEnter = function(this)
-        local value = tonumber(this:GetText()) or entity:getMoney()
-        value = math.Round(value)
-        value = math.max(value, 0)
-        if value ~= entity:getMoney() then EDITOR.money(value) end
-    end
-
     self.flag = self:Add("DTextEntry")
     self.flag:Dock(TOP)
     self.flag:DockMargin(0, 4, 0, 0)
@@ -54,6 +42,28 @@ function PANEL:Init()
             this:SetText(correctedValue)
             EDITOR.flag(correctedValue)
         end
+    end
+
+    self.welcome = self:Add("DTextEntry")
+    self.welcome:Dock(TOP)
+    self.welcome:DockMargin(0, 4, 0, 0)
+    self.welcome:SetText(entity:getWelcomeMessage())
+    self.welcome:SetTooltip(L("vendorEditorWelcomeMessage"))
+    self.welcome.OnEnter = function(this)
+        local msg = this:GetText()
+        if msg ~= entity:getWelcomeMessage() then EDITOR.welcome(msg) end
+    end
+
+    self.money = self:Add("DTextEntry")
+    self.money:Dock(TOP)
+    self.money:SetTooltip(lia.currency.plural)
+    self.money:DockMargin(0, 4, 0, 0)
+    self.money:SetNumeric(true)
+    self.money.OnEnter = function(this)
+        local value = tonumber(this:GetText()) or entity:getMoney()
+        value = math.Round(value)
+        value = math.max(value, 0)
+        if value ~= entity:getMoney() then EDITOR.money(value) end
     end
 
     self.useMoney = self:Add("DCheckBoxLabel")
@@ -155,6 +165,8 @@ function PANEL:onNameDescChanged(key)
         self.model:SetText(entity:GetModel())
     elseif key == "scale" then
         self:updateSellScale()
+    elseif key == "welcome" and entity.getWelcomeMessage then
+        self.welcome:SetText(entity:getWelcomeMessage())
     end
 end
 

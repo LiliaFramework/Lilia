@@ -2,7 +2,7 @@
 function PANEL:confirmDelete()
     local id = self.character:getID()
     if hook.Run("CanDeleteChar", id) == false then
-        LocalPlayer():notify("You cannot delete this character!")
+        LocalPlayer():notifyWarning("You cannot delete this character!")
         return
     end
 

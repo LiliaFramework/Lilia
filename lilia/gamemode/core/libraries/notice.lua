@@ -77,7 +77,7 @@ local function DisplayNotice(message, notifType, manualDismiss)
     notice.notifType = notifType
     table.insert(lia.notices, notice)
     notice.text:SetText(message)
-    notice:SetTall(36 * 2.3)
+    notice:SetTall(36 * 1.8)
     notice:CalcWidth(120)
     if manualDismiss then notice.start = nil end
     notice.oh = notice:GetTall()
@@ -85,7 +85,7 @@ local function DisplayNotice(message, notifType, manualDismiss)
     local targetX = ScrW() / 2 - notice:GetWide() / 2
     local targetY = 4
     notice:SetPos(targetX, targetY)
-    notice:SizeTo(notice:GetWide(), 36 * 2.3, 0.2, 0, -1, function() notice.text:SetPos(0, 0) end)
+    notice:SizeTo(notice:GetWide(), 36 * 1.8, 0.2, 0, -1, function() notice.text:SetPos(0, 0) end)
     if not manualDismiss then timer.Simple(5, function() if IsValid(notice) then RemoveNotices(notice) end end) end
     timer.Simple(0.05, OrganizeNotices)
 end
@@ -94,7 +94,7 @@ function OrganizeNotices()
     local scrW = ScrW()
     local baseY = 10
     local validNotices = {}
-    for i, notice in ipairs(lia.notices) do
+    for _, notice in ipairs(lia.notices) do
         if IsValid(notice) then table.insert(validNotices, notice) end
     end
 
@@ -128,7 +128,7 @@ if SERVER then
     function lia.notices.notify(message, notifType, recipient)
         net.Start("liaNotify")
         net.WriteString(message)
-        net.WriteUInt(notifType or 5, 3)
+        net.WriteUInt(notifType and isnumber(notifType) and notifType or 5, 3)
         if recipient == nil then
             net.Broadcast()
         else

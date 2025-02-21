@@ -49,7 +49,7 @@ lia.command.add("checkattributes", {
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if not IsValid(target) then return client:notify(L("targetNotFound")) end
+        if not IsValid(target) then return client:notifyError(L("targetNotFound")) end
         local attributesData = {}
         for attrKey, attrData in SortedPairsByMemberValue(lia.attribs.list, "name") do
             local currentValue = target:getChar():getAttrib(attrKey, 0) or 0

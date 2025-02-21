@@ -94,19 +94,19 @@ lia.command.add("returnitems", {
     onRun = function(client, arguments)
         local targetPlayer = lia.command.findPlayer(client, arguments[1])
         if not targetPlayer or not IsValid(targetPlayer) then
-            client:notify("Target player not found.")
+            client:notifyWarning("Target player not found.")
             return
         end
 
         if lia.config.get("LoseItemsonDeathHuman", false) or lia.config.get("LoseItemsonDeathNPC", false) then
             if IsValid(targetPlayer) then
                 if not targetPlayer.LostItems then
-                    client:notify("The target hasn't died recently or they have already had their items returned!")
+                    client:notifyWarning("The target hasn't died recently or they have already had their items returned!")
                     return
                 end
 
                 if table.IsEmpty(targetPlayer.LostItems) then
-                    client:notify("Cannot return any items; the player hasn't lost any!")
+                    client:notifyWarning("Cannot return any items; the player hasn't lost any!")
                     return
                 end
 
@@ -125,7 +125,7 @@ lia.command.add("returnitems", {
                 client:notify("Returned the items.")
             end
         else
-            client:notify("Weapon on Death not Enabled!")
+            client:notifyWarning("Weapon on Death not Enabled!")
         end
     end
 })

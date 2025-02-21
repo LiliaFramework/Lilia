@@ -5,25 +5,25 @@ net.Receive("RequestRemoveWarning", function(_, client)
     local rowData = net.ReadTable()
     local warnIndex = tonumber(rowData.ID or rowData.index)
     if not warnIndex then
-        client:notify("Invalid warning index.")
+        client:notifyWarning("Invalid warning index.")
         return
     end
 
     local targetClient = lia.char.getByID(charID)
     if not IsValid(targetClient) then
-        client:notify("Player not found.")
+        client:notifyWarning("Player not found.")
         return
     end
 
     local targetChar = targetClient:getChar()
     if not targetChar then
-        client:notify("Character not found.")
+        client:notifyWarning("Character not found.")
         return
     end
 
     local warns = targetClient:getLiliaData("warns") or {}
     if warnIndex < 1 or warnIndex > #warns then
-        client:notify("Invalid warning index.")
+        client:notifyWarning("Invalid warning index.")
         return
     end
 
