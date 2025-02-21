@@ -22,7 +22,6 @@ function PANEL:Init()
     self.factionLabel:SetAutoStretchVertical(true)
     self.factionLabel:SetVisible(false)
     self.factionLabel:SetContentAlignment(5)
-    self.factionLabel:SizeToContentsY()
     self.classLabel = self:Add("DLabel")
     self.classLabel:SetFont("liaCharSmallFont")
     self.classLabel:SetTextColor(lia.gui.character.WHITE)
@@ -30,12 +29,10 @@ function PANEL:Init()
     self.classLabel:SetAutoStretchVertical(true)
     self.classLabel:SetVisible(false)
     self.classLabel:SetContentAlignment(5)
-    self.classLabel:SizeToContentsY()
     self.name = self:Add("DLabel")
     self.name:SetFont("liaCharMediumFont")
     self.name:SetTextColor(lia.gui.character.WHITE)
-    self.name:SetWrap(true)
-    self.name:SetAutoStretchVertical(true)
+    self.name:SetWrap(false)
     self.model = self:Add("liaModelPanel")
     self.model:SetFOV(37)
     self.model.PaintOver = function(_, w, h)
@@ -43,7 +40,7 @@ function PANEL:Init()
             local centerX, centerY = w * 0.5, h * 0.5 - 24
             surface.SetDrawColor(250, 0, 0, 40)
             surface.DrawRect(0, centerY - 24, w, 48)
-            draw.SimpleText(L("banned"):upper(), "liaCharSubTitleFont", centerX, centerY, color_white, 1, 1)
+            draw.SimpleText(L("banned"):upper(), "liaCharSubTitleFont", centerX, centerY, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
     end
 
@@ -64,8 +61,6 @@ function PANEL:Init()
         lia.gui.character:clickSound()
         self:confirmDelete()
     end
-
-    self:CenterName()
 end
 
 function PANEL:onSelected()
@@ -74,8 +69,8 @@ end
 function PANEL:setCharacter(character)
     if not character then return end
     self.character = character
-    self.name:SetText(character:getName():gsub("#", "\226\128\139#"):upper())
-    self.name:SizeToContents()
+    local nameText = character:getName():gsub("#", "\226\128\139#"):upper()
+    self.name:SetText(nameText)
     self.model:SetModel(character:getModel())
     self:setBanned(character:getData("banned"))
     local entity = self.model.Entity
@@ -99,38 +94,20 @@ function PANEL:setCharacter(character)
     if IsValid(self.factionLogo) then self.factionLogo:Remove() end
     if IsValid(self.classLogo) then self.classLogo:Remove() end
     local factionData = lia.faction.indices[character:getFaction()]
-    local classData = nil
+    local classData
     local classIndex = character:getClass()
     if classIndex then classData = lia.class.list[classIndex] end
     if factionData and factionData.logo then
         self.factionLogo = self:Add("DImage")
         self.factionLogo:SetImage(factionData.logo)
         self.factionLogo:SetSize(128, 128)
-        local _, nameY = self.name:GetPos()
-        local nameHeight = self.name:GetTall()
-        local logoX = math.max((self:GetWide() - 128) / 2, 0)
-        local logoY = nameY + nameHeight + 8
-        self.factionLogo:SetPos(logoX, logoY)
     end
 
     if classData and classData.logo then
         self.classLogo = self:Add("DImage")
         self.classLogo:SetImage(classData.logo)
         self.classLogo:SetSize(128, 128)
-        local baseY
-        if IsValid(self.factionLogo) then
-            baseY = self.factionLogo:GetY() + self.factionLogo:GetTall() + 8
-        else
-            local _, nameY = self.name:GetPos()
-            local nameHeight = self.name:GetTall()
-            baseY = nameY + nameHeight + 8
-        end
-
-        local logoX = math.max((self:GetWide() - 128) / 2, 0)
-        self.classLogo:SetPos(logoX, baseY)
     end
-
-    self:CenterName()
 end
 
 function PANEL:setBanned(banned)
@@ -148,49 +125,37 @@ function PANEL:Paint()
     lia.util.drawBlur(self)
 end
 
-function PANEL:CenterName()
-    self.name:SizeToContents()
-    if self.name:GetWide() > self:GetWide() then
-        self.name:SetWide(self:GetWide() - 16)
-        self.name:SetWrap(true)
-    else
-        self.name:SetWrap(false)
-    end
-
-    local nameMarginX = math.max((self:GetWide() - self.name:GetWide()) / 2, 0)
-    local nameY = 16
-    self.name:SetPos(nameMarginX, nameY)
-end
-
 function PANEL:PerformLayout()
     DPanel.PerformLayout(self)
-    local fW = self.factionLabel:GetWide()
-    local fH = self.factionLabel:GetTall()
-    local cW = self.classLabel:GetWide()
-    local cH = self.classLabel:GetTall()
-    self.factionLabel:SetPos((self:GetWide() - fW) / 2, -(fH + cH))
-    self.classLabel:SetPos((self:GetWide() - cW) / 2, -cH)
-    self:CenterName()
+    self.name:SetWrap(false)
+    self.name:SizeToContents()
+    local maxWidth = self:GetWide() - 16
+    if self.name:GetWide() > maxWidth then
+        self.name:SetWrap(true)
+        self.name:SetWide(maxWidth)
+        self.name:SizeToContentsY()
+    else
+        self.name:SizeToContents()
+    end
+
+    self.name:CenterHorizontal()
+    self.name:SetY(16)
+    local fW, fH = self.factionLabel:GetSize()
+    local cW, cH = self.classLabel:GetSize()
+    self.factionLabel:SetPos((self:GetWide() - fW) * 0.5, -(fH + cH))
+    self.classLabel:SetPos((self:GetWide() - cW) * 0.5, -cH)
+    local _, nameY = self.name:GetPos()
+    local nameHeight = self.name:GetTall()
+    local logoX = math.max((self:GetWide() - 128) / 2, 0)
+    local nextY = nameY + nameHeight + 8
     if IsValid(self.factionLogo) then
-        local _, nameY = self.name:GetPos()
-        local nameHeight = self.name:GetTall()
-        local logoX = math.max((self:GetWide() - 128) / 2, 0)
-        local logoY = nameY + nameHeight + 8
-        self.factionLogo:SetPos(logoX, logoY)
+        self.factionLogo:SetPos(logoX, nextY)
+        nextY = nextY + self.factionLogo:GetTall() + 8
     end
 
     if IsValid(self.classLogo) then
-        local baseY
-        if IsValid(self.factionLogo) then
-            baseY = self.factionLogo:GetY() + self.factionLogo:GetTall() + 8
-        else
-            local _, nameY = self.name:GetPos()
-            local nameHeight = self.name:GetTall()
-            baseY = nameY + nameHeight + 8
-        end
-
-        local logoX = math.max((self:GetWide() - 128) / 2, 0)
-        self.classLogo:SetPos(logoX, baseY)
+        self.classLogo:SetPos(logoX, nextY)
+        nextY = nextY + self.classLogo:GetTall() + 8
     end
 
     local modelHeight = self:GetTall() - 324 - self.delete:GetTall()
