@@ -9,14 +9,18 @@
         local pos = entity:LocalToWorld(entity:OBBCenter()):ToScreen()
         local x, y = pos.x, pos.y
         local owner = entity:GetDTEntity(0)
-        local name = entity:getNetVar("title", entity:getNetVar("name", IsValid(owner) and L("doorTitleOwned") or not entity:getNetVar("class") and not entity:getNetVar("factions") and L("doorTitle") or ""))
+        local name = entity:getNetVar("title", entity:getNetVar("name", IsValid(owner) and L("doorTitleOwned") or (not entity:getNetVar("class") and not entity:getNetVar("factions") and L("doorTitle") or "")))
         local factions = entity:getNetVar("factions", "[]")
         local class = entity:getNetVar("class")
         local price = entity:getNetVar("price", 0)
+        local ownable = not entity:getNetVar("noSell", false)
         lia.util.drawText(name, x, y, ColorAlpha(color_white, alpha), 1, 1)
         y = y + 20
-        lia.util.drawText(L("doorPrice", lia.currency.get(price)), x, y, ColorAlpha(color_white, alpha), 1, 1)
-        y = y + 20
+        if ownable then
+            lia.util.drawText(L("doorPrice", lia.currency.get(price)), x, y, ColorAlpha(color_white, alpha), 1, 1)
+            y = y + 20
+        end
+
         local classData
         if class and lia.class.list[class] then classData = lia.class.list[class] end
         if IsValid(owner) then
@@ -46,7 +50,7 @@
             y = y + 20
         end
 
-        if not IsValid(owner) and factions == "[]" and not class then lia.util.drawText(entity:getNetVar("noSell") and L("doorIsNotOwnable") or L("doorIsOwnable"), x, y, ColorAlpha(color_white, alpha), 1, 1) end
+        if not IsValid(owner) and factions == "[]" and not class then lia.util.drawText(ownable and L("doorIsOwnable") or L("doorIsNotOwnable"), x, y, ColorAlpha(color_white, alpha), 1, 1) end
     end
 end
 

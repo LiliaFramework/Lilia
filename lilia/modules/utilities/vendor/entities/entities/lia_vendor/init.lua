@@ -21,7 +21,6 @@ function ENT:Use(activator)
     lia.log.add(activator, "vendorAccess", self:getNetVar("name"))
     self.receivers[#self.receivers + 1] = activator
     activator.liaVendor = self
-    print("hi", self:getNetVar("welcomeMessage"))
     if self:getNetVar("welcomeMessage") then activator:notify(self:getNetVar("name") .. ": " .. self:getNetVar("welcomeMessage")) end
     hook.Run("PlayerAccessVendor", activator, self)
 end
