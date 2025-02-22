@@ -159,7 +159,7 @@ lia.chat.register("adminchat", {
         return true
     end,
     onChatAdd = function(speaker, text) chat.AddText(Color(255, 215, 0), "[Аdmin Chat] ", Color(128, 0, 255, 255), speaker:getChar():getName(), ": ", Color(255, 255, 255), text) end,
-    prefix = {"/adminchat", "/asay", "/admin"}
+    prefix = {"/adminchat", "/asay", "/admin", "/a"}
 })
 
 lia.chat.register("roll", {
