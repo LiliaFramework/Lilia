@@ -1,12 +1,4 @@
 ﻿local liaNetworkStrings = {"liaCharChoose", "liaCharCreate", "liaCharDelete", "liaCharList", "liaCharMenu"}
-netstream.Hook("liaCharKickSelf", function(client)
-    local character = client:getChar()
-    if character then
-        if not client:Alive() then character:setData("pos", nil) end
-        character:kick()
-    end
-end)
-
 net.Receive("liaCharChoose", function(_, client)
     local function response(message)
         net.Start("liaCharChoose")
