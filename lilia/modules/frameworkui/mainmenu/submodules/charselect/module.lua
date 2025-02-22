@@ -49,7 +49,7 @@ if CLIENT then
         vgui.Create("liaCharacter")
     end
 
-    function MODULE:KickedFromCharacter(_, isCurrentChar)
+    function MODULE:KickedFromChar(_, isCurrentChar)
         if isCurrentChar then vgui.Create("liaCharacter") end
     end
 
