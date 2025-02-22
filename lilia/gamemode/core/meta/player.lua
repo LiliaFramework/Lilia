@@ -369,38 +369,6 @@ if SERVER then
         end)
     end
 
-    function playerMeta:notify(message, notifType)
-        lia.notices.notify(message, notifType, self)
-    end
-
-    function playerMeta:notifyError(message)
-        self:notify(message, 1)
-    end
-
-    function playerMeta:notifyCriticalError(message)
-        self:notify(message, 2)
-    end
-
-    function playerMeta:notifyWarning(message)
-        self:notify(message, 3)
-    end
-
-    function playerMeta:notifySuccess(message)
-        self:notify(message, 4)
-    end
-
-    function playerMeta:notifyInfo(message)
-        self:notify(message, 5)
-    end
-
-    function playerMeta:notifyHint(message)
-        self:notify(message, 6)
-    end
-
-    function playerMeta:notifyLocalized(message, ...)
-        lia.notices.notifyLocalized(message, self, ...)
-    end
-
     function playerMeta:getPlayTime()
         local diff = os.time(lia.time.toNumber(lia.lastJoin)) - os.time(lia.time.toNumber(lia.firstJoin))
         return diff + RealTime() - (lia.joinTime or 0)
@@ -671,4 +639,36 @@ else
         lia.localData = lia.localData or {}
         return lia.localData
     end
+end
+
+function playerMeta:notify(message, notifType)
+    lia.notices.notify(message, notifType, self)
+end
+
+function playerMeta:notifyLocalized(message, ...)
+    lia.notices.notifyLocalized(message, self, ...)
+end
+
+function playerMeta:notifyError(message)
+    self:notify(message, 1)
+end
+
+function playerMeta:notifyCriticalError(message)
+    self:notify(message, 2)
+end
+
+function playerMeta:notifyWarning(message)
+    self:notify(message, 3)
+end
+
+function playerMeta:notifySuccess(message)
+    self:notify(message, 4)
+end
+
+function playerMeta:notifyInfo(message)
+    self:notify(message, 5)
+end
+
+function playerMeta:notifyHint(message)
+    self:notify(message, 6)
 end
