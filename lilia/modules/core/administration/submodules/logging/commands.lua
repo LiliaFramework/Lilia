@@ -13,18 +13,8 @@ lia.command.add("logs", {
             end
         end
 
-        local jsonData = util.TableToJSON(categorizedLogs)
-        local compressedData = util.Compress(jsonData)
-        print("[Logs Command] Data size (compressed): " .. #compressedData .. " bytes")
-        print("[Logs Command] Garry's Mod limit: 65536 bytes (64 KB)")
-        if #compressedData > 65536 then
-            print("[Logs Command] WARNING: Data size exceeds GMod's 64 KB limit. Consider reducing the log limit.")
-            return
-        end
-
         net.Start("send_logs")
-        net.WriteUInt(#compressedData, 32)
-        net.WriteData(compressedData, #compressedData)
+        net.WriteBigTable(categorizedLogs)
         net.Send(client)
     end
 })

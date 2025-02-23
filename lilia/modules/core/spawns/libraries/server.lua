@@ -65,7 +65,7 @@ function MODULE:PlayerDeath(client, _, attacker)
 
     client:setNetVar("IsDeadRestricted", true)
     client:setNetVar("lastDeathTime", os.time())
-    timer.Simple(lia.config.get("SpawnTime"), function() if IsValid(client) then client:SetNW2Bool("IsDeadRestricted", false) end end)
+    timer.Simple(lia.config.get("SpawnTime"), function() if IsValid(client) then client:setNetVar("IsDeadRestricted", false) end end)
     client:SetDSP(30, false)
     character:setData("pos", nil)
     if (not attacker:IsPlayer() and lia.config.get("LoseItemsonDeathNPC", false)) or (lia.config.get("LoseItemsonDeathWorld", false) and attacker:IsWorld()) then self:RemovedDropOnDeathItems(client) end
@@ -106,6 +106,6 @@ function MODULE:PlayerSpawn(client)
         client:GodDisable()
     end
 
-    client:SetNW2Bool("IsDeadRestricted", false)
+    client:setNetVar("IsDeadRestricted", false)
     client:SetDSP(0, false)
 end

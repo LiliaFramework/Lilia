@@ -544,7 +544,7 @@ end
 function GM:PlayerStartVoice(client)
     if not IsValid(g_VoicePanelList) then return end
     if lia and lia.config and not lia.config.get("IsVoiceEnabled", true) then return end
-    if client:GetNWBool("IsDeadRestricted", false) then return false end
+    if client:getNetVar("IsDeadRestricted", false) then return false end
     hook.Run("PlayerEndVoice", client)
     if IsValid(VoicePanels[client]) then
         if VoicePanels[client].fadeAnim then

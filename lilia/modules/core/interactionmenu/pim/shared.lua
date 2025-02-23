@@ -43,7 +43,7 @@ MODULE:AddOption("Give Money", {
         frame.ok:SetFont("WB_Small")
         frame.ok.DoClick = frame.te.OnEnter
         function frame.ok:Paint(w, h)
-            draw.RoundedBox(0, 0, 0, w, h, BC_NEUTRAL)
+            draw.RoundedBox(0, 0, 0, w, h, Color(206, 80, 80))
         end
     end
 })

@@ -25,7 +25,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
     end
 
     if notSameEntity then
-        if attackerIsHuman and attacker:GetNW2Bool("IsActing", false) then return true end
+        if attackerIsHuman and attacker:getNetVar("IsActing", false) then return true end
         if lia.config.get("OnDamageCharacterSwitchCooldownTimer", 15) > 0 then
             local applyCooldown = lia.config.get("SwitchCooldownOnAllEntities", false) or attackerIsHuman
             if applyCooldown then entity.LastDamaged = CurTime() end

@@ -37,6 +37,20 @@ function characterMeta:getPlayer()
     end
 end
 
+function characterMeta:getDisplayedName(client)
+    local isRecognitionEnabled = lia.config.get("RecognitionEnabled", true)
+    if not isRecognitionEnabled then return self:getName() end
+    if not IsValid(self:getPlayer()) or not IsValid(client) then return L("unknown") end
+    local ourCharacter = client:getChar()
+    if not self or not ourCharacter then return L("unknown") end
+    if self:getPlayer() == client then return self:getName() end
+    local characterID = self:getID()
+    if ourCharacter:doesRecognize(characterID) then return self:getName() end
+    local myReg = ourCharacter:getRecognizedAs()
+    if ourCharacter:doesFakeRecognize(characterID) and myReg[characterID] then return myReg[characterID] end
+    return L("unknown")
+end
+
 function characterMeta:hasMoney(amount)
     amount = tonumber(amount) or 0
     if amount < 0 then return false end

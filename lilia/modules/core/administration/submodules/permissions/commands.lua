@@ -128,7 +128,7 @@ lia.command.add("fallover", {
     adminOnly = false,
     syntax = "[number time]",
     onRun = function(client, arguments)
-        if client:GetNW2Bool("FallOverCooldown", false) then
+        if client:getNetVar("FallOverCooldown", false) then
             client:notifyLocalized("cmdCooldown")
             return
         elseif client:IsFrozen() then
@@ -164,8 +164,8 @@ lia.command.add("dropmoney", {
     adminOnly = false,
     syntax = "[number amount]",
     onRun = function(client, arguments)
-        if client:GetNW2Bool("DropMoneyCooldown", false) then
-            local remainingTime = math.ceil(client:GetNW2Float("DropMoneyCooldownEnd", 0) - CurTime())
+        if client:getNetVar("DropMoneyCooldown", false) then
+            local remainingTime = math.ceil(client:getNetVar("DropMoneyCooldownEnd", 0) - CurTime())
             client:notifyLocalized("moneyCooldown", remainingTime)
             return
         end

@@ -192,8 +192,7 @@ function math.ClampedRemap(val, frommin, frommax, tomin, tomax)
 end
 
 if SERVER then
-    chat = chat and {}
-    function chat.AddText(client, ...)
+    function ClientAddText(client, ...)
         if not client or not IsValid(client) then
             print("Invalid client provided to chat.AddText")
             return

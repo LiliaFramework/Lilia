@@ -41,84 +41,80 @@ function MODULE:PlayerLoadedChar(client, character)
     end
 end
 
-function MODULE:FactionOnLoadout(client)
-    local faction = lia.faction.indices[client:Team()]
-    if not faction then return end
-    if faction.scale then
-        local scaleViewFix = faction.scale
-        local scaleViewFixOffset = Vector(0, 0, 64)
-        local scaleViewFixOffsetDuck = Vector(0, 0, 28)
-        client:SetViewOffset(scaleViewFixOffset * faction.scale)
-        client:SetViewOffsetDucked(scaleViewFixOffsetDuck * faction.scale)
-        client:SetModelScale(scaleViewFix)
+local function applyAttributes(client, attr)
+    if not attr then return end
+    if attr.scale then
+        local offset = Vector(0, 0, 64)
+        local offsetDuck = Vector(0, 0, 28)
+        client:SetViewOffset(offset * attr.scale)
+        client:SetViewOffsetDucked(offsetDuck * attr.scale)
+        client:SetModelScale(attr.scale)
     else
         client:SetViewOffset(Vector(0, 0, 64))
         client:SetViewOffsetDucked(Vector(0, 0, 28))
         client:SetModelScale(1)
     end
 
-    if faction.runSpeed then
-        if faction.runSpeedMultiplier then
-            client:SetRunSpeed(math.Round(lia.config.get("RunSpeed") * faction.runSpeed))
+    if attr.runSpeed then
+        if attr.runSpeedMultiplier then
+            client:SetRunSpeed(math.Round(lia.config.get("RunSpeed") * attr.runSpeed))
         else
-            client:SetRunSpeed(faction.runSpeed)
+            client:SetRunSpeed(attr.runSpeed)
         end
     end
 
-    if faction.walkSpeed then
-        if faction.walkSpeedMultiplier then
-            client:SetWalkSpeed(math.Round(lia.config.get("WalkSpeed") * faction.walkSpeed))
+    if attr.walkSpeed then
+        if attr.walkSpeedMultiplier then
+            client:SetWalkSpeed(math.Round(lia.config.get("WalkSpeed") * attr.walkSpeed))
         else
-            client:SetWalkSpeed(faction.walkSpeed)
+            client:SetWalkSpeed(attr.walkSpeed)
         end
     end
 
-    if faction.jumpPower then
-        if faction.jumpPowerMultiplier then
-            client:SetJumpPower(math.Round(client:GetJumpPower() * faction.jumpPower))
+    if attr.jumpPower then
+        if attr.jumpPowerMultiplier then
+            client:SetJumpPower(math.Round(client:GetJumpPower() * attr.jumpPower))
         else
-            client:SetJumpPower(faction.jumpPower)
+            client:SetJumpPower(attr.jumpPower)
         end
     end
 
-    if faction.bloodcolor then
-        client:SetBloodColor(faction.bloodcolor)
-    else
-        client:SetBloodColor(BLOOD_COLOR_RED)
+    client:SetBloodColor(attr.bloodcolor or BLOOD_COLOR_RED)
+    if attr.health then
+        client:SetMaxHealth(attr.health)
+        client:SetHealth(attr.health)
     end
 
-    if faction.health then
-        client:SetMaxHealth(faction.health)
-        client:SetHealth(faction.health)
-    end
-
-    if faction.armor then client:SetArmor(faction.armor) end
-    if faction.OnSpawn then faction:OnSpawn(client) end
-    if faction.weapons then
-        if istable(faction.weapons) then
-            for _, v in ipairs(faction.weapons) do
-                client:Give(v, true)
+    if attr.armor then client:SetArmor(attr.armor) end
+    if attr.OnSpawn then attr:OnSpawn(client) end
+    if attr.weapons then
+        if istable(attr.weapons) then
+            for _, weapon in ipairs(attr.weapons) do
+                client:Give(weapon, true)
             end
         else
-            client:Give(faction.weapons, true)
+            client:Give(attr.weapons, true)
         end
     end
 end
 
-function MODULE:FactionPostLoadout(client)
+local function applyBodyGroups(client, bodyGroups)
+    if not bodyGroups or not istable(bodyGroups) then return end
+    for name, value in pairs(bodyGroups) do
+        local index = client:FindBodygroupByName(name)
+        if index > -1 then client:SetBodygroup(index, value) end
+    end
+end
+
+function MODULE:FactionOnLoadout(client)
     local faction = lia.faction.indices[client:Team()]
     if not faction then return end
-    if faction.bodyGroups and istable(faction.bodyGroups) then
-        local groups = {}
-        for k, value in pairs(faction.bodyGroups) do
-            local index = client:FindBodygroupByName(k)
-            if index > -1 then groups[index] = value end
-        end
+    applyAttributes(client, faction)
+end
 
-        for index, value in pairs(groups) do
-            client:SetBodygroup(index, value)
-        end
-    end
+function MODULE:FactionPostLoadout(client)
+    local faction = lia.faction.indices[client:Team()]
+    if faction and faction.bodyGroups then applyBodyGroups(client, faction.bodyGroups) end
 end
 
 function MODULE:CanCharBeTransfered(character, faction)
@@ -132,84 +128,15 @@ end
 function MODULE:ClassOnLoadout(client)
     local character = client:getChar()
     local class = lia.class.list[character:getClass()]
-    if not class then return end
-    if class.None then return end
-    if class.scale then
-        local scaleViewFix = class.scale
-        local scaleViewFixOffset = Vector(0, 0, 64)
-        local scaleViewFixOffsetDuck = Vector(0, 0, 28)
-        client:SetViewOffset(scaleViewFixOffset * class.scale)
-        client:SetViewOffsetDucked(scaleViewFixOffsetDuck * class.scale)
-        client:SetModelScale(scaleViewFix)
-    else
-        client:SetViewOffset(Vector(0, 0, 64))
-        client:SetViewOffsetDucked(Vector(0, 0, 28))
-        client:SetModelScale(1)
-    end
-
-    if class.runSpeed then
-        if class.runSpeedMultiplier then
-            client:SetRunSpeed(math.Round(lia.config.get("RunSpeed") * class.runSpeed))
-        else
-            client:SetRunSpeed(class.runSpeed)
-        end
-    end
-
-    if class.walkSpeed then
-        if class.walkSpeedMultiplier then
-            client:SetWalkSpeed(math.Round(lia.config.get("WalkSpeed") * class.walkSpeed))
-        else
-            client:SetWalkSpeed(class.walkSpeed)
-        end
-    end
-
-    if class.jumpPower then
-        if class.jumpPowerMultiplier then
-            client:SetJumpPower(math.Round(client:GetJumpPower() * class.jumpPower))
-        else
-            client:SetJumpPower(class.jumpPower)
-        end
-    end
-
-    if class.bloodcolor then
-        client:SetBloodColor(class.bloodcolor)
-    else
-        client:SetBloodColor(BLOOD_COLOR_RED)
-    end
-
-    if class.health then
-        client:SetMaxHealth(class.health)
-        client:SetHealth(class.health)
-    end
-
+    if not class or class.None then return end
+    applyAttributes(client, class)
     if class.model then client:SetModel(class.model) end
-    if class.armor then client:SetArmor(class.armor) end
-    if class.OnSpawn then class:OnSpawn(client) end
-    if class.weapons then
-        if istable(class.weapons) then
-            for _, v in ipairs(class.weapons) do
-                client:Give(v, true)
-            end
-        else
-            client:Give(class.weapons, true)
-        end
-    end
 end
 
 function MODULE:ClassPostLoadout(client)
     local character = client:getChar()
     local class = lia.class.list[character:getClass()]
-    if class and class.bodyGroups and istable(class.bodyGroups) then
-        local groups = {}
-        for k, value in pairs(class.bodyGroups) do
-            local index = client:FindBodygroupByName(k)
-            if index > -1 then groups[index] = value end
-        end
-
-        for index, value in pairs(groups) do
-            client:SetBodygroup(index, value)
-        end
-    end
+    if class and class.bodyGroups then applyBodyGroups(client, class.bodyGroups) end
 end
 
 function MODULE:CanPlayerUseChar(client, character)

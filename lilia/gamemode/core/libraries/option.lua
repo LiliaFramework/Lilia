@@ -69,12 +69,11 @@ function lia.option.load()
     local loadLocation = dirPath .. "/" .. formattedIP .. ".txt"
     local data = file.Read(loadLocation, "DATA")
     if data then
+        print("data found")
         local savedOptions = util.JSONToTable(data)
         for k, v in pairs(savedOptions) do
             if lia.option.stored[k] then lia.option.stored[k].value = v end
         end
-    else
-        lia.option.save()
     end
 
     hook.Run("InitializedOptions")
@@ -379,13 +378,10 @@ hook.Add("CreateMenuButtons", "OptionsMenuButtons", function(tabs)
         panel.scroll.Paint = function() end
         panel.categories = {}
         panel.activeTab = nil
-        local function addCategory(text)
-            if panel.categories[text] then return panel.categories[text].label end
-            local categoryLabel = panel.sidebar:Add("DButton")
+        local function createCategoryButton(text)
+            local categoryLabel = vgui.Create("DButton")
             categoryLabel:SetText(text)
             categoryLabel:SetTall(40)
-            categoryLabel:Dock(TOP)
-            categoryLabel:DockMargin(0, 10, 0, 10)
             categoryLabel:SetFont("liaMediumFont")
             categoryLabel:SetTextColor(color_white)
             categoryLabel.Paint = function(btn, w, h)
@@ -416,7 +412,12 @@ hook.Add("CreateMenuButtons", "OptionsMenuButtons", function(tabs)
 
                 panel.activeTab = button
             end
+            return categoryLabel
+        end
 
+        local function addCategory(text)
+            if panel.categories[text] then return panel.categories[text].label end
+            local categoryLabel = createCategoryButton(text)
             panel.categories[text] = {
                 label = categoryLabel,
                 buttons = {}
@@ -455,9 +456,22 @@ hook.Add("CreateMenuButtons", "OptionsMenuButtons", function(tabs)
             addElement(elementType, key, option.name, option, option.data and option.data.category)
         end
 
-        local firstCategory = next(panel.categories)
-        if firstCategory then
-            for _, btn in ipairs(panel.categories[firstCategory].buttons) do
+        local sortedCategories = {}
+        for categoryName, cat in pairs(panel.categories) do
+            table.insert(sortedCategories, cat)
+        end
+
+        table.sort(sortedCategories, function(a, b) return a.label:GetText() < b.label:GetText() end)
+        panel.sidebar:Clear()
+        for _, cat in ipairs(sortedCategories) do
+            cat.label:SetParent(panel.sidebar)
+            cat.label:Dock(TOP)
+            cat.label:DockMargin(0, 10, 0, 10)
+            panel.sidebar:AddItem(cat.label)
+        end
+
+        if sortedCategories[1] then
+            for _, btn in ipairs(sortedCategories[1].buttons) do
                 btn:SetVisible(true)
             end
         end

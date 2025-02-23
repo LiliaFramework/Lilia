@@ -771,7 +771,14 @@ hook.Add("CreateMenuButtons", "ConfigMenuButtons", function(tabs)
                 table.insert(cat.buttons, panelElement)
             end
 
+            local orderedKeys = {}
             for key, option in pairs(lia.config.stored) do
+                table.insert(orderedKeys, key)
+            end
+
+            table.sort(orderedKeys, function(a, b) return lia.config.stored[a].name < lia.config.stored[b].name end)
+            for _, key in ipairs(orderedKeys) do
+                local option = lia.config.stored[key]
                 local elementType = option.data and option.data.type or "Generic"
                 addElement(elementType, key, option.name, option, option.category)
             end

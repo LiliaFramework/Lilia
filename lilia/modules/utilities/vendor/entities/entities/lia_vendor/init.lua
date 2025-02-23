@@ -42,7 +42,6 @@ function ENT:takeMoney(value)
 end
 
 function ENT:setWelcomeMessage(value)
-    print("ran with", value)
     self:setNetVar("welcomeMessage", value)
 end
 

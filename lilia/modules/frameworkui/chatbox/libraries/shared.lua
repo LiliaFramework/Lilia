@@ -241,7 +241,7 @@ lia.chat.register("ooc", {
 lia.chat.register("s", {
     format = "%s screams \"%s\"",
     onChatAdd = function(speaker, text, anonymous)
-        local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or IsValid(speaker) and speaker:Name() or "Console"
+        local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or "Console"
         chat.AddText(Color(200, 20, 20), speako .. " screams \"" .. text .. "\"")
     end,
     onCanHear = lia.config.get("ChatRange", 280) * 4,
@@ -252,7 +252,7 @@ lia.chat.register("me's", {
     format = "**%s's %s",
     onCanHear = lia.config.get("ChatRange", 280),
     onChatAdd = function(speaker, text, anonymous)
-        local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or IsValid(speaker) and speaker:Name() or "Console"
+        local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or "Console"
         local texCol = lia.config.get("ChatColor")
         if LocalPlayer():getTracedEntity() == speaker then texCol = lia.config.get("ChatListenColor") end
         texCol = Color(texCol.r, texCol.g, texCol.b)
@@ -274,7 +274,7 @@ lia.chat.register("me's", {
 lia.chat.register("mefarfar", {
     format = "**%s %s",
     onChatAdd = function(speaker, text, anonymous)
-        local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or IsValid(speaker) and speaker:Name() or "Console"
+        local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or "Console"
         local texCol = lia.config.get("ChatColor")
         if LocalPlayer():getTracedEntity() == speaker then texCol = lia.config.get("ChatListenColor") end
         texCol = Color(texCol.r + 45, texCol.g + 45, texCol.b + 45)

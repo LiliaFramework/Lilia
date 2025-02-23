@@ -3,7 +3,7 @@
         if not IsValid(client) then return end
         local steamID = client:SteamID64()
         if client:isStaffOnDuty() then
-            local oldCharID = client:GetNW2Int("OldCharID", 0)
+            local oldCharID = client:getNetVar("OldCharID", 0)
             if oldCharID > 0 then
                 net.Start("AdminModeSwapCharacter")
                 net.WriteInt(oldCharID, 32)

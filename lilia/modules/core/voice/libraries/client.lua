@@ -25,7 +25,7 @@ end
 
 function PANEL:Setup(client)
     self.client = client
-    self.name = hook.Run("ShouldAllowScoreboardOverride", client, "name") and hook.Run("GetDisplayedName", client) or client:Nick()
+    self.name = hook.Run("ShouldAllowScoreboardOverride", client, "name") and hook.Run("GetDisplayedName", client)
     self.LabelName:SetText(self.name)
     self:InvalidateLayout()
 end

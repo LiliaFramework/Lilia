@@ -260,7 +260,7 @@ function PANEL:addPlayer(client, parent)
             return
         end
 
-        local overrideName = hook.Run("ShouldAllowScoreboardOverride", client, "name") and hook.Run("GetDisplayedName", client) or client:getChar():getName()
+        local overrideName = hook.Run("ShouldAllowScoreboardOverride", client, "name") and hook.Run("GetDisplayedName", client)
         local nameStr = (overrideName or client:Name()):gsub("#", "\226\128\139#")
         local overrideDesc = hook.Run("ShouldAllowScoreboardOverride", client, "desc") and hook.Run("GetDisplayedDescription", client, false) or client:getChar():getDesc()
         local descStr = (overrideDesc or ""):gsub("#", "\226\128\139#")

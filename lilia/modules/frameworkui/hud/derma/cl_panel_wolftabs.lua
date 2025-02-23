@@ -70,7 +70,7 @@ function PANEL:ShowTabs()
             if self.curSel == this then
                 surface.SetDrawColor(this.hoverCol)
                 surface.DrawRect(0, 0, w, h)
-                surface.SetDrawColor(BC_NEUTRAL)
+                surface.SetDrawColor(Color(206, 80, 80))
                 surface.DrawRect(0, h - 1, w, 1)
             else
                 surface.SetDrawColor(this.color)
