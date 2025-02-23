@@ -1,15 +1,7 @@
 ﻿net.Receive("send_logs", function()
-    local length = net.ReadUInt(32)
-    local compressedData = net.ReadData(length)
-    local jsonData = util.Decompress(compressedData)
-    if not jsonData then
-        chat.AddText(Color(255, 0, 0), "Failed to decompress log data.")
-        return
-    end
-
-    local categorizedLogs = util.JSONToTable(jsonData)
+    local categorizedLogs, err = net.ReadBigTable()
     if not categorizedLogs then
-        chat.AddText(Color(255, 0, 0), "Failed to parse log data.")
+        chat.AddText(Color(255, 0, 0), "Failed to retrieve logs: " .. err)
         return
     end
 
@@ -23,6 +15,7 @@
     local logTree = vgui.Create("DTree", logFrame)
     logTree:SetPos(10, 30)
     logTree:SetSize(400, 560)
+    logTree.Paint = function() end
     local logList = vgui.Create("DListView", logFrame)
     logList:SetPos(420, 70)
     logList:SetSize(1170, 520)
@@ -32,6 +25,7 @@
     searchBox:SetPos(420, 30)
     searchBox:SetSize(1170, 30)
     searchBox:SetPlaceholderText("Search logs in the selected category...")
+    searchBox:SetTextColor(Color(255, 255, 255))
     local copyButton = vgui.Create("DButton", logFrame)
     copyButton:SetText("Copy Selected Row")
     copyButton:SetPos(10, 600)
@@ -40,6 +34,7 @@
     local currentCategoryLogs = {}
     for category, _ in pairs(categorizedLogs) do
         local node = logTree:AddNode(category)
+        if node.Label then node.Label:SetTextColor(Color(255, 255, 255)) end
         treeNodes[category] = node
     end
 
@@ -50,7 +45,12 @@
         currentCategoryLogs = logs or {}
         if logs then
             for _, log in ipairs(logs) do
-                logList:AddLine(log.timestamp, log.message)
+                local line = logList:AddLine(log.timestamp, log.message)
+                if line.Columns then
+                    for i = 1, #line.Columns do
+                        line.Columns[i]:SetTextColor(Color(255, 255, 255))
+                    end
+                end
             end
         end
     end
@@ -60,11 +60,23 @@
         logList:Clear()
         if searchQuery ~= "" and #currentCategoryLogs > 0 then
             for _, log in ipairs(currentCategoryLogs) do
-                if string.find(string.lower(log.message), searchQuery, 1, true) then logList:AddLine(log.timestamp, log.message) end
+                if string.find(string.lower(log.message), searchQuery, 1, true) then
+                    local line = logList:AddLine(log.timestamp, log.message)
+                    if line.Columns then
+                        for i = 1, #line.Columns do
+                            line.Columns[i]:SetTextColor(Color(255, 255, 255))
+                        end
+                    end
+                end
             end
         elseif #currentCategoryLogs > 0 then
             for _, log in ipairs(currentCategoryLogs) do
-                logList:AddLine(log.timestamp, log.message)
+                local line = logList:AddLine(log.timestamp, log.message)
+                if line.Columns then
+                    for i = 1, #line.Columns do
+                        line.Columns[i]:SetTextColor(Color(255, 255, 255))
+                    end
+                end
             end
         end
     end

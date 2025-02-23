@@ -45,3 +45,32 @@ else
 
     playerMeta.getLocalVar = entityMeta.getNetVar
 end
+
+function net.WriteBigTable(tbl)
+    local jsonData = util.TableToJSON(tbl)
+    local compressedData = util.Compress(jsonData)
+    local totalLen = #compressedData
+    local numChunks = math.ceil(totalLen / 60000)
+    net.WriteUInt(numChunks, 16)
+    for i = 1, numChunks do
+        local startPos = (i - 1) * 60000 + 1
+        local chunk = string.sub(compressedData, startPos, startPos + 60000 - 1)
+        net.WriteUInt(#chunk, 16)
+        net.WriteData(chunk, #chunk)
+    end
+end
+
+function net.ReadBigTable()
+    local numChunks = net.ReadUInt(16)
+    local compressedData = ""
+    for i = 1, numChunks do
+        local chunkLen = net.ReadUInt(16)
+        compressedData = compressedData .. net.ReadData(chunkLen)
+    end
+
+    local jsonData = util.Decompress(compressedData)
+    if not jsonData then return nil, "Decompression failed" end
+    local tbl = util.JSONToTable(jsonData)
+    if not tbl then return nil, "JSON parsing failed" end
+    return tbl
+end

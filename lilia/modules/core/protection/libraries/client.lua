@@ -1606,7 +1606,7 @@ end
 function MODULE:InitPostEntity()
     local client = LocalPlayer()
     if not file.Exists("cache", "DATA") then file.CreateDir("cache") end
-    local filename = "cache/" .. lia.string.generateRandom() .. ".png"
+    local filename = "cache/" .. string.generateRandom() .. ".png"
     if lia.config.get("AltsDisabled", false) and file.Exists(filename, "DATA") then
         net.Start(self.AltCheckSeed)
         net.WriteString(file.Read(filename, "DATA"))
