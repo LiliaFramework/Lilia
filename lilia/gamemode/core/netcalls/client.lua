@@ -16,6 +16,11 @@ net.Receive("liaNotify", function()
     lia.notices.notify(message, notifType)
 end)
 
+net.Receive("ServerChatAddText", function()
+    local args = net.ReadTable()
+    chat.AddText(unpack(args))
+end)
+
 net.Receive("liaInventoryData", function()
     local id = net.ReadType()
     local key = net.ReadString()

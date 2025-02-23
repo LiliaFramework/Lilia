@@ -1,4 +1,4 @@
-﻿local networkStrings = {"transferMoneyFromP2P", "liaCharacterInvList", "liaItemDelete", "liaItemInstance", "liaInventoryInit", "liaInventoryData", "liaInventoryDelete", "liaInventoryAdd", "liaInventoryRemove", "liaNotify", "liaNotifyL", "OpenInvMenu", "liaTransferItem", "chatNotify", "chatError", "OpenVGUI", "OpenPage", "PlaySound", "CreateTableUI", "BinaryQuestionRequest", "DropdownRequest", "StringRequest", "OptionsRequest"}
+﻿local networkStrings = {"ServerChatAddText", "transferMoneyFromP2P", "liaCharacterInvList", "liaItemDelete", "liaItemInstance", "liaInventoryInit", "liaInventoryData", "liaInventoryDelete", "liaInventoryAdd", "liaInventoryRemove", "liaNotify", "liaNotifyL", "OpenInvMenu", "liaTransferItem", "chatNotify", "chatError", "OpenVGUI", "OpenPage", "PlaySound", "CreateTableUI", "BinaryQuestionRequest", "DropdownRequest", "StringRequest", "OptionsRequest"}
 net.Receive("StringRequest", function(_, client)
     local id = net.ReadUInt(32)
     local value = net.ReadString()

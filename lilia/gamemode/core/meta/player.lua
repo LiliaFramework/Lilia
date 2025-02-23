@@ -36,7 +36,7 @@ function playerMeta:hasValidVehicle()
 end
 
 function playerMeta:isNoClipping()
-    return self:GetMoveType() == MOVETYPE_NOCLIP
+    return self:GetMoveType() == MOVETYPE_NOCLIP and not self:hasValidVehicle()
 end
 
 function playerMeta:hasRagdoll()
