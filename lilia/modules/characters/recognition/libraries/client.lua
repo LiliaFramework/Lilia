@@ -23,13 +23,13 @@ function MODULE:GetDisplayedName(client, chatType)
     local character = client:getChar()
     local ourCharacter = lp:getChar()
     if not character or not ourCharacter then return L("unknown") end
-    local myReg = ourCharacter:getRecognizedAs()
+    if client == lp then return ourCharacter:getName() end
     local characterID = character:getID()
-    if not ourCharacter:doesRecognize(characterID) then
-        if ourCharacter:doesFakeRecognize(characterID) and myReg[characterID] then return myReg[characterID] end
-        if chatType and hook.Run("isRecognizedChatType", chatType) then return "[" .. L("unknown") .. "]" end
-        return L("unknown")
-    end
+    if ourCharacter:doesRecognize(characterID) then return character:getName() end
+    local myReg = ourCharacter:getRecognizedAs()
+    if ourCharacter:doesFakeRecognize(characterID) and myReg[characterID] then return myReg[characterID] end
+    if chatType and hook.Run("isRecognizedChatType", chatType) then return "[" .. L("unknown") .. "]" end
+    return L("unknown")
 end
 
 function MODULE:ShouldAllowScoreboardOverride(client, var)
@@ -38,7 +38,7 @@ function MODULE:ShouldAllowScoreboardOverride(client, var)
     local character = client:getChar()
     local ourCharacter = LocalPlayer():getChar()
     if not character or not ourCharacter then return false end
-    local isRecognitionEnabled = lia.config.get("RecognitionEnabled", false)
+    local isRecognitionEnabled = lia.config.get("RecognitionEnabled", true)
     local isVarHiddenInScoreboard = var == "name" or var == "model" or var == "desc" or var == "classlogo"
     local isNotRecognized = not (ourCharacter:doesRecognize(character:getID()) or ourCharacter:doesFakeRecognize(character:getID()))
     return isRecognitionEnabled and isVarHiddenInScoreboard and isNotRecognized
