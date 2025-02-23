@@ -152,22 +152,6 @@ FilesToLoad = {
         realm = "client"
     },
     {
-        path = "lilia/gamemode/core/libraries/string.lua",
-        realm = "shared"
-    },
-    {
-        path = "lilia/gamemode/core/libraries/table.lua",
-        realm = "shared"
-    },
-    {
-        path = "lilia/gamemode/core/libraries/math.lua",
-        realm = "shared"
-    },
-    {
-        path = "lilia/gamemode/core/libraries/sizing.lua",
-        realm = "client"
-    },
-    {
         path = "lilia/gamemode/core/libraries/easyicons.lua",
         realm = "client"
     },
