@@ -1,5 +1,4 @@
 ﻿local MODULE = MODULE
-
 lia.command.add("restockvendor", {
     privilege = "Manage Vendors",
     superAdminOnly = true,

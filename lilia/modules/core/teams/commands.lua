@@ -123,7 +123,7 @@ lia.command.add("setclass", {
                 classFound = lia.class.list[className]
             else
                 for _, v in ipairs(lia.class.list) do
-                    if lia.util.stringMatches(L(v.name), className) or lia.util.stringMatches(v.uniqueID, className)  then
+                    if lia.util.stringMatches(L(v.name), className) or lia.util.stringMatches(v.uniqueID, className) then
                         classFound = v
                         break
                     end
@@ -133,7 +133,7 @@ lia.command.add("setclass", {
             if classFound then
                 if classFound.faction == target:Team() then
                     character:joinClass(classFound.index, true)
-                    target:notifyLocalized("classSet", L(classFound.name), client:GetName() )
+                    target:notifyLocalized("classSet", L(classFound.name), client:GetName())
                     if client ~= target then client:notifyLocalized("classSetOther", target:GetName(), L(classFound.name)) end
                     hook.Run("PlayerLoadout", target)
                 else
