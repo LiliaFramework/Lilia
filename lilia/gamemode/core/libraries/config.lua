@@ -772,7 +772,7 @@ hook.Add("CreateMenuButtons", "ConfigMenuButtons", function(tabs)
             end
 
             local orderedKeys = {}
-            for key, option in pairs(lia.config.stored) do
+            for key, _ in pairs(lia.config.stored) do
                 table.insert(orderedKeys, key)
             end
 
