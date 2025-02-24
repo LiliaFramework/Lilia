@@ -569,7 +569,7 @@ else
             if spos.visible then
                 render.SuppressEngineLighting(true)
                 surface.SetFont("WB_Large")
-                draw.DrawText(name .. "\n" .. howclose .. " Meters\n", "WB_Larges", spos.x, spos.y, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+                draw.DrawText(name .. "\n" .. howclose .. " Meters\n", "WB_Large", spos.x, spos.y, Color(255, 255, 255), TEXT_ALIGN_CENTER)
                 render.SuppressEngineLighting(false)
             end
 
