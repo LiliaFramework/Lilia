@@ -457,7 +457,7 @@ hook.Add("CreateMenuButtons", "OptionsMenuButtons", function(tabs)
         end
 
         local sortedCategories = {}
-        for categoryName, cat in pairs(panel.categories) do
+        for _, cat in pairs(panel.categories) do
             table.insert(sortedCategories, cat)
         end
 
