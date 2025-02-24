@@ -23,13 +23,13 @@ function MODULE:GetDisplayedName(client, chatType)
     local character = client:getChar()
     local ourCharacter = lp:getChar()
     if not character or not ourCharacter then return L("unknown") end
-    if client == lp then return ourCharacter:getName() end
-    local characterID = character:getID()
-    if ourCharacter:doesRecognize(characterID) then return character:getName() end
     local myReg = ourCharacter:getRecognizedAs()
-    if ourCharacter:doesFakeRecognize(characterID) and myReg[characterID] then return myReg[characterID] end
-    if chatType and hook.Run("isRecognizedChatType", chatType) then return "[" .. L("unknown") .. "]" end
-    return L("unknown")
+    local characterID = character:getID()
+    if not ourCharacter:doesRecognize(characterID) then
+        if ourCharacter:doesFakeRecognize(characterID) and myReg[characterID] then return myReg[characterID] end
+        if chatType and hook.Run("isRecognizedChatType", chatType) then return "[" .. L("unknown") .. "]" end
+        return L("unknown")
+    end
 end
 
 function MODULE:ShouldAllowScoreboardOverride(client, var)

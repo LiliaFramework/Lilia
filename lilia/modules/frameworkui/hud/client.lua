@@ -220,11 +220,11 @@ function MODULE:DrawCharInfo(c, _, info)
 end
 
 function MODULE:DrawEntityInfo(e, a, pos)
-    if not e.IsPlayer or not e:IsPlayer() then return end
+    if not e.IsPlayer(e) then return end
     if hook.Run("ShouldDrawPlayerInfo", e) == false then return end
-    local ch = e.getChar and e:getChar()
+    local ch = e.getChar(e)
     if not ch then return end
-    pos = pos or toScreen(e:GetPos() + (e.Crouching and e:Crouching() and Vector(0, 0, 48) or Vector(0, 0, 80)) or Vector(0, 0, 0))
+    pos = pos or toScreen(e.GetPos(e) + (e.Crouching(e) and Vector(0, 0, 48) or Vector(0, 0, 80)))
     local x, y = pos.x, pos.y
     charInfo = {}
     if e.widthCache ~= lia.config.get("descriptionWidth", 0.5) then
@@ -234,7 +234,7 @@ function MODULE:DrawEntityInfo(e, a, pos)
 
     e.liaNameCache = nil
     e.liaDescCache = nil
-    local name = hook.Run("GetDisplayedName", e, nil)
+    local name = hook.Run("GetDisplayedName", e, nil) or ch.getName(ch)
     if name ~= e.liaNameCache then
         e.liaNameCache = name
         if #name > 250 then name = name:sub(1, 250) .. "..." end
@@ -245,7 +245,7 @@ function MODULE:DrawEntityInfo(e, a, pos)
         charInfo[#charInfo + 1] = {e.liaNameLines[i], color_white}
     end
 
-    local desc = hook.Run("GetDisplayedDescription", e, true) or ch.getDesc and ch:getDesc()
+    local desc = hook.Run("GetDisplayedDescription", e, true) or ch.getDesc(ch)
     if desc ~= e.liaDescCache then
         e.liaDescCache = desc
         if #desc > 250 then desc = desc:sub(1, 250) .. "..." end
