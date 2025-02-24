@@ -148,14 +148,10 @@ function PANEL:PerformLayout()
     local nameHeight = self.name:GetTall()
     local logoX = math.max((self:GetWide() - 128) / 2, 0)
     local nextY = nameY + nameHeight + 8
-    if IsValid(self.factionLogo) then
-        self.factionLogo:SetPos(logoX, nextY)
-        nextY = nextY + self.factionLogo:GetTall() + 8
-    end
-
+    if IsValid(self.factionLogo) then self.factionLogo:SetPos(logoX, nextY) end
     if IsValid(self.classLogo) then
-        self.classLogo:SetPos(logoX, nextY)
-        nextY = nextY + self.classLogo:GetTall() + 8
+        local offset = IsValid(self.factionLogo) and (self.factionLogo:GetTall() + 8) or 0
+        self.classLogo:SetPos(logoX, nextY + offset)
     end
 
     local modelHeight = self:GetTall() - 324 - self.delete:GetTall()
