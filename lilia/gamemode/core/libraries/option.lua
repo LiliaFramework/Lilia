@@ -69,7 +69,6 @@ function lia.option.load()
     local loadLocation = dirPath .. "/" .. formattedIP .. ".txt"
     local data = file.Read(loadLocation, "DATA")
     if data then
-        print("data found")
         local savedOptions = util.JSONToTable(data)
         for k, v in pairs(savedOptions) do
             if lia.option.stored[k] then lia.option.stored[k].value = v end
