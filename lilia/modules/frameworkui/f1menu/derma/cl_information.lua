@@ -4,7 +4,7 @@ MODULE.CharacterInformations = {}
 function PANEL:Init()
     if IsValid(lia.gui.info) then lia.gui.info:Remove() end
     lia.gui.info = self
-    local panelWidth = ScrW() * 0.35
+    local panelWidth = ScrW()
     local panelHeight = ScrH() * 0.8
     self:SetSize(panelWidth, panelHeight)
     self:SetPos(50, 50)
@@ -18,6 +18,19 @@ function PANEL:Init()
     self.infoBox = self.info:Add("DPanel")
     self.infoBox:Dock(FILL)
     self.infoBox.Paint = function() end
+    self.leftColumn = self.infoBox:Add("DPanel")
+    self.leftColumn:Dock(LEFT)
+    self.leftColumn:SetWide(panelWidth * 0.5)
+    self.leftColumn.Paint = function() end
+    local spacerColumn = self.infoBox:Add("DPanel")
+    spacerColumn:Dock(LEFT)
+    spacerColumn:SetWide(10)
+    spacerColumn.Paint = function() end
+    self.rightColumn = self.infoBox:Add("DPanel")
+    self.rightColumn:Dock(LEFT)
+    self.rightColumn:SetWide(panelWidth * 0.3)
+    self.rightColumn:DockMargin(100, 0, 8, 0)
+    self.rightColumn.Paint = function() end
     hook.Run("LoadCharInformation")
     self:GenerateSections()
 end
@@ -29,33 +42,52 @@ function PANEL:GenerateSections()
             name = sectionName,
             color = data.color,
             fields = data.fields,
-            priority = data.priority
+            priority = data.priority,
+            location = data.location
         })
     end
 
     table.sort(orderedSections, function(a, b) return a.priority < b.priority end)
+    local leftCount, rightCount = 0, 0
     for _, section in ipairs(orderedSections) do
-        self:CreateSection(section.name, section.color)
+        local column = nil
+        if section.location == 1 then
+            column = self.leftColumn
+            leftCount = leftCount + 1
+        elseif section.location == 2 then
+            column = self.rightColumn
+            rightCount = rightCount + 1
+        else
+            if leftCount <= rightCount then
+                column = self.leftColumn
+                leftCount = leftCount + 1
+            else
+                column = self.rightColumn
+                rightCount = rightCount + 1
+            end
+        end
+
+        self:CreateSection(column, section.name, section.color)
         local fields = isfunction(section.fields) and section.fields() or section.fields
         for _, field in ipairs(fields) do
             if field.type == "text" then
-                self:CreateTextEntryWithBackgroundAndLabel(field.name, field.label, 5, field.value)
+                self:CreateTextEntryWithBackgroundAndLabel(column, field.name, field.label, 5, field.value)
             elseif field.type == "bar" then
-                self:CreateFillableBarWithBackgroundAndLabel(field.name, field.label, field.min, field.max, 5, field.value)
+                self:CreateFillableBarWithBackgroundAndLabel(column, field.name, field.label, field.min, field.max, 5, field.value)
             end
 
-            self:AddSpacer(5)
+            self:AddSpacer(column, 5)
         end
     end
 end
 
-function PANEL:CreateTextEntryWithBackgroundAndLabel(name, labelText, dockMarginBot, valueFunc)
+function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, dockMarginBot, valueFunc)
     local isDesc = string.lower(name) == "desc"
     local textFont = "liaSmallFont"
     local textFontSize = 20
     local textColor = color_white
     local shadowColor = Color(30, 30, 30, 150)
-    local entryContainer = self.infoBox:Add("DPanel")
+    local entryContainer = parent:Add("DPanel")
     entryContainer:Dock(TOP)
     entryContainer:SetTall(textFontSize + 5)
     entryContainer:DockMargin(8, 0, 8, dockMarginBot)
@@ -88,14 +120,14 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(name, labelText, dockMargin
     end
 end
 
-function PANEL:CreateFillableBarWithBackgroundAndLabel(name, labelText, minFunc, maxFunc, dockMarginTop, valueFunc)
+function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, minFunc, maxFunc, dockMargin, valueFunc)
     local textFont = "liaSmallFont"
     local textColor = color_white
     local shadowColor = Color(30, 30, 30, 150)
-    local entryContainer = self.infoBox:Add("DPanel")
+    local entryContainer = parent:Add("DPanel")
     entryContainer:Dock(TOP)
     entryContainer:SetTall(30)
-    entryContainer:DockMargin(8, dockMarginTop, 8, 1)
+    entryContainer:DockMargin(8, dockMargin, 8, dockMargin)
     entryContainer.Paint = function(_, w, h)
         surface.SetDrawColor(shadowColor)
         surface.DrawRect(0, 0, w, h)
@@ -126,19 +158,19 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(name, labelText, minFunc,
     self[name] = bar
 end
 
-function PANEL:AddSpacer(height)
-    local spacer = self.infoBox:Add("DPanel")
+function PANEL:AddSpacer(parent, height)
+    local spacer = parent:Add("DPanel")
     spacer:Dock(TOP)
     spacer:SetTall(height)
     spacer:DockMargin(8, 0, 8, 0)
     spacer.Paint = function() end
 end
 
-function PANEL:CreateSection(title, color)
+function PANEL:CreateSection(parent, title, color)
     local textFont = "liaSmallFont"
     local textFontSize = 20
     local textColor = color_white
-    local sectionPanel = self.infoBox:Add("DPanel")
+    local sectionPanel = parent:Add("DPanel")
     sectionPanel:Dock(TOP)
     sectionPanel:SetTall(textFontSize + 10)
     sectionPanel:DockMargin(8, 10, 8, 10)
@@ -150,7 +182,8 @@ function PANEL:CreateSection(title, color)
 end
 
 function PANEL:Refresh()
-    self.infoBox:Clear()
+    self.leftColumn:Clear()
+    self.rightColumn:Clear()
     self:GenerateSections()
 end
 
