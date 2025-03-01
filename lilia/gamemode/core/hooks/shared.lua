@@ -3,38 +3,47 @@ local string = string
 function GM:Move(client, moveData)
     local character = client:getChar()
     if not character then return end
+    local runSpeed = lia.config.get("RunSpeed", 235)
+    local runSpeedNoModifier = runSpeed
+    local runSpeedModifier = runSpeed / 2.5
+    if client:KeyDown(IN_FORWARD) then
+        moveData:SetMaxSpeed(runSpeedNoModifier)
+    elseif client:KeyDown(IN_MOVELEFT) or client:KeyDown(IN_MOVERIGHT) or client:KeyDown(IN_BACK) then
+        moveData:SetMaxSpeed(runSpeedModifier)
+    end
+
     if client:GetMoveType() == MOVETYPE_WALK and moveData:KeyDown(IN_WALK) then
-        local mf, ms = 0, 0
+        local forwardMult, sideMult = 0, 0
         local speed = client:GetWalkSpeed()
         local ratio = lia.config.get("WalkRatio")
         if moveData:KeyDown(IN_FORWARD) then
-            mf = ratio
+            forwardMult = ratio
         elseif moveData:KeyDown(IN_BACK) then
-            mf = -ratio
+            forwarwMult = -ratio
         end
 
         if moveData:KeyDown(IN_MOVELEFT) then
-            ms = -ratio
+            sideMult = -ratio
         elseif moveData:KeyDown(IN_MOVERIGHT) then
-            ms = ratio
+            sideMult = ratio
         end
 
-        moveData:SetForwardSpeed(mf * speed)
-        moveData:SetSideSpeed(ms * speed)
+        moveData:SetForwardSpeed(forwardMult * speed)
+        moveData:SetSideSpeed(sideMult * speed)
     end
 end
 
 function GM:LiliaLoaded()
     local namecache = {}
-    for _, MODULE in pairs(lia.module.list) do
-        local authorID = tonumber(MODULE.author) and tostring(MODULE.author) or string.match(MODULE.author, "STEAM_") and util.SteamIDTo64(MODULE.author) or "Unknown"
+    for _, module in pairs(lia.module.list) do
+        local authorID = tonumber(module.author) and tostring(module.author) or string.match(module.author, "STEAM_") and util.SteamIDTo64(module.author) or "Unknown"
         if authorID then
             if namecache[authorID] ~= nil then
-                MODULE.author = namecache[authorID]
+                module.author = namecache[authorID]
             else
                 steamworks.RequestPlayerInfo(authorID, function(newName)
                     namecache[authorID] = newName
-                    MODULE.author = newName or MODULE.author
+                    module.author = newName or module.author
                 end)
             end
         end
