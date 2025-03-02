@@ -25,8 +25,8 @@ end
 vgui.Register("liaNotice", PANEL, "DLabel")
 PANEL = {}
 function PANEL:Init()
-    self.padding = 60
-    self:SetSize(256, 36)
+    self.padding = 80
+    self:SetSize(400, 60)
     self:SetContentAlignment(5)
     self.text = self:Add("DLabel")
     self.text:SetText("Unassigned")
